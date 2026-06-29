@@ -13336,31 +13336,31 @@
     "armani-strong": {
       "playerSlug": "armani-strong",
       "playerName": "Armani Strong",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Sam Spiegelman",
-          "writerId": "spiegelman",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-06-28"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
+          "url": "https://www.on3.com/rivals/armani-strong-284115/",
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "Ole Miss is stacking talent in its 2027 recruiting class.",
-        "The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after"
+        "Armani Strong is a 4-star WR · listed at 6-1 / 180 · from Chaminade-Madonna Prep, FL · #210 nationally, #39 at WR, #34 in state.",
+        "He projects as a priority WR addition for the Gators."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Ole Miss is stacking talent in its 2027 recruiting class.  The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after",
-      "recruitingStory": null,
+      "projection": "He projects as a priority WR addition for the Gators.",
+      "insiderNotes": "Armani Strong is a 4-star WR · listed at 6-1 / 180 · from Chaminade-Madonna Prep, FL · #210 nationally, #39 at WR, #34 in state. He projects as a priority WR addition for the Gators.",
+      "recruitingStory": "Committed to Florida on 2026-06-28T13:05:00 · Chaminade-Madonna Prep, FL",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-28T03:02:19.377Z"
+      "updatedAt": "2026-06-29T01:33:26.941Z"
     },
     "dominick-harris-payne": {
       "playerSlug": "dominick-harris-payne",

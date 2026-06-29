@@ -151,6 +151,7 @@ function resolveFallbackSummary(player) {
       const body = String(text).trim();
       if (body.length < 80) continue;
       if (intelQuality.isGenericBeatArticle(body, player.name)) continue;
+      if (!intelQuality.intelReferencesPlayer(body, player.name)) continue;
       return {
         summary: body,
         writer: entry.analystName || entry.updates?.[0]?.analystName || 'On3',

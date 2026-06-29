@@ -122,14 +122,24 @@ function rankNote(player) {
 
 /** Program trajectory (years 2–4) — staff projection only, never beat-article skinny. */
 function verifiedProjection(player) {
-  return firstVerifiedIntel(player, ['projection', 'earlyImpact', 'earlyImpactProjection'], player.name);
+  const fromFields = firstVerifiedIntel(
+    player,
+    ['projection', 'earlyImpact', 'earlyImpactProjection'],
+    player.name
+  );
+  if (fromFields) return fromFields;
+  const note = String(player.profileNote || '').trim();
+  if (!note) return null;
+  const match = note.match(/\b(?:He|She|They)\s+projects?\s+as[^.]+\./i);
+  if (match && !isGenericBeatArticle(match[0], player.name)) return match[0].trim();
+  return null;
 }
 
 /** Insider scouting note — separate from projection; never duplicate rankNote body. */
 function verifiedInsiderIntel(player, rankNoteText) {
   const intel = firstVerifiedIntel(
     player,
-    ['insiderNotes', 'notes', 'notePreview', 'evaluatorNotes'],
+    ['insiderNotes', 'profileNote', 'notes', 'notePreview', 'evaluatorNotes'],
     player.name
   );
   if (!intel || intel === rankNoteText) return null;

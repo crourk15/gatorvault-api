@@ -116,10 +116,13 @@ const JOBS = {
     label: 'X autoposter queue processor',
     subsystem: 'autoposter:queue',
     schedule: 'Every 60s (X_AUTOPOST_ENABLED)',
-    async run() {
+    async run(opts = {}) {
       const autoposter = require('./x-autoposter');
       if (typeof autoposter.processDuePosts === 'function') {
-        return autoposter.processDuePosts();
+        return autoposter.processDuePosts({
+          force: opts.force === true,
+          limit: opts.limit || 1
+        });
       }
       const store = require('./x-autoposter-store');
       return { ok: true, queue: store.loadQueue().items?.length || 0 };

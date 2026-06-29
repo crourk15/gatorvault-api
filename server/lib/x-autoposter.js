@@ -223,6 +223,15 @@ function isDuplicateTweetError(err) {
   return /duplicate content/i.test(msg);
 }
 
+/** One-shot copy tweak when X rejects identical body (common on re-queued commits). */
+function duplicateRecoveryText(text) {
+  const base = String(text || '').trim();
+  if (!base || /#GoGators\b/i.test(base)) return null;
+  const suffix = '\n#GoGators';
+  if (base.length + suffix.length > 280) return null;
+  return `${base}${suffix}`;
+}
+
 async function processQueueItem(item) {
   if (!pipelineGuards.autopostEnabled()) {
     return { ok: false, skipped: true, reason: 'autoposter disabled', itemId: item?.id };
@@ -353,6 +362,47 @@ async function processQueueItem(item) {
     return { ok: true, item: store.loadQueue().items.find((i) => i.id === item.id), result };
   } catch (err) {
     if (isDuplicateTweetError(err)) {
+      const altText = duplicateRecoveryText(workingItem.text);
+      if (altText && altText !== workingItem.text) {
+        try {
+          autopostLog('info', 'Retrying duplicate tweet with recovery suffix', { itemId: item.id });
+          const retry = await postTweet({
+            text: altText,
+            mediaBase64: workingItem.mediaBase64 || null,
+            mediaMime: workingItem.mediaMime || null,
+            inReplyToStatusId:
+              workingItem.action === 'reply' ? workingItem.inReplyToStatusId : null,
+            quoteTweetUrl: workingItem.action === 'quote' ? workingItem.quoteTweetUrl : null,
+            quoteTweetId: workingItem.action === 'quote' ? workingItem.quoteTweetId : null
+          });
+          store.updatePost(workingItem.id, {
+            text: altText,
+            status: 'sent',
+            sentAt: store.nowIso(),
+            tweetId: retry.tweetId,
+            tweetUrl: retry.tweetUrl,
+            error: null,
+            validationErrors: []
+          });
+          const postedAt = store.nowIso();
+          freshness.recordLastPost(postedAt);
+          saveSchedulerStatus({
+            lastPostAt: postedAt,
+            lastPostSuccess: postedAt,
+            lastError: null
+          });
+          return {
+            ok: true,
+            item: store.loadQueue().items.find((i) => i.id === item.id),
+            result: retry,
+            duplicateRecovery: true
+          };
+        } catch (retryErr) {
+          if (!isDuplicateTweetError(retryErr)) {
+            throw retryErr;
+          }
+        }
+      }
       autopostLog('warn', 'Skipped duplicate tweet (already on timeline)', { itemId: item.id });
       store.updatePost(item.id, {
         status: 'skipped_duplicate',
