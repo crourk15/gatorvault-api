@@ -10,6 +10,8 @@ import { FUTURECAST_PLAYERS_TABLE, playerFromRow, type PlayerRow } from './playe
 export interface BigBoardFilters {
   class_year?: number;
   position?: string;
+  /** Match any of these positions (related-player buckets). */
+  positions?: string[];
   lifecycle?: PlayerLifecycleStatus;
 }
 
@@ -67,6 +69,9 @@ export async function listBigBoardPlayers(filters: BigBoardFilters = {}): Promis
   if (filters.position) {
     conditions.push(`p.position = $${idx++}`);
     params.push(filters.position);
+  } else if (filters.positions?.length) {
+    conditions.push(`p.position = ANY($${idx++}::text[])`);
+    params.push(filters.positions);
   }
   if (filters.lifecycle) {
     if (filters.lifecycle === 'PORTAL') {

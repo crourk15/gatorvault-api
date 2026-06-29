@@ -7,6 +7,21 @@ import type { PlayerMetrics } from '../../../lib/player-derived';
 import { signalSummaryText, formatSignalValue, formatDate, signalWeight } from '../../../lib/player-derived';
 import { dedupeDiscoverySignals, signalTimestamp } from '../../../lib/player-profile-normalize';
 import { coerceDisplayText } from '../../../lib/coerce-text';
+
+function profileNotesDeduped(
+  recruitingNotes: unknown,
+  evaluationNotes: unknown
+): { recruitingNotes: string | null; evaluationNotes: string | null } {
+  const hs = coerceDisplayText(recruitingNotes);
+  const evalN = coerceDisplayText(evaluationNotes);
+  if (!hs || !evalN) return { recruitingNotes: hs, evaluationNotes: evalN };
+  const na = hs.toLowerCase().replace(/\s+/g, ' ').trim();
+  const nb = evalN.toLowerCase().replace(/\s+/g, ' ').trim();
+  if (na === nb || (na.length >= 24 && (na.includes(nb) || nb.includes(na)))) {
+    return { recruitingNotes: hs, evaluationNotes: null };
+  }
+  return { recruitingNotes: hs, evaluationNotes: evalN };
+}
 import { RelatedPlayers } from './RelatedPlayers';
 import { PredictionsPanel } from './PredictionsPanel';
 
@@ -21,8 +36,10 @@ export function OverviewTab({ data, metrics }: OverviewTabProps): React.ReactEle
   const recentSignals = dedupeDiscoverySignals(signals)
     .sort((a, b) => signalTimestamp(b.createdAt) - signalTimestamp(a.createdAt))
     .slice(0, 5);
-  const hsNotes = coerceDisplayText(highSchoolProfile?.recruitingNotes);
-  const evalNotes = coerceDisplayText(ufSpecificProfile?.evaluationNotes);
+  const notes = profileNotesDeduped(
+    highSchoolProfile?.recruitingNotes,
+    ufSpecificProfile?.evaluationNotes
+  );
 
   return (
     <div className="fc-profile-panel" data-testid="tab-overview">
@@ -74,11 +91,15 @@ export function OverviewTab({ data, metrics }: OverviewTabProps): React.ReactEle
         </section>
       )}
 
-      {(hsNotes || evalNotes) && (
+      {(notes.recruitingNotes || notes.evaluationNotes) && (
         <section className="fc-profile-section">
           <h2>Notes</h2>
-          {hsNotes ? <p>{hsNotes}</p> : null}
-          {evalNotes ? <p>{evalNotes}</p> : null}
+          {notes.recruitingNotes ? <p>{notes.recruitingNotes}</p> : null}
+          {notes.evaluationNotes ? (
+            <p className={notes.recruitingNotes ? 'fc-profile-muted' : undefined}>
+              {notes.evaluationNotes}
+            </p>
+          ) : null}
         </section>
       )}
 

@@ -12,6 +12,7 @@ import {
   parseLimit,
   sendError,
 } from '../utils';
+import { relatedPositionsFor } from '../../../lib/recruiting-position-buckets';
 
 export const handleGetRelatedPlayers = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -28,9 +29,10 @@ export const handleGetRelatedPlayers = asyncHandler(async (req: Request, res: Re
     }
 
     const limit = parseLimit(req.query.limit, 6, 20);
+    const positions = relatedPositionsFor(player.position);
     const rows = await listBigBoardPlayers({
       class_year: player.class_year,
-      position: player.position,
+      positions,
     });
 
     const ranked = buildBigBoard(rows, 'rank', 'desc', rows.length);

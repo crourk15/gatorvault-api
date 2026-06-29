@@ -53,6 +53,7 @@ import {
   enrichRelatedFromRecruiting,
   futurecastSummaryForRecruiting,
 } from './profile-enrich';
+import { relatedPositionsFor } from '../../lib/recruiting-position-buckets';
 
 const require = createRequire(import.meta.url);
 
@@ -138,6 +139,7 @@ async function finalizeProfileResponse(
   );
 
   let highSchoolProfile = profile.highSchoolProfile;
+  let ufSpecificProfile = profile.ufSpecificProfile;
   if (recruiting && highSchoolProfile) {
     const stats = (highSchoolProfile.stats as Record<string, unknown>) ?? {};
     highSchoolProfile = {
@@ -159,10 +161,23 @@ async function finalizeProfileResponse(
     };
   }
 
+  const hsNote = String(highSchoolProfile?.recruitingNotes || '').trim();
+  const evalNote = String(ufSpecificProfile?.evaluationNotes || '').trim();
+  if (hsNote && evalNote) {
+    const na = hsNote.toLowerCase().replace(/\s+/g, ' ');
+    const nb = evalNote.toLowerCase().replace(/\s+/g, ' ');
+    if (na === nb || (na.length >= 24 && (na.includes(nb) || nb.includes(na)))) {
+      ufSpecificProfile = ufSpecificProfile
+        ? { ...ufSpecificProfile, evaluationNotes: null }
+        : ufSpecificProfile;
+    }
+  }
+
   return {
     ...profile,
     player,
     highSchoolProfile,
+    ufSpecificProfile,
     related,
     futurecastSummary: futurecastSummary as FullProfileResponse['futurecastSummary'],
   };
@@ -389,7 +404,7 @@ export async function buildFullProfileBySlug(slug: string): Promise<FullProfileR
 
   const rows = await listBigBoardPlayers({
     class_year: player.class_year,
-    position: player.position,
+    positions: relatedPositionsFor(player.position),
   });
   const ranked = buildBigBoard(rows, 'rank', 'desc', rows.length);
   const related = ranked

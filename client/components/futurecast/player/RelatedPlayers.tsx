@@ -16,7 +16,7 @@ export interface RelatedPlayersProps {
 export function RelatedPlayers({ players, currentSlug }: RelatedPlayersProps): React.ReactElement {
   const list = players.filter((p) => p.slug !== currentSlug);
   if (!list.length) {
-    return <p className="fc-profile-empty">No related players in this class and position.</p>;
+    return <p className="fc-profile-empty">No related players in this class and position group.</p>;
   }
 
   return (
