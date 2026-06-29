@@ -59,6 +59,7 @@
     "smoke:app-store": "node scripts/app-store-smoke.js",
     "provision:app-review": "node scripts/provision-app-review-account.js",
     "prep:app-store": "node scripts/app-store-prep.js",
+    "walkthrough:app-store": "node scripts/app-store-connect-walkthrough.js",
     "trigger:codemagic:ios": "node scripts/trigger-codemagic-ios.js"
   },
   "engines": {

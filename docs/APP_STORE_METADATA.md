@@ -85,6 +85,8 @@ See `docs/APP_STORE_SUBSCRIPTIONS.md` for product IDs and group setup.
 - [x] Profile spot-check script (`node server/scripts/verify-profile-spot-check.js`)
 - [x] Player profile polish deployed (`26d9cda` — notes dedupe, related position buckets)
 - [x] Recruiting Hub 2028: Younger Prospects panel + movement narratives on intel feed
+- [x] Class targets boards: /vault/recruiting/2027/targets and /vault/recruiting/2028/targets
+- [x] Team Hub pipeline follows primaryRecruitingClassYear() (2028 in discovery focus)
 - [ ] TestFlight build with vault shell + deep links (paused — signing)
 
 ### Deploy verification
@@ -92,9 +94,11 @@ See `docs/APP_STORE_SUBSCRIPTIONS.md` for product IDs and group setup.
 Run after each production push:
 
 ```bash
+npm run walkthrough:app-store
 npm run prep:app-store
 node server/scripts/verify-profile-spot-check.js
 node server/scripts/verify-recruiting-hub-spot-check.js
+node server/scripts/verify-recruiting-targets-spot-check.js
 node server/scripts/verify-aasa.js
 npm run smoke:app-store   # requires APP_REVIEW_PASSWORD
 npm run verify:app-store-screenshots

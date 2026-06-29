@@ -1,6 +1,7 @@
 import type { TeamHubBundle } from '@/lib/team-hub-api';
 import type { RecruitingBoardResponse } from '@/lib/recruiting-board-api';
 import type { MasterBoardResponse } from '@/lib/futurecast-board-types';
+import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import type {
   PipelinePreviewData,
   PortalSnapshotData,
@@ -28,13 +29,13 @@ export function computeHeroMetrics(bundle: TeamHubBundle): TeamHeroMetric[] {
   ];
 }
 
-export function computeSnapshotMetrics(): TeamSnapshotMetric[] {
+export function computeSnapshotMetrics(classYear = primaryRecruitingClassYear()): TeamSnapshotMetric[] {
   return [
     { id: 'bcr', label: 'Blue-Chip Ratio', value: '42%', trend: 'up', detail: 'SEC avg: 38%' },
     { id: 'returning', label: 'Returning Production', value: '58%', trend: 'flat', detail: 'Top-25 nationally' },
     { id: 'portal-net', label: 'Portal Net Rating', value: '+3.2', trend: 'up', detail: 'Gains outweigh losses' },
     { id: 'nil-comp', label: 'NIL Competitiveness', value: 'B+', trend: 'up', detail: 'Top-15 SEC NIL spend' },
-    { id: 'recruit-mom', label: 'Recruiting Momentum', value: 'Warm', trend: 'up', detail: '2027 class trending' },
+    { id: 'recruit-mom', label: 'Recruiting Momentum', value: 'Warm', trend: 'up', detail: `${classYear} class trending` },
     { id: 'sos', label: 'Strength of Schedule', value: '#8', trend: 'flat', detail: '2026 projected' },
   ];
 }
@@ -115,6 +116,7 @@ export function buildPipelinePreview(
     .slice(0, 8);
 
   return {
+    classYear: board?.classYear ?? primaryRecruitingClassYear(),
     topCommits: commits,
     topTargets,
     avgFitScore: fitScores.length

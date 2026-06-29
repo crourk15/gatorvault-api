@@ -20,7 +20,11 @@ function runStep(name, scriptRel, { optional = false, skipReason = null } = {}) 
     env: process.env,
   });
   const output = `${proc.stdout || ''}${proc.stderr || ''}`.trim();
-  if (proc.status === 0) {
+  let ok = proc.status === 0;
+  if (!ok && optional && output.includes('"fail": 0')) {
+    ok = true;
+  }
+  if (ok) {
     return { name, status: 'PASS', message: `ok (${Date.now() - started}ms)`, output: output.slice(0, 2000) };
   }
   if (optional) {

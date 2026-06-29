@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchTeamHubBundle, type TeamHubBundle } from '@/lib/team-hub-api';
 import { fetchRecruitingBoard } from '@/lib/recruiting-board-api';
 import { fetchFutureCastMasterBoard } from '@/lib/futurecast-board-api';
+import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import type { Coach, DepthChartTab, Era } from '@/lib/team-hub-types';
 import type { RosterFilter } from '@/lib/team-hub-data';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
@@ -68,6 +69,8 @@ export function TeamHubPage(): React.ReactElement {
     }
   });
 
+  const pipelineClassYear = primaryRecruitingClassYear();
+
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) {
       setLoading(true);
@@ -77,7 +80,7 @@ export function TeamHubPage(): React.ReactElement {
     try {
       const [hub, board, fcBoard] = await Promise.all([
         fetchTeamHubBundle(),
-        fetchRecruitingBoard(2027).catch(() => null),
+        fetchRecruitingBoard(pipelineClassYear).catch(() => null),
         fetchFutureCastMasterBoard().catch(() => null),
       ]);
       setBundle(hub);
@@ -89,7 +92,7 @@ export function TeamHubPage(): React.ReactElement {
       }
       setPipelineLoading(false);
     }
-  }, []);
+  }, [pipelineClassYear]);
 
   useEffect(() => {
     void load(true);

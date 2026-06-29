@@ -28,7 +28,7 @@ export function TeamOverviewSection({
   suppressPipelinePreview = false,
   loading = false,
 }: Props): React.ReactElement {
-  const snapshot = computeSnapshotMetrics();
+  const snapshot = computeSnapshotMetrics(pipelinePreview.classYear);
   const rooms = computePositionRoomHealth();
   const portal: PortalSnapshotData = computePortalSnapshot(bundle);
 
@@ -57,7 +57,10 @@ export function TeamOverviewSection({
       </TeamPremiumModule>
 
       {!suppressPipelinePreview ? (
-        <TeamPremiumModule title="Recruiting Pipeline Preview" subtitle="2027 class outlook">
+        <TeamPremiumModule
+          title="Recruiting Pipeline Preview"
+          subtitle={`${pipelinePreview.classYear} class outlook`}
+        >
           <RecruitingPipelinePreview data={pipelinePreview} />
         </TeamPremiumModule>
       ) : null}

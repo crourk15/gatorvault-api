@@ -4,6 +4,8 @@ Apple requires YOUR login. Open this file beside App Store Connect and check off
 
 **Start:** https://appstoreconnect.apple.com → Apps → GatorVault Insider → **Distribution** tab
 
+**Prep locally first:** `npm run walkthrough:app-store` (writes `docs/app-store/CONNECT_SESSION.md`)
+
 ---
 
 ## Step 1 — App Information (Age Rating + Privacy URL)
