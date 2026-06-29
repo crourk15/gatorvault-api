@@ -183,9 +183,12 @@ function buildVisitHistory(
 
 async function loadTargetBoardFromStore(): Promise<TargetBoardEntry[]> {
   const store = require('../../lib/recruiting-store');
+  const { enrichTargetsWithBoardSeed } = require('../../lib/target-board-enrich');
+  const allowlist = require('../../lib/recruiting-target-allowlist');
   const board = await store.getBoard(FUTURECAST_CLASS_YEAR);
+  const enriched = enrichTargetsWithBoardSeed(board.targets || [], FUTURECAST_CLASS_YEAR, allowlist);
   return filterBlockedRecruits(
-    (board.targets || []).map((p: Record<string, unknown>) => ({
+    enriched.map((p: Record<string, unknown>) => ({
       slug: String(p.slug || ''),
       name: String(p.name || ''),
       pos: p.pos as string | undefined,
