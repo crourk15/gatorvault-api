@@ -456,7 +456,8 @@ async function analyzeTeamData() {
       });
     }
     players.slice(0, 50).forEach((p) => {
-      if (p.number != null && (Number.isNaN(Number(p.number)) || Number(p.number) < 0 || Number(p.number) > 99)) {
+      const jersey = p.jersey ?? p.number;
+      if (jersey != null && (Number.isNaN(Number(jersey)) || Number(jersey) < 0 || Number(jersey) > 99)) {
         issues.push({
           ruleId: 'E1',
           checkId: 'crawler:roster-mismatch',
@@ -466,8 +467,8 @@ async function analyzeTeamData() {
           domPath: `player-${p.name}`,
           severity: 'medium',
           confidence: 88,
-          message: `Invalid jersey number for ${p.name}: ${p.number}`,
-          recommendedFix: 'Fix roster number field (0–99)'
+          message: `Invalid jersey number for ${p.name}: ${jersey}`,
+          recommendedFix: 'Fix roster jersey field (0–99)'
         });
       }
     });

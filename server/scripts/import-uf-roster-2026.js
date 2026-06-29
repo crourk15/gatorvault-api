@@ -166,6 +166,11 @@ function main() {
   const players = parseSource(md);
   fs.writeFileSync(OUT, JSON.stringify(players, null, 2) + '\n');
   console.log(`Wrote ${players.length} players to ${OUT}`);
+
+  const htmlPath = path.join(ROOT, 'data', 'roster', 'uf-roster-2026.html');
+  if (fs.existsSync(htmlPath)) {
+    require('./parse-uf-roster-html.js');
+  }
 }
 
 main();

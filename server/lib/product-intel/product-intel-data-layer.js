@@ -351,7 +351,10 @@ async function collectTeamDataSignals() {
         })
       );
     }
-    const noNumber = players.filter((p) => !p.number && !p.jersey);
+    const noNumber = players.filter((p) => {
+      const jersey = p.jersey ?? p.number;
+      return jersey == null || jersey === '';
+    });
     if (noNumber.length > players.length * 0.5 && players.length > 15) {
       signals.push(
         signal('pi:roster:numbers', 'roster-depth-chart', 'Roster missing jersey numbers', `${noNumber.length} players`, {
