@@ -87,8 +87,10 @@ function resolveClassYear(b: WarRoomBreakdown, meta: RecruitingMeta | undefined)
   return null;
 }
 
-function isStale2026(classYear: number | null, b: WarRoomBreakdown): boolean {
+function isStale2026(classYear: number | null, b: WarRoomBreakdown, minYear = FUTURECAST_CLASS_YEAR): boolean {
   if (classYear === 2026) return true;
+  // Trust recruiting store class year — commit dates often contain calendar year 2026.
+  if (classYear != null && classYear >= minYear) return false;
   const text = `${b.recruitingStory ?? ''} ${b.projection ?? ''}`.toLowerCase();
   return /\b2026\b/.test(text) && !/\b2027\b/.test(text) && !/\b2028\b/.test(text);
 }
@@ -133,7 +135,7 @@ export const handleGetFutureCastStaffNotes = asyncHandler(async (req: Request, r
       return;
     }
 
-    const cacheKey = `futurecast:staff-notes:v2:${minYear}`;
+    const cacheKey = `futurecast:staff-notes:v3:${minYear}`;
 
     await sendCachedJson(res, cacheKey, async () => {
       const warRoom = require('../../lib/war-room-store');
@@ -166,7 +168,7 @@ export const handleGetFutureCastStaffNotes = asyncHandler(async (req: Request, r
         })
         .filter((row): row is { entry: ReturnType<typeof serializeStaffNote>; raw: WarRoomBreakdown } => row !== null)
         .filter(({ entry, raw }) => {
-          if (isStale2026(entry.classYear, raw)) {
+          if (isStale2026(entry.classYear, raw, minYear)) {
             staleFiltered += 1;
             return false;
           }
