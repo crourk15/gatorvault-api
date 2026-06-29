@@ -4,6 +4,8 @@ const { COLLEGE_ANALYSTS, NFL_ANALYSTS } = require('./scouting-analysts');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'war-room');
 const BREAKDOWNS_PATH = path.join(DATA_DIR, 'breakdowns.json');
+const HUB_SEED_PATH = path.join(DATA_DIR, 'breakdowns-hub-seed.json');
+const PLAYERS_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'players.json');
 
 /** Verified scouting analysts only — no beat writers */
 const TRUSTED_WRITERS = [...COLLEGE_ANALYSTS, ...NFL_ANALYSTS];
@@ -138,8 +140,53 @@ function normalizeBreakdown(raw, slug) {
 }
 
 function getBreakdownBySlug(slug) {
+  const key = String(slug || '').trim();
+  if (!key) return null;
+
+  const {
+    breakdownIsCorrupt,
+    buildSyntheticBreakdown,
+  } = require('./recruiting-intel-quality');
+
   const doc = loadDoc();
-  return doc.breakdowns[slug] || null;
+  const runtime = doc.breakdowns[key] || null;
+  const playerName = runtime?.playerName || key;
+
+  if (runtime && !breakdownIsCorrupt(runtime, playerName)) {
+    return runtime;
+  }
+
+  const seedDoc = readJson(HUB_SEED_PATH, { breakdowns: {} });
+  const seed = seedDoc.breakdowns?.[key] || null;
+  if (seed && !breakdownIsCorrupt(seed, seed.playerName || playerName)) {
+    return seed;
+  }
+
+  try {
+    const players = readJson(PLAYERS_PATH, []);
+    const player = players.find((p) => p.slug === key);
+    if (player) {
+      const synthetic = buildSyntheticBreakdown(player);
+      if (synthetic && !breakdownIsCorrupt(synthetic, player.name)) {
+        return synthetic;
+      }
+    }
+  } catch {
+    /* optional */
+  }
+
+  return runtime || seed || null;
+}
+
+function upsertHubSeedBreakdown(slug, raw) {
+  const entry = typeof raw === 'object' && raw ? raw : null;
+  if (!entry) return null;
+  const doc = readJson(HUB_SEED_PATH, { version: 1, updatedAt: null, breakdowns: {} });
+  doc.breakdowns = doc.breakdowns || {};
+  doc.breakdowns[String(slug || entry.playerSlug || '').trim()] = entry;
+  doc.updatedAt = new Date().toISOString();
+  writeJson(HUB_SEED_PATH, doc);
+  return entry;
 }
 
 function getAllBreakdowns() {
@@ -407,6 +454,7 @@ module.exports = {
   isTrustedWriter,
   getBreakdownBySlug,
   getAllBreakdowns,
+  upsertHubSeedBreakdown,
   getScoutingDatabaseList,
   breakdownToSummary,
   upsertBreakdown,

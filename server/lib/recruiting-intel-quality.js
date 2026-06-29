@@ -196,6 +196,87 @@ function verifiedStrengthsList(player) {
   return cleaned.length ? cleaned.slice(0, 2).join(' · ') : null;
 }
 
+function breakdownIsCorrupt(entry, player) {
+  if (!entry) return true;
+  const name = typeof player === 'string' ? player : player?.name || entry.playerName || '';
+  const fields = [
+    entry.insiderNotes,
+    entry.projection,
+    ...(entry.strengths || []),
+  ].filter(Boolean);
+  if (!fields.length) return true;
+  return fields.some(
+    (text) =>
+      isGenericBeatArticle(String(text), name) ||
+      !intelReferencesPlayer(String(text), name)
+  );
+}
+
+function buildVerifiedOn3Summary(player) {
+  const pos = player.pos || player.position || 'prospect';
+  const stars = Number(player.stars);
+  const parts = [];
+  if (stars) parts.push(`${stars}-star ${pos}`);
+  if (player.htWt) parts.push(`listed at ${player.htWt}`);
+  if (player.school) parts.push(`from ${player.school}`);
+  const ranks = [];
+  if (player.natlRank != null) ranks.push(`#${player.natlRank} nationally`);
+  if (player.posRank != null) ranks.push(`#${player.posRank} at ${pos}`);
+  if (player.stateRank != null) ranks.push(`#${player.stateRank} in state`);
+  if (ranks.length) parts.push(ranks.join(', '));
+
+  let body = `${player.name} is a ${parts.join(' · ')}.`;
+  const profileNote = String(player.profileNote || '').trim();
+  if (
+    profileNote &&
+    profileNote.length >= 40 &&
+    !isGenericBeatArticle(profileNote, player.name)
+  ) {
+    body += ` ${profileNote}`;
+  } else if (player.commitDate) {
+    body += ` Committed to Florida on ${player.commitDate}.`;
+  } else {
+    body += ' Committed to Florida.';
+  }
+  return body.length >= 80 ? body : null;
+}
+
+function buildSyntheticBreakdown(player) {
+  const summary = buildVerifiedOn3Summary(player);
+  if (!summary) return null;
+  const projection =
+    summary.match(/\b(?:He|She|They)\s+projects?\s+as[^.]+\./i)?.[0]?.trim() || null;
+  const firstSentence = summary.split(/(?<=[.!?])\s+/)[0]?.trim() || summary;
+  return {
+    playerSlug: player.slug,
+    playerName: player.name,
+    playerType: player.status === 'committed' ? 'commit' : 'recruit',
+    verified: true,
+    sources: [
+      {
+        writer: 'Charles Power',
+        writerId: 'power',
+        outlet: 'On3 verified composite',
+        url: player.on3ProfileUrl || null,
+        publishedAt: new Date().toISOString().slice(0, 10),
+      },
+    ],
+    strengths: firstSentence ? [firstSentence] : [],
+    weaknesses: [],
+    comparison: null,
+    schemeFit: null,
+    staffNotes: null,
+    projection,
+    insiderNotes: summary,
+    recruitingStory: player.commitDate
+      ? `Committed to Florida on ${player.commitDate}${player.school ? ` · ${player.school}` : ''}`
+      : null,
+    nflProjection: null,
+    featured: false,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
 module.exports = {
   isPlaceholderSkinny,
   hasRealSchool,
@@ -208,4 +289,7 @@ module.exports = {
   verifiedStrengthsList,
   intelReferencesPlayer,
   playerLastName,
+  breakdownIsCorrupt,
+  buildVerifiedOn3Summary,
+  buildSyntheticBreakdown,
 };

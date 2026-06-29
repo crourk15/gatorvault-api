@@ -81,48 +81,11 @@ function sentencesFromSummary(summary) {
 }
 
 function buildVerifiedOn3Summary(player) {
-  const pos = player.pos || 'prospect';
-  const stars = Number(player.stars);
-  const parts = [];
-  if (stars) parts.push(`${stars}-star ${pos}`);
-  if (player.htWt) parts.push(`listed at ${player.htWt}`);
-  if (player.school) parts.push(`from ${player.school}`);
-  const ranks = [];
-  if (player.natlRank != null) ranks.push(`#${player.natlRank} nationally`);
-  if (player.posRank != null) ranks.push(`#${player.posRank} at ${pos}`);
-  if (player.stateRank != null) ranks.push(`#${player.stateRank} in state`);
-  if (ranks.length) parts.push(ranks.join(', '));
-
-  let body = `${player.name} is a ${parts.join(' · ')}.`;
-  const profileNote = String(player.profileNote || '').trim();
-  if (
-    profileNote &&
-    profileNote.length >= 40 &&
-    !intelQuality.isGenericBeatArticle(profileNote, player.name)
-  ) {
-    body += ` ${profileNote}`;
-  } else if (player.commitDate) {
-    body += ` Committed to Florida on ${player.commitDate}.`;
-  } else {
-    body += ' Committed to Florida.';
-  }
-  return body.length >= 80 ? body : null;
+  return intelQuality.buildVerifiedOn3Summary(player);
 }
 
 function breakdownIsCorrupt(existing, player) {
-  if (!existing) return false;
-  const name = player.name;
-  const fields = [
-    existing.insiderNotes,
-    existing.projection,
-    ...(existing.strengths || []),
-  ].filter(Boolean);
-  if (!fields.length) return false;
-  return fields.some(
-    (text) =>
-      intelQuality.isGenericBeatArticle(String(text), name) ||
-      !intelQuality.intelReferencesPlayer(String(text), name)
-  );
+  return intelQuality.breakdownIsCorrupt(existing, player);
 }
 
 function resolveFallbackSummary(player) {
@@ -337,6 +300,7 @@ async function main() {
 
       if (!dryRun) {
         warRoom.upsertBreakdown(p.slug, entry);
+        warRoom.upsertHubSeedBreakdown(p.slug, entry);
       }
       seeded += 1;
       report.push({
