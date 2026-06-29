@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { RhHubCommit } from '@/lib/recruiting-hub-elite-api';
+import { coerceDisplayText } from '@/lib/coerce-text';
 
 type Props = {
   commit: RhHubCommit;
@@ -9,11 +10,17 @@ type Props = {
 };
 
 function DetailRow({ label, value }: { label: string; value: React.ReactNode }): React.ReactElement | null {
-  if (value == null || value === '' || value === '—') return null;
+  const display =
+    typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'
+      ? String(value)
+      : React.isValidElement(value)
+        ? value
+        : coerceDisplayText(value);
+  if (display == null || display === '' || display === '—') return null;
   return (
     <div className="rh-elite-commit-detail">
       <span className="rh-elite-commit-detail__label">{label}</span>
-      <span className="rh-elite-commit-detail__value">{value}</span>
+      <span className="rh-elite-commit-detail__value">{display}</span>
     </div>
   );
 }

@@ -98,6 +98,10 @@ export function toCamelCase<T extends Record<string, unknown>>(obj: T): Record<s
       continue;
     }
     if (typeof value === 'object') {
+      if (value instanceof Date) {
+        out[snakeToCamel(key)] = Number.isFinite(value.getTime()) ? value.toISOString() : null;
+        continue;
+      }
       out[snakeToCamel(key)] = toCamelCase(value as Record<string, unknown>);
       continue;
     }

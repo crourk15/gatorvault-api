@@ -27,6 +27,7 @@ const {
   normalizePlayerGeo,
 } = require('./recruiting-geo-normalize');
 const { isCuratedHubIntel, loadHubRecruitingPool } = require('./recruiting-hub-intel-store');
+const { getAllowlistSet } = require('./recruiting-target-allowlist');
 const {
   applyCommitmentPredictionOverride,
   isUfPredictionSuppressed,
@@ -49,6 +50,16 @@ function playerPos(player) {
 function profileUrl(player) {
   const slug = player?.slug || String(player?.name || '').toLowerCase().replace(/\s+/g, '-');
   return `/vault/recruiting/player/${encodeURIComponent(slug)}`;
+}
+
+/** Movement feed: board pool + locked allowlist for underclassmen years. */
+function hubFeedSlugAllowed(slug, focusYear, pool) {
+  const key = String(slug || '').toLowerCase();
+  if (!key || !pool.has(key)) return false;
+  if (focusYear === 2027 || focusYear === 2028) {
+    return getAllowlistSet(focusYear).has(key);
+  }
+  return true;
 }
 
 function formatNextVisit(player) {
@@ -768,7 +779,7 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
 
   for (const log of visitLogs) {
     const slug = String(log.playerSlug || '').toLowerCase();
-    if (!slug || covered.has(slug)) continue;
+    if (!slug || covered.has(slug) || !hubFeedSlugAllowed(slug, focusYear, pool)) continue;
     const meta = resolveFeedMeta(slug, pool, rawMap);
     if (!meta || meta.isCommit) continue;
     if (focusYear != null && Number(meta.classYear) !== focusYear) continue;
@@ -778,7 +789,7 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
 
   for (const log of offerLogs) {
     const slug = String(log.playerSlug || '').toLowerCase();
-    if (!slug || covered.has(slug)) continue;
+    if (!slug || covered.has(slug) || !hubFeedSlugAllowed(slug, focusYear, pool)) continue;
     const meta = resolveFeedMeta(slug, pool, rawMap);
     if (!meta || meta.isCommit) continue;
     if (focusYear != null && Number(meta.classYear) !== focusYear) continue;

@@ -31,7 +31,7 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
     <article className="rh-card rh-battle-board-card" data-testid={`rh-battle-board-${battle.id}`}>
       <div className="rh-battle-board-card__head">
         <div>
-          <a href={`/vault/recruiting/player/${encodeURIComponent(battle.id)}`} className="rh-player-name">
+          <a href={`/vault/recruiting/player/${encodeURIComponent(String(battle.id || battle.name || '').toLowerCase())}`} className="rh-player-name">
             {battle.name}
           </a>
           <div className="rh-player-pos">

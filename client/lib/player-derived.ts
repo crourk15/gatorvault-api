@@ -263,13 +263,34 @@ export function formatSignalValue(signal: DiscoverySignal): string {
   if (v.delta) return `+${v.delta}`;
   const entries = Object.entries(v).filter(([, val]) => val != null && val !== '');
   if (!entries.length) return '—';
-  return entries.map(([k, val]) => `${k.replace(/_/g, ' ')}: ${val}`).join(' · ');
+  return entries
+    .map(([k, val]) => {
+      const text =
+        val == null || val === ''
+          ? ''
+          : typeof val === 'object'
+            ? JSON.stringify(val)
+            : String(val);
+      return text ? `${k.replace(/_/g, ' ')}: ${text}` : '';
+    })
+    .filter(Boolean)
+    .join(' · ');
 }
 
-export function formatDate(iso: string | null | undefined): string {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
+export function formatDate(iso: unknown): string {
+  if (iso == null || iso === '') return '—';
+  if (typeof iso === 'object') {
+    if (iso instanceof Date) {
+      return Number.isNaN(iso.getTime())
+        ? '—'
+        : iso.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    return '—';
+  }
+  const raw = String(iso).trim();
+  if (!raw) return '—';
+  const d = new Date(raw);
+  if (Number.isNaN(d.getTime())) return '—';
   return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 

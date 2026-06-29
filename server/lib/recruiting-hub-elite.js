@@ -278,7 +278,12 @@ function mapHubCommit(player, classYear) {
   const slug = player.slug || player.name;
   const note = rankNote(player);
   const projection = verifiedProjection(player);
-  const insider = verifiedInsiderIntel(player, note);
+  let insider = verifiedInsiderIntel(player, note);
+  if (projection && insider) {
+    insider = String(insider).replace(projection, '').replace(/\s+/g, ' ').trim();
+    if (insider.endsWith('.')) insider = insider.slice(0, -1).trim();
+    if (!insider || insider.length < 12) insider = null;
+  }
   const strengths = formatStrengths(player);
   const isFutureCommit = classYear >= 2027;
   return {
