@@ -39,7 +39,7 @@ function mountRecruitingRoutes(app) {
   /** Runtime live-board targets — used by volatility engine and FutureCast bindings. */
   app.get('/api/recruiting/live-board/targets', async (req, res) => {
     try {
-      const classYear = parseInt(req.query.class || req.query.classYear || '2027', 10);
+      const classYear = parseInt(req.query.class || req.query.classYear || req.query.year || '2027', 10);
       const targets = await getLiveBoardTargets(classYear);
       return res.json({
         ok: true,
@@ -55,7 +55,7 @@ function mountRecruitingRoutes(app) {
 
   app.get('/api/recruiting/board', async (req, res) => {
     try {
-      const classYear = parseInt(req.query.class || req.query.classYear || '2027', 10);
+      const classYear = parseInt(req.query.class || req.query.classYear || req.query.year || '2027', 10);
       const staffMode =
         req.query.mode === 'staff' ||
         req.query.staff === '1' ||

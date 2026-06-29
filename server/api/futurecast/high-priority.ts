@@ -275,6 +275,23 @@ function isUnderclassmenHighPriorityYear(classYear: number): boolean {
   return (HIGH_PRIORITY_UNDERCLASSMEN_YEARS as readonly number[]).includes(classYear);
 }
 
+function allowlist2028Rank(slug: string): number {
+  const key = String(slug || '').toLowerCase();
+  const index = (ALLOWLIST_2028 as string[]).indexOf(key);
+  return index >= 0 ? index : Number.MAX_SAFE_INTEGER;
+}
+
+function compareUnderclassmenHighPriority(a: HighPriorityPlayer, b: HighPriorityPlayer): number {
+  const allowA = allowlist2028Rank(a.slug);
+  const allowB = allowlist2028Rank(b.slug);
+  const aOnAllowlist = allowA < Number.MAX_SAFE_INTEGER;
+  const bOnAllowlist = allowB < Number.MAX_SAFE_INTEGER;
+  if (aOnAllowlist && !bOnAllowlist) return -1;
+  if (!aOnAllowlist && bOnAllowlist) return 1;
+  if (aOnAllowlist && bOnAllowlist && allowA !== allowB) return allowA - allowB;
+  return b.priorityScore - a.priorityScore;
+}
+
 async function loadUnderclassmenHighPrioritySlugs(classYear: number): Promise<string[]> {
   const { getLiveBoardTargets } = require('../../lib/live-board-targets');
   if (classYear === 2028) {
@@ -282,8 +299,13 @@ async function loadUnderclassmenHighPrioritySlugs(classYear: number): Promise<st
     const liveSlugs = live
       .map((t: { slug?: string }) => String(t.slug || '').toLowerCase())
       .filter(Boolean);
-    if (liveSlugs.length) return liveSlugs;
-    return ALLOWLIST_2028.map((s: string) => String(s).toLowerCase());
+    const liveSet = new Set(liveSlugs);
+    const allowlistFirst = (ALLOWLIST_2028 as string[])
+      .map((s) => String(s).toLowerCase())
+      .filter((slug) => liveSet.has(slug));
+    const extras = liveSlugs.filter((slug) => !allowlistFirst.includes(slug));
+    if (allowlistFirst.length || extras.length) return [...allowlistFirst, ...extras];
+    return (ALLOWLIST_2028 as string[]).map((s) => String(s).toLowerCase());
   }
   return [];
 }
@@ -349,7 +371,11 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   const board = slugs.length ? await loadUnderclassmenBoardPlayers(classYear, slugs) : [];
   const sorted = board
     .map(boardPlayerToHighPriority)
-    .sort((a, b) => b.priorityScore - a.priorityScore);
+    .sort(
+      classYear === 2028
+        ? compareUnderclassmenHighPriority
+        : (a, b) => b.priorityScore - a.priorityScore
+    );
   const top10 = sorted.slice(0, HIGH_PRIORITY_UNDERCLASSMEN_LIMIT);
   const lastUpdated = new Date().toISOString();
   const visitBoardSnapshot = getVisitIntelBoardSnapshot([]);
@@ -695,3 +721,5 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
     handlePredictionsApiError(res, err);
   }
 });
+
+export { allowlist2028Rank, compareUnderclassmenHighPriority };

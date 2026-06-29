@@ -26,7 +26,10 @@ function resolveSlugs() {
   if (process.env.SYNC_SLUGS) {
     return process.env.SYNC_SLUGS.split(',').map((s) => s.trim()).filter(Boolean);
   }
-  const classYear = parseInt(process.env.SYNC_CLASS_YEAR || '2027', 10);
+  const yearArg = process.argv.find((a) => a.startsWith('--class-year='));
+  const classYear = yearArg
+    ? parseInt(yearArg.split('=')[1], 10)
+    : parseInt(process.env.SYNC_CLASS_YEAR || '2027', 10);
   return activeAllowlistSlugs(classYear);
 }
 

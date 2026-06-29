@@ -28,12 +28,23 @@ function expectedActiveSlugs(classYear) {
 }
 
 async function fetchProdBoard(classYear) {
-  const res = await fetch(`${API_URL}/api/recruiting/board?year=${classYear}`, {
+  const res = await fetch(`${API_URL}/api/recruiting/board?class=${classYear}`, {
     headers: { Accept: 'application/json', 'User-Agent': 'GatorVault-Prod-Audit/1.0' },
   });
   if (!res.ok) throw new Error(`board HTTP ${res.status}`);
   const body = await res.json();
-  return (body.targets || []).map((p) => String(p.slug || '').toLowerCase());
+  return (body.targets || body.players || []).map((p) => String(p.slug || '').toLowerCase());
+}
+
+/** Match HIGH_PRIORITY_UNDERCLASSMEN_LIMIT in api/futurecast/high-priority.ts */
+const HIGH_PRIORITY_2028_LIMIT = 18;
+
+/** 2028 high-priority caps at 18 — audit the locked allowlist head, not all active targets. */
+function expectedHighPrioritySlugs(classYear, activeAllowlistSlugs) {
+  if (classYear === 2028) {
+    return activeAllowlistSlugs.slice(0, HIGH_PRIORITY_2028_LIMIT);
+  }
+  return activeAllowlistSlugs;
 }
 
 async function fetchProdHighPriority(classYear) {
@@ -47,13 +58,14 @@ async function fetchProdHighPriority(classYear) {
 
 async function main() {
   const expected = expectedActiveSlugs(YEAR);
+  const expectedHp = expectedHighPrioritySlugs(YEAR, expected);
   const [boardSlugs, hpSlugs] = await Promise.all([fetchProdBoard(YEAR), fetchProdHighPriority(YEAR)]);
   const boardSet = new Set(boardSlugs);
   const hpSet = new Set(hpSlugs);
   const bySlug = new Map(loadPlayersJson().map((p) => [String(p.slug || '').toLowerCase(), p]));
 
   const missingBoard = expected.filter((s) => !boardSet.has(s));
-  const missingHp = expected.filter((s) => !hpSet.has(s));
+  const missingHp = expectedHp.filter((s) => !hpSet.has(s));
   const quality = [];
 
   for (const slug of expected) {
@@ -64,6 +76,7 @@ async function main() {
 
   console.log(`[audit-prod-board] year=${YEAR} api=${API_URL}`);
   console.log(`  expected active allowlist: ${expected.length}`);
+  console.log(`  expected high-priority head: ${expectedHp.length}`);
   console.log(`  prod board targets: ${boardSlugs.length}`);
   console.log(`  prod high-priority: ${hpSlugs.length}`);
 
@@ -92,7 +105,12 @@ async function main() {
   }
 
   console.error('[audit-prod-board] FAIL — run:');
-  console.error('  npm run sync:recruiting:2027-board');
+  if (YEAR === 2028) {
+    console.error('  npm run sync:recruiting:2028-board');
+    console.error('  (2028 high-priority ranking deploys with API — no slug sync needed if board is complete)');
+  } else {
+    console.error('  npm run sync:recruiting:2027-board');
+  }
   process.exit(1);
 }
 
