@@ -334,19 +334,32 @@ async function firePlayerEvent(eventType, player, extra, snapshot) {
     }
     if (['commit', 'flip'].includes(resolvedType)) {
       try {
+        const sentLedger = require('./x-autoposter-sent-ledger');
+        const { commitFingerprint } = require('./commit-fingerprint');
         const { queueCommitEventAutopost } = require('./x-autoposter-fill');
-        await queueCommitEventAutopost(
-          {
+        const fp = commitFingerprint(result.player || player);
+        if (
+          sentLedger.hasRecentSentCommit({
+            slug,
+            commitFingerprint: fp,
             eventType: resolvedType,
-            source: 'on3',
-            player: result.player,
-            skinny: payload.skinny,
-            detail: payload.detail,
-            event: result.event,
-            createdAt: new Date().toISOString(),
-          },
-          { urgent: true }
-        );
+          })
+        ) {
+          /* skip duplicate X autopost */
+        } else {
+          await queueCommitEventAutopost(
+            {
+              eventType: resolvedType,
+              source: 'on3',
+              player: result.player,
+              skinny: payload.skinny,
+              detail: payload.detail,
+              event: result.event,
+              createdAt: new Date().toISOString(),
+            },
+            { urgent: true }
+          );
+        }
       } catch {
         /* optional */
       }

@@ -511,6 +511,17 @@ function startXAutoposterScheduler() {
     lastError: null
   });
 
+  try {
+    const sentLedger = require('./x-autoposter-sent-ledger');
+    const doc = store.loadQueue();
+    const bootstrapped = sentLedger.bootstrapFromQueueItems(doc.items);
+    if (bootstrapped) {
+      autopostLog('info', `Restored ${bootstrapped} sent commit(s) into autopost ledger`);
+    }
+  } catch (e) {
+    autopostLog('warn', `Sent ledger bootstrap skipped: ${e.message}`);
+  }
+
   verifyCredentials()
     .then((s) => {
       if (s.ok) autopostLog('info', `OAuth verified as @${s.screenName}`);

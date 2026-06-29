@@ -80,6 +80,9 @@ function fingerprintAlreadyQueued(fp, items) {
 }
 
 function alreadyQueued(text, items) {
+  if (sentLedger.isCommitAnnouncementText(text)) {
+    if (sentLedger.hasRecentSentCommit({ text, eventType: 'commit' })) return true;
+  }
   const key = dedupeKey(text);
   const dedupeWindow = postSpec.DEDUPE_REPOST_WINDOW_MS;
   const cutoff = Date.now() - dedupeWindow;
@@ -93,6 +96,12 @@ function alreadyQueued(text, items) {
 }
 
 function similarPostQueued(text, items) {
+  if (
+    sentLedger.isCommitAnnouncementText(text) &&
+    sentLedger.hasRecentSentCommit({ text, eventType: 'commit' })
+  ) {
+    return { hit: true, itemId: 'sent-ledger', similarity: 1 };
+  }
   const hit = postSpec.findSimilarInQueue(text, items);
   return hit.hit ? hit : null;
 }

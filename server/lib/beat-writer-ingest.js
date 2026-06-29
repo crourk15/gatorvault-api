@@ -562,6 +562,8 @@ async function queueAutoposter(row, intelItem, built) {
     const copy = require('./x-autoposter-copy');
     const postSpec = require('./x-autoposter-post-spec');
     const dataLayer = require('./x-autoposter-data-layer');
+    const sentLedger = require('./x-autoposter-sent-ledger');
+    const { commitFingerprint } = require('./commit-fingerprint');
     const fp = row.fingerprint;
     const isProgramNews = row.triggerType === 'program_news' || row.eventType === 'program_news';
     const isTeamEvent = row.triggerType === 'team_event' || row.eventType === 'team_event';
@@ -572,6 +574,29 @@ async function queueAutoposter(row, intelItem, built) {
       (!isNonPlayerBeat && !copy.isValidPlayerName(row.playerName))
     ) {
       return { queued: false, reason: 'invalid_copy' };
+    }
+    if (
+      !isNonPlayerBeat &&
+      (row.playerSlug || row.playerName) &&
+      (sentLedger.isCommitAnnouncementText(built.text) ||
+        /commit|pledge|shutting it down/i.test(String(row.eventType || row.detail || '')))
+    ) {
+      const slug = String(row.playerSlug || '').toLowerCase();
+      const cfp = commitFingerprint({
+        slug,
+        committedTo: 'Florida',
+        commitDate: row.timestamp ? String(row.timestamp).slice(0, 10) : null,
+      });
+      if (
+        sentLedger.hasRecentSentCommit({
+          slug,
+          commitFingerprint: cfp,
+          text: built.text,
+          eventType: 'commit',
+        })
+      ) {
+        return { queued: false, reason: 'commit_already_posted' };
+      }
     }
     const doc = xStore.loadQueue();
     const dup = doc.items.some(
@@ -665,6 +690,7 @@ const BEAT_SILENCE_ALLOWED = new Set([
   'stale_intel',
   'non_uf_intel',
   'similar_post',
+  'commit_already_posted',
   'false_commit_intel',
   'false_commit_queue'
 ]);
