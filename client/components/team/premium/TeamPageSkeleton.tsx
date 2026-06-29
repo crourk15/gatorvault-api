@@ -86,3 +86,19 @@ export function TeamDepthChartSkeleton(): React.ReactElement {
     </div>
   );
 }
+
+export function TeamStaffSkeleton({ count = 6 }: { count?: number }): React.ReactElement {
+  return (
+    <div
+      className="team-premium-skeleton team-premium-skeleton--staff"
+      aria-hidden="true"
+      data-testid="team-staff-skeleton"
+    >
+      <div className="team-staff-grid">
+        {Array.from({ length: count }).map((_, i) => (
+          <div key={i} className="team-premium-skeleton__card team-premium-skeleton__card--staff" />
+        ))}
+      </div>
+    </div>
+  );
+}

@@ -696,10 +696,21 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
             false,
         };
       });
+      const narrativePlayerSlugs = new Set(
+        playersWithVerifiedVisits.map((p) => String(p.slug || '').toLowerCase())
+      );
+      const narrativePlayers = [...playersWithVerifiedVisits];
+      for (const player of top10) {
+        const key = String(player.slug || '').toLowerCase();
+        if (!key || narrativePlayerSlugs.has(key)) continue;
+        narrativePlayerSlugs.add(key);
+        narrativePlayers.push(player);
+      }
       const movementNarratives = movementNarrativeLib.buildNarrativeFeed(
-        playersWithVerifiedVisits,
+        narrativePlayers,
         visitLogs,
-        mergedDelta7dBySlug
+        mergedDelta7dBySlug,
+        { limit: 8, allowTrendOnly: true }
       );
       const visitBoardSnapshot = getVisitIntelBoardSnapshot(visitLogs);
 

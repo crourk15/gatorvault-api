@@ -5,13 +5,15 @@ import type { Coach } from '@/lib/team-hub-types';
 import { TEAM_COPY } from '@/lib/team-hub-types';
 import { TeamPremiumModule } from './TeamPremiumModule';
 import { StaffCard } from './StaffCard';
+import { TeamStaffSkeleton } from './TeamPageSkeleton';
 
 type Props = {
   coaches: Coach[];
   onSelectCoach: (coach: Coach) => void;
+  loading?: boolean;
 };
 
-export function StaffCardGrid({ coaches, onSelectCoach }: Props): React.ReactElement {
+export function StaffCardGrid({ coaches, onSelectCoach, loading = false }: Props): React.ReactElement {
   const coaching = coaches.filter((c) => c.group === 'coaching');
   const support = coaches.filter((c) => c.group === 'support');
 
@@ -21,11 +23,15 @@ export function StaffCardGrid({ coaches, onSelectCoach }: Props): React.ReactEle
         title={TEAM_COPY.coachingStaff.title}
         subtitle={TEAM_COPY.coachingStaff.subtitle}
       >
-        <div className="team-staff-grid">
-          {coaching.map((coach) => (
-            <StaffCard key={coach.id} coach={coach} onSelect={onSelectCoach} />
-          ))}
-        </div>
+        {loading && coaching.length === 0 ? (
+          <TeamStaffSkeleton />
+        ) : (
+          <div className="team-staff-grid">
+            {coaching.map((coach) => (
+              <StaffCard key={coach.id} coach={coach} onSelect={onSelectCoach} />
+            ))}
+          </div>
+        )}
 
         {support.length > 0 ? (
           <div className="team-staff-support">

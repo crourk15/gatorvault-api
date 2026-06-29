@@ -203,7 +203,7 @@ export function TeamHubPage(): React.ReactElement {
           positions={dcPositions}
           loading={pageLoading}
         />
-        <StaffCardGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} />
+        <StaffCardGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} loading={pageLoading} />
         <TeamIdentityPremiumSection />
         <ProgramHistoryGrid eras={bundle.eras} onSelectEra={setSelectedEra} />
         <TeamRecruitingPipelineSection data={pipelinePreview} loading={pipelineLoading} />

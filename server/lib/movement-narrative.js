@@ -78,19 +78,24 @@ function enrichFlipWatchRows(rows, visitLogs, deltaBySlug, asOf = new Date()) {
   return (rows || []).map((row) => attachNarrativeToRow(row, visitLogs, deltaBySlug, asOf));
 }
 
-function buildNarrativeFeed(players, visitLogs, deltaBySlug, { limit = 6, asOf = new Date() } = {}) {
+function buildNarrativeFeed(
+  players,
+  visitLogs,
+  deltaBySlug,
+  { limit = 6, asOf = new Date(), allowTrendOnly = false } = {}
+) {
   const out = [];
   for (const player of players || []) {
     const visit =
       player.visitStart && player.visitEnd
         ? { visitStart: player.visitStart, visitEnd: player.visitEnd }
         : latestCompletedVisitForSlug(player.slug, visitLogs, asOf);
-    if (!visit) continue;
+    if (!visit && !allowTrendOnly) continue;
     const delta = resolveDeltaForSlug(player, deltaBySlug);
     const movementNarrative = buildMovementNarrative({
       delta7d: delta,
-      visitStart: visit.visitStart,
-      visitEnd: visit.visitEnd,
+      visitStart: visit?.visitStart,
+      visitEnd: visit?.visitEnd,
     });
     if (!movementNarrative) continue;
     out.push({
@@ -98,6 +103,7 @@ function buildNarrativeFeed(players, visitLogs, deltaBySlug, { limit = 6, asOf =
       name: player.name,
       movementNarrative,
       delta7d: delta,
+      trendOnly: !visit,
     });
   }
   return out

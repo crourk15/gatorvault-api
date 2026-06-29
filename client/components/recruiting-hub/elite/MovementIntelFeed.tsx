@@ -73,6 +73,10 @@ export function MovementIntelFeed(): React.ReactElement {
                 </span>
               </div>
               <div className="rh-feed-summary">{item.summary}</div>
+              {item.movementNarrative &&
+              !item.summary.includes(item.movementNarrative) ? (
+                <div className="rh-feed-narrative">{item.movementNarrative}</div>
+              ) : null}
             </article>
           ))}
         </section>

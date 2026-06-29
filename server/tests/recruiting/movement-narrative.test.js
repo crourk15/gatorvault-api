@@ -80,4 +80,17 @@ describe("movement-narrative", () => {
     assert.equal(feed.length, 1);
     assert.equal(feed[0].slug, "jd-jackson");
   });
+
+  it("includes trend-only narratives when allowTrendOnly is set", () => {
+    const players = [{ slug: "trend-only", name: "Trend Only", delta7d: -5 }];
+    const deltaBySlug = new Map([["trend-only", -5]]);
+    const feed = buildNarrativeFeed(players, visitLogs, deltaBySlug, {
+      limit: 3,
+      asOf,
+      allowTrendOnly: true,
+    });
+    assert.equal(feed.length, 1);
+    assert.equal(feed[0].trendOnly, true);
+    assert.match(feed[0].movementNarrative, /UF -5% \(7d\)/);
+  });
 });

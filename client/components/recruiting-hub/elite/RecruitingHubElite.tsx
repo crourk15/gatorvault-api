@@ -8,6 +8,7 @@ import { ClassCards } from '@/components/recruiting-hub/elite/ClassCards';
 import { RecruitingClassOverview } from '@/components/recruiting-hub/elite/RecruitingClassOverview';
 import { TopTargetsHeatIndex } from '@/components/recruiting-hub/elite/TopTargetsHeatIndex';
 import { MovementIntelFeed } from '@/components/recruiting-hub/elite/MovementIntelFeed';
+import { YoungerProspectsPanel } from '@/components/recruiting-hub/elite/YoungerProspectsPanel';
 import { BattleBoard } from '@/components/recruiting-hub/elite/BattleBoard';
 import { RecruitingFootprintMap } from '@/components/recruiting-hub/elite/footprint/RecruitingFootprintMap';
 import { RecruitingBattlesMovement } from '@/components/recruiting-hub/elite/RecruitingBattlesMovement';
@@ -73,6 +74,11 @@ function RecruitingHubEliteContent({
         <LazyHubSection testId="rh-lazy-movement-feed">
           <MovementIntelFeed />
         </LazyHubSection>
+        {activeYear === 2028 ? (
+          <LazyHubSection testId="rh-lazy-younger-prospects">
+            <YoungerProspectsPanel classYear={2028} />
+          </LazyHubSection>
+        ) : null}
         <LazyHubSection testId="rh-lazy-battle-board">
           <BattleBoard />
         </LazyHubSection>

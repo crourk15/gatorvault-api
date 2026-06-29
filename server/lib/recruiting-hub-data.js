@@ -734,6 +734,34 @@ function resolveFeedMeta(slug, pool, rawMap) {
   };
 }
 
+function slugFromFeedProfileUrl(url) {
+  const m = String(url || '').match(/\/player\/([^/?#]+)/i);
+  return m ? decodeURIComponent(m[1]).toLowerCase() : null;
+}
+
+function enrichMovementFeedWithNarratives(items, visitLogs, asOf = new Date()) {
+  if (!items?.length) return items;
+  const ufTrendSnapshot = require('./uf-trend-snapshot');
+  const movementNarrative = require('./movement-narrative');
+  const slugs = [...new Set(items.map((i) => slugFromFeedProfileUrl(i.profileUrl)).filter(Boolean))];
+  const deltaBySlug = ufTrendSnapshot.buildDelta7dBySlug(slugs, asOf);
+  return items.map((item) => {
+    const slug = slugFromFeedProfileUrl(item.profileUrl);
+    if (!slug) return item;
+    const visit = movementNarrative.latestCompletedVisitForSlug(slug, visitLogs, asOf);
+    const delta = deltaBySlug.get(slug);
+    const narrative = movementNarrative.buildMovementNarrative({
+      delta7d: delta,
+      visitStart: visit?.visitStart,
+      visitEnd: visit?.visitEnd,
+    });
+    if (!narrative) return item;
+    const enriched = { ...item, movementNarrative: narrative };
+    if (item.event === 'commit' || String(item.summary || '').includes(narrative)) return enriched;
+    return { ...enriched, summary: `${item.summary} — ${narrative}` };
+  });
+}
+
 function feedMatchesClassYear(item, classYear) {
   if (classYear == null) return true;
   if (item.class == null) return true;
@@ -896,7 +924,7 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
     if (deduped.length >= 25) break;
   }
 
-  return deduped;
+  return enrichMovementFeedWithNarratives(deduped, visitLogs);
 }
 
 function countFloridaVisits(player) {

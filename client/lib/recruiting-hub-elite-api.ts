@@ -109,6 +109,8 @@ export type RhHubMovementFeedItem = {
   event: 'up' | 'down' | 'visit' | 'offer' | 'intel' | 'commit';
   summary: string;
   profileUrl: string;
+  /** UF % delta narrative when snapshot history supports it. */
+  movementNarrative?: string;
 };
 
 export type RhHubBattleBoardItem = {

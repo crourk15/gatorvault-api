@@ -1324,6 +1324,25 @@
   line-height: 1.45;
 }
 
+.rh-elite-chrome .rh-feed-narrative {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--gator-orange);
+  font-weight: 600;
+}
+
+.rh-elite-chrome .rh-younger-prospects-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.rh-elite-chrome .rh-section-footer {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
 .rh-elite-chrome .rh-badge--event-up {
   background: #ecfdf5;
   border-color: #16a34a;
