@@ -101,7 +101,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const [selected, setSelected] = useState<FilmRoomCatalogItem | null>(null);
   const [lessonDetail, setLessonDetail] = useState<FilmRoomLessonDetail | null>(null);
   const [lessonLoading, setLessonLoading] = useState(false);
-  const insider = isFilmRoomInsider();
+  const [insider, setInsider] = useState(() => isFilmRoomInsider());
   const [hub, setHub] = useState<string>(() => {
     const seg = parseFilmRoomSegmentFromPath();
     return seg ? filmRoomHubFromSegment(seg) : FILM_HUB_ORDER[0];
@@ -110,6 +110,13 @@ export function VaultFilmRoomPage(): React.ReactElement {
   useEffect(() => {
     const seg = parseFilmRoomSegmentFromPath();
     if (seg) setHub(filmRoomHubFromSegment(seg));
+  }, []);
+
+  useEffect(() => {
+    const syncInsider = () => setInsider(isFilmRoomInsider());
+    syncInsider();
+    window.addEventListener('gv-auth-changed', syncInsider);
+    return () => window.removeEventListener('gv-auth-changed', syncInsider);
   }, []);
 
   const load = useCallback(async () => {
@@ -128,11 +135,11 @@ export function VaultFilmRoomPage(): React.ReactElement {
 
   useEffect(() => {
     void load();
-  }, [load]);
+  }, [load, insider]);
 
   const openLesson = useCallback(
     async (item: FilmRoomCatalogItem) => {
-      if (item.locked || !insider) {
+      if (!insider) {
         window.location.href = '/join?tier=film';
         return;
       }
@@ -246,7 +253,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
                     {item.dek ? <p className="gv-film-lesson__dek">{item.dek}</p> : null}
                     <p className="gv-film-lesson__meta">
                       {item.source || 'Verified source'}
-                      {item.locked || !insider ? ' · 🔒 Film tier' : ' · Tap to open'}
+                      {!insider ? ' · 🔒 Film tier' : item.noVideo ? ' · Tap to read' : ' · Tap to watch'}
                     </p>
                   </button>
                 </Card>

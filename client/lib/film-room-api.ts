@@ -1,5 +1,16 @@
-import { snapshotFirstFetch, snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
+import { loadSession } from './auth-api';
+import type { ApiFetchInit } from './api-fetch';
+import { snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
 import { fetchWithWarmPoll } from './api-warm-poll';
+
+/** Film catalog/lessons are tier-gated on the API — send vault session when logged in. */
+function filmFetchInit(init?: ApiFetchInit): ApiFetchInit {
+  const session = loadSession();
+  const headers = new Headers(init?.headers);
+  if (!headers.has('Accept')) headers.set('Accept', 'application/json');
+  if (session?.token) headers.set('Authorization', `Bearer ${session.token}`);
+  return { ...DEFAULT_SNAPSHOT_FETCH_OPTS, ...init, headers };
+}
 
 export interface FilmRoomCatalogItem {
   id: string;
@@ -19,6 +30,7 @@ export interface FilmRoomCatalogItem {
   embedUrl?: string | null;
   videoUrl?: string | null;
   knowledgeEngine?: boolean;
+  noVideo?: boolean;
 }
 
 export interface FilmRoomLessonDetail {
@@ -41,13 +53,16 @@ export interface FilmRoomCatalog {
 
 export async function fetchFilmRoomCatalog(): Promise<FilmRoomCatalog> {
   const data = await fetchWithWarmPoll(() =>
-    snapshotLiveFetch<FilmRoomCatalog>('/api/film-room/catalog', DEFAULT_SNAPSHOT_FETCH_OPTS)
+    snapshotLiveFetch<FilmRoomCatalog>('/api/film-room/catalog', filmFetchInit())
   );
   return { categories: data.categories, items: data.items ?? [] };
 }
 
 export async function fetchFilmRoomLesson(id: string): Promise<FilmRoomLessonDetail> {
-  const data = await snapshotLiveFetch<FilmRoomLessonDetail>(`/api/film-room/lesson/${encodeURIComponent(id)}`);
+  const data = await snapshotLiveFetch<FilmRoomLessonDetail>(
+    `/api/film-room/lesson/${encodeURIComponent(id)}`,
+    filmFetchInit()
+  );
   return data;
 }
 

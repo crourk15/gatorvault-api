@@ -6,7 +6,7 @@ const feedback = require('./feedback-store');
 const access = require('./access-config');
 const pointsStore = require('./points-store');
 const personas = require('./persona-config');
-const { getSessionFromReq, effectiveTier } = require('./session-auth');
+const { getSessionFromReq, effectiveTier, sessionHasTier } = require('./session-auth');
 
 const ADMIN_PIN = process.env.RECRUITING_ADMIN_PIN || process.env.EMAIL_TEST_PIN || 'GV2026admin';
 
@@ -104,10 +104,9 @@ function mountPlatformRoutes(app) {
       }
       const catalog = filmRoom.buildFilmRoomCatalog();
       const session = getSessionFromReq(req);
-      const paymentTier = effectiveTier(session);
+      const unlocked = sessionHasTier(session, 'film');
       const items = (catalog.items || []).map((item) => {
-        const locked = !access.hasPaymentTier(paymentTier, 'film');
-        return { ...item, minPaymentTier: 'film', locked };
+        return { ...item, minPaymentTier: 'film', locked: !unlocked };
       });
       return res.json({ ...catalog, items });
     } catch (err) {
@@ -129,7 +128,7 @@ function mountPlatformRoutes(app) {
   app.get('/api/film-room/lesson/:id', (req, res) => {
     try {
       const session = getSessionFromReq(req);
-      if (!access.hasPaymentTier(effectiveTier(session), 'film')) {
+      if (!sessionHasTier(session, 'film')) {
         return res.status(403).json({ ok: false, error: 'Film tier required', locked: true });
       }
       const out = filmRoom.getLessonDetail(req.params.id);
