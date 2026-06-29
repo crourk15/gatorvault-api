@@ -290,34 +290,32 @@ async function fetchSiteBundleText(siteUrl, pagePath, opts = {}) {
     return html;
   }
 
-  const assets = [];
   const vaultShellCss = extractVaultShellCssHrefs(html);
+  const cssAssets = [];
+  const jsAssets = [];
   const scriptRe = /<script[^>]+src=["']([^"']+)["']/gi;
   const cssRe = /<link[^>]+rel=["']stylesheet["'][^>]+href=["']([^"']+)["']|<link[^>]+href=["']([^"']+\.css[^"']*)["'][^>]+rel=["']stylesheet["']/gi;
   let m;
   while ((m = scriptRe.exec(html))) {
-    if (m[1] && !m[1].includes('google') && !m[1].includes('cdn.jsdelivr')) assets.push(m[1]);
+    if (m[1] && !m[1].includes('google') && !m[1].includes('cdn.jsdelivr')) jsAssets.push(m[1]);
   }
   while ((m = cssRe.exec(html))) {
     const href = m[1] || m[2];
-    if (href && !href.includes('fonts.googleapis')) assets.push(href);
+    if (href && !href.includes('fonts.googleapis')) cssAssets.push(href);
   }
   const toLoad = [];
   const seen = new Set();
-  for (const href of vaultShellCss) {
-    if (!seen.has(href)) {
-      seen.add(href);
-      toLoad.push(href);
-    }
-  }
-  const maxAssets = opts.maxAssets ?? 4;
-  for (const href of assets) {
-    if (toLoad.length >= maxAssets + vaultShellCss.length) break;
-    if (!seen.has(href)) {
-      seen.add(href);
-      toLoad.push(href);
-    }
-  }
+  const budget = (opts.maxAssets ?? 4) + vaultShellCss.length;
+
+  const queue = (href) => {
+    if (seen.has(href) || toLoad.length >= budget) return;
+    seen.add(href);
+    toLoad.push(href);
+  };
+
+  for (const href of vaultShellCss) queue(href);
+  for (const href of cssAssets) queue(href);
+  for (const href of jsAssets) queue(href);
   let bundled = html;
   await mapPool(
     toLoad,

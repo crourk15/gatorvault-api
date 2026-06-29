@@ -5,7 +5,7 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { REQUIRED_CSS_SIGNATURES } = require('../../server/lib/hydration/hydration-checks');
+const { REQUIRED_CSS_SIGNATURES, cssMatchesSignature } = require('../../server/lib/hydration/hydration-checks');
 
 const serverDir = path.join(__dirname, '..', '..', 'server');
 const cssDir = path.join(serverDir, '_next', 'static', 'css');
@@ -25,7 +25,7 @@ function findCssHrefsInPriorityOrder() {
       const href = `/_next/static/css/${file}`;
       if (seen.has(href)) continue;
       const text = cssFileText(file);
-      if (sig.patterns.some((p) => text.includes(p))) {
+      if (cssMatchesSignature(text, sig)) {
         hrefs.push({ id: sig.id, href });
         seen.add(href);
         break;

@@ -63,11 +63,22 @@ const PILLAR_PAGES = [
 ];
 
 const REQUIRED_CSS_SIGNATURES = [
-  { id: 'vault-shell', patterns: ['.gv-vault-shell{', '.gv-vault-shell '] },
+  {
+    id: 'vault-shell',
+    patterns: ['.gv-vault-shell{', 'z-index:40'],
+    requireAll: true,
+  },
   { id: 'hub-tabs', patterns: ['.gv-hub-tabs{', '.gv-hub-tabs ', '.gv-hub-tabs--scroll'] },
   { id: 'live-feed', patterns: ['.gv-live-feed{', '.gv-live-feed ', '.gv-live-feed__tabs'] },
   { id: 'team-page', patterns: ['.gv-team-page{', '.gv-team-page ', '.gv-team-page.'] },
 ];
+
+function cssMatchesSignature(text, signature) {
+  if (signature.requireAll) {
+    return signature.patterns.every((p) => text.includes(p));
+  }
+  return signature.patterns.some((p) => text.includes(p));
+}
 
 function readText(root, rel) {
   const file = path.join(root, rel);
@@ -104,14 +115,14 @@ function extractStylesheetHrefs(html) {
 function findCssHrefBySignature(root, html, signature) {
   for (const href of extractStylesheetHrefs(html)) {
     const text = cssBundleText(root, href);
-    if (signature.patterns.some((p) => text.includes(p))) return href;
+    if (cssMatchesSignature(text, signature)) return href;
   }
   const cssDir = path.join(root, '_next', 'static', 'css');
   if (!fs.existsSync(cssDir)) return null;
   for (const file of fs.readdirSync(cssDir)) {
     if (!file.endsWith('.css')) continue;
     const text = fs.readFileSync(path.join(cssDir, file), 'utf8');
-    if (signature.patterns.some((p) => text.includes(p))) {
+    if (cssMatchesSignature(text, signature)) {
       return `/_next/static/css/${file}`;
     }
   }
@@ -346,6 +357,7 @@ module.exports = {
   checkMobileSafari,
   checkVaultHydrationGuard,
   localBundleText,
+  cssMatchesSignature,
   findCssHrefBySignature,
   firstScriptIndex,
 };
