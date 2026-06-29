@@ -308,8 +308,8 @@ function looksLikeCompleteWebpackChunkRel(rel) {
  */
 function repairSplitChunkRefsInRscFlight(content) {
   return content.replace(
-    /((?:\/js\/vault-chunks|\/_next\/static\/chunks|static\/chunks)\/(?:app|routes)\/[A-Za-z0-9/_%-]*?)([a-z]{1,6})"\]\)<\/script><script>self\.__next_f\.push\(\[1,"([a-z][a-z0-9-]*-[a-f0-9]{8,}\.js)/g,
-    (_, prefix, head, tail) => `${prefix}${head}${tail}`
+    /("?\d+"?,")?((?:\/js\/vault-chunks|\/_next\/static\/chunks|static\/chunks)\/(?:app|routes)\/[A-Za-z0-9/_%-]*?)([a-z]{1,6})"\]\)<\/script><script>self\.__next_f\.push\(\[1,"([a-z][a-z0-9/_%-]*-[a-f0-9]{8,}\.js)/g,
+    (_, webpackId, prefix, head, tail) => `${webpackId || ''}${prefix}${head}${tail}`
   );
 }
 
