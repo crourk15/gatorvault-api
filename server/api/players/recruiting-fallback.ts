@@ -48,6 +48,9 @@ type RecruitingPlayer = {
   weight?: number;
   htWt?: string;
   fitScore?: number;
+  profileNote?: string;
+  skinny?: string;
+  ufRpmPct?: number;
   ufProbability?: number;
   offers?: string[];
   visits?: Array<{ date?: string; school?: string; type?: string }>;

@@ -5,6 +5,7 @@ import React from 'react';
 import type { PlayerProfileBundle } from '../../../lib/player-api';
 import type { PlayerMetrics } from '../../../lib/player-derived';
 import { signalSummaryText, formatSignalValue, formatDate, signalWeight } from '../../../lib/player-derived';
+import { dedupeDiscoverySignals, signalTimestamp } from '../../../lib/player-profile-normalize';
 import { coerceDisplayText } from '../../../lib/coerce-text';
 import { RelatedPlayers } from './RelatedPlayers';
 import { PredictionsPanel } from './PredictionsPanel';
@@ -17,8 +18,8 @@ export interface OverviewTabProps {
 export function OverviewTab({ data, metrics }: OverviewTabProps): React.ReactElement {
   const { player, signals, related, highSchoolProfile, collegeProfile, portalProfile, ufSpecificProfile } =
     data;
-  const recentSignals = [...signals]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  const recentSignals = dedupeDiscoverySignals(signals)
+    .sort((a, b) => signalTimestamp(b.createdAt) - signalTimestamp(a.createdAt))
     .slice(0, 5);
   const hsNotes = coerceDisplayText(highSchoolProfile?.recruitingNotes);
   const evalNotes = coerceDisplayText(ufSpecificProfile?.evaluationNotes);
@@ -42,8 +43,10 @@ export function OverviewTab({ data, metrics }: OverviewTabProps): React.ReactEle
       <section className="fc-profile-section">
         <h2>Intelligence</h2>
         <div className="fc-profile-metrics-row">
-          <div><strong>UF Fit Score™</strong><br />{metrics.ufFitScore}</div>
-          <div><strong>Portal Likelihood</strong><br />{metrics.portalLikelihoodPct}%</div>
+          <div><strong>UF Fit Score™</strong><br />{metrics.ufFitScore}{metrics.ufFitLabel ? ` · ${metrics.ufFitLabel}` : ''}</div>
+          {!metrics.portalHidden ? (
+            <div><strong>Portal Likelihood</strong><br />{metrics.portalLikelihoodPct ?? 0}%</div>
+          ) : null}
           <div><strong>Signals</strong><br />{metrics.signalCount}</div>
         </div>
         <p className="fc-profile-muted">{signalSummaryText(signals)}</p>

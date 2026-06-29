@@ -12,7 +12,7 @@ import {
 } from '@/lib/player-full-profile-api';
 import type { PortalIntelPayload, TransferPrediction } from '@/lib/portal-api';
 import type { UfFitIntelResponse } from '@/lib/uf-fit-api';
-import { computePlayerMetrics } from '@/lib/player-derived';
+import { resolveProfileMetrics } from '@/lib/player-profile-normalize';
 import '@/lib/futurecast.css';
 import { PlayerHeader } from './PlayerHeader';
 import { PlayerTabs, parseProfileTab, type ProfileTabId } from './PlayerTabs';
@@ -123,21 +123,27 @@ export function PlayerProfilePage({
   const ufFitIntel = profile?.fitIntel ?? null;
 
   const metrics = useMemo(() => {
-    if (!data) return null;
-    const base = computePlayerMetrics(
-      data.player,
-      data.ufSpecificProfile,
-      data.portalProfile,
-      data.collegeProfile,
-      data.signals
-    );
-    let result = base;
-    if (ufFitIntel) {
-      result = { ...result, ufFitScore: ufFitIntel.ufFitScore, ufFitTier: ufFitIntel.fitTier };
+    if (!data || !profile) return null;
+    const base = resolveProfileMetrics({
+      player: data.player,
+      ufSpecificProfile: data.ufSpecificProfile,
+      portalProfile: data.portalProfile,
+      collegeProfile: data.collegeProfile,
+      signals: data.signals,
+      futurecastSummary: profile.futurecastSummary,
+      fitIntel: ufFitIntel,
+      movementWindow: profile.movementWindow,
+    });
+    if (ufFitIntel && !base.ufFitLabel) {
+      return {
+        ...base,
+        ufFitScore: ufFitIntel.ufFitScore ?? base.ufFitScore,
+        ufFitTier: (ufFitIntel.fitTier as typeof base.ufFitTier) ?? base.ufFitTier,
+      };
     }
-    if (portalIntel) {
-      result = {
-        ...result,
+    if (portalIntel && !base.portalHidden) {
+      return {
+        ...base,
         portalLikelihoodPct: Math.round(portalIntel.portalLikelihood * 100),
         portalColor:
           portalIntel.portalLikelihood >= 0.7
@@ -147,8 +153,8 @@ export function PlayerProfilePage({
               : ('low' as const),
       };
     }
-    return result;
-  }, [data, portalIntel, ufFitIntel]);
+    return base;
+  }, [data, profile, portalIntel, ufFitIntel]);
 
   const availableTabs = useMemo(
     () => ({

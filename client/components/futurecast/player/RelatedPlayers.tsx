@@ -21,9 +21,13 @@ export function RelatedPlayers({ players, currentSlug }: RelatedPlayersProps): R
 
   return (
     <div className="gv-rb-grid" data-testid="related-players">
-      {list.map((p) => (
-        <ClassicRecruitCard key={p.id} player={fromBigBoard(p)} variant="target" rank={p.rank} />
-      ))}
+      {list.map((p) => {
+        const card = fromBigBoard(p);
+        const variant = card.isCommittedToUF ? 'commit' : 'target';
+        return (
+          <ClassicRecruitCard key={p.id} player={card} variant={variant} rank={p.rank} />
+        );
+      })}
     </div>
   );
 }

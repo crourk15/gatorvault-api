@@ -12,6 +12,7 @@ import {
   writeProfileCache,
   getInflightProfile,
 } from './profile-cache';
+import { normalizeFullProfilePayload } from './player-profile-normalize';
 
 export type FullProfileMovementWindow = {
   ufProbNow: number;
@@ -72,14 +73,15 @@ export type ResolvePlayerResponse = {
 export type ProfileRouteContext = 'recruiting' | 'futurecast' | 'roster' | 'auto';
 
 export function mapFullProfileToBundle(payload: FullProfilePayload): PlayerProfileBundle {
+  const normalized = normalizeFullProfilePayload(payload);
   return {
-    player: payload.player,
-    highSchoolProfile: payload.highSchoolProfile,
-    collegeProfile: payload.collegeProfile,
-    portalProfile: payload.portalProfile,
-    ufSpecificProfile: payload.ufSpecificProfile,
-    signals: payload.signals,
-    related: payload.related,
+    player: normalized.player,
+    highSchoolProfile: normalized.highSchoolProfile,
+    collegeProfile: normalized.collegeProfile,
+    portalProfile: normalized.portalProfile,
+    ufSpecificProfile: normalized.ufSpecificProfile,
+    signals: normalized.signals,
+    related: normalized.related,
   };
 }
 
@@ -118,7 +120,7 @@ export async function fetchFullProfile(
       competingSchools,
       futurecastSummary,
     } = raw;
-    const data: FullProfilePayload = {
+    const data: FullProfilePayload = normalizeFullProfilePayload({
       lastUpdated,
       source,
       player,
@@ -134,7 +136,7 @@ export async function fetchFullProfile(
       fitIntel: fitIntel ?? null,
       competingSchools: competingSchools ?? [],
       futurecastSummary: futurecastSummary ?? null,
-    };
+    });
     writeProfileCache(key, data);
     if (data.player?.id) {
       writeProfileCache(profileCacheKey(normalized, data.player.id), data);

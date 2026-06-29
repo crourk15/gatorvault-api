@@ -100,29 +100,59 @@ export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlay
   };
 }
 
-export function fromBigBoard(p: BigBoardPlayer): RecruitingBoardPlayer {
+type EnrichedBigBoardPlayer = BigBoardPlayer & {
+  stars?: number | null;
+  rating?: number | null;
+  compositeScore?: number | null;
+  nationalRank?: number | null;
+  natlRank?: number | null;
+  posRank?: number | null;
+  stateRank?: number | null;
+  state?: string | null;
+  school?: string | null;
+  committedTo?: string | null;
+  isCommittedToUF?: boolean;
+};
+
+function isFloridaCommit(committedTo?: string | null): boolean {
+  return /\bflorida\b|\bgators\b|\buf\b/i.test(String(committedTo || ''));
+}
+
+export function fromBigBoard(p: EnrichedBigBoardPlayer): RecruitingBoardPlayer {
+  const isUfCommit = p.isCommittedToUF === true || isFloridaCommit(p.committedTo);
+  const composite = p.compositeScore ?? p.rating ?? 0;
+  const isLiveOn3 = (p.nationalRank ?? p.natlRank ?? 0) > 0 && composite > 0;
+  const ufScore = isUfCommit ? 100 : p.ufFitScore > 0 ? p.ufFitScore : 0;
   return {
     slug: p.slug,
     name: p.fullName,
-    tier: 'HIGH',
+    tier: isUfCommit ? 'TOP' : 'HIGH',
     position: p.position,
     classYear: p.classYear,
-    rating: p.compositeScore ?? p.rating ?? 0,
-    displayRating: p.compositeScore ?? p.rating ?? 0,
-    natlRank: p.nationalRank ?? p.natlRank ?? undefined,
-    posRank: p.positionRank ?? p.posRank ?? undefined,
-    stateRank: p.stateRank ?? undefined,
+    state: p.state ?? undefined,
     stars: p.stars ?? 0,
-    fitScore: p.ufFitScore ?? 0,
-    ufProbability: p.ufFitScore > 0
-    ? Math.min(1, p.ufFitScore / 100)
-    : 0,
+    rating: composite,
+    displayRating: composite,
+    natlRank: isLiveOn3 ? (p.nationalRank ?? p.natlRank ?? undefined) : undefined,
+    posRank: isLiveOn3 ? (p.posRank ?? undefined) : undefined,
+    stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
+    showIndustryRanks: isLiveOn3,
+    ratingLabel: isLiveOn3 ? 'Composite' : composite > 0 ? 'Vault est.' : 'Composite',
+    school: formatRecruitSchoolLabel(p.school ?? undefined, p.state ?? undefined) ?? undefined,
+    committedTo: p.committedTo ?? undefined,
+    isCommittedToUF: isUfCommit,
+    fitScore: ufScore,
+    ufProbability: ufScore > 0 ? ufScore / 100 : 0,
+    heatPct: ufScore > 0 ? ufScore : undefined,
+    heatLabel: isUfCommit ? 'Locked In' : 'UF interest',
     skinny:
-      p.portalLikelihood > 0
-        ? `Portal likelihood ${p.portalLikelihood}% · ${p.signalCount} signals`
-        : p.signalCount > 0
-          ? `${p.signalCount} FutureCast signals`
-          : undefined,
+      isUfCommit
+        ? `Committed to Florida`
+        : p.portalLikelihood > 0
+          ? `Portal likelihood ${Math.round(p.portalLikelihood * 100)}% · ${p.signalCount} signals`
+          : p.signalCount > 0
+            ? `${p.signalCount} FutureCast signals`
+            : undefined,
   };
 }
 

@@ -4,14 +4,15 @@
 import React from 'react';
 import type { DiscoverySignal } from '../../../lib/player-api';
 import { formatDate, formatSignalValue, signalWeight } from '../../../lib/player-derived';
+import { dedupeDiscoverySignals, signalTimestamp } from '../../../lib/player-profile-normalize';
 
 export interface SignalsTabProps {
   signals: DiscoverySignal[];
 }
 
 export function SignalsTab({ signals }: SignalsTabProps): React.ReactElement {
-  const sorted = [...signals].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  const sorted = dedupeDiscoverySignals(signals).sort(
+    (a, b) => signalTimestamp(b.createdAt) - signalTimestamp(a.createdAt)
   );
 
   if (!sorted.length) {

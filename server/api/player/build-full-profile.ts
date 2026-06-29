@@ -48,6 +48,11 @@ import {
   intelUuidForSlug,
   isUnderclassmenClassYear,
 } from '../../lib/underclassmen-intel';
+import {
+  augmentPlayerFromRecruiting,
+  enrichRelatedFromRecruiting,
+  futurecastSummaryForRecruiting,
+} from './profile-enrich';
 
 const require = createRequire(import.meta.url);
 
@@ -116,6 +121,53 @@ async function safeResolvePostgresPlayerBySlug(
   }
 }
 
+async function finalizeProfileResponse(
+  slug: string,
+  profile: FullProfileResponse
+): Promise<FullProfileResponse> {
+  const recruiting = await getRecruitingPlayerBySlug(slug);
+  const player = await augmentPlayerFromRecruiting(
+    slug,
+    profile.player as Record<string, unknown>
+  );
+  const related = await enrichRelatedFromRecruiting(profile.related);
+  const futurecastSummary = futurecastSummaryForRecruiting(
+    player,
+    recruiting,
+    (profile.futurecastSummary as Record<string, unknown> | null) ?? null
+  );
+
+  let highSchoolProfile = profile.highSchoolProfile;
+  if (recruiting && highSchoolProfile) {
+    const stats = (highSchoolProfile.stats as Record<string, unknown>) ?? {};
+    highSchoolProfile = {
+      ...highSchoolProfile,
+      recruitingNotes:
+        highSchoolProfile.recruitingNotes ??
+        recruiting.profileNote ??
+        recruiting.skinny ??
+        null,
+      stats: {
+        ...stats,
+        stars: stats.stars ?? recruiting.stars ?? null,
+        natlRank: stats.natlRank ?? recruiting.natlRank ?? null,
+        posRank: stats.posRank ?? recruiting.posRank ?? null,
+        stateRank: stats.stateRank ?? recruiting.stateRank ?? null,
+        rating: stats.rating ?? recruiting.rating ?? null,
+        on3Id: stats.on3Id ?? recruiting.on3Id ?? null,
+      },
+    };
+  }
+
+  return {
+    ...profile,
+    player,
+    highSchoolProfile,
+    related,
+    futurecastSummary: futurecastSummary as FullProfileResponse['futurecastSummary'],
+  };
+}
+
 async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileResponse | null> {
   const recruiting = await getRecruitingPlayerBySlug(slug);
   if (!recruiting) return null;
@@ -164,7 +216,7 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
 
       const mw = intel.earlyMovement.movementWindow;
 
-      return {
+      return finalizeProfileResponse(slug, {
         lastUpdated: intel.updatedAt || now,
         source: 'recruiting-store',
         player: player as unknown as Record<string, unknown>,
@@ -214,13 +266,13 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
           fitScore: intel.earlyIntel.fitScore,
           volatilityScore: intel.earlyIntel.volatilityScore,
         },
-      };
+      });
     }
 
     player.id = intelUuidForSlug(slug);
   }
 
-  return {
+  return finalizeProfileResponse(slug, {
     lastUpdated: now,
     source: 'recruiting-store',
     player: player as unknown as Record<string, unknown>,
@@ -236,7 +288,7 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
     fitIntel: null,
     competingSchools: [],
     futurecastSummary: null,
-  };
+  });
 }
 
 export async function buildFullProfileBySlug(slug: string): Promise<FullProfileResponse | null> {
@@ -368,7 +420,7 @@ export async function buildFullProfileBySlug(slug: string): Promise<FullProfileR
     ? new Date(Math.max(...updatedAt)).toISOString()
     : new Date().toISOString();
 
-  return {
+  return finalizeProfileResponse(normalized, {
     lastUpdated,
     source: 'postgres',
     player: serializedPlayer,
@@ -398,7 +450,7 @@ export async function buildFullProfileBySlug(slug: string): Promise<FullProfileR
     fitIntel,
     competingSchools,
     futurecastSummary,
-  };
+  });
   } catch (err) {
     console.warn(
       '[player-profile] Postgres full profile failed, using recruiting store fallback:',

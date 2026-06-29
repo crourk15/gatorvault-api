@@ -93,12 +93,16 @@ export function PlayerHeader({
         <div className={`fc-score-card fc-score-card--${metrics.ufFitTier}`}>
           <span className="fc-score-card__label">UF Fit Score™</span>
           <span className="fc-score-card__value">{metrics.ufFitScore}</span>
-          <span className="fc-score-card__tier">{fitTierLabel(metrics.ufFitTier)}</span>
+          <span className="fc-score-card__tier">
+            {metrics.ufFitLabel ?? fitTierLabel(metrics.ufFitTier)}
+          </span>
         </div>
-        <div className={`fc-score-card fc-score-card--portal fc-score-card--portal-${metrics.portalColor}`}>
-          <span className="fc-score-card__label">Portal Likelihood</span>
-          <span className="fc-score-card__value">{metrics.portalLikelihoodPct}%</span>
-        </div>
+        {!metrics.portalHidden ? (
+          <div className={`fc-score-card fc-score-card--portal fc-score-card--portal-${metrics.portalColor}`}>
+            <span className="fc-score-card__label">Portal Likelihood</span>
+            <span className="fc-score-card__value">{metrics.portalLikelihoodPct ?? 0}%</span>
+          </div>
+        ) : null}
         <div className="fc-score-card fc-score-card--signals">
           <span className="fc-score-card__label">Signals</span>
           <span className="fc-score-card__value">{metrics.signalCount}</span>

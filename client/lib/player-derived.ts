@@ -255,8 +255,9 @@ export function signalSummaryText(signals: DiscoverySignal[]): string {
   return `${signals.length} signal${signals.length === 1 ? '' : 's'} · ${types.slice(0, 3).join(', ')}${types.length > 3 ? '…' : ''}`;
 }
 
-export function formatSignalValue(signal: DiscoverySignal): string {
-  const v = signal.signalValue;
+export function formatSignalValue(signal: DiscoverySignal | { signalValue?: Record<string, unknown>; value?: Record<string, unknown> }): string {
+  const raw = signal as { signalValue?: Record<string, unknown>; value?: Record<string, unknown> };
+  const v = raw.signalValue ?? raw.value ?? {};
   if (v.school) return String(v.school);
   if (v.note) return String(v.note);
   if (v.message) return String(v.message);
@@ -297,7 +298,10 @@ export function formatDate(iso: unknown): string {
 export interface PlayerMetrics {
   ufFitScore: number;
   ufFitTier: FitTier;
-  portalLikelihoodPct: number;
+  /** UF commit display override (e.g. Locked In). */
+  ufFitLabel?: string;
+  portalLikelihoodPct: number | null;
+  portalHidden?: boolean;
   portalColor: ColorBand;
   signalCount: number;
 }
@@ -314,7 +318,7 @@ export function computePlayerMetrics(
   return {
     ufFitScore,
     ufFitTier: fitTier(ufFitScore),
-    portalLikelihoodPct,
+    portalLikelihoodPct: portalLikelihoodPct,
     portalColor: portalLikelihoodColor(portalLikelihoodPct),
     signalCount: signals.length,
   };
