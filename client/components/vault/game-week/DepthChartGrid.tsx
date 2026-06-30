@@ -2,7 +2,8 @@
 
 import React from 'react';
 import type { DepthChartGroup } from '@/lib/game-week-data';
-import { PlayerHeadshot } from './PlayerHeadshot';
+import { vaultGradeForSlug } from '@/lib/game-week-data';
+import { SwingPlayerAvatar } from './SwingPlayerAvatar';
 
 type Props = {
   groups: DepthChartGroup[];
@@ -22,7 +23,13 @@ export function DepthChartGrid({ groups }: Props): React.ReactElement {
           <div className="gv-gw-depth-col__pos">{g.position}</div>
           {g.players.map((p) => (
             <div key={p.slug} className="gv-gw-depth-player">
-              <PlayerHeadshot slug={p.slug} name={p.name} size="sm" />
+              <SwingPlayerAvatar
+                slug={p.slug}
+                name={p.name}
+                position={g.position}
+                impact={vaultGradeForSlug(p.slug) ?? p.snapPct}
+                size="sm"
+              />
               <div className="gv-gw-depth-player__meta">
                 <div className="gv-gw-depth-player__name">
                   {p.name}

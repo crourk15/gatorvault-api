@@ -56,13 +56,11 @@ export const SCHEDULE_SECTION_META: ScheduleSectionMeta[] = [
 
 const SECTION_BY_ID: Record<string, ScheduleSectionId> = {
   fau: 'non-conference',
-  charlotte: 'non-conference',
+  campbell: 'non-conference',
   auburn: 'sec',
   olemiss: 'sec',
   missouri: 'sec',
-  lsu: 'sec',
   texas: 'sec',
-  oklahoma: 'sec',
   kentucky: 'sec',
   vandy: 'sec',
   scar: 'sec',
@@ -72,14 +70,12 @@ const SECTION_BY_ID: Record<string, ScheduleSectionId> = {
 
 const OPPONENT_META: Record<string, { short: string; logo: string }> = {
   fau: { short: 'FAU', logo: 'FAU' },
-  charlotte: { short: 'CLT', logo: 'CLT' },
+  campbell: { short: 'CAM', logo: 'CAM' },
   auburn: { short: 'AUB', logo: 'AU' },
   olemiss: { short: 'MISS', logo: 'OM' },
   missouri: { short: 'MIZ', logo: 'MU' },
-  lsu: { short: 'LSU', logo: 'LSU' },
   texas: { short: 'TEX', logo: 'UT' },
   uga: { short: 'UGA', logo: 'UGA' },
-  oklahoma: { short: 'OU', logo: 'OU' },
   kentucky: { short: 'UK', logo: 'UK' },
   vandy: { short: 'VAN', logo: 'VU' },
   scar: { short: 'SC', logo: 'SC' },

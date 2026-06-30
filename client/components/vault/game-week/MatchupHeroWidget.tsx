@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { GameWeekBundle } from '@/lib/game-week-data';
-import { TeamLogo } from './TeamLogo';
+import { homeLogoUrl, awayLogoUrl } from '@/lib/team-logos';
 import { CountdownWidget } from './CountdownWidget';
 
 type Props = {
@@ -11,16 +11,27 @@ type Props = {
 
 export function MatchupHeroWidget({ bundle }: Props): React.ReactElement {
   const { game, weather } = bundle;
+  const weatherParts = weather?.split(' · ') ?? [];
+
   return (
     <div className="gv-gw-matchup-hero" data-testid="gw-matchup-hero">
-      <div className="gv-gw-matchup-hero__logos">
-        <TeamLogo variant="uf" teamId="uf" size={72} className="gv-gw-matchup-hero__logo gv-gw-matchup-hero__logo--uf" />
-        <TeamLogo
-          variant="opponent"
-          teamId={game.id}
-          size={72}
-          label={game.opp}
-          className="gv-gw-matchup-hero__logo gv-gw-matchup-hero__logo--opp"
+      <div className="gv-gw-matchup-hero__left">
+        <img
+          src={homeLogoUrl()}
+          alt="Florida Gators"
+          className="gv-gw-team-logo-img gv-gw-matchup-hero__logo gv-gw-matchup-hero__logo--uf"
+          width={56}
+          height={56}
+        />
+        <span className="gv-gw-matchup-hero__vs" aria-hidden="true">
+          vs
+        </span>
+        <img
+          src={awayLogoUrl(game.id)}
+          alt={game.opp}
+          className="gv-gw-team-logo-img gv-gw-matchup-hero__logo gv-gw-matchup-hero__logo--opp"
+          width={56}
+          height={56}
         />
       </div>
       <div className="gv-gw-matchup-hero__center">
@@ -32,10 +43,9 @@ export function MatchupHeroWidget({ bundle }: Props): React.ReactElement {
         </p>
         {weather ? (
           <div className="gv-gw-matchup-hero__weather">
-            <span className="gv-gw-matchup-hero__weather-icon" aria-hidden="true">
-              ☀
-            </span>
-            <span>{weather}</span>
+            {weatherParts.map((part) => (
+              <span key={part}>{part}</span>
+            ))}
           </div>
         ) : null}
       </div>

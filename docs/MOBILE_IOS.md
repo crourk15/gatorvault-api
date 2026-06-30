@@ -38,17 +38,35 @@ npm run cap:ios
 
 ## Live-site dev mode (optional)
 
-Point the WebView at production/staging without rebuilding static assets:
+Point the WebView at production/staging **only for local debugging** — do **not** ship this build to App Review:
 
 ```bash
+# Mac / Linux
+CAPACITOR_SERVER_URL=https://gatorvaultinsider.com/vault/ npm run cap:sync
+
 # Windows PowerShell
-$env:CAPACITOR_SERVER_URL="https://gatorvaultinsider.com"
-npm run cap:sync --prefix client
+$env:CAPACITOR_SERVER_URL="https://gatorvaultinsider.com/vault/"
+npm run cap:sync
 ```
 
-Unset `CAPACITOR_SERVER_URL` for bundled (offline shell) builds.
+Unset `CAPACITOR_SERVER_URL` before App Store builds. The default config bundles static assets from `client/out` (required for Guideline 4.2.2).
 
-## Architecture
+## App Store resubmission (June 2026 review)
+
+Apple rejected **1.0 (5)** for:
+
+1. **2.3.8 — placeholder app icons** — Replace `AppIcon-512@2x.png` in `ios/App/App/Assets.xcassets/AppIcon.appiconset/` and `client/mobile/resources/icon.png` with the finalized GatorVault mark (1024×1024). Re-run `npm run build:mobile` on Mac before archiving.
+2. **4.2.2 — minimum functionality** — Build with **bundled** assets (no `CAPACITOR_SERVER_URL`). Highlight native features in Review Notes: StoreKit subscription (`@capgo/native-purchases`), status bar/splash, offline shell, push alerts UI.
+
+Suggested Review Notes reply:
+
+> GatorVault Insider bundles the full vault experience locally. Native StoreKit handles Insider subscription purchase and restore. The app is not a generic browser — it is a dedicated Gators command center with offline-capable shell, native IAP, and curated Florida football intel.
+
+## App Store checklist
+
+- [x] Replace placeholder icons (`client/mobile/resources/icon.png` + Xcode AppIcon set)
+- [ ] Archive with bundled build (`npm run build:mobile`, no live server URL)
+- [ ] StoreKit / IAP live sandbox test on device before resubmit
 
 | Piece | Location |
 |-------|----------|
@@ -56,13 +74,9 @@ Unset `CAPACITOR_SERVER_URL` for bundled (offline shell) builds.
 | iOS project | `client/ios/` |
 | Native API origin | `client/lib/api-base.ts` → `https://gatorvaultinsider.com` |
 | Shell init (status bar, splash, back) | `client/lib/native-shell.ts` |
+| Native IAP (StoreKit) | `client/lib/native-app-entry.ts` |
 
-## App Store checklist (later steps)
-
-- [ ] Replace placeholder icons/splash (`client/mobile/resources/`)
-- [ ] StoreKit / IAP live sandbox (Step 3b — wired, enable when Developer account active)
-
-## Web push (Step 5 — shipped on web)
+## Architecture
 
 | Piece | Location |
 |-------|----------|

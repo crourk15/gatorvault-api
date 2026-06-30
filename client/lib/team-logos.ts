@@ -1,33 +1,39 @@
-/** Game Week team logo keys — SVG components only (see TeamLogo.tsx). */
+/** Official ESPN team logos for Game Week matchup widgets (img src). */
 
-export const UF_TEAM_KEY = 'uf';
+export const UF_ESPN_TEAM_ID = 57;
 
-export const OPPONENT_TEAM_KEYS: Record<string, string> = {
-  fau: 'fau',
-  charlotte: 'charlotte',
-  auburn: 'auburn',
-  olemiss: 'olemiss',
-  missouri: 'missouri',
-  lsu: 'lsu',
-  texas: 'texas',
-  uga: 'uga',
-  oklahoma: 'oklahoma',
-  kentucky: 'kentucky',
-  vandy: 'vandy',
-  scar: 'scar',
-  fsu: 'fsu',
+export const OPPONENT_ESPN_IDS: Record<string, number> = {
+  fau: 2226,
+  campbell: 2097,
+  auburn: 2,
+  olemiss: 145,
+  missouri: 142,
+  texas: 251,
+  uga: 61,
+  kentucky: 96,
+  vandy: 238,
+  scar: 2579,
+  fsu: 52,
 };
 
-export function opponentTeamKey(gameId: string): string {
-  return OPPONENT_TEAM_KEYS[gameId] ?? gameId;
+export function espnTeamLogoUrl(teamId: number): string {
+  return `https://a.espncdn.com/i/teamlogos/ncaa/500/${teamId}.png`;
 }
 
-/** @deprecated Use TeamLogo component — PNG URLs removed per brand spec. */
 export function ufLogoUrl(): string {
-  return '/teams/uf.svg';
+  return espnTeamLogoUrl(UF_ESPN_TEAM_ID);
 }
 
-/** @deprecated Use TeamLogo component — PNG URLs removed per brand spec. */
 export function opponentLogoUrl(gameId: string): string {
-  return `/teams/${opponentTeamKey(gameId)}.svg`;
+  const id = OPPONENT_ESPN_IDS[gameId];
+  if (!id) return espnTeamLogoUrl(UF_ESPN_TEAM_ID);
+  return espnTeamLogoUrl(id);
+}
+
+export function homeLogoUrl(): string {
+  return ufLogoUrl();
+}
+
+export function awayLogoUrl(gameId: string): string {
+  return opponentLogoUrl(gameId);
 }

@@ -7,7 +7,7 @@ import {
   isHomeGame,
   type GameWeekBundle,
 } from '@/lib/game-week-data';
-import { TeamLogo } from './TeamLogo';
+import { opponentLogoUrl } from '@/lib/team-logos';
 
 type Props = {
   activeGameId: string;
@@ -33,7 +33,13 @@ export function SeasonTimeline({ activeGameId, onSelect }: Props): React.ReactEl
               className={`gv-gw-timeline__card ${diffClass(bundle.difficulty)}${activeGameId === g.id ? ' is-active' : ''}`}
               onClick={() => onSelect(g.id)}
             >
-              <TeamLogo teamId={g.id} variant="opponent" size={36} label="" className="gv-gw-timeline__logo" />
+              <img
+                src={opponentLogoUrl(g.id)}
+                alt=""
+                className="gv-gw-team-logo-img gv-gw-timeline__logo"
+                width={36}
+                height={36}
+              />
               <p className="gv-gw-timeline__label">{g.label}</p>
               <p className="gv-gw-timeline__date">{g.date.split('·')[0]?.trim()}</p>
               <span className={`gv-gw-timeline__ha gv-gw-timeline__ha--${home ? 'home' : 'away'}`}>

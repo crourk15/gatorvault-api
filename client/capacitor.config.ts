@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
-/** Live site entry for iOS TestFlight/App Store — bundled static paths break in Capacitor. */
-const LIVE_APP_URL = 'https://gatorvaultinsider.com/vault/';
-const useBundledAssets = process.env.CAPACITOR_USE_BUNDLE === '1';
+/** Production API + bundled shell for App Store (default). Set CAPACITOR_SERVER_URL for live WebView dev only. */
+const LIVE_APP_URL =
+  process.env.CAPACITOR_SERVER_URL?.trim() || 'https://gatorvaultinsider.com/vault/';
 
 const config: CapacitorConfig = {
   appId: 'com.gatorvaultinsider.app',
@@ -14,7 +14,7 @@ const config: CapacitorConfig = {
     scrollEnabled: true,
     allowsLinkPreview: false,
   },
-  ...(!useBundledAssets
+  ...(process.env.CAPACITOR_SERVER_URL
     ? {
         server: {
           url: LIVE_APP_URL,

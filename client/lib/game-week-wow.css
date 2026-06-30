@@ -62,37 +62,77 @@
   margin: 0 0 0.75rem;
 }
 
-/* Team logos (inline SVG) */
-.gv-gw-team-logo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.gv-gw-team-logo svg {
-  width: 100%;
-  height: 100%;
-  display: block;
+/* Team logos (img) */
+.gv-gw-team-logo-img {
+  width: auto;
+  height: 56px;
+  object-fit: contain;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
 }
 
-/* Player headshots */
-.gv-gw-player-photo {
-  display: inline-flex;
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;
-  border: 2px solid var(--gv-gw-orange);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
-  background: var(--gv-gw-slate);
+.gv-gw-timeline__logo.gv-gw-team-logo-img {
+  height: 36px;
 }
 
-.gv-gw-player-photo img {
-  width: 100%;
-  height: 100%;
+/* Player photos + Vault grade badges */
+.gv-gw-player-photo {
+  border-radius: 50%;
   object-fit: cover;
-  display: block;
+  flex-shrink: 0;
+  border: 2px solid var(--color-accent-orange);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
+  background: var(--color-bg-slate);
+}
+
+.gv-gw-player-photo--md {
+  width: 72px;
+  height: 72px;
+}
+
+.gv-gw-player-photo--sm {
+  width: 48px;
+  height: 48px;
+}
+
+.gv-gw-vault-grade-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid var(--color-accent-orange);
+  background: var(--color-bg-page);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+.gv-gw-vault-grade-badge--md {
+  width: 72px;
+  height: 72px;
+}
+
+.gv-gw-vault-grade-badge--sm {
+  width: 48px;
+  height: 48px;
+}
+
+.gv-gw-vault-grade-badge__value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-text-primary);
+}
+
+.gv-gw-vault-grade-badge--sm .gv-gw-vault-grade-badge__value {
+  font-size: 0.9375rem;
+}
+
+.gv-gw-vault-grade-badge__pos {
+  margin-top: 0.15rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
 }
 
 /* Matchup hero */
@@ -107,6 +147,20 @@
   padding: 1.25rem 1.5rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   animation: gv-gw-slide-in 0.6s ease-out;
+}
+
+.gv-gw-matchup-hero__left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.gv-gw-matchup-hero__vs {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
 }
 
 .gv-gw-matchup-hero__logos {
@@ -142,22 +196,24 @@
 }
 
 .gv-gw-matchup-hero__weather {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 0.35rem;
   margin-top: 0.65rem;
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
   background: rgba(250, 70, 22, 0.12);
   border: 1px solid rgba(250, 70, 22, 0.35);
-  color: var(--gv-gw-orange);
+  color: var(--color-accent-orange);
   font-size: 0.8125rem;
   font-weight: 600;
 }
 
-.gv-gw-matchup-hero__weather-icon {
-  font-size: 1rem;
-  line-height: 1;
+.gv-gw-matchup-hero__weather span + span::before {
+  content: '·';
+  margin-right: 0.35rem;
 }
 
 .gv-gw-matchup-hero__right {
@@ -176,23 +232,23 @@
   animation: gv-gw-pulse-border 2s ease-in-out infinite, gv-gw-fade-in 0.5s ease;
 }
 
-.gv-gw-countdown__num {
-  display: block;
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: var(--gv-gw-orange);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
 .gv-gw-countdown__label {
   display: block;
-  margin-top: 0.35rem;
   font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--gv-gw-muted);
+  color: var(--color-text-secondary);
+}
+
+.gv-gw-countdown__num {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--color-accent-orange);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Season timeline */
@@ -489,10 +545,15 @@
   margin-top: 0.45rem;
 }
 
+.gv-gw-swing-card__impact-label {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
 .gv-gw-swing-card__impact {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 700;
-  color: var(--gv-gw-blue);
+  color: var(--color-accent-blue);
 }
 
 .gv-gw-swing-card__trend {
@@ -777,6 +838,10 @@
   .gv-gw-matchup-hero {
     grid-template-columns: 1fr;
     text-align: center;
+  }
+
+  .gv-gw-matchup-hero__left {
+    justify-content: center;
   }
 
   .gv-gw-matchup-hero__logos {

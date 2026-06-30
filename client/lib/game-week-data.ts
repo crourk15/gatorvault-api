@@ -74,16 +74,46 @@ const SLUG_ALIASES: Record<string, string> = {
   'jeremiah-mccloud': 'jeramiah-mccloud',
 };
 
-/** Official UF roster headshots — local /headshots assets (jpg → png → svg). */
-export function rosterHeadshotCandidates(slug: string): string[] {
+/** UF roster Vault grades — used when official photo is unavailable. */
+const ROSTER_VAULT_GRADES: Record<string, number> = {
+  'tramell-jones-jr': 85,
+  'aaron-philo': 82,
+  'jaden-baugh': 88,
+  'jadan-baugh': 88,
+  'eric-singleton-jr': 87,
+  'jayden-woods': 90,
+  'cormani-mcclain': 86,
+  'myles-graham': 88,
+  'dijon-johnson': 84,
+  'lacota-dippre': 85,
+  'jaden-robinson': 83,
+  'dallas-wilson': 84,
+  'emeka-ugorji': 82,
+  'knijeah-harris': 81,
+  'brendan-bett': 83,
+  'jeramiah-mccloud': 82,
+};
+
+export function vaultGradeForSlug(slug: string): number | undefined {
   const key = SLUG_ALIASES[slug] ?? slug;
-  const enc = encodeURIComponent(key);
-  return [`/headshots/${enc}.jpg`, `/headshots/${enc}.png`, `/headshots/${enc}.svg`];
+  return ROSTER_VAULT_GRADES[key];
 }
 
-/** @deprecated Use rosterHeadshotCandidates + PlayerHeadshot */
+/** Official UF roster photos only — never SVG initials placeholders. */
+export function rosterPhotoCandidates(slug: string): string[] {
+  const key = SLUG_ALIASES[slug] ?? slug;
+  const enc = encodeURIComponent(key);
+  return [`/headshots/${enc}.jpg`, `/headshots/${enc}.png`];
+}
+
+/** @deprecated Use rosterPhotoCandidates + SwingPlayerAvatar */
+export function rosterHeadshotCandidates(slug: string): string[] {
+  return rosterPhotoCandidates(slug);
+}
+
+/** @deprecated Use rosterPhotoCandidates + SwingPlayerAvatar */
 export function headshotUrl(slug: string): string {
-  return rosterHeadshotCandidates(slug)[0];
+  return rosterPhotoCandidates(slug)[0];
 }
 
 export function daysUntilKickoff(dateStr: string): number {
@@ -163,7 +193,7 @@ function buildSwing(game: ScheduleGame): SwingPlayerIntel[] {
     position: posMap[s.name] ?? 'KEY',
     role: s.role,
     impact: Math.min(95, 72 + i * 8 + (game.ufPct > 60 ? 5 : 0)),
-    trend: i === 0 ? 'up' : i === 1 ? 'flat' : 'down',
+    trend: i === 0 ? 'up' : i === 1 ? 'up' : 'flat',
     slug: slugMap[s.name] ?? 'tramell-jones-jr',
   }));
 }
