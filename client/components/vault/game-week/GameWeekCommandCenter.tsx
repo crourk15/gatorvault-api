@@ -78,20 +78,20 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
           {tab === 'intel' ? (
             <div className="gv-gw-wow-tab gv-gw-wow-tab--intel">
               <div className="gv-gw-wow-row gv-gw-wow-row--2">
-                <section className="gv-gw-wow-panel">
+                <section className="gv-gw-wow-panel fc-lab-panel-shell">
                   <h3 className="gv-gw-wow-panel__title">3 Keys to the Game</h3>
                   <div className="gv-gw-wow-panel__body">
                     <KeysToGameCards keys={bundle.keys} />
                   </div>
                 </section>
-                <section className="gv-gw-wow-panel">
+                <section className="gv-gw-wow-panel fc-lab-panel-shell">
                   <h3 className="gv-gw-wow-panel__title">Swing Players</h3>
                   <div className="gv-gw-wow-panel__body">
                     <SwingPlayersCards players={bundle.swingPlayers} />
                   </div>
                 </section>
               </div>
-              <section className="gv-gw-wow-panel">
+              <section className="gv-gw-wow-panel fc-lab-panel-shell">
                 <h3 className="gv-gw-wow-panel__title">Film Notes</h3>
                 <div className="gv-gw-wow-panel__body">
                   <FilmNotesPanel notes={bundle.filmNotes} game={bundle.game} />
@@ -101,7 +101,7 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
           ) : null}
 
           {tab === 'depth' ? (
-            <section className="gv-gw-wow-panel">
+            <section className="gv-gw-wow-panel fc-lab-panel-shell">
               <h3 className="gv-gw-wow-panel__title">Projected depth chart</h3>
               <div className="gv-gw-wow-panel__body">
                 <DepthChartGrid groups={bundle.depthChart} />
@@ -110,7 +110,7 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
           ) : null}
 
           {tab === 'scouting' ? (
-            <section className="gv-gw-wow-panel">
+            <section className="gv-gw-wow-panel fc-lab-panel-shell">
               <h3 className="gv-gw-wow-panel__title">Scouting report</h3>
               <div className="gv-gw-wow-panel__body">
                 <ScoutingReportPanel scouting={bundle.scouting} />
@@ -119,7 +119,7 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
           ) : null}
 
           {tab === 'prediction' ? (
-            <section className="gv-gw-wow-panel">
+            <section className="gv-gw-wow-panel fc-lab-panel-shell">
               <h3 className="gv-gw-wow-panel__title">GatorVault prediction</h3>
               <div className="gv-gw-wow-panel__body">
                 <PredictionPanel prediction={bundle.prediction} />

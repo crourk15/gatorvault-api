@@ -23,8 +23,12 @@
   --color-panel-border: rgba(0, 26, 51, 0.2);
 
   min-height: 100%;
-  background: linear-gradient(180deg, var(--color-bg-page) 0%, var(--color-bg-hero) 42%, var(--color-bg-feed) 42%);
+  background: var(--color-bg-page);
   color: var(--color-text-primary);
+}
+
+.gv-gw-wow-page .gv-page-layout {
+  color: inherit;
 }
 
 .gv-gw-wow-page .gv-page-layout--navy {
@@ -117,6 +121,7 @@
   margin-top: -12px;
   position: relative;
   z-index: 2;
+  min-height: 48vh;
 }
 
 .gv-gw-wow-feed__inner {
@@ -132,6 +137,10 @@
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   overflow: hidden;
+}
+
+.gv-gw-wow-panel.fc-lab-panel-shell {
+  color: #1a1a1a;
 }
 
 .gv-gw-wow-panel__title {
@@ -552,7 +561,7 @@
   color: var(--gv-gw-muted);
 }
 
-.gv-gw-radar__legend-uf { color: var(--color-volatility); }
+.gv-gw-radar__legend-uf { color: var(--color-accent-orange); }
 .gv-gw-radar__legend-opp { color: var(--color-slate-stroke); }
 
 /* Flip cards — light feed */
@@ -981,18 +990,51 @@
   }
 }
 
-/* Legibility — feed zone overrides page-level white text */
-.gv-gw-wow-page.fc-lab-cc-page .gv-gw-wow-feed,
-.gv-gw-wow-page.fc-lab-cc-page .gv-gw-wow-feed * {
-  color: inherit;
+/* Legibility — feed must stay dark-on-light (page shell forces white text) */
+.gv-gw-wow-page .gv-gw-wow-feed {
+  color: #1a1a1a;
 }
 
-.gv-gw-wow-feed .gv-gw-wow-panel__body,
-.gv-gw-wow-feed .gv-gw-swing-card__name,
-.gv-gw-wow-feed .gv-gw-flip-card__title,
-.gv-gw-wow-feed .gv-gw-depth-player__name,
-.gv-gw-wow-feed .gv-gw-pred-panel__score {
-  color: var(--color-text-dark);
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-wow-panel__body,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-swing-card,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-flip-card__face,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-flip-card__title,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-swing-card__name,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-depth-player__name,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-scout-card,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-pred-panel,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-film-panel__list,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell p,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell li {
+  color: #1a1a1a !important;
+}
+
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-wow-panel__title,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-scout-card__title {
+  color: var(--color-accent-blue) !important;
+}
+
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-swing-card__role,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-flip-card__face--back,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-film-panel__list li,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-scout-card ul,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-scout-summary,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-pred-panel__lines,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-pred-panel__experts li {
+  color: #64748b !important;
+}
+
+.gv-gw-wow-page .gv-gw-wow-feed .gv-gw-swing-card__trend--up,
+.gv-gw-wow-page .gv-gw-wow-feed .gv-gw-depth-player__trend--up,
+.gv-gw-wow-page .gv-gw-wow-feed .gv-gw-wp-gauge__movement--up {
+  color: var(--color-move-up) !important;
+}
+
+.gv-gw-wow-page .gv-gw-wow-feed .gv-gw-swing-card__trend--down,
+.gv-gw-wow-page .gv-gw-wow-feed .gv-gw-depth-player__trend--down,
+.gv-gw-wow-page .gv-gw-wow-feed .gv-gw-wp-gauge__movement--down {
+  color: var(--color-move-down) !important;
 }
 
 /* Animations */

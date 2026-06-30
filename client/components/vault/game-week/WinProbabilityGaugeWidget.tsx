@@ -60,7 +60,7 @@ export function WinProbabilityGaugeWidget({ ufPct, prediction }: Props): React.R
             cy="64"
             r={r}
             fill="none"
-            stroke="#FACC15"
+            stroke="#FA4616"
             strokeWidth="10"
             strokeDasharray={c}
             strokeDashoffset={ufOffset}
