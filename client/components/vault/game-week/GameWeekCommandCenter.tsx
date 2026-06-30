@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { TabBar } from '@/components/brand';
 import { getGameWeekBundle } from '@/lib/game-week-data';
 import { MatchupHeroWidget } from './MatchupHeroWidget';
 import { SeasonTimeline } from './SeasonTimeline';
@@ -49,13 +48,20 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
       <MatchupHeroWidget bundle={bundle} />
       <SeasonTimeline activeGameId={gameId} onSelect={handleGameSelect} />
 
-      <TabBar
-        options={TABS}
-        active={tab}
-        onChange={setTab}
-        className="gv-gw-wow-tabs"
-        aria-label="Game week sections"
-      />
+      <div className="rh-cc-tabs gv-gw-wow-tabs" role="tablist" aria-label="Game week sections">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === t.id}
+            className={`rh-cc-tabs__btn${tab === t.id ? ' is-active' : ''}`}
+            onClick={() => setTab(t.id)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
 
       {tab === 'intel' ? (
         <div className="gv-gw-wow-tab gv-gw-wow-tab--intel">

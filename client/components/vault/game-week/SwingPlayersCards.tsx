@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { headshotUrl, type SwingPlayerIntel } from '@/lib/game-week-data';
+import type { SwingPlayerIntel } from '@/lib/game-week-data';
+import { PlayerHeadshot } from './PlayerHeadshot';
 
 type Props = {
   players: SwingPlayerIntel[];
@@ -18,23 +19,19 @@ export function SwingPlayersCards({ players }: Props): React.ReactElement {
     <div className="gv-gw-swing-grid" data-testid="gw-swing-cards">
       {players.map((p) => (
         <div key={p.slug + p.name} className="gv-gw-swing-card">
-          <img
-            src={headshotUrl(p.slug)}
-            alt={p.name}
-            className="gv-gw-swing-card__headshot"
-            width={48}
-            height={48}
-          />
-          <div>
-            <span className="gv-gw-swing-card__pos">{p.position}</span>
-            <strong>{p.name}</strong>
-            <p style={{ margin: '0.2rem 0', fontSize: '0.8rem', color: '#9CA3AF' }}>{p.role}</p>
-            <div className="gv-gw-swing-card__bar">
-              <div className="gv-gw-swing-card__bar-fill" style={{ width: `${p.impact}%` }} />
+          <PlayerHeadshot slug={p.slug} name={p.name} size="md" />
+          <div className="gv-gw-swing-card__body">
+            <div className="gv-gw-swing-card__head">
+              <strong className="gv-gw-swing-card__name">{p.name}</strong>
+              <span className="gv-gw-swing-card__pos">{p.position}</span>
             </div>
-            <span className={`gv-gw-swing-card__trend--${p.trend}`}>
-              {trendArrow(p.trend)} Impact {p.impact}
-            </span>
+            <p className="gv-gw-swing-card__role">{p.role}</p>
+            <div className="gv-gw-swing-card__impact-row">
+              <span className="gv-gw-swing-card__impact">Impact {p.impact}</span>
+              <span className={`gv-gw-swing-card__trend gv-gw-swing-card__trend--${p.trend}`}>
+                {trendArrow(p.trend)}
+              </span>
+            </div>
           </div>
         </div>
       ))}

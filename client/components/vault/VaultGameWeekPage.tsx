@@ -31,7 +31,7 @@ export function VaultGameWeekPage(): React.ReactElement {
   }, [urlGameId]);
 
   return (
-    <div className="rh-page rh-page--elite gv-gw-wow-page mobile-app" data-testid="vault-game-week-elite">
+    <div className="rh-page rh-page--elite gv-gw-wow-page fc-lab-cc-page" data-testid="vault-game-week-elite">
       <PageLayout theme="navy" testId="vault-game-week" className="gv-gw-wow-page-layout">
         <InsiderPaywall variant="overlay" {...GAME_WEEK_PAYWALL}>
           <GameWeekCommandCenter initialGameId={gameId} onGameChange={setGameId} />

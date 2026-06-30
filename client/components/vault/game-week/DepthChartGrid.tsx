@@ -1,11 +1,18 @@
 'use client';
 
 import React from 'react';
-import { headshotUrl, type DepthChartGroup } from '@/lib/game-week-data';
+import type { DepthChartGroup } from '@/lib/game-week-data';
+import { PlayerHeadshot } from './PlayerHeadshot';
 
 type Props = {
   groups: DepthChartGroup[];
 };
+
+function trendArrow(trend: 'up' | 'down' | 'flat'): string {
+  if (trend === 'up') return '↑';
+  if (trend === 'down') return '↓';
+  return '→';
+}
 
 export function DepthChartGrid({ groups }: Props): React.ReactElement {
   return (
@@ -15,20 +22,17 @@ export function DepthChartGrid({ groups }: Props): React.ReactElement {
           <div className="gv-gw-depth-col__pos">{g.position}</div>
           {g.players.map((p) => (
             <div key={p.slug} className="gv-gw-depth-player">
-              <img
-                src={headshotUrl(p.slug)}
-                alt=""
-                className="gv-gw-depth-player__headshot"
-                width={28}
-                height={28}
-              />
-              <div>
-                <div>
+              <PlayerHeadshot slug={p.slug} name={p.name} size="sm" />
+              <div className="gv-gw-depth-player__meta">
+                <div className="gv-gw-depth-player__name">
                   {p.name}
-                  {p.isStarter ? <span className="gv-gw-depth-player__starter"> ★</span> : null}
+                  {p.isStarter ? <span className="gv-gw-depth-player__starter" aria-label="Starter"> ★</span> : null}
                 </div>
-                <div style={{ fontSize: '0.65rem', color: '#9CA3AF' }}>
-                  {p.snapPct}% snaps {p.trend === 'up' ? '↑' : p.trend === 'down' ? '↓' : '→'}
+                <div className="gv-gw-depth-player__snap">
+                  <span>{p.snapPct}% snaps</span>
+                  <span className={`gv-gw-depth-player__trend gv-gw-depth-player__trend--${p.trend}`}>
+                    {trendArrow(p.trend)}
+                  </span>
                 </div>
               </div>
             </div>

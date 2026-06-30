@@ -69,24 +69,21 @@ export type GameWeekBundle = {
   difficulty: 'easy' | 'medium' | 'hard' | 'rivalry';
 };
 
-const PLAYER_HEADSHOT_IDS: Record<string, number> = {
-  'tramell-jones-jr': 4870606,
-  'aaron-philo': 4870607,
-  'jaden-baugh': 4685411,
-  'eric-singleton-jr': 4431586,
-  'jayden-woods': 4870610,
-  'cormani-mcclain': 4685415,
-  'myles-graham': 4685420,
-  'dijon-johnson': 4431590,
-  'lacota-dippre': 4685418,
+const SLUG_ALIASES: Record<string, string> = {
+  'jaden-baugh': 'jadan-baugh',
+  'jeremiah-mccloud': 'jeramiah-mccloud',
 };
 
+/** Official UF roster headshots — local /headshots assets (jpg → png → svg). */
+export function rosterHeadshotCandidates(slug: string): string[] {
+  const key = SLUG_ALIASES[slug] ?? slug;
+  const enc = encodeURIComponent(key);
+  return [`/headshots/${enc}.jpg`, `/headshots/${enc}.png`, `/headshots/${enc}.svg`];
+}
+
+/** @deprecated Use rosterHeadshotCandidates + PlayerHeadshot */
 export function headshotUrl(slug: string): string {
-  const id = PLAYER_HEADSHOT_IDS[slug] ?? 0;
-  if (!id) {
-    return 'https://a.espncdn.com/i/headshots/college-football/players/full/0.png';
-  }
-  return `https://a.espncdn.com/i/headshots/college-football/players/full/${id}.png`;
+  return rosterHeadshotCandidates(slug)[0];
 }
 
 export function daysUntilKickoff(dateStr: string): number {
@@ -155,8 +152,8 @@ function buildSwing(game: ScheduleGame): SwingPlayerIntel[] {
     'Jayden Woods': 'jayden-woods',
     'Eric Singleton Jr.': 'eric-singleton-jr',
     'Singleton Jr.': 'eric-singleton-jr',
-    'Jaden Baugh': 'jaden-baugh',
-    'Jadan Baugh': 'jaden-baugh',
+    'Jaden Baugh': 'jadan-baugh',
+    'Jadan Baugh': 'jadan-baugh',
     'Cormani McClain': 'cormani-mcclain',
     'Myles Graham': 'myles-graham',
     QB1: 'tramell-jones-jr',
@@ -175,7 +172,7 @@ function defaultRadar(ufPct: number): RadarAxis[] {
   const oppBase = 100 - ufPct;
   return [
     { label: 'Run Game', uf: 78, opp: oppBase + 10 },
-    { label: 'Pass Eff', uf: 72, opp: oppBase + 5 },
+    { label: 'Pass Efficiency', uf: 72, opp: oppBase + 5 },
     { label: 'Front 7', uf: 80, opp: oppBase + 8 },
     { label: 'Secondary', uf: 74, opp: oppBase + 3 },
     { label: 'Special Teams', uf: 70, opp: 65 },
@@ -183,12 +180,17 @@ function defaultRadar(ufPct: number): RadarAxis[] {
   ];
 }
 
+function playerSlug(name: string): string {
+  const base = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  return SLUG_ALIASES[base] ?? base;
+}
+
 function defaultDepthChart(): DepthChartGroup[] {
   const mk = (position: string, names: [string, string, string?]): DepthChartGroup => ({
     position,
     players: names.filter(Boolean).map((name, i) => ({
       name: name!,
-      slug: name!.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+      slug: playerSlug(name!),
       snapPct: i === 0 ? 78 - i * 12 : 42 - i * 8,
       isStarter: i === 0,
       trend: i === 0 ? 'up' : 'flat',
@@ -295,7 +297,7 @@ const FAU_BUNDLE: GameWeekBundle = {
   ],
   radar: [
     { label: 'Run Game', uf: 82, opp: 58 },
-    { label: 'Pass Eff', uf: 78, opp: 62 },
+    { label: 'Pass Efficiency', uf: 78, opp: 62 },
     { label: 'Front 7', uf: 85, opp: 55 },
     { label: 'Secondary', uf: 80, opp: 60 },
     { label: 'Special Teams', uf: 74, opp: 68 },
