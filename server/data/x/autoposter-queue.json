@@ -1,5 +1,90 @@
 {
   "version": 2,
-  "updatedAt": "2026-06-21T01:59:20.732Z",
-  "items": []
+  "updatedAt": "2026-06-30T23:47:39.990Z",
+  "items": [
+    {
+      "id": "xp_1782690427370_914cc6df",
+      "text": "2028 4★ WR Armani Strong (Chaminade-Madonna Prep, FL) · On3\nArmani Strong is shutting it down for the Gators.\nFlorida closes another piece of the 2028 puzzle.\nhttps://gatorvaultinsider.com",
+      "category": "news",
+      "action": "post",
+      "topic": "recruiting",
+      "sources": [
+        {
+          "url": "https://www.on3.com/college/florida-gators/football/2026/commits/",
+          "outlet": "On3",
+          "label": "On3"
+        }
+      ],
+      "inReplyToStatusId": null,
+      "quoteTweetUrl": null,
+      "quoteTweetId": null,
+      "promoLink": null,
+      "scheduledAt": "2026-06-30T23:47:39.990Z",
+      "status": "pending",
+      "mediaBase64": null,
+      "mediaMime": null,
+      "createdAt": "2026-06-30T23:47:39.990Z",
+      "sentAt": null,
+      "tweetId": null,
+      "tweetUrl": null,
+      "error": null,
+      "validationErrors": [],
+      "source": "auto:on3-event",
+      "commitFingerprint": "284115|florida|2026-06-28",
+      "intelFingerprint": "284115|florida|2026-06-28",
+      "sourceEventId": "evt_1782677703179_sz3qlk",
+      "sourceIntelId": null,
+      "intelType": null,
+      "playerName": "Armani Strong",
+      "replyFingerprint": null,
+      "postUrgency": "breaking",
+      "urgencyLabel": "commitment",
+      "sourceEventType": "commit",
+      "sourceEventCreatedAt": "2026-06-28T23:47:07.061Z",
+      "sourcePublishedAt": null,
+      "eventTimestamp": null,
+      "templateBlocks": {
+        "identity": "2028 4★ WR Armani Strong (Chaminade-Madonna Prep, FL) · On3 #210",
+        "context": "Armani Strong is shutting it down for the Gators.",
+        "insider": "Florida closes another piece of the 2028 puzzle."
+      },
+      "validationMeta": {
+        "verifiedCommit": true
+      },
+      "playerContext": null,
+      "qualityScore": 85,
+      "qualityBreakdown": {
+        "identity": {
+          "weight": 0.4,
+          "blockScore": 20,
+          "weighted": 8,
+          "fields": [
+            "ranking"
+          ]
+        },
+        "context": {
+          "weight": 0.3,
+          "blockScore": 65,
+          "weighted": 19.5
+        },
+        "insider": {
+          "weight": 0.3,
+          "blockScore": 65,
+          "weighted": 19.5
+        },
+        "compositeScore": 47,
+        "threshold": 85,
+        "sourceConfidence": 100,
+        "sourceConfidenceRequired": 100
+      },
+      "sourceConfidence": 100,
+      "triggerType": null,
+      "teamEventType": null,
+      "programNewsType": null,
+      "verifiedCommit": true,
+      "monitoringFallback": false,
+      "clusterFingerprint": null,
+      "clusterMeta": null
+    }
+  ]
 }
