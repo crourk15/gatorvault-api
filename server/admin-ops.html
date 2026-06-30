@@ -272,10 +272,28 @@
       var label=btn?btn.textContent:'Force Post Now';
       if(btn){btn.disabled=true;btn.textContent='Posting…';}
       fetch(API+'/api/autoposter/force-post',{method:'POST',headers:headers(),body:JSON.stringify({pin:p})})
-        .then(function(r){return r.json().then(function(j){return{status:r.status,body:j};});})
+        .then(function(r){
+          return r.text().then(function(txt){
+            var j={};
+            if(txt){
+              try{j=JSON.parse(txt);}catch(e){
+                throw new Error(txt.slice(0,200)||'Empty response (server may have timed out)');
+              }
+            }else{
+              throw new Error('Empty response (server may have timed out)');
+            }
+            return{status:r.status,body:j};
+          });
+        })
         .then(function(res){
           var j=res.body;
           if(res.status===401)throw new Error('Invalid PIN');
+          if(j.needs_resolution){
+            var nr='Post deferred — identity incomplete';
+            if(j.playerName)nr+='\nPlayer: '+j.playerName;
+            if(j.missingPattern)nr+='\nMissing: '+j.missingPattern;
+            throw new Error(nr);
+          }
           if(!j.ok){
             if(j.error==='identity_incomplete'){
               var detail='Identity incomplete';
@@ -285,8 +303,16 @@
               if(j.patternRebuildAttempted)detail+='\n(Pattern rebuild was attempted)';
               throw new Error(detail);
             }
+            if(j.error==='no_fresh_intel'){
+              var hint='No postable intel found.';
+              if(j.pendingCount!=null)hint+=' Pending queue: '+j.pendingCount+'.';
+              if(j.failedCount!=null)hint+=' Failed queue: '+j.failedCount+'.';
+              hint+=' Check X_AUTOPOST_ENABLED and OAuth on Render.';
+              throw new Error(hint);
+            }
             throw new Error(j.error||('Force post failed ('+res.status+')'));
           }
+          if(!j.posted)throw new Error(j.error||('Force post failed ('+res.status+')'));
           alert('Posted to X at '+fmtTime(j.timestamp)+(j.tweetUrl?'\n'+j.tweetUrl:''));
           document.getElementById('log-subsystem').value='autoposter';
           loadLogs();

@@ -11,6 +11,111 @@ const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
 const GENERIC_INSIDER_RE = /^per .+ report\.?$/i;
 const GENERIC_CLOSURE_RE = /full details via the original report/i;
 
+function eliteFirstName(name) {
+  return String(name || '').split(/\s+/)[0] || 'the prospect';
+}
+
+/** Original angles from GV data (visits, RPM, scouting) — not beat paraphrase. */
+function pickBestEliteAngle(research, beatText) {
+  if (!research?.playerName) return null;
+  const angles = [];
+  const fn = eliteFirstName(research.playerName);
+
+  const visits = (research.intelRows || []).filter((r) => /visit/i.test(String(r.eventType || '')));
+  if (visits.length >= 2) {
+    angles.push({
+      context: `${fn} has ${visits.length} Florida trips logged in recent weeks.`,
+      insider: visits.some((r) => /official/i.test(String(r.eventType || '')))
+        ? 'Staff is treating the next OV as a decision checkpoint, not a courtesy visit.'
+        : 'Repeat Gainesville time is building real momentum behind the scenes.'
+    });
+  } else if (research.timing?.visitWindow) {
+    angles.push({
+      context: `${fn} has a Gainesville window on the books (${research.timing.visitWindow}).`,
+      insider: 'Position coaches have been active on this one ahead of the trip.'
+    });
+  }
+
+  const schools = (research.topSchools || []).filter((s) => !/florida|gators/i.test(String(s || '')));
+  const pred = research.predictions?.[0];
+  const ufPct = pred?.confidencePct || pred?.ufRpmPct || research.player?.ufRpmPct;
+  if (schools.length && ufPct != null) {
+    angles.push({
+      context: `Florida sits at ${Math.round(ufPct)}% in the model with ${schools.slice(0, 2).join(' and ')} still in the mix.`,
+      insider: `The gap is closable if UF wins the next campus sequence with ${fn}.`
+    });
+  } else if (schools.length) {
+    angles.push({
+      context: `${schools[0]} still shares the lead cluster, but UF is pushing for separation.`,
+      insider: `Staff contact has picked up as ${fn} narrows his list.`
+    });
+  }
+
+  const heat = (research.heatSignals || []).find((h) =>
+    /staff_momentum|uf_leads|prediction|crystal_ball/i.test(String(h.trigger || ''))
+  );
+  if (heat) {
+    angles.push({
+      context: `Board momentum shifted on ${research.playerName} after the latest analyst input.`,
+      insider: 'Florida is trending up in the insider model, not just holding steady.'
+    });
+  }
+
+  if (research.scouting?.scoutingSummary) {
+    const line = template.extractSentences(template.stripEmojisHashtags(research.scouting.scoutingSummary))[0];
+    if (line && line.length >= 24) {
+      const analyst = research.scouting.analystName || 'War Room';
+      angles.push({
+        context: `${research.playerName} profiles as a scheme fit in this cycle.`,
+        insider: `${analyst}: ${line.slice(0, 120)}.`
+      });
+    }
+  }
+
+  if (research.breakdown) {
+    const note =
+      research.breakdown.staffNotes ||
+      research.breakdown.recruitingStory ||
+      (research.breakdown.strengths && research.breakdown.strengths[0]);
+    if (note && String(note).length >= 20) {
+      const writer = research.breakdown.sources?.[0]?.writer || 'Verified analyst';
+      angles.push({
+        context: `Board intel on ${research.playerName} points to a priority fit.`,
+        insider: `${writer}: ${template.stripEmojisHashtags(String(note)).slice(0, 120)}.`
+      });
+    }
+  }
+
+  if (research.player?.natlRank && research.player?.classYear) {
+    angles.push({
+      context: `On3 has him at No. ${research.player.natlRank} nationally in the ${research.player.classYear} class.`,
+      insider: `UF needs ${String(research.player.pos || 'position').toUpperCase()} volume in that cycle — staff is not letting this one drift.`
+    });
+  }
+
+  if (!angles.length) return null;
+
+  const src = String(beatText || research.combinedText || '').toLowerCase();
+  let best = angles[0];
+  let bestScore = -1;
+  for (const a of angles) {
+    const combined = `${a.context} ${a.insider}`.toLowerCase();
+    const words = combined.split(/\s+/);
+    let overlap = 0;
+    if (src) {
+      for (const w of words) {
+        if (w.length > 4 && src.includes(w)) overlap += 1;
+      }
+    }
+    const score = words.length - overlap * 4;
+    if (score > bestScore) {
+      bestScore = score;
+      best = a;
+    }
+  }
+  return best;
+}
+
 function pickBestFactualSentence(research) {
   if (quoteRewriter.isRewriterEnabled() && research?.combinedText) {
     const rewritten = quoteRewriter.rewriteBeatUpdate({
@@ -290,12 +395,23 @@ async function buildElitePlayerPost(input = {}) {
     identity = `${research.playerName}${research.player?.pos ? ` · ${research.player.pos}` : ''}${research.player?.classYear ? ` · '${String(research.player.classYear).slice(-2)}` : ''}`;
   }
 
-  let contextLine =
-    pickBestFactualSentence(research) ||
-    buildEventSpecificContext(research) ||
-    (quoteRewriter.isRewriterEnabled()
-      ? buildEventSpecificContext(research)
-      : trimLine(research.article?.headline || research.combinedText.slice(0, 120), 160));
+  let contextLine = null;
+  let insiderLine = null;
+
+  const digestAngle = pickBestEliteAngle(research, input.beatText);
+  if (digestAngle) {
+    contextLine = trimLine(digestAngle.context, 160);
+    insiderLine = trimLine(digestAngle.insider, 140);
+  }
+
+  if (!contextLine) {
+    contextLine =
+      pickBestFactualSentence(research) ||
+      buildEventSpecificContext(research) ||
+      (quoteRewriter.isRewriterEnabled()
+        ? buildEventSpecificContext(research)
+        : trimLine(research.article?.headline || research.combinedText.slice(0, 120), 160));
+  }
 
   if (!contextLine || GENERIC_CLOSURE_RE.test(contextLine)) {
     contextLine =
@@ -307,7 +423,11 @@ async function buildElitePlayerPost(input = {}) {
   }
 
   contextLine = trimLine(contextLine, 160);
-  let insiderLine = trimLine(buildEliteInsiderLine(research, contextLine), 140);
+  if (!insiderLine) {
+    insiderLine = trimLine(buildEliteInsiderLine(research, contextLine), 140);
+  } else {
+    insiderLine = trimLine(insiderLine, 140);
+  }
 
   if (quoteRewriter.isRewriterEnabled() && input.beatText) {
     const combined = `${contextLine} ${insiderLine}`;
@@ -342,7 +462,12 @@ async function buildElitePlayerPost(input = {}) {
   }
 
   const attr = formatAttributionTag(research.primarySource);
-  if (attr && !insiderLine.toLowerCase().includes(attr.toLowerCase())) {
+  if (
+    attr &&
+    !insiderLine.toLowerCase().includes(attr.toLowerCase()) &&
+    !digestAngle &&
+    !quoteRewriter.isRewriterEnabled()
+  ) {
     insiderLine = `${insiderLine.replace(/\.$/, '')} · ${attr}.`;
   }
 
@@ -432,6 +557,7 @@ async function buildElitePlayerPost(input = {}) {
     ok: true,
     text,
     playerName: ctx.name || research.playerName,
+    playerSlug: research.playerSlug || playerData.data.playerSlug || null,
     context: ctx,
     postKind: kind,
     autoposterData: {
@@ -462,6 +588,8 @@ async function buildElitePlayerPost(input = {}) {
       eventType: research.eventType,
       ufPosition: research.ufPosition,
       sourcesUsed: research.sourcesUsed.map((s) => s.label),
+      eliteCompose: true,
+      eliteDigest: !!digestAngle,
       beatText: input.beatText || null,
       intelDetail: input.intel?.detail || null,
       rewrittenFromQuote: true,

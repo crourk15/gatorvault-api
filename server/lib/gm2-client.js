@@ -9,6 +9,16 @@ function appendGvCta(text, meta = {}) {
   if (process.env.X_AUTOPOST_GV_CTA_ENABLED !== 'true') return text;
   const body = String(text || '').trim();
   if (!body || /gatorvault/i.test(body)) return body;
+  try {
+    const copy = require('./x-autoposter-copy');
+    const subtle = copy.buildSubtleDiscoveryLine(meta);
+    if (subtle) {
+      const withHook = `${body}\n${subtle}`;
+      if (withHook.length <= 280) return withHook;
+    }
+  } catch {
+    /* optional */
+  }
   const site = process.env.SITE_URL || 'https://gatorvaultinsider.com';
   const landing = `${site}/vault/futurecast#visits`;
   return `${body} Full tracker at ${landing.replace('https://', '')}.`;

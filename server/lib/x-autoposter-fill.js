@@ -9,7 +9,7 @@ const recruitingStore = require('./recruiting-store');
 const intelStore = require('./recruiting-intel-store');
 const contentStore = require('./content-store');
 const { commitFingerprint, intelFingerprint } = require('./commit-fingerprint');
-const { getBeatPosts } = require('./live-beat');
+const { getBeatPosts, refreshBeatStream } = require('./live-beat');
 const beatFilters = require('./beat-writer-filters');
 const copy = require('./x-autoposter-copy');
 const cadence = require('./x-autoposter-cadence');
@@ -17,6 +17,61 @@ const pipelineGuards = require('./pipeline-guards');
 const validation = require('./x-autoposter-validation');
 const postSpec = require('./x-autoposter-post-spec');
 const sentLedger = require('./x-autoposter-sent-ledger');
+
+const BEAT_CACHE_STALE_MS = parseInt(
+  process.env.X_AUTOPOST_BEAT_CACHE_STALE_MS || String(15 * 60 * 1000),
+  10
+);
+
+function beatFirstEnabled() {
+  return process.env.X_AUTOPOST_BEAT_FIRST !== 'false';
+}
+
+function clusterFallbackEnabled() {
+  return process.env.X_AUTOPOST_CLUSTER_FALLBACK !== 'false';
+}
+
+async function ensureBeatCacheFresh() {
+  if (!beatFirstEnabled()) return { refreshed: false, reason: 'beat_first_disabled' };
+  const beat = getBeatPosts(1);
+  const fetchedAt = beat.fetchedAt ? new Date(beat.fetchedAt).getTime() : 0;
+  const stale = !fetchedAt || Date.now() - fetchedAt > BEAT_CACHE_STALE_MS;
+  if (!stale && (beat.posts || []).length) {
+    return { refreshed: false, reason: 'cache_fresh', postCount: beat.posts.length, fetchedAt: beat.fetchedAt };
+  }
+  if (!pipelineGuards.scheduledJobsEnabled() && !process.env.X_BEARER_TOKEN) {
+    return { refreshed: false, reason: 'no_fetch_credentials', postCount: (beat.posts || []).length };
+  }
+  try {
+    const out = await refreshBeatStream();
+    return { refreshed: true, postCount: out.postCount || 0, source: out.source || null };
+  } catch (err) {
+    return { refreshed: false, reason: err.message, postCount: (beat.posts || []).length };
+  }
+}
+
+async function ensureBeatIntelIngested({ force = false } = {}) {
+  if (!beatFirstEnabled()) return { ok: true, skipped: true, reason: 'beat_first_disabled' };
+  if (!pipelineGuards.autopostEnabled()) return { ok: true, skipped: true, reason: 'autoposter_disabled' };
+  try {
+    const beatIngest = require('./beat-writer-ingest');
+    const result = await beatIngest.runBeatWriterIngest({ force });
+    return {
+      ok: true,
+      processedCount: result.processed?.length || 0,
+      skippedCount: result.skipped?.length || 0,
+      errorCount: result.errors?.length || 0
+    };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+}
+
+async function prepareBeatFirstAutoposter({ forceIngest = false } = {}) {
+  const cache = await ensureBeatCacheFresh();
+  const ingest = await ensureBeatIntelIngested({ force: forceIngest });
+  return { cache, ingest };
+}
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 const ON3_PORTAL =
@@ -438,12 +493,87 @@ async function buildNewsFromPortalEvent(ev) {
   );
 }
 
-async function collectFreshPostCandidates() {
+const FORCE_POST_COMMIT_AGE_MS = parseInt(
+  process.env.X_AUTOPOST_FORCE_COMMIT_AGE_MS || String(30 * 24 * 60 * 60 * 1000),
+  10
+);
+
+const BEAT_INTEL_SOURCES = /beat-writer|program-news|team-event|auto:beat|auto:program|auto:team/i;
+
+function isBeatWriterIntel(intel) {
+  return BEAT_INTEL_SOURCES.test(String(intel?.source || ''));
+}
+
+async function directBeatPostCandidates(freshPosts) {
   const candidates = [];
+  const prefilter = require('./beat-intel-prefilter');
+  for (const post of freshPosts) {
+    const guarded = await prefilter.guardBeatPost(post);
+    if (!guarded.eligible) continue;
+
+    const momentum = await buildMomentumFromBeat(post);
+    if (momentum) {
+      candidates.unshift(momentum);
+      continue;
+    }
+    const beatNews = await buildNewsFromBeatPost(post);
+    if (beatNews) candidates.unshift(beatNews);
+  }
+  return candidates;
+}
+
+/** Beat posts → elite original compose by default; cluster quote-RT only when X_AUTOPOST_ELITE_COMPOSE=false. */
+async function collectBeatAutoposterCandidates(freshPosts) {
+  if (process.env.X_AUTOPOST_ELITE_COMPOSE !== 'false') {
+    return directBeatPostCandidates(freshPosts);
+  }
+
+  const candidates = [];
+  const eventCluster = require('./x-autoposter-event-cluster');
+  const clusterFallback = clusterFallbackEnabled();
+
+  if (eventCluster.isClusteringEnabled()) {
+    const clusters = await eventCluster.buildClustersFromBeatPosts(freshPosts);
+    const handledKeys = new Set();
+
+    for (const cluster of clusters) {
+      const out = await eventCluster.buildEliteClusterPost(cluster);
+      if (out?.ok && out.queueItem) {
+        candidates.unshift(out.queueItem);
+        for (const p of cluster.posts || []) handledKeys.add(String(p.id || p.url || ''));
+        continue;
+      }
+      if (clusterFallback && cluster.posts?.length) {
+        const direct = await directBeatPostCandidates(cluster.posts);
+        for (const row of direct) candidates.unshift(row);
+        for (const p of cluster.posts) handledKeys.add(String(p.id || p.url || ''));
+      }
+    }
+
+    if (clusterFallback) {
+      const remainder = freshPosts.filter((p) => !handledKeys.has(String(p.id || p.url || '')));
+      if (remainder.length) {
+        candidates.unshift(...(await directBeatPostCandidates(remainder)));
+      }
+    }
+  } else {
+    candidates.unshift(...(await directBeatPostCandidates(freshPosts)));
+  }
+
+  return candidates;
+}
+
+async function collectFreshPostCandidates({ forcePost = false } = {}) {
+  const candidates = [];
+  const maxCommitAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_COMMIT_EVENT_AGE_MS;
+  const maxBeatAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_BEAT_POST_AGE_MS;
+  const maxIntelAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_INTEL_AGE_MS;
 
   try {
-    const unqueuedIntel = intelStore.getUnqueuedIntel({ maxAgeMs: MAX_INTEL_AGE_MS });
-    for (const intel of unqueuedIntel.slice(0, 8)) {
+    const unqueuedIntel = intelStore.getUnqueuedIntel({ maxAgeMs: maxIntelAgeMs });
+    const beatIntel = unqueuedIntel.filter(isBeatWriterIntel);
+    const otherIntel = unqueuedIntel.filter((i) => !isBeatWriterIntel(i));
+    for (const intel of [...beatIntel, ...otherIntel].slice(0, 12)) {
       const eligibility = require('./rivals-prediction-eligibility');
       const gate = await eligibility.checkIntelForAutopost(intel);
       if (!gate.allowed) continue;
@@ -457,42 +587,21 @@ async function collectFreshPostCandidates() {
   try {
     const eventCluster = require('./x-autoposter-event-cluster');
     const beat = getBeatPosts(80);
-    const beatCutoff = Date.now() - MAX_BEAT_POST_AGE_MS;
+    const beatCutoff = Date.now() - maxBeatAgeMs;
     const sportClassifier = require('./x-autoposter-sport-classifier');
     const freshPosts = sportClassifier.filterFootballBeatPosts(
       (beat.posts || []).filter((p) => new Date(p.publishedAt).getTime() >= beatCutoff)
     );
 
-    if (eventCluster.isClusteringEnabled()) {
-      const clusters = await eventCluster.buildClustersFromBeatPosts(freshPosts);
-      for (const cluster of clusters) {
-        const out = await eventCluster.buildEliteClusterPost(cluster);
-        if (out?.ok && out.queueItem) {
-          candidates.unshift(out.queueItem);
-        }
-      }
-    } else {
-      const prefilter = require('./beat-intel-prefilter');
-      for (const post of freshPosts) {
-        const guarded = await prefilter.guardBeatPost(post);
-        if (!guarded.eligible) continue;
-
-        const momentum = await buildMomentumFromBeat(post);
-        if (momentum) {
-          candidates.unshift(momentum);
-          continue;
-        }
-        const beatNews = await buildNewsFromBeatPost(post);
-        if (beatNews) candidates.unshift(beatNews);
-      }
-    }
+    const beatCandidates = await collectBeatAutoposterCandidates(freshPosts);
+    for (const row of beatCandidates) candidates.unshift(row);
   } catch {
     /* optional */
   }
 
   try {
     const events = await recruitingStore.getEvents({ limit: 50 });
-    const cutoff = Date.now() - MAX_COMMIT_EVENT_AGE_MS;
+    const cutoff = Date.now() - maxCommitAgeMs;
     for (const ev of events
       .filter((e) => isCommitAutopostEvent(e))
       .filter((e) => !String(e.title || '').includes('ranking'))
@@ -544,9 +653,15 @@ async function collectFreshPostCandidates() {
   return candidates;
 }
 
-async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
+async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5, forcePost = false } = {}) {
   if (!pipelineGuards.autopostEnabled()) {
     return { ok: true, skipped: true, reason: 'autoposter disabled', pending: 0, enqueued: [] };
+  }
+  let beatPrep = null;
+  try {
+    beatPrep = await prepareBeatFirstAutoposter({ forceIngest: forcePost });
+  } catch {
+    /* optional */
   }
   try {
     intelStore.reconcileGhostQueuedIntel();
@@ -561,7 +676,7 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
   }
 
   const slots = Math.max(maxEnqueue - pending.length, need);
-  const rawNewsCandidates = await collectFreshPostCandidates();
+  const rawNewsCandidates = await collectFreshPostCandidates({ forcePost });
   const validatedNews = [];
   for (const raw of rawNewsCandidates) {
     if (raw?._nonPlayerSkip || raw?.skipReason === 'non_player_intel') continue;
@@ -646,7 +761,8 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
     enqueued,
     enqueuedCount: enqueued.length,
     qualitySkipped,
-    validatedNewsCount: validatedNews.length
+    validatedNewsCount: validatedNews.length,
+    beatPrep
   };
 }
 
@@ -725,9 +841,42 @@ async function queueCommitEventAutopost(input, { urgent = true } = {}) {
   return { queued: true, item: out.item, commitFingerprint: fp };
 }
 
+/** Force-post: enqueue recent On3/beat commits even when normal freshness window expired. */
+async function forceEnqueueRecentCommits({ maxAgeMs = FORCE_POST_COMMIT_AGE_MS } = {}) {
+  if (!pipelineGuards.autopostEnabled()) {
+    return { queued: false, reason: 'autoposter_disabled' };
+  }
+
+  store.recoverFailedVerifiedCommits();
+  store.recoverFailedPostableItems({ maxAgeMs });
+
+  const pending = store.listQueue({ status: 'pending' });
+  if (pending.length) {
+    return { queued: false, reason: 'already_pending', pending: pending.length };
+  }
+
+  const cutoff = Date.now() - maxAgeMs;
+  const events = await recruitingStore.getEvents({ limit: 120 });
+  const commits = events
+    .filter((e) => isCommitAutopostEvent(e))
+    .filter((e) => !String(e.title || '').includes('ranking'))
+    .filter((e) => new Date(e.createdAt).getTime() >= cutoff)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  for (const ev of commits) {
+    const result = await queueCommitEventAutopost(ev, { urgent: true });
+    if (result.queued) return result;
+  }
+
+  return { queued: false, reason: 'no_eligible_commits', scanned: commits.length };
+}
+
 module.exports = {
   refillAutoposterQueue,
   collectFreshPostCandidates,
+  collectBeatAutoposterCandidates,
+  directBeatPostCandidates,
+  isBeatWriterIntel,
   finalizeNewsCandidate,
   alreadyQueued,
   similarPostQueued,
@@ -737,6 +886,9 @@ module.exports = {
   buildNewsFromBeatPost,
   buildMomentumFromBeat,
   queueCommitEventAutopost,
+  forceEnqueueRecentCommits,
+  prepareBeatFirstAutoposter,
   isCommitAutopostEvent,
   COMMIT_EVENT_SOURCES,
+  FORCE_POST_COMMIT_AGE_MS,
 };

@@ -11,6 +11,38 @@ const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 const FUTURECAST_VISITS_URL = `${SITE_URL}/vault/futurecast#visits`;
 const FUTURECAST_BOARD_URL = `${SITE_URL}/vault/futurecast#master-board`;
 
+const SUBTLE_HOOKS = [
+  'Full board read',
+  'Track the FutureCast arc',
+  'Visit timeline + RPM',
+  'Board intel breakdown',
+  'Class fit + movement'
+];
+
+function playerProfileUrl(slug, meta = {}) {
+  if (!slug) return resolveAutoposterSiteUrl(meta);
+  const et = String(meta.eventType || meta.triggerType || '').toLowerCase();
+  const base = `${SITE_URL}/vault/futurecast/player/${encodeURIComponent(slug)}`;
+  if (/visit|ov|uv/.test(et)) return `${base}#visits`;
+  if (/prediction|futurecast|rpm|crystal/.test(et)) return `${base}#futurecast`;
+  return base;
+}
+
+function buildSubtleDiscoveryLine(meta = {}) {
+  if (process.env.X_AUTOPOST_SUBTLE_GV_HOOKS === 'false') return null;
+  if (process.env.X_AUTOPOST_GV_CTA_ENABLED !== 'true') return null;
+  const slug = meta.playerSlug || meta.validationMeta?.playerSlug || null;
+  const url = playerProfileUrl(slug, meta);
+  const hookIdx =
+    Math.abs(
+      String(slug || meta.playerName || 'gv')
+        .split('')
+        .reduce((a, c) => a + c.charCodeAt(0), 0)
+    ) % SUBTLE_HOOKS.length;
+  const hook = SUBTLE_HOOKS[hookIdx];
+  return `${hook} \u2193\n${url.replace('https://', '')}`;
+}
+
 const BROKEN_COPY_PATTERNS = [
   /\bour own pi\b/i,
   /\bHer — via\b/i,
@@ -172,12 +204,17 @@ function resolveAutoposterSiteUrl(meta = {}, bodyText = '') {
 function appendSite(text, meta = {}) {
   const body = template.finalizeAutoposterCopy(template.stripEmojisHashtags(text), meta);
   if (!body) return '';
+  const subtle = buildSubtleDiscoveryLine(meta);
+  if (subtle) {
+    const withHook = `${body}\n${subtle}`;
+    if (withHook.length <= 280) return withHook;
+  }
   const landing = resolveAutoposterSiteUrl(meta, body);
   const urlBit = landing.replace('https://', '');
   if (body.includes(urlBit) || body.includes(SITE_URL.replace('https://', ''))) {
     return template.enforceTweetLimit(body, 280, meta);
   }
-  const withUrl = `${body}\n${landing}`;
+  const withUrl = `${body}\n${landing.replace('https://', '')}`;
   return withUrl.length <= 280 ? withUrl : template.enforceTweetLimit(body, 280, meta);
 }
 
@@ -242,7 +279,10 @@ function newsPayloadFromBuilt(built, extra = {}) {
     postKind: built.postKind || extra.triggerType || null,
     teamEventType: built.teamEventType || extra.teamEventType || built.validationMeta?.teamEventType || null,
     programNewsType: built.programNewsType || extra.programNewsType || built.validationMeta?.programNewsType || null,
-    beatText: built.validationMeta?.beatText || extra.beatText || null
+    beatText: built.validationMeta?.beatText || extra.beatText || null,
+    playerSlug: built.playerSlug || built.context?.playerSlug || built.validationMeta?.playerSlug || extra.playerSlug || null,
+    playerName: built.playerName || extra.playerName || null,
+    eventType: built.validationMeta?.eventType || extra.eventType || built.validationMeta?.situation || null
   };
   const text = appendSite(built.text, copyMeta);
   const payload = {
@@ -676,6 +716,8 @@ module.exports = {
   FUTURECAST_VISITS_URL,
   FUTURECAST_BOARD_URL,
   resolveAutoposterSiteUrl,
+  buildSubtleDiscoveryLine,
+  playerProfileUrl,
   isValidPlayerName,
   extractPlayerFromText,
   extractAllPlayerNameCandidates,

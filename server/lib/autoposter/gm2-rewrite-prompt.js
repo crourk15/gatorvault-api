@@ -30,8 +30,11 @@ Follow this exact 3-block insider template:
    - Optional closing clause: one subtle GatorVault reference (e.g. "Full FutureCast board on GatorVault") when platform CTA is enabled — no hashtags, no emojis, no hype  
 
 Rules:
-- DO NOT copy or paraphrase beat writer text. Generate a fresh insider update.  
-- DO NOT use hype language ("massive", "insane", "crazy").  
+- DO NOT copy or paraphrase beat writer text. Generate a fresh insider update.
+- Beat writer posts are SIGNAL ONLY — never quote, mirror, or restate their wording.
+- Synthesize from player context: visits, RPM/FutureCast, competition, class fit, staff involvement.
+- Add at least one insight the beat tweet did not say (timeline, model movement, scheme fit, or visit arc).
+- DO NOT use hype language ("massive", "insane", "crazy").
 - DO NOT be a fan. Be an insider.  
 - DO NOT be generic. Add context and insight.  
 - DO NOT mention "according to GM2" or any system references.  

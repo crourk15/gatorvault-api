@@ -226,6 +226,25 @@ function cancelPost(id) {
   return updatePost(id, { status: 'cancelled' });
 }
 
+function isRecoverableFailedItem(item, { maxAgeMs = 30 * 24 * 60 * 60 * 1000 } = {}) {
+  if (!item || item.status !== 'failed') return false;
+  const err = String(item.error || '');
+  if (/duplicate content/i.test(err)) return false;
+  const ts = new Date(item.createdAt || item.sourceEventCreatedAt || item.scheduledAt || 0).getTime();
+  if (Number.isFinite(ts) && ts > 0 && Date.now() - ts > maxAgeMs) return false;
+  if (item.verifiedCommit || item.validationMeta?.verifiedCommit) return true;
+  const check = policy.validatePostContent(item);
+  return check.valid;
+}
+
+function rependFailedItem(item) {
+  item.status = 'pending';
+  item.error = null;
+  item.validationErrors = [];
+  item.sentAt = null;
+  item.scheduledAt = nowIso();
+}
+
 /** Re-queue verified commits that failed GM2 rewrite — premade On3 copy is post-ready. */
 function recoverFailedVerifiedCommits() {
   const doc = loadQueue();
@@ -233,18 +252,29 @@ function recoverFailedVerifiedCommits() {
   for (const item of doc.items) {
     if (item.status !== 'failed') continue;
     if (!(item.verifiedCommit || item.validationMeta?.verifiedCommit)) continue;
-    const err = String(item.error || '');
-    if (!/(rewrite_failed|too_short|no_player_match|intel rewrite)/i.test(err)) continue;
-    item.status = 'pending';
-    item.error = null;
-    item.validationErrors = [];
-    item.sentAt = null;
-    item.scheduledAt = nowIso();
+    if (/duplicate content/i.test(String(item.error || ''))) continue;
+    rependFailedItem(item);
     recovered += 1;
   }
   if (recovered) {
     saveQueue(doc);
     logQueueOp('recover_verified', { id: 'batch', count: recovered }, { recovered });
+  }
+  return recovered;
+}
+
+/** Re-queue any recent failed item that still passes validation (force-post safety net). */
+function recoverFailedPostableItems(opts = {}) {
+  const doc = loadQueue();
+  let recovered = 0;
+  for (const item of doc.items) {
+    if (!isRecoverableFailedItem(item, opts)) continue;
+    rependFailedItem(item);
+    recovered += 1;
+  }
+  if (recovered) {
+    saveQueue(doc);
+    logQueueOp('recover_postable', { id: 'batch', count: recovered }, { recovered });
   }
   return recovered;
 }
@@ -262,6 +292,8 @@ module.exports = {
   updatePost,
   cancelPost,
   recoverFailedVerifiedCommits,
+  recoverFailedPostableItems,
+  isRecoverableFailedItem,
   appendOpsLog,
   logQueueOp,
   findByIntel,

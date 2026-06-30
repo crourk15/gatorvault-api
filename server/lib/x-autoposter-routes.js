@@ -350,11 +350,29 @@ function mountXAutoposterRoutes(app) {
           tweetUrl: out.tweetUrl
         });
       }
+      if (out.ok && out.needs_resolution) {
+        return res.json({
+          ok: true,
+          posted: false,
+          needs_resolution: true,
+          source: out.source || 'force-post',
+          playerName: out.playerName || null,
+          playerSlug: out.playerSlug || null,
+          triggerPhrase: out.triggerPhrase || null,
+          missingPattern: out.missingPattern || null,
+          missingPatterns: out.missingPatterns || [],
+          missingFields: out.missingFields || [],
+          reason: out.reason || null,
+          patternRebuildAttempted: out.patternRebuildAttempted || false
+        });
+      }
       return res.status(out.error === 'duplicate' ? 409 : 400).json({
         ok: false,
         posted: false,
         error: out.error || 'x_api_error',
-        source: 'force-post',
+        source: out.source || 'force-post',
+        pendingCount: out.pendingCount ?? null,
+        failedCount: out.failedCount ?? null,
         playerName: out.playerName || null,
         playerSlug: out.playerSlug || null,
         triggerPhrase: out.triggerPhrase || null,

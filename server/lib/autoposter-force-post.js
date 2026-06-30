@@ -11,7 +11,10 @@ const autoposterIdentity = require('./autoposter-identity');
 const {
   collectFreshPostCandidates,
   finalizeNewsCandidate,
-  alreadyQueued
+  alreadyQueued,
+  refillAutoposterQueue,
+  forceEnqueueRecentCommits,
+  prepareBeatFirstAutoposter
 } = require('./x-autoposter-fill');
 
 function mapPostError(err, context = {}) {
@@ -47,33 +50,43 @@ async function forceProcessQueuedPost() {
   const next = cadence.pickNextPost(pending) || pending[0];
   if (!next) return null;
 
-  const result = await autoposter.processQueueItem(next);
-  if (result.ok) {
-    opsMonitor.logEvent({
-      subsystem: 'autoposter',
-      status: 'success',
-      message: 'Force post successful (queue)',
-      details: {
-        source: 'force-post:queue',
-        itemId: next.id,
-        tweetId: result.result?.tweetId || result.item?.tweetId || null,
-        preview: String(next.text || '').slice(0, 80)
-      }
-    });
-    return successFromQueueResult(result);
-  }
+  try {
+    const result = await autoposter.processQueueItem(next);
+    if (result.ok) {
+      opsMonitor.logEvent({
+        subsystem: 'autoposter',
+        status: 'success',
+        message: 'Force post successful (queue)',
+        details: {
+          source: 'force-post:queue',
+          itemId: next.id,
+          tweetId: result.result?.tweetId || result.item?.tweetId || null,
+          preview: String(next.text || '').slice(0, 80)
+        }
+      });
+      return successFromQueueResult(result);
+    }
 
-  if (result.skipped && result.reason === 'autoposter disabled') {
-    return { ok: false, posted: false, error: 'autoposter disabled', source: 'force-post:queue' };
-  }
+    if (result.skipped && result.reason === 'autoposter disabled') {
+      return { ok: false, posted: false, error: 'autoposter disabled', source: 'force-post:queue' };
+    }
 
-  return {
-    ok: false,
-    posted: false,
-    error: result.error || result.reason || 'queue_post_failed',
-    source: 'force-post:queue',
-    itemId: next.id
-  };
+    return {
+      ok: false,
+      posted: false,
+      error: result.error || result.reason || 'queue_post_failed',
+      source: 'force-post:queue',
+      itemId: next.id
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      posted: false,
+      error: err.message || 'queue_post_failed',
+      source: 'force-post:queue',
+      itemId: next.id
+    };
+  }
 }
 
 async function retryCandidateAfterPatternRebuild(raw) {
@@ -107,13 +120,43 @@ function findPendingQueueItemForText(text, items) {
   );
 }
 
+async function tryForceQueuePost() {
+  store.recoverFailedVerifiedCommits();
+  store.recoverFailedPostableItems();
+  const pending = store.listQueue({ status: 'pending' });
+  if (!pending.length) return null;
+  return forceProcessQueuedPost();
+}
+
 async function forcePostNow() {
   autoposter.saveSchedulerStatus({ lastPostAttempt: store.nowIso(), lastError: null });
 
-  const queueFirst = await forceProcessQueuedPost();
-  if (queueFirst?.posted) return queueFirst;
-  if (queueFirst?.error && queueFirst.error !== 'queue_post_failed') {
-    return queueFirst;
+  try {
+    await prepareBeatFirstAutoposter({ forceIngest: true });
+  } catch (err) {
+    /* beat prep optional */
+  }
+
+  let queueResult = await tryForceQueuePost();
+  if (queueResult) return queueResult;
+
+  try {
+    await refillAutoposterQueue({ minPending: 1, maxEnqueue: 3, forcePost: true });
+  } catch (err) {
+    /* refill optional */
+  }
+
+  queueResult = await tryForceQueuePost();
+  if (queueResult) return queueResult;
+
+  try {
+    const enq = await forceEnqueueRecentCommits();
+    if (enq.queued) {
+      queueResult = await tryForceQueuePost();
+      if (queueResult) return queueResult;
+    }
+  } catch (err) {
+    /* commit enqueue optional */
   }
 
   try {
@@ -126,7 +169,7 @@ async function forcePostNow() {
   }
 
   const queueItems = store.loadQueue().items || [];
-  const candidates = await collectFreshPostCandidates();
+  const candidates = await collectFreshPostCandidates({ forcePost: true });
   let lastNeedsResolution = null;
 
   for (const raw of candidates) {
@@ -212,11 +255,14 @@ async function forcePostNow() {
     };
   }
 
-  if (queueFirst?.error) {
-    return queueFirst;
-  }
-
-  return { ok: false, posted: false, error: 'no_fresh_intel', source: 'force-post' };
+  return {
+    ok: false,
+    posted: false,
+    error: 'no_fresh_intel',
+    source: 'force-post',
+    pendingCount: store.listQueue({ status: 'pending' }).length,
+    failedCount: store.listQueue({ status: 'failed' }).length
+  };
 }
 
 module.exports = { forcePostNow, mapPostError, forceProcessQueuedPost };

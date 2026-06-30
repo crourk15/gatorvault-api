@@ -243,23 +243,7 @@ async function processQueueItem(item) {
   try {
     const intelligencePipeline = require('./autoposter/intelligence-pipeline');
     const prepared = await intelligencePipeline.prepareQueueItemForPost(item);
-    if (!prepared.ok) {
-      const errMsg = prepared.reason || 'rewrite_failed';
-      autopostLog('error', `Error: intelligence rewrite failed`, {
-        itemId: item.id,
-        errMsg,
-        quality: prepared.quality
-      });
-      store.updatePost(item.id, {
-        status: 'failed',
-        error: errMsg,
-        validationErrors: [{ message: errMsg }],
-        sentAt: store.nowIso()
-      });
-      saveSchedulerStatus({ lastError: errMsg });
-      return { ok: false, itemId: item.id, error: errMsg, rewrite: prepared.quality };
-    }
-    if (prepared.item && prepared.item.text) {
+    if (prepared.ok && prepared.item?.text) {
       workingItem = prepared.item;
       if (workingItem.text !== item.text) {
         store.updatePost(item.id, {
@@ -268,6 +252,32 @@ async function processQueueItem(item) {
           templateBlocks: workingItem.templateBlocks
         });
       }
+    } else if (!prepared.ok) {
+      const verified = item.verifiedCommit || item.validationMeta?.verifiedCommit;
+      const check = verified ? policy.validatePostContent(item) : null;
+      if (verified && check?.valid) {
+        autopostLog('warn', `Verified commit copy used after ${prepared.reason || 'rewrite_failed'}`, {
+          itemId: item.id
+        });
+        workingItem = item;
+      } else {
+        const errMsg = prepared.reason || 'rewrite_failed';
+        autopostLog('error', `Error: intelligence rewrite failed`, {
+          itemId: item.id,
+          errMsg,
+          quality: prepared.quality
+        });
+        store.updatePost(item.id, {
+          status: 'failed',
+          error: errMsg,
+          validationErrors: [{ message: errMsg }],
+          sentAt: store.nowIso()
+        });
+        saveSchedulerStatus({ lastError: errMsg });
+        return { ok: false, itemId: item.id, error: errMsg, rewrite: prepared.quality };
+      }
+    } else if (prepared.item?.text) {
+      workingItem = prepared.item;
     }
   } catch (pipeErr) {
     autopostLog('warn', `Intelligence pipeline fallback: ${pipeErr.message}`, { itemId: item.id });
@@ -447,6 +457,7 @@ async function processQueueItem(item) {
 
 async function processDuePosts({ limit = 1, force = false } = {}) {
   store.recoverFailedVerifiedCommits();
+  store.recoverFailedPostableItems();
   const pending = store.listQueue({ status: 'pending' });
   const status = loadSchedulerStatus();
   const lastPostAt = status.lastPostAt || status.lastPostSuccess || null;

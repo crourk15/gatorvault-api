@@ -36,7 +36,11 @@ const PREFERRED_PHRASE_HINTS = [
   'UF is trending upward',
   'quietly strengthened its position',
   'staff feels good about where things stand',
-  'firmly in the top group'
+  'firmly in the top group',
+  'decision checkpoint',
+  'scheme fit in this cycle',
+  'lead cluster',
+  'campus sequence'
 ];
 
 function countWords(text) {

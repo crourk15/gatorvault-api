@@ -129,6 +129,58 @@ async function prepareQueueItemForPost(item = {}) {
   const verifiedBypass = bypassRewriteForVerifiedCommit(item);
   if (verifiedBypass) return verifiedBypass;
 
+  const eliteCaption = require('../x-autoposter-elite-caption');
+  if (eliteCaption.isEliteModeEnabled()) {
+    const intelForElite = pipelineGuards.guardIntelForPipeline(findIntelForItem(item));
+    const beatForElite = intelToBeatText(intelForElite, item);
+    if (beatForElite && (item.playerName || intelForElite?.playerName)) {
+      try {
+        const elite = await eliteCaption.buildElitePlayerPost({
+          playerName: item.playerName || intelForElite?.playerName,
+          playerSlug: item.playerSlug || intelForElite?.playerSlug,
+          beatText: beatForElite,
+          intel: intelForElite || {
+            playerName: item.playerName,
+            playerSlug: item.playerSlug,
+            detail: beatForElite,
+            eventType: item.intelType || item.sourceEventType,
+            source: item.source
+          },
+          source: item.source
+        });
+        if (elite?.ok && elite.text) {
+          monitoring.logAutoposterEvent('elite_compose_success', {
+            itemId: item.id,
+            playerName: elite.playerName,
+            eventType: elite.validationMeta?.eventType
+          });
+          return {
+            ok: true,
+            item: {
+              ...item,
+              text: elite.text,
+              playerName: elite.playerName || item.playerName,
+              playerSlug: elite.playerSlug || item.playerSlug,
+              templateBlocks: elite.templateBlocks,
+              validationMeta: {
+                ...(item.validationMeta || {}),
+                ...(elite.validationMeta || {}),
+                eliteCompose: true,
+                beatText: beatForElite
+              }
+            },
+            elite: true
+          };
+        }
+      } catch (err) {
+        monitoring.logAutoposterEvent('elite_compose_skip', {
+          itemId: item.id,
+          error: err.message
+        });
+      }
+    }
+  }
+
   const intel = pipelineGuards.guardIntelForPipeline(findIntelForItem(item));
   const beatText = intelToBeatText(intel, item);
   if (!beatText) {
