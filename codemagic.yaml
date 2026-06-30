@@ -15,22 +15,48 @@ workflows:
         XCODE_SCHEME: App
         BUNDLE_ID: com.gatorvaultinsider.app
         DEVELOPMENT_TEAM: "45C4DZJ4UJ"
+        NEXT_TELEMETRY_DISABLED: "1"
+        NODE_OPTIONS: "--max-old-space-size=4096"
       node: 20
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Install Node dependencies and build web bundle
+      - name: Install Node dependencies
         script: |
+          set -euo pipefail
+          unset CAPACITOR_SERVER_URL || true
           cd client
-          npm ci
-          npm run build
-          npx cap sync ios
-      - name: Verify iOS loads live vault URL (not bundled landing)
+          echo "Node $(node -v) | npm $(npm -v) | cwd $(pwd)"
+          npm ci --legacy-peer-deps
+      - name: Build Next.js static export
         script: |
-          set -e
+          set -euo pipefail
+          cd client
+          node scripts/verify-recruiting-cycle-exports.js
+          npm run build
+          test -f out/index.html
+          test -d out/vault
+          test -d out/join
+          echo "OK: static export in client/out ($(find out -name '*.html' | wc -l | tr -d ' ') html files)"
+      - name: Capacitor sync (bundle web assets into iOS)
+        script: |
+          set -euo pipefail
+          unset CAPACITOR_SERVER_URL || true
+          cd client
+          npx cap sync ios
+          test -d ios/App/App/public
+          echo "OK: copied web bundle to ios/App/App/public"
+      - name: Verify bundled Capacitor config (App Store 4.2.2)
+        script: |
+          set -euo pipefail
           CFG="client/ios/App/App/capacitor.config.json"
-          grep -q 'gatorvaultinsider.com/vault' "$CFG" || (echo "ERROR: capacitor.config.json missing live server.url" && cat "$CFG" && exit 1)
-          echo "OK: Capacitor server.url points at live vault"
+          test -f "$CFG"
+          if grep -q '"server"' "$CFG"; then
+            echo "ERROR: capacitor.config.json must NOT use live server.url for App Review" >&2
+            cat "$CFG"
+            exit 1
+          fi
+          echo "OK: bundled Capacitor shell (no live WebView URL)"
       - name: Install CocoaPods
         script: |
           cd client/ios/App
