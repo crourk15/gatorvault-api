@@ -1,10 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { isNativeApp } from '@/lib/api-base';
+import { isNativeApp, nativeNavigationUrl } from '@/lib/api-base';
 import { loadSession } from '@/lib/auth-api';
-
-const SITE = 'https://gatorvaultinsider.com';
 
 function isMarketingPath(pathname: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -21,8 +19,8 @@ export function NativeMarketingRedirect(): null {
     const session = loadSession();
     const dest =
       session?.email && session?.token
-        ? `${SITE}/vault/`
-        : `${SITE}/join/?mode=signin&next=/vault/`;
+        ? nativeNavigationUrl('/vault/')
+        : nativeNavigationUrl('/join/?mode=signin&next=/vault/');
     if (window.location.href !== dest) window.location.replace(dest);
   }, []);
 

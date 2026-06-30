@@ -2,10 +2,19 @@
 export const NATIVE_BOOT_SCRIPT = `(function(){
   try {
     var cap = window.Capacitor;
-    var native = cap && cap.isNativePlatform && cap.isNativePlatform();
+    var proto = location.protocol || '';
+    var host = location.hostname || '';
+    var port = location.port || '';
+    var bundledNative = proto.indexOf('capacitor') === 0 ||
+      ((host === 'localhost' || host === '127.0.0.1') && port !== '3000');
+    var native = (cap && cap.isNativePlatform && cap.isNativePlatform()) || bundledNative;
     if (!native) return;
 
-    var SITE = 'https://gatorvaultinsider.com';
+    var SITE = (host === 'gatorvaultinsider.com' || host === 'www.gatorvaultinsider.com')
+      ? location.origin
+      : bundledNative
+        ? location.origin
+        : 'https://gatorvaultinsider.com';
 
     function abs(path) {
       if (!path) return SITE + '/';

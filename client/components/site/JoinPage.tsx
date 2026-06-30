@@ -11,7 +11,7 @@ import {
 } from '@/lib/auth-api';
 import { findPricingTier, publicPricingTiers, PRICING_TIERS } from '@/lib/pricing-tiers';
 import { LegalSiteLinks } from '@/components/site/LegalSiteLinks';
-import { isNativeApp } from '@/lib/api-base';
+import { isNativeApp, nativeNavigationUrl } from '@/lib/api-base';
 
 type Mode = 'signin' | 'signup';
 
@@ -32,7 +32,7 @@ function redirectAfterAuth(): void {
   const dest = safeAuthRedirectPath(next, '/vault/');
   const target =
     isNativeApp() || window.location.hostname === 'gatorvaultinsider.com'
-      ? new URL(dest, 'https://gatorvaultinsider.com').href
+      ? nativeNavigationUrl(dest)
       : dest;
   window.setTimeout(() => {
     window.location.replace(target);

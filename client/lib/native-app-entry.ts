@@ -1,7 +1,5 @@
-import { isNativeApp } from '@/lib/api-base';
+import { isNativeApp, nativeNavigationOrigin, nativeNavigationUrl } from '@/lib/api-base';
 import { loadSession } from '@/lib/auth-api';
-
-const SITE = 'https://gatorvaultinsider.com';
 
 export function normalizeStaticExportHref(href: string): string {
   if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) {
@@ -9,7 +7,7 @@ export function normalizeStaticExportHref(href: string): string {
   }
   if (href.startsWith('http://') || href.startsWith('https://')) return href;
   try {
-    const url = new URL(href, SITE);
+    const url = new URL(href, nativeNavigationOrigin());
     let path = url.pathname || '/';
     const last = path.split('/').filter(Boolean).pop() ?? '';
     if (!last.includes('.') && !path.endsWith('/')) path = `${path}/`;
@@ -17,11 +15,6 @@ export function normalizeStaticExportHref(href: string): string {
   } catch {
     return href;
   }
-}
-
-function toAbsolute(path: string): string {
-  if (path.startsWith('http://') || path.startsWith('https://')) return path;
-  return new URL(path, SITE).href;
 }
 
 function isMarketingPath(pathname: string): boolean {
@@ -38,7 +31,7 @@ export function nativeBootRedirect(): string | null {
     session?.email && session?.token
       ? '/vault/'
       : '/join/?mode=signin&next=/vault/';
-  return toAbsolute(rel);
+  return nativeNavigationUrl(rel);
 }
 
 export function runNativeAppEntry(): void {
@@ -59,11 +52,11 @@ export function runNativeAppEntry(): void {
       if (!raw) return;
 
       try {
-        const url = new URL(raw, SITE);
+        const url = new URL(raw, nativeNavigationOrigin());
         const p = url.pathname.replace(/\/$/, '') || '/';
         if (isMarketingPath(p)) {
           event.preventDefault();
-          window.location.href = nativeBootRedirect() ?? toAbsolute('/vault/');
+          window.location.href = nativeBootRedirect() ?? nativeNavigationUrl('/vault/');
           return;
         }
       } catch {
@@ -73,7 +66,7 @@ export function runNativeAppEntry(): void {
       const normalized = normalizeStaticExportHref(raw);
       if (normalized !== raw) {
         event.preventDefault();
-        window.location.href = toAbsolute(normalized);
+        window.location.href = nativeNavigationUrl(normalized);
       }
     },
     true
