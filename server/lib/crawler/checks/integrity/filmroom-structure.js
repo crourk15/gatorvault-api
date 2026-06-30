@@ -61,7 +61,6 @@ async function runFilmRoomStructureChecks() {
       const required = [
         'data-testid="vault-film-room"',
         'Film Room',
-        'Game Week',
         'Scheme School',
         'Film Breakdown',
         'Press Conferences',

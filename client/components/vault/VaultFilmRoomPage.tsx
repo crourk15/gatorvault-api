@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Card, PageLayout, PageSection, TabBar } from '@/components/brand';
-import { FilmRoomGameWeekPanel } from '@/components/vault/FilmRoomGameWeekPanel';
 import {
   FILM_HUB_ORDER,
   fetchFilmRoomCatalog,
@@ -34,9 +33,6 @@ const HUB_TABS = FILM_HUB_ORDER.map((name) => ({
 }));
 
 const HUB_COPY: Record<string, { desc: string }> = {
-  'Game Week': {
-    desc: 'Matchup intel, win probability, keys, and opponent prep — the centerpiece of Film Room tier.',
-  },
   'Film Breakdown': {
     desc: 'Premium video hub — Film Guy Network, GNFP, and verified tape breakdowns.',
   },
@@ -181,7 +177,7 @@ function CatalogGrid({
   return (
     <div className="gv-fr-lessons">
       {items.map((item) => (
-        <Card key={item.id} variant="dark" className="gv-fr-lesson-card">
+        <Card key={item.id} className="gv-fr-lesson-card">
           <button type="button" className="gv-fr-lesson-card__btn" onClick={() => void onOpen(item)}>
             <h3 className="gv-fr-lesson-card__title">{item.title}</h3>
             {filmLessonSubtitle(item) ? (
@@ -214,7 +210,7 @@ function SchemeSchoolGrid({
             <h3 className="gv-fr-scheme-unit__title">{unit.label}</h3>
             <div className="gv-fr-lessons">
               {lessons.map((lesson) => (
-                <Card key={lesson.id} variant="dark" className="gv-fr-lesson-card">
+                <Card key={lesson.id} className="gv-fr-lesson-card">
                   <button
                     type="button"
                     className="gv-fr-lesson-card__btn"
@@ -244,6 +240,7 @@ function SchemeSchoolGrid({
 function hubFromUrl(): string | null {
   if (typeof window === 'undefined') return null;
   const hub = new URLSearchParams(window.location.search).get('hub');
+  if (hub === 'Game Week') return 'Film Breakdown';
   if (hub && FILM_HUB_ORDER.includes(hub)) return hub;
   return null;
 }
@@ -395,16 +392,25 @@ export function VaultFilmRoomPage(): React.ReactElement {
   return (
     <div className="rh-page rh-page--elite gv-film-room-page mobile-app" data-testid="vault-film-room-elite">
       <PageLayout
-        theme="chalkboard"
+        theme="navy"
         title=""
         subtitle=""
         testId="vault-film-room"
-        className="gv-film-room rh-elite-chrome"
+        className="rh-elite-chrome"
         hero={
-          <header className="gv-fr-hero">
-            <h1 className="gv-fr-hero__title">Film Room</h1>
-            <p className="gv-fr-hero__sub">Real football. Real breakdowns. Real coaching intel.</p>
-          </header>
+          <section className="rh-hero-strip" aria-label="Film Room">
+            <div className="rh-hero-sweep" aria-hidden="true" />
+            <div className="rh-hero-watermark" aria-hidden="true">
+              GATORS
+            </div>
+            <div className="rh-hero-top">
+              <div>
+                <h1 className="rh-hero-title">Film Room</h1>
+                <p className="rh-hero-subtitle">Real football. Real breakdowns. Real coaching intel.</p>
+              </div>
+              <span className="rh-badge rh-hero-badge">FILM</span>
+            </div>
+          </section>
         }
       >
         {loading ? (
@@ -431,37 +437,17 @@ export function VaultFilmRoomPage(): React.ReactElement {
 
         {!loading && !error && !selected && !schemeLesson ? (
           <>
-            {hub !== 'Game Week' ? (
-              <p className="gv-fr-hub-desc">{hubCopy?.desc ?? ''}</p>
-            ) : null}
-
-            {hub === 'Game Week' ? (
-              insider ? (
-                <FilmRoomGameWeekPanel />
-              ) : (
-                <PageSection title="Game Week" subtitle="Film tier required">
-                  <UiEmpty
-                    message="Game Week is the centerpiece of Film Room tier."
-                    hint="Unlock matchup intel, keys, win probability, and opponent prep."
-                  />
-                  <a href="/join?tier=film" className="gv-fr-btn" style={{ marginTop: '1rem' }}>
-                    Unlock Film Room
-                  </a>
-                </PageSection>
-              )
-            ) : null}
+            <p className="gv-fr-hub-desc">{hubCopy?.desc ?? ''}</p>
 
             {hub === 'Scheme School' ? (
               <PageSection title="Scheme School" subtitle="UF staff · fan-friendly lessons">
                 <SchemeSchoolGrid insider={insider} onOpen={openSchemeLesson} />
               </PageSection>
-            ) : null}
-
-            {hub !== 'Game Week' && hub !== 'Scheme School' ? (
+            ) : (
               <PageSection title={HUB_TABS.find((t) => t.id === hub)?.label ?? hub}>
                 <CatalogGrid items={filtered} insider={insider} onOpen={openLesson} />
               </PageSection>
-            ) : null}
+            )}
           </>
         ) : null}
 

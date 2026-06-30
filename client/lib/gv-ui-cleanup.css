@@ -703,49 +703,49 @@ body {
   box-shadow: var(--gv-shadow-lift);
 }
 
-/* Film Room elite — navy grid + orange accent (Recruiting Command Center parity) */
+/* Film Room + Game Week — Recruiting Command Center color scheme */
 .gv-film-room-page {
-  --fr-bg: #0a0f1c;
-  --fr-card: #111827;
-  --fr-orange: #fa4616;
-  --fr-text: #ffffff;
-  --fr-muted: #c7c7c7;
-  --fr-subtle: #94a3b8;
+  --fr-card: var(--card-bg, #ffffff);
+  --fr-orange: var(--gator-orange, #fa4616);
+  --fr-blue: var(--gator-blue, #0021a5);
+  --fr-text: var(--card-text, #0021a5);
+  --fr-muted: var(--muted-text, #6b7280);
+  --fr-subtle: var(--th-meta, #94a3b8);
+  background: var(--page-bg, var(--th-primary, #0b1120));
 }
 
-.gv-fr-hero {
-  position: relative;
-  padding: 1.5rem 0 1.25rem;
-  margin-bottom: 0.5rem;
-  border-bottom: 3px solid var(--fr-orange);
-  background:
-    linear-gradient(rgba(10, 15, 28, 0.92), rgba(10, 15, 28, 0.92)),
-    repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(255, 255, 255, 0.03) 23px, rgba(255, 255, 255, 0.03) 24px),
-    repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(255, 255, 255, 0.03) 23px, rgba(255, 255, 255, 0.03) 24px);
+.gv-film-room-page .rh-elite-chrome {
+  --gator-blue: #0021a5;
+  --gator-orange: #fa4616;
+  --page-bg: #0b1120;
+  --card-bg: #ffffff;
+  --card-text: #0021a5;
+  --muted-text: #6b7280;
 }
 
-.gv-fr-hero__title {
-  font-family: 'Oswald', sans-serif;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 700;
-  color: var(--fr-text);
-  margin: 0 0 0.35rem;
-  letter-spacing: 0.02em;
+.gv-film-room-page .gv-page-layout--navy {
+  background: transparent;
+  color: var(--heading-color-dark, #fff);
 }
 
-.gv-fr-hero__sub {
-  margin: 0;
-  color: var(--fr-muted);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  max-width: 36rem;
+.gv-film-room-page .gv-page-layout__body {
+  padding-top: 0;
+}
+
+.gv-film-room-page .gv-page-section__title {
+  color: #ffffff;
+}
+
+.gv-film-room-page .gv-page-section__subtitle {
+  color: var(--th-meta);
+  opacity: 1;
 }
 
 .gv-fr-hub-desc {
   margin: 0 0 1rem;
-  color: var(--fr-subtle);
-  font-size: 0.8125rem;
-  line-height: 1.45;
+  color: var(--th-meta);
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .gv-fr-lessons {
@@ -754,17 +754,23 @@ body {
   gap: var(--gv-grid-gutter, 0.75rem);
 }
 
-.gv-fr-lesson-card {
+.gv-film-room-page .gv-fr-lesson-card,
+.gv-film-room-page .gv-fr-gw-card {
   background: var(--fr-card) !important;
-  border: 1px solid rgba(0, 48, 135, 0.35) !important;
-  border-radius: 0.75rem;
+  color: var(--fr-text) !important;
+  border: 1px solid var(--th-border, rgba(0, 33, 165, 0.18)) !important;
+  border-top: 4px solid var(--fr-orange) !important;
+  border-radius: var(--th-radius-card, 12px);
+  box-shadow: var(--th-shadow, 0 4px 12px rgba(0, 0, 0, 0.15));
   padding: 0;
   transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
-.gv-fr-lesson-card:hover {
-  border-color: rgba(250, 70, 22, 0.55) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+.gv-film-room-page .gv-fr-lesson-card:hover,
+.gv-film-room-page .gv-fr-gw-card:hover {
+  border-color: color-mix(in srgb, var(--fr-orange) 35%, var(--th-border)) !important;
+  border-top-color: var(--fr-orange) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   transform: translateY(-1px);
 }
 
@@ -781,23 +787,28 @@ body {
   font: inherit;
 }
 
-.gv-fr-lesson-card__title {
-  font-family: 'Oswald', sans-serif;
+.gv-fr-lesson-card__title,
+.gv-fr-gw-card__title {
   font-size: 1rem;
   font-weight: 700;
   color: var(--fr-text);
   margin: 0 0 0.35rem;
 }
 
-.gv-fr-lesson-card__dek {
-  font-size: 0.8125rem;
+.gv-fr-lesson-card__dek,
+.gv-fr-gw-card__body,
+.gv-fr-gw-list {
+  font-size: 0.875rem;
   color: var(--fr-muted);
+  line-height: 1.5;
+}
+
+.gv-fr-lesson-card__dek {
   margin: 0 0 0.5rem;
-  line-height: 1.45;
 }
 
 .gv-fr-lesson-card__meta {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   color: var(--fr-subtle);
   margin: 0;
 }
@@ -817,7 +828,6 @@ body {
 }
 
 .gv-fr-scheme-unit__title {
-  font-family: 'Oswald', sans-serif;
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -826,6 +836,20 @@ body {
   margin: 0 0 0.75rem;
   padding-bottom: 0.35rem;
   border-bottom: 1px solid rgba(250, 70, 22, 0.25);
+}
+
+.gv-film-room-page .gv-film-lesson__back {
+  color: var(--fr-orange);
+}
+
+.gv-film-room-page .gv-film-lesson__dek,
+.gv-film-room-page .gv-film-lesson__body,
+.gv-film-room-page .gv-film-lesson__type {
+  color: var(--muted-gray, #cbd5e1);
+}
+
+.gv-film-room-page .gv-film-lesson__title {
+  color: #ffffff;
 }
 
 .gv-fr-scheme-viewer__staff {
@@ -838,7 +862,7 @@ body {
 .gv-fr-scheme-viewer__watch {
   margin-top: 1.25rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .gv-fr-scheme-viewer__watch h4 {
@@ -852,7 +876,7 @@ body {
 .gv-fr-scheme-viewer__watch ul {
   margin: 0;
   padding-left: 1.15rem;
-  color: var(--fr-muted);
+  color: var(--muted-gray);
   font-size: 0.875rem;
   line-height: 1.5;
 }
@@ -880,42 +904,24 @@ body {
   min-height: auto;
 }
 
-/* Game Week panel (Film Room + standalone) */
+/* Game Week panel */
 .gv-fr-game-week {
   background: var(--fr-card);
-  border: 1px solid rgba(0, 48, 135, 0.35);
-  border-radius: 0.75rem;
+  border: 1px solid var(--th-border);
+  border-top: 4px solid var(--fr-orange);
+  border-radius: var(--th-radius-card, 12px);
+  box-shadow: var(--th-shadow);
   padding: 1.25rem;
-}
-
-.gv-fr-game-week--compact .gv-page-grid--2,
-.gv-fr-game-week--compact .gv-page-grid--3 {
-  grid-template-columns: 1fr;
+  color: var(--fr-text);
 }
 
 .gv-fr-gw-hero-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 1rem;
   margin-bottom: 1rem;
-}
-
-.gv-fr-gw-hero-kicker {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fr-orange);
-  margin: 0 0 0.25rem;
-}
-
-.gv-fr-gw-hero-title {
-  font-family: 'Oswald', sans-serif;
-  font-size: 1.25rem;
-  color: var(--fr-text);
-  margin: 0;
 }
 
 .gv-fr-gw-countdown {
@@ -925,9 +931,8 @@ body {
 
 .gv-fr-gw-countdown__num {
   display: block;
-  font-family: 'Oswald', sans-serif;
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--fr-orange);
   line-height: 1;
 }
@@ -947,18 +952,18 @@ body {
   text-align: center;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+  border-bottom: 1px solid var(--th-border);
 }
 
 .gv-fr-gw-matchup__logo {
   font-size: 2rem;
   font-weight: 700;
-  opacity: 0.9;
+  color: var(--fr-blue);
 }
 
 .gv-fr-gw-matchup__title {
-  font-family: 'Oswald', sans-serif;
   font-size: 1.125rem;
+  font-weight: 700;
   color: var(--fr-text);
   margin: 0.5rem 0 0.25rem;
 }
@@ -980,8 +985,8 @@ body {
 .gv-fr-gw-pill {
   padding: 0.35rem 0.65rem;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  background: rgba(10, 15, 28, 0.6);
+  border: 1px solid var(--th-border);
+  background: rgba(0, 33, 165, 0.06);
   color: var(--fr-muted);
   font-size: 0.6875rem;
   cursor: pointer;
@@ -990,7 +995,7 @@ body {
 .gv-fr-gw-pill.is-active {
   border-color: var(--fr-orange);
   color: var(--fr-text);
-  background: rgba(250, 70, 22, 0.12);
+  background: rgba(250, 70, 22, 0.1);
 }
 
 .gv-fr-gw-wp {
@@ -1003,7 +1008,7 @@ body {
 }
 
 .gv-fr-gw-wp__uf {
-  background: #0021a5;
+  background: var(--fr-blue);
   color: #fff;
   display: flex;
   align-items: center;
@@ -1012,7 +1017,7 @@ body {
 }
 
 .gv-fr-gw-wp__opp {
-  background: rgba(30, 41, 59, 0.9);
+  background: rgba(0, 33, 165, 0.12);
   color: var(--fr-muted);
   display: flex;
   align-items: center;
@@ -1020,32 +1025,14 @@ body {
   flex: 1;
 }
 
-.gv-fr-gw-card {
-  background: rgba(10, 15, 28, 0.65) !important;
-  border-color: rgba(0, 48, 135, 0.3) !important;
+.gv-film-room-page .gv-fr-gw-card {
+  padding: 1rem 1.15rem;
   height: 100%;
-}
-
-.gv-fr-gw-card__title {
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.875rem;
-  color: var(--fr-text);
-  margin: 0 0 0.65rem;
-}
-
-.gv-fr-gw-card__body {
-  font-size: 0.875rem;
-  color: var(--fr-muted);
-  line-height: 1.5;
-  margin: 0;
 }
 
 .gv-fr-gw-list {
   margin: 0;
   padding-left: 1.15rem;
-  color: var(--fr-muted);
-  font-size: 0.875rem;
-  line-height: 1.55;
 }
 
 .gv-fr-gw-list--bullets {
@@ -1071,8 +1058,8 @@ body {
 }
 
 .gv-fr-gw-pred-score {
-  font-family: 'Oswald', sans-serif;
   font-size: 1.75rem;
+  font-weight: 800;
   color: var(--fr-orange);
   margin: 0 0 0.35rem;
 }
@@ -1083,14 +1070,18 @@ body {
   margin: 0 0 1rem;
 }
 
-.gv-fr-gw-footer {
-  margin-top: 1.25rem;
-  text-align: center;
+.gv-fr-gw-card--accent {
+  border-top-color: var(--fr-blue) !important;
 }
 
 .gv-film-room-page .gv-tab-bar {
   margin-bottom: 1rem;
 }
+
+.gv-film-room-page .rh-hero-strip {
+  margin-bottom: 1.25rem;
+}
+
 
 /* ── 2. Game Week ── */
 .gv-gw-hero .gv-page-layout__hero-inner {

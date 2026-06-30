@@ -46,6 +46,7 @@ import '@/lib/mobile-native-framework.css';
 import '@/lib/mobile-native-framework.css';
 import '@/lib/uf-premium-mobile.css';
 import '@/lib/uf-premium-home.css';
+import '@/lib/game-week-wow.css';
 
 export const viewport: Viewport = {
   width: 'device-width',

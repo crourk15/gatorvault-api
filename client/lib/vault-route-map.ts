@@ -20,7 +20,7 @@ export type LegacyRecruitingTab = 'commits-2026' | 'targets-2026' | 'heat';
 
 export type LiveFeedTab = 'headlines' | 'beat' | 'podcasts';
 
-export type FilmRoomSegment = 'game-week' | 'breakdowns' | 'scheme-school' | 'press' | 'highlights';
+export type FilmRoomSegment = 'breakdowns' | 'scheme-school' | 'press' | 'highlights';
 
 export type FutureCastSegment = 'master' | 'trending' | 'movement' | 'staff';
 
@@ -87,7 +87,6 @@ export const LIVE_FEED_TAB_PATHS: Record<LiveFeedTab, string> = {
 
 /** Film Room segments → hub category label */
 export const FILM_ROOM_SEGMENT_HUB: Record<FilmRoomSegment, string> = {
-  'game-week': 'Game Week',
   breakdowns: 'Film Breakdown',
   'scheme-school': 'Scheme School',
   press: 'UF Press Conferences',
@@ -95,7 +94,6 @@ export const FILM_ROOM_SEGMENT_HUB: Record<FilmRoomSegment, string> = {
 };
 
 export const FILM_ROOM_SEGMENT_PATHS: Record<FilmRoomSegment, string> = {
-  'game-week': '/vault/film-room/game-week',
   breakdowns: '/vault/film-room/breakdowns',
   'scheme-school': '/vault/film-room/scheme-school',
   press: '/vault/film-room/press',
@@ -304,7 +302,6 @@ export function liveFeedTabPath(tab: LiveFeedTab): string {
 
 export function parseFilmRoomSegmentFromPath(pathname?: string): FilmRoomSegment | null {
   const p = normPath(pathname ?? (typeof window !== 'undefined' ? window.location.pathname : ''));
-  if (p.includes('/film-room/game-week')) return 'game-week';
   if (p.includes('/film-room/breakdowns')) return 'breakdowns';
   if (p.includes('/film-room/scheme-school') || p.includes('/film-room/scheme')) return 'scheme-school';
   if (p.includes('/film-room/press')) return 'press';

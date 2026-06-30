@@ -14,7 +14,6 @@ const KNOWLEDGE_CATEGORIES = [
 ];
 
 const FILM_HUBS = [
-  'Game Week',
   'Film Breakdown',
   'Scheme School',
   'UF Press Conferences',
@@ -41,7 +40,7 @@ function inferSchemeSide(lesson, conceptCategory) {
 function inferFilmHub(item) {
   const cat = item.category || '';
   const lessonType = String(item.lessonType || '').toLowerCase();
-  if (lessonType === 'opponent_prep' || cat === 'Opponent Prep') return 'Game Week';
+  if (lessonType === 'opponent_prep' || cat === 'Opponent Prep') return 'Film Breakdown';
   if (cat === legacy.LEGACY_CATEGORIES.GNFP || cat === legacy.LEGACY_CATEGORIES.FILM_GUY) return 'Film Breakdown';
   if (cat === legacy.LEGACY_CATEGORIES.PRESS) return 'UF Press Conferences';
   if (cat === legacy.LEGACY_CATEGORIES.HIGHLIGHTS) return 'Highlights';

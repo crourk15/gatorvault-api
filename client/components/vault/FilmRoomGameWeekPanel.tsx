@@ -14,7 +14,7 @@ function daysUntilKickoff(dateStr: string): number {
 
 function Countdown({ days }: { days: number }): React.ReactElement {
   return (
-    <div className="gv-fr-gw-countdown" data-testid="film-room-game-week-countdown">
+    <div className="gv-fr-gw-countdown" data-testid="game-week-countdown">
       <span className="gv-fr-gw-countdown__num">{days}</span>
       <span className="gv-fr-gw-countdown__label">Days to kickoff</span>
     </div>
@@ -55,11 +55,10 @@ function WinProbabilityBar({ ufPct }: { ufPct: number }): React.ReactElement {
 }
 
 type Props = {
-  compact?: boolean;
   initialGameId?: string;
 };
 
-export function FilmRoomGameWeekPanel({ compact = false, initialGameId }: Props): React.ReactElement {
+export function FilmRoomGameWeekPanel({ initialGameId }: Props): React.ReactElement {
   const [gameId, setGameId] = useState(initialGameId || 'fau');
 
   useEffect(() => {
@@ -69,14 +68,8 @@ export function FilmRoomGameWeekPanel({ compact = false, initialGameId }: Props)
   const days = useMemo(() => daysUntilKickoff(game.date), [game.date]);
 
   return (
-    <div className={`gv-fr-game-week${compact ? ' gv-fr-game-week--compact' : ''}`} data-testid="film-room-game-week-panel">
+    <div className="gv-fr-game-week" data-testid="game-week-panel">
       <div className="gv-fr-gw-hero-bar">
-        {!compact ? (
-          <div className="gv-fr-gw-hero-copy">
-            <p className="gv-fr-gw-hero-kicker">Game Week</p>
-            <h2 className="gv-fr-gw-hero-title">Matchup intel · keys · film prep</h2>
-          </div>
-        ) : null}
         <Countdown days={days} />
       </div>
 
@@ -100,7 +93,7 @@ export function FilmRoomGameWeekPanel({ compact = false, initialGameId }: Props)
       </PageSection>
 
       <GridLayout cols={3}>
-        <Card variant="dark" className="gv-fr-gw-card">
+        <Card className="gv-fr-gw-card">
           <h3 className="gv-fr-gw-card__title">3 Keys to the Game</h3>
           <ol className="gv-fr-gw-list">
             {game.keys.map((k) => (
@@ -108,7 +101,7 @@ export function FilmRoomGameWeekPanel({ compact = false, initialGameId }: Props)
             ))}
           </ol>
         </Card>
-        <Card variant="dark" className="gv-fr-gw-card">
+        <Card className="gv-fr-gw-card">
           <h3 className="gv-fr-gw-card__title">Swing Players</h3>
           {game.swing.map((s) => (
             <div key={s.name} className="gv-fr-gw-swing">
@@ -117,12 +110,12 @@ export function FilmRoomGameWeekPanel({ compact = false, initialGameId }: Props)
             </div>
           ))}
         </Card>
-        <Card variant="dark" className="gv-fr-gw-card">
+        <Card className="gv-fr-gw-card">
           <h3 className="gv-fr-gw-card__title">Film Notes</h3>
           <p className="gv-fr-gw-card__body">{game.film}</p>
           {game.filmLessonId ? (
             <a
-              href={`/vault/film-room/?hub=Game%20Week&lesson=${encodeURIComponent(game.filmLessonId)}`}
+              href={`/vault/film-room/?hub=Film%20Breakdown&lesson=${encodeURIComponent(game.filmLessonId)}`}
               className="gv-fr-btn gv-fr-btn--ghost"
             >
               Opponent prep lesson →
@@ -133,7 +126,7 @@ export function FilmRoomGameWeekPanel({ compact = false, initialGameId }: Props)
 
       {game.opponentTendencies?.length ? (
         <PageSection title="Opponent tendencies" subtitle="Scouting profile">
-          <Card variant="dark" className="gv-fr-gw-card">
+          <Card className="gv-fr-gw-card">
             <ul className="gv-fr-gw-list gv-fr-gw-list--bullets">
               {game.opponentTendencies.map((t) => (
                 <li key={t}>{t}</li>
@@ -145,7 +138,7 @@ export function FilmRoomGameWeekPanel({ compact = false, initialGameId }: Props)
 
       {game.howUFWins?.length ? (
         <PageSection title="How UF wins" subtitle="Staff-aligned game plan">
-          <Card variant="dark" className="gv-fr-gw-card">
+          <Card className="gv-fr-gw-card">
             <ul className="gv-fr-gw-list gv-fr-gw-list--bullets">
               {game.howUFWins.map((t) => (
                 <li key={t}>{t}</li>
@@ -157,12 +150,12 @@ export function FilmRoomGameWeekPanel({ compact = false, initialGameId }: Props)
 
       <GridLayout cols={2}>
         <PageSection title="Scouting report">
-          <Card variant="dark" className="gv-fr-gw-card">
+          <Card className="gv-fr-gw-card">
             <p className="gv-fr-gw-card__body">{game.scoutingReport || game.film}</p>
           </Card>
         </PageSection>
         <PageSection title="Prediction panel">
-          <Card variant="dark" className="gv-fr-gw-card gv-fr-gw-card--accent">
+          <Card className="gv-fr-gw-card gv-fr-gw-card--accent">
             <p className="gv-fr-gw-pred-label">GatorVault prediction</p>
             <p className="gv-fr-gw-pred-score">{game.pred}</p>
             <p className="gv-fr-gw-pred-meta">UF win probability: {game.ufPct}%</p>
@@ -170,14 +163,6 @@ export function FilmRoomGameWeekPanel({ compact = false, initialGameId }: Props)
           </Card>
         </PageSection>
       </GridLayout>
-
-      {!compact ? (
-        <div className="gv-fr-gw-footer">
-          <a href="/vault/game-week" className="gv-fr-btn">
-            Full Game Week page →
-          </a>
-        </div>
-      ) : null}
     </div>
   );
 }

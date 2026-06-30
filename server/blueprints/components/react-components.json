@@ -60,13 +60,12 @@
       "route": "/vault/film-room",
       "expectations": {
         "categories": [
-          "Game Week",
           "Film Breakdown",
           "Scheme School",
           "UF Press Conferences",
           "Highlights"
         ],
-        "classes": ["gv-fr-hero", "gv-fr-lessons", "gv-fr-game-week"]
+        "classes": ["gv-fr-hero", "gv-fr-lessons"]
       }
     },
     {
