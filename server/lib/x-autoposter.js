@@ -446,6 +446,7 @@ async function processQueueItem(item) {
 }
 
 async function processDuePosts({ limit = 1, force = false } = {}) {
+  store.recoverFailedVerifiedCommits();
   const pending = store.listQueue({ status: 'pending' });
   const status = loadSchedulerStatus();
   const lastPostAt = status.lastPostAt || status.lastPostSuccess || null;

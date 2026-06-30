@@ -3,6 +3,7 @@
  */
 const template = require('../x-autoposter-template');
 const intelStore = require('../recruiting-intel-store');
+const policy = require('../x-autoposter-policy');
 const identityMatcher = require('./identity-matcher');
 const contextEnrichment = require('./context-enrichment');
 const rewriteEngine = require('./rewrite-engine');
@@ -12,6 +13,30 @@ const pipelineGuards = require('../pipeline-guards');
 const insiderTone = require('./insider-tone');
 
 const MIN_REWRITE_WORDS = parseInt(process.env.X_AUTOPOST_MIN_REWRITE_WORDS || '40', 10);
+const VERIFIED_MIN_WORDS = parseInt(process.env.X_AUTOPOST_VERIFIED_MIN_WORDS || '18', 10);
+
+function isVerifiedCommitItem(item = {}) {
+  return !!(item.verifiedCommit || item.validationMeta?.verifiedCommit);
+}
+
+/** On3/template commits already pass quality gates — GM2 rewrite often fails on short copy. */
+function bypassRewriteForVerifiedCommit(item = {}) {
+  if (!isVerifiedCommitItem(item)) return null;
+  const check = policy.validatePostContent(item);
+  if (!check.valid) return null;
+  monitoring.logAutoposterEvent('rewrite_bypass', {
+    itemId: item.id,
+    reason: 'verified_commit_premade',
+    playerName: item.playerName
+  });
+  return {
+    ok: true,
+    item,
+    skipped: true,
+    reason: 'verified_commit_premade',
+    bypass: true
+  };
+}
 
 function rewriteFallbackEnabled() {
   return process.env.X_AUTOPOST_REWRITE_FALLBACK !== 'false';
@@ -20,9 +45,10 @@ function rewriteFallbackEnabled() {
 function buildFallbackResult(item, beatText, reason, extra = {}) {
   const queuedText = String(item.text || '').trim();
   if (!rewriteFallbackEnabled() || !queuedText) return null;
+  const minWords = isVerifiedCommitItem(item) ? VERIFIED_MIN_WORDS : MIN_REWRITE_WORDS;
   const words = queuedText.split(/\s+/).filter(Boolean).length;
-  if (words < MIN_REWRITE_WORDS) return null;
-  const tone = insiderTone.validateInsiderTone(queuedText, { minWords: MIN_REWRITE_WORDS });
+  if (words < minWords) return null;
+  const tone = insiderTone.validateInsiderTone(queuedText, { minWords });
   if (tone.errors.length) return null;
 
   monitoring.logAutoposterEvent('rewrite_fallback', {
@@ -99,6 +125,9 @@ async function prepareQueueItemForPost(item = {}) {
   if (String(item.category || '').toLowerCase() !== 'news') {
     return { ok: true, item, skipped: true, reason: 'non_news' };
   }
+
+  const verifiedBypass = bypassRewriteForVerifiedCommit(item);
+  if (verifiedBypass) return verifiedBypass;
 
   const intel = pipelineGuards.guardIntelForPipeline(findIntelForItem(item));
   const beatText = intelToBeatText(intel, item);
