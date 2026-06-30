@@ -118,7 +118,15 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
         fetchJson('/api/recruiting/intel/beat?limit=3', 0).catch(function() { return null; })
       ]).then(function(results) {
         var metrics = results[0];
-        if (metrics && metrics.status !== 'building') paintMetrics(metrics);
+        if (metrics && metrics.status !== 'building') {
+          paintMetrics(metrics);
+          try {
+            sessionStorage.setItem(
+              'gv_class_metrics_v1:' + year,
+              JSON.stringify({ at: Date.now(), data: metrics })
+            );
+          } catch (e) {}
+        }
         var home = results[1];
         if (home) {
           var pool = [].concat(home.topTargets || [], home.trendingUp || [], home.trendingDown || []);

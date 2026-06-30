@@ -106,6 +106,34 @@ function yearQuery(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
   return `?year=${year}`;
 }
 
+const CLASS_METRICS_CACHE_PREFIX = 'gv_class_metrics_v1';
+const CLASS_METRICS_CACHE_TTL_MS = 5 * 60_000;
+
+function readClassMetricsCache(year: number): ClassMetricsResponse | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = sessionStorage.getItem(`${CLASS_METRICS_CACHE_PREFIX}:${year}`);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { at: number; data: ClassMetricsResponse };
+    if (!parsed?.data || Date.now() - parsed.at > CLASS_METRICS_CACHE_TTL_MS) return null;
+    return parsed.data;
+  } catch {
+    return null;
+  }
+}
+
+function writeClassMetricsCache(year: number, data: ClassMetricsResponse): void {
+  if (typeof window === 'undefined') return;
+  try {
+    sessionStorage.setItem(
+      `${CLASS_METRICS_CACHE_PREFIX}:${year}`,
+      JSON.stringify({ at: Date.now(), data })
+    );
+  } catch {
+    /* quota */
+  }
+}
+
 function warmFetch<T>(path: string): Promise<T> {
   return fetchWithWarmPoll(() => snapshotLiveFetch<T>(path, DEFAULT_SNAPSHOT_FETCH_OPTS));
 }
@@ -113,8 +141,17 @@ function warmFetch<T>(path: string): Promise<T> {
 export function fetchClassMetrics(
   year = ACTIVE_RECRUITING_CLASS_YEAR
 ): Promise<ClassMetricsResponse> {
+  const cached = readClassMetricsCache(year);
   const path = `/api/recruiting/class-metrics${yearQuery(year)}`;
-  return warmFetch<ClassMetricsResponse>(path);
+  const live = warmFetch<ClassMetricsResponse>(path).then((data) => {
+    writeClassMetricsCache(year, data);
+    return data;
+  });
+  if (cached && cached.status !== 'building') {
+    void live.catch(() => {});
+    return Promise.resolve(cached);
+  }
+  return live;
 }
 
 export function fetchRecruitingClassYear(year: number): Promise<ClassYearResponse> {

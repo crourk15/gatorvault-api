@@ -19,8 +19,8 @@ export function getApiBase(): string {
       return '';
     }
     if (isNativeApp()) {
-      const fromEnv = process.env.NEXT_PUBLIC_API_BASE;
-      return (fromEnv || PRODUCTION_SITE).replace(/\/$/, '');
+      // Always proxy through gatorvaultinsider.com — same as web (avoids cold Render + CORS in WebView).
+      return PRODUCTION_SITE.replace(/\/$/, '');
     }
     const port = window.location.port;
     if ((host === 'localhost' || host === '127.0.0.1') && port === '3000') {

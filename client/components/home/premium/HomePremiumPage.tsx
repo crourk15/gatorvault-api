@@ -47,7 +47,18 @@ declare global {
 
 function readBootMetrics(): Awaited<ReturnType<typeof fetchClassMetrics>> | null {
   if (typeof window === 'undefined') return null;
-  return window.__GV_HOME_WOW__?.metrics ?? null;
+  const fromBoot = window.__GV_HOME_WOW__?.metrics;
+  if (fromBoot) return fromBoot;
+  try {
+    const year = ACTIVE_RECRUITING_CLASS_YEAR;
+    const raw = sessionStorage.getItem(`gv_class_metrics_v1:${year}`);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { at: number; data: Awaited<ReturnType<typeof fetchClassMetrics>> };
+    if (!parsed?.data || Date.now() - parsed.at > 5 * 60_000) return null;
+    return parsed.data;
+  } catch {
+    return null;
+  }
 }
 
 function readBootBeat(): BeatIntelItem[] {
@@ -73,7 +84,7 @@ export function HomePremiumPage(): React.ReactElement {
   useEffect(() => {
     function applyBootCache(): void {
       const boot = window.__GV_HOME_WOW__;
-      if (boot?.metrics && !classMetrics) {
+      if (boot?.metrics) {
         setClassMetrics(boot.metrics);
         setLoading(false);
       }
@@ -85,7 +96,7 @@ export function HomePremiumPage(): React.ReactElement {
     applyBootCache();
     window.addEventListener('gv-home-wow-boot', applyBootCache);
     return () => window.removeEventListener('gv-home-wow-boot', applyBootCache);
-  }, [classMetrics]);
+  }, []);
 
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial && readBootMetrics()) {
