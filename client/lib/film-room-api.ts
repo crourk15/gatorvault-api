@@ -30,6 +30,9 @@ export interface FilmRoomCatalogItem {
   embedUrl?: string | null;
   videoUrl?: string | null;
   knowledgeEngine?: boolean;
+  gameLine?: string;
+  publishedAt?: string | null;
+  lastVerified?: string | null;
   noVideo?: boolean;
   sources?: { source_name?: string; sourceName?: string; source_url?: string; sourceUrl?: string }[];
 }

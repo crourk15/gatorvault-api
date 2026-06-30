@@ -21,6 +21,7 @@
     "cache-stale",
     "broken-link",
     "404-detected",
+    "fetch-failure",
     "ui-regression",
     "mobile-desktop-divergence"
   ],
@@ -36,7 +37,7 @@
     "C": { "name": "Autoposter Intelligence", "rules": ["C1", "C2", "C3", "C4"] },
     "D": { "name": "Recruiting Intelligence", "rules": ["D1", "D2"] },
     "E": { "name": "Team Data Integrity", "rules": ["E1", "E2"] },
-    "F": { "name": "System Health", "rules": ["F1", "F2", "F3"] }
+    "F": { "name": "System Health", "rules": ["F1", "F2", "F3", "F4"] }
   },
   "rules": {
     "A1": {
@@ -217,6 +218,16 @@
       "triggers": ["broken link", "missing asset"],
       "checkPatterns": ["404", "broken", "article-links", "film-sources"],
       "defaultImpact": 80,
+      "defaultConfidence": 92
+    },
+    "F4": {
+      "id": "F4",
+      "name": "Transient Fetch Failure",
+      "classification": "fetch-failure",
+      "category": "F",
+      "triggers": ["ECONNRESET", "timeout", "fetch failed", "operation aborted"],
+      "checkPatterns": ["econnreset", "fetch failed", "operation was aborted", "vault-redirect"],
+      "defaultImpact": 12,
       "defaultConfidence": 92
     }
   },

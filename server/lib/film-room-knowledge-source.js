@@ -54,6 +54,46 @@ function hasSourceUrl(row) {
   return url.length >= 12;
 }
 
+const LOW_VALUE_URL_PATTERNS = [
+  /game-moved-to-friday/i,
+  /florida-florida-state-game-moved/i,
+  /rivalry-in-new-college-football-landscape/i,
+  /espn\.com\/college-football\/?$/i
+];
+
+const TRUSTED_SOURCE_HOSTS = [
+  'floridagators.com',
+  'youtube.com',
+  'youtu.be',
+  'on3.com',
+  '247sports.com',
+  'glazierclinics.com',
+  'nfl.com'
+];
+
+function validateSourceUrlRelevance(row) {
+  const url = String(row?.source_url || '').trim().toLowerCase();
+  const name = String(row?.source_name || '');
+  const type = normalizeSourceType(row?.source_type);
+
+  if (!url) return { ok: false, reason: 'source_url_mismatch', detail: row?.id };
+
+  if (LOW_VALUE_URL_PATTERNS.some((re) => re.test(url))) {
+    return { ok: false, reason: 'source_url_mismatch', detail: row?.id, url };
+  }
+
+  const claimsFilmStudy = /film study|spread-rpo|rpo film|breakdown/i.test(name);
+  const urlLooksRelevant =
+    /film|breakdown|scheme|rpo|install|availability|presser|football-|watch\?v=/i.test(url) ||
+    TRUSTED_SOURCE_HOSTS.some((host) => url.includes(host));
+
+  if ((type === 'film_study' || (type === 'analyst' && claimsFilmStudy)) && !urlLooksRelevant) {
+    return { ok: false, reason: 'source_url_mismatch', detail: row?.id, url };
+  }
+
+  return { ok: true };
+}
+
 function validateSourceMetadata(row, { table = 'record' } = {}) {
   const sourceName = String(row?.source_name || '').trim();
   const sourceType = normalizeSourceType(row?.source_type);
@@ -125,6 +165,18 @@ function validateSourceMetadata(row, { table = 'record' } = {}) {
     };
   }
 
+  const urlCheck = validateSourceUrlRelevance(row);
+  if (!urlCheck.ok) {
+    return {
+      ok: false,
+      reason: urlCheck.reason,
+      detail: urlCheck.detail,
+      field: 'source_url',
+      table,
+      url: urlCheck.url
+    };
+  }
+
   return {
     ok: true,
     source: {
@@ -178,6 +230,7 @@ module.exports = {
   BLOCKED_SOURCE_PATTERNS,
   normalizeSourceType,
   isBlockedSourceName,
+  validateSourceUrlRelevance,
   validateSourceMetadata,
   formatSourceCitation,
   collectSourcesFromResolved

@@ -9,6 +9,7 @@ const dataLayer = require('./product-intel-data-layer');
 const classifier = require('./product-intel-classifier');
 const severity = require('./product-intel-severity');
 const proposals = require('./product-intel-proposals');
+const { isTransientNetworkFailure } = require('./product-intel-transient');
 
 function severityRank(sev) {
   return { critical: 5, high: 4, medium: 3, low: 2, info: 1 }[sev] || 0;
@@ -19,6 +20,9 @@ function signalKeyFor(item) {
 }
 
 function suggestedFixForCheck(check) {
+  if (isTransientNetworkFailure(check)) {
+    return 'Transient network error during QA crawl (ECONNRESET/timeout). Retry QA crawl; verify Netlify site availability and crawler fetch timeouts — not a layout or recruiting bug.';
+  }
   const id = String(check.id || '');
   const meta = proposals.buildProposalMetadata({ checkId: id, module: check.module, title: check.error }, check);
   if (meta.description) return meta.description;
@@ -112,6 +116,7 @@ function buildFixQueue(signals, run, existingQueue, doc, runCount) {
 
   signals.forEach((signal) => {
     const checkId = signal.id || signal.checkId;
+    if (isTransientNetworkFailure(signal)) return;
     if (seen.has(checkId)) return;
     seen.add(checkId);
 
@@ -135,7 +140,7 @@ function buildFixQueue(signals, run, existingQueue, doc, runCount) {
 }
 
 function topIssuesFromRun(run, limit = 8) {
-  const failed = scoring.flattenChecks(run).filter((c) => !c.pass);
+  const failed = scoring.flattenChecks(run).filter((c) => !c.pass && !isTransientNetworkFailure(c));
   return failed
     .map((c) => {
       const scored = severity.scoreIssue(c, null, 1);

@@ -623,6 +623,52 @@ body {
   transition: border-color 160ms ease-out, box-shadow 160ms ease-out, transform 160ms ease-out;
 }
 
+.gv-page-layout--chalkboard .gv-film-lesson.gv-card--dark,
+.gv-page-layout--chalkboard .gv-film-lesson.gv-card {
+  background: rgba(8, 18, 36, 0.96) !important;
+  color: #f8fafc !important;
+  border-color: rgba(0, 48, 135, 0.45) !important;
+}
+
+.gv-film-room-page .gv-film-lesson.gv-card--light {
+  background: rgba(8, 18, 36, 0.96) !important;
+  color: #f8fafc !important;
+}
+
+.gv-page-layout--chalkboard .gv-film-lesson__title {
+  color: #ffffff;
+}
+
+.gv-film-room-page .gv-film-lesson__open .gv-film-lesson__title,
+.gv-film-room-page .gv-film-lesson__open .gv-film-lesson__dek,
+.gv-film-room-page .gv-film-lesson__open .gv-film-lesson__meta {
+  color: inherit;
+}
+
+.gv-film-room-page .gv-film-lesson__open .gv-film-lesson__title {
+  color: #ffffff;
+}
+
+.gv-film-room-page .gv-film-lesson__open .gv-film-lesson__dek {
+  color: #cbd5e1;
+}
+
+.gv-film-room-page .gv-film-lesson__open .gv-film-lesson__meta {
+  color: #94a3b8;
+}
+
+.gv-page-layout--chalkboard .gv-film-lesson__dek {
+  color: #cbd5e1;
+}
+
+.gv-page-layout--chalkboard .gv-film-lesson__meta {
+  color: #94a3b8;
+}
+
+.gv-page-layout--chalkboard .gv-film-lesson__open {
+  color: inherit;
+}
+
 .gv-page-layout--chalkboard .gv-film-lesson:has(.gv-film-lesson__link),
 .gv-page-layout--chalkboard .gv-film-lesson:hover {
   cursor: pointer;

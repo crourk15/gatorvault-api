@@ -223,6 +223,28 @@
       }).join('');
     }
 
+    function formatLayerVal(key, val) {
+      if (val == null) return '—';
+      if (typeof val === 'string' || typeof val === 'number') return String(val);
+      if (key === 'data' && (val.counts || val.sources)) {
+        var total = val.counts && val.counts.total != null ? val.counts.total : 0;
+        var srcCount = val.counts && val.counts.bySource
+          ? Object.keys(val.counts.bySource).length
+          : (Array.isArray(val.sources) ? val.sources.length : 0);
+        return esc(String(total)) + ' signals · ' + esc(String(srcCount)) + ' sources';
+      }
+      if (key === 'classification') {
+        var n = val.total != null ? val.total : (val.active && val.active.length);
+        return esc(String(n || 0)) + ' classified';
+      }
+      if (key === 'severity') {
+        return 'crit ' + esc(String(val.critical || 0)) + ' · high ' + esc(String(val.high || 0))
+          + ' · med ' + esc(String(val.medium || 0)) + ' · low ' + esc(String(val.low || 0));
+      }
+      if (key === 'proposals') return esc(String(val)) + ' proposals';
+      try { return esc(JSON.stringify(val)); } catch (e) { return '—'; }
+    }
+
     function renderLayers(layers, signalCounts) {
       var el = document.getElementById('intel-layers');
       var names = [
@@ -237,9 +259,9 @@
         var label = pair[1];
         var val = key === 'approvalGate'
           ? (layers && layers.approvalGate ? layers.approvalGate : 'self-runner')
-          : (layers && layers[key] != null ? layers[key] : '—');
+          : (layers && layers[key] != null ? layers[key] : null);
         return '<div class="layer-card"><div class="layer-name">' + esc(label) + '</div>'
-          + '<div class="layer-val">' + esc(String(val)) + '</div></div>';
+          + '<div class="layer-val">' + formatLayerVal(key, val) + '</div></div>';
       }).join('');
       if (signalCounts) {
         el.innerHTML += '<div class="layer-card"><div class="layer-name">Open signals</div>'

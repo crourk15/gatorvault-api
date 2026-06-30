@@ -1,6 +1,8 @@
 /**
  * Product Intelligence — scoring engine (severity weights, module/page/feature scores).
  */
+const { isTransientNetworkFailure } = require('./product-intel-transient');
+
 const SEVERITY_WEIGHTS = {
   critical: 40,
   high: 25,
@@ -116,6 +118,7 @@ const FEATURE_CHECKS = {
 };
 
 function inferSeverity(check) {
+  if (isTransientNetworkFailure(check)) return 'info';
   const id = String(check.id || '');
   if (check.module === 'visual-integrity') {
     if (/cross-page|contamination/.test(id)) return 'critical';
@@ -168,7 +171,9 @@ function scoreFromChecks(checks, ids) {
   if (!relevant.length) return null;
   const failed = relevant.filter((c) => !c.pass);
   if (!failed.length) return 100;
-  const penalty = failed.reduce((sum, c) => sum + penaltyForCheck(c), 0);
+  const realFailed = failed.filter((c) => !isTransientNetworkFailure(c));
+  if (!realFailed.length) return null;
+  const penalty = realFailed.reduce((sum, c) => sum + penaltyForCheck(c), 0);
   return Math.max(0, Math.min(100, 100 - penalty));
 }
 

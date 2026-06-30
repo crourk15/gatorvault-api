@@ -29,6 +29,29 @@ const HUB_ICONS: Record<string, string> = {
   Highlights: '⭐',
 };
 
+function formatFilmDate(iso?: string | null): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function filmLessonSubtitle(item: FilmRoomCatalogItem): string | null {
+  const line = item.dek || item.gameLine || item.category || null;
+  return line && String(line).trim() ? String(line).trim() : null;
+}
+
+function filmLessonMeta(item: FilmRoomCatalogItem, insider: boolean): string {
+  const parts: string[] = [];
+  const date = formatFilmDate(item.publishedAt || item.lastVerified);
+  if (item.source) parts.push(item.source);
+  if (date) parts.push(date);
+  if (!insider) parts.push('🔒 Film tier');
+  else if (item.noVideo || item.knowledgeEngine) parts.push('Scheme intel · read');
+  else parts.push('Tap to watch');
+  return parts.join(' · ');
+}
+
 function youtubeEmbedUrl(item: FilmRoomCatalogItem): string | null {
   if (item.embedUrl) return item.embedUrl;
   const id = item.youtubeId;
@@ -289,18 +312,21 @@ export function VaultFilmRoomPage(): React.ReactElement {
         <>
           <PageSection
             title={hub}
-            subtitle={`${hubCounts[hub] ?? 0} lessons · ${HUB_ICONS[hub] ?? '📺'}`}
+            subtitle={
+              hub === 'Offensive Scheme' || hub === 'Defensive Scheme'
+                ? `${hubCounts[hub] ?? 0} lessons · Scheme intel from verified OC/DC pressers — watch Film Breakdown for tape`
+                : `${hubCounts[hub] ?? 0} lessons · ${HUB_ICONS[hub] ?? '📺'}`
+            }
           >
             <div className="gv-film-lessons">
               {filtered.map((item) => (
-                <Card key={item.id} className="gv-film-lesson gv-film-lesson--clickable">
+                <Card key={item.id} variant="dark" className="gv-film-lesson gv-film-lesson--clickable">
                   <button type="button" className="gv-film-lesson__open" onClick={() => void openLesson(item)}>
                     <h3 className="gv-film-lesson__title">{item.title}</h3>
-                    {item.dek ? <p className="gv-film-lesson__dek">{item.dek}</p> : null}
-                    <p className="gv-film-lesson__meta">
-                      {item.source || 'Verified source'}
-                      {!insider ? ' · 🔒 Film tier' : item.noVideo ? ' · Tap to read' : ' · Tap to watch'}
-                    </p>
+                    {filmLessonSubtitle(item) ? (
+                      <p className="gv-film-lesson__dek">{filmLessonSubtitle(item)}</p>
+                    ) : null}
+                    <p className="gv-film-lesson__meta">{filmLessonMeta(item, insider)}</p>
                   </button>
                 </Card>
               ))}

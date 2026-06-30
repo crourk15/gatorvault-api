@@ -56,6 +56,7 @@ function lessonToCatalogItem(lesson, conceptCategory) {
     slug: lesson.id,
     title: lesson.title,
     dek: lesson.summary,
+    gameLine: lesson.category || null,
     category: lesson.category,
     lessonType: lesson.lessonType,
     season: '2026',

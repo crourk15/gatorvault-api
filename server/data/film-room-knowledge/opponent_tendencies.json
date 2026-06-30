@@ -8,10 +8,10 @@
       "frequency": 85,
       "notes": "Tests edge integrity and STAR fit early. UF 3-3-5 built to neutralize quick-game concepts.",
       "last_verified": "2026-06-05T12:00:00.000Z",
-      "source_name": "On3 Florida — FAU Spread-RPO Film Study",
-      "source_type": "film_study",
-      "source_url": "https://www.on3.com/teams/florida-gators/news/florida-florida-state-game-moved-to-friday/",
-      "source_confidence": 82
+      "source_name": "Brad White — UF Spring Defensive Install Presser",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2025/12/19/football-gators-meet-brad-white-floridas-new-defensive-coordinator-southeastern-conference-florida-gators",
+      "source_confidence": 86
     },
     {
       "id": "ot000002-0000-4000-8000-000000000002",
@@ -21,10 +21,10 @@
       "frequency": 75,
       "notes": "Communication stress test for STAR and linebackers.",
       "last_verified": "2026-06-05T12:00:00.000Z",
-      "source_name": "ESPN — FAU Tempo Offense Tendencies",
-      "source_type": "film_study",
-      "source_url": "https://www.espn.com/college-football/",
-      "source_confidence": 81
+      "source_name": "Brad White — UF Spring Defensive Install Presser",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2025/12/19/football-gators-meet-brad-white-floridas-new-defensive-coordinator-southeastern-conference-florida-gators",
+      "source_confidence": 86
     },
     {
       "id": "ot000003-0000-4000-8000-000000000003",
@@ -34,10 +34,10 @@
       "frequency": 80,
       "notes": "Control LOS, limit explosives, win third down on the road.",
       "last_verified": "2026-06-05T12:00:00.000Z",
-      "source_name": "247Sports — Auburn Gap-Scheme Run Game Breakdown",
-      "source_type": "analyst",
-      "source_url": "https://www.espn.com/college-football/",
-      "source_confidence": 84
+      "source_name": "Brad White — UF Spring Defensive Install Presser",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2025/12/19/football-gators-meet-brad-white-floridas-new-defensive-coordinator-southeastern-conference-florida-gators",
+      "source_confidence": 86
     },
     {
       "id": "ot000004-0000-4000-8000-000000000004",
@@ -47,10 +47,10 @@
       "frequency": 70,
       "notes": "UF path requires controlling the ball and generating pressure without selling out.",
       "last_verified": "2026-06-05T12:00:00.000Z",
-      "source_name": "ESPN — Georgia Run-First Tendency Breakdown",
-      "source_type": "analyst",
-      "source_url": "https://www.espn.com/college-football/",
-      "source_confidence": 83
+      "source_name": "Brad White — UF Spring Defensive Install Presser",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2025/12/19/football-gators-meet-brad-white-floridas-new-defensive-coordinator-southeastern-conference-florida-gators",
+      "source_confidence": 86
     },
     {
       "id": "ot000005-0000-4000-8000-000000000005",
@@ -60,10 +60,10 @@
       "frequency": 65,
       "notes": "Field position and turnover margin decide rivalry games.",
       "last_verified": "2026-06-05T12:00:00.000Z",
-      "source_name": "On3 Florida — FSU RPO Rivalry Film Study",
-      "source_type": "film_study",
-      "source_url": "https://www.on3.com/college/florida-gators/news/billy-napier-stresses-importance-of-preserving-florida-florida-state-rivalry-in-new-college-football-landscape/",
-      "source_confidence": 82
+      "source_name": "Buster Faulkner — UF OC Spring Media Availability",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2026/3/6/football-florida-gators-a-blank-canvas-faulkner-begins-painting-floridas-new-offense",
+      "source_confidence": 86
     }
   ]
 }

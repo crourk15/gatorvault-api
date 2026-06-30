@@ -50,7 +50,8 @@ function validateSourceRow(row, table) {
     source_low_confidence: SKIP.SOURCE_LOW_CONFIDENCE,
     source_blocked: SKIP.SOURCE_BLOCKED,
     coach_identity_blocked: SKIP.COACH_IDENTITY_BLOCKED,
-    source_type_invalid: SKIP.SOURCE_TYPE_INVALID
+    source_type_invalid: SKIP.SOURCE_TYPE_INVALID,
+    source_url_mismatch: SKIP.SOURCE_BLOCKED
   };
 
   return skip(reasonMap[check.reason] || SKIP.SOURCE_INCOMPLETE, check.detail, {

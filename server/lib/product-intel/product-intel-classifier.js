@@ -4,6 +4,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const transient = require('./product-intel-transient');
 
 const RULES_PATH = path.join(__dirname, 'product-intel-rules.json');
 
@@ -75,7 +76,18 @@ const CHECK_MAP = {
   'crawler:depth-chart': { classification: 'depth-chart-mismatch', ruleId: 'E2', category: 'E' },
   'crawler:api-latency': { classification: 'api-latency', ruleId: 'F1', category: 'F' },
   'crawler:cache-stale': { classification: 'cache-stale', ruleId: 'F2', category: 'F' },
-  'crawler:404': { classification: '404-detected', ruleId: 'F3', category: 'F' }
+  'crawler:404': { classification: '404-detected', ruleId: 'F3', category: 'F' },
+  'crawler:vault-redirect': { classification: 'fetch-failure', ruleId: 'F4', category: 'F' }
+};
+
+const TRANSIENT_CLASSIFICATION = {
+  classification: 'fetch-failure',
+  ruleId: 'F4',
+  category: 'F',
+  ruleName: 'Transient Fetch Failure',
+  defaultImpact: 12,
+  defaultConfidence: 92,
+  transient: true
 };
 
 function matchRuleByPattern(checkId, rulesDoc) {
@@ -99,6 +111,14 @@ function matchRuleByPattern(checkId, rulesDoc) {
 function classifySignal(signal) {
   const rulesDoc = loadRules();
   const checkId = signal.checkId || signal.id || '';
+
+  if (transient.isTransientNetworkFailure(signal)) {
+    return {
+      ...TRANSIENT_CLASSIFICATION,
+      source: signal.source || signal.module || 'unknown'
+    };
+  }
+
   const direct = CHECK_MAP[checkId];
   if (direct) {
     const rule = rulesDoc.rules[direct.ruleId] || {};
