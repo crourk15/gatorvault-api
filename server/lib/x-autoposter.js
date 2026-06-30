@@ -482,11 +482,18 @@ async function processDuePosts({ limit = 1, force = false } = {}) {
   const due = pending
     .filter((i) => new Date(i.scheduledAt).getTime() <= Date.now())
     .slice(0, Math.max(1, limit));
-  if (!due.length) return { processed: 0, skipped: true, reason: 'no_due_posts', results: [] };
+  let targets = due;
+  if (!targets.length && pending.length) {
+    const next = cadence.pickNextPost(
+      pending.map((i) => ({ ...i, scheduledAt: store.nowIso() }))
+    );
+    targets = next ? [next] : [pending[0]];
+  }
+  if (!targets.length) return { processed: 0, skipped: true, reason: 'no_due_posts', results: [] };
 
-  autopostLog('info', `Force processing ${due.length} due post(s)…`);
+  autopostLog('info', `Force processing ${targets.length} due post(s)…`);
   const results = [];
-  for (const item of due) {
+  for (const item of targets) {
     results.push(await processQueueItem(item));
     if (results.length >= limit) break;
   }
