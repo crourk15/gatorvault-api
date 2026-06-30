@@ -99,7 +99,7 @@ export function FilmRoomGameWeekPanel({ compact = false, initialGameId }: Props)
         <WinProbabilityBar ufPct={game.ufPct} />
       </PageSection>
 
-      <GridLayout cols={compact ? 1 : 3}>
+      <GridLayout cols={3}>
         <Card variant="dark" className="gv-fr-gw-card">
           <h3 className="gv-fr-gw-card__title">3 Keys to the Game</h3>
           <ol className="gv-fr-gw-list">
@@ -155,7 +155,7 @@ export function FilmRoomGameWeekPanel({ compact = false, initialGameId }: Props)
         </PageSection>
       ) : null}
 
-      <GridLayout cols={compact ? 1 : 2}>
+      <GridLayout cols={2}>
         <PageSection title="Scouting report">
           <Card variant="dark" className="gv-fr-gw-card">
             <p className="gv-fr-gw-card__body">{game.scoutingReport || game.film}</p>

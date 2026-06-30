@@ -888,6 +888,11 @@ body {
   padding: 1.25rem;
 }
 
+.gv-fr-game-week--compact .gv-page-grid--2,
+.gv-fr-game-week--compact .gv-page-grid--3 {
+  grid-template-columns: 1fr;
+}
+
 .gv-fr-gw-hero-bar {
   display: flex;
   flex-wrap: wrap;
