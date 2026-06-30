@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "node scripts/clean-next-cache.js && next build",
     "build:render": "next build && node scripts/copy-build-to-server.js",
-    "build:mobile": "npm run build && npx cap sync ios",
+    "build:mobile": "npm run build && node scripts/patch-capgo-podspec.js && npx cap sync ios",
     "start": "next start",
     "cap:sync": "npx cap sync ios",
     "cap:ios": "npx cap open ios"

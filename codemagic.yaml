@@ -28,6 +28,7 @@ workflows:
           cd client
           echo "Node $(node -v) | npm $(npm -v) | cwd $(pwd)"
           npm ci --legacy-peer-deps
+          node scripts/patch-capgo-podspec.js
       - name: Build Next.js static export
         script: |
           set -euo pipefail
