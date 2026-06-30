@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-29T19:07:27.674Z",
+  "generatedAt": "2026-06-30T15:49:53.581Z",
   "pass": 3,
   "fail": 0,
   "warn": 0,
@@ -8,19 +8,19 @@
     {
       "name": "ios-iap-wiring",
       "status": "PASS",
-      "message": "ok (127ms)",
+      "message": "ok (77ms)",
       "output": "[verify-ios-iap] OK"
     },
     {
       "name": "screenshots",
       "status": "PASS",
-      "message": "ok (164ms)",
-      "output": "{\n  \"pass\": 13,\n  \"fail\": 0,\n  \"warn\": 0,\n  \"results\": [\n    {\n      \"name\": \"iphone-01-futurecast.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"iphone-02-recruiting.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"iphone-03-team.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"iphone-04-community.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"iphone-05-membership.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"iphone-06-live-feed.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"manifest-age\",\n      \"status\": \"PASS\",\n      \"message\": \"5d old\"\n    },\n    {\n      \"name\": \"ipad-01-futurecast-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    },\n    {\n      \"name\": \"ipad-02-recruiting-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    },\n    {\n      \"name\": \"ipad-03-team-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    },\n    {\n      \"name\": \"ipad-04-community-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    },\n    {\n      \"name\": \"ipad-05-membership-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    },\n    {\n      \"name\": \"ipad-06-live-feed-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    }\n  ]\n}"
+      "message": "ok (92ms)",
+      "output": "{\n  \"pass\": 13,\n  \"fail\": 0,\n  \"warn\": 0,\n  \"results\": [\n    {\n      \"name\": \"iphone-01-futurecast.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"iphone-02-recruiting.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"iphone-03-team.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"iphone-04-community.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"iphone-05-membership.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"iphone-06-live-feed.png\",\n      \"status\": \"PASS\",\n      \"message\": \"1284x2778\"\n    },\n    {\n      \"name\": \"manifest-age\",\n      \"status\": \"PASS\",\n      \"message\": \"6d old\"\n    },\n    {\n      \"name\": \"ipad-01-futurecast-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    },\n    {\n      \"name\": \"ipad-02-recruiting-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    },\n    {\n      \"name\": \"ipad-03-team-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    },\n    {\n      \"name\": \"ipad-04-community-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    },\n    {\n      \"name\": \"ipad-05-membership-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    },\n    {\n      \"name\": \"ipad-06-live-feed-ipad-13.png\",\n      \"status\": \"PASS\",\n      \"message\": \"2064x2752\"\n    }\n  ]\n}"
     },
     {
       "name": "aasa",
       "status": "PASS",
-      "message": "ok (1032ms)",
+      "message": "ok (692ms)",
       "output": "{\n  \"site\": \"https://gatorvaultinsider.com\",\n  \"pass\": 8,\n  \"fail\": 0,\n  \"results\": [\n    {\n      \"name\": \".well-known_apple-app-site-association-content-type\",\n      \"status\": \"PASS\",\n      \"message\": \"application/json\"\n    },\n    {\n      \"name\": \".well-known_apple-app-site-association-paths\",\n      \"status\": \"PASS\",\n      \"message\": \"7 paths incl. /vault/*\"\n    },\n    {\n      \"name\": \".well-known_apple-app-site-association-team\",\n      \"status\": \"PASS\",\n      \"message\": \"shell only (set APPLE_TEAM_ID at build for live appIDs)\"\n    },\n    {\n      \"name\": \".well-known_apple-app-site-association\",\n      \"status\": \"PASS\",\n      \"message\": \"valid AASA document\"\n    },\n    {\n      \"name\": \"apple-app-site-association-content-type\",\n      \"status\": \"PASS\",\n      \"message\": \"application/json\"\n    },\n    {\n      \"name\": \"apple-app-site-association-paths\",\n      \"status\": \"PASS\",\n      \"message\": \"7 paths incl. /vault/*\"\n    },\n    {\n      \"name\": \"apple-app-site-association-team\",\n      \"status\": \"PASS\",\n      \"message\": \"shell only (set APPLE_TEAM_ID at build for live appIDs)\"\n    },\n    {\n      \"name\": \"apple-app-site-association\",\n      \"status\": \"PASS\",\n      \"message\": \"valid AASA document\"\n    }\n  ]\n}\nAssertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\\win\\async.c, line 94"
     },
     {
