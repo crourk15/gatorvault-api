@@ -1,10 +1,12 @@
 module.exports = (app) => {
   /** Render liveness probe — must return 2xx while the process is listening. */
   app.get('/health', (_req, res) => {
+    const rssMb = Math.round(process.memoryUsage().rss / 1024 / 1024);
     res.status(200).json({
       ok: true,
       alive: true,
       ready: global.__GV_API_ROUTES_READY__ === true,
+      memoryMb: rssMb,
       time: Date.now()
     });
   });

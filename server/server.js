@@ -50,6 +50,9 @@ const path = require('path');
 
 const app = express();
 
+/** Liveness probe — register before middleware so Render /health never blocks on JSON parsing. */
+require('./lib/health')(app);
+
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   const allowed = [
@@ -84,8 +87,6 @@ app.use(bodyParser.json({ limit: '1mb' }));
 app.use(require('./lib/api-cache-policy').apiCacheMiddleware());
 app.use(apiMonitorMiddleware());
 
-require('./lib/health')(app);
-
 const PORT = process.env.PORT || 3000;
 let apiRoutesReady = false;
 
@@ -104,8 +105,8 @@ app.use('/api', (req, res, next) => {
 
 app.listen(PORT, () => {
   console.log('[boot] early listen on port', PORT);
-  // Yield so Render /health probes succeed before synchronous route wiring runs.
-  setTimeout(wireApplication, 50);
+  // Yield the event loop so Render /health succeeds before synchronous route wiring.
+  setImmediate(wireApplication);
 });
 
 function wireApplication() {

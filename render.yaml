@@ -136,7 +136,7 @@ services:
       - key: QA_CRAWLER_ENABLED
         value: "true"
       - key: QA_CRAWLER_INTERVAL_MS
-        value: "300000"
+        value: "600000"
       - key: QA_CRAWLER_BOOT_DELAY_MS
         value: "180000"
       - key: PRODUCT_INTEL_ENABLED
@@ -364,7 +364,7 @@ services:
       - key: PLATFORM_OPS_JOB_TIMEOUT_MS
         value: "120000"
       - key: PLATFORM_OPS_MAX_RUNTIME_MS
-        value: "600000"
+        value: "420000"
       - key: UF_FIT_SEED_CLASS_YEARS
         value: "2027,2028"
       - key: ALLOWLIST_ON3_RANKINGS_CLASS_YEAR
