@@ -125,6 +125,15 @@ function mountPlatformRoutes(app) {
     }
   });
 
+  app.get('/api/game-week/meta', (req, res) => {
+    try {
+      const gameWeek = require('./game-week-feed');
+      return res.json(gameWeek.buildGameWeekPayload());
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/film-room/lesson/:id', (req, res) => {
     try {
       const session = getSessionFromReq(req);

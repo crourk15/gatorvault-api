@@ -60,9 +60,11 @@ async function runFilmRoomStructureChecks() {
       const text = await fetchSiteBundleText(config.SITE_URL, '/vault/film-room', { htmlOnly: false, maxAssets: 8 });
       const required = [
         'data-testid="vault-film-room"',
-        'gv-film-hub-grid',
-        'Offensive Scheme',
-        'UF Press Conferences',
+        'Film Room',
+        'Game Week',
+        'Scheme School',
+        'Film Breakdown',
+        'Press Conferences',
         'Highlights'
       ];
       const missing = required.filter((k) => !text.includes(k));

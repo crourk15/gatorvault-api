@@ -71,9 +71,9 @@ export async function fetchFilmRoomLesson(id: string): Promise<FilmRoomLessonDet
 }
 
 export const FILM_HUB_ORDER = [
-  'Offensive Scheme',
-  'Defensive Scheme',
+  'Game Week',
   'Film Breakdown',
+  'Scheme School',
   'UF Press Conferences',
   'Highlights',
 ];

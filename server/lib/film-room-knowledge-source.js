@@ -7,7 +7,6 @@ const MIN_SOURCE_CONFIDENCE = 80;
 const coachIdentity = require('./official-coach-identity');
 
 const APPROVED_SOURCE_TYPES = new Set([
-  'clinic',
   'oc_dc_interview',
   'analyst',
   'playbook',

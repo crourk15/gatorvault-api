@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Card, PageLayout, PageSection, TabBar } from '@/components/brand';
+import { FilmRoomGameWeekPanel } from '@/components/vault/FilmRoomGameWeekPanel';
 import {
   FILM_HUB_ORDER,
   fetchFilmRoomCatalog,
@@ -14,19 +15,40 @@ import {
   parseFilmRoomSegmentFromPath,
 } from '@/lib/vault-route-map';
 import { isFilmRoomInsider } from '@/lib/futurecast-insider';
+import {
+  SCHEME_SCHOOL_LESSONS,
+  SCHEME_SCHOOL_UNITS,
+  schemeSchoolLesson,
+  type SchemeSchoolLesson,
+} from '@/lib/scheme-school-data';
 import { UiEmpty, UiError, UiWarming } from '@/components/site/UiMessage';
 
 const HUB_TABS = FILM_HUB_ORDER.map((name) => ({
   id: name,
-  label: name.replace('UF ', '').replace(' Scheme', ''),
+  label:
+    name === 'UF Press Conferences'
+      ? 'Press Conferences'
+      : name === 'Scheme School'
+        ? 'Scheme School'
+        : name,
 }));
 
-const HUB_ICONS: Record<string, string> = {
-  'Offensive Scheme': '⚔️',
-  'Defensive Scheme': '🛡️',
-  'Film Breakdown': '🎬',
-  'UF Press Conferences': '🎤',
-  Highlights: '⭐',
+const HUB_COPY: Record<string, { desc: string }> = {
+  'Game Week': {
+    desc: 'Matchup intel, win probability, keys, and opponent prep — the centerpiece of Film Room tier.',
+  },
+  'Film Breakdown': {
+    desc: 'Premium video hub — Film Guy Network, GNFP, and verified tape breakdowns.',
+  },
+  'Scheme School': {
+    desc: 'Fan-friendly football education from UF\'s real staff — no clinic jargon.',
+  },
+  'UF Press Conferences': {
+    desc: 'Sumrall, Faulkner, White, and position coaches — supporting content.',
+  },
+  Highlights: {
+    desc: 'Official Gators highlights — supporting content.',
+  },
 };
 
 function formatFilmDate(iso?: string | null): string | null {
@@ -47,7 +69,7 @@ function filmLessonMeta(item: FilmRoomCatalogItem, insider: boolean): string {
   if (item.source) parts.push(item.source);
   if (date) parts.push(date);
   if (!insider) parts.push('🔒 Film tier');
-  else if (item.noVideo || item.knowledgeEngine) parts.push('Scheme intel · read');
+  else if (item.noVideo || item.knowledgeEngine) parts.push('Read lesson');
   else parts.push('Tap to watch');
   return parts.join(' · ');
 }
@@ -59,6 +81,36 @@ function youtubeEmbedUrl(item: FilmRoomCatalogItem): string | null {
   const url = item.sourceUrl || '';
   const match = url.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
   return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+}
+
+function SchemeSchoolViewer({
+  lesson,
+  onClose,
+}: {
+  lesson: SchemeSchoolLesson;
+  onClose: () => void;
+}): React.ReactElement {
+  return (
+    <PageSection title={lesson.title} subtitle={lesson.staff}>
+      <button type="button" className="gv-film-lesson__back" onClick={onClose}>
+        ← Back to Scheme School
+      </button>
+      <p className="gv-fr-scheme-viewer__staff">{lesson.staff}</p>
+      <p className="gv-film-lesson__dek">{lesson.dek}</p>
+      {lesson.usageNote ? <p className="gv-film-lesson__type">{lesson.usageNote}</p> : null}
+      <div className="gv-film-lesson__body">
+        <p>{lesson.body}</p>
+      </div>
+      <div className="gv-fr-scheme-viewer__watch">
+        <h4>What to watch for</h4>
+        <ul>
+          {lesson.watchFor.map((w) => (
+            <li key={w}>{w}</li>
+          ))}
+        </ul>
+      </div>
+    </PageSection>
+  );
 }
 
 function FilmLessonViewer({
@@ -79,19 +131,14 @@ function FilmLessonViewer({
   const bodyParas = body
     ? body.split(/\n\n+/).filter((para) => para.trim() && para.trim() !== summary?.trim())
     : [];
-  const sources = item.sources?.length
-    ? item.sources
-    : item.sourceUrl
-      ? [{ source_name: item.source, source_url: item.sourceUrl }]
-      : [];
 
   return (
-    <PageSection title={item.title} subtitle={item.source || 'Verified coaching source'}>
+    <PageSection title={item.title} subtitle={item.source || 'Florida Gators Football'}>
       <button type="button" className="gv-film-lesson__back" onClick={onClose}>
         ← Back to catalog
       </button>
       <p className="gv-film-lesson__type">
-        {embed ? 'Watch — verified film source' : isSchemeIntel ? 'Scheme intel — verified coaching analysis (no video embed)' : 'Verified source'}
+        {embed ? 'Watch — verified film source' : isSchemeIntel ? 'Scheme intel — read' : 'Verified source'}
       </p>
       {loading ? <p className="gv-page-status">Loading lesson…</p> : null}
       {summary ? <p className="gv-film-lesson__dek">{summary}</p> : null}
@@ -113,29 +160,92 @@ function FilmLessonViewer({
         </div>
       ) : null}
       {!embed && !bodyParas.length && !loading ? (
-        <UiEmpty message="Lesson content is being verified." hint="Check back after the next knowledge sync." />
-      ) : null}
-      {sources.length ? (
-        <div className="gv-film-lesson__sources">
-          <p className="gv-film-lesson__sources-label">Verified sources</p>
-          <ul className="gv-film-lesson__sources-list">
-            {sources.map((src) => {
-              const url = src.source_url || src.sourceUrl;
-              const label = src.source_name || src.sourceName || 'Source';
-              if (!url) return null;
-              return (
-                <li key={`${label}-${url}`}>
-                  <a href={url} target="_blank" rel="noopener noreferrer" className="gv-film-lesson__link">
-                    {label} →
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        <UiEmpty message="Lesson content is being verified." hint="Check back after the next sync." />
       ) : null}
     </PageSection>
   );
+}
+
+function CatalogGrid({
+  items,
+  insider,
+  onOpen,
+}: {
+  items: FilmRoomCatalogItem[];
+  insider: boolean;
+  onOpen: (item: FilmRoomCatalogItem) => void;
+}): React.ReactElement {
+  if (!items.length) {
+    return <UiEmpty message="No content in this section yet." hint="Weekly refresh adds new tape and pressers." />;
+  }
+  return (
+    <div className="gv-fr-lessons">
+      {items.map((item) => (
+        <Card key={item.id} variant="dark" className="gv-fr-lesson-card">
+          <button type="button" className="gv-fr-lesson-card__btn" onClick={() => void onOpen(item)}>
+            <h3 className="gv-fr-lesson-card__title">{item.title}</h3>
+            {filmLessonSubtitle(item) ? (
+              <p className="gv-fr-lesson-card__dek">{filmLessonSubtitle(item)}</p>
+            ) : null}
+            <p className="gv-fr-lesson-card__meta">{filmLessonMeta(item, insider)}</p>
+            <span className="gv-fr-lesson-card__cta">
+              {item.youtubeId || item.embedUrl ? 'Tap to watch →' : insider ? 'Read lesson →' : 'Unlock →'}
+            </span>
+          </button>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function SchemeSchoolGrid({
+  insider,
+  onOpen,
+}: {
+  insider: boolean;
+  onOpen: (lesson: SchemeSchoolLesson) => void;
+}): React.ReactElement {
+  return (
+    <>
+      {SCHEME_SCHOOL_UNITS.map((unit) => {
+        const lessons = SCHEME_SCHOOL_LESSONS.filter((l) => l.unit === unit.id);
+        return (
+          <div key={unit.id} className="gv-fr-scheme-unit">
+            <h3 className="gv-fr-scheme-unit__title">{unit.label}</h3>
+            <div className="gv-fr-lessons">
+              {lessons.map((lesson) => (
+                <Card key={lesson.id} variant="dark" className="gv-fr-lesson-card">
+                  <button
+                    type="button"
+                    className="gv-fr-lesson-card__btn"
+                    onClick={() => {
+                      if (!insider) {
+                        window.location.href = '/join?tier=film';
+                        return;
+                      }
+                      onOpen(lesson);
+                    }}
+                  >
+                    <h3 className="gv-fr-lesson-card__title">{lesson.title}</h3>
+                    <p className="gv-fr-lesson-card__dek">{lesson.dek}</p>
+                    <p className="gv-fr-lesson-card__meta">{lesson.staff}</p>
+                    <span className="gv-fr-lesson-card__cta">{insider ? 'Read lesson →' : 'Unlock →'}</span>
+                  </button>
+                </Card>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+function hubFromUrl(): string | null {
+  if (typeof window === 'undefined') return null;
+  const hub = new URLSearchParams(window.location.search).get('hub');
+  if (hub && FILM_HUB_ORDER.includes(hub)) return hub;
+  return null;
 }
 
 export function VaultFilmRoomPage(): React.ReactElement {
@@ -143,17 +253,24 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<FilmRoomCatalogItem | null>(null);
+  const [schemeLesson, setSchemeLesson] = useState<SchemeSchoolLesson | null>(null);
   const [lessonDetail, setLessonDetail] = useState<FilmRoomLessonDetail | null>(null);
   const [lessonLoading, setLessonLoading] = useState(false);
   const [insider, setInsider] = useState(() => isFilmRoomInsider());
   const [hub, setHub] = useState<string>(() => {
+    const fromUrl = hubFromUrl();
+    if (fromUrl) return fromUrl;
     const seg = parseFilmRoomSegmentFromPath();
     return seg ? filmRoomHubFromSegment(seg) : FILM_HUB_ORDER[0];
   });
 
   useEffect(() => {
-    const seg = parseFilmRoomSegmentFromPath();
-    if (seg) setHub(filmRoomHubFromSegment(seg));
+    const fromUrl = hubFromUrl();
+    if (fromUrl) setHub(fromUrl);
+    else {
+      const seg = parseFilmRoomSegmentFromPath();
+      if (seg) setHub(filmRoomHubFromSegment(seg));
+    }
   }, []);
 
   useEffect(() => {
@@ -184,14 +301,15 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const clearLessonFromUrl = useCallback(() => {
     if (typeof window === 'undefined') return;
     const url = new URL(window.location.href);
-    if (!url.searchParams.has('lesson')) return;
     url.searchParams.delete('lesson');
+    url.searchParams.delete('scheme');
     const next = `${url.pathname}${url.search}${url.hash}`;
     window.history.replaceState({}, '', next);
   }, []);
 
   const closeLesson = useCallback(() => {
     setSelected(null);
+    setSchemeLesson(null);
     setLessonDetail(null);
     clearLessonFromUrl();
   }, [clearLessonFromUrl]);
@@ -199,9 +317,16 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const selectHub = useCallback(
     (nextHub: string) => {
       setHub(nextHub);
-      if (selected) closeLesson();
+      if (selected || schemeLesson) closeLesson();
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.set('hub', nextHub);
+        url.searchParams.delete('lesson');
+        url.searchParams.delete('scheme');
+        window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+      }
     },
-    [selected, closeLesson]
+    [selected, schemeLesson, closeLesson]
   );
 
   const openLesson = useCallback(
@@ -210,11 +335,13 @@ export function VaultFilmRoomPage(): React.ReactElement {
         window.location.href = '/join?tier=film';
         return;
       }
+      setSchemeLesson(null);
       setSelected(item);
       setLessonDetail(null);
       if (typeof window !== 'undefined') {
         const url = new URL(window.location.href);
         url.searchParams.set('lesson', item.id);
+        url.searchParams.delete('scheme');
         window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
       }
       if (item.body || item.youtubeId || item.embedUrl) return;
@@ -232,36 +359,53 @@ export function VaultFilmRoomPage(): React.ReactElement {
     [insider]
   );
 
+  const openSchemeLesson = useCallback((lesson: SchemeSchoolLesson) => {
+    setSelected(null);
+    setLessonDetail(null);
+    setSchemeLesson(lesson);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('scheme', lesson.id);
+      url.searchParams.delete('lesson');
+      window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+    }
+  }, []);
+
   useEffect(() => {
-    if (loading || !items.length) return;
+    if (loading) return;
+    const schemeId = new URLSearchParams(window.location.search).get('scheme');
+    if (schemeId) {
+      const match = schemeSchoolLesson(schemeId);
+      if (match) setSchemeLesson(match);
+      return;
+    }
+    if (!items.length) return;
     const lessonId = new URLSearchParams(window.location.search).get('lesson');
     if (!lessonId) return;
     const match = items.find((i) => i.id === lessonId);
     if (match) void openLesson(match);
   }, [loading, items, openLesson]);
 
-  const hubCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    for (const h of FILM_HUB_ORDER) counts[h] = 0;
-    for (const item of items) {
-      const key = item.filmHub || 'Offensive Scheme';
-      counts[key] = (counts[key] ?? 0) + 1;
-    }
-    return counts;
-  }, [items]);
-
   const filtered = useMemo(() => {
-    return items.filter((i) => (i.filmHub || 'Offensive Scheme') === hub);
+    return items.filter((i) => (i.filmHub || 'Film Breakdown') === hub);
   }, [items, hub]);
+
+  const hubCopy = HUB_COPY[hub];
 
   return (
     <div className="rh-page rh-page--elite gv-film-room-page mobile-app" data-testid="vault-film-room-elite">
       <PageLayout
         theme="chalkboard"
-        title="Film Room"
-        subtitle="Scheme breakdowns, press conferences, and verified coaching analysis."
+        title=""
+        subtitle=""
         testId="vault-film-room"
         className="gv-film-room rh-elite-chrome"
+        hero={
+          <header className="gv-fr-hero">
+            <h1 className="gv-fr-hero__title">Film Room</h1>
+            <p className="gv-fr-hero__sub">Real football. Real breakdowns. Real coaching intel.</p>
+          </header>
+        }
       >
         {loading ? (
           <div className="gv-page-status" role="status" aria-live="polite" aria-busy="true">
@@ -269,86 +413,64 @@ export function VaultFilmRoomPage(): React.ReactElement {
           </div>
         ) : null}
         {error ? <UiError message={error} retry={load} backHref="/vault" backLabel="← Vault" /> : null}
-      <TabBar
-        options={HUB_TABS}
-        active={hub}
-        onChange={selectHub}
-        aria-label="Film room categories"
-      />
 
-      {!selected ? (
-        <PageSection title="Categories" subtitle="Select a film hub">
-          <div className="gv-film-hub-grid" role="list" aria-label="Film room categories">
-            {FILM_HUB_ORDER.map((name) => (
-              <button
-                key={name}
-                type="button"
-                role="listitem"
-                className={`gv-film-hub-card${hub === name ? ' is-active' : ''}`}
-                onClick={() => selectHub(name)}
-                aria-pressed={hub === name}
-              >
-                <span className="gv-film-hub-card__icon" aria-hidden="true">
-                  {HUB_ICONS[name] ?? '📺'}
-                </span>
-                <h3 className="gv-film-hub-card__title">{name}</h3>
-                <p className="gv-film-hub-card__count">{hubCounts[name] ?? 0} lessons</p>
-              </button>
-            ))}
-          </div>
-        </PageSection>
-      ) : null}
+        <TabBar options={HUB_TABS} active={hub} onChange={selectHub} aria-label="Film room sections" />
 
-      {!loading && !error && selected ? (
-        <FilmLessonViewer
-          item={selected}
-          detail={lessonDetail}
-          loading={lessonLoading}
-          onClose={closeLesson}
-        />
-      ) : null}
+        {!loading && !error && schemeLesson ? (
+          <SchemeSchoolViewer lesson={schemeLesson} onClose={closeLesson} />
+        ) : null}
 
-      {!loading && !error && !selected ? (
-        <>
-          <PageSection
-            title={hub}
-            subtitle={
-              hub === 'Offensive Scheme' || hub === 'Defensive Scheme'
-                ? `${hubCounts[hub] ?? 0} lessons · Scheme intel from verified OC/DC pressers — watch Film Breakdown for tape`
-                : `${hubCounts[hub] ?? 0} lessons · ${HUB_ICONS[hub] ?? '📺'}`
-            }
-          >
-            <div className="gv-film-lessons">
-              {filtered.map((item) => (
-                <Card key={item.id} variant="dark" className="gv-film-lesson gv-film-lesson--clickable">
-                  <button type="button" className="gv-film-lesson__open" onClick={() => void openLesson(item)}>
-                    <h3 className="gv-film-lesson__title">{item.title}</h3>
-                    {filmLessonSubtitle(item) ? (
-                      <p className="gv-film-lesson__dek">{filmLessonSubtitle(item)}</p>
-                    ) : null}
-                    <p className="gv-film-lesson__meta">{filmLessonMeta(item, insider)}</p>
-                  </button>
-                </Card>
-              ))}
-              {filtered.length === 0 && <UiEmpty message="No lessons in this category yet." />}
-            </div>
-          </PageSection>
+        {!loading && !error && selected && !schemeLesson ? (
+          <FilmLessonViewer
+            item={selected}
+            detail={lessonDetail}
+            loading={lessonLoading}
+            onClose={closeLesson}
+          />
+        ) : null}
 
-          {items.length === 0 && (
-            <UiEmpty
-              message="Film Room catalog is empty."
-              hint="Knowledge lessons sync from the verified coaching database on the API."
-            />
-          )}
-        </>
-      ) : null}
+        {!loading && !error && !selected && !schemeLesson ? (
+          <>
+            {hub !== 'Game Week' ? (
+              <p className="gv-fr-hub-desc">{hubCopy?.desc ?? ''}</p>
+            ) : null}
 
-      {!insider ? (
-        <a href="/join?tier=film" className="gv-paywall-sticky-cta">
-          Unlock Film Room + FutureCast · from $9.99/mo
-        </a>
-      ) : null}
-    </PageLayout>
+            {hub === 'Game Week' ? (
+              insider ? (
+                <FilmRoomGameWeekPanel />
+              ) : (
+                <PageSection title="Game Week" subtitle="Film tier required">
+                  <UiEmpty
+                    message="Game Week is the centerpiece of Film Room tier."
+                    hint="Unlock matchup intel, keys, win probability, and opponent prep."
+                  />
+                  <a href="/join?tier=film" className="gv-fr-btn" style={{ marginTop: '1rem' }}>
+                    Unlock Film Room
+                  </a>
+                </PageSection>
+              )
+            ) : null}
+
+            {hub === 'Scheme School' ? (
+              <PageSection title="Scheme School" subtitle="UF staff · fan-friendly lessons">
+                <SchemeSchoolGrid insider={insider} onOpen={openSchemeLesson} />
+              </PageSection>
+            ) : null}
+
+            {hub !== 'Game Week' && hub !== 'Scheme School' ? (
+              <PageSection title={HUB_TABS.find((t) => t.id === hub)?.label ?? hub}>
+                <CatalogGrid items={filtered} insider={insider} onOpen={openLesson} />
+              </PageSection>
+            ) : null}
+          </>
+        ) : null}
+
+        {!insider ? (
+          <a href="/join?tier=film" className="gv-paywall-sticky-cta">
+            Unlock Film Room + FutureCast · from $9.99/mo
+          </a>
+        ) : null}
+      </PageLayout>
     </div>
   );
 }

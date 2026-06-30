@@ -703,6 +703,390 @@ body {
   box-shadow: var(--gv-shadow-lift);
 }
 
+/* Film Room elite — navy grid + orange accent (Recruiting Command Center parity) */
+.gv-film-room-page {
+  --fr-bg: #0a0f1c;
+  --fr-card: #111827;
+  --fr-orange: #fa4616;
+  --fr-text: #ffffff;
+  --fr-muted: #c7c7c7;
+  --fr-subtle: #94a3b8;
+}
+
+.gv-fr-hero {
+  position: relative;
+  padding: 1.5rem 0 1.25rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 3px solid var(--fr-orange);
+  background:
+    linear-gradient(rgba(10, 15, 28, 0.92), rgba(10, 15, 28, 0.92)),
+    repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(255, 255, 255, 0.03) 23px, rgba(255, 255, 255, 0.03) 24px),
+    repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(255, 255, 255, 0.03) 23px, rgba(255, 255, 255, 0.03) 24px);
+}
+
+.gv-fr-hero__title {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--fr-text);
+  margin: 0 0 0.35rem;
+  letter-spacing: 0.02em;
+}
+
+.gv-fr-hero__sub {
+  margin: 0;
+  color: var(--fr-muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  max-width: 36rem;
+}
+
+.gv-fr-hub-desc {
+  margin: 0 0 1rem;
+  color: var(--fr-subtle);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.gv-fr-lessons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--gv-grid-gutter, 0.75rem);
+}
+
+.gv-fr-lesson-card {
+  background: var(--fr-card) !important;
+  border: 1px solid rgba(0, 48, 135, 0.35) !important;
+  border-radius: 0.75rem;
+  padding: 0;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.gv-fr-lesson-card:hover {
+  border-color: rgba(250, 70, 22, 0.55) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+
+.gv-fr-lesson-card__btn {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.15rem;
+  margin: 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+
+.gv-fr-lesson-card__title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fr-text);
+  margin: 0 0 0.35rem;
+}
+
+.gv-fr-lesson-card__dek {
+  font-size: 0.8125rem;
+  color: var(--fr-muted);
+  margin: 0 0 0.5rem;
+  line-height: 1.45;
+}
+
+.gv-fr-lesson-card__meta {
+  font-size: 0.6875rem;
+  color: var(--fr-subtle);
+  margin: 0;
+}
+
+.gv-fr-lesson-card__cta {
+  display: inline-block;
+  margin-top: 0.65rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fr-orange);
+}
+
+.gv-fr-scheme-unit {
+  margin-bottom: 1.5rem;
+}
+
+.gv-fr-scheme-unit__title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fr-orange);
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(250, 70, 22, 0.25);
+}
+
+.gv-fr-scheme-viewer__staff {
+  font-size: 0.75rem;
+  color: var(--fr-orange);
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+}
+
+.gv-fr-scheme-viewer__watch {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.gv-fr-scheme-viewer__watch h4 {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fr-subtle);
+  margin: 0 0 0.5rem;
+}
+
+.gv-fr-scheme-viewer__watch ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--fr-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.gv-fr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.55rem 1.1rem;
+  border-radius: 0.5rem;
+  background: var(--fr-orange);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.gv-fr-btn--ghost {
+  background: transparent;
+  color: var(--fr-orange);
+  padding-left: 0;
+  min-height: auto;
+}
+
+/* Game Week panel (Film Room + standalone) */
+.gv-fr-game-week {
+  background: var(--fr-card);
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+
+.gv-fr-gw-hero-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.gv-fr-gw-hero-kicker {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fr-orange);
+  margin: 0 0 0.25rem;
+}
+
+.gv-fr-gw-hero-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.25rem;
+  color: var(--fr-text);
+  margin: 0;
+}
+
+.gv-fr-gw-countdown {
+  text-align: center;
+  min-width: 5.5rem;
+}
+
+.gv-fr-gw-countdown__num {
+  display: block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--fr-orange);
+  line-height: 1;
+}
+
+.gv-fr-gw-countdown__label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fr-subtle);
+}
+
+.gv-fr-gw-matchup {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.gv-fr-gw-matchup__logo {
+  font-size: 2rem;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.gv-fr-gw-matchup__title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.125rem;
+  color: var(--fr-text);
+  margin: 0.5rem 0 0.25rem;
+}
+
+.gv-fr-gw-matchup__meta,
+.gv-fr-gw-matchup__venue {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--fr-muted);
+}
+
+.gv-fr-gw-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.gv-fr-gw-pill {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(10, 15, 28, 0.6);
+  color: var(--fr-muted);
+  font-size: 0.6875rem;
+  cursor: pointer;
+}
+
+.gv-fr-gw-pill.is-active {
+  border-color: var(--fr-orange);
+  color: var(--fr-text);
+  background: rgba(250, 70, 22, 0.12);
+}
+
+.gv-fr-gw-wp {
+  display: flex;
+  height: 2rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.gv-fr-gw-wp__uf {
+  background: #0021a5;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+}
+
+.gv-fr-gw-wp__opp {
+  background: rgba(30, 41, 59, 0.9);
+  color: var(--fr-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.gv-fr-gw-card {
+  background: rgba(10, 15, 28, 0.65) !important;
+  border-color: rgba(0, 48, 135, 0.3) !important;
+  height: 100%;
+}
+
+.gv-fr-gw-card__title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.875rem;
+  color: var(--fr-text);
+  margin: 0 0 0.65rem;
+}
+
+.gv-fr-gw-card__body {
+  font-size: 0.875rem;
+  color: var(--fr-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.gv-fr-gw-list {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--fr-muted);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.gv-fr-gw-list--bullets {
+  list-style: disc;
+}
+
+.gv-fr-gw-swing {
+  margin-bottom: 0.65rem;
+  font-size: 0.875rem;
+  color: var(--fr-muted);
+}
+
+.gv-fr-gw-swing strong {
+  color: var(--fr-text);
+}
+
+.gv-fr-gw-pred-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fr-subtle);
+  margin: 0 0 0.35rem;
+}
+
+.gv-fr-gw-pred-score {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.75rem;
+  color: var(--fr-orange);
+  margin: 0 0 0.35rem;
+}
+
+.gv-fr-gw-pred-meta {
+  font-size: 0.8125rem;
+  color: var(--fr-muted);
+  margin: 0 0 1rem;
+}
+
+.gv-fr-gw-footer {
+  margin-top: 1.25rem;
+  text-align: center;
+}
+
+.gv-film-room-page .gv-tab-bar {
+  margin-bottom: 1rem;
+}
+
 /* ── 2. Game Week ── */
 .gv-gw-hero .gv-page-layout__hero-inner {
   align-items: center;

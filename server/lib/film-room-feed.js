@@ -14,9 +14,9 @@ const KNOWLEDGE_CATEGORIES = [
 ];
 
 const FILM_HUBS = [
-  'Offensive Scheme',
-  'Defensive Scheme',
+  'Game Week',
   'Film Breakdown',
+  'Scheme School',
   'UF Press Conferences',
   'Highlights'
 ];
@@ -40,12 +40,13 @@ function inferSchemeSide(lesson, conceptCategory) {
 
 function inferFilmHub(item) {
   const cat = item.category || '';
+  const lessonType = String(item.lessonType || '').toLowerCase();
+  if (lessonType === 'opponent_prep' || cat === 'Opponent Prep') return 'Game Week';
   if (cat === legacy.LEGACY_CATEGORIES.GNFP || cat === legacy.LEGACY_CATEGORIES.FILM_GUY) return 'Film Breakdown';
   if (cat === legacy.LEGACY_CATEGORIES.PRESS) return 'UF Press Conferences';
   if (cat === legacy.LEGACY_CATEGORIES.HIGHLIGHTS) return 'Highlights';
-  if (item.schemeSide === 'defense') return 'Defensive Scheme';
-  if (item.schemeSide === 'offense') return 'Offensive Scheme';
-  return 'Offensive Scheme';
+  if (item.schemeSide === 'defense' || item.schemeSide === 'offense') return 'Scheme School';
+  return 'Scheme School';
 }
 
 function lessonToCatalogItem(lesson, conceptCategory) {
