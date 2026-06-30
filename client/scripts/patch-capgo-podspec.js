@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-/** Capgo podspec helper must be called at top level (::) inside Pod::Spec.new on CI. */
 const podspecPath = path.join(
   __dirname,
   '..',
@@ -16,19 +15,30 @@ if (!fs.existsSync(podspecPath)) {
   process.exit(0);
 }
 
-const before = fs.readFileSync(podspecPath, 'utf8');
-const needle = "'OTHER_SWIFT_FLAGS' => has_storekit_265_sdk? ?";
-const replacement = "'OTHER_SWIFT_FLAGS' => ::has_storekit_265_sdk? ?";
+let src = fs.readFileSync(podspecPath, 'utf8');
 
-if (before.includes(replacement)) {
+if (src.includes('storekit_swift_flags = has_storekit_265_sdk?')) {
   console.log('[patch-capgo-podspec] already patched');
   process.exit(0);
 }
 
-if (!before.includes(needle)) {
+// Undo broken :: patch if present
+src = src.replace(
+  "'OTHER_SWIFT_FLAGS' => ::has_storekit_265_sdk? ? '$(inherited) -D STOREKIT_26_5' : '$(inherited)'",
+  "'OTHER_SWIFT_FLAGS' => has_storekit_265_sdk? ? '$(inherited) -D STOREKIT_26_5' : '$(inherited)'"
+);
+
+const needle = "'OTHER_SWIFT_FLAGS' => has_storekit_265_sdk? ? '$(inherited) -D STOREKIT_26_5' : '$(inherited)'";
+if (!src.includes(needle)) {
   console.error('[patch-capgo-podspec] unexpected podspec — manual check required');
   process.exit(1);
 }
 
-fs.writeFileSync(podspecPath, before.replace(needle, replacement), 'utf8');
-console.log('[patch-capgo-podspec] OK — fixed StoreKit helper call for CocoaPods');
+src = src.replace(
+  'Pod::Spec.new do |s|',
+  "storekit_swift_flags = has_storekit_265_sdk? ? '$(inherited) -D STOREKIT_26_5' : '$(inherited)'\n\nPod::Spec.new do |s|"
+);
+src = src.replace(needle, "'OTHER_SWIFT_FLAGS' => storekit_swift_flags");
+
+fs.writeFileSync(podspecPath, src, 'utf8');
+console.log('[patch-capgo-podspec] OK — hoisted StoreKit flags before Pod::Spec.new');

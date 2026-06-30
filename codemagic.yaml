@@ -44,6 +44,7 @@ workflows:
           set -euo pipefail
           unset CAPACITOR_SERVER_URL || true
           cd client
+          node scripts/patch-capgo-podspec.js
           npx cap sync ios
           test -d ios/App/App/public
           echo "OK: copied web bundle to ios/App/App/public"
