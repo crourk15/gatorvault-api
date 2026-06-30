@@ -22,6 +22,28 @@ export function isNativeApp(): boolean {
   return isBundledNativeShell();
 }
 
+/** Strip /index.html so route checks work in the bundled file server. */
+export function normalizeNativeRoutePath(pathname: string): string {
+  let p = pathname.replace(/\/$/, '') || '/';
+  if (p.endsWith('/index.html')) {
+    p = p.slice(0, -'/index.html'.length) || '/';
+  }
+  return p || '/';
+}
+
+/** Capacitor local server needs explicit index.html — /join/ alone falls back to /. */
+export function toBundledStaticFilePath(pathname: string): string {
+  let p = pathname || '/';
+  if (!p.startsWith('/')) p = `/${p}`;
+  const last = p.split('/').filter(Boolean).pop() ?? '';
+  if (last && /\.[a-z0-9]+$/i.test(last)) {
+    return p.endsWith('/') ? p.replace(/\/+$/, '') : p;
+  }
+  if (p === '/') return '/index.html';
+  const base = p.endsWith('/') ? p : `${p}/`;
+  return `${base}index.html`;
+}
+
 /** Origin for in-app navigation — bundled shell stays on capacitor://localhost paths. */
 export function nativeNavigationOrigin(): string {
   if (typeof window === 'undefined') return PRODUCTION_SITE;
@@ -34,9 +56,16 @@ export function nativeNavigationOrigin(): string {
 }
 
 export function nativeNavigationUrl(path: string): string {
-  if (!path) return `${nativeNavigationOrigin()}/`;
+  if (!path) {
+    const origin = nativeNavigationOrigin();
+    return isBundledNativeShell() ? `${origin}/index.html` : `${origin}/`;
+  }
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
-  return new URL(path, nativeNavigationOrigin()).href;
+  const url = new URL(path, nativeNavigationOrigin());
+  if (isBundledNativeShell()) {
+    return `${url.origin}${toBundledStaticFilePath(url.pathname)}${url.search}${url.hash}`;
+  }
+  return url.href;
 }
 
 /** API / site origin — native WebView on gatorvaultinsider.com uses same-origin /api proxy. */

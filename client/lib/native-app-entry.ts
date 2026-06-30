@@ -1,4 +1,10 @@
-import { isNativeApp, nativeNavigationOrigin, nativeNavigationUrl } from '@/lib/api-base';
+import {
+  isBundledNativeShell,
+  isNativeApp,
+  nativeNavigationOrigin,
+  nativeNavigationUrl,
+  normalizeNativeRoutePath,
+} from '@/lib/api-base';
 import { loadSession } from '@/lib/auth-api';
 
 export function normalizeStaticExportHref(href: string): string {
@@ -18,13 +24,13 @@ export function normalizeStaticExportHref(href: string): string {
 }
 
 function isMarketingPath(pathname: string): boolean {
-  const p = pathname.replace(/\/$/, '') || '/';
+  const p = normalizeNativeRoutePath(pathname);
   return p === '/' || p === '/welcome' || p === '/insider';
 }
 
 export function nativeBootRedirect(): string | null {
   if (!isNativeApp()) return null;
-  const path = (window.location.pathname || '/').replace(/\/$/, '') || '/';
+  const path = normalizeNativeRoutePath(window.location.pathname || '/');
   if (!isMarketingPath(path)) return null;
   const session = loadSession();
   const rel =
@@ -50,6 +56,24 @@ export function runNativeAppEntry(): void {
       if (!anchor) return;
       const raw = anchor.getAttribute('href');
       if (!raw) return;
+      if (raw.startsWith('#') || raw.startsWith('mailto:') || raw.startsWith('tel:')) return;
+      if (raw.startsWith('http://') || raw.startsWith('https://')) return;
+
+      if (isBundledNativeShell()) {
+        event.preventDefault();
+        event.stopPropagation();
+        try {
+          const url = new URL(raw, nativeNavigationOrigin());
+          if (isMarketingPath(url.pathname)) {
+            window.location.href = nativeBootRedirect() ?? nativeNavigationUrl('/vault/');
+            return;
+          }
+        } catch {
+          /* ignore malformed href */
+        }
+        window.location.href = nativeNavigationUrl(normalizeStaticExportHref(raw));
+        return;
+      }
 
       try {
         const url = new URL(raw, nativeNavigationOrigin());

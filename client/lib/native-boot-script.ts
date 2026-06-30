@@ -16,10 +16,34 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
         ? location.origin
         : 'https://gatorvaultinsider.com';
 
+    function routePath(path) {
+      var p = (path || '/').replace(/\\/$/, '') || '/';
+      if (p.slice(-11) === '/index.html') p = p.slice(0, -11) || '/';
+      return p || '/';
+    }
+
+    function staticFilePath(pathname) {
+      var p = pathname || '/';
+      if (p.charAt(0) !== '/') p = '/' + p;
+      var parts = p.split('/').filter(Boolean);
+      var last = parts[parts.length - 1] || '';
+      if (last && /\\.[a-z0-9]+$/i.test(last)) {
+        return p.charAt(p.length - 1) === '/' ? p.replace(/\\/+$/, '') : p;
+      }
+      if (p === '/') return '/index.html';
+      return (p.charAt(p.length - 1) === '/' ? p : p + '/') + 'index.html';
+    }
+
     function abs(path) {
-      if (!path) return SITE + '/';
+      if (!path) return SITE + (bundledNative ? '/index.html' : '/');
       if (path.indexOf('http') === 0) return path;
-      return SITE + (path.charAt(0) === '/' ? path : '/' + path);
+      try {
+        var u = new URL(path, SITE);
+        var filePath = bundledNative ? staticFilePath(u.pathname) : u.pathname;
+        return SITE + filePath + u.search + u.hash;
+      } catch (e) {
+        return SITE + (path.charAt(0) === '/' ? path : '/' + path);
+      }
     }
 
     function norm(href) {
@@ -49,7 +73,7 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
     }
 
     function isMarketingPath(path) {
-      var p = (path || '/').replace(/\\/$/, '') || '/';
+      var p = routePath(path);
       return p === '/' || p === '/welcome' || p === '/insider';
     }
 
@@ -57,7 +81,23 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
       var a = e.target && e.target.closest && e.target.closest('a[href]');
       if (!a) return;
       var raw = a.getAttribute('href');
-      if (!raw) return;
+      if (!raw || raw.charAt(0) === '#' || raw.indexOf('http') === 0 ||
+          raw.indexOf('mailto:') === 0 || raw.indexOf('tel:') === 0) return;
+
+      if (bundledNative) {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+          var u = new URL(raw, SITE);
+          if (isMarketingPath(u.pathname)) {
+            location.href = vaultDest();
+            return;
+          }
+        } catch (err) {}
+        location.href = abs(norm(raw));
+        return;
+      }
+
       var fixed = norm(raw);
       if (fixed !== raw) {
         e.preventDefault();
@@ -65,16 +105,15 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
         return;
       }
       try {
-        var u = new URL(raw, SITE);
-        var p = u.pathname.replace(/\\/$/, '') || '/';
-        if (isMarketingPath(p)) {
+        var u2 = new URL(raw, SITE);
+        if (isMarketingPath(u2.pathname)) {
           e.preventDefault();
           location.href = vaultDest();
         }
-      } catch (err) {}
+      } catch (err2) {}
     }, true);
 
-    var path = (location.pathname || '/').replace(/\\/$/, '') || '/';
+    var path = routePath(location.pathname || '/');
     if (isMarketingPath(path)) {
       var dest = vaultDest();
       if (location.href !== dest) location.replace(dest);

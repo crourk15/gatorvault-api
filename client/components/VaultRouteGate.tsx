@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
+import { isNativeApp, nativeNavigationUrl } from '@/lib/api-base';
 import { loadSession } from '@/lib/auth-api';
 import { useUser } from '@/hooks/useUser';
 import { vaultGateRedirect } from '@/lib/navConfig';
 import { usePathname } from '@/lib/use-pathname';
-
 const AUTH_HANDOFF_KEY = 'gv_auth_handoff';
 
 const VAULT_AUTH_PATHS = ['/vault/login', '/vault/membership', '/vault/auth/callback', '/auth/callback'];
@@ -50,8 +50,7 @@ export function VaultRouteGate(): null {
     }
 
     const dest = vaultGateRedirect(pathname, loggedIn);
-    if (dest) window.location.replace(dest);
-  }, [pathname, ready, user?.email, user?.token]);
+    if (dest) window.location.replace(isNativeApp() ? nativeNavigationUrl(dest) : dest);  }, [pathname, ready, user?.email, user?.token]);
 
   return null;
 }

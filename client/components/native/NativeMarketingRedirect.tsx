@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect } from 'react';
-import { isNativeApp, nativeNavigationUrl } from '@/lib/api-base';
+import { isNativeApp, nativeNavigationUrl, normalizeNativeRoutePath } from '@/lib/api-base';
 import { loadSession } from '@/lib/auth-api';
 
 function isMarketingPath(pathname: string): boolean {
-  const p = pathname.replace(/\/$/, '') || '/';
+  const p = normalizeNativeRoutePath(pathname);
   return p === '/' || p === '/welcome' || p === '/insider';
 }
 
