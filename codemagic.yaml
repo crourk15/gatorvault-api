@@ -65,6 +65,11 @@ workflows:
           pod install
       - name: Set up code signing settings on Xcode project
         script: xcode-project use-profiles
+      - name: Verify iOS app icon (1024×1024)
+        script: |
+          set -euo pipefail
+          cd client
+          node scripts/verify-ios-app-icon.js
       - name: Build IPA for App Store
         script: |
           xcode-project build-ipa \
