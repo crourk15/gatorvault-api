@@ -44,68 +44,90 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
   );
 
   return (
-    <div className="gv-gw-wow-root" data-testid="game-week-command-center">
-      <MatchupHeroWidget bundle={bundle} />
-      <SeasonTimeline activeGameId={gameId} onSelect={handleGameSelect} />
-
-      <div className="rh-cc-tabs gv-gw-wow-tabs" role="tablist" aria-label="Game week sections">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            role="tab"
-            aria-selected={tab === t.id}
-            className={`rh-cc-tabs__btn${tab === t.id ? ' is-active' : ''}`}
-            onClick={() => setTab(t.id)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {tab === 'intel' ? (
-        <div className="gv-gw-wow-tab gv-gw-wow-tab--intel">
-          <div className="gv-gw-wow-row gv-gw-wow-row--2">
+    <div className="gv-gw-wow-root rh-cc-page" data-testid="game-week-command-center">
+      <section className="gv-gw-wow-hero fc-lab-bleed" aria-label="Game week overview">
+        <div className="gv-gw-wow-hero__bg" aria-hidden />
+        <div className="gv-gw-wow-hero__inner rh-frame">
+          <p className="gv-gw-wow-hero__eyebrow">Game Week Command Center</p>
+          <MatchupHeroWidget bundle={bundle} />
+          <SeasonTimeline activeGameId={gameId} onSelect={handleGameSelect} />
+          <div className="gv-gw-wow-hero__metrics">
             <WinProbabilityGaugeWidget ufPct={bundle.game.ufPct} prediction={bundle.prediction} />
             <ScoutingRadarChart axes={bundle.radar} opponentName={bundle.game.opp} />
           </div>
-          <div className="gv-gw-wow-row gv-gw-wow-row--2">
-            <section className="gv-gw-wow-section">
-              <h3 className="gv-gw-wow-section__title">3 Keys to the Game</h3>
-              <KeysToGameCards keys={bundle.keys} />
-            </section>
-            <section className="gv-gw-wow-section">
-              <h3 className="gv-gw-wow-section__title">Swing Players</h3>
-              <SwingPlayersCards players={bundle.swingPlayers} />
-            </section>
-          </div>
-          <section className="gv-gw-wow-section">
-            <h3 className="gv-gw-wow-section__title">Film Notes</h3>
-            <FilmNotesPanel notes={bundle.filmNotes} game={bundle.game} />
-          </section>
         </div>
-      ) : null}
+      </section>
 
-      {tab === 'depth' ? (
-        <section className="gv-gw-wow-section">
-          <h3 className="gv-gw-wow-section__title">Projected depth chart</h3>
-          <DepthChartGrid groups={bundle.depthChart} />
-        </section>
-      ) : null}
+      <div className="gv-gw-wow-feed fc-lab-bleed">
+        <div className="gv-gw-wow-feed__inner rh-frame">
+          <div className="rh-cc-tabs gv-gw-wow-tabs" role="tablist" aria-label="Game week sections">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={tab === t.id}
+                className={`rh-cc-tabs__btn${tab === t.id ? ' is-active' : ''}`}
+                onClick={() => setTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
 
-      {tab === 'scouting' ? (
-        <section className="gv-gw-wow-section">
-          <h3 className="gv-gw-wow-section__title">Scouting report</h3>
-          <ScoutingReportPanel scouting={bundle.scouting} />
-        </section>
-      ) : null}
+          {tab === 'intel' ? (
+            <div className="gv-gw-wow-tab gv-gw-wow-tab--intel">
+              <div className="gv-gw-wow-row gv-gw-wow-row--2">
+                <section className="gv-gw-wow-panel">
+                  <h3 className="gv-gw-wow-panel__title">3 Keys to the Game</h3>
+                  <div className="gv-gw-wow-panel__body">
+                    <KeysToGameCards keys={bundle.keys} />
+                  </div>
+                </section>
+                <section className="gv-gw-wow-panel">
+                  <h3 className="gv-gw-wow-panel__title">Swing Players</h3>
+                  <div className="gv-gw-wow-panel__body">
+                    <SwingPlayersCards players={bundle.swingPlayers} />
+                  </div>
+                </section>
+              </div>
+              <section className="gv-gw-wow-panel">
+                <h3 className="gv-gw-wow-panel__title">Film Notes</h3>
+                <div className="gv-gw-wow-panel__body">
+                  <FilmNotesPanel notes={bundle.filmNotes} game={bundle.game} />
+                </div>
+              </section>
+            </div>
+          ) : null}
 
-      {tab === 'prediction' ? (
-        <section className="gv-gw-wow-section">
-          <h3 className="gv-gw-wow-section__title">GatorVault prediction</h3>
-          <PredictionPanel prediction={bundle.prediction} />
-        </section>
-      ) : null}
+          {tab === 'depth' ? (
+            <section className="gv-gw-wow-panel">
+              <h3 className="gv-gw-wow-panel__title">Projected depth chart</h3>
+              <div className="gv-gw-wow-panel__body">
+                <DepthChartGrid groups={bundle.depthChart} />
+              </div>
+            </section>
+          ) : null}
+
+          {tab === 'scouting' ? (
+            <section className="gv-gw-wow-panel">
+              <h3 className="gv-gw-wow-panel__title">Scouting report</h3>
+              <div className="gv-gw-wow-panel__body">
+                <ScoutingReportPanel scouting={bundle.scouting} />
+              </div>
+            </section>
+          ) : null}
+
+          {tab === 'prediction' ? (
+            <section className="gv-gw-wow-panel">
+              <h3 className="gv-gw-wow-panel__title">GatorVault prediction</h3>
+              <div className="gv-gw-wow-panel__body">
+                <PredictionPanel prediction={bundle.prediction} />
+              </div>
+            </section>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 }

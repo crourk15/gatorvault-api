@@ -56,8 +56,8 @@ export function ScoutingRadarChart({ axes, opponentName }: Props): React.ReactEl
         />
         <polygon
           points={polygonPoints(axes.map((a) => a.uf))}
-          fill="rgba(250,70,22,0.2)"
-          stroke="#FA4616"
+          fill="rgba(250,204,21,0.18)"
+          stroke="#FACC15"
           strokeWidth="2"
         />
         {axes.map((a, i) => {

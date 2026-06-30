@@ -1,68 +1,167 @@
 /**
  * Game Week Command Center — FutureCast Lab parity
- * Tokens match Recruiting Command Center + FutureCast Lab dark elite theme.
+ * Dark hero band + white content feed (matches FC Lab screenshot).
  */
 
 .gv-gw-wow-page {
-  --color-bg-page: #0a0f1c;
-  --color-bg-card: #111827;
-  --color-bg-slate: #1f2937;
+  --color-bg-page: #050b20;
+  --color-bg-hero: #060c21;
+  --color-bg-card-dark: #0a1435;
+  --color-bg-feed: #f1f5f9;
+  --color-bg-panel: #ffffff;
   --color-accent-orange: #fa4616;
   --color-accent-blue: #0021a5;
+  --color-royal-blue: #0033cc;
   --color-text-primary: #ffffff;
-  --color-text-secondary: #c7c7c7;
+  --color-text-secondary: #a0aec0;
+  --color-text-dark: #1a1a1a;
+  --color-text-muted: #64748b;
   --color-move-up: #22c55e;
   --color-move-down: #ef4444;
   --color-volatility: #facc15;
   --color-slate-stroke: #64748b;
+  --color-panel-border: rgba(0, 26, 51, 0.2);
 
   min-height: 100%;
-  background-color: var(--color-bg-page);
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 32px 32px;
+  background: linear-gradient(180deg, var(--color-bg-page) 0%, var(--color-bg-hero) 42%, var(--color-bg-feed) 42%);
   color: var(--color-text-primary);
 }
 
 .gv-gw-wow-page .gv-page-layout--navy {
   background: transparent;
-  color: var(--color-text-primary);
+  color: inherit;
 }
 
 .gv-gw-wow-page-layout .gv-page-layout__body {
-  padding-top: 0.5rem;
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* Root shell */
 .gv-gw-wow-root {
   --gv-gw-bg: var(--color-bg-page);
-  --gv-gw-card: var(--color-bg-card);
-  --gv-gw-slate: var(--color-bg-slate);
+  --gv-gw-card: var(--color-bg-card-dark);
   --gv-gw-orange: var(--color-accent-orange);
   --gv-gw-blue: var(--color-accent-blue);
   --gv-gw-text: var(--color-text-primary);
   --gv-gw-muted: var(--color-text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   background: transparent;
   color: var(--gv-gw-text);
-  border-radius: 0;
-  padding: 0;
+  padding-bottom: var(--gv-space-6, 32px);
+}
+
+/* ── Dark hero band ── */
+.gv-gw-wow-hero {
+  position: relative;
+  color: var(--gv-gw-text);
+  overflow: hidden;
+}
+
+.gv-gw-wow-hero__bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(165deg, #0021a5 0%, #001656 42%, #050b20 100%);
+  pointer-events: none;
+}
+
+.gv-gw-wow-hero__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(250, 70, 22, 0.14) 0%, transparent 60%);
+}
+
+.gv-gw-wow-hero__inner {
+  position: relative;
+  z-index: 1;
+  padding-top: var(--gv-space-5, 24px);
+  padding-bottom: var(--gv-space-6, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.gv-gw-wow-hero__eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-orange);
+}
+
+.gv-gw-wow-hero__metrics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .gv-gw-wow-hero__metrics {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* ── Light content feed ── */
+.gv-gw-wow-feed {
+  background: var(--color-bg-feed);
+  color: var(--color-text-dark);
+  padding-top: var(--gv-space-5, 24px);
+  padding-bottom: var(--gv-space-6, 32px);
+  border-radius: 20px 20px 0 0;
+  margin-top: -12px;
+  position: relative;
+  z-index: 2;
+}
+
+.gv-gw-wow-feed__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.gv-gw-wow-panel {
+  background: var(--color-bg-panel);
+  border: 1px solid var(--color-panel-border);
+  border-top: 3px solid var(--color-accent-orange);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.gv-gw-wow-panel__title {
+  margin: 0;
+  padding: 1rem 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-accent-blue);
+  line-height: 1.2;
+}
+
+.gv-gw-wow-panel__body {
+  padding: 0.75rem 1rem 1rem;
+  color: var(--color-text-dark);
 }
 
 .gv-gw-wow-section {
-  margin-bottom: 1.25rem;
+  margin-bottom: 0;
 }
 
-.gv-gw-wow-section__title {
+.gv-gw-wow-hero .gv-gw-wow-section__title {
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--gv-gw-orange);
+  color: var(--color-text-secondary);
   margin: 0 0 0.75rem;
 }
 
-/* Team logos (img) */
+/* Team logos */
 .gv-gw-team-logo-img {
   width: auto;
   height: 56px;
@@ -80,8 +179,13 @@
   object-fit: cover;
   flex-shrink: 0;
   border: 2px solid var(--color-accent-orange);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+  background: #e2e8f0;
+}
+
+.gv-gw-wow-hero .gv-gw-player-photo {
+  background: var(--color-bg-card-dark);
   box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
-  background: var(--color-bg-slate);
 }
 
 .gv-gw-player-photo--md {
@@ -102,6 +206,11 @@
   border-radius: 50%;
   flex-shrink: 0;
   border: 2px solid var(--color-accent-orange);
+  background: var(--color-bg-panel);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.gv-gw-wow-hero .gv-gw-vault-grade-badge {
   background: var(--color-bg-page);
   box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
 }
@@ -120,6 +229,10 @@
   font-size: 1.25rem;
   font-weight: 800;
   line-height: 1;
+  color: var(--color-text-dark);
+}
+
+.gv-gw-wow-hero .gv-gw-vault-grade-badge__value {
   color: var(--color-text-primary);
 }
 
@@ -132,17 +245,21 @@
   font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.gv-gw-wow-hero .gv-gw-vault-grade-badge__pos {
   color: var(--color-text-secondary);
 }
 
-/* Matchup hero */
+/* Matchup hero — dark card in hero band */
 .gv-gw-matchup-hero {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 1.25rem;
-  background: var(--gv-gw-card);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--color-bg-card-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1.25rem 1.5rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
@@ -226,7 +343,7 @@
 .gv-gw-countdown {
   text-align: center;
   padding: 1rem 1.25rem;
-  background: var(--gv-gw-slate);
+  background: rgba(0, 0, 0, 0.22);
   border: 2px solid var(--gv-gw-orange);
   border-radius: 12px;
   animation: gv-gw-pulse-border 2s ease-in-out infinite, gv-gw-fade-in 0.5s ease;
@@ -251,7 +368,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Season timeline */
+/* Season timeline — hero dark cards */
 .gv-gw-timeline {
   display: flex;
   gap: 0.65rem;
@@ -264,8 +381,8 @@
 .gv-gw-timeline__card {
   flex: 0 0 148px;
   scroll-snap-align: start;
-  background: var(--gv-gw-card);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-bg-card-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 0.75rem;
   cursor: pointer;
@@ -280,8 +397,8 @@
 }
 
 .gv-gw-timeline__card.is-active {
-  border-color: var(--gv-gw-blue);
-  box-shadow: 0 0 0 1px var(--gv-gw-blue);
+  border-color: var(--color-royal-blue);
+  box-shadow: 0 0 0 1px var(--color-royal-blue);
 }
 
 .gv-gw-timeline__logo {
@@ -312,12 +429,12 @@
 }
 
 .gv-gw-timeline__ha--home {
-  background: rgba(0, 33, 165, 0.35);
+  background: rgba(0, 51, 204, 0.45);
   color: var(--gv-gw-text);
 }
 
 .gv-gw-timeline__ha--away {
-  background: var(--gv-gw-slate);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--gv-gw-muted);
 }
 
@@ -326,38 +443,38 @@
 .gv-gw-timeline__diff--hard { border-left: 3px solid var(--color-move-down); }
 .gv-gw-timeline__diff--rivalry { border-left: 3px solid var(--gv-gw-orange); }
 
-/* Tabs — FutureCast Lab / RH parity */
-.gv-gw-wow-tabs.rh-cc-tabs {
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-  margin: 1rem 0 1.25rem;
+/* Tabs — light feed zone */
+.gv-gw-wow-feed .gv-gw-wow-tabs.rh-cc-tabs {
+  border-bottom-color: rgba(0, 26, 51, 0.12);
+  margin: 0 0 0.25rem;
 }
 
-.gv-gw-wow-tabs .rh-cc-tabs__btn {
-  color: var(--gv-gw-muted);
-  background: var(--gv-gw-card);
-  border-color: rgba(255, 255, 255, 0.08);
+.gv-gw-wow-feed .gv-gw-wow-tabs .rh-cc-tabs__btn {
+  color: var(--color-text-muted);
+  background: #fff;
+  border-color: var(--color-panel-border);
 }
 
-.gv-gw-wow-tabs .rh-cc-tabs__btn:hover {
-  color: var(--gv-gw-text);
-  background: var(--gv-gw-slate);
+.gv-gw-wow-feed .gv-gw-wow-tabs .rh-cc-tabs__btn:hover {
+  color: var(--color-text-dark);
+  background: #f8fafc;
 }
 
-.gv-gw-wow-tabs .rh-cc-tabs__btn.is-active {
-  color: var(--gv-gw-text);
-  background: var(--gv-gw-blue);
-  border-color: var(--gv-gw-blue);
+.gv-gw-wow-feed .gv-gw-wow-tabs .rh-cc-tabs__btn.is-active {
+  color: #fff;
+  background: var(--color-accent-blue);
+  border-color: var(--color-accent-blue);
 }
 
-/* Win probability gauge */
+/* Win probability gauge — dark hero card */
 .gv-gw-wp-gauge {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 1rem;
-  background: var(--gv-gw-card);
+  background: var(--color-bg-card-dark);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   animation: gv-gw-fade-in 0.6s ease;
 }
 
@@ -367,7 +484,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--gv-gw-orange);
+  color: var(--color-text-secondary);
   align-self: flex-start;
 }
 
@@ -404,12 +521,12 @@
   color: var(--gv-gw-text);
 }
 
-/* Radar chart */
+/* Radar chart — dark hero card */
 .gv-gw-radar {
-  background: var(--gv-gw-card);
+  background: var(--color-bg-card-dark);
   border-radius: 12px;
   padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   animation: gv-gw-fade-in 0.7s ease;
   display: flex;
   flex-direction: column;
@@ -423,7 +540,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--gv-gw-orange);
+  color: var(--color-text-secondary);
 }
 
 .gv-gw-radar__legend {
@@ -435,10 +552,10 @@
   color: var(--gv-gw-muted);
 }
 
-.gv-gw-radar__legend-uf { color: var(--gv-gw-orange); }
+.gv-gw-radar__legend-uf { color: var(--color-volatility); }
 .gv-gw-radar__legend-opp { color: var(--color-slate-stroke); }
 
-/* Flip cards */
+/* Flip cards — light feed */
 .gv-gw-flip-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -468,27 +585,29 @@
   backface-visibility: hidden;
   border-radius: 12px;
   padding: 1rem;
-  background: var(--gv-gw-slate);
-  border: 1px solid var(--gv-gw-orange);
+  background: #fff;
+  border: 1px solid var(--color-panel-border);
+  border-top: 3px solid var(--gv-gw-orange);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .gv-gw-flip-card__face--back {
   transform: rotateY(180deg);
   font-size: 0.85rem;
-  color: var(--gv-gw-muted);
+  color: var(--color-text-muted);
 }
 
 .gv-gw-flip-card__title {
   font-weight: 800;
   font-size: 0.9rem;
   margin: 0;
-  color: var(--gv-gw-text);
+  color: var(--color-text-dark);
 }
 
-/* Swing players */
+/* Swing players — light feed rows */
 .gv-gw-swing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -496,13 +615,13 @@
 }
 
 .gv-gw-swing-card {
-  background: var(--gv-gw-slate);
+  background: #fff;
   border-radius: 12px;
   padding: 0.85rem;
   display: flex;
   gap: 0.75rem;
   align-items: flex-start;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-panel-border);
   animation: gv-gw-slide-in 0.5s ease;
 }
 
@@ -519,8 +638,9 @@
 }
 
 .gv-gw-swing-card__name {
-  color: var(--gv-gw-text);
+  color: var(--color-text-dark);
   font-size: 0.9375rem;
+  font-weight: 700;
 }
 
 .gv-gw-swing-card__pos {
@@ -528,14 +648,14 @@
   font-weight: 800;
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
-  background: var(--gv-gw-orange);
-  color: var(--gv-gw-text);
+  background: var(--color-accent-blue);
+  color: #fff;
 }
 
 .gv-gw-swing-card__role {
   margin: 0.25rem 0 0;
   font-size: 0.8125rem;
-  color: var(--gv-gw-muted);
+  color: var(--color-text-muted);
 }
 
 .gv-gw-swing-card__impact-row {
@@ -547,7 +667,7 @@
 
 .gv-gw-swing-card__impact-label {
   font-size: 0.75rem;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }
 
 .gv-gw-swing-card__impact {
@@ -563,29 +683,29 @@
 
 .gv-gw-swing-card__trend--up { color: var(--color-move-up); }
 .gv-gw-swing-card__trend--down { color: var(--color-move-down); }
-.gv-gw-swing-card__trend--flat { color: var(--gv-gw-muted); }
+.gv-gw-swing-card__trend--flat { color: var(--color-text-muted); }
 
-/* Film notes */
+/* Film notes — light feed */
 .gv-gw-film-panel {
-  background: var(--gv-gw-slate);
+  background: rgba(0, 26, 51, 0.04);
   border-radius: 12px;
   padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 26, 51, 0.1);
 }
 
 .gv-gw-film-panel__list {
   margin: 0;
   padding-left: 1.1rem;
-  color: var(--gv-gw-text);
+  color: var(--color-text-dark);
 }
 
 .gv-gw-film-panel__list li {
-  color: var(--gv-gw-muted);
+  color: var(--color-text-muted);
   margin-bottom: 0.35rem;
 }
 
 .gv-gw-film-panel__list li::marker {
-  color: var(--gv-gw-muted);
+  color: var(--color-text-muted);
 }
 
 .gv-gw-film-panel__link {
@@ -601,7 +721,7 @@
   text-decoration: underline;
 }
 
-/* Depth chart */
+/* Depth chart — light feed */
 .gv-gw-depth-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -609,10 +729,10 @@
 }
 
 .gv-gw-depth-col {
-  background: var(--gv-gw-slate);
+  background: rgba(0, 26, 51, 0.04);
   border-radius: 10px;
   padding: 0.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 26, 51, 0.1);
 }
 
 .gv-gw-depth-col__pos {
@@ -620,7 +740,7 @@
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--gv-gw-blue);
+  color: var(--color-accent-blue);
   margin-bottom: 0.5rem;
 }
 
@@ -633,7 +753,7 @@
 }
 
 .gv-gw-depth-player__name {
-  color: var(--gv-gw-text);
+  color: var(--color-text-dark);
   font-weight: 600;
 }
 
@@ -648,7 +768,7 @@
   align-items: center;
   gap: 0.35rem;
   font-size: 0.65rem;
-  color: var(--gv-gw-muted);
+  color: var(--color-text-muted);
 }
 
 .gv-gw-depth-player__trend {
@@ -657,9 +777,9 @@
 
 .gv-gw-depth-player__trend--up { color: var(--color-move-up); }
 .gv-gw-depth-player__trend--down { color: var(--color-move-down); }
-.gv-gw-depth-player__trend--flat { color: var(--gv-gw-muted); }
+.gv-gw-depth-player__trend--flat { color: var(--color-text-muted); }
 
-/* Scouting report */
+/* Scouting report — light feed */
 .gv-gw-scout-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -667,17 +787,17 @@
 }
 
 .gv-gw-scout-card {
-  background: var(--gv-gw-slate);
+  background: #fff;
   border-radius: 12px;
   padding: 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--gv-gw-text);
+  border: 1px solid var(--color-panel-border);
+  color: var(--color-text-dark);
 }
 
 .gv-gw-scout-card ul {
   margin: 0;
   padding-left: 1.1rem;
-  color: var(--gv-gw-muted);
+  color: var(--color-text-muted);
 }
 
 .gv-gw-scout-card__title {
@@ -685,27 +805,27 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--gv-gw-blue);
+  color: var(--color-accent-blue);
   margin: 0 0 0.5rem;
 }
 
 .gv-gw-scout-summary {
   margin-top: 0.75rem;
   padding: 0.85rem;
-  background: var(--gv-gw-card);
+  background: rgba(0, 26, 51, 0.04);
   border-radius: 10px;
   font-size: 0.85rem;
-  color: var(--gv-gw-muted);
-  border-left: 3px solid var(--gv-gw-blue);
+  color: var(--color-text-muted);
+  border-left: 3px solid var(--color-accent-blue);
 }
 
-/* Prediction panel */
+/* Prediction panel — light feed */
 .gv-gw-pred-panel {
-  background: var(--gv-gw-card);
+  background: rgba(0, 26, 51, 0.04);
   border-radius: 12px;
   padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--gv-gw-text);
+  border: 1px solid rgba(0, 26, 51, 0.1);
+  color: var(--color-text-dark);
 }
 
 .gv-gw-pred-panel__hero {
@@ -723,7 +843,7 @@
   text-transform: uppercase;
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
-  background: rgba(250, 70, 22, 0.2);
+  background: rgba(250, 70, 22, 0.12);
   border: 1px solid var(--gv-gw-orange);
   color: var(--gv-gw-orange);
 }
@@ -731,7 +851,7 @@
 .gv-gw-pred-panel__score {
   font-size: 1.5rem;
   font-weight: 900;
-  color: var(--gv-gw-text);
+  color: var(--color-text-dark);
   margin: 0;
 }
 
@@ -740,26 +860,26 @@
   flex-wrap: wrap;
   gap: 1rem;
   font-size: 0.85rem;
-  color: var(--gv-gw-muted);
+  color: var(--color-text-muted);
   margin: 0.5rem 0;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--gv-gw-blue);
+  border-bottom: 2px solid var(--color-accent-blue);
 }
 
 .gv-gw-pred-panel__spread {
-  color: var(--gv-gw-blue);
+  color: var(--color-accent-blue);
   font-weight: 700;
 }
 
 .gv-gw-pred-panel__poll-label {
   font-size: 0.8rem;
   margin: 0.75rem 0 0.25rem;
-  color: var(--gv-gw-text);
+  color: var(--color-text-dark);
 }
 
 .gv-gw-pred-panel__fan-bar {
   height: 8px;
-  background: var(--gv-gw-slate);
+  background: #e2e8f0;
   border-radius: 4px;
   overflow: hidden;
   margin: 0.35rem 0;
@@ -767,12 +887,12 @@
 
 .gv-gw-pred-panel__fan-fill {
   height: 100%;
-  background: var(--gv-gw-blue);
+  background: var(--color-accent-blue);
 }
 
 .gv-gw-pred-panel__poll-meta {
   font-size: 0.75rem;
-  color: var(--gv-gw-muted);
+  color: var(--color-text-muted);
   margin: 0 0 0.75rem;
 }
 
@@ -785,23 +905,23 @@
 
 .gv-gw-pred-panel__experts li {
   padding: 0.35rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--gv-gw-muted);
+  border-bottom: 1px solid rgba(0, 26, 51, 0.1);
+  color: var(--color-text-muted);
 }
 
 .gv-gw-pred-panel__experts strong {
-  color: var(--gv-gw-text);
+  color: var(--color-text-dark);
 }
 
 .gv-gw-pred-panel__confidence-label {
   font-size: 0.75rem;
   margin-top: 0.75rem;
-  color: var(--gv-gw-text);
+  color: var(--color-text-dark);
 }
 
 .gv-gw-pred-panel__confidence-meter {
   height: 6px;
-  background: var(--gv-gw-slate);
+  background: #e2e8f0;
   border-radius: 3px;
   margin-top: 0.35rem;
   overflow: hidden;
@@ -816,15 +936,19 @@
 .gv-gw-wow-row {
   display: grid;
   gap: 1rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .gv-gw-wow-row--2 {
   grid-template-columns: 1fr;
 }
 
-.gv-gw-wow-tab--intel > .gv-gw-wow-section {
+.gv-gw-wow-tab--intel > .gv-gw-wow-panel {
   animation: gv-gw-fade-in 0.35s ease-out;
+}
+
+.gv-gw-wow-tab--intel > .gv-gw-wow-row {
+  margin-bottom: 1rem;
 }
 
 @media (min-width: 768px) {
@@ -851,6 +975,24 @@
   .gv-gw-matchup-hero__title {
     font-size: 1.5rem;
   }
+
+  .gv-gw-wow-feed {
+    border-radius: 16px 16px 0 0;
+  }
+}
+
+/* Legibility — feed zone overrides page-level white text */
+.gv-gw-wow-page.fc-lab-cc-page .gv-gw-wow-feed,
+.gv-gw-wow-page.fc-lab-cc-page .gv-gw-wow-feed * {
+  color: inherit;
+}
+
+.gv-gw-wow-feed .gv-gw-wow-panel__body,
+.gv-gw-wow-feed .gv-gw-swing-card__name,
+.gv-gw-wow-feed .gv-gw-flip-card__title,
+.gv-gw-wow-feed .gv-gw-depth-player__name,
+.gv-gw-wow-feed .gv-gw-pred-panel__score {
+  color: var(--color-text-dark);
 }
 
 /* Animations */
