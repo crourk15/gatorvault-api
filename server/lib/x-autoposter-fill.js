@@ -653,7 +653,11 @@ async function collectFreshPostCandidates({ forcePost = false } = {}) {
   return candidates;
 }
 
-async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5, forcePost = false } = {}) {
+async function refillAutoposterQueue({
+  minPending = parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '5', 10),
+  maxEnqueue = parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '8', 10),
+  forcePost = false
+} = {}) {
   if (!pipelineGuards.autopostEnabled()) {
     return { ok: true, skipped: true, reason: 'autoposter disabled', pending: 0, enqueued: [] };
   }

@@ -561,7 +561,10 @@ function startXAutoposterScheduler() {
       _processing = true;
       saveSchedulerStatus({ lastRun: store.nowIso() });
       try {
-        const refill = await refillAutoposterQueue({ minPending: 2, maxEnqueue: 4 });
+        const refill = await refillAutoposterQueue({
+          minPending: parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '5', 10),
+          maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '8', 10)
+        });
         if (refill.enqueuedCount > 0) {
           autopostLog('info', `Auto-filled queue with ${refill.enqueuedCount} post(s)`);
         }

@@ -738,5 +738,6 @@ module.exports = {
   isHeadlineOnlyPost,
   INSIDER_SIGNAL_RE,
   FACTUAL_SIGNAL_RE,
-  HEADLINE_ONLY_RE
+  HEADLINE_ONLY_RE,
+  hardTrimLine
 };

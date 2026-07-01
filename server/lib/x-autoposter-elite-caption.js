@@ -17,15 +17,7 @@ function eliteFirstName(name) {
 }
 
 function competingSchoolsFromBeat(beatText) {
-  const beat = String(beatText || '').toLowerCase();
-  const out = [];
-  if (/\bohio state\b|\bosu\b/.test(beat)) out.push('Ohio State');
-  if (/\bpitt(?:sburgh)?\b/.test(beat)) out.push('Pitt');
-  if (/\bboston college\b|\bbc and\b|\bbc jumped\b/.test(beat)) out.push('BC');
-  if (/\bindiana\b/.test(beat)) out.push('Indiana');
-  if (/\bpenn state\b/.test(beat)) out.push('Penn State');
-  if (/\bmichigan\b/.test(beat)) out.push('Michigan');
-  return [...new Set(out)];
+  return [];
 }
 
 /** GV-native angles from beat signal — not beat paraphrase. */
@@ -34,23 +26,14 @@ function pickBeatIntelAngle(research, beatText) {
   if (!beat || !research?.playerName) return null;
   const fn = eliteFirstName(research.playerName);
   const pos = String(research.player?.pos || research.intel?.pos || '').toUpperCase();
-  const competitors = competingSchoolsFromBeat(beatText);
-  const note = String(research.player?.profileNote || research.breakdown?.insiderNotes || '');
-  for (const school of competingSchoolsFromBeat(note)) {
-    if (!competitors.includes(school)) competitors.push(school);
-  }
+  const compFallback = 'Staff contact has picked up as UF pushes in this cycle.';
+  const compLine = researchEngine.buildRpmAwareCompLine(research, { fallback: compFallback });
 
   if (
     (/\bballinger\b|jaxballinger/.test(beat)) &&
     /\bohio\b/.test(beat) &&
     (pos === 'TE' || /\btight end\b|\bte recruiting\b/.test(beat))
   ) {
-    const compLine =
-      competitors.length >= 2
-        ? `${competitors.slice(0, 2).join(' and ')} are in, but Gainesville has the inside track.`
-        : competitors.length === 1
-          ? `${competitors[0]} is in, but Gainesville has the inside track.`
-          : 'UF has offered and the Ballinger precedent gives them an edge in Ohio.';
     return {
       context: `UF won the Ballinger Ohio TE battle — McKissack is running the same pipeline with ${fn}.`,
       insider: compLine,
@@ -61,21 +44,15 @@ function pickBeatIntelAngle(research, beatText) {
   if (/\bstrike twice\b.*\bohio\b.*\btight end\b|\bohio\b.*\btight end\b.*\bstrike twice\b/.test(beat)) {
     return {
       context: `UF is trying to repeat its Ohio TE success with ${fn} after the Ballinger win.`,
-      insider:
-        competitors.length >= 2
-          ? `${competitors.slice(0, 2).join(' and ')} are in, but McKissack has Gainesville positioned well.`
-          : 'McKissack has UF positioned as a top contender in the next Ohio TE push.',
+      insider: compLine,
       _beatIntel: true
     };
   }
 
-  if (competitors.length && /\b(offered|top contender|in the mix|contender)\b/.test(beat)) {
+  if (/\b(offered|top contender|in the mix|contender)\b/.test(beat)) {
     return {
       context: `UF is active with ${fn}${pos ? ` (${pos})` : ''} in this cycle.`,
-      insider:
-        competitors.length >= 2
-          ? `${competitors.slice(0, 2).join(' and ')} are in, but Gainesville has the inside track.`
-          : `${competitors[0]} is in, but Gainesville has the inside track.`,
+      insider: compLine,
       _beatIntel: true
     };
   }
@@ -115,17 +92,17 @@ function pickEventIntelAngle(research) {
     case 'decommit':
       return {
         context: `${fn} is back on the market — UF is expected to stay engaged.`,
-        insider: schools.length
-          ? `${schools.slice(0, 2).join(' and ')} are circling, but Gainesville has recent staff contact.`
-          : 'Staff will treat this as a live target again in the next window.',
+        insider: researchEngine.buildRpmAwareCompLine(research, {
+          fallback: 'Staff will treat this as a live target again in the next window.'
+        }),
         _eventIntel: true
       };
     case 'official_visit':
       return {
         context: `${fn} sets an official visit to The Swamp${visit ? ` (${visit})` : ''}.`,
-        insider: schools.length
-          ? `${schools.slice(0, 2).join(' and ')} are still in, but the OV puts UF in decision mode.`
-          : 'Position coaches have been active on this one ahead of the trip.',
+        insider: researchEngine.buildRpmAwareCompLine(research, {
+          fallback: 'Position coaches have been active on this one ahead of the trip.'
+        }),
         _eventIntel: true
       };
     case 'unofficial_visit':
@@ -137,9 +114,9 @@ function pickEventIntelAngle(research) {
     case 'offer':
       return {
         context: `Florida extends an offer to ${fn}${pos ? ` (${pos})` : ''}.`,
-        insider: schools.length
-          ? `${schools[0]} is in the mix, but UF just raised its profile with ${fn}.`
-          : 'Staff sees a scheme fit and moved with the offer.',
+        insider: researchEngine.buildRpmAwareCompLine(research, {
+          fallback: 'Staff sees a scheme fit and moved with the offer.'
+        }),
         _eventIntel: true
       };
     case 'prediction':
@@ -148,9 +125,9 @@ function pickEventIntelAngle(research) {
         context: ufPct
           ? `${fn} now sits at ${Math.round(ufPct)}% in the FutureCast model.`
           : `${fn} picks up fresh Crystal Ball momentum toward Florida.`,
-        insider: schools.length
-          ? `${schools.slice(0, 2).join(' and ')} still share the lead cluster — UF needs the next campus win.`
-          : 'Analyst input is pushing Florida up the board, not just holding steady.',
+        insider: researchEngine.buildRpmAwareCompLine(research, {
+          fallback: 'Analyst input is pushing Florida up the board, not just holding steady.'
+        }),
         _eventIntel: true
       };
     case 'portal_in':
@@ -164,9 +141,9 @@ function pickEventIntelAngle(research) {
     case 'trending':
       return {
         context: `${fn} is trending up with Florida${research.ufPosition === 'staff priority' ? ' — staff has him on the short list' : ''}.`,
-        insider: schools.length
-          ? `${schools.slice(0, 2).join(' and ')} are in, but Gainesville has the inside track.`
-          : 'Contact has picked up as staff pushes for separation.',
+        insider: researchEngine.buildRpmAwareCompLine(research, {
+          fallback: 'Staff contact has picked up as UF pushes for separation.'
+        }),
         _eventIntel: true
       };
     default:

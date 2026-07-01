@@ -4,7 +4,7 @@
   "items": [
     {
       "id": "xp_landon_dawson_bender_oh_te",
-      "text": "2028 TE Landon Dawson (Mount Vernon, OH)\nUF won the Ballinger Ohio TE battle — McKissack is running the same pipeline with Dawson.\nOhio State and Pitt are in, but Gainesville has the inside track.\nTrack the FutureCast arc ↓\ngatorvaultinsider.com/vault/futurecast/player/landon-dawson",
+      "text": "2028 TE Landon Dawson (Mount Vernon, OH)\nUF won the Ballinger Ohio TE battle — McKissack is running the same pipeline with Landon.\nOhio State leads On3 at 49% — UF at 3% and pushing.\nBoard intel breakdown ↓\ngatorvaultinsider.com/vault/futurecast/player/landon-dawson",
       "category": "news",
       "action": "post",
       "topic": "recruiting",
@@ -50,7 +50,7 @@
       "templateBlocks": {
         "identity": "2028 TE Landon Dawson (Mount Vernon, OH)",
         "context": "UF won the Ballinger Ohio TE battle — McKissack is running the same pipeline with Dawson.",
-        "insider": "Ohio State and Pitt are in, but Gainesville has the inside track."
+        "insider": "Ohio State leads On3 at 49% — UF at 3% and pushing."
       },
       "validationMeta": {
         "eliteMode": true,

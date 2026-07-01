@@ -423,6 +423,13 @@ function normalizePlayer(raw) {
           ? Number(raw.nilValue)
           : null,
     nilSource: raw.nilSource || raw.nil_source || null,
+    competitors: Array.isArray(raw.competitors) ? raw.competitors : [],
+    ufRpmPct:
+      raw.ufRpmPct != null
+        ? Number(raw.ufRpmPct)
+        : raw.uf_rpm_pct != null
+          ? Number(raw.uf_rpm_pct)
+          : null,
     updatedAt: raw.updatedAt || raw.updated_at || nowIso()
   };
   const geoPatch = normalizePlayerGeo({ ...raw, ...player });
@@ -516,8 +523,37 @@ function rowToPlayer(row) {
     on3_source: row.on3_source,
     protected: row.protected,
     stars_display: row.stars_display,
-    updated_at: row.updated_at
+    updated_at: row.updated_at,
+    competitors: row.competitors,
+    uf_probability: row.uf_probability,
+    uf_rpm_pct: row.uf_rpm_pct
   });
+}
+
+/** Merge On3 board fields from local JSON when Supabase row is sparse. */
+function enrichPlayerFromLocalJson(player, slug) {
+  if (!player || !slug) return player;
+  const local = readJson(PLAYERS_PATH, []).find((x) => x.slug === slug);
+  if (!local) return player;
+  const patch = {};
+  if (!player.competitors?.length && Array.isArray(local.competitors) && local.competitors.length) {
+    patch.competitors = local.competitors;
+  }
+  if (
+    (player.ufProbability == null || player.ufProbability <= 0) &&
+    local.ufProbability != null &&
+    Number(local.ufProbability) > 0
+  ) {
+    patch.ufProbability = Number(local.ufProbability);
+  }
+  if (
+    (player.ufRpmPct == null || player.ufRpmPct <= 0) &&
+    local.ufRpmPct != null &&
+    Number(local.ufRpmPct) > 0
+  ) {
+    patch.ufRpmPct = Number(local.ufRpmPct);
+  }
+  return Object.keys(patch).length ? { ...player, ...patch } : player;
 }
 
 async function loadPlayersLocal() {
@@ -597,13 +633,13 @@ async function getPlayerBySlug(slug) {
       } else {
         throw error;
       }
-    } else {
-      return applyEditorialPositionToPlayer(rowToPlayer(data));
+    } else if (data) {
+      return enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(rowToPlayer(data)), slug);
     }
   }
   const players = await loadPlayersLocal();
   const p = players.find((x) => x.slug === slug);
-  return p ? applyEditorialPositionToPlayer(normalizePlayer(p)) : null;
+  return p ? enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(normalizePlayer(p)), slug) : null;
 }
 
 /** Resolve recruiting player by slug or On3 id (hub links sometimes pass numeric ids). */
