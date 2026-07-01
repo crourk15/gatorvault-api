@@ -153,7 +153,12 @@ function mountRecruitingRoutes(app) {
           2027: { ...board2027, commits: gm2.filterBoardPlayers(board2027.commits), targets: gm2.filterBoardPlayers(board2027.targets) },
           2026: { ...board2026, commits: gm2.filterBoardPlayers(board2026.commits), targets: gm2.filterBoardPlayers(board2026.targets) }
         },
-        portal: { ...portal, incoming: gm2.filterPortalPlayers(portal.incoming) },
+        portal: {
+          ...portal,
+          incoming: gm2.filterPortalPlayers(portal.incoming || []),
+          count: portal.count ?? (portal.incoming || []).length,
+          incomingCount: portal.count ?? (portal.incoming || []).length,
+        },
         rankings,
         events: gm2.filterPublicEvents(events),
         heatCheck: heatCheck

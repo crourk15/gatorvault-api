@@ -36,6 +36,7 @@ function playerLine(player, extra = '') {
 
 const { hasForbiddenPublishedLabels } = require('./insider-articles-sections');
 const { validateWarRoomBattles } = require('./war-room-battles');
+const { isRecruitingBattleArticleType } = require('./insider-articles-types');
 
 function validateDraftQuality(draft) {
   if (!draft?.body) {
@@ -71,7 +72,7 @@ function validateDraftQuality(draft) {
   const analysisParas = (analysisBlock.match(/<p>/gi) || []).length;
   if (analysisParas < 3) reasons.push('thin_analysis');
 
-  if (draft.articleType === 'War Room') {
+  if (isRecruitingBattleArticleType(draft.articleType)) {
     const warReasons = validateWarRoomBattles(draft.battles || [], body);
     for (const r of warReasons) reasons.push(r);
   }

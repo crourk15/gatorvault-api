@@ -212,6 +212,12 @@ function approveDraft(id) {
   const draft = doc.items[idx];
   if (draft.status !== 'draft') throw new Error('Article is not a pending draft');
 
+  const templates = require('./insider-articles-templates');
+  const quality = templates.validateDraftQuality(draft);
+  if (!quality.ok) {
+    throw new Error(`Draft failed quality gate: ${quality.reasons.join(', ')}`);
+  }
+
   const published = normalizeArticle({
     ...draft,
     status: 'published',

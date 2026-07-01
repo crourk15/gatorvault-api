@@ -45,7 +45,7 @@ function assert(label, condition) {
     assert('aborts when insufficient intel rather than filler', (result.aborted || []).length >= 0);
   }
 
-  // Permanent editorial system — War Room pipeline gates
+  // Permanent editorial system — recruiting battle pipeline gates
   const {
     generateRecruitingBattles,
     buildBattleContextFromSignals,
@@ -69,9 +69,10 @@ function assert(label, condition) {
   const mockSignals = {
     recruiting: {
       players: [
-        { slug: 'evans', name: 'Jayden Evans', pos: 'EDGE', stars: 5, ufRpmPct: 62, competingSchools: [{ school: 'OSU', pct: 48 }] },
-        { slug: 'fleming', name: 'Marcus Fleming', pos: 'WR', stars: 4, ufRpmPct: 55, competingSchools: [{ school: 'Georgia', pct: 41 }] },
-        { slug: 'whitfield', name: 'Tyler Whitfield', pos: 'CB', stars: 4, ufRpmPct: 38, competingSchools: [{ school: 'Miami', pct: 44 }] },
+        { slug: 'evans', name: 'Jayden Evans', pos: 'EDGE', stars: 5, classYear: 2027, category: 'target', school: 'North Gwinnett HS', ufRpmPct: 62, competingSchools: [{ school: 'OSU', pct: 48 }] },
+        { slug: 'fleming', name: 'Marcus Fleming', pos: 'WR', stars: 4, classYear: 2027, category: 'target', school: 'Miami Palmetto HS', ufRpmPct: 55, competingSchools: [{ school: 'Georgia', pct: 41 }] },
+        { slug: 'whitfield', name: 'Tyler Whitfield', pos: 'CB', stars: 4, classYear: 2027, category: 'target', school: 'Trinity HS', ufRpmPct: 38, competingSchools: [{ school: 'Miami', pct: 44 }] },
+        { slug: 'sumrall', name: 'Jon Sumrall', pos: 'QB', stars: 5, category: 'target', school: 'Florida' },
       ],
     },
     intel: { all: [{ playerSlug: 'evans', eventType: 'official_visit', detail: 'Staff believes Evans is closable before October.' }] },
@@ -79,20 +80,21 @@ function assert(label, condition) {
   };
   const battleCtx = buildBattleContextFromSignals(mockSignals, { season: 2026 });
   const battles = generateRecruitingBattles(battleCtx);
-  assert('War Room generates at least 2 battles', battles.length >= 2);
+  assert('Recruiting battles generate at least 2 cards', battles.length >= 2);
   const battleHtml = renderBattlesHtml(battles);
-  assert('War Room gates enforced', validateWarRoomBattles(battles, battleHtml).length === 0);
-  const headers = rewriteHeadersFallback(extractInternalSections(mockScaffold), { articleType: 'War Room', season: 2026 });
-  assert('War Room headers are editorial not scaffold', !headers.recruiting.match(/^recruiting$/i));
+  assert('Recruiting battle gates enforced', validateWarRoomBattles(battles, battleHtml).length === 0);
+  assert('Recruiting battles exclude staff names', !battles.some((b) => /sumrall/i.test(b.targetName || '')));
+  const headers = rewriteHeadersFallback(extractInternalSections(mockScaffold), { articleType: 'Heat Check', season: 2026 });
+  assert('Recruiting battle headers are editorial not scaffold', !headers.recruiting.match(/^recruiting$/i));
   const warDraft = await transformDraftForPublish({
     scaffoldBody: mockScaffold,
-    articleType: 'War Room',
+    articleType: 'Heat Check',
     context: { season: 2026, portalContext: { incomingCount: 27 } },
     signals: mockSignals,
     season: 2026,
   });
-  assert('War Room publish has no forbidden labels', !hasForbiddenPublishedLabels(warDraft.body));
-  assert('War Room publish includes battle cards', warDraft.body.includes('war-room-battle'));
+  assert('Recruiting battle publish has no forbidden labels', !hasForbiddenPublishedLabels(warDraft.body));
+  assert('Recruiting battle publish includes battle cards', warDraft.body.includes('insider-recruiting-battle'));
 
   assert('retire path ok', store.countPublished() === 0);
 

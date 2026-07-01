@@ -8,7 +8,7 @@ const EDITORIAL_SYSTEM_PROMPT = [
   'recruiting/portal impact, analytics/data, narrative tension, forward-looking implications.',
   '',
   'Synthesize multiple sources from provided context JSON only.',
-  'Classify as: Insider, War Room, Film Room, Analytics, Roster Analysis, Game Week, Program Pulse.',
+  'Classify as: Insider, Heat Check, OV Preview, Post-Visit, Film Room, Analytics, Roster Analysis, Game Week, Program Pulse.',
   'Minimum 700-1200 words in bodyHtml.',
   '',
   'Output valid JSON only:',

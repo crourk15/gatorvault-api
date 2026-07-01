@@ -60,9 +60,27 @@ function listStaff() {
   return Object.values(STAFF_DIRECTORY);
 }
 
+function isStaffOrCoachName(name) {
+  const lower = String(name || '').trim().toLowerCase();
+  if (!lower) return false;
+  for (const entry of listStaff()) {
+    if (entry.name.toLowerCase() === lower) return true;
+  }
+  try {
+    const { getCanonicalCoachNames } = require('./official-coach-identity');
+    for (const coach of getCanonicalCoachNames()) {
+      if (String(coach).toLowerCase() === lower) return true;
+    }
+  } catch {
+    /* optional */
+  }
+  return false;
+}
+
 module.exports = {
   STAFF_DIRECTORY,
   normalizeStaffId,
   resolveStaffById,
   listStaff,
+  isStaffOrCoachName,
 };

@@ -1,5 +1,6 @@
 /** Editorial header rewrite — LLM + fallback. Never expose internal scaffold labels. */
 const { isLlmAllowed } = require('./insider-articles-config');
+const { isRecruitingBattleArticleType } = require('./insider-articles-types');
 
 const fallbackEditorialHeaders = {
   thesis: 'The Big Picture',
@@ -58,7 +59,7 @@ function dynamicFallbackHeaders({ articleType, season, portalCount } = {}) {
       ? 'How the Roster Really Shifts After ' + portalCount + ' Portal Additions'
       : fallbackEditorialHeaders.roster,
     recruiting:
-      articleType === 'War Room'
+      isRecruitingBattleArticleType(articleType)
         ? "Recruiting Battles That Define Florida's " + yr + ' Momentum'
         : fallbackEditorialHeaders.recruiting,
     analytics: "The Numbers Behind Florida's " + yr + ' Survival Curve',

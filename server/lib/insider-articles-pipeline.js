@@ -3,6 +3,7 @@ const { extractInternalSections, assemblePublishedHtml, hasForbiddenPublishedLab
 const { rewriteHeadersWithLlm, rewriteHeadersFallback } = require('./editorial-headers');
 const { isLlmAllowed } = require('./insider-articles-config');
 const { generateRecruitingBattles, buildBattleContextFromSignals, renderBattlesHtml, validateWarRoomBattles } = require('./war-room-battles');
+const { isRecruitingBattleArticleType } = require('./insider-articles-types');
 const sanitize = require('./insider-articles-sanitize');
 
 async function transformDraftForPublish({ scaffoldBody, articleType, context, signals, season }) {
@@ -16,16 +17,16 @@ async function transformDraftForPublish({ scaffoldBody, articleType, context, si
   let battles = [];
   let recruitingHtml = null;
 
-  if (articleType === 'War Room') {
+  if (isRecruitingBattleArticleType(articleType)) {
     const battleCtx = buildBattleContextFromSignals(signals, context);
     battles = generateRecruitingBattles(battleCtx);
     if (battles.length < 2) {
-      throw new Error('War Room draft failed: not enough recruiting battles');
+      throw new Error('Recruiting battle draft failed: not enough verified battles');
     }
     recruitingHtml = renderBattlesHtml(battles);
     const warReasons = validateWarRoomBattles(battles, recruitingHtml);
     if (warReasons.length) {
-      throw new Error('War Room draft failed quality gate: ' + warReasons.join(','));
+      throw new Error('Recruiting battle draft failed quality gate: ' + warReasons.join(','));
     }
   }
 
@@ -36,7 +37,7 @@ async function transformDraftForPublish({ scaffoldBody, articleType, context, si
   const body = assemblePublishedHtml({
     headers,
     sections,
-    recruitingHtml: articleType === 'War Room' ? recruitingHtml : null,
+    recruitingHtml: isRecruitingBattleArticleType(articleType) ? recruitingHtml : null,
   });
 
   if (hasForbiddenPublishedLabels(body)) {

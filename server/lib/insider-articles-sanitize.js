@@ -128,6 +128,19 @@ function isGenericBoilerplateBody(html) {
   return hits >= 2;
 }
 
+function hasWarRoomPlaceholderContent(html) {
+  const t = String(html || '').toLowerCase();
+  const markers = [
+    'uf probability:</strong> unknown',
+    'momentum: neutral',
+    'florida needs a live visit to reset the board',
+    'florida is in control unless momentum shifts',
+    'top competitor:</strong> n/a',
+    'scheme role:</strong> n/a',
+  ];
+  return markers.filter((m) => t.includes(m)).length >= 2;
+}
+
 const { hasForbiddenPublishedLabels } = require('./insider-articles-sections');
 
 module.exports = {
@@ -142,5 +155,6 @@ module.exports = {
   BANNED_PHRASES,
   isNameOnlyListBody,
   isGenericBoilerplateBody,
+  hasWarRoomPlaceholderContent,
   hasForbiddenPublishedLabels
 };

@@ -32,7 +32,7 @@ function isGameWeekAutoPublishEnabled() {
 const EDITORIAL_CALENDAR = {
   1: { articleType: 'Game Week', categories: ['game_week_preview', 'summer_preview'] },
   2: { articleType: 'Film Room', categories: ['depth_chart_movement', 'staff_intel'] },
-  3: { articleType: 'War Room', categories: ['heat_check', 'official_visit_preview', 'post_visit_reaction'] },
+  3: { articleType: 'Recruiting Intel', categories: ['heat_check', 'official_visit_preview', 'post_visit_reaction'] },
   4: { articleType: 'Roster Analysis', categories: ['roster_analysis', 'depth_chart_movement'] },
   5: { articleType: 'Program Pulse', categories: ['program_pulse', 'staff_intel'] },
   0: { articleType: 'Analytics', categories: ['game_week_preview', 'program_pulse'] },

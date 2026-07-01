@@ -149,6 +149,14 @@ function rulesForPlayerPage(player, intel = [], events = []) {
 
 function rulesForBoardPlayer(player) {
   if (isQuarantined(player)) return { allow: false, reason: 'player_quarantined' };
+  try {
+    const { isStaffOrCoachName } = require('../recruiting-staff-directory');
+    if (isStaffOrCoachName(player?.name || player?.playerName)) {
+      return { allow: false, reason: 'staff_not_recruit' };
+    }
+  } catch {
+    /* optional */
+  }
   if (player?.category === 'target') {
     const { isAllowlistedTarget } = require('../recruiting-target-allowlist');
     if (!isAllowlistedTarget(player)) {

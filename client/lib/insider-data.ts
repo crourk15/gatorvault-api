@@ -89,9 +89,12 @@ export function categoryFromBadge(badge?: string | null): string {
   if (b.includes('PORTAL') || b.includes('ROSTER')) return 'Roster';
   if (b.includes('GAME') || b.includes('WEEK')) return 'Game Week';
   if (b.includes('RECRUIT')) return 'Recruiting';
+  if (b.includes('HEAT') || b.includes('OV PREVIEW') || b.includes('POST-VISIT') || b.includes('POST VISIT')) {
+    return 'Recruiting';
+  }
   if (b.includes('NIL')) return 'NIL';
   if (b.includes('COMMUNITY')) return 'Community';
-  if (b.includes('WAR')) return 'Game Week';
+  if (b.includes('WAR')) return 'Recruiting';
   return badge || 'Insider';
 }
 

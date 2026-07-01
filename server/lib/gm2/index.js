@@ -322,10 +322,14 @@ async function getValidatedSignals(options = {}) {
     filterHeatCheckRising(heatCheck?.rising || [], intel2027)
   );
 
+  const portalIncoming = portal.incoming || [];
+  const portalFilteredIncoming = filterPortalPlayers(portalIncoming);
   const portalFiltered = {
-    incoming: filterPortalPlayers(portal.incoming || []),
+    incoming: portalFilteredIncoming,
     headliner: portal.headliner,
-    count: filterPortalPlayers(portal.incoming || []).length
+    count: portal.count ?? portalIncoming.length,
+    incomingCount: portal.count ?? portalIncoming.length,
+    filteredCount: portalFilteredIncoming.length,
   };
 
   return {
