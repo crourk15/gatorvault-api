@@ -320,6 +320,18 @@ function buildRecruitingIdentity(ctx) {
   return line;
 }
 
+/** Brand beat posts: year + pos + name + hometown only — leaves room for GV hook. */
+function buildCompactRecruitingIdentity(ctx) {
+  const lead = [];
+  if (ctx.classYear) lead.push(String(ctx.classYear));
+  if (ctx.pos) lead.push(ctx.pos);
+  lead.push(ctx.name);
+  let line = lead.join(' ');
+  const school = formatSchoolLabel(ctx.school);
+  if (school) line += ` (${school})`;
+  return line;
+}
+
 function buildPortalIdentity(ctx, portalStatus = 'Portal') {
   const status = String(portalStatus || 'Portal').trim();
   const lead = [status];
@@ -690,6 +702,7 @@ module.exports = {
   formatStarsLabel,
   extractSentences,
   buildRecruitingIdentity,
+  buildCompactRecruitingIdentity,
   buildPortalIdentity,
   buildTeamIdentity,
   detectTeamContext,

@@ -15,11 +15,81 @@ function eliteFirstName(name) {
   return String(name || '').split(/\s+/)[0] || 'the prospect';
 }
 
+function competingSchoolsFromBeat(beatText) {
+  const beat = String(beatText || '').toLowerCase();
+  const out = [];
+  if (/\bohio state\b|\bosu\b/.test(beat)) out.push('Ohio State');
+  if (/\bpitt(?:sburgh)?\b/.test(beat)) out.push('Pitt');
+  if (/\bboston college\b|\bbc and\b|\bbc jumped\b/.test(beat)) out.push('BC');
+  if (/\bindiana\b/.test(beat)) out.push('Indiana');
+  if (/\bpenn state\b/.test(beat)) out.push('Penn State');
+  if (/\bmichigan\b/.test(beat)) out.push('Michigan');
+  return [...new Set(out)];
+}
+
+/** GV-native angles from beat signal — not beat paraphrase. */
+function pickBeatIntelAngle(research, beatText) {
+  const beat = String(beatText || '').toLowerCase();
+  if (!beat || !research?.playerName) return null;
+  const fn = eliteFirstName(research.playerName);
+  const pos = String(research.player?.pos || research.intel?.pos || '').toUpperCase();
+  const competitors = competingSchoolsFromBeat(beatText);
+  const note = String(research.player?.profileNote || research.breakdown?.insiderNotes || '');
+  for (const school of competingSchoolsFromBeat(note)) {
+    if (!competitors.includes(school)) competitors.push(school);
+  }
+
+  if (
+    (/\bballinger\b|jaxballinger/.test(beat)) &&
+    /\bohio\b/.test(beat) &&
+    (pos === 'TE' || /\btight end\b|\bte recruiting\b/.test(beat))
+  ) {
+    const compLine =
+      competitors.length >= 2
+        ? `${competitors.slice(0, 2).join(' and ')} are in, but Gainesville has the inside track.`
+        : competitors.length === 1
+          ? `${competitors[0]} is in, but Gainesville has the inside track.`
+          : 'UF has offered and the Ballinger precedent gives them an edge in Ohio.';
+    return {
+      context: `UF won the Ballinger Ohio TE battle — McKissack is running the same pipeline with ${fn}.`,
+      insider: compLine,
+      _beatIntel: true
+    };
+  }
+
+  if (/\bstrike twice\b.*\bohio\b.*\btight end\b|\bohio\b.*\btight end\b.*\bstrike twice\b/.test(beat)) {
+    return {
+      context: `UF is trying to repeat its Ohio TE success with ${fn} after the Ballinger win.`,
+      insider:
+        competitors.length >= 2
+          ? `${competitors.slice(0, 2).join(' and ')} are in, but McKissack has Gainesville positioned well.`
+          : 'McKissack has UF positioned as a top contender in the next Ohio TE push.',
+      _beatIntel: true
+    };
+  }
+
+  if (competitors.length && /\b(offered|top contender|in the mix|contender)\b/.test(beat)) {
+    return {
+      context: `UF is active with ${fn}${pos ? ` (${pos})` : ''} in this cycle.`,
+      insider:
+        competitors.length >= 2
+          ? `${competitors.slice(0, 2).join(' and ')} are in, but Gainesville has the inside track.`
+          : `${competitors[0]} is in, but Gainesville has the inside track.`,
+      _beatIntel: true
+    };
+  }
+
+  return null;
+}
+
 /** Original angles from GV data (visits, RPM, scouting) — not beat paraphrase. */
 function pickBestEliteAngle(research, beatText) {
   if (!research?.playerName) return null;
   const angles = [];
   const fn = eliteFirstName(research.playerName);
+
+  const beatAngle = pickBeatIntelAngle(research, beatText);
+  if (beatAngle) angles.push(beatAngle);
 
   const visits = (research.intelRows || []).filter((r) => /visit/i.test(String(r.eventType || '')));
   if (visits.length >= 2) {
@@ -107,7 +177,7 @@ function pickBestEliteAngle(research, beatText) {
         if (w.length > 4 && src.includes(w)) overlap += 1;
       }
     }
-    const score = words.length - overlap * 4;
+    const score = (a._beatIntel ? 1000 : 0) + words.length - overlap * 4;
     if (score > bestScore) {
       bestScore = score;
       best = a;
@@ -322,6 +392,34 @@ function trimLine(text, max = 140) {
   return t.endsWith('.') ? t : `${t}.`;
 }
 
+function fitBodyToHookBudget(identity, context, insider, hookBudget) {
+  if (!hookBudget || hookBudget <= 0) {
+    return { identity, context, insider };
+  }
+  const bodyLimit = 280 - hookBudget;
+  let id = String(identity || '').trim();
+  let ctx = String(context || '').trim();
+  let ins = String(insider || '').trim();
+  for (let i = 0; i < 24; i += 1) {
+    const raw = [id, ctx, ins].filter(Boolean).join('\n');
+    if (raw.length <= bodyLimit) return { identity: id, context: ctx, insider: ins };
+    if (ins.length > 48) {
+      ins = template.hardTrimLine(ins, Math.max(48, ins.length - 12));
+      continue;
+    }
+    if (ctx.length > 48) {
+      ctx = template.hardTrimLine(ctx, Math.max(48, ctx.length - 12));
+      continue;
+    }
+    if (id.length > 32) {
+      id = template.hardTrimLine(id, Math.max(32, id.length - 8));
+      continue;
+    }
+    break;
+  }
+  return { identity: id, context: ctx, insider: ins };
+}
+
 async function buildElitePlayerPost(input = {}) {
   const dataLayer = require('./x-autoposter-data-layer');
   const intelInput = {
@@ -384,11 +482,30 @@ async function buildElitePlayerPost(input = {}) {
     beatText: input.beatText
   });
 
+  const brandBeatPost =
+    Boolean(String(input.beatText || '').trim()) &&
+    process.env.X_AUTOPOST_ELITE_BRAND_BEAT !== 'false';
+  const playerSlug = research.playerSlug || playerData.data.playerSlug || null;
+  const hookMeta = {
+    playerSlug,
+    playerName: research.playerName,
+    eventType: research.eventType
+  };
+  const copyMod = require('./x-autoposter-copy');
+  const hookBudget =
+    brandBeatPost && process.env.X_AUTOPOST_GV_CTA_ENABLED === 'true'
+      ? copyMod.estimateHookBudget(hookMeta)
+      : 0;
+  const contextMax = hookBudget ? Math.min(160, 280 - hookBudget - 80) : 160;
+  const insiderMax = hookBudget ? Math.min(140, 280 - hookBudget - 50) : 140;
+
   let identity;
   if (kind === 'portal') {
     identity = template.buildPortalIdentity(ctx, input.portalStatus || 'Portal');
   } else if (kind === 'team') {
     identity = template.buildTeamIdentity(ctx, input.teamContext || template.detectTeamContext(input.beatText));
+  } else if (brandBeatPost && (ctx.hasFullIdentity || ctx.hasMinimumContext)) {
+    identity = template.buildCompactRecruitingIdentity(ctx);
   } else if (ctx.hasFullIdentity || ctx.hasMinimumContext) {
     identity = template.buildRecruitingIdentity(ctx);
   } else {
@@ -400,8 +517,8 @@ async function buildElitePlayerPost(input = {}) {
 
   const digestAngle = pickBestEliteAngle(research, input.beatText);
   if (digestAngle) {
-    contextLine = trimLine(digestAngle.context, 160);
-    insiderLine = trimLine(digestAngle.insider, 140);
+    contextLine = trimLine(digestAngle.context, contextMax);
+    insiderLine = trimLine(digestAngle.insider, insiderMax);
   }
 
   if (!contextLine) {
@@ -422,11 +539,11 @@ async function buildElitePlayerPost(input = {}) {
     return { ok: false, skipped: true, reason: 'no_usable_signal', research };
   }
 
-  contextLine = trimLine(contextLine, 160);
+  contextLine = trimLine(contextLine, contextMax);
   if (!insiderLine) {
-    insiderLine = trimLine(buildEliteInsiderLine(research, contextLine), 140);
+    insiderLine = trimLine(buildEliteInsiderLine(research, contextLine), insiderMax);
   } else {
-    insiderLine = trimLine(insiderLine, 140);
+    insiderLine = trimLine(insiderLine, insiderMax);
   }
 
   if (quoteRewriter.isRewriterEnabled() && input.beatText) {
@@ -491,10 +608,21 @@ async function buildElitePlayerPost(input = {}) {
     newsEvent: input.newsEvent,
     playerSlug: playerData.data.playerSlug
   };
-  const heatMeter = heatMeterMod.isEnabled() ? heatMeterMod.computeHeatMeter(meterInput) : null;
-  const confidenceMeter = confidenceMeterMod.isEnabled()
-    ? confidenceMeterMod.computeConfidenceMeter(meterInput)
-    : null;
+  const heatMeter =
+    !brandBeatPost && heatMeterMod.isEnabled() ? heatMeterMod.computeHeatMeter(meterInput) : null;
+  const confidenceMeter =
+    !brandBeatPost && confidenceMeterMod.isEnabled()
+      ? confidenceMeterMod.computeConfidenceMeter(meterInput)
+      : null;
+
+  if (hookBudget) {
+    ({ identity, context: contextLine, insider: insiderLine } = fitBodyToHookBudget(
+      identity,
+      contextLine,
+      insiderLine,
+      hookBudget
+    ));
+  }
 
   const raw = template.composeInsiderReportWithMeters({
     identity,
@@ -515,7 +643,7 @@ async function buildElitePlayerPost(input = {}) {
     return { ok: false, skipped: true, reason: 'compose_failed', research };
   }
 
-  const text = template.enforceTweetLimit(raw, 280, copyMeta);
+  let text = template.enforceTweetLimit(raw, 280, copyMeta);
   if (!text || GENERIC_CLOSURE_RE.test(text)) {
     eliteLog.logEliteCaption({
       pass: false,
@@ -526,6 +654,21 @@ async function buildElitePlayerPost(input = {}) {
       finalCaption: text
     });
     return { ok: false, skipped: true, reason: 'truncation_generic', research };
+  }
+
+  if (process.env.X_AUTOPOST_GV_CTA_ENABLED === 'true') {
+    const copy = require('./x-autoposter-copy');
+    const slug = playerSlug;
+    const withHook = copy.appendSite(text, {
+      playerSlug: slug,
+      playerName: research.playerName,
+      eventType: research.eventType,
+      eliteMode: true,
+      validationMeta: { playerSlug: slug, eliteCompose: true }
+    });
+    if (withHook && withHook !== text) {
+      text = withHook.length <= 280 ? withHook : template.enforceTweetLimit(withHook, 280, copyMeta) || text;
+    }
   }
 
   eliteLog.logEliteCaption({

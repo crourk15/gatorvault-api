@@ -29,16 +29,31 @@ function formatVisitWindow(intel) {
   return null;
 }
 
+function isLikelyHighSchoolLocation(name, player) {
+  const s = String(name || '').trim();
+  if (!s) return true;
+  if (/\b(high school|hs|prep|academy)\b/i.test(s)) return true;
+  if (/^[A-Za-z .'-]+,\s*[A-Z]{2}$/.test(s)) return true;
+  const school = String(player?.school || '').trim().toLowerCase();
+  const hometown = String(player?.hometown || '').trim().toLowerCase();
+  const key = s.toLowerCase();
+  if (school && key === school) return true;
+  if (hometown && (key === hometown || key.includes(hometown) || hometown.includes(key))) return true;
+  return false;
+}
+
 function extractTopSchools(intelRows, player, limit = 4) {
   const schools = new Set();
-  if (player?.school) schools.add(player.school);
   if (player?.committedTo) schools.add(player.committedTo);
   for (const row of intelRows) {
     if (row.predictionSchool) schools.add(row.predictionSchool);
     if (row.nextVisitSchool) schools.add(row.nextVisitSchool);
     if (row.cancelledSchool) schools.add(row.cancelledSchool);
   }
-  return [...schools].filter(Boolean).slice(0, limit);
+  return [...schools]
+    .filter(Boolean)
+    .filter((s) => !isLikelyHighSchoolLocation(s, player))
+    .slice(0, limit);
 }
 
 function inferEventTypeFromText(text) {

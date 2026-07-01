@@ -43,6 +43,15 @@ function buildSubtleDiscoveryLine(meta = {}) {
   return `${hook} \u2193\n${url.replace('https://', '')}`;
 }
 
+/** Chars consumed by appendSite hook (leading newline + hook block). */
+function estimateHookBudget(meta = {}) {
+  if (process.env.X_AUTOPOST_GV_CTA_ENABLED !== 'true') return 0;
+  const subtle = buildSubtleDiscoveryLine(meta);
+  if (subtle) return 1 + subtle.length;
+  const landing = resolveAutoposterSiteUrl(meta).replace('https://', '');
+  return 1 + landing.length;
+}
+
 const BROKEN_COPY_PATTERNS = [
   /\bour own pi\b/i,
   /\bHer — via\b/i,
@@ -717,6 +726,7 @@ module.exports = {
   FUTURECAST_BOARD_URL,
   resolveAutoposterSiteUrl,
   buildSubtleDiscoveryLine,
+  estimateHookBudget,
   playerProfileUrl,
   isValidPlayerName,
   extractPlayerFromText,
