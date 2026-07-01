@@ -106,6 +106,19 @@ function removeSubscription(endpoint) {
   return { ok: true, removed: before - store.subscriptions.length };
 }
 
+function removeSubscriptionsForEmail(email) {
+  const normalized = String(email || "").trim().toLowerCase();
+  if (!normalized) return { ok: false, error: "invalid_email" };
+  const store = readStore();
+  const before = (store.subscriptions || []).length;
+  store.subscriptions = (store.subscriptions || []).filter(
+    (sub) => String(sub.email || "").toLowerCase() !== normalized
+  );
+  const removed = before - store.subscriptions.length;
+  if (removed) writeStore(store);
+  return { ok: true, removed };
+}
+
 function updateSubscriptionPrefs(email, endpoint, prefs) {
   const store = readStore();
   const row = (store.subscriptions || []).find(
@@ -302,6 +315,7 @@ module.exports = {
   getPublicConfig,
   upsertSubscription,
   removeSubscription,
+  removeSubscriptionsForEmail,
   updateSubscriptionPrefs,
   dispatchVisitScheduledPush,
   dispatchVisitCancelledPush,

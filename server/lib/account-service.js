@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { deleteUser, findUserByEmail } = require('./user-store');
 const pointsStore = require('./points-store');
+const alertEmailPersistence = require('./alert-email-persistence');
+const { removeSubscriptionsForEmail } = require('./push-alert-service');
 
 const COMMUNITY_DIR = path.join(__dirname, '..', 'data', 'community');
 
@@ -63,7 +65,7 @@ function purgeCommunityMember(email) {
   if (flagsChanged) writeJson(flagsPath, flags);
 }
 
-function deleteAccountForUser(email) {
+async function deleteAccountForUser(email) {
   const normalized = String(email || '').trim().toLowerCase();
   const existing = findUserByEmail(normalized);
   if (!existing) {
@@ -77,6 +79,16 @@ function deleteAccountForUser(email) {
 
   pointsStore.deleteUserPoints(normalized);
   purgeCommunityMember(normalized);
+  try {
+    removeSubscriptionsForEmail(normalized);
+  } catch (err) {
+    console.warn("[account-delete] push purge failed:", err.message);
+  }
+  try {
+    await alertEmailPersistence.deletePref(normalized);
+  } catch (err) {
+    console.warn("[account-delete] alert prefs purge failed:", err.message);
+  }
 
   return {
     ok: true,

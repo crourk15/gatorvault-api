@@ -600,24 +600,12 @@ app.get('/api/session', (req, res) => {
   const session = verifySession(token);
   if (!session) return res.status(401).json({ ok: false, error: 'Session expired. Sign in again.' });
   const user = findUserByEmail(session.email);
-  if (user) {
-    return res.json({
-      ok: true,
-      session: buildSessionFields(user, pointsStore),
-    });
+  if (!user) {
+    return res.status(401).json({ ok: false, error: "Account not found. Sign in again." });
   }
-  const pts = pointsStore.getUserPoints(session.email);
   return res.json({
     ok: true,
-    session: {
-      email: session.email,
-      tier: effectiveTier(session),
-      name: session.name,
-      points: pts.points,
-      pointsTier: pts.tier,
-      paid: isAdminAccount(session.email),
-      accessActive: isAdminAccount(session.email),
-    },
+    session: buildSessionFields(user, pointsStore),
   });
 });
 

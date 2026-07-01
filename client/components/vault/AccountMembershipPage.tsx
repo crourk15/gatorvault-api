@@ -44,6 +44,13 @@ export function AccountMembershipPage(): React.ReactElement {
   const native = isNativeApp();
 
   useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#delete-account") {
+      const el = document.getElementById("delete-account");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [loading]);
+
+  useEffect(() => {
     const session = loadSession();
     if (!session?.token) {
       window.location.replace('/join/?next=/vault/membership/');
@@ -147,8 +154,7 @@ export function AccountMembershipPage(): React.ReactElement {
     <div className="gv-membership" data-testid="vault-membership">
       <h1 className="gv-membership__title">Membership &amp; account</h1>
       <p className="gv-membership__sub">
-        View your Insider tier, trial status, and billing options. Account deletion is available below
-        for App Store compliance.
+        View your Insider tier, trial status, and billing options.
       </p>
 
       {error ? <p className="gv-membership__error">{error}</p> : null}
@@ -177,6 +183,14 @@ export function AccountMembershipPage(): React.ReactElement {
             </p>
           ) : null}
         </section>
+      ) : null}
+
+      {status?.email ? (
+        <AccountDeletePanel
+          email={status.email}
+          paid={status.paid}
+          subscriptionSource={status.subscription?.source}
+        />
       ) : null}
 
       <section className="gv-membership__manage" aria-label="Manage subscription">
@@ -271,14 +285,6 @@ export function AccountMembershipPage(): React.ReactElement {
           </article>
         ))}
       </section>
-
-      {status?.email ? (
-        <AccountDeletePanel
-          email={status.email}
-          paid={status.paid}
-          subscriptionSource={status.subscription?.source}
-        />
-      ) : null}
 
       <section className="gv-membership__cta">
         <p>

@@ -5,7 +5,7 @@ const { deleteAccountForUser } = require('./account-service');
 const { hasPaidAccess } = require('./subscription-service');
 
 function mountAccountRoutes(app) {
-  app.post('/api/account/delete', (req, res) => {
+  app.post('/api/account/delete', async (req, res) => {
     const session = getSessionFromReq(req);
     if (!session?.email) {
       return res.status(401).json({ ok: false, error: 'Sign in to delete your account.' });
@@ -34,7 +34,7 @@ function mountAccountRoutes(app) {
     }
 
     const hadPaidAccess = hasPaidAccess(user);
-    const result = deleteAccountForUser(email);
+    const result = await deleteAccountForUser(email);
     if (!result.ok) {
       return res.status(result.error === 'Account not found.' ? 404 : 500).json(result);
     }

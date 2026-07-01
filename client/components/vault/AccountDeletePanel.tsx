@@ -46,6 +46,9 @@ export function AccountDeletePanel({ email, paid, subscriptionSource }: Props): 
     >
       <h2 className="gv-membership__section-title">Delete account</h2>
       <p className="gv-membership__meta">
+        Required by Apple App Store policy — permanently delete your login and personal account data.
+      </p>
+      <p className="gv-membership__meta">
         Permanently remove your GatorVault login, membership profile, and Vault Points for{' '}
         <strong>{email}</strong>. This cannot be undone.
       </p>

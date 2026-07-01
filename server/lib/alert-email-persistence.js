@@ -107,6 +107,28 @@ async function upsertPref(email, prefs) {
   return { ok: true, email: normalized };
 }
 
+async function deletePref(email) {
+  const normalized = String(email || "").trim().toLowerCase();
+  if (!normalized) return { ok: false, error: "invalid_email" };
+
+  const doc = readJsonStore();
+  const before = (doc.preferences || []).length;
+  doc.preferences = (doc.preferences || []).filter((p) => p.email !== normalized);
+  if (doc.preferences.length !== before) writeJsonStore(doc);
+
+  if (isEnabled()) {
+    const client = pgClient();
+    await client.connect();
+    try {
+      await client.query("DELETE FROM alert_email_preferences WHERE email = $1", [normalized]);
+    } finally {
+      await client.end().catch(() => {});
+    }
+  }
+
+  return { ok: true, removed: before - (doc.preferences || []).length };
+}
+
 async function initAlertEmailPrefsStore() {
   if (!isEnabled()) {
     const doc = readJsonStore();

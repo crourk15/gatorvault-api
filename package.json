@@ -60,7 +60,8 @@
     "provision:app-review": "node scripts/provision-app-review-account.js",
     "prep:app-store": "node scripts/app-store-prep.js",
     "walkthrough:app-store": "node scripts/app-store-connect-walkthrough.js",
-    "trigger:codemagic:ios": "node scripts/trigger-codemagic-ios.js"
+    "trigger:codemagic:ios": "node scripts/trigger-codemagic-ios.js",
+    "test:account-delete": "node scripts/test-account-delete.js"
   },
   "engines": {
     "node": ">=18"
