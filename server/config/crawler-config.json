@@ -99,6 +99,16 @@
     "recruiting": "/vault/recruiting/player/[slug]",
     "component": "PlayerProfilePage"
   },
+  "components": {
+    "FilmRoom": {
+      "categories": [
+        "Film Breakdown",
+        "Scheme School",
+        "UF Press Conferences",
+        "Highlights"
+      ]
+    }
+  },
   "retiredRoutes": [
     "/futurecast",
     "/futurecast/*",

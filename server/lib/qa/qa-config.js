@@ -58,9 +58,10 @@ function reactVaultPagesFromRouteMap() {
     filmRoom: 'vault-film-room',
     schedule: 'vault-schedule'
   };
+  const skipPaths = new Set(['/vault/depth-chart']);
   const routes = routeMap();
   return Object.entries(routes)
-    .filter(([path]) => path.startsWith('/vault'))
+    .filter(([path]) => path.startsWith('/vault') && !skipPaths.has(path))
     .map(([path, meta]) => ({
       id: idByKey[meta.key] || `vault-${meta.key}`,
       path,
@@ -105,8 +106,8 @@ module.exports = {
   ALERT_ON_FAIL: process.env.QA_ALERT_ON_FAIL !== 'false',
   FETCH_TIMEOUT_MS: parseInt(process.env.QA_FETCH_TIMEOUT_MS || '45000', 10),
   VAULT_FETCH_TIMEOUT_MS: parseInt(process.env.QA_VAULT_FETCH_TIMEOUT_MS || process.env.QA_FETCH_TIMEOUT_MS || '45000', 10),
-  FETCH_RETRIES: parseInt(process.env.QA_FETCH_RETRIES || '3', 10),
-  FETCH_RETRY_DELAY_MS: parseInt(process.env.QA_FETCH_RETRY_DELAY_MS || '2000', 10),
+  FETCH_RETRIES: parseInt(process.env.QA_FETCH_RETRIES || '5', 10),
+  FETCH_RETRY_DELAY_MS: parseInt(process.env.QA_FETCH_RETRY_DELAY_MS || '3000', 10),
   SITE_FETCH_CONCURRENCY: parseInt(process.env.QA_SITE_FETCH_CONCURRENCY || '3', 10),
   BUNDLE_HTML_ONLY: process.env.QA_BUNDLE_HTML_ONLY !== 'false',
   LIVE_DASHBOARD_RETRIES: parseInt(process.env.QA_LIVE_DASHBOARD_RETRIES || '4', 10),

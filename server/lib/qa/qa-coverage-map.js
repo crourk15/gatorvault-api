@@ -46,9 +46,8 @@ const SITE_SECTIONS = [
       '.gv-film-lessons'
     ],
     expectedOrder: [
-      'Offensive Scheme',
-      'Defensive Scheme',
       'Film Breakdown',
+      'Scheme School',
       'UF Press Conferences',
       'Highlights'
     ],

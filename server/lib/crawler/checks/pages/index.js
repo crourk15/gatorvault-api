@@ -18,6 +18,8 @@ async function checkPage(page, viewport) {
   const { text: html } = await require('../../../qa/qa-utils').fetchText(url, {
     headers,
     vault: page.path.startsWith('/vault'),
+    retries: config.FETCH_RETRIES,
+    retryDelayMs: config.FETCH_RETRY_DELAY_MS
   });
   const text = html;
   const missing = (page.markers || []).filter((marker) => !text.includes(marker));
@@ -59,9 +61,11 @@ async function runVaultPageChecks() {
     checks.push(
       await check(`pages:${page.id}:desktop`, 'pages', `${page.path} (desktop)`, () => checkPage(page, 'desktop'))
     );
+    await new Promise((resolve) => setTimeout(resolve, 400));
     checks.push(
       await check(`pages:${page.id}:mobile`, 'pages', `${page.path} (mobile)`, () => checkPage(page, 'mobile'))
     );
+    await new Promise((resolve) => setTimeout(resolve, 400));
   }
   return checks;
 }
