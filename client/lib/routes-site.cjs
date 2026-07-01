@@ -62,6 +62,8 @@ const VAULT_TO_SITE_REDIRECTS = [
   { from: '/vault/live-scores/*', to: '/live-scores/:splat', status: 301 },
   { from: '/vault/articles', to: '/articles', status: 301 },
   { from: '/vault/articles/*', to: '/articles/:splat', status: 301 },
+  { from: '/vault/insider', to: '/articles', status: 301 },
+  { from: '/vault/insider/*', to: '/articles/:splat', status: 301 },
   { from: '/vault/community', to: '/community', status: 301 },
   { from: '/vault/community/*', to: '/community/:splat', status: 301 },
   { from: '/vault/game-zone', to: '/game-zone', status: 301 },

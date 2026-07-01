@@ -92,21 +92,29 @@ function normalizeArticle(raw) {
   return {
     id: raw.id || newId(),
     title: raw.title || 'Untitled',
+    slug: raw.slug || null,
     category,
     categoryLabel: meta.label,
+    articleType: raw.articleType || null,
     byline: raw.byline || meta.byline,
     status: raw.status || 'draft',
     summary: raw.summary || '',
+    thesis: raw.thesis || '',
     body: raw.body || '',
+    insiderAngles: Array.isArray(raw.insiderAngles) ? raw.insiderAngles : [],
     readTimeMinutes: raw.readTimeMinutes || raw.readMin || 5,
     sources: Array.isArray(raw.sources) ? raw.sources : [],
     topicKey: raw.topicKey || null,
+    angleKey: raw.angleKey || null,
+    qualityReasons: Array.isArray(raw.qualityReasons) ? raw.qualityReasons : [],
     triggerIntelFingerprints: Array.isArray(raw.triggerIntelFingerprints) ? raw.triggerIntelFingerprints : [],
     triggerIdentityLog: Array.isArray(raw.triggerIdentityLog) ? raw.triggerIdentityLog : [],
     createdAt: raw.createdAt || nowIso(),
     publishedAt: raw.publishedAt || null,
     lastRefreshedAt: raw.lastRefreshedAt || null,
-    archivedAt: raw.archivedAt || null
+    archivedAt: raw.archivedAt || null,
+    rejectedAt: raw.rejectedAt || null,
+    rejectReason: raw.rejectReason || null,
   };
 }
 
@@ -212,19 +220,37 @@ function approveDraft(id) {
   else pubDoc.items.unshift(published);
   savePublishedDoc(pubDoc);
 
+  publishToContentFeed(published);
+
   logEvent('draft_approved', { articleId: id, title: published.title });
   return published;
 }
 
-function rejectDraft(id) {
+function rejectDraft(id, { reason = 'manual', auto = false } = {}) {
   const doc = loadDraftsDoc();
   const item = doc.items.find((a) => a.id === id);
   if (!item) throw new Error('Draft not found');
-  item.status = 'archived';
+  item.status = auto ? 'auto-rejected' : 'archived';
   item.archivedAt = nowIso();
+  item.rejectedAt = nowIso();
+  item.rejectReason = reason;
   saveDraftsDoc(doc);
-  logEvent('draft_rejected', { articleId: id, title: item.title });
+  logEvent(auto ? 'draft_auto_rejected_manual' : 'draft_rejected', {
+    articleId: id,
+    title: item.title,
+    reason,
+    angleKey: item.angleKey,
+    topicKey: item.topicKey,
+  });
   return item;
+}
+
+function listUsedAnglesForTopic(topicKey) {
+  if (!topicKey) return [];
+  const items = listDrafts({ status: null });
+  return items
+    .filter((a) => a.topicKey === topicKey && a.angleKey)
+    .map((a) => a.angleKey);
 }
 
 function calcReadTime(body) {
@@ -279,6 +305,7 @@ function refreshPublished(id, patch) {
     lastRefreshedAt: nowIso()
   });
   savePublishedDoc(pubDoc);
+  publishToContentFeed(pubDoc.items[idx]);
   logEvent('article_refreshed', { articleId: id, title: pubDoc.items[idx].title });
   return pubDoc.items[idx];
 }
@@ -295,6 +322,8 @@ function retirePublished(id) {
   pubDoc.items.splice(idx, 1);
   savePublishedDoc(pubDoc);
 
+  removeFromContentFeed(item);
+
   const draftDoc = loadDraftsDoc();
   draftDoc.items.unshift(item);
   saveDraftsDoc(draftDoc);
@@ -309,15 +338,17 @@ function toPublicArticle(article) {
   return {
     id: article.id,
     title: article.title,
+    slug: article.slug || null,
+    topicKey: article.topicKey || null,
     tier: 'insider',
-    badge: meta.badge,
+    badge: article.articleType || meta.badge,
     badgeClass: 'bg-gator-orange/20 text-gator-orange',
     author: article.byline || meta.byline,
     date: date ? new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '',
     readMin: article.readTimeMinutes,
     excerpt: article.summary,
     body: article.body,
-    takeaways: [],
+    takeaways: (article.insiderAngles || []).slice(0, 6),
     sources: (article.sources || []).map((s) => ({
       reporter: s.name || s.reporter,
       outlet: s.outlet,
@@ -325,10 +356,48 @@ function toPublicArticle(article) {
     })),
     category: article.category,
     categoryLabel: meta.label,
+    articleType: article.articleType || null,
     publishedAt: article.publishedAt,
     createdAt: article.createdAt,
     insiderEngine: true
   };
+}
+
+function publishToContentFeed(published) {
+  try {
+    const { loadPublishedArticles, savePublishedArticles } = require('./content-store');
+    const row = toPublicArticle(published);
+    const articles = loadPublishedArticles();
+    const idx = articles.findIndex(
+      (a) => a.id === row.id || (row.topicKey && a.topicKey === row.topicKey)
+    );
+    if (idx >= 0) {
+      row.createdAt = articles[idx].createdAt || row.createdAt || published.createdAt;
+      articles[idx] = { ...articles[idx], ...row };
+    } else {
+      articles.unshift(row);
+    }
+    savePublishedArticles(articles);
+    logEvent('content_feed_synced', { articleId: published.id, title: published.title, topicKey: row.topicKey });
+    return row;
+  } catch (err) {
+    console.warn('[insider-articles] content-store sync failed:', err.message);
+    logEvent('content_feed_sync_failed', { articleId: published.id, error: err.message });
+    return null;
+  }
+}
+
+function removeFromContentFeed(published) {
+  try {
+    const { loadPublishedArticles, savePublishedArticles } = require('./content-store');
+    const articles = loadPublishedArticles().filter(
+      (a) => a.id !== published.id && !(published.topicKey && a.topicKey === published.topicKey)
+    );
+    savePublishedArticles(articles);
+    logEvent('content_feed_removed', { articleId: published.id, topicKey: published.topicKey });
+  } catch (err) {
+    console.warn('[insider-articles] content-store remove failed:', err.message);
+  }
 }
 
 module.exports = {
@@ -346,10 +415,13 @@ module.exports = {
   addDraft,
   approveDraft,
   rejectDraft,
+  listUsedAnglesForTopic,
   updateDraft,
   refreshPublished,
   retirePublished,
   toPublicArticle,
+  publishToContentFeed,
+  removeFromContentFeed,
   logEvent,
   normalizeArticle
 };

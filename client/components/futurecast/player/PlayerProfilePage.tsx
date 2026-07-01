@@ -12,6 +12,7 @@ import {
 } from '@/lib/player-full-profile-api';
 import type { PortalIntelPayload, TransferPrediction } from '@/lib/portal-api';
 import type { UfFitIntelResponse } from '@/lib/uf-fit-api';
+import type { PlayerPrediction } from '@/lib/predictions-api';
 import { resolveProfileMetrics } from '@/lib/player-profile-normalize';
 import '@/lib/futurecast.css';
 import { PlayerHeader } from './PlayerHeader';
@@ -122,6 +123,22 @@ export function PlayerProfilePage({
   const portalPredictions = profile?.portalPredictions?.predictions ?? [];
   const ufFitIntel = profile?.fitIntel ?? null;
 
+  const initialPredictions = useMemo((): PlayerPrediction[] | undefined => {
+    const raw = profile?.portalPredictions?.predictions;
+    if (!raw?.length) return undefined;
+    const now = profile?.lastUpdated ?? new Date().toISOString();
+    return raw.map((p, i) => ({
+      id: `${profile?.player?.id ?? 'pick'}-${i}`,
+      school: p.school,
+      confidence: Math.round(Number(p.score)),
+      sourceType: 'MODEL' as const,
+      predictorId: 'on3-board',
+      status: 'ACTIVE' as const,
+      createdAt: now,
+      updatedAt: now,
+    }));
+  }, [profile]);
+
   const metrics = useMemo(() => {
     if (!data || !profile) return null;
     const base = resolveProfileMetrics({
@@ -202,7 +219,15 @@ export function PlayerProfilePage({
       <PlayerHeader player={data.player} metrics={metrics} portalProfile={data.portalProfile} />
       <PlayerTabs activeTab={activeTab} onTabChange={onTabChange} availableTabs={availableTabs} />
       <div className="fc-profile-tab-panel" role="tabpanel">
-        {activeTab === 'overview' && <OverviewTab data={data} metrics={metrics} />}
+        {activeTab === 'overview' && (
+          <OverviewTab
+            data={data}
+            metrics={metrics}
+            competingSchools={profile.competingSchools}
+            futurecastSummary={profile.futurecastSummary}
+            initialPredictions={initialPredictions}
+          />
+        )}
         {activeTab === 'high-school' && (
           <HighSchoolTab player={data.player} profile={data.highSchoolProfile} />
         )}

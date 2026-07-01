@@ -50,7 +50,10 @@ import {
 } from '../../lib/underclassmen-intel';
 import {
   augmentPlayerFromRecruiting,
+  boardSignalsFromRecruiting,
+  competingSchoolsFromRecruiting,
   enrichRelatedFromRecruiting,
+  futurecastPicksFromRecruiting,
   futurecastSummaryForRecruiting,
 } from './profile-enrich';
 import { relatedPositionsFor } from '../../lib/recruiting-position-buckets';
@@ -88,6 +91,7 @@ export interface FullProfileResponse {
     rankPrior: number | null;
     delta: number;
     volatilityBoost: number;
+    pct?: number | null;
   }>;
   futurecastSummary: {
     ufProbability: number | null;
@@ -138,6 +142,33 @@ async function finalizeProfileResponse(
     (profile.futurecastSummary as Record<string, unknown> | null) ?? null
   );
 
+  const playerId = String(player.id || intelUuidForSlug(slug));
+  let competingSchools = profile.competingSchools ?? [];
+  if (!competingSchools.length && recruiting) {
+    competingSchools = competingSchoolsFromRecruiting(recruiting);
+  }
+
+  let signals = profile.signals ?? [];
+  if (!signals.length && recruiting) {
+    signals = boardSignalsFromRecruiting(playerId, recruiting);
+  }
+
+  let portalPredictions = profile.portalPredictions;
+  if (!portalPredictions && recruiting) {
+    const picks = futurecastPicksFromRecruiting(playerId, recruiting);
+    if (picks.length) {
+      portalPredictions = {
+        predictions: picks,
+        intel: {
+          portalLikelihood: 0,
+          depthChartRisk: 0,
+          snapShareScore: 0,
+          volatility: 0,
+        },
+      };
+    }
+  }
+
   let highSchoolProfile = profile.highSchoolProfile;
   let ufSpecificProfile = profile.ufSpecificProfile;
   if (recruiting && highSchoolProfile) {
@@ -179,6 +210,9 @@ async function finalizeProfileResponse(
     highSchoolProfile,
     ufSpecificProfile,
     related,
+    competingSchools,
+    signals,
+    portalPredictions,
     futurecastSummary: futurecastSummary as FullProfileResponse['futurecastSummary'],
   };
 }
@@ -227,6 +261,7 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
         rankPrior: null,
         delta: 0,
         volatilityBoost: 0,
+        pct: s.pct,
       }));
 
       const mw = intel.earlyMovement.movementWindow;

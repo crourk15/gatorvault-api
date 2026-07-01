@@ -22,19 +22,33 @@ export interface PredictionsPanelProps {
   playerId: string;
   playerSlug?: string;
   classYear?: number;
+  initialPredictions?: PlayerPrediction[];
 }
 
 export function PredictionsPanel({
   playerId,
   playerSlug,
   classYear,
+  initialPredictions,
 }: PredictionsPanelProps): React.ReactElement {
-  const [predictions, setPredictions] = useState<PlayerPrediction[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [predictions, setPredictions] = useState<PlayerPrediction[]>(initialPredictions ?? []);
+  const [loading, setLoading] = useState(!(initialPredictions?.length ?? 0));
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (initialPredictions?.length) {
+      setPredictions(initialPredictions);
+      setLoading(false);
+    }
+  }, [initialPredictions]);
+
+  useEffect(() => {
     let cancelled = false;
+    if (initialPredictions?.length) {
+      return () => {
+        cancelled = true;
+      };
+    }
     setLoading(true);
     setError(null);
 
@@ -88,7 +102,7 @@ export function PredictionsPanel({
     return () => {
       cancelled = true;
     };
-  }, [playerId, playerSlug, classYear]);
+  }, [playerId, playerSlug, classYear, initialPredictions]);
 
   if (loading) return <p className="fc-profile-muted">Loading predictions…</p>;
   if (error) return <p className="fc-profile-muted">{error}</p>;

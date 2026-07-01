@@ -383,23 +383,41 @@ function buildCandidateTopics(signals) {
   return topics.sort((a, b) => b.totalScore - a.totalScore).slice(0, MAX_CANDIDATES);
 }
 
-function writeDraftFromTopic(topic, signals) {
+async function writeDraftFromTopic(topic, signals) {
   if (!topic?.topicKey || !topic?.category) {
     console.warn('[insider-articles] draft skipped — missing topicKey or category');
     return null;
   }
-  const draft = templates.generateDraftForTopic(topic, signals);
-  if (!draft) return null;
 
-  const meta = store.CATEGORIES[draft.category] || store.CATEGORIES.program_pulse;
+  const generator = require('./insider-articles-synthesis');
+  const result = await generator.generateEliteDraftWithRetries(topic, signals);
+  if (!result?.draft) return null;
+
+  if (result.failed || !result.quality?.ok) {
+    console.warn(
+      '[insider-articles] elite draft failed quality after retries:',
+      topic.topicKey,
+      result.quality?.reasons?.join(', ')
+    );
+    if (result.draft) {
+      store.addDraft({
+        ...result.draft,
+        status: 'auto-rejected',
+        qualityReasons: result.quality?.reasons || ['quality_gate'],
+      });
+    }
+    return null;
+  }
+
+  const meta = store.CATEGORIES[result.draft.category] || store.CATEGORIES.program_pulse;
   return store.normalizeArticle({
-    ...draft,
+    ...result.draft,
     byline: meta.byline,
     topicKey: topic.topicKey,
     triggerIntelFingerprints: topic.triggerIntelFingerprints || [],
     triggerIdentityLog: topic.triggerIdentityLog || [],
     status: 'draft',
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   });
 }
 
@@ -492,7 +510,7 @@ async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = 
         console.log('[insider-articles] PGV blocked topic:', topic.topicKey, pgv.reason);
         continue;
       }
-      const draft = writeDraftFromTopic(topic, signals);
+      const draft = await writeDraftFromTopic(topic, signals);
       if (draft) {
         drafts.push(store.addDraft(draft));
       } else {
@@ -556,24 +574,36 @@ async function refreshArticleContent(article) {
       title: article.title,
       classYear: cycle.isRecruitingCategory(article.category) ? cycle.RECRUITING_MIN_CLASS : cycle.programSeasonYear(),
       signals: { roster: signals.roster, type: article.category },
-      sources: article.sources
+      sources: article.sources,
     };
   }
-  const draft = templates.buildArticleDraft(topic, signals);
-  if (!draft) {
+  const generator = require('./insider-articles-synthesis');
+  const result = await generator.generateEliteDraftWithRetries(topic, signals);
+  if (!result?.draft?.body || !result.quality?.ok) {
     return {
       summary: article.summary,
       body: article.body,
       readTimeMinutes: article.readTimeMinutes,
-      sources: article.sources
+      sources: article.sources,
     };
   }
   return {
-    summary: draft.summary,
-    body: draft.body,
-    readTimeMinutes: draft.readTimeMinutes,
-    sources: uniqueSources(topic.sources || article.sources)
+    summary: result.draft.summary,
+    body: result.draft.body,
+    readTimeMinutes: result.draft.readTimeMinutes,
+    sources: result.draft.sources,
+    thesis: result.draft.thesis,
+    insiderAngles: result.draft.insiderAngles,
+    articleType: result.draft.articleType,
   };
+}
+
+async function regenerateAfterReject(draftId) {
+  const rejected = store.getArticleById(draftId);
+  if (!rejected) throw new Error('Draft not found');
+  const signals = await collectSignals();
+  const generator = require('./insider-articles-synthesis');
+  return generator.regenerateAfterReject(rejected, signals);
 }
 
 module.exports = {
@@ -584,5 +614,6 @@ module.exports = {
   buildCandidateTopics,
   writeDraftFromTopic,
   generateWeeklyDrafts,
-  refreshArticleContent
+  refreshArticleContent,
+  regenerateAfterReject,
 };

@@ -56,6 +56,41 @@ function hasRequiredSections(html) {
   );
 }
 
+/** Elite editorial section layout (Insider Editorial Engine). */
+function hasEliteRequiredSections(html) {
+  const t = String(html || '').toLowerCase();
+  const hasThesis = t.includes('thesis');
+  const hasAngles = t.includes('insider angles') || t.includes('insider angle');
+  const hasScheme = t.includes('scheme implications') || t.includes('scheme implication');
+  const hasRoster = t.includes('roster impact');
+  const hasRecruit =
+    t.includes('recruiting and portal') ||
+    t.includes('recruiting & portal') ||
+    t.includes('portal impact');
+  const hasData = t.includes('analytics and data') || t.includes('analytics & data');
+  const hasNext =
+    t.includes("what's next") || t.includes('whats next') || t.includes('what is next');
+  return hasThesis && hasAngles && hasScheme && hasRoster && hasRecruit && hasData && hasNext;
+}
+
+const BANNED_PHRASES = [
+  'in conclusion, it is clear that',
+  'in conclusion, it is evident that',
+  'only time will tell',
+  'at the end of the day',
+  'lorem ipsum',
+  'placeholder text',
+  'todo:',
+  'tbd player',
+  'generic recap',
+  'surface-level summary',
+];
+
+function hasBannedPhrases(html) {
+  const t = String(html || '').toLowerCase();
+  return BANNED_PHRASES.some((p) => t.includes(p));
+}
+
 /** Detect paragraphs that are mostly bold names with no analysis. */
 function isNameOnlyListBody(html) {
   const paragraphs = String(html || '').match(/<p>[\s\S]*?<\/p>/gi) || [];
@@ -100,6 +135,9 @@ module.exports = {
   hasEmptyParentheses,
   wordCount,
   hasRequiredSections,
+  hasEliteRequiredSections,
+  hasBannedPhrases,
+  BANNED_PHRASES,
   isNameOnlyListBody,
   isGenericBoilerplateBody
 };

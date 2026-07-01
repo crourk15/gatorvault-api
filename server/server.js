@@ -183,6 +183,7 @@ const { mountSelfRunnerRoutes } = require('./lib/self-runner/self-runner-routes'
 mountSelfRunnerRoutes(app);
 mountGm2Routes(app);
 require('./lib/insider-articles-routes').mountInsiderArticlesRoutes(app);
+require('./lib/insider-hub-routes').mountInsiderHubRoutes(app);
 mountVaultGradeAdminRoutes(app);
 mountPlayerIntelEntryRoutes(app);
 try {

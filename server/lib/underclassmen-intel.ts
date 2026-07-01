@@ -169,14 +169,47 @@ function synthesizeMovementHistory(
   return points;
 }
 
+function parseRecruitingUfPct(raw: unknown): number | null {
+  if (raw == null || !Number.isFinite(Number(raw))) return null;
+  const num = Number(raw);
+  const pct = num <= 1 ? num * 100 : num;
+  return Math.min(100, Math.max(0, Math.round(pct * 10) / 10));
+}
+
+function competingSchoolsFromRecruitingRecord(
+  recruiting: Record<string, unknown> | null | undefined
+): Array<{ name: string; pct: number }> {
+  const competitors = (recruiting?.competitors ?? []) as Array<{ school?: string; score?: number }>;
+  return competitors
+    .filter((c) => c?.school && !/\bflorida\b|\bgators\b|\buf\b/i.test(String(c.school)))
+    .map((c) => ({
+      name: String(c.school),
+      pct: Math.min(100, Math.max(0, Math.round(Number(c.score) * 10) / 10)),
+    }))
+    .filter((c) => c.pct > 0)
+    .sort((a, b) => b.pct - a.pct);
+}
+
 function buildEarlySignals(
   intelUuid: string,
   player: FutureCastBoardPlayer,
   tier: 'target' | 'watchlist',
-  entry?: EarlyWatchEntry
+  entry?: EarlyWatchEntry,
+  staffNote?: string | null
 ): UnderclassmenEarlySignal[] {
   const now = new Date().toISOString();
   const signals: UnderclassmenEarlySignal[] = [];
+
+  const note = String(staffNote || '').trim();
+  if (note) {
+    signals.push({
+      id: `${intelUuid}-staff-note`,
+      playerId: intelUuid,
+      signalType: 'EVALUATION_NOTE',
+      signalValue: { note, source: 'recruiting-store' },
+      createdAt: now,
+    });
+  }
 
   const discoveryScore = entry?.discoveryScore ?? null;
   if (discoveryScore != null) {
@@ -352,6 +385,23 @@ async function buildSeedBoardPlayerFromRecruiting(
     .trim()
     .toUpperCase();
 
+  const recruitingRecord = recruiting as Record<string, unknown> | null | undefined;
+  const competingSchools =
+    entry?.competingSchools?.length
+      ? entry.competingSchools
+      : competingSchoolsFromRecruitingRecord(recruitingRecord);
+  const ufConfidence =
+    parseRecruitingUfPct(recruiting?.ufProbability ?? recruiting?.ufRpmPct) ??
+    parseRecruitingUfPct(entry?.ufProbability) ??
+    null;
+  const fitScore =
+    recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
+      ? Number(recruiting.fitScore)
+      : entry?.fitScore != null && Number(entry.fitScore) > 0
+        ? Number(entry.fitScore)
+        : null;
+  const category = String(recruiting?.category || '').toLowerCase();
+
   return {
     id: intelUuidForSlug(slug),
     slug,
@@ -366,14 +416,14 @@ async function buildSeedBoardPlayerFromRecruiting(
     natlRank: recruiting?.natlRank ?? (board?.natlRank as number) ?? null,
     posRank: recruiting?.posRank ?? (board?.posRank as number) ?? null,
     stateRank: recruiting?.stateRank ?? (board?.stateRank as number) ?? null,
-    ufConfidence: null,
-    fitScore: null,
+    ufConfidence,
+    fitScore,
     trendDelta7d: null,
     volatility7d: 0,
-    priority: 'low',
+    priority: category === 'target' || entry?.tier === 'target' ? 'high' : 'low',
     committedTo: recruiting?.committedTo ?? (board?.committedTo as string) ?? null,
-    predictors: [],
-    competingSchools: [],
+    predictors: competingSchools.map((s) => ({ name: s.name, score: s.pct })),
+    competingSchools,
   };
 }
 
@@ -431,6 +481,48 @@ function buildRelatedIntel(
     }));
 }
 
+function enrichPlayerFromRecruitingStore(
+  player: FutureCastBoardPlayer,
+  recruiting: Awaited<ReturnType<typeof getRecruitingPlayerBySlug>>,
+  entry?: EarlyWatchEntry
+): FutureCastBoardPlayer {
+  const recruitingRecord = recruiting as Record<string, unknown> | null | undefined;
+  const storeCompete = entry?.competingSchools?.length
+    ? entry.competingSchools
+    : competingSchoolsFromRecruitingRecord(recruitingRecord);
+  const storeUf =
+    parseRecruitingUfPct(recruiting?.ufProbability ?? recruiting?.ufRpmPct) ??
+    parseRecruitingUfPct(entry?.ufProbability) ??
+    null;
+  const storeFit =
+    recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
+      ? Number(recruiting.fitScore)
+      : entry?.fitScore != null && Number(entry.fitScore) > 0
+        ? Number(entry.fitScore)
+        : null;
+
+  const competingSchools =
+    player.competingSchools?.length ? player.competingSchools : storeCompete;
+  const ufConfidence = player.ufConfidence ?? storeUf ?? null;
+  const predictors = player.predictors?.length
+    ? player.predictors
+    : competingSchools.map((s) => ({ name: s.name, score: s.pct }));
+
+  return {
+    ...player,
+    ufConfidence,
+    fitScore: player.fitScore ?? storeFit,
+    competingSchools,
+    predictors,
+    priority:
+      player.priority !== 'low' || String(recruiting?.category || '').toLowerCase() === 'target'
+        ? player.priority === 'low' && String(recruiting?.category || '').toLowerCase() === 'target'
+          ? 'high'
+          : player.priority
+        : player.priority,
+  };
+}
+
 export async function buildUnderclassmenIntelForSlug(
   slug: string
 ): Promise<UnderclassmenIntelBundle | null> {
@@ -461,6 +553,8 @@ export async function buildUnderclassmenIntelForSlug(
   }
   if (!player) return null;
 
+  const recruiting = await getRecruitingPlayerBySlug(normalized);
+  player = enrichPlayerFromRecruitingStore(player, recruiting, entry);
   const intelUuid = intelUuidForSlug(normalized);
   const tier: 'target' | 'watchlist' =
     classYear === 2030 || entry?.tier === 'watchlist' ? 'watchlist' : 'target';
@@ -517,7 +611,13 @@ export async function buildUnderclassmenIntelForSlug(
     slug: normalized,
     classYear: player.classYear,
     earlyIntel,
-    earlySignals: buildEarlySignals(intelUuid, player, tier, entry),
+    earlySignals: buildEarlySignals(
+      intelUuid,
+      player,
+      tier,
+      entry,
+      recruiting?.profileNote ?? recruiting?.skinny ?? null
+    ),
     earlyMovement,
     earlyFutureCastPicks: buildFutureCastPicks(intelUuid, player),
     relatedIntel: buildRelatedIntel(normalized, classYear, player.position, enriched),

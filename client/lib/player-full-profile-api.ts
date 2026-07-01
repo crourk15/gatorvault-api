@@ -28,6 +28,7 @@ export type FullProfileCompetingSchool = {
   rankPrior: number | null;
   delta: number;
   volatilityBoost: number;
+  pct?: number | null;
 };
 
 export type FullProfileFuturecastSummary = {

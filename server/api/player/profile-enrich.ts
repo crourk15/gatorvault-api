@@ -112,6 +112,100 @@ export async function enrichRelatedFromRecruiting(
   return out;
 }
 
+export function competingSchoolsFromRecruiting(
+  recruiting: Awaited<ReturnType<typeof getRecruitingPlayerBySlug>>
+): Array<{
+  school: string;
+  rankNow: number;
+  rankPrior: number | null;
+  delta: number;
+  volatilityBoost: number;
+}> {
+  if (!recruiting) return [];
+  const competitors = (recruiting as { competitors?: Array<{ school?: string; score?: number }> })
+    .competitors;
+  if (!Array.isArray(competitors) || !competitors.length) return [];
+
+  return competitors
+    .filter((c) => c?.school && !isFloridaSchool(c.school))
+    .sort((a, b) => Number(b.score ?? 0) - Number(a.score ?? 0))
+    .slice(0, 8)
+    .map((c, i) => ({
+      school: String(c.school),
+      rankNow: i + 1,
+      rankPrior: null,
+      delta: 0,
+      volatilityBoost: 0,
+      pct: Math.round(Number(c.score) * 10) / 10,
+    }));
+}
+
+export function boardSignalsFromRecruiting(
+  playerId: string,
+  recruiting: Awaited<ReturnType<typeof getRecruitingPlayerBySlug>>
+): Record<string, unknown>[] {
+  if (!recruiting) return [];
+  const now = new Date().toISOString();
+  const signals: Record<string, unknown>[] = [];
+  const note = String(recruiting.profileNote ?? recruiting.skinny ?? '').trim();
+  if (note) {
+    signals.push({
+      id: `${playerId}-staff-note`,
+      playerId,
+      signalType: 'EVALUATION_NOTE',
+      signalValue: { note, source: 'recruiting-store' },
+      createdAt: now,
+    });
+  }
+  const competitors = (recruiting as { competitors?: Array<{ school?: string; score?: number; source?: string }> })
+    .competitors;
+  for (const c of competitors ?? []) {
+    if (!c?.school || isFloridaSchool(c.school)) continue;
+    const pct = Number(c.score);
+    if (!Number.isFinite(pct) || pct <= 0) continue;
+    signals.push({
+      id: `${playerId}-on3-${String(c.school).toLowerCase().replace(/\s+/g, '-')}`,
+      playerId,
+      signalType: 'OFFER',
+      signalValue: {
+        school: c.school,
+        interestPct: Math.round(pct * 10) / 10,
+        source: c.source ?? 'on3',
+      },
+      createdAt: now,
+    });
+  }
+  return signals;
+}
+
+export function futurecastPicksFromRecruiting(
+  playerId: string,
+  recruiting: Awaited<ReturnType<typeof getRecruitingPlayerBySlug>>
+): Array<{ school: string; score: number }> {
+  if (!recruiting) return [];
+  const picks: Array<{ school: string; score: number; id: string }> = [];
+  const ufCommit = isFloridaSchool(recruiting.committedTo);
+  const ufPct = ufCommit ? 100 : parseUfPct(recruiting.ufProbability ?? recruiting.ufRpmPct);
+  if (ufPct > 0) {
+    picks.push({ id: `${playerId}-pick-florida`, school: 'Florida', score: ufPct });
+  }
+  const competitors = (recruiting as { competitors?: Array<{ school?: string; score?: number }> })
+    .competitors;
+  for (const c of competitors ?? []) {
+    if (!c?.school || isFloridaSchool(c.school)) continue;
+    const score = Number(c.score);
+    if (!Number.isFinite(score) || score <= 0) continue;
+    picks.push({
+      id: `${playerId}-pick-${String(c.school).toLowerCase().replace(/\s+/g, '-')}`,
+      school: String(c.school),
+      score: Math.round(score * 10) / 10,
+    });
+  }
+  return picks
+    .sort((a, b) => b.score - a.score)
+    .map(({ school, score }) => ({ school, score }));
+}
+
 export function futurecastSummaryForRecruiting(
   player: Record<string, unknown>,
   recruiting: Awaited<ReturnType<typeof getRecruitingPlayerBySlug>>,
@@ -121,6 +215,13 @@ export function futurecastSummaryForRecruiting(
   if (!recruiting) return null;
   const ufCommit = isFloridaSchool(recruiting.committedTo);
   const pct = parseUfPct(recruiting.ufProbability ?? recruiting.ufRpmPct);
+  const competitors = (recruiting as { competitors?: Array<{ school?: string; score?: number }> })
+    .competitors;
+  const hasBoard = Array.isArray(competitors) && competitors.some((c) => c?.school && Number(c.score) > 0);
+  const topPeer = (competitors ?? [])
+    .filter((c) => c?.school && !isFloridaSchool(c.school) && Number(c.score) > 0)
+    .sort((a, b) => Number(b.score) - Number(a.score))[0];
+
   if (ufCommit) {
     return {
       ufProbability: 100,
@@ -130,12 +231,12 @@ export function futurecastSummaryForRecruiting(
       volatilityScore: 0,
     };
   }
-  if (pct >= 10) {
+  if (pct > 0 || hasBoard) {
     return {
-      ufProbability: pct,
-      predictedSchool: null,
+      ufProbability: pct > 0 ? pct : null,
+      predictedSchool: topPeer?.school ? String(topPeer.school) : null,
       movementDelta: null,
-      fitScore: player.ufFitScore ?? null,
+      fitScore: player.ufFitScore ?? recruiting.fitScore ?? null,
       volatilityScore: 0,
     };
   }

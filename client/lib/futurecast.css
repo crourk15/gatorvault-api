@@ -655,6 +655,37 @@
   text-align: right;
 }
 
+.fc-prediction-item__bar--uf {
+  background: linear-gradient(90deg, #003087, #fa4616);
+}
+
+.fc-prediction-item__bar--peer {
+  background: linear-gradient(90deg, #64748b, #94a3b8);
+}
+
+.fc-prediction-item__bar--other {
+  background: rgba(148, 163, 184, 0.65);
+}
+
+.fc-board-intel__lead {
+  margin: 0 0 0.75rem;
+  font-size: 0.9375rem;
+  color: #e2e8f0;
+}
+
+.fc-board-intel__note {
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.75rem;
+  border-left: 3px solid #fa4616;
+  background: rgba(0, 48, 135, 0.15);
+  font-size: 0.875rem;
+  color: #cbd5e1;
+}
+
+.fc-board-intel__list {
+  margin-top: 0.25rem;
+}
+
 /* FutureCast Picks feed */
 .fc-predictions-grid {
   display: grid;

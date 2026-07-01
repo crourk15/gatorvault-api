@@ -24,13 +24,25 @@ function profileNotesDeduped(
 }
 import { RelatedPlayers } from './RelatedPlayers';
 import { PredictionsPanel } from './PredictionsPanel';
+import { BoardIntelPanel } from './BoardIntelPanel';
+import type { FullProfileCompetingSchool, FullProfileFuturecastSummary } from '@/lib/player-full-profile-api';
+import type { PlayerPrediction } from '@/lib/predictions-api';
 
 export interface OverviewTabProps {
   data: PlayerProfileBundle;
   metrics: PlayerMetrics;
+  competingSchools?: FullProfileCompetingSchool[];
+  futurecastSummary?: FullProfileFuturecastSummary | null;
+  initialPredictions?: PlayerPrediction[];
 }
 
-export function OverviewTab({ data, metrics }: OverviewTabProps): React.ReactElement {
+export function OverviewTab({
+  data,
+  metrics,
+  competingSchools = [],
+  futurecastSummary = null,
+  initialPredictions,
+}: OverviewTabProps): React.ReactElement {
   const { player, signals, related, highSchoolProfile, collegeProfile, portalProfile, ufSpecificProfile } =
     data;
   const recentSignals = dedupeDiscoverySignals(signals)
@@ -40,6 +52,9 @@ export function OverviewTab({ data, metrics }: OverviewTabProps): React.ReactEle
     highSchoolProfile?.recruitingNotes,
     ufSpecificProfile?.evaluationNotes
   );
+  const staffNoteInBoard =
+    !!notes.recruitingNotes &&
+    ((futurecastSummary?.ufProbability ?? 0) > 0 || competingSchools.some((c) => (c.pct ?? 0) > 0));
 
   return (
     <div className="fc-profile-panel" data-testid="tab-overview">
@@ -69,9 +84,21 @@ export function OverviewTab({ data, metrics }: OverviewTabProps): React.ReactEle
         <p className="fc-profile-muted">{signalSummaryText(signals)}</p>
       </section>
 
+      <BoardIntelPanel
+        ufProbability={futurecastSummary?.ufProbability ?? null}
+        competingSchools={competingSchools}
+        futurecastSummary={futurecastSummary}
+        staffNote={notes.recruitingNotes}
+      />
+
       <section className="fc-profile-section">
         <h2>FutureCast Picks</h2>
-        <PredictionsPanel playerId={player.id} playerSlug={player.slug} classYear={player.classYear} />
+        <PredictionsPanel
+          playerId={player.id}
+          playerSlug={player.slug}
+          classYear={player.classYear}
+          initialPredictions={initialPredictions}
+        />
       </section>
 
       {recentSignals.length > 0 && (
@@ -91,10 +118,10 @@ export function OverviewTab({ data, metrics }: OverviewTabProps): React.ReactEle
         </section>
       )}
 
-      {(notes.recruitingNotes || notes.evaluationNotes) && (
+      {(notes.recruitingNotes && !staffNoteInBoard) || notes.evaluationNotes ? (
         <section className="fc-profile-section">
           <h2>Notes</h2>
-          {notes.recruitingNotes ? <p>{notes.recruitingNotes}</p> : null}
+          {notes.recruitingNotes && !staffNoteInBoard ? <p>{notes.recruitingNotes}</p> : null}
           {notes.evaluationNotes ? (
             <p className={notes.recruitingNotes ? 'fc-profile-muted' : undefined}>
               {notes.evaluationNotes}

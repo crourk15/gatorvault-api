@@ -309,6 +309,8 @@ module.exports = {
   seedFromIndexHtml,
   loadPublishedArticles,
   loadPublishedStorylines,
+  savePublishedArticles,
+  savePublishedStorylines,
   getPublishedFeed,
   getArticleById,
   upsertDraft,

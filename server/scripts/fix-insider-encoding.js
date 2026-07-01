@@ -1,0 +1,3 @@
+const fs=require("fs");const path=require("path");const dir=path.join(__dirname,"..","lib");
+const names=["insider-articles-context.js","insider-articles-angles.js","insider-articles-prompt.js","insider-articles-llm.js"];
+for(const name of names){const p=path.join(dir,name);let text=fs.readFileSync(p,"utf16le").replace(/^\uFEFF/,"");if(name.includes("angles")){text=text.replace(/\n  Analytics: \[/,"\n  'Analytics': [");text=text.replace(/\n  Insider: \[/,"\n  'Insider': [");}fs.writeFileSync(p,text,"utf8");const b=fs.readFileSync(p);console.log(name,b[0],b[1],b[2]);}

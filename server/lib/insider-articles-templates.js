@@ -4,8 +4,9 @@
 const cycle = require('./insider-articles-cycle');
 const sanitize = require('./insider-articles-sanitize');
 
-const MIN_WORDS = 280;
-const TARGET_WORDS = 400;
+const MIN_WORDS = 700;
+const TARGET_WORDS = 900;
+const MAX_WORDS = 1200;
 
 function esc(text) {
   return sanitize
@@ -42,8 +43,10 @@ function validateDraftQuality(draft) {
   const reasons = [];
 
   if (words < MIN_WORDS) reasons.push(`word_count_${words}`);
+  if (words > MAX_WORDS + 200) reasons.push(`word_count_high_${words}`);
   if (sanitize.hasEmptyParentheses(body)) reasons.push('empty_parentheses');
-  if (!sanitize.hasRequiredSections(body)) reasons.push('missing_sections');
+  if (!sanitize.hasEliteRequiredSections(body)) reasons.push('missing_elite_sections');
+  if (sanitize.hasBannedPhrases(body)) reasons.push('banned_phrase');
   if (sanitize.isNameOnlyListBody(body)) reasons.push('name_only_list');
   if (sanitize.isGenericBoilerplateBody(body)) reasons.push('generic_boilerplate');
 
@@ -52,16 +55,22 @@ function validateDraftQuality(draft) {
     if (yr != null && yr < cycle.RECRUITING_MIN_CLASS) reasons.push('recruiting_cycle_violation');
   }
 
-  const analysisBlock = body.match(/<h2>Analysis<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] || '';
+  const angles = draft.insiderAngles || [];
+  if (angles.length < 3) reasons.push('insufficient_insider_angles');
+
+  const analysisBlock =
+    body.match(/<h2>Insider Angles<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] ||
+    body.match(/<h2>Analysis<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] ||
+    '';
   const analysisParas = (analysisBlock.match(/<p>/gi) || []).length;
-  if (analysisParas < 2) reasons.push('thin_analysis');
+  if (analysisParas < 3) reasons.push('thin_analysis');
 
   return {
     ok: reasons.length === 0,
     reasons,
     words,
     minWords: MIN_WORDS,
-    targetWords: TARGET_WORDS
+    targetWords: TARGET_WORDS,
   };
 }
 
@@ -78,6 +87,7 @@ function generateDraftForTopic(topic, signals) {
 module.exports = {
   MIN_WORDS,
   TARGET_WORDS,
+  MAX_WORDS,
   esc,
   section,
   playerLine,

@@ -144,11 +144,18 @@ function mountInsiderArticlesRoutes(app) {
     }
   });
 
-  app.post('/api/articles/drafts/:id/reject', (req, res) => {
+  app.post('/api/articles/drafts/:id/reject', async (req, res) => {
     if (!requireAdmin(req, res)) return;
     try {
-      const article = store.rejectDraft(req.params.id);
-      return res.json({ ok: true, article });
+      const article = store.rejectDraft(req.params.id, {
+        reason: req.body?.reason || 'manual',
+        auto: false,
+      });
+      let regenerated = null;
+      if (req.body?.regenerate !== false) {
+        regenerated = await engine.regenerateAfterReject(req.params.id);
+      }
+      return res.json({ ok: true, article, regenerated });
     } catch (err) {
       return res.status(400).json({ ok: false, error: err.message });
     }
