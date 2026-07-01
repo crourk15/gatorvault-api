@@ -96,8 +96,30 @@ assert('extracts Zyon Robinson from vague Bender tweet', benderZyonParsed && ben
 assert('uses On3 article URL for intel link', benderZyonParsed && benderZyonParsed.articleUrl === zyonUrl);
 assert('infers 2028 class year from Bender tweet', benderZyonParsed && benderZyonParsed.classYear === 2028);
 
-if (process.exitCode) {
-  console.error('\nBeat writer ingest tests failed.');
-} else {
+(async () => {
+  require('../lib/autoposter/uf-premium-mode').applyToProcessEnv();
+  const marquisPost = {
+    handle: 'Blake_Alderman',
+    writerName: 'Blake Alderman',
+    text:
+      "NEW: Florida surprised Marquis Evans more than any other official visit — but Auburn hold the edge on the RPM with his announcement coming at 11:35 a.m. ET today. Here's everything you need to know ahead of the announcement Intel: https://on3.com/teams/florida-gators/news/previewing-decision-day-for-edge-target-marquis-evans/",
+    publishedAt: new Date().toISOString(),
+    url: 'https://x.com/Blake_Alderman/status/marquis-test'
+  };
+  const filters = require('../lib/beat-writer-filters');
+  assert('Marquis tweet trusted writer', filters.isTrustedBeatWriter(marquisPost));
+  assert('Marquis tweet passes UF filter', filters.shouldIncludeBeatPost(marquisPost));
+  const prefilter = require('../lib/beat-intel-prefilter');
+  const guarded = await prefilter.guardBeatPost(marquisPost);
+  assert('Marquis tweet prefilter eligible', guarded.eligible !== false);
+  const fill = require('../lib/x-autoposter-fill');
+  const news = await fill.buildNewsFromBeatPost(marquisPost);
+  assert('Marquis beat builds news', news && news.text && !news.skipReason);
+  if (news?.text) console.log('Marquis preview:', String(news.text).slice(0, 220));
+})().finally(() => {
+  if (process.exitCode) {
+    console.error('\nBeat writer ingest tests failed.');
+    process.exit(1);
+  }
   console.log('\nAll beat writer ingest tests passed.');
-}
+});

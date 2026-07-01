@@ -424,13 +424,16 @@ async function buildNewsFromBeatPost(post) {
   const isTeamEvent = guarded.triggerType === 'team_event' || built.triggerType === 'team_event';
   const fpType = isProgramNews ? 'program_news' : isTeamEvent ? 'team_event' : 'beat_intel';
   const fp = intelFingerprint(post.id || post.url, fpType, post.publishedAt);
+  const isDecisionDay =
+    built?.validationMeta?.eventType === 'decision_day' ||
+    /decision day|announcement coming|approaches a commitment decision/i.test(String(post.text || ''));
   return attachNewsMeta(
     {
       text: built.text,
       category: 'news',
       topic: isProgramNews ? 'program' : isTeamEvent ? 'team' : 'recruiting',
-      urgencyLabel: isProgramNews ? 'breaking' : 'major_beat',
-      postUrgency: isProgramNews ? 'breaking' : null,
+      urgencyLabel: isProgramNews || isDecisionDay ? 'breaking' : 'major_beat',
+      postUrgency: isProgramNews || isDecisionDay ? 'breaking' : null,
       triggerType: isProgramNews ? 'program_news' : isTeamEvent ? 'team_event' : null,
       teamEventType: guarded.teamEventType || built.teamEventType || null,
       programNewsType: guarded.programNewsType || built.programNewsType || null,

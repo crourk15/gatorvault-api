@@ -157,6 +157,19 @@ function parseOn3NewsArticleSlug(pathSlug) {
     };
   }
 
+  m = slug.match(/\bfor-(edge|wr|qb|rb|te|ol|ot|og|c|dl|dt|de|lb|cb|s|ath|k|p)-target-([a-z0-9-]+)$/i);
+  if (m) {
+    const playerSlug = m[2].replace(/-\d+$/, '');
+    if (!isLikelyPersonSlug(playerSlug)) return null;
+    return {
+      playerSlug,
+      playerName: slugToPlayerName(playerSlug),
+      stars: null,
+      pos: m[1].toUpperCase(),
+      classYear: null,
+    };
+  }
+
   return null;
 }
 

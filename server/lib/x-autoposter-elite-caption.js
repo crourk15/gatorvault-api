@@ -20,6 +20,17 @@ function competingSchoolsFromBeat(beatText) {
   return [];
 }
 
+function announcementTimeFromBeat(beatText) {
+  const m = String(beatText || '').match(
+    /announcement coming at ([\d:.]+(?:\s*[ap]\.?m\.?)?(?:\s*et)?)/i
+  );
+  return m ? m[1].replace(/\s+/g, ' ').trim() : null;
+}
+
+function rpmLeaderFromBeat(beatText) {
+  return researchEngine.rpmLeaderFromBeatText?.(beatText) || null;
+}
+
 /** GV-native angles from beat signal — not beat paraphrase. */
 function pickBeatIntelAngle(research, beatText) {
   const beat = String(beatText || '').toLowerCase();
@@ -28,6 +39,38 @@ function pickBeatIntelAngle(research, beatText) {
   const pos = String(research.player?.pos || research.intel?.pos || '').toUpperCase();
   const compFallback = 'Staff contact has picked up as UF pushes in this cycle.';
   const compLine = researchEngine.buildRpmAwareCompLine(research, { fallback: compFallback });
+  const rpmLeader = rpmLeaderFromBeat(beatText);
+  const announceAt = announcementTimeFromBeat(beatText);
+
+  if (
+    /\bsurprised\b/.test(beat) &&
+    /\bofficial visit\b/.test(beat) &&
+    (/\brpm\b/.test(beat) || /\bannouncement\b/.test(beat))
+  ) {
+    return {
+      context: `${fn}'s Gainesville OV stood out — Florida made a real push in the decision window.`,
+      insider: announceAt
+        ? `${rpmLeader || 'Auburn'} holds the On3 RPM edge — announcement at ${announceAt}.`
+        : compLine || `${rpmLeader || 'Auburn'} holds the On3 RPM edge — UF is in the mix at the finish.`,
+      _beatIntel: true
+    };
+  }
+
+  if (/\bdecision day\b|announcement (?:coming|at|today)/.test(beat)) {
+    return {
+      context: `${fn} is at the decision window${announceAt ? ` — announcement at ${announceAt}` : ' today'}.`,
+      insider: compLine || `${rpmLeader || 'The field'} leads On3 RPM — UF made a late push worth tracking.`,
+      _beatIntel: true
+    };
+  }
+
+  if (/\bhold(?:s)? the edge on the rpm\b/.test(beat) && rpmLeader) {
+    return {
+      context: `${fn} is at the finish line with Florida in the mix.`,
+      insider: compLine || `${rpmLeader} holds the On3 RPM edge — UF is pushing for the flip.`,
+      _beatIntel: true
+    };
+  }
 
   if (
     (/\bballinger\b|jaxballinger/.test(beat)) &&
@@ -127,6 +170,14 @@ function pickEventIntelAngle(research) {
           : `${fn} picks up fresh Crystal Ball momentum toward Florida.`,
         insider: researchEngine.buildRpmAwareCompLine(research, {
           fallback: 'Analyst input is pushing Florida up the board, not just holding steady.'
+        }),
+        _eventIntel: true
+      };
+    case 'decision_day':
+      return {
+        context: `${fn} is at the decision window with Florida still in the mix.`,
+        insider: researchEngine.buildRpmAwareCompLine(research, {
+          fallback: 'Board intel points to a finish-line push — not a done deal for UF yet.'
         }),
         _eventIntel: true
       };

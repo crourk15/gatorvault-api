@@ -227,26 +227,81 @@ function appendSite(text, meta = {}) {
   return withUrl.length <= 280 ? withUrl : template.enforceTweetLimit(body, 280, meta);
 }
 
+function stripUrlsForBeatParse(text) {
+  return String(text || '')
+    .replace(/https?:\/\/\S+/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function detectBeatNewsEvent(text) {
-  const t = String(text || '');
+  const t = stripUrlsForBeatParse(text);
   if (/cancel(?:led|s)?\s+(?:his|her|their)?\s*(?:ov|official visit).*?(?:florida|gators|\buf\b)/i.test(t)) {
     const next = t.match(/visit\s+((?:South\s+Carolina|North\s+Carolina|Ole\s+Miss|[A-Z][a-z]+(?:\s+State)?))/i);
     const nextPart = next?.[1] ? ` and will visit ${next[1]} this weekend` : '';
     return `cancelled his OV to Florida${nextPart}`;
   }
-  if (/\b(commit(?:ted|ment)?|flip(?:ped)?)\b.*\b(florida|gators|\buf\b)/i.test(t)) return 'committed to Florida';
+  if (/\b(?:committed|commits)\b.*\b(florida|gators|\buf\b)/i.test(t)) return 'committed to Florida';
+  if (/\bflip(?:ped)?\b.*\b(florida|gators|\buf\b)/i.test(t)) return 'committed to Florida';
   if (/\bdecommit/i.test(t)) {
     const m = t.match(/decommitted from ([A-Za-z0-9 .]+)/i);
     return m ? `decommitted from ${m[1].trim()}` : 'decommitted';
   }
   if (/\bportal\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'entered the transfer portal (UF target)';
   if (/\bportal\b/i.test(t)) return 'entered the transfer portal';
+  if (
+    /\bannouncement (?:coming|at|today|this morning|this afternoon)|decision day|deciding (?:today|at|between)|commits? at \d/i.test(
+      t
+    )
+  ) {
+    return 'approaches a commitment decision with UF in the mix';
+  }
+  if (/\bsurprised\b.*\bofficial visit\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) {
+    return 'had his Gainesville OV stand out among his official visits';
+  }
   if (/\b(official visit|\bov\b).*?(?:florida|gators|gainesville|\buf\b)/i.test(t)) return 'scheduled an OV to Florida';
   if (/\b(unofficial visit|\buv\b).*?(?:florida|gators|gainesville|\buf\b)/i.test(t)) return 'scheduled a visit to Gainesville';
   if (/\boffer(?:ed|s)?\b.*\b(florida|gators|\buf\b)/i.test(t)) return 'received an offer from UF';
-  if (isPredictionMachinePost(t) || /\brpm\b/i.test(t)) return 'picked up a UF prediction';
+  if (isPredictionMachinePost(t)) return 'picked up a UF prediction';
+  if (/\brpm\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'picked up a UF prediction';
   if (/\bprediction\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'picked up a UF prediction';
   return null;
+}
+
+function resolveBeatIntelEventType(text, newsEvent) {
+  const t = stripUrlsForBeatParse(text);
+  if (!newsEvent) return 'update';
+  if (/decision|announcement|commits? at/i.test(newsEvent) || /decision day|announcement coming/i.test(t)) {
+    return 'decision_day';
+  }
+  if (/surprised|ov stand out|official visit/i.test(newsEvent) && /\bsurprised\b/i.test(t)) {
+    return 'official_visit';
+  }
+  if (/picked up a uf prediction|\brpm\b/i.test(String(newsEvent).toLowerCase())) return 'prediction';
+  if (/official visit|\bov\b/i.test(newsEvent)) return 'official_visit';
+  return 'beat_intel';
+}
+
+function beatIntelFromPost(post, { playerName, playerSlug, text, analyst } = {}) {
+  const on3Discovery = require('./on3-recruit-discovery');
+  const fromUrl = on3Discovery.parseOn3BeatUrlIdentity(text, post?.url || null);
+  const ts = post?.publishedAt || post?.fetchedAt || post?.createdAt || new Date().toISOString();
+  const newsEvent = detectBeatNewsEvent(text);
+  return {
+    timestamp: ts,
+    sourceEventCreatedAt: post?.publishedAt || post?.fetchedAt || ts,
+    publishedAt: post?.publishedAt || null,
+    sourceHandle: post?.handle || null,
+    articleUrl: fromUrl?.on3ArticleUrl || post?.url || null,
+    playerName: playerName || fromUrl?.playerName || null,
+    playerSlug: playerSlug || fromUrl?.playerSlug || null,
+    pos: fromUrl?.pos || null,
+    classYear: fromUrl?.classYear || null,
+    eventType: resolveBeatIntelEventType(text, newsEvent),
+    sourceEventType: newsEvent ? 'beat_intel' : 'update',
+    source: analyst || post?.writerName || post?.handle || 'Beat writer',
+    detail: text
+  };
 }
 
 function identitySkipFromEnrichment(enrichment, { playerName, playerSlug, triggerPhrase, fingerprint } = {}) {
@@ -321,6 +376,7 @@ async function buildPredictionMachineCopyAsync(post) {
     playerName,
     patch: { name: playerName, ...extractVerifiedPatchFromBeatText(text) },
     intel: {
+      ...beatIntelFromPost(post, { playerName, playerSlug: guarded.playerSlug, text }),
       eventType: 'prediction',
       playerName,
       analystName: post.writerName || post.outlet || post.handle || 'Insider',
@@ -456,7 +512,14 @@ async function buildBeatIntelCopyAsync(post) {
     source: analyst,
     newsEvent,
     playerName,
+    playerSlug: guarded.playerSlug || null,
     beatText: text,
+    intel: beatIntelFromPost(post, {
+      playerName,
+      playerSlug: guarded.playerSlug || null,
+      text,
+      analyst
+    }),
     patch: { name: playerName, ...extractVerifiedPatchFromBeatText(text) }
   });
   return newsPayloadFromBuilt(built);
@@ -714,6 +777,7 @@ function isBrokenCopy(text, meta = {}) {
     beatText &&
     !meta.validationMeta?.verifiedCommit &&
     !meta.verifiedCommit &&
+    !meta.validationMeta?.eliteCompose &&
     validation.hasExcessiveSourceOverlap(t, beatText)
   ) {
     return true;
@@ -749,5 +813,7 @@ module.exports = {
   buildVerifiedCommitEventCopy,
   buildPortalHeadlinerCopyAsync,
   buildArticleCopyAsync,
-  isBrokenCopy
+  isBrokenCopy,
+  detectBeatNewsEvent,
+  stripUrlsForBeatParse
 };

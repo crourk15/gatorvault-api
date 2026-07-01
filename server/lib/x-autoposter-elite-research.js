@@ -91,6 +91,13 @@ function resolveOn3Board(research = {}) {
   if (!competitors.length && research.on3TopTeams?.length) {
     competitors = competitorsFromOn3TopTeams(research.on3TopTeams, classYear);
   }
+  if (!competitors.length) {
+    const beatSources = [research.intel?.detail, ...(research.beatSnippets || [])].filter(Boolean);
+    for (const snippet of beatSources) {
+      competitors = competitorsFromBeatText(snippet);
+      if (competitors.length) break;
+    }
+  }
   let ufPct = ufPctFromPlayerBoard(player, research.predictions);
   if ((ufPct == null || ufPct <= 0) && research.on3TopTeams?.length) {
     ufPct = ufPctFromOn3TopTeams(research.on3TopTeams, classYear);
@@ -120,6 +127,9 @@ function buildRpmAwareCompLine(research, { fallback = null } = {}) {
 
   if (leader && second) {
     return `${leader.school} and ${second.school} top On3 — UF is active in the mix.`;
+  }
+  if (leader && leaderPct == null) {
+    return `${leader.school} holds the On3 RPM edge — UF is pushing at the finish line.`;
   }
   if (leader) {
     return `${leader.school} leads On3 — UF staff is still pushing for movement.`;
@@ -158,11 +168,37 @@ function extractTopSchools(intelRows, player, limit = 4) {
     .slice(0, limit);
 }
 
+function stripUrlsForBeatParse(text) {
+  return String(text || '')
+    .replace(/https?:\/\/\S+/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function rpmLeaderFromBeatText(text) {
+  const m = String(text || '').match(/\b([A-Z][a-z]+(?:\s+State)?)\s+hold(?:s)?\s+the\s+edge\s+on\s+the\s+rpm\b/i);
+  return m ? m[1].trim() : null;
+}
+
+function competitorsFromBeatText(text, limit = 4) {
+  const leader = rpmLeaderFromBeatText(text);
+  if (!leader) return [];
+  return [{ school: leader, pct: null }].slice(0, limit);
+}
+
 function inferEventTypeFromText(text) {
-  const t = String(text || '');
+  const t = stripUrlsForBeatParse(text);
   if (/decommit|decommitted|opened recruitment/i.test(t)) return 'decommit';
   if (/flip(?:ped)? to florida|flipped to uf/i.test(t)) return 'flip';
-  if (/commit(?:ted|ment)?.*\b(florida|gators|\buf\b)/i.test(t)) return 'commit';
+  if (
+    /decision day|announcement (?:coming|at|today|this morning|this afternoon)|approaches a commitment decision|commits? at \d/i.test(
+      t
+    )
+  ) {
+    return 'decision_day';
+  }
+  if (/\bsurprised\b.*\bofficial visit\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'official_visit';
+  if (/\b(?:committed|commits)\b.*\b(florida|gators|\buf\b)/i.test(t)) return 'commit';
   if (/cancel(?:led|s)?.*(?:ov|official visit).*(?:florida|gators|gainesville|\buf\b)/i.test(t)) return 'visit_cancelled';
   if (/\b(official visit|\bov\b).*?(?:florida|gators|gainesville|\buf\b)/i.test(t)) return 'official_visit';
   if (/\b(unofficial visit|\buv\b).*?(?:florida|gators|gainesville|\buf\b)/i.test(t)) return 'unofficial_visit';
@@ -181,6 +217,7 @@ function inferUfPosition(research) {
   const conf = predictions.map((p) => p.confidencePct || p.ufRpmPct).filter((n) => n > 0);
   const maxConf = conf.length ? Math.max(...conf) : null;
   if (eventType === 'commit' || eventType === 'flip') return 'committed';
+  if (eventType === 'decision_day') return 'in the mix';
   if (eventType === 'official_visit') return 'hosting OV';
   if (maxConf != null && maxConf >= 70) return 'leading';
   if (maxConf != null && maxConf >= 45) return 'in the mix';
@@ -527,5 +564,7 @@ module.exports = {
   extractTopSchools,
   buildRpmAwareCompLine,
   resolveOn3Board,
-  competitorsFromPlayer
+  competitorsFromPlayer,
+  rpmLeaderFromBeatText,
+  competitorsFromBeatText
 };
