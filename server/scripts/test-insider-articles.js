@@ -29,7 +29,9 @@ function assert(label, condition) {
   if (result.selected >= 1) {
     const draft = store.listDrafts({ status: 'draft' }).find((d) => result.drafts.some((x) => x.id === d.id));
     assert('stores draft with body', draft && draft.body && draft.body.includes('<p>'));
-    assert('draft has editorial sections', draft.body.includes('Analysis'));
+    const { hasForbiddenPublishedLabels } = require('../lib/insider-articles-sections');
+    assert('draft has editorial sections', !hasForbiddenPublishedLabels(draft.body));
+    assert('draft has scaffold archived', Boolean(draft.scaffoldBody));
 
     const published = store.approveDraft(draft.id);
     assert('approves draft to published', published.status === 'published');
@@ -42,6 +44,55 @@ function assert(label, condition) {
   } else {
     assert('aborts when insufficient intel rather than filler', (result.aborted || []).length >= 0);
   }
+
+  // Permanent editorial system — War Room pipeline gates
+  const {
+    generateRecruitingBattles,
+    buildBattleContextFromSignals,
+    renderBattlesHtml,
+    validateWarRoomBattles,
+  } = require('../lib/war-room-battles');
+  const { transformDraftForPublish } = require('../lib/insider-articles-pipeline');
+  const { rewriteHeadersFallback } = require('../lib/editorial-headers');
+  const { extractInternalSections, hasForbiddenPublishedLabels } = require('../lib/insider-articles-sections');
+
+  const filler = (n) => '<p>' + Array(n).fill('Florida').join(' ') + '</p>';
+  const mockScaffold = [
+    '<h2>Thesis</h2>', filler(110),
+    '<h2>Insider Angles</h2>', filler(110),
+    '<h2>Scheme Implications</h2>', filler(110),
+    '<h2>Roster Impact</h2>', filler(110),
+    '<h2>Recruiting and Portal Impact</h2>', filler(110),
+    '<h2>Analytics and Data</h2>', filler(110),
+    "<h2>What's Next</h2>", filler(110),
+  ].join('\n');
+  const mockSignals = {
+    recruiting: {
+      players: [
+        { slug: 'evans', name: 'Jayden Evans', pos: 'EDGE', stars: 5, ufRpmPct: 62, competingSchools: [{ school: 'OSU', pct: 48 }] },
+        { slug: 'fleming', name: 'Marcus Fleming', pos: 'WR', stars: 4, ufRpmPct: 55, competingSchools: [{ school: 'Georgia', pct: 41 }] },
+        { slug: 'whitfield', name: 'Tyler Whitfield', pos: 'CB', stars: 4, ufRpmPct: 38, competingSchools: [{ school: 'Miami', pct: 44 }] },
+      ],
+    },
+    intel: { all: [{ playerSlug: 'evans', eventType: 'official_visit', detail: 'Staff believes Evans is closable before October.' }] },
+    heatCheck: { rising: [{ slug: 'evans' }] },
+  };
+  const battleCtx = buildBattleContextFromSignals(mockSignals, { season: 2026 });
+  const battles = generateRecruitingBattles(battleCtx);
+  assert('War Room generates at least 2 battles', battles.length >= 2);
+  const battleHtml = renderBattlesHtml(battles);
+  assert('War Room gates enforced', validateWarRoomBattles(battles, battleHtml).length === 0);
+  const headers = rewriteHeadersFallback(extractInternalSections(mockScaffold), { articleType: 'War Room', season: 2026 });
+  assert('War Room headers are editorial not scaffold', !headers.recruiting.match(/^recruiting$/i));
+  const warDraft = await transformDraftForPublish({
+    scaffoldBody: mockScaffold,
+    articleType: 'War Room',
+    context: { season: 2026, portalContext: { incomingCount: 27 } },
+    signals: mockSignals,
+    season: 2026,
+  });
+  assert('War Room publish has no forbidden labels', !hasForbiddenPublishedLabels(warDraft.body));
+  assert('War Room publish includes battle cards', warDraft.body.includes('war-room-battle'));
 
   assert('retire path ok', store.countPublished() === 0);
 

@@ -2,6 +2,7 @@
  * Insider Articles hub API — featured, storylines, heat index, tags.
  */
 const contentStore = require('./content-store');
+const { getRelatedArticles } = require('./insider-articles-related');
 const {
   insiderAuthors,
   insiderHeatIndex,
@@ -10,6 +11,19 @@ const {
   categoryFromBadge,
   parseStorylineTitle,
 } = require('./insider-hub-data');
+
+function articleMeta(a) {
+  return {
+    id: a.id,
+    articleType: a.articleType || a.badge || '',
+    angleKey: a.angleKey || '',
+    topicKey: a.topicKey || '',
+    rosterUnits: a.rosterUnits || [],
+    recruitingTargets: a.recruitingTargets || [],
+    schemeTags: a.schemeTags || [],
+    analyticsTags: a.analyticsTags || [],
+  };
+}
 
 function mapArticle(a, trending = false) {
   return {
@@ -21,6 +35,7 @@ function mapArticle(a, trending = false) {
     date: a.date || '',
     readTime: a.readMin ?? 5,
     trending,
+    articleType: a.articleType || a.badge || '',
   };
 }
 
@@ -83,6 +98,22 @@ function mountInsiderHubRoutes(app) {
   app.get('/api/insider/heat-index', (req, res) => {
     try {
       return res.json(insiderHeatIndex);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/insider/articles/:id/related', (req, res) => {
+    try {
+      const feed = contentStore.getPublishedFeed();
+      const articles = feed.articles || [];
+      const current = articles.find((a) => a.id === req.params.id);
+      if (!current) return res.status(404).json({ ok: false, error: 'Article not found' });
+      const metas = articles.map(articleMeta);
+      const related = getRelatedArticles(articleMeta(current), metas, 4)
+        .map((m) => { const full = articles.find((a) => a.id === m.id); return full ? mapArticle(full) : null; })
+        .filter(Boolean);
+      return res.json({ ok: true, related, count: related.length });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

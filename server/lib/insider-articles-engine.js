@@ -7,6 +7,7 @@ const cycle = require('./insider-articles-cycle');
 const templates = require('./insider-articles-templates');
 const sanitize = require('./insider-articles-sanitize');
 const identityValidator = require('./identity-record-validator');
+const { calendarBoost, isAutoWeeklyEnabled, calendarForToday } = require('./insider-articles-config');
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const MIN_WEEKLY = 3;
@@ -174,14 +175,16 @@ async function collectSignals() {
 }
 
 function scoreTopic(topic) {
-  const s = topic.scores || {};
-  return (
-    (s.relevance || 0) * 0.3 +
-    (s.timeliness || 0) * 0.25 +
-    (s.impact || 0) * 0.25 +
-    (s.dataRichness || 0) * 0.12 +
-    (s.freshness || 0) * 0.08
-  );
+  const sc = topic.scores || {};
+  const base =
+    (sc.relevance || 0) * 0.3 +
+    (sc.timeliness || 0) * 0.25 +
+    (sc.impact || 0) * 0.25 +
+    (sc.dataRichness || 0) * 0.12 +
+    (sc.freshness || 0) * 0.08;
+  const cal = calendarForToday();
+  const typeBoost = topic.articleType === cal.articleType ? 10 : 0;
+  return base + calendarBoost(topic) + typeBoost;
 }
 
 function buildCandidateTopics(signals) {
@@ -443,6 +446,9 @@ function buildPgvPayload(topic, signals) {
 }
 
 async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = {}) {
+  if (!force && !isAutoWeeklyEnabled()) {
+    return { ok: true, skipped: true, reason: 'auto_weekly_disabled', phase: 'manual_only' };
+  }
   const createdThisWeek = store.draftsCreatedSince(WEEK_MS).filter((a) => a.status === 'draft');
   const pending = store.countDraftsPending();
 
@@ -563,6 +569,27 @@ async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = 
   };
 }
 
+async function generateDraftForType(articleType) {
+  const signals = await collectSignals();
+  const synthesis = require('./insider-articles-synthesis');
+  const candidates = buildCandidateTopics(signals)
+    .filter((t) => synthesis.typeForCategory(t.category) === articleType)
+    .sort((a, b) => b.totalScore - a.totalScore);
+  const topic = candidates[0] || {
+    topicKey: String(articleType).toLowerCase().replace(/\s+/g, '_') + '_' + Date.now(),
+    category: articleType === 'Game Week' ? 'game_week_preview' : 'program_pulse',
+    title: articleType + ': Florida insider analysis',
+    classYear: cycle.programSeasonYear(),
+    scores: { relevance: 85, timeliness: 80, impact: 80, dataRichness: 75, freshness: 80 },
+    articleType,
+    signals: { roster: signals.roster, portal: signals.portal, type: 'program_pulse' },
+    sources: [{ name: 'GatorVault', outlet: 'GatorVault' }],
+  };
+  const draft = await writeDraftFromTopic(topic, signals);
+  if (!draft) throw new Error('Failed to generate draft for ' + articleType);
+  return store.addDraft(draft);
+}
+
 async function refreshArticleContent(article) {
   const signals = await collectSignals();
   const candidates = buildCandidateTopics(signals);
@@ -614,6 +641,7 @@ module.exports = {
   buildCandidateTopics,
   writeDraftFromTopic,
   generateWeeklyDrafts,
+  generateDraftForType,
   refreshArticleContent,
   regenerateAfterReject,
 };

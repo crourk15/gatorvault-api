@@ -108,6 +108,7 @@
           <button id="insider-generate" class="sm">Generate weekly drafts</button>
           <button id="insider-reload" class="secondary sm">Reload</button>
         </div>
+        <div id="insider-engine-status" class="meta" style="margin-bottom:.75rem;font-size:.75rem">Engine: loading…</div>
         <h3 style="font-size:.75rem;text-transform:uppercase;color:var(--muted);margin:1rem 0 .5rem">A. Drafts (Needs Approval)</h3>
         <table>
           <thead><tr><th>Title</th><th>Category</th><th>Created</th><th>Read</th><th>Sources</th><th></th></tr></thead>
@@ -620,13 +621,15 @@
     }
     function renderInsiderDrafts(drafts){
       var tbody=document.getElementById('insider-drafts-body');
-      if(!drafts||!drafts.length){tbody.innerHTML='<tr><td colspan="6" class="meta">No drafts pending approval.</td></tr>';return;}
+      if(!drafts||!drafts.length){tbody.innerHTML='<tr><td colspan="8" class="meta">No drafts pending approval.</td></tr>';return;}
       tbody.innerHTML=drafts.map(function(d){
         return '<tr><td><strong><a href="/admin-ops/articles/'+esc(d.id)+'" style="color:#60a5fa;text-decoration:none">'+esc(d.title)+'</a></strong><div class="meta"><a href="/admin-ops/articles/edit/'+esc(d.id)+'" style="color:#94a3b8">Edit</a> · '+esc(d.summary||'')+'</div></td>'+
           '<td>'+esc(insiderCategoryLabel(d.category))+'</td>'+
+          '<td class="meta">'+esc(d.articleType||'—')+'</td>'+
+          '<td class="meta">'+esc(d.angleKey||'—')+'</td>'+
           '<td>'+fmtTime(d.createdAt)+'</td>'+
           '<td>'+esc(d.readTimeMinutes||'—')+' min</td>'+
-          '<td class="meta">'+esc(insiderSourcesLabel(d.sources))+'</td>'+
+          '<td class="meta">'+esc(d.generationSource||'synthesis')+'</td>'+
           '<td><button class="sm" data-approve="'+esc(d.id)+'">Approve</button> '+
           '<button class="secondary sm" data-reject="'+esc(d.id)+'">Reject</button></td></tr>';
       }).join('');
@@ -651,9 +654,10 @@
       tbody.innerHTML=items.map(function(a){
         return '<tr><td><strong>'+esc(a.title)+'</strong><div class="meta">'+esc(a.summary||a.excerpt||'')+'</div></td>'+
           '<td>'+esc(insiderCategoryLabel(a.category))+'</td>'+
+          '<td class="meta">'+esc(a.articleType||a.badge||'—')+'</td>'+
           '<td>'+fmtTime(a.publishedAt)+'</td>'+
           '<td>'+esc(a.readTimeMinutes||a.readMin||'—')+' min</td>'+
-          '<td class="meta">'+esc(insiderSourcesLabel(a.sources))+'</td>'+
+          '<td class="meta">'+esc(a.generationSource||'synthesis')+'</td>'+
           '<td><button class="sm" data-refresh="'+esc(a.id)+'">Refresh</button> '+
           '<button class="secondary sm" data-retire="'+esc(a.id)+'">Retire</button></td></tr>';
       }).join('');
@@ -664,7 +668,15 @@
         btn.addEventListener('click',function(){insiderAction('retire',btn.getAttribute('data-retire'));});
       });
     }
+    function loadInsiderEngineStatus(){
+      fetch(API+'/api/articles/engine/status').then(function(r){return r.json();}).then(function(st){
+        var el=document.getElementById('insider-engine-status');
+        if(!el||!st.ok)return;
+        el.textContent='Phase '+st.phase+' · LLM '+(st.llmAllowed?'on':'off')+' · Auto-weekly '+(st.autoWeekly?'on':'off')+' · Game Week auto-publish '+(st.gameWeekAutoPublish?'on':'off')+' · Pending drafts '+st.pendingDrafts;
+      }).catch(function(){});
+    }
     function loadInsiderArticles(){
+      loadInsiderEngineStatus();
       var p=pin(); if(!p)return;
       Promise.all([
         fetch(API+'/api/articles/drafts?pin='+encodeURIComponent(p),{headers:headers()}).then(function(r){return r.json();}),

@@ -154,6 +154,7 @@ const cycle = require('./insider-articles-cycle');
 const templates = require('./insider-articles-templates');
 const sanitize = require('./insider-articles-sanitize');
 const store = require('./insider-articles-store');
+const { extractArticleMetadata } = require('./insider-articles-metadata');
 
 const CATEGORY_TO_TYPE = {
   program_pulse: 'Program Pulse',
@@ -186,6 +187,10 @@ const ANGLES_BY_TYPE = {
   'Film Room': [
     { key: 'scheme_breakdown', titleTemplate: 'Film Room: 3-3-5 install - personnel fits and stress points' },
     { key: 'position_group', titleTemplate: 'Film Room: {focus} group analysis - who wins reps in fall camp' },
+    { key: 'player_mechanics', titleTemplate: 'Film Room: Player mechanics and rep winners at {focus}' },
+    { key: 'coverage_shells', titleTemplate: 'Film Room: Coverage shells and stress points on film' },
+    { key: 'run_game', titleTemplate: 'Film Room: Run game fits and OL movement' },
+    { key: 'pass_rush', titleTemplate: 'Film Room: Pass rush paths and JACK usage' },
   ],
   Analytics: [
     { key: 'win_model', titleTemplate: 'Analytics: {season} schedule win probability model' },
@@ -198,6 +203,14 @@ const ANGLES_BY_TYPE = {
   ],
   'Game Week': [
     { key: 'opponent_scout', titleTemplate: 'Game Week: Florida vs {focus} - scouting report and keys' },
+    { key: 'matchup_analytics', titleTemplate: 'Game Week: Matchup analytics - Florida vs {focus}' },
+    { key: 'scheme_tendencies', titleTemplate: 'Game Week: Scheme tendencies and coverage shells vs {focus}' },
+    { key: 'pressure_points', titleTemplate: 'Game Week: Pressure points and explosive play threats vs {focus}' },
+    { key: 'red_zone', titleTemplate: 'Game Week: Red zone tendencies and keys vs {focus}' },
+    { key: 'personnel', titleTemplate: 'Game Week: Personnel groupings and matchup edges vs {focus}' },
+    { key: 'trench_battle', titleTemplate: 'Game Week: OL/DL trench battle preview vs {focus}' },
+    { key: 'qb_tendencies', titleTemplate: 'Game Week: QB tendencies and coverage shells vs {focus}' },
+    { key: 'keys_to_game', titleTemplate: 'Game Week: Keys to the game vs {focus}' },
     { key: 'camp_battles', titleTemplate: 'Game Week: Summer camp preview - position battles for the opener' },
   ],
   Insider: [
@@ -363,30 +376,59 @@ async function produceDraftPayload({ articleType, title, angleKey, context, topi
   if (isLlmEnabled()) {
     try {
       const llmDraft = await generateWithLlm({ articleType, title, angleKey, context, topic });
-      if (llmDraft?.body) return llmDraft;
+      if (llmDraft?.body) return { ...llmDraft, generationSource: 'llm' };
     } catch (err) {
       console.warn('[insider-generator] LLM failed, synthesis fallback:', err.message);
     }
   }
-  return synthesizeEliteFromContext({ articleType, title, angleKey, context, topic });
+  const synth = synthesizeEliteFromContext({ articleType, title, angleKey, context, topic });
+  return { ...synth, generationSource: 'synthesis' };
 }
 
-function buildDraftRecord({ payload, topic, context, angleKey, articleType }) {
-  const body = payload.body;
-  const words = sanitize.wordCount(body);
+async function buildDraftRecord({ payload, topic, context, angleKey, articleType, signals }) {
+  const scaffoldBody = payload.body;
+  const { transformDraftForPublish } = require('./insider-articles-pipeline');
+  let transformed;
+  try {
+    transformed = await transformDraftForPublish({
+      scaffoldBody,
+      articleType: payload.articleType || articleType,
+      context,
+      signals,
+      season: context?.season,
+    });
+  } catch (err) {
+    console.warn('[insider-generator] editorial transform failed:', err.message);
+    return null;
+  }
+  const body = transformed.body;
+  const words = transformed.words || sanitize.wordCount(body);
+  const meta = extractArticleMetadata(context, topic, {
+    articleType: payload.articleType || articleType,
+    angleKey,
+    topicKey: topic.topicKey,
+  });
   return {
     title: sanitize.sanitizeText(payload.title || topic.title),
     slug: slugFromTitle(payload.title || topic.title),
     category: topic.category,
     articleType: payload.articleType || articleType,
     summary: sanitize.sanitizeText(payload.summary || payload.thesis || '').slice(0, 280),
+    scaffoldBody,
     body,
+    editorialHeaders: transformed.editorialHeaders,
+    battles: transformed.battles || [],
     thesis: payload.thesis || '',
     insiderAngles: payload.insiderAngles || [],
     readTimeMinutes: Math.max(5, Math.ceil(words / 200)),
     sources: sourcesFromContext(context, topic),
     topicKey: topic.topicKey,
     angleKey,
+    generationSource: payload.generationSource || 'synthesis',
+    rosterUnits: meta.rosterUnits,
+    recruitingTargets: meta.recruitingTargets,
+    schemeTags: meta.schemeTags,
+    analyticsTags: meta.analyticsTags,
     classYear: topic.classYear || null,
     cycleType: topic.cycleType || null,
     triggerIntelFingerprints: topic.triggerIntelFingerprints || [],
@@ -409,12 +451,13 @@ async function generateEliteDraft(topic, signals, options = {}) {
     topic: topicWithTitle,
   });
   if (!payload?.body) return null;
-  const draft = buildDraftRecord({
+  const draft = await buildDraftRecord({
     payload,
     topic: topicWithTitle,
     context,
     angleKey: angle.key,
     articleType: angle.articleType,
+    signals,
   });
   return { draft, quality: templates.validateDraftQuality(draft), angle, context };
 }

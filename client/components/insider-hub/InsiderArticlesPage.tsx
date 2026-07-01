@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import '@/lib/insider-hub.css';
 import {
   fetchInsiderHubBundle,
+  fetchInsiderRelated,
   type InsiderArticle,
 } from '@/lib/insider-api';
 import {
@@ -28,6 +29,24 @@ function InsiderHero(): React.ReactElement {
         <div className="insider-hero-underline" aria-hidden />
       </div>
     </header>
+  );
+}
+
+function RelatedArticlesSection({ articles }: { articles: InsiderArticle[] }): React.ReactElement | null {
+  if (!articles.length) return null;
+  return (
+    <section className="insider-section" data-testid="insider-related">
+      <h2 className="insider-section-title">Related Articles</h2>
+      <div className="insider-article-grid">
+        {articles.map((article) => (
+          <a key={article.id} href={articleRoute(article.id)} className="insider-article-card">
+            <span className="insider-article-category">{article.category}</span>
+            <h3 className="insider-article-title">{article.title}</h3>
+            <p className="insider-article-preview">{article.preview}</p>
+          </a>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -291,6 +310,7 @@ export function InsiderArticlesPage({
   const [authors, setAuthors] = useState<InsiderAuthor[]>([]);
   const [heatIndex, setHeatIndex] = useState<InsiderHeatRow[]>([]);
   const [tags, setTags] = useState<InsiderTag[]>([]);
+  const [related, setRelated] = useState<InsiderArticle[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -318,6 +338,14 @@ export function InsiderArticlesPage({
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    if (!featured?.id) {
+      setRelated([]);
+      return;
+    }
+    fetchInsiderRelated(featured.id).then(setRelated).catch(() => setRelated([]));
+  }, [featured?.id]);
 
   const filteredArticles = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -374,6 +402,8 @@ export function InsiderArticlesPage({
                 <FeaturedInsiderArticle article={featured} />
               </section>
             ) : null}
+
+            <RelatedArticlesSection articles={related} />
 
             {storylines.length > 0 ? (
               <section className="insider-section">

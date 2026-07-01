@@ -223,8 +223,8 @@ export function PlayerProfilePage({
           <OverviewTab
             data={data}
             metrics={metrics}
-            competingSchools={profile.competingSchools}
-            futurecastSummary={profile.futurecastSummary}
+            competingSchools={profile?.competingSchools ?? []}
+            futurecastSummary={profile?.futurecastSummary ?? null}
             initialPredictions={initialPredictions}
           />
         )}

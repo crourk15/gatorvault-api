@@ -115,6 +115,14 @@ function normalizeArticle(raw) {
     archivedAt: raw.archivedAt || null,
     rejectedAt: raw.rejectedAt || null,
     rejectReason: raw.rejectReason || null,
+    generationSource: raw.generationSource || null,
+    rosterUnits: Array.isArray(raw.rosterUnits) ? raw.rosterUnits : [],
+    recruitingTargets: Array.isArray(raw.recruitingTargets) ? raw.recruitingTargets : [],
+    schemeTags: Array.isArray(raw.schemeTags) ? raw.schemeTags : [],
+    analyticsTags: Array.isArray(raw.analyticsTags) ? raw.analyticsTags : [],
+    scaffoldBody: raw.scaffoldBody || null,
+    editorialHeaders: raw.editorialHeaders || null,
+    battles: Array.isArray(raw.battles) ? raw.battles : [],
   };
 }
 
@@ -359,7 +367,13 @@ function toPublicArticle(article) {
     articleType: article.articleType || null,
     publishedAt: article.publishedAt,
     createdAt: article.createdAt,
-    insiderEngine: true
+    insiderEngine: true,
+    angleKey: article.angleKey || null,
+    rosterUnits: article.rosterUnits || [],
+    recruitingTargets: article.recruitingTargets || [],
+    schemeTags: article.schemeTags || [],
+    analyticsTags: article.analyticsTags || [],
+    generationSource: article.generationSource || null,
   };
 }
 

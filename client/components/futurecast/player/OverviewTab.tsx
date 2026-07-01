@@ -7,6 +7,11 @@ import type { PlayerMetrics } from '../../../lib/player-derived';
 import { signalSummaryText, formatSignalValue, formatDate, signalWeight } from '../../../lib/player-derived';
 import { dedupeDiscoverySignals, signalTimestamp } from '../../../lib/player-profile-normalize';
 import { coerceDisplayText } from '../../../lib/coerce-text';
+import { RelatedPlayers } from './RelatedPlayers';
+import { PredictionsPanel } from './PredictionsPanel';
+import { BoardIntelPanel } from './BoardIntelPanel';
+import type { FullProfileCompetingSchool, FullProfileFuturecastSummary } from '@/lib/player-full-profile-api';
+import type { PlayerPrediction } from '@/lib/predictions-api';
 
 function profileNotesDeduped(
   recruitingNotes: unknown,
@@ -22,11 +27,6 @@ function profileNotesDeduped(
   }
   return { recruitingNotes: hs, evaluationNotes: evalN };
 }
-import { RelatedPlayers } from './RelatedPlayers';
-import { PredictionsPanel } from './PredictionsPanel';
-import { BoardIntelPanel } from './BoardIntelPanel';
-import type { FullProfileCompetingSchool, FullProfileFuturecastSummary } from '@/lib/player-full-profile-api';
-import type { PlayerPrediction } from '@/lib/predictions-api';
 
 export interface OverviewTabProps {
   data: PlayerProfileBundle;
@@ -54,7 +54,7 @@ export function OverviewTab({
   );
   const staffNoteInBoard =
     !!notes.recruitingNotes &&
-    ((futurecastSummary?.ufProbability ?? 0) > 0 || competingSchools.some((c) => (c.pct ?? 0) > 0));
+    (!!(futurecastSummary?.ufProbability) || competingSchools.some((c) => !!c.pct));
 
   return (
     <div className="fc-profile-panel" data-testid="tab-overview">
@@ -128,7 +128,7 @@ export function OverviewTab({
             </p>
           ) : null}
         </section>
-      )}
+      ) : null}
 
       <section className="fc-profile-section">
         <h2>Related Players</h2>

@@ -184,6 +184,7 @@ mountSelfRunnerRoutes(app);
 mountGm2Routes(app);
 require('./lib/insider-articles-routes').mountInsiderArticlesRoutes(app);
 require('./lib/insider-hub-routes').mountInsiderHubRoutes(app);
+require('./lib/insider-analytics-engine').mountAnalyticsRoutes(app);
 mountVaultGradeAdminRoutes(app);
 mountPlayerIntelEntryRoutes(app);
 try {
@@ -1424,6 +1425,18 @@ console.log('GatorVault server running on port', PORT);
       setTimeout(runArticleEngine, 90000);
       setInterval(runArticleEngine, articleInterval);
       console.log('[insider-articles] weekly scheduler enabled (every', Math.round(articleInterval / 3600000), 'h)');
+      try {
+        const { runGameWeekAutoPublish } = require('./lib/insider-articles-auto-publish');
+        const articleStore = require('./lib/insider-articles-store');
+        const { generateDraftForType } = require('./lib/insider-articles-engine');
+        setInterval(() => runGameWeekAutoPublish({
+          listDrafts: () => articleStore.listDrafts({ status: null }),
+          generateDraftForType,
+          approveDraft: (id) => articleStore.approveDraft(id),
+          publishToContentFeed: (d) => articleStore.publishToContentFeed(d),
+        }).then((r) => { if (r?.published) console.log('[game-week-auto] published:', r.id); }).catch((e) => console.warn('[game-week-auto]', e.message)), 3600000);
+        console.log('[game-week-auto] Monday 8 AM ET scheduler enabled');
+      } catch (e) { console.warn('[game-week-auto] failed', e.message); }
     } catch (e) {
       console.warn('Insider Articles scheduler failed to start', e.message);
     }

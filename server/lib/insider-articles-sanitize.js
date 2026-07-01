@@ -128,6 +128,8 @@ function isGenericBoilerplateBody(html) {
   return hits >= 2;
 }
 
+const { hasForbiddenPublishedLabels } = require('./insider-articles-sections');
+
 module.exports = {
   sanitizeText,
   sanitizePlayerName,
@@ -139,5 +141,6 @@ module.exports = {
   hasBannedPhrases,
   BANNED_PHRASES,
   isNameOnlyListBody,
-  isGenericBoilerplateBody
+  isGenericBoilerplateBody,
+  hasForbiddenPublishedLabels
 };

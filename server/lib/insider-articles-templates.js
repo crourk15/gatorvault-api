@@ -34,10 +34,14 @@ function playerLine(player, extra = '') {
   return `<strong>${esc(name)}</strong> (${bits})${tail}.`;
 }
 
+const { hasForbiddenPublishedLabels } = require('./insider-articles-sections');
+const { validateWarRoomBattles } = require('./war-room-battles');
+
 function validateDraftQuality(draft) {
   if (!draft?.body) {
     return { ok: false, reasons: ['empty_body'], words: 0, minWords: MIN_WORDS, targetWords: TARGET_WORDS };
   }
+  const scaffold = draft.scaffoldBody || draft.body;
   const body = draft.body;
   const words = sanitize.wordCount(body);
   const reasons = [];
@@ -45,7 +49,8 @@ function validateDraftQuality(draft) {
   if (words < MIN_WORDS) reasons.push(`word_count_${words}`);
   if (words > MAX_WORDS + 200) reasons.push(`word_count_high_${words}`);
   if (sanitize.hasEmptyParentheses(body)) reasons.push('empty_parentheses');
-  if (!sanitize.hasEliteRequiredSections(body)) reasons.push('missing_elite_sections');
+  if (!sanitize.hasEliteRequiredSections(scaffold)) reasons.push('missing_elite_sections');
+  if (hasForbiddenPublishedLabels(body)) reasons.push('internal_labels_in_publish');
   if (sanitize.hasBannedPhrases(body)) reasons.push('banned_phrase');
   if (sanitize.isNameOnlyListBody(body)) reasons.push('name_only_list');
   if (sanitize.isGenericBoilerplateBody(body)) reasons.push('generic_boilerplate');
@@ -59,11 +64,17 @@ function validateDraftQuality(draft) {
   if (angles.length < 3) reasons.push('insufficient_insider_angles');
 
   const analysisBlock =
+    scaffold.match(/<h2>Insider Angles<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] ||
     body.match(/<h2>Insider Angles<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] ||
     body.match(/<h2>Analysis<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] ||
     '';
   const analysisParas = (analysisBlock.match(/<p>/gi) || []).length;
   if (analysisParas < 3) reasons.push('thin_analysis');
+
+  if (draft.articleType === 'War Room') {
+    const warReasons = validateWarRoomBattles(draft.battles || [], body);
+    for (const r of warReasons) reasons.push(r);
+  }
 
   return {
     ok: reasons.length === 0,

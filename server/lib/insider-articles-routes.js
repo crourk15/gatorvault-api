@@ -3,6 +3,8 @@
  */
 const store = require('./insider-articles-store');
 const engine = require('./insider-articles-engine');
+const { engineStatus } = require('./insider-articles-config');
+const sanitize = require('./insider-articles-sanitize');
 
 function filterPublicArticles(articles) {
   const gm2 = require('./gm2');
@@ -40,6 +42,14 @@ function requireAdmin(req, res) {
 }
 
 function mountInsiderArticlesRoutes(app) {
+  app.get('/api/articles/engine/status', (req, res) => {
+    try {
+      return res.json({ ok: true, ...engineStatus(), pendingDrafts: store.countDraftsPending() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/articles/published', (req, res) => {
     try {
       const items = filterPublicArticles(store.listPublished()).map(store.toPublicArticle);
@@ -78,6 +88,13 @@ function mountInsiderArticlesRoutes(app) {
           sources: draft.sources || [],
           readTime: draft.readTimeMinutes || 5,
           body: draft.body || '',
+          thesis: draft.thesis || '',
+          insiderAngles: draft.insiderAngles || [],
+          angleKey: draft.angleKey || null,
+          articleType: draft.articleType || null,
+          generationSource: draft.generationSource || null,
+          wordCount: sanitize.wordCount(draft.body || ''),
+          qualityReasons: draft.qualityReasons || [],
           createdAt: draft.createdAt,
           byline: draft.byline || meta.byline
         }

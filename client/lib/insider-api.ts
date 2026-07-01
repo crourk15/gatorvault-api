@@ -95,6 +95,15 @@ export async function fetchInsiderTags(): Promise<InsiderTag[]> {
   return remote?.length ? remote : insiderTags;
 }
 
+export async function fetchInsiderRelated(articleId: string): Promise<InsiderArticle[]> {
+  const remote = await tryInsiderFetch<{ related?: InsiderArticle[] }>(`/api/insider/articles/${articleId}/related`);
+  if (remote?.related?.length) return remote.related;
+  const articles = await fetchInsiderArticles();
+  const current = articles.find((a) => a.id === articleId);
+  if (!current) return [];
+  return articles.filter((a) => a.id !== articleId && a.category === current.category).slice(0, 4);
+}
+
 export async function fetchInsiderHubBundle(): Promise<{
   articles: InsiderArticle[];
   featured: InsiderArticle | null;
