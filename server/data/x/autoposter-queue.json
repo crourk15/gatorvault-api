@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "updatedAt": "2026-07-01T00:30:00.000Z",
+  "updatedAt": "2026-07-01T01:00:00.000Z",
   "items": [
     {
       "id": "xp_landon_dawson_bender_oh_te",
-      "text": "2028 TE Landon Dawson (Mount Vernon, OH)\nUF won the Ballinger Ohio TE battle — McKissack is running the same pipeline with Dawson.\nBC and Indiana are in, but Gainesville has the inside track.\nTrack the FutureCast arc ↓\ngatorvaultinsider.com/vault/futurecast/player/landon-dawson",
+      "text": "2028 TE Landon Dawson (Mount Vernon, OH)\nUF won the Ballinger Ohio TE battle — McKissack is running the same pipeline with Dawson.\nOhio State and Pitt are in, but Gainesville has the inside track.\nTrack the FutureCast arc ↓\ngatorvaultinsider.com/vault/futurecast/player/landon-dawson",
       "category": "news",
       "action": "post",
       "topic": "recruiting",
@@ -22,11 +22,11 @@
       "quoteTweetUrl": null,
       "quoteTweetId": null,
       "promoLink": null,
-      "scheduledAt": "2026-07-01T00:30:00.000Z",
+      "scheduledAt": "2026-07-01T01:00:00.000Z",
       "status": "pending",
       "mediaBase64": null,
       "mediaMime": null,
-      "createdAt": "2026-07-01T00:30:00.000Z",
+      "createdAt": "2026-07-01T01:00:00.000Z",
       "sentAt": null,
       "tweetId": null,
       "tweetUrl": null,
@@ -44,13 +44,13 @@
       "postUrgency": "breaking",
       "urgencyLabel": "major_beat",
       "sourceEventType": "beat_intel",
-      "sourceEventCreatedAt": "2026-07-01T00:30:00.000Z",
-      "sourcePublishedAt": "2026-07-01T00:30:00.000Z",
+      "sourceEventCreatedAt": "2026-07-01T01:00:00.000Z",
+      "sourcePublishedAt": "2026-07-01T01:00:00.000Z",
       "eventTimestamp": null,
       "templateBlocks": {
         "identity": "2028 TE Landon Dawson (Mount Vernon, OH)",
         "context": "UF won the Ballinger Ohio TE battle — McKissack is running the same pipeline with Dawson.",
-        "insider": "BC and Indiana are in, but Gainesville has the inside track."
+        "insider": "Ohio State and Pitt are in, but Gainesville has the inside track."
       },
       "validationMeta": {
         "eliteMode": true,

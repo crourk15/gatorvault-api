@@ -163,6 +163,13 @@ async function findPostgresPlayerForAllowlistSlug(slug, classYear) {
   return null;
 }
 
+function toCompositeRating(raw) {
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n <= 0) return null;
+  if (n > 9.999) return Math.round((n / 100) * 1000) / 1000;
+  return n;
+}
+
 async function ensureAllowlistPostgresPlayer(slug, classYear) {
   const existing = await findPostgresPlayerForAllowlistSlug(slug, classYear);
   if (existing) return existing;
@@ -189,9 +196,9 @@ async function ensureAllowlistPostgresPlayer(slug, classYear) {
     stars: Number(recruiting?.stars ?? boardRow?.stars ?? 0) || null,
     composite_rating:
       recruiting?.rating != null
-        ? Number(recruiting.rating)
+        ? toCompositeRating(recruiting.rating)
         : boardRow?.rating != null
-          ? Number(boardRow.rating)
+          ? toCompositeRating(boardRow.rating)
           : null,
     ranking_national: recruiting?.natlRank ?? boardRow?.natlRank ?? null,
     ranking_position: recruiting?.posRank ?? boardRow?.posRank ?? null,
