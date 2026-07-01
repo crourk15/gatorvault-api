@@ -211,34 +211,47 @@ async function verifyOAuth1Credentials({ force = false } = {}) {
     return { ..._verifyCache };
   }
 
-  try {
-    const data = await oauth1Request({
-      method: 'GET',
-      url: 'https://api.twitter.com/1.1/account/verify_credentials.json',
-      form: { skip_status: 'true', include_email: 'false' }
-    });
-    _verifyCache = {
-      configured: true,
-      ok: true,
-      screenName: data.screen_name || null,
-      userId: data.id_str || String(data.id || ''),
-      error: null,
-      checkedAt: new Date().toISOString()
-    };
-    console.log(`[x-oauth1] OAuth verify PASS — @${_verifyCache.screenName}`);
-    return { ..._verifyCache };
-  } catch (err) {
-    _verifyCache = {
-      configured: true,
-      ok: false,
-      screenName: null,
-      userId: null,
-      error: err.message,
-      checkedAt: new Date().toISOString()
-    };
-    console.error(`[x-oauth1] OAuth verify FAIL — ${err.message}`);
-    return { ..._verifyCache };
+  const VERIFY_RETRIES = parseInt(process.env.X_OAUTH1_VERIFY_RETRIES || '3', 10);
+  const RETRYABLE = /timeout|ETIMEDOUT|ECONNRESET|ECONNREFUSED|network|fetch failed|socket hang up/i;
+  let lastErr = null;
+  for (let attempt = 1; attempt <= VERIFY_RETRIES; attempt += 1) {
+    try {
+      const data = await oauth1Request({
+        method: 'GET',
+        url: 'https://api.twitter.com/1.1/account/verify_credentials.json',
+        form: { skip_status: 'true', include_email: 'false' }
+      });
+      _verifyCache = {
+        configured: true,
+        ok: true,
+        screenName: data.screen_name || null,
+        userId: data.id_str || String(data.id || ''),
+        error: null,
+        checkedAt: new Date().toISOString()
+      };
+      console.log(`[x-oauth1] OAuth verify PASS — @${_verifyCache.screenName}`);
+      return { ..._verifyCache };
+    } catch (err) {
+      lastErr = err;
+      if (attempt < VERIFY_RETRIES && RETRYABLE.test(String(err.message || ''))) {
+        const waitMs = attempt * 1500;
+        console.warn(`[x-oauth1] OAuth verify retry ${attempt}/${VERIFY_RETRIES} in ${waitMs}ms — ${err.message}`);
+        await new Promise((r) => setTimeout(r, waitMs));
+        continue;
+      }
+      break;
+    }
   }
+  _verifyCache = {
+    configured: true,
+    ok: false,
+    screenName: null,
+    userId: null,
+    error: lastErr?.message || 'OAuth verify failed',
+    checkedAt: new Date().toISOString()
+  };
+  console.error(`[x-oauth1] OAuth verify FAIL — ${_verifyCache.error}`);
+  return { ..._verifyCache };
 }
 
 function getOAuth1VerifyCache() {

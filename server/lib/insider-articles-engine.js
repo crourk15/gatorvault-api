@@ -485,9 +485,7 @@ async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = 
     return { ok: false, error: err.message, signalsAt: signals?.collectedAt, drafts: [], selected: 0 };
   }
 
-  const existingKeys = new Set(
-    [...store.listDrafts({ status: 'draft' }), ...store.listPublished()].map((a) => a.topicKey).filter(Boolean)
-  );
+  const existingKeys = new Set(store.listBlockedTopicKeys());
 
   const slots = Math.max(0, maxDrafts - createdThisWeek.length);
   const selected = [];

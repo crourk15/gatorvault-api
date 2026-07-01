@@ -518,6 +518,7 @@ async function processDuePosts({ limit = 1, force = false } = {}) {
 
 let _schedulerTimer = null;
 let _processing = false;
+let _emptyQueueStreak = 0;
 
 function startXAutoposterScheduler() {
   if (!pipelineGuards.autopostEnabled()) {
@@ -566,12 +567,23 @@ function startXAutoposterScheduler() {
       _processing = true;
       saveSchedulerStatus({ lastRun: store.nowIso() });
       try {
+        const pendingBefore = store.listQueue({ status: 'pending' }).length;
+        const forceRefill = pendingBefore === 0 && _emptyQueueStreak >= 2;
         const refill = await refillAutoposterQueue({
           minPending: parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '5', 10),
-          maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '8', 10)
+          maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '8', 10),
+          forcePost: forceRefill
         });
+        const pendingAfterRefill = store.listQueue({ status: 'pending' }).length;
+        if (pendingAfterRefill === 0) {
+          _emptyQueueStreak += 1;
+        } else {
+          _emptyQueueStreak = 0;
+        }
         if (refill.enqueuedCount > 0) {
           autopostLog('info', `Auto-filled queue with ${refill.enqueuedCount} post(s)`);
+        } else if (_emptyQueueStreak >= 3) {
+          autopostLog('warn', 'Queue empty — elite fallback engaged', { streak: _emptyQueueStreak });
         }
         saveSchedulerStatus({
           lastRefillAt: store.nowIso(),
@@ -581,7 +593,22 @@ function startXAutoposterScheduler() {
         saveSchedulerStatus({
           lastProcessedCount: out.processed || 0,
           lastCadenceReason: out.cadence?.reason || out.reason || null,
-          lastError: null
+          lastError: null,
+          emptyQueueStreak: _emptyQueueStreak,
+          pendingCount: store.listQueue({ status: 'pending' }).length
+        });
+        opsMonitor.logEvent({
+          subsystem: 'autoposter:scheduler',
+          status: out.processed > 0 ? 'success' : _emptyQueueStreak >= 5 ? 'warning' : 'success',
+          message: out.processed > 0
+            ? `Posted ${out.processed} item(s)`
+            : `Tick — ${out.cadence?.reason || out.reason || 'no_post'}`,
+          details: {
+            pending: store.listQueue({ status: 'pending' }).length,
+            enqueued: refill.enqueuedCount || 0,
+            emptyQueueStreak: _emptyQueueStreak,
+            cadence: out.cadence?.reason || out.reason || null
+          }
         });
         if (out.processed > 0) {
           autopostLog('info', `Cron tick posted ${out.processed} item(s)`, {

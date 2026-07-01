@@ -341,6 +341,33 @@ async function finalizeNewsCandidate(rawCandidate) {
   return prepareNewsCandidate(raw);
 }
 
+function emptyQueueFallbackEnabled() {
+  return process.env.X_AUTOPOST_EMPTY_QUEUE_FALLBACK !== 'false';
+}
+
+async function buildEngagementPulsePost() {
+  try {
+    const { buildHeatCheck } = require('./heat-check-store');
+    const heat = await buildHeatCheck();
+    const rising = (heat?.rising || []).filter((r) => r?.name);
+    const top = rising[0];
+    if (top?.name) {
+      const pos = top.pos ? ` (${top.pos})` : '';
+      return {
+        text: `🐊 GatorVault Intel: ${top.name}${pos} momentum building for Florida — full RPM + visit intel inside. ${SITE_URL}`,
+        category: 'engagement',
+        topic: 'recruiting',
+        sources: [{ label: 'GatorVault Heat Check', url: SITE_URL }],
+        source: 'auto:heat-pulse',
+        playerName: top.name
+      };
+    }
+  } catch {
+    /* optional */
+  }
+  return buildPromoFromMix();
+}
+
 function buildPromoFromMix() {
   const mix = store.getMixStats();
   const cat = mix.suggestedNextCategory || 'promo';
@@ -847,6 +874,52 @@ async function refillAutoposterQueue({
     }
   }
 
+  if (added === 0 && emptyQueueFallbackEnabled() && pending.length === 0) {
+    const fallbacks = [];
+    if (process.env.X_AUTOPOST_ON3_NEWS_FALLBACK !== 'false') {
+      try {
+        const on3Candidates = await collectOn3NewsBeatCandidates();
+        for (const raw of on3Candidates.slice(0, 3)) {
+          const scored = await finalizeNewsCandidate(raw);
+          if (scored) fallbacks.push(scored);
+        }
+      } catch {
+        /* optional */
+      }
+    }
+    const pulse = await buildEngagementPulsePost();
+    if (pulse) fallbacks.push(pulse);
+    const promo = buildPromoFromMix();
+    if (promo) fallbacks.push(promo);
+    for (const raw of fallbacks) {
+      if (added >= slots) break;
+      if (!raw?.text || copy.isBrokenCopy(raw.text, raw)) continue;
+      const fp = raw.intelFingerprint || raw.commitFingerprint;
+      if (fp && fingerprintAlreadyQueued(fp, doc.items)) continue;
+      if (alreadyQueued(raw.text, doc.items)) continue;
+      const check = policy.validatePostContent(raw);
+      if (!check.valid && raw.category !== 'engagement' && raw.category !== 'promo') continue;
+      try {
+        const tagged = cadence.tagCandidate({
+          ...raw,
+          qualityScore: raw.qualityScore ?? check.qualityScore ?? 70,
+          qualityBreakdown: raw.qualityBreakdown ?? check.qualityBreakdown ?? null,
+          sourceConfidence: raw.sourceConfidence ?? check.sourceConfidence ?? 80
+        });
+        const out = store.enqueuePost({
+          ...tagged,
+          scheduledAt: store.nowIso(),
+          status: 'pending'
+        });
+        enqueued.push(out.item);
+        doc.items.push(out.item);
+        added += 1;
+      } catch (err) {
+        console.warn(`[x-autoposter] empty-queue fallback enqueue failed: ${err.message}`);
+      }
+    }
+  }
+
   return {
     ok: true,
     skipped: false,
@@ -855,7 +928,8 @@ async function refillAutoposterQueue({
     enqueuedCount: enqueued.length,
     qualitySkipped,
     validatedNewsCount: validatedNews.length,
-    beatPrep
+    beatPrep,
+    emptyQueueFallback: added > 0 && pending.length === 0
   };
 }
 
@@ -983,6 +1057,7 @@ module.exports = {
   prepareBeatFirstAutoposter,
   queueOn3NewsBeatPost,
   collectOn3NewsBeatCandidates,
+  buildEngagementPulsePost,
   isCommitAutopostEvent,
   COMMIT_EVENT_SOURCES,
   FORCE_POST_COMMIT_AGE_MS,

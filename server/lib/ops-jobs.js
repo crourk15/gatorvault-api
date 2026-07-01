@@ -118,14 +118,26 @@ const JOBS = {
     schedule: 'Every 60s (X_AUTOPOST_ENABLED)',
     async run(opts = {}) {
       const autoposter = require('./x-autoposter');
+      const fill = require('./x-autoposter-fill');
+      const store = require('./x-autoposter-store');
+      const refill = await fill.refillAutoposterQueue({
+        minPending: parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '5', 10),
+        maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '8', 10),
+        forcePost: opts.force === true
+      });
+      let processed = { processed: 0, skipped: true, reason: 'no_processor' };
       if (typeof autoposter.processDuePosts === 'function') {
-        return autoposter.processDuePosts({
+        processed = await autoposter.processDuePosts({
           force: opts.force === true,
           limit: opts.limit || 1
         });
       }
-      const store = require('./x-autoposter-store');
-      return { ok: true, queue: store.loadQueue().items?.length || 0 };
+      return {
+        ok: true,
+        pending: store.listQueue({ status: 'pending' }).length,
+        refill,
+        ...processed
+      };
     }
   },
   'depth-chart-refresh': {
@@ -152,7 +164,7 @@ const JOBS = {
     schedule: 'Weekly (ARTICLE_ENGINE_ENABLED)',
     async run(opts = {}) {
       const { generateWeeklyDrafts } = require('./insider-articles-engine');
-      return generateWeeklyDrafts({ force: opts.force !== false });
+      return generateWeeklyDrafts({ force: opts.force === true });
     }
   },
   'identity-patterns-rebuild': {

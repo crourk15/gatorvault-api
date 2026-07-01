@@ -414,6 +414,14 @@ function removeFromContentFeed(published) {
   }
 }
 
+function listBlockedTopicKeys() {
+  const blocked = new Set(['draft', 'published', 'archived', 'auto-rejected']);
+  return listDrafts({ status: null })
+    .filter((a) => blocked.has(a.status))
+    .map((a) => a.topicKey)
+    .filter(Boolean);
+}
+
 module.exports = {
   DATA_DIR,
   DRAFTS_PATH,
@@ -437,5 +445,6 @@ module.exports = {
   publishToContentFeed,
   removeFromContentFeed,
   logEvent,
-  normalizeArticle
+  normalizeArticle,
+  listBlockedTopicKeys
 };
