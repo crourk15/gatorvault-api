@@ -283,6 +283,7 @@ async function resolveIntelForCopy(intel, opts = {}) {
 function newsPayloadFromBuilt(built, extra = {}) {
   if (built?.skipReason || built?._identitySkip || built?._needsResolution) return built;
   if (!built?.text) return null;
+  const brand = require('./x-autoposter-brand');
   const copyMeta = {
     triggerType: extra.triggerType || built.triggerType || built.postKind || null,
     postKind: built.postKind || extra.triggerType || null,
@@ -293,7 +294,7 @@ function newsPayloadFromBuilt(built, extra = {}) {
     playerName: built.playerName || extra.playerName || null,
     eventType: built.validationMeta?.eventType || extra.eventType || built.validationMeta?.situation || null
   };
-  const text = appendSite(built.text, copyMeta);
+  const text = brand.appendSiteOnce(built.text, copyMeta);
   const payload = {
     text,
     playerName: built.playerName,

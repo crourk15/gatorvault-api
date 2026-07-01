@@ -538,6 +538,8 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
     insider: insiderLine
   });
   if (!raw || !template.hasTemplateStructure(raw)) {
+    const brand = require('./x-autoposter-brand');
+    if (!brand.monitoringFallbackAllowed()) return null;
     const eventSummary = template.inferProgramNewsEvent(beatText, programNewsType);
     const fallbackText = template.enforceTweetLimit(
       `Florida program update: ${eventSummary}. Monitoring staff/roster impact.`,

@@ -95,21 +95,39 @@ function intelToBeatText(intel, item) {
   );
 }
 
-function buildTweetFromRewrite(player, rewriteText) {
+function buildTweetFromRewrite(player, rewriteText, meta = {}) {
+  const brand = require('../x-autoposter-brand');
   const ctx = {
     name: player.name,
     pos: player.position,
     classYear: player.classYear,
+    school: player.school || player.hometown,
     starsLabel: player.rating ? `${player.rating}-Star` : null,
     hasMinimumContext: !!(player.name && player.position),
     hasFullIdentity: !!(player.name && player.position && player.classYear)
   };
-  const identity = ctx.hasFullIdentity ? template.buildRecruitingIdentity(ctx) : null;
+  const useCompact = brand.useCompactRecruitingIdentity(meta);
+  const identity =
+    ctx.hasFullIdentity || ctx.hasMinimumContext
+      ? useCompact
+        ? template.buildCompactRecruitingIdentity(ctx)
+        : template.buildRecruitingIdentity(ctx)
+      : null;
   const body = String(rewriteText || '').trim();
-  if (identity && !body.startsWith(player.name)) {
-    return template.enforceTweetLimit(`${identity}\n${body}`, 280, { eliteMode: true });
+  let text =
+    identity && !body.startsWith(player.name)
+      ? template.enforceTweetLimit(`${identity}\n${body}`, 280, { eliteMode: true })
+      : template.enforceTweetLimit(body, 280, { eliteMode: true });
+  if (process.env.X_AUTOPOST_GV_CTA_ENABLED === 'true' && meta.playerSlug) {
+    text =
+      brand.appendSiteOnce(text, {
+        playerSlug: meta.playerSlug,
+        playerName: player.name,
+        eventType: meta.eventType,
+        eliteMode: true
+      }) || text;
   }
-  return template.enforceTweetLimit(body, 280, { eliteMode: true });
+  return text;
 }
 
 async function prepareQueueItemForPost(item = {}) {
@@ -133,16 +151,18 @@ async function prepareQueueItemForPost(item = {}) {
   if (eliteCaption.isEliteModeEnabled()) {
     const intelForElite = pipelineGuards.guardIntelForPipeline(findIntelForItem(item));
     const beatForElite = intelToBeatText(intelForElite, item);
-    if (beatForElite && (item.playerName || intelForElite?.playerName)) {
+    const playerName = item.playerName || intelForElite?.playerName;
+    const playerSlug = item.playerSlug || intelForElite?.playerSlug;
+    if (playerName && (beatForElite || playerSlug)) {
       try {
         const elite = await eliteCaption.buildElitePlayerPost({
-          playerName: item.playerName || intelForElite?.playerName,
-          playerSlug: item.playerSlug || intelForElite?.playerSlug,
-          beatText: beatForElite,
+          playerName,
+          playerSlug,
+          beatText: beatForElite || null,
           intel: intelForElite || {
-            playerName: item.playerName,
-            playerSlug: item.playerSlug,
-            detail: beatForElite,
+            playerName,
+            playerSlug,
+            detail: beatForElite || item.text,
             eventType: item.intelType || item.sourceEventType,
             source: item.source
           },
@@ -252,7 +272,10 @@ async function prepareQueueItemForPost(item = {}) {
   }
 
   monitoring.trackRewriteOutcome(true);
-  const text = buildTweetFromRewrite(player, finalText);
+  const text = buildTweetFromRewrite(player, finalText, {
+    playerSlug: item.playerSlug || player.slug || null,
+    eventType: item.intelType || item.sourceEventType || intel?.eventType
+  });
   const prepared = {
     ...item,
     text,

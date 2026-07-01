@@ -113,6 +113,7 @@ const HARD_SKIP_TYPES = new Set([
   'rewrite_too_short',
   'forbidden_tone',
   'generic_fluff',
+  'monitoring_fallback',
   'non_football_sport'
 ]);
 
@@ -525,6 +526,16 @@ function hasExcessiveSourceOverlap(text, sourceText, threshold) {
 
 function collectHardSkipReasons(item, blocks, meta) {
   const skips = [];
+  const brand = require('./x-autoposter-brand');
+
+  if (item.monitoringFallback || brand.isMonitoringFallbackCopy(item.text)) {
+    if (!brand.monitoringFallbackAllowed()) {
+      skips.push({
+        type: 'monitoring_fallback',
+        message: 'Low-quality monitoring fallback — automatic skip.'
+      });
+    }
+  }
 
   if (!blocks.identity) {
     skips.push({ type: 'missing_identity', message: 'Identity block missing — automatic skip.' });

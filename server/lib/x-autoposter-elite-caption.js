@@ -7,6 +7,7 @@ const researchEngine = require('./x-autoposter-elite-research');
 const eliteLog = require('./x-autoposter-elite-log');
 const playerContext = require('./x-autoposter-player-context');
 const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
+const brand = require('./x-autoposter-brand');
 
 const GENERIC_INSIDER_RE = /^per .+ report\.?$/i;
 const GENERIC_CLOSURE_RE = /full details via the original report/i;
@@ -82,6 +83,97 @@ function pickBeatIntelAngle(research, beatText) {
   return null;
 }
 
+/** GV-native angles from event type + board data — works without beat text. */
+function pickEventIntelAngle(research) {
+  if (!research?.playerName) return null;
+  const et = String(research.eventType || '').toLowerCase();
+  const fn = eliteFirstName(research.playerName);
+  const pos = String(research.player?.pos || research.intel?.pos || '').toUpperCase();
+  const yr = research.player?.classYear || '';
+  const schools = (research.topSchools || []).filter((s) => !/florida|gators/i.test(String(s || '')));
+  const pred = research.predictions?.[0];
+  const ufPct = pred?.confidencePct || pred?.ufRpmPct || research.player?.ufRpmPct;
+  const visit = research.timing?.visitWindow;
+
+  switch (et) {
+    case 'commit':
+      return {
+        context: `UF lands ${fn}${pos ? ` (${pos})` : ''} — staff closed a priority ${yr || 'cycle'} target.`,
+        insider: schools[0]
+          ? `${schools[0]} was the main alternative before Gainesville won out.`
+          : 'Staff moved fast once the fit and timing aligned.',
+        _eventIntel: true
+      };
+    case 'flip':
+      return {
+        context: `${fn} flips to Florida${schools[0] ? ` after serious looks from ${schools[0]}` : ''}.`,
+        insider: schools[1]
+          ? `${schools[1]} is still in the picture for others, but UF got the signature.`
+          : 'This one changes the board math for UF at that position.',
+        _eventIntel: true
+      };
+    case 'decommit':
+      return {
+        context: `${fn} is back on the market — UF is expected to stay engaged.`,
+        insider: schools.length
+          ? `${schools.slice(0, 2).join(' and ')} are circling, but Gainesville has recent staff contact.`
+          : 'Staff will treat this as a live target again in the next window.',
+        _eventIntel: true
+      };
+    case 'official_visit':
+      return {
+        context: `${fn} sets an official visit to The Swamp${visit ? ` (${visit})` : ''}.`,
+        insider: schools.length
+          ? `${schools.slice(0, 2).join(' and ')} are still in, but the OV puts UF in decision mode.`
+          : 'Position coaches have been active on this one ahead of the trip.',
+        _eventIntel: true
+      };
+    case 'unofficial_visit':
+      return {
+        context: `${fn} has a Gainesville visit window on the books${visit ? ` (${visit})` : ''}.`,
+        insider: 'Repeat campus time is building real momentum behind the scenes.',
+        _eventIntel: true
+      };
+    case 'offer':
+      return {
+        context: `Florida extends an offer to ${fn}${pos ? ` (${pos})` : ''}.`,
+        insider: schools.length
+          ? `${schools[0]} is in the mix, but UF just raised its profile with ${fn}.`
+          : 'Staff sees a scheme fit and moved with the offer.',
+        _eventIntel: true
+      };
+    case 'prediction':
+    case 'rivals_futurecast':
+      return {
+        context: ufPct
+          ? `${fn} now sits at ${Math.round(ufPct)}% in the FutureCast model.`
+          : `${fn} picks up fresh Crystal Ball momentum toward Florida.`,
+        insider: schools.length
+          ? `${schools.slice(0, 2).join(' and ')} still share the lead cluster — UF needs the next campus win.`
+          : 'Analyst input is pushing Florida up the board, not just holding steady.',
+        _eventIntel: true
+      };
+    case 'portal_in':
+      return {
+        context: `${fn} hits the portal — Florida is among the programs in play.`,
+        insider: schools[0]
+          ? `${schools[0]} and others are involved, but UF has staff eyes on the fit.`
+          : 'Portal value and scheme fit both check out for Gainesville.',
+        _eventIntel: true
+      };
+    case 'trending':
+      return {
+        context: `${fn} is trending up with Florida${research.ufPosition === 'staff priority' ? ' — staff has him on the short list' : ''}.`,
+        insider: schools.length
+          ? `${schools.slice(0, 2).join(' and ')} are in, but Gainesville has the inside track.`
+          : 'Contact has picked up as staff pushes for separation.',
+        _eventIntel: true
+      };
+    default:
+      return null;
+  }
+}
+
 /** Original angles from GV data (visits, RPM, scouting) — not beat paraphrase. */
 function pickBestEliteAngle(research, beatText) {
   if (!research?.playerName) return null;
@@ -90,6 +182,9 @@ function pickBestEliteAngle(research, beatText) {
 
   const beatAngle = pickBeatIntelAngle(research, beatText);
   if (beatAngle) angles.push(beatAngle);
+
+  const eventAngle = pickEventIntelAngle(research);
+  if (eventAngle) angles.push(eventAngle);
 
   const visits = (research.intelRows || []).filter((r) => /visit/i.test(String(r.eventType || '')));
   if (visits.length >= 2) {
@@ -177,7 +272,7 @@ function pickBestEliteAngle(research, beatText) {
         if (w.length > 4 && src.includes(w)) overlap += 1;
       }
     }
-    const score = (a._beatIntel ? 1000 : 0) + words.length - overlap * 4;
+    const score = (a._beatIntel ? 1000 : 0) + (a._eventIntel ? 500 : 0) + words.length - overlap * 4;
     if (score > bestScore) {
       bestScore = score;
       best = a;
@@ -392,34 +487,6 @@ function trimLine(text, max = 140) {
   return t.endsWith('.') ? t : `${t}.`;
 }
 
-function fitBodyToHookBudget(identity, context, insider, hookBudget) {
-  if (!hookBudget || hookBudget <= 0) {
-    return { identity, context, insider };
-  }
-  const bodyLimit = 280 - hookBudget;
-  let id = String(identity || '').trim();
-  let ctx = String(context || '').trim();
-  let ins = String(insider || '').trim();
-  for (let i = 0; i < 24; i += 1) {
-    const raw = [id, ctx, ins].filter(Boolean).join('\n');
-    if (raw.length <= bodyLimit) return { identity: id, context: ctx, insider: ins };
-    if (ins.length > 48) {
-      ins = template.hardTrimLine(ins, Math.max(48, ins.length - 12));
-      continue;
-    }
-    if (ctx.length > 48) {
-      ctx = template.hardTrimLine(ctx, Math.max(48, ctx.length - 12));
-      continue;
-    }
-    if (id.length > 32) {
-      id = template.hardTrimLine(id, Math.max(32, id.length - 8));
-      continue;
-    }
-    break;
-  }
-  return { identity: id, context: ctx, insider: ins };
-}
-
 async function buildElitePlayerPost(input = {}) {
   const dataLayer = require('./x-autoposter-data-layer');
   const intelInput = {
@@ -485,26 +552,30 @@ async function buildElitePlayerPost(input = {}) {
   const brandBeatPost =
     Boolean(String(input.beatText || '').trim()) &&
     process.env.X_AUTOPOST_ELITE_BRAND_BEAT !== 'false';
+  const eliteBrandPost = brand.eliteBrandEnabled();
   const playerSlug = research.playerSlug || playerData.data.playerSlug || null;
   const hookMeta = {
     playerSlug,
     playerName: research.playerName,
-    eventType: research.eventType
+    eventType: research.eventType,
+    beatText: input.beatText || null
   };
-  const copyMod = require('./x-autoposter-copy');
   const hookBudget =
-    brandBeatPost && process.env.X_AUTOPOST_GV_CTA_ENABLED === 'true'
-      ? copyMod.estimateHookBudget(hookMeta)
+    (brandBeatPost || eliteBrandPost) && process.env.X_AUTOPOST_GV_CTA_ENABLED === 'true'
+      ? brand.hookBudgetFor(hookMeta)
       : 0;
   const contextMax = hookBudget ? Math.min(160, 280 - hookBudget - 80) : 160;
   const insiderMax = hookBudget ? Math.min(140, 280 - hookBudget - 50) : 140;
+  const useCompactIdentity =
+    kind === 'recruiting' &&
+    brand.useCompactRecruitingIdentity({ beatText: input.beatText, postKind: kind });
 
   let identity;
   if (kind === 'portal') {
     identity = template.buildPortalIdentity(ctx, input.portalStatus || 'Portal');
   } else if (kind === 'team') {
     identity = template.buildTeamIdentity(ctx, input.teamContext || template.detectTeamContext(input.beatText));
-  } else if (brandBeatPost && (ctx.hasFullIdentity || ctx.hasMinimumContext)) {
+  } else if (useCompactIdentity && (ctx.hasFullIdentity || ctx.hasMinimumContext)) {
     identity = template.buildCompactRecruitingIdentity(ctx);
   } else if (ctx.hasFullIdentity || ctx.hasMinimumContext) {
     identity = template.buildRecruitingIdentity(ctx);
@@ -546,7 +617,7 @@ async function buildElitePlayerPost(input = {}) {
     insiderLine = trimLine(insiderLine, insiderMax);
   }
 
-  if (quoteRewriter.isRewriterEnabled() && input.beatText) {
+  if (quoteRewriter.isRewriterEnabled() && input.beatText && !digestAngle?._beatIntel && !digestAngle?._eventIntel) {
     const combined = `${contextLine} ${insiderLine}`;
     if (quoteRewriter.exceedsOverlap(combined, input.beatText)) {
       const retry = quoteRewriter.rewriteBeatUpdate({
@@ -609,14 +680,16 @@ async function buildElitePlayerPost(input = {}) {
     playerSlug: playerData.data.playerSlug
   };
   const heatMeter =
-    !brandBeatPost && heatMeterMod.isEnabled() ? heatMeterMod.computeHeatMeter(meterInput) : null;
+    !brandBeatPost && !eliteBrandPost && heatMeterMod.isEnabled()
+      ? heatMeterMod.computeHeatMeter(meterInput)
+      : null;
   const confidenceMeter =
-    !brandBeatPost && confidenceMeterMod.isEnabled()
+    !brandBeatPost && !eliteBrandPost && confidenceMeterMod.isEnabled()
       ? confidenceMeterMod.computeConfidenceMeter(meterInput)
       : null;
 
   if (hookBudget) {
-    ({ identity, context: contextLine, insider: insiderLine } = fitBodyToHookBudget(
+    ({ identity, context: contextLine, insider: insiderLine } = brand.fitBodyToHookBudget(
       identity,
       contextLine,
       insiderLine,
@@ -657,14 +730,12 @@ async function buildElitePlayerPost(input = {}) {
   }
 
   if (process.env.X_AUTOPOST_GV_CTA_ENABLED === 'true') {
-    const copy = require('./x-autoposter-copy');
-    const slug = playerSlug;
-    const withHook = copy.appendSite(text, {
-      playerSlug: slug,
+    const withHook = brand.appendSiteOnce(text, {
+      playerSlug,
       playerName: research.playerName,
       eventType: research.eventType,
       eliteMode: true,
-      validationMeta: { playerSlug: slug, eliteCompose: true }
+      validationMeta: { playerSlug, eliteCompose: true }
     });
     if (withHook && withHook !== text) {
       text = withHook.length <= 280 ? withHook : template.enforceTweetLimit(withHook, 280, copyMeta) || text;

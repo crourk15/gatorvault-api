@@ -496,7 +496,7 @@ async function buildAutoposterPayload(row, intelItem) {
     if (!built?.text) {
       return { ok: false, reason: built?.skipReason || 'invalid_copy' };
     }
-    return { ok: true, ...built, text: copy.appendSite(built.text) };
+    return { ok: true, ...built };
   }
   if (row.triggerType === 'team_event' || row.eventType === 'team_event') {
     const built = await copy.buildTeamEventCopyAsync(
@@ -511,7 +511,7 @@ async function buildAutoposterPayload(row, intelItem) {
     if (!built?.text) {
       return { ok: false, reason: built?.skipReason || 'invalid_copy' };
     }
-    return { ok: true, ...built, text: copy.appendSite(built.text) };
+    return { ok: true, ...built };
   }
   const built = await copy.buildIntelCopyAsync({
     id: intelItem?.id,
@@ -543,7 +543,7 @@ async function buildAutoposterPayload(row, intelItem) {
     }
     return { ok: false, reason: built?.skipReason || 'invalid_copy' };
   }
-  return { ok: true, ...built, text: copy.appendSite(built.text) };
+  return { ok: true, ...built };
 }
 
 function isNonPlayerBeatRow(row) {
@@ -712,6 +712,8 @@ function inferBeatEventLabel(row) {
 }
 
 async function queueProgramNewsMonitoringFallback(row) {
+  const brand = require('./x-autoposter-brand');
+  if (!brand.monitoringFallbackAllowed()) return { queued: false, reason: 'monitoring_disabled' };
   if (!row?.fingerprint) return { queued: false, reason: 'invalid' };
   const template = require('./x-autoposter-template');
   const eventSummary = template.inferProgramNewsEvent(row.detail, row.programNewsType);
@@ -771,6 +773,8 @@ async function queueProgramNewsMonitoringFallback(row) {
 }
 
 async function queueBeatMonitoringFallback(row, skipReason) {
+  const brand = require('./x-autoposter-brand');
+  if (!brand.monitoringFallbackAllowed()) return { queued: false, reason: 'monitoring_disabled' };
   if (!row?.fingerprint || BEAT_SILENCE_ALLOWED.has(skipReason)) {
     return { queued: false, reason: 'silence_allowed' };
   }
@@ -825,6 +829,8 @@ async function queueBeatMonitoringFallback(row, skipReason) {
 }
 
 async function maybeQueueBeatMonitoring(row, skipReason, { trustedWriter = false } = {}) {
+  const brand = require('./x-autoposter-brand');
+  if (!brand.monitoringFallbackAllowed()) return { queued: false, reason: 'monitoring_disabled' };
   if (!trustedWriter || !hasRecruitingIntelSignal(row.detail)) return null;
   return queueBeatMonitoringFallback(row, skipReason);
 }
