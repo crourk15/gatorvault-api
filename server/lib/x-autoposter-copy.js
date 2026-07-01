@@ -67,6 +67,9 @@ const BROKEN_COPY_PATTERNS = [
 const PLAYER_INTEL_SIGNALS = [
   /\b(commit(?:ted|ment)?|decommit(?:ted)?|flip(?:ped)?|portal|enroll(?:s|ed|ing)?)\b/i,
   /\b(official visit|\bov\b|\buv\b|unofficial visit|visit(?:ed|ing|s)? scheduled|cancel(?:led|s)?\s+(?:his|her|their)?\s*(?:ov|official))\b/i,
+  /\b(?:trip|visit)\s+to\s+(?:gainesville|the swamp)\b/i,
+  /\bstrong interest in the gators\b/i,
+  /\b(interior ol|i ol|no\.?\s*1)\b/i,
   /\b(prediction machine|futurecast|expert pick|crystal ball|forecast logged|prediction logged|rpm)\b/i,
   /\b(offer(?:ed|s)?|verb(?:ed|al)?)\b/i,
   /\bClass of 20\d{2}\b/i,
@@ -261,6 +264,13 @@ function detectBeatNewsEvent(text) {
   }
   if (/\b(official visit|\bov\b).*?(?:florida|gators|gainesville|\buf\b)/i.test(t)) return 'scheduled an OV to Florida';
   if (/\b(unofficial visit|\buv\b).*?(?:florida|gators|gainesville|\buf\b)/i.test(t)) return 'scheduled a visit to Gainesville';
+  if (
+    /\b(another|return|next)\s+(?:trip|visit)\s+to\s+(?:gainesville|the swamp)\b/i.test(t) ||
+    (/\b100\s*percent\b/i.test(t) && /\bgainesville\b/i.test(t))
+  ) {
+    return 'indicated strong interest in another Gainesville visit';
+  }
+  if (/\bstrong interest in the gators\b/i.test(t)) return 'signaled strong interest in Florida';
   if (/\boffer(?:ed|s)?\b.*\b(florida|gators|\buf\b)/i.test(t)) return 'received an offer from UF';
   if (isPredictionMachinePost(t)) return 'picked up a UF prediction';
   if (/\brpm\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'picked up a UF prediction';
@@ -276,6 +286,9 @@ function resolveBeatIntelEventType(text, newsEvent) {
   }
   if (/surprised|ov stand out|official visit/i.test(newsEvent) && /\bsurprised\b/i.test(t)) {
     return 'official_visit';
+  }
+  if (/gainesville visit|strong interest|100 percent|another trip/i.test(String(newsEvent || '').toLowerCase())) {
+    return 'unofficial_visit';
   }
   if (/picked up a uf prediction|\brpm\b/i.test(String(newsEvent).toLowerCase())) return 'prediction';
   if (/official visit|\bov\b/i.test(newsEvent)) return 'official_visit';
@@ -480,9 +493,14 @@ async function buildBeatIntelCopyAsync(post) {
     return buildPredictionMachineCopyAsync(post);
   }
 
+  const on3Discovery = require('./on3-recruit-discovery');
+  const urlIdentity = on3Discovery.parseOn3BeatUrlIdentity(text, post?.url || null);
+  const resolvedPlayerSlug = guarded.playerSlug || urlIdentity?.playerSlug || null;
+
   const beatFilters = require('./beat-writer-filters');
   const isTeam =
     !hasPlayerSpecificIntel(text) &&
+    !resolvedPlayerSlug &&
     beatFilters.matchesGatorFootballIntel(text) &&
     playerName &&
     isValidPlayerName(playerName);
@@ -506,21 +524,29 @@ async function buildBeatIntelCopyAsync(post) {
 
   const newsEvent = detectBeatNewsEvent(text);
   const hasMomentum = beatFilters.detectRecruitingMomentum(text);
-  if (!newsEvent && !hasMomentum) return null;
+  const visitInterest =
+    /\b(another|return|next)\s+(?:trip|visit)\s+to\s+(?:gainesville|the swamp)\b/i.test(text) ||
+    /\bstrong interest in the gators\b/i.test(text) ||
+    (/\b100\s*percent\b/i.test(text) && /\bgainesville\b/i.test(text));
+  if (!newsEvent && !hasMomentum && !visitInterest) return null;
 
   const built = await playerContext.buildPlayerNewsPost({
     source: analyst,
     newsEvent,
     playerName,
-    playerSlug: guarded.playerSlug || null,
+    playerSlug: resolvedPlayerSlug || guarded.playerSlug || null,
     beatText: text,
     intel: beatIntelFromPost(post, {
       playerName,
-      playerSlug: guarded.playerSlug || null,
+      playerSlug: resolvedPlayerSlug || guarded.playerSlug || null,
       text,
       analyst
     }),
-    patch: { name: playerName, ...extractVerifiedPatchFromBeatText(text) }
+    patch: {
+      name: playerName,
+      pos: urlIdentity?.pos || undefined,
+      ...extractVerifiedPatchFromBeatText(text)
+    }
   });
   return newsPayloadFromBuilt(built);
 }

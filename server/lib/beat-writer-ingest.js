@@ -1390,6 +1390,18 @@ async function runBeatWriterIngest({ force = false, manualRows = [], posts = nul
   saveSnapshot(snapshot);
   if (results.processed.length) invalidateRecruitingIntelCaches();
 
+  let on3News = null;
+  try {
+    const { runUfOn3NewsDiscovery } = require('./uf-on3-news-discovery');
+    on3News = await runUfOn3NewsDiscovery({
+      classYear: 2028,
+      maxArticles: 20,
+      queueAutoposter: process.env.X_AUTOPOST_ENABLED === 'true'
+    });
+  } catch (err) {
+    on3News = { ok: false, error: err.message };
+  }
+
   try {
     const { scanBeatCommitQueue } = require('./allowlist-target-sync');
     results.commitIngest = await scanBeatCommitQueue({ posts: posts || undefined });
@@ -1412,6 +1424,7 @@ async function runBeatWriterIngest({ force = false, manualRows = [], posts = nul
   return {
     ok: true,
     ...results,
+    on3News,
     processedCount: results.processed.length,
     lastRun: snapshot.lastRun
   };

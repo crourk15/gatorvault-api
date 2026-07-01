@@ -116,6 +116,26 @@ assert('infers 2028 class year from Bender tweet', benderZyonParsed && benderZyo
   const news = await fill.buildNewsFromBeatPost(marquisPost);
   assert('Marquis beat builds news', news && news.text && !news.skipReason);
   if (news?.text) console.log('Marquis preview:', String(news.text).slice(0, 220));
+
+  const flemingPost = {
+    handle: 'corey_bender',
+    writerName: 'Corey Bender',
+    text:
+      '"100 percent." That was Joey Fleming\'s answer when asked if another trip to Gainesville could happen soon. The nation\'s No. 1 interior OL details his strong interest in the Gators and more... INTEL: https://on3.com/teams/florida-gators/news/florida-gators-making-headway-with-no-1-interior-ol-joey-fleming/',
+    publishedAt: new Date().toISOString(),
+    url: 'https://x.com/Corey_Bender/status/fleming-test'
+  };
+  const on3 = require('../lib/on3-recruit-discovery');
+  const flemingUrl = on3.parseOn3BeatUrlIdentity(flemingPost.text, flemingPost.url);
+  assert('Fleming On3 URL resolves slug', flemingUrl && flemingUrl.playerSlug === 'joey-fleming');
+  assert('Fleming On3 URL resolves IOL', flemingUrl && flemingUrl.pos === 'IOL');
+  assert('Fleming tweet trusted writer', filters.isTrustedBeatWriter(flemingPost));
+  assert('Fleming tweet passes UF filter', filters.shouldIncludeBeatPost(flemingPost));
+  const flemingGuarded = await prefilter.guardBeatPost(flemingPost);
+  assert('Fleming tweet prefilter eligible', flemingGuarded.eligible !== false);
+  const flemingNews = await fill.buildNewsFromBeatPost(flemingPost);
+  assert('Fleming beat builds news', flemingNews && flemingNews.text && !flemingNews.skipReason);
+  if (flemingNews?.text) console.log('Fleming preview:', String(flemingNews.text).slice(0, 280));
 })().finally(() => {
   if (process.exitCode) {
     console.error('\nBeat writer ingest tests failed.');

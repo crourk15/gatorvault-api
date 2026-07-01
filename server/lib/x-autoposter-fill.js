@@ -70,7 +70,24 @@ async function ensureBeatIntelIngested({ force = false } = {}) {
 async function prepareBeatFirstAutoposter({ forceIngest = false } = {}) {
   const cache = await ensureBeatCacheFresh();
   const ingest = await ensureBeatIntelIngested({ force: forceIngest });
-  return { cache, ingest };
+  let on3News = null;
+  const beatEmpty =
+    !(cache.postCount || 0) ||
+    cache.reason === 'no_fetch_credentials' ||
+    /X_BEARER_TOKEN not set/i.test(String(cache.error || ''));
+  if (beatEmpty && process.env.X_AUTOPOST_ON3_NEWS_FALLBACK !== 'false') {
+    try {
+      const { runUfOn3NewsDiscovery } = require('./uf-on3-news-discovery');
+      on3News = await runUfOn3NewsDiscovery({
+        classYear: 2028,
+        maxArticles: 20,
+        queueAutoposter: pipelineGuards.autopostEnabled()
+      });
+    } catch (err) {
+      on3News = { ok: false, error: err.message };
+    }
+  }
+  return { cache, ingest, on3News };
 }
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
@@ -598,6 +615,11 @@ async function collectFreshPostCandidates({ forcePost = false } = {}) {
 
     const beatCandidates = await collectBeatAutoposterCandidates(freshPosts);
     for (const row of beatCandidates) candidates.unshift(row);
+
+    if (!freshPosts.length && process.env.X_AUTOPOST_ON3_NEWS_FALLBACK !== 'false') {
+      const on3Candidates = await collectOn3NewsBeatCandidates();
+      for (const row of on3Candidates) candidates.unshift(row);
+    }
   } catch {
     /* optional */
   }
@@ -653,6 +675,70 @@ async function collectFreshPostCandidates({ forcePost = false } = {}) {
     /* optional */
   }
 
+  return candidates;
+}
+
+async function queueOn3NewsBeatPost(syntheticPost, meta = {}) {
+  if (!pipelineGuards.autopostEnabled()) {
+    return { queued: false, reason: 'autoposter_disabled' };
+  }
+  const news = await buildNewsFromBeatPost(syntheticPost);
+  if (!news?.text) return { queued: false, reason: 'copy_failed', detail: news?.skipReason || null };
+  const finalized = await finalizeNewsCandidate(news);
+  if (!finalized) return { queued: false, reason: 'quality_gate' };
+  const fp = meta.fingerprint || finalized.intelFingerprint;
+  const doc = store.loadQueue();
+  if (fp && fingerprintAlreadyQueued(fp, doc.items)) return { queued: false, reason: 'duplicate' };
+  if (alreadyQueued(finalized.text, doc.items)) return { queued: false, reason: 'duplicate_text' };
+  const similar = similarPostQueued(finalized.text, doc.items);
+  if (similar) return { queued: false, reason: 'similar_post', similarity: similar.similarity };
+  const policy = require('./x-autoposter-policy');
+  const check = policy.validatePostContent(finalized);
+  if (!check.valid) return { queued: false, reason: 'validation', errors: check.errors };
+  const gm2 = require('./gm2');
+  if (!gm2.filterAutoposterCandidate(finalized)) return { queued: false, reason: 'gm2_filter' };
+  const tagged = cadence.tagCandidate({
+    ...finalized,
+    qualityScore: finalized.qualityScore ?? check.qualityScore ?? null,
+    qualityBreakdown: finalized.qualityBreakdown ?? check.qualityBreakdown ?? null,
+    sourceConfidence: finalized.sourceConfidence ?? check.sourceConfidence ?? null,
+    source: finalized.source || 'auto:on3-team-news',
+    intelFingerprint: fp || finalized.intelFingerprint
+  });
+  const out = store.enqueuePost({
+    ...tagged,
+    scheduledAt: store.nowIso(),
+    status: 'pending'
+  });
+  if (meta.sourceIntelId) {
+    try {
+      intelStore.markIntelXPostQueued(meta.sourceIntelId, { queueItemId: out.item.id });
+    } catch {
+      /* optional */
+    }
+  }
+  return { queued: true, itemId: out.item.id, preview: String(finalized.text || '').slice(0, 160) };
+}
+
+async function collectOn3NewsBeatCandidates() {
+  const { fetchFloridaTeamNewsArticles, parseArticleIdentity, buildSyntheticBeatPostFromOn3Article } = require('./uf-on3-news-discovery');
+  let articles = [];
+  try {
+    articles = await fetchFloridaTeamNewsArticles();
+  } catch {
+    return [];
+  }
+  const cutoff = Date.now() - MAX_BEAT_POST_AGE_MS;
+  const candidates = [];
+  for (const article of articles.slice(0, 12)) {
+    const ts = new Date(article.postDateGMT || article.postDate || 0).getTime();
+    if (Number.isNaN(ts) || ts < cutoff) continue;
+    const identity = parseArticleIdentity(article);
+    if (!identity?.playerSlug) continue;
+    const synthetic = buildSyntheticBeatPostFromOn3Article(article, identity);
+    const row = await buildNewsFromBeatPost(synthetic);
+    if (row?.text && !copy.isBrokenCopy(row.text, row)) candidates.push(row);
+  }
   return candidates;
 }
 
@@ -895,6 +981,8 @@ module.exports = {
   queueCommitEventAutopost,
   forceEnqueueRecentCommits,
   prepareBeatFirstAutoposter,
+  queueOn3NewsBeatPost,
+  collectOn3NewsBeatCandidates,
   isCommitAutopostEvent,
   COMMIT_EVENT_SOURCES,
   FORCE_POST_COMMIT_AGE_MS,

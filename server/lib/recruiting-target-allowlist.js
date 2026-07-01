@@ -48,6 +48,7 @@ const ALLOWLIST_2028 = [
   'kahmaree-crumity',
   'pj-evans',
   'anthony-howard-jr',
+  'joey-fleming',
 ];
 
 /** Charles' display names — used for On3/Rivals/247 identity lookup (never synthetic cards). */
@@ -93,6 +94,7 @@ const CANONICAL_TARGET_NAMES = {
   'kahmaree-crumity': 'Kahmaree Crumity',
   'pj-evans': 'PJ Evans',
   'anthony-howard-jr': 'Anthony Howard Jr.',
+  'joey-fleming': 'Joey Fleming',
 };
 
 /** Display name → canonical slug (handles typos / aliases) */

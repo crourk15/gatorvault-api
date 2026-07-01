@@ -101,9 +101,48 @@ async function fetchFloridaTeamNewsArticles() {
   return Array.isArray(raw) ? raw : [];
 }
 
-async function runUfOn3NewsDiscovery({ classYear = 2028, force = false, dryRun = false, maxArticles = 30 } = {}) {
+function buildSyntheticBeatPostFromOn3Article(article, identity) {
+  const author = article?.author?.name || 'Corey Bender';
+  const handle = /bender/i.test(author)
+    ? 'corey_bender'
+    : /alderman/i.test(author)
+      ? 'blake_alderman'
+      : 'gatorsonline';
+  const excerpt = String(article?.excerpt || article?.title || '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const url = identity?.on3ArticleUrl || articleFullUrl(article);
+  const text = excerpt.includes('INTEL:') ? excerpt : `${excerpt} INTEL: ${url}`;
+  return {
+    handle,
+    writerName: author,
+    text: text.slice(0, 280),
+    publishedAt: article?.postDateGMT || article?.postDate || new Date().toISOString(),
+    url
+  };
+}
+
+async function queueAutoposterForOn3Article(article, identity, intelItem = null) {
+  if (process.env.X_AUTOPOST_ON3_NEWS_FALLBACK === 'false') {
+    return { queued: false, reason: 'on3_fallback_disabled' };
+  }
+  const synthetic = buildSyntheticBeatPostFromOn3Article(article, identity);
+  const fill = require('./x-autoposter-fill');
+  return fill.queueOn3NewsBeatPost(synthetic, {
+    fingerprint: intelItem?.fingerprint || `on3_news_autopost_${identity.articleKey || identity.playerSlug}`,
+    sourceIntelId: intelItem?.id || null
+  });
+}
+
+async function runUfOn3NewsDiscovery({
+  classYear = 2028,
+  force = false,
+  dryRun = false,
+  maxArticles = 30,
+  queueAutoposter = false
+} = {}) {
   const snapshot = readSnapshot();
-  const results = { scanned: 0, provisioned: [], intel: [], skipped: [], errors: [] };
+  const results = { scanned: 0, provisioned: [], intel: [], autoposter: [], skipped: [], errors: [] };
 
   let articles = [];
   try {
@@ -125,6 +164,7 @@ async function runUfOn3NewsDiscovery({ classYear = 2028, force = false, dryRun =
     }
 
     const fp = String(identity.articleKey || identity.playerSlug);
+    const isNewArticle = force || !snapshot.fingerprints[fp];
     if (!force && snapshot.fingerprints[fp]) {
       results.skipped.push({ reason: 'snapshot', slug: identity.playerSlug });
       continue;
@@ -153,10 +193,11 @@ async function runUfOn3NewsDiscovery({ classYear = 2028, force = false, dryRun =
       }
 
       const intelFp = `on3_news_${fp}_${identity.playerSlug}`;
+      let intelItem = null;
       if (!dryRun && !intelStore.hasIntelFingerprint(intelFp)) {
         await intelStore.initIntelStore();
         const player = (await store.getPlayerBySlug(identity.playerSlug)) || existing || {};
-        const intel = await intelStore.addIntel({
+        intelItem = await intelStore.addIntel({
           playerId: player.on3Id || identity.playerSlug,
           playerSlug: identity.playerSlug,
           playerName: identity.playerName,
@@ -180,9 +221,14 @@ async function runUfOn3NewsDiscovery({ classYear = 2028, force = false, dryRun =
         });
         results.intel.push({
           slug: identity.playerSlug,
-          created: intel.created,
-          skipped: intel.skipped,
+          created: intelItem.created,
+          skipped: intelItem.skipped,
         });
+      }
+
+      if (!dryRun && queueAutoposter && (force || isNewArticle || intelItem?.created)) {
+        const ap = await queueAutoposterForOn3Article(article, identity, intelItem);
+        results.autoposter.push({ slug: identity.playerSlug, ...ap });
       }
 
       if (!dryRun) snapshot.fingerprints[fp] = new Date().toISOString();
@@ -208,5 +254,6 @@ module.exports = {
   SNAPSHOT_PATH,
   parseArticleIdentity,
   fetchFloridaTeamNewsArticles,
+  buildSyntheticBeatPostFromOn3Article,
   runUfOn3NewsDiscovery,
 };

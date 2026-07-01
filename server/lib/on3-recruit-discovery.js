@@ -170,6 +170,47 @@ function parseOn3NewsArticleSlug(pathSlug) {
     };
   }
 
+  m = slug.match(/\bno-\d+-interior-ol-([a-z0-9-]+)$/i);
+  if (m) {
+    const playerSlug = m[1].replace(/-\d+$/, '');
+    if (!isLikelyPersonSlug(playerSlug)) return null;
+    return {
+      playerSlug,
+      playerName: slugToPlayerName(playerSlug),
+      stars: null,
+      pos: 'IOL',
+      classYear: null,
+    };
+  }
+
+  m = slug.match(/\bwith-no-\d+-([a-z0-9-]+-ol)-([a-z0-9-]+)$/i);
+  if (m) {
+    const playerSlug = m[2].replace(/-\d+$/, '');
+    if (!isLikelyPersonSlug(playerSlug)) return null;
+    const posToken = m[1].includes('interior') ? 'IOL' : 'OL';
+    return {
+      playerSlug,
+      playerName: slugToPlayerName(playerSlug),
+      stars: null,
+      pos: posToken,
+      classYear: null,
+    };
+  }
+
+  m = slug.match(/-([a-z0-9]+-[a-z0-9]+)$/i);
+  if (m) {
+    const playerSlug = m[1].replace(/-\d+$/, '');
+    if (isLikelyPersonSlug(playerSlug)) {
+      return {
+        playerSlug,
+        playerName: slugToPlayerName(playerSlug),
+        stars: null,
+        pos: null,
+        classYear: null,
+      };
+    }
+  }
+
   return null;
 }
 

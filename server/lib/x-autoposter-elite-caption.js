@@ -73,6 +73,21 @@ function pickBeatIntelAngle(research, beatText) {
   }
 
   if (
+    (/\b100\s*percent\b/.test(beat) && /\bgainesville\b/.test(beat)) ||
+    /\b(another|return|next)\s+(?:trip|visit)\s+to\s+(?:gainesville|the swamp)\b/.test(beat) ||
+    /\bstrong interest in the gators\b/.test(beat)
+  ) {
+    const rankNote = /\bno\.?\s*1\b.*\b(?:interior\s+)?ol\b|\bnation'?s?\s+no\.?\s*1\b/i.test(beatText || '')
+      ? ' — the nation\'s No. 1 interior OL on the board'
+      : '';
+    return {
+      context: `${fn} is open to another Gainesville trip${rankNote}.`,
+      insider: compLine || 'Staff has kept the OL pipeline active — UF is in the real mix here.',
+      _beatIntel: true
+    };
+  }
+
+  if (
     (/\bballinger\b|jaxballinger/.test(beat)) &&
     /\bohio\b/.test(beat) &&
     (pos === 'TE' || /\btight end\b|\bte recruiting\b/.test(beat))
