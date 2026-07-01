@@ -234,7 +234,11 @@ function isRecoverableFailedItem(item, { maxAgeMs = 30 * 24 * 60 * 60 * 1000 } =
   if (Number.isFinite(ts) && ts > 0 && Date.now() - ts > maxAgeMs) return false;
   if (item.verifiedCommit || item.validationMeta?.verifiedCommit) return true;
   const check = policy.validatePostContent(item);
-  return check.valid;
+  if (check.valid) return true;
+  if (/rewrite_failed|too_short|rewrite failed/i.test(err)) {
+    return policy.validatePostContent(item).valid;
+  }
+  return false;
 }
 
 function rependFailedItem(item) {

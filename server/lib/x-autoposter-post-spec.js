@@ -207,7 +207,7 @@ function detectSituation(text, eventType) {
   if (/portal/.test(et)) return 'portal';
   if (/commit|flip/.test(et)) return 'commitment';
   if (/decommit/.test(et)) return 'decommitment';
-  if (/prediction|trend|momentum|rpm|futurecast/.test(et)) return 'trending';
+  if (/prediction|trend|momentum|rpm|futurecast|beat_intel|major_beat/.test(et)) return 'trending';
   if (/injury/.test(et)) return 'injury';
   if (/rank/.test(et)) return 'ranking';
   if (/staff|coach/.test(et)) return 'staff';

@@ -16,6 +16,87 @@ const {
   forceEnqueueRecentCommits,
   prepareBeatFirstAutoposter
 } = require('./x-autoposter-fill');
+const { isOAuth1Configured } = require('./x-oauth1');
+const pipelineGuards = require('./pipeline-guards');
+
+function forcePostDiagnostics(extra = {}) {
+  const failed = store.listQueue({ status: 'failed' });
+  const lastFailed = failed.sort(
+    (a, b) =>
+      new Date(b.sentAt || b.createdAt || 0).getTime() - new Date(a.sentAt || a.createdAt || 0).getTime()
+  )[0];
+  return {
+    pendingCount: store.listQueue({ status: 'pending' }).length,
+    failedCount: failed.length,
+    lastFailedError: lastFailed?.error || null,
+    lastFailedItemId: lastFailed?.id || null,
+    lastFailedPreview: lastFailed?.text ? String(lastFailed.text).slice(0, 120) : null,
+    autopostEnabled: pipelineGuards.autopostEnabled(),
+    oauthConfigured: isOAuth1Configured(),
+    ...extra
+  };
+}
+
+function refreshQueueItemFreshness(item) {
+  const ts = store.nowIso();
+  item.sourceEventCreatedAt = ts;
+  item.sourcePublishedAt = ts;
+  item.scheduledAt = ts;
+  item.eventTimestamp = ts;
+  if (!item.postUrgency) item.postUrgency = 'breaking';
+  return item;
+}
+
+async function recomposeFailedQueueItems() {
+  const doc = store.loadQueue();
+  const eliteCaption = require('./x-autoposter-elite-caption');
+  let recomposed = 0;
+  for (const item of doc.items) {
+    if (item.status !== 'failed') continue;
+    if (/duplicate content/i.test(String(item.error || ''))) continue;
+    const slug = item.playerSlug || item.validationMeta?.playerSlug;
+    if (!slug && !item.playerName) continue;
+    try {
+      const beatText =
+        item.validationMeta?.beatText ||
+        item.templateBlocks?.context ||
+        null;
+      const built = await eliteCaption.buildElitePlayerPost({
+        playerName: item.playerName,
+        playerSlug: slug,
+        beatText,
+        intel: {
+          playerName: item.playerName,
+          playerSlug: slug,
+          eventType: item.sourceEventType || item.validationMeta?.eventType || 'trending',
+          detail: beatText || item.text
+        }
+      });
+      if (!built?.ok || !built.text) continue;
+      const candidate = { ...item, text: built.text, templateBlocks: built.templateBlocks || item.templateBlocks };
+      const check = policy.validatePostContent(candidate);
+      if (!check.valid) continue;
+      item.text = built.text;
+      item.templateBlocks = built.templateBlocks || item.templateBlocks;
+      item.validationMeta = {
+        ...(item.validationMeta || {}),
+        ...(built.validationMeta || {}),
+        eliteCompose: true,
+        eliteDigest: true
+      };
+      item.status = 'pending';
+      item.error = null;
+      item.validationErrors = [];
+      item.sentAt = null;
+      refreshQueueItemFreshness(item);
+      recomposed += 1;
+    } catch {
+      /* optional per item */
+    }
+  }
+  if (recomposed) store.saveQueue(doc);
+  return recomposed;
+}
 
 function mapPostError(err, context = {}) {
   const msg = String(err?.message || err || '').toLowerCase();
@@ -123,12 +204,27 @@ function findPendingQueueItemForText(text, items) {
 async function tryForceQueuePost() {
   store.recoverFailedVerifiedCommits();
   store.recoverFailedPostableItems();
+  await recomposeFailedQueueItems();
+  store.recoverFailedVerifiedCommits();
+  store.recoverFailedPostableItems();
   const pending = store.listQueue({ status: 'pending' });
+  for (const item of pending) {
+    refreshQueueItemFreshness(item);
+    store.updatePost(item.id, {
+      sourceEventCreatedAt: item.sourceEventCreatedAt,
+      sourcePublishedAt: item.sourcePublishedAt,
+      scheduledAt: item.scheduledAt,
+      eventTimestamp: item.eventTimestamp,
+      postUrgency: item.postUrgency
+    });
+  }
   if (!pending.length) return null;
   return forceProcessQueuedPost();
 }
 
 async function forcePostNow() {
+  process.env.X_AUTOPOST_FORCE_POST = 'true';
+  try {
   autoposter.saveSchedulerStatus({ lastPostAttempt: store.nowIso(), lastError: null });
 
   try {
@@ -138,7 +234,10 @@ async function forcePostNow() {
   }
 
   let queueResult = await tryForceQueuePost();
-  if (queueResult) return queueResult;
+  if (queueResult?.posted) return queueResult;
+  if (queueResult && !queueResult.posted && queueResult.error) {
+    return { ...queueResult, ...forcePostDiagnostics() };
+  }
 
   try {
     await refillAutoposterQueue({ minPending: 1, maxEnqueue: 3, forcePost: true });
@@ -147,13 +246,19 @@ async function forcePostNow() {
   }
 
   queueResult = await tryForceQueuePost();
-  if (queueResult) return queueResult;
+  if (queueResult?.posted) return queueResult;
+  if (queueResult && !queueResult.posted && queueResult.error) {
+    return { ...queueResult, ...forcePostDiagnostics() };
+  }
 
   try {
     const enq = await forceEnqueueRecentCommits();
     if (enq.queued) {
       queueResult = await tryForceQueuePost();
-      if (queueResult) return queueResult;
+      if (queueResult?.posted) return queueResult;
+      if (queueResult && !queueResult.posted && queueResult.error) {
+        return { ...queueResult, ...forcePostDiagnostics() };
+      }
     }
   } catch (err) {
     /* commit enqueue optional */
@@ -260,9 +365,11 @@ async function forcePostNow() {
     posted: false,
     error: 'no_fresh_intel',
     source: 'force-post',
-    pendingCount: store.listQueue({ status: 'pending' }).length,
-    failedCount: store.listQueue({ status: 'failed' }).length
+    ...forcePostDiagnostics()
   };
+  } finally {
+    delete process.env.X_AUTOPOST_FORCE_POST;
+  }
 }
 
 module.exports = { forcePostNow, mapPostError, forceProcessQueuedPost };

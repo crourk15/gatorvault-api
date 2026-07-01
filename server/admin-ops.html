@@ -307,7 +307,10 @@
               var hint='No postable intel found.';
               if(j.pendingCount!=null)hint+=' Pending queue: '+j.pendingCount+'.';
               if(j.failedCount!=null)hint+=' Failed queue: '+j.failedCount+'.';
-              hint+=' Check X_AUTOPOST_ENABLED and OAuth on Render.';
+              if(j.lastFailedError)hint+=' Last failure: '+j.lastFailedError+'.';
+              if(j.oauthConfigured===false)hint+=' X OAuth not configured on server.';
+              else if(j.autopostEnabled===false)hint+=' X_AUTOPOST_ENABLED is off.';
+              else if(j.oauthConfigured===true&&j.autopostEnabled===true)hint+=' OAuth OK — check beat cache / failed item validation.';
               throw new Error(hint);
             }
             throw new Error(j.error||('Force post failed ('+res.status+')'));

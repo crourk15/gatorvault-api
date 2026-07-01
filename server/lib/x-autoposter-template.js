@@ -160,6 +160,7 @@ function hasBrokenEnding(s) {
   const t = String(s || '').trim();
   if (!t) return true;
   if (isIdentityLine(t) || isUrlLine(t)) return false;
+  if (/↓\s*$/.test(t)) return false;
   if (isStatsContextLine(t)) return false;
   if (/%["')\]]*$/.test(t)) return false;
   if (/…|\.\.\.$/.test(t)) return true;

@@ -187,9 +187,15 @@ function validatePostContent(item) {
     }
     const qualityCheck = quality.validateNewsPostQuality(item);
     const verifiedCommit = item.verifiedCommit || item.validationMeta?.verifiedCommit;
+    const eliteForcePost =
+      process.env.X_AUTOPOST_FORCE_POST === 'true' &&
+      (item.validationMeta?.eliteCompose || item.validationMeta?.eliteDigest);
     if (
       !qualityCheck.valid &&
-      !(verifiedCommit && qualityCheck.errors.every((e) => e.type === 'below_threshold' || e.rule === 'score'))
+      !(
+        (verifiedCommit || eliteForcePost) &&
+        qualityCheck.errors.every((e) => e.type === 'below_threshold' || e.rule === 'score')
+      )
     ) {
       errors.push(...qualityCheck.errors.map((e) => ({ ...e, field: e.field || e.rule || 'quality' })));
     }

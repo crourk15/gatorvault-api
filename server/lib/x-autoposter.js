@@ -254,10 +254,15 @@ async function processQueueItem(item) {
       }
     } else if (!prepared.ok) {
       const verified = item.verifiedCommit || item.validationMeta?.verifiedCommit;
-      const check = verified ? policy.validatePostContent(item) : null;
-      if (verified && check?.valid) {
-        autopostLog('warn', `Verified commit copy used after ${prepared.reason || 'rewrite_failed'}`, {
-          itemId: item.id
+      const elitePremade =
+        item.validationMeta?.eliteCompose ||
+        item.validationMeta?.eliteDigest ||
+        String(item.source || '').includes('beat-intel');
+      const check = verified || elitePremade ? policy.validatePostContent(item) : null;
+      if ((verified || elitePremade) && check?.valid) {
+        autopostLog('warn', `Premade copy used after ${prepared.reason || 'rewrite_failed'}`, {
+          itemId: item.id,
+          elitePremade: !!elitePremade
         });
         workingItem = item;
       } else {

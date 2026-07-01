@@ -38,6 +38,26 @@ function bypassRewriteForVerifiedCommit(item = {}) {
   };
 }
 
+/** Elite compose already produced post-ready copy — do not run GM2 rewrite (often fails too_short). */
+function bypassRewriteForElitePremade(item = {}) {
+  const meta = item.validationMeta || {};
+  if (!(meta.eliteCompose || meta.eliteDigest)) return null;
+  const check = policy.validatePostContent(item);
+  if (!check.valid) return null;
+  monitoring.logAutoposterEvent('rewrite_bypass', {
+    itemId: item.id,
+    reason: 'elite_premade',
+    playerName: item.playerName
+  });
+  return {
+    ok: true,
+    item,
+    skipped: true,
+    reason: 'elite_premade',
+    bypass: true
+  };
+}
+
 function rewriteFallbackEnabled() {
   return process.env.X_AUTOPOST_REWRITE_FALLBACK !== 'false';
 }
@@ -146,6 +166,9 @@ async function prepareQueueItemForPost(item = {}) {
 
   const verifiedBypass = bypassRewriteForVerifiedCommit(item);
   if (verifiedBypass) return verifiedBypass;
+
+  const elitePremadeBypass = bypassRewriteForElitePremade(item);
+  if (elitePremadeBypass) return elitePremadeBypass;
 
   const eliteCaption = require('../x-autoposter-elite-caption');
   if (eliteCaption.isEliteModeEnabled()) {

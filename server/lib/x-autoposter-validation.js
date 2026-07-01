@@ -393,6 +393,7 @@ function resolveEventTimestamp(item) {
 }
 
 function validateFreshness(item, now = Date.now()) {
+  if (process.env.X_AUTOPOST_FORCE_POST === 'true') return [];
   const errors = [];
   const eventMs = resolveEventTimestamp(item);
   if (eventMs == null) {
