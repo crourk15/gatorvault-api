@@ -3,7 +3,8 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { check } = require('../../../qa/qa-utils');
+const config = require('../../../qa/qa-config');
+const { check, headUrl } = require('../../../qa/qa-utils');
 const { getRequiredExports, isRetiredPattern, routeMap, vaultMap } = require('../../load-config');
 
 const SERVER_ROOT = path.join(__dirname, '..', '..', '..', '..');
@@ -16,19 +17,47 @@ function readLocal(rel) {
   }
 }
 
+function exportSiteUrls(rel) {
+  const clean = String(rel || '').replace(/^\//, '');
+  const base = config.SITE_URL.replace(/\/$/, '');
+  const dir = clean.replace(/index\.html$/, '');
+  const urls = [`${base}/${dir}`, `${base}/${clean}`];
+  return [...new Set(urls)];
+}
+
+async function exportExists(rel) {
+  if (readLocal(rel)) return { ok: true, source: 'local' };
+  for (const url of exportSiteUrls(rel)) {
+    const head = await headUrl(url, { timeout: config.FETCH_TIMEOUT_MS, retries: 1 });
+    if (head.ok) return { ok: true, source: 'site', url };
+  }
+  return { ok: false, source: 'missing', rel };
+}
+
 async function runReactRouteValidationChecks() {
   const checks = [];
 
   checks.push(
     await check('integrity:react-exports', 'integrity', 'Vault route map static exports', async () => {
-      const missing = getRequiredExports().filter((rel) => !readLocal(rel));
+      const required = getRequiredExports();
+      const missing = [];
+      const resolved = [];
+      for (const rel of required) {
+        const hit = await exportExists(rel);
+        if (hit.ok) resolved.push({ rel, ...hit });
+        else missing.push(rel);
+      }
       if (missing.length) {
-        const err = new Error(`${missing.length} export(s) missing — run client build + merge-into-server`);
+        const err = new Error(`${missing.length} export(s) missing locally and on ${config.SITE_URL}`);
         err.details = missing;
         err.repro = 'npm run build --prefix client && node client/scripts/merge-into-server.js';
         throw err;
       }
-      return { exports: getRequiredExports().length };
+      return {
+        exports: required.length,
+        local: resolved.filter((r) => r.source === 'local').length,
+        site: resolved.filter((r) => r.source === 'site').length
+      };
     })
   );
 

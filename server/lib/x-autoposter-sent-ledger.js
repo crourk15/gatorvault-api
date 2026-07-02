@@ -151,6 +151,14 @@ function entryMatches(item, { slug, commitFingerprint: fp, text, playerSlug } = 
   return false;
 }
 
+function isConfirmedLedgerPost(entry) {
+  if (!entry) return false;
+  if (entry.tweetId) return true;
+  const eventType = String(entry.eventType || '').toLowerCase();
+  if ((eventType === 'commit' || eventType === 'flip') && entry.commitFingerprint) return true;
+  return false;
+}
+
 function hasRecentSentPost({ slug, intelFingerprint, text, playerSlug } = {}) {
   const cutoff = Date.now() - NEWS_REPOST_WINDOW_MS;
   const doc = loadLedger();
@@ -159,6 +167,7 @@ function hasRecentSentPost({ slug, intelFingerprint, text, playerSlug } = {}) {
   const key = normalizeSlug(slug || playerSlug);
   let postSpec = null;
   for (const entry of doc.entries) {
+    if (!isConfirmedLedgerPost(entry)) continue;
     const ts = new Date(entry.sentAt || 0).getTime();
     if (!Number.isFinite(ts) || ts < cutoff) continue;
     if (intelFingerprint && entry.intelFingerprint && entry.intelFingerprint === intelFingerprint) {

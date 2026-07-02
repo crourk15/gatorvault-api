@@ -279,8 +279,7 @@ function skipDuplicateQueueItem(item, reason, extra = {}) {
     sentAt: store.nowIso(),
   });
   saveSchedulerStatus({
-    lastPostAt: store.nowIso(),
-    lastPostSuccess: store.nowIso(),
+    lastDuplicateSkipAt: store.nowIso(),
     lastError: null,
   });
   return { ok: true, skipped: true, duplicate: true, itemId: item.id, reason };
@@ -652,8 +651,8 @@ function startXAutoposterScheduler() {
         const forceRefill = (pendingBefore === 0 && _emptyQueueStreak >= 2) || postFloorDue;
         const digDeeper = postFloorDue || (pendingBefore === 0 && _emptyQueueStreak >= 3);
         const refill = await refillAutoposterQueue({
-          minPending: parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '5', 10),
-          maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '8', 10),
+          minPending: parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '2', 10),
+          maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '4', 10),
           forcePost: forceRefill,
           digDeeper
         });
