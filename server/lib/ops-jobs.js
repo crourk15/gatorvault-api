@@ -123,7 +123,8 @@ const JOBS = {
       const refill = await fill.refillAutoposterQueue({
         minPending: parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '5', 10),
         maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '8', 10),
-        forcePost: opts.force === true
+        forcePost: opts.force === true,
+        digDeeper: opts.digDeeper === true || opts.force === true
       });
       let processed = { processed: 0, skipped: true, reason: 'no_processor' };
       if (typeof autoposter.processDuePosts === 'function') {

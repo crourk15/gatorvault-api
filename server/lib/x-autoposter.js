@@ -609,12 +609,30 @@ function startXAutoposterScheduler() {
       saveSchedulerStatus({ lastRun: store.nowIso() });
       try {
         const pendingBefore = store.listQueue({ status: 'pending' }).length;
-        const forceRefill = pendingBefore === 0 && _emptyQueueStreak >= 2;
+        const freshnessMod = require('./autoposter-freshness');
+        const schedulerStatus = loadSchedulerStatus();
+        const postFloorMs = parseInt(process.env.X_AUTOPOST_POST_FLOOR_MS || String(2 * 60 * 60 * 1000), 10);
+        const lastPostAt = schedulerStatus.lastPostAt || schedulerStatus.lastPostSuccess || null;
+        const msSincePost = lastPostAt ? Date.now() - new Date(lastPostAt).getTime() : Infinity;
+        const activityWindow = freshnessMod.getActivityWindow();
+        const postFloorDue =
+          activityWindow === 'normal' &&
+          Number.isFinite(msSincePost) &&
+          msSincePost >= postFloorMs;
+        const forceRefill = (pendingBefore === 0 && _emptyQueueStreak >= 2) || postFloorDue;
+        const digDeeper = postFloorDue || (pendingBefore === 0 && _emptyQueueStreak >= 3);
         const refill = await refillAutoposterQueue({
           minPending: parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '5', 10),
           maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '8', 10),
-          forcePost: forceRefill
+          forcePost: forceRefill,
+          digDeeper
         });
+        if (postFloorDue && refill.enqueuedCount > 0) {
+          autopostLog('info', 'Post floor refill — widened topic discovery', {
+            msSincePost,
+            enqueued: refill.enqueuedCount
+          });
+        }
         const pendingAfterRefill = store.listQueue({ status: 'pending' }).length;
         if (pendingAfterRefill === 0) {
           _emptyQueueStreak += 1;
@@ -628,7 +646,9 @@ function startXAutoposterScheduler() {
         }
         saveSchedulerStatus({
           lastRefillAt: store.nowIso(),
-          lastRefillCount: refill.enqueuedCount || 0
+          lastRefillCount: refill.enqueuedCount || 0,
+          postFloorDue: !!postFloorDue,
+          digDeeper: !!digDeeper
         });
         const out = await processDuePosts({ limit: 1 });
         saveSchedulerStatus({

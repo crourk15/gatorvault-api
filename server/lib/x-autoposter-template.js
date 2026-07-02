@@ -399,6 +399,8 @@ function programNewsLabel(programNewsType) {
     sec_tv: 'SEC / TV Announcement',
     realignment: 'Conference Realignment',
     branding: 'Uniform & Branding',
+    hall_of_fame: 'Hall of Fame',
+    history: 'Program History',
     general: 'Program News'
   };
   return labels[String(programNewsType || '').toLowerCase()] || labels.general;

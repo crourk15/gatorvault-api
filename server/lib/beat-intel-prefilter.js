@@ -96,6 +96,14 @@ const PROGRAM_NEWS_SIGNALS = [
   {
     type: 'branding',
     re: /\b(uniform reveal|jersey reveal|branding|helmet reveal|alternate uniform|new (?:logo|wordmark|brand))\b/i
+  },
+  {
+    type: 'hall_of_fame',
+    re: /\b(hall of fame|hof induct|ring of honor|legend|all[- ]time great|enshrined|honored at)\b/i
+  },
+  {
+    type: 'history',
+    re: /\b(this day in|on this day|program history|gator history|all[- ]time|record book|anniversary|years ago)\b/i
   }
 ];
 

@@ -300,27 +300,54 @@ async function buildNewsFromPortal(headliner) {
   );
 }
 
+function isProgramOrTeamNews(raw) {
+  return (
+    raw?.triggerType === 'program_news' ||
+    raw?.triggerType === 'team_event' ||
+    raw?.identityConfirmed === true ||
+    raw?.validationMeta?.programNews ||
+    String(raw?.source || '').includes('program-news') ||
+    String(raw?.source || '').includes('team-event')
+  );
+}
+
 function prepareNewsCandidate(raw) {
-  if (!raw?.text || copy.isBrokenCopy(raw.text, raw)) return null;
+  if (!raw?.text && !raw?._articleBuild) return null;
+  if (raw?.text && copy.isBrokenCopy(raw.text, raw)) return null;
 
   const eventMs = validation.resolveEventTimestamp(raw);
   const fresh = postSpec.validateIntelFreshness(eventMs);
-  if (!fresh.ok) {
+  const relaxedFreshness =
+    raw.source === 'auto:article' ||
+    raw.source === 'auto:heat-mover' ||
+    isProgramOrTeamNews(raw);
+  if (!fresh.ok && !relaxedFreshness) {
     console.log(`[x-autoposter] skip: ${fresh.logTag || fresh.skipReason} — ${fresh.reason}`);
     return null;
   }
 
   const gate = validation.passesNewsQualityGate(raw);
   const verifiedCommit = raw.verifiedCommit || raw.validationMeta?.verifiedCommit;
-  if (!gate.pass && verifiedCommit && !(gate.scored?.hardSkips?.length)) {
-  return {
-    ...raw,
-    qualityScore: Math.max(gate.scored?.score ?? 0, validation.POSTING_THRESHOLD || 85),
-    qualityBreakdown: gate.scored?.breakdown ?? null,
-    sourceConfidence: gate.scored?.sourceConfidence ?? validation.SOURCE_CONFIDENCE_REQUIRED ?? 100,
-    situation: raw.situation || postSpec.detectSituation(raw.text, raw.sourceEventType || raw.intelType),
-    verifiedCommit: true,
-  };
+  const programOrTeam = isProgramOrTeamNews(raw);
+  const softFailOnly =
+    gate.scored?.errors?.length &&
+    gate.scored.errors.every((e) => e.type === 'below_threshold' || e.rule === 'score');
+
+  if (
+    !gate.pass &&
+    (verifiedCommit || programOrTeam) &&
+    !(gate.scored?.hardSkips?.length) &&
+    (verifiedCommit || softFailOnly || programOrTeam)
+  ) {
+    return {
+      ...raw,
+      qualityScore: Math.max(gate.scored?.score ?? 0, validation.POSTING_THRESHOLD || 85),
+      qualityBreakdown: gate.scored?.breakdown ?? null,
+      sourceConfidence: gate.scored?.sourceConfidence ?? validation.SOURCE_CONFIDENCE_REQUIRED ?? 100,
+      situation: raw.situation || postSpec.detectSituation(raw.text, raw.sourceEventType || raw.intelType),
+      verifiedCommit: !!verifiedCommit,
+      identityConfirmed: raw.identityConfirmed || programOrTeam || undefined
+    };
   }
   if (!gate.pass) return null;
   return {
@@ -404,21 +431,260 @@ function buildPromoFromMix() {
 
 function buildNewsFromArticle(article) {
   if (!article?.title) return null;
-  const playerName = copy.extractPlayerFromText(`${article.title} ${article.summary || ''}`);
-  if (!playerName) return null;
+  const combined = `${article.title} ${article.summary || ''}`;
+  const playerName = copy.extractPlayerFromText(combined);
+  let prefilter = null;
+  try {
+    prefilter = require('./beat-intel-prefilter');
+  } catch {
+    /* optional */
+  }
+  const programNewsType = prefilter?.classifyProgramNewsType?.(combined) || null;
+  const isUfFootballArticle =
+    /\b(gator|florida gators|uf football|gator football|florida football)\b/i.test(combined);
+  if (!playerName && !programNewsType && !isUfFootballArticle) return null;
+
   const fp = intelFingerprint(article.id || article.title, 'article', article.publishedAt || article.date);
-  return {
+  const publishedAt = article.publishedAt || article.date || article.postDateGMT || null;
+  const base = {
     text: null,
     category: 'news',
+    sources: [{ label: article.author || 'GatorVault Insider', url: SITE_URL }],
+    source: 'auto:article',
+    intelFingerprint: fp,
+    sourceEventCreatedAt: publishedAt,
+    sourcePublishedAt: publishedAt,
+    _articleBuild: article
+  };
+
+  if (programNewsType) {
+    return {
+      ...base,
+      topic: 'program',
+      urgencyLabel: 'analysis',
+      postUrgency: programNewsType === 'hall_of_fame' ? 'breaking' : null,
+      sourceEventType: 'program_news',
+      triggerType: 'program_news',
+      programNewsType,
+      identityConfirmed: true,
+      playerName: null
+    };
+  }
+
+  if (!playerName && isUfFootballArticle) {
+    return {
+      ...base,
+      topic: 'general',
+      urgencyLabel: 'analysis',
+      sourceEventType: 'article',
+      identityConfirmed: true,
+      playerName: null,
+      validationMeta: { programNews: true, articleTopic: 'uf_football' }
+    };
+  }
+
+  return {
+    ...base,
     topic: 'general',
     urgencyLabel: 'analysis',
     sourceEventType: 'article',
-    sources: [{ label: article.author || 'GatorVault', url: SITE_URL }],
-    source: 'auto:article',
-    intelFingerprint: fp,
-    playerName,
-    _articleBuild: article
+    playerName
   };
+}
+
+function collectArticlePostCandidates({ limit, forcePost = false } = {}) {
+  const maxItems = limit || parseInt(process.env.X_AUTOPOST_ARTICLE_HARVEST_LIMIT || '8', 10);
+  const forceAgeMs = parseInt(
+    process.env.X_AUTOPOST_FORCE_COMMIT_AGE_MS || String(30 * 24 * 60 * 60 * 1000),
+    10
+  );
+  const maxAgeMs = forcePost
+    ? forceAgeMs
+    : parseInt(process.env.X_AUTOPOST_ARTICLE_MAX_AGE_MS || String(14 * 24 * 60 * 60 * 1000), 10);
+  const cutoff = Date.now() - maxAgeMs;
+  const articles = contentStore.loadPublishedArticles();
+  const rows = [];
+  for (const article of articles) {
+    if (!article?.title) continue;
+    const ts = new Date(article.publishedAt || article.date || article.postDateGMT || 0).getTime();
+    if (!forcePost && (Number.isNaN(ts) || ts < cutoff)) continue;
+    const row = buildNewsFromArticle(article);
+    if (row) rows.push(row);
+    if (rows.length >= maxItems) break;
+  }
+  return rows;
+}
+
+const TOPIC_PRIORITY = {
+  program_news: 0,
+  team_event: 1,
+  commitment: 2,
+  portal: 3,
+  beat_intel: 4,
+  heat_mover: 5,
+  article: 6,
+  recruiting_momentum: 7,
+  general: 8
+};
+
+function candidateTopicRank(raw) {
+  if (raw?.triggerType === 'program_news' || raw?.programNewsType) return TOPIC_PRIORITY.program_news;
+  if (raw?.triggerType === 'team_event' || raw?.teamEventType) return TOPIC_PRIORITY.team_event;
+  const eventType = String(raw?.sourceEventType || raw?.eventType || '').toLowerCase();
+  if (/commit|flip/.test(eventType)) return TOPIC_PRIORITY.commitment;
+  if (/portal/.test(eventType)) return TOPIC_PRIORITY.portal;
+  if (eventType === 'heat_mover') return TOPIC_PRIORITY.heat_mover;
+  if (eventType === 'article' || raw?.source === 'auto:article') return TOPIC_PRIORITY.article;
+  if (eventType === 'recruiting_momentum') return TOPIC_PRIORITY.recruiting_momentum;
+  if (String(raw?.source || '').includes('beat')) return TOPIC_PRIORITY.beat_intel;
+  return TOPIC_PRIORITY.general;
+}
+
+function prioritizePostCandidates(candidates) {
+  if (process.env.X_AUTOPOST_TOPIC_ROTATION === 'false') return candidates;
+  return [...(candidates || [])].sort((a, b) => {
+    const pa = candidateTopicRank(a);
+    const pb = candidateTopicRank(b);
+    if (pa !== pb) return pa - pb;
+    const ta = new Date(a.sourceEventCreatedAt || a.sourcePublishedAt || 0).getTime();
+    const tb = new Date(b.sourceEventCreatedAt || b.sourcePublishedAt || 0).getTime();
+    return tb - ta;
+  });
+}
+
+async function collectDigDeeperPostCandidates({ forcePost = false } = {}) {
+  const out = [];
+  for (const row of collectArticlePostCandidates({ limit: 10, forcePost: true })) {
+    out.push(row);
+  }
+  try {
+    const { buildHeatCheck } = require('./heat-check-store');
+    const heat = await buildHeatCheck();
+    for (const row of (heat?.rising || []).slice(0, 5)) {
+      if (!row?.name) continue;
+      const slug = row.slug || String(row.name).toLowerCase().replace(/\s+/g, '-');
+      const fp = intelFingerprint(slug, 'heat_mover', new Date().toISOString().slice(0, 10));
+      const dup = sentLedger.hasRecentSentPost({ slug, intelFingerprint: fp, text: row.name });
+      if (dup.hit) continue;
+      const classYear = row.classYear ? `${row.classYear} ` : '';
+      const pos = row.pos ? ` ${row.pos}` : '';
+      const identity = `${classYear}${row.name}${pos}`.trim();
+      const text = [
+        identity,
+        'GatorVault Heat Check — RPM momentum building on the Florida board.',
+        'Full prediction + visit intel ↓',
+        `${SITE_URL}/vault/futurecast/player/${slug}`
+      ].join('\n');
+      out.push({
+        text,
+        category: 'news',
+        topic: 'recruiting',
+        urgencyLabel: 'major_beat',
+        sourceEventType: 'heat_mover',
+        sources: [{ label: 'GatorVault Heat Check', url: SITE_URL }],
+        source: 'auto:heat-mover',
+        intelFingerprint: fp,
+        playerName: row.name,
+        playerSlug: slug,
+        sourceEventCreatedAt: store.nowIso(),
+        validationMeta: { eliteCompose: true, heatMover: true },
+        templateBlocks: {
+          identity,
+          context: 'GatorVault Heat Check — RPM momentum building on the Florida board.',
+          insider: 'Full prediction + visit intel on FutureCast.'
+        }
+      });
+    }
+  } catch {
+    /* optional */
+  }
+  return out;
+}
+
+async function attemptEnqueueCandidate(rawCandidate, doc) {
+  if (rawCandidate?._nonPlayerSkip && !isProgramOrTeamNews(rawCandidate)) {
+    return { queued: false, reason: 'non_player_intel' };
+  }
+  if (rawCandidate?._needsResolution || rawCandidate?.skipReason === 'needs_resolution') {
+    return { queued: false, reason: 'needs_resolution' };
+  }
+  if (rawCandidate?.skipReason && !isProgramOrTeamNews(rawCandidate)) {
+    return { queued: false, reason: rawCandidate.skipReason };
+  }
+  if (rawCandidate?._identitySkip && !isProgramOrTeamNews(rawCandidate)) {
+    return { queued: false, reason: 'identity_skip' };
+  }
+
+  const scored = await finalizeNewsCandidate(rawCandidate);
+  if (!scored) return { queued: false, reason: 'quality_gate' };
+
+  const fp = scored.intelFingerprint || scored.commitFingerprint;
+  if (fp && fingerprintAlreadyQueued(fp, doc.items)) return { queued: false, reason: 'duplicate_fingerprint' };
+  if (
+    scored.commitFingerprint &&
+    commitAlreadyQueued(scored.commitFingerprint, doc.items, {
+      slug: scored.playerSlug,
+      text: scored.text,
+      eventType: scored.sourceEventType
+    })
+  ) {
+    return { queued: false, reason: 'duplicate_commit' };
+  }
+  if (alreadyQueued(scored.text, doc.items)) return { queued: false, reason: 'duplicate_text' };
+  const similar = similarPostQueued(scored.text, doc.items, {
+    slug: scored.playerSlug,
+    intelFingerprint: scored.intelFingerprint
+  });
+  if (similar) return { queued: false, reason: 'similar_post', similarity: similar.similarity };
+
+  const gm2 = require('./gm2');
+  if (!gm2.filterAutoposterCandidate(scored)) return { queued: false, reason: 'gm2_filter' };
+
+  const check = policy.validatePostContent(scored);
+  const verifiedCommit = scored.verifiedCommit || scored.validationMeta?.verifiedCommit;
+  const programOrTeam = isProgramOrTeamNews(scored);
+  const elitePremade =
+    scored.validationMeta?.eliteCompose ||
+    scored.validationMeta?.eliteDigest ||
+    String(scored.source || '').includes('beat-intel');
+  const policyBlocked =
+    !check.valid &&
+    !(
+      (verifiedCommit || programOrTeam || elitePremade) &&
+      check.errors.every(
+        (e) =>
+          e.type === 'below_threshold' ||
+          e.rule === 'score' ||
+          ((programOrTeam || elitePremade) &&
+            (e.type === 'stale_intel' || e.type === 'stale' || e.type === 'missing_timestamp'))
+      )
+    );
+  if (policyBlocked) return { queued: false, reason: 'policy', errors: check.errors };
+
+  try {
+    const tagged = cadence.tagCandidate({
+      ...scored,
+      qualityScore: scored.qualityScore ?? check.qualityScore ?? null,
+      qualityBreakdown: scored.qualityBreakdown ?? check.qualityBreakdown ?? null,
+      sourceConfidence: scored.sourceConfidence ?? check.sourceConfidence ?? null
+    });
+    const out = store.enqueuePost({
+      ...tagged,
+      scheduledAt: store.nowIso(),
+      status: 'pending'
+    });
+    if (scored.sourceIntelId) {
+      const marked = intelStore.markIntelXPostQueued(scored.sourceIntelId, { queueItemId: out.item.id });
+      if (!marked) {
+        console.warn(
+          `[x-autoposter] enqueue ok but intel mark failed for ${scored.sourceIntelId} (${out.item.id})`
+        );
+      }
+    }
+    return { queued: true, item: out.item };
+  } catch (err) {
+    return { queued: false, reason: 'enqueue_error', error: err.message };
+  }
 }
 
 async function buildMomentumFromBeat(post) {
@@ -562,21 +828,28 @@ function isBeatWriterIntel(intel) {
 }
 
 async function directBeatPostCandidates(freshPosts) {
-  const candidates = [];
   const prefilter = require('./beat-intel-prefilter');
+  const programRows = [];
+  const otherRows = [];
   for (const post of freshPosts) {
     const guarded = await prefilter.guardBeatPost(post);
     if (!guarded.eligible) continue;
 
+    if (guarded.triggerType === 'program_news' || guarded.triggerType === 'team_event') {
+      const beatNews = await buildNewsFromBeatPost(post);
+      if (beatNews) programRows.push(beatNews);
+      continue;
+    }
+
     const momentum = await buildMomentumFromBeat(post);
     if (momentum) {
-      candidates.unshift(momentum);
+      otherRows.push(momentum);
       continue;
     }
     const beatNews = await buildNewsFromBeatPost(post);
-    if (beatNews) candidates.unshift(beatNews);
+    if (beatNews) otherRows.push(beatNews);
   }
-  return candidates;
+  return [...programRows, ...otherRows];
 }
 
 /** Beat posts → elite original compose by default; cluster quote-RT only when X_AUTOPOST_ELITE_COMPOSE=false. */
@@ -620,7 +893,7 @@ async function collectBeatAutoposterCandidates(freshPosts) {
   return candidates;
 }
 
-async function collectFreshPostCandidates({ forcePost = false } = {}) {
+async function collectFreshPostCandidates({ forcePost = false, digDeeper = false } = {}) {
   const candidates = [];
   const maxCommitAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_COMMIT_EVENT_AGE_MS;
   const maxBeatAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_BEAT_POST_AGE_MS;
@@ -703,16 +976,24 @@ async function collectFreshPostCandidates({ forcePost = false } = {}) {
   }
 
   try {
-    const articles = contentStore.loadPublishedArticles();
-    if (articles[0]) {
-      const row = buildNewsFromArticle(articles[0]);
-      if (row) candidates.push(row);
+    const articleLimit = parseInt(process.env.X_AUTOPOST_ARTICLE_HARVEST_LIMIT || '8', 10);
+    for (const row of collectArticlePostCandidates({ limit: articleLimit, forcePost: forcePost || digDeeper })) {
+      candidates.push(row);
     }
   } catch {
     /* optional */
   }
 
-  return candidates;
+  if (digDeeper) {
+    try {
+      const deeper = await collectDigDeeperPostCandidates({ forcePost: true });
+      for (const row of deeper) candidates.push(row);
+    } catch {
+      /* optional */
+    }
+  }
+
+  return prioritizePostCandidates(candidates);
 }
 
 async function queueOn3NewsBeatPost(syntheticPost, meta = {}) {
@@ -785,7 +1066,8 @@ async function collectOn3NewsBeatCandidates() {
 async function refillAutoposterQueue({
   minPending = parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '5', 10),
   maxEnqueue = parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '8', 10),
-  forcePost = false
+  forcePost = false,
+  digDeeper = false
 } = {}) {
   if (!pipelineGuards.autopostEnabled()) {
     return { ok: true, skipped: true, reason: 'autoposter disabled', pending: 0, enqueued: [] };
@@ -809,84 +1091,67 @@ async function refillAutoposterQueue({
   }
 
   const slots = Math.max(maxEnqueue - pending.length, need);
-  const rawNewsCandidates = await collectFreshPostCandidates({ forcePost });
-  const validatedNews = [];
-  for (const raw of rawNewsCandidates) {
-    if (raw?._nonPlayerSkip || raw?.skipReason === 'non_player_intel') continue;
-    if (raw?._needsResolution || raw?.skipReason === 'needs_resolution') continue;
-    if (raw?.skipReason || raw?._identitySkip) continue;
-    const scored = await finalizeNewsCandidate(raw);
-    if (scored) validatedNews.push(scored);
-  }
+  const widenDiscovery = forcePost || digDeeper;
+  const rawNewsCandidates = await collectFreshPostCandidates({
+    forcePost: widenDiscovery,
+    digDeeper: widenDiscovery
+  });
 
   /** Content-mix (50/30/20) runs only after news quality scoring. */
   const allowPromo = process.env.X_AUTOPOST_ALLOW_PROMO === 'true';
-  const finalCandidates = [...validatedNews];
+  const finalCandidates = [...rawNewsCandidates];
   if (allowPromo) {
     const promo = buildPromoFromMix();
     if (promo) finalCandidates.push(promo);
   }
 
   const enqueued = [];
+  const skipReasons = [];
   let added = 0;
-  let qualitySkipped = rawNewsCandidates.length - validatedNews.length;
+  let qualitySkipped = 0;
+
   for (const raw of finalCandidates) {
     if (added >= slots) break;
-    const fp = raw.intelFingerprint || raw.commitFingerprint;
-    if (fp && fingerprintAlreadyQueued(fp, doc.items)) continue;
-    if (
-      raw.commitFingerprint &&
-      commitAlreadyQueued(raw.commitFingerprint, doc.items, {
-        slug: raw.playerSlug,
-        text: raw.text,
-        eventType: raw.sourceEventType,
-      })
-    ) {
-      continue;
-    }
-    if (alreadyQueued(raw.text, doc.items)) continue;
-    const similar = similarPostQueued(raw.text, doc.items, {
-      slug: raw.playerSlug,
-      intelFingerprint: raw.intelFingerprint,
-    });
-    if (similar) {
-      console.log(
-        `[x-autoposter] skip: similar post (${Math.round((similar.similarity || 0) * 100)}% overlap, item ${similar.itemId})`
-      );
-      continue;
-    }
-    const gm2 = require('./gm2');
-    if (!gm2.filterAutoposterCandidate(raw)) continue;
-    const check = policy.validatePostContent(raw);
-    if (!check.valid) continue;
-    try {
-      const tagged = cadence.tagCandidate({
-        ...raw,
-        qualityScore: raw.qualityScore ?? check.qualityScore ?? null,
-        qualityBreakdown: raw.qualityBreakdown ?? check.qualityBreakdown ?? null,
-        sourceConfidence: raw.sourceConfidence ?? check.sourceConfidence ?? null
-      });
-      const out = store.enqueuePost({
-        ...tagged,
-        scheduledAt: store.nowIso(),
-        status: 'pending'
-      });
-      enqueued.push(out.item);
-      doc.items.push(out.item);
-      if (raw.sourceIntelId) {
-        const marked = intelStore.markIntelXPostQueued(raw.sourceIntelId, { queueItemId: out.item.id });
-        if (!marked) {
-          console.warn(
-            `[x-autoposter] enqueue ok but intel mark failed for ${raw.sourceIntelId} (${out.item.id})`
-          );
-        }
+    if (raw?.category === 'promo' || raw?.category === 'engagement') {
+      if (!raw?.text || copy.isBrokenCopy(raw.text, raw)) continue;
+      const check = policy.validatePostContent(raw);
+      if (!check.valid && raw.category !== 'engagement' && raw.category !== 'promo') continue;
+      try {
+        const tagged = cadence.tagCandidate({
+          ...raw,
+          qualityScore: raw.qualityScore ?? check.qualityScore ?? 70,
+          qualityBreakdown: raw.qualityBreakdown ?? check.qualityBreakdown ?? null,
+          sourceConfidence: raw.sourceConfidence ?? check.sourceConfidence ?? 80
+        });
+        const out = store.enqueuePost({
+          ...tagged,
+          scheduledAt: store.nowIso(),
+          status: 'pending'
+        });
+        enqueued.push(out.item);
+        doc.items.push(out.item);
+        added += 1;
+      } catch (err) {
+        console.warn(`[x-autoposter] promo enqueue failed: ${err.message}`);
       }
+      continue;
+    }
+
+    const result = await attemptEnqueueCandidate(raw, doc);
+    if (result.queued) {
+      enqueued.push(result.item);
+      doc.items.push(result.item);
       added += 1;
-    } catch (err) {
-      console.warn(`[x-autoposter] refill enqueue failed: ${err.message}`, {
-        player: raw.playerName,
-        fingerprint: raw.intelFingerprint || raw.commitFingerprint
-      });
+    } else {
+      qualitySkipped += 1;
+      if (skipReasons.length < 12) {
+        skipReasons.push({
+          reason: result.reason,
+          source: raw.source,
+          player: raw.playerName,
+          topic: raw.topic || raw.triggerType
+        });
+      }
     }
   }
 
@@ -909,31 +1174,17 @@ async function refillAutoposterQueue({
     if (promo) fallbacks.push(promo);
     for (const raw of fallbacks) {
       if (added >= slots) break;
-      if (!raw?.text || copy.isBrokenCopy(raw.text, raw)) continue;
-      const fp = raw.intelFingerprint || raw.commitFingerprint;
-      if (fp && fingerprintAlreadyQueued(fp, doc.items)) continue;
-      if (alreadyQueued(raw.text, doc.items)) continue;
-      const check = policy.validatePostContent(raw);
-      if (!check.valid && raw.category !== 'engagement' && raw.category !== 'promo') continue;
-      try {
-        const tagged = cadence.tagCandidate({
-          ...raw,
-          qualityScore: raw.qualityScore ?? check.qualityScore ?? 70,
-          qualityBreakdown: raw.qualityBreakdown ?? check.qualityBreakdown ?? null,
-          sourceConfidence: raw.sourceConfidence ?? check.sourceConfidence ?? 80
-        });
-        const out = store.enqueuePost({
-          ...tagged,
-          scheduledAt: store.nowIso(),
-          status: 'pending'
-        });
-        enqueued.push(out.item);
-        doc.items.push(out.item);
+      const result = await attemptEnqueueCandidate(raw, doc);
+      if (result.queued) {
+        enqueued.push(result.item);
+        doc.items.push(result.item);
         added += 1;
-      } catch (err) {
-        console.warn(`[x-autoposter] empty-queue fallback enqueue failed: ${err.message}`);
       }
     }
+  }
+
+  if (qualitySkipped > 0 && added === 0 && skipReasons.length) {
+    console.log('[x-autoposter] topic rotation: all candidates skipped', skipReasons.slice(0, 5));
   }
 
   return {
@@ -943,7 +1194,8 @@ async function refillAutoposterQueue({
     enqueued,
     enqueuedCount: enqueued.length,
     qualitySkipped,
-    validatedNewsCount: validatedNews.length,
+    skipReasons,
+    digDeeper: widenDiscovery,
     beatPrep,
     emptyQueueFallback: added > 0 && pending.length === 0
   };
@@ -1060,16 +1312,21 @@ async function forceEnqueueRecentCommits({ maxAgeMs = FORCE_POST_COMMIT_AGE_MS }
 module.exports = {
   refillAutoposterQueue,
   collectFreshPostCandidates,
+  collectDigDeeperPostCandidates,
+  collectArticlePostCandidates,
   collectBeatAutoposterCandidates,
   directBeatPostCandidates,
   isBeatWriterIntel,
   finalizeNewsCandidate,
+  attemptEnqueueCandidate,
+  prioritizePostCandidates,
   alreadyQueued,
   similarPostQueued,
   dedupeKey,
   fingerprintAlreadyQueued,
   buildNewsFromIntel,
   buildNewsFromBeatPost,
+  buildNewsFromArticle,
   buildMomentumFromBeat,
   queueCommitEventAutopost,
   forceEnqueueRecentCommits,
@@ -1078,6 +1335,7 @@ module.exports = {
   collectOn3NewsBeatCandidates,
   buildEngagementPulsePost,
   isCommitAutopostEvent,
+  isProgramOrTeamNews,
   COMMIT_EVENT_SOURCES,
   FORCE_POST_COMMIT_AGE_MS,
 };
