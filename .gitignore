@@ -29,5 +29,6 @@ server/.well-known/
 server/data/users.json
 server/data/x/autoposter-queue.json
 server/data/x/autoposter-sent-commits.json
+server/data/autoposter/detectives-pile.json
 proof/
 .codemagic/

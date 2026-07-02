@@ -115,6 +115,14 @@ services:
         value: "true"
       - key: X_AUTOPOST_SPORT_CLASSIFIER
         value: "true"
+      - key: X_AUTOPOST_MAX_BEAT_AGE_MS
+        value: "14400000"
+      - key: X_AUTOPOST_MAX_INTEL_AGE_MS
+        value: "14400000"
+      - key: X_AUTOPOST_DIG_ON_FILTER_SKIP
+        value: "true"
+      - key: X_AUTOPOST_DETECTIVES_ENABLED
+        value: "true"
       - key: GNFP_YOUTUBE_CHANNEL_ID
         value: "UC4uzOAHPLPqEnNpNmDUP1VA"
       - key: GV_PRICING_LAUNCH_YEAR

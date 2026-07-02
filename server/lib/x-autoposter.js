@@ -695,8 +695,8 @@ function startXAutoposterScheduler() {
           activityWindow === 'normal' &&
           Number.isFinite(msSincePost) &&
           msSincePost >= postFloorMs;
-        const forceRefill = (pendingBefore === 0 && _emptyQueueStreak >= 2) || postFloorDue;
-        const digDeeper = postFloorDue || (pendingBefore === 0 && _emptyQueueStreak >= 3);
+        const forceRefill = pendingBefore === 0 || postFloorDue;
+        const digDeeper = postFloorDue || pendingBefore === 0;
         const refill = await refillAutoposterQueue({
           minPending: parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '2', 10),
           maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '4', 10),
@@ -717,6 +717,10 @@ function startXAutoposterScheduler() {
         }
         if (refill.enqueuedCount > 0) {
           autopostLog('info', `Auto-filled queue with ${refill.enqueuedCount} post(s)`);
+        } else if (refill.detectivesRun?.results?.some((r) => r.queued)) {
+          autopostLog('info', 'Detectives resolved intel into queue', {
+            counts: refill.detectivesRun.counts
+          });
         } else if (_emptyQueueStreak >= 3) {
           autopostLog('warn', 'Queue empty — elite fallback engaged', { streak: _emptyQueueStreak });
         }

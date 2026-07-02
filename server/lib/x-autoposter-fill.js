@@ -307,15 +307,35 @@ function isProgramOrTeamNews(raw) {
     raw?.identityConfirmed === true ||
     raw?.validationMeta?.programNews ||
     raw?.validationMeta?.ufOfficialFootball ||
+    raw?.validationMeta?.detectivesResolved === true ||
     String(raw?.source || '').includes('program-news') ||
     String(raw?.source || '').includes('team-event') ||
-    String(raw?.source || '').includes('uf-official')
+    String(raw?.source || '').includes('uf-official') ||
+    String(raw?.source || '').includes('detectives')
   );
 }
 
 function prepareNewsCandidate(raw) {
   if (!raw?.text && !raw?._articleBuild) return null;
-  if (raw?.text && copy.isBrokenCopy(raw.text, raw)) return null;
+  const detectivesResolved = raw.validationMeta?.detectivesResolved === true;
+  if (raw?.text && copy.isBrokenCopy(raw.text, raw) && !detectivesResolved) return null;
+
+  if (detectivesResolved) {
+    const ts = new Date().toISOString();
+    return {
+      ...raw,
+      qualityScore: Math.max(raw.qualityScore ?? 0, validation.POSTING_THRESHOLD || 85),
+      qualityBreakdown: raw.qualityBreakdown ?? { detectives: true },
+      sourceConfidence: Math.max(raw.sourceConfidence ?? 0, validation.SOURCE_CONFIDENCE_REQUIRED ?? 100),
+      identityConfirmed: raw.identityConfirmed !== false ? true : raw.identityConfirmed,
+      sourceEventCreatedAt: raw.sourceEventCreatedAt || ts,
+      sourcePublishedAt: raw.sourcePublishedAt || ts,
+      situation: raw.situation || postSpec.detectSituation(raw.text, raw.sourceEventType || raw.intelType),
+      sources: raw.sources?.length
+        ? raw.sources
+        : [{ label: 'GatorVault Detectives', url: SITE_URL }]
+    };
+  }
 
   const eventMs = validation.resolveEventTimestamp(raw);
   const fresh = postSpec.validateIntelFreshness(eventMs);
@@ -323,6 +343,8 @@ function prepareNewsCandidate(raw) {
     raw.source === 'auto:article' ||
     raw.source === 'auto:heat-mover' ||
     raw.source === 'auto:uf-official-news' ||
+    raw.source === 'auto:detectives' ||
+    raw.validationMeta?.detectivesResolved === true ||
     isProgramOrTeamNews(raw);
   if (!fresh.ok && !relaxedFreshness) {
     console.log(`[x-autoposter] skip: ${fresh.logTag || fresh.skipReason} — ${fresh.reason}`);
@@ -338,9 +360,9 @@ function prepareNewsCandidate(raw) {
 
   if (
     !gate.pass &&
-    (verifiedCommit || programOrTeam) &&
+    (verifiedCommit || programOrTeam || detectivesResolved) &&
     !(gate.scored?.hardSkips?.length) &&
-    (verifiedCommit || softFailOnly || programOrTeam)
+    (verifiedCommit || softFailOnly || programOrTeam || detectivesResolved)
   ) {
     return {
       ...raw,
@@ -349,7 +371,7 @@ function prepareNewsCandidate(raw) {
       sourceConfidence: gate.scored?.sourceConfidence ?? validation.SOURCE_CONFIDENCE_REQUIRED ?? 100,
       situation: raw.situation || postSpec.detectSituation(raw.text, raw.sourceEventType || raw.intelType),
       verifiedCommit: !!verifiedCommit,
-      identityConfirmed: raw.identityConfirmed || programOrTeam || undefined
+      identityConfirmed: raw.identityConfirmed || programOrTeam || detectivesResolved || undefined
     };
   }
   if (!gate.pass) return null;
@@ -654,6 +676,52 @@ async function collectDigDeeperPostCandidates({ forcePost = false } = {}) {
   return out;
 }
 
+const MAX_LADDER_DEPTH = parseInt(process.env.X_AUTOPOST_RESEARCH_LADDER_DEPTH || '2', 10);
+
+async function tryResearchLadder(rawCandidate, reason, doc, ladderDepth) {
+  if (ladderDepth >= MAX_LADDER_DEPTH || !rawCandidate) return null;
+  try {
+    const rl = require('./autoposter/research-ladder');
+    if (!rl.ladderEnabled()) return null;
+    const dig = rl.digOnFilterSkipEnabled();
+    const phase3 = require('./autoposter/phase3-index');
+    if (!dig && !phase3.phase3Enabled()) return null;
+    const alt = await rl.buildResearchLadderCandidate(rawCandidate, reason);
+    if (!alt) return null;
+    return attemptEnqueueCandidate(alt, doc, { ladderDepth: ladderDepth + 1, skipDetectives: true });
+  } catch {
+    return null;
+  }
+}
+
+async function finalizeEnqueueFailure(rawCandidate, doc, result, opts = {}) {
+  if (opts.skipDetectives || result?.queued) return result;
+  try {
+    const det = require('./autoposter/detectives');
+    if (!det.detectivesEnabled() || !det.shouldHandoff(result.reason)) return result;
+    const handoff = await det.handoffToDetectives({
+      candidate: rawCandidate,
+      beatPost: opts.beatPost || null,
+      skipReason: result.reason,
+      skipStage: opts.skipStage || 'enqueue',
+      hints: {
+        playerName: rawCandidate?.playerName,
+        playerSlug: rawCandidate?.playerSlug,
+        handle: opts.beatPost?.handle,
+        writerName: opts.beatPost?.writerName,
+        url: opts.beatPost?.url
+      }
+    });
+    const resolved = await det.tryImmediateResolve(handoff, doc);
+    if (resolved?.queued) {
+      return { queued: true, item: resolved.item, detectives: true, path: resolved.path };
+    }
+  } catch {
+    /* optional */
+  }
+  return result;
+}
+
 async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
   const ladderDepth = opts.ladderDepth || 0;
   let phase3 = null;
@@ -664,43 +732,51 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
   }
 
   if (rawCandidate?._nonPlayerSkip && !isProgramOrTeamNews(rawCandidate)) {
-    return { queued: false, reason: 'non_player_intel' };
+    const ladder = await tryResearchLadder(rawCandidate, 'non_player_intel', doc, ladderDepth);
+    if (ladder?.queued) return ladder;
+    return finalizeEnqueueFailure(rawCandidate, doc, { queued: false, reason: 'non_player_intel' }, opts);
   }
   if (rawCandidate?._needsResolution || rawCandidate?.skipReason === 'needs_resolution') {
-    return { queued: false, reason: 'needs_resolution' };
+    const ladder = await tryResearchLadder(rawCandidate, 'needs_resolution', doc, ladderDepth);
+    if (ladder?.queued) return ladder;
+    return finalizeEnqueueFailure(rawCandidate, doc, { queued: false, reason: 'needs_resolution' }, opts);
   }
   if (rawCandidate?.skipReason && !isProgramOrTeamNews(rawCandidate)) {
-    return { queued: false, reason: rawCandidate.skipReason };
+    const ladder = await tryResearchLadder(rawCandidate, rawCandidate.skipReason, doc, ladderDepth);
+    if (ladder?.queued) return ladder;
+    return finalizeEnqueueFailure(rawCandidate, doc, { queued: false, reason: rawCandidate.skipReason }, opts);
   }
   if (rawCandidate?._identitySkip && !isProgramOrTeamNews(rawCandidate)) {
-    return { queued: false, reason: 'identity_skip' };
+    const ladder = await tryResearchLadder(rawCandidate, 'identity_skip', doc, ladderDepth);
+    if (ladder?.queued) return ladder;
+    return finalizeEnqueueFailure(rawCandidate, doc, { queued: false, reason: 'identity_skip' }, opts);
   }
 
   const scored = await finalizeNewsCandidate(rawCandidate);
   if (!scored) {
-    if (ladderDepth < 1 && phase3?.phase3Enabled?.()) {
-      const alt = await phase3.researchLadder.buildResearchLadderCandidate(rawCandidate, 'quality_gate');
-      if (alt) return attemptEnqueueCandidate(alt, doc, { ladderDepth: ladderDepth + 1 });
-    }
-    return { queued: false, reason: 'quality_gate' };
+    const ladder = await tryResearchLadder(rawCandidate, 'quality_gate', doc, ladderDepth);
+    if (ladder?.queued) return ladder;
+    return finalizeEnqueueFailure(rawCandidate, doc, { queued: false, reason: 'quality_gate' }, opts);
   }
 
   if (phase3?.phase3Enabled?.()) {
     const mem = phase3.guardCandidateMemory(scored);
     if (!mem.ok) {
       if (mem.reason === 'story_dedupe') {
-        return { queued: false, reason: 'story_dedupe', detail: mem.detail };
+        return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'story_dedupe', detail: mem.detail }, opts);
       }
-      if (ladderDepth < 1 && mem.reason === 'topic_angle') {
-        const alt = await phase3.researchLadder.buildResearchLadderCandidate(scored, 'topic_angle');
-        if (alt) return attemptEnqueueCandidate(alt, doc, { ladderDepth: ladderDepth + 1 });
+      if (ladderDepth < MAX_LADDER_DEPTH && mem.reason === 'topic_angle') {
+        const ladder = await tryResearchLadder(scored, 'topic_angle', doc, ladderDepth);
+        if (ladder?.queued) return ladder;
       }
-      return { queued: false, reason: mem.reason, detail: mem.detail };
+      return finalizeEnqueueFailure(scored, doc, { queued: false, reason: mem.reason, detail: mem.detail }, opts);
     }
   }
 
   const fp = scored.intelFingerprint || scored.commitFingerprint;
-  if (fp && fingerprintAlreadyQueued(fp, doc.items)) return { queued: false, reason: 'duplicate_fingerprint' };
+  if (fp && fingerprintAlreadyQueued(fp, doc.items)) {
+    return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'duplicate_fingerprint' }, opts);
+  }
   if (
     scored.commitFingerprint &&
     commitAlreadyQueued(scored.commitFingerprint, doc.items, {
@@ -709,22 +785,24 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
       eventType: scored.sourceEventType
     })
   ) {
-    return { queued: false, reason: 'duplicate_commit' };
+    return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'duplicate_commit' }, opts);
   }
-  if (alreadyQueued(scored.text, doc.items)) return { queued: false, reason: 'duplicate_text' };
+  if (alreadyQueued(scored.text, doc.items)) {
+    return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'duplicate_text' }, opts);
+  }
   const similar = similarPostQueued(scored.text, doc.items, {
     slug: scored.playerSlug,
     intelFingerprint: scored.intelFingerprint
   });
-  if (similar) return { queued: false, reason: 'similar_post', similarity: similar.similarity };
+  if (similar) {
+    return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'similar_post', similarity: similar.similarity }, opts);
+  }
 
   const gm2 = require('./gm2');
   if (!gm2.filterAutoposterCandidate(scored)) {
-    if (ladderDepth < 1 && phase3?.phase3Enabled?.()) {
-      const alt = await phase3.researchLadder.buildResearchLadderCandidate(scored, 'gm2_filter');
-      if (alt) return attemptEnqueueCandidate(alt, doc, { ladderDepth: ladderDepth + 1 });
-    }
-    return { queued: false, reason: 'gm2_filter' };
+    const ladder = await tryResearchLadder(scored, 'gm2_filter', doc, ladderDepth);
+    if (ladder?.queued) return ladder;
+    return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'gm2_filter' }, opts);
   }
 
   const check = policy.validatePostContent(scored);
@@ -733,6 +811,7 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
   const elitePremade =
     scored.validationMeta?.eliteCompose ||
     scored.validationMeta?.eliteDigest ||
+    scored.validationMeta?.detectivesResolved === true ||
     String(scored.source || '').includes('beat-intel');
   const policyBlocked =
     !check.valid &&
@@ -746,12 +825,10 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
             (e.type === 'stale_intel' || e.type === 'stale' || e.type === 'missing_timestamp'))
       )
     );
-  if (policyBlocked) {
-    if (ladderDepth < 1 && phase3?.phase3Enabled?.()) {
-      const alt = await phase3.researchLadder.buildResearchLadderCandidate(scored, 'policy');
-      if (alt) return attemptEnqueueCandidate(alt, doc, { ladderDepth: ladderDepth + 1 });
-    }
-    return { queued: false, reason: 'policy', errors: check.errors };
+  if (policyBlocked && scored.validationMeta?.detectivesResolved !== true) {
+    const ladder = await tryResearchLadder(scored, 'policy', doc, ladderDepth);
+    if (ladder?.queued) return ladder;
+    return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'policy', errors: check.errors }, opts);
   }
 
   try {
@@ -776,7 +853,7 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
     }
     return { queued: true, item: out.item };
   } catch (err) {
-    return { queued: false, reason: 'enqueue_error', error: err.message };
+    return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'enqueue_error', error: err.message }, opts);
   }
 }
 
@@ -922,11 +999,35 @@ function isBeatWriterIntel(intel) {
 
 async function directBeatPostCandidates(freshPosts) {
   const prefilter = require('./beat-intel-prefilter');
+  const researchLadder = require('./autoposter/research-ladder');
   const programRows = [];
   const otherRows = [];
   for (const post of freshPosts) {
     const guarded = await prefilter.guardBeatPost(post);
-    if (!guarded.eligible) continue;
+    if (!guarded.eligible) {
+      if (researchLadder.digOnFilterSkipEnabled()) {
+        const alt = await researchLadder.buildFromBeatPostSkip(post, guarded.reason || 'beat_skip');
+        if (alt?.text) otherRows.push(alt);
+      }
+      try {
+        const det = require('./autoposter/detectives');
+        if (det.detectivesEnabled()) {
+          await det.handoffToDetectives({
+            beatPost: post,
+            skipReason: guarded.reason || 'beat_skip',
+            skipStage: 'beat_prefilter',
+            hints: {
+              handle: post.handle,
+              writerName: post.writerName || post.outlet,
+              url: post.url
+            }
+          });
+        }
+      } catch {
+        /* optional */
+      }
+      continue;
+    }
 
     if (guarded.triggerType === 'program_news' || guarded.triggerType === 'team_event') {
       const beatNews = await buildNewsFromBeatPost(post);
@@ -1269,6 +1370,26 @@ async function refillAutoposterQueue({
     }
   }
 
+  if (added === 0) {
+    try {
+      const rl = require('./autoposter/research-ladder');
+      if (rl.digOnFilterSkipEnabled()) {
+        const deeper = await collectDigDeeperPostCandidates({ forcePost: true });
+        for (const raw of deeper) {
+          if (added >= slots) break;
+          const result = await attemptEnqueueCandidate(raw, doc);
+          if (result.queued) {
+            enqueued.push(result.item);
+            doc.items.push(result.item);
+            added += 1;
+          }
+        }
+      }
+    } catch {
+      /* optional */
+    }
+  }
+
   if (added === 0 && emptyQueueFallbackEnabled() && pending.length === 0) {
     const fallbacks = [];
     if (process.env.X_AUTOPOST_ON3_NEWS_FALLBACK !== 'false') {
@@ -1309,6 +1430,25 @@ async function refillAutoposterQueue({
     console.log('[x-autoposter] topic rotation: all candidates skipped', skipReasons.slice(0, 5));
   }
 
+  let detectivesRun = null;
+  try {
+    const det = require('./autoposter/detectives');
+    if (det.detectivesEnabled()) {
+      detectivesRun = await det.processDetectivesPile({ limit: 3, doc });
+      if (detectivesRun?.results?.some((r) => r.queued)) {
+        for (const r of detectivesRun.results) {
+          if (r.item) {
+            enqueued.push(r.item);
+            doc.items.push(r.item);
+            added += 1;
+          }
+        }
+      }
+    }
+  } catch {
+    /* optional */
+  }
+
   return {
     ok: true,
     skipped: false,
@@ -1319,6 +1459,7 @@ async function refillAutoposterQueue({
     skipReasons,
     digDeeper: widenDiscovery,
     beatPrep,
+    detectivesRun,
     emptyQueueFallback: added > 0 && pending.length === 0
   };
 }
