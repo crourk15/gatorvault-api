@@ -288,6 +288,16 @@ function bootstrapFromQueueItems(items) {
   return added;
 }
 
+/** Drop news rows that were never confirmed on X (testing ghosts). */
+function prunePhantomLedgerEntries() {
+  const doc = loadLedger();
+  const before = doc.entries.length;
+  doc.entries = doc.entries.filter((entry) => isConfirmedLedgerPost(entry));
+  if (doc.entries.length === before) return 0;
+  saveLedger(doc);
+  return before - doc.entries.length;
+}
+
 function countRecentSentPosts(withinMs = DAILY_WINDOW_MS) {
   const cutoff = Date.now() - withinMs;
   const doc = loadLedger();
@@ -309,6 +319,8 @@ module.exports = {
   recordSentCommit,
   recordSentPost,
   bootstrapFromQueueItems,
+  prunePhantomLedgerEntries,
+  isConfirmedLedgerPost,
   countRecentSentPosts,
   isCommitAnnouncementText,
   textHash,

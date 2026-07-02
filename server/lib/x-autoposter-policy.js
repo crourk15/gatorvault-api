@@ -117,6 +117,30 @@ function looksLikeFactualNews(text) {
   return /\b(commit|portal|transfer|signs|hired|fired|injury|depth chart|recruit|verb|offer|flip|decommit|score|final|vs\.|@\w)/i.test(t);
 }
 
+/** Block demo/fixture queue rows from reaching production X. */
+function isFixtureQueueItem(item = {}) {
+  if (/^demo_/i.test(String(item.id || ''))) return true;
+  return (item.sources || []).some((raw) => {
+    const url = String(raw?.url || raw?.href || '');
+    return /\/demo[_-]|status\/demo_/i.test(url);
+  });
+}
+
+function purgeFixtureQueueItems(doc) {
+  if (!doc || !Array.isArray(doc.items)) return { removed: 0, doc };
+  const keep = [];
+  let removed = 0;
+  for (const item of doc.items) {
+    if (isFixtureQueueItem(item)) {
+      removed += 1;
+    } else {
+      keep.push(item);
+    }
+  }
+  if (removed) doc.items = keep;
+  return { removed, doc };
+}
+
 function validatePostContent(item) {
   const errors = [];
   const category = String(item.category || 'news').toLowerCase();
@@ -150,6 +174,14 @@ function validatePostContent(item) {
       field: 'text',
       type: 'format',
       message: 'Posts must use the insider template — no emojis, hashtags, or headline-only copy.'
+    });
+  }
+
+  if (isFixtureQueueItem(item)) {
+    errors.push({
+      field: 'sources',
+      type: 'fixture_source',
+      message: 'Demo/fixture autoposter items cannot be published — remove from queue and refill from live beat intel.'
     });
   }
 
@@ -386,6 +418,8 @@ module.exports = {
   NEWS_TOPICS,
   normalizeSource,
   sourceMatchesTrusted,
+  isFixtureQueueItem,
+  purgeFixtureQueueItems,
   validatePostContent,
   getSentPosts,
   computeMixStats,

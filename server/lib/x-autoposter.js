@@ -239,6 +239,10 @@ function duplicateRecoveryText(text) {
 function duplicateGuardBeforePost(item) {
   const sentLedger = require('./x-autoposter-sent-ledger');
   const fill = require('./x-autoposter-fill');
+  const postSpec = require('./x-autoposter-post-spec');
+  const windowMs = postSpec.DEDUPE_REPOST_WINDOW_MS || 48 * 60 * 60 * 1000;
+  const cutoff = Date.now() - windowMs;
+
   try {
     const phase3 = require('./autoposter/phase3-index');
     if (phase3.phase3Enabled()) {
@@ -254,6 +258,19 @@ function duplicateGuardBeforePost(item) {
     text: item.text,
   });
   if (ledgerHit.hit) return { duplicate: true, ...ledgerHit };
+
+  for (const q of store.loadQueue().items) {
+    if (q.id === item.id || q.status !== 'sent' || !q.tweetId) continue;
+    const ts = new Date(q.sentAt || 0).getTime();
+    if (!Number.isFinite(ts) || ts < cutoff) continue;
+    if (item.intelFingerprint && q.intelFingerprint && q.intelFingerprint === item.intelFingerprint) {
+      return { duplicate: true, reason: 'queue_sent_fingerprint', tweetId: q.tweetId };
+    }
+    if (item.text && q.text && postSpec.isTooSimilar(item.text, q.text)) {
+      return { duplicate: true, reason: 'queue_sent_similar', tweetId: q.tweetId };
+    }
+  }
+
   const others = store.loadQueue().items.filter((i) => i.id !== item.id);
   if (fill.alreadyQueued(item.text, others)) {
     return { duplicate: true, reason: 'queue_exact' };
@@ -285,9 +302,115 @@ function skipDuplicateQueueItem(item, reason, extra = {}) {
   return { ok: true, skipped: true, duplicate: true, itemId: item.id, reason };
 }
 
+function finalizeSuccessfulPost(workingItem, result, { duplicateRecovery = false } = {}) {
+  const postedAt = store.nowIso();
+  const patch = {
+    status: 'sent',
+    sentAt: postedAt,
+    tweetId: result.tweetId,
+    tweetUrl: result.tweetUrl,
+    error: null,
+    validationErrors: [],
+  };
+  if (duplicateRecovery && result.text) {
+    patch.text = result.text;
+  }
+  store.updatePost(workingItem.id, patch);
+  const posted = { ...workingItem, ...patch };
+
+  try {
+    const sentLedger = require('./x-autoposter-sent-ledger');
+    sentLedger.recordSentPost(posted);
+    try {
+      const phase3 = require('./autoposter/phase3-index');
+      phase3.recordPostMemory(posted);
+    } catch {
+      /* optional */
+    }
+  } catch {
+    /* optional */
+  }
+
+  store.logQueueOp('post_success', { ...posted, tweetId: result.tweetId });
+  freshness.recordLastPost(postedAt);
+  saveSchedulerStatus({
+    lastPostAt: postedAt,
+    lastPostSuccess: postedAt,
+    lastError: null,
+  });
+  try {
+    const monitoring = require('./autoposter/autoposter-monitoring');
+    monitoring.logAutoposterEvent('post_success', {
+      itemId: workingItem.id,
+      intelId: workingItem.sourceIntelId,
+      playerName: workingItem.playerName,
+      statusId: result.tweetId,
+      tweetUrl: result.tweetUrl,
+      duplicateRecovery: !!duplicateRecovery,
+    });
+    if (workingItem.sourceIntelId) {
+      intelStore.markIntelXPosted(workingItem.sourceIntelId, {
+        tweetId: result.tweetId,
+        tweetUrl: result.tweetUrl,
+      });
+    }
+  } catch {
+    /* optional */
+  }
+  opsMonitor.logEvent({
+    subsystem: 'autoposter',
+    status: 'success',
+    message: duplicateRecovery ? 'Post successful (duplicate recovery)' : 'Post successful',
+    details: {
+      tweetId: result.tweetId,
+      itemId: workingItem.id,
+      category: workingItem.category,
+      duplicateRecovery: !!duplicateRecovery,
+    },
+  });
+
+  return {
+    ok: true,
+    item: store.loadQueue().items.find((i) => i.id === workingItem.id),
+    result,
+    duplicateRecovery: duplicateRecovery || undefined,
+  };
+}
+
+function bootstrapAutoposterRuntime() {
+  try {
+    const sentLedger = require('./x-autoposter-sent-ledger');
+    const pruned = sentLedger.prunePhantomLedgerEntries();
+    if (pruned > 0) {
+      autopostLog('info', `Pruned ${pruned} phantom sent-ledger row(s)`);
+    }
+  } catch (e) {
+    autopostLog('warn', `Sent ledger prune skipped: ${e.message}`);
+  }
+  try {
+    const doc = store.loadQueue();
+    const { removed } = policy.purgeFixtureQueueItems(doc);
+    if (removed > 0) {
+      store.saveQueue(doc);
+      autopostLog('info', `Purged ${removed} fixture/demo queue item(s)`);
+    }
+  } catch (e) {
+    autopostLog('warn', `Fixture queue purge skipped: ${e.message}`);
+  }
+}
+
 async function processQueueItem(item) {
   if (!pipelineGuards.autopostEnabled()) {
     return { ok: false, skipped: true, reason: 'autoposter disabled', itemId: item?.id };
+  }
+  if (policy.isFixtureQueueItem(item)) {
+    autopostLog('warn', 'Skipping fixture/demo queue item', { itemId: item.id });
+    store.updatePost(item.id, {
+      status: 'cancelled',
+      error: 'fixture_source',
+      sentAt: store.nowIso(),
+    });
+    return { ok: false, skipped: true, reason: 'fixture_source', itemId: item.id };
   }
   saveSchedulerStatus({ lastPostAttempt: store.nowIso(), lastError: null });
   store.logQueueOp('post_attempt', item, { preview: String(item.text || '').slice(0, 120) });
@@ -392,68 +515,7 @@ async function processQueueItem(item) {
       quoteTweetUrl: workingItem.action === 'quote' ? workingItem.quoteTweetUrl : null,
       quoteTweetId: workingItem.action === 'quote' ? workingItem.quoteTweetId : null
     });
-    store.updatePost(workingItem.id, {
-      status: 'sent',
-      sentAt: store.nowIso(),
-      tweetId: result.tweetId,
-      tweetUrl: result.tweetUrl,
-      error: null,
-      validationErrors: []
-    });
-    try {
-      const sentLedger = require('./x-autoposter-sent-ledger');
-      sentLedger.recordSentPost({
-        ...workingItem,
-        status: 'sent',
-        sentAt: store.nowIso(),
-        tweetId: result.tweetId,
-      });
-      try {
-        const phase3 = require('./autoposter/phase3-index');
-        phase3.recordPostMemory({
-          ...workingItem,
-          status: 'sent',
-          sentAt: store.nowIso(),
-          tweetId: result.tweetId,
-        });
-      } catch {
-        /* optional */
-      }
-    } catch {
-      /* optional */
-    }
-    store.logQueueOp('post_success', { ...workingItem, status: 'sent', tweetId: result.tweetId });
-    const postedAt = store.nowIso();
-    freshness.recordLastPost(postedAt);
-    saveSchedulerStatus({
-      lastPostAt: postedAt,
-      lastPostSuccess: postedAt,
-      lastError: null
-    });
-    try {
-      const monitoring = require('./autoposter/autoposter-monitoring');
-      monitoring.logAutoposterEvent('post_success', {
-        itemId: workingItem.id,
-        intelId: workingItem.sourceIntelId,
-        playerName: workingItem.playerName,
-        statusId: result.tweetId,
-        tweetUrl: result.tweetUrl
-      });
-      if (workingItem.sourceIntelId) {
-        intelStore.markIntelXPosted(workingItem.sourceIntelId, {
-          tweetId: result.tweetId,
-          tweetUrl: result.tweetUrl
-        });
-      }
-    } catch {
-      /* optional */
-    }
-    opsMonitor.logEvent({
-      subsystem: 'autoposter',
-      status: 'success',
-      message: 'Post successful',
-      details: { tweetId: result.tweetId, itemId: workingItem.id, category: workingItem.category }
-    });
+    const out = finalizeSuccessfulPost(workingItem, result);
     if (isReplyEnabled() && workingItem.action === 'post') {
       try {
         const replyOut = await scheduleRepliesForSentPost({ item: workingItem, tweetId: result.tweetId });
@@ -464,7 +526,7 @@ async function processQueueItem(item) {
         autopostLog('warn', `Reply scheduling failed: ${replyErr.message}`, { itemId: item.id });
       }
     }
-    return { ok: true, item: store.loadQueue().items.find((i) => i.id === item.id), result };
+    return out;
   } catch (err) {
     if (isDuplicateTweetError(err)) {
       if (duplicateRecoveryEnabled()) {
@@ -481,28 +543,11 @@ async function processQueueItem(item) {
               quoteTweetUrl: workingItem.action === 'quote' ? workingItem.quoteTweetUrl : null,
               quoteTweetId: workingItem.action === 'quote' ? workingItem.quoteTweetId : null
             });
-            store.updatePost(workingItem.id, {
-              text: altText,
-              status: 'sent',
-              sentAt: store.nowIso(),
-              tweetId: retry.tweetId,
-              tweetUrl: retry.tweetUrl,
-              error: null,
-              validationErrors: []
-            });
-            const postedAt = store.nowIso();
-            freshness.recordLastPost(postedAt);
-            saveSchedulerStatus({
-              lastPostAt: postedAt,
-              lastPostSuccess: postedAt,
-              lastError: null
-            });
-            return {
-              ok: true,
-              item: store.loadQueue().items.find((i) => i.id === item.id),
-              result: retry,
-              duplicateRecovery: true
-            };
+            return finalizeSuccessfulPost(
+              { ...workingItem, text: altText },
+              { ...retry, text: altText },
+              { duplicateRecovery: true }
+            );
           } catch (retryErr) {
             if (!isDuplicateTweetError(retryErr)) {
               throw retryErr;
@@ -605,6 +650,8 @@ function startXAutoposterScheduler() {
     schedulerStartedAt: store.nowIso(),
     lastError: null
   });
+
+  bootstrapAutoposterRuntime();
 
   try {
     const sentLedger = require('./x-autoposter-sent-ledger');
