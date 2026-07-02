@@ -190,33 +190,24 @@ async function buildHubTicker(year = 2027) {
 }
 
 async function buildHubClassOverview(year = 2027) {
-  const enriched = await loadEnrichedBoard(year);
-  const commits = enriched.commits || [];
-  const targets = enriched.targets || [];
+  // Lightweight path: targeted commit + rankings queries only (avoid getAllPlayers + movement DB).
+  const [commits, rankingsList] = await Promise.all([
+    store.getHubHsCommits(year),
+    store.getRankings(),
+  ]);
+  const rankings =
+    (rankingsList || []).find((r) => Number(r.classYear) === Number(year)) || null;
   const chip = blueChipPct(commits);
   const avg = avgRating(commits);
-
-  let rising = 0;
-  let falling = 0;
-  try {
-  const { buildMovementSummaryPayload } = require('../api/recruiting/movement-summary.ts');
-  const summary = await buildMovementSummaryPayload(year);
-  rising = summary.rising ?? 0;
-  falling = summary.falling ?? 0;
-  } catch {
-    rising = targets.filter((p) => p.movementDirection === 'up').length;
-    falling = targets.filter((p) => p.movementDirection === 'down').length;
-  }
-
   const commitCount = commits.length;
 
-  const rankTrend = trendFromDelta(rising - falling);
-  const chipTrend = rising > falling ? 'up' : falling > rising ? 'down' : 'stable';
+  const rankTrend = 'stable';
+  const chipTrend = chip != null && chip >= 55 ? 'up' : 'stable';
   const commitTrend = commitCount > 0 ? 'up' : 'stable';
-  const ratingTrend = rising >= 2 ? 'up' : rising === 0 && falling > 0 ? 'down' : 'stable';
+  const ratingTrend = avg != null && Number(avg) >= 0.9 ? 'up' : 'stable';
 
   return {
-    classRank: enriched.rankings?.nationalRank != null ? `#${enriched.rankings.nationalRank}` : '—',
+    classRank: rankings?.nationalRank != null ? `#${rankings.nationalRank}` : '—',
     blueChip: chip != null ? `${chip}%` : '—',
     commits: commitCount ? String(commitCount) : '—',
     commitLabel: classCommitMetricLabel(year),

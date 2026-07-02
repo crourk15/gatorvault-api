@@ -149,6 +149,24 @@
       </div>
 
       <div class="section">
+        <h2>Detectives Pile</h2>
+        <p class="sub" style="margin:0 0 .5rem">Beat intel that failed first-pass filters — identity research, platform provisioning, re-queue attempts.</p>
+        <div style="display:flex;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap;align-items:center">
+          <button id="load-detectives" class="secondary sm">Load pile</button>
+          <button id="process-detectives" class="sm">Process next case</button>
+          <select id="detectives-status" style="background:var(--panel);border:1px solid #334155;color:var(--text);padding:.35rem .5rem;border-radius:.5rem">
+            <option value="">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="investigating">Investigating</option>
+            <option value="resolved">Resolved</option>
+            <option value="failed">Failed</option>
+          </select>
+          <span class="meta" id="detectives-counts">—</span>
+        </div>
+        <div class="log-panel" id="detectives-panel" style="max-height:360px">Load with admin PIN.</div>
+      </div>
+
+      <div class="section">
         <h2>Elite Autoposter Captions</h2>
         <p class="sub" style="margin:0 0 .5rem">Multi-source research log — event type, sources used, final caption.</p>
         <div style="display:flex;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap">
@@ -238,6 +256,7 @@
           actions+='<button class="secondary sm" data-logs="autoposter">View logs</button>';
           actions+='<button class="secondary sm" data-elite-logs="1">Elite captions</button>';
           actions+='<button class="secondary sm" data-cluster-logs="1">Event clusters</button>';
+          actions+='<button class="secondary sm" data-detectives="1">Detectives pile</button>';
         } else {
           body='<div class="summary">'+esc(t.summary||'')+'</div>'+
             '<div class="meta">Last: '+fmtTime(t.lastRun)+'</div>';
@@ -286,6 +305,12 @@
         btn.addEventListener('click',function(){
           document.getElementById('cluster-log-panel').scrollIntoView({behavior:'smooth'});
           loadClusterLogs();
+        });
+      });
+      el.querySelectorAll('[data-detectives]').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          document.getElementById('detectives-panel').scrollIntoView({behavior:'smooth'});
+          loadDetectives();
         });
       });
     }
@@ -381,7 +406,7 @@
 
     function populateLogFilter(tiles){
       var sel=document.getElementById('log-subsystem');
-      var opts=['','ops:run-job','autoposter','autoposter:elite','autoposter:cluster','autoposter:program-news','cron:recruiting-ingest','cron:portal-ingest','autoposter:beat-writer','cron:identity-patterns','api:health','db:health','deployments'];
+      var opts=['','ops:run-job','autoposter','autoposter:elite','autoposter:cluster','autoposter:detectives','autoposter:program-news','cron:recruiting-ingest','cron:portal-ingest','autoposter:beat-writer','cron:identity-patterns','api:health','db:health','deployments'];
       (tiles||[]).forEach(function(t){if(t.id&&!opts.includes(t.id))opts.push(t.id);});
       sel.innerHTML=opts.map(function(v){
         return '<option value="'+esc(v)+'">'+(v?esc(v):'All subsystems')+'</option>';
@@ -434,6 +459,67 @@
           }).join('');
         })
         .catch(function(e){document.getElementById('elite-log-panel').textContent=e.message;});
+    }
+
+    function statusBadge(status){
+      var colors={pending:'#fbbf24',investigating:'#60a5fa',resolved:'#34d399',failed:'#f87171'};
+      var c=colors[status]||'#94a3b8';
+      return '<span style="color:'+c+';font-weight:600">'+esc(status||'unknown')+'</span>';
+    }
+
+    function loadDetectives(){
+      var p=pin();
+      var panel=document.getElementById('detectives-panel');
+      var countsEl=document.getElementById('detectives-counts');
+      if(!p){panel.textContent='Enter admin PIN first.';return;}
+      var status=document.getElementById('detectives-status').value;
+      var url=API+'/api/x/autoposter/detectives?limit=50&pin='+encodeURIComponent(p)+(status?'&status='+encodeURIComponent(status):'');
+      panel.textContent='Loading…';
+      fetch(url,{headers:headers()})
+        .then(function(r){return r.json();})
+        .then(function(j){
+          if(!j.ok){panel.textContent=j.error||'Failed';return;}
+          var c=j.counts||{};
+          countsEl.textContent='pending '+esc(c.pending||0)+' · investigating '+esc(c.investigating||0)+' · resolved '+esc(c.resolved||0)+' · failed '+esc(c.failed||0)+(j.enabled===false?' · DISABLED':'');
+          var cases=j.cases||[];
+          if(!cases.length){panel.textContent='No detectives cases yet.';return;}
+          panel.innerHTML=cases.map(function(row){
+            var log=(row.log||[]).map(function(l){
+              return esc(l.phase||'?')+(l.reason?(' · '+esc(l.reason)):'')+(l.path?(' · '+esc(l.path)):'');
+            }).join(' → ');
+            return '<div style="margin-bottom:.85rem;padding-bottom:.65rem;border-bottom:1px solid #334155">'+
+              '<strong>'+statusBadge(row.status)+'</strong> · '+esc(fmtTime(row.updatedAt||row.createdAt))+
+              ' · skip: '+esc(row.skipReason||'—')+'<br>'+
+              (row.playerName?'<span class="meta">Player: '+esc(row.playerName)+(row.playerSlug?' ('+esc(row.playerSlug)+')':'')+'</span><br>':'')+
+              (row.writerName?'<span class="meta">Beat: '+esc(row.writerName)+(row.beatHandle?' @'+esc(row.beatHandle):'')+'</span><br>':'')+
+              '<span style="color:#e2e8f0">'+esc(row.beatText||'—')+'</span><br>'+
+              (row.hasFutureCastContext!=null?'<span class="meta">Platform: '+(row.hasFutureCastContext?'FutureCast ready':'Recruiting Hub stub')+(row.platformUrl?' · '+esc(row.platformUrl):'')+'</span><br>':'')+
+              (row.resolvedPath?'<span class="meta">Resolved via '+esc(row.resolvedPath)+(row.queueItemId?' · queue '+esc(row.queueItemId):'')+'</span><br>':'')+
+              (row.resolvedPreview?'<span style="color:#93c5fd">'+esc(row.resolvedPreview)+'</span><br>':'')+
+              (log?'<span class="meta">Log: '+log+'</span>':'')+
+              '</div>';
+          }).join('');
+        })
+        .catch(function(e){panel.textContent=e.message;});
+    }
+
+    function processDetectives(){
+      var p=pin();
+      if(!p){alert('PIN required');return;}
+      var btn=document.getElementById('process-detectives');
+      var label=btn?btn.textContent:'Process next case';
+      if(btn){btn.disabled=true;btn.textContent='Processing…';}
+      fetch(API+'/api/x/autoposter/detectives/process?limit=1&pin='+encodeURIComponent(p),{method:'POST',headers:headers(),body:JSON.stringify({pin:p,limit:1})})
+        .then(function(r){return r.json();})
+        .then(function(j){
+          if(!j.ok)throw new Error(j.error||'Process failed');
+          var msg='Processed '+esc(j.processed||0)+' case(s)';
+          if(j.results&&j.results[0])msg+=' — '+(j.results[0].queued?'queued':'no queue')+(j.results[0].path?' via '+j.results[0].path:'')+(j.results[0].reason?' ('+j.results[0].reason+')':'');
+          document.getElementById('detectives-counts').textContent=msg;
+          loadDetectives();
+        })
+        .catch(function(e){alert('Detectives process error: '+e.message);})
+        .finally(function(){if(btn){btn.disabled=false;btn.textContent=label;}});
     }
 
     function loadClusterLogs(){
@@ -564,6 +650,9 @@
     document.getElementById('load-logs').addEventListener('click',loadLogs);
     document.getElementById('load-elite-logs').addEventListener('click',loadEliteLogs);
     document.getElementById('load-cluster-logs').addEventListener('click',loadClusterLogs);
+    document.getElementById('load-detectives').addEventListener('click',loadDetectives);
+    document.getElementById('process-detectives').addEventListener('click',processDetectives);
+    document.getElementById('detectives-status').addEventListener('change',loadDetectives);
 
     function loadMot(){
       var p=pin(); if(!p)return;

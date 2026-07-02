@@ -1,7 +1,11 @@
 /**
  * Recruiting Hub elite cache — prebuild on deploy, building fallback on cold miss.
  */
+const fs = require('fs');
+const path = require('path');
 const { createMemoryCache } = require('./memory-cache');
+
+const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 
 /** Bump when HS-only class commit metrics logic changes. */
 const HUB_METRICS_CACHE_REV = 'hs3';
@@ -47,6 +51,29 @@ function withTimeout(promise, ms, label) {
       setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
     }),
   ]);
+}
+
+/** Static hub-snapshot JSON from deploy build — instant response on cold cache miss. */
+function readHubDiskSnapshot(endpoint, year) {
+  if (!endpoint) return null;
+  try {
+    const filePath =
+      endpoint === 'class-overview-all'
+        ? path.join(HUB_SNAPSHOT_DIR, 'class-overview-all.json')
+        : year != null
+          ? path.join(HUB_SNAPSHOT_DIR, String(year), `${endpoint}.json`)
+          : null;
+    if (!filePath || !fs.existsSync(filePath)) return null;
+    const doc = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    if (!doc || doc.ok === false) return null;
+    const { ok, status, meta, items, ...spreadRest } = doc;
+    if (endpoint === 'class-overview' || endpoint === 'class-overview-all' || endpoint === 'footprint') {
+      return Object.keys(spreadRest).length ? spreadRest : null;
+    }
+    return items ?? spreadRest ?? null;
+  } catch {
+    return null;
+  }
 }
 
 function getHubStatus() {
@@ -146,6 +173,7 @@ async function warmEliteHubCaches(options = {}) {
     ];
 
     for (const year of years) {
+      jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year), year]);
       jobs.push([classSnapshotCacheKey(year), () => elite.buildHubClassOverview(year), year]);
       jobs.push([`recruiting:battles:${year}`, () => elite.buildHubBattleBoard(year), year]);
       jobs.push([`recruiting:battles-and-movement:${year}`, () => {
@@ -158,7 +186,6 @@ async function warmEliteHubCaches(options = {}) {
       jobs.push([eliteBundleCacheKey(year), () => elite.buildHubBundle(year), year]);
       jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year), year]);
       jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year), year]);
-      jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year), year]);
       jobs.push([`hub:elite:commits:${year}`, () => elite.buildHubCommits(year), year]);
       jobs.push([`hub:elite:battles:${year}`, () => elite.buildHubBattles(year), year]);
       jobs.push([`hub:elite:positions:${year}`, () => elite.buildHubPositions(year), year]);
@@ -246,6 +273,15 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     return { status: 'ready', value: stale, hit: true, stale: true };
   }
 
+  const diskFallback = options.diskFallback;
+  if (diskFallback?.endpoint) {
+    const diskValue = readHubDiskSnapshot(diskFallback.endpoint, diskFallback.year);
+    if (diskValue != null) {
+      refreshCacheKey(cacheKey, builderFn, timeoutMs);
+      return { status: 'ready', value: diskValue, hit: true, stale: true, diskSnapshot: true };
+    }
+  }
+
   const inflight = inflightBuilds.get(cacheKey);
   if (inflight) {
     try {
@@ -283,7 +319,11 @@ function refreshCacheKey(cacheKey, builderFn, timeoutMs = BUILD_TIMEOUT_MS) {
 }
 
 async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = false, hubMeta, timeoutMs, force = false }) {
-  const result = await serveCached(cacheKey, builder, { timeoutMs, force });
+  const result = await serveCached(cacheKey, builder, {
+    timeoutMs,
+    force,
+    diskFallback: endpoint ? { endpoint, year } : null,
+  });
   if (result.status === 'building') {
     return res.status(200).json(buildingResponse({ endpoint, year, cacheKey }));
   }
@@ -293,6 +333,7 @@ async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = fa
     hubReady: isReady(),
     cacheHit: result.hit,
     cacheStale: result.stale ?? false,
+    ...(result.diskSnapshot ? { diskSnapshot: true } : {}),
     ...(result.buildMs != null ? { buildMs: result.buildMs } : {}),
   });
   if (spread) {
@@ -353,4 +394,5 @@ module.exports = {
   getMeta,
   scheduleBackgroundRefresh,
   scheduleHubBootPipeline,
+  readHubDiskSnapshot,
 };

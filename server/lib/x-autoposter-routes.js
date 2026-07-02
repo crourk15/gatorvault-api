@@ -158,6 +158,36 @@ function mountXAutoposterRoutes(app) {
     }
   });
 
+  app.get('/api/x/autoposter/detectives', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const detectives = require('./autoposter/detectives');
+      const dashboard = require('./autoposter/detectives-dashboard');
+      const status = req.query.status ? String(req.query.status) : null;
+      const limit = Math.min(100, parseInt(req.query.limit || '50', 10) || 50);
+      return res.json({ ok: true, ...dashboard.getDetectivesDashboard({ status, limit }) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/x/autoposter/detectives/process', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const detectives = require('./autoposter/detectives');
+      const dashboard = require('./autoposter/detectives-dashboard');
+      const limit = Math.min(5, parseInt(req.body?.limit || req.query?.limit || '1', 10) || 1);
+      const result = await detectives.processDetectivesPile({ limit });
+      return res.json({ ok: true, ...result, dashboard: dashboard.getDetectivesDashboard({ limit: 50 }) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/x/autoposter/validate', (req, res) => {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
