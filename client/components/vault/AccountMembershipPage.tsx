@@ -134,7 +134,7 @@ export function AccountMembershipPage(): React.ReactElement {
 
   function handleSignOut(): void {
     clearSession();
-    window.location.replace('/join/?mode=signin&next=/vault/membership/');
+    window.location.replace('/join/?mode=signin&reauth=1&next=/vault/membership/');
   }
 
   async function handleManageSubscriptions(): Promise<void> {

@@ -113,7 +113,7 @@ async function authPost<T>(path: string, body: Record<string, unknown>): Promise
 }
 
 /** Validate stored session token with the API — clears stale local sessions. */
-export async function verifyStoredSession(): Promise<AuthSession | null> {
+export async function verifyStoredSession(opts?: { keepLocalOnNetworkError?: boolean }): Promise<AuthSession | null> {
   const session = loadSession();
   if (!session?.token) return null;
   const base = getApiBase();

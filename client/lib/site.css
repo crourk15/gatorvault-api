@@ -1986,7 +1986,7 @@ body.gv-nav-menu-open {
   line-height: 1.5;
 }
 
-.gv-join__tabs {
+.gv-join__existing { margin: 0 0 1rem; padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid rgba(250, 70, 22, 0.35); background: rgba(250, 70, 22, 0.08); } .gv-join__existing-actions { display: grid; gap: 0.5rem; margin-top: 0.65rem; } .gv-join__secondary { padding: 0.65rem 1rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: transparent; color: rgba(255, 255, 255, 0.85); font-size: 0.9375rem; cursor: pointer; width: 100%; } .gv-join__tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.35rem;

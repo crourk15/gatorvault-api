@@ -74,6 +74,21 @@ export function JoinPage(): React.ReactElement {
   const publicTiers = publicPricingTiers();
   const warTier = PRICING_TIERS.find((t) => t.id === 'war');
 
+  function continueAsExisting(): void {
+    redirectAfterAuth();
+  }
+
+  function switchAccount(): void {
+    clearSession();
+    setExistingSession(null);
+    setError(null);
+    setSuccess(null);
+    const params = new URLSearchParams(window.location.search);
+    params.set('reauth', '1');
+    params.delete('switch');
+    window.history.replaceState(null, '', `/join/?${params.toString()}`);
+  }
+
   const handleSignIn = async () => {
     setError(null);
     setTrialMembershipHref(null);
@@ -143,6 +158,26 @@ export function JoinPage(): React.ReactElement {
             ? 'Use the email and password from your account.'
             : `${tierMeta.name} — 30-day free trial, no card required.`}
         </p>
+
+        {checkingSession ? (
+          <p className="gv-join__sub">Checking sign-in status…</p>
+        ) : null}
+
+        {existingSession ? (
+          <div className="gv-join__existing" data-testid="join-existing-session">
+            <p className="gv-join__sub">
+              Already signed in as <strong>{existingSession.email}</strong>.
+            </p>
+            <div className="gv-join__existing-actions">
+              <button type="button" className="gv-join__submit" onClick={continueAsExisting}>
+                Continue to Vault
+              </button>
+              <button type="button" className="gv-join__secondary" onClick={switchAccount}>
+                Use a different account
+              </button>
+            </div>
+          </div>
+        ) : null}
 
         <div className="gv-join__tabs">
           <button
