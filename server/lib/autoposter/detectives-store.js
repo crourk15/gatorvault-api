@@ -43,11 +43,20 @@ function addCase(payload = {}) {
   doc.cases.push(row); savePile(doc);
   return { case: row, created: true, duplicate: false };
 }
-function listCases({ status = null, limit = 50 } = {}) {
+function listCases({ status = null, limit = 50, priority = false } = {}) {
   const doc = loadPile();
   let rows = [...doc.cases];
   if (status) rows = rows.filter((c) => c.status === status);
-  rows.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  if (status === 'pending' && priority) {
+    try {
+      const handoff = require('./detectives-handoff');
+      rows = handoff.sortCasesForProcessing(rows);
+    } catch {
+      rows.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    }
+  } else {
+    rows.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  }
   return rows.slice(0, limit);
 }
 function getCase(id) { return loadPile().cases.find((c) => c.id === id) || null; }

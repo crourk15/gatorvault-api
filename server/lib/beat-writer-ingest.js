@@ -158,6 +158,8 @@ function logBeatPostSkip(post, reason, category = 'filtered') {
 }
 
 const DETECTIVES_NO_HANDOFF = new Set([
+  'missing_uf_context',
+  'no_player_name',
   'other_program_without_uf',
   'disallowed_account',
   'no_football_signal',
@@ -172,7 +174,16 @@ async function maybeHandoffBeatSkipToDetectives(post, reason, skipStage = 'beat_
   if (!reason || DETECTIVES_NO_HANDOFF.has(String(reason))) return;
   try {
     const det = require('./autoposter/detectives');
-    if (!det.detectivesEnabled() || !det.shouldHandoff(reason)) return;
+    if (!det.detectivesEnabled() || !det.shouldHandoff(reason, {
+      beatPost: post,
+      skipReason: reason,
+      skipStage,
+      hints: {
+        handle: post?.handle,
+        writerName: post?.writerName || post?.outlet,
+        url: post?.url
+      }
+    })) return;
     await det.handoffToDetectives({
       beatPost: post,
       skipReason: reason,

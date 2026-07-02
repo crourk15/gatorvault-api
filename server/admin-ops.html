@@ -489,7 +489,11 @@
             }).join(' → ');
             return '<div style="margin-bottom:.85rem;padding-bottom:.65rem;border-bottom:1px solid #334155">'+
               '<strong>'+statusBadge(row.status)+'</strong> · '+esc(fmtTime(row.updatedAt||row.createdAt))+
-              ' · skip: '+esc(row.skipReason||'—')+'<br>'+
+              (row.priority!=null?' · priority '+esc(row.priority):'')+
+              (row.attempts!=null?' · attempts '+esc(row.attempts)+'/'+esc(row.maxAttempts||'—'):'')+
+              (row.lastPhase?' · phase '+esc(row.lastPhase):'')+
+              ' · skip: '+esc(row.skipReason||'—')+
+              (row.lastReject?' · last reject: '+esc(row.lastReject):'')+'<br>'+
               (row.playerName?'<span class="meta">Player: '+esc(row.playerName)+(row.playerSlug?' ('+esc(row.playerSlug)+')':'')+'</span><br>':'')+
               (row.writerName?'<span class="meta">Beat: '+esc(row.writerName)+(row.beatHandle?' @'+esc(row.beatHandle):'')+'</span><br>':'')+
               '<span style="color:#e2e8f0">'+esc(row.beatText||'—')+'</span><br>'+

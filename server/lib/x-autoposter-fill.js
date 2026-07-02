@@ -698,8 +698,7 @@ async function finalizeEnqueueFailure(rawCandidate, doc, result, opts = {}) {
   if (opts.skipDetectives || result?.queued) return result;
   try {
     const det = require('./autoposter/detectives');
-    if (!det.detectivesEnabled() || !det.shouldHandoff(result.reason)) return result;
-    const handoff = await det.handoffToDetectives({
+    const detectivesPayload = {
       candidate: rawCandidate,
       beatPost: opts.beatPost || null,
       skipReason: result.reason,
@@ -711,7 +710,9 @@ async function finalizeEnqueueFailure(rawCandidate, doc, result, opts = {}) {
         writerName: opts.beatPost?.writerName,
         url: opts.beatPost?.url
       }
-    });
+    };
+    if (!det.detectivesEnabled() || !det.shouldHandoff(result.reason, detectivesPayload)) return result;
+    const handoff = await det.handoffToDetectives(detectivesPayload);
     const resolved = await det.tryImmediateResolve(handoff, doc);
     if (resolved?.queued) {
       return { queued: true, item: resolved.item, detectives: true, path: resolved.path };
