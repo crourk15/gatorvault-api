@@ -104,6 +104,10 @@ const PROGRAM_NEWS_SIGNALS = [
   {
     type: 'history',
     re: /\b(this day in|on this day|program history|gator history|all[- ]time|record book|anniversary|years ago)\b/i
+  },
+  {
+    type: 'recruiting_roundup',
+    re: /\b(flip targets?|decision dates?|not done recruiting|recruiting storylines?|class already has|first 20\d{2} commit|top remaining targets?)\b/i
   }
 ];
 
@@ -525,6 +529,17 @@ async function evaluateBeatIntelEligibility(
   };
 }
 
+function resolveGuardSkipReason(guarded) {
+  if (!guarded || guarded.eligible) return null;
+  return (
+    guarded.reason ||
+    guarded.skip?.nonPlayerIntel?.reason ||
+    guarded.skip?.reason ||
+    guarded.skip?.skipReason ||
+    'beat_skip'
+  );
+}
+
 function buildNonPlayerSkipPayload(gate) {
   return {
     skipReason: 'non_player_intel',
@@ -603,6 +618,19 @@ async function shouldSurfaceRecruitingIntel(intel) {
   return gate.eligible;
 }
 
+function isTrustedUfBeatPost(post) {
+  try {
+    const beatFilters = require('./beat-writer-filters');
+    const ingestGate = require('./beat-recruiting-ingest-gate');
+    return (
+      ingestGate.isAllowedIngestAccount(post) &&
+      (beatFilters.isTrustedBeatWriter?.(post) || ingestGate.isUfOfficialAccount(post))
+    );
+  } catch {
+    return false;
+  }
+}
+
 async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
   const text = normalizePhrase(post?.text || '');
   if (!text) {
@@ -610,6 +638,48 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
       eligible: false,
       skip: buildNonPlayerSkipPayload({ reason: 'empty_text', category: 'non_player_intel', triggerPhrase: '' })
     };
+  }
+
+  const sportClassifier = require('./x-autoposter-sport-classifier');
+  const sportSkip = sportClassifier.guardFootballOnly(text, post);
+  if (sportSkip) {
+    sportClassifier.logNonFootballSkip({
+      text,
+      classification: sportSkip.sportClassification,
+      post,
+      subsystem: `${subsystem}:sport-filter`
+    });
+    return { eligible: false, skip: sportSkip, text, sport: sportSkip.sport };
+  }
+
+  if (isTrustedUfBeatPost(post)) {
+    const programGate = evaluateProgramNewsEligibility(text, { post });
+    if (programGate.eligible) {
+      return {
+        eligible: true,
+        triggerType: 'program_news',
+        programNewsType: programGate.programNewsType,
+        text,
+        playerName: null,
+        playerSlug: null,
+        gate: programGate,
+        sport: 'football'
+      };
+    }
+
+    const teamGate = evaluateTeamEventEligibility(text, { post });
+    if (teamGate.eligible) {
+      return {
+        eligible: true,
+        triggerType: 'team_event',
+        teamEventType: teamGate.teamEventType,
+        text,
+        playerName: null,
+        playerSlug: null,
+        gate: teamGate,
+        sport: 'football'
+      };
+    }
   }
 
   const ingestGate = require('./beat-recruiting-ingest-gate');
@@ -650,46 +720,6 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
     };
   }
 
-  const sportClassifier = require('./x-autoposter-sport-classifier');
-  const sportSkip = sportClassifier.guardFootballOnly(text, post);
-  if (sportSkip) {
-    sportClassifier.logNonFootballSkip({
-      text,
-      classification: sportSkip.sportClassification,
-      post,
-      subsystem: `${subsystem}:sport-filter`
-    });
-    return { eligible: false, skip: sportSkip, text, sport: sportSkip.sport };
-  }
-
-  const programGate = evaluateProgramNewsEligibility(text, { post });
-  if (programGate.eligible) {
-    return {
-      eligible: true,
-      triggerType: 'program_news',
-      programNewsType: programGate.programNewsType,
-      text,
-      playerName: null,
-      playerSlug: null,
-      gate: programGate,
-      sport: 'football'
-    };
-  }
-
-  const teamGate = evaluateTeamEventEligibility(text, { post });
-  if (teamGate.eligible) {
-    return {
-      eligible: true,
-      triggerType: 'team_event',
-      teamEventType: teamGate.teamEventType,
-      text,
-      playerName: null,
-      playerSlug: null,
-      gate: teamGate,
-      sport: 'football'
-    };
-  }
-
   const skip = await bypassRecruitingPipeline(text, {
     source: post?.handle || post?.writerName || post?.outlet,
     sourceHandle: post?.handle,
@@ -719,10 +749,12 @@ module.exports = {
   evaluateProgramNewsEligibility,
   evaluateBeatIntelEligibility,
   buildNonPlayerSkipPayload,
+  resolveGuardSkipReason,
   logNonPlayerIntel,
   isNonPlayerIntelSkip,
   bypassRecruitingPipeline,
   shouldSurfaceRecruitingIntelSync,
   shouldSurfaceRecruitingIntel,
-  guardBeatPost
+  guardBeatPost,
+  isTrustedUfBeatPost
 };

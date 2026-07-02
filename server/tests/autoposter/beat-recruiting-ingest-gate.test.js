@@ -61,6 +61,24 @@ describe('beat-recruiting-ingest-gate', () => {
     assert.equal(result.pass, true);
   });
 
+  it('does not reject mixed-class headlines solely for mentioning 2027', () => {
+    const result = gate.evaluateStrictRecruitingIngestGate({
+      ...GOOD_POST,
+      text: 'Florida Gators Recruiting: 2027 DB Battles Heat Up + First 2028 Commit Lands',
+    });
+    assert.notEqual(result.reason, 'class_year_below_2027');
+  });
+
+  it('passes camp-visit intel with class, position, and player name', () => {
+    const result = gate.evaluateStrictRecruitingIngestGate({
+      handle: 'ttjharden8',
+      writerName: 'Tyler Harden',
+      text:
+        'Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a unique connection at Florida. My recruitment is still open.',
+    });
+    assert.equal(result.pass, true);
+  });
+
   it('rejects posts without UF mention or locked target name', () => {
     const result = gate.evaluateStrictRecruitingIngestGate({
       ...GOOD_POST,

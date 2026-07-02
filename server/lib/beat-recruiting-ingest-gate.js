@@ -61,6 +61,29 @@ const RECRUITING_TERMS = [
   'top schools',
   'top 5',
   'top 10',
+  'gainesville',
+  'target',
+  'targets',
+  'priority',
+  'intel',
+  '4-star',
+  '5-star',
+  'star wr',
+  'star qb',
+  'interior ol',
+  'official',
+  'unofficial',
+  'prediction',
+  'futurecast',
+  'rpm',
+  'top remaining',
+  'decision date',
+  'flip target',
+  'recruitment',
+  'recruited',
+  'the swamp',
+  'friday night lights',
+  'fnl',
 ];
 
 const CLASS_YEAR_RE = /20(?:28|29|30|31|32)/;
@@ -180,6 +203,12 @@ function matchesRecruiting(text, post = null) {
   const hay = text.toLowerCase();
   if (RECRUITING_TERMS.some((term) => hay.includes(term))) return true;
   try {
+    const prefilter = require('./beat-intel-prefilter');
+    if (prefilter.hasStrongRecruitingSignals(text, post)) return true;
+  } catch {
+    /* optional */
+  }
+  try {
     const { parseOn3BeatUrlIdentity } = require('./on3-recruit-discovery');
     if (parseOn3BeatUrlIdentity(text, post?.url)?.playerSlug) return true;
   } catch {
@@ -193,6 +222,8 @@ function matchesClassYear(text, post = null) {
   if (!years.length) return true;
   const allowFuture = post?.manualClassYearOverride || process.env.BEAT_INGEST_ALLOW_CLASS_2029 === 'true';
   if (years.some((y) => y >= 2029) && !allowFuture) return false;
+  // Mixed-class headlines (e.g. "2027 battles + first 2028 commit") stay eligible when 2028+ is present.
+  if (years.some((y) => y >= 2028)) return true;
   if (years.some((y) => y <= 2027)) return false;
   return true;
 }

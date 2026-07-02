@@ -1005,8 +1005,9 @@ async function directBeatPostCandidates(freshPosts) {
   for (const post of freshPosts) {
     const guarded = await prefilter.guardBeatPost(post);
     if (!guarded.eligible) {
+      const skipReason = prefilter.resolveGuardSkipReason(guarded);
       if (researchLadder.digOnFilterSkipEnabled()) {
-        const alt = await researchLadder.buildFromBeatPostSkip(post, guarded.reason || 'beat_skip');
+        const alt = await researchLadder.buildFromBeatPostSkip(post, skipReason);
         if (alt?.text) otherRows.push(alt);
       }
       try {
@@ -1014,7 +1015,7 @@ async function directBeatPostCandidates(freshPosts) {
         if (det.detectivesEnabled()) {
           await det.handoffToDetectives({
             beatPost: post,
-            skipReason: guarded.reason || 'beat_skip',
+            skipReason,
             skipStage: 'beat_prefilter',
             hints: {
               handle: post.handle,
