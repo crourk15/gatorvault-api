@@ -6,6 +6,7 @@ const ufOfficial = require('./discovery-uf-official');
 const roster = require('./discovery-roster');
 const scouting = require('./discovery-scouting');
 const gameZone = require('./discovery-game-zone');
+const heat = require('./discovery-heat');
 
 async function collectAllDiscoveryCandidates(opts = {}) {
   if (!discoveryEnabled()) return [];
@@ -17,6 +18,7 @@ async function collectAllDiscoveryCandidates(opts = {}) {
     () => roster.collectRosterDeltaCandidates(),
     () => scouting.collectScoutingUpdateCandidates(),
     () => gameZone.collectGameZoneCandidates(),
+    () => heat.collectHeatMoverCandidates({ limit: widen ? 8 : 5 }),
   ];
   for (const run of runs) {
     try {
@@ -35,6 +37,7 @@ module.exports = {
   collectRosterDeltaCandidates: roster.collectRosterDeltaCandidates,
   collectScoutingUpdateCandidates: scouting.collectScoutingUpdateCandidates,
   collectGameZoneCandidates: gameZone.collectGameZoneCandidates,
+  collectHeatMoverCandidates: heat.collectHeatMoverCandidates,
   scanRosterDeltas: roster.scanRosterDeltas,
   buildNewsFromRosterEvent: roster.buildNewsFromRosterEvent,
 };

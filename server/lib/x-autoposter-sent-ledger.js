@@ -17,6 +17,7 @@ const NEWS_REPOST_WINDOW_MS = parseInt(
   process.env.X_AUTOPOST_NEWS_REPOST_WINDOW_MS || String(48 * 60 * 60 * 1000),
   10
 );
+const DAILY_WINDOW_MS = parseInt(process.env.X_AUTOPOST_DAILY_WINDOW_MS || String(24 * 60 * 60 * 1000), 10);
 
 const COMMIT_ANNOUNCEMENT_PATTERNS = [
   /shutting it down for the gators/i,
@@ -278,6 +279,15 @@ function bootstrapFromQueueItems(items) {
   return added;
 }
 
+function countRecentSentPosts(withinMs = DAILY_WINDOW_MS) {
+  const cutoff = Date.now() - withinMs;
+  const doc = loadLedger();
+  return (doc.entries || []).filter((entry) => {
+    const ts = new Date(entry.sentAt || 0).getTime();
+    return Number.isFinite(ts) && ts >= cutoff;
+  }).length;
+}
+
 module.exports = {
   LEDGER_PATH,
   ON3_SNAPSHOT_PATH,
@@ -290,8 +300,10 @@ module.exports = {
   recordSentCommit,
   recordSentPost,
   bootstrapFromQueueItems,
+  countRecentSentPosts,
   isCommitAnnouncementText,
   textHash,
   normalizeTextForDedupe,
   normalizedTextHash,
+  DAILY_WINDOW_MS,
 };

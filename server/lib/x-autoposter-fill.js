@@ -543,6 +543,7 @@ function candidateTopicRank(raw) {
   if (raw?.source === 'auto:roster-delta') return TOPIC_PRIORITY.roster_delta;
   if (raw?.source === 'auto:game-zone') return TOPIC_PRIORITY.game_week;
   if (raw?.source === 'auto:scouting-update') return TOPIC_PRIORITY.scouting_update;
+  if (raw?.source === 'auto:heat-mover' || raw?.sourceEventType === 'heat_mover') return TOPIC_PRIORITY.heat_mover;
   if (raw?.source === 'auto:research-ladder') return TOPIC_PRIORITY.research_ladder;
   if (raw?.source === 'auto:evergreen' || raw?.sourceEventType === 'evergreen') return TOPIC_PRIORITY.evergreen;
   const eventType = String(raw?.sourceEventType || raw?.eventType || '').toLowerCase();
@@ -558,14 +559,27 @@ function candidateTopicRank(raw) {
 function prioritizePostCandidates(candidates) {
   if (process.env.X_AUTOPOST_TOPIC_ROTATION === 'false') return candidates;
   let perf = null;
+  let timeBucket = null;
   try {
     perf = require('./autoposter/performance-tracker');
   } catch {
     /* optional */
   }
+  try {
+    timeBucket = require('./autoposter/time-bucket');
+  } catch {
+    /* optional */
+  }
+  const bucket = timeBucket?.getTimeBucket?.();
   return [...(candidates || [])].sort((a, b) => {
-    const pa = candidateTopicRank(a) + (perf?.candidatePerformanceBoost?.(a) || 0);
-    const pb = candidateTopicRank(b) + (perf?.candidatePerformanceBoost?.(b) || 0);
+    const pa =
+      candidateTopicRank(a) +
+      (perf?.candidatePerformanceBoost?.(a) || 0) +
+      (timeBucket?.candidateTimeBucketBoost?.(a, bucket) || 0);
+    const pb =
+      candidateTopicRank(b) +
+      (perf?.candidatePerformanceBoost?.(b) || 0) +
+      (timeBucket?.candidateTimeBucketBoost?.(b, bucket) || 0);
     if (pa !== pb) return pa - pb;
     const ta = new Date(a.sourceEventCreatedAt || a.sourcePublishedAt || 0).getTime();
     const tb = new Date(b.sourceEventCreatedAt || b.sourcePublishedAt || 0).getTime();
@@ -600,7 +614,7 @@ async function collectDigDeeperPostCandidates({ forcePost = false } = {}) {
         text,
         category: 'news',
         topic: 'recruiting',
-        urgencyLabel: 'major_beat',
+        urgencyLabel: 'analysis',
         sourceEventType: 'heat_mover',
         sources: [{ label: 'GatorVault Heat Check', url: SITE_URL }],
         source: 'auto:heat-mover',
@@ -1141,13 +1155,26 @@ async function collectOn3NewsBeatCandidates() {
 }
 
 async function refillAutoposterQueue({
-  minPending = parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '5', 10),
-  maxEnqueue = parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '8', 10),
+  minPending = parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '2', 10),
+  maxEnqueue = parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '4', 10),
   forcePost = false,
   digDeeper = false
 } = {}) {
   if (!pipelineGuards.autopostEnabled()) {
     return { ok: true, skipped: true, reason: 'autoposter disabled', pending: 0, enqueued: [] };
+  }
+  let dailyCount = 0;
+  let dailyMax = 6;
+  try {
+    const cadenceMod = require('./x-autoposter-cadence');
+    dailyCount = cadenceMod.countDailyPosts();
+    dailyMax = cadenceMod.DAILY_MAX_POSTS || 6;
+  } catch {
+    /* optional */
+  }
+  if (dailyCount >= dailyMax) {
+    forcePost = false;
+    digDeeper = false;
   }
   let beatPrep = null;
   try {

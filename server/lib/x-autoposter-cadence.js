@@ -1,13 +1,20 @@
 /**
- * X AutoPoster cadence — human-paced posting with breaking-news overrides.
- * Normal: 1 post / 45 min · Night (12–6 AM ET): 1 / 2.5 hr · Urgent: burst min 7 min · Multi-breaking: 2 min
+ * X AutoPoster cadence — human-paced posting (target 4–6 posts/day).
+ * Normal: 1 post / 4 hr · Urgent: 1 / 3 hr · Commit breaking: 1 / 1 hr · Night routine: 1 / 6 hr
  */
 const store = require('./x-autoposter-store');
 
-const NORMAL_COOLDOWN_MS = parseInt(process.env.X_AUTOPOST_COOLDOWN_MS || String(45 * 60 * 1000), 10);
-const BURST_COOLDOWN_MS = parseInt(process.env.X_AUTOPOST_BURST_MS || String(7 * 60 * 1000), 10);
-const NIGHT_COOLDOWN_MS = parseInt(process.env.X_AUTOPOST_NIGHT_MS || String(150 * 60 * 1000), 10);
-const BREAKING_BURST_MS = parseInt(process.env.X_AUTOPOST_BREAKING_BURST_MS || String(2 * 60 * 1000), 10);
+const NORMAL_COOLDOWN_MS = parseInt(process.env.X_AUTOPOST_COOLDOWN_MS || String(4 * 60 * 60 * 1000), 10);
+const URGENT_COOLDOWN_MS = parseInt(process.env.X_AUTOPOST_URGENT_COOLDOWN_MS || String(3 * 60 * 60 * 1000), 10);
+const BREAKING_COOLDOWN_MS = parseInt(
+  process.env.X_AUTOPOST_BREAKING_COOLDOWN_MS || String(60 * 60 * 1000),
+  10
+);
+const BURST_COOLDOWN_MS = parseInt(process.env.X_AUTOPOST_BURST_MS || String(60 * 60 * 1000), 10);
+const NIGHT_COOLDOWN_MS = parseInt(process.env.X_AUTOPOST_NIGHT_MS || String(6 * 60 * 60 * 1000), 10);
+const BREAKING_BURST_MS = parseInt(process.env.X_AUTOPOST_BREAKING_BURST_MS || String(45 * 60 * 1000), 10);
+const DAILY_MAX_POSTS = parseInt(process.env.X_AUTOPOST_DAILY_MAX || '6', 10);
+const DAILY_WINDOW_MS = parseInt(process.env.X_AUTOPOST_DAILY_WINDOW_MS || String(24 * 60 * 60 * 1000), 10);
 const NIGHT_TZ = process.env.X_AUTOPOST_NIGHT_TZ || 'America/New_York';
 
 const URGENT_LABELS = new Set([
@@ -50,7 +57,7 @@ function classifyItemUrgency(item) {
   const eventType = String(item.sourceEventType || item.eventType || intelType || '').toLowerCase();
 
   if (eventType === 'program_news' || topic === 'program' || source.includes('program-news')) {
-    return { tier: 'breaking', label: 'breaking' };
+    return { tier: 'normal', label: 'program_news' };
   }
   if (/\bbreaking\b/i.test(text)) {
     return { tier: 'breaking', label: 'breaking' };
@@ -68,7 +75,7 @@ function classifyItemUrgency(item) {
     return { tier: 'urgent', label: 'staff' };
   }
   if (source === 'auto:article' || item.urgencyLabel === 'analysis' || /\b(analysis|breakdown|film study)\b/i.test(lower)) {
-    return { tier: 'urgent', label: 'analysis' };
+    return { tier: 'normal', label: 'analysis' };
   }
   if ((source === 'auto:beat-intel' || source === 'auto:beat-momentum') && item.playerName) {
     return { tier: 'urgent', label: 'major_beat' };
@@ -105,6 +112,29 @@ function countBreakingPending(pendingItems) {
   return (pendingItems || []).filter((i) => i.status === 'pending' && classifyItemUrgency(i).tier === 'breaking').length;
 }
 
+function isCommitBreaking(item) {
+  if (!item) return false;
+  const et = String(item.sourceEventType || item.eventType || '').toLowerCase();
+  if (/^(commit|flip|decommit)$/.test(et)) return true;
+  return /\b(committed to florida|flips to florida|decommits from florida)\b/i.test(String(item.text || ''));
+}
+
+function countDailyPosts() {
+  try {
+    return require('./x-autoposter-sent-ledger').countRecentSentPosts(DAILY_WINDOW_MS);
+  } catch {
+    return 0;
+  }
+}
+
+function requiredCooldownForItem(item, night) {
+  if (isCommitBreaking(item)) return BREAKING_COOLDOWN_MS;
+  const urgency = classifyItemUrgency(item);
+  if (urgency.tier === 'breaking' || urgency.tier === 'urgent') return URGENT_COOLDOWN_MS;
+  if (night) return NIGHT_COOLDOWN_MS;
+  return NORMAL_COOLDOWN_MS;
+}
+
 function evaluatePostWindow({ pendingItems, lastPostAt, now = Date.now() } = {}) {
   const nextItem = pickNextPost(pendingItems);
   if (!nextItem) {
@@ -116,6 +146,22 @@ function evaluatePostWindow({ pendingItems, lastPostAt, now = Date.now() } = {})
   const night = isNightModeEst(new Date(now));
   const lastAt = lastPostAt ? new Date(lastPostAt).getTime() : null;
   const elapsed = lastAt ? now - lastAt : Infinity;
+  const dailyCount = countDailyPosts();
+
+  if (dailyCount >= DAILY_MAX_POSTS && !isCommitBreaking(nextItem)) {
+    return {
+      allowed: false,
+      reason: 'daily_cap',
+      item: nextItem,
+      ...urgency,
+      nightMode: night,
+      breakingCount,
+      dailyCount,
+      dailyMax: DAILY_MAX_POSTS,
+      cooldownMs: DAILY_WINDOW_MS,
+      waitMs: DAILY_WINDOW_MS
+    };
+  }
 
   if (!lastAt) {
     return {
@@ -125,51 +171,31 @@ function evaluatePostWindow({ pendingItems, lastPostAt, now = Date.now() } = {})
       ...urgency,
       nightMode: night,
       breakingCount,
+      dailyCount,
+      dailyMax: DAILY_MAX_POSTS,
       cooldownMs: 0,
       waitMs: 0
     };
   }
 
-  let minGapMs = BURST_COOLDOWN_MS;
-  if (urgency.tier === 'breaking' && breakingCount >= 2) {
-    minGapMs = BREAKING_BURST_MS;
-  }
-
-  if (elapsed < minGapMs) {
-    return {
-      allowed: false,
-      reason: breakingCount >= 2 && urgency.tier === 'breaking' ? 'breaking_burst' : 'burst_cooldown',
-      item: nextItem,
-      ...urgency,
-      nightMode: night,
-      breakingCount,
-      cooldownMs: minGapMs,
-      waitMs: minGapMs - elapsed
-    };
-  }
-
-  if (urgency.tier === 'breaking' || urgency.tier === 'urgent') {
-    return {
-      allowed: true,
-      reason: urgency.tier === 'breaking' ? 'breaking_override' : 'urgent_override',
-      item: nextItem,
-      ...urgency,
-      nightMode: night,
-      breakingCount,
-      cooldownMs: minGapMs,
-      waitMs: 0
-    };
-  }
-
-  const requiredCooldown = night ? NIGHT_COOLDOWN_MS : NORMAL_COOLDOWN_MS;
+  const requiredCooldown = requiredCooldownForItem(nextItem, night);
   if (elapsed < requiredCooldown) {
+    const reason = isCommitBreaking(nextItem)
+      ? 'breaking_cooldown'
+      : urgency.tier === 'normal'
+        ? night
+          ? 'night_cooldown'
+          : 'normal_cooldown'
+        : 'urgent_cooldown';
     return {
       allowed: false,
-      reason: night ? 'night_cooldown' : 'normal_cooldown',
+      reason,
       item: nextItem,
       ...urgency,
       nightMode: night,
       breakingCount,
+      dailyCount,
+      dailyMax: DAILY_MAX_POSTS,
       cooldownMs: requiredCooldown,
       waitMs: requiredCooldown - elapsed
     };
@@ -177,11 +203,13 @@ function evaluatePostWindow({ pendingItems, lastPostAt, now = Date.now() } = {})
 
   return {
     allowed: true,
-    reason: night ? 'night_cooldown_expired' : 'normal_cooldown_expired',
+    reason: night ? 'night_cooldown_expired' : 'cooldown_expired',
     item: nextItem,
     ...urgency,
     nightMode: night,
     breakingCount,
+    dailyCount,
+    dailyMax: DAILY_MAX_POSTS,
     cooldownMs: requiredCooldown,
     waitMs: 0
   };
@@ -201,24 +229,35 @@ function getCadenceConfig() {
   return {
     normalCooldownMs: NORMAL_COOLDOWN_MS,
     normalCooldownMinutes: Math.round(NORMAL_COOLDOWN_MS / 60000),
+    urgentCooldownMs: URGENT_COOLDOWN_MS,
+    urgentCooldownMinutes: Math.round(URGENT_COOLDOWN_MS / 60000),
+    breakingCooldownMs: BREAKING_COOLDOWN_MS,
+    breakingCooldownMinutes: Math.round(BREAKING_COOLDOWN_MS / 60000),
     burstCooldownMs: BURST_COOLDOWN_MS,
     burstCooldownMinutes: Math.round(BURST_COOLDOWN_MS / 60000),
     nightCooldownMs: NIGHT_COOLDOWN_MS,
     nightCooldownMinutes: Math.round(NIGHT_COOLDOWN_MS / 60000),
     breakingBurstMs: BREAKING_BURST_MS,
+    dailyMaxPosts: DAILY_MAX_POSTS,
+    dailyWindowMs: DAILY_WINDOW_MS,
     nightModeHoursEt: '00:00–06:00',
     nightTimezone: NIGHT_TZ,
     urgentLabels: [...URGENT_LABELS, 'breaking'],
     description:
-      'Normal 45m · Urgent/breaking bypass interval · Burst min 7m (2m when 2+ breaking) · Night 2.5h for routine posts'
+      'Target 4–6 posts/day · Normal 4h · Urgent 3h · UF commit 1h · Night routine 6h · Daily cap 6 (commits exempt)'
   };
 }
 
 module.exports = {
   NORMAL_COOLDOWN_MS,
+  URGENT_COOLDOWN_MS,
+  BREAKING_COOLDOWN_MS,
   BURST_COOLDOWN_MS,
   NIGHT_COOLDOWN_MS,
+  DAILY_MAX_POSTS,
   classifyItemUrgency,
+  isCommitBreaking,
+  countDailyPosts,
   pickNextPost,
   evaluatePostWindow,
   tagCandidate,

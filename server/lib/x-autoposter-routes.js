@@ -71,6 +71,12 @@ function mountXAutoposterRoutes(app) {
       const pipelineHealth = require('./pipeline-health');
       const lastPostAt = scheduler.lastPostAt || scheduler.lastPostSuccess || null;
       const cadenceWindow = cadence.evaluatePostWindow({ pendingItems: pending, lastPostAt });
+      let intelligence = null;
+      try {
+        intelligence = require('./autoposter/phase4-index').getOperationalIntel();
+      } catch {
+        /* optional */
+      }
       return res.json({
         ok: true,
         ...config,
@@ -89,8 +95,11 @@ function mountXAutoposterRoutes(app) {
           cooldownMs: cadenceWindow.cooldownMs || 0,
           tier: cadenceWindow.tier || null,
           label: cadenceWindow.label || null,
-          breakingCount: cadenceWindow.breakingCount || 0
+          breakingCount: cadenceWindow.breakingCount || 0,
+          dailyCount: cadenceWindow.dailyCount ?? cadence.countDailyPosts(),
+          dailyMax: cadenceWindow.dailyMax ?? cadence.DAILY_MAX_POSTS
         },
+        cadenceConfig: cadence.getCadenceConfig(),
         lastRefillAt: scheduler.lastRefillAt,
         lastError: scheduler.lastError || (verify && !verify.ok ? verify.error : null),
         queuePending: pending.length,
@@ -99,6 +108,7 @@ function mountXAutoposterRoutes(app) {
         mix,
         verify,
         pipeline: pipelineHealth.getHealthReport(),
+        intelligence,
         logs: autoposter.getAutoposterLogs(parseInt(req.query.logLimit || '20', 10) || 20)
       });
     } catch (err) {

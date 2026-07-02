@@ -33,4 +33,8 @@ function listRecentAnglesForPlayer(slug, situation) {
   const cutoff = Date.now() - TOPIC_WINDOW_MS;
   return (readStore().entries || []).filter((e) => s && String(e.topicKey || '').startsWith(s + '|') && (!situation || e.situation === situation) && new Date(e.usedAt || 0).getTime() >= cutoff).map((e) => e.angle);
 }
-module.exports = { topicMemoryEnabled, extractTopicAngle, topicKey, hasRecentTopicAngle, recordTopicUsage, listRecentAnglesForPlayer };
+function getTopicMemorySummary() {
+  const entries = readStore().entries || [];
+  return { enabled: topicMemoryEnabled(), recentCount: entries.length, windowMs: TOPIC_WINDOW_MS };
+}
+module.exports = { topicMemoryEnabled, extractTopicAngle, topicKey, hasRecentTopicAngle, recordTopicUsage, listRecentAnglesForPlayer, getTopicMemorySummary };

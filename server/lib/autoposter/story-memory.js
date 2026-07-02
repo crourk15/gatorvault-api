@@ -56,4 +56,8 @@ function recordStoryUnit(item) {
   writeStore(doc);
   return row;
 }
-module.exports = { storyMemoryEnabled, normalizeStoryArc, computeStoryUnitKey, hasRecentStoryUnit, recordStoryUnit };
+function getStoryMemorySummary() {
+  const entries = readStore().entries || [];
+  return { enabled: storyMemoryEnabled(), recentCount: entries.length, windowMs: STORY_WINDOW_MS };
+}
+module.exports = { storyMemoryEnabled, normalizeStoryArc, computeStoryUnitKey, hasRecentStoryUnit, recordStoryUnit, getStoryMemorySummary };
