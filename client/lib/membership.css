@@ -148,6 +148,14 @@
   font-weight: 700;
 }
 
+.gv-membership__account {
+  margin: 1.25rem 0;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
 .gv-membership__manage {
   margin: 0 0 1.5rem;
   padding: 1rem 1.1rem;

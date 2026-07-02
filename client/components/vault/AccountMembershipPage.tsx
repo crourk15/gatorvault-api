@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { loadSession } from '@/lib/auth-api';
+import { clearSession, loadSession } from '@/lib/auth-api';
 import { isNativeApp } from '@/lib/api-base';
 import {
   fetchSubscriptionCatalog,
@@ -132,6 +132,11 @@ export function AccountMembershipPage(): React.ReactElement {
     }
   }
 
+  function handleSignOut(): void {
+    clearSession();
+    window.location.replace('/join/?mode=signin&next=/vault/membership/');
+  }
+
   async function handleManageSubscriptions(): Promise<void> {
     try {
       await openIosSubscriptionManagement();
@@ -182,6 +187,22 @@ export function AccountMembershipPage(): React.ReactElement {
               {status.subscription.productId ? ` · ${status.subscription.productId}` : ''}
             </p>
           ) : null}
+        </section>
+      ) : null}
+
+      {status?.email ? (
+        <section className="gv-membership__account" aria-label="Signed in account">
+          <h2 className="gv-membership__section-title">Signed in</h2>
+          <p className="gv-membership__meta">
+            {status.email}
+          </p>
+          <button
+            type="button"
+            className="gv-membership__secondary-btn"
+            onClick={handleSignOut}
+          >
+            Sign out
+          </button>
         </section>
       ) : null}
 
