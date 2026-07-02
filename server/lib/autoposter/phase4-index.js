@@ -10,6 +10,7 @@ function getOperationalIntel() {
     snap.topicMemory = p3.topicMemory.getTopicMemorySummary();
     snap.performance = p3.performanceTracker.getPerformanceSummary();
   } catch { snap.phase3Enabled = false; }
+  try { snap.phase5 = require('./phase5-index').getPhase5Intel(); } catch { snap.phase5 = { phase5Enabled: false }; }
   return snap;
 }
 module.exports = { phase4Enabled, timeBucket, getOperationalIntel };

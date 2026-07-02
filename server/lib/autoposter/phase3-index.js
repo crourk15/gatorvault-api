@@ -18,5 +18,6 @@ function recordPostMemory(item) {
   try { storyMemory.recordStoryUnit(item); } catch {}
   try { topicMemory.recordTopicUsage(item); } catch {}
   try { performanceTracker.recordPostPerformance(item); } catch {}
+  try { require('./engagement-tracker').recordPostEngagement(item); } catch {}
 }
 module.exports = { phase3Enabled, storyMemory, topicMemory, researchLadder, evergreenLibrary, performanceTracker, guardCandidateMemory, recordPostMemory };

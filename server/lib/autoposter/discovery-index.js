@@ -7,6 +7,7 @@ const roster = require('./discovery-roster');
 const scouting = require('./discovery-scouting');
 const gameZone = require('./discovery-game-zone');
 const heat = require('./discovery-heat');
+const history = require('./discovery-history');
 
 async function collectAllDiscoveryCandidates(opts = {}) {
   if (!discoveryEnabled()) return [];
@@ -19,6 +20,7 @@ async function collectAllDiscoveryCandidates(opts = {}) {
     () => scouting.collectScoutingUpdateCandidates(),
     () => gameZone.collectGameZoneCandidates(),
     () => heat.collectHeatMoverCandidates({ limit: widen ? 8 : 5 }),
+    () => history.collectHistoryCandidates({ limit: widen ? 2 : 1 }),
   ];
   for (const run of runs) {
     try {
@@ -38,6 +40,7 @@ module.exports = {
   collectScoutingUpdateCandidates: scouting.collectScoutingUpdateCandidates,
   collectGameZoneCandidates: gameZone.collectGameZoneCandidates,
   collectHeatMoverCandidates: heat.collectHeatMoverCandidates,
+  collectHistoryCandidates: history.collectHistoryCandidates,
   scanRosterDeltas: roster.scanRosterDeltas,
   buildNewsFromRosterEvent: roster.buildNewsFromRosterEvent,
 };

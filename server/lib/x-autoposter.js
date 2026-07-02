@@ -375,6 +375,16 @@ async function processQueueItem(item) {
   }
 
   try {
+    const engagement = require('./autoposter/engagement-tracker');
+    const taggedText = engagement.tagPostText(workingItem.text, workingItem);
+    if (taggedText && taggedText !== workingItem.text) {
+      workingItem = { ...workingItem, text: taggedText };
+    }
+  } catch {
+    /* optional */
+  }
+
+  try {
     const result = await postTweet({
       text: workingItem.text,
       mediaBase64: workingItem.mediaBase64 || null,

@@ -533,6 +533,7 @@ const TOPIC_PRIORITY = {
   article: 9,
   recruiting_momentum: 10,
   evergreen: 11,
+  program_history: 11,
   general: 12
 };
 
@@ -546,6 +547,7 @@ function candidateTopicRank(raw) {
   if (raw?.source === 'auto:heat-mover' || raw?.sourceEventType === 'heat_mover') return TOPIC_PRIORITY.heat_mover;
   if (raw?.source === 'auto:research-ladder') return TOPIC_PRIORITY.research_ladder;
   if (raw?.source === 'auto:evergreen' || raw?.sourceEventType === 'evergreen') return TOPIC_PRIORITY.evergreen;
+  if (raw?.source === 'auto:program-history' || raw?.sourceEventType === 'program_history') return TOPIC_PRIORITY.program_history;
   const eventType = String(raw?.sourceEventType || raw?.eventType || '').toLowerCase();
   if (/commit|flip/.test(eventType)) return TOPIC_PRIORITY.commitment;
   if (/portal/.test(eventType)) return TOPIC_PRIORITY.portal;
@@ -570,16 +572,24 @@ function prioritizePostCandidates(candidates) {
   } catch {
     /* optional */
   }
+  let engagement = null;
+  try {
+    engagement = require('./autoposter/engagement-tracker');
+  } catch {
+    /* optional */
+  }
   const bucket = timeBucket?.getTimeBucket?.();
   return [...(candidates || [])].sort((a, b) => {
     const pa =
       candidateTopicRank(a) +
       (perf?.candidatePerformanceBoost?.(a) || 0) +
-      (timeBucket?.candidateTimeBucketBoost?.(a, bucket) || 0);
+      (timeBucket?.candidateTimeBucketBoost?.(a, bucket) || 0) +
+      (engagement?.candidateEngagementBoost?.(a) || 0);
     const pb =
       candidateTopicRank(b) +
       (perf?.candidatePerformanceBoost?.(b) || 0) +
-      (timeBucket?.candidateTimeBucketBoost?.(b, bucket) || 0);
+      (timeBucket?.candidateTimeBucketBoost?.(b, bucket) || 0) +
+      (engagement?.candidateEngagementBoost?.(b) || 0);
     if (pa !== pb) return pa - pb;
     const ta = new Date(a.sourceEventCreatedAt || a.sourcePublishedAt || 0).getTime();
     const tb = new Date(b.sourceEventCreatedAt || b.sourcePublishedAt || 0).getTime();
