@@ -234,6 +234,13 @@ function isRecoverableFailedItem(item, { maxAgeMs = 30 * 24 * 60 * 60 * 1000 } =
   if (Number.isFinite(ts) && ts > 0 && Date.now() - ts > maxAgeMs) return false;
   if (item.verifiedCommit || item.validationMeta?.verifiedCommit) return true;
   if (isElitePremadeItem(item) && /rewrite_failed|too_short|rewrite failed/i.test(err) && String(item.text || '').trim()) {
+    const sentLedger = require('./x-autoposter-sent-ledger');
+    const dup = sentLedger.hasRecentSentPost({
+      slug: item.playerSlug,
+      intelFingerprint: item.intelFingerprint,
+      text: item.text,
+    });
+    if (dup.hit) return false;
     return true;
   }
   const check = policy.validatePostContent(item);
@@ -286,14 +293,36 @@ function recoverFailedVerifiedCommits() {
 function recoverFailedPostableItems(opts = {}) {
   const doc = loadQueue();
   let recovered = 0;
+  let skippedDuplicate = 0;
+  const sentLedger = require('./x-autoposter-sent-ledger');
   for (const item of doc.items) {
+    if (item.status !== 'failed') continue;
+    if (isElitePremadeItem(item) && /rewrite_failed|too_short|rewrite failed/i.test(String(item.error || ''))) {
+      const dup = sentLedger.hasRecentSentPost({
+        slug: item.playerSlug,
+        intelFingerprint: item.intelFingerprint,
+        text: item.text,
+      });
+      if (dup.hit) {
+        item.status = 'skipped_duplicate';
+        item.error = dup.reason || 'duplicate';
+        item.sentAt = nowIso();
+        skippedDuplicate += 1;
+        continue;
+      }
+    }
     if (!isRecoverableFailedItem(item, opts)) continue;
     rependFailedItem(item);
     recovered += 1;
   }
-  if (recovered) {
+  if (recovered || skippedDuplicate) {
     saveQueue(doc);
-    logQueueOp('recover_postable', { id: 'batch', count: recovered }, { recovered });
+    if (recovered) {
+      logQueueOp('recover_postable', { id: 'batch', count: recovered }, { recovered });
+    }
+    if (skippedDuplicate) {
+      logQueueOp('skip_duplicate', { id: 'batch', count: skippedDuplicate }, { skippedDuplicate });
+    }
   }
   return recovered;
 }

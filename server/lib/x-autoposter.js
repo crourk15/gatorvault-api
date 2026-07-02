@@ -223,13 +223,58 @@ function isDuplicateTweetError(err) {
   return /duplicate content/i.test(msg);
 }
 
-/** One-shot copy tweak when X rejects identical body (common on re-queued commits). */
+function duplicateRecoveryEnabled() {
+  return process.env.X_AUTOPOST_DUPLICATE_RECOVERY === 'true';
+}
+
+/** Optional one-shot copy tweak when X rejects identical body (off by default). */
 function duplicateRecoveryText(text) {
   const base = String(text || '').trim();
   if (!base || /#GoGators\b/i.test(base)) return null;
   const suffix = '\n#GoGators';
   if (base.length + suffix.length > 280) return null;
   return `${base}${suffix}`;
+}
+
+function duplicateGuardBeforePost(item) {
+  const sentLedger = require('./x-autoposter-sent-ledger');
+  const fill = require('./x-autoposter-fill');
+  const ledgerHit = sentLedger.hasRecentSentPost({
+    slug: item.playerSlug,
+    intelFingerprint: item.intelFingerprint,
+    text: item.text,
+  });
+  if (ledgerHit.hit) return { duplicate: true, ...ledgerHit };
+  const others = store.loadQueue().items.filter((i) => i.id !== item.id);
+  if (fill.alreadyQueued(item.text, others)) {
+    return { duplicate: true, reason: 'queue_exact' };
+  }
+  const similar = fill.similarPostQueued(item.text, others, {
+    slug: item.playerSlug,
+    intelFingerprint: item.intelFingerprint,
+  });
+  if (similar) return { duplicate: true, reason: similar.reason || 'queue_similar', ...similar };
+  return { duplicate: false };
+}
+
+function skipDuplicateQueueItem(item, reason, extra = {}) {
+  autopostLog('warn', 'Skipped duplicate autopost (recent match)', {
+    itemId: item.id,
+    reason,
+    playerSlug: item.playerSlug,
+    ...extra,
+  });
+  store.updatePost(item.id, {
+    status: 'skipped_duplicate',
+    error: reason || 'duplicate',
+    sentAt: store.nowIso(),
+  });
+  saveSchedulerStatus({
+    lastPostAt: store.nowIso(),
+    lastPostSuccess: store.nowIso(),
+    lastError: null,
+  });
+  return { ok: true, skipped: true, duplicate: true, itemId: item.id, reason };
 }
 
 async function processQueueItem(item) {
@@ -315,6 +360,11 @@ async function processQueueItem(item) {
     return { ok: false, itemId: item.id, error: 'Validation failed', validation: check };
   }
 
+  const dupGuard = duplicateGuardBeforePost(workingItem);
+  if (dupGuard.duplicate) {
+    return skipDuplicateQueueItem(workingItem, dupGuard.reason || 'duplicate_guard', dupGuard);
+  }
+
   try {
     const result = await postTweet({
       text: workingItem.text,
@@ -334,7 +384,7 @@ async function processQueueItem(item) {
     });
     try {
       const sentLedger = require('./x-autoposter-sent-ledger');
-      sentLedger.recordSentCommit({
+      sentLedger.recordSentPost({
         ...workingItem,
         status: 'sent',
         sentAt: store.nowIso(),
@@ -388,59 +438,50 @@ async function processQueueItem(item) {
     return { ok: true, item: store.loadQueue().items.find((i) => i.id === item.id), result };
   } catch (err) {
     if (isDuplicateTweetError(err)) {
-      const altText = duplicateRecoveryText(workingItem.text);
-      if (altText && altText !== workingItem.text) {
-        try {
-          autopostLog('info', 'Retrying duplicate tweet with recovery suffix', { itemId: item.id });
-          const retry = await postTweet({
-            text: altText,
-            mediaBase64: workingItem.mediaBase64 || null,
-            mediaMime: workingItem.mediaMime || null,
-            inReplyToStatusId:
-              workingItem.action === 'reply' ? workingItem.inReplyToStatusId : null,
-            quoteTweetUrl: workingItem.action === 'quote' ? workingItem.quoteTweetUrl : null,
-            quoteTweetId: workingItem.action === 'quote' ? workingItem.quoteTweetId : null
-          });
-          store.updatePost(workingItem.id, {
-            text: altText,
-            status: 'sent',
-            sentAt: store.nowIso(),
-            tweetId: retry.tweetId,
-            tweetUrl: retry.tweetUrl,
-            error: null,
-            validationErrors: []
-          });
-          const postedAt = store.nowIso();
-          freshness.recordLastPost(postedAt);
-          saveSchedulerStatus({
-            lastPostAt: postedAt,
-            lastPostSuccess: postedAt,
-            lastError: null
-          });
-          return {
-            ok: true,
-            item: store.loadQueue().items.find((i) => i.id === item.id),
-            result: retry,
-            duplicateRecovery: true
-          };
-        } catch (retryErr) {
-          if (!isDuplicateTweetError(retryErr)) {
-            throw retryErr;
+      if (duplicateRecoveryEnabled()) {
+        const altText = duplicateRecoveryText(workingItem.text);
+        if (altText && altText !== workingItem.text) {
+          try {
+            autopostLog('info', 'Retrying duplicate tweet with recovery suffix', { itemId: item.id });
+            const retry = await postTweet({
+              text: altText,
+              mediaBase64: workingItem.mediaBase64 || null,
+              mediaMime: workingItem.mediaMime || null,
+              inReplyToStatusId:
+                workingItem.action === 'reply' ? workingItem.inReplyToStatusId : null,
+              quoteTweetUrl: workingItem.action === 'quote' ? workingItem.quoteTweetUrl : null,
+              quoteTweetId: workingItem.action === 'quote' ? workingItem.quoteTweetId : null
+            });
+            store.updatePost(workingItem.id, {
+              text: altText,
+              status: 'sent',
+              sentAt: store.nowIso(),
+              tweetId: retry.tweetId,
+              tweetUrl: retry.tweetUrl,
+              error: null,
+              validationErrors: []
+            });
+            const postedAt = store.nowIso();
+            freshness.recordLastPost(postedAt);
+            saveSchedulerStatus({
+              lastPostAt: postedAt,
+              lastPostSuccess: postedAt,
+              lastError: null
+            });
+            return {
+              ok: true,
+              item: store.loadQueue().items.find((i) => i.id === item.id),
+              result: retry,
+              duplicateRecovery: true
+            };
+          } catch (retryErr) {
+            if (!isDuplicateTweetError(retryErr)) {
+              throw retryErr;
+            }
           }
         }
       }
-      autopostLog('warn', 'Skipped duplicate tweet (already on timeline)', { itemId: item.id });
-      store.updatePost(item.id, {
-        status: 'skipped_duplicate',
-        error: err.message,
-        sentAt: store.nowIso()
-      });
-      saveSchedulerStatus({
-        lastPostAt: store.nowIso(),
-        lastPostSuccess: store.nowIso(),
-        lastError: null
-      });
-      return { ok: true, skipped: true, duplicate: true, itemId: item.id };
+      return skipDuplicateQueueItem(item, 'x_duplicate_content', { error: err.message });
     }
     autopostLog('error', `Error: ${err.message}`, { itemId: item.id });
     store.updatePost(item.id, {
@@ -541,7 +582,7 @@ function startXAutoposterScheduler() {
     const doc = store.loadQueue();
     const bootstrapped = sentLedger.bootstrapFromQueueItems(doc.items);
     if (bootstrapped) {
-      autopostLog('info', `Restored ${bootstrapped} sent commit(s) into autopost ledger`);
+      autopostLog('info', `Restored ${bootstrapped} sent post(s) into autopost ledger`);
     }
   } catch (e) {
     autopostLog('warn', `Sent ledger bootstrap skipped: ${e.message}`);

@@ -13,6 +13,10 @@ const COMMIT_REPOST_WINDOW_MS = parseInt(
   process.env.X_AUTOPOST_COMMIT_REPOST_WINDOW_MS || String(30 * 24 * 60 * 60 * 1000),
   10
 );
+const NEWS_REPOST_WINDOW_MS = parseInt(
+  process.env.X_AUTOPOST_NEWS_REPOST_WINDOW_MS || String(48 * 60 * 60 * 1000),
+  10
+);
 
 const COMMIT_ANNOUNCEMENT_PATTERNS = [
   /shutting it down for the gators/i,
@@ -109,6 +113,19 @@ function textHash(text) {
   return crypto.createHash('sha256').update(String(text || '').trim().toLowerCase()).digest('hex').slice(0, 16);
 }
 
+function normalizeTextForDedupe(text) {
+  return String(text || '')
+    .replace(/#\w+/g, '')
+    .replace(/https?:\/\/\S+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+function normalizedTextHash(text) {
+  return textHash(normalizeTextForDedupe(text));
+}
+
 function normalizeSlug(raw) {
   return String(raw || '').trim().toLowerCase();
 }
@@ -133,6 +150,36 @@ function entryMatches(item, { slug, commitFingerprint: fp, text, playerSlug } = 
   return false;
 }
 
+function hasRecentSentPost({ slug, intelFingerprint, text, playerSlug } = {}) {
+  const cutoff = Date.now() - NEWS_REPOST_WINDOW_MS;
+  const doc = loadLedger();
+  const hashNorm = text ? normalizedTextHash(text) : null;
+  const hashRaw = text ? textHash(text) : null;
+  const key = normalizeSlug(slug || playerSlug);
+  let postSpec = null;
+  for (const entry of doc.entries) {
+    const ts = new Date(entry.sentAt || 0).getTime();
+    if (!Number.isFinite(ts) || ts < cutoff) continue;
+    if (intelFingerprint && entry.intelFingerprint && entry.intelFingerprint === intelFingerprint) {
+      return { hit: true, reason: 'intel_fingerprint', tweetId: entry.tweetId || null };
+    }
+    if (hashNorm && (entry.textHashNorm === hashNorm || entry.textHash === hashNorm)) {
+      return { hit: true, reason: 'text_hash', tweetId: entry.tweetId || null };
+    }
+    if (hashRaw && entry.textHash === hashRaw) {
+      return { hit: true, reason: 'text_hash', tweetId: entry.tweetId || null };
+    }
+    const entrySlug = normalizeSlug(entry.playerSlug);
+    if (key && entrySlug === key && text && entry.text) {
+      postSpec = postSpec || require('./x-autoposter-post-spec');
+      if (postSpec.isTooSimilar(text, entry.text)) {
+        return { hit: true, reason: 'player_similar', tweetId: entry.tweetId || null, playerSlug: key };
+      }
+    }
+  }
+  return { hit: false };
+}
+
 function hasRecentSentCommit({ slug, commitFingerprint: fp, text, eventType = 'commit' } = {}) {
   const cutoff = Date.now() - COMMIT_REPOST_WINDOW_MS;
   const doc = loadLedger();
@@ -144,7 +191,7 @@ function hasRecentSentCommit({ slug, commitFingerprint: fp, text, eventType = 'c
   });
 }
 
-function recordSentCommit(item) {
+function recordSentPost(item) {
   if (!item || item.status !== 'sent') return null;
   const player = item.playerContext?.player || null;
   const slug = normalizeSlug(
@@ -152,29 +199,45 @@ function recordSentCommit(item) {
   );
   const fp =
     item.commitFingerprint ||
-    commitFingerprint(player || { slug, committedTo: 'Florida', commitDate: item.sourceEventCreatedAt });
+    (player ? commitFingerprint(player) : null);
   const row = {
     playerSlug: slug || null,
     playerName: item.playerName || null,
     commitFingerprint: fp || null,
+    intelFingerprint: item.intelFingerprint || null,
     textHash: textHash(item.text),
-    eventType: item.sourceEventType || 'commit',
+    textHashNorm: normalizedTextHash(item.text),
+    text: String(item.text || '').trim() || null,
+    eventType: item.sourceEventType || item.eventType || item.category || 'news',
     tweetId: item.tweetId || null,
     sentAt: item.sentAt || new Date().toISOString(),
     source: item.source || null,
   };
-  if (!row.playerSlug && !row.commitFingerprint && !row.textHash) return null;
+  if (!row.playerSlug && !row.commitFingerprint && !row.intelFingerprint && !row.textHash) return null;
 
   const doc = loadLedger();
-  if (doc.entries.some((e) => entryMatches(e, row))) {
-    persistSnapshotSent(row);
+  if (
+    doc.entries.some(
+      (e) =>
+        entryMatches(e, row) ||
+        (row.intelFingerprint && e.intelFingerprint === row.intelFingerprint) ||
+        (row.textHashNorm && e.textHashNorm === row.textHashNorm)
+    )
+  ) {
+    if (row.playerSlug) persistSnapshotSent(row);
     return row;
   }
   doc.entries.unshift(row);
   doc.entries = doc.entries.slice(0, LEDGER_MAX);
   saveLedger(doc);
-  persistSnapshotSent(row);
+  if (row.playerSlug && (row.eventType === 'commit' || row.eventType === 'flip')) {
+    persistSnapshotSent(row);
+  }
   return row;
+}
+
+function recordSentCommit(item) {
+  return recordSentPost(item);
 }
 
 function bootstrapFromQueueItems(items) {
@@ -182,14 +245,13 @@ function bootstrapFromQueueItems(items) {
   let added = 0;
   for (const item of items) {
     if (item?.status !== 'sent') continue;
-    const et = String(item.sourceEventType || item.eventType || 'commit').toLowerCase();
-    if (et !== 'commit' && et !== 'flip') continue;
-    const slug = normalizeSlug(
-      item.playerSlug || item.playerContext?.player?.slug || item.validationMeta?.playerSlug || ''
-    );
-    const fp = item.commitFingerprint || null;
-    if (hasRecentSentCommit({ slug, commitFingerprint: fp, text: item.text, eventType: et })) continue;
-    const row = recordSentCommit(item);
+    const dup = hasRecentSentPost({
+      slug: item.playerSlug,
+      intelFingerprint: item.intelFingerprint,
+      text: item.text,
+    });
+    if (dup.hit) continue;
+    const row = recordSentPost(item);
     if (row) added += 1;
   }
   return added;
@@ -199,11 +261,16 @@ module.exports = {
   LEDGER_PATH,
   ON3_SNAPSHOT_PATH,
   COMMIT_REPOST_WINDOW_MS,
+  NEWS_REPOST_WINDOW_MS,
   loadLedger,
   saveLedger,
   hasRecentSentCommit,
+  hasRecentSentPost,
   recordSentCommit,
+  recordSentPost,
   bootstrapFromQueueItems,
   isCommitAnnouncementText,
   textHash,
+  normalizeTextForDedupe,
+  normalizedTextHash,
 };

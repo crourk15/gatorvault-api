@@ -9,7 +9,7 @@ const MAX_INTEL_AGE_MS = parseInt(process.env.X_AUTOPOST_MAX_INTEL_AGE_MS || Str
 
 /** Rule 8 — no repost within 6 hours */
 const DEDUPE_REPOST_WINDOW_MS = parseInt(
-  process.env.X_AUTOPOST_DEDUPE_WINDOW_MS || String(6 * 60 * 60 * 1000),
+  process.env.X_AUTOPOST_DEDUPE_WINDOW_MS || String(48 * 60 * 60 * 1000),
   10
 );
 

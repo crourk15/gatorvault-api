@@ -155,6 +155,8 @@ function alreadyQueued(text, items) {
   if (sentLedger.isCommitAnnouncementText(text)) {
     if (sentLedger.hasRecentSentCommit({ text, eventType: 'commit' })) return true;
   }
+  const ledgerHit = sentLedger.hasRecentSentPost({ text });
+  if (ledgerHit.hit) return true;
   const key = dedupeKey(text);
   const dedupeWindow = postSpec.DEDUPE_REPOST_WINDOW_MS;
   const cutoff = Date.now() - dedupeWindow;
@@ -167,7 +169,15 @@ function alreadyQueued(text, items) {
   });
 }
 
-function similarPostQueued(text, items) {
+function similarPostQueued(text, items, meta = {}) {
+  const ledgerHit = sentLedger.hasRecentSentPost({
+    text,
+    slug: meta.slug || meta.playerSlug,
+    intelFingerprint: meta.intelFingerprint,
+  });
+  if (ledgerHit.hit) {
+    return { hit: true, itemId: ledgerHit.tweetId || 'sent-ledger', similarity: 1, reason: ledgerHit.reason };
+  }
   if (
     sentLedger.isCommitAnnouncementText(text) &&
     sentLedger.hasRecentSentCommit({ text, eventType: 'commit' })
@@ -717,7 +727,10 @@ async function queueOn3NewsBeatPost(syntheticPost, meta = {}) {
   const doc = store.loadQueue();
   if (fp && fingerprintAlreadyQueued(fp, doc.items)) return { queued: false, reason: 'duplicate' };
   if (alreadyQueued(finalized.text, doc.items)) return { queued: false, reason: 'duplicate_text' };
-  const similar = similarPostQueued(finalized.text, doc.items);
+  const similar = similarPostQueued(finalized.text, doc.items, {
+    slug: finalized.playerSlug,
+    intelFingerprint: finalized.intelFingerprint,
+  });
   if (similar) return { queued: false, reason: 'similar_post', similarity: similar.similarity };
   const policy = require('./x-autoposter-policy');
   const check = policy.validatePostContent(finalized);
@@ -832,7 +845,10 @@ async function refillAutoposterQueue({
       continue;
     }
     if (alreadyQueued(raw.text, doc.items)) continue;
-    const similar = similarPostQueued(raw.text, doc.items);
+    const similar = similarPostQueued(raw.text, doc.items, {
+      slug: raw.playerSlug,
+      intelFingerprint: raw.intelFingerprint,
+    });
     if (similar) {
       console.log(
         `[x-autoposter] skip: similar post (${Math.round((similar.similarity || 0) * 100)}% overlap, item ${similar.itemId})`
@@ -982,7 +998,10 @@ async function queueCommitEventAutopost(input, { urgent = true } = {}) {
   if (commitAlreadyQueued(fp, doc.items, { slug, text: scored.text, eventType: ev.eventType })) {
     return { queued: false, reason: 'duplicate', commitFingerprint: fp };
   }
-  if (similarPostQueued(scored.text, doc.items)) {
+  if (similarPostQueued(scored.text, doc.items, {
+    slug: scored.playerSlug,
+    intelFingerprint: scored.intelFingerprint,
+  })) {
     return { queued: false, reason: 'similar_post' };
   }
 
