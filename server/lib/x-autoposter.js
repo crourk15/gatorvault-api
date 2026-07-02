@@ -239,6 +239,15 @@ function duplicateRecoveryText(text) {
 function duplicateGuardBeforePost(item) {
   const sentLedger = require('./x-autoposter-sent-ledger');
   const fill = require('./x-autoposter-fill');
+  try {
+    const phase3 = require('./autoposter/phase3-index');
+    if (phase3.phase3Enabled()) {
+      const story = phase3.storyMemory.hasRecentStoryUnit(item);
+      if (story.hit) return { duplicate: true, reason: 'story_dedupe', ...story };
+    }
+  } catch {
+    /* optional */
+  }
   const ledgerHit = sentLedger.hasRecentSentPost({
     slug: item.playerSlug,
     intelFingerprint: item.intelFingerprint,
@@ -390,6 +399,17 @@ async function processQueueItem(item) {
         sentAt: store.nowIso(),
         tweetId: result.tweetId,
       });
+      try {
+        const phase3 = require('./autoposter/phase3-index');
+        phase3.recordPostMemory({
+          ...workingItem,
+          status: 'sent',
+          sentAt: store.nowIso(),
+          tweetId: result.tweetId,
+        });
+      } catch {
+        /* optional */
+      }
     } catch {
       /* optional */
     }

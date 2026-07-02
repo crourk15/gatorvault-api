@@ -163,6 +163,20 @@ function hasRecentSentPost({ slug, intelFingerprint, text, playerSlug } = {}) {
     if (intelFingerprint && entry.intelFingerprint && entry.intelFingerprint === intelFingerprint) {
       return { hit: true, reason: 'intel_fingerprint', tweetId: entry.tweetId || null };
     }
+    if (entry.storyUnitKey) {
+      try {
+        const storyKey = require('./autoposter/story-memory').computeStoryUnitKey({
+          playerSlug: slug || playerSlug,
+          intelFingerprint,
+          text,
+        });
+        if (storyKey && entry.storyUnitKey === storyKey) {
+          return { hit: true, reason: 'story_unit', tweetId: entry.tweetId || null };
+        }
+      } catch {
+        /* optional */
+      }
+    }
     if (hashNorm && (entry.textHashNorm === hashNorm || entry.textHash === hashNorm)) {
       return { hit: true, reason: 'text_hash', tweetId: entry.tweetId || null };
     }
@@ -205,6 +219,13 @@ function recordSentPost(item) {
     playerName: item.playerName || null,
     commitFingerprint: fp || null,
     intelFingerprint: item.intelFingerprint || null,
+    storyUnitKey: (() => {
+      try {
+        return require('./autoposter/story-memory').computeStoryUnitKey(item);
+      } catch {
+        return null;
+      }
+    })(),
     textHash: textHash(item.text),
     textHashNorm: normalizedTextHash(item.text),
     text: String(item.text || '').trim() || null,

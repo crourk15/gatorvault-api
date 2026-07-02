@@ -527,11 +527,13 @@ const TOPIC_PRIORITY = {
   commitment: 3,
   portal: 4,
   scouting_update: 5,
-  beat_intel: 6,
-  heat_mover: 7,
-  article: 8,
-  recruiting_momentum: 9,
-  general: 10
+  research_ladder: 6,
+  beat_intel: 7,
+  heat_mover: 8,
+  article: 9,
+  recruiting_momentum: 10,
+  evergreen: 11,
+  general: 12
 };
 
 function candidateTopicRank(raw) {
@@ -541,6 +543,8 @@ function candidateTopicRank(raw) {
   if (raw?.source === 'auto:roster-delta') return TOPIC_PRIORITY.roster_delta;
   if (raw?.source === 'auto:game-zone') return TOPIC_PRIORITY.game_week;
   if (raw?.source === 'auto:scouting-update') return TOPIC_PRIORITY.scouting_update;
+  if (raw?.source === 'auto:research-ladder') return TOPIC_PRIORITY.research_ladder;
+  if (raw?.source === 'auto:evergreen' || raw?.sourceEventType === 'evergreen') return TOPIC_PRIORITY.evergreen;
   const eventType = String(raw?.sourceEventType || raw?.eventType || '').toLowerCase();
   if (/commit|flip/.test(eventType)) return TOPIC_PRIORITY.commitment;
   if (/portal/.test(eventType)) return TOPIC_PRIORITY.portal;
@@ -553,9 +557,15 @@ function candidateTopicRank(raw) {
 
 function prioritizePostCandidates(candidates) {
   if (process.env.X_AUTOPOST_TOPIC_ROTATION === 'false') return candidates;
+  let perf = null;
+  try {
+    perf = require('./autoposter/performance-tracker');
+  } catch {
+    /* optional */
+  }
   return [...(candidates || [])].sort((a, b) => {
-    const pa = candidateTopicRank(a);
-    const pb = candidateTopicRank(b);
+    const pa = candidateTopicRank(a) + (perf?.candidatePerformanceBoost?.(a) || 0);
+    const pb = candidateTopicRank(b) + (perf?.candidatePerformanceBoost?.(b) || 0);
     if (pa !== pb) return pa - pb;
     const ta = new Date(a.sourceEventCreatedAt || a.sourcePublishedAt || 0).getTime();
     const tb = new Date(b.sourceEventCreatedAt || b.sourcePublishedAt || 0).getTime();
@@ -609,10 +619,26 @@ async function collectDigDeeperPostCandidates({ forcePost = false } = {}) {
   } catch {
     /* optional */
   }
+  try {
+    const phase3 = require('./autoposter/phase3-index');
+    for (const row of phase3.evergreenLibrary.collectEvergreenCandidates({ limit: 4, forcePost: true })) {
+      out.push(row);
+    }
+  } catch {
+    /* optional */
+  }
   return out;
 }
 
-async function attemptEnqueueCandidate(rawCandidate, doc) {
+async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
+  const ladderDepth = opts.ladderDepth || 0;
+  let phase3 = null;
+  try {
+    phase3 = require('./autoposter/phase3-index');
+  } catch {
+    /* optional */
+  }
+
   if (rawCandidate?._nonPlayerSkip && !isProgramOrTeamNews(rawCandidate)) {
     return { queued: false, reason: 'non_player_intel' };
   }
@@ -627,7 +653,27 @@ async function attemptEnqueueCandidate(rawCandidate, doc) {
   }
 
   const scored = await finalizeNewsCandidate(rawCandidate);
-  if (!scored) return { queued: false, reason: 'quality_gate' };
+  if (!scored) {
+    if (ladderDepth < 1 && phase3?.phase3Enabled?.()) {
+      const alt = await phase3.researchLadder.buildResearchLadderCandidate(rawCandidate, 'quality_gate');
+      if (alt) return attemptEnqueueCandidate(alt, doc, { ladderDepth: ladderDepth + 1 });
+    }
+    return { queued: false, reason: 'quality_gate' };
+  }
+
+  if (phase3?.phase3Enabled?.()) {
+    const mem = phase3.guardCandidateMemory(scored);
+    if (!mem.ok) {
+      if (mem.reason === 'story_dedupe') {
+        return { queued: false, reason: 'story_dedupe', detail: mem.detail };
+      }
+      if (ladderDepth < 1 && mem.reason === 'topic_angle') {
+        const alt = await phase3.researchLadder.buildResearchLadderCandidate(scored, 'topic_angle');
+        if (alt) return attemptEnqueueCandidate(alt, doc, { ladderDepth: ladderDepth + 1 });
+      }
+      return { queued: false, reason: mem.reason, detail: mem.detail };
+    }
+  }
 
   const fp = scored.intelFingerprint || scored.commitFingerprint;
   if (fp && fingerprintAlreadyQueued(fp, doc.items)) return { queued: false, reason: 'duplicate_fingerprint' };
@@ -649,7 +695,13 @@ async function attemptEnqueueCandidate(rawCandidate, doc) {
   if (similar) return { queued: false, reason: 'similar_post', similarity: similar.similarity };
 
   const gm2 = require('./gm2');
-  if (!gm2.filterAutoposterCandidate(scored)) return { queued: false, reason: 'gm2_filter' };
+  if (!gm2.filterAutoposterCandidate(scored)) {
+    if (ladderDepth < 1 && phase3?.phase3Enabled?.()) {
+      const alt = await phase3.researchLadder.buildResearchLadderCandidate(scored, 'gm2_filter');
+      if (alt) return attemptEnqueueCandidate(alt, doc, { ladderDepth: ladderDepth + 1 });
+    }
+    return { queued: false, reason: 'gm2_filter' };
+  }
 
   const check = policy.validatePostContent(scored);
   const verifiedCommit = scored.verifiedCommit || scored.validationMeta?.verifiedCommit;
@@ -670,7 +722,13 @@ async function attemptEnqueueCandidate(rawCandidate, doc) {
             (e.type === 'stale_intel' || e.type === 'stale' || e.type === 'missing_timestamp'))
       )
     );
-  if (policyBlocked) return { queued: false, reason: 'policy', errors: check.errors };
+  if (policyBlocked) {
+    if (ladderDepth < 1 && phase3?.phase3Enabled?.()) {
+      const alt = await phase3.researchLadder.buildResearchLadderCandidate(scored, 'policy');
+      if (alt) return attemptEnqueueCandidate(alt, doc, { ladderDepth: ladderDepth + 1 });
+    }
+    return { queued: false, reason: 'policy', errors: check.errors };
+  }
 
   try {
     const tagged = cadence.tagCandidate({
@@ -1189,6 +1247,14 @@ async function refillAutoposterQueue({
     }
     const pulse = await buildEngagementPulsePost();
     if (pulse) fallbacks.push(pulse);
+    try {
+      const phase3 = require('./autoposter/phase3-index');
+      for (const row of phase3.evergreenLibrary.collectEvergreenCandidates({ limit: 2, forcePost: true })) {
+        fallbacks.push(row);
+      }
+    } catch {
+      /* optional */
+    }
     const promo = buildPromoFromMix();
     if (promo) fallbacks.push(promo);
     for (const raw of fallbacks) {

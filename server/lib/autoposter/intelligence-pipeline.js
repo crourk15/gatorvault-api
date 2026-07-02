@@ -285,6 +285,24 @@ async function prepareQueueItemForPost(item = {}) {
       intelId: intel?.id,
       quality
     });
+    try {
+      const researchLadder = require('./research-ladder');
+      if (researchLadder.ladderEnabled()) {
+        const alt = await researchLadder.buildAlternateFromResearch(item);
+        if (alt?.text) {
+          const check = policy.validatePostContent(alt);
+          if (check.valid) {
+            monitoring.logAutoposterEvent('research_ladder', {
+              itemId: item.id,
+              reason: 'rewrite_failed'
+            });
+            return { ok: true, item: alt, fallback: true, reason: 'research_ladder' };
+          }
+        }
+      }
+    } catch {
+      /* optional */
+    }
     const fallback = buildFallbackResult(item, beatText, 'rewrite_failed', {
       playerId: player.playerId,
       intelId: intel?.id
