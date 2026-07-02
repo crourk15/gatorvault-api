@@ -306,8 +306,10 @@ function isProgramOrTeamNews(raw) {
     raw?.triggerType === 'team_event' ||
     raw?.identityConfirmed === true ||
     raw?.validationMeta?.programNews ||
+    raw?.validationMeta?.ufOfficialFootball ||
     String(raw?.source || '').includes('program-news') ||
-    String(raw?.source || '').includes('team-event')
+    String(raw?.source || '').includes('team-event') ||
+    String(raw?.source || '').includes('uf-official')
   );
 }
 
@@ -320,6 +322,7 @@ function prepareNewsCandidate(raw) {
   const relaxedFreshness =
     raw.source === 'auto:article' ||
     raw.source === 'auto:heat-mover' ||
+    raw.source === 'auto:uf-official-news' ||
     isProgramOrTeamNews(raw);
   if (!fresh.ok && !relaxedFreshness) {
     console.log(`[x-autoposter] skip: ${fresh.logTag || fresh.skipReason} — ${fresh.reason}`);

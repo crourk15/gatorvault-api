@@ -11,8 +11,9 @@ async function collectAllDiscoveryCandidates(opts = {}) {
   if (!discoveryEnabled()) return [];
   const widen = !!(opts.forcePost || opts.digDeeper);
   const merged = [];
+  const ufLimit = parseInt(process.env.X_AUTOPOST_UF_OFFICIAL_LIMIT || (widen ? '12' : '8'), 10);
   const runs = [
-    () => ufOfficial.collectUfOfficialNewsCandidates({ forcePost: widen }),
+    () => ufOfficial.collectUfOfficialNewsCandidates({ forcePost: widen, limit: ufLimit }),
     () => roster.collectRosterDeltaCandidates(),
     () => scouting.collectScoutingUpdateCandidates(),
     () => gameZone.collectGameZoneCandidates(),
@@ -37,3 +38,4 @@ module.exports = {
   scanRosterDeltas: roster.scanRosterDeltas,
   buildNewsFromRosterEvent: roster.buildNewsFromRosterEvent,
 };
+
