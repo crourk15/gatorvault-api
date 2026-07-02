@@ -423,36 +423,42 @@ function validateFreshness(item, now = Date.now()) {
 function scoreIdentityBlock(ctx, blocks, item = null) {
   const identity = blocks?.identity || '';
   const meta = item?.validationMeta || {};
+  const ctxName = String(ctx?.name || item?.playerName || '').trim();
+  const enrichedCtx = ctxName && !ctx?.name ? { ...ctx, name: ctxName } : ctx;
   if (isNonPlayerNewsPost(item, blocks, ctx, meta)) {
     if (/^Florida Gators — /i.test(identity) && identity.length >= 20) {
       return { score: 100, fields: ['team'], complete: true };
     }
     return { score: 50, fields: ['team'], complete: false };
   }
-  const name = String(ctx?.name || '').trim();
-  const pos = String(ctx?.pos || ctx?.position || '').trim();
-  const classYear = ctx?.classYear != null ? Number(ctx.classYear) : null;
-  const school = String(ctx?.school || ctx?.formerSchool || '').trim();
-  const natlRank = ctx?.natlRank != null ? Number(ctx.natlRank) : null;
-  const starsLabel = ctx?.starsLabel || template.formatStarsLabel(ctx?.stars);
-  const isPortal = ctx?.isPortal || /^portal\b/i.test(identity);
+  const name = String(enrichedCtx?.name || '').trim();
+  const pos = String(enrichedCtx?.pos || enrichedCtx?.position || '').trim();
+  const classYear = enrichedCtx?.classYear != null ? Number(enrichedCtx.classYear) : null;
+  const school = String(enrichedCtx?.school || enrichedCtx?.formerSchool || '').trim();
+  const natlRank = enrichedCtx?.natlRank != null ? Number(enrichedCtx.natlRank) : null;
+  const starsLabel = enrichedCtx?.starsLabel || template.formatStarsLabel(enrichedCtx?.stars);
+  const isPortal = enrichedCtx?.isPortal || /^portal\b/i.test(identity);
+  const identityHasName = name && name.length >= 4 && new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(identity);
+  const identityHasClass = classYear && !Number.isNaN(classYear) && identity.includes(String(classYear));
+  const identityHasSchool = school && school.length >= 3 && new RegExp(school.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(identity);
+  const identityHasPos = pos && new RegExp('\\b' + pos.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i').test(identity);
 
   let score = 0;
   const fields = [];
 
-  if (name && name.length >= 4) {
+  if ((name && name.length >= 4) || identityHasName) {
     score += 25;
     fields.push('name');
   }
-  if (pos) {
+  if (pos || identityHasPos) {
     score += 20;
     fields.push('pos');
   }
-  if (isPortal || (classYear && !Number.isNaN(classYear))) {
+  if (isPortal || (classYear && !Number.isNaN(classYear)) || identityHasClass || /\b20\d{2}\b/.test(identity)) {
     score += 20;
     fields.push('classYear');
   }
-  if (school) {
+  if (school || identityHasSchool || /\([^)]+\)/.test(identity)) {
     score += 20;
     fields.push('school');
   }

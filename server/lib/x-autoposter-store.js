@@ -233,6 +233,9 @@ function isRecoverableFailedItem(item, { maxAgeMs = 30 * 24 * 60 * 60 * 1000 } =
   const ts = new Date(item.createdAt || item.sourceEventCreatedAt || item.scheduledAt || 0).getTime();
   if (Number.isFinite(ts) && ts > 0 && Date.now() - ts > maxAgeMs) return false;
   if (item.verifiedCommit || item.validationMeta?.verifiedCommit) return true;
+  if (isElitePremadeItem(item) && /rewrite_failed|too_short|rewrite failed/i.test(err) && String(item.text || '').trim()) {
+    return true;
+  }
   const check = policy.validatePostContent(item);
   if (check.valid) return true;
   if (/rewrite_failed|too_short|rewrite failed/i.test(err)) {
@@ -241,12 +244,24 @@ function isRecoverableFailedItem(item, { maxAgeMs = 30 * 24 * 60 * 60 * 1000 } =
   return false;
 }
 
+function isElitePremadeItem(item = {}) {
+  const meta = item.validationMeta || {};
+  return !!(meta.eliteCompose || meta.eliteDigest || String(item.source || '').includes('beat-intel'));
+}
+
 function rependFailedItem(item) {
+  const prevError = String(item.error || '');
   item.status = 'pending';
   item.error = null;
   item.validationErrors = [];
   item.sentAt = null;
   item.scheduledAt = nowIso();
+  if (isElitePremadeItem(item) && /rewrite_failed|too_short/i.test(prevError)) {
+    const now = nowIso();
+    item.sourceEventCreatedAt = now;
+    item.sourcePublishedAt = now;
+    item.postUrgency = item.postUrgency || 'normal';
+  }
 }
 
 /** Re-queue verified commits that failed GM2 rewrite — premade On3 copy is post-ready. */

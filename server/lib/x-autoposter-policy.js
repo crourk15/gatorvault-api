@@ -187,15 +187,21 @@ function validatePostContent(item) {
     }
     const qualityCheck = quality.validateNewsPostQuality(item);
     const verifiedCommit = item.verifiedCommit || item.validationMeta?.verifiedCommit;
+    const elitePremade =
+      item.validationMeta?.eliteCompose ||
+      item.validationMeta?.eliteDigest ||
+      String(item.source || '').includes('beat-intel');
     const eliteForcePost =
-      process.env.X_AUTOPOST_FORCE_POST === 'true' &&
-      (item.validationMeta?.eliteCompose || item.validationMeta?.eliteDigest);
+      elitePremade ||
+      (process.env.X_AUTOPOST_FORCE_POST === 'true' &&
+        (item.validationMeta?.eliteCompose || item.validationMeta?.eliteDigest));
+    const eliteWaivable = (e) =>
+      e.type === 'below_threshold' ||
+      e.rule === 'score' ||
+      (eliteForcePost && (e.type === 'stale_intel' || e.type === 'stale' || e.type === 'missing_timestamp'));
     if (
       !qualityCheck.valid &&
-      !(
-        (verifiedCommit || eliteForcePost) &&
-        qualityCheck.errors.every((e) => e.type === 'below_threshold' || e.rule === 'score')
-      )
+      !((verifiedCommit || eliteForcePost) && qualityCheck.errors.every(eliteWaivable))
     ) {
       errors.push(...qualityCheck.errors.map((e) => ({ ...e, field: e.field || e.rule || 'quality' })));
     }

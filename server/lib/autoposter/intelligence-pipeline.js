@@ -38,10 +38,14 @@ function bypassRewriteForVerifiedCommit(item = {}) {
   };
 }
 
+function isElitePremadeItem(item = {}) {
+  const meta = item.validationMeta || {};
+  return !!(meta.eliteCompose || meta.eliteDigest || String(item.source || '').includes('beat-intel'));
+}
+
 /** Elite compose already produced post-ready copy — do not run GM2 rewrite (often fails too_short). */
 function bypassRewriteForElitePremade(item = {}) {
-  const meta = item.validationMeta || {};
-  if (!(meta.eliteCompose || meta.eliteDigest)) return null;
+  if (!isElitePremadeItem(item)) return null;
   const check = policy.validatePostContent(item);
   if (!check.valid) return null;
   monitoring.logAutoposterEvent('rewrite_bypass', {
@@ -65,7 +69,7 @@ function rewriteFallbackEnabled() {
 function buildFallbackResult(item, beatText, reason, extra = {}) {
   const queuedText = String(item.text || '').trim();
   if (!rewriteFallbackEnabled() || !queuedText) return null;
-  const minWords = isVerifiedCommitItem(item) ? VERIFIED_MIN_WORDS : MIN_REWRITE_WORDS;
+  const minWords = isVerifiedCommitItem(item) || isElitePremadeItem(item) ? VERIFIED_MIN_WORDS : MIN_REWRITE_WORDS;
   const words = queuedText.split(/\s+/).filter(Boolean).length;
   if (words < minWords) return null;
   const tone = insiderTone.validateInsiderTone(queuedText, { minWords });
@@ -336,6 +340,8 @@ async function prepareQueueItemForPost(item = {}) {
 
 module.exports = {
   findIntelForItem,
+  isElitePremadeItem,
+  bypassRewriteForElitePremade,
   prepareQueueItemForPost,
   buildTweetFromRewrite
 };
