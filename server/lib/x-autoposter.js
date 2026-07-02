@@ -721,6 +721,16 @@ function startXAutoposterScheduler() {
           autopostLog('info', 'Detectives resolved intel into queue', {
             counts: refill.detectivesRun.counts
           });
+        } else if (refill.detectivesRun?.processed > 0) {
+          autopostLog('info', 'Detectives investigated pile (no queue pass yet)', {
+            processed: refill.detectivesRun.processed,
+            results: (refill.detectivesRun.results || []).slice(0, 3).map((r) => ({
+              caseId: r.caseId,
+              queued: !!r.queued,
+              reason: r.reason || null,
+              path: r.path || null
+            }))
+          });
         } else if (_emptyQueueStreak >= 3) {
           autopostLog('warn', 'Queue empty — elite fallback engaged', { streak: _emptyQueueStreak });
         }

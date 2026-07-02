@@ -490,7 +490,7 @@
             return '<div style="margin-bottom:.85rem;padding-bottom:.65rem;border-bottom:1px solid #334155">'+
               '<strong>'+statusBadge(row.status)+'</strong> · '+esc(fmtTime(row.updatedAt||row.createdAt))+
               (row.priority!=null?' · priority '+esc(row.priority):'')+
-              (row.attempts!=null?' · attempts '+esc(row.attempts)+'/'+esc(row.maxAttempts||'—'):'')+
+              (row.attempts!=null||row.status!=='pending'?' · attempts '+esc(row.attempts??0)+'/'+esc(row.maxAttempts||'—'):' · attempts 0/'+esc(row.maxAttempts||'8'))+
               (row.lastPhase?' · phase '+esc(row.lastPhase):'')+
               ' · skip: '+esc(row.skipReason||'—')+
               (row.lastReject?' · last reject: '+esc(row.lastReject):'')+'<br>'+

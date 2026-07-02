@@ -1267,6 +1267,25 @@ async function collectOn3NewsBeatCandidates() {
   return candidates;
 }
 
+async function processDetectivesPileSidecar(doc, limit = 3) {
+  try {
+    const det = require('./autoposter/detectives');
+    if (!det.detectivesEnabled()) return null;
+    const queueDoc = doc || store.loadQueue();
+    const detectivesRun = await det.processDetectivesPile({ limit, doc: queueDoc });
+    const enqueued = [];
+    if (detectivesRun?.results?.some((r) => r.queued)) {
+      for (const r of detectivesRun.results) {
+        if (r.item) enqueued.push(r.item);
+      }
+    }
+    return { detectivesRun, enqueued };
+  } catch (err) {
+    console.warn('[x-autoposter] detectives pile failed:', err.message);
+    return null;
+  }
+}
+
 async function refillAutoposterQueue({
   minPending = parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '2', 10),
   maxEnqueue = parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '4', 10),
@@ -1304,7 +1323,17 @@ async function refillAutoposterQueue({
   const pending = doc.items.filter((i) => i.status === 'pending');
   const need = Math.max(minPending - pending.length, pending.length === 0 ? 1 : 0);
   if (need <= 0 && pending.length >= minPending) {
-    return { ok: true, skipped: true, reason: 'queue_full', pending: pending.length, enqueued: [] };
+    const sidecar = await processDetectivesPileSidecar(doc, 3);
+    const detectivesEnqueued = sidecar?.enqueued || [];
+    return {
+      ok: true,
+      skipped: true,
+      reason: 'queue_full',
+      pending: pending.length,
+      enqueued: detectivesEnqueued,
+      enqueuedCount: detectivesEnqueued.length,
+      detectivesRun: sidecar?.detectivesRun || null
+    };
   }
 
   const slots = Math.max(maxEnqueue - pending.length, need);
@@ -1433,22 +1462,14 @@ async function refillAutoposterQueue({
   }
 
   let detectivesRun = null;
-  try {
-    const det = require('./autoposter/detectives');
-    if (det.detectivesEnabled()) {
-      detectivesRun = await det.processDetectivesPile({ limit: 3, doc });
-      if (detectivesRun?.results?.some((r) => r.queued)) {
-        for (const r of detectivesRun.results) {
-          if (r.item) {
-            enqueued.push(r.item);
-            doc.items.push(r.item);
-            added += 1;
-          }
-        }
-      }
+  const sidecar = await processDetectivesPileSidecar(doc, 3);
+  if (sidecar) {
+    detectivesRun = sidecar.detectivesRun;
+    for (const item of sidecar.enqueued || []) {
+      enqueued.push(item);
+      doc.items.push(item);
+      added += 1;
     }
-  } catch {
-    /* optional */
   }
 
   return {
