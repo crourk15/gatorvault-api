@@ -6,6 +6,7 @@ import {
   registerAccount,
   saveSession,
   verifyStoredSession,
+  clearSession,
   safeAuthRedirectPath,
   type PaymentTierId,
 } from '@/lib/auth-api';
@@ -50,20 +51,30 @@ export function JoinPage(): React.ReactElement {
   const [trialMembershipHref, setTrialMembershipHref] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
+  const [existingSession, setExistingSession] = useState<{ email: string } | null>(null);
+  const [checkingSession, setCheckingSession] = useState(true);
   const native = isNativeApp();
 
   useEffect(() => {
     setTier(tierFromQuery());
     const params = new URLSearchParams(window.location.search);
     if (params.get('mode') === 'signin') setMode('signin');
-    if (params.get('reauth') === '1') return;
+    if (params.get('reauth') === '1' || params.get('switch') === '1') {
+      clearSession();
+      setExistingSession(null);
+      setCheckingSession(false);
+      return;
+    }
 
     let cancelled = false;
     void verifyStoredSession().then((session) => {
       if (cancelled) return;
-      if (!session?.email || !session?.token) return;
-      if (params.get('reauth') === '1') return;
-      redirectAfterAuth();
+      setCheckingSession(false);
+      if (!session?.email || !session?.token) {
+        setExistingSession(null);
+        return;
+      }
+      setExistingSession({ email: session.email });
     });
     return () => {
       cancelled = true;
