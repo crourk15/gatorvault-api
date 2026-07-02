@@ -518,18 +518,26 @@ function collectArticlePostCandidates({ limit, forcePost = false } = {}) {
 const TOPIC_PRIORITY = {
   program_news: 0,
   team_event: 1,
-  commitment: 2,
-  portal: 3,
-  beat_intel: 4,
-  heat_mover: 5,
-  article: 6,
-  recruiting_momentum: 7,
-  general: 8
+  uf_official_news: 1,
+  roster_delta: 2,
+  game_week: 2,
+  commitment: 3,
+  portal: 4,
+  scouting_update: 5,
+  beat_intel: 6,
+  heat_mover: 7,
+  article: 8,
+  recruiting_momentum: 9,
+  general: 10
 };
 
 function candidateTopicRank(raw) {
   if (raw?.triggerType === 'program_news' || raw?.programNewsType) return TOPIC_PRIORITY.program_news;
   if (raw?.triggerType === 'team_event' || raw?.teamEventType) return TOPIC_PRIORITY.team_event;
+  if (raw?.source === 'auto:uf-official-news') return TOPIC_PRIORITY.uf_official_news;
+  if (raw?.source === 'auto:roster-delta') return TOPIC_PRIORITY.roster_delta;
+  if (raw?.source === 'auto:game-zone') return TOPIC_PRIORITY.game_week;
+  if (raw?.source === 'auto:scouting-update') return TOPIC_PRIORITY.scouting_update;
   const eventType = String(raw?.sourceEventType || raw?.eventType || '').toLowerCase();
   if (/commit|flip/.test(eventType)) return TOPIC_PRIORITY.commitment;
   if (/portal/.test(eventType)) return TOPIC_PRIORITY.portal;
@@ -973,6 +981,14 @@ async function collectFreshPostCandidates({ forcePost = false, digDeeper = false
     }
   } catch {
     /* optional */
+  }
+
+  try {
+    const discovery = require('./autoposter/discovery-index');
+    const discovered = await discovery.collectAllDiscoveryCandidates({ forcePost, digDeeper });
+    for (const row of discovered) candidates.push(row);
+  } catch (err) {
+    console.warn('[x-autoposter] discovery collect failed:', err.message);
   }
 
   try {

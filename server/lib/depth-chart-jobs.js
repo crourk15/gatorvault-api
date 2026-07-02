@@ -35,11 +35,20 @@ function refreshDepthChart() {
   fs.mkdirSync(path.dirname(META_PATH), { recursive: true });
   fs.writeFileSync(META_PATH, JSON.stringify(meta, null, 2));
 
+  let rosterDeltaEvents = 0;
+  try {
+    const { scanRosterDeltas } = require('./autoposter/discovery-roster');
+    rosterDeltaEvents = scanRosterDeltas();
+  } catch {
+    /* optional */
+  }
+
   return {
     ok: true,
     processedCount: players.length,
     updatedAt,
-    meta
+    meta,
+    rosterDeltaEvents
   };
 }
 
