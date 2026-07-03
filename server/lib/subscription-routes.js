@@ -131,6 +131,34 @@ function mountSubscriptionRoutes(app) {
     });
   });
 
+  /** Idempotent App Review demo account — create, reset password, grant War Room. */
+  app.post('/api/subscription/admin/app-review', (req, res) => {
+    const pin = String(req.body.pin || req.get('X-Subscription-Pin') || '').trim();
+    if (!pin || pin !== ADMIN_PIN) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN.' });
+    }
+
+    const { provisionAppReviewAccount } = require('./app-review-provision');
+    const email = String(req.body.email || process.env.APP_REVIEW_EMAIL || 'appreview@gatorvaultinsider.com')
+      .trim()
+      .toLowerCase();
+    const password = String(req.body.password || process.env.APP_REVIEW_PASSWORD || '').trim();
+    const tier = normalizeTier(req.body.tier || process.env.APP_REVIEW_TIER || 'war');
+
+    const result = provisionAppReviewAccount({ email, password, tier });
+    if (!result.ok) {
+      return res.status(result.status || 400).json({ ok: false, error: result.error });
+    }
+
+    return res.json({
+      ok: true,
+      email: result.email,
+      created: result.created,
+      passwordReset: result.passwordReset,
+      status: result.statusPayload,
+    });
+  });
+
   /** Manual grant until IAP is live — protected by admin PIN. */
   app.post('/api/subscription/admin/grant', (req, res) => {
     const pin = String(req.body.pin || req.get('X-Subscription-Pin') || '').trim();

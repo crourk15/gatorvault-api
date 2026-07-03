@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 /**
  * Provision App Store review demo account on production.
- * Usage: SUBSCRIPTION_ADMIN_PIN=... APP_REVIEW_PASSWORD=... node scripts/provision-app-review-account.js
+ * Creates account if missing, resets password if it exists, grants War Room tier.
+ *
+ * Usage:
+ *   SUBSCRIPTION_ADMIN_PIN=... APP_REVIEW_PASSWORD=... node scripts/provision-app-review-account.js
  */
 const API = process.env.GV_API_BASE || 'https://gatorvault-api.onrender.com';
 const EMAIL = (process.env.APP_REVIEW_EMAIL || 'appreview@gatorvaultinsider.com').trim().toLowerCase();
@@ -15,7 +18,11 @@ async function jfetch(path, opts = {}) {
     headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) },
   });
   let data = null;
-  try { data = await res.json(); } catch { /* ignore */ }
+  try {
+    data = await res.json();
+  } catch {
+    /* ignore */
+  }
   return { status: res.status, ok: res.ok, data };
 }
 
@@ -26,6 +33,28 @@ async function main() {
   }
   if (!PIN) {
     console.error('Set SUBSCRIPTION_ADMIN_PIN or EMAIL_TEST_PIN for tier grant.');
+    process.exit(1);
+  }
+
+  const provision = await jfetch('/api/subscription/admin/app-review', {
+    method: 'POST',
+    body: JSON.stringify({ email: EMAIL, password: PASSWORD, tier: TIER, pin: PIN }),
+  });
+
+  if (provision.ok) {
+    console.log('App Review account ready.');
+    console.log('Email:', EMAIL);
+    console.log('Created:', Boolean(provision.data?.created));
+    console.log('Password reset:', Boolean(provision.data?.passwordReset));
+    console.log('Tier:', provision.data?.status?.tier || TIER);
+    console.log('Add these credentials to App Store Connect only (not git).');
+    return;
+  }
+
+  if (provision.status === 404) {
+    console.warn('Admin app-review route not deployed yet — falling back to register + grant.');
+  } else {
+    console.error('Provision failed:', provision.status, provision.data);
     process.exit(1);
   }
 
@@ -41,6 +70,7 @@ async function main() {
     });
     if (!reg.ok) {
       console.error('Register failed:', reg.status, reg.data);
+      console.error('Deploy latest API (app-review route) and re-run this script.');
       process.exit(1);
     }
     console.log('Registered', EMAIL);
@@ -62,4 +92,7 @@ async function main() {
   console.log('Email:', EMAIL);
 }
 
-main().catch((err) => { console.error(err); process.exit(1); });
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
