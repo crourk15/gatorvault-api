@@ -39,6 +39,19 @@ test('Corey Bender teaser classifies BEAT_QUOTE_ONLY and is not salvageable', ()
   assert.equal(dx.beatKind, 'teaser');
 });
 
+test('Miami listicle classifies BEAT_LISTICLE and is not salvageable', () => {
+  const ghioto =
+    'Power ranking the five best Miami recruits I saw at camps in June. Five-star EDGE Asher Ghioto #GoCanes.';
+  const dx = classifier.classifyCase({
+    skipReason: 'missing_situation',
+    beatPost: { text: ghioto, handle: 'EJHollandOn3' },
+    hints: { playerSlug: 'asher-ghioto', playerName: 'Asher Ghioto' }
+  });
+  assert.equal(dx.primaryCode, 'BEAT_OPPONENT_PRIORITY');
+  assert.equal(dx.salvageable, false);
+  assert.equal(dx.beatKind, 'listicle');
+});
+
 test('Floyd strategy_data_missing is salvageable with no_rpm gap', () => {
   const dx = classifier.classifyCase({
     skipReason: 'strategy_data_missing',

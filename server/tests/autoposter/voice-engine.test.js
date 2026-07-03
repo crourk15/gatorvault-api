@@ -67,11 +67,40 @@ test('voice compose produces post under 280 chars with strategy data', () => {
 test('voice compose skips when strategy data missing', () => {
   const weak = {
     ...FLOYD_SIGNAL,
+    beatText: 'Quiet offseason notes on a national recruit with no UF context attached.',
+    event: {
+      ...FLOYD_SIGNAL.event,
+      description: 'Quiet offseason notes on a national recruit with no UF context attached.'
+    },
     metrics: { rpm: null, visitDate: null, compSchools: [], depthChartNote: null, schemeNote: null }
   };
   const out = voiceEngine.autoposterCompose(weak);
   assert.equal(out.ok, false);
   assert.equal(out.reason, 'strategy_data_missing');
+});
+
+test('beat-aware strategy composes visit-story beats without board metrics', () => {
+  process.env.VOICE_PHRASE_MEMORY = 'false';
+  const drakeford = {
+    ...FLOYD_SIGNAL,
+    player: { name: 'Ryan Drakeford', pos: 'S', classYear: 2028, school: 'GA' },
+    playerSlug: 'ryan-drakeford',
+    beatText:
+      'Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp. "Florida is one of those schools at the top of my board."',
+    event: {
+      kind: 'visit',
+      timestamp: '2026-07-03T12:00:00.000Z',
+      description:
+        'Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp. "Florida is one of those schools at the top of my board."',
+      source: 'Blake Alderman'
+    },
+    metrics: { rpm: null, visitDate: null, compSchools: [], depthChartNote: null, schemeNote: null },
+    links: { playerUrl: 'https://gatorvaultinsider.com/vault/futurecast/player/ryan-drakeford' }
+  };
+  const out = voiceEngine.autoposterCompose(drakeford);
+  assert.equal(out.ok, true, out.reason || 'beat-aware compose failed');
+  assert.match(out.text, /Ryan Drakeford/i);
+  assert.match(out.blocks.strategy, /visit|board|campus|lane/i);
 });
 
 test('voice QA rejects hype language', () => {

@@ -292,10 +292,18 @@ function recoverStaleInvestigatingCases(maxAgeMs = null) {
     if (c.status !== 'investigating') continue;
     const age = now - new Date(c.updatedAt || c.createdAt).getTime();
     if (age < ms) continue;
-    c.status = 'pending';
-    c.updatedAt = nowIso();
+    const maxAttempts = c.maxAttempts || parseInt(process.env.X_AUTOPOST_DETECTIVES_MAX_ATTEMPTS || '8', 10);
     const log = c.investigationLog || [];
-    log.push({ at: nowIso(), phase: 'stale_reset', ageMs: age, reason: 'investigation_timeout' });
+    if ((c.attempts || 0) >= maxAttempts) {
+      c.status = 'failed_final';
+      c.finalSkipCode = 'EXHAUSTED_PROMOTE';
+      c.updatedAt = nowIso();
+      log.push({ at: nowIso(), phase: 'failed_final', reason: 'stale_exhausted', attempts: c.attempts, ageMs: age });
+    } else {
+      c.status = 'pending';
+      c.updatedAt = nowIso();
+      log.push({ at: nowIso(), phase: 'stale_reset', ageMs: age, reason: 'investigation_timeout' });
+    }
     c.investigationLog = log.slice(-30);
     recovered += 1;
   }

@@ -72,6 +72,13 @@ function hasStrategyData(blocks, signal) {
   if (m.compSchools?.length && m.compSchools.some((c) => s.includes(c.split(' ')[0]))) return true;
   if (m.depthChartNote && s.length >= 20) return true;
   if (m.schemeNote && s.length >= 20) return true;
+  if (
+    s.length >= 36 &&
+    /\b(?:visit|board|lane|momentum|staff|campus|fit|race|window|separation|relationship)\b/i.test(s)
+  ) {
+    const beat = String(signal?.beatText || signal?.event?.description || '');
+    if (beat.length >= 24) return true;
+  }
   return /\d+%|\bvisit\b|\bcompet/i.test(s);
 }
 

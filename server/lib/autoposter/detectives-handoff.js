@@ -61,6 +61,8 @@ function isJunkBeatText(text) {
   const t = String(text || '');
   if (!t) return true;
   if (/\b(?:greatest runs|top \d+ greatest|My top \d+)\b/i.test(t)) return true;
+  if (/\b(?:power ranking|top \d+ best|best \d+ recruits)\b/i.test(t) && /\b(?:#GoCanes|miami recruits)\b/i.test(t)) return true;
+  if (/\b#GoCanes\b/i.test(t) && !/\b(?:florida|gators|\buf\b|gainesville|swamp)\b/i.test(t)) return true;
   if (/\bNo\.\s*\d+\s*[—–-]\s*[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?['’]s\s+\d+-yard\b/i.test(t)) return true;
   if (/\bbaseball roster\b/i.test(t)) return true;
   if (/\b(?:World Cup|LET'S GO 🇺🇸|Survive and Advance)\b/i.test(t)) return true;
@@ -73,13 +75,15 @@ function isJunkBeatText(text) {
 function hasUfRecruitingSignal(text) {
   const t = String(text || '');
   if (!t) return false;
-  if (/\b20(?:2[7-9]|3[0-2])\b/.test(t) && /\b(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|IOL)\b/i.test(t)) return true;
-  if (/\b(?:swamp|gainesville|the swamp|friday night lights|\bfnl\b)\b/i.test(t) && /\b20(?:2[7-9]|3[0-2])\b/.test(t)) return true;
-  if (/\b(?:florida|gators|\buf\b)\b/i.test(t) && /\b(?:recruit|visit|commit|offer|top three|eye on florida|official visit|unofficial visit)\b/i.test(t)) return true;
-  if (/\b(?:rpm|prediction|decision day|futurecast)\b/i.test(t) && /\b(?:florida|gators|\buf\b)\b/i.test(t)) return true;
-  if (/\b(?:commitment date|sets commitment|commit date)\b/i.test(t) && /\b(?:florida|gators|\buf\b)\b/i.test(t)) return true;
+  const hasUf = /\b(?:florida|gators|\buf\b|gainesville|swamp|the swamp)\b/i.test(t);
+  if (!hasUf) return false;
+  if (/\b20(?:2[7-9]|3[0-2])\b/.test(t)) return true;
+  if (/\b(?:swamp|gainesville|the swamp|friday night lights|\bfnl\b)\b/i.test(t)) return true;
+  if (/\b(?:recruit|visit|commit|offer|top three|eye on florida|official visit|unofficial visit)\b/i.test(t)) return true;
+  if (/\b(?:rpm|prediction|decision day|futurecast)\b/i.test(t)) return true;
+  if (/\b(?:commitment date|sets commitment|commit date)\b/i.test(t)) return true;
   if (/\b(?:flip targets|pending decisions|2028 class|recruiting storyline|July is here and the Florida Gators)\b/i.test(t)) return true;
-  if (/\b(?:4|5)[- ]star\b/i.test(t) && /\b(?:florida|gators|\buf\b)\b/i.test(t)) return true;
+  if (/\b(?:4|5)[- ]star\b/i.test(t)) return true;
   return false;
 }
 
@@ -89,7 +93,7 @@ function shouldHandoff(reason, payload = {}) {
   if (!HANDOFF_ALLOW.has(r)) return false;
   const text = beatTextFromPayload(payload);
   if (isJunkBeatText(text)) return false;
-  if (r === 'needs_resolution') return hasUfRecruitingSignal(text) || /\b20(?:2[7-9]|3[0-2])\b/.test(text);
+  if (r === 'needs_resolution') return hasUfRecruitingSignal(text);
   if (r === 'no_identifiable_player') return hasUfRecruitingSignal(text);
   if (r === 'no_recruiting_signal') return hasUfRecruitingSignal(text);
   if (r === 'strategy_data_missing' || r === 'missing_situation') return hasUfRecruitingSignal(text);

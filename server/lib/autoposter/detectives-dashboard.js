@@ -41,7 +41,7 @@ function formatCaseForDashboard(caseItem) {
     skipReason: caseItem.skipReason,
     skipReasonRaw: caseItem.skipReasonRaw || caseItem.skipReason,
     skipStage: caseItem.skipStage,
-    skipCode: diagnosis?.primaryCode || caseItem.finalSkipCode || null,
+    skipCode: diagnosis?.primaryCode || caseItem.finalSkipCode || caseItem.skipReason || null,
     finalSkipCode: caseItem.finalSkipCode || diagnosis?.primaryCode || null,
     salvageable: diagnosis?.salvageable ?? null,
     beatKind: diagnosis?.beatKind || null,

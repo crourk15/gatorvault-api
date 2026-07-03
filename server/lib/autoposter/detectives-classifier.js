@@ -23,6 +23,9 @@ const SKIP_CODES = Object.freeze([
   'NO_RPM_DATA',
   'NO_VISIT_DATA',
   'NO_COMP_DATA',
+  'EXHAUSTED_PROMOTE',
+  'BEAT_OPPONENT_PRIORITY',
+  'BEAT_LISTICLE',
   'UNKNOWN'
 ]);
 
@@ -136,6 +139,15 @@ function hubNotProvisioned(caseItem, ctx) {
   return true;
 }
 
+function isOpponentOnlyBeat(text) {
+  const t = String(text || '');
+  if (!t) return false;
+  if (/\b#GoCanes\b/i.test(t) && !/\b(?:florida|gators|\buf\b|gainesville|swamp)\b/i.test(t)) return true;
+  if (/\b(?:miami recruits|best miami recruits)\b/i.test(t) && !/\b(?:florida|gators|\buf\b)\b/i.test(t)) return true;
+  if (/\b(?:power ranking|top \d+ best)\b/i.test(t) && !/\b(?:florida|gators|\buf\b|gainesville|swamp)\b/i.test(t)) return true;
+  return false;
+}
+
 function isBeatQuoteOnly(text) {
   const t = String(text || '');
   if (!t) return true;
@@ -202,6 +214,9 @@ function dataInconsistent(caseItem, ctx) {
 function mapRawReasonToSkipCode(raw, caseItem) {
   const beat = beatTextFromCase(caseItem);
   const r = String(raw || '').toLowerCase();
+
+  if (isOpponentOnlyBeat(beat)) return 'BEAT_OPPONENT_PRIORITY';
+  if (isListicle(beat)) return 'BEAT_LISTICLE';
 
   switch (r) {
     case 'no_recruiting_signal':
@@ -275,8 +290,11 @@ function detectGaps(caseItem, ctx) {
 
 function isSalvageable(primary, secondary, caseItem, ctx) {
   const beat = beatTextFromCase(caseItem);
+  const beatKind = classifyBeatKind(beat);
 
   if (handoff.isJunkBeatText(beat)) return false;
+  if (beatKind === 'listicle') return false;
+  if (isOpponentOnlyBeat(beat)) return false;
 
   if (primary === 'BEAT_QUOTE_ONLY' && !hasOn3Link(beat)) return false;
   if (primary === 'BEAT_NO_PLAYER' && !hasOn3Link(beat) && !ctx.playerSlug) return false;

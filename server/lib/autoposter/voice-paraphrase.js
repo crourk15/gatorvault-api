@@ -137,6 +137,48 @@ class StrategyDataMissing extends Error {
   }
 }
 
+function beatTextFromSignal(signal) {
+  return String(signal?.beatText || signal?.event?.description || '').trim();
+}
+
+function beatAwareStrategy(signal) {
+  const beat = beatTextFromSignal(signal).toLowerCase();
+  if (!beat || beat.length < 24) return null;
+
+  if (
+    /\b(?:first trip|first visit|on campus|in the swamp|at the swamp|gainesville|friday night lights|\bfnl\b|campus visit|spring practice|spring game|made a big impression)\b/.test(
+      beat
+    )
+  ) {
+    return 'UF is using live campus time to test fit — the visit window matters more than the headline.';
+  }
+
+  if (
+    /\b(?:top of my board|top schools|top three|cracked.*leaderboard|early leaderboard|strong position|one of my top|one of those schools)\b/.test(
+      beat
+    )
+  ) {
+    return 'Player-led board momentum puts UF in an active lane — not a monitoring hold.';
+  }
+
+  if (/\b(?:offers? from|with offers from)\b/.test(beat)) {
+    return 'Multi-school interest keeps this race open — UF needs separation in the next window.';
+  }
+
+  if (
+    /\b(?:coaches? texting|all three|db coaches|staff contact|face time|picked up more)\b/.test(beat) &&
+    /\b(?:florida|gators|\buf\b)\b/.test(beat)
+  ) {
+    return 'Staff frequency is elevated — UF is spending relationship capital here early.';
+  }
+
+  if (/\b(?:stands out|specific reason|what was different)\b/.test(beat) && /\b(?:florida|gators|\buf\b)\b/.test(beat)) {
+    return 'Florida is separating on fit and staff attention — not just staying in the comp pack.';
+  }
+
+  return null;
+}
+
 function buildStrategyLine(signal) {
   const m = signal?.metrics || {};
   if (m.rpm != null && Number(m.rpm) > 0) {
@@ -159,6 +201,10 @@ function buildStrategyLine(signal) {
     const line = paraphraseSchemeNote(m.schemeNote);
     if (line) return line;
   }
+
+  const beatLine = beatAwareStrategy(signal);
+  if (beatLine) return beatLine;
+
   throw new StrategyDataMissing();
 }
 
@@ -171,5 +217,6 @@ module.exports = {
   paraphraseVisit,
   paraphraseCompetition,
   paraphraseDepth,
-  firstFactualSentence
+  firstFactualSentence,
+  beatAwareStrategy
 };
