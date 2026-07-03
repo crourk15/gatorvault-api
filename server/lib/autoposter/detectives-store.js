@@ -80,4 +80,25 @@ function countByStatus() {
   for (const c of doc.cases) { const s = c.status || 'pending'; out[s] = (out[s] || 0) + 1; }
   return out;
 }
-module.exports = { PILE_PATH, loadPile, savePile, addCase, listCases, getCase, updateCase, appendLog, caseFingerprint, countByStatus };
+
+function recoverStaleInvestigatingCases(maxAgeMs = null) {
+  const ms = maxAgeMs || parseInt(process.env.X_AUTOPOST_DETECTIVES_STALE_MS || String(3 * 60 * 1000), 10);
+  const doc = loadPile();
+  const now = Date.now();
+  let recovered = 0;
+  for (const c of doc.cases) {
+    if (c.status !== 'investigating') continue;
+    const age = now - new Date(c.updatedAt || c.createdAt).getTime();
+    if (age < ms) continue;
+    c.status = 'pending';
+    c.updatedAt = nowIso();
+    const log = c.investigationLog || [];
+    log.push({ at: nowIso(), phase: 'stale_reset', ageMs: age, reason: 'investigation_timeout' });
+    c.investigationLog = log.slice(-30);
+    recovered += 1;
+  }
+  if (recovered) savePile(doc);
+  return recovered;
+}
+
+module.exports = { PILE_PATH, loadPile, savePile, addCase, listCases, getCase, updateCase, appendLog, caseFingerprint, countByStatus, recoverStaleInvestigatingCases };

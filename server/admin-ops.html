@@ -480,7 +480,7 @@
         .then(function(j){
           if(!j.ok){panel.textContent=j.error||'Failed';return;}
           var c=j.counts||{};
-          countsEl.textContent='pending '+esc(c.pending||0)+' · investigating '+esc(c.investigating||0)+' · resolved '+esc(c.resolved||0)+' · failed '+esc(c.failed||0)+(j.enabled===false?' · DISABLED':'');
+          countsEl.textContent='pending '+esc(c.pending||0)+' · investigating '+esc(c.investigating||0)+' · resolved '+esc(c.resolved||0)+' · failed '+esc(c.failed||0)+(j.enabled===false?' · DISABLED':'')+(j.activeInvestigation?' · ACTIVE: '+esc(j.activeInvestigation.playerName||j.activeInvestigation.caseId):'');
           var cases=j.cases||[];
           if(!cases.length){panel.textContent='No detectives cases yet.';return;}
           panel.innerHTML=cases.map(function(row){
@@ -492,9 +492,12 @@
               (row.priority!=null?' · priority '+esc(row.priority):'')+
               (row.attempts!=null||row.status!=='pending'?' · attempts '+esc(row.attempts??0)+'/'+esc(row.maxAttempts||'—'):' · attempts 0/'+esc(row.maxAttempts||'8'))+
               (row.lastPhase?' · phase '+esc(row.lastPhase):'')+
+              (row.status==='investigating'&&row.nextPhase?' · next: '+esc(row.nextPhase):'')+
+              (row.stuckInvestigating?' · <span style="color:#fbbf24">STUCK — will auto-reset</span>':'')+
               ' · skip: '+esc(row.skipReason||'—')+
               (row.lastReject?' · last reject: '+esc(row.lastReject):'')+'<br>'+
               (row.playerName?'<span class="meta">Player: '+esc(row.playerName)+(row.playerSlug?' ('+esc(row.playerSlug)+')':'')+'</span><br>':'')+
+              (row.platformOk!=null?'<span class="meta">Hub: '+(row.platformOk?'provisioned':'not provisioned')+(row.platformIntelCreated?' · beat intel filed':'')+(row.platformUrl?' · '+esc(row.platformUrl):'')+'</span><br>':'')+
               (row.writerName?'<span class="meta">Beat: '+esc(row.writerName)+(row.beatHandle?' @'+esc(row.beatHandle):'')+'</span><br>':'')+
               '<span style="color:#e2e8f0">'+esc(row.beatText||'—')+'</span><br>'+
               (row.hasFutureCastContext!=null?'<span class="meta">Platform: '+(row.hasFutureCastContext?'FutureCast ready':'Recruiting Hub stub')+(row.platformUrl?' · '+esc(row.platformUrl):'')+'</span><br>':'')+

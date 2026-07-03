@@ -9,6 +9,7 @@ async function runDetectivesBackgroundTick(limit = 1) {
   }
   tickLock = true;
   try {
+    try { require('./detectives-store').recoverStaleInvestigatingCases(); } catch {}
     const result = await detectives.processDetectivesPile({ limit });
     try {
       require('../ops-monitor').logEvent({

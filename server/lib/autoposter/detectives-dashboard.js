@@ -8,6 +8,16 @@ function lastLogPhase(log, phase) {
   return rows.length ? rows[rows.length - 1] : null;
 }
 
+function nextPhaseHint(status, lastPhase) {
+  if (status !== 'investigating') return null;
+  if (!lastPhase || lastPhase === 'start') return 'identity lookup';
+  if (lastPhase === 'identity') return 'platform provisioning (Hub + intel row)';
+  if (lastPhase === 'platform') return 'research strategies';
+  if (lastPhase === 'strategies') return 'compose / enqueue attempts';
+  if (lastPhase === 'reject') return 'retry next strategy';
+  return 'investigating';
+}
+
 function formatCaseForDashboard(caseItem) {
   const beat = caseItem?.beatPost || {};
   const cand = caseItem?.candidate || {};
@@ -18,6 +28,10 @@ function formatCaseForDashboard(caseItem) {
   const platformLog = lastLogPhase(log, 'platform');
   const rejectLog = lastLogPhase(log, 'reject');
   const lastEntry = log.length ? log[log.length - 1] : null;
+  const lastPhase = lastEntry?.phase || null;
+  const investigatingMs = caseItem.status === 'investigating'
+    ? Date.now() - new Date(caseItem.updatedAt || caseItem.createdAt).getTime()
+    : 0;
   return {
     id: caseItem.id,
     status: caseItem.status,
@@ -28,10 +42,16 @@ function formatCaseForDashboard(caseItem) {
     attempts: caseItem.attempts,
     maxAttempts: caseItem.maxAttempts,
     priority: handoff.casePriority(caseItem),
-    lastPhase: lastEntry?.phase || null,
+    lastPhase,
+    nextPhase: nextPhaseHint(caseItem.status, lastPhase),
+    investigatingMinutes: investigatingMs > 0 ? Math.round(investigatingMs / 60000) : 0,
+    stuckInvestigating: caseItem.status === 'investigating' && investigatingMs > 3 * 60 * 1000,
     lastReject: rejectLog?.reason || null,
     playerName: identityLog?.playerName || cand.playerName || hints.playerName || null,
     playerSlug: identityLog?.playerSlug || cand.playerSlug || hints.playerSlug || null,
+    platformProvisioned: platformLog?.provisioned ?? null,
+    platformIntelCreated: platformLog?.intelCreated ?? null,
+    platformOk: platformLog?.ok ?? null,
     writerName: beat.writerName || hints.writerName || null,
     beatHandle: beat.handle || hints.handle || null,
     beatText: beatText.slice(0, 280),
@@ -47,6 +67,7 @@ function formatCaseForDashboard(caseItem) {
 }
 
 function getDetectivesDashboard({ status = null, limit = 50 } = {}) {
+  try { store.recoverStaleInvestigatingCases(); } catch {}
   const doc = store.loadPile();
   const counts = store.countByStatus();
   const usePriority = !status || status === 'pending';
@@ -55,10 +76,14 @@ function getDetectivesDashboard({ status = null, limit = 50 } = {}) {
     limit: Math.min(100, limit || 50),
     priority: usePriority,
   });
+  const investigating = store.listCases({ status: 'investigating', limit: 10 });
   return {
     enabled: detectivesEnabled(),
     updatedAt: doc.updatedAt,
     counts,
+    activeInvestigation: investigating.length
+      ? { caseId: investigating[0].id, playerName: formatCaseForDashboard(investigating[0]).playerName, lastPhase: formatCaseForDashboard(investigating[0]).lastPhase, nextPhase: formatCaseForDashboard(investigating[0]).nextPhase }
+      : null,
     cases: rows.map(formatCaseForDashboard),
   };
 }
