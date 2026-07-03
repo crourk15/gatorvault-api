@@ -11,6 +11,14 @@ const voiceQa = require('./voice-qa');
 const CHAR_LIMIT = parseInt(process.env.VOICE_CHAR_LIMIT || '280', 10);
 const MAX_ATTEMPTS = parseInt(process.env.VOICE_COMPOSE_MAX_ATTEMPTS || '2', 10);
 
+const DETECTIVE_HOOK_FALLBACKS = [
+  'Circle this one.',
+  'Watch this name.',
+  'Keep an eye here.',
+  'Worth tracking closely.',
+  'Momentum can flip fast.'
+];
+
 const HOOK_FALLBACK = [
   'Circle this one.',
   'Watch this name.',
@@ -185,17 +193,25 @@ function toLegacyTemplateBlocks(blocks) {
   };
 }
 
-function autoposterCompose(signal) {
+function autoposterCompose(signal, opts = {}) {
   if (!signal?.event?.description && !signal?.beatText) {
     return { ok: false, skipped: true, reason: 'missing_signal' };
   }
 
   const mode = signalAdapter.resolveMode(signal);
   let lastQa = null;
+  const qaOpts = {
+    skipHookMemory: opts.skipHookMemory === true,
+    detectiveMode: opts.detectiveMode === true,
+    requireFullLayers: opts.requireFullLayers === true
+  };
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
     try {
       let blocks = composeBlocks(signal, mode);
+      if (opts.forcedHook) {
+        blocks = { ...blocks, hook: opts.forcedHook };
+      }
       if (attempt > 1) {
         blocks = shrinkBlocksForLimit(blocks, signal, mode, attempt);
       }
@@ -229,7 +245,7 @@ function autoposterCompose(signal) {
         }
       };
 
-      lastQa = voiceQa.runQualityGate(signal, blocks, text, candidate);
+      lastQa = voiceQa.runQualityGate(signal, blocks, text, candidate, qaOpts);
       if (lastQa.passed) {
         if (blocks.hook && !String(blocks.cta || '').startsWith('http')) {
           phraseMemory.recordHook(blocks.hook);
@@ -269,8 +285,34 @@ function autoposterCompose(signal) {
     ok: false,
     skipped: true,
     reason: lastQa?.reason || 'qa_failed_after_max_attempts',
-    metadata: { attempts: MAX_ATTEMPTS, skipped: true }
+    metadata: { attempts: MAX_ATTEMPTS, skipped: true, qaReasons: lastQa?.reasons || [] }
   };
+}
+
+function composeWithDetectiveHookRetry(signal) {
+  let out = autoposterCompose(signal, { requireFullLayers: true, detectiveMode: true });
+  if (out.ok) return out;
+
+  const hookFailure =
+    out.reason === 'invalid_hook' ||
+    (Array.isArray(out.metadata?.qaReasons) && out.metadata.qaReasons.includes('invalid_hook'));
+  if (!hookFailure) return out;
+
+  for (const hook of DETECTIVE_HOOK_FALLBACKS) {
+    out = autoposterCompose(signal, {
+      forcedHook: hook,
+      skipHookMemory: true,
+      detectiveMode: true,
+      requireFullLayers: true
+    });
+    if (out.ok) {
+      return {
+        ...out,
+        metadata: { ...(out.metadata || {}), hookRetry: hook }
+      };
+    }
+  }
+  return out;
 }
 
 function applyDetectiveOverride(signal, override = {}) {
@@ -332,7 +374,7 @@ async function composeFromDetectiveCase({ hints, identity, platformContext, rese
     });
   }
 
-  const out = autoposterCompose(signal);
+  const out = composeWithDetectiveHookRetry(signal);
   if (!out.ok) return out;
 
   return {
@@ -368,7 +410,9 @@ async function composeFromEliteInput(input, research, playerData) {
     signal.metrics.compSchools = signalAdapter.compSchoolsFromResearch(research);
   }
 
-  const out = autoposterCompose(signal);
+  const out = voiceRequiredForRecruiting()
+    ? composeWithDetectiveHookRetry(signal)
+    : autoposterCompose(signal);
   if (!out.ok) return out;
 
   return {
@@ -389,9 +433,15 @@ async function composeFromEliteInput(input, research, playerData) {
   };
 }
 
+function voiceRequiredForRecruiting() {
+  return voiceEngineEnabled() && process.env.X_AUTOPOST_VOICE_REQUIRED !== 'false';
+}
+
 module.exports = {
   voiceEngineEnabled,
+  voiceRequiredForRecruiting,
   autoposterCompose,
+  composeWithDetectiveHookRetry,
   composeFromEliteInput,
   composeFromDetectiveCase,
   applyDetectiveOverride,

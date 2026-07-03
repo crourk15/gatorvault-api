@@ -43,6 +43,16 @@ test('signal adapter resolves recruiting mode', () => {
   assert.equal(signalAdapter.resolveMode(FLOYD_SIGNAL), 'recruiting');
 });
 
+test('phrase memory blocks repeated hooks within window', () => {
+  process.env.VOICE_PHRASE_MEMORY = 'true';
+  const used = 'QA hook alpha unique.';
+  const fresh = 'QA hook beta unique.';
+  phraseMemory.recordHook(used);
+  assert.equal(phraseMemory.hookRecentlyUsed(used), true);
+  const picked = phraseMemory.pickUniqueHook([used, fresh]);
+  assert.equal(picked, fresh);
+});
+
 test('voice compose produces post under 280 chars with strategy data', () => {
   process.env.VOICE_PHRASE_MEMORY = 'false';
   const out = voiceEngine.autoposterCompose(FLOYD_SIGNAL);
@@ -79,12 +89,15 @@ test('voice QA rejects hype language', () => {
   assert.ok(gate.reasons.includes('hype_language'));
 });
 
-test('phrase memory blocks repeated hooks within window', () => {
-  process.env.VOICE_PHRASE_MEMORY = 'true';
-  const used = 'QA hook alpha unique.';
-  const fresh = 'QA hook beta unique.';
-  phraseMemory.recordHook(used);
-  assert.equal(phraseMemory.hookRecentlyUsed(used), true);
-  const picked = phraseMemory.pickUniqueHook([used, fresh]);
-  assert.equal(picked, fresh);
+test('detective hook retry recovers invalid_hook with fallback hook', () => {
+  process.env.VOICE_PHRASE_MEMORY = 'false';
+  const badHookSignal = {
+    ...FLOYD_SIGNAL,
+    metrics: { ...FLOYD_SIGNAL.metrics, rpm: 55 }
+  };
+  const out = voiceEngine.composeWithDetectiveHookRetry(badHookSignal);
+  assert.equal(out.ok, true, out.reason || 'hook retry failed');
+  assert.ok(out.metadata?.hookRetry || out.blocks?.hook);
+  assert.match(out.text, /Raheem Floyd/i);
 });
+

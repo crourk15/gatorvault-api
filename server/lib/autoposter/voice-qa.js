@@ -75,12 +75,12 @@ function hasStrategyData(blocks, signal) {
   return /\d+%|\bvisit\b|\bcompet/i.test(s);
 }
 
-function hookValid(hook) {
+function hookValid(hook, opts = {}) {
   const h = String(hook || '').trim();
   if (!h) return false;
   if (wordCount(h) > 8) return false;
   if (insiderTone.isGenericFluff(h)) return false;
-  if (phraseMemory.hookRecentlyUsed(h)) return false;
+  if (!opts.skipHookMemory && phraseMemory.hookRecentlyUsed(h)) return false;
   return true;
 }
 
@@ -141,15 +141,28 @@ function templateOverlapScore(text) {
   return max;
 }
 
-function runQualityGate(signal, blocks, text, candidate = {}) {
+function hasVoiceLayers(blocks) {
+  const ctx = String(blocks?.context || '').trim();
+  const strategy = String(blocks?.strategy || '').trim();
+  const hook = String(blocks?.hook || '').trim();
+  const cta = String(blocks?.cta || '').trim();
+  return ctx.length >= 20 && strategy.length >= 16 && hook.length >= 6 && cta.length >= 8;
+}
+
+function runQualityGate(signal, blocks, text, candidate = {}, opts = {}) {
   const reasons = [];
   const mode = signal?.type === 'recruiting' && signal?.player ? 'recruiting' : 'non_recruiting';
+  const qaOpts = {
+    skipHookMemory: opts.skipHookMemory === true,
+    detectiveMode: opts.detectiveMode === true
+  };
 
   if (!hasRealIntel(text, signal, blocks)) reasons.push('missing_real_intel');
   if (!hasUfContext(`${blocks?.context || ''} ${text}`)) reasons.push('missing_uf_context');
   if (!hasStrategyData(blocks, signal)) reasons.push('missing_strategy_data');
-  if (!hookValid(blocks?.hook)) reasons.push('invalid_hook');
+  if (!hookValid(blocks?.hook, qaOpts)) reasons.push('invalid_hook');
   if (!ctaValid(blocks?.cta, mode)) reasons.push('invalid_cta');
+  if (opts.requireFullLayers && !hasVoiceLayers(blocks)) reasons.push('missing_voice_layers');
 
   const combined = `${text} ${blocks?.intel} ${blocks?.context} ${blocks?.strategy}`;
   for (const re of HYPE_RE) {
@@ -191,6 +204,7 @@ module.exports = {
   hasRealIntel,
   hasUfContext,
   hasStrategyData,
+  hasVoiceLayers,
   hookValid,
   ctaValid,
   templateOverlapScore

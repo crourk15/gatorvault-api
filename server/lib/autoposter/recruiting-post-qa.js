@@ -30,7 +30,9 @@ const GENERIC_PROSPECT_COPY_RE = [
   /another campus touch could clarify where uf stands in the race/i,
   /^uf is active with .+ in this cycle\.?$/im,
   /per multiple reports,.+monitoring/i,
-  /florida program update:.+monitoring/i
+  /florida program update:.+monitoring/i,
+  /staff contact has picked up/i,
+  /florida scout file on .* matches the beat momentum/i
 ];
 
 const BEAT_STOPWORDS = new Set([
@@ -141,7 +143,9 @@ function passesVoicePublishGate(raw) {
       metrics: raw.validationMeta?.voiceMetrics || {},
       player: playerName ? { name: playerName } : null
     };
-    const gate = voiceQa.runQualityGate(signal, blocks, text, raw);
+    const gate = voiceQa.runQualityGate(signal, blocks, text, raw, {
+      requireFullLayers: true
+    });
     if (!gate.passed) return false;
   } catch {
     return false;
@@ -150,8 +154,18 @@ function passesVoicePublishGate(raw) {
   return true;
 }
 
+function voiceEngineRequired(raw) {
+  if (process.env.X_AUTOPOST_VOICE_ENGINE === 'false') return false;
+  if (process.env.X_AUTOPOST_VOICE_REQUIRED === 'false') return false;
+  if (!isRecruitingPlayerCandidate(raw)) return false;
+  if (raw.verifiedCommit || raw.validationMeta?.verifiedCommit) return false;
+  if (raw.validationMeta?.voiceEngine) return false;
+  return true;
+}
+
 function passesPublishGate(raw) {
   if (!raw?.text) return false;
+  if (voiceEngineRequired(raw)) return passesVoicePublishGate(raw);
   if (raw?.validationMeta?.voiceEngine) return passesVoicePublishGate(raw);
   const text = String(raw.text || '').trim();
   if (!text || !template.hasTemplateStructure(text)) return false;
@@ -196,6 +210,9 @@ function passesPublishGate(raw) {
 
 function rejectReason(raw) {
   if (!raw?.text) return 'missing_text';
+  if (voiceEngineRequired(raw) && !passesVoicePublishGate(raw)) {
+    return 'voice_required';
+  }
   if (raw?.validationMeta?.voiceEngine && !passesVoicePublishGate(raw)) {
     try {
       const voiceQa = require('./voice-qa');
@@ -242,5 +259,6 @@ module.exports = {
   hasBeatAnchoredCopy,
   passesPublishGate,
   passesVoicePublishGate,
+  voiceEngineRequired,
   rejectReason
 };

@@ -89,7 +89,7 @@ function paraphraseUFContext(signal) {
   if (/\brpm\b|\bprediction\b|\bfuturecast\b/.test(beat)) {
     return 'UF remains in the RPM mix — this pick carries weight with decision timing in play.';
   }
-  if (/\bvisit\b|\bcampus\b|\bgainesville\b|\bov\b/.test(beat)) {
+  if (/\bvisit\b|\bcampus\b|\bgainesville\b|\bov\b|\bfnl\b|friday night lights/.test(beat)) {
     return 'Gainesville activity matters here — visit timing tracks with UF board momentum.';
   }
 

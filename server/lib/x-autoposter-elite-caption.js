@@ -684,9 +684,9 @@ async function buildElitePlayerPost(input = {}) {
   }
 
   try {
-    const voiceEngine = require('./autoposter/voice-engine');
-    if (voiceEngine.voiceEngineEnabled() && String(input.beatText || '').trim()) {
-      const voiceBuilt = await voiceEngine.composeFromEliteInput(input, research, playerData);
+    const voiceEngineMod = require('./autoposter/voice-engine');
+    if (voiceEngineMod.voiceEngineEnabled() && String(input.beatText || '').trim()) {
+      const voiceBuilt = await voiceEngineMod.composeFromEliteInput(input, research, playerData);
       if (voiceBuilt?.ok && voiceBuilt.text) {
         const qa = require('./autoposter/recruiting-post-qa');
         const publishCandidate = {
@@ -738,6 +738,22 @@ async function buildElitePlayerPost(input = {}) {
           voiceEngine: true
         });
         return { ok: false, skipped: true, reason: 'strategy_data_missing', research };
+      } else if (voiceBuilt && !voiceBuilt.ok) {
+        eliteLog.logEliteCaption({
+          skipped: true,
+          skipReason: voiceBuilt.reason || 'voice_qa_failed',
+          playerName: playerData.data.name,
+          voiceEngine: true
+        });
+        return { ok: false, skipped: true, reason: voiceBuilt.reason || 'voice_qa_failed', research };
+      } else if (!voiceBuilt?.ok) {
+        eliteLog.logEliteCaption({
+          skipped: true,
+          skipReason: 'voice_compose_required',
+          playerName: playerData.data.name,
+          voiceEngine: true
+        });
+        return { ok: false, skipped: true, reason: 'voice_compose_required', research };
       }
     }
   } catch (err) {
@@ -747,6 +763,20 @@ async function buildElitePlayerPost(input = {}) {
       playerName: playerData.data.name,
       error: err.message
     });
+  }
+
+  const voiceEngineMod = require('./autoposter/voice-engine');
+  if (
+    voiceEngineMod.voiceRequiredForRecruiting() &&
+    String(input.beatText || '').trim()
+  ) {
+    eliteLog.logEliteCaption({
+      skipped: true,
+      skipReason: 'voice_required_no_legacy_fallback',
+      playerName: playerData.data.name,
+      voiceEngine: true
+    });
+    return { ok: false, skipped: true, reason: 'voice_required_no_legacy_fallback', research };
   }
 
   const ctx = playerData.ctx;

@@ -58,7 +58,7 @@ test('formatBeatDrivenInsiderLine paraphrases beat without verbatim overlap', ()
   assert.equal(quoteRewriter.exceedsOverlap(insider, TORY_BEAT), false);
 });
 
-test('Tory Clark beat-driven candidate survives template + recruiting QA checks', () => {
+test('Tory Clark beat-driven candidate blocked when voice engine is required', () => {
   const template = require('../../lib/x-autoposter-template');
   const qa = require('../../lib/autoposter/recruiting-post-qa');
   const quoteRewriter = require('../../lib/x-autoposter-recruiting-quote-rewriter');
@@ -77,7 +77,9 @@ test('Tory Clark beat-driven candidate survives template + recruiting QA checks'
   const candidate = detectives.buildBeatDrivenCandidate(caseItem, hints, identity, platformContext);
   assert.ok(candidate);
   assert.equal(copy.isBrokenCopy(candidate.text, candidate), false);
-  assert.equal(qa.passesPublishGate(candidate), true);
+  assert.equal(qa.voiceEngineRequired(candidate), true);
+  assert.equal(qa.passesPublishGate(candidate), false);
+  assert.equal(qa.rejectReason(candidate), 'voice_required');
   assert.equal(template.hasTemplateStructure(candidate.text), true);
   assert.equal(quoteRewriter.exceedsOverlap(candidate.templateBlocks.insider, TORY_BEAT), false);
   assert.doesNotMatch(candidate.text, /GatorVault Detectives|\[writer\]|the prospect is on UF's board/i);

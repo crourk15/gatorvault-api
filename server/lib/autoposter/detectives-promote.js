@@ -20,7 +20,10 @@ function logPromoteAttempt(caseId, payload = {}) {
 
 async function buildVoicePromoteCandidate({ caseItem, hints, identity, platformContext, research }) {
   const metrics = hints?.metrics || {};
-  if (!hasPromotableMetrics(metrics)) {
+  const voiceRequired =
+    voiceEngine.voiceRequiredForRecruiting() &&
+    String(hints?.beatText || '').trim();
+  if (!hasPromotableMetrics(metrics) && !voiceRequired) {
     logPromoteAttempt(caseItem?.id, { ok: false, reason: 'no_promotable_metrics' });
     return null;
   }
