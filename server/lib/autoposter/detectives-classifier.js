@@ -20,6 +20,9 @@ const SKIP_CODES = Object.freeze([
   'MISSING_SITUATION',
   'COPY_FAILED',
   'QUALITY_GATE',
+  'NO_RPM_DATA',
+  'NO_VISIT_DATA',
+  'NO_COMP_DATA',
   'UNKNOWN'
 ]);
 
@@ -245,7 +248,9 @@ function deriveSecondaryCodes(caseItem, primary, ctx) {
     codes.push('HUB_NOT_PROVISIONED');
   }
   if (primary === 'STRATEGY_DATA_MISSING') {
-    if (!hasRPM(ctx)) codes.push('STRATEGY_DATA_MISSING');
+    if (!hasRPM(ctx)) codes.push('NO_RPM_DATA');
+    if (!hasVisit(ctx)) codes.push('NO_VISIT_DATA');
+    if (!hasComp(ctx)) codes.push('NO_COMP_DATA');
   }
   if (dataInconsistent(caseItem, ctx)) {
     codes.push('DATA_INCONSISTENT');
