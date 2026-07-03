@@ -621,6 +621,23 @@ async function queueAutoposter(row, intelItem, built) {
     ) {
       return { queued: false, reason: 'invalid_copy' };
     }
+    if (!isNonPlayerBeat) {
+      try {
+        const qa = require('./autoposter/recruiting-post-qa');
+        const qaCandidate = {
+          ...built,
+          topic: 'recruiting',
+          playerName: row.playerName,
+          playerSlug: row.playerSlug,
+          source: 'auto:beat-writer'
+        };
+        if (qa.isRecruitingPlayerCandidate(qaCandidate) && !qa.passesPublishGate(qaCandidate)) {
+          return { queued: false, reason: 'recruiting_qa', detail: qa.rejectReason(qaCandidate) };
+        }
+      } catch {
+        /* optional */
+      }
+    }
     if (
       !isNonPlayerBeat &&
       (row.playerSlug || row.playerName) &&

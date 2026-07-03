@@ -66,10 +66,7 @@ const BEAT_ONLY_INSIDER = {
 };
 
 function beatOnlyCopyForAngle(angle) {
-  return {
-    context: BEAT_ONLY_CONTEXT[angle] || BEAT_ONLY_CONTEXT.program_signal,
-    insider: BEAT_ONLY_INSIDER[angle] || BEAT_ONLY_INSIDER.program_signal
-  };
+  return null;
 }
 
 async function ensureBeatProspectOnPlatform({ identity, hints, caseItem }) {

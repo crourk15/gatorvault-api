@@ -69,11 +69,15 @@ function pickAngle(used) {
 }
 
 function composeLadderPost(raw, { identity, contextLine, insider, url, angle, sourceTag }) {
+  const copy = require('../x-autoposter-copy');
   const text = [identity, contextLine, insider, url].join('\n');
   const slug = raw.playerSlug || null;
   const name = raw.playerName || identity;
-  return Object.assign({}, raw, {
+  const candidate = Object.assign({}, raw, {
     text,
+    topic: 'recruiting',
+    playerName: copy.isValidPlayerName(name) ? name : raw.playerName || null,
+    playerSlug: slug,
     source: sourceTag || 'auto:research-ladder',
     intelFingerprint: intelFingerprint(
       slug || name,
@@ -87,6 +91,13 @@ function composeLadderPost(raw, { identity, contextLine, insider, url, angle, so
     }),
     templateBlocks: { identity, context: contextLine, insider }
   });
+  try {
+    const qa = require('./recruiting-post-qa');
+    if (qa.isRecruitingPlayerCandidate(candidate) && !qa.passesPublishGate(candidate)) return null;
+  } catch {
+    /* optional */
+  }
+  return candidate;
 }
 
 async function buildScoutingLadderCandidate(raw) {
@@ -228,23 +239,29 @@ async function buildResearchLadderCandidate(raw, reason) {
     const topicMemory = require('./topic-memory');
     const story = require('./story-memory');
     const angle = pickAngle(topicMemory.listRecentAnglesForPlayer(slug || name, story.normalizeStoryArc(raw)));
-    const identity = name || 'Florida target';
+    if (!name || !slug) return null;
+    const copyMod = require('../x-autoposter-copy');
+    if (!copyMod.isValidPlayerName(name)) return null;
     const contextLine = 'GatorVault dig-deeper — ' + angle.replace(/_/g, ' ') + ' on the Florida board.';
-    const url = slug ? `${SITE_URL}/vault/futurecast/player/${slug}` : SITE_URL;
+    const url = `${SITE_URL}/vault/futurecast/player/${slug}`;
     const beatText = String(raw?.text || raw?.beatText || '').trim();
     const detectives = require('./detectives');
     const insider =
-      detectives.formatBeatDrivenInsiderLine(beatText, {
-        writerName: raw?.sourceLabel || raw?.sources?.[0]?.label || 'Beat intel',
-        beatText
-      }) || 'Board analysis and beat trail tracked on Recruiting Hub.';
+      detectives.formatBeatDrivenInsiderLine(
+        beatText,
+        { writerName: raw?.sourceLabel || raw?.sources?.[0]?.label || 'Beat intel', beatText, playerName: name },
+        { playerName: name, playerSlug: slug, classYear: raw.classYear, pos: raw.pos }
+      ) || null;
+    if (!insider) return null;
+    const idLine = ((raw.classYear ? raw.classYear + ' ' : '') + name + (raw.pos ? ' ' + raw.pos : '')).trim();
     const fallback = composeLadderPost(raw, {
-      identity,
+      identity: idLine,
       contextLine,
       insider,
       url,
       angle
     });
+    if (!fallback) return null;
     logLadderEvent({ ok: true, path: 'angle_fallback', reason, playerSlug: slug });
     return fallback;
   }

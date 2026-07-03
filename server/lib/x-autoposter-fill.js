@@ -324,6 +324,12 @@ function isProgramOrTeamNews(raw) {
 function prepareNewsCandidate(raw) {
   if (!raw?.text && !raw?._articleBuild) return null;
   if (raw?.text && copy.isBrokenCopy(raw.text, raw)) return null;
+  try {
+    const qa = require('./autoposter/recruiting-post-qa');
+    if (qa.isRecruitingPlayerCandidate(raw) && !qa.passesPublishGate(raw)) return null;
+  } catch {
+    /* optional */
+  }
 
   const eventMs = validation.resolveEventTimestamp(raw);
   const fresh = postSpec.validateIntelFreshness(eventMs);

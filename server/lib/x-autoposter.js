@@ -430,10 +430,13 @@ async function processQueueItem(item) {
       }
     } else if (!prepared.ok) {
       const verified = item.verifiedCommit || item.validationMeta?.verifiedCommit;
+      const detectivesItem =
+        String(item.source || '').includes('detectives') || item.validationMeta?.detectivesResolved === true;
       const elitePremade =
-        item.validationMeta?.eliteCompose ||
-        item.validationMeta?.eliteDigest ||
-        String(item.source || '').includes('beat-intel');
+        !detectivesItem &&
+        (item.validationMeta?.eliteCompose ||
+          item.validationMeta?.eliteDigest ||
+          String(item.source || '').includes('beat-intel'));
       const check = verified || elitePremade ? policy.validatePostContent(item) : null;
       if ((verified || elitePremade) && check?.valid) {
         autopostLog('warn', `Premade copy used after ${prepared.reason || 'rewrite_failed'}`, {
@@ -489,6 +492,27 @@ async function processQueueItem(item) {
     });
     saveSchedulerStatus({ lastError: errMsg });
     return { ok: false, itemId: item.id, error: 'Validation failed', validation: check };
+  }
+
+  try {
+    const qa = require('./autoposter/recruiting-post-qa');
+    if (qa.isRecruitingPlayerCandidate(workingItem) && !qa.passesPublishGate(workingItem)) {
+      const errMsg = `recruiting_qa:${qa.rejectReason(workingItem)}`;
+      autopostLog('error', 'Blocked generic recruiting post at send time', {
+        itemId: item.id,
+        reason: qa.rejectReason(workingItem),
+        preview: String(workingItem.text || '').slice(0, 160)
+      });
+      store.updatePost(item.id, {
+        status: 'cancelled',
+        error: errMsg,
+        sentAt: store.nowIso()
+      });
+      saveSchedulerStatus({ lastError: errMsg });
+      return { ok: false, itemId: item.id, error: errMsg, blocked: true };
+    }
+  } catch {
+    /* optional */
   }
 
   const dupGuard = duplicateGuardBeforePost(workingItem);

@@ -112,3 +112,8 @@ test('identityLineValid rejects year-only identity lines', () => {
   assert.equal(qa.identityLineValid('2028 DL', 'Tory Clark'), false);
   assert.equal(qa.identityLineValid('2028 DL Tory Clark (Woodward Academy)', 'Tory Clark'), true);
 });
+
+test('beatOnlyCopyForAngle is disabled to prevent generic fallback posts', () => {
+  const platform = require('../../lib/autoposter/detectives-platform');
+  assert.equal(platform.beatOnlyCopyForAngle('visit_intel'), null);
+});
