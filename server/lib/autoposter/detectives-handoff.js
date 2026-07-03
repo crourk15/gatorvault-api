@@ -21,6 +21,10 @@ const HANDOFF_ALLOW = new Set([
   'enqueue_reject',
   'generic_phrase',
   'no_identifiable_player',
+  'strategy_data_missing',
+  'missing_situation',
+  'copy_failed',
+  'quality_gate',
 ]);
 
 const HANDOFF_BLOCK = new Set([
@@ -72,7 +76,10 @@ function hasUfRecruitingSignal(text) {
   if (/\b20(?:2[7-9]|3[0-2])\b/.test(t) && /\b(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|IOL)\b/i.test(t)) return true;
   if (/\b(?:swamp|gainesville|the swamp|friday night lights|\bfnl\b)\b/i.test(t) && /\b20(?:2[7-9]|3[0-2])\b/.test(t)) return true;
   if (/\b(?:florida|gators|\buf\b)\b/i.test(t) && /\b(?:recruit|visit|commit|offer|top three|eye on florida|official visit|unofficial visit)\b/i.test(t)) return true;
+  if (/\b(?:rpm|prediction|decision day|futurecast)\b/i.test(t) && /\b(?:florida|gators|\buf\b)\b/i.test(t)) return true;
+  if (/\b(?:commitment date|sets commitment|commit date)\b/i.test(t) && /\b(?:florida|gators|\buf\b)\b/i.test(t)) return true;
   if (/\b(?:flip targets|pending decisions|2028 class|recruiting storyline|July is here and the Florida Gators)\b/i.test(t)) return true;
+  if (/\b(?:4|5)[- ]star\b/i.test(t) && /\b(?:florida|gators|\buf\b)\b/i.test(t)) return true;
   return false;
 }
 
@@ -85,6 +92,7 @@ function shouldHandoff(reason, payload = {}) {
   if (r === 'needs_resolution') return hasUfRecruitingSignal(text) || /\b20(?:2[7-9]|3[0-2])\b/.test(text);
   if (r === 'no_identifiable_player') return hasUfRecruitingSignal(text);
   if (r === 'no_recruiting_signal') return hasUfRecruitingSignal(text);
+  if (r === 'strategy_data_missing' || r === 'missing_situation') return hasUfRecruitingSignal(text);
   return hasUfRecruitingSignal(text);
 }
 
@@ -117,6 +125,7 @@ module.exports = {
   HANDOFF_BLOCK,
   shouldHandoff,
   isDismissibleCase,
+  isJunkBeatText,
   casePriority,
   sortCasesForProcessing,
   beatTextFromPayload,

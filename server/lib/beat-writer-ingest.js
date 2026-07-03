@@ -174,29 +174,44 @@ async function maybeHandoffBeatSkipToDetectives(post, reason, skipStage = 'beat_
   if (!reason || DETECTIVES_NO_HANDOFF.has(String(reason))) return;
   try {
     const det = require('./autoposter/detectives');
+    const hints = {
+      handle: post?.handle,
+      writerName: post?.writerName || post?.outlet,
+      url: post?.url,
+      playerName: post?.playerName || null,
+      playerSlug: post?.playerSlug || null,
+      eventType: post?.eventType || null,
+      beatFingerprint: post?.fingerprint || null
+    };
     if (!det.detectivesEnabled() || !det.shouldHandoff(reason, {
       beatPost: post,
       skipReason: reason,
       skipStage,
-      hints: {
-        handle: post?.handle,
-        writerName: post?.writerName || post?.outlet,
-        url: post?.url
-      }
+      hints
     })) return;
     await det.handoffToDetectives({
       beatPost: post,
       skipReason: reason,
       skipStage,
-      hints: {
-        handle: post?.handle,
-        writerName: post?.writerName || post?.outlet,
-        url: post?.url
-      }
+      hints
     });
   } catch {
     /* optional */
   }
+}
+
+function beatPostFromRow(row) {
+  return {
+    handle: row?.sourceHandle,
+    writerName: row?.source,
+    text: row?.detail || row?.text,
+    url: row?.articleUrl,
+    publishedAt: row?.timestamp,
+    playerName: row?.playerName || null,
+    playerSlug: row?.playerSlug || null,
+    eventType: row?.eventType || null,
+    fingerprint: row?.fingerprint || null
+  };
 }
 
 function isRecruitingIntelPost(text, post = null) {
@@ -1374,6 +1389,10 @@ async function processBeatVisitIntelRow(row, snapshot) {
     ? await queueAutoposter(row, intelResult.item, built)
     : { queued: false, reason: built.reason || 'copy_failed' };
 
+  if (!autopost.queued && built?.reason && !BEAT_SILENCE_ALLOWED.has(built.reason)) {
+    logBeatPostSkip(beatPostFromRow(row), built.reason, 'autopost');
+  }
+
   snapshot.fingerprints[row.fingerprint] = row.timestamp;
 
   try {
@@ -1506,11 +1525,7 @@ async function runBeatWriterIngest({ force = false, manualRows = [], posts = nul
       else {
         results.skipped.push(out);
         if (out.reason && out.reason !== 'duplicate' && out.reason !== 'snapshot') {
-          logBeatPostSkip(
-            { handle: row.sourceHandle, text: row.detail, url: row.articleUrl, publishedAt: row.timestamp },
-            out.needs_resolution ? 'needs_resolution' : out.reason,
-            out.category || 'ingest'
-          );
+          logBeatPostSkip(beatPostFromRow(row), out.needs_resolution ? 'needs_resolution' : out.reason, out.category || 'ingest');
         }
       }
     } catch (e) {

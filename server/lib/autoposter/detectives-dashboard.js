@@ -32,11 +32,19 @@ function formatCaseForDashboard(caseItem) {
   const investigatingMs = caseItem.status === 'investigating'
     ? Date.now() - new Date(caseItem.updatedAt || caseItem.createdAt).getTime()
     : 0;
+  const diagnosis = caseItem.diagnosis || null;
   return {
     id: caseItem.id,
     status: caseItem.status,
     skipReason: caseItem.skipReason,
+    skipReasonRaw: caseItem.skipReasonRaw || caseItem.skipReason,
     skipStage: caseItem.skipStage,
+    skipCode: diagnosis?.primaryCode || caseItem.finalSkipCode || null,
+    finalSkipCode: caseItem.finalSkipCode || diagnosis?.primaryCode || null,
+    salvageable: diagnosis?.salvageable ?? null,
+    beatKind: diagnosis?.beatKind || null,
+    gaps: diagnosis?.gaps || [],
+    diagnosis,
     createdAt: caseItem.createdAt,
     updatedAt: caseItem.updatedAt,
     attempts: caseItem.attempts,
