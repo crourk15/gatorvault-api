@@ -273,6 +273,87 @@ function autoposterCompose(signal) {
   };
 }
 
+function applyDetectiveOverride(signal, override = {}) {
+  if (override.rpm != null && Number(override.rpm) > 0) {
+    signal.metrics.rpm = Number(override.rpm);
+  }
+  if (override.visitDate || override.visitStart) {
+    signal.metrics.visitDate = override.visitDate || override.visitStart;
+  }
+  if (Array.isArray(override.compSchools) && override.compSchools.length) {
+    signal.metrics.compSchools = override.compSchools;
+  }
+  return signal;
+}
+
+async function composeFromDetectiveCase({ hints, identity, platformContext, research, detectiveOverride }) {
+  if (!voiceEngineEnabled()) {
+    return { ok: false, skipped: true, reason: 'voice_disabled' };
+  }
+
+  const override = detectiveOverride || hints?.metrics || {};
+  const playerData = {
+    ok: true,
+    data: {
+      name: identity?.playerName || hints?.playerName,
+      playerSlug: identity?.playerSlug || hints?.playerSlug,
+      pos: identity?.pos || hints?.pos,
+      classYear: identity?.classYear || hints?.classYear,
+      natlRank: identity?.natlRank || null
+    }
+  };
+
+  const signal = signalAdapter.signalFromEliteInput(
+    {
+      beatText: hints?.beatText,
+      intel: {
+        playerName: identity?.playerName,
+        playerSlug: identity?.playerSlug,
+        detail: hints?.beatText,
+        classYear: identity?.classYear,
+        ufRpmPct: override.rpm,
+        visitStart: override.visitDate || override.visitStart,
+        timestamp: hints?.publishedAt
+      },
+      source: hints?.writerName || 'Beat'
+    },
+    research || {},
+    playerData
+  );
+
+  applyDetectiveOverride(signal, override);
+
+  if (platformContext?.url) {
+    signal.links.playerUrl = platformContext.url;
+  } else if (signal.playerSlug) {
+    signal.links.playerUrl = signalAdapter.buildPlayerUrl(signal.playerSlug, {
+      playerSlug: signal.playerSlug,
+      eventType: research?.eventType || 'recruiting'
+    });
+  }
+
+  const out = autoposterCompose(signal);
+  if (!out.ok) return out;
+
+  return {
+    ok: true,
+    text: out.text,
+    playerName: signal.player?.name || identity?.playerName,
+    playerSlug: signal.playerSlug || identity?.playerSlug,
+    postKind: 'recruiting',
+    templateBlocks: out.templateBlocks,
+    validationMeta: {
+      ...out.validationMeta,
+      eliteCompose: true,
+      voiceEngine: true,
+      detectiveOverride: true,
+      detectivesPromoted: true,
+      voiceMetrics: signal.metrics
+    },
+    metadata: out.metadata
+  };
+}
+
 async function composeFromEliteInput(input, research, playerData) {
   if (!voiceEngineEnabled()) return null;
   const signal = signalAdapter.signalFromEliteInput(input, research, playerData);
@@ -312,6 +393,8 @@ module.exports = {
   voiceEngineEnabled,
   autoposterCompose,
   composeFromEliteInput,
+  composeFromDetectiveCase,
+  applyDetectiveOverride,
   composeBlocks,
   compressBlocksToText,
   toLegacyTemplateBlocks,

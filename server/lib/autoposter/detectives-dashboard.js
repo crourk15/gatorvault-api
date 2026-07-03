@@ -13,7 +13,8 @@ function nextPhaseHint(status, lastPhase) {
   if (!lastPhase || lastPhase === 'start') return 'identity lookup';
   if (lastPhase === 'identity') return 'platform provisioning (Hub + intel row)';
   if (lastPhase === 'platform') return 'metrics repair (rpm / visit / comp)';
-  if (lastPhase === 'repair') return 'research strategies';
+  if (lastPhase === 'repair') return 'voice promote (detectiveOverride)';
+  if (lastPhase === 'promote') return 'research strategies';
   if (lastPhase === 'strategies') return 'compose / enqueue attempts';
   if (lastPhase === 'reject') return 'retry next strategy';
   return 'investigating';
@@ -48,6 +49,7 @@ function formatCaseForDashboard(caseItem) {
     diagnosis,
     metrics: hints.metrics || null,
     repairActions: (caseItem.repairActions || []).slice(-6),
+    voicePromoted: (caseItem.investigationLog || []).some((l) => l.phase === 'promote' && l.ok === true),
     createdAt: caseItem.createdAt,
     updatedAt: caseItem.updatedAt,
     attempts: caseItem.attempts,
