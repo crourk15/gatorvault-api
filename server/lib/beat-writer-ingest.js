@@ -154,7 +154,6 @@ function logBeatPostSkip(post, reason, category = 'filtered') {
   } catch {
     /* ops optional */
   }
-  maybeHandoffBeatSkipToDetectives(post, reason).catch(() => {});
 }
 
 const DETECTIVES_NO_HANDOFF = new Set([
@@ -172,7 +171,7 @@ const DETECTIVES_NO_HANDOFF = new Set([
 
 async function maybeHandoffBeatSkipToDetectives(post, reason, skipStage = 'beat_ingest') {
   const handoffReason = require('./detectives-handoff').normalizeDetectivesHandoffReason(reason);
-  if (!handoffReason || DETECTIVES_NO_HANDOFF.has(String(handoffReason))) return;
+  if (!handoffReason || DETECTIVES_NO_HANDOFF.has(String(handoffReason))) return null;
   try {
     const det = require('./autoposter/detectives');
     const hints = {
@@ -189,15 +188,15 @@ async function maybeHandoffBeatSkipToDetectives(post, reason, skipStage = 'beat_
       skipReason: handoffReason,
       skipStage,
       hints
-    })) return;
-    await det.handoffToDetectives({
+    })) return null;
+    return await det.handoffToDetectives({
       beatPost: post,
       skipReason: handoffReason,
       skipStage,
       hints
     });
   } catch {
-    /* optional */
+    return null;
   }
 }
 
@@ -1390,8 +1389,11 @@ async function processBeatVisitIntelRow(row, snapshot) {
     ? await queueAutoposter(row, intelResult.item, built)
     : { queued: false, reason: built.reason || 'copy_failed' };
 
+  let detectivesHandoff = null;
   if (!autopost.queued && built?.reason && !BEAT_SILENCE_ALLOWED.has(built.reason)) {
-    logBeatPostSkip(beatPostFromRow(row), built.reason, 'autopost');
+    const beatPost = beatPostFromRow(row);
+    logBeatPostSkip(beatPost, built.reason, 'autopost');
+    detectivesHandoff = await maybeHandoffBeatSkipToDetectives(beatPost, built.reason, 'autopost');
   }
 
   snapshot.fingerprints[row.fingerprint] = row.timestamp;
@@ -1418,6 +1420,7 @@ async function processBeatVisitIntelRow(row, snapshot) {
     player: player.slug,
     source: row.source,
     autopost,
+    detectivesHandoff,
     identityConfirmed: true,
     fingerprint: row.fingerprint
   };
