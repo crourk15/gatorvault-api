@@ -4,7 +4,12 @@ const policy = require('./x-autoposter-policy');
 const cadence = require('./x-autoposter-cadence');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
 const freshness = require('./autoposter-freshness');
-const { forcePostNow } = require('./autoposter-force-post');
+const {
+  forcePostNow,
+  forcePostQueueOnly,
+  forcePostDiscover,
+  formatForcePostJson
+} = require('./autoposter-force-post');
 
 const { verifyAdminPin, pinFromReq: adminPinFromReq } = require('./admin-pin');
 const X_CRON_SECRET = process.env.X_AUTOPOST_CRON_SECRET || process.env.LIVE_CRON_SECRET || '';
@@ -403,59 +408,78 @@ function mountXAutoposterRoutes(app) {
     }
   });
 
+  app.get('/api/autoposter/force-post/status', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    const running = !!global.__forcePostRunning;
+    const last = global.__forcePostLastResult || null;
+    return res.json({
+      ok: true,
+      running,
+      lastResult: last,
+      pendingCount: store.listQueue({ status: 'pending' }).length
+    });
+  });
+
   app.post('/api/autoposter/force-post', async (req, res) => {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
     try {
-      const out = await forcePostNow();
-      if (out.ok && out.posted) {
+      const syncOnly = req.body?.sync === true || req.query?.sync === '1';
+
+      const quick = await forcePostQueueOnly();
+      if (quick?.posted || (quick && !quick.posted && quick.error)) {
+        const formatted = formatForcePostJson(quick);
+        return res.status(formatted.status).json(formatted.body);
+      }
+
+      if (global.__forcePostRunning) {
         return res.json({
           ok: true,
-          posted: true,
-          timestamp: out.timestamp,
-          source: out.source || 'force-post',
-          tweetId: out.tweetId,
-          tweetUrl: out.tweetUrl
+          started: false,
+          async: true,
+          reason: 'already_running',
+          message: 'Force post already running in background. Check autoposter logs.',
+          pendingCount: store.listQueue({ status: 'pending' }).length
         });
       }
-      if (out.ok && out.needs_resolution) {
-        return res.json({
-          ok: true,
-          posted: false,
-          needs_resolution: true,
-          source: out.source || 'force-post',
-          playerName: out.playerName || null,
-          playerSlug: out.playerSlug || null,
-          triggerPhrase: out.triggerPhrase || null,
-          missingPattern: out.missingPattern || null,
-          missingPatterns: out.missingPatterns || [],
-          missingFields: out.missingFields || [],
-          reason: out.reason || null,
-          patternRebuildAttempted: out.patternRebuildAttempted || false
-        });
+
+      if (syncOnly) {
+        const out = await forcePostNow();
+        const formatted = formatForcePostJson(out);
+        return res.status(formatted.status).json(formatted.body);
       }
-      return res.status(out.error === 'duplicate' ? 409 : 400).json({
-        ok: false,
-        posted: false,
-        error: out.error || 'x_api_error',
-        source: out.source || 'force-post',
-        pendingCount: out.pendingCount ?? null,
-        failedCount: out.failedCount ?? null,
-        lastFailedError: out.lastFailedError ?? null,
-        lastFailedItemId: out.lastFailedItemId ?? null,
-        oauthConfigured: out.oauthConfigured ?? null,
-        autopostEnabled: out.autopostEnabled ?? null,
-        playerName: out.playerName || null,
-        playerSlug: out.playerSlug || null,
-        triggerPhrase: out.triggerPhrase || null,
-        missingPattern: out.missingPattern || null,
-        missingPatterns: out.missingPatterns || [],
-        missingFields: out.missingFields || [],
-        reason: out.reason || out.error || null,
-        patternRebuildAttempted: out.patternRebuildAttempted || false
+
+      global.__forcePostRunning = true;
+      global.__forcePostLastResult = null;
+      res.json({
+        ok: true,
+        started: true,
+        async: true,
+        message:
+          'Queue empty — running full force-post in background (beat ingest + discovery). Check autoposter logs in 1–2 min.',
+        pendingCount: store.listQueue({ status: 'pending' }).length
+      });
+
+      setImmediate(async () => {
+        try {
+          const out = await forcePostDiscover();
+          global.__forcePostLastResult = { at: store.nowIso(), ...formatForcePostJson(out).body };
+        } catch (err) {
+          global.__forcePostLastResult = {
+            at: store.nowIso(),
+            ok: false,
+            posted: false,
+            error: err.message || 'x_api_error'
+          };
+        } finally {
+          global.__forcePostRunning = false;
+        }
       });
     } catch (err) {
+      global.__forcePostRunning = false;
       return res.status(500).json({ ok: false, error: 'x_api_error', message: err.message });
     }
   });

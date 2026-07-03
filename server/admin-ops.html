@@ -339,6 +339,20 @@
         .then(function(res){
           var j=res.body;
           if(res.status===401)throw new Error('Invalid PIN');
+          if(j.async){
+            var asyncMsg=j.message||'Force post running in background.';
+            if(j.started===false&&j.reason==='already_running'){
+              alert(asyncMsg);
+              loadLogs();
+              return;
+            }
+            alert(asyncMsg+'\n\nReload status/logs in about a minute.');
+            document.getElementById('log-subsystem').value='autoposter';
+            loadLogs();
+            loadStatus(false);
+            pollForcePostStatus(p);
+            return;
+          }
           if(j.needs_resolution){
             var nr='Post deferred — identity incomplete';
             if(j.playerName)nr+='\nPlayer: '+j.playerName;
@@ -376,6 +390,32 @@
         .finally(function(){
           if(btn){btn.disabled=false;btn.textContent=label;}
         });
+    }
+
+    function pollForcePostStatus(pinVal){
+      var attempts=0;
+      var maxAttempts=24;
+      function tick(){
+        if(attempts>=maxAttempts)return;
+        attempts+=1;
+        fetch(API+'/api/autoposter/force-post/status',{headers:headers()})
+          .then(function(r){return r.json();})
+          .then(function(j){
+            if(!j||!j.ok)return;
+            if(j.running)return setTimeout(tick,5000);
+            var last=j.lastResult;
+            if(!last)return;
+            loadLogs();
+            loadStatus(false);
+            if(last.posted&&last.tweetUrl){
+              alert('Background force post succeeded at '+fmtTime(last.at||last.timestamp)+'\n'+last.tweetUrl);
+            }else if(last.error){
+              alert('Background force post finished: '+last.error);
+            }
+          })
+          .catch(function(){setTimeout(tick,5000);});
+      }
+      setTimeout(tick,8000);
     }
 
     function renderJobs(jobs){

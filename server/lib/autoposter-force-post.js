@@ -201,12 +201,14 @@ function findPendingQueueItemForText(text, items) {
   );
 }
 
-async function tryForceQueuePost() {
+async function tryForceQueuePost({ skipRecompose = false } = {}) {
   store.recoverFailedVerifiedCommits();
   store.recoverFailedPostableItems();
-  await recomposeFailedQueueItems();
-  store.recoverFailedVerifiedCommits();
-  store.recoverFailedPostableItems();
+  if (!skipRecompose) {
+    await recomposeFailedQueueItems();
+    store.recoverFailedVerifiedCommits();
+    store.recoverFailedPostableItems();
+  }
   const pending = store.listQueue({ status: 'pending' });
   for (const item of pending) {
     refreshQueueItemFreshness(item);
@@ -222,7 +224,19 @@ async function tryForceQueuePost() {
   return forceProcessQueuedPost();
 }
 
-async function forcePostNow() {
+/** Fast path — pending queue only (no beat ingest / discovery). */
+async function forcePostQueueOnly() {
+  process.env.X_AUTOPOST_FORCE_POST = 'true';
+  try {
+    autoposter.saveSchedulerStatus({ lastPostAttempt: store.nowIso(), lastError: null });
+    return await tryForceQueuePost({ skipRecompose: true });
+  } finally {
+    delete process.env.X_AUTOPOST_FORCE_POST;
+  }
+}
+
+/** Full pipeline — beat ingest, refill, discovery (can take minutes). */
+async function forcePostDiscover() {
   process.env.X_AUTOPOST_FORCE_POST = 'true';
   try {
   autoposter.saveSchedulerStatus({ lastPostAttempt: store.nowIso(), lastError: null });
@@ -372,4 +386,78 @@ async function forcePostNow() {
   }
 }
 
-module.exports = { forcePostNow, mapPostError, forceProcessQueuedPost };
+async function forcePostNow() {
+  const queueResult = await forcePostQueueOnly();
+  if (queueResult?.posted) return queueResult;
+  if (queueResult && !queueResult.posted && queueResult.error) {
+    return { ...queueResult, ...forcePostDiagnostics() };
+  }
+  return forcePostDiscover();
+}
+
+function formatForcePostJson(out) {
+  if (out.ok && out.posted) {
+    return {
+      status: 200,
+      body: {
+        ok: true,
+        posted: true,
+        timestamp: out.timestamp,
+        source: out.source || 'force-post',
+        tweetId: out.tweetId,
+        tweetUrl: out.tweetUrl
+      }
+    };
+  }
+  if (out.ok && out.needs_resolution) {
+    return {
+      status: 200,
+      body: {
+        ok: true,
+        posted: false,
+        needs_resolution: true,
+        source: out.source || 'force-post',
+        playerName: out.playerName || null,
+        playerSlug: out.playerSlug || null,
+        triggerPhrase: out.triggerPhrase || null,
+        missingPattern: out.missingPattern || null,
+        missingPatterns: out.missingPatterns || [],
+        missingFields: out.missingFields || [],
+        reason: out.reason || null,
+        patternRebuildAttempted: out.patternRebuildAttempted || false
+      }
+    };
+  }
+  return {
+    status: out.error === 'duplicate' ? 409 : 400,
+    body: {
+      ok: false,
+      posted: false,
+      error: out.error || 'x_api_error',
+      source: out.source || 'force-post',
+      pendingCount: out.pendingCount ?? null,
+      failedCount: out.failedCount ?? null,
+      lastFailedError: out.lastFailedError ?? null,
+      lastFailedItemId: out.lastFailedItemId ?? null,
+      oauthConfigured: out.oauthConfigured ?? null,
+      autopostEnabled: out.autopostEnabled ?? null,
+      playerName: out.playerName || null,
+      playerSlug: out.playerSlug || null,
+      triggerPhrase: out.triggerPhrase || null,
+      missingPattern: out.missingPattern || null,
+      missingPatterns: out.missingPatterns || [],
+      missingFields: out.missingFields || [],
+      reason: out.reason || out.error || null,
+      patternRebuildAttempted: out.patternRebuildAttempted || false
+    }
+  };
+}
+
+module.exports = {
+  forcePostNow,
+  forcePostQueueOnly,
+  forcePostDiscover,
+  formatForcePostJson,
+  mapPostError,
+  forceProcessQueuedPost
+};
