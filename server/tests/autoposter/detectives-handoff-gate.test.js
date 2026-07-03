@@ -32,3 +32,13 @@ test('isJunkBeatText flags opponent-only listicles', () => {
   assert.equal(handoff.isJunkBeatText(GHIOTO_BEAT), true);
   assert.equal(handoff.isJunkBeatText(ROBINSON_BEAT), false);
 });
+
+test('shouldHandoff maps voice compose failures to detectives strategy repair', () => {
+  const beat =
+    'Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp.';
+  assert.equal(
+    handoff.shouldHandoff('voice_required_no_legacy_fallback', { beatPost: { text: beat } }),
+    true
+  );
+  assert.equal(handoff.normalizeDetectivesHandoffReason('voice_qa_failed'), 'strategy_data_missing');
+});

@@ -25,7 +25,25 @@ const HANDOFF_ALLOW = new Set([
   'missing_situation',
   'copy_failed',
   'quality_gate',
+  'voice_required_no_legacy_fallback',
+  'voice_qa_failed',
+  'voice_compose_required',
+  'invalid_hook',
 ]);
+
+const VOICE_DETECTIVES_HANDOFF = new Set([
+  'voice_required_no_legacy_fallback',
+  'voice_qa_failed',
+  'voice_compose_required',
+  'invalid_hook',
+  'voice_required'
+]);
+
+function normalizeDetectivesHandoffReason(reason) {
+  const r = String(reason || '').trim();
+  if (VOICE_DETECTIVES_HANDOFF.has(r)) return 'strategy_data_missing';
+  return r;
+}
 
 const HANDOFF_BLOCK = new Set([
   ...DEDUPE_SKIP_REASONS,
@@ -88,7 +106,7 @@ function hasUfRecruitingSignal(text) {
 }
 
 function shouldHandoff(reason, payload = {}) {
-  const r = String(reason || '');
+  const r = normalizeDetectivesHandoffReason(reason);
   if (!r || HANDOFF_BLOCK.has(r)) return false;
   if (!HANDOFF_ALLOW.has(r)) return false;
   const text = beatTextFromPayload(payload);
@@ -134,4 +152,6 @@ module.exports = {
   sortCasesForProcessing,
   beatTextFromPayload,
   hasUfRecruitingSignal,
+  normalizeDetectivesHandoffReason,
+  VOICE_DETECTIVES_HANDOFF,
 };

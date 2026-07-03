@@ -171,7 +171,8 @@ const DETECTIVES_NO_HANDOFF = new Set([
 ]);
 
 async function maybeHandoffBeatSkipToDetectives(post, reason, skipStage = 'beat_ingest') {
-  if (!reason || DETECTIVES_NO_HANDOFF.has(String(reason))) return;
+  const handoffReason = require('./detectives-handoff').normalizeDetectivesHandoffReason(reason);
+  if (!handoffReason || DETECTIVES_NO_HANDOFF.has(String(handoffReason))) return;
   try {
     const det = require('./autoposter/detectives');
     const hints = {
@@ -183,15 +184,15 @@ async function maybeHandoffBeatSkipToDetectives(post, reason, skipStage = 'beat_
       eventType: post?.eventType || null,
       beatFingerprint: post?.fingerprint || null
     };
-    if (!det.detectivesEnabled() || !det.shouldHandoff(reason, {
+    if (!det.detectivesEnabled() || !det.shouldHandoff(handoffReason, {
       beatPost: post,
-      skipReason: reason,
+      skipReason: handoffReason,
       skipStage,
       hints
     })) return;
     await det.handoffToDetectives({
       beatPost: post,
-      skipReason: reason,
+      skipReason: handoffReason,
       skipStage,
       hints
     });
