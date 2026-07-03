@@ -46,7 +46,37 @@ test('policy rejects generic detectives fallback even when detectivesResolved', 
 test('formatResearchInsiderLine requires beat snippet or breakdown story', () => {
   assert.equal(detectives.formatResearchInsiderLine(null, ''), null);
   assert.equal(detectives.formatResearchInsiderLine(null, 'short beat'), null);
-  assert.ok(detectives.formatResearchInsiderLine(null, TORY_BEAT));
+  assert.ok(detectives.formatResearchInsiderLine(null, TORY_BEAT, { writerName: 'On3' }));
+});
+
+test('formatBeatDrivenInsiderLine paraphrases beat without verbatim overlap', () => {
+  const quoteRewriter = require('../../lib/x-autoposter-recruiting-quote-rewriter');
+  const insider = detectives.formatBeatDrivenInsiderLine(TORY_BEAT, { writerName: 'On3' });
+  assert.ok(insider);
+  assert.equal(quoteRewriter.exceedsOverlap(insider, TORY_BEAT), false);
+});
+
+test('Tory Clark beat-driven candidate survives template + gm2 checks', () => {
+  const template = require('../../lib/x-autoposter-template');
+  const gm2 = require('../../lib/gm2');
+  const quoteRewriter = require('../../lib/x-autoposter-recruiting-quote-rewriter');
+  const caseItem = {
+    id: 'det_test',
+    skipReason: 'needs_resolution',
+    beatPost: { text: TORY_BEAT, writerName: 'On3', publishedAt: '2026-06-20T12:00:00.000Z' }
+  };
+  const hints = detectives.extractHints(caseItem);
+  const identity = { playerName: 'Tory Clark', playerSlug: 'tory-clark', classYear: 2028, pos: 'DL' };
+  const platformContext = {
+    hasFutureCastContext: false,
+    url: 'https://gatorvaultinsider.com/vault/recruiting/player/tory-clark',
+    slug: 'tory-clark'
+  };
+  const candidate = detectives.buildBeatDrivenCandidate(caseItem, hints, identity, platformContext);
+  assert.equal(copy.isBrokenCopy(candidate.text, candidate), false);
+  assert.equal(template.hasTemplateStructure(candidate.text), true);
+  assert.equal(quoteRewriter.exceedsOverlap(candidate.templateBlocks.insider, TORY_BEAT), false);
+  assert.equal(gm2.filterAutoposterCandidate(candidate), true);
 });
 
 test('formatResearchContextLine never returns bare ufPosition token', () => {

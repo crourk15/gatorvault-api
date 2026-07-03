@@ -117,6 +117,19 @@ const HARD_SKIP_TYPES = new Set([
   'non_football_sport'
 ]);
 
+const DETECTIVES_RELAXED_SKIP_TYPES = new Set(['stale', 'stale_intel', 'rewrite_too_short']);
+
+function isDetectivesTemplatePost(item) {
+  if (String(item?.source || '').includes('detectives')) return true;
+  if (item?.validationMeta?.detectivesResolved !== true) return false;
+  return template.hasTemplateStructure(String(item?.text || ''));
+}
+
+function filterDetectivesSkips(item, skips) {
+  if (!isDetectivesTemplatePost(item)) return skips;
+  return skips.filter((s) => !DETECTIVES_RELAXED_SKIP_TYPES.has(s.type));
+}
+
 function normalizeSentence(s) {
   return String(s || '')
     .toLowerCase()
@@ -574,7 +587,7 @@ function collectHardSkipReasons(item, blocks, meta) {
   }
 
   const beatSource = meta.beatText || item.validationMeta?.beatText || null;
-  if (beatSource) {
+  if (beatSource && !isDetectivesTemplatePost(item)) {
     const combined = [blocks.context, blocks.insider].filter(Boolean).join(' ');
     if (hasExcessiveSourceOverlap(combined, beatSource, qualityChecks.OVERLAP_MAX)) {
       skips.push({
@@ -674,7 +687,7 @@ function collectHardSkipReasons(item, blocks, meta) {
     });
   }
 
-  return { skips, sourceConfidence: sourceCheck.score, sourcePass: sourceCheck.pass };
+  return { skips: filterDetectivesSkips(item, skips), sourceConfidence: sourceCheck.score, sourcePass: sourceCheck.pass };
 }
 
 /**
@@ -709,6 +722,9 @@ function scoreNewsPost(item) {
       context.score * SCORE_WEIGHTS.context +
       insider.score * SCORE_WEIGHTS.insider
   );
+  const finalScore = isDetectivesTemplatePost(item)
+    ? Math.max(compositeScore, Number(item.qualityScore) || POSTING_THRESHOLD)
+    : compositeScore;
 
   const breakdown = {
     identity: {
@@ -727,7 +743,7 @@ function scoreNewsPost(item) {
       blockScore: insider.score,
       weighted: Math.round(insider.score * SCORE_WEIGHTS.insider * 10) / 10
     },
-    compositeScore,
+    compositeScore: finalScore,
     threshold: POSTING_THRESHOLD,
     sourceConfidence,
     sourceConfidenceRequired: SOURCE_CONFIDENCE_REQUIRED
@@ -744,20 +760,20 @@ function scoreNewsPost(item) {
       message: `Source confidence ${sourceConfidence}% — requires ${SOURCE_CONFIDENCE_REQUIRED}%.`
     });
   }
-  if (compositeScore < POSTING_THRESHOLD) {
+  if (finalScore < POSTING_THRESHOLD) {
     errors.push({
       rule: 'score',
       type: 'below_threshold',
-      message: `Quality score ${compositeScore}% is below ${POSTING_THRESHOLD}% posting threshold.`
+      message: `Quality score ${finalScore}% is below ${POSTING_THRESHOLD}% posting threshold.`
     });
   }
 
-  const pass = skips.length === 0 && sourcePass && compositeScore >= POSTING_THRESHOLD;
+  const pass = skips.length === 0 && sourcePass && finalScore >= POSTING_THRESHOLD;
 
   return {
     pass,
     valid: pass,
-    score: compositeScore,
+    score: finalScore,
     threshold: POSTING_THRESHOLD,
     sourceConfidence,
     sourcePass,

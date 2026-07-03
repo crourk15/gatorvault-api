@@ -141,21 +141,28 @@ async function buildEliteResearchCandidate(raw) {
   const beatText = String(raw?.text || raw?.beatText || '').trim();
   if (!beatText && !slug && !name) return null;
   try {
+    const detectives = require('./detectives');
     const research = require('../x-autoposter-elite-research');
+    const hints = {
+      writerName: raw?.sourceLabel || raw?.sources?.[0]?.label || 'Beat intel',
+      beatText
+    };
     const pack = await research.researchUpdate({
       playerSlug: slug,
       playerName: name,
       beatText: beatText || null,
-      sourceLabel: raw?.sourceLabel || raw?.sources?.[0]?.label || 'Beat intel',
+      sourceLabel: hints.writerName,
       eventType: raw?.sourceEventType || 'recruiting'
     });
     const resolvedName = pack?.playerName || name || null;
     const resolvedSlug = pack?.playerSlug || slug || null;
-    const contextLine = String(
-      pack?.contextLine || 'GatorVault research — beat signal expanded with board context.'
-    ).trim();
-    const insider = String(pack?.insiderLine || 'Full intel on FutureCast.').trim();
-    if (!contextLine && !insider) return null;
+    const insider = detectives.formatResearchInsiderLine(
+      pack?.breakdown?.recruitingStory,
+      beatText,
+      hints
+    );
+    if (!insider) return null;
+    const contextLine = detectives.formatResearchContextLine(pack?.ufPosition, beatText, hints);
     const identity = resolvedName || 'Florida football intel';
     const url = resolvedSlug
       ? `${SITE_URL}/vault/futurecast/player/${resolvedSlug}`
@@ -224,10 +231,17 @@ async function buildResearchLadderCandidate(raw, reason) {
     const identity = name || 'Florida target';
     const contextLine = 'GatorVault dig-deeper — ' + angle.replace(/_/g, ' ') + ' on the Florida board.';
     const url = slug ? `${SITE_URL}/vault/futurecast/player/${slug}` : SITE_URL;
+    const beatText = String(raw?.text || raw?.beatText || '').trim();
+    const detectives = require('./detectives');
+    const insider =
+      detectives.formatBeatDrivenInsiderLine(beatText, {
+        writerName: raw?.sourceLabel || raw?.sources?.[0]?.label || 'Beat intel',
+        beatText
+      }) || 'Board analysis and beat trail tracked on Recruiting Hub.';
     const fallback = composeLadderPost(raw, {
       identity,
       contextLine,
-      insider: 'Full intel on FutureCast.',
+      insider,
       url,
       angle
     });

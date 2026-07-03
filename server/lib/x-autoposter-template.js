@@ -108,26 +108,30 @@ function shortenUrlForDisplay(url) {
 }
 
 function sanitizeUrlsInText(text, { removeOnFailure = true } = {}) {
-  const urls = extractUrls(text);
+  const original = String(text || '');
+  const urls = extractUrls(original);
   if (!urls.length) {
-    return { text: String(text || '').trim(), urls: [], urlLabels: [] };
+    return { text: original.trim(), urls: [], urlLabels: [] };
   }
-  let working = String(text || '');
   const urlLabels = [];
-  for (const raw of urls) {
-    const label = shortenUrlForDisplay(raw);
-    if (label) {
-      urlLabels.push(label);
-      working = working.split(raw).join(label);
-    } else if (removeOnFailure) {
-      working = working.split(raw).join(' ');
+  const sanitizedLines = original.split('\n').map((line) => {
+    let working = line;
+    for (const raw of extractUrls(line)) {
+      const label = shortenUrlForDisplay(raw);
+      if (label) {
+        urlLabels.push(label);
+        working = working.split(raw).join(label);
+      } else if (removeOnFailure) {
+        working = working.split(raw).join(' ');
+      }
     }
-  }
-  working = working
-    .replace(/^INTEL:\s*/i, '')
-    .replace(/\b(https?|htt|http)\b/gi, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+    return working
+      .replace(/^INTEL:\s*/i, '')
+      .replace(/\b(https?|htt|http)\b/gi, ' ')
+      .replace(/[^\S\n]+/g, ' ')
+      .trim();
+  });
+  const working = sanitizedLines.filter(Boolean).join('\n').trim();
   return { text: working, urls, urlLabels };
 }
 

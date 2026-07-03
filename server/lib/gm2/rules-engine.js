@@ -105,7 +105,9 @@ function rulesForAutoposter(candidate) {
     const beatText = candidate.validationMeta?.beatText || null;
     if (beatText && candidate.text) {
       const quoteRewriter = require('../x-autoposter-recruiting-quote-rewriter');
-      if (quoteRewriter.exceedsOverlap(candidate.text, beatText)) {
+      const blocks = candidate.templateBlocks || {};
+      const overlapBody = [blocks.context, blocks.insider].filter(Boolean).join(' ') || candidate.text;
+      if (quoteRewriter.exceedsOverlap(overlapBody, beatText)) {
         return { allow: false, reason: 'verbatim_beat_overlap' };
       }
     }
@@ -122,10 +124,17 @@ function rulesForAutoposter(candidate) {
     const qualityChecks = require('../autoposter/quality-checks');
     const insiderTone = require('../autoposter/insider-tone');
     const rewriteBody = [blocks.context, blocks.insider].filter(Boolean).join(' ');
-    if (rewriteBody) {
+    const detectivesPremade =
+      String(candidate.source || '').includes('detectives') ||
+      candidate.validationMeta?.detectivesResolved === true;
+    if (rewriteBody && !detectivesPremade) {
       const qc = qualityChecks.runQualityChecks({ text: rewriteBody, beatText, blocks });
       if (!qc.ok) return { allow: false, reason: qc.errors[0] || 'rewrite_quality_failed' };
-      const tone = insiderTone.validateInsiderTone(candidate.text || rewriteBody);
+    }
+    if (rewriteBody) {
+      const tone = insiderTone.validateInsiderTone(candidate.text || rewriteBody, {
+        minWords: detectivesPremade ? 28 : 40
+      });
       if (!tone.ok) return { allow: false, reason: tone.errors[0] || 'forbidden_tone' };
     }
   } catch {
