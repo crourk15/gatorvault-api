@@ -37,8 +37,9 @@ describe('detectives beat-driven compose', () => {
       url: 'https://gatorvaultinsider.com/vault/recruiting/player/tory-clark'
     };
     const cand = detectives.buildBeatDrivenCandidate(caseItem, hints, identity, platformContext);
-    assert.match(cand.text, /Recruiting Hub|Beat read/i);
-    assert.doesNotMatch(cand.text, /FutureCast|RPM percentages/i);
+    assert.match(cand.text, /Tory|Gainesville|FNL|Swamp/i);
+    assert.doesNotMatch(cand.text, /FutureCast|RPM percentages|the prospect/i);
+    assert.match(cand.text, /\/player\/tory-clark/);
     assert.equal(cand.validationMeta.beatDrivenOnly, true);
     assert.equal(cand.validationMeta.platformPlayerReady, false);
   });

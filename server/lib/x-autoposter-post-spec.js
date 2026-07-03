@@ -4,8 +4,14 @@
  */
 const template = require('./x-autoposter-template');
 
-/** Rule 1 — only post intel ≤ 60 minutes old */
+/** Rule 1 — default intel freshness for live/RPM/on3 signals */
 const MAX_INTEL_AGE_MS = parseInt(process.env.X_AUTOPOST_MAX_INTEL_AGE_MS || String(60 * 60 * 1000), 10);
+
+/** Beat-writer intel — aligned with beat ingest window (default 14 days). */
+const MAX_BEAT_INTEL_AGE_MS = parseInt(
+  process.env.X_AUTOPOST_MAX_BEAT_INTEL_AGE_MS || String(14 * 24 * 60 * 60 * 1000),
+  10
+);
 
 /** Rule 8 — no repost within 6 hours */
 const DEDUPE_REPOST_WINDOW_MS = parseInt(
@@ -316,16 +322,17 @@ function validateMandatoryFields(ctx, situation, { isCoach = false } = {}) {
   return { ok: true, missing: [], situation: situation || 'general' };
 }
 
-function validateIntelFreshness(timestampMs, now = Date.now()) {
+function validateIntelFreshness(timestampMs, now = Date.now(), maxAgeMs = MAX_INTEL_AGE_MS) {
   if (timestampMs == null || Number.isNaN(timestampMs)) {
     return { ok: false, skipReason: 'missing_timestamp', reason: 'Intel timestamp required.', ageSec: null };
   }
   const ageSec = Math.round((now - timestampMs) / 1000);
-  if (ageSec > MAX_INTEL_AGE_MS / 1000) {
+  const maxSec = Math.max(60, Math.round(maxAgeMs / 1000));
+  if (ageSec > maxSec) {
     return {
       ok: false,
       skipReason: 'stale_intel',
-      reason: `Stale intel — source is ${Math.round(ageSec / 60)}m old (max ${MAX_INTEL_AGE_MS / 60000}m).`,
+      reason: `Stale intel — source is ${Math.round(ageSec / 60)}m old (max ${Math.round(maxSec / 60)}m).`,
       ageSec,
       logTag: 'stale intel'
     };
@@ -406,6 +413,7 @@ function composeStructuredPost(ctx, situation, meta = {}) {
 
 module.exports = {
   MAX_INTEL_AGE_MS,
+  MAX_BEAT_INTEL_AGE_MS,
   DEDUPE_REPOST_WINDOW_MS,
   SIMILARITY_THRESHOLD,
   SITUATION_TYPES,

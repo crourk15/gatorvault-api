@@ -750,11 +750,28 @@ async function buildPlayerNewsPost({
     const commitLike =
       /commit|flip/.test(String(intel?.eventType || intel?.sourceEventType || newsEvent || '').toLowerCase()) ||
       /committed to florida|flipped to florida/.test(String(newsEvent || '').toLowerCase());
-    if (elite?.skipped && elite.reason === 'no_usable_signal') {
+    const beatDetailText = String(beatText || intel?.detail || '').trim();
+    const beatName = intel?.playerName || playerName;
+    const copyMod = require('./x-autoposter-copy');
+    const canRetryLegacy =
+      beatDetailText &&
+      copyMod.isValidPlayerName(beatName) &&
+      elite?.reason !== 'recruiting_qa';
+    if (elite?.skipped && elite.reason === 'no_usable_signal' && canRetryLegacy) {
       /* fall through to legacy template path */
+    } else if (
+      elite?.ok === false &&
+      ['stale_intel', 'missing_identity_fields', 'missing_post_fields'].includes(elite.reason) &&
+      canRetryLegacy
+    ) {
+      /* beat-confirmed identity — retry legacy compose with beat-aware freshness */
     } else if (elite?.ok === false && elite.reason !== 'missing_player_identity' && !commitLike) {
-      /* elite attempted but failed — do not emit generic legacy copy */
-      return null;
+      return require('./autoposter-identity').buildIdentitySkipPayload({
+        reason: elite.reason || 'elite_compose_failed',
+        playerName: beatName,
+        playerSlug: intel?.playerSlug || playerSlug,
+        triggerPhrase: beatDetailText
+      });
     }
   }
 
@@ -772,6 +789,7 @@ async function buildPlayerNewsPost({
     sourceEventType: intel?.sourceEventType,
     source: intel?.source || source,
     sourceHandle: intel?.sourceHandle || null,
+    sourceType: intel?.sourceType || (beatDetail ? 'beat' : null),
     directlyInvolvesUF: intel?.directlyInvolvesUF
   };
 
@@ -860,6 +878,20 @@ async function buildPlayerNewsPost({
   const composed = postSpec.composeStructuredPost(ctx, situation, specMeta);
   let contextLine = composed.templateBlocks.context;
   let insiderLine = composed.templateBlocks.insider;
+  if ((!contextLine || !insiderLine) && beatDetail && kind === 'recruiting') {
+    const eliteCaption = require('./x-autoposter-elite-caption');
+    const fallback = eliteCaption.buildBeatFallbackBlocks({
+      playerName: ctx.name,
+      beatText: beatDetail,
+      classYear: ctx.classYear || ctx.class,
+      pos: ctx.position || ctx.pos,
+      school: ctx.school || ctx.hometown
+    });
+    if (fallback?.context && fallback?.insider) {
+      contextLine = fallback.context;
+      insiderLine = fallback.insider;
+    }
+  }
   if (!contextLine || !insiderLine) return null;
 
   const contextResult = { line: contextLine, meta: { fromPostSpec: true, fromRewrite: !!beatContextLine } };
@@ -924,8 +956,22 @@ async function buildPlayerNewsPost({
   const text = template.enforceTweetLimit(raw, 280, copyMeta);
   if (!text || !template.hasTemplateStructure(text)) return null;
 
+  let finalText = text;
+  if (kind === 'recruiting' && resolvedSlug) {
+    const brand = require('./x-autoposter-brand');
+    const withUrl = brand.appendSiteOnce(text, {
+      ...copyMeta,
+      playerSlug: resolvedSlug,
+      playerName: ctx.name,
+      eventType: intel?.eventType || copyMeta.triggerType
+    });
+    if (withUrl) {
+      finalText = withUrl.length <= 280 ? withUrl : template.enforceTweetLimit(withUrl, 280, copyMeta) || text;
+    }
+  }
+
   return {
-    text,
+    text: finalText,
     playerName: ctx.name,
     context: ctx,
     postKind: kind,

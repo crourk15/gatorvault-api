@@ -108,6 +108,10 @@ const MAX_INTEL_AGE_MS = parseInt(
   process.env.X_AUTOPOST_MAX_INTEL_AGE_MS || String(postSpec.MAX_INTEL_AGE_MS),
   10
 );
+const MAX_BEAT_INTEL_AGE_MS = parseInt(
+  process.env.X_AUTOPOST_MAX_BEAT_INTEL_AGE_MS || String(postSpec.MAX_BEAT_INTEL_AGE_MS),
+  10
+);
 
 /** Recruiting commit sources eligible for X autopost (On3 board + beat-verified allowlist). */
 const COMMIT_EVENT_SOURCES = new Set(['on3', 'hayes_fawcett', 'rivals_beat', 'allowlist-commit-ingest']);
@@ -1105,9 +1109,10 @@ async function collectFreshPostCandidates({ forcePost = false, digDeeper = false
   const maxIntelAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_INTEL_AGE_MS;
 
   try {
-    const unqueuedIntel = intelStore.getUnqueuedIntel({ maxAgeMs: maxIntelAgeMs });
-    const beatIntel = unqueuedIntel.filter(isBeatWriterIntel);
-    const otherIntel = unqueuedIntel.filter((i) => !isBeatWriterIntel(i));
+    const beatIntel = intelStore
+      .getUnqueuedIntel({ maxAgeMs: forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS })
+      .filter(isBeatWriterIntel);
+    const otherIntel = intelStore.getUnqueuedIntel({ maxAgeMs: maxIntelAgeMs }).filter((i) => !isBeatWriterIntel(i));
     for (const intel of [...beatIntel, ...otherIntel].slice(0, 12)) {
       const eligibility = require('./rivals-prediction-eligibility');
       const gate = await eligibility.checkIntelForAutopost(intel);

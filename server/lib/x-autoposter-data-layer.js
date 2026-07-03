@@ -43,7 +43,17 @@ function resolveIntelTimestamp(intel) {
 }
 
 /** Rule 2 — reject before ANY fetch */
-function assertIntelFresh(intel) {
+function isBeatSourcedIntel(intel) {
+  if (!intel || typeof intel !== 'object') return false;
+  if (intel.sourceType === 'beat') return true;
+  if (String(intel.beatText || '').trim()) return true;
+  const src = String(intel.source || '');
+  if (/auto:beat|beat-writer|beat_writer|beat-intel|beat_writer_ingest/i.test(src)) return true;
+  if (intel.sourceHandle && String(intel.detail || intel.beatText || '').trim()) return true;
+  return false;
+}
+
+function assertIntelFresh(intel, opts = {}) {
   intel = intel || {};
   if (process.env.X_AUTOPOST_BYPASS_FRESHNESS === 'true') {
     const ts = resolveIntelTimestamp(intel);
@@ -53,7 +63,13 @@ function assertIntelFresh(intel) {
     return { ok: true, ageSec: 0, logTag: null, bypass: true };
   }
   const ts = resolveIntelTimestamp(intel);
-  return postSpec.validateIntelFreshness(ts);
+  let maxAgeMs = postSpec.MAX_INTEL_AGE_MS;
+  if (opts.forcePost || intel._forcePostFreshness) {
+    maxAgeMs = parseInt(process.env.X_AUTOPOST_FORCE_COMMIT_AGE_MS || String(30 * 24 * 60 * 60 * 1000), 10);
+  } else if (opts.beatFreshness === true || (opts.beatFreshness !== false && isBeatSourcedIntel(intel))) {
+    maxAgeMs = postSpec.MAX_BEAT_INTEL_AGE_MS;
+  }
+  return postSpec.validateIntelFreshness(ts, Date.now(), maxAgeMs);
 }
 
 function gvRecordToIdentity(player) {
@@ -460,6 +476,29 @@ function identityToPlayerContext(identity, rewriteMetrics = null) {
  * Full player intel pipeline — freshness → name → identity chain → situation → UF filter → validate.
  * Beat text never supplies identity fields.
  */
+function beatVerifiedIdentityPatch(intel = {}) {
+  const patch = {};
+  if (intel.pos || intel.position) {
+    patch.position = String(intel.pos || intel.position).trim().toUpperCase();
+  }
+  const classYear = intel.classYear || intel.class;
+  if (classYear) {
+    patch.classYear = Number(classYear);
+    patch.class = patch.classYear;
+  }
+  const school = intel.school || intel.highSchool || intel.hometown;
+  if (school) {
+    patch.school = String(school).trim();
+    patch.hometown = patch.school;
+  }
+  if (intel.stars || intel.rating) patch.rating = Number(intel.stars || intel.rating);
+  if (intel.natlRank) patch.natlRank = Number(intel.natlRank);
+  if (intel.playerSlug) patch.playerSlug = intel.playerSlug;
+  if (intel.on3Id) patch.on3Id = intel.on3Id;
+  if (intel.identityConfirmed === true) patch.isUFtarget = true;
+  return patch;
+}
+
 async function fetchAutoposterPlayerData(intel = {}) {
   const fresh = assertIntelFresh(intel);
   if (!fresh.ok) {
@@ -481,7 +520,31 @@ async function fetchAutoposterPlayerData(intel = {}) {
     return { ok: false, skipReason: 'missing_name', reason: 'Could not normalize player name from intel.' };
   }
 
-  const identity = await enrichPlayerIdentity(nameHints);
+  let identity = await enrichPlayerIdentity(nameHints);
+  identity = mergeIdentity(identity, {
+    name: nameHints.name,
+    playerSlug: nameHints.playerSlug || intel.playerSlug || null
+  });
+  identity = mergeIdentity(
+    identity,
+    mergeIdentity(
+      beatVerifiedIdentityPatch(intel),
+      (() => {
+        try {
+          const copy = require('./x-autoposter-copy');
+          const fromBeat = copy.extractVerifiedPatchFromBeatText(intel.beatText || intel.detail || '');
+          return {
+            position: fromBeat.pos || null,
+            classYear: fromBeat.classYear || null,
+            class: fromBeat.classYear || null,
+            rating: fromBeat.stars || null
+          };
+        } catch {
+          return {};
+        }
+      })()
+    )
+  );
   const missing = listMissingCoreIdentity(identity);
   if (missing.length) {
     return {
@@ -683,6 +746,7 @@ async function fetchAutoposterCoachData(intel = {}) {
 module.exports = {
   FUZZY_NAME_THRESHOLD,
   assertIntelFresh,
+  isBeatSourcedIntel,
   resolveIntelTimestamp,
   normalizePlayerName,
   normalizeCoachName,

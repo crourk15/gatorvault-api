@@ -635,6 +635,12 @@ async function buildElitePlayerPost(input = {}) {
     playerSlug: input.playerSlug || input.intel?.playerSlug,
     beatText: input.beatText || input.intel?.detail || null,
     detail: input.beatText || input.intel?.detail || null,
+    pos: input.intel?.pos || input.patch?.pos || null,
+    classYear: input.intel?.classYear || input.patch?.classYear || null,
+    school: input.intel?.school || input.intel?.highSchool || null,
+    stars: input.intel?.stars || input.patch?.stars || null,
+    identityConfirmed: input.intel?.identityConfirmed,
+    sourceType: input.intel?.sourceType || (input.beatText ? 'beat' : null),
     timestamp:
       require('./x-autoposter-data-layer').resolveIntelTimestamp(input.intel || input) ||
       input.intel?.timestamp ||
@@ -870,7 +876,7 @@ async function buildElitePlayerPost(input = {}) {
     return { ok: false, skipped: true, reason: 'truncation_generic', research };
   }
 
-  if (process.env.X_AUTOPOST_GV_CTA_ENABLED === 'true') {
+  if (process.env.X_AUTOPOST_GV_CTA_ENABLED === 'true' || (kind === 'recruiting' && playerSlug)) {
     const withHook = brand.appendSiteOnce(text, {
       playerSlug,
       playerName: research.playerName,

@@ -227,6 +227,8 @@ function extractVerifiedPatchFromBeatText(text) {
 
 /** Deep-link X posts to the FutureCast section that matches the intel type. */
 function resolveAutoposterSiteUrl(meta = {}, bodyText = '') {
+  const slug = meta.playerSlug || meta.validationMeta?.playerSlug || meta.context?.playerSlug || null;
+  if (slug) return playerProfileUrl(slug, meta);
   const text = String(bodyText || meta.beatText || '').toLowerCase();
   const et = String(meta.eventType || meta.triggerType || meta.teamEventType || '').toLowerCase();
   if (
@@ -257,8 +259,8 @@ function appendSite(text, meta = {}) {
   if (body.includes(urlBit) || body.includes(SITE_URL.replace('https://', ''))) {
     return template.enforceTweetLimit(body, 280, meta);
   }
-  const withUrl = `${body}\n${landing.replace('https://', '')}`;
-  return withUrl.length <= 280 ? withUrl : template.enforceTweetLimit(body, 280, meta);
+  const withUrl = `${body}\n${urlBit}`;
+  return withUrl.length <= 280 ? withUrl : template.enforceTweetLimit(withUrl, 280, meta);
 }
 
 function stripUrlsForBeatParse(text) {
