@@ -170,7 +170,7 @@ const DETECTIVES_NO_HANDOFF = new Set([
 ]);
 
 async function maybeHandoffBeatSkipToDetectives(post, reason, skipStage = 'beat_ingest') {
-  const handoffReason = require('./detectives-handoff').normalizeDetectivesHandoffReason(reason);
+  const handoffReason = require('./autoposter/detectives-handoff').normalizeDetectivesHandoffReason(reason);
   if (!handoffReason || DETECTIVES_NO_HANDOFF.has(String(handoffReason))) return null;
   try {
     const det = require('./autoposter/detectives');
