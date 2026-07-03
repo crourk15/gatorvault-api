@@ -1267,23 +1267,38 @@ async function collectOn3NewsBeatCandidates() {
   return candidates;
 }
 
-async function processDetectivesPileSidecar(doc, limit = 3) {
-  try {
-    const det = require('./autoposter/detectives');
-    if (!det.detectivesEnabled()) return null;
-    const queueDoc = doc || store.loadQueue();
-    const detectivesRun = await det.processDetectivesPile({ limit, doc: queueDoc });
-    const enqueued = [];
-    if (detectivesRun?.results?.some((r) => r.queued)) {
-      for (const r of detectivesRun.results) {
-        if (r.item) enqueued.push(r.item);
+async function processDetectivesPileSidecar(doc, limit = 3, { background = false } = {}) {
+  const run = async () => {
+    try {
+      const det = require('./autoposter/detectives');
+      if (!det.detectivesEnabled()) return null;
+      const queueDoc = doc || store.loadQueue();
+      const detectivesRun = await det.processDetectivesPile({ limit, doc: queueDoc });
+      const enqueued = [];
+      if (detectivesRun?.results?.some((r) => r.queued)) {
+        for (const r of detectivesRun.results) {
+          if (r.item) enqueued.push(r.item);
+        }
       }
+      return { detectivesRun, enqueued };
+    } catch (err) {
+      console.warn('[x-autoposter] detectives pile failed:', err.message);
+      return null;
     }
-    return { detectivesRun, enqueued };
-  } catch (err) {
-    console.warn('[x-autoposter] detectives pile failed:', err.message);
-    return null;
+  };
+  if (background) {
+    if (global.__detectivesSidecarRunning) return { background: true, skipped: true, reason: 'busy' };
+    global.__detectivesSidecarRunning = true;
+    setImmediate(async () => {
+      try {
+        await run();
+      } finally {
+        global.__detectivesSidecarRunning = false;
+      }
+    });
+    return { background: true, started: true };
   }
+  return run();
 }
 
 async function refillAutoposterQueue({
@@ -1323,7 +1338,7 @@ async function refillAutoposterQueue({
   const pending = doc.items.filter((i) => i.status === 'pending');
   const need = Math.max(minPending - pending.length, pending.length === 0 ? 1 : 0);
   if (need <= 0 && pending.length >= minPending) {
-    const sidecar = await processDetectivesPileSidecar(doc, 3);
+    const sidecar = await processDetectivesPileSidecar(doc, 3, { background: true });
     const detectivesEnqueued = sidecar?.enqueued || [];
     return {
       ok: true,
@@ -1462,8 +1477,8 @@ async function refillAutoposterQueue({
   }
 
   let detectivesRun = null;
-  const sidecar = await processDetectivesPileSidecar(doc, 3);
-  if (sidecar) {
+  const sidecar = await processDetectivesPileSidecar(doc, 3, { background: true });
+  if (sidecar && !sidecar.background) {
     detectivesRun = sidecar.detectivesRun;
     for (const item of sidecar.enqueued || []) {
       enqueued.push(item);

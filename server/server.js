@@ -1312,6 +1312,13 @@ console.log('GatorVault server running on port', PORT);
       .catch((err) => console.warn('[autoposter] OAuth1 startup verify error', err.message));
     startXAutoposterScheduler();
     try {
+      const { startDetectivesScheduler } = require('./lib/autoposter/detectives-scheduler');
+      startDetectivesScheduler();
+      console.log('[detectives] background scheduler started');
+    } catch (detectivesErr) {
+      console.warn('[detectives] scheduler init skipped', detectivesErr.message);
+    }
+    try {
       const freshness = require('./lib/autoposter-freshness');
       const scheduler = require('./lib/x-autoposter').getSchedulerStatus();
       const synced = freshness.syncLastPostFromScheduler(scheduler);

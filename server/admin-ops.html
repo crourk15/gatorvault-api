@@ -514,13 +514,19 @@
       var label=btn?btn.textContent:'Process next case';
       if(btn){btn.disabled=true;btn.textContent='Processing…';}
       fetch(API+'/api/x/autoposter/detectives/process?limit=1&pin='+encodeURIComponent(p),{method:'POST',headers:headers(),body:JSON.stringify({pin:p,limit:1})})
-        .then(function(r){return r.json();})
+        .then(function(r){
+          return r.text().then(function(text){
+            if(!text||!text.trim())throw new Error('Empty server response (investigation may still be running — reload pile in 30–60s)');
+            try{return JSON.parse(text);}catch(e){throw new Error('Bad server response: '+text.slice(0,120));}
+          });
+        })
         .then(function(j){
           if(!j.ok)throw new Error(j.error||'Process failed');
-          var msg='Processed '+esc(j.processed||0)+' case(s)';
+          var msg=j.message||('Processed '+esc(j.processed||0)+' case(s)');
           if(j.results&&j.results[0])msg+=' — '+(j.results[0].queued?'queued':'no queue')+(j.results[0].path?' via '+j.results[0].path:'')+(j.results[0].reason?' ('+j.results[0].reason+')':'');
           document.getElementById('detectives-counts').textContent=msg;
-          loadDetectives();
+          if(j.started!==false)setTimeout(loadDetectives,15000);
+          else loadDetectives();
         })
         .catch(function(e){alert('Detectives process error: '+e.message);})
         .finally(function(){if(btn){btn.disabled=false;btn.textContent=label;}});

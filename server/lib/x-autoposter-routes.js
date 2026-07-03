@@ -180,10 +180,39 @@ function mountXAutoposterRoutes(app) {
     try {
       const detectives = require('./autoposter/detectives');
       const dashboard = require('./autoposter/detectives-dashboard');
+      const scheduler = require('./autoposter/detectives-scheduler');
       const limit = Math.min(5, parseInt(req.body?.limit || req.query?.limit || '1', 10) || 1);
-      const result = await detectives.processDetectivesPile({ limit });
-      return res.json({ ok: true, ...result, dashboard: dashboard.getDetectivesDashboard({ limit: 50 }) });
+
+      if (global.__detectivesManualRunning) {
+        return res.json({
+          ok: true,
+          started: false,
+          reason: 'already_running',
+          message: 'A case is already being investigated. Reload the pile in a moment.',
+          dashboard: dashboard.getDetectivesDashboard({ limit: 50 })
+        });
+      }
+
+      global.__detectivesManualRunning = true;
+      res.json({
+        ok: true,
+        started: true,
+        async: true,
+        message: `Investigating up to ${limit} case(s). Reload the pile in 30–60 seconds.`,
+        dashboard: dashboard.getDetectivesDashboard({ limit: 50 })
+      });
+
+      setImmediate(async () => {
+        try {
+          await scheduler.runDetectivesBackgroundTick(limit);
+        } catch (err) {
+          console.warn('[detectives] manual process failed:', err.message);
+        } finally {
+          global.__detectivesManualRunning = false;
+        }
+      });
     } catch (err) {
+      global.__detectivesManualRunning = false;
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
