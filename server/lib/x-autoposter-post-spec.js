@@ -7,9 +7,9 @@ const template = require('./x-autoposter-template');
 /** Rule 1 — default intel freshness for live/RPM/on3 signals */
 const MAX_INTEL_AGE_MS = parseInt(process.env.X_AUTOPOST_MAX_INTEL_AGE_MS || String(60 * 60 * 1000), 10);
 
-/** Beat-writer intel — aligned with beat ingest window (default 14 days). */
+/** Beat-writer intel — aligned with beat ingest window (default 21 days). */
 const MAX_BEAT_INTEL_AGE_MS = parseInt(
-  process.env.X_AUTOPOST_MAX_BEAT_INTEL_AGE_MS || String(14 * 24 * 60 * 60 * 1000),
+  process.env.X_AUTOPOST_MAX_BEAT_INTEL_AGE_MS || String(21 * 24 * 60 * 60 * 1000),
   10
 );
 

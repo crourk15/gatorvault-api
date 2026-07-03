@@ -237,9 +237,18 @@ function passesOtherProgramGate(text, post) {
 }
 
 function matchesPlayerName(text, post = null) {
-  if (extractPlayerFromText(text)) return true;
-  if (PLAYER_NAME_RE.test(text)) return true;
-  if (resolvePlayerFromTextSync(text)?.playerName) return true;
+  const body = String(text || '');
+  if (/\b(db battles|battles heat up|first 20\d{2} commit lands|recruiting storylines?|flip targets|decision dates dropping)\b/i.test(body)) {
+    return false;
+  }
+  const fromExtract = extractPlayerFromText(body);
+  if (fromExtract && isValidPlayerName(fromExtract)) return true;
+  if (PLAYER_NAME_RE.test(body)) {
+    const m = body.match(PLAYER_NAME_RE);
+    if (m?.[0] && isValidPlayerName(m[0])) return true;
+  }
+  const resolved = resolvePlayerFromTextSync(body);
+  if (resolved?.playerName && isValidPlayerName(resolved.playerName)) return true;
   try {
     const { parseOn3BeatUrlIdentity } = require('./on3-recruit-discovery');
     if (parseOn3BeatUrlIdentity(text, post?.url)?.playerSlug) return true;

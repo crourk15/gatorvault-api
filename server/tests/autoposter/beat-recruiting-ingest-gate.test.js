@@ -61,12 +61,14 @@ describe('beat-recruiting-ingest-gate', () => {
     assert.equal(result.pass, true);
   });
 
-  it('does not reject mixed-class headlines solely for mentioning 2027', () => {
+  it('rejects YouTube roundup headlines without a real player name', () => {
     const result = gate.evaluateStrictRecruitingIngestGate({
-      ...GOOD_POST,
-      text: 'Florida Gators Recruiting: 2027 DB Battles Heat Up + First 2028 Commit Lands',
+      handle: 'GatorsBreakdown',
+      writerName: 'Gators Breakdown',
+      text: 'Florida Gators Recruiting: 2027 DB Battles Heat Up + First 2028 Commit Lands https://t.co/ZYzbG5WUNe YouTube: https://t.co/ZOJNc3b4fU',
     });
-    assert.notEqual(result.reason, 'class_year_below_2027');
+    assert.equal(result.pass, false);
+    assert.equal(result.reason, 'no_player_name');
   });
 
   it('passes camp-visit intel with class, position, and player name', () => {

@@ -668,10 +668,40 @@ async function queueAutoposter(row, intelItem, built) {
     if (dup) return { queued: false, reason: 'duplicate' };
 
     const eventMs = row.timestamp ? new Date(row.timestamp).getTime() : null;
-    const fresh = dataLayer.assertIntelFresh({ timestamp: row.timestamp, sourceEventCreatedAt: row.timestamp });
+    const fresh = dataLayer.assertIntelFresh({
+      timestamp: row.timestamp,
+      sourceEventCreatedAt: row.timestamp,
+      sourceType: row.sourceType || 'beat',
+      sourceHandle: row.sourceHandle,
+      source: row.source,
+      detail: row.detail || row.text,
+      beatText: row.text || row.detail,
+      playerName: row.playerName,
+      playerSlug: row.playerSlug,
+      identityConfirmed: row.identityConfirmed
+    });
     if (!fresh.ok) {
-      console.log(`[beat-writer-ingest] skip autoposter: ${fresh.logTag || fresh.skipReason} — ${fresh.reason}`);
-      return { queued: false, reason: fresh.skipReason || 'stale_intel' };
+      let allowComposedBeat = false;
+      if (!isNonPlayerBeat && built?.text) {
+        try {
+          const qa = require('./autoposter/recruiting-post-qa');
+          const qaCandidate = {
+            ...built,
+            topic: 'recruiting',
+            playerName: row.playerName,
+            playerSlug: row.playerSlug,
+            source: 'auto:beat-writer'
+          };
+          allowComposedBeat =
+            !qa.isRecruitingPlayerCandidate(qaCandidate) || qa.passesPublishGate(qaCandidate);
+        } catch {
+          allowComposedBeat = !!(built.validationMeta?.eliteCompose || built.validationMeta?.eliteMode);
+        }
+      }
+      if (!allowComposedBeat) {
+        console.log(`[beat-writer-ingest] skip autoposter: ${fresh.logTag || fresh.skipReason} — ${fresh.reason}`);
+        return { queued: false, reason: fresh.skipReason || 'stale_intel' };
+      }
     }
 
     const similar = postSpec.findSimilarInQueue(built.text, doc.items);

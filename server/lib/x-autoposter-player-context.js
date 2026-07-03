@@ -16,7 +16,9 @@ const INVALID_NAME_PARTS = new Set([
   'saturday', 'sunday', 'today', 'tomorrow', 'analyst', 'analysts', 'logged', 'logs',
   'way', 'https', 'http', 'intel', 'blog', 'loaded', 'visitor', 'promo', 'check', 'out',
   'schools', "i'm", 'im', "we're", "they're", "you're", "he's", "she's", 'who', 'what', 'when', 'where',
-  'cant', "can't", 'wont', "won't", 'ignore', 'ignores', 'ignored', 'cannot'
+  'cant', "can't", 'wont', "won't", 'ignore', 'ignores', 'ignored', 'cannot',
+  'battles', 'upcoming', 'decisions', 'storylines', 'storyline', 'roundup', 'breakdown',
+  'lands', 'gathered', 'targets', 'hunting', 'remaining'
 ]);
 
 function isUsableBeatLine(line) {
@@ -54,6 +56,10 @@ function isValidPlayerName(name) {
   const SPATIAL_FALSE_SURNAMES = new Set(['here', 'there', 'today', 'tonight', 'tomorrow', 'now']);
   if (MONTH_FIRST_NAMES.has(core[0].toLowerCase())) return false;
   if (SPATIAL_FALSE_SURNAMES.has(core[core.length - 1].toLowerCase())) return false;
+  const POS_TOKENS = new Set(['qb', 'rb', 'wr', 'te', 'ol', 'ot', 'og', 'c', 'dl', 'dt', 'de', 'edge', 'lb', 'cb', 's', 'ath', 'k', 'p']);
+  if (POS_TOKENS.has(core[0].toLowerCase())) return false;
+  if (/^(?:upcoming|early|first|major|top|new)\s+/i.test(trimmed)) return false;
+  if (/\b(battles heat|heat up|commit lands|recruiting storylines?|flip targets|decision dates)\b/i.test(trimmed)) return false;
   if (parts.some((p) => /https?|www|\.com/i.test(p))) return false;
   for (const p of parts) {
     if (NAME_SUFFIXES.has(p.toLowerCase())) continue;

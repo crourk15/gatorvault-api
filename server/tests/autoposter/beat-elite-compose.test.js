@@ -10,10 +10,16 @@ const qa = require('../../lib/autoposter/recruiting-post-qa');
 const TORY_BEAT =
   'Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a unique connection at Florida.';
 
-test('beat intel within 14 days passes beat freshness gate', () => {
-  const ts = Date.now() - 13 * 24 * 60 * 60 * 1000;
+test('beat intel within 21 days passes beat freshness gate', () => {
+  const ts = Date.now() - 20 * 24 * 60 * 60 * 1000;
   const fresh = postSpec.validateIntelFreshness(ts, Date.now(), postSpec.MAX_BEAT_INTEL_AGE_MS);
   assert.equal(fresh.ok, true);
+});
+
+test('headline junk names are rejected', () => {
+  assert.equal(playerContext.isValidPlayerName('DB Battles Heat'), false);
+  assert.equal(playerContext.isValidPlayerName('Upcoming Decisions'), false);
+  assert.equal(playerContext.isValidPlayerName('Tory Clark'), true);
 });
 
 test('live intel older than 60m still fails default freshness gate', () => {

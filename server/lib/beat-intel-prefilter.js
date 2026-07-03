@@ -134,6 +134,9 @@ function isCorruptedOrHeadlinePhrase(text) {
   if (/^[a-z]\s+[a-z]+\s+[a-z]+/i.test(t) && t.length < 72) return true;
   if (/^(?:dl|de|lb|cb|wr|rb|qb|te|ol|dt|edge|s)\s+[a-z]/i.test(t) && !/\b20\d{2}\b/.test(t)) return true;
   if (/^new\s+[a-z]+\s+[a-z]+(?:'s)?\s+florida\s+official/i.test(t)) return true;
+  if (/\b(db battles|battles heat up|first 20\d{2} commit lands|recruiting storylines?)\b/i.test(t)) return true;
+  if (/\brecruiting:\s*20\d{2}\b/i.test(t)) return true;
+  if (/\byoutube:\s*https/i.test(t)) return true;
   return false;
 }
 
