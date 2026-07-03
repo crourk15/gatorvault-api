@@ -300,7 +300,15 @@ async function buildNewsFromPortal(headliner) {
   );
 }
 
+function isDetectivesPlayerPost(raw) {
+  return (
+    String(raw?.source || '').includes('detectives') ||
+    raw?.validationMeta?.detectivesResolved === true
+  );
+}
+
 function isProgramOrTeamNews(raw) {
+  if (isDetectivesPlayerPost(raw)) return false;
   return (
     raw?.triggerType === 'program_news' ||
     raw?.triggerType === 'team_event' ||
@@ -309,8 +317,7 @@ function isProgramOrTeamNews(raw) {
     raw?.validationMeta?.ufOfficialFootball ||
     String(raw?.source || '').includes('program-news') ||
     String(raw?.source || '').includes('team-event') ||
-    String(raw?.source || '').includes('uf-official') ||
-    String(raw?.source || '').includes('detectives')
+    String(raw?.source || '').includes('uf-official')
   );
 }
 
@@ -790,9 +797,10 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
   const verifiedCommit = scored.verifiedCommit || scored.validationMeta?.verifiedCommit;
   const programOrTeam = isProgramOrTeamNews(scored);
   const elitePremade =
-    scored.validationMeta?.eliteCompose ||
-    scored.validationMeta?.eliteDigest ||
-    String(scored.source || '').includes('beat-intel');
+    !isDetectivesPlayerPost(scored) &&
+    (scored.validationMeta?.eliteCompose ||
+      scored.validationMeta?.eliteDigest ||
+      String(scored.source || '').includes('beat-intel'));
   const policyBlocked =
     !check.valid &&
     !(

@@ -65,6 +65,11 @@ const BROKEN_COPY_PATTERNS = [
   /gatorvault detectives/i,
   /signal verified on a florida recruiting target/i,
   /logged a campus visit window/i,
+  /beat intel confirmed uf football context/i,
+  /failed first-pass filters/i,
+  /beat trail and player profile on recruiting hub/i,
+  /^florida recruiting intel$/im,
+  /board analysis and futurecast breakdown rebuilt from beat signal/i,
   /🐊/
 ];
 

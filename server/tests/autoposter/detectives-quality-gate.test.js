@@ -102,3 +102,49 @@ test('isBrokenCopy rejects robotic Detectives pipeline branding', () => {
   ].join('\n');
   assert.equal(copy.isBrokenCopy(robotic, { validationMeta: { detectivesResolved: true } }), true);
 });
+
+const LIVE_BAD_POST = [
+  'Florida recruiting intel',
+  'Beat intel confirmed UF football context on a prospect that failed first-pass filters.',
+  'Beat trail and player profile on Recruiting Hub.',
+  'https://gatorvaultinsider.com/vault/recruiting/player/unknown'
+].join('\n');
+
+test('isBrokenCopy rejects live guarantee_program pipeline copy', () => {
+  assert.equal(
+    copy.isBrokenCopy(LIVE_BAD_POST, {
+      source: 'auto:detectives',
+      validationMeta: { detectivesResolved: true, detectivesPath: 'guarantee_program', eliteCompose: true },
+    }),
+    true
+  );
+});
+
+test('buildGuaranteeCandidate returns null without resolved player identity', () => {
+  const caseItem = { id: 'det_no_identity', skipReason: 'needs_resolution', beatPost: { text: TORY_BEAT } };
+  const hints = detectives.extractHints(caseItem);
+  const platformContext = { hasFutureCastContext: false, url: 'https://gatorvaultinsider.com/vault/recruiting' };
+  const emptyIdentity = { playerName: null, playerSlug: null, classYear: null, pos: null };
+  assert.equal(detectives.buildGuaranteeCandidate(caseItem, hints, emptyIdentity, 0, platformContext), null);
+});
+
+test('buildBeatDrivenCandidate returns null without resolved player identity', () => {
+  const caseItem = { id: 'det_no_identity', skipReason: 'needs_resolution', beatPost: { text: TORY_BEAT } };
+  const hints = detectives.extractHints(caseItem);
+  const platformContext = { hasFutureCastContext: false, url: 'https://gatorvaultinsider.com/vault/recruiting' };
+  const emptyIdentity = { playerName: null, playerSlug: null, classYear: null, pos: null };
+  assert.equal(detectives.buildBeatDrivenCandidate(caseItem, hints, emptyIdentity, platformContext), null);
+});
+
+test('detectives posts are not treated as program news bypass', async () => {
+  const fill = require('../../lib/x-autoposter-fill');
+  const detectivesPost = {
+    source: 'auto:detectives',
+    identityConfirmed: true,
+    validationMeta: { detectivesResolved: true, eliteCompose: true },
+    playerName: null,
+    playerSlug: null,
+    text: LIVE_BAD_POST,
+  };
+  assert.equal(fill.isProgramOrTeamNews(detectivesPost), false);
+});
