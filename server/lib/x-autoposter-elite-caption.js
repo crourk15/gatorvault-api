@@ -18,7 +18,7 @@ function eliteFirstName(name) {
 }
 
 function competingSchoolsFromBeat(beatText) {
-  return [];
+  return researchEngine.competitorsFromBeatText?.(beatText) || [];
 }
 
 function announcementTimeFromBeat(beatText) {
@@ -108,14 +108,6 @@ function pickBeatIntelAngle(research, beatText) {
     };
   }
 
-  if (/\b(offered|top contender|in the mix|contender)\b/.test(beat)) {
-    return {
-      context: `UF is active with ${fn}${pos ? ` (${pos})` : ''} in this cycle.`,
-      insider: compLine,
-      _beatIntel: true
-    };
-  }
-
   if (
     (/\bfriday night lights\b|\bfnl\b/.test(beat) && /\bswamp|gainesville|campus\b/.test(beat)) ||
     /\bwas in the swamp\b|\bin the swamp for\b/.test(beat)
@@ -126,7 +118,9 @@ function pickBeatIntelAngle(research, beatText) {
       context: /\bfriday night lights\b|\bfnl\b/.test(beat)
         ? `UF coaches used FNL to get another long look at ${fn}${schoolTag} — extended time with staff in Gainesville.`
         : `${fn} logged another campus touch in Gainesville${schoolTag}.`,
-      insider: 'Staff face time at camp visits is building real momentum behind the scenes.',
+      insider:
+        compLine ||
+        (school ? `Woodward Academy pipeline target — staff wants ${fn} back on campus.` : `${fn} picked up real Swamp face time with position coaches.`),
       _beatIntel: true
     };
   }
@@ -177,6 +171,7 @@ function buildBeatFallbackBlocks({ playerName, beatText, classYear, pos, school 
   const fn = eliteFirstName(playerName);
   if (!fn) return null;
   const schoolTag = school ? ` (${school})` : '';
+  const compLine = researchEngine.buildRpmAwareCompLine(research, { fallback: null });
   const angle =
     pickBeatIntelAngle(research, beatText) ||
     pickEventIntelAngle({ ...research, eventType: 'unofficial_visit' });
@@ -190,10 +185,8 @@ function buildBeatFallbackBlocks({ playerName, beatText, classYear, pos, school 
   ];
   const insiderVariants = [
     angle.insider,
-    'Position coaches are staying active — this one is trending up quietly behind the scenes.',
-    'Another campus touch could clarify where UF stands in the race.',
-    'Repeat face time is building real momentum behind the scenes.'
-  ];
+    compLine || `${fn} picked up more Gainesville face time — UF wants to stay in front.`
+  ].filter(Boolean);
   let styleLists = { contextVariants, insiderVariants };
   try {
     const styleAnalyzer = require('./insider-style-analyzer');
@@ -264,7 +257,9 @@ function pickEventIntelAngle(research) {
     case 'unofficial_visit':
       return {
         context: `${fn} has a Gainesville visit window on the books${visit ? ` (${visit})` : ''}.`,
-        insider: 'Repeat campus time is building real momentum behind the scenes.',
+        insider: researchEngine.buildRpmAwareCompLine(research, {
+          fallback: null
+        }) || `${fn} logged Swamp face time — staff is pushing for the next touch.`,
         _eventIntel: true
       };
     case 'offer':
@@ -600,7 +595,7 @@ function buildEliteInsiderLine(research, contextLine) {
   const hayes = research.hayesMentions?.[0];
   if (hayes?.text && !quoteRewriter.isRewriterEnabled()) return hayes.text.slice(0, 140);
 
-  return 'Florida is actively tracking — more clarity expected soon.';
+  return null;
 }
 
 function formatAttributionTag(sourceLabel) {
@@ -688,6 +683,72 @@ async function buildElitePlayerPost(input = {}) {
     return { ok: false, skipped: true, reason: 'no_usable_signal', research };
   }
 
+  try {
+    const voiceEngine = require('./autoposter/voice-engine');
+    if (voiceEngine.voiceEngineEnabled() && String(input.beatText || '').trim()) {
+      const voiceBuilt = await voiceEngine.composeFromEliteInput(input, research, playerData);
+      if (voiceBuilt?.ok && voiceBuilt.text) {
+        const qa = require('./autoposter/recruiting-post-qa');
+        const publishCandidate = {
+          ok: true,
+          text: voiceBuilt.text,
+          playerName: voiceBuilt.playerName,
+          playerSlug: voiceBuilt.playerSlug,
+          topic: 'recruiting',
+          templateBlocks: voiceBuilt.templateBlocks,
+          validationMeta: voiceBuilt.validationMeta
+        };
+        if (
+          qa.isRecruitingPlayerCandidate(publishCandidate) &&
+          !qa.passesPublishGate(publishCandidate)
+        ) {
+          eliteLog.logEliteCaption({
+            pass: false,
+            skipReason: qa.rejectReason(publishCandidate),
+            playerName: voiceBuilt.playerName,
+            voiceEngine: true
+          });
+        } else {
+          eliteLog.logEliteCaption({
+            pass: true,
+            playerName: voiceBuilt.playerName,
+            playerSlug: voiceBuilt.playerSlug,
+            eventType: research.eventType,
+            sourcesUsed: research.sourcesUsed,
+            finalCaption: voiceBuilt.text,
+            voiceEngine: true
+          });
+          return {
+            ok: true,
+            text: voiceBuilt.text,
+            playerName: voiceBuilt.playerName,
+            playerSlug: voiceBuilt.playerSlug,
+            context: playerData.ctx,
+            postKind: voiceBuilt.postKind || 'recruiting',
+            autoposterData: playerData.data,
+            templateBlocks: voiceBuilt.templateBlocks,
+            validationMeta: voiceBuilt.validationMeta
+          };
+        }
+      } else if (voiceBuilt?.reason === 'strategy_data_missing') {
+        eliteLog.logEliteCaption({
+          skipped: true,
+          skipReason: 'strategy_data_missing',
+          playerName: playerData.data.name,
+          voiceEngine: true
+        });
+        return { ok: false, skipped: true, reason: 'strategy_data_missing', research };
+      }
+    }
+  } catch (err) {
+    eliteLog.logEliteCaption({
+      skipped: false,
+      skipReason: 'voice_engine_error',
+      playerName: playerData.data.name,
+      error: err.message
+    });
+  }
+
   const ctx = playerData.ctx;
 
   const kind = input.postKind || playerContext.resolvePostKind(ctx, {
@@ -762,6 +823,9 @@ async function buildElitePlayerPost(input = {}) {
     insiderLine = trimLine(buildEliteInsiderLine(research, contextLine), insiderMax);
   } else {
     insiderLine = trimLine(insiderLine, insiderMax);
+  }
+  if (!insiderLine) {
+    return { ok: false, skipped: true, reason: 'no_usable_signal', research };
   }
 
   if (quoteRewriter.isRewriterEnabled() && input.beatText && !digestAngle?._beatIntel && !digestAngle?._eventIntel) {
@@ -925,7 +989,13 @@ async function buildElitePlayerPost(input = {}) {
       context: contextLine,
       insider: insiderLine
     },
-    validationMeta: { eliteCompose: true, beatText: input.beatText || null }
+    validationMeta: {
+      eliteCompose: true,
+      eliteBeatIntel: Boolean(digestAngle?._beatIntel),
+      eliteEventIntel: Boolean(digestAngle?._eventIntel),
+      beatIntelAngle: Boolean(digestAngle?._beatIntel),
+      beatText: input.beatText || null
+    }
   };
   try {
     const qa = require('./autoposter/recruiting-post-qa');
@@ -980,6 +1050,9 @@ async function buildElitePlayerPost(input = {}) {
       sourcesUsed: research.sourcesUsed.map((s) => s.label),
       eliteCompose: true,
       eliteDigest: !!digestAngle,
+      eliteBeatIntel: Boolean(digestAngle?._beatIntel),
+      eliteEventIntel: Boolean(digestAngle?._eventIntel),
+      beatIntelAngle: Boolean(digestAngle?._beatIntel),
       beatText: input.beatText || null,
       intelDetail: input.intel?.detail || null,
       rewrittenFromQuote: true,

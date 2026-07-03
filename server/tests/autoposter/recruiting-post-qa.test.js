@@ -113,6 +113,51 @@ test('identityLineValid rejects year-only identity lines', () => {
   assert.equal(qa.identityLineValid('2028 DL Tory Clark (Woodward Academy)', 'Tory Clark'), true);
 });
 
+test('recruiting QA rejects generic catch-all UF active copy without beat anchor', () => {
+  const beat = 'Four-star DL offered by Florida after camp evaluation.';
+  const candidate = {
+    text: [
+      '2028 DL Marcus Example (Example HS)',
+      'UF is active with Marcus in this cycle.',
+      'Staff contact has picked up as UF pushes in this cycle.',
+      'https://gatorvaultinsider.com/vault/futurecast/player/marcus-example'
+    ].join('\n'),
+    topic: 'recruiting',
+    playerName: 'Marcus Example',
+    playerSlug: 'marcus-example',
+    source: 'auto:beat-writer',
+    templateBlocks: {
+      identity: '2028 DL Marcus Example (Example HS)',
+      context: 'UF is active with Marcus in this cycle.',
+      insider: 'Staff contact has picked up as UF pushes in this cycle.'
+    },
+    validationMeta: { beatText: beat, eliteCompose: true }
+  };
+  assert.equal(qa.passesPublishGate(candidate), false);
+  assert.match(qa.rejectReason(candidate), /generic_prospect_copy|missing_beat_anchor/);
+});
+
+test('recruiting QA rejects repeat campus momentum boilerplate', () => {
+  const candidate = {
+    text: [
+      '2028 DL Tory Clark (Woodward Academy)',
+      'Tory Clark has a Gainesville visit window on the books.',
+      'Repeat campus time is building real momentum behind the scenes.',
+      'https://gatorvaultinsider.com/vault/futurecast/player/tory-clark'
+    ].join('\n'),
+    topic: 'recruiting',
+    playerName: 'Tory Clark',
+    playerSlug: 'tory-clark',
+    templateBlocks: {
+      identity: '2028 DL Tory Clark (Woodward Academy)',
+      context: 'Tory Clark has a Gainesville visit window on the books.',
+      insider: 'Repeat campus time is building real momentum behind the scenes.'
+    },
+    validationMeta: { beatText: TORY_BEAT, eliteCompose: true }
+  };
+  assert.equal(qa.passesPublishGate(candidate), false);
+});
+
 test('beatOnlyCopyForAngle is disabled to prevent generic fallback posts', () => {
   const platform = require('../../lib/autoposter/detectives-platform');
   assert.equal(platform.beatOnlyCopyForAngle('visit_intel'), null);

@@ -693,7 +693,12 @@ async function queueAutoposter(row, intelItem, built) {
             source: 'auto:beat-writer'
           };
           allowComposedBeat =
-            !qa.isRecruitingPlayerCandidate(qaCandidate) || qa.passesPublishGate(qaCandidate);
+            !qa.isRecruitingPlayerCandidate(qaCandidate) ||
+            (qa.passesPublishGate(qaCandidate) &&
+              (!row.text ||
+                !built.validationMeta?.beatText ||
+                built.validationMeta?.eliteBeatIntel ||
+                built.validationMeta?.beatIntelAngle));
         } catch {
           allowComposedBeat = !!(built.validationMeta?.eliteCompose || built.validationMeta?.eliteMode);
         }
@@ -1065,8 +1070,41 @@ async function processBeatVisitIntelRow(row, snapshot) {
     return { skipped: true, reason: 'duplicate', fingerprint: row.fingerprint };
   }
   if (intelStore.hasIntelFingerprint(row.fingerprint)) {
-    snapshot.fingerprints[row.fingerprint] = row.timestamp;
-    return { skipped: true, reason: 'intel_duplicate' };
+    const existing = intelStore.getIntelByFingerprint(row.fingerprint);
+    if (existing?.resolutionStatus === 'needs_resolution' && !existing.xPostQueued) {
+      /* allow re-processing to upgrade needs_resolution intel */
+    } else if (
+      existing &&
+      !existing.xPostQueued &&
+      existing.identityConfirmed !== false &&
+      existing.resolutionStatus !== 'needs_resolution'
+    ) {
+      const built = await buildAutoposterPayload(
+        {
+          ...row,
+          playerName: row.playerName || existing.playerName,
+          playerSlug: row.playerSlug || existing.playerSlug,
+          eventType: row.eventType || existing.eventType,
+          detail: row.detail || existing.detail
+        },
+        existing
+      );
+      const autopost = built.ok
+        ? await queueAutoposter(row, existing, built)
+        : { queued: false, reason: built.reason || 'copy_failed' };
+      snapshot.fingerprints[row.fingerprint] = row.timestamp;
+      return {
+        processed: autopost.queued,
+        skipped: !autopost.queued,
+        intelDuplicateRetry: true,
+        autopost,
+        fingerprint: row.fingerprint,
+        reason: autopost.queued ? null : built.reason || 'intel_duplicate'
+      };
+    } else {
+      snapshot.fingerprints[row.fingerprint] = row.timestamp;
+      return { skipped: true, reason: 'intel_duplicate' };
+    }
   }
 
   const existing = await store.getPlayerBySlug(row.playerSlug);

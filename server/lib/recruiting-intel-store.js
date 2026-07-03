@@ -219,6 +219,12 @@ function hasIntelFingerprint(fp) {
   return (doc.items || []).some((i) => i.fingerprint === fp);
 }
 
+function getIntelByFingerprint(fp) {
+  if (!fp) return null;
+  const doc = loadIntelDoc();
+  return (doc.items || []).find((i) => i.fingerprint === fp) || null;
+}
+
 function saveNeedsResolution(raw) {
   const row = normalizeIntel({
     ...raw,
@@ -515,6 +521,7 @@ module.exports = {
   getHistoryForPlayer,
   addIntel,
   hasIntelFingerprint,
+  getIntelByFingerprint,
   markIntelXPostQueued,
   markIntelXPosted,
   clearIntelXPostQueued,

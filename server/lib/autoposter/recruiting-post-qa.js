@@ -21,8 +21,26 @@ const GENERIC_PROSPECT_COPY_RE = [
   /signal verified on a florida recruiting target/i,
   /logged a campus visit window/i,
   /^florida recruiting intel$/im,
-  /full rpm, visit intel, and predictions on futurecast/i
+  /full rpm, visit intel, and predictions on futurecast/i,
+  /florida is actively tracking — more clarity expected soon/i,
+  /repeat campus time is building real momentum behind the scenes/i,
+  /staff face time at camp visits is building real momentum/i,
+  /position coaches are staying active — this one is trending up quietly/i,
+  /repeat face time is building real momentum behind the scenes/i,
+  /another campus touch could clarify where uf stands in the race/i,
+  /^uf is active with .+ in this cycle\.?$/im,
+  /per multiple reports,.+monitoring/i,
+  /florida program update:.+monitoring/i
 ];
+
+const BEAT_STOPWORDS = new Set([
+  'florida', 'gators', 'gator', 'staff', 'coaches', 'coach', 'visit', 'campus', 'recruiting',
+  'target', 'prospect', 'class', 'school', 'high', 'academy', 'along', 'with', 'also', 'their',
+  'about', 'after', 'before', 'being', 'between', 'during', 'through', 'where', 'which', 'while'
+]);
+
+const BEAT_ANCHOR_RE =
+  /\b(swamp|gainesville|fnl|friday night lights|official visit|unofficial visit|rpm|decision day|on campus|the swamp|woodward|ballinger|sumrall|offer(?:ed|s)?|commit(?:ted|ment)?|flip(?:ped)?)\b/i;
 
 const YEAR_ONLY_IDENTITY_RE = /^20\d{2}\.?$/;
 const YEAR_LEAD_NO_NAME_RE = /^20\d{2}(?:\s+(?:DL|QB|RB|WR|TE|OL|OT|OG|C|EDGE|LB|CB|S|ATH|K|P))?\s*$/i;
@@ -70,8 +88,71 @@ function hasGenericProspectCopy(text) {
   return GENERIC_PROSPECT_COPY_RE.some((re) => re.test(t));
 }
 
+function beatTokens(beatText) {
+  const beat = String(beatText || '').toLowerCase();
+  const tokens = new Set();
+  for (const m of beat.matchAll(/\b[a-z][a-z'-]{3,}\b/g)) {
+    const w = m[0];
+    if (!BEAT_STOPWORDS.has(w)) tokens.add(w);
+  }
+  return [...tokens];
+}
+
+/** Beat-sourced posts must anchor to beat facts — not template filler. */
+function hasBeatAnchoredCopy(context, insider, beatText, meta = {}) {
+  if (!beatText || !String(beatText).trim()) return true;
+  if (meta.eliteBeatIntel || meta.eliteDigest || meta.beatIntelAngle) return true;
+  const combined = `${context || ''} ${insider || ''}`.toLowerCase();
+  if (BEAT_ANCHOR_RE.test(combined)) return true;
+  let hits = 0;
+  for (const token of beatTokens(beatText)) {
+    if (combined.includes(token)) {
+      hits += 1;
+      if (hits >= 2) return true;
+    }
+  }
+  return false;
+}
+
+function passesVoicePublishGate(raw) {
+  if (!raw?.validationMeta?.voiceEngine) return false;
+  const text = String(raw.text || '').trim();
+  if (!text || text.length < 40) return false;
+  if (copy.isBrokenCopy(text, raw)) return false;
+  if (hasGenericProspectCopy(text)) return false;
+
+  const blocks = raw.validationMeta?.voiceBlocks || {};
+  const playerName = raw.playerName || raw.templateBlocks?.playerName || null;
+  if (playerName && !copy.isValidPlayerName(playerName)) return false;
+  if (playerName && !copy.postReferencesPlayerName(text, playerName)) return false;
+
+  if (raw.topic === 'recruiting' && playerName) {
+    const identity = raw.templateBlocks?.identity || blocks.identity?.line;
+    if (identity && !identityLineValid(identity, playerName)) return false;
+    if (!/\/player\/|futurecast\/player\//i.test(text)) return false;
+  }
+
+  try {
+    const voiceQa = require('./voice-qa');
+    const signal = {
+      type: raw.validationMeta?.signalType || 'recruiting',
+      beatText: raw.validationMeta?.beatText,
+      event: { description: raw.validationMeta?.beatText },
+      metrics: raw.validationMeta?.voiceMetrics || {},
+      player: playerName ? { name: playerName } : null
+    };
+    const gate = voiceQa.runQualityGate(signal, blocks, text, raw);
+    if (!gate.passed) return false;
+  } catch {
+    return false;
+  }
+
+  return true;
+}
+
 function passesPublishGate(raw) {
   if (!raw?.text) return false;
+  if (raw?.validationMeta?.voiceEngine) return passesVoicePublishGate(raw);
   const text = String(raw.text || '').trim();
   if (!text || !template.hasTemplateStructure(text)) return false;
   if (copy.isBrokenCopy(text, raw)) return false;
@@ -94,11 +175,47 @@ function passesPublishGate(raw) {
   if (!insider || insider.length < 24) return false;
   if (hasGenericProspectCopy(`${context}\n${insider}`)) return false;
 
+  const beatText = raw.validationMeta?.beatText || raw.beatText || null;
+  const meta = raw.validationMeta || {};
+  if (
+    beatText &&
+    !hasBeatAnchoredCopy(context, insider, beatText, meta)
+  ) {
+    return false;
+  }
+
+  try {
+    const brand = require('../x-autoposter-brand');
+    if (brand.isMonitoringFallbackCopy(raw.text)) return false;
+  } catch {
+    /* optional */
+  }
+
   return true;
 }
 
 function rejectReason(raw) {
   if (!raw?.text) return 'missing_text';
+  if (raw?.validationMeta?.voiceEngine && !passesVoicePublishGate(raw)) {
+    try {
+      const voiceQa = require('./voice-qa');
+      const blocks = raw.validationMeta?.voiceBlocks || {};
+      const gate = voiceQa.runQualityGate(
+        {
+          type: raw.validationMeta?.signalType,
+          beatText: raw.validationMeta?.beatText,
+          event: { description: raw.validationMeta?.beatText },
+          metrics: raw.validationMeta?.voiceMetrics || {}
+        },
+        blocks,
+        raw.text,
+        raw
+      );
+      return gate.reason || 'voice_qa';
+    } catch {
+      return 'voice_qa';
+    }
+  }
   if (hasGenericProspectCopy(raw.text)) return 'generic_prospect_copy';
   if (copy.isGenericRecruitingHubUrl(raw.text)) return 'generic_hub_url';
   if (!copy.isValidPlayerName(raw.playerName)) return 'invalid_player_name';
@@ -106,6 +223,14 @@ function rejectReason(raw) {
   const identity = raw.templateBlocks?.identity || firstLine(raw.text);
   if (!identityLineValid(identity, raw.playerName)) return 'invalid_identity_line';
   if (copy.isBrokenCopy(raw.text, raw)) return 'broken_copy';
+  const blocks = raw.templateBlocks || {};
+  const beatText = raw.validationMeta?.beatText || raw.beatText || null;
+  if (
+    beatText &&
+    !hasBeatAnchoredCopy(blocks.context, blocks.insider, beatText, raw.validationMeta || {})
+  ) {
+    return 'missing_beat_anchor';
+  }
   return 'recruiting_qa';
 }
 
@@ -114,6 +239,8 @@ module.exports = {
   isRecruitingPlayerCandidate,
   identityLineValid,
   hasGenericProspectCopy,
+  hasBeatAnchoredCopy,
   passesPublishGate,
+  passesVoicePublishGate,
   rejectReason
 };

@@ -8,6 +8,9 @@ const template = require('./x-autoposter-template');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 
+const BEAT_ANCHOR_RE =
+  /\b(swamp|gainesville|fnl|friday night lights|official visit|unofficial visit|rpm|decision day|on campus|the swamp|woodward|ballinger|sumrall|offer(?:ed|s)?|commit(?:ted|ment)?|flip(?:ped)?)\b/i;
+
 function readJson(rel, fallback) {
   try {
     return JSON.parse(fs.readFileSync(path.join(DATA_DIR, rel), 'utf8'));
@@ -551,7 +554,19 @@ async function researchUpdate(input = {}) {
     (player ? 1 : 0) +
     intelRows.length;
 
-  research.hasUsableSignal = signalCount >= 1 && (resolvedName || combinedText.length >= 30);
+  const beatDetail = String(input.beatText || intel?.detail || '').trim();
+  const beatHasSignal =
+    beatDetail.length >= 24 &&
+    BEAT_ANCHOR_RE.test(beatDetail);
+  const hasBoardIntel =
+    intelRows.length > 0 ||
+    predictions.length > 0 ||
+    Boolean(scouting?.scoutingSummary) ||
+    Boolean(breakdown?.recruitingStory || breakdown?.staffNotes);
+
+  research.hasUsableSignal =
+    Boolean(resolvedName) &&
+    (beatHasSignal || hasBoardIntel || (signalCount >= 3 && combinedText.length >= 40));
 
   return research;
 }

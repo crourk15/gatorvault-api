@@ -763,15 +763,15 @@ async function buildPlayerNewsPost({
       beatDetailText &&
       copyMod.isValidPlayerName(beatName) &&
       elite?.reason !== 'recruiting_qa';
-    if (elite?.skipped && elite.reason === 'no_usable_signal' && canRetryLegacy) {
-      /* fall through to legacy template path */
-    } else if (
-      elite?.ok === false &&
-      ['stale_intel', 'missing_identity_fields', 'missing_post_fields'].includes(elite.reason) &&
-      canRetryLegacy
-    ) {
-      /* beat-confirmed identity — retry legacy compose with beat-aware freshness */
-    } else if (elite?.ok === false && elite.reason !== 'missing_player_identity' && !commitLike) {
+    if (beatDetailText && canRetryLegacy) {
+      return require('./autoposter-identity').buildIdentitySkipPayload({
+        reason: elite?.reason || 'elite_compose_failed',
+        playerName: beatName,
+        playerSlug: intel?.playerSlug || playerSlug,
+        triggerPhrase: beatDetailText
+      });
+    }
+    if (elite?.ok === false && elite.reason !== 'missing_player_identity' && !commitLike) {
       return require('./autoposter-identity').buildIdentitySkipPayload({
         reason: elite.reason || 'elite_compose_failed',
         playerName: beatName,
