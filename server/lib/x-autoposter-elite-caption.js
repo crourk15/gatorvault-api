@@ -13,7 +13,8 @@ const GENERIC_INSIDER_RE = /^per .+ report\.?$/i;
 const GENERIC_CLOSURE_RE = /full details via the original report/i;
 
 function eliteFirstName(name) {
-  return String(name || '').split(/\s+/)[0] || 'the prospect';
+  const part = String(name || '').split(/\s+/).filter(Boolean)[0];
+  return part || null;
 }
 
 function competingSchoolsFromBeat(beatText) {
@@ -158,6 +159,8 @@ function extractSchoolFromBeat(beatText) {
 }
 
 function buildBeatFallbackBlocks({ playerName, beatText, classYear, pos, school }) {
+  const copyMod = require('./x-autoposter-copy');
+  if (!copyMod.isValidPlayerName(playerName)) return null;
   const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
   const research = {
     playerName,
@@ -172,22 +175,18 @@ function buildBeatFallbackBlocks({ playerName, beatText, classYear, pos, school 
     topSchools: []
   };
   const fn = eliteFirstName(playerName);
+  if (!fn) return null;
   const schoolTag = school ? ` (${school})` : '';
   const angle =
     pickBeatIntelAngle(research, beatText) ||
-    pickEventIntelAngle({ ...research, eventType: 'unofficial_visit' }) ||
-    {
-      context: `${fn} is on UF's board${school ? ` out of ${school}` : ''} — staff is tracking this ${classYear || ''} ${pos || 'target'}.`
-        .replace(/\s+/g, ' ')
-        .trim(),
-      insider: 'Florida is quietly gaining traction here as the staff keeps the relationship active.'
-    };
+    pickEventIntelAngle({ ...research, eventType: 'unofficial_visit' });
+  if (!angle?.context || !angle?.insider) return null;
   const contextVariants = [
     angle.context,
-    `UF coaches used the latest camp window for extended staff time with this ${pos || 'prospect'}${schoolTag}.`,
-    `Florida is quietly building momentum after another quality campus stop${school ? ` with the ${school} ${pos || 'prospect'}` : ''}.`,
-    `${pos ? `${pos} target` : 'This target'}${schoolTag} picked up more Gainesville face time — UF wants to stay in front.`,
-    `Another campus touch gave Florida's staff a longer look at this ${classYear || ''} ${pos || 'name'}${school ? ` from ${school}` : ''}.`
+    `UF coaches used the latest camp window for extended staff time with ${fn}${schoolTag}.`,
+    `Florida is quietly building momentum after another quality campus stop${school ? ` with ${fn} (${school})` : ` with ${fn}`}.`,
+    `${fn}${schoolTag} picked up more Gainesville face time — UF wants to stay in front.`,
+    `Another campus touch gave Florida's staff a longer look at ${fn}${school ? ` from ${school}` : ''}.`
   ];
   const insiderVariants = [
     angle.insider,
@@ -908,6 +907,35 @@ async function buildElitePlayerPost(input = {}) {
     },
     finalCaption: text
   });
+
+  const publishCandidate = {
+    ok: true,
+    text,
+    playerName: ctx.name || research.playerName,
+    playerSlug: research.playerSlug || playerData.data.playerSlug || null,
+    topic: kind === 'recruiting' ? 'recruiting' : undefined,
+    templateBlocks: {
+      identity,
+      context: contextLine,
+      insider: insiderLine
+    },
+    validationMeta: { eliteCompose: true, beatText: input.beatText || null }
+  };
+  try {
+    const qa = require('./autoposter/recruiting-post-qa');
+    if (kind === 'recruiting' && qa.isRecruitingPlayerCandidate(publishCandidate) && !qa.passesPublishGate(publishCandidate)) {
+      eliteLog.logEliteCaption({
+        pass: false,
+        skipReason: 'recruiting_qa',
+        playerName: research.playerName,
+        eventType: research.eventType,
+        finalCaption: text
+      });
+      return { ok: false, skipped: true, reason: 'recruiting_qa', research };
+    }
+  } catch {
+    /* optional */
+  }
 
   return {
     ok: true,

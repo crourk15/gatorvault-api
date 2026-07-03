@@ -8,6 +8,7 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
 const copy = require('../lib/x-autoposter-copy');
+const qa = require('../lib/autoposter/recruiting-post-qa');
 const store = require('../lib/x-autoposter-store');
 const { primaryAdminPin } = require('../lib/admin-pin');
 
@@ -27,6 +28,7 @@ function isGenericDetectivesItem(item) {
     String(item.sourceEventType || '').startsWith('detectives_');
   if (!detectives) return false;
   if (item.text && copy.isBrokenCopy(item.text, item)) return true;
+  if (qa.isRecruitingPlayerCandidate(item) && !qa.passesPublishGate(item)) return true;
   if (pathTag === 'elite_research' && !item.playerSlug) return true;
   if (/full rpm, visit intel, and predictions on futurecast/i.test(String(item.text || ''))) return true;
   return false;

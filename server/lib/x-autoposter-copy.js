@@ -73,6 +73,10 @@ const BROKEN_COPY_PATTERNS = [
   /face time with the prospect in gainesville/i,
   /campus visit window confirmed — florida had real face time with (?:the prospect|this target)/i,
   /^\d{4}\s+(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+\w/i,
+  /the prospect is on uf's board/i,
+  /quietly gaining traction here as the staff keeps the relationship active/i,
+  /staff is tracking this 20\d{2} target/i,
+  /^20\d{2}\.?$/m,
   /🐊/
 ];
 

@@ -793,6 +793,22 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
     return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'gm2_filter' }, opts);
   }
 
+  try {
+    const qa = require('./autoposter/recruiting-post-qa');
+    if (qa.isRecruitingPlayerCandidate(scored) && !qa.passesPublishGate(scored)) {
+      const ladder = await tryResearchLadder(scored, 'quality_gate', doc, ladderDepth);
+      if (ladder?.queued) return ladder;
+      return finalizeEnqueueFailure(
+        scored,
+        doc,
+        { queued: false, reason: 'recruiting_qa', detail: qa.rejectReason(scored) },
+        opts
+      );
+    }
+  } catch {
+    /* optional */
+  }
+
   const check = policy.validatePostContent(scored);
   const verifiedCommit = scored.verifiedCommit || scored.validationMeta?.verifiedCommit;
   const programOrTeam = isProgramOrTeamNews(scored);

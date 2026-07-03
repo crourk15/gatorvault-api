@@ -44,21 +44,23 @@ test('policy rejects generic detectives fallback even when detectivesResolved', 
 });
 
 test('formatResearchInsiderLine requires beat snippet or breakdown story', () => {
+  const identity = { playerName: 'Tory Clark', classYear: 2028, pos: 'DL' };
   assert.equal(detectives.formatResearchInsiderLine(null, ''), null);
   assert.equal(detectives.formatResearchInsiderLine(null, 'short beat'), null);
-  assert.ok(detectives.formatResearchInsiderLine(null, TORY_BEAT, { writerName: 'On3' }));
+  assert.ok(detectives.formatResearchInsiderLine(null, TORY_BEAT, { writerName: 'On3' }, identity));
 });
 
 test('formatBeatDrivenInsiderLine paraphrases beat without verbatim overlap', () => {
   const quoteRewriter = require('../../lib/x-autoposter-recruiting-quote-rewriter');
-  const insider = detectives.formatBeatDrivenInsiderLine(TORY_BEAT, { writerName: 'On3' });
+  const identity = { playerName: 'Tory Clark', classYear: 2028, pos: 'DL' };
+  const insider = detectives.formatBeatDrivenInsiderLine(TORY_BEAT, { writerName: 'On3' }, identity);
   assert.ok(insider);
   assert.equal(quoteRewriter.exceedsOverlap(insider, TORY_BEAT), false);
 });
 
-test('Tory Clark beat-driven candidate survives template + gm2 checks', () => {
+test('Tory Clark beat-driven candidate survives template + recruiting QA checks', () => {
   const template = require('../../lib/x-autoposter-template');
-  const gm2 = require('../../lib/gm2');
+  const qa = require('../../lib/autoposter/recruiting-post-qa');
   const quoteRewriter = require('../../lib/x-autoposter-recruiting-quote-rewriter');
   const caseItem = {
     id: 'det_test',
@@ -73,11 +75,12 @@ test('Tory Clark beat-driven candidate survives template + gm2 checks', () => {
     slug: 'tory-clark'
   };
   const candidate = detectives.buildBeatDrivenCandidate(caseItem, hints, identity, platformContext);
+  assert.ok(candidate);
   assert.equal(copy.isBrokenCopy(candidate.text, candidate), false);
+  assert.equal(qa.passesPublishGate(candidate), true);
   assert.equal(template.hasTemplateStructure(candidate.text), true);
   assert.equal(quoteRewriter.exceedsOverlap(candidate.templateBlocks.insider, TORY_BEAT), false);
-  assert.equal(gm2.filterAutoposterCandidate(candidate), true);
-  assert.doesNotMatch(candidate.text, /GatorVault Detectives|\[writer\]|signal verified on a florida recruiting target/i);
+  assert.doesNotMatch(candidate.text, /GatorVault Detectives|\[writer\]|the prospect is on UF's board/i);
   assert.match(candidate.text, /Gainesville|FNL|Friday Night Lights|Tory Clark/i);
 });
 
@@ -173,6 +176,24 @@ test('isBrokenCopy rejects generic visit_intel guarantee copy without real playe
         context: 'Campus visit window confirmed — Florida had real face time with the prospect in Gainesville.',
         insider: 'Repeat campus time is building real momentum behind the scenes.'
       }
+    }),
+    true
+  );
+});
+
+test('isBrokenCopy rejects live year-only prospect board copy', () => {
+  const bad = [
+    '2028',
+    "the prospect is on UF's board — staff is tracking this 2028 target.",
+    'Florida is quietly gaining traction here as the staff keeps the relationship active.',
+    'http://gatorvaultinsider.com/vault/recruiting'
+  ].join('\n');
+  assert.equal(
+    copy.isBrokenCopy(bad, {
+      source: 'auto:detectives',
+      topic: 'recruiting',
+      playerName: 'Some Player',
+      validationMeta: { detectivesResolved: true, eliteCompose: true }
     }),
     true
   );

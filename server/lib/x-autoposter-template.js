@@ -331,11 +331,13 @@ function buildRecruitingIdentity(ctx) {
 
 /** Brand beat posts: year + pos + name + hometown only — leaves room for GV hook. */
 function buildCompactRecruitingIdentity(ctx) {
+  const name = String(ctx?.name || '').trim();
+  if (!name) return null;
   const lead = [];
   if (ctx.classYear) lead.push(String(ctx.classYear));
   if (ctx.pos) lead.push(ctx.pos);
-  lead.push(ctx.name);
-  let line = lead.join(' ');
+  lead.push(name);
+  let line = lead.filter(Boolean).join(' ');
   const school = formatSchoolLabel(ctx.school);
   if (school) line += ` (${school})`;
   return line;
