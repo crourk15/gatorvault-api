@@ -315,6 +315,13 @@ async function forcePostDiscover() {
     if (!check.valid) continue;
 
     try {
+      const qa = require('./autoposter/recruiting-post-qa');
+      if (qa.isRecruitingPlayerCandidate(scored) && !qa.passesPublishGate(scored)) continue;
+    } catch {
+      /* optional */
+    }
+
+    try {
       const result = await autoposter.postTweet({ text: scored.text });
       const ts = store.nowIso();
       freshness.recordLastPost(ts);
