@@ -73,7 +73,6 @@ function rulesForHeatCheckPlayer(player, intelRows = []) {
 
 function rulesForAutoposter(candidate) {
   if (isQuarantined(candidate)) return { allow: false, reason: 'player_quarantined' };
-  if (candidate.validationMeta?.detectivesResolved === true) return { allow: true };
   if (publicAlerts().isBrewsterFalseQueueItem(candidate)) return { allow: false, reason: 'false_commit_queue' };
   if (candidate.verifiedCommit || candidate.validationMeta?.verifiedCommit) {
     return { allow: true };

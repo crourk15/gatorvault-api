@@ -158,36 +158,6 @@ function validatePostContent(item) {
     errors.push({ field: 'text', message: 'Post text required' });
   }
 
-  if (item.validationMeta?.detectivesResolved === true) {
-    if (text.length > 280) {
-      errors.push({ field: 'text', message: 'Post text exceeds 280 characters' });
-    }
-    if (containsInventedClaims(text)) {
-      errors.push({
-        field: 'text',
-        type: 'ai_invented',
-        message: 'Posts must not contain AI-invented or unsourced rumor language. Cite credible public reporting.'
-      });
-    }
-    if (isFixtureQueueItem(item)) {
-      errors.push({
-        field: 'sources',
-        type: 'fixture_source',
-        message: 'Demo/fixture autoposter items cannot be published — remove from queue and refill from live beat intel.'
-      });
-    }
-    if (errors.length) {
-      return { valid: false, errors, qualityScore: 0, qualityBreakdown: null, sourceConfidence: 0 };
-    }
-    return {
-      valid: true,
-      errors: [],
-      qualityScore: item.qualityScore ?? 88,
-      qualityBreakdown: item.qualityBreakdown ?? { detectives: true },
-      sourceConfidence: item.sourceConfidence ?? 100
-    };
-  }
-
   if (text.length > 280) {
     errors.push({ field: 'text', message: 'Post text exceeds 280 characters' });
   }

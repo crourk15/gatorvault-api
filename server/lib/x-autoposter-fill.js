@@ -307,7 +307,6 @@ function isProgramOrTeamNews(raw) {
     raw?.identityConfirmed === true ||
     raw?.validationMeta?.programNews ||
     raw?.validationMeta?.ufOfficialFootball ||
-    raw?.validationMeta?.detectivesResolved === true ||
     String(raw?.source || '').includes('program-news') ||
     String(raw?.source || '').includes('team-event') ||
     String(raw?.source || '').includes('uf-official') ||
@@ -317,25 +316,7 @@ function isProgramOrTeamNews(raw) {
 
 function prepareNewsCandidate(raw) {
   if (!raw?.text && !raw?._articleBuild) return null;
-  const detectivesResolved = raw.validationMeta?.detectivesResolved === true;
-  if (raw?.text && copy.isBrokenCopy(raw.text, raw) && !detectivesResolved) return null;
-
-  if (detectivesResolved) {
-    const ts = new Date().toISOString();
-    return {
-      ...raw,
-      qualityScore: Math.max(raw.qualityScore ?? 0, validation.POSTING_THRESHOLD || 85),
-      qualityBreakdown: raw.qualityBreakdown ?? { detectives: true },
-      sourceConfidence: Math.max(raw.sourceConfidence ?? 0, validation.SOURCE_CONFIDENCE_REQUIRED ?? 100),
-      identityConfirmed: raw.identityConfirmed !== false ? true : raw.identityConfirmed,
-      sourceEventCreatedAt: raw.sourceEventCreatedAt || ts,
-      sourcePublishedAt: raw.sourcePublishedAt || ts,
-      situation: raw.situation || postSpec.detectSituation(raw.text, raw.sourceEventType || raw.intelType),
-      sources: raw.sources?.length
-        ? raw.sources
-        : [{ label: 'GatorVault Detectives', url: SITE_URL }]
-    };
-  }
+  if (raw?.text && copy.isBrokenCopy(raw.text, raw)) return null;
 
   const eventMs = validation.resolveEventTimestamp(raw);
   const fresh = postSpec.validateIntelFreshness(eventMs);
@@ -344,7 +325,6 @@ function prepareNewsCandidate(raw) {
     raw.source === 'auto:heat-mover' ||
     raw.source === 'auto:uf-official-news' ||
     raw.source === 'auto:detectives' ||
-    raw.validationMeta?.detectivesResolved === true ||
     isProgramOrTeamNews(raw);
   if (!fresh.ok && !relaxedFreshness) {
     console.log(`[x-autoposter] skip: ${fresh.logTag || fresh.skipReason} — ${fresh.reason}`);
@@ -360,9 +340,9 @@ function prepareNewsCandidate(raw) {
 
   if (
     !gate.pass &&
-    (verifiedCommit || programOrTeam || detectivesResolved) &&
+    (verifiedCommit || programOrTeam) &&
     !(gate.scored?.hardSkips?.length) &&
-    (verifiedCommit || softFailOnly || programOrTeam || detectivesResolved)
+    (verifiedCommit || softFailOnly || programOrTeam)
   ) {
     return {
       ...raw,
@@ -371,7 +351,7 @@ function prepareNewsCandidate(raw) {
       sourceConfidence: gate.scored?.sourceConfidence ?? validation.SOURCE_CONFIDENCE_REQUIRED ?? 100,
       situation: raw.situation || postSpec.detectSituation(raw.text, raw.sourceEventType || raw.intelType),
       verifiedCommit: !!verifiedCommit,
-      identityConfirmed: raw.identityConfirmed || programOrTeam || detectivesResolved || undefined
+      identityConfirmed: raw.identityConfirmed || programOrTeam || undefined
     };
   }
   if (!gate.pass) return null;
@@ -812,7 +792,6 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
   const elitePremade =
     scored.validationMeta?.eliteCompose ||
     scored.validationMeta?.eliteDigest ||
-    scored.validationMeta?.detectivesResolved === true ||
     String(scored.source || '').includes('beat-intel');
   const policyBlocked =
     !check.valid &&
@@ -826,7 +805,7 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
             (e.type === 'stale_intel' || e.type === 'stale' || e.type === 'missing_timestamp'))
       )
     );
-  if (policyBlocked && scored.validationMeta?.detectivesResolved !== true) {
+  if (policyBlocked) {
     const ladder = await tryResearchLadder(scored, 'policy', doc, ladderDepth);
     if (ladder?.queued) return ladder;
     return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'policy', errors: check.errors }, opts);
