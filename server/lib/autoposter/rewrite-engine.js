@@ -157,13 +157,25 @@ async function rewriteIntelPipeline(input = {}) {
   signal.situation = postSpec.detectSituation(beatText, signal.eventType);
   const sourceText = template.stripEmojisHashtags(beatText);
 
+  let styleHints = null;
+  try {
+    const styleCorpus = require('./insider-style-corpus');
+    styleHints = styleCorpus.getStyleHints({
+      eventType: signal.eventType,
+      situation: signal.situation
+    });
+  } catch {
+    /* optional */
+  }
+
   const insiderBlocks = insiderPrompt.composeInsiderBlocks({
     signal,
     research,
     metrics: { ...metrics, ...enriched.metrics },
     intel,
     sourceLabel: sourceLabel || intel?.source || research?.source,
-    situation: signal.situation
+    situation: signal.situation,
+    styleHints
   });
 
   let contextLine = insiderBlocks.contextLine;
@@ -187,19 +199,37 @@ async function rewriteIntelPipeline(input = {}) {
       mode: 'pipeline'
     });
 
-    const contextVariants = quoteRewriter.buildContextVariants(
-      signal,
-      ctx || identityResult.ctx,
-      research,
-      beatText
+    const styleAnalyzer = require('./insider-style-analyzer');
+    const styleCorpus = require('./insider-style-corpus');
+    const identity = identityResult.identity || identityResult.data || identityResult || {};
+    const enrichedLists = styleAnalyzer.enrichVariantLists(
+      quoteRewriter.buildContextVariants(
+        signal,
+        ctx || identityResult.ctx,
+        research,
+        beatText
+      ),
+      quoteRewriter.buildInsiderVariants(
+        signal,
+        ctx || identityResult.ctx,
+        research,
+        contextLine,
+        beatText
+      ),
+      {
+        corpus: styleCorpus.getCorpus(),
+        hints: styleHints,
+        playerName: intel?.playerName || identity.name || identity.playerName,
+        pos: identity.pos || ctx?.pos || research?.player?.pos,
+        school: identity.school || ctx?.school || research?.player?.school,
+        classYear: identity.classYear || ctx?.classYear || research?.player?.classYear,
+        eventType: signal.eventType,
+        beatText,
+        competition: signal.competition || []
+      }
     );
-    const insiderVariants = quoteRewriter.buildInsiderVariants(
-      signal,
-      ctx || identityResult.ctx,
-      research,
-      contextLine,
-      beatText
-    );
+    const contextVariants = enrichedLists.contextVariants;
+    const insiderVariants = enrichedLists.insiderVariants;
     contextLine =
       quoteRewriter.pickNonOverlapping(contextVariants, sourceText) ||
       contextVariants[attempt] ||

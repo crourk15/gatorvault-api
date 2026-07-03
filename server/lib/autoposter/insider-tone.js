@@ -82,6 +82,12 @@ function validateInsiderTone(text, { minWords = 40 } = {}) {
 }
 
 function getToneGuide() {
+  let styleGuide = null;
+  try {
+    styleGuide = require('./insider-style-corpus').getStyleGuide();
+  } catch {
+    /* optional */
+  }
   return {
     characteristics: [
       'confident',
@@ -94,7 +100,8 @@ function getToneGuide() {
     ],
     preferredPhrases: PREFERRED_PHRASE_HINTS,
     forbiddenPatterns: FORBIDDEN_TONE_PATTERNS.map((re) => re.source),
-    minWords: 40
+    minWords: 40,
+    styleGuide
   };
 }
 

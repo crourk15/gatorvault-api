@@ -115,7 +115,106 @@ function pickBeatIntelAngle(research, beatText) {
     };
   }
 
+  if (
+    (/\bfriday night lights\b|\bfnl\b/.test(beat) && /\bswamp|gainesville|campus\b/.test(beat)) ||
+    /\bwas in the swamp\b|\bin the swamp for\b/.test(beat)
+  ) {
+    const school = extractSchoolFromBeat(beatText);
+    const schoolTag = school ? ` (${school})` : '';
+    return {
+      context: /\bfriday night lights\b|\bfnl\b/.test(beat)
+        ? `UF coaches used FNL to get another long look at ${fn}${schoolTag} — extended time with staff in Gainesville.`
+        : `${fn} logged another campus touch in Gainesville${schoolTag}.`,
+      insider: 'Staff face time at camp visits is building real momentum behind the scenes.',
+      _beatIntel: true
+    };
+  }
+
   return null;
+}
+
+function extractSchoolFromBeat(beatText) {
+  const t = String(beatText || '');
+  const parenMixed = t.match(/\([^)]*(?:Academy|High School|HS|Prep)[^)]*\)/i);
+  if (parenMixed) {
+    const inner = parenMixed[0].slice(1, -1);
+    const schoolPart = inner.match(/(?:,\s*|\bfrom\s+)([A-Za-z0-9 .'-]+(?:Academy|High School|HS|Prep))/i);
+    if (schoolPart) return schoolPart[1].trim();
+    const solo = inner.match(/^([A-Za-z0-9 .'-]+(?:Academy|High School|HS|Prep))$/i);
+    if (solo) return solo[1].trim();
+  }
+  const paren = t.match(/\(([A-Za-z0-9 .,'-]+(?:Academy|High School|HS|Prep|School)[^)]*)\)/i);
+  if (paren) {
+    const inner = paren[1].trim();
+    if (!/\b20(?:2[6-9]|3[0-2])\b/.test(inner)) return inner;
+  }
+  const inline = t.match(/\b([A-Z][A-Za-z0-9 .'-]*(?:Academy|High School|HS|Prep))\b/);
+  if (inline) return inline[1].trim();
+  const from = t.match(/\bfrom\s+([A-Z][A-Za-z0-9 .'-]+(?:Academy|High School|HS|Prep))/i);
+  if (from) return from[1].trim();
+  const lead = t.match(/^([A-Z][A-Za-z0-9 .'-]+(?:Academy|High School|HS|Prep))/);
+  if (lead) return lead[1].trim();
+  return null;
+}
+
+function buildBeatFallbackBlocks({ playerName, beatText, classYear, pos, school }) {
+  const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
+  const research = {
+    playerName,
+    player: { name: playerName, pos, classYear },
+    intel: { pos },
+    eventType: 'unofficial_visit',
+    ufPosition: 'tracking',
+    intelRows: [],
+    predictions: [],
+    beatSnippets: [beatText].filter(Boolean),
+    combinedText: beatText || '',
+    topSchools: []
+  };
+  const fn = eliteFirstName(playerName);
+  const schoolTag = school ? ` (${school})` : '';
+  const angle =
+    pickBeatIntelAngle(research, beatText) ||
+    pickEventIntelAngle({ ...research, eventType: 'unofficial_visit' }) ||
+    {
+      context: `${fn} is on UF's board${school ? ` out of ${school}` : ''} — staff is tracking this ${classYear || ''} ${pos || 'target'}.`
+        .replace(/\s+/g, ' ')
+        .trim(),
+      insider: 'Florida is quietly gaining traction here as the staff keeps the relationship active.'
+    };
+  const contextVariants = [
+    angle.context,
+    `UF coaches used the latest camp window for extended staff time with this ${pos || 'prospect'}${schoolTag}.`,
+    `Florida is quietly building momentum after another quality campus stop${school ? ` with the ${school} ${pos || 'prospect'}` : ''}.`,
+    `${pos ? `${pos} target` : 'This target'}${schoolTag} picked up more Gainesville face time — UF wants to stay in front.`,
+    `Another campus touch gave Florida's staff a longer look at this ${classYear || ''} ${pos || 'name'}${school ? ` from ${school}` : ''}.`
+  ];
+  const insiderVariants = [
+    angle.insider,
+    'Position coaches are staying active — this one is trending up quietly behind the scenes.',
+    'Another campus touch could clarify where UF stands in the race.',
+    'Repeat face time is building real momentum behind the scenes.'
+  ];
+  let styleLists = { contextVariants, insiderVariants };
+  try {
+    const styleAnalyzer = require('./insider-style-analyzer');
+    const styleCorpus = require('./autoposter/insider-style-corpus');
+    styleLists = styleAnalyzer.enrichVariantLists(contextVariants, insiderVariants, {
+      corpus: styleCorpus.getCorpus(),
+      playerName,
+      pos,
+      school,
+      classYear,
+      eventType: research.eventType,
+      beatText
+    });
+  } catch {
+    /* optional */
+  }
+  return {
+    context: quoteRewriter.pickNonOverlapping(styleLists.contextVariants, beatText, { minLen: 28 }) || angle.context,
+    insider: quoteRewriter.pickNonOverlapping(styleLists.insiderVariants, beatText, { minLen: 24 }) || angle.insider
+  };
 }
 
 /** GV-native angles from event type + board data — works without beat text. */
@@ -955,6 +1054,9 @@ module.exports = {
   pickBestFactualSentence,
   buildEventSpecificContext,
   buildEliteInsiderLine,
+  buildBeatFallbackBlocks,
+  extractSchoolFromBeat,
+  eliteFirstName,
   formatAttributionTag,
   GENERIC_CLOSURE_RE,
   GENERIC_INSIDER_RE

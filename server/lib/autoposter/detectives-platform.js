@@ -11,7 +11,9 @@ function playerHasFutureCastContext(player, intelRows = []) {
   if (player.breakdown?.recruitingStory || player.scoutingSummary) return true;
   for (const row of intelRows) {
     const type = String(row?.eventType || '');
-    if (['prediction', 'prediction_change', 'rivals_futurecast', 'official_visit', 'unofficial_visit'].includes(type)) return true;
+    const source = String(row?.source || '');
+    if (source.includes('detectives-beat')) continue;
+    if (['prediction', 'prediction_change', 'rivals_futurecast'].includes(type)) return true;
   }
   if (player.slug) {
     try { if (require('../scouting-database').getEntryBySlug(player.slug)?.scoutingSummary) return true; } catch {}
@@ -47,20 +49,20 @@ async function loadPlayerContext(slug) {
 }
 
 const BEAT_ONLY_CONTEXT = {
-  visit_intel: 'GatorVault Detectives — beat visit signal confirmed for this Florida target.',
-  rpm_board: 'GatorVault Detectives — UF beat signal on a prospect we are tracking.',
-  scouting_read: 'GatorVault Detectives — beat cross-check logged on Recruiting Hub.',
-  competition: 'GatorVault Detectives — competing schools noted; Florida remains in play.',
-  momentum: 'GatorVault Detectives — momentum signal from trusted UF beat intel.',
-  program_signal: 'GatorVault Detectives — beat signal verified as UF recruiting intel.'
+  visit_intel: 'Campus visit window confirmed — Florida had real face time with the prospect in Gainesville.',
+  rpm_board: 'UF beat momentum on a prospect the staff is actively tracking in this class.',
+  scouting_read: 'Scheme fit and frame check out — Florida remains engaged on the board.',
+  competition: 'Other schools are involved, but UF is still in the mix for this target.',
+  momentum: 'Quiet momentum building — staff contact has picked up on this recruitment.',
+  program_signal: 'Beat intel puts Florida in play on a name the board is watching.'
 };
 const BEAT_ONLY_INSIDER = {
-  visit_intel: 'Visit trail and beat notes on Recruiting Hub — board build in progress.',
-  rpm_board: 'Beat intel logged — FutureCast board populates once profile syncs.',
-  scouting_read: 'Scout file and beat trail tracked on Recruiting Hub.',
-  competition: 'School list and beat context on Recruiting Hub.',
-  momentum: 'Heat check starts from beat signal on Recruiting Hub.',
-  program_signal: 'Player profile and beat intel on Recruiting Hub.'
+  visit_intel: 'Repeat campus time is building real momentum behind the scenes.',
+  rpm_board: 'Staff confidence is growing as UF pushes for separation in the leader group.',
+  scouting_read: 'The next campus touchpoint could clarify where UF stands in the race.',
+  competition: 'Florida likes the fit — watch whether Gainesville gets another window soon.',
+  momentum: 'Position coaches have stayed active — this one is trending up quietly.',
+  program_signal: 'Not a done deal yet, but UF is firmly in the conversation.'
 };
 
 function beatOnlyCopyForAngle(angle) {

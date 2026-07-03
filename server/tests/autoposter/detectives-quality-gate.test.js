@@ -77,11 +77,28 @@ test('Tory Clark beat-driven candidate survives template + gm2 checks', () => {
   assert.equal(template.hasTemplateStructure(candidate.text), true);
   assert.equal(quoteRewriter.exceedsOverlap(candidate.templateBlocks.insider, TORY_BEAT), false);
   assert.equal(gm2.filterAutoposterCandidate(candidate), true);
+  assert.doesNotMatch(candidate.text, /GatorVault Detectives|\[writer\]|signal verified on a florida recruiting target/i);
+  assert.match(candidate.text, /Gainesville|FNL|Friday Night Lights|Tory Clark/i);
 });
 
 test('formatResearchContextLine never returns bare ufPosition token', () => {
-  const line = detectives.formatResearchContextLine('tracking', TORY_BEAT, { writerName: 'On3' });
+  const line = detectives.formatResearchContextLine('tracking', TORY_BEAT, { writerName: 'On3' }, {
+    playerName: 'Tory Clark',
+    classYear: 2028,
+    pos: 'DL'
+  });
   assert.ok(line.length >= 28);
   assert.notEqual(line.trim().toLowerCase(), 'tracking');
-  assert.match(line, /GatorVault Detectives/);
+  assert.match(line, /camp|Gainesville|Swamp|Friday Night Lights|FNL|UF coaches/i);
+  assert.doesNotMatch(line, /GatorVault Detectives|\[writer\]/i);
+});
+
+test('isBrokenCopy rejects robotic Detectives pipeline branding', () => {
+  const robotic = [
+    '2028 Tory Clark DL',
+    'GatorVault Detectives — signal verified on a Florida recruiting target.',
+    '[writer] logged a campus visit window — UF staff had extended face time with the prospect in Gainesville.',
+    'https://gatorvaultinsider.com/vault/recruiting/player/tory-clark'
+  ].join('\n');
+  assert.equal(copy.isBrokenCopy(robotic, { validationMeta: { detectivesResolved: true } }), true);
 });

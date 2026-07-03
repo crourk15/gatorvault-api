@@ -408,6 +408,15 @@ async function refreshBeatStreamInner(cache) {
   };
   store.saveBeatCache(next);
 
+  try {
+    if (process.env.X_INSIDER_STYLE_AUTO_REFRESH !== 'false' && merged.length) {
+      const styleCorpus = require('./autoposter/insider-style-corpus');
+      styleCorpus.refreshFromPosts(merged, { source: next.source || 'beat-cache' });
+    }
+  } catch (e) {
+    console.warn('[live-beat] insider style corpus refresh failed:', e.message);
+  }
+
   console.log('[live-beat] refresh complete', {
     posts: merged.length,
     source: next.source,

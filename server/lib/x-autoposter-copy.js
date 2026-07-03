@@ -62,6 +62,9 @@ const BROKEN_COPY_PATTERNS = [
   /\bOther — via\b/i,
   /reports that .+ has (committed|decommitted|entered)/i,
   /full rpm, visit intel, and predictions on futurecast\.?/i,
+  /gatorvault detectives/i,
+  /signal verified on a florida recruiting target/i,
+  /logged a campus visit window/i,
   /🐊/
 ];
 

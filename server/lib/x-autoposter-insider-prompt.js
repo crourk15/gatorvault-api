@@ -62,8 +62,11 @@ function formatMetricsPhrase(metrics = {}) {
   return parts.length ? parts.join(' · ') : null;
 }
 
-function buildLeadInsightLine({ signal, research, metrics, sourceLabel }) {
+function buildLeadInsightLine({ signal, research, metrics, sourceLabel, styleHints = null }) {
   const staff = research?.ufPosition || metrics?.ufStatus;
+  if (styleHints?.preferStaffFrame && staff === 'tracking') {
+    return 'Florida’s staff is staying active — this one is on the board with real contact.';
+  }
   if (staff === 'staff priority') {
     return 'UF staff has this one pinned near the top of the board.';
   }
@@ -86,7 +89,7 @@ function buildLeadInsightLine({ signal, research, metrics, sourceLabel }) {
   return 'Florida’s staff is engaged — this one is on the priority radar.';
 }
 
-function buildContextLine({ signal, research, metrics, intel, visitType, sourceLabel }) {
+function buildContextLine({ signal, research, metrics, intel, visitType, sourceLabel, styleHints = null }) {
   const competition = signal?.competition?.length
     ? signal.competition.slice(0, 2).join(' and ')
     : research?.competition || null;
@@ -111,13 +114,16 @@ function buildContextLine({ signal, research, metrics, intel, visitType, sourceL
   if (research?.staffInvolved?.length) {
     bits.push(`Staff in the loop: ${research.staffInvolved.slice(0, 2).join(', ')}.`);
   }
+  if (!bits.length && styleHints?.preferCampusLanguage && visitType === 'unofficial visit') {
+    bits.push('Campus face time is the story — Gainesville staff logged extended contact.');
+  }
   if (!bits.length && sourceLabel) {
     bits.push(`Fresh ${visitType} intel surfaced via ${sourceLabel}.`);
   }
   return bits.join(' ').trim() || null;
 }
 
-function buildProjectionLine({ signal, research, metrics, intel, visitType }) {
+function buildProjectionLine({ signal, research, metrics, intel, visitType, styleHints = null }) {
   const metricPhrase = formatMetricsPhrase(metrics);
   const timeline =
     signal?.returnVisitPotential || research?.timeline || intel?.visitEnd || null;
@@ -139,18 +145,21 @@ function buildProjectionLine({ signal, research, metrics, intel, visitType }) {
     const pct = p.confidencePct || p.ufRpmPct;
     if (pct) return `${p.analystName || 'Analysts'} see Florida at ${pct}% — watch for movement after the next touch.`;
   }
+  if (styleHints?.preferMomentumClose && visitType === 'unofficial visit') {
+    return 'Repeat campus time is building real momentum behind the scenes.';
+  }
   return 'Next 72 hours: staff visits and camp buzz should move the needle.';
 }
 
 /**
  * Compose insider blocks using elite template (context = lead+context merged for 3-line tweet).
  */
-function composeInsiderBlocks({ signal, research, metrics, intel, sourceLabel, situation }) {
+function composeInsiderBlocks({ signal, research, metrics, intel, sourceLabel, situation, styleHints = null }) {
   intel = intel || {};
   const visitType = formatVisitType(intel, situation);
-  const lead = buildLeadInsightLine({ signal, research, metrics, sourceLabel });
-  const contextExtra = buildContextLine({ signal, research, metrics, intel, visitType, sourceLabel });
-  const projection = buildProjectionLine({ signal, research, metrics, intel, visitType });
+  const lead = buildLeadInsightLine({ signal, research, metrics, sourceLabel, styleHints });
+  const contextExtra = buildContextLine({ signal, research, metrics, intel, visitType, sourceLabel, styleHints });
+  const projection = buildProjectionLine({ signal, research, metrics, intel, visitType, styleHints });
 
   const contextLine = [lead, contextExtra].filter(Boolean).join(' ').trim();
   const insiderLine = projection;
