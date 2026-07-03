@@ -74,12 +74,25 @@ function buildRecruitingContext({ detail, row, player, eventType, snapshot }) {
   }
 }
 
+function ratingOptionalForBeatVisit(ctx) {
+  const et = String(ctx.eventType || '').toLowerCase();
+  if (!/(visit|target_update|offer)/.test(et)) return false;
+  const cy = Number(ctx.classYear);
+  if (!cy || cy < 2027 || cy > 2031) return false;
+  if (!hasSchool(ctx)) return false;
+  if (!String(ctx.pos || ctx.position || '').trim()) return false;
+  const name = String(ctx.playerName || ctx.name || '').trim();
+  return !!name && isValidPlayerName(name);
+}
+
 function listMissingRequiredFields(ctx) {
   const missing = [];
   const name = String(ctx.playerName || ctx.name || '').trim();
   if (!name || !isValidPlayerName(name)) missing.push('fullName');
   if (!String(ctx.pos || ctx.position || '').trim()) missing.push('position');
-  if (!parseStars(ctx.stars) && !(Number(ctx.natlRank) > 0)) missing.push('rating');
+  if (!parseStars(ctx.stars) && !(Number(ctx.natlRank) > 0) && !ratingOptionalForBeatVisit(ctx)) {
+    missing.push('rating');
+  }
   if (!hasSchool(ctx)) missing.push('school');
   if (!ctx.classYear || Number.isNaN(Number(ctx.classYear))) missing.push('classYear');
   if (!String(ctx.eventType || '').trim()) missing.push('eventType');

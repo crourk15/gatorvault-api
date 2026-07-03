@@ -36,8 +36,11 @@ function addCase(payload = {}) {
     existing.updatedAt = nowIso();
     existing.lastSkipReason = payload.skipReason || existing.lastSkipReason;
     existing.hints = { ...(existing.hints || {}), ...(payload.hints || {}) };
+    if (payload.beatPost) existing.beatPost = payload.beatPost;
+    if (payload.candidate) existing.candidate = payload.candidate;
+    if (payload.skipStage) existing.skipStage = payload.skipStage;
     savePile(doc);
-    return { case: existing, created: false, duplicate: true };
+    return { case: existing, created: false, duplicate: true, refreshed: true };
   }
   const row = { id: newCaseId(), fingerprint: fp, status: 'pending', createdAt: nowIso(), updatedAt: nowIso(), attempts: 0, maxAttempts: parseInt(process.env.X_AUTOPOST_DETECTIVES_MAX_ATTEMPTS || '8', 10), skipReason: payload.skipReason || 'filter_reject', skipStage: payload.skipStage || 'enqueue', beatPost: payload.beatPost || null, candidate: payload.candidate || null, hints: payload.hints || {}, investigationLog: [], resolvedCandidate: null, queueItemId: null, resolvedAt: null, resolvedPath: null };
   doc.cases.push(row); savePile(doc);

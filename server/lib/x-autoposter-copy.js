@@ -86,6 +86,19 @@ const NAME_PART = `[A-Z][A-Za-z'.-]+`;
 const NAME_SUFFIX = `(?:\\s+(?:Jr\\.?|Sr\\.?|II|III|IV|V))?`;
 const NAME_CHUNK = `${NAME_PART}(?:\\s+${NAME_PART}){1,2}${NAME_SUFFIX}`;
 const POS_TOKEN = `(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|K|P)`;
+const TRAILING_NAME_NOISE_RE =
+  /\s+(?:can't|cant|won't|wont|doesn't|doesnt|isn't|isnt|aren't|arent|wasn't|wasnt|hasn't|hasnt|haven't|havent|didn't|didnt|ignore|ignores|ignored|could|would|should|will|can)\.?$/i;
+
+function sanitizeExtractedPlayerName(name) {
+  let n = String(name || '').trim();
+  if (!n) return null;
+  for (let i = 0; i < 3; i += 1) {
+    const trimmed = n.replace(TRAILING_NAME_NOISE_RE, '').trim();
+    if (trimmed === n) break;
+    n = trimmed;
+  }
+  return isValidPlayerName(n) ? n : null;
+}
 
 function titleCaseToken(word) {
   return String(word || '')
@@ -129,7 +142,8 @@ function extractAllPlayerNameCandidates(text) {
       const name = m[1]?.trim();
       if (!name || seen.has(name.toLowerCase())) continue;
       seen.add(name.toLowerCase());
-      if (isValidPlayerName(name)) hits.push(name);
+      const clean = sanitizeExtractedPlayerName(name);
+      if (clean) hits.push(clean);
     }
   }
   return hits;
@@ -141,6 +155,7 @@ function extractPlayerFromText(text) {
     new RegExp(`\\b(?:Class of )?(20\\d{2})\\s+(?:\\d+-Star\\s+)?(?:${POS_TOKEN}\\s+)(${NAME_CHUNK})\\b`),
     new RegExp(`\\b(?:Class of 20\\d{2})\\s+(?:\\d+-Star\\s+)?(?:${POS_TOKEN}\\s+)?(${NAME_CHUNK})\\b`),
     new RegExp(`\\b(?:BREAKING:)\\s*(?:Class of 20\\d{2}\\s+)?(?:\\d+-Star\\s+)?(?:${POS_TOKEN}\\s+)?(${NAME_CHUNK})\\b`),
+    new RegExp(`\\b(?:top[- ]?\\d+|top\\s+(?:\\d+|100|150))\\s+prospect\\s+(${NAME_CHUNK})\\b`, 'i'),
     new RegExp(`\\b(?:${POS_TOKEN})\\s+(${NAME_CHUNK})\\b`),
     new RegExp(`\\b(?:pick|prediction|forecast)\\s+for\\s+(${NAME_CHUNK})\\b`, 'i'),
     new RegExp(`\\bfor\\s+(${NAME_CHUNK})\\s+to\\s+Florida\\b`, 'i'),
@@ -148,13 +163,13 @@ function extractPlayerFromText(text) {
     new RegExp(`\\b(${NAME_CHUNK})\\s+(?:will|to)\\s+(?:now\\s+)?(?:visit|take|officially)\\b`),
     new RegExp(`["'](${NAME_CHUNK})["']`),
     new RegExp(`\\b(${NAME_CHUNK})\\s*,\\s*(?:a|the)?\\s*(?:20\\d{2}|${POS_TOKEN})\\b`),
-    new RegExp(`\\b(?:target|prospect|recruit|commit|flip|visit(?:er)?)\\s+(${NAME_CHUNK})\\b`, 'i')
+    new RegExp(`\\b(?:target|prospect|recruit|commit|flip|visit(?:er)?)\\s+(${NAME_CHUNK})(?=\\s+(?:can't|cannot|can\\s+not|won't|will|is|has|was|ignor|who|that|and)\\b|\\s*[.,!?]|\\s*$)`, 'i')
   ];
   for (const t of variants) {
     for (const re of patterns) {
       const m = t.match(re);
-      const name = (m?.[2] || m?.[1])?.trim();
-      if (name && isValidPlayerName(name)) return name;
+      const name = sanitizeExtractedPlayerName((m?.[2] || m?.[1])?.trim());
+      if (name) return name;
     }
     const candidates = extractAllPlayerNameCandidates(t);
     if (candidates.length) return candidates[0];
@@ -825,6 +840,7 @@ module.exports = {
   playerProfileUrl,
   isValidPlayerName,
   extractPlayerFromText,
+  sanitizeExtractedPlayerName,
   extractAllPlayerNameCandidates,
   normalizeTextForNameExtract,
   hasPlayerSpecificIntel,

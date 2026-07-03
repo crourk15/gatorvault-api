@@ -15,7 +15,8 @@ const INVALID_NAME_PARTS = new Set([
   'had', 'for', 'and', 'to', 'on', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
   'saturday', 'sunday', 'today', 'tomorrow', 'analyst', 'analysts', 'logged', 'logs',
   'way', 'https', 'http', 'intel', 'blog', 'loaded', 'visitor', 'promo', 'check', 'out',
-  'schools', "i'm", 'im', "we're", "they're", "you're", "he's", "she's", 'who', 'what', 'when', 'where'
+  'schools', "i'm", 'im', "we're", "they're", "you're", "he's", "she's", 'who', 'what', 'when', 'where',
+  'cant', "can't", 'wont', "won't", 'ignore', 'ignores', 'ignored', 'cannot'
 ]);
 
 function isUsableBeatLine(line) {

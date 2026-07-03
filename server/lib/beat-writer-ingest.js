@@ -575,7 +575,10 @@ async function buildAutoposterPayload(row, intelItem) {
     analystName: row.source,
     sourceHandle: row.sourceHandle,
     detail: row.detail,
-    articleUrl: row.articleUrl
+    articleUrl: row.articleUrl,
+    timestamp: row.timestamp || intelItem?.timestamp || intelItem?.createdAt || null,
+    sourcePublishedAt: row.timestamp || intelItem?.timestamp || null,
+    publishedAt: row.timestamp || intelItem?.timestamp || null
   });
   if (!built?.text) {
     if (built?.skipReason === 'non_player_intel' || built?._nonPlayerSkip) {
@@ -1420,7 +1423,7 @@ async function runBeatWriterIngest({ force = false, manualRows = [], posts = nul
         if (out.reason && out.reason !== 'duplicate' && out.reason !== 'snapshot') {
           logBeatPostSkip(
             { handle: row.sourceHandle, text: row.detail, url: row.articleUrl, publishedAt: row.timestamp },
-            out.reason,
+            out.needs_resolution ? 'needs_resolution' : out.reason,
             out.category || 'ingest'
           );
         }

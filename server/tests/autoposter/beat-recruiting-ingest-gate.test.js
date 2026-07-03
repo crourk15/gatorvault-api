@@ -119,6 +119,26 @@ describe('beat-recruiting-ingest-gate', () => {
     assert.equal(copy.extractPlayerFromText('2028 RB Lorenzo McMullen Jr. will visit Florida.'), 'Lorenzo McMullen Jr');
     assert.equal(copy.extractPlayerFromText('2028 WR Davin Davidson is set for an OV to Gainesville.'), 'Davin Davidson');
     assert.equal(copy.extractPlayerFromText('RB Hudson West has Florida in his top five.'), 'Hudson West');
+    assert.equal(
+      copy.extractPlayerFromText(
+        "Here is why Top-100 prospect CJ Craig-James can't ignore Florida's recruiting push"
+      ),
+      'CJ Craig-James'
+    );
+  });
+
+  it('allows beat visit intel without stars when name, class, pos, and school are present', () => {
+    const auto = require('../../lib/recruiting-auto-resolution');
+    const missing = auto.listMissingRequiredFields({
+      playerName: 'Tory Clark',
+      pos: 'DL',
+      classYear: 2028,
+      school: 'Woodward Academy',
+      eventType: 'unofficial_visit',
+      context: 'Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights.'
+    });
+    assert.equal(missing.includes('rating'), false);
+    assert.equal(missing.length, 0);
   });
 
   it('parseBeatPostForVisitIntel drops generic beat fluff', () => {
