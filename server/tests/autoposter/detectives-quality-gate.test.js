@@ -148,3 +148,40 @@ test('detectives posts are not treated as program news bypass', async () => {
   };
   assert.equal(fill.isProgramOrTeamNews(detectivesPost), false);
 });
+
+const LIVE_GENERIC_VISIT_POST = [
+  '2027 June. Here',
+  'Campus visit window confirmed — Florida had real face time with the prospect in Gainesville.',
+  'Repeat campus time is building real momentum behind the scenes.',
+  'http://gatorvaultinsider.com/vault/recruiting'
+].join('\n');
+
+test('isValidPlayerName rejects month-name false positives like June Here', () => {
+  assert.equal(copy.isValidPlayerName('June Here'), false);
+  assert.equal(copy.isValidPlayerName('June. Here'), false);
+});
+
+test('isBrokenCopy rejects generic visit_intel guarantee copy without real player', () => {
+  assert.equal(
+    copy.isBrokenCopy(LIVE_GENERIC_VISIT_POST, {
+      source: 'auto:detectives',
+      topic: 'recruiting',
+      playerName: 'June Here',
+      validationMeta: { detectivesResolved: true, detectivesPath: 'guarantee_player_visit_intel', eliteCompose: true },
+      templateBlocks: {
+        identity: '2027 June. Here',
+        context: 'Campus visit window confirmed — Florida had real face time with the prospect in Gainesville.',
+        insider: 'Repeat campus time is building real momentum behind the scenes.'
+      }
+    }),
+    true
+  );
+});
+
+test('postReferencesPlayerName requires player surname in post body', () => {
+  assert.equal(copy.postReferencesPlayerName(LIVE_GENERIC_VISIT_POST, 'Tory Clark'), false);
+  assert.equal(
+    copy.postReferencesPlayerName('2028 DL Tory Clark\nUF coaches used camp time.\nhttps://gatorvaultinsider.com/vault/recruiting/player/tory-clark', 'Tory Clark'),
+    true
+  );
+});

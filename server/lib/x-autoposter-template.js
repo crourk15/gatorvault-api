@@ -97,6 +97,10 @@ function shortenUrlForDisplay(url) {
     const host = u.hostname.replace(/^www\./i, '');
     if (host === 'x.com' || host === 'twitter.com') return 'x.com';
     if (host === 't.co') return norm;
+    const playerPath = u.pathname.match(/(\/(?:vault\/)?(?:recruiting|futurecast)\/player\/[^/?#]+)/i);
+    if (playerPath) {
+      return `${host}${playerPath[1]}`;
+    }
     let path = u.pathname.replace(/\/$/, '');
     if (path.length > 24) {
       path = path.slice(0, 24).replace(/\/[^/]*$/, '') || path.slice(0, 24);
@@ -627,13 +631,19 @@ function enforceTweetLimit(text, max = 280, meta = {}) {
     .filter(Boolean);
   if (lines.length <= 1) return finalizeAutoposterCopy(shorten(t, max, { ...meta, text: t }), meta);
 
-  const heatIdx = lines.findIndex((l) => /^Heat Meter:/i.test(l));
-  const confidenceIdx = lines.findIndex((l) => /^Confidence Meter:/i.test(l));
-  const meterStart = [heatIdx, confidenceIdx].filter((i) => i >= 0).sort((a, b) => a - b)[0] ?? lines.length;
+  const urlLines = lines.filter((l) => isUrlLine(l));
+  const contentLines = lines.filter((l) => !isUrlLine(l));
+  const urlBlock = urlLines.join('\n');
+  const urlBudget = urlBlock ? urlBlock.length + 1 : 0;
+  const bodyMax = Math.max(120, max - urlBudget);
 
-  const identity = stripEmojisHashtags(lines[0]);
-  const meterLines = lines.slice(meterStart);
-  const middle = lines.slice(1, meterStart).map((l) => stripEmojisHashtags(l));
+  const heatIdx = contentLines.findIndex((l) => /^Heat Meter:/i.test(l));
+  const confidenceIdx = contentLines.findIndex((l) => /^Confidence Meter:/i.test(l));
+  const meterStart = [heatIdx, confidenceIdx].filter((i) => i >= 0).sort((a, b) => a - b)[0] ?? contentLines.length;
+
+  const identity = stripEmojisHashtags(contentLines[0]);
+  const meterLines = contentLines.slice(meterStart);
+  const middle = contentLines.slice(1, meterStart).map((l) => stripEmojisHashtags(l));
   let context = middle[0] || '';
   let insider = middle.slice(1).join(' ') || '';
 
@@ -650,8 +660,11 @@ function enforceTweetLimit(text, max = 280, meta = {}) {
     }
   }
 
-  const compose = () =>
-    composeInsiderReport({ identity, context, insider, heat, confidence });
+  const compose = () => {
+    const body = composeInsiderReport({ identity, context, insider, heat, confidence });
+    if (!body) return urlBlock || '';
+    return urlBlock ? `${body}\n${urlBlock}` : body;
+  };
 
   const len = () => stripEmojisHashtags(compose()).length;
 
@@ -659,7 +672,7 @@ function enforceTweetLimit(text, max = 280, meta = {}) {
     return preserveMeterEmojis(original, finalizeAutoposterCopy(compose(), { ...meta, fromTweetLimit: true }));
   }
 
-  // Trim meter explanations first — preserve identity + situation + insider voice.
+  // Trim meter explanations first — preserve identity + situation + insider voice + player URL.
   if (heat?.explanation && len() > max) {
     heat.explanation = hardTrimLine(heat.explanation, Math.max(48, heat.explanation.length - (len() - max) - 4));
   }
@@ -670,10 +683,10 @@ function enforceTweetLimit(text, max = 280, meta = {}) {
     );
   }
   if (len() > max && insider) {
-    insider = hardTrimLine(insider, Math.max(56, insider.length - (len() - max) - 4));
+    insider = hardTrimLine(insider, Math.max(56, insider.length - (len() - bodyMax) - 4));
   }
   if (len() > max && context) {
-    context = hardTrimLine(context, Math.max(56, context.length - (len() - max) - 4));
+    context = hardTrimLine(context, Math.max(56, context.length - (len() - bodyMax) - 4));
   }
   if (len() > max && confidence) {
     confidence.explanation = '';

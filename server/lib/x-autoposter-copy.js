@@ -70,6 +70,9 @@ const BROKEN_COPY_PATTERNS = [
   /beat trail and player profile on recruiting hub/i,
   /^florida recruiting intel$/im,
   /board analysis and futurecast breakdown rebuilt from beat signal/i,
+  /face time with the prospect in gainesville/i,
+  /campus visit window confirmed — florida had real face time with (?:the prospect|this target)/i,
+  /^\d{4}\s+(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+\w/i,
   /🐊/
 ];
 
@@ -805,6 +808,21 @@ async function buildArticleCopyAsync(article) {
   return newsPayloadFromBuilt(built);
 }
 
+function postReferencesPlayerName(text, playerName) {
+  const name = String(playerName || '').trim();
+  if (!name || !isValidPlayerName(name)) return false;
+  const parts = name.split(/\s+/).filter(Boolean);
+  const last = parts[parts.length - 1]?.replace(/\./g, '');
+  if (!last || last.length < 2) return false;
+  return new RegExp(`\\b${last.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(String(text || ''));
+}
+
+function isGenericRecruitingHubUrl(text) {
+  const t = String(text || '');
+  if (!/gatorvaultinsider\.com\/vault\/recruiting/i.test(t)) return false;
+  return !/\/player\/|futurecast\/player\//i.test(t);
+}
+
 function isBrokenCopy(text, meta = {}) {
   const t = String(text || '');
   if (!t.trim()) return true;
@@ -831,6 +849,15 @@ function isBrokenCopy(text, meta = {}) {
     validation.hasExcessiveSourceOverlap(t, beatText)
   ) {
     return true;
+  }
+  const isRecruitingPlayerPost =
+    meta.topic === 'recruiting' ||
+    meta.validationMeta?.detectivesResolved ||
+    String(meta.source || '').includes('detectives') ||
+    String(meta.source || '').includes('beat-intel');
+  if (isRecruitingPlayerPost && meta.playerName) {
+    if (!postReferencesPlayerName(t, meta.playerName)) return true;
+    if (isGenericRecruitingHubUrl(t)) return true;
   }
   return false;
 }
@@ -865,6 +892,8 @@ module.exports = {
   buildPortalHeadlinerCopyAsync,
   buildArticleCopyAsync,
   isBrokenCopy,
+  postReferencesPlayerName,
+  isGenericRecruitingHubUrl,
   detectBeatNewsEvent,
   stripUrlsForBeatParse
 };

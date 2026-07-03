@@ -46,6 +46,14 @@ function isValidPlayerName(name) {
   const core = coreNameParts(trimmed);
   if (core.length < 2) return false;
   if (core.some((p) => INVALID_NAME_PARTS.has(p.toLowerCase()))) return false;
+  const MONTH_FIRST_NAMES = new Set([
+    'january', 'jan', 'february', 'feb', 'march', 'mar', 'april', 'apr', 'may', 'june', 'jun',
+    'july', 'jul', 'august', 'aug', 'september', 'sep', 'sept', 'october', 'oct', 'november', 'nov',
+    'december', 'dec'
+  ]);
+  const SPATIAL_FALSE_SURNAMES = new Set(['here', 'there', 'today', 'tonight', 'tomorrow', 'now']);
+  if (MONTH_FIRST_NAMES.has(core[0].toLowerCase())) return false;
+  if (SPATIAL_FALSE_SURNAMES.has(core[core.length - 1].toLowerCase())) return false;
   if (parts.some((p) => /https?|www|\.com/i.test(p))) return false;
   for (const p of parts) {
     if (NAME_SUFFIXES.has(p.toLowerCase())) continue;
