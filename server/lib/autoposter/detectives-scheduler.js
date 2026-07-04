@@ -54,7 +54,17 @@ function startDetectivesScheduler() {
   const bootDelay = parseInt(process.env.X_AUTOPOST_DETECTIVES_BOOT_DELAY_MS || '20000', 10);
   const limit = parseInt(process.env.X_AUTOPOST_DETECTIVES_TICK_LIMIT || '1', 10);
   setTimeout(() => {
-    runDetectivesBackgroundTick(limit).catch(() => {});
+    (async () => {
+      try {
+        const backfill = require('./detectives-backfill');
+        if (backfill.pileNeedsBackfill()) {
+          await backfill.backfillFromBeatCache({ limit: 80 });
+        }
+      } catch {
+        /* optional */
+      }
+      await runDetectivesBackgroundTick(limit);
+    })().catch(() => {});
     setInterval(() => runDetectivesBackgroundTick(limit).catch(() => {}), intervalMs);
   }, bootDelay);
 }

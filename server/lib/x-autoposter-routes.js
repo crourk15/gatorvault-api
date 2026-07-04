@@ -168,11 +168,32 @@ function mountXAutoposterRoutes(app) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
     try {
-      const detectives = require('./autoposter/detectives');
       const dashboard = require('./autoposter/detectives-dashboard');
       const status = req.query.status ? String(req.query.status) : null;
       const limit = Math.min(100, parseInt(req.query.limit || '50', 10) || 50);
       return res.json({ ok: true, ...dashboard.getDetectivesDashboard({ status, limit }) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/x/autoposter/detectives/backfill', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const backfill = require('./autoposter/detectives-backfill');
+      const dashboard = require('./autoposter/detectives-dashboard');
+      const limit = Math.min(120, parseInt(req.body?.limit || req.query?.limit || '80', 10) || 80);
+      const stats = await backfill.backfillFromBeatCache({ limit });
+      return res.json({
+        ok: true,
+        message: (stats.beatPostCount || 0) === 0
+          ? `Beat cache empty${stats.beatCacheRefreshed ? ' (refreshed)' : ''} — ${stats.scanned || 0} scanned, ${stats.created || 0} new case(s).`
+          : `Scanned ${stats.scanned || 0} beats — ${stats.created || 0} new case(s), ${stats.refreshed || 0} refreshed.`,
+        dashboard: dashboard.getDetectivesDashboard({ limit: 50 }),
+        ...stats,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

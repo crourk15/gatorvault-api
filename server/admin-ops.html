@@ -153,6 +153,7 @@
         <p class="sub" style="margin:0 0 .5rem">Beat intel that failed first-pass filters — identity research, platform provisioning, re-queue attempts.</p>
         <div style="display:flex;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap;align-items:center">
           <button id="load-detectives" class="secondary sm">Load pile</button>
+          <button id="backfill-detectives" class="secondary sm">Scan beat cache</button>
           <button id="process-detectives" class="sm">Process next case</button>
           <select id="detectives-status" style="background:var(--panel);border:1px solid #334155;color:var(--text);padding:.35rem .5rem;border-radius:.5rem">
             <option value="">All statuses</option>
@@ -533,9 +534,12 @@
         .then(function(j){
           if(!j||!j.ok){panel.textContent=(j&&j.error)||'Failed';return;}
           var c=j.counts||{};
-          countsEl.textContent='pending '+esc(c.pending||0)+' · investigating '+esc(c.investigating||0)+' · resolved '+esc(c.resolved||0)+' · failed '+esc(c.failed||0)+(j.enabled===false?' · DISABLED':'')+(j.activeInvestigation?' · ACTIVE: '+esc(j.activeInvestigation.playerName||j.activeInvestigation.caseId):'');
+          countsEl.textContent='pending '+esc(c.pending||0)+' · investigating '+esc(c.investigating||0)+' · resolved '+esc(c.resolved||0)+' · failed '+esc(c.failed||0)+(c.failed_final?' · failed_final '+esc(c.failed_final):'')+(j.enabled===false?' · DISABLED':'')+(j.activeInvestigation?' · ACTIVE: '+esc(j.activeInvestigation.playerName||j.activeInvestigation.caseId):'');
           var cases=j.cases||[];
-          if(!cases.length){panel.textContent='No detectives cases yet.';return;}
+          if(!cases.length){
+            panel.textContent=(j.pileHint||'No detectives cases yet.')+' Click Scan beat cache to rebuild from recent filter skips.';
+            return;
+          }
           panel.innerHTML=cases.map(function(row){
             var log=(row.log||[]).map(function(l){
               return esc(l.phase||'?')+(l.reason?(' · '+esc(l.reason)):'')+(l.path?(' · '+esc(l.path)):'');
@@ -561,6 +565,27 @@
           }).join('');
         })
         .catch(function(e){panel.textContent=e.message;});
+    }
+
+    function backfillDetectives(){
+      var p=pin();
+      if(!p){alert('PIN required');return;}
+      var btn=document.getElementById('backfill-detectives');
+      var label=btn?btn.textContent:'Scan beat cache';
+      if(btn){btn.disabled=true;btn.textContent='Scanning…';}
+      fetchJson(API+'/api/x/autoposter/detectives/backfill?pin='+encodeURIComponent(p),{
+        method:'POST',
+        headers:headers(),
+        body:JSON.stringify({pin:p,limit:80})
+      })
+        .then(function(j){
+          if(!j.ok)throw new Error(j.error||'Backfill failed');
+          var msg=j.message||('Scanned '+(j.scanned||0)+' beats');
+          document.getElementById('detectives-counts').textContent=msg;
+          loadDetectives();
+        })
+        .catch(function(e){alert('Detectives backfill error: '+e.message);})
+        .finally(function(){if(btn){btn.disabled=false;btn.textContent=label;}});
     }
 
     function processDetectives(){
@@ -712,6 +737,7 @@
     document.getElementById('load-elite-logs').addEventListener('click',loadEliteLogs);
     document.getElementById('load-cluster-logs').addEventListener('click',loadClusterLogs);
     document.getElementById('load-detectives').addEventListener('click',loadDetectives);
+    document.getElementById('backfill-detectives').addEventListener('click',backfillDetectives);
     document.getElementById('process-detectives').addEventListener('click',processDetectives);
     document.getElementById('detectives-status').addEventListener('change',loadDetectives);
 

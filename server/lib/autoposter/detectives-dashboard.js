@@ -90,10 +90,16 @@ function getDetectivesDashboard({ status = null, limit = 50 } = {}) {
     priority: usePriority,
   });
   const investigating = store.listCases({ status: 'investigating', limit: 10 });
+  const totalCases = (doc.cases || []).length;
   return {
     enabled: detectivesEnabled(),
     updatedAt: doc.updatedAt,
     counts,
+    totalCases,
+    pileHint:
+      totalCases === 0
+        ? 'Pile is empty — Render disk resets on deploy. Use Scan beat cache to rebuild from recent filter skips.'
+        : null,
     activeInvestigation: investigating.length
       ? { caseId: investigating[0].id, playerName: formatCaseForDashboard(investigating[0]).playerName, lastPhase: formatCaseForDashboard(investigating[0]).lastPhase, nextPhase: formatCaseForDashboard(investigating[0]).nextPhase }
       : null,
