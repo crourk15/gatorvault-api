@@ -45,15 +45,28 @@ test('PR-789 angle shadow runs on non-golden beats', () => {
   assert.notEqual(out.metadata?.pr789Live, true);
 });
 
-test('PR-789 angle live stays off until enabled', () => {
+test('PR-789 angle live on golden when PR7/8/9 enabled', () => {
   process.env.X_AUTOPOST_PR6_ENABLED = 'true';
   process.env.X_AUTOPOST_PR7_8_9_ENABLED = 'true';
   process.env.X_AUTOPOST_PR789_ANGLE_ENABLED = 'false';
+  process.env.X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE = 'true';
   const signal = toSignal(GOLDEN_BEATS.find((b) => b.id === 'ham'));
   signal.playerSlug = 'ham';
+  signal.metrics.compSchools = ['FSU'];
+  const out = voiceEngine.autoposterCompose(signal);
+  assert.equal(out.ok, true);
+  assert.equal(out.metadata?.pr789AngleLive, true);
+  assert.equal(out.metadata?.pr789Live, true);
+  assert.equal(out.text, out.metadata?.pr789AngleText);
+});
+
+test('PR-789 angle live stays off non-golden beats', () => {
+  process.env.X_AUTOPOST_PR6_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR7_8_9_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE = 'true';
+  const signal = toSignal(GOLDEN_BEATS.find((b) => b.id === 'zylen'));
+  signal.playerSlug = 'zylen';
   const out = voiceEngine.autoposterCompose(signal);
   assert.equal(out.ok, true);
   assert.equal(out.metadata?.pr789AngleLive, undefined);
-  assert.equal(out.metadata?.pr789Live, true);
-  assert.notEqual(out.text, out.metadata?.pr789AngleShadow?.rewrittenTweet);
 });

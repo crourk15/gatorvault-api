@@ -20,6 +20,14 @@ function nextPhaseHint(status, lastPhase) {
   return 'investigating';
 }
 
+function rewriteMetaFromCase(caseItem) {
+  const resolved = caseItem?.resolvedCandidate?.rewriteMeta || {};
+  const hintsMeta = caseItem?.hints?.metrics?.rankingTokens
+    ? { rankingTokens: caseItem.hints.metrics.rankingTokens }
+    : {};
+  return { ...hintsMeta, ...resolved };
+}
+
 function formatCaseForDashboard(caseItem) {
   const beat = caseItem?.beatPost || {};
   const cand = caseItem?.candidate || {};
@@ -75,6 +83,7 @@ function formatCaseForDashboard(caseItem) {
     queueItemId: caseItem.queueItemId || null,
     resolvedAt: caseItem.resolvedAt || null,
     resolvedPreview: caseItem.resolvedCandidate?.text || null,
+    rewriteMeta: rewriteMetaFromCase(caseItem),
     log: log.slice(-8),
   };
 }

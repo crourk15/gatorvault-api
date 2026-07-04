@@ -62,9 +62,13 @@ function shouldUsePr789Live(signal = {}, pr789 = {}) {
 }
 
 function shouldUsePr789AngleLive(signal = {}, anglePack = {}) {
+  if (!isPr6GoldenBeat(signal)) return false;
+  const goldenAngleLive =
+    process.env.X_AUTOPOST_PR789_ANGLE_ENABLED === 'true' ||
+    (process.env.X_AUTOPOST_PR7_8_9_ENABLED === 'true' &&
+      process.env.X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE !== 'false');
   return (
-    process.env.X_AUTOPOST_PR789_ANGLE_ENABLED === 'true' &&
-    isPr6GoldenBeat(signal) &&
+    goldenAngleLive &&
     anglePack?.ok === true &&
     typeof anglePack.rewrittenTweet === 'string' &&
     anglePack.rewrittenTweet.length > 0

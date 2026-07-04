@@ -12,10 +12,22 @@ const { pickPr789Rewrite, buildPr789Context } = require('./enhance-templates');
 const { buildCompetitionLine } = require('./competition-engine');
 const { buildTrajectoryLine } = require('./trajectory-engine');
 const { buildBrandVoiceLine } = require('./brandvoice-engine');
+const {
+  appendRankingTokensToIdentity,
+  extractOn3RankingTokens
+} = require('../on3-ranking-tokens');
 
 function buildIdentityWithRanking(identityLine, signal) {
+  if (!identityLine) return identityLine;
+
+  const rankingTokens =
+    signal?.player?.rankingTokens || extractOn3RankingTokens(signal?.player || {});
+  if (rankingTokens) {
+    return appendRankingTokensToIdentity(identityLine, rankingTokens, signal?.player?.pos);
+  }
+
   const ranking = signal?.player?.ranking;
-  if (!identityLine || !ranking) return identityLine;
+  if (!ranking) return identityLine;
   if (/On3 #/i.test(identityLine)) return identityLine;
   return `${identityLine} · On3 #${ranking}`;
 }

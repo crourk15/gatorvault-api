@@ -4,6 +4,7 @@
 const signalAdapter = require('./voice-signal-adapter');
 const platform = require('./detectives-platform');
 const store = require('./detectives-store');
+const { loadRankingTokensForSlug } = require('./on3-ranking-tokens');
 
 function nowIso() {
   return new Date().toISOString();
@@ -120,6 +121,19 @@ async function enrichCaseMetrics({ caseItem, hints, identity, platformContext })
     } else {
       repairActions.push(buildRepairAction('pull_fc_comp', false, 'missing'));
     }
+  }
+
+  const rankingSource = {
+    ...(player || {}),
+    ...(identity || {}),
+    ...(research?.player || {})
+  };
+  const rankingTokens = await loadRankingTokensForSlug(slug, rankingSource);
+  if (rankingTokens) {
+    metrics.rankingTokens = rankingTokens;
+    repairActions.push(buildRepairAction('pull_on3_rankings', true, JSON.stringify(rankingTokens)));
+  } else {
+    repairActions.push(buildRepairAction('pull_on3_rankings', false, 'incomplete_on3_metadata'));
   }
 
   const gapsBefore = metricsGaps(metricsBefore);

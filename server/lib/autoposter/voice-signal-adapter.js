@@ -2,6 +2,7 @@
  * beatPost / intelRow / elite research → Voice Signal (v1.1.1)
  */
 const copy = require('../x-autoposter-copy');
+const { extractOn3RankingTokens } = require('./on3-ranking-tokens');
 
 const MONTH_NAMES = [
   'january', 'february', 'march', 'april', 'may', 'june',
@@ -134,6 +135,19 @@ function extractPosFromBeat(beatText, playerName = '') {
   return null;
 }
 
+function attachPlayerRanking(player, raw = {}) {
+  if (!player) return player;
+  const rankingTokens = extractOn3RankingTokens(raw) || extractOn3RankingTokens(player);
+  if (rankingTokens) {
+    player.rankingTokens = rankingTokens;
+    player.ranking = rankingTokens.on3NationalRank;
+    player.stars = player.stars || rankingTokens.on3Stars;
+  } else if (player.ranking == null && raw.natlRank != null) {
+    player.ranking = raw.natlRank;
+  }
+  return player;
+}
+
 function resolvePlayerPos({ beatText, playerName, pos }) {
   const fromBeat = extractPosFromBeat(beatText, playerName);
   const current = normalizePosToken(pos);
@@ -153,13 +167,20 @@ function signalFromBeatPost(beatPost, research = null, playerData = null) {
     id: beatPost?.id || beatPost?.url || `beat_${Date.now()}`,
     type: research ? resolveSignalType({ intel: {} }, research) : 'recruiting',
     player: playerData?.data
-      ? {
-          name: playerData.data.name,
-          pos: playerData.data.pos,
-          classYear: playerData.data.classYear,
-          school: playerData.data.school || playerData.data.highSchool || null,
-          ranking: playerData.data.natlRank || null
-        }
+      ? attachPlayerRanking(
+          {
+            name: playerData.data.name,
+            pos: playerData.data.pos,
+            classYear: playerData.data.classYear,
+            school: playerData.data.school || playerData.data.highSchool || null,
+            stars: playerData.data.stars || null,
+            natlRank: playerData.data.natlRank || null,
+            posRank: playerData.data.posRank || null,
+            stateRank: playerData.data.stateRank || null,
+            ranking: playerData.data.natlRank || null
+          },
+          playerData.data
+        )
       : beatPost?.playerName
         ? {
             name: beatPost.playerName,
@@ -209,13 +230,20 @@ function signalFromIntelRow(intel, research = null) {
     id: intel?.id || intel?.fingerprint || `intel_${Date.now()}`,
     type,
     player: intel?.playerName
-      ? {
-          name: intel.playerName,
-          pos: intel?.pos || null,
-          classYear: intel?.classYear || null,
-          school: intel?.school || intel?.highSchool || null,
-          ranking: intel?.natlRank || null
-        }
+      ? attachPlayerRanking(
+          {
+            name: intel.playerName,
+            pos: intel?.pos || null,
+            classYear: intel?.classYear || null,
+            school: intel?.school || intel?.highSchool || null,
+            stars: intel?.stars || null,
+            natlRank: intel?.natlRank || null,
+            posRank: intel?.posRank || null,
+            stateRank: intel?.stateRank || null,
+            ranking: intel?.natlRank || null
+          },
+          intel
+        )
       : null,
     event: {
       kind: intel?.eventType || 'target_update',
@@ -297,5 +325,6 @@ module.exports = {
   extractVisitDateFromBeat,
   extractPosFromBeat,
   resolvePlayerPos,
-  normalizePosToken
+  normalizePosToken,
+  attachPlayerRanking
 };

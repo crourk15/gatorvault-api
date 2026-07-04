@@ -35,6 +35,11 @@ function pr6DetectiveMeta(metadata = {}) {
     out.pr789Text = metadata.pr789Text || metadata.pr789Shadow?.rewrittenTweet || null;
   }
   if (metadata.pr789AngleShadow) out.pr789AngleShadow = metadata.pr789AngleShadow;
+  if (metadata.pr789AngleLive) {
+    out.pr789AngleLive = true;
+    out.pr789AngleText =
+      metadata.pr789AngleText || metadata.pr789AngleShadow?.rewrittenTweet || null;
+  }
   return out;
 }
 
@@ -85,9 +90,11 @@ async function buildVoicePromoteCandidate({ caseItem, hints, identity, platformC
     metrics: built.validationMeta?.voiceMetrics || metrics,
     pr6Live: built.metadata?.pr6Live === true,
     pr789Live: built.metadata?.pr789Live === true,
+    pr789AngleLive: built.metadata?.pr789AngleLive === true,
     pr6GoldenBeat: built.metadata?.pr6GoldenBeat || null,
     pr789GoldenBeat: built.metadata?.pr789GoldenBeat || null,
-    pr789Shadow: !!built.metadata?.pr789Shadow
+    pr789Shadow: !!built.metadata?.pr789Shadow,
+    pr789AngleShadow: !!built.metadata?.pr789AngleShadow
   });
 
   return {
@@ -114,8 +121,27 @@ async function buildVoicePromoteCandidate({ caseItem, hints, identity, platformC
   };
 }
 
+function buildResolvedCandidateSnapshot(candidate) {
+  const meta = candidate?.validationMeta || {};
+  return {
+    text: candidate?.text?.slice(0, 280) || null,
+    playerSlug: candidate?.playerSlug || null,
+    rewriteMeta: {
+      pr789Live: meta.pr789Live === true,
+      pr789AngleLive: meta.pr789AngleLive === true,
+      pr789Shadow: !!meta.pr789Shadow,
+      pr789AngleShadow: !!meta.pr789AngleShadow,
+      pr6Text: meta.pr6Text || meta.pr6Shadow?.rewrittenTweet || null,
+      pr789Text: meta.pr789Text || meta.pr789Shadow?.rewrittenTweet || null,
+      pr789AngleText: meta.pr789AngleText || meta.pr789AngleShadow?.rewrittenTweet || null,
+      rankingTokens: meta.voiceMetrics?.rankingTokens || meta.rankingTokens || null
+    }
+  };
+}
+
 module.exports = {
   hasPromotableMetrics,
   buildVoicePromoteCandidate,
-  logPromoteAttempt
+  logPromoteAttempt,
+  buildResolvedCandidateSnapshot
 };

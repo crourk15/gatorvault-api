@@ -10,6 +10,7 @@ const voiceQa = require('./voice-qa');
 const { blocksHaveTruncation } = require('./strategy/strategy-guard');
 const { isCompleteSentence } = require('./strategy/strategy-sentences');
 const pr6Rewrite = require('./rewrite');
+const { appendRankingTokensToIdentity } = require('./on3-ranking-tokens');
 
 const CHAR_LIMIT = parseInt(process.env.VOICE_CHAR_LIMIT || '280', 10);
 const MAX_ATTEMPTS = parseInt(process.env.VOICE_COMPOSE_MAX_ATTEMPTS || '2', 10);
@@ -59,7 +60,11 @@ function buildIdentityLine(player, { compact = false } = {}) {
   let line = parts.join(' ');
   if (!compact) {
     if (player.school) line += ` (${player.school})`;
-    if (player.ranking) line += ` · On3 #${player.ranking}`;
+    if (player.rankingTokens) {
+      line = appendRankingTokensToIdentity(line, player.rankingTokens, player.pos);
+    } else if (player.ranking) {
+      line += ` · On3 #${player.ranking}`;
+    }
   }
   return line.trim();
 }
@@ -305,6 +310,10 @@ function attachPr6Shadow(signal, blocks, text, metadata = {}) {
       next.pr6Text = pr6OnlyTweet;
       next.pr789Text = pr6.pr789.rewrittenTweet;
     }
+    if (pr6.pr789AngleLive && pr6.pr789Angle?.ok) {
+      next.pr789AngleLive = true;
+      next.pr789AngleText = pr6.pr789Angle.rewrittenTweet;
+    }
   }
 
   return next;
@@ -315,9 +324,11 @@ function applyPr6LiveText(signal, text, metadata = {}) {
     return { text, metadata };
   }
   const publishText =
-    metadata.pr789Live && metadata.pr789Text
-      ? metadata.pr789Text
-      : metadata.pr6Shadow.rewrittenTweet;
+    metadata.pr789AngleLive && metadata.pr789AngleText
+      ? metadata.pr789AngleText
+      : metadata.pr789Live && metadata.pr789Text
+        ? metadata.pr789Text
+        : metadata.pr6Shadow.rewrittenTweet;
   return {
     text: publishText,
     metadata: {
@@ -330,7 +341,13 @@ function applyPr6LiveText(signal, text, metadata = {}) {
             pr789Live: true,
             pr789GoldenBeat: metadata.pr789GoldenBeat || metadata.pr6GoldenBeat,
             pr6Text: metadata.pr6Text || metadata.pr6Shadow?.rewrittenTweet,
-            pr789Text: publishText
+            pr789Text: metadata.pr789Text || metadata.pr789Shadow?.rewrittenTweet
+          }
+        : {}),
+      ...(metadata.pr789AngleLive
+        ? {
+            pr789AngleLive: true,
+            pr789AngleText: publishText
           }
         : {})
     }
@@ -500,6 +517,11 @@ function applyDetectiveOverride(signal, override = {}) {
   if (Array.isArray(override.compSchools) && override.compSchools.length) {
     signal.metrics.compSchools = override.compSchools;
   }
+  if (override.rankingTokens && signal.player) {
+    signal.player.rankingTokens = override.rankingTokens;
+    signal.player.ranking = override.rankingTokens.on3NationalRank;
+    signal.player.stars = signal.player.stars || override.rankingTokens.on3Stars;
+  }
   return signal;
 }
 
@@ -516,7 +538,11 @@ async function composeFromDetectiveCase({ hints, identity, platformContext, rese
       playerSlug: identity?.playerSlug || hints?.playerSlug,
       pos: identity?.pos || hints?.pos,
       classYear: identity?.classYear || hints?.classYear,
-      natlRank: identity?.natlRank || null
+      stars: identity?.stars || null,
+      natlRank: identity?.natlRank || null,
+      posRank: identity?.posRank || null,
+      stateRank: identity?.stateRank || null,
+      rankingTokens: override.rankingTokens || identity?.rankingTokens || null
     }
   };
 
@@ -578,7 +604,10 @@ async function composeFromDetectiveCase({ hints, identity, platformContext, rese
       voiceEngine: true,
       detectiveOverride: true,
       detectivesPromoted: true,
-      voiceMetrics: signal.metrics
+      voiceMetrics: {
+        ...signal.metrics,
+        rankingTokens: override.rankingTokens || signal.player?.rankingTokens || null
+      }
     },
     metadata: out.metadata
   };

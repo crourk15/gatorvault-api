@@ -523,6 +523,34 @@
       return '<span style="color:'+c+';font-weight:600">'+esc(status||'unknown')+'</span>';
     }
 
+    function rewriteFlag(label,on,live){
+      var color=on?(live?'#34d399':'#94a3b8'):'#475569';
+      var suffix=live?' LIVE':'';
+      return '<span style="display:inline-block;margin:.15rem .35rem .15rem 0;padding:.12rem .45rem;border-radius:.35rem;font-size:.72rem;font-weight:600;background:#1e293b;color:'+color+';border:1px solid #334155">'+esc(label)+(on?suffix:' off')+'</span>';
+    }
+
+    function renderRewriteBadges(meta){
+      meta=meta||{};
+      var html='<div style="margin:.35rem 0 .5rem;line-height:1.5">';
+      html+=rewriteFlag('PR-789 Enhance',!!meta.pr789Live||!!meta.pr789Shadow,!!meta.pr789Live);
+      html+=rewriteFlag('PR-789 Angle',!!meta.pr789AngleLive||!!meta.pr789AngleShadow,!!meta.pr789AngleLive);
+      if(meta.pr789Shadow&&!meta.pr789Live)html+=rewriteFlag('PR-789 shadow',true,false);
+      if(meta.pr789AngleShadow&&!meta.pr789AngleLive)html+=rewriteFlag('PR-789 angle shadow',true,false);
+      if(meta.rankingTokens){
+        var rt=meta.rankingTokens;
+        html+='<span class="meta"> · On3 ranks: '+esc(rt.on3Stars)+'★ #'+esc(rt.on3NationalRank)+' natl · #'+esc(rt.on3PositionRank)+' pos · #'+esc(rt.on3StateRank)+' state</span>';
+      }
+      html+='</div>';
+      if(meta.pr6Text||meta.pr789Text||meta.pr789AngleText){
+        html+='<div style="font-size:.78rem;line-height:1.45">';
+        if(meta.pr6Text)html+='<div><span class="meta">PR-6:</span> <span style="color:#cbd5e1">'+esc(meta.pr6Text)+'</span></div>';
+        if(meta.pr789Text)html+='<div><span class="meta">PR-789:</span> <span style="color:#93c5fd">'+esc(meta.pr789Text)+'</span></div>';
+        if(meta.pr789AngleText)html+='<div><span class="meta">PR-789 angle:</span> <span style="color:#a5f3fc">'+esc(meta.pr789AngleText)+'</span></div>';
+        html+='</div>';
+      }
+      return html;
+    }
+
     function renderDetectivesEmpty(j){
       var lines=[];
       if(j.pileHint) lines.push(j.pileHint);
@@ -582,7 +610,8 @@
               '<span style="color:#e2e8f0">'+esc(row.beatText||'—')+'</span><br>'+
               (row.hasFutureCastContext!=null?'<span class="meta">Platform: '+(row.hasFutureCastContext?'FutureCast ready':'Recruiting Hub stub')+(row.platformUrl?' · '+esc(row.platformUrl):'')+'</span><br>':'')+
               (row.resolvedPath?'<span class="meta">Resolved via '+esc(row.resolvedPath)+(row.queueItemId?' · queue '+esc(row.queueItemId):'')+'</span><br>':'')+
-              (row.resolvedPreview?'<span style="color:#93c5fd">'+esc(row.resolvedPreview)+'</span><br>':'')+
+              (row.rewriteMeta?renderRewriteBadges(row.rewriteMeta):'')+
+              (row.resolvedPreview?'<span style="color:#93c5fd">Publish: '+esc(row.resolvedPreview)+'</span><br>':'')+
               (log?'<span class="meta">Log: '+log+'</span>':'')+
               '</div>';
           }).join('');

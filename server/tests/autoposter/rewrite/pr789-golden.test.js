@@ -92,8 +92,10 @@ test('PR-789 blocks unsafe competition framing', () => {
 test('PR-789 live publishes enhanced copy on golden four when enabled', () => {
   const prev6 = process.env.X_AUTOPOST_PR6_ENABLED;
   const prev789 = process.env.X_AUTOPOST_PR7_8_9_ENABLED;
+  const prevAngleGolden = process.env.X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE;
   process.env.X_AUTOPOST_PR6_ENABLED = 'true';
   process.env.X_AUTOPOST_PR7_8_9_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE = 'false';
   try {
     const signal = toSignal(GOLDEN_BEATS.find((b) => b.id === 'ham'));
     signal.playerSlug = 'ham';
@@ -112,6 +114,7 @@ test('PR-789 live publishes enhanced copy on golden four when enabled', () => {
   } finally {
     process.env.X_AUTOPOST_PR6_ENABLED = prev6;
     process.env.X_AUTOPOST_PR7_8_9_ENABLED = prev789;
+    process.env.X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE = prevAngleGolden;
   }
 });
 
