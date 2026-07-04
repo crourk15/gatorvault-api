@@ -238,7 +238,13 @@ function toLegacyTemplateBlocks(blocks) {
 }
 
 function attachPr6Shadow(signal, blocks, text, metadata = {}) {
-  if (!pr6Rewrite.isPr6ShadowMode() && !pr6Rewrite.isPr6Enabled()) {
+  const runRewrite =
+    pr6Rewrite.isPr6ShadowMode() ||
+    pr6Rewrite.isPr6Enabled() ||
+    pr6Rewrite.isPr789ShadowMode() ||
+    pr6Rewrite.isPr789Enabled() ||
+    pr6Rewrite.isPr789AngleShadowMode();
+  if (!runRewrite) {
     return metadata;
   }
 
@@ -272,6 +278,20 @@ function attachPr6Shadow(signal, blocks, text, metadata = {}) {
       rewrittenTweet: pr6.pr789.ok ? pr6.pr789.rewrittenTweet : pr6OnlyTweet,
       trace: pr6.pr789.trace || null,
       violations: pr6.pr789.violations || null
+    };
+  }
+
+  if (pr6.pr789Angle) {
+    next.pr789AngleShadow = {
+      ok: pr6.pr789Angle.ok,
+      reason: pr6.pr789Angle.reason || null,
+      fallback: pr6.pr789Angle.fallback === true,
+      dominantAngle: pr6.pr789Angle.dominantAngle || null,
+      takeaway: pr6.pr789Angle.takeaway || null,
+      charCount: pr6.pr789Angle.charCount || null,
+      rewrittenTweet: pr6.pr789Angle.ok ? pr6.pr789Angle.rewrittenTweet : null,
+      trace: pr6.pr789Angle.trace || null,
+      violations: pr6.pr789Angle.violations || null
     };
   }
 

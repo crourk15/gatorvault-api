@@ -9,6 +9,8 @@ const { isProvenanceSafe } = require('./provenance-gate');
 const { pickRewrite, pickShortRewrite, buildRewriteContext } = require('./rewrite-templates');
 const { buildRewriteTrace } = require('./rewrite-trace');
 const { enhancePr6Pack } = require('./enhance-engine');
+const { enhancePr6PackDominantAngle, shouldRunAngleEnhance } = require('./angle-enhance-engine');
+const { shouldUsePr789AngleLive } = require('./golden-beats');
 
 function assembleTweet(identityLine, narrative1, narrative2, cta) {
   return [identityLine, narrative1, narrative2, cta].filter(Boolean).join('\n');
@@ -96,6 +98,19 @@ function rewriteStrategyPack(pr5Pack, signal = {}, opts = {}) {
       pr6Result.identityLine = pr789.identityLine;
       pr6Result.charCount = pr789.charCount;
       pr6Result.pr789Live = true;
+    }
+  }
+
+  if (shouldRunAngleEnhance() && pr6Result.ok) {
+    const anglePack = enhancePr6PackDominantAngle(pr6Result, pr5Pack, signal, pr6Result.pr789 || null);
+    pr6Result.pr789Angle = anglePack;
+    if (shouldUsePr789AngleLive(signal, anglePack)) {
+      pr6Result.rewrittenTweet = anglePack.rewrittenTweet;
+      pr6Result.narrative1 = anglePack.narrative1;
+      pr6Result.narrative2 = anglePack.narrative2;
+      pr6Result.identityLine = anglePack.identityLine;
+      pr6Result.charCount = anglePack.charCount;
+      pr6Result.pr789AngleLive = true;
     }
   }
 

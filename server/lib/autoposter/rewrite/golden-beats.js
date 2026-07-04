@@ -52,10 +52,21 @@ function shouldUsePr789Live(signal = {}, pr789 = {}) {
   );
 }
 
+function shouldUsePr789AngleLive(signal = {}, anglePack = {}) {
+  return (
+    process.env.X_AUTOPOST_PR789_ANGLE_ENABLED === 'true' &&
+    isPr6GoldenBeat(signal) &&
+    anglePack?.ok === true &&
+    typeof anglePack.rewrittenTweet === 'string' &&
+    anglePack.rewrittenTweet.length > 0
+  );
+}
+
 module.exports = {
   PR6_SOFT_LAUNCH_SLUGS,
   resolveGoldenBeatId,
   isPr6GoldenBeat,
   shouldUsePr6Live,
-  shouldUsePr789Live
+  shouldUsePr789Live,
+  shouldUsePr789AngleLive
 };

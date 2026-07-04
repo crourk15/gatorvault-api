@@ -67,6 +67,14 @@ function isPr789Enabled() {
   return process.env.X_AUTOPOST_PR7_8_9_ENABLED === 'true';
 }
 
+function isPr789AngleShadowMode() {
+  return process.env.X_AUTOPOST_PR789_ANGLE_SHADOW !== 'false';
+}
+
+function isPr789AngleEnabled() {
+  return process.env.X_AUTOPOST_PR789_ANGLE_ENABLED === 'true';
+}
+
 module.exports = {
   CHAR_LIMIT,
   MAX_REWRITE_ATTEMPTS,
@@ -76,5 +84,7 @@ module.exports = {
   isPr6ShadowMode,
   isPr6Enabled,
   isPr789ShadowMode,
-  isPr789Enabled
+  isPr789Enabled,
+  isPr789AngleShadowMode,
+  isPr789AngleEnabled
 };

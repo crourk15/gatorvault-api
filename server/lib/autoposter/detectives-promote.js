@@ -34,6 +34,7 @@ function pr6DetectiveMeta(metadata = {}) {
     out.pr6Text = metadata.pr6Text || metadata.pr6Shadow?.rewrittenTweet || null;
     out.pr789Text = metadata.pr789Text || metadata.pr789Shadow?.rewrittenTweet || null;
   }
+  if (metadata.pr789AngleShadow) out.pr789AngleShadow = metadata.pr789AngleShadow;
   return out;
 }
 
