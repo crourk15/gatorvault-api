@@ -44,7 +44,7 @@ function collectAllowedTokens(pr5Pack) {
 
 function extractCompMentions(text) {
   const comps = [];
-  const re = /\b(FSU|UGA|Alabama|Ohio State|Miami|Georgia|Clemson|Auburn|LSU|Tennessee)\b/gi;
+  const re = /\b(FSU|UGA|Alabama|Ohio State|Miami|Georgia|Clemson|Auburn|Vanderbilt|Vandy|LSU|Tennessee)\b/gi;
   let m;
   while ((m = re.exec(String(text || ''))) !== null) {
     comps.push(m[1]);
@@ -74,7 +74,7 @@ function isProvenanceSafe(rewrittenText, pr5Pack) {
     }
   }
 
-  const original = `${pr5Pack?.intelLine || ''} ${pr5Pack?.contextLine || ''} ${pr5Pack?.strategyLine || ''}`.toLowerCase();
+  const original = `${pr5Pack?.beatText || ''} ${pr5Pack?.intelLine || ''} ${pr5Pack?.contextLine || ''} ${pr5Pack?.strategyLine || ''}`.toLowerCase();
   if (/swamp/i.test(original) && !/swamp/i.test(text) && /first trip|visit/i.test(original)) {
     violations.push({ type: 'dropped_visit_fact' });
   }

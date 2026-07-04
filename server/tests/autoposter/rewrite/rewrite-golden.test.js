@@ -16,7 +16,7 @@ const PR6_MARKERS = {
   drakeford: [/swamp/i, /traction|lane|board/i, /top schools|top-school/i],
   robinson: [/lean|staff|db/i, /responded|board/i, /capital|lane/i],
   willingham: [/foothold|spring/i, /top schools/i, /lane|positioned/i],
-  ham: [/march|visit/i, /separation|fsu/i, /lane|face time|eval/i]
+  ham: [/march|visit|campus/i, /energy|staff/i, /early March|loved/i]
 };
 
 function composePr6(id) {

@@ -31,21 +31,23 @@ function pickRewrite(ctx) {
   if (/spring practice|on campus this spring/i.test(beat) && /top schools/i.test(beat)) {
     return {
       narrative1: `${ln}'s spring practice visit gave Florida a foothold, and he's already calling the Gators one of his top schools.`,
-      narrative2: `UF is positioned early, and the staff is working to widen that lane.`
+      narrative2: `UF is positioned early in his recruitment.`
     };
   }
 
-  if (/early march|on campus at florida/i.test(beat) && comps) {
+  if (/energy from the staff|staff energy|loved the energy/i.test(beat)) {
     return {
-      narrative1: `${ln}'s March visit gave Florida a real shot to separate from ${comps}.`,
-      narrative2: `UF wants more face time, and that trip opened a clean evaluation lane in this cycle.`
+      narrative1: `${ln} was on Florida's campus in early March, and staff energy is still driving this recruitment.`,
+      narrative2: `He loved the energy he saw from UF's staff, and Florida is pressing that connection early.`
     };
   }
 
   if (/early march|on campus at florida/i.test(beat)) {
     return {
-      narrative1: `${ln}'s March visit gave Florida a real foothold in his recruitment.`,
-      narrative2: `UF wants more face time, and that trip opened a clean evaluation lane.`
+      narrative1: `${ln} was on Florida's campus in early March, and that trip put UF in his early mix.`,
+      narrative2: comps
+        ? `Florida is pressing while ${comps} stay in the mix.`
+        : `Florida is pressing that connection early.`
     };
   }
 
@@ -103,13 +105,13 @@ function pickShortRewrite(ctx) {
   if (/spring practice/i.test(beat)) {
     return {
       narrative1: `${ln}'s spring visit gave Florida a foothold, and the Gators are one of his top schools.`,
-      narrative2: `UF is positioned early and widening that lane.`
+      narrative2: `UF is positioned early in his recruitment.`
     };
   }
   if (/march/i.test(beat) && comps) {
     return {
-      narrative1: `${ln}'s March visit gave Florida separation from ${comps}.`,
-      narrative2: `UF wants more face time, and that trip opened an eval lane.`
+      narrative1: `${ln} was on Florida's campus in March, and that trip put UF in his early mix.`,
+      narrative2: `Florida is pressing while ${comps} stay in the mix.`
     };
   }
 

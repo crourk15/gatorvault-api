@@ -16,7 +16,7 @@ const EXPECTED_ANGLES = {
   drakeford: 'visit',
   robinson: 'staff',
   willingham: 'board',
-  ham: 'competition'
+  ham: 'staff'
 };
 
 for (const id of Object.keys(EXPECTED_ANGLES)) {
@@ -54,12 +54,17 @@ test('PR-789 angle live on golden when PR7/8/9 enabled and all four ranked', () 
   process.env.X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE = 'true';
   const signal = toSignal(GOLDEN_BEATS.find((b) => b.id === 'ham'));
   signal.playerSlug = 'ham';
-  signal.metrics.compSchools = ['FSU'];
+  signal.metrics.rpmTop = [
+    { school: 'Auburn', pct: 21 },
+    { school: 'Vanderbilt', pct: 18 }
+  ];
   const out = voiceEngine.autoposterCompose(signal);
   assert.equal(out.ok, true);
   assert.equal(out.metadata?.pr789AngleLive, true);
   assert.equal(out.metadata?.pr789Live, true);
   assert.equal(out.text, out.metadata?.pr789AngleText);
+  assert.match(out.text, /energy/i);
+  assert.doesNotMatch(out.text, /face time|Marietta/i);
 });
 
 test('PR-789 angle live blocked until all four golden rankings complete', () => {

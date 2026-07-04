@@ -68,7 +68,7 @@ function validateCompetitionLine(text, pr5Pack, signal = {}) {
     String(c).toLowerCase()
   );
   const mentionRe =
-    /\b(FSU|UGA|Alabama|Ohio State|Miami|Georgia|Clemson|Auburn|LSU|Tennessee|Bama)\b/gi;
+    /\b(FSU|UGA|Alabama|Ohio State|Miami|Georgia|Clemson|Auburn|Vanderbilt|Vandy|LSU|Tennessee|Bama)\b/gi;
   let m;
   while ((m = mentionRe.exec(t)) !== null) {
     const school = m[1].toLowerCase();

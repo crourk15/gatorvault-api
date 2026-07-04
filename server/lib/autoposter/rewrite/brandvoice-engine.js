@@ -17,7 +17,10 @@ const BRAND_REQUIRED_MARKERS = [
   'widening',
   'capitalize',
   'keep an eye',
-  'building real'
+  'building real',
+  'positioned',
+  'staff',
+  'board'
 ];
 
 function buildBrandVoiceLine(pr6Pack = {}) {

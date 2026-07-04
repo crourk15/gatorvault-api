@@ -38,9 +38,20 @@ const GOLDEN_BEATS = [
   },
   {
     id: 'ham',
-    player: { name: 'Merrick Ham', pos: 'EDGE', classYear: 2028, school: 'FL' },
-    beatText: 'Four-star 2028 EDGE Merrick Ham was on campus at Florida in early March.',
-    metrics: { rpm: null, visitDate: '2026-03-08', compSchools: ['FSU'], depthChartNote: null, schemeNote: null }
+    player: { name: 'Merrick Ham', pos: 'EDGE', classYear: 2028, school: 'Marietta' },
+    beatText:
+      'Four-star 2028 EDGE Merrick Ham was on campus at Florida in early March. He appreciated the energy from the staff while on campus, and he\'s only seen more of that since June 15. "I loved the energy that I saw."',
+    metrics: {
+      rpm: null,
+      visitDate: '2026-03-08',
+      compSchools: [],
+      rpmTop: [
+        { school: 'Auburn', pct: 21 },
+        { school: 'Vanderbilt', pct: 18 }
+      ],
+      depthChartNote: null,
+      schemeNote: null
+    }
   },
   {
     id: 'zylen',

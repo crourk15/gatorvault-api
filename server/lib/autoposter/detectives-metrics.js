@@ -6,6 +6,8 @@ const platform = require('./detectives-platform');
 const store = require('./detectives-store');
 const { getPlayerIntelligence } = require('../player-intelligence');
 const { refreshPlayerIntelligence } = require('../player-intelligence/orchestrator');
+const { resolveValidCompSchools } = require('./rewrite/comp-sourcing');
+const { extractBeatFacts } = require('./rewrite/beat-fact-extractor');
 
 function nowIso() {
   return new Date().toISOString();
@@ -168,15 +170,40 @@ async function enrichCaseMetrics({ caseItem, hints, identity, platformContext })
     repairActions.push(buildRepairAction('pull_on3_rankings', false, 'incomplete_on3_metadata'));
   }
 
-  if (intel?.competitors?.length && (!metrics.compSchools || !metrics.compSchools.length)) {
-    metrics.compSchools = intel.competitors.map((c) => c.school).filter(Boolean).slice(0, 4);
-    repairActions.push(buildRepairAction('pull_intel_comp', true, metrics.compSchools.join(', ')));
-  }
-
   if (intel?.rpm?.ufPct != null && (metrics.rpm == null || Number(metrics.rpm) <= 0)) {
     metrics.rpm = intel.rpm.ufPct;
     repairActions.push(buildRepairAction('pull_intel_rpm', true, String(metrics.rpm)));
   }
+
+  if (!metrics.rpmTop?.length && Array.isArray(player?.topTeams) && player.topTeams.length) {
+    metrics.rpmTop = player.topTeams
+      .map((row) => {
+        const team = row?.team || row;
+        const name = team?.fullName || team?.name || row?.school;
+        const pct = row?.percent ?? row?.percentage ?? row?.pct ?? null;
+        return name ? { school: name, pct } : null;
+      })
+      .filter(Boolean)
+      .filter((row) => !/florida|\bgators\b|\buf\b/i.test(String(row.school)))
+      .slice(0, 4);
+    if (metrics.rpmTop.length) {
+      repairActions.push(buildRepairAction('pull_rpm_top', true, metrics.rpmTop.map((r) => r.school).join(', ')));
+    }
+  }
+
+  const compPack = resolveValidCompSchools({
+    beatText,
+    metrics,
+    intel,
+    player: player || intel?.identity
+  });
+  if (compPack.schools.length) {
+    metrics.compSchools = compPack.schools;
+    repairActions.push(buildRepairAction('pull_intel_comp', true, compPack.schools.join(', ')));
+  } else {
+    metrics.compSchools = [];
+  }
+  if (compPack.rpmTop.length) metrics.rpmTop = compPack.rpmTop;
 
   if (intel?.visits?.length && !metrics.visitDate && !metrics.visitStart) {
     const latest = intel.visits[0];
@@ -186,6 +213,8 @@ async function enrichCaseMetrics({ caseItem, hints, identity, platformContext })
     }
   }
 
+  metrics.beatFacts = extractBeatFacts(beatText, { metrics, player, intel });
+  metrics.intelligence = intel || null;
   metrics.intelligenceGaps = intel?.gaps || [];
   metrics.intelligenceStale = intel?.stale || [];
   metrics.coverageTier = intel?.coverageTier || null;
