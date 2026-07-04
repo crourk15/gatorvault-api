@@ -522,6 +522,28 @@
       return '<span style="color:'+c+';font-weight:600">'+esc(status||'unknown')+'</span>';
     }
 
+    function renderDetectivesEmpty(j){
+      var lines=[];
+      if(j.pileHint) lines.push(j.pileHint);
+      if(j.beatCache){
+        lines.push('Beat cache: '+esc(j.beatCache.postCount||0)+' posts'+(j.beatCache.fetchedAt?' · updated '+fmtTime(j.beatCache.fetchedAt):''));
+        if((j.beatCache.postCount||0)===0&&j.beatCache.error){
+          lines.push('⚠ '+esc(j.beatCache.error));
+        }
+      }
+      if(j.lastBackfill){
+        lines.push('Last scan '+fmtTime(j.lastBackfill.at)+': '+esc(j.lastBackfill.scanned||0)+' candidates · '+esc(j.lastBackfill.created||0)+' new · '+esc(j.lastBackfill.notHandoffEligible||0)+' not eligible');
+        if(j.lastBackfill.blockedSkipReasons){
+          var top=Object.keys(j.lastBackfill.blockedSkipReasons).slice(0,4).map(function(k){
+            return esc(k)+' '+esc(j.lastBackfill.blockedSkipReasons[k]);
+          }).join(', ');
+          if(top) lines.push('Blocked reasons: '+top);
+        }
+      }
+      if(!lines.length) lines.push('No detectives cases yet. Click Scan beat cache.');
+      return lines.join('\n\n');
+    }
+
     function loadDetectives(){
       var p=pin();
       var panel=document.getElementById('detectives-panel');
@@ -537,7 +559,7 @@
           countsEl.textContent='pending '+esc(c.pending||0)+' · investigating '+esc(c.investigating||0)+' · resolved '+esc(c.resolved||0)+' · failed '+esc(c.failed||0)+(c.failed_final?' · failed_final '+esc(c.failed_final):'')+(j.enabled===false?' · DISABLED':'')+(j.activeInvestigation?' · ACTIVE: '+esc(j.activeInvestigation.playerName||j.activeInvestigation.caseId):'');
           var cases=j.cases||[];
           if(!cases.length){
-            panel.textContent=(j.pileHint||'No detectives cases yet.')+' Click Scan beat cache to rebuild from recent filter skips.';
+            panel.textContent=renderDetectivesEmpty(j);
             return;
           }
           panel.innerHTML=cases.map(function(row){
@@ -580,8 +602,16 @@
       })
         .then(function(j){
           if(!j.ok)throw new Error(j.error||'Backfill failed');
-          var msg=j.message||('Scanned '+(j.scanned||0)+' beats');
+          var msg=j.message||('Scanned '+(j.scanned||0)+' candidates');
           document.getElementById('detectives-counts').textContent=msg;
+          if(j.dashboard){
+            var c=j.dashboard.counts||{};
+            document.getElementById('detectives-counts').textContent='pending '+esc(c.pending||0)+' · investigating '+esc(c.investigating||0)+' · resolved '+esc(c.resolved||0)+' · failed '+esc(c.failed||0)+(c.failed_final?' · failed_final '+esc(c.failed_final):'');
+            var cases=j.dashboard.cases||[];
+            if(!cases.length){
+              document.getElementById('detectives-panel').textContent=renderDetectivesEmpty(j.dashboard);
+            }
+          }
           loadDetectives();
         })
         .catch(function(e){alert('Detectives backfill error: '+e.message);})

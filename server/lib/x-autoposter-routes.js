@@ -185,12 +185,13 @@ function mountXAutoposterRoutes(app) {
       const backfill = require('./autoposter/detectives-backfill');
       const dashboard = require('./autoposter/detectives-dashboard');
       const limit = Math.min(120, parseInt(req.body?.limit || req.query?.limit || '80', 10) || 80);
-      const stats = await backfill.backfillFromBeatCache({ limit });
+      const stats = await backfill.backfillDetectivesPile({ limit });
+      const summary = backfill.formatBackfillSummary(stats);
       return res.json({
         ok: true,
-        message: (stats.beatPostCount || 0) === 0
-          ? `Beat cache empty${stats.beatCacheRefreshed ? ' (refreshed)' : ''} — ${stats.scanned || 0} scanned, ${stats.created || 0} new case(s).`
-          : `Scanned ${stats.scanned || 0} beats — ${stats.created || 0} new case(s), ${stats.refreshed || 0} refreshed.`,
+        message: summary
+          ? `Scan complete — ${summary}.`
+          : `Scan complete — ${stats.created || 0} new case(s).`,
         dashboard: dashboard.getDetectivesDashboard({ limit: 50 }),
         ...stats,
       });

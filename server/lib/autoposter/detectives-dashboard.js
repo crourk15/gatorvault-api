@@ -79,6 +79,23 @@ function formatCaseForDashboard(caseItem) {
   };
 }
 
+function getBeatCacheHealth() {
+  try {
+    const { getBeatPosts } = require('../live-beat');
+    const beat = getBeatPosts(1);
+    const posts = beat?.posts || [];
+    return {
+      postCount: posts.length,
+      fetchedAt: beat?.fetchedAt || null,
+      error: beat?.error || null,
+      tokenConfigured: !!(beat?.tokenStatus?.configured),
+      tokenOk: !!(beat?.tokenStatus?.ok),
+    };
+  } catch (err) {
+    return { postCount: 0, fetchedAt: null, error: err.message, tokenConfigured: false, tokenOk: false };
+  }
+}
+
 function getDetectivesDashboard({ status = null, limit = 50 } = {}) {
   try { store.recoverStaleInvestigatingCases(); } catch {}
   const doc = store.loadPile();
@@ -91,15 +108,25 @@ function getDetectivesDashboard({ status = null, limit = 50 } = {}) {
   });
   const investigating = store.listCases({ status: 'investigating', limit: 10 });
   const totalCases = (doc.cases || []).length;
+  const beatCache = getBeatCacheHealth();
+  const lastBackfill = doc.lastBackfill || null;
+  let pileHint = null;
+  if (totalCases === 0) {
+    pileHint = 'Pile is empty — Render disk resets on deploy. Scan beat cache rebuilds from filter skips, ops logs, and needs_resolution intel.';
+    if (beatCache.postCount === 0 && beatCache.error) {
+      pileHint += ' Beat cache issue: ' + beatCache.error;
+    } else if (lastBackfill && (lastBackfill.created || 0) === 0 && (lastBackfill.scanned || 0) > 0) {
+      pileHint += ' Last scan found ' + lastBackfill.scanned + ' candidate(s) but none were handoff-eligible (often class_year_below_2027 or no_player_name).';
+    }
+  }
   return {
     enabled: detectivesEnabled(),
     updatedAt: doc.updatedAt,
     counts,
     totalCases,
-    pileHint:
-      totalCases === 0
-        ? 'Pile is empty — Render disk resets on deploy. Use Scan beat cache to rebuild from recent filter skips.'
-        : null,
+    pileHint,
+    beatCache,
+    lastBackfill,
     activeInvestigation: investigating.length
       ? { caseId: investigating[0].id, playerName: formatCaseForDashboard(investigating[0]).playerName, lastPhase: formatCaseForDashboard(investigating[0]).lastPhase, nextPhase: formatCaseForDashboard(investigating[0]).nextPhase }
       : null,

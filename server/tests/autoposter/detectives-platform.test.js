@@ -1,4 +1,4 @@
-﻿const { describe, it } = require('node:test');
+const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const platform = require('C:/Users/crour/OneDrive/Desktop/gatorvault/server/lib/autoposter/detectives-platform.js');
 const detectives = require('C:/Users/crour/OneDrive/Desktop/gatorvault/server/lib/autoposter/detectives.js');

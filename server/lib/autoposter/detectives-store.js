@@ -311,6 +311,24 @@ function recoverStaleInvestigatingCases(maxAgeMs = null) {
   return recovered;
 }
 
+function saveBackfillMeta(stats = {}) {
+  const doc = loadPile();
+  doc.lastBackfill = {
+    at: nowIso(),
+    scanned: stats.scanned || 0,
+    created: stats.created || 0,
+    refreshed: stats.refreshed || 0,
+    handoffs: stats.handoffs || 0,
+    notHandoffEligible: stats.notHandoffEligible || 0,
+    beatPostCount: stats.beatPostCount || 0,
+    beatError: stats.beatError || null,
+    sources: stats.sources || null,
+    blockedSkipReasons: stats.blockedSkipReasons || null,
+  };
+  savePile(doc);
+  return doc.lastBackfill;
+}
+
 module.exports = {
   PILE_PATH,
   loadPile,
@@ -327,5 +345,6 @@ module.exports = {
   normalizeBeatText,
   countByStatus,
   recoverStaleInvestigatingCases,
+  saveBackfillMeta,
   CLUSTER_TOPICS
 };

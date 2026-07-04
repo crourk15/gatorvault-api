@@ -1,4 +1,4 @@
-﻿/** Detectives handoff gate — allowlist UF recruiting intel only. */
+/** Detectives handoff gate — allowlist UF recruiting intel only. */
 const DEDUPE_SKIP_REASONS = new Set([
   'duplicate_fingerprint',
   'duplicate_commit',
