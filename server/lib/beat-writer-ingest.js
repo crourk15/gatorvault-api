@@ -1390,10 +1390,11 @@ async function processBeatVisitIntelRow(row, snapshot) {
     : { queued: false, reason: built.reason || 'copy_failed' };
 
   let detectivesHandoff = null;
-  if (!autopost.queued && built?.reason && !BEAT_SILENCE_ALLOWED.has(built.reason)) {
+  const skipReason = built?.reason || autopost?.reason || null;
+  if (!autopost.queued && skipReason && !BEAT_SILENCE_ALLOWED.has(skipReason)) {
     const beatPost = beatPostFromRow(row);
-    logBeatPostSkip(beatPost, built.reason, 'autopost');
-    detectivesHandoff = await maybeHandoffBeatSkipToDetectives(beatPost, built.reason, 'autopost');
+    logBeatPostSkip(beatPost, skipReason, 'autopost');
+    detectivesHandoff = await maybeHandoffBeatSkipToDetectives(beatPost, skipReason, 'autopost');
   }
 
   snapshot.fingerprints[row.fingerprint] = row.timestamp;

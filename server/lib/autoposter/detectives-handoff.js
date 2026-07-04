@@ -25,6 +25,7 @@ const HANDOFF_ALLOW = new Set([
   'missing_situation',
   'copy_failed',
   'quality_gate',
+  'recruiting_qa',
   'voice_required_no_legacy_fallback',
   'voice_qa_failed',
   'voice_compose_required',
