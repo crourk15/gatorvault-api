@@ -49,50 +49,92 @@
         return next;
       }
 
-      function verifyPin(pin, cb) {
-        var API = apiBase();
-        fetch(API + '/api/ops/verify-pin', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-Ops-Pin': pin, 'X-Recruiting-Pin': pin },
-          body: JSON.stringify({ pin: pin })
-        })
-          .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
-          .then(function (x) {
-            if (x.ok && x.j && x.j.ok) return cb(true);
-            return fetch(API + '/api/ops/status?pin=' + encodeURIComponent(pin), {
-              headers: { 'X-Ops-Pin': pin, 'X-Recruiting-Pin': pin }
-            })
-              .then(function (r) { return r.json(); })
-              .then(function (j) { cb(!!(j && j.ok)); })
-              .catch(function () { cb(false); });
-          })
-          .catch(function () { cb(false); });
+      function responseLooksLikeHtml(text) {
+        var t = String(text || '').trim();
+        return t.indexOf('<!DOCTYPE') === 0 || t.indexOf('<html') === 0;
       }
 
-      var saved = sessionStorage.getItem(SESSION_KEY) || sessionStorage.getItem(OPS_KEY);
-      if (saved) {
-        verifyPin(saved, function (ok) {
-          if (ok) location.replace(nextUrl());
-        });
+      function verifyPin(pin, cb) {
+        var API = apiBase();
+        var hdrs = { 'Content-Type': 'application/json', 'X-Ops-Pin': pin, 'X-Recruiting-Pin': pin };
+        fetch(API + '/api/ops/verify-pin', {
+          method: 'POST',
+          headers: hdrs,
+          credentials: 'omit',
+          body: JSON.stringify({ pin: pin })
+        })
+          .then(function (r) {
+            return r.text().then(function (text) {
+              if (responseLooksLikeHtml(text)) {
+                cb(false, 'API unavailable — Render may still be deploying or waking up. Wait 30–60s and retry.');
+                return;
+              }
+              var j = {};
+              try { j = text ? JSON.parse(text) : {}; } catch (e) {
+                cb(false, 'API returned invalid JSON (HTTP ' + r.status + '). Retry in 30s.');
+                return;
+              }
+              if (r.ok && j && j.ok) {
+                cb(true);
+                return;
+              }
+              if (r.status === 401) {
+                cb(false, 'Invalid PIN. Use the exact OPS_ADMIN_PIN or RECRUITING_ADMIN_PIN from Render (or GV2026admin if unset).');
+                return;
+              }
+              return fetch(API + '/api/ops/status?pin=' + encodeURIComponent(pin), {
+                headers: hdrs,
+                credentials: 'omit'
+              }).then(function (r2) {
+                return r2.text().then(function (text2) {
+                  if (responseLooksLikeHtml(text2)) {
+                    cb(false, 'API unavailable — Render may still be waking up. Retry in 30–60s.');
+                    return;
+                  }
+                  var j2 = {};
+                  try { j2 = text2 ? JSON.parse(text2) : {}; } catch (e) {
+                    cb(false, 'API returned invalid JSON. Retry in 30s.');
+                    return;
+                  }
+                  if (r2.ok && j2 && j2.ok) cb(true);
+                  else if (r2.status === 401) cb(false, 'Invalid PIN. Use the exact OPS_ADMIN_PIN or RECRUITING_ADMIN_PIN from Render.');
+                  else cb(false, 'Auth check failed (HTTP ' + r2.status + ').');
+                });
+              });
+            });
+          })
+          .catch(function () {
+            cb(false, 'Cannot reach API — check network or wait for Render deploy to finish.');
+          });
       }
 
       var btn = document.getElementById('login-submit');
       var input = document.getElementById('login-pin');
       var err = document.getElementById('login-err');
 
+      var saved = sessionStorage.getItem(SESSION_KEY) || sessionStorage.getItem(OPS_KEY);
+      if (saved) {
+        verifyPin(saved, function (ok, errMsg) {
+          if (ok) location.replace(nextUrl());
+          else if (errMsg && errMsg.indexOf('Invalid PIN') < 0) {
+            err.textContent = errMsg;
+          }
+        });
+      }
+
       btn.addEventListener('click', function () {
         var p = input.value.trim();
         if (!p) return;
         err.textContent = '';
         btn.disabled = true;
-        verifyPin(p, function (ok) {
+        verifyPin(p, function (ok, errMsg) {
           btn.disabled = false;
           if (ok) {
             sessionStorage.setItem(SESSION_KEY, p);
             sessionStorage.setItem(OPS_KEY, p);
             location.replace(nextUrl());
           } else {
-            err.textContent = 'Invalid PIN. Use your OPS_ADMIN_PIN or RECRUITING_ADMIN_PIN from Render.';
+            err.textContent = errMsg || 'Invalid PIN. Use your OPS_ADMIN_PIN or RECRUITING_ADMIN_PIN from Render.';
           }
         });
       });
