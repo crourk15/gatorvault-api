@@ -75,6 +75,10 @@ const TEMPLATES = {
     const comp = compPhrase(s);
     return `${comp} in the mix — UF wins by stacking campus time before the next eval cycle.`;
   },
+  cycle_only: (s) => {
+    const cycle = tokenOf(s, 'cycle');
+    return `${cycle} — UF board math still matters before the next contact window closes.`;
+  },
   ufAngle_only: (s) => {
     const angle = tokenOf(s, 'ufAngle');
     return `${angle} — that is the differentiator UF can lean on in the next contact window.`;
@@ -108,6 +112,8 @@ function templateAvailable(id, signals) {
       return hasSignalType(signals, 'staff');
     case 'comp_only':
       return hasSignalType(signals, 'comp');
+    case 'cycle_only':
+      return hasSignalType(signals, 'cycle');
     case 'ufAngle_only':
       return hasSignalType(signals, 'ufAngle');
     case 'quote_visit':

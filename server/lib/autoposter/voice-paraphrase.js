@@ -1,16 +1,13 @@
 /**
- * Paraphrase beat/intel text — restate verified facts only (v1.1.1).
- * Uses quote rewriter when enabled; never invents schools, dates, or percentages.
+ * Paraphrase beat/intel text — PR-5 strategy engine (Extract → Compose → Score → Guard → Trace).
  */
 const template = require('../x-autoposter-template');
 const quoteRewriter = require('../x-autoposter-recruiting-quote-rewriter');
 const { buildStrategyEngineOutput } = require('./strategy/strategy-engine');
-const { strategyEngineV2Enabled } = require('./strategy/strategy-types');
 
 const strategyPackCache = new WeakMap();
 
 function getStrategyPack(signal) {
-  if (!strategyEngineV2Enabled()) return null;
   if (strategyPackCache.has(signal)) return strategyPackCache.get(signal);
   const out = buildStrategyEngineOutput(signal);
   strategyPackCache.set(signal, out);
@@ -34,9 +31,6 @@ function firstFactualSentence(text, maxLen = 200) {
   return flat.length >= 20 ? flat : null;
 }
 
-/**
- * Paraphrase event description for INTEL line.
- */
 function paraphraseIntel(signal, { sourceLabel = 'Beat writer' } = {}) {
   const raw = signal?.event?.description || signal?.beatText || '';
   if (!raw) return null;
@@ -59,31 +53,7 @@ function paraphraseIntel(signal, { sourceLabel = 'Beat writer' } = {}) {
   return fallback.endsWith('.') ? fallback : `${fallback}.`;
 }
 
-function positionalNeedPhrase(signal) {
-  const pos = String(signal?.player?.pos || '').toUpperCase();
-  const year = signal?.player?.classYear;
-  const map = {
-    CB: 'secondary depth',
-    WR: 'speed on the perimeter',
-    DL: 'trench depth',
-    OT: 'tackle depth',
-    QB: 'quarterback room',
-    RB: 'backfield depth',
-    LB: 'linebacker corps',
-    TE: 'tight end room'
-  };
-  const need = map[pos] || 'board priority';
-  if (year) return `This fits Florida's ${need} focus in the ${year} class.`;
-  return `This fits Florida's ${need} in this cycle.`;
-}
-
-function paraphraseUFContext(signal) {
-  if (strategyEngineV2Enabled()) {
-    const pack = getStrategyPack(signal);
-    if (pack?.contextLine) return pack.contextLine;
-    throw new StrategyDataMissing();
-  }
-
+function nonRecruitingContext(signal) {
   const type = signal?.type || 'recruiting';
   const beat = String(signal?.beatText || signal?.event?.description || '').toLowerCase();
 
@@ -100,52 +70,7 @@ function paraphraseUFContext(signal) {
     }
     return 'Florida can stress this front with tempo and spacing in the early install window.';
   }
-
-  if (/\bdecision day\b|\bannouncement\b/.test(beat)) {
-    return 'Florida is in the decision window — board priority is real for this spot.';
-  }
-  if (/\brpm\b|\bprediction\b|\bfuturecast\b/.test(beat)) {
-    return 'UF remains in the RPM mix — this pick carries weight with decision timing in play.';
-  }
-  if (/\bvisit\b|\bcampus\b|\bgainesville\b|\bov\b|\bfnl\b|friday night lights/.test(beat)) {
-    return 'Gainesville activity matters here — visit timing tracks with UF board momentum.';
-  }
-
-  return positionalNeedPhrase(signal);
-}
-
-function paraphraseRPM(rpm) {
-  const n = Math.round(Number(rpm) * 10) / 10;
-  if (!Number.isFinite(n) || n <= 0) return null;
-  return `UF leads On3 RPM at ${n}% — board math backs the momentum.`;
-}
-
-function paraphraseVisit(visitDate) {
-  const d = String(visitDate || '').trim();
-  if (!d) return null;
-  const label = d.length >= 10 ? d.slice(0, 10) : d;
-  return `Visit window on ${label} carries real weight in this race.`;
-}
-
-function paraphraseCompetition(schools) {
-  const list = (schools || []).filter(Boolean).slice(0, 3);
-  if (!list.length) return null;
-  if (list.length === 1) return `Competing with ${list[0]} for this role — UF is in the mix.`;
-  return `Competing with ${list.slice(0, -1).join(', ')} and ${list[list.length - 1]} — UF holds a live lane.`;
-}
-
-function paraphraseDepth(note) {
-  const t = String(note || '').trim();
-  if (!t || t.length < 12) return null;
-  const clean = template.sanitizeCopyLine(t, 140, { sport: 'football' });
-  return clean ? (clean.endsWith('.') ? clean : `${clean}.`) : null;
-}
-
-function paraphraseSchemeNote(note) {
-  const t = String(note || '').trim();
-  if (!t || t.length < 12) return null;
-  const clean = template.sanitizeCopyLine(t, 140, { sport: 'football' });
-  return clean ? (clean.endsWith('.') ? clean : `${clean}.`) : null;
+  return null;
 }
 
 class StrategyDataMissing extends Error {
@@ -155,81 +80,20 @@ class StrategyDataMissing extends Error {
   }
 }
 
-function beatTextFromSignal(signal) {
-  return String(signal?.beatText || signal?.event?.description || '').trim();
-}
+function paraphraseUFContext(signal) {
+  const pack = getStrategyPack(signal);
+  if (pack?.contextLine) return pack.contextLine;
 
-function beatAwareStrategy(signal) {
-  const beat = beatTextFromSignal(signal).toLowerCase();
-  if (!beat || beat.length < 24) return null;
+  const fallback = nonRecruitingContext(signal);
+  if (fallback) return fallback;
 
-  if (
-    /\b(?:first trip|first visit|on campus|in the swamp|at the swamp|gainesville|friday night lights|\bfnl\b|campus visit|spring practice|spring game|made a big impression)\b/.test(
-      beat
-    )
-  ) {
-    return 'UF is using live campus time to test fit — the visit window matters more than the headline.';
-  }
-
-  if (
-    /\b(?:top of my board|top schools|top three|cracked.*leaderboard|early leaderboard|strong position|one of my top|one of those schools)\b/.test(
-      beat
-    )
-  ) {
-    return 'Player-led board momentum puts UF in an active lane — not a monitoring hold.';
-  }
-
-  if (/\b(?:offers? from|with offers from)\b/.test(beat)) {
-    return 'Multi-school interest keeps this race open — UF needs separation in the next window.';
-  }
-
-  if (
-    /\b(?:coaches? texting|all three|db coaches|staff contact|face time|picked up more)\b/.test(beat) &&
-    /\b(?:florida|gators|\buf\b)\b/.test(beat)
-  ) {
-    return 'Staff frequency is elevated — UF is spending relationship capital here early.';
-  }
-
-  if (/\b(?:stands out|specific reason|what was different)\b/.test(beat) && /\b(?:florida|gators|\buf\b)\b/.test(beat)) {
-    return 'Florida is separating on fit and staff attention — not just staying in the comp pack.';
-  }
-
-  return null;
+  throw new StrategyDataMissing();
 }
 
 function buildStrategyLine(signal) {
-  if (strategyEngineV2Enabled()) {
-    const pack = getStrategyPack(signal);
-    if (!pack?.strategyLine || pack.confidence === 'zero') throw new StrategyDataMissing();
-    return pack.strategyLine;
-  }
-
-  const m = signal?.metrics || {};
-  if (m.rpm != null && Number(m.rpm) > 0) {
-    const line = paraphraseRPM(m.rpm);
-    if (line) return line;
-  }
-  if (m.visitDate) {
-    const line = paraphraseVisit(m.visitDate);
-    if (line) return line;
-  }
-  if (m.compSchools?.length) {
-    const line = paraphraseCompetition(m.compSchools);
-    if (line) return line;
-  }
-  if (m.depthChartNote) {
-    const line = paraphraseDepth(m.depthChartNote);
-    if (line) return line;
-  }
-  if (m.schemeNote) {
-    const line = paraphraseSchemeNote(m.schemeNote);
-    if (line) return line;
-  }
-
-  const beatLine = beatAwareStrategy(signal);
-  if (beatLine) return beatLine;
-
-  throw new StrategyDataMissing();
+  const pack = getStrategyPack(signal);
+  if (!pack?.strategyLine || pack.confidence === 'zero') throw new StrategyDataMissing();
+  return pack.strategyLine;
 }
 
 module.exports = {
@@ -238,10 +102,5 @@ module.exports = {
   paraphraseUFContext,
   buildStrategyLine,
   buildStrategyPack: getStrategyPack,
-  paraphraseRPM,
-  paraphraseVisit,
-  paraphraseCompetition,
-  paraphraseDepth,
-  firstFactualSentence,
-  beatAwareStrategy
+  firstFactualSentence
 };

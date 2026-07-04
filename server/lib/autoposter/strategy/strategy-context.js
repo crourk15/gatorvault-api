@@ -46,16 +46,23 @@ function buildContextLine(signals, identity = {}, ufContext = {}, beatText = '')
 
   let line = '';
   if (parts.length >= 2) {
-    line = `Florida is tracking ${name}${classYear ? ` (${classYear} ${pos})` : ''} with ${parts.slice(0, 2).join(' and ')} in play.`;
+    line = `Florida is tracking ${name}${classYear ? ` (${classYear} ${pos})` : ''} with ${parts.slice(0, 2).join(' and ')} on UF's board.`;
   } else if (quote?.tokens?.[0]) {
     const q = quote.tokens[0].length > MAX_CONTEXT_QUOTE_CHARS
       ? `${quote.tokens[0].slice(0, MAX_CONTEXT_QUOTE_CHARS - 1)}…`
       : quote.tokens[0];
     line = `"${q}" — UF context for ${classYear ? `${classYear} ` : ''}${pos} ${name.split(' ').pop()}.`;
   } else if (visit?.tokens?.[0]) {
-    line = `Gainesville activity on ${name}: ${visit.tokens[0]} is the live UF signal.`;
+    line = `Gainesville visit intel on ${name}: ${visit.tokens[0]} is the live UF board signal.`;
   } else if (board?.tokens?.[0]) {
     line = `${name} has ${board.tokens[0]} — Florida is in the conversation.`;
+  } else if (comp?.tokens?.length) {
+    const compLabel =
+      comp.tokens.length >= 2 ? `${comp.tokens[0]} and ${comp.tokens[1]}` : comp.tokens[0];
+    line = `${name}${classYear ? ` (${classYear} ${pos})` : ''} — Florida is recruiting against ${compLabel} in this cycle.`;
+  } else if (bestSignal(signals, 'cycle')?.tokens?.[0]) {
+    const cycle = bestSignal(signals, 'cycle').tokens[0];
+    line = `Florida is in the ${cycle} with ${name}${classYear ? ` (${classYear} ${pos})` : ''} on the board.`;
   } else if (ufContext.posNeed) {
     line = `UF ${ufContext.posNeed} need intersects ${name}'s timeline this cycle.`;
   } else {

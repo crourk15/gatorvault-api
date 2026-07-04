@@ -23,7 +23,7 @@ function extractSignalsFromMetrics(metrics = {}, ufContext = {}) {
   if (metrics.rpm != null && Number.isFinite(Number(metrics.rpm))) {
     pushMetricSignal(signals, seen, {
       type: 'cycle',
-      tokens: [`${metrics.rpm} RPM`],
+      tokens: [`${metrics.rpm}% RPM`],
       source: 'metrics',
       confidence: 'medium'
     });

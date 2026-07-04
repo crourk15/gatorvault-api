@@ -7,7 +7,7 @@ const insiderTone = require('./insider-tone');
 const phraseMemory = require('./voice-phrase-memory');
 
 const UF_LINK_RE =
-  /\b(board|depth|scheme|portal|class|visit|rpm|install|trench|recruit|target|priority|mix|race|window|camp|rep)\b/i;
+  /\b(board|depth|scheme|portal|class|visit|rpm|install|trench|recruit|target|priority|mix|race|window|camp|campus|rep|schools|practice|spring|tracking|leaderboard)\b/i;
 const FLORIDA_RE = /\b(florida|gators|\buf\b|gainesville|swamp)\b/i;
 
 const HYPE_RE = [

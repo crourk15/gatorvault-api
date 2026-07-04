@@ -27,13 +27,14 @@ const TEMPLATE_PRIORITY = [
   'board_only',
   'staff_only',
   'comp_only',
+  'cycle_only',
   'ufAngle_only'
 ];
 
 const SIGNAL_TYPES = ['visit', 'board', 'staff', 'comp', 'trait', 'quote', 'ufAngle', 'cycle'];
 
 function strategyEngineV2Enabled() {
-  return process.env.X_AUTOPOST_STRATEGY_ENGINE === 'v2';
+  return process.env.X_AUTOPOST_STRATEGY_ENGINE !== 'legacy';
 }
 
 module.exports = {

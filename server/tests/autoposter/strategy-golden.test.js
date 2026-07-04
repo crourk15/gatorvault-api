@@ -7,10 +7,11 @@ const { containsBannedPhrase } = require('../../lib/autoposter/strategy/strategy
 const { BANNED_STRATEGY_PHRASES, GOLDEN_OVERLAP_THRESHOLD, MIN_STRATEGY_CHARS } = require('../../lib/autoposter/strategy/strategy-types');
 const { maxPairwiseOverlap } = require('../../lib/autoposter/strategy/strategy-overlap');
 const { isTruncatedBadly } = require('../../lib/autoposter/strategy/strategy-guard');
+const voiceQa = require('../../lib/autoposter/voice-qa');
 const { GOLDEN_BEATS, toSignal } = require('./fixtures/golden-beats');
 
 const prevEngine = process.env.X_AUTOPOST_STRATEGY_ENGINE;
-process.env.X_AUTOPOST_STRATEGY_ENGINE = 'v2';
+delete process.env.X_AUTOPOST_STRATEGY_ENGINE;
 
 test.after(() => {
   if (prevEngine === undefined) delete process.env.X_AUTOPOST_STRATEGY_ENGINE;
@@ -57,6 +58,13 @@ test('PR-5 golden — Drakeford uses visit+board template', () => {
   assert.equal(out.trace.templateId, 'visit_board');
   assert.match(out.strategyLine, /first trip|The Swamp/i);
   assert.match(out.strategyLine, /top of my board/i);
+});
+
+test('PR-5 golden — Willingham passes UF context QA', () => {
+  const beat = GOLDEN_BEATS.find((b) => b.id === 'willingham');
+  const out = buildStrategyEngineOutput(toSignal(beat));
+  assert.ok(out.contextLine);
+  assert.equal(voiceQa.hasUfContext(out.contextLine), true, out.contextLine);
 });
 
 test('PR-5 golden — Robinson uses visit+board or visit+staff', () => {

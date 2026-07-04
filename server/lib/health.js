@@ -72,7 +72,7 @@ module.exports = (app) => {
         apiVersion,
         apiCommit: deploy?.api?.commit || process.env.RENDER_GIT_COMMIT || null,
         frontendVersion: deploy?.frontend?.version || null,
-        strategyEngine: process.env.X_AUTOPOST_STRATEGY_ENGINE || 'legacy'
+        strategyEngine: process.env.X_AUTOPOST_STRATEGY_ENGINE === 'legacy' ? 'legacy' : 'v2'
       },
       systems,
       guardian: guardian?.details || null

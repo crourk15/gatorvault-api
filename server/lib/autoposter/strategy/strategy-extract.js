@@ -190,6 +190,15 @@ function extractSignalsFromBeat(beatText, identity = {}) {
     });
   }
 
+  if (/\brpm\b|\bdecision day\b|\bprediction\b|\bfuturecast\b/i.test(beat)) {
+    pushSignal(signals, seen, {
+      type: 'cycle',
+      tokens: ['decision window'],
+      source: 'beat',
+      confidence: 'medium'
+    });
+  }
+
   return signals;
 }
 
