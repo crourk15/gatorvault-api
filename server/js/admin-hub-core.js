@@ -203,8 +203,9 @@
     if (!pin()) return;
     apiGet('/api/admin/hub/module-health?pin=' + encodeURIComponent(pin()))
       .then(function (j) {
-        if (j && j.moduleHealth) {
-          var merged = Object.assign({}, j.moduleHealth);
+        var health = (j && (j.moduleHealth || j.modules)) || null;
+        if (health) {
+          var merged = Object.assign({}, health);
           merged._environment = j.environment;
           merged._alertCount = j.alertCount;
           applyModuleHealth(merged);
@@ -305,7 +306,7 @@
       panel.innerHTML = '<p class="hub-meta">Loading alerts…</p>';
       apiGet('/api/admin/hub/overview?pin=' + encodeURIComponent(pin()))
         .then(function (j) {
-          var alerts = j.alerts || [];
+          var alerts = (j && j.alerts && j.alerts.alerts) || (Array.isArray(j.alerts) ? j.alerts : []);
           if (!alerts.length) {
             panel.innerHTML = '<p class="hub-meta">No active alerts</p>';
             return;
@@ -885,7 +886,8 @@
     pin: pin,
     apiGet: apiGet,
     apiPost: apiPost,
-    wireGate: wireGate
+    wireGate: wireGate,
+    applyModuleHealth: applyModuleHealth
   };
 
   if (document.readyState === 'loading') {

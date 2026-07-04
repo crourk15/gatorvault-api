@@ -356,9 +356,14 @@ function mountAdminHubRoutes(app) {
       const productIntel = summarizeProductIntel();
       const selfRunner = selfRunnerEngine.healthSummary();
       const moduleHealth = buildModuleHealthMap({ ops, qa, productIntel, selfRunner });
+      const alerts = opsAlerts.listAlerts({ limit: 50 });
+      const alertCount = Array.isArray(alerts.alerts) ? alerts.alerts.length : 0;
       return res.status(200).json({
         ok: true,
+        moduleHealth,
         modules: moduleHealth,
+        environment: detectEnvironment(),
+        alertCount,
         updatedAt: new Date().toISOString()
       });
     } catch (err) {

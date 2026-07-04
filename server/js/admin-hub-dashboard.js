@@ -163,6 +163,14 @@
 
       body.classList.remove('hidden');
       bindActions(body);
+
+      if (global.GVAdminHub && typeof global.GVAdminHub.applyModuleHealth === 'function') {
+        var alertList = (data.alerts && data.alerts.alerts) || [];
+        global.GVAdminHub.applyModuleHealth(Object.assign({}, data.moduleHealth || {}, {
+          _environment: data.environment,
+          _alertCount: alertList.length
+        }));
+      }
     }
 
     function load() {
