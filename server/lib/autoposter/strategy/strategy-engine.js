@@ -5,7 +5,8 @@ const { extractSignalsFromMetrics, mergeSignals } = require('./strategy-metrics'
 const { composeStrategy } = require('./strategy-compose');
 const { buildContextLine } = require('./strategy-context');
 const { scoreStrategy } = require('./strategy-score');
-const { guardCompression, guardForTweet, isTruncatedBadly, TWEET_STRATEGY_MAX, TWEET_CONTEXT_MAX } = require('./strategy-guard');
+const { guardCompression, isTruncatedBadly } = require('./strategy-guard');
+const { isCompleteSentence } = require('./strategy-sentences');
 const { buildTrace } = require('./strategy-trace');
 const { validateSignalTokens, containsBannedPhrase } = require('./strategy-provenance');
 const { BANNED_STRATEGY_PHRASES } = require('./strategy-types');
@@ -84,12 +85,11 @@ function buildStrategyEngineOutput(signal, opts = {}) {
   let contextLine = buildContextLine(allSignals, identity, ufContext, beatText);
 
   if (strategyLine) {
-    strategyLine = guardCompression(strategyLine);
-    strategyLine = guardForTweet(strategyLine, TWEET_STRATEGY_MAX);
+    strategyLine = guardCompression(strategyLine, 140);
   }
-  if (contextLine) {
-    contextLine = guardForTweet(contextLine, TWEET_CONTEXT_MAX);
-  }
+
+  if (strategyLine && !isCompleteSentence(strategyLine)) strategyLine = null;
+  if (contextLine && !isCompleteSentence(contextLine)) contextLine = null;
 
   if (isTruncatedBadly(strategyLine) || isTruncatedBadly(contextLine)) {
     strategyLine = isTruncatedBadly(strategyLine) ? null : strategyLine;

@@ -8,6 +8,8 @@ const paraphrase = require('./voice-paraphrase');
 const signalAdapter = require('./voice-signal-adapter');
 const voiceQa = require('./voice-qa');
 const { blocksHaveTruncation } = require('./strategy/strategy-guard');
+const { isCompleteSentence } = require('./strategy/strategy-sentences');
+const pr6Rewrite = require('./rewrite');
 
 const CHAR_LIMIT = parseInt(process.env.VOICE_CHAR_LIMIT || '280', 10);
 const MAX_ATTEMPTS = parseInt(process.env.VOICE_COMPOSE_MAX_ATTEMPTS || '2', 10);
@@ -90,16 +92,21 @@ function buildCtaLine(signal, mode) {
 }
 
 function composeBlocks(signal, mode) {
-  const intel = paraphrase.paraphraseIntel(signal);
+  const strategyPack = paraphrase.buildStrategyPack(signal);
+  const isV2 = !!strategyPack?.trace?.engine;
+
+  const intel = isV2
+    ? paraphrase.buildIntelLine(signal) || paraphrase.paraphraseIntel(signal)
+    : paraphrase.paraphraseIntel(signal);
   if (!intel) throw new Error('intel_missing');
 
-  const strategyPack = paraphrase.buildStrategyPack(signal);
   const context = paraphrase.paraphraseUFContext(signal);
   const strategy = paraphrase.buildStrategyLine(signal);
-  const hook = buildHookLine(signal);
+  const hook = isV2 ? null : buildHookLine(signal);
   const cta = buildCtaLine(signal, mode);
 
-  const identityLine = mode === 'recruiting' ? buildIdentityLine(signal.player) : null;
+  const identityLine =
+    mode === 'recruiting' ? buildIdentityLine(signal.player, { compact: isV2 }) : null;
 
   return {
     identity: identityLine ? { line: identityLine } : null,
@@ -123,7 +130,6 @@ function shrinkBlocksForLimit(blocks, signal, mode, attempt) {
   if (isV2Blocks(blocks)) {
     const shrunk = {
       ...blocks,
-      intel: null,
       hook: null,
       identity: blocks.identity ? { line: blocks.identity.line } : null
     };
@@ -171,6 +177,7 @@ function joinParts(parts) {
 function compressBlocksToTextV2(blocks) {
   const lines = [];
   if (blocks.identity?.line) lines.push(blocks.identity.line);
+  if (blocks.intel) lines.push(blocks.intel);
   if (blocks.context) lines.push(blocks.context);
   if (blocks.strategy) lines.push(blocks.strategy);
   if (blocks.cta) lines.push(blocks.cta);
@@ -230,6 +237,64 @@ function toLegacyTemplateBlocks(blocks) {
   };
 }
 
+function attachPr6Shadow(signal, blocks, text, metadata = {}) {
+  if (!pr6Rewrite.isPr6ShadowMode() && !pr6Rewrite.isPr6Enabled()) {
+    return metadata;
+  }
+
+  const pr5Pack = pr6Rewrite.buildPr5PackFromBlocks(blocks, signal);
+  const pr6 = pr6Rewrite.rewriteStrategyPack(pr5Pack, signal, {
+    cta: blocks.cta,
+    mode: pr6Rewrite.isPr6Enabled() ? 'live' : 'shadow'
+  });
+
+  const next = {
+    ...metadata,
+    pr6Shadow: {
+      ok: pr6.ok,
+      reason: pr6.reason,
+      charCount: pr6.charCount,
+      rewrittenTweet: pr6.rewrittenTweet,
+      trace: pr6.trace
+    }
+  };
+
+  if (pr6.pr789) {
+    next.pr789Shadow = {
+      ok: pr6.pr789.ok,
+      reason: pr6.pr789.reason || null,
+      fallback: pr6.pr789.fallback === true,
+      charCount: pr6.pr789.charCount || pr6.charCount,
+      rewrittenTweet: pr6.pr789.ok ? pr6.pr789.rewrittenTweet : pr6.rewrittenTweet,
+      trace: pr6.pr789.trace || null,
+      violations: pr6.pr789.violations || null
+    };
+  }
+
+  if (pr6Rewrite.shouldUsePr6Live(signal, next.pr6Shadow)) {
+    next.pr6Live = true;
+    next.pr5Text = text;
+    next.pr6GoldenBeat = pr6Rewrite.resolveGoldenBeatId(signal);
+  }
+
+  return next;
+}
+
+function applyPr6LiveText(signal, text, metadata = {}) {
+  if (!pr6Rewrite.shouldUsePr6Live(signal, metadata.pr6Shadow)) {
+    return { text, metadata };
+  }
+  return {
+    text: metadata.pr6Shadow.rewrittenTweet,
+    metadata: {
+      ...metadata,
+      pr6Live: true,
+      pr5Text: text,
+      pr6GoldenBeat: pr6Rewrite.resolveGoldenBeatId(signal)
+    }
+  };
+}
+
 function autoposterCompose(signal, opts = {}) {
   if (!signal?.event?.description && !signal?.beatText) {
     return { ok: false, skipped: true, reason: 'missing_signal' };
@@ -248,7 +313,8 @@ function autoposterCompose(signal, opts = {}) {
   const qaOpts = {
     skipHookMemory: opts.skipHookMemory === true,
     detectiveMode: opts.detectiveMode === true,
-    requireFullLayers: opts.requireFullLayers === true
+    requireFullLayers: opts.requireFullLayers === true,
+    skipTemplateOverlap: opts.skipTemplateOverlap === true
   };
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
@@ -274,6 +340,15 @@ function autoposterCompose(signal, opts = {}) {
       }
       if (blocksHaveTruncation(blocks, text)) {
         lastQa = { passed: false, reason: 'truncated_copy' };
+        continue;
+      }
+      if (
+        isV2Blocks(blocks) &&
+        (!isCompleteSentence(blocks.intel) ||
+          !isCompleteSentence(blocks.context) ||
+          !isCompleteSentence(blocks.strategy))
+      ) {
+        lastQa = { passed: false, reason: 'incomplete_sentence' };
         continue;
       }
 
@@ -306,18 +381,21 @@ function autoposterCompose(signal, opts = {}) {
           phraseMemory.recordCta(blocks.cta);
         }
 
+        const metadata = attachPr6Shadow(signal, blocks, text, {
+          charCount: text.length,
+          attempts: attempt,
+          skipped: false
+        });
+        const live = applyPr6LiveText(signal, text, metadata);
+
         return {
           ok: true,
-          text,
+          text: live.text,
           mode,
           blocks,
           templateBlocks: legacyBlocks,
           validationMeta: candidate.validationMeta,
-          metadata: {
-            charCount: text.length,
-            attempts: attempt,
-            skipped: false
-          }
+          metadata: live.metadata
         };
       }
     } catch (err) {
@@ -339,8 +417,12 @@ function autoposterCompose(signal, opts = {}) {
   };
 }
 
-function composeWithDetectiveHookRetry(signal) {
-  let out = autoposterCompose(signal, { requireFullLayers: true, detectiveMode: true });
+function composeWithDetectiveHookRetry(signal, opts = {}) {
+  let out = autoposterCompose(signal, {
+    requireFullLayers: true,
+    detectiveMode: true,
+    skipTemplateOverlap: opts.skipTemplateOverlap === true
+  });
   if (out.ok) return out;
 
   const hookFailure =
@@ -353,7 +435,8 @@ function composeWithDetectiveHookRetry(signal) {
       forcedHook: hook,
       skipHookMemory: true,
       detectiveMode: true,
-      requireFullLayers: true
+      requireFullLayers: true,
+      skipTemplateOverlap: opts.skipTemplateOverlap === true
     });
     if (out.ok) {
       return {

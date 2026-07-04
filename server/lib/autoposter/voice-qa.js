@@ -6,6 +6,7 @@ const template = require('../x-autoposter-template');
 const insiderTone = require('./insider-tone');
 const phraseMemory = require('./voice-phrase-memory');
 const { blocksHaveTruncation } = require('./strategy/strategy-guard');
+const { isCompleteSentence } = require('./strategy/strategy-sentences');
 
 const UF_LINK_RE =
   /\b(board|depth|scheme|portal|class|visit|rpm|install|trench|recruit|target|priority|mix|race|window|camp|campus|rep|schools|practice|spring|tracking|leaderboard)\b/i;
@@ -163,7 +164,22 @@ function hasVoiceLayers(blocks) {
   const strategy = String(blocks?.strategy || '').trim();
   const hook = String(blocks?.hook || '').trim();
   const cta = String(blocks?.cta || '').trim();
+  const intel = String(blocks?.intel || '').trim();
+  const v2UrlPost =
+    blocks?.strategyTrace?.engine === 'v2' &&
+    !hook &&
+    isRecruitingPlayerUrl(cta);
+  if (v2UrlPost) {
+    return ctx.length >= 20 && strategy.length >= 16 && intel.length >= 20 && cta.length >= 8;
+  }
   return ctx.length >= 20 && strategy.length >= 16 && hook.length >= 6 && cta.length >= 8;
+}
+
+function isRecruitingPlayerUrl(cta) {
+  const c = String(cta || '').trim();
+  if (!c) return false;
+  if (/^https?:\/\//i.test(c)) return true;
+  return /(?:gatorvaultinsider\.com\/)?(?:vault\/)?futurecast\/player\//i.test(c);
 }
 
 function runQualityGate(signal, blocks, text, candidate = {}, opts = {}) {
@@ -178,11 +194,18 @@ function runQualityGate(signal, blocks, text, candidate = {}, opts = {}) {
   if (!hasRealIntel(text, signal, blocks)) reasons.push('missing_real_intel');
   if (!hasUfContext(`${blocks?.context || ''} ${text}`)) reasons.push('missing_uf_context');
   if (!hasStrategyData(blocks, signal)) reasons.push('missing_strategy_data');
-  if (!hookValid(blocks?.hook, qaOpts)) reasons.push('invalid_hook');
+  const v2UrlPost =
+    blocks?.strategyTrace?.engine === 'v2' &&
+    !String(blocks?.hook || '').trim() &&
+    isRecruitingPlayerUrl(blocks?.cta);
+  if (!v2UrlPost && !hookValid(blocks?.hook, qaOpts)) reasons.push('invalid_hook');
   if (!ctaValid(blocks?.cta, mode, qaOpts)) reasons.push('invalid_cta');
   if (opts.requireFullLayers && !hasVoiceLayers(blocks)) reasons.push('missing_voice_layers');
 
   if (blocksHaveTruncation(blocks, text)) reasons.push('truncated_copy');
+  if (!isCompleteSentence(blocks?.intel)) reasons.push('incomplete_intel');
+  if (!isCompleteSentence(blocks?.context)) reasons.push('incomplete_context');
+  if (!isCompleteSentence(blocks?.strategy)) reasons.push('incomplete_strategy');
 
   const combined = `${text} ${blocks?.intel} ${blocks?.context} ${blocks?.strategy}`;
   for (const re of HYPE_RE) {

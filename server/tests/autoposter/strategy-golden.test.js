@@ -56,8 +56,8 @@ test('PR-5 golden — Drakeford uses visit+board template', () => {
   const beat = GOLDEN_BEATS.find((b) => b.id === 'drakeford');
   const out = buildStrategyEngineOutput(toSignal(beat));
   assert.equal(out.trace.templateId, 'visit_board');
-  assert.match(out.strategyLine, /first trip|The Swamp/i);
-  assert.match(out.strategyLine, /top of my board/i);
+  assert.match(out.strategyLine, /Swamp|top schools|board/i);
+  assert.match(out.contextLine, /top of my board|top schools|Swamp/i);
 });
 
 test('PR-5 golden — Willingham passes UF context QA', () => {
@@ -65,6 +65,25 @@ test('PR-5 golden — Willingham passes UF context QA', () => {
   const out = buildStrategyEngineOutput(toSignal(beat));
   assert.ok(out.contextLine);
   assert.equal(voiceQa.hasUfContext(out.contextLine), true, out.contextLine);
+  const { isCompleteSentence } = require('../../lib/autoposter/strategy/strategy-sentences');
+  assert.equal(isCompleteSentence(out.contextLine), true, out.contextLine);
+  assert.equal(isCompleteSentence(out.strategyLine), true, out.strategyLine);
+});
+
+test('PR-5 golden four — full tweets are complete sentences under 280 chars', () => {
+  const voiceEngine = require('../../lib/autoposter/voice-engine');
+  const { isCompleteSentence } = require('../../lib/autoposter/strategy/strategy-sentences');
+  process.env.VOICE_PHRASE_MEMORY = 'false';
+  for (const id of ['drakeford', 'robinson', 'willingham', 'ham']) {
+    const beat = GOLDEN_BEATS.find((b) => b.id === id);
+    const out = voiceEngine.autoposterCompose(toSignal(beat));
+    assert.equal(out.ok, true, `${id} failed: ${out.reason || 'unknown'}`);
+    assert.ok(out.text.length <= 280, `${id} too long: ${out.text.length}`);
+    assert.equal(isCompleteSentence(out.blocks.intel), true, `${id} intel: ${out.blocks.intel}`);
+    assert.equal(isCompleteSentence(out.blocks.context), true, `${id} context: ${out.blocks.context}`);
+    assert.equal(isCompleteSentence(out.blocks.strategy), true, `${id} strategy: ${out.blocks.strategy}`);
+    assert.doesNotMatch(out.text, /\+/);
+  }
 });
 
 test('PR-5 golden — Robinson uses visit+board or visit+staff', () => {

@@ -1,8 +1,16 @@
-/** PR-5 — deterministic strategy templates by signal combo. */
+/** PR-5 — deterministic strategy templates as complete sentences. */
 
 const { bestSignal, hasSignalType } = require('./strategy-metrics');
 const { containsBannedPhrase } = require('./strategy-provenance');
 const { BANNED_STRATEGY_PHRASES, MIN_STRATEGY_CHARS } = require('./strategy-types');
+const {
+  ensurePeriod,
+  isCompleteSentence,
+  lastName,
+  visitPhrase,
+  boardPhrase,
+  staffPhrase
+} = require('./strategy-sentences');
 
 function tokenOf(signals, type) {
   const sig = bestSignal(signals, type);
@@ -16,81 +24,74 @@ function compPhrase(signals) {
   return sig.tokens[0];
 }
 
-const TEMPLATES = {
-  visit_board: (s) => {
-    const visit = tokenOf(s, 'visit');
-    const board = tokenOf(s, 'board');
-    if (/swamp|first trip/i.test(String(visit))) {
-      return `${visit} plus ${board} — Swamp time is doing real board work for UF here.`;
+function buildTemplates(identity = {}) {
+  const name = identity.playerName || identity.name || 'This prospect';
+  const ln = lastName(name);
+
+  return {
+    visit_board: (s) => {
+      const visit = tokenOf(s, 'visit');
+      const board = tokenOf(s, 'board');
+      if (/swamp|first trip/i.test(String(visit))) {
+        return `That Swamp trip gives Florida a live lane on ${ln}'s board.`;
+      }
+      if (/leaderboard|cracked/i.test(String(board))) {
+        return `That Gainesville visit moved ${ln} onto his early leaderboard with Florida.`;
+      }
+      if (/spring|top schools/i.test(`${visit} ${board}`)) {
+        return `Florida is in a strong early spot with ${ln}.`;
+      }
+      return `Florida gained board traction with ${ln} after a campus visit and a strong board signal.`;
+    },
+    visit_staff: (s) => {
+      const staff = tokenOf(s, 'staff');
+      if (/db coaches|coaches texting/i.test(String(staff))) {
+        return `UF is spending staff capital early after the visit landed.`;
+      }
+      return `Florida's staff contact picked up after the visit, and UF has real early leverage.`;
+    },
+    board_staff: (s) => {
+      return `${ln} has Florida on his board while staff contact keeps building for the Gators.`;
+    },
+    comp_ufAngle: (s) => {
+      const comp = compPhrase(s);
+      if (!comp) return null;
+      return `Florida separated on fit with ${ln} while ${comp} stay in the mix.`;
+    },
+    visit_ufAngle: (s) => {
+      return `${ln} said Florida's interest was clear before he even needed an offer.`;
+    },
+    visit_only: (s) => {
+      const comp = compPhrase(s);
+      if (comp) {
+        return `That campus visit gives Florida a separation path against ${comp}.`;
+      }
+      return `That campus visit gives Florida the proof it needs with ${ln}.`;
+    },
+    board_only: (s) => {
+      return `${ln} ${boardPhrase(tokenOf(s, 'board'))}, and Florida needs the next visit to keep climbing.`;
+    },
+    staff_only: (s) => {
+      return `${staffPhrase(tokenOf(s, 'staff'))}, and Florida is building early leverage with ${ln}.`;
+    },
+    comp_only: (s) => {
+      const comp = compPhrase(s);
+      return `Florida needs more campus time with ${ln} before ${comp} pull ahead.`;
+    },
+    cycle_only: (s) => {
+      return `Florida remains in the decision window with ${ln}, and the board math still matters.`;
+    },
+    ufAngle_only: (s) => {
+      return `Florida separated on fit with ${ln}, and that angle matters more than offer timing now.`;
+    },
+    quote_visit: (s) => {
+      const quote = tokenOf(s, 'quote');
+      if (!quote) return null;
+      const shortQuote = quote.length > 36 ? `${quote.slice(0, 33)}…` : quote;
+      return `${ln} said "${shortQuote}" and remains open to another Gainesville trip.`;
     }
-    if (/leaderboard|cracked/i.test(String(board))) {
-      return `${visit} moved him enough to ${board} — UF earned board lift, not just a mention.`;
-    }
-    if (/spring|top schools/i.test(`${visit} ${board}`)) {
-      return `${visit} + ${board} — UF climbing his board this spring.`;
-    }
-    return `${visit} and ${board} showing together — UF has tangible board traction now.`;
-  },
-  visit_staff: (s) => {
-    const visit = tokenOf(s, 'visit');
-    const staff = tokenOf(s, 'staff');
-    return `${staff} + ${visit} — UF spending real staff capital early.`;
-  },
-  board_staff: (s) => {
-    const board = tokenOf(s, 'board');
-    const staff = tokenOf(s, 'staff');
-    return `${board} backed by ${staff} — UF is spending reps here before the next eval cut.`;
-  },
-  comp_ufAngle: (s) => {
-    const comp = compPhrase(s);
-    const angle = tokenOf(s, 'ufAngle');
-    if (comp && angle) {
-      return `${angle} with ${comp} still involved — UF's lane opens if the visit window converts.`;
-    }
-    return null;
-  },
-  visit_ufAngle: (s) => {
-    const visit = tokenOf(s, 'visit');
-    const angle = tokenOf(s, 'ufAngle');
-    if (!visit || !angle) return null;
-    return `${angle} — ${visit} is where UF proves that without leaning on offer leverage.`;
-  },
-  visit_only: (s) => {
-    const visit = tokenOf(s, 'visit');
-    const comp = compPhrase(s);
-    if (comp) {
-      return `${visit} is UF's separation play against ${comp} — face time before the next cut.`;
-    }
-    return `${visit} is the live UF signal — board talk means less without that campus proof.`;
-  },
-  board_only: (s) => {
-    const board = tokenOf(s, 'board');
-    return `${board} keeps UF in an active lane — the next visit window decides momentum.`;
-  },
-  staff_only: (s) => {
-    const staff = tokenOf(s, 'staff');
-    return `${staff} — UF is front-loading relationship work instead of waiting on offer math.`;
-  },
-  comp_only: (s) => {
-    const comp = compPhrase(s);
-    return `${comp} in the mix — UF wins by stacking campus time before the next eval cycle.`;
-  },
-  cycle_only: (s) => {
-    const cycle = tokenOf(s, 'cycle');
-    return `${cycle} — UF board math still matters before the next contact window closes.`;
-  },
-  ufAngle_only: (s) => {
-    const angle = tokenOf(s, 'ufAngle');
-    return `${angle} — that is the differentiator UF can lean on in the next contact window.`;
-  },
-  quote_visit: (s) => {
-    const quote = tokenOf(s, 'quote');
-    const visit = tokenOf(s, 'visit');
-    if (!quote || !visit) return null;
-    const shortQuote = quote.length > 36 ? `${quote.slice(0, 33)}…` : quote;
-    return `"${shortQuote}" — ${visit} is when UF can turn words into board movement.`;
-  }
-};
+  };
+}
 
 function templateAvailable(id, signals) {
   switch (id) {
@@ -125,6 +126,13 @@ function templateAvailable(id, signals) {
 
 function resolveTemplateOrder(signals) {
   const { TEMPLATE_PRIORITY } = require('./strategy-types');
+  if (hasSignalType(signals, 'ufAngle') && hasSignalType(signals, 'visit')) {
+    return [
+      'visit_ufAngle',
+      'comp_ufAngle',
+      ...TEMPLATE_PRIORITY.filter((id) => !['visit_ufAngle', 'comp_ufAngle'].includes(id))
+    ];
+  }
   const staff = bestSignal(signals, 'staff');
   if (staff?.confidence === 'high' && hasSignalType(signals, 'visit')) {
     return [
@@ -138,12 +146,15 @@ function resolveTemplateOrder(signals) {
 }
 
 function composeStrategy(signals, identity = {}) {
+  const TEMPLATES = buildTemplates(identity);
+
   for (const templateId of resolveTemplateOrder(signals)) {
     if (!templateAvailable(templateId, signals)) continue;
     const fn = TEMPLATES[templateId];
-    const line = fn(signals);
+    let line = ensurePeriod(fn(signals));
     if (!line || line.length < MIN_STRATEGY_CHARS) continue;
     if (containsBannedPhrase(line, BANNED_STRATEGY_PHRASES)) continue;
+    if (!isCompleteSentence(line)) continue;
 
     return {
       strategyLine: line,
@@ -166,5 +177,5 @@ function composeStrategy(signals, identity = {}) {
 module.exports = {
   composeStrategy,
   templateAvailable,
-  TEMPLATES
+  buildTemplates
 };

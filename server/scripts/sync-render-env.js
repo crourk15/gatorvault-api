@@ -42,6 +42,10 @@ const { PIPELINE_ACTIVATION_ENV } = require('../lib/pipeline-activation-env');
 /** Intel schedulers + UF Premium autoposter — enabled on every sync (rewrite stays on). */
 const PIPELINE_ENV = {
   ...PIPELINE_ACTIVATION_ENV,
+  X_AUTOPOST_PR6_SHADOW: 'true',
+  X_AUTOPOST_PR6_ENABLED: 'true',
+  X_AUTOPOST_PR7_8_9_SHADOW: 'true',
+  X_AUTOPOST_PR7_8_9_ENABLED: 'false'
 };
 
 const key = process.env.RENDER_API_KEY;

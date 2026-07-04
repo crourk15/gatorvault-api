@@ -4,6 +4,7 @@
 const template = require('../x-autoposter-template');
 const quoteRewriter = require('../x-autoposter-recruiting-quote-rewriter');
 const { buildStrategyEngineOutput } = require('./strategy/strategy-engine');
+const { buildIntelSentence } = require('./strategy/strategy-intel');
 
 const strategyPackCache = new WeakMap();
 
@@ -29,6 +30,10 @@ function firstFactualSentence(text, maxLen = 200) {
   }
   const flat = stripUrls(text).slice(0, maxLen).trim();
   return flat.length >= 20 ? flat : null;
+}
+
+function buildIntelLine(signal) {
+  return buildIntelSentence(signal);
 }
 
 function paraphraseIntel(signal, { sourceLabel = 'Beat writer' } = {}) {
@@ -102,5 +107,6 @@ module.exports = {
   paraphraseUFContext,
   buildStrategyLine,
   buildStrategyPack: getStrategyPack,
+  buildIntelLine,
   firstFactualSentence
 };

@@ -18,6 +18,19 @@ function logPromoteAttempt(caseId, payload = {}) {
   store.appendLog(caseId, { phase: 'promote', ...payload });
 }
 
+function pr6DetectiveMeta(metadata = {}) {
+  if (!metadata || typeof metadata !== 'object') return {};
+  const out = {};
+  if (metadata.pr6Shadow) out.pr6Shadow = metadata.pr6Shadow;
+  if (metadata.pr789Shadow) out.pr789Shadow = metadata.pr789Shadow;
+  if (metadata.pr6Live) {
+    out.pr6Live = true;
+    out.pr6GoldenBeat = metadata.pr6GoldenBeat || null;
+    out.pr5Text = metadata.pr5Text || null;
+  }
+  return out;
+}
+
 async function buildVoicePromoteCandidate({ caseItem, hints, identity, platformContext, research }) {
   const metrics = hints?.metrics || {};
   const voiceRequired =
@@ -62,7 +75,10 @@ async function buildVoicePromoteCandidate({ caseItem, hints, identity, platformC
     ok: true,
     reason: null,
     charCount: built.text.length,
-    metrics: built.validationMeta?.voiceMetrics || metrics
+    metrics: built.validationMeta?.voiceMetrics || metrics,
+    pr6Live: built.metadata?.pr6Live === true,
+    pr6GoldenBeat: built.metadata?.pr6GoldenBeat || null,
+    pr789Shadow: !!built.metadata?.pr789Shadow
   });
 
   return {
@@ -71,7 +87,11 @@ async function buildVoicePromoteCandidate({ caseItem, hints, identity, platformC
     playerName: built.playerName || identity?.playerName || hints?.playerName,
     playerSlug: built.playerSlug || identity?.playerSlug || hints?.playerSlug,
     templateBlocks: built.templateBlocks,
-    validationMeta: built.validationMeta,
+    validationMeta: {
+      ...built.validationMeta,
+      ...pr6DetectiveMeta(built.metadata)
+    },
+    metadata: built.metadata,
     category: 'news',
     topic: 'recruiting',
     urgencyLabel: 'major_beat',
