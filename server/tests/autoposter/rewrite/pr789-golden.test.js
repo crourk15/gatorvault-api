@@ -88,3 +88,42 @@ test('PR-789 blocks unsafe competition framing', () => {
   });
   assert.equal(fake.ok, false);
 });
+
+test('PR-789 live publishes enhanced copy on golden four when enabled', () => {
+  const prev6 = process.env.X_AUTOPOST_PR6_ENABLED;
+  const prev789 = process.env.X_AUTOPOST_PR7_8_9_ENABLED;
+  process.env.X_AUTOPOST_PR6_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR7_8_9_ENABLED = 'true';
+  try {
+    const signal = toSignal(GOLDEN_BEATS.find((b) => b.id === 'ham'));
+    signal.playerSlug = 'ham';
+    const out = voiceEngine.autoposterCompose(signal);
+    assert.equal(out.ok, true);
+    assert.equal(out.metadata?.pr6Live, true);
+    assert.equal(out.metadata?.pr789Live, true);
+    assert.match(out.text, /separate from FSU/i);
+    assert.match(out.text, /face time|widening|momentum/i);
+    assert.doesNotMatch(out.text, /gained separation after that trip/i);
+  } finally {
+    process.env.X_AUTOPOST_PR6_ENABLED = prev6;
+    process.env.X_AUTOPOST_PR7_8_9_ENABLED = prev789;
+  }
+});
+
+test('PR-789 live does not publish on non-golden beats when enabled', () => {
+  const prev6 = process.env.X_AUTOPOST_PR6_ENABLED;
+  const prev789 = process.env.X_AUTOPOST_PR7_8_9_ENABLED;
+  process.env.X_AUTOPOST_PR6_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR7_8_9_ENABLED = 'true';
+  try {
+    const signal = toSignal(GOLDEN_BEATS.find((b) => b.id === 'zylen'));
+    signal.playerSlug = 'zylen';
+    const out = voiceEngine.autoposterCompose(signal);
+    assert.equal(out.ok, true);
+    assert.notEqual(out.metadata?.pr6Live, true);
+    assert.notEqual(out.metadata?.pr789Live, true);
+  } finally {
+    process.env.X_AUTOPOST_PR6_ENABLED = prev6;
+    process.env.X_AUTOPOST_PR7_8_9_ENABLED = prev789;
+  }
+});

@@ -275,6 +275,7 @@ function attachPr6Shadow(signal, blocks, text, metadata = {}) {
     next.pr6Live = true;
     next.pr5Text = text;
     next.pr6GoldenBeat = pr6Rewrite.resolveGoldenBeatId(signal);
+    if (pr6.pr789Live) next.pr789Live = true;
   }
 
   return next;
@@ -284,14 +285,16 @@ function applyPr6LiveText(signal, text, metadata = {}) {
   if (!pr6Rewrite.shouldUsePr6Live(signal, metadata.pr6Shadow)) {
     return { text, metadata };
   }
+  const liveMeta = {
+    ...metadata,
+    pr6Live: true,
+    pr5Text: text,
+    pr6GoldenBeat: pr6Rewrite.resolveGoldenBeatId(signal)
+  };
+  if (metadata.pr789Live) liveMeta.pr789Live = true;
   return {
     text: metadata.pr6Shadow.rewrittenTweet,
-    metadata: {
-      ...metadata,
-      pr6Live: true,
-      pr5Text: text,
-      pr6GoldenBeat: pr6Rewrite.resolveGoldenBeatId(signal)
-    }
+    metadata: liveMeta
   };
 }
 

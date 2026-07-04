@@ -45,7 +45,7 @@ const PIPELINE_ENV = {
   X_AUTOPOST_PR6_SHADOW: 'true',
   X_AUTOPOST_PR6_ENABLED: 'true',
   X_AUTOPOST_PR7_8_9_SHADOW: 'true',
-  X_AUTOPOST_PR7_8_9_ENABLED: 'false'
+  X_AUTOPOST_PR7_8_9_ENABLED: 'true'
 };
 
 const key = process.env.RENDER_API_KEY;

@@ -28,6 +28,7 @@ function pr6DetectiveMeta(metadata = {}) {
     out.pr6GoldenBeat = metadata.pr6GoldenBeat || null;
     out.pr5Text = metadata.pr5Text || null;
   }
+  if (metadata.pr789Live) out.pr789Live = true;
   return out;
 }
 
@@ -77,6 +78,7 @@ async function buildVoicePromoteCandidate({ caseItem, hints, identity, platformC
     charCount: built.text.length,
     metrics: built.validationMeta?.voiceMetrics || metrics,
     pr6Live: built.metadata?.pr6Live === true,
+    pr789Live: built.metadata?.pr789Live === true,
     pr6GoldenBeat: built.metadata?.pr6GoldenBeat || null,
     pr789Shadow: !!built.metadata?.pr789Shadow
   });
