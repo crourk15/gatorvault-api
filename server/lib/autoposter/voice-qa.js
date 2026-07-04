@@ -119,12 +119,16 @@ function ngrams(text, n = 3) {
   return out;
 }
 
-function readRecentPosts() {
+function readRecentPosts(opts = {}) {
   try {
     const xStore = require('../x-autoposter-store');
     const doc = xStore.loadQueue();
     return (doc.items || [])
-      .filter((i) => i.status === 'sent' || i.status === 'pending')
+      .filter((i) => {
+        if (i.status === 'sent') return true;
+        if (opts.sentOnly) return false;
+        return i.status === 'pending';
+      })
       .slice(0, 20)
       .map((i) => i.text || '');
   } catch {
@@ -132,11 +136,11 @@ function readRecentPosts() {
   }
 }
 
-function templateOverlapScore(text) {
+function templateOverlapScore(text, opts = {}) {
   const cand = new Set(ngrams(text, 3));
   if (!cand.size) return 0;
   let max = 0;
-  for (const prev of readRecentPosts()) {
+  for (const prev of readRecentPosts(opts)) {
     const prevSet = new Set(ngrams(prev, 3));
     if (!prevSet.size) continue;
     let shared = 0;
@@ -189,7 +193,10 @@ function runQualityGate(signal, blocks, text, candidate = {}, opts = {}) {
   const tone = insiderTone.validateInsiderTone(combined, { minWords: 12 });
   if (!tone.ok && tone.errors.includes('forbidden_tone')) reasons.push('forbidden_tone');
 
-  if (templateOverlapScore(text) > 0.45) reasons.push('template_overlap');
+  if (!opts.skipTemplateOverlap) {
+    const overlapOpts = opts.overlapSentOnly ? { sentOnly: true } : {};
+    if (templateOverlapScore(text, overlapOpts) > 0.45) reasons.push('template_overlap');
+  }
 
   if (String(text || '').length > parseInt(process.env.VOICE_CHAR_LIMIT || '280', 10)) {
     reasons.push('char_limit');

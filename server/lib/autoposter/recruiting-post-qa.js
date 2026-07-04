@@ -147,7 +147,9 @@ function passesVoicePublishGate(raw) {
       requireFullLayers: true,
       // Compose already validated phrase memory and may have recorded hook/cta.
       skipHookMemory: true,
-      skipCtaMemory: true
+      skipCtaMemory: true,
+      // Do not block send against sibling pending queue rows with shared boilerplate.
+      overlapSentOnly: true
     });
     if (!gate.passed) return false;
   } catch {
@@ -230,7 +232,7 @@ function rejectReason(raw) {
         blocks,
         raw.text,
         raw,
-        { requireFullLayers: true, skipHookMemory: true, skipCtaMemory: true }
+        { requireFullLayers: true, skipHookMemory: true, skipCtaMemory: true, overlapSentOnly: true }
       );
       return gate.reason || 'voice_qa';
     } catch {
