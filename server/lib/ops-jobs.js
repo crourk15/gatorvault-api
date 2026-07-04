@@ -427,6 +427,18 @@ const JOBS = {
       return { ok: true, classYear, result };
     }
   },
+  'player-intelligence-tier-a': {
+    label: 'Refresh Tier A player intelligence (board + golden + allowlist)',
+    subsystem: 'cron:player-intelligence-tier-a',
+    schedule: 'Daily — rankings, gaps, observations for UF-priority players',
+    async run(opts = {}) {
+      const { refreshTierAPlayers } = require('./player-intelligence/orchestrator');
+      return refreshTierAPlayers({
+        limit: Number(opts.limit || 0) || undefined,
+        verbose: opts.verbose === true
+      });
+    }
+  },
   'self-runner-purge-legacy-dedupe': {
     label: 'Reject legacy addDedupeRule Self-Runner proposals',
     subsystem: 'self-runner:cleanup',

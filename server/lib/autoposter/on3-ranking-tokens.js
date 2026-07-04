@@ -58,6 +58,13 @@ function appendRankingTokensToIdentity(identityLine, rankingTokens, pos = null) 
 }
 
 async function loadRankingTokensForSlug(slug, fallback = {}) {
+  try {
+    const { getPlayerIntelligence } = require('../player-intelligence');
+    const intel = await getPlayerIntelligence(slug);
+    if (intel?.rankingTokens) return intel.rankingTokens;
+  } catch {
+    /* fall through to store merge */
+  }
   let merged = { ...(fallback || {}) };
   if (slug) {
     try {

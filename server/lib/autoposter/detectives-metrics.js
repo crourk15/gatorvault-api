@@ -4,7 +4,8 @@
 const signalAdapter = require('./voice-signal-adapter');
 const platform = require('./detectives-platform');
 const store = require('./detectives-store');
-const { loadRankingTokensForSlug } = require('./on3-ranking-tokens');
+const { getPlayerIntelligence } = require('../player-intelligence');
+const { refreshPlayerIntelligence } = require('../player-intelligence/orchestrator');
 
 function nowIso() {
   return new Date().toISOString();
@@ -128,13 +129,66 @@ async function enrichCaseMetrics({ caseItem, hints, identity, platformContext })
     ...(identity || {}),
     ...(research?.player || {})
   };
-  const rankingTokens = await loadRankingTokensForSlug(slug, rankingSource);
-  if (rankingTokens) {
-    metrics.rankingTokens = rankingTokens;
-    repairActions.push(buildRepairAction('pull_on3_rankings', true, JSON.stringify(rankingTokens)));
+
+  if (slug) {
+    try {
+      const refresh = await refreshPlayerIntelligence(slug, { reactive: true });
+      repairActions.push(
+        buildRepairAction(
+          'intel_refresh',
+          refresh.ok === true,
+          refresh.rankingValid
+            ? `ranking:${refresh.rankingSource}`
+            : (refresh.gaps || []).join(',') || refresh.reason || 'incomplete'
+        )
+      );
+    } catch (e) {
+      repairActions.push(buildRepairAction('intel_refresh', false, e.message));
+    }
+  }
+
+  let intel = null;
+  try {
+    intel = slug ? await getPlayerIntelligence(slug) : null;
+  } catch (e) {
+    repairActions.push(buildRepairAction('pull_player_intelligence', false, e.message));
+  }
+
+  if (intel?.rankingTokens) {
+    metrics.rankingTokens = intel.rankingTokens;
+    metrics.rankingSource = intel.rankingBlock?.source || intel.rankingTokens.source || 'on3';
+    repairActions.push(
+      buildRepairAction('pull_on3_rankings', true, JSON.stringify(intel.rankingTokens))
+    );
+  } else if (intel) {
+    repairActions.push(
+      buildRepairAction('pull_on3_rankings', false, (intel.gaps || []).join(',') || 'incomplete_on3_metadata')
+    );
   } else {
     repairActions.push(buildRepairAction('pull_on3_rankings', false, 'incomplete_on3_metadata'));
   }
+
+  if (intel?.competitors?.length && (!metrics.compSchools || !metrics.compSchools.length)) {
+    metrics.compSchools = intel.competitors.map((c) => c.school).filter(Boolean).slice(0, 4);
+    repairActions.push(buildRepairAction('pull_intel_comp', true, metrics.compSchools.join(', ')));
+  }
+
+  if (intel?.rpm?.ufPct != null && (metrics.rpm == null || Number(metrics.rpm) <= 0)) {
+    metrics.rpm = intel.rpm.ufPct;
+    repairActions.push(buildRepairAction('pull_intel_rpm', true, String(metrics.rpm)));
+  }
+
+  if (intel?.visits?.length && !metrics.visitDate && !metrics.visitStart) {
+    const latest = intel.visits[0];
+    if (latest?.visitDate) {
+      metrics.visitDate = latest.visitDate;
+      repairActions.push(buildRepairAction('pull_intel_visit', true, latest.visitDate));
+    }
+  }
+
+  metrics.intelligenceGaps = intel?.gaps || [];
+  metrics.intelligenceStale = intel?.stale || [];
+  metrics.coverageTier = intel?.coverageTier || null;
 
   const gapsBefore = metricsGaps(metricsBefore);
   const gapsAfter = metricsGaps(metrics);

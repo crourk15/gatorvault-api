@@ -36,15 +36,27 @@ function resolvePlayerPlatformUrl(slug, hasFutureCastContext) {
 }
 
 async function loadPlayerContext(slug) {
-  if (!slug) return { player: null, intelRows: [], hasFutureCastContext: false };
+  if (!slug) return { player: null, intelRows: [], hasFutureCastContext: false, intelligence: null };
   try {
     const store = require('../recruiting-store');
     const intelStore = require('../recruiting-intel-store');
+    const { getPlayerIntelligence } = require('../player-intelligence');
     const player = await store.getPlayerBySlug(slug);
     const intelRows = player ? intelStore.getIntelForPlayer({ playerId: player.on3Id || player.id, playerSlug: slug, playerName: player.name }) || [] : [];
-    return { player, intelRows, hasFutureCastContext: playerHasFutureCastContext(player, intelRows) };
+    let intelligence = null;
+    try {
+      intelligence = await getPlayerIntelligence(slug);
+    } catch {
+      intelligence = null;
+    }
+    return {
+      player,
+      intelRows,
+      intelligence,
+      hasFutureCastContext: playerHasFutureCastContext(player, intelRows)
+    };
   } catch {
-    return { player: null, intelRows: [], hasFutureCastContext: false };
+    return { player: null, intelRows: [], hasFutureCastContext: false, intelligence: null };
   }
 }
 

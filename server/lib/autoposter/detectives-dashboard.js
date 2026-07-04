@@ -56,6 +56,8 @@ function formatCaseForDashboard(caseItem) {
     gaps: diagnosis?.gaps || [],
     diagnosis,
     metrics: hints.metrics || null,
+    intelligenceGaps: hints.metrics?.intelligenceGaps || caseItem?.resolvedCandidate?.rewriteMeta?.intelligenceGaps || null,
+    coverageTier: hints.metrics?.coverageTier || null,
     repairActions: (caseItem.repairActions || []).slice(-6),
     voicePromoted: (caseItem.investigationLog || []).some((l) => l.phase === 'promote' && l.ok === true),
     createdAt: caseItem.createdAt,

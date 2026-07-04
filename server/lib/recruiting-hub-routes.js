@@ -217,6 +217,62 @@ function mountRecruitingHubRoutes(app) {
     }
   });
 
+  app.get('/api/recruiting/intelligence/tier-a/gaps', async (req, res) => {
+    try {
+      const adminPin = String(process.env.ADMIN_PIN || '');
+      const pin = String(req.query.pin || req.headers['x-admin-pin'] || '').trim();
+      if (adminPin && pin !== adminPin) {
+        return res.status(401).json({ ok: false, error: 'Unauthorized' });
+      }
+      const { listTierAGaps } = require('./player-intelligence/orchestrator');
+      const gaps = await listTierAGaps();
+      return res.json({
+        ok: true,
+        meta: hubMeta({ tier: 'A', count: gaps.length }),
+        gaps
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/recruiting/intelligence/refresh', async (req, res) => {
+    try {
+      const pin = String(req.body?.pin || req.query.pin || req.headers['x-admin-pin'] || '').trim();
+      const cron = require('./ingest-cron-auth');
+      const cronOk = typeof cron.isIngestCronAuthorized === 'function' && cron.isIngestCronAuthorized(req);
+      const pinOk = pin && pin === String(process.env.ADMIN_PIN || '');
+      if (!cronOk && !pinOk) {
+        return res.status(401).json({ ok: false, error: 'Unauthorized' });
+      }
+      const { refreshTierAPlayers, refreshPlayerIntelligence } = require('./player-intelligence/orchestrator');
+      const slug = String(req.body?.slug || req.query.slug || '').trim().toLowerCase();
+      if (slug) {
+        const result = await refreshPlayerIntelligence(slug, { force: true, reactive: true });
+        return res.json({ ok: true, result });
+      }
+      const limit = Number(req.body?.limit || req.query.limit || 0);
+      const result = await refreshTierAPlayers({ limit: limit > 0 ? limit : 0, verbose: req.body?.verbose === true });
+      return res.json({ ok: true, result });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/intelligence/:slug', async (req, res) => {
+    try {
+      const slug = String(req.params.slug || '').trim().toLowerCase();
+      if (!slug) return res.status(400).json({ ok: false, error: 'Missing player slug' });
+      const { getPlayerIntelligence } = require('./player-intelligence');
+      const cacheKey = `hub:intelligence:${slug}`;
+      const { value } = await hubCache.wrap(cacheKey, () => getPlayerIntelligence(slug));
+      if (!value) return res.status(404).json({ ok: false, error: 'Player not found' });
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), intelligence: value });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/recruiting/intel/high-priority', async (req, res) => {
     try {
       const force = req.query.force === '1' || req.query.force === 'true';

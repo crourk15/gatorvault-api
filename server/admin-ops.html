@@ -611,6 +611,7 @@
               (row.hasFutureCastContext!=null?'<span class="meta">Platform: '+(row.hasFutureCastContext?'FutureCast ready':'Recruiting Hub stub')+(row.platformUrl?' · '+esc(row.platformUrl):'')+'</span><br>':'')+
               (row.resolvedPath?'<span class="meta">Resolved via '+esc(row.resolvedPath)+(row.queueItemId?' · queue '+esc(row.queueItemId):'')+'</span><br>':'')+
               (row.rewriteMeta?renderRewriteBadges(row.rewriteMeta):'')+
+              (row.intelligenceGaps&&row.intelligenceGaps.length?'<span class="meta">Intel gaps: '+esc(row.intelligenceGaps.join(', '))+(row.coverageTier?' · tier '+esc(row.coverageTier):'')+'</span><br>':'')+
               (row.resolvedPreview?'<span style="color:#93c5fd">Publish: '+esc(row.resolvedPreview)+'</span><br>':'')+
               (log?'<span class="meta">Log: '+log+'</span>':'')+
               '</div>';
