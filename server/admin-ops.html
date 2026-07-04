@@ -49,7 +49,7 @@
     .nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
     .nav a{padding:.4rem .7rem;border-radius:.5rem;background:var(--panel);border:1px solid var(--border);font-size:.8rem}
   </style>
-  <script src="/js/admin-embed.js?v=3"></script>
+  <script src="/js/admin-embed.js?v=4"></script>
 </head>
 <body>
   <div id="pin-gate" class="pin-gate">
@@ -205,28 +205,46 @@
     function headers(){
       return {'Content-Type':'application/json','X-Ops-Pin':pin(),'X-Recruiting-Pin':pin()};
     }
+    function parseApiResponse(r, text, url){
+      var ct = (r.headers.get('content-type') || '').toLowerCase();
+      var trimmed = (text || '').trim();
+      if (trimmed.charAt(0) === '<' || ct.indexOf('text/html') >= 0) {
+        var hint = r.status >= 500
+          ? 'API unavailable (' + r.status + '). Render may be waking — retry in 30s.'
+          : 'Got HTML instead of JSON (' + r.status + '). Check /api/* proxy routing.';
+        throw new Error(hint);
+      }
+      var body = null;
+      if (trimmed) {
+        try { body = JSON.parse(trimmed); } catch (e) {
+          throw new Error('Invalid JSON from ' + String(url || '').replace(location.origin, '') + ' (' + r.status + ')');
+        }
+      } else if (!r.ok) {
+        throw new Error('Empty server response (' + r.status + '). API may be starting — retry in 30s.');
+      } else {
+        throw new Error('Empty server response. API may be starting — retry in 30s.');
+      }
+      if (r.status === 401) {
+        throw new Error((body && body.error) || 'Invalid PIN — check Render RECRUITING_ADMIN_PIN / OPS_ADMIN_PIN');
+      }
+      if (!r.ok) {
+        throw new Error((body && body.error) || ('Request failed (' + r.status + ')'));
+      }
+      return body;
+    }
+
     function fetchJson(url, opts){
       opts = opts || {};
       return fetch(url, opts).then(function(r){
+        return r.text().then(function(text){ return parseApiResponse(r, text, url); });
+      });
+    }
+
+    function fetchJsonMeta(url, opts){
+      opts = opts || {};
+      return fetch(url, opts).then(function(r){
         return r.text().then(function(text){
-          var ct = (r.headers.get('content-type') || '').toLowerCase();
-          var trimmed = (text || '').trim();
-          if (trimmed.charAt(0) === '<' || ct.indexOf('text/html') >= 0) {
-            var hint = r.status >= 500
-              ? 'API unavailable (' + r.status + '). Render may be waking — retry in 30s.'
-              : 'Got HTML instead of JSON (' + r.status + '). Check /api/* proxy routing.';
-            throw new Error(hint);
-          }
-          var body = null;
-          if (trimmed) {
-            try { body = JSON.parse(trimmed); } catch (e) {
-              throw new Error('Invalid JSON from ' + url.replace(location.origin, '') + ' (' + r.status + ')');
-            }
-          }
-          if (!r.ok) {
-            throw new Error((body && body.error) || ('Request failed (' + r.status + ')'));
-          }
-          return body;
+          return { status: r.status, body: parseApiResponse(r, text, url) };
         });
       });
     }
@@ -457,12 +475,9 @@
       var p=pin();
       if(!p){alert('PIN required');return;}
       var url=API+'/api/ops/status'+(evalAlerts?'?evaluateAlerts=1&pin='+encodeURIComponent(p):'?pin='+encodeURIComponent(p));
-      fetch(url,{headers:headers()})
-        .then(function(r){
-          if(r.status===401)throw new Error('Invalid PIN — check Render RECRUITING_ADMIN_PIN / OPS_ADMIN_PIN');
-          return r.json();
-        })
+      fetchJson(url,{headers:headers()})
         .then(function(j){
+          if(!j)throw new Error('Empty status response — retry in 30s.');
           if(j.error)throw new Error(j.error);
           if(!j.tiles)throw new Error('Unexpected response');
           var banner=document.getElementById('banner');
@@ -480,8 +495,7 @@
     function loadEliteLogs(){
       var p=pin();
       if(!p){document.getElementById('elite-log-panel').textContent='Enter admin PIN first.';return;}
-      fetch(API+'/api/x/autoposter/elite/logs?limit=40&pin='+encodeURIComponent(p),{headers:headers()})
-        .then(function(r){return r.json();})
+      fetchJson(API+'/api/x/autoposter/elite/logs?limit=40&pin='+encodeURIComponent(p),{headers:headers()})
         .then(function(j){
           var panel=document.getElementById('elite-log-panel');
           if(!j.ok){panel.textContent=j.error||'Failed';return;}
@@ -515,10 +529,9 @@
       var status=document.getElementById('detectives-status').value;
       var url=API+'/api/x/autoposter/detectives?limit=50&pin='+encodeURIComponent(p)+(status?'&status='+encodeURIComponent(status):'');
       panel.textContent='Loading…';
-      fetch(url,{headers:headers()})
-        .then(function(r){return r.json();})
+      fetchJson(url,{headers:headers()})
         .then(function(j){
-          if(!j.ok){panel.textContent=j.error||'Failed';return;}
+          if(!j||!j.ok){panel.textContent=(j&&j.error)||'Failed';return;}
           var c=j.counts||{};
           countsEl.textContent='pending '+esc(c.pending||0)+' · investigating '+esc(c.investigating||0)+' · resolved '+esc(c.resolved||0)+' · failed '+esc(c.failed||0)+(j.enabled===false?' · DISABLED':'')+(j.activeInvestigation?' · ACTIVE: '+esc(j.activeInvestigation.playerName||j.activeInvestigation.caseId):'');
           var cases=j.cases||[];
@@ -578,8 +591,7 @@
     function loadClusterLogs(){
       var p=pin();
       if(!p){document.getElementById('cluster-log-panel').textContent='Enter admin PIN first.';return;}
-      fetch(API+'/api/x/autoposter/cluster/logs?limit=40&pin='+encodeURIComponent(p),{headers:headers()})
-        .then(function(r){return r.json();})
+      fetchJson(API+'/api/x/autoposter/cluster/logs?limit=40&pin='+encodeURIComponent(p),{headers:headers()})
         .then(function(j){
           var panel=document.getElementById('cluster-log-panel');
           if(!j.ok){panel.textContent=j.error||'Failed';return;}
@@ -608,11 +620,10 @@
       var sub=document.getElementById('log-subsystem').value;
       var p=pin();
       var url=API+'/api/ops/logs?limit=80&pin='+encodeURIComponent(p)+(sub?'&subsystem='+encodeURIComponent(sub):'');
-      fetch(url,{headers:headers()})
-        .then(function(r){return r.json();})
+      fetchJson(url,{headers:headers()})
         .then(function(j){
           var panel=document.getElementById('log-panel');
-          if(!j.ok){panel.textContent=j.error||'Failed';return;}
+          if(!j||!j.ok){panel.textContent=(j&&j.error)||'Failed';return;}
           panel.textContent=(j.events||[]).map(function(e){
             return fmtTime(e.timestamp)+' ['+e.status+'] '+e.subsystem+': '+e.message+(e.details?'\n  '+JSON.stringify(e.details):'');
           }).join('\n\n')||'No log events.';
@@ -627,10 +638,7 @@
       var btns=document.querySelectorAll('[data-run="'+jobId+'"],[data-job="'+jobId+'"]');
       var labels=[];
       btns.forEach(function(b,i){labels[i]=b.textContent;b.disabled=true;b.textContent='Running…';});
-      fetch(API+'/api/ops/run-job',{method:'POST',headers:headers(),body:JSON.stringify({pin:p,jobId:jobId})})
-        .then(function(r){
-          return r.json().then(function(j){return{status:r.status,body:j};});
-        })
+      fetchJsonMeta(API+'/api/ops/run-job',{method:'POST',headers:headers(),body:JSON.stringify({pin:p,jobId:jobId})})
         .then(function(res){
           var j=res.body;
           if(res.status===401)throw new Error('Invalid PIN');
