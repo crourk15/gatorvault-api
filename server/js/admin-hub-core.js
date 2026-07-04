@@ -203,6 +203,7 @@
     if (!pin()) return;
     apiGet('/api/admin/hub/module-health?pin=' + encodeURIComponent(pin()))
       .then(function (j) {
+        showApiBanner(null);
         var health = (j && (j.moduleHealth || j.modules)) || null;
         if (health) {
           var merged = Object.assign({}, health);
@@ -211,7 +212,9 @@
           applyModuleHealth(merged);
         }
       })
-      .catch(function () { /* silent */ });
+      .catch(function (err) {
+        showApiBanner((err && err.message) || 'Admin Hub API unreachable — Render may be waking.');
+      });
   }
 
   function startHealthPoll() {
@@ -328,7 +331,25 @@
     return sessionStorage.getItem(SESSION_KEY) || '';
   }
 
+  function showApiBanner(message) {
+    var el = document.getElementById('hub-api-banner');
+    if (!el) return;
+    if (!message) {
+      el.classList.add('hidden');
+      el.textContent = '';
+      return;
+    }
+    el.textContent = message;
+    el.classList.remove('hidden');
+  }
+
   function parseApiResponse(r) {
+    var fetchApi = global.GVAdminApiFetch;
+    if (fetchApi && fetchApi.parseApiResponse) {
+      return r.text().then(function (text) {
+        return fetchApi.parseApiResponse(r, text, API);
+      });
+    }
     return r.text().then(function (text) {
       var j = null;
       try { j = text ? JSON.parse(text) : {}; } catch (e) {

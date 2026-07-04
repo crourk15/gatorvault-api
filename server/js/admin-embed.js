@@ -101,37 +101,42 @@
       'X-Ops-Pin': pin,
       'X-Recruiting-Pin': pin
     };
-    fetch(apiBase() + '/api/ops/verify-pin', {
-      method: 'POST',
-      headers: hdrs,
-      credentials: 'omit',
-      body: JSON.stringify({ pin: pin })
-    })
-      .then(function (r) {
-        return r.json().catch(function () {
-          return { ok: false };
-        });
-      })
+    var fetchJson = (global.GVAdminApiFetch && global.GVAdminApiFetch.fetchJson) || null;
+    var verifyReq = fetchJson
+      ? fetchJson(apiBase() + '/api/ops/verify-pin', {
+          method: 'POST',
+          headers: hdrs,
+          credentials: 'omit',
+          body: JSON.stringify({ pin: pin })
+        })
+      : fetch(apiBase() + '/api/ops/verify-pin', {
+          method: 'POST',
+          headers: hdrs,
+          credentials: 'omit',
+          body: JSON.stringify({ pin: pin })
+        }).then(function (r) { return r.json().catch(function () { return { ok: false }; }); });
+
+    verifyReq
       .then(function (j) {
         if (j && j.ok) {
           cb(true);
           return;
         }
-        return fetch(apiBase() + '/api/ops/status?pin=' + encodeURIComponent(pin), {
-          headers: hdrs,
-          credentials: 'omit'
-        })
-          .then(function (r) {
-            return r.json().catch(function () {
-              return { ok: false };
+        var statusReq = fetchJson
+          ? fetchJson(apiBase() + '/api/ops/status?pin=' + encodeURIComponent(pin), {
+              headers: hdrs,
+              credentials: 'omit'
+            })
+          : fetch(apiBase() + '/api/ops/status?pin=' + encodeURIComponent(pin), {
+              headers: hdrs,
+              credentials: 'omit'
+            }).then(function (r) {
+              return r.json().catch(function () { return { ok: false }; });
             });
-          })
-          .then(function (j2) {
-            cb(!!(j2 && j2.ok));
-          });
+        return statusReq.then(function (j2) { cb(!!(j2 && j2.ok)); });
       })
-      .catch(function () {
-        cb(false);
+      .catch(function (err) {
+        cb(false, err && err.message ? err.message : null);
       });
   }
 
@@ -177,6 +182,22 @@
     applyPin: applyPin,
     verifyPin: verifyPinRemote,
     apiBase: apiBase,
+    fetchJson: function (url, opts) {
+      if (global.GVAdminApiFetch && global.GVAdminApiFetch.fetchJson) {
+        return global.GVAdminApiFetch.fetchJson(url, opts);
+      }
+      return fetch(url, opts || {}).then(function (r) {
+        return r.text().then(function (text) {
+          var trimmed = String(text || '').trim();
+          if (trimmed.charAt(0) === '<') {
+            throw new Error('API unavailable (' + r.status + '). Render may be waking — retry in 30s.');
+          }
+          var body = trimmed ? JSON.parse(trimmed) : {};
+          if (!r.ok) throw new Error((body && body.error) || ('HTTP ' + r.status));
+          return body;
+        });
+      });
+    },
     whenReady: function (fn) {
       if (typeof fn !== 'function') return;
       readyCallbacks.push(fn);

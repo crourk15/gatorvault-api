@@ -22,7 +22,7 @@ function mountOpsRoutes(app) {
 
   app.get('/admin/ops', (req, res) => {
     if (req.query.embed === '1') return res.sendFile(opsPage);
-    return res.redirect(302, '/admin#dashboard');
+    return res.redirect(302, '/admin/hub#dashboard/ops');
   });
 
   app.get('/admin/ops/identity-patterns', (req, res) => {
@@ -49,7 +49,7 @@ function mountOpsRoutes(app) {
   });
 
   app.get('/vault/ops', (req, res) => {
-    res.redirect(302, '/admin#dashboard');
+    res.redirect(302, '/admin/hub#dashboard/ops');
   });
 
   app.get('/api/ops/verify-pin', (req, res) => {
@@ -168,9 +168,7 @@ function mountOpsRoutes(app) {
   });
 
   app.post('/api/ops/log', (req, res) => {
-    const secret = pinFromReq(req);
-    const isCron = req.headers['x-monitoring-cron'] === CRON_SECRET;
-    if (!isCron && !verifyAdminPin(secret)) {
+    if (!isIngestCronAuthorized(req) && !verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Unauthorized' });
     }
     try {
