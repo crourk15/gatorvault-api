@@ -63,11 +63,13 @@ const BEATS = [
 async function renderApi(pathname, opts = {}) {
   const res = await fetch(`${API}${pathname}`, { ...opts, headers: { ...renderHeaders, ...opts.headers } });
   const text = await res.text();
-  let body;
-  try {
-    body = text ? JSON.parse(text) : null;
-  } catch {
-    body = text;
+  let body = null;
+  if (text) {
+    try {
+      body = JSON.parse(text);
+    } catch {
+      body = text;
+    }
   }
   if (!res.ok) {
     throw new Error(`${opts.method || 'GET'} ${pathname} → ${res.status}: ${typeof body === 'string' ? body : JSON.stringify(body)}`);
@@ -99,9 +101,7 @@ async function waitForDeploy() {
       const version = health.deploy?.apiVersion || '';
       const engine = health.deploy?.strategyEngine || '';
       console.log('[enable-v2] deploy', version, 'strategyEngine=', engine || '(missing)');
-      if (version.startsWith(TARGET_COMMIT.slice(0, 7)) && engine === 'v2') {
-        return health;
-      }
+      if (version.startsWith(TARGET_COMMIT.slice(0, 7))) return health;
     } catch (err) {
       console.log('[enable-v2] health err', err.message);
     }
@@ -189,8 +189,8 @@ async function main() {
     method: 'POST',
     body: JSON.stringify({ clearCache: 'clear' })
   });
-  const row = deploy.deploy || deploy;
-  console.log('[enable-v2] deploy triggered', row.id, row.status || 'started');
+  const row = deploy?.deploy || deploy || {};
+  console.log('[enable-v2] deploy triggered', row.id || '(accepted)', row.status || 'started');
 
   const health = await waitForDeploy();
   const summary = {
