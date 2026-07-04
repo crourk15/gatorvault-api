@@ -7,22 +7,31 @@ function slugFromPlayerUrl(url = '') {
   return m ? m[1].toLowerCase() : null;
 }
 
-function resolveGoldenBeatId(signal = {}) {
-  const direct = String(signal.playerSlug || '').toLowerCase();
-  if (PR6_SOFT_LAUNCH_SLUGS.includes(direct)) return direct;
+function slugMatchesGolden(slug, goldenId) {
+  const s = String(slug || '').toLowerCase();
+  const g = String(goldenId || '').toLowerCase();
+  if (!s || !g) return false;
+  return s === g || s.endsWith(`-${g}`);
+}
 
-  const fromUrl = slugFromPlayerUrl(signal.links?.playerUrl || '');
-  if (fromUrl && PR6_SOFT_LAUNCH_SLUGS.includes(fromUrl)) return fromUrl;
+function resolveGoldenBeatId(signal = {}) {
+  const candidates = [
+    String(signal.playerSlug || '').toLowerCase(),
+    slugFromPlayerUrl(signal.links?.playerUrl || '')
+  ];
 
   try {
     const { slugify } = require('../../slug');
     const name = signal.player?.name;
-    if (name) {
-      const slug = slugify(name);
-      if (PR6_SOFT_LAUNCH_SLUGS.includes(slug)) return slug;
-    }
+    if (name) candidates.push(String(slugify(name)).toLowerCase());
   } catch {
     /* slug helper optional in some contexts */
+  }
+
+  for (const goldenId of PR6_SOFT_LAUNCH_SLUGS) {
+    if (candidates.some((slug) => slug && slugMatchesGolden(slug, goldenId))) {
+      return goldenId;
+    }
   }
 
   return null;

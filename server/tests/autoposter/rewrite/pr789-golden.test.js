@@ -115,6 +115,27 @@ test('PR-789 live publishes enhanced copy on golden four when enabled', () => {
   }
 });
 
+test('PR-789 live resolves production player slugs (ryan-drakeford → drakeford)', () => {
+  const prev6 = process.env.X_AUTOPOST_PR6_ENABLED;
+  const prev789 = process.env.X_AUTOPOST_PR7_8_9_ENABLED;
+  process.env.X_AUTOPOST_PR6_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR7_8_9_ENABLED = 'true';
+  try {
+    const signal = toSignal(GOLDEN_BEATS.find((b) => b.id === 'drakeford'));
+    signal.playerSlug = 'ryan-drakeford';
+    signal.links.playerUrl = 'https://gatorvaultinsider.com/vault/futurecast/player/ryan-drakeford';
+    const out = voiceEngine.autoposterCompose(signal);
+    assert.equal(out.ok, true);
+    assert.equal(out.metadata?.pr789Live, true);
+    assert.equal(out.metadata?.pr789GoldenBeat, 'drakeford');
+    assert.notEqual(out.text, out.metadata?.pr5Text || signal.beatText);
+    assert.match(out.text, /traction|top schools|pressing/i);
+  } finally {
+    process.env.X_AUTOPOST_PR6_ENABLED = prev6;
+    process.env.X_AUTOPOST_PR7_8_9_ENABLED = prev789;
+  }
+});
+
 test('PR-789 live does not publish on non-golden beats when enabled', () => {
   const prev6 = process.env.X_AUTOPOST_PR6_ENABLED;
   const prev789 = process.env.X_AUTOPOST_PR7_8_9_ENABLED;
