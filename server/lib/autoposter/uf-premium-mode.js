@@ -71,7 +71,8 @@ const UF_PREMIUM_AUTOPOSTER_ENV = Object.freeze({
   X_AUTOPOST_PHASE5_ENABLED: 'true',
   X_AUTOPOST_HISTORY_DISCOVERY: 'true',
   X_AUTOPOST_ENGAGEMENT_LOOP: 'true',
-  X_AUTOPOST_UTM_ENABLED: 'true'
+  X_AUTOPOST_UTM_ENABLED: 'true',
+  X_AUTOPOST_STRATEGY_ENGINE: 'v2'
 });
 
 function isUfPremiumMode() {

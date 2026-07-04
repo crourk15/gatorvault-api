@@ -123,6 +123,8 @@ services:
         value: "true"
       - key: X_AUTOPOST_DETECTIVES_ENABLED
         value: "true"
+      - key: X_AUTOPOST_STRATEGY_ENGINE
+        value: "v2"
       - key: GNFP_YOUTUBE_CHANNEL_ID
         value: "UC4uzOAHPLPqEnNpNmDUP1VA"
       - key: GV_PRICING_LAUNCH_YEAR

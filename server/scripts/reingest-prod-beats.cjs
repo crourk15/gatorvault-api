@@ -133,6 +133,10 @@ async function main() {
           player: i.playerName,
           path: i.validationMeta?.detectivesPath,
           voice: i.validationMeta?.voiceEngine,
+          strategyEngine: i.validationMeta?.strategyTrace?.engine || null,
+          confidence: i.validationMeta?.strategyTrace?.confidence || null,
+          templateId: i.validationMeta?.strategyTrace?.templateId || null,
+          strategyPreview: i.validationMeta?.strategyTrace?.strategyLine?.slice(0, 120) || null,
           line1: String(i.text || '').split('\n')[0],
           textPreview: String(i.text || '').slice(0, 200)
         }))
