@@ -162,3 +162,37 @@ test('beatOnlyCopyForAngle is disabled to prevent generic fallback posts', () =>
   const platform = require('../../lib/autoposter/detectives-platform');
   assert.equal(platform.beatOnlyCopyForAngle('visit_intel'), null);
 });
+
+test('voice publish gate passes after compose records hook in phrase memory', () => {
+  const phraseMemory = require('../../lib/autoposter/voice-phrase-memory');
+  const hook = 'Circle this one.';
+  phraseMemory.recordHook(hook);
+
+  const beat =
+    'NEW: Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp.';
+  const candidate = {
+    text: [
+      '2028 S Ryan Drakeford',
+      'UF is using live campus time to test fit — the staff wants separation in this safety class.',
+      hook,
+      'https://gatorvaultinsider.com/vault/futurecast/player/ryan-drakeford'
+    ].join('\n'),
+    topic: 'recruiting',
+    playerName: 'Ryan Drakeford',
+    playerSlug: 'ryan-drakeford',
+    validationMeta: {
+      voiceEngine: true,
+      beatText: beat,
+      signalType: 'recruiting',
+      voiceBlocks: {
+        context: 'UF is using live campus time to test fit — the staff wants separation in this safety class.',
+        strategy: 'UF is using live campus time to test fit — the staff wants separation in this safety class.',
+        hook,
+        cta: 'https://gatorvaultinsider.com/vault/futurecast/player/ryan-drakeford'
+      },
+      detectivesPromoted: true
+    }
+  };
+
+  assert.equal(qa.passesVoicePublishGate(candidate), true);
+});

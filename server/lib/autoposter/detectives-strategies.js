@@ -4,6 +4,7 @@
 const { SITE_URL } = require('./discovery-core');
 const promote = require('./detectives-promote');
 const voiceEngine = require('./voice-engine');
+const store = require('./detectives-store');
 
 const VOICE_SKIP_REASONS = new Set(['strategy_data_missing', 'missing_situation', 'copy_failed']);
 
@@ -64,7 +65,15 @@ async function buildStrategyCandidates(
         });
         if (voiceRaw?.text) {
           const marked = markDetectivesCandidate(voiceRaw, caseItem, 'voice_promote', hints, platformContext);
-          if (qa.passesPublishGate(marked)) strategies.push(marked);
+          if (qa.passesPublishGate(marked)) {
+            strategies.push(marked);
+          } else if (caseItem?.id) {
+            store.appendLog(caseItem.id, {
+              phase: 'strategy_reject',
+              path: 'voice_promote',
+              reason: qa.rejectReason(marked)
+            });
+          }
         }
       }
     } catch {

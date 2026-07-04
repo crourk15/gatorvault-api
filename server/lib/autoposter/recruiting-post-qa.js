@@ -144,7 +144,9 @@ function passesVoicePublishGate(raw) {
       player: playerName ? { name: playerName } : null
     };
     const gate = voiceQa.runQualityGate(signal, blocks, text, raw, {
-      requireFullLayers: true
+      requireFullLayers: true,
+      // Compose already validated hook memory and may have recorded the hook.
+      skipHookMemory: true
     });
     if (!gate.passed) return false;
   } catch {
@@ -226,7 +228,8 @@ function rejectReason(raw) {
         },
         blocks,
         raw.text,
-        raw
+        raw,
+        { requireFullLayers: true, skipHookMemory: true }
       );
       return gate.reason || 'voice_qa';
     } catch {
