@@ -103,22 +103,22 @@ function rulesForAutoposter(candidate) {
     const insiderPrompt = require('../x-autoposter-insider-prompt');
     const blocks = candidate.templateBlocks || {};
     const beatText = candidate.validationMeta?.beatText || null;
-    if (beatText && candidate.text) {
+    const voiceLayered = candidate.validationMeta?.voiceEngine === true;
+    if (beatText && candidate.text && !voiceLayered) {
       const quoteRewriter = require('../x-autoposter-recruiting-quote-rewriter');
-      const blocks = candidate.templateBlocks || {};
       const overlapBody = [blocks.context, blocks.insider].filter(Boolean).join(' ') || candidate.text;
       if (quoteRewriter.exceedsOverlap(overlapBody, beatText)) {
         return { allow: false, reason: 'verbatim_beat_overlap' };
       }
     }
-    if (insiderPrompt.isGenericInsiderLine(blocks.insider)) {
+    if (!voiceLayered && insiderPrompt.isGenericInsiderLine(blocks.insider)) {
       return { allow: false, reason: 'generic_insider_line' };
     }
     const check = insiderPrompt.validateInsiderBlocks(
       { contextLine: blocks.context, insiderLine: blocks.insider },
       beatText
     );
-    if (!check.ok && beatText) {
+    if (!voiceLayered && !check.ok && beatText) {
       return { allow: false, reason: check.errors[0] || 'insider_template_failed' };
     }
     const qualityChecks = require('../autoposter/quality-checks');

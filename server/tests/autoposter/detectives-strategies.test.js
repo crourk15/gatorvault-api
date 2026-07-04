@@ -14,6 +14,12 @@ test('voiceRequiredForCase is true when promotable metrics exist', () => {
   assert.equal(strategies.voiceRequiredForCase(caseItem, hints), true);
 });
 
+test('voiceRequiredForCase is true for quality_gate handoffs', () => {
+  const caseItem = { skipReason: 'quality_gate' };
+  const hints = { beatText: ZYLEN_BEAT, metrics: {} };
+  assert.equal(strategies.voiceRequiredForCase(caseItem, hints), true);
+});
+
 test('buildStrategyCandidates skips beat_driven when voice is required', async () => {
   const caseItem = {
     id: 'det_voice_only',

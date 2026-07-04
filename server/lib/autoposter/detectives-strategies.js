@@ -6,7 +6,13 @@ const promote = require('./detectives-promote');
 const voiceEngine = require('./voice-engine');
 const store = require('./detectives-store');
 
-const VOICE_SKIP_REASONS = new Set(['strategy_data_missing', 'missing_situation', 'copy_failed']);
+const VOICE_SKIP_REASONS = new Set([
+  'strategy_data_missing',
+  'missing_situation',
+  'copy_failed',
+  'quality_gate',
+  'recruiting_qa'
+]);
 
 function voiceRequiredForCase(caseItem, hints) {
   if (!voiceEngine.voiceEngineEnabled()) return false;
@@ -14,6 +20,7 @@ function voiceRequiredForCase(caseItem, hints) {
   const skip = String(caseItem?.skipReason || '').toLowerCase();
   if (VOICE_SKIP_REASONS.has(skip)) return true;
   if (promote.hasPromotableMetrics(hints?.metrics)) return true;
+  if (voiceEngine.voiceRequiredForRecruiting() && String(hints?.beatText || '').trim()) return true;
   return false;
 }
 
