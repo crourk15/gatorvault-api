@@ -792,6 +792,65 @@ async function queueAutoposter(row, intelItem, built) {
   }
 }
 
+/** Existing intel with no durable queue row should retry autopost + Detectives. */
+function intelAutopostPending(intelItem) {
+  if (!intelItem) return true;
+  if (intelItem.xPosted) return false;
+  if (!intelItem.xPostQueued) return true;
+  try {
+    const xStore = require('./x-autoposter-store');
+    const queueDoc = xStore.loadQueue();
+    const hasMatch = queueDoc.items.some(
+      (q) =>
+        (q.sourceIntelId === intelItem.id || q.intelFingerprint === intelItem.fingerprint) &&
+        ['pending', 'sent', 'failed', 'skipped_duplicate'].includes(q.status)
+    );
+    return !hasMatch;
+  } catch {
+    return true;
+  }
+}
+
+async function attemptBeatAutoposterAndHandoff(row, intelItem, player) {
+  const built = await buildAutoposterPayload(row, intelItem);
+  const autopost = built.ok
+    ? await queueAutoposter(row, intelItem, built)
+    : { queued: false, reason: built.reason || 'copy_failed' };
+
+  let detectivesHandoff = null;
+  const skipReason = built?.reason || autopost?.reason || null;
+  if (!autopost.queued && skipReason && !BEAT_SILENCE_ALLOWED.has(skipReason)) {
+    const beatPost = beatPostFromRow(row);
+    logBeatPostSkip(beatPost, skipReason, 'autopost');
+    detectivesHandoff = await maybeHandoffBeatSkipToDetectives(beatPost, skipReason, 'autopost');
+  }
+
+  try {
+    require('./ops-monitor').logEvent({
+      subsystem: 'autoposter:beat-writer',
+      status: autopost.queued ? 'success' : 'skipped',
+      message: autopost.queued
+        ? `Queued OV/visit post: ${player.name}`
+        : autopost.reason || 'not_queued',
+      details: {
+        playerName: player.name,
+        eventType: row.eventType,
+        stars: row.stars || player.stars,
+        autopost,
+        detectivesHandoff: detectivesHandoff
+          ? { ok: detectivesHandoff.ok, caseId: detectivesHandoff.case?.id, created: detectivesHandoff.created }
+          : null,
+        identityConfirmed: true,
+        intelRetry: !!intelItem && !intelItem.created
+      }
+    });
+  } catch {
+    /* ops optional */
+  }
+
+  return { built, autopost, detectivesHandoff };
+}
+
 /** Autoposter must not go silent on trusted beat-writer recruiting intel. */
 const BEAT_SILENCE_ALLOWED = new Set([
   'duplicate',
@@ -1341,7 +1400,25 @@ async function processBeatVisitIntelRow(row, snapshot) {
 
   if (!intelResult.created && intelResult.duplicate) {
     snapshot.fingerprints[row.fingerprint] = row.timestamp;
-    return { skipped: true, reason: 'intel_exists' };
+    if (!intelAutopostPending(intelResult.item)) {
+      return { skipped: true, reason: 'intel_exists' };
+    }
+    const { autopost, detectivesHandoff } = await attemptBeatAutoposterAndHandoff(
+      row,
+      intelResult.item,
+      player
+    );
+    return {
+      processed: true,
+      retried: true,
+      reason: 'intel_exists_autopost_retry',
+      player: player.slug,
+      source: row.source,
+      autopost,
+      detectivesHandoff,
+      identityConfirmed: true,
+      fingerprint: row.fingerprint
+    };
   }
 
   await recordBeatDigDeeper(row, player, enrichedIntel, 'auto:beat-writer');
@@ -1384,37 +1461,13 @@ async function processBeatVisitIntelRow(row, snapshot) {
     }
   });
 
-  const built = await buildAutoposterPayload(row, intelResult.item);
-  const autopost = built.ok
-    ? await queueAutoposter(row, intelResult.item, built)
-    : { queued: false, reason: built.reason || 'copy_failed' };
-
-  let detectivesHandoff = null;
-  const skipReason = built?.reason || autopost?.reason || null;
-  if (!autopost.queued && skipReason && !BEAT_SILENCE_ALLOWED.has(skipReason)) {
-    const beatPost = beatPostFromRow(row);
-    logBeatPostSkip(beatPost, skipReason, 'autopost');
-    detectivesHandoff = await maybeHandoffBeatSkipToDetectives(beatPost, skipReason, 'autopost');
-  }
-
   snapshot.fingerprints[row.fingerprint] = row.timestamp;
 
-  try {
-    require('./ops-monitor').logEvent({
-      subsystem: 'autoposter:beat-writer',
-      status: autopost.queued ? 'success' : 'skipped',
-      message: autopost.queued ? `Queued OV/visit post: ${player.name}` : autopost.reason || 'not_queued',
-      details: {
-        playerName: player.name,
-        eventType: row.eventType,
-        stars: row.stars || player.stars,
-        autopost,
-        identityConfirmed: true
-      }
-    });
-  } catch {
-    /* ops optional */
-  }
+  const { autopost, detectivesHandoff } = await attemptBeatAutoposterAndHandoff(
+    row,
+    intelResult.item,
+    player
+  );
 
   return {
     processed: true,
@@ -1607,4 +1660,6 @@ module.exports = {
   shouldSnapshotBeatSkip,
   markBeatSnapshot,
   RETRYABLE_BEAT_SKIP_REASONS,
+  intelAutopostPending,
+  attemptBeatAutoposterAndHandoff
 };
