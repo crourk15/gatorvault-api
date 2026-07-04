@@ -58,7 +58,7 @@ function startDetectivesScheduler() {
       try {
         const backfill = require('./detectives-backfill');
         if (backfill.pileNeedsBackfill()) {
-          await backfill.backfillDetectivesPile({ limit: 80 });
+          await backfill.backfillDetectivesPile({ limit: 80, refreshBeatIfEmpty: false });
         }
       } catch {
         /* optional */

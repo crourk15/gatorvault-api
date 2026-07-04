@@ -109,6 +109,7 @@
           <button id="insider-reload" class="secondary sm">Reload</button>
         </div>
         <div id="insider-engine-status" class="meta" style="margin-bottom:.75rem;font-size:.75rem">Engine: loading…</div>
+        <div id="insider-load-error" class="meta hidden" style="margin-bottom:.75rem;color:#fbbf24"></div>
         <h3 style="font-size:.75rem;text-transform:uppercase;color:var(--muted);margin:1rem 0 .5rem">A. Drafts (Needs Approval)</h3>
         <table>
           <thead><tr><th>Title</th><th>Category</th><th>Created</th><th>Read</th><th>Sources</th><th></th></tr></thead>
@@ -899,14 +900,26 @@
         btn.addEventListener('click',function(){insiderAction('retire',btn.getAttribute('data-retire'));});
       });
     }
+    function showInsiderError(msg){
+      var el=document.getElementById('insider-load-error');
+      if(!el)return;
+      if(!msg){el.classList.add('hidden');el.textContent='';return;}
+      el.textContent=msg+' Click Reload to retry.';
+      el.classList.remove('hidden');
+    }
     function loadInsiderEngineStatus(){
       fetchJson(API+'/api/articles/engine/status').then(function(st){
         var el=document.getElementById('insider-engine-status');
         if(!el||!st.ok)return;
         el.textContent='Phase '+st.phase+' · LLM '+(st.llmAllowed?'on':'off')+' · Auto-weekly '+(st.autoWeekly?'on':'off')+' · Game Week auto-publish '+(st.gameWeekAutoPublish?'on':'off')+' · Pending drafts '+st.pendingDrafts;
-      }).catch(function(){});
+        showInsiderError(null);
+      }).catch(function(e){
+        showInsiderError('Engine status unavailable: '+e.message);
+      });
     }
-    function loadInsiderArticles(){
+    function loadInsiderArticles(retryCount){
+      retryCount=retryCount||0;
+      showInsiderError(null);
       loadInsiderEngineStatus();
       var p=pin(); if(!p)return;
       Promise.all([
@@ -918,7 +931,15 @@
         renderInsiderPublished((res[1].articles||[]).map(function(a){
           return {id:a.id,title:a.title,category:a.category,summary:a.excerpt,publishedAt:a.publishedAt,readMin:a.readMin,sources:a.sources};
         }));
-      }).catch(function(e){alert('Insider articles: '+e.message);});
+        showInsiderError(null);
+      }).catch(function(e){
+        if(retryCount<2&&(e.message||'').indexOf('502')>=0){
+          setTimeout(function(){loadInsiderArticles(retryCount+1);},30000);
+          showInsiderError('Insider articles: '+e.message+' Retrying in 30s…');
+          return;
+        }
+        showInsiderError('Insider articles: '+e.message);
+      });
     }
     function insiderAction(action,id){
       var p=pin(); if(!p||!id)return;

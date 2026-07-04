@@ -249,11 +249,11 @@ async function backfillFromBeatCache({ limit = 80, refreshIfEmpty = true } = {})
   };
 }
 
-async function backfillDetectivesPile({ limit = 80 } = {}) {
+async function backfillDetectivesPile({ limit = 80, refreshBeatIfEmpty = true } = {}) {
   if (!detectives.detectivesEnabled()) return { ok: false, reason: 'detectives_disabled' };
 
   let merged = emptyStats();
-  const beatStats = await backfillFromBeatCache({ limit, refreshIfEmpty: true });
+  const beatStats = await backfillFromBeatCache({ limit, refreshIfEmpty: refreshBeatIfEmpty });
   mergeStats(merged, beatStats);
   merged.beatFetchedAt = beatStats.beatFetchedAt;
   merged.beatPostCount = beatStats.beatPostCount;

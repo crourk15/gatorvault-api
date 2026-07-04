@@ -5,6 +5,7 @@ const store = require('./insider-articles-store');
 const engine = require('./insider-articles-engine');
 const { engineStatus } = require('./insider-articles-config');
 const sanitize = require('./insider-articles-sanitize');
+const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 
 function filterPublicArticles(articles) {
   const gm2 = require('./gm2');
@@ -12,25 +13,6 @@ function filterPublicArticles(articles) {
     const slugs = article.triggerIdentityLog || [];
     return !slugs.some((slug) => slug && gm2.isPlayerQuarantined(slug));
   });
-}
-
-const ADMIN_PIN =
-  process.env.OPS_ADMIN_PIN ||
-  process.env.RECRUITING_ADMIN_PIN ||
-  process.env.EMAIL_TEST_PIN ||
-  'GV2026admin';
-
-function verifyAdminPin(pin) {
-  return !!pin && pin === ADMIN_PIN;
-}
-
-function pinFromReq(req) {
-  return (
-    req.headers['x-ops-pin'] ||
-    req.headers['x-recruiting-pin'] ||
-    req.body?.pin ||
-    req.query?.pin
-  );
 }
 
 function requireAdmin(req, res) {
