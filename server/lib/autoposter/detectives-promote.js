@@ -28,7 +28,12 @@ function pr6DetectiveMeta(metadata = {}) {
     out.pr6GoldenBeat = metadata.pr6GoldenBeat || null;
     out.pr5Text = metadata.pr5Text || null;
   }
-  if (metadata.pr789Live) out.pr789Live = true;
+  if (metadata.pr789Live) {
+    out.pr789Live = true;
+    out.pr789GoldenBeat = metadata.pr789GoldenBeat || metadata.pr6GoldenBeat || null;
+    out.pr6Text = metadata.pr6Text || metadata.pr6Shadow?.rewrittenTweet || null;
+    out.pr789Text = metadata.pr789Text || metadata.pr789Shadow?.rewrittenTweet || null;
+  }
   return out;
 }
 
@@ -80,6 +85,7 @@ async function buildVoicePromoteCandidate({ caseItem, hints, identity, platformC
     pr6Live: built.metadata?.pr6Live === true,
     pr789Live: built.metadata?.pr789Live === true,
     pr6GoldenBeat: built.metadata?.pr6GoldenBeat || null,
+    pr789GoldenBeat: built.metadata?.pr789GoldenBeat || null,
     pr789Shadow: !!built.metadata?.pr789Shadow
   });
 

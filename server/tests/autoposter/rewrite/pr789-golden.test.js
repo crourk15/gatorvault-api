@@ -101,6 +101,11 @@ test('PR-789 live publishes enhanced copy on golden four when enabled', () => {
     assert.equal(out.ok, true);
     assert.equal(out.metadata?.pr6Live, true);
     assert.equal(out.metadata?.pr789Live, true);
+    assert.equal(out.metadata?.pr789GoldenBeat, 'ham');
+    assert.ok(out.metadata?.pr6Text);
+    assert.ok(out.metadata?.pr789Text);
+    assert.notEqual(out.metadata.pr6Text, out.metadata.pr789Text);
+    assert.equal(out.text, out.metadata.pr789Text);
     assert.match(out.text, /separate from FSU/i);
     assert.match(out.text, /face time|widening|momentum/i);
     assert.doesNotMatch(out.text, /gained separation after that trip/i);

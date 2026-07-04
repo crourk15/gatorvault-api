@@ -76,6 +76,8 @@ function rewriteStrategyPack(pr5Pack, signal = {}, opts = {}) {
     rewrittenContext: narrative2,
     rewrittenStrategy: narrative2,
     rewrittenTweet: tweet,
+    pr6OnlyTweet: tweet,
+    pr6OnlyCharCount: tweet.length,
     narrative1,
     narrative2,
     charCount: tweet.length,

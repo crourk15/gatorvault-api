@@ -248,13 +248,17 @@ function attachPr6Shadow(signal, blocks, text, metadata = {}) {
     mode: pr6Rewrite.isPr6Enabled() ? 'live' : 'shadow'
   });
 
+  const goldenBeatId = pr6Rewrite.resolveGoldenBeatId(signal);
+  const pr6OnlyTweet = pr6.pr6OnlyTweet || pr6.rewrittenTweet;
+  const pr6OnlyCharCount = pr6.pr6OnlyCharCount || pr6.charCount;
+
   const next = {
     ...metadata,
     pr6Shadow: {
       ok: pr6.ok,
       reason: pr6.reason,
-      charCount: pr6.charCount,
-      rewrittenTweet: pr6.rewrittenTweet,
+      charCount: pr6OnlyCharCount,
+      rewrittenTweet: pr6OnlyTweet,
       trace: pr6.trace
     }
   };
@@ -265,7 +269,7 @@ function attachPr6Shadow(signal, blocks, text, metadata = {}) {
       reason: pr6.pr789.reason || null,
       fallback: pr6.pr789.fallback === true,
       charCount: pr6.pr789.charCount || pr6.charCount,
-      rewrittenTweet: pr6.pr789.ok ? pr6.pr789.rewrittenTweet : pr6.rewrittenTweet,
+      rewrittenTweet: pr6.pr789.ok ? pr6.pr789.rewrittenTweet : pr6OnlyTweet,
       trace: pr6.pr789.trace || null,
       violations: pr6.pr789.violations || null
     };
@@ -274,8 +278,13 @@ function attachPr6Shadow(signal, blocks, text, metadata = {}) {
   if (pr6Rewrite.shouldUsePr6Live(signal, next.pr6Shadow)) {
     next.pr6Live = true;
     next.pr5Text = text;
-    next.pr6GoldenBeat = pr6Rewrite.resolveGoldenBeatId(signal);
-    if (pr6.pr789Live) next.pr789Live = true;
+    next.pr6GoldenBeat = goldenBeatId;
+    if (pr6.pr789Live && pr6.pr789?.ok) {
+      next.pr789Live = true;
+      next.pr789GoldenBeat = goldenBeatId;
+      next.pr6Text = pr6OnlyTweet;
+      next.pr789Text = pr6.pr789.rewrittenTweet;
+    }
   }
 
   return next;
@@ -285,16 +294,26 @@ function applyPr6LiveText(signal, text, metadata = {}) {
   if (!pr6Rewrite.shouldUsePr6Live(signal, metadata.pr6Shadow)) {
     return { text, metadata };
   }
-  const liveMeta = {
-    ...metadata,
-    pr6Live: true,
-    pr5Text: text,
-    pr6GoldenBeat: pr6Rewrite.resolveGoldenBeatId(signal)
-  };
-  if (metadata.pr789Live) liveMeta.pr789Live = true;
+  const publishText =
+    metadata.pr789Live && metadata.pr789Text
+      ? metadata.pr789Text
+      : metadata.pr6Shadow.rewrittenTweet;
   return {
-    text: metadata.pr6Shadow.rewrittenTweet,
-    metadata: liveMeta
+    text: publishText,
+    metadata: {
+      ...metadata,
+      pr6Live: true,
+      pr5Text: text,
+      pr6GoldenBeat: metadata.pr6GoldenBeat || pr6Rewrite.resolveGoldenBeatId(signal),
+      ...(metadata.pr789Live
+        ? {
+            pr789Live: true,
+            pr789GoldenBeat: metadata.pr789GoldenBeat || metadata.pr6GoldenBeat,
+            pr6Text: metadata.pr6Text || metadata.pr6Shadow?.rewrittenTweet,
+            pr789Text: publishText
+          }
+        : {})
+    }
   };
 }
 
