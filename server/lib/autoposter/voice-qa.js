@@ -64,6 +64,11 @@ function hasUfContext(text) {
 }
 
 function hasStrategyData(blocks, signal) {
+  const trace = blocks?.strategyTrace || signal?.strategyTrace;
+  if (trace?.engine === 'v2') {
+    return trace.confidence !== 'zero' && String(blocks?.strategy || trace.strategyLine || '').length >= 16;
+  }
+
   const s = String(blocks?.strategy || '');
   if (!s || s.length < 16) return false;
   const m = signal?.metrics || {};

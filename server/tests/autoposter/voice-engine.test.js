@@ -103,6 +103,38 @@ test('beat-aware strategy composes visit-story beats without board metrics', () 
   assert.match(out.blocks.strategy, /visit|board|campus|lane/i);
 });
 
+test('PR-5 strategy engine v2 composes Drakeford with trace and beat tokens', () => {
+  const prev = process.env.X_AUTOPOST_STRATEGY_ENGINE;
+  process.env.X_AUTOPOST_STRATEGY_ENGINE = 'v2';
+  process.env.VOICE_PHRASE_MEMORY = 'false';
+  try {
+    const drakeford = {
+      ...FLOYD_SIGNAL,
+      player: { name: 'Ryan Drakeford', pos: 'S', classYear: 2028, school: 'GA' },
+      playerSlug: 'ryan-drakeford',
+      beatText:
+        'Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp. "Florida is one of those schools at the top of my board."',
+      event: {
+        kind: 'visit',
+        description:
+          'Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp. "Florida is one of those schools at the top of my board."',
+        source: 'Blake Alderman'
+      },
+      metrics: { rpm: null, visitDate: null, compSchools: [], depthChartNote: null, schemeNote: null },
+      links: { playerUrl: 'https://gatorvaultinsider.com/vault/futurecast/player/ryan-drakeford' }
+    };
+    const out = voiceEngine.autoposterCompose(drakeford);
+    assert.equal(out.ok, true, out.reason || 'v2 compose failed');
+    assert.equal(out.validationMeta?.strategyTrace?.engine, 'v2');
+    assert.notEqual(out.validationMeta?.strategyTrace?.confidence, 'zero');
+    assert.match(out.blocks.strategy, /Swamp|top of my board/i);
+    assert.doesNotMatch(out.blocks.strategy, /— the\./);
+  } finally {
+    if (prev === undefined) delete process.env.X_AUTOPOST_STRATEGY_ENGINE;
+    else process.env.X_AUTOPOST_STRATEGY_ENGINE = prev;
+  }
+});
+
 test('voice QA rejects hype language', () => {
   const blocks = {
     intel: 'BREAKING: Florida lands a target.',

@@ -8,6 +8,7 @@ const store = require('./detectives-store');
 
 const VOICE_SKIP_REASONS = new Set([
   'strategy_data_missing',
+  'strategy_confidence_zero',
   'missing_situation',
   'copy_failed',
   'quality_gate',

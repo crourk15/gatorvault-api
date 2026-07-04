@@ -88,6 +88,7 @@ function composeBlocks(signal, mode) {
   const intel = paraphrase.paraphraseIntel(signal);
   if (!intel) throw new Error('intel_missing');
 
+  const strategyPack = paraphrase.buildStrategyPack(signal);
   const context = paraphrase.paraphraseUFContext(signal);
   const strategy = paraphrase.buildStrategyLine(signal);
   const hook = buildHookLine(signal);
@@ -101,7 +102,8 @@ function composeBlocks(signal, mode) {
     context,
     strategy,
     hook,
-    cta
+    cta,
+    strategyTrace: strategyPack?.trace || null
   };
 }
 
@@ -127,7 +129,7 @@ function shrinkBlocksForLimit(blocks, signal, mode, attempt) {
   if (attempt >= 2 && blocks.context) {
     shrunk.context = template.hardTrimLine(blocks.context, 64, { sport: 'football' }) || blocks.context;
   }
-  if (attempt >= 2 && blocks.strategy) {
+  if (attempt >= 2 && blocks.strategy && !blocks.strategyTrace) {
     shrunk.strategy = shortStrategyLine(blocks.strategy);
   }
   if (attempt >= 2) {
@@ -241,7 +243,8 @@ function autoposterCompose(signal, opts = {}) {
           voiceMetrics: signal.metrics,
           beatText: signal.beatText || signal.event?.description || null,
           signalType: signal.type,
-          mode
+          mode,
+          strategyTrace: blocks.strategyTrace || null
         }
       };
 

@@ -49,6 +49,15 @@ async function buildVoicePromoteCandidate({ caseItem, hints, identity, platformC
     return null;
   }
 
+  if (built.validationMeta?.strategyTrace?.confidence === 'zero') {
+    logPromoteAttempt(caseItem?.id, {
+      ok: false,
+      reason: 'strategy_confidence_zero',
+      trace: built.validationMeta.strategyTrace
+    });
+    return null;
+  }
+
   logPromoteAttempt(caseItem?.id, {
     ok: true,
     reason: null,

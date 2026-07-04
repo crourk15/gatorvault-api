@@ -4,6 +4,18 @@
  */
 const template = require('../x-autoposter-template');
 const quoteRewriter = require('../x-autoposter-recruiting-quote-rewriter');
+const { buildStrategyEngineOutput } = require('./strategy/strategy-engine');
+const { strategyEngineV2Enabled } = require('./strategy/strategy-types');
+
+const strategyPackCache = new WeakMap();
+
+function getStrategyPack(signal) {
+  if (!strategyEngineV2Enabled()) return null;
+  if (strategyPackCache.has(signal)) return strategyPackCache.get(signal);
+  const out = buildStrategyEngineOutput(signal);
+  strategyPackCache.set(signal, out);
+  return out;
+}
 
 function stripUrls(text) {
   return String(text || '')
@@ -66,6 +78,12 @@ function positionalNeedPhrase(signal) {
 }
 
 function paraphraseUFContext(signal) {
+  if (strategyEngineV2Enabled()) {
+    const pack = getStrategyPack(signal);
+    if (pack?.contextLine) return pack.contextLine;
+    throw new StrategyDataMissing();
+  }
+
   const type = signal?.type || 'recruiting';
   const beat = String(signal?.beatText || signal?.event?.description || '').toLowerCase();
 
@@ -180,6 +198,12 @@ function beatAwareStrategy(signal) {
 }
 
 function buildStrategyLine(signal) {
+  if (strategyEngineV2Enabled()) {
+    const pack = getStrategyPack(signal);
+    if (!pack?.strategyLine || pack.confidence === 'zero') throw new StrategyDataMissing();
+    return pack.strategyLine;
+  }
+
   const m = signal?.metrics || {};
   if (m.rpm != null && Number(m.rpm) > 0) {
     const line = paraphraseRPM(m.rpm);
@@ -213,6 +237,7 @@ module.exports = {
   paraphraseIntel,
   paraphraseUFContext,
   buildStrategyLine,
+  buildStrategyPack: getStrategyPack,
   paraphraseRPM,
   paraphraseVisit,
   paraphraseCompetition,
