@@ -92,6 +92,55 @@ function buildPlayerUrl(slug, meta = {}) {
   return resolvePlayerUrl(slug, meta);
 }
 
+const POS_ALIASES = {
+  safety: 'S',
+  cornerback: 'CB',
+  'interior ol': 'IOL',
+  'interior offensive lineman': 'IOL',
+  edge: 'EDGE',
+  linebacker: 'LB',
+  quarterback: 'QB',
+  runningback: 'RB',
+  'running back': 'RB',
+  'wide receiver': 'WR',
+  'tight end': 'TE'
+};
+
+function normalizePosToken(raw) {
+  const t = String(raw || '').trim();
+  if (!t) return null;
+  const upper = t.toUpperCase();
+  if (/^(S|CB|WR|QB|RB|TE|DL|EDGE|LB|OT|OG|IOL|ATH|DE|DT|OL)$/.test(upper)) return upper;
+  return POS_ALIASES[t.toLowerCase()] || upper;
+}
+
+function extractPosFromBeat(beatText, playerName = '') {
+  const bt = String(beatText || '');
+  if (!bt) return null;
+  const named = playerName
+    ? bt.match(new RegExp(`\\b(20\\d{2})\\s+(?:(?:\\d+-star|four-star|five-star|three-star)\\s+)?([A-Za-z ]{2,16}?)\\s+${playerName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i'))
+    : null;
+  if (named?.[2]) {
+    const pos = normalizePosToken(named[2].trim());
+    if (pos && pos !== 'ATH') return pos;
+  }
+  const generic = bt.match(
+    /\b(20\d{2})\s+(?:(?:\d+-star|four-star|five-star|three-star)\s+)?(safety|cornerback|edge|linebacker|quarterback|running back|wide receiver|tight end|IOL|OT|OG|CB|S|WR|QB|RB|TE|DL|EDGE|LB|DE|DT|ATH)\b/i
+  );
+  if (generic?.[2]) return normalizePosToken(generic[2]);
+  if (/\bDB coaches\b/i.test(bt)) return 'CB';
+  if (/\bsafety\b/i.test(bt)) return 'S';
+  if (/\bcornerback\b/i.test(bt)) return 'CB';
+  return null;
+}
+
+function resolvePlayerPos({ beatText, playerName, pos }) {
+  const fromBeat = extractPosFromBeat(beatText, playerName);
+  const current = normalizePosToken(pos);
+  if (fromBeat && (!current || current === 'ATH')) return fromBeat;
+  return current || fromBeat || null;
+}
+
 function signalFromBeatPost(beatPost, research = null, playerData = null) {
   const text = String(beatPost?.text || '').trim();
   const slug =
@@ -245,5 +294,8 @@ module.exports = {
   parseUfRpm,
   compSchoolsFromResearch,
   buildPlayerUrl,
-  extractVisitDateFromBeat
+  extractVisitDateFromBeat,
+  extractPosFromBeat,
+  resolvePlayerPos,
+  normalizePosToken
 };

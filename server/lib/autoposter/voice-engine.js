@@ -7,6 +7,7 @@ const phraseMemory = require('./voice-phrase-memory');
 const paraphrase = require('./voice-paraphrase');
 const signalAdapter = require('./voice-signal-adapter');
 const voiceQa = require('./voice-qa');
+const { blocksHaveTruncation } = require('./strategy/strategy-guard');
 
 const CHAR_LIMIT = parseInt(process.env.VOICE_CHAR_LIMIT || '280', 10);
 const MAX_ATTEMPTS = parseInt(process.env.VOICE_COMPOSE_MAX_ATTEMPTS || '2', 10);
@@ -41,6 +42,10 @@ const CTA_BOARD = ['Full board movement is live on GatorVault.'];
 
 function voiceEngineEnabled() {
   return process.env.X_AUTOPOST_VOICE_ENGINE !== 'false';
+}
+
+function isV2Blocks(blocks) {
+  return blocks?.strategyTrace?.engine === 'v2';
 }
 
 function buildIdentityLine(player, { compact = false } = {}) {
@@ -115,6 +120,19 @@ function shortStrategyLine(strategy) {
 }
 
 function shrinkBlocksForLimit(blocks, signal, mode, attempt) {
+  if (isV2Blocks(blocks)) {
+    const shrunk = {
+      ...blocks,
+      intel: null,
+      hook: null,
+      identity: blocks.identity ? { line: blocks.identity.line } : null
+    };
+    if (attempt >= 2 && mode === 'recruiting' && signal?.player) {
+      shrunk.identity = { line: buildIdentityLine(signal.player, { compact: true }) };
+    }
+    return shrunk;
+  }
+
   const shrunk = {
     ...blocks,
     identity: blocks.identity ? { line: blocks.identity.line } : null
@@ -150,7 +168,20 @@ function joinParts(parts) {
     .trim();
 }
 
+function compressBlocksToTextV2(blocks) {
+  const lines = [];
+  if (blocks.identity?.line) lines.push(blocks.identity.line);
+  if (blocks.context) lines.push(blocks.context);
+  if (blocks.strategy) lines.push(blocks.strategy);
+  if (blocks.cta) lines.push(blocks.cta);
+  return lines.filter(Boolean).join('\n');
+}
+
 function compressBlocksToText(blocks, mode) {
+  if (mode === 'recruiting' && isV2Blocks(blocks)) {
+    return compressBlocksToTextV2(blocks);
+  }
+
   const lines = [];
   if (mode === 'recruiting' && blocks.identity?.line) {
     lines.push(joinParts([blocks.identity.line, blocks.intel]));
@@ -163,6 +194,10 @@ function compressBlocksToText(blocks, mode) {
 }
 
 function aggressiveCompress(blocks, mode) {
+  if (mode === 'recruiting' && isV2Blocks(blocks)) {
+    return compressBlocksToTextV2(blocks);
+  }
+
   const lines = [];
   if (mode === 'recruiting' && blocks.identity?.line) {
     lines.push(joinParts([blocks.identity.line, blocks.intel]));
@@ -201,6 +236,14 @@ function autoposterCompose(signal, opts = {}) {
   }
 
   const mode = signalAdapter.resolveMode(signal);
+  if (signal?.player && signal?.beatText) {
+    signal.player.pos =
+      signalAdapter.resolvePlayerPos({
+        beatText: signal.beatText,
+        playerName: signal.player.name,
+        pos: signal.player.pos
+      }) || signal.player.pos;
+  }
   let lastQa = null;
   const qaOpts = {
     skipHookMemory: opts.skipHookMemory === true,
@@ -221,12 +264,16 @@ function autoposterCompose(signal, opts = {}) {
       if (!withinCharLimit(text)) {
         text = aggressiveCompress(blocks, mode);
       }
-      if (!withinCharLimit(text) && attempt >= 2) {
+      if (!withinCharLimit(text) && attempt >= 2 && !isV2Blocks(blocks)) {
         text =
           template.enforceTweetLimit(text, CHAR_LIMIT, { sport: 'football', voiceEngine: true }) || text;
       }
       if (!withinCharLimit(text)) {
         lastQa = { passed: false, reason: 'char_limit' };
+        continue;
+      }
+      if (blocksHaveTruncation(blocks, text)) {
+        lastQa = { passed: false, reason: 'truncated_copy' };
         continue;
       }
 
@@ -367,6 +414,19 @@ async function composeFromDetectiveCase({ hints, identity, platformContext, rese
   );
 
   applyDetectiveOverride(signal, override);
+
+  if (signal.player) {
+    signal.player.pos =
+      signalAdapter.resolvePlayerPos({
+        beatText: hints?.beatText,
+        playerName: signal.player.name,
+        pos: signal.player.pos || identity?.pos
+      }) || signal.player.pos;
+    const yearMatch = String(hints?.beatText || '').match(/\b(20(?:2[6-9]|3[0-2]))\b/);
+    if (yearMatch && !signal.player.classYear) {
+      signal.player.classYear = parseInt(yearMatch[1], 10);
+    }
+  }
 
   if (platformContext?.url) {
     signal.links.playerUrl = platformContext.url;

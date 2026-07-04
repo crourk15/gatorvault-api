@@ -5,6 +5,7 @@ const copy = require('../x-autoposter-copy');
 const template = require('../x-autoposter-template');
 const insiderTone = require('./insider-tone');
 const phraseMemory = require('./voice-phrase-memory');
+const { blocksHaveTruncation } = require('./strategy/strategy-guard');
 
 const UF_LINK_RE =
   /\b(board|depth|scheme|portal|class|visit|rpm|install|trench|recruit|target|priority|mix|race|window|camp|campus|rep|schools|practice|spring|tracking|leaderboard)\b/i;
@@ -180,6 +181,8 @@ function runQualityGate(signal, blocks, text, candidate = {}, opts = {}) {
   if (!hookValid(blocks?.hook, qaOpts)) reasons.push('invalid_hook');
   if (!ctaValid(blocks?.cta, mode, qaOpts)) reasons.push('invalid_cta');
   if (opts.requireFullLayers && !hasVoiceLayers(blocks)) reasons.push('missing_voice_layers');
+
+  if (blocksHaveTruncation(blocks, text)) reasons.push('truncated_copy');
 
   const combined = `${text} ${blocks?.intel} ${blocks?.context} ${blocks?.strategy}`;
   for (const re of HYPE_RE) {

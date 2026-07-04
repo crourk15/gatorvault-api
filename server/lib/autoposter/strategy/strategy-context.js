@@ -28,6 +28,20 @@ function beatTokens(beatText) {
   return [...new Set(tokens.map((t) => t.trim()).filter(Boolean))];
 }
 
+function abbreviateToken(token) {
+  const t = String(token || '').trim();
+  if (!t) return t;
+  if (/first visit to gainesville/i.test(t)) return 'Gainesville visit';
+  if (/first trip to the swamp/i.test(t)) return 'Swamp visit';
+  if (/on campus this spring/i.test(t)) return 'spring campus visit';
+  if (/cracked his early leaderboard/i.test(t)) return 'early leaderboard';
+  if (/all three db coaches texting/i.test(t)) return 'DB coaches texting';
+  if (/top schools/i.test(t)) return 'top schools';
+  if (/top of my board/i.test(t)) return 'top of board';
+  if (t.length > 34) return t.slice(0, 31) + '…';
+  return t;
+}
+
 function buildContextLine(signals, identity = {}, ufContext = {}, beatText = '') {
   const visit = bestSignal(signals, 'visit');
   const board = bestSignal(signals, 'board');
@@ -39,21 +53,21 @@ function buildContextLine(signals, identity = {}, ufContext = {}, beatText = '')
   const name = identity.playerName || identity.name || 'This prospect';
 
   const parts = [];
-  if (visit?.tokens?.[0]) parts.push(visit.tokens[0]);
-  if (board?.tokens?.[0]) parts.push(board.tokens[0]);
-  if (staff?.tokens?.[0]) parts.push(staff.tokens[0]);
-  if (comp?.tokens?.[0]) parts.push(comp.tokens[0]);
+  if (visit?.tokens?.[0]) parts.push(abbreviateToken(visit.tokens[0]));
+  if (board?.tokens?.[0]) parts.push(abbreviateToken(board.tokens[0]));
+  if (staff?.tokens?.[0]) parts.push(abbreviateToken(staff.tokens[0]));
+  if (comp?.tokens?.[0]) parts.push(abbreviateToken(comp.tokens[0]));
 
   let line = '';
   if (parts.length >= 2) {
-    line = `Florida is tracking ${name}${classYear ? ` (${classYear} ${pos})` : ''} with ${parts.slice(0, 2).join(' and ')} on UF's board.`;
+    line = `${name} (${classYear} ${pos}): ${parts[0]} + ${parts[1]} on UF's board.`;
   } else if (quote?.tokens?.[0]) {
     const q = quote.tokens[0].length > MAX_CONTEXT_QUOTE_CHARS
       ? `${quote.tokens[0].slice(0, MAX_CONTEXT_QUOTE_CHARS - 1)}…`
       : quote.tokens[0];
     line = `"${q}" — UF context for ${classYear ? `${classYear} ` : ''}${pos} ${name.split(' ').pop()}.`;
   } else if (visit?.tokens?.[0]) {
-    line = `Gainesville visit intel on ${name}: ${visit.tokens[0]} is the live UF board signal.`;
+    line = `${name} (${classYear} ${pos}): ${visit.tokens[0]} is the live UF board signal.`;
   } else if (board?.tokens?.[0]) {
     line = `${name} has ${board.tokens[0]} — Florida is in the conversation.`;
   } else if (comp?.tokens?.length) {
@@ -74,13 +88,6 @@ function buildContextLine(signals, identity = {}, ufContext = {}, beatText = '')
 
   if (!line || containsBannedPhrase(line, BANNED_STRATEGY_PHRASES)) {
     return null;
-  }
-
-  const beatDerived = beatTokens(beatText);
-  const lineLower = line.toLowerCase();
-  const hits = beatDerived.filter((t) => lineLower.includes(t.toLowerCase()));
-  if (hits.length < 2 && beatDerived.length >= 2) {
-    line = `${line} (${beatDerived[0]}, ${beatDerived[1]}).`.replace(/\.\s*\(/, ' (');
   }
 
   return line;

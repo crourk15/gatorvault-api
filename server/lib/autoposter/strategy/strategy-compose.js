@@ -27,14 +27,14 @@ const TEMPLATES = {
       return `${visit} moved him enough to ${board} — UF earned board lift, not just a mention.`;
     }
     if (/spring|top schools/i.test(`${visit} ${board}`)) {
-      return `${visit} synced with ${board} — spring activity is pushing UF up his pecking order.`;
+      return `${visit} + ${board} — UF climbing his board this spring.`;
     }
     return `${visit} and ${board} showing together — UF has tangible board traction now.`;
   },
   visit_staff: (s) => {
     const visit = tokenOf(s, 'visit');
     const staff = tokenOf(s, 'staff');
-    return `${staff} plus ${visit} — that is actionable staff capital, not a courtesy check-in.`;
+    return `${staff} + ${visit} — UF spending real staff capital early.`;
   },
   board_staff: (s) => {
     const board = tokenOf(s, 'board');

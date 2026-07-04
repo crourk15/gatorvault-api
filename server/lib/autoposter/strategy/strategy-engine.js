@@ -5,7 +5,7 @@ const { extractSignalsFromMetrics, mergeSignals } = require('./strategy-metrics'
 const { composeStrategy } = require('./strategy-compose');
 const { buildContextLine } = require('./strategy-context');
 const { scoreStrategy } = require('./strategy-score');
-const { guardCompression, isTruncatedBadly } = require('./strategy-guard');
+const { guardCompression, guardForTweet, isTruncatedBadly, TWEET_STRATEGY_MAX, TWEET_CONTEXT_MAX } = require('./strategy-guard');
 const { buildTrace } = require('./strategy-trace');
 const { validateSignalTokens, containsBannedPhrase } = require('./strategy-provenance');
 const { BANNED_STRATEGY_PHRASES } = require('./strategy-types');
@@ -85,6 +85,15 @@ function buildStrategyEngineOutput(signal, opts = {}) {
 
   if (strategyLine) {
     strategyLine = guardCompression(strategyLine);
+    strategyLine = guardForTweet(strategyLine, TWEET_STRATEGY_MAX);
+  }
+  if (contextLine) {
+    contextLine = guardForTweet(contextLine, TWEET_CONTEXT_MAX);
+  }
+
+  if (isTruncatedBadly(strategyLine) || isTruncatedBadly(contextLine)) {
+    strategyLine = isTruncatedBadly(strategyLine) ? null : strategyLine;
+    contextLine = isTruncatedBadly(contextLine) ? null : contextLine;
   }
 
   if (containsBannedPhrase(strategyLine, BANNED_STRATEGY_PHRASES)) {

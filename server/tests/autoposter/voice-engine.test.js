@@ -135,6 +135,54 @@ test('PR-5 strategy engine v2 composes Drakeford with trace and beat tokens', ()
   }
 });
 
+test('PR-5 v2 Robinson compose has no truncation or beat headline in identity line', () => {
+  process.env.VOICE_PHRASE_MEMORY = 'false';
+  const robinson = {
+    type: 'recruiting',
+    player: { name: 'Man Robinson', pos: 'ATH', classYear: 2028 },
+    beatText:
+      'NEW: Man Robinson says Florida has "all three" of their DB coaches texting him — and after his first visit to Gainesville, the Gators just cracked his early leaderboard.',
+    event: {
+      description:
+        'NEW: Man Robinson says Florida has "all three" of their DB coaches texting him — and after his first visit to Gainesville, the Gators just cracked his early leaderboard.'
+    },
+    metrics: {},
+    links: { playerUrl: 'https://gatorvaultinsider.com/vault/futurecast/player/man-robinson' },
+    playerSlug: 'man-robinson'
+  };
+  const out = voiceEngine.autoposterCompose(robinson);
+  assert.equal(out.ok, true, out.reason || JSON.stringify(out.metadata));
+  assert.ok(out.text.length <= 280);
+  assert.match(out.text, /2028 CB Man Robinson/);
+  assert.doesNotMatch(out.text, /NEW: Man Robinson says/);
+  assert.doesNotMatch(out.text, /with first visit to\./i);
+  assert.doesNotMatch(out.text, /with on\./i);
+  assert.match(out.blocks.strategy, /staff capital|DB coaches/i);
+});
+
+test('PR-5 v2 Willingham compose has no truncation', () => {
+  process.env.VOICE_PHRASE_MEMORY = 'false';
+  const willingham = {
+    type: 'recruiting',
+    player: { name: 'Bryce Willingham', pos: 'CB', classYear: 2028 },
+    beatText:
+      'Florida has given 2028 CB Bryce Willingham a lot to like as of late. He was on campus this spring to watch the Gators in spring practice, and they are in a strong position early on with the cornerback out of Atlanta. "Definitely one of my top schools."',
+    event: {
+      description:
+        'Florida has given 2028 CB Bryce Willingham a lot to like as of late. He was on campus this spring to watch the Gators in spring practice, and they are in a strong position early on with the cornerback out of Atlanta. "Definitely one of my top schools."'
+    },
+    metrics: {},
+    links: { playerUrl: 'https://gatorvaultinsider.com/vault/futurecast/player/bryce-willingham' },
+    playerSlug: 'bryce-willingham'
+  };
+  const out = voiceEngine.autoposterCompose(willingham);
+  assert.equal(out.ok, true, out.reason || JSON.stringify(out.metadata));
+  assert.ok(out.text.length <= 280);
+  assert.doesNotMatch(out.text, /with on\./i);
+  assert.doesNotMatch(out.text, /— spring\./i);
+  assert.match(out.blocks.strategy, /spring|top schools/i);
+});
+
 test('voice QA rejects hype language', () => {
   const blocks = {
     intel: 'BREAKING: Florida lands a target.',
