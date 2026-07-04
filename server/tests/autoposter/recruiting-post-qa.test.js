@@ -196,3 +196,38 @@ test('voice publish gate passes after compose records hook in phrase memory', ()
 
   assert.equal(qa.passesVoicePublishGate(candidate), true);
 });
+
+test('voice publish gate passes after compose records CTA in phrase memory', () => {
+  const phraseMemory = require('../../lib/autoposter/voice-phrase-memory');
+  const cta = 'gatorvaultinsider.com/vault/futurecast/player/merrick-ham';
+  phraseMemory.recordCta(cta);
+
+  const beat =
+    'Four-star 2028 EDGE Merrick Ham was on campus at Florida in early March.';
+  const candidate = {
+    text: [
+      '2028 EDGE Merrick Ham',
+      'Gainesville activity matters here — visit timing tracks with UF board momentum.',
+      'Visit window on 2026-06-15 carries real weight in this race.',
+      'Watch this name.',
+      cta
+    ].join('\n'),
+    topic: 'recruiting',
+    playerName: 'Merrick Ham',
+    playerSlug: 'merrick-ham',
+    validationMeta: {
+      voiceEngine: true,
+      beatText: beat,
+      signalType: 'recruiting',
+      voiceBlocks: {
+        context: 'Gainesville activity matters here — visit timing tracks with UF board momentum.',
+        strategy: 'Visit window on 2026-06-15 carries real weight in this race.',
+        hook: 'Watch this name.',
+        cta
+      },
+      detectivesPromoted: true
+    }
+  };
+
+  assert.equal(qa.passesVoicePublishGate(candidate), true);
+});

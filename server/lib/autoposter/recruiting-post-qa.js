@@ -145,8 +145,9 @@ function passesVoicePublishGate(raw) {
     };
     const gate = voiceQa.runQualityGate(signal, blocks, text, raw, {
       requireFullLayers: true,
-      // Compose already validated hook memory and may have recorded the hook.
-      skipHookMemory: true
+      // Compose already validated phrase memory and may have recorded hook/cta.
+      skipHookMemory: true,
+      skipCtaMemory: true
     });
     if (!gate.passed) return false;
   } catch {
@@ -229,7 +230,7 @@ function rejectReason(raw) {
         blocks,
         raw.text,
         raw,
-        { requireFullLayers: true, skipHookMemory: true }
+        { requireFullLayers: true, skipHookMemory: true, skipCtaMemory: true }
       );
       return gate.reason || 'voice_qa';
     } catch {

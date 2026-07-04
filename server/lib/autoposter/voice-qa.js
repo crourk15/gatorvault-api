@@ -91,7 +91,7 @@ function hookValid(hook, opts = {}) {
   return true;
 }
 
-function ctaValid(cta, mode) {
+function ctaValid(cta, mode, opts = {}) {
   const c = String(cta || '').trim();
   if (!c) return false;
   if (/download|sign up|subscribe now|get the app/i.test(c)) return false;
@@ -99,7 +99,7 @@ function ctaValid(cta, mode) {
     return true;
   }
   if (/gatorvault/i.test(c)) {
-    if (phraseMemory.ctaRecentlyUsed(c)) return false;
+    if (!opts.skipCtaMemory && phraseMemory.ctaRecentlyUsed(c)) return false;
     return true;
   }
   return /^https?:\/\//i.test(c);
@@ -161,6 +161,7 @@ function runQualityGate(signal, blocks, text, candidate = {}, opts = {}) {
   const mode = signal?.type === 'recruiting' && signal?.player ? 'recruiting' : 'non_recruiting';
   const qaOpts = {
     skipHookMemory: opts.skipHookMemory === true,
+    skipCtaMemory: opts.skipCtaMemory === true,
     detectiveMode: opts.detectiveMode === true
   };
 
@@ -168,7 +169,7 @@ function runQualityGate(signal, blocks, text, candidate = {}, opts = {}) {
   if (!hasUfContext(`${blocks?.context || ''} ${text}`)) reasons.push('missing_uf_context');
   if (!hasStrategyData(blocks, signal)) reasons.push('missing_strategy_data');
   if (!hookValid(blocks?.hook, qaOpts)) reasons.push('invalid_hook');
-  if (!ctaValid(blocks?.cta, mode)) reasons.push('invalid_cta');
+  if (!ctaValid(blocks?.cta, mode, qaOpts)) reasons.push('invalid_cta');
   if (opts.requireFullLayers && !hasVoiceLayers(blocks)) reasons.push('missing_voice_layers');
 
   const combined = `${text} ${blocks?.intel} ${blocks?.context} ${blocks?.strategy}`;
