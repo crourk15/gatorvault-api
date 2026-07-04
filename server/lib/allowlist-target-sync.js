@@ -1029,6 +1029,7 @@ module.exports = {
   detectIngestFailures,
   ingestAllowlistCommit,
   scanBeatCommitQueue,
+  profilePatchFromOn3,
   STATE_PATH,
   STALE_HOURS,
 };

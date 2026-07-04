@@ -59,6 +59,25 @@ test('detectGaps flags incomplete rankings', () => {
   assert.ok(gaps.includes('no_offers'));
 });
 
+test('offers and visits completeness flags', () => {
+  const { offersCompleteness, visitsCompleteness } = require('../../lib/player-intelligence/gaps');
+  const offers = offersCompleteness([{ school: 'Florida', source: 'store' }]);
+  assert.equal(offers.complete, true);
+  assert.equal(offers.hasUf, true);
+  const visits = visitsCompleteness([{ visitType: 'official', visitDate: '2026-06-01' }]);
+  assert.equal(visits.complete, true);
+  assert.equal(visits.hasOfficial, true);
+  const gaps = detectGaps({
+    identity: { name: 'Test', classYear: 2028, pos: 'S' },
+    rankingBlock: { valid: true },
+    offers: [{ school: 'Georgia' }],
+    visits: [{ visitType: 'unofficial', visitDate: '2026-06-01' }],
+    rpm: { ufPct: 50 }
+  });
+  assert.ok(gaps.includes('offers_missing_uf'));
+  assert.ok(gaps.includes('visits_missing_official'));
+});
+
 test('golden slug tier detection', () => {
   assert.equal(isGoldenSlug('ryan-drakeford'), true);
   assert.equal(isGoldenSlug('merrick-ham'), true);

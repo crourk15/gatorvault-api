@@ -134,7 +134,12 @@ function buildResolvedCandidateSnapshot(candidate) {
       pr6Text: meta.pr6Text || meta.pr6Shadow?.rewrittenTweet || null,
       pr789Text: meta.pr789Text || meta.pr789Shadow?.rewrittenTweet || null,
       pr789AngleText: meta.pr789AngleText || meta.pr789AngleShadow?.rewrittenTweet || null,
-      rankingTokens: meta.voiceMetrics?.rankingTokens || meta.rankingTokens || null
+      rankingTokens: meta.voiceMetrics?.rankingTokens || meta.rankingTokens || null,
+      rankingValid: meta.voiceMetrics?.rankingValid ?? meta.rankingValid ?? null,
+      coverageTier: meta.voiceMetrics?.coverageTier || meta.coverageTier || null,
+      intelligenceGaps: meta.voiceMetrics?.intelligenceGaps || meta.intelligenceGaps || null,
+      offersCompleteness: meta.voiceMetrics?.offersCompleteness || meta.offersCompleteness || null,
+      visitsCompleteness: meta.voiceMetrics?.visitsCompleteness || meta.visitsCompleteness || null
     }
   };
 }

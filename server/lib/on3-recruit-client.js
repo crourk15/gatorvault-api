@@ -103,7 +103,8 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
     (pp.recruitments || []).find((r) => Number(r.year) === year) ||
     (pp.recruitments || []).find((r) => r.year === 2028 || r.year === 2027 || r.year === 2026) ||
     (pp.recruitments || [])[0];
-  const rating = pp.rankingsPlayer || recruitment?.rating || {};
+  const rp = pp.rankingsPlayer || {};
+  const recruitmentRating = recruitment?.rating || {};
   const topTeamsRaw = pp.topTeams?.list || pp.topTeams || [];
   const classYearResolved = recruitment?.year || year;
   const topTeamForYear =
@@ -116,38 +117,74 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
     pp.player?.hometown?.stateAbbr ||
     pp.player?.hometown?.state?.abbreviation ||
     pp.player?.homeTown?.state?.abbreviation ||
+    rp.stateAbbr ||
     stateFromHighSchoolSlug(highSchool?.slug) ||
+    null;
+
+  const stars =
+    rp.consensusStars ??
+    rp.stars ??
+    recruitmentRating.stars ??
+    recruitmentRating.consensusStars ??
+    null;
+  const natlRank =
+    rp.consensusOverallRank ??
+    rp.overallRank ??
+    rp.consensusNationalRank ??
+    rp.nationalRank ??
+    recruitmentRating.consensusOverallRank ??
+    recruitmentRating.nationalRank ??
+    null;
+  const posRank =
+    rp.consensusPositionRank ??
+    rp.positionRank ??
+    recruitmentRating.consensusPositionRank ??
+    recruitmentRating.positionRank ??
+    null;
+  const stateRank =
+    rp.consensusStateRank ??
+    rp.stateRank ??
+    recruitmentRating.consensusStateRank ??
+    recruitmentRating.stateRank ??
+    null;
+  const rating =
+    rp.consensusRating ??
+    rp.rating ??
+    recruitmentRating.consensusRating ??
+    recruitmentRating.rating ??
     null;
 
   return {
     slug: recruitSlug,
     name: pp.player?.fullName || nameFromSlug(recruitSlug) || recruitSlug,
     pos: String(
-      pp.player?.positionAbbr ||
+      rp.positionAbbr ||
+        pp.player?.positionAbbr ||
         recruitment?.positionAbbreviation ||
-        rating?.positionAbbr ||
-        rating?.position?.abbr ||
+        recruitmentRating?.positionAbbr ||
+        recruitmentRating?.position?.abbr ||
         topTeamForYear?.positionAbbreviation ||
         pp.personSports?.[0]?.position?.abbr ||
         ''
     )
       .trim()
       .toUpperCase(),
-    classYear: recruitment?.year || year,
+    classYear: classYearResolved,
     school: schoolName,
     highSchoolSlug: highSchool?.slug || null,
     state,
     hometownCity: pp.player?.homeTown?.city || pp.player?.hometown?.city || null,
-    stars: rating.stars ?? rating.consensusStars ?? null,
-    rating: rating.consensusRating ?? rating.rating ?? rating.consensusRatingValue ?? null,
-    natlRank: rating.nationalRank ?? rating.consensusNationalRank ?? null,
-    posRank: rating.positionRank ?? rating.consensusPositionRank ?? null,
-    stateRank: rating.stateRank ?? rating.consensusStateRank ?? null,
+    stars,
+    rating,
+    natlRank,
+    posRank,
+    stateRank,
+    rankingsPlayer: rp,
     topTeams: pp.topTeams?.list || [],
     visits: pp.visits?.list || pp.visits || [],
     recruitments: pp.recruitments || [],
-    rankingsPlayer: pp.rankingsPlayer || null,
     nilValue: parseOn3NilValue(pp.player?.nilValue ?? pp.nilValue),
+    on3ProfileUrl: pageUrl(`/rivals/${recruitSlug.replace(/^\//, '')}/`),
     fetchedAt: new Date().toISOString()
   };
 }

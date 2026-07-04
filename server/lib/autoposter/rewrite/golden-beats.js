@@ -1,5 +1,7 @@
 /** PR-6 soft launch — golden four beat allowlist (slug match only). */
 
+const { isGoldenFourRankingComplete } = require('../../player-intelligence/golden-four-on3');
+
 const PR6_SOFT_LAUNCH_SLUGS = Object.freeze(['drakeford', 'robinson', 'willingham', 'ham']);
 
 function slugFromPlayerUrl(url = '') {
@@ -63,6 +65,7 @@ function shouldUsePr789Live(signal = {}, pr789 = {}) {
 
 function shouldUsePr789AngleLive(signal = {}, anglePack = {}) {
   if (!isPr6GoldenBeat(signal)) return false;
+  if (!isGoldenFourRankingComplete()) return false;
   const goldenAngleLive =
     process.env.X_AUTOPOST_PR789_ANGLE_ENABLED === 'true' ||
     (process.env.X_AUTOPOST_PR7_8_9_ENABLED === 'true' &&

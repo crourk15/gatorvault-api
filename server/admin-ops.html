@@ -534,11 +534,28 @@
       var html='<div style="margin:.35rem 0 .5rem;line-height:1.5">';
       html+=rewriteFlag('PR-789 Enhance',!!meta.pr789Live||!!meta.pr789Shadow,!!meta.pr789Live);
       html+=rewriteFlag('PR-789 Angle',!!meta.pr789AngleLive||!!meta.pr789AngleShadow,!!meta.pr789AngleLive);
+      if(meta.rankingValid!=null){
+        html+=rewriteFlag('Rankings',meta.rankingValid===true,meta.rankingValid===true);
+      }
+      if(meta.coverageTier){
+        html+=rewriteFlag('Tier '+esc(meta.coverageTier),true,meta.coverageTier==='A');
+      }
       if(meta.pr789Shadow&&!meta.pr789Live)html+=rewriteFlag('PR-789 shadow',true,false);
       if(meta.pr789AngleShadow&&!meta.pr789AngleLive)html+=rewriteFlag('PR-789 angle shadow',true,false);
       if(meta.rankingTokens){
         var rt=meta.rankingTokens;
         html+='<span class="meta"> · On3 ranks: '+esc(rt.on3Stars)+'★ #'+esc(rt.on3NationalRank)+' natl · #'+esc(rt.on3PositionRank)+' pos · #'+esc(rt.on3StateRank)+' state</span>';
+      }
+      if(meta.intelligenceGaps&&meta.intelligenceGaps.length){
+        html+='<span class="meta"> · gaps: '+esc(meta.intelligenceGaps.join(', '))+'</span>';
+      }
+      if(meta.offersCompleteness){
+        var oc=meta.offersCompleteness;
+        html+='<span class="meta"> · offers: '+esc(oc.count)+(oc.complete?' ✓':' ✗')+(oc.hasUf?' · UF':'')+'</span>';
+      }
+      if(meta.visitsCompleteness){
+        var vc=meta.visitsCompleteness;
+        html+='<span class="meta"> · visits: '+esc(vc.count)+(vc.complete?' ✓':' ✗')+(vc.hasOfficial?' · official':'')+'</span>';
       }
       html+='</div>';
       if(meta.pr6Text||meta.pr789Text||meta.pr789AngleText){

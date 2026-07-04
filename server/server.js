@@ -1206,6 +1206,27 @@ console.log('GatorVault server running on port', PORT);
       console.warn('[recruiting-hub] refresh scheduler skipped:', e.message);
     }
     try {
+      const {
+        schedulePlayerIntelligenceRefresh,
+        refreshTierAIntelligence
+      } = require('./lib/player-intelligence-refresh');
+      schedulePlayerIntelligenceRefresh();
+      if (process.env.PLAYER_INTEL_REFRESH_ON_BOOT !== 'false') {
+        refreshTierAIntelligence({ verbose: false })
+          .then((result) => {
+            console.log(
+              '[player-intelligence] boot refresh:',
+              result.processed,
+              'players, goldenFour complete:',
+              result.goldenFour?.complete === true
+            );
+          })
+          .catch((err) => console.warn('[player-intelligence] boot refresh failed:', err.message));
+      }
+    } catch (e) {
+      console.warn('[player-intelligence] refresh scheduler skipped:', e.message);
+    }
+    try {
       const { scheduleHubBootPipeline } = require('./lib/recruiting-hub-cache');
       scheduleHubBootPipeline();
     } catch (e) {

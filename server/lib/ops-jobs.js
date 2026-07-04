@@ -432,11 +432,25 @@ const JOBS = {
     subsystem: 'cron:player-intelligence-tier-a',
     schedule: 'Daily — rankings, gaps, observations for UF-priority players',
     async run(opts = {}) {
-      const { refreshTierAPlayers } = require('./player-intelligence/orchestrator');
-      return refreshTierAPlayers({
+      const { refreshTierAIntelligence } = require('./player-intelligence-refresh');
+      return refreshTierAIntelligence({
         limit: Number(opts.limit || 0) || undefined,
         verbose: opts.verbose === true
       });
+    }
+  },
+  'golden-four-on3-sync': {
+    label: 'Sync golden four On3 rankings (Ham, Drakeford, Robinson, Willingham)',
+    subsystem: 'cron:golden-four-on3-sync',
+    schedule: 'On demand — verified On3 recruit slugs for PR-789 rollout',
+    async run() {
+      const {
+        syncAllGoldenFourFromOn3,
+        refreshGoldenFourRankingCache
+      } = require('./player-intelligence/golden-four-on3');
+      const result = await syncAllGoldenFourFromOn3();
+      await refreshGoldenFourRankingCache();
+      return result;
     }
   },
   'self-runner-purge-legacy-dedupe': {

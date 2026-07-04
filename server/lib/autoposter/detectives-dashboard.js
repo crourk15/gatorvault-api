@@ -22,10 +22,16 @@ function nextPhaseHint(status, lastPhase) {
 
 function rewriteMetaFromCase(caseItem) {
   const resolved = caseItem?.resolvedCandidate?.rewriteMeta || {};
-  const hintsMeta = caseItem?.hints?.metrics?.rankingTokens
-    ? { rankingTokens: caseItem.hints.metrics.rankingTokens }
-    : {};
-  return { ...hintsMeta, ...resolved };
+  const hintsMeta = caseItem?.hints?.metrics || {};
+  const merged = {
+    rankingTokens: hintsMeta.rankingTokens || resolved.rankingTokens || null,
+    rankingValid: hintsMeta.rankingValid ?? resolved.rankingValid ?? null,
+    coverageTier: hintsMeta.coverageTier || resolved.coverageTier || null,
+    intelligenceGaps: hintsMeta.intelligenceGaps || resolved.intelligenceGaps || null,
+    offersCompleteness: hintsMeta.offersCompleteness || resolved.offersCompleteness || null,
+    visitsCompleteness: hintsMeta.visitsCompleteness || resolved.visitsCompleteness || null
+  };
+  return { ...merged, ...resolved };
 }
 
 function formatCaseForDashboard(caseItem) {

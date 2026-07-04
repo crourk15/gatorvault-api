@@ -6,10 +6,39 @@ function parseTime(value) {
   return Number.isFinite(t) ? t : null;
 }
 
+function offersCompleteness(offers = []) {
+  const list = Array.isArray(offers) ? offers : [];
+  const hasUf = list.some((o) => /florida|\bgators\b|\buf\b/i.test(String(o.school || '')));
+  return {
+    count: list.length,
+    complete: list.length > 0,
+    hasUf,
+    sources: [...new Set(list.map((o) => o.source).filter(Boolean))]
+  };
+}
+
+function visitsCompleteness(visits = []) {
+  const list = Array.isArray(visits) ? visits : [];
+  const hasOfficial = list.some((v) => {
+    const type = String(v.visitType || '').trim().toLowerCase();
+    return /\bofficial\b/i.test(type) && !/unofficial/i.test(type);
+  });
+  const latestDate = list.length ? list[0]?.visitDate || null : null;
+  return {
+    count: list.length,
+    complete: list.length > 0,
+    hasOfficial,
+    latestDate,
+    sources: [...new Set(list.map((v) => v.source).filter(Boolean))]
+  };
+}
+
 function detectGaps(intel = {}) {
   const gaps = [];
   const player = intel.identity || {};
   const rankingBlock = intel.rankingBlock;
+  const offers = offersCompleteness(intel.offers);
+  const visits = visitsCompleteness(intel.visits);
 
   if (!player.name) gaps.push('missing_name');
   if (!player.classYear) gaps.push('missing_class_year');
@@ -27,8 +56,12 @@ function detectGaps(intel = {}) {
     }
   }
 
-  if (!Array.isArray(intel.offers) || !intel.offers.length) gaps.push('no_offers');
-  if (!Array.isArray(intel.visits) || !intel.visits.length) gaps.push('no_visits');
+  if (!offers.complete) gaps.push('no_offers');
+  else if (!offers.hasUf) gaps.push('offers_missing_uf');
+
+  if (!visits.complete) gaps.push('no_visits');
+  else if (!visits.hasOfficial) gaps.push('visits_missing_official');
+
   if (intel.rpm?.ufPct == null || Number(intel.rpm.ufPct) <= 0) gaps.push('no_rpm');
 
   return [...new Set(gaps)];
@@ -48,4 +81,4 @@ function detectStale(intel = {}) {
   return stale;
 }
 
-module.exports = { detectGaps, detectStale };
+module.exports = { detectGaps, detectStale, offersCompleteness, visitsCompleteness };

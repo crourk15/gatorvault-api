@@ -189,6 +189,9 @@ async function enrichCaseMetrics({ caseItem, hints, identity, platformContext })
   metrics.intelligenceGaps = intel?.gaps || [];
   metrics.intelligenceStale = intel?.stale || [];
   metrics.coverageTier = intel?.coverageTier || null;
+  metrics.rankingValid = intel?.rankingBlock?.valid === true;
+  metrics.offersCompleteness = intel?.offersCompleteness || null;
+  metrics.visitsCompleteness = intel?.visitsCompleteness || null;
 
   const gapsBefore = metricsGaps(metricsBefore);
   const gapsAfter = metricsGaps(metrics);

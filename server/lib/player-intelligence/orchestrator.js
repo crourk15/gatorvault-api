@@ -9,6 +9,10 @@ const { resolveCoverageTier, loadTierASlugs, clearTierCache } = require('./tiers
 
 async function refreshPlayerFromOn3(slug, classYear) {
   try {
+    const { isGoldenProdSlug, syncGoldenFourPlayerFromOn3 } = require('./golden-four-on3');
+    if (isGoldenProdSlug(slug)) {
+      return syncGoldenFourPlayerFromOn3(slug);
+    }
     const { syncSlugFromOn3 } = require('../allowlist-target-sync');
     return await syncSlugFromOn3(slug, classYear);
   } catch (err) {
@@ -61,6 +65,13 @@ async function refreshPlayerIntelligence(slug, opts = {}) {
 }
 
 async function refreshTierAPlayers(opts = {}) {
+  const {
+    syncAllGoldenFourFromOn3,
+    refreshGoldenFourRankingCache
+  } = require('./golden-four-on3');
+  const goldenSync = await syncAllGoldenFourFromOn3();
+  await refreshGoldenFourRankingCache();
+
   const slugs = await loadTierASlugs();
   const limit = Number(opts.limit || 0);
   const list = [...slugs];
@@ -80,6 +91,7 @@ async function refreshTierAPlayers(opts = {}) {
 
   return {
     ok: true,
+    goldenFour: goldenSync.status,
     processed: results.length,
     rankingComplete: results.filter((r) => r.rankingValid).length,
     gapReport,

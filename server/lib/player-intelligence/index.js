@@ -12,7 +12,7 @@ const {
   selectRankingBlock,
   rankingTokensFromBlock
 } = require('./ranking-blocks');
-const { detectGaps, detectStale } = require('./gaps');
+const { detectGaps, detectStale, offersCompleteness, visitsCompleteness } = require('./gaps');
 const { computeMomentum } = require('./momentum');
 const { resolveCoverageTier } = require('./tiers');
 const observationsStore = require('./observations-store');
@@ -168,6 +168,8 @@ async function getPlayerIntelligence(slugOrId, opts = {}) {
 
   const offers = buildOffers(player, offerLogs);
   const visits = buildVisits(player, visitLogs, intelRows);
+  const offersMeta = offersCompleteness(offers);
+  const visitsMeta = visitsCompleteness(visits);
   const rpm = buildRpm(player, intelRows);
   const board = buildBoardState(player, enriched);
   const coverageTier = opts.coverageTier || (await resolveCoverageTier(slug));
@@ -193,6 +195,8 @@ async function getPlayerIntelligence(slugOrId, opts = {}) {
     rankingTokens,
     offers,
     visits,
+    offersCompleteness: offersMeta,
+    visitsCompleteness: visitsMeta,
     rpm,
     board,
     competitors: enriched.competitors || [],
