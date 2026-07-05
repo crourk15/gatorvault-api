@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 
 const intelStore = require('../../lib/recruiting-intel-store');
 const fill = require('../../lib/x-autoposter-fill');
+const qa = require('../../lib/autoposter/recruiting-post-qa');
 
 test('finalizeNewsCandidate accepts aged auto:on3-team-news fused beat intel', async () => {
   const doc = intelStore.loadIntelDoc();
@@ -35,6 +36,7 @@ test('finalizeNewsCandidate accepts aged auto:on3-team-news fused beat intel', a
     assert.equal(news.validationMeta?.fusedIntelCompose, true);
     const finalized = await fill.finalizeNewsCandidate(news);
     assert.ok(finalized, 'finalizeNewsCandidate returned null for fused Cobbins-class intel');
+    assert.equal(qa.passesPublishGate(finalized), true, qa.rejectReason(finalized));
   } finally {
     intelStore.saveIntelDoc(doc);
   }

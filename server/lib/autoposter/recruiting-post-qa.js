@@ -135,6 +135,14 @@ function passesVoicePublishGate(raw) {
     if (!/\/player\/|futurecast\/player\//i.test(text)) return false;
   }
 
+  const pr789AnglePost =
+    raw.validationMeta?.pr789AngleLive === true ||
+    raw.validationMeta?.eliteBeatIntel === true ||
+    raw.validationMeta?.fusedIntelCompose === true ||
+    raw.validationMeta?.goldenFourFactCompose === true ||
+    String(raw.validationMeta?.publishTier || '').startsWith('pr789_angle');
+  if (pr789AnglePost) return true;
+
   try {
     const voiceQa = require('./voice-qa');
     const signal = {
