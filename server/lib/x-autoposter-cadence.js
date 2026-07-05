@@ -80,6 +80,9 @@ function classifyItemUrgency(item) {
   if ((source === 'auto:beat-intel' || source === 'auto:beat-momentum') && item.playerName) {
     return { tier: 'urgent', label: 'major_beat' };
   }
+  if (source === 'golden-four-enqueue' || item.validationMeta?.goldenFourEnqueue || item.validationMeta?.goldenFourFactCompose) {
+    return { tier: 'urgent', label: 'major_beat' };
+  }
   if (source === 'auto:intel' && item.playerName && /visit_cancel|visit_scheduled|rivals_prediction/.test(intelType)) {
     return { tier: 'urgent', label: 'major_beat' };
   }

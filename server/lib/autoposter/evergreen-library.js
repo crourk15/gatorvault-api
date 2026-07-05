@@ -1,5 +1,5 @@
 /** Phase 3 — curated UF football evergreen posts. */
-const { intelFingerprint } = require('../commit-fingerprint');
+const { intelFingerprint, stableIntelFingerprint } = require('../commit-fingerprint');
 const { readJson, writeJson, SITE_URL } = require('./discovery-core');
 const EVERGREEN_PATH = require('path').join(require('path').join(__dirname, '..', '..', 'data', 'x'), 'autoposter-evergreen.json');
 const SNAPSHOT_PATH = require('path').join(require('path').join(__dirname, '..', '..', 'data', 'x'), 'autoposter-evergreen-snapshot.json');
@@ -18,7 +18,7 @@ function buildEvergreenCandidate(item) {
   if (!item || !item.headline) return null;
   const identity = 'Florida Gators Football';
   const text = [identity, item.headline, item.context, item.sourceUrl || SITE_URL].join('\n');
-  return { text, category: 'news', topic: item.topic || 'program', urgencyLabel: 'analysis', sourceEventType: 'evergreen', triggerType: item.topic === 'program' ? 'program_news' : item.topic === 'team' ? 'team_event' : null, programNewsType: item.angle === 'hall_of_fame' ? 'hall_of_fame' : item.angle === 'history' ? 'history' : 'program_update', sources: [{ label: 'GatorVault', url: item.sourceUrl || SITE_URL }], source: 'auto:evergreen', intelFingerprint: intelFingerprint(item.id, 'evergreen', new Date().toISOString().slice(0, 10)), sourceEventCreatedAt: new Date().toISOString(), identityConfirmed: true, validationMeta: { programNews: true, evergreen: true, eliteCompose: true, angle: item.angle }, templateBlocks: { identity, context: item.headline, insider: item.context } };
+  return { text, category: 'news', topic: item.topic || 'program', urgencyLabel: 'analysis', sourceEventType: 'evergreen', triggerType: item.topic === 'program' ? 'program_news' : item.topic === 'team' ? 'team_event' : null, programNewsType: item.angle === 'hall_of_fame' ? 'hall_of_fame' : item.angle === 'history' ? 'history' : 'program_update', sources: [{ label: 'GatorVault', url: item.sourceUrl || SITE_URL }], source: 'auto:evergreen', intelFingerprint: stableIntelFingerprint(item.id, 'evergreen'), sourceEventCreatedAt: new Date().toISOString(), identityConfirmed: true, validationMeta: { programNews: true, evergreen: true, eliteCompose: true, angle: item.angle }, templateBlocks: { identity, context: item.headline, insider: item.context } };
 }
 function collectEvergreenCandidates(opts) { opts = opts || {}; if (!evergreenEnabled()) return []; const lib = loadLibrary(); const snapshot = readJson(SNAPSHOT_PATH, { posted: {} }); const out = []; for (const item of lib.items || []) { if (out.length >= (opts.limit || 4)) break; if (!opts.forcePost && snapshot.posted[item.id]) continue; const row = buildEvergreenCandidate(item); if (row) { out.push(row); snapshot.posted[item.id] = new Date().toISOString(); } } if (out.length) writeJson(SNAPSHOT_PATH, snapshot); return out; }
 module.exports = { evergreenEnabled, collectEvergreenCandidates, buildEvergreenCandidate };

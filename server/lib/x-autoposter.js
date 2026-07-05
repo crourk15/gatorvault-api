@@ -433,6 +433,9 @@ function bootstrapAutoposterRuntime() {
   try {
     const persistence = require('./autoposter/autoposter-ledger-persistence');
     if (persistence.isEnabled()) {
+      persistence.ensureTables().catch((err) => {
+        autopostLog('warn', `Ledger table ensure skipped: ${err.message}`);
+      });
       persistence.hydrateAllLedgers().then((out) => {
         autopostLog('info', 'Hydrated autoposter ledgers from Postgres', out);
       }).catch((err) => {
@@ -822,8 +825,11 @@ function startXAutoposterScheduler() {
           activityWindow === 'normal' &&
           Number.isFinite(msSincePost) &&
           msSincePost >= postFloorMs;
+        const fillMod = require('./x-autoposter-fill');
+        const goldenPending =
+          typeof fillMod.hasGoldenFourPending === 'function' ? fillMod.hasGoldenFourPending() : false;
         const forceRefill = pendingBefore === 0 || postFloorDue;
-        const digDeeper = postFloorDue || pendingBefore === 0;
+        const digDeeper = (postFloorDue || pendingBefore === 0) && !goldenPending;
         const refill = await refillAutoposterQueue({
           minPending: parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '2', 10),
           maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '4', 10),

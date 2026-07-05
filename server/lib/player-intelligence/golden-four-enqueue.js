@@ -221,6 +221,8 @@ async function enqueueGoldenFourPosts(opts = {}) {
       category: 'news',
       action: 'post',
       topic: 'recruiting',
+      urgencyLabel: 'major_beat',
+      postUrgency: 'urgent',
       playerName: elite.playerName,
       playerSlug: elite.playerSlug || slug,
       source: 'golden-four-enqueue',

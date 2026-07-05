@@ -145,7 +145,7 @@ function dedupeKey(text) {
   return crypto.createHash('sha256').update(String(text || '').trim().toLowerCase()).digest('hex').slice(0, 16);
 }
 
-const QUEUED_STATUSES = new Set(['pending', 'sent', 'skipped_duplicate']);
+const QUEUED_STATUSES = new Set(['pending', 'sent', 'skipped_duplicate', 'failed']);
 
 function fingerprintAlreadyQueued(fp, items) {
   if (!fp) return false;
@@ -1364,7 +1364,18 @@ async function processDetectivesPileSidecar(doc, limit = 3, { background = false
   return run();
 }
 
-async function tryAutonomousGoldenFourRefill() {
+function hasGoldenFourPending() {
+  try {
+    const { GOLDEN_FOUR_PROD_SLUGS } = require('./player-intelligence/golden-four-on3');
+    return store
+      .listQueue({ status: 'pending' })
+      .some((item) => GOLDEN_FOUR_PROD_SLUGS.includes(String(item.playerSlug || '').toLowerCase()));
+  } catch {
+    return false;
+  }
+}
+
+async function tryAutonomousGoldenFourRefill(maxSlugs = 1) {
   if (process.env.X_AUTOPOST_GOLDEN_FOUR_AUTO === 'false') {
     return { ok: false, reason: 'disabled' };
   }
@@ -1384,7 +1395,7 @@ async function tryAutonomousGoldenFourRefill() {
         return false;
       }
       return true;
-    }).slice(0, 1);
+    }).slice(0, Math.max(1, parseInt(maxSlugs, 10) || 1));
     if (!nextSlugs.length) return { ok: false, reason: 'golden_four_complete' };
     return enqueueGoldenFourPosts({
       slugs: nextSlugs,
@@ -1434,7 +1445,7 @@ async function refillAutoposterQueue({
   const need = Math.max(minPending - pending.length, pending.length === 0 ? 1 : 0);
 
   if (need > 0) {
-    const golden = await tryAutonomousGoldenFourRefill();
+    const golden = await tryAutonomousGoldenFourRefill(Math.min(need, maxEnqueue));
     const goldenEnqueued = (golden?.results || []).filter((r) => r.ok);
     if (goldenEnqueued.length) {
       return {
@@ -1464,9 +1475,13 @@ async function refillAutoposterQueue({
 
   const slots = Math.max(maxEnqueue - pending.length, need);
   const widenDiscovery = forcePost || digDeeper;
+  if (digDeeper && hasGoldenFourPending()) {
+    digDeeper = false;
+  }
+
   const rawNewsCandidates = await collectFreshPostCandidates({
     forcePost: widenDiscovery,
-    digDeeper: widenDiscovery
+    digDeeper: digDeeper && !hasGoldenFourPending()
   });
 
   /** Content-mix (50/30/20) runs only after news quality scoring. */
@@ -1723,6 +1738,8 @@ async function forceEnqueueRecentCommits({ maxAgeMs = FORCE_POST_COMMIT_AGE_MS }
 
 module.exports = {
   refillAutoposterQueue,
+  hasGoldenFourPending,
+  tryAutonomousGoldenFourRefill,
   collectFreshPostCandidates,
   collectDigDeeperPostCandidates,
   collectArticlePostCandidates,

@@ -275,16 +275,30 @@ function rependFailedItem(item) {
 function recoverFailedVerifiedCommits() {
   const doc = loadQueue();
   let recovered = 0;
+  let skippedDuplicate = 0;
+  const sentLedger = require('./x-autoposter-sent-ledger');
   for (const item of doc.items) {
     if (item.status !== 'failed') continue;
     if (!(item.verifiedCommit || item.validationMeta?.verifiedCommit)) continue;
     if (/duplicate content/i.test(String(item.error || ''))) continue;
+    const dup = sentLedger.hasRecentSentPost({
+      slug: item.playerSlug,
+      intelFingerprint: item.intelFingerprint,
+      text: item.text
+    });
+    if (dup.hit) {
+      item.status = 'skipped_duplicate';
+      item.error = dup.reason || 'duplicate';
+      item.sentAt = nowIso();
+      skippedDuplicate += 1;
+      continue;
+    }
     rependFailedItem(item);
     recovered += 1;
   }
-  if (recovered) {
+  if (recovered || skippedDuplicate) {
     saveQueue(doc);
-    logQueueOp('recover_verified', { id: 'batch', count: recovered }, { recovered });
+    logQueueOp('recover_verified', { id: 'batch', count: recovered }, { recovered, skippedDuplicate });
   }
   return recovered;
 }

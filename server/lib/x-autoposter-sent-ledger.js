@@ -255,7 +255,7 @@ function recordSentPost(item) {
         (row.textHashNorm && e.textHashNorm === row.textHashNorm)
     )
   ) {
-    if (row.playerSlug) persistSnapshotSent(row);
+    if (row.playerSlug && row.tweetId) persistSnapshotSent(row);
     return row;
   }
   doc.entries.unshift(row);
