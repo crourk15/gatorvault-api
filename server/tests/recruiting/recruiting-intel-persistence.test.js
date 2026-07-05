@@ -17,6 +17,28 @@ test('migration file exists for recruiting_intel table', () => {
   assert.match(sql, /fingerprint TEXT PRIMARY KEY/);
 });
 
+test('saveIntelDoc does not full-replace postgres on every write', () => {
+  const store = require('../../lib/recruiting-intel-store');
+  const persistence = require('../../lib/recruiting-intel-persistence');
+  const originalEnabled = persistence.isEnabled;
+  let replaceAllCalls = 0;
+  persistence.isEnabled = () => true;
+  const originalReplaceAll = persistence.replaceAll;
+  persistence.replaceAll = async () => {
+    replaceAllCalls += 1;
+    return 0;
+  };
+  try {
+    const doc = store.loadIntelDoc();
+    const before = replaceAllCalls;
+    store.saveIntelDoc({ ...doc, items: [...(doc.items || [])] });
+    assert.equal(replaceAllCalls, before, 'saveIntelDoc must not call replaceAll');
+  } finally {
+    persistence.isEnabled = originalEnabled;
+    persistence.replaceAll = originalReplaceAll;
+  }
+});
+
 test('intel store exports initIntelStore and getIntelStoreInfo', () => {
   const store = require('../../lib/recruiting-intel-store');
   assert.equal(typeof store.initIntelStore, 'function');

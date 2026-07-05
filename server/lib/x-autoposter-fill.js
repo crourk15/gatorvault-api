@@ -353,6 +353,8 @@ async function probeIntelAutoposterPath(slug) {
     .toLowerCase();
   if (!normalized) return { ok: false, error: 'missing_slug' };
 
+  await intelStore.initIntelStore().catch(() => {});
+
   const { matchIntelToPlayer } = require('./autoposter/identity-matcher');
   const { isEligibleIntel, assessEligibilityFromIntel } = require('./autoposter/autoposter-policy');
   const { resolveCoverageTier } = require('./player-intelligence/tiers');
@@ -401,6 +403,7 @@ async function probeIntelAutoposterPath(slug) {
   return {
     ok: true,
     slug: normalized,
+    intelStore: await intelStore.getIntelStoreDiagnostics().catch((err) => ({ error: err.message })),
     intelRowCount: allRows.length,
     on3Row: on3Row
       ? {

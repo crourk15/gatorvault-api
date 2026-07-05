@@ -15,6 +15,8 @@ const persistence = require('./recruiting-intel-persistence');
 let memoryDoc = null;
 let persistChain = Promise.resolve();
 let initPromise = null;
+/** True after initIntelStore finishes — postgres writes are blocked until then. */
+let storeReady = false;
 
 function nowIso() {
   return new Date().toISOString();
@@ -37,19 +39,31 @@ function loadIntelDocFromJson() {
   return readJson(INTEL_PATH, { version: 1, updatedAt: null, items: [] });
 }
 
-function queuePostgresPersist(doc) {
-  if (!persistence.isEnabled()) return;
-  const items = [...(doc.items || [])];
+function queuePostgresUpsert(item) {
+  if (!persistence.isEnabled() || !storeReady || !item?.fingerprint) return;
   persistChain = persistChain
-    .then(() => persistence.replaceAll(items))
-    .catch((err) => console.warn('[intel-store] postgres persist failed:', err.message));
+    .then(() => persistence.upsertItem(item))
+    .catch((err) => console.warn('[intel-store] postgres upsert failed:', err.message));
+}
+
+function queuePostgresUpsertMany(items) {
+  if (!persistence.isEnabled() || !storeReady || !items?.length) return;
+  for (const item of items) queuePostgresUpsert(item);
+}
+
+function queuePostgresDeleteFingerprints(fingerprints) {
+  if (!persistence.isEnabled() || !storeReady || !fingerprints?.length) return;
+  const fps = fingerprints.filter(Boolean);
+  if (!fps.length) return;
+  persistChain = persistChain
+    .then(() => persistence.deleteFingerprints(fps))
+    .catch((err) => console.warn('[intel-store] postgres delete failed:', err.message));
 }
 
 function saveIntelDoc(doc) {
   doc.updatedAt = nowIso();
   memoryDoc = doc;
   writeJson(INTEL_PATH, doc);
-  queuePostgresPersist(doc);
   return doc;
 }
 
@@ -63,27 +77,55 @@ function loadIntelDoc() {
 async function initIntelStore() {
   if (initPromise) return initPromise;
   initPromise = (async () => {
-    if (!persistence.isEnabled()) {
-      memoryDoc = loadIntelDocFromJson();
-      return { mode: 'json', count: (memoryDoc.items || []).length };
+    try {
+      if (!persistence.isEnabled()) {
+        memoryDoc = loadIntelDocFromJson();
+        return { mode: 'json', count: (memoryDoc.items || []).length, storeReady: true };
+      }
+      await persistence.ensureTable();
+      const [fromDb, dbCount] = await Promise.all([persistence.loadAll(), persistence.countAll()]);
+      if (fromDb.length > 0) {
+        memoryDoc = { version: 1, updatedAt: nowIso(), items: fromDb };
+        writeJson(INTEL_PATH, memoryDoc);
+        if (dbCount > fromDb.length) {
+          console.warn(
+            `[intel-store] postgres load truncated: ${fromDb.length}/${dbCount} rows — raise loadAll limit if needed`
+          );
+        }
+        return { mode: 'postgres', count: fromDb.length, dbCount, storeReady: true };
+      }
+      const jsonDoc = loadIntelDocFromJson();
+      if (jsonDoc.items?.length) {
+        await persistence.replaceAll(jsonDoc.items);
+        memoryDoc = jsonDoc;
+        return { mode: 'postgres-seeded-from-json', count: jsonDoc.items.length, storeReady: true };
+      }
+      memoryDoc = { version: 1, updatedAt: nowIso(), items: [] };
+      return { mode: 'postgres-empty', count: 0, storeReady: true };
+    } finally {
+      storeReady = true;
     }
-    await persistence.ensureTable();
-    const fromDb = await persistence.loadAll();
-    if (fromDb.length > 0) {
-      memoryDoc = { version: 1, updatedAt: nowIso(), items: fromDb };
-      writeJson(INTEL_PATH, memoryDoc);
-      return { mode: 'postgres', count: fromDb.length };
-    }
-    const jsonDoc = loadIntelDocFromJson();
-    if (jsonDoc.items?.length) {
-      await persistence.replaceAll(jsonDoc.items);
-      memoryDoc = jsonDoc;
-      return { mode: 'postgres-seeded-from-json', count: jsonDoc.items.length };
-    }
-    memoryDoc = { version: 1, updatedAt: nowIso(), items: [] };
-    return { mode: 'postgres-empty', count: 0 };
   })();
   return initPromise;
+}
+
+async function getIntelStoreDiagnostics() {
+  const doc = loadIntelDoc();
+  const memoryCount = (doc.items || []).length;
+  const info = {
+    ...persistence.getStoreInfo(),
+    storeReady,
+    memoryCount,
+    initComplete: !!initPromise
+  };
+  if (persistence.isEnabled()) {
+    try {
+      info.postgresCount = await persistence.countAll();
+    } catch (err) {
+      info.postgresCountError = err.message;
+    }
+  }
+  return info;
 }
 
 async function flushIntelStore() {
@@ -244,11 +286,13 @@ function saveNeedsResolution(raw) {
   if (idx >= 0) {
     doc.items[idx] = { ...doc.items[idx], ...row, updatedAt: nowIso() };
     saveIntelDoc(doc);
+    queuePostgresUpsert(doc.items[idx]);
     return Promise.resolve({ item: doc.items[idx], created: false, duplicate: true, needs_resolution: true });
   }
 
   doc.items.unshift(row);
   saveIntelDoc(doc);
+  queuePostgresUpsert(row);
   return Promise.resolve({ item: row, created: true, duplicate: false, needs_resolution: true, player: null });
 }
 
@@ -299,6 +343,7 @@ function addIntel(raw) {
 
   doc.items.unshift(row);
   saveIntelDoc(doc);
+  queuePostgresUpsert(row);
 
   if (isVisitEventType(row.eventType)) {
     const store = require('./recruiting-store');
@@ -344,6 +389,7 @@ function markIntelXPostQueued(idOrFingerprint, { queueItemId } = {}) {
 
   doc.items[idx] = { ...doc.items[idx], xPostQueued: true, alertPosted: true };
   saveIntelDoc(doc);
+  queuePostgresUpsert(doc.items[idx]);
   return doc.items[idx];
 }
 
@@ -359,6 +405,7 @@ function markIntelXPosted(idOrFingerprint, { tweetId = null, tweetUrl = null } =
     xPostTweetUrl: tweetUrl || doc.items[idx].xPostTweetUrl || null
   };
   saveIntelDoc(doc);
+  queuePostgresUpsert(doc.items[idx]);
   return doc.items[idx];
 }
 
@@ -369,6 +416,7 @@ function clearIntelXPostQueued(idOrFingerprint, reason = 'queue_missing') {
   if (!doc.items[idx].xPostQueued) return doc.items[idx];
   doc.items[idx] = { ...doc.items[idx], xPostQueued: false, xPostQueueClearedReason: reason };
   saveIntelDoc(doc);
+  queuePostgresUpsert(doc.items[idx]);
   return doc.items[idx];
 }
 
@@ -378,6 +426,7 @@ function reconcileGhostQueuedIntel() {
   const queueDoc = xStore.loadQueue();
   const doc = loadIntelDoc();
   let cleared = 0;
+  const changed = [];
   doc.items = (doc.items || []).map((item) => {
     if (!item.xPostQueued) return item;
     const hasMatch = queueDoc.items.some(
@@ -387,9 +436,14 @@ function reconcileGhostQueuedIntel() {
     );
     if (hasMatch) return item;
     cleared += 1;
-    return { ...item, xPostQueued: false, xPostQueueClearedReason: 'reconcile_ghost' };
+    const next = { ...item, xPostQueued: false, xPostQueueClearedReason: 'reconcile_ghost' };
+    changed.push(next);
+    return next;
   });
-  if (cleared) saveIntelDoc(doc);
+  if (cleared) {
+    saveIntelDoc(doc);
+    queuePostgresUpsertMany(changed);
+  }
   if (cleared) console.warn(`[intel-store] reconciled ${cleared} ghost xPostQueued flag(s)`);
   return { cleared };
 }
@@ -426,6 +480,7 @@ function updateIntelIdentity(idOrFingerprint, patch) {
 
   doc.items[idx] = row;
   saveIntelDoc(doc);
+  queuePostgresUpsert(row);
   return row;
 }
 
@@ -446,6 +501,7 @@ function getIntelForPlayer({ playerId, playerSlug, playerName } = {}) {
 }
 
 async function purgeIneligibleIntel() {
+  await initIntelStore().catch(() => {});
   const prefilter = require('./beat-intel-prefilter');
   const doc = loadIntelDoc();
   const removed = [];
@@ -460,9 +516,7 @@ async function purgeIneligibleIntel() {
   if (removed.length) {
     doc.items = kept;
     saveIntelDoc(doc);
-    if (persistence.isEnabled()) {
-      await persistence.deleteFingerprints(removed.map((i) => i.fingerprint).filter(Boolean));
-    }
+    queuePostgresDeleteFingerprints(removed.map((i) => i.fingerprint).filter(Boolean));
   }
   return {
     removed: removed.length,
@@ -482,12 +536,7 @@ function removeIntelMatching(predicate) {
   if (removed.length) {
     doc.items = kept;
     saveIntelDoc(doc);
-    if (persistence.isEnabled()) {
-      const fps = removed.map((i) => i.fingerprint).filter(Boolean);
-      void persistence.deleteFingerprints(fps).catch((err) =>
-        console.warn('[intel-store] postgres delete failed:', err.message)
-      );
-    }
+    queuePostgresDeleteFingerprints(removed.map((i) => i.fingerprint).filter(Boolean));
   }
   return { removed: removed.length, kept: kept.length, removedItems: removed };
 }
@@ -524,6 +573,7 @@ module.exports = {
   initIntelStore,
   flushIntelStore,
   getIntelStoreInfo: () => persistence.getStoreInfo(),
+  getIntelStoreDiagnostics,
   listIntel,
   getHistoryForPlayer,
   addIntel,

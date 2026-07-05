@@ -339,6 +339,9 @@ async function countBrewsterFalseIntel() {
 }
 
 async function runPurgeFalseBrewsterIntel(options = {}) {
+  if (typeof intelStore.initIntelStore === 'function') {
+    await intelStore.initIntelStore().catch(() => {});
+  }
   const before = await countBrewsterFalseIntel();
 
   const eventResult = await store.deleteEventsMatching((e) => isBrewsterFalseCommit(e));
