@@ -67,6 +67,8 @@ async function syncGoldenFourPlayerFromOn3(slug) {
 
   const profilePatch = profilePatchFromOn3(profile, classYear);
   const on3Id = recruitSlug.match(/-(\d+)$/)?.[1] || existing?.on3Id || null;
+  const ufTeam = on3Recruit.getFloridaTeam(profile.topTeams, classYear);
+  const ufRpmPct = ufTeam?.prediction != null ? Number(ufTeam.prediction) : existing?.ufRpmPct ?? null;
   const merged = {
     ...(existing || {}),
     slug: key,
@@ -77,6 +79,9 @@ async function syncGoldenFourPlayerFromOn3(slug) {
     ...profilePatch,
     on3Id,
     on3Slug: recruitSlug,
+    on3TopTeams: profile.topTeams || [],
+    topTeams: profile.topTeams || [],
+    ufRpmPct: ufRpmPct != null && Number.isFinite(ufRpmPct) ? ufRpmPct : existing?.ufRpmPct ?? null,
     on3ProfileUrl: profile.on3ProfileUrl || `https://www.on3.com/rivals/${recruitSlug}/`,
     on3Source: 'golden-four-on3-sync',
     updatedAt: new Date().toISOString()

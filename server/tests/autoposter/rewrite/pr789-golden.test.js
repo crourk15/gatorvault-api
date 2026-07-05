@@ -168,7 +168,7 @@ test('PR-789 — Ham uses facts-only staff arc', () => {
 
   assert.equal(pr789?.ok, true);
 
-  assert.match(pr789.trace?.mode || '', /facts_only/);
+  assert.match(pr789.trace?.mode || '', /facts_(only|elite)/);
 
   assert.equal(pr789.dominantAngle, 'staff');
 

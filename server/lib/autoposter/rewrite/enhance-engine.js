@@ -30,7 +30,9 @@ const {
 
   appendRankingTokensToIdentity,
 
-  extractOn3RankingTokens
+  extractOn3RankingTokens,
+
+  resolveStateAbbr
 
 } = require('../on3-ranking-tokens');
 
@@ -52,7 +54,7 @@ const { resolveValidCompSchools } = require('./comp-sourcing');
 
 
 
-function buildIdentityWithRanking(identityLine, signal) {
+function buildIdentityWithRanking(identityLine, signal, opts = {}) {
 
   if (!identityLine) return identityLine;
 
@@ -64,7 +66,15 @@ function buildIdentityWithRanking(identityLine, signal) {
 
   if (rankingTokens) {
 
-    return appendRankingTokensToIdentity(identityLine, rankingTokens, signal?.player?.pos);
+    const stateAbbr = resolveStateAbbr(signal?.player || {});
+
+    return appendRankingTokensToIdentity(identityLine, rankingTokens, signal?.player?.pos, {
+
+      ...opts,
+
+      stateAbbr
+
+    });
 
   }
 
@@ -186,11 +196,11 @@ function enhanceFromBeatFacts(pr6Pack, pr5Pack, signal = {}) {
 
   const anglePick = selectAngleFromFacts(facts, ctx.beatText);
 
-  const composed = composeFromFacts(facts, anglePick, ctx, { mode: 'dual' });
+  const composed = composeFromFacts(facts, anglePick, ctx, { mode: 'elite', trimTakeaway: true });
 
-  const narrative1 = ensurePeriod(composed.narrative1);
+  const narrative1 = ensurePeriod(composed.narrative1 || composed.narrative);
 
-  const narrative2 = composed.narrative2 ? ensurePeriod(composed.narrative2) : null;
+  const narrative2 = null;
 
   const identityLine = buildIdentityWithRanking(pr6Pack.identityLine, signal);
 
@@ -241,6 +251,76 @@ function enhanceFromBeatFacts(pr6Pack, pr5Pack, signal = {}) {
   );
 
 
+
+  if (!allPassed && tweet.length > CHAR_LIMIT) {
+    const trimTiers = [
+      {},
+      { trimFollowUp: true },
+      { trimFollowUp: true, trimTakeaway: true },
+      { trimFollowUp: true, trimTakeaway: true, trimComp: true },
+      { eliteShort: true, trimComp: false },
+      { eliteShort: true, trimComp: true }
+    ];
+
+    for (const tier of trimTiers) {
+      const elite = composeFromFacts(facts, anglePick, ctx, { mode: 'elite', ...tier });
+      const eliteN1 = ensurePeriod(elite.narrative1 || elite.narrative);
+      const compactIdentity = buildIdentityWithRanking(pr6Pack.identityLine, signal, { compact: true });
+      const eliteTweet = [compactIdentity, eliteN1, cta].filter(Boolean).join('\n');
+      if (eliteTweet.length > CHAR_LIMIT) continue;
+      const eliteRetry = runPr789Gates(eliteN1, null, eliteTweet, enrichedPack, signal);
+      if (eliteRetry.allPassed) {
+        return {
+          ok: true,
+          identityLine: compactIdentity,
+          narrative1: eliteN1,
+          narrative2: null,
+          rewrittenTweet: eliteTweet,
+          charCount: eliteTweet.length,
+          dominantAngle: anglePick.angle,
+          beatFacts: facts,
+          trace: { engine: 'pr789', mode: 'facts_elite_trim', gates: eliteRetry.gates, angle: anglePick, tier }
+        };
+      }
+    }
+
+    const compactIdentity = buildIdentityWithRanking(pr6Pack.identityLine, signal, { compact: true });
+    const rankedDualTweet = [compactIdentity, narrative1, narrative2, cta].filter(Boolean).join('\n');
+    if (rankedDualTweet.length <= CHAR_LIMIT) {
+      const rankedRetry = runPr789Gates(narrative1, narrative2, rankedDualTweet, enrichedPack, signal);
+      if (rankedRetry.allPassed) {
+        return {
+          ok: true,
+          identityLine: compactIdentity,
+          narrative1,
+          narrative2,
+          rewrittenTweet: rankedDualTweet,
+          charCount: rankedDualTweet.length,
+          dominantAngle: anglePick.angle,
+          beatFacts: facts,
+          trace: { engine: 'pr789', mode: 'facts_only_compact_ranks', gates: rankedRetry.gates, angle: anglePick }
+        };
+      }
+    }
+
+    const compactArc = composeFromFacts(facts, anglePick, ctx, { mode: 'single', compact: true }).narrative;
+    const compactN1 = ensurePeriod(compactArc);
+    const compactTweet = [compactIdentity, compactN1, cta].filter(Boolean).join('\n');
+    const compactRetry = runPr789Gates(compactN1, null, compactTweet, enrichedPack, signal);
+    if (compactRetry.allPassed) {
+      return {
+        ok: true,
+        identityLine: compactIdentity,
+        narrative1: compactN1,
+        narrative2: null,
+        rewrittenTweet: compactTweet,
+        charCount: compactTweet.length,
+        dominantAngle: anglePick.angle,
+        beatFacts: facts,
+        trace: { engine: 'pr789', mode: 'facts_only_compact', gates: compactRetry.gates, angle: anglePick }
+      };
+    }
+  }
 
   if (!allPassed && narrative2 && tweet.length > CHAR_LIMIT) {
 

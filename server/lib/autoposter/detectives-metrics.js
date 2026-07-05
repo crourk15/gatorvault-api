@@ -6,7 +6,7 @@ const platform = require('./detectives-platform');
 const store = require('./detectives-store');
 const { getPlayerIntelligence } = require('../player-intelligence');
 const { refreshPlayerIntelligence } = require('../player-intelligence/orchestrator');
-const { resolveValidCompSchools } = require('./rewrite/comp-sourcing');
+const { resolveValidCompSchools, rpmTopFromOn3TopTeams } = require('./rewrite/comp-sourcing');
 const { extractBeatFacts } = require('./rewrite/beat-fact-extractor');
 
 function nowIso() {
@@ -188,6 +188,33 @@ async function enrichCaseMetrics({ caseItem, hints, identity, platformContext })
       .slice(0, 4);
     if (metrics.rpmTop.length) {
       repairActions.push(buildRepairAction('pull_rpm_top', true, metrics.rpmTop.map((r) => r.school).join(', ')));
+    }
+  }
+
+  if (!metrics.rpmTop?.length) {
+    const classYear = identity?.classYear || hints?.classYear || player?.classYear || 2028;
+    let on3TopTeams = research?.on3TopTeams || player?.on3TopTeams || player?.topTeams || null;
+    if ((!on3TopTeams || !on3TopTeams.length) && slug) {
+      try {
+        const { isGoldenProdSlug, on3RecruitSlugFor } = require('../player-intelligence/golden-four-on3');
+        const on3Recruit = require('../on3-recruit-client');
+        if (isGoldenProdSlug(slug)) {
+          const recruitSlug = on3RecruitSlugFor(slug);
+          if (recruitSlug) {
+            const profile = await on3Recruit.fetchRecruitProfile(recruitSlug, classYear);
+            on3TopTeams = profile?.topTeams || [];
+          }
+        }
+      } catch (e) {
+        repairActions.push(buildRepairAction('pull_on3_rpm_top', false, e.message));
+      }
+    }
+    const rpmFromOn3 = rpmTopFromOn3TopTeams(on3TopTeams || [], classYear);
+    if (rpmFromOn3.length) {
+      metrics.rpmTop = rpmFromOn3;
+      repairActions.push(
+        buildRepairAction('pull_on3_rpm_top', true, rpmFromOn3.map((r) => r.school).join(', '))
+      );
     }
   }
 

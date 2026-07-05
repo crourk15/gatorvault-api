@@ -38,7 +38,7 @@ const GOLDEN_BEATS = [
   },
   {
     id: 'ham',
-    player: { name: 'Merrick Ham', pos: 'EDGE', classYear: 2028, school: 'Marietta' },
+    player: { name: 'Merrick Ham', pos: 'EDGE', classYear: 2028, school: 'Marietta', state: 'GA' },
     beatText:
       'Four-star 2028 EDGE Merrick Ham was on campus at Florida in early March. He appreciated the energy from the staff while on campus, and he\'s only seen more of that since June 15. "I loved the energy that I saw."',
     metrics: {

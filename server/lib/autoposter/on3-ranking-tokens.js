@@ -39,21 +39,32 @@ function extractOn3RankingTokens(source = {}) {
   return { on3Stars, on3NationalRank, on3PositionRank, on3StateRank };
 }
 
-/** Compact identity suffix — stars + national / position / state ranks. */
-function formatRankingTokensSuffix(rankingTokens, pos = null) {
+function resolveStateAbbr(player = {}) {
+  const raw = player.state || player.stateAbbr || player.homeState || player.homeTownState || '';
+  const s = String(raw).trim().toUpperCase();
+  return /^[A-Z]{2}$/.test(s) ? s : null;
+}
+
+/** Compact identity suffix — stars + national / position / state ranks (X-safe: No. not #). */
+function formatRankingTokensSuffix(rankingTokens, pos = null, opts = {}) {
   if (!rankingTokens) return null;
+  if (opts.compact) {
+    return `${rankingTokens.on3Stars}★ · On3 No. ${rankingTokens.on3NationalRank} natl`;
+  }
   const posToken = pos ? String(pos).toUpperCase() : 'POS';
+  const stateToken = opts.stateAbbr || 'state';
   return (
-    `${rankingTokens.on3Stars}★ · On3 #${rankingTokens.on3NationalRank} natl · ` +
-    `#${rankingTokens.on3PositionRank} ${posToken} · #${rankingTokens.on3StateRank} state`
+    `${rankingTokens.on3Stars}★ · On3 No. ${rankingTokens.on3NationalRank} natl · ` +
+    `No. ${rankingTokens.on3PositionRank} ${posToken} · No. ${rankingTokens.on3StateRank} ${stateToken}`
   );
 }
 
-function appendRankingTokensToIdentity(identityLine, rankingTokens, pos = null) {
+function appendRankingTokensToIdentity(identityLine, rankingTokens, pos = null, opts = {}) {
   const line = String(identityLine || '').trim();
   if (!line || !rankingTokens) return line;
+  if (/On3 No\./i.test(line) && /\bnatl\b/i.test(line)) return line;
   if (/On3 #/i.test(line) && /\bnatl\b/i.test(line)) return line;
-  const suffix = formatRankingTokensSuffix(rankingTokens, pos);
+  const suffix = formatRankingTokensSuffix(rankingTokens, pos, opts);
   return suffix ? `${line} · ${suffix}` : line;
 }
 
@@ -84,5 +95,6 @@ module.exports = {
   extractOn3RankingTokens,
   formatRankingTokensSuffix,
   appendRankingTokensToIdentity,
-  loadRankingTokensForSlug
+  loadRankingTokensForSlug,
+  resolveStateAbbr
 };

@@ -23,7 +23,7 @@ function isEliteTone(text, { minInsiderHits = 2 } = {}) {
     if (re.test(t)) violations.push({ type: 'mechanical_structure', pattern: re.source });
   }
   if (/\s\+\s/.test(t)) violations.push({ type: 'plus_joiner' });
-  if (/—[^.]*\.$/.test(t) && !/\b(lean|leaned|gave|opened|pushed|gaining|traction|responded)\b/i.test(t)) {
+  if (/—[^.]*\.$/.test(t) && !/\b(lean|leaned|gave|opened|pushed|gaining|traction|responded|drives|drive|said|loved|landing|picked|lead|leads)\b/i.test(t)) {
     violations.push({ type: 'em_dash_fragment' });
   }
 

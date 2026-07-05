@@ -49,6 +49,36 @@ test('Ham angle is staff/energy not competition', () => {
   assert.equal(pick.angle, 'staff');
 });
 
+test('Ham elite insider paragraph matches editorial flow', () => {
+  const facts = extractBeatFacts(HAM_BEAT.beatText, {
+    metrics: HAM_BEAT.metrics,
+    player: HAM_BEAT.player
+  });
+  const pick = selectAngleFromFacts(facts, HAM_BEAT.beatText);
+  const out = composeFromFacts(facts, pick, { lastName: 'Ham' }, { mode: 'elite' });
+  const banned = validateBannedPhrases(out.narrative);
+  assert.equal(banned.ok, true, JSON.stringify(banned.violations));
+  assert.match(out.narrative, /early March/i);
+  assert.match(out.narrative, /— he said he "loved the energy that I saw\."/);
+  assert.match(out.narrative, /That same pitch has only picked up since June 15/i);
+  assert.match(out.narrative, /lead his RPM board/i);
+  assert.match(out.narrative, /staff sell is landing/i);
+  assert.doesNotMatch(out.narrative, /face time|Marietta|lane widening/i);
+});
+
+test('Ham dual-mode quote paraphrase avoids first-person I saw', () => {
+  const facts = extractBeatFacts(HAM_BEAT.beatText, {
+    metrics: HAM_BEAT.metrics,
+    player: HAM_BEAT.player
+  });
+  const pick = selectAngleFromFacts(facts, HAM_BEAT.beatText);
+  const out = composeFromFacts(facts, pick, { lastName: 'Ham' }, { mode: 'dual' });
+  assert.match(out.narrative1, /loved the energy he saw from UF staff/i);
+  assert.doesNotMatch(out.narrative1, /that I saw/i);
+  assert.match(out.narrative2, /June 15/i);
+  assert.match(out.narrative2, /Auburn and Vanderbilt/i);
+});
+
 test('Ham facts-only copy avoids banned filler and mentions real rivals', () => {
   const facts = extractBeatFacts(HAM_BEAT.beatText, {
     metrics: HAM_BEAT.metrics,

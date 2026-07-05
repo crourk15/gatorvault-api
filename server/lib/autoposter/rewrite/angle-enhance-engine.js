@@ -150,15 +150,21 @@ function enhanceAngleFromBeatFacts(pr6Pack, pr5Pack, signal = {}, pr789Pack = nu
 
   const anglePick = selectAngleFromFacts(facts, ctx.beatText);
 
-  const composed = composeFromFacts(facts, anglePick, ctx, { mode: 'single', compact: true });
+  const hasRpmTop = (signal.metrics?.rpmTop || facts.rpmTop || []).length >= 2;
+  const composeOpts =
+    anglePick.angle === 'staff'
+      ? { mode: 'elite', eliteShort: true, trimComp: !hasRpmTop }
+      : { mode: 'single', compact: true, angleArc: true };
+
+  const composed = composeFromFacts(facts, anglePick, ctx, composeOpts);
 
   const narrative = ensurePeriod(composed.narrative);
 
-  const identityLine = buildIdentityWithRanking(pr6Pack.identityLine, signal);
+  let identityLine = buildIdentityWithRanking(pr6Pack.identityLine, signal);
 
   const cta = pr5Pack?.cta || pr6Pack.cta;
 
-  const tweet = [identityLine, narrative, cta].filter(Boolean).join('\n');
+  let tweet = [identityLine, narrative, cta].filter(Boolean).join('\n');
 
 
 
@@ -178,7 +184,23 @@ function enhanceAngleFromBeatFacts(pr6Pack, pr5Pack, signal = {}, pr789Pack = nu
 
 
 
-  const { gates, allViolations, allPassed } = runAngleGates(narrative, tweet, enrichedPack, enrichedSignal);
+  let { gates, allViolations, allPassed } = runAngleGates(narrative, tweet, enrichedPack, enrichedSignal);
+
+
+
+  if (!allPassed && allViolations.some((v) => v.type === 'char_limit')) {
+    const compactIdentity = buildIdentityWithRanking(pr6Pack.identityLine, signal, { compact: true });
+    if (compactIdentity !== identityLine) {
+      tweet = [compactIdentity, narrative, cta].filter(Boolean).join('\n');
+      identityLine = compactIdentity;
+      ({ gates, allViolations, allPassed } = runAngleGates(narrative, tweet, enrichedPack, enrichedSignal));
+    }
+    if (!allPassed && identityLine !== pr6Pack.identityLine) {
+      identityLine = pr6Pack.identityLine;
+      tweet = [identityLine, narrative, cta].filter(Boolean).join('\n');
+      ({ gates, allViolations, allPassed } = runAngleGates(narrative, tweet, enrichedPack, enrichedSignal));
+    }
+  }
 
 
 

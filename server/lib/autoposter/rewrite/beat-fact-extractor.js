@@ -164,6 +164,183 @@ function shortenQuote(quote) {
   return q.replace(/^I /, '').slice(0, 57).trim() + '…';
 }
 
+/** Third-person insider paraphrase — never leave first-person "I saw" in publish copy. */
+function paraphraseBeatQuote(quote) {
+  if (!quote) return null;
+  let q = String(quote).replace(/[."]+$/, '').trim();
+  if (/^I loved the energy/i.test(q)) {
+    return 'loved the energy he saw from UF staff';
+  }
+  if (/^I /i.test(q)) {
+    q = q.replace(/^I /i, '');
+  }
+  q = q.replace(/\bthat I saw\b/i, 'from UF staff');
+  return q.trim();
+}
+
+function quoteToInsiderLine(quote) {
+  const paraphrase = paraphraseBeatQuote(quote);
+  if (!paraphrase) return null;
+  return `He said he ${paraphrase.charAt(0).toLowerCase()}${paraphrase.slice(1)}.`;
+}
+
+function quoteForEliteEmbed(quote) {
+  if (!quote) return null;
+  return String(quote)
+    .replace(/["""]+$/, '')
+    .replace(/[."]+$/, '')
+    .trim()
+    .replace(/^I /i, '');
+}
+
+function eliteTakeaway(facts, angle) {
+  if (angle === 'staff' && facts.staffEnergy) {
+    if (facts.quote && /energy/i.test(String(facts.quote))) return 'the staff sell is landing';
+    return 'the staff pitch is resonating';
+  }
+  if (angle === 'board' && facts.boardSignal) return 'UF is on his board early';
+  if (angle === 'visit' && facts.visit?.when) return 'the campus connection is real';
+  if (facts.rpmTop?.length) return 'Florida is still firmly in the mix';
+  return 'UF is clearly still in the mix';
+}
+
+function composeEliteStaffArc(facts, ln, opts = {}) {
+  const visitWhen = facts.visit?.when === 'his first Gainesville visit' ? 'Gainesville' : facts.visit?.when || 'campus';
+
+  if (opts.eliteShort) {
+    let paragraph = `${ln}'s ${visitWhen} UF visit — staff energy drives this`;
+    if (facts.quote) {
+      const embedded = quoteForEliteEmbed(facts.quote);
+      if (embedded) paragraph += `. He said he "${embedded}."`;
+    }
+    const hasRpm = facts.rpmTop?.length >= 2 && !opts.trimComp;
+    if (facts.followUpSince) {
+      if (facts.staffEnergy && !hasRpm) {
+        paragraph += ` The pitch picked up since ${facts.followUpSince}, and staff sell is landing.`;
+      } else {
+        paragraph += ` The pitch picked up since ${facts.followUpSince}.`;
+      }
+    } else if (facts.staffEnergy && !hasRpm) {
+      paragraph += `, and staff sell is landing.`;
+    }
+    if (hasRpm) {
+      paragraph += ` ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead RPM, and staff sell is landing.`;
+    }
+    return paragraph;
+  }
+
+  let paragraph = `${ln} was on Florida's campus in ${visitWhen}, and staff energy is still the story`;
+
+  if (facts.quote) {
+    const embedded = quoteForEliteEmbed(facts.quote);
+    if (embedded) paragraph += ` — he said he "${embedded}."`;
+  } else if (facts.staffEnergy) {
+    paragraph += ` — and he loved the energy from UF's staff`;
+  }
+
+  if (facts.followUpSince) {
+    paragraph += opts.trimFollowUp
+      ? ` That pitch picked up since ${facts.followUpSince}.`
+      : ` That same pitch has only picked up since ${facts.followUpSince}.`;
+  }
+
+  if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
+    const takeaway = opts.trimTakeaway ? null : eliteTakeaway(facts, 'staff');
+    paragraph += ` ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the mix`;
+    paragraph += takeaway ? ` because ${takeaway}.` : '.';
+  } else if (facts.rpmTop?.length === 1 && !opts.trimComp) {
+    paragraph += ` ${facts.rpmTop[0].school} leads his RPM board, but UF is clearly in the mix.`;
+  } else if (facts.staffEnergy) {
+    paragraph += ` UF is clearly in the mix because ${eliteTakeaway(facts, 'staff')}.`;
+  }
+
+  return paragraph;
+}
+
+function composeEliteVisitArc(facts, ln, beatText = '', opts = {}) {
+  const beat = String(beatText || '').toLowerCase();
+  if (/swamp|first trip/i.test(beat)) {
+    return `${ln}'s first trip to The Swamp gave Florida real traction — and he left with the Gators on his board early.`;
+  }
+
+  const when = facts.visit?.when || 'campus';
+  let paragraph = `${ln} was on Florida's campus in ${when}, and that trip put UF in his early mix with real traction`;
+
+  if (facts.quote) {
+    const embedded = quoteForEliteEmbed(facts.quote);
+    if (embedded) paragraph += ` — he said he "${embedded}."`;
+  }
+
+  if (facts.boardSignal) {
+    paragraph += ` He's already listing Florida among his top schools.`;
+  } else if (!facts.quote) {
+    paragraph += '.';
+  }
+
+  if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
+    paragraph += ` ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the mix because ${eliteTakeaway(facts, 'visit')}.`;
+  } else if (!paragraph.endsWith('.')) {
+    paragraph += '.';
+  }
+
+  return paragraph;
+}
+
+function composeEliteBoardArc(facts, ln, opts = {}) {
+  let paragraph = `${ln} has Florida in his top-school mix after spring campus time`;
+
+  if (facts.quote) {
+    const embedded = quoteForEliteEmbed(facts.quote);
+    if (embedded) paragraph += ` — he said he "${embedded}."`;
+  } else {
+    paragraph += ` — and UF is positioned early with him`;
+  }
+
+  if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
+    paragraph += `. ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the mix because ${eliteTakeaway(facts, 'board')}.`;
+  } else {
+    paragraph += '.';
+  }
+
+  return paragraph;
+}
+
+function composeEliteCompetitionArc(facts, ln, opts = {}) {
+  const when = facts.visit?.when;
+  const comps = facts.compLabel;
+  let paragraph;
+
+  if (when && comps) {
+    paragraph = `${ln}'s ${when} visit gave Florida traction while ${comps} stay in the mix — and UF is pressing because the staff connection is real.`;
+  } else if (comps) {
+    paragraph = `Florida is gaining traction with ${ln} while ${comps} stay in the mix — and the Gators are pressing early in this cycle.`;
+  } else if (facts.rpmTop?.length >= 2) {
+    paragraph = `${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the mix because ${eliteTakeaway(facts, 'competition')}.`;
+  } else {
+    paragraph = `${ln}'s visit gave Florida traction in a crowded race — and UF is pressing early.`;
+  }
+
+  if (opts.trimComp && facts.rpmTop?.length >= 2) {
+    paragraph = paragraph.replace(/\s+(Auburn|Vanderbilt|Florida State|Georgia)[^.]+\./g, '.');
+  }
+
+  return paragraph;
+}
+
+function composeEliteArc(facts, anglePick, ln, beatText = '', opts = {}) {
+  switch (anglePick.angle) {
+    case 'staff':
+      return composeEliteStaffArc(facts, ln, opts);
+    case 'board':
+      return composeEliteBoardArc(facts, ln, opts);
+    case 'competition':
+      return composeEliteCompetitionArc(facts, ln, opts);
+    case 'visit':
+    default:
+      return composeEliteVisitArc(facts, ln, beatText, opts);
+  }
+}
+
 function composeStaffArc(facts, ln, opts = {}, beatText = '') {
   const beat = String(beatText || '').toLowerCase();
   if (/db coach|coaches texting/i.test(beat)) {
@@ -176,21 +353,29 @@ function composeStaffArc(facts, ln, opts = {}, beatText = '') {
   parts.push(`${ln} was on Florida's campus in ${visitWhen}, and staff energy is still the story.`);
 
   if (quote) {
-    const paraphrase = quote.replace(/^I /i, '').replace(/\bthat I saw\b/i, 'he saw from UF staff').trim();
-    parts.push(`He said he ${paraphrase.charAt(0).toLowerCase()}${paraphrase.slice(1)}.`);
+    if (opts.compact && /energy/i.test(quote)) {
+      parts.push(`He loved the energy he saw from UF staff.`);
+    } else {
+      const insider = quoteToInsiderLine(quote);
+      if (insider) parts.push(insider);
+    }
   } else if (facts.staffEnergy) {
     parts.push(`He appreciated the energy from UF's staff on that trip.`);
   }
 
   if (facts.followUpSince) {
-    parts.push(`That pitch has only picked up since ${facts.followUpSince}.`);
+    parts.push(
+      opts.compact
+        ? `That pitch picked up since ${facts.followUpSince}.`
+        : `That pitch has only picked up since ${facts.followUpSince}.`
+    );
   }
 
-  if (!opts.compact && facts.rpmTop?.length >= 2) {
+  if (facts.rpmTop?.length >= 2 && !opts.angleArc) {
     parts.push(
       `${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead RPM, but UF stays in the mix.`
     );
-  } else if (!opts.compact && facts.rpmTop?.length === 1) {
+  } else if (facts.rpmTop?.length === 1 && !opts.angleArc) {
     parts.push(`${facts.rpmTop[0].school} leads his RPM board, but UF is still in the mix.`);
   }
 
@@ -231,12 +416,17 @@ function composeCompetitionArc(facts, ln) {
 function composeFromFacts(facts = {}, anglePick = {}, ctx = {}, opts = {}) {
   const ln = ctx.lastName || 'He';
   const angle = anglePick.angle || 'visit';
-  const compact = opts.compact === true;
+
+  if (opts.mode === 'elite') {
+    const narrative = composeEliteArc(facts, anglePick, ln, ctx.beatText, opts);
+    return { narrative, narrative1: narrative, narrative2: null, angle };
+  }
+
   let narrative;
 
   switch (angle) {
     case 'staff':
-      narrative = composeStaffArc(facts, ln, { compact }, ctx.beatText);
+      narrative = composeStaffArc(facts, ln, opts, ctx.beatText);
       break;
     case 'board':
       narrative = composeBoardArc(facts, ln);
@@ -256,8 +446,8 @@ function composeFromFacts(facts = {}, anglePick = {}, ctx = {}, opts = {}) {
       const quote = facts.quote ? String(facts.quote).replace(/[."]+$/, '').trim() : null;
       let narrative1 = `${ln} was on Florida's campus in ${visitWhen}, and staff energy is still the story.`;
       if (quote) {
-        const paraphrase = quote.replace(/^I /i, '').trim();
-        narrative1 += ` He said he ${paraphrase.charAt(0).toLowerCase()}${paraphrase.slice(1)}.`;
+        const insider = quoteToInsiderLine(quote);
+        if (insider) narrative1 += ` ${insider}`;
       }
       let narrative2 = facts.followUpSince
         ? `That pitch has picked up since ${facts.followUpSince}.`
@@ -282,6 +472,10 @@ module.exports = {
   extractBeatFacts,
   selectAngleFromFacts,
   composeFromFacts,
+  composeEliteArc,
+  composeEliteStaffArc,
+  quoteForEliteEmbed,
+  quoteToInsiderLine,
   classifySignals,
   extractQuote,
   extractVisit,

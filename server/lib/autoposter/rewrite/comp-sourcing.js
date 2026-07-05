@@ -104,6 +104,27 @@ function schoolsFromOffers(offers = []) {
   return out;
 }
 
+function rpmTopFromOn3TopTeams(topTeams = [], classYear = 2028) {
+  let rows = topTeams;
+  try {
+    const on3Recruit = require('../../on3-recruit-client');
+    rows = on3Recruit.getYearTopTeams(topTeams, classYear);
+  } catch {
+    rows = topTeams || [];
+  }
+
+  return rows
+    .map((row) => {
+      const team = row?.team || row;
+      const name = normalizeSchoolName(team?.fullName || team?.name || row?.school) || null;
+      const pct = row?.percent ?? row?.percentage ?? row?.prediction ?? row?.pct ?? null;
+      return name ? { school: name, pct: pct != null ? Number(pct) : null } : null;
+    })
+    .filter(Boolean)
+    .filter((row) => !/^florida|gators|uf$/i.test(String(row.school)))
+    .slice(0, 4);
+}
+
 function rpmTopFromSources(metrics = {}, intel = null) {
   if (Array.isArray(metrics.rpmTop) && metrics.rpmTop.length) {
     return metrics.rpmTop
@@ -120,7 +141,8 @@ function rpmTopFromSources(metrics = {}, intel = null) {
     .map((c) => ({
       school: c.school,
       pct: c.pct ?? c.score ?? c.ufPct ?? null
-    }));
+    }))
+    .filter((c) => isValidCollege(c.school, { player: intel?.identity || {} }));
 }
 
 function resolveValidCompSchools(ctx = {}) {
@@ -172,6 +194,7 @@ module.exports = {
   resolveValidCompSchools,
   schoolsFromBeat,
   rpmTopFromSources,
+  rpmTopFromOn3TopTeams,
   compLabel,
   HIGH_SCHOOL_RE
 };
