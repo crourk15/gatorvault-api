@@ -830,11 +830,19 @@ function startXAutoposterScheduler() {
           typeof fillMod.hasGoldenFourPending === 'function' ? fillMod.hasGoldenFourPending() : false;
         const forceRefill = pendingBefore === 0 || postFloorDue;
         const digDeeper = (postFloorDue || pendingBefore === 0) && !goldenPending;
-        const refill = await refillAutoposterQueue({
-          minPending: parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '2', 10),
-          maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '4', 10),
-          forcePost: forceRefill,
-          digDeeper
+        const refill = await Promise.race([
+          refillAutoposterQueue({
+            minPending: parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '2', 10),
+            maxEnqueue: parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '4', 10),
+            forcePost: forceRefill,
+            digDeeper
+          }),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('refill_timeout')), parseInt(process.env.X_AUTOPOST_REFILL_TIMEOUT_MS || '90000', 10))
+          )
+        ]).catch((err) => {
+          autopostLog('warn', 'Refill timed out or failed', { error: err.message });
+          return { enqueuedCount: 0, skipReasons: [{ reason: err.message }] };
         });
         if (postFloorDue && refill.enqueuedCount > 0) {
           autopostLog('info', 'Post floor refill — widened topic discovery', {

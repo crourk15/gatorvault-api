@@ -113,6 +113,40 @@ const MAX_BEAT_INTEL_AGE_MS = parseInt(
   10
 );
 
+const REFILL_PREP_TIMEOUT_MS = parseInt(process.env.X_AUTOPOST_REFILL_PREP_TIMEOUT_MS || '20000', 10);
+const REFILL_WIDE_TIMEOUT_MS = parseInt(process.env.X_AUTOPOST_REFILL_WIDE_TIMEOUT_MS || '45000', 10);
+
+function withRefillTimeout(promise, ms, label = 'refill_step') {
+  let timer;
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error(`${label}_timeout_${ms}ms`)), ms);
+    })
+  ]).finally(() => clearTimeout(timer));
+}
+
+async function collectUnqueuedIntelCandidates({ forcePost = false } = {}) {
+  const candidates = [];
+  const maxIntelAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_INTEL_AGE_MS;
+  try {
+    const beatIntel = intelStore
+      .getUnqueuedIntel({ maxAgeMs: forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS })
+      .filter(isBeatWriterIntel);
+    const otherIntel = intelStore.getUnqueuedIntel({ maxAgeMs: maxIntelAgeMs }).filter((i) => !isBeatWriterIntel(i));
+    for (const intel of [...beatIntel, ...otherIntel].slice(0, 12)) {
+      const eligibility = require('./rivals-prediction-eligibility');
+      const gate = await eligibility.checkIntelForAutopost(intel);
+      if (!gate.allowed) continue;
+      const row = await buildNewsFromIntel(intel);
+      if (row) candidates.unshift(row);
+    }
+  } catch (err) {
+    console.warn('[x-autoposter] intel candidate collect failed:', err.message);
+  }
+  return prioritizePostCandidates(candidates);
+}
+
 /** Recruiting commit sources eligible for X autopost (On3 board + beat-verified allowlist). */
 const COMMIT_EVENT_SOURCES = new Set(['on3', 'hayes_fawcett', 'rivals_beat', 'allowlist-commit-ingest']);
 
@@ -1216,7 +1250,7 @@ async function collectBeatAutoposterCandidates(freshPosts) {
   return candidates;
 }
 
-async function collectFreshPostCandidates({ forcePost = false, digDeeper = false } = {}) {
+async function collectFreshPostCandidates({ forcePost = false, digDeeper = false, intelOnly = false } = {}) {
   const candidates = [];
   const maxCommitAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_COMMIT_EVENT_AGE_MS;
   const maxBeatAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_BEAT_POST_AGE_MS;
@@ -1236,6 +1270,10 @@ async function collectFreshPostCandidates({ forcePost = false, digDeeper = false
     }
   } catch {
     /* optional */
+  }
+
+  if (intelOnly) {
+    return prioritizePostCandidates(candidates);
   }
 
   try {
@@ -1494,12 +1532,11 @@ async function refillAutoposterQueue({
     forcePost = false;
     digDeeper = false;
   }
-  let beatPrep = null;
-  try {
-    beatPrep = await prepareBeatFirstAutoposter({ forceIngest: forcePost });
-  } catch {
-    /* optional */
-  }
+  const beatPrepPromise = withRefillTimeout(
+    prepareBeatFirstAutoposter({ forceIngest: forcePost }),
+    REFILL_PREP_TIMEOUT_MS,
+    'beat_prep'
+  ).catch((err) => ({ ok: false, error: err.message }));
   try {
     intelStore.reconcileGhostQueuedIntel();
   } catch {
@@ -1576,10 +1613,22 @@ async function refillAutoposterQueue({
       beatDigDeeper = false;
     }
     const beatSlots = Math.min(maxEnqueue, need);
-    const rawNewsCandidates = await collectFreshPostCandidates({
-      forcePost: forcePost || digDeeper,
-      digDeeper: beatDigDeeper
-    });
+    let rawNewsCandidates = await collectUnqueuedIntelCandidates({ forcePost: forcePost || digDeeper });
+    if (!rawNewsCandidates.length) {
+      try {
+        rawNewsCandidates = await withRefillTimeout(
+          collectFreshPostCandidates({
+            forcePost: forcePost || digDeeper,
+            digDeeper: beatDigDeeper
+          }),
+          REFILL_WIDE_TIMEOUT_MS,
+          'wide_candidate_collect'
+        );
+      } catch (err) {
+        console.warn('[x-autoposter] wide candidate collect skipped:', err.message);
+        rawNewsCandidates = [];
+      }
+    }
     await enqueueFromCandidates(rawNewsCandidates, beatSlots);
   }
 
@@ -1675,6 +1724,13 @@ async function refillAutoposterQueue({
       doc.items.push(item);
       added += 1;
     }
+  }
+
+  let beatPrep = null;
+  try {
+    beatPrep = await beatPrepPromise;
+  } catch {
+    beatPrep = null;
   }
 
   return {
