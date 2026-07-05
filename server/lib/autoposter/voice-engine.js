@@ -722,6 +722,16 @@ async function composeFromEliteInput(input, research, playerData) {
   if (!voiceEngineEnabled()) return null;
   const signal = signalAdapter.signalFromEliteInput(input, research, playerData);
 
+  try {
+    const golden = require('../player-intelligence/golden-four-on3');
+    const slug = signal.playerSlug || playerData?.data?.playerSlug || research?.playerSlug || null;
+    if (golden.isGoldenProdSlug(slug)) {
+      await golden.refreshGoldenFourRankingCache();
+    }
+  } catch {
+    /* optional ranking cache refresh */
+  }
+
   if (research?.player?.ufRpmPct != null && signal.metrics.rpm == null) {
     signal.metrics.rpm = Number(research.player.ufRpmPct);
   }
@@ -747,9 +757,11 @@ async function composeFromEliteInput(input, research, playerData) {
     templateBlocks: out.templateBlocks,
     validationMeta: {
       ...out.validationMeta,
+      ...(out.metadata || {}),
       eliteCompose: true,
       voiceEngine: true,
       eliteBeatIntel: true,
+      beatText: signal.beatText || signal.event?.description || out.validationMeta?.beatText || null,
       voiceMetrics: signal.metrics
     },
     metadata: out.metadata

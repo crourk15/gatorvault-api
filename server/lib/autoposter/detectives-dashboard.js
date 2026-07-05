@@ -49,9 +49,25 @@ function formatCaseForDashboard(caseItem) {
     ? Date.now() - new Date(caseItem.updatedAt || caseItem.createdAt).getTime()
     : 0;
   const diagnosis = caseItem.diagnosis || null;
+  const resolutionState =
+    caseItem.resolutionState ||
+    caseItem.status ||
+    (caseItem.status === 'failed_final' ? 'resolved_archive' : null);
+  const archiveReason = caseItem.archiveReason || null;
+  let resolutionBadge = null;
+  if (caseItem.status === 'resolved_publish' || caseItem.status === 'resolved') {
+    resolutionBadge = 'Resolved — Published';
+  } else if (caseItem.status === 'resolved_archive' || caseItem.status === 'failed_final') {
+    resolutionBadge = archiveReason
+      ? `Resolved — Archived (${archiveReason})`
+      : 'Resolved — Archived (not for posting)';
+  }
   return {
     id: caseItem.id,
     status: caseItem.status,
+    resolutionState,
+    resolutionBadge,
+    archiveReason,
     skipReason: caseItem.skipReason,
     skipReasonRaw: caseItem.skipReasonRaw || caseItem.skipReason,
     skipStage: caseItem.skipStage,

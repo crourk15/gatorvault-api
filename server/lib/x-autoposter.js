@@ -331,6 +331,19 @@ function finalizeSuccessfulPost(workingItem, result, { duplicateRecovery = false
   try {
     const sentLedger = require('./x-autoposter-sent-ledger');
     sentLedger.recordSentPost(posted);
+    if (posted.playerSlug && String(posted.topic || '').toLowerCase() === 'recruiting') {
+      try {
+        const resolutionLedger = require('./autoposter/player-resolution-ledger');
+        resolutionLedger.markResolvedPublish(posted.playerSlug, {
+          source: 'autoposter_sent',
+          queueItemId: posted.id,
+          intelFingerprint: posted.intelFingerprint || null,
+          preview: posted.text || null
+        });
+      } catch {
+        /* optional */
+      }
+    }
     try {
       const phase3 = require('./autoposter/phase3-index');
       phase3.recordPostMemory(posted);

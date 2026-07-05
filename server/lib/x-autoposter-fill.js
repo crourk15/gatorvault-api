@@ -729,6 +729,55 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
     /* optional */
   }
 
+  const slug = String(rawCandidate?.playerSlug || '').trim().toLowerCase();
+  const isRecruitingPlayer =
+    slug &&
+    !isProgramOrTeamNews(rawCandidate) &&
+    (rawCandidate?.topic === 'recruiting' ||
+      (rawCandidate?.category === 'news' && rawCandidate?.playerName));
+  if (isRecruitingPlayer) {
+    const preflightMod = require('./autoposter/player-resolution-preflight');
+    const ledger = require('./autoposter/player-resolution-ledger');
+    const allowGoldenFour = String(rawCandidate?.source || '').includes('golden-four');
+    const pre = await preflightMod.evaluatePlayerPostPreflight({
+      ...rawCandidate,
+      playerSlug: slug,
+      allowGoldenFour,
+      allowRepublish: opts.allowRepublish === true
+    });
+    if (!pre.ok) {
+      if (pre.action === 'archive') {
+        ledger.markResolvedArchive(slug, pre.archiveReason || pre.reason, {
+          source: rawCandidate?.source || 'enqueue',
+          committedTo: pre.committedTo || null,
+          intelFingerprint: rawCandidate?.intelFingerprint || null,
+          preview: rawCandidate?.text || null
+        });
+      }
+      return finalizeEnqueueFailure(
+        rawCandidate,
+        doc,
+        { queued: false, reason: pre.reason, archiveReason: pre.archiveReason },
+        { ...opts, skipDetectives: pre.action === 'archive' }
+      );
+    }
+
+    const elig = await policy.validateRecruitingPostEligibility(rawCandidate);
+    if (!elig.ok) {
+      ledger.markResolvedArchive(slug, 'committed_elsewhere', {
+        source: rawCandidate?.source || 'enqueue',
+        committedTo: elig.committedTo || null,
+        intelFingerprint: rawCandidate?.intelFingerprint || null
+      });
+      return finalizeEnqueueFailure(
+        rawCandidate,
+        doc,
+        { queued: false, reason: elig.reason, committedTo: elig.committedTo || null },
+        { ...opts, skipDetectives: true }
+      );
+    }
+  }
+
   if (rawCandidate?._nonPlayerSkip && !isProgramOrTeamNews(rawCandidate)) {
     const ladder = await tryResearchLadder(rawCandidate, 'non_player_intel', doc, ladderDepth);
     if (ladder?.queued) return ladder;

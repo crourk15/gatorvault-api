@@ -703,12 +703,14 @@ async function buildElitePlayerPost(input = {}) {
           qa.isRecruitingPlayerCandidate(publishCandidate) &&
           !qa.passesPublishGate(publishCandidate)
         ) {
+          const qaReason = qa.rejectReason(publishCandidate) || 'recruiting_qa';
           eliteLog.logEliteCaption({
             pass: false,
-            skipReason: qa.rejectReason(publishCandidate),
+            skipReason: qaReason,
             playerName: voiceBuilt.playerName,
             voiceEngine: true
           });
+          return { ok: false, skipped: true, reason: qaReason, research };
         } else {
           eliteLog.logEliteCaption({
             pass: true,

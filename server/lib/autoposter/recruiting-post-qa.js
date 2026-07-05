@@ -144,8 +144,12 @@ function passesVoicePublishGate(raw) {
       metrics: raw.validationMeta?.voiceMetrics || {},
       player: playerName ? { name: playerName } : null
     };
+    const pr789AnglePost =
+      raw.validationMeta?.pr789AngleLive === true ||
+      raw.validationMeta?.eliteBeatIntel === true ||
+      String(raw.validationMeta?.publishTier || '').startsWith('pr789_angle');
     const gate = voiceQa.runQualityGate(signal, blocks, text, raw, {
-      requireFullLayers: true,
+      requireFullLayers: !pr789AnglePost,
       // Compose already validated phrase memory and may have recorded hook/cta.
       skipHookMemory: true,
       skipCtaMemory: true,

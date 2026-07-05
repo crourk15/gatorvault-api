@@ -8,7 +8,9 @@ const policy = require('../x-autoposter-policy');
 const cadence = require('../x-autoposter-cadence');
 const { validateBannedPhrases } = require('../autoposter/rewrite/fact-gates');
 const { GOLDEN_FOUR_PROD_SLUGS } = require('./golden-four-on3');
-const { syncGoldenFourPlayerFromOn3 } = require('./golden-four-on3');
+const { syncGoldenFourPlayerFromOn3, refreshGoldenFourRankingCache } = require('./golden-four-on3');
+const preflight = require('../autoposter/player-resolution-preflight');
+const resolutionLedger = require('../autoposter/player-resolution-ledger');
 
 const DEFAULT_ORDER = Object.freeze([
   'ryan-drakeford',
@@ -52,12 +54,23 @@ async function composeGoldenFourPost(slug, intel) {
   });
 }
 
+function slugRecentlySent(slug, intelFingerprint = null) {
+  try {
+    const sentLedger = require('../x-autoposter-sent-ledger');
+    const hit = sentLedger.hasRecentSentPost({ slug, playerSlug: slug, intelFingerprint });
+    return hit.hit ? hit : null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * @param {object} opts
  * @param {string[]} [opts.slugs] — subset/order; defaults to Drakeford → Robinson → Willingham (Ham optional)
  * @param {boolean} [opts.includeHam]
  * @param {boolean} [opts.clearPendingNonGolden]
  * @param {number} [opts.scheduleGapMs] — stagger scheduledAt between items
+ * @param {boolean} [opts.forceRepublish] — bypass sent-ledger duplicate guard
  */
 async function enqueueGoldenFourPosts(opts = {}) {
   const includeHam = opts.includeHam === true;
@@ -99,6 +112,49 @@ async function enqueueGoldenFourPosts(opts = {}) {
       continue;
     }
 
+    const intelFp = intel.fingerprint || intel.id || null;
+    if (opts.forceRepublish !== true) {
+      const archived = resolutionLedger.checkPlayerResolution(slug, { allowGoldenFour: true, intelFingerprint: intelFp });
+      if (archived.blocked && archived.reason === 'player_archived') {
+        results.push({ slug, ok: false, reason: 'player_archived', archiveReason: archived.archiveReason });
+        continue;
+      }
+      const sentHit = slugRecentlySent(slug, intelFp);
+      if (sentHit) {
+        results.push({
+          slug,
+          ok: false,
+          reason: 'duplicate_already_sent',
+          tweetId: sentHit.tweetId || null
+        });
+        continue;
+      }
+    }
+
+    const pre = await preflight.evaluatePlayerPostPreflight({
+      playerSlug: slug,
+      beatText: intel.detail || intel.skinny,
+      intelFingerprint: intelFp,
+      allowGoldenFour: true,
+      allowRepublish: opts.forceRepublish === true
+    });
+    if (!pre.ok) {
+      if (pre.action === 'archive') {
+        resolutionLedger.markResolvedArchive(slug, pre.archiveReason || pre.reason, {
+          source: 'golden-four-enqueue',
+          committedTo: pre.committedTo || null,
+          intelFingerprint: intelFp
+        });
+      }
+      results.push({
+        slug,
+        ok: false,
+        reason: pre.reason,
+        archiveReason: pre.archiveReason || null
+      });
+      continue;
+    }
+
     const on3Sync = await syncGoldenFourPlayerFromOn3(slug);
     if (!on3Sync.ok || on3Sync.rankingValid !== true) {
       results.push({
@@ -109,6 +165,8 @@ async function enqueueGoldenFourPosts(opts = {}) {
       });
       continue;
     }
+
+    await refreshGoldenFourRankingCache();
 
     const elite = await composeGoldenFourPost(slug, intel);
     if (!elite?.ok || !elite.text) {
@@ -169,6 +227,13 @@ async function enqueueGoldenFourPosts(opts = {}) {
         /* optional */
       }
     }
+
+    resolutionLedger.markResolvedPublish(slug, {
+      source: 'golden-four-enqueue',
+      queueItemId: out.item.id,
+      intelFingerprint: intelFp,
+      preview: elite.text
+    });
 
     results.push({
       slug,

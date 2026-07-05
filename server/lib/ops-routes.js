@@ -127,7 +127,16 @@ function mountOpsRoutes(app) {
     if (!jobId) return res.status(400).json({ ok: false, error: 'jobId required' });
 
     try {
-      const { jobId: resolvedId, requestedId, result } = await opsJobs.runJob(jobId, req.body?.options || {});
+      const options = {
+        ...(req.body?.options || {}),
+        ...(Array.isArray(req.body?.slugs) ? { slugs: req.body.slugs } : {}),
+        ...(req.body?.includeHam != null ? { includeHam: req.body.includeHam } : {}),
+        ...(req.body?.clearPendingNonGolden != null
+          ? { clearPendingNonGolden: req.body.clearPendingNonGolden }
+          : {}),
+        ...(req.body?.scheduleGapMs != null ? { scheduleGapMs: req.body.scheduleGapMs } : {})
+      };
+      const { jobId: resolvedId, requestedId, result } = await opsJobs.runJob(jobId, options);
       const failed = result && result.ok === false && !result.skipped;
       return res.status(failed ? 422 : 200).json({
         ok: !failed,

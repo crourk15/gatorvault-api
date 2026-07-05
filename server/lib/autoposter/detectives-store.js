@@ -26,6 +26,14 @@ const CLUSTER_TOPICS = new Set([
 
 const OPEN_STATUSES = new Set(['pending', 'investigating', 'failed']);
 
+const TERMINAL_STATUSES = new Set([
+  'resolved',
+  'resolved_publish',
+  'resolved_archive',
+  'failed_final',
+  'expired'
+]);
+
 function nowIso() {
   return new Date().toISOString();
 }
@@ -160,13 +168,23 @@ function caseFingerprint(payload = {}) {
   return semanticDedupeKey(payload);
 }
 
-function findFailedFinalBySemanticKey(doc, payload) {
+function findTerminalBySemanticKey(doc, payload) {
   const sem = semanticDedupeKey(payload);
   return (
     doc.cases.find(
-      (c) => (c.fingerprint === sem || c.semanticKey === sem) && c.status === 'failed_final'
+      (c) =>
+        (c.fingerprint === sem || c.semanticKey === sem) &&
+        TERMINAL_STATUSES.has(c.status)
     ) || null
   );
+}
+
+function findFailedFinalBySemanticKey(doc, payload) {
+  const hit = findTerminalBySemanticKey(doc, payload);
+  if (!hit) return null;
+  if (hit.status === 'failed_final' || hit.status === 'resolved_archive') return hit;
+  if (hit.status === 'resolved_publish' || hit.status === 'resolved') return hit;
+  return null;
 }
 
 function mergeOpenCase(existing, payload = {}) {
@@ -190,9 +208,15 @@ function findOpenDuplicate(doc, payload) {
 
 function addCase(payload = {}) {
   const doc = loadPile();
-  const terminal = findFailedFinalBySemanticKey(doc, payload);
+  const terminal = findTerminalBySemanticKey(doc, payload);
   if (terminal) {
-    return { case: terminal, created: false, duplicate: true, blocked: true, reason: 'failed_final' };
+    return {
+      case: terminal,
+      created: false,
+      duplicate: true,
+      blocked: true,
+      reason: terminal.status === 'resolved_archive' ? 'resolved_archive' : terminal.status
+    };
   }
   const sem = semanticDedupeKey(payload);
   const existing = findOpenDuplicate(doc, payload);
@@ -275,7 +299,16 @@ function appendLog(id, entry) {
 
 function countByStatus() {
   const doc = loadPile();
-  const out = { pending: 0, investigating: 0, resolved: 0, failed: 0, failed_final: 0, expired: 0 };
+  const out = {
+    pending: 0,
+    investigating: 0,
+    resolved: 0,
+    resolved_publish: 0,
+    resolved_archive: 0,
+    failed: 0,
+    failed_final: 0,
+    expired: 0
+  };
   for (const c of doc.cases) {
     const s = c.status || 'pending';
     out[s] = (out[s] || 0) + 1;
@@ -295,10 +328,13 @@ function recoverStaleInvestigatingCases(maxAgeMs = null) {
     const maxAttempts = c.maxAttempts || parseInt(process.env.X_AUTOPOST_DETECTIVES_MAX_ATTEMPTS || '8', 10);
     const log = c.investigationLog || [];
     if ((c.attempts || 0) >= maxAttempts) {
-      c.status = 'failed_final';
+      c.status = 'resolved_archive';
       c.finalSkipCode = 'EXHAUSTED_PROMOTE';
+      c.archiveReason = 'exhausted_promote';
+      c.resolutionState = 'resolved_archive';
+      c.resolvedAt = nowIso();
       c.updatedAt = nowIso();
-      log.push({ at: nowIso(), phase: 'failed_final', reason: 'stale_exhausted', attempts: c.attempts, ageMs: age });
+      log.push({ at: nowIso(), phase: 'resolved_archive', reason: 'stale_exhausted', attempts: c.attempts, ageMs: age });
     } else {
       c.status = 'pending';
       c.updatedAt = nowIso();

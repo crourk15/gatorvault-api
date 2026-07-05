@@ -55,6 +55,24 @@ function noteBlockedReason(stats, reason) {
 }
 
 async function handoffPayload(payload, stats) {
+  const slug = String(
+    payload.hints?.playerSlug || payload.beatPost?.playerSlug || payload.candidate?.playerSlug || ''
+  )
+    .trim()
+    .toLowerCase();
+  if (slug) {
+    try {
+      const ledger = require('./player-resolution-ledger');
+      const blocked = ledger.checkPlayerResolution(slug);
+      if (blocked.blocked) {
+        stats.notHandoffEligible += 1;
+        noteBlockedReason(stats, blocked.reason || 'player_archived');
+        return;
+      }
+    } catch {
+      /* optional */
+    }
+  }
   if (!detectives.shouldHandoff(payload.skipReason, payload)) {
     stats.notHandoffEligible += 1;
     noteBlockedReason(stats, payload.skipReason);

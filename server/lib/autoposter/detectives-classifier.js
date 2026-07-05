@@ -367,7 +367,10 @@ function markFailedFinal(caseItem, diagnosis = null) {
 }
 
 function shouldStopInvestigation(caseItem) {
-  return caseItem?.status === 'failed_final';
+  if (caseItem?.status === 'failed_final') return true;
+  if (caseItem?.status === 'resolved_archive' || caseItem?.status === 'resolved_publish') return true;
+  if (caseItem?.status === 'resolved') return true;
+  return false;
 }
 
 module.exports = {
