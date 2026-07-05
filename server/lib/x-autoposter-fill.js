@@ -428,7 +428,8 @@ function prepareNewsCandidate(raw) {
   if (raw?.text && copy.isBrokenCopy(raw.text, raw)) return null;
   try {
     const qa = require('./autoposter/recruiting-post-qa');
-    if (qa.isRecruitingPlayerCandidate(raw) && !qa.passesPublishGate(raw)) return null;
+    const pr789Elite = validation.isPr789AngleElitePost(raw);
+    if (qa.isRecruitingPlayerCandidate(raw) && !pr789Elite && !qa.passesPublishGate(raw)) return null;
   } catch {
     /* optional */
   }
@@ -440,6 +441,10 @@ function prepareNewsCandidate(raw) {
     raw.source === 'auto:heat-mover' ||
     raw.source === 'auto:uf-official-news' ||
     raw.source === 'auto:detectives' ||
+    raw.source === 'auto:on3-team-news' ||
+    raw.source === 'auto:intel-fused' ||
+    raw.validationMeta?.fusedIntel === true ||
+    validation.isPr789AngleElitePost(raw) ||
     isProgramOrTeamNews(raw);
   if (!fresh.ok && !relaxedFreshness) {
     console.log(`[x-autoposter] skip: ${fresh.logTag || fresh.skipReason} — ${fresh.reason}`);

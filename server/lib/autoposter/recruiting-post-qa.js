@@ -147,6 +147,8 @@ function passesVoicePublishGate(raw) {
     const pr789AnglePost =
       raw.validationMeta?.pr789AngleLive === true ||
       raw.validationMeta?.eliteBeatIntel === true ||
+      raw.validationMeta?.fusedIntelCompose === true ||
+      raw.validationMeta?.goldenFourFactCompose === true ||
       String(raw.validationMeta?.publishTier || '').startsWith('pr789_angle');
     const gate = voiceQa.runQualityGate(signal, blocks, text, raw, {
       requireFullLayers: !pr789AnglePost,

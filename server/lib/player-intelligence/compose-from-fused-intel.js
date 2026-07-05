@@ -46,6 +46,11 @@ function composeFromFusedIntel(fused) {
     validationMeta: {
       ...(built.validationMeta || {}),
       fusedIntelCompose: true,
+      pr789AngleLive: true,
+      eliteBeatIntel: true,
+      eliteCompose: true,
+      publishTier: 'pr789_angle',
+      voiceEngine: true,
       fuseConfidence: fused.confidence,
       fusePublishAction: fused.publishAction,
       fuseGapCount: fused.gaps?.length || 0,

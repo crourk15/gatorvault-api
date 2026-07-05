@@ -134,6 +134,7 @@ function isEliteComposePost(item) {
 function isPr789AngleElitePost(item) {
   return !!(
     item.validationMeta?.goldenFourFactCompose ||
+    item.validationMeta?.fusedIntelCompose ||
     item.validationMeta?.pr789AngleLive ||
     String(item.validationMeta?.publishTier || '').startsWith('pr789_angle')
   );
@@ -867,5 +868,6 @@ module.exports = {
   scoreNewsPost,
   validateNewsPostQuality,
   passesNewsQualityGate,
-  resolveEventTimestamp
+  resolveEventTimestamp,
+  isPr789AngleElitePost
 };
