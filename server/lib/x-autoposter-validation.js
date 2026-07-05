@@ -119,6 +119,18 @@ const HARD_SKIP_TYPES = new Set([
 
 const DETECTIVES_RELAXED_SKIP_TYPES = new Set(['stale', 'stale_intel', 'rewrite_too_short']);
 
+const ELITE_RELAXED_SKIP_TYPES = new Set([
+  'verbatim_overlap',
+  'rewrite_too_short',
+  'non_football_sport',
+  'stale',
+  'stale_intel'
+]);
+
+function isEliteComposePost(item) {
+  return !!(item.validationMeta?.eliteCompose || item.validationMeta?.goldenFourEnqueue);
+}
+
 function isDetectivesTemplatePost(item) {
   if (String(item?.source || '').includes('detectives')) return true;
   if (item?.validationMeta?.detectivesResolved !== true) return false;
@@ -128,6 +140,14 @@ function isDetectivesTemplatePost(item) {
 function filterDetectivesSkips(item, skips) {
   if (!isDetectivesTemplatePost(item)) return skips;
   return skips.filter((s) => !DETECTIVES_RELAXED_SKIP_TYPES.has(s.type));
+}
+
+function filterQualitySkips(item, skips) {
+  let out = filterDetectivesSkips(item, skips);
+  if (isEliteComposePost(item)) {
+    out = out.filter((s) => !ELITE_RELAXED_SKIP_TYPES.has(s.type));
+  }
+  return out;
 }
 
 function normalizeSentence(s) {
@@ -687,7 +707,7 @@ function collectHardSkipReasons(item, blocks, meta) {
     });
   }
 
-  return { skips: filterDetectivesSkips(item, skips), sourceConfidence: sourceCheck.score, sourcePass: sourceCheck.pass };
+  return { skips: filterQualitySkips(item, skips), sourceConfidence: sourceCheck.score, sourcePass: sourceCheck.pass };
 }
 
 /**
