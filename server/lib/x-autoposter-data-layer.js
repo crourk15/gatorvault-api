@@ -94,6 +94,10 @@ function gvRecordToIdentity(player) {
     htWt: player.htWt || null,
     hometown: player.school || player.hometown || null,
     school: player.school || null,
+    state: player.state || player.hometownState || null,
+    hometownState: player.hometownState || player.state || null,
+    posRank: player.posRank != null ? Number(player.posRank) : null,
+    stateRank: player.stateRank != null ? Number(player.stateRank) : null,
     category: player.category || null,
     status: player.status || null,
     committedTo: player.committedTo || null,
@@ -126,6 +130,8 @@ function snapshotToIdentity(snapshot, sourceTag) {
     natlRank: snapshot.natlRank != null ? Number(snapshot.natlRank) : null,
     hometown: snapshot.hometownState || snapshot.highSchool || snapshot.school || null,
     school: snapshot.highSchool || snapshot.school || snapshot.hometownState || null,
+    state: snapshot.state || snapshot.hometownState || null,
+    hometownState: snapshot.hometownState || snapshot.state || null,
     ufRpmPct: snapshot.ufRpmPct != null ? Number(snapshot.ufRpmPct) : null,
     identitySource: sourceTag
   };
@@ -582,9 +588,12 @@ async function fetchAutoposterPlayerData(intel = {}) {
 
   const data = {
     name: identity.name,
+    pos: identity.position,
     position: identity.position,
     class: String(identity.classYear || identity.class),
+    classYear: identity.classYear || identity.class,
     rating: identity.starsLabel || template.formatStarsLabel(identity.rating),
+    stars: identity.rating || null,
     situation,
     timestamp: timestamp ? new Date(timestamp).toISOString() : null,
     context: contextHint,
@@ -592,6 +601,10 @@ async function fetchAutoposterPlayerData(intel = {}) {
     ufStatus: identity.ufStatus || (identity.isUFtarget ? 'priority target' : null),
     playerSlug: identity.playerSlug,
     natlRank: identity.natlRank,
+    posRank: identity.posRank ?? null,
+    stateRank: identity.stateRank ?? null,
+    state: identity.state || identity.hometownState || null,
+    hometownState: identity.hometownState || identity.state || null,
     hometown: identity.hometown,
     htWt: identity.htWt,
     identitySource: identity.identitySource || 'gatorvault_db'

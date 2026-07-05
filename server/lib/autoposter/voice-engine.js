@@ -10,7 +10,7 @@ const voiceQa = require('./voice-qa');
 const { blocksHaveTruncation } = require('./strategy/strategy-guard');
 const { isCompleteSentence } = require('./strategy/strategy-sentences');
 const pr6Rewrite = require('./rewrite');
-const { appendRankingTokensToIdentity } = require('./on3-ranking-tokens');
+const { appendRankingTokensToIdentity, resolveStateAbbr } = require('./on3-ranking-tokens');
 const { getTweetCharLimit } = require('./tweet-char-limit');
 const { rpmTopFromOn3TopTeams, rpmTopFromSources } = require('./rewrite/comp-sourcing');
 
@@ -62,7 +62,9 @@ function buildIdentityLine(player, { compact = false } = {}) {
   if (!compact) {
     if (player.school) line += ` (${player.school})`;
     if (player.rankingTokens) {
-      line = appendRankingTokensToIdentity(line, player.rankingTokens, player.pos);
+      line = appendRankingTokensToIdentity(line, player.rankingTokens, player.pos, {
+        stateAbbr: resolveStateAbbr(player)
+      });
     } else if (player.ranking) {
       line += ` · On3 #${player.ranking}`;
     }
