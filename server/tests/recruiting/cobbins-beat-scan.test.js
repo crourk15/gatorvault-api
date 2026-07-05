@@ -22,6 +22,7 @@ test('selectBeatIntelForAutopost includes Cobbins beyond raw recency top-12', as
     scan.some((row) => row.playerSlug === 'jermaine-cobbins'),
     `expected Cobbins in tier-prioritized beat scan (${scan.length} rows)`
   );
+  assert.equal(scan[0]?.playerSlug, 'jermaine-cobbins', 'On3 article slug rows should lead beat scan');
 
   const slugs = scan.map((row) => row.playerSlug);
   assert.equal(slugs.length, new Set(slugs).size, 'beat scan should dedupe player slugs');

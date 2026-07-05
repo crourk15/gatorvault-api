@@ -157,10 +157,17 @@ async function selectBeatIntelForAutopost(beatIntel, { limit = MAX_BEAT_INTEL_SC
     if (tierA && slug && tierA.has(slug)) tierRank = 0;
     else if (wasMentionedRecently && slug && wasMentionedRecently(slug)) tierRank = 1;
     const on3News = /on3-team-news/i.test(String(row.source || '')) ? 0 : 1;
+    const on3Promoted =
+      /on3-team-news/i.test(String(row.source || '')) &&
+      slug &&
+      String(row.articleUrl || row.sourceUrl || '')
+        .toLowerCase()
+        .includes(slug);
     const ts = new Date(row.reportedAt || row.createdAt).getTime();
-    return { row, tierRank, on3News, ts };
+    return { row, tierRank, on3News, on3Promoted, ts };
   });
   scored.sort((a, b) => {
+    if (a.on3Promoted !== b.on3Promoted) return a.on3Promoted ? -1 : 1;
     if (a.tierRank !== b.tierRank) return a.tierRank - b.tierRank;
     if (a.on3News !== b.on3News) return a.on3News - b.on3News;
     return b.ts - a.ts;
