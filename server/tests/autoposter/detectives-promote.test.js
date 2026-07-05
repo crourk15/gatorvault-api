@@ -52,6 +52,48 @@ test('composeFromDetectiveCase applies detectiveOverride metrics', async () => {
   assert.equal(out.validationMeta.voiceMetrics.rpm, 62);
 });
 
+test('composeFromDetectiveCase carries rpmTop into PR-789 elite output', async () => {
+  const { setGoldenFourRankingCompleteForTests } = require('../../lib/player-intelligence/golden-four-on3');
+  const { GOLDEN_BEATS } = require('./fixtures/golden-beats');
+  setGoldenFourRankingCompleteForTests(true);
+  process.env.VOICE_PHRASE_MEMORY = 'false';
+  process.env.X_AUTOPOST_PR6_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR7_8_9_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE = 'true';
+
+  const ham = GOLDEN_BEATS.find((b) => b.id === 'ham');
+  const out = await voiceEngine.composeFromDetectiveCase({
+    hints: {
+      beatText: ham.beatText,
+      writerName: 'Beat writer',
+      publishedAt: '2026-07-03T12:00:00.000Z'
+    },
+    identity: {
+      playerName: 'Merrick Ham',
+      playerSlug: 'merrick-ham',
+      classYear: 2028,
+      pos: 'EDGE'
+    },
+    platformContext: {
+      url: 'https://gatorvaultinsider.com/vault/futurecast/player/merrick-ham'
+    },
+    research: { eventType: 'visit' },
+    detectiveOverride: {
+      visitDate: '2026-03-08',
+      rpmTop: [
+        { school: 'Auburn', pct: 21 },
+        { school: 'Vanderbilt', pct: 18 }
+      ]
+    }
+  });
+
+  assert.equal(out.ok, true, out.reason || JSON.stringify(out));
+  assert.ok(out.text.length <= getTweetCharLimit());
+  assert.match(out.text, /Auburn/i);
+  assert.match(out.text, /Vanderbilt/i);
+  assert.ok(out.validationMeta.voiceMetrics.rpmTop?.length >= 2);
+});
+
 test('buildVoicePromoteCandidate logs promote phase on success', async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'det-promote-'));
   process.env.X_AUTOPOST_DETECTIVES_DATA_DIR = dir;

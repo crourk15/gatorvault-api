@@ -12,6 +12,7 @@ const { isCompleteSentence } = require('./strategy/strategy-sentences');
 const pr6Rewrite = require('./rewrite');
 const { appendRankingTokensToIdentity } = require('./on3-ranking-tokens');
 const { getTweetCharLimit } = require('./tweet-char-limit');
+const { rpmTopFromOn3TopTeams, rpmTopFromSources } = require('./rewrite/comp-sourcing');
 
 const MAX_ATTEMPTS = parseInt(process.env.VOICE_COMPOSE_MAX_ATTEMPTS || '2', 10);
 
@@ -517,12 +518,73 @@ function applyDetectiveOverride(signal, override = {}) {
   if (Array.isArray(override.compSchools) && override.compSchools.length) {
     signal.metrics.compSchools = override.compSchools;
   }
+  if (Array.isArray(override.rpmTop) && override.rpmTop.length) {
+    signal.metrics.rpmTop = override.rpmTop;
+  }
+  if (override.beatFacts) signal.metrics.beatFacts = override.beatFacts;
+  if (override.intelligence) signal.metrics.intelligence = override.intelligence;
   if (override.rankingTokens && signal.player) {
     signal.player.rankingTokens = override.rankingTokens;
     signal.player.ranking = override.rankingTokens.on3NationalRank;
     signal.player.stars = signal.player.stars || override.rankingTokens.on3Stars;
   }
   return signal;
+}
+
+async function hydrateRpmTopMetrics(signal, { research, playerData, override, input } = {}) {
+  if (Array.isArray(signal.metrics?.rpmTop) && signal.metrics.rpmTop.length >= 2) return;
+
+  const classYear =
+    signal.player?.classYear || playerData?.data?.classYear || research?.player?.classYear || 2028;
+  const player = playerData?.data || research?.player || {};
+  const intel = override?.intelligence || input?.intel || signal.metrics?.intelligence || null;
+
+  if (Array.isArray(override?.rpmTop) && override.rpmTop.length) {
+    signal.metrics.rpmTop = override.rpmTop;
+    return;
+  }
+
+  const fromOn3 = rpmTopFromOn3TopTeams(
+    research?.on3TopTeams || player.on3TopTeams || player.topTeams || [],
+    classYear
+  );
+  if (fromOn3.length >= 2) {
+    signal.metrics.rpmTop = fromOn3;
+    return;
+  }
+
+  const fromStore = rpmTopFromSources({}, { competitors: player.competitors || research?.player?.competitors });
+  if (fromStore.length >= 2) {
+    signal.metrics.rpmTop = fromStore;
+    return;
+  }
+
+  const fromIntel = rpmTopFromSources(signal.metrics, intel);
+  if (fromIntel.length >= 2) {
+    signal.metrics.rpmTop = fromIntel;
+    return;
+  }
+
+  const slug = signal.playerSlug || player.playerSlug || research?.playerSlug;
+  try {
+    const golden = require('../player-intelligence/golden-four-on3');
+    if (!golden.isGoldenProdSlug(slug)) return;
+    const store = require('../recruiting-store');
+    const row = await store.getPlayerBySlug(slug);
+    const fromPlayer = rpmTopFromSources({}, { competitors: row?.competitors });
+    if (fromPlayer.length >= 2) {
+      signal.metrics.rpmTop = fromPlayer;
+      return;
+    }
+    const recruitSlug = golden.on3RecruitSlugFor(slug);
+    if (!recruitSlug) return;
+    const on3Recruit = require('../on3-recruit-client');
+    const profile = await on3Recruit.fetchRecruitProfile(recruitSlug, classYear);
+    const rpmTop = rpmTopFromOn3TopTeams(profile?.topTeams || [], classYear);
+    if (rpmTop.length >= 2) signal.metrics.rpmTop = rpmTop;
+  } catch {
+    /* optional golden-four On3 pull */
+  }
 }
 
 async function composeFromDetectiveCase({ hints, identity, platformContext, research, detectiveOverride }) {
@@ -565,6 +627,7 @@ async function composeFromDetectiveCase({ hints, identity, platformContext, rese
   );
 
   applyDetectiveOverride(signal, override);
+  await hydrateRpmTopMetrics(signal, { research, playerData, override, input: { intel: { detail: hints?.beatText } } });
 
   if (signal.player) {
     signal.player.pos =
@@ -626,6 +689,7 @@ async function composeFromEliteInput(input, research, playerData) {
   if (!signal.metrics.compSchools?.length) {
     signal.metrics.compSchools = signalAdapter.compSchoolsFromResearch(research);
   }
+  await hydrateRpmTopMetrics(signal, { research, playerData, input });
 
   const out = voiceRequiredForRecruiting()
     ? composeWithDetectiveHookRetry(signal)

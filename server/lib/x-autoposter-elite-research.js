@@ -447,6 +447,24 @@ async function researchUpdate(input = {}) {
   const player = await loadPlayerRecord(playerSlug || intel?.playerSlug, playerName || intel?.playerName);
   const resolvedSlug = player?.slug || playerSlug || intel?.playerSlug || null;
   let on3TopTeams = player?.on3TopTeams || null;
+  if (!on3TopTeams?.length) {
+    try {
+      const golden = require('./player-intelligence/golden-four-on3');
+      if (golden.isGoldenProdSlug(resolvedSlug)) {
+        const recruitSlug = golden.on3RecruitSlugFor(resolvedSlug);
+        if (recruitSlug) {
+          const on3Recruit = require('./on3-recruit-client');
+          const profile = await on3Recruit.fetchRecruitProfile(
+            recruitSlug,
+            player?.classYear || intel?.classYear || 2028
+          );
+          if (profile?.topTeams?.length) on3TopTeams = profile.topTeams;
+        }
+      }
+    } catch {
+      /* optional golden-four board pull */
+    }
+  }
   if (
     !on3TopTeams?.length &&
     player?.on3Slug &&

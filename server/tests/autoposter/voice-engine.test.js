@@ -216,3 +216,53 @@ test('detective hook retry recovers invalid_hook with fallback hook', () => {
   assert.match(out.text, /Raheem Floyd/i);
 });
 
+test('composeFromEliteInput hydrates rpmTop from research.on3TopTeams', async () => {
+  const { setGoldenFourRankingCompleteForTests } = require('../../lib/player-intelligence/golden-four-on3');
+  const { GOLDEN_BEATS } = require('./fixtures/golden-beats');
+  setGoldenFourRankingCompleteForTests(true);
+  process.env.VOICE_PHRASE_MEMORY = 'false';
+  process.env.X_AUTOPOST_PR6_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR7_8_9_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE = 'true';
+
+  const ham = GOLDEN_BEATS.find((b) => b.id === 'ham');
+  const research = {
+    playerSlug: 'merrick-ham',
+    eventType: 'visit',
+    on3TopTeams: [
+      { team: { fullName: 'Auburn' }, percent: 21 },
+      { team: { fullName: 'Vanderbilt' }, percent: 18 },
+      { team: { fullName: 'Florida' }, percent: 15 }
+    ],
+    player: { name: 'Merrick Ham', pos: 'EDGE', classYear: 2028 }
+  };
+  const playerData = {
+    ok: true,
+    data: {
+      name: 'Merrick Ham',
+      playerSlug: 'merrick-ham',
+      pos: 'EDGE',
+      classYear: 2028
+    }
+  };
+  const out = await voiceEngine.composeFromEliteInput(
+    {
+      beatText: ham.beatText,
+      intel: {
+        playerName: 'Merrick Ham',
+        playerSlug: 'merrick-ham',
+        detail: ham.beatText,
+        classYear: 2028
+      },
+      source: 'Beat writer'
+    },
+    research,
+    playerData
+  );
+
+  assert.equal(out.ok, true, out.reason || JSON.stringify(out));
+  assert.match(out.text, /Auburn/i);
+  assert.match(out.text, /Vanderbilt/i);
+  assert.ok(out.validationMeta.voiceMetrics.rpmTop?.length >= 2);
+});
+

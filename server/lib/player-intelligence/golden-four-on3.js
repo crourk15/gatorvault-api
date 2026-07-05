@@ -5,6 +5,7 @@ const store = require('../recruiting-store');
 const on3Recruit = require('../on3-recruit-client');
 const { profilePatchFromOn3 } = require('../allowlist-target-sync');
 const { extractOn3RankingTokens } = require('../autoposter/on3-ranking-tokens');
+const { rpmTopFromOn3TopTeams } = require('../autoposter/rewrite/comp-sourcing');
 
 /** Production slugs used in Supabase + beat pipeline. */
 const GOLDEN_FOUR_PROD_SLUGS = Object.freeze([
@@ -69,6 +70,12 @@ async function syncGoldenFourPlayerFromOn3(slug) {
   const on3Id = recruitSlug.match(/-(\d+)$/)?.[1] || existing?.on3Id || null;
   const ufTeam = on3Recruit.getFloridaTeam(profile.topTeams, classYear);
   const ufRpmPct = ufTeam?.prediction != null ? Number(ufTeam.prediction) : existing?.ufRpmPct ?? null;
+  const rpmTop = rpmTopFromOn3TopTeams(profile.topTeams || [], classYear);
+  const competitorsFromBoard = rpmTop.map((row) => ({
+    school: row.school,
+    score: row.pct,
+    pct: row.pct
+  }));
   const merged = {
     ...(existing || {}),
     slug: key,
@@ -81,6 +88,7 @@ async function syncGoldenFourPlayerFromOn3(slug) {
     on3Slug: recruitSlug,
     on3TopTeams: profile.topTeams || [],
     topTeams: profile.topTeams || [],
+    competitors: competitorsFromBoard.length ? competitorsFromBoard : existing?.competitors || [],
     ufRpmPct: ufRpmPct != null && Number.isFinite(ufRpmPct) ? ufRpmPct : existing?.ufRpmPct ?? null,
     on3ProfileUrl: profile.on3ProfileUrl || `https://www.on3.com/rivals/${recruitSlug}/`,
     on3Source: 'golden-four-on3-sync',
