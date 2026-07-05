@@ -67,6 +67,18 @@ async function evaluatePlayerPostPreflight(input = {}) {
     return { ok: true, action: 'enqueue' };
   }
 
+  try {
+    const queueStore = require('../x-autoposter-store');
+    const pendingSlug = queueStore
+      .listQueue({ status: 'pending' })
+      .some((item) => ledger.normalizeSlug(item.playerSlug) === slug);
+    if (pendingSlug) {
+      return { ok: false, action: 'block', reason: 'already_pending' };
+    }
+  } catch {
+    /* optional */
+  }
+
   const resolutionCheck = ledger.checkPlayerResolution(slug, {
     intelFingerprint,
     allowGoldenFour,

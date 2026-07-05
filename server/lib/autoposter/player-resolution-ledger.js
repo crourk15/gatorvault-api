@@ -109,6 +109,12 @@ function upsertPlayerResolution(slug, patch = {}) {
   };
   doc.players[key] = row;
   saveLedger(doc);
+  try {
+    const persistence = require('./autoposter-ledger-persistence');
+    persistence.schedulePlayerResolutionPersist(key, row);
+  } catch {
+    /* optional */
+  }
   return row;
 }
 

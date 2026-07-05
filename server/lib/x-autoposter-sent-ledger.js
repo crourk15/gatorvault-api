@@ -261,8 +261,12 @@ function recordSentPost(item) {
   doc.entries.unshift(row);
   doc.entries = doc.entries.slice(0, LEDGER_MAX);
   saveLedger(doc);
-  if (row.playerSlug && (row.eventType === 'commit' || row.eventType === 'flip')) {
-    persistSnapshotSent(row);
+  if (row.playerSlug && row.tweetId) persistSnapshotSent(row);
+  try {
+    const persistence = require('./autoposter/autoposter-ledger-persistence');
+    persistence.scheduleSentPersist(row);
+  } catch {
+    /* optional */
   }
   return row;
 }

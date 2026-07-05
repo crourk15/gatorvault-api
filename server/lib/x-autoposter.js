@@ -327,6 +327,28 @@ function finalizeSuccessfulPost(workingItem, result, { duplicateRecovery = false
   }
   store.updatePost(workingItem.id, patch);
   const posted = { ...workingItem, ...patch };
+  recordAutoposterSend(posted, result, { duplicateRecovery, queueItemId: workingItem.id });
+  store.logQueueOp('post_success', { ...posted, tweetId: result.tweetId });
+
+  return {
+    ok: true,
+    item: store.loadQueue().items.find((i) => i.id === workingItem.id),
+    result,
+    duplicateRecovery: duplicateRecovery || undefined,
+  };
+}
+
+function recordAutoposterSend(candidate, result, { duplicateRecovery = false, source = null, queueItemId = null } = {}) {
+  const postedAt = store.nowIso();
+  const posted = {
+    ...candidate,
+    status: 'sent',
+    sentAt: candidate.sentAt || postedAt,
+    tweetId: result.tweetId,
+    tweetUrl: result.tweetUrl,
+    id: queueItemId || candidate.id || null,
+    source: source || candidate.source || 'autoposter'
+  };
 
   try {
     const sentLedger = require('./x-autoposter-sent-ledger');
@@ -335,10 +357,11 @@ function finalizeSuccessfulPost(workingItem, result, { duplicateRecovery = false
       try {
         const resolutionLedger = require('./autoposter/player-resolution-ledger');
         resolutionLedger.markResolvedPublish(posted.playerSlug, {
-          source: 'autoposter_sent',
-          queueItemId: posted.id,
+          source: posted.source || 'autoposter_sent',
+          queueItemId: posted.id || null,
           intelFingerprint: posted.intelFingerprint || null,
-          preview: posted.text || null
+          preview: posted.text || null,
+          tweetId: result.tweetId || null
         });
       } catch {
         /* optional */
@@ -354,25 +377,25 @@ function finalizeSuccessfulPost(workingItem, result, { duplicateRecovery = false
     /* optional */
   }
 
-  store.logQueueOp('post_success', { ...posted, tweetId: result.tweetId });
   freshness.recordLastPost(postedAt);
   saveSchedulerStatus({
     lastPostAt: postedAt,
     lastPostSuccess: postedAt,
     lastError: null,
   });
+
   try {
     const monitoring = require('./autoposter/autoposter-monitoring');
     monitoring.logAutoposterEvent('post_success', {
-      itemId: workingItem.id,
-      intelId: workingItem.sourceIntelId,
-      playerName: workingItem.playerName,
+      itemId: posted.id,
+      intelId: posted.sourceIntelId,
+      playerName: posted.playerName,
       statusId: result.tweetId,
       tweetUrl: result.tweetUrl,
       duplicateRecovery: !!duplicateRecovery,
     });
-    if (workingItem.sourceIntelId) {
-      intelStore.markIntelXPosted(workingItem.sourceIntelId, {
+    if (posted.sourceIntelId) {
+      intelStore.markIntelXPosted(posted.sourceIntelId, {
         tweetId: result.tweetId,
         tweetUrl: result.tweetUrl,
       });
@@ -380,24 +403,21 @@ function finalizeSuccessfulPost(workingItem, result, { duplicateRecovery = false
   } catch {
     /* optional */
   }
+
   opsMonitor.logEvent({
     subsystem: 'autoposter',
     status: 'success',
     message: duplicateRecovery ? 'Post successful (duplicate recovery)' : 'Post successful',
     details: {
       tweetId: result.tweetId,
-      itemId: workingItem.id,
-      category: workingItem.category,
+      itemId: posted.id,
+      category: posted.category,
       duplicateRecovery: !!duplicateRecovery,
+      source: posted.source || null
     },
   });
 
-  return {
-    ok: true,
-    item: store.loadQueue().items.find((i) => i.id === workingItem.id),
-    result,
-    duplicateRecovery: duplicateRecovery || undefined,
-  };
+  return posted;
 }
 
 function bootstrapAutoposterRuntime() {
@@ -409,6 +429,18 @@ function bootstrapAutoposterRuntime() {
     }
   } catch (e) {
     autopostLog('warn', `Sent ledger prune skipped: ${e.message}`);
+  }
+  try {
+    const persistence = require('./autoposter/autoposter-ledger-persistence');
+    if (persistence.isEnabled()) {
+      persistence.hydrateAllLedgers().then((out) => {
+        autopostLog('info', 'Hydrated autoposter ledgers from Postgres', out);
+      }).catch((err) => {
+        autopostLog('warn', `Ledger hydrate skipped: ${err.message}`);
+      });
+    }
+  } catch (e) {
+    autopostLog('warn', `Ledger hydrate skipped: ${e.message}`);
   }
   try {
     const doc = store.loadQueue();
@@ -905,6 +937,8 @@ module.exports = {
   postTweet,
   processQueueItem,
   processDuePosts,
+  recordAutoposterSend,
+  finalizeSuccessfulPost,
   startXAutoposterScheduler,
   stopXAutoposterScheduler,
   getAutoposterLogs,

@@ -22,15 +22,6 @@ function resolveCasePublish(caseItem, candidate, result = {}) {
     path: pathTag,
     queueItemId: result.item?.id || null
   });
-  if (slug) {
-    ledger.markResolvedPublish(slug, {
-      caseId: caseItem.id,
-      queueItemId: result.item?.id || null,
-      intelFingerprint: candidate?.intelFingerprint || null,
-      source: 'detectives',
-      preview: candidate?.text || null
-    });
-  }
   return store.getCase(caseItem.id);
 }
 

@@ -323,13 +323,11 @@ async function forcePostDiscover() {
 
     try {
       const result = await autoposter.postTweet({ text: scored.text });
-      const ts = store.nowIso();
-      freshness.recordLastPost(ts);
-      autoposter.saveSchedulerStatus({
-        lastPostAt: ts,
-        lastPostSuccess: ts,
-        lastError: null
-      });
+      autoposter.recordAutoposterSend(
+        { ...scored, source: scored.source || 'force-post' },
+        result,
+        { source: 'force-post' }
+      );
 
       opsMonitor.logEvent({
         subsystem: 'autoposter',
@@ -341,7 +339,7 @@ async function forcePostDiscover() {
       return {
         ok: true,
         posted: true,
-        timestamp: ts,
+        timestamp: store.nowIso(),
         source: 'force-post',
         tweetId: result.tweetId,
         tweetUrl: result.tweetUrl,

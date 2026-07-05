@@ -264,13 +264,6 @@ async function enqueueGoldenFourPosts(opts = {}) {
       }
     }
 
-    resolutionLedger.markResolvedPublish(slug, {
-      source: 'golden-four-enqueue',
-      queueItemId: out.item.id,
-      intelFingerprint: intelFp,
-      preview: elite.text
-    });
-
     results.push({
       slug,
       ok: true,

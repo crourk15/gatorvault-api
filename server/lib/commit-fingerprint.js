@@ -53,6 +53,11 @@ function intelFingerprint(playerId, eventType, timestamp) {
   return `${id}|${et}|${ts}`;
 }
 
+/** Stable intel dedupe — no daily rotation (heat movers, evergreen). */
+function stableIntelFingerprint(playerId, eventType) {
+  return intelFingerprint(playerId, eventType, 'stable');
+}
+
 function feedDedupeKeyForIntel(intel) {
   const fp = intelFingerprint(intel.playerId, intel.eventType, intel.timestamp || intel.reportedAt);
   if (fp) return `intel:${fp}`;
@@ -68,5 +73,6 @@ module.exports = {
   feedDedupeKeyForCommit,
   normalizeIntelTimestamp,
   intelFingerprint,
+  stableIntelFingerprint,
   feedDedupeKeyForIntel
 };

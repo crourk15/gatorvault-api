@@ -8,7 +8,7 @@ const policy = require('./x-autoposter-policy');
 const recruitingStore = require('./recruiting-store');
 const intelStore = require('./recruiting-intel-store');
 const contentStore = require('./content-store');
-const { commitFingerprint, intelFingerprint } = require('./commit-fingerprint');
+const { commitFingerprint, intelFingerprint, stableIntelFingerprint } = require('./commit-fingerprint');
 const { getBeatPosts, refreshBeatStream } = require('./live-beat');
 const beatFilters = require('./beat-writer-filters');
 const copy = require('./x-autoposter-copy');
@@ -627,7 +627,7 @@ async function collectDigDeeperPostCandidates({ forcePost = false } = {}) {
     for (const row of (heat?.rising || []).slice(0, 5)) {
       if (!row?.name) continue;
       const slug = row.slug || String(row.name).toLowerCase().replace(/\s+/g, '-');
-      const fp = intelFingerprint(slug, 'heat_mover', new Date().toISOString().slice(0, 10));
+      const fp = stableIntelFingerprint(slug, 'heat_mover');
       const dup = sentLedger.hasRecentSentPost({ slug, intelFingerprint: fp, text: row.name });
       if (dup.hit) continue;
       const classYear = row.classYear ? `${row.classYear} ` : '';
@@ -1364,6 +1364,38 @@ async function processDetectivesPileSidecar(doc, limit = 3, { background = false
   return run();
 }
 
+async function tryAutonomousGoldenFourRefill() {
+  if (process.env.X_AUTOPOST_GOLDEN_FOUR_AUTO === 'false') {
+    return { ok: false, reason: 'disabled' };
+  }
+  try {
+    const resolutionLedger = require('./autoposter/player-resolution-ledger');
+    const { enqueueGoldenFourPosts, DEFAULT_ORDER } = require('./player-intelligence/golden-four-enqueue');
+    const pendingSlugs = new Set(
+      store
+        .listQueue({ status: 'pending' })
+        .map((i) => String(i.playerSlug || '').toLowerCase())
+        .filter(Boolean)
+    );
+    const nextSlugs = DEFAULT_ORDER.filter((slug) => {
+      if (pendingSlugs.has(slug)) return false;
+      const check = resolutionLedger.checkPlayerResolution(slug, { allowGoldenFour: true });
+      if (check.blocked && (check.reason === 'duplicate_already_sent' || check.reason === 'player_archived')) {
+        return false;
+      }
+      return true;
+    }).slice(0, 1);
+    if (!nextSlugs.length) return { ok: false, reason: 'golden_four_complete' };
+    return enqueueGoldenFourPosts({
+      slugs: nextSlugs,
+      includeHam: false,
+      clearPendingNonGolden: false
+    });
+  } catch (err) {
+    return { ok: false, reason: err.message || 'golden_four_failed' };
+  }
+}
+
 async function refillAutoposterQueue({
   minPending = parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '2', 10),
   maxEnqueue = parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '4', 10),
@@ -1400,6 +1432,22 @@ async function refillAutoposterQueue({
   const doc = store.loadQueue();
   const pending = doc.items.filter((i) => i.status === 'pending');
   const need = Math.max(minPending - pending.length, pending.length === 0 ? 1 : 0);
+
+  if (need > 0) {
+    const golden = await tryAutonomousGoldenFourRefill();
+    const goldenEnqueued = (golden?.results || []).filter((r) => r.ok);
+    if (goldenEnqueued.length) {
+      return {
+        ok: true,
+        reason: 'golden_four_auto',
+        pending: store.listQueue({ status: 'pending' }).length,
+        enqueued: goldenEnqueued,
+        enqueuedCount: goldenEnqueued.length,
+        goldenFour: golden
+      };
+    }
+  }
+
   if (need <= 0 && pending.length >= minPending) {
     const sidecar = await processDetectivesPileSidecar(doc, 3, { background: true });
     const detectivesEnqueued = sidecar?.enqueued || [];
