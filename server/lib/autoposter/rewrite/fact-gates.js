@@ -27,7 +27,9 @@ const BANNED_FILLER_PHRASES = Object.freeze([
   /\bpressing for the next eval window\b/i,
   /\bstaff is pressing for the next eval window\b/i,
   /\bUF remains in the picture\b/i,
-  /\bremains in the picture\b/i
+  /\bremains in the picture\b/i,
+  /\bpositioned early in his recruitment\b/i,
+  /\bUF is positioned early in his recruitment\b/i
 ]);
 
 function validateBannedPhrases(text) {
