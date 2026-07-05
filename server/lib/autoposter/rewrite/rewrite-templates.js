@@ -31,7 +31,7 @@ function pickRewrite(ctx) {
   if (/spring practice|on campus this spring/i.test(beat) && /top schools/i.test(beat)) {
     return {
       narrative1: `${ln}'s spring practice visit gave Florida a foothold, and he's already calling the Gators one of his top schools.`,
-      narrative2: `UF is positioned early in his recruitment.`
+      narrative2: `That visit put UF on his board early.`
     };
   }
 
