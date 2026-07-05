@@ -24,6 +24,23 @@ test('comp sourcing rejects high school and keeps Auburn/Vanderbilt', () => {
   assert.equal(pack.schools.includes('Marietta'), false);
 });
 
+test('comp sourcing keeps Purdue and rejects high school names', () => {
+  const pack = resolveValidCompSchools({
+    metrics: {
+      rpmTop: [
+        { school: 'Purdue', pct: 23 },
+        { school: 'Louisville', pct: 9.4 },
+        { school: 'Tennessee', pct: 7.9 }
+      ]
+    },
+    player: { school: 'IMG Academy', state: 'FL' }
+  });
+  assert.deepEqual(
+    pack.rpmTop.map((r) => r.school),
+    ['Purdue', 'Louisville', 'Tennessee']
+  );
+});
+
 test('Ham beat extracts staff energy, quote, visit, and rpmTop', () => {
   const facts = extractBeatFacts(HAM_BEAT.beatText, {
     metrics: HAM_BEAT.metrics,
@@ -153,9 +170,10 @@ test('Robinson elite staff-contact arc uses DB coach signal — no energy filler
   const facts = extractBeatFacts(ROBINSON_BEAT.beatText, {
     metrics: {
       ...ROBINSON_BEAT.metrics,
+      ufRpmPct: 20.2,
       rpmTop: [
-        { school: 'Louisville', pct: 28 },
-        { school: 'Tennessee', pct: 22 }
+        { school: 'Purdue', pct: 23.1 },
+        { school: 'Louisville', pct: 9.4 }
       ]
     },
     player: ROBINSON_BEAT.player
@@ -171,7 +189,8 @@ test('Robinson elite staff-contact arc uses DB coach signal — no energy filler
   assert.equal(banned.ok, true, JSON.stringify(banned.violations));
   assert.match(out.narrative, /first trip to Gainesville/i);
   assert.match(out.narrative, /all three DB coaches on UF's staff have been in contact/i);
-  assert.match(out.narrative, /Louisville and Tennessee lead his RPM board/i);
+  assert.match(out.narrative, /Purdue leads his RPM board, but Florida is second at 20%/i);
+  assert.doesNotMatch(out.narrative, /Louisville and Tennessee lead his RPM board/i);
   assert.match(out.narrative, /staff attention is real/i);
   assert.doesNotMatch(out.narrative, /staff energy is still the story/i);
   assert.doesNotMatch(out.narrative, /staff pitch is resonating/i);

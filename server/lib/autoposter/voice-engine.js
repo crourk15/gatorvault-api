@@ -561,6 +561,11 @@ async function hydrateGoldenFourPlayerContext(signal, { research, playerData } =
     if (needsRpm) {
       const rpmTop = rpmTopFromOn3TopTeams(profile?.topTeams || [], classYear);
       if (rpmTop.length >= 2) signal.metrics.rpmTop = rpmTop;
+      const ufTeam = on3Recruit.getFloridaTeam(profile?.topTeams || [], classYear);
+      const ufPct = ufTeam?.percent ?? ufTeam?.prediction ?? null;
+      if (ufPct != null && Number.isFinite(Number(ufPct))) {
+        signal.metrics.ufRpmPct = Number(ufPct);
+      }
     }
   } catch {
     /* optional golden-four On3 pull */
@@ -596,6 +601,18 @@ async function hydrateRpmTopMetrics(signal, { research, playerData, override, in
           signal.metrics.rpmTop = fromIntel;
         }
       }
+    }
+  }
+
+  if (signal.metrics.ufRpmPct == null) {
+    const ufPct =
+      player.ufRpmPct ??
+      player.ufProbability ??
+      research?.player?.ufRpmPct ??
+      research?.player?.ufProbability ??
+      null;
+    if (ufPct != null && Number.isFinite(Number(ufPct))) {
+      signal.metrics.ufRpmPct = Number(ufPct);
     }
   }
 

@@ -174,6 +174,14 @@ function extractBeatFacts(beatText = '', ctx = {}) {
     followUpSince: extractFollowUpSince(beat),
     quote: extractQuote(beat),
     rpmTop,
+    ufRpmPct:
+      metrics.ufRpmPct != null
+        ? Number(metrics.ufRpmPct)
+        : metrics.ufProbability != null
+          ? Number(metrics.ufProbability)
+          : metrics.rpm != null
+            ? Number(metrics.rpm)
+            : null,
     compSchools: compPack.schools,
     offerSchools: (intel?.offers || []).map((o) => o.school).filter(Boolean),
     visitSchools: (intel?.visits || []).map((v) => v.school).filter(Boolean),
@@ -269,6 +277,28 @@ function eliteTakeaway(facts, angle) {
   return 'UF is clearly still in the mix';
 }
 
+/** RPM close — when UF is second on the full board, say so honestly. */
+function formatEliteRpmClause(facts, angle = 'staff_contact') {
+  if (!(facts.rpmTop?.length >= 1)) return null;
+  const ufPct = facts.ufRpmPct != null ? Number(facts.ufRpmPct) : null;
+  const leader = facts.rpmTop[0];
+  const second = facts.rpmTop[1];
+  const takeaway = eliteTakeaway(facts, angle);
+
+  if (ufPct != null && Number.isFinite(ufPct) && leader?.school) {
+    const secondPct = second?.pct != null ? Number(second.pct) : 0;
+    if (ufPct > secondPct) {
+      return `. ${leader.school} leads his RPM board, but Florida is second at ${Math.round(ufPct)}% — and ${takeaway}.`;
+    }
+  }
+
+  if (facts.rpmTop.length >= 2) {
+    return `. ${leader.school} and ${second.school} lead his RPM board right now, but UF is clearly in the mix because ${takeaway}.`;
+  }
+
+  return `. ${leader.school} leads his RPM board, but UF is clearly in the mix because ${takeaway}.`;
+}
+
 function composeEliteStaffContactArc(facts, ln, beatText = '', opts = {}) {
   const beat = String(beatText || '').toLowerCase();
   const firstGainesville =
@@ -283,7 +313,8 @@ function composeEliteStaffContactArc(facts, ln, beatText = '', opts = {}) {
   }
 
   if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
-    paragraph += `. ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board right now, but UF is clearly in the mix because ${eliteTakeaway(facts, 'staff_contact')}.`;
+    const rpmClause = formatEliteRpmClause(facts, 'staff_contact');
+    if (rpmClause) paragraph += rpmClause;
   } else if (!paragraph.endsWith('.')) {
     paragraph += '.';
   }
