@@ -115,6 +115,11 @@ const MAX_BEAT_INTEL_AGE_MS = parseInt(
 
 const REFILL_PREP_TIMEOUT_MS = parseInt(process.env.X_AUTOPOST_REFILL_PREP_TIMEOUT_MS || '20000', 10);
 const REFILL_WIDE_TIMEOUT_MS = parseInt(process.env.X_AUTOPOST_REFILL_WIDE_TIMEOUT_MS || '45000', 10);
+const REFILL_INTEL_COLLECT_TIMEOUT_MS = parseInt(
+  process.env.X_AUTOPOST_INTEL_COLLECT_TIMEOUT_MS || '40000',
+  10
+);
+const REFILL_GOLDEN_FOUR_TIMEOUT_MS = parseInt(process.env.X_AUTOPOST_GOLDEN_FOUR_TIMEOUT_MS || '30000', 10);
 const MAX_BEAT_INTEL_SCAN = parseInt(process.env.X_AUTOPOST_MAX_BEAT_INTEL_SCAN || '32', 10);
 const MAX_BEAT_INTEL_BUILD = parseInt(process.env.X_AUTOPOST_MAX_BEAT_INTEL_BUILD || '6', 10);
 
@@ -1685,12 +1690,72 @@ async function refillAutoposterQueue({
           forcePost: forcePost || digDeeper,
           maxBuild: intelBuildCap
         }),
-        REFILL_PREP_TIMEOUT_MS,
+        REFILL_INTEL_COLLECT_TIMEOUT_MS,
         'intel_candidate_collect'
       );
     } catch (err) {
       console.warn('[x-autoposter] intel candidate collect skipped:', err.message);
       rawNewsCandidates = [];
+    }
+    if (rawNewsCandidates.length) {
+      await enqueueFromCandidates(rawNewsCandidates, beatSlots);
+    }
+    const pendingAfterIntel = store.listQueue({ status: 'pending' }).length;
+    if (pendingAfterIntel >= minPending || added > 0) {
+      void beatPrepPromise;
+      return {
+        ok: true,
+        skipped: false,
+        reason: added > 0 ? 'intel_first_fast_path' : 'queue_satisfied',
+        pending: pendingAfterIntel,
+        enqueued,
+        enqueuedCount: enqueued.length,
+        qualitySkipped,
+        skipReasons,
+        digDeeper: forcePost || digDeeper,
+        beatPrep: null,
+        goldenFour: null,
+        detectivesRun: null,
+        emptyQueueFallback: added > 0 && pending.length === 0
+      };
+    }
+    if (!rawNewsCandidates.length) {
+      try {
+        rawNewsCandidates = await withRefillTimeout(
+          collectFreshPostCandidates({
+            forcePost: forcePost || digDeeper,
+            digDeeper: beatDigDeeper,
+            intelOnly: true
+          }),
+          REFILL_PREP_TIMEOUT_MS,
+          'intel_only_collect'
+        );
+      } catch (err) {
+        console.warn('[x-autoposter] intel-only collect skipped:', err.message);
+        rawNewsCandidates = [];
+      }
+      if (rawNewsCandidates.length) {
+        await enqueueFromCandidates(rawNewsCandidates, beatSlots);
+      }
+      const pendingAfterIntelOnly = store.listQueue({ status: 'pending' }).length;
+      if (pendingAfterIntelOnly >= minPending || added > 0) {
+        void beatPrepPromise;
+        return {
+          ok: true,
+          skipped: false,
+          reason: added > 0 ? 'intel_only_fast_path' : 'queue_satisfied',
+          pending: pendingAfterIntelOnly,
+          enqueued,
+          enqueuedCount: enqueued.length,
+          qualitySkipped,
+          skipReasons,
+          digDeeper: forcePost || digDeeper,
+          beatPrep: null,
+          goldenFour: null,
+          detectivesRun: null,
+          emptyQueueFallback: added > 0 && pending.length === 0
+        };
+      }
     }
     if (!rawNewsCandidates.length) {
       try {
@@ -1706,15 +1771,21 @@ async function refillAutoposterQueue({
         console.warn('[x-autoposter] wide candidate collect skipped:', err.message);
         rawNewsCandidates = [];
       }
+      if (rawNewsCandidates.length) {
+        await enqueueFromCandidates(rawNewsCandidates, beatSlots);
+      }
     }
-    await enqueueFromCandidates(rawNewsCandidates, beatSlots);
   }
 
   const pendingAfterBeat = store.listQueue({ status: 'pending' }).length;
   const stillNeed = Math.max(minPending - pendingAfterBeat, pendingAfterBeat === 0 ? 1 : 0);
 
   if (stillNeed > 0) {
-    goldenFourRun = await tryAutonomousGoldenFourRefill(Math.min(stillNeed, maxEnqueue));
+    goldenFourRun = await withRefillTimeout(
+      tryAutonomousGoldenFourRefill(Math.min(stillNeed, maxEnqueue)),
+      REFILL_GOLDEN_FOUR_TIMEOUT_MS,
+      'golden_four_refill'
+    ).catch((err) => ({ ok: false, reason: err.message || String(err) }));
     goldenEnqueued = (goldenFourRun?.results || []).filter((r) => r.ok);
     for (const row of goldenEnqueued) {
       if (!row.itemId) continue;
@@ -1804,12 +1875,7 @@ async function refillAutoposterQueue({
     }
   }
 
-  let beatPrep = null;
-  try {
-    beatPrep = await beatPrepPromise;
-  } catch {
-    beatPrep = null;
-  }
+  void beatPrepPromise;
 
   return {
     ok: true,
@@ -1821,7 +1887,7 @@ async function refillAutoposterQueue({
     qualitySkipped,
     skipReasons,
     digDeeper: forcePost || digDeeper,
-    beatPrep,
+    beatPrep: null,
     goldenFour: goldenFourRun,
     detectivesRun,
     emptyQueueFallback: added > 0 && pending.length === 0
