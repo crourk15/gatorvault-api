@@ -23,7 +23,11 @@ const BANNED_FILLER_PHRASES = Object.freeze([
   /\bhe said he "Florida\b/i,
   /\bhe said he "all three\b/i,
   /\bpositioned early in this cycle\b/i,
-  /\bUF is positioned early in this cycle\b/i
+  /\bUF is positioned early in this cycle\b/i,
+  /\bpressing for the next eval window\b/i,
+  /\bstaff is pressing for the next eval window\b/i,
+  /\bUF remains in the picture\b/i,
+  /\bremains in the picture\b/i
 ]);
 
 function validateBannedPhrases(text) {

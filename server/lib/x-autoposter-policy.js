@@ -320,6 +320,38 @@ function validatePostContent(item) {
   };
 }
 
+/** Block recruiting posts for players committed to schools other than Florida. */
+async function validateRecruitingPostEligibility(item = {}) {
+  const slug = String(item.playerSlug || '').trim().toLowerCase();
+  const topic = String(item.topic || item.validationMeta?.topic || '').toLowerCase();
+  const category = String(item.category || 'news').toLowerCase();
+  if (!slug || category !== 'news') return { ok: true };
+  if (topic && topic !== 'recruiting') return { ok: true };
+
+  const metaCommitted = item.validationMeta?.committedTo || item.committedTo || null;
+  if (metaCommitted) {
+    const { isCommittedElsewhere, isFloridaSchool } = require('./recruiting-target-filters');
+    if (isFloridaSchool(metaCommitted)) return { ok: true };
+    if (isCommittedElsewhere({ committedTo: metaCommitted })) {
+      return { ok: false, reason: 'committed_elsewhere', committedTo: metaCommitted };
+    }
+  }
+
+  try {
+    const store = require('./recruiting-store');
+    const player = await store.getPlayerBySlug(slug);
+    if (!player) return { ok: true };
+    const { isCommittedElsewhere } = require('./recruiting-target-filters');
+    if (isCommittedElsewhere(player)) {
+      return { ok: false, reason: 'committed_elsewhere', committedTo: player.committedTo || null };
+    }
+  } catch {
+    return { ok: true };
+  }
+
+  return { ok: true };
+}
+
 function getSentPosts(items, { limit = 50, sinceDays = 14 } = {}) {
   const since = Date.now() - sinceDays * 24 * 60 * 60 * 1000;
   return items
@@ -439,6 +471,7 @@ module.exports = {
   isFixtureQueueItem,
   purgeFixtureQueueItems,
   validatePostContent,
+  validateRecruitingPostEligibility,
   getSentPosts,
   computeMixStats,
   getContentPolicy

@@ -503,6 +503,28 @@ async function processQueueItem(item) {
     autopostLog('warn', `Publish safety check skipped: ${safetyErr.message}`, { itemId: item.id });
   }
 
+  try {
+    const eligibility = await policy.validateRecruitingPostEligibility(workingItem);
+    if (!eligibility.ok) {
+      const errMsg = eligibility.reason || 'committed_elsewhere';
+      autopostLog('warn', 'Blocked post — player committed elsewhere', {
+        itemId: item.id,
+        playerSlug: workingItem.playerSlug,
+        committedTo: eligibility.committedTo || null
+      });
+      store.updatePost(item.id, {
+        status: 'cancelled',
+        error: errMsg,
+        validationErrors: [{ type: errMsg, message: `Player committed to ${eligibility.committedTo || 'another school'}` }],
+        sentAt: store.nowIso()
+      });
+      saveSchedulerStatus({ lastError: errMsg });
+      return { ok: false, itemId: item.id, skipped: true, reason: errMsg, blocked: true };
+    }
+  } catch (eligErr) {
+    autopostLog('warn', `Commitment eligibility check skipped: ${eligErr.message}`, { itemId: item.id });
+  }
+
   autopostLog('info', 'Posting…', {
     itemId: workingItem.id,
     category: workingItem.category,
