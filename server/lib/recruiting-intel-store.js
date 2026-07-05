@@ -492,22 +492,29 @@ function removeIntelMatching(predicate) {
   return { removed: removed.length, kept: kept.length, removedItems: removed };
 }
 
-function getUnqueuedIntel({ maxAgeMs = 7 * 86400000 } = {}) {
+function getUnqueuedIntel({ maxAgeMs = 7 * 86400000, limit = null } = {}) {
   const cutoff = Date.now() - maxAgeMs;
-  return listIntel({ limit: 50 }).filter((i) => {
-    if (i.resolutionStatus === 'needs_resolution') return false;
-    if (i.xPostQueued) return false;
-    if (i.xPosted) return false;
-    if (new Date(i.reportedAt || i.createdAt).getTime() < cutoff) return false;
-    if (i.eventType === 'prediction' || i.eventType === 'prediction_change') {
-      const ts = i.timestamp || i.reportedAt || i.createdAt;
-      const eligibility = require('./rivals-prediction-eligibility');
-      const isRivalsPm =
-        i.rivalsPickKey || /rivals|futurecast|prediction machine|rivals_pm/i.test(String(i.source || i.status || ''));
-      if (isRivalsPm && !eligibility.isTodayOrNewer(ts)) return false;
-    }
-    return true;
-  });
+  const doc = loadIntelDoc();
+  const rows = (doc.items || [])
+    .filter((i) => {
+      if (i.resolutionStatus === 'needs_resolution') return false;
+      if (i.xPostQueued) return false;
+      if (i.xPosted) return false;
+      const ts = new Date(i.reportedAt || i.createdAt).getTime();
+      if (!Number.isFinite(ts) || ts < cutoff) return false;
+      if (i.eventType === 'prediction' || i.eventType === 'prediction_change') {
+        const eligibility = require('./rivals-prediction-eligibility');
+        const isRivalsPm =
+          i.rivalsPickKey || /rivals|futurecast|prediction machine|rivals_pm/i.test(String(i.source || i.status || ''));
+        if (isRivalsPm && !eligibility.isTodayOrNewer(i.timestamp || i.reportedAt || i.createdAt)) return false;
+      }
+      return true;
+    })
+    .sort((a, b) => new Date(b.reportedAt || b.createdAt) - new Date(a.reportedAt || a.createdAt));
+  if (limit != null && Number.isFinite(Number(limit)) && Number(limit) > 0) {
+    return rows.slice(0, Number(limit));
+  }
+  return rows;
 }
 
 module.exports = {
