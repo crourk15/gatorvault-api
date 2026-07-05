@@ -1690,6 +1690,11 @@ async function refillAutoposterQueue({
   forcePost = false,
   digDeeper = false
 } = {}) {
+  if (typeof intelStore.initIntelStore === 'function') {
+    await intelStore.initIntelStore().catch((err) => {
+      console.warn('[x-autoposter] intel store init skipped during refill:', err.message);
+    });
+  }
   if (!pipelineGuards.autopostEnabled()) {
     return { ok: true, skipped: true, reason: 'autoposter disabled', pending: 0, enqueued: [] };
   }

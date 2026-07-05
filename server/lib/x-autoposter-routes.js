@@ -378,8 +378,14 @@ function mountXAutoposterRoutes(app) {
     }
     try {
       autoposter.saveSchedulerStatus({ lastRun: store.nowIso() });
+      const force = req.body.force === true || req.query.force === '1' || req.query.force === 'true';
       const refill = req.body.refill !== false
-        ? await refillAutoposterQueue({ minPending: 2, maxEnqueue: 5 })
+        ? await refillAutoposterQueue({
+            minPending: 2,
+            maxEnqueue: 5,
+            forcePost: force,
+            digDeeper: force || req.body.digDeeper === true
+          })
         : null;
       if (refill) {
         autoposter.saveSchedulerStatus({
@@ -387,7 +393,6 @@ function mountXAutoposterRoutes(app) {
           lastRefillCount: refill.enqueuedCount || 0
         });
       }
-      const force = req.body.force === true || req.query.force === '1' || req.query.force === 'true';
       const out = await autoposter.processDuePosts({
         limit: parseInt(req.body.limit || req.query.limit || '1', 10),
         force
