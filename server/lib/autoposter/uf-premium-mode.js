@@ -73,6 +73,8 @@ const UF_PREMIUM_AUTOPOSTER_ENV = Object.freeze({
   X_AUTOPOST_ENGAGEMENT_LOOP: 'true',
   X_AUTOPOST_UTM_ENABLED: 'true',
   X_AUTOPOST_STRATEGY_ENGINE: 'v2',
+  /** Never publish strategy-v2 template output — PR-789 → PR-6 → skip only */
+  X_DISABLE_TEMPLATES: 'true',
   /** PR-6/789 elite rewrite — live on golden four recruiting beats */
   X_AUTOPOST_PR6_SHADOW: 'true',
   X_AUTOPOST_PR6_ENABLED: 'true',

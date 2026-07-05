@@ -67,8 +67,8 @@ function pickRewrite(ctx) {
 
   if (templateId === 'visit_only' && comps) {
     return {
-      narrative1: `${ln}'s campus visit gave Florida traction against ${comps}.`,
-      narrative2: `That trip opened a separation path, and UF is pushing for the next eval window.`
+      narrative1: `${ln}'s campus visit gave Florida traction while ${comps} stay in the mix.`,
+      narrative2: `UF remains in the picture, and the staff is pressing for the next eval window.`
     };
   }
 

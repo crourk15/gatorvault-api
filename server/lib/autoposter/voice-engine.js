@@ -303,55 +303,40 @@ function attachPr6Shadow(signal, blocks, text, metadata = {}) {
     };
   }
 
+  if (pr6.pr789AngleLive && pr6.pr789Angle?.ok) {
+    next.pr789AngleLive = true;
+    next.pr789AngleText = pr6.pr789Angle.rewrittenTweet;
+  }
+  if (pr6.pr789Live && pr6.pr789?.ok) {
+    next.pr789Live = true;
+    next.pr789GoldenBeat = goldenBeatId;
+    next.pr6Text = pr6OnlyTweet;
+    next.pr789Text = pr6.pr789.rewrittenTweet;
+  }
   if (pr6Rewrite.shouldUsePr6Live(signal, next.pr6Shadow)) {
     next.pr6Live = true;
     next.pr5Text = text;
     next.pr6GoldenBeat = goldenBeatId;
-    if (pr6.pr789Live && pr6.pr789?.ok) {
-      next.pr789Live = true;
-      next.pr789GoldenBeat = goldenBeatId;
-      next.pr6Text = pr6OnlyTweet;
-      next.pr789Text = pr6.pr789.rewrittenTweet;
-    }
-    if (pr6.pr789AngleLive && pr6.pr789Angle?.ok) {
-      next.pr789AngleLive = true;
-      next.pr789AngleText = pr6.pr789Angle.rewrittenTweet;
-    }
   }
 
   return next;
 }
 
 function applyPr6LiveText(signal, text, metadata = {}) {
-  if (!pr6Rewrite.shouldUsePr6Live(signal, metadata.pr6Shadow)) {
-    return { text, metadata };
+  const { resolvePublishText } = require('./publish-routing');
+  const resolved = resolvePublishText(signal, text, metadata);
+  if (!resolved.ok) {
+    return { text: null, metadata: resolved.metadata, skipped: true, reason: resolved.reason };
   }
-  const publishText =
-    metadata.pr789AngleLive && metadata.pr789AngleText
-      ? metadata.pr789AngleText
-      : metadata.pr789Live && metadata.pr789Text
-        ? metadata.pr789Text
-        : metadata.pr6Shadow.rewrittenTweet;
   return {
-    text: publishText,
+    text: resolved.text,
     metadata: {
-      ...metadata,
-      pr6Live: true,
-      pr5Text: text,
-      pr6GoldenBeat: metadata.pr6GoldenBeat || pr6Rewrite.resolveGoldenBeatId(signal),
-      ...(metadata.pr789Live
-        ? {
-            pr789Live: true,
-            pr789GoldenBeat: metadata.pr789GoldenBeat || metadata.pr6GoldenBeat,
-            pr6Text: metadata.pr6Text || metadata.pr6Shadow?.rewrittenTweet,
-            pr789Text: metadata.pr789Text || metadata.pr789Shadow?.rewrittenTweet
-          }
+      ...resolved.metadata,
+      ...(resolved.tier === 'pr789_angle' || resolved.metadata.pr789AngleLive
+        ? { pr789AngleLive: true, pr789AngleText: resolved.text }
         : {}),
-      ...(metadata.pr789AngleLive
-        ? {
-            pr789AngleLive: true,
-            pr789AngleText: publishText
-          }
+      ...(resolved.tier === 'pr789' || resolved.metadata.pr789Live
+        ? { pr789Live: true, pr789Text: resolved.text }
         : {})
     }
   };
@@ -449,6 +434,10 @@ function autoposterCompose(signal, opts = {}) {
           skipped: false
         });
         const live = applyPr6LiveText(signal, text, metadata);
+        if (live.skipped || !live.text) {
+          lastQa = { passed: false, reason: live.reason || 'intel_incomplete' };
+          continue;
+        }
 
         return {
           ok: true,

@@ -454,7 +454,11 @@ function enhancePr6Pack(pr6Pack, pr5Pack, signal = {}) {
 
   }
 
+  if (process.env.X_DISABLE_TEMPLATES !== 'false') {
 
+    return { ok: false, reason: 'non_golden_pr6_only', fallback: true, pr6Pack };
+
+  }
 
   const ctx = buildPr789Context(pr5Pack, signal);
 

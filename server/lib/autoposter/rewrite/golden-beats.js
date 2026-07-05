@@ -1,6 +1,7 @@
 /** PR-6 soft launch — golden four beat allowlist (slug match only). */
 
 const { isGoldenFourRankingComplete } = require('../../player-intelligence/golden-four-on3');
+const { isPr6Enabled } = require('./rewrite-types');
 
 const PR6_SOFT_LAUNCH_SLUGS = Object.freeze(['drakeford', 'robinson', 'willingham', 'ham']);
 
@@ -45,12 +46,16 @@ function isPr6GoldenBeat(signal = {}) {
 
 function shouldUsePr6Live(signal = {}, pr6Shadow = {}) {
   return (
-    process.env.X_AUTOPOST_PR6_ENABLED === 'true' &&
-    isPr6GoldenBeat(signal) &&
+    isPr6Enabled() &&
     pr6Shadow?.ok === true &&
     typeof pr6Shadow.rewrittenTweet === 'string' &&
     pr6Shadow.rewrittenTweet.length > 0
   );
+}
+
+/** @deprecated Golden-only gate — use shouldUsePr6Live for publish fallback. */
+function shouldUsePr6LiveGoldenOnly(signal = {}, pr6Shadow = {}) {
+  return shouldUsePr6Live(signal, pr6Shadow) && isPr6GoldenBeat(signal);
 }
 
 function shouldUsePr789Live(signal = {}, pr789 = {}) {

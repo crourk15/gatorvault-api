@@ -11,6 +11,7 @@ const { buildRewriteTrace } = require('./rewrite-trace');
 const { enhancePr6Pack } = require('./enhance-engine');
 const { enhancePr6PackDominantAngle, shouldRunAngleEnhance } = require('./angle-enhance-engine');
 const { shouldUsePr789AngleLive } = require('./golden-beats');
+const { validateBannedPhrases } = require('./fact-gates');
 
 function assembleTweet(identityLine, narrative1, narrative2, cta) {
   return [identityLine, narrative1, narrative2, cta].filter(Boolean).join('\n');
@@ -28,7 +29,8 @@ function runGates(proseLines, pr5Pack, tweetLength) {
     ...(tone.violations || []),
     ...(narrative.violations || []),
     ...(provenance.violations || []),
-    ...(length.ok ? [] : [{ type: 'char_limit', chars: tweetLength }])
+    ...(length.ok ? [] : [{ type: 'char_limit', chars: tweetLength }]),
+    ...(validateBannedPhrases(proseLines.join(' ')).violations || [])
   ];
 
   return {

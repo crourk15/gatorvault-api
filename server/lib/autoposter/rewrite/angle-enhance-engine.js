@@ -293,7 +293,23 @@ function enhancePr6PackDominantAngle(pr6Pack, pr5Pack, signal = {}, pr789Pack = 
 
   }
 
+  if (process.env.X_DISABLE_TEMPLATES !== 'false') {
 
+    return {
+
+      ok: false,
+
+      reason: 'non_golden_pr6_only',
+
+      fallback: true,
+
+      pr6Pack,
+
+      pr789Pack
+
+    };
+
+  }
 
   const ctx = buildPr789Context(pr5Pack, signal);
 

@@ -169,7 +169,8 @@ async function enqueueGoldenFourPosts(opts = {}) {
   }
 
   return {
-    ok: results.some((r) => r.ok),
+    ok: results.some((r) => r.ok) || results.length === 0,
+    partial: results.some((r) => r.ok) && results.some((r) => !r.ok),
     results,
     cancelled,
     pendingCount: store.listQueue({ status: 'pending' }).length
