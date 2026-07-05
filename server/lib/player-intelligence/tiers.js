@@ -71,5 +71,6 @@ module.exports = {
   resolveCoverageTier,
   loadTierASlugs,
   isGoldenSlug,
+  wasMentionedRecently,
   clearTierCache
 };

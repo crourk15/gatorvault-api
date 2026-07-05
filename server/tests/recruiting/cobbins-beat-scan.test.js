@@ -27,7 +27,23 @@ test('selectBeatIntelForAutopost includes Cobbins beyond raw recency top-12', as
   assert.equal(slugs.length, new Set(slugs).size, 'beat scan should dedupe player slugs');
 });
 
-test('collectUnqueuedIntelCandidates builds Cobbins fused candidate', async () => {
+test('buildCandidatesFromIntelRows stops after maxBuild', async () => {
+  const beatIntel = intelStore
+    .getUnqueuedIntel({ maxAgeMs: postSpec.MAX_BEAT_INTEL_AGE_MS })
+    .filter(fill.isBeatWriterIntel);
+  const scan = await fill.selectBeatIntelForAutopost(beatIntel, { limit: 20 });
+  assert.ok(scan.length > 2, 'need multiple intel rows for lazy-build probe');
+
+  const built = await fill.buildCandidatesFromIntelRows(scan, { maxBuild: 2 });
+  assert.equal(built.length, 2);
+  const cobbinsIncluded = built.some((row) => row.playerSlug === 'jermaine-cobbins');
+  const scanHasCobbins = scan.some((row) => row.playerSlug === 'jermaine-cobbins');
+  if (scanHasCobbins && scan.findIndex((row) => row.playerSlug === 'jermaine-cobbins') < 6) {
+    assert.equal(cobbinsIncluded, true, 'tier-A Cobbins should appear within first lazy builds');
+  }
+});
+
+test('buildNewsFromIntel composes Cobbins fused candidate', async () => {
   const doc = intelStore.loadIntelDoc();
   const cobbins = (doc.items || []).find(
     (row) => row.playerSlug === 'jermaine-cobbins' && row.source === 'auto:on3-team-news'
@@ -36,14 +52,13 @@ test('collectUnqueuedIntelCandidates builds Cobbins fused candidate', async () =
   assert.equal(cobbins.xPostQueued, false);
   assert.equal(cobbins.xPosted, false);
 
-  const refill = require('../../lib/x-autoposter-fill');
   const beatIntel = intelStore
     .getUnqueuedIntel({ maxAgeMs: postSpec.MAX_BEAT_INTEL_AGE_MS })
-    .filter(refill.isBeatWriterIntel);
-  const scan = await refill.selectBeatIntelForAutopost(beatIntel);
+    .filter(fill.isBeatWriterIntel);
+  const scan = await fill.selectBeatIntelForAutopost(beatIntel);
   assert.ok(scan.some((row) => row.id === cobbins.id));
 
-  const built = await refill.buildNewsFromIntel(cobbins);
+  const built = await fill.buildNewsFromIntel(cobbins);
   assert.ok(built?.text, 'buildNewsFromIntel should compose Cobbins');
   assert.equal(built.validationMeta?.fusedIntel, true);
 });
