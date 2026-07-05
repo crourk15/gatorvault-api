@@ -115,6 +115,66 @@ const MAX_BEAT_INTEL_AGE_MS = parseInt(
 
 const REFILL_PREP_TIMEOUT_MS = parseInt(process.env.X_AUTOPOST_REFILL_PREP_TIMEOUT_MS || '20000', 10);
 const REFILL_WIDE_TIMEOUT_MS = parseInt(process.env.X_AUTOPOST_REFILL_WIDE_TIMEOUT_MS || '45000', 10);
+const MAX_BEAT_INTEL_SCAN = parseInt(process.env.X_AUTOPOST_MAX_BEAT_INTEL_SCAN || '32', 10);
+
+function dedupeIntelByPlayerSlug(rows) {
+  const bySlug = new Map();
+  for (const row of rows || []) {
+    const slug = String(row.playerSlug || '').trim().toLowerCase();
+    if (!slug) continue;
+    const prev = bySlug.get(slug);
+    if (!prev) {
+      bySlug.set(slug, row);
+      continue;
+    }
+    const prevTs = new Date(prev.reportedAt || prev.createdAt).getTime();
+    const rowTs = new Date(row.reportedAt || row.createdAt).getTime();
+    if (rowTs > prevTs) bySlug.set(slug, row);
+  }
+  return [...bySlug.values()];
+}
+
+async function selectBeatIntelForAutopost(beatIntel, { limit = MAX_BEAT_INTEL_SCAN } = {}) {
+  const deduped = dedupeIntelByPlayerSlug(beatIntel);
+  let resolveCoverageTier = null;
+  try {
+    resolveCoverageTier = require('./player-intelligence/tiers').resolveCoverageTier;
+  } catch {
+    /* optional */
+  }
+  const scored = await Promise.all(
+    deduped.map(async (row) => {
+      const slug = String(row.playerSlug || '').trim().toLowerCase();
+      let tierRank = 2;
+      if (resolveCoverageTier && slug) {
+        const tier = await resolveCoverageTier(slug);
+        tierRank = tier === 'A' ? 0 : tier === 'B' ? 1 : 2;
+      }
+      const on3News = /on3-team-news/i.test(String(row.source || '')) ? 0 : 1;
+      const ts = new Date(row.reportedAt || row.createdAt).getTime();
+      return { row, tierRank, on3News, ts };
+    })
+  );
+  scored.sort((a, b) => {
+    if (a.tierRank !== b.tierRank) return a.tierRank - b.tierRank;
+    if (a.on3News !== b.on3News) return a.on3News - b.on3News;
+    return b.ts - a.ts;
+  });
+  const cap = Number.isFinite(Number(limit)) && Number(limit) > 0 ? Number(limit) : scored.length;
+  return scored.slice(0, cap).map((s) => s.row);
+}
+
+async function buildCandidatesFromIntelRows(intelRows) {
+  const eligibility = require('./rivals-prediction-eligibility');
+  const candidates = [];
+  for (const intel of intelRows) {
+    const gate = await eligibility.checkIntelForAutopost(intel);
+    if (!gate.allowed) continue;
+    const row = await buildNewsFromIntel(intel);
+    if (row) candidates.unshift(row);
+  }
+  return candidates;
+}
 
 function withRefillTimeout(promise, ms, label = 'refill_step') {
   let timer;
@@ -133,14 +193,11 @@ async function collectUnqueuedIntelCandidates({ forcePost = false } = {}) {
     const beatIntel = intelStore
       .getUnqueuedIntel({ maxAgeMs: forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS })
       .filter(isBeatWriterIntel);
-    const otherIntel = intelStore.getUnqueuedIntel({ maxAgeMs: maxIntelAgeMs }).filter((i) => !isBeatWriterIntel(i));
-    for (const intel of [...beatIntel, ...otherIntel].slice(0, 12)) {
-      const eligibility = require('./rivals-prediction-eligibility');
-      const gate = await eligibility.checkIntelForAutopost(intel);
-      if (!gate.allowed) continue;
-      const row = await buildNewsFromIntel(intel);
-      if (row) candidates.unshift(row);
-    }
+    const beatScan = await selectBeatIntelForAutopost(beatIntel);
+    const otherIntel = dedupeIntelByPlayerSlug(
+      intelStore.getUnqueuedIntel({ maxAgeMs: maxIntelAgeMs }).filter((i) => !isBeatWriterIntel(i))
+    ).slice(0, MAX_BEAT_INTEL_SCAN);
+    candidates.push(...(await buildCandidatesFromIntelRows([...beatScan, ...otherIntel])));
   } catch (err) {
     console.warn('[x-autoposter] intel candidate collect failed:', err.message);
   }
@@ -1265,14 +1322,11 @@ async function collectFreshPostCandidates({ forcePost = false, digDeeper = false
     const beatIntel = intelStore
       .getUnqueuedIntel({ maxAgeMs: forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS })
       .filter(isBeatWriterIntel);
-    const otherIntel = intelStore.getUnqueuedIntel({ maxAgeMs: maxIntelAgeMs }).filter((i) => !isBeatWriterIntel(i));
-    for (const intel of [...beatIntel, ...otherIntel].slice(0, 12)) {
-      const eligibility = require('./rivals-prediction-eligibility');
-      const gate = await eligibility.checkIntelForAutopost(intel);
-      if (!gate.allowed) continue;
-      const row = await buildNewsFromIntel(intel);
-      if (row) candidates.unshift(row);
-    }
+    const beatScan = await selectBeatIntelForAutopost(beatIntel);
+    const otherIntel = dedupeIntelByPlayerSlug(
+      intelStore.getUnqueuedIntel({ maxAgeMs: maxIntelAgeMs }).filter((i) => !isBeatWriterIntel(i))
+    ).slice(0, MAX_BEAT_INTEL_SCAN);
+    candidates.push(...(await buildCandidatesFromIntelRows([...beatScan, ...otherIntel])));
   } catch {
     /* optional */
   }
@@ -1892,6 +1946,8 @@ module.exports = {
   buildEngagementPulsePost,
   isCommitAutopostEvent,
   isProgramOrTeamNews,
+  dedupeIntelByPlayerSlug,
+  selectBeatIntelForAutopost,
   COMMIT_EVENT_SOURCES,
   FORCE_POST_COMMIT_AGE_MS,
 };
