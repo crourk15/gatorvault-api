@@ -545,12 +545,22 @@ async function hydrateGoldenFourPlayerContext(signal, { research, playerData } =
 
     const needsState = !resolveStateAbbr(signal.player);
     const needsRpm = !(Array.isArray(signal.metrics?.rpmTop) && signal.metrics.rpmTop.length >= 2);
-    if (!needsState && !needsRpm) return;
 
     const recruitSlug = golden.on3RecruitSlugFor(slug);
     if (!recruitSlug) return;
     const on3Recruit = require('../on3-recruit-client');
+    const { extractOn3RankingTokens } = require('./on3-ranking-tokens');
     const profile = await on3Recruit.fetchRecruitProfile(recruitSlug, classYear);
+
+    const rankingTokens = extractOn3RankingTokens(profile);
+    if (rankingTokens) {
+      signal.player.rankingTokens = rankingTokens;
+      signal.player.stars = profile?.stars ?? rankingTokens.on3Stars;
+      signal.player.natlRank = rankingTokens.on3NationalRank;
+      signal.player.posRank = rankingTokens.on3PositionRank;
+      signal.player.stateRank = rankingTokens.on3StateRank;
+    }
+
     if (needsState) {
       const state = String(profile?.state || '').trim().toUpperCase();
       if (/^[A-Z]{2}$/.test(state)) {

@@ -8,6 +8,7 @@ const policy = require('../x-autoposter-policy');
 const cadence = require('../x-autoposter-cadence');
 const { validateBannedPhrases } = require('../autoposter/rewrite/fact-gates');
 const { GOLDEN_FOUR_PROD_SLUGS } = require('./golden-four-on3');
+const { syncGoldenFourPlayerFromOn3 } = require('./golden-four-on3');
 
 const DEFAULT_ORDER = Object.freeze([
   'ryan-drakeford',
@@ -95,6 +96,17 @@ async function enqueueGoldenFourPosts(opts = {}) {
     const intel = pickBeatIntel(slug);
     if (!intel) {
       results.push({ slug, ok: false, reason: 'no_beat_intel' });
+      continue;
+    }
+
+    const on3Sync = await syncGoldenFourPlayerFromOn3(slug);
+    if (!on3Sync.ok || on3Sync.rankingValid !== true) {
+      results.push({
+        slug,
+        ok: false,
+        reason: 'ranking_incomplete',
+        on3Sync
+      });
       continue;
     }
 
