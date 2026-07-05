@@ -77,6 +77,25 @@ test('fusePlayerIntel — clusters live Cobbins intel when present', async () =>
   assert.ok(['publish', 'hold', 'archive'].includes(fused.publishAction));
 });
 
+test('fusedBeatIntelEnqueueAllowed — tier-A hold beat intel may enqueue', () => {
+  const { fusedBeatIntelEnqueueAllowed } = require('../../lib/player-intelligence/fuse-player-intel');
+  const holdFused = {
+    publishAction: 'hold',
+    urlSlugMatch: false,
+    primaryIntelRow: { source: 'auto:on3-team-news' }
+  };
+  assert.equal(fusedBeatIntelEnqueueAllowed(holdFused, 'A', { source: 'auto:on3-team-news' }), true);
+  assert.equal(fusedBeatIntelEnqueueAllowed(holdFused, 'C', { source: 'auto:on3-team-news' }), false);
+  assert.equal(
+    fusedBeatIntelEnqueueAllowed(
+      { publishAction: 'hold', urlSlugMatch: true, primaryIntelRow: { source: 'auto:on3-team-news' } },
+      'B',
+      { source: 'auto:on3-team-news' }
+    ),
+    true
+  );
+});
+
 test('composeFromFusedIntel — uses PR-789 path, blocks archive tier', () => {
   const archive = composeFromFusedIntel({
     slug: 'test-player',

@@ -135,6 +135,12 @@ function computeConfidence({ slug, rows, beatText, playerIntel, urlSlugMatch }) 
   const beatRows = rows.filter((row) => /beat|on3-team-news|detectives|auto:on3/i.test(String(row.source || '')));
   if (beatRows.length >= 2) c += 0.05;
   if (normalizeSlug(slug) && rows.some((row) => normalizeSlug(row.playerSlug) === slug)) c += 0.05;
+  const on3ArticleMatch = rows.some((row) => {
+    if (!/on3-team-news/i.test(String(row.source || ''))) return false;
+    const url = String(row.articleUrl || row.sourceUrl || '').toLowerCase();
+    return url.includes(slug);
+  });
+  if (on3ArticleMatch) c += 0.12;
   return Math.min(1, Math.max(0, Math.round(c * 100) / 100));
 }
 
@@ -142,6 +148,19 @@ function resolvePublishAction(confidence) {
   if (confidence >= CONFIDENCE_PUBLISH) return 'publish';
   if (confidence >= CONFIDENCE_HOLD) return 'hold';
   return 'archive';
+}
+
+function fusedBeatIntelEnqueueAllowed(fused, tier, intel) {
+  if (!fused) return false;
+  if (fused.publishAction === 'publish') return true;
+  if (fused.publishAction === 'archive') return false;
+  const src = String(intel?.source || fused.primaryIntelRow?.source || '');
+  const beatIntel = /beat|on3-team-news|detectives|auto:on3/i.test(src);
+  if (fused.publishAction !== 'hold' || !beatIntel) return false;
+  if (tier === 'A') return true;
+  if (tier === 'B' && fused.urlSlugMatch) return true;
+  if (/auto:on3-team-news|on3-team-news/i.test(src) && fused.urlSlugMatch) return true;
+  return false;
 }
 
 function on3SyncFromPlayerIntel(playerIntel) {
@@ -250,5 +269,6 @@ module.exports = {
   on3SyncFromPlayerIntel,
   playerRowFromIntel,
   CONFIDENCE_PUBLISH,
-  CONFIDENCE_HOLD
+  CONFIDENCE_HOLD,
+  fusedBeatIntelEnqueueAllowed
 };

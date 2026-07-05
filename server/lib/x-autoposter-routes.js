@@ -2,7 +2,7 @@ const autoposter = require('./x-autoposter');
 const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
 const cadence = require('./x-autoposter-cadence');
-const { refillAutoposterQueue } = require('./x-autoposter-fill');
+const { refillAutoposterQueue, probeIntelAutoposterPath } = require('./x-autoposter-fill');
 const freshness = require('./autoposter-freshness');
 const {
   forcePostNow,
@@ -240,6 +240,18 @@ function mountXAutoposterRoutes(app) {
       });
     } catch (err) {
       global.__detectivesManualRunning = false;
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/x/autoposter/probe/:slug', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const out = await probeIntelAutoposterPath(req.params.slug);
+      return res.json(out);
+    } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
   });

@@ -43,6 +43,16 @@ test('buildCandidatesFromIntelRows stops after maxBuild', async () => {
   }
 });
 
+test('probeIntelAutoposterPath reports Cobbins intel path', async () => {
+  const out = await fill.probeIntelAutoposterPath('jermaine-cobbins');
+  assert.equal(out.ok, true);
+  assert.ok(out.on3Row, 'expected On3 intel row');
+  assert.equal(out.inBeatScan, true);
+  assert.equal(out.build.ok, true);
+  assert.equal(out.finalize, true);
+  assert.equal(out.publishGate, true);
+});
+
 test('buildNewsFromIntel composes Cobbins fused candidate', async () => {
   const doc = intelStore.loadIntelDoc();
   const cobbins = (doc.items || []).find(

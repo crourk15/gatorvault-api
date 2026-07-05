@@ -340,6 +340,102 @@ async function buildNewsFromEvent(ev) {
   );
 }
 
+async function probeIntelAutoposterPath(slug) {
+  const normalized = String(slug || '')
+    .trim()
+    .toLowerCase();
+  if (!normalized) return { ok: false, error: 'missing_slug' };
+
+  const { matchIntelToPlayer } = require('./autoposter/identity-matcher');
+  const { isEligibleIntel, assessEligibilityFromIntel } = require('./autoposter/autoposter-policy');
+  const { resolveCoverageTier } = require('./player-intelligence/tiers');
+  const { fusePlayerIntel } = require('./player-intelligence/fuse-player-intel');
+  const qa = require('./autoposter/recruiting-post-qa');
+
+  const allRows = intelStore.getIntelForPlayer({ playerSlug: normalized }) || [];
+  const unqueued = intelStore.getUnqueuedIntel({ maxAgeMs: MAX_BEAT_INTEL_AGE_MS });
+  const beatUnqueued = unqueued.filter(isBeatWriterIntel);
+  const scan = await selectBeatIntelForAutopost(beatUnqueued);
+  const on3Row =
+    allRows.find((row) => /on3-team-news/i.test(String(row.source || ''))) ||
+    allRows.find((row) => isBeatWriterIntel(row)) ||
+    null;
+
+  let tier = null;
+  let eligibility = null;
+  let fuse = null;
+  let build = null;
+  let finalized = null;
+  let resolution = null;
+
+  if (on3Row) {
+    const player = matchIntelToPlayer(on3Row);
+    tier = await resolveCoverageTier(normalized);
+    eligibility = {
+      playerMatched: !!player,
+      eligible: isEligibleIntel(on3Row, player),
+      reasons: assessEligibilityFromIntel(on3Row, player).reasons
+    };
+    fuse = await fusePlayerIntel(normalized, { persist: false });
+    build = await buildNewsFromIntel(on3Row);
+    if (build) finalized = await finalizeNewsCandidate(build);
+  }
+
+  try {
+    const ledger = require('./autoposter/player-resolution-ledger');
+    resolution = ledger.checkPlayerResolution(normalized, {
+      allowGoldenFour: true,
+      intelFingerprint: on3Row?.fingerprint || null
+    });
+  } catch {
+    /* optional */
+  }
+
+  return {
+    ok: true,
+    slug: normalized,
+    intelRowCount: allRows.length,
+    on3Row: on3Row
+      ? {
+          id: on3Row.id,
+          source: on3Row.source,
+          xPostQueued: !!on3Row.xPostQueued,
+          xPosted: !!on3Row.xPosted,
+          ufRelevant: on3Row.ufRelevant,
+          articleUrl: on3Row.articleUrl || null,
+          fingerprint: on3Row.fingerprint || null
+        }
+      : null,
+    inBeatUnqueued: beatUnqueued.some((row) => row.playerSlug === normalized),
+    inBeatScan: scan.some((row) => row.playerSlug === normalized),
+    beatScanIndex: scan.findIndex((row) => row.playerSlug === normalized),
+    beatScanSize: scan.length,
+    tier,
+    eligibility,
+    resolution,
+    fuse: fuse
+      ? {
+          confidence: fuse.confidence,
+          publishAction: fuse.publishAction,
+          urlSlugMatch: fuse.urlSlugMatch,
+          beatLen: String(fuse.beatText || '').length,
+          gaps: fuse.gaps || []
+        }
+      : null,
+    build: build
+      ? {
+          ok: true,
+          fusedIntel: !!build.validationMeta?.fusedIntel,
+          source: build.source,
+          preview: String(build.text || '').slice(0, 160)
+        }
+      : { ok: false },
+    finalize: !!finalized,
+    publishGate: finalized ? qa.passesPublishGate(finalized) : null,
+    publishGateReason: finalized && !qa.passesPublishGate(finalized) ? qa.rejectReason(finalized) : null
+  };
+}
+
 async function buildNewsFromIntel(intel) {
   const { matchIntelToPlayer } = require('./autoposter/identity-matcher');
   const { isEligibleIntel } = require('./autoposter/autoposter-policy');
@@ -355,11 +451,10 @@ async function buildNewsFromIntel(intel) {
       const { resolveCoverageTier } = require('./player-intelligence/tiers');
       const tier = await resolveCoverageTier(slug);
       if (tier === 'A' || tier === 'B') {
-        const { fusePlayerIntel } = require('./player-intelligence/fuse-player-intel');
+        const { fusePlayerIntel, fusedBeatIntelEnqueueAllowed } = require('./player-intelligence/fuse-player-intel');
         const { composeFromFusedIntel } = require('./player-intelligence/compose-from-fused-intel');
         const fused = await fusePlayerIntel(slug);
-        if (fused?.publishAction === 'archive') return null;
-        if (fused?.publishAction === 'hold') return null;
+        if (!fusedBeatIntelEnqueueAllowed(fused, tier, intel)) return null;
         const composed = composeFromFusedIntel(fused);
         if (composed?.ok && composed.text) {
           const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
@@ -2077,6 +2172,7 @@ module.exports = {
   dedupeIntelByPlayerSlug,
   selectBeatIntelForAutopost,
   buildCandidatesFromIntelRows,
+  probeIntelAutoposterPath,
   COMMIT_EVENT_SOURCES,
   FORCE_POST_COMMIT_AGE_MS,
 };
