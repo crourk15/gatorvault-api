@@ -136,7 +136,7 @@ function attachNewsMeta(row, built) {
   return {
     ...row,
     templateBlocks: built.templateBlocks || row.templateBlocks,
-    validationMeta: built.validationMeta || row.validationMeta,
+    validationMeta: { ...(row.validationMeta || {}), ...(built.validationMeta || {}) },
     playerContext: built.playerContext || row.playerContext
   };
 }
@@ -265,18 +265,27 @@ async function buildNewsFromIntel(intel) {
         if (composed?.ok && composed.text) {
           const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
           const intelType = String(intel.eventType || '').toLowerCase();
+          const intelSource = String(intel.source || '');
           const urgentIntel = /visit_cancel|visit_scheduled|rivals_prediction|prediction_change|prediction/.test(
             intelType
           );
+          const beatIntel =
+            /beat|on3-team-news|detectives|auto:on3/i.test(intelSource) ||
+            intel.sourceType === 'beat';
           return attachNewsMeta(
             {
               text: composed.text,
               category: 'news',
               topic: 'recruiting',
-              urgencyLabel: /injury/.test(intelType) ? 'injury' : urgentIntel ? 'major_beat' : null,
+              urgencyLabel: /injury/.test(intelType)
+                ? 'injury'
+                : urgentIntel || beatIntel
+                  ? 'major_beat'
+                  : null,
+              postUrgency: beatIntel ? 'urgent' : null,
               sourceEventType: intel.eventType,
               sources: (fused.sources || []).slice(0, 3).map((s) => ({ label: s.label, url: s.url })),
-              source: intel.source || 'auto:intel-fused',
+              source: intelSource || 'auto:intel-fused',
               intelFingerprint: fp,
               intelType: intel.eventType,
               playerName: composed.playerName || intel.playerName,
@@ -1500,125 +1509,124 @@ async function refillAutoposterQueue({
   const pending = doc.items.filter((i) => i.status === 'pending');
   const need = Math.max(minPending - pending.length, pending.length === 0 ? 1 : 0);
 
-  if (need > 0) {
-    const golden = await tryAutonomousGoldenFourRefill(Math.min(need, maxEnqueue));
-    const goldenEnqueued = (golden?.results || []).filter((r) => r.ok);
-    if (goldenEnqueued.length) {
-      return {
-        ok: true,
-        reason: 'golden_four_auto',
-        pending: store.listQueue({ status: 'pending' }).length,
-        enqueued: goldenEnqueued,
-        enqueuedCount: goldenEnqueued.length,
-        goldenFour: golden
-      };
+  let goldenFourRun = null;
+  let goldenEnqueued = [];
+  const enqueued = [];
+  const skipReasons = [];
+  let added = 0;
+  let qualitySkipped = 0;
+
+  const enqueueFromCandidates = async (rawNewsCandidates, slots) => {
+    const allowPromo = process.env.X_AUTOPOST_ALLOW_PROMO === 'true';
+    const finalCandidates = [...rawNewsCandidates];
+    if (allowPromo) {
+      const promo = buildPromoFromMix();
+      if (promo) finalCandidates.push(promo);
     }
+
+    for (const raw of finalCandidates) {
+      if (added >= slots) break;
+      if (raw?.category === 'promo' || raw?.category === 'engagement') {
+        if (!raw?.text || copy.isBrokenCopy(raw.text, raw)) continue;
+        const check = policy.validatePostContent(raw);
+        if (!check.valid && raw.category !== 'engagement' && raw.category !== 'promo') continue;
+        try {
+          const tagged = cadence.tagCandidate({
+            ...raw,
+            qualityScore: raw.qualityScore ?? check.qualityScore ?? 70,
+            qualityBreakdown: raw.qualityBreakdown ?? check.qualityBreakdown ?? null,
+            sourceConfidence: raw.sourceConfidence ?? check.sourceConfidence ?? 80
+          });
+          const out = store.enqueuePost({
+            ...tagged,
+            scheduledAt: store.nowIso(),
+            status: 'pending'
+          });
+          enqueued.push(out.item);
+          doc.items.push(out.item);
+          added += 1;
+        } catch (err) {
+          console.warn(`[x-autoposter] promo enqueue failed: ${err.message}`);
+        }
+        continue;
+      }
+
+      const result = await attemptEnqueueCandidate(raw, doc);
+      if (result.queued) {
+        enqueued.push(result.item);
+        doc.items.push(result.item);
+        added += 1;
+      } else {
+        qualitySkipped += 1;
+        if (skipReasons.length < 12) {
+          skipReasons.push({
+            reason: result.reason,
+            source: raw.source,
+            player: raw.playerName,
+            topic: raw.topic || raw.triggerType
+          });
+        }
+      }
+    }
+  };
+
+  if (need > 0) {
+    let beatDigDeeper = digDeeper;
+    if (beatDigDeeper && hasGoldenFourPending()) {
+      beatDigDeeper = false;
+    }
+    const beatSlots = Math.min(maxEnqueue, need);
+    const rawNewsCandidates = await collectFreshPostCandidates({
+      forcePost: forcePost || digDeeper,
+      digDeeper: beatDigDeeper
+    });
+    await enqueueFromCandidates(rawNewsCandidates, beatSlots);
   }
 
-  if (need <= 0 && pending.length >= minPending) {
+  const pendingAfterBeat = store.listQueue({ status: 'pending' }).length;
+  const stillNeed = Math.max(minPending - pendingAfterBeat, pendingAfterBeat === 0 ? 1 : 0);
+
+  if (stillNeed > 0) {
+    goldenFourRun = await tryAutonomousGoldenFourRefill(Math.min(stillNeed, maxEnqueue));
+    goldenEnqueued = (goldenFourRun?.results || []).filter((r) => r.ok);
+    for (const row of goldenEnqueued) {
+      if (!row.itemId) continue;
+      const item = store.loadQueue().items.find((i) => i.id === row.itemId);
+      if (item) enqueued.push(item);
+    }
+    added += goldenEnqueued.length;
+  }
+
+  if (pendingAfterBeat >= minPending && enqueued.length === 0 && goldenEnqueued.length === 0) {
     const sidecar = await processDetectivesPileSidecar(doc, 3, { background: true });
     const detectivesEnqueued = sidecar?.enqueued || [];
     return {
       ok: true,
       skipped: true,
       reason: 'queue_full',
-      pending: pending.length,
+      pending: pendingAfterBeat,
       enqueued: detectivesEnqueued,
       enqueuedCount: detectivesEnqueued.length,
       detectivesRun: sidecar?.detectivesRun || null
     };
   }
 
-  const slots = Math.max(maxEnqueue - pending.length, need);
-  const widenDiscovery = forcePost || digDeeper;
-  if (digDeeper && hasGoldenFourPending()) {
-    digDeeper = false;
-  }
-
-  const rawNewsCandidates = await collectFreshPostCandidates({
-    forcePost: widenDiscovery,
-    digDeeper: digDeeper && !hasGoldenFourPending()
-  });
-
-  /** Content-mix (50/30/20) runs only after news quality scoring. */
-  const allowPromo = process.env.X_AUTOPOST_ALLOW_PROMO === 'true';
-  const finalCandidates = [...rawNewsCandidates];
-  if (allowPromo) {
-    const promo = buildPromoFromMix();
-    if (promo) finalCandidates.push(promo);
-  }
-
-  const enqueued = [];
-  const skipReasons = [];
-  let added = 0;
-  let qualitySkipped = 0;
-
-  for (const raw of finalCandidates) {
-    if (added >= slots) break;
-    if (raw?.category === 'promo' || raw?.category === 'engagement') {
-      if (!raw?.text || copy.isBrokenCopy(raw.text, raw)) continue;
-      const check = policy.validatePostContent(raw);
-      if (!check.valid && raw.category !== 'engagement' && raw.category !== 'promo') continue;
-      try {
-        const tagged = cadence.tagCandidate({
-          ...raw,
-          qualityScore: raw.qualityScore ?? check.qualityScore ?? 70,
-          qualityBreakdown: raw.qualityBreakdown ?? check.qualityBreakdown ?? null,
-          sourceConfidence: raw.sourceConfidence ?? check.sourceConfidence ?? 80
-        });
-        const out = store.enqueuePost({
-          ...tagged,
-          scheduledAt: store.nowIso(),
-          status: 'pending'
-        });
-        enqueued.push(out.item);
-        doc.items.push(out.item);
-        added += 1;
-      } catch (err) {
-        console.warn(`[x-autoposter] promo enqueue failed: ${err.message}`);
-      }
-      continue;
-    }
-
-    const result = await attemptEnqueueCandidate(raw, doc);
-    if (result.queued) {
-      enqueued.push(result.item);
-      doc.items.push(result.item);
-      added += 1;
-    } else {
-      qualitySkipped += 1;
-      if (skipReasons.length < 12) {
-        skipReasons.push({
-          reason: result.reason,
-          source: raw.source,
-          player: raw.playerName,
-          topic: raw.topic || raw.triggerType
-        });
-      }
-    }
-  }
+  const pendingNow = store.listQueue({ status: 'pending' }).length;
+  const slots = Math.max(maxEnqueue - pendingNow, stillNeed > 0 ? stillNeed : 0);
 
   if (added === 0) {
     try {
       const rl = require('./autoposter/research-ladder');
       if (rl.digOnFilterSkipEnabled()) {
         const deeper = await collectDigDeeperPostCandidates({ forcePost: true });
-        for (const raw of deeper) {
-          if (added >= slots) break;
-          const result = await attemptEnqueueCandidate(raw, doc);
-          if (result.queued) {
-            enqueued.push(result.item);
-            doc.items.push(result.item);
-            added += 1;
-          }
-        }
+        await enqueueFromCandidates(deeper, slots);
       }
     } catch {
       /* optional */
     }
   }
 
-  if (added === 0 && emptyQueueFallbackEnabled() && pending.length === 0) {
+  if (added === 0 && emptyQueueFallbackEnabled() && pendingNow === 0) {
     const fallbacks = [];
     if (process.env.X_AUTOPOST_ON3_NEWS_FALLBACK !== 'false') {
       try {
@@ -1672,13 +1680,15 @@ async function refillAutoposterQueue({
   return {
     ok: true,
     skipped: false,
-    pending: pending.length,
+    reason: goldenEnqueued.length && enqueued.length === goldenEnqueued.length ? 'golden_four_auto' : null,
+    pending: store.listQueue({ status: 'pending' }).length,
     enqueued,
     enqueuedCount: enqueued.length,
     qualitySkipped,
     skipReasons,
-    digDeeper: widenDiscovery,
+    digDeeper: forcePost || digDeeper,
     beatPrep,
+    goldenFour: goldenFourRun,
     detectivesRun,
     emptyQueueFallback: added > 0 && pending.length === 0
   };
