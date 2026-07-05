@@ -28,9 +28,24 @@ function pickBeatIntel(slug) {
     .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
   const beatFirst =
-    rows.find((row) => /beat|detectives|visit|target|unofficial/i.test(String(row.source || ''))) ||
+    rows.find((row) => /beat|detectives|visit|target|unofficial|on3-team-news/i.test(String(row.source || ''))) ||
     rows[0];
   return beatFirst || null;
+}
+
+async function pickFusedBeatIntel(slug) {
+  const { fusePlayerIntel } = require('./fuse-player-intel');
+  const fused = await fusePlayerIntel(slug);
+  if (!fused?.beatText) return null;
+  const base = fused.primaryIntelRow || pickBeatIntel(slug) || {};
+  return {
+    ...base,
+    playerName: fused.playerIntel?.identity?.name || base.playerName,
+    playerSlug: slug,
+    detail: fused.beatText,
+    skinny: fused.beatText,
+    _fusedIntel: fused
+  };
 }
 
 function slugAlreadyPending(slug, items = []) {
@@ -136,7 +151,7 @@ async function enqueueGoldenFourPosts(opts = {}) {
       continue;
     }
 
-    const intel = pickBeatIntel(slug);
+    const intel = await pickFusedBeatIntel(slug);
     if (!intel) {
       results.push({ slug, ok: false, reason: 'no_beat_intel' });
       continue;
@@ -288,5 +303,6 @@ async function enqueueGoldenFourPosts(opts = {}) {
 module.exports = {
   DEFAULT_ORDER,
   pickBeatIntel,
+  pickFusedBeatIntel,
   enqueueGoldenFourPosts
 };

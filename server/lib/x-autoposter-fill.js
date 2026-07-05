@@ -248,6 +248,61 @@ async function buildNewsFromIntel(intel) {
   if (!player) return null;
   if (!isEligibleIntel(intel, player)) return null;
 
+  const slug = String(intel.playerSlug || player?.playerId || '')
+    .trim()
+    .toLowerCase();
+  if (slug) {
+    try {
+      const { resolveCoverageTier } = require('./player-intelligence/tiers');
+      const tier = await resolveCoverageTier(slug);
+      if (tier === 'A' || tier === 'B') {
+        const { fusePlayerIntel } = require('./player-intelligence/fuse-player-intel');
+        const { composeFromFusedIntel } = require('./player-intelligence/compose-from-fused-intel');
+        const fused = await fusePlayerIntel(slug);
+        if (fused?.publishAction === 'archive') return null;
+        if (fused?.publishAction === 'hold') return null;
+        const composed = composeFromFusedIntel(fused);
+        if (composed?.ok && composed.text) {
+          const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
+          const intelType = String(intel.eventType || '').toLowerCase();
+          const urgentIntel = /visit_cancel|visit_scheduled|rivals_prediction|prediction_change|prediction/.test(
+            intelType
+          );
+          return attachNewsMeta(
+            {
+              text: composed.text,
+              category: 'news',
+              topic: 'recruiting',
+              urgencyLabel: /injury/.test(intelType) ? 'injury' : urgentIntel ? 'major_beat' : null,
+              sourceEventType: intel.eventType,
+              sources: (fused.sources || []).slice(0, 3).map((s) => ({ label: s.label, url: s.url })),
+              source: intel.source || 'auto:intel-fused',
+              intelFingerprint: fp,
+              intelType: intel.eventType,
+              playerName: composed.playerName || intel.playerName,
+              playerSlug: slug,
+              classYear: intel.classYear || player?.classYear || null,
+              sourceIntelId: intel.id,
+              sourceEventCreatedAt: intel.timestamp || intel.createdAt || null,
+              eventTimestamp: intel.timestamp || intel.createdAt || null,
+              validationMeta: {
+                ...(composed.validationMeta || {}),
+                beatText: fused.beatText,
+                situation: postSpec.detectSituation(fused.beatText, intel.eventType),
+                fusedIntel: true,
+                fuseConfidence: fused.confidence
+              },
+              templateBlocks: composed.templateBlocks
+            },
+            composed
+          );
+        }
+      }
+    } catch (err) {
+      console.warn('[x-autoposter] fused intel compose failed:', err.message);
+    }
+  }
+
   const built = await copy.buildIntelCopyAsync(intel);
   if (built?._nonPlayerSkip || built?.skipReason === 'non_player_intel') return null;
   if (built?._nonFootballSkip || built?.skipReason === 'non_football_sport') return null;
@@ -1054,7 +1109,8 @@ const FORCE_POST_COMMIT_AGE_MS = parseInt(
   10
 );
 
-const BEAT_INTEL_SOURCES = /beat-writer|program-news|team-event|auto:beat|auto:program|auto:team/i;
+const BEAT_INTEL_SOURCES =
+  /beat-writer|program-news|team-event|auto:beat|auto:program|auto:team|auto:on3-team-news|on3-team-news/i;
 
 function isBeatWriterIntel(intel) {
   return BEAT_INTEL_SOURCES.test(String(intel?.source || ''));

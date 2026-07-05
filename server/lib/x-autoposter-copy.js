@@ -531,6 +531,35 @@ async function buildBeatIntelCopyAsync(post) {
   const urlIdentity = on3Discovery.parseOn3BeatUrlIdentity(text, post?.url || null);
   const resolvedPlayerSlug = guarded.playerSlug || urlIdentity?.playerSlug || null;
 
+  if (resolvedPlayerSlug) {
+    try {
+      const { resolveCoverageTier } = require('./player-intelligence/tiers');
+      const tier = await resolveCoverageTier(resolvedPlayerSlug);
+      if (tier === 'A' || tier === 'B') {
+        const { fusePlayerIntel } = require('./player-intelligence/fuse-player-intel');
+        const { composeFromFusedIntel } = require('./player-intelligence/compose-from-fused-intel');
+        const fused = await fusePlayerIntel(resolvedPlayerSlug);
+        if (fused?.publishAction === 'publish') {
+          const composed = composeFromFusedIntel(fused);
+          if (composed?.ok && composed.text) {
+            return newsPayloadFromBuilt({
+              ...composed,
+              playerName: composed.playerName || playerName,
+              playerSlug: resolvedPlayerSlug,
+              validationMeta: {
+                ...(composed.validationMeta || {}),
+                fusedIntelCompose: true,
+                beatText: fused.beatText
+              }
+            });
+          }
+        }
+      }
+    } catch {
+      /* fallback to legacy beat compose */
+    }
+  }
+
   const beatFilters = require('./beat-writer-filters');
   const isTeam =
     !hasPlayerSpecificIntel(text) &&

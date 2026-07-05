@@ -391,6 +391,27 @@ async function evaluateBeatIntelEligibility(
     return { eligible: false, reason: 'empty_text', category: 'non_player_intel' };
   }
 
+  try {
+    const on3Discovery = require('./on3-recruit-discovery');
+    const urlHit = on3Discovery.parseOn3BeatUrlIdentity(phrase, post?.url || null);
+    if (urlHit?.playerSlug) {
+      const store = require('./recruiting-store');
+      const player = await store.getPlayerBySlug(urlHit.playerSlug);
+      const name = player?.name || urlHit.playerName;
+      if (name && isValidPlayerName(name) && !isSingleTokenName(name)) {
+        return {
+          eligible: true,
+          playerName: name,
+          playerSlug: urlHit.playerSlug,
+          matchMode: 'on3_url_slug',
+          triggerPhrase: phrase.slice(0, 160)
+        };
+      }
+    }
+  } catch {
+    /* optional */
+  }
+
   if (isGenericNonPlayerIntel(phrase) && !trustedOverride) {
     return {
       eligible: false,

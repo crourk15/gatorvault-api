@@ -39,7 +39,8 @@ function appendSnapshot(slug, intel = {}) {
     rankingBlock: intel.rankingBlock || null,
     rpm: intel.rpm || null,
     gaps: intel.gaps || [],
-    stale: intel.stale || []
+    stale: intel.stale || [],
+    fusedIntel: intel.fusedIntel || null
   };
   const rows = loadDoc();
   rows.push(row);
