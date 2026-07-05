@@ -36,6 +36,16 @@ function rpmTopFromPlayer(player = {}, classYear = 2028) {
   return rpmTopFromOn3TopTeams(player.on3TopTeams || player.topTeams || [], classYear);
 }
 
+function buildInsiderLine(rpmTop = []) {
+  if (rpmTop.length >= 2) {
+    return `${rpmTop[0].school} and ${rpmTop[1].school} lead his RPM board, but UF is clearly in the mix.`;
+  }
+  if (rpmTop.length === 1) {
+    return `${rpmTop[0].school} leads his RPM board, but UF is still in the mix.`;
+  }
+  return '';
+}
+
 /**
  * @param {object} params
  * @param {string} params.slug
@@ -115,6 +125,7 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
   const identityBase = [classYear, pos, playerName].filter(Boolean).join(' ').trim();
   let identityLine = buildIdentityWithRanking(identityBase, signal);
   const cta = playerCta(slug);
+  const insiderLine = buildInsiderLine(rpmTop);
   let text = [identityLine, narrative, cta].filter(Boolean).join('\n');
 
   if (text.length > getTweetCharLimit()) {
@@ -149,7 +160,7 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
     templateBlocks: {
       identity: identityLine,
       context: narrative,
-      insider: '',
+      insider: insiderLine,
       cta
     },
     validationMeta: {

@@ -131,6 +131,14 @@ function isEliteComposePost(item) {
   return !!(item.validationMeta?.eliteCompose || item.validationMeta?.goldenFourEnqueue);
 }
 
+function isPr789AngleElitePost(item) {
+  return !!(
+    item.validationMeta?.goldenFourFactCompose ||
+    item.validationMeta?.pr789AngleLive ||
+    String(item.validationMeta?.publishTier || '').startsWith('pr789_angle')
+  );
+}
+
 function isDetectivesTemplatePost(item) {
   if (String(item?.source || '').includes('detectives')) return true;
   if (item?.validationMeta?.detectivesResolved !== true) return false;
@@ -142,10 +150,15 @@ function filterDetectivesSkips(item, skips) {
   return skips.filter((s) => !DETECTIVES_RELAXED_SKIP_TYPES.has(s.type));
 }
 
+const PR789_ANGLE_RELAXED_SKIP_TYPES = new Set(['missing_insider', 'missing_context']);
+
 function filterQualitySkips(item, skips) {
   let out = filterDetectivesSkips(item, skips);
   if (isEliteComposePost(item)) {
     out = out.filter((s) => !ELITE_RELAXED_SKIP_TYPES.has(s.type));
+  }
+  if (isPr789AngleElitePost(item)) {
+    out = out.filter((s) => !PR789_ANGLE_RELAXED_SKIP_TYPES.has(s.type));
   }
   return out;
 }
@@ -744,7 +757,9 @@ function scoreNewsPost(item) {
   );
   const finalScore = isDetectivesTemplatePost(item)
     ? Math.max(compositeScore, Number(item.qualityScore) || POSTING_THRESHOLD)
-    : compositeScore;
+    : isPr789AngleElitePost(item) && blocks.identity && (blocks.context || blocks.insider || item.text)
+      ? Math.max(compositeScore, POSTING_THRESHOLD)
+      : compositeScore;
 
   const breakdown = {
     identity: {
