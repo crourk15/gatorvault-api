@@ -126,8 +126,57 @@ test('Drakeford elite visit arc keeps Swamp hook and embeds beat quote', () => {
   const banned = validateBannedPhrases(out.narrative);
   assert.equal(banned.ok, true, JSON.stringify(banned.violations));
   assert.match(out.narrative, /first trip to The Swamp/i);
-  assert.match(out.narrative, /top of my board/i);
+  assert.match(out.narrative, /he said Florida is "one of those schools at the top of my board\."/);
+  assert.doesNotMatch(out.narrative, /he said he "Florida/i);
+  assert.doesNotMatch(out.narrative, /campus connection is real/i);
   assert.doesNotMatch(out.narrative, /left with the Gators on his board early/i);
+});
+
+const ROBINSON_BEAT = GOLDEN_BEATS.find((b) => b.id === 'robinson');
+
+test('Robinson beat extracts staff contact, visit, and board signal — not staff energy', () => {
+  const facts = extractBeatFacts(ROBINSON_BEAT.beatText, {
+    metrics: ROBINSON_BEAT.metrics,
+    player: ROBINSON_BEAT.player
+  });
+  assert.equal(facts.staffContact, true);
+  assert.equal(facts.staffEnergy, false);
+  assert.equal(facts.visit?.when, 'his first Gainesville visit');
+  assert.equal(facts.boardSignal, true);
+  assert.doesNotMatch(String(facts.quote || ''), /^all three\.?$/i);
+  const pick = selectAngleFromFacts(facts, ROBINSON_BEAT.beatText);
+  assert.equal(pick.angle, 'staff_contact');
+  assert.equal(hasFactCompletenessForPr789(facts, ROBINSON_BEAT.beatText), true);
+});
+
+test('Robinson elite staff-contact arc uses DB coach signal — no energy filler or quote fragment', () => {
+  const facts = extractBeatFacts(ROBINSON_BEAT.beatText, {
+    metrics: {
+      ...ROBINSON_BEAT.metrics,
+      rpmTop: [
+        { school: 'Louisville', pct: 28 },
+        { school: 'Tennessee', pct: 22 }
+      ]
+    },
+    player: ROBINSON_BEAT.player
+  });
+  const pick = selectAngleFromFacts(facts, ROBINSON_BEAT.beatText);
+  const out = composeFromFacts(
+    facts,
+    pick,
+    { lastName: 'Robinson', beatText: ROBINSON_BEAT.beatText },
+    { mode: 'elite' }
+  );
+  const banned = validateBannedPhrases(out.narrative);
+  assert.equal(banned.ok, true, JSON.stringify(banned.violations));
+  assert.match(out.narrative, /first trip to Gainesville/i);
+  assert.match(out.narrative, /all three DB coaches on UF's staff have been in contact/i);
+  assert.match(out.narrative, /Louisville and Tennessee lead his RPM board/i);
+  assert.match(out.narrative, /staff attention is real/i);
+  assert.doesNotMatch(out.narrative, /staff energy is still the story/i);
+  assert.doesNotMatch(out.narrative, /staff pitch is resonating/i);
+  assert.doesNotMatch(out.narrative, /he said he "all three/i);
+  assert.doesNotMatch(out.narrative, /"all three\./i);
 });
 
 test('Drakeford elite visit arc appends RPM rivals when rpmTop is present', () => {
@@ -149,7 +198,8 @@ test('Drakeford elite visit arc appends RPM rivals when rpmTop is present', () =
     { mode: 'elite' }
   );
   assert.match(out.narrative, /Auburn and Georgia Tech lead his RPM board/i);
-  assert.match(out.narrative, /top of my board/i);
+  assert.match(out.narrative, /he said Florida is "one of those schools at the top of my board\."/);
+  assert.match(out.narrative, /clearly in the picture after that first look/i);
 });
 
 test('Swamp visit without quote still uses board fallback line', () => {

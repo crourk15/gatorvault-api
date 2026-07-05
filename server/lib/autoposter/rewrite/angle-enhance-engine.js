@@ -150,7 +150,7 @@ function enhanceAngleFromBeatFacts(pr6Pack, pr5Pack, signal = {}, pr789Pack = nu
   const anglePick = selectAngleFromFacts(facts, ctx.beatText);
 
   const hasRpmTop = (signal.metrics?.rpmTop || facts.rpmTop || []).length >= 2;
-  const factDrivenElite = ['staff', 'visit'].includes(anglePick.angle);
+  const factDrivenElite = ['staff', 'staff_contact', 'visit'].includes(anglePick.angle);
   const composeOpts = factDrivenElite
     ? isExtendedTweetLimit()
       ? { mode: 'elite' }

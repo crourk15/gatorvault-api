@@ -16,9 +16,49 @@ function extractQuote(beatText = '') {
   const re = new RegExp(QUOTE_RE.source, 'g');
   while ((m = re.exec(beat)) !== null) {
     const q = (m[1] || m[2] || '').trim();
-    if (q.length >= 8) quotes.push(q);
+    if (q.length < 12) continue;
+    if (/^all three\.?$/i.test(q)) continue;
+    if (/^(yes|no|100 percent)\.?$/i.test(q)) continue;
+    quotes.push(q);
   }
-  return quotes[0] || null;
+  if (quotes.length) {
+    return quotes.sort((a, b) => b.length - a.length)[0];
+  }
+  return extractSaysClause(beat);
+}
+
+/** Unquoted "says …" attribution — only when it reads like a full statement, not a fragment. */
+function extractSaysClause(beatText = '') {
+  const beat = String(beatText || '');
+  const m = beat.match(
+    /\bsays?\s+(?:Florida\s+has\s+)?(?:all three[^.!?—–-]{8,120}[.!?]?|[^.!?—–-]{20,160}[.!?])/i
+  );
+  if (!m) return null;
+  let clause = String(m[0]).replace(/^\s*says?\s+/i, '').trim();
+  clause = clause.replace(/\s*[—–-]\s*and after.*$/i, '').trim();
+  if (clause.length < 20 || /^all three\.?$/i.test(clause)) return null;
+  return clause.replace(/[.!?]+$/, '').trim();
+}
+
+function extractStaffContact(beatText = '') {
+  const beat = String(beatText);
+  return (
+    /\ball three (?:of their )?db coach/i.test(beat) ||
+    /\bdb coaches (?:are )?texting/i.test(beat) ||
+    /\bcoaches texting (?:him|me)\b/i.test(beat) ||
+    /\bdb staff.*texting/i.test(beat) ||
+    /\bdb coach(?:es)? (?:are )?(?:in contact|texting|reaching)/i.test(beat)
+  );
+}
+
+function extractStaffEnergy(beatText = '') {
+  const beat = String(beatText).toLowerCase();
+  return (
+    /\benergy from the staff\b/i.test(beat) ||
+    /\bstaff energy\b/i.test(beat) ||
+    /\bloved the energy\b/i.test(beat) ||
+    /\bappreciated the energy\b/i.test(beat)
+  );
 }
 
 function extractVisit(beatText = '') {
@@ -37,18 +77,6 @@ function extractVisit(beatText = '') {
   const type = /\bofficial\b/i.test(beat) && !/unofficial/i.test(beat) ? 'official' : 'unofficial';
 
   return { when, type, school };
-}
-
-function extractStaffEnergy(beatText = '') {
-  const beat = String(beatText).toLowerCase();
-  return (
-    /\benergy from the staff\b/i.test(beat) ||
-    /\bstaff energy\b/i.test(beat) ||
-    /\bloved the energy\b/i.test(beat) ||
-    /\bappreciated the energy\b/i.test(beat) ||
-    /\bcoaches texting\b/i.test(beat) ||
-    /\bdb coach/i.test(beat)
-  );
 }
 
 function extractFollowUpSince(beatText = '') {
@@ -73,6 +101,7 @@ function extractBeatCompBattle(beatText = '') {
 
 function classifySignals(facts = {}) {
   const signals = [];
+  if (facts.staffContact) signals.push('staff_contact');
   if (facts.staffEnergy) signals.push('staff_energy');
   if (facts.quote) signals.push('quote_driven');
   if (facts.visit?.when || facts.visit?.school) signals.push('visit');
@@ -89,6 +118,13 @@ function selectAngleFromFacts(facts = {}, beatText = '') {
 
   if (/swamp|first trip/i.test(beat) && facts.quote && facts.boardSignal) {
     return { angle: 'visit', reason: 'swamp_quote_board', signals };
+  }
+
+  if (facts.staffContact && (facts.visit?.when || facts.boardSignal)) {
+    return { angle: 'staff_contact', reason: 'staff_contact_visit_board', signals };
+  }
+  if (facts.staffContact) {
+    return { angle: 'staff_contact', reason: 'staff_contact', signals };
   }
 
   if (facts.staffEnergy && (facts.quote || facts.followUpSince)) {
@@ -133,6 +169,7 @@ function extractBeatFacts(beatText = '', ctx = {}) {
 
   const facts = {
     visit: extractVisit(beat),
+    staffContact: extractStaffContact(beat),
     staffEnergy: extractStaffEnergy(beat),
     followUpSince: extractFollowUpSince(beat),
     quote: extractQuote(beat),
@@ -144,6 +181,7 @@ function extractBeatFacts(beatText = '', ctx = {}) {
     beatCompBattle: extractBeatCompBattle(beat),
     provenance: {
       visit: extractVisit(beat) ? 'beat' : null,
+      staffContact: extractStaffContact(beat) ? 'beat' : null,
       staffEnergy: extractStaffEnergy(beat) ? 'beat' : null,
       quote: extractQuote(beat) ? 'beat' : null,
       rpmTop: rpmTop.length ? (metrics.rpmTop ? 'metrics' : 'intel') : null
@@ -186,22 +224,68 @@ function quoteToInsiderLine(quote) {
 
 function quoteForEliteEmbed(quote) {
   if (!quote) return null;
-  return String(quote)
+  const q = String(quote)
     .replace(/["""]+$/, '')
     .replace(/[."]+$/, '')
     .trim()
     .replace(/^I /i, '');
+  if (q.length < 12 || /^all three\.?$/i.test(q)) return null;
+  return q;
+}
+
+/** Beat-accurate quote embed — avoids "he said he \"Florida…" artifacts. */
+function formatEliteQuoteEmbed(quote) {
+  const q = quoteForEliteEmbed(quote);
+  if (!q) return null;
+  if (/^Florida is /i.test(q)) {
+    const tail = q.replace(/^Florida is /i, '').trim();
+    if (!tail) return null;
+    return ` — he said Florida is "${tail}."`;
+  }
+  if (/^all three/i.test(q) && /db coach|texting/i.test(q)) {
+    return null;
+  }
+  if (/^I /i.test(q)) {
+    return ` — he said he "${q.replace(/^I /i, '').trim()}."`;
+  }
+  if (/loved the energy/i.test(q)) {
+    return ` — he said he "${q}."`;
+  }
+  return ` — he said, "${q}."`;
 }
 
 function eliteTakeaway(facts, angle) {
+  if (angle === 'staff_contact') return 'the staff attention is real';
   if (angle === 'staff' && facts.staffEnergy) {
     if (facts.quote && /energy/i.test(String(facts.quote))) return 'the staff sell is landing';
-    return 'the staff pitch is resonating';
+    return 'the staff sell is landing';
   }
   if (angle === 'board' && facts.boardSignal) return 'UF is on his board early';
-  if (angle === 'visit' && facts.visit?.when) return 'the campus connection is real';
+  if (angle === 'visit' && facts.visit?.when) return 'UF is clearly in the picture after that first look';
   if (facts.rpmTop?.length) return 'Florida is still firmly in the mix';
   return 'UF is clearly still in the mix';
+}
+
+function composeEliteStaffContactArc(facts, ln, beatText = '', opts = {}) {
+  const beat = String(beatText || '').toLowerCase();
+  const firstGainesville =
+    facts.visit?.when === 'his first Gainesville visit' || /first visit to gainesville|first trip to gainesville/i.test(beat);
+
+  let paragraph;
+  if (firstGainesville) {
+    paragraph = `${ln}'s first trip to Gainesville gave Florida a clean early look, and all three DB coaches on UF's staff have been in contact — that's the signal here`;
+  } else {
+    const when = facts.visit?.when === 'first trip' ? 'first trip' : facts.visit?.when || 'Gainesville trip';
+    paragraph = `${ln}'s ${when} gave Florida an early look, and all three DB coaches on UF's staff have been in contact — that's the signal here`;
+  }
+
+  if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
+    paragraph += `. ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board right now, but UF is clearly in the mix because ${eliteTakeaway(facts, 'staff_contact')}.`;
+  } else if (!paragraph.endsWith('.')) {
+    paragraph += '.';
+  }
+
+  return paragraph;
 }
 
 function composeEliteStaffArc(facts, ln, opts = {}) {
@@ -210,8 +294,12 @@ function composeEliteStaffArc(facts, ln, opts = {}) {
   if (opts.eliteShort) {
     let paragraph = `${ln}'s ${visitWhen} UF visit — staff energy drives this`;
     if (facts.quote) {
-      const embedded = quoteForEliteEmbed(facts.quote);
-      if (embedded) paragraph += `. He said he "${embedded}."`;
+      const embed = formatEliteQuoteEmbed(facts.quote);
+      if (embed) paragraph += embed.replace(/^ — /, '. ');
+      else {
+        const embedded = quoteForEliteEmbed(facts.quote);
+        if (embedded) paragraph += `. He said he "${embedded}."`;
+      }
     }
     const hasRpm = facts.rpmTop?.length >= 2 && !opts.trimComp;
     if (facts.followUpSince) {
@@ -232,8 +320,8 @@ function composeEliteStaffArc(facts, ln, opts = {}) {
   let paragraph = `${ln} was on Florida's campus in ${visitWhen}, and staff energy is still the story`;
 
   if (facts.quote) {
-    const embedded = quoteForEliteEmbed(facts.quote);
-    if (embedded) paragraph += ` — he said he "${embedded}."`;
+    const embed = formatEliteQuoteEmbed(facts.quote);
+    if (embed) paragraph += embed;
   } else if (facts.staffEnergy) {
     paragraph += ` — and he loved the energy from UF's staff`;
   }
@@ -270,8 +358,8 @@ function composeEliteVisitArc(facts, ln, beatText = '', opts = {}) {
   }
 
   if (facts.quote) {
-    const embedded = quoteForEliteEmbed(facts.quote);
-    if (embedded) paragraph += ` — he said he "${embedded}."`;
+    const embed = formatEliteQuoteEmbed(facts.quote);
+    if (embed) paragraph += embed;
   } else if (swampTrip && !facts.quote) {
     paragraph += ` — and he left with the Gators on his board early`;
   }
@@ -293,7 +381,7 @@ function composeEliteVisitArc(facts, ln, beatText = '', opts = {}) {
   }
 
   if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
-    paragraph += ` ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the mix because ${eliteTakeaway(facts, 'visit')}.`;
+    paragraph += ` ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the picture after that first look.`;
   } else if (!paragraph.endsWith('.') && !paragraph.endsWith('."')) {
     paragraph += '.';
   }
@@ -305,8 +393,8 @@ function composeEliteBoardArc(facts, ln, opts = {}) {
   let paragraph = `${ln} has Florida in his top-school mix after spring campus time`;
 
   if (facts.quote) {
-    const embedded = quoteForEliteEmbed(facts.quote);
-    if (embedded) paragraph += ` — he said he "${embedded}."`;
+    const embed = formatEliteQuoteEmbed(facts.quote);
+    if (embed) paragraph += embed;
   } else {
     paragraph += ` — and UF is positioned early with him`;
   }
@@ -344,6 +432,8 @@ function composeEliteCompetitionArc(facts, ln, opts = {}) {
 
 function composeEliteArc(facts, anglePick, ln, beatText = '', opts = {}) {
   switch (anglePick.angle) {
+    case 'staff_contact':
+      return composeEliteStaffContactArc(facts, ln, beatText, opts);
     case 'staff':
       return composeEliteStaffArc(facts, ln, opts);
     case 'board':
@@ -440,6 +530,9 @@ function composeFromFacts(facts = {}, anglePick = {}, ctx = {}, opts = {}) {
   let narrative;
 
   switch (angle) {
+    case 'staff_contact':
+      narrative = composeStaffArc(facts, ln, opts, ctx.beatText);
+      break;
     case 'staff':
       narrative = composeStaffArc(facts, ln, opts, ctx.beatText);
       break;
@@ -489,10 +582,13 @@ module.exports = {
   composeFromFacts,
   composeEliteArc,
   composeEliteStaffArc,
+  composeEliteStaffContactArc,
   quoteForEliteEmbed,
+  formatEliteQuoteEmbed,
   quoteToInsiderLine,
   classifySignals,
   extractQuote,
   extractVisit,
-  extractStaffEnergy
+  extractStaffEnergy,
+  extractStaffContact
 };

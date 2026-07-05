@@ -11,7 +11,6 @@ const GENERIC_BANNED = [
   /\bflorida is using campus time to test fit\b/i,
   /\bspending staff capital early after the visit landed\b/i,
   /\bthe gators want more face time\b/i,
-  /\bsaid florida\b/i,
   /\btold on3 the gators are one of his top schools\b/i,
   /\bwas on campus this spring for florida's spring practice\b/i,
   /\bimpressed florida on his first trip\b/i

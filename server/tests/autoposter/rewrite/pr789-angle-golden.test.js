@@ -15,7 +15,7 @@ process.env.X_AUTOPOST_PR789_ANGLE_ENABLED = 'false';
 
 const EXPECTED_ANGLES = {
   drakeford: 'visit',
-  robinson: 'staff',
+  robinson: 'staff_contact',
   willingham: 'board',
   ham: 'staff'
 };

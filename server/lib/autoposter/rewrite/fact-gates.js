@@ -16,7 +16,12 @@ const BANNED_FILLER_PHRASES = Object.freeze([
   /\bthat lane is widening\b/i,
   /\bseparation path against\b/i,
   /\bseparation path\b/i,
-  /\breal shot to separate from\b/i
+  /\breal shot to separate from\b/i,
+  /\bcampus connection is real\b/i,
+  /\bthe staff pitch is resonating\b/i,
+  /\bstaff pitch is resonating\b/i,
+  /\bhe said he "Florida\b/i,
+  /\bhe said he "all three\b/i
 ]);
 
 function validateBannedPhrases(text) {
@@ -30,6 +35,7 @@ function validateBannedPhrases(text) {
 
 function hasBeatSourcedFact(facts = {}) {
   if (facts.quote) return true;
+  if (facts.staffContact === true) return true;
   if (facts.staffEnergy === true) return true;
   if (facts.visit?.when || facts.visit?.school) return true;
   if (facts.boardSignal) return true;
@@ -41,6 +47,8 @@ function hasFactCompletenessForPr789(facts = {}, beatText = '') {
   if (!hasBeatSourcedFact(facts)) return false;
   const beat = String(beatText || '');
   if (facts.quote) return true;
+  if (facts.staffContact && (facts.visit?.when || facts.boardSignal)) return true;
+  if (facts.staffContact) return true;
   if (facts.staffEnergy && (facts.followUpSince || facts.quote)) return true;
   if (facts.staffEnergy && (facts.visit?.when || facts.visit?.school || facts.boardSignal)) return true;
   if (facts.visit?.when && facts.boardSignal) return true;
