@@ -15,6 +15,7 @@ const BANNED_FILLER_PHRASES = Object.freeze([
   /\buf is widening the lane\b/i,
   /\bthat lane is widening\b/i,
   /\bseparation path against\b/i,
+  /\bseparation path\b/i,
   /\breal shot to separate from\b/i
 ]);
 

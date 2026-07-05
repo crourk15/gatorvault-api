@@ -72,8 +72,43 @@ function resolvePublishText(signal, strategyText, metadata = {}) {
   return { ok: false, skipped: true, reason, metadata };
 }
 
+/** Last-mile safety — stale queue copy with banned filler falls back to PR-6, never posts template. */
+function applyPublishSafetyToItem(item = {}) {
+  const text = String(item.text || '').trim();
+  if (!text) return null;
+  if (validateBannedPhrases(text).ok) return item;
+
+  const meta = item.validationMeta || {};
+  const fallbacks = [
+    meta.pr6Shadow?.rewrittenTweet,
+    meta.pr6Text,
+    meta.pr789Text,
+    meta.pr789Shadow?.rewrittenTweet,
+    meta.pr789AngleText,
+    meta.pr789AngleShadow?.rewrittenTweet
+  ].filter(Boolean);
+
+  for (const candidate of fallbacks) {
+    const clean = String(candidate).trim();
+    if (!clean || !validateBannedPhrases(clean).ok) continue;
+    return {
+      ...item,
+      text: clean,
+      validationMeta: {
+        ...meta,
+        bannedPhraseFallback: true,
+        publishTier: 'pr6',
+        originalBlockedText: text.slice(0, 280)
+      }
+    };
+  }
+
+  return null;
+}
+
 module.exports = {
   isTemplatesPublishDisabled,
   resolvePublishText,
-  firstCleanCandidate
+  firstCleanCandidate,
+  applyPublishSafetyToItem
 };

@@ -44,3 +44,20 @@ test('rejects banned phrases even in PR-6 tier', () => {
   assert.equal(out.ok, false);
   assert.equal(out.reason, 'banned_phrases');
 });
+
+test('applyPublishSafetyToItem falls back to PR-6 when queued text has banned filler', () => {
+  const { applyPublishSafetyToItem } = require('../../lib/autoposter/publish-routing');
+  const item = {
+    text: 'Evans visited and the Gators want more face time.',
+    validationMeta: {
+      pr6Shadow: {
+        ok: true,
+        rewrittenTweet: 'Florida surprised Evans on his official visit — Auburn leads his RPM right now.'
+      }
+    }
+  };
+  const out = applyPublishSafetyToItem(item);
+  assert.ok(out);
+  assert.match(out.text, /Auburn leads his RPM/);
+  assert.equal(out.validationMeta.bannedPhraseFallback, true);
+});

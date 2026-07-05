@@ -477,6 +477,32 @@ async function processQueueItem(item) {
     autopostLog('warn', `Intelligence pipeline fallback: ${pipeErr.message}`, { itemId: item.id });
   }
 
+  try {
+    const { applyPublishSafetyToItem } = require('./autoposter/publish-routing');
+    const safeItem = applyPublishSafetyToItem(workingItem);
+    if (!safeItem) {
+      const errMsg = 'banned_phrases_no_pr6_fallback';
+      autopostLog('error', 'Blocked post — banned filler with no clean PR-6 fallback', {
+        itemId: item.id,
+        preview: String(workingItem.text || '').slice(0, 160)
+      });
+      store.updatePost(item.id, {
+        status: 'failed',
+        error: errMsg,
+        validationErrors: [{ type: 'banned_filler', message: errMsg }],
+        sentAt: store.nowIso()
+      });
+      saveSchedulerStatus({ lastError: errMsg });
+      return { ok: false, itemId: item.id, error: errMsg, blocked: true };
+    }
+    if (safeItem.text !== workingItem.text) {
+      workingItem = safeItem;
+      store.updatePost(item.id, { text: workingItem.text, validationMeta: workingItem.validationMeta });
+    }
+  } catch (safetyErr) {
+    autopostLog('warn', `Publish safety check skipped: ${safetyErr.message}`, { itemId: item.id });
+  }
+
   autopostLog('info', 'Posting…', {
     itemId: workingItem.id,
     category: workingItem.category,
