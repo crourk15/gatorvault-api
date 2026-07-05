@@ -121,7 +121,7 @@ const REFILL_INTEL_COLLECT_TIMEOUT_MS = parseInt(
 );
 const REFILL_GOLDEN_FOUR_TIMEOUT_MS = parseInt(process.env.X_AUTOPOST_GOLDEN_FOUR_TIMEOUT_MS || '30000', 10);
 const MAX_BEAT_INTEL_SCAN = parseInt(process.env.X_AUTOPOST_MAX_BEAT_INTEL_SCAN || '32', 10);
-const MAX_BEAT_INTEL_BUILD = parseInt(process.env.X_AUTOPOST_MAX_BEAT_INTEL_BUILD || '6', 10);
+const MAX_BEAT_INTEL_BUILD = parseInt(process.env.X_AUTOPOST_MAX_BEAT_INTEL_BUILD || '4', 10);
 
 function dedupeIntelByPlayerSlug(rows) {
   const bySlug = new Map();
@@ -1676,6 +1676,8 @@ async function refillAutoposterQueue({
     }
   };
 
+  const emptyQueueRefill = pending.length === 0;
+
   if (need > 0) {
     let beatDigDeeper = digDeeper;
     if (beatDigDeeper && hasGoldenFourPending()) {
@@ -1757,6 +1759,47 @@ async function refillAutoposterQueue({
         };
       }
     }
+
+    if (emptyQueueRefill) {
+      if (added === 0 && store.listQueue({ status: 'pending' }).length < minPending) {
+        goldenFourRun = await withRefillTimeout(
+          tryAutonomousGoldenFourRefill(Math.min(Math.max(minPending, 1), maxEnqueue)),
+          REFILL_GOLDEN_FOUR_TIMEOUT_MS,
+          'golden_four_refill'
+        ).catch((err) => ({ ok: false, reason: err.message || String(err) }));
+        goldenEnqueued = (goldenFourRun?.results || []).filter((r) => r.ok);
+        for (const row of goldenEnqueued) {
+          if (!row.itemId) continue;
+          const item = store.loadQueue().items.find((i) => i.id === row.itemId);
+          if (item) {
+            enqueued.push(item);
+            added += 1;
+          }
+        }
+      }
+      void beatPrepPromise;
+      return {
+        ok: true,
+        skipped: added === 0,
+        reason:
+          added > 0
+            ? goldenEnqueued.length
+              ? 'empty_queue_golden_four'
+              : 'empty_queue_intel'
+            : 'empty_queue_miss',
+        pending: store.listQueue({ status: 'pending' }).length,
+        enqueued,
+        enqueuedCount: enqueued.length,
+        qualitySkipped,
+        skipReasons,
+        digDeeper: forcePost || digDeeper,
+        beatPrep: null,
+        goldenFour: goldenFourRun,
+        detectivesRun: null,
+        emptyQueueFallback: false
+      };
+    }
+
     if (!rawNewsCandidates.length) {
       try {
         rawNewsCandidates = await withRefillTimeout(
