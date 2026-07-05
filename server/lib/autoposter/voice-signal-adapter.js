@@ -173,6 +173,8 @@ function signalFromBeatPost(beatPost, research = null, playerData = null) {
             pos: playerData.data.pos,
             classYear: playerData.data.classYear,
             school: playerData.data.school || playerData.data.highSchool || null,
+            state: playerData.data.state || playerData.data.hometownState || null,
+            hometownState: playerData.data.hometownState || playerData.data.state || null,
             stars: playerData.data.stars || null,
             natlRank: playerData.data.natlRank || null,
             posRank: playerData.data.posRank || null,

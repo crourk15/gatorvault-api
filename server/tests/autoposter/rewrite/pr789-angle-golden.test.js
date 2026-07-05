@@ -68,6 +68,22 @@ test('PR-789 angle live on golden when PR7/8/9 enabled and all four ranked', () 
   assert.doesNotMatch(out.text, /face time|Marietta/i);
 });
 
+test('PR-789 angle live embeds Drakeford Swamp quote in visit arc', () => {
+  const { setGoldenFourRankingCompleteForTests } = require('../../../lib/player-intelligence/golden-four-on3');
+  setGoldenFourRankingCompleteForTests(true);
+  process.env.X_AUTOPOST_PR6_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR7_8_9_ENABLED = 'true';
+  process.env.X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE = 'true';
+  const signal = toSignal(GOLDEN_BEATS.find((b) => b.id === 'drakeford'));
+  signal.playerSlug = 'ryan-drakeford';
+  const out = voiceEngine.autoposterCompose(signal);
+  assert.equal(out.ok, true);
+  assert.equal(out.metadata?.pr789AngleLive, true);
+  assert.match(out.text, /first trip to The Swamp/i);
+  assert.match(out.text, /top of my board/i);
+  assert.doesNotMatch(out.text, /left with the Gators on his board early/i);
+});
+
 test('PR-789 angle live blocked until all four golden rankings complete', () => {
   const { setGoldenFourRankingCompleteForTests } = require('../../../lib/player-intelligence/golden-four-on3');
   setGoldenFourRankingCompleteForTests(false);

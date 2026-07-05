@@ -96,3 +96,73 @@ test('Ham facts-only copy avoids banned filler and mentions real rivals', () => 
   assert.doesNotMatch(out.narrative, /face time/i);
   assert.doesNotMatch(out.narrative, /lane widening/i);
 });
+
+const DRAKEFORD_BEAT = GOLDEN_BEATS.find((b) => b.id === 'drakeford');
+
+test('Drakeford beat extracts quote and board signal from Swamp visit beat', () => {
+  const facts = extractBeatFacts(DRAKEFORD_BEAT.beatText, {
+    metrics: DRAKEFORD_BEAT.metrics,
+    player: DRAKEFORD_BEAT.player
+  });
+  assert.match(facts.quote, /top of my board/i);
+  assert.equal(facts.boardSignal, true);
+  assert.equal(facts.visit?.school, 'Florida');
+  const pick = selectAngleFromFacts(facts, DRAKEFORD_BEAT.beatText);
+  assert.equal(pick.angle, 'visit');
+});
+
+test('Drakeford elite visit arc keeps Swamp hook and embeds beat quote', () => {
+  const facts = extractBeatFacts(DRAKEFORD_BEAT.beatText, {
+    metrics: DRAKEFORD_BEAT.metrics,
+    player: DRAKEFORD_BEAT.player
+  });
+  const pick = selectAngleFromFacts(facts, DRAKEFORD_BEAT.beatText);
+  const out = composeFromFacts(
+    facts,
+    pick,
+    { lastName: 'Drakeford', beatText: DRAKEFORD_BEAT.beatText },
+    { mode: 'elite' }
+  );
+  const banned = validateBannedPhrases(out.narrative);
+  assert.equal(banned.ok, true, JSON.stringify(banned.violations));
+  assert.match(out.narrative, /first trip to The Swamp/i);
+  assert.match(out.narrative, /top of my board/i);
+  assert.doesNotMatch(out.narrative, /left with the Gators on his board early/i);
+});
+
+test('Drakeford elite visit arc appends RPM rivals when rpmTop is present', () => {
+  const facts = extractBeatFacts(DRAKEFORD_BEAT.beatText, {
+    metrics: {
+      ...DRAKEFORD_BEAT.metrics,
+      rpmTop: [
+        { school: 'Auburn', pct: 24 },
+        { school: 'Georgia Tech', pct: 19 }
+      ]
+    },
+    player: DRAKEFORD_BEAT.player
+  });
+  const pick = selectAngleFromFacts(facts, DRAKEFORD_BEAT.beatText);
+  const out = composeFromFacts(
+    facts,
+    pick,
+    { lastName: 'Drakeford', beatText: DRAKEFORD_BEAT.beatText },
+    { mode: 'elite' }
+  );
+  assert.match(out.narrative, /Auburn and Georgia Tech lead his RPM board/i);
+  assert.match(out.narrative, /top of my board/i);
+});
+
+test('Swamp visit without quote still uses board fallback line', () => {
+  const beat =
+    'Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp.';
+  const facts = extractBeatFacts(beat, { metrics: {}, player: DRAKEFORD_BEAT.player });
+  const pick = selectAngleFromFacts(facts, beat);
+  const out = composeFromFacts(
+    facts,
+    pick,
+    { lastName: 'Drakeford', beatText: beat },
+    { mode: 'elite' }
+  );
+  assert.match(out.narrative, /left with the Gators on his board early/i);
+  assert.doesNotMatch(out.narrative, /he said he/i);
+});

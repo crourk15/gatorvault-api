@@ -259,27 +259,42 @@ function composeEliteStaffArc(facts, ln, opts = {}) {
 
 function composeEliteVisitArc(facts, ln, beatText = '', opts = {}) {
   const beat = String(beatText || '').toLowerCase();
-  if (/swamp|first trip/i.test(beat)) {
-    return `${ln}'s first trip to The Swamp gave Florida real traction — and he left with the Gators on his board early.`;
-  }
+  const swampTrip = /swamp|first trip/i.test(beat);
+  let paragraph;
 
-  const when = facts.visit?.when || 'campus';
-  let paragraph = `${ln} was on Florida's campus in ${when}, and that trip put UF in his early mix with real traction`;
+  if (swampTrip) {
+    paragraph = `${ln}'s first trip to The Swamp gave Florida early traction`;
+  } else {
+    const when = facts.visit?.when || 'campus';
+    paragraph = `${ln} was on Florida's campus in ${when}, and that trip put UF in his early mix with real traction`;
+  }
 
   if (facts.quote) {
     const embedded = quoteForEliteEmbed(facts.quote);
     if (embedded) paragraph += ` — he said he "${embedded}."`;
+  } else if (swampTrip && !facts.quote) {
+    paragraph += ` — and he left with the Gators on his board early`;
   }
 
-  if (facts.boardSignal) {
+  if (!facts.quote && facts.boardSignal && !swampTrip) {
     paragraph += ` He's already listing Florida among his top schools.`;
-  } else if (!facts.quote) {
-    paragraph += '.';
+  }
+
+  if (facts.followUpSince) {
+    paragraph += opts.trimFollowUp
+      ? ` That pitch picked up since ${facts.followUpSince}.`
+      : ` That same pitch has only picked up since ${facts.followUpSince}.`;
+  } else if (facts.staffEnergy && !facts.quote) {
+    paragraph += swampTrip
+      ? ` — and he loved the energy from UF's staff.`
+      : ` — and he loved the energy from UF's staff.`;
+  } else if (facts.staffEnergy && facts.visit?.when === 'this spring') {
+    paragraph += `, and the staff has kept that lane warm since spring.`;
   }
 
   if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
     paragraph += ` ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the mix because ${eliteTakeaway(facts, 'visit')}.`;
-  } else if (!paragraph.endsWith('.')) {
+  } else if (!paragraph.endsWith('.') && !paragraph.endsWith('."')) {
     paragraph += '.';
   }
 

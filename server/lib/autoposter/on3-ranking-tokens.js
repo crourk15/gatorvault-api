@@ -40,7 +40,13 @@ function extractOn3RankingTokens(source = {}) {
 }
 
 function resolveStateAbbr(player = {}) {
-  const raw = player.state || player.stateAbbr || player.homeState || player.homeTownState || '';
+  const raw =
+    player.state ||
+    player.stateAbbr ||
+    player.homeState ||
+    player.hometownState ||
+    player.homeTownState ||
+    '';
   const s = String(raw).trim().toUpperCase();
   return /^[A-Z]{2}$/.test(s) ? s : null;
 }

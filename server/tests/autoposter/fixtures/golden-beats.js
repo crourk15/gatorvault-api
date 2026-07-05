@@ -3,7 +3,7 @@
 const GOLDEN_BEATS = [
   {
     id: 'drakeford',
-    player: { name: 'Ryan Drakeford', pos: 'S', classYear: 2028, school: 'GA' },
+    player: { name: 'Ryan Drakeford', pos: 'S', classYear: 2028, school: 'Quince Orchard', state: 'MD' },
     beatText:
       'Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp. "Florida is one of those schools at the top of my board."',
     metrics: { rpm: null, visitDate: null, compSchools: [], depthChartNote: null, schemeNote: null }

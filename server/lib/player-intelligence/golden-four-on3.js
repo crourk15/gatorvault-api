@@ -90,6 +90,8 @@ async function syncGoldenFourPlayerFromOn3(slug) {
     topTeams: profile.topTeams || [],
     competitors: competitorsFromBoard.length ? competitorsFromBoard : existing?.competitors || [],
     ufRpmPct: ufRpmPct != null && Number.isFinite(ufRpmPct) ? ufRpmPct : existing?.ufRpmPct ?? null,
+    hometownState: profile.state || profilePatch.state || existing?.hometownState || null,
+    hometownCity: profile.hometownCity || existing?.hometownCity || null,
     on3ProfileUrl: profile.on3ProfileUrl || `https://www.on3.com/rivals/${recruitSlug}/`,
     on3Source: 'golden-four-on3-sync',
     updatedAt: new Date().toISOString()

@@ -27,14 +27,25 @@ const REGION_RE =
   /\b(corridor|pipeline|in-state|in state|local gravity|hometown|metro|region)\b/i;
 
 const KNOWN_COLLEGE_PATTERN =
-  /\b(florida state|fsu|georgia|uga|alabama|auburn|vanderbilt|vandy|lsu|tennessee|clemson|miami|ohio state|texas|texas a&m|notre dame|penn state|michigan|usc|ucla|oregon|oklahoma|arkansas|mississippi state|ole miss|south carolina|kentucky|missouri|wisconsin|iowa|nebraska|duke|north carolina|nc state|virginia|virginia tech|pittsburgh|syracuse|boston college|louisville|baylor|tcu|oklahoma state|kansas state|west virginia|memphis|ucf|usf)\b/i;
+  /\b(florida state|fsu|georgia|uga|alabama|auburn|vanderbilt|vandy|lsu|tennessee|clemson|miami|ohio state|texas|texas a&m|notre dame|penn state|michigan|usc|ucla|oregon|oklahoma|arkansas|mississippi state|ole miss|south carolina|kentucky|missouri|wisconsin|iowa|nebraska|duke|north carolina|nc state|virginia|virginia tech|pittsburgh|syracuse|boston college|louisville|baylor|tcu|oklahoma state|kansas state|west virginia|memphis|ucf|usf|maryland)\b/i;
+
+const ON3_MASCOT_SUFFIX_RE =
+  /\s+(Nittany Lions|Terrapins|Cavaliers|Buckeyes|Volunteers|Commodores|Fighting Irish|Crimson Tide|Sun Devils|Scarlet Knights|Blue Devils|Tar Heels|Demon Deacons|Mountaineers|Golden Gophers|Rainbow Warriors|Seminoles|Bulldogs|Tigers|Wildcats|Eagles|Panthers|Hurricanes|Orange|Spartans|Wolverines|Badgers|Hawkeyes|Cornhuskers|Boilermakers|Jayhawks|Cyclones|Cowboys|Longhorns|Sooners|Aggies|Rebels|Razorbacks|Gamecocks|Knights|Cougars|Cardinals|Bearcats|Utes|Buffaloes|Ducks|Beavers|Trojans|Bruins|Gators|Yellow Jackets|Wolfpack|Hokies)$/i;
+
+function stripOn3Mascot(name) {
+  return String(name || '')
+    .replace(ON3_MASCOT_SUFFIX_RE, '')
+    .trim();
+}
 
 function normalizeSchoolName(raw) {
   const key = String(raw || '')
     .trim()
     .toLowerCase();
   if (!key) return null;
-  return COLLEGE_ALIASES[key] || String(raw).trim();
+  const stripped = stripOn3Mascot(String(raw).trim());
+  const strippedKey = stripped.toLowerCase();
+  return COLLEGE_ALIASES[strippedKey] || COLLEGE_ALIASES[key] || stripped;
 }
 
 function isBlockedSchool(name, ctx = {}) {

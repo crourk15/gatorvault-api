@@ -43,3 +43,9 @@ test('appendRankingTokensToIdentity uses state abbr when provided', () => {
   const line = appendRankingTokensToIdentity('2028 EDGE Merrick Ham', tokens, 'EDGE', { stateAbbr: 'GA' });
   assert.match(line, /No\. 14 GA/);
 });
+
+test('resolveStateAbbr reads hometownState from recruiting store shape', () => {
+  const { resolveStateAbbr } = require('../../lib/autoposter/on3-ranking-tokens');
+  assert.equal(resolveStateAbbr({ hometownState: 'MD' }), 'MD');
+  assert.equal(resolveStateAbbr({ state: 'MD' }), 'MD');
+});
