@@ -1,6 +1,7 @@
 /** PR-6 — constants and env flags. */
 
-const CHAR_LIMIT = parseInt(process.env.VOICE_CHAR_LIMIT || '280', 10);
+const { getTweetCharLimit } = require('../tweet-char-limit');
+
 const MAX_REWRITE_ATTEMPTS = 3;
 
 const GENERIC_BANNED = [
@@ -79,7 +80,9 @@ function isPr789AngleEnabled() {
 }
 
 module.exports = {
-  CHAR_LIMIT,
+  get CHAR_LIMIT() {
+    return getTweetCharLimit();
+  },
   MAX_REWRITE_ATTEMPTS,
   GENERIC_BANNED,
   MECHANICAL_BANNED,

@@ -10,6 +10,7 @@ const insiderToneGuide = require('./autoposter/insider-tone');
 const postingEngineRules = require('./autoposter/posting-engine');
 const rewriteQuality = require('./autoposter/quality-checks');
 const autoposterPolicy = require('./autoposter/autoposter-policy');
+const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 
@@ -158,8 +159,11 @@ function validatePostContent(item) {
     errors.push({ field: 'text', message: 'Post text required' });
   }
 
-  if (text.length > 280) {
-    errors.push({ field: 'text', message: 'Post text exceeds 280 characters' });
+  if (text.length > getTweetCharLimit()) {
+    errors.push({
+      field: 'text',
+      message: `Post text exceeds ${getTweetCharLimit()} characters`
+    });
   }
 
   if (containsInventedClaims(text)) {

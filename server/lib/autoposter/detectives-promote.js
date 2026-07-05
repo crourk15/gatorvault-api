@@ -5,6 +5,7 @@ const voiceEngine = require('./voice-engine');
 const metricsRepair = require('./detectives-metrics');
 const store = require('./detectives-store');
 const { SITE_URL } = require('./discovery-core');
+const { getTweetCharLimit } = require('./tweet-char-limit');
 
 function hasPromotableMetrics(metrics = {}) {
   if (metrics.rpm != null && Number(metrics.rpm) > 0) return true;
@@ -124,7 +125,7 @@ async function buildVoicePromoteCandidate({ caseItem, hints, identity, platformC
 function buildResolvedCandidateSnapshot(candidate) {
   const meta = candidate?.validationMeta || {};
   return {
-    text: candidate?.text?.slice(0, 280) || null,
+    text: candidate?.text?.slice(0, getTweetCharLimit()) || null,
     playerSlug: candidate?.playerSlug || null,
     rewriteMeta: {
       pr789Live: meta.pr789Live === true,

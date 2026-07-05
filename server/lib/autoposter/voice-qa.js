@@ -7,6 +7,7 @@ const insiderTone = require('./insider-tone');
 const phraseMemory = require('./voice-phrase-memory');
 const { blocksHaveTruncation } = require('./strategy/strategy-guard');
 const { isCompleteSentence } = require('./strategy/strategy-sentences');
+const { getTweetCharLimit } = require('./tweet-char-limit');
 
 const UF_LINK_RE =
   /\b(board|depth|scheme|portal|class|visit|rpm|install|trench|recruit|target|priority|mix|race|window|camp|campus|rep|schools|practice|spring|tracking|leaderboard)\b/i;
@@ -229,7 +230,7 @@ function runQualityGate(signal, blocks, text, candidate = {}, opts = {}) {
     if (templateOverlapScore(text, overlapOpts) > 0.45) reasons.push('template_overlap');
   }
 
-  if (String(text || '').length > parseInt(process.env.VOICE_CHAR_LIMIT || '280', 10)) {
+  if (String(text || '').length > getTweetCharLimit()) {
     reasons.push('char_limit');
   }
 

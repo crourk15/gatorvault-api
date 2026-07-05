@@ -11,8 +11,8 @@ const { blocksHaveTruncation } = require('./strategy/strategy-guard');
 const { isCompleteSentence } = require('./strategy/strategy-sentences');
 const pr6Rewrite = require('./rewrite');
 const { appendRankingTokensToIdentity } = require('./on3-ranking-tokens');
+const { getTweetCharLimit } = require('./tweet-char-limit');
 
-const CHAR_LIMIT = parseInt(process.env.VOICE_CHAR_LIMIT || '280', 10);
 const MAX_ATTEMPTS = parseInt(process.env.VOICE_COMPOSE_MAX_ATTEMPTS || '2', 10);
 
 const DETECTIVE_HOOK_FALLBACKS = [
@@ -220,14 +220,14 @@ function aggressiveCompress(blocks, mode) {
   lines.push(joinParts([blocks.strategy, blocks.hook]));
   lines.push(blocks.cta);
   let text = lines.filter(Boolean).join('\n');
-  if (text.length > CHAR_LIMIT) {
-    text = template.enforceTweetLimit(text, CHAR_LIMIT, { sport: 'football', voiceEngine: true }) || text;
+  if (text.length > getTweetCharLimit()) {
+    text = template.enforceTweetLimit(text, getTweetCharLimit(), { sport: 'football', voiceEngine: true }) || text;
   }
   return text;
 }
 
 function withinCharLimit(text) {
-  return String(text || '').length <= CHAR_LIMIT;
+  return String(text || '').length <= getTweetCharLimit();
 }
 
 function toLegacyTemplateBlocks(blocks) {
@@ -391,7 +391,7 @@ function autoposterCompose(signal, opts = {}) {
       }
       if (!withinCharLimit(text) && attempt >= 2 && !isV2Blocks(blocks)) {
         text =
-          template.enforceTweetLimit(text, CHAR_LIMIT, { sport: 'football', voiceEngine: true }) || text;
+          template.enforceTweetLimit(text, getTweetCharLimit(), { sport: 'football', voiceEngine: true }) || text;
       }
       if (!withinCharLimit(text)) {
         lastQa = { passed: false, reason: 'char_limit' };
@@ -666,6 +666,8 @@ module.exports = {
   compressBlocksToText,
   toLegacyTemplateBlocks,
   buildIdentityLine,
-  CHAR_LIMIT,
+  get CHAR_LIMIT() {
+    return getTweetCharLimit();
+  },
   MAX_ATTEMPTS
 };

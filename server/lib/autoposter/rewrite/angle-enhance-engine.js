@@ -42,10 +42,9 @@ const { validateBannedPhrases, hasFactCompletenessForPr789 } = require('./fact-g
 
 const { resolveValidCompSchools } = require('./comp-sourcing');
 
-
+const { isExtendedTweetLimit } = require('../tweet-char-limit');
 
 function runAngleGates(narrative, tweet, pr5Pack, signal) {
-
   const sentenceLines = String(narrative || '')
     .split(/(?<=\.)\s+/)
     .filter(Boolean);
@@ -153,7 +152,9 @@ function enhanceAngleFromBeatFacts(pr6Pack, pr5Pack, signal = {}, pr789Pack = nu
   const hasRpmTop = (signal.metrics?.rpmTop || facts.rpmTop || []).length >= 2;
   const composeOpts =
     anglePick.angle === 'staff'
-      ? { mode: 'elite', eliteShort: true, trimComp: !hasRpmTop }
+      ? isExtendedTweetLimit()
+        ? { mode: 'elite' }
+        : { mode: 'elite', eliteShort: true, trimComp: !hasRpmTop }
       : { mode: 'single', compact: true, angleArc: true };
 
   const composed = composeFromFacts(facts, anglePick, ctx, composeOpts);

@@ -8,6 +8,7 @@ const { loadOAuth1Credentials, isOAuth1Configured, oauth1Request, oauth1RequestJ
 const store = require('./x-autoposter-store');
 const intelStore = require('./recruiting-intel-store');
 const policy = require('./x-autoposter-policy');
+const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
 const cadence = require('./x-autoposter-cadence');
 const freshness = require('./autoposter-freshness');
@@ -195,7 +196,9 @@ async function postTweet({
     if (m) payload.quote_tweet_id = m[1];
   }
 
-  if (status.length > 280) throw new Error('Tweet exceeds 280 characters');
+  if (status.length > getTweetCharLimit()) {
+    throw new Error(`Tweet exceeds ${getTweetCharLimit()} characters`);
+  }
 
   const data = await oauth1RequestJson({
     method: 'POST',
@@ -232,7 +235,7 @@ function duplicateRecoveryText(text) {
   const base = String(text || '').trim();
   if (!base || /#GoGators\b/i.test(base)) return null;
   const suffix = '\n#GoGators';
-  if (base.length + suffix.length > 280) return null;
+  if (base.length + suffix.length > getTweetCharLimit()) return null;
   return `${base}${suffix}`;
 }
 

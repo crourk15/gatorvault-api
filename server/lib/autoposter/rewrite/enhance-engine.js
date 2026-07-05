@@ -52,10 +52,9 @@ const { validateBannedPhrases, hasFactCompletenessForPr789 } = require('./fact-g
 
 const { resolveValidCompSchools } = require('./comp-sourcing');
 
-
+const { isExtendedTweetLimit } = require('../tweet-char-limit');
 
 function buildIdentityWithRanking(identityLine, signal, opts = {}) {
-
   if (!identityLine) return identityLine;
 
 
@@ -196,7 +195,12 @@ function enhanceFromBeatFacts(pr6Pack, pr5Pack, signal = {}) {
 
   const anglePick = selectAngleFromFacts(facts, ctx.beatText);
 
-  const composed = composeFromFacts(facts, anglePick, ctx, { mode: 'elite', trimTakeaway: true });
+  const composed = composeFromFacts(
+    facts,
+    anglePick,
+    ctx,
+    isExtendedTweetLimit() ? { mode: 'elite' } : { mode: 'elite', trimTakeaway: true }
+  );
 
   const narrative1 = ensurePeriod(composed.narrative1 || composed.narrative);
 
