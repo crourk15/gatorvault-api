@@ -11,6 +11,7 @@ const postingEngineRules = require('./autoposter/posting-engine');
 const rewriteQuality = require('./autoposter/quality-checks');
 const autoposterPolicy = require('./autoposter/autoposter-policy');
 const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
+const { validateBannedPhrases } = require('./autoposter/rewrite/fact-gates');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 
@@ -157,6 +158,18 @@ function validatePostContent(item) {
   }
   if (!text) {
     errors.push({ field: 'text', message: 'Post text required' });
+  }
+
+  if (text) {
+    const banned = validateBannedPhrases(text);
+    if (!banned.ok) {
+      errors.push({
+        field: 'text',
+        type: 'banned_filler',
+        message: 'Post contains banned template filler (face time, separation path, etc.).',
+        violations: banned.violations
+      });
+    }
   }
 
   if (text.length > getTweetCharLimit()) {

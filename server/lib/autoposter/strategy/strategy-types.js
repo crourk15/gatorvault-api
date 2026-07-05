@@ -8,7 +8,13 @@ const BANNED_STRATEGY_PHRASES = [
   'UF is in a strong position early on',
   'UF is using campus time to test fit',
   'Player-led board momentum puts UF in an active lane',
-  'Staff frequency is elevated — UF is spending relationship capital'
+  'Staff frequency is elevated — UF is spending relationship capital',
+  'face time',
+  'separation path',
+  'lane widening',
+  'momentum in this cycle',
+  'want more face time',
+  'gators want more face time'
 ];
 
 const GOLDEN_OVERLAP_THRESHOLD = 0.35;

@@ -65,7 +65,7 @@ function buildContextLine(signals, identity = {}, ufContext = {}, beatText = '')
   } else if (hasSignalType(signals, 'quote') && hasSignalType(signals, 'visit')) {
     line = `${ln} is open to another Gainesville trip and said Florida remains in the mix.`;
   } else if (visit?.tokens?.[0]) {
-    line = `${ln} visited Florida's campus recently, and the Gators want more face time.`;
+    line = `${ln} was on Florida's campus recently, and UF remains in the picture.`;
   } else if (board?.tokens?.[0]) {
     line = `${ln} told reporters Florida remains one of his top schools in this cycle.`;
   } else if (comp?.tokens?.length) {

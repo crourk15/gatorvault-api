@@ -4,6 +4,7 @@
 const copy = require('../x-autoposter-copy');
 const template = require('../x-autoposter-template');
 const validation = require('../x-autoposter-validation');
+const { validateBannedPhrases } = require('./rewrite/fact-gates');
 
 const GENERIC_PROSPECT_COPY_RE = [
   /the prospect is on uf's board/i,
@@ -170,6 +171,7 @@ function voiceEngineRequired(raw) {
 
 function passesPublishGate(raw) {
   if (!raw?.text) return false;
+  if (!validateBannedPhrases(raw.text).ok) return false;
   if (voiceEngineRequired(raw)) return passesVoicePublishGate(raw);
   if (raw?.validationMeta?.voiceEngine) return passesVoicePublishGate(raw);
   const text = String(raw.text || '').trim();

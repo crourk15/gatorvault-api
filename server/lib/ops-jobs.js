@@ -453,6 +453,20 @@ const JOBS = {
       return result;
     }
   },
+  'golden-four-enqueue': {
+    label: 'Enqueue golden-four elite posts (Drakeford → Robinson → Willingham)',
+    subsystem: 'autoposter:golden-four-enqueue',
+    schedule: 'On demand — PR-789 elite compose + queue',
+    async run(opts = {}) {
+      const { enqueueGoldenFourPosts } = require('./player-intelligence/golden-four-enqueue');
+      return enqueueGoldenFourPosts({
+        slugs: opts.slugs,
+        includeHam: opts.includeHam === true,
+        clearPendingNonGolden: opts.clearPendingNonGolden !== false,
+        scheduleGapMs: opts.scheduleGapMs
+      });
+    }
+  },
   'self-runner-purge-legacy-dedupe': {
     label: 'Reject legacy addDedupeRule Self-Runner proposals',
     subsystem: 'self-runner:cleanup',

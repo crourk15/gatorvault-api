@@ -64,9 +64,9 @@ function buildTemplates(identity = {}) {
     visit_only: (s) => {
       const comp = compPhrase(s);
       if (comp) {
-        return `That campus visit gives Florida a separation path against ${comp}.`;
+        return `${ln}'s campus visit keeps Florida in the mix while ${comp} stay on his board.`;
       }
-      return `That campus visit gives Florida the proof it needs with ${ln}.`;
+      return `That campus visit keeps Florida in the picture with ${ln}.`;
     },
     board_only: (s) => {
       return `${ln} ${boardPhrase(tokenOf(s, 'board'))}, and Florida needs the next visit to keep climbing.`;
