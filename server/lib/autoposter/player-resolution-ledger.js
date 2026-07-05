@@ -171,6 +171,16 @@ function isTerminalCaseStatus(status) {
   return TERMINAL_CASE_STATUSES.has(String(status || ''));
 }
 
+function clearPlayerResolution(slug) {
+  const key = normalizeSlug(slug);
+  if (!key) return false;
+  const doc = loadLedger();
+  if (!doc.players[key]) return false;
+  delete doc.players[key];
+  saveLedger(doc);
+  return true;
+}
+
 function mapSkipCodeToArchiveReason(primaryCode, skipReason) {
   const code = String(primaryCode || skipReason || '').toUpperCase();
   if (code.includes('COMMITTED')) return 'committed_elsewhere';
@@ -196,6 +206,7 @@ module.exports = {
   getPlayerResolution,
   markResolvedPublish,
   markResolvedArchive,
+  clearPlayerResolution,
   checkPlayerResolution,
   listArchivedSlugs,
   isTerminalCaseStatus,

@@ -9,8 +9,10 @@ const cadence = require('../x-autoposter-cadence');
 const { validateBannedPhrases } = require('../autoposter/rewrite/fact-gates');
 const { GOLDEN_FOUR_PROD_SLUGS } = require('./golden-four-on3');
 const { syncGoldenFourPlayerFromOn3, refreshGoldenFourRankingCache } = require('./golden-four-on3');
+const { composeGoldenFourFactPost } = require('./golden-four-compose');
 const preflight = require('../autoposter/player-resolution-preflight');
 const resolutionLedger = require('../autoposter/player-resolution-ledger');
+const recruitingStore = require('../recruiting-store');
 
 const DEFAULT_ORDER = Object.freeze([
   'ryan-drakeford',
@@ -39,8 +41,18 @@ function slugAlreadyPending(slug, items = []) {
   );
 }
 
-async function composeGoldenFourPost(slug, intel) {
-  return eliteCaption.buildElitePlayerPost({
+async function composeGoldenFourPost(slug, intel, on3Sync, playerRow) {
+  const factBuilt = composeGoldenFourFactPost({
+    slug,
+    intel,
+    on3Sync,
+    playerRow
+  });
+  if (factBuilt?.ok && factBuilt.text) {
+    return factBuilt;
+  }
+
+  const voiceBuilt = await eliteCaption.buildElitePlayerPost({
     playerName: intel.playerName,
     playerSlug: slug,
     beatText: intel.detail || intel.skinny,
@@ -52,6 +64,24 @@ async function composeGoldenFourPost(slug, intel) {
     },
     source: intel.source || 'golden-four-enqueue'
   });
+
+  if (voiceBuilt?.ok && voiceBuilt.text) {
+    const { PR6_FALLBACK_RE } = require('./golden-four-compose');
+    if (PR6_FALLBACK_RE.test(voiceBuilt.text)) {
+      return {
+        ok: false,
+        reason: 'pr6_fallback_blocked',
+        factReason: factBuilt?.reason || null,
+        voiceReason: 'pr6_template_detected'
+      };
+    }
+  }
+
+  return {
+    ...(voiceBuilt || { ok: false }),
+    reason: voiceBuilt?.reason || factBuilt?.reason || 'compose_failed',
+    factReason: factBuilt?.reason || null
+  };
 }
 
 function slugRecentlySent(slug, intelFingerprint = null) {
@@ -168,9 +198,15 @@ async function enqueueGoldenFourPosts(opts = {}) {
 
     await refreshGoldenFourRankingCache();
 
-    const elite = await composeGoldenFourPost(slug, intel);
+    const playerRow = await recruitingStore.getPlayerBySlug(slug);
+    const elite = await composeGoldenFourPost(slug, intel, on3Sync, playerRow);
     if (!elite?.ok || !elite.text) {
-      results.push({ slug, ok: false, reason: elite?.reason || elite?.skipReason || 'compose_failed' });
+      results.push({
+        slug,
+        ok: false,
+        reason: elite?.reason || elite?.skipReason || 'compose_failed',
+        factReason: elite?.factReason || null
+      });
       continue;
     }
 

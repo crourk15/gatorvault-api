@@ -4,6 +4,7 @@
  */
 const { validateBannedPhrases } = require('./rewrite/fact-gates');
 const { isPr6Enabled } = require('./rewrite/rewrite-types');
+const { resolveGoldenBeatId } = require('./rewrite/golden-beats');
 
 function isTemplatesPublishDisabled() {
   return process.env.X_DISABLE_TEMPLATES !== 'false';
@@ -45,6 +46,15 @@ function resolvePublishText(signal, strategyText, metadata = {}) {
 
   const picked = firstCleanCandidate(candidates);
   if (picked) {
+    const goldenBeatId = signal ? resolveGoldenBeatId(signal) : null;
+    if (picked.tier === 'pr6' && goldenBeatId) {
+      return {
+        ok: false,
+        skipped: true,
+        reason: 'golden_pr6_blocked',
+        metadata: { ...metadata, publishTier: 'pr6_blocked', goldenBeatId }
+      };
+    }
     return {
       ok: true,
       text: picked.text,

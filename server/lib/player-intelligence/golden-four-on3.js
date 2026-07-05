@@ -176,6 +176,7 @@ async function getGoldenFourRankingStatus(prefetchedResults = null) {
 module.exports = {
   GOLDEN_FOUR_PROD_SLUGS,
   GOLDEN_ON3_RECRUIT_SLUGS,
+  GOLDEN_PLAYER_DEFAULTS,
   isGoldenProdSlug,
   on3RecruitSlugFor,
   syncGoldenFourPlayerFromOn3,
