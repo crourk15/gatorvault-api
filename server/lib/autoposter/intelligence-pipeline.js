@@ -155,6 +155,65 @@ function buildTweetFromRewrite(player, rewriteText, meta = {}) {
   return text;
 }
 
+/** Refresh elite copy at publish time so queued text stays current with live On3 + PR-789. */
+async function tryEliteRecomposeAtPostTime(item = {}) {
+  const eliteCaption = require('../x-autoposter-elite-caption');
+  if (!eliteCaption.isEliteModeEnabled()) return null;
+
+  const intelForElite = pipelineGuards.guardIntelForPipeline(findIntelForItem(item));
+  const beatForElite = intelToBeatText(intelForElite, item);
+  const playerName = item.playerName || intelForElite?.playerName;
+  const playerSlug = item.playerSlug || intelForElite?.playerSlug;
+  if (!playerName || (!beatForElite && !playerSlug)) return null;
+
+  try {
+    const elite = await eliteCaption.buildElitePlayerPost({
+      playerName,
+      playerSlug,
+      beatText: beatForElite || null,
+      intel: intelForElite || {
+        playerName,
+        playerSlug,
+        detail: beatForElite || item.text,
+        eventType: item.intelType || item.sourceEventType,
+        source: item.source
+      },
+      source: item.source
+    });
+    if (!elite?.ok || !elite.text) return null;
+
+    monitoring.logAutoposterEvent('elite_compose_success', {
+      itemId: item.id,
+      playerName: elite.playerName,
+      eventType: elite.validationMeta?.eventType,
+      refreshedAtPost: true
+    });
+    return {
+      ok: true,
+      item: {
+        ...item,
+        text: elite.text,
+        playerName: elite.playerName || item.playerName,
+        playerSlug: elite.playerSlug || item.playerSlug,
+        templateBlocks: elite.templateBlocks,
+        validationMeta: {
+          ...(item.validationMeta || {}),
+          ...(elite.validationMeta || {}),
+          eliteCompose: true,
+          beatText: beatForElite
+        }
+      },
+      elite: true
+    };
+  } catch (err) {
+    monitoring.logAutoposterEvent('elite_compose_skip', {
+      itemId: item.id,
+      error: err.message
+    });
+    return null;
+  }
+}
+
 async function prepareQueueItemForPost(item = {}) {
   if (!pipelineGuards.pipelinesEnabled()) {
     return { ok: true, item, skipped: true, reason: 'pipelines disabled' };
@@ -172,62 +231,11 @@ async function prepareQueueItemForPost(item = {}) {
   const verifiedBypass = bypassRewriteForVerifiedCommit(item);
   if (verifiedBypass) return verifiedBypass;
 
+  const eliteRecomposed = await tryEliteRecomposeAtPostTime(item);
+  if (eliteRecomposed) return eliteRecomposed;
+
   const elitePremadeBypass = bypassRewriteForElitePremade(item);
   if (elitePremadeBypass) return elitePremadeBypass;
-
-  const eliteCaption = require('../x-autoposter-elite-caption');
-  if (eliteCaption.isEliteModeEnabled()) {
-    const intelForElite = pipelineGuards.guardIntelForPipeline(findIntelForItem(item));
-    const beatForElite = intelToBeatText(intelForElite, item);
-    const playerName = item.playerName || intelForElite?.playerName;
-    const playerSlug = item.playerSlug || intelForElite?.playerSlug;
-    if (playerName && (beatForElite || playerSlug)) {
-      try {
-        const elite = await eliteCaption.buildElitePlayerPost({
-          playerName,
-          playerSlug,
-          beatText: beatForElite || null,
-          intel: intelForElite || {
-            playerName,
-            playerSlug,
-            detail: beatForElite || item.text,
-            eventType: item.intelType || item.sourceEventType,
-            source: item.source
-          },
-          source: item.source
-        });
-        if (elite?.ok && elite.text) {
-          monitoring.logAutoposterEvent('elite_compose_success', {
-            itemId: item.id,
-            playerName: elite.playerName,
-            eventType: elite.validationMeta?.eventType
-          });
-          return {
-            ok: true,
-            item: {
-              ...item,
-              text: elite.text,
-              playerName: elite.playerName || item.playerName,
-              playerSlug: elite.playerSlug || item.playerSlug,
-              templateBlocks: elite.templateBlocks,
-              validationMeta: {
-                ...(item.validationMeta || {}),
-                ...(elite.validationMeta || {}),
-                eliteCompose: true,
-                beatText: beatForElite
-              }
-            },
-            elite: true
-          };
-        }
-      } catch (err) {
-        monitoring.logAutoposterEvent('elite_compose_skip', {
-          itemId: item.id,
-          error: err.message
-        });
-      }
-    }
-  }
 
   const intel = pipelineGuards.guardIntelForPipeline(findIntelForItem(item));
   const beatText = intelToBeatText(intel, item);
