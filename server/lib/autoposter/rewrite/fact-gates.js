@@ -21,7 +21,9 @@ const BANNED_FILLER_PHRASES = Object.freeze([
   /\bthe staff pitch is resonating\b/i,
   /\bstaff pitch is resonating\b/i,
   /\bhe said he "Florida\b/i,
-  /\bhe said he "all three\b/i
+  /\bhe said he "all three\b/i,
+  /\bpositioned early in this cycle\b/i,
+  /\bUF is positioned early in this cycle\b/i
 ]);
 
 function validateBannedPhrases(text) {

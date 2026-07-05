@@ -216,3 +216,44 @@ test('Swamp visit without quote still uses board fallback line', () => {
   assert.match(out.narrative, /left with the Gators on his board early/i);
   assert.doesNotMatch(out.narrative, /he said he/i);
 });
+
+const WILLINGHAM_BEAT = GOLDEN_BEATS.find((b) => b.id === 'willingham');
+
+test('Willingham beat extracts spring practice visit, quote, and board signal', () => {
+  const facts = extractBeatFacts(WILLINGHAM_BEAT.beatText, {
+    metrics: WILLINGHAM_BEAT.metrics,
+    player: WILLINGHAM_BEAT.player
+  });
+  assert.match(facts.quote, /Definitely one of my top schools/i);
+  assert.equal(facts.visit?.when, 'this spring');
+  assert.equal(facts.boardSignal, true);
+  const pick = selectAngleFromFacts(facts, WILLINGHAM_BEAT.beatText);
+  assert.equal(pick.angle, 'board');
+  assert.equal(hasFactCompletenessForPr789(facts, WILLINGHAM_BEAT.beatText), true);
+});
+
+test('Willingham elite board arc embeds quote and spring practice context', () => {
+  const facts = extractBeatFacts(WILLINGHAM_BEAT.beatText, {
+    metrics: {
+      ...WILLINGHAM_BEAT.metrics,
+      rpmTop: [
+        { school: 'Penn State', pct: 25 },
+        { school: 'Maryland', pct: 20 }
+      ]
+    },
+    player: WILLINGHAM_BEAT.player
+  });
+  const pick = selectAngleFromFacts(facts, WILLINGHAM_BEAT.beatText);
+  const out = composeFromFacts(
+    facts,
+    pick,
+    { lastName: 'Willingham', beatText: WILLINGHAM_BEAT.beatText },
+    { mode: 'elite' }
+  );
+  const banned = validateBannedPhrases(out.narrative);
+  assert.equal(banned.ok, true, JSON.stringify(banned.violations));
+  assert.match(out.narrative, /spring practice visit/i);
+  assert.match(out.narrative, /Definitely one of my top schools/i);
+  assert.match(out.narrative, /Penn State and Maryland lead his RPM board/i);
+  assert.doesNotMatch(out.narrative, /positioned early in this cycle/i);
+});

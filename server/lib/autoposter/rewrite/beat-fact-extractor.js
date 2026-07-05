@@ -251,7 +251,10 @@ function formatEliteQuoteEmbed(quote) {
   if (/loved the energy/i.test(q)) {
     return ` — he said he "${q}."`;
   }
-  return ` — he said, "${q}."`;
+  if (/top schools/i.test(q)) {
+    return ` — he said he "${q}."`;
+  }
+  return ` — he said he "${q}."`;
 }
 
 function eliteTakeaway(facts, angle) {
@@ -389,19 +392,25 @@ function composeEliteVisitArc(facts, ln, beatText = '', opts = {}) {
   return paragraph;
 }
 
-function composeEliteBoardArc(facts, ln, opts = {}) {
-  let paragraph = `${ln} has Florida in his top-school mix after spring campus time`;
+function composeEliteBoardArc(facts, ln, beatText = '', opts = {}) {
+  const beat = String(beatText || '').toLowerCase();
+  let paragraph;
+  if (/spring practice/i.test(beat) && facts.visit?.when === 'this spring') {
+    paragraph = `${ln}'s spring practice visit has Florida among his top schools on his board early`;
+  } else if (facts.visit?.when) {
+    paragraph = `${ln}'s ${facts.visit.when} campus visit has Florida in his top-school mix on his board early`;
+  } else {
+    paragraph = `${ln} has Florida in his top-school mix on his board early`;
+  }
 
   if (facts.quote) {
     const embed = formatEliteQuoteEmbed(facts.quote);
     if (embed) paragraph += embed;
-  } else {
-    paragraph += ` — and UF is positioned early with him`;
   }
 
   if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
-    paragraph += `. ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the mix because ${eliteTakeaway(facts, 'board')}.`;
-  } else {
+    paragraph += `. ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the mix early.`;
+  } else if (!paragraph.endsWith('.') && !paragraph.endsWith('."')) {
     paragraph += '.';
   }
 
@@ -437,7 +446,7 @@ function composeEliteArc(facts, anglePick, ln, beatText = '', opts = {}) {
     case 'staff':
       return composeEliteStaffArc(facts, ln, opts);
     case 'board':
-      return composeEliteBoardArc(facts, ln, opts);
+      return composeEliteBoardArc(facts, ln, beatText, opts);
     case 'competition':
       return composeEliteCompetitionArc(facts, ln, opts);
     case 'visit':
@@ -499,9 +508,13 @@ function composeVisitArc(facts, ln, beatText = '') {
   return `${ln} was on Florida's campus in ${when}, and that trip put UF in his early mix with real traction.`;
 }
 
-function composeBoardArc(facts, ln) {
+function composeBoardArc(facts, ln, beatText = '') {
+  const beat = String(beatText || '').toLowerCase();
+  if (/spring practice/i.test(beat) && facts.visit?.when === 'this spring') {
+    return `${ln} was on campus this spring watching Florida's spring practice, and he's listing the Gators among his top schools.`;
+  }
   if (facts.quote && /top schools/i.test(String(facts.quote))) {
-    return `${ln} is listing Florida among his top schools after his recent campus time, and UF is positioned early in this cycle.`;
+    return `${ln} is listing Florida among his top schools after his ${facts.visit?.when || 'recent'} campus time.`;
   }
   return `${ln} has Florida in his top-school mix after spring campus time, and the Gators are positioned early with him.`;
 }
@@ -537,7 +550,7 @@ function composeFromFacts(facts = {}, anglePick = {}, ctx = {}, opts = {}) {
       narrative = composeStaffArc(facts, ln, opts, ctx.beatText);
       break;
     case 'board':
-      narrative = composeBoardArc(facts, ln);
+      narrative = composeBoardArc(facts, ln, ctx.beatText);
       break;
     case 'competition':
       narrative = composeCompetitionArc(facts, ln);
