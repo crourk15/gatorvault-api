@@ -11,7 +11,6 @@ const policy = require('./x-autoposter-policy');
 const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
 const cadence = require('./x-autoposter-cadence');
-const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 const freshness = require('./autoposter-freshness');
 const opsMonitor = require('./ops-monitor');
 const pipelineGuards = require('./pipeline-guards');
