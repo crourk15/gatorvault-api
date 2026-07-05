@@ -5,6 +5,7 @@
 const template = require('./x-autoposter-template');
 const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
 const postSpec = require('./x-autoposter-post-spec');
+const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 
 const INVALID_NAME_PARTS = new Set([
   'her', 'his', 'the', 'new', 'four', 'five', 'star', 'class', 'florida', 'gators', 'gator',
@@ -433,7 +434,7 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
     return null;
   }
 
-  const text = template.enforceTweetLimit(raw, 280, copyMeta);
+  const text = template.enforceTweetLimit(raw, getTweetCharLimit(), copyMeta);
   if (!text || !template.hasTemplateStructure(text)) return null;
 
   return {
@@ -558,7 +559,7 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
     const eventSummary = template.inferProgramNewsEvent(beatText, programNewsType);
     const fallbackText = template.enforceTweetLimit(
       `Florida program update: ${eventSummary}. Monitoring staff/roster impact.`,
-      280,
+      getTweetCharLimit(),
       copyMeta
     );
     return {
@@ -587,7 +588,7 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
   const finalRaw = usedFallback
     ? contextLine
     : template.composeInsiderReport({ identity, context: contextLine, insider: insiderLine });
-  const text = template.enforceTweetLimit(finalRaw, 280, copyMeta);
+  const text = template.enforceTweetLimit(finalRaw, getTweetCharLimit(), copyMeta);
   if (!text) return null;
 
   return {
@@ -694,7 +695,7 @@ function buildCoachNewsPost({ source, beatText = null, intel = null, coachCtx = 
     insiderLine: insiderLine || undefined
   });
 
-  const text = template.enforceTweetLimit(composed.text, 280, { beatText, postKind: 'staff', eliteMode: true });
+  const text = template.enforceTweetLimit(composed.text, getTweetCharLimit(), { beatText, postKind: 'staff', eliteMode: true });
   if (!text || !template.hasTemplateStructure(text)) return null;
 
   return {
@@ -959,7 +960,7 @@ async function buildPlayerNewsPost({
     return null;
   }
 
-  const text = template.enforceTweetLimit(raw, 280, copyMeta);
+  const text = template.enforceTweetLimit(raw, getTweetCharLimit(), copyMeta);
   if (!text || !template.hasTemplateStructure(text)) return null;
 
   let finalText = text;
@@ -972,7 +973,7 @@ async function buildPlayerNewsPost({
       eventType: intel?.eventType || copyMeta.triggerType
     });
     if (withUrl) {
-      finalText = withUrl.length <= 280 ? withUrl : template.enforceTweetLimit(withUrl, 280, copyMeta) || text;
+      finalText = withUrl.length <= getTweetCharLimit() ? withUrl : template.enforceTweetLimit(withUrl, getTweetCharLimit(), copyMeta) || text;
     }
   }
 

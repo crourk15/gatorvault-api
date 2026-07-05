@@ -11,6 +11,7 @@ const qualityChecks = require('./quality-checks');
 const monitoring = require('./autoposter-monitoring');
 const pipelineGuards = require('../pipeline-guards');
 const insiderTone = require('./insider-tone');
+const { getTweetCharLimit } = require('./tweet-char-limit');
 
 const MIN_REWRITE_WORDS = parseInt(process.env.X_AUTOPOST_MIN_REWRITE_WORDS || '40', 10);
 const VERIFIED_MIN_WORDS = parseInt(process.env.X_AUTOPOST_VERIFIED_MIN_WORDS || '18', 10);
@@ -140,8 +141,8 @@ function buildTweetFromRewrite(player, rewriteText, meta = {}) {
   const body = String(rewriteText || '').trim();
   let text =
     identity && !body.startsWith(player.name)
-      ? template.enforceTweetLimit(`${identity}\n${body}`, 280, { eliteMode: true })
-      : template.enforceTweetLimit(body, 280, { eliteMode: true });
+      ? template.enforceTweetLimit(`${identity}\n${body}`, getTweetCharLimit(), { eliteMode: true })
+      : template.enforceTweetLimit(body, getTweetCharLimit(), { eliteMode: true });
   if (process.env.X_AUTOPOST_GV_CTA_ENABLED === 'true' && meta.playerSlug) {
     text =
       brand.appendSiteOnce(text, {

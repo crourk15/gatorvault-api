@@ -9,6 +9,7 @@ const { maxPairwiseOverlap } = require('../../lib/autoposter/strategy/strategy-o
 const { isTruncatedBadly } = require('../../lib/autoposter/strategy/strategy-guard');
 const voiceQa = require('../../lib/autoposter/voice-qa');
 const { GOLDEN_BEATS, toSignal } = require('./fixtures/golden-beats');
+const { getTweetCharLimit } = require('../../lib/autoposter/tweet-char-limit');
 
 const prevEngine = process.env.X_AUTOPOST_STRATEGY_ENGINE;
 delete process.env.X_AUTOPOST_STRATEGY_ENGINE;
@@ -70,7 +71,7 @@ test('PR-5 golden — Willingham passes UF context QA', () => {
   assert.equal(isCompleteSentence(out.strategyLine), true, out.strategyLine);
 });
 
-test('PR-5 golden four — full tweets are complete sentences under 280 chars', () => {
+test('PR-5 golden four — full tweets are complete sentences within char limit', () => {
   const voiceEngine = require('../../lib/autoposter/voice-engine');
   const { isCompleteSentence } = require('../../lib/autoposter/strategy/strategy-sentences');
   process.env.VOICE_PHRASE_MEMORY = 'false';
@@ -78,7 +79,7 @@ test('PR-5 golden four — full tweets are complete sentences under 280 chars', 
     const beat = GOLDEN_BEATS.find((b) => b.id === id);
     const out = voiceEngine.autoposterCompose(toSignal(beat));
     assert.equal(out.ok, true, `${id} failed: ${out.reason || 'unknown'}`);
-    assert.ok(out.text.length <= 280, `${id} too long: ${out.text.length}`);
+    assert.ok(out.text.length <= getTweetCharLimit(), `${id} too long: ${out.text.length}`);
     assert.equal(isCompleteSentence(out.blocks.intel), true, `${id} intel: ${out.blocks.intel}`);
     assert.equal(isCompleteSentence(out.blocks.context), true, `${id} context: ${out.blocks.context}`);
     assert.equal(isCompleteSentence(out.blocks.strategy), true, `${id} strategy: ${out.blocks.strategy}`);

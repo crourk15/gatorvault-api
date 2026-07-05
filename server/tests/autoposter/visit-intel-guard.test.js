@@ -1,6 +1,7 @@
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 const { evaluateVisitIntelPostGate, isVisitIntelPromotionText, buildVerifiedVisitRecapPostCopy } = require("../../lib/x-autoposter-visit-guard");
+const { getTweetCharLimit } = require("../../lib/autoposter/tweet-char-limit");
 
 describe("x-autoposter-visit-guard", () => {
   const asOf = new Date("2026-06-22T12:00:00Z");
@@ -27,7 +28,7 @@ describe("x-autoposter-visit-guard", () => {
     if (copy) {
       assert.match(copy, /FutureCast 2027 Visit Intel/);
       assert.match(copy, /On3/);
-      assert.ok(copy.length <= 280);
+      assert.ok(copy.length <= getTweetCharLimit());
     }
   });
 });

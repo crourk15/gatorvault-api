@@ -7,6 +7,7 @@ const visitGuard = require('./x-autoposter-visit-guard');
 const { getBeatPosts } = require('./live-beat');
 const beatFilters = require('./beat-writer-filters');
 const { intelFingerprint } = require('./commit-fingerprint');
+const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 const FUTURECAST_VISITS_URL = `${SITE_URL}/vault/futurecast#visits`;
@@ -89,7 +90,7 @@ function enqueueReply({ text, inReplyToStatusId, kind, item, scheduledDelayMin =
     return null;
   }
   const replyText = String(text || '').trim();
-  if (!replyText || replyText.length > 280) return null;
+  if (!replyText || replyText.length > getTweetCharLimit()) return null;
 
   const check = policy.validatePostContent({
     text: replyText,

@@ -8,6 +8,7 @@ const eliteLog = require('./x-autoposter-elite-log');
 const playerContext = require('./x-autoposter-player-context');
 const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
 const brand = require('./x-autoposter-brand');
+const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 
 const GENERIC_INSIDER_RE = /^per .+ report\.?$/i;
 const GENERIC_CLOSURE_RE = /full details via the original report/i;
@@ -802,8 +803,8 @@ async function buildElitePlayerPost(input = {}) {
     (brandBeatPost || eliteBrandPost) && process.env.X_AUTOPOST_GV_CTA_ENABLED === 'true'
       ? brand.hookBudgetFor(hookMeta)
       : 0;
-  const contextMax = hookBudget ? Math.min(160, 280 - hookBudget - 80) : 160;
-  const insiderMax = hookBudget ? Math.min(140, 280 - hookBudget - 50) : 140;
+  const contextMax = hookBudget ? Math.min(160, getTweetCharLimit() - hookBudget - 80) : 160;
+  const insiderMax = hookBudget ? Math.min(140, getTweetCharLimit() - hookBudget - 50) : 140;
   const useCompactIdentity =
     kind === 'recruiting' &&
     brand.useCompactRecruitingIdentity({ beatText: input.beatText, postKind: kind });
@@ -957,7 +958,7 @@ async function buildElitePlayerPost(input = {}) {
     return { ok: false, skipped: true, reason: 'compose_failed', research };
   }
 
-  let text = template.enforceTweetLimit(raw, 280, copyMeta);
+  let text = template.enforceTweetLimit(raw, getTweetCharLimit(), copyMeta);
   if (!text || GENERIC_CLOSURE_RE.test(text)) {
     eliteLog.logEliteCaption({
       pass: false,
@@ -979,7 +980,7 @@ async function buildElitePlayerPost(input = {}) {
       validationMeta: { playerSlug, eliteCompose: true }
     });
     if (withHook && withHook !== text) {
-      text = withHook.length <= 280 ? withHook : template.enforceTweetLimit(withHook, 280, copyMeta) || text;
+      text = withHook.length <= getTweetCharLimit() ? withHook : template.enforceTweetLimit(withHook, getTweetCharLimit(), copyMeta) || text;
     }
   }
 
@@ -1159,7 +1160,7 @@ async function buildEliteQuoteRetweet(input = {}) {
   const raw = template.composeInsiderReport({ identity, context: contextLine, insider: insiderLine });
   if (!raw) return { ok: false, skipped: true, reason: 'compose_failed', research: built.research };
 
-  const text = template.enforceTweetLimit(raw, 280, copyMeta);
+  const text = template.enforceTweetLimit(raw, getTweetCharLimit(), copyMeta);
   if (!text || GENERIC_CLOSURE_RE.test(text)) {
     return { ok: false, skipped: true, reason: 'truncation_generic', research: built.research };
   }

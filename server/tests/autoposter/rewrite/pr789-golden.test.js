@@ -16,9 +16,7 @@ const { GOLDEN_BEATS, toSignal } = require('../fixtures/golden-beats');
 
 const { setGoldenFourRankingCompleteForTests } = require('../../../lib/player-intelligence/golden-four-on3');
 
-
-
-process.env.VOICE_PHRASE_MEMORY = 'false';
+const { getTweetCharLimit } = require('../../../lib/autoposter/tweet-char-limit');
 
 process.env.X_AUTOPOST_PR6_SHADOW = 'true';
 
@@ -64,7 +62,7 @@ for (const id of FOUR) {
 
     if (pr789.ok) {
 
-      assert.ok(pr789.charCount <= 280, `${id} too long: ${pr789.charCount}`);
+      assert.ok(pr789.charCount <= getTweetCharLimit(), `${id} too long: ${pr789.charCount}`);
 
       assert.equal(pr6.isCompleteSentence(pr789.narrative1), true);
 

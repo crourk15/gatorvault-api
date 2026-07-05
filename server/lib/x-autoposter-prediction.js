@@ -4,6 +4,7 @@
  */
 const template = require('./x-autoposter-template');
 const playerContext = require('./x-autoposter-player-context');
+const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 
 const CITY_STATE_RE = /^[A-Za-z .'-]+,\s*[A-Z]{2}\b/;
 
@@ -296,7 +297,7 @@ async function buildPredictionPostInner({
     return { ok: false, skipped: true, reason: 'invalid_template', fields };
   }
 
-  const text = template.enforceTweetLimit(raw, 280, { postKind: 'prediction', beatText: fields?.detail || null });
+  const text = template.enforceTweetLimit(raw, getTweetCharLimit(), { postKind: 'prediction', beatText: fields?.detail || null });
   if (!text || isBarePredictionLine(text)) {
     return { ok: false, skipped: true, reason: 'bare_prediction_line', fields };
   }

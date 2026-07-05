@@ -7,6 +7,7 @@ const os = require('os');
 
 const promote = require('../../lib/autoposter/detectives-promote');
 const voiceEngine = require('../../lib/autoposter/voice-engine');
+const { getTweetCharLimit } = require('../../lib/autoposter/tweet-char-limit');
 
 const FLOYD_BEAT =
   'Nearly three weeks ago, I submitted an RPM pick for Florida to land 4-star CB Raheem Floyd. With decision day approaching, is that still the call?';
@@ -45,7 +46,7 @@ test('composeFromDetectiveCase applies detectiveOverride metrics', async () => {
 
   assert.equal(out.ok, true);
   assert.ok(out.text);
-  assert.ok(out.text.length <= 280);
+  assert.ok(out.text.length <= getTweetCharLimit());
   assert.equal(out.validationMeta.detectiveOverride, true);
   assert.equal(out.validationMeta.detectivesPromoted, true);
   assert.equal(out.validationMeta.voiceMetrics.rpm, 62);

@@ -5,6 +5,7 @@ const playerContext = require('./x-autoposter-player-context');
 const autoposterIdentity = require('./autoposter-identity');
 const template = require('./x-autoposter-template');
 const validation = require('./x-autoposter-validation');
+const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 const { isValidPlayerName } = playerContext;
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
@@ -252,15 +253,15 @@ function appendSite(text, meta = {}) {
   const subtle = buildSubtleDiscoveryLine(meta);
   if (subtle) {
     const withHook = `${body}\n${subtle}`;
-    if (withHook.length <= 280) return withHook;
+    if (withHook.length <= getTweetCharLimit()) return withHook;
   }
   const landing = resolveAutoposterSiteUrl(meta, body);
   const urlBit = landing.replace('https://', '');
   if (body.includes(urlBit) || body.includes(SITE_URL.replace('https://', ''))) {
-    return template.enforceTweetLimit(body, 280, meta);
+    return template.enforceTweetLimit(body, getTweetCharLimit(), meta);
   }
   const withUrl = `${body}\n${urlBit}`;
-  return withUrl.length <= 280 ? withUrl : template.enforceTweetLimit(withUrl, 280, meta);
+  return withUrl.length <= getTweetCharLimit() ? withUrl : template.enforceTweetLimit(withUrl, getTweetCharLimit(), meta);
 }
 
 function stripUrlsForBeatParse(text) {

@@ -3,6 +3,7 @@
  */
 const template = require('./x-autoposter-template');
 const copy = require('./x-autoposter-copy');
+const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 
 const SITE_HOST = (copy.SITE_URL || 'https://gatorvaultinsider.com').replace(/^https?:\/\//, '');
 
@@ -42,7 +43,7 @@ function fitBodyToHookBudget(identity, context, insider, hookBudget) {
   if (!hookBudget || hookBudget <= 0) {
     return { identity, context, insider };
   }
-  const bodyLimit = 280 - hookBudget;
+  const bodyLimit = getTweetCharLimit() - hookBudget;
   let id = String(identity || '').trim();
   let ctx = String(context || '').trim();
   let ins = String(insider || '').trim();

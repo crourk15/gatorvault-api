@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const voiceEngine = require('../../../lib/autoposter/voice-engine');
 const pr6 = require('../../../lib/autoposter/rewrite');
 const { GOLDEN_BEATS, toSignal } = require('../fixtures/golden-beats');
+const { getTweetCharLimit } = require('../../../lib/autoposter/tweet-char-limit');
 
 process.env.VOICE_PHRASE_MEMORY = 'false';
 process.env.X_AUTOPOST_PR6_SHADOW = 'true';
@@ -31,7 +32,7 @@ for (const id of GOLDEN_FOUR) {
   test(`PR-6 golden — ${id} passes all rewrite gates`, () => {
     const rewritten = composePr6(id);
     assert.equal(rewritten.ok, true, `${id}: ${rewritten.reason} — ${JSON.stringify(rewritten.trace?.violations)}`);
-    assert.ok(rewritten.charCount <= 280, `${id} too long: ${rewritten.charCount}`);
+    assert.ok(rewritten.charCount <= getTweetCharLimit(), `${id} too long: ${rewritten.charCount}`);
     assert.equal(pr6.isCompleteSentence(rewritten.narrative1), true, rewritten.narrative1);
     assert.equal(pr6.isCompleteSentence(rewritten.narrative2), true, rewritten.narrative2);
     assert.doesNotMatch(rewritten.rewrittenTweet, /\+/);

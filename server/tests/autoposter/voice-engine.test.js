@@ -6,6 +6,7 @@ const voiceEngine = require('../../lib/autoposter/voice-engine');
 const signalAdapter = require('../../lib/autoposter/voice-signal-adapter');
 const voiceQa = require('../../lib/autoposter/voice-qa');
 const phraseMemory = require('../../lib/autoposter/voice-phrase-memory');
+const { getTweetCharLimit } = require('../../lib/autoposter/tweet-char-limit');
 
 const FLOYD_SIGNAL = {
   id: 'beat_prediction_raheem-floyd_test',
@@ -53,11 +54,11 @@ test('phrase memory blocks repeated hooks within window', () => {
   assert.equal(picked, fresh);
 });
 
-test('voice compose produces post under 280 chars with strategy data', () => {
+test('voice compose produces post within char limit with strategy data', () => {
   process.env.VOICE_PHRASE_MEMORY = 'false';
   const out = voiceEngine.autoposterCompose(FLOYD_SIGNAL, { skipTemplateOverlap: true });
   assert.equal(out.ok, true, out.reason || 'compose failed');
-  assert.ok(out.text.length <= 280, `too long: ${out.text.length}`);
+  assert.ok(out.text.length <= getTweetCharLimit(), `too long: ${out.text.length}`);
   assert.match(out.text, /Raheem Floyd/i);
   assert.match(out.text, /futurecast\/player\/raheem-floyd/);
   assert.ok(out.blocks.strategy);
@@ -153,7 +154,7 @@ test('PR-5 v2 Robinson compose has complete sentences and no beat headline bleed
   };
   const out = voiceEngine.autoposterCompose(robinson);
   assert.equal(out.ok, true, out.reason || JSON.stringify(out.metadata));
-  assert.ok(out.text.length <= 280);
+  assert.ok(out.text.length <= getTweetCharLimit());
   assert.match(out.text, /2028 CB Man Robinson/);
   assert.doesNotMatch(out.text, /NEW: Man Robinson says/);
   assert.doesNotMatch(out.text, /\+/);
@@ -180,7 +181,7 @@ test('PR-5 v2 Willingham compose has complete sentences', () => {
   };
   const out = voiceEngine.autoposterCompose(willingham);
   assert.equal(out.ok, true, out.reason || JSON.stringify(out.metadata));
-  assert.ok(out.text.length <= 280);
+  assert.ok(out.text.length <= getTweetCharLimit());
   assert.equal(isCompleteSentence(out.blocks.intel), true, out.blocks.intel);
   assert.equal(isCompleteSentence(out.blocks.context), true, out.blocks.context);
   assert.equal(isCompleteSentence(out.blocks.strategy), true, out.blocks.strategy);

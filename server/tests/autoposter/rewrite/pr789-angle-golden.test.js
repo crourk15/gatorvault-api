@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const voiceEngine = require('../../../lib/autoposter/voice-engine');
 const pr6 = require('../../../lib/autoposter/rewrite');
 const { GOLDEN_BEATS, toSignal } = require('../fixtures/golden-beats');
+const { getTweetCharLimit } = require('../../../lib/autoposter/tweet-char-limit');
 
 process.env.VOICE_PHRASE_MEMORY = 'false';
 process.env.X_AUTOPOST_PR6_SHADOW = 'true';
@@ -29,7 +30,7 @@ for (const id of Object.keys(EXPECTED_ANGLES)) {
     assert.ok(angle, 'pr789AngleShadow missing');
     assert.equal(angle.ok, true, `${id}: ${angle.reason} — ${JSON.stringify(angle.violations)}`);
     assert.equal(angle.dominantAngle, EXPECTED_ANGLES[id]);
-    assert.ok(angle.charCount <= 280, `${id} too long: ${angle.charCount}`);
+    assert.ok(angle.charCount <= getTweetCharLimit(), `${id} too long: ${angle.charCount}`);
     assert.equal(pr6.isCompleteSentence(angle.rewrittenTweet.split('\n')[1] || ''), true);
     const lines = angle.rewrittenTweet.split('\n').filter(Boolean);
     assert.equal(lines.length, 3, 'expected identity + one arc + url');

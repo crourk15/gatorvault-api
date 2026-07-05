@@ -623,7 +623,10 @@ function hardTrimLine(s, maxLen) {
   return trimmed;
 }
 
-function enforceTweetLimit(text, max = 280, meta = {}) {
+function enforceTweetLimit(text, max, meta = {}) {
+  if (max == null) {
+    max = require('./autoposter/tweet-char-limit').getTweetCharLimit();
+  }
   const original = String(text || '');
   let t = stripEmojisHashtags(original);
   if (t.length <= max) return preserveMeterEmojis(original, finalizeAutoposterCopy(t, meta));
