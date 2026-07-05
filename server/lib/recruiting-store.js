@@ -539,6 +539,10 @@ function enrichPlayerFromLocalJson(player, slug) {
   if (!player.competitors?.length && Array.isArray(local.competitors) && local.competitors.length) {
     patch.competitors = local.competitors;
   }
+  if (!player.hometownState && !player.state && (local.hometownState || local.state)) {
+    patch.hometownState = local.hometownState || local.state;
+    patch.state = local.state || local.hometownState;
+  }
   if (
     (player.ufProbability == null || player.ufProbability <= 0) &&
     local.ufProbability != null &&

@@ -573,17 +573,35 @@ async function hydrateRpmTopMetrics(signal, { research, playerData, override, in
     if (!golden.isGoldenProdSlug(slug)) return;
     const store = require('../recruiting-store');
     const row = await store.getPlayerBySlug(slug);
+    if (row?.hometownState || row?.state) {
+      const state = String(row.hometownState || row.state).trim().toUpperCase();
+      if (/^[A-Z]{2}$/.test(state) && signal.player) {
+        signal.player.state = signal.player.state || state;
+        signal.player.hometownState = signal.player.hometownState || state;
+      }
+    }
     const fromPlayer = rpmTopFromSources({}, { competitors: row?.competitors });
     if (fromPlayer.length >= 2) {
       signal.metrics.rpmTop = fromPlayer;
-      return;
     }
     const recruitSlug = golden.on3RecruitSlugFor(slug);
     if (!recruitSlug) return;
+    const needsState = !resolveStateAbbr(signal.player || {});
+    const needsRpm = !(Array.isArray(signal.metrics?.rpmTop) && signal.metrics.rpmTop.length >= 2);
+    if (!needsState && !needsRpm) return;
     const on3Recruit = require('../on3-recruit-client');
     const profile = await on3Recruit.fetchRecruitProfile(recruitSlug, classYear);
-    const rpmTop = rpmTopFromOn3TopTeams(profile?.topTeams || [], classYear);
-    if (rpmTop.length >= 2) signal.metrics.rpmTop = rpmTop;
+    if (needsState) {
+      const state = String(profile?.state || '').trim().toUpperCase();
+      if (/^[A-Z]{2}$/.test(state) && signal.player) {
+        signal.player.state = signal.player.state || state;
+        signal.player.hometownState = signal.player.hometownState || state;
+      }
+    }
+    if (needsRpm) {
+      const rpmTop = rpmTopFromOn3TopTeams(profile?.topTeams || [], classYear);
+      if (rpmTop.length >= 2) signal.metrics.rpmTop = rpmTop;
+    }
   } catch {
     /* optional golden-four On3 pull */
   }
