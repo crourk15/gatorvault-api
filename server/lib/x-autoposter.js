@@ -11,6 +11,7 @@ const policy = require('./x-autoposter-policy');
 const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
 const cadence = require('./x-autoposter-cadence');
+const { getTweetCharLimit } = require('./autoposter/tweet-char-limit');
 const freshness = require('./autoposter-freshness');
 const opsMonitor = require('./ops-monitor');
 const pipelineGuards = require('./pipeline-guards');
@@ -123,6 +124,13 @@ function getConfigStatus() {
     schedulerIntervalMs: parseInt(process.env.X_AUTOPOST_INTERVAL_MS || '60000', 10),
     contentMix: policy.getContentPolicy().contentMixLabel,
     cadence: cadence.getCadenceConfig(),
+    charLimit: getTweetCharLimit(),
+    rewriteLive: {
+      pr6: process.env.X_AUTOPOST_PR6_ENABLED === 'true',
+      pr789: process.env.X_AUTOPOST_PR7_8_9_ENABLED === 'true',
+      pr789AngleGolden: process.env.X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE !== 'false',
+      voiceEngine: process.env.X_AUTOPOST_VOICE_ENGINE !== 'false'
+    },
     lastVerify: _statusCache.checkedAt ? { ..._statusCache } : null,
     scheduler: getSchedulerStatus()
   };
@@ -764,6 +772,7 @@ function startXAutoposterScheduler() {
         saveSchedulerStatus({
           lastRefillAt: store.nowIso(),
           lastRefillCount: refill.enqueuedCount || 0,
+          lastSkipReasons: refill.skipReasons?.slice?.(0, 5) || null,
           postFloorDue: !!postFloorDue,
           digDeeper: !!digDeeper
         });

@@ -72,7 +72,18 @@ const UF_PREMIUM_AUTOPOSTER_ENV = Object.freeze({
   X_AUTOPOST_HISTORY_DISCOVERY: 'true',
   X_AUTOPOST_ENGAGEMENT_LOOP: 'true',
   X_AUTOPOST_UTM_ENABLED: 'true',
-  X_AUTOPOST_STRATEGY_ENGINE: 'v2'
+  X_AUTOPOST_STRATEGY_ENGINE: 'v2',
+  /** PR-6/789 elite rewrite — live on golden four recruiting beats */
+  X_AUTOPOST_PR6_SHADOW: 'true',
+  X_AUTOPOST_PR6_ENABLED: 'true',
+  X_AUTOPOST_PR7_8_9_SHADOW: 'true',
+  X_AUTOPOST_PR7_8_9_ENABLED: 'true',
+  X_AUTOPOST_PR789_ANGLE_SHADOW: 'true',
+  X_AUTOPOST_PR789_ANGLE_ENABLED: 'false',
+  X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE: 'true',
+  X_AUTOPOST_DETECTIVES_ENABLED: 'true',
+  /** X Premium long posts — full rank line + quote + RPM + takeaway */
+  X_CHAR_LIMIT: '500'
 });
 
 function isUfPremiumMode() {
