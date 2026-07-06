@@ -19,6 +19,21 @@ const { GOLDEN_PLAYER_DEFAULTS } = require('./golden-four-on3');
 const PR6_FALLBACK_RE =
   /\bgave Florida a foothold\b|\bput UF on his board early\b|\bpositioned early in (?:this cycle|his recruitment)\b/i;
 
+const NAME_SUFFIXES = new Set(['jr', 'sr', 'ii', 'iii', 'iv', 'v']);
+
+function recruitingLastName(playerName = '') {
+  const parts = String(playerName || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (!parts.length) return 'He';
+  const lastToken = parts[parts.length - 1].replace(/\./g, '').toLowerCase();
+  if (NAME_SUFFIXES.has(lastToken) && parts.length >= 2) {
+    return parts[parts.length - 2];
+  }
+  return parts[parts.length - 1];
+}
+
 function playerCta(slug) {
   const url = signalAdapter.buildPlayerUrl(slug, { playerSlug: slug, eventType: 'recruiting' });
   return String(url || '').replace(/^https?:\/\//i, '');
@@ -122,7 +137,7 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
   }
 
   const anglePick = selectAngleFromFacts(facts, beatText);
-  const lastName = String(playerName).trim().split(/\s+/).pop();
+  const lastName = recruitingLastName(playerName);
   const ctx = { lastName, beatText };
   const hasRpmTop = rpmTop.length >= 2;
   const composeAttempts = [

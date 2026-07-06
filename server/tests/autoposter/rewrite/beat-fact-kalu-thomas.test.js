@@ -94,7 +94,7 @@ test('Thomas elite compose avoids garbled reporter quote embed', () => {
     composePath: 'elite_pr789'
   });
   assert.equal(built.ok, true, built.reason || JSON.stringify(built));
-  assert.match(built.text, /priority early/i);
+  assert.match(built.text, /making Thomas a priority early/i);
   assert.match(built.text, /mutual interest is real/i);
   assert.doesNotMatch(built.text, /top-school mix on his board early/i);
   assert.doesNotMatch(built.text, /He's telling me/i);
