@@ -26,10 +26,13 @@ const STEPS = [
   {
     name: 'beat-writer',
     path: '/api/recruiting/beat-writer/ingest',
+    body: { force: true },
+    opts: { timeoutMs: 600000, attempts: 2 },
     summarize: (r) => ({
       processedCount: r?.processedCount ?? r?.processed?.length ?? null,
       errors: r?.errors?.length ?? 0,
       softFailure: r?.softFailure === true,
+      ok: r?.ok !== false && !(r?.errors?.length > 0 && !(r?.processed?.length > 0)),
     }),
   },
   {

@@ -181,8 +181,27 @@ function maybeLogStaleWarning(freshness) {
   return true;
 }
 
+function syncLastPostFromQueue() {
+  const existing = readLastPost();
+  if (existing.lastPostAt) return existing;
+  try {
+    const store = require('./x-autoposter-store');
+    const sent = (store.listQueue({ status: 'sent' }) || [])
+      .filter((i) => i.sentAt)
+      .sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime())[0];
+    if (sent?.sentAt) {
+      const ageMs = Date.now() - new Date(sent.sentAt).getTime();
+      if (ageMs <= 7 * 86400000) return recordLastPost(sent.sentAt);
+    }
+  } catch {
+    /* optional */
+  }
+  return existing;
+}
+
 function getAutoposterStatus({ scheduler = {} } = {}) {
   syncLastPostFromScheduler(scheduler);
+  syncLastPostFromQueue();
   const health = readHealth();
   const hb = opsMonitor.getHeartbeat('autoposter:queue') || opsMonitor.getHeartbeat('autoposter:predictions') || {};
   const errors24h = opsMonitor.getErrorCount24h('autoposter');
@@ -216,6 +235,7 @@ module.exports = {
   readLastPost,
   recordLastPost,
   syncLastPostFromScheduler,
+  syncLastPostFromQueue,
   readHealth,
   recordIdentityFail,
   resetIdentityFailStreak,

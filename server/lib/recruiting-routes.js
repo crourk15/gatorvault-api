@@ -585,6 +585,16 @@ function mountRecruitingRoutes(app) {
       }
       const force = req.body.force === true || req.query.force === 'true';
       const result = await runBeatWriterIngest({ force });
+      const hasErrors = Array.isArray(result?.errors) && result.errors.length > 0;
+      const hasProcessed = Array.isArray(result?.processed) && result.processed.length > 0;
+      if (hasErrors && !hasProcessed) {
+        return res.status(200).json({
+          ok: false,
+          softFailure: true,
+          error: result.errors[0]?.error || result.errors[0]?.message || 'beat_ingest_errors',
+          ...result
+        });
+      }
       return res.json({ ok: true, ...result });
     } catch (err) {
       console.error('beat-writer ingest error', err);

@@ -61,6 +61,16 @@ async function validateXBearerToken({ force = false } = {}) {
       };
       return _xTokenStatus;
     }
+    if (res.status === 402) {
+      _xTokenStatus = {
+        configured: true,
+        ok: false,
+        error:
+          'X API credits depleted (HTTP 402). Restore posting/read credits in the X Developer Portal billing plan.',
+        checkedAt: store.nowIso()
+      };
+      return _xTokenStatus;
+    }
     if (!res.ok) {
       const body = await res.text().catch(() => '');
       _xTokenStatus = {

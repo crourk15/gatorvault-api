@@ -113,7 +113,7 @@ const MAX_BEAT_INTEL_AGE_MS = parseInt(
   10
 );
 
-const REFILL_PREP_TIMEOUT_MS = parseInt(process.env.X_AUTOPOST_REFILL_PREP_TIMEOUT_MS || '20000', 10);
+const REFILL_PREP_TIMEOUT_MS = parseInt(process.env.X_AUTOPOST_REFILL_PREP_TIMEOUT_MS || '60000', 10);
 const REFILL_WIDE_TIMEOUT_MS = parseInt(process.env.X_AUTOPOST_REFILL_WIDE_TIMEOUT_MS || '45000', 10);
 const REFILL_INTEL_COLLECT_TIMEOUT_MS = parseInt(
   process.env.X_AUTOPOST_INTEL_COLLECT_TIMEOUT_MS || '40000',
@@ -1902,6 +1902,10 @@ async function refillAutoposterQueue({
   };
 
   const emptyQueueRefill = pending.length === 0;
+  let beatPrep = null;
+  if (emptyQueueRefill) {
+    beatPrep = await beatPrepPromise;
+  }
 
   if (need > 0) {
     let beatDigDeeper = digDeeper;
@@ -1954,7 +1958,7 @@ async function refillAutoposterQueue({
         qualitySkipped,
         skipReasons,
         digDeeper: forcePost || digDeeper,
-        beatPrep: null,
+        beatPrep: beatPrep || null,
         goldenFour: null,
         selfHeal: selfHealRun,
         detectivesRun: null,
@@ -1989,7 +1993,7 @@ async function refillAutoposterQueue({
         qualitySkipped,
         skipReasons,
         digDeeper: forcePost || digDeeper,
-        beatPrep: null,
+        beatPrep: beatPrep || null,
         goldenFour: null,
         selfHeal: selfHealRun,
         detectivesRun: null,
@@ -2027,7 +2031,7 @@ async function refillAutoposterQueue({
           qualitySkipped,
           skipReasons,
           digDeeper: forcePost || digDeeper,
-          beatPrep: null,
+          beatPrep: beatPrep || null,
           goldenFour: null,
           detectivesRun: null,
           emptyQueueFallback: added > 0 && pending.length === 0
@@ -2081,7 +2085,7 @@ async function refillAutoposterQueue({
         qualitySkipped,
         skipReasons,
         digDeeper: forcePost || digDeeper,
-        beatPrep: null,
+        beatPrep: beatPrep || null,
         goldenFour: goldenFourRun,
         selfHeal: selfHealRun,
         detectivesRun: null,
@@ -2207,7 +2211,9 @@ async function refillAutoposterQueue({
     }
   }
 
-  void beatPrepPromise;
+  if (!beatPrep) {
+    beatPrep = await beatPrepPromise.catch((err) => ({ ok: false, error: err.message }));
+  }
 
   return {
     ok: true,
@@ -2219,7 +2225,7 @@ async function refillAutoposterQueue({
     qualitySkipped,
     skipReasons,
     digDeeper: forcePost || digDeeper,
-    beatPrep: null,
+    beatPrep,
     goldenFour: goldenFourRun,
     detectivesRun,
     emptyQueueFallback: added > 0 && pending.length === 0

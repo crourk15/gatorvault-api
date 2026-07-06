@@ -69,6 +69,46 @@ function getSchedulerStatus() {
   };
 }
 
+function isXBillingError(err) {
+  const status = err?.status;
+  const body = err?.body || {};
+  const detail = String(body?.detail || body?.title || err?.message || '');
+  return (
+    status === 402 ||
+    /CreditsDepleted|credits depleted|billing|payment required/i.test(detail)
+  );
+}
+
+function billingPauseActive() {
+  const status = loadSchedulerStatus();
+  const until = status.billingPausedUntil || null;
+  if (!until) return false;
+  if (Date.now() >= new Date(until).getTime()) {
+    saveSchedulerStatus({ billingPausedUntil: null, billingPauseReason: null });
+    return false;
+  }
+  return true;
+}
+
+function setBillingPause(err, hours = 6) {
+  const until = new Date(Date.now() + hours * 60 * 60 * 1000).toISOString();
+  saveSchedulerStatus({
+    billingPausedUntil: until,
+    billingPauseReason: err?.message || 'x_api_billing',
+    lastError: err?.message || 'X API billing/quota exhausted'
+  });
+  try {
+    opsMonitor.logEvent({
+      subsystem: 'autoposter',
+      status: 'error',
+      message: 'x_api_billing_pause',
+      details: { until, error: err?.message || null }
+    });
+  } catch {
+    /* optional */
+  }
+}
+
 function autopostLog(level, message, detail) {
   const row = {
     ts: store.nowIso(),
@@ -400,6 +440,8 @@ function recordAutoposterSend(candidate, result, { duplicateRecovery = false, so
     lastPostAt: postedAt,
     lastPostSuccess: postedAt,
     lastError: null,
+    billingPausedUntil: null,
+    billingPauseReason: null
   });
 
   try {
@@ -713,6 +755,9 @@ async function processQueueItem(item) {
     });
     store.logQueueOp('post_failed', { ...item, status: 'failed' }, { error: err.message });
     saveSchedulerStatus({ lastError: err.message });
+    if (isXBillingError(err)) {
+      setBillingPause(err);
+    }
     opsMonitor.logEvent({
       subsystem: 'autoposter',
       status: 'error',
@@ -856,12 +901,28 @@ function startXAutoposterScheduler() {
             digDeeper
           }),
           new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('refill_timeout')), parseInt(process.env.X_AUTOPOST_REFILL_TIMEOUT_MS || '90000', 10))
+            setTimeout(() => reject(new Error('refill_timeout')), parseInt(process.env.X_AUTOPOST_REFILL_TIMEOUT_MS || '180000', 10))
           )
         ]).catch((err) => {
           autopostLog('warn', 'Refill timed out or failed', { error: err.message });
+          try {
+            opsMonitor.logEvent({
+              subsystem: 'autoposter',
+              status: err.message === 'refill_timeout' ? 'warning' : 'error',
+              message: err.message === 'refill_timeout' ? 'refill_timeout' : 'refill_failed',
+              details: { error: err.message }
+            });
+          } catch {
+            /* optional */
+          }
           return { enqueuedCount: 0, skipReasons: [{ reason: err.message }] };
         });
+        if (billingPauseActive()) {
+          autopostLog('warn', 'Billing pause active — skipping post tick', {
+            until: loadSchedulerStatus().billingPausedUntil
+          });
+          return;
+        }
         if (postFloorDue && refill.enqueuedCount > 0) {
           autopostLog('info', 'Post floor refill — widened topic discovery', {
             msSincePost,

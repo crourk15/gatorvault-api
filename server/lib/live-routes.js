@@ -178,7 +178,12 @@ function mountLiveRoutes(app) {
           liveRefreshStale: isStale(report.lastLiveRefresh),
           articlePullStale: isStale(report.lastArticlePull),
           beatPullStale: isStale(report.lastBeatPull || report.beatCache?.fetchedAt),
-          autoposterStale: isStale(report.autoposter?.lastRun),
+          autoposterStale: isStale(
+            report.autoposter?.lastSentAt ||
+              report.autoposter?.lastPostSuccess ||
+              report.autoposter?.lastPostAt
+          ),
+          autoposterSchedulerStale: isStale(report.autoposter?.lastRun),
           autoposterEnabled: report.autoposter?.schedulerEnabled === true,
           beatError: report.beatCache?.error || report.lastLiveRefreshError || null,
           autoposterError: report.autoposter?.lastError || null

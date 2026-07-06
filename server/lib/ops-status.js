@@ -269,6 +269,13 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
     (thresholds.filmRoomStaleDays || 8) * 36
   );
 
+  const cronTiles = buildCronTiles(config, heartbeats);
+  const cronParentStatus = cronTiles.some((j) => j.status === 'red')
+    ? 'red'
+    : cronTiles.some((j) => j.status === 'yellow')
+      ? 'yellow'
+      : 'green';
+
   const tiles = [
     tile('deployments', 'Deployments', deploy.status, {
       lastRun: deploy.api?.timestamp,
@@ -280,9 +287,9 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
       mismatch: deploy.mismatch,
       errors24h: 0
     }),
-    tile('cron-jobs', 'Cron Jobs', 'green', {
+    tile('cron-jobs', 'Cron Jobs', cronParentStatus, {
       summary: `${opsJobs.listJobs().length} tracked jobs`,
-      jobs: buildCronTiles(config, heartbeats),
+      jobs: cronTiles,
       errors24h: opsMonitor.getErrorCount24h('cron')
     }),
     buildAutoposterTile(config),
