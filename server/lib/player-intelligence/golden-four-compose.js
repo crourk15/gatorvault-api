@@ -52,8 +52,9 @@ function buildInsiderLine(rpmTop = []) {
  * @param {object} params.intel — beat intel row
  * @param {object} [params.on3Sync] — syncGoldenFourPlayerFromOn3 result
  * @param {object} [params.playerRow] — recruiting store player
+ * @param {string} [params.composePath] — probe/diagnostic compose path id
  */
-function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = null } = {}) {
+function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = null, composePath = 'pr789_beat_facts' } = {}) {
   const beatText = String(intel?.detail || intel?.skinny || '').trim();
   if (!beatText) return { ok: false, reason: 'missing_beat_text' };
 
@@ -170,7 +171,7 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
       pr789AngleLive: true,
       publishTier: 'pr789_angle',
       dominantAngle: anglePick.angle,
-      composePath: 'pr789_beat_facts',
+      composePath,
       angleReason: anglePick.reason,
       voiceEngine: true,
       eliteBeatIntel: true,

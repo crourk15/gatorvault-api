@@ -784,6 +784,7 @@ module.exports = {
   compressBlocksToText,
   toLegacyTemplateBlocks,
   buildIdentityLine,
+  attachPr6Shadow,
   get CHAR_LIMIT() {
     return getTweetCharLimit();
   },

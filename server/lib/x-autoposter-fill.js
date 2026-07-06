@@ -418,6 +418,21 @@ async function probeIntelAutoposterPath(slug) {
     /* optional */
   }
 
+  let eliteBuild = null;
+  if (on3Row && (tier === 'A' || tier === 'B')) {
+    try {
+      const { buildEliteRepublishPost } = require('./player-intelligence/elite-republish-compose');
+      eliteBuild = await buildEliteRepublishPost(normalized, {
+        intelRow: on3Row,
+        fused,
+        refreshOn3: false,
+        persistFusion: false
+      });
+    } catch {
+      /* optional */
+    }
+  }
+
   return {
     ok: true,
     slug: normalized,
@@ -455,9 +470,24 @@ async function probeIntelAutoposterPath(slug) {
           ok: true,
           fusedIntel: !!build.validationMeta?.fusedIntel,
           source: build.source,
-          preview: String(build.text || '').slice(0, 160)
+          preview: String(build.text || '').slice(0, 160),
+          composePath: build.validationMeta?.composePath || null
         }
       : { ok: false },
+    eliteBuild: eliteBuild?.ok
+      ? {
+          ok: true,
+          preview: String(eliteBuild.text || '').slice(0, 200),
+          composePath: eliteBuild.validationMeta?.composePath || null,
+          rankingTokens: eliteBuild.validationMeta?.rankingTokens || null,
+          identity: eliteBuild.templateBlocks?.identity || null,
+          insider: eliteBuild.templateBlocks?.insider || null,
+          pr789AngleLive: !!eliteBuild.validationMeta?.pr789AngleLive,
+          pr789Shadow: !!eliteBuild.validationMeta?.pr789Shadow
+        }
+      : eliteBuild
+        ? { ok: false, reason: eliteBuild.reason || 'elite_compose_failed' }
+        : { ok: false },
     finalize: !!finalized,
     publishGate: finalized ? qa.passesPublishGate(finalized) : null,
     publishGateReason: finalized && !qa.passesPublishGate(finalized) ? qa.rejectReason(finalized) : null
@@ -481,9 +511,20 @@ async function buildNewsFromIntel(intel) {
       if (tier === 'A' || tier === 'B') {
         const { fusePlayerIntel, fusedBeatIntelEnqueueAllowed } = require('./player-intelligence/fuse-player-intel');
         const { composeFromFusedIntel } = require('./player-intelligence/compose-from-fused-intel');
+        const { buildEliteRepublishPost } = require('./player-intelligence/elite-republish-compose');
         const fused = await fusePlayerIntel(slug);
         if (!fusedBeatIntelEnqueueAllowed(fused, tier, intel)) return null;
-        const composed = composeFromFusedIntel(fused);
+
+        const elite = await buildEliteRepublishPost(slug, {
+          intelRow: intel,
+          fused,
+          refreshOn3: false,
+          persistFusion: false
+        });
+        const composed =
+          elite?.ok && elite.text
+            ? elite
+            : composeFromFusedIntel(fused);
         if (composed?.ok && composed.text) {
           const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
           const intelType = String(intel.eventType || '').toLowerCase();
@@ -2230,15 +2271,17 @@ async function forceEnqueueRecentCommits({ maxAgeMs = FORCE_POST_COMMIT_AGE_MS }
 }
 
 /**
- * Admin republish — reset sent/dedupe state and enqueue corrected fused intel copy.
+ * Admin republish — reset sent/dedupe state and enqueue corrected copy.
  * @param {string} slug
- * @param {{ post?: boolean, fingerprint?: string|null }} [opts]
+ * @param {{ post?: boolean, fingerprint?: string|null, mode?: 'elite'|'fused' }} [opts]
  */
 async function republishPlayerIntel(slug, opts = {}) {
   const normalized = String(slug || '')
     .trim()
     .toLowerCase();
   if (!normalized) return { ok: false, error: 'missing_slug' };
+
+  const mode = opts.mode || (opts.elite === false ? 'fused' : 'elite');
 
   await intelStore.initIntelStore().catch(() => {});
 
@@ -2270,9 +2313,56 @@ async function republishPlayerIntel(slug, opts = {}) {
     intelRows: intelStore.resetIntelPostedForPlayer(normalized, { fingerprint })
   };
 
-  const build = await buildNewsFromIntel(on3Row);
+  let build = null;
+  let eliteStack = null;
+  if (mode === 'elite') {
+    const { buildEliteRepublishPost } = require('./player-intelligence/elite-republish-compose');
+    const elite = await buildEliteRepublishPost(normalized, {
+      intelRow: on3Row,
+      refreshOn3: true,
+      persistFusion: true
+    });
+    eliteStack = elite.eliteStack || null;
+    if (!elite?.ok || !elite.text) {
+      return {
+        ok: false,
+        error: elite?.reason || 'elite_compose_failed',
+        mode,
+        slug: normalized,
+        cleared,
+        elite
+      };
+    }
+    const fp = on3Row.fingerprint || intelFingerprint(on3Row.playerId, on3Row.eventType, on3Row.timestamp);
+    build = attachNewsMeta(
+      {
+        text: elite.text,
+        category: 'news',
+        topic: 'recruiting',
+        urgencyLabel: 'major_beat',
+        postUrgency: 'urgent',
+        sourceEventType: on3Row.eventType,
+        sources: [{ label: on3Row.analystName || 'On3', url: on3Row.articleUrl || null }].filter((s) => s.url),
+        source: on3Row.source || 'auto:on3-team-news',
+        intelFingerprint: fp,
+        intelType: on3Row.eventType,
+        playerName: elite.playerName || on3Row.playerName,
+        playerSlug: normalized,
+        classYear: on3Row.classYear || null,
+        sourceIntelId: on3Row.id,
+        sourceEventCreatedAt: on3Row.timestamp || on3Row.createdAt || null,
+        eventTimestamp: on3Row.timestamp || on3Row.createdAt || null,
+        validationMeta: elite.validationMeta,
+        templateBlocks: elite.templateBlocks
+      },
+      elite
+    );
+  } else {
+    build = await buildNewsFromIntel(on3Row);
+  }
+
   if (!build?.text) {
-    return { ok: false, error: build?.reason || 'compose_failed', slug: normalized, cleared, build };
+    return { ok: false, error: build?.reason || 'compose_failed', slug: normalized, cleared, build, mode };
   }
 
   const doc = store.loadQueue();
@@ -2282,8 +2372,11 @@ async function republishPlayerIntel(slug, opts = {}) {
       ok: false,
       error: enqueued?.reason || 'enqueue_failed',
       slug: normalized,
+      mode,
       cleared,
       preview: build.text,
+      composePath: build.validationMeta?.composePath || null,
+      eliteStack,
       enqueue: enqueued
     };
   }
@@ -2304,8 +2397,12 @@ async function republishPlayerIntel(slug, opts = {}) {
   return {
     ok: posted ? posted.ok && !posted.skipped : true,
     slug: normalized,
+    mode,
     cleared,
     preview: build.text,
+    composePath: build.validationMeta?.composePath || enqueued.item?.validationMeta?.composePath || null,
+    rankingTokens: build.validationMeta?.rankingTokens || null,
+    eliteStack,
     enqueued: enqueued.item,
     posted
   };

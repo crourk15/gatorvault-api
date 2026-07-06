@@ -62,6 +62,7 @@ test('republish clears ledgers and enqueues corrected Cobbins copy', async () =>
     assert.doesNotMatch(out.preview, /campus in campus/i);
     assert.ok(out.enqueued?.id, 'queue item missing');
     assert.equal(out.enqueued.validationMeta?.allowRepublish, true);
+    assert.equal(out.enqueued.validationMeta?.composePath, 'elite_pr789');
 
     const resolution = resolutionLedger.checkPlayerResolution(SLUG, { intelFingerprint: FP });
     assert.equal(resolution.blocked, false);
