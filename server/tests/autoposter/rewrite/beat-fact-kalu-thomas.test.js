@@ -15,7 +15,7 @@ const KALU_BEAT =
   'Florida didn\'t need an offer to get DL Isaac Kalubi Lukuni\'s attention..🧐 The Top-100 prospect explains why the SEC program had his attention long before his offer arrived 🐊 "I really like the Gators." DETAILS: https://t.co/SbDpjtYntF';
 
 const THOMAS_BEAT =
-  'Antonio Thomas Jr. has Florida firmly on his radar after his spring visit. He\'s telling me, "Man, you got to come down here." The Gators are in his top schools mix.';
+  'Florida is making 2028 4-star EDGE Antonio Thomas Jr. a priority early on, and the interest is certainly mutual. Not to mention, he\'s teammates with a current Florida commit. "He\'s telling me, \'Man, you got to come down here.\'"';
 
 test('Kalu beat selects quote/interest angle — not generic board fallback', () => {
   const facts = extractBeatFacts(KALU_BEAT, { player: { name: 'DK Kalu' } });
@@ -74,8 +74,9 @@ test('Valid Kalu beat composes interest + clean quote', () => {
 test('Thomas beat rejects reporter-voice pseudo-quotes', () => {
   const facts = extractBeatFacts(THOMAS_BEAT, { player: { name: 'Antonio Thomas Jr.' } });
   assert.equal(facts.quote, null);
+  assert.equal(facts.offerInterest, true);
   const angle = selectAngleFromFacts(facts, THOMAS_BEAT);
-  assert.notEqual(angle.angle, 'board');
+  assert.equal(angle.angle, 'player_quote');
 });
 
 test('Thomas elite compose avoids garbled reporter quote embed', () => {
@@ -93,6 +94,8 @@ test('Thomas elite compose avoids garbled reporter quote embed', () => {
     composePath: 'elite_pr789'
   });
   assert.equal(built.ok, true, built.reason || JSON.stringify(built));
+  assert.match(built.text, /priority early/i);
+  assert.match(built.text, /mutual interest is real/i);
   assert.doesNotMatch(built.text, /top-school mix on his board early/i);
   assert.doesNotMatch(built.text, /He's telling me/i);
   assert.doesNotMatch(built.text, /\.'\./);

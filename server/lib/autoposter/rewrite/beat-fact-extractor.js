@@ -133,7 +133,11 @@ function extractOfferInterestSignal(beatText = '') {
     /\blong before (?:his|the) offer\b/i.test(beat) ||
     /\bdidn'?t need an offer\b/i.test(beat) ||
     /\bhad his attention long before\b/i.test(beat) ||
-    /\bfirmly on his radar\b/i.test(beat)
+    /\bfirmly on his radar\b/i.test(beat) ||
+    /\bmaking .+ a priority early\b/i.test(beat) ||
+    /\binterest is certainly mutual\b/i.test(beat) ||
+    /\bmutual interest\b/i.test(beat) ||
+    /\bteammates with a current florida commit\b/i.test(beat)
   );
 }
 
@@ -549,7 +553,12 @@ function composeEliteVisitArc(facts, ln, beatText = '', opts = {}) {
 function composeElitePlayerQuoteArc(facts, ln, beatText = '', opts = {}) {
   const beat = String(beatText || '').toLowerCase();
   let paragraph;
-  if (/long before.*offer|didn'?t need an offer|before his offer/i.test(beat)) {
+  if (/making .+ a priority early|interest is certainly mutual/i.test(beat)) {
+    paragraph = `Florida is making ${ln} a priority early, and the mutual interest is real`;
+    if (/teammates with a current florida commit/i.test(beat)) {
+      paragraph += ` — especially with a Gators commit already in his circle`;
+    }
+  } else if (/long before.*offer|didn'?t need an offer|before his offer/i.test(beat)) {
     paragraph = `Florida had ${ln}'s attention before the offer landed, and UF is already in his mix`;
   } else if (facts.visit?.when) {
     paragraph = `${ln}'s ${facts.visit.when} visit to Florida put the Gators on his radar early`;
