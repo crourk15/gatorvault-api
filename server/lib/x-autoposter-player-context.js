@@ -972,6 +972,15 @@ async function buildPlayerNewsPost({
       patch,
       beatText: beatDetailEarly,
       source,
+      sourceHandle: intel?.sourceHandle || null,
+      classYear: intel?.classYear || patch?.classYear,
+      pos: intel?.pos || patch?.pos,
+      timestamp:
+        intel?.timestamp ||
+        intel?.sourceEventCreatedAt ||
+        intel?.publishedAt ||
+        intel?.createdAt ||
+        new Date().toISOString(),
       eventType: intel?.eventType || 'commit',
       newsEvent
     });
@@ -992,6 +1001,13 @@ async function buildPlayerNewsPost({
       patch,
       beatText: beatDetailEarly,
       source,
+      sourceHandle: intel?.sourceHandle || null,
+      timestamp:
+        intel?.timestamp ||
+        intel?.sourceEventCreatedAt ||
+        intel?.publishedAt ||
+        intel?.createdAt ||
+        new Date().toISOString(),
       eventType: intel?.eventType || 'commit'
     });
     if (verified?.text) {
