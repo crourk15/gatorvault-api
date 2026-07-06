@@ -78,6 +78,30 @@ function composeStaffArc(facts = {}) {
   };
 }
 
+function composeDepthChartArc(facts = {}) {
+  const name = facts.player_name || 'a verified Gator';
+  const role = facts.depth_role || facts.player_pos || 'a new role';
+  const pos = facts.player_pos && facts.depth_role !== facts.player_pos ? ` (${facts.player_pos})` : '';
+  return {
+    identity: 'Florida Gators — Depth Chart',
+    context: `${name}${pos} is listed at ${role} on Florida's updated depth chart, per the verified beat report.`,
+    insider: 'The two-deep shuffle reshapes how Florida plans snaps and matchups in the SEC lane.',
+    arc: 'depth_chart'
+  };
+}
+
+function composeInjuryArc(facts = {}) {
+  const name = facts.player_name || 'a verified Gator';
+  const status = facts.injury_status || 'dealing with an injury update';
+  const pos = facts.player_pos ? ` (${facts.player_pos})` : '';
+  return {
+    identity: 'Florida Gators — Injury Report',
+    context: `${name}${pos} is ${status} for Florida, per the verified beat report.`,
+    insider: 'Availability shakes up who the staff trusts in the two-deep this week.',
+    arc: 'injury'
+  };
+}
+
 function composeGeneralArc(facts = {}) {
   const opponent = facts.opponent ? ` against ${facts.opponent}` : '';
   return {
@@ -101,6 +125,10 @@ function composeTeamArc(facts = {}, ctx = {}) {
       return composeUniformArc(facts);
     case 'staff':
       return composeStaffArc(facts);
+    case 'depth_chart':
+      return composeDepthChartArc(facts);
+    case 'injury':
+      return composeInjuryArc(facts);
     default:
       return composeGeneralArc(facts, ctx);
   }
@@ -112,6 +140,8 @@ module.exports = {
   composeGameWeekArc,
   composeUniformArc,
   composeStaffArc,
+  composeDepthChartArc,
+  composeInjuryArc,
   composeGeneralArc,
   composeTeamArc
 };

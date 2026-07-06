@@ -1,4 +1,4 @@
-/** Team event elite compose — kickoff / schedule / game week golden beats. */
+/** Team event elite compose — kickoff / schedule / game week / staff / team ops golden beats. */
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
@@ -16,6 +16,10 @@ const KICKOFF_BEAT =
 const SCHEDULE_BEAT =
   'Florida vs Georgia moved to Week 6 on CBS — SEC schedule update for the Gators.';
 const GAME_WEEK_BEAT = 'Florida game week vs Tennessee at The Swamp — matchup preview from Gainesville.';
+const DEPTH_CHART_BEAT =
+  'Updated depth chart from spring: DJ Coleman at FS, Bryce Thornton at SS for the Gators.';
+const INJURY_BEAT =
+  'Florida DB DJ Coleman ruled out for the LSU game with an ankle injury, per the verified beat report.';
 const RUMOR_BEAT =
   'Hearing rumors Florida could move kickoff vs LSU — nothing confirmed yet.';
 const MIXED_RECRUITING =
@@ -55,6 +59,34 @@ test('game week golden compose', () => {
   assert.match(built.text, /Tennessee/i);
 });
 
+test('depth chart golden compose', () => {
+  const facts = extractTeamFacts(DEPTH_CHART_BEAT, { teamEventType: 'depth_chart' });
+  assert.equal(facts.player_name, 'DJ Coleman');
+  assert.equal(facts.depth_role, 'FS');
+  const built = composeTeamElitePost({
+    beatText: DEPTH_CHART_BEAT,
+    source: 'Beat intel',
+    teamEventType: 'depth_chart'
+  });
+  assert.equal(built.ok, true, built.reason || JSON.stringify(built));
+  assert.equal(built.arc, 'depth_chart');
+  assert.match(built.text, /Depth Chart/i);
+  assert.match(built.text, /DJ Coleman/i);
+  assert.match(built.text, /FS/i);
+});
+
+test('injury golden compose', () => {
+  const facts = extractTeamFacts(INJURY_BEAT, { teamEventType: 'injury' });
+  assert.equal(facts.player_name, 'DJ Coleman');
+  assert.match(facts.injury_status, /ruled out/i);
+  const built = composeTeamElitePost({ beatText: INJURY_BEAT, source: 'Beat intel', teamEventType: 'injury' });
+  assert.equal(built.ok, true, built.reason || JSON.stringify(built));
+  assert.equal(built.arc, 'injury');
+  assert.match(built.text, /Injury Report/i);
+  assert.match(built.text, /DJ Coleman/i);
+  assert.match(built.text, /ruled out/i);
+});
+
 test('rumor blocked', () => {
   const gate = passesTeamDetectionGate(RUMOR_BEAT);
   assert.equal(gate.ok, false);
@@ -69,7 +101,6 @@ test('mixed recruiting+kickoff blocked', () => {
   assert.equal(built.ok, false);
   assert.equal(built.reason, 'recruiting_dominant');
 });
-
 
 test('staff hire golden compose', () => {
   const STAFF_BEAT =
@@ -90,7 +121,9 @@ test('unconfirmed staff rumor blocked', () => {
   const gate = passesTeamDetectionGate(beat);
   assert.equal(gate.ok, false);
   assert.equal(gate.reason, 'rumor_blocked');
-});test('THIN_FALLBACK_RE blocks legacy monitoring copy', () => {
+});
+
+test('THIN_FALLBACK_RE blocks legacy monitoring copy', () => {
   const legacy = 'Florida schedule update: kickoff change. Monitoring staff/roster impact.';
   assert.match(legacy, THIN_FALLBACK_RE);
   assert.equal(validateTeamCompose(legacy).ok, false);

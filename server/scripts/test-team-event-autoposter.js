@@ -105,6 +105,22 @@ const TEAM_EXAMPLES = [
   assert('elite staff compose', staffBuilt?.text && /Staff Move/i.test(staffBuilt.text));
   assert('staff names role', staffBuilt?.text && /Austin Lehman/i.test(staffBuilt.text));
 
+  const depthBuilt = playerContext.buildTeamEventPost({
+    beatText: 'Updated depth chart from spring: DJ Coleman at FS, Bryce Thornton at SS for the Gators.',
+    source: 'Beat intel',
+    teamEventType: 'depth_chart'
+  });
+  assert('elite depth chart compose', depthBuilt?.text && /Depth Chart/i.test(depthBuilt.text));
+  assert('depth chart names player', depthBuilt?.text && /DJ Coleman/i.test(depthBuilt.text));
+
+  const injuryBuilt = playerContext.buildTeamEventPost({
+    beatText: 'Florida DB DJ Coleman ruled out for the LSU game with an ankle injury, per the verified beat report.',
+    source: 'Beat intel',
+    teamEventType: 'injury'
+  });
+  assert('elite injury compose', injuryBuilt?.text && /Injury Report/i.test(injuryBuilt.text));
+  assert('injury names player', injuryBuilt?.text && /DJ Coleman/i.test(injuryBuilt.text));
+
   if (process.exitCode) {
     console.error('\nTeam event autoposter tests failed.');
   } else {

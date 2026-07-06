@@ -4,19 +4,31 @@
 const { normalizeBeat } = require('./team-fact-extractor');
 
 const RUMOR_RE =
-  /\b(rumor|rumors|hearing|heard that|could land|might land|may land|sources? tell|per sources|nothing confirmed|unconfirmed|still fluid|take this with a grain|expected to miss|likely out|game-time decision)\b/i;
+  /\b(rumor|rumors|hearing|heard that|could land|might land|may land|sources? tell|per sources|nothing confirmed|unconfirmed|still fluid|take this with a grain)\b/i;
 
 const RECRUITING_DOMINANT_RE =
   /\b(20\d{2}\s+(?:(?:\d+|[a-z]+)-star|[0-9]\.?\d*)\s*(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DE|EDGE|LB|CB|S|ATH|K|P)\b|\b(?:official\s+)?visit\b|\brecruit(?:ing|ment)\b|\btarget\b|\bprospect\b|\boffer(?:ed|s)?\b|\bcommit(?:ted|ment)?\b)/i;
 
 const TEAM_SIGNAL_RE =
-  /\b(kickoff|kick-off|start time|game time|schedule(?:d)?|week \d+|game week|pregame|matchup|vs\.|@\s+[A-Z]|espn|sec network|peacock|the swamp|ben hill griffin|hired|promoted|named\b.*(?:coordinator|coach)|staff (?:update|change|addition))\b/i;
+  /\b(kickoff|kick-off|start time|game time|schedule(?:d)?|week \d+|game week|pregame|matchup|vs\.|@\s+[A-Z]|espn|sec network|peacock|the swamp|ben hill griffin|hired|promoted|named\b.*(?:coordinator|coach)|staff (?:update|change|addition)|depth chart|two-deep|starting (?:qb|lineup)|rotation|injury report|ruled out|out for the season|questionable|doubtful)\b/i;
 
 const THIN_FALLBACK_RE =
   /Florida (?:schedule|team|staff) update:|Monitoring (?:staff|roster|depth chart) impact/i;
 
+function isInjuryBeat(beatText = '') {
+  return /\b(injury report|ruled out|out for the season|game-time decision|questionable|doubtful|expected to miss|ankle injury|knee injury|shoulder injury)\b/i.test(
+    normalizeBeat(beatText)
+  );
+}
+
 function isRumorBeat(beatText = '') {
-  return RUMOR_RE.test(normalizeBeat(beatText));
+  const beat = normalizeBeat(beatText);
+  if (isInjuryBeat(beat)) {
+    return /\b(rumor|rumors|hearing|heard that|nothing confirmed|unconfirmed|still fluid|take this with a grain)\b/i.test(
+      beat
+    );
+  }
+  return RUMOR_RE.test(beat) || /\b(expected to miss|likely out|game-time decision)\b/i.test(beat);
 }
 
 function isRecruitingDominantTeamBeat(beatText = '') {
@@ -59,6 +71,13 @@ function hasFactCompleteness(facts = {}, ctx = {}) {
       return /\b(uniform|jersey|alternate|throwback|helmet|all[-\s]?orange)\b/i.test(facts.beatText || '');
     case 'staff':
       return Boolean(facts.staff_name && facts.staff_role);
+    case 'depth_chart':
+      return Boolean(
+        facts.player_name &&
+          (facts.depth_role || facts.player_pos || /\bat\s+[A-Z0-9]/i.test(facts.beatText || ''))
+      );
+    case 'injury':
+      return Boolean(facts.player_name && facts.injury_status);
     default:
       return Boolean(facts.opponent || facts.kickoff_time || facts.network || facts.week_number);
   }
@@ -80,5 +99,6 @@ module.exports = {
   passesTeamDetectionGate,
   validateTeamCompose,
   hasFactCompleteness,
-  hasTeamSignal
+  hasTeamSignal,
+  isInjuryBeat
 };
