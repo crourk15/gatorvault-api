@@ -279,7 +279,8 @@ function extractBeatFacts(beatText = '', ctx = {}) {
       playerRow,
       player,
       beatText: beat,
-      roster: ctx.recruitingRoster
+      roster: ctx.recruitingRoster,
+      intel: ctx.intel || intel
     }),
     provenance: {
       visit: extractVisit(beat) ? 'beat' : null,

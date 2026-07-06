@@ -131,7 +131,11 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
     metrics: signal.metrics,
     player: signal.player,
     slug,
-    playerRow
+    playerRow: {
+      ...(playerRow || {}),
+      school: playerRow?.school || intel?.school || intel?.highSchool || null
+    },
+    intel
   });
 
   if (!hasFactCompletenessForPr789(facts, beatText)) {

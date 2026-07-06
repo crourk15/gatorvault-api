@@ -118,6 +118,7 @@ function enrichPlayerRow(playerRow, playerIntel) {
 
   return {
     ...playerRow,
+    school: playerRow.school || playerIntel?.identity?.school || null,
     competitors,
     ufRpmPct:
       playerIntel?.rpm?.ufPct != null
@@ -147,35 +148,39 @@ function resolveOn3RecruitSlug(slug, playerRow, intelRow = null) {
 async function ensureRankingProfile(slug, playerRow, intelRow = null) {
   let row = playerRow;
   let tokens = extractOn3RankingTokens(row);
-  if (tokens) return { playerRow: row, rankingTokens: tokens };
+  const needsSchool = !row?.school && !row?.fromSchool;
+  if (tokens && !needsSchool) return { playerRow: row, rankingTokens: tokens };
 
   const recruitSlug = resolveOn3RecruitSlug(slug, row, intelRow);
-  if (!recruitSlug) return { playerRow: row, rankingTokens: null };
+  if (!recruitSlug) return { playerRow: row, rankingTokens: tokens || null };
 
   try {
-    const profile = await on3Recruit.fetchRecruitProfile(recruitSlug, row.classYear || 2028);
-    if (!profile || profile.error) return { playerRow: row, rankingTokens: null };
-    const patch = profilePatchFromOn3(profile, row.classYear || 2028);
+    const profile = await on3Recruit.fetchRecruitProfile(recruitSlug, row?.classYear || intelRow?.classYear || 2028);
+    if (!profile || profile.error) return { playerRow: row, rankingTokens: tokens || null };
+    const patch = profilePatchFromOn3(profile, row?.classYear || intelRow?.classYear || 2028);
     row = {
-      ...row,
+      ...(row || {}),
+      slug,
       ...patch,
       on3Slug: recruitSlug,
-      hometownState: patch.state || row.hometownState || row.state || null,
-      state: patch.state || row.state || row.hometownState || null,
-      on3TopTeams: profile.topTeams || row.on3TopTeams || [],
-      topTeams: profile.topTeams || row.topTeams || [],
-      competitors: rpmTopFromOn3TopTeams(profile.topTeams || [], row.classYear || 2028).map((entry) => ({
-        school: entry.school,
-        pct: entry.pct,
-        score: entry.pct
-      })),
+      hometownState: patch.state || row?.hometownState || row?.state || null,
+      state: patch.state || row?.state || row?.hometownState || null,
+      on3TopTeams: profile.topTeams || row?.on3TopTeams || [],
+      topTeams: profile.topTeams || row?.topTeams || [],
+      competitors: rpmTopFromOn3TopTeams(profile.topTeams || [], row?.classYear || intelRow?.classYear || 2028).map(
+        (entry) => ({
+          school: entry.school,
+          pct: entry.pct,
+          score: entry.pct
+        })
+      ),
       updatedAt: new Date().toISOString()
     };
     await recruitingStore.upsertPlayer(row);
     tokens = extractOn3RankingTokens(row);
     return { playerRow: row, rankingTokens: tokens };
   } catch {
-    return { playerRow: row, rankingTokens: null };
+    return { playerRow: row, rankingTokens: tokens || null };
   }
 }
 

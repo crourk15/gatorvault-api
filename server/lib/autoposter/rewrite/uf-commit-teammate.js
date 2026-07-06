@@ -68,13 +68,15 @@ function isUfCommit(player) {
   );
 }
 
-function subjectSchoolFromContext({ playerRow, player } = {}) {
+function subjectSchoolFromContext({ playerRow, player, intel } = {}) {
   return (
     playerRow?.school ||
     playerRow?.fromSchool ||
     playerRow?.highSchool ||
     player?.school ||
     player?.highSchool ||
+    intel?.school ||
+    intel?.highSchool ||
     null
   );
 }
@@ -102,11 +104,11 @@ function candidateMatchesSubjectHs(subjectHs, candidate) {
 /**
  * @returns {{ name: string, slug: string } | null}
  */
-function resolveUfCommitTeammate({ slug, playerRow, player, beatText, roster } = {}) {
+function resolveUfCommitTeammate({ slug, playerRow, player, beatText, roster, intel } = {}) {
   if (!beatHasUfCommitTeammateSignal(beatText)) return null;
 
   const subjectSlug = normalizeKey(slug);
-  const subjectSchool = subjectSchoolFromContext({ playerRow, player });
+  const subjectSchool = subjectSchoolFromContext({ playerRow, player, intel });
   if (!subjectSchool) return null;
 
   const players = Array.isArray(roster) ? roster : loadRosterSync();
