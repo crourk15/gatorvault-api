@@ -409,6 +409,30 @@ function markIntelXPosted(idOrFingerprint, { tweetId = null, tweetUrl = null } =
   return doc.items[idx];
 }
 
+function resetIntelPostedForPlayer(playerSlug, { fingerprint = null } = {}) {
+  const key = String(playerSlug || '')
+    .trim()
+    .toLowerCase();
+  if (!key) return 0;
+  const doc = loadIntelDoc();
+  let changed = 0;
+  doc.items = (doc.items || []).map((item) => {
+    if (String(item.playerSlug || '').trim().toLowerCase() !== key) return item;
+    if (fingerprint && item.fingerprint !== fingerprint) return item;
+    if (!item.xPosted && !item.xPostQueued) return item;
+    changed += 1;
+    const next = { ...item, xPosted: false, xPostQueued: false };
+    delete next.xPostedAt;
+    delete next.xPostTweetId;
+    delete next.xPostTweetUrl;
+    delete next.xPostQueueClearedReason;
+    queuePostgresUpsert(next);
+    return next;
+  });
+  if (changed) saveIntelDoc(doc);
+  return changed;
+}
+
 function clearIntelXPostQueued(idOrFingerprint, reason = 'queue_missing') {
   const doc = loadIntelDoc();
   const idx = doc.items.findIndex((i) => i.id === idOrFingerprint || i.fingerprint === idOrFingerprint);
@@ -581,6 +605,7 @@ module.exports = {
   getIntelByFingerprint,
   markIntelXPostQueued,
   markIntelXPosted,
+  resetIntelPostedForPlayer,
   clearIntelXPostQueued,
   reconcileGhostQueuedIntel,
   updateIntelIdentity,

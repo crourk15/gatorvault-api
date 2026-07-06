@@ -247,6 +247,9 @@ function duplicateRecoveryText(text) {
 }
 
 function duplicateGuardBeforePost(item) {
+  if (item?.validationMeta?.allowRepublish === true) {
+    return { duplicate: false, republishBypass: true };
+  }
   const sentLedger = require('./x-autoposter-sent-ledger');
   const fill = require('./x-autoposter-fill');
   const postSpec = require('./x-autoposter-post-spec');

@@ -56,8 +56,30 @@ function recordStoryUnit(item) {
   writeStore(doc);
   return row;
 }
+function clearStoryUnitsForPlayer(slug, { storyArc = null } = {}) {
+  const key = normalizeSlug(slug);
+  if (!key) return 0;
+  const doc = readStore();
+  const before = (doc.entries || []).length;
+  doc.entries = (doc.entries || []).filter((entry) => {
+    const unitKey = String(entry.storyUnitKey || '');
+    if (storyArc) return unitKey !== `${key}|${storyArc}`;
+    return !unitKey.startsWith(`${key}|`);
+  });
+  if (doc.entries.length !== before) writeStore(doc);
+  return before - doc.entries.length;
+}
+
 function getStoryMemorySummary() {
   const entries = readStore().entries || [];
   return { enabled: storyMemoryEnabled(), recentCount: entries.length, windowMs: STORY_WINDOW_MS };
 }
-module.exports = { storyMemoryEnabled, normalizeStoryArc, computeStoryUnitKey, hasRecentStoryUnit, recordStoryUnit, getStoryMemorySummary };
+module.exports = {
+  storyMemoryEnabled,
+  normalizeStoryArc,
+  computeStoryUnitKey,
+  hasRecentStoryUnit,
+  recordStoryUnit,
+  clearStoryUnitsForPlayer,
+  getStoryMemorySummary
+};

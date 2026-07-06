@@ -171,10 +171,55 @@ function schedulePlayerResolutionPersist(slug, row) {
   queuePersist(() => persistPlayerResolution(slug, row));
 }
 
+async function deleteSentEntriesForPlayer(slug, { intelFingerprint = null } = {}) {
+  if (!isEnabled() || !slug) return false;
+  await ensureTables();
+  const client = pgClient();
+  await client.connect();
+  try {
+    if (intelFingerprint) {
+      await client.query(
+        `DELETE FROM autoposter_sent_ledger WHERE player_slug = $1 AND intel_fingerprint = $2`,
+        [slug, intelFingerprint]
+      );
+    } else {
+      await client.query(`DELETE FROM autoposter_sent_ledger WHERE player_slug = $1`, [slug]);
+    }
+    return true;
+  } finally {
+    await client.end().catch(() => {});
+  }
+}
+
+async function deletePlayerResolution(slug) {
+  if (!isEnabled() || !slug) return false;
+  await ensureTables();
+  const client = pgClient();
+  await client.connect();
+  try {
+    await client.query(`DELETE FROM autoposter_player_resolution WHERE player_slug = $1`, [slug]);
+    return true;
+  } finally {
+    await client.end().catch(() => {});
+  }
+}
+
+function scheduleClearSentForPlayer(slug, opts = {}) {
+  queuePersist(() => deleteSentEntriesForPlayer(slug, opts));
+}
+
+function scheduleClearPlayerResolution(slug) {
+  queuePersist(() => deletePlayerResolution(slug));
+}
+
 module.exports = {
   isEnabled,
   ensureTables,
   hydrateAllLedgers,
   scheduleSentPersist,
-  schedulePlayerResolutionPersist
+  schedulePlayerResolutionPersist,
+  scheduleClearSentForPlayer,
+  scheduleClearPlayerResolution,
+  deleteSentEntriesForPlayer,
+  deletePlayerResolution
 };

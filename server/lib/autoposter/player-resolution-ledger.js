@@ -184,6 +184,12 @@ function clearPlayerResolution(slug) {
   if (!doc.players[key]) return false;
   delete doc.players[key];
   saveLedger(doc);
+  try {
+    const persistence = require('./autoposter-ledger-persistence');
+    persistence.scheduleClearPlayerResolution(key);
+  } catch {
+    /* optional */
+  }
   return true;
 }
 

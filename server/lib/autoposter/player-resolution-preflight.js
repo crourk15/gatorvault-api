@@ -72,7 +72,7 @@ async function evaluatePlayerPostPreflight(input = {}) {
     const pendingSlug = queueStore
       .listQueue({ status: 'pending' })
       .some((item) => ledger.normalizeSlug(item.playerSlug) === slug);
-    if (pendingSlug) {
+    if (pendingSlug && !allowRepublish) {
       return { ok: false, action: 'block', reason: 'already_pending' };
     }
   } catch {

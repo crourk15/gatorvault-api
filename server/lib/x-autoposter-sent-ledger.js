@@ -302,6 +302,29 @@ function prunePhantomLedgerEntries() {
   return before - doc.entries.length;
 }
 
+function clearSentLedgerForPlayer(slug, { intelFingerprint = null } = {}) {
+  const key = normalizeSlug(slug);
+  if (!key) return 0;
+  const doc = loadLedger();
+  const before = doc.entries.length;
+  doc.entries = doc.entries.filter((entry) => {
+    const entrySlug = normalizeSlug(entry.playerSlug);
+    if (entrySlug !== key) return true;
+    if (intelFingerprint && entry.intelFingerprint && entry.intelFingerprint !== intelFingerprint) {
+      return true;
+    }
+    return false;
+  });
+  if (doc.entries.length !== before) saveLedger(doc);
+  try {
+    const persistence = require('./autoposter/autoposter-ledger-persistence');
+    persistence.scheduleClearSentForPlayer(key, { intelFingerprint });
+  } catch {
+    /* optional */
+  }
+  return before - doc.entries.length;
+}
+
 function countRecentSentPosts(withinMs = DAILY_WINDOW_MS) {
   const cutoff = Date.now() - withinMs;
   const doc = loadLedger();
@@ -323,6 +346,7 @@ module.exports = {
   recordSentCommit,
   recordSentPost,
   bootstrapFromQueueItems,
+  clearSentLedgerForPlayer,
   prunePhantomLedgerEntries,
   isConfirmedLedgerPost,
   countRecentSentPosts,

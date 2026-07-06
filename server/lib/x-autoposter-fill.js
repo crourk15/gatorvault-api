@@ -1013,6 +1013,17 @@ async function finalizeEnqueueFailure(rawCandidate, doc, result, opts = {}) {
 
 async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
   const ladderDepth = opts.ladderDepth || 0;
+  let candidate = rawCandidate;
+  if (opts.allowRepublish === true && candidate) {
+    candidate = {
+      ...candidate,
+      validationMeta: {
+        ...(candidate.validationMeta || {}),
+        allowRepublish: true,
+        republishIntent: true
+      }
+    };
+  }
   let phase3 = null;
   try {
     phase3 = require('./autoposter/phase3-index');
@@ -1029,9 +1040,9 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
   if (isRecruitingPlayer) {
     const preflightMod = require('./autoposter/player-resolution-preflight');
     const ledger = require('./autoposter/player-resolution-ledger');
-    const allowGoldenFour = String(rawCandidate?.source || '').includes('golden-four');
+    const allowGoldenFour = String(candidate?.source || '').includes('golden-four');
     const pre = await preflightMod.evaluatePlayerPostPreflight({
-      ...rawCandidate,
+      ...candidate,
       playerSlug: slug,
       allowGoldenFour,
       allowRepublish: opts.allowRepublish === true
@@ -1090,14 +1101,25 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
     return finalizeEnqueueFailure(rawCandidate, doc, { queued: false, reason: 'identity_skip' }, opts);
   }
 
-  const scored = await finalizeNewsCandidate(rawCandidate);
+  const scoredRaw = await finalizeNewsCandidate(candidate);
+  const scored =
+    scoredRaw && opts.allowRepublish === true
+      ? {
+          ...scoredRaw,
+          validationMeta: {
+            ...(scoredRaw.validationMeta || {}),
+            allowRepublish: true,
+            republishIntent: true
+          }
+        }
+      : scoredRaw;
   if (!scored) {
-    const ladder = await tryResearchLadder(rawCandidate, 'quality_gate', doc, ladderDepth);
+    const ladder = await tryResearchLadder(candidate, 'quality_gate', doc, ladderDepth);
     if (ladder?.queued) return ladder;
-    return finalizeEnqueueFailure(rawCandidate, doc, { queued: false, reason: 'quality_gate' }, opts);
+    return finalizeEnqueueFailure(candidate, doc, { queued: false, reason: 'quality_gate' }, opts);
   }
 
-  if (phase3?.phase3Enabled?.()) {
+  if (phase3?.phase3Enabled?.() && opts.allowRepublish !== true) {
     const mem = phase3.guardCandidateMemory(scored);
     if (!mem.ok) {
       if (mem.reason === 'story_dedupe') {
@@ -1112,7 +1134,7 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
   }
 
   const fp = scored.intelFingerprint || scored.commitFingerprint;
-  if (fp && fingerprintAlreadyQueued(fp, doc.items)) {
+  if (fp && fingerprintAlreadyQueued(fp, doc.items) && opts.allowRepublish !== true) {
     return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'duplicate_fingerprint' }, opts);
   }
   if (
@@ -2207,6 +2229,88 @@ async function forceEnqueueRecentCommits({ maxAgeMs = FORCE_POST_COMMIT_AGE_MS }
   return { queued: false, reason: 'no_eligible_commits', scanned: commits.length };
 }
 
+/**
+ * Admin republish — reset sent/dedupe state and enqueue corrected fused intel copy.
+ * @param {string} slug
+ * @param {{ post?: boolean, fingerprint?: string|null }} [opts]
+ */
+async function republishPlayerIntel(slug, opts = {}) {
+  const normalized = String(slug || '')
+    .trim()
+    .toLowerCase();
+  if (!normalized) return { ok: false, error: 'missing_slug' };
+
+  await intelStore.initIntelStore().catch(() => {});
+
+  const rows = intelStore.getIntelForPlayer({ playerSlug: normalized }) || [];
+  const on3Row =
+    rows.find((row) => /on3-team-news/i.test(String(row.source || ''))) ||
+    rows.find((row) => isBeatWriterIntel(row)) ||
+    null;
+  if (!on3Row) return { ok: false, error: 'no_intel_row', slug: normalized };
+
+  const fingerprint = opts.fingerprint || on3Row.fingerprint || null;
+  const resolutionLedger = require('./autoposter/player-resolution-ledger');
+  const sentLedger = require('./x-autoposter-sent-ledger');
+  const storyMemory = require('./autoposter/story-memory');
+
+  const pendingCancelled = store
+    .listQueue({ status: 'pending' })
+    .filter((item) => String(item.playerSlug || '').trim().toLowerCase() === normalized)
+    .map((item) => {
+      store.updatePost(item.id, { status: 'cancelled', error: 'republish_reset', sentAt: store.nowIso() });
+      return item.id;
+    });
+
+  const cleared = {
+    pendingCancelled,
+    resolution: resolutionLedger.clearPlayerResolution(normalized),
+    sentLedger: sentLedger.clearSentLedgerForPlayer(normalized, { intelFingerprint: fingerprint }),
+    storyMemory: storyMemory.clearStoryUnitsForPlayer(normalized),
+    intelRows: intelStore.resetIntelPostedForPlayer(normalized, { fingerprint })
+  };
+
+  const build = await buildNewsFromIntel(on3Row);
+  if (!build?.text) {
+    return { ok: false, error: build?.reason || 'compose_failed', slug: normalized, cleared, build };
+  }
+
+  const doc = store.loadQueue();
+  const enqueued = await attemptEnqueueCandidate(build, doc, { allowRepublish: true });
+  if (!enqueued?.queued) {
+    return {
+      ok: false,
+      error: enqueued?.reason || 'enqueue_failed',
+      slug: normalized,
+      cleared,
+      preview: build.text,
+      enqueue: enqueued
+    };
+  }
+
+  let posted = null;
+  if (opts.post === true) {
+    const autoposter = require('./x-autoposter');
+    posted = await autoposter.processQueueItem({
+      ...enqueued.item,
+      validationMeta: {
+        ...(enqueued.item.validationMeta || {}),
+        allowRepublish: true,
+        republishIntent: true
+      }
+    });
+  }
+
+  return {
+    ok: posted ? posted.ok && !posted.skipped : true,
+    slug: normalized,
+    cleared,
+    preview: build.text,
+    enqueued: enqueued.item,
+    posted
+  };
+}
+
 module.exports = {
   refillAutoposterQueue,
   hasGoldenFourPending,
@@ -2241,6 +2345,7 @@ module.exports = {
   buildCandidatesFromIntelRows,
   collectPriorityBeatIntelCandidate,
   probeIntelAutoposterPath,
+  republishPlayerIntel,
   COMMIT_EVENT_SOURCES,
   FORCE_POST_COMMIT_AGE_MS,
 };
