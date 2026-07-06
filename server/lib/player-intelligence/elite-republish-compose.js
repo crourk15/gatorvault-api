@@ -159,6 +159,9 @@ async function ensureRankingProfile(slug, playerRow, intelRow = null) {
     row = {
       ...row,
       ...patch,
+      on3Slug: recruitSlug,
+      hometownState: patch.state || row.hometownState || row.state || null,
+      state: patch.state || row.state || row.hometownState || null,
       on3TopTeams: profile.topTeams || row.on3TopTeams || [],
       topTeams: profile.topTeams || row.topTeams || [],
       competitors: rpmTopFromOn3TopTeams(profile.topTeams || [], row.classYear || 2028).map((entry) => ({

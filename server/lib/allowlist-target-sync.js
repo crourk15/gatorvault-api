@@ -1030,6 +1030,9 @@ module.exports = {
   ingestAllowlistCommit,
   scanBeatCommitQueue,
   profilePatchFromOn3,
+  loadOn3RecruitSlug,
+  syncSlugFromOn3,
+  syncSlugFromOn3Fast,
   STATE_PATH,
   STALE_HOURS,
 };
