@@ -289,7 +289,15 @@ async function buildEliteRepublishPost(slug, opts = {}) {
       fingerprint: intelRow.fingerprint || null
     });
     if (mismatch.mismatch) {
-      return { ok: false, reason: 'beat_identity_mismatch', ...mismatch, on3Sync, on3Refresh };
+      return {
+        ok: false,
+        reason: 'beat_identity_mismatch',
+        mismatchReason: mismatch.reason,
+        mentionedName: mismatch.mentionedName || null,
+        mentionedSlug: mismatch.mentionedSlug || null,
+        on3Sync,
+        on3Refresh
+      };
     }
   } catch {
     /* optional */
