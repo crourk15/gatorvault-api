@@ -3,6 +3,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { cityStateFromHighSchoolSlug } = require('../../on3-recruit-client');
 
 let rosterCache = null;
 
@@ -68,6 +69,14 @@ function isUfCommit(player) {
   );
 }
 
+function expandSubjectSchool(school, highSchoolSlug) {
+  const base = String(school || '').trim();
+  if (!base) return null;
+  if (/\([^)]+\)/.test(base)) return base;
+  const cityState = cityStateFromHighSchoolSlug(highSchoolSlug);
+  return cityState ? `${base} (${cityState})` : base;
+}
+
 function subjectSchoolFromContext({ playerRow, player, intel } = {}) {
   return (
     playerRow?.school ||
@@ -108,7 +117,10 @@ function resolveUfCommitTeammate({ slug, playerRow, player, beatText, roster, in
   if (!beatHasUfCommitTeammateSignal(beatText)) return null;
 
   const subjectSlug = normalizeKey(slug);
-  const subjectSchool = subjectSchoolFromContext({ playerRow, player, intel });
+  const subjectSchool = expandSubjectSchool(
+    subjectSchoolFromContext({ playerRow, player, intel }),
+    playerRow?.highSchoolSlug || player?.highSchoolSlug || intel?.highSchoolSlug
+  );
   if (!subjectSchool) return null;
 
   const players = Array.isArray(roster) ? roster : loadRosterSync();
@@ -146,6 +158,7 @@ function resolveUfCommitTeammate({ slug, playerRow, player, beatText, roster, in
 }
 
 module.exports = {
+  expandSubjectSchool,
   beatHasUfCommitTeammateSignal,
   clearRosterCacheForTests,
   isUfCommit,

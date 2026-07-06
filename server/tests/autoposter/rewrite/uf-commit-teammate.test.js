@@ -58,6 +58,16 @@ test('resolveUfCommitTeammate names Kendrick for Thomas at Carrollwood Day', () 
   assert.deepEqual(match, { name: KENDRICK_NAME, slug: 'devoun-kendrick' });
 });
 
+test('resolveUfCommitTeammate expands HS slug when school lacks city', () => {
+  const match = resolveUfCommitTeammate({
+    slug: 'antonio-thomas-jr',
+    playerRow: { school: 'Carrollwood Day', classYear: 2028, highSchoolSlug: 'carrollwood-day-tampa-fl' },
+    beatText: THOMAS_BEAT,
+    roster: MOCK_ROSTER
+  });
+  assert.deepEqual(match, { name: KENDRICK_NAME, slug: 'devoun-kendrick' });
+});
+
 test('resolveUfCommitTeammate returns null without subject school', () => {
   const match = resolveUfCommitTeammate({
     slug: 'antonio-thomas-jr',
