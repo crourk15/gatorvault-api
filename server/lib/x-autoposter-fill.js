@@ -427,7 +427,7 @@ async function probeIntelAutoposterPath(slug) {
       } = require('./player-intelligence/elite-republish-compose');
       const built = await buildEliteRepublishPost(normalized, {
         intelRow: on3Row,
-        fused,
+        fused: fuse,
         refreshOn3: true,
         persistFusion: false
       });
