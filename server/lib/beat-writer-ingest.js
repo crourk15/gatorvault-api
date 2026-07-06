@@ -468,6 +468,38 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     };
   }
 
+  if (prefilter.isTeamEventIntel(text, post)) {
+    const gate = prefilter.evaluateTeamEventEligibility(text, { post });
+    if (!gate.eligible) {
+      if (logSkips) logBeatPostSkip(post, gate.reason || 'not_team_event', 'non_player_intel');
+      return null;
+    }
+    const timestamp = resolvePostTimestamp(post);
+    const handle = String(post.handle || '').toLowerCase() || 'beat';
+    const day = timestamp.slice(0, 10);
+    const postKey = String(post.id || post.url || day)
+      .replace(/[^a-z0-9_-]/gi, '')
+      .slice(0, 32);
+    const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
+    const detail = text.replace(/\s+/g, ' ').slice(0, 280);
+    return {
+      playerName: null,
+      playerSlug: null,
+      eventType: 'team_event',
+      triggerType: 'team_event',
+      teamEventType: gate.teamEventType || 'general',
+      status: prefilter.classifyTeamEventType(text) || gate.teamEventType || 'general',
+      detail,
+      text: detail,
+      timestamp,
+      articleUrl: post.url || null,
+      source: analystName,
+      sourceHandle: post.handle || null,
+      sourceType: 'beat',
+      fingerprint: `team_event_${gate.teamEventType || 'general'}_${postKey}_${day}_${handle}`
+    };
+  }
+
   const strict = ingestGate.evaluateStrictRecruitingIngestGate(post, text);
   if (!strict.pass) {
     if (logSkips) logBeatPostSkip(post, strict.reason, 'filtered');

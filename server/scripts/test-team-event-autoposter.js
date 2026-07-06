@@ -88,6 +88,15 @@ const TEAM_EXAMPLES = [
   });
   assert('schedule copy builder', scheduleBuilt?.text && scheduleBuilt.triggerType === 'team_event');
 
+  const playerContext = require('../lib/x-autoposter-player-context');
+  const builtKickoff = playerContext.buildTeamEventPost({
+    beatText: kickoffPost.text,
+    source: 'Gators Online',
+    teamEventType: 'kickoff'
+  });
+  assert('elite kickoff compose', builtKickoff?.text && /Kickoff Alert/i.test(builtKickoff.text));
+  assert('no thin team fallback', builtKickoff?.text && !/Monitoring staff\/roster impact/i.test(builtKickoff.text));
+
   if (process.exitCode) {
     console.error('\nTeam event autoposter tests failed.');
   } else {

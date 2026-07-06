@@ -337,7 +337,18 @@ function isTeamEventIntel(text, post = null) {
   }
   if (copy?.hasPlayerSpecificIntel?.(phrase)) return false;
 
-  return Boolean(classifyTeamEventType(phrase));
+  const teamType = classifyTeamEventType(phrase);
+  if (!teamType) return false;
+
+  try {
+    const { passesTeamDetectionGate } = require('./autoposter/team-event/team-gates');
+    const gate = passesTeamDetectionGate(phrase, { ...(post || {}), teamEventType: teamType });
+    if (!gate.ok) return false;
+  } catch {
+    /* optional gate module */
+  }
+
+  return true;
 }
 
 function evaluateTeamEventEligibility(text, { post = null } = {}) {
@@ -707,6 +718,20 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
     };
   }
 
+  const teamGate = evaluateTeamEventEligibility(text, { post });
+  if (teamGate.eligible && isTrustedUfBeatPost(post)) {
+    return {
+      eligible: true,
+      triggerType: 'team_event',
+      teamEventType: teamGate.teamEventType,
+      text,
+      playerName: null,
+      playerSlug: null,
+      gate: teamGate,
+      sport: 'football'
+    };
+  }
+
   const sportClassifier = require('./x-autoposter-sport-classifier');
   const sportSkip = sportClassifier.guardFootballOnly(text, post);
   if (sportSkip) {
@@ -717,22 +742,6 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
       subsystem: `${subsystem}:sport-filter`
     });
     return { eligible: false, skip: sportSkip, text, sport: sportSkip.sport };
-  }
-
-  if (isTrustedUfBeatPost(post)) {
-    const teamGate = evaluateTeamEventEligibility(text, { post });
-    if (teamGate.eligible) {
-      return {
-        eligible: true,
-        triggerType: 'team_event',
-        teamEventType: teamGate.teamEventType,
-        text,
-        playerName: null,
-        playerSlug: null,
-        gate: teamGate,
-        sport: 'football'
-      };
-    }
   }
 
   const ingestGate = require('./beat-recruiting-ingest-gate');

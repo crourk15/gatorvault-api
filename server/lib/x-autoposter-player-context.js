@@ -334,6 +334,41 @@ function buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel, cop
 }
 
 function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = null } = {}) {
+  try {
+    const { composeTeamElitePost, eliteComposeEnabled } = require('./autoposter/team-event/team-compose');
+    if (eliteComposeEnabled()) {
+      const elite = composeTeamElitePost({
+        beatText,
+        source,
+        teamEventType,
+        post: { writerName: source, teamEventType, url: postUrl }
+      });
+      if (elite?.ok && elite.text) {
+        return {
+          text: elite.text,
+          playerName: null,
+          postKind: 'team_event',
+          triggerType: 'team_event',
+          teamEventType: teamEventType || elite.validationMeta?.teamEventType || 'general',
+          context: { teamEvent: true, name: 'Florida Gators' },
+          templateBlocks: elite.templateBlocks,
+          validationMeta: {
+            ...(elite.validationMeta || {}),
+            teamDedupeKey: elite.dedupeKey || elite.validationMeta?.dedupeKey || null
+          },
+          playerContext: { teamEvent: true, name: 'Florida Gators' }
+        };
+      }
+      return null;
+    }
+  } catch {
+    /* fall through to legacy only when elite module unavailable */
+  }
+
+  return buildTeamEventPostLegacy({ beatText, source, teamEventType, postUrl });
+}
+
+function buildTeamEventPostLegacy({ beatText, source, teamEventType = null, postUrl = null } = {}) {
   const teamContext =
     template.teamEventLabel(teamEventType) || template.detectTeamContext(beatText) || 'UF Update';
   const identity = `Florida Gators — ${teamContext}`;

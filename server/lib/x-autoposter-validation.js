@@ -629,7 +629,8 @@ function collectHardSkipReasons(item, blocks, meta) {
   if (
     beatSource &&
     !isDetectivesTemplatePost(item) &&
-    !isProgramNewsPost(item, blocks, item?.playerContext, meta)
+    !isProgramNewsPost(item, blocks, item?.playerContext, meta) &&
+    !isTeamEventPost(item, blocks, item?.playerContext, meta)
   ) {
     const combined = [blocks.context, blocks.insider].filter(Boolean).join(' ');
     if (hasExcessiveSourceOverlap(combined, beatSource, qualityChecks.OVERLAP_MAX)) {
