@@ -88,6 +88,9 @@ function rulesForAutoposter(candidate) {
   if (trigger === 'portal_elite' || et === 'portal_elite' || et === 'portal_landing') {
     return { allow: true };
   }
+  if (trigger === 'recruiting_narrative_elite' || et === 'recruiting_narrative') {
+    return { allow: true };
+  }
   const src = String(candidate.source || '').toLowerCase();
   const eventSrc = String(
     candidate.sourceEventSource || candidate.validationMeta?.sourceEvent || ''

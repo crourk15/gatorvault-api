@@ -241,7 +241,18 @@ function resolveRecruitingEventType(text) {
   if (/\bflip(?:ped)?\s+to\s+(?:florida|the gators|\buf\b)/i.test(t)) return 'commit';
   if (/\bdecommit/i.test(t)) return 'decommit';
   if (/\bportal\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'portal_in';
-  if (/\boffer(?:ed|s)?\b/i.test(t)) return 'offer';
+  try {
+    const { isRetrospectiveOfferBeat, isFreshOfferBeat } = require('./autoposter/recruiting-offer-disambiguation');
+    const { isRecruitingNarrativeBeat } = require('./autoposter/recruiting-narrative/narrative-gates');
+    if (/\boffer(?:ed|s)?\b/i.test(t)) {
+      if (isFreshOfferBeat(t)) return 'offer';
+      if (isRetrospectiveOfferBeat(t) || isRecruitingNarrativeBeat(t)) return 'recruiting_narrative';
+      return 'offer';
+    }
+    if (isRecruitingNarrativeBeat(t)) return 'recruiting_narrative';
+  } catch {
+    if (/\boffer(?:ed|s)?\b/i.test(t)) return 'offer';
+  }
   if (/\b(prediction machine|futurecast|expert pick|rpm)\b/i.test(t)) return 'prediction';
   if (isOfficialVisitText(t)) return 'official_visit';
   if (UNOFFICIAL_VISIT_RE.test(t)) return 'unofficial_visit';
@@ -255,6 +266,7 @@ function buildRecruitingStatus(eventType, text) {
   if (eventType === 'commit') return 'Committed · Florida';
   if (eventType === 'decommit') return 'Decommitted';
   if (eventType === 'offer') return 'Offer · Florida';
+  if (eventType === 'recruiting_narrative') return 'Recruiting narrative · Florida';
   if (eventType === 'portal_in') return 'Portal · UF target';
   if (eventType === 'prediction') return 'Prediction · Florida';
   return 'Recruiting intel';
@@ -500,6 +512,44 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     };
   }
 
+  if (prefilter.isRecruitingNarrativeEliteIntel(text, post)) {
+    const gate = prefilter.evaluateRecruitingNarrativeEliteEligibility(text, { post });
+    if (!gate.eligible) {
+      if (logSkips) logBeatPostSkip(post, gate.reason || 'not_recruiting_narrative', 'filtered');
+      return null;
+    }
+    const timestamp = resolvePostTimestamp(post);
+    const handle = String(post.handle || '').toLowerCase() || 'beat';
+    const day = timestamp.slice(0, 10);
+    const postKey = String(post.id || post.url || day)
+      .replace(/[^a-z0-9_-]/gi, '')
+      .slice(0, 32);
+    const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
+    const detail = text.replace(/\s+/g, ' ').slice(0, 280);
+    const playerName = gate.playerName || extractVisitPlayerName(text);
+    const slugBase = playerName
+      ? playerName
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+      : null;
+    return {
+      playerName,
+      playerSlug: slugBase,
+      eventType: 'recruiting_narrative',
+      triggerType: 'recruiting_narrative_elite',
+      status: buildRecruitingStatus('recruiting_narrative', text),
+      detail,
+      text: detail,
+      timestamp,
+      articleUrl: post.url || null,
+      source: analystName,
+      sourceHandle: post.handle || null,
+      sourceType: 'beat',
+      fingerprint: `recruiting_narrative_${postKey}_${day}_${handle}`
+    };
+  }
+
   if (prefilter.isPortalEliteIntel(text, post)) {
     const gate = prefilter.evaluatePortalEliteEligibility(text, { post });
     if (!gate.eligible) {
@@ -684,6 +734,24 @@ async function buildAutoposterPayload(row, intelItem) {
       },
       {
         portalEventType: row.portalEventType || row.eventType,
+        playerName: row.playerName,
+        playerSlug: row.playerSlug
+      }
+    );
+    if (!built?.text) {
+      return { ok: false, reason: built?.skipReason || 'invalid_copy' };
+    }
+    return { ok: true, ...built };
+  }
+  if (row.triggerType === 'recruiting_narrative_elite' || row.eventType === 'recruiting_narrative') {
+    const built = await copy.buildRecruitingNarrativeCopyAsync(
+      {
+        text: row.detail,
+        writerName: row.source,
+        handle: row.sourceHandle,
+        url: row.articleUrl
+      },
+      {
         playerName: row.playerName,
         playerSlug: row.playerSlug
       }

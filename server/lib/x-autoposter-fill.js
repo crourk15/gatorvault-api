@@ -884,6 +884,7 @@ const TOPIC_PRIORITY = {
   program_news: 0,
   team_event: 1,
   portal_elite: 2,
+  recruiting_narrative_elite: 2,
   uf_official_news: 1,
   roster_delta: 2,
   game_week: 2,
@@ -904,6 +905,9 @@ function candidateTopicRank(raw) {
   if (raw?.triggerType === 'program_news' || raw?.programNewsType) return TOPIC_PRIORITY.program_news;
   if (raw?.triggerType === 'team_event' || raw?.teamEventType) return TOPIC_PRIORITY.team_event;
   if (raw?.triggerType === 'portal_elite' || raw?.portalEventType) return TOPIC_PRIORITY.portal_elite;
+  if (raw?.triggerType === 'recruiting_narrative_elite' || raw?.eventType === 'recruiting_narrative') {
+    return TOPIC_PRIORITY.recruiting_narrative_elite;
+  }
   if (raw?.source === 'auto:uf-official-news') return TOPIC_PRIORITY.uf_official_news;
   if (raw?.source === 'auto:roster-delta') return TOPIC_PRIORITY.roster_delta;
   if (raw?.source === 'auto:game-zone') return TOPIC_PRIORITY.game_week;

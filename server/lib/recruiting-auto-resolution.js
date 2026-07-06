@@ -517,6 +517,16 @@ async function autoResolveIntel(intel, opts = {}) {
     };
   }
 
+  if (intel?.triggerType === 'recruiting_narrative_elite' || intel?.eventType === 'recruiting_narrative') {
+    return {
+      resolved: true,
+      confirmed: true,
+      narrativeElite: true,
+      intelPatch: {},
+      mergedSnapshot: { narrativeElite: true, recruitingNarrative: true }
+    };
+  }
+
   const programGate = prefilter.evaluateProgramNewsEligibility(phrase, { post: opts.post || null });
   if (programGate.eligible) {
     return {

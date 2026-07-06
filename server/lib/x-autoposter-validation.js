@@ -307,8 +307,17 @@ function isProgramNewsPost(item, blocks, ctx, meta = {}) {
 function isPortalElitePost(item, blocks, ctx, meta = {}) {
   const m = item?.validationMeta || meta || {};
   if (item?.triggerType === 'portal_elite' || item?.portalEventType) return true;
+  if (item?.triggerType === 'recruiting_narrative_elite' || item?.eventType === 'recruiting_narrative') return true;
   if (m.portalElite || m.portalEliteCompose) return true;
   if (ctx?.isPortal && m.portalEliteCompose) return true;
+  return false;
+}
+
+function isRecruitingNarrativeElitePost(item, blocks, ctx, meta = {}) {
+  const m = item?.validationMeta || meta || {};
+  if (item?.triggerType === 'recruiting_narrative_elite' || item?.eventType === 'recruiting_narrative') return true;
+  if (m.narrativeElite || m.narrativeEliteCompose) return true;
+  if (ctx?.recruitingNarrative && m.narrativeEliteCompose) return true;
   return false;
 }
 
@@ -498,6 +507,8 @@ function scoreIdentityBlock(ctx, blocks, item = null) {
   const natlRank = enrichedCtx?.natlRank != null ? Number(enrichedCtx.natlRank) : null;
   const starsLabel = enrichedCtx?.starsLabel || template.formatStarsLabel(enrichedCtx?.stars);
   const isPortal = enrichedCtx?.isPortal || /^portal\b/i.test(identity);
+  const isNarrativeElite =
+    enrichedCtx?.recruitingNarrative || /^recruiting ·/i.test(identity) || meta.narrativeEliteCompose;
   const identityHasName = name && name.length >= 4 && new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(identity);
   const identityHasClass = classYear && !Number.isNaN(classYear) && identity.includes(String(classYear));
   const identityHasSchool = school && school.length >= 3 && new RegExp(school.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(identity);
@@ -514,7 +525,7 @@ function scoreIdentityBlock(ctx, blocks, item = null) {
     score += 20;
     fields.push('pos');
   }
-  if (isPortal || (classYear && !Number.isNaN(classYear)) || identityHasClass || /\b20\d{2}\b/.test(identity)) {
+  if (isPortal || isNarrativeElite || (classYear && !Number.isNaN(classYear)) || identityHasClass || /\b20\d{2}\b/.test(identity)) {
     score += 20;
     fields.push('classYear');
   }
@@ -523,7 +534,7 @@ function scoreIdentityBlock(ctx, blocks, item = null) {
     fields.push('school');
   }
   const hasRank = natlRank > 0 || identity.includes('On3 #') || !!starsLabel;
-  if (isPortal || hasRank) {
+  if (isPortal || isNarrativeElite || hasRank) {
     score += 15;
     fields.push('ranking');
   }
@@ -639,7 +650,8 @@ function collectHardSkipReasons(item, blocks, meta) {
     !isDetectivesTemplatePost(item) &&
     !isProgramNewsPost(item, blocks, item?.playerContext, meta) &&
     !isTeamEventPost(item, blocks, item?.playerContext, meta) &&
-    !isPortalElitePost(item, blocks, item?.playerContext, meta)
+    !isPortalElitePost(item, blocks, item?.playerContext, meta) &&
+    !isRecruitingNarrativeElitePost(item, blocks, item?.playerContext, meta)
   ) {
     const combined = [blocks.context, blocks.insider].filter(Boolean).join(' ');
     if (hasExcessiveSourceOverlap(combined, beatSource, qualityChecks.OVERLAP_MAX)) {
@@ -779,7 +791,11 @@ function scoreNewsPost(item) {
     ? Math.max(compositeScore, Number(item.qualityScore) || POSTING_THRESHOLD)
     : isPr789AngleElitePost(item) && blocks.identity && (blocks.context || blocks.insider || item.text)
       ? Math.max(compositeScore, POSTING_THRESHOLD)
-      : compositeScore;
+      : isRecruitingNarrativeElitePost(item, blocks, ctx, meta) &&
+          blocks.identity &&
+          (blocks.context || blocks.insider || item.text)
+        ? Math.max(compositeScore, POSTING_THRESHOLD)
+        : compositeScore;
 
   const breakdown = {
     identity: {

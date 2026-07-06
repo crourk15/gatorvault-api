@@ -368,6 +368,54 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
   return buildTeamEventPostLegacy({ beatText, source, teamEventType, postUrl });
 }
 
+function buildRecruitingNarrativePost({
+  beatText,
+  source,
+  playerName = null,
+  playerSlug = null,
+  pos = null,
+  patch = null,
+  postUrl = null
+} = {}) {
+  try {
+    const { composeRecruitingNarrativeElitePost, eliteComposeEnabled } = require('./autoposter/recruiting-narrative/narrative-compose');
+    if (eliteComposeEnabled()) {
+      const elite = composeRecruitingNarrativeElitePost({
+        beatText,
+        source,
+        playerName,
+        playerSlug,
+        pos,
+        patch,
+        post: { writerName: source, playerName, playerSlug, pos, url: postUrl }
+      });
+      if (elite?.ok && elite.text) {
+        return {
+          text: elite.text,
+          playerName: elite.playerName,
+          playerSlug: elite.playerSlug,
+          postKind: 'recruiting_narrative',
+          triggerType: 'recruiting_narrative_elite',
+          context: elite.context,
+          templateBlocks: elite.templateBlocks,
+          validationMeta: elite.validationMeta,
+          playerContext: {
+            recruitingNarrative: true,
+            name: elite.playerName,
+            playerSlug: elite.playerSlug,
+            pos: pos || patch?.pos || null
+          }
+        };
+      }
+      return null;
+    }
+  } catch {
+    /* fall through to legacy only when elite module unavailable */
+  }
+
+  return null;
+}
+
 function buildPortalPost({
   beatText,
   source,
@@ -1308,6 +1356,7 @@ module.exports = {
   buildCoachNewsPost,
   buildPlayerNewsPost,
   buildPortalPost,
+  buildRecruitingNarrativePost,
   buildTeamEventPost,
   buildProgramNewsPost,
   newsEventForIntel,

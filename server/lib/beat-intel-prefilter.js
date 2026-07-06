@@ -408,6 +408,34 @@ function evaluatePortalEliteEligibility(text, { post = null } = {}) {
   };
 }
 
+function isRecruitingNarrativeEliteIntel(text, post = null) {
+  const phrase = normalizePhrase(text);
+  if (!phrase || isGenericNonPlayerIntel(phrase)) return false;
+  try {
+    const { isRecruitingNarrativeBeat } = require('./autoposter/recruiting-narrative/narrative-gates');
+    return isRecruitingNarrativeBeat(phrase, post);
+  } catch {
+    return false;
+  }
+}
+
+function evaluateRecruitingNarrativeEliteEligibility(text, { post = null } = {}) {
+  const phrase = normalizePhrase(text);
+  if (!isRecruitingNarrativeEliteIntel(phrase, post)) {
+    return { eligible: false, reason: 'not_recruiting_narrative', category: 'filtered' };
+  }
+  const { extractPlayerName } = require('./autoposter/recruiting-narrative/narrative-fact-extractor');
+  const playerName = extractPlayerName(phrase, post || {});
+  return {
+    eligible: true,
+    triggerType: 'recruiting_narrative_elite',
+    playerName,
+    playerSlug: post?.playerSlug || null,
+    matchMode: 'recruiting_narrative_elite',
+    triggerPhrase: phrase.slice(0, 160)
+  };
+}
+
 function extractCleanFullName(text) {
   const fromBeat = extractPlayerFromText(text);
   if (fromBeat && isValidPlayerName(fromBeat) && !isSingleTokenName(fromBeat)) {
@@ -791,6 +819,24 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
     };
   }
 
+  const narrativeGate = evaluateRecruitingNarrativeEliteEligibility(text, { post });
+  if (narrativeGate.eligible && isTrustedUfBeatPost(post)) {
+    const beatGate = await evaluateBeatIntelEligibility(text, {
+      trustedWriter: require('./beat-writer-filters').isTrustedBeatWriter?.(post),
+      post,
+      playerName: narrativeGate.playerName
+    });
+    return {
+      eligible: true,
+      triggerType: 'recruiting_narrative_elite',
+      text,
+      playerName: narrativeGate.playerName || beatGate.playerName,
+      playerSlug: beatGate.playerSlug || narrativeGate.playerSlug || null,
+      gate: narrativeGate,
+      sport: 'football'
+    };
+  }
+
   const sportClassifier = require('./x-autoposter-sport-classifier');
   const sportSkip = sportClassifier.guardFootballOnly(text, post);
   if (sportSkip) {
@@ -870,6 +916,8 @@ module.exports = {
   classifyPortalEventType,
   isPortalEliteIntel,
   evaluatePortalEliteEligibility,
+  isRecruitingNarrativeEliteIntel,
+  evaluateRecruitingNarrativeEliteEligibility,
   evaluateProgramNewsEligibility,
   evaluateBeatIntelEligibility,
   buildNonPlayerSkipPayload,

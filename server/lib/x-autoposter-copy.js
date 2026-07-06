@@ -101,10 +101,24 @@ const NAME_CHUNK = `${NAME_PART}(?:\\s+${NAME_PART}){1,2}${NAME_SUFFIX}`;
 const POS_TOKEN = `(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|K|P)`;
 const TRAILING_NAME_NOISE_RE =
   /\s+(?:can't|cant|won't|wont|doesn't|doesnt|isn't|isnt|aren't|arent|wasn't|wasnt|hasn't|hasnt|haven't|havent|didn't|didnt|ignore|ignores|ignored|could|would|should|will|can)\.?$/i;
+const TRAILING_PREP_TIME_RE =
+  /\s+(?:in|on|at)\s+(?:january|february|march|april|may|june|july|august|september|october|november|december|spring|summer|fall|winter|\d{4})\b/i;
 
-function sanitizeExtractedPlayerName(name) {
+function sanitizeExtractedPlayerName(name, fullText = '') {
   let n = String(name || '').trim();
   if (!n) return null;
+  const prepMatch = n.match(/^(.+?)\s+(in|on|at)$/i);
+  if (prepMatch && fullText) {
+    const hay = String(fullText);
+    const idx = hay.toLowerCase().indexOf(n.toLowerCase());
+    if (idx >= 0) {
+      const after = hay.slice(idx + n.length).trim();
+      if (/^(?:january|february|march|april|may|june|july|august|september|october|november|december|spring|summer|fall|winter|\d{4})\b/i.test(after)) {
+        n = prepMatch[1].trim();
+      }
+    }
+  }
+  n = n.replace(TRAILING_PREP_TIME_RE, '').trim();
   for (let i = 0; i < 3; i += 1) {
     const trimmed = n.replace(TRAILING_NAME_NOISE_RE, '').trim();
     if (trimmed === n) break;
@@ -155,7 +169,7 @@ function extractAllPlayerNameCandidates(text) {
       const name = m[1]?.trim();
       if (!name || seen.has(name.toLowerCase())) continue;
       seen.add(name.toLowerCase());
-      const clean = sanitizeExtractedPlayerName(name);
+      const clean = sanitizeExtractedPlayerName(name, t);
       if (clean) hits.push(clean);
     }
   }
@@ -181,7 +195,7 @@ function extractPlayerFromText(text) {
   for (const t of variants) {
     for (const re of patterns) {
       const m = t.match(re);
-      const name = sanitizeExtractedPlayerName((m?.[2] || m?.[1])?.trim());
+      const name = sanitizeExtractedPlayerName((m?.[2] || m?.[1])?.trim(), t);
       if (name) return name;
     }
     const candidates = extractAllPlayerNameCandidates(t);
@@ -305,7 +319,17 @@ function detectBeatNewsEvent(text) {
     return 'indicated strong interest in another Gainesville visit';
   }
   if (/\bstrong interest in the gators\b/i.test(t)) return 'signaled strong interest in Florida';
-  if (/\boffer(?:ed|s)?\b.*\b(florida|gators|\buf\b)/i.test(t)) return 'received an offer from UF';
+  if (
+    /\b(?:offer(?:ed|s)?\b.*\b(florida|gators|\buf\b)|\b(florida|gators|\buf\b).*\boffer(?:ed|s)?\b)/i.test(t)
+  ) {
+    try {
+      const { isRetrospectiveOfferBeat } = require('./autoposter/recruiting-offer-disambiguation');
+      if (isRetrospectiveOfferBeat(t)) return null;
+    } catch {
+      /* optional */
+    }
+    return 'received an offer from UF';
+  }
   if (isPredictionMachinePost(t)) return 'picked up a UF prediction';
   if (/\brpm\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'picked up a UF prediction';
   if (/\bprediction\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'picked up a UF prediction';
@@ -490,6 +514,25 @@ async function buildPortalCopyAsync(post, gate = {}) {
   return newsPayloadFromBuilt(built, { triggerType: 'portal_elite' });
 }
 
+async function buildRecruitingNarrativeCopyAsync(post, gate = {}) {
+  const text = String(post?.text || '').replace(/\s+/g, ' ').trim();
+  if (!text) return null;
+
+  const analyst = post.writerName || post.outlet || post.handle || 'Beat writer';
+  const patch = extractVerifiedPatchFromBeatText(text);
+  const built = playerContext.buildRecruitingNarrativePost({
+    beatText: text,
+    source: analyst,
+    playerName: gate.playerName || gate.gate?.playerName || null,
+    playerSlug: gate.playerSlug || gate.gate?.playerSlug || null,
+    pos: patch?.pos || null,
+    patch,
+    postUrl: post.url || null
+  });
+  if (!built?.text) return null;
+  return newsPayloadFromBuilt(built, { triggerType: 'recruiting_narrative_elite' });
+}
+
 function buildTeamEventCopyFromSchedule(game) {
   if (!game?.game && !game?.opponent) return null;
   const opponent = game.opponent || String(game.game || '').replace(/^Florida vs\s+/i, '').trim();
@@ -529,7 +572,8 @@ async function buildBeatIntelCopyAsync(post) {
     guarded.eligible &&
     (guarded.triggerType === 'program_news' ||
       guarded.triggerType === 'team_event' ||
-      guarded.triggerType === 'portal_elite');
+      guarded.triggerType === 'portal_elite' ||
+      guarded.triggerType === 'recruiting_narrative_elite');
   if (!programTeamOrPortalBeat && !sportClassifier.isFootballAutoposterEligible(text, post)) {
     return sportClassifier.buildNonFootballSkipPayload(sportClassifier.classifySport(text, post), text);
   }
@@ -545,6 +589,10 @@ async function buildBeatIntelCopyAsync(post) {
 
   if (guarded.triggerType === 'portal_elite') {
     return buildPortalCopyAsync(post, guarded);
+  }
+
+  if (guarded.triggerType === 'recruiting_narrative_elite') {
+    return buildRecruitingNarrativeCopyAsync(post, guarded);
   }
 
   if (template.HEADLINE_ONLY_RE.test(text)) return null;
@@ -680,6 +728,18 @@ async function buildIntelCopyAsync(intel) {
       patch: playerContext.verifiedPatchFromIntel(intel)
     });
     if (built?.text) return newsPayloadFromBuilt(built, { triggerType: 'portal_elite' });
+  }
+
+  if (intel.triggerType === 'recruiting_narrative_elite' || intel.eventType === 'recruiting_narrative') {
+    const built = playerContext.buildRecruitingNarrativePost({
+      beatText: intel.detail || intel.status || '',
+      source: intel.source || intel.analystName || 'Beat writer',
+      playerName: intel.playerName,
+      playerSlug: intel.playerSlug,
+      pos: intel.pos,
+      patch: playerContext.verifiedPatchFromIntel(intel)
+    });
+    if (built?.text) return newsPayloadFromBuilt(built, { triggerType: 'recruiting_narrative_elite' });
   }
 
   const resolved = await resolveIntelForCopy(intel, {
@@ -980,6 +1040,7 @@ module.exports = {
   buildTeamEventCopyAsync,
   buildProgramNewsCopyAsync,
   buildPortalCopyAsync,
+  buildRecruitingNarrativeCopyAsync,
   buildTeamEventCopyFromSchedule,
   buildBeatIntelCopyAsync,
   buildIntelCopyAsync,

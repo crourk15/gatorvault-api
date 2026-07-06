@@ -148,6 +148,7 @@ function isIdentityLine(s) {
   if (!t) return false;
   if (/^Florida Gators —/.test(t)) return true;
   if (/^Portal /.test(t)) return true;
+  if (/^Recruiting ·/.test(t)) return true;
   if (/^[\d★]/.test(t)) return true;
   if (/ — UF Update$/.test(t)) return true;
   if (/^Florida .+\bcoach\b/i.test(t)) return true;
@@ -339,6 +340,17 @@ function buildCompactRecruitingIdentity(ctx) {
   lead.push(name);
   let line = lead.filter(Boolean).join(' ');
   const school = formatSchoolLabel(ctx.school);
+  if (school) line += ` (${school})`;
+  return line;
+}
+
+function buildNarrativeIdentity(ctx, narrativeStatus = 'Recruiting · Narrative') {
+  const status = String(narrativeStatus || 'Recruiting · Narrative').trim();
+  const lead = [status];
+  if (ctx?.pos) lead.push(ctx.pos);
+  lead.push(ctx?.name || 'Verified recruit');
+  let line = lead.join(' ');
+  const school = formatSchoolLabel(ctx?.school);
   if (school) line += ` (${school})`;
   return line;
 }
@@ -729,6 +741,7 @@ module.exports = {
   buildRecruitingIdentity,
   buildCompactRecruitingIdentity,
   buildPortalIdentity,
+  buildNarrativeIdentity,
   buildTeamIdentity,
   detectTeamContext,
   teamEventLabel,

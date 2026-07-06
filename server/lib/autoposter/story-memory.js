@@ -14,6 +14,9 @@ function normalizeStoryArc(c) {
   if (c.programNewsType) return 'program:' + c.programNewsType;
   if (c.teamEventType) return 'team:' + c.teamEventType;
   if (c.portalEventType) return 'portal:' + c.portalEventType;
+  if (c.validationMeta?.narrativeEliteCompose || c.eventType === 'recruiting_narrative') {
+    return 'narrative:' + (c.validationMeta?.arc || 'general');
+  }
   const et = String(c.sourceEventType || c.eventType || '').toLowerCase();
   if (et) return et;
   const text = (c.playerName || '') + ' ' + (c.text || '');
@@ -31,6 +34,7 @@ function computeStoryUnitKey(c) {
     c.validationMeta?.programDedupeKey ||
     c.validationMeta?.teamDedupeKey ||
     c.validationMeta?.portalDedupeKey ||
+    c.validationMeta?.narrativeDedupeKey ||
     c.validationMeta?.dedupeKey;
   if (metaKey) return metaKey;
   const arc = normalizeStoryArc(c);
