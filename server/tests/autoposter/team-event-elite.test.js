@@ -70,7 +70,27 @@ test('mixed recruiting+kickoff blocked', () => {
   assert.equal(built.reason, 'recruiting_dominant');
 });
 
-test('THIN_FALLBACK_RE blocks legacy monitoring copy', () => {
+
+test('staff hire golden compose', () => {
+  const STAFF_BEAT =
+    'Florida named Austin Lehman co-defensive coordinator, staff source confirms.';
+  const facts = extractTeamFacts(STAFF_BEAT, { teamEventType: 'staff' });
+  assert.equal(facts.staff_name, 'Austin Lehman');
+  assert.equal(facts.staff_role, 'co-defensive coordinator');
+  const built = composeTeamElitePost({ beatText: STAFF_BEAT, source: 'Beat intel', teamEventType: 'staff' });
+  assert.equal(built.ok, true, built.reason || JSON.stringify(built));
+  assert.equal(built.arc, 'staff');
+  assert.match(built.text, /Staff Move/i);
+  assert.match(built.text, /Austin Lehman/i);
+  assert.match(built.text, /co-defensive coordinator/i);
+});
+
+test('unconfirmed staff rumor blocked', () => {
+  const beat = 'Hearing rumors Florida could hire a new defensive coordinator — nothing confirmed.';
+  const gate = passesTeamDetectionGate(beat);
+  assert.equal(gate.ok, false);
+  assert.equal(gate.reason, 'rumor_blocked');
+});test('THIN_FALLBACK_RE blocks legacy monitoring copy', () => {
   const legacy = 'Florida schedule update: kickoff change. Monitoring staff/roster impact.';
   assert.match(legacy, THIN_FALLBACK_RE);
   assert.equal(validateTeamCompose(legacy).ok, false);

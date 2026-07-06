@@ -97,6 +97,14 @@ const TEAM_EXAMPLES = [
   assert('elite kickoff compose', builtKickoff?.text && /Kickoff Alert/i.test(builtKickoff.text));
   assert('no thin team fallback', builtKickoff?.text && !/Monitoring staff\/roster impact/i.test(builtKickoff.text));
 
+  const staffBuilt = playerContext.buildTeamEventPost({
+    beatText: 'Florida named Austin Lehman co-defensive coordinator, staff source confirms.',
+    source: 'Beat intel',
+    teamEventType: 'staff'
+  });
+  assert('elite staff compose', staffBuilt?.text && /Staff Move/i.test(staffBuilt.text));
+  assert('staff names role', staffBuilt?.text && /Austin Lehman/i.test(staffBuilt.text));
+
   if (process.exitCode) {
     console.error('\nTeam event autoposter tests failed.');
   } else {

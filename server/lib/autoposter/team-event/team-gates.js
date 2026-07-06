@@ -10,10 +10,10 @@ const RECRUITING_DOMINANT_RE =
   /\b(20\d{2}\s+(?:(?:\d+|[a-z]+)-star|[0-9]\.?\d*)\s*(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DE|EDGE|LB|CB|S|ATH|K|P)\b|\b(?:official\s+)?visit\b|\brecruit(?:ing|ment)\b|\btarget\b|\bprospect\b|\boffer(?:ed|s)?\b|\bcommit(?:ted|ment)?\b)/i;
 
 const TEAM_SIGNAL_RE =
-  /\b(kickoff|kick-off|start time|game time|schedule(?:d)?|week \d+|game week|pregame|matchup|vs\.|@\s+[A-Z]|espn|sec network|peacock|the swamp|ben hill griffin)\b/i;
+  /\b(kickoff|kick-off|start time|game time|schedule(?:d)?|week \d+|game week|pregame|matchup|vs\.|@\s+[A-Z]|espn|sec network|peacock|the swamp|ben hill griffin|hired|promoted|named\b.*(?:coordinator|coach)|staff (?:update|change|addition))\b/i;
 
 const THIN_FALLBACK_RE =
-  /Florida (?:schedule|team) update:|Monitoring (?:staff|roster|depth chart) impact/i;
+  /Florida (?:schedule|team|staff) update:|Monitoring (?:staff|roster|depth chart) impact/i;
 
 function isRumorBeat(beatText = '') {
   return RUMOR_RE.test(normalizeBeat(beatText));
@@ -57,6 +57,8 @@ function hasFactCompleteness(facts = {}, ctx = {}) {
       return Boolean(facts.opponent);
     case 'uniform':
       return /\b(uniform|jersey|alternate|throwback|helmet|all[-\s]?orange)\b/i.test(facts.beatText || '');
+    case 'staff':
+      return Boolean(facts.staff_name && facts.staff_role);
     default:
       return Boolean(facts.opponent || facts.kickoff_time || facts.network || facts.week_number);
   }

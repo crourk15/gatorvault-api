@@ -1,5 +1,5 @@
 /**
- * Team event post dedupe keys — kickoff / schedule / game week.
+ * Team event post dedupe keys — kickoff / schedule / game week / staff.
  */
 const crypto = require('crypto');
 const { selectTeamArc } = require('./team-fact-extractor');
@@ -24,6 +24,9 @@ function computeTeamDedupeKey(facts = {}) {
   } else if (arc === 'game_week') {
     parts.push(slugPart(facts.opponent || 'matchup'));
     parts.push(slugPart(facts.home_away || 'home'));
+  } else if (arc === 'staff') {
+    parts.push(slugPart(facts.staff_name || 'staff'));
+    parts.push(slugPart(facts.staff_role || facts.staff_action || 'move'));
   } else {
     parts.push(slugPart(facts.opponent || facts.event_type || 'general'));
   }

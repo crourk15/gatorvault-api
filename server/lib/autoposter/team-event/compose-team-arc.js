@@ -56,6 +56,28 @@ function composeUniformArc(facts = {}) {
   };
 }
 
+function composeStaffArc(facts = {}) {
+  const name = facts.staff_name || 'a verified staff addition';
+  const role = facts.staff_role || 'a new role on staff';
+  const action = facts.staff_action || 'named';
+  let context;
+  if (action === 'promoted') {
+    context = `Florida promoted ${name} to ${role}, per the verified beat report.`;
+  } else if (action === 'hired') {
+    context = `Florida hired ${name} as ${role}, per the verified beat report.`;
+  } else if (action === 'resigned') {
+    context = `${name} stepped down from ${role} at Florida, per the verified beat report.`;
+  } else {
+    context = `Florida named ${name} as ${role}, per the verified beat report.`;
+  }
+  return {
+    identity: 'Florida Gators — Staff Move',
+    context,
+    insider: 'The staff move keeps Florida aligned with its on-field identity and recruiting footprint.',
+    arc: 'staff'
+  };
+}
+
 function composeGeneralArc(facts = {}) {
   const opponent = facts.opponent ? ` against ${facts.opponent}` : '';
   return {
@@ -77,6 +99,8 @@ function composeTeamArc(facts = {}, ctx = {}) {
       return composeGameWeekArc(facts);
     case 'uniform':
       return composeUniformArc(facts);
+    case 'staff':
+      return composeStaffArc(facts);
     default:
       return composeGeneralArc(facts, ctx);
   }
@@ -87,6 +111,7 @@ module.exports = {
   composeScheduleArc,
   composeGameWeekArc,
   composeUniformArc,
+  composeStaffArc,
   composeGeneralArc,
   composeTeamArc
 };
