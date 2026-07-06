@@ -35,3 +35,13 @@ test('forcePost intel build surfaces Cobbins after init', async () => {
     'forcePost-age intel build should surface Cobbins On3 row'
   );
 });
+
+test('collectPriorityBeatIntelCandidate surfaces Cobbins beat row', async () => {
+  const intelStore = require('../../lib/recruiting-intel-store');
+  const fill = require('../../lib/x-autoposter-fill');
+
+  await intelStore.initIntelStore();
+  const row = await fill.collectPriorityBeatIntelCandidate({ forcePost: true });
+  assert.ok(row, 'priority beat intel build required');
+  assert.equal(row.playerSlug, 'jermaine-cobbins');
+});

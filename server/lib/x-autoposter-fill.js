@@ -209,6 +209,24 @@ async function collectUnqueuedIntelCandidates({ forcePost = false, maxBuild } = 
   return prioritizePostCandidates(candidates);
 }
 
+/** Build a single top-priority beat intel row — fast path when wide collect times out. */
+async function collectPriorityBeatIntelCandidate({ forcePost = false } = {}) {
+  const maxIntelAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_BEAT_INTEL_AGE_MS;
+  const beatIntel = intelStore
+    .getUnqueuedIntel({ maxAgeMs: forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS })
+    .filter(isBeatWriterIntel);
+  const scan = await selectBeatIntelForAutopost(beatIntel, { limit: 1 });
+  if (!scan.length) return null;
+  const eligibility = require('./rivals-prediction-eligibility');
+  for (const intel of scan) {
+    const gate = await eligibility.checkIntelForAutopost(intel);
+    if (!gate.allowed) continue;
+    const row = await buildNewsFromIntel(intel);
+    if (row) return row;
+  }
+  return null;
+}
+
 function withRefillTimeout(promise, ms, label = 'refill_step') {
   let timer;
   return Promise.race([
@@ -1833,6 +1851,40 @@ async function refillAutoposterQueue({
     }
     if (!rawNewsCandidates.length) {
       try {
+        const priority = await withRefillTimeout(
+          collectPriorityBeatIntelCandidate({ forcePost: forcePost || digDeeper }),
+          REFILL_PREP_TIMEOUT_MS,
+          'priority_beat_intel'
+        );
+        if (priority) {
+          rawNewsCandidates = [priority];
+          await enqueueFromCandidates(rawNewsCandidates, beatSlots);
+        }
+      } catch (err) {
+        console.warn('[x-autoposter] priority beat intel skipped:', err.message);
+      }
+    }
+    const pendingAfterPriority = store.listQueue({ status: 'pending' }).length;
+    if (pendingAfterPriority >= minPending || added > 0) {
+      void beatPrepPromise;
+      return {
+        ok: true,
+        skipped: false,
+        reason: added > 0 ? 'priority_beat_intel' : 'queue_satisfied',
+        pending: pendingAfterPriority,
+        enqueued,
+        enqueuedCount: enqueued.length,
+        qualitySkipped,
+        skipReasons,
+        digDeeper: forcePost || digDeeper,
+        beatPrep: null,
+        goldenFour: null,
+        detectivesRun: null,
+        emptyQueueFallback: added > 0 && pending.length === 0
+      };
+    }
+    if (added === 0 && pendingAfterPriority < minPending) {
+      try {
         rawNewsCandidates = await withRefillTimeout(
           collectFreshPostCandidates({
             forcePost: forcePost || digDeeper,
@@ -2187,6 +2239,7 @@ module.exports = {
   dedupeIntelByPlayerSlug,
   selectBeatIntelForAutopost,
   buildCandidatesFromIntelRows,
+  collectPriorityBeatIntelCandidate,
   probeIntelAutoposterPath,
   COMMIT_EVENT_SOURCES,
   FORCE_POST_COMMIT_AGE_MS,
