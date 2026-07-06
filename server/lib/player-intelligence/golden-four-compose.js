@@ -69,7 +69,7 @@ function buildInsiderLine(rpmTop = []) {
  * @param {object} [params.playerRow] — recruiting store player
  * @param {string} [params.composePath] — probe/diagnostic compose path id
  */
-function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = null, composePath = 'pr789_beat_facts' } = {}) {
+function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = null, recruitingRoster = null, composePath = 'pr789_beat_facts' } = {}) {
   const beatText = String(intel?.detail || intel?.skinny || '').trim();
   if (!beatText) return { ok: false, reason: 'missing_beat_text' };
 
@@ -133,9 +133,11 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
     slug,
     playerRow: {
       ...(playerRow || {}),
-      school: playerRow?.school || intel?.school || intel?.highSchool || null
+      school: playerRow?.school || intel?.school || intel?.highSchool || null,
+      highSchoolSlug: playerRow?.highSchoolSlug || intel?.highSchoolSlug || null
     },
-    intel
+    intel,
+    recruitingRoster
   });
 
   if (!hasFactCompletenessForPr789(facts, beatText)) {

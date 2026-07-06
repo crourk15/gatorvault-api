@@ -657,6 +657,15 @@ function isProgramOrTeamNews(raw) {
 function prepareNewsCandidate(raw) {
   if (!raw?.text && !raw?._articleBuild) return null;
   if (raw?.text && copy.isBrokenCopy(raw.text, raw)) return null;
+  if (raw.validationMeta?.eliteRepublish && validation.isPr789AngleElitePost(raw)) {
+    return {
+      ...raw,
+      qualityScore: Math.max(raw.validationMeta?.compositeScore ?? 0, validation.POSTING_THRESHOLD || 85),
+      qualityBreakdown: raw.validationMeta?.qualityBreakdown ?? null,
+      sourceConfidence: raw.validationMeta?.sourceConfidence ?? validation.SOURCE_CONFIDENCE_REQUIRED ?? 100,
+      situation: raw.situation || postSpec.detectSituation(raw.text, raw.sourceEventType || raw.intelType)
+    };
+  }
   try {
     const qa = require('./autoposter/recruiting-post-qa');
     const pr789Elite = validation.isPr789AngleElitePost(raw);

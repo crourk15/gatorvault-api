@@ -267,6 +267,37 @@ async function buildEliteRepublishPost(slug, opts = {}) {
   const rankingEnsure = await ensureRankingProfile(normalized, playerRow, opts.intelRow);
   playerRow = rankingEnsure.playerRow || playerRow;
 
+  if (!playerRow?.highSchoolSlug || !playerRow?.school) {
+    const recruitSlug = resolveOn3RecruitSlug(normalized, playerRow, opts.intelRow);
+    if (recruitSlug) {
+      try {
+        const profile = await on3Recruit.fetchRecruitProfile(
+          recruitSlug,
+          playerRow?.classYear || opts.intelRow?.classYear || 2028
+        );
+        if (profile) {
+          const patch = profilePatchFromOn3(profile, playerRow?.classYear || opts.intelRow?.classYear || 2028);
+          playerRow = {
+            ...(playerRow || {}),
+            slug: normalized,
+            ...patch,
+            highSchoolSlug: profile.highSchoolSlug || playerRow?.highSchoolSlug || null
+          };
+          await recruitingStore.upsertPlayer(playerRow).catch(() => {});
+        }
+      } catch {
+        /* optional */
+      }
+    }
+  }
+
+  let recruitingRoster = null;
+  try {
+    recruitingRoster = await recruitingStore.getAllPlayers();
+  } catch {
+    recruitingRoster = null;
+  }
+
   const playerIntel = await getPlayerIntelligence(normalized);
   const on3Sync = buildOn3Sync(playerIntel, playerRow, on3Refresh?.on3Refresh || on3Refresh);
   if (!hasCompleteRankingTokens(on3Sync.rankingTokens)) {
@@ -327,6 +358,7 @@ async function buildEliteRepublishPost(slug, opts = {}) {
     intel,
     on3Sync,
     playerRow: enrichedRow,
+    recruitingRoster,
     composePath: ELITE_COMPOSE_PATH
   });
 
