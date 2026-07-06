@@ -35,6 +35,7 @@ const BANNED_FILLER_PHRASES = Object.freeze([
   /\bhe said he "coaching staff\b/i,
   /\btop-school mix on his board early\b/i,
   /\bhe said he "really like the Gators/i,
+  /\bbuilding real traction with .+ early in (?:his|her|their) recruitment\b/i,
   /\bHe's telling me\b/i,
   /\b\.'\./
 ]);
@@ -54,6 +55,8 @@ function hasBeatSourcedFact(facts = {}) {
   if (facts.staffEnergy === true) return true;
   if (facts.visit?.when || facts.visit?.school) return true;
   if (facts.boardSignal) return true;
+  if (facts.geographicSignal && facts.quote) return true;
+  if (facts.geographicSignal && facts.boardSignal) return true;
   if (facts.offerInterest) return true;
   if (facts.programPitch) return true;
   if (facts.beatCompBattle) return true;

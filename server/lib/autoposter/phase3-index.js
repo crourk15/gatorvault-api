@@ -19,5 +19,29 @@ function recordPostMemory(item) {
   try { topicMemory.recordTopicUsage(item); } catch {}
   try { performanceTracker.recordPostPerformance(item); } catch {}
   try { require('./engagement-tracker').recordPostEngagement(item); } catch {}
+  try {
+    const meta = item?.validationMeta || {};
+    const applied = meta.composeAngleRotation?.applied || [];
+    const composeHistory = require('./compose-angle-history');
+    if (applied.length) {
+      for (const row of applied) {
+        composeHistory.recordComposeAngle({
+          playerSlug: item.playerSlug || meta.playerSlug,
+          angleUsed: row.bucket,
+          synonymUsed: row.synonym,
+          templateId: meta.dominantAngle || meta.composePath || null,
+          dominantAngle: meta.dominantAngle || null
+        });
+      }
+    } else if (meta.dominantAngle) {
+      composeHistory.recordComposeAngle({
+        playerSlug: item.playerSlug,
+        angleUsed: meta.dominantAngle,
+        synonymUsed: null,
+        templateId: meta.composePath || null,
+        dominantAngle: meta.dominantAngle
+      });
+    }
+  } catch {}
 }
 module.exports = { phase3Enabled, storyMemory, topicMemory, researchLadder, evergreenLibrary, performanceTracker, guardCandidateMemory, recordPostMemory };

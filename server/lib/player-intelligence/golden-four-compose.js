@@ -12,12 +12,16 @@ const {
   validateBannedPhrases,
   hasFactCompletenessForPr789
 } = require('../autoposter/rewrite/fact-gates');
+const {
+  applyComposeSynonymRotation,
+  THIN_FALLBACK_RE
+} = require('../autoposter/rewrite/compose-synonym-rotation');
 const { rpmTopFromOn3TopTeams } = require('../autoposter/rewrite/comp-sourcing');
 const { getTweetCharLimit } = require('../autoposter/tweet-char-limit');
 const { GOLDEN_PLAYER_DEFAULTS } = require('./golden-four-on3');
 
 const PR6_FALLBACK_RE =
-  /\bgave Florida a foothold\b|\bput UF on his board early\b|\bpositioned early in (?:this cycle|his recruitment)\b/i;
+  /\bgave Florida a foothold\b|\bput UF on his board early\b|\bpositioned early in (?:this cycle|his recruitment)\b|\bbuilding real traction with .+ early in (?:his|her|their) recruitment\b/i;
 
 const NAME_SUFFIXES = new Set(['jr', 'sr', 'ii', 'iii', 'iv', 'v']);
 
@@ -155,12 +159,28 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
   ];
 
   let narrative = null;
+  let rotationMeta = null;
   for (const composeOpts of composeAttempts) {
     const composed = composeFromFacts(facts, anglePick, ctx, composeOpts);
-    if (composed?.narrative) {
-      narrative = composed.narrative;
-      break;
+    if (!composed?.narrative) continue;
+    const rotated = applyComposeSynonymRotation({
+      narrative: composed.narrative,
+      facts,
+      anglePick,
+      playerSlug: slug,
+      beatText
+    });
+    if (!rotated.ok) {
+      return {
+        ok: false,
+        reason: rotated.reason || 'compose_failed',
+        facts,
+        angle: anglePick.angle
+      };
     }
+    narrative = rotated.narrative;
+    rotationMeta = rotated.rotation || null;
+    break;
   }
   if (!narrative) return { ok: false, reason: 'compose_failed', facts, angle: anglePick.angle };
 
@@ -173,15 +193,27 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
   if (text.length > getTweetCharLimit()) {
     const compactIdentity = buildIdentityWithRanking(identityBase, signal, { compact: true });
     identityLine = compactIdentity || identityLine;
-    const shortNarrative = composeFromFacts(facts, anglePick, ctx, {
+    const shortComposed = composeFromFacts(facts, anglePick, ctx, {
       mode: 'elite',
       eliteShort: true,
       trimComp: true
-    }).narrative;
-    text = [identityLine, shortNarrative, cta].filter(Boolean).join('\n');
+    });
+    if (shortComposed?.narrative) {
+      const rotatedShort = applyComposeSynonymRotation({
+        narrative: shortComposed.narrative,
+        facts,
+        anglePick,
+        playerSlug: slug,
+        beatText
+      });
+      if (rotatedShort.ok && rotatedShort.narrative) {
+        text = [identityLine, rotatedShort.narrative, cta].filter(Boolean).join('\n');
+        rotationMeta = rotatedShort.rotation || rotationMeta;
+      }
+    }
   }
 
-  if (PR6_FALLBACK_RE.test(text)) {
+  if (PR6_FALLBACK_RE.test(text) || THIN_FALLBACK_RE.test(text)) {
     return { ok: false, reason: 'pr6_fallback_blocked', text: text.slice(0, 280) };
   }
 
@@ -221,12 +253,15 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
         rpmTop,
         ufRpmPct,
         rankingTokens
-      }
+      },
+      composeAngleRotation: rotationMeta,
+      composeAngleBuckets: rotationMeta?.applied?.map((row) => row.bucket) || rotationMeta?.buckets || []
     }
   };
 }
 
 module.exports = {
   composeGoldenFourFactPost,
-  PR6_FALLBACK_RE
+  PR6_FALLBACK_RE,
+  THIN_FALLBACK_RE
 };
