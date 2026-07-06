@@ -131,8 +131,13 @@ function isEliteComposePost(item) {
   return !!(item.validationMeta?.eliteCompose || item.validationMeta?.goldenFourEnqueue);
 }
 
+function isElitePr789Post(item) {
+  return item?.validationMeta?.composePath === 'elite_pr789';
+}
+
 function isPr789AngleElitePost(item) {
-  return !!(
+  return (
+    isElitePr789Post(item) ||
     item.validationMeta?.goldenFourFactCompose ||
     item.validationMeta?.fusedIntelCompose ||
     item.validationMeta?.pr789AngleLive ||
@@ -869,5 +874,6 @@ module.exports = {
   validateNewsPostQuality,
   passesNewsQualityGate,
   resolveEventTimestamp,
+  isElitePr789Post,
   isPr789AngleElitePost
 };

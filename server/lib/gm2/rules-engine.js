@@ -101,7 +101,7 @@ function rulesForAutoposter(candidate) {
   }
   try {
     const validation = require('../x-autoposter-validation');
-    if (validation.isPr789AngleElitePost(candidate)) {
+    if (validation.isElitePr789Post(candidate) || validation.isPr789AngleElitePost(candidate)) {
       const fullText = String(candidate.text || '').trim();
       if (fullText) {
         const insiderTone = require('../autoposter/insider-tone');

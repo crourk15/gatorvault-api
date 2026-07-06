@@ -13,8 +13,74 @@ const { getPlayerIntelligence } = require('./index');
 const { refreshPlayerIntelligence } = require('./orchestrator');
 const { syncGoldenFourPlayerFromOn3, isGoldenProdSlug } = require('./golden-four-on3');
 
+const ELITE_COMPOSE_PATH = 'elite_pr789';
+
 function normalizeSlug(slug) {
   return String(slug || '').trim().toLowerCase();
+}
+
+function hasCompleteRankingTokens(tokens = null) {
+  if (!tokens) return false;
+  return (
+    tokens.on3Stars != null &&
+    tokens.on3NationalRank != null &&
+    tokens.on3PositionRank != null &&
+    tokens.on3StateRank != null
+  );
+}
+
+function identityHasRankingLine(identityLine = '') {
+  return /On3 No\.\s*\d+\s*natl/i.test(String(identityLine || ''));
+}
+
+function serializeProbeEliteBuild(eliteBuild) {
+  if (!eliteBuild?.ok) {
+    return {
+      ok: false,
+      reason: eliteBuild?.reason || 'elite_compose_failed',
+      stackErrors: eliteBuild?.stackErrors || null,
+      on3Sync: eliteBuild?.on3Sync
+        ? {
+            stars: eliteBuild.on3Sync.stars,
+            natlRank: eliteBuild.on3Sync.natlRank,
+            posRank: eliteBuild.on3Sync.posRank,
+            stateRank: eliteBuild.on3Sync.stateRank,
+            rankingTokens: eliteBuild.on3Sync.rankingTokens || null
+          }
+        : null
+    };
+  }
+  const meta = eliteBuild.validationMeta || {};
+  return {
+    ok: true,
+    composePath: meta.composePath || ELITE_COMPOSE_PATH,
+    preview: String(eliteBuild.text || '').slice(0, 240),
+    rankingTokens: meta.rankingTokens || null,
+    identity: eliteBuild.templateBlocks?.identity || null,
+    insider: eliteBuild.templateBlocks?.insider || null,
+    rpmTop: meta.voiceMetrics?.rpmTop || [],
+    scoutingRefresh: meta.scoutingRefresh || null,
+    pr789AngleLive: !!meta.pr789AngleLive,
+    pr789Live: !!meta.pr789Live,
+    pr789Shadow: meta.pr789Shadow || null,
+    pr789AngleShadow: meta.pr789AngleShadow || null,
+    pr6Shadow: meta.pr6Shadow || null,
+    pr789Text: meta.pr789Text || meta.pr789AngleText || null,
+    compositeScore: meta.compositeScore ?? null
+  };
+}
+
+function validateEliteStack(built) {
+  const errors = [];
+  const meta = built?.validationMeta || {};
+  if (meta.composePath !== ELITE_COMPOSE_PATH) errors.push('compose_path_not_elite_pr789');
+  if (!hasCompleteRankingTokens(meta.rankingTokens)) errors.push('ranking_tokens_incomplete');
+  if (!identityHasRankingLine(built?.templateBlocks?.identity)) errors.push('identity_missing_ranking_suffix');
+  if (!meta.pr789AngleLive && !meta.pr789Shadow?.ok && !meta.pr789AngleShadow?.ok) {
+    errors.push('pr_shadow_missing');
+  }
+  if (!meta.scoutingRefresh?.rankingValid) errors.push('scouting_refresh_invalid');
+  return { ok: errors.length === 0, errors };
 }
 
 function buildOn3Sync(playerIntel, playerRow, on3Refresh = null) {
@@ -62,12 +128,28 @@ function enrichPlayerRow(playerRow, playerIntel) {
   };
 }
 
-async function ensureRankingProfile(slug, playerRow) {
+function resolveOn3RecruitSlug(slug, playerRow, intelRow = null) {
+  if (playerRow?.on3Slug) return playerRow.on3Slug;
+  try {
+    const { loadOn3RecruitSlug } = require('../allowlist-target-sync');
+    const fromAllowlist = loadOn3RecruitSlug(slug, playerRow?.classYear || intelRow?.classYear || 2028);
+    if (fromAllowlist) return fromAllowlist;
+  } catch {
+    /* optional */
+  }
+  const on3Id = playerRow?.on3Id || intelRow?.playerId || null;
+  if (on3Id && slug && /^\d+$/.test(String(on3Id))) {
+    return `${slug}-${on3Id}`;
+  }
+  return null;
+}
+
+async function ensureRankingProfile(slug, playerRow, intelRow = null) {
   let row = playerRow;
   let tokens = extractOn3RankingTokens(row);
   if (tokens) return { playerRow: row, rankingTokens: tokens };
 
-  const recruitSlug = row?.on3Slug;
+  const recruitSlug = resolveOn3RecruitSlug(slug, row, intelRow);
   if (!recruitSlug) return { playerRow: row, rankingTokens: null };
 
   try {
@@ -79,6 +161,11 @@ async function ensureRankingProfile(slug, playerRow) {
       ...patch,
       on3TopTeams: profile.topTeams || row.on3TopTeams || [],
       topTeams: profile.topTeams || row.topTeams || [],
+      competitors: rpmTopFromOn3TopTeams(profile.topTeams || [], row.classYear || 2028).map((entry) => ({
+        school: entry.school,
+        pct: entry.pct,
+        score: entry.pct
+      })),
       updatedAt: new Date().toISOString()
     };
     await recruitingStore.upsertPlayer(row);
@@ -155,8 +242,9 @@ async function buildEliteRepublishPost(slug, opts = {}) {
   const normalized = normalizeSlug(slug);
   if (!normalized) return { ok: false, reason: 'missing_slug' };
 
+  const skipRefresh = opts.refreshOn3 === false && opts._testSkipRefresh === true;
   let on3Refresh = null;
-  if (opts.refreshOn3 !== false) {
+  if (!skipRefresh) {
     if (isGoldenProdSlug(normalized)) {
       on3Refresh = await syncGoldenFourPlayerFromOn3(normalized);
     } else {
@@ -165,12 +253,12 @@ async function buildEliteRepublishPost(slug, opts = {}) {
   }
 
   let playerRow = await recruitingStore.getPlayerBySlug(normalized);
-  const rankingEnsure = await ensureRankingProfile(normalized, playerRow);
+  const rankingEnsure = await ensureRankingProfile(normalized, playerRow, opts.intelRow);
   playerRow = rankingEnsure.playerRow || playerRow;
 
   const playerIntel = await getPlayerIntelligence(normalized);
   const on3Sync = buildOn3Sync(playerIntel, playerRow, on3Refresh?.on3Refresh || on3Refresh);
-  if (!on3Sync.rankingValid || !on3Sync.rankingTokens) {
+  if (!hasCompleteRankingTokens(on3Sync.rankingTokens)) {
     return {
       ok: false,
       reason: 'ranking_incomplete',
@@ -207,7 +295,7 @@ async function buildEliteRepublishPost(slug, opts = {}) {
     intel,
     on3Sync,
     playerRow: enrichedRow,
-    composePath: 'elite_pr789'
+    composePath: ELITE_COMPOSE_PATH
   });
 
   if (!composed?.ok || !composed.text) {
@@ -220,64 +308,111 @@ async function buildEliteRepublishPost(slug, opts = {}) {
     };
   }
 
+  if (!identityHasRankingLine(composed.templateBlocks?.identity)) {
+    return { ok: false, reason: 'identity_missing_ranking_suffix', on3Sync, composed };
+  }
+
   const banned = validateBannedPhrases(composed.text);
   if (!banned.ok) {
     return { ok: false, reason: 'banned_phrases', violations: banned.violations, on3Sync };
   }
 
   const signal = buildPrSignal(normalized, intel, on3Sync, enrichedRow, fused.beatText);
-  const validationMeta = attachElitePrStack(composed, signal);
+  let validationMeta = attachElitePrStack(composed, signal);
 
-  return {
+  let compositeScore = null;
+  try {
+    const policy = require('../x-autoposter-policy');
+    const check = policy.validatePostContent({
+      text: composed.text,
+      category: 'news',
+      topic: 'recruiting',
+      playerSlug: normalized,
+      templateBlocks: composed.templateBlocks,
+      validationMeta
+    });
+    compositeScore = check.qualityScore ?? null;
+    validationMeta = {
+      ...validationMeta,
+      compositeScore,
+      qualityBreakdown: check.qualityBreakdown ?? null,
+      sourceConfidence: check.sourceConfidence ?? null
+    };
+  } catch {
+    /* optional */
+  }
+
+  validationMeta = {
+    ...validationMeta,
+    eliteCompose: true,
+    eliteBeatIntel: true,
+    eliteRepublish: true,
+    fusedIntelCompose: true,
+    pr789AngleLive: true,
+    publishTier: 'pr789_angle',
+    composePath: ELITE_COMPOSE_PATH,
+    voiceEngine: true,
+    beatText: fused.beatText,
+    fuseConfidence: fused.confidence,
+    fusePublishAction: fused.publishAction,
+    fuseGapCount: fused.gaps?.length || 0,
+    rankingTokens: on3Sync.rankingTokens,
+    voiceMetrics: {
+      ...(composed.validationMeta?.voiceMetrics || {}),
+      rpmTop: signal.metrics.rpmTop,
+      ufRpmPct: signal.metrics.ufRpmPct,
+      rankingTokens: on3Sync.rankingTokens
+    },
+    scoutingRefresh: {
+      on3Refresh: skipRefresh ? false : on3Refresh?.ok !== false,
+      rankingValid: true,
+      natlRank: on3Sync.natlRank,
+      posRank: on3Sync.posRank,
+      stateRank: on3Sync.stateRank,
+      stars: on3Sync.stars,
+      refreshedAt: new Date().toISOString()
+    },
+    playerIntel: {
+      rankingBlockValid: playerIntel?.rankingBlock?.valid === true,
+      coverageTier: playerIntel?.coverageTier || null,
+      gapCount: playerIntel?.gaps?.length || 0
+    }
+  };
+
+  const result = {
     ok: true,
     text: composed.text,
     playerName: composed.playerName,
     playerSlug: composed.playerSlug || normalized,
     templateBlocks: composed.templateBlocks,
-    validationMeta: {
-      ...validationMeta,
-      eliteCompose: true,
-      eliteBeatIntel: true,
-      eliteRepublish: true,
-      fusedIntelCompose: true,
-      pr789AngleLive: true,
-      publishTier: 'pr789_angle',
-      composePath: 'elite_pr789',
-      voiceEngine: true,
-      beatText: fused.beatText,
-      fuseConfidence: fused.confidence,
-      fusePublishAction: fused.publishAction,
-      fuseGapCount: fused.gaps?.length || 0,
-      rankingTokens: on3Sync.rankingTokens,
-      voiceMetrics: {
-        ...(composed.validationMeta?.voiceMetrics || {}),
-        rpmTop: signal.metrics.rpmTop,
-        ufRpmPct: signal.metrics.ufRpmPct,
-        rankingTokens: on3Sync.rankingTokens
-      },
-      scoutingRefresh: {
-        on3Refresh: on3Refresh?.ok !== false,
-        rankingValid: on3Sync.rankingValid,
-        natlRank: on3Sync.natlRank,
-        posRank: on3Sync.posRank,
-        stateRank: on3Sync.stateRank,
-        stars: on3Sync.stars
-      }
-    },
+    validationMeta,
     eliteStack: {
       on3Sync,
       on3Refresh,
       rankingTokens: on3Sync.rankingTokens,
       identity: composed.templateBlocks?.identity || null,
       insider: composed.templateBlocks?.insider || null,
+      rpmTop: signal.metrics.rpmTop,
       fusedConfidence: fused.confidence
     }
   };
+
+  const stackCheck = validateEliteStack(result);
+  if (!stackCheck.ok) {
+    return { ok: false, reason: 'elite_stack_incomplete', stackErrors: stackCheck.errors, ...result };
+  }
+
+  return result;
 }
 
 module.exports = {
   buildEliteRepublishPost,
   buildOn3Sync,
   enrichPlayerRow,
-  ensureRankingProfile
+  ensureRankingProfile,
+  hasCompleteRankingTokens,
+  resolveOn3RecruitSlug,
+  validateEliteStack,
+  serializeProbeEliteBuild,
+  ELITE_COMPOSE_PATH
 };

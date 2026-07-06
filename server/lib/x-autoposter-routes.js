@@ -263,10 +263,7 @@ function mountXAutoposterRoutes(app) {
     try {
       const out = await republishPlayerIntel(req.params.slug, {
         post: req.body?.post === true || req.query.post === '1' || req.query.post === 'true',
-        fingerprint: req.body?.fingerprint || req.query.fingerprint || null,
-        mode:
-          req.body?.mode ||
-          (req.query.mode === 'fused' || req.query.elite === '0' ? 'fused' : 'elite')
+        fingerprint: req.body?.fingerprint || req.query.fingerprint || null
       });
       return res.status(out.ok ? 200 : 400).json(out);
     } catch (err) {

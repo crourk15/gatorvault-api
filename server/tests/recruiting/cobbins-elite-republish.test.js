@@ -49,6 +49,7 @@ test('elite republish composes ranking identity with composePath elite_pr789', a
     const built = await buildEliteRepublishPost(SLUG, {
       intelRow: probe,
       refreshOn3: false,
+      _testSkipRefresh: true,
       persistFusion: false
     });
     assert.equal(built.ok, true, built.reason || JSON.stringify(built));

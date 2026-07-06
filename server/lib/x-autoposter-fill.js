@@ -421,15 +421,19 @@ async function probeIntelAutoposterPath(slug) {
   let eliteBuild = null;
   if (on3Row && (tier === 'A' || tier === 'B')) {
     try {
-      const { buildEliteRepublishPost } = require('./player-intelligence/elite-republish-compose');
-      eliteBuild = await buildEliteRepublishPost(normalized, {
+      const {
+        buildEliteRepublishPost,
+        serializeProbeEliteBuild
+      } = require('./player-intelligence/elite-republish-compose');
+      const built = await buildEliteRepublishPost(normalized, {
         intelRow: on3Row,
         fused,
-        refreshOn3: false,
+        refreshOn3: true,
         persistFusion: false
       });
-    } catch {
-      /* optional */
+      eliteBuild = serializeProbeEliteBuild(built);
+    } catch (err) {
+      eliteBuild = { ok: false, reason: 'elite_probe_error', error: err?.message || String(err) };
     }
   }
 
@@ -474,20 +478,7 @@ async function probeIntelAutoposterPath(slug) {
           composePath: build.validationMeta?.composePath || null
         }
       : { ok: false },
-    eliteBuild: eliteBuild?.ok
-      ? {
-          ok: true,
-          preview: String(eliteBuild.text || '').slice(0, 200),
-          composePath: eliteBuild.validationMeta?.composePath || null,
-          rankingTokens: eliteBuild.validationMeta?.rankingTokens || null,
-          identity: eliteBuild.templateBlocks?.identity || null,
-          insider: eliteBuild.templateBlocks?.insider || null,
-          pr789AngleLive: !!eliteBuild.validationMeta?.pr789AngleLive,
-          pr789Shadow: !!eliteBuild.validationMeta?.pr789Shadow
-        }
-      : eliteBuild
-        ? { ok: false, reason: eliteBuild.reason || 'elite_compose_failed' }
-        : { ok: false },
+    eliteBuild: eliteBuild || { ok: false, reason: tier === 'A' || tier === 'B' ? 'elite_probe_skipped' : 'not_tier_ab' },
     finalize: !!finalized,
     publishGate: finalized ? qa.passesPublishGate(finalized) : null,
     publishGateReason: finalized && !qa.passesPublishGate(finalized) ? qa.rejectReason(finalized) : null
@@ -511,20 +502,31 @@ async function buildNewsFromIntel(intel) {
       if (tier === 'A' || tier === 'B') {
         const { fusePlayerIntel, fusedBeatIntelEnqueueAllowed } = require('./player-intelligence/fuse-player-intel');
         const { composeFromFusedIntel } = require('./player-intelligence/compose-from-fused-intel');
-        const { buildEliteRepublishPost } = require('./player-intelligence/elite-republish-compose');
+        const { buildEliteRepublishPost, serializeProbeEliteBuild } = require('./player-intelligence/elite-republish-compose');
         const fused = await fusePlayerIntel(slug);
         if (!fusedBeatIntelEnqueueAllowed(fused, tier, intel)) return null;
 
         const elite = await buildEliteRepublishPost(slug, {
           intelRow: intel,
           fused,
-          refreshOn3: false,
+          refreshOn3: true,
           persistFusion: false
         });
-        const composed =
-          elite?.ok && elite.text
-            ? elite
-            : composeFromFusedIntel(fused);
+        let composed = null;
+        if (elite?.ok && elite.text) {
+          composed = elite;
+        } else if (elite?.reason === 'ranking_incomplete') {
+          composed = composeFromFusedIntel(fused);
+          if (composed?.validationMeta) {
+            composed.validationMeta = {
+              ...composed.validationMeta,
+              eliteFallback: 'ranking_incomplete',
+              composePath: composed.validationMeta.composePath || 'pr789_beat_facts'
+            };
+          }
+        } else {
+          return null;
+        }
         if (composed?.ok && composed.text) {
           const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
           const intelType = String(intel.eventType || '').toLowerCase();
@@ -1200,7 +1202,8 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
   }
 
   const gm2 = require('./gm2');
-  if (!gm2.filterAutoposterCandidate(scored)) {
+  const isElitePr789 = scored.validationMeta?.composePath === 'elite_pr789';
+  if (!isElitePr789 && !gm2.filterAutoposterCandidate(scored)) {
     const ladder = await tryResearchLadder(scored, 'gm2_filter', doc, ladderDepth);
     if (ladder?.queued) return ladder;
     return finalizeEnqueueFailure(scored, doc, { queued: false, reason: 'gm2_filter' }, opts);
@@ -2271,17 +2274,15 @@ async function forceEnqueueRecentCommits({ maxAgeMs = FORCE_POST_COMMIT_AGE_MS }
 }
 
 /**
- * Admin republish — reset sent/dedupe state and enqueue corrected copy.
+ * Admin republish — reset sent/dedupe state and enqueue full elite PR-789 copy.
  * @param {string} slug
- * @param {{ post?: boolean, fingerprint?: string|null, mode?: 'elite'|'fused' }} [opts]
+ * @param {{ post?: boolean, fingerprint?: string|null }} [opts]
  */
 async function republishPlayerIntel(slug, opts = {}) {
   const normalized = String(slug || '')
     .trim()
     .toLowerCase();
   if (!normalized) return { ok: false, error: 'missing_slug' };
-
-  const mode = opts.mode || (opts.elite === false ? 'fused' : 'elite');
 
   await intelStore.initIntelStore().catch(() => {});
 
@@ -2313,56 +2314,51 @@ async function republishPlayerIntel(slug, opts = {}) {
     intelRows: intelStore.resetIntelPostedForPlayer(normalized, { fingerprint })
   };
 
-  let build = null;
-  let eliteStack = null;
-  if (mode === 'elite') {
-    const { buildEliteRepublishPost } = require('./player-intelligence/elite-republish-compose');
-    const elite = await buildEliteRepublishPost(normalized, {
-      intelRow: on3Row,
-      refreshOn3: true,
-      persistFusion: true
-    });
-    eliteStack = elite.eliteStack || null;
-    if (!elite?.ok || !elite.text) {
-      return {
-        ok: false,
-        error: elite?.reason || 'elite_compose_failed',
-        mode,
-        slug: normalized,
-        cleared,
-        elite
-      };
-    }
-    const fp = on3Row.fingerprint || intelFingerprint(on3Row.playerId, on3Row.eventType, on3Row.timestamp);
-    build = attachNewsMeta(
-      {
-        text: elite.text,
-        category: 'news',
-        topic: 'recruiting',
-        urgencyLabel: 'major_beat',
-        postUrgency: 'urgent',
-        sourceEventType: on3Row.eventType,
-        sources: [{ label: on3Row.analystName || 'On3', url: on3Row.articleUrl || null }].filter((s) => s.url),
-        source: on3Row.source || 'auto:on3-team-news',
-        intelFingerprint: fp,
-        intelType: on3Row.eventType,
-        playerName: elite.playerName || on3Row.playerName,
-        playerSlug: normalized,
-        classYear: on3Row.classYear || null,
-        sourceIntelId: on3Row.id,
-        sourceEventCreatedAt: on3Row.timestamp || on3Row.createdAt || null,
-        eventTimestamp: on3Row.timestamp || on3Row.createdAt || null,
-        validationMeta: elite.validationMeta,
-        templateBlocks: elite.templateBlocks
-      },
+  const { buildEliteRepublishPost, ELITE_COMPOSE_PATH } = require('./player-intelligence/elite-republish-compose');
+  const elite = await buildEliteRepublishPost(normalized, {
+    intelRow: on3Row,
+    refreshOn3: true,
+    persistFusion: true
+  });
+  const eliteStack = elite.eliteStack || null;
+  if (!elite?.ok || !elite.text) {
+    return {
+      ok: false,
+      error: elite?.reason || 'elite_compose_failed',
+      mode: 'elite',
+      slug: normalized,
+      cleared,
       elite
-    );
-  } else {
-    build = await buildNewsFromIntel(on3Row);
+    };
   }
 
+  const fp = on3Row.fingerprint || intelFingerprint(on3Row.playerId, on3Row.eventType, on3Row.timestamp);
+  const build = attachNewsMeta(
+    {
+      text: elite.text,
+      category: 'news',
+      topic: 'recruiting',
+      urgencyLabel: 'major_beat',
+      postUrgency: 'urgent',
+      sourceEventType: on3Row.eventType,
+      sources: [{ label: on3Row.analystName || 'On3', url: on3Row.articleUrl || null }].filter((s) => s.url),
+      source: on3Row.source || 'auto:on3-team-news',
+      intelFingerprint: fp,
+      intelType: on3Row.eventType,
+      playerName: elite.playerName || on3Row.playerName,
+      playerSlug: normalized,
+      classYear: on3Row.classYear || null,
+      sourceIntelId: on3Row.id,
+      sourceEventCreatedAt: on3Row.timestamp || on3Row.createdAt || null,
+      eventTimestamp: on3Row.timestamp || on3Row.createdAt || null,
+      validationMeta: elite.validationMeta,
+      templateBlocks: elite.templateBlocks
+    },
+    elite
+  );
+
   if (!build?.text) {
-    return { ok: false, error: build?.reason || 'compose_failed', slug: normalized, cleared, build, mode };
+    return { ok: false, error: 'compose_failed', slug: normalized, cleared, build, mode: 'elite' };
   }
 
   const doc = store.loadQueue();
@@ -2372,10 +2368,10 @@ async function republishPlayerIntel(slug, opts = {}) {
       ok: false,
       error: enqueued?.reason || 'enqueue_failed',
       slug: normalized,
-      mode,
+      mode: 'elite',
       cleared,
       preview: build.text,
-      composePath: build.validationMeta?.composePath || null,
+      composePath: build.validationMeta?.composePath || ELITE_COMPOSE_PATH,
       eliteStack,
       enqueue: enqueued
     };
@@ -2389,7 +2385,8 @@ async function republishPlayerIntel(slug, opts = {}) {
       validationMeta: {
         ...(enqueued.item.validationMeta || {}),
         allowRepublish: true,
-        republishIntent: true
+        republishIntent: true,
+        composePath: ELITE_COMPOSE_PATH
       }
     });
   }
@@ -2397,10 +2394,10 @@ async function republishPlayerIntel(slug, opts = {}) {
   return {
     ok: posted ? posted.ok && !posted.skipped : true,
     slug: normalized,
-    mode,
+    mode: 'elite',
     cleared,
     preview: build.text,
-    composePath: build.validationMeta?.composePath || enqueued.item?.validationMeta?.composePath || null,
+    composePath: build.validationMeta?.composePath || ELITE_COMPOSE_PATH,
     rankingTokens: build.validationMeta?.rankingTokens || null,
     eliteStack,
     enqueued: enqueued.item,
