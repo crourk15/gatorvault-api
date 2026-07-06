@@ -100,6 +100,21 @@ function rulesForAutoposter(candidate) {
     return { allow: false, reason: 'unverified_beat_autopost' };
   }
   try {
+    const validation = require('../x-autoposter-validation');
+    if (validation.isPr789AngleElitePost(candidate)) {
+      const fullText = String(candidate.text || '').trim();
+      if (fullText) {
+        const insiderTone = require('../autoposter/insider-tone');
+        const tone = insiderTone.validateInsiderTone(fullText, { minWords: 18 });
+        const hard = tone.errors.filter((e) => e !== 'too_short' && e !== 'generic_fluff');
+        if (hard.length) return { allow: false, reason: hard[0] };
+        return { allow: true };
+      }
+    }
+  } catch {
+    /* optional */
+  }
+  try {
     const insiderPrompt = require('../x-autoposter-insider-prompt');
     const blocks = candidate.templateBlocks || {};
     const beatText = candidate.validationMeta?.beatText || null;
