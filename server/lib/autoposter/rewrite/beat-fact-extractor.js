@@ -232,12 +232,16 @@ function selectAngleFromFacts(facts = {}, beatText = '') {
   return { angle: 'program_pitch', reason: 'minimal_facts', signals };
 }
 
+const { resolveUfCommitTeammate } = require('./uf-commit-teammate');
+
 function extractBeatFacts(beatText = '', ctx = {}) {
   const beat = String(beatText || ctx.beatText || '').trim();
   const signal = ctx.signal || {};
   const metrics = ctx.metrics || signal.metrics || {};
   const player = ctx.player || signal.player || {};
   const intel = ctx.intel || null;
+  const slug = ctx.slug || signal.playerSlug || null;
+  const playerRow = ctx.playerRow || null;
 
   const compPack = resolveValidCompSchools({
     beatText: beat,
@@ -270,6 +274,13 @@ function extractBeatFacts(beatText = '', ctx = {}) {
     offerInterest: extractOfferInterestSignal(beat),
     programPitch: extractProgramPitchSignal(beat),
     beatCompBattle: extractBeatCompBattle(beat),
+    ufCommitTeammate: resolveUfCommitTeammate({
+      slug,
+      playerRow,
+      player,
+      beatText: beat,
+      roster: ctx.recruitingRoster
+    }),
     provenance: {
       visit: extractVisit(beat) ? 'beat' : null,
       staffContact: extractStaffContact(beat) ? 'beat' : null,
@@ -555,8 +566,8 @@ function composeElitePlayerQuoteArc(facts, ln, beatText = '', opts = {}) {
   let paragraph;
   if (/making .+ a priority early|interest is certainly mutual/i.test(beat)) {
     paragraph = `Florida is making ${ln} a priority early, and the mutual interest is real`;
-    if (/teammates with a current florida commit/i.test(beat)) {
-      paragraph += ` — especially with a Gators commit already in his circle`;
+    if (/teammates with a current florida commit/i.test(beat) && facts.ufCommitTeammate?.name) {
+      paragraph += ` — especially with UF commit ${facts.ufCommitTeammate.name} already in his circle`;
     }
   } else if (/long before.*offer|didn'?t need an offer|before his offer/i.test(beat)) {
     paragraph = `Florida had ${ln}'s attention before the offer landed, and UF is already in his mix`;

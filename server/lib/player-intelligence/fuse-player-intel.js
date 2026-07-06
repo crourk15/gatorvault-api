@@ -189,6 +189,7 @@ function playerRowFromIntel(playerIntel) {
     name: id.name,
     pos: id.pos,
     classYear: id.classYear,
+    school: id.school || null,
     hometownState: id.hometownState,
     state: id.hometownState,
     competitors: (playerIntel?.competitors || []).map((row) => ({
@@ -219,7 +220,9 @@ async function fusePlayerIntel(slugOrId, opts = {}) {
   const facts = extractBeatFacts(beatText, {
     signal,
     metrics: signal.metrics,
-    player: signal.player
+    player: signal.player,
+    slug,
+    playerRow: playerRowFromIntel(playerIntel)
   });
 
   const confidence = computeConfidence({ slug, rows, beatText, playerIntel, urlSlugMatch });

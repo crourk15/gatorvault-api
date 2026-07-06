@@ -129,7 +129,9 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
   const facts = extractBeatFacts(beatText, {
     signal,
     metrics: signal.metrics,
-    player: signal.player
+    player: signal.player,
+    slug,
+    playerRow
   });
 
   if (!hasFactCompletenessForPr789(facts, beatText)) {

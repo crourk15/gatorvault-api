@@ -79,6 +79,41 @@ test('Thomas beat rejects reporter-voice pseudo-quotes', () => {
   assert.equal(angle.angle, 'player_quote');
 });
 
+test('Thomas beat resolves UF commit teammate when school is known', () => {
+  const facts = extractBeatFacts(THOMAS_BEAT, {
+    slug: 'antonio-thomas-jr',
+    player: { name: 'Antonio Thomas Jr.', classYear: 2028 },
+    playerRow: { school: 'Carrollwood Day (Tampa, FL)', classYear: 2028 }
+  });
+  assert.equal(facts.ufCommitTeammate?.slug, 'devoun-kendrick');
+  assert.equal(facts.ufCommitTeammate?.name, "De'Voun Kendrick");
+});
+
+test('Thomas elite compose names Kendrick when roster resolves teammate', () => {
+  const built = composeGoldenFourFactPost({
+    slug: 'antonio-thomas-jr',
+    intel: { playerName: 'Antonio Thomas Jr.', detail: THOMAS_BEAT, classYear: 2028, pos: 'EDGE' },
+    on3Sync: {
+      rankingTokens: { on3Stars: 4, on3NationalRank: 17, on3PositionRank: 4, on3StateRank: 5 },
+      stars: 4,
+      natlRank: 17,
+      posRank: 4,
+      stateRank: 5
+    },
+    playerRow: {
+      name: 'Antonio Thomas Jr.',
+      classYear: 2028,
+      pos: 'EDGE',
+      state: 'FL',
+      school: 'Carrollwood Day (Tampa, FL)'
+    },
+    composePath: 'elite_pr789'
+  });
+  assert.equal(built.ok, true, built.reason || JSON.stringify(built));
+  assert.match(built.text, /UF commit De'Voun Kendrick already in his circle/i);
+  assert.doesNotMatch(built.text, /Gators commit already in his circle/i);
+});
+
 test('Thomas elite compose avoids garbled reporter quote embed', () => {
   const built = composeGoldenFourFactPost({
     slug: 'antonio-thomas-jr',
@@ -99,6 +134,7 @@ test('Thomas elite compose avoids garbled reporter quote embed', () => {
   assert.doesNotMatch(built.text, /top-school mix on his board early/i);
   assert.doesNotMatch(built.text, /He's telling me/i);
   assert.doesNotMatch(built.text, /\.'\./);
+  assert.doesNotMatch(built.text, /already in his circle/i);
 });
 
 test('formatEliteQuoteEmbed third-person grammar for I-like quotes', () => {
