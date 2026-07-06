@@ -85,6 +85,9 @@ function rulesForAutoposter(candidate) {
   if (trigger === 'team_event' || et === 'team_event') {
     return { allow: true };
   }
+  if (trigger === 'portal_elite' || et === 'portal_elite' || et === 'portal_landing') {
+    return { allow: true };
+  }
   const src = String(candidate.source || '').toLowerCase();
   const eventSrc = String(
     candidate.sourceEventSource || candidate.validationMeta?.sourceEvent || ''

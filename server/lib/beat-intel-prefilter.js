@@ -368,6 +368,46 @@ function evaluateTeamEventEligibility(text, { post = null } = {}) {
   };
 }
 
+function classifyPortalEventType(text) {
+  try {
+    const { inferPortalDirection } = require('./autoposter/portal/portal-fact-extractor');
+    return inferPortalDirection(normalizePhrase(text));
+  } catch {
+    return 'portal_in';
+  }
+}
+
+function isPortalEliteIntel(text, post = null) {
+  const phrase = normalizePhrase(text);
+  if (!phrase || isGenericNonPlayerIntel(phrase)) return false;
+  try {
+    const { hasPortalSignal, passesPortalDetectionGate } = require('./autoposter/portal/portal-gates');
+    if (!hasPortalSignal(phrase)) return false;
+    return passesPortalDetectionGate(phrase, post).ok;
+  } catch {
+    return false;
+  }
+}
+
+function evaluatePortalEliteEligibility(text, { post = null } = {}) {
+  const phrase = normalizePhrase(text);
+  if (!isPortalEliteIntel(phrase, post)) {
+    return { eligible: false, reason: 'not_portal_elite', category: 'filtered' };
+  }
+  const portalEventType = classifyPortalEventType(phrase);
+  const { extractPlayerName } = require('./autoposter/portal/portal-fact-extractor');
+  const playerName = extractPlayerName(phrase, post || {});
+  return {
+    eligible: true,
+    triggerType: 'portal_elite',
+    portalEventType,
+    playerName,
+    playerSlug: post?.playerSlug || null,
+    matchMode: 'portal_elite',
+    triggerPhrase: phrase.slice(0, 160)
+  };
+}
+
 function extractCleanFullName(text) {
   const fromBeat = extractPlayerFromText(text);
   if (fromBeat && isValidPlayerName(fromBeat) && !isSingleTokenName(fromBeat)) {
@@ -732,6 +772,25 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
     };
   }
 
+  const portalGate = evaluatePortalEliteEligibility(text, { post });
+  if (portalGate.eligible && isTrustedUfBeatPost(post)) {
+    const beatGate = await evaluateBeatIntelEligibility(text, {
+      trustedWriter: require('./beat-writer-filters').isTrustedBeatWriter?.(post),
+      post,
+      playerName: portalGate.playerName
+    });
+    return {
+      eligible: true,
+      triggerType: 'portal_elite',
+      portalEventType: portalGate.portalEventType,
+      text,
+      playerName: portalGate.playerName || beatGate.playerName,
+      playerSlug: beatGate.playerSlug || portalGate.playerSlug || null,
+      gate: portalGate,
+      sport: 'football'
+    };
+  }
+
   const sportClassifier = require('./x-autoposter-sport-classifier');
   const sportSkip = sportClassifier.guardFootballOnly(text, post);
   if (sportSkip) {
@@ -808,6 +867,9 @@ module.exports = {
   isTeamEventIntel,
   isProgramNewsIntel,
   evaluateTeamEventEligibility,
+  classifyPortalEventType,
+  isPortalEliteIntel,
+  evaluatePortalEliteEligibility,
   evaluateProgramNewsEligibility,
   evaluateBeatIntelEligibility,
   buildNonPlayerSkipPayload,

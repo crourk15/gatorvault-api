@@ -304,6 +304,14 @@ function isProgramNewsPost(item, blocks, ctx, meta = {}) {
   return false;
 }
 
+function isPortalElitePost(item, blocks, ctx, meta = {}) {
+  const m = item?.validationMeta || meta || {};
+  if (item?.triggerType === 'portal_elite' || item?.portalEventType) return true;
+  if (m.portalElite || m.portalEliteCompose) return true;
+  if (ctx?.isPortal && m.portalEliteCompose) return true;
+  return false;
+}
+
 function isNonPlayerNewsPost(item, blocks, ctx, meta = {}) {
   return isTeamEventPost(item, blocks, ctx, meta) || isProgramNewsPost(item, blocks, ctx, meta);
 }
@@ -630,7 +638,8 @@ function collectHardSkipReasons(item, blocks, meta) {
     beatSource &&
     !isDetectivesTemplatePost(item) &&
     !isProgramNewsPost(item, blocks, item?.playerContext, meta) &&
-    !isTeamEventPost(item, blocks, item?.playerContext, meta)
+    !isTeamEventPost(item, blocks, item?.playerContext, meta) &&
+    !isPortalElitePost(item, blocks, item?.playerContext, meta)
   ) {
     const combined = [blocks.context, blocks.insider].filter(Boolean).join(' ');
     if (hasExcessiveSourceOverlap(combined, beatSource, qualityChecks.OVERLAP_MAX)) {

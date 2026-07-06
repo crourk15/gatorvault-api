@@ -507,6 +507,16 @@ async function autoResolveIntel(intel, opts = {}) {
     };
   }
 
+  if (intel?.triggerType === 'portal_elite' || intel?.portalEventType) {
+    return {
+      resolved: true,
+      confirmed: true,
+      portalElite: true,
+      intelPatch: {},
+      mergedSnapshot: { portalElite: true, isPortal: true }
+    };
+  }
+
   const programGate = prefilter.evaluateProgramNewsEligibility(phrase, { post: opts.post || null });
   if (programGate.eligible) {
     return {

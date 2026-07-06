@@ -368,6 +368,59 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
   return buildTeamEventPostLegacy({ beatText, source, teamEventType, postUrl });
 }
 
+function buildPortalPost({
+  beatText,
+  source,
+  portalEventType = null,
+  playerName = null,
+  playerSlug = null,
+  pos = null,
+  formerSchool = null,
+  patch = null,
+  postUrl = null
+} = {}) {
+  try {
+    const { composePortalElitePost, eliteComposeEnabled } = require('./autoposter/portal/portal-compose');
+    if (eliteComposeEnabled()) {
+      const elite = composePortalElitePost({
+        beatText,
+        source,
+        portalEventType,
+        playerName,
+        playerSlug,
+        pos,
+        formerSchool,
+        patch,
+        post: { writerName: source, portalEventType, playerName, playerSlug, pos, url: postUrl }
+      });
+      if (elite?.ok && elite.text) {
+        return {
+          text: elite.text,
+          playerName: elite.playerName,
+          playerSlug: elite.playerSlug,
+          postKind: 'portal',
+          triggerType: 'portal_elite',
+          portalEventType: portalEventType || elite.validationMeta?.portalEventType || 'portal_in',
+          context: elite.context,
+          templateBlocks: elite.templateBlocks,
+          validationMeta: elite.validationMeta,
+          playerContext: {
+            isPortal: true,
+            name: elite.playerName,
+            playerSlug: elite.playerSlug,
+            pos: pos || patch?.pos || null
+          }
+        };
+      }
+      return null;
+    }
+  } catch {
+    /* fall through to legacy only when elite module unavailable */
+  }
+
+  return null;
+}
+
 function buildTeamEventPostLegacy({ beatText, source, teamEventType = null, postUrl = null } = {}) {
   const teamContext =
     template.teamEventLabel(teamEventType) || template.detectTeamContext(beatText) || 'UF Update';
@@ -1254,6 +1307,7 @@ module.exports = {
   parseCoachFromText,
   buildCoachNewsPost,
   buildPlayerNewsPost,
+  buildPortalPost,
   buildTeamEventPost,
   buildProgramNewsPost,
   newsEventForIntel,

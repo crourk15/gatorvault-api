@@ -500,6 +500,45 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     };
   }
 
+  if (prefilter.isPortalEliteIntel(text, post)) {
+    const gate = prefilter.evaluatePortalEliteEligibility(text, { post });
+    if (!gate.eligible) {
+      if (logSkips) logBeatPostSkip(post, gate.reason || 'not_portal_elite', 'filtered');
+      return null;
+    }
+    const timestamp = resolvePostTimestamp(post);
+    const handle = String(post.handle || '').toLowerCase() || 'beat';
+    const day = timestamp.slice(0, 10);
+    const postKey = String(post.id || post.url || day)
+      .replace(/[^a-z0-9_-]/gi, '')
+      .slice(0, 32);
+    const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
+    const detail = text.replace(/\s+/g, ' ').slice(0, 280);
+    const playerName = gate.playerName || extractVisitPlayerName(text);
+    const slugBase = playerName
+      ? playerName
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+      : null;
+    return {
+      playerName,
+      playerSlug: slugBase,
+      eventType: gate.portalEventType || 'portal_in',
+      triggerType: 'portal_elite',
+      portalEventType: gate.portalEventType || 'portal_in',
+      status: buildRecruitingStatus(gate.portalEventType || 'portal_in', text),
+      detail,
+      text: detail,
+      timestamp,
+      articleUrl: post.url || null,
+      source: analystName,
+      sourceHandle: post.handle || null,
+      sourceType: 'beat',
+      fingerprint: `portal_elite_${gate.portalEventType || 'portal_in'}_${postKey}_${day}_${handle}`
+    };
+  }
+
   const strict = ingestGate.evaluateStrictRecruitingIngestGate(post, text);
   if (!strict.pass) {
     if (logSkips) logBeatPostSkip(post, strict.reason, 'filtered');
@@ -635,6 +674,25 @@ async function buildAutoposterPayload(row, intelItem) {
     }
     return { ok: true, ...built };
   }
+  if (row.triggerType === 'portal_elite' || row.portalEventType) {
+    const built = await copy.buildPortalCopyAsync(
+      {
+        text: row.detail,
+        writerName: row.source,
+        handle: row.sourceHandle,
+        url: row.articleUrl
+      },
+      {
+        portalEventType: row.portalEventType || row.eventType,
+        playerName: row.playerName,
+        playerSlug: row.playerSlug
+      }
+    );
+    if (!built?.text) {
+      return { ok: false, reason: built?.skipReason || 'invalid_copy' };
+    }
+    return { ok: true, ...built };
+  }
   const built = await copy.buildIntelCopyAsync({
     id: intelItem?.id,
     eventType: row.eventType,
@@ -692,6 +750,7 @@ async function queueAutoposter(row, intelItem, built) {
     const fp = row.fingerprint;
     const isProgramNews = row.triggerType === 'program_news' || row.eventType === 'program_news';
     const isTeamEvent = row.triggerType === 'team_event' || row.eventType === 'team_event';
+    const isPortalElite = row.triggerType === 'portal_elite' || row.portalEventType;
     const isNonPlayerBeat = isProgramNews || isTeamEvent;
     if (
       !built?.text ||
@@ -796,12 +855,25 @@ async function queueAutoposter(row, intelItem, built) {
     const payload = {
       text: built.text,
       category: 'news',
-      topic: isProgramNews ? 'program' : isTeamEvent ? 'team' : 'recruiting',
-      triggerType: isProgramNews ? 'program_news' : isTeamEvent ? 'team_event' : null,
+      topic: isProgramNews ? 'program' : isTeamEvent ? 'team' : isPortalElite ? 'portal' : 'recruiting',
+      triggerType: isProgramNews
+        ? 'program_news'
+        : isTeamEvent
+          ? 'team_event'
+          : isPortalElite
+            ? 'portal_elite'
+            : null,
       teamEventType: row.teamEventType || null,
       programNewsType: row.programNewsType || null,
+      portalEventType: row.portalEventType || null,
       sources: [{ label: row.source, url: row.articleUrl || SITE_URL }],
-      source: isProgramNews ? 'auto:program-news' : isTeamEvent ? 'auto:team-event' : 'auto:beat-writer',
+      source: isProgramNews
+        ? 'auto:program-news'
+        : isTeamEvent
+          ? 'auto:team-event'
+          : isPortalElite
+            ? 'auto:portal-elite'
+            : 'auto:beat-writer',
       intelFingerprint: fp,
       intelType: row.eventType,
       playerName: row.playerName || null,
@@ -809,8 +881,14 @@ async function queueAutoposter(row, intelItem, built) {
       classYear: row.classYear || null,
       identityConfirmed: isNonPlayerBeat ? true : row.identityConfirmed !== false,
       postUrgency: isProgramNews ? 'breaking' : null,
-      urgencyLabel: isProgramNews ? 'breaking' : isTeamEvent ? 'major_beat' : null,
-      sourceEventType: isProgramNews ? 'program_news' : isTeamEvent ? 'team_event' : row.eventType,
+      urgencyLabel: isProgramNews ? 'breaking' : isTeamEvent ? 'major_beat' : isPortalElite ? 'portal' : null,
+      sourceEventType: isProgramNews
+        ? 'program_news'
+        : isTeamEvent
+          ? 'team_event'
+          : isPortalElite
+            ? row.portalEventType || 'portal_in'
+            : row.eventType,
       sourceIntelId: intelItem?.id,
       sourceEventCreatedAt: row.timestamp || intelItem?.timestamp || null,
       sourcePublishedAt: row.timestamp || null,

@@ -391,6 +391,7 @@ function newsPayloadFromBuilt(built, extra = {}) {
     postKind: built.postKind || extra.triggerType || null,
     teamEventType: built.teamEventType || extra.teamEventType || built.validationMeta?.teamEventType || null,
     programNewsType: built.programNewsType || extra.programNewsType || built.validationMeta?.programNewsType || null,
+    portalEventType: built.portalEventType || extra.portalEventType || built.validationMeta?.portalEventType || null,
     beatText: built.validationMeta?.beatText || extra.beatText || null,
     playerSlug: built.playerSlug || built.context?.playerSlug || built.validationMeta?.playerSlug || extra.playerSlug || null,
     playerName: built.playerName || extra.playerName || null,
@@ -469,6 +470,26 @@ async function buildProgramNewsCopyAsync(post, gate = {}) {
   return newsPayloadFromBuilt(built, { triggerType: 'program_news' });
 }
 
+async function buildPortalCopyAsync(post, gate = {}) {
+  const text = String(post?.text || '').replace(/\s+/g, ' ').trim();
+  if (!text) return null;
+
+  const analyst = post.writerName || post.outlet || post.handle || 'Beat writer';
+  const patch = extractVerifiedPatchFromBeatText(text);
+  const built = playerContext.buildPortalPost({
+    beatText: text,
+    source: analyst,
+    portalEventType: gate.portalEventType || gate.gate?.portalEventType || null,
+    playerName: gate.playerName || gate.gate?.playerName || null,
+    playerSlug: gate.playerSlug || gate.gate?.playerSlug || null,
+    pos: patch?.pos || null,
+    patch,
+    postUrl: post.url || null
+  });
+  if (!built?.text) return null;
+  return newsPayloadFromBuilt(built, { triggerType: 'portal_elite' });
+}
+
 function buildTeamEventCopyFromSchedule(game) {
   if (!game?.game && !game?.opponent) return null;
   const opponent = game.opponent || String(game.game || '').replace(/^Florida vs\s+/i, '').trim();
@@ -504,10 +525,12 @@ async function buildBeatIntelCopyAsync(post) {
   if (!text) return null;
 
   const guarded = await prefilter.guardBeatPost(post);
-  const programOrTeamBeat =
+  const programTeamOrPortalBeat =
     guarded.eligible &&
-    (guarded.triggerType === 'program_news' || guarded.triggerType === 'team_event');
-  if (!programOrTeamBeat && !sportClassifier.isFootballAutoposterEligible(text, post)) {
+    (guarded.triggerType === 'program_news' ||
+      guarded.triggerType === 'team_event' ||
+      guarded.triggerType === 'portal_elite');
+  if (!programTeamOrPortalBeat && !sportClassifier.isFootballAutoposterEligible(text, post)) {
     return sportClassifier.buildNonFootballSkipPayload(sportClassifier.classifySport(text, post), text);
   }
   if (!guarded.eligible) return guarded.skip;
@@ -518,6 +541,10 @@ async function buildBeatIntelCopyAsync(post) {
 
   if (guarded.triggerType === 'team_event') {
     return buildTeamEventCopyAsync(post, guarded);
+  }
+
+  if (guarded.triggerType === 'portal_elite') {
+    return buildPortalCopyAsync(post, guarded);
   }
 
   if (template.HEADLINE_ONLY_RE.test(text)) return null;
@@ -635,6 +662,24 @@ async function buildIntelCopyAsync(intel) {
       teamEventType: intel.teamEventType || 'general'
     });
     return newsPayloadFromBuilt(built, { triggerType: 'team_event' });
+  }
+
+  if (
+    intel.triggerType === 'portal_elite' ||
+    intel.eventType === 'portal_in' ||
+    intel.eventType === 'portal_out' ||
+    intel.eventType === 'portal_landing'
+  ) {
+    const built = playerContext.buildPortalPost({
+      beatText: intel.detail || intel.status || '',
+      source: intel.source || intel.analystName || 'Beat writer',
+      portalEventType: intel.portalEventType || intel.eventType || 'portal_in',
+      playerName: intel.playerName,
+      playerSlug: intel.playerSlug,
+      pos: intel.pos,
+      patch: playerContext.verifiedPatchFromIntel(intel)
+    });
+    if (built?.text) return newsPayloadFromBuilt(built, { triggerType: 'portal_elite' });
   }
 
   const resolved = await resolveIntelForCopy(intel, {
@@ -811,17 +856,30 @@ async function buildRecruitingEventCopyAsync(ev, { source = 'On3' } = {}) {
 
 async function buildPortalHeadlinerCopyAsync(headliner) {
   if (!headliner?.name || !isValidPlayerName(headliner.name)) return null;
-  const newsEvent =
-    headliner.category === 'portal' ? 'entered the transfer portal (UF target)' : 'committed to Florida';
-  const built = await playerContext.buildPlayerNewsPost({
-    source: 'On3',
-    newsEvent,
-    playerSlug: headliner.slug,
-    playerName: headliner.name,
-    patch: playerContext.verifiedPatchFromPlayer(headliner),
-    postKind: headliner.category === 'portal' ? 'portal' : 'recruiting',
-    portalStatus: 'Portal'
-  });
+  const portalEventType = headliner.category === 'portal' ? 'portal_in' : 'portal_landing';
+  const beatText =
+    headliner.category === 'portal'
+      ? `${headliner.name} entered the transfer portal — Florida among programs tracking.`
+      : `${headliner.name} is transferring to Florida via the portal.`;
+  const built =
+    playerContext.buildPortalPost({
+      beatText,
+      source: 'On3',
+      portalEventType,
+      playerName: headliner.name,
+      playerSlug: headliner.slug,
+      patch: playerContext.verifiedPatchFromPlayer(headliner)
+    }) ||
+    (await playerContext.buildPlayerNewsPost({
+      source: 'On3',
+      newsEvent:
+        headliner.category === 'portal' ? 'entered the transfer portal (UF target)' : 'committed to Florida',
+      playerSlug: headliner.slug,
+      playerName: headliner.name,
+      patch: playerContext.verifiedPatchFromPlayer(headliner),
+      postKind: headliner.category === 'portal' ? 'portal' : 'recruiting',
+      portalStatus: 'Portal'
+    }));
   return newsPayloadFromBuilt(built);
 }
 
@@ -921,6 +979,7 @@ module.exports = {
   buildPredictionMachineCopyAsync,
   buildTeamEventCopyAsync,
   buildProgramNewsCopyAsync,
+  buildPortalCopyAsync,
   buildTeamEventCopyFromSchedule,
   buildBeatIntelCopyAsync,
   buildIntelCopyAsync,
