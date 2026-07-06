@@ -925,17 +925,20 @@ async function buildPlayerNewsPost({
       body
     });
     if (elite?.ok && elite.text) return elite;
-    const commitLike =
-      /commit|flip/.test(String(intel?.eventType || intel?.sourceEventType || newsEvent || '').toLowerCase()) ||
-      /committed to florida|flipped to florida/.test(String(newsEvent || '').toLowerCase());
+    const commitDetect = require('./beat-writer-filters');
     const beatDetailText = String(beatText || intel?.detail || '').trim();
     const beatName = intel?.playerName || playerName;
+    const commitLike = commitDetect.isCommitLikeSignal({
+      text: beatDetailText,
+      eventType: intel?.eventType || intel?.sourceEventType,
+      newsEvent
+    });
     const copyMod = require('./x-autoposter-copy');
     const canRetryLegacy =
       beatDetailText &&
       copyMod.isValidPlayerName(beatName) &&
       elite?.reason !== 'recruiting_qa';
-    if (beatDetailText && canRetryLegacy) {
+    if (beatDetailText && canRetryLegacy && !commitLike) {
       return require('./autoposter-identity').buildIdentitySkipPayload({
         reason: elite?.reason || 'elite_compose_failed',
         playerName: beatName,
@@ -950,6 +953,37 @@ async function buildPlayerNewsPost({
         playerSlug: intel?.playerSlug || playerSlug,
         triggerPhrase: beatDetailText
       });
+    }
+  }
+
+  const commitDetect = require('./beat-writer-filters');
+  const beatDetailEarly = beatText || intel?.detail || '';
+  if (
+    commitDetect.isCommitLikeSignal({
+      text: beatDetailEarly,
+      eventType: intel?.eventType || intel?.sourceEventType,
+      newsEvent
+    })
+  ) {
+    const copyMod = require('./x-autoposter-copy');
+    const verified = await copyMod.buildVerifiedCommitCopyAsync({
+      playerName: intel?.playerName || playerName,
+      playerSlug: intel?.playerSlug || playerSlug,
+      patch,
+      beatText: beatDetailEarly,
+      source,
+      eventType: intel?.eventType || 'commit'
+    });
+    if (verified?.text) {
+      return {
+        ok: true,
+        text: verified.text,
+        playerName: verified.playerName,
+        playerSlug: intel?.playerSlug || playerSlug,
+        templateBlocks: verified.templateBlocks,
+        validationMeta: verified.validationMeta,
+        verifiedCommit: true
+      };
     }
   }
 

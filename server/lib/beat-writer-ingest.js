@@ -237,9 +237,16 @@ function resolveRecruitingEventType(text) {
   ) {
     return isOfficialVisitText(t) ? 'official_visit' : 'unofficial_visit';
   }
-  if (/\b(?:committed|commits?)\s+to\s+(?:florida|the gators|\buf\b)/i.test(t)) return 'commit';
-  if (/\bflip(?:ped)?\s+to\s+(?:florida|the gators|\buf\b)/i.test(t)) return 'commit';
-  if (/\bdecommit/i.test(t)) return 'decommit';
+  try {
+    const commitDetect = require('./beat-writer-filters');
+    if (commitDetect.isFloridaDecommitBeat(t)) return 'decommit';
+    const commitType = commitDetect.resolveCommitEventType(t);
+    if (commitType) return commitType;
+  } catch {
+    if (/\b(?:committed|commits?)\s+to\s+(?:florida|the gators|\buf\b)/i.test(t)) return 'commit';
+    if (/\bflip(?:ped)?\s+to\s+(?:florida|the gators|\buf\b)/i.test(t)) return 'commit';
+    if (/\bdecommit/i.test(t)) return 'decommit';
+  }
   if (/\bportal\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'portal_in';
   try {
     const { isRetrospectiveOfferBeat, isFreshOfferBeat } = require('./autoposter/recruiting-offer-disambiguation');

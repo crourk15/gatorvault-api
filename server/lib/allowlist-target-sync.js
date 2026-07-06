@@ -940,21 +940,19 @@ async function ingestAllowlistCommit(opts = {}) {
   };
 }
 
-const FL_COMMIT_RES = [
-  /\b(?:committed|commits|verbally committed|pledged|pledges)\s+to\s+(?:the\s+)?(?:florida|gators|\buf\b)\b/i,
-  /\b(?:flips?|flipped)\s+to\s+(?:the\s+)?(?:florida|gators|\buf\b)\b/i,
-];
+const {
+  isFloridaCommitBeat,
+  isTrustedCommitHandle
+} = require('./beat-writer-filters');
 
 function parseBeatCommitPosts(posts) {
   const out = [];
   const seen = new Set();
   for (const post of posts || []) {
     const handle = String(post?.handle || '').toLowerCase();
-    if (!/hayesfawcett3|chadsimmons_|corey_bender|gatorsonline|stevewiltfong|charlespower/.test(handle)) {
-      continue;
-    }
+    if (!isTrustedCommitHandle(handle)) continue;
     const text = String(post.text || '').trim();
-    if (!text || !FL_COMMIT_RES.some((re) => re.test(text))) continue;
+    if (!text || !isFloridaCommitBeat(text)) continue;
     const lower = text.toLowerCase();
     let matchedSlug = null;
     for (const [slug, displayName] of Object.entries(CANONICAL_TARGET_NAMES)) {
@@ -967,7 +965,7 @@ function parseBeatCommitPosts(posts) {
     }
     if (!matchedSlug) continue;
     const publishedAt = post.publishedAt || post.timestamp || new Date().toISOString();
-    const fp = `beat_commit_${matchedSlug}_${normalizeIntelTimestamp(publishedAt)}`;
+    const fp = `beat_commit_${matchedSlug}_${handle}_${String(publishedAt).replace(/[^0-9TZ:.-]/g, '').slice(0, 19)}`;
     if (seen.has(fp)) continue;
     seen.add(fp);
     out.push({
@@ -1016,6 +1014,21 @@ async function scanBeatCommitQueue({ posts, force = false } = {}) {
 
   snapshot.lastRun = new Date().toISOString();
   writeJson(BEAT_COMMIT_SNAPSHOT, snapshot);
+  try {
+    require('./ops-monitor').logEvent({
+      subsystem: 'autoposter:commit-ingest',
+      status: results.ingested.length ? 'success' : results.errors.length ? 'error' : 'skipped',
+      message: `Beat commit scan: ${results.ingested.length} ingested, ${results.skipped.length} skipped`,
+      details: {
+        candidates: candidates.length,
+        ingested: results.ingested.map((row) => row.slug),
+        skipped: results.skipped,
+        errors: results.errors
+      }
+    });
+  } catch {
+    /* optional */
+  }
   return results;
 }
 
@@ -1030,6 +1043,7 @@ module.exports = {
   detectIngestFailures,
   ingestAllowlistCommit,
   scanBeatCommitQueue,
+  parseBeatCommitPosts,
   profilePatchFromOn3,
   loadOn3RecruitSlug,
   syncSlugFromOn3,

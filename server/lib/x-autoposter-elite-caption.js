@@ -684,6 +684,25 @@ async function buildElitePlayerPost(input = {}) {
     return { ok: false, skipped: true, reason: 'no_usable_signal', research };
   }
 
+  const commitDetect = require('./beat-writer-filters');
+  const beatForCommit = String(input.beatText || input.intel?.detail || '').trim();
+  if (
+    commitDetect.isCommitLikeSignal({
+      text: beatForCommit,
+      eventType: intelInput.eventType,
+      newsEvent: input.newsEvent
+    })
+  ) {
+    eliteLog.logEliteCaption({
+      skipped: true,
+      skipReason: 'commit_compose_bypass',
+      playerName: playerData.data.name,
+      eventType: 'commit',
+      voiceEngine: false
+    });
+    return { ok: false, skipped: true, reason: 'commit_compose_bypass', research };
+  }
+
   try {
     const voiceEngineMod = require('./autoposter/voice-engine');
     if (voiceEngineMod.voiceEngineEnabled() && String(input.beatText || '').trim()) {

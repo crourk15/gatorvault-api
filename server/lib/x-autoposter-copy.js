@@ -805,7 +805,7 @@ async function buildIntelCopyAsync(intel) {
   const newsEvent = playerContext.newsEventForIntel(intel);
   if (!newsEvent) return null;
   const source = playerContext.sourceLabelForIntel(intel);
-  const built = await playerContext.buildPlayerNewsPost({
+  let built = await playerContext.buildPlayerNewsPost({
     source,
     newsEvent,
     playerSlug: intel.playerSlug,
@@ -818,6 +818,25 @@ async function buildIntelCopyAsync(intel) {
     identityInferred: intel.identityInferred,
     identityConfidence: intel.identityConfidence
   });
+  if (!built?.text) {
+    const commitDetect = require('./beat-writer-filters');
+    if (
+      commitDetect.isCommitLikeSignal({
+        text: intel.detail,
+        eventType: intel.eventType,
+        newsEvent
+      })
+    ) {
+      built = await buildVerifiedCommitCopyAsync({
+        playerName: intel.playerName,
+        playerSlug: intel.playerSlug,
+        patch: playerContext.verifiedPatchFromIntel(intel),
+        beatText: intel.detail || null,
+        source,
+        eventType: intel.eventType || 'commit'
+      });
+    }
+  }
   return newsPayloadFromBuilt(built);
 }
 
@@ -850,7 +869,7 @@ async function buildMomentumCopyAsync(post) {
   return newsPayloadFromBuilt(built);
 }
 
-function buildVerifiedCommitEventCopy(ev, { source = 'On3' } = {}) {
+function buildVerifiedCommitEventCopy(ev, { source = 'On3', beatText = null } = {}) {
   const player = ev.payload?.player || null;
   const playerName = player?.name || null;
   if (!playerName || !isValidPlayerName(playerName)) return null;
@@ -863,7 +882,18 @@ function buildVerifiedCommitEventCopy(ev, { source = 'On3' } = {}) {
   if (!ctx?.name || !ctx?.pos) return null;
 
   const situation = et === 'flip' ? 'commitment' : 'commitment';
-  const composed = postSpec.composeStructuredPost(ctx, situation, {});
+  const detailText = beatText || ev.detail || '';
+  const specMeta = {};
+  try {
+    const commitDetect = require('./beat-writer-filters');
+    const commitQuote = commitDetect.extractCommitQuote(detailText);
+    if (commitQuote) {
+      specMeta.insiderLine = `"${commitQuote.replace(/[.!?]+$/, '')}" — ${playerName}.`;
+    }
+  } catch {
+    /* optional */
+  }
+  const composed = postSpec.composeStructuredPost(ctx, situation, specMeta);
   if (!composed?.text || !composed.templateBlocks?.context || !composed.templateBlocks?.insider) {
     return null;
   }
@@ -878,6 +908,39 @@ function buildVerifiedCommitEventCopy(ev, { source = 'On3' } = {}) {
   };
   if (isBrokenCopy(text, payload)) return null;
   return payload;
+}
+
+async function buildVerifiedCommitCopyAsync(opts = {}) {
+  const playerName = opts.playerName;
+  if (!isValidPlayerName(playerName)) return null;
+  const et = String(opts.eventType || 'commit').toLowerCase();
+  if (!['commit', 'flip'].includes(et)) return null;
+
+  const dataLayer = require('./x-autoposter-data-layer');
+  const playerData = await dataLayer.fetchAutoposterPlayerData({
+    playerName,
+    playerSlug: opts.playerSlug,
+    beatText: opts.beatText || null,
+    detail: opts.beatText || null,
+    eventType: et
+  });
+  if (!playerData.ok) return null;
+
+  const player = {
+    ...playerData.data,
+    ...(opts.patch || {}),
+    name: playerData.data.name || playerName,
+    slug: playerData.data.playerSlug || opts.playerSlug
+  };
+  return buildVerifiedCommitEventCopy(
+    {
+      eventType: et,
+      playerSlug: player.slug,
+      payload: { player },
+      detail: opts.beatText || null
+    },
+    { source: opts.source || 'Beat writer', beatText: opts.beatText || null }
+  );
 }
 
 async function buildRecruitingEventCopyAsync(ev, { source = 'On3' } = {}) {
@@ -1053,6 +1116,7 @@ module.exports = {
   buildMomentumCopyAsync,
   buildRecruitingEventCopyAsync,
   buildVerifiedCommitEventCopy,
+  buildVerifiedCommitCopyAsync,
   buildPortalHeadlinerCopyAsync,
   buildArticleCopyAsync,
   isBrokenCopy,

@@ -392,6 +392,81 @@ function matchesGatorFootballIntel(text) {
   return RECRUITING_SIGNAL_RE.test(lower) || /\b(game|kickoff|swamp|sumrall|faulkner|white|spring|fall camp|depth chart|roster|sec)\b/i.test(lower);
 }
 
+const TRUSTED_COMMIT_HANDLE_RES =
+  /^(?:hayesfawcett3|chadsimmons_|corey_bender|gatorsonline|stevewiltfong|charlespower)$/i;
+
+const FL_COMMIT_RES = [
+  /\b(?:has\s+)?(?:committed|commits|verbally committed|pledged|pledges)\s+to\s+(?:the\s+)?(?:florida|gators|\buf\b)\b/i,
+  /\b(?:flips?|flipped)\s+to\s+(?:the\s+)?(?:florida|gators|\buf\b)\b/i,
+  /\b(?:florida|gators|\buf\b)\s+has\s+(?:landed|secured|added|picked up|got)\s+(?:a\s+)?commit(?:ment)?\s+from\b/i,
+  /\b(?:florida|gators|\buf\b)\s+(?:lands?|landed|secures?|secured|adds?|added)\s+(?:a\s+)?commit(?:ment)?\s+from\b/i,
+  /\bbreaking:\s*(?:florida|gators|\buf\b)\s+has\s+landed\s+a\s+commit(?:ment)?\s+from\b/i
+];
+
+const DECOMMIT_RES = [
+  /\bdecommit(?:ted|s|ment)?\b/i,
+  /\bflipped?\s+away\s+from\s+(?:the\s+)?(?:florida|gators|\buf\b)\b/i,
+  /\b(?:opened|reopened)\s+(?:his|her|their)\s+recruitment\b/i
+];
+
+const RUMOR_ONLY_RES = [
+  /\b(?:expected to commit|leaning toward|will commit|decision soon|commitment watch)\b/i
+];
+
+function normalizeCommitText(text = '') {
+  return String(text || '').replace(/\s+/g, ' ').trim();
+}
+
+function mentionsFloridaCommit(text = '') {
+  return /\b(?:florida|gators|\buf\b|gator nation)\b/i.test(text);
+}
+
+function isFloridaDecommitBeat(text = '') {
+  const t = normalizeCommitText(text);
+  if (!t) return false;
+  return DECOMMIT_RES.some((re) => re.test(t)) && mentionsFloridaCommit(t);
+}
+
+function isFloridaCommitBeat(text = '') {
+  const t = normalizeCommitText(text);
+  if (!t || !mentionsFloridaCommit(t)) return false;
+  if (isFloridaDecommitBeat(t)) return false;
+  const explicit = FL_COMMIT_RES.some((re) => re.test(t));
+  if (!explicit) return false;
+  if (RUMOR_ONLY_RES.some((re) => re.test(t)) && !/\b(?:has|have)\s+(?:committed|landed)\b/i.test(t)) {
+    return false;
+  }
+  return true;
+}
+
+function resolveCommitEventType(text = '') {
+  if (!isFloridaCommitBeat(text)) return null;
+  if (/\bflip(?:ped)?\s+to\s+(?:the\s+)?(?:florida|gators|\buf\b)\b/i.test(text)) return 'flip';
+  return 'commit';
+}
+
+function isTrustedCommitHandle(handle = '') {
+  return TRUSTED_COMMIT_HANDLE_RES.test(String(handle || '').trim().toLowerCase());
+}
+
+function isCommitLikeSignal({ text = '', eventType = '', newsEvent = '' } = {}) {
+  const et = String(eventType || '').toLowerCase();
+  if (et === 'commit' || et === 'commitment' || et === 'flip') return true;
+  const ne = String(newsEvent || '').toLowerCase();
+  if (/committed to florida|flipped to florida/.test(ne)) return true;
+  return isFloridaCommitBeat(text);
+}
+
+function extractCommitQuote(text = '') {
+  const t = normalizeCommitText(text);
+  const curly = t.match(/[\u201c]([^\u201d]{12,220})[\u201d]/);
+  if (curly?.[1]) return curly[1].trim();
+  const straight = t.match(/"([^"]{12,220})"/);
+  if (straight?.[1]) return straight[1].trim();
+  const spoken = t.match(/(?:said|tells me)[,:]?\s+[\u201c"]?([^\u201d".]{12,180})/i);
+  return spoken?.[1]?.trim() || null;
+}
+
 module.exports = {
   FLORIDA_URL_RE,
   MOMENTUM_KEYWORDS,
@@ -430,5 +505,13 @@ module.exports = {
   extractPlayerFromText,
   isGeneralBeatCommentary,
   hasPlayerSpecificBeatIntel,
-  matchesGatorFootballIntel
+  matchesGatorFootballIntel,
+  FL_COMMIT_RES,
+  TRUSTED_COMMIT_HANDLE_RES,
+  isFloridaCommitBeat,
+  isFloridaDecommitBeat,
+  resolveCommitEventType,
+  isTrustedCommitHandle,
+  isCommitLikeSignal,
+  extractCommitQuote
 };
