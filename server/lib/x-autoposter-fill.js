@@ -1768,6 +1768,21 @@ async function tryAutonomousGoldenFourRefill(maxSlugs = 1) {
   }
 }
 
+async function tryAutonomousSelfHealRefill(opts = {}) {
+  if (process.env.X_AUTOPOST_SELF_HEAL === 'false') {
+    return { ok: false, reason: 'self_heal_disabled' };
+  }
+  try {
+    const selfHeal = require('./autoposter/elite-self-heal');
+    return await selfHeal.runSelfHealScan({
+      maxHeal: opts.maxHeal || parseInt(process.env.X_AUTOPOST_SELF_HEAL_MAX_PER_TICK || '2', 10),
+      post: opts.post
+    });
+  } catch (err) {
+    return { ok: false, reason: err.message || 'self_heal_failed' };
+  }
+}
+
 async function refillAutoposterQueue({
   minPending = parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '2', 10),
   maxEnqueue = parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '4', 10),
@@ -1811,6 +1826,7 @@ async function refillAutoposterQueue({
 
   let goldenFourRun = null;
   let goldenEnqueued = [];
+  let selfHealRun = null;
   const enqueued = [];
   const skipReasons = [];
   let added = 0;
@@ -1896,6 +1912,20 @@ async function refillAutoposterQueue({
     if (rawNewsCandidates.length) {
       await enqueueFromCandidates(rawNewsCandidates, beatSlots);
     }
+    const duplicateBlocked = skipReasons.some((row) => row.reason === 'duplicate_already_sent');
+    if (added === 0 && duplicateBlocked) {
+      selfHealRun = await withRefillTimeout(
+        tryAutonomousSelfHealRefill({ maxHeal: Math.min(maxEnqueue, 2) }),
+        REFILL_GOLDEN_FOUR_TIMEOUT_MS,
+        'self_heal_refill'
+      ).catch((err) => ({ ok: false, reason: err.message || String(err) }));
+      for (const row of selfHealRun?.healed || []) {
+        if (row.republish?.enqueued) {
+          enqueued.push(row.republish.enqueued);
+          added += 1;
+        }
+      }
+    }
     const pendingAfterIntel = store.listQueue({ status: 'pending' }).length;
     if (pendingAfterIntel >= minPending || added > 0) {
       void beatPrepPromise;
@@ -1911,6 +1941,7 @@ async function refillAutoposterQueue({
         digDeeper: forcePost || digDeeper,
         beatPrep: null,
         goldenFour: null,
+        selfHeal: selfHealRun,
         detectivesRun: null,
         emptyQueueFallback: added > 0 && pending.length === 0
       };
@@ -1945,6 +1976,7 @@ async function refillAutoposterQueue({
         digDeeper: forcePost || digDeeper,
         beatPrep: null,
         goldenFour: null,
+        selfHeal: selfHealRun,
         detectivesRun: null,
         emptyQueueFallback: added > 0 && pending.length === 0
       };
@@ -1990,6 +2022,19 @@ async function refillAutoposterQueue({
 
     if (emptyQueueRefill) {
       if (added === 0 && store.listQueue({ status: 'pending' }).length < minPending) {
+        selfHealRun = await withRefillTimeout(
+          tryAutonomousSelfHealRefill({ maxHeal: Math.min(maxEnqueue, 2) }),
+          REFILL_GOLDEN_FOUR_TIMEOUT_MS,
+          'self_heal_empty_queue'
+        ).catch((err) => ({ ok: false, reason: err.message || String(err) }));
+        for (const row of selfHealRun?.healed || []) {
+          if (row.republish?.enqueued) {
+            enqueued.push(row.republish.enqueued);
+            added += 1;
+          }
+        }
+      }
+      if (added === 0 && store.listQueue({ status: 'pending' }).length < minPending) {
         goldenFourRun = await withRefillTimeout(
           tryAutonomousGoldenFourRefill(Math.min(Math.max(minPending, 1), maxEnqueue)),
           REFILL_GOLDEN_FOUR_TIMEOUT_MS,
@@ -2023,6 +2068,7 @@ async function refillAutoposterQueue({
         digDeeper: forcePost || digDeeper,
         beatPrep: null,
         goldenFour: goldenFourRun,
+        selfHeal: selfHealRun,
         detectivesRun: null,
         emptyQueueFallback: false
       };
@@ -2377,6 +2423,22 @@ async function republishPlayerIntel(slug, opts = {}) {
     };
   }
 
+  try {
+    const { fingerprintFromEliteResult } = require('./autoposter/elite-build-fingerprint');
+    const eliteFingerprintLedger = require('./autoposter/elite-fingerprint-ledger');
+    const fp = fingerprintFromEliteResult({
+      validationMeta: enqueued.item.validationMeta,
+      templateBlocks: enqueued.item.templateBlocks
+    });
+    eliteFingerprintLedger.recordEliteFingerprint(normalized, fp, {
+      source: opts.selfHeal ? 'self_heal' : 'republish',
+      queueItemId: enqueued.item.id || null,
+      intelFingerprint: enqueued.item.intelFingerprint || null
+    });
+  } catch {
+    /* optional */
+  }
+
   let posted = null;
   if (opts.post === true) {
     const autoposter = require('./x-autoposter');
@@ -2395,6 +2457,8 @@ async function republishPlayerIntel(slug, opts = {}) {
     ok: posted ? posted.ok && !posted.skipped : true,
     slug: normalized,
     mode: 'elite',
+    selfHeal: opts.selfHeal === true,
+    healReason: opts.healReason || null,
     cleared,
     preview: build.text,
     composePath: build.validationMeta?.composePath || ELITE_COMPOSE_PATH,
@@ -2440,6 +2504,7 @@ module.exports = {
   collectPriorityBeatIntelCandidate,
   probeIntelAutoposterPath,
   republishPlayerIntel,
+  tryAutonomousSelfHealRefill,
   COMMIT_EVENT_SOURCES,
   FORCE_POST_COMMIT_AGE_MS,
 };

@@ -369,6 +369,21 @@ function recordAutoposterSend(candidate, result, { duplicateRecovery = false, so
       } catch {
         /* optional */
       }
+      try {
+        if (posted.validationMeta?.composePath === 'elite_pr789') {
+          const { fingerprintFromEliteResult } = require('./autoposter/elite-build-fingerprint');
+          const eliteFingerprintLedger = require('./autoposter/elite-fingerprint-ledger');
+          const fp = fingerprintFromEliteResult(posted);
+          eliteFingerprintLedger.recordEliteFingerprint(posted.playerSlug, fp, {
+            source: 'send',
+            queueItemId: posted.id || null,
+            tweetId: result.tweetId || null,
+            intelFingerprint: posted.intelFingerprint || null
+          });
+        }
+      } catch {
+        /* optional */
+      }
     }
     try {
       const phase3 = require('./autoposter/phase3-index');
@@ -877,6 +892,18 @@ function startXAutoposterScheduler() {
           });
         } else if (_emptyQueueStreak >= 3) {
           autopostLog('warn', 'Queue empty — elite fallback engaged', { streak: _emptyQueueStreak });
+          try {
+            const selfHeal = require('./autoposter/elite-self-heal');
+            const health = await selfHeal.runSelfHealHealthCheck({ limit: 8 });
+            if (!health.ok) {
+              autopostLog('warn', 'Self-heal health check failed', {
+                failures: health.failures,
+                alerts: (health.alerts || []).slice(0, 3)
+              });
+            }
+          } catch (err) {
+            autopostLog('warn', 'Self-heal health check skipped', { error: err.message });
+          }
         }
         saveSchedulerStatus({
           lastRefillAt: store.nowIso(),

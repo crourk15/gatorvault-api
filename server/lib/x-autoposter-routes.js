@@ -271,6 +271,43 @@ function mountXAutoposterRoutes(app) {
     }
   });
 
+  app.get('/api/x/autoposter/health/self-heal', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const selfHeal = require('./autoposter/elite-self-heal');
+      const out = await selfHeal.runSelfHealHealthCheck({
+        limit: parseInt(req.query.limit || '16', 10),
+        _testSkipRefresh: req.query.skipRefresh === '1'
+      });
+      return res.status(out.ok ? 200 : 503).json(out);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/x/autoposter/self-heal/run', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const selfHeal = require('./autoposter/elite-self-heal');
+      const slug = req.body?.slug || req.query.slug || null;
+      const out = await selfHeal.runSelfHealScan({
+        dryRun: req.body?.dryRun === true || req.query.dryRun === '1',
+        post: req.body?.post === true || req.query.post === '1',
+        maxHeal: parseInt(req.body?.maxHeal || req.query.maxHeal || '2', 10),
+        slug,
+        slugs: slug ? [slug] : undefined,
+        force: req.body?.force === true || req.query.force === '1'
+      });
+      return res.json(out);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/x/autoposter/validate', (req, res) => {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
