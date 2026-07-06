@@ -167,6 +167,14 @@ function lookupIdentityPattern(phrase, entries) {
   const key = normalizePhrase(phrase);
   if (!key || !entries?.length) return null;
 
+  let facilityGuards;
+  try {
+    facilityGuards = require('./recruiting-facility-guards');
+    if (facilityGuards.isProgramFacilityText(key)) return null;
+  } catch {
+    facilityGuards = null;
+  }
+
   const matches = [];
   const seen = new Set();
   for (const entry of entries) {
@@ -176,16 +184,18 @@ function lookupIdentityPattern(phrase, entries) {
       if (!patKey) continue;
       const dedupeKey = `${entry.slug}:${patKey}`;
       if (seen.has(dedupeKey)) continue;
-      if (key === patKey || key.includes(patKey) || patKey.includes(key)) {
-        seen.add(dedupeKey);
-        matches.push({
-          slug: entry.slug,
-          name: entry.name,
-          pattern: pat,
-          patKey,
-          specificity: patternSpecificity(patKey)
-        });
-      }
+      const matchesPhrase = facilityGuards
+        ? facilityGuards.phraseIncludesIdentityPattern(key, patKey)
+        : key === patKey || key.includes(patKey) || patKey.includes(key);
+      if (!matchesPhrase) continue;
+      seen.add(dedupeKey);
+      matches.push({
+        slug: entry.slug,
+        name: entry.name,
+        pattern: pat,
+        patKey,
+        specificity: patternSpecificity(patKey)
+      });
     }
   }
 

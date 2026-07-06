@@ -1,4 +1,9 @@
 /** Detectives handoff gate — allowlist UF recruiting intel only. */
+const {
+  hasUfRecruitingSignal,
+  shouldBlockDetectivesHandoff
+} = require('../recruiting-facility-guards');
+
 const DEDUPE_SKIP_REASONS = new Set([
   'duplicate_fingerprint',
   'duplicate_commit',
@@ -91,25 +96,11 @@ function isJunkBeatText(text) {
   return false;
 }
 
-function hasUfRecruitingSignal(text) {
-  const t = String(text || '');
-  if (!t) return false;
-  const hasUf = /\b(?:florida|gators|\buf\b|gainesville|swamp|the swamp)\b/i.test(t);
-  if (!hasUf) return false;
-  if (/\b20(?:2[7-9]|3[0-2])\b/.test(t)) return true;
-  if (/\b(?:swamp|gainesville|the swamp|friday night lights|\bfnl\b)\b/i.test(t)) return true;
-  if (/\b(?:recruit|visit|commit|offer|top three|eye on florida|official visit|unofficial visit)\b/i.test(t)) return true;
-  if (/\b(?:rpm|prediction|decision day|futurecast)\b/i.test(t)) return true;
-  if (/\b(?:commitment date|sets commitment|commit date)\b/i.test(t)) return true;
-  if (/\b(?:flip targets|pending decisions|2028 class|recruiting storyline|July is here and the Florida Gators)\b/i.test(t)) return true;
-  if (/\b(?:4|5)[- ]star\b/i.test(t)) return true;
-  return false;
-}
-
 function shouldHandoff(reason, payload = {}) {
   const r = normalizeDetectivesHandoffReason(reason);
   if (!r || HANDOFF_BLOCK.has(r)) return false;
   if (!HANDOFF_ALLOW.has(r)) return false;
+  if (shouldBlockDetectivesHandoff(payload)) return false;
   const text = beatTextFromPayload(payload);
   if (isJunkBeatText(text)) return false;
   if (r === 'needs_resolution') return hasUfRecruitingSignal(text);

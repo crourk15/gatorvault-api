@@ -124,6 +124,12 @@ function sanitizeExtractedPlayerName(name, fullText = '') {
     if (trimmed === n) break;
     n = trimmed;
   }
+  try {
+    const { isFacilityDerivedPlayerName } = require('./recruiting-facility-guards');
+    if (isFacilityDerivedPlayerName(n, fullText)) return null;
+  } catch {
+    /* optional */
+  }
   return isValidPlayerName(n) ? n : null;
 }
 
