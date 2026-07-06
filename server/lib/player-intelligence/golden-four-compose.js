@@ -170,6 +170,8 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
       pr789AngleLive: true,
       publishTier: 'pr789_angle',
       dominantAngle: anglePick.angle,
+      composePath: 'pr789_beat_facts',
+      angleReason: anglePick.reason,
       voiceEngine: true,
       eliteBeatIntel: true,
       beatText,

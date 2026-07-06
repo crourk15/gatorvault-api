@@ -4,23 +4,40 @@
 
 const { resolveValidCompSchools, compLabel } = require('./comp-sourcing');
 
-const QUOTE_RE = /["“]([^"”]+)["”]|['']([^'']+)['']/g;
 const MONTH_VISIT_RE =
   /\b(early\s+)?(january|february|march|april|may|june|july|august|september|october|november|december)\b/i;
 const FOLLOW_UP_RE = /\bsince\s+(june\s+\d{1,2}|july\s+\d{1,2}|[a-z]+\s+\d{1,2})\b/i;
+
+/** Reject possessive-apostrophe false positives (e.g. Gators' … country's). */
+function isValidBeatQuote(q) {
+  const quote = String(q || '').trim();
+  if (quote.length < 12) return false;
+  if (/^all three\.?$/i.test(quote)) return false;
+  if (/^(yes|no|100 percent)\.?$/i.test(quote)) return false;
+  if (/^(defensive back|coaching staff|the florida|florida gators)/i.test(quote)) return false;
+  if (/\bcontinue standing out\b/i.test(quote)) return false;
+  if (/\bprospects?\b/i.test(quote) && !/^I /i.test(quote)) return false;
+  return true;
+}
 
 function extractQuote(beatText = '') {
   const beat = String(beatText);
   const quotes = [];
   let m;
-  const re = new RegExp(QUOTE_RE.source, 'g');
-  while ((m = re.exec(beat)) !== null) {
-    const q = (m[1] || m[2] || '').trim();
-    if (q.length < 12) continue;
-    if (/^all three\.?$/i.test(q)) continue;
-    if (/^(yes|no|100 percent)\.?$/i.test(q)) continue;
-    quotes.push(q);
+
+  const doubleRe = /["“]([^"”]+)["”]/g;
+  while ((m = doubleRe.exec(beat)) !== null) {
+    const q = (m[1] || '').trim();
+    if (isValidBeatQuote(q)) quotes.push(q);
   }
+
+  // Single-quoted speech only — not possessives like Gators' or country's.
+  const singleRe = /(?:^|[\s([{>—–-])'([^']{12,220})'(?:[\s)\]}>.,!?;—–-]|$)/g;
+  while ((m = singleRe.exec(beat)) !== null) {
+    const q = (m[1] || '').trim();
+    if (isValidBeatQuote(q)) quotes.push(q);
+  }
+
   if (quotes.length) {
     return quotes.sort((a, b) => b.length - a.length)[0];
   }
@@ -95,6 +112,17 @@ function extractBoardSignal(beatText = '') {
   );
 }
 
+/** On3 team-news prose — staff/tradition standing out without a visit or player quote. */
+function extractProgramPitchSignal(beatText = '') {
+  const beat = String(beatText).toLowerCase();
+  return (
+    /\bstanding out\b/i.test(beat) ||
+    /\bfast start\b/i.test(beat) ||
+    (/\bcoaching staff\b/i.test(beat) &&
+      /\b(defensive back|db coach|db history|db tradition|history and coaching)\b/i.test(beat))
+  );
+}
+
 function extractBeatCompBattle(beatText = '') {
   return /\b(battle|separate|against|competing|race|mix)\b/i.test(String(beatText));
 }
@@ -106,6 +134,7 @@ function classifySignals(facts = {}) {
   if (facts.quote) signals.push('quote_driven');
   if (facts.visit?.when || facts.visit?.school) signals.push('visit');
   if (facts.boardSignal) signals.push('board');
+  if (facts.programPitch) signals.push('program_pitch');
   if (facts.rpmTop?.length) signals.push('competition');
   if (facts.beatCompBattle) signals.push('competition');
   if (facts.followUpSince) signals.push('follow_up');
@@ -146,9 +175,10 @@ function selectAngleFromFacts(facts = {}, beatText = '') {
     return { angle: 'competition', reason: 'rpm_with_visit', signals };
   }
   if (facts.boardSignal) return { angle: 'board', reason: 'board_only', signals };
+  if (facts.programPitch) return { angle: 'program_pitch', reason: 'program_pitch', signals };
   if (facts.visit?.when) return { angle: 'visit', reason: 'visit_fallback', signals };
 
-  return { angle: 'visit', reason: 'minimal_facts', signals };
+  return { angle: 'board', reason: 'minimal_facts', signals };
 }
 
 function extractBeatFacts(beatText = '', ctx = {}) {
@@ -186,6 +216,7 @@ function extractBeatFacts(beatText = '', ctx = {}) {
     offerSchools: (intel?.offers || []).map((o) => o.school).filter(Boolean),
     visitSchools: (intel?.visits || []).map((v) => v.school).filter(Boolean),
     boardSignal: extractBoardSignal(beat),
+    programPitch: extractProgramPitchSignal(beat),
     beatCompBattle: extractBeatCompBattle(beat),
     provenance: {
       visit: extractVisit(beat) ? 'beat' : null,
@@ -379,10 +410,33 @@ function composeEliteStaffArc(facts, ln, opts = {}) {
   return paragraph;
 }
 
+function composeEliteProgramPitchArc(facts, ln, beatText = '', opts = {}) {
+  const beat = String(beatText || '').toLowerCase();
+  let paragraph;
+  if (/defensive back history|db history|db tradition/i.test(beat)) {
+    paragraph = `Florida's DB tradition and staff pitch are standing out early with ${ln}, and UF has real traction in his mix`;
+  } else if (/standing out/i.test(beat)) {
+    paragraph = `Florida's staff pitch is standing out early with ${ln}, and UF has real traction in his mix`;
+  } else {
+    paragraph = `Florida is building early traction with ${ln}, and the staff pitch is landing`;
+  }
+
+  if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
+    paragraph += `. ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the picture.`;
+  } else if (!paragraph.endsWith('.')) {
+    paragraph += '.';
+  }
+  return paragraph;
+}
+
 function composeEliteVisitArc(facts, ln, beatText = '', opts = {}) {
   const beat = String(beatText || '').toLowerCase();
   const swampTrip = /swamp|first trip/i.test(beat);
   let paragraph;
+
+  if (!facts.visit?.when && !/\b(on campus|visited|visit|trip|swamp|gainesville)\b/i.test(beat)) {
+    return composeEliteProgramPitchArc(facts, ln, beatText, opts);
+  }
 
   if (swampTrip) {
     paragraph = `${ln}'s first trip to The Swamp gave Florida early traction`;
@@ -480,6 +534,8 @@ function composeEliteArc(facts, anglePick, ln, beatText = '', opts = {}) {
       return composeEliteBoardArc(facts, ln, beatText, opts);
     case 'competition':
       return composeEliteCompetitionArc(facts, ln, opts);
+    case 'program_pitch':
+      return composeEliteProgramPitchArc(facts, ln, beatText, opts);
     case 'visit':
     default:
       return composeEliteVisitArc(facts, ln, beatText, opts);
