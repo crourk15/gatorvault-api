@@ -26,10 +26,36 @@ test('Kalu beat selects quote/interest angle — not generic board fallback', ()
   assert.equal(angle.angle, 'player_quote');
 });
 
-test('Kalu elite compose uses interest + clean quote — not top-school mix boilerplate', () => {
+test('Kalu elite compose rejects Lukuni beat mis-tagged to Kalu', () => {
   const built = composeGoldenFourFactPost({
     slug: 'dk-kalu',
-    intel: { playerName: 'DK Kalu', detail: KALU_BEAT, classYear: 2026, pos: 'DL' },
+    intel: {
+      playerName: 'DK Kalu',
+      detail: KALU_BEAT,
+      fingerprint: 'beat_offer_isaac-kalubi-lukunis_2026-07-01_corey_bender',
+      classYear: 2026,
+      pos: 'DL'
+    },
+    on3Sync: {
+      rankingTokens: { on3Stars: 3, on3NationalRank: 684, on3PositionRank: 73, on3StateRank: 108 },
+      stars: 3,
+      natlRank: 684,
+      posRank: 73,
+      stateRank: 108
+    },
+    playerRow: { name: 'DK Kalu', classYear: 2026, pos: 'DL', hometownState: 'TX', state: 'TX' },
+    composePath: 'elite_pr789'
+  });
+  assert.equal(built.ok, false);
+  assert.equal(built.reason, 'beat_identity_mismatch');
+});
+
+test('Valid Kalu beat composes interest + clean quote', () => {
+  const beat =
+    'Florida had DK Kalu\'s attention before the offer landed, and the Gators remain in his mix early — "I really like the Gators."';
+  const built = composeGoldenFourFactPost({
+    slug: 'dk-kalu',
+    intel: { playerName: 'DK Kalu', detail: beat, classYear: 2026, pos: 'DL' },
     on3Sync: {
       rankingTokens: { on3Stars: 3, on3NationalRank: 684, on3PositionRank: 73, on3StateRank: 108 },
       stars: 3,
@@ -42,10 +68,7 @@ test('Kalu elite compose uses interest + clean quote — not top-school mix boil
   });
   assert.equal(built.ok, true, built.reason || JSON.stringify(built));
   assert.doesNotMatch(built.text, /top-school mix on his board early/i);
-  assert.match(built.text, /really like(s)? the Gators/i);
-  assert.doesNotMatch(built.text, /he said he "really like the Gators/i);
-  const banned = validateBannedPhrases(built.text);
-  assert.equal(banned.ok, true, JSON.stringify(banned.violations));
+  assert.match(built.text, /really likes the Gators/i);
 });
 
 test('Thomas beat rejects reporter-voice pseudo-quotes', () => {

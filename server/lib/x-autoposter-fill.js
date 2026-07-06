@@ -2333,10 +2333,20 @@ async function republishPlayerIntel(slug, opts = {}) {
   await intelStore.initIntelStore().catch(() => {});
 
   const rows = intelStore.getIntelForPlayer({ playerSlug: normalized }) || [];
-  const on3Row =
-    rows.find((row) => /on3-team-news/i.test(String(row.source || ''))) ||
-    rows.find((row) => isBeatWriterIntel(row)) ||
-    null;
+  const { pickBeatIntelRow, detectBeatIdentityMismatch } = require('./autoposter/beat-identity-guard');
+  try {
+    intelStore.removeIntelMatching((row) => {
+      if (String(row.playerSlug || '').trim().toLowerCase() !== normalized) return false;
+      const text = String(row.detail || row.skinny || row.text || '').trim();
+      return detectBeatIdentityMismatch(normalized, row.playerName, text, {
+        fingerprint: row.fingerprint || null
+      }).mismatch;
+    });
+  } catch {
+    /* optional */
+  }
+  const refreshedRows = intelStore.getIntelForPlayer({ playerSlug: normalized }) || [];
+  const on3Row = pickBeatIntelRow(normalized, refreshedRows.length ? refreshedRows : rows);
   if (!on3Row) return { ok: false, error: 'no_intel_row', slug: normalized };
 
   const fingerprint = opts.fingerprint || on3Row.fingerprint || null;

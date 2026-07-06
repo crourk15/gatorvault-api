@@ -282,6 +282,19 @@ async function buildEliteRepublishPost(slug, opts = {}) {
   }
 
   const intelRow = opts.intelRow || fused.primaryIntelRow || {};
+  const beatText = String(intelRow.detail || intelRow.skinny || fused.beatText || '').trim();
+  try {
+    const { detectBeatIdentityMismatch } = require('../autoposter/beat-identity-guard');
+    const mismatch = detectBeatIdentityMismatch(normalized, intelRow.playerName || playerRow?.name, beatText, {
+      fingerprint: intelRow.fingerprint || null
+    });
+    if (mismatch.mismatch) {
+      return { ok: false, reason: 'beat_identity_mismatch', ...mismatch, on3Sync, on3Refresh };
+    }
+  } catch {
+    /* optional */
+  }
+
   const intel = {
     ...intelRow,
     playerName: playerIntel?.identity?.name || intelRow.playerName || playerRow?.name,

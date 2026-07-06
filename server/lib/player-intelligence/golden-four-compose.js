@@ -58,6 +58,18 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
   const beatText = String(intel?.detail || intel?.skinny || '').trim();
   if (!beatText) return { ok: false, reason: 'missing_beat_text' };
 
+  try {
+    const { detectBeatIdentityMismatch } = require('../autoposter/beat-identity-guard');
+    const mismatch = detectBeatIdentityMismatch(slug, intel?.playerName || playerRow?.name, beatText, {
+      fingerprint: intel?.fingerprint || null
+    });
+    if (mismatch.mismatch) {
+      return { ok: false, reason: 'beat_identity_mismatch', ...mismatch };
+    }
+  } catch {
+    /* optional */
+  }
+
   const defaults = GOLDEN_PLAYER_DEFAULTS[slug] || {};
   const playerName = intel?.playerName || playerRow?.name || defaults.name;
   if (!playerName) return { ok: false, reason: 'missing_player_name' };

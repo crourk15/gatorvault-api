@@ -35,9 +35,15 @@ function rowText(row) {
 }
 
 function clusterIntelRows(slug) {
-  return (intelStore.getIntelForPlayer({ playerSlug: slug }) || [])
+  const rows = (intelStore.getIntelForPlayer({ playerSlug: slug }) || [])
     .filter((row) => rowText(row))
     .sort((a, b) => new Date(b.timestamp || b.createdAt || 0) - new Date(a.timestamp || a.createdAt || 0));
+  try {
+    const { filterBeatIntelRows } = require('../autoposter/beat-identity-guard');
+    return filterBeatIntelRows(slug, rows);
+  } catch {
+    return rows;
+  }
 }
 
 function buildBeatTextFromCluster(rows) {
