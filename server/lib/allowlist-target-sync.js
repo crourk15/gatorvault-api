@@ -102,7 +102,8 @@ function profilePatchFromOn3(profile, classYear) {
     stateRank: rp.consensusStateRank ?? rp.stateRank ?? profile.stateRank ?? null,
   };
 
-  if (profile.school) patch.school = profile.school;
+  if (profile.school) patch.school = on3Recruit.schoolLabelFromOn3(profile) || profile.school;
+  if (profile.highSchoolSlug) patch.highSchoolSlug = profile.highSchoolSlug;
   if (profile.state) patch.state = profile.state;
   const rating = profile.rating ?? rp.consensusRating ?? rp.rating ?? null;
   if (rating != null && Number.isFinite(Number(rating))) {

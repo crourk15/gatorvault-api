@@ -149,7 +149,9 @@ async function ensureRankingProfile(slug, playerRow, intelRow = null) {
   let row = playerRow;
   let tokens = extractOn3RankingTokens(row);
   const needsSchool = !row?.school && !row?.fromSchool;
-  if (tokens && !needsSchool) return { playerRow: row, rankingTokens: tokens };
+  const needsSchoolLocation =
+    !!row?.school && !/\([^)]+\)/.test(String(row.school)) && !/, [A-Z]{2}$/.test(String(row.school));
+  if (tokens && !needsSchool && !needsSchoolLocation) return { playerRow: row, rankingTokens: tokens };
 
   const recruitSlug = resolveOn3RecruitSlug(slug, row, intelRow);
   if (!recruitSlug) return { playerRow: row, rankingTokens: tokens || null };
@@ -163,6 +165,7 @@ async function ensureRankingProfile(slug, playerRow, intelRow = null) {
       slug,
       ...patch,
       on3Slug: recruitSlug,
+      highSchoolSlug: profile.highSchoolSlug || row?.highSchoolSlug || null,
       hometownState: patch.state || row?.hometownState || row?.state || null,
       state: patch.state || row?.state || row?.hometownState || null,
       on3TopTeams: profile.topTeams || row?.on3TopTeams || [],

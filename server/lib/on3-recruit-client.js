@@ -77,6 +77,29 @@ function stateFromHighSchoolSlug(slug) {
   return /^[a-z]{2}$/i.test(last) ? last.toUpperCase() : null;
 }
 
+function cityStateFromHighSchoolSlug(slug) {
+  const parts = String(slug || '')
+    .split('-')
+    .filter(Boolean);
+  if (parts.length < 2) return null;
+  const statePart = parts[parts.length - 1];
+  if (!/^[a-z]{2}$/i.test(statePart)) return null;
+  const citySlug = parts[parts.length - 2];
+  if (!citySlug) return null;
+  const city = citySlug.charAt(0).toUpperCase() + citySlug.slice(1);
+  return `${city}, ${statePart.toUpperCase()}`;
+}
+
+function schoolLabelFromOn3(profile) {
+  const name = profile?.school;
+  if (!name) return null;
+  if (/\([^)]+\)/.test(name)) return name;
+  const cityState =
+    cityStateFromHighSchoolSlug(profile?.highSchoolSlug) ||
+    (profile?.hometownCity && profile?.state ? `${profile.hometownCity}, ${profile.state}` : null);
+  return cityState ? `${name} (${cityState})` : name;
+}
+
 function parseOn3NilValue(raw) {
   if (raw == null) return null;
   if (typeof raw === 'number' && Number.isFinite(raw) && raw > 0) return Math.round(raw);
@@ -265,4 +288,6 @@ module.exports = {
   resolveRecruitSlug,
   slugify,
   stateFromHighSchoolSlug,
+  cityStateFromHighSchoolSlug,
+  schoolLabelFromOn3,
 };
