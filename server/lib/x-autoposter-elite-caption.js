@@ -624,6 +624,135 @@ function trimLine(text, max = 140) {
   return t.endsWith('.') ? t : `${t}.`;
 }
 
+async function tryPublishCommitElite({ input, research, playerData, beatForCommit }) {
+  const { composeCommitElite } = require('./autoposter/commit-elite/compose-commit-elite');
+  const qa = require('./autoposter/recruiting-post-qa');
+  const composed = composeCommitElite({
+    research: { ...research, eventType: research.eventType || 'commit' },
+    playerData,
+    beatText: beatForCommit,
+    newsEvent: input.newsEvent
+  });
+  if (!composed?.text) {
+    return { ok: false, reason: 'commit_elite_compose_failed', research };
+  }
+
+  const ctx = playerData.ctx;
+  const kind = 'recruiting';
+  const playerSlug = research.playerSlug || playerData.data.playerSlug || null;
+  const copyMeta = {
+    postKind: kind,
+    triggerType: 'commit',
+    beatText: beatForCommit,
+    eliteMode: true,
+    commitElite: true
+  };
+  let text = template.enforceTweetLimit(composed.text, getTweetCharLimit(), copyMeta);
+  if (!text || GENERIC_CLOSURE_RE.test(text)) {
+    return { ok: false, reason: 'commit_elite_truncation', research };
+  }
+
+  if (process.env.X_AUTOPOST_GV_CTA_ENABLED === 'true' || playerSlug) {
+    const withHook = brand.appendSiteOnce(text, {
+      playerSlug,
+      playerName: research.playerName,
+      eventType: 'commit',
+      eliteMode: true,
+      validationMeta: { playerSlug, commitElite: true }
+    });
+    if (withHook && withHook !== text) {
+      text =
+        withHook.length <= getTweetCharLimit()
+          ? withHook
+          : template.enforceTweetLimit(withHook, getTweetCharLimit(), copyMeta) || text;
+    }
+  }
+
+  const publishCandidate = {
+    ok: true,
+    text,
+    playerName: ctx.name || research.playerName,
+    playerSlug,
+    topic: 'recruiting',
+    templateBlocks: composed.templateBlocks,
+    validationMeta: { commitElite: true, beatText: beatForCommit }
+  };
+  if (qa.isRecruitingPlayerCandidate(publishCandidate) && !qa.passesPublishGate(publishCandidate)) {
+    return { ok: false, reason: 'commit_elite_qa', research };
+  }
+
+  eliteLog.logEliteCaption({
+    pass: true,
+    commitElite: true,
+    playerName: research.playerName,
+    playerSlug,
+    eventType: 'commit',
+    sourcesUsed: research.sourcesUsed,
+    templateBlocks: composed.templateBlocks,
+    finalCaption: text
+  });
+
+  return {
+    ok: true,
+    text,
+    playerName: ctx.name || research.playerName,
+    playerSlug,
+    context: ctx,
+    postKind: kind,
+    autoposterData: playerData.data,
+    templateBlocks: composed.templateBlocks,
+    validationMeta: {
+      commitElite: true,
+      eliteCompose: true,
+      commitFacts: composed.facts,
+      beatText: beatForCommit,
+      eventType: 'commit'
+    },
+    research
+  };
+}
+
+async function buildCommitElitePost(input = {}) {
+  const dataLayer = require('./x-autoposter-data-layer');
+  const intelInput = {
+    playerName: input.playerName || input.intel?.playerName,
+    playerSlug: input.playerSlug || input.intel?.playerSlug,
+    beatText: input.beatText || input.intel?.detail || null,
+    detail: input.beatText || input.intel?.detail || null,
+    pos: input.intel?.pos || input.patch?.pos || null,
+    classYear: input.intel?.classYear || input.patch?.classYear || null,
+    school: input.intel?.school || input.intel?.highSchool || null,
+    stars: input.intel?.stars || input.patch?.stars || null,
+    identityConfirmed: input.intel?.identityConfirmed,
+    sourceType: input.intel?.sourceType || (input.beatText ? 'beat' : null),
+    timestamp:
+      dataLayer.resolveIntelTimestamp(input.intel || input) ||
+      input.intel?.timestamp ||
+      input.publishedAt ||
+      null,
+    eventType: input.intel?.eventType || 'commit',
+    source: input.intel?.source || input.source,
+    sourceHandle: input.intel?.sourceHandle || null,
+    directlyInvolvesUF: input.intel?.directlyInvolvesUF
+  };
+
+  const playerData = await dataLayer.fetchAutoposterPlayerData(intelInput);
+  if (!playerData.ok) return null;
+
+  const research = await researchEngine.researchUpdate({
+    ...input,
+    playerName: playerData.data.name,
+    playerSlug: playerData.data.playerSlug,
+    patch: null,
+    rewriteMetrics: playerData.rewriteMetrics || null
+  });
+  research.eventType = research.eventType || 'commit';
+
+  const beatForCommit = String(input.beatText || input.intel?.detail || '').trim();
+  const result = await tryPublishCommitElite({ input, research, playerData, beatForCommit });
+  return result.ok ? result : null;
+}
+
 async function buildElitePlayerPost(input = {}) {
   const dataLayer = require('./x-autoposter-data-layer');
   const intelInput = {
@@ -672,6 +801,28 @@ async function buildElitePlayerPost(input = {}) {
     rewriteMetrics: playerData.rewriteMetrics || null
   });
 
+  const commitDetect = require('./beat-writer-filters');
+  const beatForCommit = String(input.beatText || input.intel?.detail || '').trim();
+  const commitLike = commitDetect.isCommitLikeSignal({
+    text: beatForCommit,
+    eventType: intelInput.eventType,
+    newsEvent: input.newsEvent
+  });
+
+  if (commitLike) {
+    research.eventType = research.eventType || 'commit';
+    const commitResult = await tryPublishCommitElite({ input, research, playerData, beatForCommit });
+    if (commitResult.ok) return commitResult;
+    eliteLog.logEliteCaption({
+      skipped: true,
+      skipReason: commitResult.reason || 'commit_elite_compose_failed',
+      playerName: playerData.data.name,
+      eventType: 'commit',
+      voiceEngine: false
+    });
+    return { ok: false, skipped: true, reason: commitResult.reason || 'commit_elite_compose_failed', research };
+  }
+
   if (!research.hasUsableSignal) {
     eliteLog.logEliteCaption({
       skipped: true,
@@ -682,25 +833,6 @@ async function buildElitePlayerPost(input = {}) {
       context: research
     });
     return { ok: false, skipped: true, reason: 'no_usable_signal', research };
-  }
-
-  const commitDetect = require('./beat-writer-filters');
-  const beatForCommit = String(input.beatText || input.intel?.detail || '').trim();
-  if (
-    commitDetect.isCommitLikeSignal({
-      text: beatForCommit,
-      eventType: intelInput.eventType,
-      newsEvent: input.newsEvent
-    })
-  ) {
-    eliteLog.logEliteCaption({
-      skipped: true,
-      skipReason: 'commit_compose_bypass',
-      playerName: playerData.data.name,
-      eventType: 'commit',
-      voiceEngine: false
-    });
-    return { ok: false, skipped: true, reason: 'commit_compose_bypass', research };
   }
 
   try {
@@ -1207,6 +1339,7 @@ function isEliteModeEnabled() {
 
 module.exports = {
   buildElitePlayerPost,
+  buildCommitElitePost,
   buildEliteQuoteRetweet,
   buildProgramImpactLine,
   isEliteModeEnabled,

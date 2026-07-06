@@ -1,4 +1,4 @@
-/** Commit event detection + beat commit compose bypass. */
+﻿/** Commit event detection + beat commit compose bypass. */
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const commitDetect = require('../../lib/beat-writer-filters');
@@ -6,15 +6,16 @@ const beatIngest = require('../../lib/beat-writer-ingest');
 const { parseBeatCommitPosts } = require('../../lib/allowlist-target-sync');
 
 const HAYES_BEAT =
-  "BREAKING: Class of 2027 CB Kamauri Whitfield has Committed to Florida, he tells me for @Rivals The 5'11 190 CB chose the Gators over Oregon and Nebraska \"I'M HOME! The best stay in state. Gator nation let's work #GoGators\"";
+  "BREAKING: Class of 2027 CB Kamauri Whitfield has Committed to Florida, he tells me for @Rivals The 5'11\" 190 CB chose the Gators over Oregon and Nebraska \u201cI'M HOME\u201d The best stay in state. Gator nation let's work #GoGators";
 
 const COREY_BEAT =
-  "BREAKING: Florida has landed a commitment from DB Kamauri Whitfield 🐊 The Orlando native and Gators' No. 1 target at nickel is staying put in the Sunshine State.";
+  "BREAKING: Florida has landed a commitment from DB Kamauri Whitfield! The Orlando native and Gators' No. 1 target at nickel is staking put in the Sunshine State.";
 
 const RUMOR_BEAT =
   'Florida is trending for CB Marcus Lee, decision soon — commitment watch heating up.';
 
-const DECOMMIT_BEAT = '2027 CB Kamauri Whitfield has decommitted from Florida and reopened his recruitment.';
+const DECOMMIT_BEAT =
+  '2027 CB Kamauri Whitfield has decommitted from Florida and reopened his recruitment.';
 
 test('Hayes Fawcett commit tweet is detected', () => {
   assert.equal(commitDetect.isFloridaCommitBeat(HAYES_BEAT), true);
@@ -40,7 +41,7 @@ test('decommit beat is not treated as commitment', () => {
 
 test('parseBeatCommitPosts matches Hayes and Corey posts', () => {
   const posts = [
-    { handle: 'Hayesfawcett3', text: HAYES_BEAT, publishedAt: '2026-07-06T18:00:00.000Z' },
+    { handle: 'hayesfawcett3', text: HAYES_BEAT, publishedAt: '2026-07-06T18:00:00.000Z' },
     { handle: 'Corey_Bender', text: COREY_BEAT, publishedAt: '2026-07-06T18:05:00.000Z' }
   ];
   const rows = parseBeatCommitPosts(posts);
@@ -69,3 +70,4 @@ test('isCommitLikeSignal covers eventType and beat text', () => {
   );
   assert.equal(commitDetect.isCommitLikeSignal({ text: '', eventType: 'commit' }), true);
 });
+

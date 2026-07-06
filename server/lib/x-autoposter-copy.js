@@ -827,14 +827,25 @@ async function buildIntelCopyAsync(intel) {
         newsEvent
       })
     ) {
-      built = await buildVerifiedCommitCopyAsync({
+      built = await buildCommitEliteCopyAsync({
         playerName: intel.playerName,
         playerSlug: intel.playerSlug,
         patch: playerContext.verifiedPatchFromIntel(intel),
         beatText: intel.detail || null,
         source,
-        eventType: intel.eventType || 'commit'
+        eventType: intel.eventType || 'commit',
+        newsEvent
       });
+      if (!built?.text) {
+        built = await buildVerifiedCommitCopyAsync({
+          playerName: intel.playerName,
+          playerSlug: intel.playerSlug,
+          patch: playerContext.verifiedPatchFromIntel(intel),
+          beatText: intel.detail || null,
+          source,
+          eventType: intel.eventType || 'commit'
+        });
+      }
     }
   }
   return newsPayloadFromBuilt(built);
@@ -908,6 +919,33 @@ function buildVerifiedCommitEventCopy(ev, { source = 'On3', beatText = null } = 
   };
   if (isBrokenCopy(text, payload)) return null;
   return payload;
+}
+
+async function buildCommitEliteCopyAsync(opts = {}) {
+  const eliteCaption = require('./x-autoposter-elite-caption');
+  const built = await eliteCaption.buildCommitElitePost({
+    playerName: opts.playerName,
+    playerSlug: opts.playerSlug,
+    beatText: opts.beatText,
+    intel: {
+      playerName: opts.playerName,
+      playerSlug: opts.playerSlug,
+      eventType: opts.eventType || 'commit',
+      detail: opts.beatText
+    },
+    patch: opts.patch,
+    source: opts.source,
+    newsEvent: opts.newsEvent || 'committed to Florida'
+  });
+  if (!built?.text) return null;
+  if (isBrokenCopy(built.text, built)) return null;
+  return {
+    text: built.text,
+    playerName: built.playerName,
+    templateBlocks: built.templateBlocks,
+    validationMeta: built.validationMeta,
+    commitElite: true
+  };
 }
 
 async function buildVerifiedCommitCopyAsync(opts = {}) {
@@ -1117,6 +1155,7 @@ module.exports = {
   buildRecruitingEventCopyAsync,
   buildVerifiedCommitEventCopy,
   buildVerifiedCommitCopyAsync,
+  buildCommitEliteCopyAsync,
   buildPortalHeadlinerCopyAsync,
   buildArticleCopyAsync,
   isBrokenCopy,

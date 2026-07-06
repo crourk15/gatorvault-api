@@ -459,12 +459,17 @@ function isCommitLikeSignal({ text = '', eventType = '', newsEvent = '' } = {}) 
 
 function extractCommitQuote(text = '') {
   const t = normalizeCommitText(text);
-  const curly = t.match(/[\u201c]([^\u201d]{12,220})[\u201d]/);
+  const curly = t.match(/[\u201c]([^\u201d]{8,220})[\u201d]/);
   if (curly?.[1]) return curly[1].trim();
-  const straight = t.match(/"([^"]{12,220})"/);
-  if (straight?.[1]) return straight[1].trim();
-  const spoken = t.match(/(?:said|tells me)[,:]?\s+[\u201c"]?([^\u201d".]{12,180})/i);
-  return spoken?.[1]?.trim() || null;
+  const spoken = t.match(/(?:said|tells me)[,:]?\s+[\u201c"]?([^\u201d".]{8,180})/i);
+  if (spoken?.[1]) return spoken[1].trim();
+  const straightAll = [...t.matchAll(/"([^"]{8,220})"/g)];
+  for (let i = straightAll.length - 1; i >= 0; i--) {
+    const q = straightAll[i][1].trim();
+    if (/^\d/.test(q) && /\b(?:CB|RB|WR|TE|OL|QB|DL|LB|EDGE|S|ATH|K|P)\b/.test(q)) continue;
+    if (q.length >= 8) return q;
+  }
+  return null;
 }
 
 module.exports = {

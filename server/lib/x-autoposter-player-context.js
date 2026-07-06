@@ -966,6 +966,26 @@ async function buildPlayerNewsPost({
     })
   ) {
     const copyMod = require('./x-autoposter-copy');
+    const eliteCommit = await copyMod.buildCommitEliteCopyAsync({
+      playerName: intel?.playerName || playerName,
+      playerSlug: intel?.playerSlug || playerSlug,
+      patch,
+      beatText: beatDetailEarly,
+      source,
+      eventType: intel?.eventType || 'commit',
+      newsEvent
+    });
+    if (eliteCommit?.text) {
+      return {
+        ok: true,
+        text: eliteCommit.text,
+        playerName: eliteCommit.playerName,
+        playerSlug: intel?.playerSlug || playerSlug,
+        templateBlocks: eliteCommit.templateBlocks,
+        validationMeta: eliteCommit.validationMeta,
+        commitElite: true
+      };
+    }
     const verified = await copyMod.buildVerifiedCommitCopyAsync({
       playerName: intel?.playerName || playerName,
       playerSlug: intel?.playerSlug || playerSlug,

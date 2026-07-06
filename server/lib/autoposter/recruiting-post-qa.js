@@ -179,6 +179,7 @@ function voiceEngineRequired(raw) {
   if (process.env.X_AUTOPOST_VOICE_REQUIRED === 'false') return false;
   if (!isRecruitingPlayerCandidate(raw)) return false;
   if (raw.verifiedCommit || raw.validationMeta?.verifiedCommit) return false;
+  if (raw.commitElite || raw.validationMeta?.commitElite) return false;
   if (raw.validationMeta?.voiceEngine) return false;
   return true;
 }
