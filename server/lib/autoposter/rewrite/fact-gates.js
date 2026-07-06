@@ -32,7 +32,11 @@ const BANNED_FILLER_PHRASES = Object.freeze([
   /\bUF is positioned early in his recruitment\b/i,
   /\bcampus in campus\b/i,
   /\bhe said he "defensive back\b/i,
-  /\bhe said he "coaching staff\b/i
+  /\bhe said he "coaching staff\b/i,
+  /\btop-school mix on his board early\b/i,
+  /\bhe said he "really like the Gators/i,
+  /\bHe's telling me\b/i,
+  /\b\.'\./
 ]);
 
 function validateBannedPhrases(text) {
@@ -50,6 +54,7 @@ function hasBeatSourcedFact(facts = {}) {
   if (facts.staffEnergy === true) return true;
   if (facts.visit?.when || facts.visit?.school) return true;
   if (facts.boardSignal) return true;
+  if (facts.offerInterest) return true;
   if (facts.programPitch) return true;
   if (facts.beatCompBattle) return true;
   return false;
@@ -66,6 +71,8 @@ function hasFactCompletenessForPr789(facts = {}, beatText = '') {
   if (facts.visit?.when && facts.boardSignal) return true;
   if (facts.visit?.when && facts.staffEnergy) return true;
   if (facts.boardSignal && facts.quote) return true;
+  if (facts.offerInterest && facts.quote) return true;
+  if (facts.offerInterest) return true;
   if (facts.programPitch) return true;
   if (facts.rpmTop?.length && facts.visit?.when) return true;
   if (facts.visit?.when && /visit|campus|gainesville|swamp/i.test(beat)) return true;

@@ -76,7 +76,7 @@ test('Ham elite insider paragraph matches editorial flow', () => {
   const banned = validateBannedPhrases(out.narrative);
   assert.equal(banned.ok, true, JSON.stringify(banned.violations));
   assert.match(out.narrative, /early March/i);
-  assert.match(out.narrative, /— he said he "loved the energy that I saw\."/);
+  assert.match(out.narrative, /— he said he loved the energy he saw from UF staff\./);
   assert.match(out.narrative, /That same pitch has only picked up since June 15/i);
   assert.match(out.narrative, /lead his RPM board/i);
   assert.match(out.narrative, /staff sell is landing/i);
@@ -143,7 +143,7 @@ test('Drakeford elite visit arc keeps Swamp hook and embeds beat quote', () => {
   const banned = validateBannedPhrases(out.narrative);
   assert.equal(banned.ok, true, JSON.stringify(banned.violations));
   assert.match(out.narrative, /first trip to The Swamp/i);
-  assert.match(out.narrative, /he said Florida is "one of those schools at the top of my board\."/);
+  assert.match(out.narrative, /he said Florida is one of those schools at the top of my board\./);
   assert.doesNotMatch(out.narrative, /he said he "Florida/i);
   assert.doesNotMatch(out.narrative, /campus connection is real/i);
   assert.doesNotMatch(out.narrative, /left with the Gators on his board early/i);
@@ -217,7 +217,7 @@ test('Drakeford elite visit arc appends RPM rivals when rpmTop is present', () =
     { mode: 'elite' }
   );
   assert.match(out.narrative, /Auburn and Georgia Tech lead his RPM board/i);
-  assert.match(out.narrative, /he said Florida is "one of those schools at the top of my board\."/);
+  assert.match(out.narrative, /he said Florida is one of those schools at the top of my board\./);
   assert.match(out.narrative, /clearly in the picture after that first look/i);
 });
 

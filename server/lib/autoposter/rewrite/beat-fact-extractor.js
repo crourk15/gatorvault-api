@@ -17,7 +17,19 @@ function isValidBeatQuote(q) {
   if (/^(defensive back|coaching staff|the florida|florida gators)/i.test(quote)) return false;
   if (/\bcontinue standing out\b/i.test(quote)) return false;
   if (/\bprospects?\b/i.test(quote) && !/^I /i.test(quote)) return false;
+  if (/^he'?s telling me\b/i.test(quote)) return false;
+  if (/^man, you got to come down here/i.test(quote)) return false;
+  if (/^you got to come down here/i.test(quote)) return false;
   return true;
+}
+
+function isReporterFramedQuote(quote = '') {
+  const q = String(quote || '').trim();
+  return (
+    /^he'?s telling me\b/i.test(q) ||
+    /^man, you got to come down here/i.test(q) ||
+    /^you got to come down here/i.test(q)
+  );
 }
 
 function extractQuote(beatText = '') {
@@ -87,6 +99,7 @@ function extractVisit(beatText = '') {
   if (month) when = month[0].trim();
   if (/early march/i.test(beat)) when = 'early March';
   if (/spring practice|this spring/i.test(beat)) when = when || 'this spring';
+  if (/spring visit/i.test(beat)) when = when || 'spring';
   if (/first visit to gainesville|gainesville visit/i.test(beat)) when = 'his first Gainesville visit';
   else if (/first visit|first trip/i.test(beat)) when = when || (/first trip/i.test(beat) ? 'first trip' : 'first visit');
 
@@ -102,13 +115,25 @@ function extractFollowUpSince(beatText = '') {
 }
 
 function extractBoardSignal(beatText = '') {
-  const beat = String(beatText).toLowerCase();
+  const beat = String(beatText || '').toLowerCase();
   return (
     /\btop of my board\b/i.test(beat) ||
-    /\btop schools?\b/i.test(beat) ||
+    /\bon his board\b/i.test(beat) ||
     /\bleaderboard\b/i.test(beat) ||
     /\bcracked his\b/i.test(beat) ||
-    /\bstrong position\b/i.test(beat)
+    /\bstrong position\b/i.test(beat) ||
+    (/\btop schools?\b/i.test(beat) && !/\btop-\d+\b/i.test(beat))
+  );
+}
+
+function extractOfferInterestSignal(beatText = '') {
+  const beat = String(beatText || '').toLowerCase();
+  return (
+    /\breally like the gators\b/i.test(beat) ||
+    /\blong before (?:his|the) offer\b/i.test(beat) ||
+    /\bdidn'?t need an offer\b/i.test(beat) ||
+    /\bhad his attention long before\b/i.test(beat) ||
+    /\bfirmly on his radar\b/i.test(beat)
   );
 }
 
@@ -135,6 +160,7 @@ function classifySignals(facts = {}) {
   if (facts.visit?.when || facts.visit?.school) signals.push('visit');
   if (facts.boardSignal) signals.push('board');
   if (facts.programPitch) signals.push('program_pitch');
+  if (facts.offerInterest) signals.push('offer_interest');
   if (facts.rpmTop?.length) signals.push('competition');
   if (facts.beatCompBattle) signals.push('competition');
   if (facts.followUpSince) signals.push('follow_up');
@@ -162,8 +188,28 @@ function selectAngleFromFacts(facts = {}, beatText = '') {
   if (facts.staffEnergy && facts.visit?.when) {
     return { angle: 'staff', reason: 'staff_energy_visit', signals };
   }
-  if (facts.boardSignal && (facts.quote || facts.visit?.when)) {
-    return { angle: 'board', reason: 'board_signal', signals };
+
+  const playerQuote = facts.quote && !isReporterFramedQuote(facts.quote) ? facts.quote : null;
+  if (
+    playerQuote &&
+    facts.visit?.when === 'this spring' &&
+    /spring practice/i.test(beat) &&
+    facts.boardSignal
+  ) {
+    return { angle: 'board', reason: 'spring_practice_board_quote', signals };
+  }
+  if (playerQuote && facts.visit?.when) {
+    return { angle: 'visit', reason: 'visit_with_player_quote', signals };
+  }
+  if (playerQuote && (facts.offerInterest || /really like the gators/i.test(beat))) {
+    return { angle: 'player_quote', reason: 'player_quote_interest', signals };
+  }
+  if (playerQuote) {
+    return { angle: 'player_quote', reason: 'player_quote', signals };
+  }
+
+  if (facts.boardSignal && facts.visit?.when) {
+    return { angle: 'visit', reason: 'visit_board_signal', signals };
   }
   if (facts.visit?.when && !facts.staffEnergy) {
     return { angle: 'visit', reason: 'dated_visit', signals };
@@ -175,10 +221,11 @@ function selectAngleFromFacts(facts = {}, beatText = '') {
     return { angle: 'competition', reason: 'rpm_with_visit', signals };
   }
   if (facts.boardSignal) return { angle: 'board', reason: 'board_only', signals };
+  if (facts.offerInterest) return { angle: 'player_quote', reason: 'offer_interest', signals };
   if (facts.programPitch) return { angle: 'program_pitch', reason: 'program_pitch', signals };
   if (facts.visit?.when) return { angle: 'visit', reason: 'visit_fallback', signals };
 
-  return { angle: 'board', reason: 'minimal_facts', signals };
+  return { angle: 'program_pitch', reason: 'minimal_facts', signals };
 }
 
 function extractBeatFacts(beatText = '', ctx = {}) {
@@ -216,6 +263,7 @@ function extractBeatFacts(beatText = '', ctx = {}) {
     offerSchools: (intel?.offers || []).map((o) => o.school).filter(Boolean),
     visitSchools: (intel?.visits || []).map((v) => v.school).filter(Boolean),
     boardSignal: extractBoardSignal(beat),
+    offerInterest: extractOfferInterestSignal(beat),
     programPitch: extractProgramPitchSignal(beat),
     beatCompBattle: extractBeatCompBattle(beat),
     provenance: {
@@ -272,28 +320,49 @@ function quoteForEliteEmbed(quote) {
   return q;
 }
 
-/** Beat-accurate quote embed — avoids "he said he \"Florida…" artifacts. */
-function formatEliteQuoteEmbed(quote) {
-  const q = quoteForEliteEmbed(quote);
-  if (!q) return null;
+function thirdPersonQuoteClause(quote) {
+  let q = String(quote || '')
+    .replace(/["""]+$/, '')
+    .replace(/[."]+$/, '')
+    .trim();
+  if (!q || isReporterFramedQuote(q)) return null;
+  if (/^I really like the Gators\.?$/i.test(q)) return 'he really likes the Gators';
+  if (/^I really like the gators\.?$/i.test(q)) return 'he really likes the Gators';
+  if (/^I love the Gators\.?$/i.test(q)) return 'he loves the Gators';
+  if (/^I loved the energy/i.test(q)) return 'he loved the energy he saw from UF staff';
+  if (/^Definitely one of my top schools/i.test(q)) return 'he said "Definitely one of my top schools"';
+  if (/^I /i.test(q)) {
+    q = q.replace(/^I /i, 'he ');
+    q = q.replace(/\blike the Gators\b/i, 'likes the Gators');
+    q = q.replace(/\blove the Gators\b/i, 'loves the Gators');
+    return q;
+  }
   if (/^Florida is /i.test(q)) {
     const tail = q.replace(/^Florida is /i, '').trim();
+    return tail ? `Florida is ${tail}` : null;
+  }
+  if (/^all three/i.test(q) && /db coach|texting/i.test(q)) return null;
+  if (/^Man, you got to/i.test(q)) return null;
+  if (/top schools?|top of my board/i.test(q)) return `he said "${q}"`;
+  return null;
+}
+
+/** Beat-accurate quote embed — clean third-person, no nested broken quotes. */
+function formatEliteQuoteEmbed(quote) {
+  const clause = thirdPersonQuoteClause(quote);
+  if (!clause) return null;
+  if (/^he said "/i.test(clause)) {
+    return ` — ${clause}.`;
+  }
+  if (/^Florida is /i.test(clause)) {
+    const tail = clause.replace(/^Florida is /i, '').trim();
     if (!tail) return null;
-    return ` — he said Florida is "${tail}."`;
+    return ` — he said Florida is ${tail}.`;
   }
-  if (/^all three/i.test(q) && /db coach|texting/i.test(q)) {
-    return null;
+  if (/^he /i.test(clause)) {
+    return ` — he said ${clause}.`;
   }
-  if (/^I /i.test(q)) {
-    return ` — he said he "${q.replace(/^I /i, '').trim()}."`;
-  }
-  if (/loved the energy/i.test(q)) {
-    return ` — he said he "${q}."`;
-  }
-  if (/top schools/i.test(q)) {
-    return ` — he said he "${q}."`;
-  }
-  return ` — he said he "${q}."`;
+  return ` — he said ${clause}.`;
 }
 
 function eliteTakeaway(facts, angle) {
@@ -477,6 +546,35 @@ function composeEliteVisitArc(facts, ln, beatText = '', opts = {}) {
   return paragraph;
 }
 
+function composeElitePlayerQuoteArc(facts, ln, beatText = '', opts = {}) {
+  const beat = String(beatText || '').toLowerCase();
+  let paragraph;
+  if (/long before.*offer|didn'?t need an offer|before his offer/i.test(beat)) {
+    paragraph = `Florida had ${ln}'s attention before the offer landed, and UF is already in his mix`;
+  } else if (facts.visit?.when) {
+    paragraph = `${ln}'s ${facts.visit.when} visit to Florida put the Gators on his radar early`;
+  } else if (/firmly on his radar/i.test(beat)) {
+    paragraph = `Florida is firmly on ${ln}'s radar early in his recruitment`;
+  } else {
+    paragraph = `Florida is building real traction with ${ln} early in his recruitment`;
+  }
+
+  const embed = formatEliteQuoteEmbed(facts.quote);
+  if (embed) {
+    paragraph += embed;
+  } else if (!paragraph.endsWith('.')) {
+    paragraph += '.';
+  }
+
+  if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
+    paragraph += `. ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the mix.`;
+  } else if (!paragraph.endsWith('.') && !paragraph.endsWith('."')) {
+    paragraph += '.';
+  }
+
+  return paragraph;
+}
+
 function composeEliteBoardArc(facts, ln, beatText = '', opts = {}) {
   const beat = String(beatText || '').toLowerCase();
   let paragraph;
@@ -536,6 +634,8 @@ function composeEliteArc(facts, anglePick, ln, beatText = '', opts = {}) {
       return composeEliteCompetitionArc(facts, ln, opts);
     case 'program_pitch':
       return composeEliteProgramPitchArc(facts, ln, beatText, opts);
+    case 'player_quote':
+      return composeElitePlayerQuoteArc(facts, ln, beatText, opts);
     case 'visit':
     default:
       return composeEliteVisitArc(facts, ln, beatText, opts);
