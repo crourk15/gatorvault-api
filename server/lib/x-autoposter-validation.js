@@ -626,7 +626,11 @@ function collectHardSkipReasons(item, blocks, meta) {
   }
 
   const beatSource = meta.beatText || item.validationMeta?.beatText || null;
-  if (beatSource && !isDetectivesTemplatePost(item)) {
+  if (
+    beatSource &&
+    !isDetectivesTemplatePost(item) &&
+    !isProgramNewsPost(item, blocks, item?.playerContext, meta)
+  ) {
     const combined = [blocks.context, blocks.insider].filter(Boolean).join(' ');
     if (hasExcessiveSourceOverlap(combined, beatSource, qualityChecks.OVERLAP_MAX)) {
       skips.push({

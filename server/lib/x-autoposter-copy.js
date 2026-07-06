@@ -503,11 +503,13 @@ async function buildBeatIntelCopyAsync(post) {
   const text = String(post.text || '').replace(/\s+/g, ' ').trim();
   if (!text) return null;
 
-  if (!sportClassifier.isFootballAutoposterEligible(text, post)) {
+  const guarded = await prefilter.guardBeatPost(post);
+  const programOrTeamBeat =
+    guarded.eligible &&
+    (guarded.triggerType === 'program_news' || guarded.triggerType === 'team_event');
+  if (!programOrTeamBeat && !sportClassifier.isFootballAutoposterEligible(text, post)) {
     return sportClassifier.buildNonFootballSkipPayload(sportClassifier.classifySport(text, post), text);
   }
-
-  const guarded = await prefilter.guardBeatPost(post);
   if (!guarded.eligible) return guarded.skip;
 
   if (guarded.triggerType === 'program_news') {

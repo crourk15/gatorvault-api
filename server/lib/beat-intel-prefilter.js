@@ -87,7 +87,7 @@ const PROGRAM_NEWS_SIGNALS = [
   },
   {
     type: 'sec_tv',
-    re: /\b(sec network|tv announcement|telecast|broadcast rights|flex schedule|national tv|media rights)\b/i
+    re: /\b(sec network|sec announces|tv announcement|telecast|broadcast rights|flex schedul(?:e|ing)|national tv|media rights)\b/i
   },
   {
     type: 'realignment',
@@ -104,10 +104,6 @@ const PROGRAM_NEWS_SIGNALS = [
   {
     type: 'history',
     re: /\b(this day in|on this day|program history|gator history|all[- ]time|record book|anniversary|years ago)\b/i
-  },
-  {
-    type: 'recruiting_roundup',
-    re: /\b(flip targets?|decision dates?|not done recruiting|recruiting storylines?|class already has|first 20\d{2} commit|top remaining targets?)\b/i
   }
 ];
 
@@ -272,8 +268,31 @@ function isProgramNewsIntel(text, post = null) {
   const programType = classifyProgramNewsType(phrase);
   if (!programType) return false;
 
+  try {
+    const { passesProgramDetectionGate } = require('./autoposter/program/program-gates');
+    const gate = passesProgramDetectionGate(phrase, { ...(post || {}), programNewsType: programType });
+    if (!gate.ok) return false;
+  } catch {
+    /* optional gate module */
+  }
+
   const teamType = classifyTeamEventType(phrase);
-  if (teamType && TEAM_EVENT_OVERRIDES_PROGRAM.has(teamType)) return false;
+  const TEAM_EVENT_ALWAYS_WINS = new Set(['kickoff', 'schedule', 'game_week']);
+  if (teamType && TEAM_EVENT_ALWAYS_WINS.has(teamType)) return false;
+
+  if (teamType && TEAM_EVENT_OVERRIDES_PROGRAM.has(teamType)) {
+    const programWinsOverTeamEvent = new Set([
+      'nil_infrastructure',
+      'athletic_release',
+      'program_update',
+      'sec_tv',
+      'realignment',
+      'branding',
+      'hall_of_fame',
+      'history'
+    ]);
+    if (!programWinsOverTeamEvent.has(programType)) return false;
+  }
 
   return true;
 }
@@ -674,6 +693,20 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
     };
   }
 
+  const programGate = evaluateProgramNewsEligibility(text, { post });
+  if (programGate.eligible && isTrustedUfBeatPost(post)) {
+    return {
+      eligible: true,
+      triggerType: 'program_news',
+      programNewsType: programGate.programNewsType,
+      text,
+      playerName: null,
+      playerSlug: null,
+      gate: programGate,
+      sport: 'football'
+    };
+  }
+
   const sportClassifier = require('./x-autoposter-sport-classifier');
   const sportSkip = sportClassifier.guardFootballOnly(text, post);
   if (sportSkip) {
@@ -687,20 +720,6 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
   }
 
   if (isTrustedUfBeatPost(post)) {
-    const programGate = evaluateProgramNewsEligibility(text, { post });
-    if (programGate.eligible) {
-      return {
-        eligible: true,
-        triggerType: 'program_news',
-        programNewsType: programGate.programNewsType,
-        text,
-        playerName: null,
-        playerSlug: null,
-        gate: programGate,
-        sport: 'football'
-      };
-    }
-
     const teamGate = evaluateTeamEventEligibility(text, { post });
     if (teamGate.eligible) {
       return {

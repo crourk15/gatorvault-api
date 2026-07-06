@@ -26,6 +26,8 @@ function normalizeStoryArc(c) {
 }
 function computeStoryUnitKey(c) {
   if (!c) return null;
+  const metaKey = c.validationMeta?.programDedupeKey || c.validationMeta?.dedupeKey;
+  if (metaKey) return metaKey;
   const arc = normalizeStoryArc(c);
   const slug = normalizeSlug(c.playerSlug || c.playerName);
   if (slug) return slug + '|' + arc;

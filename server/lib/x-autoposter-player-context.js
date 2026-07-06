@@ -457,7 +457,42 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
   };
 }
 
-function buildProgramNewsPost({ beatText, source, programNewsType = null, postUrl = null } = {}) {
+function buildProgramNewsPost({ beatText, source, programNewsType = null, postUrl = null, ufOfficial = false } = {}) {
+  try {
+    const { composeProgramElitePost, eliteComposeEnabled } = require('./autoposter/program/program-compose');
+    if (eliteComposeEnabled()) {
+      const elite = composeProgramElitePost({
+        beatText,
+        source,
+        programNewsType,
+        post: { writerName: source, programNewsType, url: postUrl, ufOfficial }
+      });
+      if (elite?.ok && elite.text) {
+        return {
+          text: elite.text,
+          playerName: null,
+          postKind: 'program_news',
+          triggerType: 'program_news',
+          programNewsType: programNewsType || elite.validationMeta?.programNewsType || 'general',
+          context: { programNews: true, name: 'Florida Gators' },
+          templateBlocks: elite.templateBlocks,
+          validationMeta: {
+            ...(elite.validationMeta || {}),
+            programDedupeKey: elite.dedupeKey || elite.validationMeta?.dedupeKey || null
+          },
+          playerContext: { programNews: true, name: 'Florida Gators' }
+        };
+      }
+      return null;
+    }
+  } catch {
+    /* fall through to legacy only when elite module unavailable */
+  }
+
+  return buildProgramNewsPostLegacy({ beatText, source, programNewsType, postUrl });
+}
+
+function buildProgramNewsPostLegacy({ beatText, source, programNewsType = null, postUrl = null } = {}) {
   const newsContext =
     template.programNewsLabel(programNewsType) || template.detectProgramNewsContext(beatText) || 'Program News';
   const identity = `Florida Gators — ${newsContext}`;

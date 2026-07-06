@@ -18,7 +18,7 @@ function assert(label, condition) {
 
 const PROGRAM_EXAMPLES = [
   {
-    text: 'Florida is planning a $1.45 billion renovation of Ben Hill Griffin Stadium, per sources.',
+    text: 'UF athletics announced a $1.45 billion renovation plan for Ben Hill Griffin Stadium, targeting completion before the 2028 season.',
     type: 'stadium_facility',
     handle: 'zachabolverdi'
   },
@@ -62,7 +62,7 @@ const PROGRAM_EXAMPLES = [
   assert('player visit is not program news', !prefilter.isProgramNewsIntel(playerLine));
 
   const stadiumPost = {
-    text: 'Florida is planning a $1.45 billion renovation of Ben Hill Griffin Stadium, per @ZachAbolverdi.',
+    text: 'UF athletics announced a $1.45 billion renovation plan for Ben Hill Griffin Stadium, targeting completion before the 2028 season.',
     writerName: 'Zach Abolverdi',
     handle: 'zachabolverdi',
     url: 'https://example.com/stadium'
@@ -102,15 +102,18 @@ const PROGRAM_EXAMPLES = [
   assert('beat ingest fingerprint', row?.fingerprint?.startsWith('program_news_'));
 
   const playerContext = require('../lib/x-autoposter-player-context');
+  const HEAVENER_BEAT =
+    'UF athletics announced a major upgrade to the Heavener Football Training Center, including an expanded weight room slated for 2027.';
   const minimal = playerContext.buildProgramNewsPost({
-    beatText: 'Florida stadium update.',
+    beatText: HEAVENER_BEAT,
     source: 'Zach Abolverdi',
     programNewsType: 'stadium_facility'
   });
   assert(
-    'fallback copy when intel incomplete',
-    minimal?.text && /Per multiple reports, Florida has announced/.test(minimal.text)
+    'elite program compose when facts complete',
+    minimal?.text && /Heavener Football Training Center/i.test(minimal.text)
   );
+  assert('no thin monitoring fallback', minimal?.text && !/Monitoring staff\/roster impact/i.test(minimal.text));
 
   if (process.exitCode) {
     console.error('\nProgram news autoposter tests failed.');
