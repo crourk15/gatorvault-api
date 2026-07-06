@@ -1825,7 +1825,7 @@ async function runBeatWriterIngest({ force = false, manualRows = [], posts = nul
 
   try {
     const { scanBeatCommitQueue } = require('./allowlist-target-sync');
-    results.commitIngest = await scanBeatCommitQueue({ posts: posts || undefined });
+    results.commitIngest = await scanBeatCommitQueue({ posts: posts || undefined, force });
   } catch (e) {
     results.errors.push({ stage: 'beat_commit', error: e.message });
   }

@@ -898,11 +898,13 @@ async function ingestAllowlistCommit(opts = {}) {
         existing.status === 'uncommitted');
     const fp = commitFingerprint(savedPlayer);
     const eventType = wasTarget && existing?.committedTo !== 'Florida' ? 'flip' : 'commit';
-    if (alreadyCommitted) {
+    const skipAutopost =
+      !opts.forceAlert &&
+      alreadyCommitted &&
+      sentLedger.hasRecentSentCommit({ slug, commitFingerprint: fp, eventType });
+    if (alreadyCommitted && !opts.forceAlert) {
       autopostResult = { queued: false, reason: 'already_committed', commitFingerprint: fp };
-    } else if (
-      sentLedger.hasRecentSentCommit({ slug, commitFingerprint: fp, eventType })
-    ) {
+    } else if (skipAutopost) {
       autopostResult = { queued: false, reason: 'already_posted', commitFingerprint: fp };
     } else {
       autopostResult = await queueCommitEventAutopost(
