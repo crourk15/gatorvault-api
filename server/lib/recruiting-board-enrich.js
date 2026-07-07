@@ -163,14 +163,58 @@ function enrichPlayer(player, isCommit, staffMode) {
   return mergeWarRoomFields(player, base);
 }
 
+function normalizeBoardPlayerName(player) {
+  return String(player.name || player.id || '').trim().toLowerCase();
+}
+
+function boardPlayerIdentityKeys(player) {
+  const keys = [];
+  const slug = String(player.slug || '').trim().toLowerCase();
+  if (slug) keys.push(`slug:${slug}`);
+  const name = normalizeBoardPlayerName(player);
+  if (name) keys.push(`name:${name}`);
+  return keys;
+}
+
+function preferBoardPlayer(existing, incoming) {
+  if (existing.isCommittedToUF && !incoming.isCommittedToUF) return existing;
+  if (!existing.isCommittedToUF && incoming.isCommittedToUF) return incoming;
+  return existing;
+}
+
+function dedupeBoardPlayers(players) {
+  const byName = new Map();
+  for (const player of players) {
+    const key = normalizeBoardPlayerName(player);
+    if (!key) continue;
+    const prev = byName.get(key);
+    byName.set(key, prev ? preferBoardPlayer(prev, player) : player);
+  }
+  return [...byName.values()];
+}
+
+function dropTargetsAlreadyCommitted(commits, targets) {
+  const commitKeys = new Set();
+  for (const commit of commits) {
+    for (const key of boardPlayerIdentityKeys(commit)) commitKeys.add(key);
+  }
+  return targets.filter((target) => {
+    const keys = boardPlayerIdentityKeys(target);
+    return !keys.some((key) => commitKeys.has(key));
+  });
+}
+
 function enrichBoard(board, staffMode = false) {
   const classYear = parseInt(board.classYear, 10) || 2027;
   const allowlist = require('./recruiting-target-allowlist');
   const rawTargets = filterBlockedRecruits(board.targets || []);
   const seededTargets = enrichTargetsWithBoardSeed(rawTargets, classYear, allowlist);
   const commits = filterBlockedRecruits(board.commits || []).map((p) => enrichPlayer(p, true, staffMode));
-  const targets = seededTargets.map((p) => enrichPlayer(p, false, staffMode));
-  const players = [...commits, ...targets];
+  const targets = dropTargetsAlreadyCommitted(
+    commits,
+    seededTargets.map((p) => enrichPlayer(p, false, staffMode))
+  );
+  const players = dedupeBoardPlayers([...commits, ...targets]);
 
   const tiers = ['TOP', 'HIGH', 'MEDIUM', 'LOW', 'EVAL'].map((tier) => ({
     tier,
@@ -184,10 +228,16 @@ function enrichBoard(board, staffMode = false) {
     lifecycle: 'HIGH_SCHOOL',
     players,
     tiers,
-    commits,
-    targets,
+    commits: players.filter((p) => p.isCommittedToUF),
+    targets: players.filter((p) => !p.isCommittedToUF),
     rankings: board.rankings || null,
   };
 }
 
-module.exports = { enrichBoard, assignTier, TIER_LABELS };
+module.exports = {
+  enrichBoard,
+  assignTier,
+  TIER_LABELS,
+  dedupeBoardPlayers,
+  dropTargetsAlreadyCommitted,
+};
