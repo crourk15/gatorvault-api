@@ -419,22 +419,26 @@ async function probeIntelAutoposterPath(slug) {
   }
 
   let eliteBuild = null;
-  if (on3Row && (tier === 'A' || tier === 'B')) {
-    try {
-      const {
-        buildEliteRepublishPost,
-        serializeProbeEliteBuild
-      } = require('./player-intelligence/elite-republish-compose');
-      const built = await buildEliteRepublishPost(normalized, {
-        intelRow: on3Row,
-        fused: fuse,
-        refreshOn3: true,
-        persistFusion: false
-      });
-      eliteBuild = serializeProbeEliteBuild(built);
-    } catch (err) {
-      eliteBuild = { ok: false, reason: 'elite_probe_error', error: err?.message || String(err) };
-    }
+  try {
+    const eliteRecruiting = require('./autoposter/elite-recruiting-compose');
+    const built = await eliteRecruiting.buildEliteRecruitingPost(normalized, {
+      intelRow: on3Row,
+      triggerBeatText: on3Row?.detail || on3Row?.skinny || null,
+      trigger: 'probe'
+    });
+    eliteBuild = {
+      ok: !!built?.ok,
+      reason: built?.reason || null,
+      lastReason: built?.lastReason || null,
+      enrichPass: built?.enrichPass || null,
+      enrichmentSources: built?.enrichmentSources || [],
+      enrichPassesTried: built?.enrichPassesTried || [],
+      composeEngine: built?.composeEngine || eliteRecruiting.COMPOSE_ENGINE,
+      preview: built?.text ? String(built.text).slice(0, 240) : null,
+      gaps: built?.gaps || []
+    };
+  } catch (err) {
+    eliteBuild = { ok: false, reason: 'elite_probe_error', error: err?.message || String(err) };
   }
 
   return {
@@ -497,36 +501,16 @@ async function buildNewsFromIntel(intel) {
     .toLowerCase();
   if (slug) {
     try {
+      const eliteRecruiting = require('./autoposter/elite-recruiting-compose');
       const { resolveCoverageTier } = require('./player-intelligence/tiers');
       const tier = await resolveCoverageTier(slug);
-      if (tier === 'A' || tier === 'B') {
-        const { fusePlayerIntel, fusedBeatIntelEnqueueAllowed } = require('./player-intelligence/fuse-player-intel');
-        const { composeFromFusedIntel } = require('./player-intelligence/compose-from-fused-intel');
-        const { buildEliteRepublishPost, serializeProbeEliteBuild } = require('./player-intelligence/elite-republish-compose');
-        const fused = await fusePlayerIntel(slug);
-        if (!fusedBeatIntelEnqueueAllowed(fused, tier, intel)) return null;
-
-        const elite = await buildEliteRepublishPost(slug, {
+      const useElitePath = eliteRecruiting.isPr789OnlyRecruiting() || tier === 'A' || tier === 'B';
+      if (useElitePath) {
+        const composed = await eliteRecruiting.buildEliteRecruitingPost(slug, {
           intelRow: intel,
-          fused,
-          refreshOn3: true,
-          persistFusion: false
+          triggerBeatText: intel.detail || intel.skinny || intel.text || null,
+          trigger: 'beat_ingest'
         });
-        let composed = null;
-        if (elite?.ok && elite.text) {
-          composed = elite;
-        } else if (elite?.reason === 'ranking_incomplete') {
-          composed = composeFromFusedIntel(fused);
-          if (composed?.validationMeta) {
-            composed.validationMeta = {
-              ...composed.validationMeta,
-              eliteFallback: 'ranking_incomplete',
-              composePath: composed.validationMeta.composePath || 'pr789_beat_facts'
-            };
-          }
-        } else {
-          return null;
-        }
         if (composed?.ok && composed.text) {
           const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
           const intelType = String(intel.eventType || '').toLowerCase();
@@ -537,6 +521,7 @@ async function buildNewsFromIntel(intel) {
           const beatIntel =
             /beat|on3-team-news|detectives|auto:on3/i.test(intelSource) ||
             intel.sourceType === 'beat';
+          const fused = composed.fused || null;
           return attachNewsMeta(
             {
               text: composed.text,
@@ -549,7 +534,7 @@ async function buildNewsFromIntel(intel) {
                   : null,
               postUrgency: beatIntel ? 'urgent' : null,
               sourceEventType: intel.eventType,
-              sources: (fused.sources || []).slice(0, 3).map((s) => ({ label: s.label, url: s.url })),
+              sources: (fused?.sources || []).slice(0, 3).map((s) => ({ label: s.label, url: s.url })),
               source: intelSource || 'auto:intel-fused',
               intelFingerprint: fp,
               intelType: intel.eventType,
@@ -561,20 +546,39 @@ async function buildNewsFromIntel(intel) {
               eventTimestamp: intel.timestamp || intel.createdAt || null,
               validationMeta: {
                 ...(composed.validationMeta || {}),
-                beatText: fused.beatText,
-                situation: postSpec.detectSituation(fused.beatText, intel.eventType),
+                beatText: fused?.beatText || intel.detail || intel.skinny || null,
+                situation: postSpec.detectSituation(fused?.beatText || intel.detail, intel.eventType),
                 fusedIntel: true,
-                fuseConfidence: fused.confidence
+                fuseConfidence: fused?.confidence,
+                enrichmentPass: composed.enrichPass || null,
+                enrichmentSources: composed.enrichmentSources || [],
+                composeEngine: eliteRecruiting.COMPOSE_ENGINE
               },
               templateBlocks: composed.templateBlocks
             },
             composed
           );
         }
+        if (eliteRecruiting.isPr789OnlyRecruiting()) {
+          return null;
+        }
       }
     } catch (err) {
-      console.warn('[x-autoposter] fused intel compose failed:', err.message);
+      console.warn('[x-autoposter] elite recruiting compose failed:', err.message);
+      try {
+        const eliteRecruiting = require('./autoposter/elite-recruiting-compose');
+        if (eliteRecruiting.isPr789OnlyRecruiting()) return null;
+      } catch {
+        /* optional */
+      }
     }
+  }
+
+  try {
+    const eliteRecruiting = require('./autoposter/elite-recruiting-compose');
+    if (eliteRecruiting.isPr789OnlyRecruiting()) return null;
+  } catch {
+    /* optional */
   }
 
   const built = await copy.buildIntelCopyAsync(intel);

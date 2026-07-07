@@ -225,7 +225,89 @@ function enrichVisitFromContext(facts, ctx = {}) {
       };
     }
   }
+  const slug = String(ctx.slug || '').trim().toLowerCase();
+  if (slug && shouldUseVisitLogContext(beat, facts)) {
+    try {
+      const visitStore = require('../../recruiting-visit-log-store');
+      const logs = visitStore.listVisitLogs({ playerSlug: slug, limit: 5 });
+      const uf = logs.find((v) => /florida|gators|\buf\b/i.test(String(v.school || '')));
+      if (uf) {
+        const date = uf.date || uf.reportedAt;
+        let when = 'Gainesville visit';
+        if (date) {
+          const d = new Date(date);
+          if (Number.isFinite(d.getTime())) {
+            const month = d.toLocaleString('en-US', { month: 'long' });
+            when = `${month} trip to Gainesville`;
+          }
+        }
+        return {
+          when,
+          type: uf.visitType || 'unofficial',
+          school: 'Florida',
+          source: 'visit_log'
+        };
+      }
+    } catch {
+      /* optional */
+    }
+  }
   return facts.visit;
+}
+
+function shouldUseVisitLogContext(beatText = '', facts = {}) {
+  const beat = String(beatText || '').toLowerCase();
+  if (
+    /\bmaking .+ a priority early\b/i.test(beat) ||
+    /\binterest is certainly mutual\b/i.test(beat) ||
+    /\bteammates with a current florida commit\b/i.test(beat) ||
+    /\blong before (?:his|the) offer\b/i.test(beat) ||
+    /\bdidn'?t need an offer\b/i.test(beat)
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function isHeadCoachOfferSignal(beatText = '', quote = '') {
+  const blob = `${beatText} ${quote}`.toLowerCase();
+  return (
+    /\bhead coach\b/i.test(blob) &&
+    (/\boffer\b/i.test(blob) || /\bsuper cool\b/i.test(blob) || /\bthat means a lot\b/i.test(blob))
+  );
+}
+
+function headCoachLabel(beatText = '', quote = '') {
+  const blob = `${beatText} ${quote}`;
+  let official = {};
+  try {
+    official = require('../../official-coach-identity').readOfficial();
+  } catch {
+    official = {};
+  }
+  const currentHc = official?.coaches?.HC?.name || null;
+
+  if (currentHc) {
+    const hcRe = new RegExp(`\\b${currentHc.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+    if (hcRe.test(blob)) return currentHc;
+    for (const alias of official?.coaches?.HC?.aliases || []) {
+      const aliasRe = new RegExp(`\\b${String(alias).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+      if (aliasRe.test(blob)) return currentHc;
+    }
+  }
+
+  // Quote/beat says "head coach" → verified current HC (Jon Sumrall in official-names.json).
+  if (/\bhead coach\b/i.test(blob) && currentHc) return currentHc;
+
+  for (const former of Object.values(official?.formerCoaches || {})) {
+    const names = [former?.name, ...(former?.aliases || [])].filter(Boolean);
+    for (const name of names) {
+      const re = new RegExp(`\\b${String(name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+      if (re.test(blob)) return null;
+    }
+  }
+
+  return null;
 }
 
 function extractOfferInterestSignal(beatText = '') {
@@ -242,7 +324,10 @@ function extractOfferInterestSignal(beatText = '') {
     /\btold .+ straight up\b/i.test(beat) ||
     /\bnow a top school\b/i.test(beat) ||
     /\bwe want you and we'?re going to get you\b/i.test(beat) ||
-    /\bteammates with a current florida commit\b/i.test(beat)
+    /\bteammates with a current florida commit\b/i.test(beat) ||
+    /\bhead coach\b/i.test(beat) ||
+    /\bcoming from the head coach\b/i.test(beat) ||
+    /\boffer was super cool\b/i.test(beat)
   );
 }
 
@@ -273,6 +358,7 @@ function classifySignals(facts = {}) {
   if (facts.geographicSignal) signals.push('geographic');
   if (facts.rpmTop?.length) signals.push('competition');
   if (facts.beatCompBattle) signals.push('competition');
+  if (facts.headCoachOffer) signals.push('head_coach_offer');
   if (facts.followUpSince) signals.push('follow_up');
   return [...new Set(signals)];
 }
@@ -330,6 +416,9 @@ function selectAngleFromFacts(facts = {}, beatText = '') {
   }
 
   const playerQuote = facts.quote && !isReporterFramedQuote(facts.quote) ? facts.quote : null;
+  if (playerQuote && (facts.headCoachOffer || isHeadCoachOfferSignal(beat, playerQuote))) {
+    return { angle: 'head_coach_offer', reason: 'head_coach_offer_quote', signals };
+  }
   if (
     playerQuote &&
     facts.visit?.when === 'this spring' &&
@@ -338,7 +427,7 @@ function selectAngleFromFacts(facts = {}, beatText = '') {
   ) {
     return { angle: 'board', reason: 'spring_practice_board_quote', signals };
   }
-  if (playerQuote && facts.visit?.when) {
+  if (playerQuote && facts.visit?.when && facts.visit?.source !== 'visit_log') {
     return { angle: 'visit', reason: 'visit_with_player_quote', signals };
   }
   if (playerQuote && (facts.offerInterest || /really like the gators/i.test(beat))) {
@@ -417,7 +506,7 @@ function extractBeatFacts(beatText = '', ctx = {}) {
     geographicSignal: extractGeographicSignal(beat),
     offerInterest: extractOfferInterestSignal(beat),
     programPitch: extractProgramPitchSignal(beat),
-    beatCompBattle: extractBeatCompBattle(beat),
+    headCoachOffer: isHeadCoachOfferSignal(beat, staffDirected ? null : rawQuote),
     ufCommitTeammate: resolveUfCommitTeammate({
       slug,
       playerRow,
@@ -736,6 +825,39 @@ function composeEliteVisitArc(facts, ln, beatText = '', opts = {}) {
   return paragraph;
 }
 
+function composeEliteHeadCoachOfferArc(facts, ln, beatText = '', opts = {}) {
+  const coach = headCoachLabel(beatText, facts.quote);
+  let paragraph;
+  if (coach && coach !== 'the head coach') {
+    paragraph = `Florida's offer carried extra weight for ${ln} — hearing it directly from ${coach} made the moment stand out`;
+  } else if (coach === 'the head coach') {
+    paragraph = `Florida's offer carried extra weight for ${ln} — getting it straight from the head coach made the moment stand out`;
+  } else {
+    paragraph = `Florida's offer landed with real priority for ${ln}, and the Gators are pressing early`;
+  }
+
+  const embed = formatEliteQuoteEmbed(facts.quote);
+  if (embed) {
+    paragraph += embed;
+  } else if (!paragraph.endsWith('.')) {
+    paragraph += '.';
+  }
+
+  if (facts.visit?.when) {
+    paragraph += ` UF is building on his ${facts.visit.when}`;
+    if (!/visit|trip/i.test(facts.visit.when)) paragraph += ' visit';
+    paragraph += ' and pressing early in this cycle.';
+  } else {
+    paragraph += ' UF is pressing early with real conviction in this cycle.';
+  }
+
+  if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
+    paragraph += ` ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the mix.`;
+  }
+
+  return paragraph;
+}
+
 function composeElitePlayerQuoteArc(facts, ln, beatText = '', opts = {}) {
   const beat = String(beatText || '').toLowerCase();
   let paragraph;
@@ -900,6 +1022,8 @@ function composeEliteArc(facts, anglePick, ln, beatText = '', opts = {}) {
       return composeEliteCompetitionArc(facts, ln, opts);
     case 'program_pitch':
       return composeEliteProgramPitchArc(facts, ln, beatText, opts);
+    case 'head_coach_offer':
+      return composeEliteHeadCoachOfferArc(facts, ln, beatText, opts);
     case 'player_quote':
       return composeElitePlayerQuoteArc(facts, ln, beatText, opts);
     case 'visit':

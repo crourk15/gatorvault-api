@@ -2,6 +2,10 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
+process.env.X_AUTOPOST_PR789_ONLY_RECRUITING = 'false';
+process.env.X_AUTOPOST_ELITE_MODE = 'false';
+process.env.X_AUTOPOST_ELITE_RECRUITING_COMPOSE = 'false';
+
 const strategies = require('../../lib/autoposter/detectives-strategies');
 const detectives = require('../../lib/autoposter/detectives');
 

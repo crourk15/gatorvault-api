@@ -60,6 +60,90 @@ async function buildStrategyCandidates(
   const beatDrivenOnly = !!(platformContext && !platformContext.hasFutureCastContext);
   const m = hints.metrics || {};
   const voiceRequired = voiceRequiredForCase(caseItem, hints);
+  const eliteRecruiting = require('./elite-recruiting-compose');
+  const pr789Only = eliteRecruiting.isPr789OnlyRecruiting();
+  const eliteComposeEnabled =
+    typeof eliteRecruiting.eliteRecruitingComposeEnabled === 'function'
+      ? eliteRecruiting.eliteRecruitingComposeEnabled()
+      : process.env.X_AUTOPOST_ELITE_RECRUITING_COMPOSE !== 'false';
+
+  if (eliteComposeEnabled && slug && beatText) {
+    try {
+      const built = await eliteRecruiting.buildEliteRecruitingPost(slug, {
+        hints,
+        intelRow: {
+          detail: beatText,
+          skinny: beatText,
+          playerName: name,
+          playerSlug: slug,
+          classYear: identity.classYear,
+          pos: identity.pos
+        },
+        metrics: m,
+        research: opts.research || null,
+        trigger: 'detectives'
+      });
+      if (built?.ok && built.text) {
+        const raw = eliteRecruiting.toQueueCandidate(built, slug, {
+          detectivesPath: 'elite_fused_pr789',
+          enrichPass: built.enrichPass,
+          enrichmentSources: built.enrichmentSources
+        });
+        const marked = markDetectivesCandidate(
+          {
+            ...raw,
+            urgencyLabel: 'major_beat',
+            sourceEventType: 'detectives_elite_pr789',
+            sources: [
+              { label: 'On3', url: SITE_URL },
+              { label: hints.writerName || 'Beat', url: hints.url || SITE_URL }
+            ],
+            identityConfirmed: true
+          },
+          caseItem,
+          'elite_fused_pr789',
+          hints,
+          platformContext
+        );
+        if (qa.passesPublishGate(marked)) {
+          return [marked];
+        }
+        if (caseItem?.id) {
+          store.appendLog(caseItem.id, {
+            phase: 'strategy_reject',
+            path: 'elite_fused_pr789',
+            reason: qa.rejectReason(marked)
+          });
+        }
+      } else if (caseItem?.id) {
+        store.appendLog(caseItem.id, {
+          phase: 'elite_compose_miss',
+          path: 'elite_fused_pr789',
+          reason: built?.reason || 'compose_failed',
+          lastReason: built?.lastReason || null,
+          enrichPassesTried: built?.enrichPassesTried || []
+        });
+      }
+      if (pr789Only) {
+        return strategies;
+      }
+    } catch (err) {
+      if (caseItem?.id) {
+        store.appendLog(caseItem.id, {
+          phase: 'elite_compose_error',
+          path: 'elite_fused_pr789',
+          error: err?.message || String(err)
+        });
+      }
+      if (pr789Only) {
+        return strategies;
+      }
+    }
+  }
+
+  if (pr789Only) {
+    return strategies;
+  }
 
   if (beatText) {
     try {

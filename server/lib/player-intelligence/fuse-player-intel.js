@@ -214,7 +214,9 @@ async function fusePlayerIntel(slugOrId, opts = {}) {
 
   const rows = clusterIntelRows(slug);
   const urlSlugMatch = urlSlugMatchesPlayer(slug, rows);
-  const beatText = buildBeatTextFromCluster(rows);
+  const beatText = opts.beatTextOverride
+    ? String(opts.beatTextOverride).trim()
+    : buildBeatTextFromCluster(rows);
   const quotes = quoteExtract(beatText);
   const signal = buildSignalFromPlayerIntel(slug, beatText, playerIntel);
   const facts = extractBeatFacts(beatText, {
