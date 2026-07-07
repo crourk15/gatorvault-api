@@ -300,3 +300,29 @@ test('Zyon Robinson beat picks staff outreach arc with WR coach names', () => {
   assert.match(out.narrative, /McKnight, Davis, and Doeker/i);
   assert.match(out.narrative, /driving serious early interest|building real traction/i);
 });
+
+const ZYLEN_BEAT =
+  'NEW: Florida told 4-star DL Zylen Little straight up — "We want you and we\'re going to get you." The Gators are now a top school for the 2028 prospect after his FNL weekend in Gainesville.';
+
+test('Zylen Little beat picks staff_pitch arc and attributes UF quote correctly', () => {
+  const facts = extractBeatFacts(ZYLEN_BEAT, {
+    player: { name: 'Zylen Little', pos: 'DL', classYear: 2028 }
+  });
+  assert.equal(facts.staffPitch, true);
+  assert.match(facts.staffQuote, /We want you and we're going to get you/);
+  assert.equal(facts.quote, null);
+  assert.equal(facts.boardSignal, true);
+  const pick = selectAngleFromFacts(facts, ZYLEN_BEAT);
+  assert.equal(pick.angle, 'staff_pitch');
+  const out = composeFromFacts(
+    facts,
+    pick,
+    { lastName: 'Little', beatText: ZYLEN_BEAT },
+    { mode: 'elite' }
+  );
+  assert.match(out.narrative, /staff didn't hold back with Little after his FNL weekend in Gainesville/i);
+  assert.match(out.narrative, /told him straight up: "We want you and we're going to get you."/i);
+  assert.match(out.narrative, /among his top schools/i);
+  assert.doesNotMatch(out.narrative, /he said "We want you/i);
+  assert.doesNotMatch(out.narrative, /on his board early in this cycle/i);
+});
