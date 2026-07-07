@@ -1761,7 +1761,7 @@ async function tryAutonomousGoldenFourRefill(maxSlugs = 1) {
     const { enqueueGoldenFourPosts, DEFAULT_ORDER } = require('./player-intelligence/golden-four-enqueue');
     const pendingSlugs = new Set(
       store
-        .listQueue({ status: 'pending' })
+        .listPostStudioDrafts({ limit: 500 })
         .map((i) => String(i.playerSlug || '').toLowerCase())
         .filter(Boolean)
     );
@@ -1803,7 +1803,8 @@ async function refillAutoposterQueue({
   minPending = parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '2', 10),
   maxEnqueue = parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '4', 10),
   forcePost = false,
-  digDeeper = false
+  digDeeper = false,
+  hubStudioRefill = false
 } = {}) {
   if (typeof intelStore.initIntelStore === 'function') {
     await intelStore.initIntelStore().catch((err) => {
@@ -1823,8 +1824,12 @@ async function refillAutoposterQueue({
     /* optional */
   }
   if (dailyCount >= dailyMax) {
-    forcePost = false;
-    digDeeper = false;
+    const hubComposeOnly =
+      hubStudioRefill || (cadence.isHubModeEnabled() && !pipelineGuards.autoposterSchedulerEnabled());
+    if (!hubComposeOnly) {
+      forcePost = false;
+      digDeeper = false;
+    }
   }
   const beatPrepPromise = withRefillTimeout(
     prepareBeatFirstAutoposter({ forceIngest: forcePost }),

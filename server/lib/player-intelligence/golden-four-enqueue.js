@@ -270,7 +270,7 @@ async function enqueueGoldenFourPosts(opts = {}) {
     const out = store.enqueuePost({
       ...tagged,
       scheduledAt,
-      status: 'pending'
+      status: cadence.resolveEnqueueStatus(tagged)
     });
 
     if (intel.id) {

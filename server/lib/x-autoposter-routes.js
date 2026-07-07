@@ -614,8 +614,10 @@ function mountXAutoposterRoutes(app) {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
-    const running = !!global.__postStudioRefillRunning;
-    const last = global.__postStudioRefillLastResult || null;
+    const refillState = require('./post-studio-refill-state');
+    const persisted = refillState.getStatus();
+    const running = !!global.__postStudioRefillRunning || persisted.running;
+    const last = global.__postStudioRefillLastResult || persisted.lastResult || null;
     const counts = store.getQueueCounts();
     return res.json({
       ok: true,
@@ -633,13 +635,22 @@ function mountXAutoposterRoutes(app) {
     }
     try {
       const syncOnly = req.body?.sync === true || req.query?.sync === '1';
-      if (global.__postStudioRefillRunning) {
+      const refillState = require('./post-studio-refill-state');
+      const pipelineGuards = require('./pipeline-guards');
+      if (global.__postStudioRefillRunning || refillState.getStatus().running) {
         return res.json({
           ok: true,
           async: true,
           started: false,
           reason: 'already_running',
           message: 'Refill already running in background. Wait ~1 min then Reload drafts.'
+        });
+      }
+      if (pipelineGuards.shouldSkipHeavyJob('post-studio-refill')) {
+        return res.status(503).json({
+          ok: false,
+          error: 'memory_pressure',
+          message: 'Server memory is elevated — wait 30s and retry Refill.'
         });
       }
 
@@ -649,7 +660,8 @@ function mountXAutoposterRoutes(app) {
           minPending: parseInt(req.body?.minPending || req.query?.minPending || '2', 10),
           maxEnqueue: parseInt(req.body?.maxEnqueue || req.query?.maxEnqueue || '5', 10),
           forcePost: true,
-          digDeeper: req.body?.digDeeper !== false
+          digDeeper: req.body?.digDeeper !== false,
+          hubStudioRefill: true
         });
         const counts = store.getQueueCounts();
         return {
@@ -668,11 +680,13 @@ function mountXAutoposterRoutes(app) {
 
       if (syncOnly) {
         const out = await runRefill();
+        refillState.setLastResult({ at: store.nowIso(), ...out });
         return res.json(out);
       }
 
       global.__postStudioRefillRunning = true;
       global.__postStudioRefillLastResult = null;
+      refillState.setRunning(true);
       res.json({
         ok: true,
         async: true,
@@ -683,19 +697,28 @@ function mountXAutoposterRoutes(app) {
       setImmediate(async () => {
         try {
           const out = await runRefill();
-          global.__postStudioRefillLastResult = { at: store.nowIso(), ...out };
+          const payload = { at: store.nowIso(), ...out };
+          global.__postStudioRefillLastResult = payload;
+          refillState.setLastResult(payload);
         } catch (err) {
-          global.__postStudioRefillLastResult = {
+          const payload = {
             at: store.nowIso(),
             ok: false,
             error: err.message || 'refill_failed'
           };
+          global.__postStudioRefillLastResult = payload;
+          refillState.setLastResult(payload);
         } finally {
           global.__postStudioRefillRunning = false;
         }
       });
     } catch (err) {
       global.__postStudioRefillRunning = false;
+      try {
+        require('./post-studio-refill-state').setRunning(false);
+      } catch {
+        /* optional */
+      }
       return res.status(500).json({ ok: false, error: err.message });
     }
   });

@@ -1227,12 +1227,18 @@
 
     function pollPostStudioRefill(btn, label){
       var attempts=0;
-      var maxAttempts=24;
+      var transientErrors=0;
+      var maxAttempts=30;
       var timer=setInterval(function(){
         attempts+=1;
-        fetchJson(API+'/api/x/post-studio/refill/status',{headers:headers()})
+        fetch(API+'/api/x/post-studio/refill/status',{headers:headers()})
+          .then(function(r){return r.text().then(function(text){return parseApiResponse(r,text,API+'/api/x/post-studio/refill/status');});})
           .then(function(s){
-            if(s.running)return;
+            transientErrors=0;
+            if(s.running){
+              if(btn)btn.textContent='Refilling… ('+Math.min(attempts*5,150)+'s)';
+              return;
+            }
             clearInterval(timer);
             if(btn){btn.disabled=false;btn.textContent=label;}
             if(s.lastResult){
@@ -1244,9 +1250,15 @@
             }
           })
           .catch(function(e){
+            var transient=/502|503|504|waking|unavailable|starting/i.test(String(e.message||''));
+            if(transient&&transientErrors<8&&attempts<maxAttempts){
+              transientErrors+=1;
+              if(btn)btn.textContent='Refilling… (API waking, retry '+transientErrors+')';
+              return;
+            }
             clearInterval(timer);
             if(btn){btn.disabled=false;btn.textContent=label;}
-            alert('Refill poll error: '+e.message);
+            alert('Refill poll error: '+e.message+'\n\nIf refill was running, wait 60s and click Reload drafts.');
             loadPostStudio();
           });
         if(attempts>=maxAttempts){

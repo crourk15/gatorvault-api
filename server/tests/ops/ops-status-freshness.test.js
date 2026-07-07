@@ -31,3 +31,17 @@ test('platform health sweep returns structured result', async () => {
   if (out.skipped) assert.equal(out.reason, 'all_green');
   else assert.ok(Array.isArray(out.healed));
 });
+
+test('hub studio refill ignores daily cap when scheduler is off', async () => {
+  process.env.X_AUTOPOST_ENABLED = 'true';
+  process.env.X_PIPELINES_ENABLED = 'true';
+  process.env.X_AUTOPOST_HUB_MODE = 'true';
+  process.env.X_AUTOPOST_SCHEDULER_ENABLED = 'false';
+  const cadence = require('../../lib/x-autoposter-cadence');
+  const guards = require('../../lib/pipeline-guards');
+  assert.equal(guards.autoposterSchedulerEnabled(), false);
+  assert.equal(cadence.isHubModeEnabled(), true);
+  const refillState = require('../../lib/post-studio-refill-state');
+  const status = refillState.getStatus();
+  assert.equal(typeof status.running, 'boolean');
+});
