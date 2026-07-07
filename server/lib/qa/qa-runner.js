@@ -75,6 +75,21 @@ async function runQaCrawl(opts = {}) {
     }
 
     try {
+      const appStoreGate = require('../app-store-stability-gate');
+      const piStore = require('../product-intel/product-intel-store');
+      const piDoc = piStore.readDoc();
+      appStoreGate.recordDailySample({
+        qaPass: !!run.pass,
+        healthReady: true,
+        productIntelOverall: piDoc.scores?.overall ?? null,
+        crawlerFailed: run.modules?.crawler?.failed || 0,
+        apiFailed: run.modules?.api?.failed || 0,
+      });
+    } catch (gateErr) {
+      console.warn('[app-store-gate] sample skipped:', gateErr.message);
+    }
+
+    try {
       if (process.env.SELF_RUNNER_ENABLED !== 'false' && !memoryGuard.shouldSkipHeavyJob('self-runner-post-qa')) {
         const selfRunner = require('../self-runner/self-runner-engine');
         const deferMs = parseInt(process.env.SELF_RUNNER_POST_QA_DELAY_MS || '45000', 10);

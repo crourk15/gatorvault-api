@@ -79,6 +79,17 @@ function mountOpsRoutes(app) {
     }
   });
 
+  app.get('/api/ops/app-store-gate', (req, res) => {
+    if (!requireOpsAuth(req, res)) return;
+    try {
+      const gate = require('./app-store-stability-gate');
+      const healthReady = req.query.healthReady !== '0';
+      return res.json({ ok: true, ...gate.buildSnapshot({ healthReady }) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/ops/ui-health', (req, res) => {
     try {
       const { buildUiHealthReport } = require('./ui-health');

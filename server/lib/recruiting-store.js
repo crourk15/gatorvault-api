@@ -778,7 +778,8 @@ async function upsertPlayer(player, options = {}) {
     if (normalized.status === 'committed') normalized.status = 'uncommitted';
   }
   const { applyEditorialPositionToPlayer } = require('./recruiting-editorial-positions');
-  const savedPlayer = applyEditorialPositionToPlayer(normalized);
+  const commitCleanup = require('./commit-target-cleanup');
+  let savedPlayer = applyEditorialPositionToPlayer(commitCleanup.normalizeCommitPlayerFields(normalized));
   const sb = initSupabase();
   if (sb) {
     const { data, error } = await sb.from('players').upsert(playerToRow(savedPlayer), { onConflict: 'slug' }).select().single();
@@ -791,6 +792,9 @@ async function upsertPlayer(player, options = {}) {
     } else {
       const saved = applyEditorialPositionToPlayer(rowToPlayer(data));
       await syncIdentityPatterns(saved);
+      if (commitCleanup.isUfHubCommit(saved)) {
+        commitCleanup.applyCommitTargetCleanup(saved, { source: 'upsert_player' });
+      }
       try {
         require('./scouting-update-engine').queuePlayerScoutingRefresh(saved.slug, {
           reason: 'recruiting_player_update'
@@ -808,6 +812,9 @@ async function upsertPlayer(player, options = {}) {
   await savePlayersLocal(players);
   const saved = idx >= 0 ? players[idx] : savedPlayer;
   await syncIdentityPatterns(saved);
+  if (commitCleanup.isUfHubCommit(saved)) {
+    commitCleanup.applyCommitTargetCleanup(saved, { source: 'upsert_player' });
+  }
   try {
     require('./scouting-update-engine').queuePlayerScoutingRefresh(saved.slug, {
       reason: 'recruiting_player_update'
@@ -1102,7 +1109,11 @@ async function getBoard(classYear) {
   const year = parseInt(classYear, 10);
   const commits = await getHubHsCommits(year);
   const rawTargets = players.filter(
-    (p) => Number(p.classYear) === year && p.category === 'target' && !isHubCommittedStatus(p)
+    (p) =>
+      Number(p.classYear) === year &&
+      p.category === 'target' &&
+      !isHubCommittedStatus(p) &&
+      !isHubFloridaCommitStatus(p)
   );
   const targets = filterAllowlistedTargets(rawTargets, year);
   const rankings = (await getRankings()).find((r) => Number(r.classYear) === year) || null;
@@ -1335,6 +1346,7 @@ module.exports = {
   isValidUuid,
   isFloridaCommit,
   isHubFloridaCommitStatus,
+  isHubCommittedStatus,
   isCommittedAnywhere,
   normalizePlayer,
   preservePlayerFields,

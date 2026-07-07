@@ -3,24 +3,6 @@
   "description": "UF 2027 target board seed — Phase 9 expansion",
   "targets": [
     {
-      "slug": "kamauri-whitfield",
-      "name": "Kamauri Whitfield",
-      "pos": "ATH",
-      "school": "Douglas County, GA",
-      "htWt": "6-1 / 195",
-      "stars": 4,
-      "rating": 91.2,
-      "natlRank": 175,
-      "posRank": 14,
-      "stateRank": 16,
-      "inState": false,
-      "committedTo": null,
-      "skinny": "4★ athlete with UF offer; Rivals PM trending Florida at 60% confidence.",
-      "headliner": true,
-      "ufProbability": 0.62,
-      "state": "GA"
-    },
-    {
       "slug": "raheem-floyd",
       "name": "Raheem Floyd",
       "pos": "CB",

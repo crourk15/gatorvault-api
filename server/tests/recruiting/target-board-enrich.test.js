@@ -57,3 +57,14 @@ test('enrichTargetsWithBoardSeed backfills allowlist rows from board seed', () =
     assert.ok(slugs.has(slug), 'missing allowlist slug ' + slug);
   }
 });
+
+test('enrichTargetsWithBoardSeed skips committed slugs from board synthesis', () => {
+  const targets = enrichTargetsWithBoardSeed([], 2027, allowlist, {
+    skipSlugs: new Set(['kamauri-whitfield']),
+  });
+  assert.equal(
+    targets.some((p) => p.slug === 'kamauri-whitfield'),
+    false,
+    'committed slug must not be synthesized from target board seed'
+  );
+});

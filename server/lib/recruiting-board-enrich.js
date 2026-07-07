@@ -208,7 +208,14 @@ function enrichBoard(board, staffMode = false) {
   const classYear = parseInt(board.classYear, 10) || 2027;
   const allowlist = require('./recruiting-target-allowlist');
   const rawTargets = filterBlockedRecruits(board.targets || []);
-  const seededTargets = enrichTargetsWithBoardSeed(rawTargets, classYear, allowlist);
+  const commitSlugs = new Set(
+    (board.commits || [])
+      .map((p) => String(p.slug || '').trim().toLowerCase())
+      .filter(Boolean)
+  );
+  const seededTargets = enrichTargetsWithBoardSeed(rawTargets, classYear, allowlist, {
+    skipSlugs: commitSlugs,
+  });
   const commits = filterBlockedRecruits(board.commits || []).map((p) => enrichPlayer(p, true, staffMode));
   const targets = dropTargetsAlreadyCommitted(
     commits,

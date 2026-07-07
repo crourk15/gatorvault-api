@@ -94,10 +94,11 @@ function synthesizeFromBoard(boardRow, classYear) {
   );
 }
 
-function enrichTargetsWithBoardSeed(targets, classYear, allowlist) {
+function enrichTargetsWithBoardSeed(targets, classYear, allowlist, options = {}) {
   const year = parseInt(classYear, 10);
   if (!BOARD_YEARS.has(year)) return targets || [];
 
+  const skipSlugs = options.skipSlugs || new Set();
   const boardBySlug = loadTargetBoardBySlug(year);
   const merged = (targets || []).map((p) => {
     const slug = String(p.slug || slugify(p.name || '')).toLowerCase();
@@ -108,9 +109,9 @@ function enrichTargetsWithBoardSeed(targets, classYear, allowlist) {
   const allowSet = allowlist?.getAllowlistSet?.(year);
   if (allowSet?.size) {
     for (const slug of allowSet) {
-      if (present.has(slug)) continue;
+      if (present.has(slug) || skipSlugs.has(slug)) continue;
       const boardRow = boardBySlug.get(slug);
-      if (!boardRow) continue;
+      if (!boardRow || skipSlugs.has(String(boardRow.slug || '').toLowerCase())) continue;
       const synth = synthesizeFromBoard(boardRow, year);
       if (synth) merged.push(synth);
     }
