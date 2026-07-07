@@ -404,8 +404,19 @@ async function probeIntelAutoposterPath(slug) {
       reasons: assessEligibilityFromIntel(on3Row, player).reasons
     };
     fuse = await fusePlayerIntel(normalized, { persist: false });
-    build = await buildNewsFromIntel(on3Row);
-    if (build) finalized = await finalizeNewsCandidate(build);
+    try {
+      build = await buildNewsFromIntel(on3Row);
+      if (build) finalized = await finalizeNewsCandidate(build);
+    } catch (err) {
+      build = { ok: false, error: err?.message || String(err) };
+    }
+  }
+
+  if (!fuse && allRows.length) {
+    const beatHint = String(allRows[0]?.detail || allRows[0]?.skinny || allRows[0]?.text || '').trim();
+    if (beatHint) {
+      fuse = await fusePlayerIntel(normalized, { persist: false, beatTextOverride: beatHint });
+    }
   }
 
   try {

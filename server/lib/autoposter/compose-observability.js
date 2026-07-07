@@ -32,7 +32,12 @@ async function composeProbe(slug, opts = {}) {
   if (!normalized) return { ok: false, error: 'missing_slug' };
 
   const { probeIntelAutoposterPath } = require('../x-autoposter-fill');
-  const probe = await probeIntelAutoposterPath(normalized, opts);
+  let probe;
+  try {
+    probe = await probeIntelAutoposterPath(normalized, opts);
+  } catch (err) {
+    probe = { ok: false, slug: normalized, error: err?.message || String(err), fuse: null, eliteBuild: { ok: false, reason: 'probe_error' } };
+  }
   const elite = probe.eliteBuild || {};
   const routing = deriveComposeRouting(probe);
 
