@@ -276,3 +276,27 @@ test('Willingham elite board arc embeds quote and spring practice context', () =
   assert.match(out.narrative, /Penn State and Maryland lead his RPM board/i);
   assert.doesNotMatch(out.narrative, /positioned early in this cycle/i);
 });
+
+const ZYON_BEAT =
+  'Florida trending with daily communication since June 15 contact window. WR coaches McKnight, Davis, Doeker building relationship; recent 7-on-7 campus visit.';
+
+test('Zyon Robinson beat picks staff outreach arc with WR coach names', () => {
+  const facts = extractBeatFacts(ZYON_BEAT, {
+    player: { name: 'Zyon Robinson', pos: 'WR', classYear: 2028 }
+  });
+  assert.equal(facts.staffContact, true);
+  assert.equal(facts.staffEnergy, true);
+  assert.equal(facts.followUpSince, 'June 15');
+  const pick = selectAngleFromFacts(facts, ZYON_BEAT);
+  assert.equal(pick.angle, 'staff');
+  assert.equal(pick.reason, 'staff_outreach_visit_followup');
+  const out = composeFromFacts(
+    facts,
+    pick,
+    { lastName: 'Robinson', beatText: ZYON_BEAT },
+    { mode: 'elite' }
+  );
+  assert.match(out.narrative, /WR staff has been in daily contact with Robinson since June 15/i);
+  assert.match(out.narrative, /McKnight, Davis, and Doeker/i);
+  assert.match(out.narrative, /driving serious early interest|building real traction/i);
+});

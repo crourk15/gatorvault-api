@@ -76,8 +76,36 @@ function extractStaffContact(beatText = '') {
     /\bdb coaches (?:are )?texting/i.test(beat) ||
     /\bcoaches texting (?:him|me)\b/i.test(beat) ||
     /\bdb staff.*texting/i.test(beat) ||
+    /\bdb coach(?:es)? (?:are )?(?:in contact|texting|reaching)/i.test(beat) ||
+    /\b(?:wr|qb|te|rb|dl|lb|edge|cb|s)\s+coach(?:es)?\b/i.test(beat) ||
+    /\bcoach(?:es)?\s+[A-Z][a-z]+(?:,\s*[A-Z][a-z]+){1,4}\s+building relationship/i.test(beat) ||
+    /\bdaily (?:communication|contact|staff contact)\b/i.test(beat) ||
+    /\btalk to them daily\b/i.test(beat) ||
+    /\bmajor contender for\b/i.test(beat)
+  );
+}
+
+function isDbStaffContactBeat(beatText = '') {
+  const beat = String(beatText || '').toLowerCase();
+  return (
+    /\ball three (?:of their )?db coach/i.test(beat) ||
+    /\bdb coaches? (?:are )?texting/i.test(beat) ||
+    /\bdb staff.*texting/i.test(beat) ||
     /\bdb coach(?:es)? (?:are )?(?:in contact|texting|reaching)/i.test(beat)
   );
+}
+
+function extractCoachNames(beatText = '') {
+  const beat = String(beatText || '');
+  const building = beat.match(/\bcoach(?:es)?\s+([A-Z][a-z]+(?:,\s*[A-Z][a-z]+){1,4})\s+building relationship/i);
+  if (building) {
+    return building[1].split(/,\s*/).map((name) => name.trim()).filter(Boolean);
+  }
+  const texting = beat.match(/\b(?:all three )?(?:DB|WR|QB|TE|RB|DL|LB|EDGE|CB|S)\s+coach(?:es)?\s+([A-Z][a-z]+(?:,\s*[A-Z][a-z]+){0,3})/i);
+  if (texting) {
+    return texting[1].split(/,\s*/).map((name) => name.trim()).filter(Boolean);
+  }
+  return [];
 }
 
 function extractStaffEnergy(beatText = '') {
@@ -86,7 +114,12 @@ function extractStaffEnergy(beatText = '') {
     /\benergy from the staff\b/i.test(beat) ||
     /\bstaff energy\b/i.test(beat) ||
     /\bloved the energy\b/i.test(beat) ||
-    /\bappreciated the energy\b/i.test(beat)
+    /\bappreciated the energy\b/i.test(beat) ||
+    /\bdaily communication\b/i.test(beat) ||
+    /\bdaily staff contact\b/i.test(beat) ||
+    /\bbuilding relationship\b/i.test(beat) ||
+    /\btrending with daily\b/i.test(beat) ||
+    /\bstaff contact\b/i.test(beat)
   );
 }
 
@@ -233,11 +266,22 @@ function selectAngleFromFacts(facts = {}, beatText = '') {
     return { angle: 'board', reason: 'board_stretch_quote', signals };
   }
 
-  if (facts.staffContact && (facts.visit?.when || facts.boardSignal)) {
+  if (facts.staffContact && isDbStaffContactBeat(beat) && (facts.visit?.when || facts.boardSignal)) {
     return { angle: 'staff_contact', reason: 'staff_contact_visit_board', signals };
   }
-  if (facts.staffContact) {
+  if (facts.staffContact && isDbStaffContactBeat(beat)) {
     return { angle: 'staff_contact', reason: 'staff_contact', signals };
+  }
+
+  if (
+    (facts.staffContact || facts.staffEnergy) &&
+    facts.followUpSince &&
+    (facts.visit?.when || facts.visit?.school || /\b(on campus|campus visit|visit)\b/i.test(beat))
+  ) {
+    return { angle: 'staff', reason: 'staff_outreach_visit_followup', signals };
+  }
+  if (facts.staffContact && !isDbStaffContactBeat(beat)) {
+    return { angle: 'staff', reason: 'staff_unit_outreach', signals };
   }
 
   if (facts.staffEnergy && (facts.quote || facts.followUpSince)) {
@@ -498,8 +542,30 @@ function composeEliteStaffContactArc(facts, ln, beatText = '', opts = {}) {
   return paragraph;
 }
 
-function composeEliteStaffArc(facts, ln, opts = {}) {
+function composeEliteStaffArc(facts, ln, opts = {}, beatText = '') {
+  const beat = String(beatText || facts.beatText || '');
+  const coachNames = extractCoachNames(beat);
+  const unitMatch = beat.match(/\b(WR|QB|DB|DL|TE|RB|LB|EDGE|CB|S)\s+coach(?:es)?\b/i);
   const visitWhen = facts.visit?.when === 'his first Gainesville visit' ? 'Gainesville' : facts.visit?.when || 'campus';
+
+  if (!opts.eliteShort && coachNames.length >= 2) {
+    const unit = unitMatch ? unitMatch[1].toUpperCase() : 'position';
+    const nameList =
+      coachNames.length > 2
+        ? `${coachNames.slice(0, -1).join(', ')}, and ${coachNames[coachNames.length - 1]}`
+        : coachNames.join(' and ');
+    let paragraph = `Florida's ${unit} staff has been in daily contact with ${ln}`;
+    if (facts.followUpSince) paragraph += ` since ${facts.followUpSince}`;
+    paragraph += ` — ${nameList} are driving serious early interest after his ${visitWhen} visit.`;
+    if (facts.quote) {
+      const embed = formatEliteQuoteEmbed(facts.quote);
+      if (embed) paragraph += embed;
+    }
+    if (facts.rpmTop?.length >= 2 && !opts.trimComp) {
+      paragraph += ` ${facts.rpmTop[0].school} and ${facts.rpmTop[1].school} lead his RPM board, but UF is clearly in the mix.`;
+    }
+    return paragraph;
+  }
 
   if (opts.eliteShort) {
     let paragraph = `${ln}'s ${visitWhen} UF visit — staff energy drives this`;
@@ -537,6 +603,7 @@ function composeEliteStaffArc(facts, ln, opts = {}) {
   }
 
   if (facts.followUpSince) {
+    if (!paragraph.endsWith('.')) paragraph += '.';
     paragraph += opts.trimFollowUp
       ? ` That pitch picked up since ${facts.followUpSince}.`
       : ` That same pitch has only picked up since ${facts.followUpSince}.`;
@@ -602,6 +669,7 @@ function composeEliteVisitArc(facts, ln, beatText = '', opts = {}) {
   }
 
   if (facts.followUpSince) {
+    if (!paragraph.endsWith('.')) paragraph += '.';
     paragraph += opts.trimFollowUp
       ? ` That pitch picked up since ${facts.followUpSince}.`
       : ` That same pitch has only picked up since ${facts.followUpSince}.`;
@@ -750,7 +818,7 @@ function composeEliteArc(facts, anglePick, ln, beatText = '', opts = {}) {
     case 'staff_contact':
       return composeEliteStaffContactArc(facts, ln, beatText, opts);
     case 'staff':
-      return composeEliteStaffArc(facts, ln, opts);
+      return composeEliteStaffArc(facts, ln, opts, beatText);
     case 'board':
       return composeEliteBoardArc(facts, ln, beatText, opts);
     case 'competition':
@@ -915,6 +983,8 @@ module.exports = {
   extractVisit,
   extractStaffEnergy,
   extractStaffContact,
+  extractCoachNames,
+  isDbStaffContactBeat,
   extractBoardSignal,
   extractGeographicSignal,
   enrichVisitFromContext
