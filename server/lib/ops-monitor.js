@@ -173,13 +173,19 @@ async function wrapJob(jobId, subsystem, fn, { message = '' } = {}) {
           }
         : null;
     const status =
-      result?.ok === false || (Array.isArray(result?.errors) && result.errors.length)
-        ? 'warning'
-        : 'success';
+      result?.skipped === true
+        ? 'skipped'
+        : result?.ok === false || (Array.isArray(result?.errors) && result.errors.length)
+          ? 'warning'
+          : 'success';
+    const doneMessage =
+      result?.skipped === true
+        ? `${jobId} skipped (${result.reason || 'skipped'})`
+        : message || `${jobId} completed`;
     logEvent({
       subsystem,
       status,
-      message: message || `${jobId} completed`,
+      message: doneMessage,
       details: result && typeof result === 'object' ? { summary: summarizeResult(result) } : null,
       counts
     });

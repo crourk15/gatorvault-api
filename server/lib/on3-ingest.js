@@ -642,6 +642,11 @@ async function syncPortalFromOn3(options = {}) {
 }
 
 async function runOn3Ingest(options = {}) {
+  const { withIngestLock } = require('./ingest-run-guard');
+  return withIngestLock('on3-ingest', () => runOn3IngestInner(options));
+}
+
+async function runOn3IngestInner(options = {}) {
   const classYears = options.classYears || parseClassYears();
   const forceBaseline = !!options.baselineOnly;
   const snapshot = loadSnapshot();

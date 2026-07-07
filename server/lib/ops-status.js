@@ -51,21 +51,33 @@ function freshnessStatus(iso, warningHours, criticalHours) {
   return { status: 'red', hours: h };
 }
 
+function inferHeartbeatRequired(job) {
+  if (job.heartbeatRequired === false) return false;
+  if (job.heartbeatRequired === true) return true;
+  const schedule = String(job.schedule || '').toLowerCase();
+  if (schedule.includes('on demand') || schedule.includes('manual /')) return false;
+  if (schedule.includes('with ') && (schedule.includes('sweep') || schedule.includes('refresh'))) return false;
+  if (/render cron/.test(schedule) && !/\bevery\b/.test(schedule)) return false;
+  return true;
+}
+
 function buildCronTiles(config, heartbeats) {
   const subs = heartbeats.subsystems || {};
   return opsJobs.listJobs().map((job) => {
     const hb = subs[job.subsystem] || {};
     const errors24h = opsMonitor.getErrorCount24h(job.subsystem);
+    const heartbeatRequired = inferHeartbeatRequired(job);
     let status = 'green';
     if (hb.lastStatus === 'error' || (hb.failureStreak || 0) >= 2) status = 'red';
     else if (hb.lastStatus === 'warning' || errors24h > 0) status = 'yellow';
-    else if (!hb.lastRun) status = 'yellow';
+    else if (heartbeatRequired && !hb.lastRun) status = 'yellow';
 
     return {
       jobId: job.id,
       label: job.label,
       subsystem: job.subsystem,
       schedule: job.schedule,
+      heartbeatRequired,
       status,
       lastRun: hb.lastRun || null,
       lastStatus: hb.lastStatus || null,
@@ -270,11 +282,13 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
   );
 
   const cronTiles = buildCronTiles(config, heartbeats);
-  const cronParentStatus = cronTiles.some((j) => j.status === 'red')
+  const trackedCronTiles = cronTiles.filter((j) => j.heartbeatRequired !== false);
+  const cronParentStatus = trackedCronTiles.some((j) => j.status === 'red')
     ? 'red'
-    : cronTiles.some((j) => j.status === 'yellow')
+    : trackedCronTiles.some((j) => j.status === 'yellow')
       ? 'yellow'
       : 'green';
+  const cronErrors24h = trackedCronTiles.reduce((n, j) => n + (j.errors24h || 0), 0);
 
   const tiles = [
     tile('deployments', 'Deployments', deploy.status, {
@@ -288,9 +302,9 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
       errors24h: 0
     }),
     tile('cron-jobs', 'Cron Jobs', cronParentStatus, {
-      summary: `${opsJobs.listJobs().length} tracked jobs`,
+      summary: `${opsJobs.listJobs().length} jobs · ${trackedCronTiles.length} scheduled`,
       jobs: cronTiles,
-      errors24h: opsMonitor.getErrorCount24h('cron')
+      errors24h: cronErrors24h
     }),
     buildAutoposterTile(config),
     tile('recruiting-board', 'Recruiting Board', recruitingFresh.status, {

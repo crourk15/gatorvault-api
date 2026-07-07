@@ -479,12 +479,15 @@
       var tbody=document.getElementById('jobs-body');
       tbody.innerHTML=(jobs||[]).map(function(j){
         var id=j.id||j.jobId;
-        var hb=j.heartbeat||{};
-        return '<tr><td>'+esc(j.label)+'<div class="meta">'+esc(id)+'</div></td>'+
+        var st=j.status||'green';
+        var dot=st==='red'?'red':st==='yellow'?'yellow':'green';
+        var errCell=j.errors24h>0?('<strong style="color:#fbbf24">'+esc(j.errors24h)+'</strong>'):esc(j.errors24h!=null?j.errors24h:'0');
+        var msg=j.lastMessage?('<div class="meta" title="'+esc(j.lastMessage)+'">'+esc(String(j.lastMessage).slice(0,72))+'</div>'):'';
+        return '<tr><td>'+esc(j.label)+'<div class="meta">'+esc(id)+(j.heartbeatRequired===false?' · on-demand':'')+'</div></td>'+
           '<td>'+esc(j.schedule)+'</td>'+
-          '<td>'+fmtTime(hb.lastRun||j.lastRun)+'</td>'+
-          '<td>'+statusDot((hb.lastStatus||j.lastStatus)==='error'?'red':(hb.lastStatus||j.lastStatus)==='warning'?'yellow':'green')+esc(hb.lastStatus||j.lastStatus||'—')+'</td>'+
-          '<td>'+esc(j.errors24h!=null?j.errors24h:'—')+'</td>'+
+          '<td>'+fmtTime(j.lastRun)+'</td>'+
+          '<td>'+statusDot(dot)+esc(j.lastStatus||'—')+msg+'</td>'+
+          '<td>'+errCell+'</td>'+
           '<td><button class="sm" data-run="'+esc(id)+'">Re-run</button></td></tr>';
       }).join('');
       tbody.querySelectorAll('[data-run]').forEach(function(btn){
