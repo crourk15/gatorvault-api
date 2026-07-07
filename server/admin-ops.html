@@ -1204,32 +1204,82 @@
         .finally(function(){document.getElementById('post-studio-compose').disabled=false;});
     }
 
+    function showRefillResult(j){
+      var n=j.enqueuedCount!=null?j.enqueuedCount:0;
+      var drafts=j.drafts!=null?j.drafts:0;
+      var msg='Refill done — '+n+' new draft(s), '+drafts+' total in studio.';
+      if(n===0){
+        msg+='\n\nNothing new composed. Try Compose with a player slug, or check beat/intel ingest.';
+        if(j.skipReasons&&j.skipReasons.length){
+          msg+='\nSkip reasons: '+j.skipReasons.slice(0,3).map(function(s){return s.reason||s;}).join(', ');
+        }else if(j.reason){
+          msg+='\nReason: '+j.reason;
+        }else if(j.error){
+          msg+='\nError: '+j.error;
+        }
+      }
+      alert(msg);
+      loadPostStudio();
+    }
+
+    function pollPostStudioRefill(btn, label){
+      var attempts=0;
+      var maxAttempts=24;
+      var timer=setInterval(function(){
+        attempts+=1;
+        fetchJson(API+'/api/x/post-studio/refill/status',{headers:headers()})
+          .then(function(s){
+            if(s.running)return;
+            clearInterval(timer);
+            if(btn){btn.disabled=false;btn.textContent=label;}
+            if(s.lastResult){
+              if(s.lastResult.ok===false)throw new Error(s.lastResult.error||'Refill failed');
+              showRefillResult(s.lastResult);
+            }else{
+              alert('Refill finished — reload drafts to see updates.');
+              loadPostStudio();
+            }
+          })
+          .catch(function(e){
+            clearInterval(timer);
+            if(btn){btn.disabled=false;btn.textContent=label;}
+            alert('Refill poll error: '+e.message);
+            loadPostStudio();
+          });
+        if(attempts>=maxAttempts){
+          clearInterval(timer);
+          if(btn){btn.disabled=false;btn.textContent=label;}
+          alert('Refill still running on server — click Reload drafts in about a minute.');
+        }
+      },5000);
+    }
+
     function refillPostStudio(){
       var p=pin(); if(!p)return alert('PIN required');
       var btn=document.getElementById('post-studio-refill');
       var label=btn?btn.textContent:'Refill compose queue';
-      if(btn){btn.disabled=true;btn.textContent='Refilling… (30–90s)';}
-      fetch(API+'/api/x/post-studio/refill',{method:'POST',headers:headers(),body:JSON.stringify({pin:p,digDeeper:true})})
-        .then(function(r){return r.json().then(function(j){return{status:r.status,body:j};});})
-        .then(function(res){
-          if(res.status===401)throw new Error('Invalid PIN');
-          if(!res.body.ok)throw new Error(res.body.error||'Refill failed');
-          var n=res.body.enqueuedCount!=null?res.body.enqueuedCount:0;
-          var drafts=res.body.drafts!=null?res.body.drafts:0;
-          var msg='Refill done — '+n+' new draft(s), '+drafts+' total in studio.';
-          if(n===0){
-            msg+='\n\nNothing new composed. Try Compose with a player slug, or check beat/intel ingest.';
-            if(res.body.skipReasons&&res.body.skipReasons.length){
-              msg+='\nSkip reasons: '+res.body.skipReasons.slice(0,3).map(function(s){return s.reason||s;}).join(', ');
-            }else if(res.body.reason){
-              msg+='\nReason: '+res.body.reason;
+      if(btn){btn.disabled=true;btn.textContent='Starting refill…';}
+      var sync=location.hostname==='localhost'||location.hostname==='127.0.0.1';
+      fetchJson(API+'/api/x/post-studio/refill',{method:'POST',headers:headers(),body:JSON.stringify({pin:p,digDeeper:true,sync:sync})})
+        .then(function(j){
+          if(j.async){
+            if(j.started===false&&j.reason==='already_running'){
+              alert(j.message||'Refill already running.');
+              pollPostStudioRefill(btn,label);
+              return;
             }
+            if(btn)btn.textContent='Refilling… (30–90s)';
+            alert(j.message||'Refill started in background. Wait ~1 min.');
+            pollPostStudioRefill(btn,label);
+            return;
           }
-          alert(msg);
-          loadPostStudio();
+          if(btn){btn.disabled=false;btn.textContent=label;}
+          showRefillResult(j);
         })
-        .catch(function(e){alert('Refill error: '+e.message);})
-        .finally(function(){if(btn){btn.disabled=false;btn.textContent=label;}});
+        .catch(function(e){
+          if(btn){btn.disabled=false;btn.textContent=label;}
+          alert('Refill error: '+e.message);
+        });
     }
 
     document.getElementById('post-studio-reload').addEventListener('click',loadPostStudio);

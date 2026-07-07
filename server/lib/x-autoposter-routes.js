@@ -610,32 +610,92 @@ function mountXAutoposterRoutes(app) {
     }
   });
 
+  app.get('/api/x/post-studio/refill/status', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    const running = !!global.__postStudioRefillRunning;
+    const last = global.__postStudioRefillLastResult || null;
+    const counts = store.getQueueCounts();
+    return res.json({
+      ok: true,
+      running,
+      lastResult: last,
+      drafts: counts.drafts,
+      hubReview: counts.hub_review,
+      pending: counts.pending
+    });
+  });
+
   app.post('/api/x/post-studio/refill', async (req, res) => {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
     try {
-      store.migratePendingToHubReview();
-      const refill = await refillAutoposterQueue({
-        minPending: parseInt(req.body?.minPending || req.query?.minPending || '2', 10),
-        maxEnqueue: parseInt(req.body?.maxEnqueue || req.query?.maxEnqueue || '5', 10),
-        forcePost: true,
-        digDeeper: req.body?.digDeeper !== false
-      });
-      const counts = store.getQueueCounts();
-      return res.json({
+      const syncOnly = req.body?.sync === true || req.query?.sync === '1';
+      if (global.__postStudioRefillRunning) {
+        return res.json({
+          ok: true,
+          async: true,
+          started: false,
+          reason: 'already_running',
+          message: 'Refill already running in background. Wait ~1 min then Reload drafts.'
+        });
+      }
+
+      const runRefill = async () => {
+        store.migratePendingToHubReview();
+        const refill = await refillAutoposterQueue({
+          minPending: parseInt(req.body?.minPending || req.query?.minPending || '2', 10),
+          maxEnqueue: parseInt(req.body?.maxEnqueue || req.query?.maxEnqueue || '5', 10),
+          forcePost: true,
+          digDeeper: req.body?.digDeeper !== false
+        });
+        const counts = store.getQueueCounts();
+        return {
+          ok: true,
+          refill,
+          enqueuedCount: refill.enqueuedCount || 0,
+          drafts: counts.drafts,
+          hubReview: counts.hub_review,
+          pending: counts.pending,
+          skipReasons: (refill.skipReasons || []).slice(0, 8),
+          reason: refill.reason || null,
+          counts,
+          stats: cadence.getHubStats()
+        };
+      };
+
+      if (syncOnly) {
+        const out = await runRefill();
+        return res.json(out);
+      }
+
+      global.__postStudioRefillRunning = true;
+      global.__postStudioRefillLastResult = null;
+      res.json({
         ok: true,
-        refill,
-        enqueuedCount: refill.enqueuedCount || 0,
-        drafts: counts.drafts,
-        hubReview: counts.hub_review,
-        pending: counts.pending,
-        skipReasons: (refill.skipReasons || []).slice(0, 8),
-        reason: refill.reason || null,
-        counts,
-        stats: cadence.getHubStats()
+        async: true,
+        started: true,
+        message: 'Refill running in background (30–90s). This panel will update when done.'
+      });
+
+      setImmediate(async () => {
+        try {
+          const out = await runRefill();
+          global.__postStudioRefillLastResult = { at: store.nowIso(), ...out };
+        } catch (err) {
+          global.__postStudioRefillLastResult = {
+            at: store.nowIso(),
+            ok: false,
+            error: err.message || 'refill_failed'
+          };
+        } finally {
+          global.__postStudioRefillRunning = false;
+        }
       });
     } catch (err) {
+      global.__postStudioRefillRunning = false;
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
