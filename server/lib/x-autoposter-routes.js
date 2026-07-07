@@ -271,6 +271,21 @@ function mountXAutoposterRoutes(app) {
     }
   });
 
+  app.get('/api/x/post-studio/leak-audit', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const leakAudit = require('./autoposter/recruiting-leak-audit');
+      const includeCancelled =
+        req.query.includeCancelled === '1' || req.query.includeCancelled === 'true';
+      const report = leakAudit.runRecruitingLeakAudit({ includeCancelled });
+      return res.status(report.pass ? 200 : 409).json(report);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/x/post-studio/compose-probe/:slug', async (req, res) => {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });

@@ -489,6 +489,20 @@ function enhancePr6Pack(pr6Pack, pr5Pack, signal = {}) {
     const retry = runPr789Gates(narrative1, fallbackN2, fallbackTweet, pr5Pack, signal);
 
     if (retry.allPassed) {
+      try {
+        const eliteRecruiting = require('../elite-recruiting-compose');
+        if (eliteRecruiting.isPr789OnlyRecruiting()) {
+          return {
+            ok: false,
+            reason: 'pr6_n2_fallback_blocked',
+            fallback: true,
+            pr6Pack,
+            violations: retry.gates
+          };
+        }
+      } catch {
+        /* optional */
+      }
 
       return {
 

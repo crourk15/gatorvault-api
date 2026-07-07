@@ -166,6 +166,19 @@
             <thead><tr><th>When</th><th>Slug</th><th>Reason</th><th>Last</th><th>Passes</th><th>Gaps</th></tr></thead>
             <tbody id="post-studio-failures-body"><tr><td colspan="6" class="meta">Load failures…</td></tr></tbody>
           </table>
+        </div>
+
+        <div id="post-studio-leak-audit" style="margin-top:1.25rem">
+          <h3 style="margin:0 0 .5rem;font-size:.9rem">G4 leak audit</h3>
+          <p class="sub" style="margin:0 0 .6rem;font-size:.75rem;color:var(--muted)">Zero tolerance scan for PR6/THIN fallback copy in recruiting queue and sent ledger when PR-789-only is on.</p>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem;align-items:center">
+            <button id="post-studio-run-leak-audit" class="secondary sm">Run leak audit</button>
+            <span id="post-studio-leak-audit-status" class="meta" style="font-size:.72rem">Not run yet</span>
+          </div>
+          <table>
+            <thead><tr><th>Source</th><th>Slug</th><th>Status</th><th>Leak</th><th>Preview</th></tr></thead>
+            <tbody id="post-studio-leak-audit-body"><tr><td colspan="5" class="meta">Run audit…</td></tr></tbody>
+          </table>
         </div>      </div>
 
       <div class="section">
@@ -1212,6 +1225,49 @@
         });
     }
 
+    function renderLeakAudit(violations){
+      var body=document.getElementById('post-studio-leak-audit-body');
+      if(!violations||!violations.length){
+        body.innerHTML='<tr><td colspan="5" class="meta">No PR6/THIN leaks found.</td></tr>';
+        return;
+      }
+      body.innerHTML=violations.map(function(v){
+        return '<tr>'+
+          '<td>'+esc(v.source||'—')+'</td>'+
+          '<td>'+esc(v.slug||'—')+'</td>'+
+          '<td>'+esc(v.status||'—')+'</td>'+
+          '<td>'+esc((v.leakTypes||[]).join(', ')||'—')+'</td>'+
+          '<td style="max-width:320px">'+esc(v.preview||'—')+'</td>'+
+          '</tr>';
+      }).join('');
+    }
+
+    function runLeakAudit(){
+      var p=pin();
+      if(!p){
+        document.getElementById('post-studio-leak-audit-body').innerHTML='<tr><td colspan="5" class="meta">Enter admin PIN first.</td></tr>';
+        return;
+      }
+      var statusEl=document.getElementById('post-studio-leak-audit-status');
+      statusEl.textContent='Running G4 audit…';
+      fetchJson(API+'/api/x/post-studio/leak-audit?pin='+encodeURIComponent(p),{headers:headers()})
+        .then(function(j){
+          if(!j.ok)throw new Error(j.error||'Leak audit failed');
+          var pass=!!j.pass;
+          statusEl.textContent='G4 '+(pass?'PASS':'FAIL')+' · leaks: '+(j.leakCount||0)+
+            ' · scanned queue '+esc(j.scanned&&j.scanned.queue!=null?j.scanned.queue:'0')+
+            ', ledger '+esc(j.scanned&&j.scanned.sentLedger!=null?j.scanned.sentLedger:'0')+
+            ' · PR-789 only: '+(j.pr789Only?'ON':'off');
+          statusEl.style.color=pass?'#86efac':'#fbbf24';
+          renderLeakAudit(j.violations||[]);
+        })
+        .catch(function(e){
+          statusEl.textContent='Audit error';
+          statusEl.style.color='#fbbf24';
+          document.getElementById('post-studio-leak-audit-body').innerHTML='<tr><td colspan="5" class="meta">'+esc(e.message)+'</td></tr>';
+        });
+    }
+
     function probePostStudioSlug(){
       var p=pin();
       var slug=(document.getElementById('post-studio-slug').value||'').trim().toLowerCase();
@@ -1390,6 +1446,7 @@
     document.getElementById('post-studio-compose').addEventListener('click',composePostStudio);
     document.getElementById('post-studio-probe').addEventListener('click',probePostStudioSlug);
     document.getElementById('post-studio-load-failures').addEventListener('click',loadComposeFailures);
+    document.getElementById('post-studio-run-leak-audit').addEventListener('click',runLeakAudit);
     document.getElementById('post-studio-refill').addEventListener('click',refillPostStudio);
     document.getElementById('post-studio-copy').addEventListener('click',function(){
       if(_postStudioSelected)copyPostStudioText(_postStudioSelected);
