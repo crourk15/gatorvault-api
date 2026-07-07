@@ -41,15 +41,31 @@ function readFrontendVersionFile() {
 
 function recordApiBoot() {
   const state = loadDeployState();
+  const prevCommit = state.api?.commit || null;
+  const nextCommit =
+    process.env.RENDER_GIT_COMMIT || process.env.GIT_COMMIT || process.env.COMMIT_REF || null;
+
   state.api = {
     service: 'render',
     timestamp: nowIso(),
-    commit: process.env.RENDER_GIT_COMMIT || process.env.GIT_COMMIT || process.env.COMMIT_REF || null,
+    commit: nextCommit,
     branch: process.env.RENDER_GIT_BRANCH || process.env.BRANCH || null,
     deployId: process.env.RENDER_SERVICE_ID || null,
     nodeEnv: process.env.NODE_ENV || 'development',
-    version: process.env.RENDER_GIT_COMMIT?.slice(0, 7) || null
+    version: nextCommit?.slice(0, 7) || null
   };
+
+  if (nextCommit && nextCommit !== prevCommit) {
+    delete state.lastSmokeTest;
+    delete state.lastFailedCheck;
+    if (
+      state.lastHealthRecompute?.deployId &&
+      state.lastHealthRecompute.deployId !== String(nextCommit).slice(0, 12)
+    ) {
+      delete state.lastHealthRecompute;
+    }
+  }
+
   return saveDeployState(state);
 }
 
@@ -73,6 +89,25 @@ function recordFrontendDeploy(payload = {}) {
     syncedFromApi: Boolean(apiShort && !payload.commit)
   };
   return saveDeployState(state);
+}
+
+function deployGateMaxAgeMs(kind) {
+  if (kind === 'smoke') {
+    return parseInt(process.env.DEPLOY_SMOKE_GATE_MAX_AGE_MS || String(48 * 3600000), 10);
+  }
+  return parseInt(process.env.DEPLOY_HEALTH_GATE_MAX_AGE_MS || String(24 * 3600000), 10);
+}
+
+function gateIsCurrent(gate, currentCommit) {
+  if (!gate?.checkedAt && !gate?.at) return false;
+  const at = gate.checkedAt || gate.at;
+  const ageMs = Date.now() - new Date(at).getTime();
+  if (!Number.isFinite(ageMs) || ageMs > deployGateMaxAgeMs(gate.kind)) return false;
+  const gateCommit = gate.deployCommit || gate.deployId || null;
+  if (gateCommit && currentCommit && !String(currentCommit).startsWith(String(gateCommit))) {
+    return false;
+  }
+  return true;
 }
 
 function getDeployReport() {
@@ -122,10 +157,16 @@ function getDeployReport() {
   let status = 'green';
   if (mismatch) status = 'red';
   else if (state.lastGuardianCheck && state.lastGuardianCheck.ok === false) status = 'red';
-  else if (state.lastSmokeTest && state.lastSmokeTest.ok === false) status = 'red';
   else if (
+    state.lastSmokeTest &&
+    state.lastSmokeTest.ok === false &&
+    gateIsCurrent({ ...state.lastSmokeTest, kind: 'smoke' }, api.commit)
+  ) {
+    status = 'red';
+  } else if (
     state.lastHealthRecompute?.overall != null &&
-    state.lastHealthRecompute.overall < 70
+    state.lastHealthRecompute.overall < 70 &&
+    gateIsCurrent({ ...state.lastHealthRecompute, kind: 'health' }, api.commit)
   ) {
     status = 'red';
   } else if (
@@ -165,7 +206,12 @@ function recordSmokeTest(result) {
     ok: result.ok,
     checkedAt: result.checkedAt || nowIso(),
     failed: result.failed || [],
-    site: result.site || null
+    site: result.site || null,
+    deployCommit:
+      result.deployCommit ||
+      process.env.RENDER_GIT_COMMIT ||
+      state.api?.commit ||
+      null
   };
   if (!result.ok) {
     state.lastFailedCheck = {
@@ -214,5 +260,7 @@ module.exports = {
   readFrontendVersionFile,
   recordSmokeTest,
   recordGuardianCheck,
-  recordHealthRecompute
+  recordHealthRecompute,
+  gateIsCurrent,
+  deployGateMaxAgeMs
 };

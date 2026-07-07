@@ -53,6 +53,23 @@ function hoursSince(iso) {
   return (Date.now() - new Date(iso).getTime()) / 3600000;
 }
 
+const COMMAND_CENTER_ALERT_MAX_AGE_H = parseInt(
+  process.env.HUB_TOP_ISSUE_ALERT_MAX_AGE_H || '48',
+  10
+);
+
+function filterActionableAlerts(alertsDoc, qa) {
+  const cutoff = Date.now() - COMMAND_CENTER_ALERT_MAX_AGE_H * 3600000;
+  return (alertsDoc.alerts || []).filter((a) => {
+    const at = new Date(a.at).getTime();
+    if (!Number.isFinite(at) || at < cutoff) return false;
+    const title = String(a.title || '');
+    if (qa.pass === true && title.includes('QA Crawler FAILED')) return false;
+    if (title.includes('QA Crawler recovered')) return false;
+    return true;
+  });
+}
+
 function freshStatus(iso, warnH, critH) {
   const h = hoursSince(iso);
   if (h == null) return 'red';
@@ -206,7 +223,9 @@ function buildTopIssues({ ops, qa, productIntel, selfRunner, alerts }) {
         route: '#dashboard/ops'
       });
     });
-  (alerts.alerts || []).slice(0, 3).forEach((a) => {
+  filterActionableAlerts(alerts, qa)
+    .slice(0, 3)
+    .forEach((a) => {
     issues.push({
       severity: a.severity === 'critical' || a.severity === 'error' ? 'red' : 'yellow',
       title: a.title || a.type || 'Ops alert',
@@ -397,5 +416,7 @@ module.exports = {
   detectEnvironment,
   MODULE_IDS,
   buildOverviewPayload,
-  buildModuleHealthMap
+  buildModuleHealthMap,
+  buildTopIssues,
+  filterActionableAlerts
 };
