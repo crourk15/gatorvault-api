@@ -31,7 +31,29 @@ function fileMtime(rel) {
 
 function hoursAgo(iso) {
   if (!iso) return null;
-  return Math.round((Date.now() - new Date(iso).getTime()) / 3600000);
+  const ms = new Date(iso).getTime();
+  if (!Number.isFinite(ms)) return null;
+  return Math.round((Date.now() - ms) / 3600000);
+}
+
+/** Pick the newest valid ISO timestamp from candidates (fixes stale first-truthy bugs). */
+function newestTimestamp(...candidates) {
+  let best = null;
+  let bestMs = -Infinity;
+  for (const iso of candidates) {
+    if (!iso) continue;
+    const ms = new Date(iso).getTime();
+    if (!Number.isFinite(ms) || ms <= bestMs) continue;
+    bestMs = ms;
+    best = iso;
+  }
+  return best;
+}
+
+function envFeatureEnabled(name) {
+  const v = process.env[name];
+  if (v == null || v === '') return true;
+  return v === 'true' || v === '1';
 }
 
 function tile(id, label, status, fields = {}) {
@@ -153,9 +175,12 @@ function buildInsiderArticlesTile(heartbeats) {
 
   const hb = heartbeats.subsystems?.['cron:article-engine'] || {};
   const errors24h = opsMonitor.getErrorCount24h('cron:article-engine');
+  const articleEngineRequired =
+    envFeatureEnabled('ARTICLE_ENGINE_ENABLED') && require('./pipeline-guards').scheduledJobsEnabled();
+
   let status = 'green';
   if (errors24h > 2 || hb.lastStatus === 'error') status = 'red';
-  else if (!hb.lastRun) status = 'yellow';
+  else if (articleEngineRequired && !hb.lastRun) status = 'yellow';
   else if (draftCount > 0 && oldestDraftHours != null && oldestDraftHours > 72) status = 'yellow';
 
   return tile('insider-articles', 'Insider Articles', status, {
@@ -288,19 +313,48 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
     /* optional */
   }
 
-  const recruitingUpdated = on3Snap.lastRun || pipeline.lastRecruitingIngest || fileMtime('recruiting/players.json');
-  const portalUpdated = fileMtime('recruiting/players.json');
-  const nilUpdated = nilManifest.updatedAt || fileMtime('nil/manifest.json');
-  const filmUpdated =
-    filmCatalog.updatedAt || opsMonitor.getHeartbeat('cron:film-room-weekly')?.lastSuccess || null;
-  const depthUpdated =
-    depthMeta?.updatedAt ||
-    opsMonitor.getHeartbeat('cron:depth-chart')?.lastSuccess ||
-    rosterMtime;
-  const gameZoneUpdated =
-    linesMeta?.updatedAt ||
-    opsMonitor.getHeartbeat('cron:game-zone')?.lastSuccess ||
-    fileMtime('betting/lines.json');
+  const recruitingHb = opsMonitor.getHeartbeat('cron:recruiting-ingest');
+  const recruitingUpdated = newestTimestamp(
+    on3Snap.lastRun,
+    pipeline.lastRecruitingIngest,
+    recruitingHb?.lastSuccess,
+    recruitingHb?.lastRun,
+    fileMtime('recruiting/players.json')
+  );
+  const portalHb = opsMonitor.getHeartbeat('cron:portal-ingest');
+  const portalUpdated = newestTimestamp(
+    portalHb?.lastSuccess,
+    portalHb?.lastRun,
+    fileMtime('recruiting/players.json')
+  );
+  const nilHb = opsMonitor.getHeartbeat('cron:nil-ingest');
+  const nilUpdated = newestTimestamp(
+    nilManifest.updatedAt,
+    nilHb?.lastSuccess,
+    nilHb?.lastRun,
+    fileMtime('nil/manifest.json')
+  );
+  const filmHb = opsMonitor.getHeartbeat('cron:film-room-weekly');
+  const filmUpdated = newestTimestamp(
+    filmCatalog.updatedAt,
+    filmHb?.lastSuccess,
+    filmHb?.lastRun
+  );
+  const depthHb = opsMonitor.getHeartbeat('cron:depth-chart');
+  const depthUpdated = newestTimestamp(
+    depthMeta?.updatedAt,
+    depthHb?.lastSuccess,
+    depthHb?.lastRun,
+    rosterMtime
+  );
+  const gameZoneHb = opsMonitor.getHeartbeat('cron:game-zone');
+  const gameZoneUpdated = newestTimestamp(
+    linesMeta?.updatedAt,
+    linesMeta?.refreshedAt,
+    gameZoneHb?.lastSuccess,
+    gameZoneHb?.lastRun,
+    fileMtime('betting/lines.json')
+  );
 
   const recruitingFresh = freshnessStatus(
     recruitingUpdated,
@@ -378,15 +432,26 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
       summary: nilUpdated ? `Updated ${nilFresh.hours ?? '?'}h ago` : 'No timestamp',
       errors24h: opsMonitor.getErrorCount24h('cron:nil-ingest')
     }),
-    tile('depth-gamezone', 'Depth Chart / Game Zone', depthFresh.status === 'green' && gameZoneFresh.status !== 'red' ? depthFresh.status : gameZoneFresh.status === 'red' ? 'red' : 'yellow', {
-      lastRun: depthUpdated > gameZoneUpdated ? depthUpdated : gameZoneUpdated,
-      depthChartUpdated: depthUpdated,
-      gameZoneUpdated: gameZoneUpdated,
-      depthChartEnabled: process.env.DEPTH_CHART_ENABLED !== 'false' && process.env.DEPTH_CHART_ENABLED !== '0',
-      gameZoneEnabled: process.env.GAME_ZONE_ENABLED !== 'false' && process.env.GAME_ZONE_ENABLED !== '0',
-      summary: `Depth ${depthFresh.hours ?? '?'}h · Game Zone ${gameZoneFresh.hours ?? '?'}h`,
-      errors24h: opsMonitor.getErrorCount24h('cron:depth-chart') + opsMonitor.getErrorCount24h('cron:game-zone')
-    }),
+    (() => {
+      const depthChartEnabled = envFeatureEnabled('DEPTH_CHART_ENABLED');
+      const gameZoneEnabled = envFeatureEnabled('GAME_ZONE_ENABLED');
+      const depthStatus = depthChartEnabled ? depthFresh.status : 'green';
+      const gameZoneStatus = gameZoneEnabled ? gameZoneFresh.status : 'green';
+      let combined = 'green';
+      if (depthStatus === 'red' || gameZoneStatus === 'red') combined = 'red';
+      else if (depthStatus === 'yellow' || gameZoneStatus === 'yellow') combined = 'yellow';
+      return tile('depth-gamezone', 'Depth Chart / Game Zone', combined, {
+        lastRun: newestTimestamp(depthChartEnabled ? depthUpdated : null, gameZoneEnabled ? gameZoneUpdated : null),
+        depthChartUpdated: depthUpdated,
+        gameZoneUpdated: gameZoneUpdated,
+        depthChartEnabled,
+        gameZoneEnabled,
+        depthStatus,
+        gameZoneStatus,
+        summary: `Depth ${depthChartEnabled ? depthFresh.hours ?? '?' : 'off'}h · Game Zone ${gameZoneEnabled ? gameZoneFresh.hours ?? '?' : 'off'}h`,
+        errors24h: opsMonitor.getErrorCount24h('cron:depth-chart') + opsMonitor.getErrorCount24h('cron:game-zone')
+      });
+    })(),
     tile('film-room', 'Film Room Engine', filmFresh.status, {
       lastRun: filmUpdated,
       lastUpdateHours: filmFresh.hours,
@@ -436,5 +501,8 @@ module.exports = {
   buildOpsStatusReport,
   buildCronTiles,
   buildAutoposterTile,
-  buildIdentityPatternsTile
+  buildIdentityPatternsTile,
+  newestTimestamp,
+  freshnessStatus,
+  hoursAgo
 };

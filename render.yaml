@@ -207,6 +207,10 @@ services:
         value: "21600000"
       - key: GAME_ZONE_INTERVAL_MS
         value: "21600000"
+      - key: PLATFORM_HEALTH_SWEEP_INTERVAL_MS
+        value: "21600000"
+      - key: PLATFORM_HEALTH_SWEEP_BOOT_DELAY_MS
+        value: "300000"
       - key: ON3_PORTAL_SYNC_INTERVAL_MS
         value: "21600000"
 

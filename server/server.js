@@ -1493,6 +1493,12 @@ console.log('GatorVault server running on port', PORT);
     console.warn('[platform] maintenance schedulers failed to start', e.message);
   }
   try {
+    const { startPlatformHealthSweepScheduler } = require('./lib/platform-health-sweep');
+    startPlatformHealthSweepScheduler();
+  } catch (e) {
+    console.warn('[platform] health sweep scheduler failed to start', e.message);
+  }
+  try {
     const { startQaScheduler } = require('./lib/qa/qa-runner');
     startQaScheduler();
   } catch (e) {

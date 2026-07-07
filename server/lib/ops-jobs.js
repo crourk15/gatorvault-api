@@ -187,6 +187,15 @@ const JOBS = {
       return { ok: report.healthy !== false, report };
     }
   },
+  'platform-health-sweep': {
+    label: 'Platform health sweep (auto-heal stale tiles)',
+    subsystem: 'ops:platform-sweep',
+    schedule: 'Every 6h (PLATFORM_HEALTH_SWEEP_INTERVAL_MS)',
+    async run(opts = {}) {
+      const { runPlatformHealthSweep } = require('./platform-health-sweep');
+      return runPlatformHealthSweep({ force: opts.force === true });
+    }
+  },
   'api-keepalive': {
     label: 'Render API keep-alive ping',
     subsystem: 'cron:api-keepalive',
