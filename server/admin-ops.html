@@ -1293,6 +1293,9 @@
             '<strong>Tier:</strong> '+esc(j.tier||'—')+
             ' · <strong>Fuse confidence:</strong> '+esc(fuse.confidence!=null?fuse.confidence:'—')+
             ' · <strong>Beat len:</strong> '+esc(fuse.beatLen!=null?fuse.beatLen:'—')+'<br>'+
+            '<strong>Angle:</strong> '+esc(j.dominantAngle||elite.dominantAngle||'—')+
+            (j.angleReason||elite.angleReason?' · reason: '+esc(j.angleReason||elite.angleReason):'')+
+            ' · <strong>Compose path:</strong> '+esc(j.composePath||elite.composePath||'—')+'<br>'+
             '<strong>Elite:</strong> '+(elite.ok?'ok':'miss')+
             (elite.reason?' · reason: '+esc(elite.reason):'')+
             (elite.lastReason?' · last: '+esc(elite.lastReason):'')+'<br>'+

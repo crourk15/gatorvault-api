@@ -445,6 +445,9 @@ async function probeIntelAutoposterPath(slug) {
       enrichmentSources: built?.enrichmentSources || [],
       enrichPassesTried: built?.enrichPassesTried || [],
       composeEngine: built?.composeEngine || eliteRecruiting.COMPOSE_ENGINE,
+      dominantAngle: built?.validationMeta?.dominantAngle || null,
+      composePath: built?.validationMeta?.composePath || built?.validationMeta?.eliteComposePath || null,
+      angleReason: built?.validationMeta?.angleReason || built?.validationMeta?.dominantAngleReason || null,
       preview: built?.text ? String(built.text).slice(0, 240) : null,
       gaps: built?.gaps || []
     };

@@ -36,7 +36,13 @@ async function composeProbe(slug, opts = {}) {
   try {
     probe = await probeIntelAutoposterPath(normalized, opts);
   } catch (err) {
-    probe = { ok: false, slug: normalized, error: err?.message || String(err), fuse: null, eliteBuild: { ok: false, reason: 'probe_error' } };
+    probe = {
+      ok: false,
+      slug: normalized,
+      error: err?.message || String(err),
+      fuse: null,
+      eliteBuild: { ok: false, reason: 'probe_error' }
+    };
   }
   const elite = probe.eliteBuild || {};
   const routing = deriveComposeRouting(probe);
@@ -47,6 +53,9 @@ async function composeProbe(slug, opts = {}) {
     routing,
     fuse: probe.fuse || null,
     eliteBuild: elite,
+    dominantAngle: elite.dominantAngle || null,
+    composePath: elite.composePath || null,
+    angleReason: elite.angleReason || null,
     publishGate: probe.publishGate ?? null,
     publishGateReason: probe.publishGateReason || null,
     build: probe.build || null,

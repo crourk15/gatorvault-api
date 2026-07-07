@@ -69,29 +69,17 @@ async function buildStrategyCandidates(
 
   if (eliteComposeEnabled && slug && beatText) {
     try {
-      const built = await eliteRecruiting.buildEliteRecruitingPost(slug, {
+      const detectivesElite = require('./detectives-elite-compose');
+      const eliteCase = await detectivesElite.composeDetectivesEliteCase({
+        slug,
         hints,
-        intelRow: {
-          detail: beatText,
-          skinny: beatText,
-          playerName: name,
-          playerSlug: slug,
-          classYear: identity.classYear,
-          pos: identity.pos
-        },
-        metrics: m,
-        research: opts.research || null,
-        trigger: 'detectives'
+        identity,
+        opts: { metrics: m, research: opts.research || null }
       });
-      if (built?.ok && built.text) {
-        const raw = eliteRecruiting.toQueueCandidate(built, slug, {
-          detectivesPath: 'elite_fused_pr789',
-          enrichPass: built.enrichPass,
-          enrichmentSources: built.enrichmentSources
-        });
+      if (eliteCase.outcome === 'elite' && eliteCase.candidate?.text) {
         const marked = markDetectivesCandidate(
           {
-            ...raw,
+            ...eliteCase.candidate,
             urgencyLabel: 'major_beat',
             sourceEventType: 'detectives_elite_pr789',
             sources: [
@@ -122,7 +110,11 @@ async function buildStrategyCandidates(
               path: 'elite_fused_pr789',
               playerSlug: slug,
               lastReason: qa.rejectReason(marked),
-              compose: { ok: true, path: 'elite_fused_pr789' }
+              compose: {
+                ok: true,
+                path: 'elite_fused_pr789',
+                dominantAngle: eliteCase.dominantAngle || null
+              }
             });
           } catch {
             /* optional */
@@ -132,9 +124,9 @@ async function buildStrategyCandidates(
         store.appendLog(caseItem.id, {
           phase: 'elite_compose_miss',
           path: 'elite_fused_pr789',
-          reason: built?.reason || 'compose_failed',
-          lastReason: built?.lastReason || null,
-          enrichPassesTried: built?.enrichPassesTried || []
+          reason: eliteCase.reason || 'compose_failed',
+          lastReason: eliteCase.lastReason || null,
+          enrichPassesTried: eliteCase.enrichPassesTried || []
         });
         try {
           require('./detectives-telemetry').emitDetectivesTelemetry({
@@ -143,14 +135,15 @@ async function buildStrategyCandidates(
             caseId: caseItem.id,
             path: 'elite_fused_pr789',
             playerSlug: slug,
-            lastReason: built?.lastReason || built?.reason || 'compose_failed',
-            enrichPassesTried: built?.enrichPassesTried || [],
-            enrichmentSources: built?.enrichmentSources || [],
-            gaps: built?.gaps || [],
+            lastReason: eliteCase.lastReason || eliteCase.reason || 'compose_failed',
+            enrichPassesTried: eliteCase.enrichPassesTried || [],
+            enrichmentSources: eliteCase.composed?.enrichmentSources || [],
+            gaps: eliteCase.gaps || [],
             compose: {
               ok: false,
-              reason: built?.reason || 'compose_failed',
-              enrichPass: built?.enrichPass || null
+              reason: eliteCase.reason || 'compose_failed',
+              enrichPass: eliteCase.composed?.enrichPass || null,
+              dominantAngle: eliteCase.dominantAngle || null
             }
           });
         } catch {

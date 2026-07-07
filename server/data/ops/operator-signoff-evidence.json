@@ -1,0 +1,61 @@
+{
+  "generatedAt": "2026-07-07T18:37:48.764Z",
+  "gates": {
+    "G1": {
+      "pass": true,
+      "note": "detectives-elite-compose wired"
+    },
+    "G2": {
+      "pass": true,
+      "note": "composeProbe + telemetry live"
+    },
+    "G3": {
+      "pass": true,
+      "slugs": [
+        {
+          "specSlug": "cale-britt",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "specSlug": "zyon-robinson",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "specSlug": "kalu-thomas",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "specSlug": "bryce-willingham",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "specSlug": "merrick-ham",
+          "pass": true,
+          "failed": []
+        },
+        {
+          "specSlug": "fujikawa",
+          "pass": true,
+          "failed": []
+        }
+      ]
+    },
+    "G4": {
+      "pass": true,
+      "leakCount": 0,
+      "violations": []
+    }
+  },
+  "flags": {
+    "pr789Only": false,
+    "eliteComposeEnabled": true
+  },
+  "tests": {
+    "ok": true,
+    "output": "✔ auditQueueItems flags recruiting queue leaks and trace mode (0.7803ms)\n✔ auditSentLedger scans recruiting sent posts for leaks (0.2619ms)\n✔ runRecruitingLeakAudit returns G4 envelope (19.1346ms)\nℹ tests 15\nℹ suites 0\nℹ pass 15\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 618002.3073\n"
+  }
+}
