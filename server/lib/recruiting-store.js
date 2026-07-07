@@ -37,10 +37,16 @@ function disableSupabase(reason) {
 function initSupabase() {
   if (supabase !== null) return supabase;
   const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+  const serviceKey = process.env.SUPABASE_SERVICE_KEY;
+  const key = serviceKey || process.env.SUPABASE_ANON_KEY;
   if (!url || !key) {
     supabase = false;
     return false;
+  }
+  if (process.env.NODE_ENV === 'production' && !serviceKey && process.env.SUPABASE_ANON_KEY) {
+    console.warn(
+      '[recruiting] SUPABASE_ANON_KEY without SUPABASE_SERVICE_KEY in production — use service key; enable RLS (migrations/022).'
+    );
   }
   try {
     const { createClient } = require('@supabase/supabase-js');
