@@ -23,6 +23,65 @@ function verifyCron(req) {
   return !!X_CRON_SECRET && secret === X_CRON_SECRET;
 }
 
+const POST_STUDIO_REFILL_MEMORY_POLL_MS = parseInt(
+  process.env.POST_STUDIO_REFILL_MEMORY_POLL_MS || '15000',
+  10
+);
+const POST_STUDIO_REFILL_MEMORY_MAX_WAIT_MS = parseInt(
+  process.env.POST_STUDIO_REFILL_MEMORY_MAX_WAIT_MS || '120000',
+  10
+);
+
+function schedulePostStudioRefillWhenReady(runRefill, refillState) {
+  if (global.__postStudioRefillDeferred) return false;
+  global.__postStudioRefillDeferred = true;
+  global.__postStudioRefillRunning = true;
+  refillState.setRunning(true);
+
+  const pipelineGuards = require('./pipeline-guards');
+  const startedAt = Date.now();
+
+  const finish = (payload) => {
+    global.__postStudioRefillRunning = false;
+    global.__postStudioRefillDeferred = false;
+    refillState.setRunning(false);
+    refillState.setLastResult(payload);
+    global.__postStudioRefillLastResult = payload;
+  };
+
+  const attempt = async () => {
+    if (!pipelineGuards.shouldSkipHeavyJob('post-studio-refill-deferred')) {
+      try {
+        const out = await runRefill();
+        finish({ at: store.nowIso(), ...out });
+      } catch (err) {
+        finish({
+          at: store.nowIso(),
+          ok: false,
+          error: err.message || 'refill_failed'
+        });
+      }
+      return;
+    }
+
+    if (Date.now() - startedAt >= POST_STUDIO_REFILL_MEMORY_MAX_WAIT_MS) {
+      finish({
+        at: store.nowIso(),
+        ok: false,
+        error: 'memory_pressure',
+        memory: pipelineGuards.memorySnapshot(),
+        message: 'Server memory stayed elevated — wait 1–2 min and retry Refill.'
+      });
+      return;
+    }
+
+    setTimeout(attempt, POST_STUDIO_REFILL_MEMORY_POLL_MS);
+  };
+
+  setTimeout(attempt, POST_STUDIO_REFILL_MEMORY_POLL_MS);
+  return true;
+}
+
 function queuePayloadFromBody(body) {
   return {
     text: body.text,
@@ -689,21 +748,21 @@ function mountXAutoposterRoutes(app) {
           message: 'Refill already running in background. Wait ~1 min then Reload drafts.'
         });
       }
-      if (pipelineGuards.shouldSkipHeavyJob('post-studio-refill')) {
-        return res.status(503).json({
-          ok: false,
-          error: 'memory_pressure',
-          message: 'Server memory is elevated — wait 30s and retry Refill.'
-        });
-      }
+      const memorySnapshot = pipelineGuards.memorySnapshot();
+      const memoryBlocked = pipelineGuards.shouldSkipHeavyJob('post-studio-refill');
+      const digDeeperDefault = req.body?.digDeeper !== false;
+      const maxEnqueueDefault = parseInt(req.body?.maxEnqueue || req.query?.maxEnqueue || '5', 10);
 
-      const runRefill = async () => {
+      const runRefill = async (opts = {}) => {
         store.migratePendingToHubReview();
+        const elevated = pipelineGuards.memorySnapshot().rssMb >= pipelineGuards.MEMORY_WARN_MB;
+        const maxEnqueue = opts.maxEnqueue ?? (elevated ? Math.min(maxEnqueueDefault, 2) : maxEnqueueDefault);
+        const digDeeper = opts.digDeeper ?? (elevated ? false : digDeeperDefault);
         const refill = await refillAutoposterQueue({
           minPending: parseInt(req.body?.minPending || req.query?.minPending || '2', 10),
-          maxEnqueue: parseInt(req.body?.maxEnqueue || req.query?.maxEnqueue || '5', 10),
+          maxEnqueue,
           forcePost: true,
-          digDeeper: req.body?.digDeeper !== false,
+          digDeeper,
           hubStudioRefill: true
         });
         const counts = store.getQueueCounts();
@@ -720,6 +779,36 @@ function mountXAutoposterRoutes(app) {
           stats: cadence.getHubStats()
         };
       };
+
+      if (memoryBlocked) {
+        if (syncOnly) {
+          return res.status(503).json({
+            ok: false,
+            error: 'memory_pressure',
+            memory: memorySnapshot,
+            message: 'Server memory is elevated — wait 30–60s and retry Refill.'
+          });
+        }
+        if (!schedulePostStudioRefillWhenReady(runRefill, refillState)) {
+          return res.json({
+            ok: true,
+            async: true,
+            started: false,
+            reason: 'already_running',
+            message: 'Refill already running in background. Wait ~1 min then Reload drafts.'
+          });
+        }
+        return res.json({
+          ok: true,
+          async: true,
+          started: true,
+          deferred: true,
+          reason: 'memory_pressure',
+          memory: memorySnapshot,
+          message:
+            'Server memory is elevated — refill queued. Poll status in ~30–60s (no need to click Refill again).'
+        });
+      }
 
       if (syncOnly) {
         const out = await runRefill();
@@ -753,6 +842,7 @@ function mountXAutoposterRoutes(app) {
           refillState.setLastResult(payload);
         } finally {
           global.__postStudioRefillRunning = false;
+          refillState.setRunning(false);
         }
       });
     } catch (err) {

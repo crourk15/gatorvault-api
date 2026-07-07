@@ -149,6 +149,7 @@ module.exports = {
   normalizeIntel,
   guardIntelForPipeline,
   MEMORY_LIMIT_MB,
+  MEMORY_WARN_MB,
   rssMb,
   memorySnapshot,
   isMemoryUnderPressure,

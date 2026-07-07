@@ -1390,7 +1390,7 @@
             clearInterval(timer);
             if(btn){btn.disabled=false;btn.textContent=label;}
             if(s.lastResult){
-              if(s.lastResult.ok===false)throw new Error(s.lastResult.error||'Refill failed');
+              if(s.lastResult.ok===false)throw new Error(s.lastResult.message||s.lastResult.error||'Refill failed');
               showRefillResult(s.lastResult);
             }else{
               alert('Refill finished — reload drafts to see updates.');
@@ -1431,8 +1431,8 @@
               pollPostStudioRefill(btn,label);
               return;
             }
-            if(btn)btn.textContent='Refilling… (30–90s)';
-            alert(j.message||'Refill started in background. Wait ~1 min.');
+            if(btn)btn.textContent=j.deferred?'Refill queued…':'Refilling… (30–90s)';
+            alert(j.message||(j.deferred?'Refill queued — memory was elevated. Wait ~1 min.':'Refill started in background. Wait ~1 min.'));
             pollPostStudioRefill(btn,label);
             return;
           }
