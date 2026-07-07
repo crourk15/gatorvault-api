@@ -51,14 +51,54 @@ function freshnessStatus(iso, warningHours, criticalHours) {
   return { status: 'red', hours: h };
 }
 
+/** Jobs with an in-process scheduler in server.js (not Render-only / on-demand). */
+const IN_PROCESS_SCHEDULED_JOB_IDS = new Set([
+  'film-room-weekly',
+  'recruiting-ingest',
+  'portal-ingest',
+  'live-refresh',
+  'beat-late-ingest',
+  'rivals-pm-ingest',
+  'media-ingest',
+  'scouting-update',
+  'article-engine-weekly-draft',
+  'qa-crawler',
+  'x-autoposter-run'
+]);
+
+function scheduleEnvFlag(schedule) {
+  const match = String(schedule || '').match(/\(([A-Z0-9_]+)\)/i);
+  return match ? match[1] : null;
+}
+
 function inferHeartbeatRequired(job) {
   if (job.heartbeatRequired === false) return false;
   if (job.heartbeatRequired === true) return true;
+
   const schedule = String(job.schedule || '').toLowerCase();
   if (schedule.includes('on demand') || schedule.includes('manual /')) return false;
   if (schedule.includes('with ') && (schedule.includes('sweep') || schedule.includes('refresh'))) return false;
-  if (/render cron/.test(schedule) && !/\bevery\b/.test(schedule)) return false;
+  if (schedule.includes('render cron')) return false;
+  if (schedule.includes('portal windows only') || schedule.includes('skipped off-season')) return false;
+  if (!IN_PROCESS_SCHEDULED_JOB_IDS.has(job.id)) return false;
+
+  const envFlag = scheduleEnvFlag(job.schedule);
+  if (envFlag && process.env[envFlag] !== 'true') return false;
+
+  if (job.id === 'x-autoposter-run') {
+    const guards = require('./pipeline-guards');
+    return guards.autoposterSchedulerEnabled();
+  }
+
+  const guards = require('./pipeline-guards');
+  if (!guards.scheduledJobsEnabled()) return false;
+
   return true;
+}
+
+function isStaleStarted(hb, staleMs = 900000) {
+  if (hb.lastStatus !== 'started' || !hb.lastRun) return false;
+  return Date.now() - new Date(hb.lastRun).getTime() > staleMs;
 }
 
 function buildCronTiles(config, heartbeats) {
@@ -67,9 +107,11 @@ function buildCronTiles(config, heartbeats) {
     const hb = subs[job.subsystem] || {};
     const errors24h = opsMonitor.getErrorCount24h(job.subsystem);
     const heartbeatRequired = inferHeartbeatRequired(job);
+    const terminalOk = hb.lastStatus === 'success' || hb.lastStatus === 'skipped';
     let status = 'green';
     if (hb.lastStatus === 'error' || (hb.failureStreak || 0) >= 2) status = 'red';
-    else if (hb.lastStatus === 'warning' || errors24h > 0) status = 'yellow';
+    else if (hb.lastStatus === 'warning' || isStaleStarted(hb)) status = 'yellow';
+    else if (errors24h > 0 && !terminalOk) status = 'yellow';
     else if (heartbeatRequired && !hb.lastRun) status = 'yellow';
 
     return {

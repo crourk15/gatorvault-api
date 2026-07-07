@@ -117,6 +117,14 @@ function heartbeat({
     entry.lastWarning = ts;
   } else if (status === 'started') {
     entry.lastStarted = ts;
+    // Keep the last completed heartbeat visible while a run is in flight.
+    if (prev.lastRun && prev.lastStatus && prev.lastStatus !== 'started') {
+      entry.lastRun = prev.lastRun;
+      entry.lastStatus = prev.lastStatus;
+      entry.lastMessage = prev.lastMessage;
+      entry.lastDetails = prev.lastDetails;
+      entry.lastCounts = prev.lastCounts;
+    }
   }
 
   doc.subsystems[subsystem] = entry;
@@ -175,7 +183,7 @@ async function wrapJob(jobId, subsystem, fn, { message = '' } = {}) {
     const status =
       result?.skipped === true
         ? 'skipped'
-        : result?.ok === false || (Array.isArray(result?.errors) && result.errors.length)
+        : result?.ok === false
           ? 'warning'
           : 'success';
     const doneMessage =

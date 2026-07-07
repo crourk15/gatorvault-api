@@ -54,4 +54,7 @@ test('buildCronTiles does not yellow on-demand jobs without heartbeat', () => {
   assert.ok(beatWriter);
   assert.equal(beatWriter.heartbeatRequired, false);
   assert.equal(beatWriter.status, 'green');
+  const renderOnly = tiles.find((j) => j.jobId === 'api-keepalive');
+  assert.equal(renderOnly.heartbeatRequired, false);
+  assert.equal(renderOnly.status, 'green');
 });
