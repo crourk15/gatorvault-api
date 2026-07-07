@@ -207,6 +207,32 @@ function getAutoposterStatus({ scheduler = {} } = {}) {
   const errors24h = opsMonitor.getErrorCount24h('autoposter');
   const lastPost = readLastPost();
 
+  let schedulerEnabled = process.env.X_AUTOPOST_ENABLED === 'true';
+  try {
+    const guards = require('./pipeline-guards');
+    schedulerEnabled = guards.autoposterSchedulerEnabled();
+    if (!schedulerEnabled) {
+      const manualLast = lastPost.lastPostAt || scheduler.lastPostAt || scheduler.lastPostSuccess || null;
+      return {
+        ok: true,
+        status: 'green',
+        hubMode: true,
+        lastPostAt: manualLast,
+        lastPostAttempt: scheduler.lastPostAttempt || null,
+        lastPostLabel: manualLast ? formatMinutesAgo(minutesSince(manualLast)) : 'manual hub mode',
+        minutesSinceLastPost: minutesSince(manualLast),
+        postsLast24h: postsLast24h(),
+        activityWindow: getActivityWindow(),
+        schedulerEnabled: false,
+        queuePending: scheduler.queuePending ?? null,
+        errors24h,
+        identityFailStreak: health.identityFailStreak || 0
+      };
+    }
+  } catch {
+    /* optional */
+  }
+
   const freshness = evaluateFreshness({
     lastPostAt: lastPost.lastPostAt || scheduler.lastPostAt || scheduler.lastPostSuccess || null,
     lastPostAttempt: scheduler.lastPostAttempt || null,

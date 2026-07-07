@@ -58,3 +58,17 @@ test('buildCronTiles does not yellow on-demand jobs without heartbeat', () => {
   assert.equal(renderOnly.heartbeatRequired, false);
   assert.equal(renderOnly.status, 'green');
 });
+
+test('api monitor ignores ops noise and benign client errors', () => {
+  const apiMonitor = require('../../lib/api-monitor');
+  assert.equal(apiMonitor.shouldMonitorPath('/api/ops/status'), false);
+  assert.equal(apiMonitor.shouldMonitorPath('/api/ping'), true);
+  assert.equal(apiMonitor.isBenignClientStatus(404), true);
+  apiMonitor.recordRequest({ method: 'GET', path: '/api/ops/status', statusCode: 401, durationMs: 12 });
+  apiMonitor.recordRequest({ method: 'GET', path: '/api/missing', statusCode: 404, durationMs: 8 });
+  apiMonitor.recordRequest({ method: 'GET', path: '/api/ping', statusCode: 200, durationMs: 5 });
+  const report = apiMonitor.getApiHealthReport();
+  assert.equal(report.status, 'green');
+  assert.equal(report.errors5xx, 0);
+  assert.equal(report.benign4xx, 2);
+});

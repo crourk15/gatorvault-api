@@ -134,10 +134,19 @@ function buildCronTiles(config, heartbeats) {
 function buildInsiderArticlesTile(heartbeats) {
   let draftCount = 0;
   let publishedCount = 0;
+  let oldestDraftHours = null;
   try {
     const insiderStore = require('./insider-articles-store');
     draftCount = insiderStore.countDraftsPending();
     publishedCount = insiderStore.countPublished();
+    const drafts = insiderStore.listDrafts({ status: 'draft' });
+    if (drafts.length) {
+      const oldestMs = drafts.reduce((min, draft) => {
+        const at = new Date(draft.createdAt || draft.updatedAt || 0).getTime();
+        return min == null || at < min ? at : min;
+      }, null);
+      if (oldestMs != null) oldestDraftHours = Math.round((Date.now() - oldestMs) / 3600000);
+    }
   } catch {
     /* optional module */
   }
@@ -146,13 +155,14 @@ function buildInsiderArticlesTile(heartbeats) {
   const errors24h = opsMonitor.getErrorCount24h('cron:article-engine');
   let status = 'green';
   if (errors24h > 2 || hb.lastStatus === 'error') status = 'red';
-  else if (draftCount === 0 && !hb.lastRun) status = 'yellow';
-  else if (draftCount > 0) status = 'yellow';
+  else if (!hb.lastRun) status = 'yellow';
+  else if (draftCount > 0 && oldestDraftHours != null && oldestDraftHours > 72) status = 'yellow';
 
   return tile('insider-articles', 'Insider Articles', status, {
     lastRun: hb.lastRun || null,
     draftCount,
     publishedCount,
+    oldestDraftHours,
     summary: `${draftCount} draft${draftCount === 1 ? '' : 's'} pending · ${publishedCount} published`,
     errors24h
   });
@@ -387,9 +397,9 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
     buildIdentityPatternsTile(),
     tile('api-health', 'API Health', api.status, {
       lastRun: new Date().toISOString(),
-      summary: `${api.totalRequests} reqs · ${Math.round(api.errorRate * 100)}% err · ${api.avgResponseMs}ms avg`,
+      summary: `${api.totalRequests} reqs · ${Math.round((api.serverErrorRate || 0) * 100)}% 5xx · ${api.avgResponseMs}ms avg`,
       ...api,
-      errors24h: api.errors5xx + api.errors4xx
+      errors24h: api.errors5xx + (api.actionable4xx || 0)
     }),
     tile('db-health', 'Database Health', db.status, {
       lastRun: db.lastError?.at || null,
