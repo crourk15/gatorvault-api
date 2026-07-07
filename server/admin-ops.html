@@ -125,7 +125,7 @@
 
       <div class="section" id="post-studio-panel">
         <h2>X Post Studio</h2>
-        <p class="sub" style="margin:0 0 .75rem;font-size:.8rem;color:var(--muted)">Composed posts land here for manual posting on X (no API credits). Autoposter auto-publishes at most 1–2/day — use Copy or Open X, then Mark Posted. Post via API only when you want the server to publish.</p>
+        <p class="sub" style="margin:0 0 .75rem;font-size:.8rem;color:var(--muted)">Scheduler is OFF — drafts do not auto-fill. Click <strong>Refill compose queue</strong> (30–90s) to pull fresh intel, or <strong>Compose</strong> a player slug. Then Copy / Open X → Mark Posted (no API credits).</p>
         <div id="post-studio-status" class="meta" style="margin-bottom:.75rem;font-size:.75rem">Studio: loading…</div>
         <div id="post-studio-error" class="meta hidden" style="margin-bottom:.75rem;color:#fbbf24"></div>
         <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem;align-items:center">
@@ -1160,22 +1160,24 @@
     function loadPostStudio(){
       var p=pin(); if(!p)return;
       postStudioShowError('');
-      fetch(API+'/api/x/post-studio/queue?status=hub_review&limit=50',{headers:headers()})
+      fetch(API+'/api/x/post-studio/queue?limit=50',{headers:headers()})
         .then(function(r){return r.json().then(function(j){return{status:r.status,body:j};});})
         .then(function(res){
           if(res.status===401)throw new Error('Invalid PIN');
           if(!res.body.ok)throw new Error(res.body.error||'Load failed');
           var stats=res.body.stats||{};
+          var counts=res.body.counts||{};
           return fetch(API+'/api/x/post-studio/config',{headers:headers()})
-            .then(function(r2){return r2.json().then(function(cfg){return{stats:stats,cfg:cfg,items:res.body.items||[]};});});
+            .then(function(r2){return r2.json().then(function(cfg){return{stats:stats,counts:counts,cfg:cfg,items:res.body.items||[]};});});
         })
         .then(function(bundle){
           var stats=bundle.stats;
+          var counts=bundle.counts||{};
           var schedOn=!!(bundle.cfg&&bundle.cfg.schedulerEnabled);
           document.getElementById('post-studio-status').textContent=
             'Hub mode: '+(stats.hubMode?'ON':'OFF')+
             ' · Scheduler: '+(schedOn?'ON (API credits)':'OFF (manual only)')+
-            ' · Drafts: '+(stats.hubReviewCount!=null?stats.hubReviewCount:0)+
+            ' · Drafts: '+(counts.drafts!=null?counts.drafts:0)+
             ' · Posted today (auto): '+(stats.dailySent||0);
           document.getElementById('post-studio-promote').style.display=schedOn?'':'none';
           document.getElementById('post-studio-api').style.display=schedOn?'':'none';
@@ -1204,15 +1206,30 @@
 
     function refillPostStudio(){
       var p=pin(); if(!p)return alert('PIN required');
-      fetch(API+'/api/x/autoposter/run',{method:'POST',headers:headers(),body:JSON.stringify({pin:p,refill:true,limit:0})})
+      var btn=document.getElementById('post-studio-refill');
+      var label=btn?btn.textContent:'Refill compose queue';
+      if(btn){btn.disabled=true;btn.textContent='Refilling… (30–90s)';}
+      fetch(API+'/api/x/post-studio/refill',{method:'POST',headers:headers(),body:JSON.stringify({pin:p,digDeeper:true})})
         .then(function(r){return r.json().then(function(j){return{status:r.status,body:j};});})
         .then(function(res){
           if(res.status===401)throw new Error('Invalid PIN');
           if(!res.body.ok)throw new Error(res.body.error||'Refill failed');
-          alert('Compose queue refill done. Enqueued: '+((res.body.refill&&res.body.refill.enqueuedCount)||0));
+          var n=res.body.enqueuedCount!=null?res.body.enqueuedCount:0;
+          var drafts=res.body.drafts!=null?res.body.drafts:0;
+          var msg='Refill done — '+n+' new draft(s), '+drafts+' total in studio.';
+          if(n===0){
+            msg+='\n\nNothing new composed. Try Compose with a player slug, or check beat/intel ingest.';
+            if(res.body.skipReasons&&res.body.skipReasons.length){
+              msg+='\nSkip reasons: '+res.body.skipReasons.slice(0,3).map(function(s){return s.reason||s;}).join(', ');
+            }else if(res.body.reason){
+              msg+='\nReason: '+res.body.reason;
+            }
+          }
+          alert(msg);
           loadPostStudio();
         })
-        .catch(function(e){alert(e.message);});
+        .catch(function(e){alert('Refill error: '+e.message);})
+        .finally(function(){if(btn){btn.disabled=false;btn.textContent=label;}});
     }
 
     document.getElementById('post-studio-reload').addEventListener('click',loadPostStudio);

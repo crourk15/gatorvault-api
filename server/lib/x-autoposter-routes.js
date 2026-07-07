@@ -591,15 +591,49 @@ function mountXAutoposterRoutes(app) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
     try {
-      const status = req.query.status || 'hub_review';
+      const migrated = store.migratePendingToHubReview();
       const limit = parseInt(req.query.limit || '50', 10);
-      const items = store.listQueue({ status, limit });
+      const status = req.query.status || null;
+      const items = status
+        ? store.listQueue({ status, limit })
+        : store.listPostStudioDrafts({ limit });
       return res.json({
         ok: true,
         items,
+        migrated,
         stats: cadence.getHubStats(),
         counts: store.getQueueCounts(),
         updatedAt: store.loadQueue().updatedAt
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/x/post-studio/refill', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      store.migratePendingToHubReview();
+      const refill = await refillAutoposterQueue({
+        minPending: parseInt(req.body?.minPending || req.query?.minPending || '2', 10),
+        maxEnqueue: parseInt(req.body?.maxEnqueue || req.query?.maxEnqueue || '5', 10),
+        forcePost: true,
+        digDeeper: req.body?.digDeeper !== false
+      });
+      const counts = store.getQueueCounts();
+      return res.json({
+        ok: true,
+        refill,
+        enqueuedCount: refill.enqueuedCount || 0,
+        drafts: counts.drafts,
+        hubReview: counts.hub_review,
+        pending: counts.pending,
+        skipReasons: (refill.skipReasons || []).slice(0, 8),
+        reason: refill.reason || null,
+        counts,
+        stats: cadence.getHubStats()
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

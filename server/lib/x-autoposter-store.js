@@ -284,7 +284,34 @@ function getQueueCounts() {
     if (counts[s] != null) counts[s] += 1;
     else counts.other += 1;
   }
+  counts.drafts = counts.pending + counts.hub_review;
   return counts;
+}
+
+const POST_STUDIO_DRAFT_STATUSES = ['hub_review', 'pending'];
+
+function listPostStudioDrafts({ limit = 50 } = {}) {
+  const doc = loadQueue();
+  const items = doc.items
+    .filter((i) => POST_STUDIO_DRAFT_STATUSES.includes(i.status))
+    .sort((a, b) => new Date(b.createdAt || b.scheduledAt) - new Date(a.createdAt || a.scheduledAt));
+  return items.slice(0, limit);
+}
+
+/** Legacy pending items from pre-hub mode — surface them in Post Studio. */
+function migratePendingToHubReview() {
+  const pipelineGuards = require('./pipeline-guards');
+  if (pipelineGuards.autoposterSchedulerEnabled()) return { migrated: 0 };
+  const doc = loadQueue();
+  let migrated = 0;
+  for (const item of doc.items) {
+    if (item.status !== 'pending') continue;
+    item.status = 'hub_review';
+    item.migratedAt = nowIso();
+    migrated += 1;
+  }
+  if (migrated) saveQueue(doc);
+  return { migrated };
 }
 
 function isRecoverableFailedItem(item, { maxAgeMs = 30 * 24 * 60 * 60 * 1000 } = {}) {
@@ -417,6 +444,9 @@ module.exports = {
   promoteToAutoposter,
   markManualPosted,
   getQueueCounts,
+  listPostStudioDrafts,
+  migratePendingToHubReview,
+  POST_STUDIO_DRAFT_STATUSES,
   recoverFailedVerifiedCommits,
   recoverFailedPostableItems,
   isRecoverableFailedItem,

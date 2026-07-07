@@ -1839,6 +1839,13 @@ async function refillAutoposterQueue({
   const doc = store.loadQueue();
   const pending = doc.items.filter((i) => i.status === 'pending');
   const hubReview = doc.items.filter((i) => i.status === 'hub_review');
+  const hubMode = cadence.isHubModeEnabled();
+  const countDrafts = () =>
+    hubMode
+      ? store.listPostStudioDrafts({ limit: 500 }).length
+      : store.listQueue({ status: 'pending' }).length;
+  const minDraftTarget = hubMode ? cadence.minHubReviewTarget() : minPending;
+  const draftQueueSatisfied = (n = countDrafts()) => n >= minDraftTarget;
   let need;
   if (cadence.isHubModeEnabled()) {
     const minHub = cadence.minHubReviewTarget();
@@ -1957,14 +1964,16 @@ async function refillAutoposterQueue({
         }
       }
     }
-    const pendingAfterIntel = store.listQueue({ status: 'pending' }).length;
-    if (pendingAfterIntel >= minPending || added > 0) {
+    const draftsAfterIntel = countDrafts();
+    if (draftQueueSatisfied(draftsAfterIntel) || added > 0) {
       void beatPrepPromise;
       return {
         ok: true,
         skipped: false,
         reason: added > 0 ? 'intel_first_fast_path' : 'queue_satisfied',
-        pending: pendingAfterIntel,
+        pending: store.listQueue({ status: 'pending' }).length,
+        hubReview: store.listQueue({ status: 'hub_review' }).length,
+        drafts: draftsAfterIntel,
         enqueued,
         enqueuedCount: enqueued.length,
         qualitySkipped,
@@ -1992,14 +2001,16 @@ async function refillAutoposterQueue({
         console.warn('[x-autoposter] priority beat intel skipped:', err.message);
       }
     }
-    const pendingAfterPriority = store.listQueue({ status: 'pending' }).length;
-    if (pendingAfterPriority >= minPending || added > 0) {
+    const draftsAfterPriority = countDrafts();
+    if (draftQueueSatisfied(draftsAfterPriority) || added > 0) {
       void beatPrepPromise;
       return {
         ok: true,
         skipped: false,
         reason: added > 0 ? 'priority_beat_intel' : 'queue_satisfied',
-        pending: pendingAfterPriority,
+        pending: store.listQueue({ status: 'pending' }).length,
+        hubReview: store.listQueue({ status: 'hub_review' }).length,
+        drafts: draftsAfterPriority,
         enqueued,
         enqueuedCount: enqueued.length,
         qualitySkipped,
@@ -2012,7 +2023,7 @@ async function refillAutoposterQueue({
         emptyQueueFallback: added > 0 && pending.length === 0
       };
     }
-    if (added === 0 && pendingAfterPriority < minPending) {
+    if (added === 0 && !draftQueueSatisfied(draftsAfterPriority)) {
       try {
         rawNewsCandidates = await withRefillTimeout(
           collectFreshPostCandidates({
@@ -2030,14 +2041,16 @@ async function refillAutoposterQueue({
       if (rawNewsCandidates.length) {
         await enqueueFromCandidates(rawNewsCandidates, beatSlots);
       }
-      const pendingAfterIntelOnly = store.listQueue({ status: 'pending' }).length;
-      if (pendingAfterIntelOnly >= minPending || added > 0) {
+      const draftsAfterIntelOnly = countDrafts();
+      if (draftQueueSatisfied(draftsAfterIntelOnly) || added > 0) {
         void beatPrepPromise;
         return {
           ok: true,
           skipped: false,
           reason: added > 0 ? 'intel_only_fast_path' : 'queue_satisfied',
-          pending: pendingAfterIntelOnly,
+          pending: store.listQueue({ status: 'pending' }).length,
+          hubReview: store.listQueue({ status: 'hub_review' }).length,
+          drafts: draftsAfterIntelOnly,
           enqueued,
           enqueuedCount: enqueued.length,
           qualitySkipped,
@@ -2052,7 +2065,7 @@ async function refillAutoposterQueue({
     }
 
     if (emptyQueueRefill) {
-      if (added === 0 && store.listQueue({ status: 'pending' }).length < minPending) {
+      if (added === 0 && !draftQueueSatisfied()) {
         selfHealRun = await withRefillTimeout(
           tryAutonomousSelfHealRefill({ maxHeal: Math.min(maxEnqueue, 2) }),
           REFILL_GOLDEN_FOUR_TIMEOUT_MS,
@@ -2065,7 +2078,7 @@ async function refillAutoposterQueue({
           }
         }
       }
-      if (added === 0 && store.listQueue({ status: 'pending' }).length < minPending) {
+      if (added === 0 && !draftQueueSatisfied()) {
         goldenFourRun = await withRefillTimeout(
           tryAutonomousGoldenFourRefill(Math.min(Math.max(minPending, 1), maxEnqueue)),
           REFILL_GOLDEN_FOUR_TIMEOUT_MS,
@@ -2125,8 +2138,10 @@ async function refillAutoposterQueue({
     }
   }
 
-  const pendingAfterBeat = store.listQueue({ status: 'pending' }).length;
-  const stillNeed = Math.max(minPending - pendingAfterBeat, pendingAfterBeat === 0 ? 1 : 0);
+  const draftsAfterBeat = countDrafts();
+  const stillNeed = hubMode
+    ? Math.max(minDraftTarget - draftsAfterBeat, draftsAfterBeat === 0 ? 2 : 0)
+    : Math.max(minPending - store.listQueue({ status: 'pending' }).length, store.listQueue({ status: 'pending' }).length === 0 ? 1 : 0);
 
   if (stillNeed > 0) {
     goldenFourRun = await withRefillTimeout(
@@ -2143,22 +2158,26 @@ async function refillAutoposterQueue({
     added += goldenEnqueued.length;
   }
 
-  if (pendingAfterBeat >= minPending && enqueued.length === 0 && goldenEnqueued.length === 0) {
+  if (draftQueueSatisfied(draftsAfterBeat) && enqueued.length === 0 && goldenEnqueued.length === 0) {
     const sidecar = await processDetectivesPileSidecar(doc, 3, { background: true });
     const detectivesEnqueued = sidecar?.enqueued || [];
     return {
       ok: true,
       skipped: true,
       reason: 'queue_full',
-      pending: pendingAfterBeat,
+      pending: store.listQueue({ status: 'pending' }).length,
+      hubReview: store.listQueue({ status: 'hub_review' }).length,
+      drafts: draftsAfterBeat,
       enqueued: detectivesEnqueued,
       enqueuedCount: detectivesEnqueued.length,
       detectivesRun: sidecar?.detectivesRun || null
     };
   }
 
-  const pendingNow = store.listQueue({ status: 'pending' }).length;
-  const slots = Math.max(maxEnqueue - pendingNow, stillNeed > 0 ? stillNeed : 0);
+  const draftsNow = countDrafts();
+  const slots = hubMode
+    ? Math.max(maxEnqueue, stillNeed > 0 ? stillNeed : 0)
+    : Math.max(maxEnqueue - store.listQueue({ status: 'pending' }).length, stillNeed > 0 ? stillNeed : 0);
 
   if (added === 0) {
     try {
@@ -2172,7 +2191,7 @@ async function refillAutoposterQueue({
     }
   }
 
-  if (added === 0 && emptyQueueFallbackEnabled() && pendingNow === 0) {
+  if (added === 0 && emptyQueueFallbackEnabled() && draftsNow === 0) {
     const fallbacks = [];
     if (process.env.X_AUTOPOST_ON3_NEWS_FALLBACK !== 'false') {
       try {
