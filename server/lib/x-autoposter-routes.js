@@ -574,6 +574,188 @@ function mountXAutoposterRoutes(app) {
       return res.status(500).json({ ok: false, error: 'x_api_error', message: err.message });
     }
   });
+
+  app.get('/api/x/post-studio/config', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      return res.json({ ok: true, ...cadence.getHubConfig(), stats: cadence.getHubStats(), counts: store.getQueueCounts() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/x/post-studio/queue', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const status = req.query.status || 'hub_review';
+      const limit = parseInt(req.query.limit || '50', 10);
+      const items = store.listQueue({ status, limit });
+      return res.json({
+        ok: true,
+        items,
+        stats: cadence.getHubStats(),
+        counts: store.getQueueCounts(),
+        updatedAt: store.loadQueue().updatedAt
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/x/post-studio/compose', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const slug = String(req.body?.slug || req.query?.slug || '').trim().toLowerCase();
+      if (!slug) return res.status(400).json({ ok: false, error: 'slug required' });
+      const out = await republishPlayerIntel(slug, { force: req.body?.force === true });
+      if (!out?.ok && !out?.preview) {
+        return res.status(400).json({ ok: false, error: out?.error || out?.enqueue?.reason || 'compose_failed', detail: out });
+      }
+      const item = out.item || out.enqueue?.item || null;
+      if (item && item.status !== 'hub_review') {
+        store.updatePost(item.id, { status: 'hub_review' });
+        item.status = 'hub_review';
+      }
+      return res.json({
+        ok: true,
+        slug,
+        item,
+        preview: out.preview || item?.text || null,
+        composePath: out.composePath || item?.validationMeta?.composePath || null,
+        detail: out
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/x/post-studio/:id/promote', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const pipelineGuards = require('./pipeline-guards');
+      if (!pipelineGuards.autoposterSchedulerEnabled()) {
+        return res.status(403).json({
+          ok: false,
+          error: 'scheduler_disabled',
+          message: 'Autoposter scheduler is off. Post manually via X app (no API credits).'
+        });
+      }
+      const pending = store.listQueue({ status: 'pending' }).length;
+      if (pending >= cadence.autoQueueMax()) {
+        return res.status(409).json({
+          ok: false,
+          error: 'auto_queue_full',
+          message: `Autoposter queue full (${cadence.autoQueueMax()} max). Post manually or wait for auto posts today.`
+        });
+      }
+      const item = store.promoteToAutoposter(req.params.id);
+      return res.json({ ok: true, item, stats: cadence.getHubStats() });
+    } catch (err) {
+      return res.status(404).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/x/post-studio/:id/mark-posted', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const item = store.markManualPosted(req.params.id, {
+        tweetUrl: req.body?.tweetUrl || req.body?.url || null,
+        tweetId: req.body?.tweetId || null
+      });
+      return res.json({ ok: true, item, stats: cadence.getHubStats() });
+    } catch (err) {
+      return res.status(404).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/x/post-studio/:id/dismiss', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const item = store.cancelPost(req.params.id);
+      return res.json({ ok: true, item });
+    } catch (err) {
+      return res.status(404).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/x/post-studio/:id/post-api', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const pipelineGuards = require('./pipeline-guards');
+      if (!pipelineGuards.autoposterSchedulerEnabled()) {
+        return res.status(403).json({
+          ok: false,
+          error: 'scheduler_disabled',
+          message: 'API posting disabled. Use Copy / Open X compose, then Mark Posted.'
+        });
+      }
+      const doc = store.loadQueue();
+      const item = doc.items.find((i) => i.id === req.params.id);
+      if (!item) return res.status(404).json({ ok: false, error: 'Queue item not found' });
+      const check = policy.validatePostContent(item);
+      if (!check.valid) {
+        return res.status(400).json({ ok: false, error: 'Validation failed', ...check });
+      }
+      const result = await autoposter.postTweet({
+        text: item.text,
+        mediaBase64: item.mediaBase64 || null,
+        mediaMime: item.mediaMime || null,
+        inReplyToStatusId: item.action === 'reply' ? item.inReplyToStatusId : null,
+        quoteTweetUrl: item.action === 'quote' ? item.quoteTweetUrl : null,
+        quoteTweetId: item.action === 'quote' ? item.quoteTweetId : null
+      });
+      const updated = store.updatePost(item.id, {
+        status: 'sent',
+        sentAt: store.nowIso(),
+        tweetId: result.tweetId || null,
+        tweetUrl: result.tweetUrl || null,
+        postMethod: 'api',
+        error: null
+      });
+      try {
+        const ledger = require('./x-autoposter-sent-ledger');
+        ledger.recordSentPost(updated);
+      } catch {
+        /* optional */
+      }
+      return res.json({ ok: true, item: updated, ...result });
+    } catch (err) {
+      return res.status(err.status === 403 ? 403 : 500).json({ ok: false, error: err.message, body: err.body || null });
+    }
+  });
+
+  app.patch('/api/x/post-studio/:id', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const patch = {};
+      if (req.body?.text != null) patch.text = String(req.body.text).trim();
+      if (!patch.text) return res.status(400).json({ ok: false, error: 'text required' });
+      const check = policy.validatePostContent({ ...req.body, text: patch.text });
+      if (!check.valid) {
+        return res.status(400).json({ ok: false, error: 'Validation failed', ...check });
+      }
+      const item = store.updatePost(req.params.id, patch);
+      return res.json({ ok: true, item, validation: check });
+    } catch (err) {
+      return res.status(404).json({ ok: false, error: err.message });
+    }
+  });
 }
 
 module.exports = { mountXAutoposterRoutes };

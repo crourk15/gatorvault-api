@@ -29,6 +29,27 @@ function autopostEnabled() {
   return pipelinesEnabled() && isEnvTrue('X_AUTOPOST_ENABLED');
 }
 
+function isHubModeDefaultOn() {
+  const v = String(process.env.X_AUTOPOST_HUB_MODE ?? 'true').trim().toLowerCase();
+  return !(v === 'false' || v === '0' || v === 'off');
+}
+
+/** Auto-publish scheduler — off by default in hub manual mode (saves X API credits). */
+function autoposterSchedulerEnabled() {
+  if (!autopostEnabled()) return false;
+  const explicit = String(process.env.X_AUTOPOST_SCHEDULER_ENABLED || '').trim().toLowerCase();
+  if (explicit === 'true' || explicit === '1') return true;
+  if (explicit === 'false' || explicit === '0' || explicit === 'off') return false;
+  return !isHubModeDefaultOn();
+}
+
+/** Compose/refill pipeline for Post Studio — works without the publish scheduler. */
+function autoposterComposeEnabled() {
+  if (!pipelinesEnabled()) return false;
+  if (isEnvTrue('X_AUTOPOST_ENABLED')) return true;
+  return isHubModeDefaultOn() || isEnvTrue('X_AUTOPOST_COMPOSE_ENABLED');
+}
+
 function gm2RewriteEnabled() {
   return pipelinesEnabled() && isEnvTrue('X_GM2_REWRITE_ENABLED');
 }
@@ -117,6 +138,9 @@ module.exports = {
   pipelinesEnabled,
   pipelinesSkipped,
   autopostEnabled,
+  autoposterSchedulerEnabled,
+  autoposterComposeEnabled,
+  isHubModeDefaultOn,
   gm2RewriteEnabled,
   intelRewriteEnabled,
   autopromptEnabled,

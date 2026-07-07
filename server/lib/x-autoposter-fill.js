@@ -52,7 +52,7 @@ async function ensureBeatCacheFresh() {
 
 async function ensureBeatIntelIngested({ force = false } = {}) {
   if (!beatFirstEnabled()) return { ok: true, skipped: true, reason: 'beat_first_disabled' };
-  if (!pipelineGuards.autopostEnabled()) return { ok: true, skipped: true, reason: 'autoposter_disabled' };
+  if (!pipelineGuards.autoposterComposeEnabled()) return { ok: true, skipped: true, reason: 'autoposter_disabled' };
   try {
     const beatIngest = require('./beat-writer-ingest');
     const result = await beatIngest.runBeatWriterIngest({ force });
@@ -1273,10 +1273,11 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
       qualityBreakdown: scored.qualityBreakdown ?? check.qualityBreakdown ?? null,
       sourceConfidence: scored.sourceConfidence ?? check.sourceConfidence ?? null
     });
+    const enqueueStatus = cadence.resolveEnqueueStatus(tagged, { forcePending: opts.forcePending === true });
     const out = store.enqueuePost({
       ...tagged,
       scheduledAt: store.nowIso(),
-      status: 'pending'
+      status: enqueueStatus
     });
     if (scored.sourceIntelId) {
       const marked = intelStore.markIntelXPostQueued(scored.sourceIntelId, { queueItemId: out.item.id });
@@ -1640,7 +1641,7 @@ async function collectFreshPostCandidates({ forcePost = false, digDeeper = false
 }
 
 async function queueOn3NewsBeatPost(syntheticPost, meta = {}) {
-  if (!pipelineGuards.autopostEnabled()) {
+  if (!pipelineGuards.autoposterComposeEnabled()) {
     return { queued: false, reason: 'autoposter_disabled' };
   }
   const news = await buildNewsFromBeatPost(syntheticPost);
@@ -1672,7 +1673,7 @@ async function queueOn3NewsBeatPost(syntheticPost, meta = {}) {
   const out = store.enqueuePost({
     ...tagged,
     scheduledAt: store.nowIso(),
-    status: 'pending'
+    status: cadence.resolveEnqueueStatus(tagged)
   });
   if (meta.sourceIntelId) {
     try {
@@ -1809,7 +1810,7 @@ async function refillAutoposterQueue({
       console.warn('[x-autoposter] intel store init skipped during refill:', err.message);
     });
   }
-  if (!pipelineGuards.autopostEnabled()) {
+  if (!pipelineGuards.autoposterComposeEnabled()) {
     return { ok: true, skipped: true, reason: 'autoposter disabled', pending: 0, enqueued: [] };
   }
   let dailyCount = 0;
@@ -1837,7 +1838,18 @@ async function refillAutoposterQueue({
   }
   const doc = store.loadQueue();
   const pending = doc.items.filter((i) => i.status === 'pending');
-  const need = Math.max(minPending - pending.length, pending.length === 0 ? 1 : 0);
+  const hubReview = doc.items.filter((i) => i.status === 'hub_review');
+  let need;
+  if (cadence.isHubModeEnabled()) {
+    const minHub = cadence.minHubReviewTarget();
+    need = Math.max(minHub - hubReview.length, hubReview.length === 0 ? 2 : 0);
+    if (cadence.autoRoutineEnabled() || cadence.autoCommitsEnabled()) {
+      const autoNeed = Math.max(cadence.autoQueueMax() - pending.length, pending.length === 0 ? 1 : 0);
+      need = Math.max(need, autoNeed);
+    }
+  } else {
+    need = Math.max(minPending - pending.length, pending.length === 0 ? 1 : 0);
+  }
 
   let goldenFourRun = null;
   let goldenEnqueued = [];
@@ -1871,7 +1883,7 @@ async function refillAutoposterQueue({
           const out = store.enqueuePost({
             ...tagged,
             scheduledAt: store.nowIso(),
-            status: 'pending'
+            status: cadence.resolveEnqueueStatus(tagged)
           });
           enqueued.push(out.item);
           doc.items.push(out.item);
@@ -2237,7 +2249,7 @@ async function refillAutoposterQueue({
  * Accepts a persisted recruiting event or a synthetic payload from allowlist ingest.
  */
 async function queueCommitEventAutopost(input, { urgent = true } = {}) {
-  if (!pipelineGuards.autopostEnabled()) {
+  if (!pipelineGuards.autoposterComposeEnabled()) {
     return { queued: false, reason: 'autoposter_disabled' };
   }
 
@@ -2303,8 +2315,10 @@ async function queueCommitEventAutopost(input, { urgent = true } = {}) {
   const out = store.enqueuePost({
     ...scored,
     qualityScore: scored.qualityScore ?? check.scored?.score ?? null,
-    qualityBreakdown: scored.qualityBreakdown ?? check.scored?.breakdown ?? null,
+    qualityBreakdown: scored.qualityBreakdown ?? check.qualityBreakdown ?? null,
     sourceConfidence: scored.sourceConfidence ?? check.scored?.sourceConfidence ?? null,
+    scheduledAt: store.nowIso(),
+    status: cadence.resolveEnqueueStatus(scored)
   });
 
   return { queued: true, item: out.item, commitFingerprint: fp };
@@ -2312,8 +2326,8 @@ async function queueCommitEventAutopost(input, { urgent = true } = {}) {
 
 /** Force-post: enqueue recent On3/beat commits even when normal freshness window expired. */
 async function forceEnqueueRecentCommits({ maxAgeMs = FORCE_POST_COMMIT_AGE_MS } = {}) {
-  if (!pipelineGuards.autopostEnabled()) {
-    return { queued: false, reason: 'autoposter_disabled' };
+  if (!pipelineGuards.autoposterSchedulerEnabled()) {
+    return { queued: false, reason: 'scheduler_disabled' };
   }
 
   store.recoverFailedVerifiedCommits();

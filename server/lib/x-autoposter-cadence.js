@@ -1,5 +1,5 @@
 /**
- * X AutoPoster cadence — human-paced posting (target 4–6 posts/day).
+ * X AutoPoster cadence — hub-first manual posting + limited auto (default 2/day).
  * Normal: 1 post / 4 hr · Urgent: 1 / 3 hr · Commit breaking: 1 / 1 hr · Night routine: 1 / 6 hr
  */
 const store = require('./x-autoposter-store');
@@ -13,7 +13,7 @@ const BREAKING_COOLDOWN_MS = parseInt(
 const BURST_COOLDOWN_MS = parseInt(process.env.X_AUTOPOST_BURST_MS || String(60 * 60 * 1000), 10);
 const NIGHT_COOLDOWN_MS = parseInt(process.env.X_AUTOPOST_NIGHT_MS || String(6 * 60 * 60 * 1000), 10);
 const BREAKING_BURST_MS = parseInt(process.env.X_AUTOPOST_BREAKING_BURST_MS || String(45 * 60 * 1000), 10);
-const DAILY_MAX_POSTS = parseInt(process.env.X_AUTOPOST_DAILY_MAX || '6', 10);
+const DAILY_MAX_POSTS = parseInt(process.env.X_AUTOPOST_DAILY_MAX || '2', 10);
 const DAILY_WINDOW_MS = parseInt(process.env.X_AUTOPOST_DAILY_WINDOW_MS || String(24 * 60 * 60 * 1000), 10);
 const NIGHT_TZ = process.env.X_AUTOPOST_NIGHT_TZ || 'America/New_York';
 
@@ -247,7 +247,79 @@ function getCadenceConfig() {
     nightTimezone: NIGHT_TZ,
     urgentLabels: [...URGENT_LABELS, 'breaking'],
     description:
-      'Target 4–6 posts/day · Normal 4h · Urgent 3h · UF commit 1h · Night routine 6h · Daily cap 6 (commits exempt)'
+      'Hub-first · Auto max 2/day · Normal 4h · Urgent 3h · UF commit 1h · Night 6h · Manual posts via Post Studio (no API credits)'
+  };
+}
+
+function isHubModeEnabled() {
+  const v = String(process.env.X_AUTOPOST_HUB_MODE || 'true').trim().toLowerCase();
+  return !(v === 'false' || v === '0' || v === 'off');
+}
+
+function autoCommitsEnabled() {
+  return String(process.env.X_AUTOPOST_AUTO_COMMITS || 'false').trim().toLowerCase() === 'true';
+}
+
+function autoRoutineEnabled() {
+  const v = String(process.env.X_AUTOPOST_AUTO_ROUTINE || 'true').trim().toLowerCase();
+  return !(v === 'false' || v === '0' || v === 'off');
+}
+
+function autoQueueMax() {
+  return Math.max(0, parseInt(process.env.X_AUTOPOST_AUTO_QUEUE_MAX || '2', 10));
+}
+
+function minHubReviewTarget() {
+  return Math.max(1, parseInt(process.env.X_AUTOPOST_REFILL_MIN_HUB || '5', 10));
+}
+
+function isAutoEligibleItem(item) {
+  if (!item) return false;
+  if (isCommitBreaking(item)) return autoCommitsEnabled();
+  return autoRoutineEnabled();
+}
+
+function resolveEnqueueStatus(item, { forcePending = false } = {}) {
+  const pipelineGuards = require('./pipeline-guards');
+  if (!pipelineGuards.autoposterSchedulerEnabled()) return 'hub_review';
+  if (forcePending || !isHubModeEnabled()) return 'pending';
+  if (!isAutoEligibleItem(item)) return 'hub_review';
+  const pending = store.listQueue({ status: 'pending' }).length;
+  const dailyCount = countDailyPosts();
+  if (pending >= autoQueueMax() || dailyCount >= DAILY_MAX_POSTS) return 'hub_review';
+  return 'pending';
+}
+
+function getHubStats() {
+  const doc = store.loadQueue();
+  const items = doc.items || [];
+  const hubReview = items.filter((i) => i.status === 'hub_review');
+  const pending = items.filter((i) => i.status === 'pending');
+  return {
+    hubMode: isHubModeEnabled(),
+    hubReviewCount: hubReview.length,
+    pendingAutoCount: pending.length,
+    autoQueueMax: autoQueueMax(),
+    dailySent: countDailyPosts(),
+    dailyMax: DAILY_MAX_POSTS,
+    autoCommits: autoCommitsEnabled(),
+    autoRoutine: autoRoutineEnabled(),
+    minHubReviewTarget: minHubReviewTarget()
+  };
+}
+
+function getHubConfig() {
+  const pipelineGuards = require('./pipeline-guards');
+  return {
+    hubMode: isHubModeEnabled(),
+    schedulerEnabled: pipelineGuards.autoposterSchedulerEnabled(),
+    composeEnabled: pipelineGuards.autoposterComposeEnabled(),
+    autoCommits: autoCommitsEnabled(),
+    autoRoutine: autoRoutineEnabled(),
+    autoQueueMax: autoQueueMax(),
+    minHubReview: minHubReviewTarget(),
+    dailyMax: DAILY_MAX_POSTS,
+    cadence: getCadenceConfig()
   };
 }
 
@@ -265,5 +337,14 @@ module.exports = {
   evaluatePostWindow,
   tagCandidate,
   isNightModeEst,
-  getCadenceConfig
+  getCadenceConfig,
+  isHubModeEnabled,
+  autoCommitsEnabled,
+  autoRoutineEnabled,
+  autoQueueMax,
+  minHubReviewTarget,
+  isAutoEligibleItem,
+  resolveEnqueueStatus,
+  getHubStats,
+  getHubConfig
 };

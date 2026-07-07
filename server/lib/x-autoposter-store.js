@@ -176,7 +176,8 @@ function logQueueOp(action, item, extra = {}) {
     itemId: row.itemId,
     fingerprint: row.intelFingerprint,
     player: row.playerName,
-    pending: loadQueue().items.filter((i) => i.status === 'pending').length
+    pending: loadQueue().items.filter((i) => i.status === 'pending').length,
+    hubReview: loadQueue().items.filter((i) => i.status === 'hub_review').length
   });
 }
 
@@ -199,7 +200,7 @@ function hasActiveQueueItemForIntel(idOrFingerprint) {
   return doc.items.some(
     (i) =>
       (i.sourceIntelId === key || i.intelFingerprint === key) &&
-      ['pending', 'sent'].includes(i.status)
+      ['pending', 'sent', 'hub_review'].includes(i.status)
   );
 }
 
@@ -224,6 +225,66 @@ function updatePost(id, patch) {
 
 function cancelPost(id) {
   return updatePost(id, { status: 'cancelled' });
+}
+
+function promoteToAutoposter(id) {
+  const item = updatePost(id, {
+    status: 'pending',
+    scheduledAt: nowIso(),
+    promotedAt: nowIso(),
+    postMethod: 'auto_queue'
+  });
+  logQueueOp('promote_autoposter', item, { from: 'hub_review' });
+  return item;
+}
+
+function markManualPosted(id, { tweetUrl = null, tweetId = null } = {}) {
+  const doc = loadQueue();
+  const idx = doc.items.findIndex((i) => i.id === id);
+  if (idx < 0) throw new Error('Queue item not found');
+  const prev = doc.items[idx];
+  const sentAt = nowIso();
+  const item = {
+    ...prev,
+    status: 'sent',
+    sentAt,
+    tweetUrl: tweetUrl ? String(tweetUrl).trim() : prev.tweetUrl || null,
+    tweetId: tweetId ? String(tweetId).trim() : prev.tweetId || null,
+    postMethod: 'manual',
+    source: prev.source && String(prev.source).includes('manual') ? prev.source : `${prev.source || 'hub'}:manual`
+  };
+  doc.items[idx] = item;
+  saveQueue(doc);
+  logQueueOp('manual_posted', item, { tweetUrl: item.tweetUrl });
+  try {
+    const ledger = require('./x-autoposter-sent-ledger');
+    ledger.recordSentPost(item);
+  } catch {
+    /* optional */
+  }
+  if (item.sourceIntelId) {
+    try {
+      const intelStore = require('./recruiting-intel-store');
+      intelStore.markIntelXPosted(item.sourceIntelId, {
+        tweetId: item.tweetId,
+        tweetUrl: item.tweetUrl
+      });
+    } catch {
+      /* optional */
+    }
+  }
+  return item;
+}
+
+function getQueueCounts() {
+  const doc = loadQueue();
+  const counts = { pending: 0, hub_review: 0, sent: 0, failed: 0, cancelled: 0, other: 0 };
+  for (const item of doc.items) {
+    const s = String(item.status || 'other');
+    if (counts[s] != null) counts[s] += 1;
+    else counts.other += 1;
+  }
+  return counts;
 }
 
 function isRecoverableFailedItem(item, { maxAgeMs = 30 * 24 * 60 * 60 * 1000 } = {}) {
@@ -353,6 +414,9 @@ module.exports = {
   enqueuePost,
   updatePost,
   cancelPost,
+  promoteToAutoposter,
+  markManualPosted,
+  getQueueCounts,
   recoverFailedVerifiedCommits,
   recoverFailedPostableItems,
   isRecoverableFailedItem,

@@ -78,6 +78,7 @@
       <div class="nav">
         <a href="/admin#dashboard">← Admin Hub</a>
         <a href="/admin#recruiting/monitoring">Recruiting Monitoring</a>
+        <a href="#post-studio">Post Studio</a>
         <a href="/admin#gm2/identity">Identity Patterns</a>
         <a href="/admin#gm2/integrity">GM 2.0 Integrity</a>
         <a href="/">Site</a>
@@ -120,6 +121,37 @@
           <thead><tr><th>Title</th><th>Category</th><th>Published</th><th>Read</th><th>Sources</th><th></th></tr></thead>
           <tbody id="insider-published-body"><tr><td colspan="6" class="meta">Load published…</td></tr></tbody>
         </table>
+      </div>
+
+      <div class="section" id="post-studio-panel">
+        <h2>X Post Studio</h2>
+        <p class="sub" style="margin:0 0 .75rem;font-size:.8rem;color:var(--muted)">Composed posts land here for manual posting on X (no API credits). Autoposter auto-publishes at most 1–2/day — use Copy or Open X, then Mark Posted. Post via API only when you want the server to publish.</p>
+        <div id="post-studio-status" class="meta" style="margin-bottom:.75rem;font-size:.75rem">Studio: loading…</div>
+        <div id="post-studio-error" class="meta hidden" style="margin-bottom:.75rem;color:#fbbf24"></div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem;align-items:center">
+          <input id="post-studio-slug" type="text" placeholder="player slug — compose elite post" style="flex:1;min-width:200px;background:var(--panel);border:1px solid #334155;color:var(--text);padding:.45rem .6rem;border-radius:.5rem" />
+          <button id="post-studio-compose" class="sm">Compose</button>
+          <button id="post-studio-reload" class="secondary sm">Reload drafts</button>
+          <button id="post-studio-refill" class="secondary sm">Refill compose queue</button>
+        </div>
+        <table>
+          <thead><tr><th>Player</th><th>Type</th><th>Preview</th><th>Created</th><th>Urgency</th><th></th></tr></thead>
+          <tbody id="post-studio-body"><tr><td colspan="6" class="meta">Load drafts…</td></tr></tbody>
+        </table>
+        <div id="post-studio-preview" class="hidden" style="margin-top:1rem;background:var(--panel);border:1px solid var(--border);border-radius:.75rem;padding:1rem">
+          <h3 style="margin:0 0 .5rem;font-size:.85rem">Preview</h3>
+          <div id="post-studio-preview-text" style="white-space:pre-wrap;font-size:.85rem;line-height:1.5;margin-bottom:.75rem"></div>
+          <div id="post-studio-preview-meta" class="meta" style="font-size:.75rem;margin-bottom:.75rem"></div>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+            <button id="post-studio-copy" class="sm">Copy text</button>
+            <button id="post-studio-open-x" class="secondary sm">Open X compose</button>
+            <button id="post-studio-mark" class="sm">Mark posted (manual)</button>
+            <button id="post-studio-promote" class="secondary sm">Queue for autoposter</button>
+            <button id="post-studio-api" class="secondary sm">Post via API</button>
+            <button id="post-studio-dismiss" class="secondary sm">Dismiss</button>
+            <button id="post-studio-close" class="secondary sm">Close</button>
+          </div>
+        </div>
       </div>
 
       <div class="section">
@@ -271,8 +303,7 @@
             '<div><strong>Posts (24h):</strong> '+esc(t.posts24h!=null?t.posts24h:'—')+'</div>'+
             '<div><strong>Status:</strong> '+statusDot(t.status)+esc((t.status||'unknown').toUpperCase())+'</div>'+
             '</div>';
-          actions+='<button class="sm" data-force-post="1">Force Post Now</button>';
-          actions+='<button class="secondary sm" data-autoposter-rebuild-patterns="1">Rebuild All Patterns</button>';
+          actions+='<button class="secondary sm" data-post-studio="1">Post Studio</button>';
           actions+='<button class="secondary sm" data-logs="autoposter">View logs</button>';
           actions+='<button class="secondary sm" data-elite-logs="1">Elite captions</button>';
           actions+='<button class="secondary sm" data-cluster-logs="1">Event clusters</button>';
@@ -313,6 +344,12 @@
         btn.addEventListener('click',function(){
           document.getElementById('log-subsystem').value=btn.getAttribute('data-logs');
           loadLogs();
+        });
+      });
+      el.querySelectorAll('[data-post-studio]').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          document.getElementById('post-studio-panel').scrollIntoView({behavior:'smooth'});
+          loadPostStudio();
         });
       });
       el.querySelectorAll('[data-force-post]').forEach(function(btn){
@@ -790,8 +827,12 @@
         loadStatus(false);
         loadInsiderArticles();
         loadPatternStats();
+        loadPostStudio();
         if(location.hash==='#insider-articles'){
           document.getElementById('insider-articles-panel').scrollIntoView({behavior:'smooth'});
+        }
+        if(location.hash==='#post-studio'){
+          document.getElementById('post-studio-panel').scrollIntoView({behavior:'smooth'});
         }
       });
     }
@@ -805,6 +846,7 @@
       loadStatus(false);
       loadInsiderArticles();
       loadPatternStats();
+      loadPostStudio();
     };
 
     document.getElementById('gate-unlock').addEventListener('click',unlock);
@@ -1019,6 +1061,206 @@
     document.getElementById('insider-generate').addEventListener('click',generateInsiderDrafts);
     document.getElementById('insider-reload').addEventListener('click',loadInsiderArticles);
 
+    var _postStudioSelected = null;
+
+    function postStudioShowError(msg){
+      var el=document.getElementById('post-studio-error');
+      if(!msg){el.classList.add('hidden');el.textContent='';return;}
+      el.textContent=msg;
+      el.classList.remove('hidden');
+    }
+
+    function postStudioTypeLabel(item){
+      var et=String(item.sourceEventType||item.intelType||item.triggerType||item.category||'').toLowerCase();
+      if(/commit|flip|decommit/.test(et))return 'Commit';
+      if(/portal/.test(et))return 'Portal';
+      if(/program/.test(et))return 'Program';
+      if(/beat|momentum/.test(String(item.source||'')))return 'Beat';
+      return item.category||'News';
+    }
+
+    function postStudioPreviewText(item){
+      return String(item&&item.text||'').trim();
+    }
+
+    function postStudioXIntentUrl(text){
+      return 'https://twitter.com/intent/tweet?text='+encodeURIComponent(String(text||'').slice(0,280));
+    }
+
+    function renderPostStudioRows(items){
+      var tbody=document.getElementById('post-studio-body');
+      if(!items.length){
+        tbody.innerHTML='<tr><td colspan="6" class="meta">No drafts — run Refill or Compose a player slug.</td></tr>';
+        return;
+      }
+      tbody.innerHTML=items.map(function(item){
+        var preview=esc(String(item.text||'').slice(0,120)+(String(item.text||'').length>120?'…':''));
+        return '<tr data-ps-id="'+esc(item.id)+'">'+
+          '<td>'+esc(item.playerName||item.playerSlug||'—')+'</td>'+
+          '<td>'+esc(postStudioTypeLabel(item))+'</td>'+
+          '<td style="max-width:320px">'+preview+'</td>'+
+          '<td>'+fmtTime(item.createdAt)+'</td>'+
+          '<td>'+esc(item.urgencyLabel||item.postUrgency||'—')+'</td>'+
+          '<td style="white-space:nowrap">'+
+            '<button class="secondary sm" data-ps-preview="'+esc(item.id)+'">Preview</button> '+
+            '<button class="secondary sm" data-ps-copy="'+esc(item.id)+'">Copy</button>'+
+          '</td></tr>';
+      }).join('');
+      tbody.querySelectorAll('[data-ps-preview]').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          var id=btn.getAttribute('data-ps-preview');
+          var item=items.find(function(i){return i.id===id;});
+          if(item)openPostStudioPreview(item);
+        });
+      });
+      tbody.querySelectorAll('[data-ps-copy]').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          var id=btn.getAttribute('data-ps-copy');
+          var item=items.find(function(i){return i.id===id;});
+          if(item)copyPostStudioText(item);
+        });
+      });
+    }
+
+    function openPostStudioPreview(item){
+      _postStudioSelected=item;
+      document.getElementById('post-studio-preview-text').textContent=postStudioPreviewText(item);
+      document.getElementById('post-studio-preview-meta').textContent=
+        (item.playerName||item.playerSlug||'')+
+        (item.source?' · '+item.source:'')+
+        ' · '+String(item.text||'').length+' chars';
+      document.getElementById('post-studio-preview').classList.remove('hidden');
+      document.getElementById('post-studio-preview').scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+
+    function copyPostStudioText(item){
+      var text=postStudioPreviewText(item);
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){alert('Copied to clipboard — paste into X.');})
+          .catch(function(){window.prompt('Copy this text:',text);});
+      }else{
+        window.prompt('Copy this text:',text);
+      }
+    }
+
+    function postStudioAction(path,body,okMsg){
+      var p=pin(); if(!p)return alert('PIN required');
+      return fetch(API+path,{method:'POST',headers:headers(),body:JSON.stringify(Object.assign({pin:p},body||{}))})
+        .then(function(r){return r.json().then(function(j){return{status:r.status,body:j};});})
+        .then(function(res){
+          if(res.status===401)throw new Error('Invalid PIN');
+          if(!res.body.ok)throw new Error(res.body.message||res.body.error||('Request failed ('+res.status+')'));
+          if(okMsg)alert(okMsg);
+          loadPostStudio();
+          loadStatus(false);
+          return res.body;
+        });
+    }
+
+    function loadPostStudio(){
+      var p=pin(); if(!p)return;
+      postStudioShowError('');
+      fetch(API+'/api/x/post-studio/queue?status=hub_review&limit=50',{headers:headers()})
+        .then(function(r){return r.json().then(function(j){return{status:r.status,body:j};});})
+        .then(function(res){
+          if(res.status===401)throw new Error('Invalid PIN');
+          if(!res.body.ok)throw new Error(res.body.error||'Load failed');
+          var stats=res.body.stats||{};
+          return fetch(API+'/api/x/post-studio/config',{headers:headers()})
+            .then(function(r2){return r2.json().then(function(cfg){return{stats:stats,cfg:cfg,items:res.body.items||[]};});});
+        })
+        .then(function(bundle){
+          var stats=bundle.stats;
+          var schedOn=!!(bundle.cfg&&bundle.cfg.schedulerEnabled);
+          document.getElementById('post-studio-status').textContent=
+            'Hub mode: '+(stats.hubMode?'ON':'OFF')+
+            ' · Scheduler: '+(schedOn?'ON (API credits)':'OFF (manual only)')+
+            ' · Drafts: '+(stats.hubReviewCount!=null?stats.hubReviewCount:0)+
+            ' · Posted today (auto): '+(stats.dailySent||0);
+          document.getElementById('post-studio-promote').style.display=schedOn?'':'none';
+          document.getElementById('post-studio-api').style.display=schedOn?'':'none';
+          renderPostStudioRows(bundle.items||[]);
+        })
+        .catch(function(e){postStudioShowError(e.message);});
+    }
+
+    function composePostStudio(){
+      var p=pin(); if(!p)return alert('PIN required');
+      var slug=(document.getElementById('post-studio-slug').value||'').trim().toLowerCase();
+      if(!slug)return alert('Enter a player slug');
+      document.getElementById('post-studio-compose').disabled=true;
+      fetch(API+'/api/x/post-studio/compose',{method:'POST',headers:headers(),body:JSON.stringify({pin:p,slug:slug})})
+        .then(function(r){return r.json().then(function(j){return{status:r.status,body:j};});})
+        .then(function(res){
+          if(res.status===401)throw new Error('Invalid PIN');
+          if(!res.body.ok)throw new Error(res.body.error||res.body.detail?.error||'Compose failed');
+          loadPostStudio();
+          if(res.body.item)openPostStudioPreview(res.body.item);
+          else if(res.body.preview)alert('Composed:\n\n'+res.body.preview.slice(0,400));
+        })
+        .catch(function(e){alert(e.message);})
+        .finally(function(){document.getElementById('post-studio-compose').disabled=false;});
+    }
+
+    function refillPostStudio(){
+      var p=pin(); if(!p)return alert('PIN required');
+      fetch(API+'/api/x/autoposter/run',{method:'POST',headers:headers(),body:JSON.stringify({pin:p,refill:true,limit:0})})
+        .then(function(r){return r.json().then(function(j){return{status:r.status,body:j};});})
+        .then(function(res){
+          if(res.status===401)throw new Error('Invalid PIN');
+          if(!res.body.ok)throw new Error(res.body.error||'Refill failed');
+          alert('Compose queue refill done. Enqueued: '+((res.body.refill&&res.body.refill.enqueuedCount)||0));
+          loadPostStudio();
+        })
+        .catch(function(e){alert(e.message);});
+    }
+
+    document.getElementById('post-studio-reload').addEventListener('click',loadPostStudio);
+    document.getElementById('post-studio-compose').addEventListener('click',composePostStudio);
+    document.getElementById('post-studio-refill').addEventListener('click',refillPostStudio);
+    document.getElementById('post-studio-copy').addEventListener('click',function(){
+      if(_postStudioSelected)copyPostStudioText(_postStudioSelected);
+    });
+    document.getElementById('post-studio-open-x').addEventListener('click',function(){
+      if(!_postStudioSelected)return;
+      window.open(postStudioXIntentUrl(_postStudioSelected.text),'_blank','noopener');
+    });
+    document.getElementById('post-studio-mark').addEventListener('click',function(){
+      if(!_postStudioSelected)return;
+      var url=window.prompt('Tweet URL (optional — paste after you post on X):','')||'';
+      postStudioAction('/api/x/post-studio/'+_postStudioSelected.id+'/mark-posted',{tweetUrl:url},'Marked as manually posted.')
+        .then(function(){document.getElementById('post-studio-preview').classList.add('hidden');_postStudioSelected=null;})
+        .catch(function(e){alert(e.message);});
+    });
+    document.getElementById('post-studio-promote').addEventListener('click',function(){
+      if(!_postStudioSelected)return;
+      if(!confirm('Queue for autoposter? Uses one of the 1–2 daily auto slots and API credits when it posts.'))return;
+      postStudioAction('/api/x/post-studio/'+_postStudioSelected.id+'/promote',{},'Queued for autoposter.')
+        .catch(function(e){alert(e.message);});
+    });
+    document.getElementById('post-studio-api').addEventListener('click',function(){
+      if(!_postStudioSelected)return;
+      if(!confirm('Post via X API now? This uses API credits.'))return;
+      postStudioAction('/api/x/post-studio/'+_postStudioSelected.id+'/post-api',{},'Posted via API.')
+        .then(function(j){
+          if(j.tweetUrl)alert('Posted: '+j.tweetUrl);
+          document.getElementById('post-studio-preview').classList.add('hidden');
+          _postStudioSelected=null;
+        })
+        .catch(function(e){alert(e.message);});
+    });
+    document.getElementById('post-studio-dismiss').addEventListener('click',function(){
+      if(!_postStudioSelected)return;
+      if(!confirm('Dismiss this draft?'))return;
+      postStudioAction('/api/x/post-studio/'+_postStudioSelected.id+'/dismiss',{},'Dismissed.')
+        .then(function(){document.getElementById('post-studio-preview').classList.add('hidden');_postStudioSelected=null;})
+        .catch(function(e){alert(e.message);});
+    });
+    document.getElementById('post-studio-close').addEventListener('click',function(){
+      document.getElementById('post-studio-preview').classList.add('hidden');
+      _postStudioSelected=null;
+    });
+
     setInterval(function(){if(!document.getElementById('app').classList.contains('hidden'))loadStatus(false);},90000);
 
     if (window.GVAdminEmbed) {
@@ -1026,6 +1268,7 @@
         loadStatus(false);
         loadInsiderArticles();
         loadPatternStats();
+        loadPostStudio();
       });
     } else {
       var saved=sessionStorage.getItem('gv_admin_pin')||sessionStorage.getItem('gv_ops_pin');

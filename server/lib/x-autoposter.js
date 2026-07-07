@@ -518,6 +518,9 @@ function bootstrapAutoposterRuntime() {
 }
 
 async function processQueueItem(item) {
+  if (!pipelineGuards.autoposterSchedulerEnabled()) {
+    return { ok: false, skipped: true, reason: 'scheduler_disabled', itemId: item?.id };
+  }
   if (!pipelineGuards.autopostEnabled()) {
     return { ok: false, skipped: true, reason: 'autoposter disabled', itemId: item?.id };
   }
@@ -769,6 +772,14 @@ async function processQueueItem(item) {
 }
 
 async function processDuePosts({ limit = 1, force = false } = {}) {
+  if (!pipelineGuards.autoposterSchedulerEnabled()) {
+    return {
+      processed: 0,
+      skipped: true,
+      reason: 'scheduler_disabled',
+      message: 'Autoposter scheduler off — use Post Studio for manual posts'
+    };
+  }
   store.recoverFailedVerifiedCommits();
   store.recoverFailedPostableItems();
   const pending = store.listQueue({ status: 'pending' });
@@ -829,9 +840,12 @@ let _processing = false;
 let _emptyQueueStreak = 0;
 
 function startXAutoposterScheduler() {
-  if (!pipelineGuards.autopostEnabled()) {
-    autopostLog('warn', 'Cron disabled — X_PIPELINES_ENABLED and X_AUTOPOST_ENABLED must be true');
-    saveSchedulerStatus({ lastError: 'Scheduler disabled — autoposter pipelines off' });
+  if (!pipelineGuards.autoposterSchedulerEnabled()) {
+    const reason = pipelineGuards.autopostEnabled()
+      ? 'Scheduler disabled — hub manual mode (Post Studio only, no API credits)'
+      : 'Scheduler disabled — X_PIPELINES_ENABLED and X_AUTOPOST_ENABLED must be true';
+    autopostLog('warn', reason);
+    saveSchedulerStatus({ lastError: reason, schedulerEnabled: false });
     return;
   }
 
