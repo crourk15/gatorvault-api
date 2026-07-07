@@ -131,6 +131,7 @@
         <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem;align-items:center">
           <input id="post-studio-slug" type="text" placeholder="player slug — compose elite post" style="flex:1;min-width:200px;background:var(--panel);border:1px solid #334155;color:var(--text);padding:.45rem .6rem;border-radius:.5rem" />
           <button id="post-studio-compose" class="sm">Compose</button>
+          <button id="post-studio-probe" class="secondary sm">Probe</button>
           <button id="post-studio-reload" class="secondary sm">Reload drafts</button>
           <button id="post-studio-refill" class="secondary sm">Refill compose queue</button>
         </div>
@@ -152,7 +153,20 @@
             <button id="post-studio-close" class="secondary sm">Close</button>
           </div>
         </div>
-      </div>
+
+        <div id="post-studio-compose-ops" style="margin-top:1.25rem">
+          <h3 style="margin:0 0 .5rem;font-size:.9rem">Compose failures & probe</h3>
+          <p class="sub" style="margin:0 0 .6rem;font-size:.75rem;color:var(--muted)">G2 observability — enrich passes tried, fuse gaps, QA gate. Probe a slug before Compose to see why elite is blocked.</p>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem;align-items:center">
+            <button id="post-studio-load-failures" class="secondary sm">Reload failures</button>
+            <span id="post-studio-compose-flags" class="meta" style="font-size:.72rem">PR-789 flags: —</span>
+          </div>
+          <div id="post-studio-probe-result" class="hidden" style="margin-bottom:.75rem;background:var(--panel);border:1px solid var(--border);border-radius:.6rem;padding:.75rem;font-size:.78rem;line-height:1.45"></div>
+          <table>
+            <thead><tr><th>When</th><th>Slug</th><th>Reason</th><th>Last</th><th>Passes</th><th>Gaps</th></tr></thead>
+            <tbody id="post-studio-failures-body"><tr><td colspan="6" class="meta">Load failures…</td></tr></tbody>
+          </table>
+        </div>      </div>
 
       <div class="section">
         <h2>Manual Identity Overrides (MOT)</h2>
@@ -1160,6 +1174,80 @@
         });
     }
 
+
+    function renderComposeFailures(entries){
+      var tbody=document.getElementById('post-studio-failures-body');
+      if(!entries||!entries.length){
+        tbody.innerHTML='<tr><td colspan="6" class="meta">No compose skips logged yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML=entries.map(function(e){
+        var passes=(e.enrichPassesTried||[]).join(', ')||'—';
+        var gaps=(e.gaps||[]).join(', ')||'—';
+        return '<tr>'+
+          '<td>'+fmtTime(e.at)+'</td>'+
+          '<td>'+esc(e.slug||'—')+'</td>'+
+          '<td>'+esc(e.reason||'—')+'</td>'+
+          '<td>'+esc(e.lastReason||'—')+'</td>'+
+          '<td style="max-width:180px">'+esc(passes)+'</td>'+
+          '<td style="max-width:180px">'+esc(gaps)+'</td>'+
+          '</tr>';
+      }).join('');
+    }
+
+    function loadComposeFailures(){
+      var p=pin();
+      if(!p){document.getElementById('post-studio-failures-body').innerHTML='<tr><td colspan="6" class="meta">Enter admin PIN first.</td></tr>';return;}
+      var slug=(document.getElementById('post-studio-slug').value||'').trim().toLowerCase();
+      var url=API+'/api/x/post-studio/compose-failures?limit=40&pin='+encodeURIComponent(p)+(slug?'&slug='+encodeURIComponent(slug):'');
+      fetchJson(url,{headers:headers()})
+        .then(function(j){
+          if(!j.ok)throw new Error(j.error||'Failed to load compose failures');
+          document.getElementById('post-studio-compose-flags').textContent=
+            'PR-789 only: '+(j.pr789Only?'ON':'off')+' · Elite compose: '+(j.eliteComposeEnabled?'ON':'off');
+          renderComposeFailures(j.entries||[]);
+        })
+        .catch(function(e){
+          document.getElementById('post-studio-failures-body').innerHTML='<tr><td colspan="6" class="meta">'+esc(e.message)+'</td></tr>';
+        });
+    }
+
+    function probePostStudioSlug(){
+      var p=pin();
+      var slug=(document.getElementById('post-studio-slug').value||'').trim().toLowerCase();
+      if(!p){alert('PIN required');return;}
+      if(!slug){alert('Enter a player slug to probe');return;}
+      var btn=document.getElementById('post-studio-probe');
+      var label=btn?btn.textContent:'Probe';
+      if(btn){btn.disabled=true;btn.textContent='Probing…';}
+      var panel=document.getElementById('post-studio-probe-result');
+      panel.classList.remove('hidden');
+      panel.textContent='Probing '+slug+'…';
+      fetchJson(API+'/api/x/post-studio/compose-probe/'+encodeURIComponent(slug)+'?pin='+encodeURIComponent(p),{headers:headers()})
+        .then(function(j){
+          if(!j.ok)throw new Error(j.error||'Probe failed');
+          var elite=j.eliteBuild||{};
+          var fuse=j.fuse||{};
+          var gaps=(fuse.gaps||elite.gaps||[]).join(', ')||'—';
+          var passes=(elite.enrichPassesTried||[]).join(', ')||'—';
+          panel.innerHTML=
+            '<strong>Routing:</strong> '+esc(j.routing||'—')+
+            ' · <strong>Publish gate:</strong> '+(j.publishGate===true?'PASS':j.publishGate===false?'BLOCK':'—')+
+            (j.publishGateReason?' ('+esc(j.publishGateReason)+')':'')+'<br>'+
+            '<strong>Tier:</strong> '+esc(j.tier||'—')+
+            ' · <strong>Fuse confidence:</strong> '+esc(fuse.confidence!=null?fuse.confidence:'—')+
+            ' · <strong>Beat len:</strong> '+esc(fuse.beatLen!=null?fuse.beatLen:'—')+'<br>'+
+            '<strong>Elite:</strong> '+(elite.ok?'ok':'miss')+
+            (elite.reason?' · reason: '+esc(elite.reason):'')+
+            (elite.lastReason?' · last: '+esc(elite.lastReason):'')+'<br>'+
+            '<strong>Enrich passes:</strong> '+esc(passes)+'<br>'+
+            '<strong>Gaps:</strong> '+esc(gaps)+'<br>'+
+            (elite.preview?'<span style="color:#93c5fd">'+esc(elite.preview)+'</span>':'');
+          loadComposeFailures();
+        })
+        .catch(function(e){panel.textContent=e.message;})
+        .finally(function(){if(btn){btn.disabled=false;btn.textContent=label;}});
+    }
     function loadPostStudio(){
       var p=pin(); if(!p)return;
       postStudioShowError('');
@@ -1185,6 +1273,7 @@
           document.getElementById('post-studio-promote').style.display=schedOn?'':'none';
           document.getElementById('post-studio-api').style.display=schedOn?'':'none';
           renderPostStudioRows(bundle.items||[]);
+          loadComposeFailures();
         })
         .catch(function(e){postStudioShowError(e.message);});
     }
@@ -1299,6 +1388,8 @@
 
     document.getElementById('post-studio-reload').addEventListener('click',loadPostStudio);
     document.getElementById('post-studio-compose').addEventListener('click',composePostStudio);
+    document.getElementById('post-studio-probe').addEventListener('click',probePostStudioSlug);
+    document.getElementById('post-studio-load-failures').addEventListener('click',loadComposeFailures);
     document.getElementById('post-studio-refill').addEventListener('click',refillPostStudio);
     document.getElementById('post-studio-copy').addEventListener('click',function(){
       if(_postStudioSelected)copyPostStudioText(_postStudioSelected);

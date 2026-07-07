@@ -249,7 +249,35 @@ function mountXAutoposterRoutes(app) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
     try {
-      const out = await probeIntelAutoposterPath(req.params.slug);
+      const composeObs = require('./autoposter/compose-observability');
+      const out = await composeObs.composeProbe(req.params.slug);
+      return res.json(out);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/x/post-studio/compose-failures', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const composeObs = require('./autoposter/compose-observability');
+      const slug = req.query.slug || null;
+      const limit = parseInt(req.query.limit || '50', 10);
+      return res.json(composeObs.listComposeFailureReport({ slug, limit }));
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/x/post-studio/compose-probe/:slug', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const composeObs = require('./autoposter/compose-observability');
+      const out = await composeObs.composeProbe(req.params.slug);
       return res.json(out);
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

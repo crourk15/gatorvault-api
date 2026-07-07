@@ -114,6 +114,19 @@ async function buildStrategyCandidates(
             path: 'elite_fused_pr789',
             reason: qa.rejectReason(marked)
           });
+          try {
+            require('./detectives-telemetry').emitDetectivesTelemetry({
+              ok: false,
+              phase: 'strategy_reject',
+              caseId: caseItem.id,
+              path: 'elite_fused_pr789',
+              playerSlug: slug,
+              lastReason: qa.rejectReason(marked),
+              compose: { ok: true, path: 'elite_fused_pr789' }
+            });
+          } catch {
+            /* optional */
+          }
         }
       } else if (caseItem?.id) {
         store.appendLog(caseItem.id, {
@@ -123,6 +136,26 @@ async function buildStrategyCandidates(
           lastReason: built?.lastReason || null,
           enrichPassesTried: built?.enrichPassesTried || []
         });
+        try {
+          require('./detectives-telemetry').emitDetectivesTelemetry({
+            ok: false,
+            phase: 'elite_compose_miss',
+            caseId: caseItem.id,
+            path: 'elite_fused_pr789',
+            playerSlug: slug,
+            lastReason: built?.lastReason || built?.reason || 'compose_failed',
+            enrichPassesTried: built?.enrichPassesTried || [],
+            enrichmentSources: built?.enrichmentSources || [],
+            gaps: built?.gaps || [],
+            compose: {
+              ok: false,
+              reason: built?.reason || 'compose_failed',
+              enrichPass: built?.enrichPass || null
+            }
+          });
+        } catch {
+          /* optional */
+        }
       }
       if (pr789Only) {
         return strategies;
