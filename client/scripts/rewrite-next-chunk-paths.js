@@ -307,10 +307,15 @@ function looksLikeCompleteWebpackChunkRel(rel) {
  * (e.g. layout-HASH.js → "…/vault/la" + "yout-HASH.js"). Rejoin before chunk rewrites.
  */
 function repairSplitChunkRefsInRscFlight(content) {
-  return content.replace(
-    /("?\d+"?,")?((?:\/js\/vault-chunks|\/_next\/static\/chunks|static\/chunks)\/(?:app|routes)\/[A-Za-z0-9/_%-]*?)([a-z]{1,6})"\]\)<\/script><script>self\.__next_f\.push\(\[1,"([a-z][a-z0-9/_%-]*-[a-f0-9]{8,}\.js)/g,
-    (_, webpackId, prefix, head, tail) => `${webpackId || ''}${prefix}${head}${tail}`
-  );
+  return content
+    .replace(
+      /("?\d+"?,")?((?:\/js\/vault-chunks|\/_next\/static\/chunks|static\/chunks)\/(?:app|routes)\/[A-Za-z0-9/_%-]*?)([a-z]{1,6})"\]\)<\/script><script>self\.__next_f\.push\(\[1,"([a-z][a-z0-9/_%-]*-[a-f0-9]{8,}\.js)/g,
+      (_, webpackId, prefix, head, tail) => `${webpackId || ''}${prefix}${head}${tail}`
+    )
+    .replace(
+      /(static\/chunks\/(?:app|routes)\/[A-Za-z0-9/_%-]+-[a-f0-9]{8,})\."\]\)<\/script><script>self\.__next_f\.push\(\[1,"js/g,
+      '$1.js'
+    );
 }
 
 /** Route key without webpack content hash: vault/layout-501318… → vault/layout */
@@ -454,6 +459,13 @@ function sweepContentUnmappedStaticAppChunkRefs(content, nestedIndex) {
       if (!looksLikeCompleteWebpackChunkRel(relPath)) return match;
       return resolveNestedAppChunkRef(nestedIndex, relPath) || `/${VAULT_CHUNKS_DIR}/app/${relPath}.js`;
     }
+  );
+  // RSC flight: webpack hash then lone "." when ".js" lands in the next __next_f segment.
+  next = next.replace(
+    /\bstatic\/chunks\/app\/([A-Za-z0-9/_%-]+-[a-f0-9]{8,})\./g,
+    (match, relPath) =>
+      resolveNestedAppChunkRef(nestedIndex, relPath) ||
+      `/${VAULT_CHUNKS_DIR}/app/${ensureAppChunkRelJs(relPath)}`
   );
   // RSC flight often embeds app chunk ids without a .js suffix before the closing quote.
   // Require webpack content hash — do not match at flight segment boundaries ($) or we split
