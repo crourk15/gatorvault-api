@@ -52,6 +52,7 @@ const RECOVERY_JOBS = [
   'commitment-sync',
   'qa-crawler',
   'product-intel-recompute',
+  'app-store-gate-record',
   'visit-intel-reconcile',
   'self-runner-scan',
   'ops-healthcheck'

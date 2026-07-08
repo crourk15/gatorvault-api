@@ -318,6 +318,41 @@ const JOBS = {
       return scheduler.syncIfStale({ force: opts.force !== false, daily: true, weekly });
     }
   },
+  'app-store-gate-record': {
+    label: 'Record App Store 7-day gate sample from live QA + PI health',
+    subsystem: 'ops:app-store-gate',
+    schedule: 'After QA crawl; on demand when crawl blocked by memory',
+    async run(opts = {}) {
+      const gate = require('./app-store-stability-gate');
+      const snap = gate.buildSnapshot({ healthReady: opts.healthReady !== false });
+      if (!opts.force && !snap.evaluation.green) {
+        return {
+          ok: false,
+          skipped: true,
+          reason: 'sample_not_green',
+          evaluation: snap.evaluation,
+          sample: snap.sample,
+        };
+      }
+      const recorded = gate.recordDailySample(
+        {
+          qaPass: snap.sample.qaPass,
+          healthReady: snap.sample.healthReady,
+          productIntelOverall: snap.sample.productIntelOverall,
+          crawlerFailed: snap.sample.crawlerFailed || 0,
+          apiFailed: snap.sample.apiFailed || 0,
+        },
+        { force: opts.force === true }
+      );
+      return {
+        ok: true,
+        consecutiveGreenDays: recorded.consecutiveGreenDays,
+        readyForSubmission: recorded.readyForSubmission,
+        evaluation: snap.evaluation,
+        recorded,
+      };
+    }
+  },
   'visit-intel-recap': {
     label: 'FutureCast weekly verified OV recap (+ optional X queue)',
     subsystem: 'cron:visit-intel-recap',
