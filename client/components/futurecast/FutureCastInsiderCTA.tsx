@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
+import { insiderUnlockHref } from '@/lib/navConfig';
+import { usePathname } from '@/lib/use-pathname';
 
 type Props = {
   message?: string;
@@ -16,6 +18,8 @@ export function FutureCastInsiderCTA({
   total,
   ctaLabel = 'Unlock FutureCast Insider',
 }: Props): React.ReactElement | null {
+  const pathname = usePathname();
+  const unlockHref = insiderUnlockHref({ returnPath: pathname });
   if (isFutureCastInsider()) return null;
 
   const prefix =
@@ -28,7 +32,7 @@ export function FutureCastInsiderCTA({
         {prefix}
         {message}
       </p>
-      <a href="/join?tier=film" className="gv-paywall-cta">
+      <a href={unlockHref} className="gv-paywall-cta">
         {ctaLabel}
       </a>
     </div>

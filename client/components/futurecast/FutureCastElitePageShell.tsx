@@ -4,6 +4,8 @@ import React from 'react';
 import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
 import { FutureCastMobileHeader } from '@/components/futurecast/FutureCastMobileHeader';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
+import { insiderUnlockHref } from '@/lib/navConfig';
+import { usePathname } from '@/lib/use-pathname';
 import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 import type { FutureCastSegment } from '@/lib/vault-route-map';
 
@@ -17,6 +19,8 @@ type Props = {
 export function FutureCastElitePageShell({ segment, testId, children }: Props): React.ReactElement {
   const insider = isFutureCastInsider();
   const isDesktop = useIsCommandCenterDesktop();
+  const pathname = usePathname();
+  const unlockHref = insiderUnlockHref({ returnPath: pathname });
 
   return (
     <div
@@ -29,7 +33,7 @@ export function FutureCastElitePageShell({ segment, testId, children }: Props): 
       </div>
       {children}
       {!insider ? (
-        <a href="/join?tier=film" className="gv-paywall-sticky-cta">
+        <a href={unlockHref} className="gv-paywall-sticky-cta">
           Unlock FutureCast Insider · Film Room from $9.99/mo
         </a>
       ) : null}

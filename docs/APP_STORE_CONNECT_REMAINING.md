@@ -47,7 +47,7 @@ Use these unless a question clearly does not apply — then choose None / No.
 | Horror / Fear Themes | None |
 | Mature / Suggestive Themes | None |
 | Alcohol, Tobacco, Drugs | None |
-| Gambling | None |
+| Gambling | **Yes** (informational betting lines / spreads in Game Week — no real-money wagering in-app) |
 | Contests | None |
 | Medical / Wellness (sensitive) | None |
 

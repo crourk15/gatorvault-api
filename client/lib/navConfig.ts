@@ -1,3 +1,5 @@
+import { loadSession, type PaymentTierId } from './auth-api';
+
 /** Main site navigation — single source for labels and default hrefs. */
 export type MainNavId = 'home' | 'futurecast' | 'recruiting' | 'filmRoom' | 'insider';
 
@@ -34,6 +36,30 @@ export function joinHref(nextPath?: string, mode: 'signin' | 'signup' = 'signup'
   if (nextPath && nextPath.startsWith('/')) params.set('next', nextPath);
   const q = params.toString();
   return q ? `/join/?${q}` : '/join/';
+}
+
+/**
+ * Paywall unlock CTA — logged-in users go to Membership (IAP), not signup/sign-in.
+ */
+export function insiderUnlockHref(opts?: {
+  tier?: PaymentTierId;
+  returnPath?: string;
+}): string {
+  const tier = opts?.tier || 'film';
+  let returnPath = opts?.returnPath || '/vault/';
+  if (typeof window !== 'undefined' && !opts?.returnPath) {
+    returnPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  }
+  const session = typeof window !== 'undefined' ? loadSession() : null;
+  const loggedIn = !!(session?.email?.trim() && session?.token?.trim());
+  if (loggedIn) {
+    const params = new URLSearchParams({ upgrade: tier });
+    if (returnPath.startsWith('/')) params.set('next', returnPath);
+    return `/vault/membership/?${params.toString()}`;
+  }
+  const params = new URLSearchParams({ tier });
+  if (returnPath.startsWith('/')) params.set('next', returnPath);
+  return `/join/?${params.toString()}`;
 }
 
 /** Logged-out → sign-in with return path; logged-in → vault route. */

@@ -53,7 +53,7 @@ export function AccountMembershipPage(): React.ReactElement {
   useEffect(() => {
     const session = loadSession();
     if (!session?.token) {
-      window.location.replace('/join/?next=/vault/membership/');
+      window.location.replace('/join/?mode=signin&next=/vault/membership/');
       return;
     }
 
@@ -83,6 +83,15 @@ export function AccountMembershipPage(): React.ReactElement {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || loading) return;
+    const params = new URLSearchParams(window.location.search);
+    const upgrade = params.get("upgrade");
+    if (!upgrade) return;
+    const el = document.querySelector(`[data-membership-tier="${upgrade}"]`);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [loading]);
 
   async function refreshStatus(): Promise<void> {
     const st = await fetchSubscriptionStatus();
@@ -278,6 +287,7 @@ export function AccountMembershipPage(): React.ReactElement {
         {(catalog?.tiers || []).map((tier) => (
           <article
             key={tier.id}
+            data-membership-tier={tier.id}
             className={`gv-membership__card${status?.tier === tier.id ? ' is-current' : ''}`}
           >
             <div className="gv-membership__card-head">

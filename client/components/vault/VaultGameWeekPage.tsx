@@ -8,6 +8,7 @@ import { DYNAMIC_PATH_PATTERNS, segmentFromPath } from '@/lib/dynamic-path-parse
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
 import { usePathname } from '@/lib/use-pathname';
 import { isFilmRoomInsider } from '@/lib/futurecast-insider';
+import { insiderUnlockHref } from '@/lib/navConfig';
 
 const GAME_WEEK_PAYWALL = {
   message:
@@ -18,6 +19,7 @@ const GAME_WEEK_PAYWALL = {
 export function VaultGameWeekPage(): React.ReactElement {
   const pathname = usePathname();
   const insider = isFilmRoomInsider();
+  const unlockHref = insiderUnlockHref({ returnPath: pathname });
   const urlGameId = useMemo(
     () => segmentFromPath(pathname, DYNAMIC_PATH_PATTERNS.gameWeekGame),
     [pathname]
@@ -38,7 +40,7 @@ export function VaultGameWeekPage(): React.ReactElement {
         </InsiderPaywall>
 
         {!insider ? (
-          <a href="/join?tier=film" className="gv-paywall-sticky-cta">
+          <a href={unlockHref} className="gv-paywall-sticky-cta">
             Unlock Game Week + Film Room · from $9.99/mo
           </a>
         ) : null}

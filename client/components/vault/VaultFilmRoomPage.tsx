@@ -14,6 +14,9 @@ import {
   parseFilmRoomSegmentFromPath,
 } from '@/lib/vault-route-map';
 import { isFilmRoomInsider } from '@/lib/futurecast-insider';
+import { insiderUnlockHref } from '@/lib/navConfig';
+import { nativeNavigationUrl } from '@/lib/api-base';
+import { usePathname } from '@/lib/use-pathname';
 import {
   SCHEME_SCHOOL_LESSONS,
   SCHEME_SCHOOL_UNITS,
@@ -197,9 +200,11 @@ function CatalogGrid({
 function SchemeSchoolGrid({
   insider,
   onOpen,
+  onUnlock,
 }: {
   insider: boolean;
   onOpen: (lesson: SchemeSchoolLesson) => void;
+  onUnlock: () => void;
 }): React.ReactElement {
   return (
     <>
@@ -216,7 +221,7 @@ function SchemeSchoolGrid({
                     className="gv-fr-lesson-card__btn"
                     onClick={() => {
                       if (!insider) {
-                        window.location.href = '/join?tier=film';
+                        onUnlock();
                         return;
                       }
                       onOpen(lesson);
@@ -246,6 +251,11 @@ function hubFromUrl(): string | null {
 }
 
 export function VaultFilmRoomPage(): React.ReactElement {
+  const pathname = usePathname();
+  const unlockHref = insiderUnlockHref({ returnPath: pathname });
+  const goToUnlock = () => {
+    window.location.href = nativeNavigationUrl(unlockHref);
+  };
   const [items, setItems] = useState<FilmRoomCatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -329,7 +339,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const openLesson = useCallback(
     async (item: FilmRoomCatalogItem) => {
       if (!insider) {
-        window.location.href = '/join?tier=film';
+        goToUnlock();
         return;
       }
       setSchemeLesson(null);
@@ -441,7 +451,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
 
             {hub === 'Scheme School' ? (
               <PageSection title="Scheme School" subtitle="UF staff · fan-friendly lessons">
-                <SchemeSchoolGrid insider={insider} onOpen={openSchemeLesson} />
+                <SchemeSchoolGrid insider={insider} onOpen={openSchemeLesson} onUnlock={goToUnlock} />
               </PageSection>
             ) : (
               <PageSection title={HUB_TABS.find((t) => t.id === hub)?.label ?? hub}>
@@ -452,7 +462,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
         ) : null}
 
         {!insider ? (
-          <a href="/join?tier=film" className="gv-paywall-sticky-cta">
+          <a href={unlockHref} className="gv-paywall-sticky-cta">
             Unlock Film Room + FutureCast · from $9.99/mo
           </a>
         ) : null}

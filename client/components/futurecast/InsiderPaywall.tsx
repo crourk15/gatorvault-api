@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
+import { insiderUnlockHref } from '@/lib/navConfig';
+import { usePathname } from '@/lib/use-pathname';
 import { FutureCastInsiderCTA } from './FutureCastInsiderCTA';
 
 type Props = {
@@ -27,6 +29,8 @@ export function InsiderPaywall({
   message = 'Film Room unlocks full FutureCast — UF confidence, fit scores, movement intel, and staff notes.',
   ctaLabel = 'Unlock FutureCast Insider',
 }: Props): React.ReactElement {
+  const pathname = usePathname();
+  const unlockHref = insiderUnlockHref({ returnPath: pathname });
   const insider = isFutureCastInsider();
 
   if (insider) {
@@ -42,7 +46,7 @@ export function InsiderPaywall({
         <div className="gv-paywall-overlay">
           <img src="/icons/lock.svg" alt="" className="gv-paywall-lock-icon" />
           <p className="gv-paywall-text">{message}</p>
-          <a href="/join?tier=film" className="gv-paywall-cta">
+          <a href={unlockHref} className="gv-paywall-cta">
             {ctaLabel}
           </a>
         </div>

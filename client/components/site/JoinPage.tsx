@@ -81,6 +81,17 @@ export function JoinPage(): React.ReactElement {
     };
   }, []);
 
+  useEffect(() => {
+    if (checkingSession || !existingSession) return;
+    const params = new URLSearchParams(window.location.search);
+    if (!params.get('tier')) return;
+    const t = tierFromQuery();
+    const dest = new URLSearchParams({ upgrade: t });
+    const next = params.get('next');
+    if (next?.startsWith('/')) dest.set('next', next);
+    window.location.replace(`/vault/membership/?${dest.toString()}`);
+  }, [checkingSession, existingSession]);
+
   const tierMeta = findPricingTier(tier);
   const publicTiers = publicPricingTiers();
   const warTier = PRICING_TIERS.find((t) => t.id === 'war');
