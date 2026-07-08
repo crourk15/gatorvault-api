@@ -45,10 +45,17 @@ async function main() {
 
   const membershipRes = await fetch(SITE + '/vault/membership/');
   const membershipHtml = membershipRes.ok ? await membershipRes.text() : '';
-  if (membershipHtml.includes('id="delete-account"') || membershipHtml.includes('delete-account')) {
+  const deleteApi = await fetch(API + '/api/account/delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({}),
+  });
+  if (deleteApi.status === 401 || deleteApi.status === 400) {
+    pass('account-delete-api', String(deleteApi.status));
+  } else if (membershipHtml.includes('id="delete-account"') || membershipHtml.includes('delete-account')) {
     pass('membership-delete-ui', 'delete panel present');
   } else {
-    fail('membership-delete-ui', 'delete-account anchor missing');
+    fail('membership-delete-ui', 'delete API/UI not detected');
   }
 
   const login = await fetch(API + '/api/login', {

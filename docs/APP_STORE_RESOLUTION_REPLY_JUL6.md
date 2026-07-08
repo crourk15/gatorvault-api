@@ -10,17 +10,17 @@ Apple rejected **1.0 (9)** on iPad Air 11-inch. Four items before resubmit.
 
 **Bug:** Tapping **Unlock Game Week + Film Room** sent reviewers to sign-in instead of membership/IAP.
 
-**Fix:** Logged-in users now route to **Membership & Account** (`/vault/membership/?upgrade=film`), not `/join`. Logged-out users still go to `/join/?tier=film`.
+**Fix (build 11):** Logged-in users route to **Membership & Account** (`/vault/membership/?upgrade=film`), not `/join`. Unlock CTAs also **recompute at session load and on click** so iPad/Capacitor never keeps a stale `/join` href after sign-in.
 
-**Code:** `client/lib/navConfig.ts` → `insiderUnlockHref()`; wired into Game Week, Film Room, and FutureCast paywalls. `JoinPage` redirects logged-in users with `?tier=` to membership.
+**Code:** `insiderUnlockHref()` + `useInsiderUnlock()` in `client/lib/useUser.ts`; wired into Game Week, Film Room, and FutureCast paywalls.
 
-**iOS build:** bumped to **1.0 (10)** in `client/ios/App/App.xcodeproj/project.pbxproj`.
+**iOS build:** **1.0 (11)** in `client/ios/App/App.xcodeproj/project.pbxproj`.
 
 Before resubmit:
 1. Deploy web (Netlify) after push
-2. Codemagic iOS build **1.0 (10)**
+2. Codemagic iOS build **1.0 (11)**
 3. Reprovision demo: `node scripts/provision-app-review-account.js`
-4. iPad test: demo War account → Game Week / Film Room **no paywall**; free account → Unlock → **Membership**, not sign-in
+4. iPad test: demo War account → Game Week / Film Room **no paywall**; free logged-in user → Unlock → **Membership**, not sign-in
 
 ---
 
@@ -66,13 +66,13 @@ Attach video in **App Review Information → Notes** (or link in Resolution Cent
 ```
 Hello App Review,
 
-Thank you for the detailed feedback on submission 475e2270 (1.0 build 9). We have addressed all four items in build 1.0 (10) and App Store Connect metadata updates.
+Thank you for the detailed feedback on submission 475e2270 (1.0 build 9). We have addressed all four items in build 1.0 (11) and App Store Connect metadata updates.
 
 Guideline 2.1(a) — Unlock redirect:
 We fixed a routing bug where logged-in users tapping "Unlock Game Week + Film Room" were sent to the sign-in page instead of Membership & Account (In-App Purchase). Logged-in users now land on /vault/membership/ with the correct upgrade tier. We tested on iPad with the demo account below.
 
 Guideline 2.1(b) — In-App Purchases:
-We have submitted all six auto-renewable subscription products for review with App Review screenshots and attached binary 1.0 (10):
+We have submitted all six auto-renewable subscription products for review with App Review screenshots and attached binary 1.0 (11):
 - com.gatorvaultinsider.locker.monthly / .annual
 - com.gatorvaultinsider.film.monthly / .annual
 - com.gatorvaultinsider.war.monthly / .annual
@@ -109,10 +109,27 @@ Charles Rourk
 ## Resubmit checklist
 
 - [ ] `git push` deployed to Netlify (web fix live)
-- [ ] Codemagic build **1.0 (10)** uploaded
+- [ ] Codemagic build **1.0 (11)** uploaded
 - [ ] Demo account reprovisioned on production
 - [ ] 6 IAP products **Submitted for Review** with screenshots
 - [ ] Age rating: **Gambling = Yes**
 - [ ] Account deletion screen recording in Review Notes
 - [ ] Resolution Center reply pasted
-- [ ] Version 1.0 → select build 10 → **Add for Review**
+- [ ] Version 1.0 → select build 11 → **Add for Review**
+
+---
+
+## Charles only (~15 min) — everything else is done
+
+### App Store Connect (your Apple login)
+1. **Age rating:** General → App Information → Age Ratings → **Gambling = Yes** → Save
+2. **IAP:** Monetization → Subscriptions → submit all 6 products with screenshot `docs/app-store-screenshots/05-membership.png`
+3. **Binary:** attach **1.0 (11)** when Codemagic finishes
+4. **Notes:** paste App Review block from `docs/app-store-screenshots/APP_STORE_CONNECT_PASTE.txt`
+5. **Resolution Center:** paste reply block from this file (bottom)
+6. **Add for Review**
+
+### iPhone only — deletion video (5 min)
+Record throwaway account flow per `docs/APP_STORE_RESUBMISSION.md` → attach in App Review Notes.
+
+**Do not delete** `appreview@gatorvaultinsider.com`.
