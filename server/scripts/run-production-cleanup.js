@@ -48,7 +48,10 @@ const RECOVERY_JOBS = [
   'nil-refresh',
   'depth-chart-refresh',
   'game-zone-refresh',
+  'reconcile-committed-targets',
+  'commitment-sync',
   'qa-crawler',
+  'product-intel-recompute',
   'visit-intel-reconcile',
   'self-runner-scan',
   'ops-healthcheck'

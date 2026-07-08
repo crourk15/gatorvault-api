@@ -569,6 +569,25 @@ async function reconcileCommitments(options = {}) {
     result.hubRefresh = await refreshHubAfterCommitmentChanges(updatedCount);
   }
 
+  try {
+    const store = require('./recruiting-store');
+    const { reconcileCommittedTargetsFromStore } = require('./commit-target-cleanup');
+    result.targetBoardReconcile = await reconcileCommittedTargetsFromStore(store, {
+      source: 'commitment_sync',
+      quiet: true,
+    });
+    if (result.targetBoardReconcile.removedBoardEntries > 0) {
+      console.log(
+        '[commitment-sync] removed',
+        result.targetBoardReconcile.removedBoardEntries,
+        'stale target-board row(s) for UF commits'
+      );
+    }
+  } catch (e) {
+    result.targetBoardReconcile = { error: e.message };
+    console.warn('[commitment-sync] target board reconcile skipped:', e.message);
+  }
+
   writeJson(STATE_PATH, {
     lastRun: result.lastRun,
     updatedCount,

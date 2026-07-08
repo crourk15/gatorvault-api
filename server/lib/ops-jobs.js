@@ -277,6 +277,42 @@ const JOBS = {
       });
     }
   },
+  'reconcile-committed-targets': {
+    label: 'Remove UF commits from target-board seeds',
+    subsystem: 'recruiting:commit-target-cleanup',
+    schedule: 'Boot + after commitment sync + on demand',
+    async run(opts = {}) {
+      const store = require('./recruiting-store');
+      const { reconcileCommittedTargetsFromStore } = require('./commit-target-cleanup');
+      return reconcileCommittedTargetsFromStore(store, {
+        source: opts.source || 'ops_job',
+        quiet: opts.quiet !== false,
+        rootDir: opts.rootDir,
+      });
+    }
+  },
+  'commitment-sync': {
+    label: 'Commitment reconciliation (On3 + Rivals allowlist)',
+    subsystem: 'cron:commitment-sync',
+    schedule: 'With On3 ingest (COMMITMENT_SYNC)',
+    async run(opts = {}) {
+      const { reconcileCommitments } = require('./allowlist-target-sync');
+      return reconcileCommitments(opts);
+    }
+  },
+  'product-intel-recompute': {
+    label: 'Product Intelligence recompute from latest QA run',
+    subsystem: 'product-intel:recompute',
+    schedule: 'After QA crawl + on demand',
+    async run(opts = {}) {
+      const engine = require('./product-intel/product-intel-engine');
+      const weekly = opts.weekly === true;
+      if (opts.force === true || opts.fromDeploy === true) {
+        return engine.recomputeFromDeployProbes({ source: opts.source || 'ops_job' });
+      }
+      return engine.recomputeFromLatestRun({ daily: true, weekly });
+    }
+  },
   'visit-intel-recap': {
     label: 'FutureCast weekly verified OV recap (+ optional X queue)',
     subsystem: 'cron:visit-intel-recap',

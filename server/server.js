@@ -1273,6 +1273,28 @@ console.log('GatorVault server running on port', PORT);
         } catch (e) {
           console.warn('[startup] intel reconcile skipped:', e.message);
         }
+        if (process.env.COMMIT_TARGET_RECONCILE_BOOT !== 'false') {
+          const bootDelay = parseInt(process.env.COMMIT_TARGET_RECONCILE_BOOT_DELAY_MS || '180000', 10);
+          setTimeout(async () => {
+            try {
+              const store = require('./lib/recruiting-store');
+              const { reconcileCommittedTargetsFromStore } = require('./lib/commit-target-cleanup');
+              const out = await reconcileCommittedTargetsFromStore(store, {
+                source: 'boot_reconcile',
+                quiet: true,
+              });
+              if (out.removedBoardEntries > 0) {
+                console.log(
+                  '[commit-target-cleanup] boot reconcile removed',
+                  out.removedBoardEntries,
+                  'stale board row(s)'
+                );
+              }
+            } catch (e) {
+              console.warn('[commit-target-cleanup] boot reconcile skipped:', e.message);
+            }
+          }, bootDelay);
+        }
       });
   } catch (e) {
     console.warn('[startup] intel init skipped:', e.message);
