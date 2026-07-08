@@ -105,6 +105,24 @@ function summarizeProductIntel() {
   };
 }
 
+function summarizeAppStoreGate() {
+  try {
+    const gate = require('./app-store-stability-gate');
+    const snap = gate.buildSnapshot({ healthReady: true });
+    return {
+      requiredDays: snap.requiredDays,
+      consecutiveGreenDays: snap.consecutiveGreenDays || 0,
+      readyForSubmission: !!snap.readyForSubmission,
+      windowStartedAt: snap.windowStartedAt,
+      evaluation: snap.evaluation,
+      sample: snap.sample,
+      lastFailureReason: snap.lastFailureReason
+    };
+  } catch {
+    return null;
+  }
+}
+
 function buildPipelines(opsReport) {
   const p = opsReport.pipeline || {};
   const list = [];
@@ -200,7 +218,7 @@ function buildModuleHealthMap({ ops, qa, productIntel, selfRunner }) {
   return map;
 }
 
-function buildTopIssues({ ops, qa, productIntel, selfRunner, alerts }) {
+function buildTopIssues({ ops, qa, productIntel, selfRunner, alerts, appStoreGate }) {
   const issues = [];
   if (qa.pass === false) {
     issues.push({
@@ -248,6 +266,22 @@ function buildTopIssues({ ops, qa, productIntel, selfRunner, alerts }) {
       route: '#product-intel/health',
       actionType: 'pi-recompute',
       action: 'Recompute'
+    });
+  }
+  if (appStoreGate && !appStoreGate.evaluation?.green) {
+    const reasons = (appStoreGate.evaluation?.reasons || []).join(', ') || 'gate criteria not met';
+    issues.push({
+      severity: 'red',
+      title: 'App Store gate — today not green',
+      detail: reasons,
+      route: '#dashboard'
+    });
+  } else if (appStoreGate && !appStoreGate.readyForSubmission) {
+    issues.push({
+      severity: 'yellow',
+      title: 'App Store gate in progress',
+      detail: `Day ${appStoreGate.consecutiveGreenDays || 0}/${appStoreGate.requiredDays || 7} green`,
+      route: '#dashboard'
     });
   }
   return issues.slice(0, 5);
@@ -331,6 +365,7 @@ async function buildOverviewPayload() {
   const qa = summarizeQa();
   const productIntel = summarizeProductIntel();
   const selfRunner = selfRunnerEngine.healthSummary();
+  const appStoreGate = summarizeAppStoreGate();
   const alerts = opsAlerts.listAlerts({ limit: 20 });
   const moduleHealth = buildModuleHealthMap({ ops, qa, productIntel, selfRunner });
   let overall = ops.overall || 'green';
@@ -338,6 +373,9 @@ async function buildOverviewPayload() {
     if (st === 'red') overall = 'red';
     else if (st === 'yellow' && overall !== 'red') overall = 'yellow';
   });
+  if (appStoreGate?.evaluation && !appStoreGate.evaluation.green && overall !== 'red') {
+    overall = 'yellow';
+  }
 
   return {
     ok: true,
@@ -348,8 +386,9 @@ async function buildOverviewPayload() {
     qa,
     productIntel,
     selfRunner,
+    appStoreGate,
     alerts,
-    topIssues: buildTopIssues({ ops, qa, productIntel, selfRunner, alerts }),
+    topIssues: buildTopIssues({ ops, qa, productIntel, selfRunner, alerts, appStoreGate }),
     moduleHealth,
     recommendedActions: buildRecommendedActions({ ops, qa, productIntel, selfRunner }),
     pipelines: buildPipelines(ops)

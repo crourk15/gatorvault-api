@@ -152,6 +152,12 @@
         + '<button type="button" class="hub-btn secondary" data-dash-route="#self-runner/pending">Open</button>'
         + '</section>'
 
+        + '<section class="hub-card"><h3>App Store Gate</h3>'
+        + '<p class="hub-meta">Progress: ' + esc(data.appStoreGate ? ((data.appStoreGate.consecutiveGreenDays || 0) + '/' + (data.appStoreGate.requiredDays || 7) + ' green days') : '—') + '</p>'
+        + '<p class="hub-meta">Today: ' + esc(data.appStoreGate && data.appStoreGate.evaluation ? (data.appStoreGate.evaluation.green ? 'Green' : 'Red') : '—') + '</p>'
+        + '<p class="hub-meta">PI sample: ' + esc(data.appStoreGate && data.appStoreGate.sample && data.appStoreGate.sample.productIntelOverall != null ? data.appStoreGate.sample.productIntelOverall : '—') + '</p>'
+        + '</section>'
+
         + '<section class="hub-card hub-card-wide"><h3>Module health</h3><div class="hub-mod-grid">' + moduleCards + '</div></section>'
 
         + '<section class="hub-card hub-card-wide"><h3>Pipelines</h3><div class="hub-pipe-grid">' + (pipelineHtml || '<p class="hub-meta">No pipeline data</p>') + '</div></section>'

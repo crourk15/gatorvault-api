@@ -1498,16 +1498,6 @@ console.log('GatorVault server running on port', PORT);
   } catch (e) {
     console.warn('[gv-om] init skipped', e.message);
   }
-  setTimeout(() => {
-    if (process.env.PRODUCT_INTEL_ENABLED === 'false') return;
-    process.env.QA_API_URL = `http://127.0.0.1:${PORT}`;
-    require('./lib/product-intel/product-intel-engine')
-      .recomputeFromDeployProbes({ source: 'deploy-boot' })
-      .then((r) => {
-        console.log('[product-intel] deploy-boot health score:', r.scores?.overall ?? 'n/a');
-      })
-      .catch((e) => console.warn('[product-intel] deploy-boot recompute skipped:', e.message));
-  }, 5000);
   try {
     const { startPlatformMaintenanceSchedulers } = require('./lib/platform-maintenance-scheduler');
     startPlatformMaintenanceSchedulers();

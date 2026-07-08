@@ -436,7 +436,21 @@ function getLayersPayload() {
 
 /**
  * Deploy-boot health recompute from live API probes (no QA crawl required).
+ * Does not overwrite QA-derived scores when a recent passing crawl is authoritative.
  */
+function isQaScoreAuthoritative(doc, qaDoc) {
+  const lastRun = (qaDoc.runs || [])[0];
+  if (!lastRun?.pass || !lastRun.finishedAt) return false;
+  const freshMs = Math.max(
+    3600000,
+    parseInt(process.env.PRODUCT_INTEL_QA_FRESH_MS || String(24 * 3600000), 10) || 24 * 3600000
+  );
+  const qaAt = new Date(lastRun.finishedAt).getTime();
+  if (!Number.isFinite(qaAt) || Date.now() - qaAt > freshMs) return false;
+  const computedAt = doc.lastComputedAt ? new Date(doc.lastComputedAt).getTime() : 0;
+  return doc.lastRunId === lastRun.id || computedAt >= qaAt - 1000;
+}
+
 async function recomputeFromDeployProbes(opts = {}) {
   const collected = await dataLayer.collectAllSignals(null);
   const probeSignals = [
@@ -460,16 +474,39 @@ async function recomputeFromDeployProbes(opts = {}) {
     (s) => s.details?.[0]?.status >= 500 || /502|503|504/.test(String(s.error || s.label || ''))
   );
 
+  if (checks.length === 0) {
+    return { ok: true, skipped: true, reason: 'all_probes_pass', scores: null };
+  }
+
+  let doc = store.readDoc();
+  const qaDoc = qaStore.readDoc();
+  if (isQaScoreAuthoritative(doc, qaDoc) && opts.force !== true) {
+    doc.intelligenceLayers = {
+      ...(doc.intelligenceLayers || {}),
+      deployProbe: {
+        checkedAt: new Date().toISOString(),
+        failures: checks.length,
+        serverErrors: serverErrors.length,
+        source: opts.source || 'deploy-probe',
+        skippedScoreOverwrite: true
+      }
+    };
+    store.writeDoc(doc);
+    return {
+      ok: true,
+      skipped: true,
+      reason: 'qa_authoritative',
+      scores: doc.scores,
+      deployProbeFailures: checks.length
+    };
+  }
+
   let apiScore = 100;
   if (checks.length > 0) {
     apiScore = Math.max(0, 100 - Math.min(75, checks.length * 12));
   }
   if (serverErrors.length > 0) {
     apiScore = Math.min(apiScore, Math.max(20, 100 - serverErrors.length * 28));
-  }
-
-  if (checks.length === 0) {
-    return { ok: true, skipped: true, reason: 'all_probes_pass', scores: null };
   }
 
   const run = {
@@ -481,7 +518,6 @@ async function recomputeFromDeployProbes(opts = {}) {
     }
   };
 
-  let doc = store.readDoc();
   doc = store.decaySignalHistory(doc);
   doc.lastRunId = run.id;
   doc.lastComputedAt = run.finishedAt;
@@ -516,6 +552,7 @@ module.exports = {
   recomputeFromRun,
   recomputeFromLatestRun,
   recomputeFromDeployProbes,
+  isQaScoreAuthoritative,
   runDailyJob,
   runWeeklyJob,
   getScoresPayload,
