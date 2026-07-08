@@ -305,12 +305,17 @@ const JOBS = {
     subsystem: 'product-intel:recompute',
     schedule: 'After QA crawl + on demand',
     async run(opts = {}) {
+      const scheduler = require('./product-intel/product-intel-scheduler');
       const engine = require('./product-intel/product-intel-engine');
       const weekly = opts.weekly === true;
-      if (opts.force === true || opts.fromDeploy === true) {
+      if (opts.fromDeploy === true) {
         return engine.recomputeFromDeployProbes({ source: opts.source || 'ops_job' });
       }
-      return engine.recomputeFromLatestRun({ daily: true, weekly });
+      if (opts.runQaFirst === true) {
+        const { runQaCrawl } = require('./qa/qa-runner');
+        await runQaCrawl({ force: true });
+      }
+      return scheduler.syncIfStale({ force: opts.force !== false, daily: true, weekly });
     }
   },
   'visit-intel-recap': {
