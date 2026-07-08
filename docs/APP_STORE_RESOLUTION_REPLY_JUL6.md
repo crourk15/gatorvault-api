@@ -108,14 +108,14 @@ Charles Rourk
 
 ## Resubmit checklist
 
-- [ ] `git push` deployed to Netlify (web fix live)
-- [ ] Codemagic build **1.0 (11)** uploaded
-- [ ] Demo account reprovisioned on production
-- [ ] 6 IAP products **Submitted for Review** with screenshots
-- [ ] Age rating: **Gambling = Yes**
+- [x] Netlify deploy live (`70f1483` — verified via build-manifest.json)
+- [x] Demo account reprovisioned on production (War tier, smoke 19/19)
+- [x] Age rating: **Gambling = Yes** (18+)
+- [ ] Codemagic / App Store Connect binary **1.0 (11)** attached (replace Build 9)
+- [ ] 6 IAP products complete + **Submitted for Review** with screenshots (2/6 started — see `docs/APP_STORE_IAP_FINISH.md`)
 - [ ] Account deletion screen recording in Review Notes
 - [ ] Resolution Center reply pasted
-- [ ] Version 1.0 → select build 11 → **Add for Review**
+- [ ] Version 1.0 → **Add for Review**
 
 ---
 

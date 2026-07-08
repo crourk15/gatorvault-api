@@ -63,6 +63,23 @@ Content-Type: application/json
 
 Uses `EMAIL_TEST_PIN` from Render env (same as email test tools).
 
+## Finish IAP setup in Connect (July 2026 resubmit)
+
+**Status:** Production `70f1483` live. Demo account reprovisioned. Age Rating Gambling=Yes done. Group **GatorVault Insider** (22217632). War monthly/annual created; **4 products + all screenshots + Submit for Review** still required.
+
+| Product ID | Display name | Duration | USD |
+|------------|--------------|----------|-----|
+| `com.gatorvaultinsider.war.monthly` | War Room Monthly | 1 month | $19.99 |
+| `com.gatorvaultinsider.war.annual` | War Room Annual | 1 year | $191.88 (~$191.99 tier) |
+| `com.gatorvaultinsider.film.monthly` | Film Room Monthly | 1 month | $9.99 |
+| `com.gatorvaultinsider.film.annual` | Film Room Annual | 1 year | $95.88 (~$95.99 tier) |
+| `com.gatorvaultinsider.locker.monthly` | Locker Room Monthly | 1 month | $4.99 |
+| `com.gatorvaultinsider.locker.annual` | Locker Room Annual | 1 year | $47.88 (~$47.99 tier) |
+
+**Levels:** War=1, Film=2, Locker=3. Review screenshot for each: `docs/app-store-screenshots/05-membership.png`.
+
+Then version 1.0: attach **Build 11**, paste notes from `docs/app-store-screenshots/APP_STORE_CONNECT_PASTE.txt`, attach deletion video, Resolution Center reply, **Add for Review**.
+
 ## API endpoints (live after deploy)
 
 | Method | Path | Auth |
