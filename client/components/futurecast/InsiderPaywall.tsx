@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
-import { insiderUnlockHref } from '@/lib/navConfig';
+import { useUser } from '@/hooks/useUser';
+import { useInsiderUnlock } from '@/lib/useUser';
 import { usePathname } from '@/lib/use-pathname';
 import { FutureCastInsiderCTA } from './FutureCastInsiderCTA';
 
@@ -30,8 +31,8 @@ export function InsiderPaywall({
   ctaLabel = 'Unlock FutureCast Insider',
 }: Props): React.ReactElement {
   const pathname = usePathname();
-  const unlockHref = insiderUnlockHref({ returnPath: pathname });
-  const insider = isFutureCastInsider();
+  const { isInsider: insider } = useUser();
+  const { href: unlockHref, navigate: goToUnlock } = useInsiderUnlock({ returnPath: pathname });
 
   if (insider) {
     return <div className={className}>{children}</div>;
@@ -46,7 +47,14 @@ export function InsiderPaywall({
         <div className="gv-paywall-overlay">
           <img src="/icons/lock.svg" alt="" className="gv-paywall-lock-icon" />
           <p className="gv-paywall-text">{message}</p>
-          <a href={unlockHref} className="gv-paywall-cta">
+          <a
+            href={unlockHref}
+            className="gv-paywall-cta"
+            onClick={(e) => {
+              e.preventDefault();
+              goToUnlock();
+            }}
+          >
             {ctaLabel}
           </a>
         </div>

@@ -6,9 +6,9 @@ import { GameWeekCommandCenter } from '@/components/vault/game-week/GameWeekComm
 import { InsiderPaywall } from '@/components/futurecast/InsiderPaywall';
 import { DYNAMIC_PATH_PATTERNS, segmentFromPath } from '@/lib/dynamic-path-parser';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
+import { useUser } from '@/hooks/useUser';
+import { useInsiderUnlock } from '@/lib/useUser';
 import { usePathname } from '@/lib/use-pathname';
-import { isFilmRoomInsider } from '@/lib/futurecast-insider';
-import { insiderUnlockHref } from '@/lib/navConfig';
 
 const GAME_WEEK_PAYWALL = {
   message:
@@ -18,8 +18,8 @@ const GAME_WEEK_PAYWALL = {
 
 export function VaultGameWeekPage(): React.ReactElement {
   const pathname = usePathname();
-  const insider = isFilmRoomInsider();
-  const unlockHref = insiderUnlockHref({ returnPath: pathname });
+  const { isInsider: insider } = useUser();
+  const { href: unlockHref, navigate: goToUnlock } = useInsiderUnlock({ returnPath: pathname });
   const urlGameId = useMemo(
     () => segmentFromPath(pathname, DYNAMIC_PATH_PATTERNS.gameWeekGame),
     [pathname]
@@ -40,7 +40,14 @@ export function VaultGameWeekPage(): React.ReactElement {
         </InsiderPaywall>
 
         {!insider ? (
-          <a href={unlockHref} className="gv-paywall-sticky-cta">
+          <a
+            href={unlockHref}
+            className="gv-paywall-sticky-cta"
+            onClick={(e) => {
+              e.preventDefault();
+              goToUnlock();
+            }}
+          >
             Unlock Game Week + Film Room · from $9.99/mo
           </a>
         ) : null}

@@ -1,1 +1,1 @@
-export { useUser } from '@/lib/useUser';
+export { useUser, useInsiderUnlock } from '@/lib/useUser';

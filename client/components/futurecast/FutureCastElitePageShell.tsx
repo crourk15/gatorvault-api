@@ -3,8 +3,8 @@
 import React from 'react';
 import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
 import { FutureCastMobileHeader } from '@/components/futurecast/FutureCastMobileHeader';
-import { isFutureCastInsider } from '@/lib/futurecast-insider';
-import { insiderUnlockHref } from '@/lib/navConfig';
+import { useUser } from '@/hooks/useUser';
+import { useInsiderUnlock } from '@/lib/useUser';
 import { usePathname } from '@/lib/use-pathname';
 import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 import type { FutureCastSegment } from '@/lib/vault-route-map';
@@ -17,10 +17,10 @@ type Props = {
 
 /** Shared shell — UF Premium Page standard (Recruiting Hub / NIL parity). */
 export function FutureCastElitePageShell({ segment, testId, children }: Props): React.ReactElement {
-  const insider = isFutureCastInsider();
+  const { isInsider: insider } = useUser();
   const isDesktop = useIsCommandCenterDesktop();
   const pathname = usePathname();
-  const unlockHref = insiderUnlockHref({ returnPath: pathname });
+  const { href: unlockHref, navigate: goToUnlock } = useInsiderUnlock({ returnPath: pathname });
 
   return (
     <div
@@ -33,7 +33,14 @@ export function FutureCastElitePageShell({ segment, testId, children }: Props): 
       </div>
       {children}
       {!insider ? (
-        <a href={unlockHref} className="gv-paywall-sticky-cta">
+        <a
+          href={unlockHref}
+          className="gv-paywall-sticky-cta"
+          onClick={(e) => {
+            e.preventDefault();
+            goToUnlock();
+          }}
+        >
           Unlock FutureCast Insider · Film Room from $9.99/mo
         </a>
       ) : null}

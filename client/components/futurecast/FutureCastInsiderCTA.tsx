@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { isFutureCastInsider } from '@/lib/futurecast-insider';
-import { insiderUnlockHref } from '@/lib/navConfig';
+import { useUser } from '@/hooks/useUser';
+import { useInsiderUnlock } from '@/lib/useUser';
 import { usePathname } from '@/lib/use-pathname';
 
 type Props = {
@@ -19,8 +19,9 @@ export function FutureCastInsiderCTA({
   ctaLabel = 'Unlock FutureCast Insider',
 }: Props): React.ReactElement | null {
   const pathname = usePathname();
-  const unlockHref = insiderUnlockHref({ returnPath: pathname });
-  if (isFutureCastInsider()) return null;
+  const { isInsider } = useUser();
+  const { href: unlockHref, navigate: goToUnlock } = useInsiderUnlock({ returnPath: pathname });
+  if (isInsider) return null;
 
   const prefix =
     total != null && limit != null && total > limit ? `Showing ${limit} of ${total} · ` : '';
@@ -32,7 +33,14 @@ export function FutureCastInsiderCTA({
         {prefix}
         {message}
       </p>
-      <a href={unlockHref} className="gv-paywall-cta">
+      <a
+        href={unlockHref}
+        className="gv-paywall-cta"
+        onClick={(e) => {
+          e.preventDefault();
+          goToUnlock();
+        }}
+      >
         {ctaLabel}
       </a>
     </div>

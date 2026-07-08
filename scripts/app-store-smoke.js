@@ -9,6 +9,8 @@ const EXPECTED_TIER = (process.env.APP_REVIEW_TIER || 'war').toLowerCase();
 const routes = [
   { n: 'privacy', url: '/privacy/', marker: 'Privacy' },
   { n: 'terms', url: '/terms/', marker: 'Terms' },
+  { n: 'game-week', url: '/vault/game-week/', marker: 'Game Week' },
+  { n: 'film-room', url: '/vault/film-room/', marker: 'Film Room' },
   { n: 'futurecast', url: '/vault/futurecast/', marker: 'FutureCast' },
   { n: 'recruiting', url: '/vault/recruiting/', marker: 'Recruiting' },
   { n: 'team', url: '/vault/team/', marker: 'Team' },

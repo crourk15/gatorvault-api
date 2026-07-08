@@ -13,9 +13,7 @@ import {
   filmRoomHubFromSegment,
   parseFilmRoomSegmentFromPath,
 } from '@/lib/vault-route-map';
-import { isFilmRoomInsider } from '@/lib/futurecast-insider';
-import { insiderUnlockHref } from '@/lib/navConfig';
-import { nativeNavigationUrl } from '@/lib/api-base';
+import { useUser, useInsiderUnlock } from '@/lib/useUser';
 import { usePathname } from '@/lib/use-pathname';
 import {
   SCHEME_SCHOOL_LESSONS,
@@ -252,10 +250,8 @@ function hubFromUrl(): string | null {
 
 export function VaultFilmRoomPage(): React.ReactElement {
   const pathname = usePathname();
-  const unlockHref = insiderUnlockHref({ returnPath: pathname });
-  const goToUnlock = () => {
-    window.location.href = nativeNavigationUrl(unlockHref);
-  };
+  const { isInsider: insider } = useUser();
+  const { navigate: goToUnlock } = useInsiderUnlock({ returnPath: pathname });
   const [items, setItems] = useState<FilmRoomCatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -263,7 +259,6 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const [schemeLesson, setSchemeLesson] = useState<SchemeSchoolLesson | null>(null);
   const [lessonDetail, setLessonDetail] = useState<FilmRoomLessonDetail | null>(null);
   const [lessonLoading, setLessonLoading] = useState(false);
-  const [insider, setInsider] = useState(() => isFilmRoomInsider());
   const [hub, setHub] = useState<string>(() => {
     const fromUrl = hubFromUrl();
     if (fromUrl) return fromUrl;
@@ -278,13 +273,6 @@ export function VaultFilmRoomPage(): React.ReactElement {
       const seg = parseFilmRoomSegmentFromPath();
       if (seg) setHub(filmRoomHubFromSegment(seg));
     }
-  }, []);
-
-  useEffect(() => {
-    const syncInsider = () => setInsider(isFilmRoomInsider());
-    syncInsider();
-    window.addEventListener('gv-auth-changed', syncInsider);
-    return () => window.removeEventListener('gv-auth-changed', syncInsider);
   }, []);
 
   const load = useCallback(async () => {
@@ -462,7 +450,14 @@ export function VaultFilmRoomPage(): React.ReactElement {
         ) : null}
 
         {!insider ? (
-          <a href={unlockHref} className="gv-paywall-sticky-cta">
+          <a
+            href="#"
+            className="gv-paywall-sticky-cta"
+            onClick={(e) => {
+              e.preventDefault();
+              goToUnlock();
+            }}
+          >
             Unlock Film Room + FutureCast · from $9.99/mo
           </a>
         ) : null}

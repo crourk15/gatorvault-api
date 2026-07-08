@@ -44,19 +44,31 @@ Username: appreview@gatorvaultinsider.com
 Password: (enter your demo password in Connect only - never commit)
 
 Notes for reviewer:
-GatorVault Insider - demo account has War Room tier (full access until StoreKit live).
+GatorVault Insider — demo account has War Room tier (full access).
 
-SIGN IN: https://gatorvaultinsider.com/join/
+SIGN IN: Tap "Sign in" on the join screen (not Create account).
+Email: appreview@gatorvaultinsider.com
+Password: (same as Sign-in required field above)
+
+UNLOCK / PAYWALL (Guideline 2.1a fix):
+Logged-in users tapping "Unlock Game Week + Film Room" go to Membership & Account (/vault/membership/) for Apple IAP — not back to sign-in.
 
 REVIEW PATHS
-1. FutureCast - /vault/futurecast/
-2. Recruiting - /vault/recruiting/
-3. Team - /vault/team/
-4. Community - /vault/community/ -> open thread -> Report / Block user
-5. Membership - /vault/membership/ (do NOT delete demo account; delete UI at #delete-account)
-6. Legal - /privacy/ and /terms/ (no sign-in)
+1. Game Week — /vault/game-week/ (demo: no paywall)
+2. Film Room — /vault/film-room/
+3. FutureCast — /vault/futurecast/
+4. Recruiting — /vault/recruiting/
+5. Team — /vault/team/
+6. Community — /vault/community/ → open thread → Report / Block user
+7. Membership & IAP — /vault/membership/ (do NOT delete demo account)
+8. Account deletion UI — /vault/membership/#delete-account (see attached screen recording on throwaway account)
+9. Legal — /privacy/ and /terms/ (no sign-in)
 
-UGC moderation: report + block. Account deletion: password + type DELETE.
+AGE RATING: Gambling = Yes (informational betting lines in Game Week; no real-money wagering in-app).
+
+SUBSCRIPTIONS (Apple IAP): Locker $4.99/mo, Film $9.99/mo, War $19.99/mo — product IDs com.gatorvaultinsider.{locker,film,war}.{monthly,annual}
+
+UGC: report + block. Account deletion: password + type DELETE (permanent).
 Support: support@gatorvaultinsider.com
 
 --- Screenshots (6.5 inch Display slot — 1284×2778) ---
