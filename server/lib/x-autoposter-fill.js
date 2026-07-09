@@ -1867,6 +1867,68 @@ async function tryAutonomousSelfHealRefill(opts = {}) {
   }
 }
 
+const HUB_REPUBLISH_SKIP_REASONS = new Set([
+  'thin_recruiting_template',
+  'player_archived',
+  'recruiting_qa',
+  'quality_gate',
+  'duplicate_fingerprint',
+  'similar_post',
+  'policy'
+]);
+
+async function tryHubStudioRepublishRecovery(skipReasons = [], opts = {}) {
+  const maxRepublish = Math.max(1, parseInt(opts.maxRepublish || '3', 10));
+  const slugs = [];
+  const pushSlug = (value) => {
+    const slug = String(value || '')
+      .trim()
+      .toLowerCase();
+    if (slug && !slugs.includes(slug)) slugs.push(slug);
+  };
+
+  for (const row of skipReasons || []) {
+    if (!HUB_REPUBLISH_SKIP_REASONS.has(row.reason)) continue;
+    pushSlug(row.playerSlug || row.slug);
+  }
+
+  if (!slugs.length) {
+    try {
+      const resolutionLedger = require('./autoposter/player-resolution-ledger');
+      const { resolveCoverageTier } = require('./player-intelligence/tiers');
+      const hubFreshMs = store.POST_STUDIO_MAX_INTEL_AGE_MS || 48 * 60 * 60 * 1000;
+      const rows = intelStore
+        .getUnqueuedIntel({ maxAgeMs: hubFreshMs })
+        .filter(isBeatWriterIntel)
+        .filter((row) => !store.isComposedIntelPollution(row))
+        .slice(0, 16);
+      for (const row of rows) {
+        if (slugs.length >= maxRepublish) break;
+        const slug = String(row.playerSlug || '').trim().toLowerCase();
+        if (!slug) continue;
+        const blocked = resolutionLedger.checkPlayerResolution(slug);
+        if (!blocked.blocked || blocked.reason !== 'player_archived') continue;
+        const tier = await resolveCoverageTier(slug);
+        if (tier !== 'A' && tier !== 'B') continue;
+        pushSlug(slug);
+      }
+    } catch (err) {
+      console.warn('[x-autoposter] hub republish recovery scan skipped:', err.message);
+    }
+  }
+
+  const recovered = [];
+  for (const slug of slugs.slice(0, maxRepublish)) {
+    try {
+      const out = await republishPlayerIntel(slug, { post: false });
+      if (out?.enqueued) recovered.push(out);
+    } catch (err) {
+      console.warn(`[x-autoposter] hub republish recovery failed for ${slug}:`, err.message);
+    }
+  }
+  return recovered;
+}
+
 async function refillAutoposterQueue({
   minPending = parseInt(process.env.X_AUTOPOST_REFILL_MIN_PENDING || '2', 10),
   maxEnqueue = parseInt(process.env.X_AUTOPOST_REFILL_MAX_ENQUEUE || '4', 10),
@@ -1945,6 +2007,7 @@ async function refillAutoposterQueue({
   let goldenFourRun = null;
   let goldenEnqueued = [];
   let selfHealRun = null;
+  let republishRecoveryRun = null;
   const enqueued = [];
   const skipReasons = [];
   let added = 0;
@@ -1997,6 +2060,7 @@ async function refillAutoposterQueue({
             reason: result.reason,
             source: raw.source,
             player: raw.playerName,
+            playerSlug: raw.playerSlug || null,
             topic: raw.topic || raw.triggerType
           });
         }
@@ -2045,6 +2109,22 @@ async function refillAutoposterQueue({
       for (const row of selfHealRun?.healed || []) {
         if (row.republish?.enqueued) {
           enqueued.push(row.republish.enqueued);
+          added += 1;
+        }
+      }
+    }
+    if (added === 0 && hubStudioRefill) {
+      republishRecoveryRun = await withRefillTimeout(
+        tryHubStudioRepublishRecovery(skipReasons, { maxRepublish: Math.min(maxEnqueue, 3) }),
+        REFILL_PREP_TIMEOUT_MS,
+        'hub_republish_recovery'
+      ).catch((err) => {
+        console.warn('[x-autoposter] hub republish recovery skipped:', err.message);
+        return [];
+      });
+      for (const out of republishRecoveryRun || []) {
+        if (out?.enqueued) {
+          enqueued.push(out.enqueued);
           added += 1;
         }
       }
@@ -2180,15 +2260,33 @@ async function refillAutoposterQueue({
           }
         }
       }
+      if (added === 0 && hubStudioRefill && !draftQueueSatisfied()) {
+        republishRecoveryRun = await withRefillTimeout(
+          tryHubStudioRepublishRecovery(skipReasons, { maxRepublish: maxEnqueue }),
+          REFILL_PREP_TIMEOUT_MS,
+          'hub_republish_recovery_empty_queue'
+        ).catch((err) => {
+          console.warn('[x-autoposter] empty-queue republish recovery skipped:', err.message);
+          return [];
+        });
+        for (const out of republishRecoveryRun || []) {
+          if (out?.enqueued) {
+            enqueued.push(out.enqueued);
+            added += 1;
+          }
+        }
+      }
       void beatPrepPromise;
       return {
         ok: true,
         skipped: added === 0,
         reason:
           added > 0
-            ? goldenEnqueued.length
-              ? 'empty_queue_golden_four'
-              : 'empty_queue_intel'
+            ? republishRecoveryRun?.length
+              ? 'empty_queue_republish_recovery'
+              : goldenEnqueued.length
+                ? 'empty_queue_golden_four'
+                : 'empty_queue_intel'
             : 'empty_queue_miss',
         pending: store.listQueue({ status: 'pending' }).length,
         enqueued,

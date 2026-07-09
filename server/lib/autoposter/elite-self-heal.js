@@ -104,12 +104,19 @@ async function assessSelfHealCandidate(slug, opts = {}) {
     resolution?.resolution === resolutionLedger.RESOLVED_PUBLISH &&
     isSubElitePreview(resolution.preview);
   const blockedDuplicate = resolutionCheck.blocked && resolutionCheck.reason === 'duplicate_already_sent';
+  const archivedRecoverable =
+    resolutionCheck.blocked &&
+    resolutionCheck.reason === 'player_archived' &&
+    ['thin_recruiting_template', 'quality_gate', 'missing_situation', 'exhausted_promote', 'policy_block'].includes(
+      resolution?.archiveReason
+    );
   const needsHeal =
     current.fingerprint.ok &&
-    (drift.drift || subEliteResolution || (blockedDuplicate && !stored?.ok));
+    (drift.drift || subEliteResolution || (blockedDuplicate && !stored?.ok) || archivedRecoverable);
 
   let healReason = null;
   if (subEliteResolution) healReason = 'sub_elite_prior_send';
+  else if (archivedRecoverable) healReason = 'archived_recoverable';
   else if (drift.drift) healReason = drift.reason;
   else if (blockedDuplicate && !stored?.ok) healReason = 'blocked_without_elite_fingerprint';
 
@@ -206,6 +213,14 @@ async function listTierAbHealCandidates({ limit = 12 } = {}) {
   for (const [slug, row] of Object.entries(resolutionDoc.players || {})) {
     if (row.resolution === resolutionLedger.RESOLVED_PUBLISH) slugs.add(slug);
     if (row.resolution === resolutionLedger.RESOLVED_ARCHIVE && row.archiveReason === 'duplicate_already_sent') {
+      slugs.add(slug);
+    }
+    if (
+      row.resolution === resolutionLedger.RESOLVED_ARCHIVE &&
+      ['thin_recruiting_template', 'quality_gate', 'missing_situation', 'exhausted_promote', 'policy_block'].includes(
+        row.archiveReason
+      )
+    ) {
       slugs.add(slug);
     }
   }

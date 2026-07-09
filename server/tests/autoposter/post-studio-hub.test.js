@@ -192,3 +192,9 @@ test('isStalePostStudioDraft blocks thin recruiting templates and composed intel
     true
   );
 });
+
+test('futurecast player URL alone is not thin recruiting template', () => {
+  const substantive =
+    "2028 EDGE Cain Van Norden · 4★\nCorey Bender reports Florida is actively recruiting Van Norden after his brother's near-miss with the Gators.\nhttps://gatorvaultinsider.com/vault/futurecast/player/cain-van-norden";
+  assert.equal(store.isThinRecruitingPostText(substantive), false);
+});
