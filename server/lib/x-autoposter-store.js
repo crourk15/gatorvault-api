@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const policy = require('./x-autoposter-policy');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'x');
-const QUEUE_PATH = path.join(DATA_DIR, 'autoposter-queue.json');
+const QUEUE_PATH = process.env.X_AUTOPOSTER_QUEUE_PATH || path.join(DATA_DIR, 'autoposter-queue.json');
 const OPS_LOG_PATH = path.join(DATA_DIR, 'autoposter-ops-log.json');
 const OPS_LOG_MAX = 200;
 
@@ -290,12 +290,144 @@ function getQueueCounts() {
 
 const POST_STUDIO_DRAFT_STATUSES = ['hub_review', 'pending'];
 
+const POST_STUDIO_MAX_DRAFT_AGE_MS = parseInt(
+  process.env.POST_STUDIO_MAX_DRAFT_AGE_MS || String(72 * 60 * 60 * 1000),
+  10
+);
+const POST_STUDIO_MAX_INTEL_AGE_MS = parseInt(
+  process.env.POST_STUDIO_MAX_INTEL_AGE_MS || String(72 * 60 * 60 * 1000),
+  10
+);
+const STALE_VISIT_TEMPLATE_RE =
+  /\bfirst trip to (?:The Swamp|Gainesville)\b|\bMarch trip\b|\bput UF in (?:his|her) early mix\b|\bgave Florida a clean early look, and all three DB coaches\b|\bgave Florida early traction\b/i;
+
+function draftIntelAgeMs(item = {}) {
+  const ts = item.sourceEventCreatedAt || item.eventTimestamp || item.createdAt || item.scheduledAt;
+  const t = new Date(ts || 0).getTime();
+  if (!Number.isFinite(t) || t <= 0) return null;
+  return Date.now() - t;
+}
+
+function isRecycledVisitTemplate(text = '', intelAgeMs = null) {
+  if (!STALE_VISIT_TEMPLATE_RE.test(String(text || ''))) return false;
+  const age = intelAgeMs == null ? POST_STUDIO_MAX_INTEL_AGE_MS + 1 : intelAgeMs;
+  return age > POST_STUDIO_MAX_INTEL_AGE_MS;
+}
+
+function isStalePostStudioDraft(item = {}) {
+  const text = String(item.text || '');
+  const meta = item.validationMeta || {};
+  const beatText = String(meta.beatText || '');
+  const intelAgeMs = draftIntelAgeMs(item);
+  const queueTs = new Date(item.createdAt || item.scheduledAt || 0).getTime();
+  const queueAgeMs = Number.isFinite(queueTs) && queueTs > 0 ? Date.now() - queueTs : null;
+
+  if (queueAgeMs != null && queueAgeMs > POST_STUDIO_MAX_DRAFT_AGE_MS) {
+    return { stale: true, reason: 'draft_too_old' };
+  }
+  if (intelAgeMs != null && intelAgeMs > POST_STUDIO_MAX_INTEL_AGE_MS) {
+    return { stale: true, reason: 'intel_too_old' };
+  }
+
+  const slug = String(item.playerSlug || '').trim().toLowerCase();
+  if (slug && beatText) {
+    try {
+      const { detectBeatIdentityMismatch } = require('./autoposter/beat-identity-guard');
+      const mismatch = detectBeatIdentityMismatch(slug, item.playerName, beatText, {
+        fingerprint: item.intelFingerprint || null
+      });
+      if (mismatch.mismatch) {
+        return { stale: true, reason: mismatch.reason || 'beat_identity_mismatch' };
+      }
+    } catch {
+      /* optional */
+    }
+  }
+
+  try {
+    const { PR6_FALLBACK_RE } = require('./player-intelligence/golden-four-compose');
+    const { THIN_FALLBACK_RE } = require('./autoposter/rewrite/compose-synonym-rotation');
+    if (PR6_FALLBACK_RE.test(text) || THIN_FALLBACK_RE.test(text)) {
+      return { stale: true, reason: 'thin_template' };
+    }
+  } catch {
+    /* optional */
+  }
+  if (isRecycledVisitTemplate(text, intelAgeMs)) {
+    return { stale: true, reason: 'recycled_visit_template' };
+  }
+
+  return { stale: false };
+}
+
+function dedupeDraftsBySlug(items = []) {
+  const seen = new Set();
+  const out = [];
+  for (const item of items) {
+    const slug = String(item.playerSlug || '').trim().toLowerCase();
+    if (!slug) {
+      out.push(item);
+      continue;
+    }
+    if (seen.has(slug)) continue;
+    seen.add(slug);
+    out.push(item);
+  }
+  return out;
+}
+
+function filterVisiblePostStudioDrafts(items = []) {
+  const sorted = [...items].sort(
+    (a, b) => new Date(b.createdAt || b.scheduledAt) - new Date(a.createdAt || a.scheduledAt)
+  );
+  return dedupeDraftsBySlug(sorted).filter((item) => !isStalePostStudioDraft(item).stale);
+}
+
+function pruneStalePostStudioDrafts({ statuses = POST_STUDIO_DRAFT_STATUSES } = {}) {
+  const doc = loadQueue();
+  const pruned = [];
+  const kept = [];
+
+  for (const item of doc.items) {
+    if (!statuses.includes(item.status)) {
+      kept.push(item);
+      continue;
+    }
+    const check = isStalePostStudioDraft(item);
+    if (check.stale) {
+      item.status = 'cancelled';
+      item.error = `post_studio_prune:${check.reason}`;
+      item.cancelledAt = nowIso();
+      pruned.push({ id: item.id, playerSlug: item.playerSlug || null, reason: check.reason });
+      kept.push(item);
+      continue;
+    }
+    kept.push(item);
+  }
+
+  const visible = filterVisiblePostStudioDrafts(kept.filter((i) => statuses.includes(i.status)));
+  const visibleSlugs = new Set(
+    visible.map((i) => String(i.playerSlug || '').trim().toLowerCase()).filter(Boolean)
+  );
+
+  for (const item of kept) {
+    if (!statuses.includes(item.status)) continue;
+    const slug = String(item.playerSlug || '').trim().toLowerCase();
+    if (!slug || visibleSlugs.has(slug)) continue;
+    item.status = 'cancelled';
+    item.error = 'post_studio_prune:duplicate_slug';
+    item.cancelledAt = nowIso();
+    pruned.push({ id: item.id, playerSlug: slug, reason: 'duplicate_slug' });
+  }
+
+  if (pruned.length) saveQueue({ ...doc, items: kept });
+  return { pruned, prunedCount: pruned.length };
+}
+
 function listPostStudioDrafts({ limit = 50 } = {}) {
   const doc = loadQueue();
-  const items = doc.items
-    .filter((i) => POST_STUDIO_DRAFT_STATUSES.includes(i.status))
-    .sort((a, b) => new Date(b.createdAt || b.scheduledAt) - new Date(a.createdAt || a.scheduledAt));
-  return items.slice(0, limit);
+  const items = doc.items.filter((i) => POST_STUDIO_DRAFT_STATUSES.includes(i.status));
+  return filterVisiblePostStudioDrafts(items).slice(0, limit);
 }
 
 /** Legacy pending items from pre-hub mode — surface them in Post Studio. */
@@ -445,6 +577,10 @@ module.exports = {
   markManualPosted,
   getQueueCounts,
   listPostStudioDrafts,
+  pruneStalePostStudioDrafts,
+  isStalePostStudioDraft,
+  isRecycledVisitTemplate,
+  POST_STUDIO_MAX_INTEL_AGE_MS,
   migratePendingToHubReview,
   POST_STUDIO_DRAFT_STATUSES,
   recoverFailedVerifiedCommits,

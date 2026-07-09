@@ -28,3 +28,13 @@ test('pickBeatIntelRow skips mismatched rows', () => {
   ];
   assert.equal(pickBeatIntelRow('dk-kalu', rows), null);
 });
+
+test('detectBeatIdentityMismatch flags coach news mislinked to recruit slug', () => {
+  const beat =
+    'Former Florida #Gators coach Billy Donovan will become the lead assistant coach for the San Antonio #Spurs under Mitch Johnson, per reports.';
+  const out = detectBeatIdentityMismatch('billy-donovan', 'Billy Donovan', beat, {
+    fingerprint: 'beat_target_update_billy-donovan_2026-07-02_onlygators'
+  });
+  assert.equal(out.mismatch, true);
+  assert.equal(out.reason, 'coach_news_mislink');
+});

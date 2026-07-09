@@ -72,3 +72,86 @@ test('api monitor ignores ops noise and benign client errors', () => {
   assert.equal(report.errors5xx, 0);
   assert.equal(report.benign4xx, 2);
 });
+
+test('pruneStalePostStudioDrafts cancels recycled visit templates and duplicate slugs', () => {
+  const fs = require('fs');
+  const os = require('os');
+  const path = require('path');
+  const tmpQueue = path.join(os.tmpdir(), `gv-test-queue-${Date.now()}.json`);
+  const freshAt = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+  const staleAt = new Date(Date.now() - 96 * 60 * 60 * 1000).toISOString();
+
+  const doc = {
+    version: 2,
+    updatedAt: new Date().toISOString(),
+    items: [
+      {
+        id: 'xp_stale_drakeford',
+        status: 'hub_review',
+        playerSlug: 'ryan-drakeford',
+        playerName: 'Ryan Drakeford',
+        createdAt: staleAt,
+        sourceEventCreatedAt: staleAt,
+        text: "Drakeford's first trip to The Swamp gave Florida early traction",
+        validationMeta: { beatText: 'first trip to The Swamp' }
+      },
+      {
+        id: 'xp_dup_robinson_old',
+        status: 'hub_review',
+        playerSlug: 'man-robinson',
+        playerName: 'Man Robinson',
+        createdAt: staleAt,
+        sourceEventCreatedAt: staleAt,
+        text: "Robinson's first trip to Gainesville gave Florida a clean early look",
+        validationMeta: { beatText: 'first trip to Gainesville' }
+      },
+      {
+        id: 'xp_dup_robinson_new',
+        status: 'hub_review',
+        playerSlug: 'man-robinson',
+        playerName: 'Man Robinson',
+        createdAt: freshAt,
+        sourceEventCreatedAt: freshAt,
+        text: 'Fresh Robinson intel with new staff contact angle',
+        validationMeta: { beatText: 'DB coaches in daily contact after Gainesville' }
+      },
+      {
+        id: 'xp_coach_billy',
+        status: 'hub_review',
+        playerSlug: 'billy-donovan',
+        playerName: 'Billy Donovan',
+        createdAt: freshAt,
+        sourceEventCreatedAt: freshAt,
+        text: 'Donovan was on campus in March',
+        validationMeta: {
+          beatText:
+            'Former Florida coach Billy Donovan will become the lead assistant coach for the San Antonio Spurs'
+        }
+      }
+    ]
+  };
+
+  fs.writeFileSync(tmpQueue, JSON.stringify(doc, null, 2));
+  const prevQueuePath = process.env.X_AUTOPOSTER_QUEUE_PATH;
+  process.env.X_AUTOPOSTER_QUEUE_PATH = tmpQueue;
+  delete require.cache[require.resolve('../../lib/x-autoposter-store')];
+  const store = require('../../lib/x-autoposter-store');
+
+  try {
+    const out = store.pruneStalePostStudioDrafts();
+    assert.equal(out.prunedCount, 3);
+    const drafts = store.listPostStudioDrafts({ limit: 20 });
+    assert.equal(drafts.length, 1);
+    assert.equal(drafts[0].playerSlug, 'man-robinson');
+    assert.equal(drafts[0].id, 'xp_dup_robinson_new');
+  } finally {
+    delete require.cache[require.resolve('../../lib/x-autoposter-store')];
+    if (prevQueuePath == null) delete process.env.X_AUTOPOSTER_QUEUE_PATH;
+    else process.env.X_AUTOPOSTER_QUEUE_PATH = prevQueuePath;
+    try {
+      fs.unlinkSync(tmpQueue);
+    } catch {
+      /* optional */
+    }
+  }
+});

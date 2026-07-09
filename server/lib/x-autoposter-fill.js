@@ -142,6 +142,15 @@ function dedupeIntelByPlayerSlug(rows) {
 
 async function selectBeatIntelForAutopost(beatIntel, { limit = MAX_BEAT_INTEL_SCAN } = {}) {
   const deduped = dedupeIntelByPlayerSlug(beatIntel);
+  const { filterBeatIntelRows } = require('./autoposter/beat-identity-guard');
+  const identityFiltered = deduped
+    .map((row) => {
+      const slug = String(row.playerSlug || '').trim().toLowerCase();
+      if (!slug) return row;
+      const valid = filterBeatIntelRows(slug, [row], row.playerName);
+      return valid[0] || null;
+    })
+    .filter(Boolean);
   let tierA = null;
   let wasMentionedRecently = null;
   try {
@@ -151,7 +160,7 @@ async function selectBeatIntelForAutopost(beatIntel, { limit = MAX_BEAT_INTEL_SC
   } catch {
     /* optional */
   }
-  const scored = deduped.map((row) => {
+  const scored = identityFiltered.map((row) => {
     const slug = String(row.playerSlug || '').trim().toLowerCase();
     let tierRank = 2;
     if (tierA && slug && tierA.has(slug)) tierRank = 0;
@@ -190,13 +199,17 @@ async function buildCandidatesFromIntelRows(intelRows, { maxBuild = MAX_BEAT_INT
   return candidates;
 }
 
-async function collectUnqueuedIntelCandidates({ forcePost = false, maxBuild } = {}) {
+async function collectUnqueuedIntelCandidates({ forcePost = false, maxBuild, hubStudioRefill = false } = {}) {
   const buildCap = Number.isFinite(Number(maxBuild)) && Number(maxBuild) > 0 ? Number(maxBuild) : MAX_BEAT_INTEL_BUILD;
   const candidates = [];
-  const maxIntelAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_INTEL_AGE_MS;
+  const hubFreshMs = store.POST_STUDIO_MAX_INTEL_AGE_MS || 72 * 60 * 60 * 1000;
+  const maxIntelAgeMs =
+    forcePost && hubStudioRefill ? hubFreshMs : forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_INTEL_AGE_MS;
   try {
     const beatIntel = intelStore
-      .getUnqueuedIntel({ maxAgeMs: forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS })
+      .getUnqueuedIntel({
+        maxAgeMs: forcePost && hubStudioRefill ? hubFreshMs : forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS
+      })
       .filter(isBeatWriterIntel);
     const beatScan = await selectBeatIntelForAutopost(beatIntel, { limit: Math.max(buildCap * 2, 12) });
     const otherIntel = dedupeIntelByPlayerSlug(
@@ -506,6 +519,7 @@ async function probeIntelAutoposterPath(slug) {
 async function buildNewsFromIntel(intel) {
   const { matchIntelToPlayer } = require('./autoposter/identity-matcher');
   const { isEligibleIntel } = require('./autoposter/autoposter-policy');
+  const { detectBeatIdentityMismatch } = require('./autoposter/beat-identity-guard');
   const player = matchIntelToPlayer(intel);
   if (!player) return null;
   if (!isEligibleIntel(intel, player)) return null;
@@ -513,6 +527,13 @@ async function buildNewsFromIntel(intel) {
   const slug = String(intel.playerSlug || player?.playerId || '')
     .trim()
     .toLowerCase();
+  const beatText = String(intel.detail || intel.skinny || intel.text || '').trim();
+  if (slug && beatText) {
+    const mismatch = detectBeatIdentityMismatch(slug, intel.playerName || player?.name, beatText, {
+      fingerprint: intel.fingerprint || null
+    });
+    if (mismatch.mismatch) return null;
+  }
   if (slug) {
     try {
       const eliteRecruiting = require('./autoposter/elite-recruiting-compose');
@@ -1829,6 +1850,16 @@ async function refillAutoposterQueue({
       console.warn('[x-autoposter] intel store init skipped during refill:', err.message);
     });
   }
+  if (hubStudioRefill) {
+    try {
+      const pruned = store.pruneStalePostStudioDrafts();
+      if (pruned.prunedCount) {
+        console.info(`[x-autoposter] post studio pruned ${pruned.prunedCount} stale draft(s)`);
+      }
+    } catch (err) {
+      console.warn('[x-autoposter] post studio prune skipped:', err.message);
+    }
+  }
   if (!pipelineGuards.autoposterComposeEnabled()) {
     return { ok: true, skipped: true, reason: 'autoposter disabled', pending: 0, enqueued: [] };
   }
@@ -1961,7 +1992,8 @@ async function refillAutoposterQueue({
       rawNewsCandidates = await withRefillTimeout(
         collectUnqueuedIntelCandidates({
           forcePost: forcePost || digDeeper,
-          maxBuild: intelBuildCap
+          maxBuild: intelBuildCap,
+          hubStudioRefill
         }),
         REFILL_INTEL_COLLECT_TIMEOUT_MS,
         'intel_candidate_collect'

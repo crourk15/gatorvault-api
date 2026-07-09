@@ -22,12 +22,38 @@ function slugifyName(name = '') {
   }
 }
 
+const COACH_NEWS_RE =
+  /\b(?:former|ex-)\b[^.]{0,80}\b(?:head coach|assistant coach|lead assistant coach|coach)\b/i;
+const PRO_SPORTS_CONTEXT_RE =
+  /\b(?:spurs|thunder|bulls|lakers|celtics|warriors|nba|nfl|mlb|coaching staff|under mitch johnson)\b/i;
+
+function detectNonRecruitingBeat(slug, beatText) {
+  const beat = String(beatText || '');
+  if (!beat) return { mismatch: false };
+
+  if (COACH_NEWS_RE.test(beat) && PRO_SPORTS_CONTEXT_RE.test(beat)) {
+    return { mismatch: true, reason: 'coach_news_mislink' };
+  }
+  if (
+    /\b(?:head coach of the|assistant coach for the)\b/i.test(beat) &&
+    !/\b(?:quarterback|safety|cornerback|linebacker|recruit|prospect|offer|visit|commit|unofficial)\b/i.test(beat)
+  ) {
+    return { mismatch: true, reason: 'coach_news_mislink' };
+  }
+
+  void slug;
+  return { mismatch: false };
+}
+
 function detectBeatIdentityMismatch(slug, playerName, beatText, meta = {}) {
   const key = normalizeToken(slug);
   const beat = String(beatText || '');
   const parts = nameParts(playerName);
   const lastName = parts[parts.length - 1] || null;
   if (!key || !beat) return { mismatch: false };
+
+  const nonRecruiting = detectNonRecruitingBeat(key, beat);
+  if (nonRecruiting.mismatch) return nonRecruiting;
 
   const fingerprint = normalizeToken(meta.fingerprint || '');
   if (fingerprint) {
@@ -102,6 +128,7 @@ function pickBeatIntelRow(slug, rows = [], playerName = null) {
 
 module.exports = {
   detectBeatIdentityMismatch,
+  detectNonRecruitingBeat,
   filterBeatIntelRows,
   pickBeatIntelRow
 };

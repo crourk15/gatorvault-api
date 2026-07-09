@@ -2,7 +2,6 @@
  * Enqueue golden-four elite posts in board order — Drakeford → Robinson → Willingham.
  */
 const intelStore = require('../recruiting-intel-store');
-const eliteCaption = require('../x-autoposter-elite-caption');
 const store = require('../x-autoposter-store');
 const policy = require('../x-autoposter-policy');
 const cadence = require('../x-autoposter-cadence');
@@ -13,6 +12,10 @@ const { composeGoldenFourFactPost } = require('./golden-four-compose');
 const preflight = require('../autoposter/player-resolution-preflight');
 const resolutionLedger = require('../autoposter/player-resolution-ledger');
 const recruitingStore = require('../recruiting-store');
+const {
+  POST_STUDIO_MAX_INTEL_AGE_MS,
+  isRecycledVisitTemplate
+} = require('../x-autoposter-store');
 
 const DEFAULT_ORDER = Object.freeze([
   'ryan-drakeford',
@@ -51,9 +54,15 @@ async function pickFusedBeatIntel(slug) {
 function slugAlreadyPending(slug, items = []) {
   return items.some(
     (item) =>
-      String(item.status || '').toLowerCase() === 'pending' &&
+      ['pending', 'hub_review'].includes(String(item.status || '').toLowerCase()) &&
       String(item.playerSlug || '').toLowerCase() === slug
   );
+}
+
+function intelFreshEnough(intel) {
+  const ts = new Date(intel?.timestamp || intel?.createdAt || intel?.reportedAt || 0).getTime();
+  if (!Number.isFinite(ts) || ts <= 0) return false;
+  return Date.now() - ts <= POST_STUDIO_MAX_INTEL_AGE_MS;
 }
 
 async function composeGoldenFourPost(slug, intel, on3Sync, playerRow) {
@@ -67,34 +76,9 @@ async function composeGoldenFourPost(slug, intel, on3Sync, playerRow) {
     return factBuilt;
   }
 
-  const voiceBuilt = await eliteCaption.buildElitePlayerPost({
-    playerName: intel.playerName,
-    playerSlug: slug,
-    beatText: intel.detail || intel.skinny,
-    intel: {
-      ...intel,
-      playerSlug: slug,
-      playerName: intel.playerName,
-      _forcePostFreshness: true
-    },
-    source: intel.source || 'golden-four-enqueue'
-  });
-
-  if (voiceBuilt?.ok && voiceBuilt.text) {
-    const { PR6_FALLBACK_RE } = require('./golden-four-compose');
-    if (PR6_FALLBACK_RE.test(voiceBuilt.text)) {
-      return {
-        ok: false,
-        reason: 'pr6_fallback_blocked',
-        factReason: factBuilt?.reason || null,
-        voiceReason: 'pr6_template_detected'
-      };
-    }
-  }
-
   return {
-    ...(voiceBuilt || { ok: false }),
-    reason: voiceBuilt?.reason || factBuilt?.reason || 'compose_failed',
+    ok: false,
+    reason: factBuilt?.reason || 'compose_failed',
     factReason: factBuilt?.reason || null
   };
 }
@@ -146,7 +130,7 @@ async function enqueueGoldenFourPosts(opts = {}) {
   let offsetMs = 0;
 
   for (const slug of slugs) {
-    if (slugAlreadyPending(slug, store.listQueue({ status: 'pending' }))) {
+    if (slugAlreadyPending(slug, store.listPostStudioDrafts({ limit: 500 }))) {
       results.push({ slug, ok: false, reason: 'already_pending' });
       continue;
     }
@@ -154,6 +138,10 @@ async function enqueueGoldenFourPosts(opts = {}) {
     const intel = await pickFusedBeatIntel(slug);
     if (!intel) {
       results.push({ slug, ok: false, reason: 'no_beat_intel' });
+      continue;
+    }
+    if (!intelFreshEnough(intel)) {
+      results.push({ slug, ok: false, reason: 'stale_intel' });
       continue;
     }
 
@@ -222,6 +210,12 @@ async function enqueueGoldenFourPosts(opts = {}) {
         reason: elite?.reason || elite?.skipReason || 'compose_failed',
         factReason: elite?.factReason || null
       });
+      continue;
+    }
+
+    const intelAgeMs = Date.now() - new Date(intel.timestamp || intel.createdAt || 0).getTime();
+    if (isRecycledVisitTemplate(elite.text, intelAgeMs)) {
+      results.push({ slug, ok: false, reason: 'recycled_visit_template' });
       continue;
     }
 

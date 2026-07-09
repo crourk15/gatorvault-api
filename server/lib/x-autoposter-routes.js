@@ -50,7 +50,7 @@ function schedulePostStudioRefillWhenReady(runRefill, refillState) {
   };
 
   const attempt = async () => {
-    if (!pipelineGuards.shouldSkipHeavyJob('post-studio-refill-deferred')) {
+    if (!pipelineGuards.shouldSkipPostStudioRefill('post-studio-refill-deferred')) {
       try {
         const out = await runRefill();
         finish({ at: store.nowIso(), ...out });
@@ -749,12 +749,13 @@ function mountXAutoposterRoutes(app) {
         });
       }
       const memorySnapshot = pipelineGuards.memorySnapshot();
-      const memoryBlocked = pipelineGuards.shouldSkipHeavyJob('post-studio-refill');
+      const memoryBlocked = pipelineGuards.shouldSkipPostStudioRefill('post-studio-refill');
       const digDeeperDefault = req.body?.digDeeper !== false;
       const maxEnqueueDefault = parseInt(req.body?.maxEnqueue || req.query?.maxEnqueue || '5', 10);
 
       const runRefill = async (opts = {}) => {
         store.migratePendingToHubReview();
+        store.pruneStalePostStudioDrafts();
         const elevated = pipelineGuards.memorySnapshot().rssMb >= pipelineGuards.MEMORY_WARN_MB;
         const maxEnqueue = opts.maxEnqueue ?? (elevated ? Math.min(maxEnqueueDefault, 2) : maxEnqueueDefault);
         const digDeeper = opts.digDeeper ?? (elevated ? false : digDeeperDefault);
