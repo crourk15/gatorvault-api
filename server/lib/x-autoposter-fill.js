@@ -1932,7 +1932,8 @@ async function refillAutoposterQueue({
   let need;
   if (cadence.isHubModeEnabled()) {
     const minHub = cadence.minHubReviewTarget();
-    need = Math.max(minHub - hubReview.length, hubReview.length === 0 ? 2 : 0);
+    const visibleDrafts = countDrafts();
+    need = Math.max(minHub - visibleDrafts, visibleDrafts === 0 ? 2 : 0);
     if (cadence.autoRoutineEnabled() || cadence.autoCommitsEnabled()) {
       const autoNeed = Math.max(cadence.autoQueueMax() - pending.length, pending.length === 0 ? 1 : 0);
       need = Math.max(need, autoNeed);

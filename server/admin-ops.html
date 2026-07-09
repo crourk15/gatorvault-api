@@ -1360,14 +1360,20 @@
       var drafts=j.drafts!=null?j.drafts:0;
       var msg='Refill done — '+n+' new draft(s), '+drafts+' total in studio.';
       if(n===0){
-        msg+='\n\nNothing new composed. Try Compose with a player slug, or check beat/intel ingest.';
-        if(j.skipReasons&&j.skipReasons.length){
-          msg+='\nSkip reasons: '+j.skipReasons.slice(0,3).map(function(s){return s.reason||s;}).join(', ');
-        }else if(j.reason){
+        msg+='\n\nNothing new composed.';
+        if(j.reason){
           msg+='\nReason: '+j.reason;
-        }else if(j.error){
-          msg+='\nError: '+j.error;
         }
+        if(j.hubReview!=null&&j.drafts!=null&&j.hubReview!==j.drafts){
+          msg+='\nRaw hub_review: '+j.hubReview+' · visible drafts: '+j.drafts;
+        }
+        if(j.skipReasons&&j.skipReasons.length){
+          msg+='\nSkip reasons: '+j.skipReasons.slice(0,5).map(function(s){
+            var bit=(s.player?(' '+s.player):'')+(s.reason?(' → '+s.reason):'');
+            return bit.trim()||s;
+          }).join('; ');
+        }
+        msg+='\n\nTry Compose on a player slug, dismiss stale drafts, or check beat ingest.';
       }
       alert(msg);
       loadPostStudio();
