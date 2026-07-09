@@ -33,6 +33,7 @@ const POST_STUDIO_REFILL_MEMORY_MAX_WAIT_MS = parseInt(
 );
 
 function shouldSkipPostStudioRefillSafe(label) {
+  const pipelineGuards = require('./pipeline-guards');
   if (typeof pipelineGuards.shouldSkipPostStudioRefill === 'function') {
     return pipelineGuards.shouldSkipPostStudioRefill(label);
   }
