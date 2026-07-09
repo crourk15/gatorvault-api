@@ -295,11 +295,26 @@ const POST_STUDIO_MAX_DRAFT_AGE_MS = parseInt(
   10
 );
 const POST_STUDIO_MAX_INTEL_AGE_MS = parseInt(
-  process.env.POST_STUDIO_MAX_INTEL_AGE_MS || String(72 * 60 * 60 * 1000),
+  process.env.POST_STUDIO_MAX_INTEL_AGE_MS || String(48 * 60 * 60 * 1000),
   10
 );
 const STALE_VISIT_TEMPLATE_RE =
   /\bfirst trip to (?:The Swamp|Gainesville)\b|\bMarch trip\b|\bput UF in (?:his|her) early mix\b|\bgave Florida a clean early look, and all three DB coaches\b|\bgave Florida early traction\b/i;
+const THIN_RECRUITING_TEMPLATE_RE =
+  /\bmaking .+ a priority early\b|\bmutual interest is real\b|\binterest is certainly mutual\b|\boffer carried extra weight\b|\bgatorvaultinsider\.com\/vault\/futurecast\b/i;
+const COMPOSED_INTEL_DETAIL_RE = /^20\d{2}\s+[A-Z0-9][^\n]{0,80}·\s*\d+★/m;
+
+function isThinRecruitingPostText(text = '') {
+  return THIN_RECRUITING_TEMPLATE_RE.test(String(text || ''));
+}
+
+function isComposedIntelPollution(intel = {}) {
+  const text = String(intel.detail || intel.skinny || intel.text || '').trim();
+  if (!text) return false;
+  if (COMPOSED_INTEL_DETAIL_RE.test(text)) return true;
+  if (/gatorvaultinsider\.com\/vault\/futurecast/i.test(text)) return true;
+  return false;
+}
 
 function draftIntelAgeMs(item = {}) {
   const ts = item.sourceEventCreatedAt || item.eventTimestamp || item.createdAt || item.scheduledAt;
@@ -352,6 +367,9 @@ function isStalePostStudioDraft(item = {}) {
     }
   } catch {
     /* optional */
+  }
+  if (isThinRecruitingPostText(text)) {
+    return { stale: true, reason: 'thin_recruiting_template' };
   }
   if (isRecycledVisitTemplate(text, intelAgeMs)) {
     return { stale: true, reason: 'recycled_visit_template' };
@@ -580,6 +598,8 @@ module.exports = {
   pruneStalePostStudioDrafts,
   isStalePostStudioDraft,
   isRecycledVisitTemplate,
+  isThinRecruitingPostText,
+  isComposedIntelPollution,
   POST_STUDIO_MAX_INTEL_AGE_MS,
   migratePendingToHubReview,
   POST_STUDIO_DRAFT_STATUSES,

@@ -191,6 +191,7 @@ async function buildCandidatesFromIntelRows(intelRows, { maxBuild = MAX_BEAT_INT
   const cap = Number.isFinite(Number(maxBuild)) && Number(maxBuild) > 0 ? Number(maxBuild) : MAX_BEAT_INTEL_BUILD;
   for (const intel of intelRows) {
     if (candidates.length >= cap) break;
+    if (store.isComposedIntelPollution(intel)) continue;
     const gate = await eligibility.checkIntelForAutopost(intel);
     if (!gate.allowed) continue;
     const row = await buildNewsFromIntel(intel);
@@ -210,7 +211,8 @@ async function collectUnqueuedIntelCandidates({ forcePost = false, maxBuild, hub
       .getUnqueuedIntel({
         maxAgeMs: forcePost && hubStudioRefill ? hubFreshMs : forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS
       })
-      .filter(isBeatWriterIntel);
+      .filter(isBeatWriterIntel)
+      .filter((row) => !store.isComposedIntelPollution(row));
     const beatScan = await selectBeatIntelForAutopost(beatIntel, { limit: Math.max(buildCap * 2, 12) });
     const otherIntel = dedupeIntelByPlayerSlug(
       intelStore.getUnqueuedIntel({ maxAgeMs: maxIntelAgeMs }).filter((i) => !isBeatWriterIntel(i))
@@ -223,11 +225,16 @@ async function collectUnqueuedIntelCandidates({ forcePost = false, maxBuild, hub
 }
 
 /** Build a single top-priority beat intel row — fast path when wide collect times out. */
-async function collectPriorityBeatIntelCandidate({ forcePost = false } = {}) {
-  const maxIntelAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_BEAT_INTEL_AGE_MS;
+async function collectPriorityBeatIntelCandidate({ forcePost = false, hubStudioRefill = false } = {}) {
+  const hubFreshMs = store.POST_STUDIO_MAX_INTEL_AGE_MS || 48 * 60 * 60 * 1000;
+  const maxIntelAgeMs =
+    forcePost && hubStudioRefill ? hubFreshMs : forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_BEAT_INTEL_AGE_MS;
   const beatIntel = intelStore
-    .getUnqueuedIntel({ maxAgeMs: forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS })
-    .filter(isBeatWriterIntel);
+    .getUnqueuedIntel({
+      maxAgeMs: forcePost && hubStudioRefill ? hubFreshMs : forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS
+    })
+    .filter(isBeatWriterIntel)
+    .filter((row) => !store.isComposedIntelPollution(row));
   const scan = await selectBeatIntelForAutopost(beatIntel, { limit: 1 });
   if (!scan.length) return null;
   const eligibility = require('./rivals-prediction-eligibility');
@@ -534,6 +541,7 @@ async function buildNewsFromIntel(intel) {
     });
     if (mismatch.mismatch) return null;
   }
+  if (store.isComposedIntelPollution(intel)) return null;
   if (slug) {
     try {
       const eliteRecruiting = require('./autoposter/elite-recruiting-compose');
@@ -1216,6 +1224,15 @@ async function attemptEnqueueCandidate(rawCandidate, doc, opts = {}) {
     return finalizeEnqueueFailure(candidate, doc, { queued: false, reason: 'quality_gate' }, opts);
   }
 
+  if (cadence.isHubModeEnabled() && store.isThinRecruitingPostText(scored.text)) {
+    return finalizeEnqueueFailure(
+      scored,
+      doc,
+      { queued: false, reason: 'thin_recruiting_template' },
+      opts
+    );
+  }
+
   if (phase3?.phase3Enabled?.() && opts.allowRepublish !== true) {
     const mem = phase3.guardCandidateMemory(scored);
     if (!mem.ok) {
@@ -1564,16 +1581,28 @@ async function collectBeatAutoposterCandidates(freshPosts) {
   return candidates;
 }
 
-async function collectFreshPostCandidates({ forcePost = false, digDeeper = false, intelOnly = false } = {}) {
+async function collectFreshPostCandidates({
+  forcePost = false,
+  digDeeper = false,
+  intelOnly = false,
+  hubStudioRefill = false
+} = {}) {
   const candidates = [];
-  const maxCommitAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_COMMIT_EVENT_AGE_MS;
-  const maxBeatAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_BEAT_POST_AGE_MS;
-  const maxIntelAgeMs = forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_INTEL_AGE_MS;
+  const hubFreshMs = store.POST_STUDIO_MAX_INTEL_AGE_MS || 48 * 60 * 60 * 1000;
+  const maxCommitAgeMs =
+    forcePost && hubStudioRefill ? hubFreshMs : forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_COMMIT_EVENT_AGE_MS;
+  const maxBeatAgeMs =
+    forcePost && hubStudioRefill ? hubFreshMs : forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_BEAT_POST_AGE_MS;
+  const maxIntelAgeMs =
+    forcePost && hubStudioRefill ? hubFreshMs : forcePost ? FORCE_POST_COMMIT_AGE_MS : MAX_INTEL_AGE_MS;
 
   try {
     const beatIntel = intelStore
-      .getUnqueuedIntel({ maxAgeMs: forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS })
-      .filter(isBeatWriterIntel);
+      .getUnqueuedIntel({
+        maxAgeMs: forcePost && hubStudioRefill ? hubFreshMs : forcePost ? maxIntelAgeMs : MAX_BEAT_INTEL_AGE_MS
+      })
+      .filter(isBeatWriterIntel)
+      .filter((row) => !store.isComposedIntelPollution(row));
     const beatScan = await selectBeatIntelForAutopost(beatIntel, { limit: MAX_BEAT_INTEL_BUILD * 2 });
     const otherIntel = dedupeIntelByPlayerSlug(
       intelStore.getUnqueuedIntel({ maxAgeMs: maxIntelAgeMs }).filter((i) => !isBeatWriterIntel(i))
@@ -2044,7 +2073,7 @@ async function refillAutoposterQueue({
     if (!rawNewsCandidates.length) {
       try {
         const priority = await withRefillTimeout(
-          collectPriorityBeatIntelCandidate({ forcePost: forcePost || digDeeper }),
+          collectPriorityBeatIntelCandidate({ forcePost: forcePost || digDeeper, hubStudioRefill }),
           REFILL_PREP_TIMEOUT_MS,
           'priority_beat_intel'
         );
@@ -2084,7 +2113,8 @@ async function refillAutoposterQueue({
           collectFreshPostCandidates({
             forcePost: forcePost || digDeeper,
             digDeeper: beatDigDeeper,
-            intelOnly: true
+            intelOnly: true,
+            hubStudioRefill
           }),
           REFILL_PREP_TIMEOUT_MS,
           'intel_only_collect'

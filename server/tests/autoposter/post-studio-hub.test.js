@@ -155,3 +155,40 @@ test('pruneStalePostStudioDrafts cancels recycled visit templates and duplicate 
     }
   }
 });
+
+test('isStalePostStudioDraft blocks thin recruiting templates and composed intel pollution', () => {
+  const store = require('../../lib/x-autoposter-store');
+  const freshAt = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+
+  const thomas = {
+    id: 'xp_thomas_thin',
+    status: 'hub_review',
+    playerSlug: 'antonio-thomas-jr',
+    createdAt: freshAt,
+    sourceEventCreatedAt: freshAt,
+    text: "2028 EDGE Antonio Thomas Jr · 4★ · On3 No. 17 natl · No. 4 EDGE · No. 5 FL\nFlorida is making Thomas a priority early, and the mutual interest is real.\ngatorvaultinsider.com/vault/futurecast/player/antonio-thomas-jr",
+    validationMeta: {
+      beatText:
+        "Florida is making 2028 4-star EDGE Antonio Thomas Jr. a priority early on, and the interest is certainly mutual."
+    }
+  };
+  const britt = {
+    id: 'xp_britt_thin',
+    status: 'hub_review',
+    playerSlug: 'cale-britt',
+    createdAt: freshAt,
+    sourceEventCreatedAt: freshAt,
+    text: "2028 LB Cale Britt · 4★ · On3 No. 267 natl · No. 21 LB · No. 37 FL\nFlorida's offer carried extra weight for Britt — hearing it directly from Billy Napier made the moment stand out",
+    validationMeta: { beatText: 'Florida offered 2028 four-star linebacker Cale Britt.' }
+  };
+
+  assert.equal(store.isStalePostStudioDraft(thomas).reason, 'thin_recruiting_template');
+  assert.equal(store.isStalePostStudioDraft(britt).reason, 'thin_recruiting_template');
+  assert.equal(
+    store.isComposedIntelPollution({
+      detail:
+        "2028 EDGE Antonio Thomas Jr · 4★ · On3 No. 17 natl · No. 4 EDGE · No. 5 FL\nFlorida is making Thomas a priority early, and the mutual interest is real.\ngatorvaultinsider.com/vault/futurecast/player/antonio-thomas-jr"
+    }),
+    true
+  );
+});
