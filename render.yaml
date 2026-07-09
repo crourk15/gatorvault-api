@@ -168,7 +168,9 @@ services:
       - key: SELF_RUNNER_POST_QA_DELAY_MS
         value: "45000"
       - key: MEMORY_GUARD_RSS_MB
-        value: "420"
+        value: "720"
+      - key: POST_STUDIO_REFILL_MAX_RSS_MB
+        value: "850"
       - key: QA_BUNDLE_HTML_ONLY
         value: "true"
       - key: QA_LIVE_DASHBOARD_RETRIES

@@ -102,6 +102,10 @@ function guardIntelForPipeline(rawIntel) {
 
 const MEMORY_LIMIT_MB = parseInt(process.env.MEMORY_GUARD_RSS_MB || '420', 10);
 const MEMORY_WARN_MB = parseInt(process.env.MEMORY_GUARD_WARN_MB || '360', 10);
+const POST_STUDIO_REFILL_MAX_RSS_MB = parseInt(
+  process.env.POST_STUDIO_REFILL_MAX_RSS_MB || String(Math.max(MEMORY_LIMIT_MB + 250, 800)),
+  10
+);
 
 function rssMb() {
   return Math.round(process.memoryUsage().rss / 1024 / 1024);
@@ -133,6 +137,11 @@ function shouldSkipHeavyJob(label, thresholdMb = MEMORY_LIMIT_MB) {
   return false;
 }
 
+/** Post Studio refill — higher ceiling than generic heavy jobs (operator-critical). */
+function shouldSkipPostStudioRefill(label = 'post-studio-refill') {
+  return shouldSkipHeavyJob(label, POST_STUDIO_REFILL_MAX_RSS_MB);
+}
+
 module.exports = {
   DEFAULT_INTEL,
   pipelinesEnabled,
@@ -150,8 +159,10 @@ module.exports = {
   guardIntelForPipeline,
   MEMORY_LIMIT_MB,
   MEMORY_WARN_MB,
+  POST_STUDIO_REFILL_MAX_RSS_MB,
   rssMb,
   memorySnapshot,
   isMemoryUnderPressure,
-  shouldSkipHeavyJob
+  shouldSkipHeavyJob,
+  shouldSkipPostStudioRefill
 };
