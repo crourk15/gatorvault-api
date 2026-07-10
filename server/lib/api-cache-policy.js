@@ -34,6 +34,11 @@ const NO_STORE_PREFIXES = [
 
 /** Short TTL (seconds) — semi-static catalog/board data. */
 const SHORT_TTL_ROUTES = [
+  { prefix: '/api/recruiting/hub/bundle', maxAge: 30, sMaxAge: 90, swr: 120 },
+  { prefix: '/api/recruiting/hub/ticker', maxAge: 30, sMaxAge: 90, swr: 120 },
+  { prefix: '/api/recruiting/hub/class-overview', maxAge: 45, sMaxAge: 90, swr: 120 },
+  { prefix: '/api/recruiting/hub/hero', maxAge: 45, sMaxAge: 90, swr: 120 },
+  { prefix: '/api/recruiting/class-metrics', maxAge: 45, sMaxAge: 90, swr: 120 },
   { prefix: '/api/futurecast/home', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/futurecast/class', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/futurecast/predictions', maxAge: 300, sMaxAge: 600 },
@@ -62,7 +67,8 @@ function cacheControlForPath(pathname) {
   for (const route of SHORT_TTL_ROUTES) {
     if (path === route.prefix || path.startsWith(`${route.prefix}/`)) {
       const sMax = route.sMaxAge ?? route.maxAge;
-      return `public, max-age=${route.maxAge}, s-maxage=${sMax}, stale-while-revalidate=60`;
+      const swr = route.swr ?? 60;
+      return `public, max-age=${route.maxAge}, s-maxage=${sMax}, stale-while-revalidate=${swr}`;
     }
   }
 

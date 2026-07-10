@@ -62,6 +62,12 @@ function savePile(doc) {
   doc.updatedAt = nowIso();
   if (doc.cases.length > MAX_CASES) doc.cases = doc.cases.slice(-MAX_CASES);
   fs.writeFileSync(PILE_PATH, JSON.stringify(doc, null, 2));
+  try {
+    const persistence = require('./pipeline-persistence');
+    persistence.scheduleDetectivesPersist(doc);
+  } catch {
+    /* optional postgres */
+  }
   return doc;
 }
 

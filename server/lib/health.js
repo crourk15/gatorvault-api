@@ -11,6 +11,28 @@ module.exports = (app) => {
     });
   });
 
+  /**
+   * Readiness probe — routes wired and hub cache has been primed at least once.
+   * Render should use this for deploy health when GV_USE_READY_HEALTH=1.
+   */
+  app.get('/ready', (_req, res) => {
+    const routesReady = global.__GV_API_ROUTES_READY__ === true;
+    let hubReady = false;
+    try {
+      hubReady = require('./recruiting-hub-cache').getMeta()?.ready === true;
+    } catch {
+      hubReady = false;
+    }
+    const ready = routesReady && hubReady;
+    res.status(ready ? 200 : 503).json({
+      ok: ready,
+      ready,
+      routesReady,
+      hubReady,
+      time: Date.now()
+    });
+  });
+
   app.get('/api/health', (req, res) => {
     let dashboard = null;
     let deploy = null;

@@ -4,17 +4,17 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import '@/lib/home-wow.css';
 import { HOME_REFRESH } from '@/lib/vault-home-api';
 import { fetchRecruitingBoard, type RecruitingBoardResponse } from '@/lib/recruiting-board-api';
-import { fetchRecruitingHubTicker } from '@/lib/recruiting-hub-elite-api';
+import { fetchRecruitingHubBundle } from '@/lib/recruiting-hub-elite-api';
 import { useVaultDataReload } from '@/lib/vault-navigation';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
 import { HomeCommandCenter } from '@/components/home/premium/command/HomeCommandCenter';
 import {
   fetchBeatIntel,
-  fetchClassMetrics,
   fetchHighPriorityIntel,
   fetchMovementIntel,
   type BeatIntelItem,
+  type ClassMetricsResponse,
   type HighPriorityIntelItem,
 } from '@/lib/recruiting-ui-api';
 import { fetchFutureCastHome, type FutureCastHomeResponse } from '@/lib/futurecast-home-api';
@@ -38,14 +38,14 @@ import {
 declare global {
   interface Window {
     __GV_HOME_WOW__?: {
-      metrics?: Awaited<ReturnType<typeof fetchClassMetrics>>;
+      metrics?: ClassMetricsResponse;
       futureCastTargets?: unknown[];
       beatItems?: BeatIntelItem[];
     };
   }
 }
 
-function readBootMetrics(): Awaited<ReturnType<typeof fetchClassMetrics>> | null {
+function readBootMetrics(): ClassMetricsResponse | null {
   if (typeof window === 'undefined') return null;
   const fromBoot = window.__GV_HOME_WOW__?.metrics;
   if (fromBoot) return fromBoot;
@@ -53,7 +53,7 @@ function readBootMetrics(): Awaited<ReturnType<typeof fetchClassMetrics>> | null
     const year = ACTIVE_RECRUITING_CLASS_YEAR;
     const raw = sessionStorage.getItem(`gv_class_metrics_v1:${year}`);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as { at: number; data: Awaited<ReturnType<typeof fetchClassMetrics>> };
+    const parsed = JSON.parse(raw) as { at: number; data: ClassMetricsResponse };
     if (!parsed?.data || Date.now() - parsed.at > 5 * 60_000) return null;
     return parsed.data;
   } catch {
@@ -73,7 +73,7 @@ export function HomePremiumPage(): React.ReactElement {
   const [movementIntel, setMovementIntel] = useState<MovementIntelResponse | null>(null);
   const [beatIntel, setBeatIntel] = useState<BeatIntelItem[]>(readBootBeat);
   const [board, setBoard] = useState<RecruitingBoardResponse | null>(null);
-  const [classMetrics, setClassMetrics] = useState<Awaited<ReturnType<typeof fetchClassMetrics>> | null>(
+  const [classMetrics, setClassMetrics] = useState<ClassMetricsResponse | null>(
     readBootMetrics
   );
   const [futureCastHome, setFutureCastHome] = useState<FutureCastHomeResponse | null>(null);
@@ -107,23 +107,22 @@ export function HomePremiumPage(): React.ReactElement {
     const poll = warmPollProfile();
     try {
       const year = ACTIVE_RECRUITING_CLASS_YEAR;
-      const [ticker, intel, movement, beat, recruitingBoard, metrics, fcHome, hpTargets] =
+      const [hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets] =
         await Promise.all([
-          fetchWithWarmPoll(() => fetchRecruitingHubTicker(year), poll).catch(() => []),
+          fetchWithWarmPoll(() => fetchRecruitingHubBundle(year), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchHighPriorityIntel(), poll).catch(() => []),
           fetchWithWarmPoll(() => fetchMovementIntel(), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchBeatIntel(), poll).catch(() => []),
           fetchWithWarmPoll(() => fetchRecruitingBoard(year), poll).catch(() => null),
-          fetchWithWarmPoll(() => fetchClassMetrics(), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchFutureCastHome(), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchHighPriorityTargets(year), poll).catch(() => null),
         ]);
-      setHubTicker(ticker);
+      setHubTicker(hubBundle?.ticker ?? []);
       setHpIntel(intel);
       setMovementIntel(movement);
       setBeatIntel(beat);
       setBoard(recruitingBoard);
-      setClassMetrics(metrics);
+      setClassMetrics(hubBundle?.classOverview ? { ...hubBundle.classOverview } : null);
       setFutureCastHome(fcHome);
       setHighPriority(hpTargets);
     } finally {

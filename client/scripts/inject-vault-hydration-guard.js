@@ -16,7 +16,7 @@ const vaultDir = path.join(serverDir, 'vault');
 const BOOT_TAG = `<script data-gv-hydration-boot="">${VAULT_HYDRATION_BOOT_SCRIPT}</script>`;
 const CSS_TAG = `<style data-gv-hydration-css="">${VAULT_HYDRATION_CRITICAL_CSS}</style>`;
 const API_WARM_TAG =
-  '<script data-gv-api-warm="">(function(){try{var Y=2027;var p=function(u){fetch(u,{cache:"no-store",credentials:"same-origin"}).catch(function(){})};var run=function(){try{p("/api/ping");p("/api/health");p("/api/recruiting/hub/bundle?year="+Y);p("/api/recruiting/class-metrics?year="+Y);p("/api/recruiting/class-metrics?year=2026");p("/api/recruiting/class-metrics?year=2028");p("/api/recruiting/hub/ticker?year="+Y);p("/api/futurecast/home");p("/api/futurecast/master-board");p("/api/roster/players?limit=1");p("/api/team/coaching-staff")}catch(e){}};run();if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",run,{once:true})}}catch(e){}})();</script>';
+  '<script data-gv-api-warm="">(function(){try{var Y=2027;var p=function(u){fetch(u,{cache:"default",credentials:"same-origin"}).catch(function(){})};var run=function(){try{p("/api/ping");p("/api/recruiting/hub/bundle?year="+Y)}catch(e){}};run();if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",run,{once:true})}}catch(e){}})();</script>';
 
 function walkVaultHtml(dir, out = []) {
   if (!fs.existsSync(dir)) return out;

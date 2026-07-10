@@ -113,12 +113,13 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
       }
 
       Promise.all([
-        fetchJson('/api/recruiting/class-metrics?year=' + year, 0).catch(function() { return null; }),
+        fetchJson('/api/recruiting/hub/bundle?year=' + year, 0).catch(function() { return null; }),
         fetchJson('/api/futurecast/home', 0).catch(function() { return null; }),
         fetchJson('/api/recruiting/intel/beat?limit=3', 0).catch(function() { return null; })
       ]).then(function(results) {
-        var metrics = results[0];
-        if (metrics && metrics.status !== 'building') {
+        var bundle = results[0];
+        var metrics = bundle && bundle.classOverview ? bundle.classOverview : null;
+        if (metrics) {
           paintMetrics(metrics);
           try {
             sessionStorage.setItem(

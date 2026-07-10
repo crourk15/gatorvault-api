@@ -480,7 +480,7 @@ function recordAutoposterSend(candidate, result, { duplicateRecovery = false, so
   return posted;
 }
 
-function bootstrapAutoposterRuntime() {
+async function bootstrapAutoposterRuntime() {
   try {
     const sentLedger = require('./x-autoposter-sent-ledger');
     const pruned = sentLedger.prunePhantomLedgerEntries();
@@ -506,6 +506,15 @@ function bootstrapAutoposterRuntime() {
     autopostLog('warn', `Ledger hydrate skipped: ${e.message}`);
   }
   try {
+    const pipelinePersistence = require('./autoposter/pipeline-persistence');
+    if (pipelinePersistence.isEnabled()) {
+      const out = await pipelinePersistence.hydratePipelineDocs();
+      autopostLog('info', 'Hydrated detectives pile + autoposter queue from Postgres', out);
+    }
+  } catch (e) {
+    autopostLog('warn', `Pipeline hydrate skipped: ${e.message}`);
+  }
+  try {
     const doc = store.loadQueue();
     const { removed } = policy.purgeFixtureQueueItems(doc);
     if (removed > 0) {
@@ -514,6 +523,16 @@ function bootstrapAutoposterRuntime() {
     }
   } catch (e) {
     autopostLog('warn', `Fixture queue purge skipped: ${e.message}`);
+  }
+  try {
+    const sentLedger = require('./x-autoposter-sent-ledger');
+    const doc = store.loadQueue();
+    const bootstrapped = sentLedger.bootstrapFromQueueItems(doc.items);
+    if (bootstrapped) {
+      autopostLog('info', `Restored ${bootstrapped} sent post(s) into autopost ledger`);
+    }
+  } catch (e) {
+    autopostLog('warn', `Sent ledger bootstrap skipped: ${e.message}`);
   }
 }
 
@@ -858,18 +877,7 @@ function startXAutoposterScheduler() {
     lastError: null
   });
 
-  bootstrapAutoposterRuntime();
-
-  try {
-    const sentLedger = require('./x-autoposter-sent-ledger');
-    const doc = store.loadQueue();
-    const bootstrapped = sentLedger.bootstrapFromQueueItems(doc.items);
-    if (bootstrapped) {
-      autopostLog('info', `Restored ${bootstrapped} sent post(s) into autopost ledger`);
-    }
-  } catch (e) {
-    autopostLog('warn', `Sent ledger bootstrap skipped: ${e.message}`);
-  }
+  void bootstrapAutoposterRuntime();
 
   verifyCredentials()
     .then((s) => {

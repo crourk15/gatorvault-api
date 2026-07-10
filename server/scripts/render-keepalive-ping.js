@@ -1,21 +1,15 @@
 #!/usr/bin/env node
 /**
- * Render cron keep-alive — wakes cold free-tier instances and keeps them warm.
+ * Render cron keep-alive — lightweight wake (api/ping only).
  * Schedule: every 2 minutes (see render.yaml cron service).
  *
- * Cold spin-down returns fast 503 (~50ms). This script retries for up to 3 minutes
- * with long per-request timeouts so the instance actually boots.
+ * Avoids heavy /api/health or hub bundle builds on every cron tick.
  */
-
-const HEALTH_URL =
+const PING_URL =
+  process.env.KEEPALIVE_PING_URL ||
   process.env.KEEPALIVE_URL ||
   process.env.RENDER_KEEPALIVE_URL ||
-  'https://gatorvault-api.onrender.com/health';
-const PING_URL =
-  process.env.KEEPALIVE_PING_URL || 'https://gatorvault-api.onrender.com/api/ping';
-const HUB_URL =
-  process.env.KEEPALIVE_HUB_URL ||
-  'https://gatorvault-api.onrender.com/api/recruiting/hub/class-overview?year=2027';
+  'https://gatorvault-api.onrender.com/api/ping';
 
 const RETRY_STATUSES = new Set([502, 503, 504, 429]);
 const WAKE_WINDOW_MS = parseInt(process.env.KEEPALIVE_WAKE_MS || '180000', 10);
@@ -30,10 +24,10 @@ async function pingOnce(url) {
   const started = Date.now();
   const res = await fetch(url, {
     method: 'GET',
-    headers: { Accept: 'application/json', 'User-Agent': 'gatorvault-keepalive/2.0' },
+    headers: { Accept: 'application/json', 'User-Agent': 'gatorvault-keepalive/3.0' },
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   });
-  return { ok: res.ok, status: res.status, elapsed: Date.now() - started, res };
+  return { ok: res.ok, status: res.status, elapsed: Date.now() - started };
 }
 
 async function wakeUntilReady(url, label) {
@@ -64,29 +58,9 @@ async function wakeUntilReady(url, label) {
   throw new Error(`${label} wake failed after ${attempts} attempts (last HTTP ${lastStatus})`);
 }
 
-async function tryPing(url, label) {
-  try {
-    return await wakeUntilReady(url, label);
-  } catch (err) {
-    console.warn(`[keepalive] ${label} skipped:`, err.message);
-    return null;
-  }
-}
-
 async function main() {
-  const health = await wakeUntilReady(HEALTH_URL, 'health');
-  const ping = await tryPing(PING_URL, 'api/ping');
-  const hub = await tryPing(HUB_URL, 'hub/class-overview');
-
-  console.log(
-    '[keepalive] ok',
-    JSON.stringify({
-      health,
-      ping,
-      hub,
-      at: new Date().toISOString(),
-    })
-  );
+  const ping = await wakeUntilReady(PING_URL, 'api/ping');
+  console.log('[keepalive] ok', JSON.stringify({ ping, at: new Date().toISOString() }));
 }
 
 (async () => {

@@ -35,6 +35,12 @@ function saveQueue(doc) {
   doc.version = 2;
   doc.updatedAt = nowIso();
   fs.writeFileSync(QUEUE_PATH, JSON.stringify(doc, null, 2));
+  try {
+    const persistence = require('./autoposter/pipeline-persistence');
+    persistence.scheduleQueuePersist(doc);
+  } catch {
+    /* optional postgres */
+  }
   return doc;
 }
 

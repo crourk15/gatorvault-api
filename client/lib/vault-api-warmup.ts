@@ -1,8 +1,8 @@
 /**
- * Wake Render API before page data fetches — critical on cold start after idle.
+ * vault-api-warmup — minimal API wake (hub bundle is the primary cache prime).
  */
 import { apiFetch } from './api-fetch';
-import { ACTIVE_RECRUITING_CLASS_YEAR, RECRUITING_CLASS_YEARS } from './recruiting-cycle';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from './recruiting-cycle';
 
 let warmed = false;
 const warmedRecruitingApi = new Set<number>();
@@ -11,28 +11,21 @@ function hubYearFromPath(path: string): number {
   const match = path.match(/\/vault\/recruiting\/(\d{4})(?:\/|$)/);
   if (match) {
     const year = parseInt(match[1], 10);
-    if (RECRUITING_CLASS_YEARS.includes(year as (typeof RECRUITING_CLASS_YEARS)[number])) {
-      return year;
-    }
+    if ([2026, 2027, 2028].includes(year)) return year;
   }
   return ACTIVE_RECRUITING_CLASS_YEAR;
 }
 
-/** Prime recruiting hub API caches before navigation — safe to call on hover/touch. */
+/** Prime recruiting hub bundle before navigation — safe on hover/touch. */
 export function warmRecruitingHubApi(year = ACTIVE_RECRUITING_CLASS_YEAR): void {
   if (typeof window === 'undefined') return;
   if (warmedRecruitingApi.has(year)) return;
   warmedRecruitingApi.add(year);
-
-  const ping = (apiPath: string) => {
-    void apiFetch(apiPath, { timeoutMs: 15_000, retries: 2, retryDelayMs: 2_000 }).catch(() => {});
-  };
-
-  ping(`/api/recruiting/hub/bundle?year=${year}`);
-  for (const classYear of RECRUITING_CLASS_YEARS) {
-    ping(`/api/recruiting/class-metrics?year=${classYear}`);
-  }
-  ping(`/api/recruiting/hub/ticker?year=${year}`);
+  void apiFetch(`/api/recruiting/hub/bundle?year=${year}`, {
+    timeoutMs: 20_000,
+    retries: 2,
+    retryDelayMs: 2_000,
+  }).catch(() => {});
 }
 
 export function warmVaultApi(): void {
@@ -40,47 +33,22 @@ export function warmVaultApi(): void {
   warmed = true;
 
   const path = window.location.pathname.replace(/\/$/, '') || '/';
-  const onRecruitingHub = path.startsWith('/vault/recruiting');
-  const onFutureCast = path.startsWith('/vault/futurecast');
   const hubYear = hubYearFromPath(path);
 
   const ping = (apiPath: string) => {
     void apiFetch(apiPath, { timeoutMs: 15_000, retries: 2, retryDelayMs: 2_000 }).catch(() => {});
   };
 
-  // Immediate wake — health first, then route-critical hub caches.
   ping('/api/ping');
-  ping('/api/health');
   ping(`/api/recruiting/hub/bundle?year=${hubYear}`);
-  for (const year of RECRUITING_CLASS_YEARS) {
-    ping(`/api/recruiting/class-metrics?year=${year}`);
-  }
-  if (!onRecruitingHub) {
-    ping(`/api/recruiting/hub/ticker?year=${hubYear}`);
-  }
-  if (!onFutureCast) {
-    ping('/api/futurecast/master-board');
-  }
-  ping('/api/roster/players?limit=1');
-  ping('/api/team/coaching-staff');
-  ping('/api/community/categories');
-  ping('/api/community/pulse');
-  ping('/api/subscription/catalog');
 
   if (typeof window.requestIdleCallback === 'function') {
     window.requestIdleCallback(
       () => {
-        ping('/api/recruiting/intel/high-priority');
-        ping('/api/staff/dashboard');
-        ping('/api/community/threads?limit=1');
+        if (path.startsWith('/vault/futurecast')) ping('/api/futurecast/home');
+        if (path.startsWith('/vault/community')) ping('/api/community/categories');
       },
-      { timeout: 1500 }
+      { timeout: 2000 }
     );
-  } else {
-    window.setTimeout(() => {
-      ping('/api/recruiting/intel/high-priority');
-      ping('/api/staff/dashboard');
-      ping('/api/community/threads?limit=1');
-    }, 400);
   }
 }
