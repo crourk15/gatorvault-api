@@ -881,6 +881,7 @@ function startLiveDashboardScheduler() {
   const intervalMs = Math.max(60000, parseInt(process.env.LIVE_POLL_INTERVAL_MS || '180000', 10) || 180000); // default 3 min
   const bootDelay = Math.max(8000, parseInt(process.env.LIVE_POLL_BOOT_DELAY_MS || '20000', 10) || 20000);
   const tick = () => {
+    if (pipelineGuards.shouldSkipHeavyJob('live-dashboard')) return;
     const opsMonitor = require('./lib/ops-monitor');
     opsMonitor
       .wrapJob('live-refresh', 'cron:live-refresh', () => refreshLiveDashboard())
@@ -907,6 +908,7 @@ function startOn3IngestScheduler() {
   const bootDelay = Math.max(5000, parseInt(process.env.ON3_INGEST_BOOT_DELAY_MS || '15000', 10) || 15000);
 
   const tick = () => {
+    if (pipelineGuards.shouldSkipHeavyJob('on3-ingest')) return;
     const opsMonitor = require('./lib/ops-monitor');
     opsMonitor
       .wrapJob('recruiting-ingest', 'cron:recruiting-ingest', () => runOn3Ingest())
@@ -1141,6 +1143,11 @@ console.log('[boot] API routes ready');
 const providers = getEmailProviders();
 console.log('🚀 API server started with commit:', process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev');
 console.log('GatorVault server running on port', PORT);
+
+// Yield so Render /ready can answer before post-boot schedulers/store init.
+setImmediate(startPostBootServices);
+
+function startPostBootServices() {
   try {
     const deployCache = require('./lib/deploy-cache');
     const inv = deployCache.invalidateAllOnDeploy();
@@ -1176,38 +1183,57 @@ console.log('GatorVault server running on port', PORT);
           console.log('[identity-patterns] ready (' + items.length + ' players, ' + patternStore.storageMode() + ')');
           return null;
         }
-        return patternStore.rebuildAllPatterns().then((r) => {
-          console.log('[identity-patterns] boot rebuild:', r.count, 'players in', r.durationMs, 'ms');
-          try {
-            const opsMonitor = require('./lib/ops-monitor');
-            opsMonitor.logEvent({
-              subsystem: 'cron:identity-patterns',
-              status: 'success',
-              message: 'Identity patterns boot rebuild',
-              details: { count: r.count, durationMs: r.durationMs, boot: true }
-            });
-          } catch {
-            /* optional */
-          }
-        });
+        const rebuildDelay = Math.max(
+          120000,
+          parseInt(process.env.IDENTITY_PATTERNS_BOOT_REBUILD_DELAY_MS || '600000', 10) || 600000
+        );
+        console.log('[identity-patterns] empty — deferring boot rebuild', rebuildDelay, 'ms');
+        setTimeout(() => {
+          if (pipelineGuards.shouldSkipHeavyJob('identity-patterns-boot-rebuild')) return;
+          patternStore
+            .rebuildAllPatterns()
+            .then((r) => {
+              console.log('[identity-patterns] boot rebuild:', r.count, 'players in', r.durationMs, 'ms');
+              try {
+                const opsMonitor = require('./lib/ops-monitor');
+                opsMonitor.logEvent({
+                  subsystem: 'cron:identity-patterns',
+                  status: 'success',
+                  message: 'Identity patterns boot rebuild',
+                  details: { count: r.count, durationMs: r.durationMs, boot: true }
+                });
+              } catch {
+                /* optional */
+              }
+            })
+            .catch((err) => console.warn('[identity-patterns] boot rebuild failed:', err.message));
+        }, rebuildDelay);
+        return null;
       })
       .catch((err) => console.warn('[identity-patterns] boot sync skipped:', err.message));
     const { runPurgeFalseBrewsterIntel } = require('./lib/recruiting-public-alerts');
-    runPurgeFalseBrewsterIntel({ refresh: true })
-      .then((r) => {
-        if (r.before.falseCommitEvents || r.before.falseCommitIntel || r.before.falseCommitFeed) {
-          console.log('[recruiting-alerts] purged false Brewster intel:', r.before, '→', r.after);
-        }
-      })
-      .catch((err) => console.warn('[recruiting-alerts] Brewster purge skipped:', err.message));
-    const { runPurgeInvalidHeadlines } = require('./lib/recruiting-public-alerts');
-    runPurgeInvalidHeadlines({ refresh: true })
-      .then((r) => {
-        if (r.before?.invalidHeadlines || r.feedResult?.removed) {
-          console.log('[headlines] purged invalid/stale headlines:', r.before, '→', r.after, 'removed', r.feedResult?.removed);
-        }
-      })
-      .catch((err) => console.warn('[headlines] purge skipped:', err.message));
+    const purgeDelay = Math.max(
+      60000,
+      parseInt(process.env.ALERT_PURGE_BOOT_DELAY_MS || '300000', 10) || 300000
+    );
+    setTimeout(() => {
+      if (pipelineGuards.shouldSkipHeavyJob('alert-purge-boot')) return;
+      runPurgeFalseBrewsterIntel({ refresh: true })
+        .then((r) => {
+          if (r.before.falseCommitEvents || r.before.falseCommitIntel || r.before.falseCommitFeed) {
+            console.log('[recruiting-alerts] purged false Brewster intel:', r.before, '→', r.after);
+          }
+        })
+        .catch((err) => console.warn('[recruiting-alerts] Brewster purge skipped:', err.message));
+      const { runPurgeInvalidHeadlines } = require('./lib/recruiting-public-alerts');
+      runPurgeInvalidHeadlines({ refresh: true })
+        .then((r) => {
+          if (r.before?.invalidHeadlines || r.feedResult?.removed) {
+            console.log('[headlines] purged invalid/stale headlines:', r.before, '→', r.after, 'removed', r.feedResult?.removed);
+          }
+        })
+        .catch((err) => console.warn('[headlines] purge skipped:', err.message));
+    }, purgeDelay);
     try {
       const { scheduleRecruitingHubRefresh } = require('./lib/recruiting-hub-refresh');
       scheduleRecruitingHubRefresh();
@@ -1354,31 +1380,35 @@ console.log('GatorVault server running on port', PORT);
     console.warn('Onboarding scheduler init skipped', e.message);
   }
   try {
-    const { startXAutoposterScheduler } = require('./lib/x-autoposter');
-    const { verifyOAuth1Credentials } = require('./lib/x-oauth1');
-    verifyOAuth1Credentials()
-      .then((s) => {
-        if (s.ok) console.log('[autoposter] OAuth1 startup verify PASS — @' + s.screenName);
-        else console.warn('[autoposter] OAuth1 startup verify FAIL —', s.error);
-      })
-      .catch((err) => console.warn('[autoposter] OAuth1 startup verify error', err.message));
-    startXAutoposterScheduler();
-    try {
-      const { startDetectivesScheduler } = require('./lib/autoposter/detectives-scheduler');
-      startDetectivesScheduler();
-      console.log('[detectives] background scheduler started');
-    } catch (detectivesErr) {
-      console.warn('[detectives] scheduler init skipped', detectivesErr.message);
-    }
-    try {
-      const freshness = require('./lib/autoposter-freshness');
-      const scheduler = require('./lib/x-autoposter').getSchedulerStatus();
-      const synced = freshness.syncLastPostFromScheduler(scheduler);
-      if (synced.lastPostAt) {
-        console.log('[autoposter] last-post.json synced:', synced.lastPostAt);
+    if (!pipelineGuards.scheduledJobsEnabled()) {
+      console.log('[autoposter] schedulers skipped — X_SCHEDULED_JOBS_ENABLED is not true');
+    } else {
+      const { startXAutoposterScheduler } = require('./lib/x-autoposter');
+      const { verifyOAuth1Credentials } = require('./lib/x-oauth1');
+      verifyOAuth1Credentials()
+        .then((s) => {
+          if (s.ok) console.log('[autoposter] OAuth1 startup verify PASS — @' + s.screenName);
+          else console.warn('[autoposter] OAuth1 startup verify FAIL —', s.error);
+        })
+        .catch((err) => console.warn('[autoposter] OAuth1 startup verify error', err.message));
+      startXAutoposterScheduler();
+      try {
+        const { startDetectivesScheduler } = require('./lib/autoposter/detectives-scheduler');
+        startDetectivesScheduler();
+        console.log('[detectives] background scheduler started');
+      } catch (detectivesErr) {
+        console.warn('[detectives] scheduler init skipped', detectivesErr.message);
       }
-    } catch (syncErr) {
-      console.warn('[autoposter] last-post sync skipped:', syncErr.message);
+      try {
+        const freshness = require('./lib/autoposter-freshness');
+        const scheduler = require('./lib/x-autoposter').getSchedulerStatus();
+        const synced = freshness.syncLastPostFromScheduler(scheduler);
+        if (synced.lastPostAt) {
+          console.log('[autoposter] last-post.json synced:', synced.lastPostAt);
+        }
+      } catch (syncErr) {
+        console.warn('[autoposter] last-post sync skipped:', syncErr.message);
+      }
     }
   } catch (e) {
     console.warn('X AutoPoster scheduler failed to start', e.message);
@@ -1390,6 +1420,7 @@ console.log('GatorVault server running on port', PORT);
     const { syncPortalFromOn3 } = require('./lib/on3-ingest');
     const bootDelay = Math.max(5000, parseInt(process.env.ON3_PORTAL_SYNC_BOOT_DELAY_MS || '12000', 10) || 12000);
     setTimeout(() => {
+      if (pipelineGuards.shouldSkipHeavyJob('portal-ingest')) return;
       const opsMonitor = require('./lib/ops-monitor');
       opsMonitor
         .wrapJob('portal-ingest', 'cron:portal-ingest', () => syncPortalFromOn3())
@@ -1410,6 +1441,7 @@ console.log('GatorVault server running on port', PORT);
       const { rebuildFilmRoomCatalog } = require('./lib/film-room-feed');
       const filmInterval = parseInt(process.env.FILM_ROOM_SYNC_INTERVAL_MS || '21600000', 10);
       const runFilmSync = () => {
+        if (pipelineGuards.shouldSkipHeavyJob('film-room-sync')) return;
         const opsMonitor = require('./lib/ops-monitor');
         opsMonitor
           .wrapJob('film-room-weekly', 'cron:film-room-weekly', () => {
@@ -1419,7 +1451,11 @@ console.log('GatorVault server running on port', PORT);
           .then((c) => console.log('[film-room] knowledge engine refreshed:', c?.counts || c))
           .catch((err) => console.warn('[film-room] knowledge refresh failed:', err.message));
       };
-      setTimeout(runFilmSync, 20000);
+      const filmBootDelay = Math.max(
+        60000,
+        parseInt(process.env.FILM_ROOM_SYNC_BOOT_DELAY_MS || '600000', 10) || 600000
+      );
+      setTimeout(runFilmSync, filmBootDelay);
       setInterval(runFilmSync, filmInterval);
     } catch (e) {
       console.warn('Film Room knowledge refresh scheduler failed to start', e.message);
@@ -1536,5 +1572,6 @@ console.log('GatorVault server running on port', PORT);
   } catch (e) {
     console.warn('[guardian] runtime watchdog failed to start', e.message);
   }
+} // startPostBootServices
 
 } // wireApplication

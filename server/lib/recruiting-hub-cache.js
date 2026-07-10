@@ -345,6 +345,12 @@ async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = fa
 function scheduleBackgroundRefresh() {
   if (refreshTimer) return;
   refreshTimer = setInterval(() => {
+    try {
+      const pipelineGuards = require('./pipeline-guards');
+      if (pipelineGuards.shouldSkipHeavyJob('hub-background-warm')) return;
+    } catch {
+      /* optional */
+    }
     warmEliteHubCaches().catch((err) => {
       console.warn('[recruiting-hub-cache] background refresh failed:', err.message);
     });
@@ -353,39 +359,59 @@ function scheduleBackgroundRefresh() {
 }
 
 function scheduleHubBootPipeline() {
+  const pipelineGuards = require('./pipeline-guards');
+  if (process.env.HUB_BOOT_SKIP_WARM === 'true') {
+    console.log('[recruiting-hub] boot pipeline skipped (HUB_BOOT_SKIP_WARM=true) — rely on hub-refresh cron');
+    return;
+  }
+  if (!pipelineGuards.scheduledJobsEnabled()) {
+    console.log('[recruiting-hub] boot pipeline skipped — X_SCHEDULED_JOBS_ENABLED is not true');
+    return;
+  }
+
   const bootDelay = parseInt(process.env.HUB_BOOT_WARM_DELAY_MS || '0', 10);
   const immediateWarm = process.env.HUB_BOOT_IMMEDIATE_WARM !== 'false';
+
   if (immediateWarm) {
     setImmediate(() => {
+      if (pipelineGuards.shouldSkipHeavyJob('hub-boot-warm')) return;
       warmEliteHubCaches().catch((err) => {
         console.warn('[recruiting-hub-cache] boot warm failed:', err.message);
       });
     });
   } else {
     setTimeout(() => {
+      if (pipelineGuards.shouldSkipHeavyJob('hub-boot-warm')) return;
       warmEliteHubCaches().catch((err) => {
         console.warn('[recruiting-hub-cache] deferred boot warm failed:', err.message);
       });
     }, Math.max(bootDelay, 60000));
   }
+
+  // Refresh is heavier than warm — run later and alone (no warmAfter) so Starter doesn't OOM.
+  const refreshDelay = Math.max(
+    bootDelay + 120000,
+    parseInt(process.env.HUB_BOOT_REFRESH_DELAY_MS || String(bootDelay + 120000), 10) || bootDelay + 120000
+  );
   setTimeout(() => {
+    if (pipelineGuards.shouldSkipHeavyJob('hub-boot-refresh')) return;
     const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
     const geoBackfill = process.env.HUB_BOOT_GEO_BACKFILL === 'true';
-    refreshRecruitingHubCaches({ geoBackfill, warmAfter: true })
+    refreshRecruitingHubCaches({ geoBackfill, warmAfter: false })
       .then((result) => {
         console.log('[recruiting-hub] boot refresh complete:', result.enrichedPlayerCount, 'players');
       })
       .catch((err) => {
         console.warn('[recruiting-hub] boot refresh failed:', err.message);
-        return warmEliteHubCaches();
       });
-  }, bootDelay);
+  }, refreshDelay);
+
   scheduleBackgroundRefresh();
   console.log(
     '[recruiting-hub] boot warm',
     immediateWarm ? 'immediate' : 'deferred',
     '; refresh pipeline in',
-    bootDelay,
+    refreshDelay,
     'ms; background every',
     REFRESH_MS,
     'ms'

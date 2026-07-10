@@ -36,7 +36,11 @@ services:
       - key: ON3_SITE_BASE
         value: "https://www.on3.com"
       - key: ON3_INGEST_BOOT_DELAY_MS
-        value: "15000"
+        value: "600000"
+      - key: ON3_PORTAL_SYNC_BOOT_DELAY_MS
+        value: "600000"
+      - key: LIVE_POLL_BOOT_DELAY_MS
+        value: "300000"
       - key: RIVALS_PM_INGEST_ENABLED
         value: "true"
       - key: RIVALS_PM_INTERVAL_MS
@@ -44,7 +48,7 @@ services:
       - key: RIVALS_PM_CLASS_YEARS
         value: "2027,2028,2029"
       - key: RIVALS_PM_BOOT_DELAY_MS
-        value: "60000"
+        value: "600000"
       - key: SESSION_SECRET
         generateValue: true
       - key: PUSH_ALERTS_ENABLED
@@ -102,7 +106,7 @@ services:
       - key: X_PIPELINES_ENABLED
         value: "true"
       - key: X_SCHEDULED_JOBS_ENABLED
-        value: "true"
+        value: "false"
       - key: X_GM2_REWRITE_ENABLED
         value: "true"
       - key: X_INTEL_REWRITE_ENABLED
@@ -130,7 +134,7 @@ services:
       - key: GV_PRICING_LAUNCH_YEAR
         value: "2026"
       - key: FILM_ROOM_SYNC_ENABLED
-        value: "true"
+        value: "false"
       - key: DEPTH_CHART_ENABLED
         value: "true"
       - key: GAME_ZONE_ENABLED
@@ -144,11 +148,11 @@ services:
       - key: MEDIA_INGEST_INTERVAL_MS
         value: "900000"
       - key: QA_CRAWLER_ENABLED
-        value: "true"
+        value: "false"
       - key: QA_CRAWLER_INTERVAL_MS
         value: "600000"
       - key: QA_CRAWLER_BOOT_DELAY_MS
-        value: "180000"
+        value: "900000"
       - key: PRODUCT_INTEL_ENABLED
         value: "true"
       - key: PRODUCT_INTEL_BOOT_DELAY_MS
@@ -168,9 +172,11 @@ services:
       - key: SELF_RUNNER_POST_QA_DELAY_MS
         value: "45000"
       - key: MEMORY_GUARD_RSS_MB
-        value: "720"
+        value: "380"
+      - key: MEMORY_GUARD_WARN_MB
+        value: "320"
       - key: POST_STUDIO_REFILL_MAX_RSS_MB
-        value: "850"
+        value: "450"
       - key: QA_BUNDLE_HTML_ONLY
         value: "true"
       - key: QA_LIVE_DASHBOARD_RETRIES
@@ -187,10 +193,12 @@ services:
         sync: false
       - key: HUB_BOOT_IMMEDIATE_WARM
         value: "false"
+      - key: HUB_BOOT_SKIP_WARM
+        value: "true"
       - key: HUB_BOOT_WARM_DELAY_MS
-        value: "300000"
+        value: "900000"
       - key: API_BOOT_DEFER_HEAVY_MS
-        value: "180000"
+        value: "600000"
       - key: PLAYER_INTEL_REFRESH_ON_BOOT
         value: "false"
       - key: HUB_CACHE_REFRESH_MS

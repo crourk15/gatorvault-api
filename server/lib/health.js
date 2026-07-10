@@ -12,8 +12,9 @@ module.exports = (app) => {
   });
 
   /**
-   * Readiness probe — routes wired (deploy gate). Hub may still be warming.
-   * Render healthCheckPath uses this; returns 200 once API routes are live.
+   * Readiness probe — must stay 200 while the process is listening.
+   * Route wiring can take 30s+ on Starter; returning 503 here causes Render
+   * restart loops (health timeout → kill → boot again).
    */
   app.get('/ready', (_req, res) => {
     const routesReady = global.__GV_API_ROUTES_READY__ === true;
@@ -25,12 +26,12 @@ module.exports = (app) => {
     } catch {
       hubReady = false;
     }
-    const deployReady = routesReady;
     const fullyReady = routesReady && hubReady;
-    res.status(deployReady ? 200 : 503).json({
-      ok: deployReady,
+    res.status(200).json({
+      ok: true,
+      alive: true,
       ready: fullyReady,
-      deployReady,
+      deployReady: routesReady,
       routesReady,
       hubReady,
       hubMeta,
@@ -39,6 +40,34 @@ module.exports = (app) => {
   });
 
   app.get('/api/health', (req, res) => {
+    const rssMb = Math.round(process.memoryUsage().rss / 1024 / 1024);
+    // Keep /api/health cheap on Starter — full guardian checks can block the event loop.
+    const lightweight = process.env.API_HEALTH_LIGHTWEIGHT !== 'false';
+    if (lightweight) {
+      let hub = null;
+      try {
+        hub = require('./recruiting-hub-cache').getMeta();
+      } catch {
+        hub = { ready: false };
+      }
+      let dashboard = null;
+      try {
+        dashboard = require('./live-dashboard-cache').getCacheMeta();
+      } catch {
+        dashboard = { ready: false };
+      }
+      return res.status(200).json({
+        ok: true,
+        status: dashboard?.ready && hub?.ready ? 'ok' : 'warming',
+        time: Date.now(),
+        ready: dashboard?.ready === true && hub?.ready === true,
+        memoryMb: rssMb,
+        dashboard,
+        hub,
+        lightweight: true
+      });
+    }
+
     let dashboard = null;
     let deploy = null;
     let systems = null;
