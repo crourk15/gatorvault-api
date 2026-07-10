@@ -540,25 +540,45 @@
       }).join('');
     }
 
-    function loadStatus(evalAlerts){
+    function wakeApi(){
+      return fetch(API+'/api/ping',{cache:'no-store'}).catch(function(){return null;});
+    }
+
+    function isTransientApiError(msg){
+      return /502|503|504|waking|unavailable|starting|Empty server/i.test(String(msg||''));
+    }
+
+    function loadStatus(evalAlerts, retryCount){
+      retryCount=retryCount||0;
       var p=pin();
       if(!p){alert('PIN required');return;}
       var url=API+'/api/ops/status'+(evalAlerts?'?evaluateAlerts=1&pin='+encodeURIComponent(p):'?pin='+encodeURIComponent(p));
-      fetchJson(url,{headers:headers()})
-        .then(function(j){
-          if(!j)throw new Error('Empty status response — retry in 30s.');
-          if(j.error)throw new Error(j.error);
-          if(!j.tiles)throw new Error('Unexpected response');
-          var banner=document.getElementById('banner');
-          banner.className='banner '+esc(j.overall||'yellow');
-          document.getElementById('overall-label').textContent='Overall: '+(j.overall||'unknown').toUpperCase();
-          document.getElementById('updated-at').textContent='Updated '+fmtTime(j.updatedAt);
-          renderTiles(j.tiles);
-          populateLogFilter(j.tiles);
-          renderJobs(j.cronJobs);
-          renderAlerts(j.alerts);
-        })
-        .catch(function(e){alert('Status error: '+e.message);});
+      wakeApi().finally(function(){
+        fetchJson(url,{headers:headers()})
+          .then(function(j){
+            if(!j)throw new Error('Empty status response — retry in 30s.');
+            if(j.error)throw new Error(j.error);
+            if(!j.tiles)throw new Error('Unexpected response');
+            var banner=document.getElementById('banner');
+            banner.className='banner '+esc(j.overall||'yellow');
+            document.getElementById('overall-label').textContent='Overall: '+(j.overall||'unknown').toUpperCase();
+            document.getElementById('updated-at').textContent='Updated '+fmtTime(j.updatedAt);
+            renderTiles(j.tiles);
+            populateLogFilter(j.tiles);
+            renderJobs(j.cronJobs);
+            renderAlerts(j.alerts);
+          })
+          .catch(function(e){
+            if(retryCount<2&&isTransientApiError(e.message)){
+              var banner=document.getElementById('banner');
+              banner.className='banner yellow';
+              document.getElementById('overall-label').textContent='API waking… retry '+((retryCount+1)*30)+'s';
+              setTimeout(function(){loadStatus(evalAlerts,retryCount+1);},30000);
+              return;
+            }
+            alert('Status error: '+e.message);
+          });
+      });
     }
 
     function loadEliteLogs(){
@@ -1175,15 +1195,12 @@
 
     function postStudioAction(path,body,okMsg){
       var p=pin(); if(!p)return alert('PIN required');
-      return fetch(API+path,{method:'POST',headers:headers(),body:JSON.stringify(Object.assign({pin:p},body||{}))})
-        .then(function(r){return r.json().then(function(j){return{status:r.status,body:j};});})
-        .then(function(res){
-          if(res.status===401)throw new Error('Invalid PIN');
-          if(!res.body.ok)throw new Error(res.body.message||res.body.error||('Request failed ('+res.status+')'));
+      return fetchJson(API+path,{method:'POST',headers:headers(),body:JSON.stringify(Object.assign({pin:p},body||{}))})
+        .then(function(j){
           if(okMsg)alert(okMsg);
           loadPostStudio();
           loadStatus(false);
-          return res.body;
+          return j;
         });
     }
 
@@ -1307,34 +1324,43 @@
         .catch(function(e){panel.textContent=e.message;})
         .finally(function(){if(btn){btn.disabled=false;btn.textContent=label;}});
     }
-    function loadPostStudio(){
+    function loadPostStudio(retryCount){
+      retryCount=retryCount||0;
       var p=pin(); if(!p)return;
       postStudioShowError('');
-      fetch(API+'/api/x/post-studio/queue?limit=50',{headers:headers()})
-        .then(function(r){return r.json().then(function(j){return{status:r.status,body:j};});})
-        .then(function(res){
-          if(res.status===401)throw new Error('Invalid PIN');
-          if(!res.body.ok)throw new Error(res.body.error||'Load failed');
-          var stats=res.body.stats||{};
-          var counts=res.body.counts||{};
-          return fetch(API+'/api/x/post-studio/config',{headers:headers()})
-            .then(function(r2){return r2.json().then(function(cfg){return{stats:stats,counts:counts,cfg:cfg,items:res.body.items||[]};});});
-        })
-        .then(function(bundle){
-          var stats=bundle.stats;
-          var counts=bundle.counts||{};
-          var schedOn=!!(bundle.cfg&&bundle.cfg.schedulerEnabled);
-          document.getElementById('post-studio-status').textContent=
-            'Hub mode: '+(stats.hubMode?'ON':'OFF')+
-            ' · Scheduler: '+(schedOn?'ON (API credits)':'OFF (manual only)')+
-            ' · Drafts: '+(counts.drafts!=null?counts.drafts:0)+
-            ' · Posted today (auto): '+(stats.dailySent||0);
-          document.getElementById('post-studio-promote').style.display=schedOn?'':'none';
-          document.getElementById('post-studio-api').style.display=schedOn?'':'none';
-          renderPostStudioRows(bundle.items||[]);
-          loadComposeFailures();
-        })
-        .catch(function(e){postStudioShowError(e.message);});
+      wakeApi().finally(function(){
+        fetchJson(API+'/api/x/post-studio/queue?limit=50',{headers:headers()})
+          .then(function(queueBody){
+            var stats=queueBody.stats||{};
+            var counts=queueBody.counts||{};
+            return fetchJson(API+'/api/x/post-studio/config',{headers:headers()})
+              .then(function(cfg){
+                return{stats:stats,counts:counts,cfg:cfg,items:queueBody.items||[]};
+              });
+          })
+          .then(function(bundle){
+            var stats=bundle.stats;
+            var counts=bundle.counts||{};
+            var schedOn=!!(bundle.cfg&&bundle.cfg.schedulerEnabled);
+            document.getElementById('post-studio-status').textContent=
+              'Hub mode: '+(stats.hubMode?'ON':'OFF')+
+              ' · Scheduler: '+(schedOn?'ON (API credits)':'OFF (manual — Copy → Open X → Mark Posted)')+
+              ' · Drafts: '+(counts.drafts!=null?counts.drafts:0)+
+              ' · Posted today (auto): '+(stats.dailySent||0);
+            document.getElementById('post-studio-promote').style.display=schedOn?'':'none';
+            document.getElementById('post-studio-api').style.display=schedOn?'':'none';
+            renderPostStudioRows(bundle.items||[]);
+            loadComposeFailures();
+          })
+          .catch(function(e){
+            if(retryCount<2&&isTransientApiError(e.message)){
+              postStudioShowError(e.message+' Retrying in 30s…');
+              setTimeout(function(){loadPostStudio(retryCount+1);},30000);
+              return;
+            }
+            postStudioShowError(e.message);
+          });
+      });
     }
 
     function composePostStudio(){
