@@ -1150,9 +1150,18 @@ console.log('GatorVault server running on port', PORT);
   }
   try {
     const dashCache = require('./lib/live-dashboard-cache');
-    dashCache.warmDashboardCache();
-    dashCache.scheduleBackgroundRefresh();
-    console.log('[live-dashboard] cache warmed (' + (dashCache.getCacheMeta().feedCount || 0) + ' feed items)');
+    const deferHeavyMs = parseInt(process.env.API_BOOT_DEFER_HEAVY_MS || '0', 10);
+    const startDashboardWarm = () => {
+      dashCache.warmDashboardCache();
+      dashCache.scheduleBackgroundRefresh();
+      console.log('[live-dashboard] cache warmed (' + (dashCache.getCacheMeta().feedCount || 0) + ' feed items)');
+    };
+    if (deferHeavyMs > 0) {
+      setTimeout(startDashboardWarm, deferHeavyMs);
+      console.log('[live-dashboard] cache warm deferred', deferHeavyMs, 'ms');
+    } else {
+      startDashboardWarm();
+    }
   } catch (e) {
     console.warn('[live-dashboard] cache warm skipped:', e.message);
   }

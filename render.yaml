@@ -185,8 +185,14 @@ services:
         sync: false
       - key: RENDER_DEPLOY_HOOK_URL
         sync: false
+      - key: HUB_BOOT_IMMEDIATE_WARM
+        value: "false"
       - key: HUB_BOOT_WARM_DELAY_MS
-        value: "10000"
+        value: "300000"
+      - key: API_BOOT_DEFER_HEAVY_MS
+        value: "180000"
+      - key: PLAYER_INTEL_REFRESH_ON_BOOT
+        value: "false"
       - key: HUB_CACHE_REFRESH_MS
         value: "240000"
       - key: HUB_REFRESH_INTERVAL_MS

@@ -354,11 +354,20 @@ function scheduleBackgroundRefresh() {
 
 function scheduleHubBootPipeline() {
   const bootDelay = parseInt(process.env.HUB_BOOT_WARM_DELAY_MS || '0', 10);
-  setImmediate(() => {
-    warmEliteHubCaches().catch((err) => {
-      console.warn('[recruiting-hub-cache] boot warm failed:', err.message);
+  const immediateWarm = process.env.HUB_BOOT_IMMEDIATE_WARM !== 'false';
+  if (immediateWarm) {
+    setImmediate(() => {
+      warmEliteHubCaches().catch((err) => {
+        console.warn('[recruiting-hub-cache] boot warm failed:', err.message);
+      });
     });
-  });
+  } else {
+    setTimeout(() => {
+      warmEliteHubCaches().catch((err) => {
+        console.warn('[recruiting-hub-cache] deferred boot warm failed:', err.message);
+      });
+    }, Math.max(bootDelay, 60000));
+  }
   setTimeout(() => {
     const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
     const geoBackfill = process.env.HUB_BOOT_GEO_BACKFILL === 'true';
@@ -372,7 +381,15 @@ function scheduleHubBootPipeline() {
       });
   }, bootDelay);
   scheduleBackgroundRefresh();
-  console.log('[recruiting-hub] boot warm immediate; refresh pipeline in', bootDelay, 'ms; background every', REFRESH_MS, 'ms');
+  console.log(
+    '[recruiting-hub] boot warm',
+    immediateWarm ? 'immediate' : 'deferred',
+    '; refresh pipeline in',
+    bootDelay,
+    'ms; background every',
+    REFRESH_MS,
+    'ms'
+  );
 }
 
 module.exports = {
