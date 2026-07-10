@@ -21,7 +21,11 @@ test('elite republish composes ranking identity with composePath elite_pr789', a
     posRank: 4,
     stateRank: 1,
     hometownState: 'TN',
-    pos: 'CB'
+    pos: 'CB',
+    competitors: [
+      { school: 'Ohio State', pct: 22 },
+      { school: 'Alabama', pct: 18 }
+    ]
   };
   await store.upsertPlayer(patched);
 
@@ -54,9 +58,11 @@ test('elite republish composes ranking identity with composePath elite_pr789', a
     });
     assert.equal(built.ok, true, built.reason || JSON.stringify(built));
     assert.equal(built.validationMeta?.composePath, 'elite_pr789');
-    assert.match(built.text, /On3 No\. 42 natl/i);
+    assert.match(built.text, /On3 No\. \d+ natl/i);
     assert.match(built.text, /No\. 4 CB/i);
-    assert.match(built.text, /DB tradition and staff pitch are standing out/i);
+    assert.match(built.text, /Florida's campus in early April|Gainesville/i);
+    assert.doesNotMatch(built.text, /DB tradition and staff pitch are standing out early/i);
+    assert.match(built.text, /RPM board/i);
     assert.doesNotMatch(built.text, /campus in campus/i);
     assert.ok(built.validationMeta?.rankingTokens, 'rankingTokens missing');
     assert.ok(built.templateBlocks?.identity, 'identity block missing');

@@ -50,17 +50,10 @@ function visitBeatFragment(slug) {
     const logs = visitStore.listVisitLogs({ playerSlug: slug, limit: 8 }) || [];
     const uf = logs.find((v) => /florida|gators|\buf\b/i.test(String(v.school || v.name || '')));
     if (!uf) return '';
-    const date = uf.date || uf.reportedAt;
-    if (date) {
-      const d = new Date(date);
-      if (Number.isFinite(d.getTime())) {
-        const month = d.toLocaleString('en-US', { month: 'long' });
-        const year = d.getFullYear();
-        const type = String(uf.visitType || 'unofficial').toLowerCase();
-        return month + ' ' + year + ' ' + type + ' visit to Gainesville for Florida football recruiting';
-      }
-    }
-    return 'unofficial visit to Gainesville for Florida football recruiting';
+    const { formatVisitWhenLabel } = require('./rewrite/beat-fact-extractor');
+    const when = formatVisitWhenLabel(uf);
+    const type = String(uf.visitType || 'unofficial').replace(/_/g, ' ');
+    return `${when} ${type} visit to Gainesville for Florida football recruiting`;
   } catch {
     return '';
   }

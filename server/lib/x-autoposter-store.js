@@ -301,7 +301,7 @@ const POST_STUDIO_MAX_INTEL_AGE_MS = parseInt(
 const STALE_VISIT_TEMPLATE_RE =
   /\bfirst trip to (?:The Swamp|Gainesville)\b|\bMarch trip\b|\bput UF in (?:his|her) early mix\b|\bgave Florida a clean early look, and all three DB coaches\b|\bgave Florida early traction\b/i;
 const THIN_RECRUITING_TEMPLATE_RE =
-  /\bmaking .+ a priority early\b|\bmutual interest is real\b|\binterest is certainly mutual\b|\boffer carried extra weight\b/i;
+  /\bmaking .+ a priority early\b|\bmutual interest is real\b|\binterest is certainly mutual\b|\boffer carried extra weight\b|\bDB tradition and staff pitch are standing out early\b/i;
 const COMPOSED_INTEL_DETAIL_RE = /^20\d{2}\s+[A-Z0-9][^\n]{0,80}·\s*\d+★/m;
 
 function isThinRecruitingPostText(text = '') {

@@ -200,6 +200,30 @@ function extractGeographicSignal(beatText = '') {
   );
 }
 
+function parseVisitDateLabel(dateRaw = '') {
+  const raw = String(dateRaw || '').trim();
+  if (!raw) return null;
+  let d = new Date(raw);
+  if (!Number.isFinite(d.getTime())) {
+    const m = raw.match(
+      /\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/i
+    );
+    if (m) {
+      const yearMatch = raw.match(/\b(20\d{2})\b/);
+      d = new Date(`${m[1]} 1${yearMatch ? `, ${yearMatch[1]}` : ''}`);
+    }
+  }
+  if (!Number.isFinite(d.getTime())) return null;
+  const month = d.toLocaleString('en-US', { month: 'long' });
+  return `early ${month}`;
+}
+
+function formatVisitWhenLabel(visit = {}) {
+  if (visit.when || visit.label) return String(visit.when || visit.label).trim();
+  const parsed = parseVisitDateLabel(visit.visitDate || visit.date || visit.reportedAt);
+  return parsed || 'Gainesville';
+}
+
 function enrichVisitFromContext(facts, ctx = {}) {
   const beat = String(facts.beatText || ctx.beatText || '');
   if (/first trip to gainesville|first visit to gainesville|first trip to the swamp/i.test(beat)) {
@@ -219,30 +243,22 @@ function enrichVisitFromContext(facts, ctx = {}) {
     const school = String(v.school || v.name || '').toLowerCase();
     if (/florida|gators|\buf\b/.test(school)) {
       return {
-        when: v.when || v.label || 'campus',
-        type: v.type || 'unofficial',
-        school: 'Florida'
+        when: formatVisitWhenLabel(v),
+        type: v.visitType || v.type || 'unofficial',
+        school: 'Florida',
+        source: v.source || 'intel'
       };
     }
   }
-  const slug = String(ctx.slug || '').trim().toLowerCase();
+  const slug = String(ctx.slug || ctx.signal?.playerSlug || '').trim().toLowerCase();
   if (slug && shouldUseVisitLogContext(beat, facts)) {
     try {
       const visitStore = require('../../recruiting-visit-log-store');
       const logs = visitStore.listVisitLogs({ playerSlug: slug, limit: 5 });
       const uf = logs.find((v) => /florida|gators|\buf\b/i.test(String(v.school || '')));
       if (uf) {
-        const date = uf.date || uf.reportedAt;
-        let when = 'Gainesville visit';
-        if (date) {
-          const d = new Date(date);
-          if (Number.isFinite(d.getTime())) {
-            const month = d.toLocaleString('en-US', { month: 'long' });
-            when = `${month} trip to Gainesville`;
-          }
-        }
         return {
-          when,
+          when: formatVisitWhenLabel(uf),
           type: uf.visitType || 'unofficial',
           school: 'Florida',
           source: 'visit_log'
@@ -788,8 +804,12 @@ function composeEliteVisitArc(facts, ln, beatText = '', opts = {}) {
   if (swampTrip) {
     paragraph = `${ln}'s first trip to The Swamp gave Florida early traction`;
   } else {
-    const when = facts.visit?.when || 'campus';
-    paragraph = `${ln} was on Florida's campus in ${when}, and that trip put UF in his early mix with real traction`;
+    const when = facts.visit?.when || 'Gainesville';
+    if (/trip to gainesville/i.test(when)) {
+      paragraph = `${ln}'s ${when} gave Florida early traction`;
+    } else {
+      paragraph = `${ln} was on Florida's campus in ${when}, and that trip put UF in his early mix with real traction`;
+    }
   }
 
   if (facts.quote) {
@@ -1192,5 +1212,6 @@ module.exports = {
   isDbStaffContactBeat,
   extractBoardSignal,
   extractGeographicSignal,
-  enrichVisitFromContext
+  enrichVisitFromContext,
+  formatVisitWhenLabel
 };

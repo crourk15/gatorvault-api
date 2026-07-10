@@ -58,7 +58,8 @@ test('republish clears ledgers and enqueues corrected Cobbins copy', async () =>
   try {
     const out = await republishPlayerIntel(SLUG, { fingerprint: FP, post: false });
     assert.equal(out.ok, true, out.error || JSON.stringify(out));
-    assert.match(out.preview, /DB tradition and staff pitch are standing out/i);
+    assert.match(out.preview, /Florida's campus in early April|Gainesville/i);
+    assert.doesNotMatch(out.preview, /DB tradition and staff pitch are standing out early/i);
     assert.doesNotMatch(out.preview, /campus in campus/i);
     assert.ok(out.enqueued?.id, 'queue item missing');
     assert.equal(out.enqueued.validationMeta?.allowRepublish, true);

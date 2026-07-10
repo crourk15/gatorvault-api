@@ -188,7 +188,10 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
   let identityLine = buildIdentityWithRanking(identityBase, signal);
   const cta = playerCta(slug);
   const insiderLine = buildInsiderLine(rpmTop);
-  let text = [identityLine, narrative, cta].filter(Boolean).join('\n');
+  const narrativeHasRpm =
+    rpmTop.length >= 2 && rpmTop.slice(0, 2).every((row) => new RegExp(row.school, 'i').test(String(narrative || '')));
+  const insiderForText = insiderLine && !narrativeHasRpm ? insiderLine : '';
+  let text = [identityLine, narrative, insiderForText, cta].filter(Boolean).join('\n');
 
   if (text.length > getTweetCharLimit()) {
     const compactIdentity = buildIdentityWithRanking(identityBase, signal, { compact: true });
@@ -207,7 +210,12 @@ function composeGoldenFourFactPost({ slug, intel, on3Sync = null, playerRow = nu
         beatText
       });
       if (rotatedShort.ok && rotatedShort.narrative) {
-        text = [identityLine, rotatedShort.narrative, cta].filter(Boolean).join('\n');
+        const shortNarrative = rotatedShort.narrative;
+        const shortHasRpm =
+          rpmTop.length >= 2 &&
+          rpmTop.slice(0, 2).every((row) => new RegExp(row.school, 'i').test(String(shortNarrative || '')));
+        const shortInsider = insiderLine && !shortHasRpm ? insiderLine : '';
+        text = [identityLine, shortNarrative, shortInsider, cta].filter(Boolean).join('\n');
         rotationMeta = rotatedShort.rotation || rotationMeta;
       }
     }

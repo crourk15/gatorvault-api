@@ -349,7 +349,8 @@ async function buildEliteRepublishPost(slug, opts = {}) {
     detail: fused.beatText,
     skinny: fused.beatText,
     classYear: playerRow?.classYear || intelRow.classYear,
-    pos: playerRow?.pos || intelRow.pos
+    pos: playerRow?.pos || intelRow.pos,
+    visits: playerIntel?.visits || intelRow.visits || []
   };
 
   const enrichedRow = enrichPlayerRow(playerRow, playerIntel);
