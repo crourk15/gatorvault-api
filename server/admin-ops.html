@@ -1187,14 +1187,66 @@
         ' · <strong>Beat cache:</strong> '+esc(bc.postCount||0)+' posts'+
         (lb.at?' · <strong>Last scan:</strong> '+esc(lb.scanned||0)+' scanned, '+esc(lb.created||0)+' new, '+esc(lb.notHandoffEligible||0)+' blocked':'')+
         mem+
-        (det.pileHint?'<br><span style="color:#fbbf24">'+esc(det.pileHint)+'</span>':'');
+        (det.pileHint?'<br><span style="color:#fbbf24">'+esc(det.pileHint)+'</span>':'')+
+        (j._fallback?'<br><span class="meta">Using config fallback — full pipeline API may still be deploying.</span>':'');
     }
 
-    function loadPipelineBar(){
+    function loadPipelineBarFromConfig(){
+      var p=pin(); if(!p)return Promise.resolve();
+      return Promise.all([
+        fetchJson(API+'/api/x/post-studio/config',{headers:headers()}),
+        fetchJson(API+'/api/x/autoposter/detectives?limit=1&pin='+encodeURIComponent(p),{headers:headers()})
+      ]).then(function(res){
+        var cfg=res[0]||{};
+        var det=res[1]||{};
+        if(cfg.pipeline&&cfg.pipeline.ok){
+          renderPipelineBar(cfg.pipeline);
+          if(cfg.inbox&&cfg.inbox.ok) renderIntelInbox(cfg.inbox.items||[]);
+          return;
+        }
+        renderPipelineBar({
+          ok:true,
+          inboxSummary:{beatUnqueued:cfg.inbox?.beatUnqueued??'—',totalUnqueued:cfg.inbox?.totalUnqueued??'—'},
+          queue:cfg.counts||{},
+          hub:{
+            hubMode:cfg.hubMode,
+            schedulerEnabled:cfg.schedulerEnabled,
+            dailySent:(cfg.stats&&cfg.stats.dailySent)||0
+          },
+          detectives:{
+            counts:det.counts,
+            beatCache:det.beatCache,
+            lastBackfill:det.lastBackfill,
+            pileHint:det.pileHint
+          },
+          _fallback:true
+        });
+        if(cfg.inbox&&cfg.inbox.ok) renderIntelInbox(cfg.inbox.items||[]);
+      });
+    }
+
+    function loadPipelineBar(retryCount){
+      retryCount=retryCount||0;
       var p=pin(); if(!p)return;
-      fetchJson(API+'/api/x/post-studio/pipeline?pin='+encodeURIComponent(p),{headers:headers()})
-        .then(renderPipelineBar)
-        .catch(function(){document.getElementById('post-studio-pipeline-bar').textContent='Pipeline load failed';});
+      var bar=document.getElementById('post-studio-pipeline-bar');
+      wakeApi().finally(function(){
+        fetchJson(API+'/api/x/post-studio/pipeline?pin='+encodeURIComponent(p),{headers:headers()})
+          .then(renderPipelineBar)
+          .catch(function(e){
+            if(/404|Not found/i.test(String(e.message||''))){
+              return loadPipelineBarFromConfig();
+            }
+            if(retryCount<2&&isTransientApiError(e.message)){
+              bar.textContent='Pipeline: '+e.message+' Retrying in 30s…';
+              setTimeout(function(){loadPipelineBar(retryCount+1);},30000);
+              return;
+            }
+            bar.textContent='Pipeline: '+e.message+' — loading config fallback…';
+            return loadPipelineBarFromConfig().catch(function(){
+              bar.textContent='Pipeline unavailable: '+e.message;
+            });
+          });
+      });
     }
 
     function renderIntelInbox(items){
@@ -1233,15 +1285,31 @@
       });
     }
 
-    function loadIntelInbox(){
+    function loadIntelInbox(retryCount){
+      retryCount=retryCount||0;
       var p=pin(); if(!p)return;
+      var tbody=document.getElementById('post-studio-inbox-body');
       fetchJson(API+'/api/x/post-studio/inbox?limit=40&pin='+encodeURIComponent(p),{headers:headers()})
         .then(function(j){
           if(!j.ok)throw new Error(j.error||'Inbox failed');
           renderIntelInbox(j.items||[]);
         })
         .catch(function(e){
-          document.getElementById('post-studio-inbox-body').innerHTML='<tr><td colspan="6" class="meta">'+esc(e.message)+'</td></tr>';
+          if(/404|Not found/i.test(String(e.message||''))){
+            return fetchJson(API+'/api/x/post-studio/config',{headers:headers()}).then(function(cfg){
+              if(cfg.inbox&&cfg.inbox.ok&&cfg.inbox.items&&cfg.inbox.items.length){
+                renderIntelInbox(cfg.inbox.items);
+                return;
+              }
+              tbody.innerHTML='<tr><td colspan="6" class="meta">Inbox API still deploying on Render. Use <strong>Inspect</strong> on a player slug — compose-probe works now. Reload in 2–3 min after deploy finishes.</td></tr>';
+            });
+          }
+          if(retryCount<2&&isTransientApiError(e.message)){
+            tbody.innerHTML='<tr><td colspan="6" class="meta">'+esc(e.message)+' Retrying…</td></tr>';
+            setTimeout(function(){loadIntelInbox(retryCount+1);},30000);
+            return;
+          }
+          tbody.innerHTML='<tr><td colspan="6" class="meta">'+esc(e.message)+'</td></tr>';
         });
     }
 
@@ -1305,12 +1373,42 @@
       if(fc.text){
         composeEl.textContent=fc.text;
         composeEl.style.color=fc.thin?'#fbbf24':'#e2e8f0';
+      }else if(elite.preview){
+        composeEl.textContent=elite.preview+'\n\n(preview only — click Compose for full post text)';
+        composeEl.style.color='#93c5fd';
       }else{
-        composeEl.textContent=fc.reason?('Compose failed: '+fc.reason):'No live compose text.';
+        composeEl.textContent=fc.reason?('Compose failed: '+fc.reason):(elite.reason?('Elite miss: '+elite.reason):'No live compose text.');
         composeEl.style.color='#94a3b8';
       }
       panel.classList.remove('hidden');
       panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+
+    function inspectorFromProbe(probe, slug){
+      var elite=probe.eliteBuild||{};
+      var fuse=probe.fuse||{};
+      var reasons=[];
+      if(probe.routing) reasons.push(probe.routing);
+      if(probe.publishGate===false&&probe.publishGateReason) reasons.push(probe.publishGateReason);
+      if(elite.reason) reasons.push(elite.reason);
+      if((fuse.gaps||[]).length) reasons=reasons.concat(fuse.gaps);
+      return {
+        ok:true,
+        slug:probe.slug||slug,
+        playerName:null,
+        verdict:{
+          ready:probe.publishGate===true,
+          needsYou:probe.publishGate!==true,
+          reasons:reasons
+        },
+        routing:probe.routing,
+        intel:{primary:null,unqueuedCount:null,totalCount:probe.intelRowCount||null},
+        detectives:[],
+        drafts:[],
+        lastComposeSkip:null,
+        probe:probe,
+        fullCompose:{ok:!!elite.ok,reason:elite.reason||null,text:null,thin:false}
+      };
     }
 
     function inspectPostStudioSlug(slug){
@@ -1326,6 +1424,16 @@
         .then(function(j){
           if(!j.ok)throw new Error(j.error||'Inspect failed');
           renderInspector(j);
+        })
+        .catch(function(e){
+          if(/404|Not found/i.test(String(e.message||''))){
+            return fetchJson(API+'/api/x/post-studio/compose-probe/'+encodeURIComponent(slug)+'?pin='+encodeURIComponent(p),{headers:headers()})
+              .then(function(probe){
+                if(!probe.ok)throw new Error(probe.error||'Probe failed');
+                renderInspector(inspectorFromProbe(probe,slug));
+              });
+          }
+          throw e;
         })
         .catch(function(e){alert(e.message);})
         .finally(function(){if(btn){btn.disabled=false;btn.textContent=label;}});

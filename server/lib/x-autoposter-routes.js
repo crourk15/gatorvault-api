@@ -722,12 +722,29 @@ function mountXAutoposterRoutes(app) {
     }
   });
 
-  app.get('/api/x/post-studio/config', (req, res) => {
+  app.get('/api/x/post-studio/config', async (req, res) => {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
     try {
-      return res.json({ ok: true, ...cadence.getHubConfig(), stats: cadence.getHubStats(), counts: store.getQueueCounts() });
+      const payload = {
+        ok: true,
+        ...cadence.getHubConfig(),
+        stats: cadence.getHubStats(),
+        counts: store.getQueueCounts()
+      };
+      try {
+        const inboxMod = require('./post-studio-intel-inbox');
+        const [pipeline, inbox] = await Promise.all([
+          inboxMod.getPipelineDashboard(),
+          inboxMod.getIntelInbox({ limit: 40 })
+        ]);
+        payload.pipeline = pipeline;
+        payload.inbox = inbox;
+      } catch (bundleErr) {
+        payload.pipelineError = bundleErr.message;
+      }
+      return res.json(payload);
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
