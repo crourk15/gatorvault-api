@@ -366,6 +366,43 @@ function mountXAutoposterRoutes(app) {
     }
   });
 
+  app.get('/api/x/post-studio/pipeline', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const inbox = require('./post-studio-intel-inbox');
+      return res.json(await inbox.getPipelineDashboard());
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/x/post-studio/inbox', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const inbox = require('./post-studio-intel-inbox');
+      const limit = parseInt(req.query.limit || '40', 10);
+      return res.json(await inbox.getIntelInbox({ limit }));
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/x/post-studio/inspect/:slug', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const inbox = require('./post-studio-intel-inbox');
+      return res.json(await inbox.inspectPlayer(req.params.slug));
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/x/autoposter/republish/:slug', async (req, res) => {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });

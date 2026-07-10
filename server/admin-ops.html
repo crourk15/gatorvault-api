@@ -125,20 +125,64 @@
 
       <div class="section" id="post-studio-panel">
         <h2>X Post Studio</h2>
-        <p class="sub" style="margin:0 0 .75rem;font-size:.8rem;color:var(--muted)">Scheduler is OFF — drafts do not auto-fill. Click <strong>Refill compose queue</strong> (30–90s) to pull fresh intel, or <strong>Compose</strong> a player slug. Then Copy / Open X → Mark Posted (no API credits).</p>
+        <p class="sub" style="margin:0 0 .75rem;font-size:.8rem;color:var(--muted)">Intel Inbox shows beat intel that survives deploys. <strong>Inspect</strong> any player to see detectives research, enrich passes, gaps, and the full compose pipeline before you post. You decide what is GV-worthy.</p>
+        <div id="post-studio-pipeline-bar" class="meta" style="margin-bottom:.6rem;font-size:.72rem;line-height:1.55;padding:.55rem .7rem;background:var(--panel);border:1px solid var(--border);border-radius:.5rem">Pipeline: loading…</div>
         <div id="post-studio-status" class="meta" style="margin-bottom:.75rem;font-size:.75rem">Studio: loading…</div>
         <div id="post-studio-error" class="meta hidden" style="margin-bottom:.75rem;color:#fbbf24"></div>
-        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem;align-items:center">
-          <input id="post-studio-slug" type="text" placeholder="player slug — compose elite post" style="flex:1;min-width:200px;background:var(--panel);border:1px solid #334155;color:var(--text);padding:.45rem .6rem;border-radius:.5rem" />
-          <button id="post-studio-compose" class="sm">Compose</button>
-          <button id="post-studio-probe" class="secondary sm">Probe</button>
-          <button id="post-studio-reload" class="secondary sm">Reload drafts</button>
-          <button id="post-studio-refill" class="secondary sm">Refill compose queue</button>
+        <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.75rem">
+          <button type="button" class="sm ps-tab active" data-ps-tab="inbox">Intel Inbox</button>
+          <button type="button" class="secondary sm ps-tab" data-ps-tab="drafts">Drafts</button>
+          <button type="button" class="secondary sm ps-tab" data-ps-tab="detectives">Detectives</button>
+          <button type="button" class="secondary sm ps-tab" data-ps-tab="failures">Failures</button>
         </div>
-        <table>
-          <thead><tr><th>Player</th><th>Type</th><th>Preview</th><th>Created</th><th>Urgency</th><th></th></tr></thead>
-          <tbody id="post-studio-body"><tr><td colspan="6" class="meta">Load drafts…</td></tr></tbody>
-        </table>
+        <div id="ps-tab-inbox">
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem;align-items:center">
+            <input id="post-studio-slug" type="text" placeholder="player slug" style="flex:1;min-width:200px;background:var(--panel);border:1px solid #334155;color:var(--text);padding:.45rem .6rem;border-radius:.5rem" />
+            <button id="post-studio-inspect" class="sm">Inspect</button>
+            <button id="post-studio-compose" class="sm">Compose</button>
+            <button id="post-studio-reload" class="secondary sm">Reload all</button>
+          </div>
+          <table>
+            <thead><tr><th>Player</th><th>Status</th><th>Beat intel</th><th>Age</th><th>Source</th><th></th></tr></thead>
+            <tbody id="post-studio-inbox-body"><tr><td colspan="6" class="meta">Load inbox…</td></tr></tbody>
+          </table>
+        </div>
+        <div id="ps-tab-drafts" class="hidden">
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem;align-items:center">
+            <button id="post-studio-refill" class="secondary sm">Refill queue (advanced)</button>
+            <span class="meta" style="font-size:.72rem">Legacy autoposter refill — prefer Inspect → Compose from inbox.</span>
+          </div>
+          <table>
+            <thead><tr><th>Player</th><th>Type</th><th>Preview</th><th>Created</th><th>Urgency</th><th></th></tr></thead>
+            <tbody id="post-studio-body"><tr><td colspan="6" class="meta">Load drafts…</td></tr></tbody>
+          </table>
+        </div>
+        <div id="ps-tab-detectives" class="hidden">
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem">
+            <button id="ps-load-detectives" class="secondary sm">Reload detectives</button>
+            <button id="ps-scan-beat" class="secondary sm">Scan beat cache</button>
+          </div>
+          <div id="ps-detectives-panel" class="log-panel" style="max-height:320px;font-size:.78rem">Load detectives…</div>
+        </div>
+        <div id="ps-tab-failures" class="hidden">
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem;align-items:center">
+            <button id="post-studio-load-failures" class="secondary sm">Reload failures</button>
+            <span id="post-studio-compose-flags" class="meta" style="font-size:.72rem">PR-789 flags: —</span>
+          </div>
+          <table>
+            <thead><tr><th>When</th><th>Slug</th><th>Reason</th><th>Last</th><th>Passes</th><th>Gaps</th></tr></thead>
+            <tbody id="post-studio-failures-body"><tr><td colspan="6" class="meta">Load failures…</td></tr></tbody>
+          </table>
+        </div>
+        <div id="post-studio-inspector" class="hidden" style="margin-top:1rem;background:var(--panel);border:1px solid var(--border);border-radius:.75rem;padding:1rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;gap:.5rem;flex-wrap:wrap">
+            <h3 id="post-studio-inspector-title" style="margin:0;font-size:.9rem">Inspector</h3>
+            <button id="post-studio-inspector-close" class="secondary sm">Close</button>
+          </div>
+          <div id="post-studio-inspector-verdict" style="margin-bottom:.65rem;font-size:.8rem"></div>
+          <div id="post-studio-inspector-body" style="font-size:.78rem;line-height:1.5;white-space:pre-wrap"></div>
+          <div id="post-studio-inspector-compose" style="margin-top:.75rem;white-space:pre-wrap;font-size:.85rem;line-height:1.5;color:#e2e8f0"></div>
+        </div>
         <div id="post-studio-preview" class="hidden" style="margin-top:1rem;background:var(--panel);border:1px solid var(--border);border-radius:.75rem;padding:1rem">
           <h3 style="margin:0 0 .5rem;font-size:.85rem">Preview</h3>
           <div id="post-studio-preview-text" style="white-space:pre-wrap;font-size:.85rem;line-height:1.5;margin-bottom:.75rem"></div>
@@ -152,20 +196,6 @@
             <button id="post-studio-dismiss" class="secondary sm">Dismiss</button>
             <button id="post-studio-close" class="secondary sm">Close</button>
           </div>
-        </div>
-
-        <div id="post-studio-compose-ops" style="margin-top:1.25rem">
-          <h3 style="margin:0 0 .5rem;font-size:.9rem">Compose failures & probe</h3>
-          <p class="sub" style="margin:0 0 .6rem;font-size:.75rem;color:var(--muted)">G2 observability — enrich passes tried, fuse gaps, QA gate. Probe a slug before Compose to see why elite is blocked.</p>
-          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem;align-items:center">
-            <button id="post-studio-load-failures" class="secondary sm">Reload failures</button>
-            <span id="post-studio-compose-flags" class="meta" style="font-size:.72rem">PR-789 flags: —</span>
-          </div>
-          <div id="post-studio-probe-result" class="hidden" style="margin-bottom:.75rem;background:var(--panel);border:1px solid var(--border);border-radius:.6rem;padding:.75rem;font-size:.78rem;line-height:1.45"></div>
-          <table>
-            <thead><tr><th>When</th><th>Slug</th><th>Reason</th><th>Last</th><th>Passes</th><th>Gaps</th></tr></thead>
-            <tbody id="post-studio-failures-body"><tr><td colspan="6" class="meta">Load failures…</td></tr></tbody>
-          </table>
         </div>
 
         <div id="post-studio-leak-audit" style="margin-top:1.25rem">
@@ -1120,6 +1150,218 @@
       el.classList.remove('hidden');
     }
 
+    function psStatusColor(status){
+      if(!status) return '#94a3b8';
+      if(status==='draft_ready'||status==='ready_to_compose') return '#4ade80';
+      if(status==='needs_you'||status==='compose_failed') return '#f87171';
+      if(status==='detectives') return '#fbbf24';
+      return '#93c5fd';
+    }
+
+    function psSwitchTab(name){
+      ['inbox','drafts','detectives','failures'].forEach(function(tab){
+        var panel=document.getElementById('ps-tab-'+tab);
+        if(panel) panel.classList.toggle('hidden', tab!==name);
+      });
+      document.querySelectorAll('.ps-tab').forEach(function(btn){
+        var on=btn.getAttribute('data-ps-tab')===name;
+        btn.classList.toggle('active', on);
+        btn.classList.toggle('sm', on);
+        btn.classList.toggle('secondary', !on);
+      });
+      if(name==='detectives') loadPsDetectives();
+      if(name==='failures') loadComposeFailures();
+    }
+
+    function renderPipelineBar(j){
+      var el=document.getElementById('post-studio-pipeline-bar');
+      if(!j||!j.ok){el.textContent='Pipeline unavailable';return;}
+      var det=j.detectives||{};
+      var bc=det.beatCache||{};
+      var lb=det.lastBackfill||{};
+      var mem=j.memory?(' · mem '+esc(j.memory.rssMb)+'MB'):'';
+      el.innerHTML=
+        '<strong>Inbox:</strong> '+esc(j.inboxSummary?.beatUnqueued||0)+' beat intel rows ('+esc(j.inboxSummary?.totalUnqueued||0)+' total unposted)'+
+        ' · <strong>Drafts:</strong> '+esc(j.queue?.drafts||0)+
+        ' · <strong>Detectives:</strong> pending '+esc(det.counts?.pending||0)+' / investigating '+esc(det.counts?.investigating||0)+
+        ' · <strong>Beat cache:</strong> '+esc(bc.postCount||0)+' posts'+
+        (lb.at?' · <strong>Last scan:</strong> '+esc(lb.scanned||0)+' scanned, '+esc(lb.created||0)+' new, '+esc(lb.notHandoffEligible||0)+' blocked':'')+
+        mem+
+        (det.pileHint?'<br><span style="color:#fbbf24">'+esc(det.pileHint)+'</span>':'');
+    }
+
+    function loadPipelineBar(){
+      var p=pin(); if(!p)return;
+      fetchJson(API+'/api/x/post-studio/pipeline?pin='+encodeURIComponent(p),{headers:headers()})
+        .then(renderPipelineBar)
+        .catch(function(){document.getElementById('post-studio-pipeline-bar').textContent='Pipeline load failed';});
+    }
+
+    function renderIntelInbox(items){
+      var tbody=document.getElementById('post-studio-inbox-body');
+      if(!items||!items.length){
+        tbody.innerHTML='<tr><td colspan="6" class="meta">No unposted beat intel in inbox. Check Detectives tab or compose a slug manually.</td></tr>';
+        return;
+      }
+      tbody.innerHTML=items.map(function(row){
+        var st=row.status||{};
+        var color=psStatusColor(st.status);
+        var beat=esc(String(row.beatText||'').slice(0,140)+(String(row.beatText||'').length>140?'…':''));
+        return '<tr data-inbox-slug="'+esc(row.slug)+'">'+
+          '<td><strong>'+esc(row.playerName||row.slug)+'</strong><br><span class="meta">'+esc(row.slug)+'</span></td>'+
+          '<td><span style="color:'+color+'">'+esc(st.label||'—')+'</span>'+
+            (row.draftCount?'<br><span class="meta">'+esc(row.draftCount)+' draft(s)</span>':'')+
+            (row.detectivesCount?'<br><span class="meta">'+esc(row.detectivesCount)+' det case(s)</span>':'')+'</td>'+
+          '<td style="max-width:340px">'+beat+'</td>'+
+          '<td>'+esc(row.ageLabel||'—')+'</td>'+
+          '<td class="meta">'+esc(row.source||'—')+'</td>'+
+          '<td style="white-space:nowrap">'+
+            '<button class="secondary sm" data-inbox-inspect="'+esc(row.slug)+'">Inspect</button> '+
+            '<button class="sm" data-inbox-compose="'+esc(row.slug)+'">Compose</button>'+
+          '</td></tr>';
+      }).join('');
+      tbody.querySelectorAll('[data-inbox-inspect]').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          inspectPostStudioSlug(btn.getAttribute('data-inbox-inspect'));
+        });
+      });
+      tbody.querySelectorAll('[data-inbox-compose]').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          document.getElementById('post-studio-slug').value=btn.getAttribute('data-inbox-compose');
+          composePostStudio();
+        });
+      });
+    }
+
+    function loadIntelInbox(){
+      var p=pin(); if(!p)return;
+      fetchJson(API+'/api/x/post-studio/inbox?limit=40&pin='+encodeURIComponent(p),{headers:headers()})
+        .then(function(j){
+          if(!j.ok)throw new Error(j.error||'Inbox failed');
+          renderIntelInbox(j.items||[]);
+        })
+        .catch(function(e){
+          document.getElementById('post-studio-inbox-body').innerHTML='<tr><td colspan="6" class="meta">'+esc(e.message)+'</td></tr>';
+        });
+    }
+
+    function renderInspector(j){
+      var panel=document.getElementById('post-studio-inspector');
+      var verdictEl=document.getElementById('post-studio-inspector-verdict');
+      var bodyEl=document.getElementById('post-studio-inspector-body');
+      var composeEl=document.getElementById('post-studio-inspector-compose');
+      document.getElementById('post-studio-inspector-title').textContent=
+        'Inspector — '+(j.playerName||j.slug);
+      var v=j.verdict||{};
+      var vColor=v.ready?'#4ade80':(v.needsYou?'#f87171':'#fbbf24');
+      verdictEl.innerHTML='<strong style="color:'+vColor+'">'+(v.ready?'GV-ready':'Needs you')+'</strong>'+
+        (v.reasons&&v.reasons.length?' · '+esc(v.reasons.join(', ')):'')+
+        ' · routing: '+esc(j.routing||'—');
+
+      var lines=[];
+      if(j.intel&&j.intel.primary){
+        lines.push('BEAT INTEL ('+esc(j.intel.primary.source)+')');
+        lines.push(esc(j.intel.primary.beatText||''));
+        if(j.intel.primary.articleUrl) lines.push('Article: '+esc(j.intel.primary.articleUrl));
+      }
+      var probe=j.probe||{};
+      var elite=probe.eliteBuild||{};
+      var fuse=probe.fuse||{};
+      lines.push('');
+      lines.push('COMPOSE PIPELINE');
+      lines.push('Angle: '+esc(probe.dominantAngle||elite.dominantAngle||'—')+
+        (probe.angleReason||elite.angleReason?' ('+esc(probe.angleReason||elite.angleReason)+')':''));
+      lines.push('Path: '+esc(probe.composePath||elite.composePath||'—'));
+      lines.push('Publish gate: '+(probe.publishGate===true?'PASS':probe.publishGate===false?'BLOCK ('+esc(probe.publishGateReason||'?')+')':'—'));
+      lines.push('Fuse confidence: '+esc(fuse.confidence!=null?fuse.confidence:'—')+' · beat len: '+esc(fuse.beatLen!=null?fuse.beatLen:'—'));
+      if((fuse.gaps||[]).length) lines.push('Gaps: '+esc((fuse.gaps||[]).join(', ')));
+      if((elite.enrichPassesTried||[]).length) lines.push('Enrich passes tried: '+esc((elite.enrichPassesTried||[]).join(' → ')));
+      if(elite.enrichPass) lines.push('Winning pass: '+esc(elite.enrichPass)+(elite.enrichmentSources?' ['+esc((elite.enrichmentSources||[]).join(', '))+']':''));
+      if(j.lastComposeSkip) lines.push('Last skip: '+esc(j.lastComposeSkip.reason||'—')+(j.lastComposeSkip.lastReason?' / '+esc(j.lastComposeSkip.lastReason):''));
+
+      if(j.detectives&&j.detectives.length){
+        lines.push('');
+        lines.push('DETECTIVES RESEARCH');
+        j.detectives.forEach(function(c){
+          lines.push('— '+esc(c.status)+' · skip: '+esc(c.skipReason||'—')+' · attempts: '+esc(c.attempts||0));
+          if(c.beatText) lines.push('  beat: '+esc(c.beatText));
+          (c.log||[]).forEach(function(l){
+            lines.push('  · '+esc(l.phase)+(l.path?'/'+esc(l.path):'')+(l.reason?' — '+esc(l.reason):''));
+          });
+          if(c.resolvedPreview) lines.push('  resolved: '+esc(c.resolvedPreview));
+        });
+      }
+      if(j.drafts&&j.drafts.length){
+        lines.push('');
+        lines.push('EXISTING DRAFTS');
+        j.drafts.forEach(function(d){
+          lines.push('— '+esc(d.source||'draft')+' · '+esc(d.charCount)+' chars · '+esc(d.composePath||'—')+(d.thin?' · THIN':''));
+          lines.push('  '+esc(d.textPreview||''));
+        });
+      }
+      bodyEl.textContent=lines.join('\n');
+
+      var fc=j.fullCompose||{};
+      if(fc.text){
+        composeEl.textContent=fc.text;
+        composeEl.style.color=fc.thin?'#fbbf24':'#e2e8f0';
+      }else{
+        composeEl.textContent=fc.reason?('Compose failed: '+fc.reason):'No live compose text.';
+        composeEl.style.color='#94a3b8';
+      }
+      panel.classList.remove('hidden');
+      panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+
+    function inspectPostStudioSlug(slug){
+      var p=pin();
+      slug=String(slug||document.getElementById('post-studio-slug').value||'').trim().toLowerCase();
+      if(!p){alert('PIN required');return;}
+      if(!slug){alert('Enter a player slug');return;}
+      document.getElementById('post-studio-slug').value=slug;
+      var btn=document.getElementById('post-studio-inspect');
+      var label=btn?btn.textContent:'Inspect';
+      if(btn){btn.disabled=true;btn.textContent='Inspecting…';}
+      fetchJson(API+'/api/x/post-studio/inspect/'+encodeURIComponent(slug)+'?pin='+encodeURIComponent(p),{headers:headers()})
+        .then(function(j){
+          if(!j.ok)throw new Error(j.error||'Inspect failed');
+          renderInspector(j);
+        })
+        .catch(function(e){alert(e.message);})
+        .finally(function(){if(btn){btn.disabled=false;btn.textContent=label;}});
+    }
+
+    function loadPsDetectives(){
+      var p=pin();
+      var panel=document.getElementById('ps-detectives-panel');
+      if(!p){panel.textContent='Enter admin PIN first.';return;}
+      panel.textContent='Loading…';
+      fetchJson(API+'/api/x/autoposter/detectives?limit=30&pin='+encodeURIComponent(p),{headers:headers()})
+        .then(function(j){
+          if(!j.ok){panel.textContent=(j&&j.error)||'Failed';return;}
+          var cases=j.cases||[];
+          if(!cases.length){panel.textContent=renderDetectivesEmpty(j);return;}
+          panel.innerHTML=cases.map(function(row){
+            var log=(row.log||[]).map(function(l){
+              return esc(l.phase||'?')+(l.reason?(' · '+esc(l.reason)):'')+(l.path?(' · '+esc(l.path)):'');
+            }).join(' → ');
+            return '<div style="margin-bottom:.85rem;padding-bottom:.65rem;border-bottom:1px solid #334155">'+
+              '<strong>'+statusBadge(row.status)+'</strong> · '+esc(row.playerName||'?')+
+              (row.playerSlug?' ('+esc(row.playerSlug)+')':'')+
+              ' · skip: '+esc(row.skipReason||'—')+'<br>'+
+              '<span style="color:#e2e8f0">'+esc(row.beatText||'—')+'</span><br>'+
+              (row.resolvedPreview?'<span style="color:#93c5fd">Out: '+esc(row.resolvedPreview)+'</span><br>':'')+
+              (log?'<span class="meta">Log: '+log+'</span>':'')+
+              (row.playerSlug?' <button class="secondary sm" data-det-inspect="'+esc(row.playerSlug)+'">Inspect</button>':'')+
+              '</div>';
+          }).join('');
+          panel.querySelectorAll('[data-det-inspect]').forEach(function(btn){
+            btn.addEventListener('click',function(){inspectPostStudioSlug(btn.getAttribute('data-det-inspect'));});
+          });
+        })
+        .catch(function(e){panel.textContent=e.message;});
+    }
+
     function postStudioTypeLabel(item){
       var et=String(item.sourceEventType||item.intelType||item.triggerType||item.category||'').toLowerCase();
       if(/commit|flip|decommit/.test(et))return 'Commit';
@@ -1286,43 +1528,7 @@
     }
 
     function probePostStudioSlug(){
-      var p=pin();
-      var slug=(document.getElementById('post-studio-slug').value||'').trim().toLowerCase();
-      if(!p){alert('PIN required');return;}
-      if(!slug){alert('Enter a player slug to probe');return;}
-      var btn=document.getElementById('post-studio-probe');
-      var label=btn?btn.textContent:'Probe';
-      if(btn){btn.disabled=true;btn.textContent='Probing…';}
-      var panel=document.getElementById('post-studio-probe-result');
-      panel.classList.remove('hidden');
-      panel.textContent='Probing '+slug+'…';
-      fetchJson(API+'/api/x/post-studio/compose-probe/'+encodeURIComponent(slug)+'?pin='+encodeURIComponent(p),{headers:headers()})
-        .then(function(j){
-          if(!j.ok)throw new Error(j.error||'Probe failed');
-          var elite=j.eliteBuild||{};
-          var fuse=j.fuse||{};
-          var gaps=(fuse.gaps||elite.gaps||[]).join(', ')||'—';
-          var passes=(elite.enrichPassesTried||[]).join(', ')||'—';
-          panel.innerHTML=
-            '<strong>Routing:</strong> '+esc(j.routing||'—')+
-            ' · <strong>Publish gate:</strong> '+(j.publishGate===true?'PASS':j.publishGate===false?'BLOCK':'—')+
-            (j.publishGateReason?' ('+esc(j.publishGateReason)+')':'')+'<br>'+
-            '<strong>Tier:</strong> '+esc(j.tier||'—')+
-            ' · <strong>Fuse confidence:</strong> '+esc(fuse.confidence!=null?fuse.confidence:'—')+
-            ' · <strong>Beat len:</strong> '+esc(fuse.beatLen!=null?fuse.beatLen:'—')+'<br>'+
-            '<strong>Angle:</strong> '+esc(j.dominantAngle||elite.dominantAngle||'—')+
-            (j.angleReason||elite.angleReason?' · reason: '+esc(j.angleReason||elite.angleReason):'')+
-            ' · <strong>Compose path:</strong> '+esc(j.composePath||elite.composePath||'—')+'<br>'+
-            '<strong>Elite:</strong> '+(elite.ok?'ok':'miss')+
-            (elite.reason?' · reason: '+esc(elite.reason):'')+
-            (elite.lastReason?' · last: '+esc(elite.lastReason):'')+'<br>'+
-            '<strong>Enrich passes:</strong> '+esc(passes)+'<br>'+
-            '<strong>Gaps:</strong> '+esc(gaps)+'<br>'+
-            (elite.preview?'<span style="color:#93c5fd">'+esc(elite.preview)+'</span>':'');
-          loadComposeFailures();
-        })
-        .catch(function(e){panel.textContent=e.message;})
-        .finally(function(){if(btn){btn.disabled=false;btn.textContent=label;}});
+      inspectPostStudioSlug();
     }
     function loadPostStudio(retryCount){
       retryCount=retryCount||0;
@@ -1351,6 +1557,8 @@
             document.getElementById('post-studio-api').style.display=schedOn?'':'none';
             renderPostStudioRows(bundle.items||[]);
             loadComposeFailures();
+            loadIntelInbox();
+            loadPipelineBar();
           })
           .catch(function(e){
             if(retryCount<2&&isTransientApiError(e.message)){
@@ -1376,6 +1584,8 @@
           loadPostStudio();
           if(res.body.item)openPostStudioPreview(res.body.item);
           else if(res.body.preview)alert('Composed:\n\n'+res.body.preview.slice(0,400));
+          loadIntelInbox();
+          loadPipelineBar();
         })
         .catch(function(e){alert(e.message);})
         .finally(function(){document.getElementById('post-studio-compose').disabled=false;});
@@ -1477,9 +1687,17 @@
         });
     }
 
-    document.getElementById('post-studio-reload').addEventListener('click',loadPostStudio);
+    document.getElementById('post-studio-reload').addEventListener('click',function(){loadPostStudio();loadIntelInbox();loadPipelineBar();});
     document.getElementById('post-studio-compose').addEventListener('click',composePostStudio);
-    document.getElementById('post-studio-probe').addEventListener('click',probePostStudioSlug);
+    document.getElementById('post-studio-inspect').addEventListener('click',function(){inspectPostStudioSlug();});
+    document.querySelectorAll('.ps-tab').forEach(function(btn){
+      btn.addEventListener('click',function(){psSwitchTab(btn.getAttribute('data-ps-tab'));});
+    });
+    document.getElementById('post-studio-inspector-close').addEventListener('click',function(){
+      document.getElementById('post-studio-inspector').classList.add('hidden');
+    });
+    document.getElementById('ps-load-detectives').addEventListener('click',loadPsDetectives);
+    document.getElementById('ps-scan-beat').addEventListener('click',backfillDetectives);
     document.getElementById('post-studio-load-failures').addEventListener('click',loadComposeFailures);
     document.getElementById('post-studio-run-leak-audit').addEventListener('click',runLeakAudit);
     document.getElementById('post-studio-refill').addEventListener('click',refillPostStudio);
