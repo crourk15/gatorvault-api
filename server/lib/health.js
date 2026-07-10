@@ -12,24 +12,29 @@ module.exports = (app) => {
   });
 
   /**
-   * Readiness probe — routes wired and hub cache has been primed at least once.
-   * Render should use this for deploy health when GV_USE_READY_HEALTH=1.
+   * Readiness probe — routes wired (deploy gate). Hub may still be warming.
+   * Render healthCheckPath uses this; returns 200 once API routes are live.
    */
   app.get('/ready', (_req, res) => {
     const routesReady = global.__GV_API_ROUTES_READY__ === true;
     let hubReady = false;
+    let hubMeta = {};
     try {
-      hubReady = require('./recruiting-hub-cache').getMeta()?.ready === true;
+      hubMeta = require('./recruiting-hub-cache').getMeta() || {};
+      hubReady = hubMeta.ready === true;
     } catch {
       hubReady = false;
     }
-    const ready = routesReady && hubReady;
-    res.status(ready ? 200 : 503).json({
-      ok: ready,
-      ready,
+    const deployReady = routesReady;
+    const fullyReady = routesReady && hubReady;
+    res.status(deployReady ? 200 : 503).json({
+      ok: deployReady,
+      ready: fullyReady,
+      deployReady,
       routesReady,
       hubReady,
-      time: Date.now()
+      hubMeta,
+      time: Date.now(),
     });
   });
 
