@@ -1142,6 +1142,7 @@
     document.getElementById('insider-reload').addEventListener('click',loadInsiderArticles);
 
     var _postStudioSelected = null;
+    var PS_MAX_RETRIES = 5;
 
     function postStudioShowError(msg){
       var el=document.getElementById('post-studio-error');
@@ -1191,37 +1192,27 @@
         (j._fallback?'<br><span class="meta">Using config fallback — full pipeline API may still be deploying.</span>':'');
     }
 
-    function loadPipelineBarFromConfig(){
-      var p=pin(); if(!p)return Promise.resolve();
-      return Promise.all([
-        fetchJson(API+'/api/x/post-studio/config',{headers:headers()}),
-        fetchJson(API+'/api/x/autoposter/detectives?limit=1&pin='+encodeURIComponent(p),{headers:headers()})
-      ]).then(function(res){
-        var cfg=res[0]||{};
-        var det=res[1]||{};
-        if(cfg.pipeline&&cfg.pipeline.ok){
-          renderPipelineBar(cfg.pipeline);
-          if(cfg.inbox&&cfg.inbox.ok) renderIntelInbox(cfg.inbox.items||[]);
-          return;
-        }
-        renderPipelineBar({
-          ok:true,
-          inboxSummary:{beatUnqueued:cfg.inbox?.beatUnqueued??'—',totalUnqueued:cfg.inbox?.totalUnqueued??'—'},
-          queue:cfg.counts||{},
-          hub:{
-            hubMode:cfg.hubMode,
-            schedulerEnabled:cfg.schedulerEnabled,
-            dailySent:(cfg.stats&&cfg.stats.dailySent)||0
-          },
-          detectives:{
-            counts:det.counts,
-            beatCache:det.beatCache,
-            lastBackfill:det.lastBackfill,
-            pileHint:det.pileHint
-          },
-          _fallback:true
-        });
-        if(cfg.inbox&&cfg.inbox.ok) renderIntelInbox(cfg.inbox.items||[]);
+    function renderPipelineBarFallback(cfg, det){
+      det=det||{};
+      renderPipelineBar({
+        ok:true,
+        inboxSummary:{
+          beatUnqueued:cfg.inbox?.beatUnqueued??cfg.inbox?.inboxSummary?.beatUnqueued??'—',
+          totalUnqueued:cfg.inbox?.totalUnqueued??cfg.inbox?.inboxSummary?.totalUnqueued??'—'
+        },
+        queue:cfg.counts||{},
+        hub:{
+          hubMode:cfg.hubMode,
+          schedulerEnabled:cfg.schedulerEnabled,
+          dailySent:(cfg.stats&&cfg.stats.dailySent)||0
+        },
+        detectives:{
+          counts:det.counts,
+          beatCache:det.beatCache,
+          lastBackfill:det.lastBackfill,
+          pileHint:det.pileHint
+        },
+        _fallback:true
       });
     }
 
@@ -1230,21 +1221,28 @@
       var p=pin(); if(!p)return;
       var bar=document.getElementById('post-studio-pipeline-bar');
       wakeApi().finally(function(){
-        fetchJson(API+'/api/x/post-studio/pipeline?pin='+encodeURIComponent(p),{headers:headers()})
-          .then(renderPipelineBar)
-          .catch(function(e){
-            if(/404|Not found/i.test(String(e.message||''))){
-              return loadPipelineBarFromConfig();
+        fetchJson(API+'/api/x/post-studio/config',{headers:headers()})
+          .then(function(cfg){
+            if(cfg.pipeline&&cfg.pipeline.ok){
+              renderPipelineBar(cfg.pipeline);
+              return;
             }
-            if(retryCount<2&&isTransientApiError(e.message)){
-              bar.textContent='Pipeline: '+e.message+' Retrying in 30s…';
+            return fetchJson(API+'/api/x/post-studio/pipeline?pin='+encodeURIComponent(p),{headers:headers()})
+              .then(renderPipelineBar)
+              .catch(function(e){
+                if(!/404|Not found/i.test(String(e.message||''))) throw e;
+                return fetchJson(API+'/api/x/autoposter/detectives?limit=1&pin='+encodeURIComponent(p),{headers:headers()})
+                  .catch(function(){return{};})
+                  .then(function(det){renderPipelineBarFallback(cfg,det);});
+              });
+          })
+          .catch(function(e){
+            if(retryCount<PS_MAX_RETRIES&&isTransientApiError(e.message)){
+              bar.textContent='Pipeline: '+e.message+' Retrying in 30s… ('+(retryCount+1)+'/'+PS_MAX_RETRIES+')';
               setTimeout(function(){loadPipelineBar(retryCount+1);},30000);
               return;
             }
-            bar.textContent='Pipeline: '+e.message+' — loading config fallback…';
-            return loadPipelineBarFromConfig().catch(function(){
-              bar.textContent='Pipeline unavailable: '+e.message;
-            });
+            bar.textContent='Pipeline unavailable: '+e.message+' — hard-refresh in a minute if Render just deployed.';
           });
       });
     }
@@ -1285,27 +1283,34 @@
       });
     }
 
+    function renderIntelInboxDeployHint(){
+      var tbody=document.getElementById('post-studio-inbox-body');
+      tbody.innerHTML='<tr><td colspan="6" class="meta">Inbox API still deploying on Render. Use <strong>Inspect</strong> on a player slug — compose-probe works now. Hard-refresh in 2–3 min after deploy finishes.</td></tr>';
+    }
+
     function loadIntelInbox(retryCount){
       retryCount=retryCount||0;
       var p=pin(); if(!p)return;
       var tbody=document.getElementById('post-studio-inbox-body');
-      fetchJson(API+'/api/x/post-studio/inbox?limit=40&pin='+encodeURIComponent(p),{headers:headers()})
-        .then(function(j){
-          if(!j.ok)throw new Error(j.error||'Inbox failed');
-          renderIntelInbox(j.items||[]);
+      fetchJson(API+'/api/x/post-studio/config',{headers:headers()})
+        .then(function(cfg){
+          if(cfg.inbox&&cfg.inbox.ok&&cfg.inbox.items&&cfg.inbox.items.length){
+            renderIntelInbox(cfg.inbox.items);
+            return;
+          }
+          return fetchJson(API+'/api/x/post-studio/inbox?limit=40&pin='+encodeURIComponent(p),{headers:headers()})
+            .then(function(j){
+              if(!j.ok)throw new Error(j.error||'Inbox failed');
+              renderIntelInbox(j.items||[]);
+            })
+            .catch(function(e){
+              if(/404|Not found/i.test(String(e.message||''))) renderIntelInboxDeployHint();
+              else throw e;
+            });
         })
         .catch(function(e){
-          if(/404|Not found/i.test(String(e.message||''))){
-            return fetchJson(API+'/api/x/post-studio/config',{headers:headers()}).then(function(cfg){
-              if(cfg.inbox&&cfg.inbox.ok&&cfg.inbox.items&&cfg.inbox.items.length){
-                renderIntelInbox(cfg.inbox.items);
-                return;
-              }
-              tbody.innerHTML='<tr><td colspan="6" class="meta">Inbox API still deploying on Render. Use <strong>Inspect</strong> on a player slug — compose-probe works now. Reload in 2–3 min after deploy finishes.</td></tr>';
-            });
-          }
-          if(retryCount<2&&isTransientApiError(e.message)){
-            tbody.innerHTML='<tr><td colspan="6" class="meta">'+esc(e.message)+' Retrying…</td></tr>';
+          if(retryCount<PS_MAX_RETRIES&&isTransientApiError(e.message)){
+            tbody.innerHTML='<tr><td colspan="6" class="meta">'+esc(e.message)+' Retrying… ('+(retryCount+1)+'/'+PS_MAX_RETRIES+')</td></tr>';
             setTimeout(function(){loadIntelInbox(retryCount+1);},30000);
             return;
           }
@@ -1669,8 +1674,8 @@
             loadPipelineBar();
           })
           .catch(function(e){
-            if(retryCount<2&&isTransientApiError(e.message)){
-              postStudioShowError(e.message+' Retrying in 30s…');
+            if(retryCount<PS_MAX_RETRIES&&isTransientApiError(e.message)){
+              postStudioShowError(e.message+' Retrying in 30s… ('+(retryCount+1)+'/'+PS_MAX_RETRIES+')');
               setTimeout(function(){loadPostStudio(retryCount+1);},30000);
               return;
             }
