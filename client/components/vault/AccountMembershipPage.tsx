@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { clearSession, loadSession } from '@/lib/auth-api';
+import { clearSession, loadSession, verifyStoredSession } from '@/lib/auth-api';
 import { isNativeApp } from '@/lib/api-base';
 import {
   fetchSubscriptionCatalog,
@@ -42,6 +42,7 @@ export function AccountMembershipPage(): React.ReactElement {
   const [billingReady, setBillingReady] = useState(false);
   const [purchaseBusy, setPurchaseBusy] = useState<string | null>(null);
   const native = isNativeApp();
+  const localSession = typeof window !== 'undefined' ? loadSession() : null;
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.location.hash === "#delete-account") {
@@ -60,15 +61,48 @@ export function AccountMembershipPage(): React.ReactElement {
     let cancelled = false;
     void (async () => {
       try {
-        const [cat, st] = await Promise.all([
+        const verified = await verifyStoredSession();
+        if (cancelled) return;
+        if (!verified?.token) {
+          window.location.replace('/join/?mode=signin&next=/vault/membership/');
+          return;
+        }
+
+        const [catalogResult, statusResult] = await Promise.allSettled([
           fetchSubscriptionCatalog(),
           fetchSubscriptionStatus(),
         ]);
+
         if (cancelled) return;
-        setCatalog(cat);
-        setStatus(st);
-        if (native && cat.iosPurchaseReady) {
-          setBillingReady(await isIosBillingAvailable());
+
+        if (catalogResult.status === 'fulfilled') {
+          setCatalog(catalogResult.value);
+          if (native && catalogResult.value.iosPurchaseReady) {
+            setBillingReady(await isIosBillingAvailable());
+          }
+        }
+
+        if (statusResult.status === 'fulfilled') {
+          setStatus(statusResult.value);
+        } else {
+          const err = statusResult.reason;
+          const message = err instanceof Error ? err.message : 'Could not load membership.';
+          setError(message);
+          if (
+            message.toLowerCase().includes('sign in') ||
+            message.toLowerCase().includes('account not found')
+          ) {
+            clearSession();
+            window.setTimeout(() => {
+              window.location.replace('/join/?mode=signin&reauth=1&next=/vault/membership/');
+            }, 1200);
+          }
+        }
+
+        if (catalogResult.status === 'rejected' && statusResult.status === 'rejected') {
+          setError('Could not load membership. Check your connection and try again.');
+        } else if (catalogResult.status === 'rejected') {
+          setError((prev) => prev || 'Could not load subscription plans.');
         }
       } catch (err) {
         if (!cancelled) {
@@ -172,6 +206,19 @@ export function AccountMembershipPage(): React.ReactElement {
       </p>
 
       {error ? <p className="gv-membership__error">{error}</p> : null}
+
+      {!status?.email && localSession?.email ? (
+        <section className="gv-membership__account" aria-label="Signed in account">
+          <h2 className="gv-membership__section-title">Signed in</h2>
+          <p className="gv-membership__meta">{localSession.email}</p>
+          <p className="gv-membership__meta">
+            Membership details could not be loaded. Sign in again to refresh your session.
+          </p>
+          <button type="button" className="gv-membership__secondary-btn" onClick={handleSignOut}>
+            Sign out and sign in again
+          </button>
+        </section>
+      ) : null}
 
       {status ? (
         <section className="gv-membership__status" aria-label="Current membership">

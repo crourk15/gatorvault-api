@@ -84,7 +84,7 @@ function mountSubscriptionRoutes(app) {
     }
     const user = findUserByEmail(session.email);
     if (!user) {
-      return res.status(404).json({ ok: false, error: 'Account not found.' });
+      return res.status(401).json({ ok: false, error: 'Account not found. Sign in again.' });
     }
     return res.json(buildSubscriptionStatus(user));
   });

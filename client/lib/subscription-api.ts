@@ -67,13 +67,23 @@ export async function fetchSubscriptionCatalog(): Promise<SubscriptionCatalog> {
   return res.json() as Promise<SubscriptionCatalog>;
 }
 
+async function subscriptionStatusError(res: Response): Promise<Error> {
+  const data = (await res.json().catch(() => ({}))) as { error?: string };
+  if (res.status === 401 || res.status === 404) {
+    return new Error(data.error || 'Sign in again to view membership.');
+  }
+  if (res.status === 502 || res.status === 503) {
+    return new Error('Membership service is waking up. Try again in a moment.');
+  }
+  return new Error(data.error || 'Could not load membership status.');
+}
+
 export async function fetchSubscriptionStatus(): Promise<SubscriptionStatus> {
   const res = await fetch(`${getApiBase()}/api/subscription/status`, {
     headers: authHeaders(),
     cache: 'no-store',
   });
-  if (res.status === 401) throw new Error('Sign in to view membership.');
-  if (!res.ok) throw new Error('Could not load membership status.');
+  if (!res.ok) throw await subscriptionStatusError(res);
   return res.json() as Promise<SubscriptionStatus>;
 }
 
