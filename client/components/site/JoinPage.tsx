@@ -40,8 +40,16 @@ function redirectAfterAuth(): void {
   }, 150);
 }
 
+function initialJoinMode(): Mode {
+  if (typeof window === 'undefined') return 'signup';
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('mode') === 'signin') return 'signin';
+  if (params.get('mode') === 'signup') return 'signup';
+  return isNativeApp() ? 'signin' : 'signup';
+}
+
 export function JoinPage(): React.ReactElement {
-  const [mode, setMode] = useState<Mode>('signup');
+  const [mode, setMode] = useState<Mode>(initialJoinMode);
   const [tier, setTier] = useState<PaymentTierId>('film');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

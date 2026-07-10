@@ -33,7 +33,17 @@ WHAT YOU GET
 - Member community — threads, debate, and game-week talk
 
 COMMUNITY SAFETY
-Signed-in members can report inappropriate posts and block other members. Reports are reviewed by our team. See our Privacy Policy and Terms for details.
+Signed-in members can report inappropriate posts and block other members. Reports are reviewed by our team.
+
+SUBSCRIPTIONS (auto-renewable via Apple In-App Purchase)
+- Locker Room — $4.99/month or $47.88/year
+- Film Room — $9.99/month or $95.88/year
+- War Room — $19.99/month or $191.88/year
+Payment is charged to your Apple ID at confirmation of purchase. Subscriptions automatically renew unless canceled at least 24 hours before the end of the current period. Manage or cancel in your Apple ID account settings.
+
+LEGAL
+Privacy Policy: https://gatorvaultinsider.com/privacy/
+Terms of Use (EULA): https://gatorvaultinsider.com/terms/
 
 ## Keywords (100 chars)
 

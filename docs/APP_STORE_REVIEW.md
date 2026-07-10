@@ -42,7 +42,45 @@ Reviewers must tap **Sign in** (not Create account) on the join screen:
 - Web: https://gatorvaultinsider.com/join/?mode=signin
 - iOS app: Menu → Sign in (or Join → Sign in tab)
 
-### Reply to App Review (Resolution Center)
+### Reply to App Review (Resolution Center) — July 9, 2026
+
+```
+Hello App Review,
+
+Thank you for the feedback on submission 475e2270 (1.0 build 11).
+
+Guideline 3.1.2(c) — Terms of Use (EULA):
+We updated App Store metadata to include functional legal links in the App Description:
+- Privacy Policy: https://gatorvaultinsider.com/privacy/
+- Terms of Use (EULA): https://gatorvaultinsider.com/terms/
+
+The Privacy Policy URL field in App Information also points to https://gatorvaultinsider.com/privacy/.
+In the app, Membership & Account lists each auto-renewable subscription (title, monthly/annual price, billing period) with links to the same Privacy Policy and Terms of Use. A screen recording confirming both metadata and in-app links is attached in App Review Information.
+
+Guideline 2.1 — Demo account:
+We reprovisioned the demo account on production. Please use:
+
+Email: appreview@gatorvaultinsider.com
+Password: GvAppReview!2026
+
+Sign in: tap "Sign in" on the join screen (not "Create account"), then enter the credentials above.
+The demo account has War Room tier with full access to all features.
+
+Review paths after sign-in:
+1. Game Week — /vault/game-week/
+2. Film Room — /vault/film-room/
+3. FutureCast — /vault/futurecast/
+4. Membership & IAP — /vault/membership/
+5. Community — /vault/community/ (Report / Block)
+6. Privacy & Terms — https://gatorvaultinsider.com/privacy/ and https://gatorvaultinsider.com/terms/
+
+Support: support@gatorvaultinsider.com
+
+Thank you,
+Charles Rourk
+```
+
+### Reply to App Review (Resolution Center) — earlier template
 
 ```
 Hello,

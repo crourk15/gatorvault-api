@@ -295,7 +295,12 @@ export function AccountMembershipPage(): React.ReactElement {
                 {tier.icon} {tier.name}
                 {tier.popular ? ' · Popular' : ''}
               </h3>
-              <p className="gv-membership__card-price">${tier.monthlyUsd.toFixed(2)}/mo</p>
+              <p className="gv-membership__card-price">
+                ${tier.monthlyUsd.toFixed(2)}/month · ${tier.annualUsd.toFixed(2)}/year
+              </p>
+              <p className="gv-membership__card-note">
+                Auto-renewing subscription · billed monthly or annually through Apple
+              </p>
             </div>
             <p className="gv-membership__card-note">
               App Store product: {tier.products.monthly}
@@ -318,13 +323,22 @@ export function AccountMembershipPage(): React.ReactElement {
       </section>
 
       <section className="gv-membership__cta">
+        <p className="gv-membership__meta">
+          Subscriptions renew automatically unless canceled at least 24 hours before the current
+          period ends. Payment is charged to your Apple ID. Manage or cancel in your Apple ID
+          subscription settings.
+        </p>
         <p>
           Questions:{' '}
           <a href={`mailto:${supportEmail}`}>{supportEmail}</a>
           {' · '}
-          <Link href="/terms/">Terms</Link>
+          <a href="https://gatorvaultinsider.com/terms/" target="_blank" rel="noopener noreferrer">
+            Terms of Use (EULA)
+          </a>
           {' · '}
-          <Link href="/privacy/">Privacy</Link>
+          <a href="https://gatorvaultinsider.com/privacy/" target="_blank" rel="noopener noreferrer">
+            Privacy Policy
+          </a>
         </p>
       </section>
     </div>

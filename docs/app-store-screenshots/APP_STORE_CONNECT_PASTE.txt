@@ -15,7 +15,17 @@ WHAT YOU GET
 - Member community - threads, debate, and game-week talk
 
 COMMUNITY SAFETY
-Signed-in members can report inappropriate posts and block other members. Reports are reviewed by our team. See our Privacy Policy and Terms for details.
+Signed-in members can report inappropriate posts and block other members. Reports are reviewed by our team.
+
+SUBSCRIPTIONS (auto-renewable via Apple In-App Purchase)
+- Locker Room — $4.99/month or $47.88/year
+- Film Room — $9.99/month or $95.88/year
+- War Room — $19.99/month or $191.88/year
+Payment is charged to your Apple ID at confirmation of purchase. Subscriptions automatically renew unless canceled at least 24 hours before the end of the current period. Manage or cancel in your Apple ID account settings.
+
+LEGAL
+Privacy Policy: https://gatorvaultinsider.com/privacy/
+Terms of Use (EULA): https://gatorvaultinsider.com/terms/
 
 --- Keywords (100 chars max) ---
 florida,gators,football,recruiting,sec,college,sports,uf,gatorvault,futurecast
@@ -46,9 +56,14 @@ Password: (enter your demo password in Connect only - never commit)
 Notes for reviewer:
 GatorVault Insider — demo account has War Room tier (full access).
 
-SIGN IN: Tap "Sign in" on the join screen (not Create account).
+SIGN IN: Tap "Sign in" on the join screen (not Create account). The app opens Sign in by default on iOS.
 Email: appreview@gatorvaultinsider.com
 Password: (same as Sign-in required field above)
+
+SUBSCRIPTIONS / LEGAL (Guideline 3.1.2):
+App Description includes Privacy Policy and Terms of Use (EULA) URLs.
+In-app: Menu → Membership & Account shows subscription titles, monthly/annual prices, auto-renew terms, and links to https://gatorvaultinsider.com/privacy/ and https://gatorvaultinsider.com/terms/
+Screen recording attached confirming metadata + in-app legal links.
 
 UNLOCK / PAYWALL (Guideline 2.1a fix):
 Logged-in users tapping "Unlock Game Week + Film Room" go to Membership & Account (/vault/membership/) for Apple IAP — not back to sign-in.
