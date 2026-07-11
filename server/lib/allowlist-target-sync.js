@@ -76,6 +76,59 @@ function allowlistJobs() {
   return jobs;
 }
 
+function extractOffersFromOn3Profile(topTeams, classYear) {
+  const teams = on3Recruit.getYearTopTeams(topTeams, classYear);
+  const offers = [];
+  for (const t of teams) {
+    if (on3Recruit.isHighSchoolOrg(t)) continue;
+    const school = teamNameFromOn3(t.team);
+    if (!school) continue;
+    const status = String(t.status || '');
+    if (!/offer/i.test(status)) continue;
+    // Include Florida + competitors — Detectives gaps treat missing UF offer separately
+    offers.push({
+      school: on3Recruit.isFloridaTeam(t) ? 'Florida' : school,
+      offerType: status || 'offer',
+      date: t.dateAdded || t.date || null,
+      source: 'on3',
+    });
+  }
+  return offers;
+}
+
+function extractVisitsFromOn3Profile(profile) {
+  const visits = [];
+  const list = Array.isArray(profile?.visits) ? profile.visits : profile?.visits?.list || [];
+  for (const v of list) {
+    const school = teamNameFromOn3(v.organization || v.team || v.school) || null;
+    if (!school && !v.date && !v.visitDate) continue;
+    visits.push({
+      school: school || 'Florida',
+      visitType: v.official ? 'official_visit' : 'unofficial_visit',
+      date: v.date || v.visitDate || null,
+      source: 'on3',
+    });
+  }
+  return visits;
+}
+
+function competitorsFromOn3TopTeams(topTeams, classYear) {
+  try {
+    const { rpmTopFromOn3TopTeams } = require('./autoposter/rewrite/comp-sourcing');
+    return rpmTopFromOn3TopTeams(topTeams || [], classYear).map((row) => ({
+      school: row.school,
+      score: row.pct,
+      pct: row.pct,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Allowlist / Detectives On3 patch — same useful intel golden-four already persists:
+ * rankings + RPM + topTeams + offers (+ visits when present on profile).
+ */
 function profilePatchFromOn3(profile, classYear) {
   const commit = on3Recruit.getCollegeCommit(profile.topTeams, classYear);
   const committedTo = commit ? teamNameFromOn3(commit.team) : null;
@@ -85,6 +138,18 @@ function profilePatchFromOn3(profile, classYear) {
     .map((n) => Number(n))
     .filter((n) => Number.isFinite(n) && n > 0);
   const stars = starCandidates.length ? Math.max(...starCandidates) : profile.stars ?? null;
+
+  const ufTeam = on3Recruit.getFloridaTeam(profile.topTeams, classYear);
+  const ufRaw = ufTeam?.prediction ?? ufTeam?.percent ?? ufTeam?.percentage ?? null;
+  let ufRpmPct = null;
+  if (ufRaw != null && Number.isFinite(Number(ufRaw))) {
+    const n = Number(ufRaw);
+    ufRpmPct = Math.min(100, Math.max(0, Math.round(n <= 1 ? n * 100 : n)));
+  }
+
+  const offerRecords = extractOffersFromOn3Profile(profile.topTeams, classYear);
+  const visitRecords = extractVisitsFromOn3Profile(profile);
+  const competitors = competitorsFromOn3TopTeams(profile.topTeams, classYear);
 
   const patch = {
     name: profile.name,
@@ -100,11 +165,28 @@ function profilePatchFromOn3(profile, classYear) {
     natlRank: rp.consensusOverallRank ?? rp.consensusNationalRank ?? profile.natlRank ?? null,
     posRank: rp.consensusPositionRank ?? rp.positionRank ?? profile.posRank ?? null,
     stateRank: rp.consensusStateRank ?? rp.stateRank ?? profile.stateRank ?? null,
+    on3TopTeams: profile.topTeams || [],
+    topTeams: profile.topTeams || [],
   };
+
+  if (ufRpmPct != null) patch.ufRpmPct = ufRpmPct;
+  if (competitors.length) patch.competitors = competitors;
+  if (offerRecords.length) patch.offers = offerRecords;
+  if (visitRecords.length) patch.visits = visitRecords;
 
   if (profile.school) patch.school = on3Recruit.schoolLabelFromOn3(profile) || profile.school;
   if (profile.highSchoolSlug) patch.highSchoolSlug = profile.highSchoolSlug;
   if (profile.state) patch.state = profile.state;
+  if (profile.slug) {
+    patch.on3Slug = profile.slug;
+    const idMatch = String(profile.slug).match(/-(\d+)$/);
+    if (idMatch) patch.on3Id = idMatch[1];
+  }
+  if (profile.on3ProfileUrl) {
+    patch.on3ProfileUrl = profile.on3ProfileUrl;
+  } else if (patch.on3Slug) {
+    patch.on3ProfileUrl = `https://www.on3.com/rivals/${patch.on3Slug}/`;
+  }
   const rating = profile.rating ?? rp.consensusRating ?? rp.rating ?? null;
   if (rating != null && Number.isFinite(Number(rating))) {
     patch.rating = Number(rating);
@@ -112,6 +194,50 @@ function profilePatchFromOn3(profile, classYear) {
   }
 
   return patch;
+}
+
+/** Write offer/visit logs so Player Intelligence gaps clear on Detectives refresh. */
+async function persistOn3OfferVisitLogs(slug, playerName, profilePatch, profile) {
+  if (!slug || !profilePatch) return { offers: 0, visits: 0 };
+  let offers = 0;
+  let visits = 0;
+  try {
+    const offerLogStore = require('./recruiting-offer-log-store');
+    for (const offer of profilePatch.offers || []) {
+      const logResult = await offerLogStore.appendOfferLog({
+        playerSlug: slug,
+        playerId: profilePatch.on3Id || null,
+        playerName: playerName || profilePatch.name,
+        school: offer.school,
+        offerType: offer.offerType || 'offer',
+        date: offer.date || null,
+        source: 'on3',
+        reportedAt: profile?.fetchedAt || new Date().toISOString(),
+      });
+      if (logResult?.created) offers += 1;
+    }
+  } catch {
+    /* optional */
+  }
+  try {
+    const visitLogStore = require('./recruiting-visit-log-store');
+    for (const visit of profilePatch.visits || []) {
+      const logResult = await visitLogStore.appendVisitLog({
+        playerSlug: slug,
+        playerId: profilePatch.on3Id || null,
+        playerName: playerName || profilePatch.name,
+        school: visit.school || 'Florida',
+        visitType: visit.visitType || 'unofficial_visit',
+        date: visit.date || null,
+        source: 'on3',
+        reportedAt: profile?.fetchedAt || new Date().toISOString(),
+      });
+      if (logResult?.created) visits += 1;
+    }
+  } catch {
+    /* optional */
+  }
+  return { offers, visits };
 }
 
 function localJsonPlayer(slug) {
@@ -125,6 +251,17 @@ function localJsonPlayer(slug) {
 function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, classYear, playerName) {
   const committedTo = profilePatch.committedTo ?? existing?.committedTo ?? localPlayer?.committedTo ?? null;
   const ufCommitted = committedTo && isFloridaSchool(committedTo);
+  const baseOffers = existing?.offers || localPlayer?.offers || [];
+  const baseVisits = existing?.visits || localPlayer?.visits || [];
+  const mergedOffers =
+    profilePatch.offers?.length
+      ? store.mergeVisitOfferArrays(baseOffers, profilePatch.offers, store.offerArrayKey) || profilePatch.offers
+      : baseOffers;
+  const mergedVisits =
+    profilePatch.visits?.length
+      ? store.mergeVisitOfferArrays(baseVisits, profilePatch.visits, store.visitArrayKey) || profilePatch.visits
+      : baseVisits;
+
   let merged = applyEditorialPositionToPlayer({
     ...localPlayer,
     ...existing,
@@ -142,6 +279,15 @@ function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, cl
     on3Source: profilePatch.on3Source || existing?.on3Source || 'on3-allowlist-sync',
     on3Slug: profilePatch.on3Slug ?? existing?.on3Slug ?? localPlayer?.on3Slug ?? null,
     on3ProfileUrl: profilePatch.on3ProfileUrl ?? existing?.on3ProfileUrl ?? localPlayer?.on3ProfileUrl ?? null,
+    on3Id: profilePatch.on3Id ?? existing?.on3Id ?? localPlayer?.on3Id ?? null,
+    ufRpmPct: profilePatch.ufRpmPct ?? existing?.ufRpmPct ?? localPlayer?.ufRpmPct ?? null,
+    on3TopTeams: profilePatch.on3TopTeams ?? existing?.on3TopTeams ?? localPlayer?.on3TopTeams ?? null,
+    topTeams: profilePatch.topTeams ?? existing?.topTeams ?? localPlayer?.topTeams ?? null,
+    competitors: profilePatch.competitors?.length
+      ? profilePatch.competitors
+      : existing?.competitors || localPlayer?.competitors || [],
+    offers: mergedOffers,
+    visits: mergedVisits,
     ufOvStatus: profilePatch.ufOvStatus ?? existing?.ufOvStatus ?? localPlayer?.ufOvStatus ?? null,
     updatedAt: new Date().toISOString(),
   });
@@ -180,6 +326,7 @@ async function buildProfilePatchFromDiscovery(slug, classYear, existing, playerN
     return {
       profilePatch: { ...profilePatch, ...schoolPatch },
       source: discovery.source,
+      profile: discovery.profile,
     };
   }
 
@@ -191,6 +338,7 @@ async function buildProfilePatchFromDiscovery(slug, classYear, existing, playerN
         return {
           profilePatch: { ...profilePatch, ...profileToSchoolPatch(profile) },
           source: discovery.source || 'stored_slug',
+          profile,
         };
       }
     } catch {
@@ -198,14 +346,14 @@ async function buildProfilePatchFromDiscovery(slug, classYear, existing, playerN
     }
   }
 
-  return { profilePatch: {}, source: discovery.source || null };
+  return { profilePatch: {}, source: discovery.source || null, profile: null };
 }
 
 async function syncSlugFromOn3Fast(slug, classYear) {
   const existing = await store.getPlayerBySlug(slug);
   const localPlayer = localJsonPlayer(slug);
   const playerName = CANONICAL_TARGET_NAMES[slug] || existing?.name || localPlayer?.name || slug;
-  const { profilePatch } = await buildProfilePatchFromDiscovery(slug, classYear, existing, playerName);
+  const { profilePatch, profile } = await buildProfilePatchFromDiscovery(slug, classYear, existing, playerName);
 
   if (!profilePatch.school && localPlayer?.school && !isPlaceholderSchool(localPlayer.school)) {
     profilePatch.school = localPlayer.school;
@@ -213,7 +361,7 @@ async function syncSlugFromOn3Fast(slug, classYear) {
   if (!profilePatch.state && (localPlayer?.state || existing?.state)) {
     profilePatch.state = localPlayer?.state || existing?.state;
   }
-  for (const field of ['natlRank', 'posRank', 'stateRank', 'rating', 'stars']) {
+  for (const field of ['natlRank', 'posRank', 'stateRank', 'rating', 'stars', 'ufRpmPct']) {
     if (profilePatch[field] == null && localPlayer?.[field] != null) {
       profilePatch[field] = localPlayer[field];
     }
@@ -228,6 +376,7 @@ async function syncSlugFromOn3Fast(slug, classYear) {
   }
 
   await store.upsertPlayer(merged);
+  await persistOn3OfferVisitLogs(slug, playerName, profilePatch, profile);
   if (merged.school && !isPlaceholderSchool(merged.school)) {
     persistAllowlistPlayerToJson(slug, {
       name: merged.name,
@@ -244,6 +393,13 @@ async function syncSlugFromOn3Fast(slug, classYear) {
       on3Source: merged.on3Source,
       on3Slug: merged.on3Slug,
       on3Id: merged.on3Id,
+      on3ProfileUrl: merged.on3ProfileUrl,
+      ufRpmPct: merged.ufRpmPct,
+      offers: merged.offers,
+      visits: merged.visits,
+      on3TopTeams: merged.on3TopTeams,
+      topTeams: merged.topTeams,
+      competitors: merged.competitors,
     });
   }
 
@@ -256,6 +412,9 @@ async function syncSlugFromOn3Fast(slug, classYear) {
     committedTo,
     pos: merged.pos || null,
     ranked: merged.on3Source === 'on3-board-sync',
+    ufRpmPct: merged.ufRpmPct ?? null,
+    offers: Array.isArray(merged.offers) ? merged.offers.length : 0,
+    visits: Array.isArray(merged.visits) ? merged.visits.length : 0,
   };
 }
 
@@ -277,6 +436,7 @@ async function syncSlugFromOn3(slug, classYear) {
   if (identity.ok && identity.player) {
     const p = identity.player;
     let profilePatch = {};
+    let fetchedProfile = null;
     const discovery = await discoverOn3RecruitSlug(slug, {
       classYear,
       player: existing,
@@ -291,6 +451,7 @@ async function syncSlugFromOn3(slug, classYear) {
       if (schoolPatch.inState != null) profilePatch.inState = schoolPatch.inState;
       if (schoolPatch.on3Slug) profilePatch.on3Slug = schoolPatch.on3Slug;
       if (schoolPatch.on3Id) profilePatch.on3Id = schoolPatch.on3Id;
+      fetchedProfile = discovery.profile;
     } else {
       try {
         const recruitSlug =
@@ -299,6 +460,7 @@ async function syncSlugFromOn3(slug, classYear) {
         const profile = await on3Recruit.fetchRecruitProfile(recruitSlug, classYear);
         if (profile && !profile.error) {
           profilePatch = profilePatchFromOn3(profile, classYear);
+          fetchedProfile = profile;
         }
       } catch {
         /* profile optional */
@@ -314,24 +476,16 @@ async function syncSlugFromOn3(slug, classYear) {
     const ufCommitted = committedTo && isFloridaSchool(committedTo);
 
     let merged = applyAllowlistIntelSkinny(
-      applyEditorialPositionToPlayer({
-        ...existing,
-        ...p,
-        ...profilePatch,
-        slug,
-        classYear,
-        name: p.name || profilePatch.name || playerName,
-        pos: profilePatch.pos || p.pos || existing?.pos,
-        committedTo: ufCommitted ? 'Florida' : committedTo,
-        status: committedTo ? 'committed' : 'uncommitted',
-        category: committedTo ? 'recruit' : 'target',
-        commitDate: profilePatch.commitDate ?? p.commitDate ?? existing?.commitDate ?? null,
-        commitmentSyncAt: new Date().toISOString(),
-        commitmentSource: profilePatch.committedTo ? 'on3-allowlist-sync' : existing?.commitmentSource || null,
-        on3Source: profilePatch.on3Source || 'on3-allowlist-sync',
-        updatedAt: new Date().toISOString(),
-      })
+      mergeAllowlistPlayerPatch(existing, localJsonPlayer(slug), profilePatch, slug, classYear, playerName)
     );
+    // Preserve identity rebuild fields that patch may not carry
+    merged = {
+      ...p,
+      ...merged,
+      committedTo: ufCommitted ? 'Florida' : committedTo,
+      status: committedTo ? 'committed' : 'uncommitted',
+      category: committedTo ? 'recruit' : 'target',
+    };
 
     if (
       isPlaceholderSchool(merged.school) &&
@@ -344,6 +498,7 @@ async function syncSlugFromOn3(slug, classYear) {
     merged = applyCanonicalFixup(slug, merged);
 
     await store.upsertPlayer(merged);
+    await persistOn3OfferVisitLogs(slug, playerName, profilePatch, fetchedProfile);
 
     if (merged.school && !isPlaceholderSchool(merged.school)) {
       persistAllowlistPlayerToJson(slug, {
@@ -361,6 +516,13 @@ async function syncSlugFromOn3(slug, classYear) {
         on3Source: merged.on3Source,
         on3Slug: merged.on3Slug,
         on3Id: merged.on3Id,
+        on3ProfileUrl: merged.on3ProfileUrl,
+        ufRpmPct: merged.ufRpmPct,
+        offers: merged.offers,
+        visits: merged.visits,
+        on3TopTeams: merged.on3TopTeams,
+        topTeams: merged.topTeams,
+        competitors: merged.competitors,
       });
     }
 
@@ -371,6 +533,9 @@ async function syncSlugFromOn3(slug, classYear) {
       committedTo: committedTo || null,
       pos: profilePatch.pos || p.pos || null,
       ranked: profilePatch.on3Source === 'on3-board-sync',
+      ufRpmPct: merged.ufRpmPct ?? null,
+      offers: Array.isArray(merged.offers) ? merged.offers.length : 0,
+      visits: Array.isArray(merged.visits) ? merged.visits.length : 0,
     };
   }
 
@@ -1069,6 +1234,7 @@ module.exports = {
   loadOn3RecruitSlug,
   syncSlugFromOn3,
   syncSlugFromOn3Fast,
+  persistOn3OfferVisitLogs,
   STATE_PATH,
   STALE_HOURS,
 };

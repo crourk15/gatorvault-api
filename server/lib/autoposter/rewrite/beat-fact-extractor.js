@@ -160,6 +160,15 @@ function extractVisit(beatText = '') {
   if (/first visit to gainesville|gainesville visit/i.test(beat)) when = 'his first Gainesville visit';
   else if (/first visit|first trip/i.test(beat)) when = when || (/first trip/i.test(beat) ? 'first trip' : 'first visit');
   if (/fnl|friday night lights/i.test(beat)) when = when || 'FNL weekend';
+  // Upcoming / return trip interest (Fleming-style beats)
+  if (
+    /another trip to gainesville/i.test(beat) ||
+    /another trip back to gainesville/i.test(beat) ||
+    /trip (?:back )?to gainesville could happen/i.test(beat) ||
+    /could happen soon.{0,40}gainesville|gainesville.{0,40}could happen soon/i.test(beat)
+  ) {
+    when = when || 'another Gainesville trip';
+  }
 
   const school = /\bflorida|gators|swamp|gainesville\b/i.test(beat) ? 'Florida' : null;
   const type = /\bofficial\b/i.test(beat) && !/unofficial/i.test(beat) ? 'official' : 'unofficial';
@@ -231,6 +240,13 @@ function enrichVisitFromContext(facts, ctx = {}) {
   }
   if (/made a big impression.*first trip|first trip.*gainesville|big impression.*gainesville/i.test(beat)) {
     return { when: 'his first Gainesville visit', type: 'unofficial', school: 'Florida' };
+  }
+  if (/another trip to gainesville|trip (?:back )?to gainesville could happen/i.test(beat)) {
+    return {
+      when: facts.visit?.when || 'another Gainesville trip',
+      type: facts.visit?.type || 'unofficial',
+      school: 'Florida',
+    };
   }
   if (facts.visit?.when) {
     if (/gainesville/i.test(beat) && /^first trip$/i.test(String(facts.visit.when))) {
@@ -337,6 +353,12 @@ function extractOfferInterestSignal(beatText = '') {
     /\bmaking .+ a priority early\b/i.test(beat) ||
     /\binterest is certainly mutual\b/i.test(beat) ||
     /\bmutual interest\b/i.test(beat) ||
+    /\bstrong interest in the gators\b/i.test(beat) ||
+    /\bstrong interest\b/i.test(beat) ||
+    /\boffering (?:him|her)\b/i.test(beat) ||
+    /\bwhen offering (?:him|her)\b/i.test(beat) ||
+    /\boffered (?:him|her)\b/i.test(beat) ||
+    /\bflorida (?:recently )?(?:entered|extended).{0,40}offer/i.test(beat) ||
     /\btold .+ straight up\b/i.test(beat) ||
     /\bnow a top school\b/i.test(beat) ||
     /\bwe want you and we'?re going to get you\b/i.test(beat) ||
