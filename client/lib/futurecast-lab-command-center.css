@@ -473,10 +473,11 @@
 .fc-lab-battle-row__metric-label {
   display: block;
   font-size: 0.68rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--gv-muted, #6b7280);
+  /* --gv-muted is storm gray (#e5e5e5) for dark shells — unreadable on white cards */
+  color: #475569;
   margin: 6px 0 2px;
 }
 
@@ -484,9 +485,14 @@
   margin-top: 0;
 }
 
+.fc-lab-battle-row__gv .rh-cc-prob-bar__label {
+  color: var(--gv-blue, #0021a5);
+}
+
 .fc-lab-battle-row__rpm-meta {
   font-size: 0.75rem;
-  color: var(--gv-muted, #6b7280);
+  font-weight: 600;
+  color: #475569;
   margin: 2px 0 0;
 }
 
@@ -1693,6 +1699,34 @@
   color: #64748b !important;
 }
 
+/* Battles panel — labels must stay readable on white rows (never inherit page shell white / storm muted) */
+.fc-lab-cc-page .fc-lab-battle-row__metric-label,
+.fc-lab-cc-page .fc-lab-battle-row__rpm-meta,
+.fc-futurecast-page--elite .fc-lab-battle-row__metric-label,
+.fc-futurecast-page--elite .fc-lab-battle-row__rpm-meta,
+.gv-fc-page .fc-lab-battle-row__metric-label,
+.gv-fc-page .fc-lab-battle-row__rpm-meta {
+  color: #475569 !important;
+}
+
+.fc-lab-cc-page .fc-lab-battle-row .rh-cc-prob-bar__label,
+.fc-futurecast-page--elite .fc-lab-battle-row .rh-cc-prob-bar__label,
+.gv-fc-page .fc-lab-battle-row .rh-cc-prob-bar__label {
+  color: var(--gv-blue, #0021a5) !important;
+}
+
+.fc-lab-cc-page .fc-lab-battle-row .fc-school-rank__school,
+.fc-futurecast-page--elite .fc-lab-battle-row .fc-school-rank__school,
+.gv-fc-page .fc-lab-battle-row .fc-school-rank__school {
+  color: var(--gv-navy, #001a33) !important;
+}
+
+.fc-lab-cc-page .fc-lab-battle-row .fc-school-rank__pct,
+.fc-futurecast-page--elite .fc-lab-battle-row .fc-school-rank__pct,
+.gv-fc-page .fc-lab-battle-row .fc-school-rank__pct {
+  color: var(--gv-blue, #0021a5) !important;
+}
+
 
 /* Shared school rank rows (also used on player profile) */
 .fc-school-rank-list {
@@ -1791,6 +1825,30 @@
 .fc-lab-rpm-board .fc-lab-battle-row__metric-label {
   display: block;
   margin-bottom: 6px;
+  color: #475569;
+}
+
+/* Battle / target cards are light surfaces — keep On3 market rows dark-on-light */
+.fc-lab-battle-row .fc-school-rank,
+.fc-lab-target-card .fc-school-rank {
+  color: var(--gv-navy, #001a33);
+}
+
+.fc-lab-battle-row .fc-school-rank__school,
+.fc-lab-target-card .fc-school-rank__school {
+  color: var(--gv-navy, #001a33);
+}
+
+.fc-lab-battle-row .fc-school-rank__pct,
+.fc-lab-target-card .fc-school-rank__pct {
+  color: var(--gv-blue, #0021a5);
+}
+
+.fc-lab-battle-row .fc-school-rank__rank,
+.fc-lab-battle-row .fc-school-rank__detail,
+.fc-lab-target-card .fc-school-rank__rank,
+.fc-lab-target-card .fc-school-rank__detail {
+  color: #64748b;
 }
 
 .fc-school-rank-list--compact {
