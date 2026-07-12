@@ -62,11 +62,12 @@ export function resolveCompetingSchools(player: FcLabTarget): CompetingSchoolSeg
 
   const rows: Array<{ name: string; absPct: number; tone: CompetingSchoolSegment['tone'] }> = [];
   if (ufRpm != null && ufRpm > 0) {
-    rows.push({ name: 'UF', absPct: ufRpm, tone: 'uf' });
+    rows.push({ name: 'Florida', absPct: ufRpm, tone: 'uf' });
   }
   fromRpm.forEach((s, i) => {
     rows.push({
-      name: shortSchoolLabel(s.name),
+      // Full school name so ESPN logo lookup works; UI can still truncate.
+      name: String(s.name).trim() || shortSchoolLabel(s.name),
       absPct: Math.round(Number(s.pct)),
       tone: i === 0 ? 'peer' : 'other',
     });

@@ -1,5 +1,7 @@
 'use client';
 
+import '@/lib/futurecast-lab-command-center.css';
+
 import React, { useEffect } from 'react';
 import { UiError } from '@/components/site/UiMessage';
 import { FutureCastLabSkeleton, FutureCastPanelSkeleton } from './FutureCastLabSkeleton';

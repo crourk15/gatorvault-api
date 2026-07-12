@@ -13,6 +13,7 @@ import {
   competingSchoolsLabel,
 } from './competing-schools';
 import type { FcLabTarget } from './fc-lab-types';
+import { SchoolRankRow } from '@/components/futurecast/player/SchoolRankRow';
 
 export { ModuleShell, MovementSparkline, MovementBadge, UfProbBar, ufPctFromRaw };
 
@@ -20,21 +21,21 @@ export function CompetingSchoolsBar({ player }: { player: FcLabTarget }): React.
   const segments = resolveCompetingSchools(player);
   if (!segments.length) return null;
 
-  const label = competingSchoolsLabel(segments);
+  const ranked = [...segments].sort((a, b) => b.absPct - a.absPct);
   return (
-    <div className="fc-lab-segment-bar" aria-label={`On3 RPM board ${label}`}>
+    <div className="fc-lab-rpm-board" aria-label={`On3 RPM board ${competingSchoolsLabel(ranked)}`}>
       <span className="fc-lab-battle-row__metric-label">On3 market</span>
-      <div className="fc-lab-segment-bar__track">
-        {segments.map((seg) => (
-          <div
+      <ol className="fc-school-rank-list fc-school-rank-list--compact">
+        {ranked.map((seg, i) => (
+          <SchoolRankRow
             key={seg.key}
-            className={`fc-lab-segment-bar__seg fc-lab-segment-bar__seg--${seg.tone}`}
-            style={{ width: `${seg.pct}%` }}
-            title={`${seg.name} ${seg.absPct}%`}
+            rank={i + 1}
+            school={seg.name}
+            pct={seg.absPct}
+            emphasize={i === 0 || seg.tone === 'uf'}
           />
         ))}
-      </div>
-      <span className="fc-lab-segment-bar__label">{label}</span>
+      </ol>
     </div>
   );
 }
