@@ -10,6 +10,7 @@ import {
   formatWeight,
   formatPlayerLocation,
   lifecycleColor,
+  validStars,
 } from '../../../lib/player-derived';
 import { buildPlayerShareUrl } from '../../../lib/player-api';
 import { PositionIcon } from '@/components/ui/PositionIcon';
@@ -33,6 +34,7 @@ export function PlayerHeader({
   const [copied, setCopied] = useState(false);
   const lifecycle = player.status;
   const location = formatPlayerLocation(player.hometown, player.state);
+  const stars = validStars(player.stars);
 
   const onShare = useCallback(async () => {
     const url = buildPlayerShareUrl(player.slug, player.status, inVault);
@@ -82,8 +84,8 @@ export function PlayerHeader({
             {portalProfile.portalStatus.replace(/_/g, ' ')}
           </Chip>
         )}
-        {player.stars != null && (
-          <span className="fc-profile-stars">{player.stars}★</span>
+        {stars != null && (
+          <span className="fc-profile-stars">{stars}★</span>
         )}
         {player.committedTo && (
           <span className="fc-profile-commit">Committed: {player.committedTo}</span>

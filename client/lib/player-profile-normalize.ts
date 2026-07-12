@@ -14,6 +14,7 @@ import {
   fitTier,
   formatDate,
   formatSignalValue,
+  validStars,
   type FitTier,
   type PlayerMetrics,
 } from './player-derived';
@@ -155,6 +156,10 @@ export function normalizeFullProfilePayload(payload: FullProfilePayload): FullPr
   const signals = normalizeDiscoverySignals(payload.signals as unknown as RawSignal[]);
   return {
     ...payload,
+    player: {
+      ...payload.player,
+      stars: validStars(payload.player?.stars),
+    },
     signals,
     related: payload.related ?? [],
   };

@@ -1931,19 +1931,19 @@
     "state": "AL",
     "high_school": null,
     "stars": 3,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
+    "composite_rating": 89.37753623188405,
+    "ranking_national": 347,
+    "ranking_position": 35,
+    "ranking_state": 16,
     "committed_to": null,
     "high_school_profile": {
       "offers": [],
       "stats": {
         "stars": 3,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
+        "rating": 89.37753623188405,
+        "natl_rank": 347,
+        "pos_rank": 35,
+        "state_rank": 16,
         "on3_id": 250285
       },
       "recruiting_notes": "EDGE · 3★ · Spain Park, AL · official visit June 11–13",
@@ -3463,7 +3463,7 @@
     "composite_rating": 0.86,
     "ranking_national": 1172,
     "ranking_position": 122,
-    "ranking_state": null,
+    "ranking_state": 108,
     "committed_to": "Florida",
     "college_profile": {
       "college": "Baylor",
@@ -4352,7 +4352,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4366,7 +4366,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4398,7 +4398,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4412,7 +4412,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4444,7 +4444,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4458,7 +4458,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4490,7 +4490,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4504,7 +4504,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4536,7 +4536,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4550,7 +4550,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4582,7 +4582,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4596,7 +4596,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4628,7 +4628,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4642,7 +4642,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4674,7 +4674,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4688,7 +4688,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4720,7 +4720,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4734,7 +4734,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4812,7 +4812,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4826,7 +4826,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4858,7 +4858,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4872,7 +4872,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4904,7 +4904,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4918,7 +4918,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4950,7 +4950,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -4964,7 +4964,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -4996,7 +4996,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5010,7 +5010,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5042,7 +5042,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5056,7 +5056,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5088,7 +5088,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5102,7 +5102,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5134,7 +5134,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5148,7 +5148,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5180,7 +5180,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5194,7 +5194,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5226,7 +5226,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5240,7 +5240,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5272,7 +5272,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5286,7 +5286,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5318,7 +5318,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5332,7 +5332,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5364,7 +5364,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5378,7 +5378,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5410,7 +5410,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5424,7 +5424,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5456,7 +5456,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5470,7 +5470,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5502,7 +5502,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5516,7 +5516,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5548,7 +5548,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5562,7 +5562,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5594,7 +5594,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5608,7 +5608,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5640,7 +5640,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5654,7 +5654,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5686,7 +5686,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5700,7 +5700,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5732,7 +5732,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5746,7 +5746,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5778,7 +5778,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5792,7 +5792,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5824,7 +5824,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5838,7 +5838,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5870,7 +5870,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5884,7 +5884,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5916,7 +5916,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5930,7 +5930,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -5962,7 +5962,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -5976,7 +5976,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6008,7 +6008,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6022,7 +6022,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6054,7 +6054,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6068,7 +6068,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6100,7 +6100,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6114,7 +6114,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6146,7 +6146,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6160,7 +6160,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6192,7 +6192,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6206,7 +6206,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6238,7 +6238,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6252,7 +6252,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6284,7 +6284,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6298,7 +6298,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6330,7 +6330,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6344,7 +6344,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6376,7 +6376,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6390,7 +6390,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6422,7 +6422,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6436,7 +6436,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6468,7 +6468,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6482,7 +6482,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6514,7 +6514,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6528,7 +6528,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6560,7 +6560,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6574,7 +6574,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6606,7 +6606,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6620,7 +6620,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6652,7 +6652,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6666,7 +6666,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6698,7 +6698,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6712,7 +6712,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6744,7 +6744,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6758,7 +6758,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6790,7 +6790,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6804,7 +6804,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6836,7 +6836,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6850,7 +6850,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6882,7 +6882,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6896,7 +6896,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6928,7 +6928,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6942,7 +6942,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -6974,7 +6974,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -6988,7 +6988,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7020,7 +7020,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7034,7 +7034,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7066,7 +7066,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7080,7 +7080,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7112,7 +7112,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7126,7 +7126,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7158,7 +7158,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7172,7 +7172,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7204,7 +7204,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7218,7 +7218,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7250,7 +7250,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7264,7 +7264,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7296,7 +7296,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7310,7 +7310,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7342,7 +7342,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7356,7 +7356,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7388,7 +7388,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7402,7 +7402,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7434,7 +7434,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7448,7 +7448,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7480,7 +7480,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7494,7 +7494,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7526,7 +7526,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7540,7 +7540,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7572,7 +7572,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7586,7 +7586,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7618,7 +7618,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7632,7 +7632,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7664,7 +7664,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7678,7 +7678,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7710,7 +7710,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7724,7 +7724,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7756,7 +7756,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7770,7 +7770,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7802,7 +7802,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7816,7 +7816,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7848,7 +7848,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7862,7 +7862,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7894,7 +7894,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7908,7 +7908,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7940,7 +7940,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -7954,7 +7954,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -7986,7 +7986,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8000,7 +8000,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8032,7 +8032,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8046,7 +8046,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8078,7 +8078,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8092,7 +8092,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8124,7 +8124,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8138,7 +8138,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8170,7 +8170,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8184,7 +8184,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8216,7 +8216,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8230,7 +8230,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8262,7 +8262,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8276,7 +8276,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8308,7 +8308,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8322,7 +8322,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8354,7 +8354,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8368,7 +8368,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8400,7 +8400,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8414,7 +8414,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8446,7 +8446,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8460,7 +8460,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8492,7 +8492,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8506,7 +8506,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8538,7 +8538,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8552,7 +8552,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8584,7 +8584,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8598,7 +8598,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8630,7 +8630,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8644,7 +8644,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8676,7 +8676,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8690,7 +8690,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8722,7 +8722,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8736,7 +8736,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8768,7 +8768,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8782,7 +8782,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8814,7 +8814,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8828,7 +8828,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8860,7 +8860,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8874,7 +8874,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8906,7 +8906,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8920,7 +8920,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8952,7 +8952,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -8966,7 +8966,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -8998,7 +8998,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9012,7 +9012,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9044,7 +9044,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9058,7 +9058,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9090,7 +9090,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9104,7 +9104,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9136,7 +9136,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9150,7 +9150,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9182,7 +9182,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9196,7 +9196,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9228,7 +9228,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9242,7 +9242,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9274,7 +9274,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9288,7 +9288,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9320,7 +9320,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9334,7 +9334,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9366,7 +9366,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9380,7 +9380,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9412,7 +9412,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9426,7 +9426,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9458,7 +9458,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9472,7 +9472,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9504,7 +9504,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9518,7 +9518,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9550,7 +9550,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9564,7 +9564,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9596,7 +9596,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9610,7 +9610,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9642,7 +9642,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9656,7 +9656,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9688,7 +9688,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9702,7 +9702,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9734,7 +9734,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9748,7 +9748,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9780,7 +9780,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9794,7 +9794,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9826,7 +9826,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9840,7 +9840,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9872,7 +9872,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9886,7 +9886,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9918,7 +9918,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9932,7 +9932,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -9964,7 +9964,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -9978,7 +9978,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10010,7 +10010,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10024,7 +10024,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10056,7 +10056,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10070,7 +10070,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10102,7 +10102,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10116,7 +10116,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10148,7 +10148,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10162,7 +10162,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10194,7 +10194,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10208,7 +10208,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10240,7 +10240,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10254,7 +10254,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10286,7 +10286,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10300,7 +10300,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10332,7 +10332,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10346,7 +10346,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10378,7 +10378,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10392,7 +10392,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10424,7 +10424,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10438,7 +10438,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10470,7 +10470,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10484,7 +10484,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10516,7 +10516,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10530,7 +10530,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10562,7 +10562,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10576,7 +10576,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10608,7 +10608,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10622,7 +10622,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10654,7 +10654,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10668,7 +10668,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10700,7 +10700,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10714,7 +10714,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10746,7 +10746,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10760,7 +10760,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10792,7 +10792,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10806,7 +10806,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10838,7 +10838,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10852,7 +10852,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10884,7 +10884,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10898,7 +10898,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10930,7 +10930,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10944,7 +10944,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -10976,7 +10976,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -10990,7 +10990,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11022,7 +11022,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11036,7 +11036,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11068,7 +11068,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11082,7 +11082,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11114,7 +11114,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11128,7 +11128,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11160,7 +11160,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11174,7 +11174,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11206,7 +11206,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11220,7 +11220,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11252,7 +11252,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11266,7 +11266,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11298,7 +11298,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11312,7 +11312,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11344,7 +11344,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11358,7 +11358,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11390,7 +11390,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11404,7 +11404,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11436,7 +11436,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11450,7 +11450,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11482,7 +11482,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11496,7 +11496,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11528,7 +11528,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11542,7 +11542,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11574,7 +11574,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11588,7 +11588,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11620,7 +11620,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11634,7 +11634,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11666,7 +11666,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11680,7 +11680,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11712,7 +11712,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11726,7 +11726,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11758,7 +11758,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11772,7 +11772,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11804,7 +11804,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11818,7 +11818,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11850,7 +11850,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11864,7 +11864,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11896,7 +11896,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11910,7 +11910,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11942,7 +11942,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -11956,7 +11956,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -11988,7 +11988,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12002,7 +12002,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12034,7 +12034,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12048,7 +12048,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12080,7 +12080,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12094,7 +12094,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12126,7 +12126,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12140,7 +12140,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12172,7 +12172,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12186,7 +12186,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12218,7 +12218,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12232,7 +12232,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12264,7 +12264,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12278,7 +12278,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12310,7 +12310,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12324,7 +12324,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12356,7 +12356,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12370,7 +12370,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12402,7 +12402,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12416,7 +12416,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12448,7 +12448,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12462,7 +12462,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12494,7 +12494,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12508,7 +12508,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12540,7 +12540,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12554,7 +12554,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12586,7 +12586,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12600,7 +12600,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12632,7 +12632,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12646,7 +12646,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12678,7 +12678,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12692,7 +12692,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12724,7 +12724,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12738,7 +12738,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12770,7 +12770,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12784,7 +12784,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12816,7 +12816,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12830,7 +12830,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12862,7 +12862,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12876,7 +12876,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12908,7 +12908,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12922,7 +12922,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -12954,7 +12954,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -12968,7 +12968,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13000,7 +13000,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13014,7 +13014,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13046,7 +13046,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13060,7 +13060,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13092,7 +13092,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13106,7 +13106,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13138,7 +13138,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13152,7 +13152,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13184,7 +13184,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13198,7 +13198,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13230,7 +13230,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13244,7 +13244,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13276,7 +13276,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13290,7 +13290,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13322,7 +13322,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13336,7 +13336,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13368,7 +13368,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13382,7 +13382,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13414,7 +13414,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13428,7 +13428,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13460,7 +13460,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13474,7 +13474,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13506,7 +13506,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13520,7 +13520,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13552,7 +13552,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13566,7 +13566,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13598,7 +13598,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13612,7 +13612,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13644,7 +13644,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13658,7 +13658,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13690,7 +13690,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13704,7 +13704,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13736,7 +13736,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13750,7 +13750,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13782,7 +13782,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13796,7 +13796,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13828,7 +13828,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13842,7 +13842,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13874,7 +13874,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13888,7 +13888,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13920,7 +13920,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13934,7 +13934,7 @@
         }
       ],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13966,7 +13966,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -13975,7 +13975,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -13998,7 +13998,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14007,7 +14007,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14030,7 +14030,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14039,7 +14039,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14062,7 +14062,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14071,7 +14071,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14094,20 +14094,20 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
+    "stars": 4,
+    "composite_rating": 91.3768115942029,
+    "ranking_national": 173,
+    "ranking_position": 13,
+    "ranking_state": 17,
     "committed_to": null,
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
+        "stars": 4,
+        "rating": 91.3768115942029,
+        "natl_rank": 173,
+        "pos_rank": 13,
+        "state_rank": 17,
         "on3_id": 238584
       },
       "recruiting_notes": null,
@@ -14126,20 +14126,20 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
+    "stars": 4,
+    "composite_rating": 89.41557971014494,
+    "ranking_national": 345,
+    "ranking_position": 36,
+    "ranking_state": 1,
     "committed_to": null,
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
+        "stars": 4,
+        "rating": 89.41557971014494,
+        "natl_rank": 345,
+        "pos_rank": 36,
+        "state_rank": 1,
         "on3_id": 285233
       },
       "recruiting_notes": null,
@@ -14158,7 +14158,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14167,7 +14167,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14190,7 +14190,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14199,7 +14199,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14222,7 +14222,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14231,7 +14231,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14254,7 +14254,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14263,7 +14263,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14286,7 +14286,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14295,7 +14295,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14318,7 +14318,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14327,7 +14327,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14350,7 +14350,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14359,7 +14359,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14382,7 +14382,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14391,7 +14391,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14414,7 +14414,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14423,7 +14423,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14446,7 +14446,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14455,7 +14455,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14478,7 +14478,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14487,7 +14487,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14510,20 +14510,20 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
+    "stars": 3,
+    "composite_rating": 88.33333333333333,
+    "ranking_national": 500,
+    "ranking_position": 36,
+    "ranking_state": 42,
     "committed_to": null,
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
+        "stars": 3,
+        "rating": 88.33333333333333,
+        "natl_rank": 500,
+        "pos_rank": 36,
+        "state_rank": 42,
         "on3_id": 239139
       },
       "recruiting_notes": null,
@@ -14542,7 +14542,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14551,7 +14551,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14574,7 +14574,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14583,7 +14583,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14606,7 +14606,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14615,7 +14615,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14638,7 +14638,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14647,7 +14647,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14670,7 +14670,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14679,7 +14679,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14702,7 +14702,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14711,7 +14711,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14734,7 +14734,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14743,7 +14743,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14766,7 +14766,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14775,7 +14775,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14798,7 +14798,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14807,7 +14807,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14830,7 +14830,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14839,7 +14839,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14862,7 +14862,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14871,7 +14871,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14894,7 +14894,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14903,7 +14903,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14926,7 +14926,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14935,7 +14935,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14958,7 +14958,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14967,7 +14967,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -14990,7 +14990,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -14999,7 +14999,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15022,7 +15022,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15031,7 +15031,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15054,7 +15054,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15063,7 +15063,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15086,7 +15086,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15095,7 +15095,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15118,7 +15118,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15127,7 +15127,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15150,7 +15150,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15159,7 +15159,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15182,7 +15182,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15191,7 +15191,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15214,7 +15214,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15223,7 +15223,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15246,7 +15246,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15255,7 +15255,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15278,7 +15278,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15287,7 +15287,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15310,7 +15310,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15319,7 +15319,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15342,7 +15342,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15351,7 +15351,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15374,7 +15374,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15383,7 +15383,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15406,7 +15406,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15415,7 +15415,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15438,7 +15438,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15447,7 +15447,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15470,7 +15470,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15479,7 +15479,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15502,7 +15502,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15511,7 +15511,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15534,7 +15534,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15543,7 +15543,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15566,7 +15566,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15575,7 +15575,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15598,7 +15598,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15607,7 +15607,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15630,7 +15630,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15639,7 +15639,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15662,7 +15662,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15671,7 +15671,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15694,7 +15694,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15703,7 +15703,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15726,7 +15726,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15735,7 +15735,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15758,7 +15758,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15767,7 +15767,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15790,7 +15790,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15799,7 +15799,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15822,7 +15822,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15831,7 +15831,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15854,7 +15854,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15863,7 +15863,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15886,7 +15886,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15895,7 +15895,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15918,7 +15918,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15927,7 +15927,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15950,7 +15950,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15959,7 +15959,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -15982,7 +15982,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -15991,7 +15991,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16014,7 +16014,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16023,7 +16023,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16046,7 +16046,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16055,7 +16055,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16078,7 +16078,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16087,7 +16087,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16110,7 +16110,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16119,7 +16119,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16142,7 +16142,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16151,7 +16151,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16174,7 +16174,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16183,7 +16183,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16206,7 +16206,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16215,7 +16215,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16238,7 +16238,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16247,7 +16247,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16270,7 +16270,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16279,7 +16279,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16302,7 +16302,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16311,7 +16311,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16334,7 +16334,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16343,7 +16343,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16366,7 +16366,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16375,7 +16375,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16398,7 +16398,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16407,7 +16407,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16430,7 +16430,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16439,7 +16439,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16462,7 +16462,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16471,7 +16471,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16494,7 +16494,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16503,7 +16503,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16526,7 +16526,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16535,7 +16535,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16558,7 +16558,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16567,7 +16567,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16590,7 +16590,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16599,7 +16599,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16622,7 +16622,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16631,7 +16631,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16654,7 +16654,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16663,7 +16663,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16686,7 +16686,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16695,7 +16695,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16718,7 +16718,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16727,7 +16727,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16750,7 +16750,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16759,7 +16759,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16782,7 +16782,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16791,7 +16791,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16814,7 +16814,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16823,7 +16823,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16846,7 +16846,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16855,7 +16855,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16878,7 +16878,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16887,7 +16887,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16910,20 +16910,20 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
+    "stars": 3,
+    "composite_rating": 88.06666666666666,
+    "ranking_national": 514,
+    "ranking_position": 70,
+    "ranking_state": 61,
     "committed_to": null,
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
+        "stars": 3,
+        "rating": 88.06666666666666,
+        "natl_rank": 514,
+        "pos_rank": 70,
+        "state_rank": 61,
         "on3_id": 239052
       },
       "recruiting_notes": null,
@@ -16942,7 +16942,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16951,7 +16951,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -16974,7 +16974,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -16983,7 +16983,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17006,7 +17006,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17015,7 +17015,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17038,7 +17038,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17047,7 +17047,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17070,7 +17070,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17079,7 +17079,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17102,7 +17102,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17111,7 +17111,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17134,7 +17134,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17143,7 +17143,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17166,7 +17166,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17175,7 +17175,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17198,7 +17198,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17207,7 +17207,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17230,20 +17230,20 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
+    "stars": 3,
+    "composite_rating": 87.76666666666667,
+    "ranking_national": 574,
+    "ranking_position": 76,
+    "ranking_state": 49,
     "committed_to": null,
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
+        "stars": 3,
+        "rating": 87.76666666666667,
+        "natl_rank": 574,
+        "pos_rank": 76,
+        "state_rank": 49,
         "on3_id": 269778
       },
       "recruiting_notes": null,
@@ -17262,7 +17262,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17271,7 +17271,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17294,7 +17294,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17303,7 +17303,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17326,7 +17326,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17335,7 +17335,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17358,7 +17358,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17367,7 +17367,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17390,7 +17390,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17399,7 +17399,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17422,20 +17422,20 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
+    "stars": 3,
+    "composite_rating": 84,
+    "ranking_national": 1441,
+    "ranking_position": 189,
+    "ranking_state": 156,
     "committed_to": null,
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
+        "stars": 3,
+        "rating": 84,
+        "natl_rank": 1441,
+        "pos_rank": 189,
+        "state_rank": 156,
         "on3_id": 243832
       },
       "recruiting_notes": null,
@@ -17454,7 +17454,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17463,7 +17463,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17486,7 +17486,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17495,7 +17495,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17518,7 +17518,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17527,7 +17527,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17550,7 +17550,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17559,7 +17559,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17582,7 +17582,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17591,7 +17591,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17614,7 +17614,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17623,7 +17623,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17646,7 +17646,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17655,7 +17655,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17678,7 +17678,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17687,7 +17687,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17710,7 +17710,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17719,7 +17719,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17742,7 +17742,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17751,7 +17751,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17774,7 +17774,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17783,7 +17783,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17806,7 +17806,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17815,7 +17815,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17838,7 +17838,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17847,7 +17847,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17870,7 +17870,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17879,7 +17879,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17902,7 +17902,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17911,7 +17911,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17934,7 +17934,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17943,7 +17943,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17966,7 +17966,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -17975,7 +17975,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -17998,7 +17998,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18007,7 +18007,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18030,7 +18030,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18039,7 +18039,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18062,7 +18062,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18071,7 +18071,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18094,7 +18094,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18103,7 +18103,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18126,7 +18126,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18135,7 +18135,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18158,7 +18158,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18167,7 +18167,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18190,20 +18190,20 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
+    "stars": 3,
+    "composite_rating": 86.8,
+    "ranking_national": 792,
+    "ranking_position": 89,
+    "ranking_state": 94,
     "committed_to": null,
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
+        "stars": 3,
+        "rating": 86.8,
+        "natl_rank": 792,
+        "pos_rank": 89,
+        "state_rank": 94,
         "on3_id": 176047
       },
       "recruiting_notes": null,
@@ -18222,7 +18222,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18231,7 +18231,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18254,7 +18254,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18263,7 +18263,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18286,7 +18286,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18295,7 +18295,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18318,7 +18318,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18327,7 +18327,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18350,7 +18350,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18359,7 +18359,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18382,7 +18382,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18391,7 +18391,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18414,7 +18414,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18423,7 +18423,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18446,7 +18446,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18455,7 +18455,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18478,7 +18478,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18487,7 +18487,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18510,7 +18510,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18519,7 +18519,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18542,7 +18542,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18551,7 +18551,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18574,7 +18574,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18583,7 +18583,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18606,7 +18606,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18615,7 +18615,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18638,7 +18638,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18647,7 +18647,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18670,7 +18670,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18679,7 +18679,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18702,7 +18702,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18711,7 +18711,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18734,7 +18734,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18743,7 +18743,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18766,7 +18766,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18775,7 +18775,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18798,7 +18798,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18807,7 +18807,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18830,7 +18830,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18839,7 +18839,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18862,7 +18862,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18871,7 +18871,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18894,7 +18894,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18903,7 +18903,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18926,7 +18926,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18935,7 +18935,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18958,7 +18958,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18967,7 +18967,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -18990,7 +18990,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -18999,7 +18999,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19022,7 +19022,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19031,7 +19031,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19054,7 +19054,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19063,7 +19063,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19086,7 +19086,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19095,7 +19095,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19118,7 +19118,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19127,7 +19127,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19150,7 +19150,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19159,7 +19159,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19182,7 +19182,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19191,7 +19191,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19214,7 +19214,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19223,7 +19223,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19246,7 +19246,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19255,7 +19255,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19278,7 +19278,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19287,7 +19287,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19310,7 +19310,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19319,7 +19319,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19342,7 +19342,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19351,7 +19351,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19374,7 +19374,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19383,7 +19383,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19406,7 +19406,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19415,7 +19415,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19438,7 +19438,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19447,7 +19447,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19470,7 +19470,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19479,7 +19479,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19502,7 +19502,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19511,7 +19511,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19534,7 +19534,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19543,7 +19543,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19566,7 +19566,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19575,7 +19575,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19598,7 +19598,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19607,7 +19607,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19630,7 +19630,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19639,7 +19639,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19662,7 +19662,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19671,7 +19671,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19694,7 +19694,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19703,7 +19703,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19726,7 +19726,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19735,7 +19735,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19758,7 +19758,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19767,7 +19767,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19790,7 +19790,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19799,7 +19799,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19822,7 +19822,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19831,7 +19831,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19854,7 +19854,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19863,7 +19863,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19886,7 +19886,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19895,7 +19895,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19918,7 +19918,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19927,7 +19927,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19950,7 +19950,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19959,7 +19959,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -19982,7 +19982,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -19991,7 +19991,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20014,7 +20014,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20023,7 +20023,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20046,7 +20046,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20055,7 +20055,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20078,7 +20078,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20087,7 +20087,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20110,7 +20110,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20119,7 +20119,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20142,7 +20142,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20151,7 +20151,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20174,7 +20174,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20183,7 +20183,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20206,7 +20206,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20215,7 +20215,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20238,7 +20238,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20247,7 +20247,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20270,7 +20270,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20279,7 +20279,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20302,7 +20302,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20311,7 +20311,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20334,7 +20334,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20343,7 +20343,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20366,7 +20366,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20375,7 +20375,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20398,7 +20398,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20407,7 +20407,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,
@@ -20430,7 +20430,7 @@
     "hometown": null,
     "state": null,
     "high_school": null,
-    "stars": 0,
+    "stars": null,
     "composite_rating": null,
     "ranking_national": null,
     "ranking_position": null,
@@ -20439,7 +20439,7 @@
     "high_school_profile": {
       "offers": [],
       "stats": {
-        "stars": 0,
+        "stars": null,
         "rating": null,
         "natl_rank": null,
         "pos_rank": null,

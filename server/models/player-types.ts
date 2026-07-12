@@ -126,7 +126,8 @@ export function playerFromRow(row: PlayerRow): Player {
     hometown: row.hometown,
     state: row.state,
     high_school: row.high_school,
-    stars: row.stars,
+    // Stored 0 is a sentinel for "unknown" — never surface as 0★.
+    stars: row.stars != null && Number(row.stars) >= 1 && Number(row.stars) <= 5 ? Number(row.stars) : null,
     composite_rating: toNumberOrNull(row.composite_rating),
     ranking_national: row.ranking_national,
     ranking_position: row.ranking_position,
@@ -155,7 +156,10 @@ export function playerToRow(player: PlayerInsert | PlayerUpdate): Record<string,
   if ('hometown' in player) out.hometown = player.hometown ?? null;
   if ('state' in player) out.state = player.state ?? null;
   if ('high_school' in player) out.high_school = player.high_school ?? null;
-  if ('stars' in player) out.stars = player.stars ?? null;
+  if ('stars' in player) {
+    const n = player.stars == null ? null : Number(player.stars);
+    out.stars = n != null && n >= 1 && n <= 5 ? n : null;
+  }
   if ('composite_rating' in player) out.composite_rating = player.composite_rating ?? null;
   if ('ranking_national' in player) out.ranking_national = player.ranking_national ?? null;
   if ('ranking_position' in player) out.ranking_position = player.ranking_position ?? null;

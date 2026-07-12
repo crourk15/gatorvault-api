@@ -34,6 +34,23 @@ function parseHtWt(htWt?: string | null): { height: number | null; weight: numbe
   return { height: parseHeightInches(m[1]), weight: Number(m[2]) };
 }
 
+/** Stars are 1–5. Stored `0` means unknown — never treat it as a real rating. */
+export function validStars(raw: unknown): number | null {
+  const n = Number(raw);
+  if (!Number.isFinite(n)) return null;
+  const stars = Math.round(n);
+  return stars >= 1 && stars <= 5 ? stars : null;
+}
+
+/** Prefer first valid stars value (skips 0 / null / junk). */
+export function coalesceStars(...candidates: unknown[]): number | null {
+  for (const c of candidates) {
+    const v = validStars(c);
+    if (v != null) return v;
+  }
+  return null;
+}
+
 export async function augmentPlayerFromRecruiting(
   slug: string,
   player: Record<string, unknown>
@@ -71,7 +88,7 @@ export async function augmentPlayerFromRecruiting(
       (player.hometown ? String(player.hometown).split(',')[0].trim() : null) ??
       (recruiting.hometown ? String(recruiting.hometown).split(',')[0].trim() : null),
     state: player.state ?? recruiting.state ?? recruiting.hometownState ?? null,
-    stars: player.stars ?? recruiting.stars ?? null,
+    stars: coalesceStars(recruiting.stars, player.stars),
     compositeRating: player.compositeRating ?? recruiting.rating ?? null,
     rankingNational: player.rankingNational ?? recruiting.natlRank ?? null,
     rankingPosition: player.rankingPosition ?? recruiting.posRank ?? null,
@@ -114,7 +131,7 @@ export async function enrichRelatedFromRecruiting(
       fullName: row.fullName ?? recruiting.name ?? slug,
       position: row.position ?? recruiting.pos ?? recruiting.position ?? row.position,
       classYear: row.classYear ?? recruiting.classYear ?? row.classYear,
-      stars: recruiting.stars ?? null,
+      stars: coalesceStars(recruiting.stars, row.stars),
       rating: recruiting.rating ?? null,
       compositeScore: recruiting.rating ?? null,
       nationalRank: recruiting.natlRank ?? null,

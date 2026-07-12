@@ -312,6 +312,14 @@ export function formatDate(iso: unknown): string {
   return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
+/** Stars are 1–5. Stored/API `0` means unknown — never treat as a rating. */
+export function validStars(raw: unknown): number | null {
+  const n = Number(raw);
+  if (!Number.isFinite(n)) return null;
+  const stars = Math.round(n);
+  return stars >= 1 && stars <= 5 ? stars : null;
+}
+
 /** Avoid "Newnan, GA, GA" when hometown already includes state. */
 export function formatPlayerLocation(
   hometown?: string | null,

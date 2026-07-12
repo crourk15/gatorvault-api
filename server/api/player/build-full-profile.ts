@@ -51,6 +51,7 @@ import {
 import {
   augmentPlayerFromRecruiting,
   boardSignalsFromRecruiting,
+  coalesceStars,
   competingSchoolsFromRecruiting,
   enrichRelatedFromRecruiting,
   futurecastPicksFromRecruiting,
@@ -201,7 +202,7 @@ async function finalizeProfileResponse(
       offers,
       stats: {
         ...stats,
-        stars: stats.stars ?? recruiting.stars ?? null,
+        stars: coalesceStars(recruiting.stars, stats.stars),
         natlRank: stats.natlRank ?? recruiting.natlRank ?? null,
         posRank: stats.posRank ?? recruiting.posRank ?? null,
         stateRank: stats.stateRank ?? recruiting.stateRank ?? null,

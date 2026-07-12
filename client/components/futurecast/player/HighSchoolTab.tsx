@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import type { HighSchoolProfile, PlayerCore } from '../../../lib/player-api';
-import { formatHeight, formatWeight, formatDate, formatPlayerLocation } from '../../../lib/player-derived';
+import { formatHeight, formatWeight, formatDate, formatPlayerLocation, validStars } from '../../../lib/player-derived';
 import { coerceDisplayText } from '../../../lib/coerce-text';
 
 export interface HighSchoolTabProps {
@@ -76,7 +76,7 @@ export function HighSchoolTab({ player, profile }: HighSchoolTabProps): React.Re
   }
 
   const stats = profile.stats ?? {};
-  const stars = player.stars ?? stats.stars;
+  const stars = validStars(player.stars) ?? validStars(stats.stars);
   const natl = player.rankingNational ?? stats.natl_rank ?? stats.national_rank;
   const pos = player.rankingPosition ?? stats.pos_rank ?? stats.position_rank;
   const stateRank = player.rankingState ?? stats.state_rank;
