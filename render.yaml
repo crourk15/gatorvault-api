@@ -10,7 +10,7 @@ services:
   - type: web
     name: gatorvault-api
     runtime: node
-    plan: starter
+    plan: standard
     region: oregon
     rootDir: server
     buildCommand: npm install && node scripts/platform-guardian-predeploy.js
