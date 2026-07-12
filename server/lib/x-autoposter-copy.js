@@ -923,26 +923,15 @@ function buildVerifiedCommitEventCopy(ev, { source = 'On3', beatText = null } = 
 
 async function buildCommitEliteCopyAsync(opts = {}) {
   const eliteCaption = require('./x-autoposter-elite-caption');
-  const beatText = opts.beatText || null;
-  const timestamp = opts.timestamp || opts.publishedAt || new Date().toISOString();
   const built = await eliteCaption.buildCommitElitePost({
     playerName: opts.playerName,
     playerSlug: opts.playerSlug,
-    beatText,
+    beatText: opts.beatText,
     intel: {
       playerName: opts.playerName,
       playerSlug: opts.playerSlug,
       eventType: opts.eventType || 'commit',
-      detail: beatText,
-      beatText,
-      source: opts.source,
-      sourceHandle: opts.sourceHandle || null,
-      sourceType: 'beat',
-      classYear: opts.classYear,
-      pos: opts.pos,
-      identityConfirmed: true,
-      timestamp,
-      publishedAt: timestamp
+      detail: opts.beatText
     },
     patch: opts.patch,
     source: opts.source,
@@ -971,11 +960,7 @@ async function buildVerifiedCommitCopyAsync(opts = {}) {
     playerSlug: opts.playerSlug,
     beatText: opts.beatText || null,
     detail: opts.beatText || null,
-    eventType: et,
-    timestamp: opts.timestamp || new Date().toISOString(),
-    sourceType: 'beat',
-    sourceHandle: opts.sourceHandle || null,
-    identityConfirmed: true
+    eventType: et
   });
   if (!playerData.ok) return null;
 

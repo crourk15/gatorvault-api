@@ -6,7 +6,6 @@ import { fetchRecruitingHubBattleBoard } from '@/lib/recruiting-hub-elite-api';
 import { getBattleColor } from '@/lib/recruiting-hub-scoring';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
-import { UiWarming } from '@/components/site/UiMessage';
 
 const DIFFICULTY_LABELS: Record<RhHubBattleBoardItem['battleDifficulty'], string> = {
   easy: 'Easy',
@@ -26,16 +25,24 @@ function trendSymbol(trend: RhHubBattleBoardItem['trend']): string {
 function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactElement {
   const ufColor =
     battle.battleColor ?? (battle.ufScore != null ? getBattleColor(battle.ufScore) : null);
+  const rivals = [...(battle.competitors || [])].sort(
+    (a, b) => Number(b.score ?? -1) - Number(a.score ?? -1)
+  );
+  const topRival = rivals.find((c) => c.score != null) || rivals[0] || null;
 
   return (
     <article className="rh-card rh-battle-board-card" data-testid={`rh-battle-board-${battle.id}`}>
       <div className="rh-battle-board-card__head">
         <div>
-          <a href={`/vault/recruiting/player/${encodeURIComponent(String(battle.id || battle.name || '').toLowerCase())}`} className="rh-player-name">
+          <a
+            href={`/vault/recruiting/player/${encodeURIComponent(String(battle.id || battle.name || '').toLowerCase())}`}
+            className="rh-player-name"
+          >
             {battle.name}
           </a>
           <div className="rh-player-pos">
             {battle.position} · {battle.class} class
+            {topRival?.school ? ` · vs ${topRival.school}` : ''}
           </div>
         </div>
         <div className="rh-battle-board-card__badges">
@@ -49,19 +56,19 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
       <div
         className={`rh-battle-board-card__uf${ufColor ? ` rh-battle-board-card__uf--${ufColor}` : ' rh-battle-board-card__uf--unknown'}`}
       >
-        <span>UF battle score</span>
-        <strong>{battle.ufScore != null ? battle.ufScore : '—'}</strong>
+        <span>UF RPM</span>
+        <strong>{battle.ufScore != null ? `${battle.ufScore}%` : '—'}</strong>
       </div>
 
-      {battle.competitors.length > 0 ? (
-        <div className="rh-battle-board-card__competitors">
-          {battle.competitors.map((c) => (
+      {rivals.length > 0 ? (
+        <div className="rh-battle-board-card__competitors" aria-label="Confirmed competitor RPM">
+          {rivals.map((c) => (
             <div key={`${battle.id}-${c.school}`} className="rh-battle-board-competitor">
               <span className="rh-battle-board-competitor__logo">{c.logo}</span>
               <div className="rh-battle-board-competitor__meta">
                 <span className="rh-battle-board-competitor__school">{c.school}</span>
                 <span className="rh-battle-board-competitor__score">
-                  {c.score != null ? c.score : '—'}{' '}
+                  {c.score != null ? `${c.score}%` : '—'}{' '}
                   <span className={`rh-movement rh-movement--${c.trend}`}>{trendSymbol(c.trend)}</span>
                 </span>
               </div>
@@ -69,7 +76,7 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
           ))}
         </div>
       ) : (
-        <div className="rh-battle-board-card__no-competitors">No competitor data on file</div>
+        <div className="rh-battle-board-card__no-competitors">No confirmed competitor RPM yet</div>
       )}
 
       {battle.nextVisit ? <div className="rh-battle-board-card__visit">Next visit: {battle.nextVisit}</div> : null}
@@ -95,27 +102,25 @@ export function BattleBoard(): React.ReactElement {
       <div className="rh-section-header">
         <div className="rh-section-title">Battle Board</div>
         <div className="rh-section-subtitle">
-          {activeYear} class — UF&apos;s position in each priority recruiting battle.
+          {activeYear} class — UF RPM vs confirmed On3 competitor boards.
         </div>
       </div>
       {loading ? (
-        <div className="rh-hub-warming" role="status" aria-live="polite" aria-busy="true">
-          <UiWarming hint="Loading battle board…" />
-        </div>
+        <div className="rh-skeleton" data-testid="rh-elite-battle-board" aria-hidden="true" />
       ) : !data ? (
         <section className="rh-card" data-testid="rh-elite-battle-board">
           <p className="rh-empty">{error ? 'Could not load battle board.' : 'Battle board unavailable.'}</p>
         </section>
       ) : !data.length ? (
         <section className="rh-card" data-testid="rh-elite-battle-board">
-          <p className="rh-empty">No battle data available — waiting on real competitor and UF score records.</p>
+          <p className="rh-empty">No battle board targets yet.</p>
         </section>
       ) : (
-        <section className="rh-battle-board-grid" data-testid="rh-elite-battle-board">
+        <div className="rh-battle-board-grid" data-testid="rh-elite-battle-board">
           {data.map((battle) => (
             <BattleCard key={battle.id} battle={battle} />
           ))}
-        </section>
+        </div>
       )}
     </>
   );

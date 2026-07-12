@@ -400,6 +400,7 @@ function normalizePlayer(raw) {
     on3Slug: raw.on3Slug || raw.on3_slug || null,
     on3ProfileUrl: raw.on3ProfileUrl || raw.on3_profile_url || null,
     on3Source: raw.on3Source || raw.on3_source || null,
+    protected: raw.protected === true || raw.protected === 'true',
     rivalsLastPrediction: raw.rivalsLastPrediction || raw.rivals_last_prediction || null,
     rivalsAnalyst: raw.rivalsAnalyst || raw.rivals_analyst || null,
     rivalsConfidence: raw.rivalsConfidence != null ? Number(raw.rivalsConfidence) : raw.rivals_confidence != null ? Number(raw.rivals_confidence) : null,
@@ -475,7 +476,11 @@ function playerToRow(p) {
     skinny: p.skinny,
     profile_note: p.profileNote,
     on3_id: p.on3Id,
-    // on3_slug, on3_profile_url, on3_source, protected omitted — not in prod Supabase schema yet.
+    // Persist official-board flags (columns added 2026-07-11).
+    ...(p.on3Source != null ? { on3_source: p.on3Source } : {}),
+    ...(p.on3Slug != null ? { on3_slug: p.on3Slug } : {}),
+    ...(p.on3ProfileUrl != null ? { on3_profile_url: p.on3ProfileUrl } : {}),
+    ...(p.protected === true ? { protected: true } : {}),
     stars_display: p.starsDisplay,
     updated_at: p.updatedAt
   };

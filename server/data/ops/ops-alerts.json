@@ -1,7 +1,200 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-16T18:03:36.221Z",
+  "updatedAt": "2026-07-11T05:06:12.827Z",
   "alerts": [
+    {
+      "id": "alert_1783746372827_uku4a",
+      "at": "2026-07-11T05:06:12.827Z",
+      "severity": "warning",
+      "type": "autoposter_missed_major",
+      "title": "Autoposter skipped major event",
+      "message": "Elite caption skipped: commit_elite_qa",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "miss:Kamauri Whitfield",
+      "meta": {
+        "eventType": "commit",
+        "playerName": "Kamauri Whitfield",
+        "sourcesUsed": [],
+        "captionPreview": ""
+      }
+    },
+    {
+      "id": "alert_1783746372698_szg9j",
+      "at": "2026-07-11T05:06:12.698Z",
+      "severity": "warning",
+      "type": "autoposter_missed_major",
+      "title": "Autoposter skipped major event",
+      "message": "Elite caption skipped: commit_elite_qa",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "miss:Raheem Floyd",
+      "meta": {
+        "eventType": "commit",
+        "playerName": "Raheem Floyd",
+        "sourcesUsed": [],
+        "captionPreview": ""
+      }
+    },
+    {
+      "id": "alert_1783388781511_ffq98",
+      "at": "2026-07-07T01:46:21.511Z",
+      "severity": "warning",
+      "type": "autoposter_missed_major",
+      "title": "Autoposter skipped major event",
+      "message": "Elite caption skipped: commit_elite_qa",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "miss:Kamauri Whitfield",
+      "meta": {
+        "eventType": "commit",
+        "playerName": "Kamauri Whitfield",
+        "sourcesUsed": [],
+        "captionPreview": ""
+      }
+    },
+    {
+      "id": "alert_1783370793962_daxio",
+      "at": "2026-07-06T20:46:33.962Z",
+      "severity": "warning",
+      "type": "autoposter_missed_major",
+      "title": "Autoposter skipped major event",
+      "message": "Elite caption skipped: commit_elite_qa",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "miss:Kamauri Whitfield",
+      "meta": {
+        "eventType": "commit",
+        "playerName": "Kamauri Whitfield",
+        "sourcesUsed": [],
+        "captionPreview": ""
+      }
+    },
+    {
+      "id": "alert_1783220448290_5aney",
+      "at": "2026-07-05T03:00:48.290Z",
+      "severity": "error",
+      "type": "job_failure_streak",
+      "title": "autoposter:elite failed 7x in a row",
+      "message": "Elite update — Ryan Drakeford",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "streak:autoposter:elite",
+      "meta": {
+        "failureStreak": 7
+      }
+    },
+    {
+      "id": "alert_1783181021068_qykcg",
+      "at": "2026-07-04T16:03:41.068Z",
+      "severity": "error",
+      "type": "job_failure_streak",
+      "title": "autoposter:elite failed 5x in a row",
+      "message": "Elite update — Bryce Willingham",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "streak:autoposter:elite",
+      "meta": {
+        "failureStreak": 5
+      }
+    },
+    {
+      "id": "alert_1783175230417_wf3mf",
+      "at": "2026-07-04T14:27:10.417Z",
+      "severity": "warning",
+      "type": "autoposter_missed_major",
+      "title": "Autoposter skipped major event",
+      "message": "Elite caption skipped: stale_intel",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "miss:Chancellor Campbell",
+      "meta": {
+        "eventType": "commit",
+        "playerName": "Chancellor Campbell",
+        "sourcesUsed": [],
+        "captionPreview": ""
+      }
+    },
+    {
+      "id": "alert_1783175230390_odq4u",
+      "at": "2026-07-04T14:27:10.390Z",
+      "severity": "warning",
+      "type": "autoposter_missed_major",
+      "title": "Autoposter skipped major event",
+      "message": "Elite caption skipped: stale_intel",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "miss:Desmond Green",
+      "meta": {
+        "eventType": "commit",
+        "playerName": "Desmond Green",
+        "sourcesUsed": [],
+        "captionPreview": ""
+      }
+    },
+    {
+      "id": "alert_1783175230368_g28bm",
+      "at": "2026-07-04T14:27:10.368Z",
+      "severity": "warning",
+      "type": "autoposter_missed_major",
+      "title": "Autoposter skipped major event",
+      "message": "Elite caption skipped: stale_intel",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "miss:Javarii Luckas",
+      "meta": {
+        "eventType": "commit",
+        "playerName": "Javarii Luckas",
+        "sourcesUsed": [],
+        "captionPreview": ""
+      }
+    },
+    {
+      "id": "alert_1783175230345_p6x0c",
+      "at": "2026-07-04T14:27:10.345Z",
+      "severity": "warning",
+      "type": "autoposter_missed_major",
+      "title": "Autoposter skipped major event",
+      "message": "Elite caption skipped: stale_intel",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "miss:Eric Parks",
+      "meta": {
+        "eventType": "commit",
+        "playerName": "Eric Parks",
+        "sourcesUsed": [],
+        "captionPreview": ""
+      }
+    },
+    {
+      "id": "alert_1783175160273_3g827",
+      "at": "2026-07-04T14:26:00.273Z",
+      "severity": "error",
+      "type": "job_failure_streak",
+      "title": "autoposter:elite failed 3x in a row",
+      "message": "Elite update — Bryce Willingham",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "streak:autoposter:elite",
+      "meta": {
+        "failureStreak": 3
+      }
+    },
+    {
+      "id": "alert_1782874054719_zxl35",
+      "at": "2026-07-01T02:47:34.719Z",
+      "severity": "error",
+      "type": "job_failure_streak",
+      "title": "autoposter:elite failed 3x in a row",
+      "message": "Elite trending — Landon Dawson",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "streak:autoposter:elite",
+      "meta": {
+        "failureStreak": 3
+      }
+    },
+    {
+      "id": "alert_1782688699554_kc9ya",
+      "at": "2026-06-28T23:18:19.554Z",
+      "severity": "error",
+      "type": "job_failure_streak",
+      "title": "autoposter:elite failed 3x in a row",
+      "message": "Elite commit — Armani Strong",
+      "subsystem": "autoposter:elite",
+      "dedupeKey": "streak:autoposter:elite",
+      "meta": {
+        "failureStreak": 3
+      }
+    },
     {
       "id": "alert_1781633016219_r0khw",
       "at": "2026-06-16T18:03:36.219Z",

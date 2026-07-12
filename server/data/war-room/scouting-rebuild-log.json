@@ -1,17 +1,12 @@
 {
   "ok": true,
   "reason": "recruiting_player_update",
-  "startedAt": "2026-06-27T01:42:45.767Z",
-  "finishedAt": "2026-06-27T01:42:55.062Z",
+  "startedAt": "2026-07-11T11:30:35.230Z",
+  "finishedAt": "2026-07-11T11:30:35.713Z",
   "total": 1,
-  "updated": 0,
+  "updated": 1,
   "unchanged": 0,
-  "blank": 1,
-  "errors": [
-    {
-      "slug": "kahmaree-crumity",
-      "error": "scoutingDb.importLegacyBreakdown is not a function"
-    }
-  ],
+  "blank": 0,
+  "errors": [],
   "updatesAdded": 0
 }

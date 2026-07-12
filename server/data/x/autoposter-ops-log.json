@@ -2,25 +2,190 @@
   "version": 1,
   "entries": [
     {
-      "ts": "2026-06-25T15:26:22.016Z",
-      "action": "rewrite_success",
+      "ts": "2026-07-11T05:06:12.859Z",
+      "action": "rewrite_failed",
       "subsystem": "rewrite-engine",
-      "playerName": "Easton Royal",
-      "attempts": 1,
-      "wordCount": 85,
-      "mode": "stub"
+      "reason": "too_short",
+      "errors": [
+        "too_short",
+        "similarity_exceeded",
+        "overlap_exceeded",
+        "beat_structure_copy"
+      ],
+      "attempts": 5,
+      "playerName": "Kamauri Whitfield",
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
     },
     {
-      "ts": "2026-06-21T17:02:13.626Z",
-      "action": "rewrite_success",
+      "ts": "2026-07-11T05:06:12.854Z",
+      "action": "rewrite_regen",
       "subsystem": "rewrite-engine",
-      "playerName": "Easton Royal",
-      "attempts": 1,
-      "wordCount": 85,
-      "mode": "stub"
+      "attempt": 4,
+      "errors": [
+        "too_short",
+        "similarity_exceeded",
+        "overlap_exceeded",
+        "beat_structure_copy"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.35294117647058826,
+      "mode": "pipeline"
     },
     {
-      "ts": "2026-06-21T17:02:13.613Z",
+      "ts": "2026-07-11T05:06:12.850Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short",
+        "similarity_exceeded",
+        "overlap_exceeded",
+        "beat_structure_copy"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.35294117647058826,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.846Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short",
+        "similarity_exceeded",
+        "overlap_exceeded",
+        "beat_structure_copy"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.35294117647058826,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.842Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short",
+        "missing_context",
+        "beat_structure_copy"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.17647058823529413,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.774Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short",
+        "similarity_exceeded",
+        "overlap_exceeded",
+        "beat_structure_copy"
+      ],
+      "attempts": 5,
+      "playerName": "Raheem Floyd",
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.770Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short",
+        "similarity_exceeded",
+        "overlap_exceeded",
+        "beat_structure_copy"
+      ],
+      "playerName": "Raheem Floyd",
+      "overlapRatio": 0.35294117647058826,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.766Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short",
+        "similarity_exceeded",
+        "overlap_exceeded",
+        "beat_structure_copy"
+      ],
+      "playerName": "Raheem Floyd",
+      "overlapRatio": 0.35294117647058826,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.762Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short",
+        "similarity_exceeded",
+        "overlap_exceeded",
+        "beat_structure_copy"
+      ],
+      "playerName": "Raheem Floyd",
+      "overlapRatio": 0.35294117647058826,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.752Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short",
+        "missing_context",
+        "beat_structure_copy"
+      ],
+      "playerName": "Raheem Floyd",
+      "overlapRatio": 0.17647058823529413,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-10T10:52:01.967Z",
+      "action": "enqueue",
+      "itemId": "xp_1783680721959_132dffa7",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "hub_review",
+      "queueLength": 14,
+      "source": "auto:on3-team-news"
+    },
+    {
+      "ts": "2026-07-10T10:50:33.495Z",
+      "action": "enqueue",
+      "itemId": "xp_1783680633486_6a014b7c",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "hub_review",
+      "queueLength": 13,
+      "source": "auto:on3-team-news"
+    },
+    {
+      "ts": "2026-07-10T10:49:47.841Z",
+      "action": "enqueue",
+      "itemId": "xp_1783680587819_31022a3b",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "hub_review",
+      "queueLength": 12,
+      "source": "auto:on3-team-news"
+    },
+    {
+      "ts": "2026-07-09T20:27:57.956Z",
       "action": "rewrite_success",
       "subsystem": "rewrite-engine",
       "playerName": "Easton Royal",
@@ -29,43 +194,451 @@
       "mode": "stub"
     },
     {
-      "ts": "2026-06-21T12:43:23.894Z",
-      "action": "rewrite_success",
-      "subsystem": "rewrite-engine",
-      "playerName": "Easton Royal",
-      "attempts": 1,
-      "wordCount": 85,
-      "mode": "stub"
+      "ts": "2026-07-07T01:46:28.086Z",
+      "action": "enqueue",
+      "itemId": "xp_1783388788078_9c0e0cf9",
+      "intelFingerprint": "beat_target_update_zyon-robinson_2026-06-27_corey_bender",
+      "sourceIntelId": "intel_251054_target_update_2026-06-27",
+      "playerName": "Zyon Robinson",
+      "status": "hub_review",
+      "queueLength": 11,
+      "source": "auto:beat-writer"
     },
     {
-      "ts": "2026-06-21T12:42:17.817Z",
-      "action": "rewrite_success",
-      "subsystem": "rewrite-engine",
-      "playerName": "Easton Royal",
-      "attempts": 1,
-      "wordCount": 85,
-      "mode": "stub"
+      "ts": "2026-07-07T01:46:28.035Z",
+      "action": "enqueue",
+      "itemId": "xp_1783388788027_735c8aef",
+      "intelFingerprint": "recruiting_narrative_x_2072798281684377772_2026-07-02_blake_alderman",
+      "sourceIntelId": "intel_260972_recruiting_narrative_2026-07-02",
+      "playerName": "Man Robinson",
+      "status": "hub_review",
+      "queueLength": 10,
+      "source": "auto:beat-writer"
     },
     {
-      "ts": "2026-06-19T18:51:38.938Z",
-      "action": "rewrite_success",
-      "subsystem": "rewrite-engine",
-      "playerName": "Jayden Harris",
-      "attempts": 1,
-      "wordCount": 103,
-      "mode": "stub"
+      "ts": "2026-07-07T01:46:27.985Z",
+      "action": "enqueue",
+      "itemId": "xp_1783388787973_8705e3d4",
+      "intelFingerprint": "beat_unofficial_visit_ryan-drakeford_2026-07-03_blake_alderman",
+      "sourceIntelId": "intel_242808_unofficial_visit_2026-07-03",
+      "playerName": "Ryan Drakeford",
+      "status": "hub_review",
+      "queueLength": 9,
+      "source": "auto:beat-writer"
     },
     {
-      "ts": "2026-06-19T18:51:38.690Z",
-      "action": "rewrite_success",
+      "ts": "2026-07-07T01:46:22.088Z",
+      "action": "rewrite_failed",
       "subsystem": "rewrite-engine",
-      "playerName": "Easton Royal",
-      "attempts": 1,
-      "wordCount": 85,
-      "mode": "stub"
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "playerName": "Kamauri Whitfield",
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
     },
     {
-      "ts": "2026-06-19T18:51:38.642Z",
+      "ts": "2026-07-07T01:46:22.079Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.16,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-07T01:46:22.071Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.16,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-07T01:46:22.062Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.16,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-07T01:46:22.054Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.08,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-07T01:46:21.651Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "playerName": "Kamauri Whitfield",
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-07T01:46:21.641Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.16,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-07T01:46:21.630Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.16,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-07T01:46:21.620Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.16,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-07T01:46:21.598Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.08,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-06T20:51:09.127Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "playerName": "Kamauri Whitfield",
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-06T20:51:09.120Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.12,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-06T20:51:09.110Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.12,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-06T20:51:09.103Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.12,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-06T20:51:09.089Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.04,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-06T20:46:34.081Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "playerName": "Kamauri Whitfield",
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-06T20:46:34.073Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.12,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-06T20:46:34.067Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.12,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-06T20:46:34.060Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.12,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-06T20:46:34.049Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "playerName": "Kamauri Whitfield",
+      "overlapRatio": 0.04,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-06T03:52:46.105Z",
+      "action": "enqueue",
+      "itemId": "xp_1783309966098_ba74486c",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "pending",
+      "queueLength": 8,
+      "source": "auto:on3-team-news"
+    },
+    {
+      "ts": "2026-07-06T03:52:45.692Z",
+      "action": "update",
+      "itemId": "xp_1783309763787_d74fc671",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "cancelled",
+      "queueLength": 7,
+      "patchKeys": [
+        "status",
+        "error",
+        "sentAt"
+      ]
+    },
+    {
+      "ts": "2026-07-06T03:49:23.794Z",
+      "action": "enqueue",
+      "itemId": "xp_1783309763787_d74fc671",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "pending",
+      "queueLength": 7,
+      "source": "auto:on3-team-news"
+    },
+    {
+      "ts": "2026-07-06T03:49:23.294Z",
+      "action": "update",
+      "itemId": "xp_1783309201244_768460d7",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "cancelled",
+      "queueLength": 6,
+      "patchKeys": [
+        "status",
+        "error",
+        "sentAt"
+      ]
+    },
+    {
+      "ts": "2026-07-06T03:40:01.249Z",
+      "action": "enqueue",
+      "itemId": "xp_1783309201244_768460d7",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "pending",
+      "queueLength": 6,
+      "source": "auto:on3-team-news"
+    },
+    {
+      "ts": "2026-07-06T03:40:01.020Z",
+      "action": "update",
+      "itemId": "xp_1783309140151_0ce3157a",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "cancelled",
+      "queueLength": 5,
+      "patchKeys": [
+        "status",
+        "error",
+        "sentAt"
+      ]
+    },
+    {
+      "ts": "2026-07-06T03:39:00.156Z",
+      "action": "enqueue",
+      "itemId": "xp_1783309140151_0ce3157a",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "pending",
+      "queueLength": 5,
+      "source": "auto:on3-team-news"
+    },
+    {
+      "ts": "2026-07-06T03:38:59.830Z",
+      "action": "update",
+      "itemId": "xp_1783308187745_9f79da25",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "cancelled",
+      "queueLength": 4,
+      "patchKeys": [
+        "status",
+        "error",
+        "sentAt"
+      ]
+    },
+    {
+      "ts": "2026-07-06T03:23:07.749Z",
+      "action": "enqueue",
+      "itemId": "xp_1783308187745_9f79da25",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "pending",
+      "queueLength": 4,
+      "source": "auto:on3-team-news"
+    },
+    {
+      "ts": "2026-07-06T03:23:07.583Z",
+      "action": "update",
+      "itemId": "xp_1783308163768_39e2d438",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "cancelled",
+      "queueLength": 3,
+      "patchKeys": [
+        "status",
+        "error",
+        "sentAt"
+      ]
+    },
+    {
+      "ts": "2026-07-06T03:22:43.771Z",
+      "action": "enqueue",
+      "itemId": "xp_1783308163768_39e2d438",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "pending",
+      "queueLength": 3,
+      "source": "auto:on3-team-news"
+    },
+    {
+      "ts": "2026-07-06T03:22:43.624Z",
+      "action": "update",
+      "itemId": "xp_1783306044536_264ad497",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "cancelled",
+      "queueLength": 2,
+      "patchKeys": [
+        "status",
+        "error",
+        "sentAt"
+      ]
+    },
+    {
+      "ts": "2026-07-06T02:47:24.546Z",
+      "action": "enqueue",
+      "itemId": "xp_1783306044536_264ad497",
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins",
+      "sourceIntelId": "intel_251062_target_update_2026-07-03",
+      "playerName": "Jermaine Cobbins",
+      "status": "pending",
+      "queueLength": 2,
+      "source": "auto:on3-team-news"
+    },
+    {
+      "ts": "2026-07-05T03:00:46.486Z",
       "action": "rewrite_success",
       "subsystem": "rewrite-engine",
       "playerName": "Easton Royal",
@@ -74,25 +647,680 @@
       "mode": "stub"
     },
     {
-      "ts": "2026-06-19T16:32:53.333Z",
-      "action": "rewrite_success",
+      "ts": "2026-07-04T16:11:07.099Z",
+      "action": "rewrite_failed",
       "subsystem": "rewrite-engine",
-      "playerName": "Jayden Harris",
-      "attempts": 1,
-      "wordCount": 103,
-      "mode": "stub"
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
     },
     {
-      "ts": "2026-06-19T16:32:53.144Z",
-      "action": "rewrite_success",
+      "ts": "2026-07-04T16:11:07.084Z",
+      "action": "rewrite_regen",
       "subsystem": "rewrite-engine",
-      "playerName": "Easton Royal",
-      "attempts": 1,
-      "wordCount": 85,
-      "mode": "stub"
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.12,
+      "mode": "pipeline"
     },
     {
-      "ts": "2026-06-19T16:32:53.112Z",
+      "ts": "2026-07-04T16:11:07.070Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.12,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T16:11:07.057Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.12,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T16:11:07.035Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short",
+        "beat_structure_copy"
+      ],
+      "overlapRatio": 0.2,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:46:32.540Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:46:32.533Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.06666666666666667,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:46:32.527Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.06666666666666667,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:46:32.520Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.06666666666666667,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:46:32.508Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.06666666666666667,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:33:15.702Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:33:15.692Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.09523809523809523,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:33:15.683Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.09523809523809523,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:33:15.676Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.09523809523809523,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:33:15.665Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.047619047619047616,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:27:10.153Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:27:10.145Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.06666666666666667,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:27:10.136Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.06666666666666667,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:27:10.128Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.06666666666666667,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:27:10.114Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.06666666666666667,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:24:26.375Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:24:26.353Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:24:26.334Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:24:26.318Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:24:26.291Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:22:59.221Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:22:59.215Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:22:59.209Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:22:59.203Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:22:59.186Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:21:30.217Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:21:30.203Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:21:30.190Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:21:30.175Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:21:30.153Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:20:03.775Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:20:03.758Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:20:03.742Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:20:03.726Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:20:03.701Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:18:31.659Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:18:31.652Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:18:31.645Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:18:31.637Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:18:31.626Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:16:48.074Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:16:48.067Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:16:48.061Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:16:48.055Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:16:48.045Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:15:30.124Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:15:30.109Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:15:30.097Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:15:30.086Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:15:30.067Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:13:43.614Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:13:43.607Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:13:43.602Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:13:43.593Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-04T14:13:43.582Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-03T13:14:12.834Z",
       "action": "rewrite_success",
       "subsystem": "rewrite-engine",
       "playerName": "Easton Royal",
@@ -101,16 +1329,7 @@
       "mode": "stub"
     },
     {
-      "ts": "2026-06-19T15:42:37.526Z",
-      "action": "rewrite_success",
-      "subsystem": "rewrite-engine",
-      "playerName": "Jayden Harris",
-      "attempts": 1,
-      "wordCount": 103,
-      "mode": "stub"
-    },
-    {
-      "ts": "2026-06-19T15:42:37.208Z",
+      "ts": "2026-07-03T13:14:12.789Z",
       "action": "rewrite_success",
       "subsystem": "rewrite-engine",
       "playerName": "Easton Royal",
@@ -119,7 +1338,16 @@
       "mode": "stub"
     },
     {
-      "ts": "2026-06-19T15:42:37.169Z",
+      "ts": "2026-07-03T03:56:09.061Z",
+      "action": "rewrite_success",
+      "subsystem": "rewrite-engine",
+      "playerName": "Easton Royal",
+      "attempts": 1,
+      "wordCount": 85,
+      "mode": "stub"
+    },
+    {
+      "ts": "2026-07-03T03:56:09.032Z",
       "action": "rewrite_success",
       "subsystem": "rewrite-engine",
       "playerName": "Easton Royal",
@@ -128,59 +1356,959 @@
       "mode": "stub"
     },
     {
-      "ts": "2026-06-17T17:30:46.498Z",
-      "action": "rewrite_success",
-      "subsystem": "rewrite-engine",
-      "playerName": "Jayden Harris",
-      "attempts": 1,
-      "wordCount": 103,
-      "mode": "stub"
+      "ts": "2026-07-03T02:23:50.317Z",
+      "action": "update",
+      "itemId": "xp_1783018198266_6287fd8a",
+      "intelFingerprint": "det_1783017920883_d1c8e63b|detectives_elite_research|2026-07-02",
+      "sourceIntelId": null,
+      "playerName": null,
+      "status": "cancelled",
+      "queueLength": 1,
+      "patchKeys": [
+        "status"
+      ]
     },
     {
-      "ts": "2026-06-17T14:15:53.216Z",
-      "action": "rewrite_success",
-      "subsystem": "rewrite-engine",
-      "playerName": "Easton Royal",
-      "attempts": 1,
-      "wordCount": 85,
-      "mode": "stub"
+      "ts": "2026-07-02T18:49:58.275Z",
+      "action": "enqueue",
+      "itemId": "xp_1783018198266_6287fd8a",
+      "intelFingerprint": "det_1783017920883_d1c8e63b|detectives_elite_research|2026-07-02",
+      "sourceIntelId": null,
+      "playerName": null,
+      "status": "pending",
+      "queueLength": 1,
+      "source": "auto:detectives"
     },
     {
-      "ts": "2026-06-17T14:15:53.199Z",
-      "action": "rewrite_success",
+      "ts": "2026-07-02T14:11:13.625Z",
+      "action": "rewrite_failed",
       "subsystem": "rewrite-engine",
-      "playerName": "Jayden Harris",
-      "attempts": 1,
-      "wordCount": 103,
-      "mode": "stub"
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
     },
     {
-      "ts": "2026-06-17T14:15:53.193Z",
-      "action": "rewrite_success",
+      "ts": "2026-07-02T14:11:13.620Z",
+      "action": "rewrite_regen",
       "subsystem": "rewrite-engine",
-      "playerName": "Easton Royal",
-      "attempts": 1,
-      "wordCount": 99,
-      "mode": "stub"
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
     },
     {
-      "ts": "2026-06-17T13:43:41.424Z",
-      "action": "rewrite_success",
+      "ts": "2026-07-02T14:11:13.610Z",
+      "action": "rewrite_regen",
       "subsystem": "rewrite-engine",
-      "playerName": "Easton Royal",
-      "attempts": 1,
-      "wordCount": 85,
-      "mode": "stub"
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
     },
     {
-      "ts": "2026-06-17T13:43:41.414Z",
-      "action": "rewrite_success",
+      "ts": "2026-07-02T14:11:13.606Z",
+      "action": "rewrite_regen",
       "subsystem": "rewrite-engine",
-      "playerName": "Jayden Harris",
-      "attempts": 1,
-      "wordCount": 103,
-      "mode": "stub"
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.596Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.583Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.577Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.571Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.565Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.560Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.16666666666666666,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.555Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.549Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.544Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.539Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.535Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.16666666666666666,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.523Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.518Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.512Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.507Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.502Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.496Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.491Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.486Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.480Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.475Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.392Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.387Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.382Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.377Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.373Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.1,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.341Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.336Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.330Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.326Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.322Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.14285714285714285,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.318Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.311Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.307Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.302Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.295Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.14285714285714285,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.288Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.280Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.275Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.272Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.266Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.258Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.254Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.248Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.241Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.235Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.16666666666666666,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.229Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.225Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.221Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.216Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.210Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.16666666666666666,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.204Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.199Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.193Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.189Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.183Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.176Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.171Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.164Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.159Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.145Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0.125,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-02T02:27:23.042Z",
+      "action": "recover_postable",
+      "itemId": "batch",
+      "intelFingerprint": null,
+      "sourceIntelId": null,
+      "playerName": null,
+      "status": null,
+      "queueLength": 1,
+      "recovered": 1
+    },
+    {
+      "ts": "2026-07-01T13:42:21.018Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:42:21.014Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:42:21.008Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:42:21.004Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:42:20.998Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:42:20.984Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:42:20.978Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:42:20.972Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:42:20.967Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:42:20.958Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.970Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.964Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.960Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 3,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.955Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 2,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.950Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 1,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.942Z",
+      "action": "rewrite_failed",
+      "subsystem": "rewrite-engine",
+      "reason": "too_short",
+      "errors": [
+        "too_short"
+      ],
+      "attempts": 5,
+      "promptVersion": "gm2_exact_v1",
+      "mode": "pipeline"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.936Z",
+      "action": "rewrite_regen",
+      "subsystem": "rewrite-engine",
+      "attempt": 4,
+      "errors": [
+        "too_short"
+      ],
+      "overlapRatio": 0,
+      "mode": "pipeline"
     }
   ],
-  "updatedAt": "2026-06-25T15:26:22.276Z"
+  "updatedAt": "2026-07-11T05:06:12.859Z"
 }

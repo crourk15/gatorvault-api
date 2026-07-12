@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-10T10:52:01.983Z",
+  "players": {
+    "test-player-self-heal": {
+      "slug": "test-player-self-heal",
+      "hash": "5c96928bf505e85858eef7b6",
+      "payload": {
+        "composePath": "elite_pr789",
+        "identity": "2028 CB Jermaine Cobbins · 4★ · On3 No. 28 natl · No. 4 CB · No. 1 TN",
+        "rankingTokens": {
+          "on3Stars": 4,
+          "on3NationalRank": 28,
+          "on3PositionRank": 4,
+          "on3StateRank": 1
+        },
+        "compositeScore": 85,
+        "dominantAngle": "program_pitch",
+        "scoutingRefreshAt": "2026-07-06T00:00:00.000Z",
+        "pr789AngleLive": true
+      },
+      "ok": true,
+      "recordedAt": "2026-07-10T10:49:43.709Z",
+      "source": "test",
+      "queueItemId": null,
+      "tweetId": null,
+      "intelFingerprint": null
+    },
+    "jermaine-cobbins": {
+      "slug": "jermaine-cobbins",
+      "hash": "6ca3541d329ed4cab0911b3a",
+      "payload": {
+        "composePath": "elite_pr789",
+        "identity": "2028 CB Jermaine Cobbins · 4★ · On3 No. 28 natl · No. 4 CB · No. 1 TN",
+        "rankingTokens": {
+          "on3Stars": 4,
+          "on3NationalRank": 28,
+          "on3PositionRank": 4,
+          "on3StateRank": 1
+        },
+        "compositeScore": 85,
+        "dominantAngle": "visit",
+        "scoutingRefreshAt": "2026-07-10T10:52:01.906Z",
+        "pr789AngleLive": true
+      },
+      "ok": true,
+      "recordedAt": "2026-07-10T10:52:01.983Z",
+      "source": "republish",
+      "queueItemId": "xp_1783680721959_132dffa7",
+      "tweetId": null,
+      "intelFingerprint": "on3_news_4635492_jermaine-cobbins"
+    }
+  }
+}

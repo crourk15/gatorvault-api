@@ -9,7 +9,7 @@ const HUB_CLASS_YEARS = new Set([2027, 2028, 2029]);
 
 /** Locked verified UF commit slugs by class year */
 const VERIFIED_UF_COMMITS_BY_YEAR = {
-  2027: new Set(['tre-geathers', 'jaydee-lane', 'ellis-mcgaskin', 'aaron-mcwilliams']),
+  2027: new Set(['tre-geathers', 'jaydee-lane', 'ellis-mcgaskin', 'aaron-mcwilliams', 'kamauri-whitfield', 'raheem-floyd']),
   2028: new Set(),
   2029: new Set(),
 };

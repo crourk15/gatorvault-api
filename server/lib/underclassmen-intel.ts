@@ -179,16 +179,51 @@ function parseRecruitingUfPct(raw: unknown): number | null {
 function competingSchoolsFromRecruitingRecord(
   recruiting: Record<string, unknown> | null | undefined
 ): Array<{ name: string; pct: number }> {
-  const competitors = (recruiting?.competitors ?? []) as Array<{ school?: string; score?: number }>;
-  return competitors
-    .filter((c) => c?.school && !/\bflorida\b|\bgators\b|\buf\b/i.test(String(c.school)))
-    .map((c) => ({
-      name: String(c.school),
-      pct: Math.min(100, Math.max(0, Math.round(Number(c.score) * 10) / 10)),
-    }))
-    .filter((c) => c.pct > 0)
-    .sort((a, b) => b.pct - a.pct);
+  const bySchool = new Map<string, { name: string; pct: number }>();
+
+  const add = (nameRaw: unknown, pctRaw: unknown) => {
+    const school = String(nameRaw || '').trim();
+    if (!school || /\bflorida\b|\bgators\b|\buf\b/i.test(school)) return;
+    if (pctRaw == null || !Number.isFinite(Number(pctRaw))) return;
+    const num = Number(pctRaw);
+    const pct = Math.min(100, Math.max(0, Math.round((num <= 1 ? num * 100 : num) * 10) / 10));
+    if (pct <= 0) return;
+    const key = school.toLowerCase();
+    const existing = bySchool.get(key);
+    if (!existing || pct > existing.pct) {
+      bySchool.set(key, { name: school, pct });
+    }
+  };
+
+  const competitors = (recruiting?.competitors ?? []) as Array<{
+    school?: string;
+    name?: string;
+    score?: number;
+    pct?: number;
+  }>;
+  for (const c of competitors) {
+    add(c?.school || c?.name, c?.score ?? c?.pct);
+  }
+
+  // Confirmed On3 RPM board when present on the player row.
+  try {
+    const { rpmTopFromOn3TopTeams } = require('./autoposter/rewrite/comp-sourcing');
+    const classYear = Number(recruiting?.classYear) || 2028;
+    const topTeams = (recruiting?.on3TopTeams || recruiting?.topTeams || []) as unknown[];
+    if (Array.isArray(topTeams) && topTeams.length) {
+      for (const row of rpmTopFromOn3TopTeams(topTeams, classYear)) {
+        add(row.school, row.pct);
+      }
+    }
+  } catch {
+    /* optional */
+  }
+
+  return [...bySchool.values()].sort((a, b) => b.pct - a.pct);
 }
+
+/** Export for high-priority / battles — real RPM competitors only (no filler). */
+export { competingSchoolsFromRecruitingRecord };
 
 function buildEarlySignals(
   intelUuid: string,
@@ -390,8 +425,10 @@ async function buildSeedBoardPlayerFromRecruiting(
     entry?.competingSchools?.length
       ? entry.competingSchools
       : competingSchoolsFromRecruitingRecord(recruitingRecord);
+  // Confirmed On3 UF RPM first — never let empty model/estimate outrank it.
   const ufConfidence =
-    parseRecruitingUfPct(recruiting?.ufProbability ?? recruiting?.ufRpmPct) ??
+    parseRecruitingUfPct(recruiting?.ufRpmPct) ??
+    parseRecruitingUfPct(recruiting?.ufProbability) ??
     parseRecruitingUfPct(entry?.ufProbability) ??
     null;
   const fitScore =
@@ -452,7 +489,15 @@ export async function loadUnderclassmenBoardPlayers(
   classYear: number,
   slugs: string[]
 ): Promise<FutureCastBoardPlayer[]> {
-  return loadEnrichedBoardPlayers(classYear, slugs);
+  const rows = await loadEnrichedBoardPlayers(classYear, slugs);
+  // Overlay confirmed On3 RPM + competitor boards from recruiting store (model must not win).
+  const enriched = await Promise.all(
+    rows.map(async (player) => {
+      const recruiting = await getRecruitingPlayerBySlug(player.slug);
+      return enrichPlayerFromRecruitingStore(player, recruiting, earlyMetaForSlug(player.slug));
+    })
+  );
+  return enriched;
 }
 
 function buildRelatedIntel(
@@ -491,7 +536,8 @@ function enrichPlayerFromRecruitingStore(
     ? entry.competingSchools
     : competingSchoolsFromRecruitingRecord(recruitingRecord);
   const storeUf =
-    parseRecruitingUfPct(recruiting?.ufProbability ?? recruiting?.ufRpmPct) ??
+    parseRecruitingUfPct(recruiting?.ufRpmPct) ??
+    parseRecruitingUfPct(recruiting?.ufProbability) ??
     parseRecruitingUfPct(entry?.ufProbability) ??
     null;
   const storeFit =
@@ -501,12 +547,15 @@ function enrichPlayerFromRecruitingStore(
         ? Number(entry.fitScore)
         : null;
 
-  const competingSchools =
-    player.competingSchools?.length ? player.competingSchools : storeCompete;
-  const ufConfidence = player.ufConfidence ?? storeUf ?? null;
-  const predictors = player.predictors?.length
-    ? player.predictors
-    : competingSchools.map((s) => ({ name: s.name, score: s.pct }));
+  // Prefer confirmed On3 competitor RPM over rivals/model filler boards.
+  const competingSchools = storeCompete.length
+    ? storeCompete
+    : player.competingSchools ?? [];
+  // Prefer confirmed On3 UF RPM over FutureCast model confidence.
+  const ufConfidence = storeUf ?? player.ufConfidence ?? null;
+  const predictors = competingSchools.length
+    ? competingSchools.map((s) => ({ name: s.name, score: s.pct }))
+    : player.predictors ?? [];
 
   return {
     ...player,

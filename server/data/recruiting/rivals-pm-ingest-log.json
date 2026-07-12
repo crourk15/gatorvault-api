@@ -8,6 +8,256 @@
       "todayOnly": true,
       "backfill": false,
       "tz": "America/New_York",
+      "at": "2026-07-04T16:08:13.449Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T16:00:51.889Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "candidates": 0,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T15:55:41.698Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "candidates": 0,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T15:48:18.184Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T15:40:57.963Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T15:35:33.073Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T15:31:03.868Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T15:29:01.518Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T15:18:05.102Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T15:14:44.078Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T15:08:28.403Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T15:07:23.740Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "candidates": 0,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T15:02:04.167Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T14:55:10.520Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T14:51:32.917Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T14:45:20.088Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T14:38:18.430Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T14:33:36.927Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T14:28:10.583Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T14:22:18.766Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T14:18:09.722Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T14:12:23.785Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T14:06:53.748Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 2,
+      "errors": 0,
+      "candidates": 2,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T14:01:43.709Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
+      "at": "2026-07-04T13:57:23.970Z"
+    },
+    {
+      "processed": 0,
+      "skipped": 50,
+      "errors": 0,
+      "candidates": 50,
+      "todayOnly": true,
+      "backfill": false,
+      "tz": "America/New_York",
       "at": "2026-06-24T20:57:54.519Z"
     },
     {

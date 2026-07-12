@@ -1,0 +1,31 @@
+{
+  "hooks": [
+    {
+      "phrase": "QA hook alpha unique.",
+      "usedAt": "2026-07-09T20:27:58.489Z"
+    },
+    {
+      "phrase": "Circle this one.",
+      "usedAt": "2026-07-09T20:27:58.189Z"
+    },
+    {
+      "phrase": "Circle this one.",
+      "usedAt": "2026-07-09T20:27:57.889Z"
+    }
+  ],
+  "ctas": [
+    {
+      "phrase": "gatorvaultinsider.com/vault/futurecast/player/ryan-drakeford",
+      "usedAt": "2026-07-09T20:27:59.390Z"
+    },
+    {
+      "phrase": "gatorvaultinsider.com/vault/futurecast/player/ryan-drakeford",
+      "usedAt": "2026-07-09T20:27:59.088Z"
+    },
+    {
+      "phrase": "gatorvaultinsider.com/vault/futurecast/player/merrick-ham",
+      "usedAt": "2026-07-09T20:27:58.306Z"
+    }
+  ],
+  "updatedAt": "2026-07-09T20:27:59.391Z"
+}

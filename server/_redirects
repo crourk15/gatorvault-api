@@ -255,6 +255,9 @@
 /vault/articles  /vault/articles/index.html  200
 /vault/articles/  /vault/articles/index.html  200
 /vault/articles/*  /vault/articles/index.html  200
+/vault/insider  /vault/insider/index.html  200
+/vault/insider/  /vault/insider/index.html  200
+/vault/insider/*  /vault/insider/index.html  200
 /vault/community  /vault/community/index.html  200
 /vault/community/  /vault/community/index.html  200
 /vault/community/*  /vault/community/index.html  200

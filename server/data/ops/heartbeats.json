@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-16T18:18:44.019Z",
+  "updatedAt": "2026-07-11T05:06:12.818Z",
   "subsystems": {
     "autoposter": {
       "subsystem": "autoposter",
@@ -36,18 +36,18 @@
     },
     "autoposter:beat-writer": {
       "subsystem": "autoposter:beat-writer",
-      "lastRun": "2026-06-10T19:36:45.650Z",
+      "lastRun": "2026-07-02T19:52:24.268Z",
       "lastStatus": "skipped",
       "lastMessage": "beat post skipped: no_recruiting_signal",
       "lastDetails": {
         "reason": "no_recruiting_signal",
         "category": "filtered",
-        "handle": "Hayesfawcett3",
-        "writer": "Hayes Fawcett",
-        "postId": null,
-        "url": null,
-        "textPreview": "Amare Patterson has cancelled his OV to Florida and will visit South Carolina this weekend.",
-        "publishedAt": "2026-06-05T16:00:00.000Z"
+        "handle": "ttjharden8",
+        "writer": "Tyler Harden",
+        "postId": "x_test_tory",
+        "url": "https://x.com/test/tory",
+        "textPreview": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19.",
+        "publishedAt": "2026-07-02T19:52:24.265Z"
       },
       "lastCounts": null,
       "lastSuccess": null,
@@ -57,28 +57,21 @@
     },
     "qa:crawler": {
       "subsystem": "qa:crawler",
-      "lastRun": "2026-06-16T18:18:44.019Z",
-      "lastStatus": "success",
-      "lastMessage": "QA crawl passed (111 checks)",
+      "lastRun": "2026-07-04T15:19:15.004Z",
+      "lastStatus": "error",
+      "lastMessage": "QA crawl crashed",
       "lastDetails": {
-        "runId": "qa_1781633888188",
-        "summary": {
-          "total": 111,
-          "passed": 111,
-          "failed": 0,
-          "emitted": 0
-        },
-        "errors": []
+        "error": "browserType.launch: Executable doesn't exist at C:\\Users\\crour\\AppData\\Local\\Temp\\cursor-sandbox-cache\\1dd86a61aeff2b0b068bc4a00e84d6c3\\playwright\\chromium_headless_shell-1228\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
       },
       "lastCounts": null,
       "lastSuccess": "2026-06-16T18:18:44.019Z",
-      "lastFailure": "2026-06-16T18:03:36.215Z",
+      "lastFailure": "2026-07-04T15:19:15.004Z",
       "lastWarning": null,
-      "failureStreak": 0
+      "failureStreak": 1
     },
     "cron:portal-ingest": {
       "subsystem": "cron:portal-ingest",
-      "lastRun": "2026-06-11T15:47:12.844Z",
+      "lastRun": "2026-07-04T13:59:04.323Z",
       "lastStatus": "success",
       "lastMessage": "portal-ingest completed",
       "lastDetails": {
@@ -92,36 +85,36 @@
         "skipped": null,
         "errors": null
       },
-      "lastSuccess": "2026-06-11T15:47:12.844Z",
+      "lastSuccess": "2026-07-04T13:59:04.323Z",
       "lastFailure": null,
       "lastWarning": null,
       "failureStreak": 0
     },
     "cron:recruiting-ingest": {
       "subsystem": "cron:recruiting-ingest",
-      "lastRun": "2026-06-11T17:53:03.364Z",
-      "lastStatus": "success",
+      "lastRun": "2026-07-04T16:10:11.662Z",
+      "lastStatus": "warning",
       "lastMessage": "recruiting-ingest completed",
       "lastDetails": {
         "summary": {
           "ok": true,
           "fired": 0,
-          "lastRun": "2026-06-11T17:53:02.301Z"
+          "lastRun": "2026-07-04T14:28:40.003Z"
         }
       },
       "lastCounts": {
         "processed": null,
-        "skipped": 72,
-        "errors": 0
+        "skipped": 74,
+        "errors": 2
       },
       "lastSuccess": "2026-06-11T17:53:03.364Z",
       "lastFailure": "2026-06-11T17:09:02.506Z",
-      "lastWarning": "2026-06-11T15:47:16.271Z",
+      "lastWarning": "2026-07-04T16:10:11.662Z",
       "failureStreak": 0
     },
     "cron:live-refresh": {
       "subsystem": "cron:live-refresh",
-      "lastRun": "2026-06-11T17:53:06.590Z",
+      "lastRun": "2026-07-04T16:11:00.886Z",
       "lastStatus": "success",
       "lastMessage": "live-refresh completed",
       "lastDetails": {
@@ -132,21 +125,21 @@
         "skipped": null,
         "errors": null
       },
-      "lastSuccess": "2026-06-11T17:53:06.590Z",
+      "lastSuccess": "2026-07-04T16:11:00.886Z",
       "lastFailure": null,
       "lastWarning": null,
       "failureStreak": 0
     },
     "cron:beat-late-ingest": {
       "subsystem": "cron:beat-late-ingest",
-      "lastRun": "2026-06-11T17:52:02.628Z",
+      "lastRun": "2026-07-04T16:09:33.678Z",
       "lastStatus": "success",
       "lastMessage": "beat-late-ingest completed",
       "lastDetails": {
         "summary": {
           "ok": true,
           "processedCount": 0,
-          "lastRun": "2026-06-11T17:52:02.624Z"
+          "lastRun": "2026-07-04T14:52:17.213Z"
         }
       },
       "lastCounts": {
@@ -154,20 +147,20 @@
         "skipped": 0,
         "errors": 0
       },
-      "lastSuccess": "2026-06-11T17:52:02.628Z",
+      "lastSuccess": "2026-07-04T16:09:33.678Z",
       "lastFailure": null,
       "lastWarning": null,
       "failureStreak": 0
     },
     "cron:article-engine": {
       "subsystem": "cron:article-engine",
-      "lastRun": "2026-06-11T15:48:29.973Z",
+      "lastRun": "2026-07-04T13:57:39.123Z",
       "lastStatus": "success",
       "lastMessage": "article-engine-weekly-draft completed",
       "lastDetails": {
         "summary": {
           "ok": true,
-          "reason": "weekly_cap_reached"
+          "reason": "auto_weekly_disabled"
         }
       },
       "lastCounts": {
@@ -175,14 +168,14 @@
         "skipped": null,
         "errors": null
       },
-      "lastSuccess": "2026-06-11T15:48:29.973Z",
+      "lastSuccess": "2026-07-04T13:57:39.123Z",
       "lastFailure": null,
       "lastWarning": null,
       "failureStreak": 0
     },
     "cron:gm2-auto-repair": {
       "subsystem": "cron:gm2-auto-repair",
-      "lastRun": "2026-06-11T15:49:02.777Z",
+      "lastRun": "2026-07-04T14:39:13.942Z",
       "lastStatus": "success",
       "lastMessage": "gm2-auto-repair completed",
       "lastDetails": {
@@ -195,32 +188,32 @@
         "skipped": null,
         "errors": null
       },
-      "lastSuccess": "2026-06-11T15:49:02.777Z",
+      "lastSuccess": "2026-07-04T14:39:13.942Z",
       "lastFailure": null,
       "lastWarning": null,
       "failureStreak": 0
     },
     "product-intel": {
       "subsystem": "product-intel",
-      "lastRun": "2026-06-16T18:18:43.936Z",
+      "lastRun": "2026-07-04T13:57:49.570Z",
       "lastStatus": "warning",
-      "lastMessage": "Product Intelligence scored 100/100 — 3 fix item(s)",
+      "lastMessage": "Product Intelligence scored 99/100 — 2 fix item(s)",
       "lastDetails": {
         "runId": "qa_1781633888188",
-        "overall": 100,
-        "fixQueue": 3,
+        "overall": 99,
+        "fixQueue": 2,
         "layers": {
           "data": {
             "counts": {
-              "total": 3,
+              "total": 2,
               "bySource": {
                 "qa": 0,
-                "apiHealth": 0,
+                "apiHealth": 1,
                 "cacheHealth": 0,
                 "autoposter": 1,
                 "recruiting": 0,
-                "teamData": 1,
-                "filmRoom": 1
+                "teamData": 0,
+                "filmRoom": 0
               }
             },
             "sources": [
@@ -242,26 +235,385 @@
           },
           "classification": {
             "active": [
-              "roster-mismatch",
-              "autoposter-stale",
-              "ui-regression"
+              "api-latency",
+              "autoposter-stale"
             ],
-            "total": 3
+            "total": 2
           },
           "severity": {
             "critical": 0,
             "high": 2,
-            "medium": 1,
+            "medium": 0,
             "low": 0
           },
-          "proposals": 3,
+          "proposals": 2,
           "approvalGate": "self-runner"
         }
       },
       "lastCounts": null,
       "lastSuccess": "2026-06-11T21:03:28.379Z",
       "lastFailure": null,
-      "lastWarning": "2026-06-16T18:18:43.936Z",
+      "lastWarning": "2026-07-04T13:57:49.570Z",
+      "failureStreak": 0
+    },
+    "autoposter:elite": {
+      "subsystem": "autoposter:elite",
+      "lastRun": "2026-07-11T05:06:12.818Z",
+      "lastStatus": "skipped",
+      "lastMessage": "Elite caption skipped: commit_elite_qa",
+      "lastDetails": {
+        "eventType": "commit",
+        "playerName": "Kamauri Whitfield",
+        "sourcesUsed": [],
+        "captionPreview": ""
+      },
+      "lastCounts": null,
+      "lastSuccess": "2026-07-09T20:27:59.408Z",
+      "lastFailure": "2026-07-05T03:00:48.280Z",
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "autoposter:ingest-gate": {
+      "subsystem": "autoposter:ingest-gate",
+      "lastRun": "2026-07-04T13:37:06.313Z",
+      "lastStatus": "skipped",
+      "lastMessage": "non-player intel",
+      "lastDetails": {
+        "reason": "class_year_below_2027",
+        "triggerPhrase": "Intel on the way — Florida hosting a top 2027 WR visitor this weekend per campus sources.",
+        "source": "@Corey_Bender"
+      },
+      "lastCounts": null,
+      "lastSuccess": null,
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "autoposter:research-ladder": {
+      "subsystem": "autoposter:research-ladder",
+      "lastRun": "2026-07-02T18:49:58.237Z",
+      "lastStatus": "success",
+      "lastMessage": "research_ladder:candidate",
+      "lastDetails": {
+        "ok": true,
+        "path": "elite_research",
+        "reason": "generic_phrase",
+        "playerSlug": null
+      },
+      "lastCounts": null,
+      "lastSuccess": "2026-07-02T18:49:58.237Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "autoposter:detectives": {
+      "subsystem": "autoposter:detectives",
+      "lastRun": "2026-07-09T20:27:56.874Z",
+      "lastStatus": "skipped",
+      "lastMessage": "detectives:resolved_archive",
+      "lastDetails": {
+        "ok": false,
+        "caseId": "det_1783628876839_a964cb2f",
+        "phase": "resolved_archive",
+        "path": null,
+        "playerSlug": null,
+        "skipReason": null,
+        "primaryCode": "BEAT_LISTICLE",
+        "archiveReason": null,
+        "attempts": null,
+        "gaps": [],
+        "compose": null,
+        "fuse": null,
+        "enrichPassesTried": [],
+        "enrichmentSources": [],
+        "lastReason": null,
+        "beatDrivenOnly": null,
+        "preFlight": null,
+        "afterPlatform": null
+      },
+      "lastCounts": null,
+      "lastSuccess": "2026-07-04T16:11:06.327Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "autoposter:sport-filter": {
+      "subsystem": "autoposter:sport-filter",
+      "lastRun": "2026-07-06T16:37:39.391Z",
+      "lastStatus": "skipped",
+      "lastMessage": "non-football sport (other_uf)",
+      "lastDetails": {
+        "sport": "other_uf",
+        "confidence": 60,
+        "reason": "uf_without_football_signals",
+        "signals": [
+          "uf_generic"
+        ],
+        "triggerPhrase": "UF athletics announced a 1.45 billion renovation plan for Ben Hill Griffin Stadium, targeting completion before the 2028 season.",
+        "handle": "zachabolverdi"
+      },
+      "lastCounts": null,
+      "lastSuccess": null,
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "api:health": {
+      "subsystem": "api:health",
+      "lastRun": "2026-07-04T16:09:24.243Z",
+      "lastStatus": "warning",
+      "lastMessage": "Slow request GET /api/recruiting/board",
+      "lastDetails": {
+        "durationMs": 71141,
+        "statusCode": 500
+      },
+      "lastCounts": null,
+      "lastSuccess": null,
+      "lastFailure": "2026-07-04T16:09:24.229Z",
+      "lastWarning": "2026-07-04T16:09:24.243Z",
+      "failureStreak": 1
+    },
+    "cron:rivals-pm-ingest": {
+      "subsystem": "cron:rivals-pm-ingest",
+      "lastRun": "2026-07-04T16:08:13.459Z",
+      "lastStatus": "success",
+      "lastMessage": "rivals-pm-ingest completed",
+      "lastDetails": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-07-04T16:08:13.444Z"
+        }
+      },
+      "lastCounts": {
+        "processed": 0,
+        "skipped": 50,
+        "errors": 0
+      },
+      "lastSuccess": "2026-07-04T16:08:13.459Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "cron:scouting-update": {
+      "subsystem": "cron:scouting-update",
+      "lastRun": "2026-07-04T13:57:16.631Z",
+      "lastStatus": "started",
+      "lastMessage": "scouting-update started",
+      "lastDetails": null,
+      "lastCounts": null,
+      "lastSuccess": null,
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0,
+      "lastStarted": "2026-07-04T13:57:16.631Z"
+    },
+    "cron:depth-chart": {
+      "subsystem": "cron:depth-chart",
+      "lastRun": "2026-07-07T12:49:21.336Z",
+      "lastStatus": "success",
+      "lastMessage": "depth-chart-refresh completed",
+      "lastDetails": {
+        "summary": {
+          "ok": true,
+          "processedCount": 111
+        }
+      },
+      "lastCounts": {
+        "processed": 111,
+        "skipped": null,
+        "errors": null
+      },
+      "lastSuccess": "2026-07-07T12:49:21.336Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "cron:game-zone": {
+      "subsystem": "cron:game-zone",
+      "lastRun": "2026-07-07T12:49:21.352Z",
+      "lastStatus": "success",
+      "lastMessage": "game-zone-refresh completed",
+      "lastDetails": {
+        "summary": {
+          "ok": true,
+          "processedCount": 3
+        }
+      },
+      "lastCounts": {
+        "processed": 3,
+        "skipped": null,
+        "errors": null
+      },
+      "lastSuccess": "2026-07-07T12:49:21.352Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "cron:nil-ingest": {
+      "subsystem": "cron:nil-ingest",
+      "lastRun": "2026-07-04T13:58:47.249Z",
+      "lastStatus": "success",
+      "lastMessage": "nil-ingest completed",
+      "lastDetails": {
+        "summary": {
+          "ok": true,
+          "processedCount": 16
+        }
+      },
+      "lastCounts": {
+        "processed": 16,
+        "skipped": null,
+        "errors": null
+      },
+      "lastSuccess": "2026-07-04T13:58:47.249Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "autoposter:scheduler": {
+      "subsystem": "autoposter:scheduler",
+      "lastRun": "2026-07-04T14:54:52.538Z",
+      "lastStatus": "success",
+      "lastMessage": "Tick — no_due_posts",
+      "lastDetails": {
+        "pending": 0,
+        "enqueued": 0,
+        "emptyQueueStreak": 1,
+        "cadence": "no_due_posts"
+      },
+      "lastCounts": null,
+      "lastSuccess": "2026-07-04T14:54:52.538Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "autoposter:commit-ingest": {
+      "subsystem": "autoposter:commit-ingest",
+      "lastRun": "2026-07-07T01:46:29.364Z",
+      "lastStatus": "skipped",
+      "lastMessage": "Beat commit scan: 0 ingested, 0 skipped",
+      "lastDetails": {
+        "candidates": 0,
+        "ingested": [],
+        "skipped": [],
+        "errors": []
+      },
+      "lastCounts": null,
+      "lastSuccess": null,
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "cron:film-room-weekly": {
+      "subsystem": "cron:film-room-weekly",
+      "lastRun": "2026-07-07T12:49:21.387Z",
+      "lastStatus": "success",
+      "lastMessage": "film-room-weekly completed",
+      "lastDetails": {
+        "summary": {
+          "ok": true,
+          "processedCount": 13,
+          "count": {
+            "total": 13,
+            "knowledgeLessons": 4,
+            "legacyVideos": 9,
+            "validated": 4,
+            "skipped": 6
+          }
+        }
+      },
+      "lastCounts": {
+        "processed": 13,
+        "skipped": null,
+        "errors": null
+      },
+      "lastSuccess": "2026-07-07T12:49:21.387Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "ops:platform-sweep": {
+      "subsystem": "ops:platform-sweep",
+      "lastRun": "2026-07-07T12:49:21.653Z",
+      "lastStatus": "success",
+      "lastMessage": "Sweep healed 3 job(s) — all tiles green",
+      "lastDetails": {
+        "ok": true,
+        "overallBefore": "red",
+        "overallAfter": "red",
+        "staleBefore": [
+          {
+            "id": "depth-gamezone",
+            "status": "yellow"
+          },
+          {
+            "id": "film-room",
+            "status": "red"
+          }
+        ],
+        "stillStale": [],
+        "healed": [
+          {
+            "tileId": "depth-gamezone",
+            "jobId": "depth-chart-refresh",
+            "tileStatus": "yellow",
+            "ok": true,
+            "result": {
+              "ok": true,
+              "processedCount": 111,
+              "updatedAt": "2026-07-07T12:49:21.322Z",
+              "meta": {
+                "version": 1,
+                "updatedAt": "2026-07-07T12:49:21.322Z",
+                "playerCount": 111,
+                "source": "roster/players.json",
+                "units": {
+                  "offense": 53,
+                  "defense": 50,
+                  "special": 8
+                }
+              },
+              "rosterDeltaEvents": 0
+            }
+          },
+          {
+            "tileId": "depth-gamezone",
+            "jobId": "game-zone-refresh",
+            "tileStatus": "yellow",
+            "ok": true,
+            "result": {
+              "ok": true,
+              "processedCount": 3,
+              "updatedAt": "2026-07-07T12:49:21.351Z",
+              "nextGame": "Florida vs FAU",
+              "liveOddsEnabled": false,
+              "pendingTeamEvents": 0
+            }
+          },
+          {
+            "tileId": "film-room",
+            "jobId": "film-room-weekly",
+            "tileStatus": "red",
+            "ok": true,
+            "result": {
+              "ok": true,
+              "count": {
+                "total": 13,
+                "knowledgeLessons": 4,
+                "legacyVideos": 9,
+                "validated": 4,
+                "skipped": 6
+              },
+              "processedCount": 13
+            }
+          }
+        ]
+      },
+      "lastCounts": null,
+      "lastSuccess": "2026-07-07T12:49:21.653Z",
+      "lastFailure": null,
+      "lastWarning": null,
       "failureStreak": 0
     }
   }

@@ -5,6 +5,8 @@ export type CompetingSchoolSegment = {
   key: string;
   name: string;
   pct: number;
+  /** Absolute confirmed RPM % (On3 / store) — used in labels. */
+  absPct: number;
   tone: 'uf' | 'peer' | 'other';
 };
 
@@ -31,69 +33,51 @@ function shortSchoolLabel(name: string): string {
   if (/clemson/i.test(n)) return 'Clemson';
   if (/tennessee/i.test(n)) return 'Tenn';
   if (/lsu/i.test(n)) return 'LSU';
+  if (/florida state|fsu/i.test(n)) return 'FSU';
   const words = n.split(' ').filter(Boolean);
   return words[0]?.slice(0, 8) || n.slice(0, 8) || 'Peer';
 }
 
-/** Build segmented competitor bar from player model data (never static UGA/Bama template). */
+/**
+ * Build competitor RPM bar from confirmed school % only.
+ * Never invents UGA/Bama fillers or predictor-synthetic shares.
+ */
 export function resolveCompetingSchools(player: FcLabTarget): CompetingSchoolSegment[] {
   if (player.committedTo && isFlorida(player.committedTo)) {
     return [];
   }
 
   const uf = ufPctFromFc(player.ufProbability);
-  const fromModel = (player.competingSchools ?? []).filter((s) => s.pct > 0);
+  const fromRpm = (player.competingSchools ?? [])
+    .filter((s) => s?.name && Number(s.pct) > 0 && !isFlorida(s.name))
+    .sort((a, b) => Number(b.pct) - Number(a.pct))
+    .slice(0, 3);
 
-  if (fromModel.length) {
-    const total = fromModel.reduce((sum, s) => sum + s.pct, 0) || 100;
-    return fromModel
-      .slice(0, 4)
-      .map((s, i) => ({
-        key: `${player.slug}-${i}`,
-        name: shortSchoolLabel(s.name),
-        pct: Math.max(1, Math.round((s.pct / total) * 100)),
-        tone: (isFlorida(s.name) ? 'uf' : i === 0 ? 'peer' : 'other') as CompetingSchoolSegment['tone'],
-      }))
-      .sort((a, b) => b.pct - a.pct);
-  }
+  // No confirmed RPM board → show nothing (not fake rivals).
+  if (!fromRpm.length) return [];
 
-  if (player.predictors?.length) {
-    const bySchool = new Map<string, number>();
-    for (const p of player.predictors) {
-      const label = shortSchoolLabel(p.name);
-      bySchool.set(label, Math.max(bySchool.get(label) ?? 0, p.score));
-    }
-    const entries = [...bySchool.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
-    const peerTotal = entries.reduce((sum, [, score]) => sum + score, 0) || 1;
-    const segments: CompetingSchoolSegment[] = [
-      {
-        key: `${player.slug}-uf`,
-        name: 'UF',
-        pct: Math.max(1, Math.min(100, uf)),
-        tone: 'uf',
-      },
-    ];
-    for (const [name, score] of entries) {
-      if (isFlorida(name)) continue;
-      segments.push({
-        key: `${player.slug}-${name}`,
-        name,
-        pct: Math.max(1, Math.round((score / peerTotal) * Math.max(0, 100 - uf))),
-        tone: 'peer',
-      });
-    }
-    return normalizeSegmentWidths(segments);
-  }
+  const rows: Array<{ name: string; absPct: number; tone: CompetingSchoolSegment['tone'] }> = [
+    { name: 'UF', absPct: Math.max(0, uf), tone: 'uf' },
+  ];
+  fromRpm.forEach((s, i) => {
+    rows.push({
+      name: shortSchoolLabel(s.name),
+      absPct: Math.round(Number(s.pct)),
+      tone: i === 0 ? 'peer' : 'other',
+    });
+  });
 
-  return [];
-}
-
-function normalizeSegmentWidths(segments: CompetingSchoolSegment[]): CompetingSchoolSegment[] {
-  const total = segments.reduce((sum, s) => sum + s.pct, 0) || 1;
-  return segments.map((s) => ({ ...s, pct: Math.max(1, Math.round((s.pct / total) * 100)) }));
+  const widthTotal = rows.reduce((sum, r) => sum + Math.max(r.absPct, 1), 0) || 1;
+  return rows.map((r, i) => ({
+    key: `${player.slug}-${r.name}-${i}`,
+    name: r.name,
+    absPct: r.absPct,
+    pct: Math.max(1, Math.round((Math.max(r.absPct, 1) / widthTotal) * 100)),
+    tone: r.tone,
+  }));
 }
 
 export function competingSchoolsLabel(segments: CompetingSchoolSegment[]): string {
   if (!segments.length) return '';
-  return segments.map((s) => `${s.name} ${s.pct}%`).join(' · ');
+  return segments.map((s) => `${s.name} ${s.absPct}%`).join(' · ');
 }

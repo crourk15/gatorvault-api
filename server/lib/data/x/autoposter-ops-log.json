@@ -2,6 +2,6745 @@
   "version": 1,
   "entries": [
     {
+      "ts": "2026-07-11T05:06:12.859Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Kamauri Whitfield",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-11T05:06:12.859Z"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.855Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.35294117647058826,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-11T05:06:12.855Z"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.851Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.35294117647058826,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-11T05:06:12.851Z"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.847Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.35294117647058826,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-11T05:06:12.847Z"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.843Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.17647058823529413,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-11T05:06:12.843Z"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.775Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Raheem Floyd",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-11T05:06:12.775Z"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.770Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Raheem Floyd",
+        "overlapRatio": 0.35294117647058826,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-11T05:06:12.770Z"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.767Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Raheem Floyd",
+        "overlapRatio": 0.35294117647058826,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-11T05:06:12.767Z"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.763Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Raheem Floyd",
+        "overlapRatio": 0.35294117647058826,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-11T05:06:12.763Z"
+    },
+    {
+      "ts": "2026-07-11T05:06:12.754Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Raheem Floyd",
+        "overlapRatio": 0.17647058823529413,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-11T05:06:12.754Z"
+    },
+    {
+      "ts": "2026-07-09T20:27:58.008Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
+      "details": {
+        "playerName": "Easton Royal",
+        "attempts": 1,
+        "wordCount": 99,
+        "mode": "stub"
+      },
+      "timestamp": "2026-07-09T20:27:58.008Z"
+    },
+    {
+      "ts": "2026-07-07T01:46:22.090Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "playerName": "Kamauri Whitfield",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-07T01:46:22.090Z"
+    },
+    {
+      "ts": "2026-07-07T01:46:22.081Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.16,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-07T01:46:22.081Z"
+    },
+    {
+      "ts": "2026-07-07T01:46:22.072Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.16,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-07T01:46:22.072Z"
+    },
+    {
+      "ts": "2026-07-07T01:46:22.064Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.16,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-07T01:46:22.064Z"
+    },
+    {
+      "ts": "2026-07-07T01:46:22.056Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.08,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-07T01:46:22.056Z"
+    },
+    {
+      "ts": "2026-07-07T01:46:21.653Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "playerName": "Kamauri Whitfield",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-07T01:46:21.653Z"
+    },
+    {
+      "ts": "2026-07-07T01:46:21.643Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.16,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-07T01:46:21.643Z"
+    },
+    {
+      "ts": "2026-07-07T01:46:21.633Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.16,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-07T01:46:21.633Z"
+    },
+    {
+      "ts": "2026-07-07T01:46:21.622Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.16,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-07T01:46:21.622Z"
+    },
+    {
+      "ts": "2026-07-07T01:46:21.607Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.08,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-07T01:46:21.607Z"
+    },
+    {
+      "ts": "2026-07-06T20:51:09.128Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "playerName": "Kamauri Whitfield",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-06T20:51:09.128Z"
+    },
+    {
+      "ts": "2026-07-06T20:51:09.121Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.12,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-06T20:51:09.121Z"
+    },
+    {
+      "ts": "2026-07-06T20:51:09.112Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.12,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-06T20:51:09.112Z"
+    },
+    {
+      "ts": "2026-07-06T20:51:09.105Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.12,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-06T20:51:09.105Z"
+    },
+    {
+      "ts": "2026-07-06T20:51:09.092Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.04,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-06T20:51:09.092Z"
+    },
+    {
+      "ts": "2026-07-06T20:46:34.082Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "playerName": "Kamauri Whitfield",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-06T20:46:34.082Z"
+    },
+    {
+      "ts": "2026-07-06T20:46:34.074Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.12,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-06T20:46:34.074Z"
+    },
+    {
+      "ts": "2026-07-06T20:46:34.068Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.12,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-06T20:46:34.068Z"
+    },
+    {
+      "ts": "2026-07-06T20:46:34.062Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.12,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-06T20:46:34.062Z"
+    },
+    {
+      "ts": "2026-07-06T20:46:34.051Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Kamauri Whitfield",
+        "overlapRatio": 0.04,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-06T20:46:34.051Z"
+    },
+    {
+      "ts": "2026-07-05T03:00:46.489Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
+      "details": {
+        "playerName": "Easton Royal",
+        "attempts": 1,
+        "wordCount": 99,
+        "mode": "stub"
+      },
+      "timestamp": "2026-07-05T03:00:46.489Z"
+    },
+    {
+      "ts": "2026-07-04T16:11:07.106Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 12
+      },
+      "timestamp": "2026-07-04T16:11:07.106Z"
+    },
+    {
+      "ts": "2026-07-04T16:11:07.101Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T16:11:07.101Z"
+    },
+    {
+      "ts": "2026-07-04T16:11:07.085Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.12,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T16:11:07.085Z"
+    },
+    {
+      "ts": "2026-07-04T16:11:07.072Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.12,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T16:11:07.072Z"
+    },
+    {
+      "ts": "2026-07-04T16:11:07.059Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.12,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T16:11:07.059Z"
+    },
+    {
+      "ts": "2026-07-04T16:11:07.039Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "beat_structure_copy"
+        ],
+        "overlapRatio": 0.2,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T16:11:07.039Z"
+    },
+    {
+      "ts": "2026-07-04T15:56:15.002Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 11
+      },
+      "timestamp": "2026-07-04T15:56:15.002Z"
+    },
+    {
+      "ts": "2026-07-04T15:56:14.992Z",
+      "type": "alert_autoposter_never_posted",
+      "action": "alert_autoposter_never_posted",
+      "details": {},
+      "timestamp": "2026-07-04T15:56:14.992Z"
+    },
+    {
+      "ts": "2026-07-04T15:41:12.004Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 11
+      },
+      "timestamp": "2026-07-04T15:41:12.004Z"
+    },
+    {
+      "ts": "2026-07-04T15:41:11.984Z",
+      "type": "alert_autoposter_never_posted",
+      "action": "alert_autoposter_never_posted",
+      "details": {},
+      "timestamp": "2026-07-04T15:41:11.984Z"
+    },
+    {
+      "ts": "2026-07-04T15:26:10.826Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 11
+      },
+      "timestamp": "2026-07-04T15:26:10.826Z"
+    },
+    {
+      "ts": "2026-07-04T15:26:10.806Z",
+      "type": "alert_autoposter_never_posted",
+      "action": "alert_autoposter_never_posted",
+      "details": {},
+      "timestamp": "2026-07-04T15:26:10.806Z"
+    },
+    {
+      "ts": "2026-07-04T15:11:09.736Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 11
+      },
+      "timestamp": "2026-07-04T15:11:09.736Z"
+    },
+    {
+      "ts": "2026-07-04T15:11:09.728Z",
+      "type": "alert_autoposter_never_posted",
+      "action": "alert_autoposter_never_posted",
+      "details": {},
+      "timestamp": "2026-07-04T15:11:09.728Z"
+    },
+    {
+      "ts": "2026-07-04T14:56:09.497Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 11
+      },
+      "timestamp": "2026-07-04T14:56:09.497Z"
+    },
+    {
+      "ts": "2026-07-04T14:56:09.488Z",
+      "type": "alert_autoposter_never_posted",
+      "action": "alert_autoposter_never_posted",
+      "details": {},
+      "timestamp": "2026-07-04T14:56:09.488Z"
+    },
+    {
+      "ts": "2026-07-04T14:46:32.543Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 11
+      },
+      "timestamp": "2026-07-04T14:46:32.543Z"
+    },
+    {
+      "ts": "2026-07-04T14:46:32.541Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:46:32.541Z"
+    },
+    {
+      "ts": "2026-07-04T14:46:32.534Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.06666666666666667,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:46:32.534Z"
+    },
+    {
+      "ts": "2026-07-04T14:46:32.527Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.06666666666666667,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:46:32.527Z"
+    },
+    {
+      "ts": "2026-07-04T14:46:32.521Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.06666666666666667,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:46:32.521Z"
+    },
+    {
+      "ts": "2026-07-04T14:46:32.510Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.06666666666666667,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:46:32.510Z"
+    },
+    {
+      "ts": "2026-07-04T14:41:09.084Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 10
+      },
+      "timestamp": "2026-07-04T14:41:09.084Z"
+    },
+    {
+      "ts": "2026-07-04T14:41:09.078Z",
+      "type": "alert_autoposter_never_posted",
+      "action": "alert_autoposter_never_posted",
+      "details": {},
+      "timestamp": "2026-07-04T14:41:09.078Z"
+    },
+    {
+      "ts": "2026-07-04T14:33:15.714Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 10
+      },
+      "timestamp": "2026-07-04T14:33:15.714Z"
+    },
+    {
+      "ts": "2026-07-04T14:33:15.703Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:33:15.703Z"
+    },
+    {
+      "ts": "2026-07-04T14:33:15.693Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.09523809523809523,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:33:15.693Z"
+    },
+    {
+      "ts": "2026-07-04T14:33:15.684Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.09523809523809523,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:33:15.684Z"
+    },
+    {
+      "ts": "2026-07-04T14:33:15.677Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.09523809523809523,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:33:15.677Z"
+    },
+    {
+      "ts": "2026-07-04T14:33:15.666Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.047619047619047616,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:33:15.666Z"
+    },
+    {
+      "ts": "2026-07-04T14:27:10.158Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 9
+      },
+      "timestamp": "2026-07-04T14:27:10.158Z"
+    },
+    {
+      "ts": "2026-07-04T14:27:10.154Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:27:10.154Z"
+    },
+    {
+      "ts": "2026-07-04T14:27:10.146Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.06666666666666667,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:27:10.146Z"
+    },
+    {
+      "ts": "2026-07-04T14:27:10.138Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.06666666666666667,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:27:10.138Z"
+    },
+    {
+      "ts": "2026-07-04T14:27:10.129Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.06666666666666667,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:27:10.129Z"
+    },
+    {
+      "ts": "2026-07-04T14:27:10.117Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.06666666666666667,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:27:10.117Z"
+    },
+    {
+      "ts": "2026-07-04T14:26:08.956Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 8
+      },
+      "timestamp": "2026-07-04T14:26:08.956Z"
+    },
+    {
+      "ts": "2026-07-04T14:26:08.939Z",
+      "type": "alert_autoposter_never_posted",
+      "action": "alert_autoposter_never_posted",
+      "details": {},
+      "timestamp": "2026-07-04T14:26:08.939Z"
+    },
+    {
+      "ts": "2026-07-04T14:24:26.397Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 8
+      },
+      "timestamp": "2026-07-04T14:24:26.397Z"
+    },
+    {
+      "ts": "2026-07-04T14:24:26.378Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:24:26.378Z"
+    },
+    {
+      "ts": "2026-07-04T14:24:26.356Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:24:26.356Z"
+    },
+    {
+      "ts": "2026-07-04T14:24:26.339Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:24:26.339Z"
+    },
+    {
+      "ts": "2026-07-04T14:24:26.320Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:24:26.320Z"
+    },
+    {
+      "ts": "2026-07-04T14:24:26.295Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:24:26.295Z"
+    },
+    {
+      "ts": "2026-07-04T14:22:59.229Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 7
+      },
+      "timestamp": "2026-07-04T14:22:59.229Z"
+    },
+    {
+      "ts": "2026-07-04T14:22:59.222Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:22:59.222Z"
+    },
+    {
+      "ts": "2026-07-04T14:22:59.216Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:22:59.216Z"
+    },
+    {
+      "ts": "2026-07-04T14:22:59.211Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:22:59.211Z"
+    },
+    {
+      "ts": "2026-07-04T14:22:59.204Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:22:59.204Z"
+    },
+    {
+      "ts": "2026-07-04T14:22:59.187Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:22:59.187Z"
+    },
+    {
+      "ts": "2026-07-04T14:21:30.233Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 6
+      },
+      "timestamp": "2026-07-04T14:21:30.233Z"
+    },
+    {
+      "ts": "2026-07-04T14:21:30.219Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:21:30.219Z"
+    },
+    {
+      "ts": "2026-07-04T14:21:30.204Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:21:30.204Z"
+    },
+    {
+      "ts": "2026-07-04T14:21:30.192Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:21:30.192Z"
+    },
+    {
+      "ts": "2026-07-04T14:21:30.177Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:21:30.177Z"
+    },
+    {
+      "ts": "2026-07-04T14:21:30.157Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:21:30.157Z"
+    },
+    {
+      "ts": "2026-07-04T14:20:03.794Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 5
+      },
+      "timestamp": "2026-07-04T14:20:03.794Z"
+    },
+    {
+      "ts": "2026-07-04T14:20:03.777Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:20:03.777Z"
+    },
+    {
+      "ts": "2026-07-04T14:20:03.760Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:20:03.760Z"
+    },
+    {
+      "ts": "2026-07-04T14:20:03.744Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:20:03.744Z"
+    },
+    {
+      "ts": "2026-07-04T14:20:03.729Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:20:03.729Z"
+    },
+    {
+      "ts": "2026-07-04T14:20:03.704Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:20:03.704Z"
+    },
+    {
+      "ts": "2026-07-04T14:18:31.660Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:18:31.660Z"
+    },
+    {
+      "ts": "2026-07-04T14:18:31.653Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:18:31.653Z"
+    },
+    {
+      "ts": "2026-07-04T14:18:31.646Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:18:31.646Z"
+    },
+    {
+      "ts": "2026-07-04T14:18:31.638Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:18:31.638Z"
+    },
+    {
+      "ts": "2026-07-04T14:18:31.628Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:18:31.628Z"
+    },
+    {
+      "ts": "2026-07-04T14:16:48.075Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:16:48.075Z"
+    },
+    {
+      "ts": "2026-07-04T14:16:48.068Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:16:48.068Z"
+    },
+    {
+      "ts": "2026-07-04T14:16:48.062Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:16:48.062Z"
+    },
+    {
+      "ts": "2026-07-04T14:16:48.056Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:16:48.056Z"
+    },
+    {
+      "ts": "2026-07-04T14:16:48.047Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:16:48.047Z"
+    },
+    {
+      "ts": "2026-07-04T14:15:30.126Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:15:30.126Z"
+    },
+    {
+      "ts": "2026-07-04T14:15:30.111Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:15:30.111Z"
+    },
+    {
+      "ts": "2026-07-04T14:15:30.099Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:15:30.099Z"
+    },
+    {
+      "ts": "2026-07-04T14:15:30.087Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:15:30.087Z"
+    },
+    {
+      "ts": "2026-07-04T14:15:30.069Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:15:30.069Z"
+    },
+    {
+      "ts": "2026-07-04T14:13:43.615Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:13:43.615Z"
+    },
+    {
+      "ts": "2026-07-04T14:13:43.608Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:13:43.608Z"
+    },
+    {
+      "ts": "2026-07-04T14:13:43.603Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:13:43.603Z"
+    },
+    {
+      "ts": "2026-07-04T14:13:43.594Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:13:43.594Z"
+    },
+    {
+      "ts": "2026-07-04T14:13:43.584Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-04T14:13:43.584Z"
+    },
+    {
+      "ts": "2026-07-04T14:11:08.788Z",
+      "type": "alert_autoposter_never_posted",
+      "action": "alert_autoposter_never_posted",
+      "details": {},
+      "timestamp": "2026-07-04T14:11:08.788Z"
+    },
+    {
+      "ts": "2026-07-03T13:14:12.837Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
+      "details": {
+        "playerName": "Easton Royal",
+        "attempts": 1,
+        "wordCount": 99,
+        "mode": "stub"
+      },
+      "timestamp": "2026-07-03T13:14:12.837Z"
+    },
+    {
+      "ts": "2026-07-03T13:14:12.793Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
+      "details": {
+        "playerName": "Easton Royal",
+        "attempts": 1,
+        "wordCount": 85,
+        "mode": "stub"
+      },
+      "timestamp": "2026-07-03T13:14:12.793Z"
+    },
+    {
+      "ts": "2026-07-03T03:56:09.064Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
+      "details": {
+        "playerName": "Easton Royal",
+        "attempts": 1,
+        "wordCount": 85,
+        "mode": "stub"
+      },
+      "timestamp": "2026-07-03T03:56:09.064Z"
+    },
+    {
+      "ts": "2026-07-03T03:56:09.036Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
+      "details": {
+        "playerName": "Easton Royal",
+        "attempts": 1,
+        "wordCount": 99,
+        "mode": "stub"
+      },
+      "timestamp": "2026-07-03T03:56:09.036Z"
+    },
+    {
+      "ts": "2026-07-02T16:42:31.107Z",
+      "type": "rewrite_bypass",
+      "action": "rewrite_bypass",
+      "details": {
+        "itemId": "xp_landon_dawson_bender_oh_te",
+        "reason": "elite_premade",
+        "playerName": "Landon Dawson"
+      },
+      "timestamp": "2026-07-02T16:42:31.107Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.630Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 13
+      },
+      "timestamp": "2026-07-02T14:11:13.630Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.627Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.627Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.621Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.621Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.612Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.612Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.607Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.607Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.600Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.600Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.591Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 12
+      },
+      "timestamp": "2026-07-02T14:11:13.591Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.588Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 11
+      },
+      "timestamp": "2026-07-02T14:11:13.588Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.585Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.585Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.577Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.577Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.573Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.573Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.567Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.567Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.561Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.16666666666666666,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.561Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.556Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.556Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.551Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.551Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.545Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.545Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.540Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.540Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.536Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.16666666666666666,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.536Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.529Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 10
+      },
+      "timestamp": "2026-07-02T14:11:13.529Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.527Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 9
+      },
+      "timestamp": "2026-07-02T14:11:13.527Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.524Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.524Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.519Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.519Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.513Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.513Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.508Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.508Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.503Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.503Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.497Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.497Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.492Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.492Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.488Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.488Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.482Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.482Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.476Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.476Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.414Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 8
+      },
+      "timestamp": "2026-07-02T14:11:13.414Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.393Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.393Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.389Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.389Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.384Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.384Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.378Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.378Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.374Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.1,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.374Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.349Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 7
+      },
+      "timestamp": "2026-07-02T14:11:13.349Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.345Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 6
+      },
+      "timestamp": "2026-07-02T14:11:13.345Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.342Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.342Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.337Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.337Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.332Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.332Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.327Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.327Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.323Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.14285714285714285,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.323Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.319Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.319Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.312Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.312Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.308Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.308Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.303Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.303Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.297Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.14285714285714285,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.297Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.292Z",
+      "type": "alert_rewrite_failures",
+      "action": "alert_rewrite_failures",
+      "details": {
+        "consecutiveRewriteFailures": 5
+      },
+      "timestamp": "2026-07-02T14:11:13.292Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.289Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.289Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.282Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.282Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.277Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.277Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.272Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.272Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.268Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.268Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.260Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.260Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.255Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.255Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.250Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.250Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.243Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.243Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.236Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.16666666666666666,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.236Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.230Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.230Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.226Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.226Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.222Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.222Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.217Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.217Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.212Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.16666666666666666,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.212Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.205Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.205Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.200Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.200Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.194Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.194Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.190Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.190Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.185Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.185Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.177Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.177Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.172Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.172Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.166Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.166Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.160Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.160Z"
+    },
+    {
+      "ts": "2026-07-02T14:11:13.150Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.125,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-02T14:11:13.150Z"
+    },
+    {
+      "ts": "2026-07-02T02:27:23.013Z",
+      "type": "rewrite_bypass",
+      "action": "rewrite_bypass",
+      "details": {
+        "itemId": "xp_landon_dawson_bender_oh_te",
+        "reason": "elite_premade",
+        "playerName": "Landon Dawson"
+      },
+      "timestamp": "2026-07-02T02:27:23.013Z"
+    },
+    {
+      "ts": "2026-07-01T13:42:21.019Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:42:21.019Z"
+    },
+    {
+      "ts": "2026-07-01T13:42:21.015Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:42:21.015Z"
+    },
+    {
+      "ts": "2026-07-01T13:42:21.009Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:42:21.009Z"
+    },
+    {
+      "ts": "2026-07-01T13:42:21.005Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:42:21.005Z"
+    },
+    {
+      "ts": "2026-07-01T13:42:21.000Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:42:21.000Z"
+    },
+    {
+      "ts": "2026-07-01T13:42:20.985Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:42:20.985Z"
+    },
+    {
+      "ts": "2026-07-01T13:42:20.980Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:42:20.980Z"
+    },
+    {
+      "ts": "2026-07-01T13:42:20.973Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:42:20.973Z"
+    },
+    {
+      "ts": "2026-07-01T13:42:20.968Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:42:20.968Z"
+    },
+    {
+      "ts": "2026-07-01T13:42:20.960Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:42:20.960Z"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.971Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:41:53.971Z"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.965Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:41:53.965Z"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.961Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:41:53.961Z"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.956Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:41:53.956Z"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.951Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:41:53.951Z"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.943Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:41:53.943Z"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.938Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:41:53.938Z"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.932Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:41:53.932Z"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.927Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:41:53.927Z"
+    },
+    {
+      "ts": "2026-07-01T13:41:53.919Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:41:53.919Z"
+    },
+    {
+      "ts": "2026-07-01T13:40:14.374Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:40:14.374Z"
+    },
+    {
+      "ts": "2026-07-01T13:40:14.363Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:40:14.363Z"
+    },
+    {
+      "ts": "2026-07-01T13:40:14.354Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:40:14.354Z"
+    },
+    {
+      "ts": "2026-07-01T13:40:14.345Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:40:14.345Z"
+    },
+    {
+      "ts": "2026-07-01T13:40:14.336Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:40:14.336Z"
+    },
+    {
+      "ts": "2026-07-01T13:40:14.321Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:40:14.321Z"
+    },
+    {
+      "ts": "2026-07-01T13:40:14.311Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:40:14.311Z"
+    },
+    {
+      "ts": "2026-07-01T13:40:14.302Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:40:14.302Z"
+    },
+    {
+      "ts": "2026-07-01T13:40:14.293Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:40:14.293Z"
+    },
+    {
+      "ts": "2026-07-01T13:40:14.279Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:40:14.279Z"
+    },
+    {
+      "ts": "2026-07-01T13:38:56.507Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:38:56.507Z"
+    },
+    {
+      "ts": "2026-07-01T13:38:56.499Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:38:56.499Z"
+    },
+    {
+      "ts": "2026-07-01T13:38:56.493Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:38:56.493Z"
+    },
+    {
+      "ts": "2026-07-01T13:38:56.485Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:38:56.485Z"
+    },
+    {
+      "ts": "2026-07-01T13:38:56.468Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T13:38:56.468Z"
+    },
+    {
+      "ts": "2026-07-01T12:52:27.079Z",
+      "type": "rewrite_fallback",
+      "action": "rewrite_fallback",
+      "details": {
+        "itemId": "xp_landon_dawson_bender_oh_te",
+        "reason": "no_player_match",
+        "playerName": "Landon Dawson"
+      },
+      "timestamp": "2026-07-01T12:52:27.079Z"
+    },
+    {
+      "ts": "2026-07-01T12:52:27.069Z",
+      "type": "rewrite_skip",
+      "action": "rewrite_skip",
+      "details": {
+        "itemId": "xp_landon_dawson_bender_oh_te",
+        "reason": "no_player_match",
+        "playerName": "Landon Dawson"
+      },
+      "timestamp": "2026-07-01T12:52:27.069Z"
+    },
+    {
+      "ts": "2026-07-01T12:48:37.743Z",
+      "type": "rewrite_fallback",
+      "action": "rewrite_fallback",
+      "details": {
+        "itemId": "xp_landon_dawson_bender_oh_te",
+        "reason": "no_player_match",
+        "playerName": "Landon Dawson"
+      },
+      "timestamp": "2026-07-01T12:48:37.743Z"
+    },
+    {
+      "ts": "2026-07-01T12:48:37.730Z",
+      "type": "rewrite_skip",
+      "action": "rewrite_skip",
+      "details": {
+        "itemId": "xp_landon_dawson_bender_oh_te",
+        "reason": "no_player_match",
+        "playerName": "Landon Dawson"
+      },
+      "timestamp": "2026-07-01T12:48:37.730Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:49.688Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "playerName": "Landon Dawson",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:49.688Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:49.684Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0.13333333333333333,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:49.684Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:49.680Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0.13333333333333333,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:49.680Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:49.677Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0.13333333333333333,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:49.677Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:49.672Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:49.672Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:34.761Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "playerName": "Landon Dawson",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:34.761Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:34.755Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0.13333333333333333,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:34.755Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:34.750Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0.13333333333333333,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:34.750Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:34.745Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0.13333333333333333,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:34.745Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:34.738Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:34.738Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:19.933Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 5,
+        "playerName": "Landon Dawson",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:19.933Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:19.926Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:19.926Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:19.919Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:19.919Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:19.911Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:19.911Z"
+    },
+    {
+      "ts": "2026-07-01T02:47:19.900Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:47:19.900Z"
+    },
+    {
+      "ts": "2026-07-01T02:46:55.533Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded"
+        ],
+        "attempts": 5,
+        "playerName": "Landon Dawson",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:46:55.533Z"
+    },
+    {
+      "ts": "2026-07-01T02:46:55.526Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0.4,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:46:55.526Z"
+    },
+    {
+      "ts": "2026-07-01T02:46:55.517Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0.4,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:46:55.517Z"
+    },
+    {
+      "ts": "2026-07-01T02:46:55.511Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0.4,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:46:55.511Z"
+    },
+    {
+      "ts": "2026-07-01T02:46:55.500Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "playerName": "Landon Dawson",
+        "overlapRatio": 0,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-07-01T02:46:55.500Z"
+    },
+    {
+      "ts": "2026-06-30T22:16:35.469Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short"
+        ],
+        "attempts": 4,
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-30T22:16:35.469Z"
+    },
+    {
+      "ts": "2026-06-30T22:16:35.461Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.03225806451612903,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-30T22:16:35.461Z"
+    },
+    {
+      "ts": "2026-06-30T22:16:35.452Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.03225806451612903,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-30T22:16:35.452Z"
+    },
+    {
+      "ts": "2026-06-30T22:16:35.436Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short"
+        ],
+        "overlapRatio": 0.03225806451612903,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-30T22:16:35.436Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.357Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.357Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.348Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.348Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.341Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.341Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.333Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.333Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.327Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.327Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.277Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.277Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.270Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.270Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.264Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.264Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.257Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.257Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.250Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.250Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.243Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.243Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.237Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.237Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.228Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.228Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.220Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.220Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.212Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.212Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.205Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.205Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.197Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.197Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.189Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.189Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.183Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.183Z"
+    },
+    {
+      "ts": "2026-06-28T23:47:07.174Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:47:07.174Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.901Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.901Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.897Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.897Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.894Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.894Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.891Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.891Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.888Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.888Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.865Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.865Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.862Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.862Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.859Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.859Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.856Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.856Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.853Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.853Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.850Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.850Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.846Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.846Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.843Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.843Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.840Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.840Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.837Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.837Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.833Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.833Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.830Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.830Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.827Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.827Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.824Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.824Z"
+    },
+    {
+      "ts": "2026-06-28T23:45:58.819Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:45:58.819Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.288Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.288Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.285Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.285Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.282Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.282Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.279Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.279Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.276Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.276Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.252Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.252Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.249Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.249Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.247Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.247Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.244Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.244Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.240Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.240Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.237Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.237Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.234Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.234Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.230Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.230Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.226Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.226Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.223Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.223Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.220Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.220Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.216Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.216Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.214Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.214Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.209Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.209Z"
+    },
+    {
+      "ts": "2026-06-28T23:43:53.203Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:43:53.203Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.281Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.281Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.267Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.267Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.255Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.255Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.247Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.247Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.234Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.234Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.146Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.146Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.141Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.141Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.135Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.135Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.130Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.130Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.123Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.123Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.117Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.117Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.112Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.112Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.105Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.105Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.099Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.099Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.092Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.092Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.085Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.085Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.079Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.079Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.073Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.073Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.066Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.066Z"
+    },
+    {
+      "ts": "2026-06-28T23:41:32.056Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:41:32.056Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.718Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.718Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.713Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.713Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.708Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.708Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.704Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.704Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.699Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.699Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.656Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.656Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.651Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.651Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.644Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.644Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.637Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.637Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.630Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.630Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.623Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.623Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.614Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.614Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.606Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.606Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.598Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.598Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.592Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.592Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.586Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.586Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.578Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.578Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.570Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.570Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.561Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.561Z"
+    },
+    {
+      "ts": "2026-06-28T23:39:59.552Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:39:59.552Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.186Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.186Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.181Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.181Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.176Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.176Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.171Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.171Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.167Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.167Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.128Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.128Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.123Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.123Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.119Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.119Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.116Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.116Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.112Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.112Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.108Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.108Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.104Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.104Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.098Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.098Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.093Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.093Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.089Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.089Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.081Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.081Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.077Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.077Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.073Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.073Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.068Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.068Z"
+    },
+    {
+      "ts": "2026-06-28T23:37:09.058Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:37:09.058Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.783Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.783Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.775Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.775Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.768Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.768Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.761Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.761Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.753Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.753Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.691Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.691Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.683Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.683Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.676Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.676Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.668Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.668Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.662Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.662Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.655Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.655Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.647Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.647Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.639Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.639Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.631Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.631Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.625Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.625Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.617Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.617Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.610Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.610Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.604Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.604Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.596Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.596Z"
+    },
+    {
+      "ts": "2026-06-28T23:18:19.584Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:18:19.584Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.503Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.503Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.497Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.497Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.490Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.490Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.485Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.485Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.478Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.478Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.419Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.419Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.413Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.413Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.408Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.408Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.403Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.403Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.398Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.398Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.394Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.394Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.388Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.388Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.384Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.384Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.379Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.379Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.374Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.374Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.369Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.369Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.363Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.363Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.358Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.358Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.351Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.351Z"
+    },
+    {
+      "ts": "2026-06-28T23:15:43.339Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T23:15:43.339Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.890Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.890Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.883Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.883Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.878Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6428571428571429,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.878Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.875Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.42857142857142855,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.875Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.871Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21428571428571427,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.871Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.866Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.866Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.862Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.862Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.858Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.858Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.855Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.855Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.852Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.852Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.844Z",
+      "type": "rewrite_failed",
+      "action": "rewrite_failed",
+      "details": {
+        "reason": "too_short",
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "attempts": 5,
+        "playerName": "Armani Strong",
+        "promptVersion": "gm2_exact_v1",
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.844Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.838Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 4,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.838Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.834Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 3,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.6521739130434783,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.834Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.829Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 2,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.43478260869565216,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.829Z"
+    },
+    {
+      "ts": "2026-06-28T22:28:59.709Z",
+      "type": "rewrite_regen",
+      "action": "rewrite_regen",
+      "details": {
+        "attempt": 1,
+        "errors": [
+          "too_short",
+          "similarity_exceeded",
+          "overlap_exceeded",
+          "missing_context",
+          "beat_structure_copy"
+        ],
+        "playerName": "Armani Strong",
+        "overlapRatio": 0.21739130434782608,
+        "mode": "pipeline"
+      },
+      "timestamp": "2026-06-28T22:28:59.709Z"
+    },
+    {
       "ts": "2026-06-25T15:26:22.279Z",
       "type": "rewrite_success",
       "action": "rewrite_success",
@@ -230,5 +6969,5 @@
       "timestamp": "2026-06-17T13:43:41.426Z"
     }
   ],
-  "updatedAt": "2026-06-25T15:26:22.280Z"
+  "updatedAt": "2026-07-11T05:06:12.860Z"
 }

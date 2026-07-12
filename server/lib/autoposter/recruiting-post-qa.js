@@ -105,7 +105,6 @@ function beatTokens(beatText) {
 function hasBeatAnchoredCopy(context, insider, beatText, meta = {}) {
   if (!beatText || !String(beatText).trim()) return true;
   if (meta.eliteBeatIntel || meta.eliteDigest || meta.beatIntelAngle) return true;
-  if (meta.commitElite || meta.verifiedCommit) return true;
   const combined = `${context || ''} ${insider || ''}`.toLowerCase();
   if (BEAT_ANCHOR_RE.test(combined)) return true;
   let hits = 0;

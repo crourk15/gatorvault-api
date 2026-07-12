@@ -1,0 +1,2595 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-11T05:06:12.817Z",
+  "entries": [
+    {
+      "id": "elite_1783746372817_o2l2",
+      "at": "2026-07-11T05:06:12.817Z",
+      "skipped": true,
+      "skipReason": "commit_elite_qa",
+      "playerName": "Kamauri Whitfield",
+      "eventType": "commit",
+      "voiceEngine": false
+    },
+    {
+      "id": "elite_1783746372678_0kj9",
+      "at": "2026-07-11T05:06:12.678Z",
+      "skipped": true,
+      "skipReason": "commit_elite_qa",
+      "playerName": "Raheem Floyd",
+      "eventType": "commit",
+      "voiceEngine": false
+    },
+    {
+      "id": "elite_1783628879404_a7d0",
+      "at": "2026-07-09T20:27:59.404Z",
+      "pass": true,
+      "playerName": "Ryan Drakeford",
+      "playerSlug": "ryan-drakeford",
+      "eventType": "recruiting",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "On3",
+          "snippet": "NEW: Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp.",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Intel DB",
+          "snippet": "NEW: Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp.",
+          "url": null
+        },
+        {
+          "id": "intel:unofficial_visit",
+          "label": "auto:beat-writer",
+          "snippet": "NEW: Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp👀 \"Florida is one of those schools at the top of my board.\" ",
+          "url": null
+        },
+        {
+          "id": "intel:target_update",
+          "label": "auto:on3-team-news",
+          "snippet": "First visit to Florida moved the needle with 3-star S Ryan Drakeford.",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Chad Simmons",
+          "snippet": "South Carolina kept one of the state's top offensive linemen home.   Four-star Nate Carson, the No. 221 prospect in the ",
+          "url": null
+        },
+        {
+          "id": "on3",
+          "label": "On3",
+          "snippet": "Natl #335",
+          "url": null
+        }
+      ],
+      "finalCaption": "2028 S Ryan Drakeford · 3★ · On3 No. 335 natl · No. 34 S · No. 11 MD\nDrakeford's first trip to The Swamp gave Florida early traction — and he left with the Gators on his board early Penn State and Maryland lead his RPM board, but UF is clearly in the picture after that first look.\ngatorvaultinsider.com/vault/futurecast/player/ryan-drakeford",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783628878113_dt0a",
+      "at": "2026-07-09T20:27:58.113Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783628877829_2puz",
+      "at": "2026-07-09T20:27:57.829Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Zylen Little",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783451494744_c1q9",
+      "at": "2026-07-07T19:11:34.744Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783451486263_9obc",
+      "at": "2026-07-07T19:11:26.263Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783451474301_ovbb",
+      "at": "2026-07-07T19:11:14.301Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783450854560_8be8",
+      "at": "2026-07-07T19:00:54.560Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783450850130_xduu",
+      "at": "2026-07-07T19:00:50.130Z",
+      "pass": true,
+      "playerName": "Ryan Drakeford",
+      "playerSlug": "ryan-drakeford",
+      "eventType": "recruiting",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "On3",
+          "snippet": "NEW: Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp.",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Intel DB",
+          "snippet": "NEW: Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp.",
+          "url": null
+        },
+        {
+          "id": "intel:unofficial_visit",
+          "label": "auto:beat-writer",
+          "snippet": "NEW: Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp👀 \"Florida is one of those schools at the top of my board.\" ",
+          "url": null
+        },
+        {
+          "id": "intel:target_update",
+          "label": "auto:on3-team-news",
+          "snippet": "First visit to Florida moved the needle with 3-star S Ryan Drakeford.",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Chad Simmons",
+          "snippet": "South Carolina kept one of the state's top offensive linemen home.   Four-star Nate Carson, the No. 221 prospect in the ",
+          "url": null
+        },
+        {
+          "id": "on3",
+          "label": "On3",
+          "snippet": "Natl #335",
+          "url": null
+        }
+      ],
+      "finalCaption": "2028 S Ryan Drakeford · 3★ · On3 No. 335 natl · No. 34 S · No. 11 MD\nDrakeford's first trip to The Swamp gave Florida early traction — and he left with the Gators on his board early Penn State and Maryland lead his RPM board, but UF is clearly in the picture after that first look.\ngatorvaultinsider.com/vault/futurecast/player/ryan-drakeford",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783450848993_opz3",
+      "at": "2026-07-07T19:00:48.993Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Zylen Little",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783448853738_yix2",
+      "at": "2026-07-07T18:27:33.738Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783448846067_anh4",
+      "at": "2026-07-07T18:27:26.067Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783446219466_e7ye",
+      "at": "2026-07-07T17:43:39.466Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783445775643_1bng",
+      "at": "2026-07-07T17:36:15.643Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783445741774_l7we",
+      "at": "2026-07-07T17:35:41.774Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783445638969_99lt",
+      "at": "2026-07-07T17:33:58.969Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783445493078_vsia",
+      "at": "2026-07-07T17:31:33.078Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783445286704_4k7f",
+      "at": "2026-07-07T17:28:06.704Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783444940464_ikfn",
+      "at": "2026-07-07T17:22:20.464Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783444323263_rquy",
+      "at": "2026-07-07T17:12:03.263Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783444308861_n4ig",
+      "at": "2026-07-07T17:11:48.861Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783444306106_eucb",
+      "at": "2026-07-07T17:11:46.106Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783444303641_rdee",
+      "at": "2026-07-07T17:11:43.641Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783444301197_41b7",
+      "at": "2026-07-07T17:11:41.197Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783443866843_rbt0",
+      "at": "2026-07-07T17:04:26.843Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783443457019_ifkt",
+      "at": "2026-07-07T16:57:37.019Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783443445880_ho0b",
+      "at": "2026-07-07T16:57:25.880Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783443443222_qllc",
+      "at": "2026-07-07T16:57:23.222Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783443439382_uzb7",
+      "at": "2026-07-07T16:57:19.382Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783443435793_s60n",
+      "at": "2026-07-07T16:57:15.793Z",
+      "skipped": true,
+      "skipReason": "missing_uf_context",
+      "playerName": "Dk Kalu",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783438281116_ddiz",
+      "at": "2026-07-07T15:31:21.116Z",
+      "pass": true,
+      "playerName": "Ryan Drakeford",
+      "playerSlug": "ryan-drakeford",
+      "eventType": "recruiting",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "On3",
+          "snippet": "NEW: Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp.",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Intel DB",
+          "snippet": "NEW: Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp.",
+          "url": null
+        },
+        {
+          "id": "intel:unofficial_visit",
+          "label": "auto:beat-writer",
+          "snippet": "NEW: Florida made a big impression on 2028 safety Ryan Drakeford during his first trip to The Swamp👀 \"Florida is one of those schools at the top of my board.\" ",
+          "url": null
+        },
+        {
+          "id": "intel:target_update",
+          "label": "auto:on3-team-news",
+          "snippet": "First visit to Florida moved the needle with 3-star S Ryan Drakeford.",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Chad Simmons",
+          "snippet": "South Carolina kept one of the state's top offensive linemen home.   Four-star Nate Carson, the No. 221 prospect in the ",
+          "url": null
+        },
+        {
+          "id": "on3",
+          "label": "On3",
+          "snippet": "Natl #335",
+          "url": null
+        }
+      ],
+      "finalCaption": "2028 S Ryan Drakeford · 3★ · On3 No. 335 natl · No. 34 S · No. 11 MD\nDrakeford's first trip to The Swamp gave Florida early traction — and he left with the Gators on his board early Penn State and Maryland lead his RPM board, but UF is clearly in the picture after that first look.\ngatorvaultinsider.com/vault/futurecast/player/ryan-drakeford",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783438279760_5syf",
+      "at": "2026-07-07T15:31:19.760Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Zylen Little",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783437742520_s5gs",
+      "at": "2026-07-07T15:22:22.520Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Zylen Little",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783388782006_i6zb",
+      "at": "2026-07-07T01:46:22.006Z",
+      "skipped": true,
+      "skipReason": "commit_elite_qa",
+      "playerName": "Kamauri Whitfield",
+      "eventType": "commit",
+      "voiceEngine": false
+    },
+    {
+      "id": "elite_1783388781467_p4id",
+      "at": "2026-07-07T01:46:21.467Z",
+      "skipped": true,
+      "skipReason": "commit_elite_qa",
+      "playerName": "Kamauri Whitfield",
+      "eventType": "commit",
+      "voiceEngine": false
+    },
+    {
+      "id": "elite_1783371245866_psml",
+      "at": "2026-07-06T20:54:05.866Z",
+      "skipped": true,
+      "skipReason": "commit_elite_qa",
+      "playerName": "Kamauri Whitfield",
+      "eventType": "commit",
+      "voiceEngine": false
+    },
+    {
+      "id": "elite_1783371245730_i9tj",
+      "at": "2026-07-06T20:54:05.730Z",
+      "skipped": true,
+      "skipReason": "commit_elite_qa",
+      "playerName": "Kamauri Whitfield",
+      "eventType": "commit",
+      "voiceEngine": false
+    },
+    {
+      "id": "elite_1783371068912_awga",
+      "at": "2026-07-06T20:51:08.913Z",
+      "skipped": true,
+      "skipReason": "commit_elite_qa",
+      "playerName": "Kamauri Whitfield",
+      "eventType": "commit",
+      "voiceEngine": false
+    },
+    {
+      "id": "elite_1783370793934_b7ip",
+      "at": "2026-07-06T20:46:33.935Z",
+      "skipped": true,
+      "skipReason": "commit_elite_qa",
+      "playerName": "Kamauri Whitfield",
+      "eventType": "commit",
+      "voiceEngine": false
+    },
+    {
+      "id": "elite_1783368738146_bfrv",
+      "at": "2026-07-06T20:12:18.146Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783361731052_g03k",
+      "at": "2026-07-06T18:15:31.053Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Dion Edwards",
+      "eventType": "offer",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783256330707_a6pz",
+      "at": "2026-07-05T12:58:50.707Z",
+      "skipped": true,
+      "skipReason": "missing_situation",
+      "playerName": "Bryce Willingham",
+      "eventType": "recruiting",
+      "reason": "Missing situation context — post must explain what is happening (visit, offer, portal, etc.)."
+    },
+    {
+      "id": "elite_1783256314156_tsov",
+      "at": "2026-07-05T12:58:34.157Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Bryce Willingham",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783255793946_h5y9",
+      "at": "2026-07-05T12:49:53.946Z",
+      "pass": true,
+      "playerName": "Man Robinson",
+      "playerSlug": "man-robinson",
+      "eventType": "target_update",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Man Robinson says Florida has all three of their DB coaches texting him — and after his first visit to Gainesville, the Gators cracked his early leaderboard.",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Intel DB",
+          "snippet": "Man Robinson says Florida has all three of their DB coaches texting him — and after his first visit to Gainesville, the Gators cracked his early leaderboard.",
+          "url": null
+        },
+        {
+          "id": "intel:target_update",
+          "label": "auto:beat-writer",
+          "snippet": "NEW: Man Robinson says Florida has \"all three\" of their DB coaches texting him — and after his first visit to Gainesville, the Gators just cracked his early lea",
+          "url": null
+        },
+        {
+          "id": "intel:target_update",
+          "label": "auto:detectives-beat",
+          "snippet": "NEW: Man Robinson says Florida has \"all three\" of their DB coaches texting him — and after his first visit to Gainesville, the Gators just cracked his early lea",
+          "url": null
+        },
+        {
+          "id": "intel:target_update",
+          "label": "auto:beat-writer",
+          "snippet": "NEW: Man Robinson says Florida has \"all three\" of their DB coaches texting him — and after his first visit to Gainesville, the Gators just cracked his early lea",
+          "url": null
+        },
+        {
+          "id": "intel:target_update",
+          "label": "auto:beat-writer",
+          "snippet": "NEW: Man Robinson says Florida has \"all three\" of their DB coaches texting him — and after his first visit to Gainesville, the Gators just cracked his early lea",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Chad Simmons",
+          "snippet": "Miami continues to make a strong push for four-star cornerback Man Robinson, and after another trip to Coral Gables, the",
+          "url": null
+        },
+        {
+          "id": "on3",
+          "label": "On3",
+          "snippet": "Natl #363",
+          "url": null
+        }
+      ],
+      "finalCaption": "2028 CB Man Robinson · 3★ · On3 No. 363 natl · No. 40 CB · No. 51 FL\nRobinson's first trip to Gainesville gave Florida a clean early look, and all three DB coaches on UF's staff have been in contact — that's the signal here. Purdue leads his RPM board, but Florida is second at 20% — and the staff attention is real.\ngatorvaultinsider.com/vault/futurecast/player/man-robinson",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783255167595_6tzn",
+      "at": "2026-07-05T12:39:27.595Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Bryce Willingham",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783255132506_tbh8",
+      "at": "2026-07-05T12:38:52.506Z",
+      "skipped": true,
+      "skipReason": "banned_phrases",
+      "playerName": "Bryce Willingham",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783220448293_haus",
+      "at": "2026-07-05T03:00:48.293Z",
+      "skipped": true,
+      "skipReason": "voice_required_no_legacy_fallback",
+      "playerName": "Ryan Drakeford",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783220448279_m5q1",
+      "at": "2026-07-05T03:00:48.279Z",
+      "pass": false,
+      "skipReason": "voice_qa",
+      "playerName": "Ryan Drakeford",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783220446884_wkr4",
+      "at": "2026-07-05T03:00:46.884Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Zylen Little",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783220446754_p0c3",
+      "at": "2026-07-05T03:00:46.754Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783181466363_6woq",
+      "at": "2026-07-04T16:11:06.363Z",
+      "skipped": true,
+      "skipReason": "missing_situation",
+      "playerName": "Armani Strong",
+      "eventType": "target_update",
+      "reason": "Missing situation context — post must explain what is happening (visit, offer, portal, etc.)."
+    },
+    {
+      "id": "elite_1783181466286_g297",
+      "at": "2026-07-04T16:11:06.286Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Chancellor Campbell",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783181426499_m6gu",
+      "at": "2026-07-04T16:10:26.499Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Javarii Luckas",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783181277527_7c65",
+      "at": "2026-07-04T16:07:57.528Z",
+      "skipped": true,
+      "skipReason": "char_limit",
+      "playerName": "Desmond Green",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783181065601_6fym",
+      "at": "2026-07-04T16:04:25.602Z",
+      "skipped": true,
+      "skipReason": "missing_situation",
+      "playerName": "Chancellor Campbell",
+      "eventType": "target_update",
+      "reason": "Missing situation context — post must explain what is happening (visit, offer, portal, etc.)."
+    },
+    {
+      "id": "elite_1783181034061_l5th",
+      "at": "2026-07-04T16:03:54.061Z",
+      "skipped": true,
+      "skipReason": "voice_required_no_legacy_fallback",
+      "playerName": "Man Robinson",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783181034011_htup",
+      "at": "2026-07-04T16:03:54.011Z",
+      "pass": false,
+      "skipReason": "voice_qa",
+      "playerName": "Man Robinson",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783181021079_hk2b",
+      "at": "2026-07-04T16:03:41.079Z",
+      "skipped": true,
+      "skipReason": "voice_required_no_legacy_fallback",
+      "playerName": "Bryce Willingham",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783181021030_ofa2",
+      "at": "2026-07-04T16:03:41.030Z",
+      "pass": false,
+      "skipReason": "voice_qa",
+      "playerName": "Bryce Willingham",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783180980601_q1tv",
+      "at": "2026-07-04T16:03:00.601Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Javarii Luckas",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783180630031_lfuv",
+      "at": "2026-07-04T15:57:10.031Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Eric Parks",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783180033512_cz35",
+      "at": "2026-07-04T15:47:13.512Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "FutureCast Lab",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783179935171_uv9i",
+      "at": "2026-07-04T15:45:35.171Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Chancellor Campbell",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783179652283_p8rv",
+      "at": "2026-07-04T15:40:52.283Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Javarii Luckas",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783179518355_3yrh",
+      "at": "2026-07-04T15:38:38.355Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Eric Parks",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783179194151_axjf",
+      "at": "2026-07-04T15:33:14.151Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "FutureCast Lab",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783179080474_7t6v",
+      "at": "2026-07-04T15:31:20.474Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Chancellor Campbell",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783178922808_b5bk",
+      "at": "2026-07-04T15:28:42.808Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Javarii Luckas",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783178604181_hoat",
+      "at": "2026-07-04T15:23:24.181Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Eric Parks",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783178288733_u9zo",
+      "at": "2026-07-04T15:18:08.733Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Chancellor Campbell",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783178220863_y20t",
+      "at": "2026-07-04T15:17:00.863Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Desmond Green",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783178103670_rizj",
+      "at": "2026-07-04T15:15:03.670Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Desmond Green",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783178038090_5m79",
+      "at": "2026-07-04T15:13:58.090Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Desmond Green",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783177917132_fxbr",
+      "at": "2026-07-04T15:11:57.132Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Desmond Green",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783177853236_lo4g",
+      "at": "2026-07-04T15:10:53.236Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Desmond Green",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783177661519_sgco",
+      "at": "2026-07-04T15:07:41.519Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Desmond Green",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783177638642_j20z",
+      "at": "2026-07-04T15:07:18.642Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Javarii Luckas",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783177331514_3ewb",
+      "at": "2026-07-04T15:02:11.514Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Will Griffin",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783177329434_ry12",
+      "at": "2026-07-04T15:02:09.434Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Eric Parks",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176953546_9ood",
+      "at": "2026-07-04T14:55:53.546Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Will Griffin",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176933437_l5es",
+      "at": "2026-07-04T14:55:33.437Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Desmond Green",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176892421_xx37",
+      "at": "2026-07-04T14:54:52.421Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Will Griffin",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176795073_8uyn",
+      "at": "2026-07-04T14:53:15.073Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Armani Strong",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176790336_d2c2",
+      "at": "2026-07-04T14:53:10.336Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Will Griffin",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176698994_6ad0",
+      "at": "2026-07-04T14:51:38.994Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Armani Strong",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176365649_zur5",
+      "at": "2026-07-04T14:46:05.649Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "FutureCast Lab",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176359576_eint",
+      "at": "2026-07-04T14:45:59.576Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "FutureCast Lab",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176355293_g5ll",
+      "at": "2026-07-04T14:45:55.293Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Armani Strong",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176337737_v9lu",
+      "at": "2026-07-04T14:45:37.737Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Will Griffin",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176311718_7gzb",
+      "at": "2026-07-04T14:45:11.718Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Will Griffin",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176250394_iqi0",
+      "at": "2026-07-04T14:44:10.394Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Summer Camp Preview",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176250356_1sov",
+      "at": "2026-07-04T14:44:10.356Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "War Room",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176250317_94to",
+      "at": "2026-07-04T14:44:10.317Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Aaron Philo Film",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176250276_xr04",
+      "at": "2026-07-04T14:44:10.276Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Real Assessment Six",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176250215_tzk9",
+      "at": "2026-07-04T14:44:10.215Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Scheme Changes Everything",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176162703_uu21",
+      "at": "2026-07-04T14:42:42.703Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Armani Strong",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783176030029_vns7",
+      "at": "2026-07-04T14:40:30.029Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Armani Strong",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175991626_zvi5",
+      "at": "2026-07-04T14:39:51.626Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Aaron Philo Film",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175991593_w2z8",
+      "at": "2026-07-04T14:39:51.593Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Aaron Philo Film",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175991558_8k7j",
+      "at": "2026-07-04T14:39:51.558Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Scheme Changes Everything",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175991522_gfrl",
+      "at": "2026-07-04T14:39:51.522Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Scheme Changes Everything",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175991489_pkju",
+      "at": "2026-07-04T14:39:51.489Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Real Assessment Six",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175991456_wver",
+      "at": "2026-07-04T14:39:51.456Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Real Assessment Six",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175991421_2kr9",
+      "at": "2026-07-04T14:39:51.421Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "War Room",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175991388_j28a",
+      "at": "2026-07-04T14:39:51.388Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "War Room",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175991355_i4g5",
+      "at": "2026-07-04T14:39:51.355Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Summer Camp Preview",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175991317_o8cf",
+      "at": "2026-07-04T14:39:51.317Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Summer Camp Preview",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175991087_mxet",
+      "at": "2026-07-04T14:39:51.088Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Chancellor Campbell",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175826788_9mmm",
+      "at": "2026-07-04T14:37:06.788Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Armani Strong",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175796291_c984",
+      "at": "2026-07-04T14:36:36.292Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Desmond Green",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175773321_eukv",
+      "at": "2026-07-04T14:36:13.321Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Armani Strong",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175712621_xjji",
+      "at": "2026-07-04T14:35:12.621Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Javarii Luckas",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175674729_ylwg",
+      "at": "2026-07-04T14:34:34.729Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Eric Parks",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175633898_16t1",
+      "at": "2026-07-04T14:33:53.898Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Armani Strong",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175611218_pbkd",
+      "at": "2026-07-04T14:33:31.218Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Will Griffin",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175595493_w8jl",
+      "at": "2026-07-04T14:33:15.493Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "FutureCast Lab",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175595115_4km6",
+      "at": "2026-07-04T14:33:15.115Z",
+      "skipped": true,
+      "skipReason": "missing_timestamp",
+      "playerName": "Will Griffin",
+      "eventType": "recruiting",
+      "reason": "Intel timestamp required."
+    },
+    {
+      "id": "elite_1783175230398_1f64",
+      "at": "2026-07-04T14:27:10.399Z",
+      "skipped": true,
+      "skipReason": "stale_intel",
+      "playerName": "Chancellor Campbell",
+      "eventType": "commit",
+      "reason": "Stale intel — source is 35628m old (max 30240m)."
+    },
+    {
+      "id": "elite_1783175230376_ohwk",
+      "at": "2026-07-04T14:27:10.376Z",
+      "skipped": true,
+      "skipReason": "stale_intel",
+      "playerName": "Desmond Green",
+      "eventType": "commit",
+      "reason": "Stale intel — source is 35628m old (max 30240m)."
+    },
+    {
+      "id": "elite_1783175230354_rq60",
+      "at": "2026-07-04T14:27:10.354Z",
+      "skipped": true,
+      "skipReason": "stale_intel",
+      "playerName": "Javarii Luckas",
+      "eventType": "commit",
+      "reason": "Stale intel — source is 35628m old (max 30240m)."
+    },
+    {
+      "id": "elite_1783175230330_aupm",
+      "at": "2026-07-04T14:27:10.330Z",
+      "skipped": true,
+      "skipReason": "stale_intel",
+      "playerName": "Eric Parks",
+      "eventType": "commit",
+      "reason": "Stale intel — source is 35628m old (max 30240m)."
+    },
+    {
+      "id": "elite_1783175230296_xb69",
+      "at": "2026-07-04T14:27:10.296Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Armani Strong",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783175219782_6lvl",
+      "at": "2026-07-04T14:26:59.782Z",
+      "skipped": true,
+      "skipReason": "voice_required_no_legacy_fallback",
+      "playerName": "Man Robinson",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783175219762_euyx",
+      "at": "2026-07-04T14:26:59.762Z",
+      "pass": false,
+      "skipReason": "voice_qa",
+      "playerName": "Man Robinson",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783175160279_zvv2",
+      "at": "2026-07-04T14:26:00.279Z",
+      "skipped": true,
+      "skipReason": "voice_required_no_legacy_fallback",
+      "playerName": "Bryce Willingham",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783175160256_i7pr",
+      "at": "2026-07-04T14:26:00.256Z",
+      "pass": false,
+      "skipReason": "voice_qa",
+      "playerName": "Bryce Willingham",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783175133587_bhjd",
+      "at": "2026-07-04T14:25:33.587Z",
+      "skipped": true,
+      "skipReason": "voice_required_no_legacy_fallback",
+      "playerName": "Man Robinson",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783175133566_xtb7",
+      "at": "2026-07-04T14:25:33.566Z",
+      "pass": false,
+      "skipReason": "voice_qa",
+      "playerName": "Man Robinson",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783175102806_i98w",
+      "at": "2026-07-04T14:25:02.806Z",
+      "skipped": true,
+      "skipReason": "voice_required_no_legacy_fallback",
+      "playerName": "Bryce Willingham",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783175102729_ilhn",
+      "at": "2026-07-04T14:25:02.730Z",
+      "pass": false,
+      "skipReason": "voice_qa",
+      "playerName": "Bryce Willingham",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783175073360_cdw7",
+      "at": "2026-07-04T14:24:33.360Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Transformational Step Toward",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: class"
+    },
+    {
+      "id": "elite_1783174982270_l71v",
+      "at": "2026-07-04T14:23:02.270Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Transformational Step Toward",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: class"
+    },
+    {
+      "id": "elite_1783174894390_6mfw",
+      "at": "2026-07-04T14:21:34.390Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Transformational Step Toward",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: class"
+    },
+    {
+      "id": "elite_1783174808513_4vng",
+      "at": "2026-07-04T14:20:08.513Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Transformational Step Toward",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: class"
+    },
+    {
+      "id": "elite_1783174714917_9vdq",
+      "at": "2026-07-04T14:18:34.917Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Transformational Step Toward",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: class"
+    },
+    {
+      "id": "elite_1783174622978_mgn6",
+      "at": "2026-07-04T14:17:02.978Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Transformational Step Toward",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: class"
+    },
+    {
+      "id": "elite_1783174531197_ad2m",
+      "at": "2026-07-04T14:15:31.197Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Transformational Step Toward",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: class"
+    },
+    {
+      "id": "elite_1783174425790_lvtd",
+      "at": "2026-07-04T14:13:45.791Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Transformational Step Toward",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: class"
+    },
+    {
+      "id": "elite_1783174075714_09io",
+      "at": "2026-07-04T14:07:55.715Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783173979873_waqp",
+      "at": "2026-07-04T14:06:19.873Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783173891398_sqj5",
+      "at": "2026-07-04T14:04:51.398Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783173798503_frsw",
+      "at": "2026-07-04T14:03:18.503Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783173706146_vd9b",
+      "at": "2026-07-04T14:01:46.146Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783173622065_bymj",
+      "at": "2026-07-04T14:00:22.065Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783173534939_16cu",
+      "at": "2026-07-04T13:58:54.939Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783173404178_ugsa",
+      "at": "2026-07-04T13:56:44.178Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783136289618_hhec",
+      "at": "2026-07-04T03:38:09.618Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Ryan Drakeford",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783136288396_rva9",
+      "at": "2026-07-04T03:38:08.396Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Zylen Little",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783135219489_ki0i",
+      "at": "2026-07-04T03:20:19.489Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Ryan Drakeford",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783135218855_m6ro",
+      "at": "2026-07-04T03:20:18.855Z",
+      "pass": true,
+      "playerName": "Zylen Little",
+      "playerSlug": "zylen-little",
+      "eventType": "recruiting",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "On3",
+          "snippet": "Zylen Little (2027 EDGE) has been on campus multiple times this spring. Florida is firmly in the mix.",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Intel DB",
+          "snippet": "Zylen Little (2027 EDGE) has been on campus multiple times this spring. Florida is firmly in the mix.",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Corey Bender",
+          "snippet": "The Florida Gators are set to get another chance to make an impression on one of the state's top 2028 defensive linemen.",
+          "url": null
+        }
+      ],
+      "finalCaption": "Zylen Little Zylen Little (2027 EDGE) has been on campus multiple times this spring.\nGainesville activity matters here — visit timing tracks with UF board momentum.\nUF is using live campus time to test fit — the visit.\ngatorvaultinsider.com/vault/futurecast/player/zylen-little",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783130081148_f6nf",
+      "at": "2026-07-04T01:54:41.148Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Ryan Drakeford",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783130080216_7h9j",
+      "at": "2026-07-04T01:54:40.216Z",
+      "pass": true,
+      "playerName": "Zylen Little",
+      "playerSlug": "zylen-little",
+      "eventType": "recruiting",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "On3",
+          "snippet": "Zylen Little (2027 EDGE) has been on campus multiple times this spring. Florida is firmly in the mix.",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Intel DB",
+          "snippet": "Zylen Little (2027 EDGE) has been on campus multiple times this spring. Florida is firmly in the mix.",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Corey Bender",
+          "snippet": "The Florida Gators are set to get another chance to make an impression on one of the state's top 2028 defensive linemen.",
+          "url": null
+        }
+      ],
+      "finalCaption": "Zylen Little Zylen Little (2027 EDGE) has been on campus multiple times this spring.\nGainesville activity matters here — visit timing tracks with UF board momentum.\nUF is using live campus time to test fit — the visit.\ngatorvaultinsider.com/vault/futurecast/player/zylen-little",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783128981004_qb2j",
+      "at": "2026-07-04T01:36:21.004Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Ryan Drakeford",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783128980565_abva",
+      "at": "2026-07-04T01:36:20.565Z",
+      "pass": true,
+      "playerName": "Zylen Little",
+      "playerSlug": "zylen-little",
+      "eventType": "recruiting",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "On3",
+          "snippet": "Zylen Little (2027 EDGE) has been on campus multiple times this spring. Florida is firmly in the mix.",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Intel DB",
+          "snippet": "Zylen Little (2027 EDGE) has been on campus multiple times this spring. Florida is firmly in the mix.",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Corey Bender",
+          "snippet": "The Florida Gators are set to get another chance to make an impression on one of the state's top 2028 defensive linemen.",
+          "url": null
+        }
+      ],
+      "finalCaption": "Zylen Little Zylen Little (2027 EDGE) has been on campus multiple times this spring.\nGainesville activity matters here — visit timing tracks with UF board momentum.\nUF is using live campus time to test fit — the visit.\ngatorvaultinsider.com/vault/futurecast/player/zylen-little",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783128980250_38rd",
+      "at": "2026-07-04T01:36:20.250Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Ryan Drakeford",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783128957589_xoec",
+      "at": "2026-07-04T01:35:57.589Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Ryan Drakeford",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783128183492_zne9",
+      "at": "2026-07-04T01:23:03.492Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Ryan Drakeford",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783128183053_ucy8",
+      "at": "2026-07-04T01:23:03.053Z",
+      "pass": true,
+      "playerName": "Zylen Little",
+      "playerSlug": "zylen-little",
+      "eventType": "recruiting",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "On3",
+          "snippet": "Zylen Little (2027 EDGE) has been on campus multiple times this spring. Florida is firmly in the mix.",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Intel DB",
+          "snippet": "Zylen Little (2027 EDGE) has been on campus multiple times this spring. Florida is firmly in the mix.",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Corey Bender",
+          "snippet": "The Florida Gators are set to get another chance to make an impression on one of the state's top 2028 defensive linemen.",
+          "url": null
+        }
+      ],
+      "finalCaption": "Zylen Little Zylen Little (2027 EDGE) has been on campus multiple times this spring.\nGainesville activity matters here — visit timing tracks with UF board momentum.\nUF is using live campus time to test fit — the visit.\ngatorvaultinsider.com/vault/futurecast/player/zylen-little",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783128149156_4i3r",
+      "at": "2026-07-04T01:22:29.156Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Ryan Drakeford",
+      "eventType": "recruiting",
+      "reason": "Missing identity fields: position"
+    },
+    {
+      "id": "elite_1783128148233_hhpj",
+      "at": "2026-07-04T01:22:28.234Z",
+      "pass": true,
+      "playerName": "Zylen Little",
+      "playerSlug": "zylen-little",
+      "eventType": "recruiting",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "On3",
+          "snippet": "Zylen Little (2027 EDGE) has been on campus multiple times this spring. Florida is firmly in the mix.",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Intel DB",
+          "snippet": "Zylen Little (2027 EDGE) has been on campus multiple times this spring. Florida is firmly in the mix.",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Corey Bender",
+          "snippet": "The Florida Gators are set to get another chance to make an impression on one of the state's top 2028 defensive linemen.",
+          "url": null
+        }
+      ],
+      "finalCaption": "Zylen Little Zylen Little (2027 EDGE) has been on campus multiple times this spring.\nGainesville activity matters here — visit timing tracks with UF board momentum.\nUF is using live campus time to test fit — the visit.\ngatorvaultinsider.com/vault/futurecast/player/zylen-little",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783112060473_p92w",
+      "at": "2026-07-03T20:54:20.473Z",
+      "skipped": true,
+      "skipReason": "voice_required_no_legacy_fallback",
+      "playerName": "Zylen Little",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783112060441_8w97",
+      "at": "2026-07-03T20:54:20.441Z",
+      "pass": false,
+      "skipReason": "invalid_hook",
+      "playerName": "Zylen Little",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783101731129_0u6h",
+      "at": "2026-07-03T18:02:11.129Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Zylen Little",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783101687837_9zu4",
+      "at": "2026-07-03T18:01:27.837Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Zylen Little",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783101605305_z8ld",
+      "at": "2026-07-03T18:00:05.305Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Zylen Little",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783084728839_udi9",
+      "at": "2026-07-03T13:18:48.839Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff contact has picked up as UF pushes in this cycle.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff contact has picked up as UF pushes in this cycle.\ngatorvaultinsider.com/vault/futurecast/player/tory-clark#visits"
+    },
+    {
+      "id": "elite_1783084728820_2qga",
+      "at": "2026-07-03T13:18:48.820Z",
+      "pass": false,
+      "skipReason": "invalid_hook",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783084644367_le8a",
+      "at": "2026-07-03T13:17:24.367Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff contact has picked up as UF pushes in this cycle.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff contact has picked up as UF pushes in this cycle.\ngatorvaultinsider.com/vault/futurecast/player/tory-clark#visits"
+    },
+    {
+      "id": "elite_1783084644334_fl1e",
+      "at": "2026-07-03T13:17:24.334Z",
+      "pass": false,
+      "skipReason": "invalid_hook",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783084624626_c420",
+      "at": "2026-07-03T13:17:04.626Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff contact has picked up as UF pushes in this cycle.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff contact has picked up as UF pushes in this cycle.\ngatorvaultinsider.com/vault/futurecast/player/tory-clark#visits"
+    },
+    {
+      "id": "elite_1783084624604_767w",
+      "at": "2026-07-03T13:17:04.604Z",
+      "skipped": false,
+      "skipReason": "voice_engine_error",
+      "playerName": "Tory Clark",
+      "error": "Unexpected token '}'"
+    },
+    {
+      "id": "elite_1783084526566_661q",
+      "at": "2026-07-03T13:15:26.566Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff contact has picked up as UF pushes in this cycle.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff contact has picked up as UF pushes in this cycle.\ngatorvaultinsider.com/vault/futurecast/player/tory-clark#visits"
+    },
+    {
+      "id": "elite_1783084526547_zkxl",
+      "at": "2026-07-03T13:15:26.547Z",
+      "pass": false,
+      "skipReason": "invalid_hook",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783084453671_9iif",
+      "at": "2026-07-03T13:14:13.671Z",
+      "skipped": true,
+      "skipReason": "strategy_data_missing",
+      "playerName": "Tory Clark",
+      "voiceEngine": true
+    },
+    {
+      "id": "elite_1783082258438_x8ha",
+      "at": "2026-07-03T12:37:38.438Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff contact has picked up as UF pushes in this cycle.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff contact has picked up as UF pushes in this cycle.\ngatorvaultinsider.com/vault/futurecast/player/tory-clark#visits"
+    },
+    {
+      "id": "elite_1783082241480_imay",
+      "at": "2026-07-03T12:37:21.480Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff contact has picked up as UF pushes in this cycle.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff contact has picked up as UF pushes in this cycle.\ngatorvaultinsider.com/vault/futurecast/player/tory-clark#visits"
+    },
+    {
+      "id": "elite_1783077299875_4ri4",
+      "at": "2026-07-03T11:14:59.875Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff face time at camp visits is building real momentum behind the scenes.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real.\ngatorvaultinsider.com/vault/futurecast/player/tory-clark"
+    },
+    {
+      "id": "elite_1783050969422_rjdy",
+      "at": "2026-07-03T03:56:09.422Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff face time at camp visits is building real momentum behind the scenes.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real.\ngatorvaultinsider.com/vault/futurecast/player/tory-clark"
+    },
+    {
+      "id": "elite_1783050930531_4349",
+      "at": "2026-07-03T03:55:30.531Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff face time at camp visits is building real momentum behind the scenes.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real.\ngatorvaultinsider.com/vault/futurecast/player/tory-clark"
+    },
+    {
+      "id": "elite_1783050929863_x5tp",
+      "at": "2026-07-03T03:55:29.863Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff face time at camp visits is building real momentum behind the scenes.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real.\ngatorvaultinsider.com/vault/futurecast/player/tory-clark"
+    },
+    {
+      "id": "elite_1783050814739_3qab",
+      "at": "2026-07-03T03:53:34.739Z",
+      "pass": false,
+      "skipReason": "recruiting_qa",
+      "playerName": "Tory Clark",
+      "eventType": "unofficial_visit",
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real momentum behind the scenes."
+    },
+    {
+      "id": "elite_1783050814722_gg1o",
+      "at": "2026-07-03T03:53:34.722Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff face time at camp visits is building real momentum behind the scenes.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real momentum behind the scenes."
+    },
+    {
+      "id": "elite_1783050753295_k60z",
+      "at": "2026-07-03T03:52:33.295Z",
+      "pass": false,
+      "skipReason": "recruiting_qa",
+      "playerName": "Tory Clark",
+      "eventType": "unofficial_visit",
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real momentum behind the scenes."
+    },
+    {
+      "id": "elite_1783050753277_vuvb",
+      "at": "2026-07-03T03:52:33.277Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19.",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19.",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff face time at camp visits is building real momentum behind the scenes.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real momentum behind the scenes."
+    },
+    {
+      "id": "elite_1783050722856_35eh",
+      "at": "2026-07-03T03:52:02.856Z",
+      "pass": false,
+      "skipReason": "recruiting_qa",
+      "playerName": "Tory Clark",
+      "eventType": "unofficial_visit",
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real momentum behind the scenes."
+    },
+    {
+      "id": "elite_1783050722843_4cz7",
+      "at": "2026-07-03T03:52:02.843Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff face time at camp visits is building real momentum behind the scenes.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real momentum behind the scenes."
+    },
+    {
+      "id": "elite_1783050705284_6bxy",
+      "at": "2026-07-03T03:51:45.284Z",
+      "pass": false,
+      "skipReason": "recruiting_qa",
+      "playerName": "Tory Clark",
+      "eventType": "unofficial_visit",
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real momentum behind the scenes."
+    },
+    {
+      "id": "elite_1783050705267_blwt",
+      "at": "2026-07-03T03:51:45.267Z",
+      "pass": true,
+      "playerName": "Tory Clark",
+      "playerSlug": "tory-clark",
+      "eventType": "unofficial_visit",
+      "eventTypeConfidence": 88,
+      "ufPosition": "tracking",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "Tyler Harden",
+          "snippet": "Woodward Academy (GA) 2028 DL Tory Clark was in the Swamp for Friday Night Lights on June 19. Along with the connections he made with the Gators, he also has a ",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "intel"
+      },
+      "templateBlocks": {
+        "identity": "2028 DL Tory Clark (Woodward Academy)",
+        "context": "UF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.",
+        "insider": "Staff face time at camp visits is building real momentum behind the scenes.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2028 DL Tory Clark (Woodward Academy)\nUF coaches used FNL to get another long look at Tory (Woodward Academy) — extended time with staff in Gainesville.\nStaff face time at camp visits is building real momentum behind the scenes."
+    },
+    {
+      "id": "elite_1783050668550_lsm4",
+      "at": "2026-07-03T03:51:08.550Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Tory Clark",
+      "eventType": "unofficial_visit",
+      "reason": "Missing identity fields: name"
+    },
+    {
+      "id": "elite_1783050634077_lnfx",
+      "at": "2026-07-03T03:50:34.077Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Tory Clark",
+      "eventType": "unofficial_visit",
+      "reason": "Missing identity fields: name, position, class"
+    },
+    {
+      "id": "elite_1783050573515_lc09",
+      "at": "2026-07-03T03:49:33.515Z",
+      "skipped": true,
+      "skipReason": "stale_intel",
+      "playerName": "Tory Clark",
+      "eventType": "unofficial_visit",
+      "reason": "Stale intel — source is 19310m old (max 10080m)."
+    },
+    {
+      "id": "elite_1783050432002_5oen",
+      "at": "2026-07-03T03:47:12.002Z",
+      "pass": false,
+      "skipReason": "recruiting_qa",
+      "playerName": "Marquis Evans",
+      "eventType": "offer",
+      "finalCaption": "2027 EDGE Marquis Evans (Spain Park, AL)\nFlorida extends an offer to Marquis (EDGE).\nStaff sees a scheme fit and moved with the offer."
+    },
+    {
+      "id": "elite_1783050431995_il11",
+      "at": "2026-07-03T03:47:11.995Z",
+      "pass": true,
+      "playerName": "Marquis Evans",
+      "playerSlug": "marquis-evans",
+      "eventType": "offer",
+      "eventTypeConfidence": 90,
+      "ufPosition": "offered",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "NEW: Marquis Evans sets commitment date — and details why Florida's visit surprised him the most",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "GatorsOnline",
+          "snippet": "NEW: Marquis Evans sets commitment date — and details why Florida's visit surprised him the most",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Corey Bender",
+          "snippet": "Florida gave itself a chance with several top targets during official visit season, but that does not mean every recruit",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "newsEvent"
+      },
+      "templateBlocks": {
+        "identity": "2027 EDGE Marquis Evans (Spain Park, AL)",
+        "context": "Florida extends an offer to Marquis (EDGE).",
+        "insider": "Staff sees a scheme fit and moved with the offer.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2027 EDGE Marquis Evans (Spain Park, AL)\nFlorida extends an offer to Marquis (EDGE).\nStaff sees a scheme fit and moved with the offer."
+    },
+    {
+      "id": "elite_1783050430236_h746",
+      "at": "2026-07-03T03:47:10.236Z",
+      "pass": false,
+      "skipReason": "recruiting_qa",
+      "playerName": "Marquis Evans",
+      "eventType": "offer",
+      "finalCaption": "2027 EDGE Marquis Evans (Spain Park, AL)\nFlorida extends an offer to Marquis (EDGE).\nStaff sees a scheme fit and moved with the offer."
+    },
+    {
+      "id": "elite_1783050430226_3peb",
+      "at": "2026-07-03T03:47:10.226Z",
+      "pass": true,
+      "playerName": "Marquis Evans",
+      "playerSlug": "marquis-evans",
+      "eventType": "offer",
+      "eventTypeConfidence": 90,
+      "ufPosition": "offered",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "NEW: Marquis Evans sets commitment date — and details why Florida's visit surprised him the most",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "GatorsOnline",
+          "snippet": "NEW: Marquis Evans sets commitment date — and details why Florida's visit surprised him the most",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Corey Bender",
+          "snippet": "Florida gave itself a chance with several top targets during official visit season, but that does not mean every recruit",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "newsEvent"
+      },
+      "templateBlocks": {
+        "identity": "2027 EDGE Marquis Evans (Spain Park, AL)",
+        "context": "Florida extends an offer to Marquis (EDGE).",
+        "insider": "Staff sees a scheme fit and moved with the offer.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2027 EDGE Marquis Evans (Spain Park, AL)\nFlorida extends an offer to Marquis (EDGE).\nStaff sees a scheme fit and moved with the offer."
+    },
+    {
+      "id": "elite_1783050430164_1z8a",
+      "at": "2026-07-03T03:47:10.164Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Tory Clark",
+      "eventType": "unofficial_visit",
+      "reason": "Missing identity fields: name, position, class"
+    },
+    {
+      "id": "elite_1783050429587_9fzn",
+      "at": "2026-07-03T03:47:09.587Z",
+      "skipped": true,
+      "skipReason": "missing_identity_fields",
+      "playerName": "Tory Clark",
+      "eventType": "unofficial_visit",
+      "reason": "Missing identity fields: name, position, class"
+    },
+    {
+      "id": "elite_1783050412451_hixi",
+      "at": "2026-07-03T03:46:52.451Z",
+      "pass": false,
+      "skipReason": "recruiting_qa",
+      "playerName": "Marquis Evans",
+      "eventType": "offer",
+      "finalCaption": "2027 EDGE Marquis Evans (Spain Park, AL)\nFlorida extends an offer to Marquis (EDGE).\nStaff sees a scheme fit and moved with the offer."
+    },
+    {
+      "id": "elite_1783050412444_j873",
+      "at": "2026-07-03T03:46:52.444Z",
+      "pass": true,
+      "playerName": "Marquis Evans",
+      "playerSlug": "marquis-evans",
+      "eventType": "offer",
+      "eventTypeConfidence": 90,
+      "ufPosition": "offered",
+      "sourcesUsed": [
+        {
+          "id": "beat",
+          "label": "Beat writer",
+          "snippet": "NEW: Marquis Evans sets commitment date — and details why Florida's visit surprised him the most",
+          "url": null
+        },
+        {
+          "id": "intel",
+          "label": "GatorsOnline",
+          "snippet": "NEW: Marquis Evans sets commitment date — and details why Florida's visit surprised him the most",
+          "url": null
+        },
+        {
+          "id": "scouting",
+          "label": "Corey Bender",
+          "snippet": "Florida gave itself a chance with several top targets during official visit season, but that does not mean every recruit",
+          "url": null
+        }
+      ],
+      "context": {
+        "topSchools": [],
+        "timing": {
+          "articleAgeDays": null,
+          "latestIntelDays": null,
+          "visitWindow": null
+        },
+        "eventTypeSource": "newsEvent"
+      },
+      "templateBlocks": {
+        "identity": "2027 EDGE Marquis Evans (Spain Park, AL)",
+        "context": "Florida extends an offer to Marquis (EDGE).",
+        "insider": "Staff sees a scheme fit and moved with the offer.",
+        "heatHeader": null,
+        "heatExplanation": null,
+        "confidenceHeader": null,
+        "confidenceExplanation": null
+      },
+      "finalCaption": "2027 EDGE Marquis Evans (Spain Park, AL)\nFlorida extends an offer to Marquis (EDGE).\nStaff sees a scheme fit and moved with the offer."
+    }
+  ]
+}

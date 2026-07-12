@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "swamp-1930",
+      "month": 11,
+      "day": 4,
+      "headline": "On this day — Ben Hill Griffin Stadium legacy began.",
+      "context": "The Swamp remains one of college football's toughest home environments.",
+      "angle": "history"
+    },
+    {
+      "id": "sec-championship-culture",
+      "month": 12,
+      "day": 7,
+      "headline": "Championship standard — Florida built modern SEC success on roster depth.",
+      "context": "Program history still shapes how recruits view the Gators.",
+      "angle": "history"
+    },
+    {
+      "id": "spring-practice",
+      "month": 3,
+      "day": 15,
+      "headline": "Spring football matters — depth chart intel starts here.",
+      "context": "GatorVault tracks roster movement from spring through fall.",
+      "angle": "program"
+    },
+    {
+      "id": "hof-tradition",
+      "headline": "Florida football Hall of Fame tradition runs deep.",
+      "context": "Legends built this program — the roster keeps writing the next chapter.",
+      "angle": "hall_of_fame"
+    },
+    {
+      "id": "gator-nation",
+      "headline": "Gator Nation spans coast to coast — recruiting footprint is national.",
+      "context": "FutureCast tracks UF probability and movement for every priority target.",
+      "angle": "program"
+    }
+  ]
+}

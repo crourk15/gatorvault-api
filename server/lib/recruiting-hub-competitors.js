@@ -76,6 +76,22 @@ function extractRealCompetitors(player, intelRows = []) {
     );
   }
 
+  // Confirmed On3 RPM board — merge absolute school % (never invent schools).
+  try {
+    const { rpmTopFromOn3TopTeams } = require('./autoposter/rewrite/comp-sourcing');
+    const classYear = Number(player.classYear) || 2028;
+    const topTeams = player.on3TopTeams || player.topTeams || [];
+    if (Array.isArray(topTeams) && topTeams.length) {
+      for (const row of rpmTopFromOn3TopTeams(topTeams, classYear)) {
+        if (row?.school && row.pct != null) {
+          addCompetitor(map, row.school, row.pct, 'flat');
+        }
+      }
+    }
+  } catch {
+    /* optional */
+  }
+
   for (const field of [player.leaderSchool, player.predictionLeader, player.topSchool]) {
     const name = parseLeaderName(field);
     if (name) addCompetitor(map, name, null);
@@ -83,7 +99,8 @@ function extractRealCompetitors(player, intelRows = []) {
 
   const committedElsewhere = extractCommittedElsewhere(player);
   if (committedElsewhere) {
-    addCompetitor(map, committedElsewhere, 75);
+    // Real school only — do not invent a fake RPM %.
+    addCompetitor(map, committedElsewhere, null);
   }
 
   const rivals = player.rivalsLastPrediction;
@@ -101,7 +118,12 @@ function extractRealCompetitors(player, intelRows = []) {
       if (rowSlug !== slug) continue;
 
       if (row.predictionSchool && !isFloridaSchool(row.predictionSchool)) {
-        addCompetitor(map, row.predictionSchool, row.confidencePct, row.movementDelta > 0 ? 'up' : row.movementDelta < 0 ? 'down' : 'flat');
+        addCompetitor(
+          map,
+          row.predictionSchool,
+          row.confidencePct,
+          row.movementDelta > 0 ? 'up' : row.movementDelta < 0 ? 'down' : 'flat'
+        );
       }
       if (row.nextVisitSchool && !isFloridaSchool(row.nextVisitSchool)) {
         addCompetitor(map, row.nextVisitSchool, null);
@@ -119,9 +141,66 @@ function extractRealCompetitors(player, intelRows = []) {
     }
   }
 
-  return [...map.values()]
-    .filter((c) => c.school)
-    .slice(0, 5);
+  const all = [...map.values()].filter((c) => c.school);
+  const scored = all.filter((c) => c.score != null && Number.isFinite(Number(c.score)));
+  // Prefer confirmed RPM rows; fall back to named rivals only when no scores exist.
+  const preferred = scored.length ? scored : all;
+  return preferred.sort((a, b) => Number(b.score ?? -1) - Number(a.score ?? -1)).slice(0, 5);
+}
+
+function resolveStrictUfScore(player, intelRows = []) {
+  if (resolveCommitmentOverride(player)) return null;
+
+  // Confirmed On3 UF RPM first when present.
+  const rpm = parseUfPct(player.ufRpmPct);
+  if (rpm != null && rpm > 0) return rpm;
+
+  const pct = parseUfPct(player.ufProbability);
+  if (pct != null && pct > 0) return pct;
+
+  // Florida row on On3 topTeams board.
+  try {
+    const on3Recruit = require('./on3-recruit-client');
+    const classYear = Number(player.classYear) || 2028;
+    const topTeams = player.on3TopTeams || player.topTeams || [];
+    if (Array.isArray(topTeams) && topTeams.length) {
+      const yearTeams = on3Recruit.getYearTopTeams
+        ? on3Recruit.getYearTopTeams(topTeams, classYear)
+        : topTeams;
+      const ufTeam = yearTeams.find(
+        (t) => on3Recruit.isFloridaTeam?.(t) || isFloridaSchool(t?.team?.name || t?.team?.fullName)
+      );
+      if (ufTeam) {
+        const ufPct = parseUfPct(
+          ufTeam.percent ?? ufTeam.percentage ?? ufTeam.prediction ?? ufTeam.pct
+        );
+        if (ufPct != null && ufPct > 0) return ufPct;
+      }
+    }
+  } catch {
+    /* optional */
+  }
+
+  const rivals = player.rivalsLastPrediction;
+  if (rivals && typeof rivals === 'object') {
+    const school = rivals.school || rivals.schoolName || rivals.name;
+    if (isFloridaSchool(school)) {
+      const conf = parseUfPct(rivals.pct ?? rivals.confidence ?? player.rivalsConfidence);
+      if (conf != null && conf > 0) return conf;
+    }
+  }
+
+  const slug = String(player.slug || '').toLowerCase();
+  for (const row of intelRows) {
+    const rowSlug = String(row.playerSlug || row.player_slug || '').toLowerCase();
+    if (rowSlug !== slug) continue;
+    if (row.predictionSchool && isFloridaSchool(row.predictionSchool) && row.confidencePct != null) {
+      const conf = parseUfPct(row.confidencePct);
+      if (conf != null && conf > 0) return conf;
+    }
+  }
+
+  return null;
 }
 
 function topCompetitorScore(competitors) {
@@ -182,34 +261,6 @@ function hasRealStaffPriority(player) {
       player.secondary_recruiter_id ||
       player.secondaryRecruiterId
   );
-}
-
-function resolveStrictUfScore(player, intelRows = []) {
-  if (resolveCommitmentOverride(player)) return null;
-
-  const pct = parseUfPct(player.ufProbability);
-  if (pct != null && pct > 0) return pct;
-
-  const rivals = player.rivalsLastPrediction;
-  if (rivals && typeof rivals === 'object') {
-    const school = rivals.school || rivals.schoolName || rivals.name;
-    if (isFloridaSchool(school)) {
-      const conf = parseUfPct(rivals.pct ?? rivals.confidence ?? player.rivalsConfidence);
-      if (conf != null && conf > 0) return conf;
-    }
-  }
-
-  const slug = String(player.slug || '').toLowerCase();
-  for (const row of intelRows) {
-    const rowSlug = String(row.playerSlug || row.player_slug || '').toLowerCase();
-    if (rowSlug !== slug) continue;
-    if (row.predictionSchool && isFloridaSchool(row.predictionSchool) && row.confidencePct != null) {
-      const conf = parseUfPct(row.confidencePct);
-      if (conf != null && conf > 0) return conf;
-    }
-  }
-
-  return null;
 }
 
 module.exports = {

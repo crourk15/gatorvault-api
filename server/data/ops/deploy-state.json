@@ -1,95 +1,207 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-27T04:37:28.043Z",
+  "updatedAt": "2026-07-09T01:37:10.368Z",
   "api": {
     "service": "render",
-    "timestamp": "2026-06-21T01:59:20.492Z",
+    "timestamp": "2026-07-04T13:56:08.699Z",
     "commit": null,
     "branch": null,
     "deployId": null,
-    "nodeEnv": "production",
+    "nodeEnv": "development",
     "version": null
   },
   "frontend": {
     "service": "netlify",
-    "timestamp": "2026-06-21T01:59:20.504Z",
-    "commit": "fbfa3d34b4bc6b07f69b98557776c897943befd7",
+    "timestamp": "2026-07-04T13:56:08.701Z",
+    "commit": "d627e9e773e22337ea101656553e11fa5d4814ff",
     "deployId": null,
     "site": "gatorvaultinsider.com",
-    "version": "fbfa3d3",
+    "version": "d627e9e",
     "syncedFromApi": false
   },
   "lastGuardianCheck": {
     "ok": true,
     "phase": "pre",
-    "checkedAt": "2026-06-26T01:59:49.644Z",
+    "checkedAt": "2026-07-09T01:37:10.365Z",
     "errors": []
   },
   "lastFailedCheck": {
     "type": "smoke-test",
-    "at": "2026-06-26T14:27:06.584Z",
+    "at": "2026-06-28T16:29:24.836Z",
     "errors": [
       {
         "label": "api-futurecast-home",
-        "error": "HTTP 404",
+        "error": "HTTP 502",
         "url": "https://gatorvault-api.onrender.com/api/futurecast/home"
       },
       {
         "label": "api-futurecast-staff-notes",
-        "error": "HTTP 404",
+        "error": "HTTP 502",
         "url": "https://gatorvault-api.onrender.com/api/futurecast/staff-notes?year=2027"
       },
       {
         "label": "api-futurecast-high-priority",
-        "error": "HTTP 404",
+        "error": "HTTP 502",
         "url": "https://gatorvault-api.onrender.com/api/futurecast/high-priority?year=2027"
       },
       {
         "label": "api-futurecast-visit-intel",
-        "error": "HTTP 404",
+        "error": "HTTP 502",
         "url": "https://gatorvault-api.onrender.com/api/futurecast/high-priority?year=2027"
       },
       {
+        "label": "api-push-config",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/push/config"
+      },
+      {
+        "label": "site-push-config-proxy",
+        "error": "HTTP 502",
+        "url": "https://gatorvaultinsider.com/api/push/config"
+      },
+      {
         "label": "api-futurecast-health",
-        "error": "HTTP 404",
+        "error": "HTTP 502",
         "url": "https://gatorvault-api.onrender.com/api/futurecast/health"
       },
       {
         "label": "api-big-board",
-        "error": "HTTP 404",
+        "error": "HTTP 502",
         "url": "https://gatorvault-api.onrender.com/api/big-board?class_year=2027&limit=5"
       },
       {
         "label": "api-uf-fit-watchlist",
-        "error": "HTTP 404",
+        "error": "HTTP 502",
         "url": "https://gatorvault-api.onrender.com/api/uf-fit/watchlist?class_year=2027&limit=5"
       },
       {
         "label": "api-early-discovery",
-        "error": "HTTP 404",
+        "error": "HTTP 502",
         "url": "https://gatorvault-api.onrender.com/api/futurecast/early-discovery?class_year_gte=2028&limit=5"
       },
       {
+        "label": "api-early-discovery-allowlist",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/early-discovery?class_year_gte=2028&min_discovery_score=50&limit=100"
+      },
+      {
+        "label": "api-futurecast-high-priority-2028",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/high-priority?year=2028"
+      },
+      {
+        "label": "api-recruiting-board-2028",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/recruiting/board?class=2028"
+      },
+      {
         "label": "api-players-slug-futurecast",
-        "error": "HTTP 404",
+        "error": "HTTP 502",
         "url": "https://gatorvault-api.onrender.com/api/players/slug/raheem-floyd"
       },
       {
         "label": "api-recruits-2027",
-        "error": "HTTP 404",
+        "error": "HTTP 502",
         "url": "https://gatorvault-api.onrender.com/api/recruits/2027"
       },
       {
         "label": "api-futurecast-alerts-uf",
-        "error": "alerts HTTP 404",
+        "error": "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
         "url": "https://gatorvault-api.onrender.com/api/futurecast/alerts"
       }
     ]
   },
   "lastSmokeTest": {
-    "ok": true,
-    "checkedAt": "2026-06-27T04:37:27.999Z",
-    "failed": [],
+    "ok": false,
+    "checkedAt": "2026-06-28T16:29:24.836Z",
+    "failed": [
+      {
+        "label": "api-futurecast-home",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/home"
+      },
+      {
+        "label": "api-futurecast-staff-notes",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/staff-notes?year=2027"
+      },
+      {
+        "label": "api-futurecast-high-priority",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/high-priority?year=2027"
+      },
+      {
+        "label": "api-futurecast-visit-intel",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/high-priority?year=2027"
+      },
+      {
+        "label": "api-push-config",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/push/config"
+      },
+      {
+        "label": "site-push-config-proxy",
+        "error": "HTTP 502",
+        "url": "https://gatorvaultinsider.com/api/push/config"
+      },
+      {
+        "label": "api-futurecast-health",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/health"
+      },
+      {
+        "label": "api-big-board",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/big-board?class_year=2027&limit=5"
+      },
+      {
+        "label": "api-uf-fit-watchlist",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/uf-fit/watchlist?class_year=2027&limit=5"
+      },
+      {
+        "label": "api-early-discovery",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/early-discovery?class_year_gte=2028&limit=5"
+      },
+      {
+        "label": "api-early-discovery-allowlist",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/early-discovery?class_year_gte=2028&min_discovery_score=50&limit=100"
+      },
+      {
+        "label": "api-futurecast-high-priority-2028",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/high-priority?year=2028"
+      },
+      {
+        "label": "api-recruiting-board-2028",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/recruiting/board?class=2028"
+      },
+      {
+        "label": "api-players-slug-futurecast",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/players/slug/raheem-floyd"
+      },
+      {
+        "label": "api-recruits-2027",
+        "error": "HTTP 502",
+        "url": "https://gatorvault-api.onrender.com/api/recruits/2027"
+      },
+      {
+        "label": "api-futurecast-alerts-uf",
+        "error": "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/alerts"
+      }
+    ],
     "site": "https://gatorvaultinsider.com"
+  },
+  "lastHealthRecompute": {
+    "at": "2026-07-08T01:45:10.799Z",
+    "overall": 76,
+    "deployId": null,
+    "source": "test"
   }
 }

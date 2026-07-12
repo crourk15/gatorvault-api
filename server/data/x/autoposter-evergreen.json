@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "swamp-history",
+      "topic": "program",
+      "angle": "history",
+      "headline": "The Swamp — one of college football's loudest venues.",
+      "context": "Ben Hill Griffin Stadium has anchored Florida football since 1930 — a home-field edge SEC foes respect.",
+      "sourceUrl": "https://floridagators.com/sports/football"
+    },
+    {
+      "id": "uf-hof",
+      "topic": "program",
+      "angle": "hall_of_fame",
+      "headline": "Florida football Hall of Fame tradition runs deep.",
+      "context": "Legends built this program — roster and recruiting still writing the next chapter.",
+      "sourceUrl": "https://floridagators.com/sports/football"
+    },
+    {
+      "id": "futurecast-lab",
+      "topic": "recruiting",
+      "angle": "analysis",
+      "headline": "FutureCast Lab — UF probability, movement, and fit scores.",
+      "context": "GatorVault models commit likelihood and 7-day RPM movement for every top target.",
+      "sourceUrl": "https://gatorvaultinsider.com/vault/futurecast"
+    },
+    {
+      "id": "depth-chart",
+      "topic": "team",
+      "angle": "roster",
+      "headline": "Depth chart intel — spring moves matter for fall.",
+      "context": "Position battles and returns shape the roster — GatorVault tracks Florida live.",
+      "sourceUrl": "https://gatorvaultinsider.com/vault/depth-chart"
+    },
+    {
+      "id": "scout-db",
+      "topic": "recruiting",
+      "angle": "scouting",
+      "headline": "GV Scout Database — verified reads on targets and roster.",
+      "context": "Analyst evaluations feed the board — context rankings alone cannot provide.",
+      "sourceUrl": "https://gatorvaultinsider.com/vault/scouting"
+    },
+    {
+      "id": "game-week",
+      "topic": "team",
+      "angle": "schedule",
+      "headline": "Game Week — schedule, spreads, and matchup intel.",
+      "context": "Every Florida matchup with lines and context as the season approaches.",
+      "sourceUrl": "https://gatorvaultinsider.com/vault/game-week"
+    },
+    {
+      "id": "portal-watch",
+      "topic": "portal",
+      "angle": "portal",
+      "headline": "Portal intel — who fits Florida's roster plan.",
+      "context": "Transfer movement is roster construction — GatorVault tracks portal likelihood and UF fit.",
+      "sourceUrl": "https://gatorvaultinsider.com/vault/portal"
+    }
+  ]
+}

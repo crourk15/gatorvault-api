@@ -1,7 +1,1116 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-10T23:34:52.244Z",
+  "updatedAt": "2026-07-01T20:46:05.794Z",
   "events": [
+    {
+      "id": "log_1782938765793_823s4o",
+      "action": "weekly_generation",
+      "at": "2026-07-01T20:46:05.793Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 0,
+      "aborted": [
+        {
+          "topicKey": "staff_intel_2026",
+          "category": "staff_intel",
+          "reason": "insufficient_intel_or_quality"
+        }
+      ],
+      "rejectedIntelCount": 2,
+      "draftIds": [],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782937370827_pir367",
+      "action": "weekly_generation",
+      "at": "2026-07-01T20:22:50.827Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 0,
+      "aborted": [
+        {
+          "topicKey": "staff_intel_2026",
+          "category": "staff_intel",
+          "reason": "insufficient_intel_or_quality"
+        }
+      ],
+      "rejectedIntelCount": 2,
+      "draftIds": [],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782937305734_pvdsa9",
+      "action": "weekly_generation",
+      "at": "2026-07-01T20:21:45.734Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 0,
+      "aborted": [
+        {
+          "topicKey": "staff_intel_2026",
+          "category": "staff_intel",
+          "reason": "insufficient_intel_or_quality"
+        }
+      ],
+      "rejectedIntelCount": 2,
+      "draftIds": [],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782926728987_jt1rck",
+      "action": "article_retired",
+      "at": "2026-07-01T17:25:28.987Z",
+      "articleId": "insider_1782926728488_k91fpi",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782926728981_73ej34",
+      "action": "content_feed_removed",
+      "at": "2026-07-01T17:25:28.981Z",
+      "articleId": "insider_1782926728488_k91fpi",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782926728971_xcytxz",
+      "action": "article_refreshed",
+      "at": "2026-07-01T17:25:28.971Z",
+      "articleId": "insider_1782926728488_k91fpi",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782926728968_3hm3h1",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T17:25:28.968Z",
+      "articleId": "insider_1782926728488_k91fpi",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782926728685_133go0",
+      "action": "draft_approved",
+      "at": "2026-07-01T17:25:28.685Z",
+      "articleId": "insider_1782926728488_k91fpi",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782926728681_kk1475",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T17:25:28.681Z",
+      "articleId": "insider_1782926728488_k91fpi",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782926728499_0cky9h",
+      "action": "weekly_generation",
+      "at": "2026-07-01T17:25:28.499Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 1,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1782926728488_k91fpi"
+      ],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782926728495_t3h44s",
+      "action": "draft_created",
+      "at": "2026-07-01T17:25:28.495Z",
+      "articleId": "insider_1782926728488_k91fpi",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "category": "depth_chart_movement"
+    },
+    {
+      "id": "log_1782925824572_9kedd8",
+      "action": "article_retired",
+      "at": "2026-07-01T17:10:24.572Z",
+      "articleId": "insider_1782925824368_ohb5t7",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782925824570_r29con",
+      "action": "content_feed_removed",
+      "at": "2026-07-01T17:10:24.570Z",
+      "articleId": "insider_1782925824368_ohb5t7",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782925824565_8db3rq",
+      "action": "article_refreshed",
+      "at": "2026-07-01T17:10:24.565Z",
+      "articleId": "insider_1782925824368_ohb5t7",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782925824563_2qlc22",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T17:10:24.563Z",
+      "articleId": "insider_1782925824368_ohb5t7",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782925824443_d9xju8",
+      "action": "draft_approved",
+      "at": "2026-07-01T17:10:24.443Z",
+      "articleId": "insider_1782925824368_ohb5t7",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782925824441_0y2xsv",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T17:10:24.441Z",
+      "articleId": "insider_1782925824368_ohb5t7",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782925824373_fwzgef",
+      "action": "weekly_generation",
+      "at": "2026-07-01T17:10:24.373Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 1,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1782925824368_ohb5t7"
+      ],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782925824371_lz0bjn",
+      "action": "draft_created",
+      "at": "2026-07-01T17:10:24.371Z",
+      "articleId": "insider_1782925824368_ohb5t7",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "category": "depth_chart_movement"
+    },
+    {
+      "id": "log_1782925737819_f6vn40",
+      "action": "weekly_generation",
+      "at": "2026-07-01T17:08:57.819Z",
+      "candidateCount": 6,
+      "selectedCount": 0,
+      "draftCount": 0,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782925695027_h8f3de",
+      "action": "article_retired",
+      "at": "2026-07-01T17:08:15.027Z",
+      "articleId": "insider_1782925694817_5qfttu",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782925695025_uyc9sm",
+      "action": "content_feed_removed",
+      "at": "2026-07-01T17:08:15.025Z",
+      "articleId": "insider_1782925694817_5qfttu",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782925695021_u8c2ba",
+      "action": "article_refreshed",
+      "at": "2026-07-01T17:08:15.021Z",
+      "articleId": "insider_1782925694817_5qfttu",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782925695020_muyw6p",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T17:08:15.020Z",
+      "articleId": "insider_1782925694817_5qfttu",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782925694902_ilbd1e",
+      "action": "draft_approved",
+      "at": "2026-07-01T17:08:14.902Z",
+      "articleId": "insider_1782925694817_5qfttu",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782925694900_lkfqdv",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T17:08:14.900Z",
+      "articleId": "insider_1782925694817_5qfttu",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782925694824_h882pi",
+      "action": "weekly_generation",
+      "at": "2026-07-01T17:08:14.824Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 1,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1782925694817_5qfttu"
+      ],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782925694822_ullize",
+      "action": "draft_created",
+      "at": "2026-07-01T17:08:14.822Z",
+      "articleId": "insider_1782925694817_5qfttu",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "category": "depth_chart_movement"
+    },
+    {
+      "id": "log_1782925587247_51lq0x",
+      "action": "weekly_generation",
+      "at": "2026-07-01T17:06:27.247Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 0,
+      "aborted": [
+        {
+          "topicKey": "depth_chart_2026_111",
+          "category": "depth_chart_movement",
+          "reason": "insufficient_intel_or_quality"
+        }
+      ],
+      "rejectedIntelCount": 2,
+      "draftIds": [],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782921053101_icr80r",
+      "action": "article_retired",
+      "at": "2026-07-01T15:50:53.101Z",
+      "articleId": "insider_1782921052690_g34l2p",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782921053095_69702e",
+      "action": "content_feed_removed",
+      "at": "2026-07-01T15:50:53.095Z",
+      "articleId": "insider_1782921052690_g34l2p",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782921053085_b0xmgz",
+      "action": "article_refreshed",
+      "at": "2026-07-01T15:50:53.085Z",
+      "articleId": "insider_1782921052690_g34l2p",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782921053083_32u2c7",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T15:50:53.083Z",
+      "articleId": "insider_1782921052690_g34l2p",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782921052831_b05gwj",
+      "action": "draft_approved",
+      "at": "2026-07-01T15:50:52.831Z",
+      "articleId": "insider_1782921052690_g34l2p",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782921052829_5i4sy2",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T15:50:52.829Z",
+      "articleId": "insider_1782921052690_g34l2p",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782921052697_9ym8e0",
+      "action": "weekly_generation",
+      "at": "2026-07-01T15:50:52.697Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 1,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1782921052690_g34l2p"
+      ],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782921052694_rnjp9s",
+      "action": "draft_created",
+      "at": "2026-07-01T15:50:52.694Z",
+      "articleId": "insider_1782921052690_g34l2p",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "category": "depth_chart_movement"
+    },
+    {
+      "id": "log_1782920638375_a5t1gm",
+      "action": "article_retired",
+      "at": "2026-07-01T15:43:58.375Z",
+      "articleId": "insider_1782920637991_keakww",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782920638366_c0uzwz",
+      "action": "content_feed_removed",
+      "at": "2026-07-01T15:43:58.367Z",
+      "articleId": "insider_1782920637991_keakww",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782920638352_vhe7ni",
+      "action": "article_refreshed",
+      "at": "2026-07-01T15:43:58.352Z",
+      "articleId": "insider_1782920637991_keakww",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782920638347_hrx9ob",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T15:43:58.347Z",
+      "articleId": "insider_1782920637991_keakww",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782920638121_c0oc0h",
+      "action": "draft_approved",
+      "at": "2026-07-01T15:43:58.121Z",
+      "articleId": "insider_1782920637991_keakww",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782920638119_np5t10",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T15:43:58.119Z",
+      "articleId": "insider_1782920637991_keakww",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782920637998_7or08n",
+      "action": "weekly_generation",
+      "at": "2026-07-01T15:43:57.999Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 1,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1782920637991_keakww"
+      ],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782920637996_6m66le",
+      "action": "draft_created",
+      "at": "2026-07-01T15:43:57.996Z",
+      "articleId": "insider_1782920637991_keakww",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "category": "depth_chart_movement"
+    },
+    {
+      "id": "log_1782920177401_2ma5vt",
+      "action": "article_retired",
+      "at": "2026-07-01T15:36:17.401Z",
+      "articleId": "insider_1782920177021_cyqies",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782920177394_2fotd4",
+      "action": "content_feed_removed",
+      "at": "2026-07-01T15:36:17.394Z",
+      "articleId": "insider_1782920177021_cyqies",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782920177381_bvn5yd",
+      "action": "article_refreshed",
+      "at": "2026-07-01T15:36:17.381Z",
+      "articleId": "insider_1782920177021_cyqies",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782920177376_o6e29z",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T15:36:17.376Z",
+      "articleId": "insider_1782920177021_cyqies",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782920177132_yytyn6",
+      "action": "draft_approved",
+      "at": "2026-07-01T15:36:17.132Z",
+      "articleId": "insider_1782920177021_cyqies",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782920177130_khwc6u",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T15:36:17.130Z",
+      "articleId": "insider_1782920177021_cyqies",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782920177028_pbidt7",
+      "action": "weekly_generation",
+      "at": "2026-07-01T15:36:17.028Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 1,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1782920177021_cyqies"
+      ],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782920177025_t65o4y",
+      "action": "draft_created",
+      "at": "2026-07-01T15:36:17.025Z",
+      "articleId": "insider_1782920177021_cyqies",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "category": "depth_chart_movement"
+    },
+    {
+      "id": "log_1782918957215_c249u3",
+      "action": "draft_approved",
+      "at": "2026-07-01T15:15:57.215Z",
+      "articleId": "insider_1782917403035_2pmphs",
+      "title": "Insider: Defensive scheme install ahead of schedule"
+    },
+    {
+      "id": "log_1782918957210_hdtafd",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T15:15:57.210Z",
+      "articleId": "insider_1782917403035_2pmphs",
+      "title": "Insider: Defensive scheme install ahead of schedule",
+      "topicKey": "staff_intel_2026"
+    },
+    {
+      "id": "log_1782918866134_bq1hkh",
+      "action": "article_retired",
+      "at": "2026-07-01T15:14:26.134Z",
+      "articleId": "insider_1782918865806_oz573w",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782918866129_zngotk",
+      "action": "content_feed_removed",
+      "at": "2026-07-01T15:14:26.129Z",
+      "articleId": "insider_1782918865806_oz573w",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782918866121_w8bg35",
+      "action": "article_refreshed",
+      "at": "2026-07-01T15:14:26.121Z",
+      "articleId": "insider_1782918865806_oz573w",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782918866118_n0pxlt",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T15:14:26.118Z",
+      "articleId": "insider_1782918865806_oz573w",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782918865917_eofq8b",
+      "action": "draft_approved",
+      "at": "2026-07-01T15:14:25.917Z",
+      "articleId": "insider_1782918865806_oz573w",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782918865915_gjcwt7",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T15:14:25.915Z",
+      "articleId": "insider_1782918865806_oz573w",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "topicKey": "depth_chart_2026_111"
+    },
+    {
+      "id": "log_1782918865818_vuhsvi",
+      "action": "weekly_generation",
+      "at": "2026-07-01T15:14:25.818Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 1,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1782918865806_oz573w"
+      ],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782918865815_d4m7cm",
+      "action": "draft_created",
+      "at": "2026-07-01T15:14:25.815Z",
+      "articleId": "insider_1782918865806_oz573w",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "category": "depth_chart_movement"
+    },
+    {
+      "id": "log_1782918165340_i9d6dt",
+      "action": "content_feed_synced",
+      "at": "2026-07-01T15:02:45.340Z",
+      "articleId": "test_sync_1782918165176",
+      "title": "Sync Test Article",
+      "topicKey": "test_sync_topic"
+    },
+    {
+      "id": "log_1782918129638_2srz8d",
+      "action": "content_feed_sync_failed",
+      "at": "2026-07-01T15:02:09.638Z",
+      "articleId": "test_sync_1782918129508",
+      "error": "savePublishedArticles is not a function"
+    },
+    {
+      "id": "log_1782917461364_igjjzm",
+      "action": "draft_regenerated",
+      "at": "2026-07-01T14:51:01.364Z",
+      "fromArticleId": "test_reject",
+      "newArticleId": "insider_1782917461360_2nhdun",
+      "angleKey": "portal_math",
+      "title": "Portal Math: How Florida rebuilt the 2026 roster position by position"
+    },
+    {
+      "id": "log_1782917461362_lfo7eu",
+      "action": "draft_created",
+      "at": "2026-07-01T14:51:01.362Z",
+      "articleId": "insider_1782917461360_2nhdun",
+      "title": "Portal Math: How Florida rebuilt the 2026 roster position by position",
+      "category": "program_pulse"
+    },
+    {
+      "id": "log_1782917460149_04gdaq",
+      "action": "article_retired",
+      "at": "2026-07-01T14:51:00.149Z",
+      "articleId": "insider_1782917459957_psyiu8",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782917460143_umspom",
+      "action": "article_refreshed",
+      "at": "2026-07-01T14:51:00.143Z",
+      "articleId": "insider_1782917459957_psyiu8",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782917459971_vi29e8",
+      "action": "draft_approved",
+      "at": "2026-07-01T14:50:59.971Z",
+      "articleId": "insider_1782917459957_psyiu8",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782917459963_ha1lfb",
+      "action": "weekly_generation",
+      "at": "2026-07-01T14:50:59.963Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 1,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1782917459957_psyiu8"
+      ],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782917459961_494cl4",
+      "action": "draft_created",
+      "at": "2026-07-01T14:50:59.961Z",
+      "articleId": "insider_1782917459957_psyiu8",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "category": "depth_chart_movement"
+    },
+    {
+      "id": "log_1782917403177_z8oul5",
+      "action": "article_retired",
+      "at": "2026-07-01T14:50:03.177Z",
+      "articleId": "insider_1782917403022_lwal3z",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782917403173_rrsrgd",
+      "action": "article_refreshed",
+      "at": "2026-07-01T14:50:03.173Z",
+      "articleId": "insider_1782917403022_lwal3z",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782917403044_io3me4",
+      "action": "draft_approved",
+      "at": "2026-07-01T14:50:03.044Z",
+      "articleId": "insider_1782917403022_lwal3z",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength"
+    },
+    {
+      "id": "log_1782917403038_vovehz",
+      "action": "weekly_generation",
+      "at": "2026-07-01T14:50:03.038Z",
+      "candidateCount": 7,
+      "selectedCount": 4,
+      "draftCount": 3,
+      "aborted": [
+        {
+          "topicKey": "staff_intel_2026",
+          "category": "staff_intel",
+          "reason": "insufficient_intel_or_quality"
+        }
+      ],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1782917402988_ac1ogq",
+        "insider_1782917403016_34pbxe",
+        "insider_1782917403022_lwal3z"
+      ],
+      "visitRecapTriggers": [
+        {
+          "topicKey": "post_visit_2027_maxwell-hiller_beat_official_visit_easton-royal_2026-06-24_ttjharden8|beat_offi",
+          "triggerIdentityLog": [
+            {
+              "slug": "maxwell-hiller",
+              "name": "Maxwell Hiller",
+              "fingerprint": "beat_official_visit_maxwell-hiller_2026-06-22_gatorsonline",
+              "source": "auto:beat-writer",
+              "eventType": "official_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            },
+            {
+              "slug": "easton-royal",
+              "name": "Easton Royal",
+              "fingerprint": "beat_official_visit_easton-royal_2026-06-24_ttjharden8",
+              "source": "auto:beat-writer",
+              "eventType": "official_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            },
+            {
+              "slug": "izayah-vickers",
+              "name": "Izayah Vickers",
+              "fingerprint": "beat_unofficial_visit_izayah-vickers_2026-06-24_blake_alderman",
+              "source": "auto:beat-writer",
+              "eventType": "unofficial_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            }
+          ],
+          "fingerprints": [
+            "beat_official_visit_maxwell-hiller_2026-06-22_gatorsonline",
+            "beat_official_visit_easton-royal_2026-06-24_ttjharden8",
+            "beat_unofficial_visit_izayah-vickers_2026-06-24_blake_alderman"
+          ]
+        }
+      ],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782917403037_pt1yz7",
+      "action": "draft_created",
+      "at": "2026-07-01T14:50:03.037Z",
+      "articleId": "insider_1782917403035_2pmphs",
+      "title": "Insider: Defensive scheme install ahead of schedule",
+      "category": "staff_intel"
+    },
+    {
+      "id": "log_1782917403033_ek5hp3",
+      "action": "draft_auto_rejected",
+      "at": "2026-07-01T14:50:03.033Z",
+      "topicKey": "staff_intel_2026",
+      "angleKey": "scheme_install",
+      "title": "Insider: Defensive scheme install ahead of schedule",
+      "reasons": [
+        "word_count_699"
+      ],
+      "words": 699
+    },
+    {
+      "id": "log_1782917403031_mdgjmw",
+      "action": "draft_auto_rejected",
+      "at": "2026-07-01T14:50:03.031Z",
+      "topicKey": "staff_intel_2026",
+      "angleKey": "locker_room",
+      "title": "Insider: Locker room intel and leadership structure",
+      "reasons": [
+        "word_count_699"
+      ],
+      "words": 699
+    },
+    {
+      "id": "log_1782917403029_83dzol",
+      "action": "draft_auto_rejected",
+      "at": "2026-07-01T14:50:03.029Z",
+      "topicKey": "staff_intel_2026",
+      "angleKey": "staff_decisions",
+      "title": "Insider: Staff decisions shaping Florida 2026 identity",
+      "reasons": [
+        "word_count_699"
+      ],
+      "words": 699
+    },
+    {
+      "id": "log_1782917403024_3vres4",
+      "action": "draft_created",
+      "at": "2026-07-01T14:50:03.024Z",
+      "articleId": "insider_1782917403022_lwal3z",
+      "title": "Roster Analysis: 2026 two-deep updates and unit strength",
+      "category": "depth_chart_movement"
+    },
+    {
+      "id": "log_1782917403019_cpkk44",
+      "action": "draft_created",
+      "at": "2026-07-01T14:50:03.019Z",
+      "articleId": "insider_1782917403016_34pbxe",
+      "title": "War Room: Maxwell Hiller - commit likelihoods and competing schools",
+      "category": "post_visit_reaction"
+    },
+    {
+      "id": "log_1782917402992_xdtpyl",
+      "action": "draft_created",
+      "at": "2026-07-01T14:50:02.992Z",
+      "articleId": "insider_1782917402988_ac1ogq",
+      "title": "Program Pulse: 2026 Florida roster architecture and culture check",
+      "category": "program_pulse"
+    },
+    {
+      "id": "log_1782917354370_hud8d1",
+      "action": "draft_auto_rejected",
+      "at": "2026-07-01T14:49:14.370Z",
+      "topicKey": "program_pulse_2026_27",
+      "angleKey": "culture_churn",
+      "title": "Culture vs. Churn: Managing portal exits without losing the locker room",
+      "reasons": [
+        "word_count_683"
+      ],
+      "words": 683
+    },
+    {
+      "id": "log_1782917354368_3e62xi",
+      "action": "draft_auto_rejected",
+      "at": "2026-07-01T14:49:14.368Z",
+      "topicKey": "program_pulse_2026_27",
+      "angleKey": "portal_math",
+      "title": "Portal Math: How Florida rebuilt the 2026 roster position by position",
+      "reasons": [
+        "word_count_683"
+      ],
+      "words": 683
+    },
+    {
+      "id": "log_1782917354364_m22hbq",
+      "action": "draft_auto_rejected",
+      "at": "2026-07-01T14:49:14.364Z",
+      "topicKey": "program_pulse_2026_27",
+      "angleKey": "macro_health",
+      "title": "Program Pulse: 2026 Florida roster architecture and culture check",
+      "reasons": [
+        "word_count_681"
+      ],
+      "words": 681
+    },
+    {
+      "id": "log_1782917205399_cinzf3",
+      "action": "weekly_generation",
+      "at": "2026-07-01T14:46:45.399Z",
+      "candidateCount": 7,
+      "selectedCount": 4,
+      "draftCount": 0,
+      "aborted": [
+        {
+          "topicKey": "program_pulse_2026_27",
+          "category": "program_pulse",
+          "reason": "topic_error",
+          "error": "Invalid or unexpected token"
+        },
+        {
+          "topicKey": "post_visit_2027_maxwell-hiller_beat_official_visit_easton-royal_2026-06-24_ttjharden8|beat_offi",
+          "category": "post_visit_reaction",
+          "reason": "topic_error",
+          "error": "Invalid or unexpected token"
+        },
+        {
+          "topicKey": "depth_chart_2026_111",
+          "category": "depth_chart_movement",
+          "reason": "topic_error",
+          "error": "Invalid or unexpected token"
+        },
+        {
+          "topicKey": "staff_intel_2026",
+          "category": "staff_intel",
+          "reason": "topic_error",
+          "error": "Invalid or unexpected token"
+        }
+      ],
+      "rejectedIntelCount": 2,
+      "draftIds": [],
+      "visitRecapTriggers": [
+        {
+          "topicKey": "post_visit_2027_maxwell-hiller_beat_official_visit_easton-royal_2026-06-24_ttjharden8|beat_offi",
+          "triggerIdentityLog": [
+            {
+              "slug": "maxwell-hiller",
+              "name": "Maxwell Hiller",
+              "fingerprint": "beat_official_visit_maxwell-hiller_2026-06-22_gatorsonline",
+              "source": "auto:beat-writer",
+              "eventType": "official_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            },
+            {
+              "slug": "easton-royal",
+              "name": "Easton Royal",
+              "fingerprint": "beat_official_visit_easton-royal_2026-06-24_ttjharden8",
+              "source": "auto:beat-writer",
+              "eventType": "official_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            },
+            {
+              "slug": "izayah-vickers",
+              "name": "Izayah Vickers",
+              "fingerprint": "beat_unofficial_visit_izayah-vickers_2026-06-24_blake_alderman",
+              "source": "auto:beat-writer",
+              "eventType": "unofficial_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            }
+          ],
+          "fingerprints": [
+            "beat_official_visit_maxwell-hiller_2026-06-22_gatorsonline",
+            "beat_official_visit_easton-royal_2026-06-24_ttjharden8",
+            "beat_unofficial_visit_izayah-vickers_2026-06-24_blake_alderman"
+          ]
+        }
+      ],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782917106782_j2mtrv",
+      "action": "weekly_generation",
+      "at": "2026-07-01T14:45:06.782Z",
+      "candidateCount": 7,
+      "selectedCount": 4,
+      "draftCount": 0,
+      "aborted": [
+        {
+          "topicKey": "program_pulse_2026_27",
+          "category": "program_pulse",
+          "reason": "topic_error",
+          "error": "Cannot read properties of null (reading 'roster')"
+        },
+        {
+          "topicKey": "post_visit_2027_maxwell-hiller_beat_official_visit_easton-royal_2026-06-24_ttjharden8|beat_offi",
+          "category": "post_visit_reaction",
+          "reason": "topic_error",
+          "error": "Cannot read properties of null (reading 'roster')"
+        },
+        {
+          "topicKey": "depth_chart_2026_111",
+          "category": "depth_chart_movement",
+          "reason": "topic_error",
+          "error": "Cannot read properties of null (reading 'roster')"
+        },
+        {
+          "topicKey": "staff_intel_2026",
+          "category": "staff_intel",
+          "reason": "topic_error",
+          "error": "Cannot read properties of null (reading 'roster')"
+        }
+      ],
+      "rejectedIntelCount": 2,
+      "draftIds": [],
+      "visitRecapTriggers": [
+        {
+          "topicKey": "post_visit_2027_maxwell-hiller_beat_official_visit_easton-royal_2026-06-24_ttjharden8|beat_offi",
+          "triggerIdentityLog": [
+            {
+              "slug": "maxwell-hiller",
+              "name": "Maxwell Hiller",
+              "fingerprint": "beat_official_visit_maxwell-hiller_2026-06-22_gatorsonline",
+              "source": "auto:beat-writer",
+              "eventType": "official_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            },
+            {
+              "slug": "easton-royal",
+              "name": "Easton Royal",
+              "fingerprint": "beat_official_visit_easton-royal_2026-06-24_ttjharden8",
+              "source": "auto:beat-writer",
+              "eventType": "official_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            },
+            {
+              "slug": "izayah-vickers",
+              "name": "Izayah Vickers",
+              "fingerprint": "beat_unofficial_visit_izayah-vickers_2026-06-24_blake_alderman",
+              "source": "auto:beat-writer",
+              "eventType": "unofficial_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            }
+          ],
+          "fingerprints": [
+            "beat_official_visit_maxwell-hiller_2026-06-22_gatorsonline",
+            "beat_official_visit_easton-royal_2026-06-24_ttjharden8",
+            "beat_unofficial_visit_izayah-vickers_2026-06-24_blake_alderman"
+          ]
+        }
+      ],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1782916473735_kpbciq",
+      "action": "weekly_generation",
+      "at": "2026-07-01T14:34:33.735Z",
+      "candidateCount": 7,
+      "selectedCount": 4,
+      "draftCount": 0,
+      "aborted": [
+        {
+          "topicKey": "program_pulse_2026_27",
+          "category": "program_pulse",
+          "reason": "topic_error",
+          "error": "Invalid regular expression: missing /"
+        },
+        {
+          "topicKey": "post_visit_2027_maxwell-hiller_beat_official_visit_easton-royal_2026-06-24_ttjharden8|beat_offi",
+          "category": "post_visit_reaction",
+          "reason": "topic_error",
+          "error": "Invalid regular expression: missing /"
+        },
+        {
+          "topicKey": "depth_chart_2026_111",
+          "category": "depth_chart_movement",
+          "reason": "topic_error",
+          "error": "Invalid regular expression: missing /"
+        },
+        {
+          "topicKey": "staff_intel_2026",
+          "category": "staff_intel",
+          "reason": "topic_error",
+          "error": "Invalid regular expression: missing /"
+        }
+      ],
+      "rejectedIntelCount": 2,
+      "draftIds": [],
+      "visitRecapTriggers": [
+        {
+          "topicKey": "post_visit_2027_maxwell-hiller_beat_official_visit_easton-royal_2026-06-24_ttjharden8|beat_offi",
+          "triggerIdentityLog": [
+            {
+              "slug": "maxwell-hiller",
+              "name": "Maxwell Hiller",
+              "fingerprint": "beat_official_visit_maxwell-hiller_2026-06-22_gatorsonline",
+              "source": "auto:beat-writer",
+              "eventType": "official_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            },
+            {
+              "slug": "easton-royal",
+              "name": "Easton Royal",
+              "fingerprint": "beat_official_visit_easton-royal_2026-06-24_ttjharden8",
+              "source": "auto:beat-writer",
+              "eventType": "official_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            },
+            {
+              "slug": "izayah-vickers",
+              "name": "Izayah Vickers",
+              "fingerprint": "beat_unofficial_visit_izayah-vickers_2026-06-24_blake_alderman",
+              "source": "auto:beat-writer",
+              "eventType": "unofficial_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            }
+          ],
+          "fingerprints": [
+            "beat_official_visit_maxwell-hiller_2026-06-22_gatorsonline",
+            "beat_official_visit_easton-royal_2026-06-24_ttjharden8",
+            "beat_unofficial_visit_izayah-vickers_2026-06-24_blake_alderman"
+          ]
+        }
+      ],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
     {
       "id": "log_1781134492244_rpr49s",
       "action": "weekly_generation",

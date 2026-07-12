@@ -39,9 +39,9 @@ const TAB_META: Record<Tab, { label: string; icon: string; battleClass: string; 
 };
 
 function classifyTab(ufPct: number): Tab {
-  if (ufPct < 40) return 'lean-elsewhere';
   if (ufPct >= 67) return 'lean-uf';
-  return 'battles';
+  if (ufPct >= 34) return 'battles';
+  return 'lean-elsewhere';
 }
 
 function BattleRow({ player, tab }: { player: ReturnType<typeof futureCastPlayerToLabTarget>; tab: Tab }): React.ReactElement {
@@ -127,7 +127,7 @@ export function FutureCastBattlesPanel({
     ? `${focusYear} Battles & Leaning Targets`
     : 'Battles & Leaning Targets';
   const sub = discoveryFocus
-    ? 'Allowlist targets bucketed by UF likelihood during early discovery.'
+    ? 'Allowlist targets bucketed by confirmed On3 UF RPM — Lean Elsewhere shows rival school %.'
     : 'Trending board buckets — battles, lean UF, and lean elsewhere.';
 
   return (

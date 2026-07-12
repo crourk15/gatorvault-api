@@ -1,4 +1,4 @@
-﻿/** GatorVault Detectives */
+/** GatorVault Detectives */
 const { SITE_URL } = require('./discovery-core');
 const { intelFingerprint } = require('../commit-fingerprint');
 const store = require('./detectives-store');

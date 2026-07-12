@@ -99,6 +99,10 @@ export interface HighPriorityPlayer {
   visitSourceLabel?: string | null;
   trendHistory: Array<{ date: string; confidence: number }>;
   predictors: HighPriorityPredictor[];
+  /** Confirmed On3 / store RPM competitors only — never filler. */
+  competingSchools?: Array<{ name: string; pct: number }>;
+  /** Confirmed On3 UF RPM % when available (preferred over model for battle RPM bar). */
+  ufRpmPct?: number | null;
 }
 
 interface TargetBoardEntry {
@@ -366,6 +370,10 @@ function boardPlayerToHighPriority(
     visitEnd: null,
     trendHistory: [],
     predictors: (p.predictors ?? []).map((x) => ({ name: x.name, score: x.score })),
+    competingSchools: (p.competingSchools ?? [])
+      .filter((s) => s?.name && Number(s.pct) > 0)
+      .map((s) => ({ name: s.name, pct: Number(s.pct) })),
+    ufRpmPct: ufProbability > 0 ? ufProbability : null,
   };
 }
 
@@ -491,12 +499,24 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
 
         const resolvedUf = resolveUfProbability({
           modelPct: model?.confidence ?? model?.ufProbability,
-          storePct: target.ufProbability ?? recruiting?.ufProbability ?? recruiting?.futurecastProbability,
+          storePct:
+            target.ufProbability ??
+            recruiting?.ufRpmPct ??
+            recruiting?.ufProbability ??
+            recruiting?.futurecastProbability,
           predictors,
           stars: target.stars ?? rank?.stars ?? null,
           headliner: Boolean(target.headliner),
         });
         const ufProbability = resolvedUf.value;
+        const { competingSchoolsFromRecruitingRecord } = require('../../lib/underclassmen-intel');
+        const competingSchools = competingSchoolsFromRecruitingRecord(
+          recruiting as Record<string, unknown> | null | undefined
+        );
+        const ufRpmPct =
+          recruiting?.ufRpmPct != null && Number(recruiting.ufRpmPct) > 0
+            ? Math.round(Number(recruiting.ufRpmPct))
+            : null;
         const delta7d = mergedDelta7dBySlug.get(slug) ?? model?.delta ?? 0;
         const movementDelta = delta7d;
         const fitScore = Math.round(model?.ufFitScore ?? target.rating ?? compositeScore ?? 0);
@@ -556,6 +576,8 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
           visitEnd: target.visitEnd ?? recruiting?.visitEnd ?? null,
           trendHistory,
           predictors,
+          competingSchools,
+          ufRpmPct,
         };
       });
 

@@ -6,7 +6,7 @@ import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 /** Bump when high-priority payload shape changes (align with server/api/futurecast/response-cache.ts). */
-export const FUTURECAST_CLIENT_CACHE_VERSION = 10;
+export const FUTURECAST_CLIENT_CACHE_VERSION = 12;
 export const HIGH_PRIORITY_CACHE_KEY = `gv:futurecast:high-priority:v${FUTURECAST_CLIENT_CACHE_VERSION}`;
 export const HIGH_PRIORITY_YEAR = 2027;
 export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;
@@ -87,6 +87,10 @@ export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
   visitSourceLabel?: string | null;
   trendHistory: Array<{ date: string; confidence: number }>;
   predictors: HighPriorityPredictor[];
+  /** Confirmed On3 / store RPM competitors only — never filler. */
+  competingSchools?: Array<{ name: string; pct: number }>;
+  /** Confirmed On3 UF RPM % when available. */
+  ufRpmPct?: number | null;
   ufProbabilitySource?: string;
   ufProbabilityLabel?: string | null;
   ufProbabilityLowConfidence?: boolean;

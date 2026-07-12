@@ -9,10 +9,18 @@
   },
   {
     "classYear": 2027,
-    "nationalRank": 6,
+    "nationalRank": 8,
     "secRank": 3,
-    "classScore": 91.61502454418,
+    "classScore": 91.588948931606,
     "source": "on3",
-    "updatedAt": "2026-06-24T20:42:06.902Z"
+    "updatedAt": "2026-07-11T05:06:12.861Z"
+  },
+  {
+    "classYear": 2028,
+    "nationalRank": null,
+    "secRank": null,
+    "classScore": 88.911036314815,
+    "source": "on3",
+    "updatedAt": "2026-07-04T13:56:49.127Z"
   }
 ]

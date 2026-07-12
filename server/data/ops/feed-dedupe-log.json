@@ -1,661 +1,4187 @@
 {
   "entries": [
     {
-      "at": "2026-06-11T22:50:16.575Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:09:02.277Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:amare-nugent|florida|2026-01-24",
-      "title": "Amare Nugent commits to Florida",
-      "rawText": "CB · 4★ · American Heritage (Plantation, FL)"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
     },
     {
-      "at": "2026-06-11T22:50:16.573Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:jackson-ballinger|florida|2026-02-24",
-      "title": "Jackson Ballinger commits to Florida",
-      "rawText": "TE · 4★ · Centerburg (Centerburg, OH)"
+      "at": "2026-07-04T16:09:02.263Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.571Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:09:02.248Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:tramond-collins|florida|2026-03-11",
-      "title": "Tramond Collins commits to Florida",
-      "rawText": "WR · 4★ · Cottondale (Cottondale, FL)"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.570Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:09:02.237Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:180637|florida|2026-04-08",
-      "title": "Maxwell Hiller commits to Florida",
-      "rawText": "IOL · 5★ · Coatesville, PA · #3 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.568Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:09:02.224Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:davin-davidson|florida|2026-04-09",
-      "title": "Davin Davidson commits to Florida",
-      "rawText": "QB · 4★ · Cardinal Mooney (Sarasota, FL)"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.566Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:08:59.759Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:aamaury-fountain|florida|2026-04-11",
-      "title": "Aamaury Fountain commits to Florida",
-      "rawText": "CB · 4★ · Northside (Warner Robins, GA)"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.564Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:tommy-douglas|florida|2026-04-16",
-      "title": "Tommy Douglas commits to Florida",
-      "rawText": "TE · 4★ · Hun School (Princeton, NJ)"
+      "at": "2026-07-04T16:08:58.857Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.562Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:anthony-jennings|florida|2026-04-25",
-      "title": "Anthony Jennings commits to Florida",
-      "rawText": "WR · 4★ · Dillard (Fort Lauderdale, FL)"
+      "at": "2026-07-04T16:08:58.384Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.561Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:peyton-miller|florida|2026-04-27",
-      "title": "Peyton Miller commits to Florida",
-      "rawText": "IOL · 4★ · Anna (Anna, TX)"
+      "at": "2026-07-04T16:08:53.119Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.559Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:devoun-kendrick|florida|2026-04-27",
-      "title": "De'Voun Kendrick commits to Florida",
-      "rawText": "DL · 3★ · Carrollwood Day (Tampa, FL)"
+      "at": "2026-07-04T16:08:53.101Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.558Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:elijah-hutcheson|florida|2026-05-05",
-      "title": "Elijah Hutcheson commits to Florida",
-      "rawText": "OT · 4★ · North Cross School (Roanoke, VA)"
+      "at": "2026-07-04T16:08:31.478Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.556Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:kailib-dillard|florida|2026-05-05",
-      "title": "Kailib Dillard commits to Florida",
-      "rawText": "S · 3★ · Jenks (Tulsa, OK)"
+      "at": "2026-07-04T16:08:31.466Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.554Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:stive-bentley-keumajou|florida|2026-05-06",
-      "title": "Stive-Bentley Keumajou commits to Florida",
-      "rawText": "DL · 3★ · Coral Gables Senior (Coral Gables, FL)"
+      "at": "2026-07-04T16:08:31.454Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.552Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:andrew-beard|florida|2026-05-08",
-      "title": "Andrew Beard commits to Florida",
-      "rawText": "RB · 4★ · Prince Avenue Christian (Bogart, GA)"
+      "at": "2026-07-04T16:08:31.442Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.551Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:cain-van-norden|florida|2026-05-15",
-      "title": "Cain Van Norden commits to Florida",
-      "rawText": "DL · 3★ · Bishop McNamara (District Heights, MD)"
+      "at": "2026-07-04T16:08:31.424Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.549Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:elias-pearl|florida|2026-05-19",
-      "title": "Elias Pearl commits to Florida",
-      "rawText": "WR · 4★ · Port Charlotte (Port Charlotte, FL)"
+      "at": "2026-07-04T16:07:58.067Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
     },
     {
-      "at": "2026-06-11T22:50:16.547Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:06:26.945Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "gator-tales_tag:soundcloud,2010:tracks/2328301979",
-      "title": "New episode: Gator Tales — Gator Tales #60: Duke Werner - Executive Associate Athletics Director / Director of Sport",
-      "rawText": "In the latest episode of Gator Tales, Presented by UF Health, Voice of the Gators Sean Kelley sits down for an exclusive conversation with Executive Associate Athletics Director/Director of Sport Dave"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
     },
     {
-      "at": "2026-06-11T22:50:16.545Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "art_art-335-revolution",
-      "title": "The 3-3-5 Revolution: Why {{ coach.DC }}'s Scheme Changes Everything",
-      "rawText": "{{ coach.DC }}'s 3-3-5 isn't a gimmick — it's a personnel-driven answer to modern spread offenses. Here's how it works, who benefits, and why Jayden Woods makes it dangerous."
+      "at": "2026-07-04T16:06:26.921Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.543Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:06:26.890Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:jabios-smith|florida|2026-05-29",
-      "title": "Ja'Bios Smith commits to Florida",
-      "rawText": "LB · 4★ · Swainsboro (Swainsboro, GA)"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.541Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:06:26.860Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "art_art-sumrall-6mo",
-      "title": "{{ coach.HC }}'s First 6 Months: A Real Assessment",
-      "rawText": "Six months in, {{ coach.HC }} has rebuilt the roster through the portal, installed a new defensive identity, and kept the locker room bought in. We grade every major decision."
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.539Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:06:26.828Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "gnfp_b37211a8-96f7-46c7-93f2-447f4b88b214",
-      "title": "New episode: Gator Nation Football Podcast — 2026- June Mailbag",
-      "rawText": "2026- June Mailbag If you enjoy the content, drop us a dono for as little as $7. Full GNFP Film Review Access starts at $15. https://www.patreon.com/1165790/join Merch https://gnfp.sellfy.store/ Join "
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.538Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:06:24.052Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:kennedee-jackson|florida|2026-06-02",
-      "title": "Kennedee Jackson commits to Florida",
-      "rawText": "OT · 4★ · Lithonia (Lithonia, GA)"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.536Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "art_art-win-model",
-      "title": "War Room: 2026 Schedule Win Probability Model",
-      "rawText": "Our proprietary model simulates every game 10,000 times using roster data, returning production, and opponent strength. Here's where UF wins, where it's vulnerable, and the two games that decide the s"
+      "at": "2026-07-04T16:06:23.358Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.534Z",
-      "action": "rejected",
-      "reason": "truncated_copy",
-      "id": "commit:zahmar-tookes|florida|2026-06-03",
-      "title": "Zahmar Tookes commits to Florida",
-      "rawText": "DL · 4★ · Brighton (Rochester, NY)"
+      "at": "2026-07-04T16:06:22.983Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T16:06:18.245Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.532Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:06:18.186Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T16:05:42.345Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T16:05:42.305Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T16:05:42.259Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T16:05:42.067Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T16:05:41.831Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T16:02:55.671Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "art_art-summer-battles",
-      "title": "Summer Camp Preview: 5 Position Battles to Watch",
-      "rawText": "Fall camp opens August 2nd. These five position battles will shape the starting lineup, the two-deep, and how {{ coach.HC }}'s first season unfolds."
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
     },
     {
-      "at": "2026-06-11T22:50:16.530Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:02:55.657Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T16:02:55.642Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:283680|florida|2026-06-05",
-      "title": "Kamarion Johnson commits to Florida",
-      "rawText": "ATH · 3★ · Homerville, GA · #813 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.528Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:02:55.628Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:cahron-wheeler|florida|2026-06-05",
-      "title": "Cahron Wheeler commits to Florida",
-      "rawText": "EDGE · 4★ · St. Paul's School (Baltimore, MD)"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.527Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:02:55.614Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
-      "title": "New episode: Gators Online Podcast — Ep. 187: Official visits underway for Florida football, baseball | Gators Online Show",
-      "rawText": "Welcome to the Gators Online Show! In the latest episode, we discuss official visits starting for the Florida football and baseball programs. Hosted by Simplecast, an AdsWizz company. See pcm.adswizz."
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.525Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:02:53.652Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:180930|florida|2026-06-06",
-      "title": "Ellis McGaskin commits to Florida",
-      "rawText": "LB · 4★ · Mobile, AL · #347 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T16:02:53.006Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.523Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:02:52.682Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T16:02:47.820Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T16:02:47.791Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T16:02:27.354Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T16:02:27.342Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T16:02:27.331Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T16:02:27.319Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T16:02:27.296Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T16:00:09.451Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:175389|florida|2025-08-11",
-      "title": "Davian Groce commits to Florida",
-      "rawText": "WR · 4★ · Frisco, TX · #60 natl"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
     },
     {
-      "at": "2026-06-11T22:50:16.521Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:00:09.436Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T16:00:09.415Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:241642|florida|2025-06-18",
-      "title": "CJ Bronaugh commits to Florida",
-      "rawText": "CB · 4★ · Winter Garden, FL · #84 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.519Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:00:09.393Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:176369|florida|2025-07-11",
-      "title": "Kevin Ford commits to Florida",
-      "rawText": "EDGE · 4★ · Duncanville, TX · #149 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.518Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:00:09.372Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:240430|florida|2025-06-08",
-      "title": "Justin Williams commits to Florida",
-      "rawText": "WR · 4★ · Gainesville, FL · #158 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.517Z",
-      "action": "rejected",
+      "at": "2026-07-04T16:00:06.263Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:154268|florida|2025-06-14",
-      "title": "JaReylan McCoy commits to Florida",
-      "rawText": "DL · 4★ · Tupelo, MS · #173 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T16:00:05.302Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T16:00:04.776Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:59:58.007Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:59:57.993Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:59:32.988Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:59:32.974Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:59:32.957Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.515Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:59:32.941Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:59:32.917Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:58:42.365Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:57:00.850Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:239856|florida|2025-12-04",
-      "title": "Dylan Purter commits to Florida",
-      "rawText": "S · 4★ · Tuskegee, AL · #204 natl"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:57:00.834Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.512Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:57:00.820Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:162624|florida|2024-06-01",
-      "title": "Will Griffin commits to Florida",
-      "rawText": "QB · 4★ · Tampa, FL · #259 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.510Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:57:00.809Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:236759|florida|2025-07-02",
-      "title": "Kendall Guervil commits to Florida",
-      "rawText": "DL · 4★ · Fort Myers, FL · #276 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.508Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:57:00.794Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:243492|florida|2025-06-16",
-      "title": "Tyler Chukuyem commits to Florida",
-      "rawText": "OT · 4★ · Douglasville, GA · #281 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.506Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:56:58.945Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:177521|florida|2025-07-07",
-      "title": "Malik Morris commits to Florida",
-      "rawText": "LB · 4★ · Lakeland, FL · #362 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:56:58.239Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:56:57.848Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:56:52.521Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:56:52.486Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.505Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:56:27.647Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:56:27.632Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:56:27.617Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:56:27.600Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:56:27.577Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:55:36.381Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:54:08.179Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:174275|florida|2025-07-12",
-      "title": "Heze Kent commits to Florida",
-      "rawText": "OT · 4★ · Brunswick, GA · #366 natl"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
     },
     {
-      "at": "2026-06-11T22:50:16.503Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:54:08.164Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:54:08.147Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:177149|florida|2025-06-14",
-      "title": "Marquez Daniel commits to Florida",
-      "rawText": "WR · 4★ · Tuskegee, AL · #367 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.501Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:54:08.131Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:174822|florida|2025-06-03",
-      "title": "Kaiden Hall commits to Florida",
-      "rawText": "S · 4★ · Milton, FL · #386 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.491Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:54:08.115Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:155900|florida|2025-07-03",
-      "title": "CJ Hester commits to Florida",
-      "rawText": "CB · 3★ · Cocoa, FL · #503 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.489Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:54:05.678Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:176416|florida|2025-06-01",
-      "title": "G'Nivre Carr commits to Florida",
-      "rawText": "IOL · 3★ · Ocala, FL · #505 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:54:04.854Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.488Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:54:04.433Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:53:57.552Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:53:57.513Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:53:29.351Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:53:29.336Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:53:29.312Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:53:29.282Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:53:29.255Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:49:43.647Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:179743|florida|2025-06-08",
-      "title": "Chancellor Campbell commits to Florida",
-      "rawText": "OT · 3★ · Saint Petersburg, FL · #627 natl"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
     },
     {
-      "at": "2026-06-11T22:50:16.486Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:49:43.629Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:49:43.604Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:283712|florida|2026-01-07",
-      "title": "Elijah Owens commits to Florida",
-      "rawText": "S · 3★ · Mobile, AL · #63 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.484Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:49:43.585Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:236347|florida|2025-06-26",
-      "title": "Desmond Green commits to Florida",
-      "rawText": "IOL · 3★ · Saint Stephen, SC · #884 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.483Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:49:43.563Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:243619|florida|2025-06-16",
-      "title": "Javarii Luckas commits to Florida",
-      "rawText": "OT · 3★ · Belle Glade, FL · #1147 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.481Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:49:41.410Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:260787|florida|2026-02-05",
-      "title": "Eric Parks commits to Florida",
-      "rawText": "S · 3★ · Tampa, FL · #1750 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:49:40.847Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:49:40.564Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:49:35.717Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:49:35.694Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:49:11.286Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:49:11.273Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:49:11.248Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.479Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:49:11.232Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:49:11.213Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:48:24.676Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:46:42.259Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:288527|florida|2026-05-12",
-      "title": "Javier Jones commits to Florida",
-      "rawText": "CB · 3★ · Phoenix, AZ · #265 natl"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:46:42.245Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.478Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:46:42.228Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:43376|florida|2026-01-06",
-      "title": "Evan Pryor commits to Florida",
-      "rawText": "RB · 3★ · Cornelius, NC"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.475Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:46:42.215Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:113148|florida|2026-01-06",
-      "title": "T.J. Shanahan commits to Florida",
-      "rawText": "IOL · 3★ · Orlando, FL"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.473Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:46:42.203Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:178263|florida|2026-01-07",
-      "title": "Cam Dooley commits to Florida",
-      "rawText": "S · 3★ · Valley, AL"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.472Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:46:38.699Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:87184|florida|2026-01-07",
-      "title": "Micah Mays commits to Florida",
-      "rawText": "WR · 3★ · North Palm Beach, FL"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:46:37.776Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:46:37.383Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:46:32.986Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:46:32.978Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.470Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:46:09.445Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:46:09.436Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:46:09.426Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:46:09.414Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:46:09.401Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:44:58.293Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:43:29.727Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:178849|florida|2026-01-10",
-      "title": "Luke Harpring commits to Florida",
-      "rawText": "TE · 3★ · Atlanta, GA"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
     },
     {
-      "at": "2026-06-11T22:50:16.469Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:43:29.717Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:43:29.707Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:155795|florida|2026-01-06",
-      "title": "Eagan Boyer commits to Florida",
-      "rawText": "OT · 3★ · Cornelius, NC"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.467Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:43:29.700Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:147775|florida|2026-01-08",
-      "title": "London Montgomery commits to Florida",
-      "rawText": "RB · 3★ · Scranton, PA"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.466Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:43:29.692Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:146069|florida|2026-01-06",
-      "title": "Aaron Philo commits to Florida",
-      "rawText": "QB · 3★ · Bogart, GA"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.464Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:43:28.187Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:145026|florida|2026-01-05",
-      "title": "DK Kalu commits to Florida",
-      "rawText": "DL · 3★ · Missouri City, TX"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:43:27.672Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.463Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:43:27.415Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:43:23.188Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:43:23.169Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:43:05.929Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:43:05.920Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:43:05.908Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:43:05.899Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:43:05.883Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:40:02.973Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:175643|florida|2026-01-18",
-      "title": "Mason Clinton commits to Florida",
-      "rawText": "DL · 3★ · Petal, MS"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
     },
     {
-      "at": "2026-06-11T22:50:16.461Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:40:02.955Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:40:02.942Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:150237|florida|2026-01-04",
-      "title": "DJ Coleman commits to Florida",
-      "rawText": "S · 3★ · Mesquite, TX"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.459Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:40:02.933Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:238104|florida|2026-01-09",
-      "title": "Emeka Ugorji commits to Florida",
-      "rawText": "OT · 3★ · Dallas, TX"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.458Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:40:02.922Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:154954|florida|2026-01-16",
-      "title": "Jaylen Lloyd commits to Florida",
-      "rawText": "WR · 3★ · Omaha, NE"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.457Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:40:01.304Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:155719|florida|2026-01-10",
-      "title": "Eric Singleton Jr. commits to Florida",
-      "rawText": "WR · 3★ · Douglasville, GA"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:40:00.739Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:40:00.456Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:39:56.644Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:39:56.634Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:39:40.079Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:39:40.070Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:39:40.059Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.455Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:39:40.049Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:39:40.035Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:39:00.952Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:38:40.982Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:37:28.448Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:153739|florida|2026-01-09",
-      "title": "Harrison Moore commits to Florida",
-      "rawText": "IOL · 3★ · Southlake, TX"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
     },
     {
-      "at": "2026-06-11T22:50:16.454Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:37:28.433Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:37:28.407Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:113075|florida|2026-01-12",
-      "title": "TJ Bullard commits to Florida",
-      "rawText": "LB · 3★ · Tampa, FL"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.452Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:37:28.391Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:154828|florida|2026-01-05",
-      "title": "Bailey Stockton commits to Florida",
-      "rawText": "WR · 3★ · Athens, GA"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.451Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:37:28.373Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:66322|florida|2026-01-21",
-      "title": "Jordy Lowery commits to Florida",
-      "rawText": "CB · 3★ · Bartow, FL"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.449Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:37:26.070Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:283144|florida|2026-01-19",
-      "title": "Evan Chieca commits to Florida",
-      "rawText": "TE · 3★ · Lindenhurst, NY"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:37:25.211Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:37:24.832Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:37:18.722Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:37:18.647Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:36:45.276Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:36:45.266Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:36:45.254Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:36:45.242Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:36:45.219Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "efb9cec273164039f36e9730cf42db30e7466c92c2694c826c426c38831b1d98",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:36:21.254Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:35:17.392Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
     },
     {
-      "at": "2026-06-11T22:50:16.448Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:34:19.076Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:148026|florida|2026-01-12",
-      "title": "Kanye Clark commits to Florida",
-      "rawText": "S · 3★ · Sacramento, CA"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
     },
     {
-      "at": "2026-06-11T22:50:16.447Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:34:19.063Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:34:19.047Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:162020|florida|2026-01-05",
-      "title": "Lacota Dippre commits to Florida",
-      "rawText": "TE · 3★ · Jermyn, PA"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.445Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:34:19.027Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:239636|florida|2026-01-06",
-      "title": "Emmanuel Oyebadejo commits to Florida",
-      "rawText": "DL · 3★ · England"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.443Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:34:19.014Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:162609|florida|2026-01-06",
-      "title": "Patrick Durkin commits to Florida",
-      "rawText": "K · 3★ · Plainfield, IL"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.442Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:34:16.629Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:283676|florida|2026-01-06",
-      "title": "Alec Clark commits to Florida",
-      "rawText": "P · 3★ · Melbourne, VIC"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:34:15.766Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:34:15.289Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:34:09.706Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:34:09.697Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:33:39.942Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:33:39.925Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:33:39.905Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.440Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:33:39.887Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:33:39.856Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "efb9cec273164039f36e9730cf42db30e7466c92c2694c826c426c38831b1d98",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:30:54.340Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:283756|florida|2026-01-08",
-      "title": "Carter Milliron commits to Florida",
-      "rawText": "LS · 3★ · Hoover, AL"
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
     },
     {
-      "at": "2026-06-11T22:50:16.438Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:30:54.331Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:30:54.319Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:283795|florida|2026-01-10",
-      "title": "Miller Fealy commits to Florida",
-      "rawText": "P · 3★ · Melbourne, VIC"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.437Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:30:54.310Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:284197|florida|2026-01-26",
-      "title": "Ace Ciongoli commits to Florida",
-      "rawText": "WR · 3★ · Needham, MA"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.435Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:30:54.297Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:288165|florida|2026-05-01",
-      "title": "Jaylen Jordon commits to Florida",
-      "rawText": "TE · 3★ · Hilliard, FL"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.433Z",
-      "action": "rejected",
+      "at": "2026-07-04T15:30:52.819Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "intel:243862|official_visit|2026-06-11",
-      "title": "Easton Royal — Official Visit Scheduled",
-      "rawText": "2026 WR Easton Royal will take an official visit to Gainesville from June 11–13."
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:30:52.323Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:30:52.064Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:30:48.349Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:30:48.339Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:30:33.379Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:30:33.370Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:30:33.360Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:30:33.349Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:30:33.337Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:29:14.830Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:28:10.040Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:28:10.029Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:28:10.015Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:28:10.004Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:28:09.992Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:28:08.293Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:28:07.758Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:28:07.480Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:28:03.717Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:28:03.702Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:27:37.924Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:27:37.906Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:27:37.887Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:27:37.868Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:27:37.844Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:26:37.287Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:25:09.267Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:25:09.244Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:25:09.230Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:25:09.219Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:25:09.208Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:25:06.909Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:25:06.131Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:25:05.712Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:25:00.180Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:25:00.163Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:24:36.786Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:24:36.766Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:24:36.743Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:24:36.714Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:24:36.667Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:21:59.047Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:21:59.034Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:21:59.025Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:21:59.017Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:21:59.008Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:21:56.941Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:21:56.245Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:21:55.907Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:21:51.227Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:21:51.215Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:21:30.664Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:21:30.655Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:21:30.644Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:21:30.634Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:21:30.608Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:18:42.693Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:18:42.683Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:18:42.673Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:18:42.664Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:18:42.655Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:18:41.048Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:18:40.521Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:18:40.245Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:18:36.703Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:18:36.684Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:18:19.242Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:18:19.233Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:18:19.223Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:18:19.213Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:18:19.202Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:17:01.992Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:15:53.729Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:15:53.718Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:15:53.704Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:15:53.692Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:15:53.678Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:15:51.559Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:15:50.794Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:15:50.436Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:15:45.011Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:15:44.996Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:15:18.822Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:15:18.813Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:15:18.804Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:15:18.796Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:15:18.787Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:13:49.474Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:13:39.429Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:12:43.773Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:12:43.765Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:12:43.757Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:12:43.739Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:12:43.729Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:12:41.916Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:12:41.263Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:12:40.982Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:12:37.168Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:12:37.159Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:12:20.043Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:12:20.029Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:12:20.017Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:12:20.001Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:12:19.992Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:12:07.171Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:12:06.646Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:11:32.036Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:11:08.989Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:09:53.748Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:09:53.732Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:09:53.720Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:09:53.709Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:09:53.695Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:09:50.913Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:09:50.287Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:09:49.989Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:09:42.951Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:09:42.933Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:09:19.259Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:09:19.246Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:09:19.233Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:09:19.221Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:09:19.207Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:08:14.819Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:06:47.021Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:06:47.013Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:06:47.002Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:06:46.994Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:06:46.985Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:06:45.186Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:06:44.610Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:06:44.330Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:06:40.167Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:06:40.159Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:06:20.556Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:06:20.546Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:06:20.535Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:06:20.522Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:06:20.500Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:03:10.776Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:03:10.766Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:03:10.755Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:03:10.746Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:03:10.737Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:03:08.774Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:03:08.300Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:03:08.035Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:03:04.468Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:03:04.460Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:02:48.141Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T15:02:48.134Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T15:02:48.127Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T15:02:48.119Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T15:02:48.111Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T15:02:24.046Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T15:00:33.393Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T15:00:33.380Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T15:00:33.364Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:00:33.353Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:00:33.341Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:00:30.690Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T15:00:29.849Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T15:00:29.217Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:00:22.730Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T15:00:22.712Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:59:55.853Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T14:59:55.838Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T14:59:55.822Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T14:59:55.805Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T14:59:55.782Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T14:57:42.468Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T14:57:42.453Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T14:57:42.435Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:57:42.420Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:57:42.408Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:57:39.428Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:57:38.459Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:57:37.894Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:57:30.432Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:57:30.417Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:57:02.366Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T14:57:02.344Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T14:57:02.323Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T14:57:02.303Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T14:57:02.275Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T14:54:06.530Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T14:54:06.520Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T14:54:06.510Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:54:06.501Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:54:06.319Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:54:03.881Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:54:03.006Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:54:02.630Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:53:57.569Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:53:57.557Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:53:37.267Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T14:53:37.257Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T14:53:37.244Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T14:53:37.237Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T14:53:37.221Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T14:53:00.325Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T14:51:13.303Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T14:51:13.290Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T14:51:13.279Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:51:13.269Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:51:13.257Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:51:11.386Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:51:10.711Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:51:10.325Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:51:05.691Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:51:05.681Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:50:42.790Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T14:50:42.775Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T14:50:42.761Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T14:50:42.742Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T14:50:42.713Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T14:49:53.031Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T14:48:21.349Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T14:48:21.337Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T14:48:21.319Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:48:21.308Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:48:21.299Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:48:19.098Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:48:18.424Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:48:18.061Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:48:12.286Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:48:12.259Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:47:39.070Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T14:47:39.055Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T14:47:39.041Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T14:47:39.026Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T14:47:39.004Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T14:45:29.877Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T14:44:53.240Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T14:44:53.232Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T14:44:53.223Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:44:53.216Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:44:53.209Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:44:51.527Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:44:50.962Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:44:50.682Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:44:46.883Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:44:46.874Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:44:30.772Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|2026-06-28",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T14:44:30.763Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T14:44:30.756Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T14:44:30.748Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T14:44:30.736Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T14:42:08.876Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T14:42:08.861Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T14:42:08.843Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:42:08.831Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:42:08.818Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:42:05.985Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:42:05.127Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:42:04.702Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:41:58.329Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:41:58.315Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:41:30.790Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T14:41:30.781Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T14:41:30.771Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|2025-06-16",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T14:41:30.759Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|2025-06-26",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T14:41:30.750Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:179743|target_update|2026-07-04",
+      "duplicateOf": "commit:chancellor-campbell|florida|2025-06-08",
+      "hash": "10d3671abee4a9fc6130ba2f40f885e4351773e86ad8953af61442990fb535f2",
+      "title": "Chancellor Campbell — intel"
+    },
+    {
+      "at": "2026-07-04T14:40:59.669Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T14:39:03.783Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:244244|target_update|2026-07-01",
+      "duplicateOf": "commit:jackson-ballinger|florida|2026-02-24",
+      "hash": "ee97db926978f8e8c945a6bc2d64cc6fd3ded9dccd517f4c75474c0b81a7dc49",
+      "title": "Jackson Ballinger — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:39:03.442Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T14:39:03.430Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T14:39:03.419Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:39:03.410Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:39:03.399Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:39:01.250Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:39:00.474Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:39:00.019Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:38:52.869Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:38:52.858Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:38:33.493Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T14:38:33.483Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T14:38:33.475Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T14:38:33.463Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:236347|target_update|2026-07-04",
+      "duplicateOf": "commit:desmond-green|florida|",
+      "hash": "35f12164bb9cb685fdc3ae9007e0f48a3d99468bf0c5bcb44da35021d946b5e3",
+      "title": "Desmond Green — intel"
+    },
+    {
+      "at": "2026-07-04T14:37:56.381Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T14:35:48.343Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|offer|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "bc6c262d2ece05323f2f25f13ea6d67b7cbbada52045c83c974e66f7cb70c931",
+      "title": "DK Kalu — Offer · Florida"
+    },
+    {
+      "at": "2026-07-04T14:35:48.331Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:244244|target_update|2026-07-01",
+      "duplicateOf": "commit:jackson-ballinger|florida|2026-02-24",
+      "hash": "ee97db926978f8e8c945a6bc2d64cc6fd3ded9dccd517f4c75474c0b81a7dc49",
+      "title": "Jackson Ballinger — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:35:48.088Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T14:35:48.081Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
+    },
+    {
+      "at": "2026-07-04T14:35:48.074Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:35:48.068Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:35:48.062Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:35:46.613Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
+    },
+    {
+      "at": "2026-07-04T14:35:46.135Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:phil-trautwein|target_update|2026-06-30",
+      "duplicateOf": "intel:39c09d7d-0df3-45a5-a3bb-1667aec1495f|target_update|2026-06-30",
+      "hash": "2a1475784ce59c2ddb9918139f00c41827e5e761ceeb6ce441c8d7a91c945ec3",
+      "title": "Phil Trautwein — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:35:45.887Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:35:42.454Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "62dc0b7c2e548d1db6629074f22619263a9d4e5239265f00649a73b78349950b",
+      "title": "Marquis Evans — intel"
+    },
+    {
+      "at": "2026-07-04T14:35:42.447Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:250285|target_update|2026-06-29",
+      "duplicateOf": "intel:250285|official_visit|2026-07-01",
+      "hash": "117046ac2a5dbbdff625396534e9f8b8757e7cac42a19a1cb5536ba847620732",
+      "title": "Marquis Evans — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:35:27.774Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:284115|target_update|2026-07-04",
+      "duplicateOf": "commit:armani-strong|florida|",
+      "hash": "f2f83cf1adffb6d6f22adea7078c1c2342ccb76d8a9cc03727451f4cb83d5354",
+      "title": "Armani Strong — intel"
+    },
+    {
+      "at": "2026-07-04T14:35:27.767Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:260787|target_update|2026-07-04",
+      "duplicateOf": "commit:eric-parks|florida|2026-02-05",
+      "hash": "8208c24c9a4617c943c0b02a1e138e58e44f5e048b6793139d96ba40b68bf509",
+      "title": "Eric Parks — intel"
+    },
+    {
+      "at": "2026-07-04T14:35:27.758Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:243619|target_update|2026-07-04",
+      "duplicateOf": "commit:javarii-luckas|florida|",
+      "hash": "39c3a54905c701ce4d050c6db952b56b58a66ec7fcee70d0c5aa468b41e1bc9e",
+      "title": "Javarii Luckas — intel"
+    },
+    {
+      "at": "2026-07-04T14:34:31.442Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "gators-online_d046b2e5-baf0-4fc6-a42d-6bb713c855d7",
+      "duplicateOf": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "hash": "1fe1c83e6227b6bfed4af3cde5defa35f4a8891dda8f80ccab846d1be4d1f733",
+      "title": "New episode: Gators Online Podcast — Ep. 190: Takeaways from Florida&apos;s roster in CFB 27 | Gators Online Show"
+    },
+    {
+      "at": "2026-07-04T14:33:05.829Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:261593|unofficial_visit|2026-07-02",
+      "duplicateOf": "intel:261593|unofficial_visit|2026-07-03",
+      "hash": "dcc88c934f24a9d4ea6ada11ff3fc69d375ebb463a59435b242609918f21a9a0",
+      "title": "Bryce Willingham — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T14:33:05.817Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:261593|unofficial_visit|2026-07-02",
+      "duplicateOf": "intel:261593|unofficial_visit|2026-07-03",
+      "hash": "dcc88c934f24a9d4ea6ada11ff3fc69d375ebb463a59435b242609918f21a9a0",
+      "title": "Bryce Willingham — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T14:33:05.086Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|offer|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "bc6c262d2ece05323f2f25f13ea6d67b7cbbada52045c83c974e66f7cb70c931",
+      "title": "DK Kalu — Offer · Florida"
+    },
+    {
+      "at": "2026-07-04T14:33:05.073Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:244244|target_update|2026-07-01",
+      "duplicateOf": "commit:jackson-ballinger|florida|2026-02-24",
+      "hash": "ee97db926978f8e8c945a6bc2d64cc6fd3ded9dccd517f4c75474c0b81a7dc49",
+      "title": "Jackson Ballinger — Recruiting intel"
+    },
+    {
+      "at": "2026-07-04T14:33:04.724Z",
+      "action": "upsert_rejected",
+      "reason": "truncated_copy",
+      "id": "intel:4f411850-c3cb-4225-b92c-979365d6bdd1|unofficial_visit|2026-07-02",
+      "title": "Ayden Woodruff — Unofficial Visit"
+    },
+    {
+      "at": "2026-07-04T14:33:04.715Z",
+      "action": "upsert_rejected",
+      "reason": "duplicate_url",
+      "id": "intel:145026|target_update|2026-07-01",
+      "duplicateOf": "commit:145026|florida|2026-01-05",
+      "hash": "15bd845902b53f63c32a0951e4934a028bbe080c6929c9063f7994f57cb764b9",
+      "title": "DK Kalu — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.431Z",
-      "action": "rejected",
+      "at": "2026-07-04T14:33:04.703Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "commit:285808|florida|2026-06-08",
-      "title": "Jaydee Lane commits to Florida",
-      "rawText": "LS · 3★ · Mendenhall, MS · #1801 natl"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     },
     {
-      "at": "2026-06-11T22:50:16.429Z",
-      "action": "rejected",
+      "at": "2026-07-04T14:33:04.692Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "rec_evt_1781017597848_ej9v28",
-      "title": "Amare Patterson — OV to Florida cancelled · visiting South Carolina",
-      "rawText": "WR · 2027 · via Hayes Fawcett"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — intel"
     },
     {
-      "at": "2026-06-11T22:50:16.425Z",
-      "action": "rejected",
+      "at": "2026-07-04T14:33:04.681Z",
+      "action": "upsert_rejected",
       "reason": "truncated_copy",
-      "id": "gators-breakdown_8d3444c2-6539-11f1-ba26-df223621a9f3",
-      "title": "New episode: Gators Breakdown — INSTANT REACTION: Florida Gators Game Start Times for 2026 | Gators Breakdown Plus MEMBER CHAT",
-      "rawText": "David Waters chats with Gators Breakdown Plus members as the SEC drops the 2026 football start times. Get the READ & REACTION 2026 PREVIEW: https://a.co/d/0c13QdI9 #FloridaGators #GatorsFootball #SECF"
+      "id": "intel:259645|target_update|2026-07-01",
+      "title": "Joey Fleming — Recruiting intel"
     }
   ],
-  "updatedAt": "2026-06-11T22:50:16.575Z"
+  "updatedAt": "2026-07-04T16:09:02.277Z"
 }

@@ -2,6 +2,4407 @@
   "version": 1,
   "entries": [
     {
+      "at": "2026-07-04T16:11:02.330Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaydee Lane",
+      "playerSlug": "jaydee-lane",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.307Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aaron McWilliams",
+      "playerSlug": "aaron-mcwilliams",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.288Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "De'Voun Kendrick",
+      "playerSlug": "devoun-kendrick",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.268Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cain Van Norden",
+      "playerSlug": "cain-van-norden",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.250Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tre Geathers",
+      "playerSlug": "tre-geathers",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.234Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Stive-Bentley Keumajou",
+      "playerSlug": "stive-bentley-keumajou",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.217Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kailib Dillard",
+      "playerSlug": "kailib-dillard",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.198Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jackson Ballinger",
+      "playerSlug": "jackson-ballinger",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.180Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ellis McGaskin",
+      "playerSlug": "ellis-mcgaskin",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.167Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kamarion Johnson",
+      "playerSlug": "kamarion-johnson",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.148Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tommy Douglas",
+      "playerSlug": "tommy-douglas",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.130Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Zahmar Tookes",
+      "playerSlug": "zahmar-tookes",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.113Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Anthony Jennings",
+      "playerSlug": "anthony-jennings",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.098Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Amare Nugent",
+      "playerSlug": "amare-nugent",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.083Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Andrew Beard",
+      "playerSlug": "andrew-beard",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.063Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aamaury Fountain",
+      "playerSlug": "aamaury-fountain",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.037Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ja'Bios Smith",
+      "playerSlug": "jabios-smith",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.019Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tramond Collins",
+      "playerSlug": "tramond-collins",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:02.001Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Peyton Miller",
+      "playerSlug": "peyton-miller",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:01.984Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cahron Wheeler",
+      "playerSlug": "cahron-wheeler",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:01.967Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Davin Davidson",
+      "playerSlug": "davin-davidson",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:01.949Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elijah Hutcheson",
+      "playerSlug": "elijah-hutcheson",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:01.931Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elias Pearl",
+      "playerSlug": "elias-pearl",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:11:01.910Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Maxwell Hiller",
+      "playerSlug": "maxwell-hiller",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.304Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Jordon",
+      "playerSlug": "jaylen-jordon",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.291Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ace Ciongoli",
+      "playerSlug": "ace-ciongoli",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.280Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Miller Fealy",
+      "playerSlug": "miller-fealy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.269Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Carter Milliron",
+      "playerSlug": "carter-milliron",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.258Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Alec Clark",
+      "playerSlug": "alec-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.247Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Patrick Durkin",
+      "playerSlug": "patrick-durkin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.239Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emmanuel Oyebadejo",
+      "playerSlug": "emmanuel-oyebadejo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.229Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Lacota Dippre",
+      "playerSlug": "lacota-dippre",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.216Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kanye Clark",
+      "playerSlug": "kanye-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.205Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Chieca",
+      "playerSlug": "evan-chieca",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.196Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jordy Lowery",
+      "playerSlug": "jordy-lowery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.184Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Bailey Stockton",
+      "playerSlug": "bailey-stockton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.163Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "TJ Bullard",
+      "playerSlug": "tj-bullard",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.136Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Harrison Moore",
+      "playerSlug": "harrison-moore",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.122Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Singleton Jr.",
+      "playerSlug": "eric-singleton-jr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.109Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Lloyd",
+      "playerSlug": "jaylen-lloyd",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.097Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emeka Ugorji",
+      "playerSlug": "emeka-ugorji",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.088Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DJ Coleman",
+      "playerSlug": "dj-coleman",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.077Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Mason Clinton",
+      "playerSlug": "mason-clinton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.067Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DK Kalu",
+      "playerSlug": "dk-kalu",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.058Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aaron Philo",
+      "playerSlug": "aaron-philo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.048Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "London Montgomery",
+      "playerSlug": "london-montgomery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.037Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eagan Boyer",
+      "playerSlug": "eagan-boyer",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.027Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Luke Harpring",
+      "playerSlug": "luke-harpring",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.018Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Micah Mays",
+      "playerSlug": "micah-mays",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:38.009Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cam Dooley",
+      "playerSlug": "cam-dooley",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.999Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "T.J. Shanahan",
+      "playerSlug": "t-j-shanahan",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.990Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Pryor",
+      "playerSlug": "evan-pryor",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.981Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javier Jones",
+      "playerSlug": "javier-jones",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.971Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Parks",
+      "playerSlug": "eric-parks",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.961Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javarii Luckas",
+      "playerSlug": "javarii-luckas",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.948Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Desmond Green",
+      "playerSlug": "desmond-green",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.937Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elijah Owens",
+      "playerSlug": "elijah-owens",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.925Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Chancellor Campbell",
+      "playerSlug": "chancellor-campbell",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.914Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "G'Nivre Carr",
+      "playerSlug": "gnivre-carr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.905Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Hester",
+      "playerSlug": "cj-hester",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.896Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kaiden Hall",
+      "playerSlug": "kaiden-hall",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.887Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Marquez Daniel",
+      "playerSlug": "marquez-daniel",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.878Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Heze Kent",
+      "playerSlug": "heze-kent",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.867Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Malik Morris",
+      "playerSlug": "malik-morris",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.857Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tyler Chukuyem",
+      "playerSlug": "tyler-chukuyem",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.848Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kendall Guervil",
+      "playerSlug": "kendall-guervil",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.838Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Will Griffin",
+      "playerSlug": "will-griffin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.828Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Dylan Purter",
+      "playerSlug": "dylan-purter",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.818Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "JaReylan McCoy",
+      "playerSlug": "jareylan-mccoy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.809Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Justin Williams",
+      "playerSlug": "justin-williams",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.799Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kevin Ford",
+      "playerSlug": "kevin-ford",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.790Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Bronaugh",
+      "playerSlug": "cj-bronaugh",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:37.779Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Davian Groce",
+      "playerSlug": "davian-groce",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.621Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Jordon",
+      "playerSlug": "jaylen-jordon",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.613Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ace Ciongoli",
+      "playerSlug": "ace-ciongoli",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.605Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Miller Fealy",
+      "playerSlug": "miller-fealy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.597Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Carter Milliron",
+      "playerSlug": "carter-milliron",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.586Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Alec Clark",
+      "playerSlug": "alec-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.577Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Patrick Durkin",
+      "playerSlug": "patrick-durkin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.567Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emmanuel Oyebadejo",
+      "playerSlug": "emmanuel-oyebadejo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.555Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Lacota Dippre",
+      "playerSlug": "lacota-dippre",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.546Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kanye Clark",
+      "playerSlug": "kanye-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.530Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Chieca",
+      "playerSlug": "evan-chieca",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.519Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jordy Lowery",
+      "playerSlug": "jordy-lowery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.507Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Bailey Stockton",
+      "playerSlug": "bailey-stockton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.498Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "TJ Bullard",
+      "playerSlug": "tj-bullard",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.474Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Harrison Moore",
+      "playerSlug": "harrison-moore",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.465Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Singleton Jr.",
+      "playerSlug": "eric-singleton-jr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.457Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Lloyd",
+      "playerSlug": "jaylen-lloyd",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.447Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emeka Ugorji",
+      "playerSlug": "emeka-ugorji",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.437Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DJ Coleman",
+      "playerSlug": "dj-coleman",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.425Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Mason Clinton",
+      "playerSlug": "mason-clinton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.417Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DK Kalu",
+      "playerSlug": "dk-kalu",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.408Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aaron Philo",
+      "playerSlug": "aaron-philo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.401Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "London Montgomery",
+      "playerSlug": "london-montgomery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.393Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eagan Boyer",
+      "playerSlug": "eagan-boyer",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.386Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Luke Harpring",
+      "playerSlug": "luke-harpring",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.378Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Micah Mays",
+      "playerSlug": "micah-mays",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.371Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cam Dooley",
+      "playerSlug": "cam-dooley",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.359Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "T.J. Shanahan",
+      "playerSlug": "t-j-shanahan",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.351Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Pryor",
+      "playerSlug": "evan-pryor",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.342Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javier Jones",
+      "playerSlug": "javier-jones",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.335Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Parks",
+      "playerSlug": "eric-parks",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.328Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javarii Luckas",
+      "playerSlug": "javarii-luckas",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.320Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Desmond Green",
+      "playerSlug": "desmond-green",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.313Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elijah Owens",
+      "playerSlug": "elijah-owens",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.305Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Chancellor Campbell",
+      "playerSlug": "chancellor-campbell",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.295Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "G'Nivre Carr",
+      "playerSlug": "gnivre-carr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.285Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Hester",
+      "playerSlug": "cj-hester",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.274Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kaiden Hall",
+      "playerSlug": "kaiden-hall",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.246Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Marquez Daniel",
+      "playerSlug": "marquez-daniel",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.237Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Heze Kent",
+      "playerSlug": "heze-kent",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.218Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Malik Morris",
+      "playerSlug": "malik-morris",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.207Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tyler Chukuyem",
+      "playerSlug": "tyler-chukuyem",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.196Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kendall Guervil",
+      "playerSlug": "kendall-guervil",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.181Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Will Griffin",
+      "playerSlug": "will-griffin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.172Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Dylan Purter",
+      "playerSlug": "dylan-purter",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.164Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "JaReylan McCoy",
+      "playerSlug": "jareylan-mccoy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.152Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Justin Williams",
+      "playerSlug": "justin-williams",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.145Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kevin Ford",
+      "playerSlug": "kevin-ford",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.137Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Bronaugh",
+      "playerSlug": "cj-bronaugh",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:10:07.120Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Davian Groce",
+      "playerSlug": "davian-groce",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.569Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Jordon",
+      "playerSlug": "jaylen-jordon",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.547Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ace Ciongoli",
+      "playerSlug": "ace-ciongoli",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.525Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Miller Fealy",
+      "playerSlug": "miller-fealy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.504Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Carter Milliron",
+      "playerSlug": "carter-milliron",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.483Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Alec Clark",
+      "playerSlug": "alec-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.463Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Patrick Durkin",
+      "playerSlug": "patrick-durkin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.441Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emmanuel Oyebadejo",
+      "playerSlug": "emmanuel-oyebadejo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.421Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Lacota Dippre",
+      "playerSlug": "lacota-dippre",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.402Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kanye Clark",
+      "playerSlug": "kanye-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.382Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Chieca",
+      "playerSlug": "evan-chieca",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.360Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jordy Lowery",
+      "playerSlug": "jordy-lowery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.338Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Bailey Stockton",
+      "playerSlug": "bailey-stockton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.313Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "TJ Bullard",
+      "playerSlug": "tj-bullard",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.289Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Harrison Moore",
+      "playerSlug": "harrison-moore",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.268Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Singleton Jr.",
+      "playerSlug": "eric-singleton-jr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.246Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Lloyd",
+      "playerSlug": "jaylen-lloyd",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.224Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emeka Ugorji",
+      "playerSlug": "emeka-ugorji",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.202Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DJ Coleman",
+      "playerSlug": "dj-coleman",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.180Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Mason Clinton",
+      "playerSlug": "mason-clinton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.158Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DK Kalu",
+      "playerSlug": "dk-kalu",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.137Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aaron Philo",
+      "playerSlug": "aaron-philo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.110Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "London Montgomery",
+      "playerSlug": "london-montgomery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.084Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eagan Boyer",
+      "playerSlug": "eagan-boyer",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.059Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Luke Harpring",
+      "playerSlug": "luke-harpring",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.037Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Micah Mays",
+      "playerSlug": "micah-mays",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:40.014Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cam Dooley",
+      "playerSlug": "cam-dooley",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.996Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "T.J. Shanahan",
+      "playerSlug": "tj-shanahan",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.976Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Pryor",
+      "playerSlug": "evan-pryor",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.940Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javier Jones",
+      "playerSlug": "javier-jones",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.920Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Parks",
+      "playerSlug": "eric-parks",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.902Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javarii Luckas",
+      "playerSlug": "javarii-luckas",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.884Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Desmond Green",
+      "playerSlug": "desmond-green",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.864Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elijah Owens",
+      "playerSlug": "elijah-owens",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.829Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Chancellor Campbell",
+      "playerSlug": "chancellor-campbell",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.787Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "G'Nivre Carr",
+      "playerSlug": "gnivre-carr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.742Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Hester",
+      "playerSlug": "cj-hester",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.713Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kaiden Hall",
+      "playerSlug": "kaiden-hall",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.677Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Marquez Daniel",
+      "playerSlug": "marquez-daniel",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.650Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Heze Kent",
+      "playerSlug": "heze-kent",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.621Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Malik Morris",
+      "playerSlug": "malik-morris",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.585Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tyler Chukuyem",
+      "playerSlug": "tyler-chukuyem",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.479Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kendall Guervil",
+      "playerSlug": "kendall-guervil",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.449Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Will Griffin",
+      "playerSlug": "will-griffin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.426Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Dylan Purter",
+      "playerSlug": "dylan-purter",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.406Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "JaReylan McCoy",
+      "playerSlug": "jareylan-mccoy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.387Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Justin Williams",
+      "playerSlug": "justin-williams",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.368Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kevin Ford",
+      "playerSlug": "kevin-ford",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.349Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Bronaugh",
+      "playerSlug": "cj-bronaugh",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:04:39.327Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Davian Groce",
+      "playerSlug": "davian-groce",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.746Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Jordon",
+      "playerSlug": "jaylen-jordon",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.724Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ace Ciongoli",
+      "playerSlug": "ace-ciongoli",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.701Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Miller Fealy",
+      "playerSlug": "miller-fealy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.680Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Carter Milliron",
+      "playerSlug": "carter-milliron",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.657Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Alec Clark",
+      "playerSlug": "alec-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.629Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Patrick Durkin",
+      "playerSlug": "patrick-durkin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.600Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emmanuel Oyebadejo",
+      "playerSlug": "emmanuel-oyebadejo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.575Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Lacota Dippre",
+      "playerSlug": "lacota-dippre",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.550Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kanye Clark",
+      "playerSlug": "kanye-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.505Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Chieca",
+      "playerSlug": "evan-chieca",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.483Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jordy Lowery",
+      "playerSlug": "jordy-lowery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.459Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Bailey Stockton",
+      "playerSlug": "bailey-stockton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.436Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "TJ Bullard",
+      "playerSlug": "tj-bullard",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.413Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Harrison Moore",
+      "playerSlug": "harrison-moore",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.386Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Singleton Jr.",
+      "playerSlug": "eric-singleton-jr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.364Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Lloyd",
+      "playerSlug": "jaylen-lloyd",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.338Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emeka Ugorji",
+      "playerSlug": "emeka-ugorji",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.316Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DJ Coleman",
+      "playerSlug": "dj-coleman",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.282Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Mason Clinton",
+      "playerSlug": "mason-clinton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.255Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DK Kalu",
+      "playerSlug": "dk-kalu",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.220Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aaron Philo",
+      "playerSlug": "aaron-philo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.158Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "London Montgomery",
+      "playerSlug": "london-montgomery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.119Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eagan Boyer",
+      "playerSlug": "eagan-boyer",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.086Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Luke Harpring",
+      "playerSlug": "luke-harpring",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.054Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Micah Mays",
+      "playerSlug": "micah-mays",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.028Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cam Dooley",
+      "playerSlug": "cam-dooley",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:37.004Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "T.J. Shanahan",
+      "playerSlug": "tj-shanahan",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.961Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Pryor",
+      "playerSlug": "evan-pryor",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.937Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javier Jones",
+      "playerSlug": "javier-jones",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.909Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Parks",
+      "playerSlug": "eric-parks",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.881Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javarii Luckas",
+      "playerSlug": "javarii-luckas",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.859Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Desmond Green",
+      "playerSlug": "desmond-green",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.826Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elijah Owens",
+      "playerSlug": "elijah-owens",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.799Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Chancellor Campbell",
+      "playerSlug": "chancellor-campbell",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.772Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "G'Nivre Carr",
+      "playerSlug": "gnivre-carr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.743Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Hester",
+      "playerSlug": "cj-hester",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.713Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kaiden Hall",
+      "playerSlug": "kaiden-hall",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.688Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Marquez Daniel",
+      "playerSlug": "marquez-daniel",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.654Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Heze Kent",
+      "playerSlug": "heze-kent",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.626Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Malik Morris",
+      "playerSlug": "malik-morris",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.600Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tyler Chukuyem",
+      "playerSlug": "tyler-chukuyem",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.573Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kendall Guervil",
+      "playerSlug": "kendall-guervil",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.543Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Will Griffin",
+      "playerSlug": "will-griffin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.512Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Dylan Purter",
+      "playerSlug": "dylan-purter",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.484Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "JaReylan McCoy",
+      "playerSlug": "jareylan-mccoy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.454Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Justin Williams",
+      "playerSlug": "justin-williams",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.428Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kevin Ford",
+      "playerSlug": "kevin-ford",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.397Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Bronaugh",
+      "playerSlug": "cj-bronaugh",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T16:03:36.361Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Davian Groce",
+      "playerSlug": "davian-groce",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.212Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Jordon",
+      "playerSlug": "jaylen-jordon",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.199Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ace Ciongoli",
+      "playerSlug": "ace-ciongoli",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.186Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Miller Fealy",
+      "playerSlug": "miller-fealy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.173Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Carter Milliron",
+      "playerSlug": "carter-milliron",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.160Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Alec Clark",
+      "playerSlug": "alec-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.146Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Patrick Durkin",
+      "playerSlug": "patrick-durkin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.134Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emmanuel Oyebadejo",
+      "playerSlug": "emmanuel-oyebadejo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.120Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Lacota Dippre",
+      "playerSlug": "lacota-dippre",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.107Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kanye Clark",
+      "playerSlug": "kanye-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.086Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Chieca",
+      "playerSlug": "evan-chieca",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.073Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jordy Lowery",
+      "playerSlug": "jordy-lowery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.060Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Bailey Stockton",
+      "playerSlug": "bailey-stockton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.042Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "TJ Bullard",
+      "playerSlug": "tj-bullard",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.021Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Harrison Moore",
+      "playerSlug": "harrison-moore",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:43.008Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Singleton Jr.",
+      "playerSlug": "eric-singleton-jr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.994Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Lloyd",
+      "playerSlug": "jaylen-lloyd",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.981Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emeka Ugorji",
+      "playerSlug": "emeka-ugorji",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.969Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DJ Coleman",
+      "playerSlug": "dj-coleman",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.957Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Mason Clinton",
+      "playerSlug": "mason-clinton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.944Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DK Kalu",
+      "playerSlug": "dk-kalu",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.931Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aaron Philo",
+      "playerSlug": "aaron-philo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.919Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "London Montgomery",
+      "playerSlug": "london-montgomery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.907Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eagan Boyer",
+      "playerSlug": "eagan-boyer",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.894Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Luke Harpring",
+      "playerSlug": "luke-harpring",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.882Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Micah Mays",
+      "playerSlug": "micah-mays",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.857Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cam Dooley",
+      "playerSlug": "cam-dooley",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.843Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "T.J. Shanahan",
+      "playerSlug": "tj-shanahan",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.830Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Pryor",
+      "playerSlug": "evan-pryor",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.816Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javier Jones",
+      "playerSlug": "javier-jones",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.803Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Parks",
+      "playerSlug": "eric-parks",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.791Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javarii Luckas",
+      "playerSlug": "javarii-luckas",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.778Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Desmond Green",
+      "playerSlug": "desmond-green",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.766Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elijah Owens",
+      "playerSlug": "elijah-owens",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.753Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Chancellor Campbell",
+      "playerSlug": "chancellor-campbell",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.739Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "G'Nivre Carr",
+      "playerSlug": "gnivre-carr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.726Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Hester",
+      "playerSlug": "cj-hester",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.713Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kaiden Hall",
+      "playerSlug": "kaiden-hall",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.701Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Marquez Daniel",
+      "playerSlug": "marquez-daniel",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.689Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Heze Kent",
+      "playerSlug": "heze-kent",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.676Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Malik Morris",
+      "playerSlug": "malik-morris",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.656Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tyler Chukuyem",
+      "playerSlug": "tyler-chukuyem",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.641Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kendall Guervil",
+      "playerSlug": "kendall-guervil",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.625Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Will Griffin",
+      "playerSlug": "will-griffin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.611Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Dylan Purter",
+      "playerSlug": "dylan-purter",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.597Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "JaReylan McCoy",
+      "playerSlug": "jareylan-mccoy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.584Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Justin Williams",
+      "playerSlug": "justin-williams",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.571Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kevin Ford",
+      "playerSlug": "kevin-ford",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.555Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Bronaugh",
+      "playerSlug": "cj-bronaugh",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:42.540Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Davian Groce",
+      "playerSlug": "davian-groce",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.686Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Jordon",
+      "playerSlug": "jaylen-jordon",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.673Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ace Ciongoli",
+      "playerSlug": "ace-ciongoli",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.660Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Miller Fealy",
+      "playerSlug": "miller-fealy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.647Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Carter Milliron",
+      "playerSlug": "carter-milliron",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.634Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Alec Clark",
+      "playerSlug": "alec-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.621Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Patrick Durkin",
+      "playerSlug": "patrick-durkin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.608Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emmanuel Oyebadejo",
+      "playerSlug": "emmanuel-oyebadejo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.595Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Lacota Dippre",
+      "playerSlug": "lacota-dippre",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.582Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kanye Clark",
+      "playerSlug": "kanye-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.570Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Chieca",
+      "playerSlug": "evan-chieca",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.557Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jordy Lowery",
+      "playerSlug": "jordy-lowery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.528Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Bailey Stockton",
+      "playerSlug": "bailey-stockton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.515Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "TJ Bullard",
+      "playerSlug": "tj-bullard",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.503Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Harrison Moore",
+      "playerSlug": "harrison-moore",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.490Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Singleton Jr.",
+      "playerSlug": "eric-singleton-jr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.478Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Lloyd",
+      "playerSlug": "jaylen-lloyd",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.456Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emeka Ugorji",
+      "playerSlug": "emeka-ugorji",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.444Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DJ Coleman",
+      "playerSlug": "dj-coleman",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.432Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Mason Clinton",
+      "playerSlug": "mason-clinton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.417Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DK Kalu",
+      "playerSlug": "dk-kalu",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.403Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aaron Philo",
+      "playerSlug": "aaron-philo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.380Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "London Montgomery",
+      "playerSlug": "london-montgomery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.368Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eagan Boyer",
+      "playerSlug": "eagan-boyer",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.355Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Luke Harpring",
+      "playerSlug": "luke-harpring",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.344Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Micah Mays",
+      "playerSlug": "micah-mays",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.331Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cam Dooley",
+      "playerSlug": "cam-dooley",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.319Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "T.J. Shanahan",
+      "playerSlug": "tj-shanahan",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.306Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Pryor",
+      "playerSlug": "evan-pryor",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.294Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javier Jones",
+      "playerSlug": "javier-jones",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.281Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Parks",
+      "playerSlug": "eric-parks",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.269Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javarii Luckas",
+      "playerSlug": "javarii-luckas",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.256Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Desmond Green",
+      "playerSlug": "desmond-green",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.243Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elijah Owens",
+      "playerSlug": "elijah-owens",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.231Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Chancellor Campbell",
+      "playerSlug": "chancellor-campbell",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.208Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "G'Nivre Carr",
+      "playerSlug": "gnivre-carr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.196Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Hester",
+      "playerSlug": "cj-hester",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.181Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kaiden Hall",
+      "playerSlug": "kaiden-hall",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.166Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Marquez Daniel",
+      "playerSlug": "marquez-daniel",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.153Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Heze Kent",
+      "playerSlug": "heze-kent",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.141Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Malik Morris",
+      "playerSlug": "malik-morris",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.128Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tyler Chukuyem",
+      "playerSlug": "tyler-chukuyem",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.116Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kendall Guervil",
+      "playerSlug": "kendall-guervil",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.103Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Will Griffin",
+      "playerSlug": "will-griffin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.079Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Dylan Purter",
+      "playerSlug": "dylan-purter",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.067Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "JaReylan McCoy",
+      "playerSlug": "jareylan-mccoy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.055Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Justin Williams",
+      "playerSlug": "justin-williams",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.041Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kevin Ford",
+      "playerSlug": "kevin-ford",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.017Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Bronaugh",
+      "playerSlug": "cj-bronaugh",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:29:12.005Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Davian Groce",
+      "playerSlug": "davian-groce",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.838Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaydee Lane",
+      "playerSlug": "jaydee-lane",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.824Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aaron McWilliams",
+      "playerSlug": "aaron-mcwilliams",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.792Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "De'Voun Kendrick",
+      "playerSlug": "devoun-kendrick",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.779Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cain Van Norden",
+      "playerSlug": "cain-van-norden",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.767Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tre Geathers",
+      "playerSlug": "tre-geathers",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.754Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Stive-Bentley Keumajou",
+      "playerSlug": "stive-bentley-keumajou",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.743Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kailib Dillard",
+      "playerSlug": "kailib-dillard",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.731Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jackson Ballinger",
+      "playerSlug": "jackson-ballinger",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.720Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ellis McGaskin",
+      "playerSlug": "ellis-mcgaskin",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.709Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kamarion Johnson",
+      "playerSlug": "kamarion-johnson",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.697Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tommy Douglas",
+      "playerSlug": "tommy-douglas",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.683Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Zahmar Tookes",
+      "playerSlug": "zahmar-tookes",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.671Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Anthony Jennings",
+      "playerSlug": "anthony-jennings",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.649Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Amare Nugent",
+      "playerSlug": "amare-nugent",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.632Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Andrew Beard",
+      "playerSlug": "andrew-beard",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.620Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aamaury Fountain",
+      "playerSlug": "aamaury-fountain",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.609Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ja'Bios Smith",
+      "playerSlug": "jabios-smith",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.598Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tramond Collins",
+      "playerSlug": "tramond-collins",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.586Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Peyton Miller",
+      "playerSlug": "peyton-miller",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.574Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cahron Wheeler",
+      "playerSlug": "cahron-wheeler",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.562Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Davin Davidson",
+      "playerSlug": "davin-davidson",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.550Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elijah Hutcheson",
+      "playerSlug": "elijah-hutcheson",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.539Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elias Pearl",
+      "playerSlug": "elias-pearl",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:28:48.525Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Maxwell Hiller",
+      "playerSlug": "maxwell-hiller",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.654Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Jordon",
+      "playerSlug": "jaylen-jordon",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.633Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ace Ciongoli",
+      "playerSlug": "ace-ciongoli",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.616Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Miller Fealy",
+      "playerSlug": "miller-fealy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.600Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Carter Milliron",
+      "playerSlug": "carter-milliron",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.578Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Alec Clark",
+      "playerSlug": "alec-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.555Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Patrick Durkin",
+      "playerSlug": "patrick-durkin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.532Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emmanuel Oyebadejo",
+      "playerSlug": "emmanuel-oyebadejo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.517Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Lacota Dippre",
+      "playerSlug": "lacota-dippre",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.497Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kanye Clark",
+      "playerSlug": "kanye-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.467Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Chieca",
+      "playerSlug": "evan-chieca",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.446Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jordy Lowery",
+      "playerSlug": "jordy-lowery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.424Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Bailey Stockton",
+      "playerSlug": "bailey-stockton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.403Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "TJ Bullard",
+      "playerSlug": "tj-bullard",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.379Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Harrison Moore",
+      "playerSlug": "harrison-moore",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.360Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Singleton Jr.",
+      "playerSlug": "eric-singleton-jr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.339Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Lloyd",
+      "playerSlug": "jaylen-lloyd",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.324Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emeka Ugorji",
+      "playerSlug": "emeka-ugorji",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.304Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DJ Coleman",
+      "playerSlug": "dj-coleman",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.268Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Mason Clinton",
+      "playerSlug": "mason-clinton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.250Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DK Kalu",
+      "playerSlug": "dk-kalu",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.234Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aaron Philo",
+      "playerSlug": "aaron-philo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.214Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "London Montgomery",
+      "playerSlug": "london-montgomery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.192Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eagan Boyer",
+      "playerSlug": "eagan-boyer",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.170Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Luke Harpring",
+      "playerSlug": "luke-harpring",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.149Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Micah Mays",
+      "playerSlug": "micah-mays",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.133Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cam Dooley",
+      "playerSlug": "cam-dooley",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.118Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "T.J. Shanahan",
+      "playerSlug": "tj-shanahan",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.100Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Pryor",
+      "playerSlug": "evan-pryor",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.074Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javier Jones",
+      "playerSlug": "javier-jones",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.049Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Parks",
+      "playerSlug": "eric-parks",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.035Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javarii Luckas",
+      "playerSlug": "javarii-luckas",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.021Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Desmond Green",
+      "playerSlug": "desmond-green",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:05.006Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elijah Owens",
+      "playerSlug": "elijah-owens",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.989Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Chancellor Campbell",
+      "playerSlug": "chancellor-campbell",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.966Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "G'Nivre Carr",
+      "playerSlug": "gnivre-carr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.948Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Hester",
+      "playerSlug": "cj-hester",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.931Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kaiden Hall",
+      "playerSlug": "kaiden-hall",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.918Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Marquez Daniel",
+      "playerSlug": "marquez-daniel",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.904Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Heze Kent",
+      "playerSlug": "heze-kent",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.889Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Malik Morris",
+      "playerSlug": "malik-morris",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.875Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tyler Chukuyem",
+      "playerSlug": "tyler-chukuyem",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.862Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kendall Guervil",
+      "playerSlug": "kendall-guervil",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.848Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Will Griffin",
+      "playerSlug": "will-griffin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.834Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Dylan Purter",
+      "playerSlug": "dylan-purter",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.819Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "JaReylan McCoy",
+      "playerSlug": "jareylan-mccoy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.805Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Justin Williams",
+      "playerSlug": "justin-williams",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.791Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kevin Ford",
+      "playerSlug": "kevin-ford",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.774Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Bronaugh",
+      "playerSlug": "cj-bronaugh",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:08:04.757Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Davian Groce",
+      "playerSlug": "davian-groce",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.608Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Jordon",
+      "playerSlug": "jaylen-jordon",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.597Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ace Ciongoli",
+      "playerSlug": "ace-ciongoli",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.576Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Miller Fealy",
+      "playerSlug": "miller-fealy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.562Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Carter Milliron",
+      "playerSlug": "carter-milliron",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.551Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Alec Clark",
+      "playerSlug": "alec-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.537Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Patrick Durkin",
+      "playerSlug": "patrick-durkin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.524Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emmanuel Oyebadejo",
+      "playerSlug": "emmanuel-oyebadejo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.509Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Lacota Dippre",
+      "playerSlug": "lacota-dippre",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.493Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kanye Clark",
+      "playerSlug": "kanye-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.480Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Chieca",
+      "playerSlug": "evan-chieca",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.464Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jordy Lowery",
+      "playerSlug": "jordy-lowery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.448Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Bailey Stockton",
+      "playerSlug": "bailey-stockton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.433Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "TJ Bullard",
+      "playerSlug": "tj-bullard",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.415Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Harrison Moore",
+      "playerSlug": "harrison-moore",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.403Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Singleton Jr.",
+      "playerSlug": "eric-singleton-jr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.391Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Lloyd",
+      "playerSlug": "jaylen-lloyd",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.381Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emeka Ugorji",
+      "playerSlug": "emeka-ugorji",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.368Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DJ Coleman",
+      "playerSlug": "dj-coleman",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.350Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Mason Clinton",
+      "playerSlug": "mason-clinton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.336Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DK Kalu",
+      "playerSlug": "dk-kalu",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.325Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aaron Philo",
+      "playerSlug": "aaron-philo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.302Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "London Montgomery",
+      "playerSlug": "london-montgomery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.287Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eagan Boyer",
+      "playerSlug": "eagan-boyer",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.276Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Luke Harpring",
+      "playerSlug": "luke-harpring",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.266Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Micah Mays",
+      "playerSlug": "micah-mays",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.256Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cam Dooley",
+      "playerSlug": "cam-dooley",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.244Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "T.J. Shanahan",
+      "playerSlug": "tj-shanahan",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.232Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Pryor",
+      "playerSlug": "evan-pryor",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.212Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javier Jones",
+      "playerSlug": "javier-jones",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.201Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Parks",
+      "playerSlug": "eric-parks",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.183Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javarii Luckas",
+      "playerSlug": "javarii-luckas",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.167Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Desmond Green",
+      "playerSlug": "desmond-green",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.154Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elijah Owens",
+      "playerSlug": "elijah-owens",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.143Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Chancellor Campbell",
+      "playerSlug": "chancellor-campbell",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.131Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "G'Nivre Carr",
+      "playerSlug": "gnivre-carr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.120Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Hester",
+      "playerSlug": "cj-hester",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.108Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kaiden Hall",
+      "playerSlug": "kaiden-hall",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.092Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Marquez Daniel",
+      "playerSlug": "marquez-daniel",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.082Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Heze Kent",
+      "playerSlug": "heze-kent",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.072Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Malik Morris",
+      "playerSlug": "malik-morris",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.061Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tyler Chukuyem",
+      "playerSlug": "tyler-chukuyem",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.051Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kendall Guervil",
+      "playerSlug": "kendall-guervil",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.039Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Will Griffin",
+      "playerSlug": "will-griffin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.021Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Dylan Purter",
+      "playerSlug": "dylan-purter",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:02.008Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "JaReylan McCoy",
+      "playerSlug": "jareylan-mccoy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:01.997Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Justin Williams",
+      "playerSlug": "justin-williams",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:01.984Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kevin Ford",
+      "playerSlug": "kevin-ford",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:01.969Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Bronaugh",
+      "playerSlug": "cj-bronaugh",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:02:01.950Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Davian Groce",
+      "playerSlug": "davian-groce",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.401Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Jordon",
+      "playerSlug": "jaylen-jordon",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.383Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Ace Ciongoli",
+      "playerSlug": "ace-ciongoli",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.363Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Miller Fealy",
+      "playerSlug": "miller-fealy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.350Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Carter Milliron",
+      "playerSlug": "carter-milliron",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.326Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Alec Clark",
+      "playerSlug": "alec-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.305Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Patrick Durkin",
+      "playerSlug": "patrick-durkin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.290Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emmanuel Oyebadejo",
+      "playerSlug": "emmanuel-oyebadejo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.275Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Lacota Dippre",
+      "playerSlug": "lacota-dippre",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.256Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kanye Clark",
+      "playerSlug": "kanye-clark",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.237Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Chieca",
+      "playerSlug": "evan-chieca",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.219Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jordy Lowery",
+      "playerSlug": "jordy-lowery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.202Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Bailey Stockton",
+      "playerSlug": "bailey-stockton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.186Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "TJ Bullard",
+      "playerSlug": "tj-bullard",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.167Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Harrison Moore",
+      "playerSlug": "harrison-moore",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.148Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Singleton Jr.",
+      "playerSlug": "eric-singleton-jr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.134Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Jaylen Lloyd",
+      "playerSlug": "jaylen-lloyd",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.100Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Emeka Ugorji",
+      "playerSlug": "emeka-ugorji",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.079Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DJ Coleman",
+      "playerSlug": "dj-coleman",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.050Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Mason Clinton",
+      "playerSlug": "mason-clinton",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.031Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "DK Kalu",
+      "playerSlug": "dk-kalu",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:23.016Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Aaron Philo",
+      "playerSlug": "aaron-philo",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.997Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "London Montgomery",
+      "playerSlug": "london-montgomery",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.982Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eagan Boyer",
+      "playerSlug": "eagan-boyer",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.966Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Luke Harpring",
+      "playerSlug": "luke-harpring",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.946Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Micah Mays",
+      "playerSlug": "micah-mays",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.928Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Cam Dooley",
+      "playerSlug": "cam-dooley",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.912Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "T.J. Shanahan",
+      "playerSlug": "tj-shanahan",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.895Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Evan Pryor",
+      "playerSlug": "evan-pryor",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.879Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javier Jones",
+      "playerSlug": "javier-jones",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.865Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Eric Parks",
+      "playerSlug": "eric-parks",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.847Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Javarii Luckas",
+      "playerSlug": "javarii-luckas",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.830Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Desmond Green",
+      "playerSlug": "desmond-green",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.811Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Elijah Owens",
+      "playerSlug": "elijah-owens",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.796Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Chancellor Campbell",
+      "playerSlug": "chancellor-campbell",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.781Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "G'Nivre Carr",
+      "playerSlug": "gnivre-carr",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.763Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Hester",
+      "playerSlug": "cj-hester",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.749Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kaiden Hall",
+      "playerSlug": "kaiden-hall",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.734Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Marquez Daniel",
+      "playerSlug": "marquez-daniel",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.713Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Heze Kent",
+      "playerSlug": "heze-kent",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.687Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Malik Morris",
+      "playerSlug": "malik-morris",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.673Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Tyler Chukuyem",
+      "playerSlug": "tyler-chukuyem",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.655Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kendall Guervil",
+      "playerSlug": "kendall-guervil",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.635Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Will Griffin",
+      "playerSlug": "will-griffin",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.618Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Dylan Purter",
+      "playerSlug": "dylan-purter",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.598Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "JaReylan McCoy",
+      "playerSlug": "jareylan-mccoy",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.575Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Justin Williams",
+      "playerSlug": "justin-williams",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.556Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kevin Ford",
+      "playerSlug": "kevin-ford",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.531Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "CJ Bronaugh",
+      "playerSlug": "cj-bronaugh",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
+      "at": "2026-07-04T15:01:22.512Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Davian Groce",
+      "playerSlug": "davian-groce",
+      "classYear": 2026,
+      "trigger": "missing_from_board"
+    },
+    {
       "at": "2026-06-24T20:42:06.893Z",
       "action": "blocked",
       "reason": "missing_from_board",
@@ -29,5 +4430,5 @@
       "trigger": "missing_from_board"
     }
   ],
-  "updatedAt": "2026-06-24T20:42:06.893Z"
+  "updatedAt": "2026-07-04T16:11:02.330Z"
 }

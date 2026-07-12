@@ -668,18 +668,6 @@ async function tryPublishCommitElite({ input, research, playerData, beatForCommi
     }
   }
 
-  if (!/\/player\/|futurecast\/player\//i.test(text) && playerSlug) {
-    const copyMod = require('./x-autoposter-copy');
-    text =
-      copyMod.appendSite(text, {
-        postKind: kind,
-        triggerType: 'commit',
-        playerSlug,
-        playerName: research.playerName,
-        validationMeta: { playerSlug, commitElite: true }
-      }) || text;
-  }
-
   const publishCandidate = {
     ok: true,
     text,
@@ -735,14 +723,13 @@ async function buildCommitElitePost(input = {}) {
     classYear: input.intel?.classYear || input.patch?.classYear || null,
     school: input.intel?.school || input.intel?.highSchool || null,
     stars: input.intel?.stars || input.patch?.stars || null,
-    identityConfirmed: input.intel?.identityConfirmed ?? true,
+    identityConfirmed: input.intel?.identityConfirmed,
     sourceType: input.intel?.sourceType || (input.beatText ? 'beat' : null),
     timestamp:
-      input.intel?.timestamp ||
-      input.timestamp ||
-      input.publishedAt ||
       dataLayer.resolveIntelTimestamp(input.intel || input) ||
-      new Date().toISOString(),
+      input.intel?.timestamp ||
+      input.publishedAt ||
+      null,
     eventType: input.intel?.eventType || 'commit',
     source: input.intel?.source || input.source,
     sourceHandle: input.intel?.sourceHandle || null,
@@ -777,15 +764,16 @@ async function buildElitePlayerPost(input = {}) {
     classYear: input.intel?.classYear || input.patch?.classYear || null,
     school: input.intel?.school || input.intel?.highSchool || null,
     stars: input.intel?.stars || input.patch?.stars || null,
-    identityConfirmed: input.intel?.identityConfirmed ?? (input.intel?.eventType === 'commit' ? true : undefined),
+    identityConfirmed: input.intel?.identityConfirmed,
     sourceType: input.intel?.sourceType || (input.beatText ? 'beat' : null),
     timestamp:
+      require('./x-autoposter-data-layer').resolveIntelTimestamp(input.intel || input) ||
       input.intel?.timestamp ||
-      input.timestamp ||
-      input.publishedAt ||
       input.intel?.sourceEventCreatedAt ||
       input.intel?.publishedAt ||
+      input.intel?.created_at ||
       input.intel?.createdAt ||
+      input.publishedAt ||
       null,
     eventType: input.intel?.eventType,
     source: input.intel?.source || input.source,

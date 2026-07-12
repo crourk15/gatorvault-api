@@ -1,5 +1,1186 @@
 [
   {
+    "ts": "2026-07-11T11:28:06.721Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 0,
+    "parsedCounts": {
+      "2027": 26
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2027/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-11T05:06:13.234Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 3,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 26,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T16:10:18.328Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 3,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T16:10:18.323Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 4,
+    "parsedCounts": {
+      "2026": 0,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T16:03:47.459Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 4,
+    "parsedCounts": {
+      "2026": 0,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T16:01:41.067Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T16:01:25.160Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 3,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:48:21.293Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:47:11.637Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:46:49.705Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 3,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:45:33.055Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 3,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:41:04.664Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:35:00.660Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:34:31.353Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 4,
+    "parsedCounts": {
+      "2026": 0,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:33:01.972Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:32:20.218Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:30:04.895Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 3,
+    "parsedCounts": {
+      "2026": 0,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:29:23.889Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 3,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 0,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:23:12.729Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 3,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:19:23.070Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:17:12.279Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:14:08.057Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:12:08.415Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:11:13.098Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:10:36.973Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:10:09.134Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:08:55.637Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 3,
+    "parsedCounts": {
+      "2026": 0,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:08:10.122Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:08:09.043Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 3,
+    "parsedCounts": {
+      "2026": 0,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T15:05:11.847Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 3,
+    "parsedCounts": {
+      "2026": 0,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:52:45.734Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:49:05.325Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:47:08.694Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:43:56.388Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:43:27.210Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:42:34.297Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:37:09.742Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:35:12.098Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:34:40.453Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:31:17.657Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:30:24.610Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:27:15.861Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:24:40.717Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:21:59.956Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:20:10.201Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:18:41.114Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:14:54.722Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:13:08.332Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:10:49.020Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:09:18.574Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:07:05.591Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:04:36.788Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:03:17.205Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T14:01:24.351Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-07-04T13:56:49.966Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 2,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-06-29T00:57:32.199Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 2,
+    "errors": 2,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 1,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-06-27T21:03:14.027Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 1,
+    "parsedCounts": {
+      "2028": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2028/commits/"
+    ]
+  },
+  {
     "ts": "2026-06-24T20:52:05.686Z",
     "level": "info",
     "baseline": false,
@@ -323,405 +1504,6 @@
   },
   {
     "ts": "2026-06-11T16:31:01.958Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:29:01.730Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:27:01.819Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:25:02.233Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:23:01.773Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:21:02.155Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:19:01.710Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:17:02.332Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:15:02.552Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:13:01.816Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:11:01.670Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:09:01.750Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:07:01.803Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:05:01.880Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:03:01.826Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T16:01:03.398Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T15:59:01.547Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T15:57:02.007Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T15:55:02.681Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T15:53:01.950Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T15:51:01.007Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T15:49:01.849Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-11T15:47:16.269Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 1
-  },
-  {
-    "ts": "2026-06-09T22:42:38.408Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T22:40:37.839Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T22:38:38.694Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T22:36:42.374Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:53:39.763Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:51:39.598Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:49:39.736Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:47:39.733Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:45:39.737Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:43:40.256Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:41:39.847Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:39:39.685Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:37:39.691Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:35:39.594Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:33:39.599Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:31:39.653Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:29:39.560Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:27:39.574Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:25:40.122Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:23:39.519Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:21:40.335Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:19:39.861Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:17:39.467Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:15:40.617Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:13:40.244Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:11:39.234Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:09:39.515Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:07:39.867Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:05:39.057Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:03:39.783Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T21:01:40.070Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T20:59:39.335Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T20:57:39.819Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T20:55:39.598Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T20:53:39.213Z",
     "level": "info",
     "baseline": false,
     "fired": 0,

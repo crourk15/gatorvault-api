@@ -56,7 +56,9 @@ export function futureCastPlayerToLabTarget(p: FutureCastPlayer): FcLabTarget {
 
 export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
   const committed = p.committedTo ?? null;
-  const uf = isFloridaCommit(committed) ? 100 : p.ufProbability;
+  const rpm =
+    p.ufRpmPct != null && Number(p.ufRpmPct) > 0 ? Number(p.ufRpmPct) : null;
+  const uf = isFloridaCommit(committed) ? 100 : rpm ?? p.ufProbability;
   return {
     id: p.id,
     slug: p.slug,
@@ -72,6 +74,9 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
     stars: p.stars ?? null,
     committedTo: committed,
     predictors: (p.predictors ?? []).map((x) => ({ name: x.name, score: x.score })),
+    competingSchools: (p.competingSchools ?? [])
+      .filter((x) => x?.name && Number(x.pct) > 0)
+      .map((x) => ({ name: x.name, pct: Number(x.pct) })),
   };
 }
 

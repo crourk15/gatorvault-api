@@ -479,15 +479,22 @@ export async function loadBoardPlayersForSlugs(
     for (const ext of predictorsBySlug.get(slug) || []) {
       ufPredictors.push(ext);
     }
+    const rpmPct = firstPositiveStorePct(recruiting?.ufRpmPct as number | undefined);
     const storePct = firstPositiveStorePct(
+      rpmPct,
       seed.ufProbability as number | undefined,
       recruiting?.ufProbability as number | undefined,
       recruiting?.futurecastProbability as number | undefined
     );
+    const underclassmen = isUnderclassmenClassYear(resolvedClassYear);
     const resolvedUf = override
       ? null
       : resolveUfProbability({
-          modelPct: model?.confidence ?? model?.ufProbability,
+          // Discovery years: confirmed On3 RPM outranks FutureCast model confidence.
+          modelPct:
+            underclassmen && rpmPct
+              ? 0
+              : model?.confidence ?? model?.ufProbability,
           storePct,
           predictors: ufPredictors,
           stars: Number(rank?.stars ?? recruiting?.stars ?? seed.stars ?? 0) || null,
@@ -500,8 +507,27 @@ export async function loadBoardPlayersForSlugs(
         : null;
     if (ufCommitted) ufConfidence = 100;
 
-    const competingSchools = override ? [] : resolveCompetingSchools(rivalsSchools.get(slug));
-    const predictors = override ? [] : rivalsPredictors(slug, competingSchools);
+    const rivalsCompete = override ? [] : resolveCompetingSchools(rivalsSchools.get(slug));
+    let recruitingCompete: { name: string; pct: number }[] = [];
+    if (!override && recruiting) {
+      try {
+        const { competingSchoolsFromRecruitingRecord } = require('../../lib/underclassmen-intel');
+        recruitingCompete = competingSchoolsFromRecruitingRecord(recruiting);
+      } catch {
+        for (const c of (recruiting.competitors as Array<{ school?: string; name?: string; score?: number; pct?: number }> | undefined) || []) {
+          const name = String(c?.school || c?.name || '').trim();
+          const pct = Number(c?.score ?? c?.pct);
+          if (!name || !Number.isFinite(pct) || pct <= 0 || isFloridaSchool(name)) continue;
+          recruitingCompete.push({ name, pct: Math.round(pct) });
+        }
+      }
+    }
+    const competingSchools = recruitingCompete.length ? recruitingCompete : rivalsCompete;
+    const predictors = override
+      ? []
+      : competingSchools.length
+        ? competingSchools.map((s) => ({ name: s.name, score: s.pct }))
+        : rivalsPredictors(slug, rivalsCompete);
     const fitScore = resolveBoardFitScore({
       override: Boolean(override),
       classYear: resolvedClassYear,

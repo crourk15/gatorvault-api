@@ -369,6 +369,11 @@ function mountRecruitingHubRoutes(app) {
     try {
       const year = parseHubYear(req);
       const cacheKey = classSnapshotCacheKey(year);
+      const force =
+        req.query.force === '1' ||
+        req.query.force === 'true' ||
+        req.query.refresh === '1' ||
+        req.query.refresh === 'true';
       return sendHubJson(res, {
         cacheKey,
         year,
@@ -376,6 +381,7 @@ function mountRecruitingHubRoutes(app) {
         builder: () => buildHubClassOverview(year),
         spread: true,
         hubMeta,
+        force,
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

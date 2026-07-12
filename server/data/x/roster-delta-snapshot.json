@@ -1,0 +1,894 @@
+{
+  "initialized": true,
+  "players": {
+    "jayden-woods": {
+      "depthChartTier": "starter",
+      "pos": "JACK",
+      "injury": "green",
+      "jersey": null,
+      "unit": "defense",
+      "name": "Jayden Woods"
+    },
+    "cormani-mcclain": {
+      "depthChartTier": "starter",
+      "pos": "CB",
+      "injury": "green",
+      "jersey": 25,
+      "unit": "defense",
+      "name": "Cormani McClain"
+    },
+    "jadan-baugh": {
+      "depthChartTier": "starter",
+      "pos": "RB",
+      "injury": "green",
+      "jersey": 13,
+      "unit": "offense",
+      "name": "Jadan Baugh"
+    },
+    "eric-singleton-jr": {
+      "depthChartTier": "starter",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 2,
+      "unit": "offense",
+      "name": "Eric Singleton Jr."
+    },
+    "vernell-brown-iii": {
+      "depthChartTier": "starter",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 1,
+      "unit": "offense",
+      "name": "Vernell Brown III"
+    },
+    "myles-graham": {
+      "depthChartTier": "starter",
+      "pos": "ILB",
+      "injury": "green",
+      "jersey": 5,
+      "unit": "defense",
+      "name": "Myles Graham"
+    },
+    "dijon-johnson": {
+      "depthChartTier": "starter",
+      "pos": "CB",
+      "injury": "green",
+      "jersey": 27,
+      "unit": "defense",
+      "name": "Dijon Johnson"
+    },
+    "dallas-wilson": {
+      "depthChartTier": "starter",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 6,
+      "unit": "offense",
+      "name": "Dallas Wilson"
+    },
+    "tramell-jones-jr": {
+      "depthChartTier": "starter",
+      "pos": "QB",
+      "injury": "green",
+      "jersey": 9,
+      "unit": "offense",
+      "name": "Tramell Jones Jr."
+    },
+    "bryce-thornton": {
+      "depthChartTier": "starter",
+      "pos": "S",
+      "injury": "green",
+      "jersey": 1,
+      "unit": "defense",
+      "name": "Bryce Thornton"
+    },
+    "jaden-robinson": {
+      "depthChartTier": "starter",
+      "pos": "ILB",
+      "injury": "green",
+      "jersey": 29,
+      "unit": "defense",
+      "name": "Jaden Robinson"
+    },
+    "lacota-dippre": {
+      "depthChartTier": "starter",
+      "pos": "TE",
+      "injury": "green",
+      "jersey": 17,
+      "unit": "offense",
+      "name": "Lacota Dippre"
+    },
+    "aaron-philo": {
+      "depthChartTier": "starter",
+      "pos": "QB",
+      "injury": "green",
+      "jersey": 12,
+      "unit": "offense",
+      "name": "Aaron Philo"
+    },
+    "kanye-clark": {
+      "depthChartTier": "rotation",
+      "pos": "STAR",
+      "injury": "green",
+      "jersey": 20,
+      "unit": "defense",
+      "name": "Kanye Clark"
+    },
+    "brendan-bett": {
+      "depthChartTier": "rotation",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 90,
+      "unit": "defense",
+      "name": "Brendan Bett"
+    },
+    "cam-dooley": {
+      "depthChartTier": "rotation",
+      "pos": "S",
+      "injury": "green",
+      "jersey": 10,
+      "unit": "defense",
+      "name": "Cam Dooley"
+    },
+    "evan-pryor": {
+      "depthChartTier": "rotation",
+      "pos": "RB",
+      "injury": "green",
+      "jersey": 21,
+      "unit": "offense",
+      "name": "Evan Pryor"
+    },
+    "lj-mccray": {
+      "depthChartTier": "rotation",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 11,
+      "unit": "defense",
+      "name": "LJ McCray"
+    },
+    "tj-shanahan-jr": {
+      "depthChartTier": "rotation",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 67,
+      "unit": "offense",
+      "name": "TJ Shanahan Jr."
+    },
+    "kofi-asare": {
+      "depthChartTier": "rotation",
+      "pos": "JACK",
+      "injury": "green",
+      "jersey": 22,
+      "unit": "defense",
+      "name": "Kofi Asare"
+    },
+    "tj-bullard": {
+      "depthChartTier": "rotation",
+      "pos": "ILB",
+      "injury": "green",
+      "jersey": 16,
+      "unit": "defense",
+      "name": "TJ Bullard"
+    },
+    "jordy-lowery": {
+      "depthChartTier": "rotation",
+      "pos": "CB",
+      "injury": "green",
+      "jersey": 13,
+      "unit": "defense",
+      "name": "Jordy Lowery"
+    },
+    "eagan-boyer": {
+      "depthChartTier": "rotation",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 64,
+      "unit": "offense",
+      "name": "Eagan Boyer"
+    },
+    "dj-coleman": {
+      "depthChartTier": "rotation",
+      "pos": "S",
+      "injury": "green",
+      "jersey": 33,
+      "unit": "defense",
+      "name": "DJ Coleman"
+    },
+    "harrison-moore": {
+      "depthChartTier": "rotation",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 52,
+      "unit": "offense",
+      "name": "Harrison Moore"
+    },
+    "jeramiah-mccloud": {
+      "depthChartTier": "rotation",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 91,
+      "unit": "defense",
+      "name": "Jeramiah McCloud"
+    },
+    "elijah-owens": {
+      "depthChartTier": "rotation",
+      "pos": "STAR",
+      "injury": "green",
+      "jersey": 28,
+      "unit": "defense",
+      "name": "Elijah Owens"
+    },
+    "emmanuel-oyebadejo": {
+      "depthChartTier": "rotation",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 99,
+      "unit": "defense",
+      "name": "Emmanuel Oyebadejo"
+    },
+    "carter-milliron": {
+      "depthChartTier": "rotation",
+      "pos": "LS",
+      "injury": "green",
+      "jersey": 39,
+      "unit": "special",
+      "name": "Carter Milliron"
+    },
+    "alfonzo-allen-jr": {
+      "depthChartTier": "rotation",
+      "pos": "S",
+      "injury": "green",
+      "jersey": 43,
+      "unit": "defense",
+      "name": "Alfonzo Allen Jr."
+    },
+    "aaron-chiles": {
+      "depthChartTier": "rotation",
+      "pos": "ILB",
+      "injury": "green",
+      "jersey": 8,
+      "unit": "defense",
+      "name": "Aaron Chiles"
+    },
+    "kahleil-jackson": {
+      "depthChartTier": "rotation",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 22,
+      "unit": "offense",
+      "name": "Kahleil Jackson"
+    },
+    "javion-toombs": {
+      "depthChartTier": "rotation",
+      "pos": "CB",
+      "injury": "green",
+      "jersey": 37,
+      "unit": "defense",
+      "name": "Javion Toombs"
+    },
+    "knijeah-harris": {
+      "depthChartTier": "rotation",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 77,
+      "unit": "offense",
+      "name": "Knijeah Harris"
+    },
+    "kamran-james": {
+      "depthChartTier": "rotation",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 24,
+      "unit": "defense",
+      "name": "Kamran James"
+    },
+    "emeka-ugorji": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 66,
+      "unit": "offense",
+      "name": "Emeka Ugorji"
+    },
+    "jvari-flowers": {
+      "depthChartTier": "developmental",
+      "pos": "CB",
+      "injury": "green",
+      "jersey": 6,
+      "unit": "defense",
+      "name": "J'Vari Flowers"
+    },
+    "myles-johnson": {
+      "depthChartTier": "developmental",
+      "pos": "ILB",
+      "injury": "green",
+      "jersey": 44,
+      "unit": "defense",
+      "name": "Myles Johnson"
+    },
+    "patrick-durkin": {
+      "depthChartTier": "developmental",
+      "pos": "K",
+      "injury": "green",
+      "jersey": 91,
+      "unit": "special",
+      "name": "Patrick Durkin"
+    },
+    "ty-jackson": {
+      "depthChartTier": "developmental",
+      "pos": "ILB",
+      "injury": "green",
+      "jersey": 7,
+      "unit": "defense",
+      "name": "Ty Jackson"
+    },
+    "vincent-brown-jr": {
+      "depthChartTier": "developmental",
+      "pos": "CB",
+      "injury": "green",
+      "jersey": 36,
+      "unit": "defense",
+      "name": "Vincent Brown Jr."
+    },
+    "micah-mays-jr": {
+      "depthChartTier": "developmental",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 5,
+      "unit": "offense",
+      "name": "Micah Mays Jr."
+    },
+    "evan-jackson": {
+      "depthChartTier": "developmental",
+      "pos": "ILB",
+      "injury": "green",
+      "jersey": 31,
+      "unit": "defense",
+      "name": "Evan Jackson"
+    },
+    "jaylen-lloyd": {
+      "depthChartTier": "developmental",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 19,
+      "unit": "offense",
+      "name": "Jaylen Lloyd"
+    },
+    "ace-ciongoli": {
+      "depthChartTier": "developmental",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 82,
+      "unit": "offense",
+      "name": "Ace Ciongoli"
+    },
+    "aidan-warner": {
+      "depthChartTier": "developmental",
+      "pos": "QB",
+      "injury": "green",
+      "jersey": 16,
+      "unit": "offense",
+      "name": "Aidan Warner"
+    },
+    "bailey-stockton": {
+      "depthChartTier": "developmental",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 3,
+      "unit": "offense",
+      "name": "Bailey Stockton"
+    },
+    "marquez-daniel": {
+      "depthChartTier": "developmental",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 88,
+      "unit": "offense",
+      "name": "Marquez Daniel"
+    },
+    "lagonza-hayward": {
+      "depthChartTier": "developmental",
+      "pos": "S",
+      "injury": "green",
+      "jersey": 2,
+      "unit": "defense",
+      "name": "Lagonza Hayward"
+    },
+    "justin-williams": {
+      "depthChartTier": "developmental",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 83,
+      "unit": "offense",
+      "name": "Justin Williams"
+    },
+    "joseph-mbatchou": {
+      "depthChartTier": "developmental",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 97,
+      "unit": "defense",
+      "name": "Joseph Mbatchou"
+    },
+    "malik-morris": {
+      "depthChartTier": "developmental",
+      "pos": "ILB",
+      "injury": "green",
+      "jersey": 50,
+      "unit": "defense",
+      "name": "Malik Morris"
+    },
+    "drake-stubbs": {
+      "depthChartTier": "developmental",
+      "pos": "S",
+      "injury": "green",
+      "jersey": 9,
+      "unit": "defense",
+      "name": "Drake Stubbs"
+    },
+    "dylan-purter": {
+      "depthChartTier": "developmental",
+      "pos": "STAR",
+      "injury": "green",
+      "jersey": 30,
+      "unit": "defense",
+      "name": "Dylan Purter"
+    },
+    "cj-hester": {
+      "depthChartTier": "developmental",
+      "pos": "CB",
+      "injury": "green",
+      "jersey": 21,
+      "unit": "defense",
+      "name": "CJ Hester"
+    },
+    "cj-bronaugh": {
+      "depthChartTier": "developmental",
+      "pos": "CB",
+      "injury": "green",
+      "jersey": 15,
+      "unit": "defense",
+      "name": "CJ Bronaugh"
+    },
+    "davian-groce": {
+      "depthChartTier": "developmental",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 18,
+      "unit": "offense",
+      "name": "Davian Groce"
+    },
+    "kj-ford": {
+      "depthChartTier": "developmental",
+      "pos": "JACK",
+      "injury": "green",
+      "jersey": 14,
+      "unit": "defense",
+      "name": "KJ Ford"
+    },
+    "will-griffin": {
+      "depthChartTier": "developmental",
+      "pos": "QB",
+      "injury": "green",
+      "jersey": 11,
+      "unit": "offense",
+      "name": "Will Griffin"
+    },
+    "hunter-solwold": {
+      "depthChartTier": "developmental",
+      "pos": "LS",
+      "injury": "green",
+      "jersey": 58,
+      "unit": "special",
+      "name": "Hunter Solwold"
+    },
+    "miller-fealy": {
+      "depthChartTier": "developmental",
+      "pos": "P",
+      "injury": "green",
+      "jersey": 47,
+      "unit": "special",
+      "name": "Miller Fealy"
+    },
+    "london-montgomery": {
+      "depthChartTier": "developmental",
+      "pos": "RB",
+      "injury": "green",
+      "jersey": 24,
+      "unit": "offense",
+      "name": "London Montgomery"
+    },
+    "evan-chieca": {
+      "depthChartTier": "developmental",
+      "pos": "TE",
+      "injury": "green",
+      "jersey": 85,
+      "unit": "offense",
+      "name": "Evan Chieca"
+    },
+    "luke-harpring": {
+      "depthChartTier": "developmental",
+      "pos": "TE",
+      "injury": "green",
+      "jersey": 15,
+      "unit": "offense",
+      "name": "Luke Harpring"
+    },
+    "dk-kalu": {
+      "depthChartTier": "developmental",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 93,
+      "unit": "defense",
+      "name": "DK Kalu"
+    },
+    "alec-clark": {
+      "depthChartTier": "developmental",
+      "pos": "P",
+      "injury": "green",
+      "jersey": 38,
+      "unit": "special",
+      "name": "Alec Clark"
+    },
+    "liam-padron": {
+      "depthChartTier": "developmental",
+      "pos": "K",
+      "injury": "green",
+      "jersey": 41,
+      "unit": "special",
+      "name": "Liam Padron"
+    },
+    "mason-clinton": {
+      "depthChartTier": "developmental",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 98,
+      "unit": "defense",
+      "name": "Mason Clinton"
+    },
+    "tj-abrams": {
+      "depthChartTier": "developmental",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 4,
+      "unit": "offense",
+      "name": "TJ Abrams"
+    },
+    "ben-hanks-iii": {
+      "depthChartTier": "developmental",
+      "pos": "CB",
+      "injury": "green",
+      "jersey": 12,
+      "unit": "defense",
+      "name": "Ben Hanks III"
+    },
+    "titus-bullard": {
+      "depthChartTier": "developmental",
+      "pos": "JACK",
+      "injury": "green",
+      "jersey": 17,
+      "unit": "defense",
+      "name": "Titus Bullard"
+    },
+    "tripp-brown-jr": {
+      "depthChartTier": "developmental",
+      "pos": "TE",
+      "injury": "green",
+      "jersey": 89,
+      "unit": "offense",
+      "name": "Tripp Brown Jr."
+    },
+    "corey-brown": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 59,
+      "unit": "offense",
+      "name": "Corey Brown"
+    },
+    "jareylan-mccoy": {
+      "depthChartTier": "developmental",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 96,
+      "unit": "defense",
+      "name": "JaReylan McCoy"
+    },
+    "heze-kent": {
+      "depthChartTier": "developmental",
+      "pos": "TE",
+      "injury": "green",
+      "jersey": 86,
+      "unit": "offense",
+      "name": "Heze Kent"
+    },
+    "onis-konanbanny": {
+      "depthChartTier": "developmental",
+      "pos": "CB",
+      "injury": "green",
+      "jersey": 3,
+      "unit": "defense",
+      "name": "Onis Konanbanny"
+    },
+    "chancellor-campbell": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 79,
+      "unit": "offense",
+      "name": "Chancellor Campbell"
+    },
+    "kendall-guervil": {
+      "depthChartTier": "developmental",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 94,
+      "unit": "defense",
+      "name": "Kendall Guervil"
+    },
+    "desmond-green": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 78,
+      "unit": "offense",
+      "name": "Desmond Green"
+    },
+    "aaron-williams": {
+      "depthChartTier": "developmental",
+      "pos": "QB",
+      "injury": "green",
+      "jersey": 10,
+      "unit": "offense",
+      "name": "Aaron Williams"
+    },
+    "dylan-leighton": {
+      "depthChartTier": "developmental",
+      "pos": "ILB",
+      "injury": "green",
+      "jersey": 52,
+      "unit": "defense",
+      "name": "Dylan Leighton"
+    },
+    "jaden-edgecombe": {
+      "depthChartTier": "developmental",
+      "pos": "WR",
+      "injury": "green",
+      "jersey": 43,
+      "unit": "offense",
+      "name": "Jaden Edgecombe"
+    },
+    "tyler-chukuyem": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 51,
+      "unit": "offense",
+      "name": "Tyler Chukuyem"
+    },
+    "matthew-kade": {
+      "depthChartTier": "developmental",
+      "pos": "ILB",
+      "injury": "green",
+      "jersey": 42,
+      "unit": "defense",
+      "name": "Matthew Kade"
+    },
+    "charles-emanuel-iii": {
+      "depthChartTier": "developmental",
+      "pos": "JACK",
+      "injury": "green",
+      "jersey": 55,
+      "unit": "defense",
+      "name": "Charles Emanuel III"
+    },
+    "erich-seager": {
+      "depthChartTier": "developmental",
+      "pos": "JACK",
+      "injury": "green",
+      "jersey": 48,
+      "unit": "defense",
+      "name": "Erich Seager"
+    },
+    "gnivre-carr": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 61,
+      "unit": "offense",
+      "name": "G'Nivre Carr"
+    },
+    "javarii-luckas": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 54,
+      "unit": "offense",
+      "name": "Javarii Luckas"
+    },
+    "kaiden-hall": {
+      "depthChartTier": "developmental",
+      "pos": "S",
+      "injury": "green",
+      "jersey": 34,
+      "unit": "defense",
+      "name": "Kaiden Hall"
+    },
+    "kelvin-jimenez": {
+      "depthChartTier": "developmental",
+      "pos": "RB",
+      "injury": "green",
+      "jersey": 34,
+      "unit": "offense",
+      "name": "Kelvin Jimenez"
+    },
+    "brandon-rabasco": {
+      "depthChartTier": "developmental",
+      "pos": "K",
+      "injury": "green",
+      "jersey": 40,
+      "unit": "special",
+      "name": "Brandon Rabasco"
+    },
+    "brian-case": {
+      "depthChartTier": "developmental",
+      "pos": "RB",
+      "injury": "green",
+      "jersey": 33,
+      "unit": "offense",
+      "name": "Brian Case"
+    },
+    "jamari-lyons": {
+      "depthChartTier": "developmental",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 95,
+      "unit": "defense",
+      "name": "Jamari Lyons"
+    },
+    "brayden-slade": {
+      "depthChartTier": "developmental",
+      "pos": "S",
+      "injury": "green",
+      "jersey": 35,
+      "unit": "defense",
+      "name": "Brayden Slade"
+    },
+    "duke-clark": {
+      "depthChartTier": "developmental",
+      "pos": "RB",
+      "injury": "green",
+      "jersey": 20,
+      "unit": "offense",
+      "name": "Duke Clark"
+    },
+    "sebastian-scott": {
+      "depthChartTier": "developmental",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 92,
+      "unit": "defense",
+      "name": "Sebastian Scott"
+    },
+    "amir-jackson": {
+      "depthChartTier": "developmental",
+      "pos": "TE",
+      "injury": "green",
+      "jersey": 7,
+      "unit": "offense",
+      "name": "Amir Jackson"
+    },
+    "bryce-lovett": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 53,
+      "unit": "offense",
+      "name": "Bryce Lovett"
+    },
+    "fletcher-westphal": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 68,
+      "unit": "offense",
+      "name": "Fletcher Westphal"
+    },
+    "roderick-kearney": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 71,
+      "unit": "offense",
+      "name": "Roderick Kearney"
+    },
+    "anthony-rubio": {
+      "depthChartTier": "developmental",
+      "pos": "RB",
+      "injury": "green",
+      "jersey": 25,
+      "unit": "offense",
+      "name": "Anthony Rubio"
+    },
+    "jahari-medlock": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 56,
+      "unit": "offense",
+      "name": "Jahari Medlock"
+    },
+    "tj-dice-jr": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 55,
+      "unit": "offense",
+      "name": "TJ Dice Jr."
+    },
+    "caden-jones": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 63,
+      "unit": "offense",
+      "name": "Caden Jones"
+    },
+    "jalen-wiggins": {
+      "depthChartTier": "developmental",
+      "pos": "DL",
+      "injury": "green",
+      "jersey": 49,
+      "unit": "defense",
+      "name": "Jalen Wiggins"
+    },
+    "micah-jones": {
+      "depthChartTier": "developmental",
+      "pos": "TE",
+      "injury": "green",
+      "jersey": 84,
+      "unit": "offense",
+      "name": "Micah Jones"
+    },
+    "nicholas-inglis": {
+      "depthChartTier": "developmental",
+      "pos": "P",
+      "injury": "green",
+      "jersey": 48,
+      "unit": "special",
+      "name": "Nicholas Inglis"
+    },
+    "jason-zandamela": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 50,
+      "unit": "offense",
+      "name": "Jason Zandamela"
+    },
+    "daniel-pierre-louis": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 73,
+      "unit": "offense",
+      "name": "Daniel Pierre Louis"
+    },
+    "mark-faircloth": {
+      "depthChartTier": "developmental",
+      "pos": "OL",
+      "injury": "green",
+      "jersey": 76,
+      "unit": "offense",
+      "name": "Mark Faircloth"
+    },
+    "byron-louis": {
+      "depthChartTier": "developmental",
+      "pos": "RB",
+      "injury": "green",
+      "jersey": 27,
+      "unit": "offense",
+      "name": "Byron Louis"
+    }
+  },
+  "updatedAt": "2026-07-07T12:49:21.334Z"
+}

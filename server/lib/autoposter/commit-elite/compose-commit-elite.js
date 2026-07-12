@@ -174,7 +174,7 @@ function buildCommitInsider(research, facts) {
 function composeCommitElite({ research, playerData, beatText = '', newsEvent = null } = {}) {
   if (!research?.playerName || !playerData?.ctx) return null;
   const ctx = playerData.ctx;
-  if (!ctx?.name || !(ctx?.pos || ctx?.position)) return null;
+  if (!ctx?.name || !ctx?.pos) return null;
 
   const facts = extractCommitFacts(beatText, research, ctx);
   const identity = buildCommitIdentity(ctx, research, facts);

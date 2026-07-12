@@ -20,19 +20,20 @@ export function CompetingSchoolsBar({ player }: { player: FcLabTarget }): React.
   const segments = resolveCompetingSchools(player);
   if (!segments.length) return null;
 
+  const label = competingSchoolsLabel(segments);
   return (
-    <div className="fc-lab-segment-bar" aria-label={`Competing schools ${competingSchoolsLabel(segments)}`}>
+    <div className="fc-lab-segment-bar" aria-label={`RPM board ${label}`}>
       <div className="fc-lab-segment-bar__track">
         {segments.map((seg) => (
           <div
             key={seg.key}
             className={`fc-lab-segment-bar__seg fc-lab-segment-bar__seg--${seg.tone}`}
             style={{ width: `${seg.pct}%` }}
-            title={`${seg.name} ${seg.pct}%`}
+            title={`${seg.name} ${seg.absPct}%`}
           />
         ))}
       </div>
-      <span className="fc-lab-segment-bar__label">{competingSchoolsLabel(segments)}</span>
+      <span className="fc-lab-segment-bar__label">{label}</span>
     </div>
   );
 }

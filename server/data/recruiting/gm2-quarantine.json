@@ -10,11 +10,77 @@
       ],
       "source": "recruiting-store",
       "repairHint": null,
-      "quarantinedAt": "2026-06-24T20:55:02.070Z",
+      "quarantinedAt": "2026-07-11T05:11:31.561Z",
       "repairedAt": null
     }
   },
   "signals": [
+    {
+      "id": "qsig_1782677183484_l4xl",
+      "signal": {
+        "playerSlug": "armani-strong",
+        "playerName": "Armani Strong",
+        "playerId": null,
+        "eventType": "commit",
+        "source": "hayes_fawcett",
+        "title": "Armani Strong commits to Florida",
+        "detail": "Armani Strong committed to Florida (2026-06-28).",
+        "timestamp": "2026-06-28T20:06:23.482Z",
+        "classYear": 2028,
+        "fingerprint": "armani-strong|commit|2026-06-28"
+      },
+      "reason": "unknown_source",
+      "errors": [
+        "unknown_source"
+      ],
+      "layer": "sil",
+      "quarantinedAt": "2026-06-28T20:06:23.485Z"
+    },
+    {
+      "id": "qsig_1782674345901_yoog",
+      "signal": {
+        "playerSlug": "armani-strong",
+        "playerName": "Armani Strong",
+        "playerId": null,
+        "eventType": "flip",
+        "source": "hayes_fawcett",
+        "title": "Armani Strong flips to Florida",
+        "detail": "Four-star WR Armani Strong committed to Florida per Hayes Fawcett.",
+        "classYear": 2028,
+        "fingerprint": "sig_hayes_fawcett_armani-strong_flip_na"
+      },
+      "reason": "missing_timestamp",
+      "errors": [
+        "missing_timestamp",
+        "unknown_source",
+        "missing_timestamp"
+      ],
+      "layer": "sil",
+      "quarantinedAt": "2026-06-28T19:19:05.901Z"
+    },
+    {
+      "id": "qsig_1782571534985_n5t0",
+      "signal": {
+        "playerSlug": "zyon-robinson",
+        "playerName": "Zyon Robinson",
+        "playerId": "251054",
+        "eventType": "target_update",
+        "source": "corey bender",
+        "detail": "Florida trending with daily communication since June 15 contact window. WR coaches McKnight, Davis, Doeker building relationship; recent 7-on-7 campus visit. — Corey Bender / Gators Online",
+        "timestamp": "2026-06-27T14:45:34.983Z",
+        "classYear": 2028,
+        "pos": "WR",
+        "school": "McEachern, GA",
+        "fingerprint": "beat_target_update_zyon-robinson_2026-06-27_corey_bender",
+        "reportedAt": "2026-06-27T14:45:34.983Z"
+      },
+      "reason": "unknown_source",
+      "errors": [
+        "unknown_source"
+      ],
+      "layer": "sil",
+      "quarantinedAt": "2026-06-27T14:45:34.985Z"
+    },
     {
       "id": "qsig_1782333726906_rk9j",
       "signal": {
@@ -97,5 +163,5 @@
       "quarantinedAt": "2026-06-10T20:45:14.633Z"
     }
   ],
-  "updatedAt": "2026-06-24T20:55:02.071Z"
+  "updatedAt": "2026-07-11T05:11:31.562Z"
 }

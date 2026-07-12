@@ -1,19 +1,12 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-16T18:18:43.919Z",
-  "lastRunId": "qa_1781633888188",
-  "lastComputedAt": "2026-06-16T18:18:36.935Z",
+  "updatedAt": "2026-07-08T01:45:10.793Z",
+  "lastRunId": "deploy_1783475110788",
+  "lastComputedAt": "2026-07-08T01:45:10.788Z",
   "scores": {
+    "overall": 76,
     "modules": {
-      "api": 100,
-      "content": 100,
-      "integrity": 100,
-      "pages": 100,
-      "ux": 100,
-      "browser": 100,
-      "visual-integrity": 100,
-      "mobile-behavior": 100,
-      "overall": 100
+      "api": 76
     },
     "pages": {
       "/": {
@@ -21,8 +14,8 @@
         "mobile": 100
       },
       "/vault": {
-        "desktop": 100,
-        "mobile": 100
+        "desktop": null,
+        "mobile": null
       },
       "/vault/film-room": {
         "score": 100
@@ -53,75 +46,78 @@
       "mobile_navigation": 100,
       "admin_hub": 100,
       "qa_monitor": 58
-    },
-    "overall": 100
+    }
   },
   "fixQueue": [
     {
-      "id": "fix_pi:roster:numbers",
-      "title": "111 players",
+      "id": "fix_pi:api-latency:ping-1s",
+      "title": "Ping 1138ms",
       "module": "integrity",
-      "source": "roster-depth-chart",
-      "classification": "roster-mismatch",
-      "ruleId": "E1",
-      "category": "E",
-      "ruleName": "Roster Mismatch",
+      "source": "api-health",
+      "classification": "api-latency",
+      "ruleId": "F1",
+      "category": "F",
+      "ruleName": "API Latency",
       "severity": "high",
-      "severityScore": 81,
+      "severityScore": 79,
       "severityLabel": "High — should fix",
       "severityComponents": {
-        "impact": 70,
+        "impact": 65,
         "frequency": 100,
-        "confidence": 85
+        "confidence": 95
       },
-      "impact": "user-facing",
+      "impact": "internal",
       "repro": null,
-      "suggestedFix": "Correct roster entry for 111 players.",
+      "suggestedFix": "Optimize API latency for /api/ping.",
       "eta": "short",
-      "checkId": "pi:roster:numbers",
+      "checkId": "pi:api-latency:ping-1s",
       "url": null,
-      "details": null,
+      "details": [
+        {
+          "ms": 1138
+        }
+      ],
       "proposal": {
-        "title": "111 players",
-        "description": "Correct roster entry for 111 players.",
-        "classification": "roster-mismatch",
-        "ruleId": "E1",
-        "category": "E",
+        "title": "Ping 1138ms",
+        "description": "Optimize API latency for /api/ping.",
+        "classification": "api-latency",
+        "ruleId": "F1",
+        "category": "F",
         "filesToModify": [
-          "data/roster/players.json"
+          "lib/lib/live-routes.js"
         ],
-        "patchType": "roster-sync",
-        "codeDiffHint": "\"{}\"",
+        "patchType": "api-latency",
+        "codeDiffHint": "/* cached + warmed response */",
         "codeDiff": [
           {
-            "file": "data/roster/players.json",
-            "before": "\"{}\"",
-            "after": "\"{}\""
+            "file": "lib/lib/live-routes.js",
+            "before": "/* handler without cache */",
+            "after": "/* cached + warmed response */"
           }
         ],
         "safetyRules": [
-          "Jersey numbers 0–99 only",
-          "Verify against official roster before edit",
-          "Never remove starters without depth chart update",
-          "Class year must match NCAA eligibility enum"
+          "Measure latency before and after — target <500ms for ping",
+          "Do not remove error handling when optimizing",
+          "Cache warming must not serve stale data >45s for live dashboard",
+          "Load test on Render cold start before merge"
         ],
         "testPlan": [
-          "Load Roster page",
-          "Verify player info correct",
-          "Verify ordering unchanged"
+          "Measure latency before and after",
+          "Verify response <500ms",
+          "Verify no errors introduced"
         ],
         "qaSteps": [
-          "Load Roster page",
-          "Verify player info correct",
-          "Verify ordering unchanged",
-          "Verify QA check pi:roster:numbers passes",
+          "Measure latency before and after",
+          "Verify response <500ms",
+          "Verify no errors introduced",
+          "Verify QA check pi:api-latency:ping-1s passes",
           "POST /api/product-intel/recompute — issue cleared from fix queue"
         ],
         "rollbackPlan": {
           "strategy": "git-revert",
-          "summary": "Restore previous roster entry if needed.",
+          "summary": "Restore previous code if latency worsens.",
           "steps": [
-            "Revert: data/roster/players.json",
+            "Revert: lib/lib/live-routes.js",
             "Redeploy Netlify (static) and Render (API) if needed",
             "POST /api/product-intel/recompute",
             "POST /api/qa/run — verify check passes"
@@ -142,8 +138,8 @@
       "resolved": false
     },
     {
-      "id": "fix_pi:autoposter-stale:24h",
-      "title": "Last post 171h ago",
+      "id": "fix_pi:autoposter-stale:12h",
+      "title": "Last post 16h ago",
       "module": "integrity",
       "source": "autoposter-logs",
       "classification": "autoposter-stale",
@@ -162,11 +158,11 @@
       "repro": null,
       "suggestedFix": "Restore autoposter activity for Team Overview.",
       "eta": "short",
-      "checkId": "pi:autoposter-stale:24h",
+      "checkId": "pi:autoposter-stale:12h",
       "url": null,
       "details": null,
       "proposal": {
-        "title": "Last post 171h ago",
+        "title": "Last post 16h ago",
         "description": "Restore autoposter activity for Team Overview.",
         "classification": "autoposter-stale",
         "ruleId": "B3",
@@ -198,7 +194,7 @@
           "Verify post within 6h during active window",
           "Check autoposter logs on Render",
           "Latest Updates shows fresh intel",
-          "Verify QA check pi:autoposter-stale:24h passes",
+          "Verify QA check pi:autoposter-stale:12h passes",
           "POST /api/product-intel/recompute — issue cleared from fix queue"
         ],
         "rollbackPlan": {
@@ -224,100 +220,14 @@
       "createdAt": "2026-06-16T18:18:36.935Z",
       "runId": "qa_1781633888188",
       "resolved": false
-    },
-    {
-      "id": "fix_pi:filmroom:categories",
-      "title": "Offensive Scheme, Defensive Scheme, UF Press Conferences",
-      "module": "integrity",
-      "source": "film-room",
-      "classification": "ui-regression",
-      "ruleId": "A1",
-      "category": "A",
-      "ruleName": "Unclassified Issue",
-      "severity": "medium",
-      "severityScore": 66,
-      "severityLabel": "Medium — optional",
-      "severityComponents": {
-        "impact": 50,
-        "frequency": 100,
-        "confidence": 60
-      },
-      "impact": "internal",
-      "repro": null,
-      "suggestedFix": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-      "eta": "medium",
-      "checkId": "pi:filmroom:categories",
-      "url": null,
-      "details": null,
-      "proposal": {
-        "title": "Offensive Scheme, Defensive Scheme, UF Press Conferences",
-        "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-        "classification": "ui-regression",
-        "ruleId": "A1",
-        "category": "A",
-        "filesToModify": [
-          "client/lib/vault-shell.css"
-        ],
-        "patchType": "layout-overflow",
-        "codeDiffHint": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
-        "codeDiff": [
-          {
-            "file": "client/lib/vault-shell.css",
-            "before": ".gv-team-modal-body { overflow: hidden; }",
-            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
-          }
-        ],
-        "safetyRules": [
-          "Never remove min-width:0 or min-height:0 from modal flex children",
-          "Only modify overflow on the targeted selector — do not change global body overflow",
-          "Preserve mobile scroll behavior — test 390px viewport after apply",
-          "Max 1 CSS file per patch unless issue spans shell + styles"
-        ],
-        "testPlan": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged"
-        ],
-        "qaSteps": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged",
-          "Verify QA check pi:filmroom:categories passes",
-          "POST /api/product-intel/recompute — issue cleared from fix queue"
-        ],
-        "rollbackPlan": {
-          "strategy": "git-revert",
-          "summary": "Restore previous overflow rules if regression detected.",
-          "steps": [
-            "Revert: client/lib/vault-shell.css",
-            "Redeploy Netlify (static) and Render (API) if needed",
-            "POST /api/product-intel/recompute",
-            "POST /api/qa/run — verify check passes"
-          ]
-        },
-        "approvalGate": {
-          "steps": [
-            "Apply patch",
-            "Optional redeploy",
-            "QA crawl",
-            "Product Health recompute",
-            "Mark completed"
-          ]
-        }
-      },
-      "createdAt": "2026-06-16T18:18:36.935Z",
-      "runId": "qa_1781633888188",
-      "resolved": false
     }
   ],
   "dailySummaries": [
     {
       "date": "2026-06-16",
-      "overallHealth": 100,
+      "overallHealth": 99,
       "moduleScores": {
-        "api": 100,
+        "api": 86,
         "content": 100,
         "integrity": 100,
         "pages": 100,
@@ -325,7 +235,7 @@
         "browser": 100,
         "visual-integrity": 100,
         "mobile-behavior": 100,
-        "overall": 100
+        "overall": 99
       },
       "pageScores": {
         "/": {
@@ -333,8 +243,8 @@
           "mobile": 100
         },
         "/vault": {
-          "desktop": 100,
-          "mobile": 100
+          "desktop": null,
+          "mobile": null
         },
         "/vault/film-room": {
           "score": 100
@@ -368,22 +278,24 @@
       },
       "topIssues": [],
       "improvements": [],
-      "regressions": [],
+      "regressions": [
+        "Overall health down 100 → 99"
+      ],
       "pass": true,
       "runId": "qa_1781633888188",
       "signalCounts": {
-        "total": 3,
+        "total": 2,
         "bySource": {
           "qa": 0,
-          "apiHealth": 0,
+          "apiHealth": 1,
           "cacheHealth": 0,
           "autoposter": 1,
           "recruiting": 0,
-          "teamData": 1,
-          "filmRoom": 1
+          "teamData": 0,
+          "filmRoom": 0
         }
       },
-      "narrative": "Platform health is strong at 100/100 — all checks passed. Data layer collected 3 signal(s) across 7 sources."
+      "narrative": "Platform health is strong at 99/100 — all checks passed. Data layer collected 2 signal(s) across 7 sources."
     },
     {
       "date": "2026-06-14",
@@ -669,6 +581,71 @@
   ],
   "weeklyReports": [],
   "snapshots": [
+    {
+      "at": "2026-06-16T18:18:36.935Z",
+      "runId": "qa_1781633888188",
+      "overall": 99,
+      "modules": {
+        "api": 86,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 99
+      },
+      "pass": true,
+      "openFixes": 2,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 2,
+            "bySource": {
+              "qa": 0,
+              "apiHealth": 1,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 0,
+              "filmRoom": 0
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "api-latency",
+            "autoposter-stale"
+          ],
+          "total": 2
+        },
+        "severity": {
+          "critical": 0,
+          "high": 2,
+          "medium": 0,
+          "low": 0
+        },
+        "proposals": 2,
+        "approvalGate": "self-runner"
+      }
+    },
     {
       "at": "2026-06-16T18:18:36.935Z",
       "runId": "qa_1781633888188",
@@ -2176,72 +2153,44 @@
       }
     ]
   },
-  "signalHistory": {
-    "pi:autoposter-stale:24h": {
-      "count": 1,
-      "firstSeen": "2026-06-16T18:18:43.913Z",
-      "lastSeen": "2026-06-16T18:18:43.913Z",
-      "recentRuns": 1
-    },
-    "pi:roster:numbers": {
-      "count": 1,
-      "firstSeen": "2026-06-16T18:18:43.916Z",
-      "lastSeen": "2026-06-16T18:18:43.916Z",
-      "recentRuns": 1
-    },
-    "pi:filmroom:categories": {
-      "count": 1,
-      "firstSeen": "2026-06-16T18:18:43.917Z",
-      "lastSeen": "2026-06-16T18:18:43.917Z",
-      "recentRuns": 1
-    }
-  },
+  "signalHistory": {},
   "intelligenceLayers": {
     "data": {
       "counts": {
         "total": 3,
         "bySource": {
           "qa": 0,
-          "apiHealth": 0,
-          "cacheHealth": 0,
+          "apiHealth": 1,
+          "cacheHealth": 1,
           "autoposter": 1,
           "recruiting": 0,
-          "teamData": 1,
-          "filmRoom": 1
+          "teamData": 0,
+          "filmRoom": 0
         }
       },
       "sources": [
-        "qa-crawler",
-        "live-dashboard",
-        "mobile-behavior",
-        "admin-hub",
-        "autoposter-logs",
-        "recruiting-board",
-        "film-room",
-        "team-overview",
-        "program-history",
-        "roster-depth-chart",
-        "press-conferences",
-        "highlights",
-        "api-health",
-        "cache-health"
+        "deploy-probe"
       ]
     },
     "classification": {
       "active": [
-        "roster-mismatch",
-        "autoposter-stale",
-        "ui-regression"
+        "api-latency",
+        "autoposter-stale"
       ],
-      "total": 3
+      "total": 2
     },
     "severity": {
       "critical": 0,
       "high": 2,
-      "medium": 1,
+      "medium": 0,
       "low": 0
     },
-    "proposals": 3,
-    "approvalGate": "self-runner"
+    "proposals": 2,
+    "approvalGate": "self-runner",
+    "deployProbe": {
+      "checkedAt": "2026-07-08T01:45:10.788Z",
+      "failures": 2,
+      "serverErrors": 0
+    }
   }
 }

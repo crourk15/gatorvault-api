@@ -164,7 +164,7 @@
           "htWt": "6-6 / 290",
           "stars": 4,
           "rating": 90.55760869565219,
-          "natlRank": 281,
+          "natlRank": 282,
           "posRank": 23,
           "stateRank": 34,
           "inState": false,
@@ -183,7 +183,7 @@
           "htWt": "6-1 / 260",
           "stars": 4,
           "rating": 89.7304347826087,
-          "natlRank": 362,
+          "natlRank": 363,
           "posRank": 27,
           "stateRank": 47,
           "inState": true,
@@ -202,7 +202,7 @@
           "htWt": "6-6 / 320",
           "stars": 4,
           "rating": 89.66666666666667,
-          "natlRank": 366,
+          "natlRank": 367,
           "posRank": 29,
           "stateRank": 43,
           "inState": false,
@@ -221,7 +221,7 @@
           "htWt": "6-5 / 187",
           "stars": 4,
           "rating": 89.66666666666667,
-          "natlRank": 367,
+          "natlRank": 368,
           "posRank": 58,
           "stateRank": 15,
           "inState": false,
@@ -240,7 +240,7 @@
           "htWt": "6-2.5 / 200",
           "stars": 4,
           "rating": 89.50833333333334,
-          "natlRank": 386,
+          "natlRank": 387,
           "posRank": 30,
           "stateRank": 50,
           "inState": true,
@@ -259,7 +259,7 @@
           "htWt": "6-1 / 175",
           "stars": 3,
           "rating": 88.66666666666667,
-          "natlRank": 503,
+          "natlRank": 504,
           "posRank": 51,
           "stateRank": 63,
           "inState": true,
@@ -278,7 +278,7 @@
           "htWt": "6-4 / 325",
           "stars": 3,
           "rating": 88.66666666666667,
-          "natlRank": 505,
+          "natlRank": 506,
           "posRank": 45,
           "stateRank": 64,
           "inState": true,
@@ -297,7 +297,7 @@
           "htWt": "6-8 / 310",
           "stars": 3,
           "rating": 88.03333333333333,
-          "natlRank": 627,
+          "natlRank": 628,
           "posRank": 48,
           "stateRank": 75,
           "inState": true,
@@ -337,7 +337,7 @@
           "rating": 87.06666666666666,
           "natlRank": 884,
           "posRank": 82,
-          "stateRank": 16,
+          "stateRank": 17,
           "inState": false,
           "status": "enrolled",
           "commitDate": "2025-06-26",
@@ -354,7 +354,7 @@
           "htWt": "6-5 / 270",
           "stars": 3,
           "rating": 86.4,
-          "natlRank": 1147,
+          "natlRank": 1148,
           "posRank": 82,
           "stateRank": 121,
           "inState": true,
@@ -373,9 +373,9 @@
           "htWt": "6-0 / 190",
           "stars": 3,
           "rating": 84.8,
-          "natlRank": 1750,
+          "natlRank": 1752,
           "posRank": 165,
-          "stateRank": 196,
+          "stateRank": 197,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-02-05",
@@ -972,7 +972,7 @@
           "school": "Port Charlotte, FL",
           "htWt": "5-11 / 183",
           "stars": 4,
-          "rating": 92.95036231884058,
+          "rating": 92.95217391304347,
           "natlRank": 95,
           "posRank": 19,
           "stateRank": 11,
@@ -989,9 +989,9 @@
           "pos": "OT",
           "classYear": 2027,
           "school": "Roanoke, VA",
-          "htWt": "6-5.5 / 260",
+          "htWt": "6-5 / 265",
           "stars": 4,
-          "rating": 92.8445652173913,
+          "rating": 92.84637681159421,
           "natlRank": 103,
           "posRank": 10,
           "stateRank": 2,
@@ -1010,7 +1010,7 @@
           "school": "Sarasota, FL",
           "htWt": "6-6 / 215",
           "stars": 4,
-          "rating": 92.28659420289856,
+          "rating": 92.28840579710146,
           "natlRank": 119,
           "posRank": 11,
           "stateRank": 13,
@@ -1029,7 +1029,7 @@
           "school": "Baltimore, MD",
           "htWt": "6-5 / 245",
           "stars": 4,
-          "rating": 92.11231884057972,
+          "rating": 92.11413043478261,
           "natlRank": 126,
           "posRank": 15,
           "stateRank": 3,
@@ -1046,9 +1046,9 @@
           "pos": "IOL",
           "classYear": 2027,
           "school": "Anna, TX",
-          "htWt": "6-5 / 290",
+          "htWt": "6-5 / 310",
           "stars": 4,
-          "rating": 92.08115942028986,
+          "rating": 92.08297101449274,
           "natlRank": 130,
           "posRank": 11,
           "stateRank": 19,
@@ -1067,7 +1067,7 @@
           "school": "Cottondale, FL",
           "htWt": "6-0 / 185",
           "stars": 4,
-          "rating": 92.05905797101451,
+          "rating": 92.06086956521739,
           "natlRank": 131,
           "posRank": 21,
           "stateRank": 14,
@@ -1086,8 +1086,8 @@
           "school": "Swainsboro, GA",
           "htWt": "6-2 / 205",
           "stars": 4,
-          "rating": 91.6699275362319,
-          "natlRank": 152,
+          "rating": 91.67173913043479,
+          "natlRank": 151,
           "posRank": 14,
           "stateRank": 12,
           "inState": false,
@@ -1106,12 +1106,31 @@
           "htWt": "6-3 / 182",
           "stars": 4,
           "rating": 91.62096774193547,
-          "natlRank": 157,
+          "natlRank": 156,
           "posRank": 20,
           "stateRank": 13,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-04-11",
+          "committedTo": "Florida",
+          "skinny": "",
+          "sourceStatus": "Committed"
+        },
+        "on3:242853": {
+          "on3Id": "242853",
+          "name": "Raheem Floyd",
+          "pos": "CB",
+          "classYear": 2027,
+          "school": "East St. Louis, IL",
+          "htWt": "6-0.5 / 170",
+          "stars": 4,
+          "rating": 91.42536231884057,
+          "natlRank": 170,
+          "posRank": 22,
+          "stateRank": 9,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-07-07",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -1124,9 +1143,9 @@
           "school": "Bogart, GA",
           "htWt": "5-9 / 195",
           "stars": 4,
-          "rating": 91.28550724637681,
-          "natlRank": 184,
-          "posRank": 13,
+          "rating": 91.2873188405797,
+          "natlRank": 183,
+          "posRank": 12,
           "stateRank": 19,
           "inState": false,
           "status": "committed",
@@ -1143,8 +1162,8 @@
           "school": "Plantation, FL",
           "htWt": "5-11 / 180",
           "stars": 4,
-          "rating": 90.48623188405797,
-          "natlRank": 247,
+          "rating": 90.48804347826088,
+          "natlRank": 246,
           "posRank": 27,
           "stateRank": 22,
           "inState": true,
@@ -1165,7 +1184,7 @@
           "rating": 89.97282608695652,
           "natlRank": 299,
           "posRank": 46,
-          "stateRank": 27,
+          "stateRank": 28,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-04-25",
@@ -1201,7 +1220,7 @@
           "htWt": "6-4.5 / 235",
           "stars": 4,
           "rating": 89.33333333333333,
-          "natlRank": 362,
+          "natlRank": 363,
           "posRank": 20,
           "stateRank": 7,
           "inState": false,
@@ -1220,8 +1239,8 @@
           "htWt": "6-0 / 185",
           "stars": 4,
           "rating": 89.33333333333333,
-          "natlRank": 363,
-          "posRank": 13,
+          "natlRank": 364,
+          "posRank": 14,
           "stateRank": 41,
           "inState": false,
           "status": "committed",
@@ -1239,7 +1258,7 @@
           "htWt": "5-11.5 / 210",
           "stars": 4,
           "rating": 89.30978260869566,
-          "natlRank": 368,
+          "natlRank": 369,
           "posRank": 32,
           "stateRank": 18,
           "inState": false,
@@ -1268,6 +1287,25 @@
           "skinny": "",
           "sourceStatus": "Committed"
         },
+        "on3:243497": {
+          "on3Id": "243497",
+          "name": "Kailib Dillard",
+          "pos": "S",
+          "classYear": 2027,
+          "school": "Tulsa, OK",
+          "htWt": "6-2 / 170",
+          "stars": 3,
+          "rating": 88.68260869565219,
+          "natlRank": 452,
+          "posRank": 41,
+          "stateRank": 12,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-05-05",
+          "committedTo": "Florida",
+          "skinny": "",
+          "sourceStatus": "Committed"
+        },
         "on3:284617": {
           "on3Id": "284617",
           "name": "Stive-Bentley Keumajou",
@@ -1277,31 +1315,12 @@
           "htWt": "6-2.5 / 295",
           "stars": 3,
           "rating": 88.03333333333333,
-          "natlRank": 544,
-          "posRank": 58,
-          "stateRank": 45,
+          "natlRank": 548,
+          "posRank": 59,
+          "stateRank": 47,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-05-06",
-          "committedTo": "Florida",
-          "skinny": "",
-          "sourceStatus": "Committed"
-        },
-        "on3:243497": {
-          "on3Id": "243497",
-          "name": "Kailib Dillard",
-          "pos": "S",
-          "classYear": 2027,
-          "school": "Tulsa, OK",
-          "htWt": "6-2 / 170",
-          "stars": 3,
-          "rating": 88.01594202898552,
-          "natlRank": 546,
-          "posRank": 51,
-          "stateRank": 12,
-          "inState": false,
-          "status": "committed",
-          "commitDate": "2026-05-05",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -1315,7 +1334,7 @@
           "htWt": "6-1.5 / 195",
           "stars": 3,
           "rating": 87.73333333333333,
-          "natlRank": 590,
+          "natlRank": 598,
           "posRank": 50,
           "stateRank": 20,
           "inState": false,
@@ -1334,8 +1353,8 @@
           "htWt": "6-7 / 299",
           "stars": 3,
           "rating": 87.7,
-          "natlRank": 616,
-          "posRank": 66,
+          "natlRank": 623,
+          "posRank": 68,
           "stateRank": 14,
           "inState": false,
           "status": "committed",
@@ -1353,12 +1372,31 @@
           "htWt": "6-4 / 300",
           "stars": 3,
           "rating": 87.7,
-          "natlRank": 619,
-          "posRank": 68,
-          "stateRank": 49,
+          "natlRank": 626,
+          "posRank": 70,
+          "stateRank": 52,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-04-27",
+          "committedTo": "Florida",
+          "skinny": "",
+          "sourceStatus": "Committed"
+        },
+        "on3:243836": {
+          "on3Id": "243836",
+          "name": "Kamauri Whitfield",
+          "pos": "CB",
+          "classYear": 2027,
+          "school": "Orlando, FL",
+          "htWt": "5-10 / 185",
+          "stars": 3,
+          "rating": 87.1,
+          "natlRank": 733,
+          "posRank": 82,
+          "stateRank": 63,
+          "inState": true,
+          "status": "committed",
+          "commitDate": "2026-07-06",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -1371,10 +1409,10 @@
           "school": "Sharpsburg, GA",
           "htWt": "5-11 / 185",
           "stars": 3,
-          "rating": 80,
-          "natlRank": 2142,
+          "rating": 80.33333333333333,
+          "natlRank": 2147,
           "posRank": 4,
-          "stateRank": 225,
+          "stateRank": 226,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-06-22",
@@ -1391,7 +1429,7 @@
           "htWt": "6-1 / 220",
           "stars": 3,
           "rating": 80,
-          "natlRank": 2149,
+          "natlRank": 2163,
           "posRank": 2,
           "stateRank": 45,
           "inState": false,
@@ -1404,9 +1442,9 @@
       },
       "rankings": {
         "classYear": 2027,
-        "nationalRank": 6,
+        "nationalRank": 8,
         "secRank": 3,
-        "classScore": 91.427674421802,
+        "classScore": 91.588948931606,
         "source": "on3"
       }
     },
@@ -1420,10 +1458,10 @@
           "school": "Miami, FL",
           "htWt": "6-1 / 180",
           "stars": 4,
-          "rating": 90.17717391304348,
-          "natlRank": 210,
+          "rating": 90.17898550724637,
+          "natlRank": 209,
           "posRank": 31,
-          "stateRank": 29,
+          "stateRank": 28,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-06-28",
@@ -1436,7 +1474,7 @@
         "classYear": 2028,
         "nationalRank": null,
         "secRank": null,
-        "classScore": 88.909224720613,
+        "classScore": 88.911036314815,
         "source": "on3"
       }
     },
@@ -1449,7 +1487,7 @@
       "rankings": null
     }
   },
-  "lastRun": "2026-06-29T00:57:29.999Z",
+  "lastRun": "2026-07-11T11:28:04.867Z",
   "commitFingerprints": {
     "175389|florida|2025-08-11": {
       "commitDate": "2025-08-11",
@@ -2952,6 +2990,1620 @@
       "commitDate": "2026-06-28",
       "registeredAt": "2026-06-28T23:52:37.918Z",
       "source": "allowlist_commit_ingest"
+    },
+    "chancellor-campbell|florida|2025-06-08": {
+      "commitDate": "2025-06-08",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "cj-bronaugh|florida|2025-06-18": {
+      "commitDate": "2025-06-18",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "cj-hester|florida|2025-07-03": {
+      "commitDate": "2025-07-03",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "davian-groce|florida|2025-08-11": {
+      "commitDate": "2025-08-11",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "desmond-green|florida|2025-06-26": {
+      "commitDate": "2025-06-26",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "dylan-purter|florida|2025-12-04": {
+      "commitDate": "2025-12-04",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "elijah-owens|florida|2026-01-07": {
+      "commitDate": "2026-01-07",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "eric-parks|florida|2026-02-05": {
+      "commitDate": "2026-02-05",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "gnivre-carr|florida|2025-06-01": {
+      "commitDate": "2025-06-01",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "heze-kent|florida|2025-07-12": {
+      "commitDate": "2025-07-12",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jareylan-mccoy|florida|2025-06-14": {
+      "commitDate": "2025-06-14",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "javarii-luckas|florida|2025-06-16": {
+      "commitDate": "2025-06-16",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "javier-jones|florida|2026-05-12": {
+      "commitDate": "2026-05-12",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "justin-williams|florida|2025-06-08": {
+      "commitDate": "2025-06-08",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "kaiden-hall|florida|2025-06-03": {
+      "commitDate": "2025-06-03",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "kendall-guervil|florida|2025-07-02": {
+      "commitDate": "2025-07-02",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "kevin-ford|florida|2025-07-11": {
+      "commitDate": "2025-07-11",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "malik-morris|florida|2025-07-07": {
+      "commitDate": "2025-07-07",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "marquez-daniel|florida|2025-06-14": {
+      "commitDate": "2025-06-14",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "tyler-chukuyem|florida|2025-06-16": {
+      "commitDate": "2025-06-16",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "will-griffin|florida|2024-06-01": {
+      "commitDate": "2024-06-01",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "aamaury-fountain|florida|2026-04-11": {
+      "commitDate": "2026-04-11",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "amare-nugent|florida|2026-01-24": {
+      "commitDate": "2026-01-24",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "andrew-beard|florida|2026-05-08": {
+      "commitDate": "2026-05-08",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "anthony-jennings|florida|2026-04-25": {
+      "commitDate": "2026-04-25",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "cahron-wheeler|florida|2026-06-05": {
+      "commitDate": "2026-06-05",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "cain-van-norden|florida|2026-05-15": {
+      "commitDate": "2026-05-15",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "davin-davidson|florida|2026-04-09": {
+      "commitDate": "2026-04-09",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "devoun-kendrick|florida|2026-04-27": {
+      "commitDate": "2026-04-27",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "elias-pearl|florida|2026-05-19": {
+      "commitDate": "2026-05-19",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "elijah-hutcheson|florida|2026-05-05": {
+      "commitDate": "2026-05-05",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "ellis-mcgaskin|florida|2026-06-06": {
+      "commitDate": "2026-06-06",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "aaron-mcwilliams|florida|2026-06-22": {
+      "commitDate": "2026-06-22",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jabios-smith|florida|2026-05-29": {
+      "commitDate": "2026-05-29",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jackson-ballinger|florida|2026-02-24": {
+      "commitDate": "2026-02-24",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jaydee-lane|florida|2026-06-08": {
+      "commitDate": "2026-06-08",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "kailib-dillard|florida|2026-05-05": {
+      "commitDate": "2026-05-05T17:08:00",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players",
+      "updatedAt": "2026-07-11T05:06:11.647Z"
+    },
+    "kamarion-johnson|florida|2026-06-05": {
+      "commitDate": "2026-06-05",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "maxwell-hiller|florida|2026-04-08": {
+      "commitDate": "2026-04-08",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "peyton-miller|florida|2026-04-27": {
+      "commitDate": "2026-04-27",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "stive-bentley-keumajou|florida|2026-05-06": {
+      "commitDate": "2026-05-06",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "tommy-douglas|florida|2026-04-16": {
+      "commitDate": "2026-04-16",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "tramond-collins|florida|2026-03-11": {
+      "commitDate": "2026-03-11",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "zahmar-tookes|florida|2026-06-03": {
+      "commitDate": "2026-06-03",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "armani-strong|florida|2026-06-28": {
+      "commitDate": "2026-06-28",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "event",
+      "updatedAt": "2026-07-11T11:28:04.880Z",
+      "eventId": "evt_1782677703179_sz3qlk"
+    },
+    "randy-shavers-jr|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "samu-taumanupepe|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "trent-thomas|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "quesean-brown|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "corey-platt-jr|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "malachi-coleman|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "pearce-spurlin|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jordan-norman|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "cam-vaughn|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "tj-shanahan|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "adam-trick|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "franklin-whitley|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "isaiah-broughton|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "somourian-wingo|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "carsyn-baker|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "champ-smith|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "cameron-mcgee|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "frederic-sainteus|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "devin-jackson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "valdin-sone|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "kaiden-prothro|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "trenton-henderson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "james-johnson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "izayia-williams|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "claude-mpouma|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "chris-booker|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "carson-sneed|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "chauncey-kennon|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "rj-wortman|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jake-kreul|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "cederian-morgan|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "hezekiah-harris|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "brody-jennings|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "darryon-williams|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "lincoln-watkins|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "preston-carey|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "kekua-aumua|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jireh-edwards|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "bralan-womack|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "asharri-charles|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "vodney-cleveland|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "dq-forkpa|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "corey-howard|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "karon-maycock|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "blaise-thomassie|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "brian-williams|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "tyson-bacon|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "luke-wafle|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "felix-ojo|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "ekene-ogboko|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "calvin-russell|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jamir-perez|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "ayden-pouncey|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "graham-houston|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "preston-ashley|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "brady-marchese|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "keenyi-pepe|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "nolan-wilson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "emanuel-ruffin|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "kealan-jones|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "brandon-bennett|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "michael-bowens-jr|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jj-finch|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "danny-odem|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "dj-jones|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "micah-smith|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "joel-ervin|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jamarrion-gordon|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "canon-pickett|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "dj-howerton|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "corbett-yarbrough|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "cj-givers|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "ezavier-crowell|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "javari-barnett|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "tre-aiken|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "derrek-cooper|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jonaz-walton|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "trace-johnson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "keil-mcgriff|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "craig-dandridge|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "shadarius-toodle|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "justice-fitzpatrick|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jordan-campbell|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "breck-kolojay|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "parker-pritchett|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "rhys-woodrow|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "brody-keefe|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "charlie-edgeworth|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "hayward-howard-jr|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "courtney-heard|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "courtlin-heard|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jabari-brady|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jordan-smith|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "chance-barclay|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "javeion-cooper|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "george-haseotes|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "rodarion-jones|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "samuel-roseborough|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "immanuel-iheanacho|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "anthony-jones|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "ben-congdon|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "blake-stewart|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "mitchell-smith|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "keenan-britt|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "anthony-davis|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "zavion-griffin-haynes|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "tico-crittendon|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "zachary-lewis|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "dalton-toothman|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jakobe-green|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "benjamin-corhei|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "deion-thomas|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jayden-griffin-haynes|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "brandon-anderson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "xavier-payne|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "zion-elee|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "camden-jensen|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "elijah-golden|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jayden-petit|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "simeon-caldwell|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "devonte-anderson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "adam-balogoun-ali|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "alejandro-schmitt|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "james-morrow|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "gavin-mueller|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jermaine-bishop-jr|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jzavien-currence|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jaelen-waters|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jc-anderson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "landen-miree|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "paris-melvin|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jaborree-riggins|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "javar-bowden|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "zavier-hilliard|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "michael-ionata|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "sam-greer|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "zion-legree|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jarius-rodgers|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "denairius-gray|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "shavar-young|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "javian-osborne|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "gabriel-osenda|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "brogan-mcnab|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jaydin-broadnax|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "javian-mallory|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "braeden-jones|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jermaine-kinsler|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "bryson-hughley|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "amari-thomas|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "dominic-turnbull|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "brady-smigiel|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "richard-anderson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jamichael-jones|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "brodie-mcwhorter|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "kevin-brown|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "naeem-burroughs|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "xavier-lherisse|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "macaiden-brown|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jordan-crutchfield|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "breeze-carter|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "ksani-jiles|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "romin-seymour|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "zech-fort|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "julian-peterson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "javion-romer|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "noah-grubbs|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "logan-rogers|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "grant-wise|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "will-conroy|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jalon-copeland|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "ben-jones|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "kenyon-alston|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "adrian-bekibele|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "tyriq-green|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "dia-bell|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jyron-hughley|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "landon-duckworth|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jake-namnun|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "cam-brooks|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "ian-asaeli-ngaue-stephenson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "rodney-colton|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "carson-clark|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "derrick-mcbride-ii|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "amari-sabb|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "chris-henry-jr|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "tay-lockett|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "cj-lavender|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "cj-sadler|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "aaron-gregory|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "gavin-sidwar|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "corbyn-fordham|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "david-pellman|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "ladarius-simmons|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "bear-mcwhorter|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "xavier-griffin|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "deuce-geralds|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "dorian-barney|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "troy-huhn|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "katrell-webb|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "devin-carter|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "darnell-kelly|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "carter-emanuel|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "keil-mcgriffy|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "ryan-mosley|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "andre-clarke|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "dereon-coleman|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "kharon-craig|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "markel-aguirre|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "tyler-atkinson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T13:56:47.190Z",
+      "source": "players"
+    },
+    "jackson-jenkins|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T14:01:55.544Z",
+      "source": "players"
+    },
+    "jaylen-jordon|florida|2026-05-01": {
+      "commitDate": "2026-05-01",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "evan-pryor|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "cam-dooley|florida|2026-01-07": {
+      "commitDate": "2026-01-07",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "micah-mays|florida|2026-01-07": {
+      "commitDate": "2026-01-07",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "luke-harpring|florida|2026-01-10": {
+      "commitDate": "2026-01-10",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "eagan-boyer|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "london-montgomery|florida|2026-01-08": {
+      "commitDate": "2026-01-08",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "aaron-philo|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "dk-kalu|florida|2026-01-05": {
+      "commitDate": "2026-01-05",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "mason-clinton|florida|2026-01-18": {
+      "commitDate": "2026-01-18",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "dj-coleman|florida|2026-01-04": {
+      "commitDate": "2026-01-04",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "emeka-ugorji|florida|2026-01-09": {
+      "commitDate": "2026-01-09",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "jaylen-lloyd|florida|2026-01-16": {
+      "commitDate": "2026-01-16",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "eric-singleton-jr|florida|2026-01-10": {
+      "commitDate": "2026-01-10",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "harrison-moore|florida|2026-01-09": {
+      "commitDate": "2026-01-09",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "tj-bullard|florida|2026-01-12": {
+      "commitDate": "2026-01-12",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "bailey-stockton|florida|2026-01-05": {
+      "commitDate": "2026-01-05",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "jordy-lowery|florida|2026-01-21": {
+      "commitDate": "2026-01-21",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "evan-chieca|florida|2026-01-19": {
+      "commitDate": "2026-01-19",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "kanye-clark|florida|2026-01-12": {
+      "commitDate": "2026-01-12",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "lacota-dippre|florida|2026-01-05": {
+      "commitDate": "2026-01-05",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "emmanuel-oyebadejo|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "patrick-durkin|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "alec-clark|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "carter-milliron|florida|2026-01-08": {
+      "commitDate": "2026-01-08",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "miller-fealy|florida|2026-01-10": {
+      "commitDate": "2026-01-10",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "ace-ciongoli|florida|2026-01-26": {
+      "commitDate": "2026-01-26",
+      "registeredAt": "2026-07-04T14:42:58.766Z",
+      "source": "players"
+    },
+    "javier-jones|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "tyler-chukuyem|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "kendall-guervil|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "derrick-hooker|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "jd-jackson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "eddison-king|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "timothy-cole|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "brayden-boults|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "amarian-mcrae|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "lord-malik-heru|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "trey-wells|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "matthew-pangaro|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "jacorey-shockley|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "adrian-reynolds|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "xzavier-corbin|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "captain-rolle|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "nolan-downes|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "khayel-sam-fong-talia|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "jase-gibson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "james-allen|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "fredner-frederic-jr|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "gnivre-carr|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "elijah-owens|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "jaylen-jordon|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "justin-williams|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "eric-parks|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "cj-hester|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "chancellor-campbell|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "kaiden-hall|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "cj-bronaugh|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "malik-morris|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "heze-kent|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "will-griffin|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-04T16:11:00.922Z",
+      "source": "players"
+    },
+    "kamauri-whitfield|florida|2026-07-06": {
+      "commitDate": "2026-07-06",
+      "registeredAt": "2026-07-11T05:06:11.647Z",
+      "source": "event",
+      "updatedAt": "2026-07-11T11:28:04.880Z",
+      "eventId": "evt_1783746372793_lafx3t"
+    },
+    "242853|florida|2026-07-07": {
+      "commitDate": "2026-07-07",
+      "registeredAt": "2026-07-11T05:06:12.555Z",
+      "source": "fired_alert",
+      "eventId": "evt_1783746372549_8hub76"
+    },
+    "243836|florida|2026-07-06": {
+      "commitDate": "2026-07-06",
+      "registeredAt": "2026-07-11T05:06:12.796Z",
+      "source": "fired_alert",
+      "eventId": "evt_1783746372793_lafx3t"
+    },
+    "raheem-floyd|florida|2026-07-07": {
+      "commitDate": "2026-07-07",
+      "registeredAt": "2026-07-11T11:28:04.878Z",
+      "source": "event",
+      "updatedAt": "2026-07-11T11:28:04.880Z",
+      "eventId": "evt_1783746372549_8hub76"
+    },
+    "aiden-gibson|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-11T11:28:04.878Z",
+      "source": "players"
+    },
+    "tj-shanahan|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-07-11T11:28:04.878Z",
+      "source": "players"
     }
   },
   "firedAlerts": {
@@ -2961,6 +4613,20 @@
       "fingerprint": "249231|florida|2026-06-18",
       "eventId": null,
       "firedAt": "2026-06-24T20:42:06.888Z"
+    },
+    "242853|florida|2026-07-07": {
+      "eventType": "commit",
+      "commitDate": "2026-07-07",
+      "fingerprint": "242853|florida|2026-07-07",
+      "eventId": "evt_1783746372549_8hub76",
+      "firedAt": "2026-07-11T05:06:12.555Z"
+    },
+    "243836|florida|2026-07-06": {
+      "eventType": "commit",
+      "commitDate": "2026-07-06",
+      "fingerprint": "243836|florida|2026-07-06",
+      "eventId": "evt_1783746372793_lafx3t",
+      "firedAt": "2026-07-11T05:06:12.796Z"
     }
   },
   "xAutopostSent": {
@@ -2971,6 +4637,16 @@
       "eventType": "commit",
       "sentAt": "2026-06-28T13:05:00.000Z",
       "source": "dedupe_seed"
+    },
+    "jermaine-cobbins": {
+      "playerSlug": "jermaine-cobbins",
+      "playerName": null,
+      "commitFingerprint": null,
+      "textHash": "a444454a7b16a3df",
+      "eventType": "news",
+      "tweetId": "111",
+      "sentAt": "2026-07-10T10:52:00.794Z",
+      "source": "test"
     }
   }
 }

@@ -2,9 +2,26 @@
   "version": 1,
   "alerts": [
     {
-      "id": "mon_1782334321979_pas3x",
-      "timestamp": 1782334321979,
-      "at": "2026-06-24T20:52:01.979Z",
+      "id": "mon_1783746976011_hd3s7",
+      "timestamp": 1783746976011,
+      "at": "2026-07-11T05:16:16.011Z",
+      "level": "warning",
+      "type": "ingest_failure",
+      "eventType": "commitment_sync",
+      "player": "Commitment pipeline",
+      "playerSlug": null,
+      "reason": null,
+      "detail": "On3 ingest errors during commitment reconciliation",
+      "source": "commitment-sync",
+      "meta": {
+        "ingestErrors": 2,
+        "lastIngestAt": "2026-07-11T05:06:13.234Z"
+      }
+    },
+    {
+      "id": "mon_1783746371640_g43iz",
+      "timestamp": 1783746371640,
+      "at": "2026-07-11T05:06:11.640Z",
       "level": "warning",
       "type": "ingest_mismatch",
       "eventType": "commits",
@@ -20,9 +37,9 @@
       }
     },
     {
-      "id": "mon_1782334321978_xd24w",
-      "timestamp": 1782334321978,
-      "at": "2026-06-24T20:52:01.978Z",
+      "id": "mon_1783746371630_2hye6",
+      "timestamp": 1783746371630,
+      "at": "2026-07-11T05:06:11.630Z",
       "level": "warning",
       "type": "ingest_mismatch",
       "eventType": "commits",
@@ -38,46 +55,465 @@
       }
     },
     {
-      "id": "mon_1782334321972_hrv0p",
-      "timestamp": 1782334321973,
-      "at": "2026-06-24T20:52:01.973Z",
-      "level": "warning",
-      "type": "ingest_mismatch",
-      "eventType": "commits",
-      "player": "Class 2028",
-      "playerSlug": null,
-      "reason": null,
-      "detail": "No commits found in On3 page data — check playerList path or DOM change",
-      "source": "on3",
-      "meta": {
-        "year": 2028,
-        "errorType": "commits",
-        "unexpectedBoardRefresh": false
-      }
-    },
-    {
-      "id": "mon_1782333726899_w9uwg",
-      "timestamp": 1782333726899,
-      "at": "2026-06-24T20:42:06.899Z",
+      "id": "mon_1783181462509_b25pp",
+      "timestamp": 1783181462509,
+      "at": "2026-07-04T16:11:02.509Z",
       "level": "info",
       "type": "ingest_mismatch",
       "eventType": "decommit",
-      "player": "Kennedee Jackson",
-      "playerSlug": "kennedee-jackson",
+      "player": "Jaydee Lane",
+      "playerSlug": "jaydee-lane",
       "reason": "missing_from_board",
       "detail": "Player missing from snapshot — event blocked",
       "source": "on3",
       "meta": {
         "year": 2027,
-        "key": "on3:284256",
+        "key": "on3:285808",
         "snapshotAbsence": true,
         "trigger": "missing_from_board"
       }
     },
     {
-      "id": "mon_1782333725983_wu0yl",
-      "timestamp": 1782333725983,
-      "at": "2026-06-24T20:42:05.983Z",
+      "id": "mon_1783181462318_3xydz",
+      "timestamp": 1783181462318,
+      "at": "2026-07-04T16:11:02.318Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Aaron McWilliams",
+      "playerSlug": "aaron-mcwilliams",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:280848",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462295_6bli8",
+      "timestamp": 1783181462295,
+      "at": "2026-07-04T16:11:02.295Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "De'Voun Kendrick",
+      "playerSlug": "devoun-kendrick",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:283921",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462277_bjp97",
+      "timestamp": 1783181462277,
+      "at": "2026-07-04T16:11:02.277Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Cain Van Norden",
+      "playerSlug": "cain-van-norden",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:251040",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462258_r8ul3",
+      "timestamp": 1783181462258,
+      "at": "2026-07-04T16:11:02.258Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Tre Geathers",
+      "playerSlug": "tre-geathers",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:249231",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462240_g5nc4",
+      "timestamp": 1783181462240,
+      "at": "2026-07-04T16:11:02.240Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Stive-Bentley Keumajou",
+      "playerSlug": "stive-bentley-keumajou",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:284617",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462225_e4pnx",
+      "timestamp": 1783181462225,
+      "at": "2026-07-04T16:11:02.225Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Kailib Dillard",
+      "playerSlug": "kailib-dillard",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:243497",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462206_knp5u",
+      "timestamp": 1783181462207,
+      "at": "2026-07-04T16:11:02.207Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Jackson Ballinger",
+      "playerSlug": "jackson-ballinger",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:244244",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462189_94mm4",
+      "timestamp": 1783181462189,
+      "at": "2026-07-04T16:11:02.189Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Ellis McGaskin",
+      "playerSlug": "ellis-mcgaskin",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:180930",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462173_1tgek",
+      "timestamp": 1783181462173,
+      "at": "2026-07-04T16:11:02.173Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Kamarion Johnson",
+      "playerSlug": "kamarion-johnson",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:283680",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462156_lmh4m",
+      "timestamp": 1783181462156,
+      "at": "2026-07-04T16:11:02.156Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Tommy Douglas",
+      "playerSlug": "tommy-douglas",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:280816",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462137_yvaic",
+      "timestamp": 1783181462137,
+      "at": "2026-07-04T16:11:02.137Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Zahmar Tookes",
+      "playerSlug": "zahmar-tookes",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:243606",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462120_wmtj2",
+      "timestamp": 1783181462120,
+      "at": "2026-07-04T16:11:02.120Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Anthony Jennings",
+      "playerSlug": "anthony-jennings",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:239852",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462105_cjnec",
+      "timestamp": 1783181462105,
+      "at": "2026-07-04T16:11:02.105Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Amare Nugent",
+      "playerSlug": "amare-nugent",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:249286",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462090_925gl",
+      "timestamp": 1783181462090,
+      "at": "2026-07-04T16:11:02.090Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Andrew Beard",
+      "playerSlug": "andrew-beard",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:236047",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462073_ulooa",
+      "timestamp": 1783181462073,
+      "at": "2026-07-04T16:11:02.073Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Aamaury Fountain",
+      "playerSlug": "aamaury-fountain",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:281368",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462047_n9pse",
+      "timestamp": 1783181462047,
+      "at": "2026-07-04T16:11:02.047Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Ja'Bios Smith",
+      "playerSlug": "jabios-smith",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:245408",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462025_tp1id",
+      "timestamp": 1783181462025,
+      "at": "2026-07-04T16:11:02.025Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Tramond Collins",
+      "playerSlug": "tramond-collins",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:258942",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181462010_o03ul",
+      "timestamp": 1783181462010,
+      "at": "2026-07-04T16:11:02.010Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Peyton Miller",
+      "playerSlug": "peyton-miller",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:238083",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181461992_fxiq0",
+      "timestamp": 1783181461992,
+      "at": "2026-07-04T16:11:01.992Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Cahron Wheeler",
+      "playerSlug": "cahron-wheeler",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:282819",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181461974_avbku",
+      "timestamp": 1783181461974,
+      "at": "2026-07-04T16:11:01.974Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Davin Davidson",
+      "playerSlug": "davin-davidson",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:259412",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181461957_cgdo3",
+      "timestamp": 1783181461957,
+      "at": "2026-07-04T16:11:01.957Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Elijah Hutcheson",
+      "playerSlug": "elijah-hutcheson",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:241889",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181461939_7aecl",
+      "timestamp": 1783181461939,
+      "at": "2026-07-04T16:11:01.939Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Elias Pearl",
+      "playerSlug": "elias-pearl",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:281377",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181461920_0ikxi",
+      "timestamp": 1783181461920,
+      "at": "2026-07-04T16:11:01.920Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Maxwell Hiller",
+      "playerSlug": "maxwell-hiller",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:180637",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181460918_ck7wb",
+      "timestamp": 1783181460918,
+      "at": "2026-07-04T16:11:00.918Z",
       "level": "warning",
       "type": "ingest_mismatch",
       "eventType": "commits",
@@ -93,9 +529,9 @@
       }
     },
     {
-      "id": "mon_1782333725982_g3e72",
-      "timestamp": 1782333725982,
-      "at": "2026-06-24T20:42:05.982Z",
+      "id": "mon_1783181460915_fcyxg",
+      "timestamp": 1783181460915,
+      "at": "2026-07-04T16:11:00.915Z",
       "level": "warning",
       "type": "ingest_mismatch",
       "eventType": "commits",
@@ -111,37 +547,403 @@
       }
     },
     {
-      "id": "mon_1782333725976_gar18",
-      "timestamp": 1782333725976,
-      "at": "2026-06-24T20:42:05.976Z",
+      "id": "mon_1783181460912_p30y2",
+      "timestamp": 1783181460912,
+      "at": "2026-07-04T16:11:00.912Z",
       "level": "warning",
       "type": "ingest_mismatch",
       "eventType": "commits",
-      "player": "Class 2028",
+      "player": "Class 2027",
       "playerSlug": null,
       "reason": null,
-      "detail": "No commits found in On3 page data — check playerList path or DOM change",
+      "detail": "request to https://www.on3.com/college/florida-gators/football/2027/commits/ failed, reason: getaddrinfo ENOTFOUND www.on3.com",
       "source": "on3",
       "meta": {
-        "year": 2028,
+        "year": 2027,
         "errorType": "commits",
         "unexpectedBoardRefresh": false
       }
     },
     {
-      "id": "mon_1781025937058_tzr2x",
-      "timestamp": 1781025937058,
-      "at": "2026-06-09T17:25:37.058Z",
-      "level": "warning",
-      "type": "blocked_event",
+      "id": "mon_1783181438310_6566k",
+      "timestamp": 1783181438310,
+      "at": "2026-07-04T16:10:38.310Z",
+      "level": "info",
+      "type": "ingest_mismatch",
       "eventType": "decommit",
-      "player": "Test Player",
-      "playerSlug": null,
-      "reason": "Test alert",
-      "detail": null,
-      "source": null,
-      "meta": null
+      "player": "Jaylen Jordon",
+      "playerSlug": "jaylen-jordon",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:288165",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438298_7blpe",
+      "timestamp": 1783181438298,
+      "at": "2026-07-04T16:10:38.298Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Ace Ciongoli",
+      "playerSlug": "ace-ciongoli",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:284197",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438285_fe1bc",
+      "timestamp": 1783181438285,
+      "at": "2026-07-04T16:10:38.285Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Miller Fealy",
+      "playerSlug": "miller-fealy",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:283795",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438274_4ik7h",
+      "timestamp": 1783181438274,
+      "at": "2026-07-04T16:10:38.274Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Carter Milliron",
+      "playerSlug": "carter-milliron",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:283756",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438262_8xpgw",
+      "timestamp": 1783181438262,
+      "at": "2026-07-04T16:10:38.262Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Alec Clark",
+      "playerSlug": "alec-clark",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:283676",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438253_hvatw",
+      "timestamp": 1783181438253,
+      "at": "2026-07-04T16:10:38.253Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Patrick Durkin",
+      "playerSlug": "patrick-durkin",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:162609",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438242_gvifa",
+      "timestamp": 1783181438242,
+      "at": "2026-07-04T16:10:38.242Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Emmanuel Oyebadejo",
+      "playerSlug": "emmanuel-oyebadejo",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:239636",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438234_u4yem",
+      "timestamp": 1783181438234,
+      "at": "2026-07-04T16:10:38.234Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Lacota Dippre",
+      "playerSlug": "lacota-dippre",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:162020",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438222_rfy2z",
+      "timestamp": 1783181438222,
+      "at": "2026-07-04T16:10:38.222Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Kanye Clark",
+      "playerSlug": "kanye-clark",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:148026",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438211_m80se",
+      "timestamp": 1783181438211,
+      "at": "2026-07-04T16:10:38.211Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Evan Chieca",
+      "playerSlug": "evan-chieca",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:283144",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438200_8fye1",
+      "timestamp": 1783181438200,
+      "at": "2026-07-04T16:10:38.200Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Jordy Lowery",
+      "playerSlug": "jordy-lowery",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:66322",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438190_af9x6",
+      "timestamp": 1783181438190,
+      "at": "2026-07-04T16:10:38.190Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Bailey Stockton",
+      "playerSlug": "bailey-stockton",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:154828",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438178_or09n",
+      "timestamp": 1783181438178,
+      "at": "2026-07-04T16:10:38.178Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "TJ Bullard",
+      "playerSlug": "tj-bullard",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:113075",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438156_tjra8",
+      "timestamp": 1783181438156,
+      "at": "2026-07-04T16:10:38.156Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Harrison Moore",
+      "playerSlug": "harrison-moore",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:153739",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438127_4maqt",
+      "timestamp": 1783181438127,
+      "at": "2026-07-04T16:10:38.127Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Eric Singleton Jr.",
+      "playerSlug": "eric-singleton-jr",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:155719",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438115_h1xtu",
+      "timestamp": 1783181438115,
+      "at": "2026-07-04T16:10:38.115Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Jaylen Lloyd",
+      "playerSlug": "jaylen-lloyd",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:154954",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438103_w1tnd",
+      "timestamp": 1783181438103,
+      "at": "2026-07-04T16:10:38.103Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Emeka Ugorji",
+      "playerSlug": "emeka-ugorji",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:238104",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438092_qg6u6",
+      "timestamp": 1783181438092,
+      "at": "2026-07-04T16:10:38.092Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "DJ Coleman",
+      "playerSlug": "dj-coleman",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:150237",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438082_n3hwn",
+      "timestamp": 1783181438082,
+      "at": "2026-07-04T16:10:38.082Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Mason Clinton",
+      "playerSlug": "mason-clinton",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:175643",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1783181438072_qtebw",
+      "timestamp": 1783181438072,
+      "at": "2026-07-04T16:10:38.072Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "DK Kalu",
+      "playerSlug": "dk-kalu",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2026,
+        "key": "on3:145026",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
     }
   ],
-  "updatedAt": "2026-06-24T20:52:01.980Z"
+  "updatedAt": "2026-07-11T05:16:16.014Z"
 }

@@ -1,0 +1,3348 @@
+{
+  "entries": [
+    {
+      "at": "2026-07-09T20:28:11.433Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-09T20:28:11.321Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-09T20:28:04.814Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-09T20:27:58.936Z",
+      "slug": "thin-prospect",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich"
+      ],
+      "gaps": [],
+      "trigger": "detectives_elite_compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-09T20:27:58.186Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-09T20:27:57.970Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-09T20:27:56.867Z",
+      "slug": "probe-test-slug",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "recruiting_qa",
+      "enrichPassesTried": [
+        "visit_metrics"
+      ],
+      "gaps": [
+        "thin_beat"
+      ],
+      "trigger": "compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:39.980Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:39.825Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:36.117Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:34.346Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:32.591Z",
+      "slug": "thin-prospect",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich"
+      ],
+      "gaps": [],
+      "trigger": "detectives_elite_compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:32.249Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:32.179Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:31.598Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:31.505Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:27.914Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:25.792Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:22.502Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:22.431Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:21.733Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:21.665Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:15.879Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:13.828Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:10.698Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:11:10.650Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:01:02.725Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:01:02.416Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:01:01.713Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:00:59.000Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:00:56.171Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:00:54.106Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:00:51.333Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:00:50.192Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:00:49.851Z",
+      "slug": "thin-prospect",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich"
+      ],
+      "gaps": [],
+      "trigger": "detectives_elite_compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:00:49.086Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:00:48.903Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:00:48.133Z",
+      "slug": "probe-test-slug",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "recruiting_qa",
+      "enrichPassesTried": [
+        "visit_metrics"
+      ],
+      "gaps": [
+        "thin_beat"
+      ],
+      "trigger": "compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T19:00:47.779Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:37.994Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:37.838Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:37.195Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:36.454Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:34.779Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:33.201Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:31.610Z",
+      "slug": "thin-prospect",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich"
+      ],
+      "gaps": [],
+      "trigger": "detectives_elite_compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:31.081Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:31.023Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:30.545Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:30.486Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:30.094Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:29.407Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:27.239Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:25.417Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:21.763Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:21.720Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:11.833Z",
+      "slug": "thin-prospect",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich"
+      ],
+      "gaps": [],
+      "trigger": "detectives_elite_compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:27:11.254Z",
+      "slug": "probe-test-slug",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "recruiting_qa",
+      "enrichPassesTried": [
+        "visit_metrics"
+      ],
+      "gaps": [
+        "thin_beat"
+      ],
+      "trigger": "compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:25:25.678Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "detectives_elite_compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:24:56.392Z",
+      "slug": "thin-prospect",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich"
+      ],
+      "gaps": [],
+      "trigger": "detectives_elite_compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:24:56.314Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "detectives_elite_compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:24:26.173Z",
+      "slug": "thin-prospect",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich"
+      ],
+      "gaps": [],
+      "trigger": "detectives_elite_compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T18:24:26.085Z",
+      "slug": "probe-test-slug",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "recruiting_qa",
+      "enrichPassesTried": [
+        "visit_metrics"
+      ],
+      "gaps": [
+        "thin_beat"
+      ],
+      "trigger": "compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:43:46.674Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:43:46.556Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:43:45.391Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:43:44.366Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:43:41.315Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:43:38.815Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:43:35.430Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:43:35.364Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:36:19.785Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:36:19.710Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:36:19.292Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:36:18.492Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:36:16.725Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:36:15.111Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:36:12.744Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:36:12.681Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:36:12.484Z",
+      "slug": "probe-test-slug",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "recruiting_qa",
+      "enrichPassesTried": [
+        "visit_metrics"
+      ],
+      "gaps": [
+        "thin_beat"
+      ],
+      "trigger": "compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:35:46.772Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:35:46.708Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:35:46.300Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:35:45.544Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:35:43.116Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:35:41.144Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:35:37.756Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:35:37.687Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:34:03.625Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:34:03.555Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:34:03.166Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:34:02.458Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:34:00.096Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:33:58.263Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:33:55.989Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:33:55.930Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:31:38.024Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:31:37.975Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:31:37.625Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:31:36.954Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:31:34.137Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:31:32.489Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:31:29.938Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:31:29.892Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:28:11.084Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:28:11.031Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:28:10.686Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:28:10.072Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:28:07.620Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:28:06.076Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:28:02.762Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:28:02.702Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:22:24.934Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:22:24.844Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:22:24.429Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:22:23.712Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:22:21.456Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:22:19.958Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:22:17.489Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:22:17.440Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:07.086Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:07.029Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:06.644Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:05.928Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:04.300Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:02.733Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:00.514Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:00.453Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:00.367Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:00.300Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:00.206Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:00.128Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:12:00.039Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:59.965Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:59.850Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:59.767Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:59.339Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:58.578Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:57.445Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:56.851Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:55.984Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:55.443Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:54.652Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:54.104Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:49.787Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:48.532Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:46.984Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:45.753Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:44.546Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:43.303Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:42.032Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:40.646Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:35.953Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:35.907Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:35.854Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:35.800Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:35.741Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:35.689Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:35.632Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:11:35.574Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:08:07.547Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:04:29.968Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:04:28.234Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:04:26.309Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:04:24.743Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:04:24.703Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:04:24.638Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T17:04:24.591Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:40.070Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:40.000Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:39.611Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:38.024Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:36.463Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:34.539Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:34.483Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:34.407Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:34.351Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:34.268Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:34.207Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:34.123Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:34.068Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:33.973Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:33.914Z",
+      "slug": "hunter-fujikawa",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:33.550Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:32.566Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:31.469Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:30.497Z",
+      "slug": "merrick-ham",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "intel_incomplete",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "visits_missing_official"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:26.783Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:25.572Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:24.217Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:22.933Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:21.345Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:19.040Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:17.439Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:14.970Z",
+      "slug": "dk-kalu",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "beat_identity_mismatch",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [
+        "no_offers",
+        "no_visits",
+        "no_rpm"
+      ],
+      "trigger": "beat_ingest",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:06.282Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:06.173Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:06.068Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:05.995Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:05.893Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:05.808Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:05.691Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "golden_acceptance",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:57:05.577Z",
+      "slug": "cale-britt",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "probe",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:20:51.599Z",
+      "slug": "probe-test-slug",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "recruiting_qa",
+      "enrichPassesTried": [
+        "visit_metrics"
+      ],
+      "gaps": [
+        "thin_beat"
+      ],
+      "trigger": "compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T16:20:26.947Z",
+      "slug": "probe-test-slug",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "recruiting_qa",
+      "enrichPassesTried": [
+        "visit_metrics"
+      ],
+      "gaps": [
+        "thin_beat"
+      ],
+      "trigger": "compose",
+      "beatLen": null
+    },
+    {
+      "at": "2026-07-07T15:22:21.708Z",
+      "slug": "zylen-little",
+      "reason": "elite_enrich_exhausted",
+      "lastReason": "missing_fused_intel",
+      "enrichPassesTried": [
+        "trigger_beat",
+        "intel_cluster",
+        "visit_metrics",
+        "research_enrich",
+        "full_enrich"
+      ],
+      "gaps": [],
+      "trigger": "detectives",
+      "beatLen": null
+    }
+  ],
+  "updatedAt": "2026-07-09T20:28:11.433Z"
+}
