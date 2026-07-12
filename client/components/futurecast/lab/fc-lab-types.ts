@@ -50,7 +50,8 @@ export function futureCastPlayerToLabTarget(p: FutureCastPlayer): FcLabTarget {
     ufRpmPct: (p as { ufRpmPct?: number | null }).ufRpmPct ?? null,
     delta7d: p.trendDelta7d,
     fitScore: p.fitScore,
-    modelPct: ufConfidence,
+    // Board rows have no separate staff meter — don't duplicate Florida odds as "Model".
+    modelPct: null,
     stars: p.stars ?? null,
     committedTo: committed,
     predictors: (p.predictors ?? []).map((x) => ({ name: x.name, score: x.score })),
@@ -76,7 +77,11 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
     ufRpmPct: rpm,
     delta7d: p.delta7d ?? p.movementDelta ?? null,
     fitScore: p.fitScore ?? null,
-    modelPct: p.staffConfidence ?? uf,
+    // Staff/model meter only when we have a real reading — never surface stored 0 as a score.
+    modelPct:
+      p.staffConfidence != null && Number(p.staffConfidence) > 0
+        ? Number(p.staffConfidence)
+        : null,
     stars: p.stars ?? null,
     committedTo: committed,
     predictors: (p.predictors ?? []).map((x) => ({ name: x.name, score: x.score })),
@@ -277,7 +282,42 @@ export type DiscoveryMovementBuckets = {
   risers: FutureCastPlayer[];
   fallers: FutureCastPlayer[];
   highVolatility: FutureCastPlayer[];
+  /** False when board-wide deltas look like synchronized filler (e.g. everyone +4). */
+  believable: boolean;
 };
+
+function rowDelta(p: {
+  delta7d?: number | null;
+  movementDelta?: number | null;
+  trendDelta7d?: number | null;
+}): number {
+  return Math.round(Number(p.delta7d ?? p.movementDelta ?? p.trendDelta7d) || 0);
+}
+
+/**
+ * True only when weekly deltas look varied enough to show fans.
+ * Uniform bumps (everyone +4 / +6 from bulk backfill) are treated as not ready.
+ */
+export function movementDeltasAreBelievable(
+  players: Array<{
+    delta7d?: number | null;
+    movementDelta?: number | null;
+    trendDelta7d?: number | null;
+  }>
+): boolean {
+  const nonzero = players.map(rowDelta).filter((d) => d !== 0);
+  if (nonzero.length < 3) return nonzero.length > 0;
+
+  const byVal = new Map<number, number>();
+  for (const d of nonzero) byVal.set(d, (byVal.get(d) || 0) + 1);
+  const topShare = Math.max(...byVal.values()) / nonzero.length;
+  if (topShare >= 0.7) return false;
+
+  const absVals = nonzero.map((d) => Math.abs(d));
+  if (new Set(absVals).size === 1) return false;
+
+  return true;
+}
 
 /** Discovery-season movement buckets from 2028 underclassmen targets or high-priority fallback. */
 export function discoveryMovementBuckets(
@@ -289,6 +329,11 @@ export function discoveryMovementBuckets(
   const pool: FutureCastPlayer[] = targets.length
     ? targets
     : highPriority.map(highPriorityToBoardPlayer);
+
+  const believable = movementDeltasAreBelievable(pool);
+  if (!believable) {
+    return { risers: [], fallers: [], highVolatility: [], believable: false };
+  }
 
   const risers = pool
     .filter((p) => (p.trendDelta7d ?? 0) > 0)
@@ -304,16 +349,10 @@ export function discoveryMovementBuckets(
     )
     .filter((p) => (p.volatility7d ?? 0) > 0 || Math.abs(p.trendDelta7d ?? 0) > 0);
 
-  if (!risers.length && !fallers.length && !highVolatility.length) {
-    const leaders = targets.length
-      ? [...targets].sort((a, b) => (b.discoveryScore ?? 0) - (a.discoveryScore ?? 0))
-      : [...pool].sort((a, b) => (b.ufConfidence ?? 0) - (a.ufConfidence ?? 0));
-    return { risers: leaders.slice(0, 8), fallers: [], highVolatility: leaders.slice(0, 8) };
-  }
-
   return {
     risers: risers.slice(0, 8),
     fallers: fallers.slice(0, 8),
     highVolatility: highVolatility.slice(0, 8),
+    believable: true,
   };
 }

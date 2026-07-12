@@ -5,7 +5,6 @@ import type { FutureCastPlayer, MovementIntelResponse } from '@/lib/futurecast-b
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import { futureCastLabHref, FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
-import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { FutureCastPanelShell, MovementBadge, MovementSparkline, UfProbBar } from './primitives';
 import { discoveryMovementBuckets, ufPctFromFc } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
@@ -32,6 +31,7 @@ function MovementRow({ player, tone }: { player: FutureCastPlayer; tone: Tab }):
         <span className="rh-cc-move-row__meta">
           {player.position} · {player.school ?? '—'}
         </span>
+        <span className="fc-lab-battle-row__metric-label">GatorVault · Florida odds</span>
         <UfProbBar value={pct} />
       </div>
       <div className="rh-cc-move-row__right">
@@ -78,8 +78,16 @@ export function FutureCastMovementPanel({
     ? `${focusYear} Discovery Movement`
     : 'FutureCast Movement — 7-Day Window';
   const sub = discoveryFocus
-    ? '2028 allowlist and discovery leaders until 7-day UF deltas populate.'
+    ? discoveryBuckets.believable
+      ? 'Real week-over-week GatorVault Florida-odds movers on the allowlist.'
+      : 'Waiting on varied week-over-week Florida-odds changes — uniform board bumps stay hidden.'
     : 'FutureCast movement window — risers, fallers, and volatile targets.';
+
+  const emptyCopy = discoveryFocus
+    ? discoveryBuckets.believable
+      ? `No ${focusYear} movement in this bucket yet.`
+      : `No reliable ${focusYear} weekly movers yet — deltas populate once snapshots diverge.`
+    : 'No movement in this bucket yet.';
 
   return (
     <FutureCastPanelShell
@@ -109,11 +117,7 @@ export function FutureCastMovementPanel({
       </div>
       <div className="rh-cc-move-list" role="tabpanel">
         {rows.length === 0 ? (
-          <p className="rh-cc-empty">
-            {discoveryFocus
-              ? `No ${focusYear} movement in this bucket yet.`
-              : 'No movement in this bucket yet.'}
-          </p>
+          <p className="rh-cc-empty">{emptyCopy}</p>
         ) : (
           rows.slice(0, 8).map((item) => <MovementRow key={item.id} player={item} tone={tab} />)
         )}

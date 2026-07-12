@@ -1822,3 +1822,24 @@
 .fc-lab-battle-row .fc-school-rank {
   background: rgba(255, 255, 255, 0.92);
 }
+
+/* Full-width modules under the 2-column lab grid */
+.fc-lab-extended-full {
+  width: 100%;
+  margin-top: var(--gv-grid-gutter, 24px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-grid-gutter, 24px);
+  min-width: 0;
+}
+
+.fc-lab-target-card__prob-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gv-graphite, #475569);
+  opacity: 0.85;
+}

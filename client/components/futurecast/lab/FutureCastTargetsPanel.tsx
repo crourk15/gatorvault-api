@@ -9,6 +9,7 @@ import { FutureCastPanelShell } from './primitives';
 import {
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
+  movementDeltasAreBelievable,
 } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
@@ -37,11 +38,13 @@ export function FutureCastTargetsPanel({ masterBoard, highPriority = [], bare }:
       .map(futureCastPlayerToLabTarget);
   }, [discoveryFocus, highPriority, masterBoard.players]);
 
+  const showMovement = useMemo(() => movementDeltasAreBelievable(rows), [rows]);
+
   const title = discoveryFocus
     ? `${focusYear} UF Targets — Allowlist Board`
     : 'Top UF Targets — Master Board';
   const sub = discoveryFocus
-    ? 'Locked UF targets ranked by priority score, likelihood, and fit during early discovery.'
+    ? 'Locked UF targets ranked by priority score, Florida odds, and fit during early discovery.'
     : 'Premium FutureCast master board with probability, movement, fit, and competing schools.';
 
   return (
@@ -62,6 +65,7 @@ export function FutureCastTargetsPanel({ masterBoard, highPriority = [], bare }:
               key={p.slug}
               player={p}
               profileHref={playerProfileRoute(p.slug, 'futurecast')}
+              showMovement={showMovement}
             />
           ))}
         </div>

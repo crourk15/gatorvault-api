@@ -99,26 +99,27 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
               />
             )}
           </section>
-          <section id="fc-lab-extended">
-            {pending ? (
-              <PanelSkeleton minHeight={320} />
-            ) : (
-              <FutureCastExtendedModules
-                masterBoard={data.masterBoard}
-                trendingBoard={data.trendingBoard}
-                movementIntel={data.movementIntel}
-                highPriority={highPriority}
-                visitIntel={data.visitIntel}
-                visitRecap={data.visitRecap}
-                flipWatch={data.flipWatch}
-                movementNarratives={data.movementNarratives}
-                staffNotes={data.staffNotes}
-                underclassmen={data.underclassmen}
-              />
-            )}
-          </section>
         </div>
       </div>
+
+      <section id="fc-lab-extended" className="fc-lab-extended-full rh-frame">
+        {pending ? (
+          <PanelSkeleton minHeight={320} />
+        ) : (
+          <FutureCastExtendedModules
+            masterBoard={data.masterBoard}
+            trendingBoard={data.trendingBoard}
+            movementIntel={data.movementIntel}
+            highPriority={highPriority}
+            visitIntel={data.visitIntel}
+            visitRecap={data.visitRecap}
+            flipWatch={data.flipWatch}
+            movementNarratives={data.movementNarratives}
+            staffNotes={data.staffNotes}
+            underclassmen={data.underclassmen}
+          />
+        )}
+      </section>
 
       <section id={FUTURECAST_LAB_ANCHORS.feed}>
         {pending ? (

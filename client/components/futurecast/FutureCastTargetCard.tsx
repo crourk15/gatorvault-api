@@ -15,13 +15,20 @@ import {
 export type FutureCastTargetCardProps = {
   player: FcLabTarget;
   profileHref: string;
+  /** When false, hide weekly Δ badges (uniform filler board). */
+  showMovement?: boolean;
 };
 
 /** Premium target card used by FutureCast Lab master board sections. */
-export function FutureCastTargetCard({ player, profileHref }: FutureCastTargetCardProps): React.ReactElement {
+export function FutureCastTargetCard({
+  player,
+  profileHref,
+  showMovement = true,
+}: FutureCastTargetCardProps): React.ReactElement {
   const pct = ufPctFromFc(player.ufProbability);
-  const delta = Math.round(player.delta7d ?? 0);
+  const delta = showMovement ? Math.round(player.delta7d ?? 0) : 0;
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
+  const hasWeekChange = showMovement && delta !== 0;
 
   return (
     <article className="fc-lab-target-card fc-target-card" data-testid="fc-target-card">
@@ -34,17 +41,23 @@ export function FutureCastTargetCard({ player, profileHref }: FutureCastTargetCa
             {player.position} · {player.school ?? '—'} · Class {player.classYear}
           </p>
         </div>
-        <MovementBadge delta={delta} tone={tone} />
+        {hasWeekChange ? <MovementBadge delta={delta} tone={tone} /> : null}
       </header>
 
       <div className="fc-target-body">
         <div className="fc-lab-target-card__prob">
+          <span className="fc-lab-target-card__prob-label">GatorVault · Florida odds</span>
           <UfProbBar value={pct} />
         </div>
-        <div className="fc-lab-target-card__spark">
-          <MovementSparkline end={pct} delta={delta} />
-          <span className="fc-lab-target-card__spark-label">7-day UF probability</span>
-        </div>
+        {hasWeekChange ? (
+          <div className="fc-lab-target-card__spark">
+            <MovementSparkline end={pct} delta={delta} />
+            <span className="fc-lab-target-card__spark-label">
+              7-day change {delta > 0 ? '+' : ''}
+              {delta} pts
+            </span>
+          </div>
+        ) : null}
         <CompetingSchoolsBar player={player} />
         <div className="fc-lab-target-card__badges">
           <FitScoreBadge score={player.fitScore} />

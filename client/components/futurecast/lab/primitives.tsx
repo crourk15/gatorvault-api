@@ -51,10 +51,13 @@ export function FitScoreBadge({
 }: {
   score: number | null | undefined;
 }): React.ReactElement {
-  if (score == null) {
+  if (score == null || !Number.isFinite(Number(score)) || Number(score) <= 0) {
     return <span className="fc-lab-fit fc-lab-fit--na">Fit: —</span>;
   }
-  const pct = score <= 1 ? Math.round(score * 100) : Math.round(score);
+  const pct = Number(score) <= 1 ? Math.round(Number(score) * 100) : Math.round(Number(score));
+  if (pct <= 0) {
+    return <span className="fc-lab-fit fc-lab-fit--na">Fit: —</span>;
+  }
   return (
     <span className={`fc-lab-fit fc-lab-fit--${fitBand(pct)}`} data-testid="fc-lab-fit-badge">
       Fit: {pct}/100
@@ -70,8 +73,12 @@ export function AnalystConfidenceMeter({
   value: number | null | undefined;
   label?: string;
   subline?: string;
-}): React.ReactElement {
-  const pct = value == null ? 0 : value <= 1 ? Math.round(value * 100) : Math.round(value);
+}): React.ReactElement | null {
+  if (value == null || !Number.isFinite(Number(value)) || Number(value) <= 0) {
+    return null;
+  }
+  const pct = Number(value) <= 1 ? Math.round(Number(value) * 100) : Math.round(Number(value));
+  if (pct <= 0) return null;
   const tone = pct >= 67 ? 'high' : pct >= 34 ? 'mid' : 'low';
 
   return (
@@ -80,7 +87,7 @@ export function AnalystConfidenceMeter({
       <div className="fc-lab-analyst__track">
         <div className={`fc-lab-analyst__fill fc-lab-analyst__fill--${tone}`} style={{ width: `${pct}%` }} />
       </div>
-      <span className="fc-lab-analyst__value">{value == null ? '—' : `${pct}%`}</span>
+      <span className="fc-lab-analyst__value">{pct}%</span>
       {subline ? <span className="fc-lab-analyst__sub">{subline}</span> : null}
     </div>
   );

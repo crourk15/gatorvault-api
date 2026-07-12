@@ -87,16 +87,18 @@ export function FutureCastLiveFeed({
       }
 
       const discoveryMove = discoveryMovementBuckets(underclassmen, highPriority);
-      for (const riser of discoveryMove.risers.slice(0, 2)) {
-        raw.push(
-          buildIntelFeedItem({
-            id: `fc-rise-${riser.slug}`,
-            playerName: riser.name,
-            headline: `${focusYear} discovery leader — ${riser.name} (${riser.position})`,
-            timestamp: staffNotes.updatedAt || movementIntel.updatedAt,
-            category: 'Update',
-          })
-        );
+      if (discoveryMove.believable) {
+        for (const riser of discoveryMove.risers.slice(0, 2)) {
+          raw.push(
+            buildIntelFeedItem({
+              id: `fc-rise-${riser.slug}`,
+              playerName: riser.name,
+              headline: `${focusYear} weekly riser — ${riser.name} (${riser.position}, ${formatTrendDelta(riser.trendDelta7d)})`,
+              timestamp: staffNotes.updatedAt || movementIntel.updatedAt,
+              category: 'Movement',
+            })
+          );
+        }
       }
     } else {
       const bySlug = new Map(masterBoard.players.map((p) => [p.slug, p]));

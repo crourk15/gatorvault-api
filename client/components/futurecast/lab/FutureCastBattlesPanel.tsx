@@ -14,6 +14,7 @@ import {
 import {
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
+  movementDeltasAreBelievable,
   ufPctFromFc,
 } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
@@ -44,9 +45,17 @@ function classifyTab(ufPct: number): Tab {
   return 'lean-elsewhere';
 }
 
-function BattleRow({ player, tab }: { player: ReturnType<typeof futureCastPlayerToLabTarget>; tab: Tab }): React.ReactElement {
+function BattleRow({
+  player,
+  tab,
+  showMovement,
+}: {
+  player: ReturnType<typeof futureCastPlayerToLabTarget>;
+  tab: Tab;
+  showMovement: boolean;
+}): React.ReactElement {
   const pct = ufPctFromFc(player.ufProbability);
-  const delta = Math.round(player.delta7d ?? 0);
+  const delta = showMovement ? Math.round(player.delta7d ?? 0) : 0;
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
   const meta = TAB_META[tab];
   const rpm = player.ufRpmPct != null && player.ufRpmPct > 0 ? Math.round(player.ufRpmPct) : null;
@@ -66,7 +75,7 @@ function BattleRow({ player, tab }: { player: ReturnType<typeof futureCastPlayer
           {player.position} · {player.school ?? '—'}
         </span>
         <div className="fc-lab-battle-row__gv">
-          <span className="fc-lab-battle-row__metric-label">GatorVault</span>
+          <span className="fc-lab-battle-row__metric-label">GatorVault · Florida odds</span>
           <UfProbBar value={pct} />
         </div>
         {rpm != null ? (
@@ -75,7 +84,7 @@ function BattleRow({ player, tab }: { player: ReturnType<typeof futureCastPlayer
         <CompetingSchoolsBar player={player} />
       </div>
       <div className="fc-lab-battle-row__right">
-        <MovementBadge delta={delta} tone={tone} />
+        {showMovement && delta !== 0 ? <MovementBadge delta={delta} tone={tone} /> : null}
       </div>
     </div>
   );
@@ -130,11 +139,15 @@ export function FutureCastBattlesPanel({
   }, [discoveryFocus, highPriority, pool]);
 
   const rows = buckets[tab].slice(0, 8);
+  const showMovement = useMemo(
+    () => movementDeltasAreBelievable(Object.values(buckets).flat()),
+    [buckets]
+  );
   const title = discoveryFocus
     ? `${focusYear} Battles & Leaning Targets`
     : 'Battles & Leaning Targets';
   const sub = discoveryFocus
-    ? 'Bucketed by GatorVault likelihood — On3 RPM boards shown as market context.'
+    ? 'Bucketed by GatorVault Florida odds — On3 RPM boards shown as market context.'
     : 'Trending board buckets — battles, lean UF, and lean elsewhere.';
 
   return (
@@ -166,7 +179,9 @@ export function FutureCastBattlesPanel({
               : 'No targets in this bucket yet.'}
           </p>
         ) : (
-          rows.map((p) => <BattleRow key={p.slug} player={p} tab={tab} />)
+          rows.map((p) => (
+            <BattleRow key={p.slug} player={p} tab={tab} showMovement={showMovement} />
+          ))
         )}
       </div>
     </FutureCastPanelShell>
