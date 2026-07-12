@@ -64,13 +64,12 @@ export async function augmentPlayerFromRecruiting(
       ? player.highSchool
       : schoolLabel,
     hometown:
-      player.hometown ??
-      recruiting.hometown ??
+      // Prefer city-only fields so header state doesn't duplicate ("Newnan, GA, GA").
       (recruiting.hometownCity
-        ? [recruiting.hometownCity, recruiting.hometownState || recruiting.state]
-            .filter(Boolean)
-            .join(', ')
-        : null),
+        ? String(recruiting.hometownCity).split(',')[0].trim()
+        : null) ??
+      (player.hometown ? String(player.hometown).split(',')[0].trim() : null) ??
+      (recruiting.hometown ? String(recruiting.hometown).split(',')[0].trim() : null),
     state: player.state ?? recruiting.state ?? recruiting.hometownState ?? null,
     stars: player.stars ?? recruiting.stars ?? null,
     compositeRating: player.compositeRating ?? recruiting.rating ?? null,
@@ -183,22 +182,22 @@ export function boardSignalsFromRecruiting(
   return signals;
 }
 
-/** Real offer rows from offer_logs.json (dated). */
+/** Real offer events for Recent Signals — only when we have a true offer day. */
 export function offerSignalsFromOfferLogs(
   playerId: string,
   slug: string
 ): Record<string, unknown>[] {
-  const logs = offerLogStore.listOfferLogs({ playerSlug: slug, limit: 25 }) || [];
-  return logs.map((log: {
-    id?: string;
-    school?: string;
-    date?: string;
-    reportedAt?: string;
-    source?: string;
-    offerType?: string;
-  }, i: number) => {
-    const when = log.date || log.reportedAt || null;
-    return {
+  const logs = offerLogStore.listOfferLogs({ playerSlug: slug, limit: 40 }) || [];
+  return logs
+    .filter((log: { date?: string; reportedAt?: string }) => offerLogStore.isKnownOfferDate(log))
+    .slice(0, 5)
+    .map((log: {
+      id?: string;
+      school?: string;
+      date?: string;
+      source?: string;
+      offerType?: string;
+    }, i: number) => ({
       id: log.id || `${playerId}-offer-log-${i}`,
       playerId,
       signalType: 'OFFER',
@@ -207,9 +206,8 @@ export function offerSignalsFromOfferLogs(
         source: log.source || 'offer-log',
         offerType: log.offerType || 'offer',
       },
-      createdAt: when,
-    };
-  });
+      createdAt: offerLogStore.displayOfferDate(log),
+    }));
 }
 
 export function mergeProfileSignals(
@@ -233,7 +231,7 @@ export function mergeProfileSignals(
   return out;
 }
 
-/** Offers for High School tab — dated from offer logs + player.offers. */
+/** Offers for High School tab — schools always; date only when known. */
 export function offersFromRecruitingAndLogs(
   slug: string,
   recruiting: Awaited<ReturnType<typeof getRecruitingPlayerBySlug>>
@@ -241,17 +239,20 @@ export function offersFromRecruitingAndLogs(
   const fromLogs = (offerLogStore.listOfferLogs({ playerSlug: slug, limit: 40 }) || []).map(
     (log: { school?: string; date?: string; reportedAt?: string }) => ({
       school: log.school || null,
-      date: log.date || log.reportedAt || null,
+      date: offerLogStore.displayOfferDate(log),
     })
   );
   const fromPlayer = ((recruiting as { offers?: Array<{ school?: string; date?: string }> })?.offers || [])
     .filter((o) => o?.school)
-    .map((o) => ({ school: o.school || null, date: o.date || null }));
+    .map((o) => ({
+      school: o.school || null,
+      date: o.date && String(o.date).trim() ? String(o.date).slice(0, 10) : null,
+    }));
   const seen = new Set<string>();
   const out: Array<{ school: string | null; date: string | null }> = [];
   for (const row of [...fromLogs, ...fromPlayer]) {
-    const key = `${String(row.school || '').toLowerCase()}|${String(row.date || '').slice(0, 10)}`;
-    if (seen.has(key)) continue;
+    const key = String(row.school || '').toLowerCase();
+    if (!key || seen.has(key)) continue;
     seen.add(key);
     out.push(row);
   }

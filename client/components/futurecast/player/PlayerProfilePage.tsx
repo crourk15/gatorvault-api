@@ -255,7 +255,12 @@ export function PlayerProfilePage({
         {activeTab === 'uf-fit' && (
           <UFFitTab profile={data.ufSpecificProfile} intel={ufFitIntel as UfFitIntelResponse | null} intelLoading={false} />
         )}
-        {activeTab === 'signals' && <SignalsTab signals={data.signals} />}
+        {activeTab === 'signals' && (
+          <SignalsTab
+            signals={data.signals}
+            offerCount={data.highSchoolProfile?.offers?.length ?? 0}
+          />
+        )}
       </div>
     </div>
   );

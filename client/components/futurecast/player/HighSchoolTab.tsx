@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import type { HighSchoolProfile, PlayerCore } from '../../../lib/player-api';
-import { formatHeight, formatWeight } from '../../../lib/player-derived';
+import { formatHeight, formatWeight, formatDate, formatPlayerLocation } from '../../../lib/player-derived';
 import { coerceDisplayText } from '../../../lib/coerce-text';
 
 export interface HighSchoolTabProps {
@@ -90,7 +90,7 @@ export function HighSchoolTab({ player, profile }: HighSchoolTabProps): React.Re
         <h2>School & Location</h2>
         <dl className="fc-profile-dl">
           <div><dt>High School</dt><dd>{player.highSchool || (typeof stats.school === 'string' ? stats.school : '') || '—'}</dd></div>
-          <div><dt>Location</dt><dd>{[player.hometown, player.state].filter(Boolean).join(', ') || '—'}</dd></div>
+          <div><dt>Location</dt><dd>{formatPlayerLocation(player.hometown, player.state) || '—'}</dd></div>
           <div><dt>Height / Weight</dt><dd>{formatHeight(player.height)} · {formatWeight(player.weight)}</dd></div>
         </dl>
       </section>
@@ -121,14 +121,22 @@ export function HighSchoolTab({ player, profile }: HighSchoolTabProps): React.Re
 
       {profile.offers.length > 0 && (
         <section className="fc-profile-section">
-          <h2>Offers</h2>
+          <h2>Offers ({profile.offers.length})</h2>
+          <p className="fc-profile-muted fc-profile-section__lede">
+            Schools on file from On3 — dates shown only when known
+          </p>
           <ul className="fc-offer-list">
-            {profile.offers.map((offer, i) => (
-              <li key={`${offer.school}-${i}`}>
-                <strong>{offer.school ?? 'Unknown'}</strong>
-                {offer.date && <span className="fc-profile-muted"> · {offer.date}</span>}
-              </li>
-            ))}
+            {profile.offers.map((offer, i) => {
+              const knownDate = offer.date ? formatDate(offer.date) : '—';
+              return (
+                <li key={`${offer.school}-${i}`}>
+                  <strong>{offer.school ?? 'Unknown'}</strong>
+                  {knownDate !== '—' ? (
+                    <span className="fc-profile-muted"> · {knownDate}</span>
+                  ) : null}
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}

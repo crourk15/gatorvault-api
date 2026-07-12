@@ -5,7 +5,7 @@ import React from 'react';
 import type { PlayerProfileBundle } from '../../../lib/player-api';
 import type { PlayerMetrics } from '../../../lib/player-derived';
 import { signalSummaryText, formatSignalValue, formatDate } from '../../../lib/player-derived';
-import { dedupeDiscoverySignals, signalTimestamp } from '../../../lib/player-profile-normalize';
+import { dedupeDiscoverySignals, isFeedSignal, signalTimestamp } from '../../../lib/player-profile-normalize';
 import { coerceDisplayText } from '../../../lib/coerce-text';
 import { RelatedPlayers } from './RelatedPlayers';
 import { PredictionsPanel } from './PredictionsPanel';
@@ -26,13 +26,6 @@ function profileNotesDeduped(
     return { recruitingNotes: hs, evaluationNotes: null };
   }
   return { recruitingNotes: hs, evaluationNotes: evalN };
-}
-
-function isEventSignal(signal: { signalType?: string }): boolean {
-  const type = String(signal.signalType || '').toUpperCase();
-  // On3 RPM interest already lives on the Prediction Market board — keep feed for real events.
-  if (type === 'COMPETING_INTEREST') return false;
-  return true;
 }
 
 function signalMeta(signal: { signalType: string; createdAt?: string | null }): string {
@@ -62,8 +55,9 @@ export function OverviewTab({
 }: OverviewTabProps): React.ReactElement {
   const { player, signals, related, highSchoolProfile, collegeProfile, portalProfile, ufSpecificProfile } =
     data;
-  const recentSignals = dedupeDiscoverySignals(signals)
-    .filter(isEventSignal)
+  const offerCount = highSchoolProfile?.offers?.length ?? 0;
+  const eventSignals = dedupeDiscoverySignals(signals).filter(isFeedSignal);
+  const recentSignals = [...eventSignals]
     .sort((a, b) => signalTimestamp(b.createdAt) - signalTimestamp(a.createdAt))
     .slice(0, 5);
   const notes = profileNotesDeduped(
@@ -123,12 +117,15 @@ export function OverviewTab({
           {!metrics.portalHidden ? (
             <div><strong>Portal Likelihood</strong><br />{metrics.portalLikelihoodPct ?? 0}%</div>
           ) : null}
-          <div><strong>Signals</strong><br />{recentSignals.length || metrics.signalCount}</div>
+          {offerCount > 0 ? (
+            <div><strong>Offers</strong><br />{offerCount}</div>
+          ) : null}
+          <div><strong>Signals</strong><br />{eventSignals.length}</div>
         </div>
-        <p className="fc-profile-muted">{signalSummaryText(recentSignals.length ? recentSignals : signals.filter(isEventSignal))}</p>
+        <p className="fc-profile-muted">{signalSummaryText(eventSignals)}</p>
       </section>
 
-      {recentSignals.length > 0 && (
+      {recentSignals.length > 0 ? (
         <section className="fc-profile-section">
           <h2>Recent Signals</h2>
           <ul className="fc-signal-feed fc-signal-feed--compact">
@@ -143,7 +140,15 @@ export function OverviewTab({
             ))}
           </ul>
         </section>
-      )}
+      ) : offerCount > 0 ? (
+        <section className="fc-profile-section">
+          <h2>Recent Signals</h2>
+          <p className="fc-profile-muted">
+            {offerCount} offers on file — open the High School tab for the full list.
+            Dated offer events appear here only when On3 provides a real offer date.
+          </p>
+        </section>
+      ) : null}
 
       {(notes.recruitingNotes && !staffNoteInBoard) || notes.evaluationNotes ? (
         <section className="fc-profile-section">

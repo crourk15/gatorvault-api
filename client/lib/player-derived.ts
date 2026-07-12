@@ -312,6 +312,28 @@ export function formatDate(iso: unknown): string {
   return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
+/** Avoid "Newnan, GA, GA" when hometown already includes state. */
+export function formatPlayerLocation(
+  hometown?: string | null,
+  state?: string | null
+): string {
+  const town = String(hometown || '').trim();
+  const st = String(state || '').trim();
+  if (!town && !st) return '';
+  if (!st) return town;
+  if (!town) return st;
+  const lowerTown = town.toLowerCase();
+  const lowerSt = st.toLowerCase();
+  if (
+    lowerTown.endsWith(`, ${lowerSt}`) ||
+    lowerTown.endsWith(`,${lowerSt}`) ||
+    lowerTown.endsWith(` ${lowerSt}`)
+  ) {
+    return town;
+  }
+  return `${town}, ${st}`;
+}
+
 export interface PlayerMetrics {
   ufFitScore: number;
   ufFitTier: FitTier;

@@ -42,22 +42,43 @@ function offerLogFingerprint(raw) {
   const slug = String(raw.playerSlug || '').trim().toLowerCase();
   const school = String(raw.school || 'Florida').trim().toLowerCase();
   const offerType = String(raw.offerType || 'offer').trim().toLowerCase();
-  const date = normalizeIntelTimestamp(raw.date || raw.reportedAt || raw.timestamp);
+  const rawDate = raw.date != null && String(raw.date).trim() ? raw.date : null;
+  const date = rawDate ? normalizeIntelTimestamp(rawDate) : 'undated';
   if (!slug || !school) return null;
   return `offer|${slug}|${school}|${offerType}|${date}`;
+}
+
+/**
+ * True offer day vs ingest stamp.
+ * When On3 omits dateAdded we used to copy reportedAt — treat same-day as unknown.
+ */
+function isKnownOfferDate(log) {
+  const date = String(log?.date || '').trim();
+  if (!date) return false;
+  const day = date.slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return false;
+  const reported = String(log?.reportedAt || '').trim();
+  if (reported && reported.slice(0, 10) === day) return false;
+  return true;
+}
+
+function displayOfferDate(log) {
+  return isKnownOfferDate(log) ? String(log.date).slice(0, 10) : null;
 }
 
 function normalizeOfferLog(raw) {
   const fingerprint = offerLogFingerprint(raw);
   const playerSlug = String(raw.playerSlug || '').trim();
   const reportedAt = raw.reportedAt || raw.timestamp || nowIso();
+  const rawDate = raw.date != null && String(raw.date).trim() ? raw.date : null;
+  const date = rawDate ? normalizeIntelTimestamp(rawDate) : null;
   return {
-    id: raw.id || `olog_${playerSlug}_${normalizeIntelTimestamp(raw.date || reportedAt)}`,
+    id: raw.id || `olog_${playerSlug}_${date || 'undated'}_${String(raw.school || 'florida').toLowerCase().replace(/\s+/g, '-')}`,
     playerSlug,
     playerId: raw.playerId != null ? String(raw.playerId) : raw.on3Id != null ? String(raw.on3Id) : null,
     school: raw.school || 'Florida',
     offerType: raw.offerType || null,
-    date: raw.date || normalizeIntelTimestamp(reportedAt),
+    date,
     source: raw.source || 'manual',
     fingerprint,
     reportedAt,
@@ -103,5 +124,7 @@ module.exports = {
   normalizeOfferLog,
   appendOfferLog,
   listOfferLogs,
+  isKnownOfferDate,
+  displayOfferDate,
   loadDoc,
 };

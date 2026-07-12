@@ -8,6 +8,7 @@ import {
   fitTierLabel,
   formatHeight,
   formatWeight,
+  formatPlayerLocation,
   lifecycleColor,
 } from '../../../lib/player-derived';
 import { buildPlayerShareUrl } from '../../../lib/player-api';
@@ -31,7 +32,7 @@ export function PlayerHeader({
   const inVault = isVaultPath(pathname);
   const [copied, setCopied] = useState(false);
   const lifecycle = player.status;
-  const location = [player.hometown, player.state].filter(Boolean).join(', ');
+  const location = formatPlayerLocation(player.hometown, player.state);
 
   const onShare = useCallback(async () => {
     const url = buildPlayerShareUrl(player.slug, player.status, inVault);

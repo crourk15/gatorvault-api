@@ -12,6 +12,7 @@ import type {
 import {
   computePlayerMetrics,
   fitTier,
+  formatDate,
   formatSignalValue,
   type FitTier,
   type PlayerMetrics,
@@ -22,6 +23,14 @@ export function isUfCommit(player: Pick<PlayerCore, 'committedTo' | 'status'>): 
   const to = String(player.committedTo || '').toLowerCase();
   if (!to) return false;
   return /\bflorida\b|\bgators\b|\buf\b/i.test(to);
+}
+
+/** Dated feed events only — excludes RPM interest and undated offer inventory. */
+export function isFeedSignal(signal: DiscoverySignal): boolean {
+  const type = String(signal.signalType || '').toUpperCase();
+  if (type === 'COMPETING_INTEREST') return false;
+  if (type === 'OFFER' && (!signal.createdAt || formatDate(signal.createdAt) === '—')) return false;
+  return true;
 }
 
 type RawSignal = Record<string, unknown>;
@@ -138,7 +147,7 @@ export function resolveProfileMetrics(opts: ProfileMetricsOptions): PlayerMetric
     ufFitLabel: ufCommit && ufFitScore >= 80 ? 'Locked In' : undefined,
     portalLikelihoodPct: portalHidden ? null : base.portalLikelihoodPct,
     portalHidden,
-    signalCount: deduped.length,
+    signalCount: deduped.filter(isFeedSignal).length,
   };
 }
 

@@ -159,7 +159,12 @@ async function finalizeProfileResponse(
     competingSchools = competingSchoolsFromRecruiting(recruiting);
   }
 
-  let signals = profile.signals ?? [];
+  // Drop inventory OFFER / RPM interest from DB signals — offers live on HS tab;
+  // only known-dated offer logs re-enter the feed via offerSignalsFromOfferLogs.
+  let signals = (profile.signals ?? []).filter((s) => {
+    const type = String(s.signalType || '').toUpperCase();
+    return type !== 'OFFER' && type !== 'COMPETING_INTEREST';
+  });
   const offerSignals = offerSignalsFromOfferLogs(playerId, slug);
   const boardSignals = recruiting ? boardSignalsFromRecruiting(playerId, recruiting) : [];
   signals = mergeProfileSignals(signals, offerSignals, signals.length ? [] : boardSignals);
@@ -184,6 +189,7 @@ async function finalizeProfileResponse(
   let ufSpecificProfile = profile.ufSpecificProfile;
   if (recruiting && highSchoolProfile) {
     const stats = (highSchoolProfile.stats as Record<string, unknown>) ?? {};
+    // Always rebuild offers so ingest stamps are not shown as real offer dates.
     const offers = offersFromRecruitingAndLogs(slug, recruiting);
     highSchoolProfile = {
       ...highSchoolProfile,
@@ -192,9 +198,7 @@ async function finalizeProfileResponse(
         recruiting.profileNote ??
         recruiting.skinny ??
         null,
-      offers: Array.isArray(highSchoolProfile.offers) && highSchoolProfile.offers.length
-        ? highSchoolProfile.offers
-        : offers,
+      offers,
       stats: {
         ...stats,
         stars: stats.stars ?? recruiting.stars ?? null,
