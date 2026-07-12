@@ -33,6 +33,8 @@ export type FullProfileCompetingSchool = {
 
 export type FullProfileFuturecastSummary = {
   ufProbability: number | null;
+  on3UfProbability?: number | null;
+  gvProbability?: number | null;
   predictedSchool: string | null;
   movementDelta: number | null;
   fitScore: number | null;

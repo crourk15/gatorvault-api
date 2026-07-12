@@ -28,6 +28,20 @@ function profileNotesDeduped(
   return { recruitingNotes: hs, evaluationNotes: evalN };
 }
 
+function signalMeta(signal: { signalType: string; createdAt?: string | null }): string {
+  const type = String(signal.signalType || '').toUpperCase();
+  const date = formatDate(signal.createdAt);
+  // Competing interest is a market snapshot — don't pretend weight/date are offer intel.
+  if (type === 'COMPETING_INTEREST') {
+    return date !== '—' ? `market · ${date}` : 'On3 market';
+  }
+  if (type === 'OFFER') {
+    return date !== '—' ? date : 'offer';
+  }
+  const weight = signalWeight(signal.signalType);
+  return date !== '—' ? `${date} · weight ${weight}` : `weight ${weight}`;
+}
+
 export interface OverviewTabProps {
   data: PlayerProfileBundle;
   metrics: PlayerMetrics;
@@ -72,6 +86,28 @@ export function OverviewTab({
         </dl>
       </section>
 
+      <BoardIntelPanel
+        ufProbability={
+          futurecastSummary?.on3UfProbability ?? futurecastSummary?.ufProbability ?? null
+        }
+        competingSchools={competingSchools}
+        futurecastSummary={futurecastSummary}
+        staffNote={notes.recruitingNotes}
+      />
+
+      <section className="fc-profile-section fc-profile-section--picks">
+        <h2>FutureCast Picks</h2>
+        <p className="fc-profile-muted fc-profile-section__lede">
+          GatorVault likelihood for Florida · On3 RPM for competitor schools
+        </p>
+        <PredictionsPanel
+          playerId={player.id}
+          playerSlug={player.slug}
+          classYear={player.classYear}
+          initialPredictions={initialPredictions}
+        />
+      </section>
+
       <section className="fc-profile-section">
         <h2>Intelligence</h2>
         <div className="fc-profile-metrics-row">
@@ -84,23 +120,6 @@ export function OverviewTab({
         <p className="fc-profile-muted">{signalSummaryText(signals)}</p>
       </section>
 
-      <BoardIntelPanel
-        ufProbability={futurecastSummary?.ufProbability ?? null}
-        competingSchools={competingSchools}
-        futurecastSummary={futurecastSummary}
-        staffNote={notes.recruitingNotes}
-      />
-
-      <section className="fc-profile-section">
-        <h2>FutureCast Picks</h2>
-        <PredictionsPanel
-          playerId={player.id}
-          playerSlug={player.slug}
-          classYear={player.classYear}
-          initialPredictions={initialPredictions}
-        />
-      </section>
-
       {recentSignals.length > 0 && (
         <section className="fc-profile-section">
           <h2>Recent Signals</h2>
@@ -109,9 +128,7 @@ export function OverviewTab({
               <li key={s.id}>
                 <span className="fc-signal-feed__type">{s.signalType.replace(/_/g, ' ')}</span>
                 <span className="fc-signal-feed__value">{formatSignalValue(s)}</span>
-                <span className="fc-signal-feed__meta">
-                  {formatDate(s.createdAt)} · weight {signalWeight(s.signalType)}
-                </span>
+                <span className="fc-signal-feed__meta">{signalMeta(s)}</span>
               </li>
             ))}
           </ul>

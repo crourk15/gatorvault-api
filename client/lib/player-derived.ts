@@ -13,6 +13,7 @@ import type {
 
 export const SIGNAL_TYPE_WEIGHTS: Record<string, number> = {
   OFFER: 10,
+  COMPETING_INTEREST: 6,
   RANKING_JUMP: 15,
   CAMP_PERFORMANCE: 20,
   EVALUATION_NOTE: 10,
@@ -256,10 +257,25 @@ export function signalSummaryText(signals: DiscoverySignal[]): string {
   return `${signals.length} signal${signals.length === 1 ? '' : 's'} · ${types.slice(0, 3).join(', ')}${types.length > 3 ? '…' : ''}`;
 }
 
-export function formatSignalValue(signal: DiscoverySignal | { signalValue?: Record<string, unknown>; value?: Record<string, unknown> }): string {
-  const raw = signal as { signalValue?: Record<string, unknown>; value?: Record<string, unknown> };
+export function formatSignalValue(signal: DiscoverySignal | { signalType?: string; signalValue?: Record<string, unknown>; value?: Record<string, unknown> }): string {
+  const raw = signal as {
+    signalType?: string;
+    signalValue?: Record<string, unknown>;
+    value?: Record<string, unknown>;
+  };
   const v = raw.signalValue ?? raw.value ?? {};
-  if (v.school) return String(v.school);
+  const type = String(raw.signalType || '').toUpperCase();
+  if (v.school) {
+    const school = String(v.school);
+    const pct = Number(v.interestPct);
+    if (type === 'COMPETING_INTEREST' && Number.isFinite(pct) && pct > 0) {
+      return `${school} · ${Math.round(pct * 10) / 10}% On3 interest`;
+    }
+    if (type === 'OFFER') {
+      return school;
+    }
+    return school;
+  }
   if (v.note) return String(v.note);
   if (v.message) return String(v.message);
   if (v.delta) return `+${v.delta}`;

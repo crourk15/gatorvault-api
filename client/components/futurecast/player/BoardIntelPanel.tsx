@@ -51,6 +51,9 @@ export function BoardIntelPanel({
   return (
     <section className="fc-profile-section fc-board-intel" data-testid="board-intel-panel">
       <h2>On3 Prediction Market</h2>
+      <p className="fc-profile-muted fc-profile-section__lede">
+        Live On3 RPM board — Florida and competing schools
+      </p>
       {leader ? (
         <p className="fc-board-intel__lead">
           <strong>{leader.school}</strong> leads at {leader.pct}%

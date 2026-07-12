@@ -172,13 +172,13 @@ export async function fetchPredictorLeaderboard(): Promise<PredictorLeaderboardE
 export function sourceTypeLabel(source: PredictionSourceType): string {
   switch (source) {
     case 'MODEL':
-      return 'Model';
+      return 'GatorVault';
     case 'STAFF':
       return 'Staff';
     case 'FAN':
       return 'Fan';
     case 'BLENDED':
-      return 'Blended';
+      return 'On3 RPM';
     default:
       return source;
   }

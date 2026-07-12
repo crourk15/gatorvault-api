@@ -55,6 +55,9 @@ import {
   enrichRelatedFromRecruiting,
   futurecastPicksFromRecruiting,
   futurecastSummaryForRecruiting,
+  mergeProfileSignals,
+  offerSignalsFromOfferLogs,
+  offersFromRecruitingAndLogs,
 } from './profile-enrich';
 import { relatedPositionsFor } from '../../lib/recruiting-position-buckets';
 
@@ -81,7 +84,13 @@ export interface FullProfileResponse {
   signals: Record<string, unknown>[];
   related: Record<string, unknown>[];
   portalPredictions: {
-    predictions: Array<{ school: string; score: number }>;
+    predictions: Array<{
+      school: string;
+      score: number;
+      sourceType?: string;
+      predictorId?: string;
+      status?: string;
+    }>;
     intel: Record<string, unknown>;
   } | null;
   fitIntel: Record<string, unknown> | null;
@@ -95,6 +104,8 @@ export interface FullProfileResponse {
   }>;
   futurecastSummary: {
     ufProbability: number | null;
+    on3UfProbability?: number | null;
+    gvProbability?: number | null;
     predictedSchool: string | null;
     movementDelta: number | null;
     fitScore: number | null;
@@ -149,9 +160,9 @@ async function finalizeProfileResponse(
   }
 
   let signals = profile.signals ?? [];
-  if (!signals.length && recruiting) {
-    signals = boardSignalsFromRecruiting(playerId, recruiting);
-  }
+  const offerSignals = offerSignalsFromOfferLogs(playerId, slug);
+  const boardSignals = recruiting ? boardSignalsFromRecruiting(playerId, recruiting) : [];
+  signals = mergeProfileSignals(signals, offerSignals, signals.length ? [] : boardSignals);
 
   let portalPredictions = profile.portalPredictions;
   if (!portalPredictions && recruiting) {
@@ -173,6 +184,7 @@ async function finalizeProfileResponse(
   let ufSpecificProfile = profile.ufSpecificProfile;
   if (recruiting && highSchoolProfile) {
     const stats = (highSchoolProfile.stats as Record<string, unknown>) ?? {};
+    const offers = offersFromRecruitingAndLogs(slug, recruiting);
     highSchoolProfile = {
       ...highSchoolProfile,
       recruitingNotes:
@@ -180,6 +192,9 @@ async function finalizeProfileResponse(
         recruiting.profileNote ??
         recruiting.skinny ??
         null,
+      offers: Array.isArray(highSchoolProfile.offers) && highSchoolProfile.offers.length
+        ? highSchoolProfile.offers
+        : offers,
       stats: {
         ...stats,
         stars: stats.stars ?? recruiting.stars ?? null,
@@ -265,6 +280,14 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
       }));
 
       const mw = intel.earlyMovement.movementWindow;
+      const on3Uf =
+        intel.ufRpmPct != null && Number(intel.ufRpmPct) > 0
+          ? Math.round(Number(intel.ufRpmPct))
+          : null;
+      const boardLeader = [
+        ...(on3Uf != null ? [{ school: 'Florida', pct: on3Uf }] : []),
+        ...intel.earlyIntel.competingSchools.map((s) => ({ school: s.name, pct: s.pct })),
+      ].sort((a, b) => b.pct - a.pct)[0];
 
       return finalizeProfileResponse(slug, {
         lastUpdated: intel.updatedAt || now,
@@ -282,6 +305,9 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
           predictions: intel.earlyFutureCastPicks.map((p) => ({
             school: p.school,
             score: p.confidence,
+            sourceType: p.sourceType,
+            predictorId: p.predictorId,
+            status: p.status,
           })),
           intel: {
             portalLikelihood: 0,
@@ -290,28 +316,15 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
             volatility: intel.earlyIntel.volatilityScore,
           },
         },
-        fitIntel: {
-          ufFitScore: intel.earlyIntel.fitScore,
-          fitTier:
-            intel.earlyIntel.fitScore >= 85
-              ? 'elite'
-              : intel.earlyIntel.fitScore >= 70
-                ? 'strong'
-                : intel.earlyIntel.fitScore >= 50
-                  ? 'moderate'
-                  : 'low',
-          schemeFit: Math.round(intel.earlyIntel.fitScore * 0.4),
-          cultureFit: Math.round(intel.earlyIntel.fitScore * 0.3),
-          positionalNeed: Math.round(intel.earlyIntel.fitScore * 0.2),
-          staffInterest: Math.round(intel.earlyIntel.fitScore * 0.1),
-          fitDelta: intel.earlyMovement.trendDelta7d * 100,
-          fitVolatility: intel.earlyIntel.volatilityScore,
-          history: [],
-        },
+        // Hide proportional filler breakdown until real UF Fit components exist.
+        fitIntel: null,
         competingSchools,
         futurecastSummary: {
-          ufProbability: intel.earlyIntel.ufProbability,
-          predictedSchool: 'Florida',
+          // On3 panel: prefer RPM. GV blend stays on FutureCast Picks (Florida row).
+          ufProbability: on3Uf ?? intel.earlyIntel.ufProbability,
+          on3UfProbability: on3Uf,
+          gvProbability: intel.earlyIntel.ufProbability,
+          predictedSchool: boardLeader?.school ?? null,
           movementDelta: mw?.delta7d ?? null,
           fitScore: intel.earlyIntel.fitScore,
           volatilityScore: intel.earlyIntel.volatilityScore,

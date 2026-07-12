@@ -1,7 +1,12 @@
 /**
  * Recruiting-store enrichment for aggregated player profiles.
  */
+import { createRequire } from 'node:module';
 import { getRecruitingPlayerBySlug } from '../players/recruiting-fallback';
+
+const require = createRequire(import.meta.url);
+const { isPlaceholderSchool, formatRecruitSchoolLabel } = require('../../lib/recruiting-placeholder-school');
+const offerLogStore = require('../../lib/recruiting-offer-log-store');
 
 function isFloridaSchool(value: unknown): boolean {
   return /\bflorida\b|\bgators\b|\buf\b/i.test(String(value || ''));
@@ -46,10 +51,18 @@ export async function augmentPlayerFromRecruiting(
   const ufCommit = isFloridaSchool(recruiting.committedTo);
   const storePct = parseUfPct(recruiting.ufProbability ?? recruiting.ufRpmPct);
 
+  const schoolRaw =
+    recruiting.school ?? recruiting.highSchool ?? player.highSchool ?? null;
+  const schoolLabel = isPlaceholderSchool(schoolRaw)
+    ? null
+    : formatRecruitSchoolLabel(schoolRaw) || null;
+
   return {
     ...player,
     fullName: player.fullName ?? recruiting.name ?? player.slug,
-    highSchool: player.highSchool ?? recruiting.school ?? recruiting.highSchool ?? null,
+    highSchool: player.highSchool && !isPlaceholderSchool(player.highSchool)
+      ? player.highSchool
+      : schoolLabel,
     hometown:
       player.hometown ??
       recruiting.hometown ??
@@ -154,7 +167,7 @@ export function boardSignalsFromRecruiting(
   recruiting: Awaited<ReturnType<typeof getRecruitingPlayerBySlug>>
 ): Record<string, unknown>[] {
   if (!recruiting) return [];
-  const now = new Date().toISOString();
+  const asOf = String(recruiting.updatedAt || '').trim() || null;
   const signals: Record<string, unknown>[] = [];
   const note = String(recruiting.profileNote ?? recruiting.skinny ?? '').trim();
   if (note) {
@@ -163,7 +176,7 @@ export function boardSignalsFromRecruiting(
       playerId,
       signalType: 'EVALUATION_NOTE',
       signalValue: { note, source: 'recruiting-store' },
-      createdAt: now,
+      createdAt: asOf,
     });
   }
   const competitors = (recruiting as { competitors?: Array<{ school?: string; score?: number; source?: string }> })
@@ -175,16 +188,92 @@ export function boardSignalsFromRecruiting(
     signals.push({
       id: `${playerId}-on3-${String(c.school).toLowerCase().replace(/\s+/g, '-')}`,
       playerId,
-      signalType: 'OFFER',
+      signalType: 'COMPETING_INTEREST',
       signalValue: {
         school: c.school,
         interestPct: Math.round(pct * 10) / 10,
-        source: c.source ?? 'on3',
+        source: c.source ?? 'on3-rpm',
       },
-      createdAt: now,
+      // Market snapshot — not an offer event date.
+      createdAt: asOf,
     });
   }
   return signals;
+}
+
+/** Real offer rows from offer_logs.json (dated). */
+export function offerSignalsFromOfferLogs(
+  playerId: string,
+  slug: string
+): Record<string, unknown>[] {
+  const logs = offerLogStore.listOfferLogs({ playerSlug: slug, limit: 25 }) || [];
+  return logs.map((log: {
+    id?: string;
+    school?: string;
+    date?: string;
+    reportedAt?: string;
+    source?: string;
+    offerType?: string;
+  }, i: number) => {
+    const when = log.date || log.reportedAt || null;
+    return {
+      id: log.id || `${playerId}-offer-log-${i}`,
+      playerId,
+      signalType: 'OFFER',
+      signalValue: {
+        school: log.school || 'Unknown',
+        source: log.source || 'offer-log',
+        offerType: log.offerType || 'offer',
+      },
+      createdAt: when,
+    };
+  });
+}
+
+export function mergeProfileSignals(
+  primary: Record<string, unknown>[] = [],
+  ...extras: Record<string, unknown>[][]
+): Record<string, unknown>[] {
+  const out: Record<string, unknown>[] = [];
+  const seen = new Set<string>();
+  for (const list of [primary, ...extras]) {
+    for (const signal of list || []) {
+      const type = String(signal.signalType || '');
+      const value = (signal.signalValue as Record<string, unknown>) || {};
+      const school = String(value.school || '').toLowerCase();
+      const day = String(signal.createdAt || '').slice(0, 10);
+      const key = `${type}|${school}|${day}|${String(value.note || '').slice(0, 40)}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(signal);
+    }
+  }
+  return out;
+}
+
+/** Offers for High School tab — dated from offer logs + player.offers. */
+export function offersFromRecruitingAndLogs(
+  slug: string,
+  recruiting: Awaited<ReturnType<typeof getRecruitingPlayerBySlug>>
+): Array<{ school: string | null; date: string | null }> {
+  const fromLogs = (offerLogStore.listOfferLogs({ playerSlug: slug, limit: 40 }) || []).map(
+    (log: { school?: string; date?: string; reportedAt?: string }) => ({
+      school: log.school || null,
+      date: log.date || log.reportedAt || null,
+    })
+  );
+  const fromPlayer = ((recruiting as { offers?: Array<{ school?: string; date?: string }> })?.offers || [])
+    .filter((o) => o?.school)
+    .map((o) => ({ school: o.school || null, date: o.date || null }));
+  const seen = new Set<string>();
+  const out: Array<{ school: string | null; date: string | null }> = [];
+  for (const row of [...fromLogs, ...fromPlayer]) {
+    const key = `${String(row.school || '').toLowerCase()}|${String(row.date || '').slice(0, 10)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(row);
+  }
+  return out;
 }
 
 export function futurecastPicksFromRecruiting(

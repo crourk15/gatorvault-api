@@ -26,7 +26,13 @@ export function SignalsTab({ signals }: SignalsTabProps): React.ReactElement {
           <li key={s.id} className="fc-signal-feed__item">
             <div className="fc-signal-feed__head">
               <span className="fc-signal-feed__type">{s.signalType.replace(/_/g, ' ')}</span>
-              <span className="fc-signal-feed__weight">Weight {signalWeight(s.signalType)}</span>
+              {String(s.signalType).toUpperCase() === 'COMPETING_INTEREST' ? (
+                <span className="fc-signal-feed__weight">On3 market</span>
+              ) : String(s.signalType).toUpperCase() === 'OFFER' ? (
+                <span className="fc-signal-feed__weight">Offer</span>
+              ) : (
+                <span className="fc-signal-feed__weight">Weight {signalWeight(s.signalType)}</span>
+              )}
             </div>
             <p className="fc-signal-feed__value">{formatSignalValue(s)}</p>
             <time className="fc-signal-feed__meta">{formatDate(s.createdAt)}</time>

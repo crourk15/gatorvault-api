@@ -673,6 +673,15 @@
   color: #e2e8f0;
 }
 
+.fc-profile-section__lede {
+  margin: -0.35rem 0 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.fc-profile-section--picks .fc-prediction-list {
+  margin-top: 0.25rem;
+}
+
 .fc-board-intel__note {
   margin: 0.75rem 0 0;
   padding: 0.65rem 0.75rem;

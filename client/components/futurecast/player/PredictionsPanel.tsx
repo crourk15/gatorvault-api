@@ -5,9 +5,7 @@ import React, { useEffect, useState } from 'react';
 import {
   fetchPlayerPredictions,
   sourceTypeLabel,
-  statusLabel,
   type PlayerPrediction,
-  type PredictionStatus,
 } from '../../../lib/predictions-api';
 import { fetchUnderclassmenIntel } from '../../../lib/futurecast-underclassmen-api';
 
@@ -118,9 +116,6 @@ export function PredictionsPanel({
             <span className="fc-prediction-item__school">{p.school}</span>
             <span className={`fc-pred-source fc-pred-source--${p.sourceType.toLowerCase()}`}>
               {sourceTypeLabel(p.sourceType)}
-            </span>
-            <span className={`fc-pred-status fc-pred-status--${p.status.toLowerCase()}`}>
-              {statusLabel(p.status as PredictionStatus)}
             </span>
           </div>
           <div className="fc-prediction-item__bar-wrap">

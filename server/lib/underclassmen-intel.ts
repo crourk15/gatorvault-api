@@ -87,6 +87,7 @@ export type UnderclassmenIntelBundle = {
   earlyFutureCastPicks: UnderclassmenFutureCastPick[];
   relatedIntel: UnderclassmenRelatedIntel[];
   updatedAt: string;
+  ufRpmPct?: number | null;
 };
 
 type EarlyWatchEntry = {
@@ -230,9 +231,11 @@ function buildEarlySignals(
   player: FutureCastBoardPlayer,
   tier: 'target' | 'watchlist',
   entry?: EarlyWatchEntry,
-  staffNote?: string | null
+  staffNote?: string | null,
+  discoveryScoreOverride?: number | null,
+  asOf?: string | null
 ): UnderclassmenEarlySignal[] {
-  const now = new Date().toISOString();
+  const stamp = asOf || null;
   const signals: UnderclassmenEarlySignal[] = [];
 
   const note = String(staffNote || '').trim();
@@ -242,11 +245,11 @@ function buildEarlySignals(
       playerId: intelUuid,
       signalType: 'EVALUATION_NOTE',
       signalValue: { note, source: 'recruiting-store' },
-      createdAt: now,
+      createdAt: stamp as string,
     });
   }
 
-  const discoveryScore = entry?.discoveryScore ?? null;
+  const discoveryScore = discoveryScoreOverride ?? entry?.discoveryScore ?? null;
   if (discoveryScore != null) {
     signals.push({
       id: `${intelUuid}-discovery`,
@@ -257,7 +260,7 @@ function buildEarlySignals(
         discoveryScore,
         tier: player.priority,
       },
-      createdAt: now,
+      createdAt: stamp as string,
     });
   }
 
@@ -270,7 +273,7 @@ function buildEarlySignals(
         note: 'Listed on FutureCast early target board',
         classYear: player.classYear,
       },
-      createdAt: now,
+      createdAt: stamp as string,
     });
   }
 
@@ -285,22 +288,23 @@ function buildEarlySignals(
         delta7d: movement,
         ufConfidence: player.ufConfidence,
       },
-      createdAt: now,
+      createdAt: stamp as string,
     });
   }
 
+  // On3 RPM competitor interest — not verified offers.
   for (const school of player.competingSchools ?? []) {
     if (!school?.name) continue;
     signals.push({
       id: `${intelUuid}-compete-${school.name.toLowerCase().replace(/\s+/g, '-')}`,
       playerId: intelUuid,
-      signalType: 'OFFER',
+      signalType: 'COMPETING_INTEREST',
       signalValue: {
         school: school.name,
         interestPct: school.pct,
-        source: 'futurecast-compete',
+        source: 'on3-rpm',
       },
-      createdAt: now,
+      createdAt: stamp as string,
     });
   }
 
@@ -319,10 +323,26 @@ function buildFutureCastPicks(
     picks.push({
       id: `${intelUuid}-pick-florida`,
       school: 'Florida',
-      confidence: floridaPct,
+      confidence: Math.round(floridaPct),
       delta: player.trendDelta7d != null ? Math.round(player.trendDelta7d * 1000) / 10 : undefined,
       sourceType: 'MODEL',
-      predictorId: 'system',
+      predictorId: 'gatorvault',
+      status: 'ACTIVE',
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
+
+  for (const school of player.competingSchools ?? []) {
+    if (!school?.name || /florida|gators/i.test(school.name)) continue;
+    const pct = Number(school.pct);
+    if (!Number.isFinite(pct) || pct <= 0) continue;
+    picks.push({
+      id: `${intelUuid}-pick-${school.name.toLowerCase().replace(/\s+/g, '-')}`,
+      school: school.name,
+      confidence: Math.round(pct),
+      sourceType: 'BLENDED',
+      predictorId: 'on3-rpm',
       status: 'ACTIVE',
       createdAt: now,
       updatedAt: now,
@@ -330,11 +350,12 @@ function buildFutureCastPicks(
   }
 
   for (const predictor of player.predictors ?? []) {
-    if (!predictor?.name || /florida|gators/i.test(predictor.name)) continue;
+    if (!predictor?.name || /florida|gators|on3|rpm|allowlist/i.test(predictor.name)) continue;
+    if (picks.some((p) => p.school.toLowerCase() === predictor.name.toLowerCase())) continue;
     picks.push({
       id: `${intelUuid}-pick-${predictor.name.toLowerCase().replace(/\s+/g, '-')}`,
       school: predictor.name,
-      confidence: predictor.score,
+      confidence: Math.round(predictor.score),
       sourceType: 'BLENDED',
       predictorId: 'rivals-compete',
       status: 'ACTIVE',
@@ -661,6 +682,9 @@ export async function buildUnderclassmenIntelForSlug(
     movementHistory,
   };
 
+  const asOf =
+    String((recruiting as { updatedAt?: string } | null)?.updatedAt || '').trim() || null;
+
   return {
     intelUuid,
     slug: normalized,
@@ -671,11 +695,14 @@ export async function buildUnderclassmenIntelForSlug(
       player,
       tier,
       entry,
-      recruiting?.profileNote ?? recruiting?.skinny ?? null
+      recruiting?.profileNote ?? recruiting?.skinny ?? null,
+      discoveryScore,
+      asOf
     ),
     earlyMovement,
     earlyFutureCastPicks: buildFutureCastPicks(intelUuid, player),
     relatedIntel: buildRelatedIntel(normalized, classYear, player.position, enriched),
     updatedAt: new Date().toISOString(),
+    ufRpmPct: ufRpmPct ?? player.ufRpmPct ?? null,
   };
 }

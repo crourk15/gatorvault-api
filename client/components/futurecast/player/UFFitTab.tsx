@@ -85,13 +85,22 @@ export function UFFitTab({ profile, intel, intelLoading }: UFFitTabProps): React
         )}
       </section>
 
-      <section className="fc-profile-section">
-        <h2>Component Breakdown</h2>
-        <ScoreBar label="Scheme Fit" value={scheme} max={40} />
-        <ScoreBar label="Culture Fit" value={culture} max={30} />
-        <ScoreBar label="Positional Need" value={need} max={20} />
-        <ScoreBar label="Staff Interest" value={staff} max={10} />
-      </section>
+      {scheme > 0 || culture > 0 || need > 0 || staff > 0 ? (
+        <section className="fc-profile-section">
+          <h2>Component Breakdown</h2>
+          <ScoreBar label="Scheme Fit" value={scheme} max={40} />
+          <ScoreBar label="Culture Fit" value={culture} max={30} />
+          <ScoreBar label="Positional Need" value={need} max={20} />
+          <ScoreBar label="Staff Interest" value={staff} max={10} />
+        </section>
+      ) : (
+        <section className="fc-profile-section">
+          <h2>Component Breakdown</h2>
+          <p className="fc-profile-muted">
+            Detailed scheme / culture / need / staff components are not available for this prospect yet.
+          </p>
+        </section>
+      )}
 
       {intel?.history && intel.history.length > 0 && (
         <section className="fc-profile-section">

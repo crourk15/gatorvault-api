@@ -127,16 +127,25 @@ export function PlayerProfilePage({
     const raw = profile?.portalPredictions?.predictions;
     if (!raw?.length) return undefined;
     const now = profile?.lastUpdated ?? new Date().toISOString();
-    return raw.map((p, i) => ({
-      id: `${profile?.player?.id ?? 'pick'}-${i}`,
-      school: p.school,
-      confidence: Math.round(Number(p.score)),
-      sourceType: 'MODEL' as const,
-      predictorId: 'on3-board',
-      status: 'ACTIVE' as const,
-      createdAt: now,
-      updatedAt: now,
-    }));
+    return raw.map((p, i) => {
+      const row = p as {
+        school: string;
+        score: number;
+        sourceType?: PlayerPrediction['sourceType'];
+        predictorId?: string;
+        status?: PlayerPrediction['status'];
+      };
+      return {
+        id: `${profile?.player?.id ?? 'pick'}-${i}`,
+        school: row.school,
+        confidence: Math.round(Number(row.score)),
+        sourceType: row.sourceType ?? 'MODEL',
+        predictorId: row.predictorId ?? 'gatorvault',
+        status: row.status ?? 'ACTIVE',
+        createdAt: now,
+        updatedAt: now,
+      };
+    });
   }, [profile]);
 
   const metrics = useMemo(() => {
