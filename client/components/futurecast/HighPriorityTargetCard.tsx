@@ -67,7 +67,9 @@ export function HighPriorityTargetCard({
               {player.htWt ? ` · ${player.htWt}` : ''}
             </p>
           </div>
-          <TrendingIndicator delta={player.movementDelta} />
+          {player.movementDelta !== 0 ? (
+            <TrendingIndicator delta={player.movementDelta} />
+          ) : null}
         </header>
 
         <div className="gv-hp-card__ratings">

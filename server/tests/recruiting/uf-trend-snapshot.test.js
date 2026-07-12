@@ -10,6 +10,7 @@ const {
   mergeTrendHistories,
   mergeDelta7dMaps,
   backfillBaseline,
+  applySnapshotMovement,
   SNAPSHOT_PATH,
 } = require("../../lib/uf-trend-snapshot");
 
@@ -52,9 +53,57 @@ describe("uf-trend-snapshot", () => {
     assert.equal(computeDelta7d("baseline-player", new Date("2026-06-22T12:00:00Z")), 6);
   });
 
+  it("ignores legacy seed snapshots when requireSource gatorvault", () => {
+    upsertSnapshot("gv-source-player", 40, "2026-07-05"); // no source = legacy seed
+    upsertSnapshot("gv-source-player", 55, "2026-07-12"); // still legacy
+    assert.equal(
+      computeDelta7d("gv-source-player", new Date("2026-07-12T12:00:00Z"), {
+        preferSource: "gatorvault",
+        requireSource: true,
+      }),
+      null
+    );
+    upsertSnapshot("gv-source-player", 40, "2026-07-05", { source: "gatorvault" });
+    upsertSnapshot("gv-source-player", 48, "2026-07-12", { source: "gatorvault" });
+    assert.equal(
+      computeDelta7d("gv-source-player", new Date("2026-07-12T12:00:00Z"), {
+        preferSource: "gatorvault",
+        requireSource: true,
+      }),
+      8
+    );
+  });
+
+  it("applySnapshotMovement hides |Δ| < 1 and uses GV history only", () => {
+    const asOf = new Date("2026-07-12T12:00:00Z");
+    upsertSnapshot("gv-apply-player", 50, "2026-07-05", { source: "gatorvault" });
+    const [row] = applySnapshotMovement(
+      [{ slug: "gv-apply-player", ufProbability: 50.4, fitScore: 80 }],
+      { asOf, minAbs: 1 }
+    );
+    assert.equal(row.delta7d, 0);
+    assert.equal(row.movementDelta, 0);
+
+    upsertSnapshot("gv-apply-player", 40, "2026-07-05", { source: "gatorvault" });
+    const [moved] = applySnapshotMovement(
+      [{ slug: "gv-apply-player", ufProbability: 48, fitScore: 80 }],
+      { asOf, minAbs: 1 }
+    );
+    assert.equal(moved.delta7d, 8);
+    assert.equal(moved.movementDelta, 8);
+  });
+
   it("cleans test snapshots", () => {
     const doc = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, "utf8"));
-    for (const slug of ["test-player", "merge-player", "baseline-player", "trend-player"]) {
+    for (const slug of [
+      "test-player",
+      "merge-player",
+      "baseline-player",
+      "trend-player",
+      "gv-source-player",
+      "gv-apply-player",
+      "gv-move-test",
+    ]) {
       delete doc.snapshots[slug];
     }
     fs.writeFileSync(SNAPSHOT_PATH, JSON.stringify(doc, null, 2));

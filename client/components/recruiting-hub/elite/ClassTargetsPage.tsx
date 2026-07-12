@@ -69,8 +69,8 @@ export function ClassTargetsPage({ year }: Props): React.ReactElement {
           <section>
             <h2 className="rh-panel-title">{year} Target Board</h2>
             <p className="rh-muted">
-              UF discovery targets ranked by GatorVault priority (likelihood + fit). On3 RPM shown as
-              market context — movement only when real deltas exist.
+              UF discovery targets ranked by GatorVault priority (likelihood + fit). On3 RPM is market
+              context. Corner movement uses real 7-day GV snapshot deltas only.
             </p>
             {data?.updatedAt ? (
               <p className="rh-muted">Updated {new Date(data.updatedAt).toLocaleString()}</p>

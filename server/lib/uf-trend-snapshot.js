@@ -54,7 +54,7 @@ function listSnapshots(slug) {
   return rows.slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
 }
 
-function upsertSnapshot(slug, ufPct, dateYmd) {
+function upsertSnapshot(slug, ufPct, dateYmd, meta = {}) {
   const pct = clampPct(ufPct);
   const date = String(dateYmd || ymd()).slice(0, 10);
   if (pct == null || !date) return false;
@@ -63,7 +63,13 @@ function upsertSnapshot(slug, ufPct, dateYmd) {
   const key = slugKey(slug);
   const rows = doc.snapshots[key] || [];
   const idx = rows.findIndex((row) => row.date === date);
-  const next = { date, ufPct: pct };
+  const rpmPct = meta.rpmPct != null ? clampPct(meta.rpmPct) : null;
+  const next = {
+    date,
+    ufPct: pct,
+  };
+  if (meta.source) next.source = String(meta.source);
+  if (rpmPct != null) next.rpmPct = rpmPct;
   if (idx >= 0) rows[idx] = { ...rows[idx], ...next };
   else rows.push(next);
   rows.sort((a, b) => String(a.date).localeCompare(String(b.date)));
@@ -72,35 +78,47 @@ function upsertSnapshot(slug, ufPct, dateYmd) {
   return true;
 }
 
-function resolveLatestUfPct(slug, asOf = new Date()) {
+function resolveLatestUfPct(slug, asOf = new Date(), options = {}) {
   const today = ymd(asOf);
-  const rows = listSnapshots(slug).filter((row) => row.date <= today);
+  const rows = filterSnapshotRows(slug, today, options);
   if (!rows.length) return null;
   return rows[rows.length - 1].ufPct;
 }
 
-function resolveUfPct7dAgo(slug, asOf = new Date()) {
+function resolveUfPct7dAgo(slug, asOf = new Date(), options = {}) {
   const cutoff = daysAgoYmd(DELTA_WINDOW_DAYS, asOf);
-  const rows = listSnapshots(slug).filter((row) => row.date <= cutoff);
+  const rows = filterSnapshotRows(slug, cutoff, options);
   if (rows.length) return rows[rows.length - 1].ufPct;
-  const all = listSnapshots(slug);
-  return all.length ? all[0].ufPct : null;
+  // No point on/before cutoff — don't invent from newer rows.
+  return null;
 }
 
-function computeDelta7d(slug, asOf = new Date()) {
-  const now = resolveLatestUfPct(slug, asOf);
-  const ago = resolveUfPct7dAgo(slug, asOf);
+function filterSnapshotRows(slug, maxDate, options = {}) {
+  const preferSource = options.preferSource || null;
+  const requireSource = Boolean(options.requireSource);
+  let rows = listSnapshots(slug).filter((row) => row.date <= maxDate);
+  if (preferSource) {
+    const sourced = rows.filter((row) => row.source === preferSource);
+    if (sourced.length) return sourced;
+    if (requireSource) return [];
+  }
+  return rows;
+}
+
+function computeDelta7d(slug, asOf = new Date(), options = {}) {
+  const now = resolveLatestUfPct(slug, asOf, options);
+  const ago = resolveUfPct7dAgo(slug, asOf, options);
   if (now == null || ago == null) return null;
   return Math.round((now - ago) * 10) / 10;
 }
 
 const TREND_HISTORY_DAYS = 30;
 
-function buildTrendHistoryForSlug(slug, { days = TREND_HISTORY_DAYS, asOf = new Date() } = {}) {
+function buildTrendHistoryForSlug(slug, { days = TREND_HISTORY_DAYS, asOf = new Date(), preferSource = null } = {}) {
   const cutoff = daysAgoYmd(days, asOf);
   const today = ymd(asOf);
-  return listSnapshots(slug)
-    .filter((row) => row.date >= cutoff && row.date <= today)
+  return filterSnapshotRows(slug, today, preferSource ? { preferSource } : {})
+    .filter((row) => row.date >= cutoff)
     .map((row) => ({ date: row.date, confidence: row.ufPct }));
 }
 
@@ -121,15 +139,74 @@ function mergeTrendHistories(primary = [], supplement = []) {
     .map(([date, confidence]) => ({ date, confidence }));
 }
 
-function buildDelta7dBySlug(slugs, asOf = new Date()) {
+function buildDelta7dBySlug(slugs, asOf = new Date(), options = {}) {
   const map = new Map();
   for (const slug of slugs || []) {
-    const delta = computeDelta7d(slug, asOf);
+    const delta = computeDelta7d(slug, asOf, options);
     if (delta != null && Number.isFinite(delta)) {
       map.set(slugKey(slug), delta);
     }
   }
   return map;
+}
+
+/**
+ * Persist today's GatorVault likelihood (+ optional On3 RPM) for movement history.
+ */
+function recordGvSnapshots(players = [], asOf = new Date()) {
+  const dayKey = ymd(asOf);
+  let written = 0;
+  for (const p of players) {
+    const slug = slugKey(p?.slug);
+    const ufPct = clampPct(p?.ufProbability ?? p?.ufPct ?? p?.ufConfidence);
+    if (!slug || ufPct == null) continue;
+    if (
+      upsertSnapshot(slug, ufPct, dayKey, {
+        source: "gatorvault",
+        rpmPct: p?.ufRpmPct ?? p?.rpmPct ?? null,
+      })
+    ) {
+      written += 1;
+    }
+  }
+  return { written, dayKey };
+}
+
+/**
+ * Apply real snapshot deltas onto player rows. Ignores seed/legacy history.
+ * Badge only when |Δ| >= minAbs (default 1).
+ */
+function applySnapshotMovement(players = [], { asOf = new Date(), minAbs = 1 } = {}) {
+  const slugs = players.map((p) => p.slug).filter(Boolean);
+  recordGvSnapshots(players, asOf);
+  const deltaMap = buildDelta7dBySlug(slugs, asOf, {
+    preferSource: "gatorvault",
+    requireSource: true,
+  });
+  return players.map((p) => {
+    const key = slugKey(p.slug);
+    const raw = deltaMap.get(key);
+    const delta7d =
+      raw != null && Number.isFinite(raw) && Math.abs(raw) >= minAbs ? Math.round(raw) : 0;
+    const trendHistory = buildTrendHistoryForSlug(key, {
+      asOf,
+      preferSource: "gatorvault",
+    });
+    const priorityScore =
+      Math.round(
+        ((Number(p.ufProbability) || 0) * 0.55 +
+          (Number(p.fitScore) || 0) * 0.3 +
+          Math.max(0, delta7d) * 0.15) *
+          100
+      ) / 100;
+    return {
+      ...p,
+      delta7d,
+      movementDelta: delta7d,
+      trendHistory,
+      priorityScore,
+    };
+  });
 }
 
 function mergeDelta7dMaps(postgresMap, snapshotMap, slugs) {
@@ -146,12 +223,15 @@ function mergeDelta7dMaps(postgresMap, snapshotMap, slugs) {
   return out;
 }
 
-function backfillBaseline(slug, { currentPct, priorPct, asOf = new Date() } = {}) {
+function backfillBaseline(slug, { currentPct, priorPct, asOf = new Date(), source = null, rpmPct = null } = {}) {
   const current = clampPct(currentPct);
   const prior = clampPct(priorPct);
   if (current == null || prior == null) return false;
-  upsertSnapshot(slug, prior, daysAgoYmd(DELTA_WINDOW_DAYS, asOf));
-  upsertSnapshot(slug, current, ymd(asOf));
+  const meta = {};
+  if (source) meta.source = source;
+  if (rpmPct != null) meta.rpmPct = rpmPct;
+  upsertSnapshot(slug, prior, daysAgoYmd(DELTA_WINDOW_DAYS, asOf), meta);
+  upsertSnapshot(slug, current, ymd(asOf), meta);
   return true;
 }
 
@@ -242,9 +322,12 @@ async function runDailyUfTrendSnapshot(options = {}) {
       if (samples.length < 5) samples.push({ slug: row.slug, ufPct: row.ufPct });
       continue;
     }
-    if (upsertSnapshot(row.slug, row.ufPct, dayKey)) {
+    if (upsertSnapshot(row.slug, row.ufPct, dayKey, {
+      source: row.source || "gatorvault",
+      rpmPct: row.rpmPct ?? null,
+    })) {
       written += 1;
-      if (samples.length < 5) samples.push({ slug: row.slug, ufPct: row.ufPct });
+      if (samples.length < 5) samples.push({ slug: row.slug, ufPct: row.ufPct, source: row.source });
     }
     const pg = await syncPostgresSnapshot(row.playerId, dayKey, row.ufPct);
     if (pg.ok) postgresSynced += 1;
@@ -289,11 +372,24 @@ async function backfillUfTrendSnapshots(options = {}) {
       prior = Math.round(row.ufPct - Number(rolling.delta7d));
     }
     if (prior != null && prior !== row.ufPct && Math.abs(row.ufPct - prior) >= 1) {
-      if (!dryRun) backfillBaseline(row.slug, { currentPct: row.ufPct, priorPct: prior, asOf });
+      if (!dryRun) {
+        backfillBaseline(row.slug, {
+          currentPct: row.ufPct,
+          priorPct: prior,
+          asOf,
+          source: row.source || "gatorvault",
+          rpmPct: row.rpmPct ?? null,
+        });
+      }
       baselines += 1;
       continue;
     }
-    if (!dryRun) upsertSnapshot(row.slug, row.ufPct, ymd(asOf));
+    if (!dryRun) {
+      upsertSnapshot(row.slug, row.ufPct, ymd(asOf), {
+        source: row.source || "gatorvault",
+        rpmPct: row.rpmPct ?? null,
+      });
+    }
     todayOnly += 1;
   }
 
@@ -320,6 +416,8 @@ module.exports = {
   mergeTrendHistories,
   mergeDelta7dMaps,
   backfillBaseline,
+  recordGvSnapshots,
+  applySnapshotMovement,
   runDailyUfTrendSnapshot,
   backfillUfTrendSnapshots,
 };
