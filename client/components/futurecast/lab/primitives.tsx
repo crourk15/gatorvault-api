@@ -22,7 +22,8 @@ export function CompetingSchoolsBar({ player }: { player: FcLabTarget }): React.
 
   const label = competingSchoolsLabel(segments);
   return (
-    <div className="fc-lab-segment-bar" aria-label={`RPM board ${label}`}>
+    <div className="fc-lab-segment-bar" aria-label={`On3 RPM board ${label}`}>
+      <span className="fc-lab-battle-row__metric-label">On3 market</span>
       <div className="fc-lab-segment-bar__track">
         {segments.map((seg) => (
           <div

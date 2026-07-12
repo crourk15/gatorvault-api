@@ -39,15 +39,14 @@ function shortSchoolLabel(name: string): string {
 }
 
 /**
- * Build competitor RPM bar from confirmed school % only.
- * Never invents UGA/Bama fillers or predictor-synthetic shares.
+ * On3 market board bar — uses confirmed RPM competitor % + On3 UF RPM.
+ * Does not use GatorVault likelihood (that stays on the primary bar).
  */
 export function resolveCompetingSchools(player: FcLabTarget): CompetingSchoolSegment[] {
   if (player.committedTo && isFlorida(player.committedTo)) {
     return [];
   }
 
-  const uf = ufPctFromFc(player.ufProbability);
   const fromRpm = (player.competingSchools ?? [])
     .filter((s) => s?.name && Number(s.pct) > 0 && !isFlorida(s.name))
     .sort((a, b) => Number(b.pct) - Number(a.pct))
@@ -56,9 +55,15 @@ export function resolveCompetingSchools(player: FcLabTarget): CompetingSchoolSeg
   // No confirmed RPM board → show nothing (not fake rivals).
   if (!fromRpm.length) return [];
 
-  const rows: Array<{ name: string; absPct: number; tone: CompetingSchoolSegment['tone'] }> = [
-    { name: 'UF', absPct: Math.max(0, uf), tone: 'uf' },
-  ];
+  const ufRpm =
+    player.ufRpmPct != null && Number(player.ufRpmPct) > 0
+      ? ufPctFromFc(player.ufRpmPct)
+      : null;
+
+  const rows: Array<{ name: string; absPct: number; tone: CompetingSchoolSegment['tone'] }> = [];
+  if (ufRpm != null && ufRpm > 0) {
+    rows.push({ name: 'UF', absPct: ufRpm, tone: 'uf' });
+  }
   fromRpm.forEach((s, i) => {
     rows.push({
       name: shortSchoolLabel(s.name),
@@ -66,6 +71,8 @@ export function resolveCompetingSchools(player: FcLabTarget): CompetingSchoolSeg
       tone: i === 0 ? 'peer' : 'other',
     });
   });
+
+  if (!rows.length) return [];
 
   const widthTotal = rows.reduce((sum, r) => sum + Math.max(r.absPct, 1), 0) || 1;
   return rows.map((r, i) => ({

@@ -373,7 +373,8 @@ function boardPlayerToHighPriority(
     competingSchools: (p.competingSchools ?? [])
       .filter((s) => s?.name && Number(s.pct) > 0)
       .map((s) => ({ name: s.name, pct: Number(s.pct) })),
-    ufRpmPct: ufProbability > 0 ? ufProbability : null,
+    ufRpmPct:
+      p.ufRpmPct != null && Number(p.ufRpmPct) > 0 ? Math.round(Number(p.ufRpmPct)) : null,
   };
 }
 

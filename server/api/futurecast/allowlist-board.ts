@@ -30,7 +30,7 @@ const { filterBlockedRecruits, isBlockedRecruit } = require('../../lib/recruitin
 const { loadTargetBoardBySlug } = require('../../lib/target-board-path');
 const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere } = require('../../lib/recruiting-target-filters');
 const { resolveCommitmentOverride } = require('../../lib/commitment-prediction-override');
-const { resolveUfProbability, loadUfPctPredictorsBySlug } = require('../../lib/uf-probability-utils');
+const { resolveUfProbability, resolveGatorVaultLikelihood, pickRivalsPmScore, loadUfPctPredictorsBySlug } = require('../../lib/uf-probability-utils');
 
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 const EARLY_WATCHLIST_PATH = path.join(__dirname, '../../data/futurecast/early-watchlist.json');
@@ -101,11 +101,13 @@ export interface FutureCastBoardPlayer {
   natlRank?: number | null;
   posRank?: number | null;
   stateRank?: number | null;
-  /** UF % (Likelihood) — FutureCast commit likelihood for Florida. Null when unknown. */
+  /** UF % (Likelihood) — GatorVault multi-signal commit likelihood. Null when unknown. */
   ufConfidence: number | null;
   ufProbabilitySource?: string;
   ufProbabilityLabel?: string | null;
   ufProbabilityLowConfidence?: boolean;
+  /** Confirmed On3 UF RPM % — market signal, not the Lab primary forecast. */
+  ufRpmPct?: number | null;
   /** Fit % (Scheme Match) — scheme, roster, and athletic fit. Null when unknown. */
   fitScore: number | null;
   /** Rolling UF probability delta for movementWindowDays. Null when unknown. */
@@ -481,25 +483,41 @@ export async function loadBoardPlayersForSlugs(
     }
     const rpmPct = firstPositiveStorePct(recruiting?.ufRpmPct as number | undefined);
     const storePct = firstPositiveStorePct(
-      rpmPct,
       seed.ufProbability as number | undefined,
       recruiting?.ufProbability as number | undefined,
       recruiting?.futurecastProbability as number | undefined
     );
+    const fitScore = resolveBoardFitScore({
+      override: Boolean(override),
+      classYear: resolvedClassYear,
+      slug,
+      model,
+      seed,
+      recruiting,
+      rank,
+    });
+    const rivalsPct = pickRivalsPmScore(ufPredictors);
     const underclassmen = isUnderclassmenClassYear(resolvedClassYear);
     const resolvedUf = override
       ? null
-      : resolveUfProbability({
-          // Discovery years: confirmed On3 RPM outranks FutureCast model confidence.
-          modelPct:
-            underclassmen && rpmPct
-              ? 0
-              : model?.confidence ?? model?.ufProbability,
-          storePct,
-          predictors: ufPredictors,
-          stars: Number(rank?.stars ?? recruiting?.stars ?? seed.stars ?? 0) || null,
-          headliner: Boolean(seed.headliner),
-        });
+      : underclassmen
+        ? resolveGatorVaultLikelihood({
+            modelPct: model?.confidence ?? model?.ufProbability,
+            rpmPct,
+            rivalsPct,
+            fitScore: fitScore ?? 0,
+            storePct,
+            delta7d: trendDelta7d ?? 0,
+            stars: Number(rank?.stars ?? recruiting?.stars ?? seed.stars ?? 0) || null,
+            headliner: Boolean(seed.headliner),
+          })
+        : resolveUfProbability({
+            modelPct: model?.confidence ?? model?.ufProbability,
+            storePct: firstPositiveStorePct(rpmPct, storePct),
+            predictors: ufPredictors,
+            stars: Number(rank?.stars ?? recruiting?.stars ?? seed.stars ?? 0) || null,
+            headliner: Boolean(seed.headliner),
+          });
     let ufConfidence = override
       ? null
       : resolvedUf && (resolvedUf.value > 0 || resolvedUf.lowConfidence)
@@ -523,20 +541,8 @@ export async function loadBoardPlayersForSlugs(
       }
     }
     const competingSchools = recruitingCompete.length ? recruitingCompete : rivalsCompete;
-    const predictors = override
-      ? []
-      : competingSchools.length
-        ? competingSchools.map((s) => ({ name: s.name, score: s.pct }))
-        : rivalsPredictors(slug, rivalsCompete);
-    const fitScore = resolveBoardFitScore({
-      override: Boolean(override),
-      classYear: resolvedClassYear,
-      slug,
-      model,
-      seed,
-      recruiting,
-      rank,
-    });
+    // Keep predictor list as prediction sources — do not replace with competitor RPM rows.
+    const predictors = override ? [] : ufPredictors.length ? ufPredictors : rivalsPredictors(slug, rivalsCompete);
     const trendDelta7dResolved = override
       ? 0
       : trendDelta7d;
@@ -581,6 +587,7 @@ export async function loadBoardPlayersForSlugs(
       ufProbabilitySource: resolvedUf?.source,
       ufProbabilityLabel: resolvedUf?.label ?? null,
       ufProbabilityLowConfidence: Boolean(resolvedUf?.lowConfidence),
+      ufRpmPct: rpmPct ?? null,
       fitScore,
       trendDelta7d: trendDelta7dResolved,
       volatility7d: volatility7dResolved,

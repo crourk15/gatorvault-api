@@ -470,6 +470,26 @@
   margin-bottom: 4px;
 }
 
+.fc-lab-battle-row__metric-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gv-muted, #6b7280);
+  margin: 6px 0 2px;
+}
+
+.fc-lab-battle-row__gv .rh-cc-prob-bar {
+  margin-top: 0;
+}
+
+.fc-lab-battle-row__rpm-meta {
+  font-size: 0.75rem;
+  color: var(--gv-muted, #6b7280);
+  margin: 2px 0 0;
+}
+
 .fc-lab-battle-row {
   flex-direction: column;
   align-items: stretch;

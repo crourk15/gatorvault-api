@@ -73,6 +73,57 @@ function resolveUfProbability({
   return { value: 0, source: "unknown", label: "Est.", lowConfidence: true };
 }
 
+/**
+ * GatorVault likelihood — multi-signal blend for FutureCast Lab.
+ * On3 RPM is one input, not the product. Buckets should use this value.
+ */
+function resolveGatorVaultLikelihood({
+  modelPct = 0,
+  rpmPct = 0,
+  rivalsPct = 0,
+  fitScore = 0,
+  storePct = 0,
+  delta7d = 0,
+  stars = null,
+  headliner = false,
+} = {}) {
+  const model = toPercent(modelPct);
+  const rpm = toPercent(rpmPct);
+  const rivals = toPercent(rivalsPct);
+  const fit = toPercent(fitScore);
+  let store = toPercent(storePct);
+  // Avoid double-counting store when it is already the On3 RPM value.
+  if (store > 0 && rpm > 0 && Math.abs(store - rpm) <= 1) store = 0;
+
+  const parts = [];
+  if (model > 0) parts.push({ v: model, w: 0.35, tag: "model" });
+  if (rpm > 0) parts.push({ v: rpm, w: 0.3, tag: "on3_rpm" });
+  if (rivals > 0) parts.push({ v: rivals, w: 0.2, tag: "rivals_pm" });
+  if (fit > 0) parts.push({ v: fit, w: 0.15, tag: "fit" });
+  if (store > 0) parts.push({ v: store, w: 0.15, tag: "store" });
+
+  if (!parts.length) {
+    return resolveUfProbability({ stars, headliner });
+  }
+
+  const wSum = parts.reduce((sum, p) => sum + p.w, 0) || 1;
+  let value = Math.round(parts.reduce((sum, p) => sum + p.v * (p.w / wSum), 0));
+  const nudge = Math.max(
+    -8,
+    Math.min(8, Math.round(Number(delta7d || 0) * 100 * 0.15))
+  );
+  value = Math.max(1, Math.min(99, value + nudge));
+
+  const thin = parts.length === 1 && parts[0].tag !== "model";
+  return {
+    value,
+    source: "gatorvault",
+    label: thin ? "GV · thin" : "GV",
+    lowConfidence: thin,
+    inputs: parts.map((p) => p.tag),
+  };
+}
+
 function formatUfProbabilityDisplay(resolved) {
   if (!resolved || resolved.value == null) return "TBD";
   const pct = Math.round(resolved.value);
@@ -168,6 +219,7 @@ module.exports = {
   pickOn3RpmScore,
   pickExternalPmScore,
   resolveUfProbability,
+  resolveGatorVaultLikelihood,
   formatUfProbabilityDisplay,
   isFloridaSchool,
   loadRivalsOnlyUfPctBySlug,

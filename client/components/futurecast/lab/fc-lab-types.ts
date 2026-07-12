@@ -16,8 +16,11 @@ export type FcLabTarget = {
   position: string;
   school: string | null;
   classYear: number;
+  /** GatorVault multi-signal likelihood — used for Lab buckets + primary bar. */
   ufProbability: number | null;
   ufProbabilityLabel?: string | null;
+  /** Confirmed On3 UF RPM — market layer for competitor board. */
+  ufRpmPct?: number | null;
   delta7d: number | null;
   fitScore: number | null;
   modelPct: number | null;
@@ -44,6 +47,7 @@ export function futureCastPlayerToLabTarget(p: FutureCastPlayer): FcLabTarget {
     classYear: p.classYear,
     ufProbability: ufConfidence,
     ufProbabilityLabel: p.ufProbabilityLabel ?? null,
+    ufRpmPct: (p as { ufRpmPct?: number | null }).ufRpmPct ?? null,
     delta7d: p.trendDelta7d,
     fitScore: p.fitScore,
     modelPct: ufConfidence,
@@ -56,9 +60,10 @@ export function futureCastPlayerToLabTarget(p: FutureCastPlayer): FcLabTarget {
 
 export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
   const committed = p.committedTo ?? null;
+  // Primary Lab number = GatorVault likelihood (never force On3 RPM over GV).
+  const uf = isFloridaCommit(committed) ? 100 : p.ufProbability;
   const rpm =
-    p.ufRpmPct != null && Number(p.ufRpmPct) > 0 ? Number(p.ufRpmPct) : null;
-  const uf = isFloridaCommit(committed) ? 100 : rpm ?? p.ufProbability;
+    p.ufRpmPct != null && Number(p.ufRpmPct) > 0 ? Math.round(Number(p.ufRpmPct)) : null;
   return {
     id: p.id,
     slug: p.slug,
@@ -67,7 +72,8 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
     school: p.school ?? null,
     classYear: p.classYear ?? primaryRecruitingClassYear(),
     ufProbability: uf,
-    ufProbabilityLabel: p.ufProbabilityLabel ?? null,
+    ufProbabilityLabel: p.ufProbabilityLabel ?? 'GV',
+    ufRpmPct: rpm,
     delta7d: p.delta7d ?? p.movementDelta ?? null,
     fitScore: p.fitScore ?? null,
     modelPct: p.staffConfidence ?? uf,

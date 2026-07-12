@@ -49,6 +49,7 @@ function BattleRow({ player, tab }: { player: ReturnType<typeof futureCastPlayer
   const delta = Math.round(player.delta7d ?? 0);
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
   const meta = TAB_META[tab];
+  const rpm = player.ufRpmPct != null && player.ufRpmPct > 0 ? Math.round(player.ufRpmPct) : null;
 
   return (
     <div className="fc-lab-battle-row">
@@ -64,7 +65,13 @@ function BattleRow({ player, tab }: { player: ReturnType<typeof futureCastPlayer
         <span className="fc-lab-battle-row__meta">
           {player.position} · {player.school ?? '—'}
         </span>
-        <UfProbBar value={pct} />
+        <div className="fc-lab-battle-row__gv">
+          <span className="fc-lab-battle-row__metric-label">GatorVault</span>
+          <UfProbBar value={pct} />
+        </div>
+        {rpm != null ? (
+          <div className="fc-lab-battle-row__rpm-meta">On3 UF RPM {rpm}%</div>
+        ) : null}
         <CompetingSchoolsBar player={player} />
       </div>
       <div className="fc-lab-battle-row__right">
@@ -127,7 +134,7 @@ export function FutureCastBattlesPanel({
     ? `${focusYear} Battles & Leaning Targets`
     : 'Battles & Leaning Targets';
   const sub = discoveryFocus
-    ? 'Allowlist targets bucketed by confirmed On3 UF RPM — Lean Elsewhere shows rival school %.'
+    ? 'Bucketed by GatorVault likelihood — On3 RPM boards shown as market context.'
     : 'Trending board buckets — battles, lean UF, and lean elsewhere.';
 
   return (

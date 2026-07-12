@@ -425,18 +425,26 @@ async function buildSeedBoardPlayerFromRecruiting(
     entry?.competingSchools?.length
       ? entry.competingSchools
       : competingSchoolsFromRecruitingRecord(recruitingRecord);
-  // Confirmed On3 UF RPM first — never let empty model/estimate outrank it.
-  const ufConfidence =
-    parseRecruitingUfPct(recruiting?.ufRpmPct) ??
-    parseRecruitingUfPct(recruiting?.ufProbability) ??
-    parseRecruitingUfPct(entry?.ufProbability) ??
-    null;
+  const rpmPct = parseRecruitingUfPct(recruiting?.ufRpmPct);
+  const storePct = parseRecruitingUfPct(recruiting?.ufProbability ?? entry?.ufProbability);
   const fitScore =
     recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
       ? Number(recruiting.fitScore)
       : entry?.fitScore != null && Number(entry.fitScore) > 0
         ? Number(entry.fitScore)
         : null;
+  const { resolveGatorVaultLikelihood } = require('./uf-probability-utils');
+  const resolved = resolveGatorVaultLikelihood({
+    modelPct: 0,
+    rpmPct: rpmPct ?? 0,
+    rivalsPct: 0,
+    fitScore: fitScore ?? 0,
+    storePct: storePct ?? 0,
+    delta7d: 0,
+    stars: Number(recruiting?.stars ?? board?.stars ?? 0) || null,
+    headliner: false,
+  });
+  const ufConfidence = resolved.value > 0 ? resolved.value : null;
   const category = String(recruiting?.category || '').toLowerCase();
 
   return {
@@ -454,12 +462,16 @@ async function buildSeedBoardPlayerFromRecruiting(
     posRank: recruiting?.posRank ?? (board?.posRank as number) ?? null,
     stateRank: recruiting?.stateRank ?? (board?.stateRank as number) ?? null,
     ufConfidence,
+    ufProbabilitySource: resolved.source,
+    ufProbabilityLabel: resolved.label ?? null,
+    ufProbabilityLowConfidence: Boolean(resolved.lowConfidence),
+    ufRpmPct: rpmPct,
     fitScore,
     trendDelta7d: null,
     volatility7d: 0,
     priority: category === 'target' || entry?.tier === 'target' ? 'high' : 'low',
     committedTo: recruiting?.committedTo ?? (board?.committedTo as string) ?? null,
-    predictors: competingSchools.map((s) => ({ name: s.name, score: s.pct })),
+    predictors: [],
     competingSchools,
   };
 }
@@ -490,7 +502,7 @@ export async function loadUnderclassmenBoardPlayers(
   slugs: string[]
 ): Promise<FutureCastBoardPlayer[]> {
   const rows = await loadEnrichedBoardPlayers(classYear, slugs);
-  // Overlay confirmed On3 RPM + competitor boards from recruiting store (model must not win).
+  // Overlay On3 competitor boards + RPM market % — do not replace GV likelihood with RPM.
   const enriched = await Promise.all(
     rows.map(async (player) => {
       const recruiting = await getRecruitingPlayerBySlug(player.slug);
@@ -535,11 +547,8 @@ function enrichPlayerFromRecruitingStore(
   const storeCompete = entry?.competingSchools?.length
     ? entry.competingSchools
     : competingSchoolsFromRecruitingRecord(recruitingRecord);
-  const storeUf =
-    parseRecruitingUfPct(recruiting?.ufRpmPct) ??
-    parseRecruitingUfPct(recruiting?.ufProbability) ??
-    parseRecruitingUfPct(entry?.ufProbability) ??
-    null;
+  const ufRpmPct =
+    parseRecruitingUfPct(recruiting?.ufRpmPct) ?? player.ufRpmPct ?? null;
   const storeFit =
     recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
       ? Number(recruiting.fitScore)
@@ -551,18 +560,15 @@ function enrichPlayerFromRecruitingStore(
   const competingSchools = storeCompete.length
     ? storeCompete
     : player.competingSchools ?? [];
-  // Prefer confirmed On3 UF RPM over FutureCast model confidence.
-  const ufConfidence = storeUf ?? player.ufConfidence ?? null;
-  const predictors = competingSchools.length
-    ? competingSchools.map((s) => ({ name: s.name, score: s.pct }))
-    : player.predictors ?? [];
 
   return {
     ...player,
-    ufConfidence,
+    // Keep GatorVault likelihood from board blend — RPM is market layer only.
+    ufConfidence: player.ufConfidence,
+    ufRpmPct,
     fitScore: player.fitScore ?? storeFit,
     competingSchools,
-    predictors,
+    predictors: player.predictors ?? [],
     priority:
       player.priority !== 'low' || String(recruiting?.category || '').toLowerCase() === 'target'
         ? player.priority === 'low' && String(recruiting?.category || '').toLowerCase() === 'target'
