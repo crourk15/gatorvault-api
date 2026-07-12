@@ -1,19 +1,23 @@
 /**
- * Player profile predictions panel — active + historical FutureCast Picks.
+ * Player profile predictions panel — ranked FutureCast Picks (logo + %).
  */
 import React, { useEffect, useState } from 'react';
 import {
   fetchPlayerPredictions,
-  sourceTypeLabel,
   type PlayerPrediction,
 } from '../../../lib/predictions-api';
 import { fetchUnderclassmenIntel } from '../../../lib/futurecast-underclassmen-api';
+import { SchoolRankRow } from './SchoolRankRow';
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function isUuid(value: string): boolean {
   return UUID_RE.test(value);
+}
+
+function isFloridaSchool(school: string): boolean {
+  return /\bflorida\b|\bgators\b|\buf\b/i.test(school);
 }
 
 export interface PredictionsPanelProps {
@@ -108,22 +112,19 @@ export function PredictionsPanel({
     return <p className="fc-profile-muted">No FutureCast Picks on file yet.</p>;
   }
 
+  const ranked = [...predictions].sort((a, b) => b.confidence - a.confidence);
+
   return (
-    <ul className="fc-prediction-list" data-testid="player-predictions-panel">
-      {predictions.map((p) => (
-        <li key={p.id} className="fc-prediction-item">
-          <div className="fc-prediction-item__meta">
-            <span className="fc-prediction-item__school">{p.school}</span>
-            <span className={`fc-pred-source fc-pred-source--${p.sourceType.toLowerCase()}`}>
-              {sourceTypeLabel(p.sourceType)}
-            </span>
-          </div>
-          <div className="fc-prediction-item__bar-wrap">
-            <div className="fc-prediction-item__bar" style={{ width: `${p.confidence}%` }} />
-          </div>
-          <span className="fc-prediction-item__score">{p.confidence}%</span>
-        </li>
+    <ol className="fc-school-rank-list" data-testid="player-predictions-panel">
+      {ranked.map((p, i) => (
+        <SchoolRankRow
+          key={p.id}
+          rank={i + 1}
+          school={p.school}
+          pct={p.confidence}
+          emphasize={i === 0 || isFloridaSchool(p.school)}
+        />
       ))}
-    </ul>
+    </ol>
   );
 }

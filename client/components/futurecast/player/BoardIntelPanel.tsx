@@ -1,8 +1,10 @@
 /**
  * On3 RPM / competing-school intel for player profile overview.
+ * Ranked logo + % rows (no multi-bar meters).
  */
 import React from 'react';
 import type { FullProfileCompetingSchool, FullProfileFuturecastSummary } from '@/lib/player-full-profile-api';
+import { SchoolRankRow } from './SchoolRankRow';
 
 export interface BoardIntelPanelProps {
   ufProbability: number | null;
@@ -11,7 +13,7 @@ export interface BoardIntelPanelProps {
   staffNote?: string | null;
 }
 
-type BoardRow = { school: string; pct: number; tone: 'uf' | 'peer' | 'other' };
+type BoardRow = { school: string; pct: number };
 
 function buildBoardRows(
   ufProbability: number | null,
@@ -19,16 +21,12 @@ function buildBoardRows(
 ): BoardRow[] {
   const rows: BoardRow[] = [];
   if (ufProbability != null && ufProbability > 0) {
-    rows.push({ school: 'Florida', pct: ufProbability, tone: 'uf' });
+    rows.push({ school: 'Florida', pct: ufProbability });
   }
-  for (const [i, c] of competingSchools.entries()) {
+  for (const c of competingSchools) {
     const pct = c.pct != null && c.pct > 0 ? c.pct : null;
     if (pct == null) continue;
-    rows.push({
-      school: c.school,
-      pct,
-      tone: i === 0 ? 'peer' : 'other',
-    });
+    rows.push({ school: c.school, pct });
   }
   return rows.sort((a, b) => b.pct - a.pct);
 }
@@ -63,20 +61,17 @@ export function BoardIntelPanel({
         </p>
       ) : null}
       {rows.length > 0 ? (
-        <ul className="fc-prediction-list fc-board-intel__list">
-          {rows.map((row) => (
-            <li key={row.school} className="fc-prediction-item">
-              <span className="fc-prediction-item__school">{row.school}</span>
-              <div className="fc-prediction-item__bar-wrap">
-                <div
-                  className={`fc-prediction-item__bar fc-prediction-item__bar--${row.tone}`}
-                  style={{ width: `${Math.min(100, Math.max(4, row.pct))}%` }}
-                />
-              </div>
-              <span className="fc-prediction-item__score">{row.pct}%</span>
-            </li>
+        <ol className="fc-school-rank-list fc-board-intel__list">
+          {rows.map((row, i) => (
+            <SchoolRankRow
+              key={row.school}
+              rank={i + 1}
+              school={row.school}
+              pct={row.pct}
+              emphasize={i === 0 || /^florida$/i.test(row.school)}
+            />
           ))}
-        </ul>
+        </ol>
       ) : null}
       {note ? <p className="fc-board-intel__note">{note}</p> : null}
     </section>

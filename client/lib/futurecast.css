@@ -1,3 +1,104 @@
+
+/* Ranked school board (logo + % ? replaces bar meters on profile) */
+.fc-school-rank-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fc-school-rank {
+  display: grid;
+  grid-template-columns: 1.25rem 2rem minmax(0, 1fr) auto;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  border-radius: 0.5rem;
+  background: #fff;
+  color: var(--gv-navy, #001a33);
+}
+
+.fc-school-rank--lead {
+  border-color: rgba(0, 33, 165, 0.28);
+  background: rgba(0, 33, 165, 0.04);
+}
+
+.fc-school-rank__rank {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-align: center;
+}
+
+.fc-school-rank__logo {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fc-school-rank__logo img {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+}
+
+.fc-school-rank__initials {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: rgba(0, 33, 165, 0.1);
+  color: var(--gv-blue, #0021a5);
+  font-size: 0.5625rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.fc-school-rank__identity {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.fc-school-rank__school {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  color: var(--gv-navy, #001a33);
+}
+
+.fc-school-rank__detail {
+  font-size: 0.6875rem;
+  color: #64748b;
+}
+
+.fc-school-rank__pct {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--gv-blue, #0021a5);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.fc-school-rank--lead .fc-school-rank__pct {
+  color: var(--gv-blue, #0021a5);
+}
+
+.fc-board-intel__list {
+  margin-top: 0.25rem;
+}
+
+.fc-profile-section--picks .fc-school-rank-list {
+  margin-top: 0.25rem;
+}
 /**
  * FutureCast shared UI styles (Big Board, PlayerCard).
  */
