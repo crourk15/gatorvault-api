@@ -179,25 +179,7 @@ export function boardSignalsFromRecruiting(
       createdAt: asOf,
     });
   }
-  const competitors = (recruiting as { competitors?: Array<{ school?: string; score?: number; source?: string }> })
-    .competitors;
-  for (const c of competitors ?? []) {
-    if (!c?.school || isFloridaSchool(c.school)) continue;
-    const pct = Number(c.score);
-    if (!Number.isFinite(pct) || pct <= 0) continue;
-    signals.push({
-      id: `${playerId}-on3-${String(c.school).toLowerCase().replace(/\s+/g, '-')}`,
-      playerId,
-      signalType: 'COMPETING_INTEREST',
-      signalValue: {
-        school: c.school,
-        interestPct: Math.round(pct * 10) / 10,
-        source: c.source ?? 'on3-rpm',
-      },
-      // Market snapshot — not an offer event date.
-      createdAt: asOf,
-    });
-  }
+  // On3 competitor RPM belongs on the Prediction Market board, not the signal feed.
   return signals;
 }
 

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import type { DiscoverySignal } from '../../../lib/player-api';
-import { formatDate, formatSignalValue, signalWeight } from '../../../lib/player-derived';
+import { formatDate, formatSignalValue } from '../../../lib/player-derived';
 import { dedupeDiscoverySignals, signalTimestamp } from '../../../lib/player-profile-normalize';
 
 export interface SignalsTabProps {
@@ -11,9 +11,9 @@ export interface SignalsTabProps {
 }
 
 export function SignalsTab({ signals }: SignalsTabProps): React.ReactElement {
-  const sorted = dedupeDiscoverySignals(signals).sort(
-    (a, b) => signalTimestamp(b.createdAt) - signalTimestamp(a.createdAt)
-  );
+  const sorted = dedupeDiscoverySignals(signals)
+    .filter((s) => String(s.signalType || '').toUpperCase() !== 'COMPETING_INTEREST')
+    .sort((a, b) => signalTimestamp(b.createdAt) - signalTimestamp(a.createdAt));
 
   if (!sorted.length) {
     return <p className="fc-profile-empty">No discovery signals recorded.</p>;
@@ -26,16 +26,16 @@ export function SignalsTab({ signals }: SignalsTabProps): React.ReactElement {
           <li key={s.id} className="fc-signal-feed__item">
             <div className="fc-signal-feed__head">
               <span className="fc-signal-feed__type">{s.signalType.replace(/_/g, ' ')}</span>
-              {String(s.signalType).toUpperCase() === 'COMPETING_INTEREST' ? (
-                <span className="fc-signal-feed__weight">On3 market</span>
-              ) : String(s.signalType).toUpperCase() === 'OFFER' ? (
+              {String(s.signalType).toUpperCase() === 'OFFER' ? (
                 <span className="fc-signal-feed__weight">Offer</span>
-              ) : (
-                <span className="fc-signal-feed__weight">Weight {signalWeight(s.signalType)}</span>
-              )}
+              ) : formatDate(s.createdAt) !== '—' ? (
+                <span className="fc-signal-feed__weight">{formatDate(s.createdAt)}</span>
+              ) : null}
             </div>
             <p className="fc-signal-feed__value">{formatSignalValue(s)}</p>
-            <time className="fc-signal-feed__meta">{formatDate(s.createdAt)}</time>
+            {formatDate(s.createdAt) !== '—' && String(s.signalType).toUpperCase() === 'OFFER' ? (
+              <time className="fc-signal-feed__meta">{formatDate(s.createdAt)}</time>
+            ) : null}
           </li>
         ))}
       </ul>

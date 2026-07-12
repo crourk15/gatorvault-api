@@ -4,7 +4,7 @@
 import React from 'react';
 import type { PlayerProfileBundle } from '../../../lib/player-api';
 import type { PlayerMetrics } from '../../../lib/player-derived';
-import { signalSummaryText, formatSignalValue, formatDate, signalWeight } from '../../../lib/player-derived';
+import { signalSummaryText, formatSignalValue, formatDate } from '../../../lib/player-derived';
 import { dedupeDiscoverySignals, signalTimestamp } from '../../../lib/player-profile-normalize';
 import { coerceDisplayText } from '../../../lib/coerce-text';
 import { RelatedPlayers } from './RelatedPlayers';
@@ -28,18 +28,21 @@ function profileNotesDeduped(
   return { recruitingNotes: hs, evaluationNotes: evalN };
 }
 
+function isEventSignal(signal: { signalType?: string }): boolean {
+  const type = String(signal.signalType || '').toUpperCase();
+  // On3 RPM interest already lives on the Prediction Market board — keep feed for real events.
+  if (type === 'COMPETING_INTEREST') return false;
+  return true;
+}
+
 function signalMeta(signal: { signalType: string; createdAt?: string | null }): string {
   const type = String(signal.signalType || '').toUpperCase();
   const date = formatDate(signal.createdAt);
-  // Competing interest is a market snapshot — don't pretend weight/date are offer intel.
-  if (type === 'COMPETING_INTEREST') {
-    return date !== '—' ? `market · ${date}` : 'On3 market';
-  }
   if (type === 'OFFER') {
-    return date !== '—' ? date : 'offer';
+    return date !== '—' ? date : 'Offer';
   }
-  const weight = signalWeight(signal.signalType);
-  return date !== '—' ? `${date} · weight ${weight}` : `weight ${weight}`;
+  if (date !== '—') return date;
+  return '';
 }
 
 export interface OverviewTabProps {
@@ -60,6 +63,7 @@ export function OverviewTab({
   const { player, signals, related, highSchoolProfile, collegeProfile, portalProfile, ufSpecificProfile } =
     data;
   const recentSignals = dedupeDiscoverySignals(signals)
+    .filter(isEventSignal)
     .sort((a, b) => signalTimestamp(b.createdAt) - signalTimestamp(a.createdAt))
     .slice(0, 5);
   const notes = profileNotesDeduped(
@@ -69,6 +73,8 @@ export function OverviewTab({
   const staffNoteInBoard =
     !!notes.recruitingNotes &&
     (!!(futurecastSummary?.ufProbability) || competingSchools.some((c) => !!c.pct));
+  const on3Uf = futurecastSummary?.on3UfProbability ?? null;
+  const gvUf = futurecastSummary?.gvProbability ?? null;
 
   return (
     <div className="fc-profile-panel" data-testid="tab-overview">
@@ -98,7 +104,9 @@ export function OverviewTab({
       <section className="fc-profile-section fc-profile-section--picks">
         <h2>FutureCast Picks</h2>
         <p className="fc-profile-muted fc-profile-section__lede">
-          GatorVault likelihood for Florida · On3 RPM for competitor schools
+          {on3Uf != null && gvUf != null
+            ? `On3 market has Florida at ${on3Uf}% · GatorVault model at ${gvUf}%`
+            : 'GatorVault model for Florida · On3 RPM for competitor schools'}
         </p>
         <PredictionsPanel
           playerId={player.id}
@@ -115,9 +123,9 @@ export function OverviewTab({
           {!metrics.portalHidden ? (
             <div><strong>Portal Likelihood</strong><br />{metrics.portalLikelihoodPct ?? 0}%</div>
           ) : null}
-          <div><strong>Signals</strong><br />{metrics.signalCount}</div>
+          <div><strong>Signals</strong><br />{recentSignals.length || metrics.signalCount}</div>
         </div>
-        <p className="fc-profile-muted">{signalSummaryText(signals)}</p>
+        <p className="fc-profile-muted">{signalSummaryText(recentSignals.length ? recentSignals : signals.filter(isEventSignal))}</p>
       </section>
 
       {recentSignals.length > 0 && (
@@ -128,7 +136,9 @@ export function OverviewTab({
               <li key={s.id}>
                 <span className="fc-signal-feed__type">{s.signalType.replace(/_/g, ' ')}</span>
                 <span className="fc-signal-feed__value">{formatSignalValue(s)}</span>
-                <span className="fc-signal-feed__meta">{signalMeta(s)}</span>
+                {signalMeta(s) ? (
+                  <span className="fc-signal-feed__meta">{signalMeta(s)}</span>
+                ) : null}
               </li>
             ))}
           </ul>

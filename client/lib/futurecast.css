@@ -435,7 +435,11 @@
   color: #64748b;
 }
 
-.fc-signal-feed__value { margin: 0.25rem 0; font-size: 0.9375rem; }
+.fc-signal-feed__value {
+  margin: 0.25rem 0;
+  font-size: 0.9375rem;
+  color: var(--gv-navy, #001a33);
+}
 
 .fc-offer-list { margin: 0; padding-left: 1.25rem; }
 .fc-film-links { display: flex; gap: 0.75rem; }
@@ -624,21 +628,31 @@
 
 .fc-prediction-item {
   display: grid;
-  grid-template-columns: 1fr 2fr auto;
+  grid-template-columns: minmax(7.5rem, 1.2fr) 2fr auto;
   gap: 0.75rem;
   align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(0, 48, 135, 0.25);
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(0, 33, 165, 0.12);
+  color: var(--gv-navy, #001a33);
 }
 
 .fc-prediction-item__school {
   font-weight: 700;
-  color: #fff;
+  color: var(--gv-navy, #001a33);
+  line-height: 1.25;
+}
+
+.fc-prediction-item__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  min-width: 0;
 }
 
 .fc-prediction-item__bar-wrap {
   height: 8px;
-  background: rgba(0, 48, 135, 0.3);
+  background: rgba(0, 33, 165, 0.1);
   border-radius: 9999px;
   overflow: hidden;
 }
@@ -649,9 +663,10 @@
 }
 
 .fc-prediction-item__score {
-  font-size: 0.8125rem;
-  color: #94a3b8;
-  min-width: 2.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--gv-navy, #001a33);
+  min-width: 2.75rem;
   text-align: right;
 }
 
@@ -660,22 +675,27 @@
 }
 
 .fc-prediction-item__bar--peer {
-  background: linear-gradient(90deg, #64748b, #94a3b8);
+  background: linear-gradient(90deg, #334155, #64748b);
 }
 
 .fc-prediction-item__bar--other {
-  background: rgba(148, 163, 184, 0.65);
+  background: rgba(100, 116, 139, 0.75);
 }
 
 .fc-board-intel__lead {
   margin: 0 0 0.75rem;
   font-size: 0.9375rem;
-  color: #e2e8f0;
+  color: var(--gv-navy, #001a33);
+}
+
+.fc-board-intel__lead strong {
+  color: var(--gv-blue, #0021a5);
 }
 
 .fc-profile-section__lede {
   margin: -0.35rem 0 0.75rem;
   font-size: 0.8125rem;
+  color: #475569;
 }
 
 .fc-profile-section--picks .fc-prediction-list {
@@ -686,9 +706,9 @@
   margin: 0.75rem 0 0;
   padding: 0.65rem 0.75rem;
   border-left: 3px solid #fa4616;
-  background: rgba(0, 48, 135, 0.15);
+  background: rgba(0, 33, 165, 0.06);
   font-size: 0.875rem;
-  color: #cbd5e1;
+  color: var(--gv-navy, #001a33);
 }
 
 .fc-board-intel__list {
@@ -1565,13 +1585,25 @@
   font-size: 0.625rem;
   font-weight: 700;
   text-transform: uppercase;
-  margin-left: 0.35rem;
+  margin-left: 0;
 }
 
-.fc-pred-source--model { background: rgba(0, 48, 135, 0.35); color: #93c5fd; }
-.fc-pred-source--staff { background: rgba(250, 70, 22, 0.2); color: #fb923c; }
-.fc-pred-source--fan { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; }
-.fc-pred-source--blended { background: rgba(196, 181, 253, 0.15); color: #c4b5fd; }
+.fc-pred-source--model {
+  background: rgba(0, 33, 165, 0.12);
+  color: var(--gv-blue, #0021a5);
+}
+.fc-pred-source--staff {
+  background: rgba(250, 70, 22, 0.12);
+  color: #c2410c;
+}
+.fc-pred-source--fan {
+  background: rgba(100, 116, 139, 0.12);
+  color: #475569;
+}
+.fc-pred-source--blended {
+  background: rgba(0, 33, 165, 0.08);
+  color: #1e3a8a;
+}
 
 .fc-pred-status {
   display: inline-block;

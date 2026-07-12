@@ -112,7 +112,7 @@ export function PredictionsPanel({
     <ul className="fc-prediction-list" data-testid="player-predictions-panel">
       {predictions.map((p) => (
         <li key={p.id} className="fc-prediction-item">
-          <div>
+          <div className="fc-prediction-item__meta">
             <span className="fc-prediction-item__school">{p.school}</span>
             <span className={`fc-pred-source fc-pred-source--${p.sourceType.toLowerCase()}`}>
               {sourceTypeLabel(p.sourceType)}

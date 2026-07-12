@@ -292,21 +292,7 @@ function buildEarlySignals(
     });
   }
 
-  // On3 RPM competitor interest — not verified offers.
-  for (const school of player.competingSchools ?? []) {
-    if (!school?.name) continue;
-    signals.push({
-      id: `${intelUuid}-compete-${school.name.toLowerCase().replace(/\s+/g, '-')}`,
-      playerId: intelUuid,
-      signalType: 'COMPETING_INTEREST',
-      signalValue: {
-        school: school.name,
-        interestPct: school.pct,
-        source: 'on3-rpm',
-      },
-      createdAt: stamp as string,
-    });
-  }
+  // Competing On3 RPM interest is shown on the Prediction Market board — not as feed events.
 
   return signals;
 }
