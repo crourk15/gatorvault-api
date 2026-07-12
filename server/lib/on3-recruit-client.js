@@ -110,6 +110,35 @@ function parseOn3NilValue(raw) {
   return null;
 }
 
+/** On3 stores height as "5-10.5" (string) and weight as lbs (number). */
+function formatHtWt(height, weight) {
+  const h = height != null ? String(height).trim() : '';
+  const w = weight != null && weight !== '' ? Number(weight) : NaN;
+  if (h && Number.isFinite(w) && w > 0) return `${h} / ${Math.round(w)}`;
+  if (h) return h;
+  if (Number.isFinite(w) && w > 0) return String(Math.round(w));
+  return '';
+}
+
+function extractHtWtFromOn3Player(player, recruitment = null) {
+  const height =
+    player?.height ??
+    recruitment?.height ??
+    player?.measurables?.height ??
+    null;
+  const weight =
+    player?.weight ??
+    recruitment?.weight ??
+    player?.measurables?.weight ??
+    null;
+  const htWt = formatHtWt(height, weight);
+  return {
+    height: height != null && String(height).trim() ? String(height).trim() : null,
+    weight: weight != null && Number.isFinite(Number(weight)) ? Math.round(Number(weight)) : null,
+    htWt: htWt || null,
+  };
+}
+
 async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
   if (!recruitSlug) return null;
   const year = parseInt(classYear, 10) || 2027;
@@ -134,15 +163,26 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
     topTeamsRaw.find((t) => Number(t.year) === Number(classYearResolved)) || topTeamsRaw[0];
 
   const highSchool = pp.player?.highSchool || null;
-  const schoolName = pp.player?.highSchoolName || highSchool?.name || null;
+  const schoolName =
+    highSchool?.name || pp.player?.highSchoolName || recruitment?.highSchool?.name || null;
   const state =
     pp.player?.homeTown?.stateAbbr ||
     pp.player?.hometown?.stateAbbr ||
     pp.player?.hometown?.state?.abbreviation ||
     pp.player?.homeTown?.state?.abbreviation ||
+    (typeof pp.player?.hometownState === 'string' ? pp.player.hometownState : null) ||
+    pp.player?.hometownState?.abbreviation ||
     rp.stateAbbr ||
     stateFromHighSchoolSlug(highSchool?.slug) ||
     null;
+  const hometownCity =
+    pp.player?.homeTown?.city ||
+    pp.player?.hometown?.city ||
+    (typeof pp.player?.hometownName === 'string'
+      ? String(pp.player.hometownName).split(',')[0].trim()
+      : null) ||
+    null;
+  const { height, weight, htWt } = extractHtWtFromOn3Player(pp.player, recruitment);
 
   const stars =
     rp.consensusStars ??
@@ -195,8 +235,11 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
     classYear: classYearResolved,
     school: schoolName,
     highSchoolSlug: highSchool?.slug || null,
-    state,
-    hometownCity: pp.player?.homeTown?.city || pp.player?.hometown?.city || null,
+    state: state ? String(state).toUpperCase() : null,
+    hometownCity,
+    height,
+    weight,
+    htWt,
     stars,
     rating,
     natlRank,
@@ -285,6 +328,8 @@ module.exports = {
   isHighSchoolOrg,
   mapPool,
   parseOn3NilValue,
+  formatHtWt,
+  extractHtWtFromOn3Player,
   resolveRecruitSlug,
   slugify,
   stateFromHighSchoolSlug,

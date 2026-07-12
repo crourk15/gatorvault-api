@@ -15,14 +15,16 @@ function parseUfPct(raw: unknown): number {
 
 function parseHeightInches(raw?: string | null): number | null {
   if (!raw) return null;
-  const m = String(raw).match(/(\d)[-']?\s*(\d{1,2})/);
+  const asNum = Number(raw);
+  if (Number.isFinite(asNum) && asNum >= 48 && asNum <= 96) return asNum;
+  const m = String(raw).match(/(\d+)\s*[-']\s*(\d+(?:\.\d+)?)/);
   if (!m) return null;
-  return parseInt(m[1], 10) * 12 + parseInt(m[2], 10);
+  return parseInt(m[1], 10) * 12 + Number(m[2]);
 }
 
 function parseHtWt(htWt?: string | null): { height: number | null; weight: number | null } {
   const raw = String(htWt || '');
-  const m = raw.match(/(\d-\d+(?:\.\d+)?)\s*\/\s*(\d+)/);
+  const m = raw.match(/(\d+\s*[-']\s*\d+(?:\.\d+)?)\s*\/\s*(\d+)/);
   if (!m) return { height: null, weight: null };
   return { height: parseHeightInches(m[1]), weight: Number(m[2]) };
 }
@@ -48,8 +50,15 @@ export async function augmentPlayerFromRecruiting(
     ...player,
     fullName: player.fullName ?? recruiting.name ?? player.slug,
     highSchool: player.highSchool ?? recruiting.school ?? recruiting.highSchool ?? null,
-    hometown: player.hometown ?? recruiting.hometown ?? null,
-    state: player.state ?? recruiting.state ?? null,
+    hometown:
+      player.hometown ??
+      recruiting.hometown ??
+      (recruiting.hometownCity
+        ? [recruiting.hometownCity, recruiting.hometownState || recruiting.state]
+            .filter(Boolean)
+            .join(', ')
+        : null),
+    state: player.state ?? recruiting.state ?? recruiting.hometownState ?? null,
     stars: player.stars ?? recruiting.stars ?? null,
     compositeRating: player.compositeRating ?? recruiting.rating ?? null,
     rankingNational: player.rankingNational ?? recruiting.natlRank ?? null,

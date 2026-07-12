@@ -63,8 +63,9 @@ function normalizePercent(value: unknown): number | null {
 export function formatHeight(inches: number | null): string {
   if (inches == null || !Number.isFinite(inches)) return '—';
   const ft = Math.floor(inches / 12);
-  const inch = Math.round(inches % 12);
-  return `${ft}'${inch}"`;
+  const inch = Math.round((inches % 12) * 2) / 2;
+  const inchLabel = Number.isInteger(inch) ? String(inch) : inch.toFixed(1);
+  return `${ft}'${inchLabel}"`;
 }
 
 export function formatWeight(lbs: number | null): string {

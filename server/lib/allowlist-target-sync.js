@@ -177,6 +177,10 @@ function profilePatchFromOn3(profile, classYear) {
   if (profile.school) patch.school = on3Recruit.schoolLabelFromOn3(profile) || profile.school;
   if (profile.highSchoolSlug) patch.highSchoolSlug = profile.highSchoolSlug;
   if (profile.state) patch.state = profile.state;
+  if (profile.hometownCity) patch.hometownCity = profile.hometownCity;
+  if (profile.htWt) patch.htWt = profile.htWt;
+  if (profile.height) patch.height = profile.height;
+  if (profile.weight != null) patch.weight = profile.weight;
   if (profile.slug) {
     patch.on3Slug = profile.slug;
     const idMatch = String(profile.slug).match(/-(\d+)$/);

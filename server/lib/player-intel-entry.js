@@ -25,12 +25,19 @@ function parseOfferFlag(offer) {
 }
 
 function formatHtWt(heightIn, weightLb) {
+  const { formatHtWt: formatFromOn3 } = require('./on3-recruit-client');
+  // Prefer On3 string heights ("5-10.5") over inches-only conversion.
+  if (heightIn != null && !Number.isFinite(Number(heightIn))) {
+    return formatFromOn3(heightIn, weightLb) || null;
+  }
   const h = Number(heightIn);
   const w = Number(weightLb);
-  if (!Number.isFinite(h) || !Number.isFinite(w) || h < 48) return null;
-  const feet = Math.floor(h / 12);
-  const inches = Math.round(h % 12);
-  return `${feet}-${inches} / ${w}`;
+  if (Number.isFinite(h) && h >= 48 && Number.isFinite(w) && w > 0) {
+    const feet = Math.floor(h / 12);
+    const inches = Math.round((h % 12) * 2) / 2;
+    return `${feet}-${inches} / ${Math.round(w)}`;
+  }
+  return formatFromOn3(heightIn, weightLb) || null;
 }
 
 function parseOn3Extended(pp, classYear) {

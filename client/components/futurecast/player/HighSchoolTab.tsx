@@ -11,6 +11,26 @@ export interface HighSchoolTabProps {
   profile: HighSchoolProfile | null;
 }
 
+/** Ranking / identity fields that must never render as physical measurables. */
+const NON_MEASURABLE_KEYS = new Set([
+  'stars',
+  'natl_rank',
+  'national_rank',
+  'pos_rank',
+  'position_rank',
+  'state_rank',
+  'on3_id',
+  'on3id',
+  'school',
+  'natlrank',
+  'posrank',
+  'staterank',
+  'rating',
+  'discoveryscore',
+  'composite',
+  'compositerating',
+]);
+
 function filmLinks(stats: Record<string, unknown>): { label: string; url: string }[] {
   const links: { label: string; url: string }[] = [];
   const hudl = stats.hudl ?? stats.hudl_url ?? stats.hudlUrl;
@@ -18,6 +38,36 @@ function filmLinks(stats: Record<string, unknown>): { label: string; url: string
   if (typeof hudl === 'string' && hudl.startsWith('http')) links.push({ label: 'HUDL', url: hudl });
   if (typeof youtube === 'string' && youtube.startsWith('http')) links.push({ label: 'YouTube', url: youtube });
   return links;
+}
+
+function isMeasurableEntry(key: string, value: unknown): boolean {
+  if (value == null || value === '') return false;
+  if (NON_MEASURABLE_KEYS.has(key.replace(/_/g, '').toLowerCase())) return false;
+  if (typeof value === 'object') return false;
+  return true;
+}
+
+/** Only real physical fields — never fall back to dumping the whole stats bag. */
+function pickMeasurables(
+  stats: Record<string, unknown>,
+  player: PlayerCore
+): Array<[string, string]> {
+  const raw = stats.measurables ?? stats.verified_measurables;
+  const rows: Array<[string, string]> = [];
+
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+      if (!isMeasurableEntry(k, v)) continue;
+      rows.push([k.replace(/_/g, ' '), String(v)]);
+    }
+  }
+
+  if (!rows.length) {
+    if (player.height != null) rows.push(['Height', formatHeight(player.height)]);
+    if (player.weight != null) rows.push(['Weight', formatWeight(player.weight)]);
+  }
+
+  return rows.slice(0, 12);
 }
 
 export function HighSchoolTab({ player, profile }: HighSchoolTabProps): React.ReactElement {
@@ -31,7 +81,7 @@ export function HighSchoolTab({ player, profile }: HighSchoolTabProps): React.Re
   const pos = player.rankingPosition ?? stats.pos_rank ?? stats.position_rank;
   const stateRank = player.rankingState ?? stats.state_rank;
   const films = filmLinks(stats);
-  const measurables = stats.measurables ?? stats.verified_measurables ?? stats;
+  const measurables = pickMeasurables(stats, player);
   const recruitingNotes = coerceDisplayText(profile.recruitingNotes);
 
   return (
@@ -58,16 +108,13 @@ export function HighSchoolTab({ player, profile }: HighSchoolTabProps): React.Re
         </dl>
       </section>
 
-      {Object.keys(measurables).length > 0 && (
+      {measurables.length > 0 && (
         <section className="fc-profile-section">
           <h2>Measurables</h2>
           <dl className="fc-profile-dl">
-            {Object.entries(measurables)
-              .filter(([k]) => !['stars', 'natl_rank', 'pos_rank', 'state_rank', 'on3_id', 'school'].includes(k))
-              .slice(0, 12)
-              .map(([k, v]) => (
-                <div key={k}><dt>{k.replace(/_/g, ' ')}</dt><dd>{String(v)}</dd></div>
-              ))}
+            {measurables.map(([k, v]) => (
+              <div key={k}><dt>{k}</dt><dd>{v}</dd></div>
+            ))}
           </dl>
         </section>
       )}
