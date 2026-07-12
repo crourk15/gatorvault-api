@@ -38,3 +38,23 @@ test('provisionAppReviewAccount creates, resets password, and grants war tier', 
   assert.equal(verifyPassword('GvAppReview!2027', user.passwordHash), true);
   assert.equal(verifyPassword(password, user.passwordHash), false);
 });
+
+test('ensureAppReviewAccountOnBoot provisions when password set', () => {
+  const { ensureAppReviewAccountOnBoot } = require('../lib/app-review-provision');
+  process.env.APP_REVIEW_PASSWORD = 'GvAppReview!BootTest99';
+  process.env.APP_REVIEW_BOOT_PROVISION = 'true';
+  process.env.APP_REVIEW_EMAIL = 'appreview@gatorvaultinsider.com';
+  process.env.APP_REVIEW_TIER = 'war';
+  const result = ensureAppReviewAccountOnBoot();
+  assert.equal(result.ok, true);
+  assert.equal(result.skipped, false);
+});
+
+test('ensureAppReviewAccountOnBoot skips without password', () => {
+  const { ensureAppReviewAccountOnBoot } = require('../lib/app-review-provision');
+  delete process.env.APP_REVIEW_PASSWORD;
+  process.env.APP_REVIEW_BOOT_PROVISION = 'true';
+  const result = ensureAppReviewAccountOnBoot();
+  assert.equal(result.skipped, true);
+  assert.equal(result.reason, 'missing_password');
+});

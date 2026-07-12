@@ -42,6 +42,35 @@ Reviewers must tap **Sign in** (not Create account) on the join screen:
 - Web: https://gatorvaultinsider.com/join/?mode=signin
 - iOS app: Menu → Sign in (or Join → Sign in tab)
 
+### Reply to App Review (Resolution Center) — July 11, 2026
+
+```
+Hello App Review,
+
+Thank you for the feedback on submission 475e2270-8df3-4c10-937a-a06ad88f47bc (1.0 build 11).
+
+Guideline 2.1 — Demo account:
+We verified and reprovisioned the demo account on production. Sign-in works with War Room full access.
+
+Email: appreview@gatorvaultinsider.com
+Password: GvAppReview!2026
+
+Please tap Sign in on the join screen (not Create account), then enter the credentials above.
+
+Review paths after sign-in:
+1. Game Week — /vault/game-week/
+2. Film Room — /vault/film-room/
+3. FutureCast — /vault/futurecast/
+4. Membership & IAP — /vault/membership/
+5. Community — /vault/community/ (Report / Block)
+6. Privacy & Terms — https://gatorvaultinsider.com/privacy/ and https://gatorvaultinsider.com/terms/
+
+Support: support@gatorvaultinsider.com
+
+Thank you,
+Charles Rourk
+```
+
 ### Reply to App Review (Resolution Center) — July 9, 2026
 
 ```

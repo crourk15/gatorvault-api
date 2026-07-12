@@ -1149,6 +1149,23 @@ setImmediate(startPostBootServices);
 
 function startPostBootServices() {
   try {
+    const { ensureAppReviewAccountOnBoot } = require('./lib/app-review-provision');
+    const reviewBoot = ensureAppReviewAccountOnBoot();
+    if (reviewBoot.skipped) {
+      console.log('[app-review] boot provision skipped:', reviewBoot.reason);
+    } else if (reviewBoot.ok) {
+      console.log(
+        '[app-review] boot provision ok —',
+        reviewBoot.created ? 'created' : reviewBoot.passwordReset ? 'password-reset' : 'ready',
+        reviewBoot.email
+      );
+    } else {
+      console.warn('[app-review] boot provision failed:', reviewBoot.error || 'unknown');
+    }
+  } catch (e) {
+    console.warn('[app-review] boot provision skipped:', e.message);
+  }
+  try {
     const deployCache = require('./lib/deploy-cache');
     const inv = deployCache.invalidateAllOnDeploy();
     console.log('[deploy-cache] boot invalidation at', inv.at);
