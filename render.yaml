@@ -278,7 +278,7 @@ services:
 
   - type: cron
     name: gatorvault-api-hub-refresh
-    schedule: "0 */6 * * *"
+    schedule: "15 * * * *"
     runtime: node
     region: oregon
     rootDir: server

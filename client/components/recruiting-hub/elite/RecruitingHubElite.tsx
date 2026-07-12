@@ -46,12 +46,15 @@ function RecruitingHubEliteContent({
     <>
       {bundle.loading && bundle.warming ? (
         <div className="rh-hub-warming" role="status" aria-live="polite" aria-busy="true">
-          <UiWarming hint="Loading class metrics and board data." />
+          <UiWarming
+            title="Loading recruiting hub…"
+            hint="Loading class metrics and board data."
+          />
         </div>
       ) : null}
       {bundle.error && !bundle.loading ? (
         <UiError
-          message="Could not load recruiting hub. The servers may still be waking up."
+          message="Recruiting data is taking longer than usual. Tap Try again — your board will load when ready."
           retry={bundle.reload}
           backHref="/vault"
           backLabel="← Vault"

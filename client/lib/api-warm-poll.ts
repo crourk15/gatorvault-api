@@ -5,7 +5,7 @@ export function isWarmRetryError(err: unknown): boolean {
   if (!(err instanceof ApiFetchError)) return false;
   if (err.timedOut || err.unavailable) return true;
   if (err.status === 503 || err.status === 502 || err.status === 504) return true;
-  return /warming|building|unavailable|timed out/i.test(err.message);
+  return /warming|building|unavailable|timed out|Hub warming/i.test(err.message);
 }
 
 export function isTransientLoadError(err: unknown): boolean {
@@ -15,7 +15,7 @@ export function isTransientLoadError(err: unknown): boolean {
 export function userFacingLoadError(err: unknown, fallback = 'Could not load data. Please try again.'): string {
   if (err instanceof ApiFetchError) {
     if (err.timedOut || err.unavailable || err.status === 503) {
-      return 'GatorVault servers are waking up — this usually takes a few seconds.';
+      return 'Loading live data — almost ready.';
     }
     return err.message || fallback;
   }

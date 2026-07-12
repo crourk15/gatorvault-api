@@ -7,13 +7,14 @@ import {
   type RhHubBundle,
 } from '@/lib/recruiting-hub-elite-api';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
-import { warmPollProfile } from '@/lib/warm-poll-profile';
+import { hubBundleWarmPollProfile } from '@/lib/warm-poll-profile';
 import type { RecruitingHubBundleState } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { initGvHydrate } from '@/lib/gv-hydrate';
 import '@/lib/recruiting-hub-window';
 
 const HUB_BUNDLE_CACHE_PREFIX = 'gv_hub_bundle_v1';
 const HUB_BUNDLE_CACHE_TTL_MS = 30 * 60 * 1000;
+const HUB_AUTO_RETRY_MS = 8_000;
 
 function readHubBundleCache(year: number): RhHubBundle | null {
   if (typeof window === 'undefined') return null;
@@ -53,9 +54,9 @@ function initHubMonitor(year: number): number {
   return start;
 }
 
-/** Poll hub bundle while API warms — avoids empty hub on cold Render wake. */
+/** Poll hub bundle while API warms — covers Starter cold hub builds (~60s). */
 async function fetchHubBundleWithWarmPoll(year: number): Promise<RhHubBundle> {
-  return fetchWithWarmPoll(() => fetchRecruitingHubBundle(year), warmPollProfile());
+  return fetchWithWarmPoll(() => fetchRecruitingHubBundle(year), hubBundleWarmPollProfile());
 }
 
 /** Single /api/recruiting/hub/bundle fetch for the elite landing page. */
@@ -85,6 +86,7 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
         setWarming(true);
       }
       setError(false);
+      let gotBundle = false;
       try {
         const t0 = performance.now();
         const bundle = await fetchHubBundleWithWarmPoll(year);
@@ -108,22 +110,32 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
           console.info(`[recruiting-hub] bundle loaded in ${bundleLoadMs}ms`);
         }
         setData(bundle);
+        gotBundle = true;
+        setWarming(false);
+        setError(false);
       } catch {
         if (cancelled) return;
         const fallback = readHubBundleCache(year);
         if (fallback) {
           setData(fallback);
           setError(false);
+          setWarming(false);
+          gotBundle = true;
         } else {
           if (typeof window !== 'undefined') {
             window.__GV_HUB__ = { ...window.__GV_HUB__, start, year, ok: false };
           }
-          setError(true);
+          // Keep warming UI + auto-retry — never dump fans into a dead error page.
+          setError(false);
+          setWarming(true);
+          window.setTimeout(() => {
+            if (!cancelled) setReloadToken((token) => token + 1);
+          }, HUB_AUTO_RETRY_MS);
         }
       } finally {
         if (!cancelled) {
           setLoading(false);
-          setWarming(false);
+          if (gotBundle) setWarming(false);
         }
       }
     }

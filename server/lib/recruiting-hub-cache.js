@@ -142,72 +142,136 @@ function removeHubCacheKeys(keys) {
   return removed;
 }
 
-async function warmEliteHubCaches(options = {}) {
-  if (warming) return getMeta();
-  warming = true;
-  lastWarmError = null;
-  const years = options.years || DEFAULT_YEARS;
-  const start = Date.now();
-  let warmed = 0;
+/** Fan-facing first paint — warm these before the rest of the elite map. */
+function priorityWarmJobs(elite, years) {
+  const jobs = [[eliteClassOverviewAllCacheKey(), () => elite.buildHubClassOverviewAll()]];
+  for (const year of years) {
+    jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year)]);
+    jobs.push([classSnapshotCacheKey(year), () => elite.buildHubClassOverview(year)]);
+    jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year)]);
+    jobs.push([eliteBundleCacheKey(year), () => elite.buildHubBundle(year)]);
+  }
+  return jobs;
+}
 
-  try {
-    const elite = require('./recruiting-hub-elite');
-    const jobs = [
-      [eliteClassOverviewAllCacheKey(), () => elite.buildHubClassOverviewAll(), null],
-      ['hub:intel:high-priority', async () => {
+function secondaryWarmJobs(elite, years) {
+  const jobs = [
+    [
+      'hub:intel:high-priority',
+      async () => {
         const gm2 = require('./gm2');
         const intelStore = require('./recruiting-intel-store');
         if (typeof intelStore.initIntelStore === 'function') {
           await intelStore.initIntelStore().catch(() => {});
         }
         return gm2.getPublicIntel({ limit: 50, subsystem: 'recruiting-hub' }).intel ?? [];
-      }, null],
-      ['recruiting:movement', () => {
+      },
+    ],
+    [
+      'recruiting:movement',
+      () => {
         const { buildRecruitingMovementIntelPayload } = require('../api/recruiting/movement-intel.ts');
         return buildRecruitingMovementIntelPayload();
-      }, null],
-      ['hub:intel:beat', () => {
+      },
+    ],
+    [
+      'hub:intel:beat',
+      () => {
         const { buildBeatIntelItems } = require('./recruiting-ui-api');
         return buildBeatIntelItems(5);
-      }, null],
-    ];
+      },
+    ],
+  ];
 
-    for (const year of years) {
-      jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year), year]);
-      jobs.push([classSnapshotCacheKey(year), () => elite.buildHubClassOverview(year), year]);
-      jobs.push([`recruiting:battles:${year}`, () => elite.buildHubBattleBoard(year), year]);
-      jobs.push([`recruiting:battles-and-movement:${year}`, () => {
+  for (const year of years) {
+    jobs.push([`recruiting:battles:${year}`, () => elite.buildHubBattleBoard(year)]);
+    jobs.push([
+      `recruiting:battles-and-movement:${year}`,
+      () => {
         const { buildBattlesAndMovement } = require('./recruiting-ui-api');
         return buildBattlesAndMovement(year);
-      }, year]);
-      jobs.push([`recruiting:heat-index:${year}`, () => elite.buildHubHeatIndex(year), year]);
-      jobs.push([`recruiting:positions:${year}`, () => elite.buildHubPositions(year), year]);
-      jobs.push([`recruiting:footprint:${year}`, () => elite.buildHubFootprint(year), year]);
-      jobs.push([eliteBundleCacheKey(year), () => elite.buildHubBundle(year), year]);
-      jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year), year]);
-      jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year), year]);
-      jobs.push([`hub:elite:commits:${year}`, () => elite.buildHubCommits(year), year]);
-      jobs.push([`hub:elite:battles:${year}`, () => elite.buildHubBattles(year), year]);
-      jobs.push([`hub:elite:positions:${year}`, () => elite.buildHubPositions(year), year]);
-      jobs.push([`hub:elite:heat-index:${year}`, () => elite.buildHubHeatIndex(year), year]);
-      jobs.push([`hub:elite:movement-feed:${year}`, () => elite.buildHubMovementFeed(year), year]);
-      jobs.push([`hub:elite:battle-board:${year}`, () => elite.buildHubBattleBoard(year), year]);
-      jobs.push([`hub:elite:footprint:${year}`, () => elite.buildHubFootprint(year), year]);
-    }
+      },
+    ]);
+    jobs.push([`recruiting:heat-index:${year}`, () => elite.buildHubHeatIndex(year)]);
+    jobs.push([`recruiting:positions:${year}`, () => elite.buildHubPositions(year)]);
+    jobs.push([`recruiting:footprint:${year}`, () => elite.buildHubFootprint(year)]);
+    jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year)]);
+    jobs.push([`hub:elite:commits:${year}`, () => elite.buildHubCommits(year)]);
+    jobs.push([`hub:elite:battles:${year}`, () => elite.buildHubBattles(year)]);
+    jobs.push([`hub:elite:positions:${year}`, () => elite.buildHubPositions(year)]);
+    jobs.push([`hub:elite:heat-index:${year}`, () => elite.buildHubHeatIndex(year)]);
+    jobs.push([`hub:elite:movement-feed:${year}`, () => elite.buildHubMovementFeed(year)]);
+    jobs.push([`hub:elite:battle-board:${year}`, () => elite.buildHubBattleBoard(year)]);
+    jobs.push([`hub:elite:footprint:${year}`, () => elite.buildHubFootprint(year)]);
+  }
+  return jobs;
+}
 
-    for (const [key, fn] of jobs) {
-      try {
-        const value = await withTimeout(fn(), BUILD_TIMEOUT_MS * 2, key);
-        hubCache.set(key, value);
-        warmed += 1;
-      } catch (err) {
-        console.warn('[recruiting-hub-cache] warm skip', key, err.message);
+async function runWarmJobBatch(jobs, timeoutMs, label) {
+  let warmed = 0;
+  for (const [key, fn] of jobs) {
+    try {
+      const value = await withTimeout(fn(), timeoutMs, key);
+      hubCache.set(key, value);
+      warmed += 1;
+      ready = true;
+      warmKeyCount = Math.max(warmKeyCount, warmed);
+    } catch (err) {
+      console.warn(`[recruiting-hub-cache] ${label} skip`, key, err.message);
+    }
+  }
+  return warmed;
+}
+
+async function warmEliteHubCaches(options = {}) {
+  if (warming) return getMeta();
+  warming = true;
+  lastWarmError = null;
+  const years = options.years || DEFAULT_YEARS;
+  const priorityOnly = options.priorityOnly === true;
+  const secondaryOnly = options.secondaryOnly === true;
+  const start = Date.now();
+  let warmed = 0;
+
+  try {
+    const elite = require('./recruiting-hub-elite');
+    const priorityTimeout = Math.max(BUILD_TIMEOUT_MS * 3, 60_000);
+
+    if (!secondaryOnly) {
+      const priorityWarmed = await runWarmJobBatch(
+        priorityWarmJobs(elite, years),
+        priorityTimeout,
+        'priority'
+      );
+      warmed += priorityWarmed;
+      warmKeyCount = Math.max(warmKeyCount, warmed);
+      ready = warmKeyCount > 0;
+      if (priorityWarmed > 0) {
+        lastWarmAt = new Date().toISOString();
+        console.log(
+          '[recruiting-hub-cache] priority warm ready:',
+          priorityWarmed,
+          'keys in',
+          Date.now() - start,
+          'ms'
+        );
       }
     }
 
-    warmKeyCount = warmed;
-    ready = warmed > 0;
-    lastWarmAt = new Date().toISOString();
+    if (!priorityOnly) {
+      const secondaryWarmed = await runWarmJobBatch(
+        secondaryWarmJobs(elite, years),
+        BUILD_TIMEOUT_MS * 2,
+        'secondary'
+      );
+      warmed += secondaryWarmed;
+    }
+
+    warmKeyCount = Math.max(warmKeyCount, warmed);
+    ready = warmKeyCount > 0;
+    if (warmed > 0 || ready) {
+      lastWarmAt = new Date().toISOString();
+    }
     console.log(
       '[recruiting-hub-cache] warm complete:',
       warmed,
@@ -364,54 +428,59 @@ function scheduleHubBootPipeline() {
     console.log('[recruiting-hub] boot pipeline skipped (HUB_BOOT_SKIP_WARM=true) — rely on hub-refresh cron');
     return;
   }
-  if (!pipelineGuards.scheduledJobsEnabled()) {
-    console.log('[recruiting-hub] boot pipeline skipped — X_SCHEDULED_JOBS_ENABLED is not true');
-    return;
-  }
 
+  // Hub warm is fan-facing infrastructure — do NOT gate on X_SCHEDULED_JOBS_ENABLED.
   const bootDelay = parseInt(process.env.HUB_BOOT_WARM_DELAY_MS || '0', 10);
   const immediateWarm = process.env.HUB_BOOT_IMMEDIATE_WARM !== 'false';
+  // Starter can OOM on full warm; priority hero/bundle/class keys first (higher RSS ceiling).
+  const priorityRssLimit = parseInt(process.env.HUB_PRIORITY_WARM_RSS_MB || '520', 10) || 520;
 
-  if (immediateWarm) {
-    setImmediate(() => {
-      if (pipelineGuards.shouldSkipHeavyJob('hub-boot-warm')) return;
-      warmEliteHubCaches().catch((err) => {
+  const runPriorityWarm = () => {
+    if (pipelineGuards.shouldSkipHeavyJob('hub-boot-priority-warm', priorityRssLimit)) return;
+    warmEliteHubCaches({ priorityOnly: true })
+      .then(() => {
+        if (pipelineGuards.shouldSkipHeavyJob('hub-boot-warm', priorityRssLimit)) return;
+        return warmEliteHubCaches({ secondaryOnly: true });
+      })
+      .catch((err) => {
         console.warn('[recruiting-hub-cache] boot warm failed:', err.message);
       });
-    });
+  };
+
+  if (immediateWarm) {
+    setImmediate(runPriorityWarm);
   } else {
-    setTimeout(() => {
-      if (pipelineGuards.shouldSkipHeavyJob('hub-boot-warm')) return;
-      warmEliteHubCaches().catch((err) => {
-        console.warn('[recruiting-hub-cache] deferred boot warm failed:', err.message);
-      });
-    }, Math.max(bootDelay, 60000));
+    setTimeout(runPriorityWarm, Math.max(bootDelay, 15_000));
   }
 
-  // Refresh is heavier than warm — run later and alone (no warmAfter) so Starter doesn't OOM.
+  // Heavy geo refresh stays optional / scheduled-jobs gated (not required for first paint).
   const refreshDelay = Math.max(
     bootDelay + 120000,
     parseInt(process.env.HUB_BOOT_REFRESH_DELAY_MS || String(bootDelay + 120000), 10) || bootDelay + 120000
   );
-  setTimeout(() => {
-    if (pipelineGuards.shouldSkipHeavyJob('hub-boot-refresh')) return;
-    const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
-    const geoBackfill = process.env.HUB_BOOT_GEO_BACKFILL === 'true';
-    refreshRecruitingHubCaches({ geoBackfill, warmAfter: false })
-      .then((result) => {
-        console.log('[recruiting-hub] boot refresh complete:', result.enrichedPlayerCount, 'players');
-      })
-      .catch((err) => {
-        console.warn('[recruiting-hub] boot refresh failed:', err.message);
-      });
-  }, refreshDelay);
+  if (pipelineGuards.scheduledJobsEnabled()) {
+    setTimeout(() => {
+      if (pipelineGuards.shouldSkipHeavyJob('hub-boot-refresh')) return;
+      const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
+      const geoBackfill = process.env.HUB_BOOT_GEO_BACKFILL === 'true';
+      refreshRecruitingHubCaches({ geoBackfill, warmAfter: false })
+        .then((result) => {
+          console.log('[recruiting-hub] boot refresh complete:', result.enrichedPlayerCount, 'players');
+        })
+        .catch((err) => {
+          console.warn('[recruiting-hub] boot refresh failed:', err.message);
+        });
+    }, refreshDelay);
+  } else {
+    console.log('[recruiting-hub] boot geo refresh skipped — X_SCHEDULED_JOBS_ENABLED is not true');
+  }
 
   scheduleBackgroundRefresh();
   console.log(
     '[recruiting-hub] boot warm',
-    immediateWarm ? 'immediate' : 'deferred',
+    immediateWarm ? 'immediate-priority' : 'deferred-priority',
     '; refresh pipeline in',
-    refreshDelay,
+    pipelineGuards.scheduledJobsEnabled() ? refreshDelay : 'skipped',
     'ms; background every',
     REFRESH_MS,
     'ms'
