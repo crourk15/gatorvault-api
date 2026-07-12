@@ -498,16 +498,26 @@ export async function loadBoardPlayersForSlugs(
     });
     const rivalsPct = pickRivalsPmScore(ufPredictors);
     const underclassmen = isUnderclassmenClassYear(resolvedClassYear);
+    const seedModel = String(model?.predictorId || '').toLowerCase() === 'allowlist_seed';
+    const movementAbs = Math.abs(Number(trendDelta7d) || 0);
+    const seedFlatDelta =
+      seedModel && (movementAbs === 4 || Math.abs(Math.round(movementAbs * 100)) === 4);
+    const movementFraction = seedFlatDelta
+      ? 0
+      : movementAbs <= 1
+        ? Number(trendDelta7d) || 0
+        : (Number(trendDelta7d) || 0) / 100;
     const resolvedUf = override
       ? null
       : underclassmen
         ? resolveGatorVaultLikelihood({
-            modelPct: model?.confidence ?? model?.ufProbability,
+            // Do not let allowlist_seed placeholder confidence drive GV likelihood.
+            modelPct: seedModel ? 0 : model?.confidence ?? model?.ufProbability,
             rpmPct,
             rivalsPct,
             fitScore: fitScore ?? 0,
             storePct,
-            delta7d: trendDelta7d ?? 0,
+            delta7d: movementFraction,
             stars: Number(rank?.stars ?? recruiting?.stars ?? seed.stars ?? 0) || null,
             headliner: Boolean(seed.headliner),
           })
@@ -541,8 +551,12 @@ export async function loadBoardPlayersForSlugs(
       }
     }
     const competingSchools = recruitingCompete.length ? recruitingCompete : rivalsCompete;
-    // Keep predictor list as prediction sources — do not replace with competitor RPM rows.
-    const predictors = override ? [] : ufPredictors.length ? ufPredictors : rivalsPredictors(slug, rivalsCompete);
+    // Keep predictor list as prediction sources — drop allowlist_seed placeholders.
+    const predictors = override
+      ? []
+      : (ufPredictors.length ? ufPredictors : rivalsPredictors(slug, rivalsCompete)).filter(
+          (x) => !/allowlist[_\s-]?seed/i.test(String(x?.name || ''))
+        );
     const trendDelta7dResolved = override
       ? 0
       : trendDelta7d;

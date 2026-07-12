@@ -99,10 +99,12 @@ export function HighPriorityTargetCard({
             ) : null}
             {!compact ? <UfTrendSparkline values={trendValues} /> : null}
           </div>
-          <div className="gv-hp-card__metric">
-            <span className="gv-hp-card__metric-label">{FC_METRIC_LABELS.staff}</span>
-            <strong>{formatStaffPercent(player.staffConfidence)}</strong>
-          </div>
+          {player.staffConfidence > 0 ? (
+            <div className="gv-hp-card__metric">
+              <span className="gv-hp-card__metric-label">{FC_METRIC_LABELS.staff}</span>
+              <strong>{formatStaffPercent(player.staffConfidence)}</strong>
+            </div>
+          ) : null}
           {!compact && (
             <div className="gv-hp-card__metric">
               <span className="gv-hp-card__metric-label">{FC_METRIC_LABELS.priority}</span>
@@ -137,14 +139,29 @@ export function HighPriorityTargetCard({
 
         {!compact && player.predictors.length > 0 && (
           <ul className="gv-hp-card__predictors">
-            {player.predictors.map((p) => (
-              <li key={p.name}>
-                {p.name}
-                {p.score > 0 ? ` · ${p.score}%` : ''}
-              </li>
-            ))}
+            {player.predictors
+              .filter((p) => !/allowlist[_\s-]?seed/i.test(p.name))
+              .map((p) => (
+                <li key={p.name}>
+                  {p.name}
+                  {p.score > 0 ? ` · ${p.score}%` : ''}
+                </li>
+              ))}
           </ul>
         )}
+        {!compact && (player.competingSchools?.length ?? 0) > 0 ? (
+          <p className="gv-hp-card__market" aria-label="On3 market board">
+            On3 market:{' '}
+            {[
+              player.ufRpmPct != null && player.ufRpmPct > 0 ? `UF ${Math.round(player.ufRpmPct)}%` : null,
+              ...(player.competingSchools ?? [])
+                .slice(0, 3)
+                .map((s) => `${s.name} ${Math.round(s.pct)}%`),
+            ]
+              .filter(Boolean)
+              .join(' · ')}
+          </p>
+        ) : null}
       </a>
       {!compact && (player.classYear ?? 0) >= 2027 ? (
         <a

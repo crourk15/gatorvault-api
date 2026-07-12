@@ -289,14 +289,54 @@ function allowlist2028Rank(slug: string): number {
 }
 
 function compareUnderclassmenHighPriority(a: HighPriorityPlayer, b: HighPriorityPlayer): number {
-  const allowA = allowlist2028Rank(a.slug);
-  const allowB = allowlist2028Rank(b.slug);
-  const aOnAllowlist = allowA < Number.MAX_SAFE_INTEGER;
-  const bOnAllowlist = allowB < Number.MAX_SAFE_INTEGER;
-  if (aOnAllowlist && !bOnAllowlist) return -1;
-  if (!aOnAllowlist && bOnAllowlist) return 1;
-  if (aOnAllowlist && bOnAllowlist && allowA !== allowB) return allowA - allowB;
-  return b.priorityScore - a.priorityScore;
+  // Rank by GatorVault priority / likelihood — not allowlist seed order.
+  const prio = (b.priorityScore ?? 0) - (a.priorityScore ?? 0);
+  if (prio !== 0) return prio;
+  const uf = (b.ufProbability ?? 0) - (a.ufProbability ?? 0);
+  if (uf !== 0) return uf;
+  return (b.fitScore ?? 0) - (a.fitScore ?? 0);
+}
+
+/** allowlist_seed baselines invent a flat +4Δ for every row — never show that as real momentum. */
+function sanitizeDiscoveryMovement(players: HighPriorityPlayer[]): HighPriorityPlayer[] {
+  if (!players.length) return players;
+  const nonzero = players.map((p) => Number(p.delta7d) || 0).filter((d) => d !== 0);
+  const uniform =
+    nonzero.length >= Math.min(3, players.length) && nonzero.every((d) => d === nonzero[0]);
+  if (!uniform && nonzero.length > 0) return players;
+  return players.map((p) => ({
+    ...p,
+    delta7d: 0,
+    movementDelta: 0,
+  }));
+}
+
+function isSeedPredictorName(name: string): boolean {
+  return /allowlist[_\s-]?seed/i.test(String(name || ''));
+}
+
+function buildDisplayPredictors(
+  raw: Array<{ name: string; score: number }>,
+  ufRpmPct: number | null
+): Array<{ name: string; score: number }> {
+  const out: Array<{ name: string; score: number }> = [];
+  if (ufRpmPct != null && ufRpmPct > 0) {
+    out.push({ name: 'On3 RPM', score: ufRpmPct });
+  }
+  for (const p of raw || []) {
+    if (!p?.name || isSeedPredictorName(p.name)) continue;
+    if (out.some((x) => x.name.toLowerCase() === String(p.name).toLowerCase())) continue;
+    out.push({ name: p.name, score: Number(p.score) || 0 });
+  }
+  return out.slice(0, 4);
+}
+
+function normalizeMovementPoints(raw: number | null | undefined): number {
+  if (raw == null || !Number.isFinite(Number(raw))) return 0;
+  const n = Number(raw);
+  // Stock/model sometimes store fractions (0.04); cards display whole percentage points.
+  if (Math.abs(n) > 0 && Math.abs(n) <= 1) return Math.round(n * 100);
+  return Math.round(n);
 }
 
 async function loadUnderclassmenHighPrioritySlugs(classYear: number): Promise<string[]> {
@@ -322,17 +362,20 @@ function boardPlayerToHighPriority(
 ): HighPriorityPlayer {
   const ufProbability = ufPctFromBoard(p.ufConfidence);
   const fitScore = Math.round(p.fitScore ?? 0);
-  const delta7d = p.trendDelta7d ?? 0;
+  const rawDelta = normalizeMovementPoints(p.trendDelta7d);
+  // Seed baseline gap is exactly ±4 across the board — treat as no real movement.
+  const delta7d = rawDelta === 4 || rawDelta === -4 ? 0 : rawDelta;
+  const ufRpmPct =
+    p.ufRpmPct != null && Number(p.ufRpmPct) > 0 ? Math.round(Number(p.ufRpmPct)) : null;
+  // Staff % only from real predictors — never fit×0.85 filler.
+  const realPredictors = (p.predictors ?? []).filter((x) => x?.name && !isSeedPredictorName(x.name));
+  const staffFromPredictors = realPredictors.find((x) => /rivals|staff|insider/i.test(x.name));
   const staffConfidence =
-    fitScore > 0 ? Math.min(100, Math.round(fitScore * 0.85)) : Math.round(ufProbability * 0.85);
+    staffFromPredictors && staffFromPredictors.score > 0
+      ? Math.round(staffFromPredictors.score)
+      : 0;
   const priorityScore =
-    Math.round(
-      (ufProbability * 0.5 +
-        fitScore * 0.2 +
-        staffConfidence * 0.2 +
-        Math.max(0, delta7d) * 0.1) *
-        100
-    ) / 100;
+    Math.round((ufProbability * 0.55 + fitScore * 0.3 + Math.max(0, delta7d) * 0.15) * 100) / 100;
 
   return {
     id: p.id,
@@ -354,7 +397,7 @@ function boardPlayerToHighPriority(
     posRank: p.posRank ?? null,
     ufProbability,
     ufProbabilitySource: p.ufProbabilitySource,
-    ufProbabilityLabel: p.ufProbabilityLabel ?? null,
+    ufProbabilityLabel: p.ufProbabilityLabel ?? 'GV',
     ufProbabilityLowConfidence: p.ufProbabilityLowConfidence ?? false,
     movementDelta: delta7d,
     delta7d,
@@ -369,25 +412,20 @@ function boardPlayerToHighPriority(
     visitStart: null,
     visitEnd: null,
     trendHistory: [],
-    predictors: (p.predictors ?? []).map((x) => ({ name: x.name, score: x.score })),
+    predictors: buildDisplayPredictors(p.predictors ?? [], ufRpmPct),
     competingSchools: (p.competingSchools ?? [])
       .filter((s) => s?.name && Number(s.pct) > 0)
       .map((s) => ({ name: s.name, pct: Number(s.pct) })),
-    ufRpmPct:
-      p.ufRpmPct != null && Number(p.ufRpmPct) > 0 ? Math.round(Number(p.ufRpmPct)) : null,
+    ufRpmPct,
   };
 }
 
 async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   const slugs = await loadUnderclassmenHighPrioritySlugs(classYear);
   const board = slugs.length ? await loadUnderclassmenBoardPlayers(classYear, slugs) : [];
-  const sorted = board
-    .map(boardPlayerToHighPriority)
-    .sort(
-      classYear === 2028
-        ? compareUnderclassmenHighPriority
-        : (a, b) => b.priorityScore - a.priorityScore
-    );
+  const mapped = board.map(boardPlayerToHighPriority);
+  const cleaned = sanitizeDiscoveryMovement(mapped);
+  const sorted = [...cleaned].sort(compareUnderclassmenHighPriority);
   const top10 = sorted.slice(0, HIGH_PRIORITY_UNDERCLASSMEN_LIMIT);
   const lastUpdated = new Date().toISOString();
   const visitBoardSnapshot = getVisitIntelBoardSnapshot([]);

@@ -47,7 +47,15 @@ export function ClassTargetsPage({ year }: Props): React.ReactElement {
     return map;
   }, [data?.movementNarratives]);
 
-  const players = data?.players ?? [];
+  const players = useMemo(() => {
+    const list = [...(data?.players ?? [])];
+    list.sort((a, b) => {
+      const prio = (b.priorityScore ?? 0) - (a.priorityScore ?? 0);
+      if (prio !== 0) return prio;
+      return (b.ufProbability ?? 0) - (a.ufProbability ?? 0);
+    });
+    return list;
+  }, [data?.players]);
 
   return (
     <RecruitingClassYearProvider initialYear={year}>
@@ -61,8 +69,8 @@ export function ClassTargetsPage({ year }: Props): React.ReactElement {
           <section>
             <h2 className="rh-panel-title">{year} Target Board</h2>
             <p className="rh-muted">
-              UF discovery targets ranked by fit, momentum, and visit intel — with movement narratives
-              where available.
+              UF discovery targets ranked by GatorVault priority (likelihood + fit). On3 RPM shown as
+              market context — movement only when real deltas exist.
             </p>
             {data?.updatedAt ? (
               <p className="rh-muted">Updated {new Date(data.updatedAt).toLocaleString()}</p>
