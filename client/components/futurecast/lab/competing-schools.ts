@@ -89,3 +89,23 @@ export function competingSchoolsLabel(segments: CompetingSchoolSegment[]): strin
   if (!segments.length) return '';
   return segments.map((s) => `${s.name} ${s.absPct}%`).join(' · ');
 }
+
+/**
+ * Single biggest non-Florida threat from the On3 market board.
+ * Returns null when no confirmed competitor % exists (no fake rivals).
+ */
+export function topThreatVsFlorida(
+  player: FcLabTarget
+): { name: string; label: string; pct: number } | null {
+  if (player.committedTo && isFlorida(player.committedTo)) return null;
+
+  const top = (player.competingSchools ?? [])
+    .filter((s) => s?.name && Number(s.pct) > 0 && !isFlorida(s.name))
+    .sort((a, b) => Number(b.pct) - Number(a.pct))[0];
+
+  if (!top) return null;
+  const pct = Math.round(Number(top.pct));
+  if (!Number.isFinite(pct) || pct <= 0) return null;
+  const label = shortSchoolLabel(String(top.name).trim());
+  return { name: String(top.name).trim(), label, pct };
+}

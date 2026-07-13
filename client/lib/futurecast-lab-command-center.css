@@ -1990,6 +1990,11 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
   text-align: right;
 }
 
+.fc-lab-battle-row__threat {
+  font-weight: 600;
+  color: #9a3412;
+}
+
 @media (max-width: 1100px) {
   .fc-lab-desktop-board {
     grid-template-columns: 1fr;

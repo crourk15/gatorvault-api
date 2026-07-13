@@ -12,6 +12,7 @@ import {
   ufPctFromFc,
 } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
+import { topThreatVsFlorida } from './competing-schools';
 
 type Tab = 'battles' | 'lean-uf' | 'lean-elsewhere';
 
@@ -54,6 +55,7 @@ function BattleRowCompact({
   const delta = showMovement ? Math.round(player.delta7d ?? 0) : 0;
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
   const meta = TAB_META[tab];
+  const threat = topThreatVsFlorida(player);
 
   return (
     <a
@@ -69,6 +71,12 @@ function BattleRowCompact({
         </div>
         <span className="fc-lab-battle-row__meta">
           {player.position} · {player.school ?? '—'}
+          {threat ? (
+            <span className="fc-lab-battle-row__threat">
+              {' '}
+              · vs {threat.label} {threat.pct}%
+            </span>
+          ) : null}
         </span>
       </div>
       <div className="fc-lab-battle-row__right">
@@ -140,7 +148,7 @@ export function FutureCastBattlesPanel({
 
   const title = discoveryFocus ? `${focusYear} Battles` : 'Battles';
   const sub = compact
-    ? 'Chase buckets — name and Florida odds only'
+    ? 'Florida odds + the top rival threat'
     : 'Battle · leaning Florida · leaning elsewhere';
 
   return (
