@@ -1,7 +1,7 @@
 {
-  "version": 1,
-  "updatedAt": "2026-07-13T02:13:37.402Z",
-  "description": "FutureCast younger prospects watchboard — 2029–2030 only (2028 locked targets live on allowlist / high-priority / Early Discovery)",
+  "version": 2,
+  "updatedAt": "2026-07-13T15:30:00.000Z",
+  "description": "FutureCast younger prospects watchboard — identity only. No seeded stars, UF%, fit, or competitor theater until real board ratings exist.",
   "entries": [
     {
       "slug": "young-fl-qb-2030",
@@ -10,19 +10,7 @@
       "tier": "watchlist",
       "pos": "QB",
       "school": "Lake Wales HS, FL",
-      "state": "FL",
-      "stars": 3,
-      "rating": 86.5,
-      "ufProbability": 0.18,
-      "fitScore": 68,
-      "discoveryScore": 58,
-      "earlyMovement": 0.01,
-      "competingSchools": [
-        {
-          "name": "Florida",
-          "pct": 15
-        }
-      ]
+      "state": "FL"
     },
     {
       "slug": "young-fl-wr-2030",
@@ -31,19 +19,7 @@
       "tier": "watchlist",
       "pos": "WR",
       "school": "St. Thomas Aquinas, FL",
-      "state": "FL",
-      "stars": 3,
-      "rating": 85.8,
-      "ufProbability": 0.15,
-      "fitScore": 65,
-      "discoveryScore": 55,
-      "earlyMovement": 0,
-      "competingSchools": [
-        {
-          "name": "Florida",
-          "pct": 12
-        }
-      ]
+      "state": "FL"
     },
     {
       "slug": "young-fl-ath-2030",
@@ -52,23 +28,7 @@
       "tier": "watchlist",
       "pos": "ATH",
       "school": "Edgewater HS, Orlando FL",
-      "state": "FL",
-      "stars": 3,
-      "rating": 87.2,
-      "ufProbability": 0.22,
-      "fitScore": 70,
-      "discoveryScore": 62,
-      "earlyMovement": 0.02,
-      "competingSchools": [
-        {
-          "name": "Florida",
-          "pct": 18
-        },
-        {
-          "name": "Florida State",
-          "pct": 14
-        }
-      ]
+      "state": "FL"
     },
     {
       "slug": "young-fl-dl-2030",
@@ -77,19 +37,7 @@
       "tier": "watchlist",
       "pos": "DL",
       "school": "Carol City HS, FL",
-      "state": "FL",
-      "stars": 3,
-      "rating": 86,
-      "ufProbability": 0.2,
-      "fitScore": 67,
-      "discoveryScore": 60,
-      "earlyMovement": 0.01,
-      "competingSchools": [
-        {
-          "name": "Florida",
-          "pct": 16
-        }
-      ]
+      "state": "FL"
     },
     {
       "slug": "young-fl-lb-2030",
@@ -98,19 +46,7 @@
       "tier": "watchlist",
       "pos": "LB",
       "school": "Chaminade-Madonna, FL",
-      "state": "FL",
-      "stars": 3,
-      "rating": 85.5,
-      "ufProbability": 0.17,
-      "fitScore": 64,
-      "discoveryScore": 57,
-      "earlyMovement": 0,
-      "competingSchools": [
-        {
-          "name": "Florida",
-          "pct": 14
-        }
-      ]
+      "state": "FL"
     },
     {
       "slug": "young-fl-rb-2030",
@@ -119,19 +55,7 @@
       "tier": "watchlist",
       "pos": "RB",
       "school": "Apopka HS, FL",
-      "state": "FL",
-      "stars": 3,
-      "rating": 86.8,
-      "ufProbability": 0.19,
-      "fitScore": 66,
-      "discoveryScore": 59,
-      "earlyMovement": 0.01,
-      "competingSchools": [
-        {
-          "name": "Florida",
-          "pct": 15
-        }
-      ]
+      "state": "FL"
     }
   ]
 }

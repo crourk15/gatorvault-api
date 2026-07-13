@@ -97,11 +97,16 @@ type EarlyWatchEntry = {
   tier?: string;
   pos?: string;
   position?: string;
+  school?: string;
+  state?: string;
+  /** @deprecated Seed metrics — ignored for fan display; real board/recruiting only. */
   ufProbability?: number;
   fitScore?: number;
   discoveryScore?: number;
   earlyMovement?: number;
   competingSchools?: Array<{ name: string; pct: number }>;
+  stars?: number;
+  rating?: number;
 };
 
 function namespaceBytes(uuid: string): Buffer {
@@ -387,11 +392,12 @@ function buildMinimalBoardPlayer(
     name: String(board?.name || entry?.name || slug),
     classYear: Number(board?.classYear ?? entry?.classYear ?? classYear),
     position: position || 'TBD',
-    school: (board?.school as string) ?? (entry as { school?: string }).school ?? null,
+    school: (board?.school as string) ?? entry?.school ?? null,
     hometown: null,
-    state: (board?.state as string) ?? (entry as { state?: string }).state ?? null,
+    state: (board?.state as string) ?? entry?.state ?? null,
     composite: Math.round(Number(board?.rating ?? 0) * 100) / 100,
-    stars: Number(board?.stars ?? (entry as { stars?: number }).stars ?? 0) || 0,
+    // Never trust seed-file stars — only target-board / recruiting ratings.
+    stars: Number(board?.stars ?? 0) || 0,
     natlRank: (board?.natlRank as number) ?? null,
     posRank: (board?.posRank as number) ?? null,
     stateRank: (board?.stateRank as number) ?? null,
@@ -428,18 +434,13 @@ async function buildSeedBoardPlayerFromRecruiting(
     .toUpperCase();
 
   const recruitingRecord = recruiting as Record<string, unknown> | null | undefined;
-  const competingSchools =
-    entry?.competingSchools?.length
-      ? entry.competingSchools
-      : competingSchoolsFromRecruitingRecord(recruitingRecord);
+  const competingSchools = competingSchoolsFromRecruitingRecord(recruitingRecord);
   const rpmPct = parseRecruitingUfPct(recruiting?.ufRpmPct);
-  const storePct = parseRecruitingUfPct(recruiting?.ufProbability ?? entry?.ufProbability);
+  const storePct = parseRecruitingUfPct(recruiting?.ufProbability);
   const fitScore =
     recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
       ? Number(recruiting.fitScore)
-      : entry?.fitScore != null && Number(entry.fitScore) > 0
-        ? Number(entry.fitScore)
-        : null;
+      : null;
   const { resolveGatorVaultLikelihood } = require('./uf-probability-utils');
   const resolved = resolveGatorVaultLikelihood({
     modelPct: 0,
@@ -460,9 +461,9 @@ async function buildSeedBoardPlayerFromRecruiting(
     name: String(recruiting?.name || board?.name || entry?.name || slug),
     classYear: Number(recruiting?.classYear ?? board?.classYear ?? entry?.classYear ?? classYear),
     position: position || 'TBD',
-    school: recruiting?.highSchool ?? (board?.school as string) ?? null,
+    school: recruiting?.highSchool ?? (board?.school as string) ?? entry?.school ?? null,
     hometown: recruiting?.hometown ?? null,
-    state: recruiting?.state ?? (board?.state as string) ?? null,
+    state: recruiting?.state ?? (board?.state as string) ?? entry?.state ?? null,
     composite: Math.round(Number(recruiting?.rating ?? board?.rating ?? 0) * 100) / 100,
     stars: Number(recruiting?.stars ?? board?.stars ?? 0) || 0,
     natlRank: recruiting?.natlRank ?? (board?.natlRank as number) ?? null,
@@ -551,17 +552,13 @@ function enrichPlayerFromRecruitingStore(
   entry?: EarlyWatchEntry
 ): FutureCastBoardPlayer {
   const recruitingRecord = recruiting as Record<string, unknown> | null | undefined;
-  const storeCompete = entry?.competingSchools?.length
-    ? entry.competingSchools
-    : competingSchoolsFromRecruitingRecord(recruitingRecord);
+  const storeCompete = competingSchoolsFromRecruitingRecord(recruitingRecord);
   const ufRpmPct =
     parseRecruitingUfPct(recruiting?.ufRpmPct) ?? player.ufRpmPct ?? null;
   const storeFit =
     recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
       ? Number(recruiting.fitScore)
-      : entry?.fitScore != null && Number(entry.fitScore) > 0
-        ? Number(entry.fitScore)
-        : null;
+      : null;
 
   // Prefer confirmed On3 competitor RPM over rivals/model filler boards.
   const competingSchools = storeCompete.length
