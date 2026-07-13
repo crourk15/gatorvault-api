@@ -1,9 +1,8 @@
 /** UF Premium Team Page — tab ids, metrics, shared types */
 
 export type TeamPremiumTabId =
-  | 'overview'
-  | 'roster'
   | 'depth-chart'
+  | 'roster'
   | 'coaching-staff'
   | 'team-identity'
   | 'program-history'
@@ -14,10 +13,10 @@ export type TeamPremiumTab = {
   label: string;
 };
 
+/** Fan-first order: depth chart is the main event. */
 export const TEAM_PREMIUM_TABS: TeamPremiumTab[] = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'roster', label: 'Roster' },
   { id: 'depth-chart', label: 'Depth Chart' },
+  { id: 'roster', label: 'Roster' },
   { id: 'coaching-staff', label: 'Coaching Staff' },
   { id: 'team-identity', label: 'Team Identity' },
   { id: 'program-history', label: 'Program History' },
@@ -31,6 +30,7 @@ export type TeamHeroMetric = {
   hint?: string;
 };
 
+/** @deprecated Overview analytics removed — kept for unused module compile. */
 export type TeamSnapshotMetric = {
   id: string;
   label: string;
@@ -39,6 +39,7 @@ export type TeamSnapshotMetric = {
   detail?: string;
 };
 
+/** @deprecated */
 export type PositionRoomHealth = {
   id: string;
   label: string;
@@ -47,6 +48,7 @@ export type PositionRoomHealth = {
   status: 'strong' | 'watch' | 'concern';
 };
 
+/** @deprecated */
 export type PortalSnapshotData = {
   additions: { count: number; nilRange: string };
   losses: { count: number; nilRange: string };

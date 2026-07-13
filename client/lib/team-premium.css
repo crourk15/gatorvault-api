@@ -160,7 +160,7 @@
   z-index: 1;
 }
 
-/* 3×2 premium metrics grid */
+/* Hero pulse — one honest line, not a 6-tile dashboard */
 .team-premium-page .team-premium-hero__metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -168,6 +168,20 @@
   margin-top: var(--gv-space-5, 24px);
   width: 100%;
   max-width: 56rem;
+}
+
+.team-premium-page .team-premium-hero__metrics--pulse {
+  grid-template-columns: 1fr;
+  max-width: 36rem;
+}
+
+.team-premium-page .team-premium-hero__metric--pulse {
+  min-height: 64px;
+}
+
+.team-premium-page .team-premium-hero__metric--pulse .team-premium-hero__metric-value {
+  font-size: 1rem;
+  letter-spacing: 0.01em;
 }
 
 .team-premium-page .team-premium-hero__metric {
@@ -820,6 +834,11 @@
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: var(--gv-space-4, 16px);
   margin-bottom: var(--gv-space-4, 16px);
+}
+
+.team-premium-page .team-pipeline-metrics--lean {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 40rem;
 }
 
 .team-premium-page .team-pipeline-metrics__card {

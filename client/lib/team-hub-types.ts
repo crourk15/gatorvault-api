@@ -110,34 +110,32 @@ export const TEAM_COPY = {
   footer: {
     title: 'Team Resources',
     links: [
-      { href: '#program-history', label: 'Program History' },
-      { href: '#coaching-staff', label: 'Coaching Staff' },
-      { href: '#roster', label: 'Full Roster' },
       { href: '#depth-chart', label: 'Depth Chart' },
+      { href: '#roster', label: 'Full Roster' },
+      { href: '#coaching-staff', label: 'Coaching Staff' },
+      { href: '#program-history', label: 'Program History' },
     ],
   },
 } as const;
 
 export const TEAM_QUICK_ACTIONS = [
-  { href: '#roster', icon: '👥', label: 'Full Roster' },
   { href: '#depth-chart', icon: '📋', label: 'Depth Chart' },
+  { href: '#roster', icon: '👥', label: 'Full Roster' },
   { href: '#coaching-staff', icon: '🏈', label: 'Coaching Staff' },
   { href: '#program-history', icon: '📜', label: 'Program History' },
 ] as const;
 
 export type TeamTab =
-  | 'overview'
-  | 'roster'
   | 'depth-chart'
+  | 'roster'
   | 'coaching-staff'
   | 'team-identity'
   | 'program-history'
   | 'recruiting-pipeline';
 
 export const TEAM_TABS: { id: TeamTab; label: string }[] = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'roster', label: 'Roster' },
   { id: 'depth-chart', label: 'Depth Chart' },
+  { id: 'roster', label: 'Roster' },
   { id: 'coaching-staff', label: 'Coaching Staff' },
   { id: 'team-identity', label: 'Team Identity' },
   { id: 'program-history', label: 'Program History' },

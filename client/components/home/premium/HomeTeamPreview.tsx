@@ -2,17 +2,14 @@
 
 import React from 'react';
 import type { TeamHubBundle } from '@/lib/team-hub-api';
-import {
-  computeHeroMetrics,
-  computePortalSnapshot,
-  computeSnapshotMetrics,
-} from '@/components/team/premium/team-premium-metrics';
+import { computeHeroMetrics } from '@/components/team/premium/team-premium-metrics';
 
 type Props = {
   bundle: TeamHubBundle | null;
   loading?: boolean;
 };
 
+/** Home teaser — honest roster / depth stats only. */
 export function HomeTeamPreview({ bundle, loading }: Props): React.ReactElement {
   if (loading || !bundle) {
     return (
@@ -26,21 +23,12 @@ export function HomeTeamPreview({ bundle, loading }: Props): React.ReactElement 
   }
 
   const hero = computeHeroMetrics(bundle);
-  const snapshot = computeSnapshotMetrics();
-  const portal = computePortalSnapshot(bundle);
-
-  const scholarship = hero.find((m) => m.id === 'scholarships')?.value ?? '—';
-  const returning = snapshot.find((m) => m.id === 'returning')?.value ?? '—';
-  const blueChip = snapshot.find((m) => m.id === 'bcr')?.value ?? '—';
-  const portalNet =
-    portal.netImpact >= 0 ? `+${portal.netImpact.toFixed(1)}` : portal.netImpact.toFixed(1);
-
   const metrics = [
-    { label: 'Scholarship Count', value: scholarship },
-    { label: 'Returning Production', value: returning },
-    { label: 'Blue-Chip Ratio', value: blueChip },
-    { label: 'Portal Net Rating', value: portalNet },
-  ];
+    hero.find((m) => m.id === 'scholarships'),
+    hero.find((m) => m.id === 'locked'),
+    hero.find((m) => m.id === 'battles'),
+    hero.find((m) => m.id === 'portal-add'),
+  ].filter(Boolean) as { label: string; value: string }[];
 
   return (
     <div className="uf-premium-grid uf-premium-grid--4" data-testid="home-team-preview">

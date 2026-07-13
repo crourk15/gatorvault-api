@@ -2,13 +2,7 @@ import type { TeamHubBundle } from '@/lib/team-hub-api';
 import type { RecruitingBoardResponse } from '@/lib/recruiting-board-api';
 import type { MasterBoardResponse } from '@/lib/futurecast-board-types';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
-import type {
-  PipelinePreviewData,
-  PortalSnapshotData,
-  PositionRoomHealth,
-  TeamHeroMetric,
-  TeamSnapshotMetric,
-} from './team-premium-types';
+import type { PipelinePreviewData, TeamHeroMetric } from './team-premium-types';
 import {
   buildFutureCastSlugMap,
   commitCompositeRating,
@@ -16,49 +10,46 @@ import {
   ufPctFromRaw,
 } from './team-pipeline-utils';
 
+/**
+ * One honest hero pulse from real depth-chart / roster stats — no cosplay grades.
+ */
+export function computeHeroPulse(bundle: TeamHubBundle): TeamHeroMetric {
+  const { rosterCount, startersLocked, positionBattles, updatedLabel } = bundle.commandStats;
+  const parts: string[] = [];
+  if (rosterCount > 0) parts.push(`${rosterCount} on roster`);
+  if (startersLocked > 0) parts.push(`${startersLocked} locked`);
+  if (positionBattles > 0) parts.push(`${positionBattles} battles`);
+  const value = parts.length ? parts.join(' · ') : 'Depth chart loading';
+  return {
+    id: 'pulse',
+    label: updatedLabel && updatedLabel !== '—' ? `Updated ${updatedLabel}` : 'Team pulse',
+    value,
+  };
+}
+
+/** @deprecated Prefer computeHeroPulse — kept for home preview migration. */
 export function computeHeroMetrics(bundle: TeamHubBundle): TeamHeroMetric[] {
-  const scholarshipCount = bundle.commandStats.rosterCount;
+  const pulse = computeHeroPulse(bundle);
   const portalAdditions = bundle.roster.filter((p) => p.tags?.includes('portal')).length;
   return [
-    { id: 'scholarships', label: 'Scholarship Count', value: String(scholarshipCount) },
-    { id: 'returning-prod', label: 'Returning Production', value: '58%', hint: '2026 returning snaps' },
-    { id: 'blue-chip', label: 'Blue-Chip Ratio', value: '42%', hint: '4★+ on roster' },
-    { id: 'portal-add', label: 'Portal Additions', value: String(portalAdditions || 7) },
-    { id: 'portal-loss', label: 'Portal Losses', value: '4' },
-    { id: 'nil-value', label: 'NIL Valuation', value: '$28.4M' },
+    { id: 'scholarships', label: 'On roster', value: String(bundle.commandStats.rosterCount || '—') },
+    {
+      id: 'locked',
+      label: 'Starters locked',
+      value: String(bundle.commandStats.startersLocked || '—'),
+    },
+    {
+      id: 'battles',
+      label: 'Position battles',
+      value: String(bundle.commandStats.positionBattles || '—'),
+    },
+    {
+      id: 'portal-add',
+      label: 'Portal additions',
+      value: portalAdditions > 0 ? String(portalAdditions) : '—',
+    },
+    pulse,
   ];
-}
-
-export function computeSnapshotMetrics(classYear = primaryRecruitingClassYear()): TeamSnapshotMetric[] {
-  return [
-    { id: 'bcr', label: 'Blue-Chip Ratio', value: '42%', trend: 'up', detail: 'SEC avg: 38%' },
-    { id: 'returning', label: 'Returning Production', value: '58%', trend: 'flat', detail: 'Top-25 nationally' },
-    { id: 'portal-net', label: 'Portal Net Rating', value: '+3.2', trend: 'up', detail: 'Gains outweigh losses' },
-    { id: 'nil-comp', label: 'NIL Competitiveness', value: 'B+', trend: 'up', detail: 'Top-15 SEC NIL spend' },
-    { id: 'recruit-mom', label: 'Recruiting Momentum', value: 'Warm', trend: 'up', detail: `${classYear} class trending` },
-    { id: 'sos', label: 'Strength of Schedule', value: '#8', trend: 'flat', detail: '2026 projected' },
-  ];
-}
-
-export function computePositionRoomHealth(): PositionRoomHealth[] {
-  return [
-    { id: 'qb', label: 'QB Room Stability', score: 78, status: 'strong' },
-    { id: 'ol', label: 'OL Depth', score: 62, status: 'watch' },
-    { id: 'dl', label: 'DL Talent Index', score: 85, status: 'strong' },
-    { id: 'db', label: 'DB Experience', score: 71, status: 'watch' },
-    { id: 'wrte', label: 'WR/TE Production', score: 74, status: 'strong' },
-    { id: 'lb', label: 'LB Athleticism', score: 88, status: 'strong' },
-  ];
-}
-
-export function computePortalSnapshot(bundle: TeamHubBundle): PortalSnapshotData {
-  const additions = bundle.roster.filter((p) => p.tags?.includes('portal')).length || 7;
-  return {
-    additions: { count: additions, nilRange: '$180K–$1.2M' },
-    losses: { count: 4, nilRange: '$95K–$680K' },
-    netImpact: 3.2,
-    positionStrength: 'DL +2, DB +1, OL −1',
-  };
 }
 
 export function buildPipelinePreview(

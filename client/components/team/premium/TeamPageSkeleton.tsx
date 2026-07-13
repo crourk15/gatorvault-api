@@ -25,17 +25,10 @@ export function TeamRosterSkeleton({ count = 8 }: { count?: number }): React.Rea
 
 export function TeamHeroMetricsSkeleton(): React.ReactElement {
   return (
-    <>
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="rh-cc-hero__metric team-premium-hero__metric team-premium-skeleton__metric"
-        >
-          <span className="team-premium-skeleton__line team-premium-skeleton__line--value" />
-          <span className="team-premium-skeleton__line team-premium-skeleton__line--label" />
-        </div>
-      ))}
-    </>
+    <div className="rh-cc-hero__metric team-premium-hero__metric team-premium-hero__metric--pulse team-premium-skeleton__metric">
+      <span className="team-premium-skeleton__line team-premium-skeleton__line--value" />
+      <span className="team-premium-skeleton__line team-premium-skeleton__line--label" />
+    </div>
   );
 }
 
