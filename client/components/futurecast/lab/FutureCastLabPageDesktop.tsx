@@ -123,6 +123,8 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
             movementNarratives={data.movementNarratives}
             staffNotes={data.staffNotes}
             underclassmen={data.underclassmen}
+            roster={data.roster}
+            commits2027={data.commits2027}
           />
         )}
       </section>

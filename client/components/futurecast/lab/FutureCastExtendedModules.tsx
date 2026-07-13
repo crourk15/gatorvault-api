@@ -14,6 +14,10 @@ import { FutureCastPanelShell } from './primitives';
 import { GatorVaultConfirmedBadge } from './GatorVaultConfirmedBadge';
 import { FlipWatchScoreStack } from './FlipWatchScoreStack';
 import { UfTrendSparkline } from '@/components/futurecast/UfTrendSparkline';
+import type { RosterPlayer } from '@/lib/roster-api';
+import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
+import { buildPositionNeedBoard } from '@/lib/fc-position-need-board';
+import { buildSchemeMatchLeaders } from '@/lib/scheme-match-leaders';
 import { PlayerIntelTimelineStrip } from './PlayerIntelTimelineStrip';
 import { ufPctFromFc } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
@@ -41,6 +45,8 @@ type Props = {
   flipWatch?: FlipWatchRow[];
   movementNarratives?: MovementNarrativeRow[];
   underclassmen: UnderclassmenPlayer[];
+  roster?: RosterPlayer[];
+  commits2027?: RecruitingBoardPlayer[];
 };
 
 function formatUfDisplay(
@@ -205,30 +211,40 @@ export function FutureCastExtendedModules({
   flipWatch = [],
   movementNarratives = [],
   underclassmen,
+  roster = [],
+  commits2027 = [],
 }: Props): React.ReactElement {
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const discoveryYear = discoveryFocus ? 2028 : 2027;
 
-  const fitLeaders = useMemo(() => {
-    if (discoveryFocus) {
-      return [...highPriority]
-        .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0))
-        .slice(0, 3);
-    }
-    return highPriority.slice(0, 3);
-  }, [discoveryFocus, highPriority]);
+  const needTierByPos = useMemo(() => {
+    const board = buildPositionNeedBoard({
+      roster,
+      commits2027,
+      boardPlayers: discoveryFocus && highPriority.length ? highPriority : masterBoard.players,
+      boardClassYear: discoveryYear,
+      commitClassYear: 2027,
+    });
+    const map: Record<string, (typeof board.rows)[number]['needTier']> = {};
+    for (const row of board.rows) map[row.position] = row.needTier;
+    return map;
+  }, [roster, commits2027, discoveryFocus, highPriority, masterBoard.players, discoveryYear]);
 
-  const sciLeaders = useMemo(() => {
-    if (discoveryFocus) {
-      return [...highPriority]
-        .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0))
-        .slice(0, 6);
-    }
-    return highPriority
-      .slice()
-      .sort((a, b) => (b.staffConfidence ?? 0) - (a.staffConfidence ?? 0))
-      .slice(0, 6);
-  }, [discoveryFocus, highPriority]);
+  const schemeMatches = useMemo(
+    () => buildSchemeMatchLeaders(highPriority, needTierByPos, 5),
+    [highPriority, needTierByPos]
+  );
+
+  const fitLeaders = useMemo(() => highPriority.slice(0, 3), [highPriority]);
+
+  const sciLeaders = useMemo(
+    () =>
+      highPriority
+        .slice()
+        .sort((a, b) => (b.staffConfidence ?? 0) - (a.staffConfidence ?? 0))
+        .slice(0, 6),
+    [highPriority]
+  );
 
   const youngerProspectGroups = useMemo(
     () =>
@@ -432,58 +448,86 @@ export function FutureCastExtendedModules({
         )}
       </FutureCastPanelShell>
 
-      <FutureCastPanelShell
-        title={discoveryFocus ? '2028 Fit Score Breakdown' : 'Fit Score Breakdown'}
-        sub={
-          discoveryFocus
-            ? 'Scheme and roster-fit leaders on locked underclassmen targets.'
-            : 'Scheme, staff, and roster-fit leaders.'
-        }
-        testId="fc-lab-fit-breakdown"
-      >
-        {fitLeaders.length === 0 ? (
-          <p className="rh-cc-empty">Fit breakdown unavailable.</p>
-        ) : (
-          fitLeaders.map((p) => (
-            <div key={p.slug} className="fc-lab-fit-card">
-              <p className="fc-lab-fit-card__name">
-                {p.name} · {p.position}
-              </p>
-              <FitBar label="Scheme / Fit" value={p.fitScore ?? 0} />
-              {!discoveryFocus ? (
-                <FitBar label="Staff confidence" value={p.staffConfidence ?? 0} />
-              ) : null}
-              <FitBar label="UF likelihood" value={p.ufProbability ?? 0} />
-              {(p.trendHistory?.length ?? 0) >= 2 ? (
-                <UfTrendSparkline values={p.trendHistory.map((point) => point.confidence)} />
-              ) : null}
-              <FitBar label="Momentum" value={Math.max(0, Math.min(100, (p.movementDelta ?? 0) + 50))} />
-            </div>
-          ))
-        )}
-      </FutureCastPanelShell>
+      {discoveryFocus ? (
+        <FutureCastPanelShell
+          title="Best scheme matches on the 2028 board"
+          sub="Who fits what Florida needs — not who On3 ranks highest."
+          testId="fc-lab-scheme-matches"
+        >
+          {schemeMatches.length === 0 ? (
+            <p className="rh-cc-empty">No scheme-fit leaders loaded yet.</p>
+          ) : (
+            <ul className="fc-lab-scheme-match-list">
+              {schemeMatches.map((row) => (
+                <li key={row.slug} className="fc-lab-scheme-match">
+                  <a href={playerProfileRoute(row.slug, 'futurecast')} className="fc-lab-scheme-match__link">
+                    <div className="fc-lab-scheme-match__head">
+                      <strong className="fc-lab-scheme-match__name">{row.name}</strong>
+                      <span className={`fc-lab-scheme-match__band fc-lab-scheme-match__band--${row.fitBand}`}>
+                        {row.fitLabel}
+                      </span>
+                    </div>
+                    <p className="fc-lab-scheme-match__meta">
+                      {row.position}
+                      {row.school ? ` · ${row.school}` : ''}
+                    </p>
+                    <p className="fc-lab-scheme-match__why">{row.why}</p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </FutureCastPanelShell>
+      ) : (
+        <>
+          <FutureCastPanelShell
+            title="Fit Score Breakdown"
+            sub="Scheme, staff, and roster-fit leaders."
+            testId="fc-lab-fit-breakdown"
+          >
+            {fitLeaders.length === 0 ? (
+              <p className="rh-cc-empty">Fit breakdown unavailable.</p>
+            ) : (
+              fitLeaders.map((p) => {
+                const move = Number(p.movementDelta ?? p.delta7d ?? 0);
+                const showMomentum = Number.isFinite(move) && Math.abs(move) >= 0.5;
+                return (
+                  <div key={p.slug} className="fc-lab-fit-card">
+                    <p className="fc-lab-fit-card__name">
+                      {p.name} · {p.position}
+                    </p>
+                    <FitBar label="Scheme / Fit" value={p.fitScore ?? 0} />
+                    <FitBar label="Staff confidence" value={p.staffConfidence ?? 0} />
+                    <FitBar label="UF likelihood" value={p.ufProbability ?? 0} />
+                    {(p.trendHistory?.length ?? 0) >= 2 ? (
+                      <UfTrendSparkline values={p.trendHistory.map((point) => point.confidence)} />
+                    ) : null}
+                    {showMomentum ? (
+                      <FitBar label="Momentum" value={Math.max(0, Math.min(100, move + 50))} />
+                    ) : null}
+                  </div>
+                );
+              })
+            )}
+          </FutureCastPanelShell>
 
-      <FutureCastPanelShell
-        title={discoveryFocus ? '2028 Fit Leaders' : 'Staff Confidence Index (SCI)'}
-        sub={
-          discoveryFocus
-            ? 'Top scheme-fit scores on locked 2028 targets.'
-            : 'Analyst conviction on top targets.'
-        }
-        testId="fc-lab-sci"
-      >
-        <ModuleList
-          empty={discoveryFocus ? 'No 2028 fit scores loaded.' : 'SCI data unavailable.'}
-          items={sciLeaders.map((p) => ({
-            key: p.slug,
-            primary: p.name,
-            meta: discoveryFocus
-              ? `Fit ${Math.round(p.fitScore ?? 0)} · UF ${formatUfDisplay(p)}`
-              : `SCI ${Math.round(p.staffConfidence ?? 0)} · UF ${formatUfDisplay(p)}`,
-            href: playerProfileRoute(p.slug, 'futurecast'),
-          }))}
-        />
-      </FutureCastPanelShell>
+          <FutureCastPanelShell
+            title="Staff Confidence Index (SCI)"
+            sub="Analyst conviction on top targets."
+            testId="fc-lab-sci"
+          >
+            <ModuleList
+              empty="SCI data unavailable."
+              items={sciLeaders.map((p) => ({
+                key: p.slug,
+                primary: p.name,
+                meta: `SCI ${Math.round(p.staffConfidence ?? 0)} · UF ${formatUfDisplay(p)}`,
+                href: playerProfileRoute(p.slug, 'futurecast'),
+              }))}
+            />
+          </FutureCastPanelShell>
+        </>
+      )}
 
       {!discoveryFocus ? (
       <>
