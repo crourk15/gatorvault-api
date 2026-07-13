@@ -2180,6 +2180,19 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
   text-decoration: underline;
 }
 
+.fc-lab-younger-cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 28px;
+  align-items: start;
+}
+
+@media (max-width: 767px) {
+  .fc-lab-younger-cols {
+    grid-template-columns: 1fr;
+  }
+}
+
 .fc-lab-younger-groups {
   display: flex;
   flex-direction: column;

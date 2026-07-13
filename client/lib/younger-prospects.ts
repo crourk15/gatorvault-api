@@ -1,3 +1,5 @@
+import { formatRecruitSchoolLabel } from './recruiting-display-utils';
+
 /**
  * Younger Prospects — 2029 / 2030 watchboard helpers.
  * Group by class year (no interleaved soup). Cap each stack. Hide filler metrics.
@@ -11,10 +13,10 @@ export const YOUNGER_PROSPECT_HUB_CAPS: Record<number, number> = {
   2030: 6,
 };
 
-/** Lab denser lists — still capped so one year cannot dominate. */
+/** Lab denser lists — short stacks so neither year dominates. */
 export const YOUNGER_PROSPECT_LAB_CAPS: Record<number, number> = {
-  2029: 12,
-  2030: 8,
+  2029: 6,
+  2030: 6,
 };
 
 export function sortWithinYoungerYear<
@@ -25,8 +27,17 @@ export function sortWithinYoungerYear<
     ufProbability?: number | null;
     natlRank?: number | null;
     name?: string | null;
+    position?: string | null;
   },
 >(a: T, b: T): number {
+  const athRank = (p: T) => {
+    const pos = String(p.position || '')
+      .trim()
+      .toUpperCase();
+    return !pos || pos === 'TBD' || pos === 'ATH' ? 1 : 0;
+  };
+  const athDiff = athRank(a) - athRank(b);
+  if (athDiff !== 0) return athDiff;
   const discDiff = Number(b.discoveryScore ?? 0) - Number(a.discoveryScore ?? 0);
   if (discDiff !== 0) return discDiff;
   const ufA = Number(a.ufProbability ?? a.ufConfidence) || 0;
@@ -108,6 +119,32 @@ export function youngerProspectTierLabel(
   const y = (year ?? Number(p.classYear)) || 0;
   if (y >= 2030 || p.tier === 'watchlist') return 'Watch';
   return 'Early target';
+}
+
+/** Lab gate — need a real school line. */
+export function isLabYoungerProspect(p: {
+  school?: string | null;
+  state?: string | null;
+}): boolean {
+  const school = formatRecruitSchoolLabel(p.school, p.state);
+  return Boolean(school) && school !== 'School pending';
+}
+
+/**
+ * Fan Lab meta — school + stars only.
+ * No UF%/Δ/vs Florida theater on early classes.
+ */
+export function formatYoungerLabMeta(p: {
+  school?: string | null;
+  state?: string | null;
+  stars?: number | null;
+}): string {
+  const parts: string[] = [];
+  const school = formatRecruitSchoolLabel(p.school, p.state);
+  if (school && school !== 'School pending') parts.push(school);
+  const stars = youngerProspectStars(p.stars);
+  if (stars != null) parts.push(`${stars}★`);
+  return parts.join(' · ');
 }
 
 /** Bucket + sort + per-year cap. Empty years are omitted. */
