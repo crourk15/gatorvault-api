@@ -77,11 +77,9 @@ function RecruitingHubEliteContent({
         <LazyHubSection testId="rh-lazy-movement-feed">
           <MovementIntelFeed />
         </LazyHubSection>
-        {activeYear === 2028 ? (
-          <LazyHubSection testId="rh-lazy-younger-prospects">
-            <YoungerProspectsPanel classYear={2028} />
-          </LazyHubSection>
-        ) : null}
+        <LazyHubSection testId="rh-lazy-younger-prospects">
+          <YoungerProspectsPanel />
+        </LazyHubSection>
         <LazyHubSection testId="rh-lazy-battle-board">
           <BattleBoard />
         </LazyHubSection>

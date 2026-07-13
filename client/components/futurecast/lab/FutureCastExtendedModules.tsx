@@ -69,7 +69,17 @@ function formatEarlyMovement(p: UnderclassmenPlayer): string {
 }
 
 function formatUnderclassmenMeta(p: UnderclassmenPlayer, discoveryFocus = false): string {
-  const tierLabel = p.allowlistTarget ? 'Locked UF target' : p.tier === 'watchlist' ? 'Watch' : 'Target';
+  const year = Number(p.classYear) || 0;
+  const isYoungerCycle = year >= 2029;
+  const tierLabel = isYoungerCycle
+    ? p.tier === 'watchlist'
+      ? 'Watch'
+      : 'Early target'
+    : p.allowlistTarget
+      ? 'Locked UF target'
+      : p.tier === 'watchlist'
+        ? 'Watch'
+        : 'Target';
   const uf = formatMetric(p.ufConfidence);
   const fit = formatMetric(p.fitScore);
   const stars = Number(p.stars) > 0 ? `${Number(p.stars)}★` : '—★';
@@ -257,16 +267,19 @@ export function FutureCastExtendedModules({
   const youngerProspects = useMemo(
     () =>
       underclassmen
-        .filter((p) => (Number(p.classYear) || 0) >= 2028)
+        .filter((p) => {
+          const year = Number(p.classYear) || 0;
+          return year >= 2029 && year <= 2030;
+        })
         .sort((a, b) => {
-          if (discoveryFocus) {
-            const discDiff = Number(b.discoveryScore ?? 0) - Number(a.discoveryScore ?? 0);
-            if (discDiff !== 0) return discDiff;
-          }
+          const yearDiff = (Number(a.classYear) || 0) - (Number(b.classYear) || 0);
+          if (yearDiff !== 0) return yearDiff;
+          const discDiff = Number(b.discoveryScore ?? 0) - Number(a.discoveryScore ?? 0);
+          if (discDiff !== 0) return discDiff;
           return (Number(b.ufConfidence) || 0) - (Number(a.ufConfidence) || 0);
         })
         .slice(0, 12),
-    [underclassmen, discoveryFocus]
+    [underclassmen]
   );
 
   /** Upcoming verified OVs only — never show completed/cleared rows in this panel. */
@@ -424,24 +437,16 @@ export function FutureCastExtendedModules({
       ) : null}
 
       <FutureCastPanelShell
-        title="Younger Prospects — Underclassmen Watchboard"
-        sub={
-          discoveryFocus
-            ? 'Locked 2028 UF targets ranked by Early Discovery score — same pipeline as the Big Board.'
-            : '2028–2030 early intel from FutureCast discovery pipeline.'
-        }
+        title="Younger Prospects — 2029–2030 Watchboard"
+        sub="Early watchlist for the next recruiting cycles — separate from the locked 2028 UF target board."
         testId="fc-lab-underclassmen"
       >
         <ModuleList
-          empty={
-            discoveryFocus
-              ? 'No 2028 Early Discovery targets loaded.'
-              : 'No underclassmen watchlist loaded.'
-          }
+          empty="No 2029–2030 prospects on the watchboard yet."
           items={youngerProspects.map((p) => ({
             key: p.slug,
             primary: `${p.name} · ${p.position && p.position !== 'TBD' ? p.position : 'TBD'} · '${String(p.classYear || '').slice(2) || 'TBD'}`,
-            meta: formatUnderclassmenMeta(p, discoveryFocus),
+            meta: formatUnderclassmenMeta(p, false),
             href: playerProfileRoute(p.slug, 'futurecast'),
           }))}
         />

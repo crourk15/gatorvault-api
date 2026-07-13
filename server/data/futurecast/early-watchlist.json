@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-04T16:11:03.857Z",
-  "description": "FutureCast early discovery — 2030 watchlist only (2028 targets live in recruiting store + allowlist)",
+  "updatedAt": "2026-07-13T02:13:37.402Z",
+  "description": "FutureCast younger prospects watchboard — 2029–2030 only (2028 locked targets live on allowlist / high-priority / Early Discovery)",
   "entries": [
     {
       "slug": "young-fl-qb-2030",
@@ -132,84 +132,6 @@
           "pct": 15
         }
       ]
-    },
-    {
-      "slug": "tyzon-swann",
-      "name": "Tyzon Swann",
-      "classYear": 2028,
-      "tier": "target",
-      "pos": "ATH",
-      "school": "",
-      "state": null,
-      "stars": 4,
-      "rating": 96.0263440860215,
-      "ufProbability": null,
-      "fitScore": null
-    },
-    {
-      "slug": "jermaine-cobbins",
-      "name": "Jermaine Cobbins",
-      "classYear": 2028,
-      "tier": "target",
-      "pos": "ATH",
-      "school": "Springfield",
-      "state": null,
-      "stars": 4,
-      "rating": 93.56227208976156,
-      "ufProbability": null,
-      "fitScore": null
-    },
-    {
-      "slug": "raheem-floyd",
-      "name": "Raheem Floyd",
-      "classYear": 2028,
-      "tier": "target",
-      "pos": "CB",
-      "school": "East St. Louis",
-      "state": null,
-      "stars": 4,
-      "rating": 91.42355072463768,
-      "ufProbability": null,
-      "fitScore": null
-    },
-    {
-      "slug": "man-robinson",
-      "name": "Man Robinson",
-      "classYear": 2028,
-      "tier": "target",
-      "pos": "ATH",
-      "school": "IMG Academy",
-      "state": null,
-      "stars": 3,
-      "rating": 85.66666666666667,
-      "ufProbability": null,
-      "fitScore": null
-    },
-    {
-      "slug": "hunter-fujikawa",
-      "name": "Hunter Fujikawa",
-      "classYear": 2028,
-      "tier": "target",
-      "pos": "ATH",
-      "school": "Mililani",
-      "state": null,
-      "stars": 3,
-      "rating": 89.96739130434783,
-      "ufProbability": null,
-      "fitScore": null
-    },
-    {
-      "slug": "ryan-drakeford",
-      "name": "Ryan Drakeford",
-      "classYear": 2028,
-      "tier": "target",
-      "pos": "S",
-      "school": "Quince Orchard",
-      "state": null,
-      "stars": 3,
-      "rating": 86.04528985507247,
-      "ufProbability": null,
-      "fitScore": null
     }
   ]
 }

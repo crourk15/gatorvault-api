@@ -2,7 +2,7 @@
  * GET /api/futurecast/underclassmen
  * GET /api/futurecast/early-watchlist
  *
- * Dedicated underclassmen intel — 2028 early targets, 2029 targets, 2030 watchlist.
+ * Dedicated underclassmen intel — 2028 locked targets (allowlist), plus 2029–2030 younger watchboard.
  */
 import type { Request, Response } from 'express';
 import fs from 'node:fs';
@@ -228,8 +228,37 @@ async function slugsForYear(classYear: number): Promise<string[]> {
     );
   }
 
-  const entries = loadEarlyWatchEntries().filter((e) => Number(e.classYear) === classYear);
-  return entries.map((e) => String(e.slug || '').toLowerCase()).filter(Boolean);
+  const watchSlugs = loadEarlyWatchEntries()
+    .filter((e) => Number(e.classYear) === classYear)
+    .map((e) => String(e.slug || '').toLowerCase())
+    .filter(Boolean);
+
+  // 2029–2030 Younger Prospects: recruiting-store targets + early-watchlist entries.
+  // Do not use getBoard() — that allowlist-filters and returns [] when no year allowlist exists.
+  if (classYear === 2029 || classYear === 2030) {
+    const {
+      getAllPlayers,
+      isHubCommittedStatus,
+      isHubFloridaCommitStatus,
+    } = require('../../lib/recruiting-store') as {
+      getAllPlayers: () => Promise<Array<Record<string, unknown>>>;
+      isHubCommittedStatus: (p: Record<string, unknown>) => boolean;
+      isHubFloridaCommitStatus: (p: Record<string, unknown>) => boolean;
+    };
+    const players = await getAllPlayers();
+    const storeSlugs = players
+      .filter((p) => {
+        if (Number(p.classYear) !== classYear) return false;
+        if (isHubCommittedStatus(p) || isHubFloridaCommitStatus(p)) return false;
+        const cat = String(p.category || '').toLowerCase();
+        return cat === 'target' || cat === 'recruit' || cat === '';
+      })
+      .map((p) => String(p.slug || '').toLowerCase())
+      .filter(Boolean);
+    return [...new Set([...storeSlugs, ...watchSlugs])];
+  }
+
+  return [...new Set(watchSlugs)];
 }
 
 export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YEARS]): Promise<UnderclassmenResponse> {
