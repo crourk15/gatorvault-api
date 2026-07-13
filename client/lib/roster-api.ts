@@ -1,5 +1,40 @@
 import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 
+export type ProductionStatCategory =
+  | 'passing'
+  | 'rushing'
+  | 'receiving'
+  | 'defense'
+  | 'kicking'
+  | 'punting'
+  | 'returning';
+
+export interface ProductionSeasonLine {
+  season: number;
+  team: string;
+  category: ProductionStatCategory | string;
+  stats: Record<string, number>;
+}
+
+export interface ProductionGameLine {
+  season: number;
+  week: number | null;
+  date: string | null;
+  opponent: string;
+  homeAway: 'home' | 'away' | 'neutral' | null;
+  category?: ProductionStatCategory | string;
+  stats: Record<string, number>;
+}
+
+export interface ProductionStats {
+  source: 'cfbd';
+  syncedAt: string | null;
+  cfbdPlayerId: number | null;
+  matchConfidence: 'exact' | 'high' | null;
+  seasons: ProductionSeasonLine[];
+  recentGames: ProductionGameLine[];
+}
+
 export interface RosterPlayer {
   id: string;
   slug: string;
@@ -23,6 +58,8 @@ export interface RosterPlayer {
   jersey?: string | number | null;
   stars?: number | null;
   rank?: number | null;
+  cfbdPlayerId?: number | null;
+  productionStats?: ProductionStats | null;
 }
 
 export async function fetchRosterPlayers(): Promise<RosterPlayer[]> {

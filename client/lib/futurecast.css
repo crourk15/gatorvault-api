@@ -434,6 +434,9 @@
   border: 1px solid rgba(0, 33, 165, 0.18);
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08);
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .fc-profile-section h2 {
@@ -448,9 +451,11 @@
 
 .fc-profile-dl {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr));
   gap: 0.75rem;
   margin: 0;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .fc-profile-dl dt {
@@ -2321,10 +2326,19 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .fc-overview-slot.fc-profile-section {
   margin-bottom: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
 }
 
 .fc-overview-title {
@@ -2364,14 +2378,19 @@
   flex-wrap: wrap;
   gap: 0.65rem 1rem;
   margin-bottom: 0.5rem;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .fc-overview-metric {
-  min-width: 7rem;
+  min-width: 0;
+  flex: 1 1 6.5rem;
+  max-width: 100%;
   padding: 0.45rem 0.65rem;
   border-radius: 8px;
   border: 1px solid rgba(0, 33, 165, 0.16);
   background: rgba(0, 33, 165, 0.04);
+  box-sizing: border-box;
 }
 
 .fc-overview-metric__label {
@@ -2411,10 +2430,12 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.55rem 0.65rem;
+  padding: 0.55rem 0.75rem;
   border-radius: 8px;
   border: 1px solid rgba(0, 33, 165, 0.12);
   background: #f8fafc;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .fc-overview-context-row--emphasis {
@@ -2423,15 +2444,22 @@
 }
 
 .fc-overview-context-row__label {
+  flex: 0 1 auto;
+  min-width: 0;
   font-size: 0.8125rem;
   font-weight: 600;
   color: #334155;
 }
 
 .fc-overview-context-row__value {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: right;
   font-size: 0.875rem;
   font-weight: 700;
   color: var(--uf-blue, #0021a5);
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .fc-overview-context-row--emphasis .fc-overview-context-row__value {
@@ -2440,4 +2468,5 @@
 
 .fc-overview-who-dl {
   margin: 0;
+  grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr));
 }

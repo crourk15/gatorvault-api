@@ -42,7 +42,48 @@
     "nilValuation": 243000,
     "recruitingBackground": "4-star recruit · Shawnee, Kan. Mill Valley",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5141766,
+      "matchConfidence": "high",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 1,
+            "sack": 3.5,
+            "solo": 11,
+            "td": 0,
+            "tfl": 5,
+            "tot": 27
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 8,
+            "solo": 3,
+            "sack": 1,
+            "tfl": 1.5,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5141766,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "cormani-mcclain",
@@ -85,7 +126,77 @@
     "nilValuation": 668250,
     "recruitingBackground": "5-star recruit · Lakeland, Fla. Lakeland · Transfer from Colorado",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 4870920,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 1,
+            "sack": 0,
+            "solo": 10,
+            "td": 0,
+            "tfl": 1,
+            "tot": 17
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 1,
+            "sack": 0,
+            "solo": 3,
+            "td": 1,
+            "tfl": 0.5,
+            "tot": 5
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 1,
+            "td": 1
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 4870920,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "jadan-baugh",
@@ -128,7 +239,134 @@
     "nilValuation": 243000,
     "recruitingBackground": "4-star recruit · Atlanta, Ga. Columbia",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5079322,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "lng": 33,
+            "rec": 33,
+            "td": 2,
+            "yds": 210,
+            "avg": 6.4
+          }
+        },
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "returning",
+          "stats": {
+            "avg": 6,
+            "lng": 6,
+            "rec": 1,
+            "td": 0,
+            "yds": 6
+          }
+        },
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 220,
+            "lng": 26,
+            "td": 8,
+            "yds": 1170,
+            "avg": 5.3
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "lng": 25,
+            "rec": 4,
+            "td": 1,
+            "yds": 33,
+            "avg": 8.3
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "returning",
+          "stats": {
+            "avg": 21.5,
+            "lng": 35,
+            "rec": 11,
+            "td": 0,
+            "yds": 237
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 133,
+            "lng": 55,
+            "td": 7,
+            "yds": 673,
+            "avg": 5.1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 18,
+            "yds": 96,
+            "avg": 5.3,
+            "td": 0,
+            "lng": 16
+          }
+        },
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 4,
+            "yds": 34,
+            "avg": 8.5,
+            "td": 0,
+            "lng": 14
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5079322,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "eric-singleton-jr",
@@ -215,7 +453,83 @@
     "nilValuation": 243000,
     "recruitingBackground": "4-star recruit · Gainesville, Fla. Jones",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5295811,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "lng": 60,
+            "rec": 40,
+            "td": 0,
+            "yds": 524,
+            "avg": 13.1
+          }
+        },
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "returning",
+          "stats": {
+            "avg": 11.7,
+            "lng": 40,
+            "rec": 12,
+            "td": 0,
+            "yds": 140
+          }
+        },
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 1,
+            "lng": 14,
+            "td": 0,
+            "yds": 14,
+            "avg": 14
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "receiving",
+          "stats": {
+            "rec": 3,
+            "yds": 14,
+            "avg": 4.7,
+            "td": 0,
+            "lng": 12
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5295811,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "myles-graham",
@@ -259,7 +573,77 @@
     "nilValuation": 243000,
     "recruitingBackground": "4-star recruit · Gainesville, Fla. Buchholz",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5079480,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 4,
+            "sack": 2,
+            "solo": 36,
+            "td": 0,
+            "tfl": 7,
+            "tot": 76
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 1,
+            "solo": 9,
+            "td": 0,
+            "tfl": 2.5,
+            "tot": 30
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 8,
+            "solo": 2,
+            "sack": 0,
+            "tfl": 0.5,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 2,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5079480,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "dijon-johnson",
@@ -303,7 +687,106 @@
     "nilValuation": 243000,
     "recruitingBackground": "4-star recruit · Tampa, Fla. Wharton",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 4899671,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 1,
+            "sack": 0,
+            "solo": 7,
+            "td": 0,
+            "tfl": 0,
+            "tot": 8
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 2,
+            "sack": 0,
+            "solo": 16,
+            "td": 0,
+            "tfl": 2,
+            "tot": 24
+          }
+        },
+        {
+          "season": 2023,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 2
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 1,
+            "td": 0
+          }
+        },
+        {
+          "season": 2023,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 4899671,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "dallas-wilson",
@@ -347,7 +830,46 @@
     "nilValuation": 243000,
     "recruitingBackground": "4-star recruit · Tampa, Fla. Tampa Bay Tech",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5141723,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "lng": 55,
+            "rec": 12,
+            "td": 3,
+            "yds": 162,
+            "avg": 13.5
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 7,
+            "avg": 7,
+            "td": 0,
+            "lng": 7
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5141723,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "tramell-jones-jr",
@@ -391,7 +913,58 @@
     "nilValuation": 243000,
     "recruitingBackground": "4-star recruit · Jacksonville, Fla. Mandarin",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5295814,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "passing",
+          "stats": {
+            "att": 35,
+            "cmp": 21,
+            "int": 0,
+            "td": 2,
+            "yds": 191,
+            "avg": 5.5
+          }
+        },
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 8,
+            "lng": 9,
+            "td": 0,
+            "yds": 10,
+            "avg": 1.3
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "passing",
+          "stats": {
+            "yds": 60,
+            "avg": 3.5,
+            "td": 0,
+            "int": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5295814,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "bryce-thornton",
@@ -435,7 +1008,106 @@
     "nilValuation": 162000,
     "recruitingBackground": "3-star recruit · College Park, Ga. Milton",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 4870995,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 6,
+            "sack": 1,
+            "solo": 31,
+            "td": 1,
+            "tfl": 3,
+            "tot": 56
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 3,
+            "sack": 0,
+            "solo": 19,
+            "td": 0,
+            "tfl": 1.5,
+            "tot": 41
+          }
+        },
+        {
+          "season": 2023,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 1,
+            "sack": 0.5,
+            "solo": 19,
+            "td": 0,
+            "tfl": 3.5,
+            "tot": 34
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 5,
+            "solo": 4,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 14,
+            "solo": 5,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2023,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 8,
+            "solo": 3,
+            "sack": 0,
+            "tfl": 0.5,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 4870995,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "jaden-robinson",
@@ -479,7 +1151,106 @@
     "nilValuation": 243000,
     "recruitingBackground": "4-star recruit · Lake City, Fla. Columbia",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 4870978,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 3,
+            "sack": 2,
+            "solo": 29,
+            "td": 0,
+            "tfl": 4,
+            "tot": 51
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 3.5,
+            "solo": 28,
+            "td": 0,
+            "tfl": 3.5,
+            "tot": 52
+          }
+        },
+        {
+          "season": 2023,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 4,
+            "td": 0,
+            "tfl": 0,
+            "tot": 4
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 9,
+            "solo": 4,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 3,
+            "solo": 2,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2023,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 2,
+            "solo": 2,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 4870978,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "lacota-dippre",
@@ -655,7 +1426,48 @@
     "nilValuation": 132000,
     "recruitingBackground": "3-star recruit · Gadsden, Ala. Ellison HS · Transfer from Baylor",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5086808,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 3,
+            "solo": 19,
+            "td": 0,
+            "tfl": 4,
+            "tot": 40
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 4,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5086808,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "cam-dooley",
@@ -875,7 +1687,48 @@
     "nilValuation": 71500,
     "recruitingBackground": "3-star recruit · Worcester, Mass. Doherty Memorial · Transfer from UMass",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 4912316,
+      "matchConfidence": "high",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 1,
+            "solo": 10,
+            "td": 0,
+            "tfl": 2.5,
+            "tot": 18
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 4,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 4912316,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "tj-bullard",
@@ -1139,7 +1992,48 @@
     "nilValuation": 65000,
     "recruitingBackground": "3-star recruit · Sylvester, Ga. Lee County",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5195951,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 2,
+            "sack": 0,
+            "solo": 5,
+            "td": 0,
+            "tfl": 0.5,
+            "tot": 13
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 4,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0.5,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5195951,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "elijah-owens",
@@ -1314,7 +2208,77 @@
     "nilValuation": 16500,
     "recruitingBackground": "3-star recruit · Miami, Fla. Miami Central · Transfer from Baylor",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 4685238,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 14,
+            "td": 0,
+            "tfl": 0,
+            "tot": 34
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 7,
+            "solo": 2,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 4685238,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "aaron-chiles",
@@ -1358,7 +2322,77 @@
     "nilValuation": 15000,
     "recruitingBackground": "3-star recruit · Largo, Md. Our Lady of Good Counsel",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5079340,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 1,
+            "sack": 0.5,
+            "solo": 22,
+            "td": 0,
+            "tfl": 2.5,
+            "tot": 52
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 1,
+            "sack": 1,
+            "solo": 10,
+            "td": 0,
+            "tfl": 1,
+            "tot": 23
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 9,
+            "solo": 3,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 2,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5079340,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "kahleil-jackson",
@@ -1402,7 +2436,139 @@
     "nilValuation": 15000,
     "recruitingBackground": "3-star recruit · Hawthorne, Fla. Hawthorne",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 4693740,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 0,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "lng": 13,
+            "rec": 1,
+            "td": 0,
+            "yds": 13,
+            "avg": 13
+          }
+        },
+        {
+          "season": 2023,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2023,
+          "team": "Florida",
+          "category": "passing",
+          "stats": {
+            "att": 1,
+            "cmp": 0,
+            "int": 1,
+            "td": 0,
+            "yds": 0,
+            "avg": 0
+          }
+        },
+        {
+          "season": 2023,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "lng": 45,
+            "rec": 21,
+            "td": 1,
+            "yds": 251,
+            "avg": 12
+          }
+        },
+        {
+          "season": 2022,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "lng": 23,
+            "rec": 2,
+            "td": 0,
+            "yds": 43,
+            "avg": 21.5
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 13,
+            "avg": 13,
+            "td": 0,
+            "lng": 13
+          }
+        },
+        {
+          "season": 2023,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 5,
+            "avg": 5,
+            "td": 0,
+            "lng": 5
+          }
+        },
+        {
+          "season": 2022,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 23,
+            "avg": 23,
+            "td": 0,
+            "lng": 23
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 4693740,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "javion-toombs",
@@ -1446,7 +2612,106 @@
     "nilValuation": 15000,
     "recruitingBackground": "3-star recruit · Fort Pierce, Fla. Centennial",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5081634,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 0,
+            "td": 0,
+            "tfl": 0,
+            "tot": 2
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 1,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2023,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 0,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 1,
+            "td": 0
+          }
+        },
+        {
+          "season": 2023,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5081634,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "knijeah-harris",
@@ -1490,7 +2755,48 @@
     "nilValuation": 15000,
     "recruitingBackground": "3-star recruit · Pahokee, Fla. IMG Academy",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 4870788,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 4870788,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "kamran-james",
@@ -1534,7 +2840,106 @@
     "nilValuation": 15000,
     "recruitingBackground": "3-star recruit · Orlando, Fla. Olympia",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5083314,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 2,
+            "sack": 3,
+            "solo": 23,
+            "td": 0,
+            "tfl": 4.5,
+            "tot": 44
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 2,
+            "solo": 20,
+            "td": 0,
+            "tfl": 4,
+            "tot": 28
+          }
+        },
+        {
+          "season": 2023,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 4
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 4,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2023,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 2,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5083314,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "emeka-ugorji",
@@ -1622,7 +3027,48 @@
     "nilValuation": 15000,
     "recruitingBackground": "Miami, Fla. Northwestern",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5161809,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 4,
+            "sack": 0,
+            "solo": 11,
+            "td": 0,
+            "tfl": 0.5,
+            "tot": 17
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 2,
+            "solo": 2,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5161809,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "myles-johnson",
@@ -1666,7 +3112,48 @@
     "nilValuation": 15000,
     "recruitingBackground": "Brewton, Ala. T.R. Miller",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5149469,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 4,
+            "td": 0,
+            "tfl": 0,
+            "tot": 5
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 4,
+            "solo": 3,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5149469,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "patrick-durkin",
@@ -1754,7 +3241,48 @@
     "nilValuation": 15000,
     "recruitingBackground": "Fort Lauderdale, Fla. Seminole Ridge",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5167180,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 0,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5167180,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "vincent-brown-jr",
@@ -2018,7 +3546,71 @@
     "nilValuation": 16500,
     "recruitingBackground": "Winter Park, Fla. Winter Park · Transfer from Yale",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5155039,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 2,
+            "td": 0,
+            "tfl": 0,
+            "tot": 2
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "passing",
+          "stats": {
+            "att": 50,
+            "cmp": 21,
+            "int": 3,
+            "td": 0,
+            "yds": 228,
+            "avg": 4.6
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 8,
+            "lng": 9,
+            "td": 1,
+            "yds": -8,
+            "avg": -1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "passing",
+          "stats": {
+            "yds": 10,
+            "avg": 5,
+            "td": 0,
+            "int": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5155039,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "bailey-stockton",
@@ -2150,7 +3742,48 @@
     "nilValuation": 15000,
     "recruitingBackground": "Lyons, Ga. Toombs County",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5195292,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 1,
+            "solo": 7,
+            "td": 0,
+            "tfl": 3.5,
+            "tot": 12
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5195292,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "justin-williams",
@@ -2238,7 +3871,48 @@
     "nilValuation": 15000,
     "recruitingBackground": "Loganville, Ga. Grayson",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5221980,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 3,
+            "td": 0,
+            "tfl": 1,
+            "tot": 11
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 6,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5221980,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "malik-morris",
@@ -2326,7 +4000,48 @@
     "nilValuation": 15000,
     "recruitingBackground": "Jacksonville, Fla. Mandarin",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5295812,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 3
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 2,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5295812,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "dylan-purter",
@@ -3073,7 +4788,48 @@
     "nilValuation": 15000,
     "recruitingBackground": "Overtown, Fla. Booker T. Washington",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5295813,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 2,
+            "sack": 0,
+            "solo": 7,
+            "td": 0,
+            "tfl": 0,
+            "tot": 8
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5295813,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "titus-bullard",
@@ -3117,7 +4873,48 @@
     "nilValuation": 15000,
     "recruitingBackground": "Tampa, Fla. Berkeley Prep",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5222235,
+      "matchConfidence": "high",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5222235,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "tripp-brown-jr",
@@ -4085,7 +5882,106 @@
     "nilValuation": 15000,
     "recruitingBackground": "Cocoa, Fla. Viera",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 4685452,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 6,
+            "td": 0,
+            "tfl": 1,
+            "tot": 18
+          }
+        },
+        {
+          "season": 2023,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 10,
+            "td": 0,
+            "tfl": 2.5,
+            "tot": 20
+          }
+        },
+        {
+          "season": 2022,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 0,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "defense",
+          "stats": {
+            "tot": 2,
+            "solo": 2,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2023,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 3,
+            "solo": 1,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        },
+        {
+          "season": 2022,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 4685452,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "brayden-slade",
@@ -4129,7 +6025,48 @@
     "nilValuation": 15000,
     "recruitingBackground": "Coconut Creek, Fla. Monarch",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5159669,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 0,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5159669,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "duke-clark",
@@ -4173,7 +6110,58 @@
     "nilValuation": 15000,
     "recruitingBackground": "Tampa, Fla. Plant",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5295815,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "lng": 11,
+            "rec": 2,
+            "td": 0,
+            "yds": 14,
+            "avg": 7
+          }
+        },
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 15,
+            "lng": 11,
+            "td": 0,
+            "yds": 58,
+            "avg": 3.9
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 5,
+            "yds": 19,
+            "avg": 3.8,
+            "td": 0,
+            "lng": 5
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5295815,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "sebastian-scott",
@@ -4261,7 +6249,72 @@
     "nilValuation": 15000,
     "recruitingBackground": "Statesboro, Ga. Portal",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5139093,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 1,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        },
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "receiving",
+          "stats": {
+            "lng": 18,
+            "rec": 3,
+            "td": 1,
+            "yds": 29,
+            "avg": 9.7
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 0,
+            "td": 0,
+            "tfl": 0,
+            "tot": 1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "receiving",
+          "stats": {
+            "rec": 1,
+            "yds": 1,
+            "avg": 1,
+            "td": 1,
+            "lng": 1
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5139093,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "bryce-lovett",
@@ -4437,7 +6490,73 @@
     "nilValuation": 15000,
     "recruitingBackground": "Miami, Fla. Belen Jesuit",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5151893,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 5,
+            "lng": 12,
+            "td": 0,
+            "yds": 27,
+            "avg": 5.4
+          }
+        },
+        {
+          "season": 2024,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 6,
+            "lng": 9,
+            "td": 1,
+            "yds": 32,
+            "avg": 5.3
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 5,
+            "yds": 27,
+            "avg": 5.4,
+            "td": 0,
+            "lng": 12
+          }
+        },
+        {
+          "season": 2024,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "rushing",
+          "stats": {
+            "car": 6,
+            "yds": 32,
+            "avg": 5.3,
+            "td": 1,
+            "lng": 9
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5151893,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "jahari-medlock",
@@ -4613,7 +6732,48 @@
     "nilValuation": 15000,
     "recruitingBackground": "Tallahassee, Fla. James Richards",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5141747,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "defense",
+          "stats": {
+            "pd": 0,
+            "sack": 0,
+            "solo": 0,
+            "td": 0,
+            "tfl": 0,
+            "tot": 2
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "home",
+          "category": "defense",
+          "stats": {
+            "tot": 1,
+            "solo": 0,
+            "sack": 0,
+            "tfl": 0,
+            "pd": 0,
+            "td": 0
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5141747,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   },
   {
     "slug": "micah-jones",
@@ -4877,6 +7037,45 @@
     "nilValuation": 15000,
     "recruitingBackground": "Miramar, Fla. American Heritage",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "productionStats": {
+      "source": "cfbd",
+      "syncedAt": "2026-07-13T19:03:41.027Z",
+      "cfbdPlayerId": 5141565,
+      "matchConfidence": "exact",
+      "seasons": [
+        {
+          "season": 2025,
+          "team": "Florida",
+          "category": "rushing",
+          "stats": {
+            "car": 2,
+            "lng": 1,
+            "td": 0,
+            "yds": -2,
+            "avg": -1
+          }
+        }
+      ],
+      "recentGames": [
+        {
+          "season": 2025,
+          "week": null,
+          "date": null,
+          "opponent": "Opponent",
+          "homeAway": "away",
+          "category": "rushing",
+          "stats": {
+            "car": 2,
+            "yds": -2,
+            "avg": -1,
+            "td": 0,
+            "lng": 1
+          }
+        }
+      ]
+    },
+    "cfbdPlayerId": 5141565,
+    "updatedAt": "2026-07-13T19:03:46.266Z"
   }
 ]

@@ -7,6 +7,14 @@ import {
   type RosterPlayer,
 } from '@/lib/roster-api';
 import {
+  careerSeasonsForPos,
+  formatGameStatLine,
+  formatSyncedAt,
+  hasProductionStats,
+  pickPrimarySeason,
+  seasonStripItems,
+} from '@/lib/roster-production-stats';
+import {
   fetchScoutingBreakdownBySlug,
   scoutingTypeLabel,
   type ScoutingBreakdown,
@@ -24,7 +32,7 @@ import { isVaultPath } from '@/lib/vault-routes';
 
 const ACE_PORTAL_SLUG = 'eric-singleton-jr';
 
-type RosterTab = 'overview' | 'depth' | 'scouting';
+type RosterTab = 'overview' | 'stats' | 'depth' | 'scouting';
 
 function playerInitials(name: string): string {
   return name
@@ -69,12 +77,15 @@ function fallbackPulseText(
 function RosterProfileTabs({
   active,
   onChange,
+  showStats,
 }: {
   active: RosterTab;
   onChange: (tab: RosterTab) => void;
+  showStats: boolean;
 }): React.ReactElement {
   const tabs: { id: RosterTab; label: string }[] = [
     { id: 'overview', label: 'Overview' },
+    ...(showStats ? [{ id: 'stats' as const, label: 'Stats' }] : []),
     { id: 'depth', label: 'Depth Role' },
     { id: 'scouting', label: 'Scouting' },
   ];
@@ -90,6 +101,121 @@ function RosterProfileTabs({
           {tab.label}
         </button>
       ))}
+    </div>
+  );
+}
+
+function ProductionStatsOverview({ player }: { player: RosterPlayer }): React.ReactElement | null {
+  if (!hasProductionStats(player) || !player.productionStats) return null;
+  const season = pickPrimarySeason(player.productionStats, player.pos || player.position);
+  const strip = seasonStripItems(season);
+  const games = (player.productionStats.recentGames || []).slice(0, 5);
+  const synced = formatSyncedAt(player.productionStats.syncedAt);
+  if (!strip.length && !games.length) return null;
+
+  return (
+    <section className="gv-roster-prod" data-testid="roster-production-stats">
+      {season && strip.length > 0 ? (
+        <div className="gv-roster-prod__season">
+          <div className="gv-roster-prod__season-head">
+            <h3>
+              {season.season}{' '}
+              {String(season.category).replace(/^./, (c) => c.toUpperCase())}
+            </h3>
+            <span className="gv-roster-prod__team">{season.team}</span>
+          </div>
+          <div className="gv-roster-prod__strip">
+            {strip.map((item) => (
+              <div key={item.key} className="gv-roster-prod__stat">
+                <strong>{item.value}</strong>
+                <small>{item.label}</small>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      {games.length > 0 ? (
+        <div className="gv-roster-prod__games">
+          <h3>Recent games</h3>
+          <ul>
+            {games.map((g) => (
+              <li key={`${g.season}-${g.week}-${g.opponent}-${g.date}`}>
+                <span className="gv-roster-prod__opp">
+                  {g.homeAway === 'away' ? '@ ' : 'vs '}
+                  {g.opponent}
+                </span>
+                <span className="gv-roster-prod__line">{formatGameStatLine(g)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {synced ? <p className="gv-roster-prod__synced">Updated {synced}</p> : null}
+    </section>
+  );
+}
+
+function ProductionStatsTab({ player }: { player: RosterPlayer }): React.ReactElement {
+  const stats = player.productionStats;
+  if (!stats || !hasProductionStats(player)) {
+    return <p className="gv-roster-profile__empty">No confirmed production stats yet.</p>;
+  }
+  const career = careerSeasonsForPos(stats, player.pos || player.position);
+  const games = stats.recentGames || [];
+  const synced = formatSyncedAt(stats.syncedAt);
+
+  return (
+    <div className="gv-roster-prod gv-roster-prod--tab" data-testid="tab-stats">
+      {career.length > 0 ? (
+        <section className="gv-roster-prod__career">
+          <h3>Career by season</h3>
+          <ul>
+            {career.map((s) => {
+              const strip = seasonStripItems(s);
+              return (
+                <li key={`${s.season}-${s.category}`}>
+                  <div className="gv-roster-prod__season-head">
+                    <strong>{s.season}</strong>
+                    <span>{String(s.category)}</span>
+                  </div>
+                  <div className="gv-roster-prod__strip gv-roster-prod__strip--compact">
+                    {strip.map((item) => (
+                      <div key={item.key} className="gv-roster-prod__stat">
+                        <strong>{item.value}</strong>
+                        <small>{item.label}</small>
+                      </div>
+                    ))}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ) : null}
+      {games.length > 0 ? (
+        <section className="gv-roster-prod__games">
+          <h3>Game log</h3>
+          <ul>
+            {games.map((g) => (
+              <li key={`${g.season}-${g.week}-${g.opponent}-full`}>
+                <span className="gv-roster-prod__opp">
+                  {g.season}
+                  {g.week != null ? ` W${g.week}` : ''}
+                  {' · '}
+                  {g.homeAway === 'away' ? '@ ' : 'vs '}
+                  {g.opponent}
+                </span>
+                <span className="gv-roster-prod__line">{formatGameStatLine(g)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+      {synced ? (
+        <p className="gv-roster-prod__synced">
+          Source: CollegeFootballData · Updated {synced}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -158,6 +284,7 @@ export function RosterProfilePage({
   const inVault = isVaultPath(pathname);
   const portalTag = portalRosterLabel(player);
   const isAce = player.slug === ACE_PORTAL_SLUG;
+  const showStats = hasProductionStats(player);
   const [activeTab, setActiveTab] = useState<RosterTab>('overview');
   const [photoIndex, setPhotoIndex] = useState(0);
   const [scouting, setScouting] = useState<ScoutingBreakdown | null>(null);
@@ -167,6 +294,9 @@ export function RosterProfilePage({
   const stand = useMemo(() => buildRosterStand(player), [player]);
   const context = useMemo(() => buildRosterContext(player), [player]);
 
+  useEffect(() => {
+    if (activeTab === 'stats' && !showStats) setActiveTab('overview');
+  }, [activeTab, showStats]);
   useEffect(() => {
     let cancelled = false;
     void fetchScoutingBreakdownBySlug(player.slug)
@@ -333,7 +463,7 @@ export function RosterProfilePage({
         </div>
       </header>
 
-      <RosterProfileTabs active={activeTab} onChange={setActiveTab} />
+      <RosterProfileTabs active={activeTab} onChange={setActiveTab} showStats={showStats} />
 
       {activeTab === 'overview' && (
         <div className="gv-roster-profile__panel fc-profile-panel" data-testid="tab-overview">
@@ -345,11 +475,18 @@ export function RosterProfilePage({
             context={context}
             pulse={pulse}
           />
+          <ProductionStatsOverview player={player} />
           {isPortalRosterPlayer(player) ? (
             <p className="gv-roster-profile__portal-link">
               <a href={playerProfilePath(player.slug, 'PORTAL', true)}>View Portal Intel →</a>
             </p>
           ) : null}
+        </div>
+      )}
+
+      {activeTab === 'stats' && showStats && (
+        <div className="gv-roster-profile__panel">
+          <ProductionStatsTab player={player} />
         </div>
       )}
 

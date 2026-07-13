@@ -24,6 +24,7 @@ const MAX_RUNTIME_MS = parseInt(process.env.PLATFORM_OPS_MAX_RUNTIME_MS || '6000
 const DEFAULT_JOBS = [
   'portal-ingest',
   'depth-chart-refresh',
+  'roster-stats-sync',
   'game-zone-refresh',
   'nil-refresh',
   'x-autoposter-run',

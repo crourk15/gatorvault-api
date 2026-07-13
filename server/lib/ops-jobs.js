@@ -6,6 +6,7 @@ const opsMonitor = require('./ops-monitor');
 /** Alternate keys accepted by POST /api/ops/run-job */
 const JOB_ALIASES = {
   depth_chart_refresh: 'depth-chart-refresh',
+  roster_stats_sync: 'roster-stats-sync',
   game_zone_lines: 'game-zone-refresh',
   'article-engine:weekly-draft': 'article-engine-weekly-draft'
 };
@@ -148,6 +149,15 @@ const JOBS = {
     async run() {
       const { refreshDepthChart } = require('./depth-chart-jobs');
       return refreshDepthChart();
+    }
+  },
+  'roster-stats-sync': {
+    label: 'Roster CFBD production stats sync',
+    subsystem: 'cron:roster-stats',
+    schedule: 'Nightly (ROSTER_STATS_SYNC_ENABLED)',
+    async run(opts = {}) {
+      const { syncRosterProductionStats } = require('./roster-production-stats-sync');
+      return syncRosterProductionStats(opts);
     }
   },
   'game-zone-refresh': {

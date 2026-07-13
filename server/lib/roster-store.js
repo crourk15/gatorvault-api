@@ -66,6 +66,26 @@ function resolveHeadshotUrl(player) {
   return findLocalHeadshot(player.slug);
 }
 
+function normalizeProductionStats(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  if (raw.source !== 'cfbd') return null;
+  if (!Array.isArray(raw.seasons) && !Array.isArray(raw.recentGames)) return null;
+  const seasons = Array.isArray(raw.seasons) ? raw.seasons : [];
+  const recentGames = Array.isArray(raw.recentGames) ? raw.recentGames : [];
+  if (!seasons.length && !recentGames.length) return null;
+  return {
+    source: 'cfbd',
+    syncedAt: raw.syncedAt || null,
+    cfbdPlayerId:
+      raw.cfbdPlayerId != null && Number.isFinite(Number(raw.cfbdPlayerId))
+        ? Number(raw.cfbdPlayerId)
+        : null,
+    matchConfidence: raw.matchConfidence === 'exact' || raw.matchConfidence === 'high' ? raw.matchConfidence : null,
+    seasons,
+    recentGames,
+  };
+}
+
 function normalizeRosterPlayer(raw) {
   const slug = raw.slug || slugify(raw.name);
   const player = {
@@ -98,6 +118,8 @@ function normalizeRosterPlayer(raw) {
     projection: raw.projection || null,
     schemeFit: raw.schemeFit || null,
     warRoomFeatured: !!(raw.warRoomFeatured ?? raw.war_room_featured),
+    cfbdPlayerId: raw.cfbdPlayerId != null && Number.isFinite(Number(raw.cfbdPlayerId)) ? Number(raw.cfbdPlayerId) : null,
+    productionStats: normalizeProductionStats(raw.productionStats),
     updatedAt: raw.updatedAt || nowIso()
   };
   if (!player.unit && player.pos) {
@@ -118,6 +140,36 @@ function normalizeRosterPlayer(raw) {
 
 function loadPlayers() {
   return readJson(PLAYERS_PATH, []).map(normalizeRosterPlayer);
+}
+
+
+function loadPlayersRaw() {
+  return readJson(PLAYERS_PATH, []);
+}
+
+function applyProductionStatsUpdates(updatesBySlug) {
+  const players = loadPlayersRaw();
+  let changed = 0;
+  const { slugify } = require('./slug');
+  for (const player of players) {
+    const slug = player.slug || slugify(player.name || '');
+    if (!slug || !Object.prototype.hasOwnProperty.call(updatesBySlug, slug)) continue;
+    const next = updatesBySlug[slug];
+    if (next == null) {
+      if (player.productionStats) {
+        delete player.productionStats;
+        player.updatedAt = nowIso();
+        changed += 1;
+      }
+      continue;
+    }
+    player.productionStats = next;
+    if (next.cfbdPlayerId != null) player.cfbdPlayerId = next.cfbdPlayerId;
+    player.updatedAt = nowIso();
+    changed += 1;
+  }
+  savePlayers(players);
+  return { changed };
 }
 
 function savePlayers(players) {
@@ -188,6 +240,9 @@ module.exports = {
   upsertRosterPlayer,
   setWarRoomFeatured,
   loadPlayers,
+  loadPlayersRaw,
+  applyProductionStatsUpdates,
+  normalizeProductionStats,
   getHeadshotMap,
   updateHeadshotMapping
 };

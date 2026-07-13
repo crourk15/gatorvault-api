@@ -41,6 +41,17 @@ function startPlatformMaintenanceSchedulers() {
   );
 
   scheduleJob(
+    'roster-stats',
+    'ROSTER_STATS_SYNC_ENABLED',
+    86400000,
+    parseInt(process.env.ROSTER_STATS_BOOT_DELAY_MS || '180000', 10),
+    () => {
+      const { syncRosterProductionStats } = require('./roster-production-stats-sync');
+      return syncRosterProductionStats();
+    }
+  );
+
+  scheduleJob(
     'game-zone',
     'GAME_ZONE_ENABLED',
     21600000,
