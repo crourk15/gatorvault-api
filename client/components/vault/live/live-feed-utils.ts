@@ -3,6 +3,9 @@ import type { LiveFeedItem } from '@/lib/live-api';
 export const LIVE_REFRESH_MS = 45_000;
 export const LIVE_STATE_KEY = 'live';
 
+/** Hide category chips entirely when the stream is this thin. */
+export const LIVE_FEED_CHIP_MIN_ITEMS = 3;
+
 export type FeedCategory = 'all' | 'news' | 'recruiting' | 'portal' | 'game' | 'podcast';
 
 export const CATEGORY_CHIPS: { id: FeedCategory; label: string; icon: string }[] = [
@@ -46,13 +49,67 @@ export function feedIcon(item: LiveFeedItem): string {
   return '📌';
 }
 
+function itemBlob(item: LiveFeedItem): string {
+  return `${item.type ?? ''} ${item.source ?? ''} ${item.title ?? ''}`.toLowerCase();
+}
+
+/**
+ * Honest category matchers — commits → recruiting, portal/transfer → portal, etc.
+ * Avoid catch-alls like matching every "Florida/gator" line as Game Week.
+ */
 export function matchesCategory(item: LiveFeedItem, cat: FeedCategory): boolean {
   if (cat === 'all') return true;
-  const blob = `${item.type ?? ''} ${item.source ?? ''} ${item.title ?? ''}`.toLowerCase();
-  if (cat === 'news') return blob.includes('news') || blob.includes('headline') || !blob.includes('recruit');
-  if (cat === 'recruiting') return blob.includes('recruit') || blob.includes('commit') || blob.includes('target');
-  if (cat === 'portal') return blob.includes('portal') || blob.includes('transfer');
-  if (cat === 'game') return blob.includes('game') || blob.includes('score') || blob.includes('gator');
-  if (cat === 'podcast') return blob.includes('podcast') || blob.includes('audio');
+  const blob = itemBlob(item);
+
+  if (cat === 'recruiting') {
+    return (
+      /\b(recruit|commit|commits|committed|target|targets|visit|visits|offer|offers|signing|ov)\b/.test(
+        blob
+      ) || blob.includes('recruiting')
+    );
+  }
+
+  if (cat === 'portal') {
+    return /\b(portal|transfer|transfers|entered the portal|transfer portal)\b/.test(blob);
+  }
+
+  if (cat === 'podcast') {
+    return /\b(podcast|episode|audio|listen)\b/.test(blob);
+  }
+
+  if (cat === 'game') {
+    return (
+      /\b(game week|kickoff|kick off|final score|box score|preview|matchup|injury report)\b/.test(
+        blob
+      ) ||
+      /\b(score|scored|touchdown|field goal|halftime)\b/.test(blob) ||
+      blob.includes('schedule')
+    );
+  }
+
+  if (cat === 'news') {
+    // Headlines = general news that is not clearly recruiting / portal / podcast / game.
+    if (matchesCategory(item, 'recruiting')) return false;
+    if (matchesCategory(item, 'portal')) return false;
+    if (matchesCategory(item, 'podcast')) return false;
+    if (matchesCategory(item, 'game')) return false;
+    return true;
+  }
+
   return true;
+}
+
+/** Chips with at least one item — Always includes All when chips are shown. */
+export function visibleFeedCategories(feed: LiveFeedItem[]): FeedCategory[] {
+  if (feed.length < LIVE_FEED_CHIP_MIN_ITEMS) return [];
+
+  const cats: FeedCategory[] = ['all'];
+  for (const chip of CATEGORY_CHIPS) {
+    if (chip.id === 'all') continue;
+    if (feed.some((item) => matchesCategory(item, chip.id))) {
+      cats.push(chip.id);
+    }
+  }
+  // Only All would be pointless — hide the bar.
+  return cats.length > 1 ? cats : [];
 }
