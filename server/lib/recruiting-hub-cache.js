@@ -8,7 +8,7 @@ const { createMemoryCache } = require('./memory-cache');
 const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 
 /** Bump when HS-only class commit metrics logic changes. */
-const HUB_METRICS_CACHE_REV = 'hs4';
+const HUB_METRICS_CACHE_REV = 'hs5';
 
 const HUB_CACHE_MS = parseInt(process.env.HUB_CACHE_MS || String(5 * 60 * 1000), 10);
 const BUILD_TIMEOUT_MS = parseInt(process.env.HUB_BUILD_TIMEOUT_MS || '20000', 10);
@@ -200,7 +200,7 @@ function secondaryWarmJobs(elite, years) {
     jobs.push([`hub:elite:battles:${year}`, () => elite.buildHubBattles(year)]);
     jobs.push([`hub:elite:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
     jobs.push([`hub:elite:heat-index:${year}`, () => elite.buildHubHeatIndex(year)]);
-    jobs.push([`hub:elite:movement-feed:v2:${year}`, () => elite.buildHubMovementFeed(year)]);
+    jobs.push([`hub:elite:movement-feed:v3:${year}`, () => elite.buildHubMovementFeed(year)]);
     jobs.push([`hub:elite:battle-board:${year}`, () => elite.buildHubBattleBoard(year)]);
     jobs.push([`hub:elite:footprint:${year}`, () => elite.buildHubFootprint(year)]);
   }

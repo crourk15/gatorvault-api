@@ -78,6 +78,7 @@ function commitStatusBadge(player) {
 const {
   isGenericBeatArticle,
   isCompositeBio,
+  isChaseProcessIntel,
   firstVerifiedIntel,
   verifiedStrengthsList,
   isVerifiedScoutingTrait,
@@ -139,10 +140,16 @@ function buildCommitFanSkinny(player) {
 
   const verified = firstVerifiedIntel(
     player,
-    ['insiderNotes', 'evaluatorNotes', 'profileNote', 'notes', 'evaluationSummary'],
+    // Prefer true scouting fields; profileNote/notes often hold chase templates.
+    ['evaluatorNotes', 'evaluationSummary', 'insiderNotes', 'skinny', 'profileNote', 'notes'],
     player.name
   );
-  if (verified && verified.length >= 40 && !isCompositeBio(verified)) {
+  if (
+    verified &&
+    verified.length >= 40 &&
+    !isCompositeBio(verified) &&
+    !isChaseProcessIntel(verified)
+  ) {
     return verified.length > 360 ? `${verified.slice(0, 357).trim()}…` : verified;
   }
 

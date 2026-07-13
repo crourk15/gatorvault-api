@@ -139,10 +139,56 @@ function playerLastName(name) {
   return parts.length ? parts[parts.length - 1] : '';
 }
 
+/** Chase / process copy — not player scouting. Never use as commit skinny. */
+const CHASE_PROCESS_PATTERNS = [
+  /shown interest in Florida/i,
+  /scheduled for an official visit/i,
+  /expected on campus again/i,
+  /evaluate (him|her|them) as a (priority|secondary)\b/i,
+  /remains on Florida['']s (priority|secondary)\b/i,
+  /Florida['']s (priority|secondary) .{0,12} board/i,
+  /GV Scout Update/i,
+  /Getting to Know:/i,
+  /COMMIT YouTube/i,
+  /\bYouTube:\s*$/i,
+  /Goes \d-for-\d at\b/i,
+  /DETAILS:\s*\(On3\+?\)/i,
+  /projects as a secondary .{1,20} addition for the Gators/i,
+  /caught up with .{0,40}commit to learn more about/i,
+  /spoke with .{0,40}commit to learn more about/i,
+  /recruiting (journey|process|process,)/i,
+  /how he fell in love with/i,
+  /finding his love/i,
+  /is scheduled for an? (official|unofficial) visit/i,
+  /visit this week/i,
+  /continue[sd]? to evaluate (him|her|them)/i,
+  /^Committed to Florida on \d{4}-\d{2}-\d{2}/i,
+  /\bcommitted to Florida on (January|February|March|April|May|June|July|August|September|October|November|December)\b/i,
+  /projects as a (priority|secondary) .{1,28} addition for the Gators/i,
+  /Fantasy Football|Dynasty TE|premium top \d+/i,
+  /\d+ days ago\b/i,
+  /By [A-Z][a-z]+ [A-Z][a-z]+\s+\d+ days ago/i,
+];
+
+/**
+ * Recruiting-process / chase / article-scrape text — not "who is this player" skinny.
+ * Safe to call without a player name.
+ */
+function isChaseProcessIntel(text) {
+  const s = String(text || '').trim();
+  if (!s) return true;
+  if (CHASE_PROCESS_PATTERNS.some((re) => re.test(s))) return true;
+  // Visit-template + scout-update mashups (common on commit cards).
+  if (/official visit/i.test(s) && /target\./i.test(s)) return true;
+  if (/Scout Update/i.test(s) && /Evaluation from/i.test(s)) return true;
+  return false;
+}
+
 /** Beat-article snippet or mis-attributed On3 scrape — not player-specific scouting intel. */
 function isGenericBeatArticle(text, playerName) {
   const s = String(text || '').trim();
   if (!s || s.length < 10) return true;
+  if (isChaseProcessIntel(s)) return true;
   if (JUNK_INTEL_PATTERNS.some((re) => re.test(s))) return true;
   if (/^The Florida Gators\b/i.test(s)) return true;
   if (/^Miami is still working\b/i.test(s)) return true;
@@ -182,7 +228,14 @@ function firstVerifiedIntel(player, fields, playerName) {
     const val = player[key];
     if (val == null) continue;
     const s = String(val).trim();
-    if (s && !isGenericBeatArticle(s, name) && !isCompositeBio(s)) return s;
+    if (
+      s &&
+      !isGenericBeatArticle(s, name) &&
+      !isCompositeBio(s) &&
+      !isChaseProcessIntel(s)
+    ) {
+      return s;
+    }
   }
   return null;
 }
@@ -292,6 +345,7 @@ module.exports = {
   hasMeaningfulOn3Fields,
   assessOn3Intel,
   isGenericBeatArticle,
+  isChaseProcessIntel,
   isCompositeBio,
   isLowQualityIntelText,
   isVerifiedScoutingTrait,

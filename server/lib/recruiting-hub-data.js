@@ -35,7 +35,10 @@ const {
 } = require('./commitment-prediction-override');
 
 const DEFAULT_CLASS_YEARS = [2026, 2027, 2028];
-const FEED_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+/** Intel / offers / visits eligible for the hub feed. */
+const FEED_WINDOW_MS = 14 * 24 * 60 * 60 * 1000;
+/** Commits older than this belong on Commit Class, not Movement. */
+const COMMIT_FEED_MAX_AGE_MS = 5 * 24 * 60 * 60 * 1000;
 const RECENT_VISIT_MS = 14 * 24 * 60 * 60 * 1000;
 const MOMENTUM_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 const OFFER_INTEL_WINDOW_MS = 90 * 24 * 60 * 60 * 1000;
@@ -701,10 +704,14 @@ function boardMovementItem(meta) {
     (meta.movementDirection === 'up'
       ? 'UF trending up on the board'
       : 'UF trending down on the board');
+  const stamp = meta.updatedAt || meta.movementUpdatedAt || meta.lastIntelAt;
+  const parsed = stamp ? new Date(stamp) : null;
+  const timestamp =
+    parsed && !Number.isNaN(parsed.getTime()) ? parsed.toISOString() : new Date().toISOString();
 
   return {
     id: `board-${meta.slug}-${meta.movementDirection}`,
-    timestamp: new Date().toISOString(),
+    timestamp,
     name: meta.name,
     position: meta.position,
     class: meta.classYear,
@@ -783,28 +790,44 @@ function isThinVisitFeedItem(item) {
   return /unofficial visit|^(visit update|visit)\b/.test(summary);
 }
 
-/** Prefer commits / real movement; drop visit spam; keep feed short for fans. */
+/** Prefer fresh traction: recent commits/offers/swings over stale visit dumps. */
 function curateHubMovementFeed(items) {
-  const ranked = [...items].sort((a, b) => {
-    const wa = FEED_EVENT_WEIGHT[a.event] ?? 8;
-    const wb = FEED_EVENT_WEIGHT[b.event] ?? 8;
-    if (wa !== wb) return wa - wb;
-    const na = a.movementNarrative ? 0 : 1;
-    const nb = b.movementNarrative ? 0 : 1;
-    if (na !== nb) return na - nb;
-    return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-  });
+  const now = Date.now();
+  const ranked = [...items]
+    .filter((item) => {
+      const ts = new Date(item.timestamp).getTime();
+      if (!Number.isFinite(ts)) return false;
+      if (item.event === 'commit' && now - ts > COMMIT_FEED_MAX_AGE_MS) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      const score = (item) => {
+        const ageHours = Math.max(0, (now - new Date(item.timestamp).getTime()) / 3_600_000);
+        const eventBoost =
+          {
+            commit: 50,
+            offer: 35,
+            up: 40,
+            down: 30,
+            intel: 25,
+            visit: 12,
+          }[item.event] ?? 0;
+        const narrativeBoost = item.movementNarrative ? 18 : 0;
+        return eventBoost + narrativeBoost - ageHours;
+      };
+      return score(b) - score(a);
+    });
 
   const out = [];
   let visitCount = 0;
   for (const item of ranked) {
     if (isThinVisitFeedItem(item)) continue;
     if (item.event === 'visit') {
-      if (visitCount >= 3) continue;
+      if (visitCount >= 2) continue;
       visitCount += 1;
     }
     out.push(item);
-    if (out.length >= 10) break;
+    if (out.length >= 8) break;
   }
   return out;
 }
@@ -855,6 +878,7 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
       if (!isFloridaSchool(raw.committedTo)) continue;
       const ts = new Date(commitFeedTimestamp({}, raw)).getTime();
       if (!Number.isFinite(ts) || ts < cutoff) continue;
+      if (Date.now() - ts > COMMIT_FEED_MAX_AGE_MS) continue;
       const meta = {
         slug,
         name: raw.name,

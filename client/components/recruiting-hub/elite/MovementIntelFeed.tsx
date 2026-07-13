@@ -46,7 +46,7 @@ export function MovementIntelFeed(): React.ReactElement {
       <div className="rh-section-header">
         <div className="rh-section-title">Movement Intel</div>
         <div className="rh-section-subtitle">
-          Recent commits, visits, and board swings for the {activeYear} class.
+          Fresh board traction for the {activeYear} class — commits, swings, and real visit heat.
         </div>
       </div>
       {loading ? (
