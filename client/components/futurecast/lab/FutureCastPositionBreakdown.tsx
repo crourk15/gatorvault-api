@@ -172,11 +172,7 @@ export function FutureCastPositionBreakdown({
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-position-breakdown">
       <p className="fc-lab-need-meta">
         <span className={`fc-lab-need-confidence fc-lab-need-confidence--${board.confidence}`}>
-          {board.confidence === 'high'
-            ? 'Auto-updating'
-            : board.confidence === 'medium'
-              ? 'Partial data'
-              : 'Loading inputs'}
+          {board.confidence === 'high' ? 'Auto-updating' : 'Loading inputs'}
         </span>
         <span className="fc-lab-need-meta__note">{board.confidenceNote}</span>
       </p>

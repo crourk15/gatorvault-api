@@ -88,7 +88,7 @@ export type PositionNeedBoard = {
   rows: PositionNeedRow[];
   boardClassYear: number;
   commitClassYear: number;
-  confidence: 'high' | 'medium' | 'low';
+  confidence: 'high' | 'low';
   confidenceNote: string;
   methodNote: string;
   updatedAt: string;
@@ -371,9 +371,7 @@ export function buildPositionNeedBoard(input: {
     confidenceNote:
       confidence === 'high'
         ? `Live roster loaded · ${commitCount} UF commit${commitCount === 1 ? '' : 's'} in the 2027 class.`
-        : confidence === 'medium'
-          ? 'Partial inputs — ranking may lag until roster finishes loading.'
-          : 'Waiting on the roster feed — need order not ready yet.',
+        : 'Waiting on the roster feed — need order not ready yet.',
     methodNote:
       'Need order = current roster depth, players with ≤1 year of eligibility left, and 2027 UF commits vs a typical scholarship floor. Early NFL exits and unofficial portal rumors are not counted until the roster/commit feeds update.',
     updatedAt: input.updatedAt || new Date().toISOString(),
