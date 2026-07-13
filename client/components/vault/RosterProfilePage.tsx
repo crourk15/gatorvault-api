@@ -9,6 +9,7 @@ import {
 import {
   careerSeasonsForPos,
   formatGameStatLine,
+  formatRecentGameHeadline,
   formatSyncedAt,
   hasProductionStats,
   pickPrimarySeason,
@@ -63,15 +64,16 @@ function signalMeta(signal: { signalType: string; createdAt?: string | null }): 
   return '';
 }
 
-function fallbackPulseText(
-  player: RosterPlayer,
-  standNote: string | null | undefined
-): string {
-  return (
-    player.transferInfo?.trim() ||
-    (!standNote ? player.bio?.trim() : null) ||
-    'No recent pulse — check Scouting for the full evaluation.'
-  );
+function fallbackPulseText(player: RosterPlayer): string {
+  const games = player.productionStats?.recentGames;
+  if (games?.length) {
+    const g = games[0];
+    const head = formatRecentGameHeadline(g);
+    const line = formatGameStatLine(g);
+    if (line && line !== '—') return `${head}: ${line}`;
+    return head;
+  }
+  return 'No recent pulse — check Scouting for the full evaluation.';
 }
 
 function RosterProfileTabs({
@@ -140,10 +142,7 @@ function ProductionStatsOverview({ player }: { player: RosterPlayer }): React.Re
           <ul>
             {games.map((g) => (
               <li key={`${g.season}-${g.week}-${g.opponent}-${g.date}`}>
-                <span className="gv-roster-prod__opp">
-                  {g.homeAway === 'away' ? '@ ' : 'vs '}
-                  {g.opponent}
-                </span>
+                <span className="gv-roster-prod__opp">{formatRecentGameHeadline(g)}</span>
                 <span className="gv-roster-prod__line">{formatGameStatLine(g)}</span>
               </li>
             ))}
@@ -202,8 +201,7 @@ function ProductionStatsTab({ player }: { player: RosterPlayer }): React.ReactEl
                   {g.season}
                   {g.week != null ? ` W${g.week}` : ''}
                   {' · '}
-                  {g.homeAway === 'away' ? '@ ' : 'vs '}
-                  {g.opponent}
+                  {formatRecentGameHeadline(g)}
                 </span>
                 <span className="gv-roster-prod__line">{formatGameStatLine(g)}</span>
               </li>
@@ -347,7 +345,7 @@ export function RosterProfilePage({
   }, [player.name, player.slug, inVault]);
 
   const showPhoto = photoIndex < photos.length;
-  const fallbackText = fallbackPulseText(player, stand.note);
+  const fallbackText = fallbackPulseText(player);
   const pulse =
     pulseSignals && pulseSignals.length > 0 ? (
       <ul className="fc-signal-feed fc-signal-feed--compact">
@@ -362,9 +360,7 @@ export function RosterProfilePage({
         ))}
       </ul>
     ) : (
-      <p className={player.bio || player.transferInfo ? 'gv-roster-profile__bio' : 'fc-profile-muted'}>
-        {fallbackText}
-      </p>
+      <p className="fc-profile-muted">{fallbackText}</p>
     );
 
   const who = (

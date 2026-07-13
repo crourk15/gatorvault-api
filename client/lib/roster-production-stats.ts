@@ -127,6 +127,31 @@ export function formatSyncedAt(iso: string | null | undefined): string {
   }
 }
 
+export function formatGameDate(iso: string | null | undefined): string {
+  if (!iso) return '';
+  try {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  } catch {
+    return '';
+  }
+}
+
+export function formatGameOpponentLabel(game: ProductionGameLine): string {
+  const opp = String(game.opponent || '').trim();
+  const name = !opp || /^opponent$/i.test(opp) ? 'Opponent' : opp;
+  const prefix = game.homeAway === 'away' ? '@ ' : game.homeAway === 'home' ? 'vs ' : '';
+  return `${prefix}${name}`;
+}
+
+export function formatRecentGameHeadline(game: ProductionGameLine): string {
+  const when = formatGameDate(game.date);
+  const opp = formatGameOpponentLabel(game);
+  return when ? `${when} · ${opp}` : opp;
+}
+
+
 export function hasProductionStats(player: RosterPlayer): boolean {
   const s = player.productionStats;
   if (!s || s.source !== 'cfbd') return false;

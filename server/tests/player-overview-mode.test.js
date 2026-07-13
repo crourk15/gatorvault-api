@@ -68,4 +68,45 @@ describe('player-overview-mode', () => {
     const blob = JSON.stringify(stand).toLowerCase();
     assert.doesNotMatch(blob, /competing|the field|board leader/);
   });
+
+  it('buildRosterStand uses bio take and skips header-duplicate metrics', () => {
+    const stand = mod.buildRosterStand({
+      name: 'Brendan Bett',
+      slug: 'brendan-bett',
+      pos: 'DL',
+      year: 'R-Jr.',
+      jersey: 90,
+      stars: 3,
+      depthChartTier: 'rotation',
+      bio: "Baylor transfer nose tackle - key piece in Brad White's 3-3-5 front.",
+      vaultGrade: 84,
+    });
+    assert.match(stand.headline, /Baylor transfer nose tackle/i);
+    assert.equal(stand.note, 'rotation on the Florida depth chart');
+    assert.ok(!stand.metrics.some((m) => /stars|jersey/i.test(m.label)));
+    assert.ok(stand.metrics.some((m) => m.label === 'Vault grade'));
+  });
+
+  it('buildRosterContext keeps Path only and hides empty context', () => {
+    const withPath = mod.buildRosterContext({
+      name: 'Brendan Bett',
+      slug: 'brendan-bett',
+      pos: 'DL',
+      year: 'R-Jr.',
+      unit: 'defense',
+      depthChartTier: 'rotation',
+      transferInfo: 'Transfer from Baylor',
+    });
+    assert.ok(withPath);
+    assert.equal(withPath.rows.length, 1);
+    assert.equal(withPath.rows[0].label, 'Path');
+    assert.ok(!withPath.rows.some((r) => /position|unit|class|depth/i.test(r.label)));
+
+    const empty = mod.buildRosterContext({
+      name: 'Homegrown',
+      slug: 'homegrown',
+      pos: 'WR',
+    });
+    assert.equal(empty, null);
+  });
 });

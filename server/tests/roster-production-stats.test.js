@@ -180,3 +180,42 @@ test('hasCfbdApiKey reflects env without throwing', () => {
 });
 
 console.log('all roster production stats tests passed');
+
+test('aggregateGameStats resolves opponent from homeTeam/awayTeam when only Florida box is present', () => {
+  const { aggregateGameStats } = require('../lib/roster-production-stats-transform');
+  const byPlayer = aggregateGameStats(
+    [
+      {
+        week: 4,
+        startDate: '2025-09-20T16:00:00.000Z',
+        homeTeam: 'Florida',
+        awayTeam: 'Texas',
+        teams: [
+          {
+            school: 'Florida',
+            homeAway: 'home',
+            categories: [
+              {
+                name: 'defensive',
+                types: [
+                  {
+                    name: 'TOT',
+                    athletes: [{ id: 5086808, name: 'Brendan Bett', stat: '4' }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    2025
+  );
+  const games = byPlayer.get('id:5086808');
+  assert.ok(games);
+  assert.equal(games[0].opponent, 'Texas');
+  assert.equal(games[0].homeAway, 'home');
+  assert.equal(games[0].week, 4);
+  assert.ok(String(games[0].date).startsWith('2025-09-20'));
+});
+

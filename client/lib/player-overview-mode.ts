@@ -304,53 +304,53 @@ export function buildRecruitingContext(input: {
   return null;
 }
 
+/**
+ * Roster Stand: one Florida take + up to two metrics not already in the header.
+ * Stars/jersey/class/pos belong in Who or the hero — do not repeat them here.
+ */
 export function buildRosterStand(player: RosterPlayer): OverviewStand {
-  const pos = player.pos || player.position || '—';
-  const year = player.year || player.class || '—';
-  const tier = player.depthChartTier || null;
+  const pos = player.pos || player.position || 'player';
+  const tier = player.depthChartTier?.trim() || null;
+  const take = firstSentence(player.bio);
   const metrics: OverviewMetric[] = [];
   if (player.vaultGrade != null) {
     metrics.push({ label: 'Vault grade', value: String(player.vaultGrade) });
   }
-  if (player.stars != null) {
-    metrics.push({ label: 'Stars', value: `${player.stars}★` });
-  }
-  if (player.jersey != null && player.jersey !== '') {
-    metrics.push({ label: 'Jersey', value: `#${player.jersey}` });
-  }
 
-  const headline = tier
-    ? `${tier} on the Florida depth chart · ${pos} · ${year}`
-    : `Florida roster · ${pos} · ${year}`;
+  if (take) {
+    return {
+      eyebrow: 'Florida stand',
+      headline: take,
+      metrics: metrics.slice(0, 2),
+      note: tier ? `${tier} on the Florida depth chart` : null,
+    };
+  }
 
   return {
     eyebrow: 'Florida stand',
-    headline: firstSentence(player.bio) || headline,
-    metrics,
-    note: firstSentence(player.bio) && tier ? headline : null,
+    headline: tier
+      ? `${tier} ${pos} on the Florida depth chart`
+      : `Florida roster · ${pos}`,
+    metrics: metrics.slice(0, 2),
+    note: null,
   };
 }
 
+/**
+ * Roster Context: only facts not already in the header / Who.
+ * Hide the slot entirely when there is nothing unique to say.
+ */
 export function buildRosterContext(player: RosterPlayer): {
   title: string;
   rows: OverviewContextRow[];
   empty: string | null;
-} {
-  const rows: OverviewContextRow[] = [
-    {
-      label: 'Position',
-      value: player.pos || player.position || '—',
-      emphasize: true,
-    },
-  ];
-  if (player.unit) rows.push({ label: 'Unit', value: player.unit });
-  if (player.depthChartTier) {
-    rows.push({ label: 'Depth tier', value: player.depthChartTier, emphasize: true });
+} | null {
+  const rows: OverviewContextRow[] = [];
+  const pathInfo = player.transferInfo?.trim();
+  if (pathInfo) {
+    rows.push({ label: 'Path', value: pathInfo, emphasize: true });
   }
-  rows.push({ label: 'Class', value: player.year || player.class || '—' });
-  if (player.transferInfo) {
-    rows.push({ label: 'Path', value: player.transferInfo });
-  }
+  if (!rows.length) return null;
   return { title: 'Context', rows, empty: null };
 }
 

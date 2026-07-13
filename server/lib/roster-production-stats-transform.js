@@ -233,6 +233,39 @@ function aggregateSeasonStats(rows) {
   return out;
 }
 
+function resolveGameMeta(game, team) {
+  const home = String(game.homeTeam || game.home_team || '').trim();
+  const away = String(game.awayTeam || game.away_team || '').trim();
+  const teams = game.teams || [];
+  const other = teams.find(
+    (t) => String(t.school || t.team || '').toLowerCase() !== 'florida'
+  );
+  let opponent = String(
+    other?.school || other?.team || team.opponent || ''
+  ).trim();
+  let homeAway = team.homeAway ? String(team.homeAway).toLowerCase() : null;
+
+  if (home && away) {
+    if (home.toLowerCase() === 'florida') {
+      if (!opponent) opponent = away;
+      if (!homeAway) homeAway = 'home';
+    } else if (away.toLowerCase() === 'florida') {
+      if (!opponent) opponent = home;
+      if (!homeAway) homeAway = 'away';
+    }
+  }
+  if (game.neutralSite || game.neutral_site) homeAway = 'neutral';
+
+  const weekRaw = game.week != null ? Number(game.week) : null;
+  const date = game.startDate || game.start_date || game.date || null;
+  return {
+    opponent: opponent || 'Opponent',
+    homeAway,
+    week: Number.isFinite(weekRaw) ? weekRaw : null,
+    date: date ? String(date) : null,
+  };
+}
+
 /**
  * Flatten /games/players nested box scores into recentGames per player key.
  */
@@ -241,22 +274,11 @@ function aggregateGameStats(gamePayloads, seasonYear) {
   const byPlayer = new Map();
 
   for (const game of gamePayloads || []) {
-    const week = game.week != null ? Number(game.week) : null;
-    const date = game.startDate || game.date || null;
     const teams = game.teams || [];
     for (const team of teams) {
       const school = String(team.school || team.team || '');
       if (school.toLowerCase() !== 'florida') continue;
-      const opponent =
-        String(
-          teams.find((t) => String(t.school || t.team || '').toLowerCase() !== 'florida')?.school ||
-            team.opponent ||
-            'Opponent'
-        ) || 'Opponent';
-      let homeAway = null;
-      if (team.homeAway) homeAway = String(team.homeAway).toLowerCase();
-      else if (game.homeTeam && String(game.homeTeam).toLowerCase() === 'florida') homeAway = 'home';
-      else if (game.awayTeam && String(game.awayTeam).toLowerCase() === 'florida') homeAway = 'away';
+      const meta = resolveGameMeta(game, team);
 
       for (const cat of team.categories || []) {
         const category = normalizeCategory(cat.name || cat.category);
@@ -277,17 +299,17 @@ function aggregateGameStats(gamePayloads, seasonYear) {
             let g = games.find(
               (x) =>
                 x.season === seasonYear &&
-                x.week === week &&
-                x.opponent === opponent &&
+                x.week === meta.week &&
+                x.opponent === meta.opponent &&
                 x._cat === category
             );
             if (!g) {
               g = {
                 season: seasonYear,
-                week: Number.isFinite(week) ? week : null,
-                date: date ? String(date) : null,
-                opponent,
-                homeAway,
+                week: meta.week,
+                date: meta.date,
+                opponent: meta.opponent,
+                homeAway: meta.homeAway,
                 stats: {},
                 _cat: category,
               };
