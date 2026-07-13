@@ -11,9 +11,8 @@ export function FutureCastLabAnchors(): React.ReactElement {
   const sections = useMemo(
     () =>
       FUTURECAST_LAB_SECTIONS.filter((section) => {
-        if (section.id === FUTURECAST_LAB_ANCHORS.visits && discoveryView) return false;
-        if (section.id === FUTURECAST_LAB_ANCHORS.movement && discoveryView) return false;
-        if (section.id === FUTURECAST_LAB_ANCHORS.overview) return false;
+        if (discoveryView && section.id === FUTURECAST_LAB_ANCHORS.visits) return false;
+        if (discoveryView && section.id === FUTURECAST_LAB_ANCHORS.movement) return false;
         return true;
       }),
     [discoveryView]
