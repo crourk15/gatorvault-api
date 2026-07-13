@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const fetch = require('node-fetch');
 const { parseRssItems } = require('./rss-parse');
 const { withRetries } = require('./ingest-resilience');
@@ -10,6 +12,65 @@ const NITTER_BASES = (process.env.NITTER_BASES || 'https://nitter.poast.org,http
   .split(',')
   .map((s) => s.trim())
   .filter(Boolean);
+
+/** Default tweets pulled per writer — keep low to conserve X API credits. */
+const DEFAULT_MAX_POSTS = Math.min(
+  20,
+  Math.max(5, parseInt(process.env.X_BEAT_MAX_POSTS_PER_WRITER || '5', 10) || 5)
+);
+const NATIONAL_MAX_POSTS = Math.min(
+  DEFAULT_MAX_POSTS,
+  Math.max(3, parseInt(process.env.X_BEAT_NATIONAL_MAX_POSTS || '3', 10) || 3)
+);
+
+/** Multi-sport / national accounts — fewer tweets (most get filtered as non-UF-football). */
+const CREDIT_THROTTLED_HANDLES = new Set([
+  ...beatFilters.NATIONAL_UF_ONLY_HANDLES,
+  ...beatFilters.REQUIRES_UF_CONTEXT_HANDLES,
+  'floridagators',
+  'ufathletics',
+  'on3recruits',
+  'rivalsportal',
+  'ejhollandon3'
+]);
+
+/** Skip polling multi-sport athletics accounts (GatorsFB covers football official). */
+const SKIP_FETCH_HANDLES = new Set(
+  String(process.env.X_BEAT_SKIP_HANDLES || 'floridagators,ufathletics')
+    .split(',')
+    .map((s) => s.trim().toLowerCase().replace(/^@/, ''))
+    .filter(Boolean)
+);
+
+const USER_ID_CACHE_PATH = path.join(__dirname, '..', 'data', 'live', 'x-user-ids.json');
+let _userIdCache = null;
+
+function loadUserIdCache() {
+  if (_userIdCache) return _userIdCache;
+  try {
+    _userIdCache = JSON.parse(fs.readFileSync(USER_ID_CACHE_PATH, 'utf8'));
+  } catch {
+    _userIdCache = {};
+  }
+  return _userIdCache;
+}
+
+function saveUserIdCache() {
+  try {
+    fs.mkdirSync(path.dirname(USER_ID_CACHE_PATH), { recursive: true });
+    fs.writeFileSync(USER_ID_CACHE_PATH, JSON.stringify(_userIdCache || {}, null, 2));
+  } catch (e) {
+    console.warn('[live-beat] user id cache write failed:', e.message);
+  }
+}
+
+function maxPostsForHandle(handle) {
+  const h = String(handle || '')
+    .toLowerCase()
+    .replace(/^@/, '');
+  if (CREDIT_THROTTLED_HANDLES.has(h)) return NATIONAL_MAX_POSTS;
+  return DEFAULT_MAX_POSTS;
+}
 
 let _xTokenStatus = {
   configured: false,
@@ -130,9 +191,12 @@ async function fetchText(url, timeoutMs = 12000) {
   );
 }
 
-async function fetchXUserTimeline(handle, { maxPosts = 10 } = {}) {
-  const headers = xAuthHeaders();
-  if (!headers) return null;
+async function resolveXUserId(handle, headers) {
+  const key = String(handle || '')
+    .toLowerCase()
+    .replace(/^@/, '');
+  const cache = loadUserIdCache();
+  if (cache[key]?.id) return cache[key].id;
 
   const userJson = await withRetries(
     async () => {
@@ -147,13 +211,26 @@ async function fetchXUserTimeline(handle, { maxPosts = 10 } = {}) {
       }
       return userRes.json();
     },
-    { label: `X user @${handle}`, attempts: 3, baseDelayMs: 1000 }
+    { label: `X user @${handle}`, attempts: 2, baseDelayMs: 1000 }
   );
 
   const userId = userJson.data?.id;
+  if (!userId) return null;
+  cache[key] = { id: userId, cachedAt: store.nowIso() };
+  _userIdCache = cache;
+  saveUserIdCache();
+  return userId;
+}
+
+async function fetchXUserTimeline(handle, { maxPosts } = {}) {
+  const headers = xAuthHeaders();
+  if (!headers) return null;
+
+  const capped = maxPosts != null ? maxPosts : maxPostsForHandle(handle);
+  const userId = await resolveXUserId(handle, headers);
   if (!userId) return [];
 
-  const maxResults = Math.min(100, Math.max(5, maxPosts));
+  const maxResults = Math.min(100, Math.max(5, capped));
   const tweetsJson = await withRetries(
     async () => {
       const tweetsRes = await fetch(
@@ -163,11 +240,15 @@ async function fetchXUserTimeline(handle, { maxPosts = 10 } = {}) {
       if (!tweetsRes.ok) {
         const err = new Error(`X tweets ${tweetsRes.status}`);
         err.status = tweetsRes.status;
+        // Don't burn retries on credit/auth failures
+        if (tweetsRes.status === 402 || tweetsRes.status === 401 || tweetsRes.status === 403) {
+          err.noRetry = true;
+        }
         throw err;
       }
       return tweetsRes.json();
     },
-    { label: `X tweets @${handle}`, attempts: 3, baseDelayMs: 1000 }
+    { label: `X tweets @${handle}`, attempts: 2, baseDelayMs: 1000 }
   );
   const writer = store.loadWriters().find((w) => w.handle.toLowerCase() === handle.toLowerCase());
   return (tweetsJson.data || []).map((t) => {
@@ -216,17 +297,18 @@ async function fetchNitterRss(handle, { maxPosts = 8 } = {}) {
   throw lastErr || new Error('Nitter unavailable');
 }
 
-async function fetchWriterPosts(writer, { maxPosts = 10 } = {}) {
+async function fetchWriterPosts(writer, { maxPosts } = {}) {
+  const capped = maxPosts != null ? maxPosts : maxPostsForHandle(writer.handle);
   try {
     if (getXBearerToken()) {
       try {
-        const posts = await fetchXUserTimeline(writer.handle, { maxPosts });
+        const posts = await fetchXUserTimeline(writer.handle, { maxPosts: capped });
         if (posts && posts.length) return posts;
       } catch (e) {
         /* fall through to Nitter */
       }
     }
-    return await fetchNitterRss(writer.handle, { maxPosts });
+    return await fetchNitterRss(writer.handle, { maxPosts: capped });
   } catch (e) {
     return [];
   }
@@ -333,6 +415,10 @@ async function purgeNonFloridaBeatContent({ refreshDashboard = true } = {}) {
 }
 
 function isAllowedFetchWriter(writer) {
+  const handle = String(writer?.handle || '')
+    .toLowerCase()
+    .replace(/^@/, '');
+  if (SKIP_FETCH_HANDLES.has(handle)) return false;
   return ingestGate.isAllowedIngestAccount({
     handle: writer.handle,
     writerId: writer.id,

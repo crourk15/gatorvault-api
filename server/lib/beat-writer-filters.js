@@ -300,6 +300,7 @@ function strictUfOnlyBlockReason(post, text) {
   if (isOtherProgramReporter(post) && !hasUfIngestContext(post, text)) return 'rival_program_reporter';
   if (mentionsOtherProgramWithoutUf(text, post)) return 'other_program_without_uf';
   if (!hasUfIngestContext(post, text)) return 'missing_uf_context';
+  if (hasUfIngestContext(post, text) && !isUfFootballEligible(post, text)) return 'non_football_sport';
   return 'hard_block_non_uf';
 }
 
@@ -314,12 +315,26 @@ function isHardBlockedNonUfContent(text, post = null) {
   return false;
 }
 
-/** Strict UF-only gate for beat ingest + Movement Intel surfacing. */
+function isUfFootballEligible(post, text) {
+  const body = `${text || ''} ${post?.summary || ''} ${post?.title || ''}`.trim();
+  if (!body) return false;
+  try {
+    const sportClassifier = require('./x-autoposter-sport-classifier');
+    return sportClassifier.isFootballAutoposterEligible(body, post);
+  } catch {
+    // Classifier missing — fall back to football keyword heuristic
+    return matchesGatorFootballIntel(body) || /\b(football|recruit|commit|qb|wr|rb|portal|sumrall|napier)\b/i.test(body);
+  }
+}
+
+/** Strict UF football-only gate for beat ingest + Movement Intel surfacing. */
 function passesStrictUfOnlyFilter(post, text) {
   const body = `${text || ''} ${post?.summary || ''} ${post?.title || ''}`.trim();
   if (!body) return false;
 
-  if (isUfOfficialAccount(post) && isFloridaRelevant(body)) return true;
+  if (isUfOfficialAccount(post) && isFloridaRelevant(body)) {
+    return isUfFootballEligible(post, body);
+  }
   if (isHardBlockedNonUfContent(body, post)) return false;
   if (mentionsOtherProgramWithoutUf(body, post)) return false;
 
@@ -330,7 +345,8 @@ function passesStrictUfOnlyFilter(post, text) {
 
   if (requiresUfContextReporter(post) && !hasUfIngestContext(post, body)) return false;
 
-  return hasUfIngestContext(post, body);
+  if (!hasUfIngestContext(post, body)) return false;
+  return isUfFootballEligible(post, body);
 }
 
 function shouldIncludeBeatPost(post, options = {}) {
@@ -501,6 +517,7 @@ module.exports = {
   matchesUfTargetNameInText,
   hasUfIngestContext,
   passesStrictUfOnlyFilter,
+  isUfFootballEligible,
   strictUfOnlyBlockReason,
   filterUfOnlyIntelRows,
   isHardBlockedNonUfContent,

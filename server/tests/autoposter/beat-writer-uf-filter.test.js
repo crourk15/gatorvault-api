@@ -76,4 +76,32 @@ describe('beat-writer UF-only filter', () => {
     assert.equal(beatFilters.isOtherProgramReporter(post), true);
     assert.equal(beatFilters.shouldIncludeBeatPost(post), false);
   });
+
+  it('blocks UF baseball content', () => {
+    const post = {
+      handle: 'corey_bender',
+      writerName: 'Corey Bender',
+      text: 'Florida baseball takes the series with a walk-off home run in Gainesville.',
+    };
+    assert.equal(beatFilters.shouldIncludeBeatPost(post), false);
+    assert.equal(beatFilters.strictUfOnlyBlockReason(post, post.text), 'non_football_sport');
+  });
+
+  it('blocks UF basketball content', () => {
+    const post = {
+      handle: 'floridagators',
+      writerName: 'Florida Gators',
+      text: 'Gators basketball tips off March Madness with a win in the SEC tournament.',
+    };
+    assert.equal(beatFilters.shouldIncludeBeatPost(post), false);
+  });
+
+  it('allows UF football recruiting content', () => {
+    const post = {
+      handle: 'gatorsfb',
+      writerName: 'Florida Gators Football',
+      text: 'Florida football welcomes 2028 WR Easton Royal for an official visit this weekend.',
+    };
+    assert.equal(beatFilters.shouldIncludeBeatPost(post), true);
+  });
 });
