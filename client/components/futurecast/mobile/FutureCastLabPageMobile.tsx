@@ -8,7 +8,6 @@ import { useResolvedLabHighPriority } from '@/components/futurecast/lab/FutureCa
 import { FutureCastHero } from '@/components/futurecast/lab/FutureCastHero';
 import { FutureCastTargetsPanel } from '@/components/futurecast/lab/FutureCastTargetsPanel';
 import { FutureCastBattlesPanel } from '@/components/futurecast/lab/FutureCastBattlesPanel';
-import { FutureCastAnalystSignals } from '@/components/futurecast/lab/FutureCastAnalystSignals';
 import { FutureCastMovementPanel } from '@/components/futurecast/lab/FutureCastMovementPanel';
 import { FutureCastPositionBreakdown } from '@/components/futurecast/lab/FutureCastPositionBreakdown';
 import { FutureCastPortalCrossView } from '@/components/futurecast/lab/FutureCastPortalCrossView';
@@ -67,17 +66,6 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
                 movementIntel={data.movementIntel}
                 highPriority={highPriority}
                 underclassmen={data.underclassmen}
-              />
-            )}
-          </section>
-          <section id={FUTURECAST_LAB_ANCHORS.signals}>
-            {pending ? (
-              <PanelSkeleton minHeight={200} />
-            ) : (
-              <FutureCastAnalystSignals
-                staffNotes={data.staffNotes}
-                masterBoard={data.masterBoard}
-                highPriority={highPriority}
               />
             )}
           </section>

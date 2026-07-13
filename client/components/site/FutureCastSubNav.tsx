@@ -20,7 +20,6 @@ const DISCOVERY_SUB_LINKS: { id: FutureCastSegment; label: string }[] = [
   { id: 'master', label: '2028 Targets' },
   { id: 'trending', label: 'Battles' },
   { id: 'movement', label: 'Movement' },
-  { id: 'staff', label: 'Signals' },
 ];
 
 const BIG_BOARD_HREF = '/vault/futurecast/big-board';

@@ -125,7 +125,7 @@ export const FUTURECAST_SEGMENT_PATHS: Record<FutureCastSegment, string> = {
   master: futureCastLabHref(FUTURECAST_LAB_ANCHORS.masterBoard),
   trending: futureCastLabHref(FUTURECAST_LAB_ANCHORS.trending),
   movement: futureCastLabHref(FUTURECAST_LAB_ANCHORS.movement),
-  staff: futureCastLabHref(FUTURECAST_LAB_ANCHORS.signals),
+  staff: '/vault/futurecast/staff',
 };
 
 /** Jump links for unified FutureCast Lab command center */
@@ -134,7 +134,6 @@ export const FUTURECAST_LAB_SECTIONS = [
   { id: FUTURECAST_LAB_ANCHORS.masterBoard, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.masterBoard), shortLabel: 'Targets' },
   { id: FUTURECAST_LAB_ANCHORS.visits, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.visits), shortLabel: 'Visits' },
   { id: FUTURECAST_LAB_ANCHORS.trending, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.trending), shortLabel: 'Battles' },
-  { id: FUTURECAST_LAB_ANCHORS.signals, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.signals), shortLabel: 'Signals' },
   { id: FUTURECAST_LAB_ANCHORS.movement, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.movement), shortLabel: 'Movement' },
   { id: FUTURECAST_LAB_ANCHORS.positions, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.positions), shortLabel: 'Positions' },
   { id: FUTURECAST_LAB_ANCHORS.portal, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.portal), shortLabel: 'Portal' },
@@ -147,12 +146,13 @@ const FUTURECAST_HASH_SEGMENT: Record<string, FutureCastSegment> = {
   [FUTURECAST_LAB_ANCHORS.masterBoard]: 'master',
   [FUTURECAST_LAB_ANCHORS.trending]: 'trending',
   [FUTURECAST_LAB_ANCHORS.movement]: 'movement',
-  [FUTURECAST_LAB_ANCHORS.signals]: 'staff',
+  /** Old Lab Signals panel removed — send legacy #signals to targets. */
+  [FUTURECAST_LAB_ANCHORS.signals]: 'master',
   'fc-hero': 'master',
   'fc-master': 'master',
   'fc-trending': 'trending',
   'fc-movement': 'movement',
-  'fc-signals': 'staff',
+  'fc-signals': 'master',
 };
 
 /** Legacy board path → trending */
