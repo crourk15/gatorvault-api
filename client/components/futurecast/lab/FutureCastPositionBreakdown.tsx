@@ -12,6 +12,7 @@ import {
   needTierLabel,
   type PositionNeedRow,
 } from '@/lib/fc-position-need-board';
+import { buildSchemeMatchLeaders } from '@/lib/scheme-match-leaders';
 import { FutureCastPanelShell } from './primitives';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 
@@ -164,9 +165,17 @@ export function FutureCastPositionBreakdown({
     });
   }, [discoveryFocus, highPriority, players, roster, commits2027, boardClassYear, updatedAt]);
 
-  const title = `Board by need — ${boardClassYear}`;
-  const sub =
-    'Positions ranked most important → least from current roster + 2027 UF commits, then how the FutureCast board stacks at each room.';
+  const schemeMatches = useMemo(() => {
+    if (!discoveryFocus || !highPriority.length) return [];
+    const needTierByPos: Record<string, (typeof board.rows)[number]['needTier']> = {};
+    for (const row of board.rows) needTierByPos[row.position] = row.needTier;
+    return buildSchemeMatchLeaders(highPriority, needTierByPos, 5);
+  }, [discoveryFocus, highPriority, board.rows]);
+
+  const title = 'How the board fits Florida';
+  const sub = discoveryFocus
+    ? `${boardClassYear} rooms ranked by roster need — plus who fits the scheme.`
+    : `${boardClassYear} rooms ranked by roster need, then how the board stacks at each spot.`;
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-position-breakdown">
@@ -186,6 +195,32 @@ export function FutureCastPositionBreakdown({
           ))}
         </div>
       )}
+
+      {schemeMatches.length > 0 ? (
+        <div className="fc-lab-scheme-inline" data-testid="fc-lab-scheme-matches">
+          <h3 className="fc-lab-scheme-inline__title">Best scheme matches</h3>
+          <p className="fc-lab-scheme-inline__sub">Who fits what Florida needs — not who ranks highest.</p>
+          <ul className="fc-lab-scheme-match-list">
+            {schemeMatches.map((row) => (
+              <li key={row.slug} className="fc-lab-scheme-match">
+                <a href={playerProfileRoute(row.slug, 'futurecast')} className="fc-lab-scheme-match__link">
+                  <div className="fc-lab-scheme-match__head">
+                    <strong className="fc-lab-scheme-match__name">{row.name}</strong>
+                    <span className={`fc-lab-scheme-match__band fc-lab-scheme-match__band--${row.fitBand}`}>
+                      {row.fitLabel}
+                    </span>
+                  </div>
+                  <p className="fc-lab-scheme-match__meta">
+                    {row.position}
+                    {row.school ? ` · ${row.school}` : ''}
+                  </p>
+                  <p className="fc-lab-scheme-match__why">{row.why}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <p className="fc-lab-need-foot">{board.methodNote}</p>
     </FutureCastPanelShell>

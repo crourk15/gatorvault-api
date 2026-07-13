@@ -53,7 +53,7 @@ export function FutureCastMovementPanel({
   highPriority = [],
   underclassmen = [],
   bare,
-}: Props): React.ReactElement {
+}: Props): React.ReactElement | null {
   const [tab, setTab] = useState<Tab>('risers');
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const focusYear = discoveryFocus ? 2028 : 2027;
@@ -61,6 +61,25 @@ export function FutureCastMovementPanel({
     () => discoveryMovementBuckets(underclassmen, highPriority),
     [underclassmen, highPriority]
   );
+
+  const closingHasMovers = useMemo(() => {
+    return (
+      movementIntel.risers.length +
+        movementIntel.fallers.length +
+        movementIntel.highVolatility.length >
+      0
+    );
+  }, [movementIntel]);
+
+  const discoveryHasMovers = useMemo(() => {
+    if (!discoveryBuckets.believable) return false;
+    return (
+      discoveryBuckets.risers.length +
+        discoveryBuckets.fallers.length +
+        discoveryBuckets.highVolatility.length >
+      0
+    );
+  }, [discoveryBuckets]);
 
   const rows = discoveryFocus
     ? tab === 'risers'
@@ -74,19 +93,17 @@ export function FutureCastMovementPanel({
         ? movementIntel.fallers
         : movementIntel.highVolatility;
 
+  if (discoveryFocus ? !discoveryHasMovers : !closingHasMovers) return null;
+
   const title = discoveryFocus
     ? `${focusYear} Discovery Movement`
     : 'FutureCast Movement — 7-Day Window';
   const sub = discoveryFocus
-    ? discoveryBuckets.believable
-      ? 'Real week-over-week GatorVault Florida-odds movers on the allowlist.'
-      : 'Waiting on varied week-over-week Florida-odds changes — uniform board bumps stay hidden.'
-    : 'FutureCast movement window — risers, fallers, and volatile targets.';
+    ? 'Week-over-week Florida-odds movers on the priority board.'
+    : 'Risers, fallers, and volatile targets in the last 7 days.';
 
   const emptyCopy = discoveryFocus
-    ? discoveryBuckets.believable
-      ? `No ${focusYear} movement in this bucket yet.`
-      : `No reliable ${focusYear} weekly movers yet — deltas populate once snapshots diverge.`
+    ? `No ${focusYear} movement in this bucket yet.`
     : 'No movement in this bucket yet.';
 
   return (

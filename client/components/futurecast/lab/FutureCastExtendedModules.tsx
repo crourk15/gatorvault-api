@@ -16,13 +16,10 @@ import { FlipWatchScoreStack } from './FlipWatchScoreStack';
 import { UfTrendSparkline } from '@/components/futurecast/UfTrendSparkline';
 import type { RosterPlayer } from '@/lib/roster-api';
 import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
-import { buildPositionNeedBoard } from '@/lib/fc-position-need-board';
-import { buildSchemeMatchLeaders } from '@/lib/scheme-match-leaders';
 import { PlayerIntelTimelineStrip } from './PlayerIntelTimelineStrip';
 import { ufPctFromFc } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
-import { TargetBoardPreview } from '@/components/futurecast/TargetBoardPreview';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import { formatRecruitSchoolLabel } from '@/lib/recruiting-display-utils';
 import {
@@ -55,11 +52,6 @@ function formatUfDisplay(
   const pct = Math.round(p.ufProbability ?? 0);
   if (p.ufProbabilityLabel) return `${p.ufProbabilityLabel} ${pct}%`;
   return `${pct}%`;
-}
-
-function formatMetric(value: number | null | undefined, suffix = '%'): string {
-  if (value == null || Number.isNaN(value)) return 'TBD';
-  return `${Math.round(value)}${suffix}`;
 }
 
 function formatTrendDelta(value: number | null | undefined): string {
@@ -162,35 +154,32 @@ function ModuleList({
   );
 }
 
-function SmartAlertsPanel({ alerts }: { alerts: IntelFeedItem[] }): React.ReactElement {
+function SmartAlertsPanel({ alerts }: { alerts: IntelFeedItem[] }): React.ReactElement | null {
+  if (alerts.length === 0) return null;
   return (
-    <FutureCastPanelShell title="Smart Alerts" sub="Deduped movement, visits, and staff intel." testId="fc-lab-smart-alerts">
-      {alerts.length === 0 ? (
-        <p className="rh-cc-empty">No alerts — monitoring allowlist targets.</p>
-      ) : (
-        <ul className="fc-lab-alert-list">
-          {alerts.map((a) => (
-            <li key={a.id} className="fc-lab-alert-list__row">
-              <span className="fc-lab-alert-list__icon" aria-hidden>
-                {a.icon}
-              </span>
-              <div className="fc-lab-alert-list__body">
-                <p className="fc-lab-alert-list__headline">
-                  {a.headline}
-                  {a.category === 'Visit' || a.category === 'Flip Watch' ? (
-                    <GatorVaultConfirmedBadge sourceLabel={a.source} compact />
-                  ) : null}
-                </p>
-                <p className="fc-lab-alert-list__meta">
-                  <span className="fc-lab-alert-list__cat">{a.category}</span>
-                  {' · '}
-                  {formatIntelTimestamp(a.timestamp)}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+    <FutureCastPanelShell title="Smart Alerts" sub="Movement, visits, and staff intel — deduped." testId="fc-lab-smart-alerts">
+      <ul className="fc-lab-alert-list">
+        {alerts.map((a) => (
+          <li key={a.id} className="fc-lab-alert-list__row">
+            <span className="fc-lab-alert-list__icon" aria-hidden>
+              {a.icon}
+            </span>
+            <div className="fc-lab-alert-list__body">
+              <p className="fc-lab-alert-list__headline">
+                {a.headline}
+                {a.category === 'Visit' || a.category === 'Flip Watch' ? (
+                  <GatorVaultConfirmedBadge sourceLabel={a.source} compact />
+                ) : null}
+              </p>
+              <p className="fc-lab-alert-list__meta">
+                <span className="fc-lab-alert-list__cat">{a.category}</span>
+                {' · '}
+                {formatIntelTimestamp(a.timestamp)}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
       <p className="fc-lab-panel-footer">
         <a href="/vault/futurecast/alerts" data-testid="fc-lab-alerts-view-all">
           View all alerts →
@@ -201,7 +190,7 @@ function SmartAlertsPanel({ alerts }: { alerts: IntelFeedItem[] }): React.ReactE
 }
 
 export function FutureCastExtendedModules({
-  masterBoard,
+  masterBoard: _masterBoard,
   trendingBoard,
   movementIntel,
   staffNotes,
@@ -211,29 +200,9 @@ export function FutureCastExtendedModules({
   flipWatch = [],
   movementNarratives = [],
   underclassmen,
-  roster = [],
-  commits2027 = [],
 }: Props): React.ReactElement {
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const discoveryYear = discoveryFocus ? 2028 : 2027;
-
-  const needTierByPos = useMemo(() => {
-    const board = buildPositionNeedBoard({
-      roster,
-      commits2027,
-      boardPlayers: discoveryFocus && highPriority.length ? highPriority : masterBoard.players,
-      boardClassYear: discoveryYear,
-      commitClassYear: 2027,
-    });
-    const map: Record<string, (typeof board.rows)[number]['needTier']> = {};
-    for (const row of board.rows) map[row.position] = row.needTier;
-    return map;
-  }, [roster, commits2027, discoveryFocus, highPriority, masterBoard.players, discoveryYear]);
-
-  const schemeMatches = useMemo(
-    () => buildSchemeMatchLeaders(highPriority, needTierByPos, 5),
-    [highPriority, needTierByPos]
-  );
 
   const fitLeaders = useMemo(() => highPriority.slice(0, 3), [highPriority]);
 
@@ -380,115 +349,104 @@ export function FutureCastExtendedModules({
   return (
     <>
       {discoveryFocus ? (
-        <FutureCastPanelShell
-          title={`${discoveryYear} Early Discovery`}
-          sub="Underclassmen ranked by discovery score — Vault est. ratings until On3 sync."
-          testId="fc-lab-early-discovery"
-          action={
-            <a href="/vault/futurecast/big-board" className="rh-cc-link">
-              Full board →
-            </a>
-          }
-        >
-          <EarlyDiscoveryPreview
-            query={{ class_year_gte: discoveryYear, limit: 4 }}
-            footerHref="/vault/futurecast/big-board"
-            footerLabel="Open Early Discovery board →"
-          />
-        </FutureCastPanelShell>
-      ) : null}
+        <div className="fc-lab-more-boards" data-testid="fc-lab-more-boards">
+          <h2 className="fc-lab-more-boards__title">More boards</h2>
+          <p className="fc-lab-more-boards__sub">
+            Early discovery and younger classes — secondary to the {discoveryYear} UF targets above.
+          </p>
 
-      {discoveryFocus ? (
-        <FutureCastPanelShell
-          title="2028 UF Targets"
-          sub="Locked allowlist — On3 ranks, composite, and UF likelihood."
-          testId="fc-lab-2028-targets"
-          action={
-            <a href="/vault/recruiting/2028/targets" className="rh-cc-link">
-              Full board →
-            </a>
-          }
-        >
-          <TargetBoardPreview classYear={2028} limit={4} />
-        </FutureCastPanelShell>
-      ) : null}
+          <FutureCastPanelShell
+            title={`${discoveryYear} Early Discovery`}
+            sub="Prospects ranked by discovery score — Vault estimates until On3 syncs."
+            testId="fc-lab-early-discovery"
+            action={
+              <a href="/vault/futurecast/big-board" className="rh-cc-link">
+                Full board →
+              </a>
+            }
+          >
+            <EarlyDiscoveryPreview
+              query={{ class_year_gte: discoveryYear, limit: 4 }}
+              footerHref="/vault/futurecast/big-board"
+              footerLabel="Open Early Discovery board →"
+            />
+          </FutureCastPanelShell>
 
-      <FutureCastPanelShell
-        title="Younger Prospects — 2029–2030 Watchboard"
-        sub="Early watchboard by class — not the locked 2028 UF target board."
-        testId="fc-lab-underclassmen"
-      >
-        {youngerProspectGroups.length === 0 ? (
-          <p className="rh-cc-empty">No 2029–2030 prospects on the watchboard yet.</p>
-        ) : (
-          <div className="fc-lab-younger-groups">
-            {youngerProspectGroups.map((group) => (
-              <div key={group.year} className="fc-lab-younger-group" data-year={group.year}>
-                <div className="fc-lab-younger-group__head">
-                  <strong className="fc-lab-younger-group__title">{group.label}</strong>
-                  <span className="fc-lab-younger-group__badge">{group.badge}</span>
-                  <span className="fc-lab-younger-group__count">
-                    {group.total > group.players.length
-                      ? `${group.players.length} of ${group.total}`
-                      : `${group.total} tracked`}
-                  </span>
-                </div>
-                <ModuleList
-                  empty={`No Class of ${group.year} prospects yet.`}
-                  items={group.players.map((p) => ({
-                    key: p.slug,
-                    primary: `${p.name} · ${p.position && p.position !== 'TBD' ? p.position : 'TBD'}`,
-                    meta: formatYoungerProspectMeta(p),
-                    href: playerProfileRoute(p.slug, 'futurecast'),
-                  }))}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-      </FutureCastPanelShell>
-
-      {discoveryFocus ? (
-        <FutureCastPanelShell
-          title="Best scheme matches on the 2028 board"
-          sub="Who fits what Florida needs — not who On3 ranks highest."
-          testId="fc-lab-scheme-matches"
-        >
-          {schemeMatches.length === 0 ? (
-            <p className="rh-cc-empty">No scheme-fit leaders loaded yet.</p>
-          ) : (
-            <ul className="fc-lab-scheme-match-list">
-              {schemeMatches.map((row) => (
-                <li key={row.slug} className="fc-lab-scheme-match">
-                  <a href={playerProfileRoute(row.slug, 'futurecast')} className="fc-lab-scheme-match__link">
-                    <div className="fc-lab-scheme-match__head">
-                      <strong className="fc-lab-scheme-match__name">{row.name}</strong>
-                      <span className={`fc-lab-scheme-match__band fc-lab-scheme-match__band--${row.fitBand}`}>
-                        {row.fitLabel}
+          {youngerProspectGroups.length > 0 ? (
+            <FutureCastPanelShell
+              title="Younger Prospects — 2029–2030"
+              sub="Early watchboard by class — not the 2028 UF target board."
+              testId="fc-lab-underclassmen"
+            >
+              <div className="fc-lab-younger-groups">
+                {youngerProspectGroups.map((group) => (
+                  <div key={group.year} className="fc-lab-younger-group" data-year={group.year}>
+                    <div className="fc-lab-younger-group__head">
+                      <strong className="fc-lab-younger-group__title">{group.label}</strong>
+                      <span className="fc-lab-younger-group__badge">{group.badge}</span>
+                      <span className="fc-lab-younger-group__count">
+                        {group.total > group.players.length
+                          ? `${group.players.length} of ${group.total}`
+                          : `${group.total} tracked`}
                       </span>
                     </div>
-                    <p className="fc-lab-scheme-match__meta">
-                      {row.position}
-                      {row.school ? ` · ${row.school}` : ''}
-                    </p>
-                    <p className="fc-lab-scheme-match__why">{row.why}</p>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-        </FutureCastPanelShell>
+                    <ModuleList
+                      empty={`No Class of ${group.year} prospects yet.`}
+                      items={group.players.map((p) => ({
+                        key: p.slug,
+                        primary: `${p.name} · ${p.position && p.position !== 'TBD' ? p.position : 'TBD'}`,
+                        meta: formatYoungerProspectMeta(p),
+                        href: playerProfileRoute(p.slug, 'futurecast'),
+                      }))}
+                    />
+                  </div>
+                ))}
+              </div>
+            </FutureCastPanelShell>
+          ) : null}
+        </div>
       ) : (
         <>
-          <FutureCastPanelShell
-            title="Fit Score Breakdown"
-            sub="Scheme, staff, and roster-fit leaders."
-            testId="fc-lab-fit-breakdown"
-          >
-            {fitLeaders.length === 0 ? (
-              <p className="rh-cc-empty">Fit breakdown unavailable.</p>
-            ) : (
-              fitLeaders.map((p) => {
+          {youngerProspectGroups.length > 0 ? (
+            <FutureCastPanelShell
+              title="Younger Prospects — 2029–2030"
+              sub="Early watchboard by class."
+              testId="fc-lab-underclassmen"
+            >
+              <div className="fc-lab-younger-groups">
+                {youngerProspectGroups.map((group) => (
+                  <div key={group.year} className="fc-lab-younger-group" data-year={group.year}>
+                    <div className="fc-lab-younger-group__head">
+                      <strong className="fc-lab-younger-group__title">{group.label}</strong>
+                      <span className="fc-lab-younger-group__badge">{group.badge}</span>
+                      <span className="fc-lab-younger-group__count">
+                        {group.total > group.players.length
+                          ? `${group.players.length} of ${group.total}`
+                          : `${group.total} tracked`}
+                      </span>
+                    </div>
+                    <ModuleList
+                      empty={`No Class of ${group.year} prospects yet.`}
+                      items={group.players.map((p) => ({
+                        key: p.slug,
+                        primary: `${p.name} · ${p.position && p.position !== 'TBD' ? p.position : 'TBD'}`,
+                        meta: formatYoungerProspectMeta(p),
+                        href: playerProfileRoute(p.slug, 'futurecast'),
+                      }))}
+                    />
+                  </div>
+                ))}
+              </div>
+            </FutureCastPanelShell>
+          ) : null}
+
+          {fitLeaders.length > 0 ? (
+            <FutureCastPanelShell
+              title="Fit Score Breakdown"
+              sub="Scheme, staff, and roster-fit leaders."
+              testId="fc-lab-fit-breakdown"
+            >
+              {fitLeaders.map((p) => {
                 const move = Number(p.movementDelta ?? p.delta7d ?? 0);
                 const showMomentum = Number.isFinite(move) && Math.abs(move) >= 0.5;
                 return (
@@ -507,140 +465,144 @@ export function FutureCastExtendedModules({
                     ) : null}
                   </div>
                 );
-              })
-            )}
-          </FutureCastPanelShell>
+              })}
+            </FutureCastPanelShell>
+          ) : null}
 
-          <FutureCastPanelShell
-            title="Staff Confidence Index (SCI)"
-            sub="Analyst conviction on top targets."
-            testId="fc-lab-sci"
-          >
-            <ModuleList
-              empty="SCI data unavailable."
-              items={sciLeaders.map((p) => ({
-                key: p.slug,
-                primary: p.name,
-                meta: `SCI ${Math.round(p.staffConfidence ?? 0)} · UF ${formatUfDisplay(p)}`,
-                href: playerProfileRoute(p.slug, 'futurecast'),
-              }))}
-            />
-          </FutureCastPanelShell>
+          {sciLeaders.length > 0 ? (
+            <FutureCastPanelShell
+              title="Staff Conviction"
+              sub="Analyst confidence on top targets."
+              testId="fc-lab-sci"
+            >
+              <ModuleList
+                empty="Staff conviction data unavailable."
+                items={sciLeaders.map((p) => ({
+                  key: p.slug,
+                  primary: p.name,
+                  meta: `Conviction ${Math.round(p.staffConfidence ?? 0)} · UF ${formatUfDisplay(p)}`,
+                  href: playerProfileRoute(p.slug, 'futurecast'),
+                }))}
+              />
+            </FutureCastPanelShell>
+          ) : null}
+
+          {(upcomingVisitIntel.length > 0 || visitRecap.length > 0 || flipWatch.length > 0) ? (
+          <section id={FUTURECAST_LAB_ANCHORS.visits}>
+            {upcomingVisitIntel.length > 0 ? (
+              <FutureCastPanelShell
+                title="2027 Visit Intel"
+                sub="Verified official visit windows only — unconfirmed schedules stay off the board."
+                testId="fc-lab-timeline"
+              >
+                <ModuleList
+                  empty="No verified upcoming official visits on file."
+                  items={upcomingVisitIntel.slice(0, 6).map((p) => ({
+                    key: p.slug,
+                    primary: p.name,
+                    badge:
+                      p.visitVerified !== false ? (
+                        <GatorVaultConfirmedBadge sourceLabel={p.visitSourceLabel} compact />
+                      ) : undefined,
+                    meta: p.visitStart
+                      ? `OV ${p.visitStart}${p.visitEnd ? `–${p.visitEnd}` : ''}${p.visitSourceLabel ? ` · ${p.visitSourceLabel}` : ''} · UF ${formatUfDisplay(p)}`
+                      : `${p.ufOvStatus ?? 'Visit intel'}${p.visitSourceLabel ? ` · ${p.visitSourceLabel}` : ''} · UF ${formatUfDisplay(p)}`,
+                    href: playerProfileRoute(p.slug, 'futurecast'),
+                  }))}
+                />
+              </FutureCastPanelShell>
+            ) : null}
+
+            {visitRecap.length > 0 ? (
+              <FutureCastPanelShell
+                title="Verified OV Recap"
+                sub="Completed official visits with On3 or beat verification."
+                testId="fc-lab-visit-recap"
+              >
+                <ModuleList
+                  empty="No verified completed official visits on file."
+                  items={visitRecap.slice(0, 6).map((row) => ({
+                    key: `recap-${row.slug}-${row.visitStart}`,
+                    primary: row.name,
+                    badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
+                    meta: `OV ${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''}${row.ufProbability != null ? ` · UF ${formatUfDisplay({ ufProbability: row.ufProbability, ufProbabilityLabel: row.ufProbabilityLabel ?? null })}` : ''}`,
+                    extra: (
+                      <>
+                        <MovementNarrativeLine text={row.movementNarrative} />
+                        <PlayerIntelTimelineStrip slug={row.slug} staffNotes={staffNotes} />
+                      </>
+                    ),
+                    href: playerProfileRoute(row.slug, 'futurecast'),
+                  }))}
+                />
+              </FutureCastPanelShell>
+            ) : null}
+
+            {flipWatch.length > 0 ? (
+              <FutureCastPanelShell
+                title="Flip Watch"
+                sub="Committed elsewhere after a verified UF official visit."
+                testId="fc-lab-flip-watch"
+              >
+                <ModuleList
+                  empty="No flip-watch targets on file."
+                  items={flipWatch.slice(0, 6).map((row) => ({
+                    key: `flip-${row.slug}`,
+                    primary: row.name,
+                    badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
+                    meta: `${row.committedShort} commit · OV ${row.visitStart ?? '—'}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''} · UF ${formatUfDisplay(row)}`,
+                    extra: (
+                      <>
+                        <MovementNarrativeLine text={row.movementNarrative} />
+                        <FlipWatchScoreStack row={row} />
+                        <PlayerIntelTimelineStrip slug={row.slug} staffNotes={staffNotes} />
+                      </>
+                    ),
+                    href: playerProfileRoute(row.slug, 'futurecast'),
+                  }))}
+                />
+              </FutureCastPanelShell>
+            ) : null}
+          </section>
+          ) : null}
+
+          {trend30.up.length + trend30.down.length > 0 ? (
+            <FutureCastPanelShell
+              title="30-Day Trends"
+              sub="UF probability movers over the last 30 days."
+              testId="fc-lab-trend-30"
+            >
+              <div className="fc-lab-trend-grid">
+                <div>
+                  <h3 className="fc-lab-trend-grid__label">Trending up</h3>
+                  <ModuleList
+                    empty="No risers."
+                    items={trend30.up.map((p) => ({
+                      key: `up-${p.slug}`,
+                      primary: p.name,
+                      meta: `${formatTrendDelta(p.trendDelta7d)} · UF ${ufPctFromFc(p.ufConfidence)}%`,
+                      extra: <MovementNarrativeLine text={narrativeBySlug.get(p.slug)} />,
+                    }))}
+                  />
+                </div>
+                <div>
+                  <h3 className="fc-lab-trend-grid__label">Trending down</h3>
+                  <ModuleList
+                    empty="No fallers."
+                    items={trend30.down.map((p) => ({
+                      key: `dn-${p.slug}`,
+                      primary: p.name,
+                      meta: `${formatTrendDelta(p.trendDelta7d)} · UF ${ufPctFromFc(p.ufConfidence)}%`,
+                      extra: <MovementNarrativeLine text={narrativeBySlug.get(p.slug)} />,
+                    }))}
+                  />
+                </div>
+              </div>
+            </FutureCastPanelShell>
+          ) : null}
+
+          <SmartAlertsPanel alerts={smartAlerts} />
         </>
-      )}
-
-      {!discoveryFocus ? (
-      <>
-      <section id={FUTURECAST_LAB_ANCHORS.visits}>
-      <FutureCastPanelShell
-        title="2027 Visit Intel"
-        sub="On3- and beat-verified official visit windows only. Unconfirmed schedules are not listed."
-        testId="fc-lab-timeline"
-      >
-        <ModuleList
-          empty="No verified upcoming official visits on file."
-          items={upcomingVisitIntel.slice(0, 6).map((p) => ({
-              key: p.slug,
-              primary: p.name,
-              badge: p.visitVerified !== false ? <GatorVaultConfirmedBadge sourceLabel={p.visitSourceLabel} compact /> : undefined,
-              meta: p.visitStart
-                ? `OV ${p.visitStart}${p.visitEnd ? `–${p.visitEnd}` : ''}${p.visitSourceLabel ? ` · ${p.visitSourceLabel}` : ''} · UF ${formatUfDisplay(p)}`
-                : `${p.ufOvStatus ?? 'Visit intel'}${p.visitSourceLabel ? ` · ${p.visitSourceLabel}` : ''} · UF ${formatUfDisplay(p)}`,
-              href: playerProfileRoute(p.slug, 'futurecast'),
-            }))}
-        />
-      </FutureCastPanelShell>
-
-      <FutureCastPanelShell
-        title="Verified OV Recap"
-        sub="Completed official visits with On3 or beat verification."
-        testId="fc-lab-visit-recap"
-      >
-        <ModuleList
-          empty="No verified completed official visits on file."
-          items={visitRecap.slice(0, 6).map((row) => ({
-            key: `recap-${row.slug}-${row.visitStart}`,
-            primary: row.name,
-            badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
-            meta: `OV ${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''}${row.ufProbability != null ? ` · UF ${formatUfDisplay({ ufProbability: row.ufProbability, ufProbabilityLabel: row.ufProbabilityLabel ?? null })}` : ''}`,
-            extra: (
-              <>
-                <MovementNarrativeLine text={row.movementNarrative} />
-                <PlayerIntelTimelineStrip slug={row.slug} staffNotes={staffNotes} />
-              </>
-            ),
-            href: playerProfileRoute(row.slug, 'futurecast'),
-          }))}
-        />
-      </FutureCastPanelShell>
-
-      <FutureCastPanelShell
-        title="Flip Watch"
-        sub="Committed elsewhere after a verified UF official visit — composite flip score from UF %, OV recency, rival commit, and beat sentiment."
-        testId="fc-lab-flip-watch"
-      >
-        <ModuleList
-          empty="No flip-watch targets on file."
-          items={flipWatch.slice(0, 6).map((row) => ({
-            key: `flip-${row.slug}`,
-            primary: row.name,
-            badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
-            meta: `${row.committedShort} commit · OV ${row.visitStart ?? '—'}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''} · UF ${formatUfDisplay(row)}`,
-            extra: (
-              <>
-                <MovementNarrativeLine text={row.movementNarrative} />
-                <FlipWatchScoreStack row={row} />
-                <PlayerIntelTimelineStrip slug={row.slug} staffNotes={staffNotes} />
-              </>
-            ),
-            href: playerProfileRoute(row.slug, 'futurecast'),
-          }))}
-        />
-      </FutureCastPanelShell>
-      </section>
-
-      <FutureCastPanelShell title="30-Day Trend Engine" sub="Rolling UF probability movers (30d window)." testId="fc-lab-trend-30">
-        <div className="fc-lab-trend-grid">
-          <div>
-            <h3 className="fc-lab-trend-grid__label">Trending up</h3>
-            <ModuleList
-              empty="No risers."
-              items={trend30.up.map((p) => ({
-                key: `up-${p.slug}`,
-                primary: p.name,
-                meta: `${formatTrendDelta(p.trendDelta7d)} · UF ${ufPctFromFc(p.ufConfidence)}%`,
-                extra: <MovementNarrativeLine text={narrativeBySlug.get(p.slug)} />,
-              }))}
-            />
-          </div>
-          <div>
-            <h3 className="fc-lab-trend-grid__label">Trending down</h3>
-            <ModuleList
-              empty="No fallers."
-              items={trend30.down.map((p) => ({
-                key: `dn-${p.slug}`,
-                primary: p.name,
-                meta: `${formatTrendDelta(p.trendDelta7d)} · UF ${ufPctFromFc(p.ufConfidence)}%`,
-                extra: <MovementNarrativeLine text={narrativeBySlug.get(p.slug)} />,
-              }))}
-            />
-          </div>
-        </div>
-      </FutureCastPanelShell>
-
-      <SmartAlertsPanel alerts={smartAlerts} />
-      </>
-      ) : (
-        <FutureCastPanelShell
-          title="2027 Closing Class Intel"
-          sub="Visit intel, flip watch, and 30-day trends for the closing class. Switch to 2027 Closing Class above."
-          testId="fc-lab-closing-class-hint"
-        >
-          <p className="rh-cc-empty">
-            2027 visit, flip, and trend panels are hidden during 2028 discovery view. Use the{' '}
-            <strong>2027 Closing Class</strong> toggle in the hero to load master-board intel.
-          </p>
-        </FutureCastPanelShell>
       )}
     </>
   );

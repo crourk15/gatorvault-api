@@ -161,8 +161,8 @@ export function FutureCastHero({
             <h1 className="fc-lab-hero__title rh-cc-hero__title">UF FUTURECAST LAB</h1>
             <p className="fc-lab-hero__sub rh-cc-hero__sub">
               {discoveryFocus
-                ? `${focusYear} Early Discovery plus locked 2028 UF targets — discovery scores, On3 ranks, and fit while portal intel is dormant.`
-                : '2027 closing class — commit likelihood, movement intel, visit windows, and flip watch for UF targets.'}
+                ? `${focusYear} discovery — UF targets, battles, and how the board fits Florida.`
+                : '2027 closing class — Florida odds, visits, and flip watch.'}
             </p>
             <FutureCastLabCycleToggle className="fc-lab-hero__cycle-toggle" />
             {discoveryFocus ? (

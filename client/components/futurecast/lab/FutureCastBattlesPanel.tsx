@@ -79,7 +79,7 @@ function BattleRow({
           <UfProbBar value={pct} />
         </div>
         {rpm != null ? (
-          <div className="fc-lab-battle-row__rpm-meta">On3 UF RPM {rpm}%</div>
+          <div className="fc-lab-battle-row__rpm-meta">On3 market {rpm}%</div>
         ) : null}
         <CompetingSchoolsBar player={player} />
       </div>
@@ -95,7 +95,7 @@ export function FutureCastBattlesPanel({
   trendingBoard,
   highPriority = [],
   bare,
-}: Props): React.ReactElement {
+}: Props): React.ReactElement | null {
   const [tab, setTab] = useState<Tab>('battles');
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const focusYear = discoveryFocus ? 2028 : 2027;
@@ -143,12 +143,15 @@ export function FutureCastBattlesPanel({
     () => movementDeltasAreBelievable(Object.values(buckets).flat()),
     [buckets]
   );
+
+  const totalRows =
+    buckets.battles.length + buckets['lean-uf'].length + buckets['lean-elsewhere'].length;
+  if (totalRows === 0) return null;
+
   const title = discoveryFocus
     ? `${focusYear} Battles & Leaning Targets`
     : 'Battles & Leaning Targets';
-  const sub = discoveryFocus
-    ? 'Bucketed by GatorVault Florida odds — On3 RPM boards shown as market context.'
-    : 'Trending board buckets — battles, lean UF, and lean elsewhere.';
+  const sub = 'Grouped by Florida odds — battles, leaning Florida, leaning elsewhere.';
 
   return (
     <FutureCastPanelShell

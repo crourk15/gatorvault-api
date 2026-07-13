@@ -40,12 +40,10 @@ export function FutureCastTargetsPanel({ masterBoard, highPriority = [], bare }:
 
   const showMovement = useMemo(() => movementDeltasAreBelievable(rows), [rows]);
 
-  const title = discoveryFocus
-    ? `${focusYear} UF Targets — Allowlist Board`
-    : 'Top UF Targets — Master Board';
+  const title = discoveryFocus ? `${focusYear} UF Targets` : 'Top UF Targets';
   const sub = discoveryFocus
-    ? 'Locked UF targets ranked by priority score, Florida odds, and fit during early discovery.'
-    : 'Premium FutureCast master board with probability, movement, fit, and competing schools.';
+    ? "Florida's priority board — odds, fit, and who's still in play."
+    : 'Closing-class board — Florida odds, movement, and competing schools.';
 
   return (
     <FutureCastPanelShell

@@ -202,9 +202,9 @@ function buildReason(row: Omit<PositionNeedRow, 'needRank' | 'reason'>): string 
     );
   }
   if (row.shortfall > 0) {
-    parts.push(`${row.shortfall} below typical scholarship floor (${row.schemeMin})`);
+    parts.push(`${row.shortfall} below typical depth target (${row.schemeMin})`);
   } else {
-    parts.push(`projected depth ${row.projectedDepth} meets floor (${row.schemeMin})`);
+    parts.push(`projected depth ${row.projectedDepth} meets target (${row.schemeMin})`);
   }
   if (row.boardTargets > 0) {
     const strength =
@@ -373,7 +373,7 @@ export function buildPositionNeedBoard(input: {
         ? `Live roster loaded · ${commitCount} UF commit${commitCount === 1 ? '' : 's'} in the 2027 class.`
         : 'Waiting on the roster feed — need order not ready yet.',
     methodNote:
-      'Need order = current roster depth, players with ≤1 year of eligibility left, and 2027 UF commits vs a typical scholarship floor. Early NFL exits and unofficial portal rumors are not counted until the roster/commit feeds update.',
+      'Need order = current roster depth, players with ≤1 year of eligibility left, and 2027 UF commits vs a typical depth target. Early NFL exits and unofficial portal rumors are not counted until the roster/commit feeds update.',
     updatedAt: input.updatedAt || new Date().toISOString(),
   };
 }
