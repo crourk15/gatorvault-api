@@ -148,7 +148,8 @@ function buildCommitFanSkinny(player) {
     verified &&
     verified.length >= 40 &&
     !isCompositeBio(verified) &&
-    !isChaseProcessIntel(verified)
+    !isChaseProcessIntel(verified) &&
+    !isMetaDumpAsSkinny(verified)
   ) {
     return verified.length > 360 ? `${verified.slice(0, 357).trim()}…` : verified;
   }
@@ -213,6 +214,15 @@ function isRankLineBlurb(text, playerName) {
   const s = String(text || '').trim();
   if (!s || s.length > 140) return false;
   return !isGenericBeatArticle(s, playerName);
+}
+
+/** Meta-line dumps (pos · stars · hometown · #natl) are not fan skinny. */
+function isMetaDumpAsSkinny(text) {
+  const s = String(text || '').trim();
+  if (!s || s.length > 110) return false;
+  if (/\bcommitted\b/i.test(s)) return false;
+  const dots = (s.match(/·/g) || []).length;
+  return dots >= 2 && /(#\d+\s*natl|\d★)/i.test(s);
 }
 
 function rankNote(player) {
