@@ -6,6 +6,7 @@ import {
   filterExcludedPortalClassItems,
   isEligiblePortalPulseItem,
 } from '@/lib/portal-class-filter';
+import { formatLiveSourceLabel } from '@/lib/live-source-label';
 import {
   fetchBeatIntel,
   fetchHighPriorityIntel,
@@ -137,7 +138,7 @@ function PulseQuadrant({ label, cell }: { label: string; cell: PulseCell }): Rea
     <div className="gv-gnl-pulse__cell">
       <p className="gv-gnl-pulse__label">{label}</p>
       {body}
-      {cell.source ? <p className="gv-gnl-pulse__source">{cell.source}</p> : null}
+      {cell.source ? <p className="gv-gnl-pulse__source">{formatLiveSourceLabel(cell.source)}</p> : null}
     </div>
   );
 }

@@ -49,6 +49,12 @@ export function feedIcon(item: LiveFeedItem): string {
   return '📌';
 }
 
+/**
+ * Fan-facing source label — never show internal ids like `auto:on3-team-news`.
+ * @deprecated import from `@/lib/live-source-label`
+ */
+export { formatLiveSourceLabel } from '@/lib/live-source-label';
+
 function itemBlob(item: LiveFeedItem): string {
   return `${item.type ?? ''} ${item.source ?? ''} ${item.title ?? ''}`.toLowerCase();
 }

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { LiveFeedItem } from '@/lib/live-api';
+import { formatLiveSourceLabel } from '@/lib/live-source-label';
 import { feedIcon, timeAgo } from './live-feed-utils';
 
 export function LiveFeedCard({ item }: { item: LiveFeedItem }): React.ReactElement {
@@ -19,7 +20,9 @@ export function LiveFeedCard({ item }: { item: LiveFeedItem }): React.ReactEleme
           <p className="gv-live-feed__row-title">{item.title}</p>
         )}
         <p className="gv-live-feed__row-meta">
-          <span className="gv-live-feed__row-source">{item.source || item.type || 'Update'}</span>
+          <span className="gv-live-feed__row-source">
+            {formatLiveSourceLabel(item.source || item.type || 'Update')}
+          </span>
           <span className="gv-live-feed__row-time">{timeAgo(item.createdAt)}</span>
         </p>
       </div>

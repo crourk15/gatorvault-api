@@ -20,6 +20,7 @@ import {
   resolvePodcastLogoFallback,
   resolvePodcastStreams,
 } from './podcast-catalog';
+import { formatLiveSourceLabel } from './live-source-label';
 
 export const LIVE_HUB_REFRESH_MS = 45_000;
 
@@ -194,7 +195,7 @@ export function buildLiveDashboardTicker(feed: LiveFeedItem[]): LiveTickerItem[]
       type: mapTickerTag(String(item.type || item.source || ''), text),
       text,
       timestamp: item.createdAt || new Date().toISOString(),
-      source: item.source || 'GatorVault',
+      source: formatLiveSourceLabel(item.source || 'GatorVault'),
       url: item.url,
     });
     if (items.length >= 16) break;
@@ -333,7 +334,10 @@ export function buildLiveStreamFeed(feed: LiveFeedItem[]): LiveFeedItem[] {
       .toLowerCase();
     if (!key || seen.has(key)) continue;
     seen.add(key);
-    out.push(item);
+    out.push({
+      ...item,
+      source: formatLiveSourceLabel(item.source || item.type || 'GatorVault'),
+    });
     if (out.length >= 40) break;
   }
   return out;
@@ -345,7 +349,7 @@ export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePan
     .slice(0, 6)
     .map((item) => ({
       text: String(item.title || '').trim(),
-      source: item.source || 'Recruiting',
+      source: formatLiveSourceLabel(item.source || 'Recruiting'),
       timestamp: item.createdAt || undefined,
     }));
 
@@ -355,7 +359,7 @@ export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePan
       .slice(0, 6)
       .map((item) => ({
         text: String(item.title || '').trim(),
-        source: 'Portal',
+        source: formatLiveSourceLabel(item.source || 'Portal'),
         timestamp: item.createdAt || undefined,
       })),
     (item) => item.text,
@@ -386,7 +390,7 @@ export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePan
     .slice(0, 4)
     .map((item) => ({
       text: String(item.title || '').trim(),
-      source: 'Insider',
+      source: formatLiveSourceLabel(item.source || 'Insider'),
       timestamp: item.createdAt || undefined,
     }));
 
