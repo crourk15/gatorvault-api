@@ -29,6 +29,49 @@
   overflow-x: hidden;
 }
 
+/* Live Stream sits on white cards — override legacy white-on-dark feed colors */
+.uf-premium-gnl .gv-gnl-elite-stream .gv-live-feed__list {
+  max-height: none;
+}
+
+.uf-premium-gnl .gv-gnl-elite-stream .gv-live-feed__row {
+  border-bottom-color: rgba(0, 33, 165, 0.12);
+}
+
+.uf-premium-gnl .gv-gnl-elite-stream .gv-live-feed__row-icon {
+  background: rgba(0, 33, 165, 0.08);
+  color: var(--uf-blue);
+}
+
+.uf-premium-gnl .gv-gnl-elite-stream .gv-live-feed__row-title,
+.uf-premium-gnl .gv-gnl-elite-stream a.gv-live-feed__row-title {
+  color: var(--uf-blue);
+}
+
+.uf-premium-gnl .gv-gnl-elite-stream a.gv-live-feed__row-title:hover {
+  color: var(--uf-orange);
+}
+
+.uf-premium-gnl .gv-gnl-elite-stream .gv-live-feed__row-source {
+  color: rgba(0, 33, 165, 0.7);
+}
+
+.uf-premium-gnl .gv-gnl-elite-stream .gv-live-feed__row-time {
+  color: rgba(0, 33, 165, 0.55);
+}
+
+.uf-premium-gnl .gv-gnl-elite-stream .gv-live-feed__chip {
+  color: var(--uf-blue);
+  border-color: rgba(0, 33, 165, 0.25);
+  background: rgba(0, 33, 165, 0.04);
+}
+
+.uf-premium-gnl .gv-gnl-elite-stream .gv-live-feed__chip.is-active {
+  background: var(--uf-blue);
+  color: #fff;
+  border-color: var(--uf-blue);
+}
+
 .uf-premium-gnl.gv-gnl,
 .uf-premium-gnl.gv-gnl-shell {
   background: var(--uf-page-bg);
@@ -776,7 +819,7 @@
 
   .uf-premium-gnl .gv-gnl-elite-podcasts__grid--lean {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-width: 40rem;
+    max-width: none;
   }
 }
 

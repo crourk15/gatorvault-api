@@ -55,8 +55,8 @@ export function GNLLiveFeedModule({ bundle, loading: _loading, refreshKey }: Pro
   const hasStream = feed.length > 0;
   const hasTicker = (bundle.ticker ?? []).length > 0;
   const hasBeat = beatItems.length > 0;
-  const hasPodcasts = (bundle.podcasts ?? []).some((p) => p.episodeTitle?.trim());
-  const isQuiet = !hasStream && !hasTicker && !hasBeat && !hasPodcasts;
+  // Podcasts always render the network catalog — quiet = no live news signal.
+  const isQuiet = !hasStream && !hasTicker && !hasBeat;
 
   return (
     <div className="gv-gnl-elite" aria-label="GatorNation Live modules" data-testid="gnl-live-feed-module">

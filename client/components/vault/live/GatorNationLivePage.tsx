@@ -92,8 +92,7 @@ export function GatorNationLivePage(): React.ReactElement {
     () =>
       (bundle.feed?.length ?? 0) > 0 ||
       (bundle.ticker?.length ?? 0) > 0 ||
-      (bundle.panels.beatWriterHighlights?.length ?? 0) > 0 ||
-      (bundle.podcasts ?? []).some((p) => p.episodeTitle?.trim()),
+      (bundle.panels.beatWriterHighlights?.length ?? 0) > 0,
     [bundle]
   );
 
