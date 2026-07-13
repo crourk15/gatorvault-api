@@ -167,13 +167,22 @@ function isLowQualityIntelText(text) {
   return isGenericBeatArticle(text, '');
 }
 
+function isCompositeBio(text) {
+  const s = String(text || '').trim();
+  if (!s) return true;
+  // On3 rank dump: "Name is a 4-star WR · listed at 6-0 / 185 · from …"
+  if (/\bis a \d+-star\b/i.test(s) && /\blisted at\b/i.test(s)) return true;
+  if (/\bis a \d+-star\b/i.test(s) && /\bfrom\b/i.test(s) && /#\d+\s+nationally/i.test(s)) return true;
+  return false;
+}
+
 function firstVerifiedIntel(player, fields, playerName) {
   const name = playerName || player?.name;
   for (const key of fields) {
     const val = player[key];
     if (val == null) continue;
     const s = String(val).trim();
-    if (s && !isGenericBeatArticle(s, name)) return s;
+    if (s && !isGenericBeatArticle(s, name) && !isCompositeBio(s)) return s;
   }
   return null;
 }
@@ -283,6 +292,7 @@ module.exports = {
   hasMeaningfulOn3Fields,
   assessOn3Intel,
   isGenericBeatArticle,
+  isCompositeBio,
   isLowQualityIntelText,
   isVerifiedScoutingTrait,
   firstVerifiedIntel,

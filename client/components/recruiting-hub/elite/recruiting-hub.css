@@ -440,6 +440,58 @@
   color: var(--muted-text);
 }
 
+.rh-elite-chrome .rh-commit-meta {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-commit-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.rh-elite-chrome .rh-badge--instate {
+  background: rgba(0, 33, 165, 0.1);
+  color: var(--gator-blue, #0021a5);
+  border: 1px solid rgba(0, 33, 165, 0.2);
+}
+
+.rh-elite-chrome .rh-commit-skinny {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--card-text);
+}
+
+.rh-elite-chrome .rh-commit-strengths {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-commit-strengths__label {
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gator-orange, #fa4616);
+}
+
+.rh-elite-chrome .rh-commit-projection {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted-text);
+  font-style: italic;
+}
+
 .rh-elite-chrome .rh-commit-body {
   font-size: 13px;
   margin: 6px 0 8px;

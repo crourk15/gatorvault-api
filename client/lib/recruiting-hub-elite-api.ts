@@ -45,24 +45,30 @@ export type RhHubCommit = {
   name: string;
   position: string;
   rating: string;
+  /** Factual subtitle: stars · pos · hometown · natl # */
   rankNote: string;
+  metaLine?: string;
+  /** Fan-facing commit story / skinny */
+  skinny?: string | null;
   commitDate: string;
   statusBadge?: string;
   profileUrl: string;
-  stabilityMeter?: string;
-  ufPercent?: string;
-  movement?: string;
+  stabilityMeter?: string | null;
+  ufPercent?: string | null;
+  movement?: string | null;
   enrolled?: boolean;
   jerseyNumber?: string | number | null;
-  positionRoomFit?: string;
-  earlyImpactProjection?: string;
+  positionRoomFit?: string | null;
+  earlyImpactProjection?: string | null;
   strengths?: string | null;
   weaknesses?: string | null;
   playerComp?: string | null;
-  gvGrade?: string;
+  gvGrade?: string | null;
   nilEstimate?: string | null;
   projection?: string | null;
   insiderIntel?: string | null;
+  inState?: boolean;
+  stars?: number | null;
 };
 
 export type RhHubBattle = {

@@ -17,7 +17,9 @@ export function EliteCommitBoard({ year }: Props): React.ReactElement {
     <>
       <div className="rh-section-header">
         <div className="rh-section-title">{year} Commit Class</div>
-        <div className="rh-section-subtitle">Full breakdown of every commit.</div>
+        <div className="rh-section-subtitle">
+          Every Florida commit — who they are and why the get matters.
+        </div>
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid={`rh-elite-commit-board-${year}`} aria-hidden="true" />

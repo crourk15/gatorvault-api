@@ -53,7 +53,7 @@ Plus **menu open + menu closed** screenshot on each route.
 | GNL | Live feed |
 | FutureCast | FutureCast page |
 | Class cards | Recruiting |
-| Everything below NSD | Heat, movement, battle board, footprint, battles, position snapshot |
+| Everything below NSD | Movement, battle board, footprint, position snapshot |
 
 All rows must **PASS** in `CHECKLIST.md` and `checklist.json`.
 

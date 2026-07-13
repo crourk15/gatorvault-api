@@ -1,13 +1,6 @@
 import React from 'react';
 import { recruitingHubHeroBootScript, RECRUITING_HUB_HERO_YEAR } from '@/lib/recruiting-hub-hero-boot';
 
-const FALLBACK_TICKER = [
-  '2027 class trending nationally — UF in the mix',
-  'Blue chip % rising on the board',
-  'Staff locked in for summer evals',
-  'Battles heating up — movement intel live',
-];
-
 const CLASS_YEARS = [2026, 2027, 2028] as const;
 
 /** Server-rendered hero partial — visible before JS bundle; hydrated after bundle via __GV_HYDRATE__. */
@@ -21,7 +14,7 @@ export function RecruitingHubHeroSsr({
       <section
         className="rh-hero-strip hero-skeleton"
         data-hydrate="hero"
-        aria-label="Recruiting War Room"
+        aria-label="Recruiting Command Center"
       >
         <div className="rh-hero-sweep" aria-hidden="true" />
         <div className="rh-hero-watermark" aria-hidden="true">
@@ -33,7 +26,7 @@ export function RecruitingHubHeroSsr({
               Recruiting Command Center
             </div>
             <div className="rh-hero-subtitle" data-hero-field="subtitle">
-              UF&apos;s class, movement, and battles—one place.
+              UF&apos;s class, commits, and battles—one place.
             </div>
             <div className="rh-hero-year-tabs" data-hero-field="year-tabs" role="tablist" aria-label="Class year">
               {CLASS_YEARS.map((y) => (
@@ -49,7 +42,7 @@ export function RecruitingHubHeroSsr({
               ))}
             </div>
           </div>
-          <span className="rh-badge rh-hero-badge rh-hero-badge--pulse">WAR ROOM</span>
+          <span className="rh-badge rh-hero-badge">Command Center</span>
         </div>
         <div className="rh-hero-metrics hero-skeleton__metrics" aria-label="Class summary metrics">
           <div className="rh-hero-metric">
@@ -75,22 +68,6 @@ export function RecruitingHubHeroSsr({
             <span className="rh-hero-metric__value" data-hero-metric="avg-rating">
               —
             </span>
-          </div>
-        </div>
-        <div className="rh-hero-ticker" aria-label="Recruiting intel ticker">
-          <div className="rh-hero-ticker-track" data-hero-field="ticker-track">
-            {FALLBACK_TICKER.map((item, idx) => (
-              <span key={idx} className="rh-hero-ticker-item">
-                {item}
-                <span className="rh-hero-ticker-sep">·</span>
-              </span>
-            ))}
-            {FALLBACK_TICKER.map((item, idx) => (
-              <span key={`dup-${idx}`} className="rh-hero-ticker-item">
-                {item}
-                <span className="rh-hero-ticker-sep">·</span>
-              </span>
-            ))}
           </div>
         </div>
       </section>

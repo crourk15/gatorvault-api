@@ -77,11 +77,37 @@ function commitStatusBadge(player) {
 
 const {
   isGenericBeatArticle,
+  isCompositeBio,
   firstVerifiedIntel,
   verifiedStrengthsList,
+  isVerifiedScoutingTrait,
 } = require('./recruiting-intel-quality');
 
 const RANK_LINE_SEP = ' | ';
+
+function hometownLabel(player) {
+  const school = String(player.school || player.fromSchool || '').trim();
+  const city = String(player.hometownCity || player.city || '').trim();
+  const state = String(player.state || player.hometownState || '').trim();
+  if (school && state && !school.includes(state)) return `${school}, ${state}`;
+  if (school) return school;
+  if (city && state) return `${city}, ${state}`;
+  if (state) return state;
+  return '';
+}
+
+function buildCommitMetaLine(player) {
+  const pos = playerPos(player);
+  const stars = effectiveStars(player) || 0;
+  const parts = [];
+  if (stars) parts.push(`${stars}★ ${pos}`);
+  else if (pos) parts.push(pos);
+  const home = hometownLabel(player);
+  if (home) parts.push(home);
+  const natl = player.natlRank ?? player.natl;
+  if (natl != null) parts.push(`#${natl} natl`);
+  return parts.join(' · ') || fallbackCommitBlurb(player);
+}
 
 function fallbackCommitBlurb(player) {
   const pos = playerPos(player);
@@ -95,6 +121,74 @@ function fallbackCommitBlurb(player) {
   if (player.school) parts.push(String(player.school).trim());
   if (parts.length) return parts.join(RANK_LINE_SEP);
   return `NATL ${formatRank(natl)}${RANK_LINE_SEP}POS ${formatRank(player.posRank)} (${pos})`;
+}
+
+/**
+ * Fan-facing commit skinny — who they are and why the get matters.
+ * Prefer real scouting notes; otherwise write an honest factual story (never On3 composite bios as "intel").
+ * Strengths / projection render as card callouts — keep this paragraph about the get itself.
+ */
+function buildCommitFanSkinny(player) {
+  const name = String(player.name || 'This commit').trim();
+  const pos = playerPos(player);
+  const stars = effectiveStars(player) || 0;
+  const home = hometownLabel(player);
+  const htWt = String(player.htWt || '').trim();
+  const natl = player.natlRank ?? player.natl;
+  const posRank = player.posRank;
+
+  const verified = firstVerifiedIntel(
+    player,
+    ['insiderNotes', 'evaluatorNotes', 'profileNote', 'notes', 'evaluationSummary'],
+    player.name
+  );
+  if (verified && verified.length >= 40 && !isCompositeBio(verified)) {
+    return verified.length > 360 ? `${verified.slice(0, 357).trim()}…` : verified;
+  }
+
+  const sentences = [];
+  let open = `${name} committed to Florida`;
+  if (stars) open += ` as a ${stars}-star ${pos}`;
+  else if (pos && pos !== '—') open += ` at ${pos}`;
+  if (home) open += ` out of ${home}`;
+  open += '.';
+  sentences.push(open);
+
+  const facts = [];
+  if (htWt) facts.push(`Listed at ${htWt}`);
+  if (natl != null) facts.push(`#${natl} nationally`);
+  if (posRank != null && pos && pos !== '—') facts.push(`#${posRank} among ${pos}s`);
+  if (player.inState) facts.push('In-state get');
+  if (player.headliner) facts.push('Class headliner');
+  if (facts.length) sentences.push(`${facts.join(' · ')}.`);
+
+  const scheme = String(player.schemeFit || '').trim();
+  if (
+    scheme &&
+    scheme.length >= 20 &&
+    isVerifiedScoutingTrait(scheme, player.name) &&
+    !isCompositeBio(scheme)
+  ) {
+    sentences.push(scheme.endsWith('.') ? scheme : `${scheme}.`);
+  }
+
+  const comp = String(player.playerComp || player.comp || '').trim();
+  if (comp && comp.length >= 3 && !/^tbd$/i.test(comp)) {
+    sentences.push(`Fan comp: ${comp}.`);
+  }
+
+  // If we only have the opener + thin facts, add one more honest line so fans always get substance.
+  if (sentences.length < 2) {
+    const bits = [];
+    if (stars >= 4) bits.push('A blue-chip addition');
+    else if (stars) bits.push(`A ${stars}-star addition`);
+    else bits.push('A new piece');
+    if (player.inState) bits.push('from inside Florida');
+    if (pos && pos !== '—') bits.push(`for the ${pos} room`);
+    sentences.push(`${bits.join(' ')}.`);
+  }
+
+  return sentences.join(' ');
 }
 
 function distinctIntel(primary, playerName, ...candidates) {
@@ -115,9 +209,8 @@ function isRankLineBlurb(text, playerName) {
 }
 
 function rankNote(player) {
-  const skinny = player.skinny ? String(player.skinny).trim() : '';
-  if (skinny && isRankLineBlurb(skinny, player.name)) return skinny;
-  return fallbackCommitBlurb(player);
+  // Meta line is the factual subtitle; long skinny belongs in fanStory/skinny.
+  return buildCommitMetaLine(player);
 }
 
 /** Program trajectory (years 2–4) — staff projection only, never beat-article skinny. */
@@ -267,39 +360,46 @@ function formatWeaknesses(player) {
 function mapHubCommit(player, classYear) {
   const pct = parseUfPct(player.ufProbability);
   const slug = player.slug || player.name;
-  const note = rankNote(player);
+  const metaLine = buildCommitMetaLine(player);
+  const skinny = buildCommitFanSkinny(player);
   const projection = verifiedProjection(player);
-  let insider = verifiedInsiderIntel(player, note);
-  if (projection && insider) {
-    insider = String(insider).replace(projection, '').replace(/\s+/g, ' ').trim();
-    if (insider.endsWith('.')) insider = insider.slice(0, -1).trim();
-    if (!insider || insider.length < 12) insider = null;
-  }
   const strengths = formatStrengths(player);
   const isFutureCommit = classYear >= 2027;
+  const stars = effectiveStars(player) || 0;
+  const badge = isFutureCommit
+    ? player.headliner
+      ? 'Headliner'
+      : stars >= 5
+        ? '5★'
+        : null
+    : 'Enrolled';
   return {
     id: slug,
     name: player.name,
     position: playerPos(player),
     rating: formatRating(player.displayRating ?? player.rating ?? player.vaultGrade),
-    rankNote: note,
+    rankNote: metaLine,
+    metaLine,
+    skinny,
     commitDate: formatCommitDate(player),
-    statusBadge: isFutureCommit ? commitStatusBadge(player) : 'Enrolled',
+    statusBadge: badge || undefined,
     profileUrl: profileUrl(player),
-    stabilityMeter: isFutureCommit ? stabilityMeter(player) : null,
+    stabilityMeter: null,
     ufPercent: !isFutureCommit && pct > 0 ? `${pct}%` : null,
-    movement: isFutureCommit ? commitMovementLabel(player) : movementLabel(player),
+    movement: isFutureCommit ? commitMovementLabel(player) : null,
     enrolled: classYear <= 2026,
     jerseyNumber: player.jerseyNumber ?? player.jersey ?? null,
-    positionRoomFit: player.schemeFit ?? (player.fitScore != null ? `Fit ${Math.round(Number(player.fitScore))}/100` : null),
+    positionRoomFit: null,
     earlyImpactProjection: projection,
     strengths,
     weaknesses: formatWeaknesses(player),
     playerComp: player.playerComp ?? player.comp ?? null,
-    gvGrade: formatRating(player.vaultGrade ?? player.displayRating ?? player.rating),
+    gvGrade: null,
     nilEstimate: formatNilEstimate(player),
     projection,
-    insiderIntel: insider,
+    insiderIntel: null,
+    inState: Boolean(player.inState),
+    stars: stars || null,
   };
 }
 
@@ -410,7 +510,7 @@ async function buildHubHero(year = 2027) {
   return {
     year,
     title: 'Recruiting Command Center',
-    subtitle: "UF's class, movement, and battles—one place.",
+    subtitle: "UF's class, commits, and battles—one place.",
     classYears: HERO_CLASS_YEARS,
     ticker,
     classOverview,

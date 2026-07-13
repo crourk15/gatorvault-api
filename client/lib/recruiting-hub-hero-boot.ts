@@ -97,13 +97,7 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
         });
 
         var tickerTrack = root.querySelector('[data-hero-field="ticker-track"]');
-        var items = (data.ticker && data.ticker.length) ? data.ticker : [];
-        if (tickerTrack && items.length) {
-          var html = items.map(function(item) {
-            return '<span class="rh-hero-ticker-item">' + item + '<span class="rh-hero-ticker-sep">·</span></span>';
-          }).join('');
-          tickerTrack.innerHTML = html + html;
-        }
+        if (tickerTrack) tickerTrack.remove();
         window.dispatchEvent(new CustomEvent('gv-hero-boot'));
       }
 

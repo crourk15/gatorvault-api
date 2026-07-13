@@ -15,13 +15,6 @@ import { RECRUITING_CLASS_YEARS, parseRecruitingClassYear, classCommitMetricLabe
 import { initGvHydrate, scheduleHeroHydration, releaseHeroHydrationGate } from '@/lib/gv-hydrate';
 import '@/lib/recruiting-hub-window';
 
-const FALLBACK_TICKER = [
-  '2027 class trending nationally — UF in the mix',
-  'Blue chip % rising on the board',
-  'Staff locked in for summer evals',
-  'Battles heating up — movement intel live',
-];
-
 const CLASS_YEARS = RECRUITING_CLASS_YEARS;
 
 function heroFromWindow(): RhHubHeroPayload | null {
@@ -113,18 +106,13 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
     };
   }, [activeYear, data?.classOverview, data?.classOverviewAll, data?.year, seeded?.classOverview, seeded?.year, year]);
 
-  const tickerItems = data?.ticker?.length
-    ? data.ticker
-    : seeded?.ticker?.length
-      ? seeded.ticker
-      : FALLBACK_TICKER;
   const overview =
     yearOverview ??
     (data?.year === activeYear ? data.classOverview : data?.classOverviewAll?.[activeYear as 2026 | 2027 | 2028]) ??
     seeded?.classOverview ??
     null;
   const title = seeded?.title ?? 'Recruiting Command Center';
-  const subtitle = seeded?.subtitle ?? "UF's class, movement, and battles—one place.";
+  const subtitle = seeded?.subtitle ?? "UF's class, commits, and battles—one place.";
 
   const handleYear = useCallback(
     (nextYear: number) => {
@@ -134,7 +122,7 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
   );
 
   return (
-    <section className="rh-hero-strip" data-hydrate="hero" data-hydrated="true" aria-label="Recruiting War Room">
+    <section className="rh-hero-strip" data-hydrate="hero" data-hydrated="true" aria-label="Recruiting Command Center">
       <div className="rh-hero-sweep" aria-hidden="true" />
       <div className="rh-hero-watermark" aria-hidden="true">
         GATORS
@@ -158,25 +146,9 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
             ))}
           </div>
         </div>
-        <span className="rh-badge rh-hero-badge rh-hero-badge--pulse">WAR ROOM</span>
+        <span className="rh-badge rh-hero-badge">Command Center</span>
       </div>
       <HeroMetrics overview={metricsLoading && !overview ? null : overview} activeYear={activeYear} />
-      <div className="rh-hero-ticker" aria-label="Recruiting intel ticker">
-        <div className="rh-hero-ticker-track">
-          {tickerItems.map((item, idx) => (
-            <span key={idx} className="rh-hero-ticker-item">
-              {item}
-              <span className="rh-hero-ticker-sep">·</span>
-            </span>
-          ))}
-          {tickerItems.map((item, idx) => (
-            <span key={`dup-${idx}`} className="rh-hero-ticker-item" aria-hidden="true">
-              {item}
-              <span className="rh-hero-ticker-sep">·</span>
-            </span>
-          ))}
-        </div>
-      </div>
     </section>
   );
 }

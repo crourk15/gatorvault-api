@@ -582,7 +582,7 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/hub/commits', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `hub:elite:commits:${year}`;
+      const cacheKey = `hub:elite:commits:v2:${year}`;
       return sendHubJson(res, {
         cacheKey,
         year,

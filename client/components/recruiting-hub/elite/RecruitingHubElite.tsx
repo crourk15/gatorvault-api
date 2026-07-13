@@ -5,13 +5,10 @@ import './recruiting-hub.css';
 import { RecruitingHeroHydrator, RecruitingHeroStripInline } from '@/components/recruiting-hub/elite/RecruitingHeroStrip';
 import { SigningDayTracker } from '@/components/recruiting-hub/elite/SigningDayTracker';
 import { ClassCards } from '@/components/recruiting-hub/elite/ClassCards';
-import { RecruitingClassOverview } from '@/components/recruiting-hub/elite/RecruitingClassOverview';
-import { TopTargetsHeatIndex } from '@/components/recruiting-hub/elite/TopTargetsHeatIndex';
 import { MovementIntelFeed } from '@/components/recruiting-hub/elite/MovementIntelFeed';
 import { YoungerProspectsPanel } from '@/components/recruiting-hub/elite/YoungerProspectsPanel';
 import { BattleBoard } from '@/components/recruiting-hub/elite/BattleBoard';
 import { RecruitingFootprintMap } from '@/components/recruiting-hub/elite/footprint/RecruitingFootprintMap';
-import { RecruitingBattlesMovement } from '@/components/recruiting-hub/elite/RecruitingBattlesMovement';
 import { RecruitingPositionSnapshot } from '@/components/recruiting-hub/elite/RecruitingPositionSnapshot';
 import { RecruitingHubBundleProvider } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { RecruitingClassYearProvider } from '@/components/recruiting-hub/elite/RecruitingClassYearProvider';
@@ -68,30 +65,23 @@ function RecruitingHubEliteContent({
       <LazyHubSection priority="top-fold" testId="rh-lazy-class-cards">
         <ClassCards />
       </LazyHubSection>
-      <LazyHubSection priority="top-fold" testId="rh-lazy-class-overview-bridge">
-        <RecruitingClassOverview />
+      <LazyHubSection testId="rh-lazy-battle-board">
+        <BattleBoard />
       </LazyHubSection>
-        <LazyHubSection testId="rh-lazy-heat-index">
-          <TopTargetsHeatIndex />
-        </LazyHubSection>
-        <LazyHubSection testId="rh-lazy-movement-feed">
-          <MovementIntelFeed />
-        </LazyHubSection>
+      <LazyHubSection testId="rh-lazy-movement-feed">
+        <MovementIntelFeed />
+      </LazyHubSection>
+      <LazyHubSection testId="rh-lazy-position-snapshot">
+        <RecruitingPositionSnapshot />
+      </LazyHubSection>
+      <LazyHubSection minHeight={420} testId="rh-lazy-footprint">
+        <RecruitingFootprintMap />
+      </LazyHubSection>
+      {activeYear === 2028 ? (
         <LazyHubSection testId="rh-lazy-younger-prospects">
           <YoungerProspectsPanel />
         </LazyHubSection>
-        <LazyHubSection testId="rh-lazy-battle-board">
-          <BattleBoard />
-        </LazyHubSection>
-        <LazyHubSection minHeight={420} testId="rh-lazy-footprint">
-          <RecruitingFootprintMap />
-        </LazyHubSection>
-        <LazyHubSection testId="rh-lazy-battles-movement">
-          <RecruitingBattlesMovement />
-        </LazyHubSection>
-        <LazyHubSection testId="rh-lazy-position-snapshot">
-          <RecruitingPositionSnapshot />
-        </LazyHubSection>
+      ) : null}
     </>
   );
 
