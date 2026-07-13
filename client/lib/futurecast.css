@@ -2315,3 +2315,129 @@
   background: rgba(0, 48, 135, 0.35);
   color: #cbd5e1;
 }
+
+/* Universal player Overview — Who / Stand / Context / Pulse */
+.fc-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fc-overview-slot.fc-profile-section {
+  margin-bottom: 0;
+}
+
+.fc-overview-title {
+  font-family: Inter, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gv-blue, #0021a5);
+  margin: 0 0 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fc-overview-slot .fc-overview-title {
+  margin-top: 0;
+}
+
+.fc-overview-eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fa4616;
+}
+
+.fc-overview-headline {
+  margin: 0 0 0.85rem;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--gv-navy, #001a33);
+}
+
+.fc-overview-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.fc-overview-metric {
+  min-width: 7rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 33, 165, 0.16);
+  background: rgba(0, 33, 165, 0.04);
+}
+
+.fc-overview-metric__label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.fc-overview-metric__value {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--uf-blue, #0021a5);
+}
+
+.fc-overview-stand-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.fc-overview-context-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.fc-overview-context-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  background: #f8fafc;
+}
+
+.fc-overview-context-row--emphasis {
+  border-color: rgba(0, 33, 165, 0.28);
+  background: rgba(0, 33, 165, 0.06);
+}
+
+.fc-overview-context-row__label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.fc-overview-context-row__value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--uf-blue, #0021a5);
+}
+
+.fc-overview-context-row--emphasis .fc-overview-context-row__value {
+  color: #fa4616;
+}
+
+.fc-overview-who-dl {
+  margin: 0;
+}

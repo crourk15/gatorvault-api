@@ -12,6 +12,7 @@ import {
   type ScoutingBreakdown,
 } from '@/lib/scouting-api';
 import { playerProfilePath } from '@/lib/player-routes';
+import { buildRosterStand, buildRosterContext } from '@/lib/player-overview-mode';
 
 const ACE_PORTAL_SLUG = 'eric-singleton-jr';
 
@@ -227,23 +228,92 @@ export function RosterProfilePage({
 
       <RosterProfileTabs active={activeTab} onChange={setActiveTab} />
 
-      {activeTab === 'overview' && (
-        <div className="gv-roster-profile__panel">
-          {player.transferInfo && (
-            <p className="gv-roster-profile__transfer">{player.transferInfo}</p>
-          )}
-          {player.bio ? (
-            <p className="gv-roster-profile__bio">{player.bio}</p>
-          ) : (
-            <p className="gv-roster-profile__empty">Bio coming soon.</p>
-          )}
-          {isPortalRosterPlayer(player) && (
-            <p className="gv-roster-profile__portal-link">
-              <a href={playerProfilePath(player.slug, 'PORTAL', true)}>View Portal Intel →</a>
-            </p>
-          )}
-        </div>
-      )}
+      {activeTab === 'overview' && (() => {
+        const stand = buildRosterStand(player);
+        const context = buildRosterContext(player);
+        // If bio already leads Stand (stand.note set), don't repeat it in Pulse.
+        const pulseText =
+          player.transferInfo?.trim() ||
+          (!stand.note ? player.bio?.trim() : null) ||
+          'No recent pulse — check Scouting for the full evaluation.';
+        return (
+          <div className="gv-roster-profile__panel fc-profile-panel" data-testid="tab-overview">
+            <div className="fc-overview" data-overview-mode="roster">
+              <section className="fc-overview-slot fc-profile-section" aria-labelledby="roster-overview-who">
+                <h2 id="roster-overview-who" className="fc-overview-title">Who</h2>
+                <dl className="fc-profile-dl fc-overview-who-dl">
+                  <div><dt>Position</dt><dd>{player.pos || player.position || '—'}</dd></div>
+                  {player.jersey != null && player.jersey !== '' ? (
+                    <div><dt>Jersey</dt><dd>#{player.jersey}</dd></div>
+                  ) : null}
+                  <div><dt>Class</dt><dd>{player.year || player.class || '—'}</dd></div>
+                  {player.hometown ? (
+                    <div><dt>Hometown</dt><dd>{player.hometown}</dd></div>
+                  ) : null}
+                </dl>
+              </section>
+
+              <section
+                className="fc-overview-slot fc-profile-section"
+                aria-labelledby="roster-overview-stand"
+                data-testid="overview-stand"
+              >
+                <p className="fc-overview-eyebrow">{stand.eyebrow}</p>
+                <h2 id="roster-overview-stand" className="fc-overview-title">Stand</h2>
+                <p className="fc-overview-headline">{stand.headline}</p>
+                {stand.metrics.length > 0 ? (
+                  <div className="fc-overview-metrics">
+                    {stand.metrics.map((m) => (
+                      <div key={m.label} className="fc-overview-metric">
+                        <span className="fc-overview-metric__label">{m.label}</span>
+                        <span className="fc-overview-metric__value">{m.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+                {stand.note ? (
+                  <p className="fc-profile-muted fc-overview-stand-note">{stand.note}</p>
+                ) : null}
+              </section>
+
+              <section
+                className="fc-overview-slot fc-profile-section"
+                aria-labelledby="roster-overview-context"
+                data-testid="overview-context"
+              >
+                <h2 id="roster-overview-context" className="fc-overview-title">{context.title}</h2>
+                <ul className="fc-overview-context-list">
+                  {context.rows.map((row) => (
+                    <li
+                      key={`${row.label}-${row.value}`}
+                      className={`fc-overview-context-row${row.emphasize ? ' fc-overview-context-row--emphasis' : ''}`}
+                    >
+                      <span className="fc-overview-context-row__label">{row.label}</span>
+                      <span className="fc-overview-context-row__value">{row.value}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+
+              <section
+                className="fc-overview-slot fc-profile-section"
+                aria-labelledby="roster-overview-pulse"
+                data-testid="overview-pulse"
+              >
+                <h2 id="roster-overview-pulse" className="fc-overview-title">Pulse</h2>
+                <p className={player.bio || player.transferInfo ? 'gv-roster-profile__bio' : 'fc-profile-muted'}>
+                  {pulseText}
+                </p>
+              </section>
+            </div>
+            {isPortalRosterPlayer(player) ? (
+              <p className="gv-roster-profile__portal-link">
+                <a href={playerProfilePath(player.slug, 'PORTAL', true)}>View Portal Intel →</a>
+              </p>
+            ) : null}
+          </div>
+        );
+      })()}
 
       {activeTab === 'depth' && (
         <div className="gv-roster-profile__panel">
