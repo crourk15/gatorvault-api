@@ -4,12 +4,7 @@ import React, { useMemo, useState } from 'react';
 import type { MasterBoardResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
-import {
-  CompetingSchoolsBar,
-  FutureCastPanelShell,
-  MovementBadge,
-  UfProbBar,
-} from './primitives';
+import { FutureCastPanelShell, MovementBadge } from './primitives';
 import {
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
@@ -25,6 +20,8 @@ type Props = {
   trendingBoard: TrendingBoardResponse;
   highPriority?: HighPriorityPlayer[];
   bare?: boolean;
+  /** Name + odds strip — no second full market board. */
+  compact?: boolean;
 };
 
 const TAB_META: Record<Tab, { label: string; icon: string; battleClass: string; battleLabel: string }> = {
@@ -44,7 +41,7 @@ function classifyTab(ufPct: number): Tab {
   return 'lean-elsewhere';
 }
 
-function BattleRow({
+function BattleRowCompact({
   player,
   tab,
   showMovement,
@@ -59,12 +56,13 @@ function BattleRow({
   const meta = TAB_META[tab];
 
   return (
-    <div className="fc-lab-battle-row">
+    <a
+      href={playerProfileRoute(player.slug, 'futurecast')}
+      className="fc-lab-battle-row fc-lab-battle-row--compact"
+    >
       <div className="fc-lab-battle-row__identity">
         <div className="fc-lab-battle-row__head">
-          <a href={playerProfileRoute(player.slug, 'futurecast')} className="fc-lab-battle-row__name">
-            {player.name}
-          </a>
+          <span className="fc-lab-battle-row__name">{player.name}</span>
           <span className={`fc-lab-battle-label ${meta.battleClass}`}>
             <span aria-hidden>{meta.icon}</span> {meta.battleLabel}
           </span>
@@ -72,16 +70,12 @@ function BattleRow({
         <span className="fc-lab-battle-row__meta">
           {player.position} · {player.school ?? '—'}
         </span>
-        <div className="fc-lab-battle-row__gv">
-          <span className="fc-lab-battle-row__metric-label">Florida odds</span>
-          <UfProbBar value={pct} />
-        </div>
-        <CompetingSchoolsBar player={player} />
       </div>
       <div className="fc-lab-battle-row__right">
+        <strong className="fc-lab-battle-row__pct">{pct}%</strong>
         {showMovement && delta !== 0 ? <MovementBadge delta={delta} tone={tone} /> : null}
       </div>
-    </div>
+    </a>
   );
 }
 
@@ -90,6 +84,7 @@ export function FutureCastBattlesPanel({
   trendingBoard,
   highPriority = [],
   bare,
+  compact = true,
 }: Props): React.ReactElement | null {
   const [tab, setTab] = useState<Tab>('battles');
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
@@ -144,7 +139,9 @@ export function FutureCastBattlesPanel({
   if (totalRows === 0) return null;
 
   const title = discoveryFocus ? `${focusYear} Battles` : 'Battles';
-  const sub = 'Battle · leaning Florida · leaning elsewhere';
+  const sub = compact
+    ? 'Chase buckets — name and Florida odds only'
+    : 'Battle · leaning Florida · leaning elsewhere';
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-battles">
@@ -162,7 +159,7 @@ export function FutureCastBattlesPanel({
           </button>
         ))}
       </div>
-      <div className="fc-lab-battle-list" role="tabpanel">
+      <div className={`fc-lab-battle-list${compact ? ' fc-lab-battle-list--compact' : ''}`} role="tabpanel">
         {rows.length === 0 ? (
           <p className="rh-cc-empty">
             {discoveryFocus
@@ -171,7 +168,7 @@ export function FutureCastBattlesPanel({
           </p>
         ) : (
           rows.map((p) => (
-            <BattleRow key={p.slug} player={p} tab={tab} showMovement={showMovement} />
+            <BattleRowCompact key={p.slug} player={p} tab={tab} showMovement={showMovement} />
           ))
         )}
       </div>

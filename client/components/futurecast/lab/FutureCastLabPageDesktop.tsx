@@ -18,7 +18,9 @@ type Props = {
   PanelSkeleton: typeof FutureCastPanelSkeleton;
 };
 
-/** Desktop FutureCast Lab — UF Premium command center (RH 2-column grid). */
+/**
+ * Desktop FutureCast Lab — Targets + slim Battles beside Fit (full frame width).
+ */
 export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.ReactElement {
   const data = lab;
   const pending = lab.secondaryLoading;
@@ -38,61 +40,55 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
         />
       </section>
 
-      <div className="rh-cc-main rh-frame">
-        <div className="rh-cc-col rh-cc-col--left">
-          <section id={FUTURECAST_LAB_ANCHORS.masterBoard}>
-            <div id={FUTURECAST_LAB_ANCHORS.trending}>
-              {pending ? (
-                <PanelSkeleton minHeight={280} />
-              ) : (
-                <FutureCastTargetsPanel
-                  masterBoard={data.masterBoard}
-                  trendingBoard={data.trendingBoard}
-                  highPriority={highPriority}
-                />
-              )}
-            </div>
-          </section>
-          <section id={FUTURECAST_LAB_ANCHORS.movement}>
-            {pending ? (
-              <PanelSkeleton minHeight={280} />
-            ) : (
-              <FutureCastMovementPanel
-                movementIntel={data.movementIntel}
-                highPriority={highPriority}
-                underclassmen={data.underclassmen}
-              />
-            )}
-          </section>
-          <section id={FUTURECAST_LAB_ANCHORS.positions}>
+      <div className="fc-lab-desktop-board rh-frame">
+        <div className="fc-lab-desktop-board__lead" id={FUTURECAST_LAB_ANCHORS.masterBoard}>
+          <div id={FUTURECAST_LAB_ANCHORS.trending}>
             {pending ? (
               <PanelSkeleton minHeight={320} />
             ) : (
-              <FutureCastPositionBreakdown
-                players={data.masterBoard.players}
+              <FutureCastTargetsPanel
+                masterBoard={data.masterBoard}
+                trendingBoard={data.trendingBoard}
                 highPriority={highPriority}
-                roster={data.roster}
-                commits2027={data.commits2027}
-                updatedAt={data.lastUpdated}
+                battlesCompact
               />
             )}
-          </section>
+          </div>
         </div>
 
-        <div className="rh-cc-col rh-cc-col--right">
-          <section id={FUTURECAST_LAB_ANCHORS.portal}>
-            {pending ? (
-              <PanelSkeleton minHeight={200} />
-            ) : (
+        <div className="fc-lab-desktop-board__fit" id={FUTURECAST_LAB_ANCHORS.positions}>
+          {pending ? (
+            <PanelSkeleton minHeight={320} />
+          ) : (
+            <FutureCastPositionBreakdown
+              players={data.masterBoard.players}
+              highPriority={highPriority}
+              roster={data.roster}
+              commits2027={data.commits2027}
+              updatedAt={data.lastUpdated}
+            />
+          )}
+          <div id={FUTURECAST_LAB_ANCHORS.portal}>
+            {pending ? null : (
               <FutureCastPortalCrossView
                 portalPlayers={data.home.portalWatchlist ?? []}
                 masterBoard={data.masterBoard}
                 portalSeason={data.home.portalSeason}
               />
             )}
-          </section>
+          </div>
         </div>
       </div>
+
+      <section id={FUTURECAST_LAB_ANCHORS.movement} className="rh-frame">
+        {pending ? null : (
+          <FutureCastMovementPanel
+            movementIntel={data.movementIntel}
+            highPriority={highPriority}
+            underclassmen={data.underclassmen}
+          />
+        )}
+      </section>
 
       <section id="fc-lab-extended" className="fc-lab-extended-full rh-frame">
         {pending ? (

@@ -22,6 +22,8 @@ type Props = {
   bare?: boolean;
   /** When true, nest battles tabs under the target cards (default). */
   includeBattles?: boolean;
+  /** Compact chase strip under targets (default true). */
+  battlesCompact?: boolean;
 };
 
 export function FutureCastTargetsPanel({
@@ -30,6 +32,7 @@ export function FutureCastTargetsPanel({
   highPriority = [],
   bare,
   includeBattles = true,
+  battlesCompact = true,
 }: Props): React.ReactElement {
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const focusYear = discoveryFocus ? 2028 : 2027;
@@ -78,6 +81,7 @@ export function FutureCastTargetsPanel({
         <div className="fc-lab-targets-battles">
           <FutureCastBattlesPanel
             bare
+            compact={battlesCompact}
             masterBoard={masterBoard}
             trendingBoard={trendingBoard}
             highPriority={highPriority}
