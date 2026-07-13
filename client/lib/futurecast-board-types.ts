@@ -24,6 +24,8 @@ export type FutureCastPlayer = {
   ufProbabilitySource?: string;
   ufProbabilityLabel?: string | null;
   ufProbabilityLowConfidence?: boolean;
+  /** Confirmed On3 UF RPM % when available (market layer). */
+  ufRpmPct?: number | null;
   /** Fit % (Scheme Match) — scheme, roster, and athletic fit. */
   fitScore: number | null;
   trendDelta7d: number | null;

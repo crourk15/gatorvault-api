@@ -53,6 +53,8 @@ export interface RecruitingBoardPlayer {
   heatPct?: number;
   heatLabel?: string;
   ratingLabel?: string;
+  /** Override Target/Eval/Priority chip (e.g. Watch / Early target). */
+  statusLabel?: string;
   showIndustryRanks?: boolean;
   category?: string;
   portalStatus?: 'in' | 'target' | 'out' | string;

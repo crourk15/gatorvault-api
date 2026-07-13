@@ -15,6 +15,12 @@ import type { StaffDashboardPlayer } from './staff-api';
 import type { PortalIncomingPlayer } from './recruiting-api';
 import { ensurePlayerSlug } from './slug';
 import type { ClassicCardVariant } from '@/components/vault/ClassicRecruitCard';
+import {
+  youngerProspectFitPct,
+  youngerProspectStars,
+  youngerProspectTierLabel,
+  youngerProspectUfPct,
+} from './younger-prospects';
 
 export function minimalRecruitPlayer(slug: string, name: string): RecruitingBoardPlayer {
   return { slug, name, tier: 'HIGH' };
@@ -55,6 +61,50 @@ export function fromUnderclassmenTarget(p: UnderclassmenPlayer): RecruitingBoard
             : 'flat'
         : undefined,
     skinny: p.tier === 'target' ? 'Locked UF target' : 'Underclassmen watchlist',
+  };
+}
+
+/** 2029–2030 watchboard cards — name/pos/school first; hide filler UF/fit/stars. */
+export function fromYoungerProspect(p: UnderclassmenPlayer): RecruitingBoardPlayer {
+  const composite = p.composite > 0 ? p.composite : undefined;
+  const isLiveOn3 = (p.natlRank ?? 0) > 0 && (p.composite ?? 0) > 0;
+  const ufPct = youngerProspectUfPct(p);
+  const fitPct = youngerProspectFitPct(p);
+  const stars = youngerProspectStars(p.stars);
+  const tierLabel = youngerProspectTierLabel(p);
+  const year = Number(p.classYear) || 0;
+  const delta = p.trendDelta7d ?? p.earlyMovement;
+  const realMove =
+    delta != null && Number.isFinite(Number(delta)) && Math.abs(Number(delta)) >= 0.005
+      ? Number(delta)
+      : null;
+
+  return {
+    slug: p.slug,
+    name: p.name,
+    tier: 'MEDIUM',
+    position: p.position,
+    classYear: year || undefined,
+    state: p.state ?? undefined,
+    stars: stars ?? 0,
+    rating: composite,
+    displayRating: composite,
+    natlRank: isLiveOn3 ? (p.natlRank ?? undefined) : undefined,
+    posRank: isLiveOn3 ? (p.posRank ?? undefined) : undefined,
+    stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
+    fitScore: fitPct ?? undefined,
+    ufProbability: ufPct != null ? ufPct / 100 : undefined,
+    ufStatus: tierLabel === 'Watch' ? 'EVAL' : 'TARGET',
+    statusLabel: tierLabel,
+    school: formatRecruitSchoolLabel(p.school ?? undefined) ?? undefined,
+    inState: p.state === 'FL',
+    heatPct: ufPct ?? undefined,
+    heatLabel: 'UF likelihood',
+    ratingLabel: isLiveOn3 ? 'Composite' : composite != null ? 'Vault est.' : undefined,
+    showIndustryRanks: isLiveOn3,
+    movementDirection:
+      realMove != null ? (realMove > 0 ? 'up' : realMove < 0 ? 'down' : undefined) : undefined,
+    skinny: year ? `Class of ${year}` : undefined,
   };
 }
 

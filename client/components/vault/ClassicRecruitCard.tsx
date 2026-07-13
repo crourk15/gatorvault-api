@@ -18,6 +18,8 @@ export type ClassicCardVariant = 'commit' | 'target';
 export type ClassicRecruitCardPlayer = Partial<RecruitingBoardPlayer> & {
   slug: string;
   name: string;
+  /** Override default Target/Eval/Priority chip text (e.g. Watch / Early target). */
+  statusLabel?: string;
 };
 
 function movementArrow(dir?: 'up' | 'down' | 'flat'): React.ReactNode {
@@ -149,6 +151,8 @@ export function ClassicRecruitCard({
         <div className="gv-rb-card__status-row">
           {resolvedVariant === 'commit' ? (
             <span className="gv-rb-card__status gv-rb-card__status--commit">🟢 Committed</span>
+          ) : player.statusLabel ? (
+            <span className={`gv-rb-card__status ${statusChip.className}`}>{player.statusLabel}</span>
           ) : (
             <span className={`gv-rb-card__status ${statusChip.className}`}>{statusChip.label}</span>
           )}

@@ -20,6 +20,15 @@ import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-ma
 import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
 import { TargetBoardPreview } from '@/components/futurecast/TargetBoardPreview';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
+import { formatRecruitSchoolLabel } from '@/lib/recruiting-display-utils';
+import {
+  groupYoungerProspectsByYear,
+  YOUNGER_PROSPECT_LAB_CAPS,
+  YOUNGER_PROSPECT_YEARS,
+  youngerProspectStars,
+  youngerProspectTierLabel,
+  youngerProspectUfPct,
+} from '@/lib/younger-prospects';
 
 type Props = {
   masterBoard: MasterBoardResponse;
@@ -68,26 +77,21 @@ function formatEarlyMovement(p: UnderclassmenPlayer): string {
   return ` · Δ${pct > 0 ? '+' : ''}${pct}%`;
 }
 
-function formatUnderclassmenMeta(p: UnderclassmenPlayer, discoveryFocus = false): string {
-  const year = Number(p.classYear) || 0;
-  const isYoungerCycle = year >= 2029;
-  const tierLabel = isYoungerCycle
-    ? p.tier === 'watchlist'
-      ? 'Watch'
-      : 'Early target'
-    : p.allowlistTarget
-      ? 'Locked UF target'
-      : p.tier === 'watchlist'
-        ? 'Watch'
-        : 'Target';
-  const uf = formatMetric(p.ufConfidence);
-  const fit = formatMetric(p.fitScore);
-  const stars = Number(p.stars) > 0 ? `${Number(p.stars)}★` : '—★';
-  const discovery =
-    discoveryFocus && p.discoveryScore != null && Number.isFinite(Number(p.discoveryScore))
-      ? ` · Discovery ${Math.round(Number(p.discoveryScore))}`
-      : '';
-  return `${tierLabel} · UF ${uf} · Fit ${fit}${discovery}${formatEarlyMovement(p)}${formatCompetitorLabel(p)} · ${stars}`;
+/** Honest younger meta — name/pos/school first; skip filler UF 48 · Fit 48 · —★. */
+function formatYoungerProspectMeta(p: UnderclassmenPlayer): string {
+  const parts: string[] = [youngerProspectTierLabel(p)];
+  const school = formatRecruitSchoolLabel(p.school ?? undefined);
+  const loc = [school, p.state].filter(Boolean).join(', ');
+  if (loc) parts.push(loc);
+  const uf = youngerProspectUfPct(p);
+  if (uf != null) parts.push(`UF ${uf}%`);
+  const stars = youngerProspectStars(p.stars);
+  if (stars != null) parts.push(`${stars}★`);
+  const move = formatEarlyMovement(p);
+  if (move) parts.push(move.replace(/^ · /, ''));
+  const vs = formatCompetitorLabel(p);
+  if (vs) parts.push(vs.replace(/^ · /, ''));
+  return parts.join(' · ');
 }
 
 function MovementNarrativeLine({ text }: { text: string | null | undefined }): React.ReactElement | null {
@@ -264,21 +268,16 @@ export function FutureCastExtendedModules({
       .slice(0, 6);
   }, [discoveryFocus, highPriority]);
 
-  const youngerProspects = useMemo(
+  const youngerProspectGroups = useMemo(
     () =>
-      underclassmen
-        .filter((p) => {
+      groupYoungerProspectsByYear(
+        underclassmen.filter((p) => {
           const year = Number(p.classYear) || 0;
           return year >= 2029 && year <= 2030;
-        })
-        .sort((a, b) => {
-          const yearDiff = (Number(a.classYear) || 0) - (Number(b.classYear) || 0);
-          if (yearDiff !== 0) return yearDiff;
-          const discDiff = Number(b.discoveryScore ?? 0) - Number(a.discoveryScore ?? 0);
-          if (discDiff !== 0) return discDiff;
-          return (Number(b.ufConfidence) || 0) - (Number(a.ufConfidence) || 0);
-        })
-        .slice(0, 12),
+        }),
+        YOUNGER_PROSPECT_YEARS,
+        YOUNGER_PROSPECT_LAB_CAPS
+      ),
     [underclassmen]
   );
 
@@ -438,18 +437,37 @@ export function FutureCastExtendedModules({
 
       <FutureCastPanelShell
         title="Younger Prospects — 2029–2030 Watchboard"
-        sub="Early watchlist for the next recruiting cycles — separate from the locked 2028 UF target board."
+        sub="Early watchboard by class — not the locked 2028 UF target board."
         testId="fc-lab-underclassmen"
       >
-        <ModuleList
-          empty="No 2029–2030 prospects on the watchboard yet."
-          items={youngerProspects.map((p) => ({
-            key: p.slug,
-            primary: `${p.name} · ${p.position && p.position !== 'TBD' ? p.position : 'TBD'} · '${String(p.classYear || '').slice(2) || 'TBD'}`,
-            meta: formatUnderclassmenMeta(p, false),
-            href: playerProfileRoute(p.slug, 'futurecast'),
-          }))}
-        />
+        {youngerProspectGroups.length === 0 ? (
+          <p className="rh-cc-empty">No 2029–2030 prospects on the watchboard yet.</p>
+        ) : (
+          <div className="fc-lab-younger-groups">
+            {youngerProspectGroups.map((group) => (
+              <div key={group.year} className="fc-lab-younger-group" data-year={group.year}>
+                <div className="fc-lab-younger-group__head">
+                  <strong className="fc-lab-younger-group__title">{group.label}</strong>
+                  <span className="fc-lab-younger-group__badge">{group.badge}</span>
+                  <span className="fc-lab-younger-group__count">
+                    {group.total > group.players.length
+                      ? `${group.players.length} of ${group.total}`
+                      : `${group.total} tracked`}
+                  </span>
+                </div>
+                <ModuleList
+                  empty={`No Class of ${group.year} prospects yet.`}
+                  items={group.players.map((p) => ({
+                    key: p.slug,
+                    primary: `${p.name} · ${p.position && p.position !== 'TBD' ? p.position : 'TBD'}`,
+                    meta: formatYoungerProspectMeta(p),
+                    href: playerProfileRoute(p.slug, 'futurecast'),
+                  }))}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </FutureCastPanelShell>
 
       <FutureCastPanelShell

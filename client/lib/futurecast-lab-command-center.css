@@ -1891,6 +1891,41 @@
   min-width: 0;
 }
 
+.fc-lab-younger-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.fc-lab-younger-group__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.fc-lab-younger-group__title {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--gator-blue, #0021a5);
+}
+
+.fc-lab-younger-group__badge {
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.fc-lab-younger-group__count {
+  margin-left: auto;
+  font-size: 0.6875rem;
+  color: #64748b;
+}
+
 .fc-lab-target-card__prob-label {
   display: block;
   margin-bottom: 4px;
