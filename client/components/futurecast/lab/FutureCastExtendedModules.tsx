@@ -15,7 +15,7 @@ import { GatorVaultConfirmedBadge } from './GatorVaultConfirmedBadge';
 import { FlipWatchScoreStack } from './FlipWatchScoreStack';
 import { UfTrendSparkline } from '@/components/futurecast/UfTrendSparkline';
 import { PlayerIntelTimelineStrip } from './PlayerIntelTimelineStrip';
-import { ufPctFromFc, isBattleTarget } from './fc-lab-types';
+import { ufPctFromFc } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
 import { TargetBoardPreview } from '@/components/futurecast/TargetBoardPreview';
@@ -208,44 +208,6 @@ export function FutureCastExtendedModules({
 }: Props): React.ReactElement {
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const discoveryYear = discoveryFocus ? 2028 : 2027;
-
-  const activeTargets = useMemo(
-    () =>
-      masterBoard.players.filter(
-        (p) => !p.committedTo || !/\bflorida\b|\bgators\b/i.test(String(p.committedTo))
-      ),
-    [masterBoard.players]
-  );
-
-  const earlyBattleItems = useMemo(() => {
-    if (discoveryFocus) {
-      const inBand = highPriority.filter((p) => isBattleTarget(ufPctFromFc(p.ufProbability)));
-      const pool = (inBand.length ? inBand : [...highPriority]).sort((a, b) => {
-        if (inBand.length) {
-          return Math.abs(b.delta7d ?? 0) - Math.abs(a.delta7d ?? 0);
-        }
-        return (b.priorityScore ?? 0) - (a.priorityScore ?? 0);
-      });
-      return pool.slice(0, 8).map((p) => ({
-        slug: p.slug,
-        name: p.name,
-        position: p.position,
-        ufPct: ufPctFromFc(p.ufProbability),
-        vol: Math.abs(p.delta7d ?? 0),
-      }));
-    }
-    return activeTargets
-      .filter((p) => isBattleTarget(ufPctFromFc(p.ufConfidence)))
-      .sort((a, b) => b.volatility7d - a.volatility7d)
-      .slice(0, 8)
-      .map((p) => ({
-        slug: p.slug,
-        name: p.name,
-        position: p.position,
-        ufPct: ufPctFromFc(p.ufConfidence),
-        vol: p.volatility7d,
-      }));
-  }, [discoveryFocus, highPriority, activeTargets]);
 
   const fitLeaders = useMemo(() => {
     if (discoveryFocus) {
@@ -468,26 +430,6 @@ export function FutureCastExtendedModules({
             ))}
           </div>
         )}
-      </FutureCastPanelShell>
-
-      <FutureCastPanelShell
-        title={discoveryFocus ? '2028 Early Battles to Monitor' : 'Early Battles to Monitor'}
-        sub={
-          discoveryFocus
-            ? 'Locked 2028 targets in the battle zone, or top priority when estimates are still flat.'
-            : 'Allowlist targets in the 34–67% UF battle zone.'
-        }
-        testId="fc-lab-early-battles"
-      >
-        <ModuleList
-          empty={discoveryFocus ? 'No 2028 priority targets loaded.' : 'No active battles on the board.'}
-          items={earlyBattleItems.map((p) => ({
-            key: p.slug,
-            primary: p.name,
-            meta: `${p.position} · UF ${p.ufPct}% · vol ${p.vol.toFixed(1)}`,
-            href: playerProfileRoute(p.slug, 'futurecast'),
-          }))}
-        />
       </FutureCastPanelShell>
 
       <FutureCastPanelShell
