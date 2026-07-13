@@ -31,8 +31,7 @@ import {
   buildBeatPostsFromIntel,
   buildFutureCastTargetsFromHome,
   buildGameDayView,
-  buildHeroTickerFromTrust,
-  mapClassMetricsToHomeView,
+  buildHomePulseHeadline,
 } from '@/components/home/premium/command/home-command-utils';
 
 declare global {
@@ -163,9 +162,9 @@ export function HomePremiumPage(): React.ReactElement {
     [highPriority]
   );
 
-  const heroTickerItems = useMemo(
+  const pulseHeadline = useMemo(
     () =>
-      buildHeroTickerFromTrust({
+      buildHomePulseHeadline({
         hubTicker,
         hpIntel,
         movement: movementIntel,
@@ -177,11 +176,6 @@ export function HomePremiumPage(): React.ReactElement {
   );
   const gameDay = useMemo(() => buildGameDayView(), []);
 
-  const recruitingMetrics = useMemo(
-    () => mapClassMetricsToHomeView(classMetrics),
-    [classMetrics]
-  );
-
   const futureCastTargets = useMemo(
     () => buildFutureCastTargetsFromHome(futureCastHome, movementIntel, board),
     [futureCastHome, movementIntel, board]
@@ -192,13 +186,9 @@ export function HomePremiumPage(): React.ReactElement {
   return (
     <div className="home-wow-page" data-testid="vault-home-premium">
       <HomeCommandCenter
-        heroTickerItems={heroTickerItems}
+        pulseHeadline={pulseHeadline}
         gameDay={gameDay}
-        recruitingMetrics={recruitingMetrics}
         futureCastTargets={futureCastTargets}
-        flipWatch={flipWatch}
-        visitRecap={visitRecap}
-        movementNarratives={movementNarratives}
         beatPosts={beatPosts}
         loading={loading}
         beatLoading={!beatReady}

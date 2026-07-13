@@ -66,7 +66,9 @@ function BootBeatCardShell({ index }: { index: number }): React.ReactElement {
   );
 }
 
-export function HomeCommandBeatHighlights({ posts, loading }: Props): React.ReactElement {
+export function HomeCommandBeatHighlights({ posts, loading }: Props): React.ReactElement | null {
+  if (!loading && posts.length === 0) return null;
+
   return (
     <>
       <div className="home-wow-section-header">
@@ -81,10 +83,6 @@ export function HomeCommandBeatHighlights({ posts, loading }: Props): React.Reac
               <BootBeatCardShell key={index} index={index} />
             ))}
           </div>
-        </section>
-      ) : posts.length === 0 ? (
-        <section className="home-wow-card" data-testid="home-beat-highlights">
-          <p className="home-wow-empty">Nothing active right now — beat posts appear when the feed updates.</p>
         </section>
       ) : (
         <section className="home-wow-beat-grid" data-testid="home-beat-highlights">

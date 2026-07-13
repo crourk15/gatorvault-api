@@ -162,8 +162,73 @@ const HOME_TICKER_FALLBACKS = [
   'GatorNation Live — real-time pulse from the Swamp',
 ] as const;
 
-/** Postgres-backed hero ticker — hub ticker, high-priority intel, movement alerts. */
+/** Prefer one concrete story for the hero — not a marquee of the whole board. */
+export function buildHomePulseHeadline(input: HomeTrustTickerInput): string {
+  const candidates: string[] = [];
+
+  const push = (value?: string | null) => {
+    const text = String(value || '').trim();
+    if (text) candidates.push(text);
+  };
+
+  // Commits / hub headlines first when available.
+  for (const item of input.hubTicker) {
+    const text = item.trim();
+    if (/commit/i.test(text)) push(text);
+  }
+  for (const item of input.hpIntel) {
+    const text = item.text?.trim();
+    if (text && /commit/i.test(text)) push(text);
+  }
+
+  for (const row of input.flipWatch ?? []) {
+    if (row.movementNarrative) push(`${row.name} — ${row.movementNarrative}`);
+    else if (row.flipScore != null) {
+      push(`Flip Watch: ${row.name} (${row.committedShort}) · Flip ${row.flipScore}`);
+    }
+  }
+  for (const row of input.visitRecap ?? []) {
+    if (row.movementNarrative) {
+      push(`${row.name} — ${row.movementNarrative}`);
+      continue;
+    }
+    const range =
+      row.visitEnd && row.visitEnd !== row.visitStart
+        ? `${row.visitStart}–${row.visitEnd}`
+        : row.visitStart;
+    if (range) push(`Verified OV: ${row.name} (${range})`);
+  }
+  for (const row of input.movementNarratives ?? []) {
+    if (row.movementNarrative) push(`${row.name} — ${row.movementNarrative}`);
+  }
+  for (const item of input.hpIntel) push(item.text);
+  for (const alert of input.movement?.alerts ?? []) {
+    const detail = alert.detail?.trim();
+    if (!detail) continue;
+    push(alert.player ? `${alert.player}: ${detail}` : detail);
+  }
+  for (const player of input.movement?.risers ?? []) {
+    const ufPct = Math.round(player.ufProb <= 1 ? player.ufProb * 100 : player.ufProb);
+    push(`${player.name} rising — UF at ${ufPct}%`);
+  }
+  for (const item of input.hubTicker) push(item);
+
+  const unique = [...new Set(candidates)];
+  if (unique.length > 0) return unique[0];
+  return HOME_TICKER_FALLBACKS[0];
+}
+
+/** @deprecated Prefer buildHomePulseHeadline — kept for any leftover callers. */
 export function buildHeroTickerFromTrust(input: HomeTrustTickerInput): string[] {
+  const pulse = buildHomePulseHeadline(input);
+  if (pulse === HOME_TICKER_FALLBACKS[0] && !(input.hubTicker?.length || input.hpIntel?.length)) {
+    return [...HOME_TICKER_FALLBACKS];
+  }
+  const rest = buildHeroTickerFromTrustLegacy(input).filter((item) => item !== pulse);
+  return [pulse, ...rest].slice(0, 6);
+}
+
+function buildHeroTickerFromTrustLegacy(input: HomeTrustTickerInput): string[] {
   const fromHub = input.hubTicker.map((item) => item.trim()).filter(Boolean).slice(0, 4);
   const fromHp = input.hpIntel
     .map((item) => item.text?.trim())

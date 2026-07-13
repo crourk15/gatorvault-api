@@ -5,10 +5,8 @@ import type { HomeFutureCastTargetView } from '@/components/home/premium/command
 import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
 import {
   getPortalSeasonState,
-  primaryRecruitingClassYear,
   shouldShowPortalWatchlist,
 } from '@/lib/recruiting-cycle';
-import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
 import { TargetBoardPreview } from '@/components/futurecast/TargetBoardPreview';
 
 type Props = {
@@ -65,6 +63,7 @@ function TargetSlide({ target }: { target: HomeFutureCastTargetView }): React.Re
   );
 }
 
+/** One home teaser — discovery = 3×2028 targets; portal = leaner carousel. */
 export function HomeCommandFutureCastPreview({ targets, loading }: Props): React.ReactElement {
   const [activeIndex, setActiveIndex] = useState(0);
   const slides = targets.slice(0, 6);
@@ -72,11 +71,8 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
     () => !shouldShowPortalWatchlist(getPortalSeasonState()),
     []
   );
-  const discoveryYear = primaryRecruitingClassYear();
-  const labHref = discoveryFocus ? '/vault/futurecast/big-board' : VAULT_PILLAR_ROUTES.futurecast;
-  const labLabel = discoveryFocus
-    ? `Open ${discoveryYear} Early Discovery →`
-    : 'Open FutureCast Lab →';
+  const labHref = discoveryFocus ? '/vault/recruiting/2028/targets' : VAULT_PILLAR_ROUTES.futurecast;
+  const labLabel = discoveryFocus ? 'Open 2028 target board →' : 'Open FutureCast Lab →';
 
   useEffect(() => {
     if (slides.length <= 1) return undefined;
@@ -92,11 +88,11 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
     <>
       <div className="home-wow-section-header">
         <h2 className="home-wow-section-title">
-          {discoveryFocus ? `${discoveryYear} Early Discovery` : 'FutureCast Preview'}
+          {discoveryFocus ? '2028 UF Targets to watch' : 'FutureCast Preview'}
         </h2>
         <p className="home-wow-section-subtitle">
           {discoveryFocus
-            ? '2027 board plus underclassmen ranked by discovery score — Vault est. until On3 sync.'
+            ? 'A short look at Florida’s locked 2028 board — open Recruiting or FutureCast for the full picture.'
             : 'Top UF leaners from the FutureCast model.'}
         </p>
       </div>
@@ -122,20 +118,10 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
           </>
         ) : discoveryFocus ? (
           <>
-            <EarlyDiscoveryPreview
-              query={{ class_year_gte: discoveryYear, limit: 3 }}
-              footerHref="/vault/futurecast/big-board"
-              footerLabel={`Open ${discoveryYear} Early Discovery board →`}
-            />
-            <div className="home-wow-fc-target-strip" data-testid="home-2028-targets">
-              <p className="home-wow-fc-strip-label">2028 UF Targets</p>
-              <p className="home-wow-fc-strip-sub">Locked allowlist — On3 ranks and UF likelihood.</p>
-              <TargetBoardPreview classYear={2028} limit={3} />
-            </div>
-            <p className="home-wow-fc-subnote">
-              2027 targets and movement intel on{' '}
-              <a href={VAULT_PILLAR_ROUTES.futurecast}>FutureCast Lab</a>.
-            </p>
+            <TargetBoardPreview classYear={2028} limit={3} />
+            <a href={labHref} className="home-wow-cta-link">
+              {labLabel}
+            </a>
           </>
         ) : slides.length === 0 ? (
           <div className="home-wow-fc-empty">

@@ -3,11 +3,12 @@
 import React from 'react';
 
 type Props = {
-  tickerItems: string[];
+  /** Single live pulse line — not a marquee dump. */
+  pulseHeadline: string;
 };
 
-export function HomeCommandHero({ tickerItems }: Props): React.ReactElement {
-  const items = tickerItems.length > 0 ? tickerItems : ['GatorNation command center loading live intel…'];
+export function HomeCommandHero({ pulseHeadline }: Props): React.ReactElement {
+  const pulse = pulseHeadline.trim() || 'GatorNation command center — live intel loading…';
 
   return (
     <section className="home-wow-hero" aria-label="GatorVault home hero" data-testid="home-command-hero">
@@ -19,22 +20,10 @@ export function HomeCommandHero({ tickerItems }: Props): React.ReactElement {
       <p className="home-wow-hero-subtitle">UF football. Recruiting. FutureCast. All here.</p>
       <p className="home-wow-hero-meta">Your command center for the GatorNation.</p>
       <span className="home-wow-hero-underline" aria-hidden="true" />
-      <div className="home-wow-hero-ticker" aria-label="Live intel ticker">
-        <div className="home-wow-hero-ticker-track">
-          {items.map((item, idx) => (
-            <span key={idx} className="home-wow-hero-ticker-item">
-              {item}
-              <span className="home-wow-hero-ticker-sep">·</span>
-            </span>
-          ))}
-          {items.map((item, idx) => (
-            <span key={`dup-${idx}`} className="home-wow-hero-ticker-item">
-              {item}
-              <span className="home-wow-hero-ticker-sep">·</span>
-            </span>
-          ))}
-        </div>
-      </div>
+      <p className="home-wow-hero-pulse" data-testid="home-hero-pulse" aria-live="polite">
+        <span className="home-wow-hero-pulse__label">Now</span>
+        <span className="home-wow-hero-pulse__text">{pulse}</span>
+      </p>
     </section>
   );
 }
