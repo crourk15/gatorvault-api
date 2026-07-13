@@ -421,7 +421,8 @@ function mapHubCommit(player, classYear) {
 }
 
 async function buildHubCommits(year = 2027) {
-  const commits = await store.getHubCommits(year);
+  // Match class-card counts (HS signing class only — portal has its own board).
+  const commits = await store.getHubHsCommits(year);
   const { enrichBoard } = require('./recruiting-board-enrich');
   const enriched = enrichBoard({ classYear: year, commits, targets: [], rankings: null }, false);
   const rows = enriched.commits || commits;

@@ -14,11 +14,16 @@ import { isDiscoverySeasonFocus } from '@/components/futurecast/lab/fc-lab-types
 const BIG_BOARD_HREF = '/vault/futurecast/big-board';
 const ALERTS_HREF = '/vault/futurecast/alerts';
 
-const PORTAL_SUB_LINKS: { id: string; label: string; href: string }[] = [
-  { id: 'master', label: 'Master Board', href: FUTURECAST_SEGMENT_PATHS.master },
-  { id: 'trending', label: 'Trending Board', href: FUTURECAST_SEGMENT_PATHS.trending },
-  { id: 'movement', label: 'Movement Intel', href: FUTURECAST_SEGMENT_PATHS.movement },
-  { id: 'staff', label: 'Staff Notes', href: FUTURECAST_SEGMENT_PATHS.staff },
+/**
+ * Closing-class Lab: prefer Lab hash anchors over parallel /trending /movement /staff pages.
+ * Standalone pages remain reachable; they are just not primary nav.
+ */
+const CLOSING_CLASS_SUB_LINKS: { id: string; label: string; href: string }[] = [
+  { id: 'master', label: 'Targets', href: FUTURECAST_SEGMENT_PATHS.master },
+  { id: 'trending', label: 'Battles', href: FUTURECAST_SEGMENT_PATHS.trending },
+  { id: 'movement', label: 'Movement', href: FUTURECAST_SEGMENT_PATHS.movement },
+  { id: 'fit', label: 'Fit', href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.positions) },
+  { id: 'portal', label: 'Portal', href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.portal) },
   { id: 'big-board', label: 'Big Board', href: BIG_BOARD_HREF },
   { id: 'alerts', label: 'Alerts', href: ALERTS_HREF },
 ];
@@ -48,8 +53,11 @@ function linkIsActive(
   if (link.id === 'fit') {
     return hash === FUTURECAST_LAB_ANCHORS.positions;
   }
-  if (link.id === 'staff') {
-    return Boolean(pathname?.includes('/futurecast/staff'));
+  if (link.id === 'portal') {
+    return hash === FUTURECAST_LAB_ANCHORS.portal;
+  }
+  if (link.id === 'movement') {
+    return hash === FUTURECAST_LAB_ANCHORS.movement || current === 'movement';
   }
   return current === link.id;
 }
@@ -71,7 +79,7 @@ export function FutureCastSubNav({
   }, [pathname]);
 
   const current = active ?? parseFutureCastSegmentFromPath(pathname, hash);
-  const subLinks = discoverySeason ? DISCOVERY_SUB_LINKS : PORTAL_SUB_LINKS;
+  const subLinks = discoverySeason ? DISCOVERY_SUB_LINKS : CLOSING_CLASS_SUB_LINKS;
 
   return (
     <nav className="fc-futurecast-nav" aria-label="FutureCast">

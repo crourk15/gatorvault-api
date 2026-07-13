@@ -72,7 +72,8 @@ function ClassCard({
 
 export function ClassCards(): React.ReactElement | null {
   const { activeYear, setActiveYear } = useRecruitingClassYear();
-  const { data: bundle, loading: bundleLoading } = useRecruitingHubBundleContext();
+  const { data: bundle, loading: bundleLoading, warming: bundleWarming } =
+    useRecruitingHubBundleContext();
   const [byYear, setByYear] = useState<Record<RecruitingClassYear, RhHubClassOverview | null>>(() => {
     const boot = readBootClassMetricsByYear();
     return {
@@ -105,7 +106,8 @@ export function ClassCards(): React.ReactElement | null {
       2027: boot[2027] ?? null,
       2028: boot[2028] ?? null,
     });
-    if (bundleLoading) {
+    // Wait through bundle warm/retry — don't fire 3× class-metrics competing with /hub/bundle.
+    if (bundleLoading || bundleWarming) {
       setLoading(!hasBoot);
       return;
     }
@@ -137,7 +139,7 @@ export function ClassCards(): React.ReactElement | null {
     return () => {
       cancelled = true;
     };
-  }, [bundle?.classOverviewAll, bundleLoading]);
+  }, [bundle?.classOverviewAll, bundleLoading, bundleWarming]);
 
   useEffect(() => {
     const onBoot = () => {

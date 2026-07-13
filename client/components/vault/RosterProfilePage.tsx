@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   isPortalRosterPlayer,
   portalRosterLabel,
@@ -13,6 +13,14 @@ import {
 } from '@/lib/scouting-api';
 import { playerProfilePath } from '@/lib/player-routes';
 import { buildRosterStand, buildRosterContext } from '@/lib/player-overview-mode';
+import { OverviewFourSlot } from '@/components/player/OverviewFourSlot';
+import { fetchFullProfile } from '@/lib/player-full-profile-api';
+import { formatSignalValue, formatDate } from '@/lib/player-derived';
+import { dedupeDiscoverySignals, isFeedSignal, signalTimestamp } from '@/lib/player-profile-normalize';
+import type { DiscoverySignal } from '@/lib/player-api';
+import { buildPlayerShareUrl } from '@/lib/player-api';
+import { usePathname } from '@/lib/use-pathname';
+import { isVaultPath } from '@/lib/vault-routes';
 
 const ACE_PORTAL_SLUG = 'eric-singleton-jr';
 
@@ -35,6 +43,27 @@ function headshotCandidates(player: RosterPlayer): string[] {
     `/headshots/${encodeURIComponent(player.slug)}.png`
   );
   return urls;
+}
+
+function signalMeta(signal: { signalType: string; createdAt?: string | null }): string {
+  const type = String(signal.signalType || '').toUpperCase();
+  const date = formatDate(signal.createdAt);
+  if (type === 'OFFER') {
+    return date !== '—' ? date : 'Offer';
+  }
+  if (date !== '—') return date;
+  return '';
+}
+
+function fallbackPulseText(
+  player: RosterPlayer,
+  standNote: string | null | undefined
+): string {
+  return (
+    player.transferInfo?.trim() ||
+    (!standNote ? player.bio?.trim() : null) ||
+    'No recent pulse — check Scouting for the full evaluation.'
+  );
 }
 
 function RosterProfileTabs({
@@ -125,12 +154,18 @@ export function RosterProfilePage({
   backHref?: string;
   backLabel?: string;
 }): React.ReactElement {
+  const pathname = usePathname();
+  const inVault = isVaultPath(pathname);
   const portalTag = portalRosterLabel(player);
   const isAce = player.slug === ACE_PORTAL_SLUG;
   const [activeTab, setActiveTab] = useState<RosterTab>('overview');
   const [photoIndex, setPhotoIndex] = useState(0);
   const [scouting, setScouting] = useState<ScoutingBreakdown | null>(null);
+  const [pulseSignals, setPulseSignals] = useState<DiscoverySignal[] | null>(null);
+  const [copied, setCopied] = useState(false);
   const photos = useMemo(() => headshotCandidates(player), [player]);
+  const stand = useMemo(() => buildRosterStand(player), [player]);
+  const context = useMemo(() => buildRosterContext(player), [player]);
 
   useEffect(() => {
     let cancelled = false;
@@ -146,10 +181,77 @@ export function RosterProfilePage({
     };
   }, [player.slug]);
 
+  useEffect(() => {
+    let cancelled = false;
+    setPulseSignals(null);
+    void fetchFullProfile(player.slug)
+      .then((payload) => {
+        if (cancelled) return;
+        const recent = dedupeDiscoverySignals(payload.signals ?? [])
+          .filter(isFeedSignal)
+          .sort((a, b) => signalTimestamp(b.createdAt) - signalTimestamp(a.createdAt))
+          .slice(0, 3);
+        setPulseSignals(recent);
+      })
+      .catch(() => {
+        if (!cancelled) setPulseSignals([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [player.slug]);
+
+  const onShare = useCallback(async () => {
+    const url = buildPlayerShareUrl(player.slug, 'COLLEGE', inVault);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: player.name, url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* user cancelled share */
+    }
+  }, [player.name, player.slug, inVault]);
+
   const showPhoto = photoIndex < photos.length;
+  const fallbackText = fallbackPulseText(player, stand.note);
+  const pulse =
+    pulseSignals && pulseSignals.length > 0 ? (
+      <ul className="fc-signal-feed fc-signal-feed--compact">
+        {pulseSignals.map((s) => (
+          <li key={s.id}>
+            <span className="fc-signal-feed__type">{s.signalType.replace(/_/g, ' ')}</span>
+            <span className="fc-signal-feed__value">{formatSignalValue(s)}</span>
+            {signalMeta(s) ? (
+              <span className="fc-signal-feed__meta">{signalMeta(s)}</span>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p className={player.bio || player.transferInfo ? 'gv-roster-profile__bio' : 'fc-profile-muted'}>
+        {fallbackText}
+      </p>
+    );
+
+  const who = (
+    <dl className="fc-profile-dl fc-overview-who-dl">
+      <div><dt>Position</dt><dd>{player.pos || player.position || '—'}</dd></div>
+      {player.jersey != null && player.jersey !== '' ? (
+        <div><dt>Jersey</dt><dd>#{player.jersey}</dd></div>
+      ) : null}
+      <div><dt>Class</dt><dd>{player.year || player.class || '—'}</dd></div>
+      {player.hometown ? (
+        <div><dt>Hometown</dt><dd>{player.hometown}</dd></div>
+      ) : null}
+    </dl>
+  );
 
   return (
-    <div className="gv-roster-profile gv-roster-profile--v2" data-testid="roster-profile-page">
+    <div className="gv-roster-profile gv-roster-profile--v2 fc-profile" data-testid="roster-profile-page">
       <nav className="fc-profile-back">
         <a
           href={backHref}
@@ -167,8 +269,10 @@ export function RosterProfilePage({
         </a>
       </nav>
 
-      <header className={`gv-roster-profile__header${isAce ? ' gv-roster-profile__header--ace' : ''}`}>
-        <div className="gv-roster-profile__hero-row">
+      <header
+        className={`gv-roster-profile__header fc-profile-header${isAce ? ' gv-roster-profile__header--ace' : ''}`}
+      >
+        <div className="gv-roster-profile__hero-row fc-profile-header__top">
           <div className="gv-roster-profile__photo-wrap">
             {showPhoto ? (
               <img
@@ -186,7 +290,7 @@ export function RosterProfilePage({
           <div className="gv-roster-profile__identity">
             {isAce && <span className="gv-roster-profile__ace-badge">ACE Portal Get</span>}
             {portalTag && <span className="gv-roster-profile__portal-tag">{portalTag}</span>}
-            <h1 className="gv-roster-profile__name">{player.name}</h1>
+            <h1 className="gv-roster-profile__name fc-profile-header__name">{player.name}</h1>
             <p className="gv-roster-profile__meta">
               {player.pos || player.position}
               {player.jersey != null && ` · #${player.jersey}`}
@@ -196,6 +300,9 @@ export function RosterProfilePage({
             </p>
             {player.hometown && <p className="gv-roster-profile__hometown">{player.hometown}</p>}
           </div>
+          <button type="button" className="fc-profile-share" onClick={onShare}>
+            {copied ? 'Link copied!' : 'Share'}
+          </button>
         </div>
 
         <div className="gv-roster-profile__kpi-row">
@@ -228,92 +335,23 @@ export function RosterProfilePage({
 
       <RosterProfileTabs active={activeTab} onChange={setActiveTab} />
 
-      {activeTab === 'overview' && (() => {
-        const stand = buildRosterStand(player);
-        const context = buildRosterContext(player);
-        // If bio already leads Stand (stand.note set), don't repeat it in Pulse.
-        const pulseText =
-          player.transferInfo?.trim() ||
-          (!stand.note ? player.bio?.trim() : null) ||
-          'No recent pulse — check Scouting for the full evaluation.';
-        return (
-          <div className="gv-roster-profile__panel fc-profile-panel" data-testid="tab-overview">
-            <div className="fc-overview" data-overview-mode="roster">
-              <section className="fc-overview-slot fc-profile-section" aria-labelledby="roster-overview-who">
-                <h2 id="roster-overview-who" className="fc-overview-title">Who</h2>
-                <dl className="fc-profile-dl fc-overview-who-dl">
-                  <div><dt>Position</dt><dd>{player.pos || player.position || '—'}</dd></div>
-                  {player.jersey != null && player.jersey !== '' ? (
-                    <div><dt>Jersey</dt><dd>#{player.jersey}</dd></div>
-                  ) : null}
-                  <div><dt>Class</dt><dd>{player.year || player.class || '—'}</dd></div>
-                  {player.hometown ? (
-                    <div><dt>Hometown</dt><dd>{player.hometown}</dd></div>
-                  ) : null}
-                </dl>
-              </section>
-
-              <section
-                className="fc-overview-slot fc-profile-section"
-                aria-labelledby="roster-overview-stand"
-                data-testid="overview-stand"
-              >
-                <p className="fc-overview-eyebrow">{stand.eyebrow}</p>
-                <h2 id="roster-overview-stand" className="fc-overview-title">Stand</h2>
-                <p className="fc-overview-headline">{stand.headline}</p>
-                {stand.metrics.length > 0 ? (
-                  <div className="fc-overview-metrics">
-                    {stand.metrics.map((m) => (
-                      <div key={m.label} className="fc-overview-metric">
-                        <span className="fc-overview-metric__label">{m.label}</span>
-                        <span className="fc-overview-metric__value">{m.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
-                {stand.note ? (
-                  <p className="fc-profile-muted fc-overview-stand-note">{stand.note}</p>
-                ) : null}
-              </section>
-
-              <section
-                className="fc-overview-slot fc-profile-section"
-                aria-labelledby="roster-overview-context"
-                data-testid="overview-context"
-              >
-                <h2 id="roster-overview-context" className="fc-overview-title">{context.title}</h2>
-                <ul className="fc-overview-context-list">
-                  {context.rows.map((row) => (
-                    <li
-                      key={`${row.label}-${row.value}`}
-                      className={`fc-overview-context-row${row.emphasize ? ' fc-overview-context-row--emphasis' : ''}`}
-                    >
-                      <span className="fc-overview-context-row__label">{row.label}</span>
-                      <span className="fc-overview-context-row__value">{row.value}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-
-              <section
-                className="fc-overview-slot fc-profile-section"
-                aria-labelledby="roster-overview-pulse"
-                data-testid="overview-pulse"
-              >
-                <h2 id="roster-overview-pulse" className="fc-overview-title">Pulse</h2>
-                <p className={player.bio || player.transferInfo ? 'gv-roster-profile__bio' : 'fc-profile-muted'}>
-                  {pulseText}
-                </p>
-              </section>
-            </div>
-            {isPortalRosterPlayer(player) ? (
-              <p className="gv-roster-profile__portal-link">
-                <a href={playerProfilePath(player.slug, 'PORTAL', true)}>View Portal Intel →</a>
-              </p>
-            ) : null}
-          </div>
-        );
-      })()}
+      {activeTab === 'overview' && (
+        <div className="gv-roster-profile__panel fc-profile-panel" data-testid="tab-overview">
+          <OverviewFourSlot
+            mode="roster"
+            idPrefix="roster-overview"
+            who={who}
+            stand={stand}
+            context={context}
+            pulse={pulse}
+          />
+          {isPortalRosterPlayer(player) ? (
+            <p className="gv-roster-profile__portal-link">
+              <a href={playerProfilePath(player.slug, 'PORTAL', true)}>View Portal Intel →</a>
+            </p>
+          ) : null}
+        </div>
+      )}
 
       {activeTab === 'depth' && (
         <div className="gv-roster-profile__panel">

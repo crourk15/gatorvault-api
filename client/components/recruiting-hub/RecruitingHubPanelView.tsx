@@ -34,12 +34,12 @@ export function RecruitingHubPanelView(): React.ReactElement {
     <div className="rh-panel-view" data-testid="rh-panel-view">
       <div className="rh-panel-view__toolbar rh-frame">
         <a href="/vault/recruiting/" className="rh-panel-view__back">
-          뿯↽ War Room overview
+          ← War Room overview
         </a>
       </div>
       <StickyTabsBar active={hub.tab} onChange={hub.setTabAndUrl} />
       {hub.error && !hub.loading ? (
-        <UiError message={hub.error} retry={hub.reload} backHref="/vault/" backLabel="뿯↽ Vault" />
+        <UiError message={hub.error} retry={hub.reload} backHref="/vault/" backLabel="← Vault" />
       ) : (
         <RecruitingHubTabPanels
           tab={hub.tab}

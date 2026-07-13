@@ -8,6 +8,7 @@ import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 import { UiWarming } from '@/components/site/UiMessage';
 import {
   groupYoungerProspectsByYear,
+  isAthHeavyShownPlayers,
   YOUNGER_PROSPECT_HUB_CAPS,
   YOUNGER_PROSPECT_YEARS,
   type YoungerProspectYearGroup,
@@ -102,6 +103,11 @@ export function YoungerProspectsPanel({
                   <span className="rh-younger-prospects__year-count">{group.total} tracked</span>
                 )}
               </div>
+              {isAthHeavyShownPlayers(group.players) ? (
+                <p className="rh-younger-prospects__ath-note fc-profile-muted">
+                  Positions still filling in for this class.
+                </p>
+              ) : null}
               <div className="rh-younger-prospects-grid gv-rb-grid">
                 {group.players.map((player) => (
                   <ClassicRecruitCard key={player.slug} player={player} variant="target" />

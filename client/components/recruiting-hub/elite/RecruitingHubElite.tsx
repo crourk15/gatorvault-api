@@ -8,6 +8,7 @@ import { ClassCards } from '@/components/recruiting-hub/elite/ClassCards';
 import { MovementIntelFeed } from '@/components/recruiting-hub/elite/MovementIntelFeed';
 import { YoungerProspectsPanel } from '@/components/recruiting-hub/elite/YoungerProspectsPanel';
 import { BattleBoard } from '@/components/recruiting-hub/elite/BattleBoard';
+import { TopTargetsHeatIndex } from '@/components/recruiting-hub/elite/TopTargetsHeatIndex';
 import { RecruitingFootprintMap } from '@/components/recruiting-hub/elite/footprint/RecruitingFootprintMap';
 import { RecruitingPositionSnapshot } from '@/components/recruiting-hub/elite/RecruitingPositionSnapshot';
 import { RecruitingHubBundleProvider } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
@@ -41,7 +42,7 @@ function RecruitingHubEliteContent({
 
   const content = (
     <>
-      {bundle.loading && bundle.warming ? (
+      {bundle.warming && !bundle.data ? (
         <div className="rh-hub-warming" role="status" aria-live="polite" aria-busy="true">
           <UiWarming
             title="Loading recruiting hub…"
@@ -67,6 +68,9 @@ function RecruitingHubEliteContent({
       </LazyHubSection>
       <LazyHubSection testId="rh-lazy-battle-board">
         <BattleBoard />
+      </LazyHubSection>
+      <LazyHubSection testId="rh-lazy-heat-index">
+        <TopTargetsHeatIndex />
       </LazyHubSection>
       <LazyHubSection testId="rh-lazy-movement-feed">
         <MovementIntelFeed />

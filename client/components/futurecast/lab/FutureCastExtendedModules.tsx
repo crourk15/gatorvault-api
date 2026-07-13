@@ -26,6 +26,7 @@ import {
   YOUNGER_PROSPECT_LAB_CAPS,
   YOUNGER_PROSPECT_YEARS,
   formatYoungerLabMeta,
+  isAthHeavyShownPlayers,
   isLabYoungerProspect,
   type YoungerProspectYearGroup,
 } from '@/lib/younger-prospects';
@@ -148,6 +149,11 @@ function YoungerProspectsLabBoard({
                 </span>
               ) : null}
             </div>
+            {isAthHeavyShownPlayers(group.players) ? (
+              <p className="fc-lab-younger-group__ath-note fc-profile-muted">
+                Positions still filling in for this class.
+              </p>
+            ) : null}
             <ModuleList
               empty={`No Class of ${group.year} names loaded yet.`}
               items={group.players.map((p) => ({

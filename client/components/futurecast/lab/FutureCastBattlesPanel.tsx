@@ -93,7 +93,7 @@ export function FutureCastBattlesPanel({
   highPriority = [],
   bare,
   compact = true,
-}: Props): React.ReactElement | null {
+}: Props): React.ReactElement {
   const [tab, setTab] = useState<Tab>('battles');
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const focusYear = discoveryFocus ? 2028 : 2027;
@@ -144,12 +144,24 @@ export function FutureCastBattlesPanel({
 
   const totalRows =
     buckets.battles.length + buckets['lean-uf'].length + buckets['lean-elsewhere'].length;
-  if (totalRows === 0) return null;
 
   const title = discoveryFocus ? `${focusYear} Battles` : 'Battles';
   const sub = compact
     ? 'Florida odds + the top rival threat'
     : 'Battle · leaning Florida · leaning elsewhere';
+
+  // Never vanish — fans need the Battles slot even when RPM/board odds are thin.
+  if (totalRows === 0) {
+    return (
+      <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-battles">
+        <p className="rh-cc-empty">
+          {discoveryFocus
+            ? `Battle odds for the ${focusYear} board refresh when Florida percentages land.`
+            : 'Battle odds refresh when Florida percentages land on the board.'}
+        </p>
+      </FutureCastPanelShell>
+    );
+  }
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-battles">

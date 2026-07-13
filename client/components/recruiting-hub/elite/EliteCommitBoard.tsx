@@ -1,24 +1,31 @@
 'use client';
 
 import React, { useCallback } from 'react';
-import { fetchRecruitingHubCommits } from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
+import { fetchRecruitingHubCommits, type RhHubCommit } from '@/lib/recruiting-hub-elite-api';
+import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
 import { EliteCommitCard } from '@/components/recruiting-hub/elite/EliteCommitCard';
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 
 type Props = {
-  year: number;
+  year?: number;
 };
 
-export function EliteCommitBoard({ year }: Props): React.ReactElement {
-  const loadCommits = useCallback(() => fetchRecruitingHubCommits(year), [year]);
-  const { data, loading, error } = useRecruitingHubQuery(loadCommits);
+export function EliteCommitBoard(_props: Props = {}): React.ReactElement {
+  const { activeYear } = useRecruitingClassYear();
+  const year = _props.year ?? activeYear;
+  const selectCommits = useCallback((b: { commits: RhHubCommit[] }) => b.commits, []);
+  const fetchCommits = useCallback((y: number) => fetchRecruitingHubCommits(y), []);
+  const { data, loading, error } = useHubBundleSection({
+    select: selectCommits,
+    fetchFallback: fetchCommits,
+  });
 
   return (
     <>
       <div className="rh-section-header">
         <div className="rh-section-title">{year} Commit Class</div>
         <div className="rh-section-subtitle">
-          Every Florida commit — who they are and why the get matters.
+          Every Florida signing-class commit — who they are and why the get matters.
         </div>
       </div>
       {loading ? (

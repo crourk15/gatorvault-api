@@ -18,6 +18,7 @@ import {
   shouldShowFutureCastPicks,
 } from '@/lib/player-overview-mode';
 import { resolveCommittedTo } from '@/lib/recruiting-target-filters';
+import { OverviewFourSlot } from '@/components/player/OverviewFourSlot';
 
 function profileNotesDeduped(
   recruitingNotes: unknown,
@@ -92,104 +93,51 @@ export function OverviewTab({
   const gvUf = futurecastSummary?.gvProbability ?? null;
   const showPicks = shouldShowFutureCastPicks(mode);
 
+  const who = (
+    <dl className="fc-profile-dl fc-overview-who-dl">
+      <div><dt>Position</dt><dd>{player.position}</dd></div>
+      <div><dt>Class</dt><dd>{player.classYear}</dd></div>
+      <div><dt>Lifecycle</dt><dd>{player.status}</dd></div>
+      {player.highSchool ? (
+        <div><dt>High School</dt><dd>{player.highSchool}</dd></div>
+      ) : null}
+      {collegeProfile?.college ? (
+        <div><dt>College</dt><dd>{collegeProfile.college}</dd></div>
+      ) : null}
+      {portalProfile?.portalStatus ? (
+        <div><dt>Portal</dt><dd>{portalProfile.portalStatus.replace(/_/g, ' ')}</dd></div>
+      ) : null}
+      {committedTo ? (
+        <div><dt>Committed</dt><dd>{committedTo}</dd></div>
+      ) : null}
+    </dl>
+  );
+
+  const pulse =
+    recentSignals.length > 0 ? (
+      <ul className="fc-signal-feed fc-signal-feed--compact">
+        {recentSignals.map((s) => (
+          <li key={s.id}>
+            <span className="fc-signal-feed__type">{s.signalType.replace(/_/g, ' ')}</span>
+            <span className="fc-signal-feed__value">{formatSignalValue(s)}</span>
+            {signalMeta(s) ? (
+              <span className="fc-signal-feed__meta">{signalMeta(s)}</span>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    ) : offerCount > 0 ? (
+      <p className="fc-profile-muted">
+        {offerCount} offers on file — open the High School tab for the full list. Dated offer events
+        appear here when On3 provides a real offer date.
+      </p>
+    ) : (
+      <p className="fc-profile-muted">{signalSummaryText(eventSignals)}</p>
+    );
+
   return (
     <div className="fc-profile-panel" data-testid="tab-overview">
-      <div className="fc-overview" data-overview-mode={mode}>
-        <section className="fc-overview-slot fc-profile-section" aria-labelledby="overview-who">
-          <h2 id="overview-who" className="fc-overview-title">Who</h2>
-          <dl className="fc-profile-dl fc-overview-who-dl">
-            <div><dt>Position</dt><dd>{player.position}</dd></div>
-            <div><dt>Class</dt><dd>{player.classYear}</dd></div>
-            <div><dt>Lifecycle</dt><dd>{player.status}</dd></div>
-            {player.highSchool ? (
-              <div><dt>High School</dt><dd>{player.highSchool}</dd></div>
-            ) : null}
-            {collegeProfile?.college ? (
-              <div><dt>College</dt><dd>{collegeProfile.college}</dd></div>
-            ) : null}
-            {portalProfile?.portalStatus ? (
-              <div><dt>Portal</dt><dd>{portalProfile.portalStatus.replace(/_/g, ' ')}</dd></div>
-            ) : null}
-            {committedTo ? (
-              <div><dt>Committed</dt><dd>{committedTo}</dd></div>
-            ) : null}
-          </dl>
-        </section>
-
-        <section
-          className="fc-overview-slot fc-profile-section"
-          aria-labelledby="overview-stand"
-          data-testid="overview-stand"
-        >
-          <p className="fc-overview-eyebrow">{stand.eyebrow}</p>
-          <h2 id="overview-stand" className="fc-overview-title">Stand</h2>
-          <p className="fc-overview-headline">{stand.headline}</p>
-          {stand.metrics.length > 0 ? (
-            <div className="fc-overview-metrics">
-              {stand.metrics.map((m) => (
-                <div key={m.label} className="fc-overview-metric">
-                  <span className="fc-overview-metric__label">{m.label}</span>
-                  <span className="fc-overview-metric__value">{m.value}</span>
-                </div>
-              ))}
-            </div>
-          ) : null}
-          {stand.note ? <p className="fc-profile-muted fc-overview-stand-note">{stand.note}</p> : null}
-        </section>
-
-        {context ? (
-          <section
-            className="fc-overview-slot fc-profile-section"
-            aria-labelledby="overview-context"
-            data-testid="overview-context"
-          >
-            <h2 id="overview-context" className="fc-overview-title">{context.title}</h2>
-            {context.rows.length > 0 ? (
-              <ul className="fc-overview-context-list">
-                {context.rows.map((row) => (
-                  <li
-                    key={`${row.label}-${row.value}`}
-                    className={`fc-overview-context-row${row.emphasize ? ' fc-overview-context-row--emphasis' : ''}`}
-                  >
-                    <span className="fc-overview-context-row__label">{row.label}</span>
-                    <span className="fc-overview-context-row__value">{row.value}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="fc-profile-muted">{context.empty}</p>
-            )}
-          </section>
-        ) : null}
-
-        <section
-          className="fc-overview-slot fc-profile-section"
-          aria-labelledby="overview-pulse"
-          data-testid="overview-pulse"
-        >
-          <h2 id="overview-pulse" className="fc-overview-title">Pulse</h2>
-          {recentSignals.length > 0 ? (
-            <ul className="fc-signal-feed fc-signal-feed--compact">
-              {recentSignals.map((s) => (
-                <li key={s.id}>
-                  <span className="fc-signal-feed__type">{s.signalType.replace(/_/g, ' ')}</span>
-                  <span className="fc-signal-feed__value">{formatSignalValue(s)}</span>
-                  {signalMeta(s) ? (
-                    <span className="fc-signal-feed__meta">{signalMeta(s)}</span>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
-          ) : offerCount > 0 ? (
-            <p className="fc-profile-muted">
-              {offerCount} offers on file — open the High School tab for the full list. Dated offer events
-              appear here when On3 provides a real offer date.
-            </p>
-          ) : (
-            <p className="fc-profile-muted">{signalSummaryText(eventSignals)}</p>
-          )}
-        </section>
-      </div>
+      <OverviewFourSlot mode={mode} who={who} stand={stand} context={context} pulse={pulse} />
 
       {showPicks ? (
         <section className="fc-profile-section fc-profile-section--picks">

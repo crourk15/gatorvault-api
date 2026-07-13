@@ -170,6 +170,20 @@ export function groupYoungerProspectsByYear<T extends { classYear?: number | nul
     .filter((g) => g.total > 0);
 }
 
+/** True when more than half of shown players are ATH/TBD/blank (positions not filled in). */
+export function isAthHeavyShownPlayers(
+  players: Array<{ position?: string | null }>
+): boolean {
+  if (players.length === 0) return false;
+  const athCount = players.filter((p) => {
+    const pos = String(p.position || '')
+      .trim()
+      .toUpperCase();
+    return !pos || pos === 'TBD' || pos === 'ATH';
+  }).length;
+  return athCount / players.length > 0.5;
+}
+
 /** @deprecated Prefer groupYoungerProspectsByYear — kept for any leftover callers. */
 export function takeYoungerProspectMix<T extends { classYear?: number | null; slug?: string }>(
   players: T[],
