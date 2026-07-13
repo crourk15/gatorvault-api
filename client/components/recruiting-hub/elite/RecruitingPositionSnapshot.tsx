@@ -6,6 +6,10 @@ import { fetchPositionSnapshot } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
 
+function countLabel(n: number, singular: string, plural: string): string {
+  return `${n} ${n === 1 ? singular : plural}`;
+}
+
 export function RecruitingPositionSnapshot(): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
   const selectPositions = useCallback((b: { positions: RhHubPositionRoom[] }) => b.positions, []);
@@ -22,7 +26,9 @@ export function RecruitingPositionSnapshot(): React.ReactElement {
     <>
       <div className="rh-section-header">
         <div className="rh-section-title">Position Room Snapshot</div>
-        <div className="rh-section-subtitle">{activeYear} class — commits and key targets by position.</div>
+        <div className="rh-section-subtitle">
+          {activeYear} class — commits and key targets by position.
+        </div>
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-position-snapshot" aria-hidden="true" />
@@ -32,7 +38,7 @@ export function RecruitingPositionSnapshot(): React.ReactElement {
         </section>
       ) : !data.length ? (
         <section className="rh-card" data-testid="rh-elite-position-snapshot">
-          <p className="rh-empty">Position breakdown loading.</p>
+          <p className="rh-empty">No position totals for this class yet.</p>
         </section>
       ) : (
         <section className="rh-position-grid" data-testid="rh-elite-position-snapshot">
@@ -40,9 +46,10 @@ export function RecruitingPositionSnapshot(): React.ReactElement {
             <article key={p.id} className="rh-position-card">
               <div className="rh-position-label">{p.label}</div>
               <div className="rh-position-meta">
-                {p.commits} commits · {p.targets} key targets
+                {countLabel(p.commits, 'commit', 'commits')}
+                {' · '}
+                {countLabel(p.targets, 'key target', 'key targets')}
               </div>
-              <div className="rh-metric-trend">{p.note}</div>
             </article>
           ))}
         </section>

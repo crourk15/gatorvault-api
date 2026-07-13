@@ -1374,14 +1374,16 @@
   margin-top: 8px;
   font-size: 13px;
   line-height: 1.45;
+  color: var(--card-text);
 }
 
 .rh-elite-chrome .rh-feed-narrative {
   margin-top: 6px;
   font-size: 12px;
-  line-height: 1.4;
-  color: var(--gator-orange);
-  font-weight: 600;
+  line-height: 1.45;
+  color: var(--muted-text);
+  font-style: italic;
+  font-weight: 500;
 }
 
 .rh-elite-chrome .rh-younger-prospects-grid {

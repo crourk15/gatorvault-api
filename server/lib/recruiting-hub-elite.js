@@ -456,19 +456,13 @@ async function buildHubPositions(year = 2027) {
     return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
   });
 
-  return sorted.slice(0, 8).map(([label, stats]) => ({
+  return sorted.slice(0, 10).map(([label, stats]) => ({
     id: label,
     label,
     commits: stats.commits,
     targets: stats.targets,
-    note:
-      stats.commits >= 2
-        ? 'Room filling in'
-        : stats.targets >= 2
-          ? 'Active battles'
-          : stats.commits >= 1
-            ? 'Room anchored, selective'
-            : 'Needs attention',
+    // Honest counts only — no canned "Room filling in" staff-speak.
+    note: null,
   }));
 }
 

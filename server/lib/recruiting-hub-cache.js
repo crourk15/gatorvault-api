@@ -193,14 +193,14 @@ function secondaryWarmJobs(elite, years) {
       },
     ]);
     jobs.push([`recruiting:heat-index:${year}`, () => elite.buildHubHeatIndex(year)]);
-    jobs.push([`recruiting:positions:${year}`, () => elite.buildHubPositions(year)]);
+    jobs.push([`recruiting:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
     jobs.push([`recruiting:footprint:${year}`, () => elite.buildHubFootprint(year)]);
     jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year)]);
     jobs.push([`hub:elite:commits:${year}`, () => elite.buildHubCommits(year)]);
     jobs.push([`hub:elite:battles:${year}`, () => elite.buildHubBattles(year)]);
-    jobs.push([`hub:elite:positions:${year}`, () => elite.buildHubPositions(year)]);
+    jobs.push([`hub:elite:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
     jobs.push([`hub:elite:heat-index:${year}`, () => elite.buildHubHeatIndex(year)]);
-    jobs.push([`hub:elite:movement-feed:${year}`, () => elite.buildHubMovementFeed(year)]);
+    jobs.push([`hub:elite:movement-feed:v2:${year}`, () => elite.buildHubMovementFeed(year)]);
     jobs.push([`hub:elite:battle-board:${year}`, () => elite.buildHubBattleBoard(year)]);
     jobs.push([`hub:elite:footprint:${year}`, () => elite.buildHubFootprint(year)]);
   }

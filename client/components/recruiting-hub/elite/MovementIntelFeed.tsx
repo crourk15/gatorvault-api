@@ -10,7 +10,7 @@ import { UiWarming } from '@/components/site/UiMessage';
 const EVENT_LABELS: Record<RhHubMovementFeedItem['event'], string> = {
   up: 'Trending Up',
   down: 'Trending Down',
-  visit: 'Visit Update',
+  visit: 'Visit',
   offer: 'Offer',
   intel: 'Intel',
   commit: 'Commit',
@@ -46,7 +46,7 @@ export function MovementIntelFeed(): React.ReactElement {
       <div className="rh-section-header">
         <div className="rh-section-title">Movement Intel</div>
         <div className="rh-section-subtitle">
-          Live recruiting momentum for the {activeYear} class.
+          Recent commits, visits, and board swings for the {activeYear} class.
         </div>
       </div>
       {loading ? (
@@ -56,7 +56,7 @@ export function MovementIntelFeed(): React.ReactElement {
       ) : !items.length ? (
         <section className="rh-card" data-testid="rh-elite-movement-feed">
           <p className="rh-empty">
-            {error ? 'Could not load movement intel.' : 'No movement intel available yet.'}
+            {error ? 'Could not load movement intel.' : 'No recent movement for this class yet.'}
           </p>
         </section>
       ) : (
@@ -72,9 +72,8 @@ export function MovementIntelFeed(): React.ReactElement {
                   {EVENT_LABELS[item.event]}
                 </span>
               </div>
-              <div className="rh-feed-summary">{item.summary}</div>
-              {item.movementNarrative &&
-              !item.summary.includes(item.movementNarrative) ? (
+              {item.summary ? <div className="rh-feed-summary">{item.summary}</div> : null}
+              {item.movementNarrative ? (
                 <div className="rh-feed-narrative">{item.movementNarrative}</div>
               ) : null}
             </article>

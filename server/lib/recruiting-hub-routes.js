@@ -440,7 +440,7 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/positions', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `recruiting:positions:${year}`;
+      const cacheKey = `recruiting:positions:v2:${year}`;
       return sendHubJson(res, {
         cacheKey,
         year,
@@ -614,7 +614,7 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/hub/positions', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `hub:elite:positions:${year}`;
+      const cacheKey = `hub:elite:positions:v2:${year}`;
       return sendHubJson(res, {
         cacheKey,
         year,
@@ -646,7 +646,7 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/hub/movement-feed', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `hub:elite:movement-feed:${year}`;
+      const cacheKey = `hub:elite:movement-feed:v2:${year}`;
       return sendHubJson(res, {
         cacheKey,
         year,

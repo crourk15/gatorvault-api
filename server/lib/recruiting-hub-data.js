@@ -526,24 +526,27 @@ function mapIntelEventType(row) {
 function buildIntelSummary(row, meta) {
   const et = String(row.eventType || '').toLowerCase();
   const detail = String(row.detail || row.text || '').trim();
-  const name = meta?.name || row.playerName;
 
   if (PUBLIC_VISIT.has(et)) {
-    if (/cancel/i.test(et) || /cancel/i.test(detail)) return `${name} — visit canceled`;
-    if (row.visitDates || row.visitStart) return `${name} — visit scheduled (${row.visitDates || row.visitStart})`;
-    return `${name} — visit update`;
+    if (/cancel/i.test(et) || /cancel/i.test(detail)) return 'Visit canceled';
+    if (row.visitDates || row.visitStart) return `Visit scheduled (${row.visitDates || row.visitStart})`;
+    return 'Visit update';
   }
-  if (et === 'offer') return `${name} — offer extended`;
-  if (et === 'ranking_change') return `${name} — ranking movement`;
+  if (et === 'offer') return 'Offer extended';
+  if (et === 'ranking_change') return 'Ranking movement';
   if (et === 'prediction' || et === 'prediction_change' || et === 'rivals_futurecast') {
-    return `${name} — battle movement (${detail.slice(0, 90)})`;
+    return detail ? `Battle movement — ${detail.slice(0, 90)}` : 'Battle movement';
   }
-  if (et === 'staff_note' || et === 'target_update') return `${name} — staff reaction: ${detail.slice(0, 100)}`;
-  if (et === 'flip_watch' || et === 'commit_watch') return `${name} — ${detail.slice(0, 110)}`;
+  if (et === 'staff_note' || et === 'target_update') {
+    return detail ? `Staff note — ${detail.slice(0, 100)}` : 'Staff note';
+  }
+  if (et === 'flip_watch' || et === 'commit_watch') {
+    return detail ? detail.slice(0, 120) : 'Flip watch';
+  }
 
   const delta = Number(row.movementDelta);
   if (Number.isFinite(delta) && delta !== 0) {
-    return `${name} — UF momentum ${delta > 0 ? 'up' : 'down'} (${delta > 0 ? '+' : ''}${delta})`;
+    return `UF momentum ${delta > 0 ? 'up' : 'down'} (${delta > 0 ? '+' : ''}${delta})`;
   }
 
   return detail.length > 140 ? `${detail.slice(0, 137)}…` : detail;
@@ -565,6 +568,7 @@ function mapIntelToFeedItem(row, meta) {
 function mapVisitLogFeedItem(log, meta) {
   const name = meta?.name || log.playerName || log.playerSlug;
   const visitLabel = String(log.visitType || 'visit').replace(/_/g, ' ');
+  const school = log.school || 'Florida';
   return {
     id: `visit-log-${log.id || log.fingerprint}`,
     timestamp: log.reportedAt || log.date || new Date().toISOString(),
@@ -572,7 +576,7 @@ function mapVisitLogFeedItem(log, meta) {
     position: meta?.position || null,
     class: meta?.classYear || null,
     event: /cancel|ov_change/.test(String(log.visitType)) ? 'down' : 'visit',
-    summary: `${name} — ${visitLabel} · ${log.school || 'Florida'}`,
+    summary: `${visitLabel} · ${school}`,
     profileUrl: meta?.profileUrl || (log.playerSlug ? `/vault/recruiting/player/${log.playerSlug}` : null),
   };
 }
@@ -586,7 +590,7 @@ function mapOfferLogFeedItem(log, meta) {
     position: meta?.position || null,
     class: meta?.classYear || null,
     event: 'offer',
-    summary: `${name} — offer from ${log.school || 'Florida'}`,
+    summary: `Offer from ${log.school || 'Florida'}`,
     profileUrl: meta?.profileUrl || (log.playerSlug ? `/vault/recruiting/player/${log.playerSlug}` : null),
   };
 }
@@ -619,7 +623,7 @@ function boardVisitItem(meta) {
     position: meta.position,
     class: meta.classYear,
     event: 'visit',
-    summary: `${meta.name} — visit scheduled (${formatted})`,
+    summary: `Visit scheduled (${formatted})`,
     profileUrl: meta.profileUrl,
   };
 }
@@ -632,7 +636,7 @@ function boardOfferItem(meta) {
     position: meta.position,
     class: meta.classYear,
     event: 'offer',
-    summary: `${meta.name} — UF offer on record`,
+    summary: 'UF offer on record',
     profileUrl: meta.profileUrl,
   };
 }
@@ -655,13 +659,11 @@ function mapCommitFeedItem(meta, raw = {}) {
   const stars = Number(raw.stars || meta.stars) || null;
   const rank = raw.natlRank ?? meta.natlRank;
   const pos = meta.position || raw.pos || 'prospect';
-  const rankNote =
-    rank != null && Number.isFinite(Number(rank))
-      ? ` · #${rank} natl`
-      : stars
-        ? ` · ${stars}-star ${pos}`
-        : '';
-  const headliner = raw.headliner || meta.headliner ? ' · Headliner' : '';
+  const parts = ['Commits to Florida'];
+  if (stars) parts.push(`${stars}★ ${pos}`);
+  else if (pos) parts.push(pos);
+  if (rank != null && Number.isFinite(Number(rank))) parts.push(`#${rank} natl`);
+  if (raw.headliner || meta.headliner) parts.push('Headliner');
   return {
     id: `commit-${meta.slug}`,
     timestamp: commitFeedTimestamp(meta, raw),
@@ -669,7 +671,7 @@ function mapCommitFeedItem(meta, raw = {}) {
     position: meta.position,
     class: meta.classYear,
     event: 'commit',
-    summary: `${meta.name} — commits to Florida${rankNote}${headliner}`,
+    summary: parts.join(' · '),
     profileUrl: meta.profileUrl,
   };
 }
@@ -687,7 +689,7 @@ function boardCompetitorChangeItem(meta, row) {
     position: meta.position,
     class: meta.classYear,
     event: mapIntelEventType(row),
-    summary: `${meta.name} — battle movement (${school})`,
+    summary: `Battle movement (${school})`,
     profileUrl: meta.profileUrl,
   };
 }
@@ -697,8 +699,8 @@ function boardMovementItem(meta) {
     meta.notePreview ??
     meta.skinny ??
     (meta.movementDirection === 'up'
-      ? `${meta.name} — UF trending up on the board`
-      : `${meta.name} — UF trending down on the board`);
+      ? 'UF trending up on the board'
+      : 'UF trending down on the board');
 
   return {
     id: `board-${meta.slug}-${meta.movementDirection}`,
@@ -756,10 +758,55 @@ function enrichMovementFeedWithNarratives(items, visitLogs, asOf = new Date()) {
       visitEnd: visit?.visitEnd,
     });
     if (!narrative) return item;
-    const enriched = { ...item, movementNarrative: narrative };
-    if (item.event === 'commit' || String(item.summary || '').includes(narrative)) return enriched;
-    return { ...enriched, summary: `${item.summary} — ${narrative}` };
+    // Keep summary factual; narrative is the separate "why it matters" line.
+    return { ...item, movementNarrative: narrative };
   });
+}
+
+const FEED_EVENT_WEIGHT = {
+  commit: 0,
+  flip: 1,
+  offer: 2,
+  visit: 3,
+  up: 4,
+  down: 5,
+  intel: 6,
+};
+
+function isThinVisitFeedItem(item) {
+  if (item.event !== 'visit') return false;
+  if (item.movementNarrative) return false;
+  const summary = String(item.summary || '').toLowerCase();
+  if (/official/.test(summary)) return false;
+  if (/scheduled/.test(summary)) return false;
+  // Bare unofficial / generic visit rows without context.
+  return /unofficial visit|^(visit update|visit)\b/.test(summary);
+}
+
+/** Prefer commits / real movement; drop visit spam; keep feed short for fans. */
+function curateHubMovementFeed(items) {
+  const ranked = [...items].sort((a, b) => {
+    const wa = FEED_EVENT_WEIGHT[a.event] ?? 8;
+    const wb = FEED_EVENT_WEIGHT[b.event] ?? 8;
+    if (wa !== wb) return wa - wb;
+    const na = a.movementNarrative ? 0 : 1;
+    const nb = b.movementNarrative ? 0 : 1;
+    if (na !== nb) return na - nb;
+    return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+  });
+
+  const out = [];
+  let visitCount = 0;
+  for (const item of ranked) {
+    if (isThinVisitFeedItem(item)) continue;
+    if (item.event === 'visit') {
+      if (visitCount >= 3) continue;
+      visitCount += 1;
+    }
+    out.push(item);
+    if (out.length >= 10) break;
+  }
+  return out;
 }
 
 function feedMatchesClassYear(item, classYear) {
@@ -892,39 +939,28 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
 
   void enrichedPlayers;
 
-  const FEED_EVENT_WEIGHT = {
-    commit: 0,
-    flip: 1,
-    offer: 2,
-    visit: 3,
-    up: 4,
-    down: 5,
-    intel: 6,
-  };
-
-  function compareFeedItems(a, b) {
+  const seen = new Set();
+  const deduped = [];
+  for (const item of items.sort((a, b) => {
     const wa = FEED_EVENT_WEIGHT[a.event] ?? 8;
     const wb = FEED_EVENT_WEIGHT[b.event] ?? 8;
     if (wa !== wb) return wa - wb;
     return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-  }
-
-  const seen = new Set();
-  const deduped = [];
-  for (const item of items.sort(compareFeedItems)) {
+  })) {
     const slugKey = String(item.name || '')
       .toLowerCase()
       .replace(/\s+/g, '-');
     const day = new Date(item.timestamp).toDateString();
-    const key = `${slugKey}:${item.event}:${day}:${item.summary.slice(0, 64)}`;
+    const key = `${slugKey}:${item.event}:${day}:${String(item.summary || '').slice(0, 64)}`;
     if (seen.has(key)) continue;
     seen.add(key);
     if (!feedMatchesClassYear(item, focusYear)) continue;
     deduped.push(item);
-    if (deduped.length >= 25) break;
+    if (deduped.length >= 40) break;
   }
 
-  return enrichMovementFeedWithNarratives(deduped, visitLogs);
+  const enriched = enrichMovementFeedWithNarratives(deduped, visitLogs);
+  return curateHubMovementFeed(enriched);
 }
 
 function countFloridaVisits(player) {
