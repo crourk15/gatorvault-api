@@ -105,59 +105,28 @@ function pickBeatQuoteFallback(bundle: LiveHubBundle): PulseCell | null {
 }
 
 function pickPortalNote(bundle: LiveHubBundle): PulseCell | null {
-  type PortalCandidate = {
-    text: string;
-    source?: string;
-    url?: string;
-    metadata: { type: string; source?: string };
-  };
-
-  const candidates: PortalCandidate[] = [
-    ...bundle.panels.portalBuzz.map((item) => ({
-      text: item.text,
-      source: item.source,
-      metadata: { type: 'PORTAL', source: item.source },
-    })),
-    ...bundle.ticker
+  const portalItems = [
+    ...bundle.panels.portalBuzz,
+    ...(bundle.ticker ?? [])
       .filter((t) => t.type === 'PORTAL')
-      .map((t) => ({
-        text: t.text,
-        source: t.source,
-        url: t.url,
-        metadata: { type: t.type, source: t.source },
-      })),
-  ];
+      .map((t) => ({ text: t.text, source: t.source, url: t.url })),
+  ].filter((item) => isEligiblePortalPulseItem(item.text, { source: item.source }));
 
-  const hit = candidates.find((item) =>
-    isEligiblePortalPulseItem(item.text, item.metadata)
-  );
-  if (!hit?.text?.trim()) return null;
-
+  const hit = portalItems.find((item) => item.text?.trim());
+  if (!hit) return null;
   return {
     label: 'Top Portal Note',
     text: hit.text.trim(),
     source: hit.source,
-    url: hit.url,
+    url: 'url' in hit ? hit.url : undefined,
   };
 }
 
-function PulseQuadrant({ label, cell }: { label: string; cell: PulseCell | null }): React.ReactElement {
-  if (!cell) {
-    return (
-      <div className="gv-gnl-pulse__quadrant gv-gnl-pulse__quadrant--empty">
-        <p className="gv-gnl-pulse__label">{label}</p>
-        <p className="gv-gnl-pulse__empty">Nothing active right now.</p>
-      </div>
-    );
-  }
-
+function PulseQuadrant({ label, cell }: { label: string; cell: PulseCell }): React.ReactElement {
   const body = cell.embedHtml ? (
-    <div
-      className="gv-gnl-pulse__embed"
-      dangerouslySetInnerHTML={{ __html: cell.embedHtml }}
-    />
+    <div className="gv-gnl-pulse__embed" dangerouslySetInnerHTML={{ __html: cell.embedHtml }} />
   ) : cell.url ? (
-    <a href={cell.url} className="gv-gnl-pulse__text gv-gnl-pulse__text--link">
+    <a href={cell.url} className="gv-gnl-pulse__text gv-gnl-pulse__text--link" target="_blank" rel="noopener noreferrer">
       {cell.text}
     </a>
   ) : (
@@ -165,7 +134,7 @@ function PulseQuadrant({ label, cell }: { label: string; cell: PulseCell | null 
   );
 
   return (
-    <div className="gv-gnl-pulse__quadrant">
+    <div className="gv-gnl-pulse__cell">
       <p className="gv-gnl-pulse__label">{label}</p>
       {body}
       {cell.source ? <p className="gv-gnl-pulse__source">{cell.source}</p> : null}
@@ -173,8 +142,8 @@ function PulseQuadrant({ label, cell }: { label: string; cell: PulseCell | null 
   );
 }
 
-/** Today's UF Football Pulse — four-quadrant summary from live bundle + Postgres intel. */
-export function GNLPulseSummary({ bundle }: Props): React.ReactElement {
+/** Top-of-day pulse — only renders when at least one signal has real content. */
+export function GNLPulseSummary({ bundle }: Props): React.ReactElement | null {
   const [highPriority, setHighPriority] = useState<HighPriorityIntelItem[]>([]);
   const [beatIntel, setBeatIntel] = useState<BeatIntelItem[]>([]);
 
@@ -197,15 +166,17 @@ export function GNLPulseSummary({ bundle }: Props): React.ReactElement {
 
   const ticker = bundle.ticker ?? [];
 
-  const cells = useMemo(
-    () => ({
-      storyline: pickStoryline(ticker) ?? pickStoryline(bundle.ticker),
-      recruiting: pickRecruitingFromIntel(highPriority) ?? pickRecruitingFallback(ticker, bundle),
-      beatQuote: pickBeatQuoteFromIntel(beatIntel) ?? pickBeatQuoteFallback(bundle),
-      portalNote: pickPortalNote(bundle),
-    }),
-    [ticker, bundle, highPriority, beatIntel]
-  );
+  const cells = useMemo(() => {
+    const list = [
+      pickStoryline(ticker),
+      pickRecruitingFromIntel(highPriority) ?? pickRecruitingFallback(ticker, bundle),
+      pickBeatQuoteFromIntel(beatIntel) ?? pickBeatQuoteFallback(bundle),
+      pickPortalNote(bundle),
+    ].filter((cell): cell is PulseCell => Boolean(cell?.text?.trim()));
+    return list;
+  }, [ticker, bundle, highPriority, beatIntel]);
+
+  if (!cells.length) return null;
 
   return (
     <section
@@ -214,15 +185,14 @@ export function GNLPulseSummary({ bundle }: Props): React.ReactElement {
       data-testid="gnl-pulse-summary"
     >
       <GNLModuleHead
-        title="Today's UF Football Pulse"
-        subtitle="The four signals driving the day across storylines, recruiting, the beat, and portal"
+        title="Top of day"
+        subtitle="Signals that are actually moving right now"
         badge={<GNLDashBadge label="PULSE" tone="team" />}
       />
-      <div className="gv-gnl-pulse__grid">
-        <PulseQuadrant label="Top Storyline" cell={cells.storyline} />
-        <PulseQuadrant label="Top Recruiting Movement" cell={cells.recruiting} />
-        <PulseQuadrant label="Top Beat Writer Quote" cell={cells.beatQuote} />
-        <PulseQuadrant label="Top Portal Note" cell={cells.portalNote} />
+      <div className={`gv-gnl-pulse__grid gv-gnl-pulse__grid--${Math.min(cells.length, 4)}`}>
+        {cells.map((cell) => (
+          <PulseQuadrant key={cell.label} label={cell.label} cell={cell} />
+        ))}
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 /** GatorNation Live — dev-ready prop types */
 
-export type TickerTag = 'BREAKING' | 'VISIT' | 'COMMIT' | 'PORTAL' | 'RUMOR' | 'TEAM' | 'PODCAST';
+export type TickerTag = 'BREAKING' | 'VISIT' | 'COMMIT' | 'PORTAL' | 'RUMOR' | 'TEAM' | 'PODCAST' | 'NEWS';
 
 export type LiveTickerProps = {
   items: {
@@ -80,9 +80,20 @@ export type RecruitingSnapshotProps = {
 export const GNL_COPY = {
   hero: {
     title: 'GatorNation Live',
-    subtitle: 'Real-time UF Football Pulse',
-    meta: 'Updated continuously · Powered by real-time intel',
+    subtitle: "What's moving for Florida football right now",
+    meta: 'Live when there is news · Beat, recruiting, and portal',
     liveBadge: (seconds: number) => `● LIVE · Auto-refresh every ${seconds} seconds`,
+    quietMeta: 'Quiet right now · Checking for updates',
+  },
+  emptyState: {
+    title: 'Nothing live right now',
+    body: 'When commits, beat notes, or portal moves drop, they’ll show up here first.',
+    recruitingLabel: 'Open Recruiting →',
+    teamLabel: 'Open Team →',
+  },
+  stream: {
+    title: 'Live Stream',
+    subtitle: 'Newest headlines across the GatorNation network',
   },
   podcastHub: 'Podcast Hub',
   mediaGrid: 'Media Grid',

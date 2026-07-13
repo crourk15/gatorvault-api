@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import '@/lib/uf-premium-gnl.css';
 import '@/lib/gnl.css';
 import {
-  DEFAULT_PODCASTS,
   fetchLiveHubBundle,
   LIVE_HUB_REFRESH_MS,
   type LiveHubBundle,
@@ -18,7 +17,7 @@ import { GNLLiveFeedModule } from '@/components/gatornation-live/GNLLiveFeedModu
 const EMPTY_BUNDLE: LiveHubBundle = {
   ticker: [],
   feed: [],
-  podcasts: DEFAULT_PODCASTS,
+  podcasts: [],
   panels: { visitsNow: [], portalBuzz: [], beatWriterHighlights: [], staffNotes: [] },
   snapshot: {
     commits: 0,
@@ -36,7 +35,7 @@ const EMPTY_BUNDLE: LiveHubBundle = {
   refreshedAt: null,
 };
 
-/** GatorNation Live — Elite UF Premium modules (45s refresh). */
+/** GatorNation Live — stream-first, honest empty states (45s refresh). */
 export function GatorNationLivePage(): React.ReactElement {
   const [bundle, setBundle] = useState<LiveHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
@@ -89,6 +88,15 @@ export function GatorNationLivePage(): React.ReactElement {
     return () => window.removeEventListener('pagehide', persist);
   }, []);
 
+  const hasLiveSignal = useMemo(
+    () =>
+      (bundle.feed?.length ?? 0) > 0 ||
+      (bundle.ticker?.length ?? 0) > 0 ||
+      (bundle.panels.beatWriterHighlights?.length ?? 0) > 0 ||
+      (bundle.podcasts ?? []).some((p) => p.episodeTitle?.trim()),
+    [bundle]
+  );
+
   return (
     <div
       className="gv-gnl gv-gnl-shell gv-gnl-shell--elite uf-premium-gnl gv-live-feed"
@@ -105,7 +113,7 @@ export function GatorNationLivePage(): React.ReactElement {
         </div>
       )}
 
-      <GNLPageHero />
+      <GNLPageHero updatedAt={bundle.updatedAt ?? bundle.refreshedAt} hasLiveSignal={hasLiveSignal} />
       <GNLLiveFeedModule bundle={bundle} loading={loading} refreshKey={bundle.refreshedAt ?? `${pollSeq}`} />
     </div>
   );

@@ -4,8 +4,32 @@ import React from 'react';
 import { GNL_COPY } from '@/lib/gatornation-live-types';
 import { SITE_ROUTES } from '@/lib/site-routes';
 
-/** UF Premium GatorNation Live hero — solid Gator Blue, centered copy. */
-export function GNLPageHero(): React.ReactElement {
+type Props = {
+  updatedAt?: string | null;
+  hasLiveSignal?: boolean;
+};
+
+function formatUpdated(iso?: string | null): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+/** Honest Live hero — brand + true status, no “continuously updating” cosplay. */
+export function GNLPageHero({ updatedAt, hasLiveSignal = false }: Props): React.ReactElement {
+  const stamp = formatUpdated(updatedAt);
+  const meta = hasLiveSignal
+    ? stamp
+      ? `Updated ${stamp}`
+      : GNL_COPY.hero.meta
+    : GNL_COPY.hero.quietMeta;
+
   return (
     <section
       className="gv-gnl-hero gv-gnl-hero--wireframe gv-gnl-hero--redesign"
@@ -22,7 +46,7 @@ export function GNLPageHero(): React.ReactElement {
           </a>
         </h1>
         <p className="gv-gnl-hero__subtitle gv-gnl-hero__subtitle--wireframe">{GNL_COPY.hero.subtitle}</p>
-        <p className="gv-gnl-hero__meta">{GNL_COPY.hero.meta}</p>
+        <p className="gv-gnl-hero__meta">{meta}</p>
       </div>
     </section>
   );

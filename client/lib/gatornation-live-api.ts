@@ -82,8 +82,9 @@ export function mapTickerTag(category: string, text: string): TickerTag {
   if (blob.includes('commit')) return 'COMMIT';
   if (blob.includes('visit') || blob.includes(' ov') || blob.includes('on campus')) return 'VISIT';
   if (blob.includes('rumor') || blob.includes('beat')) return 'RUMOR';
-  if (blob.includes('break')) return 'BREAKING';
-  return 'BREAKING';
+  // Only tag BREAKING when the item itself claims it — never by default.
+  if (/\bbreak(ing)?\b/.test(blob)) return 'BREAKING';
+  return 'NEWS';
 }
 
 export function tickerTagEmoji(tag: TickerTag): string {
@@ -102,8 +103,10 @@ export function tickerTagEmoji(tag: TickerTag): string {
       return '🐊';
     case 'PODCAST':
       return '🎙';
+    case 'NEWS':
+      return '📰';
     default:
-      return '🔴';
+      return '📰';
   }
 }
 
@@ -248,15 +251,7 @@ export function pickBreakingNews(
     };
   }
 
-  if (ticker[0]) {
-    return {
-      text: ticker[0].text,
-      url: ticker[0].url || '/gator-nation-live',
-      timestamp: ticker[0].timestamp,
-      source: ticker[0].source,
-    };
-  }
-
+  // Do not promote the first ticker item to "breaking" — only explicit breaks.
   return null;
 }
 
@@ -281,37 +276,67 @@ function platformUrl(
 }
 
 export function normalizePodcasts(shows: PodcastShow[]): PodcastCardProps[] {
-  if (!shows.length) return DEFAULT_PODCASTS;
-  return shows.slice(0, 4).map((show, idx) => {
-    const platforms = show.platforms ?? [];
-    const catalogKey = show.id ?? show.title ?? DEFAULT_PODCASTS[idx]?.id;
-    const catalogStreams = resolvePodcastStreams(catalogKey);
-    const fallback = DEFAULT_PODCASTS[idx];
-    return {
-      id: show.id ?? fallback?.id,
-      title: show.title || fallback?.title || 'Podcast',
-      description: show.description || fallback?.description || '',
-      logoUrl:
-        show.logoUrl ||
-        resolvePodcastLogo(catalogKey) ||
-        fallback?.logoUrl,
-      thumbnailUrl:
-        show.thumbnailUrl ||
-        resolvePodcastLogoFallback(catalogKey) ||
-        fallback?.thumbnailUrl,
-      hosts: show.hosts?.length ? show.hosts : fallback?.hosts,
-      appleUrl: platformUrl(platforms, 'apple', catalogStreams.appleUrl),
-      spotifyUrl: platformUrl(platforms, 'spotify', catalogStreams.spotifyUrl),
-      youtubeUrl: platformUrl(platforms, 'youtube', catalogStreams.youtubeUrl),
-      websiteUrl:
-        platformUrl(platforms, 'web', catalogStreams.siteUrl) ||
-        platforms[0]?.url ||
-        fallback?.websiteUrl ||
-        '#',
-      episodeTitle: show.episodeTitle,
-      publishedAt: show.publishedAt,
-    };
-  });
+  if (!shows.length) return [];
+  return shows
+    .map((show, idx) => {
+      const platforms = show.platforms ?? [];
+      const catalogKey = show.id ?? show.title ?? DEFAULT_PODCASTS[idx]?.id;
+      const catalogStreams = resolvePodcastStreams(catalogKey);
+      const fallback = DEFAULT_PODCASTS[idx];
+      return {
+        id: show.id ?? fallback?.id,
+        title: show.title || fallback?.title || 'Podcast',
+        description: show.description || fallback?.description || '',
+        logoUrl:
+          show.logoUrl ||
+          resolvePodcastLogo(catalogKey) ||
+          fallback?.logoUrl,
+        thumbnailUrl:
+          show.thumbnailUrl ||
+          resolvePodcastLogoFallback(catalogKey) ||
+          fallback?.thumbnailUrl,
+        hosts: show.hosts?.length ? show.hosts : fallback?.hosts,
+        appleUrl: platformUrl(platforms, 'apple', catalogStreams.appleUrl),
+        spotifyUrl: platformUrl(platforms, 'spotify', catalogStreams.spotifyUrl),
+        youtubeUrl: platformUrl(platforms, 'youtube', catalogStreams.youtubeUrl),
+        websiteUrl:
+          platformUrl(platforms, 'web', catalogStreams.siteUrl) ||
+          platforms[0]?.url ||
+          fallback?.websiteUrl ||
+          '#',
+        episodeTitle: show.episodeTitle,
+        publishedAt: show.publishedAt,
+      };
+    })
+    .filter((pod) => Boolean(pod.episodeTitle?.trim()))
+    .slice(0, 2);
+}
+
+/** Chronological stream for the Live page — newest first, no RH/FC noise. */
+export function buildLiveStreamFeed(feed: LiveFeedItem[]): LiveFeedItem[] {
+  const seen = new Set<string>();
+  const out: LiveFeedItem[] = [];
+  const sorted = [...feed]
+    .filter((item) => {
+      const text = String(item.title || '').trim();
+      return text && !isExcludedTickerFeedItem(item) && !isExcludedLiveFeedItem(item);
+    })
+    .sort((a, b) => {
+      const ta = Date.parse(a.createdAt || '') || 0;
+      const tb = Date.parse(b.createdAt || '') || 0;
+      return tb - ta;
+    });
+
+  for (const item of sorted) {
+    const key = String(item.title || '')
+      .trim()
+      .toLowerCase();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+    if (out.length >= 40) break;
+  }
+  return out;
 }
 
 export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePanelItems {
@@ -370,7 +395,7 @@ export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePan
 
 export type LiveHubBundle = {
   ticker: LiveTickerItem[];
-  feed: RecruitingUpdateCardProps[];
+  feed: LiveFeedItem[];
   podcasts: PodcastCardProps[];
   panels: LivePanelItems;
   snapshot: RecruitingSnapshotProps & { momentumTrend: 'up' | 'down' | 'neutral' };
@@ -391,13 +416,14 @@ export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> 
   const feedItems = dash?.feed ?? [];
   const beat = dash?.beat?.posts ?? [];
   const ticker = buildLiveDashboardTicker(feedItems);
+  const stream = buildLiveStreamFeed(feedItems);
   const refreshedAt = dash?.refreshedAt ?? dash?.updatedAt ?? new Date().toISOString();
   const shows = dash?.podcasts?.shows ?? [];
-  const podcasts = shows.length > 0 ? normalizePodcasts(shows) : DEFAULT_PODCASTS;
+  const podcasts = normalizePodcasts(shows);
 
   return {
     ticker,
-    feed: [],
+    feed: stream,
     podcasts,
     panels: buildLivePanels(feedItems, beat),
     snapshot: {

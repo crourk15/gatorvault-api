@@ -29,8 +29,10 @@ type Props = {
   items: BeatItem[];
 };
 
-export function BeatWriterCardGrid({ title, description, items }: Props): React.ReactElement {
+/** Beat highlights — hidden when empty (no “0 highlights” cosplay). */
+export function BeatWriterCardGrid({ title, description, items }: Props): React.ReactElement | null {
   const cards = items.slice(0, 3);
+  if (!cards.length) return null;
 
   return (
     <div className="gv-gnl-beat-grid" data-testid="gnl-beat-writer-grid" id="beat-writers">
@@ -38,45 +40,38 @@ export function BeatWriterCardGrid({ title, description, items }: Props): React.
         title={title}
         subtitle={description}
         badge={<GNLDashBadge label="BEAT" tone="beat" />}
-        count={cards.length ? `${cards.length} highlights` : '0 highlights'}
+        count={`${cards.length} highlights`}
       />
       <div className="gv-gnl-beat-grid__cards">
-        {cards.length === 0 ? (
-          <div className="gv-gnl-beat-grid__empty" aria-live="polite">
-            <p className="gv-gnl-panel__secondary">Nothing active right now.</p>
-            <p className="gv-gnl-beat-grid__empty-hint">Beat writer posts appear here when the feed updates.</p>
-          </div>
-        ) : (
-          cards.map((item, idx) => (
-            <article key={`${item.writerName ?? item.source}_${idx}`} className="gv-gnl-beat-card gv-gnl-beat-card--x">
-              <div className="gv-gnl-beat-card__head">
-                <span className="gv-gnl-beat-card__avatar" aria-hidden="true">
-                  {avatarInitials(item.writerName, item.handle)}
-                </span>
-                <div className="gv-gnl-beat-card__identity">
-                  <p className="gv-gnl-beat-card__writer">{item.writerName || item.handle || 'Beat Writer'}</p>
-                  {item.source ? (
-                    <GNLDashBadge label={item.source.toUpperCase()} tone="beat" />
-                  ) : null}
-                </div>
-                {item.timestamp ? (
-                  <span className="gv-gnl-beat-card__time">{formatTimestamp(item.timestamp)}</span>
+        {cards.map((item, idx) => (
+          <article key={`${item.writerName ?? item.source}_${idx}`} className="gv-gnl-beat-card gv-gnl-beat-card--x">
+            <div className="gv-gnl-beat-card__head">
+              <span className="gv-gnl-beat-card__avatar" aria-hidden="true">
+                {avatarInitials(item.writerName, item.handle)}
+              </span>
+              <div className="gv-gnl-beat-card__identity">
+                <p className="gv-gnl-beat-card__writer">{item.writerName || item.handle || 'Beat Writer'}</p>
+                {item.source ? (
+                  <GNLDashBadge label={item.source.toUpperCase()} tone="beat" />
                 ) : null}
               </div>
-              <p className="gv-gnl-beat-card__text">{item.text}</p>
-              {item.url ? (
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="gv-gnl-beat-card__cta gv-gnl-beat-card__cta--x"
-                >
-                  View on X →
-                </a>
+              {item.timestamp ? (
+                <span className="gv-gnl-beat-card__time">{formatTimestamp(item.timestamp)}</span>
               ) : null}
-            </article>
-          ))
-        )}
+            </div>
+            <p className="gv-gnl-beat-card__text">{item.text}</p>
+            {item.url ? (
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="gv-gnl-beat-card__cta gv-gnl-beat-card__cta--x"
+              >
+                View on X →
+              </a>
+            ) : null}
+          </article>
+        ))}
       </div>
     </div>
   );

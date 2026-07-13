@@ -4,16 +4,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { LiveTickerItem } from '@/lib/gatornation-live-api';
 import { filterExcludedPortalClassItems } from '@/lib/portal-class-filter';
 
-const FALLBACK: LiveTickerItem[] = [
-  {
-    type: 'BREAKING',
-    text: 'GatorNation Live — recruiting, portal, and beat writers updating all day',
-    timestamp: new Date().toISOString(),
-    source: 'GatorVault',
-    url: '/gator-nation-live',
-  },
-];
-
 type Props = {
   items: LiveTickerItem[];
   refreshKey?: string | null;
@@ -23,22 +13,27 @@ function itemKey(item: LiveTickerItem): string {
   return `${item.type}_${item.text.slice(0, 80).toLowerCase()}`;
 }
 
-/** UF Premium live ticker — white band, blue text, smooth horizontal scroll. */
-export function GNLEliteTicker({ items, refreshKey }: Props): React.ReactElement {
+/** Live ticker — real items only. Hidden when quiet (no fake BREAKING stubs). */
+export function GNLEliteTicker({ items, refreshKey }: Props): React.ReactElement | null {
   const prevRefreshKey = useRef<string | null>(null);
   const seenKeys = useRef<Set<string>>(new Set());
   const [newKeys, setNewKeys] = useState<Set<string>>(new Set());
 
-  const display = useMemo(() => {
-    const filtered = filterExcludedPortalClassItems(
-      items,
-      (item) => item.text,
-      (item) => ({ type: item.type, source: item.source })
-    );
-    return filtered.length ? filtered : FALLBACK;
-  }, [items]);
+  const display = useMemo(
+    () =>
+      filterExcludedPortalClassItems(
+        items,
+        (item) => item.text,
+        (item) => ({ type: item.type, source: item.source })
+      ),
+    [items]
+  );
 
-  const marqueeItems = useMemo(() => [...display, ...display], [display]);
+  const marqueeItems = useMemo(() => {
+    if (display.length === 0) return [];
+    // Only duplicate for seamless marquee when we have enough real items.
+    return display.length >= 2 ? [...display, ...display] : display;
+  }, [display]);
 
   useEffect(() => {
     const keys = display.map(itemKey);
@@ -61,6 +56,8 @@ export function GNLEliteTicker({ items, refreshKey }: Props): React.ReactElement
     seenKeys.current = new Set(keys);
     if (refreshKey != null) prevRefreshKey.current = refreshKey;
   }, [refreshKey, display]);
+
+  if (!display.length) return null;
 
   return (
     <section className="gv-gnl-ticker-band" aria-label="Live ticker" data-testid="gnl-ticker">
