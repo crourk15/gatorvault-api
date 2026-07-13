@@ -24,6 +24,8 @@ function normalizeSchool(name: string): string {
 function shortSchoolLabel(name: string): string {
   const n = normalizeSchool(name);
   if (isFlorida(n)) return 'UF';
+  // Georgia Tech before Georgia — otherwise "Georgia Tech" becomes UGA.
+  if (/georgia tech|yellow jackets/i.test(n)) return 'GT';
   if (/georgia/i.test(n)) return 'UGA';
   if (/alabama/i.test(n)) return 'Bama';
   if (/texas(?! a&m)/i.test(n)) return 'Texas';
@@ -34,6 +36,9 @@ function shortSchoolLabel(name: string): string {
   if (/tennessee/i.test(n)) return 'Tenn';
   if (/lsu/i.test(n)) return 'LSU';
   if (/florida state|fsu/i.test(n)) return 'FSU';
+  if (/penn state/i.test(n)) return 'PSU';
+  if (/kentucky/i.test(n)) return 'UK';
+  if (/ole miss|mississippi(?!\s*state)/i.test(n)) return 'Ole Miss';
   const words = n.split(' ').filter(Boolean);
   return words[0]?.slice(0, 8) || n.slice(0, 8) || 'Peer';
 }
@@ -47,18 +52,31 @@ export function resolveCompetingSchools(player: FcLabTarget): CompetingSchoolSeg
     return [];
   }
 
+  const ufRpm =
+    player.ufRpmPct != null && Number(player.ufRpmPct) > 0
+      ? ufPctFromFc(player.ufRpmPct)
+      : null;
+
   const fromRpm = (player.competingSchools ?? [])
     .filter((s) => s?.name && Number(s.pct) > 0 && !isFlorida(s.name))
     .sort((a, b) => Number(b.pct) - Number(a.pct))
     .slice(0, 3);
 
-  // No confirmed RPM board → show nothing (not fake rivals).
-  if (!fromRpm.length) return [];
-
-  const ufRpm =
-    player.ufRpmPct != null && Number(player.ufRpmPct) > 0
-      ? ufPctFromFc(player.ufRpmPct)
-      : null;
+  // No peer board — still show Florida RPM alone when we have it (legacy peers filtered out).
+  if (!fromRpm.length) {
+    if (ufRpm != null && ufRpm > 0) {
+      return [
+        {
+          key: `${player.slug}-Florida-0`,
+          name: 'Florida',
+          absPct: ufRpm,
+          pct: 100,
+          tone: 'uf',
+        },
+      ];
+    }
+    return [];
+  }
 
   const rows: Array<{ name: string; absPct: number; tone: CompetingSchoolSegment['tone'] }> = [];
   if (ufRpm != null && ufRpm > 0) {

@@ -206,8 +206,14 @@ function competingSchoolsFromRecruitingRecord(
     name?: string;
     score?: number;
     pct?: number;
+    source?: string;
   }>;
-  for (const c of competitors) {
+  // Prefer confirmed On3 / live competitors — skip legacy filler when anything better exists.
+  const nonLegacy = competitors.filter(
+    (c) => String(c?.source || '').toLowerCase() !== 'legacy'
+  );
+  const competitorPool = nonLegacy.length ? nonLegacy : [];
+  for (const c of competitorPool) {
     add(c?.school || c?.name, c?.score ?? c?.pct);
   }
 
