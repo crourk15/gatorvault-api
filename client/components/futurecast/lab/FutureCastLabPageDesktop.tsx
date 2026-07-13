@@ -68,11 +68,17 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
             )}
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.positions}>
-            <FutureCastPositionBreakdown
-              players={data.masterBoard.players}
-              highPriority={highPriority}
-              activePredictions={data.metrics.activePredictions}
-            />
+            {pending ? (
+              <PanelSkeleton minHeight={320} />
+            ) : (
+              <FutureCastPositionBreakdown
+                players={data.masterBoard.players}
+                highPriority={highPriority}
+                roster={data.roster}
+                commits2027={data.commits2027}
+                updatedAt={data.lastUpdated}
+              />
+            )}
           </section>
         </div>
 

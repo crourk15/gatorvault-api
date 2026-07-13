@@ -82,11 +82,17 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
             )}
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.positions}>
-            <FutureCastPositionBreakdown
-              players={data.masterBoard.players}
-              highPriority={highPriority}
-              activePredictions={data.metrics.activePredictions}
-            />
+            {pending ? (
+              <PanelSkeleton minHeight={300} />
+            ) : (
+              <FutureCastPositionBreakdown
+                players={data.masterBoard.players}
+                highPriority={highPriority}
+                roster={data.roster}
+                commits2027={data.commits2027}
+                updatedAt={data.lastUpdated}
+              />
+            )}
           </section>
           <section id="fc-lab-extended">
             {pending ? (

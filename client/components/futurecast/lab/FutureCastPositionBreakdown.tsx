@@ -3,135 +3,195 @@
 import React, { useMemo } from 'react';
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
-import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
+import type { RosterPlayer } from '@/lib/roster-api';
+import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
+import { playerProfileRoute } from '@/lib/vault-route-map';
+import {
+  boardStrengthLabel,
+  buildPositionNeedBoard,
+  needTierLabel,
+  type PositionNeedRow,
+} from '@/lib/fc-position-need-board';
 import { FutureCastPanelShell } from './primitives';
-import { ufPctFromFc } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
-
-type PositionBucket = {
-  position: string;
-  count: number;
-  avgUfProb: number;
-  avgVolatility: number;
-  activePredictions: number;
-};
 
 type Props = {
   players: FutureCastPlayer[];
   highPriority?: HighPriorityPlayer[];
-  activePredictions?: number;
+  roster?: RosterPlayer[];
+  commits2027?: RecruitingBoardPlayer[];
+  updatedAt?: string | null;
   bare?: boolean;
 };
+
+function NeedRow({
+  row,
+  boardClassYear,
+}: {
+  row: PositionNeedRow;
+  boardClassYear: number;
+}): React.ReactElement {
+  return (
+    <article
+      className={`fc-lab-need-row fc-lab-need-row--${row.needTier}`}
+      data-testid="fc-lab-need-row"
+    >
+      <header className="fc-lab-need-row__head">
+        <div className="fc-lab-need-row__rank-wrap">
+          <span className="fc-lab-need-row__rank">#{row.needRank}</span>
+          <strong className="fc-lab-need-row__pos">{row.position}</strong>
+          <span className={`fc-lab-need-tier fc-lab-need-tier--${row.needTier}`}>
+            {needTierLabel(row.needTier)}
+          </span>
+        </div>
+        <span className={`fc-lab-need-strength fc-lab-need-strength--${row.boardStrength}`}>
+          {boardClassYear} board · {boardStrengthLabel(row.boardStrength)}
+          {row.avgUfPct != null ? ` · ${row.avgUfPct}% avg` : ''}
+        </span>
+      </header>
+
+      <p className="fc-lab-need-row__reason">{row.reason}</p>
+
+      <div className="fc-lab-need-stats" aria-label={`${row.position} depth stats`}>
+        <div className="fc-lab-need-stat">
+          <span className="fc-lab-need-stat__label">Roster</span>
+          <strong className="fc-lab-need-stat__value">{row.rosterCount}</strong>
+        </div>
+        <div className="fc-lab-need-stat">
+          <span className="fc-lab-need-stat__label">Leaving ≤1 yr</span>
+          <strong className="fc-lab-need-stat__value">{row.departingSoon}</strong>
+        </div>
+        <div className="fc-lab-need-stat">
+          <span className="fc-lab-need-stat__label">2027 commits</span>
+          <strong className="fc-lab-need-stat__value">{row.commits2027}</strong>
+        </div>
+        <div className="fc-lab-need-stat">
+          <span className="fc-lab-need-stat__label">Projected</span>
+          <strong className="fc-lab-need-stat__value">
+            {row.projectedDepth}
+            <span className="fc-lab-need-stat__floor"> / {row.schemeMin}</span>
+          </strong>
+        </div>
+        <div className="fc-lab-need-stat">
+          <span className="fc-lab-need-stat__label">{boardClassYear} targets</span>
+          <strong className="fc-lab-need-stat__value">{row.boardTargets}</strong>
+        </div>
+        <div className="fc-lab-need-stat">
+          <span className="fc-lab-need-stat__label">Battles</span>
+          <strong className="fc-lab-need-stat__value">{row.battles}</strong>
+        </div>
+      </div>
+
+      {(row.departing.length > 0 || row.commits.length > 0 || row.topTargets.length > 0) && (
+        <div className="fc-lab-need-lists">
+          {row.departing.length > 0 ? (
+            <div className="fc-lab-need-list">
+              <span className="fc-lab-need-list__label">Likely departing</span>
+              <ul>
+                {row.departing.map((p) => (
+                  <li key={`dep-${row.position}-${p.slug || p.name}`}>
+                    {p.slug ? (
+                      <a href={playerProfileRoute(p.slug, 'roster')}>{p.name}</a>
+                    ) : (
+                      p.name
+                    )}
+                    {p.detail ? <span> · {p.detail}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+          {row.commits.length > 0 ? (
+            <div className="fc-lab-need-list">
+              <span className="fc-lab-need-list__label">2027 commits</span>
+              <ul>
+                {row.commits.map((p) => (
+                  <li key={`cmt-${row.position}-${p.slug || p.name}`}>
+                    {p.slug ? (
+                      <a href={playerProfileRoute(p.slug, 'futurecast')}>{p.name}</a>
+                    ) : (
+                      p.name
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+          {row.topTargets.length > 0 ? (
+            <div className="fc-lab-need-list">
+              <span className="fc-lab-need-list__label">{boardClassYear} board leaders</span>
+              <ul>
+                {row.topTargets.map((p) => (
+                  <li key={`tgt-${row.position}-${p.slug || p.name}`}>
+                    {p.slug ? (
+                      <a href={playerProfileRoute(p.slug, 'futurecast')}>{p.name}</a>
+                    ) : (
+                      p.name
+                    )}
+                    {p.detail ? <span> · {p.detail}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
+      )}
+    </article>
+  );
+}
 
 export function FutureCastPositionBreakdown({
   players,
   highPriority = [],
-  activePredictions,
+  roster = [],
+  commits2027 = [],
+  updatedAt,
   bare,
 }: Props): React.ReactElement {
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
-  const focusYear = discoveryFocus ? 2028 : 2027;
+  const boardClassYear = discoveryFocus ? 2028 : 2027;
 
-  const buckets = useMemo(() => {
-    if (discoveryFocus && highPriority.length) {
-      const map = new Map<string, HighPriorityPlayer[]>();
-      for (const p of highPriority) {
-        const pos = p.position || 'Other';
-        const list = map.get(pos) ?? [];
-        list.push(p);
-        map.set(pos, list);
-      }
+  const board = useMemo(() => {
+    const boardPlayers =
+      discoveryFocus && highPriority.length ? highPriority : players;
+    return buildPositionNeedBoard({
+      roster,
+      commits2027,
+      boardPlayers,
+      boardClassYear,
+      commitClassYear: 2027,
+      updatedAt,
+    });
+  }, [discoveryFocus, highPriority, players, roster, commits2027, boardClassYear, updatedAt]);
 
-      const result: PositionBucket[] = [];
-      for (const [position, list] of map) {
-        const avgUfProb = Math.round(
-          list.reduce((acc, p) => acc + ufPctFromFc(p.ufProbability), 0) / list.length
-        );
-        const avgVolatility = Math.round(
-          list.reduce((acc, p) => acc + Math.abs(p.delta7d ?? 0), 0) / list.length
-        );
-        result.push({
-          position,
-          count: list.length,
-          avgUfProb,
-          avgVolatility,
-          activePredictions: list.filter((p) => ufPctFromFc(p.ufProbability) > 0).length,
-        });
-      }
-      return result.sort((a, b) => b.count - a.count);
-    }
-
-    const map = new Map<string, FutureCastPlayer[]>();
-    for (const p of players) {
-      const pos = p.position || 'Other';
-      const list = map.get(pos) ?? [];
-      list.push(p);
-      map.set(pos, list);
-    }
-
-    const result: PositionBucket[] = [];
-    for (const [position, list] of map) {
-      const avgUfProb = Math.round(
-        list.reduce((acc, p) => acc + ufPctFromFc(p.ufConfidence), 0) / list.length
-      );
-      const avgVolatility = Math.round(
-        list.reduce((acc, p) => acc + Math.abs(p.trendDelta7d ?? p.volatility7d ?? 0), 0) / list.length
-      );
-      result.push({
-        position,
-        count: list.length,
-        avgUfProb,
-        avgVolatility,
-        activePredictions: list.filter((p) => (p.ufConfidence ?? 0) > 0).length,
-      });
-    }
-
-    return result.sort((a, b) => b.count - a.count);
-  }, [discoveryFocus, highPriority, players]);
-
-  const title = discoveryFocus
-    ? `Position Breakdown — ${focusYear} UF Targets`
-    : 'Position Breakdown — UF FutureCast';
-  const sub = discoveryFocus
-    ? 'Average UF likelihood and movement by position on the 2028 allowlist board.'
-    : 'Average UF probability, active predictions, and volatility by position.';
+  const title = `Board by need — ${boardClassYear}`;
+  const sub =
+    'Positions ranked most important → least from current roster + 2027 UF commits, then how the FutureCast board stacks at each room.';
 
   return (
-    <FutureCastPanelShell
-      bare={bare}
-      title={title}
-      sub={sub}
-      testId="fc-lab-position-breakdown"
-    >
-      {buckets.length === 0 ? (
-        <p className="rh-cc-empty">No position data available.</p>
+    <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-position-breakdown">
+      <p className="fc-lab-need-meta">
+        <span className={`fc-lab-need-confidence fc-lab-need-confidence--${board.confidence}`}>
+          {board.confidence === 'high'
+            ? 'Auto-updating'
+            : board.confidence === 'medium'
+              ? 'Partial data'
+              : 'Loading inputs'}
+        </span>
+        <span className="fc-lab-need-meta__note">{board.confidenceNote}</span>
+      </p>
+
+      {board.rows.length === 0 ? (
+        <p className="rh-cc-empty">Need board unavailable until roster and commit feeds load.</p>
       ) : (
-        <>
-          <div className="fc-lab-pos-table__head" aria-hidden>
-            <span>Position</span>
-            <span>Avg UF %</span>
-            <span>Predictions</span>
-            <span>Volatility</span>
-          </div>
-          <div className="fc-lab-pos-table">
-            {buckets.map((b) => (
-              <article key={b.position} className="fc-lab-pos-row">
-                <span className="fc-lab-pos-row__pos">{b.position}</span>
-                <span className="fc-lab-pos-row__summary">
-                  {b.position} — {b.avgUfProb}% avg, {b.activePredictions} predictions, Volatility{' '}
-                  {b.avgVolatility}
-                </span>
-                <span className="fc-lab-pos-row__avg">{b.avgUfProb}%</span>
-                <span className="fc-lab-pos-row__pred">{b.activePredictions}</span>
-                <span className="fc-lab-pos-row__vol">{b.avgVolatility}</span>
-              </article>
-            ))}
-          </div>
-          {activePredictions != null ? (
-            <p className="fc-lab-pos-table__foot">{activePredictions} total active predictions on board</p>
-          ) : null}
-        </>
+        <div className="fc-lab-need-list-wrap">
+          {board.rows.map((row) => (
+            <NeedRow key={row.position} row={row} boardClassYear={board.boardClassYear} />
+          ))}
+        </div>
       )}
+
+      <p className="fc-lab-need-foot">{board.methodNote}</p>
     </FutureCastPanelShell>
   );
 }

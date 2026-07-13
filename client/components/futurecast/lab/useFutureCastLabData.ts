@@ -70,6 +70,8 @@ const EMPTY_LAB_DATA: FutureCastLabDataMap = {
   flipWatch: [],
   movementNarratives: [],
   underclassmen: [],
+  roster: [],
+  commits2027: [],
 };
 
 export type FutureCastLabData = FutureCastLabDataMap & {
@@ -114,6 +116,8 @@ export function useFutureCastLabData(): FutureCastLabData {
           flipWatch: [],
           movementNarratives: [],
           underclassmen: [],
+          roster: [],
+          commits2027: [],
         });
         setData({
           ...EMPTY_LAB_DATA,

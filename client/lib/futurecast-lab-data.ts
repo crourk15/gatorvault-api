@@ -28,6 +28,9 @@ import { snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch
 import { ACTIVE_RECRUITING_CLASS_YEAR, primaryRecruitingClassYear } from './recruiting-cycle';
 import { HIGH_PRIORITY_YEAR } from './futurecast-high-priority-api';
 import { overlayDiscoverySeasonLabState } from '@/components/futurecast/lab/fc-lab-types';
+import { fetchRosterPlayers, type RosterPlayer } from './roster-api';
+import { fetchRecruitingBoard, type RecruitingBoardPlayer } from './recruiting-board-api';
+import { isFloridaSchool } from './recruiting-target-filters';
 
 const EMPTY_STOCK: StockBoardResponse = { stockUp: [], stockDown: [], windowDays: 7 };
 const EMPTY_HIGH_PRIORITY: HighPriorityResponse = {
@@ -70,6 +73,10 @@ export type FutureCastLabDataMap = {
   flipWatch: FlipWatchRow[];
   movementNarratives: MovementNarrativeRow[];
   underclassmen: UnderclassmenPlayer[];
+  /** Current UF roster — used for Board-by-need ranking. */
+  roster: RosterPlayer[];
+  /** Locked 2027 UF commits — used for Board-by-need ranking. */
+  commits2027: RecruitingBoardPlayer[];
 };
 
 function buildSummary(master: MasterBoardResponse): FutureCastPageSummary {
@@ -131,8 +138,18 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
 > {
   const discoveryYear = primaryRecruitingClassYear();
   const closingYear = HIGH_PRIORITY_YEAR;
-  const [trendingR, movementR, staffR, homeR, stockR, discoveryHpR, closingHpR, underclassmenR] =
-    await Promise.allSettled([
+  const [
+    trendingR,
+    movementR,
+    staffR,
+    homeR,
+    stockR,
+    discoveryHpR,
+    closingHpR,
+    underclassmenR,
+    rosterR,
+    board2027R,
+  ] = await Promise.allSettled([
       warmFetch<TrendingBoardResponse>('/api/futurecast/trending'),
       warmFetch<MovementIntelResponse>('/api/futurecast/movement-intel'),
       warmFetch<StaffNotesResponse>(
@@ -155,6 +172,13 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
         classes: {},
         players: [],
         empty: true,
+      })),
+      fetchRosterPlayers().catch((): RosterPlayer[] => []),
+      fetchRecruitingBoard(2027).catch(() => ({
+        ok: false,
+        classYear: 2027,
+        commits: [] as RecruitingBoardPlayer[],
+        targets: [] as RecruitingBoardPlayer[],
       })),
     ]);
 
@@ -206,6 +230,16 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     players: [],
     empty: true,
   });
+  const roster = settled(rosterR, [] as RosterPlayer[]);
+  const board2027 = settled(board2027R, {
+    ok: false,
+    classYear: 2027,
+    commits: [] as RecruitingBoardPlayer[],
+    targets: [] as RecruitingBoardPlayer[],
+  });
+  const commits2027 = (board2027.commits ?? []).filter(
+    (p) => p.isCommittedToUF === true || isFloridaSchool(p.committedTo)
+  );
 
   return {
     trendingBoard: trending,
@@ -220,6 +254,8 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     flipWatch: closingHighPriority.flipWatch ?? [],
     movementNarratives: closingHighPriority.movementNarratives ?? [],
     underclassmen: underclassmenPayload.players ?? [],
+    roster,
+    commits2027,
   };
 }
 
