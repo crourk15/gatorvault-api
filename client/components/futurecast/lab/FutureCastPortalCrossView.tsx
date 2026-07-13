@@ -33,7 +33,7 @@ export function FutureCastPortalCrossView({
   masterBoard,
   portalSeason,
   bare,
-}: Props): React.ReactElement {
+}: Props): React.ReactElement | null {
   const season = useMemo(
     () => resolvePortalSeason(portalSeason, portalPlayers.length),
     [portalSeason, portalPlayers.length]
@@ -60,6 +60,27 @@ export function FutureCastPortalCrossView({
     });
   }, [portalPlayers, boardBySlug]);
 
+  const dormant = !season.showUi && rows.length === 0;
+
+  if (dormant) {
+    const when = season.nextWindowStart
+      ? new Date(`${season.nextWindowStart}T12:00:00Z`).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          timeZone: 'UTC',
+        })
+      : 'December';
+    return (
+      <div
+        className="fc-lab-portal-one-line"
+        data-testid="fc-lab-portal-cross"
+        data-portal-phase={season.phase}
+      >
+        <p>Portal resumes {when}</p>
+      </div>
+    );
+  }
+
   return (
     <FutureCastPanelShell
       bare={bare}
@@ -72,9 +93,7 @@ export function FutureCastPortalCrossView({
       }
       testId="fc-lab-portal-cross"
     >
-      {!season.showUi && rows.length === 0 ? (
-        <PortalSeasonDormantCard portalSeason={season} />
-      ) : rows.length === 0 ? (
+      {rows.length === 0 ? (
         <p className="rh-cc-empty">No portal watchlist entries loaded.</p>
       ) : (
         <div className="fc-lab-portal-list">

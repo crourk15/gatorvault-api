@@ -130,12 +130,11 @@ export const FUTURECAST_SEGMENT_PATHS: Record<FutureCastSegment, string> = {
 
 /** Jump links for unified FutureCast Lab command center */
 export const FUTURECAST_LAB_SECTIONS = [
-  { id: FUTURECAST_LAB_ANCHORS.overview, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.overview), shortLabel: 'Overview' },
   { id: FUTURECAST_LAB_ANCHORS.masterBoard, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.masterBoard), shortLabel: 'Targets' },
   { id: FUTURECAST_LAB_ANCHORS.visits, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.visits), shortLabel: 'Visits' },
   { id: FUTURECAST_LAB_ANCHORS.trending, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.trending), shortLabel: 'Battles' },
   { id: FUTURECAST_LAB_ANCHORS.movement, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.movement), shortLabel: 'Movement' },
-  { id: FUTURECAST_LAB_ANCHORS.positions, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.positions), shortLabel: 'Positions' },
+  { id: FUTURECAST_LAB_ANCHORS.positions, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.positions), shortLabel: 'Fit' },
   { id: FUTURECAST_LAB_ANCHORS.portal, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.portal), shortLabel: 'Portal' },
   { id: FUTURECAST_LAB_ANCHORS.feed, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.feed), shortLabel: 'Feed' },
 ] as const;

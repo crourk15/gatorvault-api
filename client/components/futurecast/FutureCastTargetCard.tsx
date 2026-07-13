@@ -4,11 +4,9 @@ import React from 'react';
 import type { FcLabTarget } from '@/components/futurecast/lab/fc-lab-types';
 import { ufPctFromFc } from '@/components/futurecast/lab/fc-lab-types';
 import {
-  AnalystConfidenceMeter,
   CompetingSchoolsBar,
   FitScoreBadge,
   MovementBadge,
-  MovementSparkline,
   UfProbBar,
 } from '@/components/futurecast/lab/primitives';
 
@@ -46,30 +44,14 @@ export function FutureCastTargetCard({
 
       <div className="fc-target-body">
         <div className="fc-lab-target-card__prob">
-          <span className="fc-lab-target-card__prob-label">GatorVault · Florida odds</span>
+          <span className="fc-lab-target-card__prob-label">Florida odds</span>
           <UfProbBar value={pct} />
         </div>
-        {hasWeekChange ? (
-          <div className="fc-lab-target-card__spark">
-            <MovementSparkline end={pct} delta={delta} />
-            <span className="fc-lab-target-card__spark-label">
-              7-day change {delta > 0 ? '+' : ''}
-              {delta} pts
-            </span>
-          </div>
-        ) : null}
         <CompetingSchoolsBar player={player} />
         <div className="fc-lab-target-card__badges">
           <FitScoreBadge score={player.fitScore} />
-          <AnalystConfidenceMeter value={player.modelPct} label="FutureCast Model" />
         </div>
       </div>
-
-      <footer className="fc-target-footer fc-lab-target-card__foot">
-        <a href={profileHref} className="fc-target-link fc-lab-target-card__cta">
-          More Intel →
-        </a>
-      </footer>
     </article>
   );
 }

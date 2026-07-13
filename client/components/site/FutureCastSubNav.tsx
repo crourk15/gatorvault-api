@@ -3,29 +3,56 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { usePathname } from '@/lib/use-pathname';
 import {
+  FUTURECAST_LAB_ANCHORS,
   FUTURECAST_SEGMENT_PATHS,
+  futureCastLabHref,
   parseFutureCastSegmentFromPath,
   type FutureCastSegment,
 } from '@/lib/vault-route-map';
 import { isDiscoverySeasonFocus } from '@/components/futurecast/lab/fc-lab-types';
 
-const PORTAL_SUB_LINKS: { id: FutureCastSegment; label: string }[] = [
-  { id: 'master', label: 'Master Board' },
-  { id: 'trending', label: 'Trending Board' },
-  { id: 'movement', label: 'Movement Intel' },
-  { id: 'staff', label: 'Staff Notes' },
-];
-
-const DISCOVERY_SUB_LINKS: { id: FutureCastSegment; label: string }[] = [
-  { id: 'master', label: '2028 Targets' },
-  { id: 'trending', label: 'Battles' },
-  { id: 'movement', label: 'Movement' },
-];
-
 const BIG_BOARD_HREF = '/vault/futurecast/big-board';
 const ALERTS_HREF = '/vault/futurecast/alerts';
 
+const PORTAL_SUB_LINKS: { id: string; label: string; href: string }[] = [
+  { id: 'master', label: 'Master Board', href: FUTURECAST_SEGMENT_PATHS.master },
+  { id: 'trending', label: 'Trending Board', href: FUTURECAST_SEGMENT_PATHS.trending },
+  { id: 'movement', label: 'Movement Intel', href: FUTURECAST_SEGMENT_PATHS.movement },
+  { id: 'staff', label: 'Staff Notes', href: FUTURECAST_SEGMENT_PATHS.staff },
+  { id: 'big-board', label: 'Big Board', href: BIG_BOARD_HREF },
+  { id: 'alerts', label: 'Alerts', href: ALERTS_HREF },
+];
+
+/** Discovery season: only doors that open real Lab content. */
+const DISCOVERY_SUB_LINKS: { id: string; label: string; href: string }[] = [
+  { id: 'master', label: 'Targets', href: FUTURECAST_SEGMENT_PATHS.master },
+  { id: 'trending', label: 'Battles', href: FUTURECAST_SEGMENT_PATHS.trending },
+  { id: 'fit', label: 'Fit', href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.positions) },
+  { id: 'discovery', label: 'Early Discovery', href: BIG_BOARD_HREF },
+];
+
 export type FutureCastSubId = FutureCastSegment;
+
+function linkIsActive(
+  link: { id: string; href: string },
+  pathname: string | null,
+  current: FutureCastSegment,
+  hash: string
+): boolean {
+  if (link.id === 'discovery' || link.id === 'big-board') {
+    return Boolean(pathname?.includes('/futurecast/big-board'));
+  }
+  if (link.id === 'alerts') {
+    return Boolean(pathname?.includes('/futurecast/alerts'));
+  }
+  if (link.id === 'fit') {
+    return hash === FUTURECAST_LAB_ANCHORS.positions;
+  }
+  if (link.id === 'staff') {
+    return Boolean(pathname?.includes('/futurecast/staff'));
+  }
+  return current === link.id;
+}
 
 export function FutureCastSubNav({
   active,
@@ -51,26 +78,19 @@ export function FutureCastSubNav({
       {subLinks.map((link) => (
         <a
           key={link.id}
-          href={FUTURECAST_SEGMENT_PATHS[link.id]}
-          className={`fc-futurecast-nav__link${current === link.id ? ' is-active' : ''}`}
+          href={link.href}
+          className={`fc-futurecast-nav__link${linkIsActive(link, pathname, current, hash) ? ' is-active' : ''}`}
+          data-testid={
+            link.id === 'discovery' || link.id === 'big-board'
+              ? 'fc-big-board-nav'
+              : link.id === 'alerts'
+                ? 'fc-alerts-nav'
+                : undefined
+          }
         >
           {link.label}
         </a>
       ))}
-      <a
-        href={BIG_BOARD_HREF}
-        className={`fc-futurecast-nav__link${pathname?.includes('/futurecast/big-board') ? ' is-active' : ''}`}
-        data-testid="fc-big-board-nav"
-      >
-        {discoverySeason ? 'Early Discovery' : 'Big Board'}
-      </a>
-      <a
-        href={ALERTS_HREF}
-        className={`fc-futurecast-nav__link${pathname?.includes('/futurecast/alerts') ? ' is-active' : ''}`}
-        data-testid="fc-alerts-nav"
-      >
-        Alerts
-      </a>
     </nav>
   );
 }

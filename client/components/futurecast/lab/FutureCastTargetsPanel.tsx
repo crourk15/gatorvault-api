@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import type { MasterBoardResponse } from '@/lib/futurecast-board-types';
+import type { MasterBoardResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 import { FutureCastTargetCard } from '@/components/futurecast/FutureCastTargetCard';
@@ -13,14 +13,24 @@ import {
 } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
+import { FutureCastBattlesPanel } from './FutureCastBattlesPanel';
 
 type Props = {
   masterBoard: MasterBoardResponse;
+  trendingBoard?: TrendingBoardResponse;
   highPriority?: HighPriorityPlayer[];
   bare?: boolean;
+  /** When true, nest battles tabs under the target cards (default). */
+  includeBattles?: boolean;
 };
 
-export function FutureCastTargetsPanel({ masterBoard, highPriority = [], bare }: Props): React.ReactElement {
+export function FutureCastTargetsPanel({
+  masterBoard,
+  trendingBoard,
+  highPriority = [],
+  bare,
+  includeBattles = true,
+}: Props): React.ReactElement {
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const focusYear = discoveryFocus ? 2028 : 2027;
 
@@ -46,12 +56,7 @@ export function FutureCastTargetsPanel({ masterBoard, highPriority = [], bare }:
     : 'Closing-class board — Florida odds, movement, and competing schools.';
 
   return (
-    <FutureCastPanelShell
-      bare={bare}
-      title={title}
-      sub={sub}
-      testId="fc-lab-targets"
-    >
+    <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-targets">
       {rows.length === 0 ? (
         <p className="rh-cc-empty">
           {discoveryFocus ? `No ${focusYear} UF targets loaded.` : 'No master board targets loaded.'}
@@ -68,6 +73,17 @@ export function FutureCastTargetsPanel({ masterBoard, highPriority = [], bare }:
           ))}
         </div>
       )}
+
+      {includeBattles && trendingBoard ? (
+        <div className="fc-lab-targets-battles">
+          <FutureCastBattlesPanel
+            bare
+            masterBoard={masterBoard}
+            trendingBoard={trendingBoard}
+            highPriority={highPriority}
+          />
+        </div>
+      ) : null}
     </FutureCastPanelShell>
   );
 }

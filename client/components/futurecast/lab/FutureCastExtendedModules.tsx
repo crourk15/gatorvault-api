@@ -92,6 +92,17 @@ function formatYoungerProspectMeta(p: UnderclassmenPlayer): string {
   return parts.join(' · ');
 }
 
+/** Gate ATH walls — need a real position or odds+stars before showing on Lab. */
+function isFanReadyYoungerProspect(p: UnderclassmenPlayer): boolean {
+  const pos = String(p.position || '')
+    .trim()
+    .toUpperCase();
+  const school = formatRecruitSchoolLabel(p.school ?? undefined);
+  if (!school) return false;
+  if (pos && pos !== 'TBD' && pos !== 'ATH') return true;
+  return youngerProspectUfPct(p) != null && youngerProspectStars(p.stars) != null;
+}
+
 function MovementNarrativeLine({ text }: { text: string | null | undefined }): React.ReactElement | null {
   if (!text) return null;
   return <p className="fc-lab-movement-narrative">{text}</p>;
@@ -215,18 +226,17 @@ export function FutureCastExtendedModules({
     [highPriority]
   );
 
-  const youngerProspectGroups = useMemo(
-    () =>
-      groupYoungerProspectsByYear(
-        underclassmen.filter((p) => {
-          const year = Number(p.classYear) || 0;
-          return year >= 2029 && year <= 2030;
-        }),
-        YOUNGER_PROSPECT_YEARS,
-        YOUNGER_PROSPECT_LAB_CAPS
-      ),
-    [underclassmen]
-  );
+  const youngerProspectGroups = useMemo(() => {
+    const grouped = groupYoungerProspectsByYear(
+      underclassmen.filter((p) => {
+        const year = Number(p.classYear) || 0;
+        return year >= 2029 && year <= 2030 && isFanReadyYoungerProspect(p);
+      }),
+      YOUNGER_PROSPECT_YEARS,
+      YOUNGER_PROSPECT_LAB_CAPS
+    );
+    return grouped.filter((g) => g.players.length > 0);
+  }, [underclassmen]);
 
   /** Upcoming verified OVs only — never show completed/cleared rows in this panel. */
   const upcomingVisitIntel = useMemo(() => {

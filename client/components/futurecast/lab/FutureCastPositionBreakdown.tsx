@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import type { RosterPlayer } from '@/lib/roster-api';
@@ -25,16 +25,19 @@ type Props = {
   bare?: boolean;
 };
 
-function NeedRow({
+function NeedRowCompact({
   row,
   boardClassYear,
 }: {
   row: PositionNeedRow;
   boardClassYear: number;
 }): React.ReactElement {
+  const lead = row.topTargets[0];
+  const reasonShort = row.reason.split(' · ').slice(0, 2).join(' · ');
+
   return (
     <article
-      className={`fc-lab-need-row fc-lab-need-row--${row.needTier}`}
+      className={`fc-lab-need-row fc-lab-need-row--compact fc-lab-need-row--${row.needTier}`}
       data-testid="fc-lab-need-row"
     >
       <header className="fc-lab-need-row__head">
@@ -46,96 +49,22 @@ function NeedRow({
           </span>
         </div>
         <span className={`fc-lab-need-strength fc-lab-need-strength--${row.boardStrength}`}>
-          {boardClassYear} board · {boardStrengthLabel(row.boardStrength)}
-          {row.avgUfPct != null ? ` · ${row.avgUfPct}% avg` : ''}
+          {boardClassYear} · {boardStrengthLabel(row.boardStrength)}
+          {row.avgUfPct != null ? ` · ${row.avgUfPct}%` : ''}
         </span>
       </header>
-
-      <p className="fc-lab-need-row__reason">{row.reason}</p>
-
-      <div className="fc-lab-need-stats" aria-label={`${row.position} depth stats`}>
-        <div className="fc-lab-need-stat">
-          <span className="fc-lab-need-stat__label">Roster</span>
-          <strong className="fc-lab-need-stat__value">{row.rosterCount}</strong>
-        </div>
-        <div className="fc-lab-need-stat">
-          <span className="fc-lab-need-stat__label">Leaving ≤1 yr</span>
-          <strong className="fc-lab-need-stat__value">{row.departingSoon}</strong>
-        </div>
-        <div className="fc-lab-need-stat">
-          <span className="fc-lab-need-stat__label">2027 commits</span>
-          <strong className="fc-lab-need-stat__value">{row.commits2027}</strong>
-        </div>
-        <div className="fc-lab-need-stat">
-          <span className="fc-lab-need-stat__label">Projected</span>
-          <strong className="fc-lab-need-stat__value">
-            {row.projectedDepth}
-            <span className="fc-lab-need-stat__floor"> / {row.schemeMin}</span>
-          </strong>
-        </div>
-        <div className="fc-lab-need-stat">
-          <span className="fc-lab-need-stat__label">{boardClassYear} targets</span>
-          <strong className="fc-lab-need-stat__value">{row.boardTargets}</strong>
-        </div>
-        <div className="fc-lab-need-stat">
-          <span className="fc-lab-need-stat__label">Battles</span>
-          <strong className="fc-lab-need-stat__value">{row.battles}</strong>
-        </div>
-      </div>
-
-      {(row.departing.length > 0 || row.commits.length > 0 || row.topTargets.length > 0) && (
-        <div className="fc-lab-need-lists">
-          {row.departing.length > 0 ? (
-            <div className="fc-lab-need-list">
-              <span className="fc-lab-need-list__label">Likely departing</span>
-              <ul>
-                {row.departing.map((p) => (
-                  <li key={`dep-${row.position}-${p.slug || p.name}`}>
-                    {p.slug ? (
-                      <a href={playerProfileRoute(p.slug, 'roster')}>{p.name}</a>
-                    ) : (
-                      p.name
-                    )}
-                    {p.detail ? <span> · {p.detail}</span> : null}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-          {row.commits.length > 0 ? (
-            <div className="fc-lab-need-list">
-              <span className="fc-lab-need-list__label">2027 commits</span>
-              <ul>
-                {row.commits.map((p) => (
-                  <li key={`cmt-${row.position}-${p.slug || p.name}`}>
-                    {p.slug ? (
-                      <a href={playerProfileRoute(p.slug, 'futurecast')}>{p.name}</a>
-                    ) : (
-                      p.name
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-          {row.topTargets.length > 0 ? (
-            <div className="fc-lab-need-list">
-              <span className="fc-lab-need-list__label">{boardClassYear} board leaders</span>
-              <ul>
-                {row.topTargets.map((p) => (
-                  <li key={`tgt-${row.position}-${p.slug || p.name}`}>
-                    {p.slug ? (
-                      <a href={playerProfileRoute(p.slug, 'futurecast')}>{p.name}</a>
-                    ) : (
-                      p.name
-                    )}
-                    {p.detail ? <span> · {p.detail}</span> : null}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-        </div>
+      <p className="fc-lab-need-row__reason">{reasonShort}</p>
+      {lead ? (
+        <p className="fc-lab-need-row__lead">
+          {lead.slug ? (
+            <a href={playerProfileRoute(lead.slug, 'futurecast')}>{lead.name}</a>
+          ) : (
+            lead.name
+          )}
+          {lead.detail ? <span> · {lead.detail}</span> : null}
+        </p>
+      ) : (
+        <p className="fc-lab-need-row__lead fc-lab-need-row__lead--empty">No active board leader yet</p>
       )}
     </article>
   );
@@ -151,6 +80,7 @@ export function FutureCastPositionBreakdown({
 }: Props): React.ReactElement {
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const boardClassYear = discoveryFocus ? 2028 : 2027;
+  const [showAll, setShowAll] = useState(false);
 
   const board = useMemo(() => {
     const boardPlayers =
@@ -172,16 +102,25 @@ export function FutureCastPositionBreakdown({
     return buildSchemeMatchLeaders(highPriority, needTierByPos, 5);
   }, [discoveryFocus, highPriority, board.rows]);
 
+  const featured = useMemo(() => {
+    const priority = board.rows.filter((r) => r.needTier === 'critical' || r.needTier === 'high');
+    if (priority.length >= 3) return priority.slice(0, 4);
+    return board.rows.slice(0, 3);
+  }, [board.rows]);
+
+  const hiddenCount = Math.max(0, board.rows.length - featured.length);
+  const visible = showAll ? board.rows : featured;
+
   const title = 'How the board fits Florida';
   const sub = discoveryFocus
-    ? `${boardClassYear} rooms ranked by roster need — plus who fits the scheme.`
-    : `${boardClassYear} rooms ranked by roster need, then how the board stacks at each spot.`;
+    ? `Top ${boardClassYear} needs — plus who fits the scheme.`
+    : `Top ${boardClassYear} needs, then how the board stacks.`;
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-position-breakdown">
       <p className="fc-lab-need-meta">
         <span className={`fc-lab-need-confidence fc-lab-need-confidence--${board.confidence}`}>
-          {board.confidence === 'high' ? 'Auto-updating' : 'Loading inputs'}
+          {board.confidence === 'high' ? 'Live roster' : 'Loading inputs'}
         </span>
         <span className="fc-lab-need-meta__note">{board.confidenceNote}</span>
       </p>
@@ -190,9 +129,19 @@ export function FutureCastPositionBreakdown({
         <p className="rh-cc-empty">Need board unavailable until roster and commit feeds load.</p>
       ) : (
         <div className="fc-lab-need-list-wrap">
-          {board.rows.map((row) => (
-            <NeedRow key={row.position} row={row} boardClassYear={board.boardClassYear} />
+          {visible.map((row) => (
+            <NeedRowCompact key={row.position} row={row} boardClassYear={board.boardClassYear} />
           ))}
+          {hiddenCount > 0 ? (
+            <button
+              type="button"
+              className="fc-lab-need-more"
+              onClick={() => setShowAll((v) => !v)}
+              data-testid="fc-lab-need-more"
+            >
+              {showAll ? 'Show top needs only' : `All rooms → (${hiddenCount} more)`}
+            </button>
+          ) : null}
         </div>
       )}
 
@@ -221,8 +170,6 @@ export function FutureCastPositionBreakdown({
           </ul>
         </div>
       ) : null}
-
-      <p className="fc-lab-need-foot">{board.methodNote}</p>
     </FutureCastPanelShell>
   );
 }

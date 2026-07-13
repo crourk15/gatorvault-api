@@ -4,7 +4,6 @@ import React, { useMemo, useState } from 'react';
 import type { MasterBoardResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
-import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import {
   CompetingSchoolsBar,
   FutureCastPanelShell,
@@ -58,7 +57,6 @@ function BattleRow({
   const delta = showMovement ? Math.round(player.delta7d ?? 0) : 0;
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
   const meta = TAB_META[tab];
-  const rpm = player.ufRpmPct != null && player.ufRpmPct > 0 ? Math.round(player.ufRpmPct) : null;
 
   return (
     <div className="fc-lab-battle-row">
@@ -75,12 +73,9 @@ function BattleRow({
           {player.position} · {player.school ?? '—'}
         </span>
         <div className="fc-lab-battle-row__gv">
-          <span className="fc-lab-battle-row__metric-label">GatorVault · Florida odds</span>
+          <span className="fc-lab-battle-row__metric-label">Florida odds</span>
           <UfProbBar value={pct} />
         </div>
-        {rpm != null ? (
-          <div className="fc-lab-battle-row__rpm-meta">On3 market {rpm}%</div>
-        ) : null}
         <CompetingSchoolsBar player={player} />
       </div>
       <div className="fc-lab-battle-row__right">
@@ -148,18 +143,11 @@ export function FutureCastBattlesPanel({
     buckets.battles.length + buckets['lean-uf'].length + buckets['lean-elsewhere'].length;
   if (totalRows === 0) return null;
 
-  const title = discoveryFocus
-    ? `${focusYear} Battles & Leaning Targets`
-    : 'Battles & Leaning Targets';
-  const sub = 'Grouped by Florida odds — battles, leaning Florida, leaning elsewhere.';
+  const title = discoveryFocus ? `${focusYear} Battles` : 'Battles';
+  const sub = 'Battle · leaning Florida · leaning elsewhere';
 
   return (
-    <FutureCastPanelShell
-      bare={bare}
-      title={title}
-      sub={sub}
-      testId="fc-lab-battles"
-    >
+    <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-battles">
       <div className="rh-cc-tabs" role="tablist" aria-label="Battle categories">
         {(['battles', 'lean-uf', 'lean-elsewhere'] as Tab[]).map((id) => (
           <button

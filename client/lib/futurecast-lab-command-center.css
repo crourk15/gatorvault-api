@@ -70,9 +70,49 @@
 
 .fc-lab-hero__grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.9fr 1fr;
+  grid-template-columns: 1.2fr 0.9fr;
   gap: var(--gv-grid-gutter, 24px);
-  align-items: start;
+  align-items: center;
+}
+
+.fc-lab-hero__grid--slim {
+  grid-template-columns: minmax(0, 1.25fr) minmax(200px, 0.7fr);
+}
+
+@media (max-width: 900px) {
+  .fc-lab-hero__grid,
+  .fc-lab-hero__grid--slim {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fc-lab-hero__lead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  text-decoration: none;
+  color: inherit;
+  border-left: 3px solid var(--gv-orange, #e65c00);
+  background: rgba(255, 255, 255, 0.06);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.fc-lab-hero__lead:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(2px);
+}
+
+.fc-lab-hero__lead-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.fc-lab-hero__lead-meta {
+  font-size: 0.9rem;
+  opacity: 0.78;
 }
 
 .fc-lab-hero__eyebrow {
@@ -1889,6 +1929,67 @@
   flex-direction: column;
   gap: var(--gv-grid-gutter, 24px);
   min-width: 0;
+}
+
+.fc-lab-targets-battles {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+.fc-lab-need-row--compact .fc-lab-need-row__reason {
+  margin-bottom: 0;
+}
+
+.fc-lab-need-row__lead {
+  margin: 6px 0 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.fc-lab-need-row__lead a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.fc-lab-need-row__lead a:hover {
+  text-decoration: underline;
+}
+
+.fc-lab-need-row__lead--empty {
+  font-weight: 500;
+  opacity: 0.55;
+}
+
+.fc-lab-need-more {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  opacity: 0.75;
+}
+
+.fc-lab-need-more:hover {
+  opacity: 1;
+}
+
+.fc-lab-portal-one-line {
+  margin: 0 0 8px;
+  padding: 10px 0;
+  font-size: 0.92rem;
+  opacity: 0.7;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.fc-lab-portal-one-line p {
+  margin: 0;
 }
 
 .fc-lab-more-boards {

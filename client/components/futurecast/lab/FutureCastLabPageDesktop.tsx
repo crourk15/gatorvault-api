@@ -7,7 +7,6 @@ import { FUTURECAST_LAB_ANCHORS } from '@/lib/vault-route-map';
 import { useResolvedLabHighPriority } from './FutureCastLabCycleContext';
 import { FutureCastHero } from './FutureCastHero';
 import { FutureCastTargetsPanel } from './FutureCastTargetsPanel';
-import { FutureCastBattlesPanel } from './FutureCastBattlesPanel';
 import { FutureCastMovementPanel } from './FutureCastMovementPanel';
 import { FutureCastPositionBreakdown } from './FutureCastPositionBreakdown';
 import { FutureCastPortalCrossView } from './FutureCastPortalCrossView';
@@ -42,7 +41,17 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
       <div className="rh-cc-main rh-frame">
         <div className="rh-cc-col rh-cc-col--left">
           <section id={FUTURECAST_LAB_ANCHORS.masterBoard}>
-            <FutureCastTargetsPanel masterBoard={data.masterBoard} highPriority={highPriority} />
+            <div id={FUTURECAST_LAB_ANCHORS.trending}>
+              {pending ? (
+                <PanelSkeleton minHeight={280} />
+              ) : (
+                <FutureCastTargetsPanel
+                  masterBoard={data.masterBoard}
+                  trendingBoard={data.trendingBoard}
+                  highPriority={highPriority}
+                />
+              )}
+            </div>
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.movement}>
             {pending ? (
@@ -71,17 +80,6 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
         </div>
 
         <div className="rh-cc-col rh-cc-col--right">
-          <section id={FUTURECAST_LAB_ANCHORS.trending}>
-            {pending ? (
-              <PanelSkeleton minHeight={260} />
-            ) : (
-              <FutureCastBattlesPanel
-                masterBoard={data.masterBoard}
-                trendingBoard={data.trendingBoard}
-                highPriority={highPriority}
-              />
-            )}
-          </section>
           <section id={FUTURECAST_LAB_ANCHORS.portal}>
             {pending ? (
               <PanelSkeleton minHeight={200} />

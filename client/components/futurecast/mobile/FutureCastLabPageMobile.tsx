@@ -7,7 +7,6 @@ import { FUTURECAST_LAB_ANCHORS } from '@/lib/vault-route-map';
 import { useResolvedLabHighPriority } from '@/components/futurecast/lab/FutureCastLabCycleContext';
 import { FutureCastHero } from '@/components/futurecast/lab/FutureCastHero';
 import { FutureCastTargetsPanel } from '@/components/futurecast/lab/FutureCastTargetsPanel';
-import { FutureCastBattlesPanel } from '@/components/futurecast/lab/FutureCastBattlesPanel';
 import { FutureCastMovementPanel } from '@/components/futurecast/lab/FutureCastMovementPanel';
 import { FutureCastPositionBreakdown } from '@/components/futurecast/lab/FutureCastPositionBreakdown';
 import { FutureCastPortalCrossView } from '@/components/futurecast/lab/FutureCastPortalCrossView';
@@ -45,18 +44,17 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
       <div className="rh-cc-main rh-frame">
         <div className="rh-cc-col">
           <section id={FUTURECAST_LAB_ANCHORS.masterBoard}>
-            <FutureCastTargetsPanel masterBoard={data.masterBoard} highPriority={highPriority} />
-          </section>
-          <section id={FUTURECAST_LAB_ANCHORS.trending}>
-            {pending ? (
-              <PanelSkeleton minHeight={240} />
-            ) : (
-              <FutureCastBattlesPanel
-                masterBoard={data.masterBoard}
-                trendingBoard={data.trendingBoard}
-                highPriority={highPriority}
-              />
-            )}
+            <div id={FUTURECAST_LAB_ANCHORS.trending}>
+              {pending ? (
+                <PanelSkeleton minHeight={240} />
+              ) : (
+                <FutureCastTargetsPanel
+                  masterBoard={data.masterBoard}
+                  trendingBoard={data.trendingBoard}
+                  highPriority={highPriority}
+                />
+              )}
+            </div>
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.movement}>
             {pending ? (
