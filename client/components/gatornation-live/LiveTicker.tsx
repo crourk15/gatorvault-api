@@ -13,6 +13,7 @@ const TAG_CLASS: Record<TickerTag, string> = {
   RUMOR: 'rumor',
   TEAM: 'team',
   PODCAST: 'podcast',
+  NEWS: 'rumor',
 };
 
 const FIRST_PAINT_FALLBACK: LiveTickerProps['items'] = [
