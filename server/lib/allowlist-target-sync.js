@@ -58,17 +58,23 @@ function sleep(ms) {
 
 function allowlistJobs() {
   const { loadAdminAllowlist } = require('./admin-allowlist-store');
+  const { verifiedClassYearForSlug } = require('./recruiting-verified-commits');
   const admin = loadAdminAllowlist();
   const jobs = [
     ...ALLOWLIST_2027.map((slug) => ({ slug, classYear: 2027 })),
     ...ALLOWLIST_2028.map((slug) => ({ slug, classYear: 2028 })),
   ];
   for (const slug of admin.slugs2027 || []) {
+    const verifiedYear = verifiedClassYearForSlug(slug);
+    // Never schedule a verified UF commit under the wrong class year.
+    if (verifiedYear != null && verifiedYear !== 2027) continue;
     if (!jobs.some((job) => job.slug === slug && job.classYear === 2027)) {
       jobs.push({ slug, classYear: 2027 });
     }
   }
   for (const slug of admin.slugs2028 || []) {
+    const verifiedYear = verifiedClassYearForSlug(slug);
+    if (verifiedYear != null && verifiedYear !== 2028) continue;
     if (!jobs.some((job) => job.slug === slug && job.classYear === 2028)) {
       jobs.push({ slug, classYear: 2028 });
     }
@@ -253,7 +259,14 @@ function localJsonPlayer(slug) {
 }
 
 function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, classYear, playerName) {
-  const committedTo = profilePatch.committedTo ?? existing?.committedTo ?? localPlayer?.committedTo ?? null;
+  const { applyVerifiedHubCommit, verifiedClassYearForSlug } = require('./recruiting-verified-commits');
+  const verifiedYear = verifiedClassYearForSlug(slug);
+  // Verified UF commits keep their editorial year — never force a wrong-year target sync.
+  const resolvedYear = verifiedYear != null ? verifiedYear : classYear;
+  const committedTo =
+    verifiedYear != null
+      ? 'Florida'
+      : profilePatch.committedTo ?? existing?.committedTo ?? localPlayer?.committedTo ?? null;
   const ufCommitted = committedTo && isFloridaSchool(committedTo);
   const baseOffers = existing?.offers || localPlayer?.offers || [];
   const baseVisits = existing?.visits || localPlayer?.visits || [];
@@ -271,7 +284,7 @@ function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, cl
     ...existing,
     ...profilePatch,
     slug,
-    classYear,
+    classYear: resolvedYear,
     name: profilePatch.name || existing?.name || localPlayer?.name || playerName,
     pos: profilePatch.pos || existing?.pos || localPlayer?.pos,
     committedTo: ufCommitted ? 'Florida' : committedTo,
@@ -310,6 +323,7 @@ function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, cl
   ) {
     merged.school = existing.school;
   }
+  merged = applyVerifiedHubCommit(merged);
   const finalized = applyHeadlinerRules(applyCanonicalFixup(slug, merged));
   const stars = effectiveStars(finalized);
   if (stars) finalized.stars = stars;

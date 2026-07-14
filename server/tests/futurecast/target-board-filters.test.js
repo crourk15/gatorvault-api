@@ -26,6 +26,11 @@ test('isActiveUfTarget excludes UF commits and elsewhere commits', () => {
   assert.equal(isActiveUfTarget({ committedTo: 'Miami', status: 'committed' }), false);
   assert.equal(isActiveUfTarget({ committedTo: 'Texas' }), false);
   assert.equal(isActiveUfTarget({ committedTo: null, status: 'uncommitted' }), true);
+  assert.equal(
+    isActiveUfTarget({ slug: 'raheem-floyd', committedTo: null, status: 'uncommitted', classYear: 2028 }),
+    false,
+    'verified UF commit slug never counts as an active target'
+  );
 });
 
 test('filterAllowlistedTargets drops Hyppolite-style Miami commits', () => {

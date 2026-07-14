@@ -253,3 +253,17 @@ test('applyVerifiedHubCommit restores demoted verified slug', () => {
   assert.equal(restored.committedTo, 'Florida');
   assert.equal(restored.category, 'recruit');
 });
+
+test('applyVerifiedHubCommit repairs wrong-year verified commit (Floyd 2028 drift)', () => {
+  const restored = applyVerifiedHubCommit({
+    slug: 'raheem-floyd',
+    classYear: 2028,
+    status: 'uncommitted',
+    committedTo: null,
+    category: 'target',
+  });
+  assert.equal(restored.classYear, 2027);
+  assert.equal(restored.status, 'committed');
+  assert.equal(restored.committedTo, 'Florida');
+  assert.equal(restored.category, 'recruit');
+});

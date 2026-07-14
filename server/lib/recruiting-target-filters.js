@@ -23,9 +23,26 @@ function isCommittedElsewhere(player) {
   return !isFloridaSchool(to);
 }
 
+function looksCommittedStatus(player) {
+  const status = String(player?.status || '').toLowerCase();
+  return status === 'committed' || status === 'commit' || status === 'signed' || status === 'enrolled';
+}
+
 /** Active UF recruiting target — not committed to Florida or elsewhere. */
 function isActiveUfTarget(player) {
   if (!player) return false;
+  try {
+    const { isVerifiedUfCommitAnyYear } = require('./recruiting-verified-commits');
+    const slug = String(player.slug || player.id || '').toLowerCase();
+    if (slug && isVerifiedUfCommitAnyYear(slug)) return false;
+  } catch {
+    /* optional at boot */
+  }
+  if (looksCommittedStatus(player) && isFloridaSchool(resolveCommittedTo(player))) return false;
+  if (looksCommittedStatus(player) && !resolveCommittedTo(player)) return false;
+  if (String(player.category || '').toLowerCase() === 'recruit' && isFloridaSchool(resolveCommittedTo(player))) {
+    return false;
+  }
   if (isFloridaSchool(resolveCommittedTo(player))) return false;
   if (isCommittedElsewhere(player)) return false;
   return true;

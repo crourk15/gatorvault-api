@@ -41,6 +41,7 @@ export function FutureCastTargetsPanel({
     if (discoveryFocus && highPriority.length) {
       return [...highPriority]
         .filter((p) => isActiveUfTarget(p))
+        .filter((p) => Number(p.classYear) === focusYear)
         .sort((a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0))
         .slice(0, 10)
         .map(highPriorityToLabTarget);
@@ -50,7 +51,7 @@ export function FutureCastTargetsPanel({
       .sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1))
       .slice(0, 10)
       .map(futureCastPlayerToLabTarget);
-  }, [discoveryFocus, highPriority, masterBoard.players]);
+  }, [discoveryFocus, highPriority, masterBoard.players, focusYear]);
 
   const showMovement = useMemo(() => movementDeltasAreBelievable(rows), [rows]);
 

@@ -35,6 +35,20 @@ function isVerifiedUfCommitSlug(slug, classYear) {
   return !!set && set.has(s);
 }
 
+/** Canonical hub class year for a verified UF commit slug (any year). */
+function verifiedClassYearForSlug(slug) {
+  const s = String(slug || '').toLowerCase();
+  if (!s) return null;
+  for (const [year, set] of Object.entries(VERIFIED_UF_COMMITS_BY_YEAR)) {
+    if (set.has(s)) return Number(year);
+  }
+  return null;
+}
+
+function isVerifiedUfCommitAnyYear(slug) {
+  return verifiedClassYearForSlug(slug) != null;
+}
+
 /**
  * True when player is an editorially verified UF commit for a hub class year.
  * For non-hub years (e.g. enrolled 2026), callers should use raw commit flags instead.
@@ -132,11 +146,16 @@ function countVerifiedHubCommits(players, classYear) {
 function applyVerifiedHubCommit(player) {
   if (!player) return player;
   const slug = playerSlug(player);
+  const verifiedYear = verifiedClassYearForSlug(slug);
+  if (verifiedYear == null) return player;
+
   const year = Number(player.classYear ?? player.class_year);
-  if (!isVerifiedUfCommitSlug(slug, year)) return player;
-  if (looksLikeFloridaCommit(player)) return player;
+  const alreadyOk =
+    looksLikeFloridaCommit(player) && Number(year) === verifiedYear && player.category === 'recruit';
+  if (alreadyOk) return player;
 
   const out = { ...player };
+  out.classYear = verifiedYear;
   out.status = 'committed';
   out.committedTo = 'Florida';
   out.category = 'recruit';
@@ -155,7 +174,8 @@ async function restoreVerifiedHubCommitsInStore() {
     if (
       next.status === p.status &&
       next.committedTo === p.committedTo &&
-      next.category === p.category
+      next.category === p.category &&
+      Number(next.classYear) === Number(p.classYear)
     ) {
       continue;
     }
@@ -174,6 +194,8 @@ module.exports = {
   ALL_VERIFIED_UF_COMMITS,
   isHubClassYear,
   isVerifiedUfCommitSlug,
+  verifiedClassYearForSlug,
+  isVerifiedUfCommitAnyYear,
   isVerifiedHubCommit,
   looksLikeFloridaCommit,
   isHubExternalCommitFlipTarget,
