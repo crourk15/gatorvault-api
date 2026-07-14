@@ -874,9 +874,6 @@ app.get('/api/test/logs/stream', (req, res) => {
 
 let _gvLiveSchedulerStarted = false;
 function startLiveDashboardScheduler() {
-  if (!pipelineGuards.guardScheduledJobStart('live-dashboard')) return;
-  if (_gvLiveSchedulerStarted) return;
-  _gvLiveSchedulerStarted = true;
   const { refreshLiveDashboard } = require('./lib/live-aggregator');
   const intervalMs = Math.max(60000, parseInt(process.env.LIVE_POLL_INTERVAL_MS || '180000', 10) || 180000); // default 3 min
   const bootDelay = Math.max(8000, parseInt(process.env.LIVE_POLL_BOOT_DELAY_MS || '20000', 10) || 20000);
@@ -892,6 +889,21 @@ function startLiveDashboardScheduler() {
       })
       .catch((err) => console.warn('[live-dashboard]', err.message));
   };
+
+  // When in-process crons are off (Starter / hub mode), still warm beat cache once on boot
+  // so deploys are not stuck on the stale committed cache until the 10m Render cron fires.
+  const hasBearer = !!(process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN);
+  if (!pipelineGuards.guardScheduledJobStart('live-dashboard')) {
+    if (hasBearer && !_gvLiveSchedulerStarted) {
+      _gvLiveSchedulerStarted = true;
+      setTimeout(tick, bootDelay);
+      console.log('Live dashboard: one-shot boot refresh (scheduled jobs off)');
+    }
+    return;
+  }
+
+  if (_gvLiveSchedulerStarted) return;
+  _gvLiveSchedulerStarted = true;
   setTimeout(tick, bootDelay);
   setInterval(tick, intervalMs);
   console.log('Live dashboard: polling every', Math.round(intervalMs / 1000), 's');

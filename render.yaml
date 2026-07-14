@@ -103,8 +103,14 @@ services:
         sync: false
       - key: X_AUTOPOST_ENABLED
         value: "true"
+      - key: X_AUTOPOST_HUB_MODE
+        value: "true"
+      - key: X_AUTOPOST_SCHEDULER_ENABLED
+        value: "false"
       - key: X_PIPELINES_ENABLED
         value: "true"
+      # In-process heavy schedulers off on Starter; beat freshness comes from
+      # gatorvault-api-beat-ingest cron (*/10) + platform-ops live-refresh fallback.
       - key: X_SCHEDULED_JOBS_ENABLED
         value: "false"
       - key: X_GM2_REWRITE_ENABLED
@@ -388,7 +394,7 @@ services:
       - key: NEXT_PUBLIC_API_BASE
         value: https://gatorvault-api.onrender.com
       - key: PLATFORM_OPS_JOBS
-        value: portal-ingest,depth-chart-refresh,game-zone-refresh,nil-refresh,x-autoposter-run
+        value: live-refresh,portal-ingest,depth-chart-refresh,game-zone-refresh,nil-refresh
       - key: PLATFORM_OPS_SKIP_WEEKLY
         value: "true"
       - key: PLATFORM_OPS_JOB_TIMEOUT_MS

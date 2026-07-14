@@ -20,14 +20,15 @@ const CRON_SECRET = process.env.MONITORING_CRON_SECRET || process.env.INGEST_CRO
 const JOB_TIMEOUT_MS = parseInt(process.env.PLATFORM_OPS_JOB_TIMEOUT_MS || '120000', 10);
 const MAX_RUNTIME_MS = parseInt(process.env.PLATFORM_OPS_MAX_RUNTIME_MS || '600000', 10);
 
-/** Light jobs only — heavy / duplicate work lives on dedicated crons or in-process schedulers. */
+/** Light jobs only — heavy / duplicate work lives on dedicated crons or in-process schedulers.
+ *  No x-autoposter-run here (hub mode: intel + drafts only; publish is manual). */
 const DEFAULT_JOBS = [
+  'live-refresh',
   'portal-ingest',
   'depth-chart-refresh',
   'roster-stats-sync',
   'game-zone-refresh',
   'nil-refresh',
-  'x-autoposter-run',
 ];
 
 const DEFAULT_WEEKLY_JOBS = [
