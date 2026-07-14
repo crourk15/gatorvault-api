@@ -57,7 +57,8 @@
   display: flex;
   align-items: stretch;
   width: max-content;
-  animation: gnl-ticker-scroll 48s linear infinite;
+  /* Fallback only — GNLEliteTicker sets duration from content width. */
+  animation: gnl-ticker-scroll 140s linear infinite;
 }
 
 .uf-premium-gnl .gv-gnl-ticker-band__track:hover {
