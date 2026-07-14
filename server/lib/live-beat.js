@@ -505,6 +505,15 @@ async function refreshBeatStreamInner(cache) {
   store.saveBeatCache(next);
 
   try {
+    const dashCache = require('./live-dashboard-cache');
+    dashCache.clearDashboardCache();
+    dashCache.warmDashboardCache();
+    dashCache.bumpMobileRefreshSignal();
+  } catch (e) {
+    console.warn('[live-beat] dashboard cache refresh failed:', e.message);
+  }
+
+  try {
     if (process.env.X_INSIDER_STYLE_AUTO_REFRESH !== 'false' && merged.length) {
       const styleCorpus = require('./autoposter/insider-style-corpus');
       styleCorpus.refreshFromPosts(merged, { source: next.source || 'beat-cache' });

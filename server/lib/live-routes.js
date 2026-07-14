@@ -134,6 +134,14 @@ function mountLiveRoutes(app) {
       const liveBeat = require('./live-beat');
       const refreshed = await liveBeat.refreshBeatStream();
       const beat = liveBeat.getBeatPosts(parseInt(req.query.limit || '40', 10));
+      try {
+        const dashCache = require('./live-dashboard-cache');
+        dashCache.clearDashboardCache();
+        dashCache.warmDashboardCache();
+        dashCache.bumpMobileRefreshSignal();
+      } catch (cacheErr) {
+        console.warn('[live/beat/refresh] dashboard cache warm:', cacheErr.message);
+      }
       return res.json({ ok: true, refreshed, beat });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

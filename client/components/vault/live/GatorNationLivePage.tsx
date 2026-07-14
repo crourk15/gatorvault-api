@@ -50,7 +50,8 @@ export function GatorNationLivePage(): React.ReactElement {
       setError(null);
     }
     try {
-      const next = await fetchLiveHubBundle(!isInitial);
+      // Always force dashboard refresh so beat posts are not stuck behind an empty in-memory snapshot.
+      const next = await fetchLiveHubBundle(true);
       setBundle((prev) => {
         const nextLive =
           (next.feed?.length || 0) + (next.panels?.beatWriterHighlights?.length || 0);
