@@ -13,6 +13,7 @@ import {
 } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import { topThreatVsFlorida } from './competing-schools';
+import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
 
 type Tab = 'battles' | 'lean-uf' | 'lean-elsewhere';
 
@@ -121,6 +122,7 @@ export function FutureCastBattlesPanel({
     };
     if (discoveryFocus && highPriority.length) {
       for (const p of highPriority) {
+        if (!isActiveUfTarget(p)) continue;
         const lab = highPriorityToLabTarget(p);
         result[classifyTab(ufPctFromFc(lab.ufProbability))].push(lab);
       }

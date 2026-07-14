@@ -6,6 +6,7 @@
 import type { HighPriorityPlayer } from './futurecast-high-priority-api';
 import type { NeedTier } from './fc-position-need-board';
 import { normalizeNeedBoardRoom, needTierLabel } from './fc-position-need-board';
+import { isActiveUfTarget } from './recruiting-target-filters';
 
 function ufPctFromFc(raw: number | null | undefined): number {
   if (raw == null || Number.isNaN(Number(raw))) return 0;
@@ -67,18 +68,12 @@ export function schemeMatchWhy(input: {
   ufPct: number;
   needTier?: NeedTier | null;
 }): string {
-  const pos =
-    input.position && input.position !== 'TBD' ? input.position : 'this position';
-  const fit = fitBandLabel(input.fitBand);
   const chase = chaseLabelFromUf(input.ufPct);
   const tier = input.needTier ?? null;
   if (tier === 'critical' || tier === 'high') {
-    return `${fit} at ${pos}. ${needTierLabel(tier)} — ${chase}.`;
+    return `${needTierLabel(tier)} · ${chase}`;
   }
-  if (tier === 'watch') {
-    return `${fit} at ${pos}. Depth watch at the spot — ${chase}.`;
-  }
-  return `${fit} at ${pos}. ${chase}.`;
+  return chase;
 }
 
 /** Top scheme matches for the locked board — fan strip, not a metric dump. */
@@ -88,7 +83,7 @@ export function buildSchemeMatchLeaders(
   limit = 5
 ): SchemeMatchRow[] {
   return [...players]
-    .filter((p) => Number(p.fitScore) > 0)
+    .filter((p) => Number(p.fitScore) > 0 && isActiveUfTarget(p))
     .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0))
     .slice(0, limit)
     .map((p) => {

@@ -62,7 +62,7 @@ export function resolveCompetingSchools(player: FcLabTarget): CompetingSchoolSeg
     .sort((a, b) => Number(b.pct) - Number(a.pct))
     .slice(0, 3);
 
-  // No peer board — still show Florida RPM alone when we have it (legacy peers filtered out).
+  // No peer board — still show Florida RPM alone (locked / no meaningful rivals).
   if (!fromRpm.length) {
     if (ufRpm != null && ufRpm > 0) {
       return [

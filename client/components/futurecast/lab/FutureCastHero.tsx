@@ -18,6 +18,7 @@ import {
 import { FutureCastLabCycleToggle } from './FutureCastLabCycleToggle';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import { playerProfileRoute } from '@/lib/vault-route-map';
+import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
 
 type Props = {
   summary: FutureCastPageSummary;
@@ -41,11 +42,13 @@ export function FutureCastHero({
   const top10 = useMemo(() => {
     if (discoveryFocus && highPriority.length) {
       return [...highPriority]
+        .filter((p) => isActiveUfTarget(p))
         .sort((a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0))
         .slice(0, 10)
         .map(highPriorityToLabTarget);
     }
     return [...masterBoard.players]
+      .filter((p) => isActiveUfTarget(p))
       .sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1))
       .slice(0, 10)
       .map(futureCastPlayerToLabTarget);

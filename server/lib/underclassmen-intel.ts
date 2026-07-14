@@ -182,6 +182,18 @@ function parseRecruitingUfPct(raw: unknown): number | null {
   return Math.min(100, Math.max(0, Math.round(pct * 10) / 10));
 }
 
+/** Min peer % when falling back to legacy competitors (UF + 1–2 rivals). */
+const LEGACY_PEER_MIN_PCT = 4;
+/** When Florida RPM is this high, skip stale legacy peer crumbs (UF-only OK). */
+const UF_LOCKED_SKIP_LEGACY_PCT = 90;
+const LEGACY_PEER_MAX = 2;
+
+function competitorPct(raw: unknown): number | null {
+  if (raw == null || !Number.isFinite(Number(raw))) return null;
+  const num = Number(raw);
+  return Math.min(100, Math.max(0, Math.round((num <= 1 ? num * 100 : num) * 10) / 10));
+}
+
 function competingSchoolsFromRecruitingRecord(
   recruiting: Record<string, unknown> | null | undefined
 ): Array<{ name: string; pct: number }> {
@@ -190,10 +202,8 @@ function competingSchoolsFromRecruitingRecord(
   const add = (nameRaw: unknown, pctRaw: unknown) => {
     const school = String(nameRaw || '').trim();
     if (!school || /\bflorida\b|\bgators\b|\buf\b/i.test(school)) return;
-    if (pctRaw == null || !Number.isFinite(Number(pctRaw))) return;
-    const num = Number(pctRaw);
-    const pct = Math.min(100, Math.max(0, Math.round((num <= 1 ? num * 100 : num) * 10) / 10));
-    if (pct <= 0) return;
+    const pct = competitorPct(pctRaw);
+    if (pct == null || pct <= 0) return;
     const key = school.toLowerCase();
     const existing = bySchool.get(key);
     if (!existing || pct > existing.pct) {
@@ -208,11 +218,26 @@ function competingSchoolsFromRecruitingRecord(
     pct?: number;
     source?: string;
   }>;
-  // Prefer confirmed On3 / live competitors — skip legacy filler when anything better exists.
+  // Prefer confirmed On3 / live competitors. If none, allow top 1–2 meaningful legacy peers
+  // (not when UF is already ~locked — that reads as a fake battle).
   const nonLegacy = competitors.filter(
     (c) => String(c?.source || '').toLowerCase() !== 'legacy'
   );
-  const competitorPool = nonLegacy.length ? nonLegacy : [];
+  let competitorPool = nonLegacy;
+  if (!competitorPool.length) {
+    const ufRpm = competitorPct(recruiting?.ufRpmPct) ?? 0;
+    if (ufRpm < UF_LOCKED_SKIP_LEGACY_PCT) {
+      competitorPool = [...competitors]
+        .map((c) => ({
+          c,
+          pct: competitorPct(c?.score ?? c?.pct) ?? 0,
+        }))
+        .filter((row) => row.pct >= LEGACY_PEER_MIN_PCT)
+        .sort((a, b) => b.pct - a.pct)
+        .slice(0, LEGACY_PEER_MAX)
+        .map((row) => row.c);
+    }
+  }
   for (const c of competitorPool) {
     add(c?.school || c?.name, c?.score ?? c?.pct);
   }
@@ -234,7 +259,7 @@ function competingSchoolsFromRecruitingRecord(
   return [...bySchool.values()].sort((a, b) => b.pct - a.pct);
 }
 
-/** Export for high-priority / battles — real RPM competitors only (no filler). */
+/** Export for high-priority / battles — On3 first, then smart legacy peer fallback. */
 export { competingSchoolsFromRecruitingRecord };
 
 function buildEarlySignals(
@@ -692,6 +717,6 @@ export async function buildUnderclassmenIntelForSlug(
     earlyFutureCastPicks: buildFutureCastPicks(intelUuid, player),
     relatedIntel: buildRelatedIntel(normalized, classYear, player.position, enriched),
     updatedAt: new Date().toISOString(),
-    ufRpmPct: ufRpmPct ?? player.ufRpmPct ?? null,
+    ufRpmPct: player.ufRpmPct ?? null,
   };
 }

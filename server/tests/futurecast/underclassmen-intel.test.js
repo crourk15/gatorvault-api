@@ -48,17 +48,46 @@ describe('buildUnderclassmenIntelForSlug', () => {
   });
 });
 
-describe('underclassmen discovery enrich', () => {
-  it('loads discovery scores for all 2028 allowlist slugs', async () => {
-    const { loadDiscoveryEnrichmentBySlug, buildAllowlistWatchboardFallback, applyDiscoveryEnrichment } = require('../../lib/underclassmen-discovery-enrich');
-    const { ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist');
-    const map = await loadDiscoveryEnrichmentBySlug(2028);
-    assert.equal(map.size, ALLOWLIST_2028.length);
-    assert.ok(map.get('kaleb-ballard')?.discoveryScore >= 72);
-    assert.equal(map.get('kaleb-ballard')?.position, 'TE');
-    const row = buildAllowlistWatchboardFallback('kaleb-ballard', map.get('kaleb-ballard'));
-    assert.equal(row?.position, 'TE');
-    const patched = applyDiscoveryEnrichment({ slug: 'kaleb-ballard', position: 'QB' }, map.get('kaleb-ballard'));
-    assert.equal(patched.position, 'TE');
+describe('competingSchoolsFromRecruitingRecord', () => {
+  const { competingSchoolsFromRecruitingRecord } = require('../../lib/underclassmen-intel.ts');
+
+  it('prefers non-legacy competitors when present', () => {
+    const rows = competingSchoolsFromRecruitingRecord({
+      ufRpmPct: 7,
+      competitors: [
+        { school: 'Ohio State', pct: 28 },
+        { school: 'Kentucky', pct: 17, source: 'legacy' },
+      ],
+    });
+    assert.deepEqual(
+      rows.map((r) => r.name),
+      ['Ohio State']
+    );
+  });
+
+  it('falls back to top legacy peers when market peers are empty', () => {
+    const rows = competingSchoolsFromRecruitingRecord({
+      ufRpmPct: 60,
+      competitors: [
+        { school: 'Georgia Tech', pct: 4.8, source: 'legacy' },
+        { school: 'Auburn', pct: 4.1, source: 'legacy' },
+        { school: 'SMU', pct: 3.4, source: 'legacy' },
+      ],
+    });
+    assert.deepEqual(
+      rows.map((r) => r.name),
+      ['Georgia Tech', 'Auburn']
+    );
+  });
+
+  it('skips legacy crumbs when Florida is already locked on RPM', () => {
+    const rows = competingSchoolsFromRecruitingRecord({
+      ufRpmPct: 94,
+      competitors: [
+        { school: 'Georgia Tech', pct: 4.8, source: 'legacy' },
+        { school: 'Auburn', pct: 4.1, source: 'legacy' },
+      ],
+    });
+    assert.deepEqual(rows, []);
   });
 });

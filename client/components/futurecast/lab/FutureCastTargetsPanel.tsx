@@ -40,6 +40,7 @@ export function FutureCastTargetsPanel({
   const rows = useMemo(() => {
     if (discoveryFocus && highPriority.length) {
       return [...highPriority]
+        .filter((p) => isActiveUfTarget(p))
         .sort((a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0))
         .slice(0, 10)
         .map(highPriorityToLabTarget);

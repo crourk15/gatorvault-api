@@ -183,47 +183,23 @@ function needTier(score: number, shortfall: number, departing: number): NeedTier
 
 function buildReason(row: Omit<PositionNeedRow, 'needRank' | 'reason'>): string {
   const parts: string[] = [];
-  if (row.departingSoon > 0) {
-    const names = row.departing
-      .slice(0, 2)
-      .map((d) => d.name)
-      .join(', ');
-    parts.push(
-      `${row.departingSoon} likely gone after this cycle${names ? ` (${names})` : ''}`
-    );
+  if (row.shortfall > 0) {
+    parts.push(`${row.shortfall} short of depth target`);
+  } else if (row.departingSoon > 0) {
+    parts.push(`${row.departingSoon} likely gone after this cycle`);
   }
   if (row.commits2027 === 0) {
-    parts.push('no 2027 UF commits yet');
+    parts.push('no 2027 locks yet');
   } else {
+    const names = row.commits
+      .map((c) => c.name)
+      .slice(0, 2)
+      .join(', ');
     parts.push(
-      `${row.commits2027} locked for 2027${
-        row.commits[0] ? ` (${row.commits.map((c) => c.name).slice(0, 2).join(', ')})` : ''
-      }`
+      `${row.commits2027} locked for 2027${names ? ` (${names})` : ''}`
     );
   }
-  if (row.shortfall > 0) {
-    parts.push(`${row.shortfall} below typical depth target (${row.schemeMin})`);
-  } else {
-    parts.push(`projected depth ${row.projectedDepth} meets target (${row.schemeMin})`);
-  }
-  if (row.boardTargets > 0) {
-    const strength =
-      row.boardStrength === 'lean-uf'
-        ? 'leaning Florida'
-        : row.boardStrength === 'battle'
-          ? 'still battles'
-          : row.boardStrength === 'behind'
-            ? 'trailing on the board'
-            : 'on the board';
-    parts.push(
-      `${row.boardTargets} active target${row.boardTargets === 1 ? '' : 's'} ${strength}${
-        row.avgUfPct != null ? ` · ${row.avgUfPct}% avg Florida odds` : ''
-      }`
-    );
-  } else {
-    parts.push('no active FutureCast targets at this room yet');
-  }
-  return parts.join(' · ');
+  return parts.slice(0, 2).join(' · ');
 }
 
 function emptyBucket(position: NeedBoardRoom) {

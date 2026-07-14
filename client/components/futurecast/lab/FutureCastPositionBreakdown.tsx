@@ -33,7 +33,6 @@ function NeedRowCompact({
   boardClassYear: number;
 }): React.ReactElement {
   const lead = row.topTargets[0];
-  const reasonShort = row.reason.split(' · ').slice(0, 2).join(' · ');
 
   return (
     <article
@@ -53,7 +52,7 @@ function NeedRowCompact({
           {row.avgUfPct != null ? ` · ${row.avgUfPct}%` : ''}
         </span>
       </header>
-      <p className="fc-lab-need-row__reason">{reasonShort}</p>
+      {row.reason ? <p className="fc-lab-need-row__reason">{row.reason}</p> : null}
       {lead ? (
         <p className="fc-lab-need-row__lead">
           {lead.slug ? (
@@ -99,12 +98,12 @@ export function FutureCastPositionBreakdown({
     if (!discoveryFocus || !highPriority.length) return [];
     const needTierByPos: Record<string, (typeof board.rows)[number]['needTier']> = {};
     for (const row of board.rows) needTierByPos[row.position] = row.needTier;
-    return buildSchemeMatchLeaders(highPriority, needTierByPos, 5);
+    return buildSchemeMatchLeaders(highPriority, needTierByPos, 3);
   }, [discoveryFocus, highPriority, board.rows]);
 
   const featured = useMemo(() => {
     const priority = board.rows.filter((r) => r.needTier === 'critical' || r.needTier === 'high');
-    if (priority.length >= 3) return priority.slice(0, 4);
+    if (priority.length >= 3) return priority.slice(0, 3);
     return board.rows.slice(0, 3);
   }, [board.rows]);
 
@@ -113,18 +112,11 @@ export function FutureCastPositionBreakdown({
 
   const title = 'How the board fits Florida';
   const sub = discoveryFocus
-    ? `Top ${boardClassYear} needs — plus who fits the scheme.`
-    : `Top ${boardClassYear} needs, then how the board stacks.`;
+    ? `Top ${boardClassYear} needs + scheme fits.`
+    : `Top ${boardClassYear} needs on the board.`;
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-position-breakdown">
-      <p className="fc-lab-need-meta">
-        <span className={`fc-lab-need-confidence fc-lab-need-confidence--${board.confidence}`}>
-          {board.confidence === 'high' ? 'Live roster' : 'Loading inputs'}
-        </span>
-        <span className="fc-lab-need-meta__note">{board.confidenceNote}</span>
-      </p>
-
       {board.rows.length === 0 ? (
         <p className="rh-cc-empty">Need board unavailable until roster and commit feeds load.</p>
       ) : (
@@ -148,7 +140,6 @@ export function FutureCastPositionBreakdown({
       {schemeMatches.length > 0 ? (
         <div className="fc-lab-scheme-inline" data-testid="fc-lab-scheme-matches">
           <h3 className="fc-lab-scheme-inline__title">Best scheme matches</h3>
-          <p className="fc-lab-scheme-inline__sub">Who fits what Florida needs — not who ranks highest.</p>
           <ul className="fc-lab-scheme-match-list">
             {schemeMatches.map((row) => (
               <li key={row.slug} className="fc-lab-scheme-match">
@@ -161,9 +152,8 @@ export function FutureCastPositionBreakdown({
                   </div>
                   <p className="fc-lab-scheme-match__meta">
                     {row.position}
-                    {row.school ? ` · ${row.school}` : ''}
+                    {row.why ? ` · ${row.why}` : ''}
                   </p>
-                  <p className="fc-lab-scheme-match__why">{row.why}</p>
                 </a>
               </li>
             ))}
