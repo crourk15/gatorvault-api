@@ -23,7 +23,6 @@ const MAX_RUNTIME_MS = parseInt(process.env.PLATFORM_OPS_MAX_RUNTIME_MS || '6000
 /** Light jobs only — heavy / duplicate work lives on dedicated crons or in-process schedulers.
  *  No x-autoposter-run here (hub mode: intel + drafts only; publish is manual). */
 const DEFAULT_JOBS = [
-  'live-refresh',
   'portal-ingest',
   'depth-chart-refresh',
   'roster-stats-sync',

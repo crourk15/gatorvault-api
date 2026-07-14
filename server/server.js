@@ -890,14 +890,26 @@ function startLiveDashboardScheduler() {
       .catch((err) => console.warn('[live-dashboard]', err.message));
   };
 
-  // When in-process crons are off (Starter / hub mode), still warm beat cache once on boot
-  // so deploys are not stuck on the stale committed cache until the 10m Render cron fires.
+  // When in-process crons are off (Starter / hub mode), only warm the beat cache on boot.
+  // Full live-refresh OOMs this plan; light beat pull is enough for GNL.
   const hasBearer = !!(process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN);
   if (!pipelineGuards.guardScheduledJobStart('live-dashboard')) {
     if (hasBearer && !_gvLiveSchedulerStarted) {
       _gvLiveSchedulerStarted = true;
-      setTimeout(tick, bootDelay);
-      console.log('Live dashboard: one-shot boot refresh (scheduled jobs off)');
+      setTimeout(() => {
+        if (pipelineGuards.shouldSkipHeavyJob('live-dashboard')) return;
+        const opsMonitor = require('./lib/ops-monitor');
+        const { refreshBeatStream } = require('./lib/live-beat');
+        opsMonitor
+          .wrapJob('beat-refresh', 'cron:live-refresh', () => refreshBeatStream())
+          .then((result) => {
+            const n = Array.isArray(result?.posts) ? result.posts.length : 0;
+            if (result?.error) console.warn('[live-dashboard] boot beat:', result.error);
+            else console.log('[live-dashboard] boot beat refreshed', n, 'posts');
+          })
+          .catch((err) => console.warn('[live-dashboard] boot beat', err.message));
+      }, bootDelay);
+      console.log('Live dashboard: one-shot boot beat refresh (scheduled jobs off)');
     }
     return;
   }

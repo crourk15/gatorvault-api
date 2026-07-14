@@ -24,7 +24,7 @@ const KEEPALIVE_CRON = 'gatorvault-api-keepalive';
 const EXTRA_CRONS = ['gatorvault-api-recruiting-ingest', 'gatorvault-api-hub-refresh'];
 const PROD_API = 'https://gatorvault-api.onrender.com';
 const PLATFORM_OPS_JOBS =
-  'live-refresh,portal-ingest,depth-chart-refresh,game-zone-refresh,nil-refresh';
+  'portal-ingest,depth-chart-refresh,game-zone-refresh,nil-refresh';
 
 function saveLocalSecret(secret) {
   let text = fs.existsSync(ENV_PATH) ? fs.readFileSync(ENV_PATH, 'utf8') : '';

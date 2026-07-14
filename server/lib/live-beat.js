@@ -532,8 +532,12 @@ async function refreshBeatStreamInner(cache) {
   }
 
   try {
-    const { runBeatWriterIngest } = require('./beat-writer-ingest');
-    runBeatWriterIngest().catch((err) => console.warn('[beat-writer-ingest]', err.message));
+    // Optional — heavy identity/intel work can OOM Starter right after a successful beat pull.
+    // Dedicated beat-ingest cron still runs this as its own step.
+    if (process.env.BEAT_WRITER_INGEST_ON_REFRESH === 'true') {
+      const { runBeatWriterIngest } = require('./beat-writer-ingest');
+      runBeatWriterIngest().catch((err) => console.warn('[beat-writer-ingest]', err.message));
+    }
   } catch {
     /* optional */
   }

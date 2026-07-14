@@ -394,7 +394,7 @@ services:
       - key: NEXT_PUBLIC_API_BASE
         value: https://gatorvault-api.onrender.com
       - key: PLATFORM_OPS_JOBS
-        value: live-refresh,portal-ingest,depth-chart-refresh,game-zone-refresh,nil-refresh
+        value: portal-ingest,depth-chart-refresh,game-zone-refresh,nil-refresh
       - key: PLATFORM_OPS_SKIP_WEEKLY
         value: "true"
       - key: PLATFORM_OPS_JOB_TIMEOUT_MS

@@ -15,33 +15,13 @@ const CRON_SECRET = process.env.MONITORING_CRON_SECRET || process.env.INGEST_CRO
 
 const STEPS = [
   {
-    name: 'live-refresh',
-    path: '/api/live/refresh',
+    // Light path only on Starter — full live-refresh / beat-writer ingest OOMs the API.
+    name: 'beat-refresh',
+    path: '/api/live/beat/refresh',
     summarize: (r) => ({
-      beatPosts: r?.result?.beat?.postCount ?? r?.dashboard?.beat?.posts?.length ?? null,
-      beatError: r?.result?.beat?.error ?? null,
-      podcastErrors: r?.result?.podcasts?.errors?.length ?? null,
-    }),
-  },
-  {
-    name: 'beat-writer',
-    path: '/api/recruiting/beat-writer/ingest',
-    body: { force: true },
-    opts: { timeoutMs: 600000, attempts: 2 },
-    summarize: (r) => ({
-      processedCount: r?.processedCount ?? r?.processed?.length ?? null,
-      errors: r?.errors?.length ?? 0,
-      softFailure: r?.softFailure === true,
-      ok: r?.ok !== false && !(r?.errors?.length > 0 && !(r?.processed?.length > 0)),
-    }),
-  },
-  {
-    name: 'beat-visit',
-    path: '/api/recruiting/beat-visit/ingest',
-    summarize: (r) => ({
-      processedCount: r?.processedCount ?? r?.processed?.length ?? null,
-      errors: r?.errors?.length ?? 0,
-      softFailure: r?.softFailure === true,
+      beatPosts: r?.refreshed?.posts?.length ?? r?.beat?.posts?.length ?? null,
+      beatError: r?.refreshed?.error ?? r?.error ?? null,
+      source: r?.refreshed?.source ?? null,
     }),
   },
 ];
