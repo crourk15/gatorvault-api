@@ -51,7 +51,15 @@ export function GatorNationLivePage(): React.ReactElement {
     }
     try {
       const next = await fetchLiveHubBundle(!isInitial);
-      setBundle(next);
+      setBundle((prev) => {
+        const nextLive =
+          (next.feed?.length || 0) + (next.panels?.beatWriterHighlights?.length || 0);
+        const prevLive =
+          (prev.feed?.length || 0) + (prev.panels?.beatWriterHighlights?.length || 0);
+        // Don't blank the page when a poll fails / API returns empty mid-outage.
+        if (nextLive === 0 && prevLive > 0) return prev;
+        return next;
+      });
       if (!isInitial) setPollSeq((n) => n + 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load GatorNation Live.');

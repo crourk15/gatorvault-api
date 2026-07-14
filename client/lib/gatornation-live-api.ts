@@ -259,9 +259,14 @@ export function pickBreakingNews(
 function isExcludedLiveFeedItem(item: LiveFeedItem): boolean {
   const blob = `${item.title ?? ''} ${item.type ?? ''}`.toLowerCase();
   if (!blob.trim()) return true;
+  // Beat-writer X posts stay visible longer — they are the GNL primary signal.
+  const maxAgeMs =
+    String(item.type || '').toLowerCase() === 'beat'
+      ? 7 * 24 * 60 * 60 * 1000
+      : 48 * 60 * 60 * 1000;
   if (item.createdAt) {
     const ageMs = Date.now() - new Date(item.createdAt).getTime();
-    if (Number.isFinite(ageMs) && ageMs > 48 * 60 * 60 * 1000) return true;
+    if (Number.isFinite(ageMs) && ageMs > maxAgeMs) return true;
   }
   return false;
 }
@@ -343,6 +348,49 @@ export function buildLiveStreamFeed(feed: LiveFeedItem[]): LiveFeedItem[] {
   return out;
 }
 
+/** Turn beat-writer X posts into stream rows — GNL's primary live signal. */
+export function beatPostsToFeedItems(posts: BeatPost[]): LiveFeedItem[] {
+  return (posts || [])
+    .filter((post) => String(post.text || '').trim())
+    .map((post, idx) => {
+      const writer = post.writerName || post.handle || post.outlet || 'Beat Writer';
+      const text = String(post.text || '').trim();
+      return {
+        id: post.id || post.url || `beat-${idx}`,
+        type: 'beat',
+        title: `${writer}: ${text}`,
+        source: post.outlet || writer,
+        createdAt: post.publishedAt || undefined,
+        url: post.url,
+      };
+    });
+}
+
+/** Merge beat X posts ahead of other feed rows (dedupe by id/title). */
+export function mergeBeatIntoLiveFeed(
+  feed: LiveFeedItem[],
+  beat: BeatPost[]
+): LiveFeedItem[] {
+  const beatItems = beatPostsToFeedItems(beat);
+  const seen = new Set<string>();
+  const out: LiveFeedItem[] = [];
+
+  for (const item of [...beatItems, ...(feed || [])]) {
+    const idKey = String(item.id || '')
+      .trim()
+      .toLowerCase();
+    const titleKey = String(item.title || '')
+      .trim()
+      .toLowerCase();
+    if (idKey && seen.has(`id:${idKey}`)) continue;
+    if (titleKey && seen.has(`t:${titleKey}`)) continue;
+    if (idKey) seen.add(`id:${idKey}`);
+    if (titleKey) seen.add(`t:${titleKey}`);
+    out.push(item);
+  }
+  return out;
+}
+
 export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePanelItems {
   const visitsNow = feed
     .filter((item) => /visit|on campus|ov/i.test(String(item.title)))
@@ -410,7 +458,7 @@ export type LiveHubBundle = {
   refreshedAt: string | null;
 };
 
-/** GNL live bundle — live dashboard + beat writers + podcasts only (no RH/FC). */
+/** GNL live bundle — beat-writer X posts drive the stream; podcasts are secondary. */
 export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> {
   const [dash, gameDay] = await Promise.all([
     fetchLiveDashboard(40, { force }).catch(() => null),
@@ -419,8 +467,9 @@ export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> 
 
   const feedItems = dash?.feed ?? [];
   const beat = dash?.beat?.posts ?? [];
-  const ticker = buildLiveDashboardTicker(feedItems);
-  const stream = buildLiveStreamFeed(feedItems);
+  const mergedFeed = mergeBeatIntoLiveFeed(feedItems, beat);
+  const ticker = buildLiveDashboardTicker(mergedFeed);
+  const stream = buildLiveStreamFeed(mergedFeed);
   const refreshedAt = dash?.refreshedAt ?? dash?.updatedAt ?? new Date().toISOString();
   const shows = dash?.podcasts?.shows ?? [];
   const podcasts = normalizePodcasts(shows);
@@ -440,7 +489,7 @@ export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> 
       momentumTrend: 'neutral',
     },
     movement: null,
-    breakingNews: pickBreakingNews(ticker, feedItems),
+    breakingNews: pickBreakingNews(ticker, mergedFeed),
     gameDay,
     updatedAt: dash?.updatedAt ?? refreshedAt,
     refreshedAt,

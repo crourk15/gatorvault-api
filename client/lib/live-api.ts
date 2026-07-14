@@ -16,6 +16,7 @@ export interface LiveFeedItem {
 }
 
 export interface BeatPost {
+  id?: string;
   handle?: string;
   text?: string;
   publishedAt?: string;

@@ -87,13 +87,13 @@ export const GNL_COPY = {
   },
   emptyState: {
     title: 'Nothing live right now',
-    body: 'When commits, beat notes, or portal moves drop, they’ll show up here first.',
+    body: 'Beat-writer X posts and recruiting headlines land here first when the live pull is up.',
     recruitingLabel: 'Open Recruiting →',
     teamLabel: 'Open Team →',
   },
   stream: {
     title: 'Live Stream',
-    subtitle: 'Newest headlines across the GatorNation network',
+    subtitle: 'UF beat writers on X, plus recruiting and portal headlines',
   },
   podcastHub: 'Podcast Hub',
   mediaGrid: 'Media Grid',

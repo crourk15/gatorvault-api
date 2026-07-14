@@ -37,7 +37,7 @@ function GnlQuietEmpty(): React.ReactElement {
   );
 }
 
-/** Fan-first Live body — stream first; hide empty pulse/beat/podcasts. */
+/** Fan-first Live body — beat/stream first; podcasts last (not a live-news substitute). */
 export function GNLLiveFeedModule({ bundle, loading: _loading, refreshKey }: Props): React.ReactElement {
   const [category, setCategory] = useState<FeedCategory>('all');
 
@@ -55,7 +55,7 @@ export function GNLLiveFeedModule({ bundle, loading: _loading, refreshKey }: Pro
   const hasStream = feed.length > 0;
   const hasTicker = (bundle.ticker ?? []).length > 0;
   const hasBeat = beatItems.length > 0;
-  // Podcasts always render the network catalog — quiet = no live news signal.
+  // Quiet = no live news signal. Podcasts always render below and do not count as "live".
   const isQuiet = !hasStream && !hasTicker && !hasBeat;
 
   return (
@@ -78,8 +78,6 @@ export function GNLLiveFeedModule({ bundle, loading: _loading, refreshKey }: Pro
           </section>
         ) : null}
 
-        <GNLPulseSummary bundle={bundle} />
-
         {hasBeat ? (
           <section className="gv-gnl-elite-card gv-gnl-elite-beat">
             <BeatWriterCardGrid
@@ -90,9 +88,11 @@ export function GNLLiveFeedModule({ bundle, loading: _loading, refreshKey }: Pro
           </section>
         ) : null}
 
-        <GNLPodcastSpotlight podcasts={bundle.podcasts} updatedAt={bundle.updatedAt} />
+        <GNLPulseSummary bundle={bundle} />
 
         {isQuiet ? <GnlQuietEmpty /> : null}
+
+        <GNLPodcastSpotlight podcasts={bundle.podcasts} updatedAt={bundle.updatedAt} />
       </div>
     </div>
   );
