@@ -1,7 +1,180 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-01T20:46:05.794Z",
+  "updatedAt": "2026-07-15T20:36:21.568Z",
   "events": [
+    {
+      "id": "log_1784147781568_xaci98",
+      "action": "draft_rejected",
+      "at": "2026-07-15T20:36:21.568Z",
+      "articleId": "insider_1784147354696_9womgv",
+      "title": "Insider: Staff decisions shaping Florida 2026 identity",
+      "reason": "generic_template_recycle_scheme_dump_not_elite",
+      "angleKey": "staff_decisions",
+      "topicKey": "staff_intel_2026"
+    },
+    {
+      "id": "log_1784147781563_rl6ejx",
+      "action": "draft_updated",
+      "at": "2026-07-15T20:36:21.563Z",
+      "articleId": "insider_1784147354685_8fbgit",
+      "title": "Program Pulse: Florida 2027 board after the July visit wave"
+    },
+    {
+      "id": "log_1784147781552_tzezyr",
+      "action": "draft_updated",
+      "at": "2026-07-15T20:36:21.552Z",
+      "articleId": "insider_1784147354674_vl9rsn",
+      "title": "Post-Visit: Kailib Dillard and Florida defensive visit weekend"
+    },
+    {
+      "id": "log_1784147354703_iqrup7",
+      "action": "weekly_generation",
+      "at": "2026-07-15T20:29:14.703Z",
+      "candidateCount": 7,
+      "selectedCount": 3,
+      "draftCount": 3,
+      "aborted": [],
+      "rejectedIntelCount": 15,
+      "draftIds": [
+        "insider_1784147354674_vl9rsn",
+        "insider_1784147354685_8fbgit",
+        "insider_1784147354696_9womgv"
+      ],
+      "visitRecapTriggers": [
+        {
+          "topicKey": "post_visit_2027_kailib-dillard_243497|detectives_beat_det_1783306655128_cddec6f1|2026-07-06|243",
+          "triggerIdentityLog": [
+            {
+              "slug": "kailib-dillard",
+              "name": "Kailib Dillard",
+              "fingerprint": "243497|detectives_beat_det_1783306655128_cddec6f1|2026-07-06",
+              "source": "auto:detectives-beat",
+              "eventType": "official_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            },
+            {
+              "slug": "zahmar-tookes",
+              "name": "Zahmar Tookes",
+              "fingerprint": "243606|detectives_beat_det_1783306590762_bcef737e|2026-07-06",
+              "source": "auto:detectives-beat",
+              "eventType": "official_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            },
+            {
+              "slug": "tre-geathers",
+              "name": "Tre Geathers",
+              "fingerprint": "249231|detectives_beat_det_1783302227418_a0ef93d5|2026-07-06",
+              "source": "auto:detectives-beat",
+              "eventType": "official_visit",
+              "playerValid": true,
+              "playerErrors": [],
+              "intelValid": true
+            }
+          ],
+          "fingerprints": [
+            "243497|detectives_beat_det_1783306655128_cddec6f1|2026-07-06",
+            "243606|detectives_beat_det_1783306590762_bcef737e|2026-07-06",
+            "249231|detectives_beat_det_1783302227418_a0ef93d5|2026-07-06"
+          ]
+        }
+      ],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1784147354699_2gy2yo",
+      "action": "draft_created",
+      "at": "2026-07-15T20:29:14.699Z",
+      "articleId": "insider_1784147354696_9womgv",
+      "title": "Insider: Staff decisions shaping Florida 2026 identity",
+      "category": "staff_intel"
+    },
+    {
+      "id": "log_1784147354691_usj5yv",
+      "action": "draft_created",
+      "at": "2026-07-15T20:29:14.691Z",
+      "articleId": "insider_1784147354685_8fbgit",
+      "title": "Program Pulse: 2026 Florida roster architecture and culture check",
+      "category": "program_pulse"
+    },
+    {
+      "id": "log_1784147354679_w2f8xd",
+      "action": "draft_created",
+      "at": "2026-07-15T20:29:14.679Z",
+      "articleId": "insider_1784147354674_vl9rsn",
+      "title": "Post-Visit: What Kailib Dillard means for UF after the visit",
+      "category": "post_visit_reaction"
+    },
+    {
+      "id": "log_1784147328695_u0nlbz",
+      "action": "draft_rejected",
+      "at": "2026-07-15T20:28:48.695Z",
+      "articleId": "insider_1781108910197_5w8sgg",
+      "title": "Official Visit Preview: Easton Royal and 2027 OV intel",
+      "reason": "stale_pre_voice_tighten_clear_queue",
+      "topicKey": "ov_preview_2027_easton-royal"
+    },
+    {
+      "id": "log_1784147328686_mf1u3s",
+      "action": "draft_rejected",
+      "at": "2026-07-15T20:28:48.686Z",
+      "articleId": "insider_1781133067543_20p3kk",
+      "title": "Program Pulse: 2026 Florida roster and portal outlook",
+      "reason": "stale_pre_voice_tighten_clear_queue",
+      "topicKey": "program_pulse_2026_28"
+    },
+    {
+      "id": "log_1784147328676_r64h3i",
+      "action": "draft_rejected",
+      "at": "2026-07-15T20:28:48.676Z",
+      "articleId": "insider_1781133067547_nf5f3y",
+      "title": "Game Week Preview: Florida vs FAU",
+      "reason": "stale_pre_voice_tighten_clear_queue",
+      "topicKey": "game_preview_2026_fau"
+    },
+    {
+      "id": "log_1784147328669_ajnubq",
+      "action": "draft_rejected",
+      "at": "2026-07-15T20:28:48.669Z",
+      "articleId": "insider_1781133067550_tib3uu",
+      "title": "Roster Analysis: 2026 Florida team by unit",
+      "reason": "stale_pre_voice_tighten_clear_queue",
+      "topicKey": "roster_analysis_2026_111"
+    },
+    {
+      "id": "log_1784147328662_6xmwqx",
+      "action": "draft_rejected",
+      "at": "2026-07-15T20:28:48.662Z",
+      "articleId": "insider_1781133139142_hzwy6j",
+      "title": "Summer Preview: 2026 camp battles across Florida's two-deep",
+      "reason": "stale_pre_voice_tighten_clear_queue",
+      "topicKey": "summer_preview_2026"
+    },
+    {
+      "id": "log_1784147328653_o2e9xi",
+      "action": "draft_rejected",
+      "at": "2026-07-15T20:28:48.653Z",
+      "articleId": "insider_1782917402988_ac1ogq",
+      "title": "Portal Math: How Florida rebuilt the 2026 roster position by position",
+      "reason": "stale_pre_voice_tighten_clear_queue",
+      "angleKey": "portal_math",
+      "topicKey": "program_pulse_2026_27"
+    },
+    {
+      "id": "log_1784147328639_njtd4k",
+      "action": "draft_rejected",
+      "at": "2026-07-15T20:28:48.641Z",
+      "articleId": "insider_1782917403016_34pbxe",
+      "title": "War Room: Maxwell Hiller - commit likelihoods and competing schools",
+      "reason": "stale_pre_voice_tighten_clear_queue",
+      "angleKey": "board_battle",
+      "topicKey": "post_visit_2027_maxwell-hiller_beat_official_visit_easton-royal_2026-06-24_ttjharden8|beat_offi"
+    },
     {
       "id": "log_1782938765793_823s4o",
       "action": "weekly_generation",
