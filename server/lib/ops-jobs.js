@@ -31,6 +31,15 @@ const JOBS = {
       return runOn3Ingest(opts);
     }
   },
+  'uf-closing-board-sync': {
+    label: 'UF 2027 Closing Class board (247Sports)',
+    subsystem: 'cron:uf-closing-board',
+    schedule: 'With recruiting ingest (UF_CLOSING_BOARD_SYNC)',
+    async run(opts = {}) {
+      const { syncFloridaClosingBoardToStore } = require('./uf-closing-board-247');
+      return syncFloridaClosingBoardToStore({ classYear: 2027, ...opts });
+    }
+  },
   'portal-ingest': {
     label: 'Portal sync (On3)',
     subsystem: 'cron:portal-ingest',

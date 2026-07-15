@@ -899,6 +899,15 @@ async function runOn3IngestInner(options = {}) {
   }
 
   try {
+    if (process.env.UF_CLOSING_BOARD_SYNC !== 'false') {
+      const { syncFloridaClosingBoardToStore } = require('./uf-closing-board-247');
+      result.ufClosingBoardSync = await syncFloridaClosingBoardToStore({ classYear: 2027 });
+    }
+  } catch (e) {
+    result.errors.push({ type: 'uf_closing_board_sync', error: e.message });
+  }
+
+  try {
     if (store.storageMode() !== 'supabase') {
       const { demoteNonAllowlistedTargets } = require('./recruiting-target-allowlist');
       const players = await store.getAllPlayers();

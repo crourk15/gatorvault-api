@@ -1,9 +1,19 @@
 /**
- * Charles' locked UF target allow-list — ONLY these slugs may appear as targets.
- * No fallback, mock, synthetic, or AI-generated names.
+ * Charles' locked UF target allow-list for curated Lab / hub targets.
+ * 2027 Closing Class also surfaces live remaining Florida board rows
+ * (247Sports sync via uf-closing-board-247) — uncommitted only.
  */
 const { slugify } = require('./slug');
 const { isActiveUfTarget } = require('./recruiting-target-filters');
+
+function isClosingClassLiveBoardTarget(player) {
+  try {
+    const { isLiveUfBoardTarget } = require('./uf-closing-board-247');
+    return isLiveUfBoardTarget(player);
+  } catch {
+    return false;
+  }
+}
 
 /** Locked 2027 target slugs */
 const ALLOWLIST_2027 = [
@@ -146,11 +156,13 @@ function isAllowlistedTarget(player) {
 function filterAllowlistedTargets(targets, classYear) {
   const year = parseInt(classYear, 10);
   const set = getAllowlistSet(year);
-  if (!set.size) return [];
   return (targets || []).filter((p) => {
     if (!isActiveUfTarget(p)) return false;
     const slug = canonicalTargetSlug(p.slug || slugify(p.name));
-    return set.has(slug);
+    if (set.has(slug)) return true;
+    // Closing Class: keep remaining UF board (247 live sync), not commits.
+    if (year === 2027 && isClosingClassLiveBoardTarget(p)) return true;
+    return false;
   });
 }
 
@@ -163,14 +175,14 @@ function validateStoreTargets(players) {
     if (year !== 2027 && year !== 2028) continue;
     const slug = canonicalTargetSlug(p.slug || slugify(p.name));
     const set = getAllowlistSet(year);
-    if (!set.size || !set.has(slug)) {
-      errors.push({
-        slug,
-        name: p.name,
-        classYear: year,
-        reason: 'not_on_charles_allowlist',
-      });
-    }
+    if (set.has(slug)) continue;
+    if (year === 2027 && isClosingClassLiveBoardTarget(p)) continue;
+    errors.push({
+      slug,
+      name: p.name,
+      classYear: year,
+      reason: 'not_on_charles_allowlist',
+    });
   }
   return errors;
 }
@@ -185,7 +197,9 @@ function demoteNonAllowlistedTargets(players) {
     if (year !== 2027 && year !== 2028) continue;
     const slug = canonicalTargetSlug(p.slug || slugify(p.name));
     const set = getAllowlistSet(year);
-    if (set.size && set.has(slug)) continue;
+    if (set.has(slug)) continue;
+    // Do not demote live 2027 Closing Class board rows between syncs.
+    if (year === 2027 && isClosingClassLiveBoardTarget(p)) continue;
     p.category = 'recruit';
     if (!p.status || p.status === 'target') p.status = 'uncommitted';
     demoted += 1;

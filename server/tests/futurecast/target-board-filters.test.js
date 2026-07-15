@@ -48,6 +48,34 @@ test('filterAllowlistedTargets drops Hyppolite-style Miami commits', () => {
   assert.ok(slugs.includes('jalen-brewster'));
 });
 
+test('filterAllowlistedTargets keeps 2027 live UF board rows beyond Charles allowlist', () => {
+  const targets = filterAllowlistedTargets(
+    [
+      {
+        slug: 'seth-williams',
+        name: 'Seth Williams',
+        classYear: 2027,
+        committedTo: null,
+        boardSource: '247-uf-board-sync',
+        category: 'target',
+        status: 'uncommitted',
+      },
+      {
+        slug: 'random-not-on-board',
+        name: 'Random Prospect',
+        classYear: 2027,
+        committedTo: null,
+        category: 'target',
+        status: 'uncommitted',
+      },
+    ],
+    2027
+  );
+  const slugs = targets.map((p) => p.slug);
+  assert.ok(slugs.includes('seth-williams'));
+  assert.ok(!slugs.includes('random-not-on-board'));
+});
+
 test('filterActiveUfTargets', () => {
   const out = filterActiveUfTargets([
     { committedTo: 'Florida' },

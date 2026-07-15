@@ -130,10 +130,11 @@ export function topThreatVsFlorida(
 
 /**
  * Closing-class shortlist: UF still in play.
+ * Live board rows may land before GV odds exist — still show them.
  * Drops longshots where a rival owns the market (e.g. 3% UF / 90% Georgia).
  */
 export function isClosingClassInPlayTarget(player: FcLabTarget): boolean {
-  if (player.ufProbability == null) return false;
+  if (player.ufProbability == null) return true;
   const uf = ufPctFromFc(player.ufProbability);
   if (uf < 15) return false;
   const threat = topThreatVsFlorida(player);
