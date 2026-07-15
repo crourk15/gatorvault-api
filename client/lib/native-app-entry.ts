@@ -7,6 +7,8 @@ import {
 } from '@/lib/api-base';
 import { loadSession } from '@/lib/auth-api';
 
+const NATIVE_COLD_START_KEY = 'gv_native_cold_done';
+
 export function normalizeStaticExportHref(href: string): string {
   if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) {
     return href;
@@ -28,16 +30,38 @@ function isMarketingPath(pathname: string): boolean {
   return p === '/' || p === '/welcome' || p === '/insider';
 }
 
-export function nativeBootRedirect(): string | null {
-  if (!isNativeApp()) return null;
-  const path = normalizeNativeRoutePath(window.location.pathname || '/');
-  if (!isMarketingPath(path)) return null;
+/** Logged-out → sign-in; logged-in → vault home. */
+export function nativeEntryDestination(): string {
   const session = loadSession();
   const rel =
     session?.email && session?.token
       ? '/vault/'
       : '/join/?mode=signin&next=/vault/';
   return nativeNavigationUrl(rel);
+}
+
+/** True once per WebView process (cleared when iOS kills the app). */
+export function takeNativeColdStart(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    if (sessionStorage.getItem(NATIVE_COLD_START_KEY)) return false;
+    sessionStorage.setItem(NATIVE_COLD_START_KEY, '1');
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Cold start: always sign-in or /vault/ home (do not restore Recruiting).
+ * Later navigations: only bounce marketing paths.
+ */
+export function nativeBootRedirect(): string | null {
+  if (!isNativeApp()) return null;
+  const path = normalizeNativeRoutePath(window.location.pathname || '/');
+  const cold = takeNativeColdStart();
+  if (!cold && !isMarketingPath(path)) return null;
+  return nativeEntryDestination();
 }
 
 export function runNativeAppEntry(): void {
@@ -65,7 +89,7 @@ export function runNativeAppEntry(): void {
         try {
           const url = new URL(raw, nativeNavigationOrigin());
           if (isMarketingPath(url.pathname)) {
-            window.location.href = nativeBootRedirect() ?? nativeNavigationUrl('/vault/');
+            window.location.href = nativeEntryDestination();
             return;
           }
         } catch {
@@ -80,7 +104,7 @@ export function runNativeAppEntry(): void {
         const p = url.pathname.replace(/\/$/, '') || '/';
         if (isMarketingPath(p)) {
           event.preventDefault();
-          window.location.href = nativeBootRedirect() ?? nativeNavigationUrl('/vault/');
+          window.location.href = nativeEntryDestination();
           return;
         }
       } catch {

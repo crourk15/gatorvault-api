@@ -1,26 +1,22 @@
 'use client';
 
 import { useEffect } from 'react';
-import { isNativeApp, nativeNavigationUrl, normalizeNativeRoutePath } from '@/lib/api-base';
-import { loadSession } from '@/lib/auth-api';
+import { isNativeApp, normalizeNativeRoutePath } from '@/lib/api-base';
+import { nativeEntryDestination } from '@/lib/native-app-entry';
 
 function isMarketingPath(pathname: string): boolean {
   const p = normalizeNativeRoutePath(pathname);
   return p === '/' || p === '/welcome' || p === '/insider';
 }
 
-/** Redirect native app away from marketing/pricing pages (React fallback if boot script missed). */
+/** React fallback if the inline boot script missed a marketing path. */
 export function NativeMarketingRedirect(): null {
   useEffect(() => {
     if (!isNativeApp()) return;
     const path = window.location.pathname || '/';
     if (!isMarketingPath(path)) return;
 
-    const session = loadSession();
-    const dest =
-      session?.email && session?.token
-        ? nativeNavigationUrl('/vault/')
-        : nativeNavigationUrl('/join/?mode=signin&next=/vault/');
+    const dest = nativeEntryDestination();
     if (window.location.href !== dest) window.location.replace(dest);
   }, []);
 

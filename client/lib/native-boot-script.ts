@@ -1,4 +1,4 @@
-/** Inline script — runs before React. Keeps native app off marketing/pricing landing. */
+/** Inline script — runs before React. Native cold start + keep app off marketing landing. */
 export const NATIVE_BOOT_SCRIPT = `(function(){
   try {
     var cap = window.Capacitor;
@@ -15,6 +15,7 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
       : bundledNative
         ? location.origin
         : 'https://gatorvaultinsider.com';
+    var COLD_KEY = 'gv_native_cold_done';
 
     function routePath(path) {
       var p = (path || '/').replace(/\\/$/, '') || '/';
@@ -66,6 +67,7 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
       } catch (e) { return false; }
     }
 
+    /** Fresh process: sign-in if logged out, vault home if logged in (ignore WKWebView restore). */
     function vaultDest() {
       return sessionOk()
         ? abs('/vault/')
@@ -75,6 +77,16 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
     function isMarketingPath(path) {
       var p = routePath(path);
       return p === '/' || p === '/welcome' || p === '/insider';
+    }
+
+    function takeColdStart() {
+      try {
+        if (sessionStorage.getItem(COLD_KEY)) return false;
+        sessionStorage.setItem(COLD_KEY, '1');
+        return true;
+      } catch (e) {
+        return false;
+      }
     }
 
     document.addEventListener('click', function(e) {
@@ -114,7 +126,8 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
     }, true);
 
     var path = routePath(location.pathname || '/');
-    if (isMarketingPath(path)) {
+    var cold = takeColdStart();
+    if (cold || isMarketingPath(path)) {
       var dest = vaultDest();
       if (location.href !== dest) location.replace(dest);
     }
