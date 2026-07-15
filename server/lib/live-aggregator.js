@@ -212,7 +212,7 @@ function ingestPublishedContent() {
         type: 'article',
         title: a.title,
         summary: a.excerpt || '',
-        source_url: a.id ? `/article/${a.id}` : '/articles',
+        source_url: a.id ? `/articles/${a.id}` : '/articles',
         imageUrl: null,
         source: 'content',
         author: a.author || 'GatorVault',

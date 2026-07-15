@@ -129,7 +129,7 @@ function buildLatestContent() {
     timestamp: a.publishedAt || a.date || null,
     icon: '📰',
     source: a.author || 'GatorVault Insider',
-    href: `/vault/articles#${a.id}`,
+    href: `/articles/${a.id}`,
   }));
 
   const podcasts = (dash.podcasts?.shows || []).slice(0, 8).map((show, idx) => ({

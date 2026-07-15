@@ -21,10 +21,10 @@ function InsiderHero(): React.ReactElement {
   return (
     <header className="insider-hero" data-testid="insider-hero">
       <div className="insider-hero__inner">
+        <p className="rh-elite-mobile-header__eyebrow" style={{margin:0}}>GatorVault Insider</p>
         <h1 className="insider-hero-title">Insider Articles</h1>
         <p className="insider-hero-subtitle">
-          Film breakdowns, coaching intel, and roster analysis for members who want more than
-          surface-level takes. Your premium Florida Gators football newsroom inside the Vault.
+          Original Gators analysis — film, recruiting, roster, and scheme. Teaser free; full reads for members.
         </p>
         <div className="insider-hero-underline" aria-hidden />
       </div>
@@ -372,7 +372,7 @@ export function InsiderArticlesPage({
 
   if (loading) {
     return (
-      <div className="insider-page" data-testid="insider-articles-page">
+      <div className="insider-page rh-page rh-page--elite mobile-app gv-page" data-testid="insider-articles-page">
         <div className="insider-page__frame">
           <p className="insider-status">Loading Insider articles…</p>
         </div>
@@ -382,7 +382,7 @@ export function InsiderArticlesPage({
 
   if (error) {
     return (
-      <div className="insider-page" data-testid="insider-articles-page">
+      <div className="insider-page rh-page rh-page--elite mobile-app gv-page" data-testid="insider-articles-page">
         <div className="insider-page__frame">
           <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
         </div>
@@ -391,7 +391,7 @@ export function InsiderArticlesPage({
   }
 
   return (
-    <div className="insider-page" data-testid="insider-articles-page">
+    <div className="insider-page rh-page rh-page--elite mobile-app gv-page" data-testid="insider-articles-page">
       <div className="insider-page__frame">
         <InsiderHero />
 

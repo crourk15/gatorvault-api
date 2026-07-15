@@ -50,6 +50,41 @@ function mapStoryline(s: PublishedStoryline): InsiderStoryline {
   };
 }
 
+
+function deriveAuthorsFromArticles(articles: InsiderArticle[]): InsiderAuthor[] {
+  const counts = new Map<string, number>();
+  for (const a of articles) {
+    const name = (a.author || "GatorVault Staff").trim();
+    counts.set(name, (counts.get(name) || 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8)
+    .map(([name, articleCount], i) => ({
+      id: `author-${i}-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+      name,
+      role: "GatorVault Insider",
+      articleCount,
+    }));
+}
+
+function deriveTagsFromArticles(articles: InsiderArticle[]): InsiderTag[] {
+  const counts = new Map<string, number>();
+  for (const a of articles) {
+    const label = (a.category || "").trim();
+    if (!label || label === "All") continue;
+    counts.set(label, (counts.get(label) || 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 12)
+    .map(([label, n], i) => ({
+      id: `tag-${i}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+      label,
+      hot: n >= 2 || i < 3,
+    }));
+}
+
 async function tryInsiderFetch<T>(path: string): Promise<T | null> {
   try {
     return await apiFetch<T>(path);

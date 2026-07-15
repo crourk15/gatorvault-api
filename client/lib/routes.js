@@ -93,7 +93,7 @@ const LEGACY_VAULT_TAB_REDIRECTS = {
 /** @type {RedirectRule[]} */
 const ADMIN_AND_LEGACY_HTML = [
   { from: '/highlight/*', to: '/highlight.html', status: 200 },
-  { from: '/article/*', to: '/article.html', status: 200 },
+  { from: '/article/*', to: '/articles/:splat', status: 301 },
   { from: '/admin', to: '/admin.html', status: 200 },
   { from: '/admin/hub', to: '/admin.html', status: 200 },
   { from: '/admin/hub/*', to: '/admin.html', status: 200 },
