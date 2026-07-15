@@ -18,6 +18,81 @@ function expandParagraphs(base, extras) {
   return [...base, ...(extras || [])].filter(Boolean);
 }
 
+function plainText(text) {
+  return String(text || '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function formatTargetNames(targets, { html } = { html: false }) {
+  return (targets || [])
+    .slice(0, 3)
+    .map((p) => {
+      const name = String(p.name || '').trim();
+      const pos = String(p.pos || '').trim();
+      if (!name) return '';
+      if (html) return `<strong>${esc(name)}</strong>${pos ? ` (${esc(pos)})` : ''}`;
+      return pos ? `${name} (${pos})` : name;
+    })
+    .filter(Boolean)
+    .join(', ');
+}
+
+function buildPunchyAngles({ portal, board, intel, scheme, heatCount }) {
+  const htmlNames = formatTargetNames(board.topTargets, { html: true });
+  const plainNames = formatTargetNames(board.topTargets, { html: false });
+  const bodyAngles = [];
+  const takeaways = [];
+
+  if (portal.incomingCount) {
+    const t = `Portal math: ${portal.incomingCount} incoming transfers already reshaped which high school battles are must-close vs wait-and-see.`;
+    bodyAngles.push(t);
+    takeaways.push(t);
+  }
+  if (board.topTargets?.length) {
+    const tHtml = `Board focus: ${board.targetCount || board.topTargets.length} live ${board.classYear || ''} targets — priority names: ${htmlNames}.`;
+    const tPlain = `Board focus: ${board.targetCount || board.topTargets.length} live ${board.classYear || ''} targets — priority names: ${plainNames}.`;
+    bodyAngles.push(tHtml);
+    takeaways.push(tPlain);
+  }
+  if (intel.upcomingVisits?.length) {
+    const t = `Visit window: ${intel.upcomingVisits.length} upcoming visits can reorder closing priority before fall camp.`;
+    bodyAngles.push(t);
+    takeaways.push(t);
+  } else if (intel.recentIntel?.length) {
+    const t = `Intel desk: ${intel.recentIntel.length} verified signals in the latest window — use them to weight battles, not rumor.`;
+    bodyAngles.push(t);
+    takeaways.push(t);
+  }
+  if (heatCount) {
+    const t = `Heat check: ${heatCount} rising names on the desk; momentum can flip closing order week to week.`;
+    bodyAngles.push(t);
+    takeaways.push(t);
+  }
+  if (bodyAngles.length < 3) {
+    const t = `Scheme fit: ${scheme.dcScheme || '3-3-5 hybrid'} install puts JACK/STAR and trench depth under the brightest fall-camp spotlight.`;
+    bodyAngles.push(t);
+    takeaways.push(t);
+  }
+  while (bodyAngles.length < 3) {
+    const t = 'Fall camp rep winners — not spring pedigree — will decide the real two-deep.';
+    bodyAngles.push(t);
+    takeaways.push(t);
+  }
+  return {
+    bodyAngles: bodyAngles.slice(0, 4),
+    takeaways: takeaways.slice(0, 4).map(plainText),
+  };
+}
+
+
+
 function synthesizeRecruitingBattleFromContext({ title, angleKey, context, articleType }) {
   const season = context.season;
   const roster = context.rosterContext || {};
@@ -26,77 +101,65 @@ function synthesizeRecruitingBattleFromContext({ title, angleKey, context, artic
   const analytics = context.analyticsContext || {};
   const scheme = context.schemeContext || {};
   const intel = context.intelContext || {};
-  const topNames = (board.topTargets || [])
-    .slice(0, 3)
-    .map((p) => `<strong>${esc(p.name)}</strong> (${esc(p.pos || '')})`)
-    .join(', ');
+  const htmlNames = formatTargetNames(board.topTargets, { html: true });
+  const plainNames = formatTargetNames(board.topTargets, { html: false });
+  const { bodyAngles, takeaways } = buildPunchyAngles({
+    portal,
+    board,
+    intel,
+    scheme,
+    heatCount: context.heatCheck?.length || 0,
+  });
 
-  const thesis = [
-    `${title} — Recruiting intel for Florida ${season}.`,
-    `Thesis: Florida's closing window on ${board.targetCount || 'priority'} live ${board.classYear || '2027'} targets will define the ${season} roster ceiling.`,
-    topNames ? `Priority battles: ${topNames}.` : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  const angleParas = [];
-  if (portal.incomingCount) {
-    angleParas.push(
-      `Portal tracker: ${portal.incomingCount} incoming transfers shape which high school targets remain must-close battles.`,
-      `Portal-filled rooms reduce urgency at some positions while opening new closing lanes at thin spots.`
-    );
-  }
-  if (board.topTargets?.length) {
-    angleParas.push(
-      `Board focus: ${board.targetCount} active targets with verified RPM or intel on ${topNames || 'tier-one names'}.`,
-      `Battle cards below use live competitor splits, visit signals, and staff notes — not placeholder copy.`
-    );
-  }
-  if (intel.recentIntel?.length) {
-    angleParas.push(`Recent intel: ${intel.recentIntel.length} verified signals feed the battle cards in this piece.`);
-  }
-  if (context.heatCheck?.length) {
-    angleParas.push(
-      `Heat check: ${context.heatCheck.length} rising names on the desk — momentum shifts can reorder closing order quickly.`
-    );
-  }
+  const lede = htmlNames
+    ? `Florida's ${board.classYear || '2027'} board still turns on a short list — ${htmlNames} — and the closing window is already compressing.`
+    : `Florida's ${board.classYear || '2027'} closing window will define the ${season} roster ceiling more than any single spring evaluation.`;
+  const stakes = `Thesis: win the tier-one battles with real visit/RPM edges, or watch portal math force UF into reactive board decisions by August.`;
 
   const body = [
-    section('Thesis', [thesis]),
-    section('Insider Angles', angleParas.slice(0, 5)),
+    section('Thesis', [lede, stakes]),
+    section('Insider Angles', bodyAngles),
     section('Scheme Implications', [
-      `Florida's ${scheme.dcScheme || '3-3-5 hybrid'} install sets which positions are stress-tested in fall camp.`,
-      topNames
-        ? `Closing ${topNames} changes how Brad White deploys hybrid defenders and how the offense protects a rebuilt OL.`
-        : `Personnel fit at JACK, STAR, and WR drives how quickly portal additions mesh in August reps.`,
+      `The ${scheme.dcScheme || '3-3-5 hybrid'} install tells you which positions are actually stress-tested in camp — JACK, STAR, and trench depth first.`,
+      htmlNames
+        ? `Closing ${htmlNames} changes how Florida deploys hybrid defenders and how the offense protects a rebuilt OL.`
+        : `Personnel fit at JACK, STAR, and WR decides how quickly portal pieces can play winning snaps in September.`,
     ]),
     section('Roster Impact', [
       `${roster.unitSnapshot?.total || 0} scholarship names tracked (${roster.offenseCount || 0} offense / ${roster.defenseCount || 0} defense).`,
       portal.incomingCount
-        ? `${portal.incomingCount} portal additions reset snap expectations before fall camp.`
-        : `Portal math and returning production set the baseline two-deep before camp battles begin.`,
+        ? `${portal.incomingCount} portal additions already reset snap expectations — high school closes only matter where rooms are still thin.`
+        : `Returning production sets the floor; camp battles decide who actually travels.`,
     ]),
     section('Recruiting and Portal Impact', [
       `${board.ufCommitCount || 0} UF commits with ${board.targetCount || 0} live targets on the board.`,
-      portal.incomingCount
-        ? `Portal count: ${portal.incomingCount} incoming transfers — roster holes define which battles are must-win closes.`
-        : `Board movement without intel is noise; Battle cards require verified RPM, competitors, or visit signals.`,
+      `Battle cards in this piece lean on competitor splits, visit signals, and staff notes — board movement without intel is noise.`,
     ]),
     section('Analytics and Data', [
       analytics.nextGame
         ? `Next opponent ${esc(analytics.nextGame.opponent || 'TBD')}${analytics.nextGame.ufPct != null ? ` — model win probability ${analytics.nextGame.ufPct}%` : ''}.`
-        : `Schedule strength and returning production feed baseline win models before roster adjustments.`,
-      `Heat check: ${context.heatCheck?.length || 0} rising prospects flagged this cycle.`,
+        : `Schedule strength and returning production set the baseline before roster adjustments.`,
     ]),
     section("What's Next", [
-      `Watch which priority targets log official visits before fall camp — visit windows reorder closing priority.`,
-      `Florida ${season} ceiling depends on closing tier-one battles with real RPM edges, not generic board chatter.`,
+      plainNames
+        ? `Watch visit logs on ${plainNames} before fall camp — those weekends reorder closing priority.`
+        : `Watch which priority targets log official visits before fall camp — those weekends reorder closing priority.`,
+      `Florida ${season} ceiling: close the board with verified edges, then let camp reps settle the two-deep.`,
     ]),
   ]
     .filter(Boolean)
     .join('\n');
 
-  return { body, title, articleType: articleType || 'Heat Check', angleKey };
+  return {
+    body,
+    title,
+    articleType: articleType || 'Heat Check',
+    angleKey,
+    thesis: plainText(`${lede} ${stakes}`),
+    summary: plainText(`${lede} ${stakes}`).slice(0, 220),
+    insiderAngles: takeaways,
+    sourcesUsed: [],
+  };
 }
 
 function synthesizeEliteFromContext({ articleType, title, angleKey, context }) {
@@ -111,127 +174,83 @@ function synthesizeEliteFromContext({ articleType, title, angleKey, context }) {
   const analytics = context.analyticsContext || {};
   const scheme = context.schemeContext || {};
   const intel = context.intelContext || {};
+  const htmlNames = formatTargetNames(board.topTargets, { html: true });
+  const plainNames = formatTargetNames(board.topTargets, { html: false });
+  const schemeName = scheme.dcScheme || '3-3-5 hybrid';
+  const { bodyAngles, takeaways } = buildPunchyAngles({
+    portal,
+    board,
+    intel,
+    scheme,
+    heatCount: context.heatCheck?.length || 0,
+  });
 
-  const thesis = [
-    `${title} — ${articleType} analysis for Florida ${season}.`,
-    `Thesis: Florida's ${season} ceiling depends on meshing portal talent, defensive scheme install, and closing recruiting battles before fall camp.`,
-    `The stakes are SEC survival: slow installs and thin depth become exploitable matchups by mid-October.`,
-  ].join(' ');
-
-  const angleParas = [];
-  if (portal.incomingCount) {
-    angleParas.push(
-      `Portal impact: Florida added ${portal.incomingCount} incoming transfers this cycle, reshaping snap expectations before fall camp.`,
-      `Each portal addition shifts which high school targets remain priorities — filled rooms reduce urgency on the board.`
-    );
-  }
-  if (board.topTargets?.length) {
-    const names = board.topTargets.slice(0, 3).map((p) => `<strong>${esc(p.name)}</strong> (${esc(p.pos || '')})`).join(', ');
-    angleParas.push(
-      `Recruiting board: ${board.targetCount} active ${board.classYear} targets tracked. Priority names: ${names}.`,
-      `Staff allocation this month signals who UF believes it can close before the season opens.`
-    );
-  }
-  if (intel.upcomingVisits?.length) {
-    angleParas.push(
-      `Visit calendar: ${intel.upcomingVisits.length} upcoming visit events compress decision timelines for tier-one targets.`,
-      `OV and UV intel drives next staff visits — validated signals only, not social noise.`
-    );
-  }
-  if (intel.recentIntel?.length) {
-    angleParas.push(`Recent intel: ${intel.recentIntel.length} verified signals in the last window feed board movement analysis.`);
-  }
-  angleParas.push(
-    `Coaching intel: ${scheme.dcScheme || '3-3-5 hybrid'} install is the defensive identity — personnel fit at JACK and STAR decides stress-test outcomes.`,
-    `Locker room leadership after portal churn decides how quickly new pieces mesh in August reps.`,
-    `Fall camp rep reports will re-sort the two-deep faster than spring evaluations or pedigree alone.`,
-    `Narrative tension: units that fail to gel in August become season-long liabilities against SEC tempo and physicality.`,
-    `Film-driven evaluation favors rep winners over name recognition when depth chart slots are contested.`
-  );
+  // One claim up front — no "Title — Type analysis" boilerplate.
+  const claimByType = {
+    'Film Room': `Florida's ${schemeName} only travels if JACK/STAR and the trenches win August reps — pedigree on paper will not cover a late install.`,
+    Analytics: `The ${season} projection is roster math, not vibe: portal net value plus returning production decide whether Florida survives the SEC back half.`,
+    'Roster Analysis': `Depth chart truth for ${season} will come from camp winners, not spring rankings — especially in thin OL and secondary rooms.`,
+    'Program Pulse': `Florida is running roster churn, scheme install, and board closes on the same clock — miss one, and September gets expensive.`,
+  };
+  const lede =
+    claimByType[articleType] ||
+    `Florida's ${season} ceiling rises or falls on one install question: can the ${schemeName} gel before SEC weeks punish thin depth?`;
+  const stakes = plainNames
+    ? `Meanwhile the board still hinges on ${htmlNames} — close those lanes or portal math keeps forcing reactive decisions.`
+    : `Portal churn and board closes are not separate stories — filled rooms free staff to hunt remaining tier-one targets.`;
 
   const body = [
-    section('Thesis', expandParagraphs([thesis], [
-      `Florida enters ${season} with roster math, scheme install, and recruiting momentum all in motion simultaneously.`,
-      `This ${articleType} piece synthesizes GatorVault roster data, portal tracker intel, recruiting board signals, and analytics — not a surface recap.`,
-    ])),
-    section('Insider Angles', angleParas.slice(0, 5)),
-    section('Scheme Implications', expandParagraphs([
-      `Florida ${scheme.dcScheme || '3-3-5 hybrid'} asks three down linemen to eat doubles, freeing hybrid defenders to play with leverage in space.`,
-      `Offensively, packages must protect a rebuilt OL; quick-game, play-action, and tempo become necessities against SEC fronts.`,
-      `JACK and STAR roles are stress points against spread sets — personnel who can cover and rush win the install.`,
-    ], [
-      `Special teams and tempo amplify scheme edges when install is ahead of schedule; lagging install shows up as explosive plays allowed.`,
-      `Defensive coordinator tendencies favor hybrid bodies who can blitz, spy, and match slot receivers without substitution delays.`,
-      `Offensive scheme fit ties directly to QB comfort in structure — rep battles in fall camp reveal who handles pressure and checks.`,
-    ])),
-    section('Roster Impact', expandParagraphs([
-      `${roster.unitSnapshot?.total || 0} scholarship names tracked (${roster.offenseCount || 0} offense / ${roster.defenseCount || 0} defense).`,
-      roster.unitSnapshot?.top?.length
-        ? `Position distribution: ${roster.unitSnapshot.top.map(([g, n]) => `${g} (${n})`).join(', ')}.`
-        : `Unit distribution drives travel-list and rotation planning across the two-deep.`,
-      `Depth chart movement favors rep winners, not pedigree alone — portal exits created repair spots incoming names must plug quickly.`,
-    ], [
-      `Thin rooms at OL and secondary depth remain the highest-variance units entering camp.`,
-      `Portal additions must acclimate without long learning curves — SEC weeks one through four punish slow integrations.`,
-      `Leadership structure after churn determines whether new faces elevate or stall unit chemistry.`,
-    ])),
-    section('Recruiting and Portal Impact', expandParagraphs([
-      `${board.ufCommitCount || 0} UF commits with ${board.targetCount || 0} live targets on the ${board.classYear} board.`,
-      `Portal additions reshape which high school targets stay priorities — roster holes define staff visit calendars.`,
-      `Commit likelihoods shift with every OV; competing schools on the board require closing attention, not passive monitoring.`,
-    ], [
-      `On3 RPM and competitor percentages inform closing strategy — Florida path requires validated intel, not rumor.`,
-      `Board movement without intel is noise; GatorVault tracks signals that survived sanitization and identity validation.`,
-      `Recruiting momentum and portal math are linked — a closed position group frees resources for remaining tier-one battles.`,
-    ])),
-    section('Analytics and Data', expandParagraphs([
+    section('Thesis', [lede, stakes]),
+    section('Insider Angles', bodyAngles),
+    section('Scheme Implications', [
+      `The ${schemeName} asks three down linemen to eat doubles so hybrid defenders can play with leverage in space.`,
+      `JACK and STAR are the stress points against spread sets — cover-and-rush bodies win the install; substitution delays lose it.`,
+      `Offensively, protect the rebuilt OL with quick-game, play-action, and tempo until the trenches stabilize.`,
+      `Special teams and tempo only amplify that edge when the install is on schedule — lag shows up as explosives allowed, not as a December problem.`,
+    ]),
+    section('Roster Impact', [
+      `${roster.unitSnapshot?.total || 0} scholarship names tracked (${roster.offenseCount || 0} offense / ${roster.defenseCount || 0} defense)${
+        roster.unitSnapshot?.top?.length
+          ? ` — heaviest rooms: ${roster.unitSnapshot.top
+              .slice(0, 4)
+              .map(([g, n]) => `${g} (${n})`)
+              .join(', ')}`
+          : ''
+      }.`,
+      portal.incomingCount
+        ? `${portal.incomingCount} portal additions must acclimate fast — SEC weeks one through four punish slow integrations in the trenches and secondary.`
+        : `Thin rooms and travel-list battles will sort the real two-deep faster than spring paper depth. Leadership after portal churn decides whether new faces raise the room or stall it.`,
+    ]),
+    section('Recruiting and Portal Impact', [
+      `${board.ufCommitCount || 0} UF commits with ${board.targetCount || 0} live ${board.classYear || ''} targets still on the board.`,
+      htmlNames
+        ? `Staff visits and OVs on ${htmlNames} are the week-to-week tells — competitor RPM without visit proof is just noise.`
+        : `Staff visits compress into a narrow window; board movement without validated intel should be ignored.`,
+    ]),
+    section('Analytics and Data', [
       analytics.nextGame
         ? `Next opponent ${esc(analytics.nextGame.opponent || 'TBD')}${analytics.nextGame.ufPct != null ? ` — model win probability ${analytics.nextGame.ufPct}%` : ''}.`
-        : `Schedule and opponent strength feed the baseline win model before roster adjustments.`,
-      `Returning production and continuity drive projections; portal churn adjusts both floor and ceiling estimates.`,
-      `Heat check: ${context.heatCheck?.length || 0} rising prospects flagged on the recruiting desk this cycle.`,
-      `Schedule length ${analytics.scheduleLength || 0} games sets the SEC survival curve — no soft middle weeks in this league.`,
-    ], [
-      `Win probability models incorporate opponent strength, returning starters, and portal net value — not narrative hype.`,
-      `Roster math exposes where Florida is over- or under-built relative to scheme demands and schedule stress.`,
-      `Data-backed analysis separates signal from noise when evaluating camp battles and board movement.`,
-      `Trend lines on returning production and portal net value inform whether Florida is built to survive the back half of the schedule.`,
-    ])),
-    section("What's Next", expandParagraphs([
-      `Watch OL and QB rep battles in fall camp for two-deep movement — trenches decide ${season} floor.`,
-      `Recruiting closes on top-tier targets before the season opens; staff visits compress into a narrow window.`,
-      `Defensive depth behind the starting eleven remains the primary risk factor if injuries hit hybrid roles.`,
-      `Florida ${season} ceiling: mesh portal talent, stabilize trenches, close the board, and execute the ${scheme.dcScheme || '3-3-5 hybrid'} install on schedule.`,
-    ], [
-      `Forward-looking: monitor JACK/STAR rep winners, portal acclimation timelines, and visit-weekend board shifts.`,
-      `What to watch: depth chart updates after first fall scrimmage, commit announcements, and opponent scouting drops.`,
-      `Florida must win the August install window — scheme, roster, and recruiting momentum converge there.`,
-    ])),
+        : `Opponent strength and returning starters set the floor before portal net value adjusts the ceiling.`,
+      `Heat desk: ${context.heatCheck?.length || 0} rising prospects flagged this cycle — use that for closing urgency, not filler.`,
+    ]),
+    section("What's Next", [
+      `Watch JACK/STAR and OL rep winners after the first fall scrimmage — that is the install report card.`,
+      plainNames
+        ? `Watch visit-weekend movement on ${plainNames} before kickoff.`
+        : `Watch visit-weekend board shifts and commit windows before kickoff.`,
+      `If the August install slips, explosive plays allowed and thin depth will show up by mid-October — not in December.`,
+    ]),
   ].join('\n');
-
-  let finalBody = body;
-  const countWords = (html) =>
-    String(html || '')
-      .replace(/<[^>]+>/g, ' ')
-      .split(/\s+/)
-      .filter(Boolean).length;
-  if (countWords(finalBody) < 700) {
-    const pad = section("What's Next", [
-      `Florida must treat every fall camp rep as roster currency — the ${season} two-deep will not mirror spring paper depth.`,
-      `Insider read: scheme install pace, portal acclimation, and board closes define whether this ${articleType} thesis holds by kickoff.`,
-    ]);
-    finalBody = `${finalBody}\n${pad}`;
-  }
 
   return {
     articleType,
-    thesis,
+    thesis: plainText(`${lede} ${stakes}`),
     title,
-    summary: thesis.slice(0, 220),
-    body: finalBody,
-    insiderAngles: angleParas.slice(0, 5),
+    summary: plainText(`${lede} ${stakes}`).slice(0, 220),
+    body,
+    insiderAngles: takeaways,
     angleKey,
-    sourcesUsed: ['GatorVault', 'Recruiting Board', 'Portal Tracker'],
+    sourcesUsed: [],
   };
 }
 
@@ -449,18 +468,40 @@ function slugFromTitle(title) {
     .slice(0, 80);
 }
 
+
 function sourcesFromContext(context, topic) {
-  const out = [{ name: 'GatorVault Staff', outlet: 'GatorVault' }];
-  if (context?.recruitingContext?.board?.totalTracked) {
-    out.push({ name: 'Recruiting Board', outlet: 'GatorVault' });
+  const out = [];
+  const seen = new Set();
+  const push = (name, outlet, url) => {
+    const n = String(name || '').trim();
+    const o = String(outlet || '').trim();
+    if (!n && !o) return;
+    // Drop useless self-label duplicates like GatorVault · GatorVault
+    if (n.toLowerCase() === 'gatorvault' && o.toLowerCase() === 'gatorvault') return;
+    const key = `${n}|\${o}|${url || ''}`.toLowerCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    out.push({ name: n || o, outlet: o && o.toLowerCase() !== n.toLowerCase() ? o : o || 'Public reporting', url: url || null });
+  };
+
+  for (const s of topic?.sources || []) {
+    push(s.name || s.reporter, s.outlet || s.source || 'Beat report', s.url || s.href);
+  }
+  for (const row of context?.intelContext?.recentIntel || []) {
+    if (row?.sourceHandle || row?.outlet) {
+      push(row.sourceHandle || row.reporter || 'Beat', row.outlet || 'Public beat', row.url);
+    }
+  }
+  if (context?.recruitingContext?.board?.totalTracked || context?.recruitingContext?.board?.targetCount) {
+    push('UF recruiting board', 'GatorVault tracker');
   }
   if (context?.portalContext?.incomingCount) {
-    out.push({ name: 'Portal Tracker', outlet: 'GatorVault' });
+    push('Portal tracker', 'GatorVault tracker');
   }
-  for (const s of topic?.sources || []) {
-    if (s?.name && s?.outlet) out.push(s);
+  if (!out.length) {
+    push('GatorVault Staff', 'Internal roster & board data');
   }
-  return out;
+  return out.slice(0, 8);
 }
 
 async function produceDraftPayload({ articleType, title, angleKey, context, topic }) {
@@ -510,7 +551,7 @@ async function buildDraftRecord({ payload, topic, context, angleKey, articleType
     editorialHeaders: transformed.editorialHeaders,
     battles: transformed.battles || [],
     thesis: payload.thesis || '',
-    insiderAngles: payload.insiderAngles || [],
+    insiderAngles: (payload.insiderAngles || []).map((a) => plainText(a)).filter(Boolean),
     readTimeMinutes: Math.max(5, Math.ceil(words / 200)),
     sources: sourcesFromContext(context, topic),
     topicKey: topic.topicKey,

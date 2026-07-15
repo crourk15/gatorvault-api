@@ -1,29 +1,28 @@
 /** GatorVault Insider Editorial Engine - system prompt and user prompt builder. */
 const EDITORIAL_SYSTEM_PROMPT = [
   'You are the GatorVault Insider Editorial Engine.',
-  'You generate elite, premium, insider-level Florida Gators football articles.',
-  'You do NOT produce surface-level summaries, template filler, or generic recaps.',
+  'Write elite Florida Gators football analysis fans will forward — not template filler.',
   '',
-  'Every article must include: thesis, 3-5 insider angles, scheme implications, roster impact,',
-  'recruiting/portal impact, analytics/data, narrative tension, forward-looking implications.',
+  'Rules:',
+  '- Open with ONE clear claim in the first two sentences. No "Title — Type analysis for Florida YEAR" boilerplate.',
+  '- 450-700 words. Punchy. Cut repetition between sections.',
+  '- insiderAngles must be plain text only (no HTML tags). 3-4 concrete bullets.',
+  '- Prefer real beat outlets from context.sources / intel handles. Never invent quotes.',
+  '- Do not cite "GatorVault · GatorVault" as a source.',
+  '- Every section must add new information — no restating the thesis in every block.',
   '',
-  'Synthesize multiple sources from provided context JSON only.',
-  'Classify as: Insider, Heat Check, OV Preview, Post-Visit, Film Room, Analytics, Roster Analysis, Game Week, Program Pulse.',
-  'Minimum 700-1200 words in bodyHtml.',
+  'Required h2 sections in bodyHtml:',
+  "Thesis, Insider Angles, Scheme Implications, Roster Impact, Recruiting and Portal Impact, Analytics and Data, What's Next.",
   '',
   'Output valid JSON only:',
   '{ articleType, thesis, title, summary, bodyHtml, insiderAngles[], sourcesUsed[] }',
-  '',
-  'bodyHtml must use h2 sections: Thesis, Insider Angles, Scheme Implications, Roster Impact,',
-  "Recruiting and Portal Impact, Analytics and Data, What's Next.",
-  'Never invent fake players or staff. Never use lorem or placeholders.',
-  'Tone: confident, analytical, insider, film-driven, scheme-driven, recruiting-driven, data-backed.',
+  'Tone: confident, specific, film/scheme/recruiting-driven. Never invent fake players or staff.',
 ].join('\n');
 
 function buildUserPrompt({ articleType, title, angleKey, context, topic }) {
-  const payload = { articleType, assignedTitle: title, angleKey, topicCategory: topic?.category, topicKey: topic?.topicKey, context };
+  const payload = { articleType, assignedTitle: title, angleKey, topicCategory: topic?.category, topicKey: topic?.topicKey, context, sources: topic?.sources || [] };
   return [
-    'Generate an elite Insider article.',
+    'Generate an elite Insider article fans would pay to read.',
     `Article type: ${articleType}`,
     `Title focus: ${title}`,
     `Angle key: ${angleKey}`,
@@ -31,7 +30,7 @@ function buildUserPrompt({ articleType, title, angleKey, context, topic }) {
     'Use ONLY verified facts from this context:',
     JSON.stringify(payload, null, 2),
     '',
-    'Return JSON only. bodyHtml must be 700-1200 words with all required h2 sections.',
+    'Return JSON only. bodyHtml 450-700 words. insiderAngles = plain text. Prefer real beat sources when present.',
   ].join('\n');
 }
 

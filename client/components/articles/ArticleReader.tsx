@@ -20,6 +20,16 @@ type Props = {
   articleId: string;
 };
 
+function stripTakeaway(text: string): string {
+  return String(text || '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function sourceLabel(s: ArticleSource): string {
   const who = s.reporter || s.name || '';
   const outlet = s.outlet || s.label || '';
@@ -202,7 +212,7 @@ export function ArticleReader({ articleId }: Props): React.ReactElement {
                     <p className="gv-article-page__panel-label">Key takeaways</p>
                     <ul className="gv-article-takeaways">
                       {article.takeaways.map((item) => (
-                        <li key={item}>{item}</li>
+                        <li key={stripTakeaway(item)}>{stripTakeaway(item)}</li>
                       ))}
                     </ul>
                   </div>

@@ -4,9 +4,9 @@
 const cycle = require('./insider-articles-cycle');
 const sanitize = require('./insider-articles-sanitize');
 
-const MIN_WORDS = 700;
-const TARGET_WORDS = 900;
-const MAX_WORDS = 1200;
+const MIN_WORDS = 320;
+const TARGET_WORDS = 420;
+const MAX_WORDS = 700;
 
 function esc(text) {
   return sanitize

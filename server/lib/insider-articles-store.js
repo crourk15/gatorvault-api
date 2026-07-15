@@ -346,6 +346,16 @@ function retirePublished(id) {
   return item;
 }
 
+function stripHtmlToPlain(text) {
+  return String(text || '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function toPublicArticle(article) {
   const meta = CATEGORIES[article.category] || CATEGORIES.program_pulse;
   const date = article.publishedAt || article.createdAt;
@@ -362,12 +372,18 @@ function toPublicArticle(article) {
     readMin: article.readTimeMinutes,
     excerpt: article.summary,
     body: article.body,
-    takeaways: (article.insiderAngles || []).slice(0, 6),
-    sources: (article.sources || []).map((s) => ({
-      reporter: s.name || s.reporter,
-      outlet: s.outlet,
-      url: s.url || null
-    })),
+    takeaways: (article.insiderAngles || []).map(stripHtmlToPlain).filter(Boolean).slice(0, 5),
+    sources: (article.sources || [])
+      .map((s) => ({
+        reporter: s.name || s.reporter,
+        outlet: s.outlet,
+        url: s.url || null
+      }))
+      .filter((s) => {
+        const r = String(s.reporter || '').toLowerCase();
+        const o = String(s.outlet || '').toLowerCase();
+        return !(r === 'gatorvault' && o === 'gatorvault');
+      }),
     category: article.category,
     categoryLabel: meta.label,
     articleType: article.articleType || null,

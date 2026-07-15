@@ -45,8 +45,8 @@ async function transformDraftForPublish({ scaffoldBody, articleType, context, si
   }
 
   const words = sanitize.wordCount(body);
-  if (words < 700) {
-    throw new Error('Draft failed quality gate: <700 words after editorial transform');
+  if (words < 320) {
+    throw new Error('Draft failed quality gate: <320 words after editorial transform');
   }
 
   return { body, editorialHeaders: headers, battles, sections, words };

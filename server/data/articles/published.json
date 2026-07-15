@@ -17,7 +17,7 @@
       "insiderAngles": [
         "Portal impact: Florida added 27 incoming transfers this cycle, reshaping snap expectations before fall camp.",
         "Each portal addition shifts which high school targets remain priorities — filled rooms reduce urgency on the board.",
-        "Recruiting board: 36 active 2027 targets tracked. Priority names: <strong>Landon Dawson</strong> (TE), <strong>Jalen Brewster</strong> (DL), <strong>Kamauri Whitfield</strong> (CB).",
+        "Recruiting board: 36 active 2027 targets tracked. Priority names: Landon Dawson (TE), Jalen Brewster (DL), Kamauri Whitfield (CB).",
         "Staff allocation this month signals who UF believes it can close before the season opens.",
         "Recent intel: 3 verified signals in the last window feed board movement analysis."
       ],
@@ -25,19 +25,18 @@
       "sources": [
         {
           "name": "GatorVault Staff",
-          "outlet": "GatorVault"
+          "outlet": "Internal roster & board data",
+          "url": null
         },
         {
           "name": "Recruiting Board",
-          "outlet": "GatorVault"
+          "outlet": "GatorVault tracker",
+          "url": null
         },
         {
           "name": "Portal Tracker",
-          "outlet": "GatorVault"
-        },
-        {
-          "name": "GatorVault Staff",
-          "outlet": "GatorVault"
+          "outlet": "GatorVault tracker",
+          "url": null
         }
       ],
       "topicKey": "staff_intel_2026",
