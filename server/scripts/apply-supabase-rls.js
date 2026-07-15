@@ -5,15 +5,15 @@
  * Usage:
  *   cd server && node scripts/apply-supabase-rls.js
  *
- * Or paste server/migrations/022_enable_rls_public_tables.sql into Supabase SQL Editor.
+ * Uses simple ALTER/REVOKE statements — Supabase transaction pooler rejects DO $$ blocks.
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
-const fs = require('fs');
-const path = require('path');
 const { Client } = require('pg');
 
-const SQL_PATH = path.join(__dirname, '..', 'migrations', '022_enable_rls_public_tables.sql');
+function qIdent(schema, table) {
+  return `${schema}."${String(table).replace(/"/g, '""')}"`;
+}
 
 async function main() {
   const { normalizePostgresUrl } = await import('../models/db.ts');
@@ -29,9 +29,31 @@ async function main() {
   });
   await client.connect();
   try {
-    const sql = fs.readFileSync(SQL_PATH, 'utf8');
-    console.log('[rls] Applying 022_enable_rls_public_tables.sql...');
-    await client.query(sql);
+    const missing = await client.query(`
+      SELECT n.nspname AS schema, c.relname AS table_name
+      FROM pg_class c
+      JOIN pg_namespace n ON n.oid = c.relnamespace
+      WHERE n.nspname IN ('public', 'futurecast')
+        AND c.relkind = 'r'
+        AND NOT c.relrowsecurity
+      ORDER BY 1, 2
+    `);
+
+    for (const row of missing.rows) {
+      await client.query(`ALTER TABLE ${qIdent(row.schema, row.table_name)} ENABLE ROW LEVEL SECURITY`);
+      console.log('[rls] enabled', `${row.schema}.${row.table_name}`);
+    }
+
+    const grants = [
+      'REVOKE ALL ON ALL TABLES IN SCHEMA public FROM anon, authenticated',
+      'REVOKE ALL ON ALL TABLES IN SCHEMA futurecast FROM anon, authenticated',
+      'GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role',
+      'GRANT USAGE ON SCHEMA futurecast TO anon, authenticated, service_role',
+    ];
+    for (const sql of grants) {
+      await client.query(sql);
+      console.log('[rls]', sql);
+    }
 
     const check = await client.query(`
       SELECT n.nspname AS schema, c.relname AS table_name, c.relrowsecurity AS rls_enabled
@@ -41,10 +63,13 @@ async function main() {
         AND c.relkind = 'r'
       ORDER BY 1, 2
     `);
-    const missing = check.rows.filter((r) => !r.rls_enabled);
+    const still = check.rows.filter((r) => !r.rls_enabled);
     console.log('[rls] Tables with RLS:', check.rows.filter((r) => r.rls_enabled).length);
-    if (missing.length) {
-      console.warn('[rls] Still without RLS:', missing.map((r) => `${r.schema}.${r.table_name}`).join(', '));
+    if (still.length) {
+      console.warn(
+        '[rls] Still without RLS:',
+        still.map((r) => `${r.schema}.${r.table_name}`).join(', ')
+      );
       process.exit(1);
     }
     console.log('[rls] Done - re-run Supabase Advisors to confirm rls_disabled_in_public is cleared.');
