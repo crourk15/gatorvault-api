@@ -99,13 +99,15 @@ export function UfProbabilityBarHero({
   label = 'Commit Likelihood — Top Targets',
 }: {
   value: number;
-  delta7d: number;
+  /** Null when 7d movement is missing or not believable — hide the trend line. */
+  delta7d: number | null;
   label?: string;
 }): React.ReactElement {
   const [animated, setAnimated] = useState(0);
   const pct = Math.max(0, Math.min(100, value));
   const tone = pct >= 67 ? 'high' : pct >= 34 ? 'mid' : 'low';
-  const trend = delta7d > 0 ? 'up' : delta7d < 0 ? 'down' : 'flat';
+  const showTrend = delta7d != null && delta7d !== 0;
+  const trend = !showTrend ? 'flat' : delta7d > 0 ? 'up' : 'down';
 
   useEffect(() => {
     const t = window.setTimeout(() => setAnimated(pct), 80);
@@ -131,14 +133,20 @@ export function UfProbabilityBarHero({
           <span className="fc-lab-meter__hint">Top targets</span>
         </div>
       </div>
-      <p className={`fc-lab-meter__trend fc-lab-meter__trend--${trend}`}>
-        Trending {delta7d > 0 ? '↑' : delta7d < 0 ? '↓' : '→'} {delta7d > 0 ? '+' : ''}
-        {delta7d}% (7d)
-      </p>
-      <div className="fc-lab-meter__spark">
-        <MovementSparkline end={pct} delta={delta7d} />
-        <span className="fc-lab-meter__spark-label">7-day UF probability</span>
-      </div>
+      {showTrend ? (
+        <>
+          <p className={`fc-lab-meter__trend fc-lab-meter__trend--${trend}`}>
+            Trending {delta7d > 0 ? '↑' : '↓'} {delta7d > 0 ? '+' : ''}
+            {delta7d}% (7d)
+          </p>
+          <div className="fc-lab-meter__spark">
+            <MovementSparkline end={pct} delta={delta7d} />
+            <span className="fc-lab-meter__spark-label">7-day UF probability</span>
+          </div>
+        </>
+      ) : (
+        <p className="fc-lab-meter__trend fc-lab-meter__trend--flat">7-day movement updating</p>
+      )}
     </div>
   );
 }

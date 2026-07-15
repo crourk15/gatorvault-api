@@ -13,6 +13,7 @@ import {
 } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
+import { closingClassUrgencyScore, isClosingClassInPlayTarget } from './competing-schools';
 import { FutureCastBattlesPanel } from './FutureCastBattlesPanel';
 
 type Props = {
@@ -48,9 +49,10 @@ export function FutureCastTargetsPanel({
     }
     return [...masterBoard.players]
       .filter((p) => isActiveUfTarget(p))
-      .sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1))
-      .slice(0, 10)
-      .map(futureCastPlayerToLabTarget);
+      .map(futureCastPlayerToLabTarget)
+      .filter(isClosingClassInPlayTarget)
+      .sort((a, b) => closingClassUrgencyScore(b) - closingClassUrgencyScore(a))
+      .slice(0, 10);
   }, [discoveryFocus, highPriority, masterBoard.players, focusYear]);
 
   const showMovement = useMemo(() => movementDeltasAreBelievable(rows), [rows]);
@@ -58,7 +60,7 @@ export function FutureCastTargetsPanel({
   const title = discoveryFocus ? `${focusYear} UF Targets` : 'Top UF Targets';
   const sub = discoveryFocus
     ? "Florida's priority board — odds, fit, and who's still in play."
-    : 'Closing-class board — Florida odds, movement, and competing schools.';
+    : 'In-play closing fights — Florida odds, rival threats, and movement.';
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-targets">

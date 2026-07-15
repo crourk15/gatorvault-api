@@ -127,3 +127,27 @@ export function topThreatVsFlorida(
   const label = shortSchoolLabel(String(top.name).trim());
   return { name: String(top.name).trim(), label, pct };
 }
+
+/**
+ * Closing-class shortlist: UF still in play.
+ * Drops longshots where a rival owns the market (e.g. 3% UF / 90% Georgia).
+ */
+export function isClosingClassInPlayTarget(player: FcLabTarget): boolean {
+  if (player.ufProbability == null) return false;
+  const uf = ufPctFromFc(player.ufProbability);
+  if (uf < 15) return false;
+  const threat = topThreatVsFlorida(player);
+  if (threat && uf < 25 && threat.pct >= uf + 40) return false;
+  if (threat && uf < 20 && threat.pct >= 70) return false;
+  return true;
+}
+
+/** Rank closing targets by UF urgency, then how close the top rival is. */
+export function closingClassUrgencyScore(player: FcLabTarget): number {
+  const uf = ufPctFromFc(player.ufProbability);
+  const threat = topThreatVsFlorida(player);
+  const rivalGap = threat ? Math.max(0, threat.pct - uf) : 0;
+  // Contested mid-board fights slightly ahead of locked UF leans with the same UF%.
+  const battleBonus = uf >= 34 && uf < 67 ? 8 : 0;
+  return uf * 1.2 + battleBonus - rivalGap * 0.15;
+}

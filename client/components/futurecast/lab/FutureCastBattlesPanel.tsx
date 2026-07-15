@@ -12,7 +12,7 @@ import {
   ufPctFromFc,
 } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
-import { topThreatVsFlorida } from './competing-schools';
+import { closingClassUrgencyScore, isClosingClassInPlayTarget, topThreatVsFlorida } from './competing-schools';
 import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
 
 type Tab = 'battles' | 'lean-uf' | 'lean-elsewhere';
@@ -95,7 +95,7 @@ export function FutureCastBattlesPanel({
   bare,
   compact = true,
 }: Props): React.ReactElement {
-  const [tab, setTab] = useState<Tab>('battles');
+  const [tabOverride, setTabOverride] = useState<Tab | null>(null);
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const focusYear = discoveryFocus ? 2028 : 2027;
 
@@ -123,21 +123,39 @@ export function FutureCastBattlesPanel({
     if (discoveryFocus && highPriority.length) {
       for (const p of highPriority) {
         if (!isActiveUfTarget(p)) continue;
+        if (Number(p.classYear) !== focusYear) continue;
         const lab = highPriorityToLabTarget(p);
+        if (lab.ufProbability == null) continue;
         result[classifyTab(ufPctFromFc(lab.ufProbability))].push(lab);
       }
     } else {
       for (const p of pool) {
+        if (!isActiveUfTarget(p)) continue;
         const lab = futureCastPlayerToLabTarget(p);
+        if (lab.ufProbability == null) continue;
+        // Closing class: only show in-play UF fights in Battles/Lean UF;
+        // lean-elsewhere keeps real longshots that still have known odds.
+        if (!isClosingClassInPlayTarget(lab) && classifyTab(ufPctFromFc(lab.ufProbability)) !== 'lean-elsewhere') {
+          continue;
+        }
         result[classifyTab(ufPctFromFc(lab.ufProbability))].push(lab);
       }
     }
     for (const key of Object.keys(result) as Tab[]) {
-      result[key].sort((a, b) => ufPctFromFc(b.ufProbability) - ufPctFromFc(a.ufProbability));
+      result[key].sort((a, b) => closingClassUrgencyScore(b) - closingClassUrgencyScore(a));
     }
     return result;
-  }, [discoveryFocus, highPriority, pool]);
+  }, [discoveryFocus, highPriority, pool, focusYear]);
 
+  // Prefer opening on a non-empty bucket so fans don't land on a blank Battles tab.
+  const preferredTab = useMemo((): Tab => {
+    if (buckets.battles.length) return 'battles';
+    if (buckets['lean-uf'].length) return 'lean-uf';
+    if (buckets['lean-elsewhere'].length) return 'lean-elsewhere';
+    return 'battles';
+  }, [buckets]);
+
+  const tab = tabOverride ?? preferredTab;
   const rows = buckets[tab].slice(0, 8);
   const showMovement = useMemo(
     () => movementDeltasAreBelievable(Object.values(buckets).flat()),
@@ -175,7 +193,7 @@ export function FutureCastBattlesPanel({
             role="tab"
             aria-selected={tab === id}
             className={`rh-cc-tabs__btn${tab === id ? ' is-active' : ''}`}
-            onClick={() => setTab(id)}
+            onClick={() => setTabOverride(id)}
           >
             {TAB_META[id].icon} {TAB_META[id].label} ({buckets[id].length})
           </button>
@@ -184,9 +202,7 @@ export function FutureCastBattlesPanel({
       <div className={`fc-lab-battle-list${compact ? ' fc-lab-battle-list--compact' : ''}`} role="tabpanel">
         {rows.length === 0 ? (
           <p className="rh-cc-empty">
-            {discoveryFocus
-              ? `No ${focusYear} targets in this bucket yet.`
-              : 'No targets in this bucket yet.'}
+            No {TAB_META[tab].label.toLowerCase()} targets on the board yet.
           </p>
         ) : (
           rows.map((p) => (

@@ -13,8 +13,10 @@ import { UfProbabilityBarHero } from './primitives';
 import {
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
+  movementDeltasAreBelievable,
   ufPctFromFc,
 } from './fc-lab-types';
+import { closingClassUrgencyScore, isClosingClassInPlayTarget } from './competing-schools';
 import { FutureCastLabCycleToggle } from './FutureCastLabCycleToggle';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import { playerProfileRoute } from '@/lib/vault-route-map';
@@ -48,11 +50,12 @@ export function FutureCastHero({
         .slice(0, 10)
         .map(highPriorityToLabTarget);
     }
-    return [...masterBoard.players]
+    const mapped = [...masterBoard.players]
       .filter((p) => isActiveUfTarget(p))
-      .sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1))
-      .slice(0, 10)
-      .map(futureCastPlayerToLabTarget);
+      .map(futureCastPlayerToLabTarget)
+      .filter(isClosingClassInPlayTarget)
+      .sort((a, b) => closingClassUrgencyScore(b) - closingClassUrgencyScore(a));
+    return mapped.slice(0, 10);
   }, [discoveryFocus, highPriority, masterBoard.players, focusYear]);
 
   const top10Avg = useMemo(() => {
@@ -64,18 +67,28 @@ export function FutureCastHero({
     return Math.round(top10.reduce((acc, p) => acc + ufPctFromFc(p.ufProbability), 0) / top10.length);
   }, [top10, discoveryFocus, metrics.avgUFProbability, masterBoard.ufConfidenceAverage]);
 
-  const avgDelta = useMemo(() => {
-    if (!top10.length) return 0;
-    return Math.round(top10.reduce((acc, p) => acc + (p.delta7d ?? 0), 0) / top10.length);
+  const avgDelta = useMemo((): number | null => {
+    if (!top10.length) return null;
+    if (!movementDeltasAreBelievable(top10)) return null;
+    const withDelta = top10.filter((p) => p.delta7d != null && Number(p.delta7d) !== 0);
+    if (!withDelta.length) return null;
+    return Math.round(withDelta.reduce((acc, p) => acc + (p.delta7d ?? 0), 0) / withDelta.length);
   }, [top10]);
 
-  /** One lead signal — elite scheme fit if present, else #1 priority. */
+  /** One lead signal — highest UF urgency, prefer elite scheme fit when close. */
   const lead = useMemo(() => {
     if (!top10.length) return null;
+    const topUf = top10[0];
     const elite = [...top10]
       .filter((p) => (p.fitScore ?? 0) >= 80)
       .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0))[0];
-    return elite ?? top10[0];
+    if (
+      elite &&
+      ufPctFromFc(elite.ufProbability) >= ufPctFromFc(topUf.ufProbability) - 15
+    ) {
+      return elite;
+    }
+    return topUf;
   }, [top10]);
 
   const updatedLabel = lastUpdated ? formatRelativeUpdated(lastUpdated) : 'just now';

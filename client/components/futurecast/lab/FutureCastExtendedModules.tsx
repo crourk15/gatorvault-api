@@ -65,15 +65,24 @@ function MovementNarrativeLine({ text }: { text: string | null | undefined }): R
   return <p className="fc-lab-movement-narrative">{text}</p>;
 }
 
-function FitBar({ label, value }: { label: string; value: number }): React.ReactElement {
-  const pct = Math.max(0, Math.min(100, Math.round(value)));
+function FitBar({
+  label,
+  value,
+  emptyLabel = '—',
+}: {
+  label: string;
+  value: number | null | undefined;
+  emptyLabel?: string;
+}): React.ReactElement {
+  const hasValue = value != null && Number(value) > 0;
+  const pct = hasValue ? Math.max(0, Math.min(100, Math.round(Number(value)))) : 0;
   return (
     <div className="fc-lab-fit-row">
       <span className="fc-lab-fit-row__label">{label}</span>
       <div className="fc-lab-fit-row__track">
         <div className="fc-lab-fit-row__fill" style={{ width: `${pct}%` }} />
       </div>
-      <span className="fc-lab-fit-row__val">{pct}</span>
+      <span className="fc-lab-fit-row__val">{hasValue ? pct : emptyLabel}</span>
     </div>
   );
 }
@@ -220,11 +229,19 @@ export function FutureCastExtendedModules({
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const discoveryYear = discoveryFocus ? 2028 : 2027;
 
-  const fitLeaders = useMemo(() => highPriority.slice(0, 3), [highPriority]);
+  const fitLeaders = useMemo(
+    () =>
+      highPriority
+        .slice()
+        .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0) || (b.ufProbability ?? 0) - (a.ufProbability ?? 0))
+        .slice(0, 3),
+    [highPriority]
+  );
 
   const sciLeaders = useMemo(
     () =>
       highPriority
+        .filter((p) => Number(p.staffConfidence ?? 0) > 0)
         .slice()
         .sort((a, b) => (b.staffConfidence ?? 0) - (a.staffConfidence ?? 0))
         .slice(0, 6),
@@ -287,12 +304,24 @@ export function FutureCastExtendedModules({
 
   const smartAlerts = useMemo(() => {
     const raw: IntelFeedItem[] = [];
+    // Closing-class priority: movement + flip first; OV recap already has its own panel.
     for (const p of movementIntel.risers.slice(0, 4)) {
       raw.push(
         buildIntelFeedItem({
           id: `rise-${p.slug}`,
           playerName: p.name,
           headline: `${p.name} trending up (${formatTrendDelta(p.trendDelta7d)} UF)`,
+          timestamp: movementIntel.updatedAt,
+          category: 'Movement',
+        })
+      );
+    }
+    for (const row of movementNarratives.slice(0, 4)) {
+      raw.push(
+        buildIntelFeedItem({
+          id: `move-${row.slug}`,
+          playerName: row.name,
+          headline: `${row.name} — ${row.movementNarrative}`,
           timestamp: movementIntel.updatedAt,
           category: 'Movement',
         })
@@ -332,31 +361,6 @@ export function FutureCastExtendedModules({
         })
       );
     }
-    for (const row of visitRecap.slice(0, 3)) {
-      raw.push(
-        buildIntelFeedItem({
-          id: `recap-${row.slug}-${row.visitStart}`,
-          playerName: row.name,
-          headline: row.movementNarrative
-            ? `${row.name} — ${row.movementNarrative}`
-            : `${row.name} — verified UF OV completed (${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''})`,
-          timestamp: row.visitEnd ?? row.visitStart,
-          category: 'Visit',
-          source: row.visitSourceLabel ?? undefined,
-        })
-      );
-    }
-    for (const row of movementNarratives.slice(0, 3)) {
-      raw.push(
-        buildIntelFeedItem({
-          id: `move-${row.slug}`,
-          playerName: row.name,
-          headline: `${row.name} — ${row.movementNarrative}`,
-          timestamp: movementIntel.updatedAt,
-          category: 'Movement',
-        })
-      );
-    }
     for (const p of upcomingVisitIntel.slice(0, 2)) {
       raw.push(
         buildIntelFeedItem({
@@ -369,8 +373,9 @@ export function FutureCastExtendedModules({
         })
       );
     }
-    return dedupeIntelFeedItems(raw, 8);
-  }, [movementIntel, flipWatch, visitRecap, upcomingVisitIntel, movementNarratives]);
+    // Completed OVs stay in Verified OV Recap — do not re-dump them here.
+    return dedupeIntelFeedItems(raw, 6);
+  }, [movementIntel, flipWatch, upcomingVisitIntel, movementNarratives]);
 
   return (
     <>
@@ -418,9 +423,12 @@ export function FutureCastExtendedModules({
                     <p className="fc-lab-fit-card__name">
                       {p.name} · {p.position}
                     </p>
-                    <FitBar label="Scheme / Fit" value={p.fitScore ?? 0} />
-                    <FitBar label="Staff confidence" value={p.staffConfidence ?? 0} />
-                    <FitBar label="UF likelihood" value={p.ufProbability ?? 0} />
+                    <FitBar label="Scheme / Fit" value={p.fitScore} />
+                    <FitBar
+                      label="Staff confidence"
+                      value={Number(p.staffConfidence ?? 0) > 0 ? p.staffConfidence : null}
+                    />
+                    <FitBar label="UF likelihood" value={p.ufProbability} />
                     {(p.trendHistory?.length ?? 0) >= 2 ? (
                       <UfTrendSparkline values={p.trendHistory.map((point) => point.confidence)} />
                     ) : null}
@@ -480,12 +488,12 @@ export function FutureCastExtendedModules({
             {visitRecap.length > 0 ? (
               <FutureCastPanelShell
                 title="Verified OV Recap"
-                sub="Completed official visits with On3 or beat verification."
+                sub="Recent completed official visits — On3 or beat verified."
                 testId="fc-lab-visit-recap"
               >
                 <ModuleList
                   empty="No verified completed official visits on file."
-                  items={visitRecap.slice(0, 6).map((row) => ({
+                  items={visitRecap.slice(0, 4).map((row) => ({
                     key: `recap-${row.slug}-${row.visitStart}`,
                     primary: row.name,
                     badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
