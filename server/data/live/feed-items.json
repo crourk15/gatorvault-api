@@ -988,7 +988,7 @@
     "dedupeKey": "art_insider_1782917403035_2pmphs",
     "type": "article",
     "title": "Insider: Defensive scheme install ahead of schedule",
-    "summary": "Insider: Defensive scheme install ahead of schedule — Insider analysis for Florida 2026. Thesis: Florida's 2026 ceiling depends on meshing portal talent, defensive scheme install, and closing recruiting battles before fa",
+    "summary": "Florida's 2026 floor turns on 3-3-5 install pace — JACK/STAR and the trenches — not a laundry list of portal and board stats.",
     "source_url": "/article/insider_1782917403035_2pmphs",
     "imageUrl": null,
     "source": "content",
@@ -1003,7 +1003,8 @@
     "hashWindowSec": 172800,
     "hashCreatedAt": "2026-07-04T16:09:02.657Z",
     "updatedAt": "2026-07-07T01:46:18.749Z",
-    "url": "/article/insider_1782917403035_2pmphs"
+    "url": "/article/insider_1782917403035_2pmphs",
+    "publishedAt": "2026-07-14T16:00:00.000Z"
   },
   {
     "id": "gators-breakdown_286da954-74dc-11f1-bcff-4717b945f502",
@@ -6685,7 +6686,7 @@
     "dedupeKey": "art_art-win-model",
     "type": "article",
     "title": "War Room: 2026 Schedule Win Probability Model",
-    "summary": "Our proprietary model simulates every game 10,000 times using roster data, returning production, and opponent strength. Here's where UF wins, where it's vulnerable, and the two games that decide the season.",
+    "summary": "Rebuilt against the real 2026 slate (no LSU): expected wins ~7.6, with Auburn/Ole Miss/Oklahoma/FSU/Missouri as the true toss-up cluster.",
     "url": "/article/art-win-model",
     "imageUrl": null,
     "source": "content",
@@ -6700,7 +6701,8 @@
     "hash": "18869b12409f4520a0b742d75628958c51894835873b656b3ee45c6740ba58a6",
     "hashNormalizedPreview": "war room: 2026 schedule win probability model our proprietary model simulates every game 10,000 times using roster data,",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-07-04T16:09:03.817Z"
+    "hashCreatedAt": "2026-07-04T16:09:03.817Z",
+    "publishedAt": "2026-07-14T15:30:00.000Z"
   },
   {
     "id": "commit:kennedee-jackson|florida|2026-06-02",
@@ -6795,7 +6797,8 @@
     "hash": "ad0330600a4d15d78b51372a6968ae9ef7adb3819f36d3976c2e07569f81d4cf",
     "hashNormalizedPreview": "{{ coach.hc }}'s first 6 months: a real assessment six months in, {{ coach.hc }} has rebuilt the roster through the port",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-07-04T16:09:04.181Z"
+    "hashCreatedAt": "2026-07-04T16:09:04.181Z",
+    "publishedAt": "2026-07-14T15:00:00.000Z"
   },
   {
     "id": "commit:jabios-smith|florida|2026-05-29",
