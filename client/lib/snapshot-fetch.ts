@@ -10,6 +10,7 @@ import {
 } from './api-fetch';
 import { LIVE_DATA_ONLY } from './data-mode';
 import { snapshotPathForApi } from './snapshot-paths';
+import { cacheFirstApiFetch } from './stale-while-revalidate';
 
 function snapshotPayloadUsable(body: unknown): boolean {
   if (body == null || typeof body !== 'object') return false;
@@ -31,14 +32,18 @@ export async function fetchSnapshotJson<T>(snapPath: string): Promise<T> {
   return body;
 }
 
-/** Live API fetch; snapshot CDN path used only when LIVE_DATA_ONLY is false. */
+/**
+ * Live API fetch with browser stale-while-revalidate.
+ * First visit awaits live; revisits paint last-good JSON instantly and refresh in background.
+ * CDN hub-snapshot path used only when LIVE_DATA_ONLY is false.
+ */
 export function snapshotFirstFetch<T>(
   apiPath: string,
   liveFetch: () => Promise<T>,
   _init?: ApiFetchInit
 ): Promise<T> {
   if (LIVE_DATA_ONLY) {
-    return liveFetch();
+    return cacheFirstApiFetch(apiPath, liveFetch);
   }
   const snapPath = snapshotPathForApi(apiPath);
   if (snapPath) {
@@ -47,9 +52,9 @@ export function snapshotFirstFetch<T>(
         void liveFetch().catch(() => {});
         return snapshot;
       })
-      .catch(() => liveFetch());
+      .catch(() => cacheFirstApiFetch(apiPath, liveFetch));
   }
-  return liveFetch();
+  return cacheFirstApiFetch(apiPath, liveFetch);
 }
 
 /** Live API via apiFetch. */

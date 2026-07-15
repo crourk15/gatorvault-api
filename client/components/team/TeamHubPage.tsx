@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchTeamHubBundle, type TeamHubBundle } from '@/lib/team-hub-api';
+import { fetchTeamHubBundle, readCachedTeamHubBundle, type TeamHubBundle } from '@/lib/team-hub-api';
 import { fetchRecruitingBoard } from '@/lib/recruiting-board-api';
 import { fetchFutureCastMasterBoard } from '@/lib/futurecast-board-api';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
@@ -48,9 +48,10 @@ function tabFromHash(): TeamPremiumTabId {
 }
 
 export function TeamHubPage(): React.ReactElement {
-  const [bundle, setBundle] = useState<TeamHubBundle>(EMPTY_BUNDLE);
-  const [loading, setLoading] = useState(true);
-  const [warming, setWarming] = useState(true);
+  const cachedHub = typeof window !== 'undefined' ? readCachedTeamHubBundle() : null;
+  const [bundle, setBundle] = useState<TeamHubBundle>(cachedHub ?? EMPTY_BUNDLE);
+  const [loading, setLoading] = useState(!cachedHub);
+  const [warming, setWarming] = useState(!cachedHub);
   const [pipelineLoading, setPipelineLoading] = useState(true);
   const [rosterFilter, setRosterFilter] = useState<RosterFilter>('All');
   const [dcTab, setDcTab] = useState<DepthChartTab>('offense');
@@ -69,14 +70,17 @@ export function TeamHubPage(): React.ReactElement {
 
   const load = useCallback(
     async (isInitial: boolean) => {
-      if (isInitial) {
+      const hadCache = isInitial && readCachedTeamHubBundle() != null;
+      if (isInitial && !hadCache) {
         setLoading(true);
         setWarming(true);
+        setPipelineLoading(true);
+      } else if (isInitial) {
         setPipelineLoading(true);
       }
       try {
         const [hub, board, fcBoard] = await Promise.all([
-          fetchTeamHubBundle(),
+          fetchTeamHubBundle({ onFresh: setBundle }),
           fetchRecruitingBoard(pipelineClassYear).catch(() => null),
           fetchFutureCastMasterBoard().catch(() => null),
         ]);

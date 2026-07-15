@@ -12,6 +12,7 @@ import {
 } from './team-hub-data';
 import type { Coach, DepthChart, Era, Achievement, IdentityBlock, TeamPlayer, TeamCommandStats } from './team-hub-types';
 import { computeTeamCommandStats } from '@/components/team/team-command-stats';
+import { cacheFirstFetch, readSwrCache } from './stale-while-revalidate';
 
 export type TeamHubBundle = {
   eras: Era[];
@@ -23,6 +24,21 @@ export type TeamHubBundle = {
   commandStats: TeamCommandStats;
   updatedAt: string | null;
 };
+
+const TEAM_HUB_BUNDLE_CACHE_KEY = 'gv_swr_v1:team-hub-bundle';
+
+function teamBundleUsable(data: unknown): boolean {
+  if (data == null || typeof data !== 'object') return false;
+  const bundle = data as Partial<TeamHubBundle>;
+  return Array.isArray(bundle.roster) && bundle.roster.length > 0;
+}
+
+/** Sync read for React initial state — instant Team paint on revisit. */
+export function readCachedTeamHubBundle(): TeamHubBundle | null {
+  return readSwrCache<TeamHubBundle>(TEAM_HUB_BUNDLE_CACHE_KEY, {
+    isUsable: teamBundleUsable,
+  });
+}
 
 type StaffApiCoach = {
   id: string;
@@ -138,7 +154,7 @@ function countRosterUnits(roster: TeamPlayer[]): { offense: number; defense: num
   return { offense, defense };
 }
 
-export async function fetchTeamHubBundle(): Promise<TeamHubBundle> {
+async function fetchTeamHubBundleLive(): Promise<TeamHubBundle> {
   const [rosterResult, coaches, meta] = await Promise.allSettled([
     fetchWithWarmPoll(
       () =>
@@ -170,4 +186,14 @@ export async function fetchTeamHubBundle(): Promise<TeamHubBundle> {
     commandStats,
     updatedAt: metaData?.updatedAt ?? new Date().toISOString(),
   };
+}
+
+/** Cache-first Team hub: instant roster/staff on revisit, live refresh in background. */
+export function fetchTeamHubBundle(opts?: {
+  onFresh?: (bundle: TeamHubBundle) => void;
+}): Promise<TeamHubBundle> {
+  return cacheFirstFetch(TEAM_HUB_BUNDLE_CACHE_KEY, fetchTeamHubBundleLive, {
+    isUsable: teamBundleUsable,
+    onFresh: opts?.onFresh,
+  });
 }
