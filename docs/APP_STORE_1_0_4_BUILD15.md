@@ -13,7 +13,11 @@
 2. **Articles** — in-vault reader + gating already in repo; confirm latest `client/components/articles/*` and article routes are on `main` before Codemagic. Publish Charles-approved drafts via GV-OM so content is live on API (content does not require the binary, but the reader UI does).
 3. **Team Pipeline Map (mobile)** — horizontal state bars instead of squeezed column chart. Already on `main` (`ca9fe0b`). Files: `client/components/team/premium/PipelineMap.tsx`, `client/lib/team-premium.css`. **Requires this binary** — does not OTA into the App Store shell.
 4. **Film Room YouTube Error 153** — site-hosted embed relay + catalog `embedUrl` (`2dac918`). Relay HTML/API help via Netlify/Render; client iframe wiring still ships in this binary for full native polish. Files: `client/public/youtube-embed.html`, `client/components/vault/VaultFilmRoomPage.tsx`, `server/lib/film-room-feed.js`.
-5. Anything else approved for 15 before Codemagic starts.
+5. **Game Week energy + Thursday cadence (Charles, Jul 16)** — hold while **14** is in review; implement before Codemagic for **15**:
+   - Visual: more Gator orange / blue / white throughout Game Week (dark base OK; less generic dark-lab). Opponent colors/logos only in the matchup strip.
+   - Product/ops: treat **Thursday** as the weekly refresh ritual (UF depth + injury picture usually firmer Wed+), not Tuesday. Tue/Wed = quiet prep only.
+   - Files likely: `client/lib/game-week-wow.css`, `client/components/vault/game-week/*`, any copy that implies a Tuesday drop.
+6. Anything else approved for 15 before Codemagic starts.
 
 ## What's New (paste into App Store Connect)
 
