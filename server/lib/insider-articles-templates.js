@@ -90,6 +90,17 @@ function validateDraftQuality(draft) {
     reasons.push(`fact_check_error:${err?.message || 'unknown'}`);
   }
 
+
+  // Scaffold mad-lib / scheme-dump gate — skip for hand-polished Approve drafts (facts still run above).
+  if (!handPolished) {
+    try {
+      const { detectScaffoldBoilerplate } = require('./insider-articles-elite-gate');
+      for (const r of detectScaffoldBoilerplate(draft)) reasons.push(r);
+    } catch (err) {
+      reasons.push(`elite_gate_error:${err?.message || 'unknown'}`);
+    }
+  }
+
   return {
     ok: reasons.length === 0,
     reasons,

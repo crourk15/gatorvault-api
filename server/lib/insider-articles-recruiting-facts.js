@@ -114,20 +114,53 @@ function windowAround(text, index, radius = 140) {
   return text.slice(start, end);
 }
 
-function findNameMentions(text, player) {
+function findNameMentions(text, player, { lastNameIndex } = {}) {
   const name = normalizeName(player.name);
   if (!name || name.length < 4) return [];
   const hay = text.toLowerCase();
-  const needle = name;
-  const hits = [];
-  let from = 0;
-  while (from < hay.length) {
-    const idx = hay.indexOf(needle, from);
-    if (idx < 0) break;
-    hits.push(idx);
-    from = idx + needle.length;
+  const needles = [name];
+  // Board focus lines often use last names only ("Ballard, Cobbins").
+  const parts = name.split(' ').filter(Boolean);
+  if (parts.length >= 2) {
+    const last = parts[parts.length - 1];
+    if (last.length >= 5) {
+      const owners = lastNameIndex?.get(last);
+      if (!owners || owners.length === 1) needles.push(last);
+    }
   }
-  return hits;
+  const hits = [];
+  for (const needle of needles) {
+    let from = 0;
+    while (from < hay.length) {
+      const idx = hay.indexOf(needle, from);
+      if (idx < 0) break;
+      // Avoid matching inside a longer alpha token when using last name only.
+      const before = idx === 0 ? ' ' : hay[idx - 1];
+      const after = hay[idx + needle.length] || ' ';
+      if (/[a-z]/.test(before) || /[a-z]/.test(after)) {
+        from = idx + needle.length;
+        continue;
+      }
+      hits.push(idx);
+      from = idx + needle.length;
+    }
+  }
+  return [...new Set(hits)].sort((a, b) => a - b);
+}
+
+function buildLastNameIndex(players) {
+  const map = new Map();
+  for (const p of players || []) {
+    const n = normalizeName(p?.name);
+    if (!n) continue;
+    const parts = n.split(' ').filter(Boolean);
+    if (parts.length < 2) continue;
+    const last = parts[parts.length - 1];
+    if (last.length < 5) continue;
+    if (!map.has(last)) map.set(last, []);
+    map.get(last).push(p);
+  }
+  return map;
 }
 
 /**
@@ -139,6 +172,7 @@ function validateRecruitingFactClaims(draft, playersOverride) {
   if (!players.length) return reasons;
 
   const index = buildPlayerIndex(players);
+  const lastNameIndex = buildLastNameIndex(players);
   const units = draftTextUnits(draft);
   if (!units.length) return reasons;
 
@@ -159,7 +193,7 @@ function validateRecruitingFactClaims(draft, playersOverride) {
   for (const unit of units) {
     for (const p of index.players) {
       if (!p?.name) continue;
-      const hits = findNameMentions(unit, p);
+      const hits = findNameMentions(unit, p, { lastNameIndex });
       if (!hits.length) continue;
 
       const slug = String(p.slug || slugify(p.name)).toLowerCase();

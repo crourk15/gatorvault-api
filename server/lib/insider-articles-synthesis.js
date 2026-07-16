@@ -44,29 +44,40 @@ function formatTargetNames(targets, { html } = { html: false }) {
     .join(', ');
 }
 
-function buildPunchyAngles({ portal, board, intel, scheme, heatCount }) {
+function hasEventSignals(context, topic) {
+  const visits =
+    (context?.intelContext?.upcomingVisits || []).length +
+    (context?.intelContext?.recentIntel || []).filter((r) =>
+      /visit/i.test(String(r?.eventType || r?.type || ''))
+    ).length +
+    (topic?.signals?.visits || []).length;
+  const commits = (topic?.signals?.commits || []).length;
+  const heat =
+    (context?.heatCheck || []).length + (topic?.signals?.rising || []).length;
+  const recentCommitsCtx = (context?.recruitingContext?.recentCommits || []).length;
+  return visits > 0 || commits > 0 || heat > 0 || recentCommitsCtx > 0;
+}
+
+function buildPunchyAngles({ portal, board, intel, scheme, heatCount, roster, commits }) {
   const htmlNames = formatTargetNames(board.topTargets, { html: true });
   const plainNames = formatTargetNames(board.topTargets, { html: false });
   const bodyAngles = [];
   const takeaways = [];
 
-  if (portal.incomingCount) {
-    const t = `Portal math: ${portal.incomingCount} incoming transfers already reshaped which high school battles are must-close vs wait-and-see.`;
+  if (commits?.length) {
+    const events = commits.slice(0, 3).map(formatCommitEvent).filter(Boolean);
+    const t = events.length
+      ? `Commit window: ${events.join('; ')} — class years and dates drive the heat desk, not board filler.`
+      : `Commit window: recent UF pledges reorder which rooms still need high-school closes.`;
     bodyAngles.push(t);
-    takeaways.push(t);
-  }
-  if (board.topTargets?.length) {
-    const tHtml = `Board focus: ${board.targetCount || board.topTargets.length} live ${board.classYear || ''} targets — priority names: ${htmlNames}.`;
-    const tPlain = `Board focus: ${board.targetCount || board.topTargets.length} live ${board.classYear || ''} targets — priority names: ${plainNames}.`;
-    bodyAngles.push(tHtml);
-    takeaways.push(tPlain);
+    takeaways.push(plainText(t));
   }
   if (intel.upcomingVisits?.length) {
     const t = `Visit window: ${intel.upcomingVisits.length} upcoming visits can reorder closing priority before fall camp.`;
     bodyAngles.push(t);
     takeaways.push(t);
   } else if (intel.recentIntel?.length) {
-    const t = `Intel desk: ${intel.recentIntel.length} verified signals in the latest window — use them to weight battles, not rumor.`;
+    const t = `Beat desk: ${intel.recentIntel.length} fresh signals in the latest window — weight battles with dates, not rumor.`;
     bodyAngles.push(t);
     takeaways.push(t);
   }
@@ -75,13 +86,30 @@ function buildPunchyAngles({ portal, board, intel, scheme, heatCount }) {
     bodyAngles.push(t);
     takeaways.push(t);
   }
-  if (bodyAngles.length < 3) {
-    const t = `Scheme fit: ${scheme.dcScheme || '3-3-5 hybrid'} install puts JACK/STAR and trench depth under the brightest fall-camp spotlight.`;
+  if (portal.incomingCount) {
+    const t = `Portal math: ${portal.incomingCount} incoming transfers already reshaped which high school battles are must-close vs wait-and-see.`;
+    bodyAngles.push(t);
+    takeaways.push(t);
+  }
+  if (board.topTargets?.length && bodyAngles.length < 3) {
+    const tHtml = `Board focus: ${board.targetCount || board.topTargets.length} live targets — priority names: ${htmlNames}.`;
+    const tPlain = `Board focus: ${board.targetCount || board.topTargets.length} live targets — priority names: ${plainNames}.`;
+    bodyAngles.push(tHtml);
+    takeaways.push(tPlain);
+  }
+  // Pad with roster / portal facts only — never scheme JACK/STAR filler.
+  if (bodyAngles.length < 3 && roster?.unitSnapshot?.total) {
+    const t = `Roster desk: ${roster.unitSnapshot.total} scholarship names tracked (${roster.offenseCount || 0} offense / ${roster.defenseCount || 0} defense) — camp reps decide the real two-deep.`;
+    bodyAngles.push(t);
+    takeaways.push(t);
+  }
+  if (bodyAngles.length < 3 && portal.incomingCount) {
+    const t = `Portal churn already reset snap expectations — high school closes only matter where rooms are still thin.`;
     bodyAngles.push(t);
     takeaways.push(t);
   }
   while (bodyAngles.length < 3) {
-    const t = 'Fall camp rep winners — not spring pedigree — will decide the real two-deep.';
+    const t = 'Verified visit and commit dates — not scheme essays — decide which board lanes stay open.';
     bodyAngles.push(t);
     takeaways.push(t);
   }
@@ -91,9 +119,32 @@ function buildPunchyAngles({ portal, board, intel, scheme, heatCount }) {
   };
 }
 
+function sanitizePlayer(name) {
+  return String(name || '').trim();
+}
 
+function formatCommitEvent(player) {
+  const name = sanitizePlayer(player?.name || player?.playerName);
+  if (!name) return '';
+  const d = player.commitDate || player.commit_date;
+  let dateLabel = '';
+  if (d) {
+    const dt = new Date(d);
+    if (Number.isFinite(dt.getTime())) {
+      dateLabel = dt.toLocaleString('en-US', { month: 'long', day: 'numeric' });
+    } else if (/\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}\b/i.test(String(d))) {
+      dateLabel = String(d);
+    } else if (/\b20\d{2}-\d{2}-\d{2}\b/.test(String(d))) {
+      dateLabel = String(d);
+    }
+  }
+  const yr = player.classYear ?? player.class_year;
+  const yrBit = yr != null ? ` (${yr})` : '';
+  if (dateLabel) return `${name}${yrBit} committed ${dateLabel}`;
+  return name ? `${name}${yrBit} committed` : '';
+}
 
-function synthesizeRecruitingBattleFromContext({ title, angleKey, context, articleType }) {
+function synthesizeRecruitingBattleFromContext({ title, angleKey, context, articleType, topic }) {
   const season = context.season;
   const roster = context.rosterContext || {};
   const portal = context.portalContext || {};
@@ -101,30 +152,48 @@ function synthesizeRecruitingBattleFromContext({ title, angleKey, context, artic
   const analytics = context.analyticsContext || {};
   const scheme = context.schemeContext || {};
   const intel = context.intelContext || {};
+  const commits = topic?.signals?.commits || context.recruitingContext?.recentCommits || [];
   const htmlNames = formatTargetNames(board.topTargets, { html: true });
   const plainNames = formatTargetNames(board.topTargets, { html: false });
+  const eventPlayers = (commits.length ? commits : topic?.signals?.visits || topic?.signals?.rising || [])
+    .slice(0, 3)
+    .map((p) => sanitizePlayer(p.name || p.playerName))
+    .filter(Boolean);
+  const eventHtml = eventPlayers.map((n) => `<strong>${esc(n)}</strong>`).join(', ');
   const { bodyAngles, takeaways } = buildPunchyAngles({
     portal,
     board,
     intel,
     scheme,
     heatCount: context.heatCheck?.length || 0,
+    roster,
+    commits,
   });
 
-  const lede = htmlNames
-    ? `Florida's ${board.classYear || '2027'} board still turns on a short list — ${htmlNames} — and the closing window is already compressing.`
-    : `Florida's ${board.classYear || '2027'} closing window will define the ${season} roster ceiling more than any single spring evaluation.`;
+  const lede = eventHtml
+    ? `Florida's board just moved on a named event — ${eventHtml} — and the closing window is already compressing.`
+    : htmlNames
+      ? `Florida's live board still turns on a short list — ${htmlNames} — and the closing window is already compressing.`
+      : `Florida's closing window will define the ${season} roster ceiling more than any single spring evaluation.`;
   const stakes = `Thesis: win the tier-one battles with real visit/RPM edges, or watch portal math force UF into reactive board decisions by August.`;
+
+  const schemeParas =
+    articleType === 'Staff Intel' || articleType === 'Film Room'
+      ? [
+          `Scheme note: the ${scheme.dcScheme || '3-3-5 hybrid'} install only matters where event players fill the rooms that camp will stress-test first.`,
+        ]
+      : eventHtml
+        ? [
+            `Personnel fit follows the named event — closing ${eventHtml} changes how Florida deploys hybrids and protects a rebuilt OL.`,
+          ]
+        : [
+            `Personnel fit at the stressed rooms decides how quickly portal pieces can play winning snaps in September.`,
+          ];
 
   const body = [
     section('Thesis', [lede, stakes]),
     section('Insider Angles', bodyAngles),
-    section('Scheme Implications', [
-      `The ${scheme.dcScheme || '3-3-5 hybrid'} install tells you which positions are actually stress-tested in camp — JACK, STAR, and trench depth first.`,
-      htmlNames
-        ? `Closing ${htmlNames} changes how Florida deploys hybrid defenders and how the offense protects a rebuilt OL.`
-        : `Personnel fit at JACK, STAR, and WR decides how quickly portal pieces can play winning snaps in September.`,
-    ]),
+    section('Scheme Implications', schemeParas),
     section('Roster Impact', [
       `${roster.unitSnapshot?.total || 0} scholarship names tracked (${roster.offenseCount || 0} offense / ${roster.defenseCount || 0} defense).`,
       portal.incomingCount
@@ -141,9 +210,11 @@ function synthesizeRecruitingBattleFromContext({ title, angleKey, context, artic
         : `Schedule strength and returning production set the baseline before roster adjustments.`,
     ]),
     section("What's Next", [
-      plainNames
-        ? `Watch visit logs on ${plainNames} before fall camp — those weekends reorder closing priority.`
-        : `Watch which priority targets log official visits before fall camp — those weekends reorder closing priority.`,
+      eventPlayers.length
+        ? `Watch the next visit and commit windows around ${eventPlayers.join(', ')} — those dates reorder closing priority.`
+        : plainNames
+          ? `Watch visit logs on ${plainNames} before fall camp — those weekends reorder closing priority.`
+          : `Watch which priority targets log official visits before fall camp — those weekends reorder closing priority.`,
       `Florida ${season} ceiling: close the board with verified edges, then let camp reps settle the two-deep.`,
     ]),
   ]
@@ -162,10 +233,10 @@ function synthesizeRecruitingBattleFromContext({ title, angleKey, context, artic
   };
 }
 
-function synthesizeEliteFromContext({ articleType, title, angleKey, context }) {
+function synthesizeEliteFromContext({ articleType, title, angleKey, context, topic }) {
   const { isRecruitingBattleArticleType } = require('./insider-articles-types');
   if (isRecruitingBattleArticleType(articleType)) {
-    return synthesizeRecruitingBattleFromContext({ title, angleKey, context, articleType });
+    return synthesizeRecruitingBattleFromContext({ title, angleKey, context, articleType, topic });
   }
   const season = context.season;
   const roster = context.rosterContext || {};
@@ -174,40 +245,100 @@ function synthesizeEliteFromContext({ articleType, title, angleKey, context }) {
   const analytics = context.analyticsContext || {};
   const scheme = context.schemeContext || {};
   const intel = context.intelContext || {};
+  const commits = topic?.signals?.commits || context.recruitingContext?.recentCommits || [];
   const htmlNames = formatTargetNames(board.topTargets, { html: true });
   const plainNames = formatTargetNames(board.topTargets, { html: false });
   const schemeName = scheme.dcScheme || '3-3-5 hybrid';
+  const eventOk = hasEventSignals(context, topic);
+
+  const genericTypes = new Set(['Program Pulse', 'Staff Intel', 'Film Room', 'Roster Analysis']);
+  if (genericTypes.has(articleType) && !eventOk) {
+    const stub =
+      'Insufficient event intel for an elite draft — need a concrete visit, commit date, or rising heat signal before publishing Program Pulse / Staff Intel filler.';
+    return {
+      articleType,
+      thesis: stub,
+      title,
+      summary: stub.slice(0, 220),
+      body: section('Thesis', [stub]),
+      insiderAngles: [stub, stub, stub],
+      angleKey,
+      sourcesUsed: [],
+    };
+  }
+
   const { bodyAngles, takeaways } = buildPunchyAngles({
     portal,
     board,
     intel,
     scheme,
     heatCount: context.heatCheck?.length || 0,
+    roster,
+    commits,
   });
 
-  // One claim up front — no "Title — Type analysis" boilerplate.
+  const eventPlayers = (commits.length ? commits : topic?.signals?.visits || topic?.signals?.rising || [])
+    .slice(0, 3)
+    .map((p) => sanitizePlayer(p.name || p.playerName))
+    .filter(Boolean);
+  const eventHtml = eventPlayers.map((n) => `<strong>${esc(n)}</strong>`).join(', ');
+  const commitEventLine = commits.length
+    ? commits.slice(0, 3).map(formatCommitEvent).filter(Boolean).join('; ')
+    : '';
+
   const claimByType = {
-    'Film Room': `Florida's ${schemeName} only travels if JACK/STAR and the trenches win August reps — pedigree on paper will not cover a late install.`,
+    'Film Room': eventHtml
+      ? `Film desk follows the named event — ${eventHtml} — and how those bodies change the ${schemeName} fit on Saturdays.`
+      : `Depth chart truth for ${season} will come from camp winners where the board just moved — not a recycled scheme essay.`,
     Analytics: `The ${season} projection is roster math, not vibe: portal net value plus returning production decide whether Florida survives the SEC back half.`,
     'Roster Analysis': `Depth chart truth for ${season} will come from camp winners, not spring rankings — especially in thin OL and secondary rooms.`,
-    'Program Pulse': `Florida is running roster churn, scheme install, and board closes on the same clock — miss one, and September gets expensive.`,
+    'Program Pulse': commitEventLine
+      ? `Program Pulse starts with a dated board move — ${commitEventLine} — then stacks portal math against rooms that still need closes.`
+      : eventHtml
+        ? `Program Pulse starts with a dated board move — ${eventHtml} — then stacks portal math against rooms that still need closes.`
+        : `Florida is stacking portal math with verified board dates — event intel first, scheme essays never.`,
+    'Staff Intel': eventHtml
+      ? `Staff read: the latest board event around ${eventHtml} tells you which rooms the install must protect first.`
+      : `Staff read follows visit and commit dates — not a generic JACK/STAR essay.`,
   };
   const lede =
     claimByType[articleType] ||
-    `Florida's ${season} ceiling rises or falls on one install question: can the ${schemeName} gel before SEC weeks punish thin depth?`;
+    (eventHtml
+      ? `Florida's ${season} ceiling just moved with ${eventHtml} — verified dates beat recycled scheme copy.`
+      : `Florida's ${season} ceiling rises or falls on verified board dates and portal math — not filler.`);
   const stakes = plainNames
     ? `Meanwhile the board still hinges on ${htmlNames} — close those lanes or portal math keeps forcing reactive decisions.`
     : `Portal churn and board closes are not separate stories — filled rooms free staff to hunt remaining tier-one targets.`;
 
+  const schemeParas =
+    articleType === 'Staff Intel' || articleType === 'Film Room'
+      ? [
+          `Scheme note: the ${schemeName} install only earns ink where the latest visit or commit fills a room camp will stress-test.`,
+        ]
+      : [
+          `Scheme fit follows personnel — event players and portal adds decide which rooms still need high-school closes.`,
+        ];
+
+  const heatCount = context.heatCheck?.length || 0;
+  const analyticsParas = [
+    analytics.nextGame
+      ? `Next opponent ${esc(analytics.nextGame.opponent || 'TBD')}${analytics.nextGame.ufPct != null ? ` — model win probability ${analytics.nextGame.ufPct}%` : ''}.`
+      : `Opponent strength and returning starters set the floor before portal net value adjusts the ceiling.`,
+  ];
+  if (heatCount > 0) {
+    analyticsParas.push(
+      `Heat desk: ${heatCount} rising prospects flagged this cycle — use that for closing urgency, not filler.`
+    );
+  } else if (eventPlayers.length) {
+    analyticsParas.push(
+      `Event desk: ${eventPlayers.join(', ')} supply the dated signal this piece is built around.`
+    );
+  }
+
   const body = [
     section('Thesis', [lede, stakes]),
     section('Insider Angles', bodyAngles),
-    section('Scheme Implications', [
-      `The ${schemeName} asks three down linemen to eat doubles so hybrid defenders can play with leverage in space.`,
-      `JACK and STAR are the stress points against spread sets — cover-and-rush bodies win the install; substitution delays lose it.`,
-      `Offensively, protect the rebuilt OL with quick-game, play-action, and tempo until the trenches stabilize.`,
-      `Special teams and tempo only amplify that edge when the install is on schedule — lag shows up as explosives allowed, not as a December problem.`,
-    ]),
+    section('Scheme Implications', schemeParas),
     section('Roster Impact', [
       `${roster.unitSnapshot?.total || 0} scholarship names tracked (${roster.offenseCount || 0} offense / ${roster.defenseCount || 0} defense)${
         roster.unitSnapshot?.top?.length
@@ -222,23 +353,19 @@ function synthesizeEliteFromContext({ articleType, title, angleKey, context }) {
         : `Thin rooms and travel-list battles will sort the real two-deep faster than spring paper depth. Leadership after portal churn decides whether new faces raise the room or stall it.`,
     ]),
     section('Recruiting and Portal Impact', [
-      `${board.ufCommitCount || 0} UF commits with ${board.targetCount || 0} live ${board.classYear || ''} targets still on the board.`,
+      `${board.ufCommitCount || 0} UF commits with ${board.targetCount || 0} live targets still on the board.`,
       htmlNames
         ? `Staff visits and OVs on ${htmlNames} are the week-to-week tells — competitor RPM without visit proof is just noise.`
         : `Staff visits compress into a narrow window; board movement without validated intel should be ignored.`,
     ]),
-    section('Analytics and Data', [
-      analytics.nextGame
-        ? `Next opponent ${esc(analytics.nextGame.opponent || 'TBD')}${analytics.nextGame.ufPct != null ? ` — model win probability ${analytics.nextGame.ufPct}%` : ''}.`
-        : `Opponent strength and returning starters set the floor before portal net value adjusts the ceiling.`,
-      `Heat desk: ${context.heatCheck?.length || 0} rising prospects flagged this cycle — use that for closing urgency, not filler.`,
-    ]),
+    section('Analytics and Data', analyticsParas),
     section("What's Next", [
-      `Watch JACK/STAR and OL rep winners after the first fall scrimmage — that is the install report card.`,
-      plainNames
-        ? `Watch visit-weekend movement on ${plainNames} before kickoff.`
-        : `Watch visit-weekend board shifts and commit windows before kickoff.`,
-      `If the August install slips, explosive plays allowed and thin depth will show up by mid-October — not in December.`,
+      eventPlayers.length
+        ? `Watch the next visit and commit windows around ${eventPlayers.join(', ')} before kickoff.`
+        : plainNames
+          ? `Watch visit-weekend movement on ${plainNames} before kickoff.`
+          : `Watch visit-weekend board shifts and commit windows before kickoff.`,
+      `Florida ${season} ceiling: close with verified edges, then let camp reps settle the two-deep.`,
     ]),
   ].join('\n');
 
@@ -385,8 +512,11 @@ function summarizeRecruitingBoard(recruiting) {
   );
   const commits = players.filter((p) => p.committedTo);
   const ufCommits = commits.filter((p) => /florida|gators|\bUF\b/i.test(String(p.committedTo || '')));
+  // Never hard-code RECRUITING_MIN_CLASS as the board year — targets span multiple cycles.
+  const years = [...new Set(targets.map((p) => Number(p.classYear ?? p.class_year)).filter((y) => Number.isFinite(y)))];
   return {
-    classYear: cycle.RECRUITING_MIN_CLASS,
+    classYear: years.length === 1 ? years[0] : null,
+    classYears: years,
     totalTracked: players.length,
     targetCount: targets.length,
     commitCount: commits.length,
@@ -396,6 +526,7 @@ function summarizeRecruitingBoard(recruiting) {
       name: p.name,
       pos: p.pos || p.position,
       stars: p.stars,
+      classYear: p.classYear ?? p.class_year ?? null,
       ufProbability: p.ufProbability ?? p.ufRpmPct ?? null,
     })),
   };
@@ -430,7 +561,11 @@ async function buildInsiderContext(signals, topic = null) {
       incoming: incoming.slice(0, 10),
     },
     schemeContext: { depthChart: signals?.depthChart, dcScheme: '3-3-5 hybrid' },
-    recruitingContext: { ...recruitingCtx, board: summarizeRecruitingBoard(signals?.recruiting) },
+    recruitingContext: {
+      ...recruitingCtx,
+      board: summarizeRecruitingBoard(signals?.recruiting),
+      recentCommits: (topic?.signals?.commits || []).slice(0, 8),
+    },
     analyticsContext: {
       nextGame: next ? { opponent: next.opponent || next.game, ufPct: next.ufPct ?? next.winProb } : null,
       scheduleLength: (gameZone?.schedule || []).length,

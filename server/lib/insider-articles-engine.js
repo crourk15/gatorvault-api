@@ -187,6 +187,76 @@ function scoreTopic(topic) {
   return base + calendarBoost(topic) + typeBoost;
 }
 
+function normalizePosGroup(pos) {
+  const p = String(pos || '').toUpperCase().trim();
+  if (!p) return 'UNK';
+  if (/^CB|CORNER/.test(p)) return 'CB';
+  if (/^S\b|SAFETY|^FS|^SS/.test(p)) return 'S';
+  if (/^WR|RECEIVER/.test(p)) return 'WR';
+  if (/^TE\b|TIGHT/.test(p)) return 'TE';
+  if (/^QB/.test(p)) return 'QB';
+  if (/^RB|HB|RUNNING/.test(p)) return 'RB';
+  if (/^OT|OL|IOL|OG|OC|TACKLE|GUARD|CENTER/.test(p)) return 'OL';
+  if (/^EDGE|DE|OLB/.test(p)) return 'EDGE';
+  if (/^DL|DT|NT/.test(p)) return 'DL';
+  if (/^LB|ILB|MLB/.test(p)) return 'LB';
+  return p.slice(0, 3);
+}
+
+function lastNameFromPlayer(name) {
+  const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+  return parts.length ? parts[parts.length - 1] : '';
+}
+
+function slugifyLoose(name) {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 40);
+}
+
+/** UF commits with commitDate within the last days window. */
+function recentUfCommits(players, days = 14) {
+  let looksLikeFloridaCommit;
+  let isFloridaSchool;
+  try {
+    looksLikeFloridaCommit = require('./recruiting-verified-commits').looksLikeFloridaCommit;
+  } catch {
+    looksLikeFloridaCommit = () => false;
+  }
+  try {
+    isFloridaSchool = require('./recruiting-target-filters').isFloridaSchool;
+  } catch {
+    isFloridaSchool = (v) => /florida|gators|\bUF\b/i.test(String(v || ''));
+  }
+  const cutoff = Date.now() - days * 86400000;
+  return (players || []).filter((p) => {
+    if (!p) return false;
+    const to = p.committedTo || p.committed_to;
+    const isUf = looksLikeFloridaCommit(p) || isFloridaSchool(to);
+    if (!isUf) return false;
+    const d = p.commitDate || p.commit_date;
+    if (!d) return false;
+    const ts = new Date(d).getTime();
+    return Number.isFinite(ts) && ts >= cutoff && ts <= Date.now() + 86400000;
+  });
+}
+
+const EVENT_FIRST_CATEGORIES = [
+  'heat_check',
+  'post_visit_reaction',
+  'official_visit_preview',
+  'game_week_preview',
+];
+const GENERIC_FILLER_CATEGORIES = new Set([
+  'program_pulse',
+  'staff_intel',
+  'summer_preview',
+  'roster_analysis',
+  'depth_chart_movement',
+]);
+
 function buildCandidateTopics(signals) {
   const topics = [];
   const visits2027 = signals.intel?.visits || [];
@@ -203,18 +273,72 @@ function buildCandidateTopics(signals) {
 
   const season = signals.season;
 
-  if (signals.portal.count > 0 || signals.roster.players.length > 50) {
+  // --- Event-first: recent UF commits (Heat Check) ---
+  const recentCommits = recentUfCommits(recruitingPlayers, 14);
+  if (recentCommits.length >= 2) {
+    const byPos = new Map();
+    for (const p of recentCommits) {
+      const g = normalizePosGroup(p.pos || p.position);
+      if (!byPos.has(g)) byPos.set(g, []);
+      byPos.get(g).push(p);
+    }
+    const posGroup = [...byPos.entries()].find(([, list]) => list.length >= 2);
+    const cluster = posGroup ? posGroup[1] : recentCommits.slice(0, 4);
+    const posLabel = posGroup ? posGroup[0] : null;
+    const names = cluster
+      .slice(0, 3)
+      .map((p) => sanitize.sanitizePlayerName(p.name) || p.name)
+      .filter(Boolean);
+    const lastNames = names.map(lastNameFromPlayer).filter(Boolean);
+    const commitTs = cluster
+      .map((p) => new Date(p.commitDate || p.commit_date).getTime())
+      .filter((t) => Number.isFinite(t));
+    const newest = commitTs.length ? new Date(Math.max(...commitTs)) : new Date();
+    const month = newest.toLocaleString('en-US', { month: 'long' });
+    const dateKey = newest.toISOString().slice(0, 10);
+    const slugs = cluster
+      .slice(0, 3)
+      .map((p) => p.slug || slugifyLoose(p.name))
+      .filter(Boolean)
+      .join('_');
+    const title =
+      posLabel && names.length >= 2
+        ? `Heat Check: Florida's ${month} ${posLabel} double — ${lastNames.slice(0, 2).join(' and ')}`
+        : `Heat Check: Florida's ${month} commit surge — ${lastNames.slice(0, 2).join(' and ') || names.slice(0, 2).join(' and ')}`;
+    const classYears = [
+      ...new Set(cluster.map((p) => Number(p.classYear ?? p.class_year)).filter((y) => Number.isFinite(y))),
+    ];
     push({
-      topicKey: `program_pulse_${season}_${signals.portal.count || 0}`,
-      category: 'program_pulse',
-      title: `Program Pulse: ${season} Florida roster and portal outlook`,
-      classYear: season,
-      scores: { relevance: 90, timeliness: 85, impact: 88, dataRichness: 80, freshness: 85 },
-      signals: { portal: signals.portal, roster: signals.roster, type: 'program_pulse' },
+      topicKey: `heat_check_commits_${dateKey}_${slugs}`,
+      category: 'heat_check',
+      title,
+      classYear: classYears.length === 1 ? classYears[0] : cycle.RECRUITING_MIN_CLASS,
+      scores: { relevance: 96, timeliness: 97, impact: 90, dataRichness: 88, freshness: 98 },
+      signals: { commits: cluster, type: 'heat_check' },
       sources: [
-        { name: 'GatorVault Roster', outlet: 'GatorVault' },
-        { name: 'On3 Portal', outlet: 'On3' }
-      ]
+        { name: 'UF Commit Tracker', outlet: 'GatorVault' },
+        { name: 'On3', outlet: 'On3' },
+      ],
+    });
+  } else if (recentCommits.length === 1) {
+    const p = recentCommits[0];
+    const name = sanitize.sanitizePlayerName(p.name) || p.name || 'UF commit';
+    const d = new Date(p.commitDate || p.commit_date);
+    const dateKey = Number.isFinite(d.getTime()) ? d.toISOString().slice(0, 10) : 'recent';
+    const month = Number.isFinite(d.getTime())
+      ? d.toLocaleString('en-US', { month: 'long' })
+      : 'Recent';
+    push({
+      topicKey: `heat_check_commits_${dateKey}_${p.slug || slugifyLoose(name)}`,
+      category: 'heat_check',
+      title: `Heat Check: ${name} locks Florida — ${month} board shock`,
+      classYear: Number(p.classYear ?? p.class_year) || cycle.RECRUITING_MIN_CLASS,
+      scores: { relevance: 94, timeliness: 96, impact: 88, dataRichness: 84, freshness: 97 },
+      signals: { commits: [p], type: 'heat_check' },
+      sources: [
+        { name: 'UF Commit Tracker', outlet: 'GatorVault' },
+        { name: 'On3', outlet: 'On3' },
+      ],
     });
   }
 
@@ -233,8 +357,8 @@ function buildCandidateTopics(signals) {
       signals: { rising, type: 'heat_check' },
       sources: [
         { name: 'On3 RPM', outlet: 'On3' },
-        { name: 'GatorVault Heat Check', outlet: 'GatorVault' }
-      ]
+        { name: 'GatorVault Heat Check', outlet: 'GatorVault' },
+      ],
     });
   }
 
@@ -263,9 +387,9 @@ function buildCandidateTopics(signals) {
         sources: uniqueSources(
           visits.map((v) => ({
             name: v.sourceHandle || v.source || 'Beat Writer',
-            outlet: v.source === 'beat_writer' ? 'Beat Report' : 'Recruiting Intel'
+            outlet: v.source === 'beat_writer' ? 'Beat Report' : 'Recruiting Intel',
           }))
-        )
+        ),
       });
     } else {
       console.log('[insider-articles] skipped OV preview — intel already covered:', topicKey);
@@ -300,9 +424,9 @@ function buildCandidateTopics(signals) {
         sources: uniqueSources(
           visits.map((v) => ({
             name: v.sourceHandle || v.source || 'Beat Writer',
-            outlet: 'Beat Report'
+            outlet: 'Beat Report',
           }))
-        )
+        ),
       });
     } else {
       console.log('[insider-articles] skipped visit recap — intel already covered:', topicKey);
@@ -318,54 +442,6 @@ function buildCandidateTopics(signals) {
     }
   }
 
-  // Legacy blocks removed — visit topics only when new verified intel passes validation above.
-
-  if (signals.roster.players.length >= 40) {
-    push({
-      topicKey: `roster_analysis_${season}_${signals.roster.players.length}`,
-      category: 'roster_analysis',
-      title: `Roster Analysis: ${season} Florida team by unit`,
-      classYear: season,
-      scores: { relevance: 84, timeliness: 70, impact: 76, dataRichness: 88, freshness: 72 },
-      signals: { roster: signals.roster, type: 'roster_analysis' },
-      sources: [{ name: 'GatorVault Roster Store', outlet: 'GatorVault' }]
-    });
-  }
-
-  if (signals.depthChart.rosterCount >= 50) {
-    push({
-      topicKey: `depth_chart_${season}_${signals.depthChart.rosterCount}`,
-      category: 'depth_chart_movement',
-      title: `Depth Chart Movement: ${season} two-deep updates`,
-      classYear: season,
-      scores: { relevance: 82, timeliness: 72, impact: 74, dataRichness: 86, freshness: 70 },
-      signals: { depthChart: signals.depthChart, type: 'depth_chart_movement' },
-      sources: [{ name: 'Depth Chart Engine', outlet: 'GatorVault' }]
-    });
-  }
-
-  if (signals.roster.players.length >= 50) {
-    push({
-      topicKey: `summer_preview_${season}`,
-      category: 'summer_preview',
-      title: `Summer Preview: ${season} camp battles across Florida's two-deep`,
-      classYear: season,
-      scores: { relevance: 80, timeliness: 82, impact: 74, dataRichness: 72, freshness: 78 },
-      signals: { roster: signals.roster, depthChart: signals.depthChart, type: 'summer_preview' },
-      sources: [{ name: 'GatorVault Staff', outlet: 'GatorVault' }]
-    });
-
-    push({
-      topicKey: `staff_intel_${season}`,
-      category: 'staff_intel',
-      title: `Staff Intel: ${season} scheme and roster evaluation`,
-      classYear: season,
-      scores: { relevance: 78, timeliness: 75, impact: 72, dataRichness: 70, freshness: 74 },
-      signals: { roster: signals.roster, depthChart: signals.depthChart, type: 'staff_intel' },
-      sources: [{ name: 'GatorVault Staff', outlet: 'GatorVault' }]
-    });
-  }
-
   const nextGame = signals.gameZone.nextGame;
   if (nextGame?.game || nextGame?.opponent) {
     const opp = nextGame.opponent || nextGame.game || 'Next Opponent';
@@ -376,14 +452,91 @@ function buildCandidateTopics(signals) {
       classYear: season,
       scores: { relevance: 84, timeliness: 88, impact: 80, dataRichness: 72, freshness: 86 },
       signals: { game: nextGame, schedule: signals.gameZone.schedule, type: 'game_week_preview' },
-      sources: uniqueSources([
-        { name: 'Game Zone Lines', outlet: 'GatorVault' },
-        nextGame.source ? { name: nextGame.source, outlet: nextGame.source } : null
-      ].filter(Boolean))
+      sources: uniqueSources(
+        [
+          { name: 'Game Zone Lines', outlet: 'GatorVault' },
+          nextGame.source ? { name: nextGame.source, outlet: nextGame.source } : null,
+        ].filter(Boolean)
+      ),
     });
   }
 
-  return topics.sort((a, b) => b.totalScore - a.totalScore).slice(0, MAX_CANDIDATES);
+  const hasEventTopics = topics.some((t) => EVENT_FIRST_CATEGORIES.includes(t.category));
+
+  // Generic topics — downscored; staff/summer/roster/depth only if no event topics exist.
+  if (signals.portal.count > 0 || signals.roster.players.length > 50) {
+    push({
+      topicKey: `program_pulse_${season}_${signals.portal.count || 0}`,
+      category: 'program_pulse',
+      title: `Program Pulse: ${season} Florida roster and portal outlook`,
+      classYear: season,
+      scores: { relevance: 58, timeliness: 55, impact: 70, dataRichness: 72, freshness: 60 },
+      signals: { portal: signals.portal, roster: signals.roster, type: 'program_pulse' },
+      sources: [
+        { name: 'GatorVault Roster', outlet: 'GatorVault' },
+        { name: 'On3 Portal', outlet: 'On3' },
+      ],
+    });
+  }
+
+  if (!hasEventTopics) {
+    if (signals.roster.players.length >= 40) {
+      push({
+        topicKey: `roster_analysis_${season}_${signals.roster.players.length}`,
+        category: 'roster_analysis',
+        title: `Roster Analysis: ${season} Florida team by unit`,
+        classYear: season,
+        scores: { relevance: 56, timeliness: 52, impact: 68, dataRichness: 80, freshness: 55 },
+        signals: { roster: signals.roster, type: 'roster_analysis' },
+        sources: [{ name: 'GatorVault Roster Store', outlet: 'GatorVault' }],
+      });
+    }
+
+    if (signals.depthChart.rosterCount >= 50) {
+      push({
+        topicKey: `depth_chart_${season}_${signals.depthChart.rosterCount}`,
+        category: 'depth_chart_movement',
+        title: `Depth Chart Movement: ${season} two-deep updates`,
+        classYear: season,
+        scores: { relevance: 55, timeliness: 52, impact: 66, dataRichness: 78, freshness: 54 },
+        signals: { depthChart: signals.depthChart, type: 'depth_chart_movement' },
+        sources: [{ name: 'Depth Chart Engine', outlet: 'GatorVault' }],
+      });
+    }
+
+    if (signals.roster.players.length >= 50) {
+      push({
+        topicKey: `summer_preview_${season}`,
+        category: 'summer_preview',
+        title: `Summer Preview: ${season} camp battles across Florida's two-deep`,
+        classYear: season,
+        scores: { relevance: 54, timeliness: 58, impact: 64, dataRichness: 66, freshness: 56 },
+        signals: { roster: signals.roster, depthChart: signals.depthChart, type: 'summer_preview' },
+        sources: [{ name: 'GatorVault Staff', outlet: 'GatorVault' }],
+      });
+
+      push({
+        topicKey: `staff_intel_${season}`,
+        category: 'staff_intel',
+        title: `Staff Intel: ${season} scheme and roster evaluation`,
+        classYear: season,
+        scores: { relevance: 52, timeliness: 54, impact: 62, dataRichness: 64, freshness: 55 },
+        signals: { roster: signals.roster, depthChart: signals.depthChart, type: 'staff_intel' },
+        sources: [{ name: 'GatorVault Staff', outlet: 'GatorVault' }],
+      });
+    }
+  }
+
+  return topics
+    .sort((a, b) => {
+      const ae = EVENT_FIRST_CATEGORIES.indexOf(a.category);
+      const be = EVENT_FIRST_CATEGORIES.indexOf(b.category);
+      const ap = ae === -1 ? 99 : ae;
+      const bp = be === -1 ? 99 : be;
+      if (ap !== bp) return ap - bp;
+      return b.totalScore - a.totalScore;
+    })
+    .slice(0, MAX_CANDIDATES);
 }
 
 async function writeDraftFromTopic(topic, signals) {
@@ -489,11 +642,24 @@ async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = 
 
   const slots = Math.max(0, maxDrafts - createdThisWeek.length);
   const selected = [];
+  const hasEventCandidate = candidates.some((t) => EVENT_FIRST_CATEGORIES.includes(t.category));
+
+  // Prefer event-first categories; skip generic filler while events remain available.
   for (const topic of candidates) {
     if (selected.length >= slots) break;
     if (existingKeys.has(topic.topicKey)) continue;
+    if (hasEventCandidate && GENERIC_FILLER_CATEGORIES.has(topic.category)) continue;
     selected.push(topic);
     existingKeys.add(topic.topicKey);
+  }
+  // Fill remaining slots with generics only when nothing else is left.
+  if (selected.length < slots) {
+    for (const topic of candidates) {
+      if (selected.length >= slots) break;
+      if (existingKeys.has(topic.topicKey)) continue;
+      selected.push(topic);
+      existingKeys.add(topic.topicKey);
+    }
   }
 
   const drafts = [];
@@ -642,4 +808,7 @@ module.exports = {
   generateDraftForType,
   refreshArticleContent,
   regenerateAfterReject,
+  recentUfCommits,
+  EVENT_FIRST_CATEGORIES,
+  GENERIC_FILLER_CATEGORIES,
 };

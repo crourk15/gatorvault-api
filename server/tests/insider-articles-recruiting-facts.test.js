@@ -117,6 +117,19 @@ describe('validateRecruitingFactClaims', () => {
     );
   });
 
+
+  it('fails Board focus live 2027 targets naming Cobbins (2028 store year)', () => {
+    const draft = {
+      title: 'Program Pulse',
+      body: '<p>Board focus: 5 live 2027 targets — priority names: Ballard, Cobbins, Roberts.</p>',
+    };
+    const reasons = validateRecruitingFactClaims(draft, FIXTURE_PLAYERS);
+    assert.ok(
+      reasons.some((r) => r === 'fact_class_year_mismatch:amare-cobbins:2028_vs_2027'),
+      `expected Cobbins class year mismatch near live 2027 targets, got ${JSON.stringify(reasons)}`
+    );
+  });
+
   it('loadPlayersSync can read live players.json without throwing', () => {
     const players = loadPlayersSync();
     assert.ok(Array.isArray(players));
