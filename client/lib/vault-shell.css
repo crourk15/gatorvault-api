@@ -2903,6 +2903,148 @@ body.gv-scroll-locked {
   }
 }
 
+/* Gators Live — Florida-only game-day scoreboard */
+.gv-gators-live__ready {
+  margin: 0.5rem 0 1.5rem;
+  padding: 1.5rem 1.35rem;
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(250, 70, 22, 0.16) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(0, 33, 165, 0.55) 0%, rgba(5, 11, 32, 0.92) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-left: 4px solid #fa4616;
+  color: #fff;
+}
+
+.gv-gators-live__ready-eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fa4616;
+}
+
+.gv-gators-live__ready-title {
+  margin: 0 0 0.65rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.gv-gators-live__ready-dek {
+  margin: 0 0 1.25rem;
+  max-width: 36rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.gv-gators-live__next {
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1rem;
+}
+
+.gv-gators-live__next-matchup {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.gv-gators-live__next-meta {
+  margin: 0.15rem 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.gv-gators-live__next-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: #fa4616;
+  font-weight: 600;
+}
+
+.gv-gators-live__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.gv-gators-live__board {
+  padding: 1.35rem 1.25rem;
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(250, 70, 22, 0.14) 0%, transparent 40%),
+    rgba(0, 26, 51, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 4px solid #0021a5;
+}
+
+.gv-gators-live__board.is-live {
+  border-left-color: #fa4616;
+  box-shadow: 0 0 0 1px rgba(250, 70, 22, 0.25);
+}
+
+.gv-gators-live__board-head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+}
+
+.gv-gators-live__board-label {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.gv-gators-live__board-matchup {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.gv-gators-live__board-matchup span {
+  color: #fa4616;
+  font-size: 0.85rem;
+  margin: 0 0.35rem;
+}
+
+.gv-gators-live__board-score {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.gv-gators-live__board-score.is-live {
+  color: #fa4616;
+}
+
+.gv-gators-live__board-status {
+  margin: 0.35rem 0 0.75rem;
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.gv-gators-live__board-meta {
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 32rem;
+}
+
 .gv-live-scores__hint {
   font-size: 0.75rem;
   color: #64748b;

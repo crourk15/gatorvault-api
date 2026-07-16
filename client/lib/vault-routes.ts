@@ -37,7 +37,7 @@ export const VAULT_PILLARS: { id: VaultSectionId; label: string; href: string; i
 export const VAULT_SECONDARY: { id: VaultSectionId; label: string; href: string; icon: string }[] = [
   { id: 'film-room', label: 'Film Room', href: '/vault/film-room', icon: '📺' },
   { id: 'game-week', label: 'Game Week', href: '/vault/game-week', icon: '🏈' },
-  { id: 'live-scores', label: 'Live Scores', href: '/vault/live-scores', icon: '📊' },
+  { id: 'live-scores', label: 'Gators Live', href: '/vault/live-scores', icon: '🏈' },
   { id: 'articles', label: 'Articles', href: '/vault/articles', icon: '📰' },
   { id: 'community', label: 'Community', href: '/vault/community', icon: '💬' },
   { id: 'game-zone', label: 'Game Zone', href: '/vault/game-zone', icon: '🏆' },

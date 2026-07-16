@@ -35,7 +35,7 @@ export const landingContent = {
         bullets: [
           'Film Room breakdowns and highlights',
           'Game Week prep and matchups',
-          'Live Scores and Game Zone win probability',
+          'Gators Live game-day scoreboard and Game Zone',
         ],
         icons: [
           { src: '/icons/trending-up.svg' },

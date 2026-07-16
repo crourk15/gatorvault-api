@@ -35,7 +35,7 @@ export function HomeCommandGameDay({ game }: Props): React.ReactElement {
       <div className="home-wow-section-header">
         <h2 className="home-wow-section-title">{inSeason ? 'Game Week' : 'GameDay Countdown'}</h2>
         <p className="home-wow-section-subtitle">
-          {inSeason ? 'Matchup prep, kickoff intel, and live scores.' : 'Next kickoff, front and center.'}
+          {inSeason ? 'Matchup prep, kickoff intel, and Gators Live.' : 'Next kickoff, front and center.'}
         </p>
       </div>
       <section

@@ -17,19 +17,24 @@
    - Visual: Gator orange / blue / white throughout (`client/lib/game-week-wow.css`).
    - Product copy: **Thursday briefing** ritual; depth tab explains Wed+ official depth lock (`GameWeekCommandCenter.tsx`, `game-week-data.ts`).
    - Still ops: refresh intel content each Thursday in-season (not auto from UF site yet).
-6. Anything else approved for 15 before Codemagic starts.
+6. **Gators Live** (was Live Scores) — Florida-only game-day scoreboard shell:
+   - Renamed in nav/UI; route stays `/vault/live-scores/`.
+   - Offseason: ready card + next UF game; **no provider API polls** until UF live window (~3h pre → ~5h post kickoff).
+   - Files: `client/components/vault/VaultLiveScoresPage.tsx`, `client/lib/gators-live.ts`.
+   - Season work still owed: wire real UF score/clock (not just betting schedule) before Sep kickoff.
+7. Anything else approved for 15 before Codemagic starts.
 
 ## What's New (paste into App Store Connect)
 
-Player profiles open correctly when you tap a name in Recruiting, Team, and FutureCast. In-vault Articles reader. Team Recruiting Pipeline map readable on iPhone and iPad. Film Room videos open without the Error 153 splash. Game Week gets louder Gator colors and a Thursday briefing cadence. Builds on the faster Vault loading from 1.0.3.
+Player profiles open correctly when you tap a name in Recruiting, Team, and FutureCast. In-vault Articles reader. Team Recruiting Pipeline map readable on iPhone and iPad. Film Room videos open without the Error 153 splash. Game Week gets louder Gator colors and a Thursday briefing cadence. Gators Live — Florida game-day scoreboard, ready for the season. Builds on the faster Vault loading from 1.0.3.
 
 ## Build path (after 14 is live)
 
-1. Confirm items 1–5 above are on `main` (player-tap, articles, pipeline map, film Error 153, Game Week energy/Thursday)
+1. Confirm items 1–6 above are on `main`
 2. Approve/publish any article drafts Charles wants live
 3. Codemagic → **iOS Release Build** (`ios-release`) on `main`
 4. App Store Connect → version **1.0.4** → build **15** → Submit for Review
-5. Smoke on device: player tap, Articles, Team → Pipeline Map, Film Room (no Error 153), Game Week (orange/blue energy + Thursday stamp)
+5. Smoke on device: player tap, Articles, Team → Pipeline Map, Film Room (no Error 153), Game Week, Gators Live ready card
 
 ## Do not
 
