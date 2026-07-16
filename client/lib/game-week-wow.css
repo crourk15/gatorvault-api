@@ -1,29 +1,32 @@
 /**
- * Game Week Command Center — FutureCast Lab parity
- * Dark hero band + white content feed (matches FC Lab screenshot).
+ * Game Week Command Center — Gator energy
+ * UF blue / orange / white throughout; opponent colors only in matchup logos.
  */
 
 .gv-gw-wow-page {
-  --color-bg-page: #050b20;
-  --color-bg-hero: #060c21;
-  --color-bg-card-dark: #0a1435;
-  --color-bg-feed: #f1f5f9;
+  --color-bg-page: #001656;
+  --color-bg-hero: #0021a5;
+  --color-bg-card-dark: rgba(0, 22, 86, 0.72);
+  --color-bg-feed: #f7f8fc;
   --color-bg-panel: #ffffff;
   --color-accent-orange: #fa4616;
   --color-accent-blue: #0021a5;
   --color-royal-blue: #0033cc;
   --color-text-primary: #ffffff;
-  --color-text-secondary: #a0aec0;
-  --color-text-dark: #1a1a1a;
-  --color-text-muted: #64748b;
+  --color-text-secondary: rgba(255, 255, 255, 0.78);
+  --color-text-dark: #0b1b4a;
+  --color-text-muted: #5b6b8c;
   --color-move-up: #22c55e;
   --color-move-down: #ef4444;
   --color-volatility: #facc15;
-  --color-slate-stroke: #64748b;
-  --color-panel-border: rgba(0, 26, 51, 0.2);
+  --color-slate-stroke: #94a3b8;
+  --color-panel-border: rgba(0, 33, 165, 0.14);
 
   min-height: 100%;
-  background: var(--color-bg-page);
+  background:
+    radial-gradient(ellipse 90% 50% at 10% 0%, rgba(250, 70, 22, 0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 45% at 90% 10%, rgba(0, 51, 204, 0.45) 0%, transparent 50%),
+    linear-gradient(180deg, #0021a5 0%, #001656 42%, #050b20 100%);
   color: var(--color-text-primary);
 }
 
@@ -68,7 +71,9 @@
 .gv-gw-wow-hero__bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(165deg, #0021a5 0%, #001656 42%, #050b20 100%);
+  background:
+    linear-gradient(120deg, rgba(250, 70, 22, 0.22) 0%, transparent 38%),
+    linear-gradient(165deg, #0021a5 0%, #001a7a 38%, #001656 72%, #050b20 100%);
   pointer-events: none;
 }
 
@@ -76,7 +81,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(250, 70, 22, 0.14) 0%, transparent 60%);
+  background:
+    radial-gradient(ellipse 70% 55% at 70% 20%, rgba(250, 70, 22, 0.32) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 15% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
 }
 
 .gv-gw-wow-hero__inner {
@@ -92,10 +99,25 @@
 .gv-gw-wow-hero__eyebrow {
   margin: 0;
   font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-weight: 800;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-accent-orange);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.gv-gw-wow-hero__stamp {
+  margin: -0.35rem 0 0;
+  max-width: 36rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.gv-gw-wow-hero__stamp strong {
+  color: #fff;
+  font-weight: 800;
 }
 
 .gv-gw-wow-hero__metrics {
@@ -111,9 +133,9 @@
   }
 }
 
-/* ── Light content feed ── */
+/* ── Light content feed — white with UF blue wash ── */
 .gv-gw-wow-feed {
-  background: var(--color-bg-feed);
+  background: linear-gradient(180deg, #ffffff 0%, #f4f6fb 55%, #eef1f8 100%);
   color: var(--color-text-dark);
   padding-top: var(--gv-space-5, 24px);
   padding-bottom: var(--gv-space-6, 32px);
@@ -122,6 +144,8 @@
   position: relative;
   z-index: 2;
   min-height: 48vh;
+  box-shadow: 0 -8px 28px rgba(0, 33, 165, 0.12);
+  border-top: 3px solid var(--color-accent-orange);
 }
 
 .gv-gw-wow-feed__inner {
@@ -261,17 +285,20 @@
   color: var(--color-text-secondary);
 }
 
-/* Matchup hero — dark card in hero band */
+/* Matchup hero — Gator card in hero band (opponent logos OK here) */
 .gv-gw-matchup-hero {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 1.25rem;
-  background: var(--color-bg-card-dark);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(135deg, rgba(250, 70, 22, 0.16) 0%, transparent 42%),
+    linear-gradient(180deg, rgba(0, 33, 165, 0.55) 0%, rgba(5, 11, 32, 0.88) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-left: 4px solid var(--color-accent-orange);
   border-radius: 12px;
   padding: 1.25rem 1.5rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32);
   animation: gv-gw-slide-in 0.6s ease-out;
 }
 
@@ -286,7 +313,7 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: var(--color-accent-orange);
 }
 
 .gv-gw-matchup-hero__logos {
@@ -406,8 +433,12 @@
 }
 
 .gv-gw-timeline__card.is-active {
-  border-color: var(--color-royal-blue);
-  box-shadow: 0 0 0 1px var(--color-royal-blue);
+  border-color: var(--color-accent-orange);
+  box-shadow:
+    0 0 0 1px var(--color-accent-orange),
+    0 8px 20px rgba(250, 70, 22, 0.22);
+  background:
+    linear-gradient(180deg, rgba(250, 70, 22, 0.18) 0%, rgba(0, 33, 165, 0.55) 100%);
 }
 
 .gv-gw-timeline__logo {
@@ -471,8 +502,9 @@
 
 .gv-gw-wow-feed .gv-gw-wow-tabs .rh-cc-tabs__btn.is-active {
   color: #fff;
-  background: var(--color-accent-blue);
-  border-color: var(--color-accent-blue);
+  background: linear-gradient(135deg, var(--color-accent-orange) 0%, #e03d12 100%);
+  border-color: var(--color-accent-orange);
+  box-shadow: 0 4px 12px rgba(250, 70, 22, 0.28);
 }
 
 /* Win probability gauge — dark hero card */
@@ -1061,4 +1093,71 @@
 @keyframes gv-gw-slide-right {
   from { opacity: 0; transform: translateX(24px); }
   to { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Gator energy polish (panels, depth note, brand chips) ── */
+.gv-gw-wow-panel {
+  border-left: 3px solid var(--color-accent-blue);
+}
+
+.gv-gw-wow-panel__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gv-gw-wow-panel__title::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--color-accent-orange);
+  box-shadow: 0 0 0 3px rgba(250, 70, 22, 0.18);
+  flex-shrink: 0;
+}
+
+.gv-gw-depth-note {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 10px;
+  background: rgba(0, 33, 165, 0.06);
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  border-left: 3px solid var(--color-accent-orange);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text-dark);
+}
+
+.gv-gw-depth-note strong {
+  color: var(--color-accent-blue);
+}
+
+.gv-gw-wow-feed .gv-gw-swing-card {
+  border-left: 3px solid var(--color-accent-orange);
+}
+
+.gv-gw-wow-feed .gv-gw-swing-card__name {
+  color: var(--color-accent-blue) !important;
+}
+
+.gv-gw-wp-gauge,
+.gv-gw-radar {
+  border-color: rgba(250, 70, 22, 0.28);
+  background:
+    linear-gradient(160deg, rgba(250, 70, 22, 0.12) 0%, transparent 45%),
+    var(--color-bg-card-dark);
+}
+
+.gv-gw-wp-gauge__heading,
+.gv-gw-radar__heading {
+  color: var(--color-accent-orange);
+}
+
+.gv-gw-timeline__ha--home {
+  background: rgba(250, 70, 22, 0.85);
+  color: #fff;
+}
+
+.gv-gw-countdown {
+  background: linear-gradient(180deg, rgba(250, 70, 22, 0.18) 0%, rgba(0, 0, 0, 0.28) 100%);
 }

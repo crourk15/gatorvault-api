@@ -13,23 +13,23 @@
 2. **Articles** — in-vault reader + gating already in repo; confirm latest `client/components/articles/*` and article routes are on `main` before Codemagic. Publish Charles-approved drafts via GV-OM so content is live on API (content does not require the binary, but the reader UI does).
 3. **Team Pipeline Map (mobile)** — horizontal state bars instead of squeezed column chart. Already on `main` (`ca9fe0b`). Files: `client/components/team/premium/PipelineMap.tsx`, `client/lib/team-premium.css`. **Requires this binary** — does not OTA into the App Store shell.
 4. **Film Room YouTube Error 153** — site-hosted embed relay + catalog `embedUrl` (`2dac918`). Relay HTML/API help via Netlify/Render; client iframe wiring still ships in this binary for full native polish. Files: `client/public/youtube-embed.html`, `client/components/vault/VaultFilmRoomPage.tsx`, `server/lib/film-room-feed.js`.
-5. **Game Week energy + Thursday cadence (Charles, Jul 16)** — hold while **14** is in review; implement before Codemagic for **15**:
-   - Visual: more Gator orange / blue / white throughout Game Week (dark base OK; less generic dark-lab). Opponent colors/logos only in the matchup strip.
-   - Product/ops: treat **Thursday** as the weekly refresh ritual (UF depth + injury picture usually firmer Wed+), not Tuesday. Tue/Wed = quiet prep only.
-   - Files likely: `client/lib/game-week-wow.css`, `client/components/vault/game-week/*`, any copy that implies a Tuesday drop.
+5. **Game Week energy + Thursday cadence** — implemented on `main` (Jul 16):
+   - Visual: Gator orange / blue / white throughout (`client/lib/game-week-wow.css`).
+   - Product copy: **Thursday briefing** ritual; depth tab explains Wed+ official depth lock (`GameWeekCommandCenter.tsx`, `game-week-data.ts`).
+   - Still ops: refresh intel content each Thursday in-season (not auto from UF site yet).
 6. Anything else approved for 15 before Codemagic starts.
 
 ## What's New (paste into App Store Connect)
 
-Player profiles open correctly when you tap a name in Recruiting, Team, and FutureCast. In-vault Articles reader. Team Recruiting Pipeline map readable on iPhone and iPad. Film Room videos open without the Error 153 splash. Builds on the faster Vault loading from 1.0.3.
+Player profiles open correctly when you tap a name in Recruiting, Team, and FutureCast. In-vault Articles reader. Team Recruiting Pipeline map readable on iPhone and iPad. Film Room videos open without the Error 153 splash. Game Week gets louder Gator colors and a Thursday briefing cadence. Builds on the faster Vault loading from 1.0.3.
 
 ## Build path (after 14 is live)
 
-1. Confirm items 1–4 above are on `main` (player-tap, articles, pipeline map `ca9fe0b`, film Error 153 `2dac918`)
+1. Confirm items 1–5 above are on `main` (player-tap, articles, pipeline map, film Error 153, Game Week energy/Thursday)
 2. Approve/publish any article drafts Charles wants live
 3. Codemagic → **iOS Release Build** (`ios-release`) on `main`
 4. App Store Connect → version **1.0.4** → build **15** → Submit for Review
-5. Smoke on device: player tap, Articles, Team → Pipeline Map (full-width bars), Film Room presser (no Error 153)
+5. Smoke on device: player tap, Articles, Team → Pipeline Map, Film Room (no Error 153), Game Week (orange/blue energy + Thursday stamp)
 
 ## Do not
 

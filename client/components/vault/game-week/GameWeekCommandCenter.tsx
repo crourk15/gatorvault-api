@@ -1,7 +1,11 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { getGameWeekBundle } from '@/lib/game-week-data';
+import {
+  gameWeekBriefingEyebrow,
+  gameWeekBriefingStamp,
+  getGameWeekBundle,
+} from '@/lib/game-week-data';
 import { MatchupHeroWidget } from './MatchupHeroWidget';
 import { SeasonTimeline } from './SeasonTimeline';
 import { WinProbabilityGaugeWidget } from './WinProbabilityGaugeWidget';
@@ -48,7 +52,10 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
       <section className="gv-gw-wow-hero fc-lab-bleed" aria-label="Game week overview">
         <div className="gv-gw-wow-hero__bg" aria-hidden />
         <div className="gv-gw-wow-hero__inner rh-frame">
-          <p className="gv-gw-wow-hero__eyebrow">Game Week Command Center</p>
+          <p className="gv-gw-wow-hero__eyebrow">{gameWeekBriefingEyebrow()}</p>
+          <p className="gv-gw-wow-hero__stamp">
+            <strong>Thursday ritual.</strong> {gameWeekBriefingStamp()}
+          </p>
           <MatchupHeroWidget bundle={bundle} />
           <SeasonTimeline activeGameId={gameId} onSelect={handleGameSelect} />
           <div className="gv-gw-wow-hero__metrics">
@@ -102,8 +109,12 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
 
           {tab === 'depth' ? (
             <section className="gv-gw-wow-panel fc-lab-panel-shell">
-              <h3 className="gv-gw-wow-panel__title">Projected depth chart</h3>
+              <h3 className="gv-gw-wow-panel__title">Depth chart — Thursday lock</h3>
               <div className="gv-gw-wow-panel__body">
+                <p className="gv-gw-depth-note">
+                  <strong>Why Thursday:</strong> UF depth and injury reports usually firm up Wednesday.
+                  We lock the Game Week depth picture Thursday so you get the real board — not a Tuesday guess.
+                </p>
                 <DepthChartGrid groups={bundle.depthChart} />
               </div>
             </section>
