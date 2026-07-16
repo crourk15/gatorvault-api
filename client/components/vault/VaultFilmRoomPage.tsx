@@ -71,13 +71,33 @@ function filmLessonMeta(item: FilmRoomCatalogItem, insider: boolean): string {
   return parts.join(' · ');
 }
 
+/** Netlify-hosted relay — Capacitor WebViews hit Error 153 on direct youtube.com/embed. */
+const YOUTUBE_EMBED_SITE = 'https://gatorvaultinsider.com';
+
+function extractYoutubeId(item: FilmRoomCatalogItem): string | null {
+  const direct = (item.youtubeId || '').trim();
+  if (/^[\w-]{11}$/.test(direct)) return direct;
+  const urls = [item.embedUrl, item.videoUrl, item.sourceUrl].filter(Boolean) as string[];
+  for (const u of urls) {
+    const match = u.match(
+      /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|shorts\/|watch\?.*?v=)|[?&]v=)([\w-]{11})/
+    );
+    if (match) return match[1];
+  }
+  return null;
+}
+
 function youtubeEmbedUrl(item: FilmRoomCatalogItem): string | null {
-  if (item.embedUrl) return item.embedUrl;
-  const id = item.youtubeId;
-  if (id) return `https://www.youtube.com/embed/${id}`;
-  const url = item.sourceUrl || '';
-  const match = url.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
-  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+  // API already returns the relay for native App Store shells that only honor embedUrl.
+  if (item.embedUrl && item.embedUrl.includes('/youtube-embed.html')) return item.embedUrl;
+  const id = extractYoutubeId(item);
+  if (!id) return null;
+  return `${YOUTUBE_EMBED_SITE}/youtube-embed.html?v=${encodeURIComponent(id)}`;
+}
+
+function youtubeWatchUrl(item: FilmRoomCatalogItem): string | null {
+  const id = extractYoutubeId(item);
+  return id ? `https://www.youtube.com/watch?v=${encodeURIComponent(id)}` : null;
 }
 
 function SchemeSchoolViewer({
@@ -122,6 +142,7 @@ function FilmLessonViewer({
   onClose: () => void;
 }): React.ReactElement {
   const embed = youtubeEmbedUrl(item);
+  const watchUrl = youtubeWatchUrl(item);
   const body = detail?.body || item.body;
   const summary = detail?.summary || item.dek;
   const isSchemeIntel = item.knowledgeEngine || item.noVideo;
@@ -144,10 +165,18 @@ function FilmLessonViewer({
           <iframe
             title={item.title}
             src={embed}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
+            referrerPolicy="strict-origin-when-cross-origin"
           />
         </div>
+      ) : null}
+      {watchUrl ? (
+        <p className="gv-film-lesson__watch-ext">
+          <a href={watchUrl} target="_blank" rel="noopener noreferrer">
+            Open in YouTube
+          </a>
+        </p>
       ) : null}
       {bodyParas.length ? (
         <div className="gv-film-lesson__body">

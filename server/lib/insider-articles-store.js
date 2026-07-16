@@ -437,11 +437,16 @@ function removeFromContentFeed(published) {
 }
 
 function listBlockedTopicKeys() {
-  const blocked = new Set(['draft', 'published', 'archived', 'auto-rejected']);
-  return listDrafts({ status: null })
-    .filter((a) => blocked.has(a.status))
+  const blockedStatuses = new Set(['draft', 'published', 'archived', 'auto-rejected']);
+  const fromDrafts = listDrafts({ status: null })
+    .filter((a) => blockedStatuses.has(a.status))
     .map((a) => a.topicKey)
     .filter(Boolean);
+  // Approve moves articles out of drafts — still block their topicKeys forever.
+  const fromPublished = listPublished()
+    .map((a) => a.topicKey)
+    .filter(Boolean);
+  return [...new Set([...fromDrafts, ...fromPublished])];
 }
 
 module.exports = {

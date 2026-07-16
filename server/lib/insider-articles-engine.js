@@ -77,6 +77,56 @@ function visitIntelAlreadyCovered(visits, category = 'post_visit_reaction') {
   });
 }
 
+/** True when article text/keys already cover this commit slug (full or last-name). */
+function articleMentionsCommitSlug(article, slug) {
+  const s = String(slug || '').toLowerCase().trim();
+  if (!s) return false;
+  const hay = [
+    article.topicKey,
+    article.title,
+    article.summary,
+    article.thesis,
+    ...(article.coveredCommitSlugs || []),
+    ...(article.recruitingTargets || []),
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+  if (hay.includes(s)) return true;
+  const last = s.split('-').filter(Boolean).pop();
+  return Boolean(last && last.length >= 4 && hay.includes(last));
+}
+
+/**
+ * Heat Checks already covering these UF commits (draft or published).
+ * Matches hand-crafted keys (…whitfield_floyd…) vs engine keys (…kamauri-whitfield…).
+ */
+function heatCheckCommitsAlreadyCovered(commits, articles = null) {
+  const slugs = [
+    ...new Set(
+      (commits || [])
+        .map((p) => String(p.slug || slugifyLoose(p.name) || '').toLowerCase())
+        .filter(Boolean)
+    ),
+  ];
+  if (!slugs.length) return false;
+  const pool =
+    articles ||
+    [...store.listDrafts({ status: null }), ...store.listPublished()].filter((a) =>
+      ['draft', 'published'].includes(a.status)
+    );
+  const need = Math.min(2, slugs.length);
+  return pool.some((article) => {
+    if (article.category !== 'heat_check') return false;
+    if (!['draft', 'published'].includes(article.status)) return false;
+    let hits = 0;
+    for (const slug of slugs) {
+      if (articleMentionsCommitSlug(article, slug)) hits += 1;
+    }
+    return hits >= need;
+  });
+}
+
 function validateVisitIntelBatch(intelRows, storePlayers) {
   const gm2 = require('./gm2');
   const seenFingerprints = new Set();
@@ -296,30 +346,39 @@ function buildCandidateTopics(signals) {
     const newest = commitTs.length ? new Date(Math.max(...commitTs)) : new Date();
     const month = newest.toLocaleString('en-US', { month: 'long' });
     const dateKey = newest.toISOString().slice(0, 10);
-    const slugs = cluster
-      .slice(0, 3)
-      .map((p) => p.slug || slugifyLoose(p.name))
-      .filter(Boolean)
-      .join('_');
-    const title =
-      posLabel && names.length >= 2
-        ? `Heat Check: Florida's ${month} ${posLabel} double — ${lastNames.slice(0, 2).join(' and ')}`
-        : `Heat Check: Florida's ${month} commit surge — ${lastNames.slice(0, 2).join(' and ') || names.slice(0, 2).join(' and ')}`;
-    const classYears = [
-      ...new Set(cluster.map((p) => Number(p.classYear ?? p.class_year)).filter((y) => Number.isFinite(y))),
-    ];
-    push({
-      topicKey: `heat_check_commits_${dateKey}_${slugs}`,
-      category: 'heat_check',
-      title,
-      classYear: classYears.length === 1 ? classYears[0] : cycle.RECRUITING_MIN_CLASS,
-      scores: { relevance: 96, timeliness: 97, impact: 90, dataRichness: 88, freshness: 98 },
-      signals: { commits: cluster, type: 'heat_check' },
-      sources: [
-        { name: 'UF Commit Tracker', outlet: 'GatorVault' },
-        { name: 'On3', outlet: 'On3' },
-      ],
-    });
+    const commitSlugs = [
+      ...new Set(
+        cluster
+          .slice(0, 3)
+          .map((p) => p.slug || slugifyLoose(p.name))
+          .filter(Boolean)
+          .map((s) => String(s).toLowerCase())
+      ),
+    ].sort();
+    if (heatCheckCommitsAlreadyCovered(cluster)) {
+      console.log('[insider-articles] skipped heat_check — commits already covered:', commitSlugs.join(', '));
+    } else {
+      const title =
+        posLabel && names.length >= 2
+          ? `Heat Check: Florida's ${month} ${posLabel} double — ${lastNames.slice(0, 2).join(' and ')}`
+          : `Heat Check: Florida's ${month} commit surge — ${lastNames.slice(0, 2).join(' and ') || names.slice(0, 2).join(' and ')}`;
+      const classYears = [
+        ...new Set(cluster.map((p) => Number(p.classYear ?? p.class_year)).filter((y) => Number.isFinite(y))),
+      ];
+      push({
+        topicKey: `heat_check_commits_${dateKey}_${commitSlugs.join('_')}`,
+        category: 'heat_check',
+        title,
+        classYear: classYears.length === 1 ? classYears[0] : cycle.RECRUITING_MIN_CLASS,
+        scores: { relevance: 96, timeliness: 97, impact: 90, dataRichness: 88, freshness: 98 },
+        signals: { commits: cluster, type: 'heat_check' },
+        coveredCommitSlugs: commitSlugs,
+        sources: [
+          { name: 'UF Commit Tracker', outlet: 'GatorVault' },
+          { name: 'On3', outlet: 'On3' },
+        ],
+      });
+    }
   } else if (recentCommits.length === 1) {
     const p = recentCommits[0];
     const name = sanitize.sanitizePlayerName(p.name) || p.name || 'UF commit';
@@ -328,18 +387,24 @@ function buildCandidateTopics(signals) {
     const month = Number.isFinite(d.getTime())
       ? d.toLocaleString('en-US', { month: 'long' })
       : 'Recent';
-    push({
-      topicKey: `heat_check_commits_${dateKey}_${p.slug || slugifyLoose(name)}`,
-      category: 'heat_check',
-      title: `Heat Check: ${name} locks Florida — ${month} board shock`,
-      classYear: Number(p.classYear ?? p.class_year) || cycle.RECRUITING_MIN_CLASS,
-      scores: { relevance: 94, timeliness: 96, impact: 88, dataRichness: 84, freshness: 97 },
-      signals: { commits: [p], type: 'heat_check' },
-      sources: [
-        { name: 'UF Commit Tracker', outlet: 'GatorVault' },
-        { name: 'On3', outlet: 'On3' },
-      ],
-    });
+    const commitSlug = String(p.slug || slugifyLoose(name) || '').toLowerCase();
+    if (heatCheckCommitsAlreadyCovered([p])) {
+      console.log('[insider-articles] skipped heat_check — commit already covered:', commitSlug);
+    } else {
+      push({
+        topicKey: `heat_check_commits_${dateKey}_${commitSlug}`,
+        category: 'heat_check',
+        title: `Heat Check: ${name} locks Florida — ${month} board shock`,
+        classYear: Number(p.classYear ?? p.class_year) || cycle.RECRUITING_MIN_CLASS,
+        scores: { relevance: 94, timeliness: 96, impact: 88, dataRichness: 84, freshness: 97 },
+        signals: { commits: [p], type: 'heat_check' },
+        coveredCommitSlugs: commitSlug ? [commitSlug] : [],
+        sources: [
+          { name: 'UF Commit Tracker', outlet: 'GatorVault' },
+          { name: 'On3', outlet: 'On3' },
+        ],
+      });
+    }
   }
 
   if (signals.heatCheck.rising.length >= 2) {
@@ -566,12 +631,18 @@ async function writeDraftFromTopic(topic, signals) {
   }
 
   const meta = store.CATEGORIES[result.draft.category] || store.CATEGORIES.program_pulse;
+  const coveredCommitSlugs =
+    topic.coveredCommitSlugs ||
+    (topic.signals?.commits || [])
+      .map((p) => String(p.slug || slugifyLoose(p.name) || '').toLowerCase())
+      .filter(Boolean);
   return store.normalizeArticle({
     ...result.draft,
     byline: meta.byline,
     topicKey: topic.topicKey,
     triggerIntelFingerprints: topic.triggerIntelFingerprints || [],
     triggerIdentityLog: topic.triggerIdentityLog || [],
+    coveredCommitSlugs: [...new Set(coveredCommitSlugs)].sort(),
     status: 'draft',
     createdAt: new Date().toISOString(),
   });
@@ -809,6 +880,8 @@ module.exports = {
   refreshArticleContent,
   regenerateAfterReject,
   recentUfCommits,
+  heatCheckCommitsAlreadyCovered,
+  articleMentionsCommitSlug,
   EVENT_FIRST_CATEGORIES,
   GENERIC_FILLER_CATEGORIES,
 };

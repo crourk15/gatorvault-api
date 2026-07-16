@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="robots" content="noindex,nofollow">
+  <title>GatorVault Film</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+    #player { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    #err { color: #fff; font: 14px/1.4 system-ui,sans-serif; padding: 24px; text-align: center; }
+  </style>
+</head>
+<body>
+  <iframe
+    id="player"
+    title="YouTube video"
+    allowfullscreen
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+  ></iframe>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var videoId = params.get('v') || '';
+      if (!/^[\w-]{11}$/.test(videoId)) {
+        document.body.innerHTML = '<div id="err">Missing or invalid video.</div>';
+        return;
+      }
+      var qs = new URLSearchParams({
+        autoplay: params.get('autoplay') || '0',
+        controls: params.get('controls') || '1',
+        rel: '0',
+        modestbranding: '1',
+        playsinline: '1',
+        enablejsapi: '1',
+        origin: window.location.origin
+      });
+      document.getElementById('player').src =
+        'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(videoId) + '?' + qs.toString();
+    })();
+  </script>
+</body>
+</html>

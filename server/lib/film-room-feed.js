@@ -29,6 +29,39 @@ const LEGACY_VIDEO_CATEGORIES = [
 
 const FILM_ROOM_CATEGORIES = [...FILM_HUBS];
 
+/** Hosted on Netlify — Capacitor WebViews need HTTPS origin + Referer for YouTube embeds (Error 153). */
+const YOUTUBE_EMBED_SITE = String(process.env.PUBLIC_SITE_URL || 'https://gatorvaultinsider.com').replace(
+  /\/$/,
+  ''
+);
+
+function extractYoutubeId(item) {
+  const direct = String(item?.youtubeId || '').trim();
+  if (/^[\w-]{11}$/.test(direct)) return direct;
+  const urls = [item?.embedUrl, item?.videoUrl, item?.sourceUrl].filter(Boolean);
+  for (const u of urls) {
+    const m = String(u).match(
+      /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|shorts\/|watch\?.*?v=)|[?&]v=)([\w-]{11})/
+    );
+    if (m) return m[1];
+  }
+  return null;
+}
+
+function youtubeRelayEmbedUrl(videoId) {
+  return `${YOUTUBE_EMBED_SITE}/youtube-embed.html?v=${encodeURIComponent(videoId)}`;
+}
+
+/** Prefer site-hosted relay so iOS Capacitor iframes get a valid Referer (fixes Error 153). */
+function withYoutubeEmbedRelay(item) {
+  if (!item || item.noVideo) return item;
+  const id = extractYoutubeId(item);
+  if (!id) return item;
+  const relay = youtubeRelayEmbedUrl(id);
+  if (item.embedUrl === relay && item.youtubeId === id) return item;
+  return { ...item, youtubeId: id, embedUrl: relay };
+}
+
 function inferSchemeSide(lesson, conceptCategory) {
   const cat = String(conceptCategory || '').toLowerCase();
   if (cat === 'offense' || cat === 'defense') return cat;
@@ -120,9 +153,9 @@ function buildFilmRoomCatalog() {
     legacyItems = [];
   }
 
-  const items = [...lessonItems, ...legacyItems].sort(
-    (a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0)
-  );
+  const items = [...lessonItems, ...legacyItems]
+    .map(withYoutubeEmbedRelay)
+    .sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
 
   const byCategory = {};
   FILM_HUBS.forEach((hub) => {
@@ -192,5 +225,8 @@ module.exports = {
   FILM_HUBS,
   KNOWLEDGE_CATEGORIES,
   LEGACY_VIDEO_CATEGORIES,
-  inferFilmHub
+  inferFilmHub,
+  extractYoutubeId,
+  withYoutubeEmbedRelay,
+  youtubeRelayEmbedUrl,
 };

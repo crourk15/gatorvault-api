@@ -1485,6 +1485,21 @@ body.gv-live-page-active .gv-vault-shell__main {
   border: 0;
 }
 
+.gv-film-lesson__watch-ext {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+}
+
+.gv-film-lesson__watch-ext a {
+  color: #fa4616;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.gv-film-lesson__watch-ext a:hover {
+  text-decoration: underline;
+}
+
 .gv-film-lesson__body {
   font-size: 0.875rem;
   line-height: 1.6;
