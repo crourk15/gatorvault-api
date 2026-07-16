@@ -1,4 +1,4 @@
-const test = require('node:test');
+﻿const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
   isVerifiedHubCommit,
@@ -94,8 +94,13 @@ test('getHubHsCommits 2026 excludes portal signees', async () => {
   const jsonStore = require('../../lib/recruiting-store');
   const all = await jsonStore.getHubCommits(2026);
   const hs = await jsonStore.getHubHsCommits(2026);
-  assert.ok(hs.length > 0 && hs.length < all.length, 'HS commits should be a subset of all hub commits');
+  assert.ok(hs.length > 0, 'HS commits should exist');
+  assert.ok(hs.length <= all.length, 'HS commits should be a subset of all hub commits');
   assert.ok(hs.every((p) => String(p.category).toLowerCase() !== 'portal'));
+  const portalsInHub = all.filter((p) => String(p.category).toLowerCase() === 'portal');
+  if (portalsInHub.length) {
+    assert.ok(hs.length < all.length, 'portal signees should be excluded from HS commits');
+  }
   delete require.cache[require.resolve('../../lib/recruiting-store')];
   delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
 });
@@ -152,7 +157,7 @@ test('demoteUnverifiedHubCommit clears false UF commit on allowlist on3-board-sy
 
 test('demoteUnverifiedHubCommit clears false commits', () => {
   const demoted = demoteUnverifiedHubCommit({
-    slug: 'aamaury-fountain',
+    slug: 'not-a-real-uf-commit',
     classYear: 2027,
     status: 'committed',
     committedTo: 'Florida',
@@ -161,6 +166,20 @@ test('demoteUnverifiedHubCommit clears false commits', () => {
   assert.equal(demoted.status, 'uncommitted');
   assert.equal(demoted.committedTo, null);
   assert.equal(demoted.category, 'target');
+});
+
+test('demoteUnverifiedHubCommit preserves On3 snapshot board commits', () => {
+  const kept = demoteUnverifiedHubCommit({
+    slug: 'maxwell-hiller',
+    on3Id: 180637,
+    classYear: 2027,
+    status: 'committed',
+    committedTo: 'Florida',
+    category: 'recruit',
+    on3Source: 'on3-board-sync',
+  });
+  assert.equal(kept.status, 'committed');
+  assert.equal(kept.committedTo, 'Florida');
 });
 
 test('validateVerifiedCommits flags unverified rows', () => {

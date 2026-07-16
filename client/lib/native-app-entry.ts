@@ -6,6 +6,7 @@ import {
   normalizeNativeRoutePath,
 } from '@/lib/api-base';
 import { loadSession } from '@/lib/auth-api';
+import { isVaultClientNavHref } from '@/lib/vault-nav-utils';
 
 const NATIVE_COLD_START_KEY = 'gv_native_cold_done';
 
@@ -84,17 +85,22 @@ export function runNativeAppEntry(): void {
       if (raw.startsWith('http://') || raw.startsWith('https://')) return;
 
       if (isBundledNativeShell()) {
-        event.preventDefault();
-        event.stopPropagation();
         try {
           const url = new URL(raw, nativeNavigationOrigin());
           if (isMarketingPath(url.pathname)) {
+            event.preventDefault();
+            event.stopPropagation();
             window.location.href = nativeEntryDestination();
             return;
           }
         } catch {
           /* ignore malformed href */
         }
+        // Vault SPA catch-alls (player profiles, boards) have no per-slug index.html.
+        // Hard-nav 404s — let VaultNavigationProvider / Next Link soft-nav instead.
+        if (isVaultClientNavHref(raw)) return;
+        event.preventDefault();
+        event.stopPropagation();
         window.location.href = nativeNavigationUrl(normalizeStaticExportHref(raw));
         return;
       }

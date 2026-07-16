@@ -731,6 +731,18 @@ function preservePlayerFields(existing, incoming) {
   }
   if (incoming.headliner == null && existing.headliner != null) merged.headliner = existing.headliner;
 
+  // Board-sync protection must survive upserts that omit or normalize `protected` to false.
+  if (
+    existing.protected === true &&
+    incoming.protected !== false &&
+    String(incoming.protected) !== 'false'
+  ) {
+    merged.protected = true;
+  }
+  if (existing.on3Source === 'on3-board-sync' && !incoming.on3Source) {
+    merged.on3Source = 'on3-board-sync';
+  }
+
   if (String(incoming.status || '').toLowerCase() === 'uncommitted') {
     merged.committedTo = incoming.committedTo ?? null;
     merged.fromSchool = incoming.fromSchool ?? null;

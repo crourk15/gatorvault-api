@@ -79,6 +79,16 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
       return p === '/' || p === '/welcome' || p === '/insider';
     }
 
+    /** In-vault SPA routes (player profiles, boards) — let Next/VaultNavigation soft-nav. */
+    function isVaultClientNav(href) {
+      try {
+        var p = new URL(href, SITE).pathname.replace(/\\/$/, '') || '/';
+        return p === '/vault' || p.indexOf('/vault/') === 0;
+      } catch (e) {
+        return false;
+      }
+    }
+
     function takeColdStart() {
       try {
         if (sessionStorage.getItem(COLD_KEY)) return false;
@@ -97,15 +107,20 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
           raw.indexOf('mailto:') === 0 || raw.indexOf('tel:') === 0) return;
 
       if (bundledNative) {
-        e.preventDefault();
-        e.stopPropagation();
         try {
           var u = new URL(raw, SITE);
           if (isMarketingPath(u.pathname)) {
+            e.preventDefault();
+            e.stopPropagation();
             location.href = vaultDest();
             return;
           }
+          // Player profiles + vault boards are SPA catch-alls (one index.html per family).
+          // Hard-nav to /player/{slug}/index.html 404s — leave client router alone.
+          if (isVaultClientNav(raw)) return;
         } catch (err) {}
+        e.preventDefault();
+        e.stopPropagation();
         location.href = abs(norm(raw));
         return;
       }

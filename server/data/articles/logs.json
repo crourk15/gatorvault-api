@@ -1,7 +1,51 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-15T20:36:21.568Z",
+  "updatedAt": "2026-07-15T22:12:25.886Z",
   "events": [
+    {
+      "id": "log_1784153545886_l53zda",
+      "action": "draft_created",
+      "at": "2026-07-15T22:12:25.886Z",
+      "articleId": "insider_1784153545882_e77hwd",
+      "title": "Program Pulse: Florida's 2027 class after the July secondary surge",
+      "category": "program_pulse"
+    },
+    {
+      "id": "log_1784153520100_2vcawf",
+      "action": "draft_created",
+      "at": "2026-07-15T22:12:00.100Z",
+      "articleId": "insider_1784153520097_7laq6c",
+      "title": "Program Pulse: Florida's 2027 class after the July secondary surge",
+      "category": "program_pulse"
+    },
+    {
+      "id": "log_1784153520095_3712g8",
+      "action": "draft_created",
+      "at": "2026-07-15T22:12:00.095Z",
+      "articleId": "insider_1784153520093_bo2wji",
+      "title": "Heat Check: Florida's July CB double — Whitfield and Floyd",
+      "category": "heat_check"
+    },
+    {
+      "id": "log_1784153520091_t6w9xa",
+      "action": "draft_rejected",
+      "at": "2026-07-15T22:12:00.091Z",
+      "articleId": "insider_1784147354685_8fbgit",
+      "title": "Program Pulse: Florida 2027 board after the July visit wave",
+      "reason": "stale_wrong_hiller_open_status",
+      "angleKey": "macro_health",
+      "topicKey": "program_pulse_2026_0"
+    },
+    {
+      "id": "log_1784153520085_vmxupx",
+      "action": "draft_rejected",
+      "at": "2026-07-15T22:12:00.085Z",
+      "articleId": "insider_1784147354674_vl9rsn",
+      "title": "Post-Visit: Kailib Dillard and Florida defensive visit weekend",
+      "reason": "stale_may_ov_intel_and_wrong_commit_status",
+      "angleKey": "visit_reaction",
+      "topicKey": "post_visit_2027_kailib-dillard_243497|detectives_beat_det_1783306655128_cddec6f1|2026-07-06|243"
+    },
     {
       "id": "log_1784147781568_xaci98",
       "action": "draft_rejected",

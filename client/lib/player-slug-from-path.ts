@@ -7,17 +7,23 @@ export const PLAYER_SLUG_PATTERNS = {
   standalone: /\/player\/([^/]+)\/?$/,
 } as const;
 
+function stripBundledIndexHtml(path: string): string {
+  return path.replace(/\/index\.html$/i, '') || '/';
+}
+
 /** Read player slug synchronously from pathname + browser URL (static rewrite safe). */
 export function playerSlugFromPath(pathname: string, pattern: RegExp): string {
   const paths: string[] = [];
-  if (pathname) paths.push(pathname);
+  if (pathname) paths.push(stripBundledIndexHtml(pathname));
   if (typeof window !== 'undefined') {
-    const browser = window.location.pathname;
+    const browser = stripBundledIndexHtml(window.location.pathname);
     if (browser && !paths.includes(browser)) paths.unshift(browser);
   }
   for (const path of paths) {
     const match = path.match(pattern);
-    if (match?.[1]) return decodeURIComponent(match[1]);
+    if (match?.[1] && match[1].toLowerCase() !== 'index.html') {
+      return decodeURIComponent(match[1]);
+    }
   }
   return '';
 }

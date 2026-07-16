@@ -1,7 +1,7 @@
 /**
  * Editorial verified UF commits — minimum slugs restored after On3 ingest demotion.
  * Hub commit lists use official On3 board sync + enrolled/signed rows only.
- * from sticking while ensuring known commits are never demoted.
+ * On3 snapshot commits are also treated as authoritative and must never be demoted.
  */
 const { slugify } = require('./slug');
 
@@ -9,10 +9,65 @@ const HUB_CLASS_YEARS = new Set([2027, 2028, 2029]);
 
 /** Locked verified UF commit slugs by class year */
 const VERIFIED_UF_COMMITS_BY_YEAR = {
-  2027: new Set(['tre-geathers', 'jaydee-lane', 'ellis-mcgaskin', 'aaron-mcwilliams', 'kamauri-whitfield', 'raheem-floyd']),
+  2027: new Set([
+    'tre-geathers',
+    'jaydee-lane',
+    'ellis-mcgaskin',
+    'aaron-mcwilliams',
+    'kamauri-whitfield',
+    'raheem-floyd',
+    'maxwell-hiller',
+    'kailib-dillard',
+    'zahmar-tookes',
+  ]),
   2028: new Set(),
   2029: new Set(),
 };
+
+/** Cached On3 snapshot commit keys by class year: slug + on3:<id> */
+let _snapshotCommitKeysByYear = null;
+
+function loadSnapshotCommitKeysByYear() {
+  if (_snapshotCommitKeysByYear) return _snapshotCommitKeysByYear;
+  const map = new Map();
+  try {
+    const { loadOn3Snapshot } = require('./on3-snapshot-commits');
+    const snapshot = loadOn3Snapshot();
+    for (const [yearKey, bucket] of Object.entries(snapshot.years || {})) {
+      const year = Number(yearKey);
+      if (!Number.isFinite(year)) continue;
+      const keys = new Set();
+      for (const entry of Object.values(bucket?.commits || {})) {
+        const slug = slugify(entry?.name || '').toLowerCase();
+        if (slug) keys.add(slug);
+        if (entry?.on3Id != null) keys.add(`on3:${String(entry.on3Id)}`);
+      }
+      map.set(year, keys);
+    }
+  } catch {
+    /* snapshot optional at boot */
+  }
+  _snapshotCommitKeysByYear = map;
+  return map;
+}
+
+/** True when player appears on the authoritative On3 UF commit board snapshot. */
+function isOn3SnapshotUfCommit(player) {
+  if (!player) return false;
+  const year = Number(player.classYear ?? player.class_year);
+  if (!Number.isFinite(year)) return false;
+  const keys = loadSnapshotCommitKeysByYear().get(year);
+  if (!keys || keys.size === 0) return false;
+  const slug = playerSlug(player);
+  if (slug && keys.has(slug)) return true;
+  if (player.on3Id != null && keys.has(`on3:${String(player.on3Id)}`)) return true;
+  return false;
+}
+
+/** Test helper — clear snapshot key cache after mutating fixtures. */
+function clearSnapshotCommitKeyCache() {
+  _snapshotCommitKeysByYear = null;
+}
 
 const ALL_VERIFIED_UF_COMMITS = new Set(
   Object.values(VERIFIED_UF_COMMITS_BY_YEAR).flatMap((set) => [...set])
@@ -98,6 +153,8 @@ function demoteUnverifiedHubCommit(player) {
 
   if (isVerifiedUfCommitSlug(slug, year)) return player;
   if (player.protected === true) return player;
+  // Official On3 board snapshot is authoritative — do not wipe real commits.
+  if (isOn3SnapshotUfCommit(player)) return player;
 
   const out = { ...player };
   out.status = 'uncommitted';
@@ -200,6 +257,8 @@ module.exports = {
   looksLikeFloridaCommit,
   isHubExternalCommitFlipTarget,
   HUB_EXTERNAL_COMMIT_BY_SLUG,
+  isOn3SnapshotUfCommit,
+  clearSnapshotCommitKeyCache,
   demoteUnverifiedHubCommit,
   applyVerifiedHubCommit,
   restoreVerifiedHubCommitsInStore,
