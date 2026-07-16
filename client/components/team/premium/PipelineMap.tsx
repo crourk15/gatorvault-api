@@ -18,14 +18,16 @@ export function PipelineMap({ states }: Props): React.ReactElement {
       <div className="team-pipeline-map__grid">
         {states.map((s) => {
           const tier = pipelineStateTier(s.count, maxCount);
+          const pct = Math.max(8, Math.round((s.count / Math.max(maxCount, 1)) * 100));
           return (
-            <div key={s.state} className="team-pipeline-map__cell">
+            <div
+              key={s.state}
+              className="team-pipeline-map__cell"
+              style={{ '--pipeline-pct': `${pct}%` } as React.CSSProperties}
+            >
               <span className="team-pipeline-map__code">{s.state}</span>
               <div className="team-pipeline-map__bar-wrap">
-                <span
-                  className={`team-pipeline-map__bar team-pipeline-map__bar--${tier}`}
-                  style={{ height: `${Math.max(8, Math.round((s.count / Math.max(maxCount, 1)) * 100))}%` }}
-                />
+                <span className={`team-pipeline-map__bar team-pipeline-map__bar--${tier}`} />
               </div>
               <span className="team-pipeline-map__count">{s.count}</span>
             </div>
