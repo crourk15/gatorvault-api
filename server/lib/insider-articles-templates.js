@@ -46,11 +46,15 @@ function validateDraftQuality(draft) {
   const body = draft.body;
   const words = sanitize.wordCount(body);
   const reasons = [];
+  const handPolished = (draft.qualityReasons || []).includes('hand_polished_for_approve');
 
   if (words < MIN_WORDS) reasons.push(`word_count_${words}`);
   if (words > MAX_WORDS + 200) reasons.push(`word_count_high_${words}`);
   if (sanitize.hasEmptyParentheses(body)) reasons.push('empty_parentheses');
-  if (!sanitize.hasEliteRequiredSections(scaffold)) reasons.push('missing_elite_sections');
+  // Hand-polished Approve drafts use free-form sections; facts still hard-fail below.
+  if (!handPolished && !sanitize.hasEliteRequiredSections(scaffold)) {
+    reasons.push('missing_elite_sections');
+  }
   if (hasForbiddenPublishedLabels(body)) reasons.push('internal_labels_in_publish');
   if (sanitize.hasBannedPhrases(body)) reasons.push('banned_phrase');
   if (sanitize.isNameOnlyListBody(body)) reasons.push('name_only_list');
@@ -64,17 +68,26 @@ function validateDraftQuality(draft) {
   const angles = draft.insiderAngles || [];
   if (angles.length < 3) reasons.push('insufficient_insider_angles');
 
-  const analysisBlock =
-    scaffold.match(/<h2>Insider Angles<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] ||
-    body.match(/<h2>Insider Angles<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] ||
-    body.match(/<h2>Analysis<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] ||
-    '';
-  const analysisParas = (analysisBlock.match(/<p>/gi) || []).length;
-  if (analysisParas < 3) reasons.push('thin_analysis');
+  if (!handPolished) {
+    const analysisBlock =
+      scaffold.match(/<h2>Insider Angles<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] ||
+      body.match(/<h2>Insider Angles<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] ||
+      body.match(/<h2>Analysis<\/h2>([\s\S]*?)(<h2>|$)/i)?.[1] ||
+      '';
+    const analysisParas = (analysisBlock.match(/<p>/gi) || []).length;
+    if (analysisParas < 3) reasons.push('thin_analysis');
 
-  if (isRecruitingBattleArticleType(draft.articleType)) {
-    const warReasons = validateWarRoomBattles(draft.battles || [], body);
-    for (const r of warReasons) reasons.push(r);
+    if (isRecruitingBattleArticleType(draft.articleType)) {
+      const warReasons = validateWarRoomBattles(draft.battles || [], body);
+      for (const r of warReasons) reasons.push(r);
+    }
+  }
+
+  try {
+    const { validateRecruitingFactClaims } = require('./insider-articles-recruiting-facts');
+    for (const r of validateRecruitingFactClaims(draft)) reasons.push(r);
+  } catch (err) {
+    reasons.push(`fact_check_error:${err?.message || 'unknown'}`);
   }
 
   return {

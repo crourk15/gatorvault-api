@@ -378,8 +378,11 @@ function rosterUnitSnapshot(roster) {
 }
 
 function summarizeRecruitingBoard(recruiting) {
+  const { isActiveUfTarget } = require('./recruiting-target-filters');
   const players = recruiting?.players || [];
-  const targets = players.filter((p) => p.category === 'target' || p.status === 'target');
+  const targets = players.filter(
+    (p) => (p.category === 'target' || p.status === 'target') && isActiveUfTarget(p)
+  );
   const commits = players.filter((p) => p.committedTo);
   const ufCommits = commits.filter((p) => /florida|gators|\bUF\b/i.test(String(p.committedTo || '')));
   return {

@@ -65,6 +65,8 @@ function isStaffOrCoachIdentity(player) {
 function isEligibleRecruitTarget(p) {
   if (!p || isStaffOrCoachIdentity(p)) return false;
   if (p.committedTo && !/florida|gators/i.test(String(p.committedTo))) return false;
+  const { isActiveUfTarget } = require('./recruiting-target-filters');
+  if (!isActiveUfTarget(p)) return false;
   const identityValidator = require('./identity-record-validator');
   const idCheck = identityValidator.validatePlayerIdentityRecord(p);
   if (!idCheck.valid) return false;
