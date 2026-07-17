@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { loadSession } from '@/lib/auth-api';
+import { ensureSessionHydrated, loadSession } from '@/lib/auth-api';
 import { useUser } from '@/hooks/useUser';
 import { siteGateRedirect } from '@/lib/site-routes';
 import { usePathname } from '@/lib/use-pathname';
@@ -23,12 +23,19 @@ export function AppRouteGate(): null {
 
   React.useEffect(() => {
     if (!ready) return;
-    const p = pathname.replace(/\/$/, '') || '/';
-    if (p.startsWith('/join') || p.startsWith('/insider') || p.startsWith('/welcome')) return;
+    let cancelled = false;
+    void ensureSessionHydrated().then(() => {
+      if (cancelled) return;
+      const p = pathname.replace(/\/$/, '') || '/';
+      if (p.startsWith('/join') || p.startsWith('/insider') || p.startsWith('/welcome')) return;
 
-    const loggedIn = sessionLoggedIn() || isAuthenticated(user?.email, user?.token);
-    const dest = siteGateRedirect(pathname, loggedIn);
-    if (dest) window.location.replace(dest);
+      const loggedIn = sessionLoggedIn() || isAuthenticated(user?.email, user?.token);
+      const dest = siteGateRedirect(pathname, loggedIn);
+      if (dest) window.location.replace(dest);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [pathname, ready, user?.email, user?.token]);
 
   return null;

@@ -75,6 +75,38 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
         : abs('/join/?mode=signin&next=/vault/');
     }
 
+    /** iOS may wipe localStorage; Preferences (UserDefaults) survives — restore before join bounce. */
+    function restoreSessionFromPreferences(done) {
+      try {
+        var plugins = cap && cap.Plugins;
+        var Prefs = plugins && plugins.Preferences;
+        if (!Prefs || typeof Prefs.get !== 'function') {
+          done();
+          return;
+        }
+        var settled = false;
+        var finish = function() {
+          if (settled) return;
+          settled = true;
+          done();
+        };
+        setTimeout(finish, 1200);
+        Prefs.get({ key: 'gv_session' }).then(function(res) {
+          try {
+            if (res && res.value) {
+              var s = JSON.parse(res.value);
+              if (s && s.email && s.token) {
+                localStorage.setItem('gv_session', res.value);
+              }
+            }
+          } catch (e1) {}
+          finish();
+        }).catch(function() { finish(); });
+      } catch (e2) {
+        done();
+      }
+    }
+
     function isMarketingPath(path) {
       var p = routePath(path);
       return p === '/' || p === '/welcome' || p === '/insider';
@@ -224,8 +256,10 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
     var path = routePath(location.pathname || '/');
     var cold = takeColdStart();
     if (cold || isMarketingPath(path)) {
-      var dest = vaultDest();
-      if (location.href !== dest) location.replace(dest);
+      restoreSessionFromPreferences(function() {
+        var dest = vaultDest();
+        if (location.href !== dest) location.replace(dest);
+      });
     } else {
       consumeSpaPending();
     }

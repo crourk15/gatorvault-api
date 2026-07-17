@@ -5,7 +5,7 @@ import {
   nativeNavigationUrl,
   normalizeNativeRoutePath,
 } from '@/lib/api-base';
-import { loadSession } from '@/lib/auth-api';
+import { ensureSessionHydrated, loadSession } from '@/lib/auth-api';
 import {
   consumeNativeSpaPendingPath,
   isNativeCatchAllDynamicHref,
@@ -73,15 +73,16 @@ export function nativeBootRedirect(): string | null {
 export function runNativeAppEntry(): void {
   if (!isNativeApp()) return;
 
-  const boot = nativeBootRedirect();
-  if (boot && window.location.href !== boot) {
-    window.location.replace(boot);
-    return;
-  }
-
-  if (isBundledNativeShell()) {
-    consumeNativeSpaPendingPath();
-  }
+  void ensureSessionHydrated().then(() => {
+    const boot = nativeBootRedirect();
+    if (boot && window.location.href !== boot) {
+      window.location.replace(boot);
+      return;
+    }
+    if (isBundledNativeShell()) {
+      consumeNativeSpaPendingPath();
+    }
+  });
 
   document.addEventListener(
     'click',
@@ -99,7 +100,9 @@ export function runNativeAppEntry(): void {
           if (isMarketingPath(url.pathname)) {
             event.preventDefault();
             event.stopPropagation();
-            window.location.href = nativeEntryDestination();
+            void ensureSessionHydrated().then(() => {
+              window.location.href = nativeEntryDestination();
+            });
             return;
           }
         } catch {
@@ -125,7 +128,9 @@ export function runNativeAppEntry(): void {
         const p = url.pathname.replace(/\/$/, '') || '/';
         if (isMarketingPath(p)) {
           event.preventDefault();
-          window.location.href = nativeEntryDestination();
+          void ensureSessionHydrated().then(() => {
+            window.location.href = nativeEntryDestination();
+          });
           return;
         }
       } catch {
