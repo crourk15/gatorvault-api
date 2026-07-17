@@ -28,7 +28,7 @@ function AuthLinks({
   if (!ready) {
     return (
       <>
-        <Link href="/join?mode=signin" className="gv-site-nav__link">
+        <Link href="/join/?mode=signin" className="gv-site-nav__link">
           Sign in
         </Link>
         <Link href="/insider" className="gv-site-nav__cta gv-nav-premium__cta">
