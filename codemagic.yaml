@@ -76,6 +76,17 @@ workflows:
       - name: Build IPA for App Store
         script: |
           set -euo pipefail
+          PROFILE_FILE="$(cat /tmp/gatorvault_push_profile.path 2>/dev/null || true)"
+          PROFILE_NAME="$(cat /tmp/gatorvault_push_profile.name 2>/dev/null || true)"
+          if [[ -z "${PROFILE_FILE}" || ! -f "${PROFILE_FILE}" ]]; then
+            echo "ERROR: Push-enabled profile path missing — refresh step did not run?" >&2
+            exit 1
+          fi
+          if ! security cms -D -i "${PROFILE_FILE}" | grep -q 'aps-environment'; then
+            echo "ERROR: profile ${PROFILE_NAME:-unknown} lacks aps-environment" >&2
+            exit 1
+          fi
+          echo "Archiving with profile: ${PROFILE_NAME} (${PROFILE_FILE})"
           xcode-project build-ipa \
             --workspace "$CM_BUILD_DIR/client/ios/App/App.xcworkspace" \
             --scheme "$XCODE_SCHEME" \

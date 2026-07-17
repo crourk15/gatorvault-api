@@ -4,8 +4,13 @@
 set -euo pipefail
 
 BUNDLE_ID="${BUNDLE_ID:?BUNDLE_ID is required}"
-PROFILES_DIR="${HOME}/Library/Developer/Xcode/UserData/Provisioning Profiles"
-mkdir -p "${PROFILES_DIR}"
+PROFILE_DIRS=(
+  "${HOME}/Library/Developer/Xcode/UserData/Provisioning Profiles"
+  "${HOME}/Library/MobileDevice/Provisioning Profiles"
+)
+for d in "${PROFILE_DIRS[@]}"; do
+  mkdir -p "${d}"
+done
 
 echo "==> Refresh App Store profile for ${BUNDLE_ID} (Push / aps-environment)"
 
@@ -93,8 +98,10 @@ if [[ -n "${OLD_PROFILE_IDS:-}" ]]; then
   done
 fi
 
-# Drop any previously installed local profiles so use-profiles cannot pick a stale one.
-rm -f "${PROFILES_DIR}"/*.mobileprovision 2>/dev/null || true
+# Drop every local profile copy so Xcode cannot pick a stale Codemagic-cached one.
+for d in "${PROFILE_DIRS[@]}"; do
+  rm -f "${d}"/*.mobileprovision 2>/dev/null || true
+done
 
 PROFILE_NAME="GatorVault Insider App Store Push $(date -u +%Y%m%d%H%M%S)"
 echo "==> Creating App Store profile: ${PROFILE_NAME}"
@@ -106,11 +113,24 @@ app-store-connect profiles create \
   --certificate-ids ${CERT_IDS} \
   --save
 
-PROFILE_FILE="$(ls -1t "${PROFILES_DIR}"/*.mobileprovision 2>/dev/null | head -1 || true)"
+PROFILE_FILE=""
+for d in "${PROFILE_DIRS[@]}"; do
+  candidate="$(ls -1t "${d}"/*.mobileprovision 2>/dev/null | head -1 || true)"
+  if [[ -n "${candidate}" ]]; then
+    PROFILE_FILE="${candidate}"
+    break
+  fi
+done
 if [[ -z "${PROFILE_FILE}" ]]; then
-  echo "ERROR: profile was not saved to ${PROFILES_DIR}" >&2
+  echo "ERROR: profile was not saved to any known profiles directory" >&2
   exit 1
 fi
+
+# Mirror into both profile dirs Xcode/Codemagic may consult.
+for d in "${PROFILE_DIRS[@]}"; do
+  mkdir -p "${d}"
+  cp -f "${PROFILE_FILE}" "${d}/$(basename "${PROFILE_FILE}")"
+done
 
 echo "==> Verifying aps-environment in ${PROFILE_FILE}"
 DECODED="$(security cms -D -i "${PROFILE_FILE}" 2>/dev/null || true)"
@@ -120,7 +140,17 @@ if ! printf '%s' "${DECODED}" | grep -q 'aps-environment'; then
   printf '%s\n' "${DECODED}" | head -n 80 >&2 || true
   exit 1
 fi
-echo "OK: profile includes aps-environment"
+NAME="$(printf '%s' "${DECODED}" | python3 -c 'import sys,re; t=sys.stdin.read(); m=re.search(r"<key>Name</key>\s*<string>(.*?)</string>", t); print(m.group(1) if m else "")')"
+UUID="$(printf '%s' "${DECODED}" | python3 -c 'import sys,re; t=sys.stdin.read(); m=re.search(r"<key>UUID</key>\s*<string>(.*?)</string>", t); print(m.group(1) if m else "")')"
+echo "OK: profile includes aps-environment (name=${NAME} uuid=${UUID})"
 
-xcode-project use-profiles
+# Force Xcode onto this exact profile (never a stale "GatorVault Insider App Store").
+xcode-project use-profiles \
+  --project "$CM_BUILD_DIR/client/ios/App/App.xcodeproj" \
+  --profile "${PROFILE_FILE}"
+
+# Persist for the IPA step preflight.
+printf '%s\n' "${PROFILE_FILE}" > /tmp/gatorvault_push_profile.path
+printf '%s\n' "${NAME}" > /tmp/gatorvault_push_profile.name
+printf '%s\n' "${UUID}" > /tmp/gatorvault_push_profile.uuid
 echo "OK: Xcode project configured with Push-enabled App Store profile"
