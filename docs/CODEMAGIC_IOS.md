@@ -57,12 +57,24 @@ openssl genrsa -out ios_distribution_private_key.pem 2048
 3. Export compliance: encryption **Yes** → standard HTTPS → **exempt** (also set in Info.plist)
 4. **Add for Review**
 
+## After enabling Push Notifications
+
+Apple marks the App Store provisioning profile **Invalid**. Before the next Codemagic build:
+
+1. Confirm Apple Developer → Profiles → **GatorVault Insider App Store** is valid (includes Push)
+2. Codemagic → app → **Code signing identities** → iOS provisioning profiles
+3. Remove the stale `gatorvault_appstore_profile` (or Fetch again)
+4. **Fetch profile** from Apple for `com.gatorvaultinsider.app` (App Store) → reference name must stay **`gatorvault_appstore_profile`**
+5. Start a new **iOS Release Build** on `main`
+
 ## Troubleshooting
 
 | Error | Fix |
 |-------|-----|
 | Integration not found | Rename integration in Codemagic to match `integrations.app_store_connect` in `codemagic.yaml` |
 | No matching profiles found | Add `CERTIFICATE_PRIVATE_KEY` env var OR Generate certificate in app Distribution settings; rebuild after yaml fix on `main` |
+| Cannot save Signing Certificates without certificate private key | Do not use `fetch-signing-files --create` without `CERTIFICATE_PRIVATE_KEY`; use named `gatorvault_appstore` cert + profile instead |
+| Profile Invalid / archive exit 65 after Push | Re-fetch App Store profile in Codemagic (see “After enabling Push Notifications”) |
 | Bundle ID mismatch | Must be `com.gatorvaultinsider.app` |
 | Build fails on `npm run build` | Check Codemagic build log; fix Next.js errors |
 | Upload OK but no build in Connect | Wait 30 min; check email for Apple processing errors |

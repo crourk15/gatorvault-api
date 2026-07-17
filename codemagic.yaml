@@ -6,11 +6,14 @@ workflows:
     integrations:
       app_store_connect: codemagic
     environment:
-      # Valid Codemagic shape: distribution_type + bundle_identifier
-      # (named profile alone went Invalid after Push was enabled on the App ID).
+      # Named cert + profile (must be valid in Codemagic Code signing identities).
+      # After enabling Push on the App ID, re-fetch the App Store profile in
+      # Codemagic UI so it includes aps-environment (Apple marks old ones Invalid).
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.gatorvaultinsider.app
+        certificates:
+          - certificate: gatorvault_appstore
+        provisioning_profiles:
+          - profile: gatorvault_appstore_profile
       vars:
         XCODE_SCHEME: App
         BUNDLE_ID: com.gatorvaultinsider.app
@@ -63,17 +66,8 @@ workflows:
         script: |
           cd client/ios/App
           pod install
-      - name: Set up code signing (refresh profile for Push entitlement)
-        script: |
-          set -euo pipefail
-          # Profile must include aps-environment after Push was enabled on the App ID.
-          # --create regenerates an App Store profile when the old one is missing Push.
-          keychain initialize
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --create
-          keychain add-certificates
-          xcode-project use-profiles
+      - name: Set up code signing settings on Xcode project
+        script: xcode-project use-profiles
       - name: Verify iOS app icon (1024×1024)
         script: |
           set -euo pipefail
@@ -82,7 +76,6 @@ workflows:
       - name: Build IPA for App Store
         script: |
           set -euo pipefail
-          # Surface the real archive error (exit 65) instead of only the CocoaPods warning.
           xcode-project build-ipa \
             --workspace "$CM_BUILD_DIR/client/ios/App/App.xcworkspace" \
             --scheme "$XCODE_SCHEME" \
