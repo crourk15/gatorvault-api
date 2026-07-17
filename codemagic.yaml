@@ -6,11 +6,11 @@ workflows:
     integrations:
       app_store_connect: codemagic
     environment:
-      # Certificate kept by reference; App Store profile is refreshed below with
-      # fetch-signing-files --create so Push (aps-environment) is included.
+      # Valid Codemagic shape: distribution_type + bundle_identifier
+      # (named profile alone went Invalid after Push was enabled on the App ID).
       ios_signing:
-        certificates:
-          - certificate: gatorvault_appstore
+        distribution_type: app_store
+        bundle_identifier: com.gatorvaultinsider.app
       vars:
         XCODE_SCHEME: App
         BUNDLE_ID: com.gatorvaultinsider.app
