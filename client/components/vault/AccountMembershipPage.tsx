@@ -63,7 +63,8 @@ export function AccountMembershipPage(): React.ReactElement {
       try {
         const verified = await verifyStoredSession({ keepLocalOnNetworkError: true });
         if (cancelled) return;
-        if (!verified?.token) {
+        // Soft API blips keep local session — only force reauth when login is actually gone.
+        if (!verified?.token && !loadSession()?.token) {
           replaceAuthLocation('/join/?mode=signin&reauth=1&next=/vault/membership/');
           return;
         }
