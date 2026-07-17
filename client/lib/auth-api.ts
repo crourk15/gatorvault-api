@@ -154,15 +154,36 @@ export async function registerAccount(opts: {
   password: string;
   name: string;
   tier: PaymentTierId;
-}): Promise<{ session: AuthSession; emailSent?: boolean }> {
-  const res = await authPost<{ ok?: boolean; error?: string; session?: AuthSession; emailSent?: boolean }>(
-    '/api/register',
-    opts
-  );
+}): Promise<{
+  session: AuthSession;
+  emailSent?: boolean;
+  trialReused?: boolean;
+  trialExpired?: boolean;
+}> {
+  const res = await authPost<{
+    ok?: boolean;
+    error?: string;
+    code?: string;
+    session?: AuthSession;
+    emailSent?: boolean;
+    trialReused?: boolean;
+    trialExpired?: boolean;
+  }>('/api/register', opts);
   if (!res.ok || !res.data.session) {
-    throw new Error(res.data.error || 'Registration failed.');
+    const err = new Error(res.data.error || 'Registration failed.') as Error & {
+      code?: string;
+      status?: number;
+    };
+    err.code = res.data.code;
+    err.status = res.status;
+    throw err;
   }
-  return { session: normalizeSession(res.data.session), emailSent: res.data.emailSent };
+  return {
+    session: normalizeSession(res.data.session),
+    emailSent: res.data.emailSent,
+    trialReused: res.data.trialReused,
+    trialExpired: res.data.trialExpired,
+  };
 }
 
 export async function loginAccount(opts: {

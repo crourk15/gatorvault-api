@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { isNativeApp, nativeNavigationUrl } from '@/lib/api-base';
-import { loadSession } from '@/lib/auth-api';
+import { loadSession, replaceAuthLocation, verifyStoredSession } from '@/lib/auth-api';
 import { useUser } from '@/hooks/useUser';
 import { vaultGateRedirect } from '@/lib/navConfig';
 import { usePathname } from '@/lib/use-pathname';
@@ -29,6 +29,7 @@ function sessionLoggedIn(): boolean {
 /**
  * Static-export substitute for middleware.ts vault protection.
  * Logged-out visitors on /vault/futurecast|recruiting|film-room → welcome preview anchors.
+ * Expired unpaid trials are sent to Membership (not kicked to landing).
  */
 export function VaultRouteGate(): null {
   const pathname = usePathname();
@@ -50,7 +51,26 @@ export function VaultRouteGate(): null {
     }
 
     const dest = vaultGateRedirect(pathname, loggedIn);
-    if (dest) window.location.replace(isNativeApp() ? nativeNavigationUrl(dest) : dest);  }, [pathname, ready, user?.email, user?.token]);
+    if (dest) {
+      window.location.replace(isNativeApp() ? nativeNavigationUrl(dest) : dest);
+      return;
+    }
+
+    if (!loggedIn) return;
+
+    let cancelled = false;
+    void verifyStoredSession({ keepLocalOnNetworkError: true }).then((session) => {
+      if (cancelled || !session) return;
+      if (session.paid) return;
+      if (session.accessActive === false) {
+        replaceAuthLocation('/vault/membership/?trial=ended');
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [pathname, ready, user?.email, user?.token]);
 
   return null;
 }
