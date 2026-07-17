@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { deleteAccount } from '@/lib/auth-api';
+import { deleteAccount, replaceAuthLocation } from '@/lib/auth-api';
 
 type Props = {
   email: string;
@@ -29,7 +29,7 @@ export function AccountDeletePanel({ email, paid, subscriptionSource }: Props): 
     setLoading(true);
     try {
       await deleteAccount({ password, confirm });
-      window.location.replace('/welcome/?deleted=1');
+      replaceAuthLocation('/welcome/?deleted=1');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not delete account.');
     } finally {

@@ -8,6 +8,7 @@ import {
   verifyStoredSession,
   clearSession,
   safeAuthRedirectPath,
+  replaceAuthLocation,
   type PaymentTierId,
 } from '@/lib/auth-api';
 import { findPricingTier, publicPricingTiers, PRICING_TIERS } from '@/lib/pricing-tiers';
@@ -97,7 +98,7 @@ export function JoinPage(): React.ReactElement {
     const dest = new URLSearchParams({ upgrade: t });
     const next = params.get('next');
     if (next?.startsWith('/')) dest.set('next', next);
-    window.location.replace(`/vault/membership/?${dest.toString()}`);
+    replaceAuthLocation(`/vault/membership/?${dest.toString()}`);
   }, [checkingSession, existingSession]);
 
   const tierMeta = findPricingTier(tier);
