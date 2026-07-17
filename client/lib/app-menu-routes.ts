@@ -80,7 +80,7 @@ export function getAppMenuSections(inVault: boolean): AppMenuSection[] {
     {
       id: 'podcasts',
       label: 'Podcasts',
-      href: sitePath(inVault, SITE_ROUTES.gatorNationLive, '/vault/live/podcasts'),
+      href: sitePath(inVault, SITE_ROUTES.gatorNationLive, '/vault/live/podcasts/'),
       icon: '🎙️',
     },
     {

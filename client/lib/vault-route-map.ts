@@ -80,9 +80,9 @@ export function normalizeRecruitingTab(tab: RecruitingHubTab): RecruitingHubTab 
 
 /** Live Feed tabs */
 export const LIVE_FEED_TAB_PATHS: Record<LiveFeedTab, string> = {
-  headlines: '/vault/live/headlines',
-  beat: '/vault/live/beat',
-  podcasts: '/vault/live/podcasts',
+  headlines: '/vault/live/headlines/',
+  beat: '/vault/live/beat/',
+  podcasts: '/vault/live/podcasts/',
 };
 
 /** Film Room segments → hub category label */

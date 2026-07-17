@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
+import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import { usePathname } from '@/lib/use-pathname';
 import { getAppMenuSections } from '@/lib/app-menu-routes';
 import { isVaultPath } from '@/lib/vault-routes';
@@ -53,14 +53,14 @@ export function AppMenuDrawer(): React.ReactElement {
               <ul className="gv-app-menu__list">
                 {section.items.map((item) => (
                   <li key={item.id}>
-                    <Link href={item.href} className="gv-app-menu__link" onClick={closeMenu}>
+                    <VaultNavLink href={item.href} className="gv-app-menu__link" onClick={closeMenu}>
                       {item.icon ? (
                         <span className="gv-app-menu__link-icon" aria-hidden="true">
                           {item.icon}
                         </span>
                       ) : null}
                       <span>{item.label}</span>
-                    </Link>
+                    </VaultNavLink>
                   </li>
                 ))}
               </ul>
