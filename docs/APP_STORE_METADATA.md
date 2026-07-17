@@ -45,7 +45,7 @@ Capture at **1284×2778** (6.5" Display slot) via `npm run capture:app-store-scr
 |-----|----------------|
 | NSCameraUsageDescription | Not used unless added later |
 | NSPhotoLibraryUsageDescription | Not used unless avatar upload added |
-| (Push) | Required when Step 5 push is enabled |
+| (Push / notifications) | GatorVault sends optional alerts for verified visits, commits, and Gator game scores when you enable them in My Alerts. |
 
 ## Subscription metadata
 

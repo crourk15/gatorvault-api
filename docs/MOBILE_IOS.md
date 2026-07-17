@@ -80,14 +80,28 @@ Suggested Review Notes reply:
 
 | Piece | Location |
 |-------|----------|
-| Service worker | `client/public/push-sw.js` |
+| Service worker | `client/public/push-sw.js` (Safari / Chrome Web Push) |
 | Alerts UI | `/vault/alerts/` → `VaultAlertsPage.tsx` |
-| API | `POST /api/push/subscribe`, `/unsubscribe`, `GET /api/push/config` |
-| Server env | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `PUSH_ALERTS_ENABLED=true` on Render |
+| Web Push API | `POST /api/push/subscribe`, `/unsubscribe`, `GET /api/push/config` |
+| Native APNs API | `POST /api/push/device`, `/device/unregister` |
+| Capacitor plugin | `@capacitor/push-notifications` + `client/lib/native-push.ts` |
+| Server env (Web) | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `PUSH_ALERTS_ENABLED=true` |
+| Server env (APNs) | `APNS_KEY_ID`, `APNS_TEAM_ID`, `APNS_BUNDLE_ID=com.gatorvaultinsider.app`, `APNS_KEY_P8` (or `APNS_KEY_PATH`), `APNS_PRODUCTION=true` |
 
-Enable on a member account: sign in → **My Alerts** → Push + Visits → Save. Cache-bust no longer unregisters `push-sw.js`.
+**My Alerts delivery (honest):** Visits, Commits, Scores can leave the device. Other categories are in-app feed only.
 
-Native iOS push requires APNs key + Capacitor plugin (Step 5b — not started).
+Enable on a member account: sign in → **My Alerts** → toggle Visits / Commits / Scores → Push → Save.
+
+### Step 5b — Native APNs (App Store binary)
+
+1. Apple Developer → Keys → create **Apple Push Notifications** key (.p8); note Key ID + Team ID
+2. App ID `com.gatorvaultinsider.app` → enable Push Notifications
+3. Xcode: Signing & Capabilities → Push Notifications (+ Background Modes → Remote notifications — already in Info.plist)
+4. Set Render env vars above; redeploy API
+5. `cd client && npm i && npx cap sync ios` then archive a new build (APNs does not OTA)
+6. On device: open My Alerts → Save Preferences → allow notifications
+
+Commit pushes fire from On3 ingest. Score pushes: ops job `gators-score-alerts` (kickoff + final in UF game windows only).
 
 ## Windows note
 

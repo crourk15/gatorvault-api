@@ -1,10 +1,18 @@
-import { getApiBase } from '@/lib/big-board-api';
+import { getApiBase, isNativeApp } from '@/lib/api-base';
 import { loadSession } from '@/lib/auth-api';
 
 export type PushConfig = {
   ok: boolean;
   enabled: boolean;
   publicKey: string | null;
+  apnsConfigured?: boolean;
+};
+
+export type AlertPushPrefs = {
+  visit: boolean;
+  commit: boolean;
+  score: boolean;
+  followPlayers: string[];
 };
 
 function authHeaders(json = false): HeadersInit {
@@ -30,10 +38,7 @@ export async function fetchPushConfig(): Promise<PushConfig> {
   return res.json() as Promise<PushConfig>;
 }
 
-export async function subscribeVisitPush(
-  visitEnabled: boolean,
-  followPlayers: string[] = []
-): Promise<{ ok: boolean; reason?: string }> {
+async function subscribeWebPush(prefs: AlertPushPrefs): Promise<{ ok: boolean; reason?: string }> {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator) || !('PushManager' in window)) {
     return { ok: false, reason: 'unsupported' };
   }
@@ -64,7 +69,7 @@ export async function subscribeVisitPush(
     headers: authHeaders(true),
     body: JSON.stringify({
       subscription: subscription.toJSON(),
-      prefs: { visit: visitEnabled, followPlayers },
+      prefs,
     }),
   });
 
@@ -75,38 +80,58 @@ export async function subscribeVisitPush(
   return { ok: true };
 }
 
-/** Refresh server prefs for an existing push subscription (tracked players, visit toggle). */
+/** Register/update Web Push and/or native APNs prefs. */
+export async function syncAlertPushPrefs(
+  prefs: AlertPushPrefs
+): Promise<{ ok: boolean; reason?: string }> {
+  if (isNativeApp()) {
+    try {
+      const { registerNativePush } = await import('@/lib/native-push');
+      return registerNativePush(prefs);
+    } catch {
+      return { ok: false, reason: 'unsupported' };
+    }
+  }
+  return subscribeWebPush(prefs);
+}
+
+/** @deprecated Use syncAlertPushPrefs — kept for call-site compatibility. */
+export async function subscribeVisitPush(
+  visitEnabled: boolean,
+  followPlayers: string[] = []
+): Promise<{ ok: boolean; reason?: string }> {
+  return syncAlertPushPrefs({
+    visit: visitEnabled,
+    commit: false,
+    score: false,
+    followPlayers,
+  });
+}
+
+/** @deprecated Use syncAlertPushPrefs */
 export async function syncVisitPushPrefs(options: {
   visit: boolean;
   followPlayers: string[];
 }): Promise<{ ok: boolean; reason?: string }> {
-  if (typeof window === 'undefined' || !('serviceWorker' in navigator) || !('PushManager' in window)) {
-    return { ok: false, reason: 'unsupported' };
-  }
-
-  const registration = await navigator.serviceWorker.getRegistration('/push-sw.js');
-  const subscription = await registration?.pushManager.getSubscription();
-  if (!subscription) {
-    return subscribeVisitPush(options.visit, options.followPlayers);
-  }
-
-  const res = await fetch(`${getApiBase()}/api/push/subscribe`, {
-    method: 'POST',
-    headers: authHeaders(true),
-    body: JSON.stringify({
-      subscription: subscription.toJSON(),
-      prefs: { visit: options.visit, followPlayers: options.followPlayers },
-    }),
+  return syncAlertPushPrefs({
+    visit: options.visit,
+    commit: false,
+    score: false,
+    followPlayers: options.followPlayers,
   });
-
-  if (res.status === 401) return { ok: false, reason: 'sign_in' };
-  if (res.status === 403) return { ok: false, reason: 'membership' };
-  if (!res.ok) return { ok: false, reason: 'server' };
-
-  return { ok: true };
 }
 
 export async function unsubscribeVisitPush(): Promise<void> {
+  if (isNativeApp()) {
+    try {
+      const { unregisterNativePush } = await import('@/lib/native-push');
+      await unregisterNativePush();
+    } catch {
+      /* ok */
+    }
+    return;
+  }
+
   if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
   const registration = await navigator.serviceWorker.getRegistration('/push-sw.js');
   const subscription = await registration?.pushManager.getSubscription();

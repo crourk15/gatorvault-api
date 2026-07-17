@@ -738,6 +738,30 @@ body.gv-live-page-active .gv-vault-shell__main {
   margin: 0 0 0.35rem;
 }
 
+.gv-vault-alerts__native-banner {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(250, 176, 66, 0.35);
+  background: rgba(250, 176, 66, 0.08);
+  color: #f3e6c8;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.gv-alert-toggle__label {
+  display: block;
+  font-weight: 600;
+}
+
+.gv-alert-toggle__status {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
 .gv-vault-alerts__section-hint {
   font-size: 0.75rem;
   color: #64748b;

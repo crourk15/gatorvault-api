@@ -4,19 +4,21 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   ALERT_CATEGORY_META,
   DEFAULT_ALERT_PREFS,
+  PRIMARY_ALERT_CATEGORIES,
   loadAlertPrefs,
   loadLocalRecentAlerts,
   markLocalAlertsRead,
   saveAlertPrefs,
-  type AlertCategoryId,
   type AlertFreq,
   type AlertMethod,
   type AlertPrefs,
+  type DeliverableAlertCategory,
   type LocalRecentAlert,
 } from '@/lib/alert-prefs';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
-import { syncVisitPushPrefs, unsubscribeVisitPush } from '@/lib/push-alerts-api';
+import { syncAlertPushPrefs, unsubscribeVisitPush } from '@/lib/push-alerts-api';
 import { syncEmailAlertPrefs } from '@/lib/alert-email-api';
+import { isNativeApp } from '@/lib/api-base';
 import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
@@ -58,10 +60,12 @@ export function VaultAlertsPage(): React.ReactElement {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pushStatus, setPushStatus] = useState<string | null>(null);
+  const [nativeShell, setNativeShell] = useState(false);
 
   useEffect(() => {
     setPrefs(loadAlertPrefs());
     setLocalAlerts(loadLocalRecentAlerts());
+    setNativeShell(isNativeApp());
   }, []);
 
   const loadFeed = useCallback(async (isInitial: boolean) => {
@@ -99,7 +103,7 @@ export function VaultAlertsPage(): React.ReactElement {
     };
   }, [loadFeed]);
 
-  const toggleCategory = (id: AlertCategoryId) => {
+  const toggleCategory = (id: DeliverableAlertCategory) => {
     setPrefs((p) => ({
       ...p,
       types: { ...p.types, [id]: !p.types[id] },
@@ -114,6 +118,12 @@ export function VaultAlertsPage(): React.ReactElement {
 
     const wantsPush = prefs.method === 'push' || prefs.method === 'both';
     const wantsEmail = prefs.method === 'email' || prefs.method === 'both';
+    const pushPrefs = {
+      visit: Boolean(prefs.types.visit),
+      commit: Boolean(prefs.types.commit),
+      score: Boolean(prefs.types.score),
+      followPlayers: prefs.followPlayers,
+    };
 
     if (wantsEmail && prefs.types.visit) {
       void syncEmailAlertPrefs({
@@ -125,15 +135,11 @@ export function VaultAlertsPage(): React.ReactElement {
         if (out.ok && !wantsPush) {
           setPushStatus(
             prefs.freq === 'weekly'
-              ? prefs.followPlayers.length
-                ? `Weekly verified OV emails enabled for ${prefs.followPlayers.length} tracked player(s).`
-                : 'Weekly verified OV recap emails enabled.'
+              ? 'Weekly verified OV recap emails enabled.'
               : prefs.freq === 'daily'
-                ? prefs.followPlayers.length
-                  ? `Daily verified OV emails enabled for ${prefs.followPlayers.length} tracked player(s).`
-                  : 'Daily verified OV digest emails enabled.'
+                ? 'Daily verified OV digest emails enabled.'
                 : prefs.freq === 'instant'
-                  ? 'Instant verified OV emails enabled — you will be emailed on schedule/cancel events.'
+                  ? 'Instant verified OV emails enabled.'
                   : 'Email alert preferences saved.'
           );
         } else if (out.reason === 'sign_in') {
@@ -144,38 +150,51 @@ export function VaultAlertsPage(): React.ReactElement {
       });
     }
 
-    if (wantsPush && prefs.types.visit) {
-      void syncVisitPushPrefs({
-        visit: true,
-        followPlayers: prefs.followPlayers,
-      }).then((out) => {
+    if (wantsPush && (prefs.types.visit || prefs.types.commit || prefs.types.score)) {
+      void syncAlertPushPrefs(pushPrefs).then((out) => {
         if (out.ok) {
+          const parts: string[] = [];
+          if (prefs.types.visit) parts.push('visits');
+          if (prefs.types.commit) parts.push('commits');
+          if (prefs.types.score) parts.push('scores');
           setPushStatus(
-            prefs.followPlayers.length
-              ? `Visit pushes enabled for ${prefs.followPlayers.length} tracked player(s) on this device.`
-              : 'Visit push alerts enabled for all verified UF OVs on this device.'
+            nativeShell
+              ? `Lock-screen alerts enabled for ${parts.join(', ')} on this iPhone.`
+              : `Push enabled for ${parts.join(', ')} on this browser.`
           );
         } else if (out.reason === 'denied') {
-          setPushStatus('Browser blocked notifications — enable them in site settings.');
+          setPushStatus(
+            nativeShell
+              ? 'Notifications blocked — enable them in iPhone Settings → GatorVault.'
+              : 'Browser blocked notifications — enable them in site settings.'
+          );
         } else if (out.reason === 'sign_in') {
           setPushStatus('Sign in to enable push alerts.');
         } else if (out.reason === 'membership') {
           setPushStatus('Active membership required for push alerts.');
         } else if (out.reason === 'disabled') {
           setPushStatus('Push alerts are not configured on the server yet.');
+        } else if (out.reason === 'unsupported') {
+          setPushStatus(
+            nativeShell
+              ? 'This app build cannot register for lock-screen push yet — update when Build 16+ ships with APNs.'
+              : 'This browser does not support Web Push.'
+          );
         }
       });
     } else if (!wantsPush) {
       void unsubscribeVisitPush().then(() => {
         setPushStatus('Push alerts disabled on this device.');
       });
-    } else if (wantsPush && !prefs.types.visit) {
-      void syncVisitPushPrefs({
+    } else if (wantsPush && !prefs.types.visit && !prefs.types.commit && !prefs.types.score) {
+      void syncAlertPushPrefs({
         visit: false,
+        commit: false,
+        score: false,
         followPlayers: prefs.followPlayers,
       }).then((out) => {
         if (out.ok) {
-          setPushStatus('Visit push alerts turned off — other preferences saved.');
+          setPushStatus('All lock-screen categories off — feed still updates in-app.');
         } else if (out.reason === 'sign_in') {
           setPushStatus('Sign in to update push alert preferences.');
         }
@@ -207,28 +226,33 @@ export function VaultAlertsPage(): React.ReactElement {
     setLocalAlerts(loadLocalRecentAlerts());
   };
 
-  const categoryKeys = Object.keys(DEFAULT_ALERT_PREFS.types) as AlertCategoryId[];
-
   return (
     <div className="gv-vault-alerts" data-testid="vault-alerts">
       <div className="gv-page-hero">
-        <h1 className="gv-page-title">🔔 My Alerts</h1>
+        <h1 className="gv-page-title">My Alerts</h1>
         <p className="gv-page-subtitle">
-          Choose what matters to you — commits, portal moves, offers, articles, scores, and
-          community threads delivered your way.
+          Lock-screen and email for visits, commits, and Gator scores. Everything else stays in your
+          in-app feed.
         </p>
       </div>
 
+      {nativeShell ? (
+        <p className="gv-vault-alerts__native-banner" data-testid="alerts-native-banner">
+          You&apos;re in the App Store app. Save Preferences to register this iPhone for lock-screen
+          alerts (requires an APNs-enabled build). The feed below always works.
+        </p>
+      ) : null}
+
       <div className="gv-vault-alerts__layout">
         <section className="gv-vault-alerts__prefs">
-          <h2 className="gv-vault-alerts__section-title">What You Want to Hear About</h2>
+          <h2 className="gv-vault-alerts__section-title">Lock-screen &amp; email</h2>
           <p className="gv-vault-alerts__section-hint">
-            Tap a category to subscribe. Verified UF official visit alerts only — no rumor alerts.
-            Weekly roundup emails send after each verified OV weekend recap.
+            Only these three categories leave the app. Verified UF visits support email digests;
+            commits and scores are instant push.
           </p>
 
           <div className="gv-alert-toggles">
-            {categoryKeys.map((id) => {
+            {PRIMARY_ALERT_CATEGORIES.map((id) => {
               const meta = ALERT_CATEGORY_META[id];
               const active = prefs.types[id];
               return (
@@ -237,8 +261,10 @@ export function VaultAlertsPage(): React.ReactElement {
                   type="button"
                   className={`gv-alert-toggle${active ? ' is-active' : ''}`}
                   onClick={() => toggleCategory(id)}
+                  title={meta.hint}
                 >
-                  {meta.icon} {meta.label}
+                  <span className="gv-alert-toggle__label">{meta.label}</span>
+                  <span className="gv-alert-toggle__status">Live</span>
                 </button>
               );
             })}
@@ -259,10 +285,14 @@ export function VaultAlertsPage(): React.ReactElement {
                 { id: 'both', label: 'Both' },
               ]}
             />
+            <p className="gv-vault-alerts__section-hint">
+              Email currently covers verified official visits. Push covers visits, commits, and
+              scores.
+            </p>
           </div>
 
           <div className="gv-vault-alerts__field">
-            <p className="gv-vault-alerts__field-label">Alert Frequency</p>
+            <p className="gv-vault-alerts__field-label">Visit email frequency</p>
             <ChoiceButtons<AlertFreq>
               ariaLabel="Alert frequency"
               value={prefs.freq}
@@ -279,7 +309,10 @@ export function VaultAlertsPage(): React.ReactElement {
           </div>
 
           <div className="gv-vault-alerts__field">
-            <p className="gv-vault-alerts__field-label">Favorite Players to Track</p>
+            <p className="gv-vault-alerts__field-label">Favorite players (optional filter)</p>
+            <p className="gv-vault-alerts__section-hint">
+              Empty list = all verified visits/commits. Add names to only hear about those recruits.
+            </p>
             <div className="gv-alert-player-input">
               <input
                 type="text"
@@ -310,18 +343,21 @@ export function VaultAlertsPage(): React.ReactElement {
           </div>
 
           <button type="button" className="gv-alert-save-btn" onClick={handleSave}>
-            {saved ? 'Preferences Saved ✓' : 'Save Preferences'}
+            {saved ? 'Preferences Saved' : 'Save Preferences'}
           </button>
           {pushStatus ? <p className="gv-vault-alerts__section-hint">{pushStatus}</p> : null}
         </section>
 
         <section className="gv-vault-alerts__feed">
           <div className="gv-vault-alerts__feed-header">
-            <h2 className="gv-vault-alerts__section-title">Your Feed</h2>
+            <h2 className="gv-vault-alerts__section-title">In-app feed</h2>
             <button type="button" className="gv-alert-mark-read" onClick={handleMarkAllRead}>
               Mark all as read
             </button>
           </div>
+          <p className="gv-vault-alerts__section-hint">
+            Movement and intel always appear here — even before lock-screen push is available.
+          </p>
 
           {loading && <p className="gv-page-status">Loading alerts…</p>}
 
@@ -366,7 +402,7 @@ export function VaultAlertsPage(): React.ReactElement {
               {apiAlerts.length === 0 && localAlerts.length === 0 && (
                 <UiEmpty
                   message="No alerts yet."
-                  hint="Turn on categories on the left, or follow players for personalized updates."
+                  hint="Enable Visits, Commits, or Scores on the left — or open FutureCast movement."
                 />
               )}
             </div>

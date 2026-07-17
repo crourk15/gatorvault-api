@@ -397,6 +397,20 @@ const JOBS = {
       });
     }
   },
+  'gators-score-alerts': {
+    label: 'UF kickoff/final score push alerts (game window only)',
+    subsystem: 'cron:gators-score-alerts',
+    schedule: 'Every 2 min during season (idle outside UF windows)',
+    async run(opts = {}) {
+      const { runGatorsScoreAlerts } = require('./gators-score-alerts');
+      return runGatorsScoreAlerts({
+        dryRun: opts.dryRun === true,
+        force: opts.force === true,
+        kind: opts.kind,
+        asOf: opts.asOf,
+      });
+    }
+  },
   'uf-trend-snapshot': {
     label: 'FutureCast daily UF % trend snapshots',
     subsystem: 'cron:uf-trend-snapshot',

@@ -26,6 +26,8 @@ module.exports = {
     'lib/push-alert-routes.js',
     'lib/push-subscription-persistence.js',
     'lib/push-alert-filters.js',
+    'lib/apns-push.js',
+    'lib/gators-score-alerts.js',
     'lib/staff-note-picker.js',
     'lib/alert-email-persistence.js',
     'lib/alert-email-prefs-service.js',

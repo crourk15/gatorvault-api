@@ -32,6 +32,7 @@ export async function initNativeShell(): Promise<void> {
   }
 
   void initIosPurchases();
+  void initNativePush();
 
   void App.addListener('backButton', ({ canGoBack }) => {
     if (canGoBack) {
@@ -53,6 +54,15 @@ async function initIosPurchases(): Promise<void> {
       await verifyApplePurchase({ productId, transactionId });
       await finishIosPurchase(transactionId);
     });
+  } catch {
+    /* plugin unavailable outside iOS build */
+  }
+}
+
+async function initNativePush(): Promise<void> {
+  try {
+    const { initNativePushTapHandler } = await import('@/lib/native-push');
+    await initNativePushTapHandler();
   } catch {
     /* plugin unavailable outside iOS build */
   }

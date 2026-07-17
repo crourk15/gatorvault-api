@@ -4,10 +4,13 @@ const { pickStaffNoteText } = require("../../lib/staff-note-picker");
 const {
   buildScheduledPayload,
   buildCancelledPayload,
+  buildCommitPayload,
+  buildScorePayload,
   pushEnabled,
   normalizePrefs,
 } = require("../../lib/push-alert-service");
 const { subscriberMatchesPayload } = require("../../lib/push-alert-filters");
+const { isUfGameLiveWindow, extractFloridaGame } = require("../../lib/gators-score-alerts");
 
 describe("staff-note-picker", () => {
   it("prefers scouting summary for Easton Royal", () => {
@@ -94,8 +97,73 @@ describe("push-alert filters", () => {
   });
 
   it("normalizes followPlayers on subscribe prefs", () => {
-    const prefs = normalizePrefs({ visit: true, followPlayers: [" Easton Royal ", "Easton Royal", ""] });
+    const prefs = normalizePrefs({
+      visit: true,
+      commit: true,
+      score: false,
+      followPlayers: [" Easton Royal ", "Easton Royal", ""],
+    });
     assert.deepEqual(prefs.followPlayers, ["Easton Royal"]);
     assert.equal(prefs.visit, true);
+    assert.equal(prefs.commit, true);
+    assert.equal(prefs.score, false);
+  });
+
+  it("does not filter score alerts by followPlayers", () => {
+    const sub = { prefs: { followPlayers: ["Easton Royal"] } };
+    assert.equal(
+      subscriberMatchesPayload(sub, { type: "score_kickoff", playerSlug: null }),
+      true
+    );
+  });
+});
+
+describe("commit and score payloads", () => {
+  it("builds commit payload with recruiting deep link", () => {
+    const payload = buildCommitPayload({
+      eventType: "commit",
+      player: { slug: "test-player", name: "Test Player", stars: 4, pos: "WR", classYear: 2027 },
+      skinny: "Test Player locks in with the Gators.",
+    });
+    assert.match(payload.title, /commit/i);
+    assert.match(payload.url, /test-player/);
+    assert.equal(payload.type, "commit");
+  });
+
+  it("builds kickoff and final score payloads", () => {
+    const kick = buildScorePayload({ kind: "kickoff", opponent: "Georgia" });
+    assert.equal(kick.type, "score_kickoff");
+    assert.match(kick.url, /live-scores/);
+    const fin = buildScorePayload({ kind: "final", opponent: "Georgia", ufScore: 31, oppScore: 24 });
+    assert.equal(fin.type, "score_final");
+    assert.match(fin.body, /31/);
+  });
+});
+
+describe("gators-score-alerts window", () => {
+  it("is idle outside UF windows in midsummer", () => {
+    assert.equal(isUfGameLiveWindow(new Date("2026-07-16T16:00:00-04:00")), false);
+  });
+
+  it("extracts Florida from ESPN-shaped scoreboard", () => {
+    const game = extractFloridaGame({
+      events: [
+        {
+          id: "401772001",
+          competitions: [
+            {
+              competitors: [
+                { team: { id: "57", displayName: "Florida Gators" }, score: "14" },
+                { team: { id: "61", displayName: "Georgia Bulldogs" }, score: "10" },
+              ],
+              status: { type: { name: "STATUS_IN_PROGRESS", completed: false, detail: "Q2 8:00" } },
+            },
+          ],
+        },
+      ],
+    });
+    assert.equal(game.eventId, "401772001");
+    assert.match(game.opponent, /Georgia/i);
+    assert.equal(game.ufScore, 14);
   });
 });

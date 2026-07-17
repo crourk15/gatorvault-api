@@ -341,6 +341,34 @@ services:
         sync: false
 
   - type: cron
+    name: gatorvault-api-gators-score-alerts
+    schedule: "*/3 * * * *"
+    runtime: node
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-gators-score-alerts-cron.js
+    envVars:
+      - key: SITE_URL
+        value: https://gatorvaultinsider.com
+      - key: PUSH_ALERTS_ENABLED
+        value: "true"
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+      - key: APNS_KEY_ID
+        sync: false
+      - key: APNS_TEAM_ID
+        sync: false
+      - key: APNS_BUNDLE_ID
+        value: com.gatorvaultinsider.app
+      - key: APNS_KEY_P8
+        sync: false
+      - key: APNS_PRODUCTION
+        value: "true"
+
+  - type: cron
     name: gatorvault-api-uf-trend-snapshot
     schedule: "0 15 * * *"
     runtime: node

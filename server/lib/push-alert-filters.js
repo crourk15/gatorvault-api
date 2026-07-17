@@ -3,22 +3,26 @@
  */
 
 function normalizeToken(value) {
-  return String(value || "")
+  return String(value || '')
     .trim()
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 function subscriberMatchesPayload(sub, payload) {
+  const type = String(payload?.type || '');
+  // Score alerts are team-wide — never filter by followPlayers.
+  if (type.startsWith('score')) return true;
+
   const watchlist = sub?.prefs?.followPlayers;
   if (!Array.isArray(watchlist) || watchlist.length === 0) return true;
 
   const slug = normalizeToken(payload?.playerSlug);
-  const name = String(payload?.playerName || "").trim().toLowerCase();
+  const name = String(payload?.playerName || '').trim().toLowerCase();
 
   return watchlist.some((entry) => {
-    const raw = String(entry || "").trim();
+    const raw = String(entry || '').trim();
     if (!raw) return false;
     const token = normalizeToken(raw);
     const lower = raw.toLowerCase();

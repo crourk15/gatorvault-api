@@ -334,6 +334,21 @@ async function firePlayerEvent(eventType, player, extra, snapshot) {
     }
     if (['commit', 'flip'].includes(resolvedType)) {
       try {
+        const { dispatchCommitPush } = require('./push-alert-service');
+        const { commitFingerprint } = require('./commit-fingerprint');
+        const fp = commitFingerprint(result.player || player);
+        await dispatchCommitPush(
+          {
+            eventType: resolvedType,
+            player: result.player || { ...player, slug, committedTo: 'Florida' },
+            skinny: payload.skinny,
+          },
+          { fingerprint: `push|commit|${resolvedType}|${fp || slug}` }
+        );
+      } catch (pushErr) {
+        console.warn('[on3-ingest] commit push failed:', pushErr?.message || pushErr);
+      }
+      try {
         const sentLedger = require('./x-autoposter-sent-ledger');
         const { commitFingerprint } = require('./commit-fingerprint');
         const { queueCommitEventAutopost } = require('./x-autoposter-fill');
