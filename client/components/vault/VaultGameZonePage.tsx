@@ -1,79 +1,64 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchBettingLines, type BettingGame } from '@/lib/betting-api';
-import {
-  addVaultPoints,
-  getPointsTier,
-  getVaultPoints,
-  hasOneTimeKey,
-  markOneTimeKey,
-  nextTierLabel,
-  POINTS_TIERS,
-  pointsProgressPct,
-} from '@/lib/vault-points';
 import { UiError } from '@/components/site/UiMessage';
-import { Card, Chip, GridLayout, PageLayout, PageSection } from '@/components/brand';
+import { Chip, PageLayout } from '@/components/brand';
+import { VaultNavLink } from '@/components/vault/VaultNavLink';
 
-const MOCK_PBP = [
-  { clock: '14:22 Q1', play: 'Baugh rush left for 8 yards', gain: 8 },
-  { clock: '13:45 Q1', play: 'Jones Jr. pass complete to Singleton — 22 yards', gain: 22 },
-  { clock: '12:58 Q1', play: 'Baugh rush up middle — TOUCHDOWN', gain: 6 },
-];
+const PRED_PREFIX = 'gv_gz_prediction_';
 
-const MOCK_MOMENTUM = [20, 35, 55, 48, 72, 65, 80, 75, 90, 85];
-const PRED_STORAGE = 'gv_prediction';
-const PRED_POINTS_KEY = 'gv_predPoints';
-const TRIVIA_POINTS_KEY = 'gv_triviaPoints';
+const TRIVIA = {
+  question: 'Who was the last Florida Gators QB to win the Heisman Trophy?',
+  options: [
+    { id: 'a', label: 'Danny Wuerffel', correct: false },
+    { id: 'b', label: 'Tim Tebow', correct: true },
+    { id: 'c', label: 'Rex Grossman', correct: false },
+    { id: 'd', label: 'Chris Leak', correct: false },
+  ],
+  explain: 'Tim Tebow won the Heisman in 2007.',
+};
 
-const POLL_OPTIONS = [
-  { id: 'jones', label: 'Tramell Jones Jr.', pct: 42 },
-  { id: 'philo', label: 'Aaron Philo', pct: 38 },
-  { id: 'warner', label: 'Aidan Warner', pct: 20 },
-];
-
-const TRIVIA_OPTIONS = [
-  { id: 'wrong1', label: 'A. Danny Wuerffel', correct: false },
-  { id: 'correct', label: 'B. Tim Tebow', correct: true },
-  { id: 'wrong2', label: 'C. Rex Grossman', correct: false },
-  { id: 'wrong3', label: 'D. Chris Leak', correct: false },
-];
-
-function gameLabel(g?: BettingGame | null): string {
-  if (!g) return 'UF vs FAU — Sep 5 • The Swamp';
-  const away = g.awayTeam || g.away || 'Opponent';
-  const home = g.homeTeam || g.home || 'UF';
-  const date = g.date || g.kickoff || '';
-  return `UF vs ${away === 'UF' ? home : away}${date ? ` — ${date}` : ''}`;
+function opponentName(g?: BettingGame | null): string {
+  if (!g) return 'Opponent';
+  const away = g.awayTeam || g.away || '';
+  const home = g.homeTeam || g.home || '';
+  if (away === 'UF' || away === 'Florida') return home || 'Opponent';
+  if (home === 'UF' || home === 'Florida') return away || 'Opponent';
+  return away || home || 'Opponent';
 }
 
-function spreadLine(g?: BettingGame | null): string {
-  if (!g?.spread) return 'UF -8.5';
+function gameKey(g?: BettingGame | null): string {
+  return String(g?.id || g?.game || g?.date || g?.kickoff || 'next').replace(/\s+/g, '_');
+}
+
+function spreadLine(g?: BettingGame | null): string | null {
+  if (!g?.spread) return null;
   if (typeof g.spread === 'string') return g.spread;
-  return g.spread.line || 'UF -8.5';
+  return g.spread.line || null;
 }
+
+function kickoffLabel(g?: BettingGame | null): string {
+  if (!g) return 'Kickoff TBA';
+  return g.kickoff || g.date || 'Kickoff TBA';
+}
+
+type SavedPick = { uf: string; opp: string; lockedAt: string };
 
 export function VaultGameZonePage(): React.ReactElement {
-  const [lines, setLines] = useState<BettingGame | null>(null);
   const [nextGame, setNextGame] = useState<BettingGame | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [ufScore, setUfScore] = useState('');
   const [oppScore, setOppScore] = useState('');
-  const [predLocked, setPredLocked] = useState(false);
-  const [predMsg, setPredMsg] = useState('');
-  const [pollChoice, setPollChoice] = useState<string | null>(null);
-  const [pollMsg, setPollMsg] = useState('312 votes cast');
+  const [pick, setPick] = useState<SavedPick | null>(null);
   const [triviaChoice, setTriviaChoice] = useState<string | null>(null);
-  const [triviaMsg, setTriviaMsg] = useState('Answer correctly to earn Vault Points.');
-  const [points, setPoints] = useState(0);
-  const [tier, setTier] = useState<'scout' | 'insider' | 'elite'>('scout');
+  const [triviaMsg, setTriviaMsg] = useState('One quick Gators question — no points ladder, just for fun.');
 
-  const refreshPoints = useCallback(() => {
-    const pts = getVaultPoints();
-    setPoints(pts);
-    setTier(getPointsTier(pts));
-  }, []);
+  const storageKey = useMemo(() => PRED_PREFIX + gameKey(nextGame), [nextGame]);
+  const opp = opponentName(nextGame);
+  const spread = spreadLine(nextGame);
+  const total = nextGame?.total != null ? String(nextGame.total) : null;
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -81,341 +66,230 @@ export function VaultGameZonePage(): React.ReactElement {
     try {
       const data = await fetchBettingLines();
       setNextGame(data.nextGame ?? null);
-      setLines(data.nextGame ?? null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load betting lines.');
+      setError(err instanceof Error ? err.message : 'Could not load the next game.');
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    refreshPoints();
+    void load();
+  }, [load]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
     try {
-      const saved = JSON.parse(localStorage.getItem(PRED_STORAGE) || 'null') as {
-        uf?: string;
-        opp?: string;
-      } | null;
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) {
+        setPick(null);
+        return;
+      }
+      const saved = JSON.parse(raw) as SavedPick;
       if (saved?.uf && saved?.opp) {
+        setPick(saved);
         setUfScore(saved.uf);
         setOppScore(saved.opp);
-        setPredLocked(true);
-        setPredMsg(`Your pick: UF ${saved.uf} – ${saved.opp}. Locked in locally — check back after kickoff.`);
       }
     } catch {
-      /* ignore */
+      setPick(null);
     }
-    void load();
-  }, [load, refreshPoints]);
+  }, [storageKey]);
 
-  const submitPrediction = () => {
+  const lockPick = () => {
     if (!ufScore.trim() || !oppScore.trim()) return;
+    const saved: SavedPick = {
+      uf: ufScore.trim(),
+      opp: oppScore.trim(),
+      lockedAt: new Date().toISOString(),
+    };
     try {
-      localStorage.setItem(
-        PRED_STORAGE,
-        JSON.stringify({ uf: ufScore.trim(), opp: oppScore.trim(), game: 'fau' })
-      );
+      localStorage.setItem(storageKey, JSON.stringify(saved));
     } catch {
       /* ignore */
     }
-    setPredLocked(true);
-    setPredMsg(
-      `Prediction locked! You picked UF ${ufScore} – ${oppScore}. Community line: ${spreadLine(nextGame)}.`
-    );
-    if (!hasOneTimeKey(PRED_POINTS_KEY)) {
-      addVaultPoints(25);
-      markOneTimeKey(PRED_POINTS_KEY);
-      refreshPoints();
+    setPick(saved);
+  };
+
+  const clearPick = () => {
+    try {
+      localStorage.removeItem(storageKey);
+    } catch {
+      /* ignore */
     }
+    setPick(null);
+    setUfScore('');
+    setOppScore('');
   };
 
-  const pickPoll = (id: string) => {
-    setPollChoice(id);
-    setPollMsg('Vote recorded — 313 fans have weighed in.');
-  };
-
-  const pickTrivia = (id: string, correct: boolean) => {
+  const answerTrivia = (id: string, correct: boolean) => {
     setTriviaChoice(id);
-    if (correct) {
-      setTriviaMsg('Correct! Tim Tebow won the Heisman in 2007.');
-      if (!hasOneTimeKey(TRIVIA_POINTS_KEY)) {
-        addVaultPoints(15);
-        markOneTimeKey(TRIVIA_POINTS_KEY);
-        refreshPoints();
-      }
-    } else {
-      setTriviaMsg('Not quite — the answer is B. Tim Tebow (2007).');
-    }
+    setTriviaMsg(correct ? `Correct — ${TRIVIA.explain}` : `Not quite — ${TRIVIA.explain}`);
   };
-
-  const oppName =
-    nextGame?.awayTeam === 'UF' || nextGame?.away === 'UF'
-      ? nextGame?.homeTeam || nextGame?.home || 'FAU'
-      : nextGame?.awayTeam || nextGame?.away || 'FAU';
 
   return (
     <PageLayout
       theme="navy"
       title="Game Zone"
-      subtitle="Predictions, live trend signals, fan polls, and Vault point progress — sharpen your picks before kickoff."
+      subtitle="Pre-kickoff picks for the next Gators game — lock a score, then jump to Game Week or Gators Live."
       testId="vault-game-zone"
       className="gv-game-zone-page"
-      accent={<Chip variant="orange">Live Match Insight</Chip>}
+      accent={<Chip variant="orange">Pre-kickoff</Chip>}
     >
-      {loading && <p className="gv-page-status">Loading game data…</p>}
+      {loading && <p className="gv-page-status">Loading next game…</p>}
       {error && !loading && (
         <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
       )}
 
       {!loading && !error && (
         <>
-          <GridLayout cols={2}>
-            <PageSection title="Live Win Probability">
-              <Card variant="stat">
-                <p className="gv-stat-card__value">74%</p>
-                <p className="gv-stat-card__label">UF vs {oppName}</p>
-                <div className="gv-prob-bar" style={{ marginTop: '0.75rem' }}>
-                  <div className="gv-prob-bar__fill" style={{ width: '74%' }} />
-                </div>
-              </Card>
-            </PageSection>
-            <PageSection title="Momentum Heatmap">
-              <Card>
-                <div className="gv-home-sparkline" aria-hidden="true">
-                  {MOCK_MOMENTUM.map((h, i) => (
-                    <div
-                      key={i}
-                      className={`gv-home-sparkline__bar${h >= 70 ? ' is-hot' : ''}`}
-                      style={{ height: `${h}%` }}
-                    />
-                  ))}
-                </div>
-              </Card>
-            </PageSection>
-          </GridLayout>
+          <section className="gv-game-zone__card gv-game-zone__card--hero" aria-label="Next Gators game">
+            <div className="gv-game-zone__card-head">
+              <div>
+                <p className="gv-game-zone__eyebrow">Next game</p>
+                <h2 className="gv-game-zone__card-title">Florida vs {opp}</h2>
+                <p className="gv-game-zone__card-sub">{kickoffLabel(nextGame)}</p>
+              </div>
+            </div>
+            <div className="gv-game-zone__stats">
+              <div className="gv-game-zone__stat">
+                <p>Spread</p>
+                <strong>{spread || 'Line TBA'}</strong>
+              </div>
+              <div className="gv-game-zone__stat">
+                <p>Total</p>
+                <strong>{total || 'TBA'}</strong>
+              </div>
+              <div className="gv-game-zone__stat">
+                <p>Your job here</p>
+                <strong>Lock a score pick before kickoff</strong>
+              </div>
+            </div>
+          </section>
 
-          <GridLayout cols={2}>
-            <PageSection title="Drive Chart">
-              <Card>
-                <p>Q1 — 8 plays, 72 yards — <strong className="gv-trend gv-trend--up">TD</strong></p>
-                <p>Q2 — 6 plays, 41 yards — FG</p>
-              </Card>
-            </PageSection>
-            <PageSection title="Play-by-Play">
-              <Card>
-                <ul style={{ margin: 0, paddingLeft: '1.25rem' }}>
-                  {MOCK_PBP.map((p) => (
-                    <li key={p.clock} style={{ marginBottom: '0.35rem' }}>
-                      <Chip variant="neutral">{p.clock}</Chip> {p.play}
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            </PageSection>
-          </GridLayout>
-
-          <PageSection title="Player & Team Stats">
-            <GridLayout cols={3}>
-              <Card><strong>Baugh</strong><p>98 rush yds · 1 TD</p></Card>
-              <Card><strong>Jones Jr.</strong><p>14/18 · 187 pass yds</p></Card>
-              <Card><strong>UF Defense</strong><p>2 sacks · 1 INT</p></Card>
-            </GridLayout>
-          </PageSection>
-
-          <div className="gv-game-zone__grid gv-game-zone__grid--2">
-            <section className="gv-game-zone__card">
-              <div className="gv-game-zone__card-head">
-                <div>
-                  <h2 className="gv-game-zone__card-title">🎯 Score Predictor</h2>
-                  <p className="gv-game-zone__card-sub">
-                    Next Game: <strong>{gameLabel(nextGame)}</strong>
-                  </p>
-                </div>
-                <span className="gv-game-zone__pill">Pro Tip</span>
-              </div>
-              <div className="gv-game-zone__score-row">
-                <div className="gv-game-zone__score-cell">
-                  <p className="gv-game-zone__score-label">🐊 UF</p>
-                  <input
-                    type="number"
-                    className="gv-game-zone__score-input"
-                    placeholder="0"
-                    min={0}
-                    max={99}
-                    value={ufScore}
-                    onChange={(e) => setUfScore(e.target.value)}
-                  />
-                </div>
-                <span className="gv-game-zone__vs">vs</span>
-                <div className="gv-game-zone__score-cell">
-                  <p className="gv-game-zone__score-label">{oppName}</p>
-                  <input
-                    type="number"
-                    className="gv-game-zone__score-input"
-                    placeholder="0"
-                    min={0}
-                    max={99}
-                    value={oppScore}
-                    onChange={(e) => setOppScore(e.target.value)}
-                  />
-                </div>
-              </div>
-              <button type="button" className="gv-alert-save-btn" onClick={submitPrediction}>
-                Submit Prediction
-              </button>
-              {predLocked && predMsg ? (
-                <p className="gv-game-zone__pred-result">{predMsg}</p>
-              ) : null}
-              <div className="gv-game-zone__stats">
-                <div className="gv-game-zone__stat">
-                  <p>Community line</p>
-                  <strong>{spreadLine(lines)}</strong>
-                </div>
-                <div className="gv-game-zone__stat">
-                  <p>Projected total</p>
-                  <strong>{nextGame?.total ?? '48.5'}</strong>
-                </div>
-                <div className="gv-game-zone__stat">
-                  <p>Confidence</p>
-                  <strong>74%</strong>
-                </div>
-                <div className="gv-game-zone__stat">
-                  <p>Fast facts</p>
-                  <strong>UF holds a +3 turnover differential over last 5 games.</strong>
-                </div>
-              </div>
-            </section>
-
-            <section className="gv-game-zone__card">
-              <div className="gv-game-zone__card-head">
-                <div>
-                  <h2 className="gv-game-zone__card-title">📌 Game Pulse</h2>
-                  <p className="gv-game-zone__card-sub">Key matchup notes and what to watch before kickoff.</p>
-                </div>
-                <span className="gv-game-zone__pill">Early Edge</span>
-              </div>
-              <div className="gv-game-zone__stats">
-                <div className="gv-game-zone__stat">
-                  <p>Rush Defense</p>
-                  <strong>UF ranked top 10 nationally</strong>
-                </div>
-                <div className="gv-game-zone__stat">
-                  <p>Turnover Margin</p>
-                  <strong>+1.2 per game</strong>
-                </div>
-                <div className="gv-game-zone__stat">
-                  <p>Opponent injury</p>
-                  <strong>{oppName} RB questionable</strong>
-                </div>
-                <div className="gv-game-zone__stat">
-                  <p>Weather note</p>
-                  <strong>Clear evening, 74°F</strong>
-                </div>
-              </div>
-              <div className="gv-game-zone__notes">
-                <p>
-                  UF has won 7 of the last 8 matchups against non-conference opponents in Florida. Expect
-                  a strong second-half push.
+          <section className="gv-game-zone__card" aria-label="Score pick">
+            <div className="gv-game-zone__card-head">
+              <div>
+                <h2 className="gv-game-zone__card-title">Lock your score</h2>
+                <p className="gv-game-zone__card-sub">
+                  Saved on this device for this game. No fake leaderboard and no membership points.
                 </p>
-                <p>Best bet: lean the over if UF averages 5.4 yards per rush in the first quarter.</p>
               </div>
-            </section>
-          </div>
+            </div>
 
-          <div className="gv-game-zone__grid gv-game-zone__grid--2">
-            <section className="gv-game-zone__card">
-              <div className="gv-game-zone__card-head">
-                <div>
-                  <h2 className="gv-game-zone__card-title">📊 Prediction Leaderboard</h2>
-                  <p className="gv-game-zone__card-sub">Top fans by prediction accuracy and points.</p>
-                </div>
-                <span className="gv-game-zone__pill">Rankings</span>
-              </div>
-              <p className="gv-game-zone__leaderboard-empty">
-                Leaderboard will activate when members begin making predictions.
-              </p>
-            </section>
-
-            <section className="gv-game-zone__card">
-              <div className="gv-game-zone__card-head">
-                <div>
-                  <h2 className="gv-game-zone__card-title">📊 Weekly Poll</h2>
-                  <p className="gv-game-zone__card-sub">Who wins the starting QB job in 2026?</p>
-                </div>
-                <span className="gv-game-zone__pill">Fan Vote</span>
-              </div>
-              <div className="gv-game-zone__poll">
-                {POLL_OPTIONS.map((o) => (
-                  <button
-                    key={o.id}
-                    type="button"
-                    className={`gv-game-zone__poll-btn${pollChoice === o.id ? ' is-active' : ''}`}
-                    onClick={() => pickPoll(o.id)}
-                  >
-                    {o.label} — {o.pct}%
+            {pick ? (
+              <div className="gv-game-zone__locked">
+                <p className="gv-game-zone__pred-result">
+                  Your pick is locked: Florida {pick.uf} – {opp} {pick.opp}
+                </p>
+                <p className="gv-game-zone__card-sub">
+                  Come back after the final whistle and compare. For live scoreboard action, use Gators Live.
+                </p>
+                <div className="gv-game-zone__actions">
+                  <button type="button" className="gv-game-zone__btn gv-game-zone__btn--ghost" onClick={clearPick}>
+                    Change pick
                   </button>
-                ))}
-              </div>
-              <p className="gv-game-zone__poll-meta">{pollMsg}</p>
-            </section>
-          </div>
-
-          <div className="gv-game-zone__grid gv-game-zone__grid--2">
-            <section className="gv-game-zone__card">
-              <h2 className="gv-game-zone__card-title">⭐ Your Vault Points</h2>
-              <div className="gv-game-zone__points">
-                <div className="gv-game-zone__points-val">
-                  <p className="gv-game-zone__points-num">{points}</p>
-                  <p className="gv-game-zone__points-label">Vault Points</p>
+                  <VaultNavLink href="/vault/live-scores/" className="gv-game-zone__btn">
+                    Open Gators Live
+                  </VaultNavLink>
                 </div>
-                <div className="gv-game-zone__points-bar-wrap">
-                  <div className="gv-game-zone__tier-labels">
-                    <span>{POINTS_TIERS.scout.icon} Scout</span>
-                    <span>{POINTS_TIERS.insider.icon} Insider</span>
-                    <span>{POINTS_TIERS.elite.icon} Vault Elite</span>
-                  </div>
-                  <div className="gv-game-zone__points-bar">
-                    <div
-                      className="gv-game-zone__points-fill"
-                      style={{ width: `${pointsProgressPct(points)}%` }}
+              </div>
+            ) : (
+              <>
+                <div className="gv-game-zone__score-row">
+                  <div className="gv-game-zone__score-cell">
+                    <p className="gv-game-zone__score-label">Florida</p>
+                    <input
+                      type="number"
+                      className="gv-game-zone__score-input"
+                      placeholder="0"
+                      min={0}
+                      max={99}
+                      inputMode="numeric"
+                      value={ufScore}
+                      onChange={(e) => setUfScore(e.target.value)}
+                      aria-label="Florida score prediction"
                     />
                   </div>
-                  <p className="gv-game-zone__points-next">{nextTierLabel(points)}</p>
+                  <span className="gv-game-zone__vs">vs</span>
+                  <div className="gv-game-zone__score-cell">
+                    <p className="gv-game-zone__score-label">{opp}</p>
+                    <input
+                      type="number"
+                      className="gv-game-zone__score-input"
+                      placeholder="0"
+                      min={0}
+                      max={99}
+                      inputMode="numeric"
+                      value={oppScore}
+                      onChange={(e) => setOppScore(e.target.value)}
+                      aria-label={`${opp} score prediction`}
+                    />
+                  </div>
                 </div>
-                <div className="gv-game-zone__tier-icons">
-                  {(['scout', 'insider', 'elite'] as const).map((id) => (
-                    <div
-                      key={id}
-                      className={`gv-game-zone__tier-icon${tier === id ? ' is-active' : ''}`}
-                    >
-                      <span>{POINTS_TIERS[id].icon}</span>
-                      <p>{POINTS_TIERS[id].name}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
+                <button
+                  type="button"
+                  className="gv-game-zone__btn"
+                  onClick={lockPick}
+                  disabled={!ufScore.trim() || !oppScore.trim()}
+                >
+                  Lock pick
+                </button>
+              </>
+            )}
+          </section>
 
-            <section className="gv-game-zone__card">
-              <h2 className="gv-game-zone__card-title">🧠 Daily Gator Trivia</h2>
-              <p className="gv-game-zone__card-sub">
-                Who was the last Florida Gators QB to win the Heisman Trophy?
-              </p>
-              <div className="gv-game-zone__poll">
-                {TRIVIA_OPTIONS.map((o) => (
-                  <button
-                    key={o.id}
-                    type="button"
-                    className={`gv-game-zone__poll-btn${triviaChoice === o.id ? ' is-active' : ''}`}
-                    onClick={() => pickTrivia(o.id, o.correct)}
-                  >
-                    {o.label}
-                  </button>
-                ))}
+          <section className="gv-game-zone__card" aria-label="Where to go next">
+            <div className="gv-game-zone__card-head">
+              <div>
+                <h2 className="gv-game-zone__card-title">Game-day doors</h2>
+                <p className="gv-game-zone__card-sub">
+                  Game Zone is for your pick. Use these for prep and live scores.
+                </p>
               </div>
-              <p className="gv-game-zone__poll-meta">{triviaMsg}</p>
-            </section>
-          </div>
+            </div>
+            <div className="gv-game-zone__doors">
+              <VaultNavLink href="/vault/game-week/" className="gv-game-zone__door">
+                <span className="gv-game-zone__door-title">Game Week</span>
+                <span className="gv-game-zone__door-sub">Matchup prep and briefing</span>
+              </VaultNavLink>
+              <VaultNavLink href="/vault/live-scores/" className="gv-game-zone__door">
+                <span className="gv-game-zone__door-title">Gators Live</span>
+                <span className="gv-game-zone__door-sub">Scoreboard when the ball is in the air</span>
+              </VaultNavLink>
+              <VaultNavLink href="/vault/film-room/" className="gv-game-zone__door">
+                <span className="gv-game-zone__door-title">Film Room</span>
+                <span className="gv-game-zone__door-sub">Pressers and tape</span>
+              </VaultNavLink>
+            </div>
+          </section>
+
+          <section className="gv-game-zone__card" aria-label="Gators trivia">
+            <div className="gv-game-zone__card-head">
+              <div>
+                <h2 className="gv-game-zone__card-title">Quick trivia</h2>
+                <p className="gv-game-zone__card-sub">{TRIVIA.question}</p>
+              </div>
+            </div>
+            <div className="gv-game-zone__poll">
+              {TRIVIA.options.map((o) => (
+                <button
+                  key={o.id}
+                  type="button"
+                  className={`gv-game-zone__poll-btn${triviaChoice === o.id ? ' is-active' : ''}`}
+                  onClick={() => answerTrivia(o.id, o.correct)}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            <p className="gv-game-zone__poll-meta">{triviaMsg}</p>
+          </section>
+
+          <p className="gv-game-zone__footnote">
+            Lines update from the next scheduled Florida game when available. This page does not show live
+            play-by-play — that belongs on Gators Live.
+          </p>
         </>
       )}
     </PageLayout>

@@ -159,7 +159,7 @@ export function FilmRoomGameWeekPanel({ initialGameId }: Props): React.ReactElem
             <p className="gv-fr-gw-pred-label">GatorVault prediction</p>
             <p className="gv-fr-gw-pred-score">{game.pred}</p>
             <p className="gv-fr-gw-pred-meta">UF win probability: {game.ufPct}%</p>
-            <Button href={SITE_ROUTES.gameZone}>Open Game Zone</Button>
+            <Button href="/vault/game-zone/">Lock your score pick</Button>
           </Card>
         </PageSection>
       </GridLayout>
