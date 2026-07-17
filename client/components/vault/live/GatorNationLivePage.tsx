@@ -35,8 +35,15 @@ const EMPTY_BUNDLE: LiveHubBundle = {
   refreshedAt: null,
 };
 
+export type GatorNationLiveFocus = 'podcasts' | 'beat';
+
+type GatorNationLivePageProps = {
+  /** Deep-link target when opened from Menu / tab paths. */
+  focusSection?: GatorNationLiveFocus;
+};
+
 /** GatorNation Live — stream-first, honest empty states (45s refresh). */
-export function GatorNationLivePage(): React.ReactElement {
+export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps = {}): React.ReactElement {
   const [bundle, setBundle] = useState<LiveHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -75,6 +82,15 @@ export function GatorNationLivePage(): React.ReactElement {
     document.body.classList.add('gv-live-page-active');
     return () => document.body.classList.remove('gv-live-page-active');
   }, []);
+
+  useEffect(() => {
+    if (!focusSection || loading) return;
+    const id = focusSection === 'podcasts' ? 'podcast-hub' : 'beat-writers';
+    const timer = window.setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+    return () => window.clearTimeout(timer);
+  }, [focusSection, loading, bundle.podcasts.length, bundle.panels.beatWriterHighlights.length]);
 
   useEffect(() => {
     let cancelled = false;

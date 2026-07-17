@@ -102,7 +102,7 @@ export function GNLPodcastSpotlight({
   const withEpisodes = cards.filter((p) => p.episodeTitle?.trim()).length;
 
   return (
-    <section className="gv-gnl-elite-card gv-gnl-elite-podcasts" data-testid="gnl-podcast-spotlight">
+    <section id="podcast-hub" className="gv-gnl-elite-card gv-gnl-elite-podcasts" data-testid="gnl-podcast-spotlight">
       <GNLModuleHead
         title="GatorNation Podcasts"
         subtitle={
