@@ -75,6 +75,43 @@ describe('Phase 3 unified hub data', () => {
     }
   });
 
+  it('Battle Board never invents UF RPM from heat/fit when On3 RPM is missing', () => {
+    const rows = buildBattleBoardRows([
+      {
+        slug: 'heat-only-target',
+        name: 'Heat Only',
+        pos: 'WR',
+        classYear: 2027,
+        stars: 4,
+        rating: 92,
+        ufScore: null,
+        heat: 100,
+        fit: 88,
+        competitors: [],
+        isPriority: true,
+        isCommit: false,
+      },
+      {
+        slug: 'real-rpm-target',
+        name: 'Real Rpm',
+        pos: 'QB',
+        classYear: 2027,
+        stars: 4,
+        rating: 94,
+        ufScore: 67,
+        heat: 100,
+        competitors: [{ school: 'Georgia', score: 55 }],
+        isPriority: true,
+        isCommit: false,
+      },
+    ]);
+
+    assert.equal(rows.some((r) => r.id === 'heat-only-target'), false);
+    const real = rows.find((r) => r.id === 'real-rpm-target');
+    assert.ok(real);
+    assert.equal(real.ufScore, 67);
+  });
+
   it('buildHubBattles does not pad with heat-check fake rows', async () => {
     const battles = await buildHubBattles(2027);
     for (const row of battles) {

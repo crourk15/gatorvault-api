@@ -4,6 +4,7 @@ const {
   enrichBoard,
   dedupeBoardPlayers,
   dropTargetsAlreadyCommitted,
+  assignTier,
 } = require('../../lib/recruiting-board-enrich');
 
 function assertNoDuplicateNames(players) {
@@ -67,4 +68,11 @@ test('dropTargetsAlreadyCommitted matches slug or normalized name', () => {
 
   const kept = dropTargetsAlreadyCommitted(commits, targets);
   assert.deepEqual(kept.map((p) => p.slug), ['player-b']);
+});
+
+test('assignTier treats 0-100 ratings as percent scale (not fractional)', () => {
+  assert.equal(assignTier({ rating: 92, stars: 4 }), 'HIGH');
+  assert.equal(assignTier({ rating: 98.5, stars: 5 }), 'TOP');
+  assert.equal(assignTier({ rating: 0.92, stars: 4 }), 'HIGH');
+  assert.equal(assignTier({ rating: 0.985, stars: 5 }), 'TOP');
 });

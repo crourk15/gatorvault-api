@@ -57,7 +57,7 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
         className={`rh-battle-board-card__uf${ufColor ? ` rh-battle-board-card__uf--${ufColor}` : ' rh-battle-board-card__uf--unknown'}`}
       >
         <span>UF RPM</span>
-        <strong>{battle.ufScore != null ? `${battle.ufScore}%` : '—'}</strong>
+        <strong>{battle.ufScore != null ? `${battle.ufScore}%` : 'No On3 RPM'}</strong>
       </div>
 
       {rivals.length > 0 ? (
@@ -102,7 +102,7 @@ export function BattleBoard(): React.ReactElement {
       <div className="rh-section-header">
         <div className="rh-section-title">Battle Board</div>
         <div className="rh-section-subtitle">
-          {activeYear} class — UF RPM vs confirmed On3 competitor boards.
+          {activeYear} class — confirmed On3 UF RPM vs competitor boards only (no estimated %).
         </div>
       </div>
       {loading ? (

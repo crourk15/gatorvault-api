@@ -419,11 +419,12 @@ function buildBattleBoardRows(enrichedPlayers) {
 
   for (const player of enrichedPlayers) {
     if (player.isCommit) continue;
-    const heat = computeHeatScore(player);
-    const isPriority =
-      player.tier === 'TOP' || player.tier === 'HIGH' || heat >= 45;
-    const hasBattle = player.ufScore != null || (player.competitors || []).length;
-    if (!hasBattle && !isPriority) continue;
+    // Only real UF RPM / probability (or confirmed competitor boards) — never heat/fit as "UF RPM".
+    const hasUfRpm = player.ufScore != null && Number.isFinite(Number(player.ufScore));
+    const competitors = (player.competitors || []).filter(
+      (c) => c && (c.school || c.score != null)
+    );
+    if (!hasUfRpm && !competitors.length) continue;
 
     rows.push({
       id: player.slug,
@@ -433,14 +434,21 @@ function buildBattleBoardRows(enrichedPlayers) {
       battleDifficulty: player.battleDifficulty,
       battleColor: player.battleColor,
       trend: player.trend || 'flat',
-      competitors: player.competitors || [],
-      ufScore: player.ufScore ?? (isPriority ? heat : null),
+      competitors,
+      ufScore: hasUfRpm ? Number(player.ufScore) : null,
       nextVisit: player.nextVisit,
       intel: shortNote(player) || null,
     });
   }
 
-  rows.sort((a, b) => (b.ufScore ?? -1) - (a.ufScore ?? -1));
+  rows.sort((a, b) => {
+    const aScore = a.ufScore != null ? a.ufScore : -1;
+    const bScore = b.ufScore != null ? b.ufScore : -1;
+    if (bScore !== aScore) return bScore - aScore;
+    const aComp = Math.max(0, ...(a.competitors || []).map((c) => Number(c.score) || 0));
+    const bComp = Math.max(0, ...(b.competitors || []).map((c) => Number(c.score) || 0));
+    return bComp - aComp;
+  });
   return rows.slice(0, 12);
 }
 

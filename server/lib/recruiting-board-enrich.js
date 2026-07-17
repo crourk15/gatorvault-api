@@ -18,13 +18,20 @@ function playerRating(player) {
   return raw != null ? Number(raw) : 0;
 }
 
+function normalizeRating100(rating) {
+  const n = Number(rating);
+  if (!Number.isFinite(n) || n <= 0) return 0;
+  // On3/247 display ratings are typically 0–100; legacy fractional 0–1 still supported.
+  return n > 1 ? n : n * 100;
+}
+
 function assignTier(player) {
   const stars = Number(player.stars) || 0;
-  const rating = playerRating(player);
+  const rating = normalizeRating100(playerRating(player));
   if (!stars && !rating) return 'EVAL';
-  if (stars >= 5 || rating >= 0.98) return 'TOP';
-  if (stars >= 4 || rating >= 0.9) return 'HIGH';
-  if (stars >= 3 || rating >= 0.85) return 'MEDIUM';
+  if (stars >= 5 || rating >= 98) return 'TOP';
+  if (stars >= 4 || rating >= 90) return 'HIGH';
+  if (stars >= 3 || rating >= 85) return 'MEDIUM';
   return 'LOW';
 }
 
