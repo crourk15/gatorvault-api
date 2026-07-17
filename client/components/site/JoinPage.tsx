@@ -225,7 +225,7 @@ export function JoinPage(): React.ReactElement {
       if (regErr.status === 409 || regErr.code === 'email_taken') {
         setMode('signin');
         setError(
-          'That email already has an account. Use Sign in with the same email and password — don't create another account.'
+          "That email already has an account. Use Sign in with the same email and password — do not create another account."
         );
       } else {
         setError(err instanceof Error ? err.message : 'Registration failed.');
@@ -244,7 +244,7 @@ export function JoinPage(): React.ReactElement {
         <h1 className="gv-join__title">{mode === 'signin' ? 'Sign in to GatorVault' : 'Join GatorVault'}</h1>
         <p className="gv-join__sub">
           {existingSession
-            ? 'You're already signed in — continue below.'
+            ? "You are already signed in — continue below."
             : mode === 'signin'
               ? 'Sign in with your account email and password (not your display name).'
               : `${tierMeta.name} — 30-day free trial, no card required.`}
