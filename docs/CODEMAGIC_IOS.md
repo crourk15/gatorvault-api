@@ -66,7 +66,7 @@ openssl genrsa -out ios_distribution_private_key.pem 2048
 3. Creates a fresh App Store profile that includes `aps-environment`
 4. Verifies the profile, then configures Xcode signing
 
-Required in Codemagic: named cert **`gatorvault_appstore`** + App Store Connect integration **`codemagic`**. No named provisioning profile is required.
+Required in Codemagic: named cert **`gatorvault_appstore`**, named profile **`gatorvault_appstore_profile`** (schema/install only; build recreates a Push profile), and App Store Connect integration **`codemagic`**.
 
 ## Troubleshooting
 

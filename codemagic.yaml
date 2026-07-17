@@ -6,12 +6,14 @@ workflows:
     integrations:
       app_store_connect: codemagic
     environment:
-      # Named distribution cert only. App Store profile is recreated each build
-      # with Push (aps-environment) via scripts/codemagic-refresh-push-profile.sh
-      # so we never archive against a stale Codemagic-cached profile.
+      # Codemagic schema requires provisioning_profiles OR distribution_type+bundle_id.
+      # Keep named cert+profile for validation/install; the refresh script then deletes
+      # stale local profiles and forces a Push-enabled App Store profile before archive.
       ios_signing:
         certificates:
           - certificate: gatorvault_appstore
+        provisioning_profiles:
+          - profile: gatorvault_appstore_profile
       vars:
         XCODE_SCHEME: App
         BUNDLE_ID: com.gatorvaultinsider.app
