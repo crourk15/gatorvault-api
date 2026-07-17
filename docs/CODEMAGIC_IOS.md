@@ -59,22 +59,23 @@ openssl genrsa -out ios_distribution_private_key.pem 2048
 
 ## After enabling Push Notifications
 
-Apple marks the App Store provisioning profile **Invalid**. Before the next Codemagic build:
+`ios-release` recreates the App Store profile during each build (`scripts/codemagic-refresh-push-profile.sh`):
 
-1. Confirm Apple Developer → Profiles → **GatorVault Insider App Store** is valid (includes Push)
-2. Codemagic → app → **Code signing identities** → iOS provisioning profiles
-3. Remove the stale `gatorvault_appstore_profile` (or Fetch again)
-4. **Fetch profile** from Apple for `com.gatorvaultinsider.app` (App Store) → reference name must stay **`gatorvault_appstore_profile`**
-5. Start a new **iOS Release Build** on `main`
+1. Enables **Push Notifications** on the App ID if missing
+2. Deletes stale App Store profiles for `com.gatorvaultinsider.app`
+3. Creates a fresh App Store profile that includes `aps-environment`
+4. Verifies the profile, then configures Xcode signing
+
+Required in Codemagic: named cert **`gatorvault_appstore`** + App Store Connect integration **`codemagic`**. No named provisioning profile is required.
 
 ## Troubleshooting
 
 | Error | Fix |
 |-------|-----|
 | Integration not found | Rename integration in Codemagic to match `integrations.app_store_connect` in `codemagic.yaml` |
-| No matching profiles found | Add `CERTIFICATE_PRIVATE_KEY` env var OR Generate certificate in app Distribution settings; rebuild after yaml fix on `main` |
-| Cannot save Signing Certificates without certificate private key | Do not use `fetch-signing-files --create` without `CERTIFICATE_PRIVATE_KEY`; use named `gatorvault_appstore` cert + profile instead |
-| Profile Invalid / archive exit 65 after Push | Re-fetch App Store profile in Codemagic (see “After enabling Push Notifications”) |
+| No matching certificates found | Ensure named cert **`gatorvault_appstore`** exists under Codemagic → Code signing identities |
+| Cannot save Signing Certificates without certificate private key | Expected if using `fetch-signing-files --create`; this workflow uses named cert + profile recreate instead |
+| Profile missing aps-environment / archive exit 65 | Check the “Refresh App Store profile with Push entitlement” step log; confirm ASC API key can manage profiles |
 | Bundle ID mismatch | Must be `com.gatorvaultinsider.app` |
 | Build fails on `npm run build` | Check Codemagic build log; fix Next.js errors |
 | Upload OK but no build in Connect | Wait 30 min; check email for Apple processing errors |

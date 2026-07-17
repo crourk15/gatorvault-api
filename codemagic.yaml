@@ -6,14 +6,12 @@ workflows:
     integrations:
       app_store_connect: codemagic
     environment:
-      # Named cert + profile (must be valid in Codemagic Code signing identities).
-      # After enabling Push on the App ID, re-fetch the App Store profile in
-      # Codemagic UI so it includes aps-environment (Apple marks old ones Invalid).
+      # Named distribution cert only. App Store profile is recreated each build
+      # with Push (aps-environment) via scripts/codemagic-refresh-push-profile.sh
+      # so we never archive against a stale Codemagic-cached profile.
       ios_signing:
         certificates:
           - certificate: gatorvault_appstore
-        provisioning_profiles:
-          - profile: gatorvault_appstore_profile
       vars:
         XCODE_SCHEME: App
         BUNDLE_ID: com.gatorvaultinsider.app
@@ -66,8 +64,10 @@ workflows:
         script: |
           cd client/ios/App
           pod install
-      - name: Set up code signing settings on Xcode project
-        script: xcode-project use-profiles
+      - name: Refresh App Store profile with Push entitlement
+        script: |
+          set -euo pipefail
+          bash "$CM_BUILD_DIR/scripts/codemagic-refresh-push-profile.sh"
       - name: Verify iOS app icon (1024×1024)
         script: |
           set -euo pipefail
@@ -76,6 +76,17 @@ workflows:
       - name: Build IPA for App Store
         script: |
           set -euo pipefail
+          PROFILE_FILE="$(cat /tmp/gatorvault_push_profile.path 2>/dev/null || true)"
+          PROFILE_NAME="$(cat /tmp/gatorvault_push_profile.name 2>/dev/null || true)"
+          if [[ -z "${PROFILE_FILE}" || ! -f "${PROFILE_FILE}" ]]; then
+            echo "ERROR: Push-enabled profile path missing — refresh step did not run?" >&2
+            exit 1
+          fi
+          if ! security cms -D -i "${PROFILE_FILE}" | grep -q 'aps-environment'; then
+            echo "ERROR: profile ${PROFILE_NAME:-unknown} lacks aps-environment" >&2
+            exit 1
+          fi
+          echo "Archiving with profile: ${PROFILE_NAME} (${PROFILE_FILE})"
           xcode-project build-ipa \
             --workspace "$CM_BUILD_DIR/client/ios/App/App.xcworkspace" \
             --scheme "$XCODE_SCHEME" \
