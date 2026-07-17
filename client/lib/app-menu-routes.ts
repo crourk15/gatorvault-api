@@ -59,7 +59,7 @@ export function getAppMenuSections(inVault: boolean): AppMenuSection[] {
     {
       id: 'membership',
       label: 'Membership & Account',
-      href: sitePath(inVault, '/join/?mode=signin', '/vault/membership'),
+      href: sitePath(inVault, '/join/?mode=signin', '/vault/membership/'),
       icon: '👤',
     },
     {

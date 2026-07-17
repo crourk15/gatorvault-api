@@ -61,28 +61,73 @@ function authHeaders(): HeadersInit {
   return headers;
 }
 
+/** WebKit/Capacitor often surfaces transport failures as "Load failed". */
+export function isMembershipTransportError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  return /load failed|failed to fetch|networkerror|network request failed|timed out|waking up|almost ready|502|503|504/i.test(
+    err.message
+  );
+}
+
+export function membershipLoadErrorMessage(err: unknown): string {
+  if (isMembershipTransportError(err)) {
+    return 'Membership service is waking up. Try again in a moment.';
+  }
+  return err instanceof Error && err.message
+    ? err.message
+    : 'Could not load membership. Check your connection and try again.';
+}
+
+export class MembershipAuthError extends Error {
+  readonly status: number;
+  constructor(message: string, status = 401) {
+    super(message);
+    this.name = 'MembershipAuthError';
+    this.status = status;
+  }
+}
+
+async function readJsonSafe<T>(res: Response): Promise<T> {
+  return (await res.json().catch(() => ({}))) as T;
+}
+
 export async function fetchSubscriptionCatalog(): Promise<SubscriptionCatalog> {
-  const res = await fetch(`${getApiBase()}/api/subscription/catalog`, { cache: 'no-store' });
-  if (!res.ok) throw new Error('Could not load membership catalog.');
+  let res: Response;
+  try {
+    res = await fetch(`${getApiBase()}/api/subscription/catalog`, { cache: 'no-store' });
+  } catch (err) {
+    throw new Error(membershipLoadErrorMessage(err));
+  }
+  if (!res.ok) {
+    if (res.status === 502 || res.status === 503 || res.status === 504) {
+      throw new Error('Membership service is waking up. Try again in a moment.');
+    }
+    throw new Error('Could not load membership catalog.');
+  }
   return res.json() as Promise<SubscriptionCatalog>;
 }
 
 async function subscriptionStatusError(res: Response): Promise<Error> {
-  const data = (await res.json().catch(() => ({}))) as { error?: string };
-  if (res.status === 401 || res.status === 404) {
-    return new Error(data.error || 'Sign in again to view membership.');
+  const data = await readJsonSafe<{ error?: string }>(res);
+  if (res.status === 401 || res.status === 403 || res.status === 404) {
+    return new MembershipAuthError(data.error || 'Sign in again to view membership.', res.status);
   }
-  if (res.status === 502 || res.status === 503) {
+  if (res.status === 502 || res.status === 503 || res.status === 504) {
     return new Error('Membership service is waking up. Try again in a moment.');
   }
   return new Error(data.error || 'Could not load membership status.');
 }
 
 export async function fetchSubscriptionStatus(): Promise<SubscriptionStatus> {
-  const res = await fetch(`${getApiBase()}/api/subscription/status`, {
-    headers: authHeaders(),
-    cache: 'no-store',
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${getApiBase()}/api/subscription/status`, {
+      headers: authHeaders(),
+      cache: 'no-store',
+    });
+  } catch (err) {
+    throw new Error(membershipLoadErrorMessage(err));
+  }
   if (!res.ok) throw await subscriptionStatusError(res);
   return res.json() as Promise<SubscriptionStatus>;
 }

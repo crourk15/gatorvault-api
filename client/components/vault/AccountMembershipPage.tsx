@@ -1,12 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { clearSession, loadSession, replaceAuthLocation, verifyStoredSession } from '@/lib/auth-api';
 import { isNativeApp } from '@/lib/api-base';
 import {
   fetchSubscriptionCatalog,
   fetchSubscriptionStatus,
+  isMembershipTransportError,
+  membershipLoadErrorMessage,
+  MembershipAuthError,
   verifyApplePurchase,
   restoreApplePurchase,
   type SubscriptionCatalog,
@@ -23,6 +26,9 @@ import {
 import { AccountDeletePanel } from '@/components/vault/AccountDeletePanel';
 import '@/lib/membership.css';
 
+const LOAD_ATTEMPTS = 3;
+const LOAD_RETRY_DELAY_MS = 1_500;
+
 function statusBadge(status: SubscriptionStatus | null): React.ReactElement {
   if (!status) return <span className="gv-membership__badge">Loading…</span>;
   if (status.paid) {
@@ -34,6 +40,21 @@ function statusBadge(status: SubscriptionStatus | null): React.ReactElement {
   return <span className="gv-membership__badge">Free trial</span>;
 }
 
+async function withTransientRetries<T>(fn: () => Promise<T>): Promise<T> {
+  let lastErr: unknown;
+  for (let attempt = 0; attempt < LOAD_ATTEMPTS; attempt += 1) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+      if (err instanceof MembershipAuthError) throw err;
+      if (attempt >= LOAD_ATTEMPTS - 1 || !isMembershipTransportError(err)) throw err;
+      await new Promise((resolve) => setTimeout(resolve, LOAD_RETRY_DELAY_MS));
+    }
+  }
+  throw lastErr;
+}
+
 export function AccountMembershipPage(): React.ReactElement {
   const [catalog, setCatalog] = useState<SubscriptionCatalog | null>(null);
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
@@ -41,6 +62,7 @@ export function AccountMembershipPage(): React.ReactElement {
   const [loading, setLoading] = useState(true);
   const [billingReady, setBillingReady] = useState(false);
   const [purchaseBusy, setPurchaseBusy] = useState<string | null>(null);
+  const [needsReauth, setNeedsReauth] = useState(false);
   const native = isNativeApp();
   const localSession = typeof window !== 'undefined' ? loadSession() : null;
 
@@ -51,80 +73,66 @@ export function AccountMembershipPage(): React.ReactElement {
     }
   }, [loading]);
 
-  useEffect(() => {
+  const loadMembership = useCallback(async () => {
     const session = loadSession();
     if (!session?.token) {
       replaceAuthLocation('/join/?mode=signin&next=/vault/membership/');
       return;
     }
 
-    let cancelled = false;
-    void (async () => {
-      try {
-        const verified = await verifyStoredSession({ keepLocalOnNetworkError: true });
-        if (cancelled) return;
-        // Soft API blips keep local session — only force reauth when login is actually gone.
-        if (!verified?.token && !loadSession()?.token) {
-          replaceAuthLocation('/join/?mode=signin&reauth=1&next=/vault/membership/');
-          return;
-        }
+    setLoading(true);
+    setError(null);
+    setNeedsReauth(false);
 
-        const [catalogResult, statusResult] = await Promise.allSettled([
-          fetchSubscriptionCatalog(),
-          fetchSubscriptionStatus(),
-        ]);
-
-        if (cancelled) return;
-
-        if (catalogResult.status === 'fulfilled') {
-          setCatalog(catalogResult.value);
-          if (native && catalogResult.value.iosPurchaseReady) {
-            setBillingReady(await isIosBillingAvailable());
-          }
-        }
-
-        if (statusResult.status === 'fulfilled') {
-          setStatus(statusResult.value);
-          setError(null);
-        } else {
-          const err = statusResult.reason;
-          const message = err instanceof Error ? err.message : 'Could not load membership.';
-          setError(message);
-          if (
-            message.toLowerCase().includes('sign in') ||
-            message.toLowerCase().includes('account not found')
-          ) {
-            clearSession();
-            window.setTimeout(() => {
-              replaceAuthLocation('/join/?mode=signin&reauth=1&next=/vault/membership/');
-            }, 1200);
-          }
-        }
-
-        if (catalogResult.status === 'rejected' && statusResult.status === 'rejected') {
-          const statusMsg =
-            statusResult.reason instanceof Error ? statusResult.reason.message : '';
-          setError(
-            statusMsg && !/failed to fetch|networkerror/i.test(statusMsg)
-              ? statusMsg
-              : 'Could not load membership. Check your connection and try again.'
-          );
-        } else if (catalogResult.status === 'rejected') {
-          setError((prev) => prev || 'Could not load subscription plans.');
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Could not load membership.');
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
+    try {
+      await verifyStoredSession({ keepLocalOnNetworkError: true });
+      if (!loadSession()?.token) {
+        // Only leave the page when the server confirmed the session is gone.
+        replaceAuthLocation('/join/?mode=signin&reauth=1&next=/vault/membership/');
+        return;
       }
-    })();
 
-    return () => {
-      cancelled = true;
-    };
+      const [catalogResult, statusResult] = await Promise.allSettled([
+        withTransientRetries(() => fetchSubscriptionCatalog()),
+        withTransientRetries(() => fetchSubscriptionStatus()),
+      ]);
+
+      if (catalogResult.status === 'fulfilled') {
+        setCatalog(catalogResult.value);
+        if (native && catalogResult.value.iosPurchaseReady) {
+          setBillingReady(await isIosBillingAvailable());
+        }
+      }
+
+      if (statusResult.status === 'fulfilled') {
+        setStatus(statusResult.value);
+        setError(null);
+      } else {
+        const err = statusResult.reason;
+        // Stay on Membership for soft failures — never wipe login or hard-navigate away.
+        if (err instanceof MembershipAuthError) {
+          setNeedsReauth(true);
+          setError('Could not refresh membership for this session. Sign in again if this continues.');
+        } else {
+          setError(membershipLoadErrorMessage(err));
+        }
+      }
+
+      if (catalogResult.status === 'rejected' && statusResult.status === 'rejected') {
+        setError(membershipLoadErrorMessage(statusResult.reason));
+      } else if (catalogResult.status === 'rejected') {
+        setError((prev) => prev || 'Could not load subscription plans.');
+      }
+    } catch (err) {
+      setError(membershipLoadErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
   }, [native]);
+
+  useEffect(() => {
+    void loadMembership();
+  }, [loadMembership]);
 
   useEffect(() => {
     if (typeof window === "undefined" || loading) return;
@@ -189,9 +197,8 @@ export function AccountMembershipPage(): React.ReactElement {
   }
 
   function handleRetryLoad(): void {
-    setLoading(true);
-    setError(null);
-    window.location.reload();
+    // In-place retry — full reload on Capacitor can fall back to the marketing landing page.
+    void loadMembership();
   }
 
   async function handleManageSubscriptions(): Promise<void> {
@@ -222,9 +229,16 @@ export function AccountMembershipPage(): React.ReactElement {
       {error ? (
         <div className="gv-membership__error" role="alert">
           <p>{error}</p>
-          <button type="button" className="gv-membership__secondary-btn" onClick={handleRetryLoad}>
-            Try again
-          </button>
+          <div className="gv-membership__actions">
+            <button type="button" className="gv-membership__secondary-btn" onClick={handleRetryLoad}>
+              Try again
+            </button>
+            {needsReauth ? (
+              <button type="button" className="gv-membership__secondary-btn" onClick={handleSignOut}>
+                Sign out and sign in again
+              </button>
+            ) : null}
+          </div>
         </div>
       ) : null}
 
@@ -233,11 +247,15 @@ export function AccountMembershipPage(): React.ReactElement {
           <h2 className="gv-membership__section-title">Signed in</h2>
           <p className="gv-membership__meta">{localSession.email}</p>
           <p className="gv-membership__meta">
-            Membership details could not be loaded. Sign in again to refresh your session.
+            {needsReauth
+              ? 'Membership details could not be refreshed for this session.'
+              : 'Membership details could not be loaded yet. Stay here and try again — you are still signed in.'}
           </p>
-          <button type="button" className="gv-membership__secondary-btn" onClick={handleSignOut}>
-            Sign out and sign in again
-          </button>
+          {needsReauth ? (
+            <button type="button" className="gv-membership__secondary-btn" onClick={handleSignOut}>
+              Sign out and sign in again
+            </button>
+          ) : null}
         </section>
       ) : null}
 
