@@ -173,12 +173,12 @@ export function VaultAlertsPage(): React.ReactElement {
         } else if (out.reason === 'membership') {
           setPushStatus('Active membership required for push alerts.');
         } else if (out.reason === 'disabled') {
-          setPushStatus('Push alerts are not configured on the server yet.');
+          setPushStatus('Lock-screen alerts are unavailable right now. Try again later.');
         } else if (out.reason === 'unsupported') {
           setPushStatus(
             nativeShell
-              ? 'This app build cannot register for lock-screen push yet — update when Build 16+ ships with APNs.'
-              : 'This browser does not support Web Push.'
+              ? 'Lock-screen alerts need an app update. Your in-app feed still works.'
+              : 'This browser does not support push notifications.'
           );
         }
       });
@@ -235,13 +235,6 @@ export function VaultAlertsPage(): React.ReactElement {
           in-app feed.
         </p>
       </div>
-
-      {nativeShell ? (
-        <p className="gv-vault-alerts__native-banner" data-testid="alerts-native-banner">
-          You&apos;re in the App Store app. Save Preferences to register this iPhone for lock-screen
-          alerts (requires an APNs-enabled build). The feed below always works.
-        </p>
-      ) : null}
 
       <div className="gv-vault-alerts__layout">
         <section className="gv-vault-alerts__prefs">
@@ -356,7 +349,7 @@ export function VaultAlertsPage(): React.ReactElement {
             </button>
           </div>
           <p className="gv-vault-alerts__section-hint">
-            Movement and intel always appear here — even before lock-screen push is available.
+            Movement and intel show up here as they land.
           </p>
 
           {loading && <p className="gv-page-status">Loading alerts…</p>}
