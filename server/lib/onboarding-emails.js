@@ -1,4 +1,7 @@
-const VAULT_URL = process.env.GV_VAULT_URL || 'https://gatorvault.com/vault';
+// Live product host is gatorvaultinsider.com — gatorvault.com/vault 404s and must not be emailed.
+const SITE_URL = String(process.env.SITE_URL || 'https://gatorvaultinsider.com').replace(/\/$/, '');
+const VAULT_URL =
+  process.env.GV_VAULT_URL || `${SITE_URL}/join/?mode=signin&next=${encodeURIComponent('/vault/')}`;
 const SUPPORT_EMAIL = process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com';
 
 const WELCOME_SUBJECT = 'Welcome to GatorVault — Your Access Is Now Live 🐊🔥';
@@ -88,8 +91,11 @@ function welcomeEmailHtml({ name, email, tier } = {}) {
 
   <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">🔑 Your Access</p>
   <p style="margin:0 0 8px;font-size:14px;line-height:1.6;">Your vault is now unlocked.</p>
-  <p style="margin:0 0 20px;font-size:14px;line-height:1.6;">Use the email you signed up with to enter the member area:<br>
-  <a href="${VAULT_URL}" style="color:#FA4616;">${VAULT_URL}</a></p>
+  <p style="margin:0 0 8px;font-size:14px;line-height:1.6;">Sign in with the email you signed up with:</p>
+  <p style="margin:0 0 8px;font-size:14px;line-height:1.6;">
+  <a href="${VAULT_URL}" style="color:#FA4616;font-weight:700;">Open GatorVault (sign in)</a></p>
+  <p style="margin:0 0 8px;font-size:13px;color:#94a3b8;line-height:1.55;word-break:break-all;">${VAULT_URL}</p>
+  <p style="margin:0 0 20px;font-size:14px;line-height:1.6;">On iPhone? Open the <strong>GatorVault</strong> app and sign in with that same email — you do not need a separate website password link for the app.</p>
 
   <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">🎬 Your Tier: ${tierLabel}</p>
   <ul style="margin:0 0 20px;padding-left:20px;">${benefits}</ul>
