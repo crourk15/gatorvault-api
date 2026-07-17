@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { isNativeApp, nativeNavigationUrl } from './api-base';
-import { loadSession, type AuthSession, type PaymentTierId } from './auth-api';
+import { ensureSessionHydrated, loadSession, type AuthSession, type PaymentTierId } from './auth-api';
 import { isFutureCastInsider } from './futurecast-insider';
 import { insiderUnlockHref } from './navConfig';
 
@@ -15,14 +15,19 @@ export function useUser(): {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     const sync = () => {
       setUser(loadSession());
-      setReady(true);
     };
-    sync();
+    void ensureSessionHydrated().then(() => {
+      if (cancelled) return;
+      sync();
+      setReady(true);
+    });
     window.addEventListener('storage', sync);
     window.addEventListener('gv-auth-changed', sync);
     return () => {
+      cancelled = true;
       window.removeEventListener('storage', sync);
       window.removeEventListener('gv-auth-changed', sync);
     };

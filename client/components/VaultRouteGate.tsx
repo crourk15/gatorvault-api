@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { isNativeApp, nativeNavigationUrl } from '@/lib/api-base';
-import { loadSession, replaceAuthLocation, verifyStoredSession } from '@/lib/auth-api';
+import { ensureSessionHydrated, loadSession, replaceAuthLocation, verifyStoredSession } from '@/lib/auth-api';
 import { useUser } from '@/hooks/useUser';
 import { vaultGateRedirect } from '@/lib/navConfig';
 import { usePathname } from '@/lib/use-pathname';
@@ -51,30 +51,36 @@ export function VaultRouteGate(): null {
 
   React.useEffect(() => {
     if (!ready) return;
-    const p = pathname.replace(/\/$/, '') || '/';
-    if (p.startsWith('/join') || p.startsWith('/insider') || p.startsWith('/welcome')) return;
-    if (isVaultAuthPath(p)) return;
-
-    const handoff =
-      typeof window !== 'undefined' && sessionStorage.getItem(AUTH_HANDOFF_KEY) === '1';
-    const loggedIn = sessionLoggedIn() || isAuthenticated(user?.email, user?.token);
-
-    if (handoff) {
-      if (loggedIn) sessionStorage.removeItem(AUTH_HANDOFF_KEY);
-      return;
-    }
-
-    // Gate only on local session presence — never wait on network for nav.
-    const dest = vaultGateRedirect(pathname, loggedIn);
-    if (dest) {
-      window.location.replace(isNativeApp() ? nativeNavigationUrl(dest) : dest);
-      return;
-    }
-
-    if (!loggedIn || !shouldVerifyNow()) return;
-
     let cancelled = false;
-    void verifyStoredSession({ keepLocalOnNetworkError: true }).then((session) => {
+
+    void (async () => {
+      // Restore native Preferences → localStorage before any sign-in bounce.
+      await ensureSessionHydrated();
+      if (cancelled) return;
+
+      const p = pathname.replace(/\/$/, '') || '/';
+      if (p.startsWith('/join') || p.startsWith('/insider') || p.startsWith('/welcome')) return;
+      if (isVaultAuthPath(p)) return;
+
+      const handoff =
+        typeof window !== 'undefined' && sessionStorage.getItem(AUTH_HANDOFF_KEY) === '1';
+      const loggedIn = sessionLoggedIn() || isAuthenticated(user?.email, user?.token);
+
+      if (handoff) {
+        if (loggedIn) sessionStorage.removeItem(AUTH_HANDOFF_KEY);
+        return;
+      }
+
+      // Gate only on local session presence — never wait on network for nav.
+      const dest = vaultGateRedirect(pathname, loggedIn);
+      if (dest) {
+        window.location.replace(isNativeApp() ? nativeNavigationUrl(dest) : dest);
+        return;
+      }
+
+      if (!loggedIn || !shouldVerifyNow()) return;
+
+      const session = await verifyStoredSession({ keepLocalOnNetworkError: true });
       if (cancelled || !session) return;
       // Only redirect after a confirmed server payload saying access is inactive.
       // Soft failures return the local session without overwriting accessActive.
@@ -85,7 +91,7 @@ export function VaultRouteGate(): null {
           replaceAuthLocation('/vault/membership/?trial=ended');
         }
       }
-    });
+    })();
 
     return () => {
       cancelled = true;

@@ -5,6 +5,7 @@ import {
   loginAccount,
   registerAccount,
   saveSession,
+  ensureSessionHydrated,
   verifyStoredSession,
   clearSession,
   safeAuthRedirectPath,
@@ -103,16 +104,18 @@ export function JoinPage(): React.ReactElement {
     }
 
     let cancelled = false;
-    void verifyStoredSession({ keepLocalOnNetworkError: true }).then((session) => {
-      if (cancelled) return;
-      setCheckingSession(false);
-      if (!session?.email || !session?.token) {
-        setExistingSession(null);
-        return;
-      }
-      rememberLastEmail(session.email);
-      setExistingSession({ email: session.email });
-    });
+    void ensureSessionHydrated()
+      .then(() => verifyStoredSession({ keepLocalOnNetworkError: true }))
+      .then((session) => {
+        if (cancelled) return;
+        setCheckingSession(false);
+        if (!session?.email || !session?.token) {
+          setExistingSession(null);
+          return;
+        }
+        rememberLastEmail(session.email);
+        setExistingSession({ email: session.email });
+      });
     return () => {
       cancelled = true;
     };

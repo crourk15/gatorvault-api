@@ -1,5 +1,5 @@
 import { getApiBase } from './big-board-api';
-import { nativeNavigationUrl } from './api-base';
+import { isNativeApp, nativeNavigationUrl } from './api-base';
 
 export type PaymentTierId = 'locker' | 'film' | 'war';
 export type AuthSession = {
@@ -22,7 +22,8 @@ export type AuthSession = {
   } | null;
 };
 
-const SESSION_KEY = 'gv_session';
+/** Keep in sync with native-boot-script.ts */
+export const SESSION_KEY = 'gv_session';
 
 /** Auth-only paths — never use as post-login ?next= destinations (avoids redirect loops). */
 export const AUTH_ONLY_PATHS = [
@@ -66,16 +67,15 @@ export function effectiveTier(session: AuthSession | null | undefined): PaymentT
   return session.tier || 'locker';
 }
 
-function normalizeSession(session: AuthSession): AuthSession {  const tier = effectiveTier(session);
+function normalizeSession(session: AuthSession): AuthSession {
+  const tier = effectiveTier(session);
   if (tier === session.tier) return session;
   return { ...session, tier };
 }
 
-export function loadSession(): AuthSession | null {
-  if (typeof window === 'undefined') return null;
+function parseSessionRaw(raw: string | null | undefined): AuthSession | null {
+  if (!raw) return null;
   try {
-    const raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
     const parsed = JSON.parse(raw) as AuthSession;
     if (!parsed?.email || !parsed?.token) return null;
     return normalizeSession(parsed);
@@ -84,13 +84,50 @@ export function loadSession(): AuthSession | null {
   }
 }
 
+async function nativePreferences(): Promise<typeof import('@capacitor/preferences').Preferences | null> {
+  if (typeof window === 'undefined' || !isNativeApp()) return null;
+  try {
+    const mod = await import('@capacitor/preferences');
+    return mod.Preferences;
+  } catch {
+    return null;
+  }
+}
+
+function persistNativeSession(raw: string | null): void {
+  void (async () => {
+    const prefs = await nativePreferences();
+    if (!prefs) return;
+    try {
+      if (raw) await prefs.set({ key: SESSION_KEY, value: raw });
+      else await prefs.remove({ key: SESSION_KEY });
+    } catch {
+      /* ignore */
+    }
+  })();
+}
+
+/** Sync read — localStorage only. Call ensureSessionHydrated() first on native. */
+export function loadSession(): AuthSession | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    return parseSessionRaw(localStorage.getItem(SESSION_KEY));
+  } catch {
+    return null;
+  }
+}
+
 export function saveSession(session: AuthSession): void {
   if (typeof window === 'undefined') return;
+  const raw = JSON.stringify(normalizeSession(session));
   try {
-    localStorage.setItem(SESSION_KEY, JSON.stringify(normalizeSession(session)));    window.dispatchEvent(new CustomEvent('gv-auth-changed'));
+    localStorage.setItem(SESSION_KEY, raw);
+    window.dispatchEvent(new CustomEvent('gv-auth-changed'));
   } catch {
     /* ignore */
   }
+  // iOS may reclaim WebView localStorage — mirror into native Preferences.
+  persistNativeSession(raw);
 }
 
 export function clearSession(): void {
@@ -101,6 +138,42 @@ export function clearSession(): void {
   } catch {
     /* ignore */
   }
+  persistNativeSession(null);
+}
+
+let hydratePromise: Promise<AuthSession | null> | null = null;
+
+/**
+ * Restore gv_session from Capacitor Preferences when iOS wiped localStorage.
+ * Safe to call repeatedly — runs once per page load.
+ */
+export function ensureSessionHydrated(): Promise<AuthSession | null> {
+  if (typeof window === 'undefined') return Promise.resolve(null);
+  const existing = loadSession();
+  if (existing) return Promise.resolve(existing);
+  if (!isNativeApp()) return Promise.resolve(null);
+  if (hydratePromise) return hydratePromise;
+
+  hydratePromise = (async () => {
+    const prefs = await nativePreferences();
+    if (!prefs) return null;
+    try {
+      const { value } = await prefs.get({ key: SESSION_KEY });
+      const session = parseSessionRaw(value);
+      if (!session) return null;
+      try {
+        localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+        window.dispatchEvent(new CustomEvent('gv-auth-changed'));
+      } catch {
+        /* ignore */
+      }
+      return session;
+    } catch {
+      return null;
+    }
+  })();
+
+  return hydratePromise;
 }
 
 async function authPost<T>(path: string, body: Record<string, unknown>): Promise<{
@@ -124,6 +197,7 @@ async function authPost<T>(path: string, body: Record<string, unknown>): Promise
  * Transport / 5xx blips keep the local session so a cold API cannot kick users to Sign in.
  */
 export async function verifyStoredSession(opts?: { keepLocalOnNetworkError?: boolean }): Promise<AuthSession | null> {
+  await ensureSessionHydrated();
   const session = loadSession();
   if (!session?.token) return null;
   const base = getApiBase();
@@ -134,12 +208,13 @@ export async function verifyStoredSession(opts?: { keepLocalOnNetworkError?: boo
       cache: 'no-store',
     });
     if (!res.ok) {
-      const authFailure = res.status === 401 || res.status === 403 || res.status === 404;
-      if (authFailure) {
+      // Only a real expired/invalid token (401) logs the user out.
+      // 403/404 from proxies or edge quirks must not wipe login.
+      if (res.status === 401) {
         clearSession();
         return null;
       }
-      // 408/429/5xx / unexpected — keep local login.
+      // 403/404/408/429/5xx — keep local login.
       return keepOnSoftFailure ? session : null;
     }
     const data = (await res.json()) as { ok?: boolean; session?: AuthSession };
