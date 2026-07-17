@@ -104,4 +104,8 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        submit_to_app_store: false
+        # 1.0.5 Build 25 ship — Codemagic submits for App Review after upload/processing.
+        # Set back to false after this release if you want TestFlight-only uploads again.
+        submit_to_app_store: true
+        cancel_previous_submissions: true
+        release_type: MANUAL
