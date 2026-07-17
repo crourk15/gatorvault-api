@@ -22,10 +22,9 @@ Player profiles and Insider articles open correctly on iPhone. My Alerts can sen
 
 ## Before Codemagic
 
-1. Apple Developer: App ID has Push Notifications enabled; APNs .p8 key created
-2. Render API env: APNS_KEY_ID, APNS_TEAM_ID, APNS_KEY_P8, APNS_BUNDLE_ID=com.gatorvaultinsider.app, APNS_PRODUCTION=true
-3. Provisioning profile used by Codemagic includes Push (regenerate if created before Push was enabled)
-4. Codemagic → iOS Release Build on main
+1. Codemagic has named cert **`gatorvault_appstore`** + ASC integration **`codemagic`**
+2. Render API env (for lock-screen pushes after install): APNS_KEY_ID, APNS_TEAM_ID, APNS_KEY_P8, APNS_BUNDLE_ID=com.gatorvaultinsider.app, APNS_PRODUCTION=true
+3. Codemagic → **iOS Release Build** on this branch / `main` — profile refresh with Push is automatic
 
 ## Device smoke after install
 

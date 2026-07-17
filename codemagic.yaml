@@ -6,14 +6,12 @@ workflows:
     integrations:
       app_store_connect: codemagic
     environment:
-      # Named cert + profile (must be valid in Codemagic Code signing identities).
-      # After enabling Push on the App ID, re-fetch the App Store profile in
-      # Codemagic UI so it includes aps-environment (Apple marks old ones Invalid).
+      # Named distribution cert only. App Store profile is recreated each build
+      # with Push (aps-environment) via scripts/codemagic-refresh-push-profile.sh
+      # so we never archive against a stale Codemagic-cached profile.
       ios_signing:
         certificates:
           - certificate: gatorvault_appstore
-        provisioning_profiles:
-          - profile: gatorvault_appstore_profile
       vars:
         XCODE_SCHEME: App
         BUNDLE_ID: com.gatorvaultinsider.app
@@ -66,8 +64,10 @@ workflows:
         script: |
           cd client/ios/App
           pod install
-      - name: Set up code signing settings on Xcode project
-        script: xcode-project use-profiles
+      - name: Refresh App Store profile with Push entitlement
+        script: |
+          set -euo pipefail
+          bash "$CM_BUILD_DIR/scripts/codemagic-refresh-push-profile.sh"
       - name: Verify iOS app icon (1024×1024)
         script: |
           set -euo pipefail
