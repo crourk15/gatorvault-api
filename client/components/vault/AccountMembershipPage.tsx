@@ -246,14 +246,18 @@ export function AccountMembershipPage(): React.ReactElement {
             {statusBadge(status)}
             <span className="gv-membership__badge">{String(status.tier).toUpperCase()} tier</span>
           </div>
-          <p className="gv-membership__meta">
+          <p className="gv-membership__meta" data-testid="membership-trial-status">
             {status.paid
               ? 'Your paid membership is active.'
               : status.trial.expired
                 ? 'Your 30-day trial has ended. Subscribe to restore full Vault access.'
                 : status.trial.daysLeft != null
-                  ? `${status.trial.daysLeft} day${status.trial.daysLeft === 1 ? '' : 's'} left in your free trial${
-                      status.trial.trialEndFormatted ? ` (ends ${status.trial.trialEndFormatted})` : ''
+                  ? `Free trial: ${status.trial.daysLeft} day${
+                      status.trial.daysLeft === 1 ? '' : 's'
+                    } left${
+                      status.trial.trialEndFormatted
+                        ? ` · ends ${status.trial.trialEndFormatted}`
+                        : ''
                     }.`
                   : 'Trial status unavailable.'}
           </p>

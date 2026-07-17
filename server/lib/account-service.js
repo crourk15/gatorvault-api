@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { deleteUser, findUserByEmail } = require('./user-store');
+const { rememberTrial, markTrialDeleted } = require('./trial-ledger');
 const pointsStore = require('./points-store');
 const alertEmailPersistence = require('./alert-email-persistence');
 const { removeSubscriptionsForEmail } = require('./push-alert-service');
@@ -71,6 +72,14 @@ async function deleteAccountForUser(email) {
   if (!existing) {
     return { ok: false, error: 'Account not found.' };
   }
+
+  // Keep original trial window so re-register cannot mint another free month.
+  rememberTrial(normalized, {
+    trialEnd: existing.trialEnd,
+    trialStart: existing.createdAt,
+    createdAt: existing.createdAt,
+  });
+  markTrialDeleted(normalized);
 
   const removedAuth = deleteUser(normalized);
   if (!removedAuth) {

@@ -157,21 +157,44 @@ export function JoinPage(): React.ReactElement {
     }
     setLoading(true);
     try {
-      const { session, emailSent } = await registerAccount({
+      const { session, emailSent, trialExpired, trialReused } = await registerAccount({
         email: email.trim().toLowerCase(),
         password,
         name: name.trim(),
         tier,
       });
       saveSession(session);
+      const days =
+        typeof session.daysLeft === 'number' ? session.daysLeft : null;
+      if (trialExpired) {
+        setSuccess(
+          'Account ready — your free trial for this email already ended. Redirecting to Membership…'
+        );
+        window.setTimeout(() => {
+          replaceAuthLocation('/vault/membership/');
+        }, 1200);
+        return;
+      }
+      const trialLine =
+        days != null
+          ? ` ${days} day${days === 1 ? '' : 's'} left in your free trial.`
+          : ' Your 30-day free trial is active.';
       setSuccess(
         emailSent
-          ? 'Account created! Welcome email sent — redirecting to the Vault…'
-          : 'Account created! Redirecting to the Vault…'
+          ? `Account created! Welcome email sent.${trialLine} Redirecting to the Vault…`
+          : `Account created!${trialLine}${
+              trialReused ? ' (same trial window as your earlier account).' : ''
+            } Redirecting to the Vault…`
       );
-      window.setTimeout(redirectAfterAuth, 1200);
+      window.setTimeout(redirectAfterAuth, 1400);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed.');
+      const regErr = err as Error & { code?: string; status?: number };
+      if (regErr.status === 409 || regErr.code === 'email_taken') {
+        setMode('signin');
+        setError('An account with this email already exists. Sign in instead.');
+      } else {
+        setError(err instanceof Error ? err.message : 'Registration failed.');
+      }
     } finally {
       setLoading(false);
     }

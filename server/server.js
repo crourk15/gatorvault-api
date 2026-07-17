@@ -461,22 +461,33 @@ app.post('/api/register', async (req, res) => {
 
     const users = loadUsers();
     if (users.find((u) => u.email === email)) {
-      return res.status(409).json({ ok: false, error: 'An account with this email already exists. Sign in instead.' });
+      return res.status(409).json({
+        ok: false,
+        error: 'An account with this email already exists. Sign in instead.',
+        code: 'email_taken',
+      });
     }
 
-    const trialEnd = new Date();
-    trialEnd.setDate(trialEnd.getDate() + 30);
+    const { resolveRegistrationTrial, rememberTrial } = require('./lib/trial-ledger');
+    const trialPlan = resolveRegistrationTrial(email, { trialDays: 30 });
+    const trialEnd = trialPlan.trialEnd;
+    const createdAt = new Date().toISOString();
 
     const user = {
       email,
       name,
       tier,
       passwordHash: hashPassword(password),
-      createdAt: new Date().toISOString(),
-      trialEnd: trialEnd.toISOString()
+      createdAt: trialPlan.trialStart || createdAt,
+      trialEnd: trialEnd.toISOString(),
     };
     users.push(user);
     saveUsers(users);
+    rememberTrial(email, {
+      trialEnd: user.trialEnd,
+      trialStart: user.createdAt,
+      createdAt: user.createdAt,
+    });
 
     let trialEndStr = trialEnd.toLocaleDateString('en-US', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
@@ -505,6 +516,7 @@ app.post('/api/register', async (req, res) => {
     }
 
     const token = signSession({ email, tier, name, exp: Date.now() + TOKEN_TTL_MS });
+    const sessionFields = buildSessionFields(user, pointsStore);
     return res.json({
       ok: true,
       emailSent,
@@ -513,9 +525,11 @@ app.post('/api/register', async (req, res) => {
       onboardingProvider: null,
       onboardingMode: 'welcome_only',
       welcomeEmail: ONBOARDING_SEQUENCE[0],
+      trialReused: Boolean(trialPlan.reused),
+      trialExpired: Boolean(sessionFields.accessActive === false && !sessionFields.paid),
       session: {
         token,
-        ...buildSessionFields(user, pointsStore),
+        ...sessionFields,
       },
     });
   } catch (err) {
@@ -609,8 +623,13 @@ app.get('/api/session', (req, res) => {
   });
 });
 
-/** Mint a signed API token for Netlify Identity / legacy ni- sessions */
+/** Legacy Netlify Identity bridge — disabled unless explicitly enabled with a shared secret. */
 app.post('/api/auth/bridge-session', (req, res) => {
+  const expected = String(process.env.AUTH_BRIDGE_SECRET || '').trim();
+  const provided = String(req.get('X-Auth-Bridge-Secret') || req.body?.secret || '').trim();
+  if (!expected || !provided || provided !== expected) {
+    return res.status(403).json({ ok: false, error: 'Session bridge is disabled.' });
+  }
   try {
     const email = String(req.body.email || '').trim().toLowerCase();
     const tier = normalizeTier(req.body.tier);
@@ -619,8 +638,23 @@ app.post('/api/auth/bridge-session', (req, res) => {
 
     const users = loadUsers();
     const user = users.find((u) => u.email === email);
-    const finalTier = user ? user.tier : tier;
-    const finalName = (user && user.name) || name || email.split('@')[0];
+    if (!user) {
+      return res.status(404).json({ ok: false, error: 'Account not found.' });
+    }
+    if (!hasPaidAccess(user)) {
+      const trialEndDate = user.trialEnd ? new Date(user.trialEnd) : null;
+      const trialExpired = trialEndDate ? trialEndDate.getTime() <= Date.now() : false;
+      if (trialExpired) {
+        return res.status(402).json({
+          ok: false,
+          trialExpired: true,
+          error: 'Your 30-day free trial has ended. Subscribe to restore access.',
+          membershipUrl: `${SITE_URL}/vault/membership/`,
+        });
+      }
+    }
+    const finalTier = user.tier || tier;
+    const finalName = user.name || name || email.split('@')[0];
 
     const token = signSession({
       email,
@@ -633,11 +667,7 @@ app.post('/api/auth/bridge-session', (req, res) => {
       ok: true,
       session: {
         token,
-        email,
-        tier: finalTier,
-        name: finalName,
-        trialEndISO: user?.trialEnd || null,
-        createdAt: user?.createdAt || null
+        ...buildSessionFields(user, pointsStore),
       }
     });
   } catch (err) {
@@ -1188,6 +1218,23 @@ function startPostBootServices() {
     }
   } catch (e) {
     console.warn('[app-review] boot provision skipped:', e.message);
+  }
+  try {
+    const { rememberTrial } = require('./lib/trial-ledger');
+    const existingUsers = loadUsers();
+    let seeded = 0;
+    for (const u of existingUsers) {
+      if (!u?.email || !u?.trialEnd) continue;
+      rememberTrial(u.email, {
+        trialEnd: u.trialEnd,
+        trialStart: u.createdAt,
+        createdAt: u.createdAt,
+      });
+      seeded += 1;
+    }
+    console.log('[trial-ledger] seeded', seeded, 'active accounts');
+  } catch (e) {
+    console.warn('[trial-ledger] seed skipped:', e.message);
   }
   try {
     const deployCache = require('./lib/deploy-cache');
