@@ -7,6 +7,8 @@ import { useUser } from '@/hooks/useUser';
 import { vaultGateRedirect } from '@/lib/navConfig';
 import { usePathname } from '@/lib/use-pathname';
 const AUTH_HANDOFF_KEY = 'gv_auth_handoff';
+const LAST_VERIFY_KEY = 'gv_session_last_verify_ms';
+const VERIFY_MIN_INTERVAL_MS = 60_000;
 
 const VAULT_AUTH_PATHS = ['/vault/login', '/vault/membership', '/vault/auth/callback', '/auth/callback'];
 
@@ -26,10 +28,22 @@ function sessionLoggedIn(): boolean {
   return isAuthenticated(session?.email, session?.token);
 }
 
+function shouldVerifyNow(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const last = Number(sessionStorage.getItem(LAST_VERIFY_KEY) || 0);
+    if (Number.isFinite(last) && Date.now() - last < VERIFY_MIN_INTERVAL_MS) return false;
+    sessionStorage.setItem(LAST_VERIFY_KEY, String(Date.now()));
+    return true;
+  } catch {
+    return true;
+  }
+}
+
 /**
  * Static-export substitute for middleware.ts vault protection.
- * Logged-out visitors on /vault/futurecast|recruiting|film-room → welcome preview anchors.
- * Expired unpaid trials are sent to Membership (not kicked to landing).
+ * Logged-out visitors on /vault/futurecast|recruiting|film-room → join sign-in.
+ * Soft API failures must not wipe login; only confirmed expired trials go to Membership.
  */
 export function VaultRouteGate(): null {
   const pathname = usePathname();
@@ -50,20 +64,26 @@ export function VaultRouteGate(): null {
       return;
     }
 
+    // Gate only on local session presence — never wait on network for nav.
     const dest = vaultGateRedirect(pathname, loggedIn);
     if (dest) {
       window.location.replace(isNativeApp() ? nativeNavigationUrl(dest) : dest);
       return;
     }
 
-    if (!loggedIn) return;
+    if (!loggedIn || !shouldVerifyNow()) return;
 
     let cancelled = false;
     void verifyStoredSession({ keepLocalOnNetworkError: true }).then((session) => {
       if (cancelled || !session) return;
+      // Only redirect after a confirmed server payload saying access is inactive.
+      // Soft failures return the local session without overwriting accessActive.
       if (session.paid) return;
-      if (session.accessActive === false) {
-        replaceAuthLocation('/vault/membership/?trial=ended');
+      if (session.accessActive === false && session.trialEndISO) {
+        const end = Date.parse(session.trialEndISO);
+        if (Number.isFinite(end) && end <= Date.now()) {
+          replaceAuthLocation('/vault/membership/?trial=ended');
+        }
       }
     });
 

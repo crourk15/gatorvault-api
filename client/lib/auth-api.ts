@@ -118,30 +118,40 @@ async function authPost<T>(path: string, body: Record<string, unknown>): Promise
   return { ok: res.ok, status: res.status, data };
 }
 
-/** Validate stored session token with the API — clears stale local sessions. */
+/**
+ * Validate stored session token with the API.
+ * Only clears local session on definitive auth failures (401/403/404).
+ * Transport / 5xx blips keep the local session so a cold API cannot kick users to Sign in.
+ */
 export async function verifyStoredSession(opts?: { keepLocalOnNetworkError?: boolean }): Promise<AuthSession | null> {
   const session = loadSession();
   if (!session?.token) return null;
   const base = getApiBase();
+  const keepOnSoftFailure = opts?.keepLocalOnNetworkError !== false;
   try {
     const res = await fetch(`${base}/api/session`, {
       headers: { Authorization: `Bearer ${session.token}` },
+      cache: 'no-store',
     });
     if (!res.ok) {
-      clearSession();
-      return null;
+      const authFailure = res.status === 401 || res.status === 403 || res.status === 404;
+      if (authFailure) {
+        clearSession();
+        return null;
+      }
+      // 408/429/5xx / unexpected — keep local login.
+      return keepOnSoftFailure ? session : null;
     }
     const data = (await res.json()) as { ok?: boolean; session?: AuthSession };
     if (!data.ok || !data.session?.email) {
-      clearSession();
-      return null;
+      // Successful HTTP but invalid payload — treat as soft failure, not logout.
+      return keepOnSoftFailure ? session : null;
     }
     const merged = normalizeSession({ ...session, ...data.session, token: session.token });
     saveSession(merged);
     return merged;
   } catch {
-    // Keep local session on transport failures unless caller opts out.
-    if (opts?.keepLocalOnNetworkError === false) {
+    if (!keepOnSoftFailure) {
       clearSession();
       return null;
     }
