@@ -127,9 +127,15 @@ if [[ -z "${PROFILE_FILE}" ]]; then
 fi
 
 # Mirror into both profile dirs Xcode/Codemagic may consult.
+# macOS `cp` exits 1 when source and dest are the same path — skip that case.
 for d in "${PROFILE_DIRS[@]}"; do
   mkdir -p "${d}"
-  cp -f "${PROFILE_FILE}" "${d}/$(basename "${PROFILE_FILE}")"
+  dest="${d}/$(basename "${PROFILE_FILE}")"
+  if [[ "${PROFILE_FILE}" -ef "${dest}" ]]; then
+    echo "==> Profile already in ${d}"
+    continue
+  fi
+  cp -f "${PROFILE_FILE}" "${dest}"
 done
 
 echo "==> Verifying aps-environment in ${PROFILE_FILE}"
