@@ -1,5 +1,10 @@
 const { fetchText } = require('./qa/qa-utils');
 const { buildOn3ProfileUrl } = require('./on3-urls');
+const {
+  looksLikeHometownAsSchool,
+  parseHometown,
+  normalizeStateCode,
+} = require('./recruiting-geo-normalize');
 
 const ORG = process.env.ON3_ORG_SLUG || 'florida-gators';
 const SPORT = process.env.ON3_SPORT || 'football';
@@ -61,6 +66,32 @@ function formatHtWt(height, weight) {
   return h || (w != null ? String(w) : '');
 }
 
+/** Prefer real HS name; never treat On3 hometown.abbr ("City, ST") as school. */
+function pickHighSchoolName(...vals) {
+  for (const v of vals) {
+    const s = pickString(v);
+    if (!s || looksLikeHometownAsSchool(s)) continue;
+    return s;
+  }
+  return '';
+}
+
+function hometownFieldsFromPlayer(player = {}) {
+  const fromCity = pickString(player.hometown?.city, player.homeTown?.city);
+  const fromState = normalizeStateCode(
+    pickString(
+      player.hometown?.stateAbbr,
+      player.homeTown?.stateAbbr,
+      player.hometown?.state?.abbreviation,
+      player.homeTown?.state?.abbreviation
+    )
+  );
+  if (fromCity || fromState) {
+    return { hometownCity: fromCity || null, hometownState: fromState || null };
+  }
+  return parseHometown(pickString(player.hometown?.abbr, player.homeTown?.abbr));
+}
+
 function normalizeOn3Row(row, classYear) {
   const player = row.player || {};
   const rating = row.rating || {};
@@ -69,7 +100,12 @@ function normalizeOn3Row(row, classYear) {
     player.fullName,
     [player.firstName, player.lastName].filter(Boolean).join(' ')
   );
-  const school = pickString(player.hometown?.abbr, player.highSchoolName, player.highSchool?.name);
+  const school = pickHighSchoolName(
+    player.highSchoolName,
+    player.highSchool?.name,
+    player.highSchool?.fullName
+  );
+  const hometown = hometownFieldsFromPlayer(player);
   const pos = pickString(
     rating.positionAbbr,
     player.position?.abbr,
@@ -80,6 +116,7 @@ function normalizeOn3Row(row, classYear) {
   const playerRating = pickNumber(rating.consensusRating, rating.rating);
   const commitDate = pickString(status.date);
   const commitDateShort = commitDate ? commitDate.slice(0, 10) : '';
+  const hometownState = hometown.hometownState || null;
 
   return {
     on3Id: pickString(player.key, row.recKey) || null,
@@ -87,13 +124,16 @@ function normalizeOn3Row(row, classYear) {
     pos: pos.toUpperCase(),
     classYear: pickNumber(player.classYear, rating.year, classYear) || classYear,
     school,
+    hometownCity: hometown.hometownCity || null,
+    hometownState,
+    state: hometownState,
     htWt: formatHtWt(player.height, player.weight),
     stars,
     rating: playerRating,
     natlRank: pickNumber(rating.consensusNationalRank, rating.nationalRank),
     posRank: pickNumber(rating.consensusPositionRank, rating.positionRank),
     stateRank: pickNumber(rating.consensusStateRank, rating.stateRank),
-    inState: /,\s*FL\b/i.test(school),
+    inState: hometownState === 'FL' || /,\s*FL\b/i.test(school),
     status: pickString(status.type, 'Committed').toLowerCase(),
     commitDate: commitDateShort,
     committedTo: pickString(status.committedAsset?.name, 'Florida'),
@@ -106,19 +146,26 @@ function normalizeOn3Player(raw, classYear) {
   if (raw && raw.player) return normalizeOn3Row(raw, classYear);
   const person = raw.person || raw.player || raw.recruit || raw;
   const name = pickString(person.fullName, person.name, raw.name);
+  const school = pickHighSchoolName(person.highSchoolName, person.highSchool?.name, raw.school);
+  const hometown = hometownFieldsFromPlayer(person);
+  const hometownState =
+    hometown.hometownState || normalizeStateCode(raw.hometownState || raw.state) || null;
   return {
     on3Id: pickString(person.key, person.id, raw.key) || null,
     name,
     pos: pickString(person.position?.abbr, person.pos, raw.pos, 'ATH').toUpperCase(),
     classYear: pickNumber(person.classYear, raw.classYear, classYear) || classYear,
-    school: pickString(person.hometown?.abbr, person.highSchoolName, raw.school),
+    school,
+    hometownCity: hometown.hometownCity || raw.hometownCity || null,
+    hometownState,
+    state: hometownState || raw.state || null,
     htWt: pickString(raw.htWt),
     stars: pickNumber(raw.stars) || 3,
     rating: pickNumber(raw.rating),
     natlRank: pickNumber(raw.natlRank),
     posRank: pickNumber(raw.posRank),
     stateRank: pickNumber(raw.stateRank),
-    inState: !!(raw.inState ?? /,\s*FL\b/i.test(raw.school)),
+    inState: !!(raw.inState ?? (hometownState === 'FL' || /,\s*FL\b/i.test(school))),
     status: pickString(raw.status, 'committed').toLowerCase(),
     commitDate: pickString(raw.commitDate),
     committedTo: pickString(raw.committedTo, 'Florida'),

@@ -5,6 +5,18 @@ import { createRequire } from 'node:module';
 import { intelUuidForSlug, isUnderclassmenClassYear } from '../../lib/underclassmen-intel';
 
 const require = createRequire(import.meta.url);
+const { looksLikeHometownAsSchool } = require('../../lib/recruiting-geo-normalize');
+const { isPlaceholderSchool, formatRecruitSchoolLabel } = require('../../lib/recruiting-placeholder-school');
+
+function resolveHighSchoolLabel(...candidates: unknown[]): string | null {
+  for (const raw of candidates) {
+    if (raw == null) continue;
+    if (isPlaceholderSchool(raw) || looksLikeHometownAsSchool(raw)) continue;
+    const label = formatRecruitSchoolLabel(raw);
+    if (label) return label;
+  }
+  return null;
+}
 
 export interface FallbackPlayerCore {
   id: string;
@@ -56,6 +68,10 @@ type RecruitingPlayer = {
   visits?: Array<{ date?: string; school?: string; type?: string }>;
   interestMeter?: string;
   hometown?: string;
+  hometownCity?: string;
+  hometownState?: string;
+  state?: string;
+  school?: string;
   pos?: string;
   highSchool?: string;
   previousSchool?: string;
@@ -122,9 +138,11 @@ export function mapRecruitingToPlayerCore(p: RecruitingPlayer): FallbackPlayerCo
     status: lifecycle,
     height: heightInches,
     weight,
-    hometown: p.hometown ?? null,
-    state: p.state ?? null,
-    highSchool: p.highSchool ?? null,
+    hometown:
+      (p.hometownCity ? String(p.hometownCity).split(',')[0].trim() : null) ??
+      (p.hometown ? String(p.hometown).split(',')[0].trim() : null),
+    state: p.hometownState ?? p.state ?? null,
+    highSchool: resolveHighSchoolLabel(p.highSchool, p.school),
     stars: p.stars ?? null,
     compositeRating: p.rating ?? null,
     rankingNational: p.natlRank ?? null,

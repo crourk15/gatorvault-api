@@ -3,6 +3,7 @@
  * Rejects corrupted school fields, duplicate fingerprints, stale visit chains, and thin context.
  */
 const { isValidPlayerName } = require('./x-autoposter-player-context');
+const { looksLikeHometownAsSchool } = require('./recruiting-geo-normalize');
 
 const CORRUPTED_SCHOOL_RES = [
   /florida twice/i,
@@ -99,6 +100,8 @@ function isValidSchoolField(school, { allowCollege = false } = {}) {
   if (s.length < 3) return false;
   if (s.length > 72) return false;
   if (CORRUPTED_SCHOOL_RES.some((re) => re.test(s))) return false;
+  // On3 hometown.abbr ("Duncanville, TX") must never land in school.
+  if (looksLikeHometownAsSchool(s)) return false;
   const words = s.split(/\s+/);
   if (words.length > 8 && !/\b(?:High School|HS|Academy|Prep|Christian|School)\b/i.test(s)) return false;
   if (!allowCollege && isCollegeOnlySchoolLabel(s)) {

@@ -83,6 +83,8 @@ export function PlayerProfilePage({
       setLoading(false);
       setError(null);
     } else {
+      // Drop prior slug's profile so we never flash another player's HS/location.
+      setProfile(null);
       setLoading(true);
       setError(null);
     }

@@ -6,6 +6,7 @@ const {
   parseHometown,
   normalizePlayerGeo,
   resolvePlayerState,
+  looksLikeHometownAsSchool,
 } = require('../../lib/recruiting-geo-normalize');
 
 describe('recruiting-geo-normalize', () => {
@@ -50,5 +51,13 @@ describe('recruiting-geo-normalize', () => {
       resolvePlayerState({ hometownState: 'Florida', school: 'Atlanta, GA' }),
       'FL'
     );
+  });
+
+  it('detects bare City, ST hometowns masquerading as school', () => {
+    assert.equal(looksLikeHometownAsSchool('Duncanville, TX'), true);
+    assert.equal(looksLikeHometownAsSchool('Phoenix, AZ'), true);
+    assert.equal(looksLikeHometownAsSchool('Lake Dallas HS, TX'), false);
+    assert.equal(looksLikeHometownAsSchool('Chaminade-Madonna Prep, FL'), false);
+    assert.equal(looksLikeHometownAsSchool('IMG Academy'), false);
   });
 });

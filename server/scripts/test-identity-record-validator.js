@@ -28,6 +28,16 @@ assert(
 );
 
 assert(
+  'rejects bare hometown City, ST as school',
+  !validator.isValidSchoolField('Duncanville, TX')
+);
+
+assert(
+  'accepts Prep school with state suffix',
+  validator.isValidSchoolField('Chaminade-Madonna Prep, FL')
+);
+
+assert(
   'rejects Brewster corrupted player record',
   !validator.validatePlayerIdentityRecord({
     slug: 'jalen-brewster',

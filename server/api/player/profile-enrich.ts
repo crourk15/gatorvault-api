@@ -6,7 +6,18 @@ import { getRecruitingPlayerBySlug } from '../players/recruiting-fallback';
 
 const require = createRequire(import.meta.url);
 const { isPlaceholderSchool, formatRecruitSchoolLabel } = require('../../lib/recruiting-placeholder-school');
+const { looksLikeHometownAsSchool } = require('../../lib/recruiting-geo-normalize');
 const offerLogStore = require('../../lib/recruiting-offer-log-store');
+
+function resolveHighSchoolLabel(...candidates: unknown[]): string | null {
+  for (const raw of candidates) {
+    if (raw == null) continue;
+    if (isPlaceholderSchool(raw) || looksLikeHometownAsSchool(raw)) continue;
+    const label = formatRecruitSchoolLabel(raw);
+    if (label) return label;
+  }
+  return null;
+}
 
 function isFloridaSchool(value: unknown): boolean {
   return /\bflorida\b|\bgators\b|\buf\b/i.test(String(value || ''));
@@ -68,18 +79,16 @@ export async function augmentPlayerFromRecruiting(
   const ufCommit = isFloridaSchool(recruiting.committedTo);
   const storePct = parseUfPct(recruiting.ufProbability ?? recruiting.ufRpmPct);
 
-  const schoolRaw =
-    recruiting.school ?? recruiting.highSchool ?? player.highSchool ?? null;
-  const schoolLabel = isPlaceholderSchool(schoolRaw)
-    ? null
-    : formatRecruitSchoolLabel(schoolRaw) || null;
+  const schoolLabel = resolveHighSchoolLabel(
+    player.highSchool,
+    recruiting.highSchool,
+    recruiting.school
+  );
 
   return {
     ...player,
     fullName: player.fullName ?? recruiting.name ?? player.slug,
-    highSchool: player.highSchool && !isPlaceholderSchool(player.highSchool)
-      ? player.highSchool
-      : schoolLabel,
+    highSchool: schoolLabel,
     hometown:
       // Prefer city-only fields so header state doesn't duplicate ("Newnan, GA, GA").
       (recruiting.hometownCity
@@ -87,7 +96,7 @@ export async function augmentPlayerFromRecruiting(
         : null) ??
       (player.hometown ? String(player.hometown).split(',')[0].trim() : null) ??
       (recruiting.hometown ? String(recruiting.hometown).split(',')[0].trim() : null),
-    state: player.state ?? recruiting.state ?? recruiting.hometownState ?? null,
+    state: player.state ?? recruiting.hometownState ?? recruiting.state ?? null,
     stars: coalesceStars(recruiting.stars, player.stars),
     compositeRating: player.compositeRating ?? recruiting.rating ?? null,
     rankingNational: player.rankingNational ?? recruiting.natlRank ?? null,
@@ -139,7 +148,7 @@ export async function enrichRelatedFromRecruiting(
       posRank: recruiting.posRank ?? null,
       stateRank: recruiting.stateRank ?? null,
       state: recruiting.state ?? null,
-      school: recruiting.school ?? recruiting.highSchool ?? null,
+      school: resolveHighSchoolLabel(recruiting.highSchool, recruiting.school),
       committedTo: recruiting.committedTo ?? null,
       isCommittedToUF: ufCommit,
       ufFitScore: ufScore,
