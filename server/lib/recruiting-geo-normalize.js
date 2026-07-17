@@ -111,6 +111,24 @@ function normalizeStateCode(input) {
   return null;
 }
 
+/**
+ * True when a value is a bare "City, ST" hometown string — not a high-school name.
+ * Keeps labels like "Lake Dallas HS, TX" / "Chaminade-Madonna Prep, FL".
+ */
+function looksLikeHometownAsSchool(value) {
+  const text = String(value || '').trim();
+  if (!text) return false;
+  const match = text.match(/^(.+?),\s*([A-Za-z.]{2,})\s*$/);
+  if (!match) return false;
+  const place = match[1].trim();
+  const state = normalizeStateCode(match[2].trim());
+  if (!place || !state) return false;
+  if (/\b(?:HS|High|Academy|Prep|School|Christian|Collegiate|Day)\b/i.test(place)) {
+    return false;
+  }
+  return true;
+}
+
 function parseHometown(raw) {
   if (raw == null || raw === '') return { hometownCity: null, hometownState: null };
   const text = String(raw).trim();
@@ -202,6 +220,7 @@ module.exports = {
   STATE_FIPS,
   normalizeStateNameVariants,
   normalizeStateCode,
+  looksLikeHometownAsSchool,
   parseHometown,
   resolvePlayerState,
   normalizePlayerGeo,

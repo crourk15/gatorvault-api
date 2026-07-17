@@ -57,6 +57,32 @@ function formatHtWt(height, weight) {
   return h || (w != null ? String(w) : '');
 }
 
+function looksLikeHometownAsSchool(value) {
+  const text = String(value || '').trim();
+  const match = text.match(/^(.+?),\s*([A-Z]{2})\s*$/);
+  if (!match) return false;
+  if (/\b(?:HS|High|Academy|Prep|School|Christian|Collegiate|Day)\b/i.test(match[1])) {
+    return false;
+  }
+  return true;
+}
+
+function pickHighSchoolName(...vals) {
+  for (const v of vals) {
+    const s = pickString(v);
+    if (!s || looksLikeHometownAsSchool(s)) continue;
+    return s;
+  }
+  return '';
+}
+
+function hometownFromAbbr(abbr) {
+  const text = pickString(abbr);
+  const match = text.match(/^(.+?),\s*([A-Z]{2})\s*$/);
+  if (!match) return { hometownCity: null, hometownState: null };
+  return { hometownCity: match[1].trim() || null, hometownState: match[2] };
+}
+
 function normalizeOn3Row(row, classYear) {
   const player = row.player || {};
   const rating = row.rating || {};
@@ -65,7 +91,12 @@ function normalizeOn3Row(row, classYear) {
     player.fullName,
     [player.firstName, player.lastName].filter(Boolean).join(' ')
   );
-  const school = pickString(player.hometown?.abbr, player.highSchoolName, player.highSchool?.name);
+  const school = pickHighSchoolName(
+    player.highSchoolName,
+    player.highSchool?.name,
+    player.highSchool?.fullName
+  );
+  const hometown = hometownFromAbbr(player.hometown?.abbr || player.homeTown?.abbr);
   const pos = pickString(
     rating.positionAbbr,
     player.position?.abbr,
@@ -83,13 +114,16 @@ function normalizeOn3Row(row, classYear) {
     pos: pos.toUpperCase(),
     classYear: pickNumber(player.classYear, rating.year, classYear) || classYear,
     school,
+    hometownCity: hometown.hometownCity,
+    hometownState: hometown.hometownState,
+    state: hometown.hometownState,
     htWt: formatHtWt(player.height, player.weight),
     stars,
     rating: playerRating,
     natlRank: pickNumber(rating.consensusNationalRank, rating.nationalRank),
     posRank: pickNumber(rating.consensusPositionRank, rating.positionRank),
     stateRank: pickNumber(rating.consensusStateRank, rating.stateRank),
-    inState: /,\s*FL\b/i.test(school),
+    inState: hometown.hometownState === 'FL' || /,\s*FL\b/i.test(school),
     status: pickString(status.type, 'Committed').toLowerCase(),
     commitDate: commitDateShort,
     committedTo: pickString(status.committedAsset?.name, 'Florida'),
@@ -102,19 +136,24 @@ function normalizeOn3Player(raw, classYear) {
   if (raw && raw.player) return normalizeOn3Row(raw, classYear);
   const person = raw.person || raw.player || raw.recruit || raw;
   const name = pickString(person.fullName, person.name, raw.name);
+  const school = pickHighSchoolName(person.highSchoolName, person.highSchool?.name, raw.school);
+  const hometown = hometownFromAbbr(person.hometown?.abbr || person.homeTown?.abbr);
   return {
     on3Id: pickString(person.key, person.id, raw.key) || null,
     name,
     pos: pickString(person.position?.abbr, person.pos, raw.pos, 'ATH').toUpperCase(),
     classYear: pickNumber(person.classYear, raw.classYear, classYear) || classYear,
-    school: pickString(person.hometown?.abbr, person.highSchoolName, raw.school),
+    school,
+    hometownCity: hometown.hometownCity || raw.hometownCity || null,
+    hometownState: hometown.hometownState || raw.hometownState || null,
+    state: hometown.hometownState || raw.state || null,
     htWt: pickString(raw.htWt),
     stars: pickNumber(raw.stars) || 3,
     rating: pickNumber(raw.rating),
     natlRank: pickNumber(raw.natlRank),
     posRank: pickNumber(raw.posRank),
     stateRank: pickNumber(raw.stateRank),
-    inState: !!(raw.inState ?? /,\s*FL\b/i.test(raw.school)),
+    inState: !!(raw.inState ?? (hometown.hometownState === 'FL' || /,\s*FL\b/i.test(school))),
     status: pickString(raw.status, 'committed').toLowerCase(),
     commitDate: pickString(raw.commitDate),
     committedTo: pickString(raw.committedTo, 'Florida'),
