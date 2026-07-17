@@ -6,11 +6,11 @@ workflows:
     integrations:
       app_store_connect: codemagic
     environment:
+      # Certificate kept by reference; App Store profile is refreshed below with
+      # fetch-signing-files --create so Push (aps-environment) is included.
       ios_signing:
         certificates:
           - certificate: gatorvault_appstore
-        provisioning_profiles:
-          - profile: gatorvault_appstore_profile
       vars:
         XCODE_SCHEME: App
         BUNDLE_ID: com.gatorvaultinsider.app
@@ -63,8 +63,17 @@ workflows:
         script: |
           cd client/ios/App
           pod install
-      - name: Set up code signing settings on Xcode project
-        script: xcode-project use-profiles
+      - name: Set up code signing (refresh profile for Push entitlement)
+        script: |
+          set -euo pipefail
+          # Profile must include aps-environment after Push was enabled on the App ID.
+          # --create regenerates an App Store profile when the old one is missing Push.
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+          keychain add-certificates
+          xcode-project use-profiles
       - name: Verify iOS app icon (1024×1024)
         script: |
           set -euo pipefail
@@ -72,9 +81,16 @@ workflows:
           node scripts/verify-ios-app-icon.js
       - name: Build IPA for App Store
         script: |
+          set -euo pipefail
+          # Surface the real archive error (exit 65) instead of only the CocoaPods warning.
           xcode-project build-ipa \
             --workspace "$CM_BUILD_DIR/client/ios/App/App.xcworkspace" \
-            --scheme "$XCODE_SCHEME"
+            --scheme "$XCODE_SCHEME" \
+            || {
+              echo "ERROR: build-ipa failed — last xcodebuild log tail:" >&2
+              ls -1t /tmp/xcodebuild_logs/*.log 2>/dev/null | head -1 | xargs -I{} tail -n 80 {} >&2 || true
+              exit 65
+            }
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
