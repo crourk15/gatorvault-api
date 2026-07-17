@@ -1,32 +1,54 @@
-# Submit 1.0.5 (Build 23) — App Store Connect
+# Submit 1.0.5 (Build 25) — App Store Connect
 
-**When:** Codemagic has uploaded **1.0.5 (23)** to App Store Connect / TestFlight (build green + processing complete).
+**Preferred path:** Codemagic auto-submit (this repo now has `submit_to_app_store: true` + `release_notes.json`).
 
-**Binary includes:** Membership native fix, trial/signup hardening, Join login stickiness, HS/location fix, Swamp Eve + Alerts fan-copy cleanup.
+**Binary includes:** Session kickout fix, Membership load/retry fix, Join stickiness, trial ledger, HS/hometown, Game Zone + Alerts fan-copy cleanup.
 
-This agent environment has **no App Store Connect API key or Apple login**, so Charles must click Submit in Connect (or provide `ASC_KEY_ID` / `ASC_ISSUER_ID` / `.p8` for API automation).
+This cloud agent has **no App Store Connect API key or Apple login**, so it cannot click Submit in Connect from here. Starting Codemagic on `main` is the forward path.
 
-## Steps (Apple login required)
+---
+
+## Path A — Codemagic (recommended)
+
+1. Codemagic → **gatorvault-api** → workflow **iOS Release Build** (`ios-release`) → **Start new build** on branch **`main`**
+2. Wait until the build is **green**
+3. Wait for App Store Connect post-processing (TestFlight + review submit)
+4. Open https://appstoreconnect.apple.com → **Apps** → **GatorVault Insider** → **1.0.5**
+5. Confirm status is **Waiting for Review** (or that a review submission was created)
+6. Confirm **Whats New** matches `release_notes.json` / paste block below if empty
+7. Confirm **App Review Information** still has demo account:
+   - Email: appreview@gatorvaultinsider.com
+   - Password: (same value already in Connect — do not change)
+8. Confirm age rating **Gambling = No**
+
+If Codemagic uploaded to TestFlight but did **not** create a review submission, use Path B.
+
+---
+
+## Path B — Manual Connect (fallback)
 
 1. Open https://appstoreconnect.apple.com → **Apps** → **GatorVault Insider**
 2. Open version **1.0.5** (create it with **+** if needed)
-3. **Build** → select **23** (1.0.5) — wait until the build is ready if still processing
+3. **Build** → select **25** (1.0.5) — wait until the build is ready if still processing
 4. **Whats New in This Version** — paste block below
-5. Confirm **App Review Information** still has demo account:
-   - Email: appreview@gatorvaultinsider.com
-   - Password: (same value already in Connect — do not change)
-6. **Notes for reviewer** — paste review notes block below (optional refresh)
-7. Confirm age rating **Gambling = No** (do not set Yes)
-8. **Add for Review** → **Submit to App Review**
+5. Confirm demo account + reviewer notes (optional refresh below)
+6. Confirm age rating **Gambling = No**
+7. **Add for Review** → **Submit to App Review**
 
 Do **not** change auth/IAP/demo password for this submit.
+
+Optional local automation (needs your Apple login on your machine):
+
+```bash
+ASC_EMAIL='…' ASC_PASSWORD='…' node scripts/asc-create-submit-1-0-5.cjs
+```
 
 ---
 
 ## Whats New (paste)
 
 ```
-Membership and account load correctly on iPhone. Sign-in sticks after you create an account — use Sign in with the same email next time. Player high school and hometown show correctly. Game Zone and Alerts copy cleaned up for fans. Builds on recent 1.0.5 TestFlight fixes.
+Membership & Account stays open if the network blips — no more bounce to the landing page. Sign-in no longer drops while you browse FutureCast and other vault tabs. Player high school vs hometown display fix. Game Zone and Alerts fan-facing copy cleanup.
 ```
 
 ---
