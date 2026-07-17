@@ -1,13 +1,13 @@
-# Submit 1.0.5 (Build 16) — App Store Connect
+# Submit 1.0.5 (Build 17) — App Store Connect
 
-**When:** After Codemagic uploads **1.0.5 (16)** to App Store Connect / TestFlight.
+**When:** After Codemagic uploads **1.0.5 (17)** to App Store Connect / TestFlight.
 **Binary includes:** player/article nav fixes, My Alerts + APNs client, Battle Board RPM honesty, push entitlements.
 
 ## Steps (Apple login required)
 
 1. Open https://appstoreconnect.apple.com → **Apps** → **GatorVault Insider**
 2. **+** version (or open existing) → marketing version **1.0.5**
-3. **Build** → select **16** (1.0.5)
+3. **Build** → select **17** (1.0.5)
 4. **Whats New in This Version** — paste block below
 5. Confirm **App Review Information** still has demo account:
    - Email: ppreview@gatorvaultinsider.com
