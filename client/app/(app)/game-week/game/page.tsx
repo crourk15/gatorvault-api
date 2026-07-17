@@ -35,7 +35,7 @@ export default function GameWeekDetailPage(): React.ReactElement {
         Countdown, matchup intel, and keys to watch for this opponent.
       </p>
       <Button href={gameZoneRoute(gameId)} variant="primary">
-        Enter Game Zone on game day →
+        Lock your Game Zone score pick →
       </Button>
     </DetailPageStub>
   );

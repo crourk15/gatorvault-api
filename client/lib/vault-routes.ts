@@ -40,7 +40,7 @@ export const VAULT_SECONDARY: { id: VaultSectionId; label: string; href: string;
   { id: 'live-scores', label: 'Gators Live', href: '/vault/live-scores', icon: '🏈' },
   { id: 'articles', label: 'Articles', href: '/vault/articles', icon: '📰' },
   { id: 'community', label: 'Community', href: '/vault/community', icon: '💬' },
-  { id: 'game-zone', label: 'Game Zone', href: '/vault/game-zone', icon: '🏆' },
+  { id: 'game-zone', label: 'Game Zone', href: '/vault/game-zone/', icon: '🏆' },
   { id: 'nil', label: 'NIL Tracker', href: '/vault/nil', icon: '💰' },
   { id: 'alerts', label: 'My Alerts', href: '/vault/alerts', icon: '🔔' },
   { id: 'apparel', label: 'Apparel', href: '/vault/apparel', icon: '👕' },
