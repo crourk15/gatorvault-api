@@ -255,8 +255,8 @@ export function VaultGameZonePage(): React.ReactElement {
             </p>
             <p className="gv-gz__support">
               {locked
-                ? 'Hold it until the final whistle. Live board lives on Gators Live — prep lives on Game Week.'
-                : 'Cover call + final score. Saved on this device for this game — no fake leaderboard.'}
+                ? 'Hold it until the final whistle. Watch kickoff on Gators Live — full prep stays on Game Week.'
+                : 'Call the cover and the final score. Your ticket stays with you until kickoff.'}
             </p>
 
             <div className="gv-gz__cover" role="group" aria-label="Cover call">
