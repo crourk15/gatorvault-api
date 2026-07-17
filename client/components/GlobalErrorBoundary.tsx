@@ -29,10 +29,8 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
           error={this.state.error}
           title="GatorVault hit a snag"
           onRetry={this.retry}
-          dashboardHref="/vault"
+          dashboardHref="/vault/"
           dashboardLabel="Enter Vault"
-          homeHref="/"
-          homeLabel="← Home"
         />
       );
     }

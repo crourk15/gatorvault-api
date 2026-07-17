@@ -26,7 +26,12 @@ export function VaultNavLink({
   ...rest
 }: Props): React.ReactElement {
   const { beginNavigation } = useVaultNavigation();
-  const path = href.split('?')[0].split('#')[0];
+  // Hard block: vault chrome must never deep-link to marketing landing.
+  const safeHref =
+    href === '/' || href === '/welcome' || href === '/welcome/' || href.startsWith('/welcome?')
+      ? '/vault/'
+      : href;
+  const path = safeHref.split('?')[0].split('#')[0];
 
   const warm = () => {
     if (/\/player\/|\/players\//.test(path)) warmVaultPlayerRoute(path);
@@ -35,16 +40,16 @@ export function VaultNavLink({
 
   return (
     <Link
-      href={href}
+      href={safeHref}
       className={className}
       data-vault-nav=""
       prefetch
       scroll
       onClick={(event) => {
-        if (shouldUseNativeCatchAllNav(href)) {
+        if (shouldUseNativeCatchAllNav(safeHref)) {
           event.preventDefault();
           beginNavigation();
-          navigateNativeCatchAll(href);
+          navigateNativeCatchAll(safeHref);
           onClick?.(event);
           return;
         }

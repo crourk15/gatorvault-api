@@ -50,7 +50,16 @@ export function MovementIntelPageContent(): React.ReactElement {
   }, [load]);
 
   if (loading) return <FutureCastSubPageLoading testId="fc-movement-intel-loading" />;
-  if (error) return <UiError message={error} />;
+  if (error) {
+    return (
+      <UiError
+        message={error}
+        retry={() => void load(true)}
+        backHref="/vault/futurecast"
+        backLabel="← FutureCast"
+      />
+    );
+  }
   if (!data) return <p className="rh-cc-empty">No movement intel.</p>;
 
   return <MovementIntelLayout data={data} />;

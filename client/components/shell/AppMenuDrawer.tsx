@@ -8,10 +8,11 @@ import { isVaultPath } from '@/lib/vault-routes';
 import { useAppMenu } from '@/components/shell/AppMenuContext';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 
-export function AppMenuDrawer(): React.ReactElement {
+export function AppMenuDrawer({ forceVaultRoutes = false }: { forceVaultRoutes?: boolean }): React.ReactElement {
   const pathname = usePathname();
   const { isOpen, closeMenu } = useAppMenu();
-  const inVault = isVaultPath(pathname);
+  // Prefer vault destinations whenever we are under /vault/* or hosted by VaultShell.
+  const inVault = forceVaultRoutes || isVaultPath(pathname);
   const sections = getAppMenuSections(inVault);
 
   useEffect(() => {

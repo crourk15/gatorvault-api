@@ -6,7 +6,8 @@ export function UiError({
   title = 'Something went wrong',
   message,
   retry,
-  backHref = '/',
+  // Vault home — never marketing `/`. Landing is only for signed-out marketing.
+  backHref = '/vault/',
   backLabel = '← Back to GatorVault',
 }: {
   title?: string;
@@ -15,6 +16,10 @@ export function UiError({
   backHref?: string;
   backLabel?: string;
 }): React.ReactElement {
+  // Defense in depth: "Back to GatorVault" must never mean the marketing landing page.
+  const safeBackHref =
+    backHref === '/' || backHref === '/welcome' || backHref === '/welcome/' ? '/vault/' : backHref;
+
   return (
     <div className="gv-ui-message gv-ui-message--error" role="alert">
       <h2 className="gv-ui-message__title">{title}</h2>
@@ -25,7 +30,7 @@ export function UiError({
             Try again
           </button>
         )}
-        <a href={backHref} className="gv-ui-message__link">
+        <a href={safeBackHref} className="gv-ui-message__link">
           {backLabel}
         </a>
       </div>
