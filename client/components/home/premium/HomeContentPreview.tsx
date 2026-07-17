@@ -2,10 +2,9 @@
 
 import React from 'react';
 import type { ContentLatestResponse } from '@/lib/vault-home-api';
-import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
-import { articleRoute, SITE_ROUTES } from '@/lib/site-routes';
+import { VAULT_PILLAR_ROUTES, vaultArticleRoute } from '@/lib/vault-route-map';
 
-const VAULT_ARTICLES = SITE_ROUTES.articles;
+const VAULT_ARTICLES = VAULT_PILLAR_ROUTES.articles;
 const VAULT_COMMUNITY = '/vault/community';
 
 type Props = {
@@ -66,7 +65,12 @@ export function HomeContentPreview({ content, loading }: Props): React.ReactElem
   const articles =
     content?.articles?.slice(0, 3).map((a) => ({
       title: a.title,
-      href: a.href && !String(a.href).includes('#') ? a.href : (a.id ? articleRoute(a.id) : VAULT_ARTICLES),
+      href:
+        a.href && !String(a.href).includes('#')
+          ? a.href
+          : a.id
+            ? vaultArticleRoute(a.id)
+            : VAULT_ARTICLES,
       meta: formatMeta(a.timestamp),
     })) ?? [];
 

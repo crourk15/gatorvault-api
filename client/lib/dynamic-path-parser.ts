@@ -12,8 +12,11 @@ function pathsToTry(pathname: string): string[] {
 
 export function segmentFromPath(pathname: string, pattern: RegExp): string {
   for (const path of pathsToTry(pathname)) {
-    const match = path.match(pattern);
-    if (match?.[1]) return decodeURIComponent(match[1]);
+    const cleaned = path.replace(/\/index\.html$/i, '') || '/';
+    const match = cleaned.match(pattern);
+    if (match?.[1] && match[1].toLowerCase() !== 'index.html') {
+      return decodeURIComponent(match[1]);
+    }
   }
   return '';
 }
@@ -25,6 +28,7 @@ export const DYNAMIC_PATH_PATTERNS = {
   scheduleSeason: /\/schedule\/([^/]+)\/?$/,
   gameWeekGame: /\/game-week\/([^/]+)\/?$/,
   article: /\/articles\/([^/]+)\/?$/,
+  vaultArticle: /\/vault\/articles\/([^/]+)\/?$/,
   communityThread: /\/community\/thread\/([^/]+)\/?$/,
   gameZoneGame: /\/game-zone\/([^/]+)\/?$/,
   /** Legacy vault paths still supported during transition */

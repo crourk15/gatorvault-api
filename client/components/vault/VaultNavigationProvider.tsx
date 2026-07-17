@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { prefetchVaultHref, notifyVaultNavigation, warmVaultBottomNavRoutes, warmVaultDrawerRoutes, warmVaultPlayerRoute, warmRecruitingHubApi } from '@/lib/vault-navigation';
 import { isVaultClientNavHref, vaultNavPathsEqual } from '@/lib/vault-nav-utils';
 import { isPlayerProfileHref, playerSlugFromHref, prefetchFullProfile } from '@/lib/player-full-profile-api';
+import { navigateNativeCatchAll, shouldUseNativeCatchAllNav } from '@/lib/native-spa-nav';
 
 function normalizeVaultNavHref(href: string): string {
   try {
@@ -162,10 +163,13 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
       const anchor = (event.target as Element | null)?.closest('a[href]') as HTMLAnchorElement | null;
       if (!anchor || anchor.target === '_blank' || anchor.hasAttribute('download')) return;
       if (!anchor.closest('.gv-vault-shell')) return;
-      if (anchor.hasAttribute('data-vault-nav') || anchor.hasAttribute('data-no-vault-nav')) return;
+      if (anchor.hasAttribute('data-no-vault-nav')) return;
 
       const rawHref = anchor.getAttribute('href');
-      if (!rawHref || !isVaultClientNavHref(rawHref)) return;
+      if (!rawHref) return;
+      // VaultNavLink sets data-vault-nav; still intercept catch-alls on Capacitor.
+      if (anchor.hasAttribute('data-vault-nav') && !shouldUseNativeCatchAllNav(rawHref)) return;
+      if (!isVaultClientNavHref(rawHref) && !shouldUseNativeCatchAllNav(rawHref)) return;
 
       const href = normalizeVaultNavHref(rawHref);
       const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
@@ -197,6 +201,11 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
       event.preventDefault();
       beginNavigation();
       warmPlayerLink(href);
+      // Capacitor has no per-slug index.html — pushState / shell stash instead of router.push.
+      if (shouldUseNativeCatchAllNav(href)) {
+        navigateNativeCatchAll(href);
+        return;
+      }
       router.push(href);
       notifyVaultNavigation();
     };

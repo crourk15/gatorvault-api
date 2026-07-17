@@ -16,6 +16,7 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
         ? location.origin
         : 'https://gatorvaultinsider.com';
     var COLD_KEY = 'gv_native_cold_done';
+    var SPA_KEY = 'gv_native_spa_path';
 
     function routePath(path) {
       var p = (path || '/').replace(/\\/$/, '') || '/';
@@ -79,7 +80,6 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
       return p === '/' || p === '/welcome' || p === '/insider';
     }
 
-    /** In-vault SPA routes (player profiles, boards) — let Next/VaultNavigation soft-nav. */
     function isVaultClientNav(href) {
       try {
         var p = new URL(href, SITE).pathname.replace(/\\/$/, '') || '/';
@@ -87,6 +87,65 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
       } catch (e) {
         return false;
       }
+    }
+
+    /** Catch-all shells — only one index.html exists; deep slugs must not hard-nav to missing files. */
+    function catchAllShell(pathname) {
+      var p = routePath(pathname);
+      var art = p.match(/^\\/articles\\/([^/]+)$/);
+      if (art && art[1] && art[1] !== 'detail') return '/vault/articles/';
+      var rules = [
+        [/^\\/vault\\/recruiting\\/player(?:\\/[^/]+)?$/, '/vault/recruiting/player/'],
+        [/^\\/vault\\/futurecast\\/player(?:\\/[^/]+)?$/, '/vault/futurecast/player/'],
+        [/^\\/vault\\/portal\\/player(?:\\/[^/]+)?$/, '/vault/portal/player/'],
+        [/^\\/vault\\/players(?:\\/[^/]+)?$/, '/vault/players/'],
+        [/^\\/vault\\/articles(?:\\/[^/]+)?$/, '/vault/articles/'],
+        [/^\\/player(?:\\/[^/]+)?$/, '/player/'],
+        [/^\\/recruiting\\/player(?:\\/[^/]+)?$/, '/recruiting/player/'],
+        [/^\\/futurecast\\/player(?:\\/[^/]+)?$/, '/futurecast/player/'],
+        [/^\\/team\\/player(?:\\/[^/]+)?$/, '/team/player/']
+      ];
+      for (var i = 0; i < rules.length; i++) {
+        if (rules[i][0].test(p)) return rules[i][1];
+      }
+      return null;
+    }
+
+    function resolveSpaHref(href) {
+      try {
+        var u = new URL(href, SITE);
+        var p = routePath(u.pathname);
+        var art = p.match(/^\\/articles\\/([^/]+)$/);
+        if (art && art[1] && art[1] !== 'detail') {
+          return '/vault/articles/' + encodeURIComponent(art[1]) + '/' + u.search + u.hash;
+        }
+        return norm(href);
+      } catch (e) {
+        return href;
+      }
+    }
+
+    function isCatchAllDynamic(pathname) {
+      var shell = catchAllShell(pathname);
+      if (!shell) return false;
+      return routePath(pathname) !== routePath(shell);
+    }
+
+    function navigateCatchAll(href) {
+      var target = resolveSpaHref(href);
+      var shell = catchAllShell(target);
+      if (!shell) {
+        location.href = abs(target);
+        return;
+      }
+      var curShell = catchAllShell(location.pathname);
+      if (curShell && routePath(curShell) === routePath(shell)) {
+        history.pushState(null, '', target);
+        try { window.dispatchEvent(new Event('vault:navigation')); } catch (e1) {}
+        return;
+      }
+      try { sessionStorage.setItem(SPA_KEY, target); } catch (e2) {}
+      location.href = abs(shell);
     }
 
     function takeColdStart() {
@@ -97,6 +156,22 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
       } catch (e) {
         return false;
       }
+    }
+
+    function consumeSpaPending() {
+      try {
+        var pending = sessionStorage.getItem(SPA_KEY);
+        if (!pending) return;
+        sessionStorage.removeItem(SPA_KEY);
+        var pendingShell = catchAllShell(pending);
+        var curShell = catchAllShell(location.pathname);
+        if (pendingShell && curShell && routePath(pendingShell) === routePath(curShell)) {
+          history.replaceState(null, '', pending);
+        } else if (pendingShell) {
+          sessionStorage.setItem(SPA_KEY, pending);
+          location.replace(abs(pendingShell));
+        }
+      } catch (e) {}
     }
 
     document.addEventListener('click', function(e) {
@@ -115,8 +190,14 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
             location.href = vaultDest();
             return;
           }
-          // Player profiles + vault boards are SPA catch-alls (one index.html per family).
-          // Hard-nav to /player/{slug}/index.html 404s — leave client router alone.
+          // Deep catch-all routes have no per-slug index.html — stash + shell, or pushState.
+          if (isCatchAllDynamic(u.pathname) || isCatchAllDynamic(resolveSpaHref(raw))) {
+            e.preventDefault();
+            e.stopPropagation();
+            navigateCatchAll(raw);
+            return;
+          }
+          // Other vault boards: leave client router alone after hydration.
           if (isVaultClientNav(raw)) return;
         } catch (err) {}
         e.preventDefault();
@@ -145,6 +226,8 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
     if (cold || isMarketingPath(path)) {
       var dest = vaultDest();
       if (location.href !== dest) location.replace(dest);
+    } else {
+      consumeSpaPending();
     }
   } catch (e) {}
 })();`;

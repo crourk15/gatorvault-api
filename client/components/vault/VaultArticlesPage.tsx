@@ -8,7 +8,7 @@ export function VaultArticlesPage({
 }: {
   initialArticleId?: string;
 } = {}): React.ReactElement {
-  return <InsiderArticlesPage initialArticleId={initialArticleId} />;
+  return <InsiderArticlesPage initialArticleId={initialArticleId} inVault />;
 }
 
 export default VaultArticlesPage;

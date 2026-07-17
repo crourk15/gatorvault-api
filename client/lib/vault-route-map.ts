@@ -199,6 +199,11 @@ export function playerProfileRoute(slug: string, context: PlayerProfileContext):
   }
 }
 
+/** In-vault article reader (Capacitor catch-all safe). */
+export function vaultArticleRoute(articleId: string): string {
+  return `/vault/articles/${encodeURIComponent(articleId)}`;
+}
+
 /** Legacy routes → 301 targets */
 export const LEGACY_ROUTE_REDIRECTS: { from: string; to: string }[] = [
   { from: '/futurecast', to: '/vault/futurecast' },

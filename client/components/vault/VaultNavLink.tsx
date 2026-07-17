@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import type { LinkProps } from 'next/link';
+import { navigateNativeCatchAll, shouldUseNativeCatchAllNav } from '@/lib/native-spa-nav';
 import { prefetchVaultHref, warmVaultPlayerRoute } from '@/lib/vault-navigation';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
 
@@ -40,6 +41,13 @@ export function VaultNavLink({
       prefetch
       scroll
       onClick={(event) => {
+        if (shouldUseNativeCatchAllNav(href)) {
+          event.preventDefault();
+          beginNavigation();
+          navigateNativeCatchAll(href);
+          onClick?.(event);
+          return;
+        }
         beginNavigation();
         onClick?.(event);
       }}

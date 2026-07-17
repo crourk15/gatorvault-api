@@ -10,6 +10,7 @@ import {
 } from '@/lib/article-api';
 import { fetchInsiderRelated, type InsiderArticle } from '@/lib/insider-api';
 import { articleRoute, SITE_ROUTES } from '@/lib/site-routes';
+import { vaultArticleRoute } from '@/lib/vault-route-map';
 import { useUser } from '@/lib/useUser';
 import { ArticleAccessGate } from '@/components/articles/ArticleAccessGate';
 import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
@@ -18,7 +19,13 @@ import '@/lib/article-reader.css';
 
 type Props = {
   articleId: string;
+  listHref?: string;
+  listLabel?: string;
 };
+
+function relatedArticleHref(articleId: string, listHref: string): string {
+  return listHref.startsWith('/vault') ? vaultArticleRoute(articleId) : articleRoute(articleId);
+}
 
 function stripTakeaway(text: string): string {
   return String(text || '')
@@ -59,7 +66,11 @@ function collectTags(article: ArticleDetail): { label: string; href?: string }[]
   return tags.slice(0, 12);
 }
 
-export function ArticleReader({ articleId }: Props): React.ReactElement {
+export function ArticleReader({
+  articleId,
+  listHref = SITE_ROUTES.articles,
+  listLabel = '← All articles',
+}: Props): React.ReactElement {
   const isDesktop = useIsCommandCenterDesktop();
   const { user, isInsider, ready } = useUser();
   const [article, setArticle] = useState<ArticleDetail | null>(null);
@@ -152,8 +163,8 @@ export function ArticleReader({ articleId }: Props): React.ReactElement {
       ) : null}
 
       <article className="gv-article-page">
-        <a className="gv-article-page__back" href={SITE_ROUTES.articles}>
-          ← All articles
+        <a className="gv-article-page__back" href={listHref}>
+          {listLabel}
         </a>
 
         {loading || !ready ? (
@@ -252,7 +263,7 @@ export function ArticleReader({ articleId }: Props): React.ReactElement {
                 <ul className="gv-article-page__related-list">
                   {related.map((item) => (
                     <li key={item.id}>
-                      <a href={articleRoute(item.id)}>
+                      <a href={relatedArticleHref(item.id, listHref)}>
                         {item.title}
                         <span>
                           {item.category}

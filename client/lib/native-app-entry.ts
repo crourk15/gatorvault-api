@@ -6,6 +6,11 @@ import {
   normalizeNativeRoutePath,
 } from '@/lib/api-base';
 import { loadSession } from '@/lib/auth-api';
+import {
+  consumeNativeSpaPendingPath,
+  isNativeCatchAllDynamicHref,
+  navigateNativeCatchAll,
+} from '@/lib/native-spa-nav';
 import { isVaultClientNavHref } from '@/lib/vault-nav-utils';
 
 const NATIVE_COLD_START_KEY = 'gv_native_cold_done';
@@ -74,6 +79,10 @@ export function runNativeAppEntry(): void {
     return;
   }
 
+  if (isBundledNativeShell()) {
+    consumeNativeSpaPendingPath();
+  }
+
   document.addEventListener(
     'click',
     (event) => {
@@ -96,8 +105,14 @@ export function runNativeAppEntry(): void {
         } catch {
           /* ignore malformed href */
         }
-        // Vault SPA catch-alls (player profiles, boards) have no per-slug index.html.
-        // Hard-nav 404s — let VaultNavigationProvider / Next Link soft-nav instead.
+        // Deep catch-all routes have no per-slug index.html.
+        if (isNativeCatchAllDynamicHref(raw)) {
+          event.preventDefault();
+          event.stopPropagation();
+          navigateNativeCatchAll(raw);
+          return;
+        }
+        // Other vault SPA boards — let VaultNavigationProvider / Next Link soft-nav.
         if (isVaultClientNavHref(raw)) return;
         event.preventDefault();
         event.stopPropagation();

@@ -15,7 +15,12 @@ import {
   type InsiderTag,
 } from '@/lib/insider-data';
 import { articleRoute } from '@/lib/site-routes';
+import { vaultArticleRoute } from '@/lib/vault-route-map';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
+
+function articleHref(articleId: string, inVault: boolean): string {
+  return inVault ? vaultArticleRoute(articleId) : articleRoute(articleId);
+}
 
 function InsiderHero(): React.ReactElement {
   return (
@@ -32,14 +37,20 @@ function InsiderHero(): React.ReactElement {
   );
 }
 
-function RelatedArticlesSection({ articles }: { articles: InsiderArticle[] }): React.ReactElement | null {
+function RelatedArticlesSection({
+  articles,
+  inVault,
+}: {
+  articles: InsiderArticle[];
+  inVault: boolean;
+}): React.ReactElement | null {
   if (!articles.length) return null;
   return (
     <section className="insider-section" data-testid="insider-related">
       <h2 className="insider-section-title">Related Articles</h2>
       <div className="insider-article-grid">
         {articles.map((article) => (
-          <a key={article.id} href={articleRoute(article.id)} className="insider-article-card">
+          <a key={article.id} href={articleHref(article.id, inVault)} className="insider-article-card">
             <span className="insider-article-category">{article.category}</span>
             <h3 className="insider-article-title">{article.title}</h3>
             <p className="insider-article-preview">{article.preview}</p>
@@ -50,7 +61,13 @@ function RelatedArticlesSection({ articles }: { articles: InsiderArticle[] }): R
   );
 }
 
-function FeaturedInsiderArticle({ article }: { article: InsiderArticle }): React.ReactElement {
+function FeaturedInsiderArticle({
+  article,
+  inVault,
+}: {
+  article: InsiderArticle;
+  inVault: boolean;
+}): React.ReactElement {
   return (
     <article className="insider-card" data-testid="insider-featured">
       <div className="insider-featured-header">
@@ -62,7 +79,7 @@ function FeaturedInsiderArticle({ article }: { article: InsiderArticle }): React
       <p className="insider-featured-meta">
         {article.author} · {article.date} · {article.readTime} min read
       </p>
-      <a className="insider-button-primary" href={articleRoute(article.id)}>
+      <a className="insider-button-primary" href={articleHref(article.id, inVault)}>
         Read now <span aria-hidden>→</span>
       </a>
     </article>
@@ -152,14 +169,20 @@ function InsiderSearch({
   );
 }
 
-function InsiderArticleGrid({ articles }: { articles: InsiderArticle[] }): React.ReactElement {
+function InsiderArticleGrid({
+  articles,
+  inVault,
+}: {
+  articles: InsiderArticle[];
+  inVault: boolean;
+}): React.ReactElement {
   if (!articles.length) {
     return <UiEmpty message="No articles match your filters." />;
   }
   return (
     <div className="insider-article-grid" data-testid="insider-article-grid">
       {articles.map((article) => (
-        <a key={article.id} href={articleRoute(article.id)} className="insider-article-card">
+        <a key={article.id} href={articleHref(article.id, inVault)} className="insider-article-card">
           <div className="insider-article-card__top">
             <span className="insider-article-category">{article.category}</span>
             <div className="insider-article-actions">
@@ -187,7 +210,13 @@ function InsiderArticleGrid({ articles }: { articles: InsiderArticle[] }): React
   );
 }
 
-function InsiderAuthors({ authors }: { authors: InsiderAuthor[] }): React.ReactElement {
+function InsiderAuthors({
+  authors,
+  inVault,
+}: {
+  authors: InsiderAuthor[];
+  inVault: boolean;
+}): React.ReactElement {
   return (
     <div className="insider-card" data-testid="insider-authors">
       <h2 className="insider-section-title">Authors</h2>
@@ -205,7 +234,7 @@ function InsiderAuthors({ authors }: { authors: InsiderAuthor[] }): React.ReactE
           </div>
         ))}
       </div>
-      <a className="insider-view-all" href="/articles">
+      <a className="insider-view-all" href={inVault ? '/vault/articles/' : '/articles'}>
         View all articles →
       </a>
     </div>
@@ -250,7 +279,13 @@ function InsiderTrendingTimeline({ articles }: { articles: InsiderArticle[] }): 
   );
 }
 
-function InsiderSpotlightCarousel({ articles }: { articles: InsiderArticle[] }): React.ReactElement {
+function InsiderSpotlightCarousel({
+  articles,
+  inVault,
+}: {
+  articles: InsiderArticle[];
+  inVault: boolean;
+}): React.ReactElement {
   const spotlight = articles.slice(0, 5);
   if (!spotlight.length) return <></>;
   return (
@@ -258,7 +293,7 @@ function InsiderSpotlightCarousel({ articles }: { articles: InsiderArticle[] }):
       <h2 className="insider-section-title">Insider Spotlight</h2>
       <div className="insider-spotlight">
         {spotlight.map((a) => (
-          <a key={a.id} href={articleRoute(a.id)} className="insider-spotlight-card">
+          <a key={a.id} href={articleHref(a.id, inVault)} className="insider-spotlight-card">
             <p className="insider-spotlight-card__title">{a.title}</p>
           </a>
         ))}
@@ -295,10 +330,13 @@ function InsiderTagCloud({
 
 export interface InsiderArticlesPageProps {
   initialArticleId?: string;
+  /** When true, article links stay under /vault/articles (Capacitor catch-all). */
+  inVault?: boolean;
 }
 
 export function InsiderArticlesPage({
   initialArticleId,
+  inVault = false,
 }: InsiderArticlesPageProps = {}): React.ReactElement {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -399,11 +437,11 @@ export function InsiderArticlesPage({
           <div>
             {featured ? (
               <section className="insider-section">
-                <FeaturedInsiderArticle article={featured} />
+                <FeaturedInsiderArticle article={featured} inVault={inVault} />
               </section>
             ) : null}
 
-            <RelatedArticlesSection articles={related} />
+            <RelatedArticlesSection articles={related} inVault={inVault} />
 
             {storylines.length > 0 ? (
               <section className="insider-section">
@@ -414,7 +452,7 @@ export function InsiderArticlesPage({
             <section className="insider-section">
               <InsiderCategories active={activeCategory} onChange={setActiveCategory} />
               <InsiderSearch value={searchQuery} onChange={setSearchQuery} />
-              <InsiderArticleGrid articles={listArticles} />
+              <InsiderArticleGrid articles={listArticles} inVault={inVault} />
             </section>
           </div>
 
@@ -426,10 +464,10 @@ export function InsiderArticlesPage({
               <InsiderTrendingTimeline articles={articles} />
             </section>
             <section className="insider-section">
-              <InsiderSpotlightCarousel articles={articles} />
+              <InsiderSpotlightCarousel articles={articles} inVault={inVault} />
             </section>
             <section className="insider-section">
-              <InsiderAuthors authors={authors} />
+              <InsiderAuthors authors={authors} inVault={inVault} />
             </section>
             <section className="insider-section">
               <InsiderTagCloud tags={tags} onTagClick={handleTagClick} />
