@@ -3,18 +3,21 @@ import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 export type BettingGame = {
   id?: string;
   game?: string;
+  opponent?: string;
   home?: string;
   away?: string;
   homeTeam?: string;
   awayTeam?: string;
   date?: string;
   kickoff?: string;
-  spread?: { line?: string } | string;
+  venue?: string;
+  spread?: { line?: string; uf?: number } | string;
   total?: number | string;
   moneyline?: { uf?: number; opp?: number };
   status?: string;
   homeScore?: number | null;
   awayScore?: number | null;
+  source?: string;
 };
 
 export type BettingLinesResponse = {
