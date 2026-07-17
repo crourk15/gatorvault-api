@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import type { LinkProps } from 'next/link';
+import { toAppRelativeHref } from '@/lib/app-href';
 import { navigateNativeCatchAll, shouldUseNativeCatchAllNav } from '@/lib/native-spa-nav';
 import { prefetchVaultHref, warmVaultPlayerRoute } from '@/lib/vault-navigation';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
@@ -26,7 +27,13 @@ export function VaultNavLink({
   ...rest
 }: Props): React.ReactElement {
   const { beginNavigation } = useVaultNavigation();
-  const path = href.split('?')[0].split('#')[0];
+  // Never deep-link vault chrome to marketing landing.
+  const relative = toAppRelativeHref(href);
+  const safeHref =
+    relative === '/' || relative === '/welcome' || relative === '/welcome/' || relative.startsWith('/welcome?')
+      ? '/vault/'
+      : relative;
+  const path = safeHref.split('?')[0].split('#')[0];
 
   const warm = () => {
     if (/\/player\/|\/players\//.test(path)) warmVaultPlayerRoute(path);
@@ -35,16 +42,16 @@ export function VaultNavLink({
 
   return (
     <Link
-      href={href}
+      href={safeHref}
       className={className}
       data-vault-nav=""
       prefetch
       scroll
       onClick={(event) => {
-        if (shouldUseNativeCatchAllNav(href)) {
+        if (shouldUseNativeCatchAllNav(safeHref)) {
           event.preventDefault();
           beginNavigation();
-          navigateNativeCatchAll(href);
+          navigateNativeCatchAll(safeHref);
           onClick?.(event);
           return;
         }

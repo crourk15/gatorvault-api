@@ -6,6 +6,7 @@ import {
   normalizeNativeRoutePath,
 } from '@/lib/api-base';
 import { ensureSessionHydrated, loadSession } from '@/lib/auth-api';
+import { toAppRelativeHref } from '@/lib/app-href';
 import {
   consumeNativeSpaPendingPath,
   isNativeCatchAllDynamicHref,
@@ -89,9 +90,12 @@ export function runNativeAppEntry(): void {
     (event) => {
       const anchor = (event.target as Element | null)?.closest?.('a[href]');
       if (!anchor) return;
-      const raw = anchor.getAttribute('href');
-      if (!raw) return;
-      if (raw.startsWith('#') || raw.startsWith('mailto:') || raw.startsWith('tel:')) return;
+      const attr = anchor.getAttribute('href');
+      if (!attr) return;
+      if (attr.startsWith('#') || attr.startsWith('mailto:') || attr.startsWith('tel:')) return;
+
+      // Same-origin absolute URLs must still hit catch-all player routing.
+      const raw = toAppRelativeHref(attr);
       if (raw.startsWith('http://') || raw.startsWith('https://')) return;
 
       if (isBundledNativeShell()) {
@@ -108,7 +112,7 @@ export function runNativeAppEntry(): void {
         } catch {
           /* ignore malformed href */
         }
-        // Deep catch-all routes have no per-slug index.html.
+        // Deep catch-all routes have no per-slug index.html — every player slug.
         if (isNativeCatchAllDynamicHref(raw)) {
           event.preventDefault();
           event.stopPropagation();
@@ -138,7 +142,7 @@ export function runNativeAppEntry(): void {
       }
 
       const normalized = normalizeStaticExportHref(raw);
-      if (normalized !== raw) {
+      if (normalized !== raw || attr !== raw) {
         event.preventDefault();
         window.location.href = nativeNavigationUrl(normalized);
       }

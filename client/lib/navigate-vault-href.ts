@@ -4,13 +4,23 @@
  * static files fall through to marketing `/` on the native WebView.
  */
 import { isNativeApp, nativeNavigationUrl } from '@/lib/api-base';
-import { navigateNativeCatchAll, shouldUseNativeCatchAllNav } from '@/lib/native-spa-nav';
+import { toAppRelativeHref } from '@/lib/app-href';
+import {
+  isNativeCatchAllDynamicHref,
+  navigateNativeCatchAll,
+  shouldUseNativeCatchAllNav,
+} from '@/lib/native-spa-nav';
 
 export function navigateVaultHref(href: string): void {
   if (typeof window === 'undefined' || !href) return;
-  if (shouldUseNativeCatchAllNav(href)) {
-    navigateNativeCatchAll(href);
+  const path = toAppRelativeHref(href);
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    window.location.href = path;
     return;
   }
-  window.location.href = isNativeApp() ? nativeNavigationUrl(href) : href;
+  if (shouldUseNativeCatchAllNav(path) || (isNativeApp() && isNativeCatchAllDynamicHref(path))) {
+    navigateNativeCatchAll(path);
+    return;
+  }
+  window.location.href = isNativeApp() ? nativeNavigationUrl(path) : path;
 }
