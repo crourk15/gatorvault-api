@@ -152,12 +152,7 @@ export default function BigBoardPage(): React.ReactElement {
         </label>
       </div>
 
-      <BigBoardGrid
-        query={query}
-        onPlayerClick={(p) => {
-          window.location.href = `/futurecast/player/${encodeURIComponent(p.slug)}`;
-        }}
-      />
+      <BigBoardGrid query={query} />
     </div>
   );
 }

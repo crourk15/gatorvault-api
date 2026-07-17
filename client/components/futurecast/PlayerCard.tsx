@@ -12,25 +12,19 @@ import { fromBigBoard } from '@/lib/recruiting-card-adapters';
 
 export interface PlayerCardProps {
   player: BigBoardPlayer;
+  /** @deprecated Cards navigate via VaultNavLink — kept for call-site compat. */
   onClick?: (player: BigBoardPlayer) => void;
 }
 
-export function PlayerCard({ player, onClick }: PlayerCardProps): React.ReactElement {
-  const card = (
-    <ClassicRecruitCard player={fromBigBoard(player)} variant="target" rank={player.rank} />
-  );
-
-  if (!onClick) return card;
-
+export function PlayerCard({ player }: PlayerCardProps): React.ReactElement {
   return (
-    <button
-      type="button"
-      className="gv-rb-card-button"
-      onClick={() => onClick(player)}
-      data-testid="player-card"
-      data-slug={player.slug}
-    >
-      {card}
-    </button>
+    <div data-testid="player-card" data-slug={player.slug}>
+      <ClassicRecruitCard
+        player={fromBigBoard(player)}
+        variant="target"
+        rank={player.rank}
+        profileContext="futurecast"
+      />
+    </div>
   );
 }

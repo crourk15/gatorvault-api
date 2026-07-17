@@ -9,6 +9,7 @@ import {
   MovementBadge,
   UfProbBar,
 } from '@/components/futurecast/lab/primitives';
+import { VaultNavLink } from '@/components/vault/VaultNavLink';
 
 export type FutureCastTargetCardProps = {
   player: FcLabTarget;
@@ -32,9 +33,9 @@ export function FutureCastTargetCard({
     <article className="fc-lab-target-card fc-target-card" data-testid="fc-target-card">
       <header className="fc-target-header fc-lab-target-card__head">
         <div>
-          <a href={profileHref} className="fc-lab-target-card__name">
+          <VaultNavLink href={profileHref} className="fc-lab-target-card__name">
             {player.name}
-          </a>
+          </VaultNavLink>
           <p className="fc-lab-target-card__meta">
             {player.position} · {player.school ?? '—'} · Class {player.classYear}
           </p>
