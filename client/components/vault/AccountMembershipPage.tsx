@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { clearSession, loadSession, verifyStoredSession } from '@/lib/auth-api';
+import { clearSession, loadSession, replaceAuthLocation, verifyStoredSession } from '@/lib/auth-api';
 import { isNativeApp } from '@/lib/api-base';
 import {
   fetchSubscriptionCatalog,
@@ -54,17 +54,17 @@ export function AccountMembershipPage(): React.ReactElement {
   useEffect(() => {
     const session = loadSession();
     if (!session?.token) {
-      window.location.replace('/join/?mode=signin&next=/vault/membership/');
+      replaceAuthLocation('/join/?mode=signin&next=/vault/membership/');
       return;
     }
 
     let cancelled = false;
     void (async () => {
       try {
-        const verified = await verifyStoredSession();
+        const verified = await verifyStoredSession({ keepLocalOnNetworkError: true });
         if (cancelled) return;
         if (!verified?.token) {
-          window.location.replace('/join/?mode=signin&next=/vault/membership/');
+          replaceAuthLocation('/join/?mode=signin&reauth=1&next=/vault/membership/');
           return;
         }
 
@@ -84,6 +84,7 @@ export function AccountMembershipPage(): React.ReactElement {
 
         if (statusResult.status === 'fulfilled') {
           setStatus(statusResult.value);
+          setError(null);
         } else {
           const err = statusResult.reason;
           const message = err instanceof Error ? err.message : 'Could not load membership.';
@@ -94,13 +95,19 @@ export function AccountMembershipPage(): React.ReactElement {
           ) {
             clearSession();
             window.setTimeout(() => {
-              window.location.replace('/join/?mode=signin&reauth=1&next=/vault/membership/');
+              replaceAuthLocation('/join/?mode=signin&reauth=1&next=/vault/membership/');
             }, 1200);
           }
         }
 
         if (catalogResult.status === 'rejected' && statusResult.status === 'rejected') {
-          setError('Could not load membership. Check your connection and try again.');
+          const statusMsg =
+            statusResult.reason instanceof Error ? statusResult.reason.message : '';
+          setError(
+            statusMsg && !/failed to fetch|networkerror/i.test(statusMsg)
+              ? statusMsg
+              : 'Could not load membership. Check your connection and try again.'
+          );
         } else if (catalogResult.status === 'rejected') {
           setError((prev) => prev || 'Could not load subscription plans.');
         }
@@ -116,7 +123,7 @@ export function AccountMembershipPage(): React.ReactElement {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [native]);
 
   useEffect(() => {
     if (typeof window === "undefined" || loading) return;
@@ -177,7 +184,13 @@ export function AccountMembershipPage(): React.ReactElement {
 
   function handleSignOut(): void {
     clearSession();
-    window.location.replace('/join/?mode=signin&reauth=1&next=/vault/membership/');
+    replaceAuthLocation('/join/?mode=signin&reauth=1&next=/vault/membership/');
+  }
+
+  function handleRetryLoad(): void {
+    setLoading(true);
+    setError(null);
+    window.location.reload();
   }
 
   async function handleManageSubscriptions(): Promise<void> {
@@ -205,7 +218,14 @@ export function AccountMembershipPage(): React.ReactElement {
         View your Insider tier, trial status, and billing options.
       </p>
 
-      {error ? <p className="gv-membership__error">{error}</p> : null}
+      {error ? (
+        <div className="gv-membership__error" role="alert">
+          <p>{error}</p>
+          <button type="button" className="gv-membership__secondary-btn" onClick={handleRetryLoad}>
+            Try again
+          </button>
+        </div>
+      ) : null}
 
       {!status?.email && localSession?.email ? (
         <section className="gv-membership__account" aria-label="Signed in account">

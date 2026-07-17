@@ -1,4 +1,5 @@
 import { getApiBase } from './big-board-api';
+import { nativeNavigationUrl } from './api-base';
 
 export type PaymentTierId = 'locker' | 'film' | 'war';
 export type AuthSession = {
@@ -26,11 +27,16 @@ const SESSION_KEY = 'gv_session';
 /** Auth-only paths — never use as post-login ?next= destinations (avoids redirect loops). */
 export const AUTH_ONLY_PATHS = [
   '/vault/login',
-  '/vault/membership',
   '/vault/auth/callback',
   '/auth/callback',
   '/join',
 ] as const;
+
+/** Hard navigate for sign-in / welcome — Capacitor needs /join/index.html, not bare /join/. */
+export function replaceAuthLocation(path: string): void {
+  if (typeof window === 'undefined') return;
+  window.location.replace(nativeNavigationUrl(path));
+}
 
 /** Safe post-auth destination; strips membership/login/callback loops. */
 export function safeAuthRedirectPath(next?: string | null, fallback = '/vault/'): string {
@@ -134,6 +140,11 @@ export async function verifyStoredSession(opts?: { keepLocalOnNetworkError?: boo
     saveSession(merged);
     return merged;
   } catch {
+    // Keep local session on transport failures unless caller opts out.
+    if (opts?.keepLocalOnNetworkError === false) {
+      clearSession();
+      return null;
+    }
     return session;
   }
 }

@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { saveSession, safeAuthRedirectPath, type AuthSession } from '@/lib/auth-api';
+import {
+  saveSession,
+  safeAuthRedirectPath,
+  replaceAuthLocation,
+  type AuthSession,
+} from '@/lib/auth-api';
 
 /**
  * OAuth / magic-link callback — stores session from query hash or search params.
@@ -26,11 +31,11 @@ export default function AuthCallbackPage(): React.ReactElement {
         /* ignore */
       }
       const next = params.get('next');
-      const dest = safeAuthRedirectPath(next, '/vault');
-      window.location.replace(dest);
+      const dest = safeAuthRedirectPath(next, '/vault/');
+      replaceAuthLocation(dest);
       return;
     }
-    window.location.replace('/join?mode=signin');
+    replaceAuthLocation('/join/?mode=signin');
   }, []);
 
   return (
