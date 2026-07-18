@@ -114,6 +114,11 @@ if (!fs.existsSync(rosterPath)) {
   }
 }
 
+
+mustInclude('components/vault/RosterProfilePage.tsx', 'loggedIn');
+mustInclude('components/vault/RosterProfilePage.tsx', 'roster-portal-path');
+mustNot('components/vault/RosterProfilePage.tsx', 'View Portal Intel');
+
 if (failures.length) {
   console.error('[verify-roster-player-nav] FAIL');
   failures.forEach((f) => console.error(' -', f));
