@@ -1,8 +1,9 @@
 /**
  * Capacitor Push Notifications (APNs) for the App Store shell.
  */
-import { getApiBase, nativeNavigationUrl } from '@/lib/api-base';
+import { getApiBase } from '@/lib/api-base';
 import { loadSession } from '@/lib/auth-api';
+import { navigateVaultHref } from '@/lib/navigate-vault-href';
 import type { AlertPushPrefs } from '@/lib/push-alerts-api';
 
 function authHeaders(): HeadersInit {
@@ -87,10 +88,7 @@ export async function initNativePushTapHandler(): Promise<void> {
     await PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
       const data = (action.notification?.data || {}) as { url?: string; path?: string };
       const raw = data.url || data.path || '/vault/alerts/';
-      const href = String(raw).startsWith('http')
-        ? String(raw)
-        : nativeNavigationUrl(String(raw));
-      window.location.href = href;
+      navigateVaultHref(String(raw));
     });
   } catch {
     /* ok on web */

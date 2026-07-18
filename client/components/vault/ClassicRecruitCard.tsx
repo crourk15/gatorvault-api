@@ -11,7 +11,9 @@ import {
   starsDisplay,
 } from '@/lib/recruiting-board-utils';
 import { playerProfilePath, recruitingProfileLifecycle } from '@/lib/player-routes';
+import type { PlayerProfileContext } from '@/lib/vault-route-map';
 import { formatRecruitSchoolLine } from '@/lib/recruiting-display-utils';
+import { VaultNavLink } from '@/components/vault/VaultNavLink';
 
 export type ClassicCardVariant = 'commit' | 'target';
 
@@ -70,13 +72,19 @@ export function ClassicRecruitCard({
   player,
   variant = 'target',
   rank,
+  profileContext = 'recruiting',
+  href: hrefOverride,
 }: {
   player: ClassicRecruitCardPlayer;
   variant?: ClassicCardVariant;
   rank?: number;
+  profileContext?: PlayerProfileContext;
+  /** When set, replaces the default profile path (must stay under /vault/*). */
+  href?: string;
 }): React.ReactElement {
   const lifecycle = recruitingProfileLifecycle(player);
-  const href = playerProfilePath(player.slug, lifecycle, true, player.name, 'recruiting');
+  const href =
+    hrefOverride ?? playerProfilePath(player.slug, lifecycle, true, player.name, profileContext);
   const rawRating =
     player.displayRating ??
     player.rating ??
@@ -110,7 +118,7 @@ export function ClassicRecruitCard({
       className={`gv-rb-card gv-rb-card--classic gv-rb-card--${resolvedVariant}${player.headliner ? ' gv-rb-card--headliner' : ''}`}
       data-testid="classic-recruit-card"
     >
-      <a href={href} className="gv-rb-card__link">
+      <VaultNavLink href={href} className="gv-rb-card__link" data-testid="classic-recruit-card-link">
         {player.headliner && (
           <span className="gv-rb-card__headliner-badge" aria-label="Class headliner">
             🏆 Headliner
@@ -180,7 +188,7 @@ export function ClassicRecruitCard({
           )}
           {player.staffGrade && <span className="gv-rb-card__badge">Staff {player.staffGrade}</span>}
         </div>
-      </a>
+      </VaultNavLink>
 
       {skinny ? <p className="gv-rb-card__skinny">{skinny}</p> : null}
     </article>

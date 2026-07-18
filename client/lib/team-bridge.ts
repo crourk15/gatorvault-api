@@ -6,6 +6,7 @@ import {
   type DepthChartRow,
   type DepthPhase,
 } from '@/lib/depth-chart-data';
+import { navigateVaultHref } from '@/lib/navigate-vault-href';
 import { playerProfilePath } from '@/lib/player-routes';
 import { saveVaultPageState, type VaultPageState } from '@/lib/vault-navigation';
 import type { RosterPlayer } from '@/lib/roster-api';
@@ -155,7 +156,7 @@ export function wireTeamRosterNavigation(getState: () => VaultPageState): void {
       e.preventDefault();
       e.stopPropagation();
       saveVaultPageState('team', getState());
-      window.location.href = playerProfilePath(slug, 'ROSTER', true);
+      navigateVaultHref(playerProfilePath(slug, 'ROSTER', true));
     },
     true
   );

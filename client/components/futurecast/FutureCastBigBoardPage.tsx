@@ -4,14 +4,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { BigBoardGrid } from '@/components/futurecast/BigBoardGrid';
 import { EarlyDiscoveryGrid } from '@/components/futurecast/EarlyDiscoveryGrid';
 import { UfFitWatchlistGrid } from '@/components/futurecast/UfFitWatchlistGrid';
-import {
-  TAB_SORT,
-  type BigBoardLifecycle,
-  type BigBoardQuery,
-} from '@/lib/big-board-api';
+import { TAB_SORT, type BigBoardQuery } from '@/lib/big-board-api';
 import { getPortalSeasonState, shouldShowPortalWatchlist } from '@/lib/recruiting-cycle';
-import { playerProfilePath } from '@/lib/player-routes';
-
 type BigBoardTabId = 'top-targets' | 'early-discovery' | 'portal-watchlist' | 'rank';
 
 const ALL_TABS: { id: BigBoardTabId; label: string }[] = [
@@ -89,10 +83,6 @@ export function FutureCastBigBoardPage(): React.ReactElement {
     }),
     [earlyDiscoveryClassGte, minDiscoveryScore, position]
   );
-
-  const openPlayer = (slug: string, lifecycle: BigBoardLifecycle, fullName: string) => {
-    window.location.href = playerProfilePath(slug, lifecycle, true, fullName, 'futurecast');
-  };
 
   return (
     <div className="rh-frame" data-testid="vault-futurecast-big-board">
@@ -178,17 +168,9 @@ export function FutureCastBigBoardPage(): React.ReactElement {
           }}
         />
       ) : activeTab === 'early-discovery' ? (
-        <EarlyDiscoveryGrid
-          query={earlyDiscoveryQuery}
-          onPlayerClick={(player) => openPlayer(player.slug, 'HS', player.fullName)}
-        />
+        <EarlyDiscoveryGrid query={earlyDiscoveryQuery} />
       ) : (
-        <BigBoardGrid
-          query={query}
-          onPlayerClick={(player) =>
-            openPlayer(player.slug, player.lifecycle as BigBoardLifecycle, player.fullName)
-          }
-        />
+        <BigBoardGrid query={query} />
       )}
     </div>
   );

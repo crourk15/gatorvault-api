@@ -75,6 +75,11 @@ export function shouldUseNativeCatchAllNav(href: string): boolean {
   return isBundledNativeShell() && isNativeCatchAllDynamicHref(href);
 }
 
+/** True for any dynamic player/article catch-all path (relative or absolute same-app URL). */
+export function isPlayerCatchAllHref(href: string): boolean {
+  return isNativeCatchAllDynamicHref(href);
+}
+
 export function navigateNativeCatchAll(href: string): void {
   if (typeof window === 'undefined') return;
   const target = resolveNativeSpaHref(href);

@@ -13,6 +13,7 @@ import {
 } from '@/lib/futurecast-elite-metrics';
 import { formatCompositeRating, formatRank } from '@/lib/recruiting-board-utils';
 import { playerProfilePath } from '@/lib/player-routes';
+import { VaultNavLink } from '@/components/vault/VaultNavLink';
 
 function fitMeterTone(score: number): 'high' | 'mid' | 'low' {
   if (score >= 80) return 'high';
@@ -56,7 +57,7 @@ export function HighPriorityTargetCard({
       className={`gv-hp-card${compact ? ' gv-hp-card--compact' : ''}${player.headliner ? ' gv-hp-card--headliner' : ''}`}
       data-testid="high-priority-card"
     >
-      <a href={href} className="gv-hp-card__link">
+      <VaultNavLink href={href} className="gv-hp-card__link">
         <header className="gv-hp-card__head">
           <div>
             {rank != null && <span className="gv-hp-card__rank">#{rank}</span>}
@@ -164,14 +165,14 @@ export function HighPriorityTargetCard({
               .join(' · ')}
           </p>
         ) : null}
-      </a>
+      </VaultNavLink>
       {!compact && (player.classYear ?? 0) >= 2027 ? (
-        <a
+        <VaultNavLink
           href={`/vault/futurecast/player/${encodeURIComponent(player.slug)}`}
           className="gv-hp-card__fc-link"
         >
           FutureCast intel →
-        </a>
+        </VaultNavLink>
       ) : null}
     </article>
   );

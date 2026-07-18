@@ -11,10 +11,11 @@ import { fromEarlyDiscovery } from '@/lib/recruiting-card-adapters';
 
 export interface EarlyDiscoveryGridProps {
   query: EarlyDiscoveryQuery;
+  /** @deprecated Cards navigate via VaultNavLink — kept for call-site compat. */
   onPlayerClick?: (player: EarlyDiscoveryPlayer) => void;
 }
 
-export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridProps): React.ReactElement {
+export function EarlyDiscoveryGrid({ query }: EarlyDiscoveryGridProps): React.ReactElement {
   const classYearGte = query.class_year_gte;
   const minDiscoveryScore = query.min_discovery_score;
   const limit = query.limit;
@@ -87,29 +88,15 @@ export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridP
         data-testid="early-discovery-grid"
         data-refreshing={isRefreshing ? 'true' : undefined}
       >
-        {players.map((player) => {
-          const card = (
+        {players.map((player) => (
+          <div key={player.id} data-testid="player-card" data-slug={player.slug}>
             <ClassicRecruitCard
               player={fromEarlyDiscovery(player)}
               variant="target"
+              profileContext="futurecast"
             />
-          );
-          if (!onPlayerClick) {
-            return <div key={player.id}>{card}</div>;
-          }
-          return (
-            <button
-              key={player.id}
-              type="button"
-              className="gv-rb-card-button"
-              onClick={() => onPlayerClick(player)}
-              data-testid="player-card"
-              data-slug={player.slug}
-            >
-              {card}
-            </button>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </>
   );
