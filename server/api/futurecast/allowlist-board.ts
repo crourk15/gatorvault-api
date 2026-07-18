@@ -637,10 +637,12 @@ function enrichBoardPlayersWithUfTrendMovement(
         ufRpmPct: p.ufRpmPct,
       }))
     );
+    // Prefer gatorvault-sourced points, but fall back to legacy unsourced history
+    // (pre-source snapshots) so Lab movement is not blank after durable migrate.
     const deltaMap = ufTrend.buildDelta7dBySlug(
       players.map((p) => p.slug),
       new Date(),
-      { preferSource: 'gatorvault', requireSource: true }
+      { preferSource: 'gatorvault', requireSource: false }
     ) as Map<string, number>;
 
     return players.map((p) => {
