@@ -28,8 +28,9 @@ module.exports = (app) => {
         live: live
           ? {
               durableEnv: live.durableEnv === true,
+              pathIsDurable: live.pathIsDurable === true,
               diskMountPresent: live.diskMountPresent === true,
-              dataDirHint: live.durableEnv ? '/var/data/live' : 'ephemeral',
+              dataDirHint: live.pathIsDurable || live.durableEnv ? '/var/data/live' : 'ephemeral',
             }
           : null,
         confirmed: diskMountPresent && users.durableEnv === true && pathIsDurable,

@@ -8,6 +8,13 @@ const path = require('path');
 function resolveStatusPath() {
   const liveDir = String(process.env.GV_LIVE_DATA_DIR || '').trim();
   if (liveDir) return path.join(liveDir, 'pipeline-health.json');
+  try {
+    if (process.env.NODE_ENV === 'production' && fs.existsSync('/var/data')) {
+      return path.join('/var/data/live', 'pipeline-health.json');
+    }
+  } catch {
+    /* ignore */
+  }
   return path.join(__dirname, '..', 'data', 'live', 'pipeline-health.json');
 }
 

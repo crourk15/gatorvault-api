@@ -6,10 +6,20 @@ const feedDedup = require('./live-feed-dedup');
 
 /** Bundled seed/writers live here; mutable caches can redirect to GV_LIVE_DATA_DIR (/var/data/live). */
 const BUNDLE_DATA_DIR = path.join(__dirname, '..', 'data', 'live');
+const RENDER_LIVE_DATA_DIR = '/var/data/live';
 
 function resolveLiveDataDir() {
   const fromEnv = String(process.env.GV_LIVE_DATA_DIR || '').trim();
-  return fromEnv || BUNDLE_DATA_DIR;
+  if (fromEnv) return fromEnv;
+  // Blueprint env sync can lag; if Render disk is mounted, use it automatically.
+  try {
+    if (process.env.NODE_ENV === 'production' && fs.existsSync('/var/data')) {
+      return RENDER_LIVE_DATA_DIR;
+    }
+  } catch {
+    /* ignore */
+  }
+  return BUNDLE_DATA_DIR;
 }
 
 const DATA_DIR = resolveLiveDataDir();
@@ -140,11 +150,15 @@ function saveBeatCache(cache) {
 }
 
 function getLiveStoreInfo() {
+  const diskMountPresent = fs.existsSync('/var/data');
+  const pathIsDurable = String(DATA_DIR || '').startsWith('/var/data');
   return {
     dataDir: DATA_DIR,
     beatCachePath: BEAT_CACHE_PATH,
-    durableEnv: Boolean(String(process.env.GV_LIVE_DATA_DIR || '').trim()),
-    diskMountPresent: fs.existsSync('/var/data'),
+    durableEnv:
+      Boolean(String(process.env.GV_LIVE_DATA_DIR || '').trim()) || pathIsDurable,
+    pathIsDurable,
+    diskMountPresent,
   };
 }
 
