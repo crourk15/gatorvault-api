@@ -28,7 +28,16 @@ export function TrendingBoardPageContent(): React.ReactElement {
   }, [load]);
 
   if (loading) return <FutureCastSubPageLoading testId="fc-trending-loading" />;
-  if (error) return <UiError message={error} />;
+  if (error) {
+    return (
+      <UiError
+        message={error}
+        retry={() => void load()}
+        backHref="/vault/futurecast"
+        backLabel="← FutureCast"
+      />
+    );
+  }
   if (!data) return <p className="rh-cc-empty">No trending data.</p>;
 
   return (

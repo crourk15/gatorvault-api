@@ -28,7 +28,16 @@ export function StaffNotesPageContent(): React.ReactElement {
   }, [load]);
 
   if (loading) return <FutureCastSubPageLoading testId="fc-staff-notes-loading" />;
-  if (error) return <UiError message={error} />;
+  if (error) {
+    return (
+      <UiError
+        message={error}
+        retry={() => void load()}
+        backHref="/vault/futurecast"
+        backLabel="← FutureCast"
+      />
+    );
+  }
   if (!data) return <p className="rh-cc-empty">No staff notes.</p>;
 
   return (

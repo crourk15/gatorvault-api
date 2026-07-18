@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect } from 'react';
 import { usePathname } from '@/lib/use-pathname';
-import { VAULT_BOTTOM_NAV, VAULT_MOBILE_MENU_ITEM, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath } from '@/lib/vault-routes';
+import { VAULT_BOTTOM_NAV, VAULT_MOBILE_MENU_ITEM, VAULT_PILLARS, VAULT_SECONDARY } from '@/lib/vault-routes';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
@@ -115,9 +115,7 @@ function VaultShellInner({ children }: { children: React.ReactNode }): React.Rea
   const pathname = usePathname();
   const { isNavigating } = useVaultNavigation();
   const [navOpen, setNavOpen] = React.useState(false);
-  const inVault = isVaultPath(pathname);
-  const isHome =
-    (pathname.replace(/\/$/, '') || '/') === '/vault';
+  const isHome = (pathname.replace(/\/$/, '') || '/') === '/vault';
 
   const coreNav = VAULT_PILLARS;
   const secondaryNav = VAULT_SECONDARY;
@@ -166,7 +164,7 @@ function VaultShellInner({ children }: { children: React.ReactNode }): React.Rea
       />
       <header className="gv-vault-shell__header">
         <div className="gv-vault-shell__header-start">
-          <VaultNavLink href={inVault ? '/vault/' : '/'} className="gv-vault-shell__brand">
+          <VaultNavLink href="/vault/" className="gv-vault-shell__brand" aria-label="GatorVault home">
             <GatorVaultWordmark height={28} className="gv-vault-shell__wordmark" />
           </VaultNavLink>
         </div>
@@ -215,7 +213,7 @@ function VaultShellInner({ children }: { children: React.ReactNode }): React.Rea
         <main className="gv-vault-shell__main">{children}</main>
       </div>
       <VaultBottomNav pathname={pathname} />
-      <AppMenuDrawer />
+      <AppMenuDrawer forceVaultRoutes />
       <LivePulseFab />
       <MobileBackToTop />
     </div>

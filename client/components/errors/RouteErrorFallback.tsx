@@ -17,9 +17,9 @@ export function RouteErrorFallback({
   error,
   title = 'Something went wrong',
   onRetry,
-  dashboardHref = '/vault',
-  dashboardLabel = 'Go to Dashboard',
-  homeHref = '/',
+  dashboardHref = '/vault/',
+  dashboardLabel = 'Go to Home',
+  homeHref,
   homeLabel = '← Home',
 }: Props): React.ReactElement {
   return (
@@ -38,9 +38,11 @@ export function RouteErrorFallback({
           <a href={dashboardHref} className="gv-ui-message__btn gv-ui-message__btn--secondary">
             {dashboardLabel}
           </a>
-          <a href={homeHref} className="gv-ui-message__link">
-            {homeLabel}
-          </a>
+          {homeHref ? (
+            <a href={homeHref} className="gv-ui-message__link">
+              {homeLabel}
+            </a>
+          ) : null}
         </div>
       </div>
     </div>
