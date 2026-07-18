@@ -29,6 +29,7 @@
     "verify:netlify:build": "node client/scripts/verify-netlify-build-match.js",
     "verify:cold-start:api": "node client/scripts/verify-cold-start-api.js",
     "verify:mobile:hardening": "node client/scripts/verify-mobile-hardening.js",
+    "verify:player-nav": "node client/scripts/verify-all-player-nav-safe.js && node client/scripts/verify-early-discovery-player-nav.js && node client/scripts/verify-roster-player-nav.js",
     "verify:ios:iap": "node client/scripts/verify-ios-iap-wiring.js",
     "audit:target-stubs": "node server/scripts/audit-target-stubs.js",
     "audit:prod-board": "node server/scripts/audit-prod-allowlist-board.js",

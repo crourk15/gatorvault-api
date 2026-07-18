@@ -545,13 +545,34 @@ export async function resolvePlayerSlugRecord(
   const normalized = String(slug || '').trim().toLowerCase();
   if (!normalized) return null;
 
+  // Team roster taps must stay on roster profiles even when the same slug
+  // also exists as a PORTAL/FutureCast player (e.g. Eric Singleton Jr.).
+  // Otherwise the client redirects into /vault/recruiting/player/:slug and
+  // Capacitor catch-all shells can fall through to marketing `/`.
+  if (context === 'roster') {
+    const rosterHit = rosterPlayerBySlug(normalized);
+    if (rosterHit) {
+      return {
+        kind: 'roster',
+        playerId: String(rosterHit.slug || normalized),
+        canonicalSlug: String(rosterHit.slug || normalized),
+        redirectHref: null,
+        roster: rosterHit,
+      };
+    }
+  }
+
   try {
     const postgres = await safeResolvePostgresPlayerBySlug(normalized);
     if (postgres) {
       const player = await getPlayerById(postgres.playerId);
       if (player) {
         let redirectHref: string | null = null;
-        if (player.status === 'PORTAL' && context !== 'recruiting') {
+        if (
+          player.status === 'PORTAL' &&
+          context !== 'recruiting' &&
+          context !== 'roster'
+        ) {
           redirectHref = `/vault/recruiting/player/${encodeURIComponent(player.slug)}/`;
         }
         return {

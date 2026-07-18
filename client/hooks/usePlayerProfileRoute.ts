@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import type { RosterPlayer } from '@/lib/roster-api';
 import {
   resolvePlayerSlug,
   type ProfileRouteContext,
   type ResolvePlayerKind,
 } from '@/lib/player-full-profile-api';
+import { navigateVaultHref } from '@/lib/navigate-vault-href';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 
 export type PlayerProfileRouteState =
@@ -44,7 +44,6 @@ export function usePlayerProfileRoute(
   slug: string | null,
   context: ProfileRouteContext = 'auto'
 ): PlayerProfileRouteState {
-  const router = useRouter();
   const [state, setState] = useState<PlayerProfileRouteState>({ phase: 'loading' });
 
   useEffect(() => {
@@ -61,7 +60,8 @@ export function usePlayerProfileRoute(
       .then((resolved) => {
         if (cancelled) return;
         if (resolved.redirectHref) {
-          router.replace(resolved.redirectHref);
+          // Capacitor-safe catch-all navigation (avoid Next replace into player shells).
+          navigateVaultHref(resolved.redirectHref);
           setState({ phase: 'redirect', href: resolved.redirectHref });
           return;
         }
@@ -70,7 +70,7 @@ export function usePlayerProfileRoute(
           resolved.canonicalSlug.toLowerCase() !== normalized
         ) {
           const href = canonicalProfileHref(resolved.canonicalSlug, resolved.kind, context);
-          router.replace(href);
+          navigateVaultHref(href);
           setState({ phase: 'redirect', href });
           return;
         }
@@ -101,7 +101,6 @@ export function usePlayerProfileRoute(
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- resolve once per slug/context
   }, [slug, context]);
 
   return state;
