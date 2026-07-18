@@ -28,10 +28,15 @@ function rel(abs) {
 const PLAYER_LOC =
   /window\.location\.(href|assign|replace)\s*=\s*[^;\n]*(playerProfilePath|playerProfileRoute|\/vault\/(?:futurecast|recruiting|portal)\/player|\/vault\/players\/|\/futurecast\/player\/|\/recruiting\/player\/)/;
 
+const ROUTER_REPLACE_PLAYER =
+  /router\.replace\s*\(\s*[^)]*(redirectHref|playerProfile|\/vault\/(?:futurecast|recruiting|portal)\/player|\/vault\/players\/)/;
+
 const files = []
   .concat(walk(path.join(ROOT, 'components')))
   .concat(walk(path.join(ROOT, 'lib')))
-  .concat(walk(path.join(ROOT, 'routes')));
+  .concat(walk(path.join(ROOT, 'hooks')))
+  .concat(walk(path.join(ROOT, 'routes')))
+  .concat(walk(path.join(ROOT, 'app')));
 
 for (const file of files) {
   const text = fs.readFileSync(file, 'utf8');
@@ -47,6 +52,9 @@ for (const file of files) {
   if (PLAYER_LOC.test(text)) {
     failures.push(rel(file) + ': unsafe window.location hard-nav into a player route');
   }
+  if (ROUTER_REPLACE_PLAYER.test(text)) {
+    failures.push(rel(file) + ': unsafe router.replace into a player route (use navigateVaultHref)');
+  }
 }
 
 const must = [
@@ -57,6 +65,8 @@ const must = [
   ['components/vault/VaultNavLink.tsx', 'toAppRelativeHref'],
   ['components/futurecast/EarlyDiscoveryGrid.tsx', 'profileContext="futurecast"'],
   ['components/vault/ClassicRecruitCard.tsx', 'VaultNavLink'],
+  ['components/team/RosterList.tsx', 'PlayerNavLink'],
+  ['hooks/usePlayerProfileRoute.ts', 'navigateVaultHref'],
 ];
 
 for (const [file, needle] of must) {

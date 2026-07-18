@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import type { TeamPlayer } from '@/lib/team-hub-types';
 import { rosterMatchesFilter, type RosterFilter } from '@/lib/team-hub-data';
 import { playerProfilePath } from '@/lib/player-routes';
+import { PlayerNavLink } from '@/components/vault/PlayerNavLink';
 
 type Props = {
   players: TeamPlayer[];
@@ -31,9 +32,9 @@ export function RosterList({ players, filter }: Props): React.ReactElement {
         return (
           <article key={player.id} className="gv-team-roster-card">
             {href ? (
-              <a href={href} className="gv-team-roster-card__name">
+              <PlayerNavLink href={href} className="gv-team-roster-card__name">
                 {player.name}
-              </a>
+              </PlayerNavLink>
             ) : (
               <p className="gv-team-roster-card__name">{player.name}</p>
             )}

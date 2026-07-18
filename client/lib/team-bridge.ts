@@ -156,7 +156,7 @@ export function wireTeamRosterNavigation(getState: () => VaultPageState): void {
       e.preventDefault();
       e.stopPropagation();
       saveVaultPageState('team', getState());
-      navigateVaultHref(playerProfilePath(slug, 'ROSTER', true));
+      navigateVaultHref(playerProfilePath(slug, 'ROSTER', true, null, 'roster'));
     },
     true
   );

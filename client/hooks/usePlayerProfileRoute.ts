@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import type { RosterPlayer } from '@/lib/roster-api';
+import { fetchRosterPlayerBySlug } from '@/lib/roster-api';
 import {
   resolvePlayerSlug,
   type ProfileRouteContext,
   type ResolvePlayerKind,
 } from '@/lib/player-full-profile-api';
+import { navigateVaultHref } from '@/lib/navigate-vault-href';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 
 export type PlayerProfileRouteState =
@@ -44,7 +45,6 @@ export function usePlayerProfileRoute(
   slug: string | null,
   context: ProfileRouteContext = 'auto'
 ): PlayerProfileRouteState {
-  const router = useRouter();
   const [state, setState] = useState<PlayerProfileRouteState>({ phase: 'loading' });
 
   useEffect(() => {
@@ -57,20 +57,48 @@ export function usePlayerProfileRoute(
     setState({ phase: 'loading' });
     const normalized = slug.trim().toLowerCase();
 
-    void resolvePlayerSlug(slug, context)
-      .then((resolved) => {
+    void (async () => {
+      try {
+        const resolved = await resolvePlayerSlug(slug, context);
         if (cancelled) return;
-        if (resolved.redirectHref) {
-          router.replace(resolved.redirectHref);
+
+        // Team roster context must never leave /vault/players — even when an
+        // older API still returns a PORTAL redirectHref for dual-listed players.
+        if (context === 'roster') {
+          if (resolved.kind === 'roster' && resolved.roster) {
+            setState({
+              phase: 'roster',
+              playerId: resolved.playerId,
+              canonicalSlug: resolved.canonicalSlug || normalized,
+              roster: mapRoster(resolved.roster),
+            });
+            return;
+          }
+          const rosterPlayer = await fetchRosterPlayerBySlug(normalized);
+          if (cancelled) return;
+          if (rosterPlayer) {
+            setState({
+              phase: 'roster',
+              playerId: rosterPlayer.id || rosterPlayer.slug || normalized,
+              canonicalSlug: rosterPlayer.slug || normalized,
+              roster: rosterPlayer,
+            });
+            return;
+          }
+          // Fall through to generic profile if roster row is missing.
+        } else if (resolved.redirectHref) {
+          // Capacitor-safe catch-all navigation (avoid Next replace into player shells).
+          navigateVaultHref(resolved.redirectHref);
           setState({ phase: 'redirect', href: resolved.redirectHref });
           return;
         }
+
         if (
           resolved.canonicalSlug &&
           resolved.canonicalSlug.toLowerCase() !== normalized
         ) {
           const href = canonicalProfileHref(resolved.canonicalSlug, resolved.kind, context);
-          router.replace(href);
+          navigateVaultHref(href);
           setState({ phase: 'redirect', href });
           return;
         }
@@ -89,19 +117,35 @@ export function usePlayerProfileRoute(
           canonicalSlug: resolved.canonicalSlug,
           kind: resolved.kind,
         });
-      })
-      .catch((err) => {
+      } catch (err) {
         if (cancelled) return;
+        if (context === 'roster') {
+          try {
+            const rosterPlayer = await fetchRosterPlayerBySlug(normalized);
+            if (cancelled) return;
+            if (rosterPlayer) {
+              setState({
+                phase: 'roster',
+                playerId: rosterPlayer.id || rosterPlayer.slug || normalized,
+                canonicalSlug: rosterPlayer.slug || normalized,
+                roster: rosterPlayer,
+              });
+              return;
+            }
+          } catch {
+            /* fall through */
+          }
+        }
         setState({
           phase: 'error',
           message: err instanceof Error ? err.message : 'Player not found',
         });
-      });
+      }
+    })();
 
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- resolve once per slug/context
   }, [slug, context]);
 
   return state;
