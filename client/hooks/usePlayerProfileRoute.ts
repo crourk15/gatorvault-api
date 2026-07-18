@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { RosterPlayer } from '@/lib/roster-api';
+import { fetchRosterPlayerBySlug } from '@/lib/roster-api';
 import {
   resolvePlayerSlug,
   type ProfileRouteContext,
@@ -56,15 +57,42 @@ export function usePlayerProfileRoute(
     setState({ phase: 'loading' });
     const normalized = slug.trim().toLowerCase();
 
-    void resolvePlayerSlug(slug, context)
-      .then((resolved) => {
+    void (async () => {
+      try {
+        const resolved = await resolvePlayerSlug(slug, context);
         if (cancelled) return;
-        if (resolved.redirectHref) {
+
+        // Team roster context must never leave /vault/players — even when an
+        // older API still returns a PORTAL redirectHref for dual-listed players.
+        if (context === 'roster') {
+          if (resolved.kind === 'roster' && resolved.roster) {
+            setState({
+              phase: 'roster',
+              playerId: resolved.playerId,
+              canonicalSlug: resolved.canonicalSlug || normalized,
+              roster: mapRoster(resolved.roster),
+            });
+            return;
+          }
+          const rosterPlayer = await fetchRosterPlayerBySlug(normalized);
+          if (cancelled) return;
+          if (rosterPlayer) {
+            setState({
+              phase: 'roster',
+              playerId: rosterPlayer.id || rosterPlayer.slug || normalized,
+              canonicalSlug: rosterPlayer.slug || normalized,
+              roster: rosterPlayer,
+            });
+            return;
+          }
+          // Fall through to generic profile if roster row is missing.
+        } else if (resolved.redirectHref) {
           // Capacitor-safe catch-all navigation (avoid Next replace into player shells).
           navigateVaultHref(resolved.redirectHref);
           setState({ phase: 'redirect', href: resolved.redirectHref });
           return;
         }
+
         if (
           resolved.canonicalSlug &&
           resolved.canonicalSlug.toLowerCase() !== normalized
@@ -89,14 +117,31 @@ export function usePlayerProfileRoute(
           canonicalSlug: resolved.canonicalSlug,
           kind: resolved.kind,
         });
-      })
-      .catch((err) => {
+      } catch (err) {
         if (cancelled) return;
+        if (context === 'roster') {
+          try {
+            const rosterPlayer = await fetchRosterPlayerBySlug(normalized);
+            if (cancelled) return;
+            if (rosterPlayer) {
+              setState({
+                phase: 'roster',
+                playerId: rosterPlayer.id || rosterPlayer.slug || normalized,
+                canonicalSlug: rosterPlayer.slug || normalized,
+                roster: rosterPlayer,
+              });
+              return;
+            }
+          } catch {
+            /* fall through */
+          }
+        }
         setState({
           phase: 'error',
           message: err instanceof Error ? err.message : 'Player not found',
         });
-      });
+      }
+    })();
 
     return () => {
       cancelled = true;

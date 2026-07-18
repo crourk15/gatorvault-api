@@ -48,6 +48,8 @@ mustInclude(
 );
 mustNot('components/team/RosterList.tsx', '<a href={href}');
 mustInclude('hooks/usePlayerProfileRoute.ts', 'navigateVaultHref');
+mustInclude('hooks/usePlayerProfileRoute.ts', 'fetchRosterPlayerBySlug');
+mustInclude('hooks/usePlayerProfileRoute.ts', "context === 'roster'");
 mustNot('hooks/usePlayerProfileRoute.ts', 'router.replace');
 mustNot('hooks/usePlayerProfileRoute.ts', 'useRouter');
 
