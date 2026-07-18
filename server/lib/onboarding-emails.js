@@ -1,7 +1,9 @@
 // Live product host is gatorvaultinsider.com — gatorvault.com/vault 404s and must not be emailed.
 const SITE_URL = String(process.env.SITE_URL || 'https://gatorvaultinsider.com').replace(/\/$/, '');
-const VAULT_URL =
-  process.env.GV_VAULT_URL || `${SITE_URL}/join/?mode=signin&next=${encodeURIComponent('/vault/')}`;
+// Readable sign-in deep link (no %2F encoding in the visible URL).
+const VAULT_URL = process.env.GV_VAULT_URL || `${SITE_URL}/join/?mode=signin&next=/vault/`;
+const VAULT_LINK_LABEL = 'Open your vault';
+const VAULT_URL_DISPLAY = `${SITE_URL.replace(/^https?:\/\//, '')}/join`;
 const SUPPORT_EMAIL = process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com';
 
 const WELCOME_SUBJECT = 'Welcome to GatorVault — Your Access Is Now Live 🐊🔥';
@@ -91,11 +93,12 @@ function welcomeEmailHtml({ name, email, tier } = {}) {
 
   <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">🔑 Your Access</p>
   <p style="margin:0 0 8px;font-size:14px;line-height:1.6;">Your vault is now unlocked.</p>
-  <p style="margin:0 0 8px;font-size:14px;line-height:1.6;">Sign in with the email you signed up with:</p>
-  <p style="margin:0 0 8px;font-size:14px;line-height:1.6;">
-  <a href="${VAULT_URL}" style="color:#FA4616;font-weight:700;">Open GatorVault (sign in)</a></p>
-  <p style="margin:0 0 8px;font-size:13px;color:#94a3b8;line-height:1.55;word-break:break-all;">${VAULT_URL}</p>
-  <p style="margin:0 0 20px;font-size:14px;line-height:1.6;">On iPhone? Open the <strong>GatorVault</strong> app and sign in with that same email — you do not need a separate website password link for the app.</p>
+  <p style="margin:0 0 14px;font-size:14px;line-height:1.6;">Sign in with the email you used at signup:</p>
+  <p style="margin:0 0 10px;">
+    <a href="${VAULT_URL}" style="display:inline-block;background:#FA4616;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 22px;border-radius:8px;">${VAULT_LINK_LABEL}</a>
+  </p>
+  <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.55;">${VAULT_URL_DISPLAY}</p>
+  <p style="margin:0 0 20px;font-size:14px;line-height:1.6;">On iPhone, open the <strong>GatorVault</strong> app and sign in with that same email.</p>
 
   <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">🎬 Your Tier: ${tierLabel}</p>
   <ul style="margin:0 0 20px;padding-left:20px;">${benefits}</ul>
@@ -140,6 +143,8 @@ function getWelcomeEmail({ name, email, tier }) {
       tier: tierLabel,
       tier_benefits: getTierBenefitsHtml(tier),
       vault_url: VAULT_URL,
+      vault_link_label: VAULT_LINK_LABEL,
+      vault_url_display: VAULT_URL_DISPLAY,
       support_email: SUPPORT_EMAIL
     }
   };
@@ -164,6 +169,8 @@ function onboardingEmailHtml(emailDef, opts) {
 module.exports = {
   WELCOME_SUBJECT,
   VAULT_URL,
+  VAULT_LINK_LABEL,
+  VAULT_URL_DISPLAY,
   ONBOARDING_SEQUENCE,
   getTierLabel,
   getTierBenefits,

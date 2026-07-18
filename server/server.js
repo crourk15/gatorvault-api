@@ -305,7 +305,13 @@ function getEmailProviders() {
 
 async function sendEmailEmailJS(to, templateParams) {
   const { sendEmailViaEmailJS } = require('./lib/emailjs-server');
-  const { getTierLabel, getTierBenefitsHtml, VAULT_URL } = require('./lib/onboarding-emails');
+  const {
+    getTierLabel,
+    getTierBenefitsHtml,
+    VAULT_URL,
+    VAULT_LINK_LABEL,
+    VAULT_URL_DISPLAY,
+  } = require('./lib/onboarding-emails');
   const { serviceId, templateId, publicKey, privateKey } = getEmailJsConfig();
   if (!isEmailJsReady()) {
     throw new Error('EmailJS not configured — set EMAILJS_USER_ID (public key), EMAILJS_PRIVATE_KEY, service and template IDs');
@@ -322,6 +328,8 @@ async function sendEmailEmailJS(to, templateParams) {
     tier: tierLabel,
     tier_benefits: templateParams.tierBenefits || getTierBenefitsHtml(tierKey),
     vault_url: VAULT_URL,
+    vault_link_label: VAULT_LINK_LABEL,
+    vault_url_display: VAULT_URL_DISPLAY,
     support_email: process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com',
     email_subject: templateParams.emailSubject || templateParams.subject || 'Welcome to GatorVault — Your Access Is Now Live 🐊🔥',
     reply_to: process.env.EMAILJS_REPLY_TO || process.env.SMTP_USER || 'support@gatorvaultinsider.com'
