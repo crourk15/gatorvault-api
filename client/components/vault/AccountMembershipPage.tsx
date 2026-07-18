@@ -397,16 +397,28 @@ export function AccountMembershipPage(): React.ReactElement {
               {status?.tier === tier.id ? ' · Your current tier' : ''}
             </p>
             {native && catalog?.iosPurchaseReady && billingReady && status?.tier !== tier.id ? (
-              <button
-                type="button"
-                className="gv-membership__subscribe-btn"
-                disabled={Boolean(purchaseBusy)}
-                onClick={() => void handleSubscribe(tier.products.monthly)}
-              >
-                {purchaseBusy === tier.products.monthly
-                  ? 'Processing…'
-                  : `Subscribe · ${tier.name}`}
-              </button>
+              <div className="gv-membership__subscribe-row">
+                <button
+                  type="button"
+                  className="gv-membership__subscribe-btn"
+                  disabled={Boolean(purchaseBusy)}
+                  onClick={() => void handleSubscribe(tier.products.monthly)}
+                >
+                  {purchaseBusy === tier.products.monthly
+                    ? 'Processing…'
+                    : `Monthly · $${tier.monthlyUsd.toFixed(2)}`}
+                </button>
+                <button
+                  type="button"
+                  className="gv-membership__secondary-btn"
+                  disabled={Boolean(purchaseBusy)}
+                  onClick={() => void handleSubscribe(tier.products.annual)}
+                >
+                  {purchaseBusy === tier.products.annual
+                    ? 'Processing…'
+                    : `Annual · $${tier.annualUsd.toFixed(2)}`}
+                </button>
+              </div>
             ) : null}
           </article>
         ))}
@@ -414,9 +426,9 @@ export function AccountMembershipPage(): React.ReactElement {
 
       <section className="gv-membership__cta">
         <p className="gv-membership__meta">
-          Subscriptions renew automatically unless canceled at least 24 hours before the current
-          period ends. Payment is charged to your Apple ID. Manage or cancel in your Apple ID
-          subscription settings.
+          {native || status?.subscription?.source === 'apple'
+            ? 'Subscriptions renew automatically unless canceled at least 24 hours before the current period ends. Payment is charged to your Apple ID. Manage or cancel in your Apple ID subscription settings.'
+            : 'Paid membership continues through the GatorVault iOS app (Apple In-App Purchase). After you subscribe on iOS, the same account unlocks the web Vault automatically.'}
         </p>
         <p>
           Questions:{' '}

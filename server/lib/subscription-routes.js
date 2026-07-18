@@ -36,6 +36,13 @@ async function processVerifiedApplePurchase(session, productId, transactionId, r
   try {
     verified = await verifyAppleTransaction(transactionId);
   } catch (err) {
+    if (err?.code === 'subscription_expired') {
+      return res.status(402).json({
+        ok: false,
+        expired: true,
+        error: err.message || 'This Apple subscription is no longer active.',
+      });
+    }
     return res.status(502).json({
       ok: false,
       error: err.message || 'Apple transaction verification failed.',
@@ -50,6 +57,15 @@ async function processVerifiedApplePurchase(session, productId, transactionId, r
     });
   }
 
+  if (verified.expiresAt && new Date(verified.expiresAt).getTime() <= Date.now()) {
+    return res.status(402).json({
+      ok: false,
+      expired: true,
+      error: 'This Apple subscription is no longer active.',
+      expiresAt: verified.expiresAt,
+    });
+  }
+
   const user = applySubscription(session.email, {
     source: 'apple',
     status: 'active',
@@ -57,7 +73,8 @@ async function processVerifiedApplePurchase(session, productId, transactionId, r
     tier,
     originalTransactionId: verified.originalTransactionId || transactionId,
     expiresAt: verified.expiresAt || null,
-    appAccountToken: options.appAccountToken || null,
+    appAccountToken: options.appAccountToken || verified.appAccountToken || null,
+    autoRenewEnabled: true,
   });
 
   return res.json({

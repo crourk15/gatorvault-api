@@ -164,13 +164,22 @@ export function JoinPage(): React.ReactElement {
       rememberLastEmail(session.email);
       saveSession(session);
       setExistingSession({ email: session.email });
+      if (session.trialExpired || session.accessActive === false) {
+        setSuccess(
+          `Signed in as ${session.email}. Your free trial has ended — opening Membership to restore access…`
+        );
+        window.setTimeout(() => {
+          replaceAuthLocation(session.membershipUrl || '/vault/membership/?trial=ended');
+        }, 900);
+        return;
+      }
       setSuccess(`Signed in as ${session.email}. Opening the Vault…`);
       redirectAfterAuth();
     } catch (err) {
       const trialErr = err as Error & { trialExpired?: boolean; membershipUrl?: string };
       if (trialErr.trialExpired) {
         setError(trialErr.message);
-        setTrialMembershipHref(trialErr.membershipUrl || '/vault/membership/');
+        setTrialMembershipHref(trialErr.membershipUrl || '/vault/membership/?trial=ended');
       } else {
         setError(err instanceof Error ? err.message : 'Sign in failed.');
       }

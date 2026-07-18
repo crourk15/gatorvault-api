@@ -13,12 +13,14 @@ export type AuthSession = {
   daysLeft?: number | null;
   paid?: boolean;
   accessActive?: boolean;
+  membershipRequired?: boolean;
   points?: number;
   pointsTier?: string;
   subscription?: {
     source?: string | null;
     status?: string | null;
     productId?: string | null;
+    expiresAt?: string | null;
   } | null;
 };
 
@@ -274,24 +276,39 @@ export async function registerAccount(opts: {
 export async function loginAccount(opts: {
   email: string;
   password: string;
-}): Promise<AuthSession> {
-  const res = await authPost<{ ok?: boolean; error?: string; trialExpired?: boolean; session?: AuthSession }>(
-    '/api/login',
-    opts
-  );
-  if (res.status === 402 && res.data.trialExpired) {
+}): Promise<AuthSession & { trialExpired?: boolean; membershipUrl?: string }> {
+  const res = await authPost<{
+    ok?: boolean;
+    error?: string;
+    trialExpired?: boolean;
+    membershipRequired?: boolean;
+    membershipUrl?: string;
+    session?: AuthSession;
+  }>('/api/login', opts);
+
+  // Legacy servers returned 402 with no session — keep a clear membership path.
+  if (res.status === 402 && res.data.trialExpired && !res.data.session) {
     const err = new Error(res.data.error || 'Your trial has ended.') as Error & {
       trialExpired?: boolean;
       membershipUrl?: string;
     };
     err.trialExpired = true;
-    err.membershipUrl = (res.data as { membershipUrl?: string }).membershipUrl || '/vault/membership/';
+    err.membershipUrl = res.data.membershipUrl || '/vault/membership/?trial=ended';
     throw err;
   }
+
   if (!res.ok || !res.data.session) {
     throw new Error(res.data.error || 'Incorrect email or password.');
   }
-  return normalizeSession(res.data.session);
+
+  const session = normalizeSession(res.data.session);
+  return {
+    ...session,
+    trialExpired: Boolean(
+      res.data.trialExpired || res.data.membershipRequired || session.accessActive === false
+    ),
+    membershipUrl: res.data.membershipUrl || '/vault/membership/?trial=ended',
+  };
 }
 
 export async function deleteAccount(opts: {

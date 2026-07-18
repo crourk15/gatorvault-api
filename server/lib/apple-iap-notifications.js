@@ -3,7 +3,10 @@
 const { decodeJwsPayload } = require('./apple-iap-verify');
 const { tierFromProductId } = require('./subscription-config');
 const { applySubscription, revokeSubscription } = require('./subscription-service');
-const { findUserByOriginalTransactionId } = require('./user-store');
+const {
+  findUserByOriginalTransactionId,
+  findUserByAppAccountToken,
+} = require('./user-store');
 
 const ACTIVATE_TYPES = new Set(['SUBSCRIBED', 'DID_RENEW', 'OFFER_REDEEMED', 'RENEWAL_EXTENDED']);
 const REVOKE_TYPES = new Set(['EXPIRED', 'REVOKE', 'REFUND', 'GRACE_PERIOD_EXPIRED']);
@@ -48,12 +51,19 @@ function resolveUserForTransaction(transaction) {
     const byLatest = findUserByOriginalTransactionId(txId);
     if (byLatest) return byLatest;
   }
+  const accountToken = String(
+    transaction?.appAccountToken || transaction?.app_account_token || ''
+  ).trim();
+  if (accountToken && typeof findUserByAppAccountToken === 'function') {
+    const byToken = findUserByAppAccountToken(accountToken);
+    if (byToken) return byToken;
+  }
   return null;
 }
 
 function handleAppleServerNotification(signedPayload) {
   const parsed = parseAppleNotification(signedPayload);
-  const { transaction, type, subtype } = parsed;
+  const { transaction, renewal, type, subtype } = parsed;
   if (!transaction?.productId && !transaction?.product_id) {
     return { ok: true, handled: false, reason: 'no_transaction', type };
   }
@@ -73,11 +83,33 @@ function handleAppleServerNotification(signedPayload) {
     transaction.originalTransactionId || transaction.transactionId || ''
   );
   const expiresAt = expiresAtFromTransaction(transaction);
+  const appAccountToken = String(
+    transaction.appAccountToken || transaction.app_account_token || user.subscription?.appAccountToken || ''
+  ).trim() || null;
 
-  if (
-    ACTIVATE_TYPES.has(type) ||
-    (type === 'DID_CHANGE_RENEWAL_STATUS' && subtype !== 'AUTO_RENEW_DISABLED')
-  ) {
+  // Cancel auto-renew: keep access until expiresAt (Apple App Store rule).
+  if (type === 'DID_CHANGE_RENEWAL_STATUS' && subtype === 'AUTO_RENEW_DISABLED') {
+    applySubscription(user.email, {
+      source: 'apple',
+      status: 'canceled',
+      productId,
+      tier,
+      originalTransactionId,
+      expiresAt: expiresAt || user.subscription?.expiresAt || null,
+      appAccountToken,
+      autoRenewEnabled: false,
+    });
+    return {
+      ok: true,
+      handled: true,
+      action: 'canceled_keep_access',
+      email: user.email,
+      type,
+      subtype,
+    };
+  }
+
+  if (ACTIVATE_TYPES.has(type) || type === 'DID_CHANGE_RENEWAL_STATUS') {
     applySubscription(user.email, {
       source: 'apple',
       status: 'active',
@@ -85,6 +117,8 @@ function handleAppleServerNotification(signedPayload) {
       tier,
       originalTransactionId,
       expiresAt,
+      appAccountToken,
+      autoRenewEnabled: renewal?.autoRenewStatus !== 0,
     });
     return { ok: true, handled: true, action: 'activated', email: user.email, type };
   }
@@ -97,14 +131,13 @@ function handleAppleServerNotification(signedPayload) {
       tier,
       originalTransactionId,
       expiresAt,
+      appAccountToken,
+      autoRenewEnabled: true,
     });
     return { ok: true, handled: true, action: 'grace', email: user.email, type };
   }
 
-  if (
-    REVOKE_TYPES.has(type) ||
-    (type === 'DID_CHANGE_RENEWAL_STATUS' && subtype === 'AUTO_RENEW_DISABLED')
-  ) {
+  if (REVOKE_TYPES.has(type)) {
     revokeSubscription(user.email, {
       status: type === 'REFUND' || type === 'REVOKE' ? 'revoked' : 'expired',
       productId,
