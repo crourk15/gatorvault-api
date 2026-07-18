@@ -267,9 +267,11 @@ export function AccountMembershipPage(): React.ReactElement {
           </div>
           <p className="gv-membership__meta" data-testid="membership-trial-status">
             {status.paid
-              ? 'Your paid membership is active.'
+              ? status.subscription?.status === 'canceled'
+                ? 'Paid access remains until your current Apple billing period ends. Auto-renew is off.'
+                : 'Your paid membership is active.'
               : status.trial.expired
-                ? 'Your 30-day trial has ended. Subscribe to restore full Vault access.'
+                ? 'Your 30-day trial has ended. Subscribe in the iOS app to restore full Vault access.'
                 : status.trial.daysLeft != null
                   ? `Free trial: ${status.trial.daysLeft} day${
                       status.trial.daysLeft === 1 ? '' : 's'
@@ -280,6 +282,18 @@ export function AccountMembershipPage(): React.ReactElement {
                     }.`
                   : 'Trial status unavailable.'}
           </p>
+          {!native && !status.paid && status.trial.expired ? (
+            <div className="gv-membership__actions" style={{ marginTop: '0.75rem' }}>
+              <a
+                className="gv-membership__subscribe-btn"
+                href={status.billing.appStoreUrl || catalog?.appStoreUrl || 'https://apps.apple.com/app/id6783848215'}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Continue in App Store
+              </a>
+            </div>
+          ) : null}
           {status.subscription?.source ? (
             <p className="gv-membership__meta">
               Billing source: {status.subscription.source}
@@ -344,13 +358,29 @@ export function AccountMembershipPage(): React.ReactElement {
           <>
             <p className="gv-membership__meta">
               {status?.billing.manageWebHint ||
-                'Web checkout is not available yet. Email support for billing help, tier changes, or cancellation.'}
+                'Paid membership continues in the GatorVault iOS app. Use the same email, then Subscribe or Restore.'}
             </p>
-            <p className="gv-membership__meta">
-              <a href={`mailto:${supportEmail}?subject=GatorVault%20membership%20help`}>
+            <div className="gv-membership__actions">
+              <a
+                className="gv-membership__subscribe-btn"
+                href={
+                  status?.billing.appStoreUrl ||
+                  catalog?.appStoreUrl ||
+                  'https://apps.apple.com/app/id6783848215'
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open GatorVault on the App Store
+              </a>
+              <a
+                className="gv-membership__secondary-btn"
+                href={`mailto:${supportEmail}?subject=GatorVault%20membership%20help`}
+              >
                 Email {supportEmail}
               </a>
-              {' · '}
+            </div>
+            <p className="gv-membership__meta">
               <Link href="/terms/">Membership Terms</Link>
             </p>
           </>
@@ -362,8 +392,8 @@ export function AccountMembershipPage(): React.ReactElement {
           </p>
         ) : catalog?.iosPurchaseReady ? (
           <p className="gv-membership__meta">
-            Subscribe in the GatorVault iOS app when in-app purchase is enabled. Purchases are
-            processed by Apple.
+            Apple billing is live. Open the iOS app, sign in with this email, then Subscribe or Restore
+            purchases — web access unlocks automatically.
           </p>
         ) : (
           <p className="gv-membership__meta">
@@ -397,16 +427,28 @@ export function AccountMembershipPage(): React.ReactElement {
               {status?.tier === tier.id ? ' · Your current tier' : ''}
             </p>
             {native && catalog?.iosPurchaseReady && billingReady && status?.tier !== tier.id ? (
-              <button
-                type="button"
-                className="gv-membership__subscribe-btn"
-                disabled={Boolean(purchaseBusy)}
-                onClick={() => void handleSubscribe(tier.products.monthly)}
-              >
-                {purchaseBusy === tier.products.monthly
-                  ? 'Processing…'
-                  : `Subscribe · ${tier.name}`}
-              </button>
+              <div className="gv-membership__subscribe-row">
+                <button
+                  type="button"
+                  className="gv-membership__subscribe-btn"
+                  disabled={Boolean(purchaseBusy)}
+                  onClick={() => void handleSubscribe(tier.products.monthly)}
+                >
+                  {purchaseBusy === tier.products.monthly
+                    ? 'Processing…'
+                    : `Monthly · $${tier.monthlyUsd.toFixed(2)}`}
+                </button>
+                <button
+                  type="button"
+                  className="gv-membership__secondary-btn"
+                  disabled={Boolean(purchaseBusy)}
+                  onClick={() => void handleSubscribe(tier.products.annual)}
+                >
+                  {purchaseBusy === tier.products.annual
+                    ? 'Processing…'
+                    : `Annual · $${tier.annualUsd.toFixed(2)}`}
+                </button>
+              </div>
             ) : null}
           </article>
         ))}
@@ -414,9 +456,9 @@ export function AccountMembershipPage(): React.ReactElement {
 
       <section className="gv-membership__cta">
         <p className="gv-membership__meta">
-          Subscriptions renew automatically unless canceled at least 24 hours before the current
-          period ends. Payment is charged to your Apple ID. Manage or cancel in your Apple ID
-          subscription settings.
+          {native || status?.subscription?.source === 'apple'
+            ? 'Subscriptions renew automatically unless canceled at least 24 hours before the current period ends. Payment is charged to your Apple ID. Manage or cancel in your Apple ID subscription settings.'
+            : 'Paid membership continues through the GatorVault iOS app (Apple In-App Purchase). After you subscribe on iOS, the same account unlocks the web Vault automatically.'}
         </p>
         <p>
           Questions:{' '}

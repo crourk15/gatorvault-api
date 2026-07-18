@@ -60,11 +60,20 @@ function tierFromProductId(productId) {
 }
 
 function buildCatalogPayload() {
+  const siteUrl = String(process.env.SITE_URL || 'https://gatorvaultinsider.com').replace(/\/$/, '');
+  const apiBase = String(
+    process.env.NEXT_PUBLIC_API_BASE || process.env.API_BASE || 'https://gatorvault-api.onrender.com'
+  ).replace(/\/$/, '');
+  const appAppleId = String(process.env.APPLE_APP_APPLE_ID || '6783848215').trim();
   return {
     ok: true,
     provider: 'apple',
     trialDays: 30,
     subscriptionGroup: 'gatorvault_insider',
+    appAppleId,
+    appStoreUrl: `https://apps.apple.com/app/id${appAppleId}`,
+    notificationsUrl: `${apiBase}/api/subscription/apple/notifications`,
+    membershipUrl: `${siteUrl}/vault/membership/`,
     tiers: Object.values(SUBSCRIPTION_TIERS).map((tier) => ({
       id: tier.id,
       name: tier.name,

@@ -383,13 +383,17 @@ async function deliverEmail(to, subject, html, templateParams = {}) {
 const { getWelcomeEmail, ONBOARDING_SEQUENCE } = require('./lib/onboarding-emails');
 const { startOnboardingScheduler } = require('./lib/onboarding-scheduler');
 
-async function sendWelcomeEmail({ email, name, tier }) {
-  const trialEnd = new Date();
-  trialEnd.setDate(trialEnd.getDate() + 30);
-  const trialEndStr = trialEnd.toLocaleDateString('en-US', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
-  const welcome = getWelcomeEmail({ name, email, tier });
+async function sendWelcomeEmail({ email, name, tier, trialEndISO = null }) {
+  const trialEnd = trialEndISO ? new Date(trialEndISO) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  const trialEndStr = Number.isFinite(trialEnd.getTime())
+    ? trialEnd.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    : null;
+  const welcome = getWelcomeEmail({ name, email, tier, trialEndStr });
   const delivery = await deliverEmail(email, welcome.subject, welcome.html, {
     name: welcome.templateParams.name,
     tier: tier,
@@ -503,7 +507,12 @@ app.post('/api/register', async (req, res) => {
     let emailSent = false;
     let emailProvider = null;
     try {
-      const welcome = await sendWelcomeEmail({ email, name, tier });
+      const welcome = await sendWelcomeEmail({
+        email,
+        name,
+        tier,
+        trialEndISO: user.trialEnd,
+      });
       trialEndStr = welcome.trialEndStr;
       emailSent = welcome.emailSent;
       emailProvider = welcome.provider;
@@ -570,24 +579,24 @@ app.post('/api/login', async (req, res) => {
       return res.status(401).json({ ok: false, code: 'bad_password', error: 'Incorrect email or password.' });
     }
 
-    const trialEndDate = user.trialEnd ? new Date(user.trialEnd) : null;
-    const trialExpired = trialEndDate ? trialEndDate.getTime() <= Date.now() : false;
-    if (trialExpired && !hasPaidAccess(user)) {
-      return res.status(402).json({
-        ok: false,
-        error: 'Your 30-day free trial has ended. Restore access from Membership or the iOS app.',
-        trialExpired: true,
-        trialEnd: trialEndDate.toISOString(),
-        membershipUrl: `${SITE_URL}/vault/membership/`,
-      });
-    }
-
-    const token = signSession({ email: user.email, tier: user.tier, name: user.name, exp: Date.now() + TOKEN_TTL_MS });
+    // Always issue a session after password check so expired-trial members can open
+    // Membership / restore / subscribe. Vault content stays gated by accessActive.
+    const token = signSession({
+      email: user.email,
+      tier: user.tier,
+      name: user.name,
+      exp: Date.now() + TOKEN_TTL_MS,
+    });
+    const sessionFields = buildSessionFields(user, pointsStore);
+    const trialExpired = Boolean(sessionFields.membershipRequired);
     return res.json({
       ok: true,
+      trialExpired,
+      membershipRequired: trialExpired,
+      membershipUrl: trialExpired ? `${SITE_URL}/vault/membership/?trial=ended` : null,
       session: {
         token,
-        ...buildSessionFields(user, pointsStore),
+        ...sessionFields,
       },
     });
   } catch (err) {
@@ -659,18 +668,6 @@ app.post('/api/auth/bridge-session', (req, res) => {
     if (!user) {
       return res.status(404).json({ ok: false, error: 'Account not found.' });
     }
-    if (!hasPaidAccess(user)) {
-      const trialEndDate = user.trialEnd ? new Date(user.trialEnd) : null;
-      const trialExpired = trialEndDate ? trialEndDate.getTime() <= Date.now() : false;
-      if (trialExpired) {
-        return res.status(402).json({
-          ok: false,
-          trialExpired: true,
-          error: 'Your 30-day free trial has ended. Subscribe to restore access.',
-          membershipUrl: `${SITE_URL}/vault/membership/`,
-        });
-      }
-    }
     const finalTier = user.tier || tier;
     const finalName = user.name || name || email.split('@')[0];
 
@@ -680,12 +677,17 @@ app.post('/api/auth/bridge-session', (req, res) => {
       name: finalName,
       exp: Date.now() + TOKEN_TTL_MS
     });
+    const sessionFields = buildSessionFields(user, pointsStore);
+    const trialExpired = Boolean(sessionFields.membershipRequired);
 
     return res.json({
       ok: true,
+      trialExpired,
+      membershipRequired: trialExpired,
+      membershipUrl: trialExpired ? `${SITE_URL}/vault/membership/?trial=ended` : null,
       session: {
         token,
-        ...buildSessionFields(user, pointsStore),
+        ...sessionFields,
       }
     });
   } catch (err) {

@@ -2,21 +2,40 @@ const { effectiveTier, isAdminAccount } = require('./session-auth');
 const { normalizeTier, tierFromProductId } = require('./subscription-config');
 const { findUserByEmail, updateUser } = require('./user-store');
 
+const ENTITLED_STATUSES = new Set(['active', 'grace', 'canceled']);
+
+function expiresAtMs(user) {
+  const raw = user?.subscription?.expiresAt;
+  if (!raw) return null;
+  const ms = new Date(raw).getTime();
+  return Number.isFinite(ms) ? ms : null;
+}
+
+/** True when subscription period is still open (or no expiry on a live status). */
+function subscriptionPeriodOpen(user) {
+  const exp = expiresAtMs(user);
+  if (exp != null) return exp > Date.now();
+  const status = String(user?.subscription?.status || '').toLowerCase();
+  // Manual grants / legacy rows without expiresAt stay open while status is entitled.
+  return ENTITLED_STATUSES.has(status);
+}
+
 function isSubscriptionActive(user) {
   if (!user?.subscription) return false;
   const status = String(user.subscription.status || '').toLowerCase();
-  if (status === 'active' || status === 'grace') return true;
-  if (user.subscription.expiresAt) {
-    return new Date(user.subscription.expiresAt).getTime() > Date.now();
-  }
-  return false;
+  // Canceled keep access until Apple period end — matches App Store legalese.
+  if (!ENTITLED_STATUSES.has(status)) return false;
+  return subscriptionPeriodOpen(user);
 }
 
 function hasPaidAccess(user) {
   if (!user) return false;
   if (isAdminAccount(user.email)) return true;
-  if (user.paid) return true;
-  return isSubscriptionActive(user);
+  // Prefer time-bounded subscription state over a stale paid boolean.
+  if (isSubscriptionActive(user)) return true;
+  // Legacy paid accounts with no subscription record (pre-IAP grants).
+  if (user.paid === true && !user.subscription) return true;
+  return false;
 }
 
 function trialState(user) {
@@ -52,6 +71,7 @@ function buildSubscriptionStatus(user) {
         tier: user.subscription.tier || null,
         expiresAt: user.subscription.expiresAt || null,
         updatedAt: user.subscription.updatedAt || null,
+        autoRenewEnabled: user.subscription.autoRenewEnabled,
       }
     : null;
 
@@ -66,9 +86,11 @@ function buildSubscriptionStatus(user) {
     billing: {
       appleIapEnabled: process.env.APPLE_IAP_VERIFICATION_ENABLED === 'true',
       webCheckoutEnabled: false,
-      manageInAppHint: 'Subscriptions purchased in the iOS app are managed in Settings → Apple ID → Subscriptions.',
+      appStoreUrl: `https://apps.apple.com/app/id${String(process.env.APPLE_APP_APPLE_ID || '6783848215').trim()}`,
+      manageInAppHint:
+        'Subscriptions purchased in the iOS app are managed in Settings → Apple ID → Subscriptions.',
       manageWebHint:
-        'For billing questions, tier changes, or cancellation help before iOS billing is live, email support.',
+        'Paid membership continues in the GatorVault iOS app. Open the App Store listing, sign in with this same email, then Subscribe or Restore — web Vault unlocks automatically.',
       supportEmail: 'support@gatorvaultinsider.com',
       accountDeletionPath: '/vault/membership/#delete-account',
     },
@@ -78,6 +100,8 @@ function buildSubscriptionStatus(user) {
 function buildSessionFields(user, pointsStore) {
   const trial = trialState(user);
   const pts = pointsStore.getUserPoints(user.email);
+  const paid = hasPaidAccess(user);
+  const accessActive = paid || !trial.expired;
   return {
     email: user.email,
     tier: effectiveTier(user),
@@ -86,8 +110,9 @@ function buildSessionFields(user, pointsStore) {
     trialEndISO: trial.trialEndISO,
     createdAt: user.createdAt || null,
     daysLeft: trial.daysLeft,
-    paid: hasPaidAccess(user),
-    accessActive: hasPaidAccess(user) || !trial.expired,
+    paid,
+    accessActive,
+    membershipRequired: !accessActive,
     points: pts.points,
     pointsTier: pts.tier,
     subscription: user.subscription
@@ -95,6 +120,7 @@ function buildSessionFields(user, pointsStore) {
           source: user.subscription.source,
           status: user.subscription.status,
           productId: user.subscription.productId,
+          expiresAt: user.subscription.expiresAt || null,
         }
       : null,
   };
@@ -103,19 +129,31 @@ function buildSessionFields(user, pointsStore) {
 function applySubscription(email, payload) {
   const tier = normalizeTier(payload.tier || tierFromProductId(payload.productId) || 'film');
   const now = new Date().toISOString();
+  const status = String(payload.status || 'active').toLowerCase();
   const subscription = {
     source: payload.source || 'apple',
-    status: payload.status || 'active',
+    status,
     productId: payload.productId || null,
     tier,
     originalTransactionId: payload.originalTransactionId || null,
     appAccountToken: payload.appAccountToken || null,
     expiresAt: payload.expiresAt || null,
+    autoRenewEnabled:
+      payload.autoRenewEnabled != null
+        ? Boolean(payload.autoRenewEnabled)
+        : status === 'canceled'
+          ? false
+          : true,
     updatedAt: now,
   };
+  const entitled =
+    ENTITLED_STATUSES.has(status) &&
+    (subscription.expiresAt
+      ? new Date(subscription.expiresAt).getTime() > Date.now()
+      : status === 'active' || status === 'grace' || status === 'canceled');
   const user = updateUser(email, {
-    paid: true,
-    tier,
+    paid: entitled,
+    tier: entitled ? tier : 'locker',
     subscription,
   });
   return user;
@@ -127,11 +165,13 @@ function revokeSubscription(email, { status = 'expired', productId = null } = {}
   const now = new Date().toISOString();
   const subscription = {
     ...(user.subscription || {}),
-    source: 'apple',
+    source: user.subscription?.source || 'apple',
     status,
     productId: productId || user.subscription?.productId || null,
     tier: user.subscription?.tier || 'locker',
+    autoRenewEnabled: false,
     updatedAt: now,
+    // Keep historical expiresAt when present; otherwise stamp now.
     expiresAt: user.subscription?.expiresAt || now,
   };
   return updateUser(email, {
@@ -169,4 +209,5 @@ module.exports = {
   revokeSubscription,
   appleVerificationConfigured,
   verifyAppleTransaction,
+  ENTITLED_STATUSES,
 };

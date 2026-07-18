@@ -1,0 +1,194 @@
+#!/usr/bin/env node
+/**
+ * Sync Apple IAP (App Store Server API) env to Render gatorvault-api and optionally redeploy.
+ *
+ * Required:
+ *   RENDER_API_KEY
+ *   APPLE_IAP_PRIVATE_KEY  (.p8 PEM contents, or base64 of the PEM)
+ *
+ * Optional (defaults from this agent / Codemagic ASC key):
+ *   ASC_KEY_ID / APPLE_IAP_KEY_ID
+ *   ASC_ISSUER_ID / APPLE_IAP_ISSUER_ID
+ *   APPLE_IAP_BUNDLE_ID (default com.gatorvaultinsider.app)
+ *
+ * Usage:
+ *   RENDER_API_KEY=rnd_... APPLE_IAP_PRIVATE_KEY="$(cat AuthKey_XXXX.p8)" \
+ *     node server/scripts/set-render-apple-iap-env.js --deploy
+ */
+'use strict';
+
+const path = require('path');
+try {
+  require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
+} catch {
+  /* optional */
+}
+
+const API = 'https://api.render.com/v1';
+const SERVICE_NAME = 'gatorvault-api';
+const PROD_CATALOG = 'https://gatorvault-api.onrender.com/api/subscription/catalog';
+
+function clean(val) {
+  return String(val == null ? '' : val).trim();
+}
+
+function normalizePrivateKey(raw) {
+  const text = clean(raw);
+  if (!text) return '';
+  if (text.includes('BEGIN PRIVATE KEY')) return text.replace(/\\n/g, '\n');
+  try {
+    const decoded = Buffer.from(text, 'base64').toString('utf8');
+    if (decoded.includes('BEGIN PRIVATE KEY')) return decoded;
+  } catch {
+    /* fall through */
+  }
+  return text.replace(/\\n/g, '\n');
+}
+
+function mask(val) {
+  const s = String(val || '');
+  if (!s) return '(empty)';
+  if (s.includes('BEGIN PRIVATE KEY')) return 'PEM(' + s.length + ' chars)';
+  if (s.length <= 12) return s.slice(0, 2) + '…';
+  return s.slice(0, 6) + '…' + s.slice(-4) + ' (' + s.length + ')';
+}
+
+const renderKey = clean(process.env.RENDER_API_KEY);
+const privateKey = normalizePrivateKey(
+  process.env.APPLE_IAP_PRIVATE_KEY || process.env.ASC_PRIVATE_KEY || process.env.ASC_KEY_P8
+);
+const keyId = clean(process.env.APPLE_IAP_KEY_ID || process.env.ASC_KEY_ID);
+const issuerId = clean(process.env.APPLE_IAP_ISSUER_ID || process.env.ASC_ISSUER_ID);
+const bundleId = clean(process.env.APPLE_IAP_BUNDLE_ID || 'com.gatorvaultinsider.app');
+const sandbox = clean(process.env.APPLE_IAP_SANDBOX || 'false') || 'false';
+
+if (!renderKey) {
+  console.error('Missing RENDER_API_KEY (Render → Account Settings → API Keys).');
+  process.exit(1);
+}
+if (!privateKey || !privateKey.includes('BEGIN PRIVATE KEY')) {
+  console.error(
+    'Missing APPLE_IAP_PRIVATE_KEY — paste the App Store Connect API .p8 PEM (AuthKey_XXXXX.p8).'
+  );
+  process.exit(1);
+}
+if (!keyId || !issuerId) {
+  console.error('Missing APPLE_IAP_KEY_ID / APPLE_IAP_ISSUER_ID (or ASC_KEY_ID / ASC_ISSUER_ID).');
+  process.exit(1);
+}
+
+const VARS = {
+  APPLE_IAP_VERIFICATION_ENABLED: 'true',
+  APPLE_IAP_KEY_ID: keyId,
+  APPLE_IAP_ISSUER_ID: issuerId,
+  APPLE_IAP_PRIVATE_KEY: privateKey,
+  APPLE_IAP_BUNDLE_ID: bundleId,
+  APPLE_IAP_SANDBOX: sandbox,
+};
+
+const headers = {
+  Authorization: 'Bearer ' + renderKey,
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
+};
+
+async function api(pathname, opts = {}) {
+  const res = await fetch(API + pathname, { ...opts, headers: { ...headers, ...opts.headers } });
+  const text = await res.text();
+  let body;
+  try {
+    body = text ? JSON.parse(text) : null;
+  } catch {
+    body = text;
+  }
+  if (!res.ok) {
+    throw new Error(
+      (opts.method || 'GET') +
+        ' ' +
+        pathname +
+        ' → ' +
+        res.status +
+        ': ' +
+        (typeof body === 'string' ? body.slice(0, 240) : JSON.stringify(body).slice(0, 240))
+    );
+  }
+  return body;
+}
+
+async function upsertEnvVar(serviceId, envKey, value) {
+  await api('/services/' + serviceId + '/env-vars/' + encodeURIComponent(envKey), {
+    method: 'PUT',
+    body: JSON.stringify({ value: String(value) }),
+  });
+}
+
+async function waitForLive(serviceId, maxMs = 600000) {
+  const t0 = Date.now();
+  while (Date.now() - t0 < maxMs) {
+    const rows = await api('/services/' + serviceId + '/deploys?limit=1');
+    const deploy = (rows && rows[0] && (rows[0].deploy || rows[0])) || null;
+    const status = (deploy && (deploy.status || deploy.state)) || 'unknown';
+    console.log('  deploy status: ' + status);
+    if (/live|succeeded|active/i.test(status)) return deploy;
+    if (/failed|canceled|cancelled/i.test(status)) {
+      throw new Error('Deploy failed: ' + status);
+    }
+    await new Promise((r) => setTimeout(r, 15000));
+  }
+  throw new Error('Deploy wait timeout');
+}
+
+async function verifyCatalogReady() {
+  const res = await fetch(PROD_CATALOG, { headers: { Accept: 'application/json' } });
+  const body = await res.json();
+  return Boolean(body && body.iosPurchaseReady);
+}
+
+async function main() {
+  const doDeploy = process.argv.includes('--deploy');
+  console.log('Apple IAP → Render sync');
+  console.log('  KEY_ID     ', mask(keyId));
+  console.log('  ISSUER_ID  ', mask(issuerId));
+  console.log('  BUNDLE_ID  ', bundleId);
+  console.log('  PRIVATE_KEY', mask(privateKey));
+  console.log('  SANDBOX    ', sandbox);
+  console.log('  ENABLED    ', 'true');
+
+  const rows = await api('/services?name=' + encodeURIComponent(SERVICE_NAME) + '&limit=20');
+  const svcRow = (rows || []).find((row) => (row.service || row).name === SERVICE_NAME);
+  if (!svcRow) throw new Error('Service ' + SERVICE_NAME + ' not found');
+  const service = svcRow.service || svcRow;
+  console.log('Service:', service.id, service.name);
+
+  for (const [k, v] of Object.entries(VARS)) {
+    await upsertEnvVar(service.id, k, v);
+    console.log('  set', k, k.includes('PRIVATE') ? mask(v) : v);
+  }
+
+  if (doDeploy) {
+    const deploy = await api('/services/' + service.id + '/deploys', {
+      method: 'POST',
+      body: JSON.stringify({ clearCache: 'do_not_clear' }),
+    });
+    const row = deploy.deploy || deploy;
+    console.log('Deploy triggered:', row.id, row.status || 'started');
+    await waitForLive(service.id);
+    for (let i = 0; i < 8; i += 1) {
+      const ready = await verifyCatalogReady();
+      console.log('  catalog iosPurchaseReady=' + ready);
+      if (ready) {
+        console.log('OK — Apple IAP verification is live.');
+        return;
+      }
+      await new Promise((r) => setTimeout(r, 10000));
+    }
+    console.warn('Deploy finished but catalog still reports iosPurchaseReady=false — check service logs.');
+  } else {
+    console.log('Re-run with --deploy to redeploy and verify catalog.');
+  }
+}
+
+main().catch((err) => {
+  console.error(err.message || err);
+  process.exit(1);
+});

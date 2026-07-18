@@ -92,6 +92,16 @@ function findUserByOriginalTransactionId(originalTransactionId) {
   );
 }
 
+function findUserByAppAccountToken(appAccountToken) {
+  const key = String(appAccountToken || '').trim().toLowerCase();
+  if (!key) return null;
+  return (
+    loadUsers().find(
+      (u) => String(u.subscription?.appAccountToken || '').trim().toLowerCase() === key
+    ) || null
+  );
+}
+
 function updateUser(email, patch) {
   const normalized = String(email || '').trim().toLowerCase();
   const users = loadUsers();
@@ -131,6 +141,7 @@ module.exports = {
   saveUsers,
   findUserByEmail,
   findUserByOriginalTransactionId,
+  findUserByAppAccountToken,
   updateUser,
   deleteUser,
   migrateUsersFromLegacyIfNeeded,

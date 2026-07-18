@@ -76,12 +76,9 @@ function createAppStoreJwt(config = readAppleIapConfig()) {
   return `${signingInput}.${signature}`;
 }
 
-async function fetchTransaction(transactionId, config = readAppleIapConfig()) {
-  const id = String(transactionId || '').trim();
-  if (!id) throw new Error('transactionId is required.');
-  const base = config.sandbox ? SANDBOX_BASE : PRODUCTION_BASE;
+async function fetchTransactionOnce(transactionId, config, base) {
   const token = createAppStoreJwt(config);
-  const res = await fetch(`${base}/inApps/v1/transactions/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${base}/inApps/v1/transactions/${encodeURIComponent(transactionId)}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/json',
@@ -94,6 +91,23 @@ async function fetchTransaction(transactionId, config = readAppleIapConfig()) {
   } catch {
     body = { raw: text };
   }
+  return { res, body };
+}
+
+async function fetchTransaction(transactionId, config = readAppleIapConfig()) {
+  const id = String(transactionId || '').trim();
+  if (!id) throw new Error('transactionId is required.');
+  const primaryBase = config.sandbox ? SANDBOX_BASE : PRODUCTION_BASE;
+  let { res, body } = await fetchTransactionOnce(id, config, primaryBase);
+
+  // Production → sandbox fallback (common for TestFlight / App Review sandbox txs).
+  if (!res.ok && !config.sandbox && (res.status === 404 || res.status === 400)) {
+    const fallback = await fetchTransactionOnce(id, { ...config, sandbox: true }, SANDBOX_BASE);
+    if (fallback.res.ok) {
+      return { ...fallback.body, __appleEnvironment: 'Sandbox' };
+    }
+  }
+
   if (!res.ok) {
     const err = new Error(body?.errorMessage || body?.error || `Apple API HTTP ${res.status}`);
     err.status = res.status;
@@ -116,14 +130,37 @@ function decodeJwsPayload(signedPayload) {
 async function verifyStoreKitTransaction(transactionId, config = readAppleIapConfig()) {
   const body = await fetchTransaction(transactionId, config);
   const signedTransaction = body?.signedTransactionInfo || body?.signedTransaction || null;
-  const decoded = signedTransaction ? decodeJwsPayload(signedTransaction) : body;
+  let decoded = body;
+  if (signedTransaction) {
+    try {
+      const { verifyAppleSignedJws } = require('./apple-jws-verify');
+      decoded = verifyAppleSignedJws(signedTransaction).payload;
+    } catch (err) {
+      // Fall back to unsigned decode only when roots/certs unavailable in local/dev.
+      if (process.env.NODE_ENV === 'production' && process.env.APPLE_IAP_REQUIRE_JWS !== 'false') {
+        throw err;
+      }
+      decoded = decodeJwsPayload(signedTransaction);
+    }
+  }
+  const expiresDate = decoded?.expiresDate ?? decoded?.expires_date ?? null;
+  if (expiresDate != null && Number(expiresDate) > 0 && Number(expiresDate) <= Date.now()) {
+    const err = new Error('Apple subscription period has already ended.');
+    err.code = 'subscription_expired';
+    err.expiresDate = expiresDate;
+    throw err;
+  }
   return {
     ok: true,
     transactionId: decoded?.transactionId || transactionId,
     productId: decoded?.productId || null,
     originalTransactionId: decoded?.originalTransactionId || null,
-    expiresDate: decoded?.expiresDate || null,
-    environment: decoded?.environment || (config.sandbox ? 'Sandbox' : 'Production'),
+    appAccountToken: decoded?.appAccountToken || null,
+    expiresDate,
+    environment:
+      decoded?.environment ||
+      body?.__appleEnvironment ||
+      (config.sandbox ? 'Sandbox' : 'Production'),
     raw: decoded,
   };
 }

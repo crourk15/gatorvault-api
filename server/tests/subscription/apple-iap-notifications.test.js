@@ -38,7 +38,7 @@ test('parseAppleNotification decodes nested transaction', () => {
       expiresDate: Date.now() + 86400000,
     },
   });
-  const parsed = parseAppleNotification(token);
+  const parsed = parseAppleNotification(token, { verify: false });
   assert.equal(parsed.type, 'DID_RENEW');
   assert.equal(parsed.transaction.productId, 'com.gatorvaultinsider.film.monthly');
 });
@@ -69,7 +69,7 @@ test('handleAppleServerNotification activates subscription for known user', () =
       expiresDate: Date.now() + 86400000,
     },
   });
-  const result = handleAppleServerNotification(token);
+  const result = handleAppleServerNotification(token, { verify: false });
   assert.equal(result.handled, true);
   assert.equal(result.action, 'activated');
 
@@ -106,7 +106,7 @@ test('handleAppleServerNotification revokes expired subscription', () => {
       transactionId: 'tx-exp',
     },
   });
-  const result = handleAppleServerNotification(token);
+  const result = handleAppleServerNotification(token, { verify: false });
   assert.equal(result.handled, true);
   assert.equal(result.action, 'revoked');
 

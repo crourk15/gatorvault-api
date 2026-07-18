@@ -72,10 +72,13 @@ function getTierBenefitsHtml(tier) {
     .join('');
 }
 
-function welcomeEmailHtml({ name, email, tier } = {}) {
+function welcomeEmailHtml({ name, email, tier, trialEndStr } = {}) {
   const displayName = name || (email ? email.split('@')[0] : 'there');
   const tierLabel = getTierLabel(tier);
   const benefits = getTierBenefitsHtml(tier);
+  const trialLine = trialEndStr
+    ? `Your free 30-day trial is active through <strong>${trialEndStr}</strong>. No payment method is required during the trial.`
+    : 'Your free 30-day trial is active. No payment method is required during the trial.';
 
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -107,8 +110,8 @@ function welcomeEmailHtml({ name, email, tier } = {}) {
   <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Your vault stays unlocked for the full 30-day trial.</p>
   <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">New drops appear automatically — no extra emails needed.</p>
   <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Request custom scenes anytime: <a href="mailto:${SUPPORT_EMAIL}" style="color:#FA4616;">${SUPPORT_EMAIL}</a></p>
-  <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Membership renews automatically unless canceled.</p>
-  <p style="margin:0 0 20px;font-size:14px;line-height:1.55;">You can upgrade/downgrade anytime inside your vault.</p>
+  <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">${trialLine}</p>
+  <p style="margin:0 0 20px;font-size:14px;line-height:1.55;">After your trial, continue in the GatorVault iOS app with Apple In-App Purchase. App Store subscriptions renew automatically unless canceled at least 24 hours before the period ends.</p>
 
   <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">🧭 Quick Start Guide</p>
   <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Bookmark your vault</p>
@@ -131,11 +134,11 @@ function welcomeEmailHtml({ name, email, tier } = {}) {
 </table></td></tr></table></body></html>`;
 }
 
-function getWelcomeEmail({ name, email, tier }) {
+function getWelcomeEmail({ name, email, tier, trialEndStr } = {}) {
   const tierLabel = getTierLabel(tier);
   return {
     subject: WELCOME_SUBJECT,
-    html: welcomeEmailHtml({ name, email, tier }),
+    html: welcomeEmailHtml({ name, email, tier, trialEndStr }),
     tier: tierLabel,
     templateParams: {
       name: name || (email || '').split('@')[0],
@@ -145,7 +148,8 @@ function getWelcomeEmail({ name, email, tier }) {
       vault_url: VAULT_URL,
       vault_link_label: VAULT_LINK_LABEL,
       vault_url_display: VAULT_URL_DISPLAY,
-      support_email: SUPPORT_EMAIL
+      support_email: SUPPORT_EMAIL,
+      trial_end: trialEndStr || '',
     }
   };
 }

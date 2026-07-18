@@ -185,6 +185,19 @@
   margin-top: 0.75rem;
 }
 
+.gv-membership__subscribe-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.gv-membership__subscribe-row .gv-membership__subscribe-btn,
+.gv-membership__subscribe-row .gv-membership__secondary-btn {
+  margin-top: 0;
+  flex: 1 1 10rem;
+}
+
 .gv-membership__subscribe-btn,
 .gv-membership__secondary-btn {
   margin-top: 0.75rem;
