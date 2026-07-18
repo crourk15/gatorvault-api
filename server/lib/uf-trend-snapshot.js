@@ -245,9 +245,10 @@ function getUfTrendStoreInfo() {
 function applySnapshotMovement(players = [], { asOf = new Date(), minAbs = 1 } = {}) {
   const slugs = players.map((p) => p.slug).filter(Boolean);
   recordGvSnapshots(players, asOf);
+  // Prefer gatorvault points; allow legacy unsourced rows so redeployed history still moves.
   const deltaMap = buildDelta7dBySlug(slugs, asOf, {
     preferSource: "gatorvault",
-    requireSource: true,
+    requireSource: false,
   });
   return players.map((p) => {
     const key = slugKey(p.slug);
