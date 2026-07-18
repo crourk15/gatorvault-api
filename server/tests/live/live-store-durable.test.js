@@ -44,4 +44,22 @@ describe('live-store durable beat cache', () => {
     assert.equal(cache.posts.length, 1);
     assert.equal(cache.source, 'x');
   });
+
+  it('auto-uses /var/data/live in production when disk is mounted and env is unset', () => {
+    delete process.env.GV_LIVE_DATA_DIR;
+    const prevNode = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'production';
+    const existsSync = fs.existsSync;
+    fs.existsSync = (p) => (p === '/var/data' ? true : existsSync(p));
+    delete require.cache[require.resolve('../../lib/live-store')];
+    try {
+      const store = require('../../lib/live-store');
+      assert.equal(store.DATA_DIR, '/var/data/live');
+      assert.equal(store.getLiveStoreInfo().pathIsDurable, true);
+    } finally {
+      fs.existsSync = existsSync;
+      if (prevNode == null) delete process.env.NODE_ENV;
+      else process.env.NODE_ENV = prevNode;
+    }
+  });
 });
