@@ -4,11 +4,46 @@
 const fs = require("fs");
 const path = require("path");
 
-const SNAPSHOT_PATH = path.join(__dirname, "..", "data", "futurecast", "uf-trend-snapshots.json");
+const BUNDLE_SNAPSHOT_PATH = path.join(
+  __dirname,
+  "..",
+  "data",
+  "futurecast",
+  "uf-trend-snapshots.json"
+);
 const MAX_DAYS_PER_SLUG = 45;
 const DELTA_WINDOW_DAYS = 7;
 
+function resolveSnapshotPath() {
+  const fromEnv = String(process.env.GV_FUTURECAST_DATA_DIR || "").trim();
+  if (fromEnv) return path.join(fromEnv, "uf-trend-snapshots.json");
+  try {
+    if (process.env.NODE_ENV === "production" && fs.existsSync("/var/data")) {
+      return path.join("/var/data/futurecast", "uf-trend-snapshots.json");
+    }
+  } catch {
+    /* ignore */
+  }
+  return BUNDLE_SNAPSHOT_PATH;
+}
+
+const SNAPSHOT_PATH = resolveSnapshotPath();
+
+function migrateSnapshotIfNeeded() {
+  if (path.resolve(SNAPSHOT_PATH) === path.resolve(BUNDLE_SNAPSHOT_PATH)) return;
+  if (fs.existsSync(SNAPSHOT_PATH)) return;
+  if (!fs.existsSync(BUNDLE_SNAPSHOT_PATH)) return;
+  try {
+    fs.mkdirSync(path.dirname(SNAPSHOT_PATH), { recursive: true });
+    fs.copyFileSync(BUNDLE_SNAPSHOT_PATH, SNAPSHOT_PATH);
+    console.log("[uf-trend-snapshot] migrated snapshots →", SNAPSHOT_PATH);
+  } catch (err) {
+    console.warn("[uf-trend-snapshot] migrate failed:", err.message);
+  }
+}
+
 function readDoc() {
+  migrateSnapshotIfNeeded();
   try {
     const raw = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, "utf8"));
     return {
@@ -155,21 +190,52 @@ function buildDelta7dBySlug(slugs, asOf = new Date(), options = {}) {
  */
 function recordGvSnapshots(players = [], asOf = new Date()) {
   const dayKey = ymd(asOf);
+  const doc = readDoc();
   let written = 0;
   for (const p of players) {
     const slug = slugKey(p?.slug);
     const ufPct = clampPct(p?.ufProbability ?? p?.ufPct ?? p?.ufConfidence);
     if (!slug || ufPct == null) continue;
-    if (
-      upsertSnapshot(slug, ufPct, dayKey, {
-        source: "gatorvault",
-        rpmPct: p?.ufRpmPct ?? p?.rpmPct ?? null,
-      })
-    ) {
-      written += 1;
+    const rpmPct =
+      p?.ufRpmPct != null || p?.rpmPct != null
+        ? clampPct(p?.ufRpmPct ?? p?.rpmPct)
+        : null;
+    const rows = doc.snapshots[slug] || [];
+    const idx = rows.findIndex((row) => row.date === dayKey);
+    const next = { date: dayKey, ufPct, source: "gatorvault" };
+    if (rpmPct != null) next.rpmPct = rpmPct;
+    if (idx >= 0) rows[idx] = { ...rows[idx], ...next };
+    else rows.push(next);
+    rows.sort((a, b) => String(a.date).localeCompare(String(b.date)));
+    doc.snapshots[slug] = rows.slice(-MAX_DAYS_PER_SLUG);
+    written += 1;
+  }
+  if (written) writeDoc(doc);
+  return { written, dayKey };
+}
+
+function getUfTrendStoreInfo() {
+  const doc = readDoc();
+  const snapshots = doc.snapshots || {};
+  let latestDate = null;
+  let multiPointSlugs = 0;
+  for (const rows of Object.values(snapshots)) {
+    if (Array.isArray(rows) && rows.length >= 2) multiPointSlugs += 1;
+    for (const row of rows || []) {
+      const d = String(row?.date || "").slice(0, 10);
+      if (d && (!latestDate || d > latestDate)) latestDate = d;
     }
   }
-  return { written, dayKey };
+  return {
+    path: SNAPSHOT_PATH,
+    durable:
+      Boolean(String(process.env.GV_FUTURECAST_DATA_DIR || "").trim()) ||
+      String(SNAPSHOT_PATH).startsWith("/var/data"),
+    updatedAt: doc.updatedAt || null,
+    latestDate,
+    slugCount: Object.keys(snapshots).length,
+    multiPointSlugs,
+  };
 }
 
 /**
@@ -405,6 +471,7 @@ async function backfillUfTrendSnapshots(options = {}) {
 
 module.exports = {
   SNAPSHOT_PATH,
+  BUNDLE_SNAPSHOT_PATH,
   DELTA_WINDOW_DAYS,
   TREND_HISTORY_DAYS,
   readDoc,
@@ -417,6 +484,7 @@ module.exports = {
   mergeDelta7dMaps,
   backfillBaseline,
   recordGvSnapshots,
+  getUfTrendStoreInfo,
   applySnapshotMovement,
   runDailyUfTrendSnapshot,
   backfillUfTrendSnapshots,

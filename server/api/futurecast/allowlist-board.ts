@@ -614,7 +614,66 @@ export async function loadBoardPlayersForSlugs(
     });
   }
 
-  return players.sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1));
+  const withTrend = enrichBoardPlayersWithUfTrendMovement(players);
+  return withTrend.sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1));
+}
+
+/**
+ * Lab movement: fill null / seed±4 deltas from durable daily UF% snapshots.
+ * Records today's GV confidence so history keeps growing between cron runs.
+ */
+function enrichBoardPlayersWithUfTrendMovement(
+  players: FutureCastBoardPlayer[]
+): FutureCastBoardPlayer[] {
+  if (!players.length) return players;
+  try {
+    const ufTrend = require('../../lib/uf-trend-snapshot');
+    ufTrend.recordGvSnapshots(
+      players.map((p) => ({
+        slug: p.slug,
+        ufConfidence: p.ufConfidence,
+        ufProbability: p.ufConfidence,
+        ufPct: p.ufConfidence,
+        ufRpmPct: p.ufRpmPct,
+      }))
+    );
+    const deltaMap = ufTrend.buildDelta7dBySlug(
+      players.map((p) => p.slug),
+      new Date(),
+      { preferSource: 'gatorvault', requireSource: true }
+    ) as Map<string, number>;
+
+    return players.map((p) => {
+      const key = String(p.slug || '').toLowerCase();
+      const snapRaw = deltaMap.get(key);
+      const snapDelta =
+        snapRaw != null && Number.isFinite(snapRaw) && Math.abs(snapRaw) >= 1
+          ? Math.round(snapRaw)
+          : null;
+      const existing = p.trendDelta7d;
+      const existingAbs = existing == null || !Number.isFinite(Number(existing)) ? null : Math.abs(Number(existing));
+      const seedFlat = existingAbs === 4;
+
+      let trendDelta7d = existing;
+      if (seedFlat) trendDelta7d = snapDelta;
+      else if (existing == null) trendDelta7d = snapDelta;
+
+      const volatility7d =
+        p.volatility7d > 0
+          ? p.volatility7d
+          : trendDelta7d != null
+            ? Math.round(Math.abs(Number(trendDelta7d)) * 100) / 100
+            : 0;
+
+      return { ...p, trendDelta7d, volatility7d };
+    });
+  } catch (err) {
+    console.warn(
+      '[allowlist-board] uf-trend enrich failed:',
+      err instanceof Error ? err.message : err
+    );
+    return players;
+  }
 }
 
 export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlayer[]> {
