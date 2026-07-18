@@ -124,12 +124,21 @@ function loadAdminAllowlistSlugs() {
   }
 }
 
+function loadLabPromotionSlugs(classYear) {
+  try {
+    return [...require('./lab-promotions-store').getLabSlugSet(classYear)];
+  } catch {
+    return [];
+  }
+}
+
 function getAllowlistSet(classYear) {
   const year = parseInt(classYear, 10);
   const admin = loadAdminAllowlistSlugs();
   const base = year === 2027 ? ALLOWLIST_2027 : year === 2028 ? ALLOWLIST_2028 : [];
   const extra = year === 2027 ? admin.slugs2027 : year === 2028 ? admin.slugs2028 : [];
-  return new Set([...base, ...extra].map((s) => canonicalTargetSlug(s)));
+  const promoted = loadLabPromotionSlugs(year);
+  return new Set([...base, ...extra, ...promoted].map((s) => canonicalTargetSlug(s)));
 }
 
 function getMergedCanonicalNames() {

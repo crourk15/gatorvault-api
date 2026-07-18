@@ -113,6 +113,15 @@ const JOBS = {
       return runRivalsPredictionIngest();
     }
   },
+  'lab-intel-promote': {
+    label: 'FutureCast Lab intel promote (offer/OV/prediction → board)',
+    subsystem: 'cron:lab-intel-promote',
+    schedule: 'With recruiting ingest + on demand',
+    async run(opts = {}) {
+      const { runLabIntelPromote } = require('./lab-intel-promote');
+      return runLabIntelPromote({ dryRun: opts.dryRun === true });
+    }
+  },
   'media-ingest': {
     label: 'Media ingest',
     subsystem: 'cron:media-ingest',

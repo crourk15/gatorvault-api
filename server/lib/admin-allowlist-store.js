@@ -1,13 +1,43 @@
 /**
  * Runtime allowlist additions — merged with locked code allowlist for board placement.
+ * Durable on Render when /var/data is mounted.
  */
 const fs = require('fs');
 const path = require('path');
 const { slugify } = require('./slug');
 
-const ALLOWLIST_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'admin-allowlist.json');
+const BUNDLE_ALLOWLIST_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'admin-allowlist.json');
+
+function resolveAllowlistPath() {
+  const fromEnv = String(process.env.GV_ADMIN_ALLOWLIST_PATH || '').trim();
+  if (fromEnv) return fromEnv;
+  try {
+    if (process.env.NODE_ENV === 'production' && fs.existsSync('/var/data')) {
+      return '/var/data/recruiting/admin-allowlist.json';
+    }
+  } catch {
+    /* ignore */
+  }
+  return BUNDLE_ALLOWLIST_PATH;
+}
+
+const ALLOWLIST_PATH = resolveAllowlistPath();
+
+function migrateIfNeeded() {
+  if (path.resolve(ALLOWLIST_PATH) === path.resolve(BUNDLE_ALLOWLIST_PATH)) return;
+  if (fs.existsSync(ALLOWLIST_PATH)) return;
+  if (!fs.existsSync(BUNDLE_ALLOWLIST_PATH)) return;
+  try {
+    fs.mkdirSync(path.dirname(ALLOWLIST_PATH), { recursive: true });
+    fs.copyFileSync(BUNDLE_ALLOWLIST_PATH, ALLOWLIST_PATH);
+    console.log('[admin-allowlist] migrated →', ALLOWLIST_PATH);
+  } catch (err) {
+    console.warn('[admin-allowlist] migrate failed:', err.message);
+  }
+}
 
 function readDoc() {
+  migrateIfNeeded();
   try {
     return JSON.parse(fs.readFileSync(ALLOWLIST_PATH, 'utf8'));
   } catch {
