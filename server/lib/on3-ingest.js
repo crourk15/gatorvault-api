@@ -923,6 +923,15 @@ async function runOn3IngestInner(options = {}) {
   }
 
   try {
+    if (process.env.LAB_INTEL_PROMOTE !== 'false') {
+      const { runLabIntelPromote } = require('./lab-intel-promote');
+      result.labIntelPromote = await runLabIntelPromote();
+    }
+  } catch (e) {
+    result.errors.push({ type: 'lab_intel_promote', error: e.message });
+  }
+
+  try {
     if (store.storageMode() !== 'supabase') {
       const { demoteNonAllowlistedTargets } = require('./recruiting-target-allowlist');
       const players = await store.getAllPlayers();

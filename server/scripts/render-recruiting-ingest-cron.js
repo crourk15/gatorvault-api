@@ -46,6 +46,16 @@ function buildSteps() {
       softFailure: r?.softFailure === true,
     }),
   });
+  if (process.env.LAB_INTEL_PROMOTE !== 'false') {
+    steps.push({
+      name: 'lab-promote',
+      path: '/api/futurecast/lab-promote',
+      summarize: (r) => ({
+        promotedLab: r?.promotedLab ?? null,
+        promotedWatchlist: r?.promotedWatchlist ?? null,
+      }),
+    });
+  }
   return steps;
 }
 

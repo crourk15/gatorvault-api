@@ -32,6 +32,12 @@ function loadFreshness() {
     const ageDays = Number.isFinite(latestMs)
       ? Math.max(0, Math.round((Date.now() - latestMs) / (24 * 60 * 60 * 1000)))
       : null;
+    let labPromote = null;
+    try {
+      labPromote = require('../../lib/lab-promotions-store').getStoreInfo();
+    } catch {
+      labPromote = null;
+    }
     return {
       ufTrend: {
         durable: trend.durable === true,
@@ -43,6 +49,7 @@ function loadFreshness() {
         stale: ageDays == null ? true : ageDays > 2,
       },
       rivalsPmLastRun,
+      labPromote,
     };
   } catch (err) {
     return {
