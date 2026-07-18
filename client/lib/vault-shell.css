@@ -4025,6 +4025,32 @@ a.gv-live-feed__row-title:hover {
   background: rgba(250, 70, 22, 0.15);
 }
 
+.gv-roster-profile__portal-panel {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gv-roster-profile__portal-panel-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.gv-roster-profile__portal-panel-text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.gv-roster-profile__portal-link {
+  margin: 0.55rem 0 0;
+}
+
 .gv-roster-profile__panel {
   padding: 1rem;
   border-radius: 0.75rem;

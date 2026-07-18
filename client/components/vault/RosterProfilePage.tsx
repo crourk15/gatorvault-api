@@ -32,6 +32,7 @@ import { usePathname } from '@/lib/use-pathname';
 import { isVaultPath } from '@/lib/vault-routes';
 import { PlayerNavLink } from '@/components/vault/PlayerNavLink';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
+import { useUser } from '@/hooks/useUser';
 
 const ACE_PORTAL_SLUG = 'eric-singleton-jr';
 
@@ -282,6 +283,8 @@ export function RosterProfilePage({
 }): React.ReactElement {
   const pathname = usePathname();
   const inVault = isVaultPath(pathname);
+  const { user } = useUser();
+  const loggedIn = !!(user?.email?.trim() && user?.token?.trim());
   const portalTag = portalRosterLabel(player);
   const isAce = player.slug === ACE_PORTAL_SLUG;
   const showStats = hasProductionStats(player);
@@ -475,11 +478,26 @@ export function RosterProfilePage({
           />
           <ProductionStatsOverview player={player} />
           {isPortalRosterPlayer(player) ? (
-            <p className="gv-roster-profile__portal-link">
-              <PlayerNavLink href={playerProfilePath(player.slug, 'PORTAL', true, player.name, 'recruiting')}>
-                View Portal Intel →
-              </PlayerNavLink>
-            </p>
+            <div className="gv-roster-profile__portal-panel" data-testid="roster-portal-path">
+              <h3 className="gv-roster-profile__portal-panel-title">Portal path</h3>
+              <p className="gv-roster-profile__portal-panel-text">
+                {player.transferInfo || 'Arrived via the transfer portal.'}
+              </p>
+              {/*
+                Recruiting player routes are auth-gated. Never send Team preview /
+                logged-out vault browsers into /vault/recruiting/player/:slug or
+                they bounce to the sign-in page (Aaron Philo, Singleton, etc.).
+              */}
+              {loggedIn ? (
+                <p className="gv-roster-profile__portal-link">
+                  <PlayerNavLink
+                    href={playerProfilePath(player.slug, 'PORTAL', true, player.name, 'recruiting')}
+                  >
+                    Open full portal profile →
+                  </PlayerNavLink>
+                </p>
+              ) : null}
+            </div>
           ) : null}
         </div>
       )}
