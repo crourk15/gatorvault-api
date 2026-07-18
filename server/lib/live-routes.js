@@ -3,9 +3,20 @@ const { refreshLiveDashboard, getDashboard } = require('./live-aggregator');
 const gm2 = require('./gm2');
 
 const { verifyAdminPin, pinFromReq: adminPinFromReq } = require('./admin-pin');
+const { isIngestCronAuthorized } = require('./ingest-cron-auth');
 
 function pinFromReq(req) {
   return adminPinFromReq(req) || req.headers['x-live-pin'];
+}
+
+/** Beat refresh auth — never treat undefined LIVE_CRON_SECRET as a match. */
+function isBeatRefreshAuthorized(req) {
+  const liveCron = String(process.env.LIVE_CRON_SECRET || '').trim();
+  const headerLiveCron = String(req.headers['x-live-cron'] || '').trim();
+  if (liveCron && headerLiveCron && headerLiveCron === liveCron) return true;
+  if (isIngestCronAuthorized(req)) return true;
+  if (verifyAdminPin(pinFromReq(req))) return true;
+  return false;
 }
 
 function mountLiveRoutes(app) {
@@ -125,15 +136,19 @@ function mountLiveRoutes(app) {
   });
 
   app.post('/api/live/beat/refresh', async (req, res) => {
-    const pin = pinFromReq(req);
-    const isCron = req.headers['x-live-cron'] === process.env.LIVE_CRON_SECRET;
-    if (!isCron && !verifyAdminPin(pin)) {
+    if (!isBeatRefreshAuthorized(req)) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN or cron secret' });
     }
     try {
       const liveBeat = require('./live-beat');
       const refreshed = await liveBeat.refreshBeatStream();
       const beat = liveBeat.getBeatPosts(parseInt(req.query.limit || '40', 10));
+      try {
+        const pipelineHealth = require('./pipeline-health');
+        pipelineHealth.recordBeatPull(refreshed);
+      } catch (healthErr) {
+        console.warn('[live/beat/refresh] pipeline health:', healthErr.message);
+      }
       try {
         const dashCache = require('./live-dashboard-cache');
         dashCache.clearDashboardCache();
@@ -203,13 +218,7 @@ function mountLiveRoutes(app) {
   });
 
   app.post('/api/live/refresh', async (req, res) => {
-    const pin = pinFromReq(req);
-    const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.INGEST_CRON_SECRET || '';
-    const isCron =
-      req.headers['x-live-cron'] === process.env.LIVE_CRON_SECRET ||
-      (cronSecret && req.headers['x-monitoring-cron'] === cronSecret) ||
-      (cronSecret && req.headers['x-ingest-secret'] === cronSecret);
-    if (!isCron && !verifyAdminPin(pin)) {
+    if (!isBeatRefreshAuthorized(req)) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
     try {

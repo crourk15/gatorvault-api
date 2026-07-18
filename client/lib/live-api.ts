@@ -95,19 +95,10 @@ export function normalizePodcastShow(raw: Record<string, unknown>): PodcastShow 
   };
 }
 
-export async function fetchLiveDashboard(
-  limit = 40,
-  options: { force?: boolean } = {}
-): Promise<LiveDashboard> {
-  const qs = new URLSearchParams({ limit: String(limit) });
-  if (options.force) qs.set('refresh', '1');
-  const path = `/api/live/dashboard?${qs.toString()}`;
-
-  const data = await snapshotFirstFetch(path, () => snapshotLiveFetch<LiveDashboard & {
-    ok?: boolean;
-    podcasts?: { shows?: Record<string, unknown>[] };
-  }>(path));
-
+function normalizeLiveDashboard(data: LiveDashboard & {
+  ok?: boolean;
+  podcasts?: { shows?: Record<string, unknown>[] };
+}): LiveDashboard {
   const rawShows = data.podcasts?.shows ?? [];
   return {
     feed: data.feed ?? [],
@@ -120,6 +111,31 @@ export async function fetchLiveDashboard(
     cacheAgeMs: data.cacheAgeMs ?? null,
     stale: data.stale,
   };
+}
+
+export async function fetchLiveDashboard(
+  limit = 40,
+  options: { force?: boolean } = {}
+): Promise<LiveDashboard> {
+  const qs = new URLSearchParams({ limit: String(limit) });
+  if (options.force) qs.set('refresh', '1');
+  const path = `/api/live/dashboard?${qs.toString()}`;
+
+  // Force polls skip browser SWR so an empty local cache cannot hide a fresh beat pull.
+  if (options.force) {
+    const live = await snapshotLiveFetch<LiveDashboard & {
+      ok?: boolean;
+      podcasts?: { shows?: Record<string, unknown>[] };
+    }>(path);
+    return normalizeLiveDashboard(live);
+  }
+
+  const data = await snapshotFirstFetch(path, () => snapshotLiveFetch<LiveDashboard & {
+    ok?: boolean;
+    podcasts?: { shows?: Record<string, unknown>[] };
+  }>(path));
+
+  return normalizeLiveDashboard(data);
 }
 
 /** Build social lanes from beat posts for ESPN-style layout. */

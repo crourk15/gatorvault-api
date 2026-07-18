@@ -1,4 +1,44 @@
 module.exports = (app) => {
+  /**
+   * Public ops probe for durable auth + live beat disk (no secrets / emails).
+   * Confirms Render /var/data mount + GV_* path env without Dashboard access.
+   */
+  app.get('/api/auth/store-status', (_req, res) => {
+    try {
+      const fs = require('fs');
+      const userStore = require('./user-store');
+      const users = userStore.getUsersStoreInfo();
+      let live = null;
+      try {
+        live = require('./live-store').getLiveStoreInfo();
+      } catch {
+        live = null;
+      }
+      const diskMountPresent = fs.existsSync('/var/data');
+      const pathIsDurable = String(users.path || '').startsWith('/var/data');
+      return res.status(200).json({
+        ok: true,
+        auth: {
+          durableEnv: users.durableEnv === true,
+          pathIsDurable,
+          diskMountPresent,
+          accountCount: users.count,
+          pathHint: pathIsDurable ? '/var/data/users.json' : 'ephemeral',
+        },
+        live: live
+          ? {
+              durableEnv: live.durableEnv === true,
+              diskMountPresent: live.diskMountPresent === true,
+              dataDirHint: live.durableEnv ? '/var/data/live' : 'ephemeral',
+            }
+          : null,
+        confirmed: diskMountPresent && users.durableEnv === true && pathIsDurable,
+      });
+    } catch (err) {
+      return res.status(200).json({ ok: false, error: err.message, confirmed: false });
+    }
+  });
+
   /** Render liveness probe — must return 2xx while the process is listening. */
   app.get('/health', (_req, res) => {
     const rssMb = Math.round(process.memoryUsage().rss / 1024 / 1024);

@@ -5,7 +5,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const STATUS_PATH = path.join(__dirname, '..', 'data', 'live', 'pipeline-health.json');
+function resolveStatusPath() {
+  const liveDir = String(process.env.GV_LIVE_DATA_DIR || '').trim();
+  if (liveDir) return path.join(liveDir, 'pipeline-health.json');
+  return path.join(__dirname, '..', 'data', 'live', 'pipeline-health.json');
+}
+
+const STATUS_PATH = resolveStatusPath();
 
 function nowIso() {
   return new Date().toISOString();
@@ -63,8 +69,17 @@ function recordLiveRefresh(results, error) {
 
 function getHealthReport() {
   const status = load();
-  const beatCache = readJson(path.join(__dirname, '..', 'data', 'live', 'beat-cache.json'), {});
-  const feedCache = readJson(path.join(__dirname, '..', 'data', 'live', 'feed-items.json'), { items: [] });
+  let beatCache = {};
+  let feedItems = [];
+  try {
+    const liveStore = require('./live-store');
+    beatCache = liveStore.loadBeatCache() || {};
+    feedItems = liveStore.loadFeedItems() || [];
+  } catch {
+    beatCache = readJson(path.join(__dirname, '..', 'data', 'live', 'beat-cache.json'), {});
+    feedItems = readJson(path.join(__dirname, '..', 'data', 'live', 'feed-items.json'), []);
+  }
+  const feedCache = { items: feedItems, updatedAt: status.updatedAt || null };
   const on3Snap = readJson(path.join(__dirname, '..', 'data', 'recruiting', 'on3-snapshot.json'), {});
   const articlesRaw = readJson(path.join(__dirname, '..', 'data', 'content', 'articles.json'), []);
   const autoposterStatus = readJson(path.join(__dirname, '..', 'data', 'x', 'autoposter-status.json'), {});
@@ -132,11 +147,22 @@ function recordBeatLateIngest(result) {
   });
 }
 
+/** Beat-only refresh (dedicated cron) — keep lastBeatPull current even when full live-refresh is off. */
+function recordBeatPull(result) {
+  const patch = {
+    lastBeatPull: result?.fetchedAt || nowIso(),
+  };
+  if (result?.error) patch.lastLiveRefreshError = result.error;
+  else if (result && !result.softFailure) patch.lastLiveRefreshError = null;
+  return save(patch);
+}
+
 module.exports = {
   STATUS_PATH,
   load,
   save,
   recordLiveRefresh,
   recordBeatLateIngest,
+  recordBeatPull,
   getHealthReport
 };

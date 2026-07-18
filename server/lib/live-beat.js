@@ -455,7 +455,9 @@ async function refreshBeatStreamInner(cache) {
   let nitterHits = 0;
   let xHits = 0;
 
+  let writerIndex = 0;
   for (const writer of writers) {
+    writerIndex += 1;
     const posts = await fetchWriterPosts(writer);
     if (!posts.length) errors += 1;
     posts.forEach((p) => {
@@ -465,6 +467,22 @@ async function refreshBeatStreamInner(cache) {
     const filtered = filterBeatPosts(posts, { alertBlocks: true });
     blocked += filtered.blocked;
     filtered.kept.forEach((p) => all.push(p));
+
+    // Checkpoint every 5 writers so Starter OOM/restart keeps a partial pool.
+    if (all.length && writerIndex % 5 === 0) {
+      const partial = [...all]
+        .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
+        .slice(0, 80);
+      store.saveBeatCache({
+        posts: partial,
+        fetchedAt: store.nowIso(),
+        source: xHits > 0 ? 'x' : nitterHits > 0 ? 'nitter' : 'partial',
+        blockedNational: blocked,
+        error: null,
+        tokenStatus: { configured: tokenStatus.configured, ok: tokenStatus.ok },
+        partial: true,
+      });
+    }
   }
 
   all.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));

@@ -4,12 +4,22 @@ const gvClass = require('./gv-classification');
 const { feedDedupeKeyForCommit, commitFingerprint } = require('./commit-fingerprint');
 const feedDedup = require('./live-feed-dedup');
 
-const DATA_DIR = path.join(__dirname, '..', 'data', 'live');
-const WRITERS_PATH = path.join(DATA_DIR, 'writers.json');
-const PODCASTS_PATH = path.join(DATA_DIR, 'podcasts.json');
+/** Bundled seed/writers live here; mutable caches can redirect to GV_LIVE_DATA_DIR (/var/data/live). */
+const BUNDLE_DATA_DIR = path.join(__dirname, '..', 'data', 'live');
+
+function resolveLiveDataDir() {
+  const fromEnv = String(process.env.GV_LIVE_DATA_DIR || '').trim();
+  return fromEnv || BUNDLE_DATA_DIR;
+}
+
+const DATA_DIR = resolveLiveDataDir();
+const WRITERS_PATH = path.join(BUNDLE_DATA_DIR, 'writers.json');
+const PODCASTS_PATH = path.join(BUNDLE_DATA_DIR, 'podcasts.json');
 const FEED_PATH = path.join(DATA_DIR, 'feed-items.json');
 const BEAT_CACHE_PATH = path.join(DATA_DIR, 'beat-cache.json');
 const PODCAST_CACHE_PATH = path.join(DATA_DIR, 'podcast-cache.json');
+const LEGACY_BEAT_CACHE_PATH = path.join(BUNDLE_DATA_DIR, 'beat-cache.json');
+const LEGACY_FEED_PATH = path.join(BUNDLE_DATA_DIR, 'feed-items.json');
 
 const FEED_TYPES = [
   'commit',
@@ -76,7 +86,22 @@ function readJson(filePath, fallback) {
 
 function writeJson(filePath, data) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  const tmp = `${filePath}.${process.pid}.${Date.now()}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2));
+  fs.renameSync(tmp, filePath);
+}
+
+function migrateLiveCacheIfNeeded(destPath, legacyPath) {
+  if (path.resolve(destPath) === path.resolve(legacyPath)) return;
+  if (fs.existsSync(destPath)) return;
+  if (!fs.existsSync(legacyPath)) return;
+  try {
+    fs.mkdirSync(path.dirname(destPath), { recursive: true });
+    fs.copyFileSync(legacyPath, destPath);
+    console.log(`[live-store] migrated ${path.basename(destPath)} → ${destPath}`);
+  } catch (err) {
+    console.warn('[live-store] migrate failed:', err.message);
+  }
 }
 
 function nowIso() {
@@ -96,6 +121,7 @@ function loadPodcasts() {
 }
 
 function loadFeedItems() {
+  migrateLiveCacheIfNeeded(FEED_PATH, LEGACY_FEED_PATH);
   return readJson(FEED_PATH, []);
 }
 
@@ -105,11 +131,21 @@ function saveFeedItems(items) {
 }
 
 function loadBeatCache() {
+  migrateLiveCacheIfNeeded(BEAT_CACHE_PATH, LEGACY_BEAT_CACHE_PATH);
   return readJson(BEAT_CACHE_PATH, { posts: [], fetchedAt: null, source: null });
 }
 
 function saveBeatCache(cache) {
   writeJson(BEAT_CACHE_PATH, cache);
+}
+
+function getLiveStoreInfo() {
+  return {
+    dataDir: DATA_DIR,
+    beatCachePath: BEAT_CACHE_PATH,
+    durableEnv: Boolean(String(process.env.GV_LIVE_DATA_DIR || '').trim()),
+    diskMountPresent: fs.existsSync('/var/data'),
+  };
 }
 
 function loadPodcastCache() {
@@ -274,6 +310,7 @@ function purgeTestFeedItems() {
 
 module.exports = {
   DATA_DIR,
+  BUNDLE_DATA_DIR,
   FEED_TYPES,
   LIVE_FEED_CATEGORIES,
   loadWriters,
@@ -282,6 +319,7 @@ module.exports = {
   saveFeedItems,
   loadBeatCache,
   saveBeatCache,
+  getLiveStoreInfo,
   loadPodcastCache,
   savePodcastCache,
   clearPodcastCache,
