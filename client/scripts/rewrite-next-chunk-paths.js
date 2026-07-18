@@ -312,6 +312,11 @@ function repairSplitChunkRefsInRscFlight(content) {
       /("?\d+"?,")?((?:\/js\/vault-chunks|\/_next\/static\/chunks|static\/chunks)\/(?:app|routes)\/[A-Za-z0-9/_%-]*?)([a-z]{1,6})"\]\)<\/script><script>self\.__next_f\.push\(\[1,"([a-z][a-z0-9/_%-]*-[a-f0-9]{8,}\.js)/g,
       (_, webpackId, prefix, head, tail) => `${webpackId || ''}${prefix}${head}${tail}`
     )
+    // Mid-hash split: …/layout-9"… + "eed2348….js → …/layout-9eed2348….js
+    .replace(
+      /("?\d+"?,")?((?:\/js\/vault-chunks|\/_next\/static\/chunks|static\/chunks)\/(?:app|routes)\/[A-Za-z0-9/_%-]*-[a-f0-9]{1,7})"\]\)<\/script><script>self\.__next_f\.push\(\[1,"([a-f0-9]{1,}\.js)/g,
+      (_, webpackId, prefix, tail) => `${webpackId || ''}${prefix}${tail}`
+    )
     .replace(
       /(static\/chunks\/(?:app|routes)\/[A-Za-z0-9/_%-]+-[a-f0-9]{8,})\."\]\)<\/script><script>self\.__next_f\.push\(\[1,"js/g,
       '$1.js'
@@ -525,7 +530,18 @@ function findUnrewrittenChunkRefs(content) {
     /(?:^|["'\s,[])static\/chunks\/(?:app|routes)\/[^"'\\?\s]+/g,
   ];
   for (const re of patterns) {
-    for (const match of content.matchAll(re)) refs.push(match[0]);
+    for (const match of content.matchAll(re)) {
+      const raw = match[0].replace(/^["'\s,\[]+/, '');
+      // Skip RSC flight fragments split mid-path/hash (e.g. static/chunks/app/layout-9).
+      const rel = raw
+        .replace(/^\/_next\/static\/chunks\/(?:app|routes)\//, '')
+        .replace(/^static\/chunks\/(?:app|routes)\//, '')
+        .replace(/^\/_next\/static\/chunks\//, '');
+      if (!looksLikeCompleteWebpackChunkRel(rel) && !/main-(?:app|entry)-[^/]+-[a-f0-9]{8,}\.js$/i.test(rel)) {
+        continue;
+      }
+      refs.push(match[0]);
+    }
   }
   return refs;
 }
