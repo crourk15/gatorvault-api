@@ -30,6 +30,8 @@ import type { DiscoverySignal } from '@/lib/player-api';
 import { buildPlayerShareUrl } from '@/lib/player-api';
 import { usePathname } from '@/lib/use-pathname';
 import { isVaultPath } from '@/lib/vault-routes';
+import { PlayerNavLink } from '@/components/vault/PlayerNavLink';
+import { VaultNavLink } from '@/components/vault/VaultNavLink';
 
 const ACE_PORTAL_SLUG = 'eric-singleton-jr';
 
@@ -379,7 +381,7 @@ export function RosterProfilePage({
   return (
     <div className="gv-roster-profile gv-roster-profile--v2 fc-profile" data-testid="roster-profile-page">
       <nav className="fc-profile-back">
-        <a
+        <VaultNavLink
           href={backHref}
           onClick={(e) => {
             if (typeof window !== 'undefined' && window.history.length > 1) {
@@ -392,7 +394,7 @@ export function RosterProfilePage({
           }}
         >
           {backLabel}
-        </a>
+        </VaultNavLink>
       </nav>
 
       <header
@@ -474,7 +476,9 @@ export function RosterProfilePage({
           <ProductionStatsOverview player={player} />
           {isPortalRosterPlayer(player) ? (
             <p className="gv-roster-profile__portal-link">
-              <a href={playerProfilePath(player.slug, 'PORTAL', true)}>View Portal Intel →</a>
+              <PlayerNavLink href={playerProfilePath(player.slug, 'PORTAL', true, player.name, 'recruiting')}>
+                View Portal Intel →
+              </PlayerNavLink>
             </p>
           ) : null}
         </div>
@@ -507,7 +511,7 @@ export function RosterProfilePage({
             </div>
           </dl>
           <p className="gv-roster-profile__depth-note">
-            <a href="/vault/team?tab=depth">View full team depth chart →</a>
+            <VaultNavLink href="/vault/team?tab=depth">View full team depth chart →</VaultNavLink>
           </p>
         </div>
       )}

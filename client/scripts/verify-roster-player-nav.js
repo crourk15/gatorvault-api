@@ -53,6 +53,15 @@ mustInclude('hooks/usePlayerProfileRoute.ts', "context === 'roster'");
 mustNot('hooks/usePlayerProfileRoute.ts', 'router.replace');
 mustNot('hooks/usePlayerProfileRoute.ts', 'useRouter');
 
+const bootSrc = fs.readFileSync(path.join(ROOT, 'lib/native-boot-script.ts'), 'utf8');
+const consumeCall = bootSrc.lastIndexOf('consumeSpaPending()');
+const coldCall = bootSrc.lastIndexOf('takeColdStart()');
+if (consumeCall < 0 || coldCall < 0 || consumeCall > coldCall) {
+  failures.push('lib/native-boot-script.ts: consumeSpaPending() must run before takeColdStart() on boot');
+}
+mustInclude('components/vault/VaultNavLink.tsx', 'isNativeCatchAllDynamicHref');
+mustInclude('components/vault/RosterProfilePage.tsx', 'PlayerNavLink');
+
 const resolveSrc = fs.readFileSync(
   path.join(REPO, 'server/api/player/build-full-profile.ts'),
   'utf8'

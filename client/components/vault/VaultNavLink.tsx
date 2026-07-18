@@ -4,7 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import type { LinkProps } from 'next/link';
 import { toAppRelativeHref } from '@/lib/app-href';
-import { navigateNativeCatchAll, shouldUseNativeCatchAllNav } from '@/lib/native-spa-nav';
+import { isNativeCatchAllDynamicHref } from '@/lib/native-spa-nav';
+import { navigateVaultHref } from '@/lib/navigate-vault-href';
 import { prefetchVaultHref, warmVaultPlayerRoute } from '@/lib/vault-navigation';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
 
@@ -48,10 +49,12 @@ export function VaultNavLink({
       prefetch
       scroll
       onClick={(event) => {
-        if (shouldUseNativeCatchAllNav(safeHref)) {
+        // Catch-all player/article shells have no per-slug HTML — never let
+        // Next client routing soft-nav into a missing file (→ marketing `/`).
+        if (isNativeCatchAllDynamicHref(safeHref)) {
           event.preventDefault();
           beginNavigation();
-          navigateNativeCatchAll(safeHref);
+          navigateVaultHref(safeHref);
           onClick?.(event);
           return;
         }
