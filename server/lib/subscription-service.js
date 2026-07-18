@@ -86,10 +86,11 @@ function buildSubscriptionStatus(user) {
     billing: {
       appleIapEnabled: process.env.APPLE_IAP_VERIFICATION_ENABLED === 'true',
       webCheckoutEnabled: false,
+      appStoreUrl: `https://apps.apple.com/app/id${String(process.env.APPLE_APP_APPLE_ID || '6783848215').trim()}`,
       manageInAppHint:
         'Subscriptions purchased in the iOS app are managed in Settings → Apple ID → Subscriptions.',
       manageWebHint:
-        'Paid membership is available through the GatorVault iOS app (Apple In-App Purchase). For billing help, email support.',
+        'Paid membership continues in the GatorVault iOS app. Open the App Store listing, sign in with this same email, then Subscribe or Restore — web Vault unlocks automatically.',
       supportEmail: 'support@gatorvaultinsider.com',
       accountDeletionPath: '/vault/membership/#delete-account',
     },

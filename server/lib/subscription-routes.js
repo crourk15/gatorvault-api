@@ -89,9 +89,52 @@ async function processVerifiedApplePurchase(session, productId, transactionId, r
   });
 }
 
+function buildBillingHealth() {
+  const { isAppleIapReady, readAppleIapConfig } = require('./apple-iap-verify');
+  const { loadAppleRootCerts } = require('./apple-jws-verify');
+  const { getRecentNotifications } = require('./apple-iap-notification-log');
+  const catalog = buildCatalogPayload();
+  const cfg = readAppleIapConfig();
+  const roots = loadAppleRootCerts();
+  const recent = getRecentNotifications(5);
+  return {
+    ok: true,
+    elite: Boolean(isAppleIapReady(cfg) && roots.length >= 1),
+    appleIap: {
+      verificationEnabled: cfg.enabled,
+      configured: isAppleIapReady(cfg),
+      keyId: cfg.keyId || null,
+      bundleId: cfg.bundleId || null,
+      sandbox: cfg.sandbox,
+      rootCertsLoaded: roots.length,
+    },
+    catalog: {
+      iosPurchaseReady: catalog.iosPurchaseReady,
+      appStoreUrl: catalog.appStoreUrl,
+      appAppleId: catalog.appAppleId,
+    },
+    notifications: {
+      url: catalog.notificationsUrl,
+      version: 'v2',
+      jwsVerification: 'required',
+      connectSetup:
+        'App Store Connect → App → App Information → App Store Server Notifications → Production URL',
+      recentCount: recent.entries.length,
+      durableLog: recent.durable,
+      lastAt: recent.updatedAt,
+    },
+    webCheckoutEnabled: false,
+  };
+}
+
 function mountSubscriptionRoutes(app) {
   app.get('/api/subscription/catalog', (_req, res) => {
     res.json(buildCatalogPayload());
+  });
+
+  /** Public billing readiness — safe (no secrets). */
+  app.get('/api/subscription/health', (_req, res) => {
+    res.json(buildBillingHealth());
   });
 
   app.get('/api/subscription/status', (req, res) => {
@@ -210,7 +253,7 @@ function mountSubscriptionRoutes(app) {
     });
   });
 
-  /** App Store Server Notifications V2 — decode payload when Apple IAP is configured. */
+  /** App Store Server Notifications V2 — cryptographically verified JWS. */
   app.post('/api/subscription/apple/notifications', async (req, res) => {
     if (!appleVerificationConfigured()) {
       return res.status(503).json({ ok: false, error: 'Apple notifications not configured.' });
@@ -221,8 +264,27 @@ function mountSubscriptionRoutes(app) {
         return res.status(400).json({ ok: false, error: 'signedPayload is required.' });
       }
       const { handleAppleServerNotification } = require('./apple-iap-notifications');
-      const result = handleAppleServerNotification(signedPayload);
-      console.log('[subscription] apple notification', result);
+      const { appendNotification } = require('./apple-iap-notification-log');
+      const result = handleAppleServerNotification(signedPayload, { verify: true });
+      try {
+        appendNotification({
+          type: result.type || null,
+          action: result.action || null,
+          handled: Boolean(result.handled),
+          reason: result.reason || null,
+          email: result.email || null,
+          verified: Boolean(result.verified),
+          trustedRoot: Boolean(result.trustedRoot),
+        });
+      } catch (logErr) {
+        console.warn('[subscription] notification log failed', logErr.message);
+      }
+      console.log('[subscription] apple notification', {
+        handled: result.handled,
+        action: result.action,
+        type: result.type,
+        verified: result.verified,
+      });
       return res.status(200).json({ ok: true, received: true, ...result });
     } catch (err) {
       console.error('[subscription] apple notification error', err);
@@ -231,4 +293,4 @@ function mountSubscriptionRoutes(app) {
   });
 }
 
-module.exports = { mountSubscriptionRoutes };
+module.exports = { mountSubscriptionRoutes, buildBillingHealth };

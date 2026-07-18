@@ -38,6 +38,7 @@ export type SubscriptionStatus = {
   billing: {
     appleIapEnabled: boolean;
     webCheckoutEnabled: boolean;
+    appStoreUrl?: string;
     manageInAppHint: string;
     manageWebHint?: string;
     supportEmail: string;
@@ -50,6 +51,10 @@ export type SubscriptionCatalog = {
   provider: string;
   trialDays: number;
   subscriptionGroup: string;
+  appAppleId?: string;
+  appStoreUrl?: string;
+  notificationsUrl?: string;
+  membershipUrl?: string;
   tiers: SubscriptionCatalogTier[];
   iosPurchaseReady: boolean;
 };

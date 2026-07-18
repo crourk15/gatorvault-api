@@ -130,7 +130,19 @@ function decodeJwsPayload(signedPayload) {
 async function verifyStoreKitTransaction(transactionId, config = readAppleIapConfig()) {
   const body = await fetchTransaction(transactionId, config);
   const signedTransaction = body?.signedTransactionInfo || body?.signedTransaction || null;
-  const decoded = signedTransaction ? decodeJwsPayload(signedTransaction) : body;
+  let decoded = body;
+  if (signedTransaction) {
+    try {
+      const { verifyAppleSignedJws } = require('./apple-jws-verify');
+      decoded = verifyAppleSignedJws(signedTransaction).payload;
+    } catch (err) {
+      // Fall back to unsigned decode only when roots/certs unavailable in local/dev.
+      if (process.env.NODE_ENV === 'production' && process.env.APPLE_IAP_REQUIRE_JWS !== 'false') {
+        throw err;
+      }
+      decoded = decodeJwsPayload(signedTransaction);
+    }
+  }
   const expiresDate = decoded?.expiresDate ?? decoded?.expires_date ?? null;
   if (expiresDate != null && Number(expiresDate) > 0 && Number(expiresDate) <= Date.now()) {
     const err = new Error('Apple subscription period has already ended.');

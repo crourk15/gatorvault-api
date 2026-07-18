@@ -77,7 +77,7 @@ describe('subscription entitlement elite path', () => {
       },
     });
 
-    const result = handleAppleServerNotification(token);
+    const result = handleAppleServerNotification(token, { verify: false });
     assert.equal(result.handled, true);
     assert.equal(result.action, 'canceled_keep_access');
 

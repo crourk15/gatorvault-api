@@ -106,6 +106,10 @@ services:
         value: com.gatorvaultinsider.app
       - key: APPLE_IAP_SANDBOX
         value: "false"
+      - key: APPLE_APP_APPLE_ID
+        value: "6783848215"
+      - key: GV_APPLE_IAP_NOTIFICATIONS_PATH
+        value: /var/data/subscription/apple-iap-notifications.json
       - key: EMAILJS_USER_ID
         sync: false
       - key: EMAILJS_PRIVATE_KEY
