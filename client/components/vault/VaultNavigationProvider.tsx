@@ -5,7 +5,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { prefetchVaultHref, notifyVaultNavigation, warmVaultBottomNavRoutes, warmVaultDrawerRoutes, warmVaultPlayerRoute, warmRecruitingHubApi } from '@/lib/vault-navigation';
 import { isVaultClientNavHref, vaultNavPathsEqual } from '@/lib/vault-nav-utils';
 import { isPlayerProfileHref, playerSlugFromHref, prefetchFullProfile } from '@/lib/player-full-profile-api';
-import { navigateNativeCatchAll, shouldUseNativeCatchAllNav } from '@/lib/native-spa-nav';
+import { isNativeCatchAllDynamicHref, shouldUseNativeCatchAllNav } from '@/lib/native-spa-nav';
+import { navigateVaultHref } from '@/lib/navigate-vault-href';
 
 function normalizeVaultNavHref(href: string): string {
   try {
@@ -167,9 +168,21 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
 
       const rawHref = anchor.getAttribute('href');
       if (!rawHref) return;
-      // VaultNavLink sets data-vault-nav; still intercept catch-alls on Capacitor.
-      if (anchor.hasAttribute('data-vault-nav') && !shouldUseNativeCatchAllNav(rawHref)) return;
-      if (!isVaultClientNavHref(rawHref) && !shouldUseNativeCatchAllNav(rawHref)) return;
+      // VaultNavLink sets data-vault-nav; still intercept catch-alls everywhere.
+      if (
+        anchor.hasAttribute('data-vault-nav') &&
+        !isNativeCatchAllDynamicHref(rawHref) &&
+        !shouldUseNativeCatchAllNav(rawHref)
+      ) {
+        return;
+      }
+      if (
+        !isVaultClientNavHref(rawHref) &&
+        !isNativeCatchAllDynamicHref(rawHref) &&
+        !shouldUseNativeCatchAllNav(rawHref)
+      ) {
+        return;
+      }
 
       const href = normalizeVaultNavHref(rawHref);
       const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
@@ -201,9 +214,9 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
       event.preventDefault();
       beginNavigation();
       warmPlayerLink(href);
-      // Capacitor has no per-slug index.html — pushState / shell stash instead of router.push.
-      if (shouldUseNativeCatchAllNav(href)) {
-        navigateNativeCatchAll(href);
+      // No per-slug index.html for player/article catch-alls — never router.push those.
+      if (isNativeCatchAllDynamicHref(href) || shouldUseNativeCatchAllNav(href)) {
+        navigateVaultHref(href);
         return;
       }
       router.push(href);

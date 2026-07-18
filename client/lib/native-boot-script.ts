@@ -271,15 +271,17 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
       } catch (err2) {}
     }, true);
 
+    // Restore stashed catch-all deep links BEFORE cold-start routing.
+    // Otherwise Team → /vault/players/:slug loads the shell, then cold-start
+    // replaces to /vault/ and drops the player (or falls through to marketing).
+    consumeSpaPending();
     var path = routePath(location.pathname || '/');
     var cold = takeColdStart();
-    if (cold || isMarketingPath(path)) {
+    if (isMarketingPath(path) || (cold && isMarketingPath(path))) {
       restoreSessionFromPreferences(function() {
         var dest = vaultDest();
         if (location.href !== dest) location.replace(dest);
       });
-    } else {
-      consumeSpaPending();
     }
   } catch (e) {}
 })();`;
