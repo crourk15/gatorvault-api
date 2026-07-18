@@ -400,6 +400,8 @@ function normalizePlayer(raw) {
     on3Slug: raw.on3Slug || raw.on3_slug || null,
     on3ProfileUrl: raw.on3ProfileUrl || raw.on3_profile_url || null,
     on3Source: raw.on3Source || raw.on3_source || null,
+    // Closing Class / live UF board membership — must survive normalize/upsert.
+    boardSource: raw.boardSource || raw.board_source || null,
     protected: raw.protected === true || raw.protected === 'true',
     rivalsLastPrediction: raw.rivalsLastPrediction || raw.rivals_last_prediction || null,
     rivalsAnalyst: raw.rivalsAnalyst || raw.rivals_analyst || null,
@@ -480,6 +482,7 @@ function playerToRow(p) {
     ...(p.on3Source != null ? { on3_source: p.on3Source } : {}),
     ...(p.on3Slug != null ? { on3_slug: p.on3Slug } : {}),
     ...(p.on3ProfileUrl != null ? { on3_profile_url: p.on3ProfileUrl } : {}),
+    ...(p.boardSource != null ? { board_source: p.boardSource } : {}),
     ...(p.protected === true ? { protected: true } : {}),
     stars_display: p.starsDisplay,
     updated_at: p.updatedAt
@@ -532,6 +535,7 @@ function rowToPlayer(row) {
     on3_slug: row.on3_slug,
     on3_profile_url: row.on3_profile_url,
     on3_source: row.on3_source,
+    board_source: row.board_source,
     protected: row.protected,
     stars_display: row.stars_display,
     updated_at: row.updated_at,
@@ -741,6 +745,14 @@ function preservePlayerFields(existing, incoming) {
   }
   if (existing.on3Source === 'on3-board-sync' && !incoming.on3Source) {
     merged.on3Source = 'on3-board-sync';
+  }
+  // Preserve Closing Class board marker when patches omit boardSource.
+  if (
+    !merged.boardSource &&
+    (existing.boardSource === '247-uf-board-sync' ||
+      String(existing.on3Source || '').includes('247-uf-board-sync'))
+  ) {
+    merged.boardSource = '247-uf-board-sync';
   }
 
   if (String(incoming.status || '').toLowerCase() === 'uncommitted') {

@@ -898,21 +898,8 @@ async function runOn3IngestInner(options = {}) {
     result.errors.push({ type: 'demote_unverified_commits', error: e.message });
   }
 
-  try {
-    if (process.env.COMMITMENT_SYNC !== 'false') {
-      const { reconcileCommitments } = require('./allowlist-target-sync');
-      result.commitmentSync = await reconcileCommitments(options);
-      result.allowlistOn3Sync = result.commitmentSync.on3;
-      result.allowlistRivalsSync = result.commitmentSync.rivalsCache;
-    } else if (process.env.ALLOWLIST_TARGET_SYNC !== 'false') {
-      const { syncAllowlistTargetsFromOn3, syncAllowlistTargetsFromRivals } = require('./allowlist-target-sync');
-      result.allowlistOn3Sync = await syncAllowlistTargetsFromOn3(options);
-      result.allowlistRivalsSync = await syncAllowlistTargetsFromRivals();
-    }
-  } catch (e) {
-    result.errors.push({ type: 'allowlist_target_sync', error: e.message });
-  }
-
+  // Closing board + Lab promote first so the same ingest cycle can On3-enrich
+  // RPM + competitor logos for newly surfaced Closing Class / discovery targets.
   try {
     if (process.env.UF_CLOSING_BOARD_SYNC !== 'false') {
       const { syncFloridaClosingBoardToStore } = require('./uf-closing-board-247');
@@ -929,6 +916,21 @@ async function runOn3IngestInner(options = {}) {
     }
   } catch (e) {
     result.errors.push({ type: 'lab_intel_promote', error: e.message });
+  }
+
+  try {
+    if (process.env.COMMITMENT_SYNC !== 'false') {
+      const { reconcileCommitments } = require('./allowlist-target-sync');
+      result.commitmentSync = await reconcileCommitments(options);
+      result.allowlistOn3Sync = result.commitmentSync.on3;
+      result.allowlistRivalsSync = result.commitmentSync.rivalsCache;
+    } else if (process.env.ALLOWLIST_TARGET_SYNC !== 'false') {
+      const { syncAllowlistTargetsFromOn3, syncAllowlistTargetsFromRivals } = require('./allowlist-target-sync');
+      result.allowlistOn3Sync = await syncAllowlistTargetsFromOn3(options);
+      result.allowlistRivalsSync = await syncAllowlistTargetsFromRivals();
+    }
+  } catch (e) {
+    result.errors.push({ type: 'allowlist_target_sync', error: e.message });
   }
 
   try {

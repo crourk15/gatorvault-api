@@ -1,5 +1,6 @@
 /**
- * On3 RPM UF % for allowlist targets missing Rivals PM (flip-watch / committed OVs).
+ * On3 RPM UF % for allowlist / Closing Class / Lab-promoted targets.
+ * Also backfills store ufRpmPct + competitors so Lab logos match curated 2028 targets.
  */
 const fs = require("fs");
 const path = require("path");
@@ -34,18 +35,54 @@ function writeDoc(doc) {
 }
 
 function loadTargetBoard(classYear = DEFAULT_CLASS_YEAR) {
+  const year = Number(classYear) || DEFAULT_CLASS_YEAR;
+  const bySlug = new Map();
+
+  const add = (row) => {
+    const slug = String(row?.slug || "").toLowerCase();
+    if (!slug) return;
+    const prev = bySlug.get(slug) || { slug };
+    bySlug.set(slug, {
+      ...prev,
+      ...row,
+      slug,
+      name: row.name || prev.name || null,
+      classYear: year,
+    });
+  };
+
   try {
-    const doc = JSON.parse(fs.readFileSync(boardPathForClassYear(classYear), "utf8"));
-    return doc.targets || [];
+    const doc = JSON.parse(fs.readFileSync(boardPathForClassYear(year), "utf8"));
+    for (const t of doc.targets || []) add(t);
   } catch {
-    if (Number(classYear) === 2028) {
-      const { getAllowlistSet } = require("./recruiting-target-allowlist");
-      const { loadTargetBoardBySlug } = require("./target-board-path");
-      const board = loadTargetBoardBySlug(2028);
-      return [...getAllowlistSet(2028)].map((slug) => board.get(String(slug).toLowerCase()) || { slug });
-    }
-    return [];
+    /* board file optional */
   }
+
+  try {
+    const { getAllowlistSet } = require("./recruiting-target-allowlist");
+    const { loadTargetBoardBySlug } = require("./target-board-path");
+    const board = loadTargetBoardBySlug(year);
+    for (const slug of getAllowlistSet(year)) {
+      add(board.get(String(slug).toLowerCase()) || { slug });
+    }
+  } catch {
+    /* allowlist optional */
+  }
+
+  // Closing Class remaining Florida board (2027).
+  if (year === 2027) {
+    try {
+      const { SNAPSHOT_PATH } = require("./uf-closing-board-247");
+      const board = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, "utf8"));
+      for (const row of board.open || []) {
+        add({ slug: row.slug, name: row.name, stars: row.stars });
+      }
+    } catch {
+      /* closing board optional */
+    }
+  }
+
+  return [...bySlug.values()];
 }
 
 function entryBySlug(doc, slug) {
@@ -71,6 +108,70 @@ function resolveRecruitSlugForTarget(target, recruiting) {
   return on3.resolveRecruitSlug(player, new Map());
 }
 
+async function persistRpmToRecruitingStore(slug, classYear, profile, ufPct) {
+  if (!slug || !profile || profile.error) return { ok: false, reason: "no_profile" };
+  try {
+    const recruitingStore = require("./recruiting-store");
+    const { profilePatchFromOn3 } = require("./allowlist-target-sync");
+    const existing = await recruitingStore.getPlayerBySlug(slug);
+    if (!existing && !profile.name) return { ok: false, reason: "missing_player" };
+
+    const patch = profilePatchFromOn3(profile, classYear);
+    let onClosingBoard = false;
+    try {
+      const { SNAPSHOT_PATH, BOARD_SOURCE, isLiveUfBoardTarget } = require("./uf-closing-board-247");
+      if (isLiveUfBoardTarget(existing) || existing?.boardSource === BOARD_SOURCE) {
+        onClosingBoard = true;
+      } else {
+        const board = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, "utf8"));
+        onClosingBoard = (board.open || []).some(
+          (row) => String(row.slug || "").toLowerCase() === String(slug).toLowerCase()
+        );
+      }
+    } catch {
+      onClosingBoard =
+        existing?.boardSource === "247-uf-board-sync" ||
+        String(existing?.on3Source || "").includes("247-uf-board-sync");
+    }
+    const closingBoardSource = onClosingBoard
+      ? "247-uf-board-sync"
+      : existing?.boardSource || null;
+
+    const merged = {
+      ...(existing || {}),
+      slug,
+      name: patch.name || existing?.name || profile.name || slug,
+      classYear: existing?.classYear || classYear,
+      pos: patch.pos || existing?.pos || profile.pos || "ATH",
+      category: existing?.category || "target",
+      status: existing?.status || "uncommitted",
+      ufRpmPct: patch.ufRpmPct ?? ufPct ?? existing?.ufRpmPct ?? null,
+      competitors: patch.competitors?.length ? patch.competitors : existing?.competitors || [],
+      on3TopTeams: patch.on3TopTeams || existing?.on3TopTeams || null,
+      topTeams: patch.topTeams || existing?.topTeams || null,
+      on3Slug: patch.on3Slug || existing?.on3Slug || null,
+      on3Id: patch.on3Id || existing?.on3Id || null,
+      on3ProfileUrl: patch.on3ProfileUrl || existing?.on3ProfileUrl || null,
+      boardSource: closingBoardSource,
+      on3Source: patch.on3Source || existing?.on3Source || "on3-rpm-allowlist",
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (patch.offers?.length) merged.offers = patch.offers;
+    if (patch.stars != null) merged.stars = patch.stars;
+    if (patch.school) merged.school = patch.school;
+
+    await recruitingStore.upsertPlayer(merged);
+    return {
+      ok: true,
+      ufRpmPct: merged.ufRpmPct,
+      competitors: (merged.competitors || []).length,
+    };
+  } catch (err) {
+    return { ok: false, reason: err.message };
+  }
+}
+
 async function syncAllowlistOn3Rpm(options = {}) {
   const dryRun = Boolean(options.dryRun);
   const classYear = options.classYear || DEFAULT_CLASS_YEAR;
@@ -88,38 +189,48 @@ async function syncAllowlistOn3Rpm(options = {}) {
       return { slug, skipped: true, reason: "rivals_pm_present" };
     }
 
-    const recruiting = recruitingStore.findBySlug(slug);
-    const recruitSlug = resolveRecruitSlugForTarget(target, recruiting);
+    const existingPlayer =
+      recruitingStore.findBySlug(slug) ||
+      (await recruitingStore.getPlayerBySlug(slug).catch(() => null));
+    const recruitSlug = resolveRecruitSlugForTarget(target, existingPlayer);
     const existing = entryBySlug(doc, slug);
     let ufPct = null;
-    const profileUrl = existing?.profileUrl || buildOn3ProfileUrl(recruiting || target);
+    let profile = null;
+    const profileUrl = existing?.profileUrl || buildOn3ProfileUrl(existingPlayer || target);
     let fetchError = null;
+    let storePatch = null;
 
     if (recruitSlug && options.fetch !== false) {
-      const profile = await on3.fetchRecruitProfile(recruitSlug);
+      profile = await on3.fetchRecruitProfile(recruitSlug);
       ufPct = resolveUfPctFromProfile(profile, classYear);
       if (profile?.error) fetchError = profile.error;
+      if (!dryRun && profile && !profile.error) {
+        storePatch = await persistRpmToRecruitingStore(slug, classYear, profile, ufPct);
+      }
     }
 
     if (ufPct == null) {
       const fallback =
-        target.ufProbability ?? recruiting?.ufProbability ?? recruiting?.futurecastProbability;
+        target.ufProbability ??
+        existingPlayer?.ufRpmPct ??
+        existingPlayer?.ufProbability ??
+        existingPlayer?.futurecastProbability;
       ufPct = fallback != null ? toPercent(fallback) : null;
     }
 
     if (ufPct == null || ufPct <= 0) {
-      return { slug, skipped: true, reason: fetchError || "no_uf_pct" };
+      return { slug, skipped: true, reason: fetchError || "no_uf_pct", storePatch };
     }
 
     const priorUfPct = existing?.ufPct ?? null;
     const entry = {
       playerSlug: slug,
-      playerName: target.name || recruiting?.name || slug,
+      playerName: target.name || existingPlayer?.name || slug,
       classYear,
       ufPct,
       priorUfPct: priorUfPct != null ? priorUfPct : null,
       profileUrl,
-      source: "On3 RPM � UF",
+      source: "On3 RPM — UF",
       syncedAt: new Date().toISOString(),
     };
 
@@ -131,7 +242,15 @@ async function syncAllowlistOn3Rpm(options = {}) {
       else doc.entries.push(entry);
     }
 
-    return { slug, ufPct, priorUfPct, dryRun, fetchError };
+    return {
+      slug,
+      ufPct,
+      priorUfPct,
+      dryRun,
+      fetchError,
+      competitors: storePatch?.competitors ?? null,
+      storePatched: Boolean(storePatch?.ok),
+    };
   });
 
   const out = await on3.mapPool(jobs, limit, (fn) => fn());
@@ -146,6 +265,7 @@ async function syncAllowlistOn3Rpm(options = {}) {
     dryRun,
     updated: results.filter((r) => r.ufPct != null && !r.skipped).length,
     skipped: results.filter((r) => r.skipped).length,
+    storePatched: results.filter((r) => r.storePatched).length,
     results,
   };
 }
@@ -166,7 +286,9 @@ module.exports = {
   DATA_PATH,
   readDoc,
   writeDoc,
+  loadTargetBoard,
   resolveUfPctFromProfile,
   syncAllowlistOn3Rpm,
   loadOn3RpmUfPctBySlug,
+  persistRpmToRecruitingStore,
 };
