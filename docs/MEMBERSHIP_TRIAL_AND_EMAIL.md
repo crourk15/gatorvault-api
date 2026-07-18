@@ -8,7 +8,7 @@
 
 ## 30-day trial tracking
 
-- On first signup we store `trialEnd = now + 30 days` on the user record (`users.json` on the API).
+- On first signup we store `trialEnd = now + 30 days` on the user record (`users.json` on the API; production uses persistent disk via `GV_USERS_PATH` — see `docs/AUTH_ACCOUNT_PERSISTENCE.md`).
 - `daysLeft` = ceil(trialEnd − now).
 - Login blocks expired unpaid trials (HTTP 402).
 - Membership page shows **Free trial: N days left · ends &lt;date&gt;**.

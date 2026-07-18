@@ -556,8 +556,18 @@ app.post('/api/login', async (req, res) => {
 
     const users = loadUsers();
     const user = users.find((u) => u.email === email);
-    if (!user || !verifyPassword(password, user.passwordHash)) {
-      return res.status(401).json({ ok: false, error: 'Incorrect email or password.' });
+    if (!user) {
+      // Distinct from wrong-password so members orphaned by ephemeral disk wipes
+      // can tell "account missing" apart from a typo — still safe (no password hint).
+      return res.status(401).json({
+        ok: false,
+        code: 'account_not_found',
+        error:
+          'No account found for that email. Create an account first (or re-create it if you signed up before accounts were persisted).',
+      });
+    }
+    if (!verifyPassword(password, user.passwordHash)) {
+      return res.status(401).json({ ok: false, code: 'bad_password', error: 'Incorrect email or password.' });
     }
 
     const trialEndDate = user.trialEnd ? new Date(user.trialEnd) : null;
@@ -1210,6 +1220,25 @@ console.log('GatorVault server running on port', PORT);
 setImmediate(startPostBootServices);
 
 function startPostBootServices() {
+  try {
+    const { getUsersStoreInfo } = require('./lib/user-store');
+    const store = getUsersStoreInfo();
+    console.log(
+      '[user-store] path=',
+      store.path,
+      'accounts=',
+      store.count,
+      'durableEnv=',
+      store.durableEnv
+    );
+    if (!store.durableEnv) {
+      console.warn(
+        '[user-store] GV_USERS_PATH unset — accounts live on ephemeral disk and will be wiped on redeploy'
+      );
+    }
+  } catch (storeErr) {
+    console.warn('[user-store] boot info failed:', storeErr.message || storeErr);
+  }
   try {
     const { ensureAppReviewAccountOnBoot } = require('./lib/app-review-provision');
     const reviewBoot = ensureAppReviewAccountOnBoot();

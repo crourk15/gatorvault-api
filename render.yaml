@@ -16,6 +16,12 @@ services:
     buildCommand: npm install && node scripts/platform-guardian-predeploy.js
     startCommand: node server.js
     healthCheckPath: /ready
+    # Member accounts + trial ledger must survive Render redeploys.
+    # Without this disk, users.json is wiped and sign-in returns "incorrect password".
+    disk:
+      name: gatorvault-api-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
@@ -23,6 +29,10 @@ services:
         value: https://gatorvaultinsider.com
       - key: NEXT_PUBLIC_API_BASE
         value: https://gatorvault-api.onrender.com
+      - key: GV_USERS_PATH
+        value: /var/data/users.json
+      - key: GV_TRIAL_LEDGER_PATH
+        value: /var/data/trial-ledger.json
       - key: EMAIL_PROVIDER
         value: emailjs
       - key: ON3_INGEST_ENABLED

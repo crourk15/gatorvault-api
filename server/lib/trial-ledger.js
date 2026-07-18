@@ -4,23 +4,70 @@
 const fs = require('fs');
 const path = require('path');
 
-function ledgerPath() {
-  return process.env.GV_TRIAL_LEDGER_PATH || path.join(__dirname, '..', 'data', 'trial-ledger.json');
+function defaultLedgerPath() {
+  return path.join(__dirname, '..', 'data', 'trial-ledger.json');
 }
 
-function loadLedger() {
+function ledgerPath() {
+  return process.env.GV_TRIAL_LEDGER_PATH || defaultLedgerPath();
+}
+
+function ensureParentDir(filePath) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+}
+
+function atomicWriteJson(filePath, value) {
+  ensureParentDir(filePath);
+  const tmp = `${filePath}.${process.pid}.${Date.now()}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(value, null, 2), 'utf8');
+  fs.renameSync(tmp, filePath);
+}
+
+function readLedgerObject(filePath) {
   try {
-    const raw = JSON.parse(fs.readFileSync(ledgerPath(), 'utf8'));
+    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     return raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
   } catch {
     return {};
   }
 }
 
+function migrateLedgerFromLegacyIfNeeded() {
+  const dest = ledgerPath();
+  const legacy = defaultLedgerPath();
+  if (path.resolve(dest) === path.resolve(legacy)) return { migrated: false };
+  if (fs.existsSync(dest)) {
+    const existing = readLedgerObject(dest);
+    if (Object.keys(existing).length > 0) return { migrated: false, reason: 'dest_has_rows' };
+  }
+  if (!fs.existsSync(legacy)) return { migrated: false, reason: 'no_legacy' };
+  const legacyLedger = readLedgerObject(legacy);
+  if (!Object.keys(legacyLedger).length) return { migrated: false, reason: 'legacy_empty' };
+  atomicWriteJson(dest, legacyLedger);
+  return { migrated: true, count: Object.keys(legacyLedger).length, to: dest };
+}
+
+let migrateAttempted = false;
+
+function loadLedger() {
+  if (!migrateAttempted) {
+    migrateAttempted = true;
+    try {
+      const result = migrateLedgerFromLegacyIfNeeded();
+      if (result.migrated) {
+        console.log(
+          `[trial-ledger] migrated ${result.count} row(s) from ephemeral path → ${result.to}`
+        );
+      }
+    } catch (err) {
+      console.warn('[trial-ledger] migrate failed:', err instanceof Error ? err.message : err);
+    }
+  }
+  return readLedgerObject(ledgerPath());
+}
+
 function saveLedger(ledger) {
-  const filePath = ledgerPath();
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(ledger, null, 2));
+  atomicWriteJson(ledgerPath(), ledger && typeof ledger === 'object' ? ledger : {});
 }
 
 function normalizeEmail(email) {
