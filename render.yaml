@@ -36,6 +36,9 @@ services:
       # Beat/X live pool + feed caches — same disk so redeploys do not empty GatorNation Live.
       - key: GV_LIVE_DATA_DIR
         value: /var/data/live
+      # FutureCast UF% trend history + Rivals PM fingerprints — survive redeploys for Lab movement.
+      - key: GV_FUTURECAST_DATA_DIR
+        value: /var/data/futurecast
       - key: EMAIL_PROVIDER
         value: emailjs
       - key: ON3_INGEST_ENABLED

@@ -19,12 +19,46 @@ const futurecastStore = require('./futurecast-store');
 const postgresSync = require('./postgres-futurecast-sync');
 const { mergeCompetitorsOnPlayer } = require('./recruiting-competitor-merge');
 
-const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
+const BUNDLE_DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
+
+function resolveRecruitingDataDir() {
+  const fromEnv = String(process.env.GV_FUTURECAST_DATA_DIR || process.env.GV_LIVE_DATA_DIR || '').trim();
+  if (fromEnv) {
+    // Keep rivals PM beside FutureCast durable data when FC dir is set; else under live dir sibling.
+    if (fromEnv.endsWith('/live')) return path.join(path.dirname(fromEnv), 'recruiting');
+    if (fromEnv.endsWith('/futurecast')) return path.join(path.dirname(fromEnv), 'recruiting');
+    return path.join(fromEnv, 'recruiting');
+  }
+  try {
+    if (process.env.NODE_ENV === 'production' && fs.existsSync('/var/data')) {
+      return '/var/data/recruiting';
+    }
+  } catch {
+    /* ignore */
+  }
+  return BUNDLE_DATA_DIR;
+}
+
+const DATA_DIR = resolveRecruitingDataDir();
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'rivals-pm-snapshot.json');
 const LOG_PATH = path.join(DATA_DIR, 'rivals-pm-ingest-log.json');
+const BUNDLE_SNAPSHOT_PATH = path.join(BUNDLE_DATA_DIR, 'rivals-pm-snapshot.json');
 const WAR_ROOM_PREDICTIONS_PATH = path.join(__dirname, '..', 'data', 'war-room', 'rivals-predictions.json');
 const INTERNAL_ALERTS_PATH = path.join(DATA_DIR, 'internal-alerts.json');
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
+
+function migrateRivalsSnapshotIfNeeded() {
+  if (path.resolve(SNAPSHOT_PATH) === path.resolve(BUNDLE_SNAPSHOT_PATH)) return;
+  if (fs.existsSync(SNAPSHOT_PATH)) return;
+  if (!fs.existsSync(BUNDLE_SNAPSHOT_PATH)) return;
+  try {
+    fs.mkdirSync(path.dirname(SNAPSHOT_PATH), { recursive: true });
+    fs.copyFileSync(BUNDLE_SNAPSHOT_PATH, SNAPSHOT_PATH);
+    console.log('[rivals-pm] migrated snapshot →', SNAPSHOT_PATH);
+  } catch (err) {
+    console.warn('[rivals-pm] migrate failed:', err.message);
+  }
+}
 
 const CLASS_YEARS = (process.env.RIVALS_PM_CLASS_YEARS || '2027,2028,2029')
   .split(',')
@@ -45,7 +79,12 @@ function writeJson(filePath, data) {
 }
 
 function loadSnapshot() {
+  migrateRivalsSnapshotIfNeeded();
   return readJson(SNAPSHOT_PATH, { version: 2, fingerprints: {}, pickKeys: {}, pickState: {}, lastRun: null });
+}
+
+function getLastRun() {
+  return loadSnapshot().lastRun || null;
 }
 
 function getPriorPickState(snapshot, row) {
@@ -647,6 +686,8 @@ function getRivalsPmStatus() {
 module.exports = {
   runRivalsPredictionIngest,
   getRivalsPmStatus,
+  getLastRun,
+  loadSnapshot,
   reseedPostgresMovementFromIntel,
   processPrediction,
   resolvePredictionEvent,
