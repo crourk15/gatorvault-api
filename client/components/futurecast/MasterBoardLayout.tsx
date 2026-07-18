@@ -59,7 +59,14 @@ export function MasterBoardLayout(): React.ReactElement {
     return <FutureCastSubPageLoading testId="fc-master-board-loading" />;
   }
   if (error && !data) {
-    return <UiError message={error} />;
+    return (
+      <UiError
+        message={error}
+        retry={() => void load(true)}
+        backHref="/vault/futurecast"
+        backLabel="← FutureCast"
+      />
+    );
   }
   if (!data) {
     return <p className="rh-cc-empty">No master board data.</p>;

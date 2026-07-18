@@ -248,7 +248,12 @@ export function ScoutingDepartmentPage({
 
       {loading && <p className="gv-page-status">Loading scouting database…</p>}
       {error && !loading && (
-        <UiError message={error} retry={() => void load()} backHref="/" backLabel="← GatorVault Home" />
+        <UiError
+          message={error}
+          retry={() => void load()}
+          backHref={inVault ? '/vault/recruiting' : '/vault/'}
+          backLabel={inVault ? '← Recruiting Hub' : '← Back to GatorVault'}
+        />
       )}
 
       {!loading && !error && view === 'reports' && (

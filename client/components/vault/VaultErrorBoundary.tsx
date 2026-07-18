@@ -30,10 +30,8 @@ export class VaultErrorBoundary extends React.Component<Props, State> {
           error={this.state.error}
           title="This Vault page failed to load"
           onRetry={this.retry}
-          dashboardHref="/vault"
+          dashboardHref="/vault/"
           dashboardLabel="Go to Home"
-          homeHref="/"
-          homeLabel="← Home"
         />
       );
     }
