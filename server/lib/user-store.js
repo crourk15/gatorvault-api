@@ -1,22 +1,79 @@
 const fs = require('fs');
 const path = require('path');
 
-function usersPath() {
-  return process.env.GV_USERS_PATH || path.join(__dirname, '..', 'data', 'users.json');
+/** Default ephemeral path (wiped on Render redeploy without a persistent disk). */
+function defaultUsersPath() {
+  return path.join(__dirname, '..', 'data', 'users.json');
 }
 
-function loadUsers() {
+function usersPath() {
+  return process.env.GV_USERS_PATH || defaultUsersPath();
+}
+
+function ensureParentDir(filePath) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+}
+
+/** Atomic write so concurrent register/login cannot truncate the file mid-write. */
+function atomicWriteJson(filePath, value) {
+  ensureParentDir(filePath);
+  const tmp = `${filePath}.${process.pid}.${Date.now()}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(value, null, 2), 'utf8');
+  fs.renameSync(tmp, filePath);
+}
+
+function readJsonArray(filePath) {
   try {
-    return JSON.parse(fs.readFileSync(usersPath(), 'utf8'));
+    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    return Array.isArray(raw) ? raw : [];
   } catch {
     return [];
   }
 }
 
+/**
+ * If the durable path is empty but the legacy ephemeral file has accounts,
+ * copy them once so a deploy that adds GV_USERS_PATH does not orphan users.
+ */
+function migrateUsersFromLegacyIfNeeded() {
+  const dest = usersPath();
+  const legacy = defaultUsersPath();
+  if (path.resolve(dest) === path.resolve(legacy)) return { migrated: false, reason: 'same_path' };
+  if (fs.existsSync(dest)) {
+    const existing = readJsonArray(dest);
+    if (existing.length > 0) return { migrated: false, reason: 'dest_has_users', count: existing.length };
+  }
+  if (!fs.existsSync(legacy)) return { migrated: false, reason: 'no_legacy' };
+  const legacyUsers = readJsonArray(legacy);
+  if (!legacyUsers.length) return { migrated: false, reason: 'legacy_empty' };
+  atomicWriteJson(dest, legacyUsers);
+  return { migrated: true, count: legacyUsers.length, from: legacy, to: dest };
+}
+
+let migrateAttempted = false;
+
+function loadUsers() {
+  if (!migrateAttempted) {
+    migrateAttempted = true;
+    try {
+      const result = migrateUsersFromLegacyIfNeeded();
+      if (result.migrated) {
+        console.log(
+          `[user-store] migrated ${result.count} account(s) from ephemeral path → ${result.to}`
+        );
+      }
+    } catch (err) {
+      console.warn('[user-store] migrate failed:', err instanceof Error ? err.message : err);
+    }
+  }
+  return readJsonArray(usersPath());
+}
+
 function saveUsers(users) {
-  const filePath = usersPath();
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
+  if (!Array.isArray(users)) {
+    throw new Error('saveUsers expects an array');
+  }
+  atomicWriteJson(usersPath(), users);
 }
 
 function findUserByEmail(email) {
@@ -56,6 +113,16 @@ function deleteUser(email) {
   return true;
 }
 
+function getUsersStoreInfo() {
+  const filePath = usersPath();
+  const users = loadUsers();
+  return {
+    path: filePath,
+    count: users.length,
+    durableEnv: Boolean(process.env.GV_USERS_PATH),
+  };
+}
+
 module.exports = {
   get usersPath() {
     return usersPath();
@@ -66,4 +133,6 @@ module.exports = {
   findUserByOriginalTransactionId,
   updateUser,
   deleteUser,
+  migrateUsersFromLegacyIfNeeded,
+  getUsersStoreInfo,
 };
