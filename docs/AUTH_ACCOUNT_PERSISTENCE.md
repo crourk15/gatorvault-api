@@ -4,7 +4,7 @@
 
 Create Account and Sign In use the same email normalization and scrypt password hashing. The frequent **Incorrect email or password** after a successful signup was **not** a hash mismatch.
 
-Member accounts were stored in `server/data/users.json` on the Render API filesystem. That path is **ephemeral** — Render redeploys/restarts wipe it. Only `appreview@gatorvaultinsider.com` was recreated on boot (`APP_REVIEW_PASSWORD`). Real fans’ accounts disappeared, so later sign-in returned the generic incorrect-password error.
+Member accounts were stored in `server/data/users.json` on the Render API filesystem. That path is **ephemeral** — Render redeploys/restarts wipe it. Only `appreview@gatorvaultinsider.com` was recreated on boot (`APP_REVIEW_PASSWORD`). Real fans' accounts disappeared, so later sign-in returned the generic incorrect-password error.
 
 ## Fix
 
