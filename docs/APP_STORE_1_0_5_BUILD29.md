@@ -1,0 +1,28 @@
+# Submit 1.0.5 (Build 29) — App Store / TestFlight
+
+**Shell reliability + vault trust.** Do not start Codemagic until mobile proof passes and you explicitly confirm App Store upload.
+
+**iOS:** `MARKETING_VERSION = 1.0.5`, `CURRENT_PROJECT_VERSION = 29`.  
+**Codemagic:** workflow `ios-release` on branch `main` (`submit_to_app_store: true`).
+
+## What's in 29
+
+1. **Menu open/close** — Boot script owns Menu clicks; React only mirrors state (fixes Home double-toggle race).
+2. **Hydration / blank main** — SSR-safe home boot state; hydration boot in vault layout; soft reload instead of orphaning React via `replaceWith`.
+3. **Vault route leaks** — Home strip, GNL doors/hero/film preview, recruiting ecosystem, NIL footer, movement CTA, Live FAB stay under `/vault/*` on device.
+4. **Podcasts** — `/vault/live/podcasts/` lands podcasts-first (no scroll-jump). Tickets remains Schedule · Tickets (buy links intact).
+
+## Start Codemagic (only after you confirm)
+
+1. https://codemagic.io → **gatorvault-api**
+2. Workflow **iOS Release Build** (`ios-release`)
+3. Branch **`main`**
+4. **Start new build**
+
+## TestFlight smoke
+
+1. Cold load Home → Menu opens on **first** tap; closes on backdrop / Close / link
+2. Home strip → GatorNation Live stays in vault bottom nav
+3. Menu → Podcasts → podcasts content at top (no delayed jump)
+4. Menu → Tickets → Schedule with Buy Tickets / vendor links
+5. Recruiting ecosystem tiles stay under `/vault/*`

@@ -12,7 +12,10 @@ import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/l
 import { LIVE_STATE_KEY } from '@/components/vault/live/live-feed-utils';
 import { UiError } from '@/components/site/UiMessage';
 import { GNLPageHero } from '@/components/gatornation-live/GNLPageHero';
-import { GNLLiveFeedModule } from '@/components/gatornation-live/GNLLiveFeedModule';
+import {
+  GNLLiveFeedModule,
+  type GnlFocusSection,
+} from '@/components/gatornation-live/GNLLiveFeedModule';
 
 const EMPTY_BUNDLE: LiveHubBundle = {
   ticker: [],
@@ -35,7 +38,7 @@ const EMPTY_BUNDLE: LiveHubBundle = {
   refreshedAt: null,
 };
 
-export type GatorNationLiveFocus = 'podcasts' | 'beat';
+export type GatorNationLiveFocus = GnlFocusSection;
 
 type GatorNationLivePageProps = {
   /** Deep-link target when opened from Menu / tab paths. */
@@ -84,15 +87,6 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
   }, []);
 
   useEffect(() => {
-    if (!focusSection || loading) return;
-    const id = focusSection === 'podcasts' ? 'podcast-hub' : 'beat-writers';
-    const timer = window.setTimeout(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 80);
-    return () => window.clearTimeout(timer);
-  }, [focusSection, loading, bundle.podcasts.length, bundle.panels.beatWriterHighlights.length]);
-
-  useEffect(() => {
     let cancelled = false;
     let timer: ReturnType<typeof setInterval> | undefined;
 
@@ -137,8 +131,22 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
         </div>
       )}
 
-      <GNLPageHero updatedAt={bundle.updatedAt ?? bundle.refreshedAt} hasLiveSignal={hasLiveSignal} />
-      <GNLLiveFeedModule bundle={bundle} loading={loading} refreshKey={bundle.refreshedAt ?? `${pollSeq}`} />
+      <GNLPageHero
+        updatedAt={bundle.updatedAt ?? bundle.refreshedAt}
+        hasLiveSignal={hasLiveSignal}
+        title={focusSection === 'podcasts' ? 'Podcasts' : undefined}
+        subtitle={
+          focusSection === 'podcasts'
+            ? 'GatorNation shows and recruiting audio — stay in the vault.'
+            : undefined
+        }
+      />
+      <GNLLiveFeedModule
+        bundle={bundle}
+        loading={loading}
+        refreshKey={bundle.refreshedAt ?? `${pollSeq}`}
+        focusSection={focusSection}
+      />
     </div>
   );
 }

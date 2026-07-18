@@ -1,0 +1,6 @@
+import { isVaultPath } from '@/lib/vault-routes';
+
+/** Pick vault vs flat href based on current path (Capacitor stays in /vault/*). */
+export function vaultAwareHref(pathname: string, flat: string, vault: string): string {
+  return isVaultPath(pathname) ? vault : flat;
+}

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { syncVaultMenuBootOpen } from '@/lib/vault-menu-sync';
+import { readVaultMenuBootOpen, syncVaultMenuBootOpen } from '@/lib/vault-menu-sync';
 
 type AppMenuContextValue = {
   isOpen: boolean;
@@ -12,6 +12,14 @@ type AppMenuContextValue = {
 
 const AppMenuContext = createContext<AppMenuContextValue | null>(null);
 
+function hasMenuBoot(): boolean {
+  return typeof window !== 'undefined' && Boolean(window.__GV_MENU_BOOT__);
+}
+
+/**
+ * Vault: boot script owns clicks; React mirrors via boot.onChange.
+ * Flat AppShell (no boot): React owns open state directly.
+ */
 export function AppMenuProvider({ children }: { children: React.ReactNode }): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,19 +34,25 @@ export function AppMenuProvider({ children }: { children: React.ReactNode }): Re
   }, []);
 
   const openMenu = useCallback(() => {
+    if (hasMenuBoot()) {
+      syncVaultMenuBootOpen(true);
+      return;
+    }
     setIsOpen(true);
-    syncVaultMenuBootOpen(true);
   }, []);
   const closeMenu = useCallback(() => {
+    if (hasMenuBoot()) {
+      syncVaultMenuBootOpen(false);
+      return;
+    }
     setIsOpen(false);
-    syncVaultMenuBootOpen(false);
   }, []);
   const toggleMenu = useCallback(() => {
-    setIsOpen((v) => {
-      const next = !v;
-      syncVaultMenuBootOpen(next);
-      return next;
-    });
+    if (hasMenuBoot()) {
+      syncVaultMenuBootOpen(!readVaultMenuBootOpen());
+      return;
+    }
+    setIsOpen((v) => !v);
   }, []);
 
   const value = useMemo(

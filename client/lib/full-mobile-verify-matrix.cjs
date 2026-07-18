@@ -20,7 +20,7 @@ const MENU_ROUTES = [
   { id: 'community', path: '/vault/community/', label: 'Community' },
   { id: 'game-zone', path: '/vault/game-zone/', label: 'Game Zone' },
   { id: 'nil', path: '/vault/nil/', label: 'NIL' },
-  { id: 'podcasts', path: '/vault/live/', label: 'Podcasts (GNL)', skipGotoIfSamePath: true },
+  { id: 'podcasts', path: '/vault/live/podcasts/', label: 'Podcasts (GNL)' },
   { id: 'apparel', path: '/vault/apparel/', label: 'Shop & Apparel' },
   { id: 'membership', path: '/vault/membership/', label: 'Membership' },
   { id: 'alerts', path: '/vault/alerts/', label: 'My Alerts' },
@@ -44,7 +44,7 @@ const ROUTE_CHECKS = {
       { sel: '[data-testid="home-beat-highlights"]', label: 'Beat intel', minText: 40 },
       { sel: '[data-testid="home-gnl-preview"], [data-testid="home-command-strip"], [data-testid="home-live-media"]', label: 'GNL / live strip', minText: 20 },
       { sel: '[data-testid="home-futurecast-preview"], [data-testid="home-futurecast-pulse"]', label: 'FutureCast / movement preview', minText: 15 },
-      { sel: '[data-testid="home-recruiting-snapshot"], [data-testid="home-recruiting-preview"]', label: 'Recruiting snapshot', minText: 15 },
+      { sel: '[data-testid="home-gameday-countdown"], [data-testid="home-command-strip"]', label: 'GameDay / command strip', minText: 15 },
     ],
     testMenu: true,
   },
@@ -130,9 +130,9 @@ const ROUTE_CHECKS = {
     sections: [{ sel: 'body', label: 'Live Scores body', minText: 80 }],
   },
   articles: {
-    root: '.gv-articles, [data-testid="vault-articles"]',
+    root: '[data-testid="insider-articles-page"], .gv-articles, [data-testid="vault-articles"]',
     minBodyText: 100,
-    sections: [{ sel: 'body', label: 'Articles body', minText: 80 }],
+    sections: [{ sel: '[data-testid="insider-articles-page"], body', label: 'Articles body', minText: 80 }],
   },
   community: {
     root: '.gv-community, [data-testid="vault-community"]',
@@ -150,11 +150,11 @@ const ROUTE_CHECKS = {
     sections: [{ sel: '[data-testid="vault-nil"]', label: 'NIL page', minText: 50 }],
   },
   podcasts: {
-    root: '[data-testid="vault-live-feed"], [data-testid="gnl-page-hero"]',
+    root: '[data-testid="vault-live-feed"], [data-testid="gnl-page-hero"], [data-testid="gnl-podcast-spotlight"]',
     minBodyText: 150,
     sections: [
       {
-        sel: '[data-testid="gnl-page-hero"], [data-testid="vault-live-feed"]',
+        sel: '[data-testid="gnl-podcast-spotlight"], [data-testid="gnl-page-hero"], [data-testid="vault-live-feed"]',
         label: 'Podcasts / GNL',
         minText: 30,
       },

@@ -250,6 +250,22 @@
   border-color: var(--uf-orange, #fa4616);
 }
 
+.gv-gnl-elite__back {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+}
+
+.gv-gnl-elite__back a {
+  color: rgba(226, 232, 240, 0.85);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.gv-gnl-elite__back a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
 .uf-premium-gnl .gv-gnl-pulse__quadrant {
   padding: 16px;
   border-radius: var(--uf-card-radius);

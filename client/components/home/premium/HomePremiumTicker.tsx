@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import type { TickerResponse } from '@/lib/vault-home-api';
 import { applyTickerScrollDuration } from '@/lib/ticker-duration';
-import { SITE_ROUTES } from '@/lib/site-routes';
+import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
 
 type Props = {
   ticker: TickerResponse | null;
@@ -20,7 +20,7 @@ function TickerItem({
   url?: string;
 }): React.ReactElement {
   return (
-    <a href={url || SITE_ROUTES.gatorNationLive} className="uf-premium-ticker__item">
+    <a href={url || VAULT_PILLAR_ROUTES.liveFeed} className="uf-premium-ticker__item">
       <strong>{category || 'UPDATE'}</strong>
       <span>{text}</span>
       <span className="uf-premium-ticker__sep" aria-hidden="true">
