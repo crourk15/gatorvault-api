@@ -2,14 +2,13 @@
 
 import React from 'react';
 import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
-import { SITE_ROUTES } from '@/lib/site-routes';
 
 const STRIP_ITEMS = [
   {
     icon: '⚡',
     title: 'GatorNation Live',
     body: 'Jump into the real-time UF football pulse.',
-    href: SITE_ROUTES.gatorNationLive,
+    href: VAULT_PILLAR_ROUTES.liveFeed,
     label: 'Open GNL →',
   },
   {

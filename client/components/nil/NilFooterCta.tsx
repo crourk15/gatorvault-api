@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { SITE_ROUTES } from '@/lib/site-routes';
+import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
 
 type Props = {
   onRefresh: () => void;
@@ -16,7 +16,7 @@ export function NilFooterCta({ onRefresh, refreshing }: Props): React.ReactEleme
         <button type="button" className="nil-footer-cta__btn nil-footer-cta__btn--primary" onClick={onRefresh} disabled={refreshing}>
           {refreshing ? 'Refreshing…' : 'Refresh NIL Data'}
         </button>
-        <a href={SITE_ROUTES.recruiting} className="nil-footer-cta__btn nil-footer-cta__btn--outline">
+        <a href={VAULT_PILLAR_ROUTES.recruiting} className="nil-footer-cta__btn nil-footer-cta__btn--outline">
           View Recruiting Hub
         </a>
       </div>

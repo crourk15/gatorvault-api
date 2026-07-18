@@ -5,7 +5,6 @@ import type { StaffDashboardResponse } from '@/lib/staff-api';
 import { buildWhyItMatters, heatmapSparkPct } from '@/lib/vault-home-api';
 import { GV_COPY } from '@/lib/gatorvault-copy';
 import { playerProfilePath } from '@/lib/player-routes';
-import { SITE_ROUTES } from '@/lib/site-routes';
 import './MovementIntelPreview.css';
 
 function staffDelta(p: { delta?: number; delta7d?: number }): number {
@@ -161,7 +160,7 @@ export function MovementIntelPreview({
               {windowDays}-day volatility score: <strong>{sparkPct}%</strong>
             </p>
             <a
-              href={`${SITE_ROUTES.futurecast}/movement`}
+              href="/vault/futurecast/movement"
               className="gv-btn gv-btn--secondary gv-home-movement__cta"
               title={GV_COPY.tooltips.movementScore}
             >

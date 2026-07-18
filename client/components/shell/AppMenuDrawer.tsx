@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import { usePathname } from '@/lib/use-pathname';
 import { getAppMenuSections } from '@/lib/app-menu-routes';
@@ -14,8 +14,12 @@ export function AppMenuDrawer({ forceVaultRoutes = false }: { forceVaultRoutes?:
   // Prefer vault destinations whenever we are under /vault/* or hosted by VaultShell.
   const inVault = forceVaultRoutes || isVaultPath(pathname);
   const sections = getAppMenuSections(inVault);
+  const prevPathRef = useRef(pathname);
 
+  // Close on route change only — skip first mount so pre-React open survives hydrate.
   useEffect(() => {
+    if (prevPathRef.current === pathname) return;
+    prevPathRef.current = pathname;
     closeMenu();
   }, [pathname, closeMenu]);
 

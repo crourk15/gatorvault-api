@@ -70,18 +70,27 @@ export function HomePremiumPage(): React.ReactElement {
   const [hubTicker, setHubTicker] = useState<string[]>([]);
   const [hpIntel, setHpIntel] = useState<HighPriorityIntelItem[]>([]);
   const [movementIntel, setMovementIntel] = useState<MovementIntelResponse | null>(null);
-  const [beatIntel, setBeatIntel] = useState<BeatIntelItem[]>(readBootBeat);
+  // SSR-safe init — apply session/boot cache only in useEffect to avoid hydration mismatch.
+  const [beatIntel, setBeatIntel] = useState<BeatIntelItem[]>([]);
   const [board, setBoard] = useState<RecruitingBoardResponse | null>(null);
-  const [classMetrics, setClassMetrics] = useState<ClassMetricsResponse | null>(
-    readBootMetrics
-  );
+  const [classMetrics, setClassMetrics] = useState<ClassMetricsResponse | null>(null);
   const [futureCastHome, setFutureCastHome] = useState<FutureCastHomeResponse | null>(null);
   const [highPriority, setHighPriority] = useState<HighPriorityResponse | null>(null);
-  const [loading, setLoading] = useState(() => !readBootMetrics());
-  const [beatReady, setBeatReady] = useState(() => readBootBeat().length > 0);
+  const [loading, setLoading] = useState(true);
+  const [beatReady, setBeatReady] = useState(false);
 
   useEffect(() => {
     function applyBootCache(): void {
+      const metrics = readBootMetrics();
+      if (metrics) {
+        setClassMetrics(metrics);
+        setLoading(false);
+      }
+      const beat = readBootBeat();
+      if (beat.length > 0) {
+        setBeatIntel(beat);
+        setBeatReady(true);
+      }
       const boot = window.__GV_HOME_WOW__;
       if (boot?.metrics) {
         setClassMetrics(boot.metrics);

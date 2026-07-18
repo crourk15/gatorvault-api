@@ -11,7 +11,7 @@ import { useMobileViewport } from '@/lib/use-mobile-viewport';
 export function LivePulseFab(): React.ReactElement | null {
   const pathname = usePathname();
   const isMobile = useMobileViewport();
-  const href = isVaultPath(pathname) ? '/vault/recruiting' : '/recruiting';
+  const href = isVaultPath(pathname) ? '/vault/live' : '/gator-nation-live';
 
   if (!isMobile) return null;
 
@@ -19,7 +19,7 @@ export function LivePulseFab(): React.ReactElement | null {
     <Link
       href={href}
       className="gv-live-pulse-fab"
-      aria-label="Open live pulse feed"
+      aria-label="Open GatorNation Live"
       data-testid="live-pulse-fab"
     >
       <PremiumNavIcon id="pulse" className="gv-live-pulse-fab__icon" />

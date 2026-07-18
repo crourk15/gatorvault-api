@@ -221,7 +221,7 @@ export function pickBreakingNews(
   if (fromTicker) {
     return {
       text: fromTicker.text,
-      url: fromTicker.url || '/gator-nation-live',
+      url: fromTicker.url || '/vault/live',
       timestamp: fromTicker.timestamp,
       source: fromTicker.source,
     };
@@ -246,7 +246,7 @@ export function pickBreakingNews(
     }
     return {
       text: String(fromFeed.title || ''),
-      url: fromFeed.url || '/gator-nation-live',
+      url: fromFeed.url || '/vault/live',
       timestamp: fromFeed.createdAt || new Date().toISOString(),
       source: fromFeed.source || 'GatorVault',
     };
