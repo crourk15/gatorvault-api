@@ -2,7 +2,7 @@
 
 ## What was broken
 
-Create Account and Sign In use the same email normalization and scrypt password hashing. The frequent **Incorrect email or password** after a successful signup was **not** a hash mismatch.
+Create Account and Sign In used the same email normalization and scrypt password hashing. The frequent **Incorrect email or password** after a successful signup was **not** a hash mismatch.
 
 Member accounts were stored in `server/data/users.json` on the Render API filesystem. That path is **ephemeral** — Render redeploys/restarts wipe it. Only `appreview@gatorvaultinsider.com` was recreated on boot (`APP_REVIEW_PASSWORD`). Real fans' accounts disappeared, so later sign-in returned the generic incorrect-password error.
 
@@ -16,10 +16,21 @@ Member accounts were stored in `server/data/users.json` on the Render API filesy
 3. **One-time migrate** from the old ephemeral file into the durable path when the durable file is empty
 4. Clearer login error when the email has **no account** (`account_not_found`) vs wrong password
 
-## After deploy
+## Confirm after deploy
 
-1. Confirm Render Blueprint sync attached the disk (Dashboard → gatorvault-api → Disks → `/var/data`).
-2. Check API logs for: `[user-store] path= /var/data/users.json … durableEnv= true`
-3. Fans whose accounts were already wiped must **Create account once more** with the same email (trial ledger still prevents a second free month when the ledger row survived; if ledger was also wiped, they get a normal new trial).
+```bash
+curl -sS https://gatorvault-api.onrender.com/api/auth/store-status | python3 -m json.tool
+```
+
+Expect:
+
+- `confirmed: true`
+- `auth.durableEnv: true`
+- `auth.pathIsDurable: true`
+- `auth.diskMountPresent: true`
+
+Also: Dashboard → gatorvault-api → Disks → `/var/data`, and API logs for `[user-store] path= /var/data/users.json … durableEnv= true`.
+
+Fans whose accounts were already wiped must **Create Account once more** with the same email (trial ledger still prevents a second free month when the ledger row survives; if the ledger was also wiped, they get a normal new trial).
 
 Do **not** change the App Review demo password without an explicit request.

@@ -33,6 +33,9 @@ services:
         value: /var/data/users.json
       - key: GV_TRIAL_LEDGER_PATH
         value: /var/data/trial-ledger.json
+      # Beat/X live pool + feed caches — same disk so redeploys do not empty GatorNation Live.
+      - key: GV_LIVE_DATA_DIR
+        value: /var/data/live
       - key: EMAIL_PROVIDER
         value: emailjs
       - key: ON3_INGEST_ENABLED
