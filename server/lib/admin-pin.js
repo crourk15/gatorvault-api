@@ -1,39 +1,53 @@
 /**
- * Unified admin PIN verification — accepts any configured admin/cron PIN env var.
+ * Unified admin PIN verification — accepts configured operator pins + cron secrets.
+ *
+ * Operator pins (OPS_ADMIN_PIN, RECRUITING_ADMIN_PIN, …) are for hub login.
+ * Cron/monitoring secrets also authorize API calls.
+ * Legacy GV2026admin stays accepted unless DISABLE_DEFAULT_ADMIN_PIN=true —
+ * cron secrets alone must never lock operators out of the hub.
  */
 function normalizePin(value) {
   if (value == null) return '';
   return String(value).trim();
 }
 
+const OPERATOR_PIN_ENV = [
+  'ADMIN_PASSWORD',
+  'OPS_ADMIN_PIN',
+  'RECRUITING_ADMIN_PIN',
+  'ROSTER_ADMIN_PIN',
+  'CONTENT_ADMIN_PIN',
+  'COMMUNITY_ADMIN_PIN',
+  'LIVE_ADMIN_PIN',
+  'FILM_ROOM_ADMIN_PIN',
+  'WAR_ROOM_ADMIN_PIN',
+  'X_AUTOPOST_PIN',
+  'MEDIA_INGEST_PIN',
+  'EMAIL_TEST_PIN'
+];
+
+const SERVICE_SECRET_ENV = [
+  'INGEST_CRON_SECRET',
+  'MONITORING_CRON_SECRET',
+  'MONITORING_SECRET'
+];
+
+const LEGACY_OPERATOR_PIN = 'GV2026admin';
+
+function pinsFromEnv(keys) {
+  return keys.map((key) => normalizePin(process.env[key])).filter(Boolean);
+}
+
 function collectAdminPins() {
-  // Env-configured pins only. Hardcoded fallback is last-resort when nothing is set
-  // (local/dev or misconfigured Render) — never accepted alongside real env pins.
-  const raw = [
-    process.env.ADMIN_PASSWORD,
-    process.env.OPS_ADMIN_PIN,
-    process.env.RECRUITING_ADMIN_PIN,
-    process.env.ROSTER_ADMIN_PIN,
-    process.env.CONTENT_ADMIN_PIN,
-    process.env.COMMUNITY_ADMIN_PIN,
-    process.env.LIVE_ADMIN_PIN,
-    process.env.FILM_ROOM_ADMIN_PIN,
-    process.env.WAR_ROOM_ADMIN_PIN,
-    process.env.X_AUTOPOST_PIN,
-    process.env.MEDIA_INGEST_PIN,
-    process.env.INGEST_CRON_SECRET,
-    process.env.MONITORING_CRON_SECRET,
-    process.env.MONITORING_SECRET,
-    process.env.EMAIL_TEST_PIN
-  ];
-  const pins = [...new Set(raw.map(normalizePin).filter(Boolean))];
-  if (pins.length > 0) return pins;
-  if (process.env.ALLOW_DEFAULT_ADMIN_PIN === 'true' || process.env.NODE_ENV !== 'production') {
-    return ['GV2026admin'];
+  const operatorPins = [...new Set(pinsFromEnv(OPERATOR_PIN_ENV))];
+  const serviceSecrets = [...new Set(pinsFromEnv(SERVICE_SECRET_ENV))];
+  const disableLegacy = String(process.env.DISABLE_DEFAULT_ADMIN_PIN || '').toLowerCase() === 'true';
+
+  if (!disableLegacy || operatorPins.length === 0) {
+    operatorPins.push(LEGACY_OPERATOR_PIN);
   }
-  // Production with zero env pins: keep legacy fallback so ops is not locked out,
-  // but prefer setting OPS_ADMIN_PIN (see docs/ADMIN_HUB.md).
-  return ['GV2026admin'];
+
+  return [...new Set([...operatorPins, ...serviceSecrets])];
 }
 
 function verifyAdminPin(pin) {
@@ -44,7 +58,7 @@ function verifyAdminPin(pin) {
 
 function primaryAdminPin() {
   const pins = collectAdminPins();
-  return pins[0] || 'GV2026admin';
+  return pins[0] || LEGACY_OPERATOR_PIN;
 }
 
 function pinFromReq(req) {
@@ -65,5 +79,6 @@ module.exports = {
   verifyAdminPin,
   primaryAdminPin,
   pinFromReq,
-  normalizePin
+  normalizePin,
+  LEGACY_OPERATOR_PIN
 };
