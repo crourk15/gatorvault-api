@@ -45,8 +45,12 @@ Set `OPS_ADMIN_PIN` in Render for production. A legacy default exists only as a 
 
 - **Command Center** — `#dashboard/overview`
 - **Runbooks** — `#dashboard/runbooks` (also `#gm2/rerun`)
+- **Ops Summary** — `#dashboard/ops-summary` (tiles, cron freshness, safe re-runs)
+- **QA Summary** — `#qa/summary` (last crawl, modules, open errors)
 - **Vault Grades Manager** — `#recruiting/vault-grades` / `#team/vault-grades`
 - **Settings** — `#settings/platform`
+
+Full Ops / Full QA iframe consoles remain as escape hatches.
 
 ## Shell polish (v16)
 

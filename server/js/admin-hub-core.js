@@ -64,7 +64,8 @@
       panels: [
         { id: 'overview', label: 'Command Center', inline: true },
         { id: 'runbooks', label: 'Runbooks', inline: true },
-        { id: 'ops', label: 'Operations', embed: 'ops' }
+        { id: 'ops-summary', label: 'Ops Summary', inline: true },
+        { id: 'ops', label: 'Full Ops', embed: 'ops' }
       ]
     },
     {
@@ -91,7 +92,8 @@
       mark: 'QA',
       desc: '24/7 crawler — pass/fail, broken pages, UX integrity',
       panels: [
-        { id: 'monitor', label: 'QA Dashboard', embed: 'qa' },
+        { id: 'summary', label: 'QA Summary', inline: true },
+        { id: 'monitor', label: 'Full QA', embed: 'qa' },
         { id: 'mobile-behavior', label: 'Mobile Behavior', embed: 'qa-mobile' }
       ]
     },
@@ -839,11 +841,24 @@
           if (panelId === 'rerun' || panelId === 'runbooks') renderRunbooksPanel(panelEl);
           else if (panelId === 'vault-grades') renderVaultGradesPanel(panelEl);
           else if (panelId === 'overview' && global.GVAdminDashboard) {
-            panelEl.setAttribute('data-rendered', '1');
             GVAdminDashboard.render(panelEl, {
               apiGet: apiGet,
               apiPost: apiPost,
               pin: pin,
+              onNavigate: navigateFromHash
+            });
+          }
+          else if (panelId === 'ops-summary' && global.GVAdminOpsSummary) {
+            GVAdminOpsSummary.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash
+            });
+          }
+          else if (panelId === 'summary' && section.id === 'qa' && global.GVAdminQaSummary) {
+            GVAdminQaSummary.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
               onNavigate: navigateFromHash
             });
           }
