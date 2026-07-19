@@ -30,6 +30,9 @@ Do **not** couple Admin Hub work to:
 
 ## Auth model
 
+Hub login accepts configured operator env pins **and** legacy `GV2026admin` (cron secrets alone do not lock out the legacy PIN). Set `DISABLE_DEFAULT_ADMIN_PIN=true` only when you intentionally want env-only pins.
+
+
 1. Operator enters PIN on `/admin/login`.
 2. PIN is stored in `sessionStorage` (`gv_admin_pin` / `gv_ops_pin`).
 3. Hub API calls send `X-Ops-Pin` / `X-Recruiting-Pin` headers (not query strings).
