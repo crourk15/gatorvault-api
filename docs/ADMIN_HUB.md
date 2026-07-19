@@ -45,8 +45,20 @@ Set `OPS_ADMIN_PIN` in Render for production. A legacy default exists only as a 
 
 - **Command Center** — `#dashboard/overview`
 - **Runbooks** — `#dashboard/runbooks` (also `#gm2/rerun`)
+- **Ops Summary** — `#dashboard/ops-summary` (tiles, cron freshness, safe re-runs)
+- **QA Summary** — `#qa/summary` (last crawl, modules, open errors)
 - **Vault Grades Manager** — `#recruiting/vault-grades` / `#team/vault-grades`
 - **Settings** — `#settings/platform`
+
+Full Ops / Full QA iframe consoles remain as escape hatches.
+
+## Shell polish (v16)
+
+- Typography: Source Sans 3 + Oswald (not Inter)
+- Blue/orange atmospheric gradients on the shell background
+- Letter nav marks (CC / GM / QA…) instead of emoji icons
+- Sticky **ops strip** under the top bar: top issue + primary CTA + jump to Command Center
+- Command Center hero: overall health + top issue + primary action in one composition
 
 ## Runbooks
 
