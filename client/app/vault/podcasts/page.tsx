@@ -1,0 +1,9 @@
+'use client';
+
+import React from 'react';
+import { GatorNationLivePage } from '@/components/vault/live/GatorNationLivePage';
+
+/** Short alias for Menu / bookmarks (`/vault/podcasts/` → podcasts-first Live). */
+export default function VaultPodcastsAliasRoute(): React.ReactElement {
+  return <GatorNationLivePage focusSection="podcasts" />;
+}

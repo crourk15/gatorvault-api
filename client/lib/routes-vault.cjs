@@ -168,6 +168,8 @@ const VAULT_REACT_REWRITES = [
   ...subRouteRewrites('/vault/team', '/vault/team/index.html'),
   ...subRouteRewrites('/vault/live', '/vault/live/index.html'),
   ...subRouteRewrites('/vault/live-feed', '/vault/live/index.html'),
+  // Prefer dedicated export when present; rewrite keeps short URL out of home catch-all.
+  ...subRouteRewrites('/vault/podcasts', '/vault/live/podcasts/index.html'),
   ...subRouteRewrites('/vault/film-room', '/vault/film-room/index.html'),
   ...subRouteRewrites('/vault/schedule', '/vault/schedule/index.html'),
   ...subRouteRewrites('/vault/login', '/vault/login/index.html'),

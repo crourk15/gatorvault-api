@@ -14,7 +14,7 @@ const PROOF_ROUTES = [
   { slug: 'vault-articles', path: '/vault/articles/', label: 'Articles' },
   { slug: 'vault-nil', path: '/vault/nil/', label: 'NIL' },
   { slug: 'vault-game-zone', path: '/vault/game-zone/', label: 'Game Zone' },
-  { slug: 'vault-podcasts', path: '/vault/live/podcasts/', label: 'Podcasts', fallback: '/vault/live/' },
+  { slug: 'vault-podcasts', path: '/vault/live/podcasts/', label: 'Podcasts', alias: '/vault/podcasts/', fallback: '/vault/live/' },
   { slug: 'vault-tickets', path: '/vault/tickets/', label: 'Tickets' },
 ];
 

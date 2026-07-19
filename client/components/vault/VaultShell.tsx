@@ -30,7 +30,14 @@ function sidebarActive(pathname: string, href: string): boolean {
     return p === h || p.startsWith('/vault/players/');
   }
   if (h === '/vault/live' || h === '/vault/live-feed') {
-    return p === '/vault/live' || p.startsWith('/vault/live/') || p === '/vault/live-feed' || p.startsWith('/vault/live-feed/');
+    return (
+      p === '/vault/live' ||
+      p.startsWith('/vault/live/') ||
+      p === '/vault/live-feed' ||
+      p.startsWith('/vault/live-feed/') ||
+      p === '/vault/podcasts' ||
+      p.startsWith('/vault/podcasts/')
+    );
   }
   if (h === '/vault/schedule') {
     return p === h || p.startsWith(`${h}/`) || p === '/vault/tickets' || p.startsWith('/vault/tickets/');

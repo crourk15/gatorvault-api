@@ -228,6 +228,9 @@
 /vault/live-feed  /vault/live/index.html  200
 /vault/live-feed/  /vault/live/index.html  200
 /vault/live-feed/*  /vault/live/index.html  200
+/vault/podcasts  /vault/live/podcasts/index.html  200
+/vault/podcasts/  /vault/live/podcasts/index.html  200
+/vault/podcasts/*  /vault/live/podcasts/index.html  200
 /vault/film-room  /vault/film-room/index.html  200
 /vault/film-room/  /vault/film-room/index.html  200
 /vault/film-room/*  /vault/film-room/index.html  200
@@ -281,7 +284,7 @@
 
 # Admin + legacy HTML
 /highlight/*  /highlight.html  200
-/article/*  /article.html  200
+/article/*  /articles/:splat  301
 /admin  /admin.html  200
 /admin/hub  /admin.html  200
 /admin/hub/*  /admin.html  200
