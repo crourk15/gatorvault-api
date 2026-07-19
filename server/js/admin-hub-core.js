@@ -65,6 +65,7 @@
         { id: 'overview', label: 'Command Center', inline: true },
         { id: 'runbooks', label: 'Runbooks', inline: true },
         { id: 'ops-summary', label: 'Ops Summary', inline: true },
+        { id: 'jobs', label: 'Job Queue', inline: true },
         { id: 'ops', label: 'Full Ops', embed: 'ops' }
       ]
     },
@@ -885,7 +886,7 @@
     var jump = document.getElementById('hub-activity-ops');
     if (jump) {
       jump.addEventListener('click', function () {
-        navigateFromHash('#dashboard/ops-summary');
+        navigateFromHash('#dashboard/jobs');
       });
     }
     refreshActivityRail();
@@ -933,6 +934,14 @@
               apiGet: apiGet,
               apiPost: apiPost,
               onNavigate: navigateFromHash
+            });
+          }
+          else if (panelId === 'jobs' && global.GVAdminJobQueue) {
+            GVAdminJobQueue.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash,
+              pushActivity: pushActivity
             });
           }
           else if (panelId === 'summary' && section.id === 'qa' && global.GVAdminQaSummary) {
