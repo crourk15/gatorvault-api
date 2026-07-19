@@ -66,6 +66,7 @@
         { id: 'runbooks', label: 'Runbooks', inline: true },
         { id: 'ops-summary', label: 'Ops Summary', inline: true },
         { id: 'jobs', label: 'Job Queue', inline: true },
+        { id: 'post-studio', label: 'Post Studio', inline: true },
         { id: 'ops', label: 'Full Ops', embed: 'ops' }
       ]
     },
@@ -938,6 +939,14 @@
           }
           else if (panelId === 'jobs' && global.GVAdminJobQueue) {
             GVAdminJobQueue.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash,
+              pushActivity: pushActivity
+            });
+          }
+          else if (panelId === 'post-studio' && global.GVAdminPostStudio) {
+            GVAdminPostStudio.render(panelEl, {
               apiGet: apiGet,
               apiPost: apiPost,
               onNavigate: navigateFromHash,
