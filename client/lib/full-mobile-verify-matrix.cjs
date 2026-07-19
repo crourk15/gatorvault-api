@@ -24,7 +24,7 @@ const MENU_ROUTES = [
   { id: 'apparel', path: '/vault/apparel/', label: 'Shop & Apparel' },
   { id: 'membership', path: '/vault/membership/', label: 'Membership' },
   { id: 'alerts', path: '/vault/alerts/', label: 'My Alerts' },
-  { id: 'tickets', path: '/vault/tickets/', label: 'Tickets', fallback: '/vault/schedule/' },
+  { id: 'tickets', path: '/vault/tickets/', label: 'Schedule (tickets alias)', fallback: '/vault/schedule/' },
 ];
 
 /** Text that must never persist after settle on any page. */

@@ -127,7 +127,7 @@ const SECTION_LABELS: Record<SiteSectionId, string> = {
   futurecast: 'FutureCast',
   team: 'Team',
   gatorNationLive: 'Gator Nation Live',
-  schedule: 'Schedule & Tickets',
+  schedule: 'Schedule',
   filmRoom: 'Film Room',
   gameWeek: 'Game Week',
   liveScores: 'Gators Live',

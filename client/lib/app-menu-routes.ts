@@ -68,12 +68,6 @@ export function getAppMenuSections(inVault: boolean): AppMenuSection[] {
       href: sitePath(inVault, '/futurecast/alerts', '/vault/alerts'),
       icon: '🔔',
     },
-    {
-      id: 'tickets',
-      label: 'Tickets',
-      href: sitePath(inVault, SITE_ROUTES.schedule, '/vault/schedule'),
-      icon: '🎟️',
-    },
   ];
 
   const media: AppMenuItem[] = [
