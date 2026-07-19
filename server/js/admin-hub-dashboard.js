@@ -11,12 +11,8 @@
   function statusClass(status) {
     if (status === 'red') return 'hub-st-red';
     if (status === 'yellow') return 'hub-st-yellow';
-    return 'hub-st-green';
-  }
-
-  function pinFromCtx(ctx) {
-    if (typeof ctx.pin === 'function') return ctx.pin();
-    return ctx.pin || '';
+    if (status === 'green') return 'hub-st-green';
+    return 'hub-st-unknown';
   }
 
   function render(container, ctx) {
@@ -28,7 +24,7 @@
       '<div class="hub-dash">'
       + '<div class="hub-dash-head">'
       + '<div><h2 class="hub-dash-title">Command Center</h2>'
-      + '<p class="hub-dash-sub">System health, pipelines, and recommended actions</p></div>'
+      + '<p class="hub-dash-sub">One surface for health, top issues, and the next action</p></div>'
       + '<button type="button" class="hub-btn secondary hub-dash-refresh" id="hub-dash-refresh">Refresh</button>'
       + '</div>'
       + '<div id="hub-dash-loading" class="hub-dash-loading">Loading overview…</div>'
@@ -65,6 +61,8 @@
       var body = document.getElementById('hub-dash-body');
       var env = data.environment === 'prod' ? 'Production' : 'Staging';
       var envCls = data.environment === 'prod' ? 'hub-env-prod' : 'hub-env-stage';
+      var top = (data.topIssues && data.topIssues[0]) || null;
+      var primaryAction = (data.recommendedActions && data.recommendedActions[0]) || null;
 
       var issueHtml = (data.topIssues || [])
         .map(function (issue, i) {
@@ -81,10 +79,11 @@
         .join('');
 
       if (!issueHtml) {
-        issueHtml = '<li class="hub-issue hub-st-green"><span class="hub-issue-num">✓</span><div class="hub-issue-body"><strong>All clear</strong><span>No critical issues detected</span></div></li>';
+        issueHtml = '<li class="hub-issue hub-st-green"><span class="hub-issue-num">OK</span><div class="hub-issue-body"><strong>All clear</strong><span>No critical issues detected</span></div></li>';
       }
 
       var moduleCards = Object.keys(data.moduleHealth || {})
+        .filter(function (id) { return id.charAt(0) !== '_'; })
         .map(function (id) {
           var st = data.moduleHealth[id];
           var label = id.replace(/-/g, ' ');
@@ -110,28 +109,34 @@
         })
         .join('');
 
-      var opsTiles = (data.ops && data.ops.tiles) || [];
-      var tileHtml = opsTiles.slice(0, 6).map(function (t) {
-        return '<div class="hub-stat ' + statusClass(t.status) + '">'
-          + '<span class="hub-stat-label">' + esc(t.label) + '</span>'
-          + '<span class="hub-stat-val">' + esc(t.summary || t.status) + '</span>'
-          + '</div>';
-      }).join('');
+      var primaryBtn = primaryAction
+        ? '<button type="button" class="hub-btn" data-dash-action="' + esc(primaryAction.id) + '">' + esc(primaryAction.label) + '</button>'
+        : '<button type="button" class="hub-btn" data-dash-route="#dashboard/runbooks">Open Runbooks</button>';
+
+      var heroIssue = top
+        ? '<strong style="display:block;color:#fff;font-size:1rem;margin-bottom:4px">' + esc(top.title) + '</strong>'
+          + '<span class="hub-meta" style="margin:0">' + esc(top.detail || 'Needs attention') + '</span>'
+        : '<strong style="display:block;color:#fff;font-size:1rem;margin-bottom:4px">Systems steady</strong>'
+          + '<span class="hub-meta" style="margin:0">No top issue — keep an eye on pipelines below.</span>';
 
       var qaPass = data.qa && data.qa.pass;
-      var qaLine = qaPass ? '✓ Last crawl passed' : '✗ Failures detected';
+      var qaLine = qaPass === true ? 'Last crawl passed' : qaPass === false ? 'Failures detected' : 'No crawl signal yet';
 
       body.innerHTML =
         '<div class="hub-dash-grid">'
         + '<section class="hub-card hub-card-wide hub-dash-overall ' + statusClass(data.overall) + '">'
-        + '<div class="hub-overall-row">'
+        + '<div class="hub-dash-hero">'
         + '<div><span class="hub-overall-label">Overall health</span>'
-        + '<strong class="hub-overall-val">' + esc((data.overall || 'green').toUpperCase()) + '</strong></div>'
-        + '<span class="hub-env-badge ' + envCls + '">' + esc(env) + '</span>'
-        + '<span class="hub-dash-ts">Updated ' + esc(new Date(data.updatedAt).toLocaleTimeString()) + '</span>'
-        + '</div></section>'
+        + '<strong class="hub-overall-val">' + esc((data.overall || 'unknown').toUpperCase()) + '</strong>'
+        + '<div style="margin-top:8px"><span class="hub-env-badge ' + envCls + '">' + esc(env) + '</span></div>'
+        + '<p class="hub-dash-ts" style="margin-top:8px">Updated ' + esc(new Date(data.updatedAt).toLocaleTimeString()) + '</p></div>'
+        + '<div>' + heroIssue + '</div>'
+        + '<div class="hub-dash-primary">'
+        + primaryBtn
+        + '<button type="button" class="hub-btn secondary" data-dash-route="#dashboard/runbooks">Runbooks</button>'
+        + '</div></div></section>'
 
-        + '<section class="hub-card hub-card-wide"><h3>Top issues needing attention</h3><ol class="hub-issue-list">' + issueHtml + '</ol></section>'
+        + '<section class="hub-card hub-card-wide"><h3>Top issues</h3><ol class="hub-issue-list">' + issueHtml + '</ol></section>'
 
         + '<section class="hub-card"><h3>QA Monitor</h3>'
         + '<p class="hub-meta">' + qaLine + '</p>'
@@ -155,7 +160,6 @@
         + '<section class="hub-card"><h3>App Store Gate</h3>'
         + '<p class="hub-meta">Progress: ' + esc(data.appStoreGate ? ((data.appStoreGate.consecutiveGreenDays || 0) + '/' + (data.appStoreGate.requiredDays || 7) + ' green days') : '—') + '</p>'
         + '<p class="hub-meta">Today: ' + esc(data.appStoreGate && data.appStoreGate.evaluation ? (data.appStoreGate.evaluation.green ? 'Green' : 'Red') : '—') + '</p>'
-        + '<p class="hub-meta">PI sample: ' + esc(data.appStoreGate && data.appStoreGate.sample && data.appStoreGate.sample.productIntelOverall != null ? data.appStoreGate.sample.productIntelOverall : '—') + '</p>'
         + '</section>'
 
         + '<section class="hub-card hub-card-wide"><h3>Module health</h3><div class="hub-mod-grid">' + moduleCards + '</div></section>'
@@ -163,8 +167,6 @@
         + '<section class="hub-card hub-card-wide"><h3>Pipelines</h3><div class="hub-pipe-grid">' + (pipelineHtml || '<p class="hub-meta">No pipeline data</p>') + '</div></section>'
 
         + '<section class="hub-card hub-card-wide"><h3>Recommended actions</h3><div class="hub-btn-row">' + (actionsHtml || '<span class="hub-meta">No actions suggested</span>') + '</div></section>'
-
-        + '<section class="hub-card hub-card-wide"><h3>Ops tiles</h3><div class="hub-stat-grid">' + tileHtml + '</div></section>'
         + '</div>';
 
       body.classList.remove('hidden');
@@ -177,6 +179,9 @@
           _alertCount: alertList.length
         }));
       }
+      if (global.GVAdminHub && typeof global.GVAdminHub.applyOpsStrip === 'function') {
+        global.GVAdminHub.applyOpsStrip(data);
+      }
     }
 
     function load() {
@@ -185,8 +190,7 @@
       if (loading) loading.classList.remove('hidden');
       if (body) body.classList.add('hidden');
 
-      var pin = pinFromCtx(ctx);
-      apiGet('/api/admin/hub/overview?pin=' + encodeURIComponent(pin))
+      apiGet('/api/admin/hub/overview')
         .then(renderOverview)
         .catch(function (e) {
           if (body) {

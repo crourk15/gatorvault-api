@@ -59,7 +59,7 @@
     {
       id: 'dashboard',
       label: 'Dashboard',
-      icon: '📊',
+      mark: 'CC',
       desc: 'Command center — system health, top issues, pipelines, recommended actions',
       panels: [
         { id: 'overview', label: 'Command Center', inline: true },
@@ -70,7 +70,7 @@
     {
       id: 'gm2',
       label: 'GM',
-      icon: '🛡️',
+      mark: 'GM',
       desc: 'Roster, scholarships, depth chart, re-run modules, identity resolution',
       panels: [
         { id: 'rerun', label: 'Runbooks', inline: true },
@@ -81,14 +81,14 @@
     {
       id: 'product-intel',
       label: 'Product Health',
-      icon: '🧠',
+      mark: 'PI',
       desc: 'API uptime, latency, error rates, deploy status, fix queue',
       panels: [{ id: 'health', label: 'Product Intelligence', embed: 'product-intel' }]
     },
     {
       id: 'qa',
       label: 'QA Monitor',
-      icon: '🔍',
+      mark: 'QA',
       desc: '24/7 crawler — pass/fail, broken pages, UX integrity',
       panels: [
         { id: 'monitor', label: 'QA Dashboard', embed: 'qa' },
@@ -98,7 +98,7 @@
     {
       id: 'recruiting',
       label: 'Recruiting Admin',
-      icon: '🎯',
+      mark: 'RH',
       desc: 'Classes, boards, intel, predictions, hub bundle inputs, pipeline status',
       panels: [
         { id: 'alerts', label: 'Alerts & Live', embed: 'recruiting-alerts' },
@@ -109,7 +109,7 @@
     {
       id: 'team',
       label: 'Team Admin',
-      icon: '🐊',
+      mark: 'TM',
       desc: 'Schedule, opponents, depth chart, staff, film room, game zone',
       panels: [
         { id: 'board', label: 'Roster & Board', embed: 'board' },
@@ -119,7 +119,7 @@
     {
       id: 'content',
       label: 'Content & Media',
-      icon: '📺',
+      mark: 'CM',
       desc: 'Articles, War Room, videos, assets, draft/publish, featured slots',
       panels: [
         { id: 'content-accuracy', label: 'Content Accuracy', embed: 'content' },
@@ -129,35 +129,35 @@
     {
       id: 'community',
       label: 'Community Admin',
-      icon: '💬',
+      mark: 'CO',
       desc: 'Comments, moderation queue, bans, engagement metrics',
       panels: [{ id: 'moderation', label: 'Moderation Queue', embed: 'community' }]
     },
     {
       id: 'feedback',
       label: 'Feedback & Support',
-      icon: '📬',
+      mark: 'FB',
       desc: 'User feedback, bug reports, support tickets, status tracking',
       panels: [{ id: 'inbox', label: 'Feedback Inbox', embed: 'feedback' }]
     },
     {
       id: 'settings',
       label: 'Settings',
-      icon: '⚙️',
+      mark: 'ST',
       desc: 'Global config, feature flags, admin users, security, color system',
       panels: [{ id: 'platform', label: 'Platform Settings', inline: true }]
     },
     {
       id: 'player-intel',
       label: 'Player Intel Entry',
-      icon: '⚡',
+      mark: 'PX',
       desc: 'Fast form — player selector, event type, source, notes → intel store + hub snapshot',
       panels: [{ id: 'entry', label: 'Intel Entry', embed: 'player-intel' }]
     },
     {
       id: 'self-runner',
       label: 'Self-Runner',
-      icon: '🤖',
+      mark: 'SR',
       desc: 'Smart automation — monitor, detect, suggest fixes across the entire stack',
       panels: [{ id: 'pending', label: 'Pending Fixes', embed: 'self-runner' }]
     }
@@ -218,6 +218,10 @@
       .catch(function (err) {
         showApiBanner((err && err.message) || 'Admin Hub API unreachable — Render may be waking.');
       });
+    // Keep the sticky ops strip fresh even when Command Center is not open.
+    apiGet('/api/admin/hub/overview')
+      .then(function (overview) { applyOpsStrip(overview); })
+      .catch(function () { /* strip stays as-is */ });
   }
 
   function startHealthPoll() {
@@ -705,14 +709,14 @@
       btn.type = 'button';
       btn.className = 'hub-nav-btn';
       btn.setAttribute('data-section', sec.id);
-      btn.innerHTML = '<span class="hub-health-dot hub-health-unknown"></span><span class="hub-nav-icon">' + sec.icon + '</span><span class="hub-nav-label">' + sec.label + '</span>';
+      btn.innerHTML = '<span class="hub-health-dot hub-health-unknown"></span><span class="hub-nav-mark">' + (sec.mark || sec.label.slice(0, 2).toUpperCase()) + '</span><span class="hub-nav-label">' + sec.label + '</span>';
       btn.addEventListener('click', function () { setRoute(sec.id, sec.panels[0] && sec.panels[0].id); renderRoute(); });
       navEl.appendChild(btn);
 
       var sectionEl = document.createElement('section');
       sectionEl.className = 'hub-section hidden';
       sectionEl.id = 'hub-section-' + sec.id;
-      sectionEl.innerHTML = '<div class="hub-section-head"><h2>' + sec.icon + ' ' + sec.label + '</h2><p>' + sec.desc + '</p></div>';
+      sectionEl.innerHTML = '<div class="hub-section-head"><h2>' + sec.label + '</h2><p>' + sec.desc + '</p></div>';
 
       if (sec.panels.length > 1) {
         var tabs = document.createElement('div');
@@ -756,8 +760,55 @@
 
     wireGlobalSearch();
     wireAlertsPanel();
+    wireOpsStrip();
     startHealthPoll();
     renderRoute();
+  }
+
+  function wireOpsStrip() {
+    var primary = document.getElementById('hub-ops-strip-primary');
+    var secondary = document.getElementById('hub-ops-strip-secondary');
+    if (primary) {
+      primary.addEventListener('click', function () {
+        var route = primary.getAttribute('data-route') || '#dashboard/runbooks';
+        navigateFromHash(route);
+      });
+    }
+    if (secondary) {
+      secondary.addEventListener('click', function () {
+        navigateFromHash('#dashboard/overview');
+      });
+    }
+  }
+
+  function applyOpsStrip(data) {
+    var strip = document.getElementById('hub-ops-strip');
+    var titleEl = document.getElementById('hub-ops-strip-title');
+    var detailEl = document.getElementById('hub-ops-strip-detail');
+    var primary = document.getElementById('hub-ops-strip-primary');
+    if (!strip || !titleEl || !detailEl || !primary) return;
+
+    var issues = (data && data.topIssues) || [];
+    var top = issues[0];
+    strip.classList.remove('hidden');
+
+    if (!top) {
+      titleEl.textContent = 'All clear';
+      detailEl.textContent = 'No critical issues — runbooks ready if you need them.';
+      primary.textContent = 'Open Runbooks';
+      primary.setAttribute('data-route', '#dashboard/runbooks');
+      return;
+    }
+
+    titleEl.textContent = top.title || 'Attention needed';
+    detailEl.textContent = top.detail || '';
+    if (top.route) {
+      primary.textContent = 'Open module';
+      primary.setAttribute('data-route', top.route);
+    } else {
+      primary.textContent = 'Open Runbooks';
+      primary.setAttribute('data-route', '#dashboard/runbooks');
+    }
   }
 
   function renderRoute() {
@@ -886,7 +937,8 @@
     apiGet: apiGet,
     apiPost: apiPost,
     wireGate: wireGate,
-    applyModuleHealth: applyModuleHealth
+    applyModuleHealth: applyModuleHealth,
+    applyOpsStrip: applyOpsStrip
   };
 
   if (document.readyState === 'loading') {

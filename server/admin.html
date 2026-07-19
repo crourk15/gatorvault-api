@@ -5,18 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>GatorVault — Admin Hub</title>
   <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/gv-feedback.css?v=2">
   <style>
     *{box-sizing:border-box}
     :root{
-      --hub-bg:#030712;--hub-panel:#0b1220;--hub-border:#1e3a5f;--hub-text:#e2e8f0;
-      --hub-muted:#94a3b8;--hub-orange:#FA4616;--hub-sidebar:240px;
+      --hub-bg:#040b16;--hub-panel:#0b1526;--hub-border:#1e3a5f;--hub-text:#e8eef7;
+      --hub-muted:#94a3b8;--hub-orange:#FA4616;--hub-blue:#0021A5;--hub-sidebar:248px;
+      --hub-font:"Source Sans 3",Segoe UI,sans-serif;--hub-display:Oswald,Impact,sans-serif;
     }
-    body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--hub-bg);color:var(--hub-text);min-height:100vh}
+    body{
+      margin:0;font-family:var(--hub-font);background:
+        radial-gradient(1200px 600px at 0% 0%, rgba(0,33,165,.28), transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, rgba(250,70,22,.12), transparent 50%),
+        var(--hub-bg);
+      color:var(--hub-text);min-height:100vh;
+    }
     .hidden{display:none!important}
     .admin-pin-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px}
     .admin-pin-card{background:var(--hub-panel);border:1px solid var(--hub-border);border-radius:16px;padding:28px;width:100%;max-width:400px}
-    .admin-pin-card h1{margin:0 0 6px;font-family:Oswald,sans-serif;color:#fff;font-size:1.35rem;letter-spacing:.04em}
+    .admin-pin-card h1{margin:0 0 6px;font-family:var(--hub-display);color:#fff;font-size:1.35rem;letter-spacing:.04em;text-transform:uppercase}
     .admin-pin-card p{color:var(--hub-muted);font-size:14px;margin:0 0 18px;line-height:1.45}
     .admin-pin-card label{display:block;font-size:11px;color:var(--hub-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
     .admin-pin-card input{width:100%;padding:12px;border-radius:10px;border:1px solid #334155;background:#111827;color:#f8fafc;font:inherit;margin-bottom:8px}
@@ -31,7 +41,7 @@
       border-right:2px solid #003087;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
     }
     .hub-brand{padding:18px 16px 14px;border-bottom:1px solid var(--hub-border)}
-    .hub-brand h1{margin:0;font-family:Oswald,sans-serif;font-size:1.1rem;color:var(--hub-orange);letter-spacing:.06em}
+    .hub-brand h1{margin:0;font-family:var(--hub-display);font-size:1.05rem;color:var(--hub-orange);letter-spacing:.08em;text-transform:uppercase}
     .hub-brand p{margin:4px 0 0;font-size:11px;color:var(--hub-muted);line-height:1.35}
     .hub-nav{flex:1;overflow-y:auto;padding:10px 8px;display:flex;flex-direction:column;gap:4px}
     .hub-nav-btn{
@@ -46,7 +56,8 @@
     .hub-health-unknown{background:#64748b;box-shadow:none;opacity:.85}
     .hub-nav-btn:hover{background:rgba(0,48,135,.25);color:#e2e8f0}
     .hub-nav-btn.active{background:rgba(250,70,22,.15);color:#fff;border:1px solid rgba(250,70,22,.35)}
-    .hub-nav-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+    .hub-nav-icon,.hub-nav-mark{font-size:11px;width:28px;height:22px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:6px;background:rgba(0,33,165,.35);border:1px solid rgba(148,163,184,.2);color:#cbd5e1;font-weight:700;letter-spacing:.04em;font-family:var(--hub-display)}
+    .hub-nav-btn.active .hub-nav-mark{background:rgba(250,70,22,.2);border-color:rgba(250,70,22,.45);color:#fff}
     .hub-sidebar-foot{padding:12px;border-top:1px solid var(--hub-border);display:flex;flex-direction:column;gap:8px}
     .hub-sidebar-foot a,.hub-sidebar-foot button{font-size:12px;color:var(--hub-muted);text-decoration:none;background:transparent;border:none;text-align:left;padding:8px 12px;cursor:pointer;font:inherit}
     .hub-sidebar-foot a:hover,.hub-sidebar-foot button:hover{color:#fff}
@@ -57,11 +68,11 @@
       border-bottom:1px solid var(--hub-border);background:rgba(3,7,18,.95);backdrop-filter:blur(8px);flex-shrink:0;flex-wrap:wrap;
     }
     .hub-topbar-left{display:flex;align-items:center;gap:14px;min-width:0;flex:1}
-    .hub-topbar h2{margin:0;font-family:Oswald,sans-serif;font-size:1.15rem;color:#fff;white-space:nowrap}
+    .hub-topbar h2{margin:0;font-family:var(--hub-display);font-size:1.15rem;color:#fff;white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
     .hub-topbar-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .hub-search-wrap{position:relative;flex:1;max-width:420px;min-width:180px}
     .hub-search-wrap input{width:100%;padding:10px 14px 10px 36px;border-radius:999px;border:1px solid #334155;background:#0f172a;color:#f8fafc;font:inherit;font-size:13px}
-    .hub-search-wrap::before{content:'🔍';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.7;pointer-events:none}
+    .hub-search-wrap::before{content:'';position:absolute;left:14px;top:50%;transform:translateY(-50%);width:12px;height:12px;border:2px solid #64748b;border-radius:50%;box-shadow:5px 5px 0 -4px #64748b;pointer-events:none}
     .hub-search-results{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:50;background:#0b1220;border:1px solid #334155;border-radius:12px;max-height:320px;overflow:auto;box-shadow:0 16px 40px rgba(0,0,0,.5)}
     .hub-search-item{display:block;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid #1e293b;color:#e2e8f0;padding:10px 12px;cursor:pointer;font:inherit}
     .hub-search-item:hover{background:rgba(250,70,22,.1)}
@@ -72,6 +83,16 @@
     .hub-env-stage{background:rgba(234,179,8,.12);color:#fde047;border:1px solid rgba(234,179,8,.35)}
     .hub-api-banner{background:#451a03;border-bottom:1px solid #ea580c;color:#fed7aa;padding:10px 20px;font-size:13px;line-height:1.45;flex-shrink:0}
     .hub-api-banner.hidden{display:none!important}
+    .hub-ops-strip{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+      padding:10px 20px;background:linear-gradient(90deg,rgba(0,33,165,.35),rgba(250,70,22,.12));
+      border-bottom:1px solid rgba(250,70,22,.35);flex-shrink:0;
+    }
+    .hub-ops-strip.hidden{display:none!important}
+    .hub-ops-strip__label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#fdba74;font-weight:700;margin:0 0 2px}
+    .hub-ops-strip__title{margin:0;font-family:var(--hub-display);font-size:1rem;color:#fff;letter-spacing:.03em}
+    .hub-ops-strip__detail{margin:2px 0 0;font-size:12px;color:#cbd5e1}
+    .hub-ops-strip__actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
     .hub-alerts-btn{position:relative;background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:10px;padding:8px 12px;cursor:pointer;font:inherit;min-height:40px}
     .hub-alerts-btn[data-count]:not([data-count=""])::after{content:attr(data-count);position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:999px;display:flex;align-items:center;justify-content:center;padding:0 4px}
     .hub-alerts-panel{position:absolute;right:20px;top:62px;width:min(360px,calc(100vw - 32px));background:#0b1220;border:1px solid #334155;border-radius:12px;padding:12px;z-index:60;box-shadow:0 16px 40px rgba(0,0,0,.5);max-height:360px;overflow:auto}
@@ -81,7 +102,7 @@
     .hub-main-wrap{position:relative;flex:1;min-width:0;display:flex;flex-direction:column;max-height:100vh}
     .hub-content{flex:1;overflow:auto;padding:16px 20px 32px;-webkit-overflow-scrolling:touch}
     .hub-section-head{margin-bottom:14px}
-    .hub-section-head h2{margin:0 0 4px;font-family:Oswald,sans-serif;font-size:1.25rem;color:#fff}
+    .hub-section-head h2{margin:0 0 4px;font-family:var(--hub-display);font-size:1.25rem;color:#fff;text-transform:uppercase;letter-spacing:.04em}
     .hub-section-head p{margin:0;font-size:13px;color:var(--hub-muted)}
 
     .hub-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
@@ -129,12 +150,16 @@
 
     /* Command center dashboard */
     .hub-dash-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
-    .hub-dash-title{margin:0;font-family:Oswald,sans-serif;font-size:1.35rem;color:#fff}
+    .hub-dash-title{margin:0;font-family:var(--hub-display);font-size:1.45rem;color:#fff;text-transform:uppercase;letter-spacing:.05em}
+    .hub-dash-hero{display:grid;grid-template-columns:minmax(180px,220px) 1fr auto;gap:16px;align-items:center}
+    @media(max-width:800px){.hub-dash-hero{grid-template-columns:1fr}}
+    .hub-dash-primary{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+    .hub-st-unknown{border-color:rgba(100,116,139,.45)}
     .hub-dash-sub{margin:4px 0 0;font-size:13px;color:var(--hub-muted)}
     .hub-dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
     .hub-dash-overall .hub-overall-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
     .hub-overall-label{display:block;font-size:11px;color:var(--hub-muted);text-transform:uppercase}
-    .hub-overall-val{font-family:Oswald,sans-serif;font-size:1.6rem;color:#fff}
+    .hub-overall-val{font-family:var(--hub-display);font-size:1.75rem;color:#fff;letter-spacing:.04em}
     .hub-issue-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
     .hub-issue{display:flex;gap:12px;padding:12px;border-radius:10px;background:#020617;border:1px solid #1e293b}
     .hub-issue-num{font-weight:700;color:#64748b;min-width:20px}
@@ -179,8 +204,8 @@
 <body>
   <div id="admin-pin-gate" class="admin-pin-ov" role="dialog" aria-modal="true">
     <div class="admin-pin-card">
-      <h1>🐊 GatorVault Admin Hub</h1>
-      <p>One login. One control panel. Enter your operator PIN to manage recruiting, team, content, community, GM2, and platform settings.</p>
+      <h1>GatorVault Admin Hub</h1>
+      <p>One login. One control panel. Enter your operator PIN to manage recruiting, team, content, community, GM, and platform settings.</p>
       <label for="gate-pin">Admin PIN</label>
       <input id="gate-pin" type="password" inputmode="numeric" autocomplete="off" placeholder="Admin PIN">
       <p id="gate-err" class="err hidden">Invalid PIN</p>
@@ -191,15 +216,16 @@
   <div id="hub-shell" class="hidden">
     <aside class="hub-sidebar">
       <div class="hub-brand">
-        <h1>GatorVault Admin Hub</h1>
-        <p>Unified command center</p>
+        <h1>GatorVault Admin</h1>
+        <p>Command center</p>
       </div>
       <nav id="hub-nav" class="hub-nav" aria-label="Admin sections"></nav>
       <div class="hub-sidebar-foot">
-        <a href="/admin/hub#qa/monitor">🛡️ QA Monitor</a>
-        <a href="/admin/hub#product-intel/health">🧠 Product Health</a>
-        <a href="/" target="_blank" rel="noopener">↗ Open public site</a>
-        <button type="button" id="hub-lock">🔒 Lock &amp; sign out</button>
+        <a href="/admin/hub#qa/monitor">QA Monitor</a>
+        <a href="/admin/hub#product-intel/health">Product Health</a>
+        <a href="/admin/hub#dashboard/runbooks">Runbooks</a>
+        <a href="/" target="_blank" rel="noopener">Open public site</a>
+        <button type="button" id="hub-lock">Lock &amp; sign out</button>
       </div>
     </aside>
     <div class="hub-main-wrap">
@@ -213,11 +239,22 @@
         </div>
         <div class="hub-topbar-actions">
           <span id="hub-env-badge" class="hub-env-badge hub-env-stage">Stage</span>
-          <button type="button" class="hub-alerts-btn" id="hub-alerts-btn" title="Alerts">🔔</button>
+          <button type="button" class="hub-alerts-btn" id="hub-alerts-btn" title="Alerts">Alerts</button>
           <button type="button" class="hub-btn secondary" id="hub-lock-top">Lock</button>
         </div>
       </header>
       <div id="hub-api-banner" class="hub-api-banner hidden" role="alert"></div>
+      <div id="hub-ops-strip" class="hub-ops-strip hidden" aria-live="polite">
+        <div>
+          <p class="hub-ops-strip__label">Top issue</p>
+          <p class="hub-ops-strip__title" id="hub-ops-strip-title">All clear</p>
+          <p class="hub-ops-strip__detail" id="hub-ops-strip-detail">No critical issues</p>
+        </div>
+        <div class="hub-ops-strip__actions">
+          <button type="button" class="hub-btn" id="hub-ops-strip-primary">Open Runbooks</button>
+          <button type="button" class="hub-btn secondary" id="hub-ops-strip-secondary">Command Center</button>
+        </div>
+      </div>
       <div id="hub-alerts-panel" class="hub-alerts-panel hidden"></div>
       <div id="hub-main" class="hub-content"></div>
     </div>
@@ -225,9 +262,9 @@
 
   <script src="/js/admin-api-fetch.js?v=1"></script>
   <script src="/js/vault-grade-editor.js?v=vge-20260611"></script>
-  <script src="/js/admin-hub-dashboard.js?v=hub-dash-v5"></script>
+  <script src="/js/admin-hub-dashboard.js?v=hub-dash-v6"></script>
   <script src="/js/admin-hub-runbooks.js?v=hub-runbooks-v1"></script>
-  <script src="/js/admin-hub-core.js?v=hub-v15-elite"></script>
+  <script src="/js/admin-hub-core.js?v=hub-v16-shell"></script>
   <script>
     document.getElementById('hub-lock-top').addEventListener('click', function () {
       document.getElementById('hub-lock').click();
