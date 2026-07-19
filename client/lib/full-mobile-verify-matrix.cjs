@@ -20,7 +20,7 @@ const MENU_ROUTES = [
   { id: 'community', path: '/vault/community/', label: 'Community' },
   { id: 'game-zone', path: '/vault/game-zone/', label: 'Game Zone' },
   { id: 'nil', path: '/vault/nil/', label: 'NIL' },
-  { id: 'podcasts', path: '/vault/live/podcasts/', label: 'Podcasts (GNL)' },
+  { id: 'podcasts', path: '/vault/live/podcasts/', label: 'Podcasts (GNL)', fallback: '/vault/podcasts/' },
   { id: 'apparel', path: '/vault/apparel/', label: 'Shop & Apparel' },
   { id: 'membership', path: '/vault/membership/', label: 'Membership' },
   { id: 'alerts', path: '/vault/alerts/', label: 'My Alerts' },
