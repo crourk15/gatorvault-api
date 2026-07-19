@@ -84,7 +84,10 @@
       label: 'Product Health',
       mark: 'PI',
       desc: 'API uptime, latency, error rates, deploy status, fix queue',
-      panels: [{ id: 'health', label: 'Product Intelligence', embed: 'product-intel' }]
+      panels: [
+        { id: 'summary', label: 'Fix Queue', inline: true },
+        { id: 'health', label: 'Full console', embed: 'product-intel' }
+      ]
     },
     {
       id: 'qa',
@@ -103,7 +106,8 @@
       mark: 'RH',
       desc: 'Classes, boards, intel, predictions, hub bundle inputs, pipeline status',
       panels: [
-        { id: 'alerts', label: 'Alerts & Live', embed: 'recruiting-alerts' },
+        { id: 'daily', label: 'Daily Summary', inline: true },
+        { id: 'alerts', label: 'Full Alerts', embed: 'recruiting-alerts' },
         { id: 'monitoring', label: 'Monitoring', embed: 'monitoring' },
         { id: 'vault-grades', label: 'Vault Grades Manager', inline: true }
       ]
@@ -763,6 +767,7 @@
     wireGlobalSearch();
     wireAlertsPanel();
     wireOpsStrip();
+    wireActivityRail();
     startHealthPoll();
     renderRoute();
   }
@@ -811,6 +816,81 @@
       primary.textContent = 'Open Runbooks';
       primary.setAttribute('data-route', '#dashboard/runbooks');
     }
+  }
+
+  var _activityLocal = [];
+  var _activityTimer = null;
+
+  function pushActivity(entry) {
+    if (!entry) return;
+    _activityLocal.unshift({
+      id: 'local_' + Date.now(),
+      status: entry.status || 'success',
+      message: entry.message || 'Action',
+      subsystem: entry.subsystem || 'hub',
+      timestamp: new Date().toISOString()
+    });
+    _activityLocal = _activityLocal.slice(0, 8);
+    renderActivityRail();
+  }
+
+  function activityStatusClass(status) {
+    if (status === 'error' || status === 'fail' || status === 'red') return 'hub-act--err';
+    if (status === 'warning' || status === 'yellow') return 'hub-act--warn';
+    if (status === 'started' || status === 'running') return 'hub-act--run';
+    return 'hub-act--ok';
+  }
+
+  function renderActivityRail(remoteEvents) {
+    var list = document.getElementById('hub-activity-list');
+    var rail = document.getElementById('hub-activity-rail');
+    if (!list || !rail) return;
+
+    var remote = Array.isArray(remoteEvents) ? remoteEvents : [];
+    var merged = _activityLocal.concat(remote).slice(0, 12);
+    rail.classList.remove('hidden');
+
+    if (!merged.length) {
+      list.innerHTML = '<li class="hub-act hub-act--ok"><span class="hub-act__meta">Quiet</span><span class="hub-act__msg">No recent ops activity</span></li>';
+      return;
+    }
+
+    list.innerHTML = merged.map(function (ev) {
+      var when = '';
+      try { when = new Date(ev.timestamp || ev.at || Date.now()).toLocaleTimeString(); } catch (e) { when = ''; }
+      var meta = document.createElement('div');
+      meta.textContent = when + (ev.subsystem ? ' · ' + ev.subsystem : '');
+      var msg = document.createElement('div');
+      msg.textContent = ev.message || ev.title || ev.status || 'event';
+      return '<li class="hub-act ' + activityStatusClass(ev.status) + '">'
+        + '<span class="hub-act__meta">' + meta.innerHTML + '</span>'
+        + '<span class="hub-act__msg">' + msg.innerHTML + '</span>'
+        + '</li>';
+    }).join('');
+  }
+
+  function refreshActivityRail() {
+    apiGet('/api/ops/logs?limit=10')
+      .then(function (j) {
+        renderActivityRail((j && j.events) || []);
+      })
+      .catch(function () {
+        renderActivityRail([]);
+      });
+  }
+
+  function wireActivityRail() {
+    var refreshBtn = document.getElementById('hub-activity-refresh');
+    if (refreshBtn) refreshBtn.addEventListener('click', refreshActivityRail);
+    var jump = document.getElementById('hub-activity-ops');
+    if (jump) {
+      jump.addEventListener('click', function () {
+        navigateFromHash('#dashboard/ops-summary');
+      });
+    }
+    refreshActivityRail();
+    if (_activityTimer) clearInterval(_activityTimer);
+    _activityTimer = setInterval(refreshActivityRail, 60000);
   }
 
   function renderRoute() {
@@ -862,6 +942,20 @@
               onNavigate: navigateFromHash
             });
           }
+          else if (panelId === 'daily' && section.id === 'recruiting' && global.GVAdminRecruitingSummary) {
+            GVAdminRecruitingSummary.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash
+            });
+          }
+          else if (panelId === 'summary' && section.id === 'product-intel' && global.GVAdminProductIntelSummary) {
+            GVAdminProductIntelSummary.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash
+            });
+          }
           else if (panelId === 'platform') renderSettingsPanel(panelEl);
         }
         return;
@@ -889,6 +983,7 @@
     sessionStorage.removeItem(SESSION_KEY);
     sessionStorage.removeItem(OPS_SESSION_KEY);
     if (_healthPollTimer) clearInterval(_healthPollTimer);
+    if (_activityTimer) clearInterval(_activityTimer);
     _hubInitialized = false;
     location.replace('/admin/login');
   }
@@ -953,7 +1048,8 @@
     apiPost: apiPost,
     wireGate: wireGate,
     applyModuleHealth: applyModuleHealth,
-    applyOpsStrip: applyOpsStrip
+    applyOpsStrip: applyOpsStrip,
+    pushActivity: pushActivity
   };
 
   if (document.readyState === 'loading') {
