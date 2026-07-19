@@ -47,6 +47,9 @@ Set `OPS_ADMIN_PIN` in Render for production. A legacy default exists only as a 
 - **Runbooks** — `#dashboard/runbooks` (also `#gm2/rerun`)
 - **Ops Summary** — `#dashboard/ops-summary` (tiles, cron freshness, safe re-runs)
 - **QA Summary** — `#qa/summary` (last crawl, modules, open errors)
+- **Recruiting Daily** — `#recruiting/daily` (events, ingest, pipeline actions)
+- **Product Fix Queue** — `#product-intel/summary` (scores, open fixes, recompute)
+- Sticky **Activity** rail — recent `/api/ops/logs` + local hub actions
 - **Vault Grades Manager** — `#recruiting/vault-grades` / `#team/vault-grades`
 - **Settings** — `#settings/platform`
 
