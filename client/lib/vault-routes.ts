@@ -19,6 +19,7 @@ export type VaultSectionId =
   | 'nil'
   | 'alerts'
   | 'apparel'
+  | 'podcasts'
   | 'admin'
   | 'depth-chart'
   | 'players';
@@ -42,6 +43,7 @@ export const VAULT_SECONDARY: { id: VaultSectionId; label: string; href: string;
   { id: 'community', label: 'Community', href: '/vault/community', icon: '💬' },
   { id: 'game-zone', label: 'Game Zone', href: '/vault/game-zone/', icon: '🏆' },
   { id: 'nil', label: 'NIL Tracker', href: '/vault/nil', icon: '💰' },
+  { id: 'podcasts', label: 'Podcasts', href: '/vault/live/podcasts/', icon: '🎙️' },
   { id: 'alerts', label: 'My Alerts', href: '/vault/alerts', icon: '🔔' },
   { id: 'apparel', label: 'Apparel', href: '/vault/apparel', icon: '👕' },
 ];

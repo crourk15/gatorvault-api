@@ -39,6 +39,9 @@ function sidebarActive(pathname: string, href: string): boolean {
       p.startsWith('/vault/podcasts/')
     );
   }
+  if (h === '/vault/live/podcasts' || h.startsWith('/vault/live/podcasts')) {
+    return p === '/vault/live/podcasts' || p.startsWith('/vault/live/podcasts/') || p === '/vault/podcasts' || p.startsWith('/vault/podcasts/');
+  }
   if (h === '/vault/schedule') {
     return p === h || p.startsWith(`${h}/`) || p === '/vault/tickets' || p.startsWith('/vault/tickets/');
   }
