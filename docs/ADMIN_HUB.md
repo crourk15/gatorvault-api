@@ -46,6 +46,7 @@ Set `OPS_ADMIN_PIN` in Render for production. A legacy default exists only as a 
 - **Command Center** — `#dashboard/overview`
 - **Runbooks** — `#dashboard/runbooks` (also `#gm2/rerun`)
 - **Ops Summary** — `#dashboard/ops-summary` (tiles, cron freshness, safe re-runs)
+- **Job Queue** — `#dashboard/jobs` (safe re-runs + heartbeats + recent ops logs)
 - **QA Summary** — `#qa/summary` (last crawl, modules, open errors)
 - **Recruiting Daily** — `#recruiting/daily` (events, ingest, pipeline actions)
 - **Product Fix Queue** — `#product-intel/summary` (scores, open fixes, recompute)
