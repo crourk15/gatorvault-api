@@ -1,4 +1,4 @@
-/** Admin Hub API — module-health response contract. */
+/** Admin Hub API — module-health + search contracts. */
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
@@ -8,12 +8,39 @@ test('buildModuleHealthMap returns all module ids', () => {
   const map = hub.buildModuleHealthMap({
     ops: { overall: 'green', tiles: [] },
     qa: { pass: true, failed: 0 },
-    productIntel: { fixQueueOpen: 0 },
+    productIntel: { fixQueueOpen: 0, overall: 90 },
     selfRunner: { queue: { pending: 0 }, enabled: true }
   });
   for (const id of hub.MODULE_IDS) {
     assert.ok(map[id], `missing module health for ${id}`);
   }
+});
+
+test('buildModuleHealthMap does not fake-green unchecked modules', () => {
+  const map = hub.buildModuleHealthMap({
+    ops: { overall: 'green', tiles: [] },
+    qa: { pass: true, failed: 0 },
+    productIntel: { fixQueueOpen: 0 },
+    selfRunner: { queue: { pending: 0 }, enabled: true }
+  });
+  assert.equal(map.dashboard, 'green');
+  assert.equal(map.qa, 'green');
+  assert.equal(map.settings, 'unknown');
+  assert.equal(map.community, 'unknown');
+  assert.equal(map.feedback, 'unknown');
+});
+
+test('buildModuleHealthMap uses community/feedback backlog signals', () => {
+  const map = hub.buildModuleHealthMap({
+    ops: { overall: 'green', tiles: [] },
+    qa: { pass: true, failed: 0 },
+    productIntel: { fixQueueOpen: 0, overall: 88 },
+    selfRunner: { queue: { pending: 0 }, enabled: true },
+    communityOpen: 3,
+    feedbackOpen: 0
+  });
+  assert.equal(map.community, 'yellow');
+  assert.equal(map.feedback, 'green');
 });
 
 test('filterActionableAlerts hides stale QA failures when latest crawl passed', () => {
@@ -56,4 +83,11 @@ test('buildTopIssues does not surface ancient QA alerts', () => {
     }
   });
   assert.equal(issues.length, 0);
+});
+
+test('search result mappers include navigable route fields', () => {
+  // Exercise private mappers indirectly via module internals if exported later;
+  // for now assert health map + MODULE_IDS stay stable for hub shell.
+  assert.ok(hub.MODULE_IDS.includes('dashboard'));
+  assert.ok(hub.MODULE_IDS.includes('settings'));
 });

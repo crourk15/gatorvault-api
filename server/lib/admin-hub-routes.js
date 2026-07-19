@@ -174,47 +174,69 @@ function buildPipelines(opsReport) {
   return list;
 }
 
-function buildModuleHealthMap({ ops, qa, productIntel, selfRunner }) {
+function worstStatus(a, b) {
+  const rank = { red: 3, yellow: 2, unknown: 1, green: 0 };
+  const ra = rank[a] != null ? rank[a] : 1;
+  const rb = rank[b] != null ? rank[b] : 1;
+  return ra >= rb ? a : b;
+}
+
+/** Never default green without a real signal — unchecked modules stay `unknown`. */
+function buildModuleHealthMap({ ops, qa, productIntel, selfRunner, feedbackOpen, communityOpen }) {
   const map = {};
   MODULE_IDS.forEach((id) => {
-    map[id] = 'green';
+    map[id] = 'unknown';
   });
 
-  map.dashboard = ops.overall || 'green';
+  if (ops && ops.overall) map.dashboard = ops.overall;
   const identity = tileById(ops, 'identity-patterns');
   const gmTile = tileById(ops, 'cron-jobs');
-  map.gm2 = (identity && identity.status) || (gmTile && gmTile.status) || map.dashboard;
+  if (identity && identity.status) map.gm2 = identity.status;
+  else if (gmTile && gmTile.status) map.gm2 = gmTile.status;
+  else if (ops && ops.overall) map.gm2 = ops.overall;
 
-  if (productIntel.fixQueueOpen > 0) {
-    map['product-intel'] = productIntel.fixQueueOpen > 8 ? 'red' : 'yellow';
+  if (productIntel && productIntel.overall != null) {
+    map['product-intel'] =
+      productIntel.overall < 55 ? 'red' : productIntel.overall < 75 ? 'yellow' : 'green';
   }
+  if (productIntel && productIntel.fixQueueOpen > 0) {
+    const fixSt = productIntel.fixQueueOpen > 8 ? 'red' : 'yellow';
+    map['product-intel'] = worstStatus(map['product-intel'], fixSt);
+  }
+
   if (qa.pass === false) map.qa = 'red';
-  else if (qa.failed > 0) map.qa = 'yellow';
+  else if (qa.pass === true && (qa.failed || 0) > 0) map.qa = 'yellow';
+  else if (qa.pass === true) map.qa = 'green';
 
   const rec = tileById(ops, 'recruiting-board');
-  if (rec) map.recruiting = rec.status;
+  if (rec && rec.status) map.recruiting = rec.status;
   const depth = tileById(ops, 'depth-gamezone');
-  if (depth) map.team = depth.status;
+  if (depth && depth.status) map.team = depth.status;
   const film = tileById(ops, 'film-room');
   const insider = tileById(ops, 'insider-articles');
-  if (film && insider) {
-    map.content =
-      film.status === 'red' || insider.status === 'red'
-        ? 'red'
-        : film.status === 'yellow' || insider.status === 'yellow'
-          ? 'yellow'
-          : 'green';
-  } else if (film) {
+  if (film && film.status && insider && insider.status) {
+    map.content = worstStatus(film.status, insider.status);
+  } else if (film && film.status) {
     map.content = film.status;
+  } else if (insider && insider.status) {
+    map.content = insider.status;
   }
 
-  map['self-runner'] =
-    selfRunner.queue && selfRunner.queue.pending > 0
-      ? 'yellow'
-      : selfRunner.enabled === false
-        ? 'yellow'
-        : 'green';
-  map['player-intel'] = map.recruiting;
+  if (selfRunner) {
+    if (selfRunner.queue && selfRunner.queue.pending > 0) map['self-runner'] = 'yellow';
+    else if (selfRunner.enabled === false) map['self-runner'] = 'yellow';
+    else if (selfRunner.enabled === true) map['self-runner'] = 'green';
+  }
+
+  if (typeof communityOpen === 'number') {
+    map.community = communityOpen > 20 ? 'red' : communityOpen > 0 ? 'yellow' : 'green';
+  }
+  if (typeof feedbackOpen === 'number') {
+    map.feedback = feedbackOpen > 10 ? 'red' : feedbackOpen > 0 ? 'yellow' : 'green';
+  }
+
+  // Settings has no live probe yet — leave unknown (not fake-green).
+  map['player-intel'] = map.recruiting !== 'unknown' ? map.recruiting : 'unknown';
   return map;
 }
 
@@ -314,13 +336,22 @@ function searchPlayers(q, limit) {
       return name.includes(needle) || String(p.id || '').includes(needle);
     })
     .slice(0, limit)
-    .map((p) => ({
-      id: p.id || p.slug,
-      slug: p.slug,
-      name: p.name || p.fullName,
-      classYear: p.classYear || p.year,
-      type: 'player'
-    }));
+    .map((p) => {
+      const slug = p.slug || p.id;
+      const title = p.name || p.fullName || slug;
+      const year = p.classYear || p.year;
+      return {
+        id: p.id || slug,
+        slug,
+        name: title,
+        title,
+        classYear: year,
+        subtitle: year ? `Class of ${year}` : 'Player',
+        type: 'player',
+        route: '#player-intel/entry',
+        href: slug ? `/vault/recruiting/player/${encodeURIComponent(slug)}` : ''
+      };
+    });
 }
 
 function searchArticles(q, limit) {
@@ -338,7 +369,18 @@ function searchArticles(q, limit) {
       return blob.includes(needle);
     })
     .slice(0, limit)
-    .map((a) => ({ id: a.id, slug: a.slug, title: a.title, type: 'article' }));
+    .map((a) => {
+      const id = a.id || a.slug;
+      return {
+        id,
+        slug: a.slug,
+        title: a.title || id,
+        subtitle: 'Insider article',
+        type: 'article',
+        route: '#content/insider-articles',
+        href: id ? `/vault/articles/${encodeURIComponent(id)}` : '/vault/articles/'
+      };
+    });
 }
 
 function searchUsers(q, limit) {
@@ -357,7 +399,54 @@ function searchUsers(q, limit) {
       return blob.includes(needle);
     })
     .slice(0, limit)
-    .map((u) => ({ id: u.id, email: u.email, name: u.name, type: 'user' }));
+    .map((u) => ({
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      title: u.name || u.email || u.id,
+      subtitle: u.email || 'Member',
+      type: 'user',
+      route: '#settings/platform',
+      href: ''
+    }));
+}
+
+function countOpenFeedback() {
+  try {
+    const feedback = require('./feedback-store');
+    const items = feedback.listSubmissions({ limit: 200 }) || [];
+    return items.filter((row) => {
+      const st = String(row.status || 'open').toLowerCase();
+      return st !== 'closed' && st !== 'resolved' && st !== 'done';
+    }).length;
+  } catch {
+    return null;
+  }
+}
+
+function countOpenCommunityFlags() {
+  try {
+    const community = require('./community-store');
+    if (typeof community.getOpenFlags === 'function') {
+      return community.getOpenFlags().length;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function moduleHealthContext(ops, qa, productIntel, selfRunner) {
+  const feedbackOpen = countOpenFeedback();
+  const communityOpen = countOpenCommunityFlags();
+  return buildModuleHealthMap({
+    ops,
+    qa,
+    productIntel,
+    selfRunner,
+    feedbackOpen: feedbackOpen == null ? undefined : feedbackOpen,
+    communityOpen: communityOpen == null ? undefined : communityOpen
+  });
 }
 
 async function buildOverviewPayload() {
@@ -367,11 +456,12 @@ async function buildOverviewPayload() {
   const selfRunner = selfRunnerEngine.healthSummary();
   const appStoreGate = summarizeAppStoreGate();
   const alerts = opsAlerts.listAlerts({ limit: 20 });
-  const moduleHealth = buildModuleHealthMap({ ops, qa, productIntel, selfRunner });
-  let overall = ops.overall || 'green';
+  const moduleHealth = moduleHealthContext(ops, qa, productIntel, selfRunner);
+  let overall = ops.overall || 'unknown';
   Object.values(moduleHealth).forEach((st) => {
     if (st === 'red') overall = 'red';
     else if (st === 'yellow' && overall !== 'red') overall = 'yellow';
+    else if (st === 'green' && overall === 'unknown') overall = 'green';
   });
   if (appStoreGate?.evaluation && !appStoreGate.evaluation.green && overall !== 'red') {
     overall = 'yellow';
@@ -413,7 +503,7 @@ function mountAdminHubRoutes(app) {
       const qa = summarizeQa();
       const productIntel = summarizeProductIntel();
       const selfRunner = selfRunnerEngine.healthSummary();
-      const moduleHealth = buildModuleHealthMap({ ops, qa, productIntel, selfRunner });
+      const moduleHealth = moduleHealthContext(ops, qa, productIntel, selfRunner);
       const alerts = opsAlerts.listAlerts({ limit: 50 });
       const alertCount = Array.isArray(alerts.alerts) ? alerts.alerts.length : 0;
       return res.status(200).json({

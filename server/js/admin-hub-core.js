@@ -63,6 +63,7 @@
       desc: 'Command center — system health, top issues, pipelines, recommended actions',
       panels: [
         { id: 'overview', label: 'Command Center', inline: true },
+        { id: 'runbooks', label: 'Runbooks', inline: true },
         { id: 'ops', label: 'Operations', embed: 'ops' }
       ]
     },
@@ -72,7 +73,7 @@
       icon: '🛡️',
       desc: 'Roster, scholarships, depth chart, re-run modules, identity resolution',
       panels: [
-        { id: 'rerun', label: 'Re-run Modules', inline: true },
+        { id: 'rerun', label: 'Runbooks', inline: true },
         { id: 'integrity', label: 'GM Integrity', embed: 'gm2' },
         { id: 'identity', label: 'Identity Patterns', embed: 'identity' }
       ]
@@ -174,7 +175,8 @@
   function healthDotClass(status) {
     if (status === 'red') return 'hub-health-red';
     if (status === 'yellow') return 'hub-health-yellow';
-    return 'hub-health-green';
+    if (status === 'green') return 'hub-health-green';
+    return 'hub-health-unknown';
   }
 
   function applyModuleHealth(map) {
@@ -183,8 +185,9 @@
       var id = btn.getAttribute('data-section');
       var dot = btn.querySelector('.hub-health-dot');
       if (!dot) return;
-      var st = _moduleHealth[id] || 'green';
+      var st = _moduleHealth[id] || 'unknown';
       dot.className = 'hub-health-dot ' + healthDotClass(st);
+      dot.title = 'Status: ' + st;
     });
     var envEl = document.getElementById('hub-env-badge');
     if (envEl && _moduleHealth._environment) {
@@ -201,7 +204,7 @@
 
   function pollModuleHealth() {
     if (!pin()) return;
-    apiGet('/api/admin/hub/module-health?pin=' + encodeURIComponent(pin()))
+    apiGet('/api/admin/hub/module-health')
       .then(function (j) {
         showApiBanner(null);
         var health = (j && (j.moduleHealth || j.modules)) || null;
@@ -259,13 +262,18 @@
       }).join('');
       resultsEl.classList.remove('hidden');
       resultsEl.querySelectorAll('.hub-search-item').forEach(function (btn) {
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', function (ev) {
           var href = btn.getAttribute('data-href');
           var route = btn.getAttribute('data-route');
           hideResults();
           input.value = '';
+          // Cmd/Ctrl-click opens public vault URL when available.
+          if (href && (ev.metaKey || ev.ctrlKey)) {
+            window.open(href, '_blank', 'noopener');
+            return;
+          }
           if (route) navigateFromHash(route);
-          else if (href) window.open(href, '_blank');
+          else if (href) window.open(href, '_blank', 'noopener');
         });
       });
     }
@@ -275,7 +283,7 @@
       var q = input.value.trim();
       if (q.length < 2) { hideResults(); return; }
       timer = setTimeout(function () {
-        apiGet('/api/admin/hub/search?q=' + encodeURIComponent(q) + '&pin=' + encodeURIComponent(pin()))
+        apiGet('/api/admin/hub/search?q=' + encodeURIComponent(q))
           .then(function (j) {
             var list = [];
             if (j.results) {
@@ -307,7 +315,7 @@
       panel.classList.toggle('hidden');
       if (panel.classList.contains('hidden')) return;
       panel.innerHTML = '<p class="hub-meta">Loading alerts…</p>';
-      apiGet('/api/admin/hub/overview?pin=' + encodeURIComponent(pin()))
+      apiGet('/api/admin/hub/overview')
         .then(function (j) {
           var alerts = (j && j.alerts && j.alerts.alerts) || (Array.isArray(j.alerts) ? j.alerts : []);
           if (!alerts.length) {
@@ -414,7 +422,7 @@
   }
 
   function verifyPinViaStatus(p) {
-    return fetch(API + '/api/ops/status?pin=' + encodeURIComponent(p), {
+    return fetch(API + '/api/ops/status', {
       method: 'GET',
       headers: adminPinHeaders(p),
       credentials: 'omit'
@@ -505,7 +513,13 @@
     if (!iframe || !iframe.contentWindow) return;
     var p = pin();
     if (!p) return;
-    iframe.contentWindow.postMessage({ type: 'gv-admin-pin', pin: p }, '*');
+    // Same-origin only — never broadcast PIN with target '*'.
+    var target = location.origin || '*';
+    try {
+      iframe.contentWindow.postMessage({ type: 'gv-admin-pin', pin: p }, target);
+    } catch (e) {
+      /* cross-origin blocked — sessionStorage still shared for same-origin embeds */
+    }
   }
 
   function loadIframe(panelEl, src) {
@@ -517,7 +531,9 @@
       iframe.setAttribute('loading', 'lazy');
       panelEl.appendChild(iframe);
     }
-    var fullSrc = src + (src.indexOf('?') >= 0 ? '&' : '?') + 'pin=' + encodeURIComponent(pin());
+    // Do not put PIN in the iframe URL (history / Referer leak).
+    // Embeds read sessionStorage + postMessage instead.
+    var fullSrc = src;
     if (iframe.getAttribute('data-src') !== fullSrc) {
       iframe.setAttribute('data-src', fullSrc);
       iframe.src = fullSrc;
@@ -556,60 +572,22 @@
     });
   }
 
-  function renderGmRerunPanel(container) {
-    container.innerHTML = ''
-      + '<div class="hub-settings-grid">'
-      + '<div class="hub-card hub-card-wide"><h3>GM — Re-run Modules</h3>'
-      + '<p class="hub-meta">Trigger rebuilds and QA without leaving Admin Hub. Requires valid admin PIN.</p>'
-      + '<div class="hub-btn-row">'
-      + '<button type="button" class="hub-btn" data-gm-action="force-autoposter">Force Autoposter</button>'
-      + '<button type="button" class="hub-btn secondary" data-gm-action="live-refresh">Re-run Latest Updates</button>'
-      + '<button type="button" class="hub-btn secondary" data-gm-action="team-rebuild">Re-run Team Tab</button>'
-      + '<button type="button" class="hub-btn" data-gm-action="qa-run">Run QA Crawl</button>'
-      + '<button type="button" class="hub-btn secondary" data-gm-action="film-rebuild">Rebuild Film Room</button>'
-      + '<button type="button" class="hub-btn secondary" data-gm-action="scouting-rebuild">Rebuild Scouting DB</button>'
-      + '<button type="button" class="hub-btn secondary" data-gm-action="heat-refresh">Refresh Heat Check</button>'
-      + '<button type="button" class="hub-btn secondary" data-gm-action="gm2-repair">GM Auto-Repair</button>'
-      + '<button type="button" class="hub-btn secondary" data-gm-action="mobile-latest-refresh">Force Mobile Auto-Refresh Now</button>'
-      + '<button type="button" class="hub-btn secondary" data-gm-action="purge-beat">Purge Non-UF Beat</button>'
-      + '</div></div>'
-      + '<div class="hub-card hub-card-wide"><h3>GM Log</h3><div id="hub-gm-log" class="hub-log"></div></div>'
-      + '</div>';
-
-    function gmLog(msg, cls) {
-      var el = document.getElementById('hub-gm-log');
-      if (!el) return;
-      var line = document.createElement('div');
-      line.className = cls || 'info';
-      line.textContent = new Date().toLocaleTimeString() + ' — ' + msg;
-      el.prepend(line);
-    }
-
-    container.querySelectorAll('[data-gm-action]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var action = btn.getAttribute('data-gm-action');
-        btn.disabled = true;
-        var p;
-        if (action === 'force-autoposter') p = apiPost('/api/autoposter/force-post', {});
-        else if (action === 'live-refresh') p = apiPost('/api/live/refresh', {});
-        else if (action === 'team-rebuild') p = apiPost('/api/ops/run-job', { jobId: 'depth-chart-refresh' });
-        else if (action === 'qa-run') p = apiPost('/api/qa/run', { scope: 'full' });
-        else if (action === 'film-rebuild') p = apiPost('/api/film-room/admin/rebuild', { scope: 'all' });
-        else if (action === 'scouting-rebuild') p = apiPost('/api/war-room/admin/rebuild-scouting', {});
-        else if (action === 'heat-refresh') p = apiGet('/api/recruiting/heat-check?force=1&pin=' + encodeURIComponent(pin()));
-        else if (action === 'gm2-repair') p = apiPost('/api/gm2/auto-repair/run', {});
-        else if (action === 'mobile-latest-refresh') {
-          p = apiPost('/api/live/refresh', {}).then(function () {
-            return apiPost('/api/live/admin/mobile-refresh-signal', {});
-          });
-        }
-        else if (action === 'purge-beat') p = apiPost('/api/live/admin/purge-non-uf-beat', {});
-        else p = Promise.resolve();
-        p.then(function (j) { gmLog('Done: ' + JSON.stringify(j).slice(0, 200), 'ok'); })
-          .catch(function (e) { gmLog(e.message, 'err'); })
-          .finally(function () { btn.disabled = false; });
+  function renderRunbooksPanel(container) {
+    if (global.GVAdminRunbooks && typeof global.GVAdminRunbooks.render === 'function') {
+      global.GVAdminRunbooks.render(container, {
+        apiGet: apiGet,
+        apiPost: apiPost,
+        pin: pin,
+        onNavigate: navigateFromHash
       });
-    });
+      return;
+    }
+    container.innerHTML = '<p class="hub-meta err">Runbooks failed to load. Refresh the page.</p>';
+  }
+
+  function renderGmRerunPanel(container) {
+    // Legacy GM "Re-run Modules" tab now hosts the shared Runbooks UI.
+    renderRunbooksPanel(container);
   }
 
   function renderSettingsPanel(container) {
@@ -653,7 +631,7 @@
     document.getElementById('hub-pts-lookup').addEventListener('click', function () {
       var email = document.getElementById('hub-pts-email').value.trim();
       if (!email) return;
-      apiGet('/api/points/admin/lookup?email=' + encodeURIComponent(email) + '&pin=' + encodeURIComponent(pin()))
+      apiGet('/api/points/admin/lookup?email=' + encodeURIComponent(email))
         .then(function (j) {
           document.getElementById('hub-pts-current').textContent = j.email + ': ' + j.points + ' pts (' + j.tier + ')';
           document.getElementById('hub-pts-set').value = j.points;
@@ -727,7 +705,7 @@
       btn.type = 'button';
       btn.className = 'hub-nav-btn';
       btn.setAttribute('data-section', sec.id);
-      btn.innerHTML = '<span class="hub-health-dot hub-health-green"></span><span class="hub-nav-icon">' + sec.icon + '</span><span class="hub-nav-label">' + sec.label + '</span>';
+      btn.innerHTML = '<span class="hub-health-dot hub-health-unknown"></span><span class="hub-nav-icon">' + sec.icon + '</span><span class="hub-nav-label">' + sec.label + '</span>';
       btn.addEventListener('click', function () { setRoute(sec.id, sec.panels[0] && sec.panels[0].id); renderRoute(); });
       navEl.appendChild(btn);
 
@@ -807,7 +785,7 @@
       if (panelEl.getAttribute('data-inline') === '1') {
         if (!panelEl.getAttribute('data-rendered')) {
           panelEl.setAttribute('data-rendered', '1');
-          if (panelId === 'rerun') renderGmRerunPanel(panelEl);
+          if (panelId === 'rerun' || panelId === 'runbooks') renderRunbooksPanel(panelEl);
           else if (panelId === 'vault-grades') renderVaultGradesPanel(panelEl);
           else if (panelId === 'overview' && global.GVAdminDashboard) {
             panelEl.setAttribute('data-rendered', '1');

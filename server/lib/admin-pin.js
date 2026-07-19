@@ -7,6 +7,8 @@ function normalizePin(value) {
 }
 
 function collectAdminPins() {
+  // Env-configured pins only. Hardcoded fallback is last-resort when nothing is set
+  // (local/dev or misconfigured Render) — never accepted alongside real env pins.
   const raw = [
     process.env.ADMIN_PASSWORD,
     process.env.OPS_ADMIN_PIN,
@@ -22,11 +24,16 @@ function collectAdminPins() {
     process.env.INGEST_CRON_SECRET,
     process.env.MONITORING_CRON_SECRET,
     process.env.MONITORING_SECRET,
-    process.env.EMAIL_TEST_PIN,
-    'GV2026admin'
+    process.env.EMAIL_TEST_PIN
   ];
-  const pins = raw.map(normalizePin).filter(Boolean);
-  return [...new Set(pins)];
+  const pins = [...new Set(raw.map(normalizePin).filter(Boolean))];
+  if (pins.length > 0) return pins;
+  if (process.env.ALLOW_DEFAULT_ADMIN_PIN === 'true' || process.env.NODE_ENV !== 'production') {
+    return ['GV2026admin'];
+  }
+  // Production with zero env pins: keep legacy fallback so ops is not locked out,
+  // but prefer setting OPS_ADMIN_PIN (see docs/ADMIN_HUB.md).
+  return ['GV2026admin'];
 }
 
 function verifyAdminPin(pin) {
