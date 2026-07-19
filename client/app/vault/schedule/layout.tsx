@@ -11,7 +11,7 @@ export default function VaultScheduleLayout({
       <VaultPillarSsrMarkers
         testId="vault-schedule"
         className="gv-schedule-page gv-sched-page"
-        label="Schedule · Tickets"
+        label="Schedule"
       />
       {children}
     </>

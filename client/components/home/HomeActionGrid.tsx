@@ -22,7 +22,7 @@ const TILES = [
   { id: 'film', label: 'Film Room', href: SITE_ROUTES.filmRoom },
   { id: 'nil', label: 'NIL Tracker', href: SITE_ROUTES.nil },
   { id: 'community', label: 'Community', href: SITE_ROUTES.community },
-  { id: 'tickets', label: 'Tickets', href: '/vault/tickets' },
+  { id: 'schedule', label: 'Schedule', href: '/vault/schedule' },
 ] as const;
 
 export function HomeActionGrid(): React.ReactElement {

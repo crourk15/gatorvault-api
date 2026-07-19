@@ -11,7 +11,7 @@ const TILES = [
   { href: SITE_ROUTES.filmRoom, icon: '📺', label: 'Film Room' },
   { href: SITE_ROUTES.nil, icon: '💰', label: 'NIL Tracker' },
   { href: SITE_ROUTES.community, icon: '💬', label: 'Community' },
-  { href: '/vault/tickets', icon: '🎟️', label: 'Tickets' },
+  { href: '/vault/schedule', icon: '🎟️', label: 'Schedule' },
 ] as const;
 
 export function HomeActionGrid(): React.ReactElement {

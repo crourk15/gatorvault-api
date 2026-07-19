@@ -25,7 +25,7 @@ export function EcosystemTeaser(): React.ReactElement {
           <span className="rh-cc-ecosystem__icon" aria-hidden>
             🎟️
           </span>
-          <span className="rh-cc-ecosystem__label">Schedule & Tickets</span>
+          <span className="rh-cc-ecosystem__label">Schedule</span>
           <span className="rh-cc-ecosystem__desc">GameDay planning and ticket links for UF home games</span>
           <span className="rh-cc-ecosystem__cta">View Schedule →</span>
         </a>
