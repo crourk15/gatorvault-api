@@ -16,6 +16,7 @@ import {
   type LocalRecentAlert,
 } from '@/lib/alert-prefs';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
+import { buildSeedAlerts } from '@/lib/alerts-hub-seed';
 import { syncAlertPushPrefs, unsubscribeVisitPush } from '@/lib/push-alerts-api';
 import { syncEmailAlertPrefs } from '@/lib/alert-email-api';
 import { isNativeApp } from '@/lib/api-base';
@@ -23,6 +24,8 @@ import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 const REFRESH_MS = 60_000;
+const SEED_ALERTS = buildSeedAlerts();
+const HAS_SEED = SEED_ALERTS.length > 0;
 
 function ChoiceButtons<T extends string>({
   options,
@@ -55,9 +58,10 @@ export function VaultAlertsPage(): React.ReactElement {
   const [prefs, setPrefs] = useState<AlertPrefs>(DEFAULT_ALERT_PREFS);
   const [saved, setSaved] = useState(false);
   const [playerInput, setPlayerInput] = useState('');
-  const [apiAlerts, setApiAlerts] = useState<FutureCastAlert[]>([]);
+  const [apiAlerts, setApiAlerts] = useState<FutureCastAlert[]>(HAS_SEED ? SEED_ALERTS : []);
   const [localAlerts, setLocalAlerts] = useState<LocalRecentAlert[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Seeded first paint is content-ready; live refresh still runs in background.
+  const [loading, setLoading] = useState(!HAS_SEED);
   const [error, setError] = useState<string | null>(null);
   const [pushStatus, setPushStatus] = useState<string | null>(null);
   const [nativeShell, setNativeShell] = useState(false);
@@ -69,7 +73,7 @@ export function VaultAlertsPage(): React.ReactElement {
   }, []);
 
   const loadFeed = useCallback(async (isInitial: boolean) => {
-    if (isInitial) {
+    if (isInitial && !HAS_SEED) {
       setLoading(true);
       setError(null);
     }
@@ -79,7 +83,10 @@ export function VaultAlertsPage(): React.ReactElement {
       setLocalAlerts(loadLocalRecentAlerts());
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load alerts.');
+      // Keep seed painted if live wake fails.
+      if (!HAS_SEED) {
+        setError(err instanceof Error ? err.message : 'Could not load alerts.');
+      }
     } finally {
       if (isInitial) setLoading(false);
     }

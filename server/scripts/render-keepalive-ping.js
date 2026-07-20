@@ -14,7 +14,7 @@ const PING_URL =
 
 const HUB_URL =
   process.env.KEEPALIVE_HUB_URL ||
-  'https://gatorvault-api.onrender.com/api/recruiting/hub/class-overview?year=2027';
+  'https://gatorvault-api.onrender.com/api/recruiting/hub/bundle?year=2027';
 
 const RETRY_STATUSES = new Set([502, 503, 504, 429]);
 const WAKE_WINDOW_MS = parseInt(process.env.KEEPALIVE_WAKE_MS || '180000', 10);

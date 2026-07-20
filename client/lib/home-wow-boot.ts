@@ -1,5 +1,6 @@
 /**
- * Inline boot for vault home — paints recruiting snapshot + FutureCast preview before React.
+ * Inline boot for vault home — cache-only (no DOM mutation) so React hydrate stays clean.
+ * Elite first paint comes from React seeds in HomePremiumPage.
  */
 import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 import { RECRUITING_HUB_HERO_SEED } from '@/lib/recruiting-hub-hero-seed';
@@ -28,6 +29,9 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
       var BEAT_SEED = ${beatSeedLiteral};
       window.__GV_HOME_WOW__ = window.__GV_HOME_WOW__ || {};
 
+      // Wake Render before heavier hub fetches (cold-start softener).
+      try { fetch('/api/ping', { credentials: 'same-origin', cache: 'no-store' }).catch(function(){}); } catch (e) {}
+
       function fetchJson(url, attempt) {
         return fetch(url, { credentials: 'same-origin', cache: 'no-store' })
           .then(function(res) {
@@ -42,81 +46,6 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
           });
       }
 
-      function paintMetrics(metrics) {
-        if (!metrics) return;
-        window.__GV_HOME_WOW__.metrics = metrics;
-        var card = document.querySelector('[data-home-boot="recruiting-snapshot"]');
-        if (!card) return;
-        var fields = [
-          ['classRank', 'class-rank'],
-          ['blueChip', 'blue-chip'],
-          ['commits', 'commits'],
-          ['avgRating', 'avg-rating']
-        ];
-        fields.forEach(function(pair) {
-          var node = card.querySelector('[data-home-metric="' + pair[1] + '"]');
-          if (node && metrics[pair[0]] != null) node.textContent = metrics[pair[0]];
-        });
-        var skeleton = card.querySelector('[data-home-boot-skeleton]');
-        if (skeleton) skeleton.style.display = 'none';
-        var body = card.querySelector('[data-home-boot-body]');
-        if (body) body.hidden = false;
-        var row = card.querySelector('.home-wow-metrics-row');
-        if (row) {
-          row.style.removeProperty('display');
-          row.hidden = false;
-        }
-        card.setAttribute('data-home-boot-painted', 'metrics');
-      }
-
-      function paintFutureCast(targets) {
-        if (!targets || !targets.length) return;
-        window.__GV_HOME_WOW__.futureCastTargets = targets;
-        var card = document.querySelector('[data-home-boot="futurecast-preview"]');
-        if (!card) return;
-        var first = targets[0];
-        var nameNode = card.querySelector('[data-fc-name]');
-        var pctNode = card.querySelector('[data-fc-pct]');
-        var posNode = card.querySelector('[data-fc-pos]');
-        if (nameNode && first.name) nameNode.textContent = first.name;
-        if (pctNode && first.ufPercent) pctNode.textContent = first.ufPercent;
-        if (posNode && first.position) posNode.textContent = first.position;
-        var skeleton = card.querySelector('[data-home-boot-skeleton]');
-        if (skeleton) skeleton.style.display = 'none';
-        var body = card.querySelector('[data-home-boot-body]');
-        if (body) body.hidden = false;
-        card.setAttribute('data-home-boot-painted', 'futurecast');
-      }
-
-      function paintBeat(items) {
-        if (!items || !items.length) return;
-        window.__GV_HOME_WOW__.beatItems = items;
-        var section = document.querySelector('[data-home-boot="beat-highlights"]');
-        if (!section) return;
-        var cards = section.querySelectorAll('[data-beat-card]');
-        items.slice(0, 3).forEach(function(item, idx) {
-          var card = cards[idx];
-          if (!card) return;
-          var initials = (item.writerName || 'BW').split(' ').map(function(w) { return w[0]; }).join('').slice(0, 2).toUpperCase();
-          var nameNode = card.querySelector('[data-beat-name]');
-          var outletNode = card.querySelector('[data-beat-outlet]');
-          var textNode = card.querySelector('[data-beat-text]');
-          var timeNode = card.querySelector('[data-beat-time]');
-          var urlNode = card.querySelector('[data-beat-url]');
-          var avatarNode = card.querySelector('[data-beat-avatar]');
-          if (nameNode) nameNode.textContent = item.writerName || 'Beat Writer';
-          if (outletNode) outletNode.textContent = item.source || 'UF Beat';
-          if (textNode) textNode.textContent = item.text || '';
-          if (timeNode) timeNode.textContent = item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Recently';
-          if (urlNode) urlNode.href = item.url || '#';
-          if (avatarNode) avatarNode.textContent = initials;
-          card.hidden = false;
-        });
-        var skeleton = section.querySelector('[data-home-boot-skeleton]');
-        if (skeleton) skeleton.style.display = 'none';
-        section.setAttribute('data-home-boot-painted', 'beat');
-      }
-
       function mapFcTarget(row) {
         var pct = row.ufProbability != null ? row.ufProbability : row.confidence;
         if (pct == null) return null;
@@ -129,12 +58,12 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
         };
       }
 
-      // Instant recruiting snapshot + beat highlights from build-time seeds.
+      // Cache-only seeds — React owns first paint (avoids #418/#423 hydration mismatch).
       if (SEED && SEED.classOverview) {
-        paintMetrics(SEED.classOverview);
+        window.__GV_HOME_WOW__.metrics = SEED.classOverview;
       }
       if (BEAT_SEED && BEAT_SEED.length) {
-        paintBeat(BEAT_SEED);
+        window.__GV_HOME_WOW__.beatItems = BEAT_SEED;
       }
 
       Promise.all([
@@ -145,7 +74,7 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
         var bundle = results[0];
         var metrics = bundle && bundle.classOverview ? bundle.classOverview : null;
         if (metrics) {
-          paintMetrics(metrics);
+          window.__GV_HOME_WOW__.metrics = metrics;
           try {
             sessionStorage.setItem(
               'gv_class_metrics_v1:' + year,
@@ -167,10 +96,12 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
             targets.push(mapped);
             if (targets.length >= 3) break;
           }
-          paintFutureCast(targets);
+          window.__GV_HOME_WOW__.futureCastTargets = targets;
         }
         var beat = results[2];
-        if (beat && beat.items && beat.items.length) paintBeat(beat.items);
+        if (beat && beat.items && beat.items.length) {
+          window.__GV_HOME_WOW__.beatItems = beat.items;
+        }
         window.dispatchEvent(new CustomEvent('gv-home-wow-boot'));
       });
     } catch (e) {}
