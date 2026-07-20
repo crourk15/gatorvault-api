@@ -49,7 +49,7 @@
     '/admin/ops/gm2': { section: 'gm2', panel: 'rerun' },
     '/admin/ops/identity-patterns': { section: 'gm2', panel: 'identity' },
     '/vault/ops': { section: 'dashboard', panel: 'ops' },
-    '/recruiting-admin.html': { section: 'recruiting', panel: 'alerts' },
+    '/recruiting-admin.html': { section: 'recruiting', panel: 'alerts-full' },
     '/recruiting-board.html': { section: 'team', panel: 'board' },
     '/content-admin.html': { section: 'content', panel: 'content-accuracy' },
     '/community-admin.html': { section: 'community', panel: 'moderation' }
@@ -110,9 +110,10 @@
       panels: [
         { id: 'daily', label: 'Daily Summary', inline: true },
         { id: 'unresolved', label: 'Unresolved Predictions', inline: true },
+        { id: 'alerts', label: 'Alerts Summary', inline: true },
         { id: 'monitoring', label: 'Monitoring Summary', inline: true },
         { id: 'vault-grades', label: 'Vault Grades Manager', inline: true },
-        { id: 'alerts', label: 'Full Alerts (legacy)', embed: 'recruiting-alerts' },
+        { id: 'alerts-full', label: 'Full Alerts (legacy)', embed: 'recruiting-alerts' },
         { id: 'monitoring-full', label: 'Full Monitoring (legacy)', embed: 'monitoring' }
       ]
     },
@@ -990,6 +991,13 @@
               apiPost: apiPost,
               onNavigate: navigateFromHash,
               pushActivity: pushActivity
+            });
+          }
+          else if (panelId === 'alerts' && section.id === 'recruiting' && global.GVAdminAlertsSummary) {
+            GVAdminAlertsSummary.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash
             });
           }
           else if (panelId === 'monitoring' && section.id === 'recruiting' && global.GVAdminMonitoringSummary) {
