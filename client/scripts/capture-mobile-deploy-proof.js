@@ -186,13 +186,31 @@ async function runLayoutNavCheck(page, check) {
   }
 
   if (check.id === 'nil-home-vault') {
-    const home = page.locator('.gv-vault-bottom-nav a[href*="/vault"]').first();
+    // Prefer explicit Home href — not first a[href*="/vault"] (all bottom items match).
+    const home = page
+      .locator('.gv-vault-bottom-nav a[href="/vault/"], .gv-vault-bottom-nav a[href="/vault"]')
+      .first();
     if (!(await home.count())) {
       return { pass: false, reason: 'vault home nav link missing' };
     }
-    await home.click();
-    await page.waitForTimeout(1200);
-    const pathAfter = await page.evaluate(() => window.location.pathname.replace(/\/$/, '') || '/');
+    const normalizePath = (pathname) => {
+      let p = String(pathname || '/');
+      p = p.replace(/\/index\.html$/i, '/');
+      p = p.replace(/\/$/, '') || '/';
+      return p;
+    };
+    await Promise.all([
+      page
+        .waitForURL((url) => normalizePath(url.pathname) === '/vault', { timeout: 15_000 })
+        .catch(() => null),
+      home.click(),
+    ]);
+    await page.waitForTimeout(500);
+    const pathAfter = await page.evaluate(() => {
+      let p = window.location.pathname || '/';
+      p = p.replace(/\/index\.html$/i, '/');
+      return p.replace(/\/$/, '') || '/';
+    });
     const pass = pathAfter === '/vault';
     return {
       pass,

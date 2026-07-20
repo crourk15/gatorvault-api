@@ -58,6 +58,22 @@ export function VaultNavLink({
           onClick?.(event);
           return;
         }
+        // Hard-nav Home — soft-nav chunk failures reload the *current* route via
+        // gv_retry and can leave users stuck (e.g. NIL → Home).
+        const homePath = path.replace(/\/$/, '') || '/';
+        if (homePath === '/vault') {
+          const here =
+            typeof window !== 'undefined'
+              ? window.location.pathname.replace(/\/$/, '') || '/'
+              : '';
+          if (here !== '/vault') {
+            event.preventDefault();
+            beginNavigation();
+            navigateVaultHref('/vault/');
+            onClick?.(event);
+            return;
+          }
+        }
         beginNavigation();
         onClick?.(event);
       }}
