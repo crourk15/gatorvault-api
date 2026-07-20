@@ -1,5 +1,7 @@
 # Submit 1.0.6 (Build 32) — App Store / TestFlight
 
+> **Superseded for upload:** ASC closed the 1.0.6 train after approval (`90186` / `90062`). Next ship: **[1.0.7 Build 33](./APP_STORE_1_0_7_BUILD33.md)**. Do not re-upload 1.0.6.
+
 **Elite platform cut** after shell trust (29–31), Admin Hub daily ops, and never-late recruiting intel.
 
 ## What’s in Build 32
