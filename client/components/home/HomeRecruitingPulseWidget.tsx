@@ -21,7 +21,7 @@ export function HomeRecruitingPulseWidget(): React.ReactElement | null {
     <InViewObserver className="gv-card gv-card--fade-in gv-card--pulse" visibleClass="gv-card--visible">
       <div data-testid="home-recruiting-pulse">
       <div className="gv-card__header">
-        <div className="gv-card__title">UF Recruiting Pulse — 2027 Class</div>
+        <div className="gv-card__title">Florida Recruiting — 2027</div>
         <div className="gv-card__meta">
           Class Rank {summary.classRank} • Blue Chip {summary.blueChipPercent}% • Avg Rating{' '}
           {summary.avgRating}

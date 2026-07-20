@@ -19,10 +19,10 @@ export function RecruitingHubHero({
     <section className="gv-rh-elite-hero rh-hero" data-testid="rh-elite-hero">
       <div className="rh-hero__bg gv-rh-elite-hero__bg" aria-hidden="true" />
       <div className="gv-rh-elite-hero__inner rh-frame">
-        <p className="gv-rh-elite-hero__eyebrow">Florida Recruiting Command</p>
-        <h1 className="gv-rh-elite-hero__title rh-hero__title">Recruiting Hub</h1>
+        <p className="gv-rh-elite-hero__eyebrow">Florida Recruiting</p>
+        <h1 className="gv-rh-elite-hero__title rh-hero__title">Who Florida is chasing</h1>
         <p className="gv-rh-elite-hero__sub rh-hero__subtitle">
-          Boards, FutureCast, NIL, and Portal — unified insider intel in one command center.
+          Movement, board, and beat intel — the story of this class.
         </p>
         <div className="gv-rh-elite-hero__stats" aria-label="Class snapshot">
           <div className="gv-rh-elite-stat">

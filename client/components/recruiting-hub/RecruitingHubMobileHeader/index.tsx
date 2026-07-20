@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-/** Compact mobile header — UF Recruiting Command Center (vertical app). */
+/** Compact mobile header — Florida Recruiting (vertical app). */
 export function RecruitingHubMobileHeader(): React.ReactElement {
   return (
     <header className="rh-elite-mobile-header" data-testid="rh-mobile-header">

@@ -298,8 +298,8 @@ export async function fetchRecruitingHubHero(year = HUB_YEAR): Promise<RhHubHero
   );
   return {
     year: raw.year ?? year,
-    title: raw.title ?? 'Recruiting Command Center',
-    subtitle: raw.subtitle ?? "UF's class, movement, and battles—one place.",
+    title: raw.title ?? 'Florida Recruiting',
+    subtitle: raw.subtitle ?? 'Who Florida is chasing — movement, board, and beat intel.',
     classYears: raw.classYears ?? [2026, 2027, 2028],
     ticker: raw.ticker ?? [],
     classOverview: raw.classOverview,

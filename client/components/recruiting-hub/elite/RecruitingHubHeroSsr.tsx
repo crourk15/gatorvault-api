@@ -14,7 +14,7 @@ export function RecruitingHubHeroSsr({
       <section
         className="rh-hero-strip hero-skeleton"
         data-hydrate="hero"
-        aria-label="Recruiting Command Center"
+        aria-label="Florida Recruiting"
       >
         <div className="rh-hero-sweep" aria-hidden="true" />
         <div className="rh-hero-watermark" aria-hidden="true">
@@ -23,10 +23,10 @@ export function RecruitingHubHeroSsr({
         <div className="rh-hero-top">
           <div>
             <div className="rh-hero-title" data-hero-field="title">
-              Recruiting Command Center
+              Florida Recruiting
             </div>
             <div className="rh-hero-subtitle" data-hero-field="subtitle">
-              UF&apos;s class, commits, and battles—one place.
+              Who Florida is chasing — movement, board, and beat intel.
             </div>
             <div className="rh-hero-year-tabs" data-hero-field="year-tabs" role="tablist" aria-label="Class year">
               {CLASS_YEARS.map((y) => (
@@ -42,7 +42,7 @@ export function RecruitingHubHeroSsr({
               ))}
             </div>
           </div>
-          <span className="rh-badge rh-hero-badge">Command Center</span>
+          <span className="rh-badge rh-hero-badge">Live</span>
         </div>
         <div className="rh-hero-metrics hero-skeleton__metrics" aria-label="Class summary metrics">
           <div className="rh-hero-metric">

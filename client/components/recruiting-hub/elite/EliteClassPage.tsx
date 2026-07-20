@@ -17,7 +17,7 @@ export function EliteClassPage({ year }: Props): React.ReactElement {
         <div className="rh-frame rh-elite-chrome">
           <RecruitingHeroStripInline />
           <p className="rh-elite-back-link">
-            <a href="/vault/recruiting">← Command Center</a>
+            <a href="/vault/recruiting">← Recruiting</a>
           </p>
           <EliteCommitBoard year={year} />
         </div>

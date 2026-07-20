@@ -18,7 +18,7 @@ export function NilHero({ dashboard }: Props): React.ReactElement {
       <div className="nil-hero__bg" aria-hidden />
       <div className="nil-hero__inner rh-frame">
         <div className="nil-hero__copy">
-          <p className="nil-hero__eyebrow">GatorVault NIL Command Center</p>
+          <p className="nil-hero__eyebrow">GatorVault NIL</p>
           <h1 className="nil-hero__title">NIL Tracker</h1>
           <p className="nil-hero__sub">
             Real-time NIL movement, valuations, and UF competitive position.

@@ -3,7 +3,7 @@
 import React from 'react';
 
 /**
- * @deprecated Fake Overview analytics removed from Team Command Center.
+ * @deprecated Fake Overview analytics removed from Florida Football.
  * Depth Chart is the lead section now.
  */
 export function TeamOverviewSection(): null {

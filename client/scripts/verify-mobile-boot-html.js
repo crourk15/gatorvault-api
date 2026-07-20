@@ -39,7 +39,7 @@ const EXTRA = {
     'loadClassMetrics',
   ],
   'vault/index.html': ['data-home-wow-boot'],
-  'vault/team/index.html': ['Team Command Center'],
+  'vault/team/index.html': ['Florida Football'],
 };
 
 let failed = false;

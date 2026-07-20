@@ -151,10 +151,10 @@ export function HeroPulse({
       <div className="rh-cc-hero__inner rh-frame">
         <div className="rh-cc-hero__grid">
           <div className="rh-cc-hero__col rh-cc-hero__col--pulse">
-            <p className="rh-cc-hero__eyebrow">UF Recruiting Command Center</p>
-            <h1 className="rh-cc-hero__title">UF Recruiting Pulse — 2027 Class</h1>
+            <p className="rh-cc-hero__eyebrow">Florida Recruiting</p>
+            <h1 className="rh-cc-hero__title">Who Florida is chasing</h1>
             <p className="rh-cc-hero__sub">
-              Live intel, movement, and board pulse for UF targets.
+              Movement, beat intel, and the board — the story of this class.
             </p>
             <div className="rh-cc-hero__metrics">
               <div className="rh-cc-hero__metric rh-cc-hero__metric--rank">

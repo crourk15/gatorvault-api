@@ -46,7 +46,7 @@ export function HomeRecruitingPulseWidget({
   return (
     <section className="gv-hcc-section gv-hcc-widget gv-hcc-widget--rh" data-testid="home-rh-pulse">
       <header className="gv-hcc-widget__head">
-        <h2 className="gv-hcc-widget__title">UF Recruiting Pulse — {classYear} Class</h2>
+        <h2 className="gv-hcc-widget__title">Florida Recruiting — {classYear}</h2>
       </header>
       <p className="gv-hcc-widget__meta">
         Class Rank {blueChip} · Blue Chip {blueChipPct}% · Avg Rating 91.8↑

@@ -6,5 +6,5 @@ console.log('script opens', opens, 'closes', closes);
 const chunks = [...html.matchAll(/src="(\/js\/vault-chunks\/[^"]+)"/g)].map((m) => m[1]);
 console.log('chunk refs', chunks.length);
 for (const c of chunks.slice(-5)) console.log(' ', c);
-console.log('has Team Command Center in SSR', html.includes('Team Command Center'));
+console.log('has Florida Football in SSR', html.includes('Florida Football'));
 console.log('has gv-vault-root in SSR', html.includes('gv-vault-root'));

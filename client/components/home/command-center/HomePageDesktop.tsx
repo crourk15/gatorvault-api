@@ -49,7 +49,7 @@ export function HomePageDesktop(): React.ReactElement {
             <HomeMetricsSlider />
           </aside>
 
-          <main className="gv-hcc-desktop-right" aria-label="Right – Command Center">
+          <main className="gv-hcc-desktop-right" aria-label="Right – Home">
             <HomeActionGrid />
             <HomeRecruitingPulseWidget />
             <HomeFutureCastPulseWidget />
