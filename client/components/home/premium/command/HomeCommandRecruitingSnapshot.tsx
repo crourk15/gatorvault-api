@@ -73,7 +73,7 @@ export function HomeCommandRecruitingSnapshot({ metrics, loading }: Props): Reac
   return (
     <>
       <div className="home-wow-section-header">
-        <h2 className="home-wow-section-title">Recruiting Command Snapshot</h2>
+        <h2 className="home-wow-section-title">Recruiting Snapshot</h2>
         <p className="home-wow-section-subtitle">High-level view of UF&apos;s current class.</p>
       </div>
       <section className="home-wow-card" data-testid="home-recruiting-snapshot" data-home-boot="recruiting-snapshot">
@@ -101,7 +101,7 @@ export function HomeCommandRecruitingSnapshot({ metrics, loading }: Props): Reac
         </div>
         {!loading || hasLiveMetrics ? (
           <a href={VAULT_PILLAR_ROUTES.recruiting} className="home-wow-cta-link">
-            View full Recruiting Command Center →
+            View full Recruiting Hub →
           </a>
         ) : null}
       </section>

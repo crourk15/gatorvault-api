@@ -65,7 +65,7 @@ function readBootBeat(): BeatIntelItem[] {
   return window.__GV_HOME_WOW__?.beatItems ?? [];
 }
 
-/** Vault home — WOW command center (hero → gameday → strip → recruiting → FC → beat). */
+/** Vault home — brand hero → gameday → strip → FutureCast → beat. */
 export function HomePremiumPage(): React.ReactElement {
   const [hubTicker, setHubTicker] = useState<string[]>([]);
   const [hpIntel, setHpIntel] = useState<HighPriorityIntelItem[]>([]);

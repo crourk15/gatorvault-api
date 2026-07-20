@@ -21,7 +21,7 @@ type Props = {
   beatLoading?: boolean;
 };
 
-/** Home = brand + one pulse + doors + one teaser. Not a second Lab. */
+/** Home = full-bleed brand hero + doors + one teaser. Not a second Lab. */
 export function HomeCommandCenter({
   pulseHeadline,
   gameDay,
@@ -33,10 +33,12 @@ export function HomeCommandCenter({
   return (
     <div className="home-wow-page__frame">
       <HomeCommandHero pulseHeadline={pulseHeadline} />
-      <HomeCommandGameDay game={gameDay} />
-      <HomeCommandLiveStrip />
-      <HomeCommandFutureCastPreview targets={futureCastTargets} loading={loading} />
-      <HomeCommandBeatHighlights posts={beatPosts} loading={beatLoading ?? loading} />
+      <div className="home-wow-page__stack">
+        <HomeCommandGameDay game={gameDay} />
+        <HomeCommandLiveStrip />
+        <HomeCommandFutureCastPreview targets={futureCastTargets} loading={loading} />
+        <HomeCommandBeatHighlights posts={beatPosts} loading={beatLoading ?? loading} />
+      </div>
     </div>
   );
 }

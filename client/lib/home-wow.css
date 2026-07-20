@@ -1,28 +1,32 @@
 /**
- * WOW Home Command Center — UF Blue hero, white cards, orange chrome, motion
+ * Vault Home — full-bleed brand hero, white cards, orange chrome, motion
  */
 
 :root {
   --home-gator-blue: #0021a5;
   --home-gator-orange: #fa4616;
+  --home-swamp-navy: #001a33;
   --home-page-bg: #0b1120;
   --home-card-bg: #ffffff;
   --home-card-text: #0021a5;
   --home-muted: #6b7280;
   --home-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --home-stack-pad-x: 24px;
 }
 
 .home-wow-page {
   background: var(--home-page-bg);
   color: #ffffff;
   min-height: 100%;
-  padding: 32px 24px 48px;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 0 0 48px;
+  overflow-x: clip;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 @media (max-width: 767px) {
   .home-wow-page {
-    padding: 20px 16px calc(48px + env(safe-area-inset-bottom, 0));
+    --home-stack-pad-x: 16px;
+    padding: 0 0 calc(48px + env(safe-area-inset-bottom, 0));
   }
 
   .home-wow-page__frame {
@@ -33,24 +37,42 @@
 }
 
 .home-wow-page__frame {
+  max-width: none;
+  margin: 0;
+}
+
+.home-wow-page__stack {
   max-width: var(--max-width, 1200px);
   margin: 0 auto;
+  padding: 8px var(--home-stack-pad-x) 0;
 }
 
 .gv-vault-shell__main:has(.home-wow-page) {
   padding: 0;
 }
 
-/* Hero */
+/* Full-bleed brand hero — edge-to-edge, not an inset card */
 .home-wow-hero {
   position: relative;
   overflow: hidden;
-  background: radial-gradient(circle at top left, #1d4ed8, var(--home-gator-blue));
   color: #ffffff;
-  border-radius: 16px;
-  padding: 30px 26px 34px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
-  margin-bottom: 0;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
+  min-height: calc(100svh - var(--gv-shell-header-height, 64px));
+  min-height: calc(100dvh - var(--gv-shell-header-height, 64px));
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.home-wow-hero__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 28%, rgba(250, 70, 22, 0.16) 0%, transparent 58%),
+    linear-gradient(165deg, #0021a5 0%, #001656 52%, var(--home-swamp-navy) 100%);
+  pointer-events: none;
 }
 
 .home-wow-hero-sweep {
@@ -63,51 +85,125 @@
   transform: translateX(-40%);
   animation: home-hero-sweep 12s linear infinite;
   pointer-events: none;
+  z-index: 1;
 }
 
 .home-wow-hero-watermark {
   position: absolute;
-  right: 24px;
-  bottom: 18px;
-  font-size: clamp(2.5rem, 8vw, 4rem);
-  font-weight: 800;
-  opacity: 0.08;
+  right: clamp(12px, 4vw, 28px);
+  bottom: clamp(12px, 3vw, 24px);
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(3rem, 14vw, 6.5rem);
+  font-weight: 700;
+  opacity: 0.07;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   pointer-events: none;
   user-select: none;
+  z-index: 1;
+  line-height: 0.9;
+}
+
+.home-wow-hero__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--max-width, 1200px);
+  margin: 0 auto;
+  padding:
+    clamp(36px, 8vh, 72px)
+    var(--home-stack-pad-x)
+    clamp(28px, 6vh, 48px);
 }
 
 .home-wow-hero-title {
   position: relative;
-  margin: 0 0 6px;
-  font-size: clamp(1.625rem, 4vw, 1.875rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(3rem, 12vw, 5.25rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 0.95;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.28);
+  animation: home-hero-brand-in 0.7s ease-out both;
+}
+
+.home-wow-hero-slogan {
+  position: relative;
+  margin: 0 0 10px;
+  font-size: clamp(1.05rem, 3.2vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  opacity: 0.96;
+  animation: home-hero-copy-in 0.75s ease-out 0.08s both;
 }
 
 .home-wow-hero-subtitle {
   position: relative;
-  margin: 0 0 10px;
+  margin: 0 0 22px;
+  max-width: 28rem;
   font-size: 1rem;
-  opacity: 0.95;
+  line-height: 1.45;
+  opacity: 0.9;
+  animation: home-hero-copy-in 0.75s ease-out 0.14s both;
 }
 
-.home-wow-hero-meta {
+.home-wow-hero-ctas {
   position: relative;
-  margin: 0 0 14px;
-  font-size: 0.875rem;
-  opacity: 0.88;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 18px;
+  animation: home-hero-copy-in 0.75s ease-out 0.2s both;
+}
+
+.home-wow-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 8px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.home-wow-hero-cta--primary {
+  background: var(--home-gator-orange);
+  color: #fff;
+  border: 1px solid transparent;
+}
+
+.home-wow-hero-cta--primary:hover {
+  background: #e03d12;
+  transform: translateY(-1px);
+}
+
+.home-wow-hero-cta--secondary {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+}
+
+.home-wow-hero-cta--secondary:hover {
+  border-color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .home-wow-hero-underline {
   position: relative;
   display: block;
-  height: 2px;
+  height: 3px;
   width: 0;
-  max-width: 120px;
+  max-width: 140px;
   background: var(--home-gator-orange);
-  animation: home-hero-underline 0.9s ease-out forwards;
+  animation: home-hero-underline 0.9s ease-out 0.25s forwards;
 }
 
 .home-wow-hero-pulse {
@@ -116,18 +212,20 @@
   flex-wrap: wrap;
   align-items: baseline;
   gap: 8px 12px;
-  margin-top: 14px;
+  margin-top: 16px;
   max-width: 42rem;
   font-size: 0.9375rem;
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.92);
+  animation: home-hero-copy-in 0.8s ease-out 0.28s both;
 }
 
 .home-wow-hero-pulse__label {
   flex: 0 0 auto;
-  font-size: 0.6875rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--home-gator-orange);
 }
@@ -135,6 +233,27 @@
 .home-wow-hero-pulse__text {
   flex: 1 1 12rem;
   opacity: 0.95;
+}
+
+@media (max-width: 767px) {
+  .home-wow-hero {
+    min-height: calc(100svh - var(--gv-shell-header-height, 64px));
+    min-height: calc(100dvh - var(--gv-shell-header-height, 64px));
+    align-items: center;
+  }
+
+  .home-wow-hero__inner {
+    padding-top: clamp(28px, 6vh, 48px);
+    padding-bottom: clamp(32px, 7vh, 56px);
+  }
+
+  .home-wow-page__stack {
+    padding-top: 4px;
+  }
+
+  .home-wow-page__stack > .home-wow-section-header:first-child {
+    margin-top: 20px;
+  }
 }
 
 .home-wow-hero-ticker {
@@ -177,7 +296,29 @@
     width: 0;
   }
   100% {
-    width: 120px;
+    width: 140px;
+  }
+}
+
+@keyframes home-hero-brand-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes home-hero-copy-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

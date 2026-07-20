@@ -13,7 +13,7 @@ const STRIP_ITEMS = [
   },
   {
     icon: '⭐',
-    title: 'Recruiting Command Center',
+    title: 'Recruiting Hub',
     body: 'Class rankings, movement, and battles in one view.',
     href: VAULT_PILLAR_ROUTES.recruiting,
     label: 'Open Recruiting →',
@@ -31,7 +31,7 @@ export function HomeCommandLiveStrip(): React.ReactElement {
   return (
     <>
       <div className="home-wow-section-header">
-        <h2 className="home-wow-section-title">GatorNation Command Strip</h2>
+        <h2 className="home-wow-section-title">Open the vault</h2>
         <p className="home-wow-section-subtitle">Live, recruiting, and FutureCast—one tap away.</p>
       </div>
       <section className="home-wow-strip-grid" data-testid="home-command-strip">
