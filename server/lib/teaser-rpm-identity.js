@@ -235,7 +235,26 @@ async function enrichUnresolvedPredictionItem(item, options = {}) {
     } catch {
       /* optional */
     }
-    return { enriched: true, autoResolved: true, identity, item: resolved.item, allowlist };
+
+    // Pass 3 — land on radar (watchlist/lab) immediately after naming.
+    let radar = null;
+    if (options.promoteRadar !== false) {
+      try {
+        const { promoteResolvedPredictionToRadar } = require('./lab-intel-promote');
+        radar = await promoteResolvedPredictionToRadar({
+          slug: identity.playerSlug,
+          name: identity.playerName,
+          classYear: identity.classYear || 2028,
+          reasons: ['on3_rpm', 'teaser_identity'],
+          sources: ['on3_rpm', 'teaser_identity', identity.source],
+          fetchRpm: options.fetchRpm !== false,
+        });
+      } catch (err) {
+        radar = { ok: false, error: err.message };
+      }
+    }
+
+    return { enriched: true, autoResolved: true, identity, item: resolved.item, allowlist, radar };
   }
 
   try {

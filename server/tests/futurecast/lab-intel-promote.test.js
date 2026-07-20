@@ -112,4 +112,74 @@ describe('lab-intel-promote', () => {
       'lab'
     );
   });
+
+
+  it('treats On3 RPM like prediction machine (visit+RPM → lab)', () => {
+    const { decideStage, collectSignals } = require('../../lib/lab-intel-promote');
+    assert.equal(
+      decideStage({
+        reasons: ['on3_rpm', 'prediction_machine', 'florida_visit'],
+        sources: ['on3_rpm', 'visit_log'],
+        sourceCount: 2,
+        hasOffer: false,
+        hasVisit: true,
+        visitVerified: false,
+        hasPrediction: true,
+        hasOn3Rpm: true,
+        rpmConfidence: 55,
+      }),
+      'lab'
+    );
+    assert.equal(
+      decideStage({
+        reasons: ['on3_rpm', 'prediction_machine'],
+        sources: ['on3_rpm'],
+        sourceCount: 1,
+        hasOffer: false,
+        hasVisit: false,
+        visitVerified: false,
+        hasPrediction: true,
+        hasOn3Rpm: true,
+        rpmConfidence: 60,
+      }),
+      'watchlist'
+    );
+
+    const signals = collectSignals(
+      {
+        slug: 'cyion-smith',
+        name: 'Cyion Smith',
+        classYear: 2028,
+        ufRpmPct: 58,
+        on3Id: 242617,
+      },
+      {
+        offerSlugs: new Set(),
+        visitSlugs: new Set(['cyion-smith']),
+        rivalsBySlug: new Map(),
+        on3RpmBySlug: new Map([['cyion-smith', { confidence: 58, source: 'on3_rpm' }]]),
+      }
+    );
+    assert.equal(signals.hasOn3Rpm, true);
+    assert.equal(signals.hasPrediction, true);
+    assert.equal(signals.hasVisit, true);
+    assert.ok(signals.reasons.includes('on3_rpm'));
+    assert.equal(decideStage(signals), 'lab');
+  });
+
+  it('promoteResolvedPredictionToRadar dryRun is watchlist without visit', async () => {
+    const { promoteResolvedPredictionToRadar } = require('../../lib/lab-intel-promote');
+    const result = await promoteResolvedPredictionToRadar({
+      slug: 'brand-new-rpm-prospect',
+      name: 'Brand New Rpm Prospect',
+      classYear: 2028,
+      fetchRpm: false,
+      dryRun: true,
+    });
+    assert.equal(result.ok, true);
+    assert.equal(result.dryRun, true);
+    assert.equal(result.stage, 'watchlist');
+    assert.equal(result.row.slug, 'brand-new-rpm-prospect');
+  });
+
 });
