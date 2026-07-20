@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-20T03:47:51.040Z",
+  "generatedAt": "2026-07-20T04:01:14.432Z",
   "maxAgeHours": 72,
   "gates": {
     "G1": {
@@ -59,6 +59,6 @@
   "stagingProbe": null,
   "tests": {
     "ok": true,
-    "output": "  duration_ms: 8.540432\n  ...\n1..15\n# tests 15\n# suites 0\n# pass 15\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 17528.314899\n"
+    "output": "  duration_ms: 7.714911\n  ...\n1..15\n# tests 15\n# suites 0\n# pass 15\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 33000.793011\n"
   }
 }
