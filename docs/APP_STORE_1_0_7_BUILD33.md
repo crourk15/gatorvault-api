@@ -12,6 +12,24 @@
 
 Same elite platform stack as the Build 32 cut (Home brand hero, recruiting voice, never-late intel, Admin Hub daily path, prod autoposter sign-off) — shipping under a new marketing train because 1.0.6 is locked.
 
+## Mobile deploy proof (local)
+
+**Status: PASS** — `npm run proof:mobile:deploy` on 2026-07-20
+
+- Build ID: `29f559078171-IotI0KRi` (commit `29f559078171`)
+- All section checklist rows PASS (Roster → Below NSD rollup + NIL/Game Zone layout)
+- Menu open/close PASS on every required vault route
+- Cold-load recordings: Home, Recruiting, Team
+- `verify:mobile:full` — **3 consecutive passes** (18 routes)
+
+Artifacts (local / agent): `proof/mobile-deploy-proof/`
+
+After this merges and Netlify deploys, run:
+
+```bash
+npm run verify:netlify:build
+```
+
 ## Start Codemagic
 
 1. https://codemagic.io → **gatorvault-api**

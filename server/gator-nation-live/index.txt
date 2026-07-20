@@ -1,11 +1,11 @@
 2:I[19107,[],"ClientPageRoot"]
-3:I[94977,["7833","/js/vault-chunks/7833-6533e8dfb2e29d47.js","1072","/js/vault-chunks/1072-e3e8408f257369ac.js","8655","/js/vault-chunks/8655-5e62a96c246ac834.js","6487","/js/vault-chunks/6487-a28802c3e16307b1.js","9305","/js/vault-chunks/app/gator-nation-live/page-138fdb110546e014.js"],"default",1]
+3:I[94977,["6765","/js/vault-chunks/6765-07d564b4eb5c723c.js","1072","/js/vault-chunks/1072-404d4b47bb413c7d.js","8655","/js/vault-chunks/8655-9c4ca3a28e84985d.js","38","/js/vault-chunks/38-98aa05b34422cd22.js","9305","/js/vault-chunks/app/gator-nation-live/page-f63da58525d588e1.js"],"default",1]
 4:I[4707,[],""]
 5:I[36423,[],""]
-6:I[30859,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","8140","/js/vault-chunks/8140-b964893761b9d7db.js","7833","/js/vault-chunks/7833-6533e8dfb2e29d47.js","5814","/js/vault-chunks/app/layout-7269258988381ed5.js"],"AppRouteGate"]
-7:I[41045,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","8140","/js/vault-chunks/8140-b964893761b9d7db.js","7833","/js/vault-chunks/7833-6533e8dfb2e29d47.js","5814","/js/vault-chunks/app/layout-7269258988381ed5.js"],"AppShell"]
-9:I[50985,["3185","/js/vault-chunks/app/layout-7269258988381ed5.js"],"AppProviders"]
-8:Tf31,(function(){
+6:I[30859,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","1072","/js/vault-chunks/1072-404d4b47bb413c7d.js","8140","/js/vault-chunks/8140-6c0b163b77d6335f.js","3253","/js/vault-chunks/3253-6873c5fabbd85760.js","1529","/js/vault-chunks/1529-87a1d422c8c01a7b.js","3567","/js/vault-chunks/3567-791800e530f0a36b.js","5814","/js/vault-chunks/app/layout-9eed2348db56c221.js"],"AppRouteGate"]
+7:I[41045,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","1072","/js/vault-chunks/1072-404d4b47bb413c7d.js","8140","/js/vault-chunks/8140-6c0b163b77d6335f.js","3253","/js/vault-chunks/3253-6873c5fabbd85760.js","1529","/js/vault-chunks/1529-87a1d422c8c01a7b.js","3567","/js/vault-chunks/3567-791800e530f0a36b.js","5814","/js/vault-chunks/app/layout-9eed2348db56c221.js"],"AppShell"]
+9:I[50985,["3185","/js/vault-chunks/app/layout-9eed2348db56c221.js"],"AppProviders"]
+8:T2736,(function(){
   try {
     var cap = window.Capacitor;
     var proto = location.protocol || '';
@@ -21,6 +21,8 @@
       : bundledNative
         ? location.origin
         : 'https://gatorvaultinsider.com';
+    var COLD_KEY = 'gv_native_cold_done';
+    var SPA_KEY = 'gv_native_spa_path';
 
     function routePath(path) {
       var p = (path || '/').replace(/\/$/, '') || '/';
@@ -72,10 +74,43 @@
       } catch (e) { return false; }
     }
 
+    /** Fresh process: sign-in if logged out, vault home if logged in (ignore WKWebView restore). */
     function vaultDest() {
       return sessionOk()
         ? abs('/vault/')
         : abs('/join/?mode=signin&next=/vault/');
+    }
+
+    /** iOS may wipe localStorage; Preferences (UserDefaults) survives — restore before join bounce. */
+    function restoreSessionFromPreferences(done) {
+      try {
+        var plugins = cap && cap.Plugins;
+        var Prefs = plugins && plugins.Preferences;
+        if (!Prefs || typeof Prefs.get !== 'function') {
+          done();
+          return;
+        }
+        var settled = false;
+        var finish = function() {
+          if (settled) return;
+          settled = true;
+          done();
+        };
+        setTimeout(finish, 1200);
+        Prefs.get({ key: 'gv_session' }).then(function(res) {
+          try {
+            if (res && res.value) {
+              var s = JSON.parse(res.value);
+              if (s && s.email && s.token) {
+                localStorage.setItem('gv_session', res.value);
+              }
+            }
+          } catch (e1) {}
+          finish();
+        }).catch(function() { finish(); });
+      } catch (e2) {
+        done();
+      }
     }
 
     function isMarketingPath(path) {
@@ -83,29 +118,152 @@
       return p === '/' || p === '/welcome' || p === '/insider';
     }
 
+    function isVaultClientNav(href) {
+      try {
+        var p = new URL(href, SITE).pathname.replace(/\/$/, '') || '/';
+        return p === '/vault' || p.indexOf('/vault/') === 0;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    /** Catch-all shells — only one index.html exists; deep slugs must not hard-nav to missing files. */
+    function catchAllShell(pathname) {
+      var p = routePath(pathname);
+      var art = p.match(/^\/articles\/([^/]+)$/);
+      if (art && art[1] && art[1] !== 'detail') return '/vault/articles/';
+      var rules = [
+        [/^\/vault\/recruiting\/player(?:\/[^/]+)?$/, '/vault/recruiting/player/'],
+        [/^\/vault\/futurecast\/player(?:\/[^/]+)?$/, '/vault/futurecast/player/'],
+        [/^\/vault\/portal\/player(?:\/[^/]+)?$/, '/vault/portal/player/'],
+        [/^\/vault\/players(?:\/[^/]+)?$/, '/vault/players/'],
+        [/^\/vault\/articles(?:\/[^/]+)?$/, '/vault/articles/'],
+        [/^\/player(?:\/[^/]+)?$/, '/player/'],
+        [/^\/recruiting\/player(?:\/[^/]+)?$/, '/recruiting/player/'],
+        [/^\/futurecast\/player(?:\/[^/]+)?$/, '/futurecast/player/'],
+        [/^\/team\/player(?:\/[^/]+)?$/, '/team/player/']
+      ];
+      for (var i = 0; i < rules.length; i++) {
+        if (rules[i][0].test(p)) return rules[i][1];
+      }
+      return null;
+    }
+
+    function resolveSpaHref(href) {
+      try {
+        var u = new URL(href, SITE);
+        var p = routePath(u.pathname);
+        var art = p.match(/^\/articles\/([^/]+)$/);
+        if (art && art[1] && art[1] !== 'detail') {
+          return '/vault/articles/' + encodeURIComponent(art[1]) + '/' + u.search + u.hash;
+        }
+        return norm(href);
+      } catch (e) {
+        return href;
+      }
+    }
+
+    function isCatchAllDynamic(pathname) {
+      var shell = catchAllShell(pathname);
+      if (!shell) return false;
+      return routePath(pathname) !== routePath(shell);
+    }
+
+    function navigateCatchAll(href) {
+      var target = resolveSpaHref(href);
+      var shell = catchAllShell(target);
+      if (!shell) {
+        location.href = abs(target);
+        return;
+      }
+      var curShell = catchAllShell(location.pathname);
+      if (curShell && routePath(curShell) === routePath(shell)) {
+        history.pushState(null, '', target);
+        try { window.dispatchEvent(new Event('vault:navigation')); } catch (e1) {}
+        return;
+      }
+      try { sessionStorage.setItem(SPA_KEY, target); } catch (e2) {}
+      location.href = abs(shell);
+    }
+
+    function takeColdStart() {
+      try {
+        if (sessionStorage.getItem(COLD_KEY)) return false;
+        sessionStorage.setItem(COLD_KEY, '1');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function consumeSpaPending() {
+      try {
+        var pending = sessionStorage.getItem(SPA_KEY);
+        if (!pending) return;
+        sessionStorage.removeItem(SPA_KEY);
+        var pendingShell = catchAllShell(pending);
+        var curShell = catchAllShell(location.pathname);
+        if (pendingShell && curShell && routePath(pendingShell) === routePath(curShell)) {
+          history.replaceState(null, '', pending);
+        } else if (pendingShell) {
+          sessionStorage.setItem(SPA_KEY, pending);
+          location.replace(abs(pendingShell));
+        }
+      } catch (e) {}
+    }
+
+    function toAppRelative(href) {
+      if (!href || href.charAt(0) === '#' || href.indexOf('mailto:') === 0 || href.indexOf('tel:') === 0) return href;
+      if (href.indexOf('http') !== 0) return href;
+      try {
+        var au = new URL(href);
+        var siteHost = '';
+        try { siteHost = new URL(SITE).hostname; } catch (eh) {}
+        if (au.hostname === 'gatorvaultinsider.com' || au.hostname === 'www.gatorvaultinsider.com' ||
+            au.hostname === 'localhost' || au.hostname === '127.0.0.1' ||
+            (siteHost && au.hostname === siteHost)) {
+          return (au.pathname || '/') + au.search + au.hash;
+        }
+      } catch (eRel) {}
+      return href;
+    }
+
     document.addEventListener('click', function(e) {
       var a = e.target && e.target.closest && e.target.closest('a[href]');
       if (!a) return;
-      var raw = a.getAttribute('href');
-      if (!raw || raw.charAt(0) === '#' || raw.indexOf('http') === 0 ||
-          raw.indexOf('mailto:') === 0 || raw.indexOf('tel:') === 0) return;
+      var attr = a.getAttribute('href');
+      if (!attr || attr.charAt(0) === '#' ||
+          attr.indexOf('mailto:') === 0 || attr.indexOf('tel:') === 0) return;
+      var raw = toAppRelative(attr);
+      if (raw.indexOf('http') === 0) return;
 
       if (bundledNative) {
-        e.preventDefault();
-        e.stopPropagation();
         try {
           var u = new URL(raw, SITE);
           if (isMarketingPath(u.pathname)) {
+            e.preventDefault();
+            e.stopPropagation();
             location.href = vaultDest();
             return;
           }
+          // Deep catch-all routes have no per-slug index.html — every player slug.
+          if (isCatchAllDynamic(u.pathname) || isCatchAllDynamic(resolveSpaHref(raw))) {
+            e.preventDefault();
+            e.stopPropagation();
+            navigateCatchAll(raw);
+            return;
+          }
+          // Other vault boards: leave client router alone after hydration.
+          if (isVaultClientNav(raw)) return;
         } catch (err) {}
+        e.preventDefault();
+        e.stopPropagation();
         location.href = abs(norm(raw));
         return;
       }
 
       var fixed = norm(raw);
-      if (fixed !== raw) {
+      if (fixed !== raw || attr !== raw) {
         e.preventDefault();
         location.href = abs(fixed);
         return;
@@ -119,16 +277,23 @@
       } catch (err2) {}
     }, true);
 
+    // Restore stashed catch-all deep links BEFORE cold-start routing.
+    // Otherwise Team → /vault/players/:slug loads the shell, then cold-start
+    // replaces to /vault/ and drops the player (or falls through to marketing).
+    consumeSpaPending();
     var path = routePath(location.pathname || '/');
-    if (isMarketingPath(path)) {
-      var dest = vaultDest();
-      if (location.href !== dest) location.replace(dest);
+    var cold = takeColdStart();
+    if (isMarketingPath(path) || (cold && isMarketingPath(path))) {
+      restoreSessionFromPreferences(function() {
+        var dest = vaultDest();
+        if (location.href !== dest) location.replace(dest);
+      });
     }
   } catch (e) {}
 })();a:{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"}
 b:{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"}
 c:{"display":"inline-block"}
 d:{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0}
-0:["CGYO5emkM2mON0u239Nh9",[[["",{"children":["(app)",{"children":["gator-nation-live",{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",{"children":["(app)",{"children":["gator-nation-live",{"children":["__PAGE__",{},[["$L1",["$","$L2",null,{"props":{"params":{},"searchParams":{}},"Component":"$3"}],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/bc24d485ede08d8d.css","precedence":"next","crossOrigin":"$undefined"}]]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/f1a46d51c83b7012.css","precedence":"next","crossOrigin":"$undefined"}]],["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children","(app)","children","gator-nation-live","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/09c4a14a1897fae8.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/fca2b81e4f619f62.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/1a9283b473e13dc4.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/a8fe1a20ab38f79a.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","4",{"rel":"stylesheet","href":"/_next/static/css/3f52c8abae2610fd.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","5",{"rel":"stylesheet","href":"/_next/static/css/e6fdf6b5f8a56102.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","6",{"rel":"stylesheet","href":"/_next/static/css/b223f0a107e10f9f.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","7",{"rel":"stylesheet","href":"/_next/static/css/2051b149cfddd0b0.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","8",{"rel":"stylesheet","href":"/_next/static/css/fde0835731924eff.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","9",{"rel":"stylesheet","href":"/_next/static/css/4c4eec84f6f4594e.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","10",{"rel":"stylesheet","href":"/_next/static/css/72c6316fabed6a59.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","11",{"rel":"stylesheet","href":"/_next/static/css/04ab4bf330d77386.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","12",{"rel":"stylesheet","href":"/_next/static/css/3cea7525a15f876d.css","precedence":"next","crossOrigin":"$undefined"}]],[["$","$L6",null,{}],["$","$L7",null,{"children":["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children","(app)","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":"404"}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/73686baa7e8e7ff9.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/0b76d5d2160fdaa8.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/9aaf170a6eeea464.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/b799eacc7000fb11.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","4",{"rel":"stylesheet","href":"/_next/static/css/1ae7486c9b29f7d2.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","5",{"rel":"stylesheet","href":"/_next/static/css/0c417f3c61b21d1d.css","precedence":"next","crossOrigin":"$undefined"}]],["$","html",null,{"lang":"en","data-theme":"dark","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();"}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$8"}}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@600;700;800&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"className":"fc-body gv-body","children":["$","$L9",null,{"children":["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$a","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$b","children":"404"}],["$","div",null,{"style":"$c","children":["$","h2",null,{"style":"$d","children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]}]]}]],null],null],["$Le",null]]]]
+0:["IotI0KRi7FH3ZaL47Dql_",[[["",{"children":["(app)",{"children":["gator-nation-live",{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",{"children":["(app)",{"children":["gator-nation-live",{"children":["__PAGE__",{},[["$L1",["$","$L2",null,{"props":{"params":{},"searchParams":{}},"Component":"$3"}],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/12a30cb0338843d5.css","precedence":"next","crossOrigin":"$undefined"}]]],null],null]},[[null,["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children","(app)","children","gator-nation-live","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/09c4a14a1897fae8.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/fca2b81e4f619f62.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/1a9283b473e13dc4.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/a8fe1a20ab38f79a.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","4",{"rel":"stylesheet","href":"/_next/static/css/3f52c8abae2610fd.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","5",{"rel":"stylesheet","href":"/_next/static/css/37d4a14d01f8d87a.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","6",{"rel":"stylesheet","href":"/_next/static/css/b223f0a107e10f9f.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","7",{"rel":"stylesheet","href":"/_next/static/css/b739614822fcd076.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","8",{"rel":"stylesheet","href":"/_next/static/css/25285874498fad1f.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","9",{"rel":"stylesheet","href":"/_next/static/css/4c4eec84f6f4594e.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","10",{"rel":"stylesheet","href":"/_next/static/css/ae6a62dfe6a30731.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","11",{"rel":"stylesheet","href":"/_next/static/css/04ab4bf330d77386.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","12",{"rel":"stylesheet","href":"/_next/static/css/f5018f6bc28b1e96.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","13",{"rel":"stylesheet","href":"/_next/static/css/5a5879f005a263a4.css","precedence":"next","crossOrigin":"$undefined"}]],[["$","$L6",null,{}],["$","$L7",null,{"children":["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children","(app)","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":"404"}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/8c656d63b1573491.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/18b9a4f413c25020.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/02609e47e0546a4e.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/981631524a7c484c.css","precedence":"next","crossOrigin":"$undefined"}]],["$","html",null,{"lang":"en","data-theme":"dark","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();"}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$8"}}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Oswald:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"className":"fc-body gv-body","children":["$","$L9",null,{"children":["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$a","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$b","children":"404"}],["$","div",null,{"style":"$c","children":["$","h2",null,{"style":"$d","children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]}]]}]],null],null],["$Le",null]]]]
 e:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","1",{"charSet":"utf-8"}]]
 1:null
