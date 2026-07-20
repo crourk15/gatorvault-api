@@ -24,8 +24,11 @@ type Props = {
  */
 export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.ReactElement {
   const data = lab;
-  const pending = lab.secondaryLoading;
   const highPriority = useResolvedLabHighPriority(data.highPriority, data.highPriorityClosing);
+  // Elite: never blank seeded panels behind secondaryLoading — only skeleton when empty.
+  const hasSeededBoard =
+    (data.masterBoard?.players?.length || 0) > 0 || (highPriority?.length || 0) > 0;
+  const pending = lab.secondaryLoading && !hasSeededBoard;
 
   return (
     <div className="rh-cc-page fc-lab-cc-page" data-testid="fc-lab-page-mobile">
