@@ -28,12 +28,29 @@ import {
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 import { RECRUITING_HUB_HERO_SEED } from '@/lib/recruiting-hub-hero-seed';
+import { GNL_HUB_SEED } from '@/lib/gnl-hub-seed';
 import {
   buildBeatPostsFromIntel,
   buildFutureCastTargetsFromHome,
   buildGameDayView,
   buildHomePulseHeadline,
 } from '@/components/home/premium/command/home-command-utils';
+
+function buildSeedBeatIntel(): BeatIntelItem[] {
+  return (GNL_HUB_SEED.panels?.beatWriterHighlights ?? [])
+    .filter((row) => String(row.text || '').trim())
+    .slice(0, 3)
+    .map((row, idx) => ({
+      id: `seed-beat-${idx}`,
+      text: String(row.text || '').trim(),
+      writerName: row.writerName || row.handle || 'Beat Writer',
+      source: row.source || 'UF Beat',
+      url: row.url ?? null,
+      timestamp: row.timestamp || new Date().toISOString(),
+    }));
+}
+
+const SEED_BEAT_INTEL = buildSeedBeatIntel();
 
 declare global {
   interface Window {
@@ -71,8 +88,8 @@ export function HomePremiumPage(): React.ReactElement {
   const [hubTicker, setHubTicker] = useState<string[]>([]);
   const [hpIntel, setHpIntel] = useState<HighPriorityIntelItem[]>([]);
   const [movementIntel, setMovementIntel] = useState<MovementIntelResponse | null>(null);
-  // SSR-safe init — apply session/boot cache only in useEffect to avoid hydration mismatch.
-  const [beatIntel, setBeatIntel] = useState<BeatIntelItem[]>([]);
+  // Seeded beat + metrics so first paint never waits on cold intel APIs.
+  const [beatIntel, setBeatIntel] = useState<BeatIntelItem[]>(SEED_BEAT_INTEL);
   const [board, setBoard] = useState<RecruitingBoardResponse | null>(null);
   const [classMetrics, setClassMetrics] = useState<ClassMetricsResponse | null>(
     () => ({ ...RECRUITING_HUB_HERO_SEED.classOverview }) as ClassMetricsResponse
@@ -81,7 +98,7 @@ export function HomePremiumPage(): React.ReactElement {
   const [highPriority, setHighPriority] = useState<HighPriorityResponse | null>(null);
   // Seeded metrics mean first paint is never a blank recruiting snapshot.
   const [loading, setLoading] = useState(false);
-  const [beatReady, setBeatReady] = useState(false);
+  const [beatReady, setBeatReady] = useState(SEED_BEAT_INTEL.length > 0);
 
   useEffect(() => {
     function applyBootCache(): void {

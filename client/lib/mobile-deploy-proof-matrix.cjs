@@ -73,6 +73,7 @@ const SECTION_CHECKLIST = [
     path: '/vault/',
     selector: '[data-testid="home-beat-highlights"], [data-home-boot="beat-highlights"]',
     minText: 30,
+    waitForbiddenMs: 90_000,
   },
   {
     id: 'gnl',
