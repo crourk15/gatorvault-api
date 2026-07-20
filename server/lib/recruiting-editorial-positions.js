@@ -68,6 +68,8 @@ function loadBoardFile() {
         stateRank: row.stateRank != null ? Number(row.stateRank) : null,
         rating: row.rating != null ? Number(row.rating) : null,
         inState: row.inState != null ? Boolean(row.inState) : null,
+        htWt: row.htWt ? String(row.htWt).trim() : null,
+        skinny: row.skinny ? String(row.skinny).trim() : null,
       });
     }
     cachedMap = map;
@@ -94,7 +96,7 @@ function getEditorialPosition(slug, classYear = 2028) {
 function applyEditorialPositionToPlayer(player) {
   if (!player) return player;
   const editorial = getEditorialPosition(player.slug, player.classYear ?? player.class_year);
-  if (!editorial?.pos) return player;
+  if (!editorial) return player;
   const out = { ...player };
   const currentPos = normalizePos(out.pos || out.position);
   // Upgrade empty / ATH / TBD placeholders when the board has a real position.
@@ -127,6 +129,8 @@ function applyEditorialPositionToPlayer(player) {
     out.displayRating = editorial.rating;
   }
   if (editorial.inState != null) out.inState = editorial.inState;
+  if (editorial.htWt && !String(out.htWt || '').trim()) out.htWt = editorial.htWt;
+  if (editorial.skinny && !String(out.skinny || '').trim()) out.skinny = editorial.skinny;
   return out;
 }
 

@@ -40,7 +40,7 @@ test('kahmaree-crumity editorial position is CB with 3 stars', () => {
 test('malakhi-dudley editorial position is OT at Heritage (GA)', () => {
   const row = getEditorialPosition('malakhi-dudley', 2028);
   assert.equal(row?.pos, 'OT');
-  assert.equal(row?.school, 'Heritage High School, GA');
+  assert.equal(row?.school, 'Heritage (Conyers, GA)');
   assert.equal(row?.state, 'GA');
   assert.equal(row?.natlRank, 204);
 });
@@ -54,7 +54,7 @@ test('applyEditorialPositionToPlayer fills missing pos from board seed', () => {
   });
   assert.equal(out.pos, 'OT');
   assert.equal(out.position, 'OT');
-  assert.equal(out.school, 'Heritage High School, GA');
+  assert.equal(out.school, 'Heritage (Conyers, GA)');
   assert.equal(out.state, 'GA');
 });
 
@@ -67,6 +67,17 @@ test('applyEditorialPositionToPlayer upgrades ATH placeholder from board seed', 
   });
   assert.equal(out.pos, 'OT');
   assert.equal(out.position, 'OT');
+});
+
+test('applyEditorialPositionToPlayer fills Cyion htWt/skinny from board seed', () => {
+  const out = applyEditorialPositionToPlayer({
+    slug: 'cyion-smith',
+    classYear: 2028,
+    pos: 'ATH',
+  });
+  assert.equal(out.pos, 'S');
+  assert.equal(out.htWt, '6-2 / 175');
+  assert.match(String(out.skinny || ''), /Blountstown/);
 });
 
 test('applyEditorialPositionToPlayer does not override On3-synced pos', () => {

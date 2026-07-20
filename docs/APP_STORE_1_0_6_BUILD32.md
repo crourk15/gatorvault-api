@@ -13,11 +13,12 @@
 7. **Intel depth** — On3 403 keeps last-good RPM; board pos upgrades ATH/TBD placeholders
 8. **Admin Hub** — embed panels labeled legacy with in-shell daily path first + load failure banner
 
-## Remaining (ops / larger rewrite)
+## Remaining before calling Build 32 “true elite”
 
-- Full design-system CSS layer collapse (`*-elite.css`) — non-blocking polish
-- Admin Hub: promote more iframe panels fully in-shell (alerts/monitoring/board)
-- Autoposter: human operator sign-off name/date after evidence re-run (see `ELITE_RECRUITING_INTEL_OPERATOR_SPEC.md`)
+- Autoposter: human operator sign-off name/date + Render flag confirm (see `ELITE_RECRUITING_INTEL_OPERATOR_SPEC.md`)
+- Optional: full Admin board / Full Alerts iframe rewrite (Monitoring Summary is now in-shell)
+- Optional: deeper CSS layer merge beyond dead-file + duplicate import cleanup
+- `npm run proof:mobile:deploy` after merge — required before claiming ready
 
 ## iOS
 

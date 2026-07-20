@@ -331,6 +331,15 @@ function overlayJsonIntelFields(players) {
     if (src.htWt && String(src.htWt).trim() && !String(p.htWt || '').trim()) {
       patch.htWt = src.htWt;
     }
+    if (src.height && !p.height) patch.height = src.height;
+    if (src.weight != null && p.weight == null) patch.weight = src.weight;
+    const localPos = String(src.pos || src.position || '')
+      .trim()
+      .toUpperCase();
+    if (localPos && !isWeakStorePos(localPos) && isWeakStorePos(p.pos || p.position)) {
+      patch.pos = localPos;
+      patch.position = localPos;
+    }
     if (src.on3ProfileUrl && !p.on3ProfileUrl) patch.on3ProfileUrl = src.on3ProfileUrl;
     if (src.on3Slug && !p.on3Slug) patch.on3Slug = src.on3Slug;
     if (src.commitDate && !p.commitDate) patch.commitDate = src.commitDate;
@@ -541,6 +550,13 @@ function rowToPlayer(row) {
   });
 }
 
+function isWeakStorePos(pos) {
+  const p = String(pos || '')
+    .trim()
+    .toUpperCase();
+  return !p || p === 'ATH' || p === 'TBD' || p === 'N/A' || p === 'NA' || p === 'UNKNOWN';
+}
+
 /** Merge On3 board fields from local JSON when Supabase row is sparse. */
 function enrichPlayerFromLocalJson(player, slug) {
   if (!player || !slug) return player;
@@ -568,6 +584,30 @@ function enrichPlayerFromLocalJson(player, slug) {
   ) {
     patch.ufRpmPct = Number(local.ufRpmPct);
   }
+  if (local.htWt && String(local.htWt).trim() && !String(player.htWt || '').trim()) {
+    patch.htWt = local.htWt;
+  }
+  if (local.height && !player.height) patch.height = local.height;
+  if (local.weight != null && player.weight == null) patch.weight = local.weight;
+  if (local.skinny && String(local.skinny).trim() && !String(player.skinny || '').trim()) {
+    patch.skinny = local.skinny;
+  }
+  if (local.profileNote && String(local.profileNote).trim() && !String(player.profileNote || '').trim()) {
+    patch.profileNote = local.profileNote;
+  }
+  const localPos = String(local.pos || local.position || '')
+    .trim()
+    .toUpperCase();
+  if (localPos && !isWeakStorePos(localPos) && isWeakStorePos(player.pos || player.position)) {
+    patch.pos = localPos;
+    patch.position = localPos;
+  }
+  const localStars = Number(local.stars) || Number(local.consensusStars) || 0;
+  const rowStars = Number(player.stars) || Number(player.consensusStars) || 0;
+  if (localStars > rowStars) patch.stars = localStars;
+  if (local.natlRank != null && player.natlRank == null) patch.natlRank = local.natlRank;
+  if (local.posRank != null && player.posRank == null) patch.posRank = local.posRank;
+  if (local.stateRank != null && player.stateRank == null) patch.stateRank = local.stateRank;
   return Object.keys(patch).length ? { ...player, ...patch } : player;
 }
 

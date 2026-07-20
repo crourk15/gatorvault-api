@@ -379,10 +379,46 @@ async function syncSlugFromOn3Fast(slug, classYear) {
   if (!profilePatch.state && (localPlayer?.state || existing?.state)) {
     profilePatch.state = localPlayer?.state || existing?.state;
   }
-  for (const field of ['natlRank', 'posRank', 'stateRank', 'rating', 'stars', 'ufRpmPct']) {
-    if (profilePatch[field] == null && localPlayer?.[field] != null) {
-      profilePatch[field] = localPlayer[field];
+
+  // On3 miss / 403: keep last-good profile depth from store + players.json.
+  const lastGoodFields = [
+    'natlRank',
+    'posRank',
+    'stateRank',
+    'rating',
+    'stars',
+    'ufRpmPct',
+    'htWt',
+    'height',
+    'weight',
+    'skinny',
+    'pos',
+    'position',
+    'profileNote',
+    'on3Slug',
+    'on3Id',
+    'on3ProfileUrl',
+  ];
+  let usedLastGood = false;
+  for (const field of lastGoodFields) {
+    const cur = profilePatch[field];
+    const empty = cur == null || cur === '';
+    if (!empty) continue;
+    const fromLocal = localPlayer?.[field];
+    const fromExisting = existing?.[field];
+    const val =
+      fromLocal != null && fromLocal !== ''
+        ? fromLocal
+        : fromExisting != null && fromExisting !== ''
+          ? fromExisting
+          : null;
+    if (val != null && val !== '') {
+      profilePatch[field] = val;
+      usedLastGood = true;
     }
+  }
+  if ((!profile || profile?.error) && usedLastGood && !profilePatch.on3Source) {
+    profilePatch.on3Source = 'on3_profile_last_good';
   }
 
   const merged = applyAllowlistIntelSkinny(

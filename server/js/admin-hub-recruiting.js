@@ -26,7 +26,7 @@
       + '<div class="hub-btn-row">'
       + '<button type="button" class="hub-btn secondary" id="hub-rh-refresh">Refresh</button>'
       + '<button type="button" class="hub-btn secondary" id="hub-rh-full">Full Alerts (legacy)</button>'
-      + '<button type="button" class="hub-btn secondary" id="hub-rh-mon">Monitoring (legacy)</button>'
+      + '<button type="button" class="hub-btn secondary" id="hub-rh-mon">Monitoring Summary</button>'
       + '</div></div>'
       + '<div id="hub-rh-loading" class="hub-dash-loading">Loading recruiting status...</div>'
       + '<div id="hub-rh-body" class="hidden"></div>'

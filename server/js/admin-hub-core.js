@@ -45,7 +45,7 @@
     '/admin-self-runner.html': { section: 'self-runner', panel: 'pending' },
     '/admin/ops': { section: 'dashboard', panel: 'ops' },
     '/admin/feedback': { section: 'feedback', panel: 'inbox' },
-    '/admin/monitoring': { section: 'recruiting', panel: 'monitoring' },
+    '/admin/monitoring': { section: 'recruiting', panel: 'monitoring-full' },
     '/admin/ops/gm2': { section: 'gm2', panel: 'rerun' },
     '/admin/ops/identity-patterns': { section: 'gm2', panel: 'identity' },
     '/vault/ops': { section: 'dashboard', panel: 'ops' },
@@ -110,9 +110,10 @@
       panels: [
         { id: 'daily', label: 'Daily Summary', inline: true },
         { id: 'unresolved', label: 'Unresolved Predictions', inline: true },
+        { id: 'monitoring', label: 'Monitoring Summary', inline: true },
         { id: 'vault-grades', label: 'Vault Grades Manager', inline: true },
         { id: 'alerts', label: 'Full Alerts (legacy)', embed: 'recruiting-alerts' },
-        { id: 'monitoring', label: 'Monitoring (legacy)', embed: 'monitoring' }
+        { id: 'monitoring-full', label: 'Full Monitoring (legacy)', embed: 'monitoring' }
       ]
     },
     {
@@ -989,6 +990,13 @@
               apiPost: apiPost,
               onNavigate: navigateFromHash,
               pushActivity: pushActivity
+            });
+          }
+          else if (panelId === 'monitoring' && section.id === 'recruiting' && global.GVAdminMonitoringSummary) {
+            GVAdminMonitoringSummary.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash
             });
           }
           else if (panelId === 'summary' && section.id === 'product-intel' && global.GVAdminProductIntelSummary) {
