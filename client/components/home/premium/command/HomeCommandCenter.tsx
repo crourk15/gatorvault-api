@@ -21,7 +21,7 @@ type Props = {
   beatLoading?: boolean;
 };
 
-/** Home = full-bleed brand hero + doors + one teaser. Not a second Lab. */
+/** Home = full-bleed brand hero first; live pulse + countdown below the fold. */
 export function HomeCommandCenter({
   pulseHeadline,
   gameDay,
@@ -30,10 +30,16 @@ export function HomeCommandCenter({
   loading,
   beatLoading,
 }: Props): React.ReactElement {
+  const pulse = pulseHeadline.trim() || 'Live intel loading…';
+
   return (
     <div className="home-wow-page__frame">
       <HomeCommandHero pulseHeadline={pulseHeadline} />
       <div className="home-wow-page__stack">
+        <p className="home-wow-below-pulse" data-testid="home-hero-pulse" aria-live="polite">
+          <span className="home-wow-below-pulse__label">Now</span>
+          <span>{pulse}</span>
+        </p>
         <HomeCommandGameDay game={gameDay} />
         <HomeCommandLiveStrip />
         <HomeCommandFutureCastPreview targets={futureCastTargets} loading={loading} />

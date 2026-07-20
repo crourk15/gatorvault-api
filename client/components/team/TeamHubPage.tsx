@@ -41,8 +41,9 @@ function tabFromHash(): TeamPremiumTabId {
 export function TeamHubPage(): React.ReactElement {
   const cachedHub = typeof window !== 'undefined' ? readCachedTeamHubBundle() : null;
   const [bundle, setBundle] = useState<TeamHubBundle>(cachedHub ?? SEED_BUNDLE);
-  const [loading, setLoading] = useState(!cachedHub);
-  const [warming, setWarming] = useState(!cachedHub);
+  const seedReady = (cachedHub ?? SEED_BUNDLE).roster.length > 0;
+  const [loading, setLoading] = useState(!cachedHub && !seedReady);
+  const [warming, setWarming] = useState(!cachedHub && !seedReady);
   const [pipelineLoading, setPipelineLoading] = useState(true);
   const [rosterFilter, setRosterFilter] = useState<RosterFilter>('All');
   const [dcTab, setDcTab] = useState<DepthChartTab>('offense');
@@ -62,13 +63,13 @@ export function TeamHubPage(): React.ReactElement {
   const load = useCallback(
     async (isInitial: boolean) => {
       const hadCache = isInitial && readCachedTeamHubBundle() != null;
-      if (isInitial && !hadCache) {
-        // Keep seeded depth chart / staff visible — only roster warms.
-        setLoading(true);
-        setWarming(true);
+      if (isInitial) {
+        // Seed/cache already paints roster + depth — only pipeline waits.
         setPipelineLoading(true);
-      } else if (isInitial) {
-        setPipelineLoading(true);
+        if (!hadCache && SEED_BUNDLE.roster.length === 0) {
+          setLoading(true);
+          setWarming(true);
+        }
       }
       try {
         const [hub, board, fcBoard] = await Promise.all([

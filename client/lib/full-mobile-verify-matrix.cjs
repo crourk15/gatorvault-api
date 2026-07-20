@@ -77,13 +77,18 @@ const ROUTE_CHECKS = {
     testMenu: true,
   },
   live: {
-    root: '[data-testid="vault-live-feed"], .gv-live-feed, [data-testid="gnl-page-hero"]',
-    minBodyText: 200,
+    root: '[data-testid="vault-live-feed"]:not(.gv-vault-ssr-marker), [data-testid="gnl-live-feed-module"], [data-testid="gnl-page-hero"]',
+    minBodyText: 300,
     sections: [
       {
-        sel: '[data-testid="gnl-page-hero"], [data-testid="vault-live-feed"], .gv-live-feed',
-        label: 'Live feed shell',
-        minText: 30,
+        sel: '[data-testid="gnl-page-hero"]',
+        label: 'Live hero',
+        minText: 20,
+      },
+      {
+        sel: '[data-testid="gnl-live-feed-module"], [data-testid="gnl-live-stream"], [data-testid="gnl-beat-writer-grid"]',
+        label: 'Live feed content',
+        minText: 60,
       },
     ],
     testMenu: true,

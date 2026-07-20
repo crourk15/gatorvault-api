@@ -111,16 +111,23 @@ async function evaluateSection(page, check, opts = {}) {
       const state = await item.evaluate(
         (node, noSkeleton) => {
           const text = (node.innerText || '').trim();
+          const ssrMarker = node.classList?.contains('gv-vault-ssr-marker');
           const skeletonOnly =
             noSkeleton &&
             (node.matches('.rh-skeleton') ||
               (node.querySelector('.rh-skeleton[aria-hidden="true"]') && text.length < 40));
-          return { textLen: text.length, skeletonOnly, hidden: node.hidden || node.getAttribute('aria-hidden') === 'true' };
+          return {
+            textLen: text.length,
+            skeletonOnly,
+            ssrMarker,
+            hidden: node.hidden || node.getAttribute('aria-hidden') === 'true',
+          };
         },
         Boolean(check.noSkeleton)
       );
 
-      if (state.hidden && state.textLen < (check.minText || 15)) continue;
+      if (state.ssrMarker) continue;
+      if (state.hidden) continue;
 
       if (!state.skeletonOnly && state.textLen >= (check.minText || 15)) {
         const forbidden = check.forbidden || [];

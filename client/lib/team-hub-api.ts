@@ -12,6 +12,7 @@ import {
 } from './team-hub-data';
 import type { Coach, DepthChart, Era, Achievement, IdentityBlock, TeamPlayer, TeamCommandStats } from './team-hub-types';
 import { computeTeamCommandStats } from '@/components/team/team-command-stats';
+import { TEAM_HUB_SEED } from '@/lib/team-hub-seed';
 import { cacheFirstFetch, readSwrCache } from './stale-while-revalidate';
 
 export type TeamHubBundle = {
@@ -33,19 +34,29 @@ function teamBundleUsable(data: unknown): boolean {
   return Array.isArray(bundle.roster) && bundle.roster.length > 0;
 }
 
-/** Static first-paint seed — depth chart / staff / eras without waiting on API. */
+/** Static first-paint seed — real roster/staff/depth without waiting on API. */
 export function buildSeedTeamHubBundle(): TeamHubBundle {
   const depthChart = TEAM_DEPTH_CHART;
-  const coaches = FALLBACK_COACHES.map((c) => ({ ...c }));
+  const roster = TEAM_HUB_SEED.roster ?? [];
+  const coaches =
+    TEAM_HUB_SEED.coaches?.length > 0
+      ? TEAM_HUB_SEED.coaches.map((c) => ({ ...c }))
+      : FALLBACK_COACHES.map((c) => ({ ...c }));
+  const meta = TEAM_HUB_SEED.meta;
+  const commandStats = computeTeamCommandStats(roster, depthChart, meta);
+  if (meta?.units) {
+    commandStats.offenseCount = meta.units.offense ?? commandStats.offenseCount;
+    commandStats.defenseCount = meta.units.defense ?? commandStats.defenseCount;
+  }
   return {
     eras: TEAM_ERAS,
     achievements: TEAM_ACHIEVEMENTS,
     identity: TEAM_IDENTITY,
     coaches,
-    roster: [],
+    roster,
     depthChart,
-    commandStats: computeTeamCommandStats([], depthChart, null),
-    updatedAt: null,
+    commandStats,
+    updatedAt: meta?.updatedAt ?? TEAM_HUB_SEED.generatedAt ?? null,
   };
 }
 
