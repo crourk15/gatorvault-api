@@ -44,6 +44,11 @@ export function warmVaultApi(): void {
     if (path.startsWith('/vault/film-room')) void ping('/api/film-room/catalog');
     if (path.startsWith('/vault/nil')) void ping('/api/nil/dashboard');
     if (path.startsWith('/vault/alerts')) void ping('/api/futurecast/alerts?limit=20');
+    if (path.startsWith('/vault/articles')) void ping('/api/articles/published?limit=12');
+    if (path.startsWith('/vault/game-zone')) void ping('/api/betting/lines');
+    if (path.startsWith('/vault/depth-chart') || path.startsWith('/vault/team')) {
+      void ping('/api/roster/players');
+    }
   });
 
   if (typeof window.requestIdleCallback === 'function') {
@@ -52,6 +57,10 @@ export function warmVaultApi(): void {
         if (path.startsWith('/vault/futurecast')) void ping('/api/futurecast/home');
         if (path.startsWith('/vault/community')) void ping('/api/community/categories');
         if (path.startsWith('/vault/live')) void ping('/api/live/dashboard?limit=20');
+        if (path.startsWith('/vault/schedule') || path.startsWith('/vault/tickets')) {
+          void ping('/api/betting/lines');
+        }
+        if (path.startsWith('/vault/membership')) void ping('/api/subscription/catalog');
       },
       { timeout: 2000 }
     );

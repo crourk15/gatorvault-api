@@ -32,6 +32,9 @@ const GLOBAL_FORBIDDEN = [
   'Waking up GatorVault',
   'Minified React error #423',
   'Application error: a client-side exception has occurred',
+  'Loading your account…',
+  'Loading Insider articles…',
+  'Loading Swamp Eve…',
 ];
 
 /** Per-route checks after hydration settle. */

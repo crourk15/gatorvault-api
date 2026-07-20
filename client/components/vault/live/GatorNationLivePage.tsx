@@ -54,7 +54,14 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
       });
       if (!isInitial) setPollSeq((n) => n + 1);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load GatorNation Live.');
+      // Forever-seed: keep painted GNL shell; only hard-error when there is no live signal at all.
+      const seeded =
+        (SEED_BUNDLE.feed?.length || 0) +
+          (SEED_BUNDLE.panels?.beatWriterHighlights?.length || 0) >
+        0;
+      if (!seeded) {
+        setError(err instanceof Error ? err.message : 'Could not load GatorNation Live.');
+      }
     } finally {
       if (isInitial) setLoading(false);
     }
@@ -101,7 +108,7 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
       className="gv-gnl gv-gnl-shell gv-gnl-shell--elite uf-premium-gnl gv-live-feed"
       data-testid="vault-live-feed"
     >
-      {error && !loading && (
+      {error && !loading && !hasLiveSignal && (
         <div className="gv-gnl__frame gv-gnl__command">
           <UiError
             message={error}

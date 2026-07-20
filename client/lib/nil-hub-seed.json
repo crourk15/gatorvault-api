@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-20T18:39:58.272Z",
+  "generatedAt": "2026-07-20T19:16:23.018Z",
   "source": "prod-dashboard+high-priority",
   "dashboard": {
     "conference": "SEC",
@@ -919,7 +919,7 @@
         }
       }
     ],
-    "updatedAt": "2026-07-20T18:39:57.980Z"
+    "updatedAt": "2026-07-20T19:16:22.698Z"
   },
   "players": [
     {

@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-07-20T19:16:27.261Z",
+  "source": "prod-api",
+  "categories": [
+    {
+      "id": "cat_film",
+      "slug": "film",
+      "name": "Film Room",
+      "badgeLabel": "🎬 FILM ROOM",
+      "badgeClass": "tier-film",
+      "sortOrder": 1
+    },
+    {
+      "id": "cat_locker",
+      "slug": "locker",
+      "name": "Locker Room",
+      "badgeLabel": "🏟️ LOCKER ROOM",
+      "badgeClass": "tier-locker",
+      "sortOrder": 2
+    },
+    {
+      "id": "cat_war",
+      "slug": "war",
+      "name": "War Room",
+      "badgeLabel": "⚔️ WAR ROOM",
+      "badgeClass": "tier-war",
+      "sortOrder": 3
+    },
+    {
+      "id": "cat_founding",
+      "slug": "founding",
+      "name": "Founding",
+      "badgeLabel": "🏅 FOUNDING",
+      "badgeClass": "tier-founding",
+      "sortOrder": 4
+    }
+  ],
+  "threads": [],
+  "pulse": {
+    "repliesToday": 0,
+    "trending": 0,
+    "pinned": 0,
+    "liveRooms": 0
+  },
+  "rooms": []
+}

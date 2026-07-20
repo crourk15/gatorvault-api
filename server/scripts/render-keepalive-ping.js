@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * Render cron keep-alive — lightweight wake + soft hub touch.
+ * Render cron keep-alive — lightweight wake + soft hub touch bundle.
  * Schedule: every 2 minutes (see render.yaml cron service).
  *
- * Hits api/ping first, then optional class-overview so Starter keeps
- * recruiting hub cache warm for fans (not just process alive).
+ * Hits api/ping first, then a short list of pillar endpoints so Starter
+ * stays warm for fans (not just process alive).
  */
 const PING_URL =
   process.env.KEEPALIVE_PING_URL ||
@@ -12,9 +12,22 @@ const PING_URL =
   process.env.RENDER_KEEPALIVE_URL ||
   'https://gatorvault-api.onrender.com/api/ping';
 
-const HUB_URL =
-  process.env.KEEPALIVE_HUB_URL ||
-  'https://gatorvault-api.onrender.com/api/recruiting/hub/bundle?year=2027';
+const API_ORIGIN = process.env.KEEPALIVE_API_ORIGIN || 'https://gatorvault-api.onrender.com';
+
+const TOUCH_PATHS = (
+  process.env.KEEPALIVE_TOUCH_PATHS ||
+  [
+    '/api/recruiting/hub/bundle?year=2027',
+    '/api/live/dashboard?limit=10',
+    '/api/film-room/catalog',
+    '/api/betting/lines',
+    '/api/articles/published?limit=5',
+    '/api/futurecast/alerts?limit=10',
+  ].join(',')
+)
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
 
 const RETRY_STATUSES = new Set([502, 503, 504, 429]);
 const WAKE_WINDOW_MS = parseInt(process.env.KEEPALIVE_WAKE_MS || '180000', 10);
@@ -30,7 +43,7 @@ async function pingOnce(url, timeoutMs = REQUEST_TIMEOUT_MS) {
   const started = Date.now();
   const res = await fetch(url, {
     method: 'GET',
-    headers: { Accept: 'application/json', 'User-Agent': 'gatorvault-keepalive/3.1' },
+    headers: { Accept: 'application/json', 'User-Agent': 'gatorvault-keepalive/3.2' },
     signal: AbortSignal.timeout(timeoutMs),
   });
   return { ok: res.ok, status: res.status, elapsed: Date.now() - started };
@@ -64,22 +77,32 @@ async function wakeUntilReady(url, label) {
   throw new Error(`${label} wake failed after ${attempts} attempts (last HTTP ${lastStatus})`);
 }
 
-async function softHubTouch(url) {
-  if (!url || process.env.KEEPALIVE_HUB_TOUCH === 'false') {
-    return { skipped: true };
-  }
+async function softTouch(path) {
+  const url = path.startsWith('http') ? path : `${API_ORIGIN}${path}`;
   try {
     const result = await pingOnce(url, HUB_TIMEOUT_MS);
-    return { ok: result.ok, status: result.status, elapsedMs: result.elapsed };
+    return { path, ok: result.ok, status: result.status, elapsedMs: result.elapsed };
   } catch (err) {
-    return { ok: false, error: String(err.message || err).slice(0, 120) };
+    return { path, ok: false, error: String(err.message || err).slice(0, 120) };
   }
 }
 
 async function main() {
   const ping = await wakeUntilReady(PING_URL, 'api/ping');
-  const hub = await softHubTouch(HUB_URL);
-  console.log('[keepalive] ok', JSON.stringify({ ping, hub, at: new Date().toISOString() }));
+  const touches = [];
+  if (process.env.KEEPALIVE_HUB_TOUCH !== 'false') {
+    for (const path of TOUCH_PATHS) {
+      touches.push(await softTouch(path));
+    }
+  }
+  console.log(
+    '[keepalive] ok',
+    JSON.stringify({
+      ping,
+      touches,
+      at: new Date().toISOString(),
+    })
+  );
 }
 
 (async () => {
