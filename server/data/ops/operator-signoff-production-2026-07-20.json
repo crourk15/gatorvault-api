@@ -1,0 +1,41 @@
+{
+  "signedAt": "2026-07-20T04:47:00.000Z",
+  "signOffName": "Charles Rourk",
+  "environment": "prod",
+  "apiBase": "https://gatorvault-api.onrender.com",
+  "webBuildId": "da3b9ad795d9-TJ17Uaiv",
+  "mergedPr": 133,
+  "renderDeploy": {
+    "status": "live",
+    "evidence": "admin-hub-alerts.js and admin-hub-core.js Alerts/Monitoring Summary served from gatorvault-api.onrender.com with Last-Modified 2026-07-20T04:16:47Z (post-merge auto-deploy)",
+    "allowlistSync": {
+      "triggeredAt": "2026-07-20T04:44:43.679Z",
+      "updated": 33,
+      "jobId": "allowlist-on3-rankings"
+    },
+    "cyionUpsert": {
+      "ok": true,
+      "pos": "S",
+      "htWt": "6-2 / 175",
+      "note": "Persisted via POST /api/recruiting/players/cyion-smith; hub mapPlayerToHub htWt exposure shipped in follow-up"
+    }
+  },
+  "flags": {
+    "pr789Only": true,
+    "eliteComposeEnabled": true,
+    "voiceEngine": true,
+    "source": "GET /api/x/post-studio/leak-audit + GET /api/x/autoposter/status"
+  },
+  "gates": {
+    "G4": {
+      "pass": true,
+      "leakCount": 0
+    }
+  },
+  "checklist": {
+    "executiveTruthTableReviewed": true,
+    "forbiddenPathsReviewed": true,
+    "misrouteArchiveBeforeDelete": true,
+    "featureFlagsConfirmedProd": true
+  }
+}
