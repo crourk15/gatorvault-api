@@ -1,0 +1,30 @@
+# Submit 1.0.7 (Build 33) — App Store / TestFlight
+
+**Why this version:** App Store Connect closed the **1.0.6** pre-release train after approval (`90186` / `90062`). New uploads must use a higher `CFBundleShortVersionString`.
+
+## iOS
+
+- `MARKETING_VERSION = 1.0.7`
+- `CURRENT_PROJECT_VERSION = 33`
+- Codemagic: `ios-release` on `main`
+
+## What's in this cut
+
+Same elite platform stack as the Build 32 cut (Home brand hero, recruiting voice, never-late intel, Admin Hub daily path, prod autoposter sign-off) — shipping under a new marketing train because 1.0.6 is locked.
+
+## Start Codemagic
+
+1. https://codemagic.io → **gatorvault-api**
+2. Workflow **iOS Release Build** (`ios-release`)
+3. Branch **`main`** (after this bump merges)
+4. **Start new build**
+
+## App Store Connect
+
+1. Create version **1.0.7** (new train)
+2. Attach build **33** when processing finishes
+3. Submit for review when ready
+
+## Whats New (short)
+
+GatorVault elite Home brand hero, clearer recruiting narrative, faster never-late intel, and tighter Admin Hub daily ops.
