@@ -8,10 +8,12 @@ import {
   applyDiscoverySeasonOverlay,
   type FutureCastLabDataMap,
 } from '@/lib/futurecast-lab-data';
+import { buildSeedFutureCastLabData } from '@/lib/futurecast-lab-seed';
 import { deriveHeatLevel } from '@/lib/api/futurecast';
 import { userFacingLoadError } from '@/lib/api-warm-poll';
 
 const LAB_POLL_MS = 90_000;
+const SEED_LAB_DATA = buildSeedFutureCastLabData();
 
 const EMPTY_LAB_DATA: FutureCastLabDataMap = {
   masterBoard: {
@@ -84,18 +86,26 @@ export type FutureCastLabData = FutureCastLabDataMap & {
 };
 
 export function useFutureCastLabData(): FutureCastLabData {
-  const [data, setData] = useState<FutureCastLabDataMap | null>(null);
-  const [loading, setLoading] = useState(true);
+  const seedReady = SEED_LAB_DATA.masterBoard.players.length > 0;
+  const [data, setData] = useState<FutureCastLabDataMap | null>(
+    seedReady ? SEED_LAB_DATA : null
+  );
+  const [loading, setLoading] = useState(!seedReady);
   const [secondaryLoading, setSecondaryLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [warming, setWarming] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async (isInitial: boolean) => {
+    const hasSeedPaint = SEED_LAB_DATA.masterBoard.players.length > 0;
+
     if (isInitial) {
-      setLoading(true);
+      // Seeded first paint — never flip back into fc-elite-loading.
+      if (!hasSeedPaint) {
+        setLoading(true);
+        setWarming(true);
+      }
       setSecondaryLoading(true);
-      setWarming(true);
       setError(null);
     } else {
       setRefreshing(true);
@@ -103,6 +113,13 @@ export function useFutureCastLabData(): FutureCastLabData {
     try {
       if (isInitial) {
         const primary = await loadFutureCastLabPrimary();
+        if (!primary.masterBoard.players.length && hasSeedPaint) {
+          // Keep seed if live primary is empty/cold.
+          setSecondaryLoading(false);
+          setLoading(false);
+          setWarming(false);
+          return;
+        }
         const partialOverlay = applyDiscoverySeasonOverlay(primary, {
           trendingBoard: EMPTY_LAB_DATA.trendingBoard,
           movementIntel: EMPTY_LAB_DATA.movementIntel,
@@ -142,11 +159,12 @@ export function useFutureCastLabData(): FutureCastLabData {
         setError(null);
       } else {
         const next = await loadFutureCastLabData();
+        if (!next.masterBoard.players.length && hasSeedPaint) return;
         setData(next);
         setError(null);
       }
     } catch (err) {
-      if (isInitial) {
+      if (isInitial && !hasSeedPaint) {
         setError(userFacingLoadError(err, 'Failed to load FutureCast Lab.'));
       }
     } finally {
@@ -175,7 +193,7 @@ export function useFutureCastLabData(): FutureCastLabData {
     };
   }, [load]);
 
-  const snapshot = data ?? EMPTY_LAB_DATA;
+  const snapshot = data ?? (seedReady ? SEED_LAB_DATA : EMPTY_LAB_DATA);
 
   return {
     ...snapshot,

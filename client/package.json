@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/clean-next-cache.js && node scripts/generate-recruiting-hub-hero-seed.js && node scripts/generate-team-hub-seed.js && node scripts/generate-gnl-hub-seed.js && next build",
+    "build": "node scripts/clean-next-cache.js && node scripts/generate-recruiting-hub-hero-seed.js && node scripts/generate-team-hub-seed.js && node scripts/generate-gnl-hub-seed.js && node scripts/generate-futurecast-lab-seed.js && next build",
     "build:render": "next build && node scripts/copy-build-to-server.js",
     "build:mobile": "npm run build && node scripts/patch-capgo-podspec.js && npx cap sync ios",
     "start": "next start",

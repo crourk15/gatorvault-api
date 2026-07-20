@@ -11,7 +11,7 @@ const ROOT = path.resolve(__dirname, '../..');
 const OUT = path.join(__dirname, '../lib/gnl-hub-seed.json');
 const API = process.env.GNL_SEED_API || 'https://gatorvault-api.onrender.com';
 
-function fetchJson(url, timeoutMs = 20000) {
+function fetchJson(url, timeoutMs = 35000) {
   return new Promise((resolve, reject) => {
     const lib = url.startsWith('https') ? https : http;
     const req = lib.get(url, { timeout: timeoutMs }, (res) => {
@@ -70,13 +70,19 @@ async function main() {
   let beat = [];
   let source = 'local-feed';
 
-  try {
-    const dash = await fetchJson(API + '/api/live/dashboard?limit=40');
-    feed = (dash.feed || []).map(slimFeedItem).filter((i) => i.title);
-    beat = (dash.beat && dash.beat.posts) || [];
-    if (feed.length || beat.length) source = 'prod-dashboard';
-  } catch (err) {
-    console.warn('[generate-gnl-hub-seed] prod fetch failed:', err.message);
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      const dash = await fetchJson(API + '/api/live/dashboard?limit=40', 35000);
+      feed = (dash.feed || []).map(slimFeedItem).filter((i) => i.title);
+      beat = (dash.beat && dash.beat.posts) || [];
+      if (feed.length || beat.length) {
+        source = 'prod-dashboard';
+        break;
+      }
+    } catch (err) {
+      console.warn('[generate-gnl-hub-seed] prod fetch failed:', err.message);
+      await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+    }
   }
 
   if (!feed.length) {
