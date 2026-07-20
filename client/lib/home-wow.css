@@ -51,7 +51,8 @@
   padding: 0;
 }
 
-/* Full-bleed brand hero — edge-to-edge, not an inset card */
+/* Full-bleed brand hero — edge-to-edge, not an inset card.
+   Sized to a strong first fold (not a half-empty full-viewport slab). */
 .home-wow-hero {
   position: relative;
   overflow: hidden;
@@ -59,8 +60,7 @@
   border-radius: 0;
   box-shadow: none;
   margin: 0;
-  min-height: calc(100svh - var(--gv-shell-header-height, 64px));
-  min-height: calc(100dvh - var(--gv-shell-header-height, 64px));
+  min-height: clamp(300px, 48svh, 480px);
   display: flex;
   align-items: flex-end;
   width: 100%;
@@ -111,9 +111,9 @@
   max-width: var(--max-width, 1200px);
   margin: 0 auto;
   padding:
-    clamp(36px, 8vh, 72px)
+    clamp(28px, 5vh, 48px)
     var(--home-stack-pad-x)
-    clamp(28px, 6vh, 48px);
+    clamp(24px, 4vh, 40px);
 }
 
 .home-wow-hero-title {
@@ -237,14 +237,22 @@
 
 @media (max-width: 767px) {
   .home-wow-hero {
-    min-height: calc(100svh - var(--gv-shell-header-height, 64px));
-    min-height: calc(100dvh - var(--gv-shell-header-height, 64px));
-    align-items: center;
+    /* Available fold above header + bottom nav — brand-led, not empty stadium */
+    --home-hero-chrome: calc(
+      var(--gv-shell-header-height, 64px) + 4.75rem + env(safe-area-inset-bottom, 0px)
+    );
+    min-height: clamp(280px, calc(100svh - var(--home-hero-chrome)), 400px);
+    min-height: clamp(280px, calc(100dvh - var(--home-hero-chrome)), 400px);
+    align-items: flex-start;
   }
 
   .home-wow-hero__inner {
-    padding-top: clamp(28px, 6vh, 48px);
-    padding-bottom: clamp(32px, 7vh, 56px);
+    padding-top: clamp(20px, 4vh, 32px);
+    padding-bottom: clamp(20px, 4vh, 32px);
+  }
+
+  .home-wow-hero-title {
+    font-size: clamp(2.5rem, 11vw, 3.75rem);
   }
 
   .home-wow-page__stack {
