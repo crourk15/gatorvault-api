@@ -14,7 +14,7 @@ export function TeamTopCommandCard({ stats, loading }: Props): React.ReactElemen
     return (
       <article
         className="gv-team__cell gv-team__cell--12 gv-team-command-card"
-        aria-label="Team command center"
+        aria-label="Florida Football"
       >
         <div className="gv-team-skeleton" style={{ minHeight: 220 }} />
       </article>
@@ -34,7 +34,7 @@ export function TeamTopCommandCard({ stats, loading }: Props): React.ReactElemen
   return (
     <article
       className="gv-team__cell gv-team__cell--12 gv-team-command-card gv-team-card"
-      aria-label="Team command center"
+      aria-label="Florida Football"
       data-testid="team-command-card"
     >
       <div className="gv-team-command-card__head">

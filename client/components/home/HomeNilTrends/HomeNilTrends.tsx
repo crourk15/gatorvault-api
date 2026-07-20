@@ -32,7 +32,7 @@ export function HomeNilTrends({ data, loading }: Props): React.ReactElement {
     return (
       <HomeModuleCard
         gridClass="gv-home__cell--6"
-        eyebrow="NIL Command Center"
+        eyebrow="NIL Tracker"
         title="NIL Tracker Preview"
         ariaLabel="NIL tracker preview"
         testId="home-nil-trends"
@@ -45,7 +45,7 @@ export function HomeNilTrends({ data, loading }: Props): React.ReactElement {
   return (
     <HomeModuleCard
       gridClass="gv-home__cell--6"
-      eyebrow="NIL Command Center"
+      eyebrow="NIL Tracker"
       title="NIL Tracker Preview"
       stats={[
         { value: estPool, label: 'NIL valuation', tone: 'accent' },
@@ -53,7 +53,7 @@ export function HomeNilTrends({ data, loading }: Props): React.ReactElement {
         { value: secRank ? `#${secRank}` : '—', label: 'SEC rank', tone: 'neutral' },
       ]}
       subtitle={`${movementLabel} · ${movementDelta}`}
-      link={{ href: VAULT_NIL, label: 'Open NIL Command Center →' }}
+      link={{ href: VAULT_NIL, label: 'Open NIL Tracker →' }}
       ariaLabel="NIL tracker preview"
       testId="home-nil-trends"
     >

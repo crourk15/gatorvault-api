@@ -31,7 +31,7 @@ export function HomeTopCommandCard({
 
   const subtitle =
     ticker?.storyline ||
-    'Your command center for UF recruiting, intel, and movement.';
+    'UF recruiting, intel, and movement — all in one place.';
   const stats = buildHomeQuickStats(snapshot, momentumPct, movementDelta);
 
   return (

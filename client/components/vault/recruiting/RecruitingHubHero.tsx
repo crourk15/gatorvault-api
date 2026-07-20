@@ -42,15 +42,15 @@ export function RecruitingHubHero({
   return (
     <section
       className="gv-rh-hero gv-texture-stadium-lights gv-texture-swamp-mist"
-      aria-label="Florida Recruiting Command Center"
+      aria-label="Florida Recruiting"
     >
       <div className="gv-rh-hero__bg" aria-hidden="true" />
       <div className="gv-rh-hero__inner gv-rh-hub__frame">
         <div className="gv-rh-hero__header">
           <GatorVaultWordmark height={32} className="gv-rh-hero__wordmark" />
-          <h1 className="gv-rh-hero__title">Florida Recruiting Command Center</h1>
+          <h1 className="gv-rh-hero__title">Florida Recruiting</h1>
           <p className="gv-rh-hero__subtitle">
-            Live intel, movement, rankings, and class control.
+            Who Florida is chasing — movement, board, and beat intel.
           </p>
         </div>
 

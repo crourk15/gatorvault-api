@@ -63,7 +63,7 @@ export function ClassTargetsPage({ year }: Props): React.ReactElement {
         <div className="rh-frame rh-elite-chrome">
           <RecruitingHeroStripInline />
           <p className="rh-elite-back-link">
-            <a href="/vault/recruiting">← Command Center</a>
+            <a href="/vault/recruiting">← Recruiting</a>
           </p>
 
           <section>
@@ -80,7 +80,7 @@ export function ClassTargetsPage({ year }: Props): React.ReactElement {
           {loading && <p className="gv-page-status">Loading targets…</p>}
 
           {error && !loading && (
-            <UiError message={error} retry={load} backHref="/vault/recruiting" backLabel="← Command Center" />
+            <UiError message={error} retry={load} backHref="/vault/recruiting" backLabel="← Recruiting" />
           )}
 
           {!loading && !error && players.length === 0 && (

@@ -24,10 +24,10 @@ export function FutureCastPageHero({ summary, metrics, heatLevel, lastUpdated }:
       <div className="fc-lab-hero__bg" aria-hidden />
       <div className="fc-lab-hero__inner rh-frame">
         <div className="fc-lab-hero__col fc-lab-hero__col--overview">
-          <p className="fc-lab-hero__eyebrow rh-cc-hero__eyebrow">FutureCast Command Center</p>
-          <h1 className="fc-lab-hero__title rh-cc-hero__title">FutureCast — UF Recruiting Prediction &amp; Intel</h1>
+          <p className="fc-lab-hero__eyebrow rh-cc-hero__eyebrow">FutureCast</p>
+          <h1 className="fc-lab-hero__title rh-cc-hero__title">FutureCast</h1>
           <p className="fc-lab-hero__sub rh-cc-hero__sub">
-            Commit likelihood, movement, fit scores, competing schools, and deep player profiles — all in one layer.
+            Where Florida stands — confidence, movement, and the schools in the fight.
           </p>
           <div className="fc-lab-hero__metrics rh-cc-hero__metrics">
             <div className="fc-lab-hero__metric rh-cc-hero__metric">

@@ -34,7 +34,7 @@ export function RecruitingHubPanelView(): React.ReactElement {
     <div className="rh-panel-view" data-testid="rh-panel-view">
       <div className="rh-panel-view__toolbar rh-frame">
         <a href="/vault/recruiting/" className="rh-panel-view__back">
-          ← War Room overview
+          ← Recruiting overview
         </a>
       </div>
       <StickyTabsBar active={hub.tab} onChange={hub.setTabAndUrl} />

@@ -36,9 +36,9 @@
   --gv-card-padding: var(--space-4);
   --gv-page-margin: clamp(16px, 5vw, 48px);
 
-  /* Typography — Inter */
-  --gv-font-display: Inter, system-ui, sans-serif;
-  --gv-font-body: Inter, system-ui, sans-serif;
+  /* Typography — brand display (Oswald) + readable body */
+  --gv-font-display: 'Oswald', 'Arial Narrow', sans-serif;
+  --gv-font-body: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
 }
 
 /* ── Typography components ── */

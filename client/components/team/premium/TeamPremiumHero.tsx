@@ -19,9 +19,9 @@ export function TeamPremiumHero({ pulse, loading }: Props): React.ReactElement {
       <div className="rh-frame rh-cc-hero__inner team-premium-hero__inner">
         <div className="team-premium-hero__copy">
           <p className="rh-cc-hero__eyebrow team-premium-hero__eyebrow">Florida Gators Football</p>
-          <h1 className="rh-cc-hero__title team-premium-hero__title">Team Command Center</h1>
+          <h1 className="rh-cc-hero__title team-premium-hero__title">Florida Football</h1>
           <p className="rh-cc-hero__sub team-premium-hero__sub">
-            Depth chart, roster, and staff — the Gators as they stand.
+            Roster, depth chart, and staff — how the Gators are built.
           </p>
         </div>
         <div className="rh-cc-hero__metrics team-premium-hero__metrics team-premium-hero__metrics--pulse" aria-label="Team pulse">

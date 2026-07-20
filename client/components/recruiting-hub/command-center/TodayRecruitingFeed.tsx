@@ -88,7 +88,7 @@ export function TodayRecruitingFeed({
       deduped.push(
         buildIntelFeedItem({
           id: 'feed-placeholder',
-          headline: 'Recruiting command center live — intel refreshes every 90 seconds',
+          headline: 'Recruiting live — intel refreshes every 90 seconds',
           category: 'Update',
         })
       );

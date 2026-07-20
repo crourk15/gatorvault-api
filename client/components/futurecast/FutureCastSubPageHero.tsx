@@ -19,7 +19,7 @@ type Props = {
 
 /** Compact premium hero for standalone FutureCast sub-pages (RH / Lab parity). */
 export function FutureCastSubPageHero({
-  eyebrow = 'FutureCast Command Center',
+  eyebrow = 'FutureCast',
   title,
   sub,
   badge,

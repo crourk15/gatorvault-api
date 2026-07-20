@@ -53,7 +53,7 @@ export function SigningDayPage({ eventId }: Props): React.ReactElement {
       <div className="rh-frame rh-elite-chrome rh-signing-page">
         <header className="rh-signing-page__header">
           <Link href="/vault/recruiting" className="rh-signing-page__back">
-            ← Command Center
+            ← Recruiting
           </Link>
           <h1 className="rh-signing-page__title">{event.label}</h1>
           <p className="rh-signing-page__dates">{event.dateLabel}</p>

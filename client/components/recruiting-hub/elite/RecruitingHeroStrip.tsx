@@ -111,8 +111,9 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
     (data?.year === activeYear ? data.classOverview : data?.classOverviewAll?.[activeYear as 2026 | 2027 | 2028]) ??
     seeded?.classOverview ??
     null;
-  const title = seeded?.title ?? 'Recruiting Command Center';
-  const subtitle = seeded?.subtitle ?? "UF's class, commits, and battles—one place.";
+  const title = seeded?.title ?? 'Florida Recruiting';
+  const subtitle =
+    seeded?.subtitle ?? 'Who Florida is chasing — movement, board, and beat intel.';
 
   const handleYear = useCallback(
     (nextYear: number) => {
@@ -122,7 +123,7 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
   );
 
   return (
-    <section className="rh-hero-strip" data-hydrate="hero" data-hydrated="true" aria-label="Recruiting Command Center">
+    <section className="rh-hero-strip" data-hydrate="hero" data-hydrated="true" aria-label="Florida Recruiting">
       <div className="rh-hero-sweep" aria-hidden="true" />
       <div className="rh-hero-watermark" aria-hidden="true">
         GATORS
@@ -146,7 +147,7 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
             ))}
           </div>
         </div>
-        <span className="rh-badge rh-hero-badge">Command Center</span>
+        <span className="rh-badge rh-hero-badge">Live</span>
       </div>
       <HeroMetrics overview={metricsLoading && !overview ? null : overview} activeYear={activeYear} />
     </section>
