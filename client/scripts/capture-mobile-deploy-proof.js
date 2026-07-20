@@ -167,7 +167,10 @@ async function runLayoutNavCheck(page, check) {
 
   if (check.id === 'nil-table-scroll') {
     const wrap = page.locator('.nil-rank-table-wrap').first();
-    if (!(await wrap.count())) {
+    // NIL dashboard is API-backed — wait through cold Render wake before failing.
+    try {
+      await wrap.waitFor({ state: 'attached', timeout: 90_000 });
+    } catch {
       return { pass: false, reason: 'rankings table wrapper missing' };
     }
     const metrics = await wrap.evaluate((el) => ({
