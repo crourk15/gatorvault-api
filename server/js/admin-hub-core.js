@@ -109,6 +109,7 @@
       desc: 'Classes, boards, intel, predictions, hub bundle inputs, pipeline status',
       panels: [
         { id: 'daily', label: 'Daily Summary', inline: true },
+        { id: 'unresolved', label: 'Unresolved Predictions', inline: true },
         { id: 'alerts', label: 'Full Alerts', embed: 'recruiting-alerts' },
         { id: 'monitoring', label: 'Monitoring', embed: 'monitoring' },
         { id: 'vault-grades', label: 'Vault Grades Manager', inline: true }
@@ -965,6 +966,14 @@
               apiGet: apiGet,
               apiPost: apiPost,
               onNavigate: navigateFromHash
+            });
+          }
+          else if (panelId === 'unresolved' && section.id === 'recruiting' && global.GVAdminUnresolvedPredictions) {
+            GVAdminUnresolvedPredictions.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash,
+              pushActivity: pushActivity
             });
           }
           else if (panelId === 'summary' && section.id === 'product-intel' && global.GVAdminProductIntelSummary) {

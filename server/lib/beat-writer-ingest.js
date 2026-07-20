@@ -599,6 +599,22 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
   const strict = ingestGate.evaluateStrictRecruitingIngestGate(post, text);
   if (!strict.pass) {
     if (logSkips) logBeatPostSkip(post, strict.reason, 'filtered');
+    try {
+      const { safeEnqueueUnresolvedPrediction } = require('./unresolved-predictions-detect');
+      safeEnqueueUnresolvedPrediction({
+        reason: strict.reason || 'strict_gate_fail',
+        source: 'beat-writer-ingest',
+        title: String(text || '').replace(/\s+/g, ' ').slice(0, 160) || 'Beat prediction (gate fail)',
+        textPreview: text,
+        url: post.url || null,
+        handle: post.handle || null,
+        writerName: post.writerName || null,
+        eventType: 'prediction',
+        fingerprint: `beat_gate_${String(post.id || post.url || text).slice(0, 80)}`,
+      });
+    } catch {
+      /* never block ingest */
+    }
     return null;
   }
 
@@ -625,6 +641,22 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
   ) {
     if (logSkips) logBeatPostSkip(post, 'no_identifiable_player', 'non_player_intel');
     prefilter.logNonPlayerIntel({ text, reason: 'no_identifiable_player', source: post.handle || post.writerName });
+    try {
+      const { safeEnqueueUnresolvedPrediction } = require('./unresolved-predictions-detect');
+      safeEnqueueUnresolvedPrediction({
+        reason: 'no_identifiable_player',
+        source: 'beat-writer-ingest',
+        title: String(text || '').replace(/\s+/g, ' ').slice(0, 160) || 'Beat prediction (no player)',
+        textPreview: text,
+        url: post.url || null,
+        handle: post.handle || null,
+        writerName: post.writerName || null,
+        eventType: 'prediction',
+        fingerprint: `beat_noid_${String(post.id || post.url || text).slice(0, 80)}`,
+      });
+    } catch {
+      /* never block ingest */
+    }
     return null;
   }
   if (!playerName || !isUsableExtractedName(playerName)) {
@@ -1426,6 +1458,35 @@ async function processBeatVisitIntelRow(row, snapshot) {
 
   if (!enrichment.confirmed) {
     markBeatSnapshot(snapshot, row, enrichment.reason || 'identity_not_confirmed');
+    try {
+      const { safeEnqueueUnresolvedPrediction } = require('./unresolved-predictions-detect');
+      const pendingSlug = String(row.playerSlug || '').startsWith('beat-pending-');
+      const unknownName = /^unknown prospect$/i.test(String(row.playerName || ''));
+      if (
+        row.eventType === 'prediction' ||
+        pendingSlug ||
+        unknownName
+      ) {
+        safeEnqueueUnresolvedPrediction({
+          reason: enrichment.reason || 'identity_not_confirmed',
+          source: 'beat-writer-ingest',
+          title: String(row.detail || row.playerName || 'Prediction identity fail').slice(0, 160),
+          textPreview: row.detail || row.text,
+          url: row.articleUrl || null,
+          handle: row.sourceHandle || null,
+          writerName: row.source || null,
+          eventType: row.eventType || 'prediction',
+          playerNameHint: unknownName ? null : row.playerName,
+          playerSlugHint: pendingSlug ? null : row.playerSlug,
+          classYearHint: row.classYear,
+          posHint: row.pos,
+          fingerprint: row.fingerprint || null,
+          requireMissingIdentity: true,
+        });
+      }
+    } catch {
+      /* never block ingest */
+    }
     if (enrichment.needs_resolution) {
       const snap = enrichment.mergedSnapshot || {};
       await intelStore.saveNeedsResolution({

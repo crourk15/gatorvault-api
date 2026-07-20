@@ -525,7 +525,7 @@ const JOBS = {
     }
   },
   'on3-rpm-allowlist-sync': {
-    label: 'On3 RPM UF % gap-fill for allowlist targets missing Rivals PM',
+    label: 'On3 RPM UF % sync — allowlist + UF-active inventory (missing Rivals PM)',
     subsystem: 'cron:on3-rpm-allowlist',
     schedule: 'Daily after uf-trend-snapshot or on demand',
     async run(opts = {}) {
@@ -534,6 +534,9 @@ const JOBS = {
         dryRun: opts.dryRun === true,
         fetch: opts.fetch !== false,
         classYear: opts.classYear,
+        scope: opts.scope || process.env.ON3_RPM_SYNC_SCOPE || 'all',
+        maxInventory: opts.maxInventory,
+        writePlayers: opts.writePlayers !== false,
       });
     }
   },

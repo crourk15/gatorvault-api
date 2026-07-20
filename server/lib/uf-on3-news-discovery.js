@@ -160,6 +160,23 @@ async function runUfOn3NewsDiscovery({
     const identity = parseArticleIdentity(article);
     if (!identity?.playerSlug || !isRecruitingArticle(article, identity)) {
       results.skipped.push({ reason: 'no_recruiting_identity', title: article?.title });
+      try {
+        const { safeEnqueueUnresolvedPrediction } = require('./unresolved-predictions-detect');
+        const url = articleFullUrl(article);
+        safeEnqueueUnresolvedPrediction({
+          reason: 'no_recruiting_identity',
+          source: 'uf-on3-news-discovery',
+          title: String(article?.title || 'On3 recruiting article').slice(0, 160),
+          textPreview: String(article?.excerpt || article?.title || '').slice(0, 320),
+          url,
+          writerName: article?.author?.name || null,
+          handle: article?.author?.niceName || null,
+          eventType: 'prediction',
+          fingerprint: `on3_news_noid_${article?.key || article?.slug || url || ''}`,
+        });
+      } catch {
+        /* never block discovery */
+      }
       continue;
     }
 

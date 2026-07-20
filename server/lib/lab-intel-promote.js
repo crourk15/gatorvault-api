@@ -2,9 +2,10 @@
  * Auto-promote verified Florida recruiting signals onto FutureCast Lab.
  *
  * Stages:
- *   watchlist — credible Florida involvement (prediction / multi-source / soft visit)
- *   lab       — offer OR verified OV OR (prediction + corroborating source)
+ *   watchlist — credible Florida involvement (Rivals PM / On3 RPM / multi-source / soft visit)
+ *   lab       — offer OR verified OV OR (prediction/RPM + corroborating source)
  *
+ * On3 RPM is first-class with Rivals PM (Pass 3 auto-radar).
  * Never promotes bare beat mentions alone.
  */
 'use strict';
@@ -126,6 +127,46 @@ function loadRivalsPmFloridaSlugs() {
   return out;
 }
 
+/** On3 RPM UF % — allowlist sync store + any player.ufRpmPct already on the card. */
+function loadOn3RpmFloridaSlugs(players = []) {
+  const out = new Map(); // slug -> { confidence, name, classYear, source }
+  try {
+    const { loadOn3RpmUfPctBySlug, readDoc } = require('./on3-rpm-allowlist');
+    const pctMap = loadOn3RpmUfPctBySlug();
+    const doc = readDoc();
+    const bySlug = new Map(
+      (doc.entries || []).map((row) => [String(row.playerSlug || '').toLowerCase(), row])
+    );
+    for (const [slug, pct] of pctMap.entries()) {
+      if (!slug || !(Number(pct) > 0)) continue;
+      const row = bySlug.get(slug) || {};
+      out.set(slug, {
+        confidence: Number(pct),
+        name: row.playerName || slug,
+        classYear: Number(row.classYear) || null,
+        source: 'on3_rpm',
+      });
+    }
+  } catch {
+    /* optional */
+  }
+  for (const player of players || []) {
+    const slug = canonicalTargetSlug(player?.slug || player?.name);
+    if (!slug) continue;
+    const pct = Number(player.ufRpmPct ?? player.on3RpmPct);
+    if (!(pct > 0)) continue;
+    const prev = out.get(slug);
+    if (prev && Number(prev.confidence || 0) >= pct) continue;
+    out.set(slug, {
+      confidence: pct,
+      name: player.name || slug,
+      classYear: Number(player.classYear) || null,
+      source: 'on3_rpm_player',
+    });
+  }
+  return out;
+}
+
 function collectSignals(player, ctx) {
   const slug = canonicalTargetSlug(player.slug || player.name);
   const reasons = [];
@@ -145,9 +186,18 @@ function collectSignals(player, ctx) {
     reasons.push('florida_visit');
     sources.push(visitLog ? 'visit_log' : 'player_visit');
   }
-  if (rivals) {
+  const on3Rpm = ctx.on3RpmBySlug?.get(slug);
+  const playerRpm = Number(player.ufRpmPct ?? player.on3RpmPct);
+  const hasOn3Rpm =
+    (on3Rpm && Number(on3Rpm.confidence) > 0) || (Number.isFinite(playerRpm) && playerRpm > 0);
+
+  if (rivals || hasOn3Rpm) {
     reasons.push('prediction_machine');
-    sources.push(rivals.source || 'rivals_pm');
+    if (rivals) sources.push(rivals.source || 'rivals_pm');
+    if (hasOn3Rpm) {
+      reasons.push('on3_rpm');
+      sources.push((on3Rpm && on3Rpm.source) || 'on3_rpm');
+    }
   }
   if (player.on3Id || player.on3ProfileUrl) sources.push('on3');
   if (player.rivalsId || player.rivalsLastPrediction) sources.push('rivals');
@@ -155,6 +205,13 @@ function collectSignals(player, ctx) {
 
   const sourceCount = uniq(sources).length;
   if (sourceCount >= 2 && reasons.length) reasons.push('multi_source');
+
+  const rpmConfidence = Number(
+    (on3Rpm && on3Rpm.confidence) ||
+      (Number.isFinite(playerRpm) && playerRpm > 0 ? playerRpm : 0) ||
+      (rivals && rivals.confidence) ||
+      0
+  );
 
   return {
     slug,
@@ -165,17 +222,23 @@ function collectSignals(player, ctx) {
     hasVisit: reasons.includes('florida_visit'),
     visitVerified: visitLog === true,
     hasPrediction: reasons.includes('prediction_machine'),
+    hasOn3Rpm,
+    rpmConfidence,
     rivals,
+    on3Rpm: on3Rpm || (hasOn3Rpm ? { confidence: playerRpm, source: 'on3_rpm_player' } : null),
   };
 }
 
 function decideStage(signals) {
   if (!signals.reasons.length) return null;
+  const strongRpm = Number(signals.rpmConfidence || 0) >= 40;
   // Lab: hard Florida involvement only
   if (signals.hasOffer) return 'lab';
   if (signals.hasVisit && signals.visitVerified) return 'lab';
   if (signals.hasVisit && signals.hasPrediction) return 'lab';
   if (signals.hasPrediction && signals.sourceCount >= 2) return 'lab';
+  // Strong On3 RPM + any second Florida-linked source → Lab
+  if (signals.hasOn3Rpm && strongRpm && signals.sourceCount >= 2) return 'lab';
   // Watchlist: softer but still Florida-linked
   if (signals.hasVisit || signals.hasPrediction) return 'watchlist';
   if (signals.reasons.includes('multi_source')) return 'watchlist';
@@ -243,9 +306,9 @@ async function runLabIntelPromote(options = {}) {
   const offerSlugs = loadFloridaOfferSlugs();
   const visitSlugs = loadFloridaVisitSlugs();
   const rivalsBySlug = loadRivalsPmFloridaSlugs();
-  const ctx = { offerSlugs, visitSlugs, rivalsBySlug };
-
   const players = await store.getAllPlayers();
+  const on3RpmBySlug = loadOn3RpmFloridaSlugs(players);
+  const ctx = { offerSlugs, visitSlugs, rivalsBySlug, on3RpmBySlug };
   const candidates = [];
 
   for (const player of players || []) {
@@ -338,6 +401,143 @@ function getLabPromotionStatus() {
   };
 }
 
+
+/**
+ * Pass 3 — after a teaser RPM is named, put the prospect on radar immediately.
+ * Lab if visit corroborates; otherwise watchlist + admin allowlist.
+ */
+async function promoteResolvedPredictionToRadar({
+  slug,
+  name,
+  classYear = 2028,
+  reasons = ['on3_rpm', 'teaser_identity'],
+  sources = ['on3_rpm', 'teaser_identity'],
+  ufRpmPct = null,
+  dryRun = false,
+  fetchRpm = true,
+} = {}) {
+  const key = canonicalTargetSlug(slug);
+  if (!key) return { ok: false, error: 'slug_required' };
+  const year = parseInt(classYear, 10) || 2028;
+  const player = (await store.getPlayerBySlug(key).catch(() => null)) || {
+    slug: key,
+    name: name || key,
+    classYear: year,
+  };
+
+  const visitSlugs = loadFloridaVisitSlugs();
+  const hasVisit = visitSlugs.has(key) || floridaVisitOnPlayer(player);
+  const stage = hasVisit ? 'lab' : 'watchlist';
+  const row = {
+    slug: key,
+    name: name || player.name || key,
+    classYear: year,
+    reasons: uniq([...(reasons || []), hasVisit ? 'florida_visit' : null].filter(Boolean)),
+    sources: uniq(sources || ['on3_rpm']),
+    promotedAt: new Date().toISOString(),
+    stage,
+  };
+
+  if (dryRun) return { ok: true, dryRun: true, stage, row };
+
+  if (ufRpmPct != null && Number(ufRpmPct) > 0) {
+    player.ufRpmPct = Math.round(Number(ufRpmPct));
+  }
+
+  const savedStage = labPromotions.upsertStage(stage, row);
+  let savedPlayer = await ensureTargetPlayer(player, { ...row, stage });
+  if (stage === 'lab') {
+    await sideEffectsForLab(savedPlayer, { ...row, stage });
+  } else {
+    try {
+      const { addToAdminAllowlist } = require('./admin-allowlist-store');
+      addToAdminAllowlist({ slug: key, name: row.name, classYear: year });
+    } catch (err) {
+      console.warn('[lab-intel-promote] watchlist allowlist:', err.message);
+    }
+  }
+
+  let rpmSync = null;
+  if (fetchRpm && String(process.env.ON3_RPM_FETCH || 'true').toLowerCase() !== 'false') {
+    try {
+      rpmSync = await syncSingleSlugOn3Rpm(key, year);
+      if (rpmSync?.ufPct != null) {
+        savedPlayer = { ...savedPlayer, ufRpmPct: rpmSync.ufPct };
+        if (typeof store.upsertPlayer === 'function') {
+          await store.upsertPlayer(savedPlayer);
+        }
+      }
+    } catch (err) {
+      rpmSync = { ok: false, error: err.message };
+    }
+  }
+
+  try {
+    require('./ops-monitor').logEvent({
+      subsystem: 'recruiting:auto-radar',
+      status: 'promoted',
+      message: `Auto-radar ${stage}: ${key}`,
+      details: { slug: key, stage, reasons: row.reasons, rpmSync },
+    });
+  } catch {
+    /* optional */
+  }
+
+  return {
+    ok: true,
+    stage,
+    slug: key,
+    created: savedStage.created,
+    reasons: row.reasons,
+    rpmSync,
+  };
+}
+
+async function syncSingleSlugOn3Rpm(slug, classYear = 2028) {
+  const on3 = require('./on3-recruit-client');
+  const { buildOn3ProfileUrl } = require('./on3-urls');
+  const rpm = require('./on3-rpm-allowlist');
+  const recruitingStore = require('./recruiting-store');
+  const key = String(slug || '').toLowerCase();
+  let player = null;
+  try {
+    player = await recruitingStore.getPlayerBySlug(key);
+  } catch {
+    player = typeof recruitingStore.findBySlug === 'function' ? recruitingStore.findBySlug(key) : null;
+  }
+  const recruitSlug =
+    (player && player.on3Slug) ||
+    on3.resolveRecruitSlug(
+      { slug: key, name: player?.name, on3Slug: player?.on3Slug, on3Id: player?.on3Id },
+      new Map()
+    );
+  if (!recruitSlug) {
+    return { ok: true, skipped: true, reason: 'no_recruit_slug', slug: key };
+  }
+  const profile = await on3.fetchRecruitProfile(recruitSlug);
+  const ufPct = rpm.resolveUfPctFromProfile(profile, classYear);
+  if (ufPct == null || ufPct <= 0) {
+    return { ok: true, skipped: true, reason: (profile && profile.error) || 'no_uf_pct', slug: key };
+  }
+  const doc = rpm.readDoc();
+  const entry = {
+    playerSlug: key,
+    playerName: (player && player.name) || key,
+    classYear,
+    ufPct,
+    priorUfPct: null,
+    profileUrl: buildOn3ProfileUrl(player || { slug: key, on3Slug: recruitSlug }),
+    source: 'On3 RPM · UF',
+    syncedAt: new Date().toISOString(),
+  };
+  const idx = (doc.entries || []).findIndex((row) => String(row.playerSlug || '').toLowerCase() === key);
+  if (idx >= 0) doc.entries[idx] = Object.assign({}, doc.entries[idx], entry);
+  else doc.entries.push(entry);
+  rpm.writeDoc(doc);
+  return { ok: true, slug: key, ufPct: ufPct, recruitSlug: recruitSlug };
+}
+
+
 module.exports = {
   runLabIntelPromote,
   getLabPromotionStatus,
@@ -345,4 +545,7 @@ module.exports = {
   decideStage,
   floridaOfferOnPlayer,
   floridaVisitOnPlayer,
+  loadOn3RpmFloridaSlugs,
+  promoteResolvedPredictionToRadar,
+  syncSingleSlugOn3Rpm,
 };
