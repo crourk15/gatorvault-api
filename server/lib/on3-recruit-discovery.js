@@ -49,6 +49,8 @@ const US_STATE_ABBR = new Set([
 const PERSON_SLUG_NOISE = new Set([
   'florida', 'gators', 'gator', 'teams', 'team', 'news', 'star', 'stars', 'major', 'contender', 'contenders',
   'interest', 'priority', 'top', 'high', 'school', 'football', 'recruiting', 'visit', 'official', 'unofficial',
+  // Teaser RPM / crystal-ball article tails — never treat as a person slug
+  'new', 'rpm', 'new-rpm', 'crystal', 'ball', 'prediction', 'defender', 'target', 'standout', 'prospect',
 ]);
 const POS_SLUG_PREFIX = new Set([
   'wr', 'qb', 'rb', 'te', 'ol', 'ot', 'og', 'c', 'dl', 'dt', 'de', 'edge', 'lb', 'cb', 's', 'ath', 'k', 'p',

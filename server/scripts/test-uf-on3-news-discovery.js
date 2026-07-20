@@ -45,5 +45,15 @@ const tweetUrl =
   'https://on3.com/teams/florida-gators/news/florida-gators-are-a-major-contender-for-4-star-wr-zyon-robinson/';
 assert('tweet URL parser still works', parseOn3BeatUrlIdentity(`DETAILS: ${tweetUrl}`, null)?.playerSlug === 'zyon-robinson');
 
+const teaserRpmUrl =
+  'https://on3.com/teams/florida-gators/news/predicting-the-florida-gators-to-land-a-4-star-defender-new-rpm/';
+assert(
+  'teaser RPM URL does not invent a fake player slug',
+  parseOn3BeatUrlIdentity(
+    `NEW: The Gators have built early momentum for a 4-star defender INTEL: ${teaserRpmUrl}`,
+    null
+  ) == null
+);
+
 if (process.exitCode) console.error('\nUF On3 news discovery tests failed.');
 else console.log('\nAll UF On3 news discovery tests passed.');

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-14T18:30:00.000Z",
+  "updatedAt": "2026-07-20T01:30:00.000Z",
   "slugs2027": [],
   "slugs2028": [
     "zyon-robinson",
@@ -8,7 +8,8 @@
     "jermaine-cobbins",
     "man-robinson",
     "hunter-fujikawa",
-    "ryan-drakeford"
+    "ryan-drakeford",
+    "cyion-smith"
   ],
   "names": {
     "zyon-robinson": "Zyon Robinson",
@@ -16,6 +17,7 @@
     "jermaine-cobbins": "Jermaine Cobbins",
     "man-robinson": "Man Robinson",
     "hunter-fujikawa": "Hunter Fujikawa",
-    "ryan-drakeford": "Ryan Drakeford"
+    "ryan-drakeford": "Ryan Drakeford",
+    "cyion-smith": "Cyion Smith"
   }
 }
