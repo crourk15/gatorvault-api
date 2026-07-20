@@ -64,7 +64,8 @@
     "trigger:codemagic:ios": "node scripts/trigger-codemagic-ios.js",
     "test:account-delete": "node scripts/test-account-delete.js",
     "verify:ios:smoke": "node client/scripts/verify-ios-smoke.js",
-    "proof:mobile:prod": "PROOF_BASE=https://gatorvaultinsider.com VERIFY_BASE=https://gatorvaultinsider.com node client/scripts/run-mobile-deploy-proof.js --verify-production"
+    "proof:mobile:prod": "PROOF_BASE=https://gatorvaultinsider.com VERIFY_BASE=https://gatorvaultinsider.com node client/scripts/load-proof-env.js client/scripts/run-mobile-deploy-proof.js --verify-production",
+    "proof:env:check": "node client/scripts/load-proof-env.js"
   },
   "engines": {
     "node": ">=18"
