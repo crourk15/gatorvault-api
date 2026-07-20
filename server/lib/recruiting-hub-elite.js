@@ -521,8 +521,8 @@ async function buildHubHero(year = 2027) {
 
   return {
     year,
-    title: 'Recruiting Command Center',
-    subtitle: "UF's class, commits, and battles—one place.",
+    title: 'Florida Recruiting',
+    subtitle: 'Who Florida is chasing — movement, board, and beat intel.',
     classYears: HERO_CLASS_YEARS,
     ticker,
     classOverview,

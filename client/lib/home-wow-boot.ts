@@ -2,13 +2,16 @@
  * Inline boot for vault home — paints recruiting snapshot + FutureCast preview before React.
  */
 import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { RECRUITING_HUB_HERO_SEED } from '@/lib/recruiting-hub-hero-seed';
 
 export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
   const safeYear = Number.isFinite(year) ? year : ACTIVE_RECRUITING_CLASS_YEAR;
+  const seedLiteral = JSON.stringify(RECRUITING_HUB_HERO_SEED);
   return `(function(){
   function run() {
     try {
       var year = ${safeYear};
+      var SEED = ${seedLiteral};
       window.__GV_HOME_WOW__ = window.__GV_HOME_WOW__ || {};
 
       function fetchJson(url, attempt) {
@@ -110,6 +113,11 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
           position: row.position || '—',
           ufPercent: num + '%'
         };
+      }
+
+      // Instant recruiting snapshot from build-time seed.
+      if (SEED && SEED.classOverview) {
+        paintMetrics(SEED.classOverview);
       }
 
       Promise.all([

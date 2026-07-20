@@ -33,6 +33,22 @@ function teamBundleUsable(data: unknown): boolean {
   return Array.isArray(bundle.roster) && bundle.roster.length > 0;
 }
 
+/** Static first-paint seed — depth chart / staff / eras without waiting on API. */
+export function buildSeedTeamHubBundle(): TeamHubBundle {
+  const depthChart = TEAM_DEPTH_CHART;
+  const coaches = FALLBACK_COACHES.map((c) => ({ ...c }));
+  return {
+    eras: TEAM_ERAS,
+    achievements: TEAM_ACHIEVEMENTS,
+    identity: TEAM_IDENTITY,
+    coaches,
+    roster: [],
+    depthChart,
+    commandStats: computeTeamCommandStats([], depthChart, null),
+    updatedAt: null,
+  };
+}
+
 /** Sync read for React initial state — instant Team paint on revisit. */
 export function readCachedTeamHubBundle(): TeamHubBundle | null {
   return readSwrCache<TeamHubBundle>(TEAM_HUB_BUNDLE_CACHE_KEY, {

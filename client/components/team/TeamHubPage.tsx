@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchTeamHubBundle, readCachedTeamHubBundle, type TeamHubBundle } from '@/lib/team-hub-api';
+import {
+  buildSeedTeamHubBundle,
+  fetchTeamHubBundle,
+  readCachedTeamHubBundle,
+  type TeamHubBundle,
+} from '@/lib/team-hub-api';
 import { fetchRecruitingBoard } from '@/lib/recruiting-board-api';
 import { fetchFutureCastMasterBoard } from '@/lib/futurecast-board-api';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
@@ -22,21 +27,7 @@ import { TeamRecruitingPipelineSection } from '@/components/team/premium/TeamRec
 import { buildPipelinePreview, computeHeroPulse } from '@/components/team/premium/team-premium-metrics';
 import { TEAM_PREMIUM_TABS, type TeamPremiumTabId } from '@/components/team/premium/team-premium-types';
 
-const EMPTY_BUNDLE: TeamHubBundle = {
-  eras: [],
-  achievements: [],
-  identity: [],
-  coaches: [],
-  roster: [],
-  depthChart: { offense: [], defense: [], specialTeams: [] },
-  commandStats: {
-    rosterCount: 0,
-    startersLocked: 0,
-    positionBattles: 0,
-    updatedLabel: '—',
-  },
-  updatedAt: null,
-};
+const SEED_BUNDLE: TeamHubBundle = buildSeedTeamHubBundle();
 
 const SECTION_IDS = TEAM_PREMIUM_TABS.map((t) => t.id);
 const DEFAULT_TAB: TeamPremiumTabId = 'depth-chart';
@@ -49,7 +40,7 @@ function tabFromHash(): TeamPremiumTabId {
 
 export function TeamHubPage(): React.ReactElement {
   const cachedHub = typeof window !== 'undefined' ? readCachedTeamHubBundle() : null;
-  const [bundle, setBundle] = useState<TeamHubBundle>(cachedHub ?? EMPTY_BUNDLE);
+  const [bundle, setBundle] = useState<TeamHubBundle>(cachedHub ?? SEED_BUNDLE);
   const [loading, setLoading] = useState(!cachedHub);
   const [warming, setWarming] = useState(!cachedHub);
   const [pipelineLoading, setPipelineLoading] = useState(true);
@@ -72,6 +63,7 @@ export function TeamHubPage(): React.ReactElement {
     async (isInitial: boolean) => {
       const hadCache = isInitial && readCachedTeamHubBundle() != null;
       if (isInitial && !hadCache) {
+        // Keep seeded depth chart / staff visible — only roster warms.
         setLoading(true);
         setWarming(true);
         setPipelineLoading(true);
@@ -168,11 +160,20 @@ export function TeamHubPage(): React.ReactElement {
         : bundle.depthChart.specialTeams;
 
   const heroPulse = useMemo(() => computeHeroPulse(bundle), [bundle]);
-  const pageLoading = loading && bundle.roster.length === 0;
+  const hasDepthChart =
+    bundle.depthChart.offense.length +
+      bundle.depthChart.defense.length +
+      bundle.depthChart.specialTeams.length >
+    0;
+  const rosterLoading = loading && bundle.roster.length === 0;
+  const staffLoading = loading && bundle.coaches.length === 0;
+  // Depth chart is static — never block first paint behind roster/API warm.
+  const depthLoading = !hasDepthChart;
+  const heroLoading = loading && !hasDepthChart && bundle.roster.length === 0;
 
   return (
     <TeamElitePageShell>
-      <TeamPremiumHero pulse={heroPulse} loading={pageLoading} />
+      <TeamPremiumHero pulse={heroPulse} loading={heroLoading} />
       <div className="team-premium-subnav-wrap rh-frame">
         <TeamPremiumSubNav active={activeTab} onSelect={scrollToSection} />
       </div>
@@ -181,16 +182,16 @@ export function TeamHubPage(): React.ReactElement {
           dcTab={dcTab}
           onTabChange={setDcTab}
           positions={dcPositions}
-          loading={pageLoading}
+          loading={depthLoading}
         />
         <TeamRosterSection
           roster={bundle.roster}
           filter={rosterFilter}
           onFilterChange={setRosterFilter}
-          loading={pageLoading}
+          loading={rosterLoading}
           warming={warming}
         />
-        <StaffCardGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} loading={pageLoading} />
+        <StaffCardGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} loading={staffLoading} />
         <TeamIdentityPremiumSection />
         <ProgramHistoryGrid eras={bundle.eras} onSelectEra={setSelectedEra} />
         <TeamRecruitingPipelineSection data={pipelinePreview} loading={pipelineLoading} />

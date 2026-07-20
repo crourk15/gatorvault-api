@@ -27,6 +27,7 @@ import {
 } from '@/lib/futurecast-high-priority-api';
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { RECRUITING_HUB_HERO_SEED } from '@/lib/recruiting-hub-hero-seed';
 import {
   buildBeatPostsFromIntel,
   buildFutureCastTargetsFromHome,
@@ -73,10 +74,13 @@ export function HomePremiumPage(): React.ReactElement {
   // SSR-safe init — apply session/boot cache only in useEffect to avoid hydration mismatch.
   const [beatIntel, setBeatIntel] = useState<BeatIntelItem[]>([]);
   const [board, setBoard] = useState<RecruitingBoardResponse | null>(null);
-  const [classMetrics, setClassMetrics] = useState<ClassMetricsResponse | null>(null);
+  const [classMetrics, setClassMetrics] = useState<ClassMetricsResponse | null>(
+    () => ({ ...RECRUITING_HUB_HERO_SEED.classOverview }) as ClassMetricsResponse
+  );
   const [futureCastHome, setFutureCastHome] = useState<FutureCastHomeResponse | null>(null);
   const [highPriority, setHighPriority] = useState<HighPriorityResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Seeded metrics mean first paint is never a blank recruiting snapshot.
+  const [loading, setLoading] = useState(false);
   const [beatReady, setBeatReady] = useState(false);
 
   useEffect(() => {

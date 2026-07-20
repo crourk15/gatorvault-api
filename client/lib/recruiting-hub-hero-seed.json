@@ -1,0 +1,81 @@
+{
+  "generatedAt": "2026-07-20T13:27:32.710Z",
+  "activeYear": 2027,
+  "title": "Florida Recruiting",
+  "subtitle": "Who Florida is chasing — movement, board, and beat intel.",
+  "classYears": [
+    2026,
+    2027,
+    2028
+  ],
+  "classOverview": {
+    "classRank": "#8",
+    "blueChip": "65%",
+    "commits": "26",
+    "commitLabel": "Commits",
+    "avgRating": "89.7",
+    "trendRank": "Stable",
+    "trendBlueChip": "Rising",
+    "trendCommits": "Rising",
+    "trendRating": "Rising",
+    "sparklines": {
+      "classRank": null,
+      "blueChip": null,
+      "commits": null,
+      "avgRating": null
+    }
+  },
+  "classOverviewAll": {
+    "2026": {
+      "classRank": "#16",
+      "blueChip": "30%",
+      "commits": "47",
+      "commitLabel": "Signees",
+      "avgRating": "87.8",
+      "trendRank": "Stable",
+      "trendBlueChip": "Stable",
+      "trendCommits": "Rising",
+      "trendRating": "Rising",
+      "sparklines": {
+        "classRank": null,
+        "blueChip": null,
+        "commits": null,
+        "avgRating": null
+      }
+    },
+    "2027": {
+      "classRank": "#8",
+      "blueChip": "65%",
+      "commits": "26",
+      "commitLabel": "Commits",
+      "avgRating": "89.7",
+      "trendRank": "Stable",
+      "trendBlueChip": "Rising",
+      "trendCommits": "Rising",
+      "trendRating": "Rising",
+      "sparklines": {
+        "classRank": null,
+        "blueChip": null,
+        "commits": null,
+        "avgRating": null
+      }
+    },
+    "2028": {
+      "classRank": "—",
+      "blueChip": "100%",
+      "commits": "1",
+      "commitLabel": "Commits",
+      "avgRating": "90.2",
+      "trendRank": "Stable",
+      "trendBlueChip": "Rising",
+      "trendCommits": "Rising",
+      "trendRating": "Rising",
+      "sparklines": {
+        "classRank": null,
+        "blueChip": null,
+        "commits": null,
+        "avgRating": null
+      }
+    }
+  }
+}
