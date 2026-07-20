@@ -126,12 +126,26 @@ async function main() {
   }
   const headCommitPrefix = headCommit ? headCommit.slice(0, 12) : null;
 
+  // When verifying production from a tooling branch, also accept origin/main tip.
+  let mainCommitPrefix = null;
+  try {
+    mainCommitPrefix = execSync('git rev-parse origin/main', { encoding: 'utf8' }).trim().slice(0, 12);
+  } catch {
+    try {
+      mainCommitPrefix = execSync('git rev-parse main', { encoding: 'utf8' }).trim().slice(0, 12);
+    } catch {
+      mainCommitPrefix = null;
+    }
+  }
+
   const exactMatch = localBuildId && productionBuildId === localBuildId;
   const commitMatch = prodCommitPrefix && localCommitPrefix && prodCommitPrefix === localCommitPrefix;
   // Netlify rebuild-on-merge stamps the merge SHA into gatorvault-build; local
   // server/build-manifest.json may still carry the pre-merge rebuild commit.
   const headMatch =
     Boolean(prodCommitPrefix && headCommitPrefix && prodCommitPrefix === headCommitPrefix);
+  const mainMatch =
+    Boolean(prodCommitPrefix && mainCommitPrefix && prodCommitPrefix === mainCommitPrefix);
 
   const report = {
     checkedAt: new Date().toISOString(),
@@ -140,11 +154,13 @@ async function main() {
     localBuildId,
     localCommit,
     headCommit,
+    mainCommitPrefix,
     exactBuildIdMatch: exactMatch,
     commitPrefixMatch: commitMatch,
     headCommitMatch: headMatch,
+    mainCommitMatch: mainMatch,
     netlifyDeploy: netlify,
-    pass: Boolean(commitMatch || exactMatch || headMatch) && (netlify.skipped || netlify.ok),
+    pass: Boolean(commitMatch || exactMatch || headMatch || mainMatch) && (netlify.skipped || netlify.ok),
   };
 
   fs.writeFileSync(path.join(OUT, 'build-match.json'), JSON.stringify(report, null, 2));
@@ -161,6 +177,7 @@ async function main() {
     `| Exact build ID match | **${exactMatch ? 'PASS' : 'FAIL'}** |`,
     `| Commit prefix match | **${commitMatch ? 'PASS' : 'FAIL'}** (${prodCommitPrefix} vs ${localCommitPrefix}) |`,
     `| HEAD commit match | **${headMatch ? 'PASS' : 'FAIL'}** (${prodCommitPrefix} vs ${headCommitPrefix}) |`,
+    `| origin/main match | **${mainMatch ? 'PASS' : 'FAIL'}** (${prodCommitPrefix} vs ${mainCommitPrefix || 'n/a'}) |`,
     `| Netlify deploy ready | **${netlify.skipped ? 'SKIP (no API token)' : netlify.ok ? 'PASS' : 'FAIL'}** |`,
     '',
     `**Overall:** ${report.pass ? 'PASS' : 'FAIL'}`,
@@ -173,6 +190,7 @@ async function main() {
   console.log('[verify-netlify-build] exact match:', exactMatch);
   console.log('[verify-netlify-build] commit match:', commitMatch);
   console.log('[verify-netlify-build] HEAD match:', headMatch, headCommitPrefix || 'n/a');
+  console.log('[verify-netlify-build] main match:', mainMatch, mainCommitPrefix || 'n/a');
   if (!netlify.skipped) console.log('[verify-netlify-build] netlify deploy:', netlify.state, netlify.ok ? 'ok' : 'FAIL');
 
   if (!report.pass) {
