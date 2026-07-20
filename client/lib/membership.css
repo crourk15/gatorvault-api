@@ -34,6 +34,18 @@
   margin-bottom: 0.35rem;
 }
 
+.gv-membership__features {
+  margin: 0.75rem 0 0;
+  padding: 0 0 0 1.1rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.gv-membership__features li {
+  margin: 0.25rem 0;
+}
+
 .gv-membership__badge {
   display: inline-flex;
   align-items: center;

@@ -123,7 +123,8 @@
       mark: 'TM',
       desc: 'Schedule, opponents, depth chart, staff, film room, game zone',
       panels: [
-        { id: 'board', label: 'Roster & Board', embed: 'board' },
+        { id: 'board', label: 'Roster & Board', inline: true },
+        { id: 'board-full', label: 'Full Board (legacy)', embed: 'board' },
         { id: 'vault-grades', label: 'Vault Grades Manager', inline: true }
       ]
     },
@@ -940,6 +941,13 @@
           panelEl.setAttribute('data-rendered', '1');
           if (panelId === 'rerun' || panelId === 'runbooks') renderRunbooksPanel(panelEl);
           else if (panelId === 'vault-grades') renderVaultGradesPanel(panelEl);
+          else if (panelId === 'board' && section.id === 'team' && global.GVAdminBoardSummary) {
+            GVAdminBoardSummary.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash
+            });
+          }
           else if (panelId === 'overview' && global.GVAdminDashboard) {
             GVAdminDashboard.render(panelEl, {
               apiGet: apiGet,

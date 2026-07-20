@@ -60,9 +60,19 @@ async function warmApi() {
   return false;
 }
 
+function isRemoteBase(url) {
+  try {
+    const u = new URL(url);
+    return u.protocol === 'https:' || (u.hostname !== '127.0.0.1' && u.hostname !== 'localhost');
+  } catch {
+    return false;
+  }
+}
+
 function pingBase() {
   return new Promise((resolve) => {
-    const req = http.get(`${BASE}/vault/`, { timeout: 5_000 }, (res) => {
+    const lib = BASE.startsWith('https:') ? https : http;
+    const req = lib.get(`${BASE}/vault/`, { timeout: 5_000 }, (res) => {
       res.resume();
       resolve(res.statusCode >= 200 && res.statusCode < 400);
     });
@@ -78,6 +88,11 @@ async function ensureServer() {
   if (await pingBase()) {
     console.log(`[run-full-mobile-verify] server already up at ${BASE}`);
     return null;
+  }
+
+  // Production / remote HTTPS — never try to spawn local static server.
+  if (isRemoteBase(BASE)) {
+    throw new Error(`remote VERIFY_BASE not reachable: ${BASE}`);
   }
 
   console.log(`[run-full-mobile-verify] starting serve-local-netlify on ${BASE}…`);

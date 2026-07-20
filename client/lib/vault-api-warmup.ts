@@ -35,18 +35,23 @@ export function warmVaultApi(): void {
   const path = window.location.pathname.replace(/\/$/, '') || '/';
   const hubYear = hubYearFromPath(path);
 
-  const ping = (apiPath: string) => {
-    void apiFetch(apiPath, { timeoutMs: 15_000, retries: 2, retryDelayMs: 2_000 }).catch(() => {});
-  };
+  const ping = (apiPath: string) =>
+    apiFetch(apiPath, { timeoutMs: 15_000, retries: 2, retryDelayMs: 2_000 }).catch(() => null);
 
-  ping('/api/ping');
-  ping(`/api/recruiting/hub/bundle?year=${hubYear}`);
+  // Ping first so Render wakes before the heavier hub bundle.
+  void ping('/api/ping').then(() => {
+    void ping(`/api/recruiting/hub/bundle?year=${hubYear}`);
+    if (path.startsWith('/vault/film-room')) void ping('/api/film-room/catalog');
+    if (path.startsWith('/vault/nil')) void ping('/api/nil/dashboard');
+    if (path.startsWith('/vault/alerts')) void ping('/api/futurecast/alerts?limit=20');
+  });
 
   if (typeof window.requestIdleCallback === 'function') {
     window.requestIdleCallback(
       () => {
-        if (path.startsWith('/vault/futurecast')) ping('/api/futurecast/home');
-        if (path.startsWith('/vault/community')) ping('/api/community/categories');
+        if (path.startsWith('/vault/futurecast')) void ping('/api/futurecast/home');
+        if (path.startsWith('/vault/community')) void ping('/api/community/categories');
+        if (path.startsWith('/vault/live')) void ping('/api/live/dashboard?limit=20');
       },
       { timeout: 2000 }
     );

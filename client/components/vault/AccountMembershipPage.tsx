@@ -24,10 +24,49 @@ import {
   restoreIosPurchasesWithSync,
 } from '@/lib/ios-iap';
 import { AccountDeletePanel } from '@/components/vault/AccountDeletePanel';
+import { publicPricingTiers } from '@/lib/pricing-tiers';
 import '@/lib/membership.css';
 
 const LOAD_ATTEMPTS = 3;
 const LOAD_RETRY_DELAY_MS = 1_500;
+const PUBLIC_TIERS = publicPricingTiers();
+
+function MembershipTierMarketing({
+  currentTier,
+}: {
+  currentTier?: string | null;
+}): React.ReactElement {
+  return (
+    <section className="gv-membership__cards" aria-label="Insider tiers" data-testid="membership-tier-cards">
+      <h2 className="gv-membership__section-title">Insider tiers</h2>
+      <p className="gv-membership__meta" style={{ marginBottom: '1rem' }}>
+        Locker Room and Film Room — recruiting, FutureCast, and film in one vault.
+      </p>
+      {PUBLIC_TIERS.map((tier) => (
+        <article
+          key={tier.id}
+          data-membership-tier={tier.id}
+          className={`gv-membership__card${currentTier === tier.id ? ' is-current' : ''}`}
+        >
+          <div className="gv-membership__card-head">
+            <h3 className="gv-membership__card-name">
+              {tier.icon} {tier.name}
+              {tier.popular ? ' · Popular' : ''}
+            </h3>
+            <p className="gv-membership__card-price">
+              ${tier.monthly.toFixed(2)}/month · ${tier.annual.toFixed(2)}/year billed annually
+            </p>
+          </div>
+          <ul className="gv-membership__features">
+            {tier.features.map((f) => (
+              <li key={f}>{f}</li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </section>
+  );
+}
 
 function statusBadge(status: SubscriptionStatus | null): React.ReactElement {
   if (!status) return <span className="gv-membership__badge">Loading…</span>;
@@ -63,6 +102,7 @@ export function AccountMembershipPage(): React.ReactElement {
   const [billingReady, setBillingReady] = useState(false);
   const [purchaseBusy, setPurchaseBusy] = useState<string | null>(null);
   const [needsReauth, setNeedsReauth] = useState(false);
+  const [guestMode, setGuestMode] = useState(false);
   const native = isNativeApp();
   const localSession = typeof window !== 'undefined' ? loadSession() : null;
 
@@ -76,10 +116,13 @@ export function AccountMembershipPage(): React.ReactElement {
   const loadMembership = useCallback(async () => {
     const session = loadSession();
     if (!session?.token) {
-      replaceAuthLocation('/join/?mode=signin&next=/vault/membership/');
+      // Elite public surface: show tiers + sign-in CTA instead of a blank redirect shell.
+      setGuestMode(true);
+      setLoading(false);
       return;
     }
 
+    setGuestMode(false);
     setLoading(true);
     setError(null);
     setNeedsReauth(false);
@@ -212,7 +255,38 @@ export function AccountMembershipPage(): React.ReactElement {
   if (loading) {
     return (
       <div className="gv-membership" data-testid="vault-membership">
-        <p className="gv-membership__loading">Loading membership…</p>
+        <h1 className="gv-membership__title">Membership &amp; account</h1>
+        <p className="gv-membership__sub">Locker Room and Film Room — recruiting, FutureCast, and film.</p>
+        <MembershipTierMarketing />
+        <p className="gv-membership__loading">Loading your account…</p>
+      </div>
+    );
+  }
+
+  if (guestMode) {
+    return (
+      <div className="gv-membership" data-testid="vault-membership">
+        <h1 className="gv-membership__title">GatorVault Membership</h1>
+        <p className="gv-membership__sub">
+          Sign in to manage your tier, trial, and billing — or preview what Insider unlocks.
+        </p>
+        <div className="gv-membership__actions" style={{ marginBottom: '1.25rem' }}>
+          <a
+            className="gv-membership__subscribe-btn"
+            href="/join/?mode=signin&next=/vault/membership/"
+          >
+            Sign in
+          </a>
+          <a className="gv-membership__secondary-btn" href="/join/?mode=signup&next=/vault/membership/">
+            Create account
+          </a>
+        </div>
+        <MembershipTierMarketing />
+        <p className="gv-membership__meta">
+          <Link href="/terms/">Membership Terms</Link>
+          {' · '}
+          <Link href="/vault/">Back to Vault</Link>
+        </p>
       </div>
     );
   }
@@ -402,9 +476,15 @@ export function AccountMembershipPage(): React.ReactElement {
         )}
       </section>
 
+      {!(catalog?.tiers || []).length ? <MembershipTierMarketing currentTier={status?.tier} /> : null}
+
       <section className="gv-membership__cards" aria-label="Available plans">
-        <h2 className="gv-membership__section-title">Insider tiers</h2>
-        {(catalog?.tiers || []).map((tier) => (
+        {(catalog?.tiers || []).length ? (
+          <h2 className="gv-membership__section-title">Insider tiers</h2>
+        ) : null}
+        {(catalog?.tiers || []).map((tier) => {
+          const marketing = PUBLIC_TIERS.find((t) => t.id === tier.id);
+          return (
           <article
             key={tier.id}
             data-membership-tier={tier.id}
@@ -422,6 +502,13 @@ export function AccountMembershipPage(): React.ReactElement {
                 Auto-renewing subscription · billed monthly or annually through Apple
               </p>
             </div>
+            {marketing?.features?.length ? (
+              <ul className="gv-membership__features">
+                {marketing.features.map((f) => (
+                  <li key={f}>{f}</li>
+                ))}
+              </ul>
+            ) : null}
             <p className="gv-membership__card-note">
               App Store product: {tier.products.monthly}
               {status?.tier === tier.id ? ' · Your current tier' : ''}
@@ -451,7 +538,8 @@ export function AccountMembershipPage(): React.ReactElement {
               </div>
             ) : null}
           </article>
-        ))}
+          );
+        })}
       </section>
 
       <section className="gv-membership__cta">

@@ -9,6 +9,7 @@ import {
   type FilmRoomCatalogItem,
   type FilmRoomLessonDetail,
 } from '@/lib/film-room-api';
+import { buildSeedFilmRoomCatalog } from '@/lib/film-room-hub-seed';
 import {
   filmRoomHubFromSegment,
   parseFilmRoomSegmentFromPath,
@@ -277,12 +278,16 @@ function hubFromUrl(): string | null {
   return null;
 }
 
+const SEED_CATALOG = buildSeedFilmRoomCatalog();
+const HAS_FILM_SEED = SEED_CATALOG.items.length > 0;
+
 export function VaultFilmRoomPage(): React.ReactElement {
   const pathname = usePathname();
   const { isInsider: insider } = useUser();
   const { navigate: goToUnlock } = useInsiderUnlock({ returnPath: pathname });
-  const [items, setItems] = useState<FilmRoomCatalogItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<FilmRoomCatalogItem[]>(HAS_FILM_SEED ? SEED_CATALOG.items : []);
+  // Seeded catalog paints immediately; Scheme School never needs the API.
+  const [loading, setLoading] = useState(!HAS_FILM_SEED);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<FilmRoomCatalogItem | null>(null);
   const [schemeLesson, setSchemeLesson] = useState<SchemeSchoolLesson | null>(null);
@@ -305,14 +310,19 @@ export function VaultFilmRoomPage(): React.ReactElement {
   }, []);
 
   const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    if (!HAS_FILM_SEED) {
+      setLoading(true);
+      setError(null);
+    }
     try {
       const catalog = await fetchFilmRoomCatalog();
       setItems(catalog.items);
+      setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load Film Room catalog.');
-      setItems([]);
+      if (!HAS_FILM_SEED) {
+        setError(err instanceof Error ? err.message : 'Could not load Film Room catalog.');
+        setItems([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -440,7 +450,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
           </section>
         }
       >
-        {loading ? (
+        {loading && hub !== 'Scheme School' ? (
           <div className="gv-page-status" role="status" aria-live="polite" aria-busy="true">
             <UiWarming hint="Loading film catalog…" />
           </div>

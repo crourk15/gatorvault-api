@@ -136,12 +136,13 @@ export function HomePremiumPage(): React.ReactElement {
     const poll = warmPollProfile();
     try {
       const year = ACTIVE_RECRUITING_CLASS_YEAR;
+      // APIs that already warm-poll internally — do not nest another warm layer.
       const [hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets] =
         await Promise.all([
           fetchWithWarmPoll(() => fetchRecruitingHubBundle(year), poll).catch(() => null),
-          fetchWithWarmPoll(() => fetchHighPriorityIntel(), poll).catch(() => []),
-          fetchWithWarmPoll(() => fetchMovementIntel(), poll).catch(() => null),
-          fetchWithWarmPoll(() => fetchBeatIntel(), poll).catch(() => []),
+          fetchHighPriorityIntel().catch(() => []),
+          fetchMovementIntel().catch(() => null),
+          fetchBeatIntel().catch(() => []),
           fetchWithWarmPoll(() => fetchRecruitingBoard(year), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchFutureCastHome(), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchHighPriorityTargets(year), poll).catch(() => null),
