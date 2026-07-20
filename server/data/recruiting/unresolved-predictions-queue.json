@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-20T01:36:31.000Z",
+  "items": [
+    {
+      "id": "upq_seed_cyion_alderman_rpm",
+      "status": "open",
+      "reason": "no_recruiting_identity",
+      "source": "uf-on3-news-discovery",
+      "title": "Predicting the Florida Gators to land a 4-star defender: New RPM",
+      "textPreview": "NEW: The Gators have built early momentum for a 4-star defender \u2014 and we're dropping a prediction in their favor",
+      "url": "https://on3.com/teams/florida-gators/news/predicting-the-florida-gators-to-land-a-4-star-defender-new-rpm/",
+      "handle": "blake_alderman",
+      "writerName": "Blake Alderman",
+      "eventType": "prediction",
+      "playerNameHint": "Cyion Smith",
+      "playerSlugHint": "cyion-smith",
+      "classYearHint": 2028,
+      "posHint": "S",
+      "fingerprint": "seed_blake_alderman_cyion_rpm_20260718",
+      "seenCount": 1,
+      "createdAt": "2026-07-20T01:36:31.000Z",
+      "updatedAt": "2026-07-20T01:36:31.000Z",
+      "lastSeenAt": "2026-07-20T01:36:31.000Z",
+      "resolvedAt": null,
+      "resolvedPlayerSlug": null,
+      "note": "Seeded from July 18 Alderman teaser \u2014 resolve with cyion-smith after allowlist merge."
+    }
+  ]
+}
