@@ -7,9 +7,9 @@ export function RecruitingHubMobileHeader(): React.ReactElement {
   return (
     <header className="rh-elite-mobile-header" data-testid="rh-mobile-header">
       <p className="rh-elite-mobile-header__eyebrow">GatorVault Insider</p>
-      <h1 className="rh-elite-mobile-header__title">UF Recruiting Hub</h1>
+      <h1 className="rh-elite-mobile-header__title">Florida Recruiting</h1>
       <p className="rh-elite-mobile-header__sub">
-        Live pulse, intel, movement, and boards — one vertical feed.
+        Who Florida is chasing — movement, board, and beat intel.
       </p>
     </header>
   );
