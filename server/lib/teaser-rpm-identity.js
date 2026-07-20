@@ -248,6 +248,7 @@ async function enrichUnresolvedPredictionItem(item, options = {}) {
           reasons: ['on3_rpm', 'teaser_identity'],
           sources: ['on3_rpm', 'teaser_identity', identity.source],
           fetchRpm: options.fetchRpm !== false,
+          dryRun: options.dryRunRadar === true,
         });
       } catch (err) {
         radar = { ok: false, error: err.message };

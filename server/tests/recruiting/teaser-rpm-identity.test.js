@@ -55,6 +55,8 @@ section('fetch wrapper uses injected pageProps');
     autoResolve: true,
     minConfidence: 'high',
     fetchPageProps: async () => fixture,
+    fetchRpm: false,
+    dryRunRadar: true,
   });
   assert.strictEqual(enriched.enriched, true);
   assert.strictEqual(enriched.autoResolved, true);
