@@ -81,3 +81,35 @@ describe("enrichRecapRowsWithMovementNarratives", () => {
     assert.match(rows[0].movementNarrative || "", /UF \+6% \(7d\)/);
   });
 });
+
+
+describe('on3-rpm inventory sync (Pass 4)', () => {
+  it('collectSyncTargets includes inventory prospects with On3 ids', () => {
+    const { collectSyncTargets } = require('../../lib/on3-rpm-allowlist');
+    const all = collectSyncTargets({ scope: 'all', classYears: [2028], maxInventory: 200 });
+    assert.ok(all.targets.length > 0);
+    const cyion = all.targets.find((t) => t.slug === 'cyion-smith');
+    assert.ok(cyion, 'cyion-smith should be in inventory sync set');
+    assert.match(String(cyion.sourceBucket), /inventory|allowlist/);
+    assert.ok(cyion.on3Slug || cyion.on3Id);
+
+    const allowOnly = collectSyncTargets({ scope: 'allowlist', classYears: [2028] });
+    assert.ok(allowOnly.targets.every((t) => String(t.sourceBucket).includes('allowlist')));
+  });
+
+  it('syncAllowlistOn3Rpm dryRun inventory scope returns targetCount', async () => {
+    const { syncAllowlistOn3Rpm } = require('../../lib/on3-rpm-allowlist');
+    const out = await syncAllowlistOn3Rpm({
+      dryRun: true,
+      fetch: false,
+      scope: 'inventory',
+      classYears: [2028],
+      maxInventory: 50,
+      writePlayers: false,
+    });
+    assert.equal(out.ok, true);
+    assert.equal(out.scope, 'inventory');
+    assert.ok(out.targetCount > 0);
+  });
+});
+

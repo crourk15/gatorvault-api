@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Render cron — On3 RPM UF % gap-fill for allowlist targets missing Rivals PM.
+ * Render cron — On3 RPM UF % for allowlist + UF-active inventory (missing Rivals PM).
  */
 require('./render-cron-env');
 
@@ -24,7 +24,7 @@ async function postSync() {
       "x-monitoring-cron": CRON_SECRET,
       "User-Agent": "gatorvault-on3-rpm-allowlist-cron/1.0",
     },
-    body: "{}",
+    body: JSON.stringify({ scope: process.env.ON3_RPM_SYNC_SCOPE || 'all' }),
     signal: AbortSignal.timeout(180000),
   });
   const elapsed = Date.now() - started;

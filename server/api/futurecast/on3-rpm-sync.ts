@@ -1,5 +1,5 @@
 /**
- * POST /api/futurecast/on3-rpm/sync — On3 RPM UF % gap-fill for allowlist targets.
+ * POST /api/futurecast/on3-rpm/sync — On3 RPM UF % for allowlist + UF-active inventory.
  */
 import { createRequire } from 'node:module';
 import type { Request, Response } from 'express';
@@ -19,15 +19,36 @@ export const handlePostOn3RpmSync = asyncHandler(async (req: Request, res: Respo
     res.status(403).json({ ok: false, error: 'Forbidden' });
     return;
   }
-  const dryRun = req.query.dryRun === 'true' || req.query.dryRun === '1';
-  const fetchProfiles = req.query.fetch !== 'false' && req.query.fetch !== '0';
+  const dryRun =
+    req.query.dryRun === 'true' ||
+    req.query.dryRun === '1' ||
+    req.body?.dryRun === true;
+  const fetchProfiles =
+    req.query.fetch !== 'false' &&
+    req.query.fetch !== '0' &&
+    req.body?.fetch !== false;
+  const classYearRaw = req.query.year ?? req.body?.classYear;
   const classYear =
-    typeof req.query.year === 'string' ? parseInt(req.query.year, 10) : undefined;
+    typeof classYearRaw === 'string' || typeof classYearRaw === 'number'
+      ? parseInt(String(classYearRaw), 10)
+      : undefined;
+  const scope =
+    typeof req.query.scope === 'string'
+      ? req.query.scope
+      : typeof req.body?.scope === 'string'
+        ? req.body.scope
+        : undefined;
+  const maxInventoryRaw = req.query.maxInventory ?? req.body?.maxInventory;
+  const maxInventory =
+    maxInventoryRaw != null ? parseInt(String(maxInventoryRaw), 10) : undefined;
   const { syncAllowlistOn3Rpm } = require('../../lib/on3-rpm-allowlist');
   const result = await syncAllowlistOn3Rpm({
     dryRun,
     fetch: fetchProfiles,
     classYear: Number.isFinite(classYear) ? classYear : undefined,
+    scope,
+    maxInventory: Number.isFinite(maxInventory) ? maxInventory : undefined,
+    writePlayers: req.body?.writePlayers !== false,
   });
   res.json({ ok: true, ...result });
 });
