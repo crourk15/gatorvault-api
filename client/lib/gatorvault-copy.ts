@@ -4,19 +4,19 @@
 export const GV_COPY = {
   headlines: {
     heroStoryline: "Today's Gator Storyline",
-    movementIntel: "Movement Intel: Who's Rising?",
+    movementIntel: "Who's moving on the board",
     recruitingSnapshot: 'Recruiting Snapshot',
     latestContent: 'Latest From Inside The Swamp',
     yourFeed: 'Your Gator Feed',
-    heatCheck: "Heat Check: Who's Heating Up?",
+    heatCheck: "Who's heating up",
     futurecastMomentum: 'FutureCast Momentum',
     livePulse: 'GatorNation Live Pulse',
-    whatsHot: "Heat Check: Who's Heating Up?",
+    whatsHot: "Who's heating up",
   },
   microcopy: {
     viewFullBoard: 'View Full Board',
     seeAllUpdates: 'See All Updates',
-    openMovementIntel: 'Open Movement Intel',
+    openMovementIntel: 'See board movement',
     trackPlayer: 'Track Player',
     addToWatchlist: 'Add to Watchlist',
     viewFilmBreakdown: 'View Film Breakdown',

@@ -45,11 +45,11 @@
     '/admin-self-runner.html': { section: 'self-runner', panel: 'pending' },
     '/admin/ops': { section: 'dashboard', panel: 'ops' },
     '/admin/feedback': { section: 'feedback', panel: 'inbox' },
-    '/admin/monitoring': { section: 'recruiting', panel: 'monitoring' },
+    '/admin/monitoring': { section: 'recruiting', panel: 'monitoring-full' },
     '/admin/ops/gm2': { section: 'gm2', panel: 'rerun' },
     '/admin/ops/identity-patterns': { section: 'gm2', panel: 'identity' },
     '/vault/ops': { section: 'dashboard', panel: 'ops' },
-    '/recruiting-admin.html': { section: 'recruiting', panel: 'alerts' },
+    '/recruiting-admin.html': { section: 'recruiting', panel: 'alerts-full' },
     '/recruiting-board.html': { section: 'team', panel: 'board' },
     '/content-admin.html': { section: 'content', panel: 'content-accuracy' },
     '/community-admin.html': { section: 'community', panel: 'moderation' }
@@ -110,9 +110,11 @@
       panels: [
         { id: 'daily', label: 'Daily Summary', inline: true },
         { id: 'unresolved', label: 'Unresolved Predictions', inline: true },
-        { id: 'alerts', label: 'Full Alerts', embed: 'recruiting-alerts' },
-        { id: 'monitoring', label: 'Monitoring', embed: 'monitoring' },
-        { id: 'vault-grades', label: 'Vault Grades Manager', inline: true }
+        { id: 'alerts', label: 'Alerts Summary', inline: true },
+        { id: 'monitoring', label: 'Monitoring Summary', inline: true },
+        { id: 'vault-grades', label: 'Vault Grades Manager', inline: true },
+        { id: 'alerts-full', label: 'Full Alerts (legacy)', embed: 'recruiting-alerts' },
+        { id: 'monitoring-full', label: 'Full Monitoring (legacy)', embed: 'monitoring' }
       ]
     },
     {
@@ -535,7 +537,18 @@
     }
   }
 
+  function ensureEmbedNotice(panelEl) {
+    if (!panelEl || panelEl.querySelector('.hub-embed-notice')) return;
+    var notice = document.createElement('div');
+    notice.className = 'hub-embed-notice';
+    notice.setAttribute('role', 'note');
+    notice.textContent =
+      'Legacy console embed — prefer Daily Summary / in-shell panels for the daily path. Full consoles stay available as an escape hatch.';
+    panelEl.insertBefore(notice, panelEl.firstChild);
+  }
+
   function loadIframe(panelEl, src) {
+    ensureEmbedNotice(panelEl);
     var iframe = panelEl.querySelector('iframe');
     if (!iframe) {
       iframe = document.createElement('iframe');
@@ -552,6 +565,7 @@
       iframe.src = fullSrc;
     }
     iframe.onload = function () {
+      showApiBanner(null);
       postPinToIframe(iframe);
       var attempts = 0;
       var timer = setInterval(function () {
@@ -559,6 +573,9 @@
         attempts += 1;
         if (attempts >= 8) clearInterval(timer);
       }, 250);
+    };
+    iframe.onerror = function () {
+      showApiBanner('Embedded admin panel failed to load. Use Daily Summary or refresh.');
     };
     postPinToIframe(iframe);
   }
@@ -974,6 +991,20 @@
               apiPost: apiPost,
               onNavigate: navigateFromHash,
               pushActivity: pushActivity
+            });
+          }
+          else if (panelId === 'alerts' && section.id === 'recruiting' && global.GVAdminAlertsSummary) {
+            GVAdminAlertsSummary.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash
+            });
+          }
+          else if (panelId === 'monitoring' && section.id === 'recruiting' && global.GVAdminMonitoringSummary) {
+            GVAdminMonitoringSummary.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash
             });
           }
           else if (panelId === 'summary' && section.id === 'product-intel' && global.GVAdminProductIntelSummary) {

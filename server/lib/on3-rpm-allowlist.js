@@ -298,6 +298,18 @@ async function syncAllowlistOn3Rpm(options = {}) {
       ufPct = fallback != null ? toPercent(fallback) : null;
     }
 
+    // On3 403 / network misses: keep last-good RPM instead of wiping the board.
+    let source = 'On3 RPM · UF';
+    if (
+      ufPct == null &&
+      fetchError &&
+      existing?.ufPct != null &&
+      Number(existing.ufPct) > 0
+    ) {
+      ufPct = toPercent(existing.ufPct);
+      source = 'on3_rpm_last_good';
+    }
+
     if (ufPct == null || ufPct <= 0) {
       return {
         slug,
@@ -316,9 +328,10 @@ async function syncAllowlistOn3Rpm(options = {}) {
       ufPct,
       priorUfPct: priorUfPct != null ? priorUfPct : null,
       profileUrl,
-      source: 'On3 RPM · UF',
+      source,
       sourceBucket: target.sourceBucket || 'allowlist',
       syncedAt,
+      ...(fetchError && source === 'on3_rpm_last_good' ? { fetchError } : {}),
     };
 
     let playerWrite = null;

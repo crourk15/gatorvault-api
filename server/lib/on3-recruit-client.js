@@ -147,7 +147,9 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
   try {
     pp = await fetchNextPageProps(url, year);
   } catch (e) {
-    return { slug: recruitSlug, error: e.message };
+    const msg = e && e.message ? String(e.message) : String(e);
+    const typed = /HTTP\s*403\b/i.test(msg) ? 'on3_403' : msg;
+    return { slug: recruitSlug, error: typed };
   }
   if (!pp) return null;
 

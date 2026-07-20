@@ -12,7 +12,7 @@ export default function VaultRecruitingLayout({
       <RecruitingHubHeadLinks />
       <VaultPillarSsrMarkers
         testId="vault-recruiting-hub"
-        label="Recruiting Hub · 2026 Commits · Heat Check"
+        label="Recruiting Hub · 2026 Commits · Who's heating up"
         extraClasses="gv-hub-tabs gv-hub-tabs--scroll gv-hub-tab"
       />
       {children}

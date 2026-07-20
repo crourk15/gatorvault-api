@@ -9,7 +9,7 @@ export const STICKY_TAB_LABELS: { id: RecruitingHubTab; label: string }[] = [
   { id: 'commits-2027', label: '2027 Commits' },
   { id: 'targets-2027', label: '2027 Targets' },
   { id: 'targets-2028', label: '2028 Targets' },
-  { id: 'intel', label: 'Movement Intel' },
+  { id: 'intel', label: "Who's Moving" },
   { id: 'scouting', label: 'Scouting' },
   { id: 'portal', label: 'Portal' },
   { id: 'rankings', label: 'Rankings' },

@@ -6,7 +6,7 @@
 
 .gv-membership__title {
   margin: 0 0 0.35rem;
-  font-family: Oswald, Inter, sans-serif;
+  font-family: Oswald, 'Arial Narrow', sans-serif;
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
 }

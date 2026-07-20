@@ -27,6 +27,9 @@ const UF_PREMIUM_AUTOPOSTER_ENV = Object.freeze({
   X_AUTOPOST_ELITE_COMPOSE: 'true',
   X_AUTOPOST_PR789_ONLY_RECRUITING: 'true',
   X_AUTOPOST_ELITE_RECRUITING_COMPOSE: 'true',
+  /** Require elite voice path — no thin template publish */
+  X_AUTOPOST_VOICE_REQUIRED: 'true',
+  X_AUTOPOST_VOICE_ENGINE: 'true',
   X_AUTOPOST_SUBTLE_GV_HOOKS: 'true',
   X_AUTOPOST_BEAT_CACHE_STALE_MS: String(15 * 60 * 1000),
   X_AUTOPOST_ELITE_BRAND_BEAT: 'true',

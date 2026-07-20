@@ -12,7 +12,7 @@ import { MobileBackToTop } from '@/components/vault/MobileBackToTop';
 import { AppMenuProvider } from '@/components/shell/AppMenuContext';
 import { AppMenuDrawer } from '@/components/shell/AppMenuDrawer';
 import { LivePulseFab } from '@/components/shell/LivePulseFab';
-import { PremiumNavIcon, type PremiumNavIconId } from '@/components/shell/PremiumNavIcons';
+import { PremiumNavIcon, isPremiumNavIconId, type PremiumNavIconId } from '@/components/shell/PremiumNavIcons';
 import { useAppMenu } from '@/components/shell/AppMenuContext';
 
 function sidebarActive(pathname: string, href: string): boolean {
@@ -69,7 +69,11 @@ function NavLink({
       onClick={onClick}
     >
       <span className="gv-vault-shell__nav-icon" aria-hidden="true">
-        {item.icon}
+        {isPremiumNavIconId(item.icon) ? (
+          <PremiumNavIcon id={item.icon} />
+        ) : (
+          item.icon
+        )}
       </span>
       <span className="gv-vault-shell__nav-label">{item.label}</span>
     </VaultNavLink>
@@ -93,7 +97,7 @@ function VaultBottomNav({ pathname }: { pathname: string }): React.ReactElement 
           }`}
         >
           <span className="gv-vault-bottom-nav__icon" aria-hidden="true">
-            <PremiumNavIcon id={item.icon as PremiumNavIconId} />
+            <PremiumNavIcon id={(isPremiumNavIconId(item.icon) ? item.icon : 'home') as PremiumNavIconId} />
           </span>
           <span className="gv-vault-bottom-nav__label">{navLabel(item.label)}</span>
         </VaultNavLink>

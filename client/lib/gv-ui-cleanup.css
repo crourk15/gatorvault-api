@@ -585,7 +585,7 @@ body {
 .gv-gnl,
 .gv-sched-page,
 .fc-futurecast-page {
-  font-family: var(--gv-font, Inter, system-ui, sans-serif);
+  font-family: var(--gv-font, Source Sans 3, system-ui, sans-serif);
 }
 
 .gv-card,

@@ -25,7 +25,8 @@
       + '<p class="hub-dash-sub">Recent alerts, ingest health, and safe pipeline actions</p></div>'
       + '<div class="hub-btn-row">'
       + '<button type="button" class="hub-btn secondary" id="hub-rh-refresh">Refresh</button>'
-      + '<button type="button" class="hub-btn secondary" id="hub-rh-full">Full Alerts</button>'
+      + '<button type="button" class="hub-btn secondary" id="hub-rh-full">Alerts Summary</button>'
+      + '<button type="button" class="hub-btn secondary" id="hub-rh-mon">Monitoring Summary</button>'
       + '</div></div>'
       + '<div id="hub-rh-loading" class="hub-dash-loading">Loading recruiting status...</div>'
       + '<div id="hub-rh-body" class="hidden"></div>'
@@ -38,6 +39,10 @@
 
     document.getElementById('hub-rh-full').addEventListener('click', function () {
       onNavigate('#recruiting/alerts');
+    });
+    // #recruiting/alerts is now in-shell Alerts Summary; legacy console is #recruiting/alerts-full.
+    document.getElementById('hub-rh-mon').addEventListener('click', function () {
+      onNavigate('#recruiting/monitoring');
     });
     document.getElementById('hub-rh-refresh').addEventListener('click', load);
 

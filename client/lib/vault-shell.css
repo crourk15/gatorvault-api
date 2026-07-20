@@ -154,6 +154,21 @@
   margin-bottom: 0.15rem;
 }
 
+.gv-vault-shell__nav-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gv-vault-shell__nav-icon svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  display: block;
+}
+
 .gv-vault-shell__nav-link:hover {
   background: rgba(0, 48, 135, 0.2);
   color: #fff;

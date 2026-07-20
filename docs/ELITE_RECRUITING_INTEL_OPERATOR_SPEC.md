@@ -49,13 +49,41 @@ Related live flags (existing code): `X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE`, `X_AUT
 
 ## Operator sign-off checklist
 
-- [ ] Executive truth table reviewed with engineering
-- [ ] G1-G4 evidence attached (probe JSON, telemetry samples, test run IDs)
-- [ ] Golden slug matrix PASS (six known slugs plus regression spot checks)
-- [ ] Forbidden paths table reviewed
+Automated evidence:
+
+```bash
+node server/scripts/operator-signoff-evidence.js
+# optional staging probe loop:
+STAGING_API_BASE=https://your-staging.host node server/scripts/operator-signoff-evidence.js
+```
+
+Output: `server/data/ops/operator-signoff-evidence.json` (includes `generatedAt`, G1–G4, flags, optional `stagingProbe`).
+
+UF Premium env defaults also set `X_AUTOPOST_VOICE_REQUIRED=true` and `X_AUTOPOST_PR789_ONLY_RECRUITING=true` via `uf-premium-mode.js`.
+
+### Engineering evidence (re-run before prod flip)
+
+- [x] G1–G4 code gates present (`detectives-elite-compose` path wired)
+- [x] Golden slug matrix A–D covered by local evidence script
+- [x] Evidence script supports staging composeProbe via `STAGING_API_BASE`
+- [ ] Fresh evidence JSON attached from staging composeProbe (re-run on deploy host)
+- [ ] Forbidden paths table reviewed with engineering
 - [ ] Misroute handling confirmed: archive/block before delete
-- [ ] Feature flag state documented for prod and staging
-- [ ] Sign-off name, date, environment
+
+### Production flag + human sign-off
+
+| Env | Flag | Expected |
+| --- | --- | --- |
+| Staging | `X_AUTOPOST_PR789_ONLY_RECRUITING` | `true` while validating |
+| Staging | `X_AUTOPOST_VOICE_REQUIRED` | `true` |
+| Prod | `X_AUTOPOST_PR789_ONLY_RECRUITING` | `true` only after staging PASS |
+| Prod | `X_AUTOPOST_VOICE_REQUIRED` | `true` |
+
+- [ ] Feature flag state confirmed for prod and staging (Render env)
+- [ ] Executive truth table reviewed with engineering
+- [ ] Sign-off name: _______________
+- [ ] Sign-off date: _______________
+- [ ] Environment signed: staging / prod
 
 ---
 

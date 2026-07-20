@@ -6,7 +6,7 @@ import { ToolTile } from '@/components/recruiting-hub/primitives/ToolTile';
 export function DeepDiveSection(): React.ReactElement {
   return (
     <section className="rh-section rh-section--panel rh-deep-dive rh-container" data-testid="rh-deep-dive-section">
-      <h2 className="rh-section__title">Deep-Dive Tools</h2>
+      <h2 className="rh-section__title">More recruiting tools</h2>
       <div className="rh-tool-grid">
         <ToolTile
           title="Depth Chart"

@@ -6,7 +6,7 @@
 
 .pricing-section h2 {
   margin: 0;
-  font-family: Oswald, Inter, sans-serif;
+  font-family: Oswald, 'Arial Narrow', sans-serif;
   font-size: clamp(1.75rem, 3vw, 2.25rem);
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -91,7 +91,7 @@
 
 .pricing-card h3 {
   margin: 8px 0 0;
-  font-family: Oswald, Inter, sans-serif;
+  font-family: Oswald, 'Arial Narrow', sans-serif;
   font-size: 1.25rem;
 }
 

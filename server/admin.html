@@ -133,6 +133,10 @@
     .hub-tab.active{background:var(--hub-orange);border-color:var(--hub-orange);color:#fff}
 
     .hub-panel{min-height:480px}
+    .hub-embed-notice{
+      margin:0 0 10px;padding:10px 12px;border-radius:10px;font-size:12px;line-height:1.45;
+      background:rgba(250,70,22,.1);border:1px solid rgba(250,70,22,.35);color:#fed7aa;
+    }
     .hub-iframe{width:100%;min-height:calc(100vh - 180px);border:1px solid var(--hub-border);border-radius:12px;background:#020617}
 
     .hub-settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
@@ -301,10 +305,12 @@
   <script src="/js/admin-hub-job-queue.js?v=hub-jobs-v1"></script>
   <script src="/js/admin-hub-post-studio.js?v=hub-ps-v1"></script>
   <script src="/js/admin-hub-qa-summary.js?v=hub-qa-sum-v1"></script>
-  <script src="/js/admin-hub-recruiting.js?v=hub-rh-v1"></script>
+  <script src="/js/admin-hub-recruiting.js?v=hub-rh-v3"></script>
+  <script src="/js/admin-hub-alerts.js?v=hub-al-v1"></script>
+  <script src="/js/admin-hub-monitoring.js?v=hub-mon-v1"></script>
   <script src="/js/admin-hub-unresolved-predictions.js?v=hub-upq-v2"></script>
   <script src="/js/admin-hub-product-intel.js?v=hub-pi-v1"></script>
-  <script src="/js/admin-hub-core.js?v=hub-v22-teaser"></script>
+  <script src="/js/admin-hub-core.js?v=hub-v24-elite"></script>
   <script>
     document.getElementById('hub-lock-top').addEventListener('click', function () {
       document.getElementById('hub-lock').click();

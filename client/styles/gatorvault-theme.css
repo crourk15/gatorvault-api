@@ -38,7 +38,8 @@
   --heading-color-light: var(--uf-blue);
   --body-color-dark: var(--muted-gray);
   --body-color-light: var(--graphite);
-  --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family: 'Source Sans 3', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Oswald', 'Arial Narrow', sans-serif;
 
   /* SPACING */
   --space-xs: 4px;

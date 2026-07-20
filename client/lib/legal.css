@@ -12,7 +12,7 @@
 
 .gv-legal__title {
   margin: 0 0 0.75rem;
-  font-family: Oswald, Inter, sans-serif;
+  font-family: Oswald, 'Arial Narrow', sans-serif;
   font-size: clamp(1.75rem, 5vw, 2.25rem);
   font-weight: 700;
   letter-spacing: 0.02em;

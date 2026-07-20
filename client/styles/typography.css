@@ -1,8 +1,8 @@
 /**
- * GatorVault design tokens — typography (Inter)
+ * GatorVault design tokens — typography (Source Sans 3 / Oswald)
  */
 :root {
-  --gv-font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --gv-font-family: 'Source Sans 3', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* GV/H1: ExtraBold 800, 32px, 120%, -1% letter-spacing */
   --gv-h1-size: 32px;

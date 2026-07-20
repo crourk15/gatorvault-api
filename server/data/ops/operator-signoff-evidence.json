@@ -1,5 +1,6 @@
 {
-  "generatedAt": "2026-07-07T19:21:49.827Z",
+  "generatedAt": "2026-07-20T04:01:14.432Z",
+  "maxAgeHours": 72,
   "gates": {
     "G1": {
       "pass": true,
@@ -52,10 +53,12 @@
   },
   "flags": {
     "pr789Only": false,
-    "eliteComposeEnabled": true
+    "eliteComposeEnabled": true,
+    "voiceRequired": true
   },
+  "stagingProbe": null,
   "tests": {
     "ok": true,
-    "output": "✔ auditQueueItems flags recruiting queue leaks and trace mode (0.9133ms)\n✔ auditSentLedger scans recruiting sent posts for leaks (0.2915ms)\n✔ runRecruitingLeakAudit returns G4 envelope (34.0375ms)\nℹ tests 15\nℹ suites 0\nℹ pass 15\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 617965.3867\n"
+    "output": "  duration_ms: 7.714911\n  ...\n1..15\n# tests 15\n# suites 0\n# pass 15\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 33000.793011\n"
   }
 }

@@ -380,7 +380,25 @@
       "natlRank": 175,
       "posRank": 14,
       "stateRank": null,
-      "stars": 4
+      "stars": 4,
+      "htWt": "6-2 / 175",
+      "skinny": "2028 4-star S — Blountstown. UF daily contact + early On3 RPM momentum (Alderman)."
+    },
+    {
+      "slug": "cassell-cruickshank",
+      "name": "Cassell Cruickshank",
+      "pos": "EDGE",
+      "classYear": 2028,
+      "school": "E E Smith (Fayetteville, NC)",
+      "state": "NC",
+      "inState": false,
+      "rating": 95.22258064516129,
+      "natlRank": 14,
+      "posRank": 3,
+      "stateRank": 2,
+      "stars": 4,
+      "htWt": "6-5 / 217",
+      "skinny": "4★ EDGE · #14 natl · E E Smith, NC"
     },
     {
       "slug": "john-matthews",
@@ -409,7 +427,71 @@
       "posRank": 23,
       "stateRank": 49,
       "stars": 3
+    },
+    {
+      "slug": "xander-edwards",
+      "name": "Xander Edwards",
+      "pos": "RB",
+      "classYear": 2028,
+      "school": "The Bolles School (Jacksonville, FL)",
+      "state": "FL",
+      "inState": true,
+      "rating": 91.63152173913043,
+      "natlRank": 108,
+      "posRank": 6,
+      "stateRank": 15,
+      "stars": 4,
+      "htWt": "6-1 / 205",
+      "skinny": "4★ RB · #108 natl · The Bolles School, FL"
+    },
+    {
+      "slug": "merrick-ham",
+      "name": "merrick-ham",
+      "pos": "EDGE",
+      "classYear": 2028,
+      "school": "Marietta (Marietta, GA)",
+      "state": "GA",
+      "inState": false,
+      "rating": 91.77934782608696,
+      "natlRank": 102,
+      "posRank": 13,
+      "stateRank": 14,
+      "stars": 4,
+      "htWt": "6-6 / 230",
+      "skinny": "4★ EDGE · #102 natl · Marietta, GA"
+    },
+    {
+      "slug": "armani-strong",
+      "name": "Armani Strong",
+      "pos": "WR",
+      "classYear": 2028,
+      "school": "Chaminade-Madonna Prep, FL",
+      "state": "FL",
+      "inState": true,
+      "rating": 90.17898550724637,
+      "natlRank": 209,
+      "posRank": 31,
+      "stateRank": 28,
+      "stars": 4,
+      "htWt": "6-1 / 180",
+      "skinny": "WR · 4★ · Miami, FL · #209 natl"
+    },
+    {
+      "slug": "joey-fleming",
+      "name": "Joey Fleming",
+      "pos": "IOL",
+      "classYear": 2028,
+      "school": "Huntsville (Huntsville, AL)",
+      "state": "AL",
+      "inState": false,
+      "rating": 93.97903225806452,
+      "natlRank": 22,
+      "posRank": 1,
+      "stateRank": 1,
+      "stars": 4,
+      "htWt": "6-5 / 275",
+      "skinny": "4★ IOL · #22 natl · Huntsville, AL"
     }
   ],
-  "updatedAt": "2026-06-28T23:52:37.923Z"
+  "updatedAt": "2026-07-20T03:48:04.596Z"
 }

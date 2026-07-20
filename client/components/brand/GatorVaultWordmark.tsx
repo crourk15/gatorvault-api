@@ -21,10 +21,10 @@ export function GatorVaultWordmark({
       role="img"
       aria-label="GatorVault"
     >
-      <text x="0" y="42" fontFamily="Inter, sans-serif" fontWeight="800" fontSize="42" fill="#0021A5">
+      <text x="0" y="42" fontFamily="Oswald, Arial Narrow, sans-serif" fontWeight="700" fontSize="42" fill="#0021A5">
         GATOR
       </text>
-      <text x="150" y="42" fontFamily="Inter, sans-serif" fontWeight="800" fontSize="42" fill="#0021A5">
+      <text x="150" y="42" fontFamily="Oswald, Arial Narrow, sans-serif" fontWeight="700" fontSize="42" fill="#0021A5">
         VAULT
       </text>
       <rect x="150" y="48" width="150" height="6" fill="#FA4616" rx="3" />
