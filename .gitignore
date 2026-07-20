@@ -33,3 +33,6 @@ server/data/x/autoposter-compose-angle-history.json
 server/data/autoposter/detectives-pile.json
 proof/
 .codemagic/
+.env.proof.local
+.cursor/secrets.local.env
+.env*.local
