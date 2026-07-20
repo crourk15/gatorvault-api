@@ -67,10 +67,10 @@ export function ClassTargetsPage({ year }: Props): React.ReactElement {
           </p>
 
           <section>
-            <h2 className="rh-panel-title">{year} Target Board</h2>
+            <h2 className="rh-panel-title">{year} targets Florida is chasing</h2>
             <p className="rh-muted">
-              UF discovery targets ranked by GatorVault priority (likelihood + fit). On3 RPM is market
-              context. Corner movement uses real 7-day GV snapshot deltas only.
+              Ranked by GatorVault priority (likelihood + fit). On3 RPM is market context. Corner
+              movement uses real 7-day GatorVault snapshot deltas only.
             </p>
             {data?.updatedAt ? (
               <p className="rh-muted">Updated {new Date(data.updatedAt).toLocaleString()}</p>

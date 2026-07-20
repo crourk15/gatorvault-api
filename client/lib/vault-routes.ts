@@ -26,26 +26,26 @@ export type VaultSectionId =
 
 /** Core vault pillars — sidebar primary + mobile bottom nav. */
 export const VAULT_PILLARS: { id: VaultSectionId; label: string; href: string; icon: string }[] = [
-  { id: 'home', label: 'Home', href: VAULT_PILLAR_ROUTES.home, icon: '🏠' },
-  { id: 'recruiting', label: 'Recruiting Hub', href: VAULT_PILLAR_ROUTES.recruiting, icon: '🎯' },
-  { id: 'futurecast', label: 'FutureCast', href: VAULT_PILLAR_ROUTES.futurecast, icon: '📈' },
-  { id: 'team', label: 'Team', href: VAULT_PILLAR_ROUTES.team, icon: '👥' },
-  { id: 'live-feed', label: 'GatorNation Live', href: VAULT_PILLAR_ROUTES.liveFeed, icon: '⚡' },
-  { id: 'schedule', label: 'Schedule', href: VAULT_PILLAR_ROUTES.schedule, icon: '🎟️' },
+  { id: 'home', label: 'Home', href: VAULT_PILLAR_ROUTES.home, icon: 'home' },
+  { id: 'recruiting', label: 'Recruiting Hub', href: VAULT_PILLAR_ROUTES.recruiting, icon: 'recruiting' },
+  { id: 'futurecast', label: 'FutureCast', href: VAULT_PILLAR_ROUTES.futurecast, icon: 'futurecast' },
+  { id: 'team', label: 'Team', href: VAULT_PILLAR_ROUTES.team, icon: 'team' },
+  { id: 'live-feed', label: 'GatorNation Live', href: VAULT_PILLAR_ROUTES.liveFeed, icon: 'live' },
+  { id: 'schedule', label: 'Schedule', href: VAULT_PILLAR_ROUTES.schedule, icon: 'schedule' },
 ];
 
 /** Secondary vault links — drawer/sidebar only. */
 export const VAULT_SECONDARY: { id: VaultSectionId; label: string; href: string; icon: string }[] = [
-  { id: 'film-room', label: 'Film Room', href: '/vault/film-room', icon: '📺' },
-  { id: 'game-week', label: 'Game Week', href: '/vault/game-week', icon: '🏈' },
-  { id: 'live-scores', label: 'Gators Live', href: '/vault/live-scores', icon: '🏈' },
-  { id: 'articles', label: 'Articles', href: '/vault/articles', icon: '📰' },
-  { id: 'community', label: 'Community', href: '/vault/community', icon: '💬' },
-  { id: 'game-zone', label: 'Game Zone', href: '/vault/game-zone/', icon: '🏆' },
-  { id: 'nil', label: 'NIL Tracker', href: '/vault/nil', icon: '💰' },
-  { id: 'podcasts', label: 'Podcasts', href: '/vault/live/podcasts/', icon: '🎙️' },
-  { id: 'alerts', label: 'My Alerts', href: '/vault/alerts', icon: '🔔' },
-  { id: 'apparel', label: 'Apparel', href: '/vault/apparel', icon: '👕' },
+  { id: 'film-room', label: 'Film Room', href: '/vault/film-room', icon: 'film' },
+  { id: 'game-week', label: 'Game Week', href: '/vault/game-week', icon: 'gameweek' },
+  { id: 'live-scores', label: 'Gators Live', href: '/vault/live-scores', icon: 'scores' },
+  { id: 'articles', label: 'Articles', href: '/vault/articles', icon: 'articles' },
+  { id: 'community', label: 'Community', href: '/vault/community', icon: 'community' },
+  { id: 'game-zone', label: 'Game Zone', href: '/vault/game-zone/', icon: 'gamezone' },
+  { id: 'nil', label: 'NIL Tracker', href: '/vault/nil', icon: 'nil' },
+  { id: 'podcasts', label: 'Podcasts', href: '/vault/live/podcasts/', icon: 'podcasts' },
+  { id: 'alerts', label: 'My Alerts', href: '/vault/alerts', icon: 'alerts' },
+  { id: 'apparel', label: 'Apparel', href: '/vault/apparel', icon: 'apparel' },
 ];
 
 /** Full sidebar = pillars + secondary (legacy export name). */

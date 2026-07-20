@@ -49,10 +49,23 @@ function sitePath(inVault: boolean, flatPath: string, vaultPath: string): string
 export function getAppMenuSections(inVault: boolean): AppMenuSection[] {
   const overflowPillars = TOP_NAV_ITEMS.filter((item) => !BOTTOM_NAV_IDS.has(item.id));
 
+  const MENU_ICON_BY_SECTION: Partial<Record<SiteSectionId, string>> = {
+    futurecast: 'futurecast',
+    schedule: 'schedule',
+    filmRoom: 'film',
+    gameWeek: 'gameweek',
+    liveScores: 'scores',
+    articles: 'articles',
+    community: 'community',
+    gameZone: 'gamezone',
+    nil: 'nil',
+  };
+
   const more: AppMenuItem[] = overflowPillars.map((item) => ({
     id: item.id,
     label: item.label,
     href: inVault ? VAULT_PATH_BY_SECTION[item.id] : item.href,
+    icon: MENU_ICON_BY_SECTION[item.id],
   }));
 
   const account: AppMenuItem[] = [
@@ -60,13 +73,13 @@ export function getAppMenuSections(inVault: boolean): AppMenuSection[] {
       id: 'membership',
       label: 'Membership & Account',
       href: sitePath(inVault, '/join/?mode=signin', '/vault/membership/'),
-      icon: '👤',
+      icon: 'account',
     },
     {
       id: 'alerts',
       label: 'My Alerts',
       href: sitePath(inVault, '/futurecast/alerts', '/vault/alerts'),
-      icon: '🔔',
+      icon: 'alerts',
     },
   ];
 
@@ -75,13 +88,13 @@ export function getAppMenuSections(inVault: boolean): AppMenuSection[] {
       id: 'podcasts',
       label: 'Podcasts',
       href: sitePath(inVault, SITE_ROUTES.gatorNationLive, '/vault/live/podcasts/'),
-      icon: '🎙️',
+      icon: 'podcasts',
     },
     {
       id: 'apparel',
       label: 'Shop & Apparel',
       href: sitePath(inVault, '/vault/apparel', '/vault/apparel'),
-      icon: '👕',
+      icon: 'apparel',
     },
   ];
 
@@ -90,7 +103,7 @@ export function getAppMenuSections(inVault: boolean): AppMenuSection[] {
       id: 'vault',
       label: 'Vault (Legacy)',
       href: '/vault',
-      icon: '🏛️',
+      icon: 'vault',
     });
   }
 

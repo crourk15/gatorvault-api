@@ -44,19 +44,19 @@ export function MovementIntelFeed(): React.ReactElement {
   return (
     <>
       <div className="rh-section-header">
-        <div className="rh-section-title">Movement Intel</div>
+        <div className="rh-section-title">Who&apos;s moving</div>
         <div className="rh-section-subtitle">
-          Fresh board traction for the {activeYear} class — commits, swings, and real visit heat.
+          Fresh board traction for the {activeYear} class — commits, swings, and visit heat.
         </div>
       </div>
       {loading ? (
         <div className="rh-hub-warming" role="status" aria-live="polite" aria-busy="true">
-          <UiWarming hint="Loading movement intel…" />
+          <UiWarming hint="Loading board movement…" />
         </div>
       ) : !items.length ? (
         <section className="rh-card" data-testid="rh-elite-movement-feed">
           <p className="rh-empty">
-            {error ? 'Could not load movement intel.' : 'No recent movement for this class yet.'}
+            {error ? 'Could not load board movement.' : 'No recent movement for this class yet.'}
           </p>
         </section>
       ) : (

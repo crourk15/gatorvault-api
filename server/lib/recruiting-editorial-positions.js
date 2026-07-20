@@ -1,8 +1,19 @@
 /**
  * 2028 allowlist profile fallbacks from target-board seed.
  * On3-synced recruiting store fields win for position (see allowlist-target-sync).
- * Board JSON is used only when On3 has not populated pos yet.
+ * Board JSON fills missing / weak placeholders (ATH, TBD) when a real board pos exists.
  */
+
+const WEAK_POS = new Set(['', 'ATH', 'TBD', 'N/A', 'NA', 'UNKNOWN', 'NONE']);
+
+function isWeakPosition(pos) {
+  return WEAK_POS.has(String(pos || '').trim().toUpperCase());
+}
+
+function normalizePos(pos) {
+  const p = String(pos || '').trim().toUpperCase();
+  return p || '';
+}
 const fs = require('fs');
 const path = require('path');
 const { isPlaceholderSchool } = require('./recruiting-placeholder-school');
@@ -85,7 +96,9 @@ function applyEditorialPositionToPlayer(player) {
   const editorial = getEditorialPosition(player.slug, player.classYear ?? player.class_year);
   if (!editorial?.pos) return player;
   const out = { ...player };
-  if (editorial.pos && !out.pos) {
+  const currentPos = normalizePos(out.pos || out.position);
+  // Upgrade empty / ATH / TBD placeholders when the board has a real position.
+  if (editorial.pos && isWeakPosition(currentPos)) {
     out.pos = editorial.pos;
     out.position = editorial.pos;
   }
@@ -117,22 +130,25 @@ function applyEditorialPositionToPlayer(player) {
   return out;
 }
 
-/** FutureCast board position — On3/recruiting store first; board seed is fallback only. */
+/** FutureCast board position — strong store/rank/seed first; board seed upgrades ATH. */
 function resolveFutureCastPosition({ slug, classYear, recruiting, seed, rank, model }) {
-  const storePos = String(
-    recruiting?.pos ||
-      recruiting?.position ||
-      rank?.position ||
-      seed?.pos ||
-      seed?.position ||
-      model?.position ||
-      ''
-  )
-    .trim()
-    .toUpperCase();
-  if (storePos) return storePos;
+  const candidates = [
+    recruiting?.pos || recruiting?.position,
+    rank?.position,
+    seed?.pos || seed?.position,
+    model?.position,
+  ];
+  for (const candidate of candidates) {
+    const pos = normalizePos(candidate);
+    if (pos && !isWeakPosition(pos)) return pos;
+  }
   const editorial = getEditorialPosition(slug, classYear);
-  return editorial?.pos || '';
+  if (editorial?.pos) return editorial.pos;
+  for (const candidate of candidates) {
+    const pos = normalizePos(candidate);
+    if (pos) return pos;
+  }
+  return '';
 }
 
 function listEditorial2028YoungerProspects() {
@@ -147,6 +163,7 @@ module.exports = {
   EDITORIAL_2028_YOUNGER_PROSPECTS,
   TARGET_BOARD_PATH,
   isEditorialPositionSlug,
+  isWeakPosition,
   getEditorialPosition,
   applyEditorialPositionToPlayer,
   resolveFutureCastPosition,

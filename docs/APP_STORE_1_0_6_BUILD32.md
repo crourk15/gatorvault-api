@@ -6,15 +6,18 @@
 
 1. **Home brand hero** — full-bleed **GatorVault** H1; slogan demoted; no inset command card
 2. **Product voice** — vault UI no longer says “Command Center” on Team / Recruiting / FutureCast / NIL heroes
-3. **Recruiting narrative** — hero frame is “Who Florida is chasing,” not a war-room dump title
+3. **Recruiting narrative** — hero + hub sections in fan voice (“Who Florida is chasing,” “Who’s moving,” “Biggest battles”)
 4. **Never-late stack** (already on API) — Unresolved Predictions → teaser identity → Lab radar (Cyion / Alderman path)
+5. **Brand typography** — Oswald + Source Sans 3 (Inter removed from vault tokens / wordmark)
+6. **Nav chrome** — sidebar + menu use SVG icons (no emoji IDs)
+7. **Intel depth** — On3 403 keeps last-good RPM; board pos upgrades ATH/TBD placeholders
+8. **Admin Hub** — embed panels labeled legacy with in-shell daily path first + load failure banner
 
-## Deferred (not blocking 32)
+## Remaining (ops / larger rewrite)
 
-- Full design-system CSS collapse (`*-elite.css` layers)
-- Sidebar emoji chrome cleanup
-- Admin Hub deep iframe rewrite
-- Autoposter G1–G4 operator sign-off checklist
+- Full design-system CSS layer collapse (`*-elite.css`) — non-blocking polish
+- Admin Hub: promote more iframe panels fully in-shell (alerts/monitoring/board)
+- Autoposter: human operator sign-off name/date after evidence re-run (see `ELITE_RECRUITING_INTEL_OPERATOR_SPEC.md`)
 
 ## iOS
 

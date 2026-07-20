@@ -110,9 +110,9 @@
       panels: [
         { id: 'daily', label: 'Daily Summary', inline: true },
         { id: 'unresolved', label: 'Unresolved Predictions', inline: true },
-        { id: 'alerts', label: 'Full Alerts', embed: 'recruiting-alerts' },
-        { id: 'monitoring', label: 'Monitoring', embed: 'monitoring' },
-        { id: 'vault-grades', label: 'Vault Grades Manager', inline: true }
+        { id: 'vault-grades', label: 'Vault Grades Manager', inline: true },
+        { id: 'alerts', label: 'Full Alerts (legacy)', embed: 'recruiting-alerts' },
+        { id: 'monitoring', label: 'Monitoring (legacy)', embed: 'monitoring' }
       ]
     },
     {
@@ -535,7 +535,18 @@
     }
   }
 
+  function ensureEmbedNotice(panelEl) {
+    if (!panelEl || panelEl.querySelector('.hub-embed-notice')) return;
+    var notice = document.createElement('div');
+    notice.className = 'hub-embed-notice';
+    notice.setAttribute('role', 'note');
+    notice.textContent =
+      'Legacy console embed — prefer Daily Summary / in-shell panels for the daily path. Full consoles stay available as an escape hatch.';
+    panelEl.insertBefore(notice, panelEl.firstChild);
+  }
+
   function loadIframe(panelEl, src) {
+    ensureEmbedNotice(panelEl);
     var iframe = panelEl.querySelector('iframe');
     if (!iframe) {
       iframe = document.createElement('iframe');
@@ -552,6 +563,7 @@
       iframe.src = fullSrc;
     }
     iframe.onload = function () {
+      showApiBanner(null);
       postPinToIframe(iframe);
       var attempts = 0;
       var timer = setInterval(function () {
@@ -559,6 +571,9 @@
         attempts += 1;
         if (attempts >= 8) clearInterval(timer);
       }, 250);
+    };
+    iframe.onerror = function () {
+      showApiBanner('Embedded admin panel failed to load. Use Daily Summary or refresh.');
     };
     postPinToIframe(iframe);
   }

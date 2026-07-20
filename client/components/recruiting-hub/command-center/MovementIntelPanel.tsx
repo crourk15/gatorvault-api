@@ -65,10 +65,10 @@ export function MovementIntelPanel(): React.ReactElement {
 
   return (
     <ModuleShell
-      title="Movement Intel — Risers, Fallers, Volatile"
+      title="Who's moving — Risers, Fallers, Volatile"
       action={
         <a href="/vault/recruiting/movement" className="rh-cc-link">
-          View full Movement Intel →
+          See all board movement →
         </a>
       }
       testId="rh-cc-movement-intel"

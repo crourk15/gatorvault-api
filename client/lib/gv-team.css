@@ -98,7 +98,7 @@
   letter-spacing: 0.08em;
   color: #64748b;
   margin: var(--gv-team-space-5) 0 var(--gv-team-space-3);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Source Sans 3', sans-serif;
 }
 
 .gv-team-subhdr:first-child,

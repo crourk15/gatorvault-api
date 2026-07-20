@@ -39,8 +39,8 @@ export function DeepDiveTools(): React.ReactElement {
   return (
     <section className="rh-deep-dive rh-frame" data-testid="rh-deep-dive">
       <div className="rh-section-head">
-        <h2 className="rh-section-title">Deep-Dive Tools</h2>
-        <p className="rh-section-sub">Command-center utilities — not just links.</p>
+        <h2 className="rh-section-title">More recruiting tools</h2>
+        <p className="rh-section-sub">Depth, scouting, and board resources in one place.</p>
       </div>
       <div className="rh-deep-dive__grid">
         {TOOLS.map((tool) => (

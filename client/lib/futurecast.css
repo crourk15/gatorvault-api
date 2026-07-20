@@ -293,7 +293,7 @@
 }
 
 .fc-profile-header__name {
-  font-family: Inter, sans-serif;
+  font-family: Source Sans 3, sans-serif;
   font-size: clamp(1.75rem, 5vw, 2.25rem);
   font-weight: 800;
   letter-spacing: -0.01em;
@@ -440,7 +440,7 @@
 }
 
 .fc-profile-section h2 {
-  font-family: Inter, sans-serif;
+  font-family: Source Sans 3, sans-serif;
   font-size: 1rem;
   font-weight: 600;
   color: var(--gv-blue, #0021a5);
@@ -2342,7 +2342,7 @@
 }
 
 .fc-overview-title {
-  font-family: Inter, sans-serif;
+  font-family: Source Sans 3, sans-serif;
   font-size: 1rem;
   font-weight: 600;
   color: var(--gv-blue, #0021a5);

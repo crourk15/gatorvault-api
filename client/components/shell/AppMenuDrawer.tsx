@@ -6,6 +6,7 @@ import { usePathname } from '@/lib/use-pathname';
 import { getAppMenuSections } from '@/lib/app-menu-routes';
 import { isVaultPath } from '@/lib/vault-routes';
 import { useAppMenu } from '@/components/shell/AppMenuContext';
+import { PremiumNavIcon, isPremiumNavIconId } from '@/components/shell/PremiumNavIcons';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 
 export function AppMenuDrawer({ forceVaultRoutes = false }: { forceVaultRoutes?: boolean }): React.ReactElement {
@@ -61,7 +62,11 @@ export function AppMenuDrawer({ forceVaultRoutes = false }: { forceVaultRoutes?:
                     <VaultNavLink href={item.href} className="gv-app-menu__link" onClick={closeMenu}>
                       {item.icon ? (
                         <span className="gv-app-menu__link-icon" aria-hidden="true">
-                          {item.icon}
+                          {isPremiumNavIconId(item.icon) ? (
+                            <PremiumNavIcon id={item.icon} />
+                          ) : (
+                            item.icon
+                          )}
                         </span>
                       ) : null}
                       <span>{item.label}</span>

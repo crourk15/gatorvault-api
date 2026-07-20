@@ -122,7 +122,7 @@ export function RecruitingHubHero({
             </div>
 
             <div className="gv-rh-hero__widget">
-              <p className="gv-rh-hero__widget-label">Heat Check</p>
+              <p className="gv-rh-hero__widget-label">Who&apos;s heating up</p>
               <p className="gv-rh-hero__widget-value">{sparkPct}% volatility</p>
               <div className="gv-rh-hero__sparkline" aria-label={`${windowDays}-day volatility`}>
                 {Array.from({ length: bars }, (_, i) => (

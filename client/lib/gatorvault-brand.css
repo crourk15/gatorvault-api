@@ -28,7 +28,9 @@
   --gv-gradient-momentum: linear-gradient(90deg, #fa4616 0%, #facc15 100%);
 
   /* TYPOGRAPHY */
-  --gv-font: 'Inter', system-ui, sans-serif;
+  --gv-font-display: 'Oswald', 'Arial Narrow', sans-serif;
+  --gv-font-body: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  --gv-font: var(--gv-font-body);
   --gv-text-h1: 32px;
   --gv-text-h2: 24px;
   --gv-text-h3: 20px;

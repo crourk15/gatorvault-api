@@ -49,13 +49,28 @@ Related live flags (existing code): `X_AUTOPOST_PR789_ANGLE_GOLDEN_LIVE`, `X_AUT
 
 ## Operator sign-off checklist
 
-- [ ] Executive truth table reviewed with engineering
-- [ ] G1-G4 evidence attached (probe JSON, telemetry samples, test run IDs)
-- [ ] Golden slug matrix PASS (six known slugs plus regression spot checks)
-- [ ] Forbidden paths table reviewed
+Automated evidence: `node server/scripts/operator-signoff-evidence.js` → `server/data/ops/operator-signoff-evidence.json`.
+
+### Engineering evidence (re-run before prod flip)
+
+- [x] G1–G4 code gates present (`detectives-elite-compose` path wired)
+- [x] Golden slug matrix A–D covered by local evidence script
+- [ ] Fresh evidence JSON attached from staging composeProbe (re-run on deploy host)
+- [ ] Forbidden paths table reviewed with engineering
 - [ ] Misroute handling confirmed: archive/block before delete
-- [ ] Feature flag state documented for prod and staging
-- [ ] Sign-off name, date, environment
+
+### Production flag + human sign-off
+
+| Env | Flag | Expected |
+| --- | --- | --- |
+| Staging | `X_AUTOPOST_PR789_ONLY_RECRUITING` | `true` while validating |
+| Prod | `X_AUTOPOST_PR789_ONLY_RECRUITING` | `true` only after staging PASS |
+
+- [ ] Feature flag state confirmed for prod and staging (Render env)
+- [ ] Executive truth table reviewed with engineering
+- [ ] Sign-off name: _______________
+- [ ] Sign-off date: _______________
+- [ ] Environment signed: staging / prod
 
 ---
 

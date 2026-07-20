@@ -58,6 +58,17 @@ test('applyEditorialPositionToPlayer fills missing pos from board seed', () => {
   assert.equal(out.state, 'GA');
 });
 
+test('applyEditorialPositionToPlayer upgrades ATH placeholder from board seed', () => {
+  const out = applyEditorialPositionToPlayer({
+    slug: 'malakhi-dudley',
+    classYear: 2028,
+    pos: 'ATH',
+    position: 'ATH',
+  });
+  assert.equal(out.pos, 'OT');
+  assert.equal(out.position, 'OT');
+});
+
 test('applyEditorialPositionToPlayer does not override On3-synced pos', () => {
   const out = applyEditorialPositionToPlayer({
     slug: 'malakhi-dudley',
@@ -102,4 +113,16 @@ test('resolveFutureCastPosition falls back to board seed when store pos missing'
     model: null,
   });
   assert.equal(pos, 'TE');
+});
+
+test('resolveFutureCastPosition upgrades ATH store pos from board seed', () => {
+  const pos = resolveFutureCastPosition({
+    slug: 'malakhi-dudley',
+    classYear: 2028,
+    recruiting: { pos: 'ATH' },
+    seed: { pos: 'ATH' },
+    rank: null,
+    model: null,
+  });
+  assert.equal(pos, 'OT');
 });

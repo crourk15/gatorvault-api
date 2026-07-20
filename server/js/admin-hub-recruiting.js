@@ -25,7 +25,8 @@
       + '<p class="hub-dash-sub">Recent alerts, ingest health, and safe pipeline actions</p></div>'
       + '<div class="hub-btn-row">'
       + '<button type="button" class="hub-btn secondary" id="hub-rh-refresh">Refresh</button>'
-      + '<button type="button" class="hub-btn secondary" id="hub-rh-full">Full Alerts</button>'
+      + '<button type="button" class="hub-btn secondary" id="hub-rh-full">Full Alerts (legacy)</button>'
+      + '<button type="button" class="hub-btn secondary" id="hub-rh-mon">Monitoring (legacy)</button>'
       + '</div></div>'
       + '<div id="hub-rh-loading" class="hub-dash-loading">Loading recruiting status...</div>'
       + '<div id="hub-rh-body" class="hidden"></div>'
@@ -38,6 +39,9 @@
 
     document.getElementById('hub-rh-full').addEventListener('click', function () {
       onNavigate('#recruiting/alerts');
+    });
+    document.getElementById('hub-rh-mon').addEventListener('click', function () {
+      onNavigate('#recruiting/monitoring');
     });
     document.getElementById('hub-rh-refresh').addEventListener('click', load);
 

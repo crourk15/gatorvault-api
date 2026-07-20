@@ -100,20 +100,20 @@ export function BattleBoard(): React.ReactElement {
   return (
     <>
       <div className="rh-section-header">
-        <div className="rh-section-title">Battle Board</div>
+        <div className="rh-section-title">Biggest battles</div>
         <div className="rh-section-subtitle">
-          {activeYear} class — confirmed On3 UF RPM vs competitor boards only (no estimated %).
+          {activeYear} class — Florida vs the field on confirmed On3 UF RPM (no estimated %).
         </div>
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-battle-board" aria-hidden="true" />
       ) : !data ? (
         <section className="rh-card" data-testid="rh-elite-battle-board">
-          <p className="rh-empty">{error ? 'Could not load battle board.' : 'Battle board unavailable.'}</p>
+          <p className="rh-empty">{error ? 'Could not load battles.' : 'Battles unavailable right now.'}</p>
         </section>
       ) : !data.length ? (
         <section className="rh-card" data-testid="rh-elite-battle-board">
-          <p className="rh-empty">No battle board targets yet.</p>
+          <p className="rh-empty">No close battles for this class yet.</p>
         </section>
       ) : (
         <div className="rh-battle-board-grid" data-testid="rh-elite-battle-board">
