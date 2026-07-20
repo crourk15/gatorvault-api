@@ -15,8 +15,8 @@ export function HomePremiumHero(): React.ReactElement {
 
       <div className="uf-premium-hero__inner uf-premium-hero__inner--fade-in">
         <span className="uf-premium-hero__accent" aria-hidden="true" />
-        <h1 className="uf-premium-hero__title">Only Gators Get Out Alive.</h1>
-        <p className="uf-premium-hero__sub">UF football. Recruiting. FutureCast. All here.</p>
+        <h1 className="uf-premium-hero__title">GatorVault</h1>
+        <p className="uf-premium-hero__sub">Only Gators Get Out Alive. UF football. Recruiting. FutureCast.</p>
         <div className="uf-premium-hero__ctas">
           <a href={VAULT_PILLAR_ROUTES.recruiting} className="uf-premium-cta uf-premium-cta--primary">
             Recruiting Hub
