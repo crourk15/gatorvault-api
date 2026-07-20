@@ -98,11 +98,16 @@ export function AccountMembershipPage(): React.ReactElement {
   const [catalog, setCatalog] = useState<SubscriptionCatalog | null>(null);
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Elite: never block first paint on network. Guest teaser is the default shell.
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(true);
   const [billingReady, setBillingReady] = useState(false);
   const [purchaseBusy, setPurchaseBusy] = useState<string | null>(null);
   const [needsReauth, setNeedsReauth] = useState(false);
-  const [guestMode, setGuestMode] = useState(false);
+  const [guestMode, setGuestMode] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return !loadSession()?.token;
+  });
   const native = isNativeApp();
   const localSession = typeof window !== 'undefined' ? loadSession() : null;
 
@@ -111,7 +116,7 @@ export function AccountMembershipPage(): React.ReactElement {
       const el = document.getElementById("delete-account");
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  }, [loading]);
+  }, [refreshing]);
 
   const loadMembership = useCallback(async () => {
     const session = loadSession();
@@ -119,11 +124,13 @@ export function AccountMembershipPage(): React.ReactElement {
       // Elite public surface: show tiers + sign-in CTA instead of a blank redirect shell.
       setGuestMode(true);
       setLoading(false);
+      setRefreshing(false);
       return;
     }
 
     setGuestMode(false);
-    setLoading(true);
+    setLoading(false);
+    setRefreshing(true);
     setError(null);
     setNeedsReauth(false);
 
@@ -169,6 +176,7 @@ export function AccountMembershipPage(): React.ReactElement {
     } catch (err) {
       setError(membershipLoadErrorMessage(err));
     } finally {
+      setRefreshing(false);
       setLoading(false);
     }
   }, [native]);
@@ -178,13 +186,13 @@ export function AccountMembershipPage(): React.ReactElement {
   }, [loadMembership]);
 
   useEffect(() => {
-    if (typeof window === "undefined" || loading) return;
+    if (typeof window === "undefined" || refreshing) return;
     const params = new URLSearchParams(window.location.search);
     const upgrade = params.get("upgrade");
     if (!upgrade) return;
     const el = document.querySelector(`[data-membership-tier="${upgrade}"]`);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [loading]);
+  }, [refreshing]);
 
   async function refreshStatus(): Promise<void> {
     const st = await fetchSubscriptionStatus();
@@ -252,17 +260,6 @@ export function AccountMembershipPage(): React.ReactElement {
     }
   }
 
-  if (loading) {
-    return (
-      <div className="gv-membership" data-testid="vault-membership">
-        <h1 className="gv-membership__title">Membership &amp; account</h1>
-        <p className="gv-membership__sub">Locker Room and Film Room — recruiting, FutureCast, and film.</p>
-        <MembershipTierMarketing />
-        <p className="gv-membership__loading">Loading your account…</p>
-      </div>
-    );
-  }
-
   if (guestMode) {
     return (
       <div className="gv-membership" data-testid="vault-membership">
@@ -299,6 +296,11 @@ export function AccountMembershipPage(): React.ReactElement {
       <p className="gv-membership__sub">
         View your Insider tier, trial status, and billing options.
       </p>
+      {refreshing && !status ? (
+        <p className="gv-membership__meta" role="status" aria-live="polite">
+          Refreshing membership…
+        </p>
+      ) : null}
 
       {error ? (
         <div className="gv-membership__error" role="alert">

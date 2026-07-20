@@ -21,6 +21,7 @@ import {
   type CommunityThread,
   type LiveRoom,
 } from '@/lib/community-api';
+import { buildSeedCommunityPageData } from '@/lib/community-hub-seed';
 import { fetchWithWarmPoll, userFacingLoadError } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
 import {
@@ -32,6 +33,10 @@ import {
 } from '@/lib/community-ugc';
 import { loadSession } from '@/lib/auth-api';
 import { UiEmpty, UiError, UiWarming } from '@/components/site/UiMessage';
+
+const SEED_COMMUNITY = buildSeedCommunityPageData();
+const HAS_COMMUNITY_SEED =
+  SEED_COMMUNITY.categories.length > 0 || SEED_COMMUNITY.threads.length > 0;
 
 type SortId = 'trending' | 'recent' | 'active' | 'replies';
 
@@ -68,14 +73,20 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const { pushToast } = useCommunityToast();
   const [sort, setSort] = useState<SortId>('trending');
   const [category, setCategory] = useState('');
-  const [categories, setCategories] = useState<CommunityCategory[]>([]);
-  const [threads, setThreads] = useState<CommunityThread[]>([]);
-  const [pulse, setPulse] = useState<CommunityPulse | null>(null);
-  const [rooms, setRooms] = useState<LiveRoom[]>([]);
+  const [categories, setCategories] = useState<CommunityCategory[]>(
+    HAS_COMMUNITY_SEED ? SEED_COMMUNITY.categories : []
+  );
+  const [threads, setThreads] = useState<CommunityThread[]>(
+    HAS_COMMUNITY_SEED ? SEED_COMMUNITY.threads : []
+  );
+  const [pulse, setPulse] = useState<CommunityPulse | null>(
+    HAS_COMMUNITY_SEED ? SEED_COMMUNITY.pulse : null
+  );
+  const [rooms, setRooms] = useState<LiveRoom[]>(HAS_COMMUNITY_SEED ? SEED_COMMUNITY.rooms : []);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedThread, setSelectedThread] = useState<CommunityThread | null>(null);
   const [selectedPosts, setSelectedPosts] = useState<CommunityPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!HAS_COMMUNITY_SEED);
   const [warming, setWarming] = useState(false);
   const [threadLoading, setThreadLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -112,22 +123,28 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   }, [pushToast, viewerEmail]);
 
   const load = useCallback(async () => {
-    setLoading(true);
+    if (!HAS_COMMUNITY_SEED) {
+      setLoading(true);
+      setError(null);
+    }
     setWarming(true);
-    setError(null);
     try {
       const data = await fetchCommunityPageData({
         sort,
         category: category || undefined,
         limit: 40,
       });
-      setCategories(data.categories);
+      setCategories(data.categories.length ? data.categories : SEED_COMMUNITY.categories);
       setThreads(data.threads);
       setPulse(data.pulse);
       setRooms(data.rooms);
+      setError(null);
       if (data.categories.length && !newCategory) setNewCategory(data.categories[0].slug);
     } catch (err) {
-      setError(userFacingLoadError(err, 'Could not load community.'));
+      if (!HAS_COMMUNITY_SEED) {
+        setError(userFacingLoadError(err, 'Could not load community.'));
+      }
+      // Keep seed shell when live community fetch fails.
     } finally {
       setLoading(false);
       setWarming(false);
@@ -404,17 +421,17 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             </div>
           )}
 
-          {loading && (
+          {loading && !HAS_COMMUNITY_SEED && (
             <div className="gv-community__loading" role="status" aria-live="polite" aria-busy="true">
               {warming ? <UiWarming hint="Loading threads and community pulse." /> : null}
               <CommunityPageSkeleton />
             </div>
           )}
-          {error && !loading && (
+          {error && !loading && !HAS_COMMUNITY_SEED && (
             <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
           )}
 
-          {!loading && !error && selectedId && threadLoading && (
+          {(HAS_COMMUNITY_SEED || (!loading && !error)) && selectedId && threadLoading && (
             <div className="gv-community__thread-detail">
               <button
                 type="button"
@@ -434,7 +451,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             </div>
           )}
 
-          {!loading && !error && selectedId && !selectedThread && !threadLoading && (
+          {(HAS_COMMUNITY_SEED || (!loading && !error)) && selectedId && !selectedThread && !threadLoading && (
             <div className="gv-community__thread-detail">
               <button
                 type="button"
@@ -450,7 +467,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             </div>
           )}
 
-          {!loading && !error && selectedId && selectedThread && (
+          {(HAS_COMMUNITY_SEED || (!loading && !error)) && selectedId && selectedThread && (
             <div className="gv-community__thread-detail">
               <button
                 type="button"
@@ -572,7 +589,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             </div>
           )}
 
-          {!loading && !error && !selectedId && (
+          {(HAS_COMMUNITY_SEED || (!loading && !error)) && !selectedId && (
             <PageSection title="Threads">
               <ul className="gv-community__threads">
                 {threads.map((t) => {

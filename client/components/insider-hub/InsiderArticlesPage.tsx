@@ -7,6 +7,7 @@ import {
   fetchInsiderRelated,
   type InsiderArticle,
 } from '@/lib/insider-api';
+import { buildSeedArticlesHub } from '@/lib/articles-hub-seed';
 import {
   insiderCategories,
   type InsiderAuthor,
@@ -17,6 +18,9 @@ import {
 import { articleRoute } from '@/lib/site-routes';
 import { vaultArticleRoute } from '@/lib/vault-route-map';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
+
+const SEED_ARTICLES = buildSeedArticlesHub();
+const HAS_ARTICLES_SEED = SEED_ARTICLES.articles.length > 0;
 
 function articleHref(articleId: string, inVault: boolean): string {
   return inVault ? vaultArticleRoute(articleId) : articleRoute(articleId);
@@ -340,34 +344,55 @@ export function InsiderArticlesPage({
 }: InsiderArticlesPageProps = {}): React.ReactElement {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!HAS_ARTICLES_SEED);
   const [error, setError] = useState<string | null>(null);
-  const [articles, setArticles] = useState<InsiderArticle[]>([]);
-  const [featured, setFeatured] = useState<InsiderArticle | null>(null);
-  const [storylines, setStorylines] = useState<InsiderStoryline[]>([]);
-  const [authors, setAuthors] = useState<InsiderAuthor[]>([]);
-  const [heatIndex, setHeatIndex] = useState<InsiderHeatRow[]>([]);
-  const [tags, setTags] = useState<InsiderTag[]>([]);
+  const [articles, setArticles] = useState<InsiderArticle[]>(
+    HAS_ARTICLES_SEED ? SEED_ARTICLES.articles : []
+  );
+  const [featured, setFeatured] = useState<InsiderArticle | null>(
+    HAS_ARTICLES_SEED
+      ? (initialArticleId
+          ? SEED_ARTICLES.articles.find((a) => a.id === initialArticleId) || SEED_ARTICLES.featured
+          : SEED_ARTICLES.featured)
+      : null
+  );
+  const [storylines, setStorylines] = useState<InsiderStoryline[]>(
+    HAS_ARTICLES_SEED ? SEED_ARTICLES.storylines : []
+  );
+  const [authors, setAuthors] = useState<InsiderAuthor[]>(
+    HAS_ARTICLES_SEED ? SEED_ARTICLES.authors : []
+  );
+  const [heatIndex, setHeatIndex] = useState<InsiderHeatRow[]>(
+    HAS_ARTICLES_SEED ? SEED_ARTICLES.heatIndex : []
+  );
+  const [tags, setTags] = useState<InsiderTag[]>(HAS_ARTICLES_SEED ? SEED_ARTICLES.tags : []);
   const [related, setRelated] = useState<InsiderArticle[]>([]);
 
   const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    if (!HAS_ARTICLES_SEED) {
+      setLoading(true);
+      setError(null);
+    }
     try {
       const bundle = await fetchInsiderHubBundle();
-      setArticles(bundle.articles);
-      const feat =
-        (initialArticleId
-          ? bundle.articles.find((a) => a.id === initialArticleId)
-          : null) ??
-        bundle.featured;
-      setFeatured(feat);
-      setStorylines(bundle.storylines);
-      setAuthors(bundle.authors);
-      setHeatIndex(bundle.heatIndex);
-      setTags(bundle.tags);
+      if (bundle.articles.length) {
+        setArticles(bundle.articles);
+        const feat =
+          (initialArticleId
+            ? bundle.articles.find((a) => a.id === initialArticleId)
+            : null) ??
+          bundle.featured;
+        setFeatured(feat);
+        setStorylines(bundle.storylines);
+        setAuthors(bundle.authors);
+        setHeatIndex(bundle.heatIndex);
+        setTags(bundle.tags);
+        setError(null);
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load Insider articles.');
+      if (!HAS_ARTICLES_SEED) {
+        setError(err instanceof Error ? err.message : 'Could not load Insider articles.');
+      }
     } finally {
       setLoading(false);
     }
@@ -408,7 +433,7 @@ export function InsiderArticlesPage({
     setActiveCategory('All');
   }, []);
 
-  if (loading) {
+  if (loading && !HAS_ARTICLES_SEED) {
     return (
       <div className="insider-page rh-page rh-page--elite mobile-app gv-page" data-testid="insider-articles-page">
         <div className="insider-page__frame">
@@ -418,7 +443,7 @@ export function InsiderArticlesPage({
     );
   }
 
-  if (error) {
+  if (error && !HAS_ARTICLES_SEED) {
     return (
       <div className="insider-page rh-page rh-page--elite mobile-app gv-page" data-testid="insider-articles-page">
         <div className="insider-page__frame">

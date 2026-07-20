@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchBettingLines, type BettingGame } from '@/lib/betting-api';
+import { buildSeedNextGame } from '@/lib/game-zone-hub-seed';
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 import { UiError } from '@/components/site/UiMessage';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
@@ -98,9 +99,12 @@ function clampScore(n: number): number {
   return Math.max(0, Math.min(99, Math.round(n)));
 }
 
+const SEED_NEXT_GAME = buildSeedNextGame();
+const HAS_GAME_ZONE_SEED = Boolean(SEED_NEXT_GAME);
+
 export function VaultGameZonePage(): React.ReactElement {
-  const [nextGame, setNextGame] = useState<BettingGame | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [nextGame, setNextGame] = useState<BettingGame | null>(SEED_NEXT_GAME);
+  const [loading, setLoading] = useState(!HAS_GAME_ZONE_SEED);
   const [error, setError] = useState<string | null>(null);
   const [ufScore, setUfScore] = useState('31');
   const [oppScore, setOppScore] = useState('10');
@@ -120,13 +124,22 @@ export function VaultGameZonePage(): React.ReactElement {
   const film = schedule?.film || schedule?.scoutingReport || null;
 
   const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    if (!HAS_GAME_ZONE_SEED) {
+      setLoading(true);
+      setError(null);
+    }
     try {
       const data = await fetchBettingLines();
-      setNextGame(data.nextGame ?? null);
+      if (data.nextGame) {
+        setNextGame(data.nextGame);
+        setError(null);
+      } else if (!HAS_GAME_ZONE_SEED) {
+        setNextGame(null);
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load the next game.');
+      if (!HAS_GAME_ZONE_SEED) {
+        setError(err instanceof Error ? err.message : 'Could not load the next game.');
+      }
     } finally {
       setLoading(false);
     }
@@ -206,19 +219,19 @@ export function VaultGameZonePage(): React.ReactElement {
     >
       <div className="gv-gz__atmosphere" aria-hidden="true" />
 
-      {loading && (
+      {loading && !HAS_GAME_ZONE_SEED && (
         <div className="gv-gz__status">
           <p>Loading Swamp Eve…</p>
         </div>
       )}
 
-      {error && !loading && (
+      {error && !loading && !HAS_GAME_ZONE_SEED && (
         <div className="gv-gz__status">
           <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
         </div>
       )}
 
-      {!loading && !error && (
+      {(HAS_GAME_ZONE_SEED || (!loading && !error)) && nextGame && (
         <>
           <section className="gv-gz__stage" aria-label="Swamp Eve">
             <p className="gv-gz__brand">GatorVault</p>

@@ -53,13 +53,27 @@ async function warmApi() {
   console.warn('[deploy-proof] API warm incomplete — proof may show cold-start failures');
 }
 
+function isRemoteBase(url) {
+  try {
+    const u = new URL(url);
+    return u.protocol === 'https:' || (u.hostname !== '127.0.0.1' && u.hostname !== 'localhost');
+  } catch {
+    return false;
+  }
+}
+
 function pingBase() {
   return new Promise((resolve) => {
-    const req = http.get(`${BASE}/vault/`, { timeout: 5000 }, (res) => {
+    const lib = BASE.startsWith('https:') ? https : http;
+    const req = lib.get(`${BASE}/vault/`, { timeout: 10_000 }, (res) => {
       res.resume();
       resolve(res.statusCode >= 200 && res.statusCode < 400);
     });
     req.on('error', () => resolve(false));
+    req.on('timeout', () => {
+      req.destroy();
+      resolve(false);
+    });
   });
 }
 
@@ -92,6 +106,15 @@ function killListenersOnPort(port) {
 }
 
 async function ensureServer() {
+  // Production / remote HTTPS — never kill or spawn local static server.
+  if (isRemoteBase(BASE)) {
+    if (!(await pingBase())) {
+      throw new Error(`remote PROOF_BASE not reachable: ${BASE}`);
+    }
+    console.log(`[deploy-proof] using remote proof base ${BASE}`);
+    return null;
+  }
+
   const port = Number(new URL(BASE).port || 8787);
   // Deploy proof always restarts so the just-built server/ tree is what we verify.
   if (await pingBase()) {

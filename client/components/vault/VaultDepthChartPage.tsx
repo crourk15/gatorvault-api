@@ -8,6 +8,7 @@ import {
   type DepthPhase,
 } from '@/lib/depth-chart-data';
 import { fetchRosterPlayers, type RosterPlayer } from '@/lib/roster-api';
+import { TEAM_HUB_SEED } from '@/lib/team-hub-seed';
 import { TEAM_ERAS } from '@/lib/team-history-data';
 import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
@@ -17,6 +18,23 @@ function statusLabel(status: string): string {
   if (status === 'battle') return '🟡 Battle';
   return '🔴 Watch';
 }
+
+function seedRosterPlayers(): RosterPlayer[] {
+  return (TEAM_HUB_SEED.roster || []).map((p) => ({
+    id: p.id,
+    slug: p.slug || p.id,
+    name: p.name,
+    pos: p.position,
+    position: p.position,
+    positionGroup: p.positionGroup ?? null,
+    year: p.classYear,
+    class: p.classYear,
+    hometown: p.hometown,
+  }));
+}
+
+const SEED_ROSTER = seedRosterPlayers();
+const HAS_SEED = SEED_ROSTER.length > 0;
 
 function DepthCard({ row }: { row: DepthChartRow }): React.ReactElement {
   return (
@@ -41,20 +59,30 @@ function DepthCard({ row }: { row: DepthChartRow }): React.ReactElement {
 
 export function VaultDepthChartPage(): React.ReactElement {
   const [phase, setPhase] = useState<DepthPhase>('off');
-  const [roster, setRoster] = useState<RosterPlayer[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [roster, setRoster] = useState<RosterPlayer[]>(HAS_SEED ? SEED_ROSTER : []);
+  const [loading, setLoading] = useState(!HAS_SEED);
   const [error, setError] = useState<string | null>(null);
   const [expandedEra, setExpandedEra] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    if (!HAS_SEED) {
+      setLoading(true);
+      setError(null);
+    }
     try {
       const players = await fetchRosterPlayers();
-      setRoster(players);
+      if (players.length) {
+        setRoster(players);
+        setError(null);
+      } else if (!HAS_SEED) {
+        setRoster([]);
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load roster.');
-      setRoster([]);
+      if (!HAS_SEED) {
+        setError(err instanceof Error ? err.message : 'Could not load roster.');
+        setRoster([]);
+      }
+      // Seeded first paint stays up when live roster fetch fails.
     } finally {
       setLoading(false);
     }
@@ -126,14 +154,14 @@ export function VaultDepthChartPage(): React.ReactElement {
 
       <section className="gv-depth-chart__roster">
         <h2 className="gv-vault-alerts__section-title">Spring Roster</h2>
-        {loading && <p className="gv-page-status">Loading roster…</p>}
-        {error && !loading && (
+        {loading && !HAS_SEED && <p className="gv-page-status">Loading roster…</p>}
+        {error && !loading && !HAS_SEED && (
           <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
         )}
         {!loading && !error && roster.length === 0 && (
           <UiEmpty message="No roster players loaded yet." hint="Check /api/roster/players on the API." />
         )}
-        {!loading && !error && roster.length > 0 && (
+        {roster.length > 0 && (
           <div className="gv-roster-grid">
             {roster.slice(0, 60).map((p) => (
               <a
