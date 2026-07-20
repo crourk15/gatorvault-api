@@ -82,6 +82,23 @@ function safeEnqueueUnresolvedPrediction(input = {}) {
     } catch {
       /* ops optional */
     }
+    // Pass 2: try to name the kid from On3 pageProps (non-blocking for ingest).
+    if (result.item?.url && process.env.GV_TEASER_IDENTITY_ENRICH !== 'false') {
+      try {
+        const { enrichUnresolvedPredictionItem } = require('./teaser-rpm-identity');
+        const autoResolve = process.env.GV_TEASER_IDENTITY_AUTO_RESOLVE !== 'false';
+        Promise.resolve()
+          .then(() =>
+            enrichUnresolvedPredictionItem(result.item, {
+              autoResolve,
+              minConfidence: process.env.GV_TEASER_IDENTITY_MIN_CONFIDENCE || 'high',
+            })
+          )
+          .catch(() => {});
+      } catch {
+        /* optional */
+      }
+    }
     return { enqueued: true, created: result.created, item: result.item };
   } catch (err) {
     return { enqueued: false, error: err.message };

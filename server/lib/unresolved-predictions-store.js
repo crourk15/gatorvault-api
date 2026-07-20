@@ -38,6 +38,8 @@ function migrateIfNeeded() {
   if (path.resolve(STORE_PATH) === path.resolve(BUNDLE_PATH)) return;
   if (fs.existsSync(STORE_PATH)) return;
   if (!fs.existsSync(BUNDLE_PATH)) return;
+  // Only auto-migrate into Render durable storage — never into test/override paths.
+  if (!String(STORE_PATH).startsWith('/var/data/')) return;
   try {
     fs.mkdirSync(path.dirname(STORE_PATH), { recursive: true });
     fs.copyFileSync(BUNDLE_PATH, STORE_PATH);
@@ -131,6 +133,11 @@ function enqueue(input = {}) {
     playerSlugHint: input.playerSlugHint ? String(input.playerSlugHint).toLowerCase() : null,
     classYearHint: input.classYearHint != null ? Number(input.classYearHint) || null : null,
     posHint: input.posHint ? String(input.posHint) : null,
+    suggestedSlug: input.suggestedSlug ? String(input.suggestedSlug).toLowerCase() : null,
+    suggestedName: input.suggestedName ? String(input.suggestedName) : null,
+    suggestedConfidence: input.suggestedConfidence || null,
+    identitySource: input.identitySource || null,
+    twitterHandles: Array.isArray(input.twitterHandles) ? input.twitterHandles : [],
     fingerprint,
     seenCount: 1,
     createdAt: now,
@@ -194,6 +201,35 @@ function dismissItem(id, { note = null } = {}) {
   return { ok: true, item };
 }
 
+
+function patchItem(id, patch = {}) {
+  const doc = readDoc();
+  const item = doc.items.find((row) => row.id === String(id || ''));
+  if (!item) return null;
+  const allowed = [
+    'playerNameHint',
+    'playerSlugHint',
+    'classYearHint',
+    'posHint',
+    'suggestedSlug',
+    'suggestedName',
+    'suggestedConfidence',
+    'identitySource',
+    'twitterHandles',
+    'title',
+    'textPreview',
+    'note',
+  ];
+  for (const key of allowed) {
+    if (patch[key] !== undefined) item[key] = patch[key];
+  }
+  if (patch.suggestedSlug) item.suggestedSlug = String(patch.suggestedSlug).toLowerCase();
+  if (patch.playerSlugHint) item.playerSlugHint = String(patch.playerSlugHint).toLowerCase();
+  item.updatedAt = new Date().toISOString();
+  writeDoc(doc);
+  return item;
+}
+
 module.exports = {
   STORE_PATH,
   BUNDLE_PATH,
@@ -202,6 +238,7 @@ module.exports = {
   getItem,
   resolveItem,
   dismissItem,
+  patchItem,
   fingerprintFor,
   readDoc,
 };

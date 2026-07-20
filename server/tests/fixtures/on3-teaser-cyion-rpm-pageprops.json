@@ -1,0 +1,91 @@
+{
+  "pageType": "article",
+  "article": {
+    "key": 4663439,
+    "title": "Predicting the Florida Gators to land a 4-star defender: New RPM",
+    "slug": "predicting-the-florida-gators-to-land-a-4-star-defender-new-rpm",
+    "excerpt": "We like where the Florida Gators stand early on with a 4-star defensive target. ",
+    "tags": [
+      {
+        "key": 1191,
+        "termKey": 1191,
+        "name": "Plus",
+        "taxonomy": "post_tag",
+        "parent": 0,
+        "count": 292632,
+        "slug": "plus"
+      },
+      {
+        "key": 543252,
+        "termKey": 543250,
+        "name": "Chris Collins",
+        "taxonomy": "post_tag",
+        "parent": 0,
+        "count": 46,
+        "slug": "chris-collins-132060"
+      },
+      {
+        "key": 551922,
+        "termKey": 551922,
+        "name": "Cyion Smith (28 - Blountstown)",
+        "taxonomy": "post_tag",
+        "parent": 0,
+        "count": 29,
+        "slug": "cyion-smith-242617"
+      },
+      {
+        "key": 565254,
+        "termKey": 565254,
+        "name": "Jon Sumrall",
+        "taxonomy": "post_tag",
+        "parent": 0,
+        "count": 350,
+        "slug": "jon-sumrall-131272"
+      }
+    ],
+    "featuredImage": {
+      "title": "2028 S Cyion Smith",
+      "caption": "X (@cyionsmith5)",
+      "altText": "2028 S Cyion Smith",
+      "description": ""
+    },
+    "author": {
+      "key": 1031584,
+      "name": "Blake Alderman",
+      "niceName": "blake-alderman",
+      "twitterHandle": "Blake_Alderman",
+      "instagramHandle": null,
+      "youtubeUrl": null,
+      "bio": "Florida Gators recruiting insider for Gators Online, part of the On3 network. I've covered Florida since 2012 with previous stops at Rivals and 247Sports before joining On3.",
+      "jobTitle": "Florida Insider",
+      "siteAffiliation": null,
+      "profilePicture": {
+        "key": 490850,
+        "url": "https://on3static.com/uploads/dev/assets/cms/2025/04/17100823/IMG_6615.jpg",
+        "slug": null,
+        "fullName": ""
+      },
+      "profilePictureResponse": {
+        "key": 3263619,
+        "domainOverride": "on3static.com",
+        "domain": "on3static.com",
+        "sourceOverride": "uploads/dev/assets/cms/2025/04/17100823/IMG_6615.jpg",
+        "source": "uploads/dev/assets/cms/2025/04/17100823/IMG_6615.jpg",
+        "title": "IMG_6615",
+        "description": "",
+        "caption": "",
+        "category": null,
+        "altText": "IMG_6615",
+        "height": null,
+        "width": null,
+        "assetType": "Unknown",
+        "fileSystem": null,
+        "path": null,
+        "type": null,
+        "thumbnail": null,
+        "duration": 0,
+        "mimeType": null
+      }
+    }
+  }
+}

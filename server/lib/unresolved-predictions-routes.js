@@ -23,6 +23,39 @@ function mountUnresolvedPredictionsRoutes(app) {
     res.json({ ok: true, ...listed });
   });
 
+
+  app.post('/api/admin/unresolved-predictions/enrich-open', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const { enrichOpenUnresolvedPredictions } = require('./teaser-rpm-identity');
+      const result = await enrichOpenUnresolvedPredictions({
+        autoResolve: req.body?.autoResolve !== false,
+        force: !!req.body?.force,
+        limit: parseInt(req.body?.limit, 10) || 40,
+        minConfidence: req.body?.minConfidence || 'high',
+      });
+      res.json(result);
+    } catch (err) {
+      res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/admin/unresolved-predictions/:id/enrich', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    const item = store.getItem(req.params.id);
+    if (!item) return res.status(404).json({ ok: false, error: 'not_found' });
+    try {
+      const { enrichUnresolvedPredictionItem } = require('./teaser-rpm-identity');
+      const result = await enrichUnresolvedPredictionItem(item, {
+        autoResolve: req.body?.autoResolve !== false,
+        minConfidence: req.body?.minConfidence || 'high',
+      });
+      res.json({ ok: true, ...result });
+    } catch (err) {
+      res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/admin/unresolved-predictions/:id/resolve', async (req, res) => {
     if (!requireAdmin(req, res)) return;
     const playerSlug = String(req.body?.playerSlug || '').trim().toLowerCase() || null;

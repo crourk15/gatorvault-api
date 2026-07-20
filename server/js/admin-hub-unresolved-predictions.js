@@ -29,6 +29,7 @@
       + '<div><h2 class="hub-dash-title">Unresolved Predictions</h2>'
       + '<p class="hub-dash-sub">RPM / crystal-ball teasers that could not be attached to a player — never silent-skip</p></div>'
       + '<div class="hub-btn-row">'
+      + '<button type="button" class="hub-btn" id="hub-upq-enrich">Enrich / Auto-resolve</button>'
       + '<button type="button" class="hub-btn secondary" id="hub-upq-refresh">Refresh</button>'
       + '</div></div>'
       + '<div id="hub-upq-loading" class="hub-dash-loading">Loading unresolved predictions...</div>'
@@ -41,6 +42,23 @@
     var msg = document.getElementById('hub-upq-msg');
 
     document.getElementById('hub-upq-refresh').addEventListener('click', load);
+    document.getElementById('hub-upq-enrich').addEventListener('click', function () {
+      var btn = this;
+      btn.disabled = true;
+      setMsg('Enriching open teasers from On3 page props...');
+      apiPost('/api/admin/unresolved-predictions/enrich-open', { autoResolve: true, force: true })
+        .then(function (data) {
+          setMsg('Enriched — auto-resolved ' + (data.autoResolved || 0) + ', suggested ' + (data.suggested || 0));
+          pushAct({
+            status: 'success',
+            message: 'Teaser identity enrich: ' + (data.autoResolved || 0) + ' auto-resolved',
+            subsystem: 'recruiting:teaser-identity'
+          });
+          return load();
+        })
+        .catch(function (e) { setMsg(e.message || 'Enrich failed', true); })
+        .finally(function () { btn.disabled = false; });
+    });
 
     function setMsg(text, isErr) {
       if (!msg) return;
@@ -61,13 +79,17 @@
           : '-';
         return '<tr data-id="' + esc(it.id) + '">'
           + '<td><strong style="color:#fff">' + esc(it.title) + '</strong>'
-          + '<div class="hub-meta" style="margin-top:4px">' + esc((it.textPreview || '').slice(0, 140)) + '</div></td>'
+          + '<div class="hub-meta" style="margin-top:4px">' + esc((it.textPreview || '').slice(0, 140)) + '</div>'
+          + (it.suggestedSlug
+            ? '<div class="hub-meta" style="margin-top:6px;color:#86efac">Suggested: <strong>' + esc(it.suggestedName || it.suggestedSlug) + '</strong> (' + esc(it.suggestedSlug) + ') · ' + esc(it.suggestedConfidence || '') + ' · ' + esc(it.identitySource || '') + '</div>'
+            : '')
+          + '</td>'
           + '<td>' + esc(it.reason) + '<div class="hub-meta">' + esc(it.source) + '</div></td>'
           + '<td>' + esc(it.handle || it.writerName || '-') + '</td>'
           + '<td>' + esc(fmtTime(it.createdAt)) + '<div class="hub-meta">seen ×' + esc(it.seenCount || 1) + '</div></td>'
           + '<td>' + link + '</td>'
           + '<td><div class="hub-btn-row">'
-          + '<button type="button" class="hub-btn hub-upq-resolve" data-id="' + esc(it.id) + '">Resolve</button>'
+          + '<button type="button" class="hub-btn hub-upq-resolve" data-id="' + esc(it.id) + '" data-suggested="' + esc(it.suggestedSlug || '') + '" data-name="' + esc(it.suggestedName || '') + '">' + (it.suggestedSlug ? 'Resolve suggested' : 'Resolve') + '</button>'
           + '<button type="button" class="hub-btn secondary hub-upq-dismiss" data-id="' + esc(it.id) + '">Dismiss</button>'
           + '</div></td>'
           + '</tr>';
@@ -97,14 +119,16 @@
       Array.prototype.forEach.call(body.querySelectorAll('.hub-upq-resolve'), function (btn) {
         btn.addEventListener('click', function () {
           var id = btn.getAttribute('data-id');
-          var slug = window.prompt('Player slug to resolve (e.g. cyion-smith):', '');
+          var itSuggested = btn.getAttribute('data-suggested') || '';
+          var itName = btn.getAttribute('data-name') || '';
+          var slug = window.prompt('Player slug to resolve (e.g. cyion-smith):', itSuggested || '');
           if (slug == null) return;
           slug = String(slug).trim().toLowerCase();
           if (!slug) {
             setMsg('Slug required to resolve', true);
             return;
           }
-          var name = window.prompt('Display name (optional):', '') || '';
+          var name = window.prompt('Display name (optional):', itName || '') || '';
           btn.disabled = true;
           setMsg('Resolving...');
           apiPost('/api/admin/unresolved-predictions/' + encodeURIComponent(id) + '/resolve', {
