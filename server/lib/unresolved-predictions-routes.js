@@ -84,18 +84,74 @@ function mountUnresolvedPredictionsRoutes(app) {
       }
     }
 
+    let radar = null;
+    const promoteRadar = req.body?.promoteRadar !== false && !!playerSlug;
+    if (promoteRadar) {
+      try {
+        const { promoteResolvedPredictionToRadar } = require('./lab-intel-promote');
+        const { CANONICAL_TARGET_NAMES } = require('./recruiting-target-allowlist');
+        const name =
+          String(req.body?.playerName || '').trim() ||
+          CANONICAL_TARGET_NAMES[playerSlug] ||
+          playerSlug
+            .split('-')
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(' ');
+        radar = await promoteResolvedPredictionToRadar({
+          slug: playerSlug,
+          name,
+          classYear,
+          reasons: ['on3_rpm', 'teaser_identity', 'manual_resolve'],
+          sources: ['unresolved_predictions', 'manual_resolve'],
+          fetchRpm: req.body?.fetchRpm !== false,
+        });
+      } catch (err) {
+        radar = { ok: false, error: err.message };
+      }
+    }
+
     try {
       require('./ops-monitor').logEvent({
         subsystem: 'recruiting:unresolved-predictions',
         status: 'resolved',
         message: `Resolved prediction → ${playerSlug || 'no slug'}`,
-        details: { id: result.item.id, playerSlug, allowlist },
+        details: { id: result.item.id, playerSlug, allowlist, radar },
       });
     } catch {
       /* optional */
     }
 
-    res.json({ ok: true, item: result.item, allowlist, already: !!result.already });
+    res.json({ ok: true, item: result.item, allowlist, radar, already: !!result.already });
+  });
+
+  app.post('/api/admin/unresolved-predictions/promote-radar', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    const playerSlug = String(req.body?.playerSlug || req.body?.slug || '').trim().toLowerCase();
+    if (!playerSlug) return res.status(400).json({ ok: false, error: 'playerSlug required' });
+    const classYear = parseInt(req.body?.classYear, 10) || 2028;
+    try {
+      const { promoteResolvedPredictionToRadar } = require('./lab-intel-promote');
+      const { CANONICAL_TARGET_NAMES } = require('./recruiting-target-allowlist');
+      const name =
+        String(req.body?.playerName || req.body?.name || '').trim() ||
+        CANONICAL_TARGET_NAMES[playerSlug] ||
+        playerSlug
+          .split('-')
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ');
+      const radar = await promoteResolvedPredictionToRadar({
+        slug: playerSlug,
+        name,
+        classYear,
+        reasons: req.body?.reasons || ['on3_rpm', 'teaser_identity', 'manual_promote'],
+        sources: req.body?.sources || ['admin_promote_radar'],
+        fetchRpm: req.body?.fetchRpm !== false,
+        dryRun: req.body?.dryRun === true,
+      });
+      res.json({ ok: true, radar });
+    } catch (err) {
+      res.status(500).json({ ok: false, error: err.message });
+    }
   });
 
   app.post('/api/admin/unresolved-predictions/:id/dismiss', (req, res) => {

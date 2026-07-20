@@ -524,6 +524,25 @@ const JOBS = {
       });
     }
   },
+  'prediction-radar-promote': {
+    label: 'Promote named prediction prospect to Lab/watchlist radar',
+    subsystem: 'recruiting:auto-radar',
+    schedule: 'On demand (teaser resolve recovery)',
+    async run(opts = {}) {
+      const slug = String(opts.slug || opts.playerSlug || '').trim().toLowerCase();
+      if (!slug) return { ok: false, error: 'slug required' };
+      const { promoteResolvedPredictionToRadar } = require('./lab-intel-promote');
+      return promoteResolvedPredictionToRadar({
+        slug,
+        name: opts.name || opts.playerName || null,
+        classYear: opts.classYear || 2028,
+        reasons: opts.reasons || ['on3_rpm', 'teaser_identity', 'ops_promote'],
+        sources: opts.sources || ['ops:prediction-radar-promote'],
+        fetchRpm: opts.fetchRpm !== false,
+        dryRun: opts.dryRun === true,
+      });
+    }
+  },
   'on3-rpm-allowlist-sync': {
     label: 'On3 RPM UF % sync — allowlist + UF-active inventory (missing Rivals PM)',
     subsystem: 'cron:on3-rpm-allowlist',
