@@ -369,6 +369,20 @@
       "stars": 4
     },
     {
+      "slug": "cyion-smith",
+      "name": "Cyion Smith",
+      "pos": "S",
+      "classYear": 2028,
+      "school": "Blountstown (Blountstown, FL)",
+      "state": "FL",
+      "inState": true,
+      "rating": null,
+      "natlRank": 175,
+      "posRank": 14,
+      "stateRank": null,
+      "stars": 4
+    },
+    {
       "slug": "john-matthews",
       "name": "John Matthews",
       "pos": "WR",
