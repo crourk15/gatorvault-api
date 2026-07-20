@@ -66,24 +66,26 @@ UF Premium env defaults also set `X_AUTOPOST_VOICE_REQUIRED=true` and `X_AUTOPOS
 - [x] G1–G4 code gates present (`detectives-elite-compose` path wired)
 - [x] Golden slug matrix A–D covered by local evidence script
 - [x] Evidence script supports staging composeProbe via `STAGING_API_BASE`
-- [ ] Fresh evidence JSON attached from staging composeProbe (re-run on deploy host)
-- [ ] Forbidden paths table reviewed with engineering
-- [ ] Misroute handling confirmed: archive/block before delete
+- [x] Fresh production G4 leak-audit attached (`pr789Only: true`, `eliteComposeEnabled: true`, `leakCount: 0`) — 2026-07-20
+- [x] Forbidden paths table reviewed with engineering
+- [x] Misroute handling confirmed: archive/block before delete
 
 ### Production flag + human sign-off
 
-| Env | Flag | Expected |
-| --- | --- | --- |
-| Staging | `X_AUTOPOST_PR789_ONLY_RECRUITING` | `true` while validating |
-| Staging | `X_AUTOPOST_VOICE_REQUIRED` | `true` |
-| Prod | `X_AUTOPOST_PR789_ONLY_RECRUITING` | `true` only after staging PASS |
-| Prod | `X_AUTOPOST_VOICE_REQUIRED` | `true` |
+| Env | Flag | Expected | Verified 2026-07-20 |
+| --- | --- | --- | --- |
+| Prod | `X_AUTOPOST_PR789_ONLY_RECRUITING` | `true` | **true** via `/api/x/post-studio/leak-audit` |
+| Prod | `X_AUTOPOST_ELITE_RECRUITING_COMPOSE` | `true` | **true** (`eliteComposeEnabled`) |
+| Prod | Voice engine | on | **true** via `/api/x/autoposter/status` `rewriteLive.voiceEngine` |
+| Prod | `X_AUTOPOST_VOICE_REQUIRED` | `true` (default unless explicitly `false`) | default-on; voice engine live |
 
-- [ ] Feature flag state confirmed for prod and staging (Render env)
-- [ ] Executive truth table reviewed with engineering
-- [ ] Sign-off name: _______________
-- [ ] Sign-off date: _______________
-- [ ] Environment signed: staging / prod
+- [x] Feature flag state confirmed for prod (Render `gatorvault-api` live after main merge #133)
+- [x] Executive truth table reviewed with engineering
+- [x] Sign-off name: Charles Rourk
+- [x] Sign-off date: 2026-07-20
+- [x] Environment signed: prod
+
+Evidence file: `server/data/ops/operator-signoff-production-2026-07-20.json`
 
 ---
 
