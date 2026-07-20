@@ -63,12 +63,46 @@ function pingBase() {
   });
 }
 
+function killListenersOnPort(port) {
+  // After build:netlify, a stale serve-local-netlify can keep serving old chunk
+  // hashes and flake FutureCast/NIL verify with ChunkLoadError. Always clear.
+  try {
+    spawnSync('fuser', ['-k', `${port}/tcp`], { stdio: 'ignore' });
+  } catch {
+    /* fuser optional */
+  }
+  try {
+    const listed = spawnSync('lsof', ['-t', `-iTCP:${port}`, '-sTCP:LISTEN'], {
+      encoding: 'utf8',
+    });
+    const pids = String(listed.stdout || '')
+      .split(/\s+/)
+      .map((s) => Number(s))
+      .filter((n) => Number.isFinite(n) && n > 0);
+    for (const pid of pids) {
+      try {
+        process.kill(pid, 'SIGTERM');
+      } catch {
+        /* already gone */
+      }
+    }
+  } catch {
+    /* lsof optional */
+  }
+}
+
 async function ensureServer() {
-  if (await pingBase()) return null;
+  const port = Number(new URL(BASE).port || 8787);
+  // Deploy proof always restarts so the just-built server/ tree is what we verify.
+  if (await pingBase()) {
+    console.log(`[deploy-proof] restarting local server on ${port} for fresh build…`);
+    killListenersOnPort(port);
+    await new Promise((r) => setTimeout(r, 800));
+  }
   const script = path.join(__dirname, 'serve-local-netlify.js');
   const child = spawn(process.execPath, [script], {
     stdio: 'inherit',
-    env: { ...process.env, PORT: String(new URL(BASE).port || 8787) },
+    env: { ...process.env, PORT: String(port) },
   });
   for (let i = 0; i < 60; i += 1) {
     if (await pingBase()) return child;

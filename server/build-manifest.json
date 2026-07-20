@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "buildId": "7c1bfd2855d0-CGYO5emk",
-  "commit": "7c1bfd2855d09fb801c4ed9fa93b321037d58fd3",
-  "nextBuildId": "CGYO5emkM2mON0u239Nh9",
-  "builtAt": "2026-07-08T14:02:40.057Z",
+  "buildId": "b7ff30c9b094-R--NAZbl",
+  "commit": "b7ff30c9b09471d64531804567a760b426145e7e",
+  "nextBuildId": "R--NAZbln2LU5kXNjOs3R",
+  "builtAt": "2026-07-20T15:49:17.394Z",
   "site": "gatorvaultinsider.com",
   "pipeline": "netlify"
 }

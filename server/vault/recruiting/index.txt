@@ -1,21 +1,33 @@
-2:I[80540,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","1427","/js/vault-chunks/1427-36e0b70300e678b9.js","7833","/js/vault-chunks/7833-6533e8dfb2e29d47.js","3551","/js/vault-chunks/3551-50e9f80a3a129550.js","1072","/js/vault-chunks/1072-e3e8408f257369ac.js","4455","/js/vault-chunks/4455-a9a514712f497b48.js","8655","/js/vault-chunks/8655-5e62a96c246ac834.js","5791","/js/vault-chunks/5791-053a171bbee12cd5.js","3850","/js/vault-chunks/3850-9a869145b675e327.js","8208","/js/vault-chunks/8208-ba89017098c433ba.js","5942","/js/vault-chunks/5942-3e5351dd6c0e8f7a.js","1841","/js/vault-chunks/1841-0751098d72715cde.js","4194","/js/vault-chunks/4194-a2431666d59b5211.js","1276","/js/vault-chunks/app/vault/recruiting/page-1b5e3d8c43526c61.js"],"RecruitingHubPageChrome"]
-4:I[43970,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","1427","/js/vault-chunks/1427-36e0b70300e678b9.js","7833","/js/vault-chunks/7833-6533e8dfb2e29d47.js","3551","/js/vault-chunks/3551-50e9f80a3a129550.js","1072","/js/vault-chunks/1072-e3e8408f257369ac.js","4455","/js/vault-chunks/4455-a9a514712f497b48.js","8655","/js/vault-chunks/8655-5e62a96c246ac834.js","5791","/js/vault-chunks/5791-053a171bbee12cd5.js","3850","/js/vault-chunks/3850-9a869145b675e327.js","8208","/js/vault-chunks/8208-ba89017098c433ba.js","5942","/js/vault-chunks/5942-3e5351dd6c0e8f7a.js","1841","/js/vault-chunks/1841-0751098d72715cde.js","4194","/js/vault-chunks/4194-a2431666d59b5211.js","1276","/js/vault-chunks/app/vault/recruiting/page-1b5e3d8c43526c61.js"],"RecruitingHubCommandCenterClient"]
+2:I[80540,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","6752","/js/vault-chunks/6752-ed6baecb3ebe904b.js","6765","/js/vault-chunks/6765-07d564b4eb5c723c.js","1072","/js/vault-chunks/1072-404d4b47bb413c7d.js","3253","/js/vault-chunks/3253-6873c5fabbd85760.js","1529","/js/vault-chunks/1529-87a1d422c8c01a7b.js","8655","/js/vault-chunks/8655-9c4ca3a28e84985d.js","3551","/js/vault-chunks/3551-efb560bed519f368.js","2613","/js/vault-chunks/2613-08f648557a46a7dd.js","5791","/js/vault-chunks/5791-01244ec700110008.js","9949","/js/vault-chunks/9949-4023dd48b8295e7a.js","3850","/js/vault-chunks/3850-78532c8d4aa5bbc0.js","4489","/js/vault-chunks/4489-ea7c687111d19266.js","1841","/js/vault-chunks/1841-b56e854f8453f382.js","7993","/js/vault-chunks/7993-8f21dc628dbd5d38.js","1276","/js/vault-chunks/app/vault/recruiting/page-3a2f20a2343ef9d3.js"],"RecruitingHubPageChrome"]
+4:I[18542,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","6752","/js/vault-chunks/6752-ed6baecb3ebe904b.js","6765","/js/vault-chunks/6765-07d564b4eb5c723c.js","1072","/js/vault-chunks/1072-404d4b47bb413c7d.js","3253","/js/vault-chunks/3253-6873c5fabbd85760.js","1529","/js/vault-chunks/1529-87a1d422c8c01a7b.js","8655","/js/vault-chunks/8655-9c4ca3a28e84985d.js","3551","/js/vault-chunks/3551-efb560bed519f368.js","2613","/js/vault-chunks/2613-08f648557a46a7dd.js","5791","/js/vault-chunks/5791-01244ec700110008.js","9949","/js/vault-chunks/9949-4023dd48b8295e7a.js","3850","/js/vault-chunks/3850-78532c8d4aa5bbc0.js","4489","/js/vault-chunks/4489-ea7c687111d19266.js","1841","/js/vault-chunks/1841-b56e854f8453f382.js","7993","/js/vault-chunks/7993-8f21dc628dbd5d38.js","1276","/js/vault-chunks/app/vault/recruiting/page-3a2f20a2343ef9d3.js"],"RecruitingHubCommandCenterClient"]
 6:I[4707,[],""]
 7:I[36423,[],""]
-8:I[22617,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","5629","/js/vault-chunks/app/vault/layout-493be9df01bd7c6e.js"],"VaultHydrationGuard"]
-9:I[21500,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","5629","/js/vault-chunks/app/vault/layout-493be9df01bd7c6e.js"],"VaultErrorBoundary"]
-a:I[35389,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","5629","/js/vault-chunks/app/vault/layout-493be9df01bd7c6e.js"],"VaultRouteGate"]
-b:I[14689,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","5629","/js/vault-chunks/app/vault/layout-493be9df01bd7c6e.js"],"VaultNavigationProvider"]
-c:I[6041,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","5629","/js/vault-chunks/app/vault/layout-493be9df01bd7c6e.js"],"VaultShell"]
-f:I[50985,["3185","/js/vault-chunks/app/layout-7269258988381ed5.js"],"AppProviders"]
-3:T1749,(function(){
+8:I[22617,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","1072","/js/vault-chunks/1072-404d4b47bb413c7d.js","8140","/js/vault-chunks/8140-6c0b163b77d6335f.js","3567","/js/vault-chunks/3567-791800e530f0a36b.js","5629","/js/vault-chunks/app/vault/layout-9ffbbbcb074f9a96.js"],"VaultHydrationGuard"]
+9:I[21500,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","1072","/js/vault-chunks/1072-404d4b47bb413c7d.js","8140","/js/vault-chunks/8140-6c0b163b77d6335f.js","3567","/js/vault-chunks/3567-791800e530f0a36b.js","5629","/js/vault-chunks/app/vault/layout-9ffbbbcb074f9a96.js"],"VaultErrorBoundary"]
+a:I[35389,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","1072","/js/vault-chunks/1072-404d4b47bb413c7d.js","8140","/js/vault-chunks/8140-6c0b163b77d6335f.js","3567","/js/vault-chunks/3567-791800e530f0a36b.js","5629","/js/vault-chunks/app/vault/layout-9ffbbbcb074f9a96.js"],"VaultRouteGate"]
+b:I[17817,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","1072","/js/vault-chunks/1072-404d4b47bb413c7d.js","8140","/js/vault-chunks/8140-6c0b163b77d6335f.js","3567","/js/vault-chunks/3567-791800e530f0a36b.js","5629","/js/vault-chunks/app/vault/layout-9ffbbbcb074f9a96.js"],"VaultNavigationProvider"]
+c:I[6041,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","1072","/js/vault-chunks/1072-404d4b47bb413c7d.js","8140","/js/vault-chunks/8140-6c0b163b77d6335f.js","3567","/js/vault-chunks/3567-791800e530f0a36b.js","5629","/js/vault-chunks/app/vault/layout-9ffbbbcb074f9a96.js"],"VaultShell"]
+10:I[50985,["3185","/js/vault-chunks/app/layout-9eed2348db56c221.js"],"AppProviders"]
+3:T2141,(function(){
   function run() {
     try {
       var start = performance.now();
+      var SEED = {"generatedAt":"2026-07-20T15:48:44.756Z","activeYear":2027,"title":"Florida Recruiting","subtitle":"Who Florida is chasing — movement, board, and beat intel.","classYears":[2026,2027,2028],"classOverview":{"classRank":"#8","blueChip":"65%","commits":"26","commitLabel":"Commits","avgRating":"89.7","trendRank":"Stable","trendBlueChip":"Rising","trendCommits":"Rising","trendRating":"Rising","sparklines":{"classRank":null,"blueChip":null,"commits":null,"avgRating":null}},"classOverviewAll":{"2026":{"classRank":"#16","blueChip":"30%","commits":"47","commitLabel":"Signees","avgRating":"87.8","trendRank":"Stable","trendBlueChip":"Stable","trendCommits":"Rising","trendRating":"Rising","sparklines":{"classRank":null,"blueChip":null,"commits":null,"avgRating":null}},"2027":{"classRank":"#8","blueChip":"65%","commits":"26","commitLabel":"Commits","avgRating":"89.7","trendRank":"Stable","trendBlueChip":"Rising","trendCommits":"Rising","trendRating":"Rising","sparklines":{"classRank":null,"blueChip":null,"commits":null,"avgRating":null}},"2028":{"classRank":"—","blueChip":"100%","commits":"1","commitLabel":"Commits","avgRating":"90.2","trendRank":"Stable","trendBlueChip":"Rising","trendCommits":"Rising","trendRating":"Rising","sparklines":{"classRank":null,"blueChip":null,"commits":null,"avgRating":null}}}};
       window.__GV_HUB__ = window.__GV_HUB__ || {};
       window.__GV_HUB__.start = start;
       window.__GV_HUB__.year = 2027;
       window.__GV_HUB__.metricsByYear = window.__GV_HUB__.metricsByYear || {};
+
+      function fanTitle(title) {
+        if (!title || /command\s*center/i.test(String(title))) return SEED.title || 'Florida Recruiting';
+        return title;
+      }
+      function fanSubtitle(subtitle) {
+        if (!subtitle || /command\s*center/i.test(String(subtitle))) {
+          return SEED.subtitle || 'Who Florida is chasing — movement, board, and beat intel.';
+        }
+        return subtitle;
+      }
 
       function paintMetricFields(root, metrics) {
         if (!root || !metrics) return;
@@ -42,7 +54,7 @@ f:I[50985,["3185","/js/vault-chunks/app/layout-7269258988381ed5.js"],"AppProvide
         }
         [2026, 2027, 2028].forEach(function(y) {
           var card = document.querySelector('[data-rh-boot="class-card-' + y + '"]');
-          var metrics = byYear[y];
+          var metrics = byYear[y] || byYear[String(y)];
           if (!card || !metrics) return;
           paintMetricFields(card, metrics);
           card.classList.remove('rh-boot-loading');
@@ -54,16 +66,27 @@ f:I[50985,["3185","/js/vault-chunks/app/layout-7269258988381ed5.js"],"AppProvide
       function storeMetrics(year, data) {
         if (!data) return;
         window.__GV_HUB__.metricsByYear[year] = data.classOverview || data;
+        window.__GV_HUB__.metricsByYear[String(year)] = data.classOverview || data;
       }
 
       function paintHero(data) {
         if (!data) return;
-        window.__GV_HERO__ = data;
+        var normalized = Object.assign({}, data, {
+          title: fanTitle(data.title),
+          subtitle: fanSubtitle(data.subtitle)
+        });
+        window.__GV_HERO__ = normalized;
+        data = normalized;
         window.__GV_HUB__.heroRenderMs = Math.round(performance.now() - start);
         if (data.classOverview) {
           storeMetrics(data.year || 2027, data.classOverview);
-          paintClassSections();
         }
+        if (data.classOverviewAll) {
+          Object.keys(data.classOverviewAll).forEach(function(y) {
+            storeMetrics(y, data.classOverviewAll[y]);
+          });
+        }
+        paintClassSections();
         var root = document.querySelector('[data-hydrate="hero"]');
         if (!root) return;
         root.classList.remove('hero-skeleton');
@@ -72,10 +95,10 @@ f:I[50985,["3185","/js/vault-chunks/app/layout-7269258988381ed5.js"],"AppProvide
 
         var title = root.querySelector('[data-hero-field="title"]');
         var subtitle = root.querySelector('[data-hero-field="subtitle"]');
-        if (title && data.title) title.textContent = data.title;
-        if (subtitle && data.subtitle) subtitle.textContent = data.subtitle;
+        if (title) title.textContent = fanTitle(data.title);
+        if (subtitle) subtitle.textContent = fanSubtitle(data.subtitle);
 
-        var years = data.classYears || [2026, 2027, 2028];
+        var years = data.classYears || SEED.classYears || [2026, 2027, 2028];
         var yearRow = root.querySelector('[data-hero-field="year-tabs"]');
         if (yearRow) {
           yearRow.innerHTML = years.map(function(y) {
@@ -93,17 +116,13 @@ f:I[50985,["3185","/js/vault-chunks/app/layout-7269258988381ed5.js"],"AppProvide
         ];
         fields.forEach(function(pair) {
           var node = root.querySelector('[data-hero-metric="' + pair[1] + '"]');
-          if (node && metrics[pair[0]] != null) node.textContent = metrics[pair[0]];
+          if (node && metrics[pair[0]] != null && String(metrics[pair[0]]) !== '') {
+            node.textContent = metrics[pair[0]];
+          }
         });
 
         var tickerTrack = root.querySelector('[data-hero-field="ticker-track"]');
-        var items = (data.ticker && data.ticker.length) ? data.ticker : [];
-        if (tickerTrack && items.length) {
-          var html = items.map(function(item) {
-            return '<span class="rh-hero-ticker-item">' + item + '<span class="rh-hero-ticker-sep">·</span></span>';
-          }).join('');
-          tickerTrack.innerHTML = html + html;
-        }
+        if (tickerTrack) tickerTrack.remove();
         window.dispatchEvent(new CustomEvent('gv-hero-boot'));
       }
 
@@ -132,6 +151,22 @@ f:I[50985,["3185","/js/vault-chunks/app/layout-7269258988381ed5.js"],"AppProvide
         });
       }
 
+      // Instant first paint from build-time seed — never leave dashes waiting on cold API.
+      if (SEED && SEED.classOverviewAll) {
+        Object.keys(SEED.classOverviewAll).forEach(function(y) {
+          storeMetrics(y, SEED.classOverviewAll[y]);
+        });
+      }
+      paintHero({
+        ok: true,
+        year: SEED.activeYear || 2027,
+        title: SEED.title,
+        subtitle: SEED.subtitle,
+        classYears: SEED.classYears || [2026, 2027, 2028],
+        classOverview: SEED.classOverview,
+        classOverviewAll: SEED.classOverviewAll
+      });
+
       var heroUrl = '/api/recruiting/hub/hero?year=2027';
       function loadHero(attempt) {
         fetch(heroUrl, { credentials: 'same-origin', cache: 'no-store' })
@@ -158,7 +193,7 @@ f:I[50985,["3185","/js/vault-chunks/app/layout-7269258988381ed5.js"],"AppProvide
     run();
   }
 })();5:{"display":"none","minHeight":0,"height":0,"margin":0,"padding":0,"overflow":"hidden"}
-d:T75c,(function(){var open=false;function els(){return{btn:document.querySelector("[data-vault-menu-toggle]")||document.querySelector('button[aria-controls="gv-app-menu-drawer"]'),drawer:document.getElementById("gv-app-menu-drawer"),backdrop:document.querySelector(".gv-app-menu__backdrop")};}function sync(){var e=els();if(!e.btn||!e.drawer)return;if(!e.btn.hasAttribute("data-vault-menu-toggle"))e.btn.setAttribute("data-vault-menu-toggle","");e.drawer.classList.toggle("is-open",open);e.drawer.setAttribute("aria-hidden",open?"false":"true");if(e.backdrop){e.backdrop.classList.toggle("is-open",open);e.backdrop.setAttribute("aria-hidden",open?"false":"true");}e.btn.classList.toggle("is-menu-open",open);e.btn.setAttribute("aria-expanded",open?"true":"false");document.body.style.overflow=open?"hidden":"";}function setOpen(next){open=!!next;sync();if(window.__GV_MENU_BOOT__&&window.__GV_MENU_BOOT__.onChange){window.__GV_MENU_BOOT__.onChange(open);}}function bind(){sync();}window.__GV_MENU_BOOT__={isOpen:function(){return open;},setOpen:setOpen,onChange:null};window.__GV_MENU_BIND__=bind;if(!window.__gvMenuClickBound){window.__gvMenuClickBound=true;document.addEventListener("click",function(ev){var close=ev.target.closest("[data-vault-menu-close]");if(close){ev.preventDefault();setOpen(false);return;}var backdrop=ev.target.closest(".gv-app-menu__backdrop");if(backdrop){setOpen(false);return;}var toggle=ev.target.closest("[data-vault-menu-toggle],button[aria-controls=\"gv-app-menu-drawer\"]");if(toggle&&toggle.hasAttribute("data-vault-menu-react"))return;if(toggle){ev.preventDefault();setOpen(!open);}},true);document.addEventListener("keydown",function(ev){if(ev.key==="Escape"&&open)setOpen(false);});window.addEventListener("gv-vault-restored",bind);}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",bind,{once:true});}else{bind();}})();e:Tf31,(function(){
+d:T71d,(function(){var open=false;function els(){return{btn:document.querySelector("[data-vault-menu-toggle]")||document.querySelector('button[aria-controls="gv-app-menu-drawer"]'),drawer:document.getElementById("gv-app-menu-drawer"),backdrop:document.querySelector(".gv-app-menu__backdrop")};}function sync(){var e=els();if(!e.btn||!e.drawer)return;if(!e.btn.hasAttribute("data-vault-menu-toggle"))e.btn.setAttribute("data-vault-menu-toggle","");e.drawer.classList.toggle("is-open",open);e.drawer.setAttribute("aria-hidden",open?"false":"true");if(e.backdrop){e.backdrop.classList.toggle("is-open",open);e.backdrop.setAttribute("aria-hidden",open?"false":"true");}e.btn.classList.toggle("is-menu-open",open);e.btn.setAttribute("aria-expanded",open?"true":"false");document.body.style.overflow=open?"hidden":"";}function setOpen(next){open=!!next;sync();if(window.__GV_MENU_BOOT__&&window.__GV_MENU_BOOT__.onChange){window.__GV_MENU_BOOT__.onChange(open);}}function bind(){sync();}window.__GV_MENU_BOOT__={isOpen:function(){return open;},setOpen:setOpen,onChange:null};window.__GV_MENU_BIND__=bind;if(!window.__gvMenuClickBound){window.__gvMenuClickBound=true;document.addEventListener("click",function(ev){var close=ev.target.closest("[data-vault-menu-close]");if(close){ev.preventDefault();setOpen(false);return;}var backdrop=ev.target.closest(".gv-app-menu__backdrop");if(backdrop){setOpen(false);return;}var toggle=ev.target.closest("[data-vault-menu-toggle],button[aria-controls=\"gv-app-menu-drawer\"]");if(toggle){ev.preventDefault();setOpen(!open);}},true);document.addEventListener("keydown",function(ev){if(ev.key==="Escape"&&open)setOpen(false);});window.addEventListener("gv-vault-restored",bind);}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",bind,{once:true});}else{bind();}})();e:T7cd,(function(){if(window.__gvHydrationBoot)return;window.__gvHydrationBoot=true;function mainEl(){var r=document.getElementById("gv-vault-root");return r?r.querySelector(".gv-vault-shell__main"):null}function rootBlank(){var r=document.getElementById("gv-vault-root");if(!r)return true;if(r.getAttribute("data-gv-hydrated")==="true")return false;var m=mainEl();if(!m)return true;if(m.querySelector("[data-home-boot-painted],[data-hydrate=hero]:not(.hero-skeleton)"))return false;return m.childElementCount===0}function softRecover(){try{if(sessionStorage.getItem("gv_vault_hydration_reload")==="1")return false;sessionStorage.setItem("gv_vault_hydration_reload","1");}catch(e){}console.warn("[VaultHydrationGuard] blank main — soft reload");location.reload();return true}function clearReloadGuard(){try{sessionStorage.removeItem("gv_vault_hydration_reload")}catch(e){}}function guard(){var r=document.getElementById("gv-vault-root");if(r&&r.getAttribute("data-gv-hydrated")==="true"){clearReloadGuard();return}if(rootBlank()){softRecover();return}if(r&&!r.hasAttribute("data-gv-hydrated")){r.removeAttribute("data-hydrating")}}function arm(){if(window.__gvHydrationTimeout){clearTimeout(window.__gvHydrationTimeout)}var ms=window.matchMedia&&window.matchMedia("(max-width:767px)").matches?4500:3000;window.__gvHydrationTimeout=window.setTimeout(guard,ms)}function boot(){arm()}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",boot,{once:true})}else{boot()}window.addEventListener("error",function(ev){var msg=String(ev.message||"");var file=String(ev.filename||"");if(/hydration|Hydration|did not match|Minified React error #(418|423|425|422)/i.test(msg)||/vault-chunks|_next\/static\/chunks/i.test(file)){setTimeout(guard,0)}});window.addEventListener("pageshow",function(ev){if(ev.persisted){arm()}})window.addEventListener("load",function(){var r=document.getElementById("gv-vault-root");if(r&&r.getAttribute("data-gv-hydrated")==="true")clearReloadGuard()})})();f:T2736,(function(){
   try {
     var cap = window.Capacitor;
     var proto = location.protocol || '';
@@ -174,6 +209,8 @@ d:T75c,(function(){var open=false;function els(){return{btn:document.querySelect
       : bundledNative
         ? location.origin
         : 'https://gatorvaultinsider.com';
+    var COLD_KEY = 'gv_native_cold_done';
+    var SPA_KEY = 'gv_native_spa_path';
 
     function routePath(path) {
       var p = (path || '/').replace(/\/$/, '') || '/';
@@ -225,10 +262,43 @@ d:T75c,(function(){var open=false;function els(){return{btn:document.querySelect
       } catch (e) { return false; }
     }
 
+    /** Fresh process: sign-in if logged out, vault home if logged in (ignore WKWebView restore). */
     function vaultDest() {
       return sessionOk()
         ? abs('/vault/')
         : abs('/join/?mode=signin&next=/vault/');
+    }
+
+    /** iOS may wipe localStorage; Preferences (UserDefaults) survives — restore before join bounce. */
+    function restoreSessionFromPreferences(done) {
+      try {
+        var plugins = cap && cap.Plugins;
+        var Prefs = plugins && plugins.Preferences;
+        if (!Prefs || typeof Prefs.get !== 'function') {
+          done();
+          return;
+        }
+        var settled = false;
+        var finish = function() {
+          if (settled) return;
+          settled = true;
+          done();
+        };
+        setTimeout(finish, 1200);
+        Prefs.get({ key: 'gv_session' }).then(function(res) {
+          try {
+            if (res && res.value) {
+              var s = JSON.parse(res.value);
+              if (s && s.email && s.token) {
+                localStorage.setItem('gv_session', res.value);
+              }
+            }
+          } catch (e1) {}
+          finish();
+        }).catch(function() { finish(); });
+      } catch (e2) {
+        done();
+      }
     }
 
     function isMarketingPath(path) {
@@ -236,29 +306,152 @@ d:T75c,(function(){var open=false;function els(){return{btn:document.querySelect
       return p === '/' || p === '/welcome' || p === '/insider';
     }
 
+    function isVaultClientNav(href) {
+      try {
+        var p = new URL(href, SITE).pathname.replace(/\/$/, '') || '/';
+        return p === '/vault' || p.indexOf('/vault/') === 0;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    /** Catch-all shells — only one index.html exists; deep slugs must not hard-nav to missing files. */
+    function catchAllShell(pathname) {
+      var p = routePath(pathname);
+      var art = p.match(/^\/articles\/([^/]+)$/);
+      if (art && art[1] && art[1] !== 'detail') return '/vault/articles/';
+      var rules = [
+        [/^\/vault\/recruiting\/player(?:\/[^/]+)?$/, '/vault/recruiting/player/'],
+        [/^\/vault\/futurecast\/player(?:\/[^/]+)?$/, '/vault/futurecast/player/'],
+        [/^\/vault\/portal\/player(?:\/[^/]+)?$/, '/vault/portal/player/'],
+        [/^\/vault\/players(?:\/[^/]+)?$/, '/vault/players/'],
+        [/^\/vault\/articles(?:\/[^/]+)?$/, '/vault/articles/'],
+        [/^\/player(?:\/[^/]+)?$/, '/player/'],
+        [/^\/recruiting\/player(?:\/[^/]+)?$/, '/recruiting/player/'],
+        [/^\/futurecast\/player(?:\/[^/]+)?$/, '/futurecast/player/'],
+        [/^\/team\/player(?:\/[^/]+)?$/, '/team/player/']
+      ];
+      for (var i = 0; i < rules.length; i++) {
+        if (rules[i][0].test(p)) return rules[i][1];
+      }
+      return null;
+    }
+
+    function resolveSpaHref(href) {
+      try {
+        var u = new URL(href, SITE);
+        var p = routePath(u.pathname);
+        var art = p.match(/^\/articles\/([^/]+)$/);
+        if (art && art[1] && art[1] !== 'detail') {
+          return '/vault/articles/' + encodeURIComponent(art[1]) + '/' + u.search + u.hash;
+        }
+        return norm(href);
+      } catch (e) {
+        return href;
+      }
+    }
+
+    function isCatchAllDynamic(pathname) {
+      var shell = catchAllShell(pathname);
+      if (!shell) return false;
+      return routePath(pathname) !== routePath(shell);
+    }
+
+    function navigateCatchAll(href) {
+      var target = resolveSpaHref(href);
+      var shell = catchAllShell(target);
+      if (!shell) {
+        location.href = abs(target);
+        return;
+      }
+      var curShell = catchAllShell(location.pathname);
+      if (curShell && routePath(curShell) === routePath(shell)) {
+        history.pushState(null, '', target);
+        try { window.dispatchEvent(new Event('vault:navigation')); } catch (e1) {}
+        return;
+      }
+      try { sessionStorage.setItem(SPA_KEY, target); } catch (e2) {}
+      location.href = abs(shell);
+    }
+
+    function takeColdStart() {
+      try {
+        if (sessionStorage.getItem(COLD_KEY)) return false;
+        sessionStorage.setItem(COLD_KEY, '1');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function consumeSpaPending() {
+      try {
+        var pending = sessionStorage.getItem(SPA_KEY);
+        if (!pending) return;
+        sessionStorage.removeItem(SPA_KEY);
+        var pendingShell = catchAllShell(pending);
+        var curShell = catchAllShell(location.pathname);
+        if (pendingShell && curShell && routePath(pendingShell) === routePath(curShell)) {
+          history.replaceState(null, '', pending);
+        } else if (pendingShell) {
+          sessionStorage.setItem(SPA_KEY, pending);
+          location.replace(abs(pendingShell));
+        }
+      } catch (e) {}
+    }
+
+    function toAppRelative(href) {
+      if (!href || href.charAt(0) === '#' || href.indexOf('mailto:') === 0 || href.indexOf('tel:') === 0) return href;
+      if (href.indexOf('http') !== 0) return href;
+      try {
+        var au = new URL(href);
+        var siteHost = '';
+        try { siteHost = new URL(SITE).hostname; } catch (eh) {}
+        if (au.hostname === 'gatorvaultinsider.com' || au.hostname === 'www.gatorvaultinsider.com' ||
+            au.hostname === 'localhost' || au.hostname === '127.0.0.1' ||
+            (siteHost && au.hostname === siteHost)) {
+          return (au.pathname || '/') + au.search + au.hash;
+        }
+      } catch (eRel) {}
+      return href;
+    }
+
     document.addEventListener('click', function(e) {
       var a = e.target && e.target.closest && e.target.closest('a[href]');
       if (!a) return;
-      var raw = a.getAttribute('href');
-      if (!raw || raw.charAt(0) === '#' || raw.indexOf('http') === 0 ||
-          raw.indexOf('mailto:') === 0 || raw.indexOf('tel:') === 0) return;
+      var attr = a.getAttribute('href');
+      if (!attr || attr.charAt(0) === '#' ||
+          attr.indexOf('mailto:') === 0 || attr.indexOf('tel:') === 0) return;
+      var raw = toAppRelative(attr);
+      if (raw.indexOf('http') === 0) return;
 
       if (bundledNative) {
-        e.preventDefault();
-        e.stopPropagation();
         try {
           var u = new URL(raw, SITE);
           if (isMarketingPath(u.pathname)) {
+            e.preventDefault();
+            e.stopPropagation();
             location.href = vaultDest();
             return;
           }
+          // Deep catch-all routes have no per-slug index.html — every player slug.
+          if (isCatchAllDynamic(u.pathname) || isCatchAllDynamic(resolveSpaHref(raw))) {
+            e.preventDefault();
+            e.stopPropagation();
+            navigateCatchAll(raw);
+            return;
+          }
+          // Other vault boards: leave client router alone after hydration.
+          if (isVaultClientNav(raw)) return;
         } catch (err) {}
+        e.preventDefault();
+        e.stopPropagation();
         location.href = abs(norm(raw));
         return;
       }
 
       var fixed = norm(raw);
-      if (fixed !== raw) {
+      if (fixed !== raw || attr !== raw) {
         e.preventDefault();
         location.href = abs(fixed);
         return;
@@ -272,12 +465,19 @@ d:T75c,(function(){var open=false;function els(){return{btn:document.querySelect
       } catch (err2) {}
     }, true);
 
+    // Restore stashed catch-all deep links BEFORE cold-start routing.
+    // Otherwise Team → /vault/players/:slug loads the shell, then cold-start
+    // replaces to /vault/ and drops the player (or falls through to marketing).
+    consumeSpaPending();
     var path = routePath(location.pathname || '/');
-    if (isMarketingPath(path)) {
-      var dest = vaultDest();
-      if (location.href !== dest) location.replace(dest);
+    var cold = takeColdStart();
+    if (isMarketingPath(path) || (cold && isMarketingPath(path))) {
+      restoreSessionFromPreferences(function() {
+        var dest = vaultDest();
+        if (location.href !== dest) location.replace(dest);
+      });
     }
   } catch (e) {}
-})();0:["CGYO5emkM2mON0u239Nh9",[[["",{"children":["vault",{"children":["recruiting",{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",{"children":["vault",{"children":["recruiting",{"children":["__PAGE__",{},[["$L1",["$","$L2",null,{"children":["$","div",null,{"className":"rh-cc-page","data-testid":"rh-command-center","children":["$","div",null,{"className":"rh-frame rh-elite-chrome","data-testid":"rh-elite-chrome","children":[[["$","section",null,{"className":"rh-hero-strip hero-skeleton","data-hydrate":"hero","aria-label":"Recruiting War Room","children":[["$","div",null,{"className":"rh-hero-sweep","aria-hidden":"true"}],["$","div",null,{"className":"rh-hero-watermark","aria-hidden":"true","children":"GATORS"}],["$","div",null,{"className":"rh-hero-top","children":[["$","div",null,{"children":[["$","div",null,{"className":"rh-hero-title","data-hero-field":"title","children":"Recruiting Command Center"}],["$","div",null,{"className":"rh-hero-subtitle","data-hero-field":"subtitle","children":"UF's class, movement, and battles—one place."}],["$","div",null,{"className":"rh-hero-year-tabs","data-hero-field":"year-tabs","role":"tablist","aria-label":"Class year","children":[["$","button","2026",{"type":"button","className":"rh-hero-year-tab","data-year":2026,"disabled":true,"children":2026}],["$","button","2027",{"type":"button","className":"rh-hero-year-tab is-active","data-year":2027,"disabled":true,"children":2027}],["$","button","2028",{"type":"button","className":"rh-hero-year-tab","data-year":2028,"disabled":true,"children":2028}]]}]]}],["$","span",null,{"className":"rh-badge rh-hero-badge rh-hero-badge--pulse","children":"WAR ROOM"}]]}],["$","div",null,{"className":"rh-hero-metrics hero-skeleton__metrics","aria-label":"Class summary metrics","children":[["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Class rank"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"class-rank","children":"—"}]]}],["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Blue chip %"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"blue-chip","children":"—"}]]}],["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Commits"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"commits","children":"—"}]]}],["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Avg rating"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"avg-rating","children":"—"}]]}]]}],["$","div",null,{"className":"rh-hero-ticker","aria-label":"Recruiting intel ticker","children":["$","div",null,{"className":"rh-hero-ticker-track","data-hero-field":"ticker-track","children":[[["$","span","0",{"className":"rh-hero-ticker-item","children":["2027 class trending nationally — UF in the mix",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","1",{"className":"rh-hero-ticker-item","children":["Blue chip % rising on the board",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","2",{"className":"rh-hero-ticker-item","children":["Staff locked in for summer evals",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","3",{"className":"rh-hero-ticker-item","children":["Battles heating up — movement intel live",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}]],[["$","span","dup-0",{"className":"rh-hero-ticker-item","children":["2027 class trending nationally — UF in the mix",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","dup-1",{"className":"rh-hero-ticker-item","children":["Blue chip % rising on the board",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","dup-2",{"className":"rh-hero-ticker-item","children":["Staff locked in for summer evals",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","dup-3",{"className":"rh-hero-ticker-item","children":["Battles heating up — movement intel live",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}]]]}]}]]}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$3"}}]],["$","div",null,{"data-rh-boot-root":true,"children":[["$","div",null,{"className":"rh-section-header","children":[["$","div",null,{"className":"rh-section-title","children":"Class Overview"}],["$","div",null,{"className":"rh-section-subtitle","children":["Snapshot of UF's ",2027," recruiting class."]}]]}],["$","section",null,{"className":"rh-card rh-card--watermark rh-boot-section rh-boot-loading","data-rh-boot":"class-overview","data-testid":"rh-elite-class-overview","children":[["$","span",null,{"className":"rh-card-watermark","aria-hidden":"true","children":"UF"}],["$","div",null,{"className":"rh-metrics-row","data-rh-boot-body":"class-overview","children":[["$","div",null,{"children":[["$","div",null,{"className":"rh-metric-label","children":"Class rank"}],["$","div",null,{"className":"rh-metric-value","data-rh-field":"class-rank","children":"—"}]]}],["$","div",null,{"children":[["$","div",null,{"className":"rh-metric-label","children":"Blue chip %"}],["$","div",null,{"className":"rh-metric-value","data-rh-field":"blue-chip","children":"—"}]]}],["$","div",null,{"children":[["$","div",null,{"className":"rh-metric-label","children":"Commits"}],["$","div",null,{"className":"rh-metric-value","data-rh-field":"commits","children":"—"}]]}],["$","div",null,{"children":[["$","div",null,{"className":"rh-metric-label","children":"Avg rating"}],["$","div",null,{"className":"rh-metric-value","data-rh-field":"avg-rating","children":"—"}]]}]]}]]}],["$","div",null,{"className":"rh-section-header","children":[["$","div",null,{"className":"rh-section-title","children":"Recruiting Classes"}],["$","div",null,{"className":"rh-section-subtitle","children":["Tap a class to focus the hub on ",2027," — or open commits for any year."]}]]}],["$","section",null,{"className":"rh-class-cards","data-testid":"rh-class-cards","aria-label":"Recruiting class cards","children":["$","div",null,{"className":"rh-class-cards__grid","children":[["$","article","2026",{"className":"rh-class-card rh-boot-section rh-boot-loading","data-rh-boot":"class-card-2026","data-testid":"rh-class-card-2026","children":[["$","div",null,{"className":"rh-class-card__focus","children":[["$","span",null,{"className":"rh-class-card__watermark","aria-hidden":"true","children":"UF"}],["$","h3",null,{"className":"rh-class-card__title","children":[2026," Class"]}],["$","dl",null,{"className":"rh-class-card__stats","data-rh-boot-body":"class-card-2026","children":[["$","div",null,{"children":[["$","dt",null,{"children":"Commits"}],["$","dd",null,{"data-rh-field":"commits","children":"—"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Blue chip %"}],["$","dd",null,{"data-rh-field":"blue-chip","children":"—"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Avg rating"}],["$","dd",null,{"data-rh-field":"avg-rating","children":"—"}]]}]]}]]}],["$","a",null,{"href":"/vault/recruiting/2026","className":"rh-class-card__link","children":"View commits →"}]]}],["$","article","2027",{"className":"rh-class-card rh-boot-section rh-boot-loading rh-class-card--active","data-rh-boot":"class-card-2027","data-testid":"rh-class-card-2027","children":[["$","div",null,{"className":"rh-class-card__focus","children":[["$","span",null,{"className":"rh-class-card__watermark","aria-hidden":"true","children":"UF"}],["$","h3",null,{"className":"rh-class-card__title","children":[2027," Class"]}],["$","dl",null,{"className":"rh-class-card__stats","data-rh-boot-body":"class-card-2027","children":[["$","div",null,{"children":[["$","dt",null,{"children":"Commits"}],["$","dd",null,{"data-rh-field":"commits","children":"—"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Blue chip %"}],["$","dd",null,{"data-rh-field":"blue-chip","children":"—"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Avg rating"}],["$","dd",null,{"data-rh-field":"avg-rating","children":"—"}]]}]]}]]}],["$","a",null,{"href":"/vault/recruiting/2027","className":"rh-class-card__link","children":"View commits →"}]]}],["$","article","2028",{"className":"rh-class-card rh-boot-section rh-boot-loading","data-rh-boot":"class-card-2028","data-testid":"rh-class-card-2028","children":[["$","div",null,{"className":"rh-class-card__focus","children":[["$","span",null,{"className":"rh-class-card__watermark","aria-hidden":"true","children":"UF"}],["$","h3",null,{"className":"rh-class-card__title","children":[2028," Class"]}],["$","dl",null,{"className":"rh-class-card__stats","data-rh-boot-body":"class-card-2028","children":[["$","div",null,{"children":[["$","dt",null,{"children":"Commits"}],["$","dd",null,{"data-rh-field":"commits","children":"—"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Blue chip %"}],["$","dd",null,{"data-rh-field":"blue-chip","children":"—"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Avg rating"}],["$","dd",null,{"data-rh-field":"avg-rating","children":"—"}]]}]]}]]}],["$","a",null,{"href":"/vault/recruiting/2028","className":"rh-class-card__link","children":"View commits →"}]]}]]}]}]]}],["$","$L4",null,{"deferHero":true}]]}]}]}],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/1848b9c858c13783.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/15aca25086d73abc.css","precedence":"next","crossOrigin":"$undefined"}]]],null],null]},[[null,[[["$","link",null,{"rel":"preconnect","href":"https://gatorvault-api.onrender.com","crossOrigin":"anonymous"}],["$","link",null,{"rel":"preload","href":"/api/recruiting/hub/hero?year=2027","as":"fetch","crossOrigin":"anonymous"}],["$","link",null,{"rel":"preload","href":"/api/recruiting/hub/bundle?year=2027","as":"fetch","crossOrigin":"anonymous"}]],[["$","span",null,{"hidden":true,"aria-hidden":"true","data-testid":"vault-recruiting-hub","className":"gv-vault-ssr-marker","style":{"display":"none","minHeight":0,"height":0,"margin":0,"padding":0,"overflow":"hidden"},"children":"Recruiting Hub · 2026 Commits · Heat Check"}],["$","span",null,{"hidden":true,"aria-hidden":"true","className":"gv-vault-ssr-marker gv-hub-tabs gv-hub-tabs--scroll gv-hub-tab","style":"$5"}]],["$","$L6",null,{"parallelRouterKey":"children","segmentPath":["children","vault","children","recruiting","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L7",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/b223f0a107e10f9f.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/2051b149cfddd0b0.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/8e3c545a62728597.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/fca2b81e4f619f62.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","4",{"rel":"stylesheet","href":"/_next/static/css/eb61717a3bd0643c.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","5",{"rel":"stylesheet","href":"/_next/static/css/1a9283b473e13dc4.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","6",{"rel":"stylesheet","href":"/_next/static/css/752cb316d5a858ef.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","7",{"rel":"stylesheet","href":"/_next/static/css/a8fe1a20ab38f79a.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","8",{"rel":"stylesheet","href":"/_next/static/css/3f52c8abae2610fd.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","9",{"rel":"stylesheet","href":"/_next/static/css/f8d83ea5cdc52194.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","10",{"rel":"stylesheet","href":"/_next/static/css/3ff5c0cb3c102764.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","11",{"rel":"stylesheet","href":"/_next/static/css/491536a0d987a4a8.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","12",{"rel":"stylesheet","href":"/_next/static/css/e6fdf6b5f8a56102.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","13",{"rel":"stylesheet","href":"/_next/static/css/9241b43e8bbeebcd.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","14",{"rel":"stylesheet","href":"/_next/static/css/fde0835731924eff.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","15",{"rel":"stylesheet","href":"/_next/static/css/4c4eec84f6f4594e.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","16",{"rel":"stylesheet","href":"/_next/static/css/72c6316fabed6a59.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","17",{"rel":"stylesheet","href":"/_next/static/css/04ab4bf330d77386.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","18",{"rel":"stylesheet","href":"/_next/static/css/3cea7525a15f876d.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","19",{"rel":"stylesheet","href":"/_next/static/css/1158d82d0c627bac.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","20",{"rel":"stylesheet","href":"/_next/static/css/42a4e558afe8c6ab.css","precedence":"next","crossOrigin":"$undefined"}]],[["$","style",null,{"dangerouslySetInnerHTML":{"__html":".gv-vault-shell{min-height:100vh;min-height:100dvh;background:#001a33;color:#ffffff;display:flex;flex-direction:column}.gv-vault-shell__main{flex:1;min-height:0;width:100%}.gv-vault-shell--home .gv-vault-shell__body,.gv-vault-shell__main:has(.gv-home){margin:0;padding-top:0}.gv-vault-shell--home .gv-vault-shell__main,.gv-vault-shell__main:has(.gv-home){padding:0}.gv-home__frame,.gv-home__frame.gv-home__command{padding-top:24px}[data-hydrating] .gv-vault-shell,[data-hydrating] .gv-vault-shell__main{opacity:1!important;visibility:visible!important}[data-hydrating] .gv-vault-shell.is-navigating .gv-vault-shell__main{opacity:1!important;pointer-events:auto!important}[data-hydrating] .gv-vault-shell__main>*{visibility:visible!important}"}}],["$","div",null,{"id":"gv-vault-root","data-hydrating":"true","children":[["$","$L8",null,{}],["$","$L9",null,{"children":[["$","$La",null,{}],["$","$Lb",null,{"children":["$","$Lc",null,{"children":["$","$L6",null,{"parallelRouterKey":"children","segmentPath":["children","vault","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L7",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]}]}]]}]]}],["$","script",null,{"data-gv-menu-boot":"","dangerouslySetInnerHTML":{"__html":"$d"}}]]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/73686baa7e8e7ff9.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/0b76d5d2160fdaa8.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/9aaf170a6eeea464.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/b799eacc7000fb11.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","4",{"rel":"stylesheet","href":"/_next/static/css/1ae7486c9b29f7d2.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","5",{"rel":"stylesheet","href":"/_next/static/css/0c417f3c61b21d1d.css","precedence":"next","crossOrigin":"$undefined"}]],["$","html",null,{"lang":"en","data-theme":"dark","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();"}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$e"}}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@600;700;800&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"className":"fc-body gv-body","children":["$","$Lf",null,{"children":["$","$L6",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L7",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":"404"}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]}]]}]],null],null],["$L10",null]]]]
-10:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","1",{"charSet":"utf-8"}]]
+})();0:["R--NAZbln2LU5kXNjOs3R",[[["",{"children":["vault",{"children":["recruiting",{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",{"children":["vault",{"children":["recruiting",{"children":["__PAGE__",{},[["$L1",["$","$L2",null,{"children":["$","div",null,{"className":"rh-cc-page","data-testid":"rh-command-center","children":["$","div",null,{"className":"rh-frame rh-elite-chrome","data-testid":"rh-elite-chrome","children":[[["$","section",null,{"className":"rh-hero-strip","data-hydrate":"hero","data-hero-seeded":"true","aria-label":"Florida Recruiting","children":[["$","div",null,{"className":"rh-hero-sweep","aria-hidden":"true"}],["$","div",null,{"className":"rh-hero-watermark","aria-hidden":"true","children":"GATORS"}],["$","div",null,{"className":"rh-hero-top","children":[["$","div",null,{"children":[["$","div",null,{"className":"rh-hero-title","data-hero-field":"title","children":"Florida Recruiting"}],["$","div",null,{"className":"rh-hero-subtitle","data-hero-field":"subtitle","children":"Who Florida is chasing — movement, board, and beat intel."}],["$","div",null,{"className":"rh-hero-year-tabs","data-hero-field":"year-tabs","role":"tablist","aria-label":"Class year","children":[["$","button","2026",{"type":"button","className":"rh-hero-year-tab","data-year":2026,"disabled":true,"children":2026}],["$","button","2027",{"type":"button","className":"rh-hero-year-tab is-active","data-year":2027,"disabled":true,"children":2027}],["$","button","2028",{"type":"button","className":"rh-hero-year-tab","data-year":2028,"disabled":true,"children":2028}]]}]]}],["$","span",null,{"className":"rh-badge rh-hero-badge","children":"Live"}]]}],["$","div",null,{"className":"rh-hero-metrics","aria-label":"Class summary metrics","children":[["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Class rank"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"class-rank","children":"#8"}]]}],["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Blue chip %"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"blue-chip","children":"65%"}]]}],["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Commits"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"commits","children":"26"}]]}],["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Avg rating"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"avg-rating","children":"89.7"}]]}]]}]]}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$3"}}]],["$","div",null,{"data-rh-boot-root":true,"children":[["$","div",null,{"className":"rh-section-header","children":[["$","div",null,{"className":"rh-section-title","children":"Recruiting Classes"}],["$","div",null,{"className":"rh-section-subtitle","children":["Tap a class to focus the hub on ",2027," — or open commits for any year."]}]]}],["$","section",null,{"className":"rh-class-cards","data-testid":"rh-class-cards","aria-label":"Recruiting class cards","children":["$","div",null,{"className":"rh-class-cards__grid","children":[["$","article","2026",{"className":"rh-class-card rh-boot-section","data-rh-boot":"class-card-2026","data-rh-boot-painted":"seed","data-testid":"rh-class-card-2026","children":["$","div",null,{"className":"rh-class-card__focus","children":[["$","span",null,{"className":"rh-class-card__watermark","aria-hidden":"true","children":"UF"}],["$","h3",null,{"className":"rh-class-card__title","children":[2026," Class"]}],["$","dl",null,{"className":"rh-class-card__stats","data-rh-boot-body":"class-card-2026","children":[["$","div",null,{"children":[["$","dt",null,{"children":"Signees"}],["$","dd",null,{"data-rh-field":"commits","children":"47"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Blue chip %"}],["$","dd",null,{"data-rh-field":"blue-chip","children":"30%"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Avg rating"}],["$","dd",null,{"data-rh-field":"avg-rating","children":"87.8"}]]}]]}]]}]}],["$","article","2027",{"className":"rh-class-card rh-boot-section rh-class-card--active","data-rh-boot":"class-card-2027","data-rh-boot-painted":"seed","data-testid":"rh-class-card-2027","children":["$","div",null,{"className":"rh-class-card__focus","children":[["$","span",null,{"className":"rh-class-card__watermark","aria-hidden":"true","children":"UF"}],["$","h3",null,{"className":"rh-class-card__title","children":[2027," Class"]}],["$","dl",null,{"className":"rh-class-card__stats","data-rh-boot-body":"class-card-2027","children":[["$","div",null,{"children":[["$","dt",null,{"children":"Commits"}],["$","dd",null,{"data-rh-field":"commits","children":"26"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Blue chip %"}],["$","dd",null,{"data-rh-field":"blue-chip","children":"65%"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Avg rating"}],["$","dd",null,{"data-rh-field":"avg-rating","children":"89.7"}]]}]]}]]}]}],["$","article","2028",{"className":"rh-class-card rh-boot-section","data-rh-boot":"class-card-2028","data-rh-boot-painted":"seed","data-testid":"rh-class-card-2028","children":["$","div",null,{"className":"rh-class-card__focus","children":[["$","span",null,{"className":"rh-class-card__watermark","aria-hidden":"true","children":"UF"}],["$","h3",null,{"className":"rh-class-card__title","children":[2028," Class"]}],["$","dl",null,{"className":"rh-class-card__stats","data-rh-boot-body":"class-card-2028","children":[["$","div",null,{"children":[["$","dt",null,{"children":"Commits"}],["$","dd",null,{"data-rh-field":"commits","children":"1"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Blue chip %"}],["$","dd",null,{"data-rh-field":"blue-chip","children":"100%"}]]}],["$","div",null,{"children":[["$","dt",null,{"children":"Avg rating"}],["$","dd",null,{"data-rh-field":"avg-rating","children":"90.2"}]]}]]}]]}]}]]}]}]]}],["$","$L4",null,{"deferHero":true}]]}]}]}],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/b972c1a43c0d447a.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/15aca25086d73abc.css","precedence":"next","crossOrigin":"$undefined"}]]],null],null]},[[null,[[["$","link",null,{"rel":"preconnect","href":"https://gatorvault-api.onrender.com","crossOrigin":"anonymous"}],["$","link",null,{"rel":"preload","href":"/api/recruiting/hub/hero?year=2027","as":"fetch","crossOrigin":"anonymous"}],["$","link",null,{"rel":"preload","href":"/api/recruiting/hub/bundle?year=2027","as":"fetch","crossOrigin":"anonymous"}]],[["$","span",null,{"hidden":true,"aria-hidden":"true","data-testid":"vault-recruiting-hub","className":"gv-vault-ssr-marker","style":{"display":"none","minHeight":0,"height":0,"margin":0,"padding":0,"overflow":"hidden"},"children":"Recruiting Hub · 2026 Commits · Who's heating up"}],["$","span",null,{"hidden":true,"aria-hidden":"true","className":"gv-vault-ssr-marker gv-hub-tabs gv-hub-tabs--scroll gv-hub-tab","style":"$5"}]],["$","$L6",null,{"parallelRouterKey":"children","segmentPath":["children","vault","children","recruiting","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L7",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/b223f0a107e10f9f.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/b739614822fcd076.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/a70cfd483fdd5d96.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/fca2b81e4f619f62.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","4",{"rel":"stylesheet","href":"/_next/static/css/eb61717a3bd0643c.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","5",{"rel":"stylesheet","href":"/_next/static/css/1a9283b473e13dc4.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","6",{"rel":"stylesheet","href":"/_next/static/css/eac1a836dee0991d.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","7",{"rel":"stylesheet","href":"/_next/static/css/a8fe1a20ab38f79a.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","8",{"rel":"stylesheet","href":"/_next/static/css/3f52c8abae2610fd.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","9",{"rel":"stylesheet","href":"/_next/static/css/a3bd6a5cb521f2b8.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","10",{"rel":"stylesheet","href":"/_next/static/css/3ff5c0cb3c102764.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","11",{"rel":"stylesheet","href":"/_next/static/css/920fed036f4409d2.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","12",{"rel":"stylesheet","href":"/_next/static/css/37d4a14d01f8d87a.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","13",{"rel":"stylesheet","href":"/_next/static/css/52832c45d8f0bfc1.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","14",{"rel":"stylesheet","href":"/_next/static/css/25285874498fad1f.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","15",{"rel":"stylesheet","href":"/_next/static/css/4c4eec84f6f4594e.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","16",{"rel":"stylesheet","href":"/_next/static/css/ae6a62dfe6a30731.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","17",{"rel":"stylesheet","href":"/_next/static/css/04ab4bf330d77386.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","18",{"rel":"stylesheet","href":"/_next/static/css/f5018f6bc28b1e96.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","19",{"rel":"stylesheet","href":"/_next/static/css/1158d82d0c627bac.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","20",{"rel":"stylesheet","href":"/_next/static/css/42f66f6a42703b86.css","precedence":"next","crossOrigin":"$undefined"}]],[["$","style",null,{"dangerouslySetInnerHTML":{"__html":".gv-vault-shell{min-height:100vh;min-height:100dvh;background:#001a33;color:#ffffff;display:flex;flex-direction:column}.gv-vault-shell__main{flex:1;min-height:0;width:100%}.gv-vault-shell--home .gv-vault-shell__body,.gv-vault-shell__main:has(.gv-home){margin:0;padding-top:0}.gv-vault-shell--home .gv-vault-shell__main,.gv-vault-shell__main:has(.gv-home){padding:0}.gv-home__frame,.gv-home__frame.gv-home__command{padding-top:24px}[data-hydrating] .gv-vault-shell,[data-hydrating] .gv-vault-shell__main{opacity:1!important;visibility:visible!important}[data-hydrating] .gv-vault-shell.is-navigating .gv-vault-shell__main{opacity:1!important;pointer-events:auto!important}[data-hydrating] .gv-vault-shell__main>*{visibility:visible!important}"}}],["$","div",null,{"id":"gv-vault-root","data-hydrating":"true","children":[["$","$L8",null,{}],["$","$L9",null,{"children":[["$","$La",null,{}],["$","$Lb",null,{"children":["$","$Lc",null,{"children":["$","$L6",null,{"parallelRouterKey":"children","segmentPath":["children","vault","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L7",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]}]}]]}]]}],["$","script",null,{"data-gv-menu-boot":"","dangerouslySetInnerHTML":{"__html":"$d"}}],["$","script",null,{"data-gv-hydration-boot":"","dangerouslySetInnerHTML":{"__html":"$e"}}]]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/8c656d63b1573491.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/18b9a4f413c25020.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/02609e47e0546a4e.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/981631524a7c484c.css","precedence":"next","crossOrigin":"$undefined"}]],["$","html",null,{"lang":"en","data-theme":"dark","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();"}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$f"}}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Oswald:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"className":"fc-body gv-body","children":["$","$L10",null,{"children":["$","$L6",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L7",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":"404"}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]}]]}]],null],null],["$L11",null]]]]
+11:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","1",{"charSet":"utf-8"}]]
 1:null

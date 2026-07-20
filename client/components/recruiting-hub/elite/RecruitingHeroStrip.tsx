@@ -19,8 +19,19 @@ const CLASS_YEARS = RECRUITING_CLASS_YEARS;
 
 function heroFromWindow(): RhHubHeroPayload | null {
   if (typeof window === 'undefined') return null;
-  return window.__GV_HERO__ ?? null;
+  const raw = window.__GV_HERO__ ?? null;
+  if (!raw) return null;
+  const title = String(raw.title || '');
+  const subtitle = String(raw.subtitle || '');
+  return {
+    ...raw,
+    title: /command\s*center/i.test(title) ? 'Florida Recruiting' : title || 'Florida Recruiting',
+    subtitle: /command\s*center/i.test(subtitle)
+      ? 'Who Florida is chasing — movement, board, and beat intel.'
+      : subtitle || 'Who Florida is chasing — movement, board, and beat intel.',
+  };
 }
+
 
 function HeroMetric({
   label,

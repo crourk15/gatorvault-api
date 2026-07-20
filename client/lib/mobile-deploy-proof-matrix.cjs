@@ -73,13 +73,15 @@ const SECTION_CHECKLIST = [
     path: '/vault/',
     selector: '[data-testid="home-beat-highlights"], [data-home-boot="beat-highlights"]',
     minText: 30,
+    waitForbiddenMs: 90_000,
   },
   {
     id: 'gnl',
     label: 'GNL',
     path: '/vault/live/',
-    selector: '[data-testid="vault-live-feed"], .gv-live-feed',
-    minText: 30,
+    // Exclude SSR marker — it is ~35 chars and hid real feed failures.
+    selector: '[data-testid="gnl-live-feed-module"], [data-testid="vault-live-feed"]:not(.gv-vault-ssr-marker), .gv-live-feed:not(.gv-vault-ssr-marker)',
+    minText: 80,
   },
   {
     id: 'futurecast',

@@ -1,0 +1,1358 @@
+{
+  "generatedAt": "2026-07-20T15:48:47.676Z",
+  "source": "prod-dashboard+high-priority",
+  "dashboard": {
+    "conference": "SEC",
+    "ufStanding": {
+      "secRank": 8,
+      "nationalRank": 16,
+      "score": 77,
+      "estimatedAnnualPoolM": 11.8,
+      "trend": "up",
+      "trendPct": 14,
+      "collective": "Florida Victorious"
+    },
+    "secRankings": [
+      {
+        "id": "tamu",
+        "name": "Texas A&M Aggies",
+        "school": "Texas A&M Aggies",
+        "conference": "SEC",
+        "collective": "Fund 12",
+        "ranking": {
+          "secRank": 1,
+          "nationalRank": 3,
+          "score": 94
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 22.5,
+          "trend": "up",
+          "trendPct": 12
+        }
+      },
+      {
+        "id": "tex",
+        "name": "Texas Longhorns",
+        "school": "Texas Longhorns",
+        "conference": "SEC",
+        "collective": "Horns With Heart",
+        "ranking": {
+          "secRank": 2,
+          "nationalRank": 4,
+          "score": 92
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 20.8,
+          "trend": "up",
+          "trendPct": 18
+        }
+      },
+      {
+        "id": "bama",
+        "name": "Alabama Crimson Tide",
+        "school": "Alabama Crimson Tide",
+        "conference": "SEC",
+        "collective": "Yellowhammer Fund",
+        "ranking": {
+          "secRank": 3,
+          "nationalRank": 5,
+          "score": 90
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 19.2,
+          "trend": "stable",
+          "trendPct": 2
+        }
+      },
+      {
+        "id": "uga",
+        "name": "Georgia Bulldogs",
+        "school": "Georgia Bulldogs",
+        "conference": "SEC",
+        "collective": "Classic City Collective",
+        "ranking": {
+          "secRank": 4,
+          "nationalRank": 7,
+          "score": 88
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 17.5,
+          "trend": "up",
+          "trendPct": 8
+        }
+      },
+      {
+        "id": "lsu",
+        "name": "LSU Tigers",
+        "school": "LSU Tigers",
+        "conference": "SEC",
+        "collective": "Bayou Traditions",
+        "ranking": {
+          "secRank": 5,
+          "nationalRank": 10,
+          "score": 84
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 14.8,
+          "trend": "up",
+          "trendPct": 6
+        }
+      },
+      {
+        "id": "olemiss",
+        "name": "Ole Miss Rebels",
+        "school": "Ole Miss Rebels",
+        "conference": "SEC",
+        "collective": "Champion Circle",
+        "ranking": {
+          "secRank": 6,
+          "nationalRank": 12,
+          "score": 81
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 13.2,
+          "trend": "up",
+          "trendPct": 15
+        }
+      },
+      {
+        "id": "tenn",
+        "name": "Tennessee Volunteers",
+        "school": "Tennessee Volunteers",
+        "conference": "SEC",
+        "collective": "Spire Collective",
+        "ranking": {
+          "secRank": 7,
+          "nationalRank": 14,
+          "score": 79
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 12.5,
+          "trend": "up",
+          "trendPct": 9
+        }
+      },
+      {
+        "id": "uf",
+        "name": "Florida Gators",
+        "school": "Florida Gators",
+        "conference": "SEC",
+        "collective": "Florida Victorious",
+        "ranking": {
+          "secRank": 8,
+          "nationalRank": 16,
+          "score": 77
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 11.8,
+          "trend": "up",
+          "trendPct": 14
+        }
+      },
+      {
+        "id": "auburn",
+        "name": "Auburn Tigers",
+        "school": "Auburn Tigers",
+        "conference": "SEC",
+        "collective": "Auburn NIL Club",
+        "ranking": {
+          "secRank": 9,
+          "nationalRank": 18,
+          "score": 74
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 10.5,
+          "trend": "up",
+          "trendPct": 11
+        }
+      },
+      {
+        "id": "okla",
+        "name": "Oklahoma Sooners",
+        "school": "Oklahoma Sooners",
+        "conference": "SEC",
+        "collective": "Crimson & Cream",
+        "ranking": {
+          "secRank": 10,
+          "nationalRank": 19,
+          "score": 73
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 10.2,
+          "trend": "stable",
+          "trendPct": 3
+        }
+      },
+      {
+        "id": "scar",
+        "name": "South Carolina Gamecocks",
+        "school": "South Carolina Gamecocks",
+        "conference": "SEC",
+        "collective": "Garnet Trust",
+        "ranking": {
+          "secRank": 11,
+          "nationalRank": 24,
+          "score": 68
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 8.4,
+          "trend": "up",
+          "trendPct": 7
+        }
+      },
+      {
+        "id": "mizz",
+        "name": "Missouri Tigers",
+        "school": "Missouri Tigers",
+        "conference": "SEC",
+        "collective": "Golden NIL",
+        "ranking": {
+          "secRank": 12,
+          "nationalRank": 28,
+          "score": 64
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 7.2,
+          "trend": "stable",
+          "trendPct": 1
+        }
+      },
+      {
+        "id": "ark",
+        "name": "Arkansas Razorbacks",
+        "school": "Arkansas Razorbacks",
+        "conference": "SEC",
+        "collective": "Hogs NIL",
+        "ranking": {
+          "secRank": 13,
+          "nationalRank": 30,
+          "score": 62
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 6.8,
+          "trend": "up",
+          "trendPct": 5
+        }
+      },
+      {
+        "id": "uk",
+        "name": "Kentucky Wildcats",
+        "school": "Kentucky Wildcats",
+        "conference": "SEC",
+        "collective": "Wildcat NIL",
+        "ranking": {
+          "secRank": 14,
+          "nationalRank": 32,
+          "score": 60
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 6.2,
+          "trend": "stable",
+          "trendPct": 0
+        }
+      },
+      {
+        "id": "msst",
+        "name": "Mississippi State Bulldogs",
+        "school": "Mississippi State Bulldogs",
+        "conference": "SEC",
+        "collective": "Bulldog NIL",
+        "ranking": {
+          "secRank": 15,
+          "nationalRank": 35,
+          "score": 57
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 5.5,
+          "trend": "up",
+          "trendPct": 4
+        }
+      },
+      {
+        "id": "vandy",
+        "name": "Vanderbilt Commodores",
+        "school": "Vanderbilt Commodores",
+        "conference": "SEC",
+        "collective": "Anchor NIL",
+        "ranking": {
+          "secRank": 16,
+          "nationalRank": 42,
+          "score": 52
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 4.1,
+          "trend": "up",
+          "trendPct": 6
+        }
+      }
+    ],
+    "nationalRankings": [
+      {
+        "id": "ohio-st",
+        "name": "Ohio State Buckeyes",
+        "school": "Ohio State Buckeyes",
+        "conference": "Big Ten",
+        "collective": "The Foundation",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 1,
+          "score": 96
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 24.5,
+          "trend": "up",
+          "trendPct": 10
+        }
+      },
+      {
+        "id": "tamu",
+        "name": "Texas A&M Aggies",
+        "school": "Texas A&M Aggies",
+        "conference": "SEC",
+        "collective": "Fund 12",
+        "ranking": {
+          "secRank": 1,
+          "nationalRank": 3,
+          "score": 94
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 22.5,
+          "trend": "up",
+          "trendPct": 12
+        }
+      },
+      {
+        "id": "tex",
+        "name": "Texas Longhorns",
+        "school": "Texas Longhorns",
+        "conference": "SEC",
+        "collective": "Horns With Heart",
+        "ranking": {
+          "secRank": 2,
+          "nationalRank": 4,
+          "score": 92
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 20.8,
+          "trend": "up",
+          "trendPct": 18
+        }
+      },
+      {
+        "id": "bama",
+        "name": "Alabama Crimson Tide",
+        "school": "Alabama Crimson Tide",
+        "conference": "SEC",
+        "collective": "Yellowhammer Fund",
+        "ranking": {
+          "secRank": 3,
+          "nationalRank": 5,
+          "score": 90
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 19.2,
+          "trend": "stable",
+          "trendPct": 2
+        }
+      },
+      {
+        "id": "usc",
+        "name": "USC Trojans",
+        "school": "USC Trojans",
+        "conference": "Big Ten",
+        "collective": "United Legacy Fund",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 6,
+          "score": 86
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 18.5,
+          "trend": "up",
+          "trendPct": 9
+        }
+      },
+      {
+        "id": "uga",
+        "name": "Georgia Bulldogs",
+        "school": "Georgia Bulldogs",
+        "conference": "SEC",
+        "collective": "Classic City Collective",
+        "ranking": {
+          "secRank": 4,
+          "nationalRank": 7,
+          "score": 88
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 17.5,
+          "trend": "up",
+          "trendPct": 8
+        }
+      },
+      {
+        "id": "oregon",
+        "name": "Oregon Ducks",
+        "school": "Oregon Ducks",
+        "conference": "Big Ten",
+        "collective": "Division Street",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 8,
+          "score": 82
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 16.2,
+          "trend": "up",
+          "trendPct": 14
+        }
+      },
+      {
+        "id": "michigan",
+        "name": "Michigan Wolverines",
+        "school": "Michigan Wolverines",
+        "conference": "Big Ten",
+        "collective": "Champions Circle",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 9,
+          "score": 80
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 15.8,
+          "trend": "stable",
+          "trendPct": 2
+        }
+      },
+      {
+        "id": "lsu",
+        "name": "LSU Tigers",
+        "school": "LSU Tigers",
+        "conference": "SEC",
+        "collective": "Bayou Traditions",
+        "ranking": {
+          "secRank": 5,
+          "nationalRank": 10,
+          "score": 84
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 14.8,
+          "trend": "up",
+          "trendPct": 6
+        }
+      },
+      {
+        "id": "nd",
+        "name": "Notre Dame Fighting Irish",
+        "school": "Notre Dame Fighting Irish",
+        "conference": "Independent",
+        "collective": "Irish NIL Collective",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 11,
+          "score": 78
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 14.5,
+          "trend": "up",
+          "trendPct": 7
+        }
+      },
+      {
+        "id": "olemiss",
+        "name": "Ole Miss Rebels",
+        "school": "Ole Miss Rebels",
+        "conference": "SEC",
+        "collective": "Champion Circle",
+        "ranking": {
+          "secRank": 6,
+          "nationalRank": 12,
+          "score": 81
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 13.2,
+          "trend": "up",
+          "trendPct": 15
+        }
+      },
+      {
+        "id": "penn-st",
+        "name": "Penn State Nittany Lions",
+        "school": "Penn State Nittany Lions",
+        "conference": "Big Ten",
+        "collective": "Happy Valley NIL",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 13,
+          "score": 76
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 13.8,
+          "trend": "up",
+          "trendPct": 8
+        }
+      },
+      {
+        "id": "tenn",
+        "name": "Tennessee Volunteers",
+        "school": "Tennessee Volunteers",
+        "conference": "SEC",
+        "collective": "Spire Collective",
+        "ranking": {
+          "secRank": 7,
+          "nationalRank": 14,
+          "score": 79
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 12.5,
+          "trend": "up",
+          "trendPct": 9
+        }
+      },
+      {
+        "id": "miami",
+        "name": "Miami Hurricanes",
+        "school": "Miami Hurricanes",
+        "conference": "ACC",
+        "collective": "Canes Legacy",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 15,
+          "score": 74
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 12.2,
+          "trend": "up",
+          "trendPct": 12
+        }
+      },
+      {
+        "id": "uf",
+        "name": "Florida Gators",
+        "school": "Florida Gators",
+        "conference": "SEC",
+        "collective": "Florida Victorious",
+        "ranking": {
+          "secRank": 8,
+          "nationalRank": 16,
+          "score": 77
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 11.8,
+          "trend": "up",
+          "trendPct": 14
+        }
+      },
+      {
+        "id": "clemson",
+        "name": "Clemson Tigers",
+        "school": "Clemson Tigers",
+        "conference": "ACC",
+        "collective": "Clemson United",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 17,
+          "score": 72
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 11.5,
+          "trend": "stable",
+          "trendPct": 1
+        }
+      },
+      {
+        "id": "auburn",
+        "name": "Auburn Tigers",
+        "school": "Auburn Tigers",
+        "conference": "SEC",
+        "collective": "Auburn NIL Club",
+        "ranking": {
+          "secRank": 9,
+          "nationalRank": 18,
+          "score": 74
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 10.5,
+          "trend": "up",
+          "trendPct": 11
+        }
+      },
+      {
+        "id": "okla",
+        "name": "Oklahoma Sooners",
+        "school": "Oklahoma Sooners",
+        "conference": "SEC",
+        "collective": "Crimson & Cream",
+        "ranking": {
+          "secRank": 10,
+          "nationalRank": 19,
+          "score": 73
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 10.2,
+          "trend": "stable",
+          "trendPct": 3
+        }
+      },
+      {
+        "id": "fsu",
+        "name": "Florida State Seminoles",
+        "school": "Florida State Seminoles",
+        "conference": "ACC",
+        "collective": "Seminole Boost",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 19,
+          "score": 70
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 10.8,
+          "trend": "up",
+          "trendPct": 6
+        }
+      },
+      {
+        "id": "colorado",
+        "name": "Colorado Buffaloes",
+        "school": "Colorado Buffaloes",
+        "conference": "Big 12",
+        "collective": "Buffalo Edge",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 22,
+          "score": 66
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 9.2,
+          "trend": "up",
+          "trendPct": 16
+        }
+      },
+      {
+        "id": "tcu",
+        "name": "TCU Horned Frogs",
+        "school": "TCU Horned Frogs",
+        "conference": "Big 12",
+        "collective": "Frog Club NIL",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 23,
+          "score": 65
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 8.8,
+          "trend": "up",
+          "trendPct": 5
+        }
+      },
+      {
+        "id": "scar",
+        "name": "South Carolina Gamecocks",
+        "school": "South Carolina Gamecocks",
+        "conference": "SEC",
+        "collective": "Garnet Trust",
+        "ranking": {
+          "secRank": 11,
+          "nationalRank": 24,
+          "score": 68
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 8.4,
+          "trend": "up",
+          "trendPct": 7
+        }
+      },
+      {
+        "id": "washington",
+        "name": "Washington Huskies",
+        "school": "Washington Huskies",
+        "conference": "Big Ten",
+        "collective": "Purple Reign Collective",
+        "ranking": {
+          "secRank": null,
+          "nationalRank": 24,
+          "score": 64
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 8.5,
+          "trend": "stable",
+          "trendPct": 2
+        }
+      },
+      {
+        "id": "mizz",
+        "name": "Missouri Tigers",
+        "school": "Missouri Tigers",
+        "conference": "SEC",
+        "collective": "Golden NIL",
+        "ranking": {
+          "secRank": 12,
+          "nationalRank": 28,
+          "score": 64
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 7.2,
+          "trend": "stable",
+          "trendPct": 1
+        }
+      },
+      {
+        "id": "ark",
+        "name": "Arkansas Razorbacks",
+        "school": "Arkansas Razorbacks",
+        "conference": "SEC",
+        "collective": "Hogs NIL",
+        "ranking": {
+          "secRank": 13,
+          "nationalRank": 30,
+          "score": 62
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 6.8,
+          "trend": "up",
+          "trendPct": 5
+        }
+      },
+      {
+        "id": "uk",
+        "name": "Kentucky Wildcats",
+        "school": "Kentucky Wildcats",
+        "conference": "SEC",
+        "collective": "Wildcat NIL",
+        "ranking": {
+          "secRank": 14,
+          "nationalRank": 32,
+          "score": 60
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 6.2,
+          "trend": "stable",
+          "trendPct": 0
+        }
+      },
+      {
+        "id": "msst",
+        "name": "Mississippi State Bulldogs",
+        "school": "Mississippi State Bulldogs",
+        "conference": "SEC",
+        "collective": "Bulldog NIL",
+        "ranking": {
+          "secRank": 15,
+          "nationalRank": 35,
+          "score": 57
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 5.5,
+          "trend": "up",
+          "trendPct": 4
+        }
+      },
+      {
+        "id": "vandy",
+        "name": "Vanderbilt Commodores",
+        "school": "Vanderbilt Commodores",
+        "conference": "SEC",
+        "collective": "Anchor NIL",
+        "ranking": {
+          "secRank": 16,
+          "nationalRank": 42,
+          "score": 52
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 4.1,
+          "trend": "up",
+          "trendPct": 6
+        }
+      }
+    ],
+    "trendHistory": [
+      {
+        "period": "2024",
+        "valueM": 8.5
+      },
+      {
+        "period": "2025",
+        "valueM": 9.5
+      },
+      {
+        "period": "2026",
+        "valueM": 11.8,
+        "trend": "up",
+        "trendPct": 14
+      }
+    ],
+    "positionImpact": [
+      {
+        "position": "WR",
+        "count": 2
+      },
+      {
+        "position": "QB",
+        "count": 1
+      },
+      {
+        "position": "EDGE",
+        "count": 1
+      },
+      {
+        "position": "OL",
+        "count": 1
+      }
+    ],
+    "recruitingCorrelation": {
+      "positiveEvents": 3,
+      "totalEvents": 3,
+      "note": "Major NIL events correlated with reported recruiting momentum"
+    },
+    "recentEvents": [
+      {
+        "id": "nil_evt_001",
+        "title": "Florida Victorious expands roster-wide tier program",
+        "summary": "Florida Victorious announced expanded tiered deals for skill-position starters ahead of the 2026 season.",
+        "impact": "WR, QB, EDGE",
+        "date": "2026-05-15",
+        "type": "collective_launch",
+        "recruitingCorrelation": "positive"
+      },
+      {
+        "id": "nil_evt_002",
+        "title": "Reported seven-figure portal package secured OL commitment",
+        "summary": "Multiple outlets reported a coordinated package helped land a priority portal OL target.",
+        "impact": "OL",
+        "date": "2026-04-02",
+        "type": "reported_package",
+        "recruitingCorrelation": "positive"
+      },
+      {
+        "id": "nil_evt_005",
+        "title": "In-state flip tied to Florida Victorious visibility at OV",
+        "summary": "Family cited structured NIL education and collective roadmap during official visit weekend.",
+        "impact": "WR",
+        "date": "2026-02-10",
+        "type": "recruiting_win",
+        "recruitingCorrelation": "positive"
+      }
+    ],
+    "peers": [
+      {
+        "id": "tamu",
+        "name": "Texas A&M Aggies",
+        "school": "Texas A&M Aggies",
+        "conference": "SEC",
+        "collective": "Fund 12",
+        "ranking": {
+          "secRank": 1,
+          "nationalRank": 3,
+          "score": 94
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 22.5,
+          "trend": "up",
+          "trendPct": 12
+        }
+      },
+      {
+        "id": "tex",
+        "name": "Texas Longhorns",
+        "school": "Texas Longhorns",
+        "conference": "SEC",
+        "collective": "Horns With Heart",
+        "ranking": {
+          "secRank": 2,
+          "nationalRank": 4,
+          "score": 92
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 20.8,
+          "trend": "up",
+          "trendPct": 18
+        }
+      },
+      {
+        "id": "bama",
+        "name": "Alabama Crimson Tide",
+        "school": "Alabama Crimson Tide",
+        "conference": "SEC",
+        "collective": "Yellowhammer Fund",
+        "ranking": {
+          "secRank": 3,
+          "nationalRank": 5,
+          "score": 90
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 19.2,
+          "trend": "stable",
+          "trendPct": 2
+        }
+      },
+      {
+        "id": "uga",
+        "name": "Georgia Bulldogs",
+        "school": "Georgia Bulldogs",
+        "conference": "SEC",
+        "collective": "Classic City Collective",
+        "ranking": {
+          "secRank": 4,
+          "nationalRank": 7,
+          "score": 88
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 17.5,
+          "trend": "up",
+          "trendPct": 8
+        }
+      },
+      {
+        "id": "lsu",
+        "name": "LSU Tigers",
+        "school": "LSU Tigers",
+        "conference": "SEC",
+        "collective": "Bayou Traditions",
+        "ranking": {
+          "secRank": 5,
+          "nationalRank": 10,
+          "score": 84
+        },
+        "metrics": {
+          "estimatedAnnualPoolM": 14.8,
+          "trend": "up",
+          "trendPct": 6
+        }
+      }
+    ],
+    "updatedAt": "2026-07-20T15:48:47.526Z"
+  },
+  "players": [
+    {
+      "id": "tranard-roberts",
+      "slug": "tranard-roberts",
+      "name": "Tranard Roberts",
+      "position": "RB",
+      "school": "The Villages Charter (The Villages, FL)",
+      "htWt": "5-11.5 / 195",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 88,
+      "nationalRank": 500,
+      "positionRank": 34,
+      "stateRank": 53,
+      "rating": 88,
+      "natlRank": 500,
+      "posRank": 34,
+      "movementDelta": 59,
+      "delta7d": 59,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "jalen-brewster",
+      "slug": "jalen-brewster",
+      "name": "Jalen Brewster",
+      "position": "DL",
+      "school": "Lake Dallas HS, TX",
+      "htWt": null,
+      "stars": 5,
+      "headliner": true,
+      "committedTo": "Texas Tech",
+      "compositeScore": 98.63,
+      "nationalRank": 1,
+      "positionRank": 1,
+      "stateRank": 1,
+      "rating": 98.63,
+      "natlRank": 1,
+      "posRank": 1,
+      "movementDelta": 37,
+      "delta7d": 37,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "monshun-sales",
+      "slug": "monshun-sales",
+      "name": "Monshun Sales",
+      "position": "WR",
+      "school": "Lawrence North (Indianapolis, IN)",
+      "htWt": "6-5 / 195",
+      "stars": 5,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 98,
+      "nationalRank": 13,
+      "positionRank": 1,
+      "stateRank": 1,
+      "rating": 98,
+      "natlRank": 13,
+      "posRank": 1,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "tashawn-poole",
+      "slug": "tashawn-poole",
+      "name": "Ta'Shawn Poole",
+      "position": "S",
+      "school": "Howard (Macon, GA)",
+      "htWt": "6-2 / 185",
+      "stars": 4,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 93,
+      "nationalRank": 85,
+      "positionRank": 4,
+      "stateRank": 6,
+      "rating": 93,
+      "natlRank": 85,
+      "posRank": 4,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "brayden-parks",
+      "slug": "brayden-parks",
+      "name": "Brayden Parks",
+      "position": "DL",
+      "school": "Brother Rice (Oak Lawn, IL)",
+      "htWt": "6-3 / 305",
+      "stars": 4,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 91,
+      "nationalRank": 161,
+      "positionRank": 18,
+      "stateRank": 7,
+      "rating": 91,
+      "natlRank": 161,
+      "posRank": 18,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "seth-williams",
+      "slug": "seth-williams",
+      "name": "Seth Williams",
+      "position": "S",
+      "school": "Lakeside (Atlanta, GA)",
+      "htWt": "6-2 / 180",
+      "stars": 4,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 90,
+      "nationalRank": null,
+      "positionRank": 25,
+      "stateRank": 22,
+      "rating": 90,
+      "natlRank": null,
+      "posRank": 25,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "gregory-batson",
+      "slug": "gregory-batson",
+      "name": "Gregory Batson",
+      "position": "LB",
+      "school": "Lee County (Leesburg, GA)",
+      "htWt": "6-1 / 215",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 89,
+      "nationalRank": null,
+      "positionRank": 30,
+      "stateRank": 38,
+      "rating": 89,
+      "natlRank": null,
+      "posRank": 30,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "caden-waye",
+      "slug": "caden-waye",
+      "name": "Caden Waye",
+      "position": "RB",
+      "school": "Ola (McDonough, GA)",
+      "htWt": "5-11 / 185",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 89,
+      "nationalRank": null,
+      "positionRank": 23,
+      "stateRank": 36,
+      "rating": 89,
+      "natlRank": null,
+      "posRank": 23,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "jacob-whitehead",
+      "slug": "jacob-whitehead",
+      "name": "Jacob Whitehead",
+      "position": "CB",
+      "school": "Crean Lutheran (Irvine, CA)",
+      "htWt": "6-2 / 165",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 88,
+      "nationalRank": null,
+      "positionRank": 55,
+      "stateRank": 50,
+      "rating": 88,
+      "natlRank": null,
+      "posRank": 55,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "dolph-mcdonald",
+      "slug": "dolph-mcdonald",
+      "name": "Dolph McDonald",
+      "position": "CB",
+      "school": "Morton (Morton, MS)",
+      "htWt": "6-1 / 160",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 87,
+      "nationalRank": null,
+      "positionRank": 70,
+      "stateRank": 22,
+      "rating": 87,
+      "natlRank": null,
+      "posRank": 70,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "quartavius-lyons-jr",
+      "slug": "quartavius-lyons-jr",
+      "name": "Quartavius Lyons Jr.",
+      "position": "ATH",
+      "school": "Miami Central (Miami, FL)",
+      "htWt": "6-1 / 165",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 87,
+      "nationalRank": null,
+      "positionRank": 93,
+      "stateRank": 88,
+      "rating": 87,
+      "natlRank": null,
+      "posRank": 93,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "liufau-loumoli",
+      "slug": "liufau-loumoli",
+      "name": "Liufau Loumoli",
+      "position": "LB",
+      "school": "IMG Academy (Bradenton, FL)",
+      "htWt": "6-1 / 210",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 86,
+      "nationalRank": null,
+      "positionRank": 89,
+      "stateRank": 91,
+      "rating": 86,
+      "natlRank": null,
+      "posRank": 89,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "brian-demoss",
+      "slug": "brian-demoss",
+      "name": "Brian DeMoss",
+      "position": "EDGE",
+      "school": "Simeon (Chicago, IL)",
+      "htWt": "6-5 / 210",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 86,
+      "nationalRank": null,
+      "positionRank": 89,
+      "stateRank": 36,
+      "rating": 86,
+      "natlRank": null,
+      "posRank": 89,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "kaden-woodie",
+      "slug": "kaden-woodie",
+      "name": "Kaden Woodie",
+      "position": "LB",
+      "school": "Spruce Creek (Port Orange, FL)",
+      "htWt": "6-2 / 211",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 86,
+      "nationalRank": null,
+      "positionRank": 93,
+      "stateRank": 122,
+      "rating": 86,
+      "natlRank": null,
+      "posRank": 93,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "michael-griffin-jr",
+      "slug": "michael-griffin-jr",
+      "name": "Michael Griffin Jr.",
+      "position": "LB",
+      "school": "Hough (Cornelius, NC)",
+      "htWt": "5-11 / 205",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 86,
+      "nationalRank": null,
+      "positionRank": 97,
+      "stateRank": 36,
+      "rating": 86,
+      "natlRank": null,
+      "posRank": 97,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "caleb-mattison",
+      "slug": "caleb-mattison",
+      "name": "Caleb Mattison",
+      "position": "RB",
+      "school": "Bishop Kenny (Jacksonville, FL)",
+      "htWt": "5-9 / 200",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 86,
+      "nationalRank": null,
+      "positionRank": 101,
+      "stateRank": 140,
+      "rating": 86,
+      "natlRank": null,
+      "posRank": 101,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "wesley-winn",
+      "slug": "wesley-winn",
+      "name": "Wesley Winn",
+      "position": "ATH",
+      "school": "Saint Andrew's (Boca Raton, FL)",
+      "htWt": "5-7.5 / 152",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 85,
+      "nationalRank": null,
+      "positionRank": 105,
+      "stateRank": 150,
+      "rating": 85,
+      "natlRank": null,
+      "posRank": 105,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    },
+    {
+      "id": "khamarian-young",
+      "slug": "khamarian-young",
+      "name": "Khamarian Young",
+      "position": "WR",
+      "school": "McArthur (Hollywood, FL)",
+      "htWt": "6-0 / 175",
+      "stars": 3,
+      "headliner": false,
+      "committedTo": null,
+      "compositeScore": 85,
+      "nationalRank": null,
+      "positionRank": 187,
+      "stateRank": 162,
+      "rating": 85,
+      "natlRank": null,
+      "posRank": 187,
+      "movementDelta": 0,
+      "delta7d": 0,
+      "insiderNotes": null,
+      "notePreview": null,
+      "skinny": null,
+      "classYear": 2027
+    }
+  ]
+}

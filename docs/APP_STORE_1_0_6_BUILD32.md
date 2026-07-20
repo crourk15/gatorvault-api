@@ -17,10 +17,10 @@
 
 ## Remaining before calling Build 32 “true elite”
 
-- Autoposter: human operator sign-off name/date + Render flag confirm (see `ELITE_RECRUITING_INTEL_OPERATOR_SPEC.md`)
+- ~~Autoposter: human operator sign-off name/date + Render flag confirm~~ — done 2026-07-20 (`operator-signoff-production-2026-07-20.json`)
 - Optional: full Admin Roster/Board iframe rewrite (Alerts + Monitoring Summaries are now in-shell)
 - Optional: deeper CSS layer merge beyond dead-file + duplicate import cleanup
-- `npm run proof:mobile:deploy` after merge — required before claiming ready
+- ~~`npm run proof:mobile:deploy` after merge~~ — **PASS** 2026-07-20 on Build 33 stack (see `APP_STORE_1_0_7_BUILD33.md`)
 
 ## iOS
 

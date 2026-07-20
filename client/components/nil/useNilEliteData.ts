@@ -7,6 +7,7 @@ import {
   type HighPriorityPlayer,
   type HighPriorityResponse,
 } from '@/lib/futurecast-high-priority-api';
+import { buildSeedNilEliteBundle } from '@/lib/nil-hub-seed';
 
 export type NilPortalImpactRow = {
   id: string;
@@ -26,6 +27,11 @@ export type NilEliteData = {
   error: string | null;
   reload: () => Promise<void>;
 };
+
+const SEED_NIL = buildSeedNilEliteBundle();
+const HAS_SEED =
+  Boolean(SEED_NIL.dashboard?.ufStanding) ||
+  (SEED_NIL.dashboard?.secRankings?.length ?? 0) > 0;
 
 function buildPortalImpact(players: HighPriorityPlayer[], dashboard: NilDashboard | null) {
   const gains: NilPortalImpactRow[] = [];
@@ -91,13 +97,19 @@ function parseNil(p: HighPriorityPlayer): number {
 }
 
 export function useNilEliteData(): NilEliteData {
-  const [dashboard, setDashboard] = useState<NilDashboard | null>(null);
-  const [players, setPlayers] = useState<HighPriorityPlayer[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [dashboard, setDashboard] = useState<NilDashboard | null>(
+    HAS_SEED ? SEED_NIL.dashboard : null
+  );
+  const [players, setPlayers] = useState<HighPriorityPlayer[]>(
+    HAS_SEED ? SEED_NIL.players : []
+  );
+  // Seeded first paint is content-ready; live refresh still runs in background.
+  const [loading, setLoading] = useState(!HAS_SEED);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    setLoading(true);
+    // Only show skeleton gate when we have nothing to paint.
+    if (!HAS_SEED) setLoading(true);
     setError(null);
     try {
       const [dash, hp] = await Promise.all([
@@ -107,7 +119,10 @@ export function useNilEliteData(): NilEliteData {
       setDashboard(dash);
       setPlayers(hp.players ?? []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load NIL tracker.');
+      // Keep seed painted if live wake fails.
+      if (!HAS_SEED) {
+        setError(err instanceof Error ? err.message : 'Could not load NIL tracker.');
+      }
     } finally {
       setLoading(false);
     }

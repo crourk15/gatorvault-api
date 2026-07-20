@@ -1,21 +1,35 @@
 /**
- * Inline boot script for recruiting hub — paints hero + class sections from API before React bundle.
+ * Inline boot script for recruiting hub — paints hero + class sections from seed first, then live API.
  */
 import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { RECRUITING_HUB_HERO_SEED } from '@/lib/recruiting-hub-hero-seed';
 
 export const RECRUITING_HUB_HERO_YEAR = ACTIVE_RECRUITING_CLASS_YEAR;
 
-/** Minimal inline script — fetches hero + class metrics, sets window.__GV_HUB__, updates DOM. */
+/** Minimal inline script — seed paint first, then refresh from API. */
 export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): string {
   const safeYear = Number.isFinite(year) ? year : RECRUITING_HUB_HERO_YEAR;
+  const seedLiteral = JSON.stringify(RECRUITING_HUB_HERO_SEED);
   return `(function(){
   function run() {
     try {
       var start = performance.now();
+      var SEED = ${seedLiteral};
       window.__GV_HUB__ = window.__GV_HUB__ || {};
       window.__GV_HUB__.start = start;
       window.__GV_HUB__.year = ${safeYear};
       window.__GV_HUB__.metricsByYear = window.__GV_HUB__.metricsByYear || {};
+
+      function fanTitle(title) {
+        if (!title || /command\\s*center/i.test(String(title))) return SEED.title || 'Florida Recruiting';
+        return title;
+      }
+      function fanSubtitle(subtitle) {
+        if (!subtitle || /command\\s*center/i.test(String(subtitle))) {
+          return SEED.subtitle || 'Who Florida is chasing — movement, board, and beat intel.';
+        }
+        return subtitle;
+      }
 
       function paintMetricFields(root, metrics) {
         if (!root || !metrics) return;
@@ -42,7 +56,7 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
         }
         [2026, 2027, 2028].forEach(function(y) {
           var card = document.querySelector('[data-rh-boot="class-card-' + y + '"]');
-          var metrics = byYear[y];
+          var metrics = byYear[y] || byYear[String(y)];
           if (!card || !metrics) return;
           paintMetricFields(card, metrics);
           card.classList.remove('rh-boot-loading');
@@ -54,16 +68,27 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
       function storeMetrics(year, data) {
         if (!data) return;
         window.__GV_HUB__.metricsByYear[year] = data.classOverview || data;
+        window.__GV_HUB__.metricsByYear[String(year)] = data.classOverview || data;
       }
 
       function paintHero(data) {
         if (!data) return;
-        window.__GV_HERO__ = data;
+        var normalized = Object.assign({}, data, {
+          title: fanTitle(data.title),
+          subtitle: fanSubtitle(data.subtitle)
+        });
+        window.__GV_HERO__ = normalized;
+        data = normalized;
         window.__GV_HUB__.heroRenderMs = Math.round(performance.now() - start);
         if (data.classOverview) {
           storeMetrics(data.year || ${safeYear}, data.classOverview);
-          paintClassSections();
         }
+        if (data.classOverviewAll) {
+          Object.keys(data.classOverviewAll).forEach(function(y) {
+            storeMetrics(y, data.classOverviewAll[y]);
+          });
+        }
+        paintClassSections();
         var root = document.querySelector('[data-hydrate="hero"]');
         if (!root) return;
         root.classList.remove('hero-skeleton');
@@ -72,10 +97,10 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
 
         var title = root.querySelector('[data-hero-field="title"]');
         var subtitle = root.querySelector('[data-hero-field="subtitle"]');
-        if (title && data.title) title.textContent = data.title;
-        if (subtitle && data.subtitle) subtitle.textContent = data.subtitle;
+        if (title) title.textContent = fanTitle(data.title);
+        if (subtitle) subtitle.textContent = fanSubtitle(data.subtitle);
 
-        var years = data.classYears || [2026, 2027, 2028];
+        var years = data.classYears || SEED.classYears || [2026, 2027, 2028];
         var yearRow = root.querySelector('[data-hero-field="year-tabs"]');
         if (yearRow) {
           yearRow.innerHTML = years.map(function(y) {
@@ -93,7 +118,9 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
         ];
         fields.forEach(function(pair) {
           var node = root.querySelector('[data-hero-metric="' + pair[1] + '"]');
-          if (node && metrics[pair[0]] != null) node.textContent = metrics[pair[0]];
+          if (node && metrics[pair[0]] != null && String(metrics[pair[0]]) !== '') {
+            node.textContent = metrics[pair[0]];
+          }
         });
 
         var tickerTrack = root.querySelector('[data-hero-field="ticker-track"]');
@@ -125,6 +152,22 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
             });
         });
       }
+
+      // Instant first paint from build-time seed — never leave dashes waiting on cold API.
+      if (SEED && SEED.classOverviewAll) {
+        Object.keys(SEED.classOverviewAll).forEach(function(y) {
+          storeMetrics(y, SEED.classOverviewAll[y]);
+        });
+      }
+      paintHero({
+        ok: true,
+        year: SEED.activeYear || ${safeYear},
+        title: SEED.title,
+        subtitle: SEED.subtitle,
+        classYears: SEED.classYears || [2026, 2027, 2028],
+        classOverview: SEED.classOverview,
+        classOverviewAll: SEED.classOverviewAll
+      });
 
       var heroUrl = '/api/recruiting/hub/hero?year=${safeYear}';
       function loadHero(attempt) {

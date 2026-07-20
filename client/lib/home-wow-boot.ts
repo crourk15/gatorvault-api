@@ -2,13 +2,30 @@
  * Inline boot for vault home — paints recruiting snapshot + FutureCast preview before React.
  */
 import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { RECRUITING_HUB_HERO_SEED } from '@/lib/recruiting-hub-hero-seed';
+import { GNL_HUB_SEED } from '@/lib/gnl-hub-seed';
 
 export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
   const safeYear = Number.isFinite(year) ? year : ACTIVE_RECRUITING_CLASS_YEAR;
+  const seedLiteral = JSON.stringify(RECRUITING_HUB_HERO_SEED);
+  const beatSeed = (GNL_HUB_SEED.panels?.beatWriterHighlights ?? [])
+    .filter((row) => String(row.text || '').trim())
+    .slice(0, 3)
+    .map((row, idx) => ({
+      id: `seed-beat-${idx}`,
+      text: String(row.text || '').trim(),
+      writerName: row.writerName || row.handle || 'Beat Writer',
+      source: row.source || 'UF Beat',
+      url: row.url || null,
+      timestamp: row.timestamp || new Date().toISOString(),
+    }));
+  const beatSeedLiteral = JSON.stringify(beatSeed);
   return `(function(){
   function run() {
     try {
       var year = ${safeYear};
+      var SEED = ${seedLiteral};
+      var BEAT_SEED = ${beatSeedLiteral};
       window.__GV_HOME_WOW__ = window.__GV_HOME_WOW__ || {};
 
       function fetchJson(url, attempt) {
@@ -110,6 +127,14 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
           position: row.position || '—',
           ufPercent: num + '%'
         };
+      }
+
+      // Instant recruiting snapshot + beat highlights from build-time seeds.
+      if (SEED && SEED.classOverview) {
+        paintMetrics(SEED.classOverview);
+      }
+      if (BEAT_SEED && BEAT_SEED.length) {
+        paintBeat(BEAT_SEED);
       }
 
       Promise.all([

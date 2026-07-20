@@ -142,11 +142,11 @@
 .home-wow-hero-subtitle {
   position: relative;
   margin: 0 0 22px;
-  max-width: 28rem;
-  font-size: 1rem;
-  line-height: 1.45;
-  opacity: 0.9;
-  animation: home-hero-copy-in 0.75s ease-out 0.14s both;
+  max-width: 32rem;
+  font-size: clamp(1.05rem, 3.4vw, 1.25rem);
+  line-height: 1.4;
+  opacity: 0.92;
+  animation: home-hero-copy-in 0.75s ease-out 0.1s both;
 }
 
 .home-wow-hero-ctas {
@@ -237,13 +237,13 @@
 
 @media (max-width: 767px) {
   .home-wow-hero {
-    /* Available fold above header + bottom nav — brand-led, not empty stadium */
+    /* Own the first viewport — brand composition only; countdown/live sit below. */
     --home-hero-chrome: calc(
       var(--gv-shell-header-height, 64px) + 4.75rem + env(safe-area-inset-bottom, 0px)
     );
-    min-height: clamp(280px, calc(100svh - var(--home-hero-chrome)), 400px);
-    min-height: clamp(280px, calc(100dvh - var(--home-hero-chrome)), 400px);
-    align-items: flex-start;
+    min-height: calc(100svh - var(--home-hero-chrome));
+    min-height: calc(100dvh - var(--home-hero-chrome));
+    align-items: flex-end;
   }
 
   .home-wow-hero__inner {
@@ -1136,4 +1136,24 @@
 
 .home-wow-fc-subnote a:hover {
   text-decoration: underline;
+}
+
+/* Below-fold live pulse — not in the hero composition */
+.home-wow-below-pulse {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  margin: 8px 0 4px;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.9);
+}
+.home-wow-below-pulse__label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--home-gator-orange);
 }

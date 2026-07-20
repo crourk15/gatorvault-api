@@ -8,6 +8,7 @@ import {
   LIVE_HUB_REFRESH_MS,
   type LiveHubBundle,
 } from '@/lib/gatornation-live-api';
+import { buildSeedLiveHubBundle } from '@/lib/gnl-hub-seed';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 import { LIVE_STATE_KEY } from '@/components/vault/live/live-feed-utils';
 import { UiError } from '@/components/site/UiMessage';
@@ -17,26 +18,7 @@ import {
   type GnlFocusSection,
 } from '@/components/gatornation-live/GNLLiveFeedModule';
 
-const EMPTY_BUNDLE: LiveHubBundle = {
-  ticker: [],
-  feed: [],
-  podcasts: [],
-  panels: { visitsNow: [], portalBuzz: [], beatWriterHighlights: [], staffNotes: [] },
-  snapshot: {
-    commits: 0,
-    nationalRank: null,
-    secRank: null,
-    blueChips: 0,
-    inStatePercent: 0,
-    momentum: 0,
-    momentumTrend: 'neutral',
-  },
-  movement: null,
-  breakingNews: null,
-  gameDay: null,
-  updatedAt: null,
-  refreshedAt: null,
-};
+const SEED_BUNDLE: LiveHubBundle = buildSeedLiveHubBundle();
 
 export type GatorNationLiveFocus = GnlFocusSection;
 
@@ -45,10 +27,10 @@ type GatorNationLivePageProps = {
   focusSection?: GatorNationLiveFocus;
 };
 
-/** GatorNation Live — stream-first, honest empty states (45s refresh). */
+/** GatorNation Live — seeded first paint, then live refresh (45s). */
 export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps = {}): React.ReactElement {
-  const [bundle, setBundle] = useState<LiveHubBundle>(EMPTY_BUNDLE);
-  const [loading, setLoading] = useState(true);
+  const [bundle, setBundle] = useState<LiveHubBundle>(SEED_BUNDLE);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pollSeq, setPollSeq] = useState(0);
 
@@ -56,12 +38,11 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
 
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) {
-      setLoading(true);
       setError(null);
     }
     try {
-      // Always force dashboard refresh so beat posts are not stuck behind an empty in-memory snapshot.
-      const next = await fetchLiveHubBundle(true);
+      // Initial: cache-first. Polls: force refresh for beat freshness.
+      const next = await fetchLiveHubBundle(!isInitial);
       setBundle((prev) => {
         const nextLive =
           (next.feed?.length || 0) + (next.panels?.beatWriterHighlights?.length || 0);

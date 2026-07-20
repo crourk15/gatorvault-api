@@ -1,8 +1,8 @@
 2:I[4707,[],""]
 3:I[36423,[],""]
-4:I[43087,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","8140","/js/vault-chunks/8140-b964893761b9d7db.js","3087","/js/vault-chunks/3087-99a8123ba063eb69.js","1191","/js/vault-chunks/app/(legal)/layout-ad30a0c267d101c0.js"],"PublicSiteShell"]
-6:I[50985,["3185","/js/vault-chunks/app/layout-7269258988381ed5.js"],"AppProviders"]
-5:Tf31,(function(){
+4:I[43087,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","8140","/js/vault-chunks/8140-6c0b163b77d6335f.js","1511","/js/vault-chunks/1511-b94cc8780c006d7e.js","1191","/js/vault-chunks/app/(legal)/layout-84a2ccb6ea7e7816.js"],"PublicSiteShell"]
+6:I[50985,["3185","/js/vault-chunks/app/layout-9eed2348db56c221.js"],"AppProviders"]
+5:T2736,(function(){
   try {
     var cap = window.Capacitor;
     var proto = location.protocol || '';
@@ -18,6 +18,8 @@
       : bundledNative
         ? location.origin
         : 'https://gatorvaultinsider.com';
+    var COLD_KEY = 'gv_native_cold_done';
+    var SPA_KEY = 'gv_native_spa_path';
 
     function routePath(path) {
       var p = (path || '/').replace(/\/$/, '') || '/';
@@ -69,10 +71,43 @@
       } catch (e) { return false; }
     }
 
+    /** Fresh process: sign-in if logged out, vault home if logged in (ignore WKWebView restore). */
     function vaultDest() {
       return sessionOk()
         ? abs('/vault/')
         : abs('/join/?mode=signin&next=/vault/');
+    }
+
+    /** iOS may wipe localStorage; Preferences (UserDefaults) survives — restore before join bounce. */
+    function restoreSessionFromPreferences(done) {
+      try {
+        var plugins = cap && cap.Plugins;
+        var Prefs = plugins && plugins.Preferences;
+        if (!Prefs || typeof Prefs.get !== 'function') {
+          done();
+          return;
+        }
+        var settled = false;
+        var finish = function() {
+          if (settled) return;
+          settled = true;
+          done();
+        };
+        setTimeout(finish, 1200);
+        Prefs.get({ key: 'gv_session' }).then(function(res) {
+          try {
+            if (res && res.value) {
+              var s = JSON.parse(res.value);
+              if (s && s.email && s.token) {
+                localStorage.setItem('gv_session', res.value);
+              }
+            }
+          } catch (e1) {}
+          finish();
+        }).catch(function() { finish(); });
+      } catch (e2) {
+        done();
+      }
     }
 
     function isMarketingPath(path) {
@@ -80,29 +115,152 @@
       return p === '/' || p === '/welcome' || p === '/insider';
     }
 
+    function isVaultClientNav(href) {
+      try {
+        var p = new URL(href, SITE).pathname.replace(/\/$/, '') || '/';
+        return p === '/vault' || p.indexOf('/vault/') === 0;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    /** Catch-all shells — only one index.html exists; deep slugs must not hard-nav to missing files. */
+    function catchAllShell(pathname) {
+      var p = routePath(pathname);
+      var art = p.match(/^\/articles\/([^/]+)$/);
+      if (art && art[1] && art[1] !== 'detail') return '/vault/articles/';
+      var rules = [
+        [/^\/vault\/recruiting\/player(?:\/[^/]+)?$/, '/vault/recruiting/player/'],
+        [/^\/vault\/futurecast\/player(?:\/[^/]+)?$/, '/vault/futurecast/player/'],
+        [/^\/vault\/portal\/player(?:\/[^/]+)?$/, '/vault/portal/player/'],
+        [/^\/vault\/players(?:\/[^/]+)?$/, '/vault/players/'],
+        [/^\/vault\/articles(?:\/[^/]+)?$/, '/vault/articles/'],
+        [/^\/player(?:\/[^/]+)?$/, '/player/'],
+        [/^\/recruiting\/player(?:\/[^/]+)?$/, '/recruiting/player/'],
+        [/^\/futurecast\/player(?:\/[^/]+)?$/, '/futurecast/player/'],
+        [/^\/team\/player(?:\/[^/]+)?$/, '/team/player/']
+      ];
+      for (var i = 0; i < rules.length; i++) {
+        if (rules[i][0].test(p)) return rules[i][1];
+      }
+      return null;
+    }
+
+    function resolveSpaHref(href) {
+      try {
+        var u = new URL(href, SITE);
+        var p = routePath(u.pathname);
+        var art = p.match(/^\/articles\/([^/]+)$/);
+        if (art && art[1] && art[1] !== 'detail') {
+          return '/vault/articles/' + encodeURIComponent(art[1]) + '/' + u.search + u.hash;
+        }
+        return norm(href);
+      } catch (e) {
+        return href;
+      }
+    }
+
+    function isCatchAllDynamic(pathname) {
+      var shell = catchAllShell(pathname);
+      if (!shell) return false;
+      return routePath(pathname) !== routePath(shell);
+    }
+
+    function navigateCatchAll(href) {
+      var target = resolveSpaHref(href);
+      var shell = catchAllShell(target);
+      if (!shell) {
+        location.href = abs(target);
+        return;
+      }
+      var curShell = catchAllShell(location.pathname);
+      if (curShell && routePath(curShell) === routePath(shell)) {
+        history.pushState(null, '', target);
+        try { window.dispatchEvent(new Event('vault:navigation')); } catch (e1) {}
+        return;
+      }
+      try { sessionStorage.setItem(SPA_KEY, target); } catch (e2) {}
+      location.href = abs(shell);
+    }
+
+    function takeColdStart() {
+      try {
+        if (sessionStorage.getItem(COLD_KEY)) return false;
+        sessionStorage.setItem(COLD_KEY, '1');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function consumeSpaPending() {
+      try {
+        var pending = sessionStorage.getItem(SPA_KEY);
+        if (!pending) return;
+        sessionStorage.removeItem(SPA_KEY);
+        var pendingShell = catchAllShell(pending);
+        var curShell = catchAllShell(location.pathname);
+        if (pendingShell && curShell && routePath(pendingShell) === routePath(curShell)) {
+          history.replaceState(null, '', pending);
+        } else if (pendingShell) {
+          sessionStorage.setItem(SPA_KEY, pending);
+          location.replace(abs(pendingShell));
+        }
+      } catch (e) {}
+    }
+
+    function toAppRelative(href) {
+      if (!href || href.charAt(0) === '#' || href.indexOf('mailto:') === 0 || href.indexOf('tel:') === 0) return href;
+      if (href.indexOf('http') !== 0) return href;
+      try {
+        var au = new URL(href);
+        var siteHost = '';
+        try { siteHost = new URL(SITE).hostname; } catch (eh) {}
+        if (au.hostname === 'gatorvaultinsider.com' || au.hostname === 'www.gatorvaultinsider.com' ||
+            au.hostname === 'localhost' || au.hostname === '127.0.0.1' ||
+            (siteHost && au.hostname === siteHost)) {
+          return (au.pathname || '/') + au.search + au.hash;
+        }
+      } catch (eRel) {}
+      return href;
+    }
+
     document.addEventListener('click', function(e) {
       var a = e.target && e.target.closest && e.target.closest('a[href]');
       if (!a) return;
-      var raw = a.getAttribute('href');
-      if (!raw || raw.charAt(0) === '#' || raw.indexOf('http') === 0 ||
-          raw.indexOf('mailto:') === 0 || raw.indexOf('tel:') === 0) return;
+      var attr = a.getAttribute('href');
+      if (!attr || attr.charAt(0) === '#' ||
+          attr.indexOf('mailto:') === 0 || attr.indexOf('tel:') === 0) return;
+      var raw = toAppRelative(attr);
+      if (raw.indexOf('http') === 0) return;
 
       if (bundledNative) {
-        e.preventDefault();
-        e.stopPropagation();
         try {
           var u = new URL(raw, SITE);
           if (isMarketingPath(u.pathname)) {
+            e.preventDefault();
+            e.stopPropagation();
             location.href = vaultDest();
             return;
           }
+          // Deep catch-all routes have no per-slug index.html — every player slug.
+          if (isCatchAllDynamic(u.pathname) || isCatchAllDynamic(resolveSpaHref(raw))) {
+            e.preventDefault();
+            e.stopPropagation();
+            navigateCatchAll(raw);
+            return;
+          }
+          // Other vault boards: leave client router alone after hydration.
+          if (isVaultClientNav(raw)) return;
         } catch (err) {}
+        e.preventDefault();
+        e.stopPropagation();
         location.href = abs(norm(raw));
         return;
       }
 
       var fixed = norm(raw);
-      if (fixed !== raw) {
+      if (fixed !== raw || attr !== raw) {
         e.preventDefault();
         location.href = abs(fixed);
         return;
@@ -116,16 +274,23 @@
       } catch (err2) {}
     }, true);
 
+    // Restore stashed catch-all deep links BEFORE cold-start routing.
+    // Otherwise Team → /vault/players/:slug loads the shell, then cold-start
+    // replaces to /vault/ and drops the player (or falls through to marketing).
+    consumeSpaPending();
     var path = routePath(location.pathname || '/');
-    if (isMarketingPath(path)) {
-      var dest = vaultDest();
-      if (location.href !== dest) location.replace(dest);
+    var cold = takeColdStart();
+    if (isMarketingPath(path) || (cold && isMarketingPath(path))) {
+      restoreSessionFromPreferences(function() {
+        var dest = vaultDest();
+        if (location.href !== dest) location.replace(dest);
+      });
     }
   } catch (e) {}
 })();7:{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"}
 8:{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"}
 9:{"display":"inline-block"}
 a:{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0}
-0:["CGYO5emkM2mON0u239Nh9",[[["",{"children":["(legal)",{"children":["privacy",{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",{"children":["(legal)",{"children":["privacy",{"children":["__PAGE__",{},[["$L1",["$","article",null,{"className":"gv-legal","data-testid":"legal-privacy","children":[["$","p",null,{"className":"gv-legal__meta","children":["Effective ","June 22, 2026"]}],["$","h1",null,{"className":"gv-legal__title","children":"Privacy Policy"}],["$","p",null,{"className":"gv-legal__intro","children":"GatorVault (\"we,\" \"us,\" or \"our\") operates gatorvaultinsider.com and related membership services for Florida Gators football fans. This Privacy Policy explains what information we collect, how we use it, and the choices you have."}],[["$","section","collect",{"className":"gv-legal__section","id":"collect","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Information we collect"}],[["$","p","We collect information you provide directly and ",{"className":"gv-legal__p","children":"We collect information you provide directly and information generated when you use the service."}]],["$","ul",null,{"className":"gv-legal__list","children":[["$","li","Account details: name, email address, and passwo",{"children":"Account details: name, email address, and password (stored using industry-standard hashing on our servers)."}],["$","li","Membership tier and trial status associated with",{"children":"Membership tier and trial status associated with your account."}],["$","li","Community content you post in forums or live roo",{"children":"Community content you post in forums or live rooms, including text you submit and timestamps."}],["$","li","Alert and display preferences saved in your brow",{"children":"Alert and display preferences saved in your browser (for example, notification method preferences)."}],["$","li","Technical data such as browser type, device type",{"children":"Technical data such as browser type, device type, and pages viewed, used to operate and improve the product."}]]}]]}],["$","section","use",{"className":"gv-legal__section","id":"use","children":[["$","h2",null,{"className":"gv-legal__heading","children":"How we use information"}],[["$","p","We use your information to operate GatorVault an",{"className":"gv-legal__p","children":"We use your information to operate GatorVault and deliver the membership experience you signed up for."}]],["$","ul",null,{"className":"gv-legal__list","children":[["$","li","Authenticate you and maintain your session.",{"children":"Authenticate you and maintain your session."}],["$","li","Provide recruiting intel, FutureCast, film, sche",{"children":"Provide recruiting intel, FutureCast, film, schedule, and other Insider features."}],["$","li","Send service-related email (for example, welcome",{"children":"Send service-related email (for example, welcome or account notices) when applicable."}],["$","li","Moderate community content and respond to abuse ",{"children":"Moderate community content and respond to abuse reports."}],["$","li","Monitor reliability, prevent fraud, and improve ",{"children":"Monitor reliability, prevent fraud, and improve performance."}]]}]]}],["$","section","storage",{"className":"gv-legal__section","id":"storage","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Storage and session data"}],[["$","p","When you sign in, an encrypted session token is ",{"className":"gv-legal__p","children":"When you sign in, an encrypted session token is stored in your browser so you stay logged in. We also store theme and alert preferences locally on your device. We do not use third-party advertising cookies."}]],null]}],["$","section","sharing",{"className":"gv-legal__section","id":"sharing","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Sharing and service providers"}],[["$","p","We do not sell your personal information. We sha",{"className":"gv-legal__p","children":"We do not sell your personal information. We share data only with infrastructure and service providers that help us run the platform (for example, hosting, email delivery, and analytics needed for operations), and only as required for them to perform those services."}],["$","p","Community posts you choose to publish are visibl",{"className":"gv-legal__p","children":"Community posts you choose to publish are visible to other members according to the product experience."}]],null]}],["$","section","retention",{"className":"gv-legal__section","id":"retention","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Data retention and deletion"}],[["$","p","We retain account information while your members",{"className":"gv-legal__p","children":"We retain account information while your membership is active and for a reasonable period afterward for legal, security, and operational purposes."}],["$","p","Signed-in members can delete their account from ",{"className":"gv-legal__p","children":"Signed-in members can delete their account from Membership in the Vault (/vault/membership/). Deletion removes login credentials, membership profile data, and Vault Points. Community posts may remain visible with the author shown as \"Deleted member.\""}],["$","p","You may also request account deletion or a copy ",{"className":"gv-legal__p","children":"You may also request account deletion or a copy of your data by emailing support@gatorvaultinsider.com. We will verify ownership of the account before processing requests."}]],null]}],["$","section","children",{"className":"gv-legal__section","id":"children","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Children"}],[["$","p","GatorVault is not directed to children under 13,",{"className":"gv-legal__p","children":"GatorVault is not directed to children under 13, and we do not knowingly collect personal information from children under 13. Contact us if you believe a child has provided us information."}]],null]}],["$","section","changes",{"className":"gv-legal__section","id":"changes","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Changes to this policy"}],[["$","p","We may update this Privacy Policy from time to t",{"className":"gv-legal__p","children":"We may update this Privacy Policy from time to time. We will post the revised policy on this page and update the effective date above."}]],null]}]],["$","p",null,{"className":"gv-legal__contact","children":["Questions? Email"," ",["$","a",null,{"href":"mailto:support@gatorvaultinsider.com","children":"support@gatorvaultinsider.com"}],"."]}]]}],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/1a4f0e3ef077737a.css","precedence":"next","crossOrigin":"$undefined"}]]],null],null]},[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","(legal)","children","privacy","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],null]},[[null,["$","$L4",null,{"children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","(legal)","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":"404"}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/73686baa7e8e7ff9.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/0b76d5d2160fdaa8.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/9aaf170a6eeea464.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/b799eacc7000fb11.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","4",{"rel":"stylesheet","href":"/_next/static/css/1ae7486c9b29f7d2.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","5",{"rel":"stylesheet","href":"/_next/static/css/0c417f3c61b21d1d.css","precedence":"next","crossOrigin":"$undefined"}]],["$","html",null,{"lang":"en","data-theme":"dark","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();"}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$5"}}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@600;700;800&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"className":"fc-body gv-body","children":["$","$L6",null,{"children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$7","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$8","children":"404"}],["$","div",null,{"style":"$9","children":["$","h2",null,{"style":"$a","children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]}]]}]],null],null],["$Lb",null]]]]
+0:["R--NAZbln2LU5kXNjOs3R",[[["",{"children":["(legal)",{"children":["privacy",{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",{"children":["(legal)",{"children":["privacy",{"children":["__PAGE__",{},[["$L1",["$","article",null,{"className":"gv-legal","data-testid":"legal-privacy","children":[["$","p",null,{"className":"gv-legal__meta","children":["Effective ","June 22, 2026"]}],["$","h1",null,{"className":"gv-legal__title","children":"Privacy Policy"}],["$","p",null,{"className":"gv-legal__intro","children":"GatorVault (\"we,\" \"us,\" or \"our\") operates gatorvaultinsider.com and related membership services for Florida Gators football fans. This Privacy Policy explains what information we collect, how we use it, and the choices you have."}],[["$","section","collect",{"className":"gv-legal__section","id":"collect","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Information we collect"}],[["$","p","We collect information you provide directly and ",{"className":"gv-legal__p","children":"We collect information you provide directly and information generated when you use the service."}]],["$","ul",null,{"className":"gv-legal__list","children":[["$","li","Account details: name, email address, and passwo",{"children":"Account details: name, email address, and password (stored using industry-standard hashing on our servers)."}],["$","li","Membership tier and trial status associated with",{"children":"Membership tier and trial status associated with your account."}],["$","li","Community content you post in forums or live roo",{"children":"Community content you post in forums or live rooms, including text you submit and timestamps."}],["$","li","Alert and display preferences saved in your brow",{"children":"Alert and display preferences saved in your browser (for example, notification method preferences)."}],["$","li","Technical data such as browser type, device type",{"children":"Technical data such as browser type, device type, and pages viewed, used to operate and improve the product."}]]}]]}],["$","section","use",{"className":"gv-legal__section","id":"use","children":[["$","h2",null,{"className":"gv-legal__heading","children":"How we use information"}],[["$","p","We use your information to operate GatorVault an",{"className":"gv-legal__p","children":"We use your information to operate GatorVault and deliver the membership experience you signed up for."}]],["$","ul",null,{"className":"gv-legal__list","children":[["$","li","Authenticate you and maintain your session.",{"children":"Authenticate you and maintain your session."}],["$","li","Provide recruiting intel, FutureCast, film, sche",{"children":"Provide recruiting intel, FutureCast, film, schedule, and other Insider features."}],["$","li","Send service-related email (for example, welcome",{"children":"Send service-related email (for example, welcome or account notices) when applicable."}],["$","li","Moderate community content and respond to abuse ",{"children":"Moderate community content and respond to abuse reports."}],["$","li","Monitor reliability, prevent fraud, and improve ",{"children":"Monitor reliability, prevent fraud, and improve performance."}]]}]]}],["$","section","storage",{"className":"gv-legal__section","id":"storage","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Storage and session data"}],[["$","p","When you sign in, an encrypted session token is ",{"className":"gv-legal__p","children":"When you sign in, an encrypted session token is stored in your browser so you stay logged in. We also store theme and alert preferences locally on your device. We do not use third-party advertising cookies."}]],null]}],["$","section","sharing",{"className":"gv-legal__section","id":"sharing","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Sharing and service providers"}],[["$","p","We do not sell your personal information. We sha",{"className":"gv-legal__p","children":"We do not sell your personal information. We share data only with infrastructure and service providers that help us run the platform (for example, hosting, email delivery, and analytics needed for operations), and only as required for them to perform those services."}],["$","p","Community posts you choose to publish are visibl",{"className":"gv-legal__p","children":"Community posts you choose to publish are visible to other members according to the product experience."}]],null]}],["$","section","retention",{"className":"gv-legal__section","id":"retention","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Data retention and deletion"}],[["$","p","We retain account information while your members",{"className":"gv-legal__p","children":"We retain account information while your membership is active and for a reasonable period afterward for legal, security, and operational purposes."}],["$","p","Signed-in members can delete their account from ",{"className":"gv-legal__p","children":"Signed-in members can delete their account from Membership in the Vault (/vault/membership/). Deletion removes login credentials, membership profile data, and Vault Points. Community posts may remain visible with the author shown as \"Deleted member.\""}],["$","p","You may also request account deletion or a copy ",{"className":"gv-legal__p","children":"You may also request account deletion or a copy of your data by emailing support@gatorvaultinsider.com. We will verify ownership of the account before processing requests."}]],null]}],["$","section","children",{"className":"gv-legal__section","id":"children","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Children"}],[["$","p","GatorVault is not directed to children under 13,",{"className":"gv-legal__p","children":"GatorVault is not directed to children under 13, and we do not knowingly collect personal information from children under 13. Contact us if you believe a child has provided us information."}]],null]}],["$","section","changes",{"className":"gv-legal__section","id":"changes","children":[["$","h2",null,{"className":"gv-legal__heading","children":"Changes to this policy"}],[["$","p","We may update this Privacy Policy from time to t",{"className":"gv-legal__p","children":"We may update this Privacy Policy from time to time. We will post the revised policy on this page and update the effective date above."}]],null]}]],["$","p",null,{"className":"gv-legal__contact","children":["Questions? Email"," ",["$","a",null,{"href":"mailto:support@gatorvaultinsider.com","children":"support@gatorvaultinsider.com"}],"."]}]]}],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/08f7f615bb074018.css","precedence":"next","crossOrigin":"$undefined"}]]],null],null]},[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","(legal)","children","privacy","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],null]},[[null,["$","$L4",null,{"children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","(legal)","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":"404"}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/8c656d63b1573491.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/18b9a4f413c25020.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/02609e47e0546a4e.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/981631524a7c484c.css","precedence":"next","crossOrigin":"$undefined"}]],["$","html",null,{"lang":"en","data-theme":"dark","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();"}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$5"}}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Oswald:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"className":"fc-body gv-body","children":["$","$L6",null,{"children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$7","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$8","children":"404"}],["$","div",null,{"style":"$9","children":["$","h2",null,{"style":"$a","children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]}]]}]],null],null],["$Lb",null]]]]
 b:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","1",{"charSet":"utf-8"}],["$","title","2",{"children":"Privacy Policy | GatorVault"}],["$","meta","3",{"name":"description","content":"How GatorVault collects, uses, and protects your information."}]]
 1:null

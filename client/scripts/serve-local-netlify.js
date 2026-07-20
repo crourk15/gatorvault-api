@@ -20,6 +20,9 @@ const MIME = {
   '.jpg': 'image/jpeg',
   '.ico': 'image/x-icon',
   '.txt': 'text/plain; charset=utf-8',
+  '.webm': 'video/webm',
+  '.mp4': 'video/mp4',
+  '.woff2': 'font/woff2',
 };
 
 function sendFile(res, filePath) {
@@ -50,8 +53,20 @@ function proxyApi(req, res) {
   req.pipe(upstream);
 }
 
+/** Mirror Netlify _redirects that proof depends on locally. */
+function applyLocalRewrites(urlPath) {
+  let clean = decodeURIComponent(String(urlPath || '').split('?')[0] || '/');
+  // Webpack publicPath /_next/ + absolute /js/vault-chunks → /_next//js/...
+  clean = clean.replace(/\/{2,}/g, '/');
+  const vaultChunk = clean.match(/^\/_next\/js\/vault-chunks\/(.+)$/);
+  if (vaultChunk) {
+    return `/js/vault-chunks/${vaultChunk[1]}`;
+  }
+  return clean;
+}
+
 function resolveStatic(urlPath) {
-  const clean = decodeURIComponent(urlPath.split('?')[0]);
+  const clean = applyLocalRewrites(urlPath);
   let filePath = path.join(root, clean.replace(/^\//, ''));
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
     filePath = path.join(filePath, 'index.html');
@@ -62,6 +77,14 @@ function resolveStatic(urlPath) {
     if (fs.existsSync(fallback)) return fallback;
     const vaultRoot = path.join(root, 'vault', 'index.html');
     if (fs.existsSync(vaultRoot)) return vaultRoot;
+  }
+  // Asset misses must NOT fall back to HTML — that poisons webpack with "<!".
+  if (
+    clean.startsWith('/_next/') ||
+    clean.startsWith('/js/') ||
+    /\.(js|css|map|json|woff2?|png|jpe?g|svg|webp|ico)$/i.test(clean)
+  ) {
+    return null;
   }
   const rootIndex = path.join(root, 'index.html');
   if (fs.existsSync(rootIndex)) return rootIndex;
