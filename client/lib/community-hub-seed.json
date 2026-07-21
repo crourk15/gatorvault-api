@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-21T13:22:56.947Z",
-  "source": "founding-seed",
+  "generatedAt": "2026-07-21T13:25:39.403Z",
+  "source": "prod-api+founding",
   "categories": [
     {
       "id": "cat_film",
@@ -47,8 +47,8 @@
       "viewCount": 0,
       "pinned": true,
       "featured": true,
-      "createdAt": "2026-07-21T13:22:56.947Z",
-      "lastActivityAt": "2026-07-21T13:22:56.947Z"
+      "createdAt": "2026-07-21T13:25:39.403Z",
+      "lastActivityAt": "2026-07-21T13:25:39.403Z"
     },
     {
       "id": "seed_founding_portal_watch",
@@ -61,8 +61,8 @@
       "viewCount": 0,
       "pinned": false,
       "featured": true,
-      "createdAt": "2026-07-21T13:22:56.947Z",
-      "lastActivityAt": "2026-07-21T13:22:56.947Z"
+      "createdAt": "2026-07-21T13:25:39.403Z",
+      "lastActivityAt": "2026-07-21T13:25:39.403Z"
     },
     {
       "id": "seed_founding_film_clip",
@@ -75,8 +75,8 @@
       "viewCount": 0,
       "pinned": false,
       "featured": true,
-      "createdAt": "2026-07-21T13:22:56.947Z",
-      "lastActivityAt": "2026-07-21T13:22:56.947Z"
+      "createdAt": "2026-07-21T13:25:39.403Z",
+      "lastActivityAt": "2026-07-21T13:25:39.403Z"
     },
     {
       "id": "seed_founding_nil_pulse",
@@ -89,8 +89,8 @@
       "viewCount": 0,
       "pinned": false,
       "featured": false,
-      "createdAt": "2026-07-21T13:22:56.947Z",
-      "lastActivityAt": "2026-07-21T13:22:56.947Z"
+      "createdAt": "2026-07-21T13:25:39.403Z",
+      "lastActivityAt": "2026-07-21T13:25:39.403Z"
     },
     {
       "id": "seed_founding_gameweek",
@@ -103,8 +103,8 @@
       "viewCount": 0,
       "pinned": true,
       "featured": false,
-      "createdAt": "2026-07-21T13:22:56.947Z",
-      "lastActivityAt": "2026-07-21T13:22:56.947Z"
+      "createdAt": "2026-07-21T13:25:39.403Z",
+      "lastActivityAt": "2026-07-21T13:25:39.403Z"
     },
     {
       "id": "seed_founding_welcome",
@@ -117,8 +117,8 @@
       "viewCount": 0,
       "pinned": false,
       "featured": true,
-      "createdAt": "2026-07-21T13:22:56.947Z",
-      "lastActivityAt": "2026-07-21T13:22:56.947Z"
+      "createdAt": "2026-07-21T13:25:39.403Z",
+      "lastActivityAt": "2026-07-21T13:25:39.403Z"
     },
     {
       "id": "seed_founding_closing_class",
@@ -131,8 +131,8 @@
       "viewCount": 0,
       "pinned": false,
       "featured": true,
-      "createdAt": "2026-07-21T13:22:56.947Z",
-      "lastActivityAt": "2026-07-21T13:22:56.947Z"
+      "createdAt": "2026-07-21T13:25:39.403Z",
+      "lastActivityAt": "2026-07-21T13:25:39.403Z"
     },
     {
       "id": "seed_founding_staff_scheme",
@@ -145,32 +145,29 @@
       "viewCount": 0,
       "pinned": false,
       "featured": false,
-      "createdAt": "2026-07-21T13:22:56.947Z",
-      "lastActivityAt": "2026-07-21T13:22:56.947Z"
+      "createdAt": "2026-07-21T13:25:39.403Z",
+      "lastActivityAt": "2026-07-21T13:25:39.403Z"
     }
   ],
   "pulse": {
     "repliesToday": 0,
-    "trending": 6,
-    "pinned": 2,
-    "liveRooms": 2,
-    "threadCount": 8,
-    "postCount": 0,
-    "activeToday": 0
+    "trending": 0,
+    "pinned": 0,
+    "liveRooms": 0
   },
   "rooms": [
     {
       "id": "seed_room_gameweek",
       "title": "Game Week Open Thread",
       "description": "Live reaction room every Saturday — keys, visitors, and board chatter.",
-      "scheduledAt": "2026-07-21T13:22:56.947Z",
+      "scheduledAt": "2026-07-21T13:25:39.403Z",
       "status": "scheduled"
     },
     {
       "id": "seed_room_recruiting_qa",
       "title": "Recruiting Q&A with Staff",
       "description": "Ask board and portal questions — staff answers weekly.",
-      "scheduledAt": "2026-07-21T13:22:56.947Z",
+      "scheduledAt": "2026-07-21T13:25:39.403Z",
       "status": "scheduled"
     }
   ]
