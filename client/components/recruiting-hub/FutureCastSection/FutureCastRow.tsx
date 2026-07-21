@@ -9,9 +9,9 @@ type Props = {
   player: HighPriorityPlayer;
 };
 
-function ufPct(p: HighPriorityPlayer): number {
+function ufPct(p: HighPriorityPlayer): number | null {
   const raw = p.ufProbability;
-  if (raw == null) return 0;
+  if (raw == null || Number.isNaN(Number(raw))) return null;
   return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
 }
 
@@ -20,7 +20,8 @@ function movementDelta(player: HighPriorityPlayer): number {
 }
 
 function lastIntel(p: HighPriorityPlayer): string {
-  const text = p.notePreview?.trim() || p.insiderNotes?.trim() || p.skinny?.trim() || 'Tracking active';
+  const text = p.notePreview?.trim() || p.insiderNotes?.trim() || p.skinny?.trim() || '';
+  if (!text) return 'Intel pending';
   return text.length > 90 ? `${text.slice(0, 87)}…` : text;
 }
 
@@ -76,7 +77,8 @@ function MovementBadge({ delta }: { delta: number }): React.ReactElement {
 export function FutureCastRow({ player }: Props): React.ReactElement {
   const delta = movementDelta(player);
   const intel = lastIntel(player);
-  const hasAnalystNote = intel !== 'Tracking active';
+  const pct = ufPct(player);
+  const hasAnalystNote = intel !== 'Intel pending';
 
   return (
     <tr>
@@ -89,11 +91,17 @@ export function FutureCastRow({ player }: Props): React.ReactElement {
           </span>
         </PlayerNavLink>
       </td>
-      <td className="rh-fc-row__pct">{ufPct(player)}%</td>
+      <td className="rh-fc-row__pct">{pct == null ? '—' : `${pct}%`}</td>
       <td className="rh-fc-row__move">
         <div className="rh-movement-stock-row__right">
-          <MovementSparkline end={ufPct(player)} delta={delta} />
-          <MovementBadge delta={delta} />
+          {pct == null ? (
+            <span className="rh-movement-badge rh-movement-badge--flat">RPM pending</span>
+          ) : (
+            <>
+              <MovementSparkline end={pct} delta={delta} />
+              <MovementBadge delta={delta} />
+            </>
+          )}
         </div>
       </td>
       <td className="rh-fc-row__intel">

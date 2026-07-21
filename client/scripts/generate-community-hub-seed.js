@@ -58,12 +58,122 @@ function slimThread(t) {
   };
 }
 
+/** Curated first-paint conversations when live UGC is empty. */
+function foundingThreads(nowIso) {
+  return [
+    {
+      id: 'seed_founding_board_priority',
+      title: 'Who is Florida’s biggest 2027 board priority right now?',
+      body: 'Looking at the battle board — which target feels like the program’s true #1, and what would move the needle this month?',
+      categorySlug: 'war',
+      categoryLabel: 'War Room',
+      authorDisplay: 'GatorVault Staff',
+      replyCount: 0,
+      viewCount: 0,
+      pinned: true,
+      featured: true,
+      createdAt: nowIso,
+      lastActivityAt: nowIso,
+    },
+    {
+      id: 'seed_founding_portal_watch',
+      title: 'Portal watch: which rooms need help before fall camp?',
+      body: 'Depth chart first — where does Florida still feel thin, and which portal profiles actually fit the scheme?',
+      categorySlug: 'locker',
+      categoryLabel: 'Locker Room',
+      authorDisplay: 'Insider Desk',
+      replyCount: 0,
+      viewCount: 0,
+      pinned: false,
+      featured: true,
+      createdAt: nowIso,
+      lastActivityAt: nowIso,
+    },
+    {
+      id: 'seed_founding_film_clip',
+      title: 'Film Room: one clip that changed your mind on a 2027 target',
+      body: 'Drop the prospect and what you saw — first step, frame, ball skills, or competitive toughness.',
+      categorySlug: 'film',
+      categoryLabel: 'Film Room',
+      authorDisplay: 'GatorVault Staff',
+      replyCount: 0,
+      viewCount: 0,
+      pinned: false,
+      featured: true,
+      createdAt: nowIso,
+      lastActivityAt: nowIso,
+    },
+    {
+      id: 'seed_founding_nil_pulse',
+      title: 'NIL pulse: what are fans seeing in the market this week?',
+      body: 'Keep it factual — name the market signal and how it intersects Florida’s board or roster.',
+      categorySlug: 'war',
+      categoryLabel: 'War Room',
+      authorDisplay: 'Insider Desk',
+      replyCount: 0,
+      viewCount: 0,
+      pinned: false,
+      featured: false,
+      createdAt: nowIso,
+      lastActivityAt: nowIso,
+    },
+    {
+      id: 'seed_founding_gameweek',
+      title: 'Game Week open thread — drop your keys before kickoff',
+      body: 'Matchup keys, depth chart notes, and recruiting visitors. Keep it sharp and on Florida.',
+      categorySlug: 'locker',
+      categoryLabel: 'Locker Room',
+      authorDisplay: 'GatorVault Staff',
+      replyCount: 0,
+      viewCount: 0,
+      pinned: true,
+      featured: false,
+      createdAt: nowIso,
+      lastActivityAt: nowIso,
+    },
+    {
+      id: 'seed_founding_welcome',
+      title: 'Founding members: introduce yourself and what you track',
+      body: 'Recruiting, film, NIL, game week — tell the room what you follow so staff can shape weekly threads.',
+      categorySlug: 'founding',
+      categoryLabel: 'Founding',
+      authorDisplay: 'GatorVault Staff',
+      replyCount: 0,
+      viewCount: 0,
+      pinned: false,
+      featured: true,
+      createdAt: nowIso,
+      lastActivityAt: nowIso,
+    },
+  ];
+}
+
+function foundingRooms(nowIso) {
+  return [
+    {
+      id: 'seed_room_gameweek',
+      title: 'Game Week Open Thread',
+      description: 'Live reaction room every Saturday — keys, visitors, and board chatter.',
+      scheduledAt: nowIso,
+      status: 'scheduled',
+    },
+    {
+      id: 'seed_room_recruiting_qa',
+      title: 'Recruiting Q&A with Staff',
+      description: 'Ask board and portal questions — staff answers weekly.',
+      scheduledAt: nowIso,
+      status: 'scheduled',
+    },
+  ];
+}
+
 async function main() {
   let categories = [];
   let threads = [];
   let pulse = {};
   let rooms = [];
   let source = 'local-fallback';
+  const nowIso = new Date().toISOString();
 
   for (let i = 0; i < 3; i += 1) {
     try {
@@ -89,24 +199,42 @@ async function main() {
   const prev = retainPrevious();
   if (!categories.length && prev && prev.categories && prev.categories.length) {
     categories = prev.categories;
-    threads = prev.threads || [];
-    pulse = prev.pulse || {};
-    rooms = prev.rooms || [];
-    source = 'retained-previous';
+    if (!threads.length) threads = prev.threads || [];
+    if (!rooms.length) rooms = prev.rooms || [];
+    if (!pulse || !Object.keys(pulse).length) pulse = prev.pulse || {};
+    source = threads.length ? 'retained-previous' : source;
   }
 
   if (!categories.length) {
     categories = [
-      { id: 'cat_film', slug: 'film', name: 'Film Room' },
-      { id: 'cat_locker', slug: 'locker', name: 'Locker Room' },
-      { id: 'cat_war', slug: 'war', name: 'War Room' },
+      { id: 'cat_film', slug: 'film', name: 'Film Room', badgeLabel: 'FILM ROOM', badgeClass: 'tier-film', sortOrder: 1 },
+      { id: 'cat_locker', slug: 'locker', name: 'Locker Room', badgeLabel: 'LOCKER ROOM', badgeClass: 'tier-locker', sortOrder: 2 },
+      { id: 'cat_war', slug: 'war', name: 'War Room', badgeLabel: 'WAR ROOM', badgeClass: 'tier-war', sortOrder: 3 },
+      { id: 'cat_founding', slug: 'founding', name: 'Founding', badgeLabel: 'FOUNDING', badgeClass: 'tier-founding', sortOrder: 4 },
     ];
   }
-  if (!pulse || !Object.keys(pulse).length) {
-    pulse = { threadCount: threads.length, postCount: 0, activeToday: 0, trending: threads.length };
+
+  // Empty live UGC still gets elite first paint from founding conversations.
+  if (!threads.length) {
+    threads = foundingThreads(nowIso);
+    if (source === 'prod-api') source = 'prod-api+founding';
+    else source = 'founding-seed';
+  }
+  if (!rooms.length) rooms = foundingRooms(nowIso);
+
+  if (!pulse || !Object.keys(pulse).length || (pulse.trending == null && pulse.repliesToday == null)) {
+    pulse = {
+      repliesToday: pulse.repliesToday ?? 0,
+      trending: Math.max(pulse.trending || 0, threads.filter((t) => t.featured || t.pinned).length),
+      pinned: threads.filter((t) => t.pinned).length,
+      liveRooms: rooms.length,
+      threadCount: threads.length,
+      postCount: pulse.postCount || 0,
+      activeToday: pulse.activeToday || 0,
+    };
   }
 
-  const seed = { generatedAt: new Date().toISOString(), source, categories, threads, pulse, rooms };
+  const seed = { generatedAt: nowIso, source, categories, threads, pulse, rooms };
   fs.writeFileSync(OUT, JSON.stringify(seed, null, 2) + '\n');
   console.log('[generate-community-hub-seed] wrote', OUT, 'source=', source, 'cats=', categories.length, 'threads=', threads.length);
 }

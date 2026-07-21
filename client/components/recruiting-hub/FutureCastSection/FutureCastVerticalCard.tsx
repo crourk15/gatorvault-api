@@ -7,6 +7,7 @@ import { playerProfileRoute } from '@/lib/site-routes';
 import {
   analystConfidence,
   competingSchools,
+  formatUfPct,
   lastIntel,
   movementDelta,
   ufPct,
@@ -57,14 +58,24 @@ export function FutureCastVerticalCard({ player }: Props): React.ReactElement {
 
       <section className="hp-intel-prob rh-fc-card__prob">
         <div className="hp-intel-prob-main">
-          <span className="hp-intel-prob-value">{prob}%</span>
-          <span className="hp-intel-prob-caption">UF Probability</span>
+          <span className="hp-intel-prob-value">{formatUfPct(player)}</span>
+          <span className="hp-intel-prob-caption">
+            {prob == null ? 'RPM pending' : 'UF Probability'}
+          </span>
         </div>
-        <div className="hp-intel-prob-bar" role="img" aria-label={`UF probability ${prob} percent`}>
-          <div className="hp-intel-prob-fill" style={{ width: `${prob}%` }} />
+        <div
+          className="hp-intel-prob-bar"
+          role="img"
+          aria-label={prob == null ? 'UF probability pending' : `UF probability ${prob} percent`}
+        >
+          <div className="hp-intel-prob-fill" style={{ width: `${prob ?? 0}%` }} />
         </div>
         <div className="hp-intel-prob-delta">
-          <MovementBadge delta={delta} />
+          {prob == null ? (
+            <span className="rh-fc-card__badge rh-fc-card__badge--flat">RPM pending</span>
+          ) : (
+            <MovementBadge delta={delta} />
+          )}
         </div>
       </section>
 

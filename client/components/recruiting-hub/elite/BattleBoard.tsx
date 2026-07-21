@@ -57,7 +57,7 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
         className={`rh-battle-board-card__uf${ufColor ? ` rh-battle-board-card__uf--${ufColor}` : ' rh-battle-board-card__uf--unknown'}`}
       >
         <span>UF RPM</span>
-        <strong>{battle.ufScore != null ? `${battle.ufScore}%` : 'No On3 RPM'}</strong>
+        <strong>{battle.ufScore != null ? `${battle.ufScore}%` : 'RPM pending'}</strong>
       </div>
 
       {rivals.length > 0 ? (
@@ -76,7 +76,7 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
           ))}
         </div>
       ) : (
-        <div className="rh-battle-board-card__no-competitors">No confirmed competitor RPM yet</div>
+        <div className="rh-battle-board-card__no-competitors">Competitor RPM pending</div>
       )}
 
       {battle.nextVisit ? <div className="rh-battle-board-card__visit">Next visit: {battle.nextVisit}</div> : null}

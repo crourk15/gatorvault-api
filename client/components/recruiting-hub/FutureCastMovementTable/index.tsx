@@ -10,9 +10,9 @@ type Props = {
 
 type SortKey = 'name' | 'ufProbability' | 'movement' | 'fitScore';
 
-function ufPct(p: HighPriorityPlayer): number {
+function ufPct(p: HighPriorityPlayer): number | null {
   const raw = p.ufProbability;
-  if (raw == null) return 0;
+  if (raw == null || Number.isNaN(Number(raw))) return null;
   return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
 }
 
@@ -32,7 +32,7 @@ function competingSchools(p: HighPriorityPlayer): string {
 }
 
 function lastIntel(p: HighPriorityPlayer): string {
-  return p.notePreview?.trim() || p.insiderNotes?.trim() || p.skinny?.trim() || 'Tracking active';
+  return p.notePreview?.trim() || p.insiderNotes?.trim() || p.skinny?.trim() || 'Intel pending';
 }
 
 function MovementSparkline({ end, delta }: { end: number; delta: number }): React.ReactElement {
@@ -93,8 +93,8 @@ export function FutureCastMovementTable({ players }: Props): React.ReactElement 
         return sortAsc ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
       }
       if (sortKey === 'ufProbability') {
-        av = ufPct(a);
-        bv = ufPct(b);
+        av = ufPct(a) ?? -1;
+        bv = ufPct(b) ?? -1;
       } else if (sortKey === 'movement') {
         av = movementDelta(a);
         bv = movementDelta(b);
@@ -153,7 +153,8 @@ export function FutureCastMovementTable({ players }: Props): React.ReactElement 
             {rows.map((p) => {
               const delta = movementDelta(p);
               const intel = lastIntel(p);
-              const hasAnalystNote = intel !== 'Tracking active';
+              const pct = ufPct(p);
+              const hasAnalystNote = intel !== 'Intel pending';
 
               return (
                 <tr key={p.slug}>
@@ -166,11 +167,17 @@ export function FutureCastMovementTable({ players }: Props): React.ReactElement 
                       </span>
                     </a>
                   </td>
-                  <td className="rh-fc-table__pct">{ufPct(p)}%</td>
+                  <td className="rh-fc-table__pct">{pct == null ? '—' : `${pct}%`}</td>
                   <td className="rh-fc-table__move">
                     <div className="rh-movement-stock-row__right">
-                      <MovementSparkline end={ufPct(p)} delta={delta} />
-                      <MovementBadge delta={delta} />
+                      {pct == null ? (
+                        <span className="rh-movement-badge rh-movement-badge--flat">RPM pending</span>
+                      ) : (
+                        <>
+                          <MovementSparkline end={pct} delta={delta} />
+                          <MovementBadge delta={delta} />
+                        </>
+                      )}
                     </div>
                   </td>
                   <td className="rh-fc-table__intel">

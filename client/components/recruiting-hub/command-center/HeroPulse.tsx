@@ -57,7 +57,7 @@ export function HeroPulse({
   const avgUfProb = useMemo(() => {
     const withProb = targets.filter((p) => p.ufProbability != null);
     if (!withProb.length) return 0;
-    const sum = withProb.reduce((acc, p) => acc + ufPctFromRaw(p.ufProbability), 0);
+    const sum = withProb.reduce((acc, p) => acc + (ufPctFromRaw(p.ufProbability) ?? 0), 0);
     return Math.round(sum / withProb.length);
   }, [targets]);
 

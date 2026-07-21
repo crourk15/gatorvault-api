@@ -1,8 +1,8 @@
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 
-export function ufPct(p: HighPriorityPlayer): number {
+export function ufPct(p: HighPriorityPlayer): number | null {
   const raw = p.ufProbability;
-  if (raw == null) return 0;
+  if (raw == null || Number.isNaN(Number(raw))) return null;
   return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
 }
 
@@ -11,8 +11,14 @@ export function movementDelta(player: HighPriorityPlayer): number {
 }
 
 export function lastIntel(p: HighPriorityPlayer): string {
-  const text = p.notePreview?.trim() || p.insiderNotes?.trim() || p.skinny?.trim() || 'Tracking active';
+  const text = p.notePreview?.trim() || p.insiderNotes?.trim() || p.skinny?.trim() || '';
+  if (!text) return 'Intel pending';
   return text.length > 120 ? `${text.slice(0, 117)}…` : text;
+}
+
+export function formatUfPct(p: HighPriorityPlayer): string {
+  const pct = ufPct(p);
+  return pct == null ? '—' : `${pct}%`;
 }
 
 export function competingSchools(p: HighPriorityPlayer): string {
