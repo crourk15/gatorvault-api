@@ -295,6 +295,7 @@ body.gv-live-page-active .gv-vault-shell__main {
    forces overflow-y:auto and traps vertical gestures inside the shell. */
 .gv-vault-shell__main:has(.gv-film-room-page),
 body.gv-film-page-active .gv-vault-shell,
+body.gv-film-page-active .gv-vault-shell__body,
 body.gv-film-page-active .gv-vault-shell__main {
   overflow: visible;
 }

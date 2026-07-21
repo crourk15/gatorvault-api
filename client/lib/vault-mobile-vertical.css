@@ -275,8 +275,11 @@
   /* ── Hub tabs / chips ── */
   .gv-vault-shell__main .rh-hub-tabs,
   .gv-vault-shell__main .gv-hub-tabs,
-  .gv-vault-shell__main .gv-tabs {
+  .gv-vault-shell__main .gv-tabs,
+  .gv-vault-shell__main .gv-tab-bar,
+  .gv-vault-shell__main .gv-film-room-page .gv-tab-bar {
     flex-wrap: wrap !important;
+    overflow: visible !important;
     overflow-x: visible !important;
     justify-content: flex-start !important;
     gap: 8px !important;
