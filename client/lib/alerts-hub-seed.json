@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T13:25:39.234Z",
+  "generatedAt": "2026-07-21T14:06:08.233Z",
   "source": "prod-api",
   "alerts": [
     {
@@ -154,7 +154,7 @@
       "type": "movement_riser",
       "message": "Tranard Roberts trending up (59% UF)",
       "lifecycle": null,
-      "createdAt": "2026-07-21T13:25:36.276Z",
+      "createdAt": "2026-07-21T14:06:04.385Z",
       "seen": false,
       "category": "Movement"
     },

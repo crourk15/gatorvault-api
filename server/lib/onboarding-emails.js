@@ -129,7 +129,7 @@ function welcomeEmailHtml({ name, email, tier, trialEndStr } = {}) {
   <p style="margin:16px 0 0;font-size:14px;color:#94a3b8;line-height:1.6;">— GatorVault Team</p>
 </td></tr>
 <tr><td style="background:#030712;padding:18px 32px;text-align:center;border-top:1px solid #1e3a5f;">
-  <p style="margin:0;font-size:11px;color:#475569;">GatorVault © 2026</p>
+  <p style="margin:0;font-size:11px;color:#475569;">© 2026 GatorVault Media, LLC</p>
 </td></tr>
 </table></td></tr></table></body></html>`;
 }

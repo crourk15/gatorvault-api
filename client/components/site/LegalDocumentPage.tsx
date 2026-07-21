@@ -1,5 +1,6 @@
 import React from 'react';
 import type { LegalDocument } from '@/lib/legal-content';
+import { LEGAL_ENTITY_NAME } from '@/lib/legal-entity';
 import '@/lib/legal.css';
 
 export function LegalDocumentPage({ doc }: { doc: LegalDocument }): React.ReactElement {
@@ -7,6 +8,9 @@ export function LegalDocumentPage({ doc }: { doc: LegalDocument }): React.ReactE
     <article className="gv-legal" data-testid={`legal-${doc.id}`}>
       <p className="gv-legal__meta">Effective {doc.effectiveDate}</p>
       <h1 className="gv-legal__title">{doc.title}</h1>
+      <p className="gv-legal__entity" data-testid="legal-entity">
+        Operated by {LEGAL_ENTITY_NAME}
+      </p>
       <p className="gv-legal__intro">{doc.intro}</p>
 
       {doc.sections.map((section) => (
