@@ -2,6 +2,10 @@ import { isNativeApp } from '@/lib/api-base';
 
 let initialized = false;
 
+const PENDING_IAP_KEY = 'gv_pending_iap';
+
+type PendingIap = { productId: string; transactionId: string };
+
 /** Capacitor-only boot: status bar, splash hide, safe-area class, native routing fixes. */
 export async function initNativeShell(): Promise<void> {
   if (!isNativeApp() || initialized) return;
@@ -25,7 +29,13 @@ export async function initNativeShell(): Promise<void> {
     /* simulator / unsupported */
   }
 
+  // Hide splash after first paint so cold start does not flash an empty WebView.
   try {
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
     await SplashScreen.hide();
   } catch {
     /* ok */
@@ -59,16 +69,104 @@ async function handleAppUrlOpen(url: string): Promise<void> {
   }
 }
 
+async function readPendingIap(): Promise<PendingIap | null> {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(PENDING_IAP_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as PendingIap;
+      if (parsed?.productId && parsed?.transactionId) return parsed;
+    }
+  } catch {
+    /* ignore */
+  }
+  try {
+    const { Preferences } = await import('@capacitor/preferences');
+    const { value } = await Preferences.get({ key: PENDING_IAP_KEY });
+    if (!value) return null;
+    const parsed = JSON.parse(value) as PendingIap;
+    if (parsed?.productId && parsed?.transactionId) return parsed;
+  } catch {
+    /* plugin missing */
+  }
+  return null;
+}
+
+async function stashPendingIap(payload: PendingIap): Promise<void> {
+  const raw = JSON.stringify(payload);
+  try {
+    window.localStorage.setItem(PENDING_IAP_KEY, raw);
+  } catch {
+    /* ignore */
+  }
+  try {
+    const { Preferences } = await import('@capacitor/preferences');
+    await Preferences.set({ key: PENDING_IAP_KEY, value: raw });
+  } catch {
+    /* plugin missing */
+  }
+}
+
+async function clearPendingIap(): Promise<void> {
+  try {
+    window.localStorage.removeItem(PENDING_IAP_KEY);
+  } catch {
+    /* ignore */
+  }
+  try {
+    const { Preferences } = await import('@capacitor/preferences');
+    await Preferences.remove({ key: PENDING_IAP_KEY });
+  } catch {
+    /* plugin missing */
+  }
+}
+
 async function initIosPurchases(): Promise<void> {
   try {
-    const { loadSession } = await import('@/lib/auth-api');
+    const { loadSession, ensureSessionHydrated } = await import('@/lib/auth-api');
     const { verifyApplePurchase } = await import('@/lib/subscription-api');
-    const { initIosPurchaseListeners, finishIosPurchase } = await import('@/lib/ios-iap');
-    await initIosPurchaseListeners(async ({ productId, transactionId }) => {
+    const {
+      initIosPurchaseListeners,
+      finishIosPurchase,
+      appAccountTokenForEmail,
+    } = await import('@/lib/ios-iap');
+
+    const handleTx = async ({
+      productId,
+      transactionId,
+    }: {
+      productId: string;
+      transactionId: string;
+    }) => {
+      await ensureSessionHydrated();
       const session = loadSession();
-      if (!session?.token) return;
-      await verifyApplePurchase({ productId, transactionId });
+      if (!session?.token) {
+        // Keep StoreKit unfinished until sign-in — then verify + acknowledge.
+        await stashPendingIap({ productId, transactionId });
+        return;
+      }
+      await verifyApplePurchase({
+        productId,
+        transactionId,
+        appAccountToken: session.email
+          ? appAccountTokenForEmail(session.email)
+          : undefined,
+      });
       await finishIosPurchase(transactionId);
+      await clearPendingIap();
+    };
+
+    await initIosPurchaseListeners(handleTx);
+
+    const flushPending = async () => {
+      const pending = await readPendingIap();
+      if (!pending) return;
+      await handleTx(pending);
+    };
+
+    await flushPending();
+    window.addEventListener('gv-auth-changed', () => {
+      void flushPending();
     });
   } catch {
     /* plugin unavailable outside iOS build */

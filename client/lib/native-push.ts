@@ -46,6 +46,10 @@ export async function registerNativePush(
       return { ok: false, reason: 'denied' };
     }
 
+    // Avoid duplicate registration handlers when prefs are re-saved.
+    // removeAllListeners also clears tap handlers — re-attach after token flow.
+    await PushNotifications.removeAllListeners().catch(() => undefined);
+
     const tokenPromise = new Promise<string>((resolve, reject) => {
       const timeout = setTimeout(() => reject(new Error('token_timeout')), 20_000);
       void PushNotifications.addListener('registration', (token) => {
@@ -60,6 +64,7 @@ export async function registerNativePush(
 
     await PushNotifications.register();
     const token = await tokenPromise;
+    await initNativePushTapHandler();
     return postDeviceToken(token, prefs);
   } catch {
     return { ok: false, reason: 'unsupported' };

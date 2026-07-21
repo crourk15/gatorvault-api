@@ -107,15 +107,18 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     if (viewerEmail) setBlockedEmails(loadBlockedEmails(viewerEmail));
   }, [viewerEmail]);
 
-  const requireSignIn = useCallback((): boolean => {
-    if (viewerEmail) return true;
-    pushToast({
-      kind: 'error',
-      title: 'Sign in required',
-      body: 'Sign in to report or block community members.',
-    });
-    return false;
-  }, [pushToast, viewerEmail]);
+  const requireSignIn = useCallback(
+    (body = 'Sign in to post, reply, report, or block in Community.'): boolean => {
+      if (viewerEmail) return true;
+      pushToast({
+        kind: 'error',
+        title: 'Sign in required',
+        body,
+      });
+      return false;
+    },
+    [pushToast, viewerEmail],
+  );
 
   const load = useCallback(async () => {
     if (!HAS_COMMUNITY_SEED) {
@@ -167,8 +170,15 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
       setSelectedThread(data.thread);
       setSelectedPosts(data.posts);
     } catch {
-      setSelectedThread(null);
-      setSelectedPosts([]);
+      // Founding/seed threads are list-only until live UGC exists — hydrate OP locally.
+      const seed = SEED_COMMUNITY.threads.find((t) => t.id === id) || null;
+      if (seed) {
+        setSelectedThread(seed as CommunityThread);
+        setSelectedPosts([]);
+      } else {
+        setSelectedThread(null);
+        setSelectedPosts([]);
+      }
     } finally {
       setThreadLoading(false);
     }
@@ -184,6 +194,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
 
   const submitThread = async () => {
     if (!newTitle.trim() || !newBody.trim()) return;
+    if (!requireSignIn('Sign in to start a Community thread.')) return;
     setPosting(true);
     setPostError(null);
     try {
@@ -338,9 +349,44 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     return pinned || threads[0] || null;
   }, [threads]);
 
-  const startRoomThread = (roomTitle: string) => {
+  const findThreadForRoom = useCallback(
+    (room: LiveRoom): CommunityThread | null => {
+      const roomId = (room.id || '').toLowerCase();
+      const roomTitle = (room.title || '').toLowerCase();
+      if (roomId.includes('gameweek') || roomTitle.includes('game week')) {
+        return (
+          threads.find(
+            (t) =>
+              t.id.includes('gameweek') || /game week/i.test(t.title || ''),
+          ) || null
+        );
+      }
+      if (roomId.includes('recruit') || roomTitle.includes('recruit')) {
+        return (
+          threads.find(
+            (t) =>
+              t.id.includes('board_priority') ||
+              /board priority|recruiting|2027/i.test(t.title || ''),
+          ) || null
+        );
+      }
+      const needle = roomTitle.slice(0, 14);
+      if (needle.length >= 6) {
+        return threads.find((t) => (t.title || '').toLowerCase().includes(needle)) || null;
+      }
+      return null;
+    },
+    [threads],
+  );
+
+  const startRoomThread = (room: LiveRoom) => {
+    const existing = findThreadForRoom(room);
+    if (existing) {
+      void openThread(existing.id);
+      return;
+    }
     setShowForm(true);
-    setNewTitle(roomTitle.slice(0, 200));
+    setNewTitle((room.title || '').slice(0, 200));
     setNewBody('');
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -385,11 +431,19 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                   {todaysThread.title}
                 </h3>
                 <p style={{ margin: 0, opacity: 0.7 }}>
-                  {todaysThread.authorDisplay || 'GatorVault Staff'} · {todaysThread.replyCount ?? 0}{' '}
-                  replies · Open thread →
+                  {todaysThread.authorDisplay || 'GatorVault Staff'} ·{' '}
+                  {(todaysThread.replyCount ?? 0) === 0
+                    ? 'No replies yet — be the first →'
+                    : `${todaysThread.replyCount} replies · Open thread →`}
                 </p>
               </button>
             </PageSection>
+          ) : null}
+
+          {HAS_COMMUNITY_SEED && warming && !selectedId ? (
+            <p className="gv-page-status gv-community__live-updating" role="status">
+              Updating live board…
+            </p>
           ) : null}
 
           <PageSection title="Trending Topics">
@@ -444,7 +498,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                   className={`gv-alert-choice${sort === s ? ' is-active' : ''}`}
                   onClick={() => setSort(s)}
                 >
-                  {s === 'trending' ? '🔥 Trending' : s === 'recent' ? '🕐 Recent' : s === 'active' ? '📈 Active' : '💬 Replies'}
+                  {s === 'trending' ? 'Trending' : s === 'recent' ? 'Recent' : s === 'active' ? 'Active' : 'Replies'}
                 </button>
               ))}
             </div>
@@ -631,9 +685,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                     </li>
                   );
                 })}
-                {selectedPosts.length === 0 && !selectedThread.body && (
-                  <UiEmpty message="No replies yet." />
-                )}
+                {selectedPosts.length === 0 ? (
+                  <UiEmpty
+                    message="No replies yet."
+                    hint={viewerEmail ? 'Be the first reply and keep the board alive.' : 'Sign in to be the first reply.'}
+                  />
+                ) : null}
               </ul>
               {selectedThread.locked ? (
                 <p className="gv-community__reply-locked">This thread is locked — new replies are disabled.</p>
@@ -682,7 +739,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                         onClick={() => void openThread(t.id)}
                       >
                         <span className="gv-community__thread-title">
-                          {t.pinned ? '📌 ' : ''}
+                          {t.pinned ? <Chip variant="staff">Pinned</Chip> : null}{' '}
                           {t.title}
                           {blockedAuthor ? (
                             <span className="gv-community__blocked-chip">Blocked author</span>
@@ -750,23 +807,30 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
 
           <section className="gv-community__panel">
             <h2 className="gv-vault-alerts__section-title">Game Week Rooms</h2>
-            {rooms.map((r) => (
-              <button
-                key={r.id}
-                type="button"
-                className="gv-community__room gv-community__room--action"
-                onClick={() => startRoomThread(r.title)}
-              >
-                <p className="gv-community__room-title">{r.title}</p>
-                {r.description ? <p className="gv-community__room-desc">{r.description}</p> : null}
-                {r.scheduledAt || r.startsAt ? (
+            {rooms.map((r) => {
+              const existing = findThreadForRoom(r);
+              return (
+                <button
+                  key={r.id}
+                  type="button"
+                  className={`gv-community__room gv-community__room--action${
+                    existing ? ' gv-community__room--live' : ''
+                  }`}
+                  onClick={() => startRoomThread(r)}
+                >
+                  <p className="gv-community__room-title">{r.title}</p>
+                  {r.description ? <p className="gv-community__room-desc">{r.description}</p> : null}
+                  {r.scheduledAt || r.startsAt ? (
+                    <p className="gv-community__room-meta">
+                      {new Date(r.scheduledAt || r.startsAt || '').toLocaleString()}
+                    </p>
+                  ) : null}
                   <p className="gv-community__room-meta">
-                    {new Date(r.scheduledAt || r.startsAt || '').toLocaleString()}
+                    {existing ? 'Join open thread →' : 'Start a thread →'}
                   </p>
-                ) : null}
-                <p className="gv-community__room-meta">Start a thread →</p>
-              </button>
-            ))}
+                </button>
+              );
+            })}
             {rooms.length === 0 && !loading && (
               <p className="gv-page-status">Rooms open as game week approaches.</p>
             )}

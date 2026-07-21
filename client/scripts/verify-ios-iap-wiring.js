@@ -8,6 +8,8 @@ const checks = [
   ['client/lib/subscription-api.ts', 'verifyApplePurchase'],
   ['client/lib/subscription-api.ts', 'restoreApplePurchase'],
   ['client/lib/native-shell.ts', 'initIosPurchaseListeners'],
+  ['client/lib/native-shell.ts', 'gv_pending_iap'],
+  ['client/lib/native-shell.ts', 'stashPendingIap'],
   ['client/components/vault/AccountMembershipPage.tsx', 'handleSubscribe'],
   ['client/components/vault/AccountMembershipPage.tsx', 'handleRestore'],
   ['client/lib/ios-iap.ts', 'restoreIosPurchasesWithSync'],

@@ -2064,6 +2064,18 @@ a.gv-live-item__title:hover {
 .gv-community__today-card {
   width: 100%;
   text-align: left;
+  border-color: rgba(250, 70, 22, 0.35);
+}
+
+.gv-community__live-updating {
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+  opacity: 0.72;
+}
+
+.gv-community__room--live {
+  border-color: rgba(250, 70, 22, 0.4);
+  background: rgba(250, 70, 22, 0.06);
 }
 
 .gv-community__room-title {
