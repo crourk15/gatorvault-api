@@ -1,0 +1,57 @@
+# Agent Handoff — Elite Platform Status (2026-07-21)
+
+**Stop point:** User paused here overnight. Resume from this file.
+
+## Verdict (owner-aligned)
+
+**Fan-facing web vault is elite.** Authenticated production mobile proof is green. Do **not** reopen large "make it elite" UI sweeps unless the user asks. Leftovers are ops / native / content, not product-finish gaps.
+
+## What just shipped / verified
+
+- **PR #143 merged** to `main` (`cdc39aa3`): recruiting hub-bundle seed, community founding surface, cold-start keepalive/warmup, thin-card honesty, Team/GNL soft-refresh.
+- Production Netlify build matches `main` (`cdc39aa352c0`).
+- **`APP_REVIEW_PASSWORD` was updated** in Cursor Secrets (was stale → 401). Login now works.
+- **`npm run proof:mobile:prod` PASS** (2026-07-21 ~02:26 UTC):
+  - Remote login ok via `https://gatorvaultinsider.com/api/login` (attempt 1)
+  - All checklist sections PASS (Roster → Below NSD + NIL/Game Zone)
+  - Menu open/close PASS on every required vault route
+  - Gated routes (Film Room, FutureCast, Membership, Alerts) OK under App Review session
+  - `verify:mobile:full` — **3 consecutive passes** (18 routes)
+  - Artifacts (gitignored): `proof/mobile-deploy-proof/`
+
+## Secrets / auth for proof
+
+| Secret | Status |
+|--------|--------|
+| `APP_REVIEW_EMAIL` | Present / working |
+| `APP_REVIEW_PASSWORD` | **Updated + verified working** |
+| `SUBSCRIPTION_ADMIN_PIN` | Not set (not needed unless reprovisioning demo account) |
+
+Proof entrypoints:
+- `npm run proof:mobile:prod` — authenticated prod proof (preferred next verify)
+- `npm run proof:mobile:deploy` — local Netlify mirror proof (required before any push claiming deploy-ready)
+- Auth bootstrap: `client/scripts/proof-auth-bootstrap.js` → `POST /api/login`
+
+## Still outside "elite web" (do not treat as unfinished vault)
+
+1. **Render Starter cold starts** — softened (keepalive/warmup), not eliminated.
+2. **Real-device TestFlight** — IAP / push / cold-launch not proven in cloud agents.
+3. **Community UGC** — founding staff threads seed when empty; real fan posts still needed over time.
+4. **Full CSS consolidation** — debt; too large for a drive-by PR.
+
+## Hard constraints (read before acting)
+
+1. **App Store review freeze** — do **not** production push/deploy/redeploy, re-enable Render autoDeploy, change login/auth/IAP/membership/account-deletion, touch `appreview@` demo credentials, or risky production API/UI without explicit user confirmation. Prefer Render `gatorvault-api` auto-deploy **off**.
+2. **No push/deploy without full mobile proof** — see `.cursor/rules/no-push-without-full-mobile-verify.mdc`. Run `npm run proof:mobile:deploy` locally before claiming ready; after Netlify, `npm run verify:netlify:build`.
+3. User explicitly stopped for the night — **do not invent new elite work** unless they ask.
+
+## Suggested resume prompts for the user
+
+- "Retry `proof:mobile:prod` and report status"
+- "What's left that's not elite?"
+- Specific ops: TestFlight device pass, Render plan/cold-start, content freshness
+
+## Prior agent runs (context)
+
+- Elite platform completion: https://cursor.com/agents/bc-3f7f1f87-f2cd-4412-b47a-4411d4ed7398 (PR #143)
+- This handoff session: https://cursor.com/agents/bc-b126002e-1c25-4da8-878e-b48c3c2af54e (password update → prod proof green)
