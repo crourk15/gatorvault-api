@@ -19,6 +19,13 @@
   line-height: 1.15;
 }
 
+.gv-legal__entity {
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--gv-text-secondary, rgba(255, 255, 255, 0.82));
+}
+
 .gv-legal__intro {
   margin: 0 0 1.75rem;
   font-size: 1rem;

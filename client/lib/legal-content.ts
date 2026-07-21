@@ -1,3 +1,5 @@
+import { LEGAL_ENTITY_NAME, SUPPORT_EMAIL } from './legal-entity';
+
 export type LegalSection = {
   id: string;
   heading: string;
@@ -14,17 +16,23 @@ export type LegalDocument = {
   contactEmail: string;
 };
 
-const CONTACT_EMAIL = 'support@gatorvaultinsider.com';
-const EFFECTIVE_DATE = 'June 22, 2026';
+const CONTACT_EMAIL = SUPPORT_EMAIL;
+const EFFECTIVE_DATE = 'July 21, 2026';
 
 export const PRIVACY_POLICY: LegalDocument = {
   id: 'privacy',
   title: 'Privacy Policy',
   effectiveDate: EFFECTIVE_DATE,
   contactEmail: CONTACT_EMAIL,
-  intro:
-    'GatorVault ("we," "us," or "our") operates gatorvaultinsider.com and related membership services for Florida Gators football fans. This Privacy Policy explains what information we collect, how we use it, and the choices you have.',
+  intro: `${LEGAL_ENTITY_NAME} ("GatorVault," "we," "us," or "our") operates gatorvaultinsider.com and related membership services for Florida Gators football fans. This Privacy Policy explains what information we collect, how we use it, and the choices you have.`,
   sections: [
+    {
+      id: 'entity',
+      heading: 'Who we are',
+      paragraphs: [
+        `${LEGAL_ENTITY_NAME} is a Florida limited liability company. References to "GatorVault" or "GatorVault Insider" in this policy mean ${LEGAL_ENTITY_NAME}.`,
+      ],
+    },
     {
       id: 'collect',
       heading: 'Information we collect',
@@ -95,15 +103,20 @@ export const MEMBERSHIP_TERMS: LegalDocument = {
   title: 'Membership Terms',
   effectiveDate: EFFECTIVE_DATE,
   contactEmail: CONTACT_EMAIL,
-  intro:
-    'These Membership Terms ("Terms") govern your access to GatorVault Insider features at gatorvaultinsider.com. By creating an account or using paid or trial membership, you agree to these Terms and our Privacy Policy.',
+  intro: `These Membership Terms ("Terms") govern your access to GatorVault Insider features at gatorvaultinsider.com, operated by ${LEGAL_ENTITY_NAME}. By creating an account or using paid or trial membership, you agree to these Terms and our Privacy Policy.`,
   sections: [
+    {
+      id: 'entity',
+      heading: 'Operator',
+      paragraphs: [
+        `${LEGAL_ENTITY_NAME} ("GatorVault") operates the GatorVault Insider service. GatorVault is an independent fan platform and is not affiliated with, endorsed by, or sponsored by the University of Florida or UF Athletics.`,
+      ],
+    },
     {
       id: 'service',
       heading: 'The service',
       paragraphs: [
         'GatorVault provides Florida Gators football coverage including recruiting intelligence, FutureCast, film analysis, schedules, NIL tracking, community discussion, and related Insider tools. Features may vary by membership tier.',
-        'GatorVault is an independent fan platform and is not affiliated with, endorsed by, or sponsored by the University of Florida or UF Athletics.',
       ],
     },
     {
@@ -148,7 +161,7 @@ export const MEMBERSHIP_TERMS: LegalDocument = {
       id: 'content',
       heading: 'Content and intellectual property',
       paragraphs: [
-        'GatorVault content, branding, and product design are owned by GatorVault or its licensors. Third-party names, logos, and marks belong to their respective owners.',
+        `GatorVault content, branding, and product design are owned by ${LEGAL_ENTITY_NAME} or its licensors. Third-party names, logos, and marks belong to their respective owners.`,
         'You retain rights to content you submit, but grant us a license to host, display, and moderate it within the service.',
       ],
     },

@@ -47,6 +47,8 @@
 	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2026 GatorVault Media, LLC</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
