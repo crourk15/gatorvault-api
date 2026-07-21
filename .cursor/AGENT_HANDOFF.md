@@ -54,7 +54,7 @@ Proof entrypoints:
 
 ## Hard constraints (read before acting)
 
-1. **App Store review freeze** — do **not** production push/deploy/redeploy, re-enable Render autoDeploy, change login/auth/IAP/membership/account-deletion, touch `appreview@` demo credentials, or risky production API/UI without explicit user confirmation. Prefer Render `gatorvault-api` auto-deploy **off**.
+1. **App Store review freeze — LIFTED** (owner, 2026-07-21). Production merge/deploy to `main` / Netlify / Render is allowed again for this ship.
 2. **No push/deploy without full mobile proof** — see `.cursor/rules/no-push-without-full-mobile-verify.mdc`. Run `npm run proof:mobile:deploy` locally before claiming ready; after Netlify, `npm run verify:netlify:build`.
 3. Do **not** invent new elite UI sweeps unless the user asks.
 
