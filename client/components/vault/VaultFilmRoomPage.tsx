@@ -147,9 +147,14 @@ function FilmLessonViewer({
   const body = detail?.body || item.body;
   const summary = detail?.summary || item.dek;
   const isSchemeIntel = item.knowledgeEngine || item.noVideo;
+  const [embedActive, setEmbedActive] = useState(false);
   const bodyParas = body
     ? body.split(/\n\n+/).filter((para) => para.trim() && para.trim() !== summary?.trim())
     : [];
+
+  useEffect(() => {
+    setEmbedActive(false);
+  }, [item.id]);
 
   return (
     <PageSection title={item.title} subtitle={item.source || 'Florida Gators Football'}>
@@ -162,7 +167,22 @@ function FilmLessonViewer({
       {loading ? <p className="gv-page-status">Loading lesson…</p> : null}
       {summary ? <p className="gv-film-lesson__dek">{summary}</p> : null}
       {embed ? (
-        <div className="gv-film-lesson__embed">
+        <div
+          className={`gv-film-lesson__embed${embedActive ? ' is-active' : ''}`}
+          onPointerDown={() => {
+            if (!embedActive) setEmbedActive(true);
+          }}
+        >
+          {!embedActive ? (
+            <button
+              type="button"
+              className="gv-film-lesson__embed-activate"
+              onClick={() => setEmbedActive(true)}
+              aria-label={`Play ${item.title}`}
+            >
+              Tap to play
+            </button>
+          ) : null}
           <iframe
             title={item.title}
             src={embed}
@@ -332,6 +352,12 @@ export function VaultFilmRoomPage(): React.ReactElement {
     void load();
   }, [load, insider]);
 
+  // Match Live: body class keeps shell overflow:visible even if later CSS reasserts overflow-x.
+  useEffect(() => {
+    document.body.classList.add('gv-film-page-active');
+    return () => document.body.classList.remove('gv-film-page-active');
+  }, []);
+
   const clearLessonFromUrl = useCallback(() => {
     if (typeof window === 'undefined') return;
     const url = new URL(window.location.href);
@@ -379,6 +405,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
         url.searchParams.set('lesson', item.id);
         url.searchParams.delete('scheme');
         window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }
       if (item.body || item.youtubeId || item.embedUrl) return;
       if (!item.knowledgeEngine) return;
@@ -404,6 +431,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
       url.searchParams.set('scheme', lesson.id);
       url.searchParams.delete('lesson');
       window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
   }, []);
 

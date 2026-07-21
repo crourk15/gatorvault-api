@@ -17,6 +17,11 @@
     overflow-x: hidden;
   }
 
+  .gv-vault-shell__main:has(.gv-film-room-page),
+  body.gv-film-page-active .gv-vault-shell__main {
+    overflow: visible;
+  }
+
   /* ── Vertical rhythm ── */
   .gv-vault-shell__main .rh-page > section,
   .gv-vault-shell__main .rh-section,
