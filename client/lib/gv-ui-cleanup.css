@@ -1078,23 +1078,15 @@ body {
 
 .gv-film-room-page .gv-tab-bar {
   margin-bottom: 1rem;
-  /* Team/Recruiting pattern: x-scroll only — overflow-x:auto alone creates a Y trap. */
-  overflow-x: auto;
-  overflow-y: hidden;
-  touch-action: pan-x pan-y;
-  overscroll-behavior-x: contain;
-  overscroll-behavior-y: none;
-  -webkit-overflow-scrolling: touch;
 }
 
-.gv-film-room-page .gv-tab-bar .gv-tab {
-  touch-action: pan-x pan-y;
+.gv-film-room-page .rh-hero-strip {
+  margin-bottom: 1.25rem;
 }
 
 /* YouTube iframe swallows vertical scroll until explicitly activated. */
 .gv-film-room-page .gv-film-lesson__embed {
   position: relative;
-  touch-action: pan-y;
 }
 
 .gv-film-room-page .gv-film-lesson__embed iframe {
@@ -1126,15 +1118,62 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-.gv-film-room-page .rh-hero-strip {
-  margin-bottom: 1.25rem;
-}
+/*
+ * Film Room — document-only scroll (native WKWebView + mobile Safari).
+ * Match Recruiting: hub tabs WRAP (no nested scrollport). Kill overflow-x:hidden
+ * ancestors that coerce overflow-y:auto and fight the WebView scroller.
+ */
+@media (max-width: 1023px) {
+  html:has(body.gv-film-page-active),
+  html:has(.gv-film-room-page) {
+    overflow-x: clip !important;
+    overflow-y: auto !important;
+    height: auto !important;
+  }
 
-@media (max-width: 767px) {
-  /* PageLayout overflow-x:hidden also forces a nested Y scroller — clear it on Film. */
-  .gv-film-room-page .gv-page-layout,
-  .gv-film-room-page .gv-page-layout__body {
-    overflow: visible;
+  body.gv-film-page-active,
+  body:has(.gv-film-room-page) {
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    height: auto !important;
+    overscroll-behavior-y: auto;
+    touch-action: manipulation;
+  }
+
+  body.gv-film-page-active .gv-vault-shell,
+  body.gv-film-page-active .gv-vault-shell__body,
+  body.gv-film-page-active .gv-vault-shell__main,
+  body.gv-film-page-active .gv-film-room-page,
+  body.gv-film-page-active .gv-film-room-page .gv-page-layout,
+  body.gv-film-page-active .gv-film-room-page .gv-page-layout__body,
+  body.gv-film-page-active .gv-film-room-page .rh-elite-chrome,
+  body:has(.gv-film-room-page) .gv-vault-shell,
+  body:has(.gv-film-room-page) .gv-vault-shell__body,
+  body:has(.gv-film-room-page) .gv-vault-shell__main {
+    overflow: visible !important;
+    max-height: none !important;
+    touch-action: manipulation;
+  }
+
+  /* Recruiting mobile pattern: tabs are NOT a horizontal scrollport. */
+  body.gv-film-page-active .gv-tab-bar,
+  .gv-film-room-page .gv-tab-bar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    overflow: visible !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+    touch-action: manipulation !important;
+    overscroll-behavior: auto !important;
+    -webkit-overflow-scrolling: auto;
+    gap: 0.25rem 0;
+    justify-content: flex-start !important;
+  }
+
+  body.gv-film-page-active .gv-tab-bar .gv-tab,
+  .gv-film-room-page .gv-tab-bar .gv-tab {
+    touch-action: manipulation !important;
+    flex-shrink: 0;
   }
 
   /* Sit unlock CTA above bottom nav so nav/scroll gestures are not covered. */
