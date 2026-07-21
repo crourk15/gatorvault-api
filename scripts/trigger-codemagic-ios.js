@@ -3,19 +3,19 @@
  * Trigger Codemagic ios-release workflow.
  *
  * Usage:
- *   CM_API_TOKEN=... CODEMAGIC_APP_ID=... node scripts/trigger-codemagic-ios.js
+ *   CODEMAGIC_API_TOKEN=... node scripts/trigger-codemagic-ios.js
  *
- * Find token: Codemagic → Account settings → API tokens
- * Find app id: Codemagic → app → Settings → Application ID
+ * Find token: Codemagic → Account settings → Integrations → Codemagic API
+ * App ID defaults to gatorvault-api; override with CODEMAGIC_APP_ID if needed.
  */
-const APP_ID = process.env.CODEMAGIC_APP_ID || '';
+const APP_ID = process.env.CODEMAGIC_APP_ID || '6a3ae08903d4d93cf0d1a5de';
 const TOKEN = process.env.CM_API_TOKEN || process.env.CODEMAGIC_API_TOKEN || '';
 const BRANCH = process.env.CODEMAGIC_BRANCH || 'main';
 const WORKFLOW = process.env.CODEMAGIC_WORKFLOW || 'ios-release';
 
 async function main() {
-  if (!APP_ID || !TOKEN) {
-    console.error('Set CM_API_TOKEN and CODEMAGIC_APP_ID.');
+  if (!TOKEN) {
+    console.error('Set CODEMAGIC_API_TOKEN (Codemagic → Account → Integrations → Codemagic API).');
     process.exit(1);
   }
   const res = await fetch('https://api.codemagic.io/builds', {
@@ -36,7 +36,7 @@ async function main() {
     process.exit(1);
   }
   const buildId = body?._id || body?.buildId || body?.id;
-  console.log(JSON.stringify({ ok: true, buildId, branch: BRANCH, workflow: WORKFLOW, body }, null, 2));
+  console.log(JSON.stringify({ ok: true, buildId, branch: BRANCH, workflow: WORKFLOW, appId: APP_ID, body }, null, 2));
   if (buildId) {
     console.log(`Build page: https://codemagic.io/builds/${buildId}`);
   }

@@ -88,6 +88,7 @@ export async function initNativePushTapHandler(): Promise<void> {
     await PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
       const data = (action.notification?.data || {}) as { url?: string; path?: string };
       const raw = data.url || data.path || '/vault/alerts/';
+      // Absolute site URLs are normalized inside navigateVaultHref.
       navigateVaultHref(String(raw));
     });
   } catch {

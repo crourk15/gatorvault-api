@@ -1,0 +1,42 @@
+/**
+ * Parse Capacitor appUrlOpen / push / universal-link URLs into in-app vault paths.
+ */
+import { toAppRelativeHref } from '@/lib/app-href';
+
+const OWN_HOSTS = new Set(['gatorvaultinsider.com', 'www.gatorvaultinsider.com', 'localhost']);
+
+/** Return a same-app path (/vault/...) or null if the URL is not ours. */
+export function vaultPathFromOpenUrl(raw: string): string | null {
+  if (!raw || typeof raw !== 'string') return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+
+  if (trimmed.startsWith('/')) {
+    const path = toAppRelativeHref(trimmed);
+    return path.startsWith('/') ? path : null;
+  }
+
+  try {
+    const url = new URL(trimmed);
+    const isHttp = url.protocol === 'http:' || url.protocol === 'https:';
+
+    if (isHttp) {
+      if (!OWN_HOSTS.has(url.hostname) && url.hostname !== '127.0.0.1') {
+        return null;
+      }
+      const path = toAppRelativeHref(`${url.pathname}${url.search}${url.hash}`);
+      return path.startsWith('/') ? path : null;
+    }
+
+    // Custom scheme: com.gatorvaultinsider.app://vault/film-room/
+    // URL parser puts first segment in hostname.
+    const host = url.hostname || '';
+    const combined = host
+      ? `/${host}${url.pathname || '/'}${url.search}${url.hash}`
+      : `${url.pathname || '/'}${url.search}${url.hash}`;
+    const path = toAppRelativeHref(combined.startsWith('/') ? combined : `/${combined}`);
+    return path.startsWith('/') ? path : null;
+  } catch {
+    return null;
+  }
+}

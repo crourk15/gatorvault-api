@@ -104,10 +104,8 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        # 1.0.8 Build 36 — rebundles Film Room document-only scroll fix into Capacitor shell.
-        # Codemagic submits for App Review after upload/processing.
-        # Attach to existing 1.0.8 train in App Store Connect.
-        # Set back to false after this release if you want TestFlight-only uploads again.
-        submit_to_app_store: true
-        cancel_previous_submissions: true
+        # Default: TestFlight only. Flip to true only when intentionally submitting review.
+        # Build 36 was the intentional App Review upload; ongoing main→TF stays TF-only.
+        submit_to_app_store: false
+        cancel_previous_submissions: false
         release_type: MANUAL

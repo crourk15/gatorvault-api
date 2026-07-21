@@ -34,6 +34,10 @@ export async function initNativeShell(): Promise<void> {
   void initIosPurchases();
   void initNativePush();
 
+  void App.addListener('appUrlOpen', ({ url }) => {
+    void handleAppUrlOpen(url);
+  });
+
   void App.addListener('backButton', ({ canGoBack }) => {
     if (canGoBack) {
       window.history.back();
@@ -41,6 +45,18 @@ export async function initNativeShell(): Promise<void> {
     }
     void App.minimizeApp();
   });
+}
+
+async function handleAppUrlOpen(url: string): Promise<void> {
+  try {
+    const { vaultPathFromOpenUrl } = await import('@/lib/native-deep-link');
+    const { navigateVaultHref } = await import('@/lib/navigate-vault-href');
+    const path = vaultPathFromOpenUrl(url);
+    if (!path) return;
+    navigateVaultHref(path);
+  } catch {
+    /* ignore malformed open URL */
+  }
 }
 
 async function initIosPurchases(): Promise<void> {

@@ -51,6 +51,8 @@ npm run cap:sync
 
 Unset `CAPACITOR_SERVER_URL` before App Store builds. The default config bundles static assets from `client/out` (required for Guideline 4.2.2).
 
+See **`docs/APP_WEB_DRIFT.md`** — Netlify does not update TestFlight; Codemagic rebakes the IPA (optional GitHub → Codemagic trigger on `main`).
+
 ## App Store resubmission (June 2026 review)
 
 Apple rejected **1.0 (5)** for:

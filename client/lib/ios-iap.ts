@@ -55,19 +55,56 @@ export async function restoreIosPurchases(): Promise<void> {
   await NativePurchases.restorePurchases();
 }
 
+/** Best-effort: pull active entitlements if transactionUpdated never fires. */
+async function syncPurchasesFromGetPurchases(
+  onTransaction: (payload: { productId: string; transactionId: string }) => Promise<void>
+): Promise<boolean> {
+  try {
+    const { NativePurchases, PURCHASE_TYPE } = await import('@capgo/native-purchases');
+    const { purchases } = await NativePurchases.getPurchases({
+      productType: PURCHASE_TYPE.SUBS,
+      onlyCurrentEntitlements: true,
+    });
+    const active = (purchases || []).filter((p) => p.transactionId && p.productIdentifier);
+    if (!active.length) return false;
+    // Newest first when dates exist
+    active.sort((a, b) => {
+      const ta = Date.parse(String(a.purchaseDate || 0)) || 0;
+      const tb = Date.parse(String(b.purchaseDate || 0)) || 0;
+      return tb - ta;
+    });
+    const top = active[0];
+    await onTransaction({
+      productId: top.productIdentifier,
+      transactionId: top.transactionId as string,
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Run native restore and invoke callback for each restored transaction (Step 3b). */
 export async function restoreIosPurchasesWithSync(
   onTransaction: (payload: { productId: string; transactionId: string }) => Promise<void>
 ): Promise<void> {
   let handled = false;
-  const remove = await initIosPurchaseListeners(async (tx) => {
+  const markHandled = async (tx: { productId: string; transactionId: string }) => {
     if (handled) return;
     handled = true;
     await onTransaction(tx);
+  };
+  const remove = await initIosPurchaseListeners(async (tx) => {
+    await markHandled(tx);
     remove?.();
   });
   try {
     await restoreIosPurchases();
+    // Listener can miss on cold StoreKit; fall back to getPurchases entitlements.
+    if (!handled) {
+      const ok = await syncPurchasesFromGetPurchases(markHandled);
+      if (ok) remove?.();
+    }
   } finally {
     window.setTimeout(() => remove?.(), 8000);
   }
