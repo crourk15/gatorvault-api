@@ -104,8 +104,6 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        # Default: TestFlight only. Flip to true only when intentionally submitting review.
-        # Build 36 was the intentional App Review upload; ongoing main→TF stays TF-only.
+        # TestFlight only. Do not set release_type / cancel_previous_submissions
+        # unless submit_to_app_store is true (Codemagic YAML validation requires it).
         submit_to_app_store: false
-        cancel_previous_submissions: false
-        release_type: MANUAL
