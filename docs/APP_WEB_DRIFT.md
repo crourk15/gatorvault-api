@@ -22,3 +22,7 @@ The App Store / TestFlight binary is a **bundled** Capacitor shell (`client/out`
 ## Not the fix
 
 Do **not** set `CAPACITOR_SERVER_URL` / `server.url` for App Store builds. Codemagic fails the build if that sneaks in.
+
+## Status
+
+- GitHub secret `CODEMAGIC_API_TOKEN` configured for auto TestFlight on `main`.
