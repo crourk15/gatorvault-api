@@ -1,6 +1,6 @@
-# Trigger Codemagic ios-release after merges to main (App Store–safe bundled shell).
-# Requires repo secrets: CODEMAGIC_API_TOKEN, CODEMAGIC_APP_ID
-# Does not use live WebView URL — Codemagic still builds/syncs client/out into the IPA.
+# Trigger Codemagic ios-release after merges to main (App Store-safe bundled shell).
+# Requires repo secret: CODEMAGIC_API_TOKEN
+# App ID defaults to the gatorvault-api Codemagic application (override via secret if needed).
 name: iOS TestFlight (Codemagic)
 
 on:
@@ -24,8 +24,9 @@ jobs:
           CODEMAGIC_BRANCH: main
           CODEMAGIC_WORKFLOW: ios-release
         run: |
-          if [ -z "${CODEMAGIC_API_TOKEN}" ] || [ -z "${CODEMAGIC_APP_ID}" ]; then
-            echo "::warning::CODEMAGIC_API_TOKEN / CODEMAGIC_APP_ID not set — skip auto TestFlight trigger. Run Codemagic manually or add secrets."
+          export CODEMAGIC_APP_ID="${CODEMAGIC_APP_ID:-6a3ae08903d4d93cf0d1a5de}"
+          if [ -z "${CODEMAGIC_API_TOKEN}" ]; then
+            echo "::warning::CODEMAGIC_API_TOKEN not set — skip auto TestFlight trigger. Add the secret or run Codemagic manually."
             exit 0
           fi
           npm run trigger:codemagic:ios
