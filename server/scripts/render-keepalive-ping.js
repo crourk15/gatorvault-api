@@ -3,8 +3,8 @@
  * Render cron keep-alive — lightweight wake + soft hub touch bundle.
  * Schedule: every 2 minutes (see render.yaml cron service).
  *
- * Hits api/ping first, then a short list of pillar endpoints so Starter
- * stays warm for fans (not just process alive).
+ * Hits api/ping first, then pillar endpoints in a small concurrent pool
+ * so fan caches stay warm (not just process alive).
  */
 const PING_URL =
   process.env.KEEPALIVE_PING_URL ||
@@ -18,12 +18,18 @@ const TOUCH_PATHS = (
   process.env.KEEPALIVE_TOUCH_PATHS ||
   [
     '/api/recruiting/hub/bundle?year=2027',
+    '/api/recruiting/hub/bundle?year=2028',
+    '/api/recruiting/movement-intel',
+    '/api/recruiting/intel/beat?limit=5',
     '/api/live/dashboard?limit=10',
+    '/api/live/podcasts',
+    '/api/live/ticker',
     '/api/film-room/catalog',
     '/api/betting/lines',
     '/api/articles/published?limit=5',
     '/api/futurecast/alerts?limit=10',
     '/api/roster/players',
+    '/api/staff/dashboard',
     '/api/futurecast/home',
     '/api/community/categories',
     '/api/community/threads?sort=trending&limit=12',
@@ -39,6 +45,10 @@ const WAKE_WINDOW_MS = parseInt(process.env.KEEPALIVE_WAKE_MS || '180000', 10);
 const WAKE_INTERVAL_MS = parseInt(process.env.KEEPALIVE_WAKE_INTERVAL_MS || '5000', 10);
 const REQUEST_TIMEOUT_MS = parseInt(process.env.KEEPALIVE_TIMEOUT_MS || '90000', 10);
 const HUB_TIMEOUT_MS = parseInt(process.env.KEEPALIVE_HUB_TIMEOUT_MS || '45000', 10);
+const TOUCH_CONCURRENCY = Math.max(
+  1,
+  parseInt(process.env.KEEPALIVE_TOUCH_CONCURRENCY || '4', 10) || 4
+);
 
 async function sleep(ms) {
   await new Promise((resolve) => setTimeout(resolve, ms));
@@ -48,7 +58,7 @@ async function pingOnce(url, timeoutMs = REQUEST_TIMEOUT_MS) {
   const started = Date.now();
   const res = await fetch(url, {
     method: 'GET',
-    headers: { Accept: 'application/json', 'User-Agent': 'gatorvault-keepalive/3.2' },
+    headers: { Accept: 'application/json', 'User-Agent': 'gatorvault-keepalive/3.3' },
     signal: AbortSignal.timeout(timeoutMs),
   });
   return { ok: res.ok, status: res.status, elapsed: Date.now() - started };
@@ -92,18 +102,34 @@ async function softTouch(path) {
   }
 }
 
-async function main() {
-  const ping = await wakeUntilReady(PING_URL, 'api/ping');
-  const touches = [];
-  if (process.env.KEEPALIVE_HUB_TOUCH !== 'false') {
-    for (const path of TOUCH_PATHS) {
-      touches.push(await softTouch(path));
+async function mapPool(items, concurrency, worker) {
+  const results = new Array(items.length);
+  let next = 0;
+  async function run() {
+    while (next < items.length) {
+      const idx = next;
+      next += 1;
+      results[idx] = await worker(items[idx], idx);
     }
   }
+  const n = Math.min(concurrency, Math.max(1, items.length));
+  await Promise.all(Array.from({ length: n }, () => run()));
+  return results;
+}
+
+async function main() {
+  const ping = await wakeUntilReady(PING_URL, 'api/ping');
+  let touches = [];
+  if (process.env.KEEPALIVE_HUB_TOUCH !== 'false') {
+    touches = await mapPool(TOUCH_PATHS, TOUCH_CONCURRENCY, (path) => softTouch(path));
+  }
+  const okCount = touches.filter((t) => t && t.ok).length;
   console.log(
     '[keepalive] ok',
     JSON.stringify({
       ping,
+      touchOk: okCount,
+      touchTotal: touches.length,
       touches,
       at: new Date().toISOString(),
     })

@@ -1,72 +1,41 @@
-# Agent Handoff — Elite Platform Status (2026-07-21)
+# Agent Handoff — Elite Remaining Gaps (2026-07-21)
 
-**Stop point (overnight):** User paused after elite web verdict. Resume continued here.
+## Verdict
 
-## Verdict (owner-aligned)
+**Fan-facing web vault remains elite.** This branch knocks down the remaining non-elite gaps that can be completed from a cloud agent.
 
-**Fan-facing web vault is elite.** Authenticated production mobile proof is green. Do **not** reopen large "make it elite" UI sweeps unless the user asks. Leftovers are ops / native / content / data-enrichment, not product-finish gaps.
+## Completed this session
 
-## What shipped / verified (overnight)
+1. **Render cold-start harden**
+   - Keepalive touches staff/movement/beat/podcasts/ticker + 2028 hub; concurrent pool (4)
+   - Client warmup covers staff, podcasts, beat, ticker, movement-intel; idle fallback without `requestIdleCallback`
+   - `API_BOOT_DEFER_HEAVY_MS` 120s → 45s on Standard
+   - `verify:cold-start:api` expanded to pillar paths
 
-- **PR #143 merged** to `main` (`cdc39aa3`): recruiting hub-bundle seed, community founding surface, cold-start keepalive/warmup, thin-card honesty, Team/GNL soft-refresh.
-- Production Netlify build matches `main` (`cdc39aa352c0`).
-- **`APP_REVIEW_PASSWORD` was updated** in Cursor Secrets (was stale → 401). Login now works.
-- **`npm run proof:mobile:prod` PASS** (2026-07-21 ~02:26 UTC):
-  - Remote login ok via `https://gatorvaultinsider.com/api/login` (attempt 1)
-  - All checklist sections PASS (Roster → Below NSD + NIL/Game Zone)
-  - Menu open/close PASS on every required vault route
-  - Gated routes (Film Room, FutureCast, Membership, Alerts) OK under App Review session
-  - `verify:mobile:full` — **3 consecutive passes** (18 routes)
-  - Artifacts (gitignored): `proof/mobile-deploy-proof/`
+2. **Content freshness**
+   - Server `ensureFoundingSurface()` seeds honest staff Community threads when UGC empty
+   - Client community founding seed expanded (Closing Class + scheme threads)
+   - Closing Class On3 RPM/logos already shipped on `main` (#145); fills via Render On3 ingest
 
-## Today's continuation (this branch)
+3. **CSS consolidation Phase 1**
+   - Deleted dead `home.css` + `futurecast-page.css`
+   - Collapsed duplicate root-token / mobile-framework imports from vault/(app)/recruiting-hub/GNL/marketing layouts
 
-Revived stale draft **PR #109** (On3 RPM + competitor logos for Closing Class / Lab targets) onto current `main`:
+4. **Native / TestFlight (cloud-completable)**
+   - `verify:ios:smoke` PASS (IAP wiring, icon, SPA nav)
+   - AASA document PASS (shell only until `APPLE_TEAM_ID` at build)
+   - **Blocked without human/device:** Codemagic trigger (no `CODEMAGIC_*` secrets here), real-device TestFlight IAP/push/cold-launch, ASC 1.0.7 train attach
 
-- Closing Class snapshot + Lab-promoted slugs join allowlist On3 sync jobs
-- Closing board / Lab promote run before allowlist On3 ingest so the same cycle can enrich new names
-- `persistRpmToRecruitingStore` writes `ufRpmPct` + `competitors` while preserving `boardSource`
-- Merged with Pass 4 inventory RPM sync already on `main` (not a replace)
-- Tests: `board-rpm-jobs.test.js` + `on3-rpm-allowlist.test.js` — **13/13 pass**
+## Still human-gated
 
-**Needs after merge (ops, App Store freeze applies):** Render deploy / On3 ingest cycle so live Closing Class cards pick up RPM + logos. Do **not** production deploy without explicit user confirmation while freeze is on.
+| Item | Why |
+|------|-----|
+| Codemagic ios-release → TestFlight Build 33 | Needs `CODEMAGIC_API_TOKEN` + `CODEMAGIC_APP_ID` in Cursor secrets, or dashboard start |
+| Device TestFlight pass | Physical device: cold launch, sandbox IAP, APNs |
+| ASC 1.0.7 attach | App Store Connect UI |
+| Live AASA appIDs | Set `APPLE_TEAM_ID` on Netlify build |
 
-## Secrets / auth for proof
+## Hard constraints
 
-| Secret | Status |
-|--------|--------|
-| `APP_REVIEW_EMAIL` | Present / working |
-| `APP_REVIEW_PASSWORD` | **Updated + verified working** |
-| `SUBSCRIPTION_ADMIN_PIN` | Not set (not needed unless reprovisioning demo account) |
-
-Proof entrypoints:
-- `npm run proof:mobile:prod` — authenticated prod proof (preferred next verify)
-- `npm run proof:mobile:deploy` — local Netlify mirror proof (required before any push claiming deploy-ready)
-- Auth bootstrap: `client/scripts/proof-auth-bootstrap.js` → `POST /api/login`
-
-## Still outside "elite web" (do not treat as unfinished vault)
-
-1. **Render Starter cold starts** — softened (keepalive/warmup), not eliminated.
-2. **Real-device TestFlight** — IAP / push / cold-launch not proven in cloud agents.
-3. **Community UGC** — founding staff threads seed when empty; real fan posts still needed over time.
-4. **Full CSS consolidation** — debt; too large for a drive-by PR.
-5. **Closing Class RPM/logos in prod** — code ready on this branch; needs Render deploy + ingest after freeze allows.
-
-## Hard constraints (read before acting)
-
-1. **App Store review freeze — LIFTED** (owner, 2026-07-21). Production merge/deploy to `main` / Netlify / Render is allowed again for this ship.
-2. **No push/deploy without full mobile proof** — see `.cursor/rules/no-push-without-full-mobile-verify.mdc`. Run `npm run proof:mobile:deploy` locally before claiming ready; after Netlify, `npm run verify:netlify:build`.
-3. Do **not** invent new elite UI sweeps unless the user asks.
-
-## Suggested resume prompts
-
-- "Merge Closing Class RPM work and allow Render deploy" (confirm freeze lift first)
-- "Retry `proof:mobile:prod` and report status"
-- "What's left that's not elite?"
-- Specific ops: TestFlight device pass, Render plan/cold-start, content freshness, CSS consolidation phase 1
-
-## Prior agent runs (context)
-
-- Elite platform completion: https://cursor.com/agents/bc-3f7f1f87-f2cd-4412-b47a-4411d4ed7398 (PR #143)
-- Overnight handoff: https://cursor.com/agents/bc-b126002e-1c25-4da8-878e-b48c3c2af54e (password update → prod proof green)
-- This continuation: https://cursor.com/agents/bc-a22d4ea8-1099-4578-8966-56dedbd249da
+1. App Store freeze was **lifted** by owner earlier today — prod merge/deploy allowed.
+2. Still run `proof:mobile:deploy` before claiming deploy-ready; after Netlify `verify:netlify:build`.

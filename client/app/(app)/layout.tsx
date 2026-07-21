@@ -2,8 +2,6 @@ import React from 'react';
 import { AppShell } from '@/components/shell/AppShell';
 import { AppRouteGate } from '@/components/shell/AppRouteGate';
 import '@/lib/app-shell.css';
-import '@/lib/gv-design-system.css';
-import '@/lib/gatorvault-brand.css';
 import '@/lib/vault-home.css';
 import '@/lib/vault-recruiting-hub.css';
 import '@/styles/recruiting-hub-globals.css';
@@ -23,9 +21,6 @@ import '@/lib/futurecast-premium.css';
 import '@/lib/team-premium.css';
 import '@/lib/nil-elite.css';
 import '@/lib/vault-mobile-vertical.css';
-import '@/lib/mobile-native-framework.css';
-
-import '@/lib/mobile-native-framework.css';
 import '@/lib/uf-premium-mobile.css';
 import '@/lib/uf-premium-gnl.css';
 

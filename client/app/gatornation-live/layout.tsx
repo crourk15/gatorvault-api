@@ -1,8 +1,6 @@
 import React from 'react';
 import { VaultShell } from '@/components/vault/VaultShell';
 import { VaultErrorBoundary } from '@/components/vault/VaultErrorBoundary';
-import '@/lib/gv-design-system.css';
-import '@/lib/gatorvault-brand.css';
 import '@/lib/vault-shell.css';
 import '@/lib/vault-home.css';
 import '@/lib/home-premium.css';

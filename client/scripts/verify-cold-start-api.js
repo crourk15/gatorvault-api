@@ -6,9 +6,18 @@ const TIMEOUT_MS = Number(process.env.COLD_START_TIMEOUT_MS || 120000);
 const MAX_LATENCY_MS = Number(process.env.COLD_START_MAX_MS || 45000);
 const EXPECTED_COMMITS = {
   2026: { commits: "19", commitLabel: "Signees" },
-  2027: { commits: "24", commitLabel: "Commits" },
-  2028: { commits: "\u2014", commitLabel: "Commits" },
+  2027: { commits: "26", commitLabel: "Commits" },
+  2028: { commits: "1", commitLabel: "Commits" },
 };
+const PILLAR_PATHS = [
+  "/api/ping",
+  "/api/roster/players",
+  "/api/staff/dashboard",
+  "/api/live/dashboard?limit=10",
+  "/api/live/podcasts",
+  "/api/community/threads?sort=trending&limit=12",
+  "/api/nil/dashboard",
+];
 function fetchJson(path, timeoutMs = 90000) {
   const url = API_ORIGIN + path;
   const lib = url.startsWith("https") ? https : http;
@@ -49,12 +58,22 @@ async function main() {
     if (res.ok && res.ms > MAX_LATENCY_MS) failures.push("class-metrics " + year + ": slow " + res.ms + "ms");
     if (String(got.commits) !== expected.commits) failures.push("class-metrics " + year + ": commits " + got.commits + " expected " + expected.commits);
     if (got.commitLabel !== expected.commitLabel) failures.push("class-metrics " + year + ": label mismatch");
-    if (String(cacheKey).indexOf("hs2") === -1) failures.push("class-metrics " + year + ": stale cache key " + cacheKey);
+    if (String(cacheKey).indexOf("hub:class:snapshot") === -1) {
+      failures.push("class-metrics " + year + ": unexpected cache key " + cacheKey);
+    }
   }
   const bundle = await fetchJson("/api/recruiting/hub/bundle?year=2027");
   console.log("[hub/bundle 2027] " + (bundle.ok ? "OK" : "FAIL") + " " + bundle.ms + "ms");
   if (!bundle.ok) failures.push("hub/bundle HTTP " + bundle.status);
   if (bundle.ok && bundle.ms > MAX_LATENCY_MS) failures.push("hub/bundle slow " + bundle.ms + "ms");
+
+  for (const path of PILLAR_PATHS) {
+    const res = await fetchJson(path);
+    console.log("[" + path + "] " + (res.ok ? "OK" : "FAIL") + " " + res.ms + "ms");
+    if (!res.ok) failures.push(path + ": HTTP " + res.status);
+    if (res.ok && res.ms > MAX_LATENCY_MS) failures.push(path + ": slow " + res.ms + "ms");
+  }
+
   if (failures.length) { console.error("[verify-cold-start-api] FAIL"); failures.forEach((f) => console.error(" -", f)); process.exitCode = 1; return; }
   console.log("[verify-cold-start-api] PASS");
 }
