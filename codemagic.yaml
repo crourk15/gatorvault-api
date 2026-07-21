@@ -104,9 +104,9 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        # 1.0.7 Build 34 ship — Build 33 already uploaded to ASC (duplicate cfBundleVersion).
+        # 1.0.8 Build 35 ship — ASC closed 1.0.7 train after approval (90186 / 90062).
         # Codemagic submits for App Review after upload/processing.
-        # ASC 1.0.6 train is closed; create version 1.0.7 before/while this build processes.
+        # Create version 1.0.8 in App Store Connect before/while this build processes.
         # Set back to false after this release if you want TestFlight-only uploads again.
         submit_to_app_store: true
         cancel_previous_submissions: true
