@@ -52,7 +52,7 @@
 }
 
 /* Full-bleed brand hero — edge-to-edge, not an inset card.
-   Sized to a strong first fold (not a half-empty full-viewport slab). */
+   Compact first fold so content peeks below (~⅓ viewport, not half+). */
 .home-wow-hero {
   position: relative;
   overflow: hidden;
@@ -60,7 +60,7 @@
   border-radius: 0;
   box-shadow: none;
   margin: 0;
-  min-height: clamp(300px, 48svh, 480px);
+  min-height: clamp(240px, 34svh, 360px);
   display: flex;
   align-items: flex-end;
   width: 100%;
@@ -237,22 +237,18 @@
 
 @media (max-width: 767px) {
   .home-wow-hero {
-    /* Own the first viewport — brand composition only; countdown/live sit below. */
-    --home-hero-chrome: calc(
-      var(--gv-shell-header-height, 64px) + 4.75rem + env(safe-area-inset-bottom, 0px)
-    );
-    min-height: calc(100svh - var(--home-hero-chrome));
-    min-height: calc(100dvh - var(--home-hero-chrome));
+    /* Brand-first but compact — leave room for the stack in the first viewport. */
+    min-height: clamp(220px, 32svh, 280px);
     align-items: flex-end;
   }
 
   .home-wow-hero__inner {
-    padding-top: clamp(20px, 4vh, 32px);
-    padding-bottom: clamp(20px, 4vh, 32px);
+    padding-top: clamp(16px, 3vh, 24px);
+    padding-bottom: clamp(16px, 3vh, 24px);
   }
 
   .home-wow-hero-title {
-    font-size: clamp(2.5rem, 11vw, 3.75rem);
+    font-size: clamp(2.25rem, 10vw, 3.25rem);
   }
 
   .home-wow-page__stack {

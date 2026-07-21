@@ -110,6 +110,12 @@
     overflow-x: hidden;
   }
 
+  /* Film Room: do not create a nested Y scroller (overflow-x:hidden → overflow-y:auto). */
+  .gv-vault-shell__main:has(.gv-film-room-page),
+  .gv-app-shell__main:has(.gv-film-room-page) {
+    overflow: visible;
+  }
+
   /* Edge-to-edge content with safe padding */
   .gv-vault-shell__main .gv-container,
   .gv-vault-shell__main .rh-frame,
