@@ -28,7 +28,11 @@ function MovementRow({ item, tone }: { item: MovementIntelItem; tone: Tab }): Re
         <UfProbBar value={pct} />
       </div>
       <div className="rh-cc-move-row__right">
-        <MovementSparkline end={pct} delta={delta} />
+        {pct == null ? (
+          <span className="rh-cc-move-row__vol">RPM pending</span>
+        ) : (
+          <MovementSparkline end={pct} delta={delta} />
+        )}
         <MovementBadge
           delta={delta}
           tone={tone === 'volatile' ? 'volatile' : delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat'}

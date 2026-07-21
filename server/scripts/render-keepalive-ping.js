@@ -23,6 +23,11 @@ const TOUCH_PATHS = (
     '/api/betting/lines',
     '/api/articles/published?limit=5',
     '/api/futurecast/alerts?limit=10',
+    '/api/roster/players',
+    '/api/futurecast/home',
+    '/api/community/categories',
+    '/api/community/threads?sort=trending&limit=12',
+    '/api/nil/dashboard',
   ].join(',')
 )
   .split(',')

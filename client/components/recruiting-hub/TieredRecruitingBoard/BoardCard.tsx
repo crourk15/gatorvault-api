@@ -9,9 +9,9 @@ export type BoardCardProps = {
   player: RecruitingBoardPlayer;
 };
 
-function ufPct(player: RecruitingBoardPlayer): number {
+function ufPct(player: RecruitingBoardPlayer): number | null {
   const raw = player.ufProbability;
-  if (raw == null) return 0;
+  if (raw == null || Number.isNaN(Number(raw))) return null;
   return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
 }
 
@@ -25,7 +25,7 @@ function competingSchools(player: RecruitingBoardPlayer): string {
   const schools = player.predictionSchools?.slice(0, 3).map((s) => s.school);
   if (schools?.length) return schools.join(' · ');
   if (player.committedTo) return player.committedTo;
-  return 'Open';
+  return '—';
 }
 
 function whyUf(player: RecruitingBoardPlayer): string {
@@ -33,7 +33,7 @@ function whyUf(player: RecruitingBoardPlayer): string {
     player.notePreview?.trim() ||
     player.skinny?.trim() ||
     player.notes?.trim() ||
-    'UF staff actively engaged — fit score supports positional need.'
+    'Intel pending — board still building.'
   );
 }
 
@@ -41,7 +41,7 @@ function whatsNext(player: RecruitingBoardPlayer): string {
   if (player.visitStart) return `OV window ${player.visitStart}${player.visitEnd ? `–${player.visitEnd}` : ''}`;
   if (player.nextVisitSchool) return `Next: ${player.nextVisitSchool}`;
   if (player.ufOvStatus) return `Visit status: ${player.ufOvStatus}`;
-  return 'Monitor RPM + summer camp circuit';
+  return 'Visit / decision window TBD';
 }
 
 export function BoardCard({ player }: BoardCardProps): React.ReactElement {
@@ -60,7 +60,7 @@ export function BoardCard({ player }: BoardCardProps): React.ReactElement {
             ) : null}
           </p>
         </div>
-        <span className="rh-board-card__uf">{pct}% UF</span>
+        <span className="rh-board-card__uf">{pct == null ? 'RPM pending' : `${pct}% UF`}</span>
       </header>
 
       <div className="rh-board-card__heat">

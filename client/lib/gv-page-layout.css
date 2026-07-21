@@ -432,6 +432,32 @@
   gap: var(--gv-grid-gutter);
 }
 
+.gv-community__staff-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--gv-border, rgba(0, 0, 0, 0.08));
+  background: var(--gv-surface, #fff);
+  border-radius: 0;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.gv-community__staff-card:hover,
+.gv-community__staff-card:focus-visible {
+  border-color: var(--gv-orange, #fa4616);
+  outline: none;
+}
+
+.gv-community__empty-cta {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem 0;
+}
+
 .gv-articles__featured {
   border-left: 4px solid var(--gv-orange);
 }

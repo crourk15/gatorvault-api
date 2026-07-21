@@ -30,9 +30,9 @@ export function TeamRosterSection({
       <TeamPremiumModule
         title={TEAM_COPY.roster.title}
         subtitle={TEAM_COPY.roster.subtitle}
-        stamp={loading ? 'Loading…' : `${roster.length} players`}
+        stamp={roster.length > 0 ? `${roster.length} players` : loading ? 'Updating…' : '0 players'}
       >
-        {loading && roster.length === 0 ? (
+        {roster.length === 0 && loading ? (
           <div className="team-premium-loading" role="status" aria-live="polite" aria-busy="true">
             {warming ? <UiWarming hint="Loading roster and depth chart." /> : null}
             <TeamRosterSkeleton />

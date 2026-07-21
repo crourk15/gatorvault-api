@@ -18,7 +18,11 @@ export function LiveFeedShell({
 }): React.ReactElement {
   return (
     <>
-      {loading && <p className="gv-page-status">Loading live feed…</p>}
+      {loading ? (
+        <p className="gv-page-status" aria-live="polite">
+          Updating live feed…
+        </p>
+      ) : null}
       {error && !loading && (
         <UiError message={error} retry={onRetry} backHref="/vault" backLabel="← Home" />
       )}

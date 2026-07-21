@@ -9,9 +9,9 @@ export type BoardCardProps = {
   player: RecruitingBoardPlayer;
 };
 
-function ufPct(player: RecruitingBoardPlayer): number {
+function ufPct(player: RecruitingBoardPlayer): number | null {
   const raw = player.ufProbability;
-  if (raw == null) return 0;
+  if (raw == null || Number.isNaN(Number(raw))) return null;
   return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
 }
 
@@ -33,7 +33,7 @@ function competingTags(player: RecruitingBoardPlayer): string[] {
     return player.predictionSchools.slice(0, 3).map((s) => s.school);
   }
   if (player.committedTo) return [player.committedTo];
-  return ['Open'];
+  return [];
 }
 
 function whyUf(player: RecruitingBoardPlayer): string {
@@ -41,7 +41,7 @@ function whyUf(player: RecruitingBoardPlayer): string {
     player.notePreview?.trim() ||
     player.skinny?.trim()?.split('.')[0] ||
     player.notes?.trim() ||
-    'UF staff actively engaged on fit and need.'
+    'Intel pending — board still building.'
   );
 }
 
@@ -49,13 +49,14 @@ function whatsNext(player: RecruitingBoardPlayer): string {
   if (player.visitStart) return `Visit ${player.visitStart}${player.visitEnd ? `–${player.visitEnd}` : ''}`;
   if (player.ufOvStatus) return `Status: ${player.ufOvStatus}`;
   if (player.nextVisitSchool) return `Next: ${player.nextVisitSchool}`;
-  return 'Monitor summer circuit + decision window';
+  return 'Visit / decision window TBD';
 }
 
 export function BoardCard({ player }: BoardCardProps): React.ReactElement {
   const pct = ufPct(player);
   const heat = heatLevel(player);
   const classYear = player.classYear ?? 2027;
+  const tags = competingTags(player);
 
   return (
     <article className="rh-board-card">
@@ -66,7 +67,7 @@ export function BoardCard({ player }: BoardCardProps): React.ReactElement {
             {player.position || player.pos} · Class {classYear} · {rankingLabel(player)}
           </p>
         </div>
-        <span className="rh-board-card__uf">{pct}%</span>
+        <span className="rh-board-card__uf">{pct == null ? '—' : `${pct}%`}</span>
       </header>
 
       <div className="rh-board-card__heat">
@@ -74,11 +75,15 @@ export function BoardCard({ player }: BoardCardProps): React.ReactElement {
       </div>
 
       <div className="rh-board-card__tags">
-        {competingTags(player).map((school) => (
-          <span key={school} className="rh-board-card__tag">
-            {school}
-          </span>
-        ))}
+        {tags.length > 0 ? (
+          tags.map((school) => (
+            <span key={school} className="rh-board-card__tag">
+              {school}
+            </span>
+          ))
+        ) : (
+          <span className="rh-board-card__tag">—</span>
+        )}
       </div>
 
       <p className="rh-board-card__line">

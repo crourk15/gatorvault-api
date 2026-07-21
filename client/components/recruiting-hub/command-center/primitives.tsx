@@ -2,9 +2,14 @@
 
 import React from 'react';
 
-export function ufPctFromRaw(raw: number | null | undefined): number {
-  if (raw == null) return 0;
+export function ufPctFromRaw(raw: number | null | undefined): number | null {
+  if (raw == null || Number.isNaN(Number(raw))) return null;
   return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
+}
+
+export function formatUfPctFromRaw(raw: number | null | undefined): string {
+  const pct = ufPctFromRaw(raw);
+  return pct == null ? '—' : `${pct}%`;
 }
 
 export function MovementSparkline({
@@ -66,7 +71,17 @@ export function MovementBadge({
   );
 }
 
-export function UfProbBar({ value }: { value: number }): React.ReactElement {
+export function UfProbBar({ value }: { value: number | null | undefined }): React.ReactElement {
+  if (value == null || Number.isNaN(Number(value))) {
+    return (
+      <div className="rh-cc-prob-bar" aria-label="UF probability pending">
+        <div className="rh-cc-prob-bar__track">
+          <div className="rh-cc-prob-bar__fill rh-cc-prob-bar__fill--low" style={{ width: '0%' }} />
+        </div>
+        <span className="rh-cc-prob-bar__label">—</span>
+      </div>
+    );
+  }
   const pct = Math.max(0, Math.min(100, value));
   const tone = pct >= 67 ? 'high' : pct >= 34 ? 'mid' : 'low';
   return (

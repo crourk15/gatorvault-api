@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Card, Chip, PageLayout, PageSection } from '@/components/brand';
+import { Chip, PageLayout, PageSection } from '@/components/brand';
 import { CommunityConfirmModal } from '@/components/community/CommunityConfirmModal';
 import { CommunityPostActions } from '@/components/community/CommunityPostActions';
 import { CommunityReportModal } from '@/components/community/CommunityReportModal';
@@ -49,12 +49,7 @@ type BlockTarget = {
   displayName: string;
 };
 
-const TRENDING_TOPICS = ['QB battle 2026', 'Portal targets', 'Georgia week', 'NIL rankings', 'Depth chart'];
-
-const STAFF_POSTS = [
-  { title: 'Spring practice intel', author: 'GatorVault Staff', badge: 'staff' as const },
-  { title: 'Recruiting board update', author: 'Insider Desk', badge: 'staff' as const },
-];
+const FALLBACK_TOPICS = ['2027 board', 'Portal watch', 'Game week keys', 'NIL pulse', 'Film Room'];
 
 function timeAgo(iso?: string): string {
   if (!iso) return '';
@@ -135,9 +130,18 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
         limit: 40,
       });
       setCategories(data.categories.length ? data.categories : SEED_COMMUNITY.categories);
-      setThreads(data.threads);
-      setPulse(data.pulse);
-      setRooms(data.rooms);
+      // Keep founding/seed conversations when live UGC is empty/cold.
+      if (data.threads.length > 0) {
+        setThreads(data.threads);
+      } else if (SEED_COMMUNITY.threads.length > 0) {
+        setThreads(SEED_COMMUNITY.threads);
+      } else {
+        setThreads([]);
+      }
+      setPulse(data.pulse?.trending != null || data.pulse?.repliesToday != null
+        ? data.pulse
+        : SEED_COMMUNITY.pulse || data.pulse);
+      setRooms(data.rooms.length ? data.rooms : SEED_COMMUNITY.rooms);
       setError(null);
       if (data.categories.length && !newCategory) setNewCategory(data.categories[0].slug);
     } catch (err) {
@@ -309,6 +313,25 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
         ? `the thread “${reportTarget.thread.title}”`
         : '';
 
+  const trendingTopics = useMemo(() => {
+    const fromThreads = threads
+      .slice(0, 5)
+      .map((t) => t.title.replace(/^(Who is |Film Room: |Portal watch: |NIL pulse: |Game Week open thread — )/i, '').slice(0, 28));
+    return fromThreads.length ? fromThreads : FALLBACK_TOPICS;
+  }, [threads]);
+
+  const staffHighlights = useMemo(() => {
+    const featured = threads.filter((t) => t.featured || t.pinned).slice(0, 3);
+    if (featured.length) {
+      return featured.map((t) => ({
+        id: t.id,
+        title: t.title,
+        author: t.authorDisplay || 'GatorVault Staff',
+      }));
+    }
+    return [];
+  }, [threads]);
+
   const renderBlockedPlaceholder = (displayName: string, email?: string) => (
     <div className="gv-community__post gv-community__post--blocked">
       <p className="gv-community__blocked-label">Blocked member</p>
@@ -337,7 +360,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
         <div className="gv-community__main">
           <PageSection title="Trending Topics">
             <div className="gv-ds-filters">
-              {TRENDING_TOPICS.map((t) => (
+              {trendingTopics.map((t) => (
                 <Chip key={t} variant="trending">
                   {t}
                 </Chip>
@@ -345,17 +368,24 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             </div>
           </PageSection>
 
-          <PageSection title="Staff Posts">
-            <div className="gv-community__staff-grid">
-              {STAFF_POSTS.map((p) => (
-                <Card key={p.title}>
-                  <Chip variant="staff">Staff</Chip>
-                  <h3 className="gv-type-h3" style={{ margin: '0.5rem 0' }}>{p.title}</h3>
-                  <p style={{ margin: 0, opacity: 0.7 }}>{p.author}</p>
-                </Card>
-              ))}
-            </div>
-          </PageSection>
+          {staffHighlights.length > 0 ? (
+            <PageSection title="Staff Highlights">
+              <div className="gv-community__staff-grid">
+                {staffHighlights.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    className="gv-community__staff-card"
+                    onClick={() => void openThread(p.id)}
+                  >
+                    <Chip variant="staff">Staff</Chip>
+                    <h3 className="gv-type-h3" style={{ margin: '0.5rem 0' }}>{p.title}</h3>
+                    <p style={{ margin: 0, opacity: 0.7 }}>{p.author}</p>
+                  </button>
+                ))}
+              </div>
+            </PageSection>
+          ) : null}
 
           <div className="gv-community__toolbar">
             <div className="gv-alert-choices">
@@ -618,7 +648,18 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                     </li>
                   );
                 })}
-                {threads.length === 0 && <UiEmpty message="No threads yet — start the conversation." />}
+                {threads.length === 0 && (
+                  <li className="gv-community__empty-cta">
+                    <UiEmpty message="Be first — start a founding conversation." />
+                    <button
+                      type="button"
+                      className="gv-btn gv-btn--primary"
+                      onClick={() => setShowForm(true)}
+                    >
+                      Start a thread
+                    </button>
+                  </li>
+                )}
               </ul>
             </PageSection>
           )}
@@ -646,14 +687,21 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
           ) : null}
 
           <section className="gv-community__panel">
-            <h2 className="gv-vault-alerts__section-title">Recruiting Q&amp;A</h2>
-            <Card>
-              <p style={{ margin: 0 }}>Ask recruiting questions — staff answers weekly.</p>
-            </Card>
+            <h2 className="gv-vault-alerts__section-title">Start a conversation</h2>
+            <p className="gv-community__room-desc">
+              Recruiting debate, film takes, and game week keys — staff reads every thread.
+            </p>
+            <button
+              type="button"
+              className="gv-btn gv-btn--primary"
+              onClick={() => setShowForm(true)}
+            >
+              New thread
+            </button>
           </section>
 
           <section className="gv-community__panel">
-            <h2 className="gv-vault-alerts__section-title">Game Week Threads</h2>
+            <h2 className="gv-vault-alerts__section-title">Game Week Rooms</h2>
             {rooms.map((r) => (
               <div key={r.id} className="gv-community__room">
                 <p className="gv-community__room-title">{r.title}</p>
@@ -665,7 +713,9 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                 ) : null}
               </div>
             ))}
-            {rooms.length === 0 && !loading && <p className="gv-page-status">No live rooms scheduled.</p>}
+            {rooms.length === 0 && !loading && (
+              <p className="gv-page-status">Rooms open as game week approaches.</p>
+            )}
           </section>
 
           <section className="gv-community__panel">
@@ -682,7 +732,16 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                 </div>
               </div>
             ) : (
-              <p className="gv-page-status">Loading pulse…</p>
+              <div className="gv-community__pulse-grid">
+                <div className="gv-recruit-stat">
+                  <span>Replies today</span>
+                  <strong>—</strong>
+                </div>
+                <div className="gv-recruit-stat">
+                  <span>Trending</span>
+                  <strong>—</strong>
+                </div>
+              </div>
             )}
           </section>
         </aside>

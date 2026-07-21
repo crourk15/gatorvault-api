@@ -41,7 +41,9 @@ export function warmVaultApi(): void {
   // Ping first so Render wakes before the heavier hub bundle.
   void ping('/api/ping').then(() => {
     void ping(`/api/recruiting/hub/bundle?year=${hubYear}`);
-    if (path.startsWith('/vault/film-room')) void ping('/api/film-room/catalog');
+    if (path.startsWith('/vault/film-room') || path.startsWith('/vault/film')) {
+      void ping('/api/film-room/catalog');
+    }
     if (path.startsWith('/vault/nil')) void ping('/api/nil/dashboard');
     if (path.startsWith('/vault/alerts')) void ping('/api/futurecast/alerts?limit=20');
     if (path.startsWith('/vault/articles')) void ping('/api/articles/published?limit=12');
@@ -49,14 +51,24 @@ export function warmVaultApi(): void {
     if (path.startsWith('/vault/depth-chart') || path.startsWith('/vault/team')) {
       void ping('/api/roster/players');
     }
+    if (path.startsWith('/vault/futurecast')) void ping('/api/futurecast/home');
+    if (path.startsWith('/vault/community')) {
+      void ping('/api/community/categories');
+      void ping('/api/community/threads?sort=trending&limit=12');
+    }
+    if (path.startsWith('/vault/live')) void ping('/api/live/dashboard?limit=20');
   });
 
   if (typeof window.requestIdleCallback === 'function') {
     window.requestIdleCallback(
       () => {
-        if (path.startsWith('/vault/futurecast')) void ping('/api/futurecast/home');
-        if (path.startsWith('/vault/community')) void ping('/api/community/categories');
-        if (path.startsWith('/vault/live')) void ping('/api/live/dashboard?limit=20');
+        // Soft prime adjacent pillars so navigation stays warm.
+        if (!path.startsWith('/vault/futurecast')) void ping('/api/futurecast/home');
+        if (!path.startsWith('/vault/community')) void ping('/api/community/categories');
+        if (!path.startsWith('/vault/live')) void ping('/api/live/dashboard?limit=20');
+        if (!path.startsWith('/vault/team') && !path.startsWith('/vault/depth-chart')) {
+          void ping('/api/roster/players');
+        }
         if (path.startsWith('/vault/schedule') || path.startsWith('/vault/tickets')) {
           void ping('/api/betting/lines');
         }
