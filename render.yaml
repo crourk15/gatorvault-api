@@ -256,8 +256,10 @@ services:
         value: "15000"
       - key: HUB_PRIORITY_WARM_RSS_MB
         value: "1400"
+      # Standard plan: shorten heavy-warm defer so live dashboard / hub caches
+      # prime sooner after listen (still after /ready is accepting traffic).
       - key: API_BOOT_DEFER_HEAVY_MS
-        value: "120000"
+        value: "45000"
       - key: PLAYER_INTEL_REFRESH_ON_BOOT
         value: "false"
       - key: HUB_CACHE_REFRESH_MS
@@ -300,8 +302,8 @@ services:
         value: https://gatorvault-api.onrender.com/health
       - key: KEEPALIVE_PING_URL
         value: https://gatorvault-api.onrender.com/api/ping
-      - key: KEEPALIVE_HUB_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/bundle?year=2027
+      - key: KEEPALIVE_TOUCH_CONCURRENCY
+        value: "4"
 
   # Beat ingest cron — hardened with API warm check, retries, soft failures (always exit 0).
   # Optional future: move to a dedicated worker service to isolate from API deploys.

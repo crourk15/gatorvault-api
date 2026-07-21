@@ -90,6 +90,161 @@ function ensureCategories() {
   return cats;
 }
 
+/**
+ * When UGC is empty, seed honest staff founding threads (replyCount 0).
+ * Does not invent engagement — fans fill the room over time.
+ */
+function ensureFoundingSurface() {
+  ensureCategories();
+  const existing = loadThreads().filter((t) => !t.deleted);
+  if (existing.length > 0) return { seeded: false, count: existing.length };
+
+  const ts = nowIso();
+  const staffId = 'usr_gv_staff';
+  const users = loadUsers();
+  if (!users.some((u) => u.id === staffId)) {
+    users.push({
+      id: staffId,
+      email: 'staff@gatorvaultinsider.com',
+      displayName: 'GatorVault Staff',
+      avatarUrl: null,
+      tier: 'film',
+      isFounding: true,
+      joinDate: ts,
+      createdAt: ts,
+    });
+    saveUsers(users);
+  }
+
+  const threads = [
+    {
+      id: 'thr_founding_board_priority',
+      title: "Who is Florida's biggest 2027 board priority right now?",
+      body: "Looking at the battle board — which target feels like the program's true #1, and what would move the needle this month?",
+      categoryId: 'cat_war',
+      categorySlug: 'war',
+      authorId: staffId,
+      authorEmail: 'staff@gatorvaultinsider.com',
+      pinned: true,
+      locked: false,
+      featured: true,
+      replyCount: 0,
+      viewCount: 0,
+      lastActivityAt: ts,
+      createdAt: ts,
+      deleted: false,
+    },
+    {
+      id: 'thr_founding_portal_watch',
+      title: 'Portal watch: which rooms need help before fall camp?',
+      body: 'Depth chart first — where does Florida still feel thin, and which portal profiles actually fit the scheme?',
+      categoryId: 'cat_locker',
+      categorySlug: 'locker',
+      authorId: staffId,
+      authorEmail: 'staff@gatorvaultinsider.com',
+      pinned: false,
+      locked: false,
+      featured: true,
+      replyCount: 0,
+      viewCount: 0,
+      lastActivityAt: ts,
+      createdAt: ts,
+      deleted: false,
+    },
+    {
+      id: 'thr_founding_film_clip',
+      title: 'Film Room: one clip that changed your mind on a 2027 target',
+      body: 'Drop the prospect and what you saw — first step, frame, ball skills, or competitive toughness.',
+      categoryId: 'cat_film',
+      categorySlug: 'film',
+      authorId: staffId,
+      authorEmail: 'staff@gatorvaultinsider.com',
+      pinned: false,
+      locked: false,
+      featured: true,
+      replyCount: 0,
+      viewCount: 0,
+      lastActivityAt: ts,
+      createdAt: ts,
+      deleted: false,
+    },
+    {
+      id: 'thr_founding_welcome',
+      title: 'Founding members: introduce yourself and what you track',
+      body: 'Recruiting, film, NIL, game week — tell the room what you follow so staff can shape weekly threads.',
+      categoryId: 'cat_founding',
+      categorySlug: 'founding',
+      authorId: staffId,
+      authorEmail: 'staff@gatorvaultinsider.com',
+      pinned: false,
+      locked: false,
+      featured: true,
+      replyCount: 0,
+      viewCount: 0,
+      lastActivityAt: ts,
+      createdAt: ts,
+      deleted: false,
+    },
+    {
+      id: 'thr_founding_gameweek',
+      title: 'Game Week open thread — drop your keys before kickoff',
+      body: 'Matchup keys, depth chart notes, and recruiting visitors. Keep it sharp and on Florida.',
+      categoryId: 'cat_locker',
+      categorySlug: 'locker',
+      authorId: staffId,
+      authorEmail: 'staff@gatorvaultinsider.com',
+      pinned: true,
+      locked: false,
+      featured: false,
+      replyCount: 0,
+      viewCount: 0,
+      lastActivityAt: ts,
+      createdAt: ts,
+      deleted: false,
+    },
+    {
+      id: 'thr_founding_nil_pulse',
+      title: 'NIL pulse: what are fans seeing in the market this week?',
+      body: "Keep it factual — name the market signal and how it intersects Florida's board or roster.",
+      categoryId: 'cat_war',
+      categorySlug: 'war',
+      authorId: staffId,
+      authorEmail: 'staff@gatorvaultinsider.com',
+      pinned: false,
+      locked: false,
+      featured: false,
+      replyCount: 0,
+      viewCount: 0,
+      lastActivityAt: ts,
+      createdAt: ts,
+      deleted: false,
+    },
+  ];
+  saveThreads(threads);
+
+  const rooms = loadLiveRooms();
+  if (!rooms.length) {
+    writeJson(LIVE_ROOMS_PATH, [
+      {
+        id: 'room_gameweek',
+        title: 'Game Week Open Thread',
+        description: 'Live reaction room every Saturday — keys, visitors, and board chatter.',
+        scheduledAt: ts,
+        status: 'scheduled',
+      },
+      {
+        id: 'room_recruiting_qa',
+        title: 'Recruiting Q&A with Staff',
+        description: 'Ask board and portal questions — staff answers weekly.',
+        scheduledAt: ts,
+        status: 'scheduled',
+      },
+    ]);
+  }
+
+  return { seeded: true, count: threads.length };
+}
+
 function loadUsers() {
   return readJson(USERS_PATH, []);
 }
@@ -218,6 +373,7 @@ function enrichThreadWithAuthor(thread, categoryMap, users) {
 
 function getThreads({ sort = 'trending', category, limit = 50 } = {}) {
   ensureCategories();
+  ensureFoundingSurface();
   const categoryMap = getCategoryMap();
   const users = loadUsers();
   let threads = loadThreads().filter((t) => !t.deleted);
@@ -561,6 +717,7 @@ function adminUpdateCategory(id, patch) {
 }
 
 function isSeeded() {
+  ensureFoundingSurface();
   return loadThreads().length > 0;
 }
 
@@ -569,6 +726,7 @@ module.exports = {
   TIER_BADGE,
   trendingScore,
   ensureCategories,
+  ensureFoundingSurface,
   getOrCreateUser,
   getThreads,
   getThreadById,

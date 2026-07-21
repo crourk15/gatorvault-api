@@ -28,6 +28,15 @@ export function warmRecruitingHubApi(year = ACTIVE_RECRUITING_CLASS_YEAR): void 
   }).catch(() => {});
 }
 
+function scheduleIdle(fn: () => void, timeout = 2000): void {
+  if (typeof window === 'undefined') return;
+  if (typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(fn, { timeout });
+    return;
+  }
+  window.setTimeout(fn, 0);
+}
+
 export function warmVaultApi(): void {
   if (typeof window === 'undefined' || warmed) return;
   warmed = true;
@@ -50,31 +59,45 @@ export function warmVaultApi(): void {
     if (path.startsWith('/vault/game-zone')) void ping('/api/betting/lines');
     if (path.startsWith('/vault/depth-chart') || path.startsWith('/vault/team')) {
       void ping('/api/roster/players');
+      void ping('/api/staff/dashboard');
     }
     if (path.startsWith('/vault/futurecast')) void ping('/api/futurecast/home');
     if (path.startsWith('/vault/community')) {
       void ping('/api/community/categories');
       void ping('/api/community/threads?sort=trending&limit=12');
     }
-    if (path.startsWith('/vault/live')) void ping('/api/live/dashboard?limit=20');
+    if (
+      path.startsWith('/vault/live') ||
+      path.startsWith('/vault/podcasts') ||
+      path.startsWith('/vault/live/podcasts')
+    ) {
+      void ping('/api/live/dashboard?limit=20');
+      void ping('/api/live/podcasts');
+    }
+    if (path === '/vault' || path.startsWith('/vault/recruiting')) {
+      void ping('/api/recruiting/intel/beat?limit=5');
+      void ping('/api/live/ticker');
+      void ping('/api/recruiting/movement-intel');
+    }
   });
 
-  if (typeof window.requestIdleCallback === 'function') {
-    window.requestIdleCallback(
-      () => {
-        // Soft prime adjacent pillars so navigation stays warm.
-        if (!path.startsWith('/vault/futurecast')) void ping('/api/futurecast/home');
-        if (!path.startsWith('/vault/community')) void ping('/api/community/categories');
-        if (!path.startsWith('/vault/live')) void ping('/api/live/dashboard?limit=20');
-        if (!path.startsWith('/vault/team') && !path.startsWith('/vault/depth-chart')) {
-          void ping('/api/roster/players');
-        }
-        if (path.startsWith('/vault/schedule') || path.startsWith('/vault/tickets')) {
-          void ping('/api/betting/lines');
-        }
-        if (path.startsWith('/vault/membership')) void ping('/api/subscription/catalog');
-      },
-      { timeout: 2000 }
-    );
-  }
+  scheduleIdle(() => {
+    // Soft prime adjacent pillars so navigation stays warm.
+    if (!path.startsWith('/vault/futurecast')) void ping('/api/futurecast/home');
+    if (!path.startsWith('/vault/community')) void ping('/api/community/categories');
+    if (!path.startsWith('/vault/live') && !path.startsWith('/vault/podcasts')) {
+      void ping('/api/live/dashboard?limit=20');
+    }
+    if (!path.startsWith('/vault/team') && !path.startsWith('/vault/depth-chart')) {
+      void ping('/api/roster/players');
+    }
+    if (path.startsWith('/vault/schedule') || path.startsWith('/vault/tickets')) {
+      void ping('/api/betting/lines');
+    }
+    if (path.startsWith('/vault/membership')) void ping('/api/subscription/catalog');
+    if (!path.startsWith('/vault/team')) void ping('/api/staff/dashboard');
+    if (!path.startsWith('/vault/podcasts') && !path.startsWith('/vault/live')) {
+      void ping('/api/live/podcasts');
+    }
+  });
 }

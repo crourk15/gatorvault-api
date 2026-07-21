@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-21T12:53:41.474Z",
-  "source": "prod-api+founding",
+  "generatedAt": "2026-07-21T13:22:56.947Z",
+  "source": "founding-seed",
   "categories": [
     {
       "id": "cat_film",
@@ -47,8 +47,8 @@
       "viewCount": 0,
       "pinned": true,
       "featured": true,
-      "createdAt": "2026-07-21T12:53:41.474Z",
-      "lastActivityAt": "2026-07-21T12:53:41.474Z"
+      "createdAt": "2026-07-21T13:22:56.947Z",
+      "lastActivityAt": "2026-07-21T13:22:56.947Z"
     },
     {
       "id": "seed_founding_portal_watch",
@@ -61,8 +61,8 @@
       "viewCount": 0,
       "pinned": false,
       "featured": true,
-      "createdAt": "2026-07-21T12:53:41.474Z",
-      "lastActivityAt": "2026-07-21T12:53:41.474Z"
+      "createdAt": "2026-07-21T13:22:56.947Z",
+      "lastActivityAt": "2026-07-21T13:22:56.947Z"
     },
     {
       "id": "seed_founding_film_clip",
@@ -75,8 +75,8 @@
       "viewCount": 0,
       "pinned": false,
       "featured": true,
-      "createdAt": "2026-07-21T12:53:41.474Z",
-      "lastActivityAt": "2026-07-21T12:53:41.474Z"
+      "createdAt": "2026-07-21T13:22:56.947Z",
+      "lastActivityAt": "2026-07-21T13:22:56.947Z"
     },
     {
       "id": "seed_founding_nil_pulse",
@@ -89,8 +89,8 @@
       "viewCount": 0,
       "pinned": false,
       "featured": false,
-      "createdAt": "2026-07-21T12:53:41.474Z",
-      "lastActivityAt": "2026-07-21T12:53:41.474Z"
+      "createdAt": "2026-07-21T13:22:56.947Z",
+      "lastActivityAt": "2026-07-21T13:22:56.947Z"
     },
     {
       "id": "seed_founding_gameweek",
@@ -103,8 +103,8 @@
       "viewCount": 0,
       "pinned": true,
       "featured": false,
-      "createdAt": "2026-07-21T12:53:41.474Z",
-      "lastActivityAt": "2026-07-21T12:53:41.474Z"
+      "createdAt": "2026-07-21T13:22:56.947Z",
+      "lastActivityAt": "2026-07-21T13:22:56.947Z"
     },
     {
       "id": "seed_founding_welcome",
@@ -117,29 +117,60 @@
       "viewCount": 0,
       "pinned": false,
       "featured": true,
-      "createdAt": "2026-07-21T12:53:41.474Z",
-      "lastActivityAt": "2026-07-21T12:53:41.474Z"
+      "createdAt": "2026-07-21T13:22:56.947Z",
+      "lastActivityAt": "2026-07-21T13:22:56.947Z"
+    },
+    {
+      "id": "seed_founding_closing_class",
+      "title": "Closing Class pulse: which 2027 board name feels hottest this week?",
+      "body": "RPM, visits, or crystal-ball chatter — name the prospect and the signal. Keep it board-real, not rumor spam.",
+      "categorySlug": "war",
+      "categoryLabel": "War Room",
+      "authorDisplay": "Insider Desk",
+      "replyCount": 0,
+      "viewCount": 0,
+      "pinned": false,
+      "featured": true,
+      "createdAt": "2026-07-21T13:22:56.947Z",
+      "lastActivityAt": "2026-07-21T13:22:56.947Z"
+    },
+    {
+      "id": "seed_founding_staff_scheme",
+      "title": "Scheme talk: what should Florida emphasize on defense in year one?",
+      "body": "Front structure, coverage identity, or personnel fits — drop one concrete schematic take for the room.",
+      "categorySlug": "film",
+      "categoryLabel": "Film Room",
+      "authorDisplay": "GatorVault Staff",
+      "replyCount": 0,
+      "viewCount": 0,
+      "pinned": false,
+      "featured": false,
+      "createdAt": "2026-07-21T13:22:56.947Z",
+      "lastActivityAt": "2026-07-21T13:22:56.947Z"
     }
   ],
   "pulse": {
     "repliesToday": 0,
-    "trending": 0,
-    "pinned": 0,
-    "liveRooms": 0
+    "trending": 6,
+    "pinned": 2,
+    "liveRooms": 2,
+    "threadCount": 8,
+    "postCount": 0,
+    "activeToday": 0
   },
   "rooms": [
     {
       "id": "seed_room_gameweek",
       "title": "Game Week Open Thread",
       "description": "Live reaction room every Saturday — keys, visitors, and board chatter.",
-      "scheduledAt": "2026-07-21T12:53:41.474Z",
+      "scheduledAt": "2026-07-21T13:22:56.947Z",
       "status": "scheduled"
     },
     {
       "id": "seed_room_recruiting_qa",
       "title": "Recruiting Q&A with Staff",
       "description": "Ask board and portal questions — staff answers weekly.",
-      "scheduledAt": "2026-07-21T12:53:41.474Z",
+      "scheduledAt": "2026-07-21T13:22:56.947Z",
       "status": "scheduled"
     }
   ]
