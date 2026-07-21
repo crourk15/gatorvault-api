@@ -712,6 +712,9 @@ body {
   --fr-muted: var(--muted-text, #6b7280);
   --fr-subtle: var(--th-meta, #94a3b8);
   background: var(--page-bg, var(--th-primary, #0b1120));
+  /* Prefer page/document scroll; avoid nested gesture traps. */
+  overscroll-behavior-y: auto;
+  touch-action: pan-y;
 }
 
 .gv-film-room-page .rh-elite-chrome {
@@ -1076,10 +1079,35 @@ body {
 
 .gv-film-room-page .gv-tab-bar {
   margin-bottom: 1rem;
+  /* Allow vertical page scroll through the hub strip; keep horizontal pan. */
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+}
+
+.gv-film-room-page .gv-tab-bar .gv-tab {
+  touch-action: manipulation;
+}
+
+.gv-film-room-page .gv-film-lesson__embed {
+  /* Keep vertical drags on the page when not interacting with the player. */
+  touch-action: pan-y;
 }
 
 .gv-film-room-page .rh-hero-strip {
   margin-bottom: 1.25rem;
+}
+
+@media (max-width: 767px) {
+  /* Sit unlock CTA above bottom nav so nav/scroll gestures are not covered. */
+  .gv-film-room-page .gv-paywall-sticky-cta {
+    bottom: var(--gv-mobile-nav-height, calc(4.5rem + env(safe-area-inset-bottom, 0px)));
+    z-index: 50;
+  }
+
+  .gv-film-room-page {
+    padding-bottom: calc(3.25rem + var(--gv-mobile-nav-height, 4.5rem));
+  }
 }
 
 

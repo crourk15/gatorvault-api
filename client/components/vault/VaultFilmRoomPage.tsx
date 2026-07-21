@@ -358,6 +358,8 @@ export function VaultFilmRoomPage(): React.ReactElement {
         url.searchParams.delete('lesson');
         url.searchParams.delete('scheme');
         window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+        // Reset document scroll so hub switches don't leave a trapped mid-page offset.
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }
     },
     [selected, schemeLesson, closeLesson]
