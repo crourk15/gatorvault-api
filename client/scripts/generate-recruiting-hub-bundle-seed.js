@@ -136,15 +136,39 @@ function slimFootprint(fp) {
   return { ok: true, states, pins };
 }
 
+function cleanSparklines(overview) {
+  if (!overview || typeof overview !== 'object') return overview || {};
+  const out = { ...overview };
+  if (out.sparklines && typeof out.sparklines === 'object') {
+    const sparks = {};
+    for (const [k, v] of Object.entries(out.sparklines)) {
+      sparks[k] = Array.isArray(v) ? v.filter((n) => typeof n === 'number') : [];
+    }
+    out.sparklines = sparks;
+  }
+  return out;
+}
+
 function slimBundle(raw, year) {
+  const classOverview = cleanSparklines(raw.classOverview || {});
+  const classOverviewAll = {};
+  for (const [k, v] of Object.entries(raw.classOverviewAll || {})) {
+    classOverviewAll[k] = cleanSparklines(v);
+  }
   return {
     year,
     ticker: Array.isArray(raw.ticker) ? raw.ticker.slice(0, 12) : [],
-    classOverview: raw.classOverview || {},
-    classOverviewAll: raw.classOverviewAll || {},
+    classOverview,
+    classOverviewAll,
     commits: (raw.commits || []).map(slimCommit).filter(Boolean).slice(0, 24),
     battles: (raw.battles || []).map(slimBattle).filter(Boolean).slice(0, 12),
-    positions: (raw.positions || []).slice(0, 16),
+    positions: (raw.positions || []).slice(0, 16).map((pos) => ({
+      id: pos.id,
+      label: pos.label || 'Room',
+      commits: pos.commits || 0,
+      targets: pos.targets || 0,
+      note: pos.note || '',
+    })),
     heatIndex: (raw.heatIndex || []).map(slimHeat).filter(Boolean).slice(0, 16),
     movementFeed: (raw.movementFeed || []).map(slimMovement).filter(Boolean).slice(0, 20),
     battleBoard: (raw.battleBoard || []).map(slimBattleBoard).filter(Boolean).slice(0, 16),

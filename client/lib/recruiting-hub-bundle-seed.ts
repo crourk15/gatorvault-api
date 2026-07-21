@@ -8,14 +8,15 @@ export type RecruitingHubBundleSeedFile = {
   byYear: Record<string, RhHubBundle>;
 };
 
-export const RECRUITING_HUB_BUNDLE_SEED = seedJson as RecruitingHubBundleSeedFile;
+// Seed JSON is slimmed at generate-time; cast via unknown for nullish seed fields.
+export const RECRUITING_HUB_BUNDLE_SEED = seedJson as unknown as RecruitingHubBundleSeedFile;
 
 /** Static first-paint recruiting hub bundle — kept when live is empty/cold. */
 export function getRecruitingHubBundleSeed(year = ACTIVE_RECRUITING_CLASS_YEAR): RhHubBundle | null {
   const keyed = RECRUITING_HUB_BUNDLE_SEED.byYear?.[String(year)];
-  if (keyed && typeof keyed === 'object') return keyed as RhHubBundle;
+  if (keyed && typeof keyed === 'object') return keyed;
   const active = RECRUITING_HUB_BUNDLE_SEED.byYear?.[String(RECRUITING_HUB_BUNDLE_SEED.activeYear)];
-  return active && typeof active === 'object' ? (active as RhHubBundle) : null;
+  return active && typeof active === 'object' ? active : null;
 }
 
 export function recruitingHubBundleHasSignal(bundle: RhHubBundle | null | undefined): boolean {
