@@ -56,9 +56,23 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function allowlistJobs() {
+function pushJob(jobs, slug, classYear) {
+  const key = canonicalTargetSlug(slug);
+  if (!key) return;
+  const year = Number(classYear);
+  if (year !== 2027 && year !== 2028) return;
+  if (jobs.some((job) => job.slug === key && job.classYear === year)) return;
+  jobs.push({ slug: key, classYear: year });
+}
+
+/**
+ * Sync job seeds from files (allowlist, admin, Lab promotions, Closing Class snapshot).
+ * Safe for sync callers (staleness checks). Full sync also merges live store board markers.
+ */
+function allowlistJobsFromFiles() {
   const { loadAdminAllowlist } = require('./admin-allowlist-store');
   const { verifiedClassYearForSlug } = require('./recruiting-verified-commits');
+  const { getLabSlugSet } = require('./lab-promotions-store');
   const admin = loadAdminAllowlist();
   const jobs = [
     ...ALLOWLIST_2027.map((slug) => ({ slug, classYear: 2027 })),
@@ -68,17 +82,56 @@ function allowlistJobs() {
     const verifiedYear = verifiedClassYearForSlug(slug);
     // Never schedule a verified UF commit under the wrong class year.
     if (verifiedYear != null && verifiedYear !== 2027) continue;
-    if (!jobs.some((job) => job.slug === slug && job.classYear === 2027)) {
-      jobs.push({ slug, classYear: 2027 });
-    }
+    pushJob(jobs, slug, 2027);
   }
   for (const slug of admin.slugs2028 || []) {
     const verifiedYear = verifiedClassYearForSlug(slug);
     if (verifiedYear != null && verifiedYear !== 2028) continue;
-    if (!jobs.some((job) => job.slug === slug && job.classYear === 2028)) {
-      jobs.push({ slug, classYear: 2028 });
+    pushJob(jobs, slug, 2028);
+  }
+
+  // Lab auto-promotes (2027/2028 discovery → UF targets) share the same RPM/logo sync.
+  for (const year of [2027, 2028]) {
+    for (const slug of getLabSlugSet(year)) {
+      pushJob(jobs, slug, year);
     }
   }
+
+  // 2027 Closing Class: remaining Florida 247 board rows from last snapshot.
+  try {
+    const { SNAPSHOT_PATH, DEFAULT_CLASS_YEAR } = require('./uf-closing-board-247');
+    const board = readJson(SNAPSHOT_PATH, null);
+    for (const row of board?.open || []) {
+      pushJob(jobs, row.slug, DEFAULT_CLASS_YEAR);
+    }
+  } catch {
+    /* closing-board optional */
+  }
+
+  return jobs;
+}
+
+/**
+ * On3 sync job list: Charles allowlist + admin + Lab promotions + 2027 Closing Class board.
+ * Closing Class / Lab-promoted names need the same RPM + competitor logo path as curated targets.
+ */
+async function allowlistJobs() {
+  const jobs = allowlistJobsFromFiles();
+
+  // Merge live store Closing Class markers (covers snapshot lag / boardSource-only rows).
+  try {
+    const { DEFAULT_CLASS_YEAR, BOARD_SOURCE, isLiveUfBoardTarget } = require('./uf-closing-board-247');
+    const players = await store.getAllPlayers();
+    for (const p of players || []) {
+      if (Number(p.classYear) !== DEFAULT_CLASS_YEAR) continue;
+      if (p.category !== 'target') continue;
+      if (!isLiveUfBoardTarget(p) && p.boardSource !== BOARD_SOURCE) continue;
+      pushJob(jobs, p.slug || store.slugify(p.name), DEFAULT_CLASS_YEAR);
+    }
+  } catch {
+    /* store optional */
+  }
+
   return jobs;
 }
 
@@ -279,6 +332,15 @@ function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, cl
       ? store.mergeVisitOfferArrays(baseVisits, profilePatch.visits, store.visitArrayKey) || profilePatch.visits
       : baseVisits;
 
+  // Keep Closing Class board membership when On3 overwrites on3Source with allowlist sync tags.
+  const closingBoardSource =
+    existing?.boardSource === '247-uf-board-sync' ||
+    localPlayer?.boardSource === '247-uf-board-sync' ||
+    String(existing?.on3Source || '').includes('247-uf-board-sync') ||
+    String(localPlayer?.on3Source || '').includes('247-uf-board-sync')
+      ? '247-uf-board-sync'
+      : existing?.boardSource || localPlayer?.boardSource || null;
+
   let merged = applyEditorialPositionToPlayer({
     ...localPlayer,
     ...existing,
@@ -294,6 +356,7 @@ function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, cl
     commitmentSyncAt: new Date().toISOString(),
     commitmentSource: profilePatch.committedTo ? 'on3-allowlist-sync' : existing?.commitmentSource || null,
     on3Source: profilePatch.on3Source || existing?.on3Source || 'on3-allowlist-sync',
+    boardSource: closingBoardSource,
     on3Slug: profilePatch.on3Slug ?? existing?.on3Slug ?? localPlayer?.on3Slug ?? null,
     on3ProfileUrl: profilePatch.on3ProfileUrl ?? existing?.on3ProfileUrl ?? localPlayer?.on3ProfileUrl ?? null,
     on3Id: profilePatch.on3Id ?? existing?.on3Id ?? localPlayer?.on3Id ?? null,
@@ -598,7 +661,7 @@ async function syncSlugFromOn3(slug, classYear) {
 
 async function syncAllowlistTargetsFromOn3(options = {}) {
   const limit = options.limit || parseInt(process.env.ALLOWLIST_SYNC_LIMIT || '0', 10) || 0;
-  let jobs = allowlistJobs();
+  let jobs = await allowlistJobs();
   if (options.classYear) {
     jobs = jobs.filter((job) => job.classYear === Number(options.classYear));
   }
@@ -670,7 +733,7 @@ async function syncAllowlistTargetsFromRivals() {
   const rivalsBySlug = loadRivalsCommittedBySlug();
   const results = { updated: 0, committedElsewhere: 0 };
 
-  for (const { slug, classYear } of allowlistJobs()) {
+  for (const { slug, classYear } of await allowlistJobs()) {
     const rivals = rivalsBySlug.get(slug);
     if (!rivals?.committedTo) continue;
 
@@ -708,10 +771,11 @@ async function syncLiveRivalsCommits() {
   try {
     const client = require('./rivals-prediction-client');
     const rows = await client.fetchAllUfPredictions([2027, 2028, 2029]);
+    const jobs = await allowlistJobs();
     for (const row of rows) {
       if (!row.isCommitted || !row.committedTo) continue;
       const slug = canonicalTargetSlug(row.playerSlug);
-      if (!allowlistJobs().some((j) => j.slug === slug)) continue;
+      if (!jobs.some((j) => j.slug === slug)) continue;
       const existing = await store.getPlayerBySlug(slug);
       if (!existing && !CANONICAL_TARGET_NAMES[slug]) continue;
       const committedTo = row.committedTo;
@@ -824,7 +888,7 @@ function getCommitmentSyncStatus() {
 
 function detectStaleCommitmentSync(players) {
   const stale = [];
-  for (const { slug, classYear } of allowlistJobs()) {
+  for (const { slug, classYear } of allowlistJobsFromFiles()) {
     const row = players.find((p) => canonicalTargetSlug(p.slug) === slug);
     if (!row) {
       stale.push({ slug, classYear, reason: 'missing_player_record', hoursStale: Infinity });
@@ -1276,6 +1340,7 @@ module.exports = {
   syncAllowlistTargetsFromOn3,
   syncAllowlistTargetsFromRivals,
   allowlistJobs,
+  allowlistJobsFromFiles,
   reconcileCommitments,
   runCommitmentIntelligence,
   getCommitmentSyncStatus,
