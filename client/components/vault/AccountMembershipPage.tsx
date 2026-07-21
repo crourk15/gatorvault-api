@@ -194,9 +194,10 @@ export function AccountMembershipPage(): React.ReactElement {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [refreshing]);
 
-  async function refreshStatus(): Promise<void> {
+  async function refreshStatus(): Promise<SubscriptionStatus> {
     const st = await fetchSubscriptionStatus();
     setStatus(st);
+    return st;
   }
 
   async function handleSubscribe(productId: string): Promise<void> {
@@ -230,7 +231,12 @@ export function AccountMembershipPage(): React.ReactElement {
           synced = true;
         });
         if (!synced) {
-          await refreshStatus();
+          const st = await refreshStatus();
+          if (!st.accessActive && !st.paid) {
+            setError(
+              'No active Apple subscription found for this Apple ID. If you subscribed with a different Apple ID, sign into that one in Settings → App Store, then try Restore again.'
+            );
+          }
         }
       } else {
         await refreshStatus();

@@ -5,6 +5,7 @@
  */
 import { isNativeApp, nativeNavigationUrl } from '@/lib/api-base';
 import { toAppRelativeHref } from '@/lib/app-href';
+import { vaultPathFromOpenUrl } from '@/lib/native-deep-link';
 import {
   isNativeCatchAllDynamicHref,
   navigateNativeCatchAll,
@@ -13,7 +14,9 @@ import {
 
 export function navigateVaultHref(href: string): void {
   if (typeof window === 'undefined' || !href) return;
-  const path = toAppRelativeHref(href);
+  // Push payloads often send absolute https://gatorvaultinsider.com/vault/...
+  const fromOpen = vaultPathFromOpenUrl(href);
+  const path = fromOpen || toAppRelativeHref(href);
   if (path.startsWith('http://') || path.startsWith('https://')) {
     window.location.href = path;
     return;

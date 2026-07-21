@@ -332,6 +332,21 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     return [];
   }, [threads]);
 
+  /** Daily-open hook — first pinned/staff thread, else newest. */
+  const todaysThread = useMemo(() => {
+    const pinned = threads.find((t) => t.pinned || t.featured);
+    return pinned || threads[0] || null;
+  }, [threads]);
+
+  const startRoomThread = (roomTitle: string) => {
+    setShowForm(true);
+    setNewTitle(roomTitle.slice(0, 200));
+    setNewBody('');
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const renderBlockedPlaceholder = (displayName: string, email?: string) => (
     <div className="gv-community__post gv-community__post--blocked">
       <p className="gv-community__blocked-label">Blocked member</p>
@@ -358,12 +373,45 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     >
       <div className="gv-community__layout">
         <div className="gv-community__main">
+          {todaysThread && !selectedId ? (
+            <PageSection title="Jump in today" subtitle="Staff-led open thread — reply and keep the board alive.">
+              <button
+                type="button"
+                className="gv-community__staff-card gv-community__today-card"
+                onClick={() => void openThread(todaysThread.id)}
+              >
+                <Chip variant="staff">Today</Chip>
+                <h3 className="gv-type-h3" style={{ margin: '0.5rem 0' }}>
+                  {todaysThread.title}
+                </h3>
+                <p style={{ margin: 0, opacity: 0.7 }}>
+                  {todaysThread.authorDisplay || 'GatorVault Staff'} · {todaysThread.replyCount ?? 0}{' '}
+                  replies · Open thread →
+                </p>
+              </button>
+            </PageSection>
+          ) : null}
+
           <PageSection title="Trending Topics">
             <div className="gv-ds-filters">
               {trendingTopics.map((t) => (
-                <Chip key={t} variant="trending">
-                  {t}
-                </Chip>
+                <button
+                  key={t}
+                  type="button"
+                  className="gv-community__topic-chip-btn"
+                  onClick={() => {
+                    const match = threads.find((th) =>
+                      th.title.toLowerCase().includes(t.toLowerCase().slice(0, 12))
+                    );
+                    if (match) void openThread(match.id);
+                    else {
+                      setShowForm(true);
+                      setNewTitle(t.slice(0, 200));
+                    }
+                  }}
+                >
+                  <Chip variant="trending">{t}</Chip>
+                </button>
               ))}
             </div>
           </PageSection>
@@ -703,7 +751,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
           <section className="gv-community__panel">
             <h2 className="gv-vault-alerts__section-title">Game Week Rooms</h2>
             {rooms.map((r) => (
-              <div key={r.id} className="gv-community__room">
+              <button
+                key={r.id}
+                type="button"
+                className="gv-community__room gv-community__room--action"
+                onClick={() => startRoomThread(r.title)}
+              >
                 <p className="gv-community__room-title">{r.title}</p>
                 {r.description ? <p className="gv-community__room-desc">{r.description}</p> : null}
                 {r.scheduledAt || r.startsAt ? (
@@ -711,7 +764,8 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                     {new Date(r.scheduledAt || r.startsAt || '').toLocaleString()}
                   </p>
                 ) : null}
-              </div>
+                <p className="gv-community__room-meta">Start a thread →</p>
+              </button>
             ))}
             {rooms.length === 0 && !loading && (
               <p className="gv-page-status">Rooms open as game week approaches.</p>

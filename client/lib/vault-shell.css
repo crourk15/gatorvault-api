@@ -2036,6 +2036,36 @@ a.gv-live-item__title:hover {
   margin-bottom: 0.5rem;
 }
 
+.gv-community__room--action {
+  display: block;
+  width: 100%;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.gv-community__room--action:hover {
+  border-color: rgba(250, 70, 22, 0.45);
+  background: #132033;
+}
+
+.gv-community__topic-chip-btn {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.gv-community__today-card {
+  width: 100%;
+  text-align: left;
+}
+
 .gv-community__room-title {
   font-size: 0.875rem;
   font-weight: 700;

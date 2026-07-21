@@ -59,15 +59,28 @@ export function takeNativeColdStart(): boolean {
   }
 }
 
+function isDeepVaultPath(pathname: string): boolean {
+  const p = normalizeNativeRoutePath(pathname);
+  if (!p.startsWith('/vault')) return false;
+  // Bare /vault/ is the default home — cold start may still send sign-in vs home.
+  return p !== '/vault' && p !== '/vault/';
+}
+
 /**
- * Cold start: always sign-in or /vault/ home (do not restore Recruiting).
+ * Cold start: sign-in or /vault/ home — unless a deep vault URL / universal link
+ * already landed us on a real destination (film-room, recruiting, etc.).
  * Later navigations: only bounce marketing paths.
  */
 export function nativeBootRedirect(): string | null {
   if (!isNativeApp()) return null;
   const path = normalizeNativeRoutePath(window.location.pathname || '/');
   const cold = takeNativeColdStart();
-  if (!cold && !isMarketingPath(path)) return null;
+  if (!cold) {
+    if (!isMarketingPath(path)) return null;
+    return nativeEntryDestination();
+  }
+  // Preserve universal-link / push deep links on first paint.
+  if (isDeepVaultPath(path)) return null;
   return nativeEntryDestination();
 }
 

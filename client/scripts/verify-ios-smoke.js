@@ -11,6 +11,7 @@ const root = path.join(__dirname, '..', '..');
 const steps = [
   ['verify-ios-iap-wiring.js', 'IAP wiring'],
   ['verify-ios-app-icon.js', 'App icon asset'],
+  ['verify-native-deep-link.js', 'Native deep-link parsing'],
 ];
 
 let failed = false;
@@ -45,6 +46,9 @@ const presence = [
   ['client/components/vault/AccountMembershipPage.tsx', 'handleSubscribe'],
   ['client/lib/auth-api.ts', 'verifyStoredSession'],
   ['client/lib/ios-iap.ts', 'purchaseIosSubscription'],
+  ['client/lib/ios-iap.ts', 'getPurchases'],
+  ['client/lib/native-shell.ts', 'appUrlOpen'],
+  ['client/ios/App/App/App.entitlements', 'associated-domains'],
 ];
 for (const [rel, needle] of presence) {
   const file = path.join(root, rel);
