@@ -20,6 +20,8 @@
   NODE_OPTIONS = "--max-old-space-size=4096"
   # Skip Netlify build-cache restore — stale .next/_next/static caused mismatched layout chunk hashes.
   NETLIFY_SKIP_BUILD_CACHE = "true"
+  # Apple Team ID (same as Xcode DEVELOPMENT_TEAM) — fills AASA appIDs for universal links.
+  APPLE_TEAM_ID = "45C4DZJ4UJ"
 
 # Disable Netlify post-processing — optimization layer rewrites HTML/RSC with stale chunk hashes.
 [build.processing]
