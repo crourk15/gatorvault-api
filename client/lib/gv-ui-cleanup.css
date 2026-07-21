@@ -714,7 +714,6 @@ body {
   background: var(--page-bg, var(--th-primary, #0b1120));
   /* Prefer page/document scroll; avoid nested gesture traps. */
   overscroll-behavior-y: auto;
-  touch-action: pan-y;
 }
 
 .gv-film-room-page .rh-elite-chrome {
@@ -1079,19 +1078,52 @@ body {
 
 .gv-film-room-page .gv-tab-bar {
   margin-bottom: 1rem;
-  /* Allow vertical page scroll through the hub strip; keep horizontal pan. */
+  /* Team/Recruiting pattern: x-scroll only — overflow-x:auto alone creates a Y trap. */
+  overflow-x: auto;
+  overflow-y: hidden;
   touch-action: pan-x pan-y;
   overscroll-behavior-x: contain;
-  overscroll-behavior-y: auto;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .gv-film-room-page .gv-tab-bar .gv-tab {
-  touch-action: manipulation;
+  touch-action: pan-x pan-y;
 }
 
+/* YouTube iframe swallows vertical scroll until explicitly activated. */
 .gv-film-room-page .gv-film-lesson__embed {
-  /* Keep vertical drags on the page when not interacting with the player. */
+  position: relative;
   touch-action: pan-y;
+}
+
+.gv-film-room-page .gv-film-lesson__embed iframe {
+  pointer-events: none;
+}
+
+.gv-film-room-page .gv-film-lesson__embed.is-active iframe {
+  pointer-events: auto;
+}
+
+.gv-film-room-page .gv-film-lesson__embed-activate {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border: 0;
+  border-radius: inherit;
+  background: rgba(0, 26, 51, 0.45);
+  color: #fff;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .gv-film-room-page .rh-hero-strip {
@@ -1099,14 +1131,28 @@ body {
 }
 
 @media (max-width: 767px) {
+  /* PageLayout overflow-x:hidden also forces a nested Y scroller — clear it on Film. */
+  .gv-film-room-page .gv-page-layout,
+  .gv-film-room-page .gv-page-layout__body {
+    overflow: visible;
+  }
+
   /* Sit unlock CTA above bottom nav so nav/scroll gestures are not covered. */
   .gv-film-room-page .gv-paywall-sticky-cta {
     bottom: var(--gv-mobile-nav-height, calc(4.5rem + env(safe-area-inset-bottom, 0px)));
     z-index: 50;
   }
 
-  .gv-film-room-page {
+  /* Beat `.gv-vault-shell__main .rh-page { padding-bottom: 0 }` (FutureCast pattern). */
+  .gv-vault-shell__main .gv-film-room-page.rh-page,
+  .gv-vault-shell__main .gv-film-room-page.rh-page--elite {
     padding-bottom: calc(3.25rem + var(--gv-mobile-nav-height, 4.5rem));
+  }
+
+  /* FAB sits in the same band as paywall/scroll end-zone — hide on Film Room. */
+  body.gv-film-page-active .gv-live-pulse-fab,
+  body:has(.gv-film-room-page) .gv-live-pulse-fab {
+    display: none !important;
   }
 }
 
