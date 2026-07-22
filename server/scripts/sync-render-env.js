@@ -16,6 +16,9 @@ const CRON_SERVICES = ['gatorvault-api-recruiting-ingest', 'gatorvault-api-hub-r
 const CRON_SYNC_KEYS = ['MONITORING_CRON_SECRET', 'INGEST_CRON_SECRET', 'NEXT_PUBLIC_API_BASE'];
 
 const SYNC_KEYS = [
+  'RESEND_API_KEY',
+  'RESEND_FROM',
+  'RESEND_REPLY_TO',
   'EMAILJS_USER_ID',
   'EMAILJS_PUBLIC_KEY',
   'EMAILJS_PRIVATE_KEY',
