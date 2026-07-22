@@ -66,7 +66,7 @@ workflows:
         script: |
           cd client/ios/App
           pod install
-      - name: Refresh App Store profile with Push entitlement
+      - name: Refresh App Store profile with Push + Associated Domains
         script: |
           set -euo pipefail
           bash "$CM_BUILD_DIR/scripts/codemagic-refresh-push-profile.sh"
@@ -81,11 +81,16 @@ workflows:
           PROFILE_FILE="$(cat /tmp/gatorvault_push_profile.path 2>/dev/null || true)"
           PROFILE_NAME="$(cat /tmp/gatorvault_push_profile.name 2>/dev/null || true)"
           if [[ -z "${PROFILE_FILE}" || ! -f "${PROFILE_FILE}" ]]; then
-            echo "ERROR: Push-enabled profile path missing — refresh step did not run?" >&2
+            echo "ERROR: Push + Associated Domains profile path missing — refresh step did not run?" >&2
             exit 1
           fi
-          if ! security cms -D -i "${PROFILE_FILE}" | grep -q 'aps-environment'; then
+          PROFILE_PLIST="$(security cms -D -i "${PROFILE_FILE}")"
+          if ! printf '%s' "${PROFILE_PLIST}" | grep -q 'aps-environment'; then
             echo "ERROR: profile ${PROFILE_NAME:-unknown} lacks aps-environment" >&2
+            exit 1
+          fi
+          if ! printf '%s' "${PROFILE_PLIST}" | grep -q 'com.apple.developer.associated-domains'; then
+            echo "ERROR: profile ${PROFILE_NAME:-unknown} lacks com.apple.developer.associated-domains" >&2
             exit 1
           fi
           echo "Archiving with profile: ${PROFILE_NAME} (${PROFILE_FILE})"

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-# Recreate the App Store provisioning profile with Push (aps-environment).
+# Recreate the App Store provisioning profile with Push + Associated Domains.
 # Runs on Codemagic with the App Store Connect integration + named distribution cert.
+# Entitlements in client/ios/App/App/App.entitlements require both:
+#   - aps-environment (Push Notifications)
+#   - com.apple.developer.associated-domains (Universal Links)
 set -euo pipefail
 
 BUNDLE_ID="${BUNDLE_ID:?BUNDLE_ID is required}"
@@ -12,7 +15,7 @@ for d in "${PROFILE_DIRS[@]}"; do
   mkdir -p "${d}"
 done
 
-echo "==> Refresh App Store profile for ${BUNDLE_ID} (Push / aps-environment)"
+echo "==> Refresh App Store profile for ${BUNDLE_ID} (Push + Associated Domains)"
 
 keychain initialize
 keychain add-certificates
@@ -46,12 +49,15 @@ caps = run_json([
     "--json",
 ])
 has_push = False
+has_associated_domains = False
 for cap in caps:
-    ctype = (cap.get("attributes") or {}).get("capabilityType") or ""
-    if str(ctype) in ("PUSH_NOTIFICATIONS", "Push Notifications"):
+    ctype = str((cap.get("attributes") or {}).get("capabilityType") or "")
+    if ctype in ("PUSH_NOTIFICATIONS", "Push Notifications"):
         has_push = True
-        break
+    if ctype in ("ASSOCIATED_DOMAINS", "Associated Domains"):
+        has_associated_domains = True
 print(f"HAS_PUSH={'1' if has_push else '0'}")
+print(f"HAS_ASSOCIATED_DOMAINS={'1' if has_associated_domains else '0'}")
 
 certs = run_json([
     "app-store-connect", "certificates", "list",
@@ -89,6 +95,15 @@ if [[ "${HAS_PUSH}" != "1" ]]; then
     --capability "Push Notifications"
 else
   echo "==> Push Notifications already enabled on App ID"
+fi
+
+if [[ "${HAS_ASSOCIATED_DOMAINS}" != "1" ]]; then
+  echo "==> Enabling Associated Domains on App ID ${BUNDLE_RID}"
+  app-store-connect bundle-ids enable-capabilities \
+    "${BUNDLE_RID}" \
+    --capability "Associated Domains"
+else
+  echo "==> Associated Domains already enabled on App ID"
 fi
 
 if [[ -n "${OLD_PROFILE_IDS:-}" ]]; then
@@ -138,17 +153,26 @@ for d in "${PROFILE_DIRS[@]}"; do
   cp -f "${PROFILE_FILE}" "${dest}"
 done
 
-echo "==> Verifying aps-environment in ${PROFILE_FILE}"
+echo "==> Verifying Push + Associated Domains in ${PROFILE_FILE}"
 DECODED="$(security cms -D -i "${PROFILE_FILE}" 2>/dev/null || true)"
+MISSING=0
 if ! printf '%s' "${DECODED}" | grep -q 'aps-environment'; then
   echo "ERROR: new profile still missing aps-environment entitlement." >&2
   echo "Confirm Push Notifications is enabled for ${BUNDLE_ID} in Apple Developer." >&2
-  printf '%s\n' "${DECODED}" | head -n 80 >&2 || true
+  MISSING=1
+fi
+if ! printf '%s' "${DECODED}" | grep -q 'com.apple.developer.associated-domains'; then
+  echo "ERROR: new profile still missing com.apple.developer.associated-domains entitlement." >&2
+  echo "Confirm Associated Domains is enabled for ${BUNDLE_ID} in Apple Developer." >&2
+  MISSING=1
+fi
+if [[ "${MISSING}" -ne 0 ]]; then
+  printf '%s\n' "${DECODED}" | head -n 120 >&2 || true
   exit 1
 fi
 NAME="$(printf '%s' "${DECODED}" | python3 -c 'import sys,re; t=sys.stdin.read(); m=re.search(r"<key>Name</key>\s*<string>(.*?)</string>", t); print(m.group(1) if m else "")')"
 UUID="$(printf '%s' "${DECODED}" | python3 -c 'import sys,re; t=sys.stdin.read(); m=re.search(r"<key>UUID</key>\s*<string>(.*?)</string>", t); print(m.group(1) if m else "")')"
-echo "OK: profile includes aps-environment (name=${NAME} uuid=${UUID})"
+echo "OK: profile includes aps-environment + associated-domains (name=${NAME} uuid=${UUID})"
 
 # Force Xcode onto this exact profile (never a stale "GatorVault Insider App Store").
 xcode-project use-profiles \
@@ -159,4 +183,4 @@ xcode-project use-profiles \
 printf '%s\n' "${PROFILE_FILE}" > /tmp/gatorvault_push_profile.path
 printf '%s\n' "${NAME}" > /tmp/gatorvault_push_profile.name
 printf '%s\n' "${UUID}" > /tmp/gatorvault_push_profile.uuid
-echo "OK: Xcode project configured with Push-enabled App Store profile"
+echo "OK: Xcode project configured with Push + Associated Domains App Store profile"
