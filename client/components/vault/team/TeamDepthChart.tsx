@@ -9,7 +9,7 @@ export function TeamDepthChart(): React.ReactElement {
       id="gv-team-dc-section"
       className="gv-team-dc-wrap"
       title="2026 Depth Chart"
-      description="Spring projections · Updated June 2026"
+      description="OTA / summer intel · Updated July 2026"
       headerExtra={
         <div className="gv-team-dc-legend">
           <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--locked">🟢 Locked</span>
