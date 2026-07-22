@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { slugify } = require('./slug');
+const { slugify, nameFromSlug } = require('./slug');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { commitFingerprint, intelFingerprint } = require('./commit-fingerprint');
 const { isVisitEventType } = require('./gv-classification');
@@ -375,6 +375,7 @@ function normalizeClassYear(raw) {
 
 function normalizePlayer(raw) {
   const slug = raw.slug || slugify(raw.name);
+  const displayName = String(raw.name || '').trim() || nameFromSlug(slug) || slug;
   const committedTo = raw.committedTo ?? raw.committed_to ?? null;
   const statusRaw = raw.status ?? (isFloridaCommit({ status: 'committed', committedTo }) ? 'committed' : null);
   let status = statusRaw;
@@ -388,7 +389,7 @@ function normalizePlayer(raw) {
   const player = {
     id: raw.id || slug,
     slug,
-    name: raw.name,
+    name: displayName,
     pos: raw.pos,
     classYear: normalizeClassYear(raw),
     school: raw.school || '',
