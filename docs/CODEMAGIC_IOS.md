@@ -57,16 +57,17 @@ openssl genrsa -out ios_distribution_private_key.pem 2048
 3. Export compliance: encryption **Yes** → standard HTTPS → **exempt** (also set in Info.plist)
 4. **Add for Review**
 
-## After enabling Push Notifications
+## After enabling Push + Associated Domains
 
 `ios-release` recreates the App Store profile during each build (`scripts/codemagic-refresh-push-profile.sh`):
 
 1. Enables **Push Notifications** on the App ID if missing
-2. Deletes stale App Store profiles for `com.gatorvaultinsider.app`
-3. Creates a fresh App Store profile that includes `aps-environment`
-4. Verifies the profile, then configures Xcode signing
+2. Enables **Associated Domains** on the App ID if missing (required by `App.entitlements` Universal Links)
+3. Deletes stale App Store profiles for `com.gatorvaultinsider.app`
+4. Creates a fresh App Store profile that includes `aps-environment` **and** `com.apple.developer.associated-domains`
+5. Verifies both entitlements in the profile, then configures Xcode signing
 
-Required in Codemagic: named cert **`gatorvault_appstore`**, named profile **`gatorvault_appstore_profile`** (schema/install only; build recreates a Push profile), and App Store Connect integration **`codemagic`**.
+Required in Codemagic: named cert **`gatorvault_appstore`**, named profile **`gatorvault_appstore_profile`** (schema/install only; build recreates a Push + Associated Domains profile), and App Store Connect integration **`codemagic`**.
 
 ## Troubleshooting
 
@@ -75,7 +76,7 @@ Required in Codemagic: named cert **`gatorvault_appstore`**, named profile **`ga
 | Integration not found | Rename integration in Codemagic to match `integrations.app_store_connect` in `codemagic.yaml` |
 | No matching certificates found | Ensure named cert **`gatorvault_appstore`** exists under Codemagic → Code signing identities |
 | Cannot save Signing Certificates without certificate private key | Expected if using `fetch-signing-files --create`; this workflow uses named cert + profile recreate instead |
-| Profile missing aps-environment / archive exit 65 | Check the “Refresh App Store profile with Push entitlement” step log; confirm ASC API key can manage profiles |
+| Profile missing aps-environment / associated-domains / archive exit 65 | Check the “Refresh App Store profile with Push + Associated Domains” step log; confirm ASC API key can manage App ID capabilities + profiles |
 | Bundle ID mismatch | Must be `com.gatorvaultinsider.app` |
 | Build fails on `npm run build` | Check Codemagic build log; fix Next.js errors |
 | Upload OK but no build in Connect | Wait 30 min; check email for Apple processing errors |
