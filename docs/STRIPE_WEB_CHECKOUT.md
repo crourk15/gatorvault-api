@@ -4,17 +4,46 @@ Web membership checkout via Stripe. **Never shown inside the iOS app** (Apple IA
 
 ## Status
 
-- Code is live when `STRIPE_SECRET_KEY` + price IDs are set.
-- Until then, `webCheckoutEnabled` stays `false` and membership UI keeps the App Store path.
+- Code is live when `STRIPE_SECRET_KEY` + price IDs are set on Render.
+- Until then, `webCheckoutEnabled` stays `false`.
 
-## Charles setup (one-time)
+## Fast path (recommended)
 
-1. Create a Stripe account (or use existing).
-2. Create **6 recurring Prices** (USD) matching catalog:
+Paste these into chat (or `server/.env`) and the agent/script does the rest:
+
+1. **Stripe Secret Key** — Stripe Dashboard → Developers → API keys → Secret key (`sk_live_...` or `sk_test_...` for dry run)
+2. **Render API Key** — Render → Account Settings → API Keys (`rnd_...`)
+
+Then run from `server/`:
+
+```bash
+STRIPE_SECRET_KEY=sk_live_... RENDER_API_KEY=rnd_... \
+  node scripts/setup-stripe-web-checkout.js --deploy
+```
+
+That script will:
+
+- Create 3 Products + 6 recurring Prices (Locker/Film/War × monthly/annual)
+- Register webhook `https://gatorvault-api.onrender.com/api/subscription/stripe/webhook`
+- Create a Customer Portal configuration
+- Push env vars to Render `gatorvault-api` and redeploy (`--deploy`)
+
+Re-run is safe (reuses products/prices by metadata / lookup_key).
+
+If the webhook already exists and Render is missing `STRIPE_WEBHOOK_SECRET`:
+
+```bash
+STRIPE_SECRET_KEY=sk_live_... RENDER_API_KEY=rnd_... \
+  node scripts/setup-stripe-web-checkout.js --rotate-webhook --deploy
+```
+
+## Manual path (Dashboard)
+
+1. Create **6 recurring Prices** (USD):
    - Locker monthly $4.99 / annual $47.88
    - Film monthly $9.99 / annual $95.88
    - War monthly $19.99 / annual $191.88
-3. In Render → `gatorvault-api` → Environment, set:
+2. Render → `gatorvault-api` → Environment:
 
 ```
 STRIPE_SECRET_KEY=sk_live_...
@@ -28,11 +57,9 @@ STRIPE_PRICE_WAR_MONTHLY=price_...
 STRIPE_PRICE_WAR_ANNUAL=price_...
 ```
 
-4. Stripe Dashboard → Developers → Webhooks → Add endpoint:
+3. Webhook endpoint + events:
 
 `https://gatorvault-api.onrender.com/api/subscription/stripe/webhook`
-
-Events:
 
 - `checkout.session.completed`
 - `customer.subscription.created`
@@ -40,9 +67,8 @@ Events:
 - `customer.subscription.deleted`
 - `invoice.payment_failed`
 
-5. Enable Customer Portal (Settings → Billing → Customer portal) so paid web members can manage/cancel.
-
-6. Redeploy or restart the API so env vars load.
+4. Enable Customer Portal (Settings → Billing → Customer portal).
+5. Redeploy the API.
 
 ## Verify
 
