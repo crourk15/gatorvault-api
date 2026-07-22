@@ -4,10 +4,10 @@ EmailJS dashboard **Save** can fail during their outages. Resend sends **raw HTM
 
 ## Charles — 5 minutes
 
-1. Create account: https://resend.com  
-2. **API Keys → Create** → copy key  
-3. **Domains → Add** `gatorvaultinsider.com` (DNS records Resend shows)  
-   - Until domain verifies, you can use Resend’s onboarding test sender only for your own inbox  
+1. Create account: https://resend.com
+2. **API Keys → Create** → copy key
+3. **Domains → Add** `gatorvaultinsider.com` (DNS records Resend shows)
+   - Until domain verifies, you can use Resend's onboarding test sender only for your own inbox
 4. Render → **gatorvault-api** → Environment:
    - `RESEND_API_KEY` = (your key)
    - `RESEND_FROM` = `GatorVault <onboarding@gatorvaultinsider.com>` (must match verified domain)
