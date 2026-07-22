@@ -117,7 +117,7 @@ test('getAllowlistSet(2027) does not merge Lab soft-visit promotions', () => {
   fs.rmSync(tmp, { recursive: true, force: true });
 });
 
-test('filterAllowlistedTargets keeps 2027 live UF board rows beyond Charles allowlist', () => {
+test('filterAllowlistedTargets drops 2027 247 offer-list rows not on hunt allowlist', () => {
   const targets = filterAllowlistedTargets(
     [
       {
@@ -126,6 +126,23 @@ test('filterAllowlistedTargets keeps 2027 live UF board rows beyond Charles allo
         classYear: 2027,
         committedTo: null,
         boardSource: '247-uf-board-sync',
+        category: 'target',
+        status: 'uncommitted',
+      },
+      {
+        slug: 'andre-hyppolite',
+        name: 'Andre Hyppolite',
+        classYear: 2027,
+        committedTo: null,
+        boardSource: '247-uf-board-sync',
+        category: 'target',
+        status: 'uncommitted',
+      },
+      {
+        slug: 'tranard-roberts',
+        name: 'Tranard Roberts',
+        classYear: 2027,
+        committedTo: null,
         category: 'target',
         status: 'uncommitted',
       },
@@ -141,8 +158,25 @@ test('filterAllowlistedTargets keeps 2027 live UF board rows beyond Charles allo
     2027
   );
   const slugs = targets.map((p) => p.slug);
-  assert.ok(slugs.includes('seth-williams'));
-  assert.ok(!slugs.includes('random-not-on-board'));
+  assert.deepEqual(slugs, ['tranard-roberts']);
+});
+
+test('isActiveUfTarget excludes forced Miami/Notre Dame commits even when store looks open', () => {
+  assert.equal(
+    isActiveUfTarget({ slug: 'andre-hyppolite', committedTo: null, status: 'uncommitted', category: 'target' }),
+    false,
+    'Hyppolite → Miami must never count as an active UF target'
+  );
+  assert.equal(
+    isActiveUfTarget({ slug: 'ace-alston', committedTo: null, status: 'uncommitted', category: 'target' }),
+    false,
+    'Alston → Notre Dame must never count as an active UF target'
+  );
+  assert.equal(
+    isActiveUfTarget({ slug: 'monshun-sales', committedTo: null, status: 'uncommitted', category: 'target' }),
+    false,
+    'Sales → Indiana must never count as an active UF target'
+  );
 });
 
 test('filterActiveUfTargets', () => {

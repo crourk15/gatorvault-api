@@ -1,28 +1,20 @@
 /**
  * Charles' locked UF target allow-list for curated Lab / hub targets.
- * 2027 Closing Class also surfaces live remaining Florida board rows
- * (247Sports sync via uf-closing-board-247) — uncommitted only.
+ *
+ * 2027 Closing Class is hunt-list only — never a 247 "Florida offered" dump.
+ * 247 sync still marks dead commits / UF commits; it does not expand the target board.
  */
 const { slugify } = require('./slug');
 const { isActiveUfTarget } = require('./recruiting-target-filters');
 
-function isClosingClassLiveBoardTarget(player) {
-  try {
-    const { isLiveUfBoardTarget } = require('./uf-closing-board-247');
-    return isLiveUfBoardTarget(player);
-  } catch {
-    return false;
-  }
-}
-
 /**
  * Locked 2027 Closing Class targets — intentional remaining battles / flips only.
  * Dead elsewhere-commits and UF commits do not belong here.
- * Broader 247 remaining-board rows still surface via uf-closing-board-247 sync.
+ * Offer-list / soft 247 open rows are not board membership.
  */
 const ALLOWLIST_2027 = [
   'jalen-brewster', // 5★ DT — Texas Tech commit, active UF flip watch
-  'tranard-roberts', // still open on 247 UF board (in-state RB)
+  'tranard-roberts', // still open — in-state RB UF is actively hunting
 ];
 
 /** Allowlisted 2027 names that stay on the board after committing elsewhere (flip radar). */
@@ -203,10 +195,8 @@ function filterAllowlistedTargets(targets, classYear) {
       return true;
     }
     if (!isActiveUfTarget(p)) return false;
-    if (set.has(slug)) return true;
-    // Closing Class: keep remaining UF board (247 live sync), not commits.
-    if (year === 2027 && isClosingClassLiveBoardTarget(p)) return true;
-    return false;
+    // Hunt list only — no 247 offer-list expansion for Closing Class.
+    return set.has(slug);
   });
 }
 
@@ -220,7 +210,6 @@ function validateStoreTargets(players) {
     const slug = canonicalTargetSlug(p.slug || slugify(p.name));
     const set = getAllowlistSet(year);
     if (set.has(slug)) continue;
-    if (year === 2027 && isClosingClassLiveBoardTarget(p)) continue;
     errors.push({
       slug,
       name: p.name,
@@ -236,14 +225,11 @@ function demoteNonAllowlistedTargets(players) {
   let demoted = 0;
   for (const p of players || []) {
     if (p.category !== 'target') continue;
-    if (!isActiveUfTarget(p)) continue;
     const year = parseInt(p.classYear || p.class_year, 10);
     if (year !== 2027 && year !== 2028) continue;
     const slug = canonicalTargetSlug(p.slug || slugify(p.name));
     const set = getAllowlistSet(year);
     if (set.has(slug)) continue;
-    // Do not demote live 2027 Closing Class board rows between syncs.
-    if (year === 2027 && isClosingClassLiveBoardTarget(p)) continue;
     p.category = 'recruit';
     if (!p.status || p.status === 'target') p.status = 'uncommitted';
     demoted += 1;

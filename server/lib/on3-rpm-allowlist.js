@@ -38,7 +38,8 @@ function writeDoc(doc) {
 }
 
 /**
- * Target rows for RPM sync: board file + allowlist + 2027 Closing Class snapshot.
+ * Target rows for RPM sync: board file + Charles/admin/Lab allowlist only.
+ * 2027 Closing Class does not expand from the 247 offer-list snapshot.
  */
 function loadTargetBoard(classYear = DEFAULT_CLASS_YEAR) {
   const year = Number(classYear) || DEFAULT_CLASS_YEAR;
@@ -73,19 +74,6 @@ function loadTargetBoard(classYear = DEFAULT_CLASS_YEAR) {
     }
   } catch {
     /* allowlist optional */
-  }
-
-  // Closing Class remaining Florida board (2027).
-  if (year === 2027) {
-    try {
-      const { SNAPSHOT_PATH } = require('./uf-closing-board-247');
-      const board = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, 'utf8'));
-      for (const row of board.open || []) {
-        add({ slug: row.slug, name: row.name, stars: row.stars });
-      }
-    } catch {
-      /* closing board optional */
-    }
   }
 
   return [...bySlug.values()];

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "UF 2027 target board seed — Phase 9 expansion",
+  "description": "UF 2027 target board seed \u2014 Phase 9 expansion",
   "targets": [
     {
       "slug": "jalen-brewster",
@@ -15,10 +15,18 @@
       "stateRank": 2,
       "inState": false,
       "committedTo": null,
-      "skinny": "5★ DL — national priority; UF among top schools monitoring.",
+      "skinny": "5\u2605 DL \u2014 national priority; UF among top schools monitoring.",
       "headliner": true,
       "ufProbability": 0.38,
       "state": "TX"
+    },
+    {
+      "slug": "tranard-roberts",
+      "name": "Tranard Roberts",
+      "pos": "RB",
+      "classYear": 2027,
+      "stars": 3,
+      "status": "uncommitted"
     }
   ]
 }
