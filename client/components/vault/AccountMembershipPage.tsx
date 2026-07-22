@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { clearSession, loadSession, replaceAuthLocation, verifyStoredSession } from '@/lib/auth-api';
-import { isNativeApp } from '@/lib/api-base';
+import { isNativeApp, nativeNavigationUrl } from '@/lib/api-base';
 import {
   fetchSubscriptionCatalog,
   fetchSubscriptionStatus,
@@ -56,7 +56,7 @@ function MembershipTierMarketing({
               {tier.popular ? ' · Popular' : ''}
             </h3>
             <p className="gv-membership__card-price">
-              ${tier.monthly.toFixed(2)}/month · ${tier.annual.toFixed(2)}/year billed annually
+              ${tier.monthly.toFixed(2)}/month · ${tier.annual.toFixed(2)}/mo billed annually
             </p>
           </div>
           <ul className="gv-membership__features">
@@ -328,11 +328,14 @@ export function AccountMembershipPage(): React.ReactElement {
         <div className="gv-membership__actions" style={{ marginBottom: '1.25rem' }}>
           <a
             className="gv-membership__subscribe-btn"
-            href="/join/?mode=signin&next=/vault/membership/"
+            href={native ? nativeNavigationUrl('/join/?mode=signin&next=/vault/membership/') : '/join/?mode=signin&next=/vault/membership/'}
           >
             Sign in
           </a>
-          <a className="gv-membership__secondary-btn" href="/join/?mode=signup&next=/vault/membership/">
+          <a
+            className="gv-membership__secondary-btn"
+            href={native ? nativeNavigationUrl('/join/?mode=signup&next=/vault/membership/') : '/join/?mode=signup&next=/vault/membership/'}
+          >
             Create account
           </a>
         </div>
@@ -405,7 +408,9 @@ export function AccountMembershipPage(): React.ReactElement {
                 ? 'Paid access remains until your current Apple billing period ends. Auto-renew is off.'
                 : 'Your paid membership is active.'
               : status.trial.expired
-                ? 'Your 30-day trial has ended. Subscribe in the iOS app to restore full Vault access.'
+                ? webCheckoutReady
+                  ? 'Your 30-day trial has ended. Subscribe below with secure web checkout, or continue in the iOS app.'
+                  : 'Your 30-day trial has ended. Subscribe in the iOS app to restore full Vault access.'
                 : status.trial.daysLeft != null
                   ? `Free trial: ${status.trial.daysLeft} day${
                       status.trial.daysLeft === 1 ? '' : 's'
@@ -543,9 +548,13 @@ export function AccountMembershipPage(): React.ReactElement {
             Apple billing is live. Open the iOS app, sign in with this email, then Subscribe or Restore
             purchases — web access unlocks automatically.
           </p>
+        ) : webCheckoutReady ? (
+          <p className="gv-membership__meta">
+            Web checkout is available below. On iPhone, open the GatorVault app to subscribe with Apple In-App Purchase.
+          </p>
         ) : (
           <p className="gv-membership__meta">
-            iOS in-app purchase is coming soon. Until then, contact support if you need billing help.
+            Billing is temporarily unavailable. Email support if you need help restoring access.
           </p>
         )}
       </section>
@@ -556,7 +565,9 @@ export function AccountMembershipPage(): React.ReactElement {
         {(catalog?.tiers || []).length ? (
           <h2 className="gv-membership__section-title">Insider tiers</h2>
         ) : null}
-        {(catalog?.tiers || []).map((tier) => {
+        {(catalog?.tiers || [])
+          .filter((tier) => tier.id !== 'war' || status?.tier === 'war')
+          .map((tier) => {
           const marketing = PUBLIC_TIERS.find((t) => t.id === tier.id);
           return (
           <article

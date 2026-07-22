@@ -71,7 +71,7 @@ export function MovementIntelPanel(): React.ReactElement {
     <ModuleShell
       title="Who's moving — Risers, Fallers, Volatile"
       action={
-        <a href="/vault/recruiting/movement" className="rh-cc-link">
+        <a href="/vault/recruiting/?tab=movement" className="rh-cc-link">
           See all board movement →
         </a>
       }

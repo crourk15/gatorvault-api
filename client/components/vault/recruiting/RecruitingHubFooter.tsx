@@ -6,9 +6,9 @@ import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 const LINKS = [
   { href: '/vault/futurecast', label: 'FutureCast' },
   { href: '/vault/futurecast#movement', label: 'Movement Intel' },
-  { href: '/vault/recruiting/scouting', label: 'Scouting' },
-  { href: '/vault/recruiting/portal', label: 'Portal' },
-  { href: '/vault/recruiting/rankings', label: 'Rankings' },
+  { href: '/vault/recruiting/?tab=scouting', label: 'Scouting' },
+  { href: '/vault/recruiting/?tab=portal', label: 'Portal' },
+  { href: '/vault/recruiting/?tab=rankings', label: 'Rankings' },
 ];
 
 export function RecruitingHubFooter(): React.ReactElement {

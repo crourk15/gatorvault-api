@@ -33,6 +33,7 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pollSeq, setPollSeq] = useState(0);
+  const [liveFresh, setLiveFresh] = useState(false);
 
   useVaultPageRestore(LIVE_STATE_KEY, () => {});
 
@@ -48,6 +49,7 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
           (next.feed?.length || 0) + (next.panels?.beatWriterHighlights?.length || 0);
         const prevLive =
           (prev.feed?.length || 0) + (prev.panels?.beatWriterHighlights?.length || 0);
+        if (nextLive > 0) setLiveFresh(true);
         // Don't blank the page when a poll fails / API returns empty mid-outage.
         if (nextLive === 0 && prevLive > 0) return prev;
         return next;
@@ -118,6 +120,14 @@ export function GatorNationLivePage({ focusSection }: GatorNationLivePageProps =
           />
         </div>
       )}
+
+      {!liveFresh && hasLiveSignal ? (
+        <div className="gv-gnl__frame" style={{ paddingTop: '0.75rem' }}>
+          <p className="gv-gnl__meta" style={{ color: '#94a3b8', fontSize: 13, margin: 0 }}>
+            Showing latest available feed — live refresh is catching up.
+          </p>
+        </div>
+      ) : null}
 
       <GNLPageHero
         updatedAt={bundle.updatedAt ?? bundle.refreshedAt}

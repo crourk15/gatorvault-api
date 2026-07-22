@@ -72,8 +72,8 @@ export function isVaultPath(pathname?: string): boolean {
 }
 
 export function vaultPortalBackHref(pathname: string): string {
-  if (isVaultPath(pathname)) return '/vault/recruiting/portal';
-  return '/vault/recruiting/portal';
+  if (isVaultPath(pathname)) return '/vault/recruiting/?tab=portal';
+  return '/vault/recruiting/?tab=portal';
 }
 
 export function vaultPortalBackLabel(pathname: string): string {

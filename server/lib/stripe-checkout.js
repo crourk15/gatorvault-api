@@ -203,6 +203,16 @@ function expiresAtFromSubscription(subscription) {
   return new Date(Number(end) * 1000).toISOString();
 }
 
+function mapStripeStatus(stripeStatus, { statusOverride } = {}) {
+  if (statusOverride) return statusOverride;
+  const s = String(stripeStatus || '').toLowerCase();
+  if (s === 'active' || s === 'trialing') return 'active';
+  if (s === 'past_due' || s === 'unpaid') return 'grace';
+  if (s === 'canceled' || s === 'incomplete_expired') return 'canceled';
+  if (s === 'incomplete') return 'grace';
+  return 'canceled';
+}
+
 function applyStripeSubscription(email, subscription, { statusOverride } = {}) {
   const priceId =
     subscription?.items?.data?.[0]?.price?.id ||
@@ -211,40 +221,38 @@ function applyStripeSubscription(email, subscription, { statusOverride } = {}) {
   const tier =
     tierFromPriceId(priceId) ||
     normalizeTier(subscription?.metadata?.gatorvaultTier || 'film');
-  const status =
-    statusOverride ||
-    (subscription?.status === 'active' || subscription?.status === 'trialing'
-      ? 'active'
-      : subscription?.status === 'past_due'
-        ? 'grace'
-        : 'canceled');
-  const entitled = status === 'active' || status === 'grace' || status === 'canceled';
-  if (!entitled && (subscription?.status === 'canceled' || subscription?.status === 'unpaid')) {
-    // keep canceled_keep_access until period end when still open
-    if (subscription?.current_period_end && subscription.current_period_end * 1000 > Date.now()) {
-      return applySubscription(email, {
-        source: 'stripe',
-        status: 'canceled',
-        productId: priceId || `stripe.${tier}`,
-        tier,
-        originalTransactionId: String(subscription.id || ''),
-        expiresAt: expiresAtFromSubscription(subscription),
-        autoRenewEnabled: false,
-        stripeCustomerId: subscription.customer || null,
-        stripeSubscriptionId: subscription.id || null,
-      });
-    }
+  const stripeStatus = String(subscription?.status || '').toLowerCase();
+  const periodEndMs = subscription?.current_period_end
+    ? Number(subscription.current_period_end) * 1000
+    : null;
+  const periodOpen = periodEndMs != null && Number.isFinite(periodEndMs) && periodEndMs > Date.now();
+  const customerId =
+    typeof subscription?.customer === 'string'
+      ? subscription.customer
+      : subscription?.customer?.id || null;
+
+  // Fully ended / unpaid with no open period → revoke access.
+  if (
+    stripeStatus === 'unpaid' ||
+    stripeStatus === 'incomplete_expired' ||
+    (stripeStatus === 'canceled' && !periodOpen)
+  ) {
     return revokeSubscription(email, { status: 'expired', productId: priceId });
   }
+
+  const status = mapStripeStatus(stripeStatus, { statusOverride });
+  const keepAccessCanceled = stripeStatus === 'canceled' && periodOpen;
   return applySubscription(email, {
     source: 'stripe',
-    status,
+    status: keepAccessCanceled ? 'canceled' : status,
     productId: priceId || `stripe.${tier}`,
     tier,
     originalTransactionId: String(subscription.id || ''),
     expiresAt: expiresAtFromSubscription(subscription),
-    autoRenewEnabled: subscription?.cancel_at_period_end === false,
-    stripeCustomerId: typeof subscription.customer === 'string' ? subscription.customer : subscription.customer?.id || null,
+    autoRenewEnabled: keepAccessCanceled
+      ? false
+      : subscription?.cancel_at_period_end === false,
+    stripeCustomerId: customerId,
     stripeSubscriptionId: subscription.id || null,
   });
 }

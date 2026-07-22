@@ -115,3 +115,14 @@ test('processOnboardingQueue sends trial d1 convert email', async () => {
   assert.match(sent[0].subject, /Last day/i);
   assert.ok(users[0].trialRemindersSent.includes('d1'));
 });
+
+test('dueTrialReminderKeys catches up when exact day was missed', () => {
+  const now = new Date('2026-07-22T12:00:00.000Z');
+  // 3 days left — missed the exact d5 window
+  const user = {
+    email: 'fan@example.com',
+    trialEnd: '2026-07-25T12:00:00.000Z',
+    trialRemindersSent: [],
+  };
+  assert.deepEqual(dueTrialReminderKeys(user, now), ['d5']);
+});

@@ -102,7 +102,7 @@ function buildSubscriptionStatus(user) {
             ? 'Manage or cancel your web membership in the Stripe customer portal.'
             : 'Subscribe on the web with card checkout, or continue in the GatorVault iOS app with Apple In-App Purchase.'
           : 'Paid membership continues in the GatorVault iOS app. Open the App Store listing, sign in with this same email, then Subscribe or Restore — web Vault unlocks automatically.',
-        supportEmail: 'support@gatorvaultinsider.com',
+        supportEmail: process.env.EMAILJS_REPLY_TO || process.env.RESEND_REPLY_TO || 'gatorvaultinsider@gmail.com',
         accountDeletionPath: '/vault/membership/#delete-account',
       };
     })(),

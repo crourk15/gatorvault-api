@@ -68,9 +68,12 @@ function dueTrialReminderKeys(user, now = new Date()) {
   const left = trialDaysLeft(user, now);
   if (left == null) return [];
   const sent = new Set(Array.isArray(user.trialRemindersSent) ? user.trialRemindersSent.map(String) : []);
-  return TRIAL_REMINDER_SEQUENCE
-    .filter((e) => left === e.daysLeft && !sent.has(e.key))
-    .map((e) => e.key);
+  // Catch up if the exact day was missed (outage): fire when daysLeft <= target and not sent.
+  // Prefer the tightest unmet reminder (d1 before d5 when both due).
+  const due = TRIAL_REMINDER_SEQUENCE
+    .filter((e) => left <= e.daysLeft && !sent.has(e.key))
+    .sort((a, b) => a.daysLeft - b.daysLeft);
+  return due.length ? [due[0].key] : [];
 }
 
 async function sendBuiltEmail(deliverEmail, to, built) {

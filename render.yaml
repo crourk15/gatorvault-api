@@ -58,6 +58,18 @@ services:
         value: "true"
       - key: EMAIL_PROVIDER
         value: emailjs
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        sync: false
+      - key: RESEND_REPLY_TO
+        sync: false
+      - key: STRIPE_WEB_CHECKOUT_ENABLED
+        value: "true"
+      - key: MONITORING_CRON_SECRET
+        sync: false
+      - key: FILM_ROOM_DATA_DIR
+        value: /var/data/film-room
       # Stripe web checkout (set in dashboard; leave unset until prices exist)
       - key: STRIPE_SECRET_KEY
         sync: false

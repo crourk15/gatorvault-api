@@ -223,7 +223,7 @@ function CatalogGrid({
   onOpen: (item: FilmRoomCatalogItem) => void;
 }): React.ReactElement {
   if (!items.length) {
-    return <UiEmpty message="No content in this section yet." hint="Weekly refresh adds new tape and pressers." />;
+    return <UiEmpty message="No content in this section yet." hint="New pressers and reviews land as they publish and pressers." />;
   }
   return (
     <div className="gv-fr-lessons">
