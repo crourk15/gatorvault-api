@@ -26,14 +26,24 @@ type Props = {
   compact?: boolean;
 };
 
-const TAB_META: Record<Tab, { label: string; icon: string; battleClass: string; battleLabel: string }> = {
-  battles: { label: 'Battles', icon: '⚠️', battleClass: 'fc-lab-battle-label--battle', battleLabel: 'Battle' },
-  'lean-uf': { label: 'Lean UF', icon: '🟦', battleClass: 'fc-lab-battle-label--uf', battleLabel: 'Lean UF' },
+const TAB_META: Record<Tab, { label: string; battleClass: string; battleLabel: string; empty: string }> = {
+  battles: {
+    label: 'Battles',
+    battleClass: 'fc-lab-battle-label--battle',
+    battleLabel: 'Battle',
+    empty: 'No open battles on the board yet. Check Lean UF or Lean Elsewhere.',
+  },
+  'lean-uf': {
+    label: 'Lean UF',
+    battleClass: 'fc-lab-battle-label--uf',
+    battleLabel: 'Lean UF',
+    empty: 'No Florida leans at 67%+ right now — open Battles for the live fights.',
+  },
   'lean-elsewhere': {
     label: 'Lean Elsewhere',
-    icon: '🔴',
     battleClass: 'fc-lab-battle-label--other',
     battleLabel: 'Lean Other',
+    empty: 'No lean-elsewhere targets on the board yet.',
   },
 };
 
@@ -64,22 +74,22 @@ function BattleRowCompact({
       className="fc-lab-battle-row fc-lab-battle-row--compact"
     >
       <div className="fc-lab-battle-row__identity">
-        <div className="fc-lab-battle-row__head">
-          <span className="fc-lab-battle-row__name">{player.name}</span>
-          <span className={`fc-lab-battle-label ${meta.battleClass}`}>
-            <span aria-hidden>{meta.icon}</span> {meta.battleLabel}
-          </span>
-        </div>
+        <span className="fc-lab-battle-row__name">{player.name}</span>
         <span className="fc-lab-battle-row__meta">
           {player.position} · {player.school ?? '—'}
-          {threat ? (
-            <span className="fc-lab-battle-row__threat">
-              {' '}
-              · vs {threat.label} {threat.pct}%
-            </span>
-          ) : null}
         </span>
       </div>
+      <span className={`fc-lab-battle-label ${meta.battleClass}`}>{meta.battleLabel}</span>
+      <span className="fc-lab-battle-row__rival">
+        {threat ? (
+          <>
+            <span className="fc-lab-battle-row__rival-label">vs</span> {threat.label}{' '}
+            <strong>{threat.pct}%</strong>
+          </>
+        ) : (
+          <span className="fc-lab-battle-row__rival-empty">—</span>
+        )}
+      </span>
       <div className="fc-lab-battle-row__right">
         <strong className="fc-lab-battle-row__pct">{pct}%</strong>
         {showMovement && delta !== 0 ? <MovementBadge delta={delta} tone={tone} /> : null}
@@ -167,7 +177,7 @@ export function FutureCastBattlesPanel({
 
   const title = discoveryFocus ? `${focusYear} Battles` : 'Battles';
   const sub = compact
-    ? 'Florida odds + the top rival threat'
+    ? 'Name · lean · top rival · Florida %'
     : 'Battle · leaning Florida · leaning elsewhere';
 
   // Never vanish — fans need the Battles slot even when RPM/board odds are thin.
@@ -195,15 +205,21 @@ export function FutureCastBattlesPanel({
             className={`rh-cc-tabs__btn${tab === id ? ' is-active' : ''}`}
             onClick={() => setTabOverride(id)}
           >
-            {TAB_META[id].icon} {TAB_META[id].label} ({buckets[id].length})
+            {TAB_META[id].label} ({buckets[id].length})
           </button>
         ))}
       </div>
       <div className={`fc-lab-battle-list${compact ? ' fc-lab-battle-list--compact' : ''}`} role="tabpanel">
+        {compact && rows.length > 0 ? (
+          <div className="fc-lab-battle-list__cols" aria-hidden="true">
+            <span>Name</span>
+            <span>Lean</span>
+            <span>Rival</span>
+            <span>UF %</span>
+          </div>
+        ) : null}
         {rows.length === 0 ? (
-          <p className="rh-cc-empty">
-            No {TAB_META[tab].label.toLowerCase()} targets on the board yet.
-          </p>
+          <p className="rh-cc-empty fc-lab-battle-empty">{TAB_META[tab].empty}</p>
         ) : (
           rows.map((p) => (
             <BattleRowCompact key={p.slug} player={p} tab={tab} showMovement={showMovement} />

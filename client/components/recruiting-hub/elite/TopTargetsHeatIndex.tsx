@@ -19,6 +19,18 @@ function movementSymbol(movement: RhHubHeatTarget['movement']): string {
   return '—';
 }
 
+/** Board scores (not percents): "UF 10 · Auburn 16". */
+function formatBattleLine(battle: RhHubHeatTarget['battle']): string {
+  const uf = battle?.uf;
+  const comp = battle?.competitor;
+  const name = String(battle?.competitorName || '').trim();
+  if (uf == null && comp == null && !name) return '—';
+  const ufPart = `UF ${uf ?? '—'}`;
+  if (!name && comp == null) return ufPart;
+  const rivalPart = name ? `${name} ${comp ?? '—'}`.trim() : `${comp ?? '—'}`;
+  return `${ufPart} · ${rivalPart}`;
+}
+
 function HeatTargetCard({
   target,
   showFutureCastLink,
@@ -47,12 +59,7 @@ function HeatTargetCard({
       </div>
       <div className="rh-heat-meta">
         <span>UF %: {target.ufPercent != null ? target.ufPercent : '—'}</span>
-        <span>
-          Battle:{' '}
-          {target.battle.uf != null || target.battle.competitor != null || target.battle.competitorName
-            ? `UF ${target.battle.uf ?? '—'} / ${target.battle.competitor ?? '—'} ${target.battle.competitorName ?? ''}`.trim()
-            : '—'}
-        </span>
+        <span>Battle: {formatBattleLine(target.battle)}</span>
       </div>
       {target.nextVisit ? <div className="rh-heat-visit">Next visit: {target.nextVisit}</div> : null}
       {target.insiderNote ? <div className="rh-heat-note">{target.insiderNote}</div> : null}

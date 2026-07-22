@@ -9,12 +9,12 @@ import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBun
 import { schoolLogoInitials, schoolLogoUrl } from '@/lib/school-logos';
 
 const DIFFICULTY_LABELS: Record<RhHubBattleBoardItem['battleDifficulty'], string> = {
-  easy: 'Easy',
-  moderate: 'Moderate',
-  hard: 'Hard',
-  flip: 'Flip Watch',
+  easy: 'Easy battle',
+  moderate: 'Moderate battle',
+  hard: 'Hard battle',
+  flip: 'Flip watch',
   longshot: 'Longshot',
-  unknown: 'Unknown',
+  unknown: 'Battle TBD',
 };
 
 function trendSymbol(trend: RhHubBattleBoardItem['trend']): string {

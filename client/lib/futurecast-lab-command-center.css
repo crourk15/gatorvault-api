@@ -1959,12 +1959,31 @@
   gap: 0;
 }
 
-a.fc-lab-battle-row--compact {
-  display: flex;
+.fc-lab-battle-list__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) 5.5rem minmax(0, 1fr) 4.25rem;
+  gap: 10px;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 0;
+  padding: 0 0 8px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.fc-lab-battle-list__cols span:last-child {
+  text-align: right;
+}
+
+a.fc-lab-battle-row--compact {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) 5.5rem minmax(0, 1fr) 4.25rem;
+  gap: 10px;
+  align-items: center;
+  padding: 11px 0;
   text-decoration: none;
   color: inherit;
   border-bottom: 1px solid rgba(15, 23, 42, 0.08);
@@ -1978,6 +1997,63 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
   text-decoration: underline;
 }
 
+.fc-lab-battle-row--compact .fc-lab-battle-row__identity {
+  min-width: 0;
+}
+
+.fc-lab-battle-row--compact .fc-lab-battle-row__name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fc-lab-battle-row--compact .fc-lab-battle-row__meta {
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fc-lab-battle-row--compact .fc-lab-battle-label {
+  justify-self: start;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-lab-battle-row__rival {
+  min-width: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #334155;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fc-lab-battle-row__rival strong {
+  font-variant-numeric: tabular-nums;
+  color: #9a3412;
+}
+
+.fc-lab-battle-row__rival-label {
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: lowercase;
+}
+
+.fc-lab-battle-row__rival-empty {
+  color: #94a3b8;
+}
+
+.fc-lab-battle-row--compact .fc-lab-battle-row__right {
+  margin-top: 0;
+  justify-content: flex-end;
+  justify-self: end;
+  gap: 6px;
+}
+
 .fc-lab-battle-row--compact .fc-lab-battle-row__gv,
 .fc-lab-battle-row--compact .fc-lab-rpm-board {
   display: none;
@@ -1986,13 +2062,52 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 .fc-lab-battle-row__pct {
   font-size: 1rem;
   font-variant-numeric: tabular-nums;
-  min-width: 3rem;
+  min-width: 2.75rem;
   text-align: right;
+  color: var(--gv-blue, #0021a5);
 }
 
 .fc-lab-battle-row__threat {
   font-weight: 600;
   color: #9a3412;
+}
+
+.fc-lab-battle-empty {
+  margin: 12px 0 4px;
+  padding: 12px 0;
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .fc-lab-battle-list__cols {
+    display: none;
+  }
+
+  a.fc-lab-battle-row--compact {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name pct'
+      'lean rival';
+    row-gap: 4px;
+    column-gap: 8px;
+  }
+
+  .fc-lab-battle-row--compact .fc-lab-battle-row__identity {
+    grid-area: name;
+  }
+
+  .fc-lab-battle-row--compact .fc-lab-battle-label {
+    grid-area: lean;
+  }
+
+  .fc-lab-battle-row--compact .fc-lab-battle-row__rival {
+    grid-area: rival;
+    text-align: right;
+  }
+
+  .fc-lab-battle-row--compact .fc-lab-battle-row__right {
+    grid-area: pct;
+  }
 }
 
 @media (max-width: 1100px) {

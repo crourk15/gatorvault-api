@@ -117,12 +117,8 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
             </div>
           </>
         ) : discoveryFocus ? (
-          <>
-            <TargetBoardPreview classYear={2028} limit={3} />
-            <a href={labHref} className="home-wow-cta-link">
-              {labLabel}
-            </a>
-          </>
+          // TargetBoardPreview already includes the "Open 2028 target board" footer CTA.
+          <TargetBoardPreview classYear={2028} limit={3} />
         ) : slides.length === 0 ? (
           <div className="home-wow-fc-empty">
             <p className="home-wow-empty">Top UF leaners from the FutureCast model.</p>
