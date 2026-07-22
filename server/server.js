@@ -298,13 +298,18 @@ const {
   isEmailJsReady,
   getEmailJsPublicKeyHint
 } = require('./lib/emailjs-config');
+const { isResendReady, sendEmailViaResend, getResendFrom } = require('./lib/resend-server');
 
 function getEmailProviders() {
-  if (EMAIL_PROVIDER === 'emailjs') return isEmailJsReady() ? ['emailjs'] : [];
   const providers = [];
+  // Prefer raw-HTML providers so onboarding/drip is not blocked on EmailJS template Save.
+  if (isResendReady()) providers.push('resend');
   if (process.env.SENDGRID_API_KEY) providers.push('sendgrid');
   if (process.env.SMTP_HOST) providers.push('smtp');
   if (isEmailJsReady()) providers.push('emailjs');
+  if (EMAIL_PROVIDER === 'emailjs' && providers.length === 0 && isEmailJsReady()) {
+    return ['emailjs'];
+  }
   return providers;
 }
 
@@ -346,42 +351,78 @@ async function sendEmailEmailJS(to, templateParams) {
 
 async function deliverEmail(to, subject, html, templateParams = {}) {
   const params = { ...templateParams, html, emailSubject: subject, subject };
-  if (EMAIL_PROVIDER === 'emailjs') {
+  const forceProvider = String(templateParams.forceProvider || process.env.EMAIL_FORCE_PROVIDER || '').toLowerCase();
+  const preferRawHtml = templateParams.preferRawHtml !== false; // default true — elite drip needs real subjects/HTML
+
+  const tryResend = async () => {
+    await sendEmailViaResend({ to, subject, html });
+    pushEmailLog({ level: 'success', message: 'Resend send OK', detail: { to, subject }, source: 'deliver' });
+    return { sent: true, provider: 'resend' };
+  };
+  const trySendGrid = async () => {
+    await sendEmailSendGrid(to, subject, html);
+    pushEmailLog({ level: 'success', message: 'SendGrid send OK', detail: { to, subject }, source: 'deliver' });
+    return { sent: true, provider: 'sendgrid' };
+  };
+  const trySmtp = async () => {
+    await sendEmailSMTP(to, subject, html);
+    pushEmailLog({ level: 'success', message: 'SMTP send OK', detail: { to, subject }, source: 'deliver' });
+    return { sent: true, provider: 'smtp' };
+  };
+  const tryEmailJs = async () => {
     if (!isEmailJsReady()) {
       const msg = 'EmailJS private key missing or placeholder in server/.env';
       pushEmailLog({ level: 'error', message: msg, detail: { to }, source: 'deliver' });
       return { sent: false, provider: null, error: msg };
     }
+    await sendEmailEmailJS(to, params);
+    pushEmailLog({ level: 'success', message: 'EmailJS send OK', detail: { to, subject }, source: 'deliver' });
+    return { sent: true, provider: 'emailjs' };
+  };
+
+  // Forced provider for ops/tests.
+  if (forceProvider === 'resend') return tryResend();
+  if (forceProvider === 'sendgrid') return trySendGrid();
+  if (forceProvider === 'smtp') return trySmtp();
+  if (forceProvider === 'emailjs') return tryEmailJs();
+
+  // Raw HTML first when available — bypasses EmailJS template Save outages.
+  if (preferRawHtml) {
+    if (isResendReady()) {
+      try {
+        return await tryResend();
+      } catch (err) {
+        pushEmailLog({ level: 'error', message: err.message, detail: { to, subject, provider: 'resend' }, source: 'deliver' });
+        // fall through to other providers
+      }
+    }
+    if (process.env.SENDGRID_API_KEY) {
+      try {
+        return await trySendGrid();
+      } catch (err) {
+        pushEmailLog({ level: 'error', message: err.message, detail: { to, subject, provider: 'sendgrid' }, source: 'deliver' });
+      }
+    }
+    if (process.env.SMTP_HOST) {
+      try {
+        return await trySmtp();
+      } catch (err) {
+        pushEmailLog({ level: 'error', message: err.message, detail: { to, subject, provider: 'smtp' }, source: 'deliver' });
+      }
+    }
+  }
+
+  // Legacy EmailJS template path (welcome/drip still work once template Save succeeds).
+  if (EMAIL_PROVIDER === 'emailjs' || isEmailJsReady()) {
     try {
-      await sendEmailEmailJS(to, params);
-      pushEmailLog({ level: 'success', message: 'EmailJS send OK', detail: { to, subject }, source: 'deliver' });
-      return { sent: true, provider: 'emailjs' };
+      return await tryEmailJs();
     } catch (err) {
       pushEmailLog({ level: 'error', message: err.message, detail: { to, subject }, source: 'deliver' });
       throw err;
     }
   }
-  if (process.env.SENDGRID_API_KEY) {
-    await sendEmailSendGrid(to, subject, html);
-    pushEmailLog({ level: 'success', message: 'SendGrid send OK', detail: { to }, source: 'deliver' });
-    return { sent: true, provider: 'sendgrid' };
-  }
-  if (process.env.SMTP_HOST) {
-    await sendEmailSMTP(to, subject, html);
-    pushEmailLog({ level: 'success', message: 'SMTP send OK', detail: { to }, source: 'deliver' });
-    return { sent: true, provider: 'smtp' };
-  }
-  if (isEmailJsReady()) {
-    try {
-      await sendEmailEmailJS(to, params);
-      pushEmailLog({ level: 'success', message: 'EmailJS send OK', detail: { to, subject }, source: 'deliver' });
-      return { sent: true, provider: 'emailjs' };
-    } catch (err) {
-      pushEmailLog({ level: 'error', message: err.message, detail: { to, subject }, source: 'deliver' });
-      throw err;
-    }
-  }
-  const msg = 'No email provider configured';
+
+  const msg = 'No email provider configured — set RESEND_API_KEY (recommended) or EmailJS keys';
   pushEmailLog({ level: 'error', message: msg, detail: { to }, source: 'deliver' });
   return { sent: false, provider: null, error: msg };
 }
@@ -900,18 +941,25 @@ app.get('/api/email-status', async (req, res) => {
     const { probeEmailJsAccount } = require('./lib/emailjs-server');
     probe = await probeEmailJsAccount();
   }
+  const primary = providers[0] || null;
   return res.json({
     ok: true,
     configured: providers.length > 0,
     providers,
-    provider: EMAIL_PROVIDER,
+    provider: primary || EMAIL_PROVIDER,
+    preferredProvider: primary,
+    resend: {
+      ready: isResendReady(),
+      from: isResendReady() ? getResendFrom() : null,
+      endpoint: 'https://api.resend.com/emails',
+    },
     emailjs: {
       sender: 'lib/emailjs-server.js',
       endpoint: 'https://api.emailjs.com/api/v1.0/email/send',
       build: process.env.RENDER_GIT_COMMIT ? String(process.env.RENDER_GIT_COMMIT).slice(0, 7) : null,
       mode: 'server-rest',
       restPayloadKeys: ['service_id', 'template_id', 'user_id', 'accessToken', 'template_params'],
-      templateParamKeys: ['to_email', 'name', 'email', 'tier', 'tier_benefits', 'vault_url', 'support_email', 'email_subject'],
+      templateParamKeys: ['to_email', 'name', 'email', 'tier', 'tier_benefits', 'body_html', 'vault_url', 'support_email', 'email_subject'],
       serviceId: getEmailJsConfig().serviceId || null,
       templateId: getEmailJsConfig().templateId || null,
       userIdSet: !!publicKey,
@@ -922,12 +970,12 @@ app.get('/api/email-status', async (req, res) => {
       probe: probe || undefined
     },
     hint: providers.length === 0
-      ? (!getEmailJsPublicKey()
-        ? 'Set EMAILJS_USER_ID (public key) and EMAILJS_PRIVATE_KEY — both required for strict mode'
-        : !privateKeySet
-          ? 'Set EMAILJS_PRIVATE_KEY (sent as REST accessToken)'
-          : 'Set EMAILJS_SERVICE_ID and EMAILJS_TEMPLATE_ID')
-      : `Sending via EmailJS (Gmail: ${process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com'})`
+      ? 'Set RESEND_API_KEY (recommended for drip) or EmailJS keys'
+      : primary === 'resend'
+        ? `Sending via Resend (${getResendFrom()}) — EmailJS template Save not required`
+        : primary === 'emailjs'
+          ? `Sending via EmailJS (Gmail: ${process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com'})`
+          : `Sending via ${primary}`
   });
 });
 
@@ -952,11 +1000,46 @@ app.post('/api/test/welcome', async (req, res) => {
   }
 });
 
-app.post('/api/test/onboarding-day', (req, res) => {
-  return res.status(410).json({
-    ok: false,
-    error: 'Follow-up onboarding emails are disabled. Use POST /api/test/welcome to send the single welcome email.'
-  });
+app.post('/api/test/onboarding-day', async (req, res) => {
+  const pin = String(req.body.pin || req.get('X-Test-Pin') || '');
+  if (!verifyTestPin(pin)) {
+    return res.status(401).json({ ok: false, error: 'Invalid test PIN' });
+  }
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const name = String(req.body.name || 'Test Member').trim();
+  const tier = normalizeTier(req.body.tier);
+  const day = Number(req.body.day);
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ ok: false, error: 'Enter a valid test email address.' });
+  }
+  const { getOnboardingEmailByDay, getTrialReminderEmail } = require('./lib/onboarding-emails');
+  const built = Number.isFinite(day)
+    ? getOnboardingEmailByDay(day, { email, name, tier, trialEndStr: 'Friday, August 21, 2026', daysLeft: 5 })
+    : getTrialReminderEmail(Number(req.body.daysLeft) || 1, { email, name, tier, trialEndStr: 'Tomorrow', daysLeft: 1 });
+  if (!built) {
+    return res.status(400).json({ ok: false, error: 'Unknown day / daysLeft. Use day 0|1|3|7|25 or daysLeft 5|1.' });
+  }
+  try {
+    const delivery = await deliverEmail(email, built.subject, built.html, {
+      name: built.templateParams.name,
+      tier,
+      tierBenefits: built.templateParams.tier_benefits,
+      bodyHtml: built.templateParams.body_html,
+      emailSubject: built.subject,
+      html: built.html,
+    });
+    return res.status(delivery.sent ? 200 : 502).json({
+      ok: Boolean(delivery.sent),
+      emailSent: Boolean(delivery.sent),
+      provider: delivery.provider || null,
+      subject: built.subject,
+      day: built.day,
+      kind: built.kind,
+      error: delivery.error || null,
+    });
+  } catch (err) {
+    return res.status(502).json({ ok: false, emailSent: false, error: err.message });
+  }
 });
 
 app.get('/api/test/logs', (req, res) => {

@@ -19,7 +19,8 @@
 ## Email / onboarding drip
 
 - There is **no activation link**. Accounts work immediately after signup.
-- **Primary path:** EmailJS via the API (`onboardingMode: drip`).
+- **Primary path (recommended):** **Resend** raw HTML — see `docs/EMAIL_RESEND_SETUP.md`. No EmailJS template Save required.
+- **Fallback:** EmailJS (`onboardingMode: drip`) when Resend/SendGrid/SMTP are not configured.
 - **Day 0 welcome** sends on `/api/register`.
 - **Server drip** (hourly in-process + Render cron `gatorvault-api-onboarding-drip`):
   - Day **1** — playbook / activate
@@ -32,14 +33,16 @@
 - Paid members are skipped.
 - Kill switch: `ONBOARDING_DRIP_DISABLED=true`.
 - Optional Beehiiv enroll on register when `BEEHIIV_*` env is set (does not replace the server drip).
-- If EmailJS is misconfigured, signup still succeeds; the app may say welcome email was not sent.
+- If no provider can send, signup still succeeds; the app may say welcome email was not sent.
 
-### EmailJS template (required once)
+### EmailJS template (optional fallback)
 
-Paste `server/emailjs-welcome-template.html` into EmailJS template `template_okh1hj8`:
+If you stay on EmailJS, paste `server/emailjs-welcome-template.html` into `template_okh1hj8`:
 
 - Subject: `{{email_subject}}`
-- Body uses `{{{body_html}}}` (welcome + drip + trial convert + visit digests)
+- Body uses `{{{body_html}}}`
+
+If EmailJS **Save** is broken (their outage), use Resend instead — do not block the drip on their dashboard.
 
 ## Where fans see the clock
 
