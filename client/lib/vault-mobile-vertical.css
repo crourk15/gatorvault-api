@@ -310,15 +310,22 @@
 
   /* ── Schedule / tickets cards ── */
   .gv-vault-shell__main .gv-sched-game-card {
+    box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
     grid-template-columns: unset !important;
     gap: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
   }
 
   .gv-vault-shell__main .gv-sched-game-card__center,
   .gv-vault-shell__main .gv-sched-game-card__right {
+    box-sizing: border-box;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   /* Recruiting Hub: single-column intel on mobile only */

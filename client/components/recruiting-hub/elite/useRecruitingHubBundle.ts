@@ -17,7 +17,10 @@ import { initGvHydrate } from '@/lib/gv-hydrate';
 import '@/lib/recruiting-hub-window';
 
 const HUB_BUNDLE_CACHE_PREFIX = 'gv_hub_bundle_v1';
-const HUB_BUNDLE_CACHE_TTL_MS = 30 * 60 * 1000;
+/** Keep session paint snappy, but don't leave the board stale for half an hour. */
+const HUB_BUNDLE_CACHE_TTL_MS = 3 * 60 * 1000;
+/** Soft live refresh while the hub tab stays open (FutureCast Lab parity). */
+const HUB_SOFT_POLL_MS = 90_000;
 const HUB_AUTO_RETRY_MS = 8_000;
 const HUB_AUTO_RETRY_MAX = 6;
 
@@ -171,6 +174,15 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
       cancelled = true;
     };
   }, [year, reloadToken]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const pollId = window.setInterval(() => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+      setReloadToken((token) => token + 1);
+    }, HUB_SOFT_POLL_MS);
+    return () => window.clearInterval(pollId);
+  }, [year]);
 
   return { data, loading, warming, error, reload };
 }

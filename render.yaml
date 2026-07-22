@@ -348,9 +348,24 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
+  # Light On3 + hub rebuild every 20m so new board names land without waiting on the 2h heavy cron.
+  - type: cron
+    name: gatorvault-api-recruiting-light
+    schedule: "*/20 * * * *"
+    runtime: node
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-recruiting-light-cron.js
+    envVars:
+      - key: NEXT_PUBLIC_API_BASE
+        value: https://gatorvault-api.onrender.com
+      - key: MONITORING_CRON_SECRET
+        sync: false
+
   - type: cron
     name: gatorvault-api-hub-refresh
-    schedule: "15 * * * *"
+    schedule: "*/30 * * * *"
     runtime: node
     region: oregon
     rootDir: server
@@ -463,7 +478,8 @@ services:
 
   - type: cron
     name: gatorvault-api-on3-rpm-allowlist-sync
-    schedule: "30 15 * * *"
+    # Every 4h — board UF% / competitor RPM should not wait a full day.
+    schedule: "30 */4 * * *"
     runtime: node
     region: oregon
     rootDir: server
