@@ -1,7 +1,51 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-11T11:29:04.183Z",
+  "updatedAt": "2026-07-22T12:46:10.000Z",
   "items": [
+    {
+      "id": "olog_kaydan-whiteside_florida_2026-07-01",
+      "playerSlug": "kaydan-whiteside",
+      "playerName": "Kaydan Whiteside",
+      "school": "Florida",
+      "date": "2026-07-01",
+      "source": "beat:tyler-harden",
+      "fingerprint": "offer|kaydan-whiteside|florida|2026-07-01",
+      "reportedAt": "2026-07-22T12:46:10.000Z",
+      "detail": "Florida among most recent offers; Gators trending upward."
+    },
+    {
+      "id": "olog_jordyn-murray_florida_2026-04-01",
+      "playerSlug": "jordyn-murray",
+      "playerName": "Jordyn Murray",
+      "school": "Florida",
+      "date": "2026-04-01",
+      "source": "beat:corey-bender",
+      "fingerprint": "offer|jordyn-murray|florida|2026-04-01",
+      "reportedAt": "2026-07-22T12:45:03.000Z",
+      "detail": "Florida involved since spring; recruiting hard (Corey Bender)."
+    },
+    {
+      "id": "olog_lorenzo-mcmullen-jr_florida_2026-06-19",
+      "playerSlug": "lorenzo-mcmullen-jr",
+      "playerName": "Lorenzo McMullen Jr.",
+      "school": "Florida",
+      "date": "2026-06-19",
+      "source": "beat:corey-bender",
+      "fingerprint": "offer|lorenzo-mcmullen-jr|florida|2026-06-19",
+      "reportedAt": "2026-07-22T12:45:03.000Z",
+      "detail": "UF major 2028 WR push / priority (Corey Bender)."
+    },
+    {
+      "id": "olog_nikolay-petrushev_florida_2026-06-01",
+      "playerSlug": "nikolay-petrushev",
+      "playerName": "Nikolay Petrushev",
+      "school": "Florida",
+      "date": "2026-06-01",
+      "source": "beat:corey-bender",
+      "fingerprint": "offer|nikolay-petrushev|florida|2026-06-01",
+      "reportedAt": "2026-07-22T12:45:03.000Z",
+      "detail": "Florida offered after Friday Night Lights (June)."
+    },
     {
       "id": "olog_rashaad-silver_2026-07-11",
       "playerSlug": "rashaad-silver",

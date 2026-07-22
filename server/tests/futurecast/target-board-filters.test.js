@@ -48,6 +48,70 @@ test('filterAllowlistedTargets drops Hyppolite-style Miami commits', () => {
   assert.ok(slugs.includes('jalen-brewster'));
 });
 
+test('filterAllowlistedTargets keeps Brewster flip watch after Texas Tech commit', () => {
+  const { FLIP_WATCH_2027 } = require('../../lib/recruiting-target-allowlist');
+  assert.ok(FLIP_WATCH_2027.includes('jalen-brewster'));
+  const targets = filterAllowlistedTargets(
+    [
+      {
+        slug: 'jalen-brewster',
+        name: 'Jalen Brewster',
+        classYear: 2027,
+        category: 'target',
+        status: 'committed',
+        committedTo: 'Texas Tech',
+        flipWatch: true,
+      },
+      {
+        slug: 'adryan-cole',
+        name: 'Adryan Cole',
+        classYear: 2027,
+        category: 'target',
+        status: 'committed',
+        committedTo: 'Georgia',
+      },
+      {
+        slug: 'elijah-guertin',
+        name: 'Elijah Guertin',
+        classYear: 2027,
+        category: 'target',
+        status: 'committed',
+        committedTo: 'Penn State',
+      },
+    ],
+    2027
+  );
+  const slugs = targets.map((p) => p.slug);
+  assert.deepEqual(slugs, ['jalen-brewster']);
+});
+
+test('getAllowlistSet(2027) does not merge Lab soft-visit promotions', () => {
+  const path = require('path');
+  const fs = require('fs');
+  const os = require('os');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-lab-2027-'));
+  const prev = process.env.GV_LAB_PROMOTIONS_PATH;
+  process.env.GV_LAB_PROMOTIONS_PATH = path.join(tmp, 'lab-promotions.json');
+  delete require.cache[require.resolve('../../lib/lab-promotions-store')];
+  delete require.cache[require.resolve('../../lib/recruiting-target-allowlist')];
+  const promotions = require('../../lib/lab-promotions-store');
+  promotions.upsertStage('lab', {
+    slug: 'soft-visit-noise',
+    name: 'Soft Visit Noise',
+    classYear: 2027,
+    reasons: ['florida_visit'],
+    sources: ['visit_log'],
+  });
+  const allowlist = require('../../lib/recruiting-target-allowlist');
+  assert.equal(allowlist.getAllowlistSet(2027).has('soft-visit-noise'), false);
+  assert.equal(allowlist.getAllowlistSet(2027).has('jalen-brewster'), true);
+  if (prev == null) delete process.env.GV_LAB_PROMOTIONS_PATH;
+  else process.env.GV_LAB_PROMOTIONS_PATH = prev;
+  delete require.cache[require.resolve('../../lib/lab-promotions-store')];
+  delete require.cache[require.resolve('../../lib/recruiting-target-allowlist')];
+  fs.rmSync(tmp, { recursive: true, force: true });
+});
+
 test('filterAllowlistedTargets keeps 2027 live UF board rows beyond Charles allowlist', () => {
   const targets = filterAllowlistedTargets(
     [

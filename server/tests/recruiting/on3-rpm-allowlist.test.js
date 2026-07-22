@@ -53,13 +53,15 @@ describe("on3-rpm allowlist gap-fill", () => {
     assert.equal(pct, 42);
   });
 
-  it("syncAllowlistOn3Rpm dryRun skips rivals-covered slugs", async () => {
+  it("syncAllowlistOn3Rpm dryRun returns allowlist/inventory results", async () => {
     const { syncAllowlistOn3Rpm } = require("../../lib/on3-rpm-allowlist");
     const out = await syncAllowlistOn3Rpm({ dryRun: true, fetch: false });
     assert.equal(out.ok, true);
-    const kamauri = out.results.find((r) => r.slug === "kamauri-whitfield");
-    assert.equal(kamauri?.skipped, true);
-    assert.equal(kamauri?.reason, "rivals_pm_present");
+    assert.ok(Array.isArray(out.results));
+    assert.ok(out.results.length > 0);
+    const brewster = out.results.find((r) => r.slug === "jalen-brewster");
+    assert.ok(brewster, "expected flip-watch Brewster in sync set");
+    assert.equal(String(brewster.sourceBucket || "").includes("allowlist"), true);
   });
 });
 

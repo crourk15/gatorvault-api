@@ -37,16 +37,18 @@ describe('lab-intel-promote', () => {
     const saved = promotions.upsertStage('lab', {
       slug: 'new-florida-target',
       name: 'New Florida Target',
-      classYear: 2027,
+      classYear: 2028,
       reasons: ['florida_offer'],
       sources: ['offer_log'],
     });
     assert.equal(saved.ok, true);
-    assert.equal(promotions.getLabSlugSet(2027).has('new-florida-target'), true);
+    assert.equal(promotions.getLabSlugSet(2028).has('new-florida-target'), true);
 
     delete require.cache[require.resolve('../../lib/recruiting-target-allowlist')];
     const allowlist = require('../../lib/recruiting-target-allowlist');
-    assert.equal(allowlist.getAllowlistSet(2027).has('new-florida-target'), true);
+    // 2028 still merges Lab promotions; Closing Class 2027 does not.
+    assert.equal(allowlist.getAllowlistSet(2028).has('new-florida-target'), true);
+    assert.equal(allowlist.getAllowlistSet(2027).has('new-florida-target'), false);
   });
 
   it('decideStage requires verifiable Florida involvement', () => {
@@ -165,6 +167,77 @@ describe('lab-intel-promote', () => {
     assert.equal(signals.hasVisit, true);
     assert.ok(signals.reasons.includes('on3_rpm'));
     assert.equal(decideStage(signals), 'lab');
+  });
+
+  it('loads Florida visit/offer slugs beyond the old 500-row window', () => {
+    const prevVisit = process.env.RECRUITING_TEST_DATA_DIR;
+    // visit + offer stores share RECRUITING_TEST_DATA_DIR
+    const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-signal-logs-'));
+    process.env.RECRUITING_TEST_DATA_DIR = dataDir;
+
+    const visitItems = [];
+    for (let i = 0; i < 600; i += 1) {
+      visitItems.push({
+        playerSlug: `filler-visit-${i}`,
+        school: 'Florida',
+        visitType: 'unofficial_visit',
+        date: `2026-07-${String((i % 28) + 1).padStart(2, '0')}`,
+        reportedAt: `2026-07-22T12:${String(i % 60).padStart(2, '0')}:00.000Z`,
+        source: 'on3',
+      });
+    }
+    // Older than the newest 500 — previously invisible to Lab promote.
+    visitItems.push({
+      playerSlug: 'lorenzo-mcmullen-jr',
+      school: 'Florida',
+      visitType: 'unofficial_visit',
+      date: '2026-06-19',
+      reportedAt: '2026-06-19T12:00:00.000Z',
+      source: 'on3',
+    });
+    fs.writeFileSync(
+      path.join(dataDir, 'visit_logs.json'),
+      JSON.stringify({ version: 1, updatedAt: null, items: visitItems })
+    );
+
+    const offerItems = [];
+    for (let i = 0; i < 600; i += 1) {
+      offerItems.push({
+        playerSlug: `filler-offer-${i}`,
+        school: 'Florida',
+        date: `2026-07-${String((i % 28) + 1).padStart(2, '0')}`,
+        reportedAt: `2026-07-22T11:${String(i % 60).padStart(2, '0')}:00.000Z`,
+        source: 'on3',
+      });
+    }
+    offerItems.push({
+      playerSlug: 'nikolay-petrushev',
+      school: 'Florida',
+      date: '2026-06-01',
+      reportedAt: '2026-06-01T12:00:00.000Z',
+      source: 'beat:corey-bender',
+    });
+    fs.writeFileSync(
+      path.join(dataDir, 'offer_logs.json'),
+      JSON.stringify({ version: 1, updatedAt: null, items: offerItems })
+    );
+
+    delete require.cache[require.resolve('../../lib/recruiting-visit-log-store')];
+    delete require.cache[require.resolve('../../lib/recruiting-offer-log-store')];
+    delete require.cache[require.resolve('../../lib/lab-intel-promote')];
+    const {
+      loadFloridaVisitSlugs,
+      loadFloridaOfferSlugs,
+    } = require('../../lib/lab-intel-promote');
+
+    const visits = loadFloridaVisitSlugs();
+    const offers = loadFloridaOfferSlugs();
+    assert.equal(visits.has('lorenzo-mcmullen-jr'), true);
+    assert.equal(offers.has('nikolay-petrushev'), true);
+
+    if (prevVisit == null) delete process.env.RECRUITING_TEST_DATA_DIR;
+    else process.env.RECRUITING_TEST_DATA_DIR = prevVisit;
+    fs.rmSync(dataDir, { recursive: true, force: true });
   });
 
   it('promoteResolvedPredictionToRadar dryRun is watchlist without visit', async () => {

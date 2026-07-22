@@ -19,24 +19,6 @@
       "status": "uncommitted"
     },
     {
-      "slug": "adryan-cole",
-      "name": "Adryan Cole",
-      "pos": "S",
-      "school": "Douglas County (Douglasville, GA)",
-      "htWt": "6-2 / 190",
-      "stars": 4,
-      "rating": 90,
-      "natlRank": null,
-      "posRank": 27,
-      "stateRank": 26,
-      "classYear": 2027,
-      "recruit247Id": "46146427",
-      "profileUrl": "https://247sports.com/Player/adryan-cole-46146427/",
-      "inState": false,
-      "committedTo": null,
-      "status": "uncommitted"
-    },
-    {
       "slug": "monshun-sales",
       "name": "Monshun Sales",
       "pos": "WR",
@@ -1189,8 +1171,27 @@
       "inState": false,
       "committedTo": "Florida",
       "status": "committed"
+    },
+    {
+      "slug": "adryan-cole",
+      "name": "Adryan Cole",
+      "pos": "S",
+      "school": "Douglas County (Douglasville, GA)",
+      "htWt": "6-2 / 190",
+      "stars": 4,
+      "rating": 90,
+      "natlRank": null,
+      "posRank": 27,
+      "stateRank": 26,
+      "classYear": 2027,
+      "recruit247Id": "46146427",
+      "profileUrl": "https://247sports.com/Player/adryan-cole-46146427/",
+      "inState": false,
+      "committedTo": "Georgia",
+      "status": "committed"
     }
   ],
-  "fetchedAt": "2026-07-15T01:33:40.710Z",
-  "sourceUrl": "https://247sports.com/college/florida/Season/2027-Football/Targets/"
+  "fetchedAt": "2026-07-22T12:52:27.000Z",
+  "sourceUrl": "https://247sports.com/college/florida/Season/2027-Football/Targets/",
+  "note": "Adryan Cole forced to Georgia commit (owner/beat) \u2014 247 open list was stale."
 }
