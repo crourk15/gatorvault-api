@@ -384,8 +384,15 @@ async function loadHubDatasetOnce(options = {}) {
         isTarget: true,
       });
     } else if (classYears.includes(Number(p.classYear)) && p.isTarget && !p.isCommittedToUF) {
+      const year = Number(p.classYear);
+      // Closing Class / underclassmen: only Charles allowlist targets count as hub targets.
+      // Durable isTarget flags from old offer-list dumps must not re-enter the dataset.
+      if (year === 2027 || year === 2028) {
+        const { canonicalTargetSlug } = require('./recruiting-target-allowlist');
+        if (!getAllowlistSet(year).has(canonicalTargetSlug(slug))) continue;
+      }
       addPlayer(merged, {
-        classYear: Number(p.classYear),
+        classYear: year,
         isCommit: false,
         isTarget: true,
       });
@@ -485,6 +492,7 @@ function buildHeatIndexRows(enrichedPlayers) {
       (p) =>
         !p.isCommit &&
         !p.ufPredictionSuppressed &&
+        isHuntListBattleEligible(p) &&
         (p.tier === 'TOP' || p.tier === 'HIGH' || (p.ufScore != null && p.ufScore >= 34))
     )
     .map((player) => ({
@@ -506,7 +514,14 @@ function buildHeatIndexRows(enrichedPlayers) {
 
 function buildBattlesListRows(enrichedPlayers) {
   const battles = enrichedPlayers
-    .filter((p) => !p.isCommit && !p.ufPredictionSuppressed && p.ufScore != null && p.ufScore >= 34)
+    .filter(
+      (p) =>
+        !p.isCommit &&
+        !p.ufPredictionSuppressed &&
+        isHuntListBattleEligible(p) &&
+        p.ufScore != null &&
+        p.ufScore >= 34
+    )
     .map((player) => {
       const note = player.notePreview ?? player.notes ?? player.skinny ?? null;
       if (!note || !String(note).trim()) return null;
@@ -902,6 +917,10 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
     const meta = resolveFeedMeta(slug, pool, rawMap);
     if (!meta) continue;
     if (focusYear != null && Number(meta.classYear) !== focusYear) continue;
+    // Closing Class / underclassmen movement: hunt-list only (UF commits added below).
+    if ((focusYear === 2027 || focusYear === 2028) && !getAllowlistSet(focusYear).has(slug)) {
+      continue;
+    }
     const playerCtx = { ...(rawMap.get(slug) || {}), ...(meta || {}), slug };
     const filtered = filterMovementIntelForPlayer([row], playerCtx);
     if (!filtered.length) continue;
@@ -957,6 +976,12 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
   for (const meta of pool.values()) {
     if (meta.isCommit) continue;
     if (focusYear != null && Number(meta.classYear) !== focusYear) continue;
+    if (
+      (focusYear === 2027 || focusYear === 2028) &&
+      !getAllowlistSet(focusYear).has(String(meta.slug || '').toLowerCase())
+    ) {
+      continue;
+    }
     if (covered.has(meta.slug)) continue;
     const raw = rawMap.get(String(meta.slug).toLowerCase()) || {};
     const merged = { ...raw, ...meta };
@@ -1102,7 +1127,20 @@ function buildFootprintPayload(enrichedPlayers, intelRows, logs = {}) {
     );
 
     const isCommit = player.isCommit || player.isCommittedToUF;
-    const isTarget = !isCommit && (player.isTarget || player.isPortal);
+    const year = Number(player.classYear);
+    const onHuntList =
+      year !== 2027 && year !== 2028
+        ? Boolean(player.isTarget || player.isPortal)
+        : (() => {
+            try {
+              const { canonicalTargetSlug } = require('./recruiting-target-allowlist');
+              return getAllowlistSet(year).has(canonicalTargetSlug(player.slug || player.id));
+            } catch {
+              return false;
+            }
+          })();
+    // Footprint "targets" = hunt-list battles only — never every recruit with a pin.
+    const isTarget = !isCommit && onHuntList;
 
     if (isCommit) bucket.commits += 1;
     if (isTarget) bucket.targets += 1;
@@ -1137,6 +1175,9 @@ function buildFootprintPayload(enrichedPlayers, intelRows, logs = {}) {
     if (competitorScore != null) bucket.competitorScores.push(competitorScore);
 
     const trend = player.trend || 'flat';
+
+    // Skip generic recruits from footprint pins/topPlayers — commits + hunt targets only.
+    if (!isCommit && !isTarget) continue;
 
     bucket.playerRecords.push({
       id: player.slug,

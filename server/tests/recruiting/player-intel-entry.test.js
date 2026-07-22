@@ -17,7 +17,9 @@ test('parseOfferFlag detects UF offer variants', () => {
 
 test('placementForClassYear routes to correct sections', () => {
   assert.equal(placementForClassYear(2027).section, 'master-board');
+  assert.equal(placementForClassYear(2027).allowlist, false, '2027 Closing Class is hard-locked');
   assert.equal(placementForClassYear(2028).section, 'master-board');
+  assert.equal(placementForClassYear(2028).allowlist, true);
   assert.equal(placementForClassYear(2029).section, 'underclassmen-watchboard');
 });
 

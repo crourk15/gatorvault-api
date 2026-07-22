@@ -118,9 +118,22 @@ async function loadHubRecruitingPool() {
       continue;
     }
     if (HUB_CLASS_YEARS.includes(year) && player.isTarget && !player.isCommittedToUF) {
-      if (!pool.has(String(player.slug).toLowerCase())) {
-        pool.set(String(player.slug).toLowerCase(), normalizePoolPlayer(player, year, 'target'));
+      const slug = String(player.slug).toLowerCase();
+      if (pool.has(slug)) continue;
+      // Closing Class / underclassmen: board getBoard() already filtered — do not
+      // re-admit durable isTarget offer-list junk into the movement pool.
+      if (year === 2027 || year === 2028) {
+        try {
+          const {
+            getAllowlistSet,
+            canonicalTargetSlug,
+          } = require('./recruiting-target-allowlist');
+          if (!getAllowlistSet(year).has(canonicalTargetSlug(slug))) continue;
+        } catch {
+          continue;
+        }
       }
+      pool.set(slug, normalizePoolPlayer(player, year, 'target'));
     }
   }
 

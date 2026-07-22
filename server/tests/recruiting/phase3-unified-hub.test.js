@@ -174,16 +174,28 @@ describe('Phase 3 unified hub data', () => {
       ),
       enrichHubPlayer(
         {
-          slug: 'battle-target',
-          name: 'Battle Target',
+          // Must be on Closing Class hunt list — battles are hunt-gated for 2027.
+          slug: 'tranard-roberts',
+          name: 'Tranard Roberts',
           classYear: 2027,
           ufProbability: 48,
           skinny: '4★ WR · official visit scheduled',
         },
         { intelRows: [], visitLogs: [], offerLogs: [] }
       ),
+      enrichHubPlayer(
+        {
+          slug: 'offer-list-noise',
+          name: 'Offer List Noise',
+          classYear: 2027,
+          ufProbability: 55,
+          skinny: 'should not appear — not on hunt list',
+        },
+        { intelRows: [], visitLogs: [], offerLogs: [] }
+      ),
     ]);
     assert.equal(rows.length, 1);
+    assert.equal(rows[0].id, 'tranard-roberts');
     assert.equal(rows[0].ufPercent, '48%');
     assert.match(rows[0].note, /official visit/i);
   });
