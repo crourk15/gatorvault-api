@@ -307,6 +307,52 @@ function getDay0Email(opts) {
   return getWelcomeEmail(opts);
 }
 
+function paidMembershipBodyHtml({ name, email, tier, expiresAtStr } = {}) {
+  const displayName = displayNameFrom({ name, email });
+  const tierLabel = getTierLabel(tier);
+  const benefits = getTierBenefitsHtml(tier);
+  const renewLine = expiresAtStr
+    ? `Your current period runs through <strong>${expiresAtStr}</strong>. Apple renews automatically unless you cancel at least 24 hours before the period ends.`
+    : 'Apple renews automatically unless you cancel at least 24 hours before the period ends.';
+
+  return `
+  <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">Hey ${displayName},</p>
+  <p style="margin:0 0 20px;font-size:15px;line-height:1.6;">You're in — your <strong>${tierLabel}</strong> membership is active. Same email unlocks the full vault on web and in the GatorVault iOS app.</p>
+  <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">What's unlocked</p>
+  <ul style="margin:0 0 20px;padding-left:20px;">${benefits}</ul>
+  <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Open your vault</p>
+  ${ctaButton(VAULT_URL, VAULT_LINK_LABEL)}
+  <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.55;">${VAULT_URL_DISPLAY}</p>
+  <p style="margin:0 0 20px;font-size:14px;line-height:1.6;">${renewLine}</p>
+  <p style="margin:0 0 8px;font-size:14px;line-height:1.55;">Manage or cancel anytime in iPhone Settings → Apple ID → Subscriptions, or from Membership in the app.</p>
+  <p style="margin:16px 0 0;font-size:14px;color:#94a3b8;line-height:1.6;">— GatorVault Media, LLC</p>`;
+}
+
+function getPaidMembershipConfirmationEmail(opts = {}) {
+  const subject = 'Your GatorVault membership is active';
+  const bodyInner = paidMembershipBodyHtml(opts);
+  const html = emailShell(bodyInner);
+  const tierLabel = getTierLabel(opts.tier);
+  return {
+    kind: 'paid_confirm',
+    subject,
+    html,
+    tier: tierLabel,
+    templateParams: {
+      name: displayNameFrom(opts),
+      email: opts.email || '',
+      tier: tierLabel,
+      tier_benefits: getTierBenefitsHtml(opts.tier),
+      body_html: bodyInner,
+      vault_url: VAULT_URL,
+      vault_link_label: VAULT_LINK_LABEL,
+      vault_url_display: VAULT_URL_DISPLAY,
+      support_email: SUPPORT_EMAIL,
+      email_subject: subject,
+    },
+  };
+}
+
 module.exports = {
   WELCOME_SUBJECT,
   SITE_URL,
@@ -325,6 +371,10 @@ module.exports = {
   getDay0Email,
   getOnboardingEmailByDay,
   getTrialReminderEmail,
+  getPaidMembershipConfirmationEmail,
   onboardingEmailHtml,
   buildEmailPayload,
+  emailShell,
+  ctaButton,
+  displayNameFrom,
 };

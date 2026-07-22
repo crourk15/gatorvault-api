@@ -434,6 +434,21 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
+  # Weekly fan digest — beat + recruiting movement + verified visits (Monday ~15:00 UTC).
+  - type: cron
+    name: gatorvault-api-fan-digest-weekly
+    schedule: "0 15 * * 1"
+    runtime: node
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-fan-digest-cron.js
+    envVars:
+      - key: FAN_DIGEST_WEEKLY_URL
+        value: https://gatorvault-api.onrender.com/api/fan-digest/weekly
+      - key: MONITORING_CRON_SECRET
+        sync: false
+
   # Film Room YouTube auto-ingest — Florida Gators football pressers + GNFP reviews.
   - type: cron
     name: gatorvault-api-film-room-youtube-sync

@@ -160,7 +160,17 @@ mountInterviewsRoutes(app);
 mountMediaIngestRoutes(app);
 mountWarRoomRoutes(app);
 mountPlatformRoutes(app);
-mountSubscriptionRoutes(app);
+/** Bound after deliverEmail is defined — subscription confirm emails use the same Resend path. */
+const subscriptionMail = {
+  deliverEmail: async (...args) => {
+    if (typeof subscriptionMail._impl !== 'function') {
+      return { sent: false, provider: null, error: 'Email deliverer not ready' };
+    }
+    return subscriptionMail._impl(...args);
+  },
+  _impl: null,
+};
+mountSubscriptionRoutes(app, { deliverEmail: (...args) => subscriptionMail.deliverEmail(...args) });
 mountPushAlertRoutes(app);
 mountAlertEmailRoutes(app);
 mountAccountRoutes(app);
@@ -440,6 +450,8 @@ async function deliverEmail(to, subject, html, templateParams = {}) {
   pushEmailLog({ level: 'error', message: msg, detail: { to }, source: 'deliver' });
   return { sent: false, provider: null, error: msg, attempts };
 }
+
+subscriptionMail._impl = deliverEmail;
 
 const { getWelcomeEmail, ONBOARDING_SEQUENCE } = require('./lib/onboarding-emails');
 const { startOnboardingScheduler } = require('./lib/onboarding-scheduler');
@@ -838,9 +850,34 @@ app.post('/api/onboarding/process', async (req, res) => {
   }
 });
 
+app.post('/api/fan-digest/weekly', async (req, res) => {
+  try {
+    const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.CRON_SECRET || '';
+    const header = String(req.get('x-monitoring-cron') || req.get('x-cron-secret') || '');
+    if (!cronSecret || header !== cronSecret) {
+      return res.status(401).json({ ok: false, error: 'Unauthorized' });
+    }
+    const { processFanDigestWeekly, digestEnabled } = require('./lib/fan-digest');
+    const dryRun = Boolean(req.body?.dryRun);
+    const force = Boolean(req.body?.force);
+    const result = await processFanDigestWeekly({
+      loadUsers,
+      saveUsers,
+      deliverEmail,
+      dryRun,
+      force,
+    });
+    return res.json({ ok: true, enabled: digestEnabled(), ...result });
+  } catch (err) {
+    console.error('fan digest weekly error', err);
+    return res.status(500).json({ ok: false, error: err.message || 'Fan digest failed' });
+  }
+});
+
 app.get('/api/version', (req, res) => {
   const commit = process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev';
   const { shouldUseServerScheduler } = require('./lib/onboarding-scheduler');
+  const { digestEnabled } = require('./lib/fan-digest');
   return res.json({
     ok: true,
     build: commit,
@@ -853,6 +890,8 @@ app.get('/api/version', (req, res) => {
       welcomeEmailOnly: false,
       onboardingDrip: true,
       trialConvertEmails: true,
+      paidMembershipConfirmEmail: true,
+      weeklyFanDigest: digestEnabled(),
       articleSourceValidation: true,
       scoutingTeasers: true
     },

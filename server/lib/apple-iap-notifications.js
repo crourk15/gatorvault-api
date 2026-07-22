@@ -159,6 +159,7 @@ function handleAppleServerNotification(signedPayload, options = {}) {
       action: 'activated',
       email: user.email,
       type,
+      subtype,
       verified: verify,
       trustedRoot: Boolean(chain?.trustedRoot),
     };

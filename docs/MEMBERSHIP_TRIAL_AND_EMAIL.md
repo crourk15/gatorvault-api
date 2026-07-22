@@ -35,6 +35,21 @@
 - Optional Beehiiv enroll on register when `BEEHIIV_*` env is set (does not replace the server drip).
 - If no provider can send, signup still succeeds; the app may say welcome email was not sent.
 
+## Paid membership confirmation
+
+- Sent **once** after the first successful Apple IAP verify/restore (or admin grant / ASSN `SUBSCRIBED` / `OFFER_REDEEMED`).
+- Not sent on every `DID_RENEW`.
+- Idempotency flag on the user: `paidConfirmationSentAt`.
+- Same Resend-first `deliverEmail` path as onboarding.
+
+## Weekly fan digest
+
+- Monday Render cron `gatorvault-api-fan-digest-weekly` → `POST /api/fan-digest/weekly`.
+- Content: beat intel + recruiting movement + verified visit recap.
+- Recipients: active trial or paid members who have not set `fanDigestOptOut: true`.
+- Kill switch: `FAN_DIGEST_DISABLED=true`.
+- Per-week state in `server/data/ops/fan-digest-state.json`; per-user `fanDigestLastWeekKey`.
+
 ### EmailJS template (optional fallback)
 
 If you stay on EmailJS, paste `server/emailjs-welcome-template.html` into `template_okh1hj8`:
