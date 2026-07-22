@@ -894,6 +894,21 @@ body.gv-film-page-active .gv-vault-shell__main {
   min-height: 44px;
 }
 
+.gv-alert-save-btn + .gv-alert-save-btn {
+  margin-top: 0.5rem;
+}
+
+.gv-alert-save-btn--secondary {
+  background: transparent;
+  color: #0021a5;
+  border: 1px solid rgba(0, 33, 165, 0.28);
+}
+
+.gv-alert-save-btn--secondary:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
 .gv-vault-alerts__feed-header {
   display: flex;
   align-items: center;

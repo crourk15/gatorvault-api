@@ -26,7 +26,11 @@ function authHeaders(): HeadersInit {
   return headers;
 }
 
-async function postDeviceToken(token: string, prefs: AlertPushPrefs) {
+async function postDeviceToken(
+  token: string,
+  prefs: AlertPushPrefs,
+  options: { confirm?: boolean } = {}
+) {
   const res = await fetch(`${getApiBase()}/api/push/device`, {
     method: 'POST',
     headers: authHeaders(),
@@ -34,6 +38,8 @@ async function postDeviceToken(token: string, prefs: AlertPushPrefs) {
       token,
       platform: 'ios',
       prefs,
+      // Default true: Save Preferences proves APNs on existing App Store builds.
+      confirm: options.confirm !== false,
     }),
   });
   if (res.status === 401) return { ok: false as const, reason: 'sign_in' };
@@ -66,7 +72,8 @@ async function ensureRegistrationListeners(
 }
 
 export async function registerNativePush(
-  prefs: AlertPushPrefs
+  prefs: AlertPushPrefs,
+  options: { confirm?: boolean } = {}
 ): Promise<{ ok: boolean; reason?: string }> {
   try {
     const { PushNotifications } = await import('@capacitor/push-notifications');
@@ -88,7 +95,7 @@ export async function registerNativePush(
     });
 
     await initNativePushTapHandler();
-    return postDeviceToken(token, prefs);
+    return postDeviceToken(token, prefs, options);
   } catch {
     return { ok: false, reason: 'unsupported' };
   }

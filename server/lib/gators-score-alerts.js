@@ -7,7 +7,15 @@ const path = require('path');
 const fetch = require('node-fetch');
 const { dispatchScorePush } = require('./push-alert-service');
 
-const STATE_PATH = path.join(__dirname, '../data/ops/gators-score-alert-state.json');
+function resolveStatePath() {
+  const fromEnv = String(process.env.GV_OPS_DATA_DIR || process.env.GV_LIVE_DATA_DIR || '').trim();
+  if (fromEnv) {
+    return path.join(fromEnv, 'gators-score-alert-state.json');
+  }
+  return path.join(__dirname, '../data/ops/gators-score-alert-state.json');
+}
+
+const STATE_PATH = resolveStatePath();
 const PREGAME_HOURS = 3;
 const POSTGAME_HOURS = 5;
 const FLORIDA_TEAM_ID = '57';

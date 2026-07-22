@@ -138,6 +138,13 @@ describe("commit and score payloads", () => {
     assert.equal(fin.type, "score_final");
     assert.match(fin.body, /31/);
   });
+
+  it("builds test confirm payload for phone QA", () => {
+    const { buildTestPayload } = require("../../lib/push-alert-service");
+    const payload = buildTestPayload("confirm");
+    assert.match(payload.title, /connected|GatorVault/i);
+    assert.match(payload.body, /lock-screen|alerts/i);
+  });
 });
 
 describe("gators-score-alerts window", () => {

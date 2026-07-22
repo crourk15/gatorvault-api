@@ -409,7 +409,7 @@ const JOBS = {
   'gators-score-alerts': {
     label: 'UF kickoff/final score push alerts (game window only)',
     subsystem: 'cron:gators-score-alerts',
-    schedule: 'Every 2 min during season (idle outside UF windows)',
+    schedule: 'Every 3 min during season (idle outside UF windows)',
     async run(opts = {}) {
       const { runGatorsScoreAlerts } = require('./gators-score-alerts');
       return runGatorsScoreAlerts({
@@ -417,6 +417,23 @@ const JOBS = {
         force: opts.force === true,
         kind: opts.kind,
         asOf: opts.asOf,
+      });
+    }
+  },
+  'push-alert-test': {
+    label: 'Send test lock-screen push to one member email',
+    subsystem: 'ops:push-alert-test',
+    schedule: 'Manual',
+    async run(opts = {}) {
+      const email = String(opts.email || '').trim().toLowerCase();
+      if (!email) return { ok: false, error: 'email required' };
+      const { dispatchTestPushToEmail } = require('./push-alert-service');
+      return dispatchTestPushToEmail(email, {
+        kind: opts.kind || 'confirm',
+        dryRun: opts.dryRun === true,
+        fingerprint: opts.force
+          ? `push_test_force|${email}|${opts.kind || 'confirm'}|${Date.now()}`
+          : undefined,
       });
     }
   },

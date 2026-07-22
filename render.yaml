@@ -502,24 +502,11 @@ services:
     buildCommand: npm install
     startCommand: node scripts/render-gators-score-alerts-cron.js
     envVars:
-      - key: SITE_URL
-        value: https://gatorvaultinsider.com
-      - key: PUSH_ALERTS_ENABLED
-        value: "true"
-      - key: VAPID_PUBLIC_KEY
+      # Runs score dispatch on the web service (shared APNs token store + membership).
+      - key: NEXT_PUBLIC_API_BASE
+        value: https://gatorvault-api.onrender.com
+      - key: MONITORING_CRON_SECRET
         sync: false
-      - key: VAPID_PRIVATE_KEY
-        sync: false
-      - key: APNS_KEY_ID
-        sync: false
-      - key: APNS_TEAM_ID
-        sync: false
-      - key: APNS_BUNDLE_ID
-        value: com.gatorvaultinsider.app
-      - key: APNS_KEY_P8
-        sync: false
-      - key: APNS_PRODUCTION
-        value: "true"
 
   - type: cron
     name: gatorvault-api-uf-trend-snapshot
