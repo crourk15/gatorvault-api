@@ -382,7 +382,7 @@
       "stateRank": null,
       "stars": 4,
       "htWt": "6-2 / 175",
-      "skinny": "2028 4-star S — Blountstown. UF daily contact + early On3 RPM momentum (Alderman)."
+      "skinny": "2028 4-star S \u2014 Blountstown. UF daily contact + early On3 RPM momentum (Alderman)."
     },
     {
       "slug": "cassell-cruickshank",
@@ -398,7 +398,7 @@
       "stateRank": 2,
       "stars": 4,
       "htWt": "6-5 / 217",
-      "skinny": "4★ EDGE · #14 natl · E E Smith, NC"
+      "skinny": "4\u2605 EDGE \u00b7 #14 natl \u00b7 E E Smith, NC"
     },
     {
       "slug": "john-matthews",
@@ -442,7 +442,7 @@
       "stateRank": 15,
       "stars": 4,
       "htWt": "6-1 / 205",
-      "skinny": "4★ RB · #108 natl · The Bolles School, FL"
+      "skinny": "4\u2605 RB \u00b7 #108 natl \u00b7 The Bolles School, FL"
     },
     {
       "slug": "merrick-ham",
@@ -458,7 +458,7 @@
       "stateRank": 14,
       "stars": 4,
       "htWt": "6-6 / 230",
-      "skinny": "4★ EDGE · #102 natl · Marietta, GA"
+      "skinny": "4\u2605 EDGE \u00b7 #102 natl \u00b7 Marietta, GA"
     },
     {
       "slug": "armani-strong",
@@ -474,7 +474,7 @@
       "stateRank": 28,
       "stars": 4,
       "htWt": "6-1 / 180",
-      "skinny": "WR · 4★ · Miami, FL · #209 natl"
+      "skinny": "WR \u00b7 4\u2605 \u00b7 Miami, FL \u00b7 #209 natl"
     },
     {
       "slug": "joey-fleming",
@@ -490,8 +490,72 @@
       "stateRank": 1,
       "stars": 4,
       "htWt": "6-5 / 275",
-      "skinny": "4★ IOL · #22 natl · Huntsville, AL"
+      "skinny": "4\u2605 IOL \u00b7 #22 natl \u00b7 Huntsville, AL"
+    },
+    {
+      "slug": "lorenzo-mcmullen-jr",
+      "name": "Lorenzo McMullen Jr.",
+      "pos": "WR",
+      "classYear": 2028,
+      "school": "Princeton (Cincinnati, OH)",
+      "state": "OH",
+      "inState": false,
+      "stars": 4,
+      "natlRank": 11,
+      "posRank": 4,
+      "stateRank": 1,
+      "htWt": null,
+      "skinny": "4\u2605 WR \u00b7 #11 Rivals \u00b7 Princeton (OH) \u00b7 major UF push",
+      "ufProbability": null
+    },
+    {
+      "slug": "jordyn-murray",
+      "name": "Jordyn Murray",
+      "pos": "WR",
+      "classYear": 2028,
+      "school": "Tampa Bay Tech (Tampa, FL)",
+      "state": "FL",
+      "inState": true,
+      "stars": null,
+      "natlRank": null,
+      "posRank": null,
+      "stateRank": null,
+      "htWt": null,
+      "skinny": "WR \u00b7 Tampa Bay Tech \u00b7 UF recruiting hard since spring",
+      "ufProbability": null
+    },
+    {
+      "slug": "hudson-west",
+      "name": "Hudson West",
+      "pos": "QB",
+      "classYear": 2028,
+      "school": "Sarasota (Sarasota, FL)",
+      "state": "FL",
+      "inState": true,
+      "stars": null,
+      "natlRank": null,
+      "posRank": null,
+      "stateRank": null,
+      "htWt": "6-5 / 190",
+      "skinny": "QB \u00b7 6-5 / 190 \u00b7 Sarasota \u00b7 20+ offers \u00b7 UF visit",
+      "ufProbability": null
+    },
+    {
+      "slug": "nikolay-petrushev",
+      "name": "Nikolay Petrushev",
+      "pos": "OT",
+      "classYear": 2028,
+      "school": "East Lake (Tarpon Springs, FL)",
+      "state": "FL",
+      "inState": true,
+      "stars": null,
+      "natlRank": null,
+      "posRank": null,
+      "stateRank": null,
+      "htWt": "6-6 / 285",
+      "skinny": "OT \u00b7 6-6 / 285 \u00b7 East Lake \u00b7 UF offer June 2026",
+      "ufProbability": null
     }
   ],
-  "updatedAt": "2026-07-20T03:48:04.596Z"
+  "updatedAt": "2026-07-22T12:45:03.000Z"
 }

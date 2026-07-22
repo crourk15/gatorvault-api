@@ -61,6 +61,11 @@ const ALLOWLIST_2028 = [
   'pj-evans',
   'anthony-howard-jr',
   'joey-fleming',
+  // Corey Bender / beat board — UF push / offer names that must stay locked
+  'lorenzo-mcmullen-jr',
+  'jordyn-murray',
+  'hudson-west',
+  'nikolay-petrushev',
 ];
 
 /** Charles' display names — used for On3/Rivals/247 identity lookup (never synthetic cards). */
@@ -109,6 +114,10 @@ const CANONICAL_TARGET_NAMES = {
   'pj-evans': 'PJ Evans',
   'anthony-howard-jr': 'Anthony Howard Jr.',
   'joey-fleming': 'Joey Fleming',
+  'lorenzo-mcmullen-jr': 'Lorenzo McMullen Jr.',
+  'jordyn-murray': 'Jordyn Murray',
+  'hudson-west': 'Hudson West',
+  'nikolay-petrushev': 'Nikolay Petrushev',
 };
 
 /** Display name → canonical slug (handles typos / aliases) */

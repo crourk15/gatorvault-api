@@ -48,10 +48,14 @@ function floridaVisitOnPlayer(player) {
   });
 }
 
+/** Scan the full durable log — a 500-row window dropped older UF visits/offers off Lab promote. */
+const FLORIDA_SIGNAL_LOG_LIMIT = 100000;
+
 function loadFloridaOfferSlugs() {
   try {
     const { listOfferLogs } = require('./recruiting-offer-log-store');
-    const items = typeof listOfferLogs === 'function' ? listOfferLogs({ limit: 500 }) : [];
+    const items =
+      typeof listOfferLogs === 'function' ? listOfferLogs({ limit: FLORIDA_SIGNAL_LOG_LIMIT }) : [];
     return new Set(
       (items || [])
         .filter((row) => isFloridaSchool(row.school || 'Florida'))
@@ -67,7 +71,8 @@ function loadFloridaVisitSlugs() {
   try {
     const { listVisitLogs } = require('./recruiting-visit-log-store');
     const { isVerifiedVisitLogSource } = require('./visit-intel-utils');
-    const items = typeof listVisitLogs === 'function' ? listVisitLogs({ limit: 500 }) : [];
+    const items =
+      typeof listVisitLogs === 'function' ? listVisitLogs({ limit: FLORIDA_SIGNAL_LOG_LIMIT }) : [];
     const out = new Set();
     for (const row of items || []) {
       if (!isFloridaSchool(row.school || 'Florida')) continue;
@@ -545,6 +550,9 @@ module.exports = {
   decideStage,
   floridaOfferOnPlayer,
   floridaVisitOnPlayer,
+  loadFloridaOfferSlugs,
+  loadFloridaVisitSlugs,
+  FLORIDA_SIGNAL_LOG_LIMIT,
   loadOn3RpmFloridaSlugs,
   promoteResolvedPredictionToRadar,
   syncSingleSlugOn3Rpm,

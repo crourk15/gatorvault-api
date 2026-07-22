@@ -154,12 +154,9 @@ async function getPlayerIntelligence(slugOrId, opts = {}) {
       playerId: player.on3Id || player.id,
       playerName: player.name
     }) || [];
-  const visitLogs = (visitLogStore.listVisitLogs({ limit: 500 }) || []).filter(
-    (l) => normalizeSlug(l.playerSlug) === slug
-  );
-  const offerLogs = (offerLogStore.listOfferLogs({ limit: 500 }) || []).filter(
-    (l) => normalizeSlug(l.playerSlug) === slug
-  );
+  // Pass playerSlug so older Florida visits/offers are not dropped by a global 500-row window.
+  const visitLogs = visitLogStore.listVisitLogs({ playerSlug: slug, limit: 100 }) || [];
+  const offerLogs = offerLogStore.listOfferLogs({ playerSlug: slug, limit: 100 }) || [];
 
   const enriched = enrichHubPlayer(player, { intelRows, visitLogs, offerLogs });
   const rankingBlocks = buildAllRankingBlocks(player);
