@@ -1259,7 +1259,7 @@ function buildProgramImpactLine(research) {
     case 'decommit':
       return `Program impact: Opens a board spot — UF expected to re-engage quickly.`;
     case 'official_visit':
-      return `Program impact: OV window is a decision-point moment for Napier's ${yr} board.`;
+      return `Program impact: OV window is a decision-point moment for Sumrall's ${yr} board.`;
     case 'unofficial_visit':
       return `Program impact: Campus touchpoint as Florida pushes in the ${yr} cycle.`;
     case 'visit_cancelled':
@@ -1280,7 +1280,7 @@ function buildProgramImpactLine(research) {
     case 'staff_push':
       return `Program impact: Staff priority signal — UF pushing hard on the trail.`;
     case 'program_news':
-      return `Program impact: Infrastructure/staff move that shapes the Napier era trajectory.`;
+      return `Program impact: Infrastructure/staff move that shapes the Sumrall era trajectory.`;
     case 'team_event':
       return `Program impact: Roster/schedule intel that affects how Florida is positioned this season.`;
     default:

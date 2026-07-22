@@ -324,7 +324,7 @@ function synthesizeHeatOverview(ctx) {
 
   const paras = [
     `Florida's ${yr} recruiting board shifted this week with measurable momentum around ${names.slice(0, 3).join(', ')}${names.length > 3 ? ` and ${names.length - 3} more` : ''}. GatorVault Heat Check flagged ${names.length} rising ${yr} names where verified beat intel, visit activity, or On3 RPM movement align — not isolated social buzz.`,
-    `The movement clusters at ${groups}, which matches where Billy Napier's staff has been active on the trail heading into summer official visits. Florida is not chasing volume for its own sake; the names below cleared identity confirmation and carried at least two independent data points before inclusion.`,
+    `The movement clusters at ${groups}, which matches where Jon Sumrall's staff has been active on the trail heading into summer official visits. Florida is not chasing volume for its own sake; the names below cleared identity confirmation and carried at least two independent data points before inclusion.`,
     `For the ${yr} cycle, Florida's strategic priority is closing skill talent and trench depth before rival SEC programs consolidate their boards. This week's momentum suggests the staff is pushing decision windows on prospects where Florida already holds RPM leverage or has a campus visit scheduled.`
   ];
   return paras;
@@ -415,7 +415,7 @@ function synthesizeRecruitingAnalysis(ctx) {
   const withStaff = ctx.bundles.filter((b) => b.staff?.schemeFit || b.staff?.summary);
   if (withStaff.length) {
     paras.push(
-      `Scheme fit matters for this group — ${withStaff.map((b) => esc(b.name)).join(', ')} ${withStaff.length > 1 ? 'have' : 'has'} verified scouting context on file. Florida's staff typically accelerates prospects who project into Billy Napier's personnel packages without a year of development delay.`
+      `Scheme fit matters for this group — ${withStaff.map((b) => esc(b.name)).join(', ')} ${withStaff.length > 1 ? 'have' : 'has'} verified scouting context on file. Florida's staff typically accelerates prospects who project into Buster Faulkner's personnel packages without a year of development delay.`
     );
   }
 
@@ -434,7 +434,7 @@ function synthesizeRecruitingAnalysis(ctx) {
 
   if (ctx.category === 'official_visit_preview' || ctx.category === 'post_visit_reaction') {
     paras.push(
-      `Florida's ${ctx.classYear} staff uses official visits to validate scheme fit in Billy Napier's offense and to map where a prospect fits in the current board pecking order. A productive OV does not guarantee commitment — but it almost always clarifies whether Florida is a finalist or a fallback option.`
+      `Florida's ${ctx.classYear} staff uses official visits to validate scheme fit in Buster Faulkner's offense and to map where a prospect fits in the current board pecking order. A productive OV does not guarantee commitment — but it almost always clarifies whether Florida is a finalist or a fallback option.`
     );
     if (ctx.landscape.thin.length) {
       paras.push(
@@ -508,7 +508,7 @@ function synthesizeProgramOverview(ctx) {
   }
 
   paras.push(
-    `Billy Napier's staff enters the ${season} evaluation window focused on returning production, portal integration, and scheme adjustments from spring. Program Pulse tracks team personnel only — ${cycle.RECRUITING_MIN_CLASS}+ recruiting lives in Heat Check and visit columns.`,
+    `Jon Sumrall's staff enters the ${season} evaluation window focused on returning production, portal integration, and scheme adjustments from spring. Program Pulse tracks team personnel only — ${cycle.RECRUITING_MIN_CLASS}+ recruiting lives in Heat Check and visit columns.`,
     `The SEC window does not wait for development timelines. Florida needs contributors who can help win ${season} games while the staff continues to build the ${cycle.RECRUITING_MIN_CLASS} board separately — that separation keeps this column focused on the team on the field, not signing-day rankings.`
   );
 
@@ -648,7 +648,7 @@ function synthesizeRosterOverview(ctx) {
   if (!r?.players?.length) return null;
   return [
     `Roster Analysis for Florida's ${season} team: ${r.players.length} scholarship names tracked across ${r.offense?.length || '—'} offensive and ${r.defense?.length || '—'} defensive pieces. This column evaluates the team on the field — not ${cycle.RECRUITING_MIN_CLASS}+ recruiting rankings.`,
-    `Billy Napier's ${season} roster mix determines snap distribution, special-teams usage, and how portal additions plug into existing rooms. Program Pulse covers portal headlines separately; this piece maps unit strength and thin spots.`
+    `Jon Sumrall's ${season} roster mix determines snap distribution, special-teams usage, and how portal additions plug into existing rooms. Program Pulse covers portal headlines separately; this piece maps unit strength and thin spots.`
   ];
 }
 
@@ -665,7 +665,7 @@ function synthesizeRosterTrends(ctx) {
     );
   }
   trends.push(
-    `Offensive skill talent and trench depth typically drive Billy Napier's personnel packages. Special-teams roles often hide value in summer rep reports.`
+    `Offensive skill talent and trench depth typically drive Buster Faulkner's personnel packages. Special-teams roles often hide value in summer rep reports.`
   );
   return trends.length ? trends : null;
 }
@@ -929,7 +929,7 @@ function synthesizeStaffAnalysis(ctx) {
   const season = ctx.season;
   return [
     `Staff evaluations at this stage focus on who can help win ${season} games — not signing-day rankings. Portal additions and retention decisions shape the board the coordinators actually deploy.`,
-    `Scheme fit for returning production matters: players who project into Billy Napier's personnel packages without a development year get rep priority in summer and fall camp.`,
+    `Scheme fit for returning production matters: players who project into Buster Faulkner's personnel packages without a development year get rep priority in summer and fall camp.`,
     `Defensive pressure packages and offensive personnel groupings from spring carry forward — summer is when the staff tests whether those packages hold against live reps and full-speed tempo.`,
     `Coordinator tendencies at WR, EDGE, and nickel will show up first in fall camp reports; Staff Intel refreshes when verified scheme or role-reporting signals land.`
   ];

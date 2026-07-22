@@ -15,7 +15,7 @@ const { GOLDEN_BEATS } = require('../../tests/autoposter/fixtures/golden-beats')
 const BRITT_BEAT =
   'Florida offered 2028 four-star linebacker Cale Britt. "The offer was super cool, especially coming from the head coach. That means a lot," Britt said.';
 const ZYON_BEAT =
-  'Florida trending with daily communication since June 15 contact window. WR coaches McKnight, Davis, Doeker building relationship; recent 7-on-7 campus visit.';
+  'Florida trending with daily communication since June 15 contact window. WR coaches McKnight and Davis building relationship; recent 7-on-7 campus visit.';
 const KALU_BEAT =
   'Florida had DK Kalu\'s attention before the offer landed, and the Gators remain in his mix early — "I really like the Gators."';
 const FUJIKAWA_BEAT =
@@ -46,7 +46,7 @@ const GOLDEN_MATRIX = [
     on3Sync: { rankingTokens: { on3Stars: 4, on3NationalRank: 180, on3PositionRank: 12, on3StateRank: 8 }, stars: 4, natlRank: 180, posRank: 12, stateRank: 8 },
     playerRow: { name: 'Zyon Robinson', classYear: 2028, pos: 'WR', state: 'GA' },
     expectAngle: 'staff',
-    expectText: [/McKnight, Davis, and Doeker/i, /June 15/i]
+    expectText: [/McKnight and Davis/i, /June 15/i]
   },
   {
     specSlug: 'kalu-thomas',
