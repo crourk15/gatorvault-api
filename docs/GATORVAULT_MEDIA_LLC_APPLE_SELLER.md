@@ -60,16 +60,11 @@ Confirmation PDF saved offline. Legal name on letter: **GATORVAULT MEDIA**.
 ### 3. D‑U‑N‑S Number — DONE
 Issued July 22, 2026. Wait ~2 business days for Apple to index it, then proceed to step 4.
 
-### 4. Ask Apple to convert Individual → Organization — NEXT
-1. Sign in at https://developer.apple.com/contact/  
-2. Request: **Update membership from Individual to Organization**  
-3. Provide:
-   - Organization name: **GatorVault Media, LLC**
-   - D‑U‑N‑S Number (from D&B email)
-   - You are founder / have authority to bind the LLC
-   - Florida document number **L26000377317** (attach Articles / DOS email if asked)
-   - LLC EIN (from IRS CP575G)
-4. Apple may call or ask for more docs — answer promptly
+### 4. Ask Apple to convert Individual → Organization — SUBMITTED
+**Submitted** via developer.apple.com/contact → **Program Enrollment**.  
+Case ID: **102949070582** (July 22, 2026).
+
+Waiting on Apple. They may email or call for more docs — answer promptly. Until they approve, the public seller name stays personal.
 
 **Suggested message to Apple:**
 
@@ -113,5 +108,5 @@ Issued July 22, 2026. Wait ~2 business days for Apple to index it, then proceed 
 | Sunbiz visible | Confirm on sunbiz.org |
 | EIN for LLC | **DONE** (July 22, 2026 — CP575G on file) |
 | D‑U‑N‑S | **DONE** (July 22, 2026 — D&B case 10698484) |
-| Apple Individual → Organization | **NEXT** — wait ~2 business days, then contact Apple |
-| App Store seller name shows LLC | Pending (after Apple) |
+| Apple Individual → Organization | **SUBMITTED** — case **102949070582** (Program Enrollment) |
+| App Store seller name shows LLC | Pending (after Apple approves) |
