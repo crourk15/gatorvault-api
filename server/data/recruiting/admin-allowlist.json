@@ -1,6 +1,6 @@
 {
     "version": 1,
-    "updatedAt": "2026-07-22T12:45:03.000Z",
+    "updatedAt": "2026-07-22T12:46:10.000Z",
     "slugs2027": [],
     "slugs2028": [
         "zyon-robinson",
@@ -14,7 +14,11 @@
         "jordyn-murray",
         "hudson-west",
         "nikolay-petrushev",
-        "armani-strong"
+        "armani-strong",
+        "kaydan-whiteside",
+        "ridge-janes",
+        "zaiden-jernigan",
+        "nate-dollard"
     ],
     "names": {
         "zyon-robinson": "Zyon Robinson",
@@ -28,6 +32,10 @@
         "jordyn-murray": "Jordyn Murray",
         "hudson-west": "Hudson West",
         "nikolay-petrushev": "Nikolay Petrushev",
-        "armani-strong": "Armani Strong"
+        "armani-strong": "Armani Strong",
+        "kaydan-whiteside": "Kaydan Whiteside",
+        "ridge-janes": "Ridge Janes",
+        "zaiden-jernigan": "Zaiden Jernigan",
+        "nate-dollard": "Nate Dollard"
     }
 }

@@ -66,6 +66,11 @@ const ALLOWLIST_2028 = [
   'jordyn-murray',
   'hudson-west',
   'nikolay-petrushev',
+  // Tyler Harden / 247 — daily contact, visits, recent UF offers
+  'kaydan-whiteside',
+  'ridge-janes',
+  'zaiden-jernigan',
+  'nate-dollard',
 ];
 
 /** Charles' display names — used for On3/Rivals/247 identity lookup (never synthetic cards). */
@@ -118,6 +123,10 @@ const CANONICAL_TARGET_NAMES = {
   'jordyn-murray': 'Jordyn Murray',
   'hudson-west': 'Hudson West',
   'nikolay-petrushev': 'Nikolay Petrushev',
+  'kaydan-whiteside': 'Kaydan Whiteside',
+  'ridge-janes': 'Ridge Janes',
+  'zaiden-jernigan': 'Zaiden Jernigan',
+  'nate-dollard': 'Nate Dollard',
 };
 
 /** Display name → canonical slug (handles typos / aliases) */

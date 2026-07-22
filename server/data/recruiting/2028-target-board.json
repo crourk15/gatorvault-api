@@ -555,7 +555,55 @@
       "htWt": "6-6 / 285",
       "skinny": "OT \u00b7 6-6 / 285 \u00b7 East Lake \u00b7 UF offer June 2026",
       "ufProbability": null
+    },
+    {
+      "slug": "kaydan-whiteside",
+      "name": "Kaydan Whiteside",
+      "pos": "ATH",
+      "classYear": 2028,
+      "school": "Asheville (Asheville, NC)",
+      "state": "NC",
+      "inState": false,
+      "stars": null,
+      "htWt": null,
+      "skinny": "ATH \u00b7 Asheville, NC \u00b7 recent UF offer \u00b7 Gators trending up"
+    },
+    {
+      "slug": "ridge-janes",
+      "name": "Ridge Janes",
+      "pos": "TE",
+      "classYear": 2028,
+      "school": "De Smet (St. Louis, MO)",
+      "state": "MO",
+      "inState": false,
+      "stars": 4,
+      "htWt": null,
+      "skinny": "4\u2605 TE \u00b7 De Smet, MO \u00b7 UF campus March \u00b7 eyeing fall gameday"
+    },
+    {
+      "slug": "zaiden-jernigan",
+      "name": "Zaiden Jernigan",
+      "pos": "RB",
+      "classYear": 2028,
+      "school": "TBD",
+      "state": null,
+      "inState": false,
+      "stars": 4,
+      "htWt": null,
+      "skinny": "4\u2605 RB \u00b7 daily UF contact \u00b7 eyeing first Swamp visit this fall"
+    },
+    {
+      "slug": "nate-dollard",
+      "name": "Nate Dollard",
+      "pos": "CB",
+      "classYear": 2028,
+      "school": "TBD",
+      "state": null,
+      "inState": false,
+      "stars": 4,
+      "htWt": null,
+      "skinny": "4\u2605 CB \u00b7 UF persistent early \u00b7 now teammates with UF commit"
     }
   ],
-  "updatedAt": "2026-07-22T12:45:03.000Z"
+  "updatedAt": "2026-07-22T12:46:10.000Z"
 }
