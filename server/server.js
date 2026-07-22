@@ -386,27 +386,35 @@ async function deliverEmail(to, subject, html, templateParams = {}) {
   if (forceProvider === 'smtp') return trySmtp();
   if (forceProvider === 'emailjs') return tryEmailJs();
 
+  const attempts = [];
+
   // Raw HTML first when available — bypasses EmailJS template Save outages.
   if (preferRawHtml) {
     if (isResendReady()) {
       try {
-        return await tryResend();
+        const result = await tryResend();
+        return { ...result, attempts: [...attempts, { provider: 'resend', ok: true }] };
       } catch (err) {
+        attempts.push({ provider: 'resend', ok: false, error: err.message });
         pushEmailLog({ level: 'error', message: err.message, detail: { to, subject, provider: 'resend' }, source: 'deliver' });
         // fall through to other providers
       }
     }
     if (process.env.SENDGRID_API_KEY) {
       try {
-        return await trySendGrid();
+        const result = await trySendGrid();
+        return { ...result, attempts: [...attempts, { provider: 'sendgrid', ok: true }] };
       } catch (err) {
+        attempts.push({ provider: 'sendgrid', ok: false, error: err.message });
         pushEmailLog({ level: 'error', message: err.message, detail: { to, subject, provider: 'sendgrid' }, source: 'deliver' });
       }
     }
     if (process.env.SMTP_HOST) {
       try {
-        return await trySmtp();
+        const result = await trySmtp();
+        return { ...result, attempts: [...attempts, { provider: 'smtp', ok: true }] };
       } catch (err) {
+        attempts.push({ provider: 'smtp', ok: false, error: err.message });
         pushEmailLog({ level: 'error', message: err.message, detail: { to, subject, provider: 'smtp' }, source: 'deliver' });
       }
     }
@@ -415,7 +423,13 @@ async function deliverEmail(to, subject, html, templateParams = {}) {
   // Legacy EmailJS template path (welcome/drip still work once template Save succeeds).
   if (EMAIL_PROVIDER === 'emailjs' || isEmailJsReady()) {
     try {
-      return await tryEmailJs();
+      const result = await tryEmailJs();
+      return {
+        ...result,
+        attempts: [...attempts, { provider: 'emailjs', ok: Boolean(result.sent) }],
+        fallbackFrom: attempts.find((a) => !a.ok)?.provider || null,
+        resendError: attempts.find((a) => a.provider === 'resend' && !a.ok)?.error || null,
+      };
     } catch (err) {
       pushEmailLog({ level: 'error', message: err.message, detail: { to, subject }, source: 'deliver' });
       throw err;
@@ -424,7 +438,7 @@ async function deliverEmail(to, subject, html, templateParams = {}) {
 
   const msg = 'No email provider configured — set RESEND_API_KEY (recommended) or EmailJS keys';
   pushEmailLog({ level: 'error', message: msg, detail: { to }, source: 'deliver' });
-  return { sent: false, provider: null, error: msg };
+  return { sent: false, provider: null, error: msg, attempts };
 }
 
 const { getWelcomeEmail, ONBOARDING_SEQUENCE } = require('./lib/onboarding-emails');
@@ -452,7 +466,15 @@ async function sendWelcomeEmail({ email, name, tier, trialEndISO = null }) {
     vault_url: welcome.templateParams.vault_url,
     vault_link_label: welcome.templateParams.vault_link_label,
   });
-  return { trialEndStr, emailSent: delivery.sent, provider: delivery.provider, error: delivery.error || null };
+  return {
+    trialEndStr,
+    emailSent: delivery.sent,
+    provider: delivery.provider,
+    error: delivery.error || null,
+    resendError: delivery.resendError || null,
+    fallbackFrom: delivery.fallbackFrom || null,
+    attempts: delivery.attempts || null,
+  };
 }
 
 async function runWelcomeEmailTest({ email, name, tier }) {
@@ -849,7 +871,10 @@ app.post('/api/welcome', async (req, res) => {
       ok: true,
       trialEnd: welcome.trialEndStr,
       emailSent: welcome.emailSent,
-      provider: welcome.provider
+      provider: welcome.provider,
+      resendError: welcome.resendError || null,
+      fallbackFrom: welcome.fallbackFrom || null,
+      attempts: welcome.attempts || null,
     });
   } catch (err) {
     console.error('welcome error', err);
