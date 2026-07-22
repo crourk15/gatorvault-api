@@ -17,6 +17,8 @@ workflows:
       vars:
         XCODE_SCHEME: App
         BUNDLE_ID: com.gatorvaultinsider.app
+        # App Store Connect numeric Apple ID (for build-number queries)
+        APPLE_APP_APPLE_ID: "6783848215"
         DEVELOPMENT_TEAM: "45C4DZJ4UJ"
         NEXT_TELEMETRY_DISABLED: "1"
         NODE_OPTIONS: "--max-old-space-size=4096"
@@ -70,6 +72,10 @@ workflows:
         script: |
           set -euo pipefail
           bash "$CM_BUILD_DIR/scripts/codemagic-refresh-push-profile.sh"
+      - name: Set next TestFlight build number
+        script: |
+          set -euo pipefail
+          bash "$CM_BUILD_DIR/scripts/codemagic-set-next-build-number.sh"
       - name: Verify iOS app icon (1024×1024)
         script: |
           set -euo pipefail

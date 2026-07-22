@@ -77,6 +77,7 @@ Required in Codemagic: named cert **`gatorvault_appstore`**, named profile **`ga
 | No matching certificates found | Ensure named cert **`gatorvault_appstore`** exists under Codemagic → Code signing identities |
 | Cannot save Signing Certificates without certificate private key | Expected if using `fetch-signing-files --create`; this workflow uses named cert + profile recreate instead |
 | Profile missing aps-environment / associated-domains / archive exit 65 | Check the “Refresh App Store profile with Push + Associated Domains” step log; confirm ASC API key can manage App ID capabilities + profiles |
+| Publishing failed / Failed to publish App.ipa | Open the **Publishing** step log. Most common: `ENTITY_ERROR.ATTRIBUTE.INVALID.DUPLICATE` (CFBundleVersion already on ASC). `ios-release` now auto-bumps above the latest TestFlight build; also bump `CURRENT_PROJECT_VERSION` in the Xcode project. Also check ASC agreements + API key role (App Manager+) |
 | Bundle ID mismatch | Must be `com.gatorvaultinsider.app` |
 | Build fails on `npm run build` | Check Codemagic build log; fix Next.js errors |
 | Upload OK but no build in Connect | Wait 30 min; check email for Apple processing errors |
