@@ -158,11 +158,14 @@
 
 /* ── Game card (white hub card) ── */
 .gv-sched-game-card {
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto;
   gap: var(--space-lg, 24px);
   align-items: center;
   padding: var(--space-md, 16px);
+  min-width: 0;
+  max-width: 100%;
   min-height: 168px;
   background: var(--th-card-bg, #fff);
   color: var(--th-body-dark, var(--graphite));
@@ -249,6 +252,13 @@
   font-size: 0.8125rem;
 }
 
+.gv-sched-game-card__left,
+.gv-sched-game-card__center,
+.gv-sched-game-card__right {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .gv-sched-game-card__center {
   display: flex;
   flex-direction: column;
@@ -256,15 +266,28 @@
 }
 
 .gv-sched-game-card__right {
-  min-width: 168px;
+  min-width: 0;
+}
+
+@media (min-width: 901px) {
+  .gv-sched-game-card__right {
+    min-width: 168px;
+  }
 }
 
 /* ── Win probability bar ── */
+.gv-sched-win-bar {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .gv-sched-win-bar__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-sm, 8px);
   margin-bottom: var(--space-sm, 8px);
+  min-width: 0;
 }
 
 .gv-sched-win-bar__label {
@@ -273,13 +296,16 @@
   color: var(--th-meta);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  min-width: 0;
 }
 
 .gv-sched-win-bar__pct {
+  flex-shrink: 0;
   font-family: var(--font-family);
   font-size: 0.9375rem;
   font-weight: 700;
   color: var(--th-accent, var(--gator-orange));
+  font-variant-numeric: tabular-nums;
 }
 
 .gv-sched-win-bar__track {
@@ -421,10 +447,13 @@
 }
 
 .gv-sched-tickets__vendor {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: var(--space-sm, 8px);
   padding: var(--space-sm, 8px) var(--space-md, 16px);
+  min-width: 0;
+  max-width: 100%;
   border-radius: var(--th-radius-card, 12px);
   text-decoration: none;
   color: var(--th-body-dark);
@@ -451,15 +480,21 @@
 }
 
 .gv-sched-tickets__name {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 0.8125rem;
   font-weight: 600;
 }
 
 .gv-sched-tickets__price {
+  flex-shrink: 0;
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--th-accent, var(--gator-orange));
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── Mobile ── */
@@ -495,8 +530,8 @@
   }
 
   .gv-sched-page__body {
-    padding-left: var(--space-md, 16px);
-    padding-right: var(--space-md, 16px);
+    padding-left: max(var(--space-md, 16px), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--space-md, 16px), env(safe-area-inset-right, 0px));
   }
 
   .gv-sched-hero__cta {

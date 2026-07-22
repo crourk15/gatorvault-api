@@ -34,10 +34,10 @@ const NO_STORE_PREFIXES = [
 
 /** Short TTL (seconds) — semi-static catalog/board data. */
 const SHORT_TTL_ROUTES = [
-  { prefix: '/api/recruiting/hub/bundle', maxAge: 30, sMaxAge: 90, swr: 120 },
-  { prefix: '/api/recruiting/hub/ticker', maxAge: 30, sMaxAge: 90, swr: 120 },
-  { prefix: '/api/recruiting/hub/class-overview', maxAge: 45, sMaxAge: 90, swr: 120 },
-  { prefix: '/api/recruiting/hub/hero', maxAge: 45, sMaxAge: 90, swr: 120 },
+  { prefix: '/api/recruiting/hub/bundle', maxAge: 15, sMaxAge: 45, swr: 60 },
+  { prefix: '/api/recruiting/hub/ticker', maxAge: 15, sMaxAge: 45, swr: 60 },
+  { prefix: '/api/recruiting/hub/class-overview', maxAge: 20, sMaxAge: 45, swr: 60 },
+  { prefix: '/api/recruiting/hub/hero', maxAge: 20, sMaxAge: 45, swr: 60 },
   { prefix: '/api/recruiting/class-metrics', maxAge: 45, sMaxAge: 90, swr: 120 },
   { prefix: '/api/futurecast/home', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/futurecast/class', maxAge: 300, sMaxAge: 600 },
