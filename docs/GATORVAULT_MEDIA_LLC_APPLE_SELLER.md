@@ -27,14 +27,23 @@ This cannot be finished by code alone. Apple must convert the Developer Program 
 
 ## EIN status
 
-**LLC EIN obtained (July 22, 2026).** IRS confirmation legal name: **GATORVAULT MEDIA** (name control **GATO**). That matches the Florida LLC (IRS forms omit the `LLC` ending). Keep the confirmation PDF offline — do not commit EINs to the repo or paste them into chat unnecessarily.
+**LLC EIN obtained (July 22, 2026).** IRS confirmation legal name: **GATORVAULT MEDIA** (name control **GATO**). That matches the Florida LLC (IRS forms omit the `LLC` ending). Keep the confirmation PDF offline — do not commit EINs to the repo.
 
 Use this **LLC EIN** for:
-- D‑U‑N‑S registration
 - Apple Individual → Organization conversion / tax forms
 - Florida annual report (FEI/EIN field)
 
 Do **not** mix a personal/sole-prop EIN with LLC filings.
+
+---
+
+## D‑U‑N‑S status
+
+**D‑U‑N‑S issued (July 22, 2026)** by D&B iResearch for **GATORVAULT MEDIA, LLC** (Bartow, FL). Case #10698484 / Tracking Id 10635904 — Mini Inquiry, verified through outside sources.
+
+Keep the D&B email offline. Do **not** commit the D‑U‑N‑S number to the repo.
+
+**Wait ~2 business days** after issuance before asking Apple to convert, so Apple’s D‑U‑N‑S lookup can see the new record.
 
 ---
 
@@ -48,21 +57,18 @@ Do **not** mix a personal/sole-prop EIN with LLC filings.
 ### 2. EIN for the LLC — DONE
 Confirmation PDF saved offline. Legal name on letter: **GATORVAULT MEDIA**.
 
-### 3. Get a D‑U‑N‑S Number (required by Apple for Organization) — NEXT
-1. Apple’s D‑U‑N‑S lookup: https://developer.apple.com/enroll/duns-lookup/  
-2. Or D&B: https://www.dnb.com/duns-number/get-a-duns.html  
-3. Use **exact** legal name: **GatorVault Media, LLC** (as on Sunbiz)  
-4. Use the LLC’s mailing address + the **LLC EIN** when asked  
-5. After D&B issues the number, wait **~2 business days** for Apple to see it
+### 3. D‑U‑N‑S Number — DONE
+Issued July 22, 2026. Wait ~2 business days for Apple to index it, then proceed to step 4.
 
-### 4. Ask Apple to convert Individual → Organization
+### 4. Ask Apple to convert Individual → Organization — NEXT
 1. Sign in at https://developer.apple.com/contact/  
 2. Request: **Update membership from Individual to Organization**  
 3. Provide:
    - Organization name: **GatorVault Media, LLC**
-   - D‑U‑N‑S Number
+   - D‑U‑N‑S Number (from D&B email)
    - You are founder / have authority to bind the LLC
    - Florida document number **L26000377317** (attach Articles / DOS email if asked)
+   - LLC EIN (from IRS CP575G)
 4. Apple may call or ask for more docs — answer promptly
 
 **Suggested message to Apple:**
@@ -71,8 +77,8 @@ Confirmation PDF saved offline. Legal name on letter: **GATORVAULT MEDIA**.
 > Organization legal name: GatorVault Media, LLC  
 > Florida document number: L26000377317 (Articles filed July 15, 2026)  
 > I am Charles W. Rourk III, Sole Member, with authority to bind the company.  
-> D‑U‑N‑S: [paste after issued]  
-> LLC EIN: [paste from IRS CP575G]  
+> D‑U‑N‑S: [from D&B case 10698484 email]  
+> LLC EIN: [from IRS CP575G]  
 > Please keep the existing apps, bundle IDs, and IAP products on this membership.
 
 ### 5. After Apple approves the conversion
@@ -92,7 +98,7 @@ Confirmation PDF saved offline. Legal name on letter: **GATORVAULT MEDIA**.
 ## Do not do
 
 - Do **not** create a second Apple Developer account and try to “move” the app unless Apple Support tells you to — convert the existing membership.  
-- Do **not** paste EIN / D‑U‑N‑S / passwords into chat.  
+- Do **not** commit EIN / D‑U‑N‑S / passwords to the repo.  
 - Do **not** change IAP product IDs or bundle id as part of the seller rename.  
 - Do **not** register D‑U‑N‑S / Apple org under a personal EIN.
 
@@ -106,6 +112,6 @@ Confirmation PDF saved offline. Legal name on letter: **GATORVAULT MEDIA**.
 | Product legal / copyright strings → LLC | **DONE** (repo) |
 | Sunbiz visible | Confirm on sunbiz.org |
 | EIN for LLC | **DONE** (July 22, 2026 — CP575G on file) |
-| D‑U‑N‑S | **NEXT** — Charles registers with D&B |
-| Apple Individual → Organization | Pending (Charles + Apple; needs D‑U‑N‑S) |
+| D‑U‑N‑S | **DONE** (July 22, 2026 — D&B case 10698484) |
+| Apple Individual → Organization | **NEXT** — wait ~2 business days, then contact Apple |
 | App Store seller name shows LLC | Pending (after Apple) |
