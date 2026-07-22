@@ -16,7 +16,8 @@ const LEGACY_CATEGORIES = {
   BREAKDOWN: 'Film Breakdown'
 };
 
-const PRESS_CONFERENCE_LIMIT = 5;
+/** Keep SEC Media Days set + recent spring pressers visible. */
+const PRESS_CONFERENCE_LIMIT = 8;
 
 function readJson(filePath, fallback) {
   try {
