@@ -31,6 +31,11 @@ test('isActiveUfTarget excludes UF commits and elsewhere commits', () => {
     false,
     'verified UF commit slug never counts as an active target'
   );
+  assert.equal(
+    isActiveUfTarget({ slug: 'adryan-cole', committedTo: null, status: 'uncommitted', category: 'target' }),
+    false,
+    'forced elsewhere-commit (Cole → Georgia) never counts as an active target'
+  );
 });
 
 test('filterAllowlistedTargets drops Hyppolite-style Miami commits', () => {

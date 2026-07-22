@@ -28,12 +28,24 @@ function looksCommittedStatus(player) {
   return status === 'committed' || status === 'commit' || status === 'signed' || status === 'enrolled';
 }
 
+function isForcedElsewhereCommitSlug(slug) {
+  try {
+    const { FORCED_ELSEWHERE_COMMITS } = require('./uf-closing-board-247');
+    const key = String(slug || '').toLowerCase();
+    return (FORCED_ELSEWHERE_COMMITS || []).some((row) => String(row.slug || '').toLowerCase() === key);
+  } catch {
+    return false;
+  }
+}
+
 /** Active UF recruiting target — not committed to Florida or elsewhere. */
 function isActiveUfTarget(player) {
   if (!player) return false;
+  const slug = String(player.slug || player.id || '').toLowerCase();
+  // Hard exclusions when 247/open-board sync lags an elsewhere-commit (e.g. Cole → Georgia).
+  if (slug && isForcedElsewhereCommitSlug(slug)) return false;
   try {
     const { isVerifiedUfCommitAnyYear } = require('./recruiting-verified-commits');
-    const slug = String(player.slug || player.id || '').toLowerCase();
     if (slug && isVerifiedUfCommitAnyYear(slug)) return false;
   } catch {
     /* optional at boot */
