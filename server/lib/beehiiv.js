@@ -40,8 +40,7 @@ async function beehiivRequest(path, { method = 'GET', body } = {}) {
 }
 
 /**
- * Beehiiv subscriber add (optional). Multi-day onboarding automations are disabled —
- * welcome email is sent via EmailJS on signup only.
+ * Optional Beehiiv list/automation enroll. Server EmailJS drip is the primary sequence.
  */
 async function enrollOnboarding({ email, name, tier }) {
   if (!isBeehiivConfigured()) {
@@ -49,7 +48,7 @@ async function enrollOnboarding({ email, name, tier }) {
   }
 
   const pubId = process.env.BEEHIIV_PUBLICATION_ID;
-  const automationId = null; // onboarding automations disabled — welcome email only via EmailJS
+  const automationId = getOnboardingAutomationId();
   const payload = {
     email,
     reactivate_existing: false,

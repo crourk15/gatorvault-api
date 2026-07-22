@@ -332,11 +332,12 @@ async function sendEmailEmailJS(to, templateParams) {
     email: to,
     tier: tierLabel,
     tier_benefits: templateParams.tierBenefits || getTierBenefitsHtml(tierKey),
-    vault_url: VAULT_URL,
-    vault_link_label: VAULT_LINK_LABEL,
+    body_html: templateParams.bodyHtml || templateParams.body_html || templateParams.html || templateParams.tierBenefits || getTierBenefitsHtml(tierKey),
+    vault_url: templateParams.vault_url || VAULT_URL,
+    vault_link_label: templateParams.vault_link_label || VAULT_LINK_LABEL,
     vault_url_display: VAULT_URL_DISPLAY,
     support_email: process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com',
-    email_subject: templateParams.emailSubject || templateParams.subject || 'Welcome to GatorVault — Your Access Is Now Live 🐊🔥',
+    email_subject: templateParams.emailSubject || templateParams.subject || 'Welcome to GatorVault — Your Insider Access Is Live',
     reply_to: process.env.EMAILJS_REPLY_TO || process.env.SMTP_USER || 'support@gatorvaultinsider.com'
   };
 
@@ -404,8 +405,11 @@ async function sendWelcomeEmail({ email, name, tier, trialEndISO = null }) {
     tier: tier,
     tierName: welcome.tier,
     tierBenefits: welcome.templateParams.tier_benefits,
+    bodyHtml: welcome.templateParams.body_html,
     emailSubject: welcome.subject,
-    html: welcome.html
+    html: welcome.html,
+    vault_url: welcome.templateParams.vault_url,
+    vault_link_label: welcome.templateParams.vault_link_label,
   });
   return { trialEndStr, emailSent: delivery.sent, provider: delivery.provider, error: delivery.error || null };
 }
@@ -519,6 +523,7 @@ app.post('/api/register', async (req, res) => {
     });
     let emailSent = false;
     let emailProvider = null;
+    let beehiivEnroll = { enrolled: false, provider: null };
     try {
       const welcome = await sendWelcomeEmail({
         email,
@@ -534,11 +539,25 @@ app.post('/api/register', async (req, res) => {
       }
       user.onboardingSent = welcome.emailSent ? [0] : [];
       user.onboardingProvider = 'server';
+      user.trialRemindersSent = [];
+      try {
+        const { enrollOnboarding } = require('./lib/beehiiv');
+        beehiivEnroll = await enrollOnboarding({ email, name, tier });
+        if (beehiivEnroll.enrolled) {
+          user.beehiivSubscriptionId = beehiivEnroll.subscriptionId || null;
+        }
+      } catch (beehiivErr) {
+        console.warn('beehiiv enroll skipped:', beehiivErr.message);
+      }
       const usersUpdated = loadUsers();
       const uIdx = usersUpdated.findIndex((u) => u.email === email);
       if (uIdx >= 0) {
         usersUpdated[uIdx].onboardingSent = user.onboardingSent;
         usersUpdated[uIdx].onboardingProvider = user.onboardingProvider;
+        usersUpdated[uIdx].trialRemindersSent = user.trialRemindersSent;
+        if (user.beehiivSubscriptionId) {
+          usersUpdated[uIdx].beehiivSubscriptionId = user.beehiivSubscriptionId;
+        }
         saveUsers(usersUpdated);
       }
     } catch (e) {
@@ -551,10 +570,12 @@ app.post('/api/register', async (req, res) => {
       ok: true,
       emailSent,
       emailProvider,
-      onboardingEnrolled: false,
-      onboardingProvider: null,
-      onboardingMode: 'welcome_only',
+      onboardingEnrolled: true,
+      onboardingProvider: 'server',
+      onboardingMode: 'drip',
+      beehiivEnrolled: Boolean(beehiivEnroll.enrolled),
       welcomeEmail: ONBOARDING_SEQUENCE[0],
+      onboardingDays: ONBOARDING_SEQUENCE.map((e) => e.day),
       trialReused: Boolean(trialPlan.reused),
       trialExpired: Boolean(sessionFields.accessActive === false && !sessionFields.paid),
       session: {
@@ -710,21 +731,53 @@ app.post('/api/auth/bridge-session', (req, res) => {
 });
 
 app.get('/api/onboarding/sequence', (req, res) => {
+  const { TRIAL_REMINDER_SEQUENCE } = require('./lib/onboarding-emails');
   return res.json({
     ok: true,
-    mode: 'welcome_only',
+    mode: 'drip',
     provider: 'emailjs',
     emails: ONBOARDING_SEQUENCE.map((e) => ({
       day: e.day,
       delayDays: e.delayDays,
       delayLabel: e.delayLabel,
-      subject: e.subject
-    }))
+      subject: e.subject,
+      kind: e.kind,
+    })),
+    trialReminders: TRIAL_REMINDER_SEQUENCE.map((e) => ({
+      key: e.key,
+      daysLeft: e.daysLeft,
+      subject: e.subject,
+      kind: e.kind,
+    })),
   });
+});
+
+app.post('/api/onboarding/process', async (req, res) => {
+  try {
+    const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.CRON_SECRET || '';
+    const header = String(req.get('x-monitoring-cron') || req.get('x-cron-secret') || '');
+    if (!cronSecret || header !== cronSecret) {
+      return res.status(401).json({ ok: false, error: 'Unauthorized' });
+    }
+    const { processOnboardingQueue } = require('./lib/onboarding-scheduler');
+    const { hasPaidAccess } = require('./lib/subscription-service');
+    const result = await processOnboardingQueue({
+      loadUsers,
+      saveUsers,
+      deliverEmail,
+      hasPaidAccess,
+      pushEmailLog,
+    });
+    return res.json({ ok: true, ...result });
+  } catch (err) {
+    console.error('onboarding process error', err);
+    return res.status(500).json({ ok: false, error: err.message || 'Onboarding process failed' });
+  }
 });
 
 app.get('/api/version', (req, res) => {
   const commit = process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev';
+  const { shouldUseServerScheduler } = require('./lib/onboarding-scheduler');
   return res.json({
     ok: true,
     build: commit,
@@ -733,12 +786,14 @@ app.get('/api/version', (req, res) => {
     features: {
       globalTicker: true,
       bannerAlerts: true,
-      onboardingScheduler: false,
-      welcomeEmailOnly: true,
+      onboardingScheduler: shouldUseServerScheduler(),
+      welcomeEmailOnly: false,
+      onboardingDrip: true,
+      trialConvertEmails: true,
       articleSourceValidation: true,
       scoutingTeasers: true
     },
-    onboardingDays: [0]
+    onboardingDays: ONBOARDING_SEQUENCE.map((e) => e.day)
   });
 });
 

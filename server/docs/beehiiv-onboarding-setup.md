@@ -1,6 +1,8 @@
 # GatorVault — Beehiiv Onboarding Automation Setup
 
-Replace the old 3-email sequence with this **7-email** onboarding flow (Days 0, 1, 3, 5, 7, 10, 14).
+**Note (July 2026):** The live product uses the **server EmailJS drip** (Days 0/1/3/7/25 + trial d5/d1 reminders). Beehiiv is optional for list growth / promo blasts. If you enable Beehiiv automations, turn OFF Beehiiv’s default welcome email so Day 0 is not duplicated.
+
+Optional Beehiiv setup below (Audience automations). Primary sequence lives in `server/lib/onboarding-emails.js`.
 
 ## 1. Render environment variables
 
