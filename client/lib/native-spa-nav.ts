@@ -19,6 +19,8 @@ const CATCH_ALL_SHELL_RES: RegExp[] = [
   /^(\/vault\/portal\/player)(?:\/[^/]+)?$/,
   /^(\/vault\/players)(?:\/[^/]+)?$/,
   /^(\/vault\/articles)(?:\/[^/]+)?$/,
+  /^(\/vault\/community\/thread)(?:\/[^/]+)?$/,
+  /^(\/community\/thread)(?:\/[^/]+)?$/,
   /^(\/player)(?:\/[^/]+)?$/,
   /^(\/recruiting\/player)(?:\/[^/]+)?$/,
   /^(\/futurecast\/player)(?:\/[^/]+)?$/,

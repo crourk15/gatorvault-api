@@ -171,31 +171,43 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   }, [sort, category, newCategory]);
 
   const openThread = useCallback(async (id: string) => {
-    setSelectedId(id);
-    setSelectedThread(null);
+    const threadId = String(id || '').trim();
+    if (!threadId) return;
+
+    // Prefer the already-rendered list/seed OP so daily cards never die on a blip.
+    const fromList =
+      threads.find((t) => t.id === threadId) ||
+      SEED_COMMUNITY.threads.find((t) => t.id === threadId) ||
+      null;
+
+    setSelectedId(threadId);
     setSelectedPosts([]);
     setReplyBody('');
     setReplyError(null);
+    setSelectedThread(fromList);
     setThreadLoading(true);
     if (typeof window !== 'undefined') {
       try {
-        const next = `/vault/community/thread/${encodeURIComponent(id)}/`;
-        if (!window.location.pathname.includes(`/community/thread/${id}`)) {
+        const next = `/vault/community/thread/${encodeURIComponent(threadId)}/`;
+        if (!window.location.pathname.includes(`/community/thread/${threadId}`)) {
           window.history.pushState(null, '', next);
+          window.dispatchEvent(new Event('vault:navigation'));
         }
       } catch {
         /* ignore */
       }
     }
     try {
-      const data = await fetchWithWarmPoll(() => fetchCommunityThread(id), warmPollProfile());
+      const data = await fetchWithWarmPoll(
+        () => fetchCommunityThread(threadId),
+        warmPollProfile(),
+      );
       setSelectedThread(data.thread);
       setSelectedPosts(data.posts);
     } catch {
-      // Founding/seed threads are list-only until live UGC exists — hydrate OP locally.
-      const seed = SEED_COMMUNITY.threads.find((t) => t.id === id) || null;
-      if (seed) {
-        setSelectedThread(seed as CommunityThread);
+      // Keep the list/seed OP when live detail fails (common for daily threads + native CORS blips).
+      if (fromList) {
+        setSelectedThread(fromList);
         setSelectedPosts([]);
       } else {
         setSelectedThread(null);
@@ -204,7 +216,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     } finally {
       setThreadLoading(false);
     }
-  }, []);
+  }, [threads]);
 
   useEffect(() => {
     void load();
@@ -588,7 +600,10 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
           )}
 
-          {(HAS_COMMUNITY_SEED || (!loading && !error)) && selectedId && threadLoading && (
+          {(HAS_COMMUNITY_SEED || (!loading && !error)) &&
+            selectedId &&
+            threadLoading &&
+            !selectedThread && (
             <div className="gv-community__thread-detail">
               <button
                 type="button"

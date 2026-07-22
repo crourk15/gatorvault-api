@@ -77,9 +77,6 @@
 /vault/tickets  /vault/schedule  301
 /vault/tickets/  /vault/schedule  301
 /vault/tickets/*  /vault/schedule  301
-/vault/film  /vault/film-room  301
-/vault/film/  /vault/film-room  301
-/vault/film/*  /vault/film-room/:splat  301
 /vault/portal  /vault/recruiting/portal  301
 /vault/portal/  /vault/recruiting/portal  301
 /vault/portal/*  /vault/recruiting/portal  301
@@ -265,6 +262,9 @@
 /vault/insider  /vault/insider/index.html  200
 /vault/insider/  /vault/insider/index.html  200
 /vault/insider/*  /vault/insider/index.html  200
+/vault/community/thread/*  /vault/community/thread/index.html  200
+/vault/community/thread  /vault/community/thread/index.html  200
+/vault/community/thread/  /vault/community/thread/index.html  200
 /vault/community  /vault/community/index.html  200
 /vault/community/  /vault/community/index.html  200
 /vault/community/*  /vault/community/index.html  200

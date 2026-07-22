@@ -180,6 +180,10 @@ const VAULT_REACT_REWRITES = [
   ...subRouteRewrites('/vault/live-scores', '/vault/live-scores/index.html'),
   ...subRouteRewrites('/vault/articles', '/vault/articles/index.html'),
   ...subRouteRewrites('/vault/insider', '/vault/insider/index.html'),
+  // Thread deep links must precede the community parent wildcard.
+  { from: '/vault/community/thread/*', to: '/vault/community/thread/index.html', status: 200 },
+  { from: '/vault/community/thread', to: '/vault/community/thread/index.html', status: 200 },
+  { from: '/vault/community/thread/', to: '/vault/community/thread/index.html', status: 200 },
   ...subRouteRewrites('/vault/community', '/vault/community/index.html'),
   ...subRouteRewrites('/vault/nil', '/vault/nil/index.html'),
   { from: '/vault', to: '/vault/index.html', status: 200 },
@@ -208,6 +212,7 @@ const REQUIRED_VAULT_EXPORTS = [
   'vault/articles/index.html',
   'vault/insider/index.html',
   'vault/community/index.html',
+  'vault/community/thread/index.html',
   'vault/nil/index.html',
   'vault/admin/index.html',
   'vault/login/index.html',

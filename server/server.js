@@ -73,7 +73,10 @@ app.use((req, res, next) => {
       origin === 'https://localhost' ||
       origin === 'http://localhost');
   if (origin && (allowed.includes(origin) || isNetlifyPreview || isCapacitorNative)) {
+    // Credentialed fetches from the Capacitor WebView (Community, session cookie/Bearer)
+    // require a reflected Origin + Allow-Credentials — '*' is rejected by the browser.
     res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Vary', 'Origin');
   } else {
     res.header('Access-Control-Allow-Origin', '*');
