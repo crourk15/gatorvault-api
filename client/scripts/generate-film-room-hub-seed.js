@@ -63,9 +63,15 @@ function fromLocalCache() {
   for (const key of Object.keys(auto)) {
     const list = Array.isArray(auto[key]) ? auto[key] : [];
     for (const item of list) {
+      const filmHub =
+        key === 'pressers'
+          ? 'UF Press Conferences'
+          : key === 'gnfp'
+            ? 'GNFP Film Review'
+            : (item.category || 'Film Breakdown');
       rows.push(slimItem({
         ...item,
-        filmHub: item.category || (key === 'pressers' ? 'UF Press Conferences' : 'Film Breakdown'),
+        filmHub,
       }));
     }
   }
