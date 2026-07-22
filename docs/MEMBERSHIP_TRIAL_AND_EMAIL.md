@@ -16,13 +16,33 @@
 - Paid access is **time-bounded** (`subscription.expiresAt`). Canceling Apple auto-renew keeps access until the period ends; `EXPIRED` / refund / revoke remove access.
 - Paid conversion is **Apple IAP in the iOS app** (no web checkout yet). Same account unlocks web after verify.
 
-## Email / “activation”
+## Email / onboarding drip
 
 - There is **no activation link**. Accounts work immediately after signup.
-- We send a **welcome email** via EmailJS (`onboardingMode: welcome_only`) describing the **free trial** (not App Store auto-renew).
+- **Primary path:** EmailJS via the API (`onboardingMode: drip`).
+- **Day 0 welcome** sends on `/api/register`.
+- **Server drip** (hourly in-process + Render cron `gatorvault-api-onboarding-drip`):
+  - Day **1** — playbook / activate
+  - Day **3** — Recruiting + FutureCast
+  - Day **7** — trial checklist
+  - Day **25** — trial ending → Membership CTA
+- **Trial-clock convert emails** (based on `trialEnd`, not signup day):
+  - **5 days left**
+  - **1 day left**
+- Paid members are skipped.
+- Kill switch: `ONBOARDING_DRIP_DISABLED=true`.
+- Optional Beehiiv enroll on register when `BEEHIIV_*` env is set (does not replace the server drip).
 - If EmailJS is misconfigured, signup still succeeds; the app may say welcome email was not sent.
+
+### EmailJS template (required once)
+
+Paste `server/emailjs-welcome-template.html` into EmailJS template `template_okh1hj8`:
+
+- Subject: `{{email_subject}}`
+- Body uses `{{{body_html}}}` (welcome + drip + trial convert + visit digests)
 
 ## Where fans see the clock
 
 1. Join success copy (days left)
 2. Membership & Account → trial status line
+3. Trial convert emails → Membership CTA (`/vault/membership/`)

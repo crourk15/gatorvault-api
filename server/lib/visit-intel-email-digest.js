@@ -71,6 +71,7 @@ async function sendSubscriberDigestEmail(to, subject, html) {
       email: to,
       name: to.split("@")[0],
       email_subject: subject,
+      body_html: html,
       tier_benefits: html,
       vault_url: `${SITE_URL}/vault/futurecast#visits`,
       support_email: process.env.EMAILJS_REPLY_TO || "gatorvaultinsider@gmail.com",

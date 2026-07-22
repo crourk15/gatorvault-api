@@ -5,15 +5,15 @@
   - To email:    {{email}}
   - From name:   GatorVault Team
   - Reply to:    gatorvaultinsider@gmail.com
-  - Subject:     Welcome to GatorVault — Your Access Is Now Live 🐊🔥
+  - Subject:     {{email_subject}}
 
   Required template variables:
-    {{name}}, {{email}}, {{tier}}, {{tier_benefits}}, {{vault_url}},
-    {{vault_link_label}}, {{vault_url_display}}, {{support_email}}
+    {{name}}, {{email}}, {{email_subject}}, {{{body_html}}},
+    {{vault_url}}, {{vault_link_label}}, {{vault_url_display}}, {{support_email}}
+  Optional (legacy welcome fields): {{tier}}, {{{tier_benefits}}}
   Service: service_ul7ju9p
 
-  Display rule: never show the raw query-string vault_url as link text.
-  Use the orange CTA button + short {{vault_url_display}} (e.g. gatorvaultinsider.com/join).
+  body_html is the full inner email body for welcome + drip + trial convert emails.
 -->
 
 <div style="margin:0;padding:0;background:#030712;font-family:Inter,Arial,sans-serif;">
@@ -23,53 +23,18 @@
         <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;border-radius:16px;overflow:hidden;border:1px solid #1e3a5f;">
           <tr>
             <td style="background:linear-gradient(135deg,#001a4d 0%,#003087 100%);padding:28px 32px;text-align:center;">
-              <div style="font-size:42px;line-height:1;margin-bottom:8px;">🐊</div>
               <div style="font-family:Oswald,Arial,sans-serif;font-size:28px;font-weight:700;color:#FA4616;letter-spacing:4px;">GATORVAULT</div>
             </td>
           </tr>
           <tr>
             <td style="background:#060f1f;padding:32px;color:#e2e8f0;">
-              <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">Hey {{name}},</p>
-              <p style="margin:0 0 20px;font-size:15px;line-height:1.6;">Welcome to GatorVault — your membership is officially active and your vault is open.</p>
-
-              <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">🔑 Your Access</p>
-              <p style="margin:0 0 8px;font-size:14px;line-height:1.6;">Your vault is now unlocked.</p>
-              <p style="margin:0 0 14px;font-size:14px;line-height:1.6;">Sign in with the email you used at signup:</p>
-              <p style="margin:0 0 10px;">
-                <a href="{{vault_url}}" style="display:inline-block;background:#FA4616;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 22px;border-radius:8px;">{{vault_link_label}}</a>
-              </p>
-              <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;line-height:1.55;">{{vault_url_display}}</p>
-              <p style="margin:0 0 20px;font-size:14px;line-height:1.6;">On iPhone, open the <strong>GatorVault</strong> app and sign in with that same email.</p>
-
-              <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">🎬 Your Tier: {{tier}}</p>
-              <ul style="margin:0 0 20px;padding-left:20px;">{{{tier_benefits}}}</ul>
-
-              <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">📦 What Happens Next</p>
-              <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Your vault stays unlocked for the full 30-day trial.</p>
-              <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">New drops appear automatically — no extra emails needed.</p>
-              <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Request custom scenes anytime: <a href="mailto:{{support_email}}" style="color:#FA4616;">{{support_email}}</a></p>
-              <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Membership renews automatically unless canceled.</p>
-              <p style="margin:0 0 20px;font-size:14px;line-height:1.55;">You can upgrade/downgrade anytime inside your vault.</p>
-
-              <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">🧭 Quick Start Guide</p>
-              <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Bookmark your vault</p>
-              <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Check &ldquo;New Drops&rdquo; regularly</p>
-              <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Use the Request button for custom content</p>
-              <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Save favorites</p>
-              <p style="margin:0 0 20px;font-size:14px;line-height:1.55;">Explore the Hidden Vault</p>
-
-              <p style="margin:0 0 8px;font-size:13px;color:#FA4616;font-weight:700;text-transform:uppercase;letter-spacing:1px;">🛠 Support</p>
-              <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Email: <a href="mailto:{{support_email}}" style="color:#FA4616;">{{support_email}}</a></p>
-              <p style="margin:0 0 6px;font-size:14px;line-height:1.55;">Response time: under 24 hours</p>
-              <p style="margin:0 0 20px;font-size:14px;line-height:1.55;">Priority: {{tier}} gets front-of-line support</p>
-
-              <p style="margin:0 0 8px;font-size:15px;line-height:1.6;">Welcome to the Vault.<br>🐊🔥</p>
-              <p style="margin:16px 0 0;font-size:14px;color:#94a3b8;line-height:1.6;">— GatorVault Team</p>
+              {{{body_html}}}
             </td>
           </tr>
           <tr>
             <td style="background:#030712;padding:20px 32px;text-align:center;border-top:1px solid #1e3a5f;">
-              <p style="margin:0;font-size:11px;color:#475569;">© 2026 GatorVault Media, LLC</p>
+              <p style="margin:0;font-size:11px;color:#475569;">© 2026 GatorVault Media, LLC · Not affiliated with the University of Florida</p>
+              <p style="margin:8px 0 0;font-size:11px;color:#475569;">Support: <a href="mailto:{{support_email}}" style="color:#94a3b8;">{{support_email}}</a></p>
             </td>
           </tr>
         </table>
