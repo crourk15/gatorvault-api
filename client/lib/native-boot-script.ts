@@ -132,6 +132,8 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
         [/^\\/vault\\/portal\\/player(?:\\/[^/]+)?$/, '/vault/portal/player/'],
         [/^\\/vault\\/players(?:\\/[^/]+)?$/, '/vault/players/'],
         [/^\\/vault\\/articles(?:\\/[^/]+)?$/, '/vault/articles/'],
+        [/^\\/vault\\/community\\/thread(?:\\/[^/]+)?$/, '/vault/community/thread/'],
+        [/^\\/community\\/thread(?:\\/[^/]+)?$/, '/community/thread/'],
         [/^\\/player(?:\\/[^/]+)?$/, '/player/'],
         [/^\\/recruiting\\/player(?:\\/[^/]+)?$/, '/recruiting/player/'],
         [/^\\/futurecast\\/player(?:\\/[^/]+)?$/, '/futurecast/player/'],
