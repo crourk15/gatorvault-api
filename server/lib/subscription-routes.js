@@ -9,6 +9,19 @@ const {
 } = require('./subscription-service');
 const { findUserByEmail, findUserByOriginalTransactionId } = require('./user-store');
 const { appAccountTokenForEmail } = require('./app-account-token');
+const {
+  maybeSendPaidMembershipConfirmation,
+  isInitialPaidActivationNotification,
+} = require('./membership-confirm');
+
+function queuePaidConfirmation(userBefore, userAfter, deliverEmail) {
+  if (typeof deliverEmail !== 'function' || !userAfter) return;
+  setImmediate(() => {
+    maybeSendPaidMembershipConfirmation(userBefore, userAfter, { deliverEmail }).catch((err) => {
+      console.warn('[subscription] paid confirmation email failed', err?.message || err);
+    });
+  });
+}
 
 async function processVerifiedApplePurchase(session, productId, transactionId, res, options = {}) {
   const tier = tierFromProductId(productId);
@@ -98,6 +111,7 @@ async function processVerifiedApplePurchase(session, productId, transactionId, r
     });
   }
 
+  const userBefore = findUserByEmail(session.email);
   const user = applySubscription(session.email, {
     source: 'apple',
     status: 'active',
@@ -108,6 +122,8 @@ async function processVerifiedApplePurchase(session, productId, transactionId, r
     appAccountToken: expectedToken,
     autoRenewEnabled: true,
   });
+
+  queuePaidConfirmation(userBefore, user, options.deliverEmail);
 
   return res.json({
     ok: true,
@@ -159,7 +175,9 @@ function buildBillingHealth() {
   };
 }
 
-function mountSubscriptionRoutes(app) {
+function mountSubscriptionRoutes(app, deps = {}) {
+  const deliverEmail = typeof deps.deliverEmail === 'function' ? deps.deliverEmail : null;
+
   app.get('/api/subscription/catalog', (_req, res) => {
     res.json(buildCatalogPayload());
   });
@@ -196,6 +214,7 @@ function mountSubscriptionRoutes(app) {
     }
 
     return processVerifiedApplePurchase(session, productId, transactionId, res, {
+      deliverEmail,
       appAccountToken: String(req.body?.appAccountToken || req.body?.app_account_token || '').trim() || null,
     });
   });
@@ -219,6 +238,7 @@ function mountSubscriptionRoutes(app) {
 
     return processVerifiedApplePurchase(session, productId, transactionId, res, {
       restored: true,
+      deliverEmail,
       appAccountToken: String(req.body?.appAccountToken || req.body?.app_account_token || '').trim() || null,
     });
   });
@@ -278,6 +298,8 @@ function mountSubscriptionRoutes(app) {
       expiresAt: req.body.expiresAt || null,
     });
 
+    queuePaidConfirmation(existing, user, deliverEmail);
+
     return res.json({
       ok: true,
       granted: true,
@@ -298,6 +320,19 @@ function mountSubscriptionRoutes(app) {
       const { handleAppleServerNotification } = require('./apple-iap-notifications');
       const { appendNotification } = require('./apple-iap-notification-log');
       const result = handleAppleServerNotification(signedPayload, { verify: true });
+      if (
+        result.handled &&
+        result.action === 'activated' &&
+        result.email &&
+        isInitialPaidActivationNotification(result.type, result.subtype)
+      ) {
+        const after = findUserByEmail(result.email);
+        queuePaidConfirmation(
+          { paidConfirmationSentAt: after?.paidConfirmationSentAt || null },
+          after,
+          deliverEmail
+        );
+      }
       try {
         appendNotification({
           type: result.type || null,

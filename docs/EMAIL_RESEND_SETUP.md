@@ -37,4 +37,4 @@ Look for `"provider":"resend"`. If you see `"provider":"emailjs"` plus `resendEr
 
 ## Priority
 
-When domain is verified + `RESEND_API_KEY` set, welcome + drip + trial convert use Resend first. EmailJS stays as fallback.
+When domain is verified + `RESEND_API_KEY` set, welcome + drip + trial convert + paid-membership confirmation + weekly fan digest use Resend first. EmailJS stays as fallback.
