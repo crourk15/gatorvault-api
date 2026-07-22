@@ -4,8 +4,8 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { loadFilmRoomCache, resolveCachePath } = require('./film-room-cache-store');
 
-const CACHE_PATH = path.join(__dirname, '..', 'data', 'film-room', 'cache.json');
 const MANUAL_PATH = path.join(__dirname, '..', 'data', 'film-room', 'manual.json');
 
 const LEGACY_CATEGORIES = {
@@ -62,7 +62,7 @@ function legacyItemToCatalog(raw, category) {
 }
 
 function loadLegacyVideoCatalog() {
-  const cache = readJson(CACHE_PATH, { auto: {} });
+  const cache = loadFilmRoomCache();
   const manual = readJson(MANUAL_PATH, { items: [] });
   const items = [];
 
@@ -97,5 +97,6 @@ function loadLegacyVideoCatalog() {
 module.exports = {
   LEGACY_CATEGORIES,
   PRESS_CONFERENCE_LIMIT,
-  loadLegacyVideoCatalog
+  loadLegacyVideoCatalog,
+  resolveCachePath,
 };

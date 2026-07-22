@@ -166,6 +166,36 @@ function mountPlatformRoutes(app) {
     }
   });
 
+  /**
+   * Pull new UF football pressers + GNFP film reviews from YouTube RSS into the durable cache.
+   * Auth: admin PIN or monitoring cron secret.
+   */
+  app.post('/api/film-room/admin/sync-youtube', async (req, res) => {
+    try {
+      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.query.pin || '');
+      const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.CRON_SECRET || '';
+      const cronHeader = String(req.get('x-monitoring-cron') || req.get('x-cron-secret') || '');
+      const cronOk = Boolean(cronSecret && cronHeader && cronHeader === cronSecret);
+      if (!cronOk && !verifyAdminPin(pin)) {
+        return res.status(401).json({ ok: false, error: 'Invalid admin PIN or cron secret' });
+      }
+      const { syncFilmRoomYouTube } = require('./film-room-youtube-ingest');
+      const sync = await syncFilmRoomYouTube();
+      const catalog = filmRoom.rebuildFilmRoomCatalog();
+      return res.json({
+        ok: true,
+        scope: 'youtube_rss',
+        message: 'Film Room YouTube sync complete (Florida Gators football pressers + GNFP reviews).',
+        sync,
+        catalogCounts: {
+          items: Array.isArray(catalog?.items) ? catalog.items.length : null,
+        },
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/feedback/submit', (req, res) => {
     try {
       const row = feedback.addSubmission(req.body || {});

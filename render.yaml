@@ -434,6 +434,21 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
+  # Film Room YouTube auto-ingest — Florida Gators football pressers + GNFP reviews.
+  - type: cron
+    name: gatorvault-api-film-room-youtube-sync
+    schedule: "35 */3 * * *"
+    runtime: node
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-film-room-youtube-sync-cron.js
+    envVars:
+      - key: FILM_ROOM_YOUTUBE_SYNC_URL
+        value: https://gatorvault-api.onrender.com/api/film-room/admin/sync-youtube
+      - key: MONITORING_CRON_SECRET
+        sync: false
+
   # Community daily staff open thread (ET morning) — real OP only, no fake replies.
   - type: cron
     name: gatorvault-api-community-daily-open
