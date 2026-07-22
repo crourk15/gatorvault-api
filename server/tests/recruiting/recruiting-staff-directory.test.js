@@ -13,7 +13,12 @@ describe('recruiting-staff-directory', () => {
     assert.ok(STAFF_DIRECTORY.harris);
     assert.ok(STAFF_DIRECTORY['chris-prescott']);
     assert.ok(STAFF_DIRECTORY['drew-hughes']);
-    assert.equal(STAFF_DIRECTORY.harris.role, 'Director of Player Personnel');
+    assert.equal(STAFF_DIRECTORY.harris.role, 'Cornerbacks Coach');
+    assert.equal(STAFF_DIRECTORY['chris-prescott'].role, 'Director of Player Personnel');
+    assert.equal(STAFF_DIRECTORY.collins.role, 'Safeties Coach');
+    assert.equal(STAFF_DIRECTORY.gasparato.role, 'Linebackers Coach');
+    assert.equal(STAFF_DIRECTORY.hardmon.role, 'Outside Linebackers Coach');
+    assert.equal(STAFF_DIRECTORY.whitt.role, 'Director of Football Performance');
   });
 
   it('normalizeStaffId resolves aliases', () => {

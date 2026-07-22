@@ -19,7 +19,7 @@
     "DB": {
       "name": "Brandon Harris",
       "title": "Cornerbacks Coach",
-      "aliases": ["Coach Harris", "Harris", "Anthony Harris"]
+      "aliases": ["Coach Harris", "Harris"]
     }
   },
   "staff": {
@@ -101,7 +101,7 @@
     }
   },
   "blockedScNames": [
-    "Anthony Harris",
+    
     "Coach Harris"
   ],
   "ignoreTerms": [

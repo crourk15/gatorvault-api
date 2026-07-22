@@ -6,7 +6,7 @@ const POSITION_TEMPLATES = {
     strengths: ['Arm talent and timing in the intermediate game', 'Poise under pressure in the pocket', 'Leadership and command of the huddle'],
     weaknesses: ['Decision speed vs. disguised coverages', 'Consistency on deep-ball accuracy'],
     schemeFit: 'Spread passing quarterback who can distribute on rhythm and extend when structure breaks down.',
-    projection: 'SEC-caliber signal-caller with starter trajectory in Billy Napier\'s system.'
+    projection: 'SEC-caliber signal-caller with starter trajectory in Buster Faulkner\'s system.'
   },
   RB: {
     strengths: ['Vision and patience between the tackles', 'Contact balance through second-level defenders', 'Pass-catching reliability out of the backfield'],
@@ -35,7 +35,7 @@ const POSITION_TEMPLATES = {
   DL: {
     strengths: ['Get-off and first-step quickness at the line', 'Hand usage to disengage blockers', 'Motor and finish rate in pursuit'],
     weaknesses: ['Anchor vs. double teams on early downs', 'Counter moves vs. veteran tackles'],
-    schemeFit: 'Defensive lineman in Billy White\'s odd-front pressure packages.',
+    schemeFit: 'Defensive lineman in Brad White\'s odd-front pressure packages.',
     projection: 'Rotation-to-starter defensive lineman with SEC production upside.'
   },
   JACK: {

@@ -128,7 +128,7 @@ export const FALLBACK_COACHES: Omit<Coach, 'bio' | 'highlights'>[] = [
   { id: 'harris', initials: 'BH', name: 'Brandon Harris', title: 'Cornerbacks Coach', group: 'coaching' },
   { id: 'collins', initials: 'CC', name: 'Chris Collins', title: 'Safeties Coach', group: 'coaching' },
   { id: 'galante', initials: 'JG', name: 'Johnathan Galante', title: 'Special Teams Coordinator', group: 'coaching' },
-  { id: 'whitt', initials: 'RW', name: 'Rusty Whitt', title: 'Head Strength & Conditioning', group: 'coaching' },
+  { id: 'whitt', initials: 'RW', name: 'Rusty Whitt', title: 'Director of Football Performance', group: 'coaching' },
   { id: 'donovan', initials: 'JD', name: 'John Donovan', title: 'Senior Offensive Analyst', group: 'coaching' },
   { id: 'moorer', initials: 'JM', name: 'Jared Moorer', title: 'Defensive Analyst', group: 'coaching' },
   { id: 'thompson', initials: 'JT', name: 'Joshua Thompson', title: 'Director of Football Operations', group: 'support' },
