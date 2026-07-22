@@ -419,6 +419,8 @@ function normalizePlayer(raw) {
     // Closing Class / live UF board membership — must survive normalize/upsert.
     boardSource: raw.boardSource || raw.board_source || null,
     protected: raw.protected === true || raw.protected === 'true',
+    // Verified elsewhere-commits must survive board sync (e.g. Cole → Georgia).
+    verifiedCommit: raw.verifiedCommit === true || raw.verified_commit === true || raw.verifiedCommit === 'true',
     rivalsLastPrediction: raw.rivalsLastPrediction || raw.rivals_last_prediction || null,
     rivalsAnalyst: raw.rivalsAnalyst || raw.rivals_analyst || null,
     rivalsConfidence: raw.rivalsConfidence != null ? Number(raw.rivalsConfidence) : raw.rivals_confidence != null ? Number(raw.rivals_confidence) : null,
@@ -803,9 +805,23 @@ function preservePlayerFields(existing, incoming) {
   }
 
   if (String(incoming.status || '').toLowerCase() === 'uncommitted') {
-    merged.committedTo = incoming.committedTo ?? null;
-    merged.fromSchool = incoming.fromSchool ?? null;
-    merged.commitDate = incoming.commitDate ?? null;
+    // Never let a stale board sync wipe a verified elsewhere-commit (e.g. Cole → Georgia).
+    const existingElsewhere =
+      existing.verifiedCommit &&
+      existing.committedTo &&
+      !isHubFloridaCommitStatus({ status: 'committed', committedTo: existing.committedTo });
+    if (existingElsewhere) {
+      merged.committedTo = existing.committedTo;
+      merged.status = existing.status || 'committed';
+      merged.category = existing.category === 'target' ? 'recruit' : existing.category;
+      merged.verifiedCommit = true;
+      merged.commitDate = existing.commitDate ?? incoming.commitDate ?? null;
+      merged.fromSchool = existing.fromSchool ?? incoming.fromSchool ?? null;
+    } else {
+      merged.committedTo = incoming.committedTo ?? null;
+      merged.fromSchool = incoming.fromSchool ?? null;
+      merged.commitDate = incoming.commitDate ?? null;
+    }
   }
 
   const mergedCompetitors = mergeCompetitorArrays(existing.competitors, incoming.competitors);

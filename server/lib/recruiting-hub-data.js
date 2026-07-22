@@ -737,17 +737,21 @@ function isHubPlayerSuppressed(slug, rawMap, pool) {
 }
 
 function resolveFeedMeta(slug, pool, rawMap) {
+  const raw = rawMap.get(slug) || {};
   const meta = pool.get(slug);
-  if (meta) return meta;
-  const raw = rawMap.get(slug);
-  if (!raw) return null;
+  const committedElsewhere = isCommittedElsewhere(raw) || isCommittedElsewhere(meta || {});
+  if (meta) {
+    return committedElsewhere ? { ...meta, isCommit: true } : meta;
+  }
+  if (!raw || !raw.name) return null;
   return {
     slug,
     name: raw.name || slug.replace(/-/g, ' '),
     position: playerPos(raw),
     classYear: raw.classYear ?? null,
     profileUrl: profileUrl(raw),
-    isCommit: false,
+    // Treat elsewhere-commits as commits so visit/offer heat cannot revive them.
+    isCommit: committedElsewhere || Boolean(raw.isCommit),
   };
 }
 
@@ -929,6 +933,8 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
     if (covered.has(meta.slug)) continue;
     const raw = rawMap.get(String(meta.slug).toLowerCase()) || {};
     const merged = { ...raw, ...meta };
+    // Dead elsewhere-commits (Cole → Georgia, etc.) must not appear as visit heat.
+    if (isCommittedElsewhere(merged) || (raw.verifiedCommit && isCommittedElsewhere(raw))) continue;
 
     if (isRelevantVisit(meta.visitStart)) {
       items.push(boardVisitItem(meta));

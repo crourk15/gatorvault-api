@@ -144,8 +144,25 @@ async function syncFloridaClosingBoardToStore(options = {}) {
   let skippedCommit = 0;
   let demoted = 0;
 
+  // Committed-elsewhere rows from the 247 page (and forced snapshot corrections).
+  // Never re-open these as uncommitted targets even if 247's open list is stale.
+  const committedElsewhereBySlug = new Map();
+  for (const row of board.committed || []) {
+    if (!row?.slug || !row.committedTo || isFloridaSchool(row.committedTo)) continue;
+    committedElsewhereBySlug.set(String(row.slug).toLowerCase(), row);
+  }
+
   for (const row of open) {
+    const slug = String(row.slug || '').toLowerCase();
     const existing = await store.getPlayerBySlug(row.slug);
+    if (committedElsewhereBySlug.has(slug)) {
+      skippedCommit += 1;
+      continue;
+    }
+    if (existing?.verifiedCommit && existing.committedTo && !isFloridaSchool(existing.committedTo)) {
+      skippedCommit += 1;
+      continue;
+    }
     if (existing && !isActiveUfTarget(existing)) {
       skippedCommit += 1;
       continue;
@@ -188,25 +205,51 @@ async function syncFloridaClosingBoardToStore(options = {}) {
 
   // Apply committed-elsewhere from 247 page (incl. Charles allowlist rows still marked open).
   let markedCommitted = 0;
-  for (const row of board.committed || []) {
+  for (const row of committedElsewhereBySlug.values()) {
     if (!row?.slug || !row.committedTo || isFloridaSchool(row.committedTo)) continue;
     const existing = await store.getPlayerBySlug(row.slug);
-    if (!existing) continue;
+    if (!existing) {
+      // Ensure dead targets exist in-store so board/feed filters can see the commit.
+      await store.upsertPlayer({
+        id: row.slug,
+        slug: row.slug,
+        name: row.name,
+        pos: row.pos || 'ATH',
+        classYear,
+        school: row.school || null,
+        htWt: row.htWt || null,
+        stars: row.stars || null,
+        rating: row.rating || null,
+        natlRank: row.natlRank ?? null,
+        posRank: row.posRank ?? null,
+        stateRank: row.stateRank ?? null,
+        inState: row.inState ?? false,
+        committedTo: row.committedTo,
+        category: 'recruit',
+        status: 'committed',
+        verifiedCommit: true,
+        boardSource: BOARD_SOURCE,
+        profileNote: `${row.name || row.slug} committed to ${row.committedTo}. Removed from UF target board.`,
+        updatedAt: new Date().toISOString(),
+      });
+      markedCommitted += 1;
+      continue;
+    }
     if (Number(existing.classYear) !== classYear) continue;
-    if (existing.verifiedCommit) continue;
     const already =
       String(existing.committedTo || '').toLowerCase() === String(row.committedTo).toLowerCase() &&
-      existing.category !== 'target';
+      existing.category !== 'target' &&
+      existing.verifiedCommit;
     if (already) continue;
     await store.upsertPlayer({
       ...existing,
       committedTo: row.committedTo,
       category: 'recruit',
       status: 'committed',
+      verifiedCommit: true,
       updatedAt: new Date().toISOString(),
       profileNote:
-        existing.profileNote ||
-        ((row.name || existing.name) + ' committed to ' + row.committedTo + ' (247 UF board).'),
+        `${row.name || existing.name} committed to ${row.committedTo}. Removed from UF target board.`,
     });
     markedCommitted += 1;
   }
