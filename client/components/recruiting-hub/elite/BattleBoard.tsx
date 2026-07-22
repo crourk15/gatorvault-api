@@ -6,6 +6,7 @@ import { fetchRecruitingHubBattleBoard } from '@/lib/recruiting-hub-elite-api';
 import { getBattleColor } from '@/lib/recruiting-hub-scoring';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
+import { schoolLogoInitials, schoolLogoUrl } from '@/lib/school-logos';
 
 const DIFFICULTY_LABELS: Record<RhHubBattleBoardItem['battleDifficulty'], string> = {
   easy: 'Easy',
@@ -22,13 +23,35 @@ function trendSymbol(trend: RhHubBattleBoardItem['trend']): string {
   return '—';
 }
 
+function CompetitorLogo({ school, fallback }: { school: string; fallback?: string | null }): React.ReactElement {
+  const src = schoolLogoUrl(school);
+  const initials = schoolLogoInitials(school) || fallback || '?';
+  if (src) {
+    return (
+      // ESPN CDN NCAA marks — same source as FutureCast school rows.
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        className="rh-battle-board-competitor__logo-img"
+        src={src}
+        alt=""
+        width={28}
+        height={28}
+        loading="lazy"
+        decoding="async"
+      />
+    );
+  }
+  return <span className="rh-battle-board-competitor__logo-fallback">{initials}</span>;
+}
+
 function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactElement {
   const ufColor =
     battle.battleColor ?? (battle.ufScore != null ? getBattleColor(battle.ufScore) : null);
-  const rivals = [...(battle.competitors || [])].sort(
-    (a, b) => Number(b.score ?? -1) - Number(a.score ?? -1)
-  );
-  const topRival = rivals.find((c) => c.score != null) || rivals[0] || null;
+  const rivals = [...(battle.competitors || [])]
+    .filter((c) => c?.school && c.score != null)
+    .sort((a, b) => Number(b.score ?? -1) - Number(a.score ?? -1));
+  const topRival = rivals[0] || null;
+  const ufLogo = schoolLogoUrl('Florida');
 
   return (
     <article className="rh-card rh-battle-board-card" data-testid={`rh-battle-board-${battle.id}`}>
@@ -56,19 +79,27 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
       <div
         className={`rh-battle-board-card__uf${ufColor ? ` rh-battle-board-card__uf--${ufColor}` : ' rh-battle-board-card__uf--unknown'}`}
       >
-        <span>UF RPM</span>
-        <strong>{battle.ufScore != null ? `${battle.ufScore}%` : 'RPM pending'}</strong>
+        <span className="rh-battle-board-card__uf-brand">
+          {ufLogo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={ufLogo} alt="" width={22} height={22} loading="lazy" decoding="async" />
+          ) : null}
+          <span>UF RPM</span>
+        </span>
+        <strong>{battle.ufScore != null ? `${battle.ufScore}%` : '—'}</strong>
       </div>
 
       {rivals.length > 0 ? (
         <div className="rh-battle-board-card__competitors" aria-label="Confirmed competitor RPM">
           {rivals.map((c) => (
             <div key={`${battle.id}-${c.school}`} className="rh-battle-board-competitor">
-              <span className="rh-battle-board-competitor__logo">{c.logo}</span>
+              <span className="rh-battle-board-competitor__logo">
+                <CompetitorLogo school={c.school} fallback={c.logo} />
+              </span>
               <div className="rh-battle-board-competitor__meta">
                 <span className="rh-battle-board-competitor__school">{c.school}</span>
                 <span className="rh-battle-board-competitor__score">
-                  {c.score != null ? `${c.score}%` : '—'}{' '}
+                  {`${c.score}%`}{' '}
                   <span className={`rh-movement rh-movement--${c.trend}`}>{trendSymbol(c.trend)}</span>
                 </span>
               </div>
@@ -76,7 +107,7 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
           ))}
         </div>
       ) : (
-        <div className="rh-battle-board-card__no-competitors">Competitor RPM pending</div>
+        <div className="rh-battle-board-card__no-competitors">No confirmed competitor RPM yet.</div>
       )}
 
       {battle.nextVisit ? <div className="rh-battle-board-card__visit">Next visit: {battle.nextVisit}</div> : null}

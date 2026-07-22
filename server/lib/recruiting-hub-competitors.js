@@ -1,8 +1,12 @@
 /**
  * Real competitor extraction — no default schools or synthetic scores.
+ * College RPM schools only — never high-school names / offer-list noise.
  */
 const { parseUfPct, isFloridaSchool: isFloridaSchoolScoring } = require('./recruiting-hub-scoring');
 const { resolveCommitmentOverride } = require('./commitment-prediction-override');
+
+const MASCOT_SUFFIX =
+  /\b(hurricanes|bulldogs|volunteers|aggies|buckeyes|fighting irish|razorbacks|demon deacons|jayhawks|tigers|red raiders|mustangs|cougars|bulls|knights|gators|crimson tide|sooners|longhorns|wolverines|nittany lions|trojans|bruins|ducks|huskies|seminoles|gamecocks|wildcats|commodores|rebels|orange|tar heels|wolfpack|yellow jackets|midshipmen|midshipman|fighting illini|golden gophers|hawkeyes|badgers|spartans|boilermakers|scarlet knights|terrapins|hoosiers|cornhuskers|jayhawk|razorback)\s*$/i;
 
 function isFloridaSchool(value) {
   return isFloridaSchoolScoring(value);
@@ -15,11 +19,30 @@ function schoolInitials(name) {
     .filter(Boolean);
   if (!parts.length) return '—';
   if (parts.length === 1) return parts[0].slice(0, 3).toUpperCase();
-  return parts.map((p) => p[0]).join('').slice(0, 4).toUpperCase();
+  return parts.map((p) => p[0]).join('').slice(0, 3).toUpperCase();
 }
 
+/** Reject HS / city labels that leak into competitor boards. */
+function looksLikeHighSchool(name) {
+  const s = String(name || '').trim();
+  if (!s) return true;
+  if (/[()]/.test(s)) return true;
+  if (/\b(hs|high school|prep|charter|christian|catholic|academy)\b/i.test(s)) return true;
+  if (/^\d/.test(s)) return true;
+  return false;
+}
+
+/**
+ * Canonical college label for RPM UI: "Miami Hurricanes" → "Miami".
+ */
 function normalizeSchoolName(name) {
-  return String(name || '').trim().slice(0, 28);
+  let s = String(name || '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!s || looksLikeHighSchool(s)) return '';
+  s = s.replace(MASCOT_SUFFIX, '').replace(/\s+/g, ' ').trim();
+  if (!s || looksLikeHighSchool(s)) return '';
+  return s.slice(0, 28);
 }
 
 function addCompetitor(map, name, score, trend = 'flat') {
@@ -42,12 +65,12 @@ function addCompetitor(map, name, score, trend = 'flat') {
 }
 
 function extractCommittedElsewhere(player) {
-  const school = player.committedTo ?? player.school;
+  // Never treat high-school `school` as a college competitor.
+  const school = player.committedTo;
   if (!school || isFloridaSchool(school)) return null;
   const status = String(player.status || player.ufOvStatus || '').toLowerCase();
-  if (status.includes('commit') && !isFloridaSchool(school)) return normalizeSchoolName(school);
-  if (player.committedTo && !isFloridaSchool(player.committedTo)) {
-    return normalizeSchoolName(player.committedTo);
+  if (status.includes('commit') || player.verifiedCommit || player.committedTo) {
+    return normalizeSchoolName(school);
   }
   return null;
 }
@@ -270,4 +293,6 @@ module.exports = {
   hasRealInterestData,
   hasRealVisitData,
   hasRealIntelData,
+  normalizeSchoolName,
+  looksLikeHighSchool,
 };
