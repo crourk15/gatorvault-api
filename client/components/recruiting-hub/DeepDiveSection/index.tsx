@@ -11,7 +11,7 @@ export function DeepDiveSection(): React.ReactElement {
         <ToolTile
           title="Depth Chart"
           description="Roster layers, snap projections, and positional depth intel."
-          href="/vault/depth-chart"
+          href="/vault/team/#depth"
           icon={
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 6h16v12H4V6zm2 2v8h12V8H6zm2 2h8v2H8v-2zm0 3h5v2H8v-2z" />

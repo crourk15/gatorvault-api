@@ -678,15 +678,13 @@ app.post('/api/auth/forgot-password', async (req, res) => {
   try {
     const { requestPasswordReset } = require('./lib/password-reset');
     const email = String(req.body?.email || '').trim().toLowerCase();
-    const result = await requestPasswordReset(email, { deliverEmail });
-    // Always generic — do not reveal whether the account exists.
+    await requestPasswordReset(email, { deliverEmail });
+    // Always identical body — do not reveal whether the account exists.
     return res.json({
       ok: true,
       accepted: true,
       message:
         'If that email has a GatorVault account, we sent a password reset link. Check your inbox (and spam).',
-      emailSent: Boolean(result.emailSent),
-      provider: result.provider || null,
     });
   } catch (err) {
     console.error('forgot-password error', err);
@@ -934,7 +932,7 @@ app.get('/api/version', (req, res) => {
     ok: true,
     build: commit,
     buildShort: String(commit).slice(0, 7),
-    uiBuild: 'baaf5783',
+    uiBuild: String(commit).slice(0, 7),
     features: {
       globalTicker: true,
       bannerAlerts: true,

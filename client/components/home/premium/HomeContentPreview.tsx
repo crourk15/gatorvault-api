@@ -97,7 +97,7 @@ export function HomeContentPreview({ content, loading }: Props): React.ReactElem
       <ContentColumn
         heading="Latest Film Room Breakdowns"
         items={filmRoom}
-        empty="Film room clips coming soon."
+        empty="Film room clips No breakdowns yet — check Film Room for the latest tape.."
       />
     </div>
   );

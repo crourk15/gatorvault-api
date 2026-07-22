@@ -190,7 +190,7 @@ export function HomeMovementIntel({ data, loading }: Props): React.ReactElement 
         </ul>
       </section>
 
-      <a href="/vault/recruiting/movement" className="gv-home-link">
+      <a href="/vault/recruiting/?tab=movement" className="gv-home-link">
         Full Movement Intel →
       </a>
     </article>

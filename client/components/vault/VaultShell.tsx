@@ -82,7 +82,7 @@ function NavLink({
 
 function VaultBottomNav({ pathname }: { pathname: string }): React.ReactElement {
   // Boot script owns Menu clicks — React only mirrors open state (no dual onClick).
-  const { isOpen: menuOpen } = useAppMenu();
+  const { isOpen: menuOpen, toggleMenu } = useAppMenu();
 
   const navLabel = (label: string) => label.replace('GatorNation Live', 'GNL Live').replace(' Hub', '');
 
@@ -108,6 +108,7 @@ function VaultBottomNav({ pathname }: { pathname: string }): React.ReactElement 
         aria-expanded={menuOpen}
         aria-controls="gv-app-menu-drawer"
         data-vault-menu-toggle=""
+        onClick={toggleMenu}
       >
         <span className="gv-vault-bottom-nav__icon" aria-hidden="true">
           <PremiumNavIcon id="menu" />
