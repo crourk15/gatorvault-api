@@ -6,7 +6,12 @@ import '@/lib/vault-home.css';
 import '@/lib/uf-premium-home.css';
 import { HomePremiumPage } from '@/components/home/premium/HomePremiumPage';
 
-const PREFETCH_ROUTES = ['/vault/recruiting', '/vault/futurecast', '/vault/team'] as const;
+const PREFETCH_ROUTES = [
+  '/vault/recruiting',
+  '/vault/futurecast',
+  '/vault/team',
+  '/vault/community',
+] as const;
 
 export function VaultHomePage(): React.ReactElement {
   const router = useRouter();

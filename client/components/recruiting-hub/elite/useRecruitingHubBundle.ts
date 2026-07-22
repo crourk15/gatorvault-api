@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   fetchRecruitingHubBundle,
   RECRUITING_HUB_ELITE_YEAR,
@@ -19,6 +19,7 @@ import '@/lib/recruiting-hub-window';
 const HUB_BUNDLE_CACHE_PREFIX = 'gv_hub_bundle_v1';
 const HUB_BUNDLE_CACHE_TTL_MS = 30 * 60 * 1000;
 const HUB_AUTO_RETRY_MS = 8_000;
+const HUB_AUTO_RETRY_MAX = 6;
 
 function readHubBundleCache(year: number): RhHubBundle | null {
   if (typeof window === 'undefined') return null;
@@ -74,8 +75,12 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
   const [warming, setWarming] = useState(() => !recruitingHubBundleHasSignal(initialHubBundle(year)));
   const [error, setError] = useState(false);
   const [reloadToken, setReloadToken] = useState(0);
+  const autoRetryCountRef = useRef(0);
 
-  const reload = useCallback(() => setReloadToken((token) => token + 1), []);
+  const reload = useCallback(() => {
+    autoRetryCountRef.current = 0;
+    setReloadToken((token) => token + 1);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -140,12 +145,18 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
           if (typeof window !== 'undefined') {
             window.__GV_HUB__ = { ...window.__GV_HUB__, start, year, ok: false };
           }
-          // Keep warming UI + auto-retry — never dump fans into a dead error page.
+          // Bounded auto-retry — never dump fans into a dead page, never spin forever.
           setError(false);
           setWarming(true);
-          window.setTimeout(() => {
-            if (!cancelled) setReloadToken((token) => token + 1);
-          }, HUB_AUTO_RETRY_MS);
+          if (autoRetryCountRef.current < HUB_AUTO_RETRY_MAX) {
+            autoRetryCountRef.current += 1;
+            window.setTimeout(() => {
+              if (!cancelled) setReloadToken((token) => token + 1);
+            }, HUB_AUTO_RETRY_MS);
+          } else {
+            setError(true);
+            setWarming(false);
+          }
         }
       } finally {
         if (!cancelled) {

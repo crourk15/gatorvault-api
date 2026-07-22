@@ -33,7 +33,7 @@ const { mountPlayerIntelEntryRoutes } = require('./lib/player-intel-entry-routes
 const { apiMonitorMiddleware } = require('./lib/api-monitor');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
-const { effectiveTier, isAdminAccount } = require('./lib/session-auth');
+const { effectiveTier, isAdminAccount, isReservedOperatorEmail } = require('./lib/session-auth');
 const { loadUsers, saveUsers, findUserByEmail } = require('./lib/user-store');
 const { hasPaidAccess, buildSessionFields } = require('./lib/subscription-service');
 const { mountSubscriptionRoutes } = require('./lib/subscription-routes');
@@ -464,13 +464,21 @@ app.post('/api/register', async (req, res) => {
     const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
     const name = String(req.body.name || '').trim();
-    const tier = normalizeTier(req.body.tier);
+    // Self-register never chooses War — upgrades only via IAP / admin grant.
+    const tier = 'locker';
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res.status(400).json({ ok: false, error: 'Enter a valid email address.' });
     }
     if (!password || password.length < 8) {
       return res.status(400).json({ ok: false, error: 'Password must be at least 8 characters.' });
+    }
+    if (isReservedOperatorEmail(email)) {
+      return res.status(403).json({
+        ok: false,
+        error: 'This email cannot self-register. Contact support@gatorvaultinsider.com for operator access.',
+        code: 'reserved_email',
+      });
     }
 
     const users = loadUsers();

@@ -25,8 +25,9 @@ const config: CapacitorConfig = {
     : {}),
   plugins: {
     SplashScreen: {
-      launchShowDuration: 1800,
-      launchAutoHide: true,
+      // Keep splash until first paint (native-shell hides it). Avoids blank WebView flash.
+      launchShowDuration: 3000,
+      launchAutoHide: false,
       backgroundColor: '#0a1628',
       showSpinner: false,
       androidSplashResourceName: 'splash',

@@ -7,7 +7,54 @@ const {
   flagValidationError,
 } = require('./community-flag-utils');
 
-const DATA_DIR = path.join(__dirname, '..', 'data', 'community');
+/** Bundled seed lives here; mutable UGC redirects to GV_COMMUNITY_DATA_DIR (/var/data/community). */
+const BUNDLE_DATA_DIR = path.join(__dirname, '..', 'data', 'community');
+const RENDER_COMMUNITY_DATA_DIR = '/var/data/community';
+
+function resolveCommunityDataDir() {
+  const fromEnv = String(process.env.GV_COMMUNITY_DATA_DIR || '').trim();
+  if (fromEnv) return fromEnv;
+  try {
+    if (process.env.NODE_ENV === 'production' && fs.existsSync('/var/data')) {
+      return RENDER_COMMUNITY_DATA_DIR;
+    }
+  } catch {
+    /* ignore */
+  }
+  return BUNDLE_DATA_DIR;
+}
+
+const DATA_DIR = resolveCommunityDataDir();
+
+function migrateBundleCommunityIfNeeded() {
+  if (DATA_DIR === BUNDLE_DATA_DIR) return;
+  try {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    const destThreads = path.join(DATA_DIR, 'threads.json');
+    if (fs.existsSync(destThreads)) {
+      try {
+        const existing = JSON.parse(fs.readFileSync(destThreads, 'utf8'));
+        if (Array.isArray(existing) && existing.length > 0) return;
+      } catch {
+        /* continue migrate */
+      }
+    }
+    if (!fs.existsSync(BUNDLE_DATA_DIR)) return;
+    for (const file of fs.readdirSync(BUNDLE_DATA_DIR)) {
+      if (!file.endsWith('.json')) continue;
+      const src = path.join(BUNDLE_DATA_DIR, file);
+      const dest = path.join(DATA_DIR, file);
+      if (!fs.existsSync(dest)) {
+        fs.copyFileSync(src, dest);
+      }
+    }
+  } catch (err) {
+    console.warn('[community-store] durable migrate skipped:', err.message);
+  }
+}
+
+migrateBundleCommunityIfNeeded();
+
 const USERS_PATH = path.join(DATA_DIR, 'users.json');
 const THREADS_PATH = path.join(DATA_DIR, 'threads.json');
 const POSTS_PATH = path.join(DATA_DIR, 'posts.json');
@@ -16,6 +63,51 @@ const LIVE_ROOMS_PATH = path.join(DATA_DIR, 'live_rooms.json');
 const LIVE_MESSAGES_PATH = path.join(DATA_DIR, 'live_messages.json');
 const FLAGS_PATH = path.join(DATA_DIR, 'flags.json');
 const FOLLOWS_PATH = path.join(DATA_DIR, 'follows.json');
+
+const STAFF_USER = {
+  id: 'usr_gv_staff',
+  email: 'staff@gatorvaultinsider.com',
+  displayName: 'GatorVault Staff',
+};
+
+/** Honest staff prompts for the daily open thread (real OP text, replyCount starts at 0). */
+const DAILY_OPEN_PROMPTS = [
+  {
+    title: 'Daily open: what moved Florida’s board overnight?',
+    body: 'Visits, RPM, portal chatter, or scheme notes — drop one concrete signal and why it matters today.',
+    categorySlug: 'war',
+  },
+  {
+    title: 'Daily open: depth chart question you want answered',
+    body: 'Name the room and the uncertainty. Staff and members — keep it roster-real.',
+    categorySlug: 'locker',
+  },
+  {
+    title: 'Daily open: one film trait you’re watching this week',
+    body: 'Prospect or roster player — first step, eyes, ball skills, or toughness. Be specific.',
+    categorySlug: 'film',
+  },
+  {
+    title: 'Daily open: portal fit you’d prioritize before fall camp',
+    body: 'Position, scheme fit, and what Florida already has. No rumor spam.',
+    categorySlug: 'locker',
+  },
+  {
+    title: 'Daily open: recruiting visitor or board name heating up',
+    body: 'Who’s getting louder — and what’s the public signal (visit, offer, crystal ball)?',
+    categorySlug: 'war',
+  },
+  {
+    title: 'Daily open: NIL market signal fans are seeing',
+    body: 'Keep it factual — market move and how it intersects Florida’s board or roster.',
+    categorySlug: 'war',
+  },
+  {
+    title: 'Daily open: game week keys before Saturday',
+    body: 'Matchup keys, depth notes, visitors. Sharp and on Florida.',
+    categorySlug: 'locker',
+  },
+];
 
 const TIER_BADGE = {
   locker: { badge: '🏟️ LOCKER ROOM', badgeClass: 'tier-locker' },
@@ -26,7 +118,10 @@ const TIER_BADGE = {
 
 function readJson(filePath, fallback) {
   try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    if (!fs.existsSync(filePath)) return fallback;
+    const raw = fs.readFileSync(filePath, 'utf8');
+    if (!String(raw || '').trim()) return fallback;
+    return JSON.parse(raw);
   } catch (e) {
     return fallback;
   }
@@ -34,7 +129,25 @@ function readJson(filePath, fallback) {
 
 function writeJson(filePath, data) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  const tmp = `${filePath}.${process.pid}.${Date.now()}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2));
+  fs.renameSync(tmp, filePath);
+}
+
+/** Threads/posts: never treat corrupt JSON as empty (prevents founding wipe). */
+function readJsonArrayStrict(filePath) {
+  if (!fs.existsSync(filePath)) return { ok: true, missing: true, data: [] };
+  try {
+    const raw = fs.readFileSync(filePath, 'utf8');
+    if (!String(raw || '').trim()) return { ok: true, missing: true, data: [] };
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return { ok: false, missing: false, data: [], error: 'not_array' };
+    }
+    return { ok: true, missing: false, data: parsed };
+  } catch (err) {
+    return { ok: false, missing: false, data: [], error: err.message };
+  }
 }
 
 function nowIso() {
@@ -49,6 +162,119 @@ function trendingScore(thread) {
   const hours = (Date.now() - new Date(thread.lastActivityAt || thread.createdAt).getTime()) / 3600000;
   const recencyBoost = Math.max(0, 48 - hours) * 0.5;
   return (thread.replyCount || 0) * 2 + (thread.viewCount || 0) * 0.1 + recencyBoost;
+}
+
+/** Client bake sometimes used seed_founding_*; server founding IDs are thr_founding_*. */
+function resolveThreadId(id) {
+  const raw = String(id || '').trim();
+  if (!raw) return raw;
+  if (raw.startsWith('seed_founding_')) {
+    return `thr_founding_${raw.slice('seed_founding_'.length)}`;
+  }
+  return raw;
+}
+
+function todayKeyET() {
+  try {
+    return new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/New_York',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(new Date());
+  } catch {
+    return new Date().toISOString().slice(0, 10);
+  }
+}
+
+function dayOfYearET() {
+  const key = todayKeyET();
+  const [y, m, d] = key.split('-').map(Number);
+  const start = Date.UTC(y, 0, 0);
+  const now = Date.UTC(y, m - 1, d);
+  return Math.floor((now - start) / 86400000);
+}
+
+function ensureStaffUser() {
+  const users = loadUsers();
+  if (users.some((u) => u.id === STAFF_USER.id)) return users.find((u) => u.id === STAFF_USER.id);
+  const ts = nowIso();
+  const staff = {
+    id: STAFF_USER.id,
+    email: STAFF_USER.email,
+    displayName: STAFF_USER.displayName,
+    avatarUrl: null,
+    tier: 'film',
+    isFounding: true,
+    joinDate: ts,
+    createdAt: ts,
+  };
+  users.push(staff);
+  saveUsers(users);
+  return staff;
+}
+
+function staffSession() {
+  ensureStaffUser();
+  return {
+    email: STAFF_USER.email,
+    displayName: STAFF_USER.displayName,
+  };
+}
+
+/**
+ * One fresh staff OP per ET calendar day. Does not invent fan replies.
+ * Idempotent: returns existing daily thread when already published.
+ */
+function ensureDailyOpenThread() {
+  ensureCategories();
+  ensureFoundingSurface();
+  ensureStaffUser();
+  const today = todayKeyET();
+  const threads = loadThreads();
+  const existing = threads.find((t) => t.dailyKey === today && !t.deleted);
+  if (existing) {
+    // Keep today's daily at the top of Jump-in.
+    if (!existing.pinned || !existing.featured) {
+      existing.pinned = true;
+      existing.featured = true;
+      saveThreads(threads);
+    }
+    return { created: false, thread: existing };
+  }
+
+  const prompt = DAILY_OPEN_PROMPTS[dayOfYearET() % DAILY_OPEN_PROMPTS.length];
+  const cats = ensureCategories();
+  const cat = cats.find((c) => c.slug === prompt.categorySlug) || cats[0];
+  const ts = nowIso();
+
+  for (const t of threads) {
+    if (t.dailyKey && t.dailyKey !== today) {
+      t.pinned = false;
+    }
+  }
+
+  const thread = {
+    id: newId('thr_daily'),
+    title: prompt.title,
+    body: prompt.body,
+    categoryId: cat.id,
+    categorySlug: cat.slug,
+    authorId: STAFF_USER.id,
+    authorEmail: STAFF_USER.email,
+    pinned: true,
+    locked: false,
+    featured: true,
+    replyCount: 0,
+    viewCount: 0,
+    lastActivityAt: ts,
+    createdAt: ts,
+    deleted: false,
+    dailyKey: today,
+  };
+  threads.unshift(thread);
+  saveThreads(threads);
+  return { created: true, thread };
 }
 
 function sortThreads(threads, sort) {
@@ -96,7 +322,15 @@ function ensureCategories() {
  */
 function ensureFoundingSurface() {
   ensureCategories();
-  const existing = loadThreads().filter((t) => !t.deleted);
+  const loaded = readJsonArrayStrict(THREADS_PATH);
+  if (!loaded.ok) {
+    console.error(
+      '[community-store] refusing founding reseed — corrupt threads store:',
+      loaded.error
+    );
+    return { seeded: false, corrupt: true, count: 0 };
+  }
+  const existing = loaded.data.filter((t) => !t.deleted);
   if (existing.length > 0) return { seeded: false, count: existing.length };
 
   const ts = nowIso();
@@ -254,7 +488,13 @@ function saveUsers(users) {
 }
 
 function loadThreads() {
-  return readJson(THREADS_PATH, []);
+  const loaded = readJsonArrayStrict(THREADS_PATH);
+  if (!loaded.ok) {
+    const err = new Error(`Community threads store unreadable: ${loaded.error}`);
+    err.code = 'COMMUNITY_STORE_CORRUPT';
+    throw err;
+  }
+  return loaded.data;
 }
 
 function saveThreads(threads) {
@@ -262,7 +502,13 @@ function saveThreads(threads) {
 }
 
 function loadPosts() {
-  return readJson(POSTS_PATH, []);
+  const loaded = readJsonArrayStrict(POSTS_PATH);
+  if (!loaded.ok) {
+    const err = new Error(`Community posts store unreadable: ${loaded.error}`);
+    err.code = 'COMMUNITY_STORE_CORRUPT';
+    throw err;
+  }
+  return loaded.data;
 }
 
 function savePosts(posts) {
@@ -374,6 +620,7 @@ function enrichThreadWithAuthor(thread, categoryMap, users) {
 function getThreads({ sort = 'trending', category, limit = 50 } = {}) {
   ensureCategories();
   ensureFoundingSurface();
+  ensureDailyOpenThread();
   const categoryMap = getCategoryMap();
   const users = loadUsers();
   let threads = loadThreads().filter((t) => !t.deleted);
@@ -385,8 +632,9 @@ function getThreads({ sort = 'trending', category, limit = 50 } = {}) {
 }
 
 function getThreadById(id, incrementView = false) {
+  const resolvedId = resolveThreadId(id);
   const threads = loadThreads();
-  const idx = threads.findIndex((t) => t.id === id && !t.deleted);
+  const idx = threads.findIndex((t) => t.id === resolvedId && !t.deleted);
   if (idx < 0) return null;
   if (incrementView) {
     threads[idx].viewCount = (threads[idx].viewCount || 0) + 1;
@@ -394,7 +642,7 @@ function getThreadById(id, incrementView = false) {
   }
   const categoryMap = getCategoryMap();
   const posts = loadPosts()
-    .filter((p) => p.threadId === id && !p.deleted)
+    .filter((p) => p.threadId === resolvedId && !p.deleted)
     .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
   const users = loadUsers();
   const author = users.find((u) => u.id === threads[idx].authorId);
@@ -465,8 +713,9 @@ function createThread(session, { title, body, categorySlug }) {
 
 function createReply(session, threadId, body) {
   const user = getOrCreateUser(session);
+  const resolvedId = resolveThreadId(threadId);
   const threads = loadThreads();
-  const idx = threads.findIndex((t) => t.id === threadId && !t.deleted);
+  const idx = threads.findIndex((t) => t.id === resolvedId && !t.deleted);
   if (idx < 0) throw new Error('Thread not found');
   if (threads[idx].locked) throw new Error('Thread is locked');
   const text = String(body || '').trim();
@@ -474,7 +723,7 @@ function createReply(session, threadId, body) {
   const posts = loadPosts();
   const post = {
     id: newId('pst'),
-    threadId,
+    threadId: resolvedId,
     authorId: user.id,
     authorEmail: user.email,
     body: text,
@@ -524,14 +773,39 @@ function getFollowedThreadIds(email) {
 }
 
 function getPulseStats() {
+  ensureDailyOpenThread();
   const threads = loadThreads().filter((t) => !t.deleted);
   const posts = loadPosts().filter((p) => !p.deleted);
   const since = Date.now() - 24 * 60 * 60 * 1000;
   const repliesToday = posts.filter((p) => new Date(p.createdAt).getTime() > since).length;
-  const trending = threads.filter((t) => trendingScore(t) > 5).length;
+  // Honest: only threads with real replies count as trending — no recency theater.
+  const trending = threads.filter((t) => (t.replyCount || 0) > 0).length;
   const pinned = threads.filter((t) => t.pinned).length;
   const liveRooms = loadLiveRooms().filter((r) => r.status === 'live').length;
   return { repliesToday, trending, pinned, liveRooms };
+}
+
+/** Admin: create a real staff OP (PIN-gated). */
+function adminCreateStaffThread({ title, body, categorySlug, pinned, featured }) {
+  const result = createThread(staffSession(), {
+    title,
+    body,
+    categorySlug: categorySlug || 'locker',
+  });
+  const threads = loadThreads();
+  const idx = threads.findIndex((t) => t.id === result.thread.id);
+  if (idx >= 0) {
+    threads[idx].pinned = Boolean(pinned);
+    threads[idx].featured = Boolean(featured);
+    saveThreads(threads);
+    result.thread = enrichThread(threads[idx], getCategoryMap());
+  }
+  return result;
+}
+
+/** Admin: post a real staff reply (PIN-gated). */
+function adminStaffReply(threadId, body) {
+  return createReply(staffSession(), threadId, body);
 }
 
 function getLiveRooms() {
@@ -723,10 +997,13 @@ function isSeeded() {
 
 module.exports = {
   DATA_DIR,
+  BUNDLE_DATA_DIR,
   TIER_BADGE,
   trendingScore,
+  resolveThreadId,
   ensureCategories,
   ensureFoundingSurface,
+  ensureDailyOpenThread,
   getOrCreateUser,
   getThreads,
   getThreadById,
@@ -743,6 +1020,8 @@ module.exports = {
   adminFeatureThread,
   adminDeleteThread,
   adminDeletePost,
+  adminCreateStaffThread,
+  adminStaffReply,
   flagPost,
   flagThread,
   getOpenFlags,

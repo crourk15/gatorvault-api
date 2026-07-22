@@ -62,7 +62,7 @@ function slimThread(t) {
 function foundingThreads(nowIso) {
   return [
     {
-      id: 'seed_founding_board_priority',
+      id: 'thr_founding_board_priority',
       title: 'Who is Florida’s biggest 2027 board priority right now?',
       body: 'Looking at the battle board — which target feels like the program’s true #1, and what would move the needle this month?',
       categorySlug: 'war',
@@ -76,7 +76,7 @@ function foundingThreads(nowIso) {
       lastActivityAt: nowIso,
     },
     {
-      id: 'seed_founding_portal_watch',
+      id: 'thr_founding_portal_watch',
       title: 'Portal watch: which rooms need help before fall camp?',
       body: 'Depth chart first — where does Florida still feel thin, and which portal profiles actually fit the scheme?',
       categorySlug: 'locker',
@@ -90,7 +90,7 @@ function foundingThreads(nowIso) {
       lastActivityAt: nowIso,
     },
     {
-      id: 'seed_founding_film_clip',
+      id: 'thr_founding_film_clip',
       title: 'Film Room: one clip that changed your mind on a 2027 target',
       body: 'Drop the prospect and what you saw — first step, frame, ball skills, or competitive toughness.',
       categorySlug: 'film',
@@ -104,7 +104,7 @@ function foundingThreads(nowIso) {
       lastActivityAt: nowIso,
     },
     {
-      id: 'seed_founding_nil_pulse',
+      id: 'thr_founding_nil_pulse',
       title: 'NIL pulse: what are fans seeing in the market this week?',
       body: 'Keep it factual — name the market signal and how it intersects Florida’s board or roster.',
       categorySlug: 'war',
@@ -118,7 +118,7 @@ function foundingThreads(nowIso) {
       lastActivityAt: nowIso,
     },
     {
-      id: 'seed_founding_gameweek',
+      id: 'thr_founding_gameweek',
       title: 'Game Week open thread — drop your keys before kickoff',
       body: 'Matchup keys, depth chart notes, and recruiting visitors. Keep it sharp and on Florida.',
       categorySlug: 'locker',
@@ -132,7 +132,7 @@ function foundingThreads(nowIso) {
       lastActivityAt: nowIso,
     },
     {
-      id: 'seed_founding_welcome',
+      id: 'thr_founding_welcome',
       title: 'Founding members: introduce yourself and what you track',
       body: 'Recruiting, film, NIL, game week — tell the room what you follow so staff can shape weekly threads.',
       categorySlug: 'founding',
@@ -146,7 +146,7 @@ function foundingThreads(nowIso) {
       lastActivityAt: nowIso,
     },
     {
-      id: 'seed_founding_closing_class',
+      id: 'thr_founding_closing_class',
       title: 'Closing Class pulse: which 2027 board name feels hottest this week?',
       body: 'RPM, visits, or crystal-ball chatter — name the prospect and the signal. Keep it board-real, not rumor spam.',
       categorySlug: 'war',
@@ -160,7 +160,7 @@ function foundingThreads(nowIso) {
       lastActivityAt: nowIso,
     },
     {
-      id: 'seed_founding_staff_scheme',
+      id: 'thr_founding_staff_scheme',
       title: 'Scheme talk: what should Florida emphasize on defense in year one?',
       body: 'Front structure, coverage identity, or personnel fits — drop one concrete schematic take for the room.',
       categorySlug: 'film',
@@ -250,17 +250,18 @@ async function main() {
   }
   if (!rooms.length) rooms = foundingRooms(nowIso);
 
-  if (!pulse || !Object.keys(pulse).length || (pulse.trending == null && pulse.repliesToday == null)) {
-    pulse = {
-      repliesToday: pulse.repliesToday ?? 0,
-      trending: Math.max(pulse.trending || 0, threads.filter((t) => t.featured || t.pinned).length),
-      pinned: threads.filter((t) => t.pinned).length,
-      liveRooms: rooms.length,
-      threadCount: threads.length,
-      postCount: pulse.postCount || 0,
-      activeToday: pulse.activeToday || 0,
-    };
-  }
+  // Honest pulse only — never invent trending from featured/pinned empty threads.
+  const repliesToday = Number(pulse.repliesToday) || 0;
+  const threadsWithReplies = threads.filter((t) => (t.replyCount || 0) > 0).length;
+  pulse = {
+    repliesToday,
+    trending: threadsWithReplies,
+    pinned: threads.filter((t) => t.pinned).length,
+    liveRooms: (rooms || []).filter((r) => r.status === 'live').length,
+    threadCount: threads.length,
+    postCount: Number(pulse.postCount) || 0,
+    activeToday: Number(pulse.activeToday) || 0,
+  };
 
   const seed = { generatedAt: nowIso, source, categories, threads, pulse, rooms };
   fs.writeFileSync(OUT, JSON.stringify(seed, null, 2) + '\n');

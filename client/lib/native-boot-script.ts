@@ -271,6 +271,9 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
       } catch (err2) {}
     }, true);
 
+    // Safe-area / tap polish before React mounts.
+    try { document.documentElement.classList.add('gv-native-app'); } catch (eCls) {}
+
     // Restore stashed catch-all deep links BEFORE cold-start routing.
     // Otherwise Team → /vault/players/:slug loads the shell, then cold-start
     // replaces to /vault/ and drops the player (or falls through to marketing).
@@ -278,10 +281,16 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
     var path = routePath(location.pathname || '/');
     var cold = takeColdStart();
     if (isMarketingPath(path) || (cold && isMarketingPath(path))) {
-      restoreSessionFromPreferences(function() {
-        var dest = vaultDest();
-        if (location.href !== dest) location.replace(dest);
-      });
+      // Skip Preferences round-trip when localStorage already has a session.
+      if (sessionOk()) {
+        var destFast = vaultDest();
+        if (location.href !== destFast) location.replace(destFast);
+      } else {
+        restoreSessionFromPreferences(function() {
+          var dest = vaultDest();
+          if (location.href !== dest) location.replace(dest);
+        });
+      }
     }
   } catch (e) {}
 })();`;

@@ -1,0 +1,28 @@
+# Submit 1.0.8 (Build 38) — after Build 37 TestFlight
+
+Build **37** covers deep links, IAP restore fallback, push URL normalize, and Community jump-in.
+Build **38** adds the next elite hardenings (does not replace 37 mid-review unless Apple asks):
+
+- Community daily loop: sign-in gate on new threads, room → existing open thread, seed OP fallback, live-board updating
+- IAP: stash unfinished StoreKit txs when logged out; verify + finish after sign-in
+- Native: splash after first paint; offline banner; push registration listener cleanup
+- Home: Team + Community in Open the vault strip
+
+## iOS
+
+- `MARKETING_VERSION = 1.0.8`
+- `CURRENT_PROJECT_VERSION = 38`
+
+## Codemagic
+
+1. After **37** is processing / in review (or after you decide to supersede), merge this to `main`
+2. Confirm log: bundled shell, no `server.url`
+3. Attach **38** to 1.0.8 only when you want this binary under review
+
+## Device check (TestFlight)
+
+- Community: open Game Week room → joins founding thread (not blank dead-end)
+- Community: New Thread while signed out → sign-in toast
+- IAP: purchase/restore path still finishes after sign-in if a tx was pending
+- Home strip shows Team + Community
+- Airplane mode briefly shows offline banner

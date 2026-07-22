@@ -11,6 +11,23 @@ import {
   navigateNativeCatchAll,
   shouldUseNativeCatchAllNav,
 } from '@/lib/native-spa-nav';
+import { isVaultClientNavHref } from '@/lib/vault-nav-utils';
+
+type SoftNavHandler = (href: string) => boolean;
+
+let softNavHandler: SoftNavHandler | null = null;
+
+/** VaultNavigationProvider registers Next router.push for in-shell soft nav. */
+export function registerVaultSoftNav(handler: SoftNavHandler): () => void {
+  softNavHandler = handler;
+  return () => {
+    if (softNavHandler === handler) softNavHandler = null;
+  };
+}
+
+function requestVaultSoftNav(href: string): boolean {
+  return softNavHandler?.(href) ?? false;
+}
 
 export function navigateVaultHref(href: string): void {
   if (typeof window === 'undefined' || !href) return;
@@ -23,6 +40,10 @@ export function navigateVaultHref(href: string): void {
   }
   if (shouldUseNativeCatchAllNav(path) || (isNativeApp() && isNativeCatchAllDynamicHref(path))) {
     navigateNativeCatchAll(path);
+    return;
+  }
+  // Everyday vault boards: soft-nav when the shell router is mounted.
+  if (isVaultClientNavHref(path) && requestVaultSoftNav(path)) {
     return;
   }
   window.location.href = isNativeApp() ? nativeNavigationUrl(path) : path;

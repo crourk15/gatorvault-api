@@ -6,6 +6,16 @@ import { loadSession } from '@/lib/auth-api';
 import { navigateVaultHref } from '@/lib/navigate-vault-href';
 import type { AlertPushPrefs } from '@/lib/push-alerts-api';
 
+type TokenWaiter = {
+  resolve: (token: string) => void;
+  reject: (err: unknown) => void;
+  timeout: ReturnType<typeof setTimeout>;
+};
+
+let registrationWired = false;
+let tapHandlerWired = false;
+let tokenWaiters: TokenWaiter[] = [];
+
 function authHeaders(): HeadersInit {
   const session = loadSession();
   const headers: Record<string, string> = {
@@ -32,6 +42,29 @@ async function postDeviceToken(token: string, prefs: AlertPushPrefs) {
   return { ok: true as const };
 }
 
+async function ensureRegistrationListeners(
+  PushNotifications: typeof import('@capacitor/push-notifications').PushNotifications
+): Promise<void> {
+  if (registrationWired) return;
+  registrationWired = true;
+  await PushNotifications.addListener('registration', (token) => {
+    const waiters = tokenWaiters;
+    tokenWaiters = [];
+    for (const w of waiters) {
+      clearTimeout(w.timeout);
+      w.resolve(token.value);
+    }
+  });
+  await PushNotifications.addListener('registrationError', (err) => {
+    const waiters = tokenWaiters;
+    tokenWaiters = [];
+    for (const w of waiters) {
+      clearTimeout(w.timeout);
+      w.reject(err);
+    }
+  });
+}
+
 export async function registerNativePush(
   prefs: AlertPushPrefs
 ): Promise<{ ok: boolean; reason?: string }> {
@@ -46,20 +79,15 @@ export async function registerNativePush(
       return { ok: false, reason: 'denied' };
     }
 
-    const tokenPromise = new Promise<string>((resolve, reject) => {
+    await ensureRegistrationListeners(PushNotifications);
+
+    const token = await new Promise<string>((resolve, reject) => {
       const timeout = setTimeout(() => reject(new Error('token_timeout')), 20_000);
-      void PushNotifications.addListener('registration', (token) => {
-        clearTimeout(timeout);
-        resolve(token.value);
-      });
-      void PushNotifications.addListener('registrationError', (err) => {
-        clearTimeout(timeout);
-        reject(err);
-      });
+      tokenWaiters.push({ resolve, reject, timeout });
+      void PushNotifications.register();
     });
 
-    await PushNotifications.register();
-    const token = await tokenPromise;
+    await initNativePushTapHandler();
     return postDeviceToken(token, prefs);
   } catch {
     return { ok: false, reason: 'unsupported' };
@@ -75,6 +103,9 @@ export async function unregisterNativePush(): Promise<void> {
     }).catch(() => undefined);
     const { PushNotifications } = await import('@capacitor/push-notifications');
     await PushNotifications.removeAllListeners().catch(() => undefined);
+    registrationWired = false;
+    tapHandlerWired = false;
+    tokenWaiters = [];
   } catch {
     /* plugin missing */
   }
@@ -82,16 +113,16 @@ export async function unregisterNativePush(): Promise<void> {
 
 /** Deep-link when user taps a notification (call from native shell boot). */
 export async function initNativePushTapHandler(): Promise<void> {
+  if (tapHandlerWired) return;
   try {
     const { PushNotifications } = await import('@capacitor/push-notifications');
-
+    tapHandlerWired = true;
     await PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
       const data = (action.notification?.data || {}) as { url?: string; path?: string };
       const raw = data.url || data.path || '/vault/alerts/';
-      // Absolute site URLs are normalized inside navigateVaultHref.
       navigateVaultHref(String(raw));
     });
   } catch {
-    /* ok on web */
+    tapHandlerWired = false;
   }
 }

@@ -13,7 +13,9 @@ const { buildOn3ProfileUrl } = require('./on3-urls');
 const { enrichIntelCompetitors } = require('./recruiting-competitor-extract');
 const { recordBeatDigDeeper } = require('./recruiting-dig-deeper-ingest');
 
-const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
+const { resolveRecruitingDataDir, migrateRecruitingBundleIfNeeded } = require('./recruiting-data-dir');
+const DATA_DIR = resolveRecruitingDataDir();
+migrateRecruitingBundleIfNeeded(DATA_DIR);
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'visit-intel-snapshot.json');
 const WAR_ROOM_VISITS_PATH = path.join(__dirname, '..', 'data', 'war-room', 'visit-intel.json');
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';

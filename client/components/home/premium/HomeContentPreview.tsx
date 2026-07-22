@@ -77,7 +77,9 @@ export function HomeContentPreview({ content, loading }: Props): React.ReactElem
   const community =
     content?.community?.slice(0, 3).map((t) => ({
       title: t.title,
-      href: t.href || VAULT_COMMUNITY,
+      href:
+        t.href ||
+        (t.id ? `${VAULT_COMMUNITY}/thread/${encodeURIComponent(t.id)}` : VAULT_COMMUNITY),
       meta: t.replyCount != null ? `${t.replyCount} replies` : formatMeta(t.timestamp),
     })) ?? [];
 

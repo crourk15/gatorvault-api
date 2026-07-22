@@ -6,7 +6,7 @@
       "id": "cat_film",
       "slug": "film",
       "name": "Film Room",
-      "badgeLabel": "🎬 FILM ROOM",
+      "badgeLabel": "\ud83c\udfac FILM ROOM",
       "badgeClass": "tier-film",
       "sortOrder": 1
     },
@@ -14,7 +14,7 @@
       "id": "cat_locker",
       "slug": "locker",
       "name": "Locker Room",
-      "badgeLabel": "🏟️ LOCKER ROOM",
+      "badgeLabel": "\ud83c\udfdf\ufe0f LOCKER ROOM",
       "badgeClass": "tier-locker",
       "sortOrder": 2
     },
@@ -22,7 +22,7 @@
       "id": "cat_war",
       "slug": "war",
       "name": "War Room",
-      "badgeLabel": "⚔️ WAR ROOM",
+      "badgeLabel": "\u2694\ufe0f WAR ROOM",
       "badgeClass": "tier-war",
       "sortOrder": 3
     },
@@ -30,7 +30,7 @@
       "id": "cat_founding",
       "slug": "founding",
       "name": "Founding",
-      "badgeLabel": "🏅 FOUNDING",
+      "badgeLabel": "\ud83c\udfc5 FOUNDING",
       "badgeClass": "tier-founding",
       "sortOrder": 4
     }
@@ -39,7 +39,7 @@
     {
       "id": "thr_founding_board_priority",
       "title": "Who is Florida's biggest 2027 board priority right now?",
-      "body": "Looking at the battle board — which target feels like the program's true #1, and what would move the needle this month?",
+      "body": "Looking at the battle board \u2014 which target feels like the program's true #1, and what would move the needle this month?",
       "categorySlug": "war",
       "categoryLabel": "War Room",
       "authorDisplay": "GatorVault Staff",
@@ -52,7 +52,7 @@
     },
     {
       "id": "thr_founding_gameweek",
-      "title": "Game Week open thread — drop your keys before kickoff",
+      "title": "Game Week open thread \u2014 drop your keys before kickoff",
       "body": "Matchup keys, depth chart notes, and recruiting visitors. Keep it sharp and on Florida.",
       "categorySlug": "locker",
       "categoryLabel": "Locker Room",
@@ -67,7 +67,7 @@
     {
       "id": "thr_founding_portal_watch",
       "title": "Portal watch: which rooms need help before fall camp?",
-      "body": "Depth chart first — where does Florida still feel thin, and which portal profiles actually fit the scheme?",
+      "body": "Depth chart first \u2014 where does Florida still feel thin, and which portal profiles actually fit the scheme?",
       "categorySlug": "locker",
       "categoryLabel": "Locker Room",
       "authorDisplay": "GatorVault Staff",
@@ -81,7 +81,7 @@
     {
       "id": "thr_founding_film_clip",
       "title": "Film Room: one clip that changed your mind on a 2027 target",
-      "body": "Drop the prospect and what you saw — first step, frame, ball skills, or competitive toughness.",
+      "body": "Drop the prospect and what you saw \u2014 first step, frame, ball skills, or competitive toughness.",
       "categorySlug": "film",
       "categoryLabel": "Film Room",
       "authorDisplay": "GatorVault Staff",
@@ -95,7 +95,7 @@
     {
       "id": "thr_founding_welcome",
       "title": "Founding members: introduce yourself and what you track",
-      "body": "Recruiting, film, NIL, game week — tell the room what you follow so staff can shape weekly threads.",
+      "body": "Recruiting, film, NIL, game week \u2014 tell the room what you follow so staff can shape weekly threads.",
       "categorySlug": "founding",
       "categoryLabel": "Founding",
       "authorDisplay": "GatorVault Staff",
@@ -109,7 +109,7 @@
     {
       "id": "thr_founding_nil_pulse",
       "title": "NIL pulse: what are fans seeing in the market this week?",
-      "body": "Keep it factual — name the market signal and how it intersects Florida's board or roster.",
+      "body": "Keep it factual \u2014 name the market signal and how it intersects Florida's board or roster.",
       "categorySlug": "war",
       "categoryLabel": "War Room",
       "authorDisplay": "GatorVault Staff",
@@ -123,7 +123,7 @@
   ],
   "pulse": {
     "repliesToday": 0,
-    "trending": 6,
+    "trending": 0,
     "pinned": 2,
     "liveRooms": 0
   },
@@ -131,14 +131,14 @@
     {
       "id": "room_gameweek",
       "title": "Game Week Open Thread",
-      "description": "Live reaction room every Saturday — keys, visitors, and board chatter.",
+      "description": "Live reaction room every Saturday \u2014 keys, visitors, and board chatter.",
       "scheduledAt": "2026-07-21T14:04:32.297Z",
       "status": "scheduled"
     },
     {
       "id": "room_recruiting_qa",
       "title": "Recruiting Q&A with Staff",
-      "description": "Ask board and portal questions — staff answers weekly.",
+      "description": "Ask board and portal questions \u2014 staff answers weekly.",
       "scheduledAt": "2026-07-21T14:04:32.297Z",
       "status": "scheduled"
     }

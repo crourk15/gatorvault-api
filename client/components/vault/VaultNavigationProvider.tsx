@@ -6,7 +6,7 @@ import { prefetchVaultHref, notifyVaultNavigation, warmVaultBottomNavRoutes, war
 import { isVaultClientNavHref, vaultNavPathsEqual } from '@/lib/vault-nav-utils';
 import { isPlayerProfileHref, playerSlugFromHref, prefetchFullProfile } from '@/lib/player-full-profile-api';
 import { isNativeCatchAllDynamicHref, shouldUseNativeCatchAllNav } from '@/lib/native-spa-nav';
-import { navigateVaultHref } from '@/lib/navigate-vault-href';
+import { navigateVaultHref, registerVaultSoftNav } from '@/lib/navigate-vault-href';
 
 function normalizeVaultNavHref(href: string): string {
   try {
@@ -64,6 +64,21 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
     const timer = window.setTimeout(() => setIsNavigating(false), 5_000);
     return () => window.clearTimeout(timer);
   }, [isNavigating]);
+
+  /** Programmatic navigateVaultHref uses soft router.push when shell is mounted. */
+  useEffect(() => {
+    return registerVaultSoftNav((href) => {
+      const normalized = normalizeVaultNavHref(href);
+      if (!isVaultClientNavHref(normalized)) return false;
+      if (isNativeCatchAllDynamicHref(normalized) || shouldUseNativeCatchAllNav(normalized)) {
+        return false;
+      }
+      beginNavigation();
+      router.push(normalized);
+      notifyVaultNavigation();
+      return true;
+    });
+  }, [router, beginNavigation]);
 
   useEffect(() => {
     warmVaultBottomNavRoutes(pathname);
