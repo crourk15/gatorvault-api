@@ -117,6 +117,66 @@ test('getAllowlistSet(2027) does not merge Lab soft-visit promotions', () => {
   fs.rmSync(tmp, { recursive: true, force: true });
 });
 
+test('getAllowlistSet(2027) ignores durable admin.slugs2027 pollution', () => {
+  const path = require('path');
+  const fs = require('fs');
+  const os = require('os');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-admin-2027-'));
+  const allowPath = path.join(tmp, 'admin-allowlist.json');
+  fs.writeFileSync(
+    allowPath,
+    JSON.stringify({
+      version: 1,
+      slugs2027: ['xay-mincey', 'eric-mcfarland', 'rashaad-silver', 'seth-williams'],
+      slugs2028: [],
+      names: {},
+    })
+  );
+  const prev = process.env.GV_ADMIN_ALLOWLIST_PATH;
+  process.env.GV_ADMIN_ALLOWLIST_PATH = allowPath;
+  delete require.cache[require.resolve('../../lib/admin-allowlist-store')];
+  delete require.cache[require.resolve('../../lib/recruiting-target-allowlist')];
+  const allowlist = require('../../lib/recruiting-target-allowlist');
+  const set = allowlist.getAllowlistSet(2027);
+  assert.deepEqual([...set].sort(), ['jalen-brewster', 'tranard-roberts']);
+  assert.equal(set.has('xay-mincey'), false);
+  const admin = require('../../lib/admin-allowlist-store');
+  assert.deepEqual(admin.loadAdminAllowlist().slugs2027, []);
+  if (prev == null) delete process.env.GV_ADMIN_ALLOWLIST_PATH;
+  else process.env.GV_ADMIN_ALLOWLIST_PATH = prev;
+  delete require.cache[require.resolve('../../lib/admin-allowlist-store')];
+  delete require.cache[require.resolve('../../lib/recruiting-target-allowlist')];
+  fs.rmSync(tmp, { recursive: true, force: true });
+});
+
+test('addToAdminAllowlist refuses Closing Class 2027 expands', () => {
+  const path = require('path');
+  const fs = require('fs');
+  const os = require('os');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-admin-refuse-'));
+  const allowPath = path.join(tmp, 'admin-allowlist.json');
+  fs.writeFileSync(
+    allowPath,
+    JSON.stringify({ version: 1, slugs2027: [], slugs2028: [], names: {} })
+  );
+  const prev = process.env.GV_ADMIN_ALLOWLIST_PATH;
+  process.env.GV_ADMIN_ALLOWLIST_PATH = allowPath;
+  delete require.cache[require.resolve('../../lib/admin-allowlist-store')];
+  const admin = require('../../lib/admin-allowlist-store');
+  const out = admin.addToAdminAllowlist({
+    slug: 'xay-mincey',
+    name: 'Xay Mincey',
+    classYear: 2027,
+  });
+  assert.equal(out.added, false);
+  assert.equal(out.reason, 'closing_class_2027_hard_locked');
+  assert.deepEqual(admin.loadAdminAllowlist().slugs2027, []);
+  if (prev == null) delete process.env.GV_ADMIN_ALLOWLIST_PATH;
+  else process.env.GV_ADMIN_ALLOWLIST_PATH = prev;
+  delete require.cache[require.resolve('../../lib/admin-allowlist-store')];
+  fs.rmSync(tmp, { recursive: true, force: true });
+});
+
 test('filterAllowlistedTargets drops 2027 247 offer-list rows not on hunt allowlist', () => {
   const targets = filterAllowlistedTargets(
     [

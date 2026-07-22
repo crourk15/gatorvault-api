@@ -144,13 +144,18 @@ function loadLabPromotionSlugs(classYear) {
 
 function getAllowlistSet(classYear) {
   const year = parseInt(classYear, 10);
+  // Closing Class is hard-locked to Charles' hunt list only.
+  // Never merge durable admin.slugs2027 or Lab soft-promotions — Render disk
+  // historically re-expanded the board with 247 offer-list junk after deploy.
+  if (year === 2027) {
+    return new Set(ALLOWLIST_2027.map((s) => canonicalTargetSlug(s)));
+  }
+  if (year !== 2028) return new Set();
   const admin = loadAdminAllowlistSlugs();
-  const base = year === 2027 ? ALLOWLIST_2027 : year === 2028 ? ALLOWLIST_2028 : [];
-  const extra = year === 2027 ? admin.slugs2027 : year === 2028 ? admin.slugs2028 : [];
-  // Closing Class is nearly done — do not auto-expand 2027 with Lab soft-visit promotions.
+  const extra = admin.slugs2028 || [];
   // 2028 still merges Lab promotions for elite offer/visit discovery.
-  const promoted = year === 2028 ? loadLabPromotionSlugs(year) : [];
-  return new Set([...base, ...extra, ...promoted].map((s) => canonicalTargetSlug(s)));
+  const promoted = loadLabPromotionSlugs(2028);
+  return new Set([...ALLOWLIST_2028, ...extra, ...promoted].map((s) => canonicalTargetSlug(s)));
 }
 
 function isFlipWatchAllowlisted(slug, classYear) {

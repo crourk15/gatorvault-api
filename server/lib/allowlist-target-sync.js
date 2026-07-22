@@ -78,12 +78,7 @@ function allowlistJobsFromFiles() {
     ...ALLOWLIST_2027.map((slug) => ({ slug, classYear: 2027 })),
     ...ALLOWLIST_2028.map((slug) => ({ slug, classYear: 2028 })),
   ];
-  for (const slug of admin.slugs2027 || []) {
-    const verifiedYear = verifiedClassYearForSlug(slug);
-    // Never schedule a verified UF commit under the wrong class year.
-    if (verifiedYear != null && verifiedYear !== 2027) continue;
-    pushJob(jobs, slug, 2027);
-  }
+  // Closing Class 2027 is hunt-list only — ignore durable admin.slugs2027.
   for (const slug of admin.slugs2028 || []) {
     const verifiedYear = verifiedClassYearForSlug(slug);
     if (verifiedYear != null && verifiedYear !== 2028) continue;

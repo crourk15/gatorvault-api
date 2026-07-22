@@ -56,8 +56,21 @@ function normalizeSlug(raw) {
 
 function loadAdminAllowlist() {
   const doc = readDoc();
+  const stale2027 = [...new Set((doc.slugs2027 || []).map(normalizeSlug))];
+  // Closing Class is code-locked — scrub durable admin extras so demote/sync
+  // and future reads cannot re-expand the 2027 board from Render disk.
+  if (stale2027.length) {
+    doc.slugs2027 = [];
+    doc.updatedAt = new Date().toISOString();
+    try {
+      writeDoc(doc);
+      console.log('[admin-allowlist] scrubbed stale slugs2027:', stale2027.length);
+    } catch (err) {
+      console.warn('[admin-allowlist] scrub slugs2027 failed:', err.message);
+    }
+  }
   return {
-    slugs2027: [...new Set((doc.slugs2027 || []).map(normalizeSlug))],
+    slugs2027: [],
     slugs2028: [...new Set((doc.slugs2028 || []).map(normalizeSlug))],
     names: doc.names || {},
   };
@@ -67,22 +80,29 @@ function addToAdminAllowlist({ slug, name, classYear }) {
   const year = parseInt(classYear, 10);
   const s = normalizeSlug(slug || slugify(name));
   if (!s || !name) throw new Error('slug and name required');
-  if (year !== 2027 && year !== 2028) {
-    return { added: false, reason: 'admin_allowlist_only_2027_2028', slug: s };
+  if (year === 2027) {
+    return {
+      added: false,
+      reason: 'closing_class_2027_hard_locked',
+      slug: s,
+      classYear: year,
+    };
+  }
+  if (year !== 2028) {
+    return { added: false, reason: 'admin_allowlist_only_2028', slug: s };
   }
 
   const doc = readDoc();
-  doc.slugs2027 = doc.slugs2027 || [];
+  doc.slugs2027 = [];
   doc.slugs2028 = doc.slugs2028 || [];
   doc.names = doc.names || {};
 
-  const key = year === 2027 ? 'slugs2027' : 'slugs2028';
-  if (!doc[key].includes(s)) doc[key].push(s);
+  if (!doc.slugs2028.includes(s)) doc.slugs2028.push(s);
   doc.names[s] = String(name).trim();
   doc.updatedAt = new Date().toISOString();
   writeDoc(doc);
 
-  return { added: true, slug: s, classYear: year, key };
+  return { added: true, slug: s, classYear: year, key: 'slugs2028' };
 }
 
 module.exports = {

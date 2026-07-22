@@ -865,9 +865,13 @@ async function upsertPlayer(player, options = {}) {
       delete normalized.fromSchool;
     }
   }
+  // Closing Class is hunt-list only — never soft-promote random recruits onto the board.
   if (!isFloridaCommit(normalized) && normalized.category === 'recruit') {
-    normalized.category = 'target';
-    if (normalized.status === 'committed') normalized.status = 'uncommitted';
+    const year = Number(normalized.classYear);
+    if (year !== 2027) {
+      normalized.category = 'target';
+      if (normalized.status === 'committed') normalized.status = 'uncommitted';
+    }
   }
   const { applyEditorialPositionToPlayer } = require('./recruiting-editorial-positions');
   const commitCleanup = require('./commit-target-cleanup');

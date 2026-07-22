@@ -5,7 +5,8 @@ const store = require('./recruiting-store');
 const { enrichBoard } = require('./recruiting-board-enrich');
 const { effectiveStars } = require('./recruiting-target-filters');
 
-const POSITION_ORDER = ['QB', 'RB', 'WR', 'TE', 'OL', 'OT', 'OG', 'C', 'DL', 'EDGE', 'LB', 'CB', 'S', 'ATH', 'K', 'P'];
+/** Fixed coach rooms for Position Room Snapshot — always shown. */
+const COACH_ROOMS = ['QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'EDGE', 'LB', 'CB', 'S'];
 
 function playerPos(player) {
   return player.position || player.pos || '—';
@@ -13,8 +14,19 @@ function playerPos(player) {
 
 function normalizePos(raw) {
   const p = String(raw || '').toUpperCase().trim();
-  if (p === 'EDGE' || p === 'DE' || p === 'DT') return 'DL';
+  // OL room: OT + IOL (OG/C) together — never orphan OT-only.
+  if (p === 'OT' || p === 'OG' || p === 'C' || p === 'IOL' || p === 'OL') return 'OL';
+  // EDGE stays its own room (DE → EDGE). Interior DL only for DL.
+  if (p === 'EDGE' || p === 'DE') return 'EDGE';
+  if (p === 'DT' || p === 'NT' || p === 'DL') return 'DL';
   return p || '—';
+}
+
+function rawOlBucket(raw) {
+  const p = String(raw || '').toUpperCase().trim();
+  if (p === 'OT') return 'OT';
+  if (p === 'IOL' || p === 'OG' || p === 'C') return 'IOL';
+  return null;
 }
 
 function parseUfPct(raw) {
@@ -452,36 +464,58 @@ async function buildHubPositions(year = 2027) {
   const commits = enriched.commits || [];
   const targets = enriched.targets || [];
   const rooms = new Map();
+  for (const label of COACH_ROOMS) {
+    rooms.set(label, { commits: 0, targets: 0 });
+  }
+  const olBreakdown = { OT: 0, IOL: 0 };
 
   for (const player of commits) {
-    const label = normalizePos(playerPos(player));
+    const raw = playerPos(player);
+    const ol = rawOlBucket(raw);
+    if (ol) olBreakdown[ol] += 1;
+    const label = normalizePos(raw);
     const entry = rooms.get(label) ?? { commits: 0, targets: 0 };
     entry.commits += 1;
     rooms.set(label, entry);
   }
 
+  // Key targets = hunt-list board only (getBoard already filters).
   for (const player of targets) {
-    if (player.tier !== 'TOP' && player.tier !== 'HIGH') continue;
     const label = normalizePos(playerPos(player));
     const entry = rooms.get(label) ?? { commits: 0, targets: 0 };
     entry.targets += 1;
     rooms.set(label, entry);
   }
 
-  const sorted = [...rooms.entries()].sort((a, b) => {
-    const ai = POSITION_ORDER.indexOf(a[0]);
-    const bi = POSITION_ORDER.indexOf(b[0]);
-    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  const rows = COACH_ROOMS.map((label) => {
+    const stats = rooms.get(label) || { commits: 0, targets: 0 };
+    let note = null;
+    if (label === 'OL' && (olBreakdown.OT || olBreakdown.IOL)) {
+      note = `${olBreakdown.OT} OT · ${olBreakdown.IOL} IOL`;
+    }
+    return {
+      id: label,
+      label,
+      commits: stats.commits,
+      targets: stats.targets,
+      note,
+    };
   });
 
-  return sorted.slice(0, 10).map(([label, stats]) => ({
-    id: label,
-    label,
-    commits: stats.commits,
-    targets: stats.targets,
-    // Honest counts only — no canned "Room filling in" staff-speak.
-    note: null,
-  }));
+  // Optional specialty rooms when they have commits (ST / ATH).
+  for (const label of ['ATH', 'K', 'P', 'LS']) {
+    const stats = rooms.get(label);
+    if (!stats || (!stats.commits && !stats.targets)) continue;
+    rows.push({
+      id: label,
+      label,
+      commits: stats.commits,
+      targets: stats.targets,
+      note: null,
+    });
+  }
+
+  return rows;
 }
 
 

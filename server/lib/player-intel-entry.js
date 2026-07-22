@@ -221,8 +221,12 @@ function mergeOfferList(existing, next) {
 
 function placementForClassYear(classYear) {
   const year = parseInt(classYear, 10);
-  if (year === 2027 || year === 2028) {
-    return { section: 'master-board', allowlist: true, earlyWatch: year === 2028 };
+  // Closing Class hunt list is code-locked — never soft-expand via intel entry.
+  if (year === 2027) {
+    return { section: 'master-board', allowlist: false, earlyWatch: false };
+  }
+  if (year === 2028) {
+    return { section: 'master-board', allowlist: true, earlyWatch: true };
   }
   if (year >= 2028 && year <= 2030) {
     return { section: 'underclassmen-watchboard', allowlist: year === 2028, earlyWatch: true };
