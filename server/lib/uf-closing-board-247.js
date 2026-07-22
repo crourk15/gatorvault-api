@@ -14,6 +14,47 @@ const DEFAULT_URL =
   'https://247sports.com/college/florida/Season/2027-Football/Targets/';
 const SNAPSHOT_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'uf-closing-board-247-2027.json');
 
+/**
+ * Beat/owner corrections when 247's open UF target list lags an elsewhere-commit.
+ * These always win over a stale open-list row during Closing Class sync.
+ */
+const FORCED_ELSEWHERE_COMMITS = [
+  {
+    slug: 'adryan-cole',
+    name: 'Adryan Cole',
+    pos: 'S',
+    classYear: 2027,
+    committedTo: 'Georgia',
+    status: 'committed',
+  },
+];
+
+function loadSnapshotCommittedElsewhere() {
+  try {
+    const snap = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, 'utf8'));
+    return (snap.committed || []).filter(
+      (row) => row?.slug && row.committedTo && !isFloridaSchool(row.committedTo)
+    );
+  } catch {
+    return [];
+  }
+}
+
+function mergeCommittedElsewhere(board) {
+  const bySlug = new Map();
+  for (const row of [...(board.committed || []), ...loadSnapshotCommittedElsewhere(), ...FORCED_ELSEWHERE_COMMITS]) {
+    if (!row?.slug || !row.committedTo || isFloridaSchool(row.committedTo)) continue;
+    bySlug.set(String(row.slug).toLowerCase(), row);
+  }
+  const forcedSlugs = new Set(bySlug.keys());
+  const open = (board.open || []).filter((row) => !forcedSlugs.has(String(row.slug || '').toLowerCase()));
+  return {
+    ...board,
+    open,
+    committed: [...bySlug.values()],
+  };
+}
+
 function defaultHeaders() {
   return {
     Accept: 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8',
@@ -131,7 +172,9 @@ function isLiveUfBoardTarget(player) {
 async function syncFloridaClosingBoardToStore(options = {}) {
   const store = require('./recruiting-store');
   const classYear = Number(options.classYear) || DEFAULT_CLASS_YEAR;
-  const board = options.board || (await fetchFloridaClosingBoard(classYear));
+  const rawBoard = options.board || (await fetchFloridaClosingBoard(classYear));
+  // Merge forced/snapshot elsewhere-commits so stale 247 open rows cannot revive them.
+  const board = mergeCommittedElsewhere(rawBoard);
   const open = board.open || [];
   const openSlugs = new Set(open.map((p) => p.slug));
 
@@ -290,8 +333,10 @@ module.exports = {
   DEFAULT_CLASS_YEAR,
   DEFAULT_URL,
   SNAPSHOT_PATH,
+  FORCED_ELSEWHERE_COMMITS,
   parseFloridaProspectsHtml,
   fetchFloridaClosingBoard,
   syncFloridaClosingBoardToStore,
   isLiveUfBoardTarget,
+  mergeCommittedElsewhere,
 };
