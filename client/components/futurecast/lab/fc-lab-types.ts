@@ -35,13 +35,25 @@ function isFloridaCommit(value: string | null | undefined): boolean {
   return /\bflorida\b|\bgators\b/i.test(String(value));
 }
 
+function displayPlayerName(name: string | null | undefined, slug: string | null | undefined): string {
+  const n = String(name || '').trim();
+  if (n && n !== slug) return n;
+  const base = String(slug || '')
+    .replace(/-\d+$/, '')
+    .split('-')
+    .filter(Boolean)
+    .map((part) => (part.length <= 2 ? part.toUpperCase() : part.charAt(0).toUpperCase() + part.slice(1)))
+    .join(' ');
+  return n || base || 'Player';
+}
+
 export function futureCastPlayerToLabTarget(p: FutureCastPlayer): FcLabTarget {
   const committed = p.committedTo ?? null;
   const ufConfidence = isFloridaCommit(committed) ? 100 : p.ufConfidence;
   return {
     id: p.id,
     slug: p.slug,
-    name: p.name,
+    name: displayPlayerName(p.name, p.slug),
     position: p.position,
     school: p.school ?? null,
     classYear: p.classYear,
@@ -68,7 +80,7 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
   return {
     id: p.id,
     slug: p.slug,
-    name: p.name,
+    name: displayPlayerName(p.name, p.slug),
     position: p.position,
     school: p.school ?? null,
     classYear: p.classYear ?? primaryRecruitingClassYear(),
@@ -155,7 +167,7 @@ export function underclassmenToFitLeader(p: UnderclassmenPlayer): HighPriorityPl
   return {
     id: p.id,
     slug: p.slug,
-    name: p.name,
+    name: displayPlayerName(p.name, p.slug),
     classYear: p.classYear,
     position: p.position,
     school: p.school ?? null,
