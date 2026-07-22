@@ -57,7 +57,7 @@ function loadOfficialNames() {
 /** Depth chart header — manual text only unless admin explicitly re-enables auto-append flags. */
 function normalizeDepthChartConfig(raw, coaches) {
   const dc = raw && typeof raw === 'object' ? { ...raw } : {};
-  const headerText = String(dc.headerText || dc.subtitle || 'Spring Projections · Updated June 2026').trim();
+  const headerText = String(dc.headerText || dc.subtitle || 'OTA / Summer Intel · Updated July 2026').trim();
   const autoAppendScheme = dc.autoAppendScheme === true;
   const autoAppendCoordinator = dc.autoAppendCoordinator === true;
   let resolvedHeader = headerText;
@@ -158,9 +158,23 @@ function buildAllowlist(official) {
     (c.aliases || []).forEach(add);
   });
   (official.players || []).forEach((p) => {
-    add(p.name);
-    const parts = (p.name || '').split(' ');
-    if (parts.length >= 2) add(parts[parts.length - 1].replace(/\.$/, ''));
+    const name = String(p.name || '').trim();
+    add(name);
+    (p.aliases || []).forEach(add);
+    // extractCandidateNames often drops the trailing "." on Jr./Sr. via word-boundary
+    if (/\s+Jr\.$/i.test(name)) add(name.replace(/\.$/, ''));
+    if (/\s+Sr\.$/i.test(name)) add(name.replace(/\.$/, ''));
+    const parts = name.split(' ').filter(Boolean);
+    if (parts.length >= 2) {
+      add(parts[parts.length - 1].replace(/\.$/, ''));
+      // "Eric Singleton Jr." → also allow "Singleton Jr." / "Singleton Jr"
+      if (parts.length >= 3) {
+        const tail = parts.slice(-2).join(' ');
+        add(tail);
+        if (/\s+Jr\.$/i.test(tail)) add(tail.replace(/\.$/, ''));
+        if (/\s+Sr\.$/i.test(tail)) add(tail.replace(/\.$/, ''));
+      }
+    }
   });
   (official.editorial?.authors || []).forEach(add);
   (official.editorial?.brands || []).forEach(add);

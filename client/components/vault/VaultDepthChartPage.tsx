@@ -98,7 +98,7 @@ export function VaultDepthChartPage(): React.ReactElement {
     <div className="gv-depth-chart" data-testid="vault-depth-chart">
       <div className="gv-page-hero">
         <h1 className="gv-page-title">2026 Depth Chart & Team Hub</h1>
-        <p className="gv-page-subtitle">Spring projections · Program history, roster, and depth chart.</p>
+        <p className="gv-page-subtitle">OTA / summer intel · Program history, roster, and depth chart.</p>
       </div>
 
       <section className="gv-depth-chart__eras">

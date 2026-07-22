@@ -1,5 +1,5 @@
 {
-  "version": "2026-06-06",
+  "version": "2026-07-22",
   "coaches": {
     "HC": {
       "name": "Jon Sumrall",
@@ -40,13 +40,15 @@
     "authors": [
       "GatorVault Staff",
       "GatorVault Film Desk",
-      "GatorVault Analytics"
+      "GatorVault Analytics",
+      "Zach Abolverdi",
+      "Gators Online"
     ],
-    "brands": ["GatorVault", "GatorCountry", "Prep Prospect Report", "On3"]
+    "brands": ["GatorVault", "GatorCountry", "Prep Prospect Report", "On3", "Gators Online"]
   },
   "depthChart": {
     "title": "2026 Depth Chart",
-    "headerText": "Spring Projections · Updated June 2026",
+    "headerText": "OTA / Summer Intel · Updated July 2026",
     "mobileEmbedSuffix": "Tap to open",
     "autoAppendScheme": false,
     "autoAppendCoordinator": false
@@ -128,7 +130,7 @@
     { "slug": "evan-pryor", "name": "Evan Pryor", "pos": "RB" },
     { "slug": "byron-louis", "name": "Byron Louis", "pos": "RB" },
     { "slug": "dallas-wilson", "name": "Dallas Wilson", "pos": "WR" },
-    { "slug": "micah-mays", "name": "Micah Mays", "pos": "WR" },
+    { "slug": "micah-mays", "name": "Micah Mays Jr.", "pos": "WR", "aliases": ["Micah Mays", "Mays"] },
     { "slug": "kahleil-jackson", "name": "Kahleil Jackson", "pos": "WR" },
     { "slug": "eric-singleton-jr", "name": "Eric Singleton Jr.", "pos": "WR" },
     { "slug": "tj-abrams", "name": "TJ Abrams", "pos": "WR" },
@@ -158,13 +160,13 @@
     { "slug": "caden-jones", "name": "Caden Jones", "pos": "RT" },
     { "slug": "eagan-boyer", "name": "Eagan Boyer", "pos": "OT" },
     { "slug": "javarii-luckas", "name": "Javarii Luckas", "pos": "OT" },
-    { "slug": "jeremiah-mccloud", "name": "Jeremiah McCloud", "pos": "DT" },
+    { "slug": "jeramiah-mccloud", "name": "Jeramiah McCloud", "pos": "DT", "aliases": ["Jeremiah McCloud", "McCloud"] },
     { "slug": "jamari-lyons", "name": "Jamari Lyons", "pos": "DT" },
     { "slug": "joseph-mbatchou", "name": "Joseph Mbatchou", "pos": "DT" },
     { "slug": "mason-clinton", "name": "Mason Clinton", "pos": "DL" },
     { "slug": "brendan-bett", "name": "Brendan Bett", "pos": "NOSE" },
     { "slug": "dk-kalu", "name": "DK Kalu", "pos": "NOSE" },
-    { "slug": "lj-mccray", "name": "LJ McCray", "pos": "END" },
+    { "slug": "lj-mccray", "name": "LJ McCray", "pos": "END", "aliases": ["L.J. McCray", "McCray", "LJ McCray"] },
     { "slug": "kamran-james", "name": "Kamran James", "pos": "END" },
     { "slug": "emmanuel-oyebadejo", "name": "Emmanuel Oyebadejo", "pos": "END" },
     { "slug": "jareylan-mccoy", "name": "JaReylan McCoy", "pos": "DL" },
@@ -206,6 +208,17 @@
     { "slug": "hunter-solwold", "name": "Hunter Solwold", "pos": "LS" },
     { "slug": "davian-groce", "name": "Davian Groce", "pos": "WR" },
     { "slug": "maxwell-hiller", "name": "Maxwell Hiller", "pos": "IOL" },
-    { "slug": "kennedee-jackson", "name": "Kennedee Jackson", "pos": "OT" }
+    { "slug": "kennedee-jackson", "name": "Kennedee Jackson", "pos": "OT" },
+    { "slug": "michai-boireau", "name": "Michai Boireau", "pos": "DL" }
+  ],
+  "knownPhrases": [
+    "OTA Scoop",
+    "OTA Intel",
+    "Summer Camp Preview",
+    "Position Battles",
+    "Portal Class Recap",
+    "Strength Surge",
+    "WR Arsenal",
+    "OL Strength"
   ]
 }

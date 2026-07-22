@@ -82,7 +82,7 @@ export const TEAM_COPY = {
   hero: {
     title: 'FLORIDA GATORS FOOTBALL',
     subtitle: 'Program history, culture, roster, and depth chart—one hub for Gator Nation.',
-    badge: 'Updated June 2026',
+    badge: 'Updated July 2026',
   },
   commandCard: {
     eyebrow: 'GatorVault Insider',
@@ -104,7 +104,7 @@ export const TEAM_COPY = {
   },
   depthChart: {
     title: '2026 Depth Chart',
-    subtitle: 'Spring projections · Updated June 2026',
+    subtitle: 'OTA / summer intel · Updated July 2026',
     tabs: { offense: 'Offense', defense: 'Defense (3‑3‑5)', specialTeams: 'Special Teams' },
   },
   footer: {
