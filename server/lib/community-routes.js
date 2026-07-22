@@ -12,6 +12,13 @@ function pinFromReq(req) {
   return req.headers['x-community-pin'] || req.body?.pin || req.query?.pin;
 }
 
+function verifyCronOrAdmin(req) {
+  const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.CRON_SECRET || '';
+  const cronHeader = req.headers['x-monitoring-cron'] || req.headers['x-cron-secret'];
+  if (cronSecret && cronHeader && cronHeader === cronSecret) return true;
+  return verifyAdminPin(pinFromReq(req));
+}
+
 function requireSession(req, res) {
   const session = getSessionFromReq(req);
   if (!session || !session.email) {
@@ -167,7 +174,56 @@ function mountCommunityRoutes(app) {
         ok: true,
         threads: store.getThreads({ sort: 'recent', limit: 100 }),
         flags: store.getOpenFlags(),
-        categories: store.ensureCategories()
+        categories: store.ensureCategories(),
+        dataDir: store.DATA_DIR,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/community/admin/thread', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const result = store.adminCreateStaffThread({
+        title: req.body.title,
+        body: req.body.body,
+        categorySlug: req.body.category || req.body.categorySlug || 'locker',
+        pinned: Boolean(req.body.pinned),
+        featured: req.body.featured !== false,
+      });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/community/admin/thread/:id/reply', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const result = store.adminStaffReply(req.params.id, req.body.body || req.body.text);
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Cron or admin: publish today's staff open thread (idempotent per ET day). */
+  app.post('/api/community/admin/daily-open', (req, res) => {
+    if (!verifyCronOrAdmin(req)) {
+      return res.status(401).json({ ok: false, error: 'Unauthorized' });
+    }
+    try {
+      const result = store.ensureDailyOpenThread();
+      return res.json({
+        ok: true,
+        created: result.created,
+        thread: result.thread,
+        dataDir: store.DATA_DIR,
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

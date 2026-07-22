@@ -29,7 +29,7 @@ export const DYNAMIC_PATH_PATTERNS = {
   gameWeekGame: /\/game-week\/([^/]+)\/?$/,
   article: /\/articles\/([^/]+)\/?$/,
   vaultArticle: /\/vault\/articles\/([^/]+)\/?$/,
-  communityThread: /\/community\/thread\/([^/]+)\/?$/,
+  communityThread: /\/(?:vault\/)?community\/thread\/([^/]+)\/?$/,
   gameZoneGame: /\/game-zone\/([^/]+)\/?$/,
   /** Legacy vault paths still supported during transition */
   vaultRecruitingPlayer: /\/vault\/recruiting\/player\/([^/]+)\/?$/,

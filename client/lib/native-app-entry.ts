@@ -98,6 +98,9 @@ export function runNativeAppEntry(): void {
     }
   });
 
+  // Bundled App Store shell: native-boot-script already owns capture-phase clicks.
+  if (isBundledNativeShell()) return;
+
   document.addEventListener(
     'click',
     (event) => {
@@ -110,35 +113,6 @@ export function runNativeAppEntry(): void {
       // Same-origin absolute URLs must still hit catch-all player routing.
       const raw = toAppRelativeHref(attr);
       if (raw.startsWith('http://') || raw.startsWith('https://')) return;
-
-      if (isBundledNativeShell()) {
-        try {
-          const url = new URL(raw, nativeNavigationOrigin());
-          if (isMarketingPath(url.pathname)) {
-            event.preventDefault();
-            event.stopPropagation();
-            void ensureSessionHydrated().then(() => {
-              window.location.href = nativeEntryDestination();
-            });
-            return;
-          }
-        } catch {
-          /* ignore malformed href */
-        }
-        // Deep catch-all routes have no per-slug index.html — every player slug.
-        if (isNativeCatchAllDynamicHref(raw)) {
-          event.preventDefault();
-          event.stopPropagation();
-          navigateNativeCatchAll(raw);
-          return;
-        }
-        // Other vault SPA boards — let VaultNavigationProvider / Next Link soft-nav.
-        if (isVaultClientNavHref(raw)) return;
-        event.preventDefault();
-        event.stopPropagation();
-        window.location.href = nativeNavigationUrl(normalizeStaticExportHref(raw));
-        return;
-      }
 
       try {
         const url = new URL(raw, nativeNavigationOrigin());
@@ -153,6 +127,14 @@ export function runNativeAppEntry(): void {
       } catch {
         /* ignore malformed href */
       }
+
+      if (isNativeCatchAllDynamicHref(raw)) {
+        event.preventDefault();
+        event.stopPropagation();
+        navigateNativeCatchAll(raw);
+        return;
+      }
+      if (isVaultClientNavHref(raw)) return;
 
       const normalized = normalizeStaticExportHref(raw);
       if (normalized !== raw || attr !== raw) {

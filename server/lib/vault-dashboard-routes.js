@@ -148,7 +148,7 @@ function buildLatestContent() {
     timestamp: t.lastActivityAt || t.createdAt || null,
     icon: '💬',
     source: t.categoryLabel || 'Community',
-    href: `/vault/community?thread=${encodeURIComponent(t.id)}`,
+    href: `/vault/community/thread/${encodeURIComponent(t.id)}`,
     replyCount: t.replyCount || 0,
   }));
 
@@ -191,7 +191,7 @@ function buildPersonalizedHints(req) {
     .map((t) => ({
       id: t.id,
       title: t.title,
-      href: `/vault/community?thread=${encodeURIComponent(t.id)}`,
+      href: `/vault/community/thread/${encodeURIComponent(t.id)}`,
     }));
 
   return {

@@ -32,13 +32,44 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>🐊 Community Admin</h1>
-    <p class="help">Pin, lock, feature, delete threads · resolve flags · edit categories. <a href="/">← Back to vault</a></p>
+    <h1>Community Admin</h1>
+    <p class="help">Staff compose · daily open · pin/lock/feature · flags · categories. Real posts only — never invent fan replies. <a href="/">← Back to vault</a></p>
 
     <div class="card">
       <label>Admin PIN</label>
       <input id="pin" type="password" placeholder="GV2026admin" autocomplete="off">
       <button class="secondary" id="refresh" type="button">Refresh queue</button>
+      <button class="secondary" id="publish-daily" type="button">Publish today’s open thread</button>
+    </div>
+
+    <div class="card">
+      <h2>Staff compose — new thread</h2>
+      <p class="help">Posts as GatorVault Staff. Use this for real board questions and staff answers.</p>
+      <label>Title</label>
+      <input id="staff-title" maxlength="200" placeholder="Thread title">
+      <label>Body</label>
+      <textarea id="staff-body" rows="4" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;margin-bottom:12px;font:inherit" placeholder="Open the conversation…"></textarea>
+      <label>Category slug</label>
+      <select id="staff-category">
+        <option value="locker">locker</option>
+        <option value="war">war</option>
+        <option value="film">film</option>
+        <option value="founding">founding</option>
+      </select>
+      <label><input id="staff-pin" type="checkbox"> Pin</label>
+      <label><input id="staff-feature" type="checkbox" checked> Feature</label>
+      <div style="margin-top:10px">
+        <button type="button" id="staff-post">Post staff thread</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Staff reply</h2>
+      <label>Thread id</label>
+      <input id="reply-thread-id" placeholder="thr_…">
+      <label>Reply body</label>
+      <textarea id="reply-body" rows="3" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;margin-bottom:12px;font:inherit" placeholder="Staff reply…"></textarea>
+      <button type="button" id="staff-reply">Post staff reply</button>
     </div>
 
     <div class="card">
@@ -103,11 +134,13 @@
         if (t.locked) pills += '<span class="pill pill-lock">LOCKED</span>';
         if (t.featured) pills += '<span class="pill pill-feature">FEATURED</span>';
         return '<div class="item"><strong>' + t.title + '</strong> ' + pills
-          + '<div class="meta">' + (t.category && t.category.name ? t.category.name : t.categorySlug)
-          + ' · ' + (t.replyCount || 0) + ' replies · ' + (t.viewCount || 0) + ' views · score ' + (t.trendingScore || 0) + '</div>'
+          + '<div class="meta">id ' + t.id + ' · ' + (t.category && t.category.name ? t.category.name : t.categorySlug)
+          + ' · ' + (t.replyCount || 0) + ' replies · ' + (t.viewCount || 0) + ' views'
+          + (t.dailyKey ? ' · daily ' + t.dailyKey : '') + '</div>'
           + '<button class="secondary" onclick="pinThread(\'' + t.id + '\',' + !t.pinned + ')">' + (t.pinned ? 'Unpin' : 'Pin') + '</button>'
           + '<button class="secondary" onclick="lockThread(\'' + t.id + '\',' + !t.locked + ')">' + (t.locked ? 'Unlock' : 'Lock') + '</button>'
           + '<button class="secondary" onclick="featureThread(\'' + t.id + '\',' + !t.featured + ')">' + (t.featured ? 'Unfeature' : 'Feature') + '</button>'
+          + '<button class="secondary" onclick="fillReply(\'' + t.id + '\')">Reply as staff</button>'
           + '<button class="danger" onclick="deleteThread(\'' + t.id + '\')">Delete</button></div>';
       }).join('');
     }
@@ -169,7 +202,59 @@
       }).catch(function(e) { log(e.message, 'err'); });
     }
 
+    window.fillReply = function(id) {
+      document.getElementById('reply-thread-id').value = id;
+      document.getElementById('reply-body').focus();
+    };
+
     document.getElementById('refresh').addEventListener('click', loadQueue);
+    document.getElementById('publish-daily').addEventListener('click', function() {
+      if (!pin()) { log('Enter PIN first', 'err'); return; }
+      api('/api/community/admin/daily-open', { method: 'POST', body: {} })
+        .then(function(r) {
+          if (!r.json.ok) throw new Error(r.json.error || 'Failed');
+          log((r.json.created ? 'Created' : 'Already had') + ' daily: ' + (r.json.thread && r.json.thread.title));
+          loadQueue();
+        })
+        .catch(function(e) { log(e.message, 'err'); });
+    });
+    document.getElementById('staff-post').addEventListener('click', function() {
+      if (!pin()) { log('Enter PIN first', 'err'); return; }
+      var title = document.getElementById('staff-title').value.trim();
+      var body = document.getElementById('staff-body').value.trim();
+      if (!title || !body) { log('Title and body required', 'err'); return; }
+      api('/api/community/admin/thread', {
+        method: 'POST',
+        body: {
+          title: title,
+          body: body,
+          category: document.getElementById('staff-category').value,
+          pinned: document.getElementById('staff-pin').checked,
+          featured: document.getElementById('staff-feature').checked
+        }
+      }).then(function(r) {
+        if (!r.json.ok) throw new Error(r.json.error || 'Failed');
+        document.getElementById('staff-title').value = '';
+        document.getElementById('staff-body').value = '';
+        log('Staff thread posted: ' + (r.json.thread && r.json.thread.id));
+        loadQueue();
+      }).catch(function(e) { log(e.message, 'err'); });
+    });
+    document.getElementById('staff-reply').addEventListener('click', function() {
+      if (!pin()) { log('Enter PIN first', 'err'); return; }
+      var id = document.getElementById('reply-thread-id').value.trim();
+      var body = document.getElementById('reply-body').value.trim();
+      if (!id || !body) { log('Thread id and reply body required', 'err'); return; }
+      api('/api/community/admin/thread/' + encodeURIComponent(id) + '/reply', {
+        method: 'POST',
+        body: { body: body }
+      }).then(function(r) {
+        if (!r.json.ok) throw new Error(r.json.error || 'Failed');
+        document.getElementById('reply-body').value = '';
+        log('Staff reply posted on ' + id);
+        loadQueue();
+      }).catch(function(e) { log(e.message, 'err'); });
+    });
   </script>
   <script src="/js/admin-embed.js"></script>
 </body>

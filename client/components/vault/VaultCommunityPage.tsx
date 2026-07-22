@@ -64,6 +64,18 @@ function threadCategoryLabel(thread: CommunityThread): string {
   return thread.category?.name || thread.categoryLabel || thread.categorySlug || 'General';
 }
 
+function threadIdFromLocation(): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const fromQuery = new URLSearchParams(window.location.search).get('thread');
+    if (fromQuery) return fromQuery;
+    const match = window.location.pathname.match(/\/community\/thread\/([^/]+)\/?$/);
+    return match?.[1] ? decodeURIComponent(match[1]) : null;
+  } catch {
+    return null;
+  }
+}
+
 function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string }): React.ReactElement {
   const { pushToast } = useCommunityToast();
   const [sort, setSort] = useState<SortId>('trending');
@@ -189,7 +201,8 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   }, [load]);
 
   useEffect(() => {
-    if (initialThreadId) void openThread(initialThreadId);
+    const id = initialThreadId || threadIdFromLocation();
+    if (id) void openThread(id);
   }, [initialThreadId, openThread]);
 
   const submitThread = async () => {
@@ -343,8 +356,10 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     return [];
   }, [threads]);
 
-  /** Daily-open hook — first pinned/staff thread, else newest. */
+  /** Daily-open hook — ET daily staff OP first, then pinned/featured. */
   const todaysThread = useMemo(() => {
+    const daily = threads.find((t) => Boolean(t.dailyKey));
+    if (daily) return daily;
     const pinned = threads.find((t) => t.pinned || t.featured);
     return pinned || threads[0] || null;
   }, [threads]);
@@ -845,8 +860,10 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                   <strong>{pulse.repliesToday ?? '—'}</strong>
                 </div>
                 <div className="gv-recruit-stat">
-                  <span>Trending</span>
-                  <strong>{pulse.trending ?? '—'}</strong>
+                  <span>Threads with replies</span>
+                  <strong>
+                    {(pulse.trending ?? 0) > 0 ? pulse.trending : '—'}
+                  </strong>
                 </div>
               </div>
             ) : (
@@ -856,7 +873,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                   <strong>—</strong>
                 </div>
                 <div className="gv-recruit-stat">
-                  <span>Trending</span>
+                  <span>Threads with replies</span>
                   <strong>—</strong>
                 </div>
               </div>

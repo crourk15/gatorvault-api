@@ -92,7 +92,8 @@ export function articleRoute(articleId: string): string {
 }
 
 export function communityThreadRoute(threadId: string): string {
-  return `${SITE_ROUTES.community}/thread/${encodeURIComponent(threadId)}`;
+  // Vault hub is the member-facing surface; keep /community/thread for app aliases.
+  return `/vault/community/thread/${encodeURIComponent(threadId)}`;
 }
 
 export function gameZoneRoute(gameId: string): string {

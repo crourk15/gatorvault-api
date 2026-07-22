@@ -29,13 +29,18 @@ export async function initNativeShell(): Promise<void> {
     /* simulator / unsupported */
   }
 
-  // Hide splash after first paint so cold start does not flash an empty WebView.
+  // Own splash hide (launchAutoHide: false) — first paint, hard cap 2.5s.
   try {
-    await new Promise<void>((resolve) => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
+    await Promise.race([
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => resolve());
+        });
+      }),
+      new Promise<void>((resolve) => {
+        window.setTimeout(resolve, 2500);
+      }),
+    ]);
     await SplashScreen.hide();
   } catch {
     /* ok */
@@ -46,6 +51,16 @@ export async function initNativeShell(): Promise<void> {
 
   void App.addListener('appUrlOpen', ({ url }) => {
     void handleAppUrlOpen(url);
+  });
+
+  void App.addListener('appStateChange', ({ isActive }) => {
+    if (!isActive) return;
+    document.documentElement.classList.remove('is-navigating');
+    void import('@/lib/vault-api-warmup')
+      .then(({ warmVaultApi }) => {
+        warmVaultApi();
+      })
+      .catch(() => undefined);
   });
 
   void App.addListener('backButton', ({ canGoBack }) => {

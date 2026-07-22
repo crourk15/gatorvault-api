@@ -36,6 +36,9 @@ services:
       # Beat/X live pool + feed caches — same disk so redeploys do not empty GatorNation Live.
       - key: GV_LIVE_DATA_DIR
         value: /var/data/live
+      # Community UGC (threads/replies) — same disk so redeploys do not wipe the board.
+      - key: GV_COMMUNITY_DATA_DIR
+        value: /var/data/community
       # FutureCast UF% trend history + Rivals PM fingerprints — survive redeploys for Lab movement.
       - key: GV_FUTURECAST_DATA_DIR
         value: /var/data/futurecast
@@ -390,6 +393,21 @@ services:
     envVars:
       - key: VISIT_INTEL_DAILY_DIGEST_URL
         value: https://gatorvault-api.onrender.com/api/futurecast/visit-intel/daily-digest
+      - key: MONITORING_CRON_SECRET
+        sync: false
+
+  # Community daily staff open thread (ET morning) — real OP only, no fake replies.
+  - type: cron
+    name: gatorvault-api-community-daily-open
+    schedule: "15 11 * * *"
+    runtime: node
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-community-daily-open-cron.js
+    envVars:
+      - key: COMMUNITY_DAILY_OPEN_URL
+        value: https://gatorvault-api.onrender.com/api/community/admin/daily-open
       - key: MONITORING_CRON_SECRET
         sync: false
 
