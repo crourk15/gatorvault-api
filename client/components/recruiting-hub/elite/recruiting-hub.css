@@ -1536,9 +1536,22 @@
 .rh-elite-chrome .rh-battle-board-card__uf {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   font-size: 13px;
   margin-bottom: 10px;
+}
+
+.rh-elite-chrome .rh-battle-board-card__uf-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.rh-elite-chrome .rh-battle-board-card__uf-brand img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
 }
 
 .rh-elite-chrome .rh-battle-board-card__uf strong {
@@ -1570,6 +1583,19 @@
   color: var(--gator-blue);
   font-size: 11px;
   font-weight: 800;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.rh-elite-chrome .rh-battle-board-competitor__logo-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+}
+
+.rh-elite-chrome .rh-battle-board-competitor__logo-fallback {
+  line-height: 1;
 }
 
 .rh-elite-chrome .rh-battle-board-competitor__meta {

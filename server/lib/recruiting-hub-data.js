@@ -414,15 +414,42 @@ async function loadHubDataset(options = {}) {
   return promise;
 }
 
+function isHuntListBattleEligible(player) {
+  const year = Number(player.classYear);
+  if (year !== 2027 && year !== 2028) return true;
+  try {
+    const {
+      getAllowlistSet,
+      canonicalTargetSlug,
+      isFlipWatchAllowlisted,
+    } = require('./recruiting-target-allowlist');
+    const slug = canonicalTargetSlug(player.slug || player.id || player.name);
+    if (!getAllowlistSet(year).has(slug)) return false;
+    // Flip-watch elsewhere commits stay eligible; UF commits do not.
+    if (player.isCommit || player.isCommittedToUF) {
+      return isFlipWatchAllowlisted(slug, year);
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function buildBattleBoardRows(enrichedPlayers) {
   const rows = [];
 
   for (const player of enrichedPlayers) {
-    if (player.isCommit) continue;
-    // Only real UF RPM / probability (or confirmed competitor boards) — never heat/fit as "UF RPM".
-    const hasUfRpm = player.ufScore != null && Number.isFinite(Number(player.ufScore));
+    if ((player.isCommit || player.isCommittedToUF) && !isHuntListBattleEligible(player)) continue;
+    if (!isHuntListBattleEligible(player)) continue;
+    // Only confirmed On3 RPM numbers — never offer-list text / HS names / heat-as-RPM.
+    const hasUfRpm = player.ufScore != null && Number.isFinite(Number(player.ufScore)) && Number(player.ufScore) > 0;
     const competitors = (player.competitors || []).filter(
-      (c) => c && (c.school || c.score != null)
+      (c) =>
+        c &&
+        c.school &&
+        !/[()]/.test(String(c.school)) &&
+        c.score != null &&
+        Number.isFinite(Number(c.score))
     );
     if (!hasUfRpm && !competitors.length) continue;
 

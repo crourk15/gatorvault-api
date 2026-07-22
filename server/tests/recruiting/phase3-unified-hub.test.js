@@ -92,22 +92,36 @@ describe('Phase 3 unified hub data', () => {
         isCommit: false,
       },
       {
-        slug: 'real-rpm-target',
-        name: 'Real Rpm',
-        pos: 'QB',
+        // Must be on Charles hunt allowlist — offer-list noise is not a battle card.
+        slug: 'tranard-roberts',
+        name: 'Tranard Roberts',
+        pos: 'RB',
         classYear: 2027,
-        stars: 4,
-        rating: 94,
+        stars: 3,
+        rating: 88,
         ufScore: 67,
         heat: 100,
         competitors: [{ school: 'Georgia', score: 55 }],
         isPriority: true,
         isCommit: false,
       },
+      {
+        slug: 'xay-mincey',
+        name: 'Xay Mincey',
+        pos: 'ATH',
+        classYear: 2027,
+        ufScore: null,
+        competitors: [
+          { school: 'Miami Hurricanes', score: null, logo: 'MH' },
+          { school: 'Evans (Orlando, FL)', score: null, logo: 'E(F' },
+        ],
+        isCommit: false,
+      },
     ]);
 
     assert.equal(rows.some((r) => r.id === 'heat-only-target'), false);
-    const real = rows.find((r) => r.id === 'real-rpm-target');
+    assert.equal(rows.some((r) => r.id === 'xay-mincey'), false, 'offer-list RPM-pending junk must not surface');
+    const real = rows.find((r) => r.id === 'tranard-roberts');
     assert.ok(real);
     assert.equal(real.ufScore, 67);
   });

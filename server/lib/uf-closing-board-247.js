@@ -1,6 +1,7 @@
 /**
- * Live Florida remaining board for Closing Class (2027).
- * Source: 247Sports Florida season prospects page — uncommitted rows only.
+ * 247Sports Florida targets page sync for Closing Class (2027).
+ * Used to discover / force elsewhere-commits and UF commits — NOT to dump the
+ * offer list onto the hunt board. Board membership is Charles allowlist only.
  */
 const fs = require('fs');
 const path = require('path');
@@ -17,14 +18,106 @@ const SNAPSHOT_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'uf-closi
 /**
  * Beat/owner corrections when 247's open UF target list lags an elsewhere-commit.
  * These always win over a stale open-list row during Closing Class sync.
+ * Keep this list current — offer-list lag is how dead names embarrass the brand.
  */
 const FORCED_ELSEWHERE_COMMITS = [
   {
     slug: 'adryan-cole',
     name: 'Adryan Cole',
     pos: 'S',
+    school: 'Buford (Buford, GA)',
     classYear: 2027,
     committedTo: 'Georgia',
+    status: 'committed',
+  },
+  {
+    slug: 'andre-hyppolite',
+    name: 'Andre Hyppolite',
+    pos: 'S',
+    school: 'North Miami Beach (Miami, FL)',
+    classYear: 2027,
+    committedTo: 'Miami',
+    status: 'committed',
+  },
+  {
+    slug: 'jaylyn-jones',
+    name: 'Jaylyn Jones',
+    pos: 'S',
+    school: 'McArthur (Hollywood, FL)',
+    classYear: 2027,
+    committedTo: 'Miami',
+    status: 'committed',
+  },
+  {
+    slug: 'ace-alston',
+    name: 'Ace Alston',
+    pos: 'CB',
+    school: 'Anderson (Cincinnati, OH)',
+    classYear: 2027,
+    committedTo: 'Notre Dame',
+    status: 'committed',
+  },
+  {
+    slug: 'monshun-sales',
+    name: 'Monshun Sales',
+    pos: 'WR',
+    school: 'Lawrence North (Indianapolis, IN)',
+    classYear: 2027,
+    committedTo: 'Indiana',
+    status: 'committed',
+  },
+  {
+    slug: 'tashawn-poole',
+    name: "Ta'Shawn Poole",
+    pos: 'S',
+    school: 'Howard (Macon, GA)',
+    classYear: 2027,
+    committedTo: 'Florida State',
+    status: 'committed',
+  },
+  {
+    slug: 'easton-royal',
+    name: 'Easton Royal',
+    pos: 'WR',
+    school: 'IMG Academy (Bradenton, FL)',
+    classYear: 2027,
+    committedTo: 'Texas',
+    status: 'committed',
+  },
+  {
+    slug: 'keldrid-ben',
+    name: 'Keldrid Ben',
+    pos: 'ATH',
+    school: 'IMG Academy (Bradenton, FL)',
+    classYear: 2027,
+    committedTo: 'Oklahoma',
+    status: 'committed',
+  },
+  {
+    slug: 'angelo-smith',
+    name: 'Angelo Smith',
+    pos: 'ATH',
+    school: 'IMG Academy (Bradenton, FL)',
+    classYear: 2027,
+    committedTo: 'Ohio State',
+    status: 'committed',
+  },
+  {
+    slug: 'avrian-pauley',
+    name: 'Avrian Pauley',
+    pos: 'ATH',
+    school: 'IMG Academy (Bradenton, FL)',
+    classYear: 2027,
+    committedTo: 'Alabama',
+    status: 'committed',
+  },
+  {
+    slug: 'max-brown',
+    name: 'Max Brown',
+    pos: 'ATH',
+    school: 'IMG Academy (Bradenton, FL)',
+    classYear: 2027,
+    committedTo: 'Clemson',
     status: 'committed',
   },
 ];
@@ -171,12 +264,17 @@ function isLiveUfBoardTarget(player) {
 
 async function syncFloridaClosingBoardToStore(options = {}) {
   const store = require('./recruiting-store');
+  const {
+    getAllowlistSet,
+    isFlipWatchAllowlisted,
+    canonicalTargetSlug,
+  } = require('./recruiting-target-allowlist');
   const classYear = Number(options.classYear) || DEFAULT_CLASS_YEAR;
+  const huntSet = getAllowlistSet(classYear);
   const rawBoard = options.board || (await fetchFloridaClosingBoard(classYear));
   // Merge forced/snapshot elsewhere-commits so stale 247 open rows cannot revive them.
   const board = mergeCommittedElsewhere(rawBoard);
   const open = board.open || [];
-  const openSlugs = new Set(open.map((p) => p.slug));
 
   try {
     fs.mkdirSync(path.dirname(SNAPSHOT_PATH), { recursive: true });
@@ -185,6 +283,7 @@ async function syncFloridaClosingBoardToStore(options = {}) {
 
   let upserted = 0;
   let skippedCommit = 0;
+  let skippedOfferList = 0;
   let demoted = 0;
 
   // Committed-elsewhere rows from the 247 page (and forced snapshot corrections).
@@ -196,7 +295,7 @@ async function syncFloridaClosingBoardToStore(options = {}) {
   }
 
   for (const row of open) {
-    const slug = String(row.slug || '').toLowerCase();
+    const slug = canonicalTargetSlug(row.slug || slugify(row.name));
     const existing = await store.getPlayerBySlug(row.slug);
     if (committedElsewhereBySlug.has(slug)) {
       skippedCommit += 1;
@@ -206,7 +305,7 @@ async function syncFloridaClosingBoardToStore(options = {}) {
       skippedCommit += 1;
       continue;
     }
-    if (existing && !isActiveUfTarget(existing)) {
+    if (existing && !isActiveUfTarget(existing) && !isFlipWatchAllowlisted(slug, classYear)) {
       skippedCommit += 1;
       continue;
     }
@@ -215,6 +314,30 @@ async function syncFloridaClosingBoardToStore(options = {}) {
       continue;
     }
 
+    // Brand rule: 247 open list ≠ hunt board. Only Charles allowlist / flip watch.
+    if (!huntSet.has(slug)) {
+      if (existing?.category === 'target') {
+        await store.upsertPlayer({
+          ...existing,
+          category: 'recruit',
+          status:
+            existing.committedTo || existing.status === 'committed'
+              ? existing.status || 'committed'
+              : 'uncommitted',
+          boardSource: existing.boardSource || BOARD_SOURCE,
+          updatedAt: new Date().toISOString(),
+          profileNote:
+            existing.profileNote ||
+            `${row.name} is on Florida's 247 offer list but is not a curated UF hunt target.`,
+        });
+        demoted += 1;
+      } else {
+        skippedOfferList += 1;
+      }
+      continue;
+    }
+
+    const flipWatch = isFlipWatchAllowlisted(slug, classYear);
     const patch = {
       ...(existing || {}),
       id: existing?.id || row.slug,
@@ -231,14 +354,15 @@ async function syncFloridaClosingBoardToStore(options = {}) {
       stateRank: row.stateRank ?? existing?.stateRank ?? null,
       inState: row.inState ?? existing?.inState ?? false,
       category: 'target',
-      status: 'uncommitted',
-      committedTo: null,
+      status: flipWatch && existing?.committedTo ? existing.status || 'committed' : 'uncommitted',
+      committedTo: flipWatch ? existing?.committedTo || null : null,
+      flipWatch: flipWatch || existing?.flipWatch || false,
       recruit247Id: row.recruit247Id || existing?.recruit247Id || null,
       boardSource: BOARD_SOURCE,
       on3Source: BOARD_SOURCE,
       profileNote:
         existing?.profileNote ||
-        `${row.name} remains on Florida's 247Sports ${classYear} board.`,
+        `${row.name} is a curated Florida ${classYear} hunt target.`,
       updatedAt: new Date().toISOString(),
     };
 
@@ -250,30 +374,38 @@ async function syncFloridaClosingBoardToStore(options = {}) {
   let markedCommitted = 0;
   for (const row of committedElsewhereBySlug.values()) {
     if (!row?.slug || !row.committedTo || isFloridaSchool(row.committedTo)) continue;
+    const slug = canonicalTargetSlug(row.slug);
+    const flipWatch = isFlipWatchAllowlisted(slug, classYear);
     const existing = await store.getPlayerBySlug(row.slug);
+    const basePatch = {
+      id: existing?.id || row.slug,
+      slug: row.slug,
+      name: row.name || existing?.name,
+      pos: row.pos || existing?.pos || 'ATH',
+      classYear,
+      school: row.school || existing?.school || null,
+      htWt: row.htWt || existing?.htWt || null,
+      stars: row.stars || existing?.stars || null,
+      rating: row.rating || existing?.rating || null,
+      natlRank: row.natlRank ?? existing?.natlRank ?? null,
+      posRank: row.posRank ?? existing?.posRank ?? null,
+      stateRank: row.stateRank ?? existing?.stateRank ?? null,
+      inState: row.inState ?? existing?.inState ?? false,
+      committedTo: row.committedTo,
+      status: 'committed',
+      verifiedCommit: true,
+      flipWatch,
+      boardSource: existing?.boardSource || BOARD_SOURCE,
+      updatedAt: new Date().toISOString(),
+    };
+
     if (!existing) {
-      // Ensure dead targets exist in-store so board/feed filters can see the commit.
       await store.upsertPlayer({
-        id: row.slug,
-        slug: row.slug,
-        name: row.name,
-        pos: row.pos || 'ATH',
-        classYear,
-        school: row.school || null,
-        htWt: row.htWt || null,
-        stars: row.stars || null,
-        rating: row.rating || null,
-        natlRank: row.natlRank ?? null,
-        posRank: row.posRank ?? null,
-        stateRank: row.stateRank ?? null,
-        inState: row.inState ?? false,
-        committedTo: row.committedTo,
-        category: 'recruit',
-        status: 'committed',
-        verifiedCommit: true,
-        boardSource: BOARD_SOURCE,
-        profileNote: `${row.name || row.slug} committed to ${row.committedTo}. Removed from UF target board.`,
-        updatedAt: new Date().toISOString(),
+        ...basePatch,
+        category: flipWatch ? 'target' : 'recruit',
+        profileNote: flipWatch
+          ? `${row.name || row.slug} committed to ${row.committedTo}. Kept on UF flip radar.`
+          : `${row.name || row.slug} committed to ${row.committedTo}. Removed from UF target board.`,
       });
       markedCommitted += 1;
       continue;
@@ -281,34 +413,32 @@ async function syncFloridaClosingBoardToStore(options = {}) {
     if (Number(existing.classYear) !== classYear) continue;
     const already =
       String(existing.committedTo || '').toLowerCase() === String(row.committedTo).toLowerCase() &&
-      existing.category !== 'target' &&
-      existing.verifiedCommit;
+      existing.verifiedCommit &&
+      (flipWatch ? existing.category === 'target' && existing.flipWatch : existing.category !== 'target');
     if (already) continue;
     await store.upsertPlayer({
       ...existing,
-      committedTo: row.committedTo,
-      category: 'recruit',
-      status: 'committed',
-      verifiedCommit: true,
-      updatedAt: new Date().toISOString(),
-      profileNote:
-        `${row.name || existing.name} committed to ${row.committedTo}. Removed from UF target board.`,
+      ...basePatch,
+      category: flipWatch ? 'target' : 'recruit',
+      profileNote: flipWatch
+        ? `${row.name || existing.name} committed to ${row.committedTo}. Kept on UF flip radar.`
+        : `${row.name || existing.name} committed to ${row.committedTo}. Removed from UF target board.`,
     });
     markedCommitted += 1;
   }
 
+  // Scrub any leftover offer-list targets that are not on the hunt allowlist.
   const all = await store.getAllPlayers();
   for (const p of all) {
     if (Number(p.classYear) !== classYear) continue;
-    if (!isLiveUfBoardTarget(p)) continue;
     if (p.category !== 'target') continue;
-    if (openSlugs.has(p.slug) && isActiveUfTarget(p)) continue;
+    const slug = canonicalTargetSlug(p.slug || slugify(p.name));
+    if (huntSet.has(slug)) continue;
 
     await store.upsertPlayer({
       ...p,
       category: 'recruit',
       status: p.committedTo || p.status === 'committed' ? p.status || 'committed' : 'uncommitted',
-      boardSource: BOARD_SOURCE,
       updatedAt: new Date().toISOString(),
     });
     demoted += 1;
@@ -321,6 +451,7 @@ async function syncFloridaClosingBoardToStore(options = {}) {
     committedOnPage: (board.committed || []).length,
     upserted,
     skippedCommit,
+    skippedOfferList,
     markedCommitted,
     demoted,
     fetchedAt: board.fetchedAt,

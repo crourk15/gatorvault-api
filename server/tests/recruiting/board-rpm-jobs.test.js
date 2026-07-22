@@ -4,13 +4,14 @@ const { allowlistJobsFromFiles, profilePatchFromOn3 } = require('../../lib/allow
 const { loadTargetBoard, persistRpmToRecruitingStore } = require('../../lib/on3-rpm-allowlist');
 
 describe('Closing Class / Lab RPM job coverage', () => {
-  it('allowlistJobsFromFiles includes Closing Class snapshot slugs', () => {
+  it('allowlistJobsFromFiles is hunt-list only for 2027 (no 247 offer dump)', () => {
     const jobs = allowlistJobsFromFiles();
     const slugs = new Set(jobs.filter((j) => j.classYear === 2027).map((j) => j.slug));
-    assert.ok(slugs.has('tranard-roberts'), 'curated allowlist still present');
-    assert.ok(slugs.has('seth-williams'), 'Closing Class board slug should sync RPM');
-    assert.ok(slugs.has('monshun-sales'), 'Closing Class board slug should sync RPM');
-    assert.ok(slugs.has('brayden-parks'), 'Closing Class board slug should sync RPM');
+    assert.ok(slugs.has('tranard-roberts'), 'curated hunt target present');
+    assert.ok(slugs.has('jalen-brewster'), 'flip-watch hunt target present');
+    assert.ok(!slugs.has('seth-williams'), 'offer-list noise must not become a sync job');
+    assert.ok(!slugs.has('monshun-sales'), 'elsewhere-commit must not become a sync job');
+    assert.ok(!slugs.has('brayden-parks'), 'offer-list noise must not become a sync job');
   });
 
   it('profilePatchFromOn3 extracts UF RPM + competitors for Lab logos', () => {
@@ -30,31 +31,32 @@ describe('Closing Class / Lab RPM job coverage', () => {
     assert.ok((patch.competitors || []).some((c) => /georgia/i.test(c.school)));
   });
 
-  it('on3-rpm loadTargetBoard includes Closing Class open board', () => {
+  it('on3-rpm loadTargetBoard is hunt-list only for 2027', () => {
     const targets = loadTargetBoard(2027);
     const slugs = new Set(targets.map((t) => String(t.slug || '').toLowerCase()));
-    assert.ok(slugs.has('seth-williams'));
-    assert.ok(slugs.has('monshun-sales'));
     assert.ok(slugs.has('tranard-roberts'));
+    assert.ok(slugs.has('jalen-brewster'));
+    assert.ok(!slugs.has('seth-williams'));
+    assert.ok(!slugs.has('monshun-sales'));
   });
 
-  it('persistRpmToRecruitingStore writes competitors onto Closing Class rows', async () => {
+  it('persistRpmToRecruitingStore writes competitors onto hunt-list rows', async () => {
     const store = require('../../lib/recruiting-store');
-    const before = await store.getPlayerBySlug('seth-williams');
-    assert.ok(before, 'fixture player seth-williams should exist in local store');
+    const before = await store.getPlayerBySlug('tranard-roberts');
+    assert.ok(before, 'fixture player tranard-roberts should exist in local store');
 
     try {
       const out = await persistRpmToRecruitingStore(
-        'seth-williams',
+        'tranard-roberts',
         2027,
         {
-          name: 'Seth Williams',
-          slug: 'seth-williams-284423',
+          name: 'Tranard Roberts',
+          slug: 'tranard-roberts',
           topTeams: [
             { year: 2027, prediction: 15, team: { name: 'Florida Gators', fullName: 'Florida' } },
             { year: 2027, prediction: 55, team: { name: 'Georgia Bulldogs', fullName: 'Georgia' } },
           ],
-          rankingsPlayer: { consensusStars: 4, playerId: 284423 },
+          rankingsPlayer: { consensusStars: 3, playerId: 1 },
         },
         15
       );
@@ -62,16 +64,12 @@ describe('Closing Class / Lab RPM job coverage', () => {
       assert.equal(out.ufRpmPct, 15);
       assert.ok(out.competitors >= 1);
 
-      const player = await store.getPlayerBySlug('seth-williams');
+      const player = await store.getPlayerBySlug('tranard-roberts');
       assert.equal(player.ufRpmPct, 15);
       assert.ok((player.competitors || []).some((c) => /georgia/i.test(c.school || c.name || '')));
-      assert.equal(player.boardSource, '247-uf-board-sync');
     } finally {
       if (before) {
-        await store.upsertPlayer({
-          ...before,
-          boardSource: before.boardSource || '247-uf-board-sync',
-        });
+        await store.upsertPlayer({ ...before });
       }
     }
   });

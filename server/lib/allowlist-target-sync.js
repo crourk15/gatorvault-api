@@ -66,8 +66,8 @@ function pushJob(jobs, slug, classYear) {
 }
 
 /**
- * Sync job seeds from files (allowlist, admin, Lab promotions, Closing Class snapshot).
- * Safe for sync callers (staleness checks). Full sync also merges live store board markers.
+ * Sync job seeds from files (allowlist, admin, Lab promotions).
+ * 2027 Closing Class is hunt-list only — snapshot offer rows do not become sync jobs.
  */
 function allowlistJobsFromFiles() {
   const { loadAdminAllowlist } = require('./admin-allowlist-store');
@@ -90,49 +90,21 @@ function allowlistJobsFromFiles() {
     pushJob(jobs, slug, 2028);
   }
 
-  // Lab auto-promotes (2027/2028 discovery → UF targets) share the same RPM/logo sync.
-  for (const year of [2027, 2028]) {
-    for (const slug of getLabSlugSet(year)) {
-      pushJob(jobs, slug, year);
-    }
-  }
-
-  // 2027 Closing Class: remaining Florida 247 board rows from last snapshot.
-  try {
-    const { SNAPSHOT_PATH, DEFAULT_CLASS_YEAR } = require('./uf-closing-board-247');
-    const board = readJson(SNAPSHOT_PATH, null);
-    for (const row of board?.open || []) {
-      pushJob(jobs, row.slug, DEFAULT_CLASS_YEAR);
-    }
-  } catch {
-    /* closing-board optional */
+  // Lab auto-promotes (2028 discovery → UF targets) share the same RPM/logo sync.
+  // Closing Class 2027 does not soft-expand via Lab promotions.
+  for (const slug of getLabSlugSet(2028)) {
+    pushJob(jobs, slug, 2028);
   }
 
   return jobs;
 }
 
 /**
- * On3 sync job list: Charles allowlist + admin + Lab promotions + 2027 Closing Class board.
- * Closing Class / Lab-promoted names need the same RPM + competitor logo path as curated targets.
+ * On3 sync job list: Charles allowlist + admin + Lab promotions.
+ * 2027 Closing Class is hunt-list only — do not expand jobs from 247 offer-list markers.
  */
 async function allowlistJobs() {
-  const jobs = allowlistJobsFromFiles();
-
-  // Merge live store Closing Class markers (covers snapshot lag / boardSource-only rows).
-  try {
-    const { DEFAULT_CLASS_YEAR, BOARD_SOURCE, isLiveUfBoardTarget } = require('./uf-closing-board-247');
-    const players = await store.getAllPlayers();
-    for (const p of players || []) {
-      if (Number(p.classYear) !== DEFAULT_CLASS_YEAR) continue;
-      if (p.category !== 'target') continue;
-      if (!isLiveUfBoardTarget(p) && p.boardSource !== BOARD_SOURCE) continue;
-      pushJob(jobs, p.slug || store.slugify(p.name), DEFAULT_CLASS_YEAR);
-    }
-  } catch {
-    /* store optional */
-  }
-
-  return jobs;
+  return allowlistJobsFromFiles();
 }
 
 function extractOffersFromOn3Profile(topTeams, classYear) {
