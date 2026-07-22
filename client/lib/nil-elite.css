@@ -255,6 +255,28 @@
 
 .gv-nil-page .rh-cc-tabs {
   margin-bottom: var(--gv-space-4, 16px);
+  border-bottom-color: rgba(255, 255, 255, 0.14);
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+/* Dark NIL shell: default graphite tab text is nearly invisible on swamp navy. */
+.gv-nil-page .rh-cc-tabs__btn {
+  color: rgba(232, 238, 248, 0.62);
+  border-color: transparent;
+  background: transparent;
+}
+
+.gv-nil-page .rh-cc-tabs__btn:hover {
+  color: #f4f7fc;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.gv-nil-page .rh-cc-tabs__btn.is-active {
+  color: #ffffff;
+  background: rgba(250, 70, 22, 0.18);
+  border-color: #fa4616;
+  box-shadow: inset 0 -2px 0 #fa4616;
 }
 
 /* ── Leaderboard cards ── */

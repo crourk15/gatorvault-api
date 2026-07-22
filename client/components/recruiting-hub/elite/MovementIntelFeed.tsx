@@ -10,9 +10,9 @@ import { UiWarming } from '@/components/site/UiMessage';
 const EVENT_LABELS: Record<RhHubMovementFeedItem['event'], string> = {
   up: 'Trending Up',
   down: 'Trending Down',
-  visit: 'Visit',
-  offer: 'Offer',
-  intel: 'Intel',
+  visit: 'Visit scheduled',
+  offer: 'New offer',
+  intel: 'Board intel',
   commit: 'Commit',
 };
 
@@ -46,7 +46,7 @@ export function MovementIntelFeed(): React.ReactElement {
       <div className="rh-section-header">
         <div className="rh-section-title">Who&apos;s moving</div>
         <div className="rh-section-subtitle">
-          Fresh board traction for the {activeYear} class — commits, swings, and visit heat.
+          Fresh board traction for the {activeYear} class — offers, visits, commits, and swings.
         </div>
       </div>
       {loading ? (
