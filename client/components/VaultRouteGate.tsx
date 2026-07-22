@@ -67,8 +67,19 @@ export function VaultRouteGate(): null {
       const loggedIn = sessionLoggedIn() || isAuthenticated(user?.email, user?.token);
 
       if (handoff) {
-        if (loggedIn) sessionStorage.removeItem(AUTH_HANDOFF_KEY);
-        return;
+        if (loggedIn) {
+          sessionStorage.removeItem(AUTH_HANDOFF_KEY);
+          return;
+        }
+        // Handoff without a session must not leave gated routes open forever.
+        const started = Number(sessionStorage.getItem(`${AUTH_HANDOFF_KEY}_at`) || 0);
+        if (!started) {
+          sessionStorage.setItem(`${AUTH_HANDOFF_KEY}_at`, String(Date.now()));
+          return;
+        }
+        if (Date.now() - started < 8_000) return;
+        sessionStorage.removeItem(AUTH_HANDOFF_KEY);
+        sessionStorage.removeItem(`${AUTH_HANDOFF_KEY}_at`);
       }
 
       // Gate only on local session presence — never wait on network for nav.

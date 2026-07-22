@@ -4,7 +4,38 @@
 const fs = require('fs');
 const path = require('path');
 
-const DATA_DIR = path.join(__dirname, '..', 'data', 'futurecast');
+const BUNDLE_DATA_DIR = path.join(__dirname, '..', 'data', 'futurecast');
+const RENDER_DATA_DIR = '/var/data/futurecast';
+
+function resolveFuturecastDataDir() {
+  const fromEnv = String(process.env.GV_FUTURECAST_DATA_DIR || '').trim();
+  if (fromEnv) return fromEnv;
+  try {
+    if (process.env.NODE_ENV === 'production' && fs.existsSync('/var/data')) {
+      return RENDER_DATA_DIR;
+    }
+  } catch {
+    /* ignore */
+  }
+  return BUNDLE_DATA_DIR;
+}
+
+const DATA_DIR = resolveFuturecastDataDir();
+try {
+  if (DATA_DIR !== BUNDLE_DATA_DIR) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    for (const name of fs.existsSync(BUNDLE_DATA_DIR) ? fs.readdirSync(BUNDLE_DATA_DIR) : []) {
+      if (!name.endsWith('.json')) continue;
+      const dest = path.join(DATA_DIR, name);
+      if (!fs.existsSync(dest)) {
+        fs.copyFileSync(path.join(BUNDLE_DATA_DIR, name), dest);
+      }
+    }
+  }
+} catch (err) {
+  console.warn('[futurecast-store] migrate skipped:', err.message);
+}
+
 const HISTORY_PATH = path.join(DATA_DIR, 'prediction-history.json');
 
 function readJson(filePath, fallback) {
@@ -17,7 +48,9 @@ function readJson(filePath, fallback) {
 
 function writeJson(filePath, data) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  const tmp = `${filePath}.${process.pid}.${Date.now()}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2));
+  fs.renameSync(tmp, filePath);
 }
 
 function cachePathForYear(classYear) {

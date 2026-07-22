@@ -1,15 +1,9 @@
 const store = require('./community-store');
 const { getSessionFromReq } = require('./session-auth');
-
-const COMMUNITY_ADMIN_PIN =
-  process.env.COMMUNITY_ADMIN_PIN || process.env.CONTENT_ADMIN_PIN || process.env.EMAIL_TEST_PIN || 'GV2026admin';
-
-function verifyAdminPin(pin) {
-  return !!pin && pin === COMMUNITY_ADMIN_PIN;
-}
+const { verifyAdminPin, pinFromReq: adminPinFromReq } = require('./admin-pin');
 
 function pinFromReq(req) {
-  return req.headers['x-community-pin'] || req.body?.pin || req.query?.pin;
+  return req.headers['x-community-pin'] || adminPinFromReq(req) || req.body?.pin || req.query?.pin;
 }
 
 function verifyCronOrAdmin(req) {

@@ -44,7 +44,9 @@ function markBeatSnapshot(snapshot, row, reason) {
   }
 }
 
-const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
+const { resolveRecruitingDataDir, migrateRecruitingBundleIfNeeded } = require('./recruiting-data-dir');
+const DATA_DIR = resolveRecruitingDataDir();
+migrateRecruitingBundleIfNeeded(DATA_DIR);
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'beat-writer-ingest-snapshot.json');
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 

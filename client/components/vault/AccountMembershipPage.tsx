@@ -207,8 +207,17 @@ export function AccountMembershipPage(): React.ReactElement {
     try {
       const token = appAccountTokenForEmail(status.email);
       const purchase = await purchaseIosSubscription(productId, token);
-      const next = await verifyApplePurchase(purchase);
-      await finishIosPurchase(purchase.transactionId);
+      const next = await verifyApplePurchase({
+        ...purchase,
+        appAccountToken: token,
+      });
+      try {
+        await finishIosPurchase(purchase.transactionId);
+      } catch (ackErr) {
+        // Global native listener may have already acknowledged — treat as success.
+        const msg = ackErr instanceof Error ? ackErr.message : String(ackErr);
+        if (!/already|acknowledged|not found/i.test(msg)) throw ackErr;
+      }
       setStatus(next);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Purchase could not be completed.');
@@ -401,11 +410,11 @@ export function AccountMembershipPage(): React.ReactElement {
         </section>
       ) : null}
 
-      {status?.email ? (
+      {(status?.email || localSession?.email) ? (
         <AccountDeletePanel
-          email={status.email}
-          paid={status.paid}
-          subscriptionSource={status.subscription?.source}
+          email={(status?.email || localSession?.email) as string}
+          paid={Boolean(status?.paid)}
+          subscriptionSource={status?.subscription?.source}
         />
       ) : null}
 

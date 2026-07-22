@@ -6,7 +6,13 @@ const { commitFingerprint, intelFingerprint } = require('./commit-fingerprint');
 const { isVisitEventType } = require('./gv-classification');
 const { normalizePlayerGeo } = require('./recruiting-geo-normalize');
 
-const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
+const {
+  resolveRecruitingDataDir,
+  migrateRecruitingBundleIfNeeded,
+} = require('./recruiting-data-dir');
+
+const DATA_DIR = resolveRecruitingDataDir();
+migrateRecruitingBundleIfNeeded(DATA_DIR);
 const PLAYERS_PATH = path.join(DATA_DIR, 'players.json');
 const EVENTS_PATH = path.join(DATA_DIR, 'events.json');
 const RANKINGS_PATH = path.join(DATA_DIR, 'rankings.json');

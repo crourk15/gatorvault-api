@@ -177,6 +177,16 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     setReplyBody('');
     setReplyError(null);
     setThreadLoading(true);
+    if (typeof window !== 'undefined') {
+      try {
+        const next = `/vault/community/thread/${encodeURIComponent(id)}/`;
+        if (!window.location.pathname.includes(`/community/thread/${id}`)) {
+          window.history.pushState(null, '', next);
+        }
+      } catch {
+        /* ignore */
+      }
+    }
     try {
       const data = await fetchWithWarmPoll(() => fetchCommunityThread(id), warmPollProfile());
       setSelectedThread(data.thread);

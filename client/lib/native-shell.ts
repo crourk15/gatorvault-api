@@ -167,7 +167,11 @@ async function initIosPurchases(): Promise<void> {
           ? appAccountTokenForEmail(session.email)
           : undefined,
       });
-      await finishIosPurchase(transactionId);
+      try {
+        await finishIosPurchase(transactionId);
+      } catch {
+        /* UI path may have already acknowledged */
+      }
       await clearPendingIap();
     };
 

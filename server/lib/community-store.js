@@ -118,7 +118,10 @@ const TIER_BADGE = {
 
 function readJson(filePath, fallback) {
   try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    if (!fs.existsSync(filePath)) return fallback;
+    const raw = fs.readFileSync(filePath, 'utf8');
+    if (!String(raw || '').trim()) return fallback;
+    return JSON.parse(raw);
   } catch (e) {
     return fallback;
   }
@@ -126,7 +129,25 @@ function readJson(filePath, fallback) {
 
 function writeJson(filePath, data) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  const tmp = `${filePath}.${process.pid}.${Date.now()}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2));
+  fs.renameSync(tmp, filePath);
+}
+
+/** Threads/posts: never treat corrupt JSON as empty (prevents founding wipe). */
+function readJsonArrayStrict(filePath) {
+  if (!fs.existsSync(filePath)) return { ok: true, missing: true, data: [] };
+  try {
+    const raw = fs.readFileSync(filePath, 'utf8');
+    if (!String(raw || '').trim()) return { ok: true, missing: true, data: [] };
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return { ok: false, missing: false, data: [], error: 'not_array' };
+    }
+    return { ok: true, missing: false, data: parsed };
+  } catch (err) {
+    return { ok: false, missing: false, data: [], error: err.message };
+  }
 }
 
 function nowIso() {
@@ -301,7 +322,15 @@ function ensureCategories() {
  */
 function ensureFoundingSurface() {
   ensureCategories();
-  const existing = loadThreads().filter((t) => !t.deleted);
+  const loaded = readJsonArrayStrict(THREADS_PATH);
+  if (!loaded.ok) {
+    console.error(
+      '[community-store] refusing founding reseed — corrupt threads store:',
+      loaded.error
+    );
+    return { seeded: false, corrupt: true, count: 0 };
+  }
+  const existing = loaded.data.filter((t) => !t.deleted);
   if (existing.length > 0) return { seeded: false, count: existing.length };
 
   const ts = nowIso();
@@ -459,7 +488,13 @@ function saveUsers(users) {
 }
 
 function loadThreads() {
-  return readJson(THREADS_PATH, []);
+  const loaded = readJsonArrayStrict(THREADS_PATH);
+  if (!loaded.ok) {
+    const err = new Error(`Community threads store unreadable: ${loaded.error}`);
+    err.code = 'COMMUNITY_STORE_CORRUPT';
+    throw err;
+  }
+  return loaded.data;
 }
 
 function saveThreads(threads) {
@@ -467,7 +502,13 @@ function saveThreads(threads) {
 }
 
 function loadPosts() {
-  return readJson(POSTS_PATH, []);
+  const loaded = readJsonArrayStrict(POSTS_PATH);
+  if (!loaded.ok) {
+    const err = new Error(`Community posts store unreadable: ${loaded.error}`);
+    err.code = 'COMMUNITY_STORE_CORRUPT';
+    throw err;
+  }
+  return loaded.data;
 }
 
 function savePosts(posts) {

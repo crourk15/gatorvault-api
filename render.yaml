@@ -39,6 +39,14 @@ services:
       # Community UGC (threads/replies) — same disk so redeploys do not wipe the board.
       - key: GV_COMMUNITY_DATA_DIR
         value: /var/data/community
+      # Recruiting fingerprints / players / visit intel — same disk across redeploys.
+      - key: GV_RECRUITING_DATA_DIR
+        value: /var/data/recruiting
+      # Never accept published default admin PIN in production.
+      - key: DISABLE_DEFAULT_ADMIN_PIN
+        value: "true"
+      - key: ALLOW_LEGACY_ADMIN_PIN
+        value: "false"
       # FutureCast UF% trend history + Rivals PM fingerprints — survive redeploys for Lab movement.
       - key: GV_FUTURECAST_DATA_DIR
         value: /var/data/futurecast

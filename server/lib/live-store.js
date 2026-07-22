@@ -49,7 +49,8 @@ const FEED_TYPES = [
 /** Main Live Feed column — matches My Alerts categories */
 const LIVE_FEED_CATEGORIES = gvClass.FEED_CATEGORIES;
 
-const RECRUITING_PLAYERS_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'players.json');
+const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
+const RECRUITING_PLAYERS_PATH = path.join(resolveRecruitingDataDir(), 'players.json');
 
 function loadPlayerIndex() {
   const players = readJson(RECRUITING_PLAYERS_PATH, []);

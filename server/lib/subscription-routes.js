@@ -1,4 +1,5 @@
 const { getSessionFromReq } = require('./session-auth');
+const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 const { buildCatalogPayload, tierFromProductId, normalizeTier } = require('./subscription-config');
 const {
   buildSubscriptionStatus,
@@ -6,9 +7,8 @@ const {
   appleVerificationConfigured,
   verifyAppleTransaction,
 } = require('./subscription-service');
-const { findUserByEmail } = require('./user-store');
-
-const ADMIN_PIN = process.env.EMAIL_TEST_PIN || process.env.SUBSCRIPTION_ADMIN_PIN || 'GV2026admin';
+const { findUserByEmail, findUserByOriginalTransactionId } = require('./user-store');
+const { appAccountTokenForEmail } = require('./app-account-token');
 
 async function processVerifiedApplePurchase(session, productId, transactionId, res, options = {}) {
   const tier = tierFromProductId(productId);
@@ -66,14 +66,46 @@ async function processVerifiedApplePurchase(session, productId, transactionId, r
     });
   }
 
+  const sessionEmail = String(session.email || '').trim().toLowerCase();
+  const originalTx = String(verified.originalTransactionId || transactionId || '').trim();
+  if (originalTx) {
+    const owner = findUserByOriginalTransactionId(originalTx);
+    if (owner && String(owner.email || '').trim().toLowerCase() !== sessionEmail) {
+      return res.status(409).json({
+        ok: false,
+        error:
+          'This Apple subscription is already linked to a different GatorVault account. Sign in with that email or contact support.',
+        code: 'subscription_linked_elsewhere',
+      });
+    }
+  }
+
+  const expectedToken = appAccountTokenForEmail(sessionEmail);
+  const incomingToken = String(options.appAccountToken || '').trim().toLowerCase();
+  const appleToken = String(verified.appAccountToken || '').trim().toLowerCase();
+  if (appleToken && appleToken !== expectedToken.toLowerCase()) {
+    return res.status(403).json({
+      ok: false,
+      error: 'This Apple purchase is tied to a different GatorVault account token.',
+      code: 'app_account_token_mismatch',
+    });
+  }
+  if (incomingToken && incomingToken !== expectedToken.toLowerCase()) {
+    return res.status(403).json({
+      ok: false,
+      error: 'appAccountToken does not match the signed-in account.',
+      code: 'app_account_token_mismatch',
+    });
+  }
+
   const user = applySubscription(session.email, {
     source: 'apple',
     status: 'active',
     productId: verified.productId || productId,
     tier,
-    originalTransactionId: verified.originalTransactionId || transactionId,
+    originalTransactionId: originalTx || transactionId,
     expiresAt: verified.expiresAt || null,
-    appAccountToken: options.appAccountToken || verified.appAccountToken || null,
+    appAccountToken: expectedToken,
     autoRenewEnabled: true,
   });
 
@@ -193,8 +225,8 @@ function mountSubscriptionRoutes(app) {
 
   /** Idempotent App Review demo account — create, reset password, grant War Room. */
   app.post('/api/subscription/admin/app-review', (req, res) => {
-    const pin = String(req.body.pin || req.get('X-Subscription-Pin') || '').trim();
-    if (!pin || pin !== ADMIN_PIN) {
+    const pin = String(req.body.pin || req.get('X-Subscription-Pin') || pinFromReq(req) || '').trim();
+    if (!verifyAdminPin(pin)) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN.' });
     }
 
@@ -221,8 +253,8 @@ function mountSubscriptionRoutes(app) {
 
   /** Manual grant until IAP is live — protected by admin PIN. */
   app.post('/api/subscription/admin/grant', (req, res) => {
-    const pin = String(req.body.pin || req.get('X-Subscription-Pin') || '').trim();
-    if (!pin || pin !== ADMIN_PIN) {
+    const pin = String(req.body.pin || req.get('X-Subscription-Pin') || pinFromReq(req) || '').trim();
+    if (!verifyAdminPin(pin)) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN.' });
     }
 

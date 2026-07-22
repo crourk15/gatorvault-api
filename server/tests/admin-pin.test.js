@@ -12,7 +12,8 @@ const CLEAR = [
   'CONTENT_ADMIN_PIN', 'COMMUNITY_ADMIN_PIN', 'LIVE_ADMIN_PIN', 'FILM_ROOM_ADMIN_PIN',
   'WAR_ROOM_ADMIN_PIN', 'X_AUTOPOST_PIN', 'MEDIA_INGEST_PIN', 'EMAIL_TEST_PIN',
   'INGEST_CRON_SECRET', 'MONITORING_CRON_SECRET', 'MONITORING_SECRET',
-  'DISABLE_DEFAULT_ADMIN_PIN', 'ALLOW_DEFAULT_ADMIN_PIN', 'NODE_ENV'
+  'DISABLE_DEFAULT_ADMIN_PIN', 'ALLOW_LEGACY_ADMIN_PIN', 'ALLOW_DEFAULT_ADMIN_PIN',
+  'NODE_ENV', 'RENDER',
 ];
 
 function withEnv(map, fn) {
@@ -36,26 +37,43 @@ function withEnv(map, fn) {
   }
 }
 
-test('legacy PIN works when only cron secrets are set', () => {
-  withEnv({ NODE_ENV: 'production', MONITORING_CRON_SECRET: 'cron-only' }, ({ verifyAdminPin }) => {
+test('legacy PIN works in non-production when only cron secrets are set', () => {
+  withEnv({ NODE_ENV: 'development', MONITORING_CRON_SECRET: 'cron-only' }, ({ verifyAdminPin }) => {
     assert.equal(verifyAdminPin('GV2026admin'), true);
     assert.equal(verifyAdminPin('cron-only'), true);
     assert.equal(verifyAdminPin('wrong'), false);
   });
 });
 
-test('configured operator PIN is accepted alongside legacy', () => {
+test('production rejects legacy default PIN even with cron secrets', () => {
+  withEnv({ NODE_ENV: 'production', MONITORING_CRON_SECRET: 'cron-only' }, ({ verifyAdminPin }) => {
+    assert.equal(verifyAdminPin('GV2026admin'), false);
+    assert.equal(verifyAdminPin('cron-only'), true);
+  });
+});
+
+test('configured operator PIN is accepted in production without legacy', () => {
   withEnv({ NODE_ENV: 'production', OPS_ADMIN_PIN: 'ops-secret' }, ({ verifyAdminPin }) => {
     assert.equal(verifyAdminPin('ops-secret'), true);
+    assert.equal(verifyAdminPin('GV2026admin'), false);
+  });
+});
+
+test('ALLOW_LEGACY_ADMIN_PIN re-enables published default in production', () => {
+  withEnv({
+    NODE_ENV: 'production',
+    ALLOW_LEGACY_ADMIN_PIN: 'true',
+  }, ({ verifyAdminPin }) => {
     assert.equal(verifyAdminPin('GV2026admin'), true);
   });
 });
 
-test('DISABLE_DEFAULT_ADMIN_PIN suppresses legacy when operator pin exists', () => {
+test('DISABLE_DEFAULT_ADMIN_PIN suppresses legacy even when allow-legacy is set', () => {
   withEnv({
     NODE_ENV: 'production',
     OPS_ADMIN_PIN: 'ops-secret',
-    DISABLE_DEFAULT_ADMIN_PIN: 'true'
+    ALLOW_LEGACY_ADMIN_PIN: 'true',
+    DISABLE_DEFAULT_ADMIN_PIN: 'true',
   }, ({ verifyAdminPin }) => {
     assert.equal(verifyAdminPin('ops-secret'), true);
     assert.equal(verifyAdminPin('GV2026admin'), false);

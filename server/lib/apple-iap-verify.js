@@ -64,11 +64,13 @@ function createAppStoreJwt(config = readAppleIapConfig()) {
     })
   );
   const signingInput = `${header}.${payload}`;
-  const signer = crypto.createSign('SHA256');
-  signer.update(signingInput);
-  signer.end();
-  const signature = signer
-    .sign(config.privateKey)
+  // Apple App Store Server API requires IEEE P1363 (raw r||s), not DER.
+  const keyObject = crypto.createPrivateKey(config.privateKey);
+  const signature = crypto
+    .sign('sha256', Buffer.from(signingInput), {
+      key: keyObject,
+      dsaEncoding: 'ieee-p1363',
+    })
     .toString('base64')
     .replace(/=/g, '')
     .replace(/\+/g, '-')

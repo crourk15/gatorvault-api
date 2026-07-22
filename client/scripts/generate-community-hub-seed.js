@@ -250,17 +250,18 @@ async function main() {
   }
   if (!rooms.length) rooms = foundingRooms(nowIso);
 
-  if (!pulse || !Object.keys(pulse).length || (pulse.trending == null && pulse.repliesToday == null)) {
-    pulse = {
-      repliesToday: pulse.repliesToday ?? 0,
-      trending: Math.max(pulse.trending || 0, threads.filter((t) => t.featured || t.pinned).length),
-      pinned: threads.filter((t) => t.pinned).length,
-      liveRooms: rooms.length,
-      threadCount: threads.length,
-      postCount: pulse.postCount || 0,
-      activeToday: pulse.activeToday || 0,
-    };
-  }
+  // Honest pulse only — never invent trending from featured/pinned empty threads.
+  const repliesToday = Number(pulse.repliesToday) || 0;
+  const threadsWithReplies = threads.filter((t) => (t.replyCount || 0) > 0).length;
+  pulse = {
+    repliesToday,
+    trending: threadsWithReplies,
+    pinned: threads.filter((t) => t.pinned).length,
+    liveRooms: (rooms || []).filter((r) => r.status === 'live').length,
+    threadCount: threads.length,
+    postCount: Number(pulse.postCount) || 0,
+    activeToday: Number(pulse.activeToday) || 0,
+  };
 
   const seed = { generatedAt: nowIso, source, categories, threads, pulse, rooms };
   fs.writeFileSync(OUT, JSON.stringify(seed, null, 2) + '\n');

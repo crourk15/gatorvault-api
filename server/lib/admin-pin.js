@@ -38,12 +38,25 @@ function pinsFromEnv(keys) {
   return keys.map((key) => normalizePin(process.env[key])).filter(Boolean);
 }
 
+function isProductionRuntime() {
+  return (
+    String(process.env.NODE_ENV || '').toLowerCase() === 'production' ||
+    String(process.env.RENDER || '').toLowerCase() === 'true'
+  );
+}
+
 function collectAdminPins() {
   const operatorPins = [...new Set(pinsFromEnv(OPERATOR_PIN_ENV))];
   const serviceSecrets = [...new Set(pinsFromEnv(SERVICE_SECRET_ENV))];
   const disableLegacy = String(process.env.DISABLE_DEFAULT_ADMIN_PIN || '').toLowerCase() === 'true';
+  const allowLegacy = String(process.env.ALLOW_LEGACY_ADMIN_PIN || '').toLowerCase() === 'true';
 
-  if (!disableLegacy || operatorPins.length === 0) {
+  // Production: never accept the published default PIN unless explicitly allowed.
+  if (isProductionRuntime()) {
+    if (allowLegacy && !disableLegacy) {
+      operatorPins.push(LEGACY_OPERATOR_PIN);
+    }
+  } else if (!disableLegacy || operatorPins.length === 0) {
     operatorPins.push(LEGACY_OPERATOR_PIN);
   }
 
