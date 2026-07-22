@@ -70,6 +70,7 @@ async function subscribeWebPush(prefs: AlertPushPrefs): Promise<{ ok: boolean; r
     body: JSON.stringify({
       subscription: subscription.toJSON(),
       prefs,
+      confirm: true,
     }),
   });
 
@@ -119,6 +120,32 @@ export async function syncVisitPushPrefs(options: {
     score: false,
     followPlayers: options.followPlayers,
   });
+}
+
+/** Send a test lock-screen push to the signed-in member's registered devices. */
+export async function sendTestPushAlert(
+  kind: 'confirm' | 'visit' | 'commit' | 'score' = 'confirm',
+  options: { force?: boolean } = {}
+): Promise<{ ok: boolean; reason?: string; sent?: number }> {
+  const res = await fetch(`${getApiBase()}/api/push/test`, {
+    method: 'POST',
+    headers: authHeaders(true),
+    body: JSON.stringify({ kind, force: Boolean(options.force) }),
+  });
+  if (res.status === 401) return { ok: false, reason: 'sign_in' };
+  if (res.status === 403) return { ok: false, reason: 'membership' };
+  if (res.status === 404) return { ok: false, reason: 'no_devices' };
+  let body: { ok?: boolean; sent?: number; skipped?: boolean; reason?: string } | null = null;
+  try {
+    body = (await res.json()) as typeof body;
+  } catch {
+    body = null;
+  }
+  if (!res.ok || !body?.ok) {
+    if (body?.reason === 'rate_limited') return { ok: false, reason: 'rate_limited' };
+    return { ok: false, reason: 'server' };
+  }
+  return { ok: true, sent: body.sent };
 }
 
 export async function unsubscribeVisitPush(): Promise<void> {

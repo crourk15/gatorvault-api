@@ -17,7 +17,7 @@ import {
 } from '@/lib/alert-prefs';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
 import { buildSeedAlerts } from '@/lib/alerts-hub-seed';
-import { syncAlertPushPrefs, unsubscribeVisitPush } from '@/lib/push-alerts-api';
+import { sendTestPushAlert, syncAlertPushPrefs, unsubscribeVisitPush } from '@/lib/push-alerts-api';
 import { syncEmailAlertPrefs } from '@/lib/alert-email-api';
 import { isNativeApp } from '@/lib/api-base';
 import { playerProfilePath } from '@/lib/player-routes';
@@ -65,6 +65,7 @@ export function VaultAlertsPage(): React.ReactElement {
   const [error, setError] = useState<string | null>(null);
   const [pushStatus, setPushStatus] = useState<string | null>(null);
   const [nativeShell, setNativeShell] = useState(false);
+  const [testingPush, setTestingPush] = useState(false);
 
   useEffect(() => {
     setPrefs(loadAlertPrefs());
@@ -345,7 +346,46 @@ export function VaultAlertsPage(): React.ReactElement {
           <button type="button" className="gv-alert-save-btn" onClick={handleSave}>
             {saved ? 'Preferences Saved' : 'Save Preferences'}
           </button>
+          {(prefs.method === 'push' || prefs.method === 'both') &&
+          (prefs.types.visit || prefs.types.commit || prefs.types.score) ? (
+            <button
+              type="button"
+              className="gv-alert-save-btn gv-alert-save-btn--secondary"
+              disabled={testingPush}
+              onClick={() => {
+                setTestingPush(true);
+                void sendTestPushAlert('confirm', { force: true }).then((out) => {
+                  setTestingPush(false);
+                  if (out.ok) {
+                    setPushStatus(
+                      nativeShell
+                        ? 'Test alert sent — check your lock screen.'
+                        : 'Test alert sent — check browser notifications.'
+                    );
+                  } else if (out.reason === 'no_devices') {
+                    setPushStatus('Save Preferences first so this device can register for push.');
+                  } else if (out.reason === 'sign_in') {
+                    setPushStatus('Sign in to send a test alert.');
+                  } else if (out.reason === 'membership') {
+                    setPushStatus('Active membership required for push alerts.');
+                  } else if (out.reason === 'rate_limited') {
+                    setPushStatus('Test alert already sent — wait a minute and try again.');
+                  } else {
+                    setPushStatus('Could not send test alert. Try Save Preferences, then retry.');
+                  }
+                });
+              }}
+            >
+              {testingPush ? 'Sending test…' : 'Send test alert'}
+            </button>
+          ) : null}
           {pushStatus ? <p className="gv-vault-alerts__section-hint">{pushStatus}</p> : null}
+          {nativeShell ? (
+            <p className="gv-vault-alerts__section-hint">
+              On iPhone: Save Preferences → Allow notifications. You should get a confirmation
+              ping on the lock screen within a few seconds.
+            </p>
+          ) : null}
         </section>
 
         <section className="gv-vault-alerts__feed">

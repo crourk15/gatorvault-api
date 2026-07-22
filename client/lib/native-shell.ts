@@ -194,8 +194,28 @@ async function initIosPurchases(): Promise<void> {
 
 async function initNativePush(): Promise<void> {
   try {
-    const { initNativePushTapHandler } = await import('@/lib/native-push');
+    const { initNativePushTapHandler, registerNativePush } = await import('@/lib/native-push');
     await initNativePushTapHandler();
+
+    // Keep APNs token fresh when the member already opted into push on My Alerts.
+    const { loadAlertPrefs } = await import('@/lib/alert-prefs');
+    const { loadSession, ensureSessionHydrated } = await import('@/lib/auth-api');
+    await ensureSessionHydrated().catch(() => undefined);
+    const session = loadSession();
+    if (!session?.token) return;
+    const prefs = loadAlertPrefs();
+    const wantsPush = prefs.method === 'push' || prefs.method === 'both';
+    const anyLive = Boolean(prefs.types?.visit || prefs.types?.commit || prefs.types?.score);
+    if (!wantsPush || !anyLive) return;
+    await registerNativePush(
+      {
+        visit: Boolean(prefs.types.visit),
+        commit: Boolean(prefs.types.commit),
+        score: Boolean(prefs.types.score),
+        followPlayers: prefs.followPlayers || [],
+      },
+      { confirm: false }
+    );
   } catch {
     /* plugin unavailable outside iOS build */
   }

@@ -94,6 +94,8 @@ Suggested Review Notes reply:
 
 Enable on a member account: sign in → **My Alerts** → toggle Visits / Commits / Scores → Push → Save.
 
+**Phone QA:** Save Preferences should deliver a confirmation lock-screen ping (“GatorVault alerts connected”). You can also tap **Send test alert** on My Alerts, or call `POST /api/push/test` with `{ "kind": "confirm"|"visit"|"commit"|"score" }`.
+
 ### Step 5b — Native APNs (App Store binary)
 
 1. Apple Developer → Keys → create **Apple Push Notifications** key (.p8); note Key ID + Team ID
@@ -101,9 +103,9 @@ Enable on a member account: sign in → **My Alerts** → toggle Visits / Commit
 3. Xcode: Signing & Capabilities → Push Notifications (+ Background Modes → Remote notifications — already in Info.plist)
 4. Set Render env vars above; redeploy API
 5. `cd client && npm i && npx cap sync ios` then archive a new build (APNs does not OTA)
-6. On device: open My Alerts → Save Preferences → allow notifications
+6. On device: open My Alerts → Save Preferences → allow notifications → expect confirmation push
 
-Commit pushes fire from On3 ingest. Score pushes: ops job `gators-score-alerts` (kickoff + final in UF game windows only).
+Commit pushes fire from On3 ingest. Score pushes: Render cron `gatorvault-api-gators-score-alerts` calls `POST /api/ops/run-job` `{ jobId: "gators-score-alerts" }` on the web service (shared token store). Kickoff + final only inside UF game windows.
 
 ## Windows note
 

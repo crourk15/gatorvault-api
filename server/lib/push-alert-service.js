@@ -440,6 +440,168 @@ async function dispatchScorePush(event, options = {}) {
   });
 }
 
+function buildTestPayload(kind = 'confirm') {
+  const k = String(kind || 'confirm').toLowerCase();
+  if (k === 'visit') {
+    return {
+      title: 'Test visit alert',
+      body: 'GatorVault push is working — verified visit alerts will look like this.',
+      url: `${SITE_URL}/vault/alerts/`,
+      tag: `test_visit|${Date.now()}`,
+      type: 'visit_scheduled',
+      playerSlug: null,
+      playerName: null,
+    };
+  }
+  if (k === 'commit') {
+    return {
+      title: 'Test commit alert',
+      body: 'GatorVault push is working — UF commit alerts will look like this.',
+      url: `${SITE_URL}/vault/alerts/`,
+      tag: `test_commit|${Date.now()}`,
+      type: 'commit',
+      playerSlug: null,
+      playerName: null,
+    };
+  }
+  if (k === 'score') {
+    return {
+      title: 'Test score alert',
+      body: 'GatorVault push is working — Gators kickoff/final alerts will look like this.',
+      url: `${SITE_URL}/vault/live-scores/`,
+      tag: `test_score|${Date.now()}`,
+      type: 'score_kickoff',
+      playerSlug: null,
+      playerName: null,
+    };
+  }
+  return {
+    title: 'GatorVault alerts connected',
+    body: 'Lock-screen alerts are on for this iPhone. Visits, commits, and scores will land here.',
+    url: `${SITE_URL}/vault/alerts/`,
+    tag: `test_confirm|${Date.now()}`,
+    type: 'visit_scheduled',
+    playerSlug: null,
+    playerName: null,
+  };
+}
+
+function alertTypeForTestKind(kind) {
+  const k = String(kind || 'confirm').toLowerCase();
+  if (k === 'commit') return 'commit';
+  if (k === 'score') return 'score';
+  return 'visit';
+}
+
+/**
+ * Send a push only to one member's registered devices/web subs (phone QA).
+ * Skips preference filters so a confirm ping can land after Save.
+ */
+async function dispatchTestPushToEmail(email, options = {}) {
+  if (!pushEnabled()) return { ok: false, skipped: true, reason: 'push_disabled' };
+  const normalized = String(email || '').trim().toLowerCase();
+  if (!normalized) return { ok: false, error: 'invalid_email' };
+
+  const user = findUserByEmail(normalized);
+  if (!hasSubscriberAccess(user)) {
+    return { ok: false, error: 'membership_required' };
+  }
+
+  const kind = String(options.kind || 'confirm').toLowerCase();
+  const payload = buildTestPayload(kind);
+  const store = readStore();
+  const web = (store.subscriptions || []).filter(
+    (s) => String(s.email || '').toLowerCase() === normalized
+  );
+  const devices = (store.deviceTokens || []).filter(
+    (d) => String(d.email || '').toLowerCase() === normalized
+  );
+
+  if (!web.length && !devices.length) {
+    return { ok: false, error: 'no_devices', hint: 'Save Preferences on My Alerts first.' };
+  }
+
+  if (options.dryRun) {
+    return {
+      ok: true,
+      dryRun: true,
+      kind,
+      wouldSend: web.length + devices.length,
+      devices: devices.length,
+      web: web.length,
+    };
+  }
+
+  const rateKey =
+    options.fingerprint ||
+    `push_test|${normalized}|${kind}|${Math.floor(Date.now() / 120_000)}`;
+  if (alreadyDispatched(rateKey)) {
+    return { ok: true, skipped: true, reason: 'rate_limited', fingerprint: rateKey };
+  }
+
+  let sent = 0;
+  let failed = 0;
+  const deadWeb = [];
+  const deadDevices = [];
+
+  if (ensureWebPush()) {
+    for (const sub of web) {
+      try {
+        await webpush.sendNotification(
+          { endpoint: sub.endpoint, keys: sub.keys },
+          JSON.stringify({
+            title: payload.title,
+            body: payload.body,
+            url: payload.url,
+            tag: payload.tag,
+            type: payload.type,
+          })
+        );
+        sent += 1;
+      } catch (err) {
+        failed += 1;
+        const status = err?.statusCode || err?.status;
+        if (status === 404 || status === 410) deadWeb.push(sub.endpoint);
+      }
+    }
+  }
+
+  if (apnsConfigured()) {
+    for (const device of devices) {
+      const out = await sendApnsNotification(device.token, payload);
+      if (out.ok) sent += 1;
+      else {
+        failed += 1;
+        if (out.dead) deadDevices.push(device.token);
+      }
+    }
+  }
+
+  if (deadWeb.length || deadDevices.length) {
+    const next = readStore();
+    if (deadWeb.length) {
+      next.subscriptions = (next.subscriptions || []).filter((s) => !deadWeb.includes(s.endpoint));
+    }
+    if (deadDevices.length) {
+      next.deviceTokens = (next.deviceTokens || []).filter((d) => !deadDevices.includes(d.token));
+    }
+    writeStore(next);
+  }
+
+  if (sent > 0) markDispatched(rateKey);
+
+  return {
+    ok: sent > 0,
+    sent,
+    failed,
+    kind,
+    devices: devices.length,
+    web: web.length,
+    alertType: alertTypeForTestKind(kind),
+    fingerprint: rateKey,
+  };
+}
+
 function getPublicConfig() {
   return {
     enabled: pushEnabled(),
@@ -515,10 +677,12 @@ module.exports = {
   dispatchVisitCancelledPush,
   dispatchCommitPush,
   dispatchScorePush,
+  dispatchTestPushToEmail,
   buildScheduledPayload,
   buildCancelledPayload,
   buildCommitPayload,
   buildScorePayload,
+  buildTestPayload,
   requirePushSession,
   eligibleRecipients,
   alreadyDispatched,
