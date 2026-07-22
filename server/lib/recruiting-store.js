@@ -1180,17 +1180,24 @@ async function createEvent(event) {
 }
 
 async function getBoard(classYear) {
-  const { filterAllowlistedTargets } = require('./recruiting-target-allowlist');
+  const {
+    filterAllowlistedTargets,
+    isFlipWatchAllowlisted,
+    canonicalTargetSlug,
+  } = require('./recruiting-target-allowlist');
   const players = await getAllPlayers();
   const year = parseInt(classYear, 10);
   const commits = await getHubHsCommits(year);
-  const rawTargets = players.filter(
-    (p) =>
-      Number(p.classYear) === year &&
-      p.category === 'target' &&
-      !isHubCommittedStatus(p) &&
-      !isHubFloridaCommitStatus(p)
-  );
+  const rawTargets = players.filter((p) => {
+    if (Number(p.classYear) !== year) return false;
+    if (p.category !== 'target') return false;
+    if (isHubFloridaCommitStatus(p)) return false;
+    const slug = canonicalTargetSlug(p.slug || p.id);
+    const flipWatch = Boolean(p.flipWatch) || isFlipWatchAllowlisted(slug, year);
+    // Flip-watch allowlist rows may keep status=committed to the other school.
+    if (isHubCommittedStatus(p) && !flipWatch) return false;
+    return true;
+  });
   const targets = filterAllowlistedTargets(rawTargets, year);
   const rankings = (await getRankings()).find((r) => Number(r.classYear) === year) || null;
   return { classYear: year, commits, targets, rankings };

@@ -37,16 +37,18 @@ describe('lab-intel-promote', () => {
     const saved = promotions.upsertStage('lab', {
       slug: 'new-florida-target',
       name: 'New Florida Target',
-      classYear: 2027,
+      classYear: 2028,
       reasons: ['florida_offer'],
       sources: ['offer_log'],
     });
     assert.equal(saved.ok, true);
-    assert.equal(promotions.getLabSlugSet(2027).has('new-florida-target'), true);
+    assert.equal(promotions.getLabSlugSet(2028).has('new-florida-target'), true);
 
     delete require.cache[require.resolve('../../lib/recruiting-target-allowlist')];
     const allowlist = require('../../lib/recruiting-target-allowlist');
-    assert.equal(allowlist.getAllowlistSet(2027).has('new-florida-target'), true);
+    // 2028 still merges Lab promotions; Closing Class 2027 does not.
+    assert.equal(allowlist.getAllowlistSet(2028).has('new-florida-target'), true);
+    assert.equal(allowlist.getAllowlistSet(2027).has('new-florida-target'), false);
   });
 
   it('decideStage requires verifiable Florida involvement', () => {
