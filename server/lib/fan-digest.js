@@ -26,8 +26,11 @@ function statePath() {
 }
 
 function digestEnabled() {
-  const raw = String(process.env.FAN_DIGEST_DISABLED || '').toLowerCase();
-  return !(raw === '1' || raw === 'true' || raw === 'yes');
+  // Default OFF — weekly digests flood members. Opt-in only via FAN_DIGEST_ENABLED=true.
+  const disabled = String(process.env.FAN_DIGEST_DISABLED || '').toLowerCase();
+  if (disabled === '1' || disabled === 'true' || disabled === 'yes') return false;
+  const enabled = String(process.env.FAN_DIGEST_ENABLED || '').toLowerCase();
+  return enabled === '1' || enabled === 'true' || enabled === 'yes';
 }
 
 function readState() {

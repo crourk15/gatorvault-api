@@ -311,6 +311,49 @@ export async function loginAccount(opts: {
   };
 }
 
+export async function requestPasswordReset(email: string): Promise<{
+  message: string;
+  emailSent?: boolean;
+}> {
+  const res = await authPost<{
+    ok?: boolean;
+    error?: string;
+    message?: string;
+    emailSent?: boolean;
+  }>('/api/auth/forgot-password', { email: email.trim().toLowerCase() });
+  if (!res.ok) {
+    throw new Error(res.data.error || 'Could not send reset email.');
+  }
+  return {
+    message:
+      res.data.message ||
+      'If that email has a GatorVault account, we sent a password reset link.',
+    emailSent: res.data.emailSent,
+  };
+}
+
+export async function resetPasswordWithToken(opts: {
+  email: string;
+  token: string;
+  password: string;
+}): Promise<{ message: string }> {
+  const res = await authPost<{
+    ok?: boolean;
+    error?: string;
+    message?: string;
+  }>('/api/auth/reset-password', {
+    email: opts.email.trim().toLowerCase(),
+    token: opts.token,
+    password: opts.password,
+  });
+  if (!res.ok) {
+    throw new Error(res.data.error || 'Could not reset password.');
+  }
+  return {
+    message: res.data.message || 'Password updated. Sign in with your new password.',
+  };
+}
+
 export async function deleteAccount(opts: {
   password: string;
   confirm: string;

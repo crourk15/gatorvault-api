@@ -83,17 +83,29 @@ function buildSubscriptionStatus(user) {
     accessActive,
     trial,
     subscription,
-    billing: {
-      appleIapEnabled: process.env.APPLE_IAP_VERIFICATION_ENABLED === 'true',
-      webCheckoutEnabled: false,
-      appStoreUrl: `https://apps.apple.com/app/id${String(process.env.APPLE_APP_APPLE_ID || '6783848215').trim()}`,
-      manageInAppHint:
-        'Subscriptions purchased in the iOS app are managed in Settings → Apple ID → Subscriptions.',
-      manageWebHint:
-        'Paid membership continues in the GatorVault iOS app. Open the App Store listing, sign in with this same email, then Subscribe or Restore — web Vault unlocks automatically.',
-      supportEmail: 'support@gatorvaultinsider.com',
-      accountDeletionPath: '/vault/membership/#delete-account',
-    },
+    billing: (() => {
+      let webCheckoutEnabled = false;
+      try {
+        webCheckoutEnabled = require('./stripe-checkout').isWebCheckoutEnabled();
+      } catch {
+        webCheckoutEnabled = false;
+      }
+      const source = String(user?.subscription?.source || '').toLowerCase();
+      return {
+        appleIapEnabled: process.env.APPLE_IAP_VERIFICATION_ENABLED === 'true',
+        webCheckoutEnabled,
+        appStoreUrl: `https://apps.apple.com/app/id${String(process.env.APPLE_APP_APPLE_ID || '6783848215').trim()}`,
+        manageInAppHint:
+          'Subscriptions purchased in the iOS app are managed in Settings → Apple ID → Subscriptions.',
+        manageWebHint: webCheckoutEnabled
+          ? source === 'stripe'
+            ? 'Manage or cancel your web membership in the Stripe customer portal.'
+            : 'Subscribe on the web with card checkout, or continue in the GatorVault iOS app with Apple In-App Purchase.'
+          : 'Paid membership continues in the GatorVault iOS app. Open the App Store listing, sign in with this same email, then Subscribe or Restore — web Vault unlocks automatically.',
+        supportEmail: 'support@gatorvaultinsider.com',
+        accountDeletionPath: '/vault/membership/#delete-account',
+      };
+    })(),
   };
 }
 
@@ -130,6 +142,7 @@ function applySubscription(email, payload) {
   const tier = normalizeTier(payload.tier || tierFromProductId(payload.productId) || 'film');
   const now = new Date().toISOString();
   const status = String(payload.status || 'active').toLowerCase();
+  const existing = findUserByEmail(email)?.subscription || {};
   const subscription = {
     source: payload.source || 'apple',
     status,
@@ -144,6 +157,14 @@ function applySubscription(email, payload) {
         : status === 'canceled'
           ? false
           : true,
+    stripeCustomerId:
+      payload.stripeCustomerId != null
+        ? payload.stripeCustomerId
+        : existing.stripeCustomerId || null,
+    stripeSubscriptionId:
+      payload.stripeSubscriptionId != null
+        ? payload.stripeSubscriptionId
+        : existing.stripeSubscriptionId || null,
     updatedAt: now,
   };
   const entitled =
@@ -151,11 +172,15 @@ function applySubscription(email, payload) {
     (subscription.expiresAt
       ? new Date(subscription.expiresAt).getTime() > Date.now()
       : status === 'active' || status === 'grace' || status === 'canceled');
-  const user = updateUser(email, {
+  const patch = {
     paid: entitled,
     tier: entitled ? tier : 'locker',
     subscription,
-  });
+  };
+  if (payload.stripeCustomerId) {
+    patch.stripeCustomerId = payload.stripeCustomerId;
+  }
+  const user = updateUser(email, patch);
   return user;
 }
 

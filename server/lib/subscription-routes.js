@@ -171,7 +171,13 @@ function buildBillingHealth() {
       durableLog: recent.durable,
       lastAt: recent.updatedAt,
     },
-    webCheckoutEnabled: false,
+    webCheckoutEnabled: (() => {
+      try {
+        return require('./stripe-checkout').isWebCheckoutEnabled();
+      } catch {
+        return false;
+      }
+    })(),
   };
 }
 
@@ -356,6 +362,75 @@ function mountSubscriptionRoutes(app, deps = {}) {
     } catch (err) {
       console.error('[subscription] apple notification error', err);
       return res.status(400).json({ ok: false, error: err.message || 'Invalid notification payload.' });
+    }
+  });
+
+  /** Web-only Stripe Checkout — never call from the iOS app. */
+  app.post('/api/subscription/stripe/checkout', async (req, res) => {
+    const session = getSessionFromReq(req);
+    if (!session?.email) {
+      return res.status(401).json({ ok: false, error: 'Sign in required.' });
+    }
+    try {
+      const { createCheckoutSession } = require('./stripe-checkout');
+      const tier = normalizeTier(req.body?.tier || 'film');
+      const interval = String(req.body?.interval || 'monthly').toLowerCase() === 'annual' ? 'annual' : 'monthly';
+      const result = await createCheckoutSession({
+        email: session.email,
+        tier,
+        interval,
+        successUrl: req.body?.successUrl || null,
+        cancelUrl: req.body?.cancelUrl || null,
+      });
+      return res.json(result);
+    } catch (err) {
+      return res.status(err.status || 500).json({
+        ok: false,
+        error: err.message || 'Could not start checkout.',
+        hint: err.hint || null,
+      });
+    }
+  });
+
+  app.post('/api/subscription/stripe/portal', async (req, res) => {
+    const session = getSessionFromReq(req);
+    if (!session?.email) {
+      return res.status(401).json({ ok: false, error: 'Sign in required.' });
+    }
+    try {
+      const { createBillingPortalSession } = require('./stripe-checkout');
+      const result = await createBillingPortalSession(session.email, req.body?.returnUrl || null);
+      return res.json(result);
+    } catch (err) {
+      return res.status(err.status || 500).json({
+        ok: false,
+        error: err.message || 'Could not open billing portal.',
+      });
+    }
+  });
+
+  app.post('/api/subscription/stripe/webhook', async (req, res) => {
+    try {
+      const { constructStripeEvent, handleStripeWebhookEvent } = require('./stripe-checkout');
+      const signature = String(req.get('stripe-signature') || '');
+      const rawBody = req.rawBody || Buffer.from(JSON.stringify(req.body || {}));
+      const event = constructStripeEvent(rawBody, signature);
+      const result = await handleStripeWebhookEvent(event);
+      if (result.handled && result.action === 'activated' && result.email) {
+        const after = findUserByEmail(result.email);
+        queuePaidConfirmation(
+          { paidConfirmationSentAt: after?.paidConfirmationSentAt || null },
+          after,
+          deliverEmail
+        );
+      }
+      return res.status(200).json({ ok: true, received: true, ...result });
+    } catch (err) {
+      console.error('[subscription] stripe webhook error', err.message || err);
+      return res.status(err.status || 400).json({
+        ok: false,
+        error: err.message || 'Invalid Stripe webhook.',
+      });
     }
   });
 }

@@ -14,7 +14,7 @@
 - Membership page shows **Free trial: N days left · ends &lt;date&gt;**.
 - Build 22+: a **trial ledger** remembers each email’s original `trialEnd`. Delete → re-register keeps that same window (no new free month).
 - Paid access is **time-bounded** (`subscription.expiresAt`). Canceling Apple auto-renew keeps access until the period ends; `EXPIRED` / refund / revoke remove access.
-- Paid conversion is **Apple IAP in the iOS app** (no web checkout yet). Same account unlocks web after verify.
+- Paid conversion: **Apple IAP in the iOS app**, plus **web Stripe checkout** when configured (browser only). Same account unlocks both surfaces.
 
 ## Email / onboarding drip
 
@@ -42,13 +42,12 @@
 - Idempotency flag on the user: `paidConfirmationSentAt`.
 - Same Resend-first `deliverEmail` path as onboarding.
 
-## Weekly fan digest
+## Weekly fan digest — OFF by default
 
-- Monday Render cron `gatorvault-api-fan-digest-weekly` → `POST /api/fan-digest/weekly`.
-- Content: beat intel + recruiting movement + verified visit recap.
-- Recipients: active trial or paid members who have not set `fanDigestOptOut: true`.
-- Kill switch: `FAN_DIGEST_DISABLED=true`.
-- Per-week state in `server/data/ops/fan-digest-state.json`; per-user `fanDigestLastWeekKey`.
+- Disabled so members are not flooded. Requires explicit `FAN_DIGEST_ENABLED=true` to send.
+- Render cron removed from blueprint. Prefer keeping this off.
+- Password reset: `POST /api/auth/forgot-password` + `POST /api/auth/reset-password` (Resend link, 1 hour).
+- Web checkout: see `docs/STRIPE_WEB_CHECKOUT.md`.
 
 ### EmailJS template (optional fallback)
 

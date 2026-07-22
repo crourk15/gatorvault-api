@@ -87,7 +87,17 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json({ limit: '1mb' }));
+app.use(
+  bodyParser.json({
+    limit: '1mb',
+    verify: (req, _res, buf) => {
+      // Stripe webhooks need the raw body for signature verification.
+      if (req.originalUrl && req.originalUrl.includes('/subscription/stripe/webhook')) {
+        req.rawBody = Buffer.from(buf);
+      }
+    },
+  })
+);
 app.use(require('./lib/api-cache-policy').apiCacheMiddleware());
 app.use(apiMonitorMiddleware());
 
@@ -664,6 +674,48 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+app.post('/api/auth/forgot-password', async (req, res) => {
+  try {
+    const { requestPasswordReset } = require('./lib/password-reset');
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    const result = await requestPasswordReset(email, { deliverEmail });
+    // Always generic — do not reveal whether the account exists.
+    return res.json({
+      ok: true,
+      accepted: true,
+      message:
+        'If that email has a GatorVault account, we sent a password reset link. Check your inbox (and spam).',
+      emailSent: Boolean(result.emailSent),
+      provider: result.provider || null,
+    });
+  } catch (err) {
+    console.error('forgot-password error', err);
+    return res.status(500).json({ ok: false, error: 'Could not process password reset.' });
+  }
+});
+
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const { resetPasswordWithToken } = require('./lib/password-reset');
+    const result = resetPasswordWithToken({
+      email: req.body?.email,
+      token: req.body?.token,
+      password: req.body?.password,
+    });
+    if (!result.ok) {
+      return res.status(400).json({ ok: false, error: result.error || 'Reset failed.' });
+    }
+    return res.json({
+      ok: true,
+      email: result.email,
+      message: 'Password updated. Sign in with your new password.',
+    });
+  } catch (err) {
+    console.error('reset-password error', err);
+    return res.status(500).json({ ok: false, error: 'Could not reset password.' });
+  }
+});
+
 app.post('/api/login', async (req, res) => {
   try {
     const email = String(req.body.email || '').trim().toLowerCase();
@@ -892,6 +944,14 @@ app.get('/api/version', (req, res) => {
       trialConvertEmails: true,
       paidMembershipConfirmEmail: true,
       weeklyFanDigest: digestEnabled(),
+      passwordResetEmail: true,
+      webCheckout: (() => {
+        try {
+          return require('./lib/stripe-checkout').isWebCheckoutEnabled();
+        } catch {
+          return false;
+        }
+      })(),
       articleSourceValidation: true,
       scoutingTeasers: true
     },

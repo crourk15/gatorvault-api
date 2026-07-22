@@ -13,6 +13,11 @@ export type SubscriptionCatalogTier = {
     monthly: string;
     annual: string;
   };
+  stripe?: {
+    monthlyPriceId?: string | null;
+    annualPriceId?: string | null;
+    ready?: boolean;
+  } | null;
 };
 
 export type SubscriptionStatus = {
@@ -57,6 +62,15 @@ export type SubscriptionCatalog = {
   membershipUrl?: string;
   tiers: SubscriptionCatalogTier[];
   iosPurchaseReady: boolean;
+  webCheckoutEnabled?: boolean;
+  stripe?: {
+    enabled?: boolean;
+    configured?: boolean;
+    tiers?: Record<
+      string,
+      { monthlyPriceId?: string | null; annualPriceId?: string | null; ready?: boolean }
+    >;
+  };
 };
 
 function authHeaders(): HeadersInit {
@@ -195,4 +209,49 @@ export async function restoreApplePurchase(input: {
   }
   if (data.status) return data.status;
   return fetchSubscriptionStatus();
+}
+
+/** Web-only Stripe Checkout — do not call from the native iOS app. */
+export async function startStripeCheckout(input: {
+  tier: PaymentTierId | string;
+  interval: 'monthly' | 'annual';
+}): Promise<{ url: string }> {
+  const res = await fetch(`${getApiBase()}/api/subscription/stripe/checkout`, {
+    method: 'POST',
+    headers: {
+      ...authHeaders(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(input),
+  });
+  const data = (await res.json().catch(() => ({}))) as {
+    ok?: boolean;
+    url?: string;
+    error?: string;
+    hint?: string;
+  };
+  if (!res.ok || !data.url) {
+    throw new Error(data.error || data.hint || 'Could not start web checkout.');
+  }
+  return { url: data.url };
+}
+
+export async function openStripeBillingPortal(): Promise<{ url: string }> {
+  const res = await fetch(`${getApiBase()}/api/subscription/stripe/portal`, {
+    method: 'POST',
+    headers: {
+      ...authHeaders(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({}),
+  });
+  const data = (await res.json().catch(() => ({}))) as {
+    ok?: boolean;
+    url?: string;
+    error?: string;
+  };
+  if (!res.ok || !data.url) {
+    throw new Error(data.error || 'Could not open billing portal.');
+  }
+  return { url: data.url };
 }
