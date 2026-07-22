@@ -65,9 +65,15 @@ function buildCatalogPayload() {
     process.env.NEXT_PUBLIC_API_BASE || process.env.API_BASE || 'https://gatorvault-api.onrender.com'
   ).replace(/\/$/, '');
   const appAppleId = String(process.env.APPLE_APP_APPLE_ID || '6783848215').trim();
+  let stripe = { enabled: false, configured: false, tiers: {} };
+  try {
+    stripe = require('./stripe-checkout').catalogStripeBlock();
+  } catch {
+    /* optional */
+  }
   return {
     ok: true,
-    provider: 'apple',
+    provider: stripe.enabled ? 'apple+stripe' : 'apple',
     trialDays: 30,
     subscriptionGroup: 'gatorvault_insider',
     appAppleId,
@@ -85,8 +91,11 @@ function buildCatalogPayload() {
         monthly: tier.apple.monthlyProductId,
         annual: tier.apple.annualProductId,
       },
+      stripe: stripe.tiers?.[tier.id] || null,
     })),
     iosPurchaseReady: Boolean(process.env.APPLE_IAP_VERIFICATION_ENABLED === 'true'),
+    webCheckoutEnabled: Boolean(stripe.enabled),
+    stripe,
   };
 }
 

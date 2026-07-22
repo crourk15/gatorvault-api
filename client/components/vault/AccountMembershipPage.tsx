@@ -12,6 +12,8 @@ import {
   MembershipAuthError,
   verifyApplePurchase,
   restoreApplePurchase,
+  startStripeCheckout,
+  openStripeBillingPortal,
   type SubscriptionCatalog,
   type SubscriptionStatus,
 } from '@/lib/subscription-api';
@@ -186,6 +188,18 @@ export function AccountMembershipPage(): React.ReactElement {
   }, [loadMembership]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('checkout') === 'success') {
+      setError(null);
+      void loadMembership();
+    }
+    if (params.get('checkout') === 'cancel') {
+      setError('Checkout canceled — no charge was made.');
+    }
+  }, [loadMembership]);
+
+  useEffect(() => {
     if (typeof window === "undefined" || refreshing) return;
     const params = new URLSearchParams(window.location.search);
     const upgrade = params.get("upgrade");
@@ -198,6 +212,35 @@ export function AccountMembershipPage(): React.ReactElement {
     const st = await fetchSubscriptionStatus();
     setStatus(st);
     return st;
+  }
+
+  const webCheckoutReady =
+    !native &&
+    Boolean(status?.billing.webCheckoutEnabled || catalog?.webCheckoutEnabled);
+
+  async function handleStripeCheckout(tierId: string, interval: 'monthly' | 'annual'): Promise<void> {
+    const busyKey = `stripe:${tierId}:${interval}`;
+    setPurchaseBusy(busyKey);
+    setError(null);
+    try {
+      const { url } = await startStripeCheckout({ tier: tierId, interval });
+      window.location.assign(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not start web checkout.');
+      setPurchaseBusy(null);
+    }
+  }
+
+  async function handleStripePortal(): Promise<void> {
+    setPurchaseBusy('stripe-portal');
+    setError(null);
+    try {
+      const { url } = await openStripeBillingPortal();
+      window.location.assign(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not open billing portal.');
+      setPurchaseBusy(null);
+    }
   }
 
   async function handleSubscribe(productId: string): Promise<void> {
@@ -375,6 +418,9 @@ export function AccountMembershipPage(): React.ReactElement {
           </p>
           {!native && !status.paid && status.trial.expired ? (
             <div className="gv-membership__actions" style={{ marginTop: '0.75rem' }}>
+              {webCheckoutReady ? (
+                <p className="gv-membership__meta">Choose a plan below to continue with secure card checkout.</p>
+              ) : (
               <a
                 className="gv-membership__subscribe-btn"
                 href={status.billing.appStoreUrl || catalog?.appStoreUrl || 'https://apps.apple.com/app/id6783848215'}
@@ -383,6 +429,7 @@ export function AccountMembershipPage(): React.ReactElement {
               >
                 Continue in App Store
               </a>
+              )}
             </div>
           ) : null}
           {status.subscription?.source ? (
@@ -452,8 +499,18 @@ export function AccountMembershipPage(): React.ReactElement {
                 'Paid membership continues in the GatorVault iOS app. Use the same email, then Subscribe or Restore.'}
             </p>
             <div className="gv-membership__actions">
+              {webCheckoutReady && status?.subscription?.source === 'stripe' ? (
+                <button
+                  type="button"
+                  className="gv-membership__subscribe-btn"
+                  disabled={Boolean(purchaseBusy)}
+                  onClick={() => void handleStripePortal()}
+                >
+                  {purchaseBusy === 'stripe-portal' ? 'Opening…' : 'Manage billing'}
+                </button>
+              ) : null}
               <a
-                className="gv-membership__subscribe-btn"
+                className="gv-membership__secondary-btn"
                 href={
                   status?.billing.appStoreUrl ||
                   catalog?.appStoreUrl ||
@@ -516,7 +573,9 @@ export function AccountMembershipPage(): React.ReactElement {
                 ${tier.monthlyUsd.toFixed(2)}/month · ${tier.annualUsd.toFixed(2)}/year
               </p>
               <p className="gv-membership__card-note">
-                Auto-renewing subscription · billed monthly or annually through Apple
+                {webCheckoutReady
+                  ? 'Auto-renewing subscription · billed monthly or annually (web card or Apple In-App Purchase)'
+                  : 'Auto-renewing subscription · billed monthly or annually through Apple'}
               </p>
             </div>
             {marketing?.features?.length ? (
@@ -554,6 +613,30 @@ export function AccountMembershipPage(): React.ReactElement {
                 </button>
               </div>
             ) : null}
+            {webCheckoutReady && !status?.paid ? (
+              <div className="gv-membership__subscribe-row">
+                <button
+                  type="button"
+                  className="gv-membership__subscribe-btn"
+                  disabled={Boolean(purchaseBusy)}
+                  onClick={() => void handleStripeCheckout(tier.id, 'monthly')}
+                >
+                  {purchaseBusy === `stripe:${tier.id}:monthly`
+                    ? 'Redirecting…'
+                    : `Web monthly · $${tier.monthlyUsd.toFixed(2)}`}
+                </button>
+                <button
+                  type="button"
+                  className="gv-membership__secondary-btn"
+                  disabled={Boolean(purchaseBusy)}
+                  onClick={() => void handleStripeCheckout(tier.id, 'annual')}
+                >
+                  {purchaseBusy === `stripe:${tier.id}:annual`
+                    ? 'Redirecting…'
+                    : `Web annual · $${tier.annualUsd.toFixed(2)}`}
+                </button>
+              </div>
+            ) : null}
           </article>
           );
         })}
@@ -563,7 +646,9 @@ export function AccountMembershipPage(): React.ReactElement {
         <p className="gv-membership__meta">
           {native || status?.subscription?.source === 'apple'
             ? 'Subscriptions renew automatically unless canceled at least 24 hours before the current period ends. Payment is charged to your Apple ID. Manage or cancel in your Apple ID subscription settings.'
-            : 'Paid membership continues through the GatorVault iOS app (Apple In-App Purchase). After you subscribe on iOS, the same account unlocks the web Vault automatically.'}
+            : webCheckoutReady
+              ? 'Web subscriptions renew automatically via Stripe unless canceled. iOS purchases stay on Apple In-App Purchase. Same account unlocks both web and app after subscribe.'
+              : 'Paid membership continues through the GatorVault iOS app (Apple In-App Purchase). After you subscribe on iOS, the same account unlocks the web Vault automatically.'}
         </p>
         <p>
           Questions:{' '}

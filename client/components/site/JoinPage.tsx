@@ -10,13 +10,15 @@ import {
   clearSession,
   safeAuthRedirectPath,
   replaceAuthLocation,
+  requestPasswordReset,
+  resetPasswordWithToken,
   type PaymentTierId,
 } from '@/lib/auth-api';
 import { findPricingTier, publicPricingTiers, PRICING_TIERS } from '@/lib/pricing-tiers';
 import { LegalSiteLinks } from '@/components/site/LegalSiteLinks';
 import { isNativeApp, nativeNavigationUrl } from '@/lib/api-base';
 
-type Mode = 'signin' | 'signup';
+type Mode = 'signin' | 'signup' | 'forgot' | 'reset';
 
 const LAST_EMAIL_KEY = 'gv_last_email';
 
@@ -66,6 +68,8 @@ function redirectAfterAuth(): void {
 function initialJoinMode(): Mode {
   if (typeof window === 'undefined') return 'signup';
   const params = new URLSearchParams(window.location.search);
+  if (params.get('mode') === 'forgot') return 'forgot';
+  if (params.get('mode') === 'reset') return 'reset';
   if (params.get('mode') === 'signin') return 'signin';
   if (params.get('mode') === 'signup') return 'signup';
   // Returning app users / prior emails → Sign in, not Create account.
@@ -79,6 +83,7 @@ export function JoinPage(): React.ReactElement {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [resetToken, setResetToken] = useState('');
   const [terms, setTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [trialMembershipHref, setTrialMembershipHref] = useState<string | null>(null);
@@ -93,8 +98,16 @@ export function JoinPage(): React.ReactElement {
     const params = new URLSearchParams(window.location.search);
     if (params.get('mode') === 'signin') setMode('signin');
     if (params.get('mode') === 'signup') setMode('signup');
+    if (params.get('mode') === 'forgot') setMode('forgot');
+    if (params.get('mode') === 'reset') {
+      setMode('reset');
+      const token = params.get('token') || '';
+      const resetEmail = params.get('email') || '';
+      if (token) setResetToken(token);
+      if (resetEmail) setEmail(resetEmail);
+    }
     const remembered = readLastEmail();
-    if (remembered) setEmail(remembered);
+    if (remembered && params.get('mode') !== 'reset') setEmail(remembered);
     if (params.get('reauth') === '1' || params.get('switch') === '1') {
       clearSession();
       setExistingSession(null);
@@ -247,18 +260,78 @@ export function JoinPage(): React.ReactElement {
     }
   };
 
+
+  async function handleForgot(): Promise<void> {
+    setError(null);
+    setSuccess(null);
+    if (!email.trim()) {
+      setError('Enter the email for your account.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const result = await requestPasswordReset(email.trim().toLowerCase());
+      setSuccess(result.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not send reset email.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleResetPassword(): Promise<void> {
+    setError(null);
+    setSuccess(null);
+    if (!email.trim() || !resetToken.trim()) {
+      setError('This reset link is invalid or incomplete. Request a new one.');
+      return;
+    }
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const result = await resetPasswordWithToken({
+        email: email.trim().toLowerCase(),
+        token: resetToken.trim(),
+        password,
+      });
+      setSuccess(result.message);
+      setMode('signin');
+      setPassword('');
+      setResetToken('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not reset password.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="gv-join" data-testid="join-page">
       <div className="gv-join__card">
         <span className="gv-join__logo" aria-hidden="true">
           🐊
         </span>
-        <h1 className="gv-join__title">{mode === 'signin' ? 'Sign in to GatorVault' : 'Join GatorVault'}</h1>
+        <h1 className="gv-join__title">
+          {mode === 'signin'
+            ? 'Sign in to GatorVault'
+            : mode === 'forgot'
+              ? 'Reset your password'
+              : mode === 'reset'
+                ? 'Choose a new password'
+                : 'Join GatorVault'}
+        </h1>
         <p className="gv-join__sub">
           {existingSession
             ? "You are already signed in — continue below."
             : mode === 'signin'
               ? 'Sign in with your account email and password (not your display name).'
+              : mode === 'forgot'
+                ? 'Enter your account email and we will send a reset link if it exists.'
+                : mode === 'reset'
+                  ? 'Set a new password for your GatorVault account.'
               : `${tierMeta.name} — 30-day free trial, no card required.`}
         </p>
 
@@ -283,6 +356,7 @@ export function JoinPage(): React.ReactElement {
           </div>
         ) : (
           <>
+            {mode === 'signin' || mode === 'signup' ? (
             <div className="gv-join__tabs">
               <button
                 type="button"
@@ -307,6 +381,7 @@ export function JoinPage(): React.ReactElement {
                 Create account
               </button>
             </div>
+            ) : null}
 
             {mode === 'signup' && (
               <>
@@ -364,16 +439,18 @@ export function JoinPage(): React.ReactElement {
                   placeholder="you@email.com"
                 />
               </label>
+              {mode !== 'forgot' ? (
               <label className="gv-join__field">
-                <span>Password</span>
+                <span>{mode === 'reset' ? 'New password' : 'Password'}</span>
                 <input
                   type="password"
                   autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder={mode === 'signup' ? '8+ characters' : 'Your password'}
+                  placeholder={mode === 'signup' || mode === 'reset' ? '8+ characters' : 'Your password'}
                 />
               </label>
+              ) : null}
 
               {mode === 'signup' && (
                 <label className="gv-join__terms">
@@ -411,10 +488,56 @@ export function JoinPage(): React.ReactElement {
                 type="button"
                 className="gv-join__submit"
                 disabled={loading}
-                onClick={() => void (mode === 'signin' ? handleSignIn() : handleSignUp())}
+                onClick={() =>
+                  void (mode === 'signin'
+                    ? handleSignIn()
+                    : mode === 'forgot'
+                      ? handleForgot()
+                      : mode === 'reset'
+                        ? handleResetPassword()
+                        : handleSignUp())
+                }
               >
-                {loading ? 'Please wait…' : mode === 'signin' ? 'Sign in' : 'Create account'}
+                {loading
+                  ? 'Please wait…'
+                  : mode === 'signin'
+                    ? 'Sign in'
+                    : mode === 'forgot'
+                      ? 'Send reset link'
+                      : mode === 'reset'
+                        ? 'Update password'
+                        : 'Create account'}
               </button>
+              {mode === 'signin' ? (
+                <p className="gv-join__tier-note" style={{ marginTop: '0.75rem' }}>
+                  <button
+                    type="button"
+                    className="gv-join__tier-link"
+                    onClick={() => {
+                      setMode('forgot');
+                      setError(null);
+                      setSuccess(null);
+                    }}
+                  >
+                    Forgot password?
+                  </button>
+                </p>
+              ) : null}
+              {mode === 'forgot' || mode === 'reset' ? (
+                <p className="gv-join__tier-note" style={{ marginTop: '0.75rem' }}>
+                  <button
+                    type="button"
+                    className="gv-join__tier-link"
+                    onClick={() => {
+                      setMode('signin');
+                      setError(null);
+                      setSuccess(null);
+                    }}
+                  >
+                    Back to sign in
+                  </button>
+                </p>
+              ) : null}
             </div>
           </>
         )}

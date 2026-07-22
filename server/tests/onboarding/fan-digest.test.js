@@ -85,6 +85,7 @@ test('processFanDigestWeekly sends once per week and marks users', async () => {
   );
   process.env.GV_USERS_PATH = usersPath;
   process.env.GV_FAN_DIGEST_STATE_PATH = statePath;
+  process.env.FAN_DIGEST_ENABLED = 'true';
 
   const sent = [];
   let users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
@@ -121,4 +122,5 @@ test('processFanDigestWeekly sends once per week and marks users', async () => {
 
   delete process.env.GV_USERS_PATH;
   delete process.env.GV_FAN_DIGEST_STATE_PATH;
+  delete process.env.FAN_DIGEST_ENABLED;
 });

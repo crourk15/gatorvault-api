@@ -58,6 +58,23 @@ services:
         value: "true"
       - key: EMAIL_PROVIDER
         value: emailjs
+      # Stripe web checkout (set in dashboard; leave unset until prices exist)
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRICE_LOCKER_MONTHLY
+        sync: false
+      - key: STRIPE_PRICE_LOCKER_ANNUAL
+        sync: false
+      - key: STRIPE_PRICE_FILM_MONTHLY
+        sync: false
+      - key: STRIPE_PRICE_FILM_ANNUAL
+        sync: false
+      - key: STRIPE_PRICE_WAR_MONTHLY
+        sync: false
+      - key: STRIPE_PRICE_WAR_ANNUAL
+        sync: false
       - key: ON3_INGEST_ENABLED
         value: "true"
       - key: ON3_INGEST_INTERVAL_MS
@@ -431,21 +448,6 @@ services:
     envVars:
       - key: ONBOARDING_PROCESS_URL
         value: https://gatorvault-api.onrender.com/api/onboarding/process
-      - key: MONITORING_CRON_SECRET
-        sync: false
-
-  # Weekly fan digest — beat + recruiting movement + verified visits (Monday ~15:00 UTC).
-  - type: cron
-    name: gatorvault-api-fan-digest-weekly
-    schedule: "0 15 * * 1"
-    runtime: node
-    region: oregon
-    rootDir: server
-    buildCommand: npm install
-    startCommand: node scripts/render-fan-digest-cron.js
-    envVars:
-      - key: FAN_DIGEST_WEEKLY_URL
-        value: https://gatorvault-api.onrender.com/api/fan-digest/weekly
       - key: MONITORING_CRON_SECRET
         sync: false
 
