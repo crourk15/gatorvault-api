@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-23T00:31:31.101Z",
-  "source": "prod-dashboard+retained-players+local-elite",
+  "generatedAt": "2026-07-23T01:19:48.139Z",
+  "source": "prod-dashboard+high-priority+local-elite",
   "dashboard": {
     "conference": "SEC",
     "ufStanding": {
@@ -919,7 +919,7 @@
         }
       }
     ],
-    "updatedAt": "2026-07-23T00:30:11.319Z"
+    "updatedAt": "2026-07-23T01:19:37.005Z"
   },
   "players": [
     {
@@ -952,7 +952,7 @@
       "name": "Jalen Brewster",
       "position": "DL",
       "school": "Lake Dallas HS, TX",
-      "htWt": null,
+      "htWt": "6-5 / 280",
       "stars": 5,
       "headliner": true,
       "committedTo": "Texas Tech",
@@ -969,402 +969,89 @@
       "notePreview": null,
       "skinny": null,
       "classYear": 2027
-    },
-    {
-      "id": "monshun-sales",
-      "slug": "monshun-sales",
-      "name": "Monshun Sales",
-      "position": "WR",
-      "school": "Lawrence North (Indianapolis, IN)",
-      "htWt": "6-5 / 195",
-      "stars": 5,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 98,
-      "nationalRank": 13,
-      "positionRank": 1,
-      "stateRank": 1,
-      "rating": 98,
-      "natlRank": 13,
-      "posRank": 1,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "tashawn-poole",
-      "slug": "tashawn-poole",
-      "name": "Ta'Shawn Poole",
-      "position": "S",
-      "school": "Howard (Macon, GA)",
-      "htWt": "6-2 / 185",
-      "stars": 4,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 93,
-      "nationalRank": 85,
-      "positionRank": 4,
-      "stateRank": 6,
-      "rating": 93,
-      "natlRank": 85,
-      "posRank": 4,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "brayden-parks",
-      "slug": "brayden-parks",
-      "name": "Brayden Parks",
-      "position": "DL",
-      "school": "Brother Rice (Oak Lawn, IL)",
-      "htWt": "6-3 / 305",
-      "stars": 4,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 91,
-      "nationalRank": 161,
-      "positionRank": 18,
-      "stateRank": 7,
-      "rating": 91,
-      "natlRank": 161,
-      "posRank": 18,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "seth-williams",
-      "slug": "seth-williams",
-      "name": "Seth Williams",
-      "position": "S",
-      "school": "Lakeside (Atlanta, GA)",
-      "htWt": "6-2 / 180",
-      "stars": 4,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 90,
-      "nationalRank": null,
-      "positionRank": 25,
-      "stateRank": 22,
-      "rating": 90,
-      "natlRank": null,
-      "posRank": 25,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "gregory-batson",
-      "slug": "gregory-batson",
-      "name": "Gregory Batson",
-      "position": "LB",
-      "school": "Lee County (Leesburg, GA)",
-      "htWt": "6-1 / 215",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 89,
-      "nationalRank": null,
-      "positionRank": 30,
-      "stateRank": 38,
-      "rating": 89,
-      "natlRank": null,
-      "posRank": 30,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "caden-waye",
-      "slug": "caden-waye",
-      "name": "Caden Waye",
-      "position": "RB",
-      "school": "Ola (McDonough, GA)",
-      "htWt": "5-11 / 185",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 89,
-      "nationalRank": null,
-      "positionRank": 23,
-      "stateRank": 36,
-      "rating": 89,
-      "natlRank": null,
-      "posRank": 23,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "jacob-whitehead",
-      "slug": "jacob-whitehead",
-      "name": "Jacob Whitehead",
-      "position": "CB",
-      "school": "Crean Lutheran (Irvine, CA)",
-      "htWt": "6-2 / 165",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 88,
-      "nationalRank": null,
-      "positionRank": 55,
-      "stateRank": 50,
-      "rating": 88,
-      "natlRank": null,
-      "posRank": 55,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "dolph-mcdonald",
-      "slug": "dolph-mcdonald",
-      "name": "Dolph McDonald",
-      "position": "CB",
-      "school": "Morton (Morton, MS)",
-      "htWt": "6-1 / 160",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 87,
-      "nationalRank": null,
-      "positionRank": 70,
-      "stateRank": 22,
-      "rating": 87,
-      "natlRank": null,
-      "posRank": 70,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "quartavius-lyons-jr",
-      "slug": "quartavius-lyons-jr",
-      "name": "Quartavius Lyons Jr.",
-      "position": "ATH",
-      "school": "Miami Central (Miami, FL)",
-      "htWt": "6-1 / 165",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 87,
-      "nationalRank": null,
-      "positionRank": 93,
-      "stateRank": 88,
-      "rating": 87,
-      "natlRank": null,
-      "posRank": 93,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "liufau-loumoli",
-      "slug": "liufau-loumoli",
-      "name": "Liufau Loumoli",
-      "position": "LB",
-      "school": "IMG Academy (Bradenton, FL)",
-      "htWt": "6-1 / 210",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 86,
-      "nationalRank": null,
-      "positionRank": 89,
-      "stateRank": 91,
-      "rating": 86,
-      "natlRank": null,
-      "posRank": 89,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "brian-demoss",
-      "slug": "brian-demoss",
-      "name": "Brian DeMoss",
-      "position": "EDGE",
-      "school": "Simeon (Chicago, IL)",
-      "htWt": "6-5 / 210",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 86,
-      "nationalRank": null,
-      "positionRank": 89,
-      "stateRank": 36,
-      "rating": 86,
-      "natlRank": null,
-      "posRank": 89,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "kaden-woodie",
-      "slug": "kaden-woodie",
-      "name": "Kaden Woodie",
-      "position": "LB",
-      "school": "Spruce Creek (Port Orange, FL)",
-      "htWt": "6-2 / 211",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 86,
-      "nationalRank": null,
-      "positionRank": 93,
-      "stateRank": 122,
-      "rating": 86,
-      "natlRank": null,
-      "posRank": 93,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "michael-griffin-jr",
-      "slug": "michael-griffin-jr",
-      "name": "Michael Griffin Jr.",
-      "position": "LB",
-      "school": "Hough (Cornelius, NC)",
-      "htWt": "5-11 / 205",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 86,
-      "nationalRank": null,
-      "positionRank": 97,
-      "stateRank": 36,
-      "rating": 86,
-      "natlRank": null,
-      "posRank": 97,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "caleb-mattison",
-      "slug": "caleb-mattison",
-      "name": "Caleb Mattison",
-      "position": "RB",
-      "school": "Bishop Kenny (Jacksonville, FL)",
-      "htWt": "5-9 / 200",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 86,
-      "nationalRank": null,
-      "positionRank": 101,
-      "stateRank": 140,
-      "rating": 86,
-      "natlRank": null,
-      "posRank": 101,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "wesley-winn",
-      "slug": "wesley-winn",
-      "name": "Wesley Winn",
-      "position": "ATH",
-      "school": "Saint Andrew's (Boca Raton, FL)",
-      "htWt": "5-7.5 / 152",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 85,
-      "nationalRank": null,
-      "positionRank": 105,
-      "stateRank": 150,
-      "rating": 85,
-      "natlRank": null,
-      "posRank": 105,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "khamarian-young",
-      "slug": "khamarian-young",
-      "name": "Khamarian Young",
-      "position": "WR",
-      "school": "McArthur (Hollywood, FL)",
-      "htWt": "6-0 / 175",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 85,
-      "nationalRank": null,
-      "positionRank": 187,
-      "stateRank": 162,
-      "rating": 85,
-      "natlRank": null,
-      "posRank": 187,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
     }
   ],
   "elite": {
     "ok": true,
-    "generatedAt": "2026-07-23T00:31:31.095Z",
+    "generatedAt": "2026-07-23T01:21:22.032Z",
     "classYear": 2027,
     "hero": {
       "collective": "Florida Victorious",
       "school": "Florida Gators",
       "eyebrow": "GatorVault NIL",
       "title": "NIL Tracker",
-      "sub": "Live board, portal, and collective signals — proven data only. No invented deal dollars."
+      "sub": "Sideline NIL Market Index — school markets and Florida player valuations with On3 / Sideline labels.",
+      "poolLabel": "$37.0M",
+      "poolCaption": "All-sport school market"
+    },
+    "money": {
+      "estimatedAnnualPoolM": 37,
+      "poolLabel": "$37.0M",
+      "rosterMarketM": 37,
+      "rosterMarketLabel": "$37.0M",
+      "schoolMarketM": 37,
+      "schoolMarketLabel": "$37.0M",
+      "footballMarketM": 17.3,
+      "footballMarketLabel": "$17.3M",
+      "eliteMarketM": 65.3,
+      "vsElitePct": 56.6,
+      "indexedMarketB": 3.87,
+      "benefitsCapM": 21.3,
+      "programsIndexed": 357,
+      "avgDealK": 34,
+      "topDealM": 2.1,
+      "topEarnerName": "Aaron Philo",
+      "topEarnerValue": "$1.51M",
+      "secRank": 12,
+      "nationalRank": 24,
+      "trend": "up",
+      "trendPct": 14,
+      "collective": "Florida Victorious",
+      "sourceNote": "Player values from Sideline NIL Market Index (On3 value when labeled; otherwise Sideline model).",
+      "bySport": [
+        {
+          "sport": "Football",
+          "valueM": 17.3,
+          "sharePct": 47
+        },
+        {
+          "sport": "Men's Basketball",
+          "valueM": 12.7,
+          "sharePct": 34
+        },
+        {
+          "sport": "Baseball",
+          "valueM": 2.8,
+          "sharePct": 7
+        },
+        {
+          "sport": "Softball",
+          "valueM": 1,
+          "sharePct": 3
+        },
+        {
+          "sport": "Track & Field",
+          "valueK": 925,
+          "sharePct": 3
+        },
+        {
+          "sport": "Other Olympic Sports",
+          "valueK": 850,
+          "sharePct": 2
+        },
+        {
+          "sport": "Volleyball",
+          "valueK": 775,
+          "sharePct": 2
+        },
+        {
+          "sport": "Women's Soccer",
+          "valueK": 675,
+          "sharePct": 2
+        }
+      ],
+      "attribution": "The Sideline owns this index.",
+      "provider": "Sideline NIL Market Index"
     },
     "pulse": {
       "commits": 26,
@@ -1374,6 +1061,1450 @@
       "portalArrivals": 12,
       "portalWatch": 0
     },
+    "rosterEarners": [
+      {
+        "id": "aaron-philo",
+        "slug": "aaron-philo",
+        "name": "Aaron Philo",
+        "position": "QB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "classLabel": "R-So.",
+        "jersey": 12,
+        "nilValuation": "$1.51M",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jadan-baugh",
+        "slug": "jadan-baugh",
+        "name": "Jadan Baugh",
+        "position": "RB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "classLabel": "Jr.",
+        "jersey": 13,
+        "nilValuation": "$1M",
+        "nilSource": "on3",
+        "nilSourceLabel": "On3 value"
+      },
+      {
+        "id": "vernell-brown-iii",
+        "slug": "vernell-brown-iii",
+        "name": "Vernell Brown III",
+        "position": "WR",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "classLabel": "So.",
+        "jersey": 1,
+        "nilValuation": "$1M",
+        "nilSource": "on3",
+        "nilSourceLabel": "On3 value"
+      },
+      {
+        "id": "eric-singleton-jr",
+        "slug": "eric-singleton-jr",
+        "name": "Eric Singleton Jr.",
+        "position": "WR",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "classLabel": "Sr.",
+        "jersey": 2,
+        "nilValuation": "$1M",
+        "nilSource": "on3",
+        "nilSourceLabel": "On3 value"
+      },
+      {
+        "id": "kamran-james",
+        "slug": "kamran-james",
+        "name": "Kamran James",
+        "position": "DL",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "Sr.",
+        "jersey": 24,
+        "nilValuation": "$941.0K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jayden-woods",
+        "slug": "jayden-woods",
+        "name": "Jayden Woods",
+        "position": "JACK",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "classLabel": "So.",
+        "jersey": null,
+        "nilValuation": "$842.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "caden-jones",
+        "slug": "caden-jones",
+        "name": "Caden Jones",
+        "position": "OL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 63,
+        "nilValuation": "$800K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "emeka-ugorji",
+        "slug": "emeka-ugorji",
+        "name": "Emeka Ugorji",
+        "position": "OL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "So.",
+        "jersey": 66,
+        "nilValuation": "$800K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "brendan-bett",
+        "slug": "brendan-bett",
+        "name": "Brendan Bett",
+        "position": "DL",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "R-Jr.",
+        "jersey": 90,
+        "nilValuation": "$720K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "cormani-mcclain",
+        "slug": "cormani-mcclain",
+        "name": "Cormani McClain",
+        "position": "CB",
+        "classYear": null,
+        "stars": 5,
+        "depthChartTier": "starter",
+        "classLabel": "R-Jr.",
+        "jersey": 25,
+        "nilValuation": "$700K",
+        "nilSource": "on3",
+        "nilSourceLabel": "On3 value"
+      },
+      {
+        "id": "tj-shanahan-jr",
+        "slug": "tj-shanahan-jr",
+        "name": "TJ Shanahan Jr.",
+        "position": "OL",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "R-Jr.",
+        "jersey": 67,
+        "nilValuation": "$645.1K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "lj-mccray",
+        "slug": "lj-mccray",
+        "name": "LJ McCray",
+        "position": "DL",
+        "classYear": null,
+        "stars": 5,
+        "depthChartTier": "rotation",
+        "classLabel": "R-So.",
+        "jersey": 11,
+        "nilValuation": "$500K",
+        "nilSource": "on3",
+        "nilSourceLabel": "On3 value"
+      },
+      {
+        "id": "Clay Millen",
+        "slug": null,
+        "name": "Clay Millen",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$490K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "aaron-williams",
+        "slug": "aaron-williams",
+        "name": "Aaron Williams",
+        "position": "QB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 10,
+        "nilValuation": "$483.9K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Harrison Bailey",
+        "slug": null,
+        "name": "Harrison Bailey",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$355K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "tj-abrams",
+        "slug": "tj-abrams",
+        "name": "TJ Abrams",
+        "position": "WR",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 4,
+        "nilValuation": "$337K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "dallas-wilson",
+        "slug": "dallas-wilson",
+        "name": "Dallas Wilson",
+        "position": "WR",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "classLabel": "R-Fr.",
+        "jersey": 6,
+        "nilValuation": "$318K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "alfonzo-allen-jr",
+        "slug": "alfonzo-allen-jr",
+        "name": "Alfonzo Allen Jr.",
+        "position": "S",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "R-Sr.",
+        "jersey": 43,
+        "nilValuation": "$236.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "dijon-johnson",
+        "slug": "dijon-johnson",
+        "name": "Dijon Johnson",
+        "position": "CB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "classLabel": "R-Jr.",
+        "jersey": 27,
+        "nilValuation": "$217.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jamari-lyons",
+        "slug": "jamari-lyons",
+        "name": "Jamari Lyons",
+        "position": "DL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 95,
+        "nilValuation": "$201.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jalen-wiggins",
+        "slug": "jalen-wiggins",
+        "name": "Jalen Wiggins",
+        "position": "DL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 49,
+        "nilValuation": "$190.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "aaron-chiles",
+        "slug": "aaron-chiles",
+        "name": "Aaron Chiles",
+        "position": "ILB",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "Jr.",
+        "jersey": 8,
+        "nilValuation": "$180K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "myles-graham",
+        "slug": "myles-graham",
+        "name": "Myles Graham",
+        "position": "ILB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "classLabel": "Jr.",
+        "jersey": 5,
+        "nilValuation": "$172.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "aidan-warner",
+        "slug": "aidan-warner",
+        "name": "Aidan Warner",
+        "position": "QB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 16,
+        "nilValuation": "$172K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "knijeah-harris",
+        "slug": "knijeah-harris",
+        "name": "Knijeah Harris",
+        "position": "OL",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "Sr.",
+        "jersey": 77,
+        "nilValuation": "$163.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "london-montgomery",
+        "slug": "london-montgomery",
+        "name": "London Montgomery",
+        "position": "RB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 24,
+        "nilValuation": "$155K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "evan-pryor",
+        "slug": "evan-pryor",
+        "name": "Evan Pryor",
+        "position": "RB",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "R-Sr.",
+        "jersey": 21,
+        "nilValuation": "$149K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "byron-louis",
+        "slug": "byron-louis",
+        "name": "Byron Louis",
+        "position": "RB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 27,
+        "nilValuation": "$142K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "roderick-kearney",
+        "slug": "roderick-kearney",
+        "name": "Roderick Kearney",
+        "position": "OL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 71,
+        "nilValuation": "$125.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jvari-flowers",
+        "slug": "jvari-flowers",
+        "name": "J'Vari Flowers",
+        "position": "CB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "So.",
+        "jersey": 6,
+        "nilValuation": "$117.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "ty-jackson",
+        "slug": "ty-jackson",
+        "name": "Ty Jackson",
+        "position": "ILB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "So.",
+        "jersey": 7,
+        "nilValuation": "$107.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "joseph-mbatchou",
+        "slug": "joseph-mbatchou",
+        "name": "Joseph Mbatchou",
+        "position": "DL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "So.",
+        "jersey": 97,
+        "nilValuation": "$98.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jeramiah-mccloud",
+        "slug": "jeramiah-mccloud",
+        "name": "Jeramiah McCloud",
+        "position": "DL",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "So.",
+        "jersey": 91,
+        "nilValuation": "$95.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "kofi-asare",
+        "slug": "kofi-asare",
+        "name": "Kofi Asare",
+        "position": "JACK",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "R-Sr.",
+        "jersey": 22,
+        "nilValuation": "$91K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "tramell-jones-jr",
+        "slug": "tramell-jones-jr",
+        "name": "Tramell Jones Jr.",
+        "position": "QB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "classLabel": "R-Fr.",
+        "jersey": 9,
+        "nilValuation": "$88.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "fletcher-westphal",
+        "slug": "fletcher-westphal",
+        "name": "Fletcher Westphal",
+        "position": "OL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 68,
+        "nilValuation": "$87.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jason-zandamela",
+        "slug": "jason-zandamela",
+        "name": "Jason Zandamela",
+        "position": "OL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 50,
+        "nilValuation": "$85K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "myles-johnson",
+        "slug": "myles-johnson",
+        "name": "Myles Johnson",
+        "position": "ILB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "So.",
+        "jersey": 44,
+        "nilValuation": "$83K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "onis-konanbanny",
+        "slug": "onis-konanbanny",
+        "name": "Onis Konanbanny",
+        "position": "CB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 3,
+        "nilValuation": "$76K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jaylen-lloyd",
+        "slug": "jaylen-lloyd",
+        "name": "Jaylen Lloyd",
+        "position": "WR",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 19,
+        "nilValuation": "$73K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "micah-mays-jr",
+        "slug": "micah-mays-jr",
+        "name": "Micah Mays Jr.",
+        "position": "WR",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 5,
+        "nilValuation": "$71.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "bailey-stockton",
+        "slug": "bailey-stockton",
+        "name": "Bailey Stockton",
+        "position": "WR",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 3,
+        "nilValuation": "$69.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "bryce-thornton",
+        "slug": "bryce-thornton",
+        "name": "Bryce Thornton",
+        "position": "S",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "starter",
+        "classLabel": "Sr.",
+        "jersey": 1,
+        "nilValuation": "$60K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "kahleil-jackson",
+        "slug": "kahleil-jackson",
+        "name": "Kahleil Jackson",
+        "position": "WR",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "Gr.",
+        "jersey": 22,
+        "nilValuation": "$57K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Taylor Spierto",
+        "slug": null,
+        "name": "Taylor Spierto",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$54K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Alex Gonzalez",
+        "slug": null,
+        "name": "Alex Gonzalez",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$52.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jaden-robinson",
+        "slug": "jaden-robinson",
+        "name": "Jaden Robinson",
+        "position": "ILB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "classLabel": "Sr.",
+        "jersey": 29,
+        "nilValuation": "$51K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "kanye-clark",
+        "slug": "kanye-clark",
+        "name": "Kanye Clark",
+        "position": "STAR",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "R-Jr.",
+        "jersey": 20,
+        "nilValuation": "$49.3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "bryce-lovett",
+        "slug": "bryce-lovett",
+        "name": "Bryce Lovett",
+        "position": "OL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 53,
+        "nilValuation": "$45.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jaden-edgecombe",
+        "slug": "jaden-edgecombe",
+        "name": "Jaden Edgecombe",
+        "position": "WR",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 43,
+        "nilValuation": "$44.3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "eagan-boyer",
+        "slug": "eagan-boyer",
+        "name": "Eagan Boyer",
+        "position": "OL",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "R-So.",
+        "jersey": 64,
+        "nilValuation": "$41.8K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "cam-dooley",
+        "slug": "cam-dooley",
+        "name": "Cam Dooley",
+        "position": "S",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "Jr.",
+        "jersey": 10,
+        "nilValuation": "$39K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "evan-jackson",
+        "slug": "evan-jackson",
+        "name": "Evan Jackson",
+        "position": "ILB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 31,
+        "nilValuation": "$38K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "emmanuel-oyebadejo",
+        "slug": "emmanuel-oyebadejo",
+        "name": "Emmanuel Oyebadejo",
+        "position": "DL",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "R-Sr.",
+        "jersey": 99,
+        "nilValuation": "$36.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jahari-medlock",
+        "slug": "jahari-medlock",
+        "name": "Jahari Medlock",
+        "position": "OL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 56,
+        "nilValuation": "$34.8K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "daniel-pierre-louis",
+        "slug": "daniel-pierre-louis",
+        "name": "Daniel Pierre Louis",
+        "position": "OL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 73,
+        "nilValuation": "$34.3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "ace-ciongoli",
+        "slug": "ace-ciongoli",
+        "name": "Ace Ciongoli",
+        "position": "WR",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 82,
+        "nilValuation": "$33.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Cary Rifenberick",
+        "slug": null,
+        "name": "Cary Rifenberick",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$32.8K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "luke-harpring",
+        "slug": "luke-harpring",
+        "name": "Luke Harpring",
+        "position": "TE",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 15,
+        "nilValuation": "$32K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "lacota-dippre",
+        "slug": "lacota-dippre",
+        "name": "Lacota Dippre",
+        "position": "TE",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "starter",
+        "classLabel": "R-Jr.",
+        "jersey": 17,
+        "nilValuation": "$31.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Layne Swafford",
+        "slug": null,
+        "name": "Layne Swafford",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$31K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "micah-jones",
+        "slug": "micah-jones",
+        "name": "Micah Jones",
+        "position": "TE",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 84,
+        "nilValuation": "$30.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "anthony-rubio",
+        "slug": "anthony-rubio",
+        "name": "Anthony Rubio",
+        "position": "RB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 25,
+        "nilValuation": "$30K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "harrison-moore",
+        "slug": "harrison-moore",
+        "name": "Harrison Moore",
+        "position": "OL",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "Jr.",
+        "jersey": 52,
+        "nilValuation": "$29K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Micheal Caraway Jr.",
+        "slug": null,
+        "name": "Micheal Caraway Jr.",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$27.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Cahron Rackley",
+        "slug": null,
+        "name": "Cahron Rackley",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$26.3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Harold Stubbs IV",
+        "slug": null,
+        "name": "Harold Stubbs IV",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$25.3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "javion-toombs",
+        "slug": "javion-toombs",
+        "name": "Javion Toombs",
+        "position": "CB",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "R-Sr.",
+        "jersey": 37,
+        "nilValuation": "$25K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "titus-bullard",
+        "slug": "titus-bullard",
+        "name": "Titus Bullard",
+        "position": "JACK",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 17,
+        "nilValuation": "$24.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Hayden Clem",
+        "slug": null,
+        "name": "Hayden Clem",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$23.8K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Damieon George Jr.",
+        "slug": null,
+        "name": "Damieon George Jr.",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$23.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Kamryn Waites",
+        "slug": null,
+        "name": "Kamryn Waites",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$23.3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Nicolas Flynn",
+        "slug": null,
+        "name": "Nicolas Flynn",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$23K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "charles-emanuel-iii",
+        "slug": "charles-emanuel-iii",
+        "name": "Charles Emanuel III",
+        "position": "JACK",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 55,
+        "nilValuation": "$22.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "erich-seager",
+        "slug": "erich-seager",
+        "name": "Erich Seager",
+        "position": "JACK",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 48,
+        "nilValuation": "$22.3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "duke-clark",
+        "slug": "duke-clark",
+        "name": "Duke Clark",
+        "position": "RB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 20,
+        "nilValuation": "$21.8K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Caleb Rillos",
+        "slug": null,
+        "name": "Caleb Rillos",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$21.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "jordy-lowery",
+        "slug": "jordy-lowery",
+        "name": "Jordy Lowery",
+        "position": "CB",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "R-Sr.",
+        "jersey": 13,
+        "nilValuation": "$21K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "vincent-brown-jr",
+        "slug": "vincent-brown-jr",
+        "name": "Vincent Brown Jr.",
+        "position": "CB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 36,
+        "nilValuation": "$20.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "brayden-slade",
+        "slug": "brayden-slade",
+        "name": "Brayden Slade",
+        "position": "S",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 35,
+        "nilValuation": "$20.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "kelvin-jimenez",
+        "slug": "kelvin-jimenez",
+        "name": "Kelvin Jimenez",
+        "position": "RB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 34,
+        "nilValuation": "$20.3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "sebastian-scott",
+        "slug": "sebastian-scott",
+        "name": "Sebastian Scott",
+        "position": "DL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 92,
+        "nilValuation": "$19.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "lagonza-hayward",
+        "slug": "lagonza-hayward",
+        "name": "Lagonza Hayward",
+        "position": "S",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "So.",
+        "jersey": 2,
+        "nilValuation": "$18.3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "drake-stubbs",
+        "slug": "drake-stubbs",
+        "name": "Drake Stubbs",
+        "position": "S",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "So.",
+        "jersey": 9,
+        "nilValuation": "$18K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "ben-hanks-iii",
+        "slug": "ben-hanks-iii",
+        "name": "Ben Hanks III",
+        "position": "CB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 12,
+        "nilValuation": "$17K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "dj-coleman",
+        "slug": "dj-coleman",
+        "name": "DJ Coleman",
+        "position": "S",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "Sr.",
+        "jersey": 33,
+        "nilValuation": "$16.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Winfield Scott",
+        "slug": null,
+        "name": "Winfield Scott",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$16.3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "mason-clinton",
+        "slug": "mason-clinton",
+        "name": "Mason Clinton",
+        "position": "DL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 98,
+        "nilValuation": "$15.8K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "dk-kalu",
+        "slug": "dk-kalu",
+        "name": "DK Kalu",
+        "position": "DL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 93,
+        "nilValuation": "$15.8K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "brian-case",
+        "slug": "brian-case",
+        "name": "Brian Case",
+        "position": "RB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 33,
+        "nilValuation": "$15.3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "tj-bullard",
+        "slug": "tj-bullard",
+        "name": "TJ Bullard",
+        "position": "ILB",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "classLabel": "R-Sr.",
+        "jersey": 16,
+        "nilValuation": "$15K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "tj-dice-jr",
+        "slug": "tj-dice-jr",
+        "name": "TJ Dice Jr.",
+        "position": "OL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 55,
+        "nilValuation": "$14.8K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "mark-faircloth",
+        "slug": "mark-faircloth",
+        "name": "Mark Faircloth",
+        "position": "OL",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 76,
+        "nilValuation": "$14.8K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "matthew-kade",
+        "slug": "matthew-kade",
+        "name": "Matthew Kade",
+        "position": "ILB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 42,
+        "nilValuation": "$14.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "Jake Xeller",
+        "slug": null,
+        "name": "Jake Xeller",
+        "position": "ATH",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": null,
+        "classLabel": null,
+        "jersey": null,
+        "nilValuation": "$14.5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "evan-chieca",
+        "slug": "evan-chieca",
+        "name": "Evan Chieca",
+        "position": "TE",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 85,
+        "nilValuation": "$14K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "dylan-leighton",
+        "slug": "dylan-leighton",
+        "name": "Dylan Leighton",
+        "position": "ILB",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 52,
+        "nilValuation": "$11.8K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "liam-padron",
+        "slug": "liam-padron",
+        "name": "Liam Padron",
+        "position": "K",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 41,
+        "nilValuation": "$5.7K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "patrick-durkin",
+        "slug": "patrick-durkin",
+        "name": "Patrick Durkin",
+        "position": "K",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 91,
+        "nilValuation": "$5.7K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "brandon-rabasco",
+        "slug": "brandon-rabasco",
+        "name": "Brandon Rabasco",
+        "position": "K",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 40,
+        "nilValuation": "$5.6K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "alec-clark",
+        "slug": "alec-clark",
+        "name": "Alec Clark",
+        "position": "P",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Jr.",
+        "jersey": 38,
+        "nilValuation": "$5K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "nicholas-inglis",
+        "slug": "nicholas-inglis",
+        "name": "Nicholas Inglis",
+        "position": "P",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-So.",
+        "jersey": 48,
+        "nilValuation": "$4.9K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      },
+      {
+        "id": "hunter-solwold",
+        "slug": "hunter-solwold",
+        "name": "Hunter Solwold",
+        "position": "LS",
+        "classYear": null,
+        "stars": null,
+        "depthChartTier": "developmental",
+        "classLabel": "R-Fr.",
+        "jersey": 58,
+        "nilValuation": "$3K",
+        "nilSource": "sideline",
+        "nilSourceLabel": "Sideline model"
+      }
+    ],
     "marketBoard": {
       "leaders": [
         {
@@ -1391,6 +2522,9 @@
           "committedTo": "Texas Tech",
           "status": "elsewhere",
           "nilEstimate": null,
+          "vaultEstimate": "$307K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$307K",
           "headliner": true
         },
         {
@@ -1408,6 +2542,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$306K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$306K",
           "headliner": false
         },
         {
@@ -1425,6 +2562,9 @@
           "committedTo": "Indiana",
           "status": "elsewhere",
           "nilEstimate": null,
+          "vaultEstimate": "$299K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$299K",
           "headliner": false
         },
         {
@@ -1442,6 +2582,9 @@
           "committedTo": "Florida State",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$178K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$178K",
           "headliner": false
         },
         {
@@ -1459,6 +2602,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$173K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$173K",
           "headliner": false
         },
         {
@@ -1476,6 +2622,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$169K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$169K",
           "headliner": false
         },
         {
@@ -1493,6 +2642,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$161K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$161K",
           "headliner": false
         },
         {
@@ -1510,6 +2662,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$157K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$157K",
           "headliner": false
         },
         {
@@ -1527,6 +2682,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$155K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$155K",
           "headliner": false
         },
         {
@@ -1544,6 +2702,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$155K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$155K",
           "headliner": false
         },
         {
@@ -1561,6 +2722,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$145K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$145K",
           "headliner": false
         },
         {
@@ -1578,6 +2742,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$142K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$142K",
           "headliner": false
         },
         {
@@ -1595,6 +2762,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$140K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$140K",
           "headliner": false
         },
         {
@@ -1612,6 +2782,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$135K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$135K",
           "headliner": false
         },
         {
@@ -1629,6 +2802,9 @@
           "committedTo": "Georgia",
           "status": "elsewhere",
           "nilEstimate": null,
+          "vaultEstimate": "$134K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$134K",
           "headliner": false
         },
         {
@@ -1646,6 +2822,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$129K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$129K",
           "headliner": false
         }
       ],
@@ -1665,6 +2844,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -1682,6 +2864,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$140K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$140K",
           "headliner": false
         },
         {
@@ -1699,6 +2884,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1716,6 +2904,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1733,6 +2924,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1750,6 +2944,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1767,6 +2964,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1784,6 +2984,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1801,6 +3004,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1818,6 +3024,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1835,6 +3044,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1852,6 +3064,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1869,6 +3084,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1886,6 +3104,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1903,6 +3124,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1920,6 +3144,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         }
       ],
@@ -1939,6 +3166,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -1956,6 +3186,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1973,6 +3206,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1990,6 +3226,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         }
       ],
@@ -2009,6 +3248,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$306K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$306K",
           "headliner": false
         },
         {
@@ -2026,6 +3268,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$173K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$173K",
           "headliner": false
         },
         {
@@ -2043,6 +3288,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$169K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$169K",
           "headliner": false
         },
         {
@@ -2060,6 +3308,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$161K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$161K",
           "headliner": false
         },
         {
@@ -2077,6 +3328,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$157K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$157K",
           "headliner": false
         },
         {
@@ -2094,6 +3348,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$155K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$155K",
           "headliner": false
         },
         {
@@ -2111,6 +3368,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$155K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$155K",
           "headliner": false
         },
         {
@@ -2128,6 +3388,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$145K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$145K",
           "headliner": false
         },
         {
@@ -2145,6 +3408,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$142K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$142K",
           "headliner": false
         },
         {
@@ -2162,6 +3428,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$135K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$135K",
           "headliner": false
         },
         {
@@ -2179,6 +3448,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$129K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$129K",
           "headliner": false
         },
         {
@@ -2196,6 +3468,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$97K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$97K",
           "headliner": false
         },
         {
@@ -2213,6 +3488,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$71K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$71K",
           "headliner": false
         },
         {
@@ -2230,6 +3508,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$60K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$60K",
           "headliner": false
         },
         {
@@ -2247,6 +3528,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$39K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$39K",
           "headliner": false
         },
         {
@@ -2264,6 +3548,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$38K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$38K",
           "headliner": false
         },
         {
@@ -2281,6 +3568,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$36K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$36K",
           "headliner": false
         },
         {
@@ -2298,6 +3588,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2315,6 +3608,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2332,6 +3628,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2349,6 +3648,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2366,6 +3668,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2383,6 +3688,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2400,6 +3708,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         }
       ]
@@ -2415,7 +3726,8 @@
           "position": "CB",
           "transferInfo": "Transfer from Colorado",
           "stars": 5,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$700K"
         },
         {
           "id": "eric-singleton-jr",
@@ -2424,7 +3736,8 @@
           "position": "WR",
           "transferInfo": "Transfer from Georgia Tech / Auburn",
           "stars": 4,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$1M"
         },
         {
           "id": "lacota-dippre",
@@ -2433,7 +3746,8 @@
           "position": "TE",
           "transferInfo": "Transfer from Charlotte / James Madison",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$31.5K"
         },
         {
           "id": "aaron-philo",
@@ -2442,7 +3756,8 @@
           "position": "QB",
           "transferInfo": "Transfer from Georgia Tech",
           "stars": 4,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$1.51M"
         },
         {
           "id": "kanye-clark",
@@ -2451,7 +3766,8 @@
           "position": "STAR",
           "transferInfo": "Transfer from UCLA",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$49.3K"
         },
         {
           "id": "brendan-bett",
@@ -2460,7 +3776,8 @@
           "position": "DL",
           "transferInfo": "Transfer from Baylor",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$720K"
         },
         {
           "id": "cam-dooley",
@@ -2469,7 +3786,8 @@
           "position": "S",
           "transferInfo": "Transfer from Kentucky",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$39K"
         },
         {
           "id": "evan-pryor",
@@ -2478,7 +3796,8 @@
           "position": "RB",
           "transferInfo": "Transfer from Ohio State / Cincinnati",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$149K"
         },
         {
           "id": "tj-shanahan-jr",
@@ -2487,7 +3806,8 @@
           "position": "OL",
           "transferInfo": "Transfer from Texas A&M / Penn State",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$645.1K"
         },
         {
           "id": "kofi-asare",
@@ -2496,7 +3816,8 @@
           "position": "JACK",
           "transferInfo": "Transfer from UMass",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$91K"
         },
         {
           "id": "tj-bullard",
@@ -2505,7 +3826,8 @@
           "position": "ILB",
           "transferInfo": "Transfer from UCF",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$15K"
         },
         {
           "id": "jordy-lowery",
@@ -2514,7 +3836,8 @@
           "position": "CB",
           "transferInfo": "Transfer from Western Carolina / East Carolina",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$21K"
         }
       ]
     },
@@ -2620,185 +3943,687 @@
       {
         "id": "commit-maxwell-hiller",
         "category": "Commit",
-        "text": "Maxwell Hiller (IOL · 5★ · #3) is on the UF board as a commit.",
+        "text": "Maxwell Hiller (IOL · 5★ · $306K) is on the UF board as a commit.",
         "slug": "maxwell-hiller"
       },
       {
         "id": "commit-elias-pearl",
         "category": "Commit",
-        "text": "Elias Pearl (WR · 4★ · #95) is on the UF board as a commit.",
+        "text": "Elias Pearl (WR · 4★ · $173K) is on the UF board as a commit.",
         "slug": "elias-pearl"
       },
       {
         "id": "commit-elijah-hutcheson",
         "category": "Commit",
-        "text": "Elijah Hutcheson (OT · 4★ · #103) is on the UF board as a commit.",
+        "text": "Elijah Hutcheson (OT · 4★ · $169K) is on the UF board as a commit.",
         "slug": "elijah-hutcheson"
       },
       {
         "id": "commit-davin-davidson",
         "category": "Commit",
-        "text": "Davin Davidson (QB · 4★ · #119) is on the UF board as a commit.",
+        "text": "Davin Davidson (QB · 4★ · $161K) is on the UF board as a commit.",
         "slug": "davin-davidson"
       },
       {
         "id": "commit-cahron-wheeler",
         "category": "Commit",
-        "text": "Cahron Wheeler (EDGE · 4★ · #126) is on the UF board as a commit.",
+        "text": "Cahron Wheeler (EDGE · 4★ · $157K) is on the UF board as a commit.",
         "slug": "cahron-wheeler"
       },
       {
         "id": "commit-peyton-miller",
         "category": "Commit",
-        "text": "Peyton Miller (IOL · 4★ · #130) is on the UF board as a commit.",
+        "text": "Peyton Miller (IOL · 4★ · $155K) is on the UF board as a commit.",
         "slug": "peyton-miller"
       },
       {
         "id": "else-elijah-guertin",
         "category": "Elsewhere",
-        "text": "Elijah Guertin committed to Penn State.",
+        "text": "Elijah Guertin committed to Penn State · $48K est..",
         "slug": "elijah-guertin"
       },
       {
         "id": "else-kyren-caldwell",
         "category": "Elsewhere",
-        "text": "Kyren Caldwell committed to Maryland.",
+        "text": "Kyren Caldwell committed to Maryland · $25K est..",
         "slug": "kyren-caldwell"
       },
       {
         "id": "else-jameer-cantrell",
         "category": "Elsewhere",
-        "text": "Jameer Cantrell committed to Arkansas.",
+        "text": "Jameer Cantrell committed to Arkansas · $25K est..",
         "slug": "jameer-cantrell"
       },
       {
         "id": "else-jalen-brewster",
         "category": "Elsewhere",
-        "text": "Jalen Brewster committed to Texas Tech.",
+        "text": "Jalen Brewster committed to Texas Tech · $307K est..",
         "slug": "jalen-brewster"
       }
     ],
-    "editorial": {
-      "asOf": "2026-07-23T00:28:58.331Z",
-      "disclaimer": "Editorial landscape estimates from curated public signals — not audited deal ledgers. Demoted below live board data.",
+    "landscape": {
+      "asOf": "2026-07-23",
+      "sourceNote": "One best current estimate per school, reconciled across sport and player pools with disclosure and source evidence where available.",
+      "disclaimer": "School market figures from the Sideline NIL Market Index (Sideline Data Desk). Not audited contracts. Player dollars labeled On3 or Sideline model separately.",
+      "provider": "Sideline NIL Market Index",
+      "programsIndexed": 357,
+      "headline": {
+        "indexedMarketB": 3.87,
+        "topProgram": "Texas",
+        "topProgramMarketM": 65.3,
+        "benefitsCapM": 21.3,
+        "benefitsCapNote": "2026–27 benefits cap"
+      },
+      "nationalTop": [
+        {
+          "nationalRank": 1,
+          "secRank": 1,
+          "school": "Texas",
+          "schoolKey": "Texas",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 65.3,
+          "programId": "tex"
+        },
+        {
+          "nationalRank": 2,
+          "secRank": 2,
+          "school": "Texas A&M",
+          "schoolKey": "Texas A&M",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 62.2,
+          "programId": "tamu"
+        },
+        {
+          "nationalRank": 3,
+          "secRank": null,
+          "school": "Oregon",
+          "schoolKey": "Oregon",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 58.5,
+          "programId": null
+        },
+        {
+          "nationalRank": 4,
+          "secRank": null,
+          "school": "Miami (FL)",
+          "schoolKey": "Miami (FL)",
+          "conference": "ACC",
+          "tier": "Power 4",
+          "marketM": 56.3,
+          "programId": null
+        },
+        {
+          "nationalRank": 5,
+          "secRank": 3,
+          "school": "LSU",
+          "schoolKey": "LSU",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 55.8,
+          "programId": "lsu"
+        },
+        {
+          "nationalRank": 6,
+          "secRank": null,
+          "school": "Ohio State",
+          "schoolKey": "Ohio State",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 53,
+          "programId": null
+        },
+        {
+          "nationalRank": 7,
+          "secRank": null,
+          "school": "USC",
+          "schoolKey": "USC",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 52,
+          "programId": null
+        },
+        {
+          "nationalRank": 8,
+          "secRank": null,
+          "school": "Indiana",
+          "schoolKey": "Indiana",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 48.5,
+          "programId": null
+        },
+        {
+          "nationalRank": 9,
+          "secRank": null,
+          "school": "Texas Tech",
+          "schoolKey": "Texas Tech",
+          "conference": "Big 12",
+          "tier": "Power 4",
+          "marketM": 48.2,
+          "programId": null
+        },
+        {
+          "nationalRank": 10,
+          "secRank": null,
+          "school": "Notre Dame",
+          "schoolKey": "Notre Dame",
+          "conference": "ACC",
+          "tier": "Power 4",
+          "marketM": 47,
+          "programId": null
+        },
+        {
+          "nationalRank": 11,
+          "secRank": 4,
+          "school": "Ole Miss",
+          "schoolKey": "Ole Miss",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 46.8,
+          "programId": "olemiss"
+        },
+        {
+          "nationalRank": 12,
+          "secRank": 5,
+          "school": "Oklahoma",
+          "schoolKey": "Oklahoma",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 45.4,
+          "programId": "okla"
+        },
+        {
+          "nationalRank": 13,
+          "secRank": 6,
+          "school": "Tennessee",
+          "schoolKey": "Tennessee",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 45.1,
+          "programId": "tenn"
+        },
+        {
+          "nationalRank": 14,
+          "secRank": 7,
+          "school": "Alabama",
+          "schoolKey": "Alabama",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 44.7,
+          "programId": "bama"
+        },
+        {
+          "nationalRank": 15,
+          "secRank": 8,
+          "school": "Georgia",
+          "schoolKey": "Georgia",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 44.6,
+          "programId": "uga"
+        },
+        {
+          "nationalRank": 16,
+          "secRank": null,
+          "school": "Michigan",
+          "schoolKey": "Michigan",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 43.8,
+          "programId": null
+        },
+        {
+          "nationalRank": 17,
+          "secRank": null,
+          "school": "UCLA",
+          "schoolKey": "UCLA",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 43.5,
+          "programId": null
+        },
+        {
+          "nationalRank": 18,
+          "secRank": 9,
+          "school": "Missouri",
+          "schoolKey": "Missouri",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 41.2,
+          "programId": "mizz"
+        },
+        {
+          "nationalRank": 19,
+          "secRank": 10,
+          "school": "Vanderbilt",
+          "schoolKey": "Vanderbilt",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 40,
+          "programId": "vandy"
+        },
+        {
+          "nationalRank": 20,
+          "secRank": 11,
+          "school": "Auburn",
+          "schoolKey": "Auburn",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 39.4,
+          "programId": "auburn"
+        },
+        {
+          "nationalRank": 21,
+          "secRank": null,
+          "school": "Houston",
+          "schoolKey": "Houston",
+          "conference": "Big 12",
+          "tier": "Power 4",
+          "marketM": 38.1,
+          "programId": null
+        },
+        {
+          "nationalRank": 22,
+          "secRank": null,
+          "school": "Florida State",
+          "schoolKey": "Florida State",
+          "conference": "ACC",
+          "tier": "Power 4",
+          "marketM": 37.3,
+          "programId": null
+        },
+        {
+          "nationalRank": 23,
+          "secRank": null,
+          "school": "North Carolina",
+          "schoolKey": "North Carolina",
+          "conference": "ACC",
+          "tier": "Power 4",
+          "marketM": 37.1,
+          "programId": null
+        },
+        {
+          "nationalRank": 24,
+          "secRank": 12,
+          "school": "Florida",
+          "schoolKey": "Florida",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 37,
+          "programId": "uf"
+        },
+        {
+          "nationalRank": 25,
+          "secRank": 13,
+          "school": "Kentucky",
+          "schoolKey": "Kentucky",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 36.4,
+          "programId": "uk"
+        }
+      ],
       "uf": {
         "collective": "Florida Victorious",
-        "secRank": 8,
-        "nationalRank": 16,
-        "estimatedAnnualPoolM": 11.8
+        "secRank": 12,
+        "nationalRank": 24,
+        "estimatedAnnualPoolM": 37,
+        "avgDealK": 34,
+        "topDealM": 2.1,
+        "trend": "up",
+        "trendPct": 14
       },
       "sec": [
-        {
-          "id": "tamu",
-          "school": "Texas A&M Aggies",
-          "collective": "Fund 12",
-          "secRank": 1,
-          "estimatedAnnualPoolM": 22.5
-        },
         {
           "id": "tex",
           "school": "Texas Longhorns",
           "collective": "Horns With Heart",
+          "secRank": 1,
+          "nationalRank": 1,
+          "score": 99,
+          "estimatedAnnualPoolM": 65.3,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "tamu",
+          "school": "Texas A&M Aggies",
+          "collective": "Fund 12",
           "secRank": 2,
-          "estimatedAnnualPoolM": 20.8
-        },
-        {
-          "id": "bama",
-          "school": "Alabama Crimson Tide",
-          "collective": "Yellowhammer Fund",
-          "secRank": 3,
-          "estimatedAnnualPoolM": 19.2
-        },
-        {
-          "id": "uga",
-          "school": "Georgia Bulldogs",
-          "collective": "Classic City Collective",
-          "secRank": 4,
-          "estimatedAnnualPoolM": 17.5
+          "nationalRank": 2,
+          "score": 98,
+          "estimatedAnnualPoolM": 62.2,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
           "id": "lsu",
           "school": "LSU Tigers",
           "collective": "Bayou Traditions",
-          "secRank": 5,
-          "estimatedAnnualPoolM": 14.8
+          "secRank": 3,
+          "nationalRank": 5,
+          "score": 95,
+          "estimatedAnnualPoolM": 55.8,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
           "id": "olemiss",
           "school": "Ole Miss Rebels",
           "collective": "Champion Circle",
-          "secRank": 6,
-          "estimatedAnnualPoolM": 13.2
-        },
-        {
-          "id": "tenn",
-          "school": "Tennessee Volunteers",
-          "collective": "Spire Collective",
-          "secRank": 7,
-          "estimatedAnnualPoolM": 12.5
-        },
-        {
-          "id": "uf",
-          "school": "Florida Gators",
-          "collective": "Florida Victorious",
-          "secRank": 8,
-          "estimatedAnnualPoolM": 11.8
-        },
-        {
-          "id": "auburn",
-          "school": "Auburn Tigers",
-          "collective": "Auburn NIL Club",
-          "secRank": 9,
-          "estimatedAnnualPoolM": 10.5
+          "secRank": 4,
+          "nationalRank": 11,
+          "score": 89,
+          "estimatedAnnualPoolM": 46.8,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
           "id": "okla",
           "school": "Oklahoma Sooners",
           "collective": "Crimson & Cream",
-          "secRank": 10,
-          "estimatedAnnualPoolM": 10.2
+          "secRank": 5,
+          "nationalRank": 12,
+          "score": 88,
+          "estimatedAnnualPoolM": 45.4,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
-          "id": "scar",
-          "school": "South Carolina Gamecocks",
-          "collective": "Garnet Trust",
-          "secRank": 11,
-          "estimatedAnnualPoolM": 8.4
+          "id": "tenn",
+          "school": "Tennessee Volunteers",
+          "collective": "Spire Collective",
+          "secRank": 6,
+          "nationalRank": 13,
+          "score": 87,
+          "estimatedAnnualPoolM": 45.1,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "bama",
+          "school": "Alabama Crimson Tide",
+          "collective": "Yellowhammer Fund",
+          "secRank": 7,
+          "nationalRank": 14,
+          "score": 86,
+          "estimatedAnnualPoolM": 44.7,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "uga",
+          "school": "Georgia Bulldogs",
+          "collective": "Classic City Collective",
+          "secRank": 8,
+          "nationalRank": 15,
+          "score": 85,
+          "estimatedAnnualPoolM": 44.6,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
           "id": "mizz",
           "school": "Missouri Tigers",
           "collective": "Golden NIL",
-          "secRank": 12,
-          "estimatedAnnualPoolM": 7.2
-        },
-        {
-          "id": "ark",
-          "school": "Arkansas Razorbacks",
-          "collective": "Hogs NIL",
-          "secRank": 13,
-          "estimatedAnnualPoolM": 6.8
-        },
-        {
-          "id": "uk",
-          "school": "Kentucky Wildcats",
-          "collective": "Wildcat NIL",
-          "secRank": 14,
-          "estimatedAnnualPoolM": 6.2
-        },
-        {
-          "id": "msst",
-          "school": "Mississippi State Bulldogs",
-          "collective": "Bulldog NIL",
-          "secRank": 15,
-          "estimatedAnnualPoolM": 5.5
+          "secRank": 9,
+          "nationalRank": 18,
+          "score": 82,
+          "estimatedAnnualPoolM": 41.2,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
           "id": "vandy",
           "school": "Vanderbilt Commodores",
           "collective": "Anchor NIL",
+          "secRank": 10,
+          "nationalRank": 19,
+          "score": 81,
+          "estimatedAnnualPoolM": 40,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "auburn",
+          "school": "Auburn Tigers",
+          "collective": "Auburn NIL Club",
+          "secRank": 11,
+          "nationalRank": 20,
+          "score": 80,
+          "estimatedAnnualPoolM": 39.4,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "uf",
+          "school": "Florida Gators",
+          "collective": "Florida Victorious",
+          "secRank": 12,
+          "nationalRank": 24,
+          "score": 76,
+          "estimatedAnnualPoolM": 37,
+          "avgDealK": 34,
+          "topDealM": 2.1,
+          "trend": "up",
+          "trendPct": 14,
+          "source": "sideline"
+        },
+        {
+          "id": "uk",
+          "school": "Kentucky Wildcats",
+          "collective": "Wildcat NIL",
+          "secRank": 13,
+          "nationalRank": 25,
+          "score": 75,
+          "estimatedAnnualPoolM": 36.4,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "ark",
+          "school": "Arkansas Razorbacks",
+          "collective": "Hogs NIL",
+          "secRank": 14,
+          "nationalRank": 28,
+          "score": 72,
+          "estimatedAnnualPoolM": 35.3,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "scar",
+          "school": "South Carolina Gamecocks",
+          "collective": "Garnet Trust",
+          "secRank": 15,
+          "nationalRank": 40,
+          "score": 60,
+          "estimatedAnnualPoolM": 32.3,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "msst",
+          "school": "Mississippi State Bulldogs",
+          "collective": "Bulldog NIL",
           "secRank": 16,
-          "estimatedAnnualPoolM": 4.1
+          "nationalRank": 56,
+          "score": 44,
+          "estimatedAnnualPoolM": 27.5,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        }
+      ]
+    },
+    "editorial": {
+      "asOf": "2026-07-23",
+      "disclaimer": "School market figures from the Sideline NIL Market Index (Sideline Data Desk). Not audited contracts. Player dollars labeled On3 or Sideline model separately.",
+      "uf": {
+        "collective": "Florida Victorious",
+        "secRank": 12,
+        "nationalRank": 24,
+        "estimatedAnnualPoolM": 37
+      },
+      "sec": [
+        {
+          "id": "tex",
+          "school": "Texas Longhorns",
+          "collective": "Horns With Heart",
+          "secRank": 1,
+          "estimatedAnnualPoolM": 65.3
+        },
+        {
+          "id": "tamu",
+          "school": "Texas A&M Aggies",
+          "collective": "Fund 12",
+          "secRank": 2,
+          "estimatedAnnualPoolM": 62.2
+        },
+        {
+          "id": "lsu",
+          "school": "LSU Tigers",
+          "collective": "Bayou Traditions",
+          "secRank": 3,
+          "estimatedAnnualPoolM": 55.8
+        },
+        {
+          "id": "olemiss",
+          "school": "Ole Miss Rebels",
+          "collective": "Champion Circle",
+          "secRank": 4,
+          "estimatedAnnualPoolM": 46.8
+        },
+        {
+          "id": "okla",
+          "school": "Oklahoma Sooners",
+          "collective": "Crimson & Cream",
+          "secRank": 5,
+          "estimatedAnnualPoolM": 45.4
+        },
+        {
+          "id": "tenn",
+          "school": "Tennessee Volunteers",
+          "collective": "Spire Collective",
+          "secRank": 6,
+          "estimatedAnnualPoolM": 45.1
+        },
+        {
+          "id": "bama",
+          "school": "Alabama Crimson Tide",
+          "collective": "Yellowhammer Fund",
+          "secRank": 7,
+          "estimatedAnnualPoolM": 44.7
+        },
+        {
+          "id": "uga",
+          "school": "Georgia Bulldogs",
+          "collective": "Classic City Collective",
+          "secRank": 8,
+          "estimatedAnnualPoolM": 44.6
+        },
+        {
+          "id": "mizz",
+          "school": "Missouri Tigers",
+          "collective": "Golden NIL",
+          "secRank": 9,
+          "estimatedAnnualPoolM": 41.2
+        },
+        {
+          "id": "vandy",
+          "school": "Vanderbilt Commodores",
+          "collective": "Anchor NIL",
+          "secRank": 10,
+          "estimatedAnnualPoolM": 40
+        },
+        {
+          "id": "auburn",
+          "school": "Auburn Tigers",
+          "collective": "Auburn NIL Club",
+          "secRank": 11,
+          "estimatedAnnualPoolM": 39.4
+        },
+        {
+          "id": "uf",
+          "school": "Florida Gators",
+          "collective": "Florida Victorious",
+          "secRank": 12,
+          "estimatedAnnualPoolM": 37
+        },
+        {
+          "id": "uk",
+          "school": "Kentucky Wildcats",
+          "collective": "Wildcat NIL",
+          "secRank": 13,
+          "estimatedAnnualPoolM": 36.4
+        },
+        {
+          "id": "ark",
+          "school": "Arkansas Razorbacks",
+          "collective": "Hogs NIL",
+          "secRank": 14,
+          "estimatedAnnualPoolM": 35.3
+        },
+        {
+          "id": "scar",
+          "school": "South Carolina Gamecocks",
+          "collective": "Garnet Trust",
+          "secRank": 15,
+          "estimatedAnnualPoolM": 32.3
+        },
+        {
+          "id": "msst",
+          "school": "Mississippi State Bulldogs",
+          "collective": "Bulldog NIL",
+          "secRank": 16,
+          "estimatedAnnualPoolM": 27.5
         }
       ]
     }

@@ -6,6 +6,7 @@ import { UiError } from '@/components/site/UiMessage';
 import { NilMobileHeader } from '@/components/nil/NilMobileHeader';
 import { NilHero } from '@/components/nil/NilHero';
 import { NilMetricsBar } from '@/components/nil/NilMetricsBar';
+import { NilRosterEarners } from '@/components/nil/NilRosterEarners';
 import { NilLeaderboard } from '@/components/nil/NilLeaderboard';
 import { NilMovementFeed } from '@/components/nil/NilMovementFeed';
 import { NilCollectiveComparison } from '@/components/nil/NilCollectiveComparison';
@@ -24,6 +25,20 @@ export function NilElitePage(): React.ReactElement {
     setRefreshing(true);
     void reload().finally(() => setRefreshing(false));
   };
+
+  const landscape = bundle?.landscape || (
+    bundle?.editorial
+      ? {
+          asOf: bundle.editorial.asOf,
+          sourceNote: 'Estimated annual pools from public reporting — updated quarterly',
+          disclaimer: bundle.editorial.disclaimer,
+          uf: bundle.editorial.uf
+            ? { ...bundle.editorial.uf }
+            : null,
+          sec: bundle.editorial.sec || [],
+        }
+      : null
+  );
 
   return (
     <div className="rh-page rh-page--elite gv-nil-page mobile-app" data-testid="vault-nil">
@@ -45,23 +60,25 @@ export function NilElitePage(): React.ReactElement {
 
       {bundle ? (
         <div className="rh-cc-page nil-cc-page">
-          <NilHero hero={bundle.hero} pulse={bundle.pulse} />
-          <NilMetricsBar pulse={bundle.pulse} classYear={bundle.classYear} />
+          <NilHero hero={bundle.hero} money={bundle.money} />
+          <NilMetricsBar money={bundle.money} pulse={bundle.pulse} />
 
           <div className="rh-cc-main rh-frame">
             <div className="rh-cc-col">
+              <NilRosterEarners earners={bundle.rosterEarners || []} />
+              {landscape ? <NilProgramRankingsTable landscape={landscape} /> : null}
               <NilLeaderboard marketBoard={bundle.marketBoard} />
               <NilPortalImpact portal={bundle.portal} />
               <NilMovementFeed items={bundle.movement} />
               <NilCollectiveComparison collectives={bundle.collectives} />
-              {bundle.editorial ? <NilProgramRankingsTable editorial={bundle.editorial} /> : null}
               <NilFooterCta onRefresh={handleRefresh} refreshing={refreshing || loading} />
             </div>
           </div>
 
           <p className="nil-disclaimer rh-frame">
-            Elite NIL rule: only proven board, roster, portal, and collective signals. Dollar figures appear
-            only from On3 when public — never invented deal ranges.
+            Florida player dollars from the Sideline NIL Market Index (On3 value when labeled;
+            otherwise Sideline model). SEC program pools remain curated public estimates. Not audited
+            contracts.
           </p>
         </div>
       ) : null}

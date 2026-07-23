@@ -39,8 +39,8 @@
     "playerComp": null,
     "developmentProjection": "All-SEC caliber edge defender with NFL draft ceiling if he stays healthy through 2026.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 243000,
-    "recruitingBackground": "4-star recruit · Shawnee, Kan. Mill Valley",
+    "nilValuation": 842500,
+    "recruitingBackground": "4-star recruit \u00b7 Shawnee, Kan. Mill Valley",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -83,7 +83,9 @@
       ]
     },
     "cfbdPlayerId": 5141766,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "cormani-mcclain",
@@ -123,8 +125,8 @@
     "playerComp": null,
     "developmentProjection": "First-round NFL corner projection if he re-establishes top-tier form in 2026.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 668250,
-    "recruitingBackground": "5-star recruit · Lakeland, Fla. Lakeland · Transfer from Colorado",
+    "nilValuation": 700000,
+    "recruitingBackground": "5-star recruit \u00b7 Lakeland, Fla. Lakeland \u00b7 Transfer from Colorado",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -196,7 +198,9 @@
       ]
     },
     "cfbdPlayerId": 4870920,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "on3",
+    "nilSourceLabel": "On3 value"
   },
   {
     "slug": "jadan-baugh",
@@ -236,8 +240,8 @@
     "playerComp": null,
     "developmentProjection": "SEC starter with 1,000-yard season upside in a balanced offense.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 243000,
-    "recruitingBackground": "4-star recruit · Atlanta, Ga. Columbia",
+    "nilValuation": 1000000,
+    "recruitingBackground": "4-star recruit \u00b7 Atlanta, Ga. Columbia",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -366,7 +370,9 @@
       ]
     },
     "cfbdPlayerId": 5079322,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "on3",
+    "nilSourceLabel": "On3 value"
   },
   {
     "slug": "eric-singleton-jr",
@@ -406,10 +412,12 @@
     "playerComp": null,
     "developmentProjection": "1,000-yard receiver and primary target for the new staff in 2026.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 267300,
-    "recruitingBackground": "4-star recruit · Atlanta, Ga. Alexander · Transfer from Georgia Tech / Auburn",
+    "nilValuation": 1000000,
+    "recruitingBackground": "4-star recruit \u00b7 Atlanta, Ga. Alexander \u00b7 Transfer from Georgia Tech / Auburn",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "on3",
+    "nilSourceLabel": "On3 value"
   },
   {
     "slug": "vernell-brown-iii",
@@ -441,7 +449,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "SEC starter contributor with red-zone and third-down upside.",
     "eligibilityYearsRemaining": 3,
     "transferStatus": "High school / standard path",
@@ -450,8 +458,8 @@
     "playerComp": null,
     "developmentProjection": "SEC starter contributor with red-zone and third-down upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 243000,
-    "recruitingBackground": "4-star recruit · Gainesville, Fla. Jones",
+    "nilValuation": 1000000,
+    "recruitingBackground": "4-star recruit \u00b7 Gainesville, Fla. Jones",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -529,7 +537,9 @@
       ]
     },
     "cfbdPlayerId": 5295811,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "on3",
+    "nilSourceLabel": "On3 value"
   },
   {
     "slug": "myles-graham",
@@ -570,8 +580,8 @@
     "playerComp": null,
     "developmentProjection": "SEC starter linebacker with starter trajectory.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 243000,
-    "recruitingBackground": "4-star recruit · Gainesville, Fla. Buchholz",
+    "nilValuation": 172500,
+    "recruitingBackground": "4-star recruit \u00b7 Gainesville, Fla. Buchholz",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -643,7 +653,9 @@
       ]
     },
     "cfbdPlayerId": 5079480,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "dijon-johnson",
@@ -684,8 +696,8 @@
     "playerComp": null,
     "developmentProjection": "SEC starter with NFL secondary upside if consistency holds.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 243000,
-    "recruitingBackground": "4-star recruit · Tampa, Fla. Wharton",
+    "nilValuation": 217500,
+    "recruitingBackground": "4-star recruit \u00b7 Tampa, Fla. Wharton",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -786,7 +798,9 @@
       ]
     },
     "cfbdPlayerId": 4899671,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "dallas-wilson",
@@ -818,7 +832,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "SEC starter contributor with red-zone and third-down upside.",
     "eligibilityYearsRemaining": 4,
     "transferStatus": "High school / standard path",
@@ -827,8 +841,8 @@
     "playerComp": null,
     "developmentProjection": "SEC starter contributor with red-zone and third-down upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 243000,
-    "recruitingBackground": "4-star recruit · Tampa, Fla. Tampa Bay Tech",
+    "nilValuation": 318000,
+    "recruitingBackground": "4-star recruit \u00b7 Tampa, Fla. Tampa Bay Tech",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -869,7 +883,9 @@
       ]
     },
     "cfbdPlayerId": 5141723,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "tramell-jones-jr",
@@ -910,8 +926,8 @@
     "playerComp": null,
     "developmentProjection": "SEC-caliber signal-caller with starter trajectory in Buster Faulkner's system.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 243000,
-    "recruitingBackground": "4-star recruit · Jacksonville, Fla. Mandarin",
+    "nilValuation": 88500,
+    "recruitingBackground": "4-star recruit \u00b7 Jacksonville, Fla. Mandarin",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -964,7 +980,9 @@
       ]
     },
     "cfbdPlayerId": 5295814,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "bryce-thornton",
@@ -1005,8 +1023,8 @@
     "playerComp": null,
     "developmentProjection": "SEC starter defensive back with special-teams value.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 162000,
-    "recruitingBackground": "3-star recruit · College Park, Ga. Milton",
+    "nilValuation": 60000,
+    "recruitingBackground": "3-star recruit \u00b7 College Park, Ga. Milton",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -1107,7 +1125,9 @@
       ]
     },
     "cfbdPlayerId": 4870995,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "jaden-robinson",
@@ -1148,8 +1168,8 @@
     "playerComp": null,
     "developmentProjection": "SEC starter linebacker with starter trajectory.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 243000,
-    "recruitingBackground": "4-star recruit · Lake City, Fla. Columbia",
+    "nilValuation": 51000,
+    "recruitingBackground": "4-star recruit \u00b7 Lake City, Fla. Columbia",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -1250,7 +1270,9 @@
       ]
     },
     "cfbdPlayerId": 4870978,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "lacota-dippre",
@@ -1291,10 +1313,12 @@
     "playerComp": null,
     "developmentProjection": "Starter-caliber tight end in a pro-style spread if development continues.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 178200,
-    "recruitingBackground": "3-star recruit · Scranton, Pa. Lakeland (Pa.) · Transfer from Charlotte / James Madison",
+    "nilValuation": 31500,
+    "recruitingBackground": "3-star recruit \u00b7 Scranton, Pa. Lakeland (Pa.) \u00b7 Transfer from Charlotte / James Madison",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "aaron-philo",
@@ -1335,10 +1359,12 @@
     "playerComp": null,
     "developmentProjection": "SEC-caliber signal-caller with starter trajectory in Buster Faulkner's system.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 267300,
-    "recruitingBackground": "4-star recruit · Bogart, Ga. Prince Avenue Christian · Transfer from Georgia Tech",
+    "nilValuation": 1510000,
+    "recruitingBackground": "4-star recruit \u00b7 Bogart, Ga. Prince Avenue Christian \u00b7 Transfer from Georgia Tech",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "kanye-clark",
@@ -1379,10 +1405,12 @@
     "playerComp": null,
     "developmentProjection": "High-impact nickel with every-down sub-package value.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 132000,
-    "recruitingBackground": "3-star recruit · Sacramento, Calif. Capital Christian · Transfer from UCLA",
+    "nilValuation": 49300,
+    "recruitingBackground": "3-star recruit \u00b7 Sacramento, Calif. Capital Christian \u00b7 Transfer from UCLA",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "brendan-bett",
@@ -1423,8 +1451,8 @@
     "playerComp": null,
     "developmentProjection": "Rotation-to-starter defensive lineman with SEC production upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 132000,
-    "recruitingBackground": "3-star recruit · Gadsden, Ala. Ellison HS · Transfer from Baylor",
+    "nilValuation": 720000,
+    "recruitingBackground": "3-star recruit \u00b7 Gadsden, Ala. Ellison HS \u00b7 Transfer from Baylor",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -1467,7 +1495,9 @@
       ]
     },
     "cfbdPlayerId": 5086808,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "cam-dooley",
@@ -1508,10 +1538,12 @@
     "playerComp": null,
     "developmentProjection": "SEC rotation defensive back with special-teams value.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 132000,
-    "recruitingBackground": "3-star recruit · Valley, Ala. Valley · Transfer from Kentucky",
+    "nilValuation": 39000,
+    "recruitingBackground": "3-star recruit \u00b7 Valley, Ala. Valley \u00b7 Transfer from Kentucky",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "evan-pryor",
@@ -1552,10 +1584,12 @@
     "playerComp": null,
     "developmentProjection": "Rotation back with early-down and short-yardage value in the SEC.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 71500,
-    "recruitingBackground": "3-star recruit · Cornelius, N.C. Williams Amos Hough · Transfer from Ohio State / Cincinnati",
+    "nilValuation": 149000,
+    "recruitingBackground": "3-star recruit \u00b7 Cornelius, N.C. Williams Amos Hough \u00b7 Transfer from Ohio State / Cincinnati",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "lj-mccray",
@@ -1596,10 +1630,12 @@
     "playerComp": null,
     "developmentProjection": "Rotation-to-starter defensive lineman with SEC production upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 450000,
-    "recruitingBackground": "5-star recruit · Daytona, Fla. Mainland",
+    "nilValuation": 500000,
+    "recruitingBackground": "5-star recruit \u00b7 Daytona, Fla. Mainland",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "on3",
+    "nilSourceLabel": "On3 value"
   },
   {
     "slug": "tj-shanahan-jr",
@@ -1640,10 +1676,12 @@
     "playerComp": null,
     "developmentProjection": "SEC starter track with NFL size and developmental upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 71500,
-    "recruitingBackground": "3-star recruit · Orlando, Fla. Westlake · Transfer from Texas A&M / Penn State",
+    "nilValuation": 645100,
+    "recruitingBackground": "3-star recruit \u00b7 Orlando, Fla. Westlake \u00b7 Transfer from Texas A&M / Penn State",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "kofi-asare",
@@ -1684,8 +1722,8 @@
     "playerComp": null,
     "developmentProjection": "All-SEC caliber edge defender with NFL draft ceiling.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 71500,
-    "recruitingBackground": "3-star recruit · Worcester, Mass. Doherty Memorial · Transfer from UMass",
+    "nilValuation": 91000,
+    "recruitingBackground": "3-star recruit \u00b7 Worcester, Mass. Doherty Memorial \u00b7 Transfer from UMass",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -1728,7 +1766,9 @@
       ]
     },
     "cfbdPlayerId": 4912316,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "tj-bullard",
@@ -1769,10 +1809,12 @@
     "playerComp": null,
     "developmentProjection": "SEC rotation linebacker with starter trajectory.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 71500,
-    "recruitingBackground": "3-star recruit · Tampa, Fla. Berkeley Prep · Transfer from UCF",
+    "nilValuation": 15000,
+    "recruitingBackground": "3-star recruit \u00b7 Tampa, Fla. Berkeley Prep \u00b7 Transfer from UCF",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "jordy-lowery",
@@ -1813,10 +1855,12 @@
     "playerComp": null,
     "developmentProjection": "SEC starter with NFL secondary upside if consistency holds.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 71500,
-    "recruitingBackground": "3-star recruit · Bartow, Fla. Bartow · Transfer from Western Carolina / East Carolina",
+    "nilValuation": 21000,
+    "recruitingBackground": "3-star recruit \u00b7 Bartow, Fla. Bartow \u00b7 Transfer from Western Carolina / East Carolina",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "eagan-boyer",
@@ -1857,10 +1901,12 @@
     "playerComp": null,
     "developmentProjection": "SEC starter track with NFL size and developmental upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 71500,
-    "recruitingBackground": "3-star recruit · Cornelius, N.C. Hough · Transfer from Penn State",
+    "nilValuation": 41800,
+    "recruitingBackground": "3-star recruit \u00b7 Cornelius, N.C. Hough \u00b7 Transfer from Penn State",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "dj-coleman",
@@ -1901,10 +1947,12 @@
     "playerComp": null,
     "developmentProjection": "SEC rotation defensive back with special-teams value.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 71500,
-    "recruitingBackground": "3-star recruit · Mesquite, Texas Horn · Transfer from Baylor",
+    "nilValuation": 16500,
+    "recruitingBackground": "3-star recruit \u00b7 Mesquite, Texas Horn \u00b7 Transfer from Baylor",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "harrison-moore",
@@ -1945,10 +1993,12 @@
     "playerComp": null,
     "developmentProjection": "SEC starter track with NFL size and developmental upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 65000,
-    "recruitingBackground": "3-star recruit · Southlake, Texas Carroll",
+    "nilValuation": 29000,
+    "recruitingBackground": "3-star recruit \u00b7 Southlake, Texas Carroll",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "jeramiah-mccloud",
@@ -1989,8 +2039,8 @@
     "playerComp": null,
     "developmentProjection": "Rotation-to-starter defensive lineman with SEC production upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 65000,
-    "recruitingBackground": "3-star recruit · Sylvester, Ga. Lee County",
+    "nilValuation": 95500,
+    "recruitingBackground": "3-star recruit \u00b7 Sylvester, Ga. Lee County",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -2033,7 +2083,9 @@
       ]
     },
     "cfbdPlayerId": 5195951,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "elijah-owens",
@@ -2075,7 +2127,7 @@
     "developmentProjection": "High-impact nickel with every-down sub-package value.",
     "injuryHistory": "No significant injury history on file.",
     "nilValuation": 16500,
-    "recruitingBackground": "3-star recruit · Mobile, Ala. Citronelle · Transfer from Mississippi Gulf Coast CC",
+    "recruitingBackground": "3-star recruit \u00b7 Mobile, Ala. Citronelle \u00b7 Transfer from Mississippi Gulf Coast CC",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
   },
@@ -2118,10 +2170,12 @@
     "playerComp": null,
     "developmentProjection": "Rotation-to-starter defensive lineman with SEC production upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "3-star recruit · Manchester, England Loreto College · Transfer from University of Exeter / Jacksonville State",
+    "nilValuation": 36500,
+    "recruitingBackground": "3-star recruit \u00b7 Manchester, England Loreto College \u00b7 Transfer from University of Exeter / Jacksonville State",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "carter-milliron",
@@ -2162,7 +2216,7 @@
     "developmentProjection": "Reliable long snapper with multi-year starter stability.",
     "injuryHistory": "No significant injury history on file.",
     "nilValuation": 16500,
-    "recruitingBackground": "3-star recruit · Hoover, Ala. Hoover · Transfer from Louisiana",
+    "recruitingBackground": "3-star recruit \u00b7 Hoover, Ala. Hoover \u00b7 Transfer from Louisiana",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
   },
@@ -2205,8 +2259,8 @@
     "playerComp": null,
     "developmentProjection": "SEC rotation defensive back with special-teams value.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "3-star recruit · Miami, Fla. Miami Central · Transfer from Baylor",
+    "nilValuation": 236500,
+    "recruitingBackground": "3-star recruit \u00b7 Miami, Fla. Miami Central \u00b7 Transfer from Baylor",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -2278,7 +2332,9 @@
       ]
     },
     "cfbdPlayerId": 4685238,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "aaron-chiles",
@@ -2319,8 +2375,8 @@
     "playerComp": null,
     "developmentProjection": "SEC rotation linebacker with starter trajectory.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
-    "recruitingBackground": "3-star recruit · Largo, Md. Our Lady of Good Counsel",
+    "nilValuation": 180000,
+    "recruitingBackground": "3-star recruit \u00b7 Largo, Md. Our Lady of Good Counsel",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -2392,7 +2448,9 @@
       ]
     },
     "cfbdPlayerId": 5079340,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "kahleil-jackson",
@@ -2424,7 +2482,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "SEC rotation contributor with red-zone and third-down upside.",
     "eligibilityYearsRemaining": 0,
     "transferStatus": "High school / standard path",
@@ -2433,8 +2491,8 @@
     "playerComp": null,
     "developmentProjection": "SEC rotation contributor with red-zone and third-down upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
-    "recruitingBackground": "3-star recruit · Hawthorne, Fla. Hawthorne",
+    "nilValuation": 57000,
+    "recruitingBackground": "3-star recruit \u00b7 Hawthorne, Fla. Hawthorne",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -2568,7 +2626,9 @@
       ]
     },
     "cfbdPlayerId": 4693740,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "javion-toombs",
@@ -2609,8 +2669,8 @@
     "playerComp": null,
     "developmentProjection": "SEC starter with NFL secondary upside if consistency holds.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
-    "recruitingBackground": "3-star recruit · Fort Pierce, Fla. Centennial",
+    "nilValuation": 25000,
+    "recruitingBackground": "3-star recruit \u00b7 Fort Pierce, Fla. Centennial",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -2711,7 +2771,9 @@
       ]
     },
     "cfbdPlayerId": 5081634,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "knijeah-harris",
@@ -2752,8 +2814,8 @@
     "playerComp": null,
     "developmentProjection": "SEC starter track with NFL size and developmental upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
-    "recruitingBackground": "3-star recruit · Pahokee, Fla. IMG Academy",
+    "nilValuation": 163500,
+    "recruitingBackground": "3-star recruit \u00b7 Pahokee, Fla. IMG Academy",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -2796,7 +2858,9 @@
       ]
     },
     "cfbdPlayerId": 4870788,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "kamran-james",
@@ -2837,8 +2901,8 @@
     "playerComp": null,
     "developmentProjection": "Rotation-to-starter defensive lineman with SEC production upside.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
-    "recruitingBackground": "3-star recruit · Orlando, Fla. Olympia",
+    "nilValuation": 941000,
+    "recruitingBackground": "3-star recruit \u00b7 Orlando, Fla. Olympia",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -2939,7 +3003,9 @@
       ]
     },
     "cfbdPlayerId": 5083314,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "emeka-ugorji",
@@ -2980,10 +3046,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Oak Cliff, Texas Oak Cliff · Transfer from Stanford",
+    "nilValuation": 800000,
+    "recruitingBackground": "Oak Cliff, Texas Oak Cliff \u00b7 Transfer from Stanford",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "jvari-flowers",
@@ -3024,7 +3092,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental cb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 117500,
     "recruitingBackground": "Miami, Fla. Northwestern",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
@@ -3068,7 +3136,9 @@
       ]
     },
     "cfbdPlayerId": 5161809,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "myles-johnson",
@@ -3109,7 +3179,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental ilb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 83000,
     "recruitingBackground": "Brewton, Ala. T.R. Miller",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
@@ -3153,7 +3223,9 @@
       ]
     },
     "cfbdPlayerId": 5149469,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "patrick-durkin",
@@ -3194,10 +3266,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental k with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Chicago, Ill. Joliet Catholic Academy · Transfer from Tulane",
+    "nilValuation": 5700,
+    "recruitingBackground": "Chicago, Ill. Joliet Catholic Academy \u00b7 Transfer from Tulane",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "ty-jackson",
@@ -3238,7 +3312,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental ilb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 107500,
     "recruitingBackground": "Fort Lauderdale, Fla. Seminole Ridge",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
@@ -3282,7 +3356,9 @@
       ]
     },
     "cfbdPlayerId": 5167180,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "vincent-brown-jr",
@@ -3323,10 +3399,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental cb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Gainesville, Fla. Wildwood · Transfer from Southeastern",
+    "nilValuation": 20500,
+    "recruitingBackground": "Gainesville, Fla. Wildwood \u00b7 Transfer from Southeastern",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "micah-mays-jr",
@@ -3358,7 +3436,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "Developmental wr with special-teams and depth-chart climb potential.",
     "eligibilityYearsRemaining": 2,
     "transferStatus": "Portal transfer",
@@ -3367,10 +3445,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "West Palm Beach, Fla. The Benjamin School · Transfer from Wake Forest",
+    "nilValuation": 71500,
+    "recruitingBackground": "West Palm Beach, Fla. The Benjamin School \u00b7 Transfer from Wake Forest",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "evan-jackson",
@@ -3411,10 +3491,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ilb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Fort Lauderdale, Fla. Seminole Ridge · Transfer from Keiser",
+    "nilValuation": 38000,
+    "recruitingBackground": "Fort Lauderdale, Fla. Seminole Ridge \u00b7 Transfer from Keiser",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "jaylen-lloyd",
@@ -3446,7 +3528,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "Developmental wr with special-teams and depth-chart climb potential.",
     "eligibilityYearsRemaining": 2,
     "transferStatus": "Portal transfer",
@@ -3455,10 +3537,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Omaha, Neb. Omaha Westside · Transfer from Nebraska / Oklahoma State",
+    "nilValuation": 73000,
+    "recruitingBackground": "Omaha, Neb. Omaha Westside \u00b7 Transfer from Nebraska / Oklahoma State",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "ace-ciongoli",
@@ -3468,7 +3552,7 @@
     "class": "R-Fr.",
     "height": "5-10",
     "weight": "172",
-    "hometown": "Needham, Mass. St. SebastianÃ¢â‚¬â„¢s",
+    "hometown": "Needham, Mass. St. Sebastian\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s",
     "jersey": 82,
     "unit": "offense",
     "transferInfo": "Transfer from Indiana",
@@ -3477,7 +3561,7 @@
     "rating": 73,
     "ratingOverride": null,
     "headshotUrl": null,
-    "bio": "Ace Ciongoli is a R-Fr. WR from Needham, Mass. St. SebastianÃ¢â‚¬â„¢s. Transfer from Indiana. Spring roster profile for the 2026 Gators.",
+    "bio": "Ace Ciongoli is a R-Fr. WR from Needham, Mass. St. Sebastian\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s. Transfer from Indiana. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Indiana - wr on the 2026 spring roster.",
     "injury": "green",
     "depthChartTier": "developmental",
@@ -3490,7 +3574,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "Developmental wr with special-teams and depth-chart climb potential.",
     "eligibilityYearsRemaining": 4,
     "transferStatus": "Portal transfer",
@@ -3499,10 +3583,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Needham, Mass. St. SebastianÃ¢â‚¬â„¢s · Transfer from Indiana",
+    "nilValuation": 33500,
+    "recruitingBackground": "Needham, Mass. St. Sebastian\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s \u00b7 Transfer from Indiana",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "aidan-warner",
@@ -3543,8 +3629,8 @@
     "playerComp": null,
     "developmentProjection": "Developmental qb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Winter Park, Fla. Winter Park · Transfer from Yale",
+    "nilValuation": 172000,
+    "recruitingBackground": "Winter Park, Fla. Winter Park \u00b7 Transfer from Yale",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
     "productionStats": {
@@ -3610,7 +3696,9 @@
       ]
     },
     "cfbdPlayerId": 5155039,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "bailey-stockton",
@@ -3642,7 +3730,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "Developmental wr with special-teams and depth-chart climb potential.",
     "eligibilityYearsRemaining": 2,
     "transferStatus": "Portal transfer",
@@ -3651,10 +3739,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Bogart, Ga. Prince Avenue Christian · Transfer from Georgia Tech",
+    "nilValuation": 69500,
+    "recruitingBackground": "Bogart, Ga. Prince Avenue Christian \u00b7 Transfer from Georgia Tech",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "marquez-daniel",
@@ -3686,7 +3776,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "Developmental wr with special-teams and depth-chart climb potential.",
     "eligibilityYearsRemaining": 4,
     "transferStatus": "High school / standard path",
@@ -3739,7 +3829,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental s with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 18300,
     "recruitingBackground": "Lyons, Ga. Toombs County",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
@@ -3783,7 +3873,9 @@
       ]
     },
     "cfbdPlayerId": 5195292,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "justin-williams",
@@ -3815,7 +3907,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "Developmental wr with special-teams and depth-chart climb potential.",
     "eligibilityYearsRemaining": 4,
     "transferStatus": "High school / standard path",
@@ -3868,7 +3960,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 98500,
     "recruitingBackground": "Loganville, Ga. Grayson",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
@@ -3912,7 +4004,9 @@
       ]
     },
     "cfbdPlayerId": 5221980,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "malik-morris",
@@ -3997,7 +4091,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental s with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 18000,
     "recruitingBackground": "Jacksonville, Fla. Mandarin",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
@@ -4041,7 +4135,9 @@
       ]
     },
     "cfbdPlayerId": 5295812,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "dylan-purter",
@@ -4205,7 +4301,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "Developmental wr with special-teams and depth-chart climb potential.",
     "eligibilityYearsRemaining": 4,
     "transferStatus": "High school / standard path",
@@ -4345,10 +4441,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ls with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Fallston, Md. Fallston · Transfer from Washington",
+    "nilValuation": 3000,
+    "recruitingBackground": "Fallston, Md. Fallston \u00b7 Transfer from Washington",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "miller-fealy",
@@ -4390,7 +4488,7 @@
     "developmentProjection": "Developmental p with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
     "nilValuation": 16500,
-    "recruitingBackground": "Melbourne, Australia Marcellin College · Transfer from Southwestern Oklahoma",
+    "recruitingBackground": "Melbourne, Australia Marcellin College \u00b7 Transfer from Southwestern Oklahoma",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
   },
@@ -4433,10 +4531,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Scranton, Pa. Scranton Prep · Transfer from Penn State / East Carolina",
+    "nilValuation": 155000,
+    "recruitingBackground": "Scranton, Pa. Scranton Prep \u00b7 Transfer from Penn State / East Carolina",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "evan-chieca",
@@ -4477,10 +4577,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental te with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Lindenhurst, N.Y. Lindenhurst · Transfer from New Haven",
+    "nilValuation": 14000,
+    "recruitingBackground": "Lindenhurst, N.Y. Lindenhurst \u00b7 Transfer from New Haven",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "luke-harpring",
@@ -4521,10 +4623,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental te with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Atlanta, Ga. Marist School · Transfer from Georgia Tech",
+    "nilValuation": 32000,
+    "recruitingBackground": "Atlanta, Ga. Marist School \u00b7 Transfer from Georgia Tech",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "dk-kalu",
@@ -4565,10 +4669,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Missouri City, Texas Ridge Point · Transfer from Baylor",
+    "nilValuation": 15800,
+    "recruitingBackground": "Missouri City, Texas Ridge Point \u00b7 Transfer from Baylor",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "alec-clark",
@@ -4609,10 +4715,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental p with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Perth, Australia Howard Scholar Academy · Transfer from Marshall / Tulane",
+    "nilValuation": 5000,
+    "recruitingBackground": "Perth, Australia Howard Scholar Academy \u00b7 Transfer from Marshall / Tulane",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "liam-padron",
@@ -4653,10 +4761,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental k with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "St. Augustine, Fla. Bartram Trail · Transfer from Texas A&M",
+    "nilValuation": 5700,
+    "recruitingBackground": "St. Augustine, Fla. Bartram Trail \u00b7 Transfer from Texas A&M",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "mason-clinton",
@@ -4697,10 +4807,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 16500,
-    "recruitingBackground": "Hattiesburg, Miss. Petal · Transfer from Louisiana / East Mississippi CC / Southern Miss",
+    "nilValuation": 15800,
+    "recruitingBackground": "Hattiesburg, Miss. Petal \u00b7 Transfer from Louisiana / East Mississippi CC / Southern Miss",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "tj-abrams",
@@ -4732,7 +4844,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "Developmental wr with special-teams and depth-chart climb potential.",
     "eligibilityYearsRemaining": 3,
     "transferStatus": "High school / standard path",
@@ -4741,10 +4853,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 337000,
     "recruitingBackground": "Fort Myers, Fla. Dunbar",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "ben-hanks-iii",
@@ -4785,7 +4899,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental cb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 17000,
     "recruitingBackground": "Overtown, Fla. Booker T. Washington",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
@@ -4829,7 +4943,9 @@
       ]
     },
     "cfbdPlayerId": 5295813,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "titus-bullard",
@@ -4870,7 +4986,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental jack with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 24500,
     "recruitingBackground": "Tampa, Fla. Berkeley Prep",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
@@ -4914,7 +5030,9 @@
       ]
     },
     "cfbdPlayerId": 5222235,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "tripp-brown-jr",
@@ -5131,10 +5249,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental cb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 76000,
     "recruitingBackground": "London, England Heathwood Hall Episcopal",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "chancellor-campbell",
@@ -5307,10 +5427,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental qb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 483900,
     "recruitingBackground": "Orlando, Fla. Winter Park",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "dylan-leighton",
@@ -5351,10 +5473,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ilb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 11800,
     "recruitingBackground": "New Port Richey, Fla. J.W. Mitchell",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "jaden-edgecombe",
@@ -5386,7 +5510,7 @@
       "Contested-catch wins vs. longer corners",
       "Physicality as a perimeter blocker"
     ],
-    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack \u2014 slot or boundary.",
     "projection": "Developmental wr with special-teams and depth-chart climb potential.",
     "eligibilityYearsRemaining": 2,
     "transferStatus": "High school / standard path",
@@ -5395,10 +5519,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 44300,
     "recruitingBackground": "Cocoa, Fla. Cocoa",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.693Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.693Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "tyler-chukuyem",
@@ -5483,10 +5609,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ilb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 14500,
     "recruitingBackground": "Gainesville, Fla. Buchholz",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.694Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.694Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "charles-emanuel-iii",
@@ -5527,10 +5655,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental jack with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 22500,
     "recruitingBackground": "Orlando, Fla. Lake Nona",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.694Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.694Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "erich-seager",
@@ -5571,10 +5701,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental jack with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 22300,
     "recruitingBackground": "Lake Butler, Fla. Union County",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.694Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.694Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "gnivre-carr",
@@ -5747,10 +5879,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 20300,
     "recruitingBackground": "Cape Coral, Fla. Mariner",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "brandon-rabasco",
@@ -5791,10 +5925,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental k with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 5600,
     "recruitingBackground": "Hollywood, Fla. South Broward",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "brian-case",
@@ -5835,10 +5971,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 15300,
     "recruitingBackground": "Ponte Vedra Beach, Fla. Ponte Vedra",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "jamari-lyons",
@@ -5879,7 +6017,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 201500,
     "recruitingBackground": "Cocoa, Fla. Viera",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
@@ -5981,7 +6119,9 @@
       ]
     },
     "cfbdPlayerId": 4685452,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "brayden-slade",
@@ -6022,7 +6162,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental s with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 20500,
     "recruitingBackground": "Coconut Creek, Fla. Monarch",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
@@ -6066,7 +6206,9 @@
       ]
     },
     "cfbdPlayerId": 5159669,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "duke-clark",
@@ -6107,7 +6249,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 21800,
     "recruitingBackground": "Tampa, Fla. Plant",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
@@ -6161,7 +6303,9 @@
       ]
     },
     "cfbdPlayerId": 5295815,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "sebastian-scott",
@@ -6202,10 +6346,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 19500,
     "recruitingBackground": "West Palm Beach, Fla. Cardinal Newman",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "amir-jackson",
@@ -6355,10 +6501,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 45500,
     "recruitingBackground": "Rockledge, Fla. Rockledge",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "fletcher-westphal",
@@ -6399,10 +6547,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 87500,
     "recruitingBackground": "Leesburg, Va. Tuscarora",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "roderick-kearney",
@@ -6443,10 +6593,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 125500,
     "recruitingBackground": "Jacksonville, Fla. Orange Park",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "anthony-rubio",
@@ -6487,7 +6639,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 30000,
     "recruitingBackground": "Miami, Fla. Belen Jesuit",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
@@ -6556,7 +6708,9 @@
       ]
     },
     "cfbdPlayerId": 5151893,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "jahari-medlock",
@@ -6597,10 +6751,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 34800,
     "recruitingBackground": "Atlanta, Ga. Charles Drew",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "tj-dice-jr",
@@ -6641,10 +6797,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 14800,
     "recruitingBackground": "College Park, Ga. Langston Hughes",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "caden-jones",
@@ -6685,10 +6843,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 800000,
     "recruitingBackground": "New Orleans, La. De La Salle",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "jalen-wiggins",
@@ -6729,7 +6889,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 190500,
     "recruitingBackground": "Tallahassee, Fla. James Richards",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
@@ -6773,7 +6933,9 @@
       ]
     },
     "cfbdPlayerId": 5141747,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "micah-jones",
@@ -6814,10 +6976,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental te with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 30500,
     "recruitingBackground": "Madison, Miss. Madison Central",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "nicholas-inglis",
@@ -6858,10 +7022,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental p with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 4900,
     "recruitingBackground": "Dallas, Texas Episcopal",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "jason-zandamela",
@@ -6902,10 +7068,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 85000,
     "recruitingBackground": "Clearwater, Fla. Clearwater Academy",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "daniel-pierre-louis",
@@ -6946,10 +7114,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 34300,
     "recruitingBackground": "Royal Palm Beach, Fla. Seminole Ridge",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "mark-faircloth",
@@ -6990,10 +7160,12 @@
     "playerComp": null,
     "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 14800,
     "recruitingBackground": "Quincy, Fla. Florida State University School",
     "profileTier": "uf-premium",
-    "profileEnrichedAt": "2026-06-19T16:32:52.695Z"
+    "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   },
   {
     "slug": "byron-louis",
@@ -7034,7 +7206,7 @@
     "playerComp": null,
     "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
     "injuryHistory": "No significant injury history on file.",
-    "nilValuation": 15000,
+    "nilValuation": 142000,
     "recruitingBackground": "Miramar, Fla. American Heritage",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.695Z",
@@ -7076,6 +7248,8 @@
       ]
     },
     "cfbdPlayerId": 5141565,
-    "updatedAt": "2026-07-13T19:03:46.266Z"
+    "updatedAt": "2026-07-13T19:03:46.266Z",
+    "nilSource": "sideline",
+    "nilSourceLabel": "Sideline model"
   }
 ]

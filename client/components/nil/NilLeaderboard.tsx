@@ -37,10 +37,10 @@ export function NilLeaderboard({ marketBoard }: Props): React.ReactElement {
     <section className="nil-elite-section" data-testid="nil-leaderboard">
       <header className="nil-elite-section__head">
         <div>
-          <h2 className="nil-elite-section__title">NIL Market Board</h2>
+          <h2 className="nil-elite-section__title">Recruiting NIL board</h2>
           <p className="nil-elite-section__sub">
-            Proven recruiting board signals — stars, national rank, UF % when confirmed. On3 NIL dollars
-            only appear when publicly reported.
+            Player dollars show On3 when public; otherwise a Vault recruiting-band estimate. Never
+            unlabeled.
           </p>
         </div>
       </header>

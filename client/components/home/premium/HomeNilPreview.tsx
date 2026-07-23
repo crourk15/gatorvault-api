@@ -19,35 +19,34 @@ export function HomeNilPreview({ data, loading }: Props): React.ReactElement {
     );
   }
 
-  const commits = data?.commits != null ? String(data.commits) : data?.estPool ?? '—';
-  const blueChip =
-    data?.blueChipPct != null ? `${data.blueChipPct}%` : data?.movementLabel ?? '—';
-  const collective = data?.collective || data?.topEarner || 'Florida Victorious';
-  const note = data?.topEarnerNote ?? 'Open NIL Tracker for the full board';
+  const pool = data?.estPool ?? '—';
+  const movement = data?.movementLabel ?? '—';
+  const top = data?.topEarner || data?.collective || 'Florida Victorious';
+  const note = data?.topEarnerNote ?? 'Open NIL Tracker for full valuations';
 
   return (
     <div className="uf-premium-grid uf-premium-grid--3" data-testid="home-nil-preview">
       <article className="uf-premium-card">
-        <h3 className="uf-premium-card__title">UF commits</h3>
+        <h3 className="uf-premium-card__title">UF pool est.</h3>
         <div className="uf-premium-metric">
-          <span className="uf-premium-metric__label">Class on board</span>
-          <span className="uf-premium-metric__value">{commits}</span>
+          <span className="uf-premium-metric__label">Annual NIL pool</span>
+          <span className="uf-premium-metric__value">{pool}</span>
         </div>
-        <p className="uf-premium-card__body">{data?.movementDelta ?? 'Live recruiting board'}</p>
+        <p className="uf-premium-card__body">{data?.movementDelta ?? 'Public reporting estimate'}</p>
       </article>
 
       <article className="uf-premium-card">
-        <h3 className="uf-premium-card__title">Blue-chip share</h3>
+        <h3 className="uf-premium-card__title">Market pulse</h3>
         <div className="uf-premium-metric">
-          <span className="uf-premium-metric__label">4★+ commits</span>
-          <span className="uf-premium-metric__value">{blueChip}</span>
+          <span className="uf-premium-metric__label">Deal / board signal</span>
+          <span className="uf-premium-metric__value">{movement}</span>
         </div>
       </article>
 
       <article className="uf-premium-card">
-        <h3 className="uf-premium-card__title">Collective</h3>
+        <h3 className="uf-premium-card__title">Top roster est.</h3>
         <p className="uf-premium-card__body">
-          <strong>{collective}</strong>
+          <strong>{top}</strong>
           <br />
           {note}
         </p>

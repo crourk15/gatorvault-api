@@ -610,16 +610,29 @@ export async function fetchHomeNilPulse(force = false): Promise<HomeNilPulse> {
   const { fetchNilEliteBundle } = await import('@/lib/nil-elite-api');
   const elite = await fetchNilEliteBundle().catch(() => null);
   if (elite?.pulse) {
+    const top = elite.rosterEarners?.[0];
     const pulse: HomeNilPulse = {
-      secRank: elite.editorial?.uf?.secRank ?? 0,
-      estPool: `${elite.pulse.commits} commits`,
-      movementLabel: elite.pulse.blueChipPct != null ? `${elite.pulse.blueChipPct}% blue-chip` : 'Board live',
-      movementDelta: elite.pulse.avgRating != null ? `Avg ${elite.pulse.avgRating}` : '—',
-      topEarner: elite.hero.collective || 'Florida Victorious',
-      topEarnerNote: `${elite.pulse.activeTargets} active UF targets · ${elite.pulse.portalArrivals} portal arrivals`,
+      secRank: elite.money?.secRank ?? elite.editorial?.uf?.secRank ?? 0,
+      estPool: elite.money?.poolLabel || elite.hero.poolLabel || '—',
+      movementLabel:
+        elite.money?.avgDealK != null
+          ? `Avg deal $${elite.money.avgDealK}K`
+          : elite.pulse.blueChipPct != null
+            ? `${elite.pulse.blueChipPct}% blue-chip`
+            : 'Board live',
+      movementDelta:
+        elite.money?.topDealM != null
+          ? `Top deal $${elite.money.topDealM}M`
+          : elite.pulse.avgRating != null
+            ? `Avg ${elite.pulse.avgRating}`
+            : '—',
+      topEarner: top ? `${top.name} · ${top.nilValuation}` : elite.hero.collective || 'Florida Victorious',
+      topEarnerNote: top
+        ? 'Vault roster estimate · open NIL Tracker'
+        : `${elite.pulse.activeTargets} active UF targets · ${elite.pulse.portalArrivals} portal arrivals`,
       commits: elite.pulse.commits,
       blueChipPct: elite.pulse.blueChipPct,
-      collective: elite.hero.collective,
+      collective: elite.money?.collective || elite.hero.collective,
     };
     return writeCache(memoryCache.nil, pulse);
   }
