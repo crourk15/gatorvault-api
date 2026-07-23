@@ -11,23 +11,29 @@ export function DepthChartGrid({ positions }: Props): React.ReactElement {
   return (
     <div className="gv-team-dc-grid">
       {positions.map((pos) => (
-        <article key={pos.id} className="gv-team-dc-card">
+        <article
+          key={pos.id}
+          className={`gv-team-dc-card gv-team-dc-card--${pos.status.toLowerCase()}`}
+        >
           <div className="gv-team-dc-card__head">
             <h3 className="gv-team-dc-card__pos">{pos.label}</h3>
             <span className={`gv-team-dc-status gv-team-dc-status--${pos.status}`}>{pos.status}</span>
           </div>
-          {pos.players.map((player, i) => (
-            <p key={`${player.name}-${i}`} className="gv-team-dc-player">
-              <strong>{player.name}</strong>
-              {player.classYear ? ` · ${player.classYear}` : ''}
-              {player.notes ? ` (${player.notes})` : ''}
-            </p>
-          ))}
-          {pos.analysis && (
-            <p className="gv-team-dc-player" style={{ marginTop: '0.65rem', fontStyle: 'italic' }}>
-              {pos.analysis}
-            </p>
-          )}
+          <ol className="gv-team-dc-depth">
+            {pos.players.map((player, i) => {
+              const meta = [player.classYear, player.notes].filter(Boolean).join(' · ');
+              return (
+                <li key={`${player.name}-${i}`} className="gv-team-dc-depth-row">
+                  <span className="gv-team-dc-depth-rank" aria-label={`Depth ${i + 1}`}>
+                    {i + 1}
+                  </span>
+                  <span className="gv-team-dc-depth-name">{player.name}</span>
+                  {meta ? <span className="gv-team-dc-depth-meta">{meta}</span> : null}
+                </li>
+              );
+            })}
+          </ol>
+          {pos.analysis ? <p className="gv-team-dc-analysis">{pos.analysis}</p> : null}
         </article>
       ))}
     </div>

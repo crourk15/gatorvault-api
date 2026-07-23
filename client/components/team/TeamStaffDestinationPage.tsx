@@ -51,16 +51,15 @@ export function TeamStaffDestinationPage(): React.ReactElement {
 
   return (
     <TeamElitePageShell testId="vault-team-staff">
-      <section className="team-dest-hero team-premium-bleed" aria-labelledby="team-staff-hero-title">
+      <section className="team-dest-hero team-dest-hero--staff team-premium-bleed" aria-labelledby="team-staff-hero-title">
         <div className="rh-frame team-dest-hero__inner">
           <p className="team-dest-hero__kicker">GatorVault · Team</p>
           <h1 id="team-staff-hero-title" className="team-dest-hero__title">
             Coaching Staff
           </h1>
           <p className="team-dest-hero__sub">
-            Sumrall&apos;s room — coordinators, position coaches, and the full Florida staff card.
+            Sumrall&apos;s room — {coachingCount || '—'} coaches on the Florida card.
           </p>
-          <p className="team-dest-hero__meta">{coachingCount || '—'} coaches on the card</p>
         </div>
       </section>
 

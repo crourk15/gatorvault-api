@@ -6,24 +6,30 @@ import Link from 'next/link';
 const DESTINATIONS = [
   {
     href: '/vault/team/staff/',
-    mark: 'S',
-    title: 'Coaching Staff',
-    copy: "Sumrall's room — coordinators, position coaches, and the full Florida staff card.",
-    cta: 'Open staff',
+    room: '01',
+    watermark: 'STAFF',
+    kicker: 'Coaching room',
+    title: 'Staff',
+    copy: "Sumrall's coordinators and position coaches — the full Florida card.",
+    cta: 'Enter staff',
   },
   {
     href: '/vault/team/identity/',
-    mark: 'I',
-    title: 'Team Identity',
-    copy: 'Swamp DNA — culture pillars, traditions, and what Florida football means.',
-    cta: 'Open identity',
+    room: '02',
+    watermark: 'SWAMP',
+    kicker: 'Swamp DNA',
+    title: 'Identity',
+    copy: 'Culture pillars, traditions, and the 2026 Florida standard.',
+    cta: 'Enter identity',
   },
   {
     href: '/vault/team/history/',
-    mark: 'H',
-    title: 'Program History',
-    copy: 'Dynasty eras, championships, Heisman winners, and the program ledger.',
-    cta: 'Open history',
+    room: '03',
+    watermark: 'LEGACY',
+    kicker: 'Program ledger',
+    title: 'History',
+    copy: 'Titles, Heismans, and the eras that built Gator Nation.',
+    cta: 'Enter history',
   },
 ] as const;
 
@@ -31,23 +37,23 @@ export function TeamDestinationGrid(): React.ReactElement {
   return (
     <section className="team-dest-grid" aria-label="Team destinations">
       <div className="team-dest-grid__head">
-        <p className="team-dest-grid__kicker">Explore</p>
+        <p className="team-dest-grid__kicker">Gator rooms</p>
         <h2 className="team-dest-grid__title">Staff · Identity · History</h2>
         <p className="team-dest-grid__sub">
-          Deeper rooms off the hub — Depth, Roster, and Pipeline stay here for game-week work.
+          Leave Depth, Roster, and Pipeline on the hub — open the deeper Florida rooms from here.
         </p>
       </div>
       <div className="team-dest-grid__cards">
         {DESTINATIONS.map((d) => (
           <Link key={d.href} href={d.href} className="team-dest-card">
-            <span className="team-dest-card__icon" aria-hidden>
-              {d.mark}
+            <span className="team-dest-card__watermark" aria-hidden="true">
+              {d.watermark}
             </span>
-            <div className="team-dest-card__body">
-              <h3 className="team-dest-card__title">{d.title}</h3>
-              <p className="team-dest-card__copy">{d.copy}</p>
-              <span className="team-dest-card__cta">{d.cta} →</span>
-            </div>
+            <span className="team-dest-card__room">{d.room}</span>
+            <p className="team-dest-card__kicker">{d.kicker}</p>
+            <h3 className="team-dest-card__title">{d.title}</h3>
+            <p className="team-dest-card__copy">{d.copy}</p>
+            <span className="team-dest-card__cta">{d.cta}</span>
           </Link>
         ))}
       </div>

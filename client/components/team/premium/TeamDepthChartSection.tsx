@@ -26,15 +26,25 @@ export function TeamDepthChartSection({
       <TeamPremiumModule
         title={TEAM_COPY.depthChart.title}
         subtitle={TEAM_COPY.depthChart.subtitle}
+        className="team-dc-module"
       >
         {loading ? (
           <TeamDepthChartSkeleton />
         ) : (
           <>
-            <div className="gv-team-dc-legend team-premium-dc-legend">
-              <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--locked">Locked</span>
-              <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--battle">Battle</span>
-              <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--watch">Watch</span>
+            <div className="gv-team-dc-legend" aria-label="Depth status key">
+              <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--locked">
+                <i aria-hidden="true" />
+                Locked
+              </span>
+              <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--battle">
+                <i aria-hidden="true" />
+                Battle
+              </span>
+              <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--watch">
+                <i aria-hidden="true" />
+                Watch
+              </span>
             </div>
             <DepthChartTabs active={dcTab} onChange={onTabChange} />
             <DepthChartGrid positions={positions} />
