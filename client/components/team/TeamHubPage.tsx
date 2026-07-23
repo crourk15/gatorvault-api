@@ -10,20 +10,16 @@ import {
 import { fetchRecruitingBoard } from '@/lib/recruiting-board-api';
 import { fetchFutureCastMasterBoard } from '@/lib/futurecast-board-api';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
-import type { Coach, DepthChartTab, Era } from '@/lib/team-hub-types';
+import type { DepthChartTab } from '@/lib/team-hub-types';
 import type { RosterFilter } from '@/lib/team-hub-data';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
-import { lockBodyScroll } from '@/lib/body-scroll-lock';
-import { CoachingStaffModal, EraDetailModal } from '@/components/team/CoachingStaffModal';
 import { TeamElitePageShell } from '@/components/team/premium/TeamElitePageShell';
 import { TeamPremiumHero } from '@/components/team/premium/TeamPremiumHero';
 import { TeamPremiumSubNav } from '@/components/team/premium/TeamPremiumSubNav';
 import { TeamRosterSection } from '@/components/team/premium/TeamRosterSection';
 import { TeamDepthChartSection } from '@/components/team/premium/TeamDepthChartSection';
-import { StaffCardGrid } from '@/components/team/premium/StaffCardGrid';
-import { TeamIdentityPremiumSection } from '@/components/team/premium/TeamIdentityPremiumSection';
-import { ProgramHistoryGrid } from '@/components/team/premium/ProgramHistoryGrid';
 import { TeamRecruitingPipelineSection } from '@/components/team/premium/TeamRecruitingPipelineSection';
+import { TeamDestinationGrid } from '@/components/team/TeamDestinationGrid';
 import { buildPipelinePreview, computeHeroPulse } from '@/components/team/premium/team-premium-metrics';
 import { TEAM_PREMIUM_TABS, type TeamPremiumTabId } from '@/components/team/premium/team-premium-types';
 
@@ -31,6 +27,12 @@ const SEED_BUNDLE: TeamHubBundle = buildSeedTeamHubBundle();
 
 const SECTION_IDS = TEAM_PREMIUM_TABS.map((t) => t.id);
 const DEFAULT_TAB: TeamPremiumTabId = 'depth-chart';
+
+const HASH_DESTINATIONS: Record<string, string> = {
+  'coaching-staff': '/vault/team/staff/',
+  'team-identity': '/vault/team/identity/',
+  'program-history': '/vault/team/history/',
+};
 
 function tabFromHash(): TeamPremiumTabId {
   if (typeof window === 'undefined') return DEFAULT_TAB;
@@ -47,8 +49,6 @@ export function TeamHubPage(): React.ReactElement {
   const [pipelineLoading, setPipelineLoading] = useState(true);
   const [rosterFilter, setRosterFilter] = useState<RosterFilter>('All');
   const [dcTab, setDcTab] = useState<DepthChartTab>('offense');
-  const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
-  const [selectedEra, setSelectedEra] = useState<Era | null>(null);
   const [activeTab, setActiveTab] = useState<TeamPremiumTabId>(DEFAULT_TAB);
   const [pipelinePreview, setPipelinePreview] = useState(() => buildPipelinePreview(null, null));
 
@@ -64,7 +64,6 @@ export function TeamHubPage(): React.ReactElement {
     async (isInitial: boolean) => {
       const hadCache = isInitial && readCachedTeamHubBundle() != null;
       if (isInitial) {
-        // Seed/cache already paints roster + depth — only pipeline waits.
         setPipelineLoading(true);
         if (!hadCache && SEED_BUNDLE.roster.length === 0) {
           setLoading(true);
@@ -106,12 +105,6 @@ export function TeamHubPage(): React.ReactElement {
     return () => window.removeEventListener('pagehide', persist);
   }, [rosterFilter]);
 
-  useEffect(() => {
-    const open = Boolean(selectedCoach || selectedEra);
-    if (!open) return;
-    return lockBodyScroll();
-  }, [selectedCoach, selectedEra]);
-
   const scrollToSection = useCallback((tab: TeamPremiumTabId) => {
     setActiveTab(tab);
     window.history.replaceState(null, '', `#${tab}`);
@@ -122,13 +115,26 @@ export function TeamHubPage(): React.ReactElement {
   }, []);
 
   useEffect(() => {
+    const rawHash = typeof window !== 'undefined' ? window.location.hash.replace('#', '') : '';
+    if (rawHash && HASH_DESTINATIONS[rawHash]) {
+      window.location.replace(HASH_DESTINATIONS[rawHash]);
+      return;
+    }
+
     const initial = tabFromHash();
     setActiveTab(initial);
     if (initial !== DEFAULT_TAB) {
       requestAnimationFrame(() => scrollToSection(initial));
     }
 
-    const onHash = () => setActiveTab(tabFromHash());
+    const onHash = () => {
+      const next = window.location.hash.replace('#', '');
+      if (HASH_DESTINATIONS[next]) {
+        window.location.replace(HASH_DESTINATIONS[next]);
+        return;
+      }
+      setActiveTab(tabFromHash());
+    };
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, [scrollToSection]);
@@ -167,8 +173,6 @@ export function TeamHubPage(): React.ReactElement {
       bundle.depthChart.specialTeams.length >
     0;
   const rosterLoading = loading && bundle.roster.length === 0;
-  const staffLoading = loading && bundle.coaches.length === 0;
-  // Depth chart is static — never block first paint behind roster/API warm.
   const depthLoading = !hasDepthChart;
   const heroLoading = loading && !hasDepthChart && bundle.roster.length === 0;
 
@@ -192,14 +196,9 @@ export function TeamHubPage(): React.ReactElement {
           loading={rosterLoading}
           warming={warming}
         />
-        <StaffCardGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} loading={staffLoading} />
-        <TeamIdentityPremiumSection />
-        <ProgramHistoryGrid eras={bundle.eras} onSelectEra={setSelectedEra} />
         <TeamRecruitingPipelineSection data={pipelinePreview} loading={pipelineLoading} />
+        <TeamDestinationGrid />
       </div>
-
-      <CoachingStaffModal coach={selectedCoach} onClose={() => setSelectedCoach(null)} />
-      <EraDetailModal era={selectedEra} onClose={() => setSelectedEra(null)} />
     </TeamElitePageShell>
   );
 }

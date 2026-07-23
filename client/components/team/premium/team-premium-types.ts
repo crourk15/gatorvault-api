@@ -1,25 +1,16 @@
 /** UF Premium Team Page — tab ids, metrics, shared types */
 
-export type TeamPremiumTabId =
-  | 'depth-chart'
-  | 'roster'
-  | 'coaching-staff'
-  | 'team-identity'
-  | 'program-history'
-  | 'recruiting-pipeline';
+export type TeamPremiumTabId = 'depth-chart' | 'roster' | 'recruiting-pipeline';
 
 export type TeamPremiumTab = {
   id: TeamPremiumTabId;
   label: string;
 };
 
-/** Fan-first order: depth chart is the main event. */
+/** Fan-first hub: depth, roster, pipeline. Staff / Identity / History are destinations. */
 export const TEAM_PREMIUM_TABS: TeamPremiumTab[] = [
   { id: 'depth-chart', label: 'Depth Chart' },
   { id: 'roster', label: 'Roster' },
-  { id: 'coaching-staff', label: 'Coaching Staff' },
-  { id: 'team-identity', label: 'Team Identity' },
-  { id: 'program-history', label: 'Program History' },
   { id: 'recruiting-pipeline', label: 'Recruiting Pipeline' },
 ];
 

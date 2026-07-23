@@ -20,7 +20,7 @@ export function TeamElitePageShell({ children, testId = 'vault-team' }: Props): 
         <header className="rh-elite-mobile-header" aria-label="Team page" data-testid="team-mobile-header">
           <p className="rh-elite-mobile-header__eyebrow">GatorVault Insider</p>
           <h1 className="rh-elite-mobile-header__title">Florida Football</h1>
-          <p className="rh-elite-mobile-header__sub">Depth chart, roster, and staff.</p>
+          <p className="rh-elite-mobile-header__sub">Depth chart, roster, and pipeline.</p>
         </header>
       ) : null}
       {children}

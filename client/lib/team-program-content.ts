@@ -1,0 +1,649 @@
+/** Program History + Identity content ported from legacy team hub (gv-team-mobile). */
+
+export type ProgramEraPlayer = { name: string; role: string };
+
+export type ProgramEraDetail = {
+  id: string;
+  label: string;
+  title: string;
+  summary: string;
+  coaching: string[];
+  milestones: string[];
+  schemes: string[];
+  recruiting: string[];
+  culture: string[];
+  winners: string[];
+  players: ProgramEraPlayer[];
+  games: string[];
+  highlights: string[];
+  achievements: string[];
+};
+
+export type ProgramAchievementDetail = {
+  id: string;
+  icon: string;
+  stat: string;
+  label: string;
+  kicker: string;
+  years: string[];
+  note: string;
+  highlights: string[];
+  winners: string[];
+};
+
+export type TeamIdentityDetail = {
+  id: string;
+  title: string;
+  kicker: string;
+  summary: string;
+  body: string;
+  highlights: string[];
+  pillars: string[];
+};
+
+export const PROGRAM_ERAS: ProgramEraDetail[] = [
+  {
+    "id": "era-70s80s",
+    "label": "1970–1989",
+    "title": "Building The Swamp Standard",
+    "summary": "Doug Dickey and Charley Pell transformed Florida from a regional program into an SEC contender. The Swamp opened in 1990, but the cultural and recruiting foundation was laid across two decades of rising expectations, elite talent acquisition, and bowl-era credibility.",
+    "coaching": [
+      "1970–1978 · Doug Dickey — modernized recruiting and facilities",
+      "1979–1984 · Charley Pell — SEC competitiveness and bowl momentum",
+      "1984–1989 · Galen Hall / transition years — Emmitt Smith era peak"
+    ],
+    "milestones": [
+      "1976 · First bowl win under Dickey",
+      "1980 · 8–4 season — SEC relevance signal",
+      "1983 · 9–2–1 — top-10 finish and Citrus Bowl win",
+      "1987–89 · Emmitt Smith rushes into national spotlight"
+    ],
+    "schemes": [
+      "Pro-style power run game under Dickey",
+      "Pell-era I-formation and balanced attack",
+      "Evolution toward speed-in-space before the spread revolution"
+    ],
+    "recruiting": [
+      "In-state Florida pipeline established as priority",
+      "National reach into Georgia and the Carolinas",
+      "Facilities arms race begins — precursor to The Swamp mystique"
+    ],
+    "culture": [
+      "Orange & Blue identity sharpened across the SEC",
+      "Home-field intimidation culture seeded pre-Swamp",
+      "Expectation shift: Florida expects to win, not just compete"
+    ],
+    "winners": [
+      "Emmitt Smith — all-time rushing legend",
+      "Wilber Marshall — defensive tone-setter",
+      "Kerwin Bell — record-setting passer"
+    ],
+    "players": [
+      {
+        "name": "Emmitt Smith",
+        "role": "RB · All-American, NFL record-setter"
+      },
+      {
+        "name": "Wilber Marshall",
+        "role": "LB · Butkus Award winner"
+      },
+      {
+        "name": "Kerwin Bell",
+        "role": "QB · SEC passing pioneer"
+      },
+      {
+        "name": "Cris Collinsworth",
+        "role": "WR · All-SEC star"
+      }
+    ],
+    "games": [
+      "1980 vs LSU — Pell-era breakthrough",
+      "1983 vs Miami — program-defining rivalry win",
+      "1987 vs FSU — Emmitt's Heisman campaign peak",
+      "1989 vs Washington (Freedom Bowl) — closing the decade strong"
+    ],
+    "highlights": [
+      "First sustained SEC winning culture",
+      "Emmitt Smith Heisman runner-up momentum (1989)",
+      "Defensive identity with Wilber Marshall",
+      "Foundation for 1990s national title window"
+    ],
+    "achievements": [
+      "Multiple top-10 finishes",
+      "Bowl streak established",
+      "All-American pipeline at RB and LB"
+    ]
+  },
+  {
+    "id": "era-90s",
+    "label": "1990–2001",
+    "title": "The Steve Spurrier Era",
+    "summary": "Steve Spurrier returned to Gainesville and revolutionized college football with the Fun & Gun offense. Florida won its first national championship in 1996, claimed four SEC titles in six years, and established the modern Gator standard: score fast, recruit elite quarterbacks, and dominate the SEC East.",
+    "coaching": [
+      "1990–2001 · Steve Spurrier — HC/OC, Fun & Gun architect",
+      "Bob Stoops (1995–98) — defensive renaissance before Oklahoma",
+      "Ron Zook — DC during 1996 title run"
+    ],
+    "milestones": [
+      "1991 · First SEC Championship in program history",
+      "1996 · First consensus national championship",
+      "1996 · Danny Wuerffel Heisman Trophy",
+      "2000 · Spurrier's final SEC title before NFL departure"
+    ],
+    "schemes": [
+      "Fun & Gun — wide-open passing attack",
+      "No-huddle tempo and vertical shot concepts",
+      "Spread principles a decade before the spread era label"
+    ],
+    "recruiting": [
+      "Elite QB pipeline: Wuerffel, Grossman, Brantley era seeds",
+      "Florida-first speed — WR/RB skill talent as identity",
+      "National championship recruiting cycles 1991–1996"
+    ],
+    "culture": [
+      "Scoreboard pressure — 50-point games normalized",
+      "The Swamp as loudest venue in college football",
+      "Confidence, flair, and offensive arrogance as brand"
+    ],
+    "winners": [
+      "Danny Wuerffel — 1996 Heisman & national champion",
+      "Fred Taylor — explosive run game complement",
+      "Jevon Kearse — \"The Freak\" pass rusher"
+    ],
+    "players": [
+      {
+        "name": "Danny Wuerffel",
+        "role": "QB · 1996 Heisman"
+      },
+      {
+        "name": "Fred Taylor",
+        "role": "RB · 1,000-yard seasons"
+      },
+      {
+        "name": "Jevon Kearse",
+        "role": "DE · First-round talent"
+      },
+      {
+        "name": "Ike Hilliard",
+        "role": "WR · Biletnikoff finalist"
+      }
+    ],
+    "games": [
+      "1994 vs FSU — \"Choke at Doak\" / \"Fifth Quarter\"",
+      "1996 vs FSU — national title path secured",
+      "1997 vs FSU — Wuerffel Heisman season finale",
+      "2001 vs Maryland — Orange Bowl, Spurrier's last game"
+    ],
+    "highlights": [
+      "1996 National Championship",
+      "Four SEC titles (1991, 1993, 1994, 1995, 1996, 2000)",
+      "Fun & Gun legacy across college football",
+      "First sustained SEC East dynasty"
+    ],
+    "achievements": [
+      "1996 National Championship",
+      "Heisman: Danny Wuerffel (1996)",
+      "Six SEC Championship Game appearances"
+    ]
+  },
+  {
+    "id": "era-2000s",
+    "label": "2002–2009",
+    "title": "Zook Transition & Meyer Dynasty",
+    "summary": "Ron Zook bridged the Spurrier exit before Urban Meyer arrived in 2005 and built a two-time national champion. The spread-option with Tim Tebow, Percy Harvin, and elite defenses redefined Florida's second golden age.",
+    "coaching": [
+      "2002–2004 · Ron Zook — stabilizing transition",
+      "2005–2009 · Urban Meyer — spread-option dynasty",
+      "Dan Mullen — OC during Tebow era (2005–08)"
+    ],
+    "milestones": [
+      "2006 · Second national championship (BCS)",
+      "2008 · Third national championship",
+      "2007 · Tim Tebow Heisman Trophy",
+      "2009 · Meyer's final season — 12–1, Sugar Bowl"
+    ],
+    "schemes": [
+      "Spread-option with Tebow as dual-threat engine",
+      "Percy Harvin jet sweeps and mismatch packages",
+      "Elite defensive lines — Jarvis Moss, Carlos Dunlap era"
+    ],
+    "recruiting": [
+      "Top-5 national classes 2006–2008",
+      "Florida speed at WR/RB/DB as roster identity",
+      "In-state dominance: Miami, Tampa, Jacksonville pipelines"
+    ],
+    "culture": [
+      "\"Row the Boat\" mentality under Meyer",
+      "Championship-or-bust expectations restored",
+      "The Swamp night games as national events"
+    ],
+    "winners": [
+      "Tim Tebow — 2007 Heisman, two-time champion",
+      "Percy Harvin — mismatch weapon",
+      "Brandon Spikes — defensive leader"
+    ],
+    "players": [
+      {
+        "name": "Tim Tebow",
+        "role": "QB · 2007 Heisman"
+      },
+      {
+        "name": "Percy Harvin",
+        "role": "WR · All-American"
+      },
+      {
+        "name": "Brandon Spikes",
+        "role": "LB · Two-time All-American"
+      },
+      {
+        "name": "Joe Haden",
+        "role": "CB · First-round NFL talent"
+      }
+    ],
+    "games": [
+      "2006 vs Ohio State — BCS National Championship",
+      "2008 vs Oklahoma — Tebow's second ring",
+      "2008 vs Alabama — SEC Championship classic",
+      "2009 vs FSU — Meyer's Swamp finale"
+    ],
+    "highlights": [
+      "2006 & 2008 National Championships",
+      "Spread-option evolution with Tebow",
+      "SEC Championship Game dominance",
+      "Reloaded roster pipeline under Meyer"
+    ],
+    "achievements": [
+      "2006 & 2008 National Championships",
+      "Heisman: Tim Tebow (2007)",
+      "2006 & 2008 SEC Championships"
+    ]
+  },
+  {
+    "id": "era-2010s",
+    "label": "2010–2019",
+    "title": "SEC East Dominance & Transition",
+    "summary": "Will Muschamp, Jim McElwain, and Dan Mullen each left marks across a turbulent but talent-rich decade. Elite defenses, Kyle Pitts' TE revolution, and SEC East titles kept Florida in national conversation despite coaching turnover.",
+    "coaching": [
+      "2011–2014 · Will Muschamp — defensive identity first",
+      "2015–2017 · Jim McElwain — SEC East titles",
+      "2018–2019 · Dan Mullen — offensive resurgence with Trask/Emory"
+    ],
+    "milestones": [
+      "2012 · Sugar Bowl appearance under Muschamp",
+      "2015–2016 · Back-to-back SEC East titles (McElwain)",
+      "2019 · Kyle Pitts breakout — TE1 legacy begins",
+      "2019 · 11-win season under Mullen"
+    ],
+    "schemes": [
+      "Muschamp 3-4 / aggressive defensive fronts",
+      "Mullen spread-RPO with Feleipe Franks → Kyle Trask arc",
+      "TE11 and 12 personnel revolution with Kyle Pitts"
+    ],
+    "recruiting": [
+      "Defensive line and CB pipeline peaks (2010–2013)",
+      "Mullen-era offensive skill reload (2018–2019)",
+      "Transfer portal seeds before portal era label"
+    ],
+    "culture": [
+      "Defensive toughness under Muschamp",
+      "SEC East crown expectations under McElwain",
+      "Offensive excitement restored under Mullen"
+    ],
+    "winners": [
+      "Kyle Pitts — generational TE",
+      "Vernon Hargreaves III — lockdown CB",
+      "Marco Wilson — All-SEC corner"
+    ],
+    "players": [
+      {
+        "name": "Kyle Pitts",
+        "role": "TE · TE1, top-5 draft pick"
+      },
+      {
+        "name": "Vernon Hargreaves III",
+        "role": "CB · First-round talent"
+      },
+      {
+        "name": "Kyle Trask",
+        "role": "QB · 2020 Heisman finalist (built in 2019)"
+      },
+      {
+        "name": "Marco Wilson",
+        "role": "CB · All-SEC"
+      }
+    ],
+    "games": [
+      "2012 vs LSU — Driskel-led peak",
+      "2015 vs Alabama — SEC Championship",
+      "2019 vs Auburn — Trask emergence (4 TD)",
+      "2019 vs Virginia — Orange Bowl"
+    ],
+    "highlights": [
+      "Multiple SEC East titles",
+      "Elite defensive recruiting classes",
+      "Kyle Pitts TE1 revolution",
+      "11-win 2019 season under Mullen"
+    ],
+    "achievements": [
+      "2015 & 2016 SEC East Championships",
+      "Kyle Pitts unanimous All-American (2020)",
+      "Top-10 finishes under Mullen"
+    ]
+  },
+  {
+    "id": "era-2020s",
+    "label": "2020–Present",
+    "title": "Portal Era & Sumrall Reset",
+    "summary": "Dan Mullen's peak gave way to Billy Napier's rebuild and Jon Sumrall's 2026 culture-first reset. The portal, NIL, and the 3-3-5 defensive identity under Brad White define modern Florida — a roster rebuilt for SEC contention with conflict players on offense and hybrid defenders on defense.",
+    "coaching": [
+      "2020–2021 · Dan Mullen — Trask Heisman finalist era",
+      "2022–2025 · Billy Napier — rebuild and development",
+      "2026–present · Jon Sumrall — culture-first reset with Tulane staff"
+    ],
+    "milestones": [
+      "2020 · Kyle Trask Heisman finalist, 9-win COVID season",
+      "2023 · Anthony Richardson top-5 NFL draft pick",
+      "2026 · Sumrall hire + portal-powered roster reset",
+      "2026 · Brad White 3-3-5 defensive install"
+    ],
+    "schemes": [
+      "Napier pro-spread RPO foundation",
+      "Sumrall/Faulkner conflict-read offense with vertical shots",
+      "Brad White 3-3-5 odd front — JACK/STAR hybrid roles"
+    ],
+    "recruiting": [
+      "Portal as primary roster construction tool (2024–2026)",
+      "SEC battleground: Georgia, FSU, Miami competition",
+      "2026 portal class: Singleton, Woods, Philo headline additions"
+    ],
+    "culture": [
+      "Culture-first accountability under Sumrall",
+      "Portal-era roster management as new normal",
+      "Return to defensive physicality in 3-3-5"
+    ],
+    "winners": [
+      "Jayden Woods — JACK centerpiece",
+      "Eric Singleton Jr. — WR1 vertical threat",
+      "Anthony Richardson — dual-threat QB prototype"
+    ],
+    "players": [
+      {
+        "name": "Jayden Woods",
+        "role": "JACK · 3-3-5 edge star"
+      },
+      {
+        "name": "Eric Singleton Jr.",
+        "role": "WR · Auburn transfer WR1"
+      },
+      {
+        "name": "Aaron Philo",
+        "role": "QB · Pro-style fit"
+      },
+      {
+        "name": "Anthony Richardson",
+        "role": "QB · 2023 top-5 pick"
+      }
+    ],
+    "games": [
+      "2020 vs Alabama — SEC Championship (Trask era peak)",
+      "2026 vs FAU — Sumrall debut",
+      "2026 Orange & Blue Spring Game — roster reveal",
+      "2026 vs Georgia — Cocktail Party"
+    ],
+    "highlights": [
+      "2026 portal-powered roster reset",
+      "Brad White 3-3-5 install",
+      "Sumrall culture-first standard",
+      "Spring Game 2026 roster preview"
+    ],
+    "achievements": [
+      "Top portal classes 2024–2026",
+      "3-3-5 defensive identity established",
+      "Sumrall staff continuity from Tulane"
+    ]
+  }
+];
+
+export const PROGRAM_ACHIEVEMENTS: ProgramAchievementDetail[] = [
+  {
+    "id": "ach-nc",
+    "icon": "🏆",
+    "stat": "3",
+    "label": "National Championships",
+    "kicker": "Program Achievements",
+    "years": [
+      "1966 · Steve Spurrier Heisman (player era)",
+      "1996 · Danny Wuerffel & Steve Spurrier (HC)",
+      "2006 · Urban Meyer & Chris Leak",
+      "2008 · Urban Meyer & Tim Tebow"
+    ],
+    "note": "Three consensus national championships — 1996, 2006, and 2008 — plus the program's first Heisman as a player (Spurrier, 1966). The standard Gator Nation expects every decade.",
+    "highlights": [
+      "1996: First national title — Fun & Gun peak",
+      "2006–08: Back-to-back title window under Meyer",
+      "CFP-era contention remains the 2020s goal under Sumrall"
+    ],
+    "winners": [
+      "Steve Spurrier (HC & player)",
+      "Urban Meyer",
+      "Tim Tebow"
+    ]
+  },
+  {
+    "id": "ach-sec",
+    "icon": "🥇",
+    "stat": "8",
+    "label": "SEC Championships",
+    "kicker": "Program Achievements",
+    "years": [
+      "1991",
+      "1993",
+      "1994",
+      "1995",
+      "1996",
+      "2000",
+      "2006",
+      "2008"
+    ],
+    "note": "Eight SEC championships — four under Spurrier, two under Meyer, and sustained SEC East crowns across every coaching era since 1991.",
+    "highlights": [
+      "1990s: Spurrier SEC dynasty — four titles in six years",
+      "2000s: Meyer reload titles in 2006 and 2008",
+      "2015–16: McElwain SEC East crowns",
+      "SEC Championship Game regular since 1992"
+    ],
+    "winners": [
+      "Spurrier era — 4 SEC titles",
+      "Meyer era — 2 SEC titles",
+      "McElwain — 2 SEC East titles"
+    ]
+  },
+  {
+    "id": "ach-heisman",
+    "icon": "⭐",
+    "stat": "3",
+    "label": "Heisman Winners",
+    "kicker": "Program Achievements",
+    "years": [
+      "1966 · Steve Spurrier (QB)",
+      "1996 · Danny Wuerffel (QB)",
+      "2007 · Tim Tebow (QB)"
+    ],
+    "note": "Three Heisman Trophy winners — all quarterbacks who defined their eras. Tim Tebow also won the 2008 national championship; Wuerffel won in 1996.",
+    "highlights": [
+      "Spurrier — first UF Heisman as player-coach lineage (1966)",
+      "Wuerffel — title + Heisman same season (1996)",
+      "Tebow — first sophomore Heisman winner (2007)",
+      "Trask — Heisman finalist (2020)"
+    ],
+    "winners": [
+      "Steve Spurrier",
+      "Danny Wuerffel",
+      "Tim Tebow"
+    ]
+  },
+  {
+    "id": "ach-aam",
+    "icon": "🛡️",
+    "stat": "100+",
+    "label": "All-Americans",
+    "kicker": "Program Achievements",
+    "years": [
+      "100+ consensus and first-team selections program-wide",
+      "Notable: Marshall, Emmitt, Wuerffel, Tebow, Pitts, Haden, Spikes"
+    ],
+    "note": "Elite talent pipeline across every era — from Wilber Marshall to Kyle Pitts to Jayden Woods. Florida produces All-Americans on both sides of the ball.",
+    "highlights": [
+      "Defensive All-Americans in every era",
+      "WR/TE/QB production in spread eras",
+      "NFL-caliber depth at CB, EDGE, and TE",
+      "2026 track: Woods, Singleton on watch lists"
+    ],
+    "winners": [
+      "Wilber Marshall",
+      "Kyle Pitts",
+      "Tim Tebow",
+      "Jayden Woods (2026 track)"
+    ]
+  },
+  {
+    "id": "ach-nfl",
+    "icon": "🏈",
+    "stat": "500+",
+    "label": "NFL Draft Picks",
+    "kicker": "Program Achievements",
+    "years": [
+      "500+ all-time NFL draft selections",
+      "2020s: Pitts (#4), Henderson, Richardson (#4), Hines Ward lineage"
+    ],
+    "note": "Consistent NFL production — Florida develops Sunday players at every position group, especially CB, EDGE, TE, and QB.",
+    "highlights": [
+      "First-round pipeline at EDGE and CB",
+      "TE1 development track record (Pitts, Aaron Hernandez era)",
+      "QB factory: Spurrier, Wuerffel, Tebow, Richardson",
+      "Most first-round picks of any SEC program historically"
+    ],
+    "winners": [
+      "Kyle Pitts — TE1 (#4 overall)",
+      "Anthony Richardson — dual-threat QB (#4 overall)",
+      "Joe Haden — CB cornerstone"
+    ]
+  },
+  {
+    "id": "ach-bowl",
+    "icon": "🎖️",
+    "stat": "50+",
+    "label": "Major Bowl Wins",
+    "kicker": "Program Achievements",
+    "years": [
+      "Sugar Bowl",
+      "Orange Bowl",
+      "BCS/CFP appearances",
+      "50+ all-time bowl victories"
+    ],
+    "note": "Postseason success across decades — Florida shows up on the biggest stages with Sugar Bowl, Orange Bowl, and BCS/CFP appearances.",
+    "highlights": [
+      "BCS National Championship Game wins (2006, 2008)",
+      "New Year's Six / major bowl regular",
+      "Bowl streaks in every winning era",
+      "1996 Orange Bowl — first national title clincher"
+    ],
+    "winners": [
+      "Sugar Bowl champions",
+      "Orange Bowl champions",
+      "BCS title game winners"
+    ]
+  },
+  {
+    "id": "ach-streak",
+    "icon": "🔥",
+    "stat": "20",
+    "label": "Win Streak Record",
+    "kicker": "Program Achievements",
+    "years": [
+      "2008–2009 · 20-game win streak (Meyer/Tebow)",
+      "1995–1996 · 17-game win streak (Spurrier/Wuerffel)"
+    ],
+    "note": "Historic win streaks under Meyer (20) and Spurrier (17) rank among the longest in SEC history — proof of sustained dominance, not one-year spikes.",
+    "highlights": [
+      "2008–09: 20 straight — back-to-back title window",
+      "1995–96: 17 straight — first national title run",
+      "The Swamp as streak amplifier"
+    ],
+    "winners": [
+      "Urban Meyer 2008–09",
+      "Steve Spurrier 1995–96"
+    ]
+  },
+  {
+    "id": "ach-rivalry",
+    "icon": "🤝",
+    "stat": "2",
+    "label": "Rivalry Dynasties",
+    "kicker": "Program Achievements",
+    "years": [
+      "Florida vs FSU — annual state championship since 1958",
+      "Florida vs Georgia — Cocktail Party since 1915"
+    ],
+    "note": "Two defining rivalries shape every Gator season. The FSU series and the Georgia Cocktail Party in Jacksonville are program-defining benchmarks.",
+    "highlights": [
+      "FSU: 1990s dominance — 7 straight (1986–93 window)",
+      "Georgia: 1990s Cocktail Party run under Spurrier",
+      "2008: Both rivals beaten en route to title",
+      "The Swamp vs Doak Campbell — state bragging rights"
+    ],
+    "winners": [
+      "1996 FSU win — title path",
+      "2008 Georgia + FSU — championship season",
+      "Cocktail Party all-time series"
+    ]
+  },
+  {
+    "id": "ach-records",
+    "icon": "📊",
+    "stat": "Elite",
+    "label": "Statistical Records",
+    "kicker": "Program Achievements",
+    "years": [
+      "Emmitt Smith — NCAA rushing records (1989)",
+      "Wuerffel — SEC passing TD records (1990s)",
+      "Tebow — NCAA TD responsibility records (2007–08)"
+    ],
+    "note": "Program statistical records span rushing (Emmitt), passing (Wuerffel, Trask), and total offense (Tebow) — proof of scheme diversity across eras.",
+    "highlights": [
+      "Emmitt Smith — 3,928 career rush yards at UF",
+      "Danny Wuerffel — 10,875 career pass yards",
+      "Tim Tebow — 57 total TDs in 2007 (record pace)",
+      "Kyle Pitts — TE receiving records (2020)"
+    ],
+    "winners": [
+      "Emmitt Smith",
+      "Danny Wuerffel",
+      "Tim Tebow",
+      "Kyle Pitts"
+    ]
+  }
+];
+
+export const TEAM_IDENTITY_DETAIL: TeamIdentityDetail = {
+  "id": "identity",
+  "title": "Team Identity",
+  "kicker": "Culture & Traditions",
+  "summary": "Orange and blue. The Swamp. Gator Nation.",
+  "body": "Florida football is built on speed, physicality, and recruiting dominance in the Southeast. The program's brand centers on The Swamp's home-field advantage — one of the loudest venues in college football — the Gator Chomp tradition, and a standard of competing for SEC and national titles every season.\n\nAcross eras, identity has evolved: Spurrier's Fun & Gun arrogance, Meyer's spread-option championship grit, and now Jon Sumrall's culture-first reset with a 3-3-5 defensive backbone and conflict-player offense built for RPO rhythm and vertical shots.\n\nThe 2026 identity: portal-powered roster construction, hybrid defenders in Brad White's 3-3-5, and skill talent that wins one-on-one matchups on the perimeter.",
+  "highlights": [
+    "The Swamp — decibel-level home-field advantage since 1990",
+    "Orange & Blue — iconic SEC brand recognized nationally",
+    "Gator Chomp — universal rally cry across Gator Nation",
+    "3-3-5 defensive identity under Brad White (2026)",
+    "Conflict players on offense — RPO rhythm and vertical shots",
+    "Portal-era roster building under Sumrall"
+  ],
+  "pillars": [
+    "Speed and physicality in the SEC trenches",
+    "Recruiting dominance in Florida, Georgia, and the Southeast",
+    "Culture-first leadership under Jon Sumrall",
+    "Hybrid defense — JACK/STAR roles in the 3-3-5",
+    "Championship standard — three national titles, eight SEC crowns"
+  ]
+};

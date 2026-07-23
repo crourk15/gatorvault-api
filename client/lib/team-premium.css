@@ -1149,3 +1149,381 @@
     background-position: -100% 0;
   }
 }
+
+/* ── Team destination hub cards + destination pages ── */
+.team-premium-page .team-dest-grid {
+  margin: var(--gv-space-6, 24px) 0 var(--gv-space-8, 32px);
+}
+
+.team-premium-page .team-dest-grid__head {
+  margin-bottom: var(--gv-space-4, 16px);
+}
+
+.team-premium-page .team-dest-grid__kicker,
+.team-premium-page .team-dest-page__kicker,
+.team-premium-page .team-dest-hero__kicker {
+  margin: 0 0 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--team-gator-orange);
+}
+
+.team-premium-page .team-dest-grid__title {
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.team-premium-page .team-dest-grid__sub,
+.team-premium-page .team-dest-page__lede {
+  margin: 0;
+  max-width: 40rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.team-premium-page .team-dest-grid__cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gv-space-3, 12px);
+}
+
+@media (min-width: 768px) {
+  .team-premium-page .team-dest-grid__cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.team-premium-page .team-dest-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(145deg, rgba(0, 33, 165, 0.35) 0%, rgba(0, 26, 51, 0.9) 55%, rgba(250, 70, 22, 0.12) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.team-premium-page .team-dest-card:hover {
+  border-color: rgba(250, 70, 22, 0.55);
+  transform: translateY(-1px);
+}
+
+.team-premium-page .team-dest-card__icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  background: rgba(250, 70, 22, 0.22);
+  border: 1px solid rgba(250, 70, 22, 0.35);
+}
+
+.team-premium-page .team-dest-card__title {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.team-premium-page .team-dest-card__copy {
+  margin: 0 0 10px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.team-premium-page .team-dest-card__cta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffb199;
+}
+
+.team-premium-page .team-dest-hero {
+  position: relative;
+  padding: 28px 0 22px;
+  background:
+    radial-gradient(ellipse 80% 70% at 15% 0%, rgba(250, 70, 22, 0.22), transparent 55%),
+    linear-gradient(180deg, #001a33 0%, #001428 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.team-premium-page .team-dest-hero__inner {
+  max-width: 720px;
+}
+
+.team-premium-page .team-dest-hero__title {
+  margin: 0 0 8px;
+  font-size: clamp(1.75rem, 4vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.team-premium-page .team-dest-hero__sub {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.team-premium-page .team-dest-hero__meta {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.team-premium-page .team-dest-page {
+  padding-top: var(--gv-space-4, 16px);
+}
+
+.team-premium-page .team-dest-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--gv-space-4, 16px);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+}
+
+.team-premium-page .team-dest-back:hover {
+  color: #fff;
+}
+
+.team-premium-page .team-dest-page__intro {
+  margin-bottom: var(--gv-space-5, 20px);
+}
+
+.team-premium-page .team-dest-page__h,
+.team-premium-page .team-dest-block__title {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.team-premium-page .team-dest-block__title {
+  margin-top: var(--gv-space-6, 24px);
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.team-premium-page .team-identity-deep__p {
+  margin: 0 0 14px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.team-premium-page .team-identity-deep__pillars,
+.team-premium-page .team-identity-deep__list {
+  margin: 0;
+  padding-left: 1.15rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.team-premium-page .team-identity-deep__pillars li + li,
+.team-premium-page .team-identity-deep__list li + li {
+  margin-top: 8px;
+}
+
+.team-premium-page .team-history-achievements__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .team-premium-page .team-history-achievements__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.team-premium-page .team-history-achievement {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.team-premium-page .team-history-achievement__stat {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--team-gator-orange);
+}
+
+.team-premium-page .team-history-achievement__title {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.team-premium-page .team-history-achievement__detail {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.team-premium-page .team-history-achievement__list {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.team-premium-page .team-history-eras__tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 12px 0 16px;
+  padding-bottom: 2px;
+}
+
+.team-premium-page .team-history-eras__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.team-premium-page .team-history-eras__tab {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  max-width: 11rem;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.8);
+  text-align: left;
+  cursor: pointer;
+}
+
+.team-premium-page .team-history-eras__tab.is-active {
+  border-color: rgba(250, 70, 22, 0.55);
+  background: rgba(250, 70, 22, 0.16);
+  color: #fff;
+}
+
+.team-premium-page .team-history-eras__tab-years {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 177, 153, 0.95);
+}
+
+.team-premium-page .team-history-eras__tab-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.team-premium-page .team-history-era {
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.team-premium-page .team-history-era__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.team-premium-page .team-history-era__years {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--team-gator-orange);
+}
+
+.team-premium-page .team-history-era__title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.team-premium-page .team-history-era__summary {
+  margin: 0 0 16px;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.team-premium-page .team-history-era__cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+@media (min-width: 700px) {
+  .team-premium-page .team-history-era__cols {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.team-premium-page .team-history-era__h {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.team-premium-page .team-history-era ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.team-premium-page .team-history-era li + li {
+  margin-top: 4px;
+}
+
+.team-premium-page .team-history-era__winners {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.team-premium-page .team-dest-page__status {
+  margin: 24px 0;
+  color: rgba(255, 255, 255, 0.65);
+}

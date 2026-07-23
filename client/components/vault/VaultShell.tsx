@@ -27,7 +27,7 @@ function sidebarActive(pathname: string, href: string): boolean {
     );
   }
   if (h === '/vault/team') {
-    return p === h || p.startsWith('/vault/players/');
+    return p === h || p.startsWith(`${h}/`) || p.startsWith('/vault/players/');
   }
   if (h === '/vault/live' || h === '/vault/live-feed') {
     return (
