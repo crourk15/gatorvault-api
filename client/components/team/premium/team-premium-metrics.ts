@@ -35,12 +35,12 @@ export function computeHeroMetrics(bundle: TeamHubBundle): TeamHeroMetric[] {
     { id: 'scholarships', label: 'On roster', value: String(bundle.commandStats.rosterCount || '—') },
     {
       id: 'locked',
-      label: 'Starters locked',
+      label: 'Locked starters',
       value: String(bundle.commandStats.startersLocked || '—'),
     },
     {
       id: 'battles',
-      label: 'Position battles',
+      label: 'Battles',
       value: String(bundle.commandStats.positionBattles || '—'),
     },
     {

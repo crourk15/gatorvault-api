@@ -99,12 +99,12 @@ export const TEAM_COPY = {
     supportTitle: 'Support Staff',
   },
   roster: {
-    title: 'Full Roster',
-    subtitle: 'Filter by position, class, and hometown to explore the full Florida roster.',
+    title: 'Roster',
+    subtitle: 'Florida by position room',
   },
   depthChart: {
     title: '2026 Depth Chart',
-    subtitle: 'Spring projections · Updated June 2026',
+    subtitle: 'Fall camp board · Locked · Battle · Watch',
     tabs: { offense: 'Offense', defense: 'Defense (3‑3‑5)', specialTeams: 'Special Teams' },
   },
   footer: {
@@ -112,8 +112,8 @@ export const TEAM_COPY = {
     links: [
       { href: '#depth-chart', label: 'Depth Chart' },
       { href: '#roster', label: 'Full Roster' },
-      { href: '#coaching-staff', label: 'Coaching Staff' },
-      { href: '#program-history', label: 'Program History' },
+      { href: '/vault/team/staff/', label: 'Coaching Staff' },
+      { href: '/vault/team/history/', label: 'Program History' },
     ],
   },
 } as const;
@@ -121,23 +121,14 @@ export const TEAM_COPY = {
 export const TEAM_QUICK_ACTIONS = [
   { href: '#depth-chart', icon: '📋', label: 'Depth Chart' },
   { href: '#roster', icon: '👥', label: 'Full Roster' },
-  { href: '#coaching-staff', icon: '🏈', label: 'Coaching Staff' },
-  { href: '#program-history', icon: '📜', label: 'Program History' },
+  { href: '/vault/team/staff/', icon: '🏈', label: 'Coaching Staff' },
+  { href: '/vault/team/history/', icon: '📜', label: 'Program History' },
 ] as const;
 
-export type TeamTab =
-  | 'depth-chart'
-  | 'roster'
-  | 'coaching-staff'
-  | 'team-identity'
-  | 'program-history'
-  | 'recruiting-pipeline';
+export type TeamTab = 'depth-chart' | 'roster' | 'recruiting-pipeline';
 
 export const TEAM_TABS: { id: TeamTab; label: string }[] = [
   { id: 'depth-chart', label: 'Depth Chart' },
   { id: 'roster', label: 'Roster' },
-  { id: 'coaching-staff', label: 'Coaching Staff' },
-  { id: 'team-identity', label: 'Team Identity' },
-  { id: 'program-history', label: 'Program History' },
   { id: 'recruiting-pipeline', label: 'Recruiting Pipeline' },
 ];

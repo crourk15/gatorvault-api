@@ -150,6 +150,7 @@ function subRouteRewrites(prefix, exportPath) {
 }
 
 const FUTURECAST_SUB_ROUTES = ['trending', 'movement', 'stock', 'snapshots', 'alerts', 'staff'];
+const TEAM_SUB_ROUTES = ['staff', 'identity', 'history'];
 
 const VAULT_REACT_REWRITES = [
   // Dynamic profile + podcast routes MUST precede parent wildcards (Netlify first-match).
@@ -165,6 +166,10 @@ const VAULT_REACT_REWRITES = [
   ),
   ...subRouteRewrites('/vault/futurecast', '/vault/futurecast/index.html'),
   ...subRouteRewrites('/vault/recruiting', '/vault/recruiting/index.html'),
+  // Team destinations before parent wildcard so /vault/team/staff/ etc. hit dedicated exports.
+  ...TEAM_SUB_ROUTES.flatMap((sub) =>
+    subRouteRewrites(`/vault/team/${sub}`, `/vault/team/${sub}/index.html`)
+  ),
   ...subRouteRewrites('/vault/team', '/vault/team/index.html'),
   ...subRouteRewrites('/vault/live', '/vault/live/index.html'),
   ...subRouteRewrites('/vault/live-feed', '/vault/live/index.html'),
@@ -201,6 +206,9 @@ const REQUIRED_VAULT_EXPORTS = [
   'vault/futurecast/index.html',
   'vault/futurecast/player/index.html',
   'vault/team/index.html',
+  'vault/team/staff/index.html',
+  'vault/team/identity/index.html',
+  'vault/team/history/index.html',
   'vault/players/index.html',
   'vault/live/index.html',
   'vault/live-feed/index.html',

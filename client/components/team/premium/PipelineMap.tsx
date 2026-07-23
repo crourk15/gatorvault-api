@@ -14,26 +14,30 @@ export function PipelineMap({ states }: Props): React.ReactElement {
 
   return (
     <div className="team-pipeline-map">
-      <h3 className="team-pipeline-map__title">Pipeline Map</h3>
-      <div className="team-pipeline-map__grid">
-        {states.map((s) => {
-          const tier = pipelineStateTier(s.count, maxCount);
-          const pct = Math.max(8, Math.round((s.count / Math.max(maxCount, 1)) * 100));
-          return (
-            <div
-              key={s.state}
-              className="team-pipeline-map__cell"
-              style={{ '--pipeline-pct': `${pct}%` } as React.CSSProperties}
-            >
-              <span className="team-pipeline-map__code">{s.state}</span>
-              <div className="team-pipeline-map__bar-wrap">
-                <span className={`team-pipeline-map__bar team-pipeline-map__bar--${tier}`} />
+      <h3 className="team-pipeline-map__title">State footprint</h3>
+      {states.length === 0 ? (
+        <p className="team-pipeline-list__empty">No state footprint on this board slice.</p>
+      ) : (
+        <div className="team-pipeline-map__grid">
+          {states.map((s) => {
+            const tier = pipelineStateTier(s.count, maxCount);
+            const pct = Math.max(8, Math.round((s.count / Math.max(maxCount, 1)) * 100));
+            return (
+              <div
+                key={s.state}
+                className="team-pipeline-map__cell"
+                style={{ '--pipeline-pct': `${pct}%` } as React.CSSProperties}
+              >
+                <span className="team-pipeline-map__code">{s.state}</span>
+                <div className="team-pipeline-map__bar-wrap">
+                  <span className={`team-pipeline-map__bar team-pipeline-map__bar--${tier}`} />
+                </div>
+                <span className="team-pipeline-map__count">{s.count}</span>
               </div>
-              <span className="team-pipeline-map__count">{s.count}</span>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

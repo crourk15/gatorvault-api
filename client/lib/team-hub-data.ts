@@ -141,7 +141,7 @@ export {
   type RosterFilter,
 } from './roster-position-groups';
 
-export const ROSTER_FILTER_OPTIONS = ['All', 'QB', 'RB', 'WR', 'OL', 'DL', 'LB', 'DB', 'ST'] as const;
+export const ROSTER_FILTER_OPTIONS = ['QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'EDGE', 'LB', 'CB', 'S', 'ST', 'All'] as const;
 
 export function coachInitials(name: string): string {
   return name
