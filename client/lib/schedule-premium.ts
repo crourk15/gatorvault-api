@@ -117,7 +117,7 @@ function normalizeTv(tv?: string): string {
 }
 
 function ticketVendorsForGame(opponent: string): TicketVendor[] {
-  // Links only — no invented "$42+" floors. Prices appear only when a live feed exists.
+  // Matchup search links only — never invent "$42+" floors. Prices appear only with a live feed.
   const q = encodeURIComponent(`Florida Gators ${opponent}`);
   return [
     {
@@ -134,7 +134,7 @@ function ticketVendorsForGame(opponent: string): TicketVendor[] {
     },
     {
       id: 'vivid',
-      name: 'VividSeats',
+      name: 'Vivid Seats',
       logo: 'VS',
       url: `https://www.vividseats.com/search?q=${q}`,
     },
