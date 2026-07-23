@@ -2168,13 +2168,20 @@
 .team-premium-page .team-roster-module {
   max-width: 100%;
   min-width: 0;
+  width: 100%;
   overflow-x: clip;
+  box-sizing: border-box;
+  contain: inline-size;
 }
 
 .team-premium-page .team-roster-module .rh-cc-module__body {
   max-width: 100%;
   min-width: 0;
+  width: 100%;
   overflow-x: clip;
+  box-sizing: border-box;
+  padding-right: 16px;
+  padding-left: 16px;
 }
 
 .team-premium-page .team-roster-module .rh-cc-module__title {
@@ -2351,24 +2358,27 @@
 }
 
 .team-premium-page .gv-team-roster-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
   gap: 10px;
   width: 100%;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  justify-items: stretch;
 }
 
 @media (min-width: 720px) {
   .team-premium-page .gv-team-roster-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
 .team-premium-page .gv-team-roster-room {
   max-width: 100%;
   min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .team-premium-page .gv-team-roster-card {
@@ -2682,7 +2692,10 @@
 .team-premium-page .gv-team-roster-card,
 .team-premium-page a.gv-team-roster-card {
   display: block;
+  width: 100% !important;
+  max-width: 100% !important;
   min-width: 0;
+  margin: 0 !important;
   padding: 12px 12px 12px 14px !important;
   border-radius: 12px !important;
   text-decoration: none;
@@ -2691,7 +2704,9 @@
   border: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-left: 3px solid rgba(255, 255, 255, 0.35) !important;
   box-shadow: 0 6px 16px rgba(0, 26, 51, 0.16);
-  overflow: visible !important;
+  box-sizing: border-box !important;
+  /* Clip so the right edge of the card stays closed inside the module */
+  overflow: hidden !important;
 }
 
 .team-premium-page .gv-team-roster-card.is-starter,

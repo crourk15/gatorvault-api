@@ -1636,12 +1636,12 @@
 .rh-elite-chrome .rh-footprint-stage__top {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
 }
 
 .rh-elite-chrome .rh-footprint-stage__kicker {
-  margin: 0;
+  margin: 0 0 4px;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -1650,7 +1650,7 @@
 }
 
 .rh-elite-chrome .rh-footprint-stage__title {
-  margin: 0;
+  margin: 6px 0 0;
   font-family: var(--gv-font-display, 'Oswald', sans-serif);
   font-size: clamp(1.45rem, 5vw, 1.85rem);
   font-weight: 700;

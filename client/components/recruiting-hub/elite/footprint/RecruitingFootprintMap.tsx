@@ -22,8 +22,8 @@ import { US_MAP_GEO_URL } from './state-geo-utils';
 const MAP_WIDTH = 960;
 const MAP_HEIGHT = 560;
 const FOOTPRINT_YEARS = [2027, 2028] as const;
-/** Keep footprint locked in the viewport while hub sections above reflow on year change. */
-const YEAR_SCROLL_PIN_MS = 2400;
+/** One-shot adjust after year change — keep short so tabs do not feel like they bounce. */
+const YEAR_SCROLL_PIN_MS = 400;
 
 function momentumLabel(momentum: RhHubFootprintState['momentum']): string {
   if (momentum === 'up') return 'Gaining';
@@ -150,12 +150,12 @@ export function RecruitingFootprintMap(): React.ReactElement {
 
   const selectFootprintYear = useCallback(
     (year: RecruitingClassYear) => {
-      if (year === footprintYear) return;
-      // Capture before setState — hub sections above collapse while the new class loads.
+      // Compare to store year (not display fallback) so 2026→2027 still writes.
+      if (year === activeYear) return;
       pinViewportTopRef.current = stageRef.current?.getBoundingClientRect().top ?? null;
       setActiveYear(year);
     },
-    [footprintYear, setActiveYear]
+    [activeYear, setActiveYear]
   );
 
   useLayoutEffect(() => {
@@ -172,33 +172,23 @@ export function RecruitingFootprintMap(): React.ReactElement {
       }
     };
 
+    // Single layout pass + brief follow-up — do not re-arm on loading (that caused bounce).
     adjust();
-    const root = el.closest('.rh-elite-chrome') ?? document.body;
-    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(adjust) : null;
-    ro?.observe(root);
-
-    let rafId = 0;
-    const tick = () => {
-      if (!alive) return;
-      adjust();
-      rafId = window.requestAnimationFrame(tick);
-    };
-    rafId = window.requestAnimationFrame(tick);
-
+    const t1 = window.setTimeout(adjust, 50);
+    const t2 = window.setTimeout(adjust, 160);
     const stopId = window.setTimeout(() => {
       alive = false;
       pinViewportTopRef.current = null;
-      ro?.disconnect();
-      window.cancelAnimationFrame(rafId);
     }, YEAR_SCROLL_PIN_MS);
 
     return () => {
       alive = false;
-      ro?.disconnect();
-      window.cancelAnimationFrame(rafId);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
       window.clearTimeout(stopId);
+      pinViewportTopRef.current = null;
     };
-  }, [footprintYear, loading]);
+  }, [footprintYear]);
 
   const states = footprint?.states ?? [];
   const pins = footprint?.pins ?? [];

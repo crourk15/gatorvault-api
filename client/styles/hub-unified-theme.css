@@ -238,11 +238,11 @@
 }
 
 /* ── Heat / progress bars — solid accent, no gradients ── */
+/* Schedule win meters use tone colors (orange / blue / gray) — do not force accent. */
 .rh-board-card__heat-fill,
 .rh-needs-item__bar div,
 .gv-rh-heat__fill,
-.fc-confidence-bar__fill,
-.gv-sched-win-bar__fill {
+.fc-confidence-bar__fill {
   background: var(--th-accent) !important;
   background-image: none !important;
 }

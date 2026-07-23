@@ -8,6 +8,8 @@ import {
 } from '@/lib/recruiting-cycle';
 
 let storeYear: RecruitingClassYear = ACTIVE_RECRUITING_CLASS_YEAR;
+/** Once the user picks a class year, seeds/providers must not snap it back. */
+let userPinned = false;
 const listeners = new Set<() => void>();
 
 function emit(): void {
@@ -18,8 +20,20 @@ export function getRecruitingClassYearSnapshot(): RecruitingClassYear {
   return storeYear;
 }
 
-export function setRecruitingClassYearStore(year: number): void {
+export function isRecruitingClassYearUserPinned(): boolean {
+  return userPinned;
+}
+
+type SetYearOptions = {
+  /** true = user gesture (tabs/cards). Seeds/providers omit this. */
+  pin?: boolean;
+};
+
+export function setRecruitingClassYearStore(year: number, opts?: SetYearOptions): void {
   const next = parseRecruitingClassYear(year);
+  if (opts?.pin) userPinned = true;
+  // Ignore passive seeds after the user has chosen a year (fixes 2027↔2028 hop).
+  if (!opts?.pin && userPinned) return;
   if (next === storeYear) return;
   storeYear = next;
   emit();
@@ -28,6 +42,13 @@ export function setRecruitingClassYearStore(year: number): void {
 export function subscribeRecruitingClassYear(onStoreChange: () => void): () => void {
   listeners.add(onStoreChange);
   return () => listeners.delete(onStoreChange);
+}
+
+/** Test helper — reset module store between cases. */
+export function __resetRecruitingClassYearStoreForTests(): void {
+  storeYear = ACTIVE_RECRUITING_CLASS_YEAR;
+  userPinned = false;
+  emit();
 }
 
 /** Shared class year — syncs hero hydration root and hub sections. */
@@ -41,7 +62,7 @@ export function useRecruitingClassYear(): {
     (): RecruitingClassYear => ACTIVE_RECRUITING_CLASS_YEAR
   );
   const setActiveYear = useCallback((year: RecruitingClassYear) => {
-    setRecruitingClassYearStore(year);
+    setRecruitingClassYearStore(year, { pin: true });
   }, []);
   return { activeYear, setActiveYear };
 }
