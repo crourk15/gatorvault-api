@@ -1710,28 +1710,29 @@
   max-width: 36rem;
 }
 
-/* Match hero year tabs: white text on dark rail; active = white pill + blue text */
+/* Light segmented control on dark chrome — both years always readable */
 .rh-elite-chrome .rh-footprint-year-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 4px;
   width: 100%;
   max-width: 100%;
   margin-top: 6px;
   padding: 4px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
   box-sizing: border-box;
 }
 
 .rh-elite-chrome .rh-footprint-year-tab {
   min-height: 48px;
   padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid transparent;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+  background: transparent;
+  color: #001a33;
   font-size: 1rem;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -1740,15 +1741,15 @@
 }
 
 .rh-elite-chrome .rh-footprint-year-tab:not(.is-active) {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.08);
+  color: rgba(0, 26, 51, 0.72);
+  background: transparent;
 }
 
 .rh-elite-chrome .rh-footprint-year-tab.is-active {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #0021a5;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+  background: #0021a5;
+  border-color: #0021a5;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 33, 165, 0.35);
 }
 
 .rh-elite-chrome .rh-footprint-scoreboard {
