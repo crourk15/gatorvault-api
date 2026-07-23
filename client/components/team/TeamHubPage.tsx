@@ -62,6 +62,8 @@ export function TeamHubPage(): React.ReactElement {
 
   const pendingPlayerRestoreRef = useRef(false);
 
+  const shouldRestoreScrollRef = useRef(false);
+
   useVaultPageRestore(
     'team',
     (saved) => {
@@ -71,9 +73,24 @@ export function TeamHubPage(): React.ReactElement {
         const next = (raw === 'DB' ? 'CB' : raw) as RosterFilter;
         setRosterFilter(next);
       }
+      shouldRestoreScrollRef.current = Boolean(saved.restoreScroll && saved.scrollY != null);
     },
     { requireRestoreScrollFlag: true }
   );
+
+  // Bottom-nav / fresh Team entry must stay on the hero. Re-assert top after
+  // layout settles (roster chips used to scrollIntoView the page to mid-roster).
+  useEffect(() => {
+    if (shouldRestoreScrollRef.current) return;
+    const toTop = () => window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    toTop();
+    const t1 = window.setTimeout(toTop, 50);
+    const t2 = window.setTimeout(toTop, 250);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [loading]);
 
   const pipelineClassYear = primaryRecruitingClassYear();
 

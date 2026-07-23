@@ -230,12 +230,41 @@
   color: rgba(255, 255, 255, 0.65);
 }
 
-.gv-sched-next .gv-sched-win-bar__pct {
-  color: #fff;
+.gv-sched-next .gv-sched-win-bar__track {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
-.gv-sched-next .gv-sched-win-bar__track {
-  background: rgba(255, 255, 255, 0.12);
+/* Keep tone colors on the dark Next Up card (do not force all-white %). */
+.gv-sched-next .gv-sched-win-bar__pct--favored,
+.gv-sched-next .gv-sched-win-bar__tone--favored {
+  color: #ff8a5b !important;
+}
+
+.gv-sched-next .gv-sched-win-bar__pct--tossup,
+.gv-sched-next .gv-sched-win-bar__tone--tossup {
+  color: #9db7ff !important;
+}
+
+.gv-sched-next .gv-sched-win-bar__pct--underdog,
+.gv-sched-next .gv-sched-win-bar__tone--underdog {
+  color: #cbd5e1 !important;
+}
+
+.gv-sched-next .gv-sched-win-bar__fill--favored {
+  background: #fa4616 !important;
+}
+
+.gv-sched-next .gv-sched-win-bar__fill--tossup {
+  background: #7aa2ff !important;
+}
+
+.gv-sched-next .gv-sched-win-bar__fill--underdog {
+  background: #94a3b8 !important;
+}
+
+.gv-sched-next .gv-sched-win-bar__tone {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .gv-sched-next .gv-sched-scoreboard {
@@ -726,7 +755,7 @@
 }
 
 .gv-sched-win-bar__track {
-  height: 12px;
+  height: 14px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--th-blue) 10%, var(--th-card-bg));
   overflow: hidden;

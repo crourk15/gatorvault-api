@@ -22,15 +22,28 @@ const TONE_LABEL: Record<WinProbTone, string> = {
   underdog: 'UF underdog',
 };
 
+/** Hard colors so Next Up / cleanup CSS cannot wash the meter back to one accent. */
+const TONE_COLOR: Record<WinProbTone, string> = {
+  favored: '#fa4616',
+  tossup: '#0021a5',
+  underdog: '#475569',
+};
+
 export function WinProbabilityBar({ winProbability, className = '' }: Props): React.ReactElement {
   const pct = Math.min(100, Math.max(0, winProbability));
   const tone = winProbTone(pct);
+  const color = TONE_COLOR[tone];
 
   return (
-    <div className={`gv-sched-win-bar gv-sched-win-bar--${tone}${className ? ` ${className}` : ''}`}>
+    <div
+      className={`gv-sched-win-bar gv-sched-win-bar--${tone}${className ? ` ${className}` : ''}`}
+      data-tone={tone}
+    >
       <div className="gv-sched-win-bar__header">
         <Label>Win probability</Label>
-        <span className={`gv-sched-win-bar__pct gv-sched-win-bar__pct--${tone}`}>{pct}%</span>
+        <span className={`gv-sched-win-bar__pct gv-sched-win-bar__pct--${tone}`} style={{ color }}>
+          {pct}%
+        </span>
       </div>
       <div
         className="gv-sched-win-bar__track"
@@ -39,10 +52,15 @@ export function WinProbabilityBar({ winProbability, className = '' }: Props): Re
       >
         <div
           className={`gv-sched-win-bar__fill gv-sched-win-bar__fill--${tone}`}
-          style={{ width: `${pct}%` }}
+          style={{ width: `${pct}%`, background: color }}
         />
       </div>
-      <span className={`gv-sched-win-bar__tone gv-sched-win-bar__tone--${tone}`}>{TONE_LABEL[tone]}</span>
+      <span
+        className={`gv-sched-win-bar__tone gv-sched-win-bar__tone--${tone}`}
+        style={{ color, background: `${color}22` }}
+      >
+        {TONE_LABEL[tone]}
+      </span>
     </div>
   );
 }

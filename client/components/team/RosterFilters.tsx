@@ -9,6 +9,15 @@ type Props = {
   counts?: Partial<Record<RosterFilter, number>>;
 };
 
+/** Horizontally center the active chip inside the rail — never scroll the page. */
+function scrollChipInTrack(track: HTMLElement, chip: HTMLElement): void {
+  const trackRect = track.getBoundingClientRect();
+  const chipRect = chip.getBoundingClientRect();
+  const delta =
+    chipRect.left - trackRect.left - (trackRect.width - chipRect.width) / 2 + track.scrollLeft;
+  track.scrollTo({ left: Math.max(0, delta), behavior: 'smooth' });
+}
+
 export function RosterFilters({ active, onChange, counts }: Props): React.ReactElement {
   const trackRef = useRef<HTMLDivElement | null>(null);
 
@@ -17,7 +26,7 @@ export function RosterFilters({ active, onChange, counts }: Props): React.ReactE
     if (!track) return;
     const activeChip = track.querySelector<HTMLElement>('[aria-selected="true"]');
     if (!activeChip) return;
-    activeChip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    scrollChipInTrack(track, activeChip);
   }, [active]);
 
   return (
