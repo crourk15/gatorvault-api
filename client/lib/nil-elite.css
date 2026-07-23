@@ -1414,59 +1414,6 @@ a.nil-player-card:focus-visible {
   color: #fa4616;
 }
 
-.nil-desk-intel {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.nil-desk-intel__row {
-  margin: 0;
-}
-
-.nil-desk-intel__link {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 11px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
-  color: inherit;
-  text-decoration: none;
-}
-
-.nil-desk-intel__link:hover {
-  border-color: rgba(250, 70, 22, 0.4);
-}
-
-.nil-desk-intel__badge {
-  flex: 0 0 auto;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(232, 238, 248, 0.8);
-}
-
-.nil-desk-intel__badge--on3 {
-  background: rgba(250, 70, 22, 0.18);
-  color: #ffb59a;
-}
-
-.nil-desk-intel__badge--portal {
-  background: rgba(0, 196, 107, 0.16);
-  color: #7dffb8;
-}
-
-.nil-desk-intel__text {
-  font-size: 0.86rem;
-  line-height: 1.35;
-  color: rgba(232, 238, 248, 0.9);
-}
 
 .nil-desk-foot {
   display: flex;
@@ -1496,18 +1443,19 @@ a.nil-player-card:focus-visible {
 }
 
 
-/* ── Fan wow cold-open ── */
+/* ── Fan wow cold-open (vault-framed, not edge-flush) ── */
 .nil-hero--wow {
-  min-height: min(100svh, 820px);
+  min-height: 0;
   max-height: none;
   display: flex;
   align-items: stretch;
   overflow: hidden;
+  /* Keep full-bleed background, but content stays in vault gutters */
 }
 
 .nil-hero--wow .nil-hero__bg {
   background:
-    radial-gradient(ellipse 90% 70% at 80% 10%, rgba(250, 70, 22, 0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 80% 10%, rgba(250, 70, 22, 0.22) 0%, transparent 55%),
     linear-gradient(160deg, #000d1c 0%, #0021a5 48%, #00102a 100%);
 }
 
@@ -1530,31 +1478,38 @@ a.nil-player-card:focus-visible {
   position: relative;
   z-index: 1;
   width: 100%;
-  padding: 28px 0 32px;
+  max-width: 40rem;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding-top: calc(20px + env(safe-area-inset-top, 0px));
+  padding-bottom: 28px;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0;
 }
 
 .nil-wow__brand {
   margin: 0;
-  font-size: clamp(1.7rem, 7vw, 2.6rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 0.95;
-  color: #fff;
+  font-size: clamp(1.15rem, 4.2vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  color: rgba(255, 255, 255, 0.92);
   opacity: 0;
   transform: translateY(14px);
   transition: opacity 520ms ease, transform 520ms ease;
 }
 
 .nil-wow__product {
-  margin: 2px 0 0;
-  font-size: clamp(2.8rem, 14vw, 4.8rem);
+  margin: 6px 0 0;
+  font-size: clamp(2.1rem, 9vw, 3rem);
   font-weight: 900;
-  letter-spacing: -0.055em;
-  line-height: 0.9;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
   color: #fa4616;
   opacity: 0;
   transform: translateY(16px);
@@ -1562,7 +1517,7 @@ a.nil-player-card:focus-visible {
 }
 
 .nil-wow__market {
-  margin-top: 22px;
+  margin-top: 18px;
   opacity: 0;
   transform: translateY(18px);
   transition: opacity 600ms ease 140ms, transform 600ms ease 140ms;
@@ -1570,23 +1525,24 @@ a.nil-player-card:focus-visible {
 
 .nil-wow__amount {
   display: block;
-  font-size: clamp(3rem, 15vw, 5.2rem);
+  font-size: clamp(2.4rem, 11vw, 3.4rem);
   font-weight: 900;
-  letter-spacing: -0.05em;
-  line-height: 0.92;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
   color: #fff;
 }
 
 .nil-wow__amount-label {
   display: block;
   margin-top: 8px;
-  font-size: 0.92rem;
-  line-height: 1.35;
+  max-width: 22rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
   color: rgba(232, 238, 248, 0.78);
 }
 
 .nil-wow__race {
-  margin-top: 22px;
+  margin-top: 18px;
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 600ms ease 220ms, transform 600ms ease 220ms;
@@ -1639,10 +1595,15 @@ a.nil-player-card:focus-visible {
 }
 
 .nil-wow__faces {
-  margin-top: 26px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.22);
+  box-sizing: border-box;
 }
 
 .nil-wow__faces-label {
@@ -1656,16 +1617,17 @@ a.nil-player-card:focus-visible {
 
 .nil-wow-face {
   display: grid;
-  grid-template-columns: 28px 48px 1fr auto;
+  grid-template-columns: 28px 44px minmax(0, 1fr) auto;
   gap: 10px;
   align-items: center;
-  padding: 8px 0;
+  padding: 10px 0;
   color: inherit;
   text-decoration: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   opacity: 0;
   transform: translateY(14px);
   transition: opacity 480ms ease, transform 480ms ease, border-color 160ms ease;
+  min-width: 0;
 }
 
 .nil-wow-face:nth-child(2) { transition-delay: 360ms; }
@@ -1687,8 +1649,8 @@ a.nil-player-card:focus-visible {
 }
 
 .nil-wow-face__photo {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.08);
@@ -1759,20 +1721,39 @@ a.nil-player-card:focus-visible {
 
 @media (min-width: 900px) {
   .nil-hero--wow {
-    min-height: 720px;
+    min-height: 0;
   }
   .nil-wow {
-    max-width: 720px;
+    max-width: 40rem;
+    padding-top: 32px;
+    padding-bottom: 36px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
   }
 }
 
 @media (max-width: 420px) {
+  .nil-wow {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
   .nil-wow-face {
-    grid-template-columns: 22px 42px 1fr auto;
+    grid-template-columns: 22px 40px minmax(0, 1fr) auto;
     gap: 8px;
   }
   .nil-wow-face__photo {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
   }
+  .nil-wow__faces {
+    padding: 10px 12px;
+  }
+}
+
+/* Prevent vault bleed from canceling gutters on the wow content */
+.gv-nil-page .nil-hero--wow.nil-bleed {
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
 }

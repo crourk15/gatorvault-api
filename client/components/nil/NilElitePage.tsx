@@ -7,7 +7,6 @@ import { NilHero } from '@/components/nil/NilHero';
 import { NilRosterEarners } from '@/components/nil/NilRosterEarners';
 import { NilLeaderboard } from '@/components/nil/NilLeaderboard';
 import { NilProgramRankingsTable } from '@/components/nil/NilProgramRankingsTable';
-import { NilDeskIntel } from '@/components/nil/NilDeskIntel';
 import { useNilEliteData } from '@/components/nil/useNilEliteData';
 
 export function NilElitePage(): React.ReactElement {
@@ -60,7 +59,6 @@ export function NilElitePage(): React.ReactElement {
               <NilRosterEarners earners={bundle.rosterEarners || []} startRank={1} />
               {landscape ? <NilProgramRankingsTable landscape={landscape} /> : null}
               <NilLeaderboard marketBoard={bundle.marketBoard} />
-              {bundle.desk ? <NilDeskIntel desk={bundle.desk} /> : null}
 
               <div className="nil-desk-foot">
                 <p className="nil-desk-foot__meta">
