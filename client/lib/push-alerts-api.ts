@@ -122,6 +122,13 @@ export async function syncVisitPushPrefs(options: {
   });
 }
 
+type TestPushResponse = {
+  ok?: boolean;
+  sent?: number;
+  skipped?: boolean;
+  reason?: string;
+};
+
 /** Send a test lock-screen push to the signed-in member's registered devices. */
 export async function sendTestPushAlert(
   kind: 'confirm' | 'visit' | 'commit' | 'score' = 'confirm',
@@ -135,12 +142,14 @@ export async function sendTestPushAlert(
   if (res.status === 401) return { ok: false, reason: 'sign_in' };
   if (res.status === 403) return { ok: false, reason: 'membership' };
   if (res.status === 404) return { ok: false, reason: 'no_devices' };
-  let body: { ok?: boolean; sent?: number; skipped?: boolean; reason?: string } | null = null;
+
+  let body: TestPushResponse | null = null;
   try {
-    body = (await res.json()) as typeof body;
+    body = (await res.json()) as TestPushResponse;
   } catch {
     body = null;
   }
+
   if (!res.ok || !body?.ok) {
     if (body?.reason === 'rate_limited') return { ok: false, reason: 'rate_limited' };
     return { ok: false, reason: 'server' };
