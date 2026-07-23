@@ -222,8 +222,8 @@ export function RecruitingFootprintMap(): React.ReactElement {
                 projection="geoAlbersUsa"
                 width={MAP_WIDTH}
                 height={MAP_HEIGHT}
-                projectionConfig={{ scale: 1070 }}
                 className="rh-footprint-map__svg"
+                {...({ projectionConfig: { scale: 1070 } } as Record<string, unknown>)}
               >
                 <Geographies geography={US_MAP_GEO_URL}>
                   {({ geographies }) => (
