@@ -1,8 +1,10 @@
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
+import { parseScheduleKickoff } from '@/lib/gators-live';
 import { gameWeekRoute } from '@/lib/site-routes';
 
 export type ScheduleSectionId = 'non-conference' | 'sec' | 'rivalry';
 export type HomeOrAway = 'vs' | '@' | 'neutral';
+export type ScheduleGameStatus = 'next' | 'upcoming' | 'past';
 
 export type TicketVendor = {
   id: string;
@@ -21,6 +23,8 @@ export type PremiumScheduleGame = {
   homeOrAway: HomeOrAway;
   date: string;
   time: string;
+  /** Full kickoff label from schedule-data (for countdown / status). */
+  kickoffRaw: string;
   stadium: string;
   tvNetwork: string;
   winProbability: number;
@@ -29,6 +33,8 @@ export type PremiumScheduleGame = {
   intelUrl: string;
   ticketVendors: TicketVendor[];
   section: ScheduleSectionId;
+  /** One-line game-week teaser — never the full scout dump. */
+  keyTeaser?: string;
 };
 
 export type ScheduleSectionMeta = {
@@ -84,6 +90,7 @@ const OPPONENT_META: Record<string, { short: string; logo: string }> = {
 };
 
 const TV_PLACEHOLDERS = new Set(['FLEX', 'EARLY', 'NIGHT', 'TBD']);
+const POSTGAME_MS = 5 * 3600_000;
 
 function homeOrAwayFromLabel(label: string, venue: string): HomeOrAway {
   if (label.includes('@')) return '@';
@@ -146,6 +153,7 @@ export function toPremiumScheduleGame(game: ScheduleGame): PremiumScheduleGame {
     homeOrAway: homeOrAwayFromLabel(game.label, game.venue),
     date,
     time,
+    kickoffRaw: game.date,
     stadium: game.venue,
     tvNetwork: normalizeTv(game.tv),
     winProbability: game.ufPct,
@@ -154,6 +162,7 @@ export function toPremiumScheduleGame(game: ScheduleGame): PremiumScheduleGame {
     intelUrl: gameWeekRoute(game.id),
     ticketVendors: ticketVendorsForGame(game.opp),
     section: SECTION_BY_ID[game.id] ?? 'sec',
+    keyTeaser: game.keys[0],
   };
 }
 
@@ -169,10 +178,60 @@ export function groupGamesBySection(games: PremiumScheduleGame[]): Map<ScheduleS
   return map;
 }
 
-export const SCHEDULE_SEASONS = ['2025', '2026', '2027'] as const;
+/** Published + next unpublished season — skip empty past years. */
+export const SCHEDULE_SEASONS = ['2026', '2027'] as const;
 export type ScheduleSeason = (typeof SCHEDULE_SEASONS)[number];
 
 export function gamesForSeason(season: ScheduleSeason): PremiumScheduleGame[] {
   if (season === '2026') return PREMIUM_SCHEDULE_2026;
   return [];
+}
+
+export function isRivalryGame(game: PremiumScheduleGame): boolean {
+  return game.section === 'rivalry';
+}
+
+/** Next upcoming kickoff, or null when the season is complete / empty. */
+export function getNextScheduleGame(
+  games: PremiumScheduleGame[],
+  now = new Date(),
+): PremiumScheduleGame | null {
+  let next: PremiumScheduleGame | null = null;
+  let nextTs = Infinity;
+  const t = now.getTime();
+
+  for (const game of games) {
+    const kick = parseScheduleKickoff(game.kickoffRaw);
+    if (!kick) continue;
+    const end = kick.getTime() + POSTGAME_MS;
+    if (t > end) continue;
+    const ts = kick.getTime();
+    if (ts < nextTs) {
+      nextTs = ts;
+      next = game;
+    }
+  }
+
+  return next;
+}
+
+export function getScheduleGameStatus(
+  game: PremiumScheduleGame,
+  nextId: string | null,
+  now = new Date(),
+): ScheduleGameStatus {
+  if (nextId && game.id === nextId) return 'next';
+  const kick = parseScheduleKickoff(game.kickoffRaw);
+  if (!kick) return 'upcoming';
+  if (now.getTime() > kick.getTime() + POSTGAME_MS) return 'past';
+  return 'upcoming';
+}
+
+export function daysUntilKickoffLabel(kickoffRaw: string, now = new Date()): string {
+  const kick = parseScheduleKickoff(kickoffRaw);
+  if (!kick) return '';
+  const days = Math.ceil((kick.getTime() - now.getTime()) / 86_400_000);
+  if (days <= 0) return 'Game week';
+  if (days === 1) return '1 day';
+  return `${days} days`;
 }

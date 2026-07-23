@@ -2,13 +2,17 @@
 
 import React from 'react';
 import { HeadingM, BodyM } from '@/components/ui';
-import type { PremiumScheduleGame } from '@/lib/schedule-premium';
+import type { PremiumScheduleGame, ScheduleGameStatus } from '@/lib/schedule-premium';
+import { isRivalryGame } from '@/lib/schedule-premium';
+import { opponentLogoUrl } from '@/lib/team-logos';
 import { GameActions } from './GameActions';
 import { PredictedScoreBlock } from './PredictedScoreBlock';
 import { TVNetworkBadge } from './TVNetworkBadge';
 import { WinProbabilityBar } from './WinProbabilityBar';
 
-type Props = PremiumScheduleGame;
+type Props = PremiumScheduleGame & {
+  status?: ScheduleGameStatus;
+};
 
 const BADGE_CLASS: Record<PremiumScheduleGame['homeOrAway'], string> = {
   vs: 'home',
@@ -18,9 +22,9 @@ const BADGE_CLASS: Record<PremiumScheduleGame['homeOrAway'], string> = {
 
 export function GameCard(props: Props): React.ReactElement {
   const {
+    id,
     opponentName,
     opponentShort,
-    opponentLogo,
     homeOrAway,
     date,
     time,
@@ -31,18 +35,48 @@ export function GameCard(props: Props): React.ReactElement {
     predictedScoreOpp,
     intelUrl,
     ticketVendors,
+    status = 'upcoming',
   } = props;
 
+  const rivalry = isRivalryGame(props);
+  const statusLabel = status === 'next' ? 'Next' : status === 'past' ? 'Final' : null;
+
   return (
-    <article className="gv-sched-game-card gv-ds-card" data-testid={`schedule-game-${props.id}`}>
+    <article
+      className={[
+        'gv-sched-game-card',
+        'gv-ds-card',
+        status === 'next' ? 'gv-sched-game-card--next' : '',
+        status === 'past' ? 'gv-sched-game-card--past' : '',
+        rivalry ? 'gv-sched-game-card--rivalry' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      data-testid={`schedule-game-${id}`}
+      data-status={status}
+    >
       <div className="gv-sched-game-card__left">
-        <span className={`gv-sched-game-card__badge gv-sched-game-card__badge--${BADGE_CLASS[homeOrAway]}`}>
-          {homeOrAway === '@' ? 'AWAY' : homeOrAway === 'neutral' ? 'NEUTRAL' : 'HOME'}
-        </span>
-        <div className="gv-sched-game-card__identity">
-          <span className="gv-sched-game-card__opp-logo" aria-hidden="true">
-            {opponentLogo}
+        <div className="gv-sched-game-card__badges">
+          <span className={`gv-sched-game-card__badge gv-sched-game-card__badge--${BADGE_CLASS[homeOrAway]}`}>
+            {homeOrAway === '@' ? 'AWAY' : homeOrAway === 'neutral' ? 'NEUTRAL' : 'HOME'}
           </span>
+          {statusLabel ? (
+            <span className={`gv-sched-game-card__badge gv-sched-game-card__badge--${status}`}>
+              {statusLabel}
+            </span>
+          ) : null}
+          {rivalry ? (
+            <span className="gv-sched-game-card__badge gv-sched-game-card__badge--rivalry">Rivalry</span>
+          ) : null}
+        </div>
+        <div className="gv-sched-game-card__identity">
+          <img
+            src={opponentLogoUrl(id)}
+            alt=""
+            className="gv-sched-game-card__opp-logo-img"
+            width={48}
+            height={48}
+          />
           <div>
             <HeadingM className="gv-sched-game-card__opp-name">
               {homeOrAway === '@' ? `@ ${opponentShort}` : `vs ${opponentShort}`}
@@ -59,13 +93,20 @@ export function GameCard(props: Props): React.ReactElement {
 
       <div className="gv-sched-game-card__center">
         <TVNetworkBadge network={tvNetwork} />
-        <WinProbabilityBar winProbability={winProbability} />
-        <PredictedScoreBlock
-          ufScore={predictedScoreUF}
-          oppScore={predictedScoreOpp}
-          oppName={opponentName}
-          oppLogo={opponentLogo}
-        />
+        {status !== 'past' ? (
+          <>
+            <WinProbabilityBar winProbability={winProbability} />
+            <PredictedScoreBlock
+              ufScore={predictedScoreUF}
+              oppScore={predictedScoreOpp}
+              oppName={opponentName}
+              oppShort={opponentShort}
+              gameId={id}
+            />
+          </>
+        ) : (
+          <p className="gv-sched-game-card__past-note">Result posts after kickoff.</p>
+        )}
       </div>
 
       <div className="gv-sched-game-card__right">

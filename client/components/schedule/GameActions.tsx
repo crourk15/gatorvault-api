@@ -28,32 +28,28 @@ export function GameActions({ intelUrl, ticketVendors }: Props): React.ReactElem
               Tickets from <strong>${lowest}+</strong>
             </>
           ) : (
-            <>Find tickets</>
+            <>Tickets</>
           )}
         </p>
-        <div className="gv-sched-tickets__vendors">
+        <div className="gv-sched-tickets__links" role="list">
           {vendors.map((vendor) => (
             <a
               key={vendor.id}
               href={vendor.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="gv-sched-tickets__vendor"
+              className="gv-sched-tickets__link"
+              role="listitem"
               title={
                 vendor.priceFrom != null
                   ? `${vendor.name} from $${vendor.priceFrom}`
                   : `Find tickets on ${vendor.name}`
               }
             >
-              <span className="gv-sched-tickets__logo" aria-hidden="true">
-                {vendor.logo}
-              </span>
-              <span className="gv-sched-tickets__name">{vendor.name}</span>
+              {vendor.name}
               {vendor.priceFrom != null ? (
                 <span className="gv-sched-tickets__price">${vendor.priceFrom}+</span>
-              ) : (
-                <span className="gv-sched-tickets__price">Check</span>
-              )}
+              ) : null}
             </a>
           ))}
         </div>

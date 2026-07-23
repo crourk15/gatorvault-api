@@ -2,6 +2,7 @@ export { GameActions } from './GameActions';
 export { GameCard } from './GameCard';
 export { GameSection } from './GameSection';
 export { HeroSchedule } from './HeroSchedule';
+export { NextUpMatchup } from './NextUpMatchup';
 export { PredictedScoreBlock } from './PredictedScoreBlock';
 export { SchedulePageShell } from './SchedulePageShell';
 export { TVNetworkBadge } from './TVNetworkBadge';
