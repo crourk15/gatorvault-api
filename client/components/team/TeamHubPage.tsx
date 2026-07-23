@@ -62,7 +62,10 @@ export function TeamHubPage(): React.ReactElement {
 
   useVaultPageRestore('team', (saved) => {
     if (saved.rosterFilter && typeof saved.rosterFilter === 'string') {
-      setRosterFilter(saved.rosterFilter as RosterFilter);
+      const raw = saved.rosterFilter as string;
+      // Legacy DB bucket → CB room
+      const next = (raw === 'DB' ? 'CB' : raw) as RosterFilter;
+      setRosterFilter(next);
     }
   });
 

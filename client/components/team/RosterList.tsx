@@ -4,7 +4,6 @@ import React, { useMemo } from 'react';
 import type { TeamPlayer } from '@/lib/team-hub-types';
 import {
   rosterMatchesFilter,
-  resolveRosterPositionGroup,
   type RosterFilter,
   type RosterPositionGroup,
 } from '@/lib/roster-position-groups';
@@ -19,11 +18,14 @@ type Props = {
 const GROUP_LABEL: Record<RosterPositionGroup, string> = {
   QB: 'Quarterbacks',
   RB: 'Running backs',
-  WR: 'Receivers & tight ends',
+  WR: 'Wide receivers',
+  TE: 'Tight ends',
   OL: 'Offensive line',
   DL: 'Defensive line',
+  EDGE: 'Edge',
   LB: 'Linebackers',
-  DB: 'Secondary',
+  CB: 'Cornerbacks',
+  S: 'Safeties',
   ST: 'Special teams',
 };
 
@@ -89,7 +91,6 @@ export function RosterList({ players, filter }: Props): React.ReactElement {
     [players, filter]
   );
 
-  // All = one flat full directory (member opted in). Positions = one room only.
   if (filter === 'All') {
     const alpha = sortAlpha(filtered);
     if (alpha.length === 0) {

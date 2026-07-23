@@ -100,7 +100,7 @@ export const TEAM_COPY = {
   },
   roster: {
     title: 'Roster Rooms',
-    subtitle: 'One position room at a time · ALL (last) opens the full roster',
+    subtitle: 'QB → ST one room at a time · ALL (last) opens the full roster',
   },
   depthChart: {
     title: '2026 Depth Chart',
