@@ -96,7 +96,7 @@ export function NilRosterEarners({ earners, startRank = 1 }: Props): React.React
   const showToggle = !query && filter === 'All' && earners.length > preview.length;
 
   return (
-    <section className="nil-elite-section" data-testid="nil-roster-earners">
+    <section className="nil-elite-section nil-elite-section--gator-board" data-testid="nil-roster-earners">
       <header className="nil-elite-section__head">
         <div>
           <h2 className="nil-elite-section__title">Full Florida board</h2>
