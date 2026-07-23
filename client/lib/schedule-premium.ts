@@ -99,7 +99,8 @@ function homeOrAwayFromLabel(label: string, venue: string): HomeOrAway {
 }
 
 function parsePrediction(pred: string): { uf: number; opp: number } {
-  const match = pred.match(/UF\s+(\d+)\s*[·•]\s*\w+\s+(\d+)/i);
+  // Opponent names can be multi-word ("Ole Miss", "South Carolina").
+  const match = pred.match(/UF\s+(\d+)\s*[·•]\s*.+?\s+(\d+)\s*$/i);
   if (match) return { uf: Number(match[1]), opp: Number(match[2]) };
   return { uf: 0, opp: 0 };
 }
