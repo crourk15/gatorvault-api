@@ -62,9 +62,9 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
             aria-label="Season year"
           />
           <div className="gv-sched-legend" aria-label="Win probability legend">
-            <span className="gv-sched-legend__item gv-sched-legend__item--favored">UF favored</span>
-            <span className="gv-sched-legend__item gv-sched-legend__item--tossup">Toss-up</span>
-            <span className="gv-sched-legend__item gv-sched-legend__item--underdog">Underdog</span>
+            <span className="gv-sched-legend__item gv-sched-legend__item--favored">UF favored · 75%+</span>
+            <span className="gv-sched-legend__item gv-sched-legend__item--tossup">Toss-up · 40–74%</span>
+            <span className="gv-sched-legend__item gv-sched-legend__item--underdog">UF underdog · under 40%</span>
           </div>
         </div>
 

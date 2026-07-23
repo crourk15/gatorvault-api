@@ -1,6 +1,10 @@
 /* Schedule & Tickets — elite next-up hero + hub game cards */
 
 .gv-sched-page {
+  --sched-prob-favored: #fa4616;
+  --sched-prob-tossup: #0021a5;
+  /* Cool slate — must not read as Gator orange on small swatches */
+  --sched-prob-underdog: #475569;
   min-height: 100%;
   background: var(--th-primary, var(--page-bg));
   color: var(--th-meta, var(--subtle-gray));
@@ -410,13 +414,16 @@
 .gv-sched-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-md, 16px);
+  gap: 10px 14px;
 }
 
 .gv-sched-legend__item {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--th-meta, var(--subtle-gray));
 }
@@ -424,23 +431,22 @@
 .gv-sched-legend__item::before {
   content: '';
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin-right: 6px;
-  border-radius: 2px;
-  vertical-align: middle;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
 }
 
 .gv-sched-legend__item--favored::before {
-  background: var(--th-accent, var(--gator-orange));
+  background: var(--sched-prob-favored);
 }
 
 .gv-sched-legend__item--tossup::before {
-  background: var(--th-blue, var(--uf-blue));
+  background: var(--sched-prob-tossup);
 }
 
 .gv-sched-legend__item--underdog::before {
-  background: var(--th-red, var(--momentum-down));
+  background: var(--sched-prob-underdog);
 }
 
 .gv-sched-empty {
@@ -675,6 +681,9 @@
 
 /* ── Win probability bar ── */
 .gv-sched-win-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   min-width: 0;
   max-width: 100%;
 }
@@ -684,7 +693,6 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-sm, 8px);
-  margin-bottom: var(--space-sm, 8px);
   min-width: 0;
 }
 
@@ -701,16 +709,28 @@
   flex-shrink: 0;
   font-family: var(--font-family);
   font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--th-accent, var(--gator-orange));
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
 
+.gv-sched-win-bar__pct--favored {
+  color: var(--sched-prob-favored, #fa4616);
+}
+
+.gv-sched-win-bar__pct--tossup {
+  color: var(--sched-prob-tossup, #0021a5);
+}
+
+.gv-sched-win-bar__pct--underdog {
+  color: var(--sched-prob-underdog, #475569);
+}
+
 .gv-sched-win-bar__track {
-  height: 8px;
+  height: 12px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--th-blue) 8%, var(--th-card-bg));
+  background: color-mix(in srgb, var(--th-blue) 10%, var(--th-card-bg));
   overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--th-blue) 12%, transparent);
 }
 
 .gv-sched-win-bar__fill {
@@ -720,15 +740,42 @@
 }
 
 .gv-sched-win-bar__fill--favored {
-  background: var(--th-accent, var(--gator-orange));
+  background: var(--sched-prob-favored, #fa4616);
 }
 
 .gv-sched-win-bar__fill--tossup {
-  background: var(--th-blue, var(--uf-blue));
+  background: var(--sched-prob-tossup, #0021a5);
 }
 
 .gv-sched-win-bar__fill--underdog {
-  background: var(--th-red, var(--momentum-down));
+  background: var(--sched-prob-underdog, #475569);
+}
+
+.gv-sched-win-bar__tone {
+  align-self: flex-start;
+  margin: 0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+.gv-sched-win-bar__tone--favored {
+  color: var(--sched-prob-favored, #fa4616);
+  background: color-mix(in srgb, var(--sched-prob-favored, #fa4616) 12%, transparent);
+}
+
+.gv-sched-win-bar__tone--tossup {
+  color: var(--sched-prob-tossup, #0021a5);
+  background: color-mix(in srgb, var(--sched-prob-tossup, #0021a5) 10%, transparent);
+}
+
+.gv-sched-win-bar__tone--underdog {
+  color: var(--sched-prob-underdog, #475569);
+  background: color-mix(in srgb, var(--sched-prob-underdog, #475569) 14%, transparent);
 }
 
 /* ── Scoreboard ── */

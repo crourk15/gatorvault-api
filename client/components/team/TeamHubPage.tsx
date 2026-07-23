@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   buildSeedTeamHubBundle,
   fetchTeamHubBundle,
@@ -60,14 +60,20 @@ export function TeamHubPage(): React.ReactElement {
   const [activeTab, setActiveTab] = useState<TeamPremiumTabId>(DEFAULT_TAB);
   const [pipelinePreview, setPipelinePreview] = useState(() => buildPipelinePreview(null, null));
 
-  useVaultPageRestore('team', (saved) => {
-    if (saved.rosterFilter && typeof saved.rosterFilter === 'string') {
-      const raw = saved.rosterFilter as string;
-      // Legacy DB bucket → CB room
-      const next = (raw === 'DB' ? 'CB' : raw) as RosterFilter;
-      setRosterFilter(next);
-    }
-  });
+  const pendingPlayerRestoreRef = useRef(false);
+
+  useVaultPageRestore(
+    'team',
+    (saved) => {
+      if (saved.rosterFilter && typeof saved.rosterFilter === 'string') {
+        const raw = saved.rosterFilter as string;
+        // Legacy DB bucket → CB room
+        const next = (raw === 'DB' ? 'CB' : raw) as RosterFilter;
+        setRosterFilter(next);
+      }
+    },
+    { requireRestoreScrollFlag: true }
+  );
 
   const pipelineClassYear = primaryRecruitingClassYear();
 
@@ -117,12 +123,39 @@ export function TeamHubPage(): React.ReactElement {
     void loadPipeline();
   });
 
+  // Save scroll only when leaving into a player profile. Bottom-nav / fresh
+  // Team entry should start at the hero, not mid-page near Roster.
   useEffect(() => {
-    const persist = () =>
+    const onPlayerNav = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const anchor = target.closest('a[href]');
+      if (!anchor) return;
+      const href = anchor.getAttribute('href') || '';
+      if (!/\/players?\/|\/player\//.test(href)) return;
+      pendingPlayerRestoreRef.current = true;
       saveVaultPageState('team', {
-        scrollY: window.scrollY,
         rosterFilter,
+        scrollY: window.scrollY,
+        restoreScroll: true,
       });
+    };
+    document.addEventListener('click', onPlayerNav, true);
+    return () => document.removeEventListener('click', onPlayerNav, true);
+  }, [rosterFilter]);
+
+  useEffect(() => {
+    const persist = () => {
+      if (pendingPlayerRestoreRef.current) {
+        saveVaultPageState('team', {
+          rosterFilter,
+          scrollY: window.scrollY,
+          restoreScroll: true,
+        });
+        return;
+      }
+      saveVaultPageState('team', { rosterFilter });
+    };
     window.addEventListener('pagehide', persist);
     return () => window.removeEventListener('pagehide', persist);
   }, [rosterFilter]);

@@ -10,6 +10,8 @@ const STATE_PREFIX = 'gv-vault-state:';
 
 export type VaultPageState = {
   scrollY?: number;
+  /** When true, restore scrollY on return (e.g. Team → player → back). */
+  restoreScroll?: boolean;
   tab?: string;
   search?: string;
   phase?: string;
@@ -69,21 +71,34 @@ export function vaultTeamBackHref(): string {
 
 export function useVaultPageRestore(
   pageKey: string,
-  onRestore: (state: VaultPageState) => void
+  onRestore: (state: VaultPageState) => void,
+  options?: {
+    /**
+     * When true, only restore scrollY if saved.restoreScroll === true.
+     * Otherwise scroll to top (used by Team so bottom-nav entry starts at hero).
+     */
+    requireRestoreScrollFlag?: boolean;
+  }
 ): void {
   const restoredRef = useRef(false);
   const onRestoreRef = useRef(onRestore);
   onRestoreRef.current = onRestore;
+  const requireFlag = options?.requireRestoreScrollFlag === true;
 
   useEffect(() => {
     if (restoredRef.current) return;
     restoredRef.current = true;
     const saved = consumeVaultPageState(pageKey);
     if (saved) onRestoreRef.current(saved);
-    if (saved?.scrollY != null) {
-      requestAnimationFrame(() => window.scrollTo(0, saved.scrollY ?? 0));
+    const shouldRestoreScroll = requireFlag
+      ? Boolean(saved?.restoreScroll && saved.scrollY != null)
+      : saved?.scrollY != null;
+    if (shouldRestoreScroll) {
+      requestAnimationFrame(() => window.scrollTo(0, saved?.scrollY ?? 0));
+    } else if (requireFlag) {
+      requestAnimationFrame(() => window.scrollTo(0, 0));
     }
-  }, [pageKey]);
+  }, [pageKey, requireFlag]);
 }
 
 /** Re-run data loaders when returning via bfcache. */
