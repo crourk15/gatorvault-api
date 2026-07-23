@@ -320,12 +320,33 @@
     min-width: 0 !important;
   }
 
+  .gv-vault-shell__main .gv-sched-game-card__main {
+    box-sizing: border-box;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    gap: 14px;
+  }
+
   .gv-vault-shell__main .gv-sched-game-card__center,
   .gv-vault-shell__main .gv-sched-game-card__right {
     box-sizing: border-box;
     width: 100%;
     max-width: 100%;
     min-width: 0;
+  }
+
+  .gv-vault-shell__main .gv-sched-game-card__right {
+    padding-left: 0;
+    border-left: none;
+    padding-top: 12px;
+    border-top: 1px solid var(--th-border, rgba(0, 0, 0, 0.08));
+  }
+
+  .gv-vault-shell__main .gv-sched-tickets__vendor {
+    min-height: 44px;
   }
 
   /* Recruiting Hub: single-column intel on mobile only */
