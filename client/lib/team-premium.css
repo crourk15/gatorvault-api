@@ -2712,3 +2712,63 @@
   margin-top: 6px;
 }
 
+
+/* Full roster directory — collapsed by default at end of rooms */
+.team-premium-page .gv-team-roster-full {
+  margin-top: 8px;
+}
+
+.team-premium-page .gv-team-roster-full__panel {
+  padding: 18px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  background:
+    radial-gradient(ellipse 80% 70% at 100% 0%, rgba(250, 70, 22, 0.1), transparent 55%),
+    rgba(0, 33, 165, 0.04);
+}
+
+.team-premium-page .gv-team-roster-full__kicker {
+  margin: 0 0 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--team-gator-orange);
+}
+
+.team-premium-page .gv-team-roster-full__title {
+  margin: 0 0 8px;
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--team-uf-blue);
+}
+
+.team-premium-page .gv-team-roster-full__copy {
+  margin: 0 0 14px;
+  max-width: 36rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(15, 23, 42, 0.68);
+}
+
+.team-premium-page .gv-team-roster-full__toggle {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(250, 70, 22, 0.35);
+  background: linear-gradient(135deg, #0021a5 0%, #001a33 100%);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.team-premium-page .gv-team-roster-full__list {
+  margin-top: 14px;
+}
+

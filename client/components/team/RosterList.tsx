@@ -11,12 +11,9 @@ import {
 import { playerProfilePath } from '@/lib/player-routes';
 import { PlayerNavLink } from '@/components/vault/PlayerNavLink';
 
-export type RosterViewMode = 'starters' | 'full';
-
 type Props = {
   players: TeamPlayer[];
   filter: RosterFilter;
-  viewMode: RosterViewMode;
 };
 
 const GROUP_ORDER: RosterPositionGroup[] = ['QB', 'RB', 'WR', 'OL', 'DL', 'LB', 'DB', 'ST'];
@@ -32,13 +29,11 @@ const GROUP_LABEL: Record<RosterPositionGroup, string> = {
   ST: 'Special teams',
 };
 
-const FULL_ROOM_PREVIEW = 4;
-
 function isStarter(p: TeamPlayer): boolean {
   return (p.tags ?? []).some((t) => t.toLowerCase() === 'starter');
 }
 
-function sortPlayers(list: TeamPlayer[]): TeamPlayer[] {
+function sortRoomPlayers(list: TeamPlayer[]): TeamPlayer[] {
   return [...list].sort((a, b) => {
     const sa = isStarter(a) ? 0 : 1;
     const sb = isStarter(b) ? 0 : 1;
@@ -47,11 +42,13 @@ function sortPlayers(list: TeamPlayer[]): TeamPlayer[] {
   });
 }
 
+function sortAlpha(list: TeamPlayer[]): TeamPlayer[] {
+  return [...list].sort((a, b) => a.name.localeCompare(b.name));
+}
+
 function hometownLine(player: TeamPlayer): string {
   const raw = String(player.hometown || '').trim();
-  // Prefer short school/city — avoid giant "City, St. High School" overflow.
   if (!raw) return player.state?.trim() || '';
-  // Keep first segment before a long school suffix when possible
   if (raw.length <= 42) return raw;
   const comma = raw.indexOf(',');
   if (comma > 0 && comma <= 36) return raw.slice(0, comma).trim();
@@ -92,22 +89,11 @@ function RoomSection({
   id,
   label,
   players,
-  viewMode,
 }: {
   id: string;
   label: string;
   players: TeamPlayer[];
-  viewMode: RosterViewMode;
 }): React.ReactElement {
-  const [expanded, setExpanded] = useState(false);
-  const visible =
-    viewMode === 'starters'
-      ? players
-      : expanded || players.length <= FULL_ROOM_PREVIEW
-        ? players
-        : players.slice(0, FULL_ROOM_PREVIEW);
-  const hidden = viewMode === 'full' ? Math.max(0, players.length - visible.length) : 0;
-
   return (
     <section className="gv-team-roster-room" aria-labelledby={`roster-room-${id}`}>
       <header className="gv-team-roster-room__head">
@@ -117,38 +103,58 @@ function RoomSection({
         <span className="gv-team-roster-room__count">{players.length}</span>
       </header>
       <div className="gv-team-roster-grid">
-        {visible.map((player) => (
+        {players.map((player) => (
           <PlayerCard key={player.id} player={player} />
         ))}
       </div>
-      {hidden > 0 ? (
+    </section>
+  );
+}
+
+function FullRosterPanel({ players }: { players: TeamPlayer[] }): React.ReactElement {
+  const [open, setOpen] = useState(false);
+  const alpha = useMemo(() => sortAlpha(players), [players]);
+
+  return (
+    <section className="gv-team-roster-full" aria-labelledby="roster-full-title">
+      <div className="gv-team-roster-full__panel">
+        <p className="gv-team-roster-full__kicker">Directory</p>
+        <h3 id="roster-full-title" className="gv-team-roster-full__title">
+          Full roster
+        </h3>
+        <p className="gv-team-roster-full__copy">
+          Prefer the rooms above for position-by-position. Open the full {players.length}-player
+          directory only when you want everyone at once.
+        </p>
         <button
           type="button"
-          className="gv-team-roster-room__more"
-          onClick={() => setExpanded(true)}
+          className="gv-team-roster-full__toggle"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
         >
-          Show {hidden} more in {label}
+          {open ? 'Hide full roster' : `Show all ${players.length} players`}
         </button>
-      ) : null}
-      {viewMode === 'full' && expanded && players.length > FULL_ROOM_PREVIEW ? (
-        <button
-          type="button"
-          className="gv-team-roster-room__more gv-team-roster-room__more--collapse"
-          onClick={() => setExpanded(false)}
-        >
-          Show fewer
-        </button>
+      </div>
+
+      {open ? (
+        <div className="gv-team-roster-full__list" aria-label="Full roster A to Z">
+          <div className="gv-team-roster-grid">
+            {alpha.map((player) => (
+              <PlayerCard key={player.id} player={player} />
+            ))}
+          </div>
+        </div>
       ) : null}
     </section>
   );
 }
 
-export function RosterList({ players, filter, viewMode }: Props): React.ReactElement {
-  const filtered = useMemo(() => {
-    const base = players.filter((p) => rosterMatchesFilter(p.position, filter, p.positionGroup));
-    const scoped = viewMode === 'starters' ? base.filter(isStarter) : base;
-    return sortPlayers(scoped);
-  }, [players, filter, viewMode]);
+export function RosterList({ players, filter }: Props): React.ReactElement {
+  const filtered = useMemo(
+    () =>
+      sortRoomPlayers(players.filter((p) => rosterMatchesFilter(p.position, filter, p.positionGroup))),
+    [players, filter]
+  );
 
   const rooms = useMemo(() => {
     const map = new Map<RosterPositionGroup, TeamPlayer[]>();
@@ -164,32 +170,21 @@ export function RosterList({ players, filter, viewMode }: Props): React.ReactEle
       .map((g) => ({
         id: g,
         label: GROUP_LABEL[g],
-        players: sortPlayers(map.get(g) ?? []),
+        players: sortRoomPlayers(map.get(g) ?? []),
       }))
       .filter((room) => room.players.length > 0);
   }, [filtered, filter]);
 
   if (filtered.length === 0) {
-    return (
-      <p className="gv-team-status">
-        {viewMode === 'starters'
-          ? 'No tagged starters in this room yet. Switch to Full roster to browse the class.'
-          : 'No players match this filter.'}
-      </p>
-    );
+    return <p className="gv-team-status">No players match this filter.</p>;
   }
 
   return (
     <div className="gv-team-roster-rooms">
       {rooms.map((room) => (
-        <RoomSection
-          key={room.id}
-          id={room.id}
-          label={room.label}
-          players={room.players}
-          viewMode={viewMode}
-        />
+        <RoomSection key={room.id} id={room.id} label={room.label} players={room.players} />
       ))}
+      {filter === 'All' ? <FullRosterPanel players={players} /> : null}
     </div>
   );
 }

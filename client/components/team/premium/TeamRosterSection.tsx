@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { RosterFilters } from '@/components/team/RosterFilters';
-import { RosterList, type RosterViewMode } from '@/components/team/RosterList';
+import { RosterList } from '@/components/team/RosterList';
 import { TeamPremiumModule } from './TeamPremiumModule';
 import { TeamRosterSkeleton } from './TeamPageSkeleton';
 import { UiWarming } from '@/components/site/UiMessage';
@@ -19,10 +19,6 @@ type Props = {
   warming?: boolean;
 };
 
-function isStarter(p: TeamPlayer): boolean {
-  return (p.tags ?? []).some((t) => t.toLowerCase() === 'starter');
-}
-
 export function TeamRosterSection({
   roster,
   filter,
@@ -30,21 +26,19 @@ export function TeamRosterSection({
   loading,
   warming,
 }: Props): React.ReactElement {
-  const [viewMode, setViewMode] = useState<RosterViewMode>('starters');
-
-  const starterCount = useMemo(() => roster.filter(isStarter).length, [roster]);
+  const starterCount = useMemo(
+    () => roster.filter((p) => (p.tags ?? []).some((t) => t.toLowerCase() === 'starter')).length,
+    [roster]
+  );
 
   const counts = useMemo(() => {
-    const source = viewMode === 'starters' ? roster.filter(isStarter) : roster;
-    const next: Partial<Record<RosterFilter, number>> = { All: source.length };
+    const next: Partial<Record<RosterFilter, number>> = { All: roster.length };
     for (const f of ROSTER_FILTER_OPTIONS) {
       if (f === 'All') continue;
-      next[f] = source.filter((p) => rosterMatchesFilter(p.position, f, p.positionGroup)).length;
+      next[f] = roster.filter((p) => rosterMatchesFilter(p.position, f, p.positionGroup)).length;
     }
     return next;
-  }, [roster, viewMode]);
-
-  const showingCount = counts[filter] ?? 0;
+  }, [roster]);
 
   return (
     <div className="team-premium-section" id="roster" data-section="roster">
@@ -67,23 +61,6 @@ export function TeamRosterSection({
           </div>
         ) : (
           <>
-            <div className="gv-team-roster-view" role="group" aria-label="Roster view">
-              <button
-                type="button"
-                className={`gv-team-roster-view__btn${viewMode === 'starters' ? ' is-active' : ''}`}
-                onClick={() => setViewMode('starters')}
-              >
-                Starters
-              </button>
-              <button
-                type="button"
-                className={`gv-team-roster-view__btn${viewMode === 'full' ? ' is-active' : ''}`}
-                onClick={() => setViewMode('full')}
-              >
-                Full roster
-              </button>
-            </div>
-
             <div className="gv-team-roster-summary" aria-label="Roster snapshot">
               <div className="gv-team-roster-summary__cell">
                 <span className="gv-team-roster-summary__value">{roster.length || '—'}</span>
@@ -94,15 +71,14 @@ export function TeamRosterSection({
                 <span className="gv-team-roster-summary__label">Starters</span>
               </div>
               <div className="gv-team-roster-summary__cell">
-                <span className="gv-team-roster-summary__value">{showingCount}</span>
+                <span className="gv-team-roster-summary__value">{counts[filter] ?? 0}</span>
                 <span className="gv-team-roster-summary__label">
-                  {viewMode === 'starters' ? 'Showing starters' : 'In this view'}
+                  {filter === 'All' ? 'Across rooms' : `${filter} room`}
                 </span>
               </div>
             </div>
-
             <RosterFilters active={filter} onChange={onFilterChange} counts={counts} />
-            <RosterList players={roster} filter={filter} viewMode={viewMode} />
+            <RosterList players={roster} filter={filter} />
           </>
         )}
       </TeamPremiumModule>
