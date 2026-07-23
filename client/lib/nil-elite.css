@@ -39,13 +39,17 @@
   margin-right: calc(50% - 50vw);
 }
 
-/* ── Compact hero (120–160px) ── */
+/* ── Elite desk hero ── */
 .nil-hero {
   position: relative;
   min-height: 120px;
-  max-height: 160px;
   color: #fff;
   overflow: hidden;
+}
+
+.nil-hero--desk {
+  min-height: 0;
+  max-height: none;
 }
 
 .nil-hero__bg {
@@ -62,18 +66,22 @@
   background: radial-gradient(ellipse 70% 80% at 85% 50%, rgba(250, 70, 22, 0.14) 0%, transparent 65%);
 }
 
-.nil-hero__inner {
+.nil-hero__inner,
+.nil-hero__desk {
   position: relative;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) auto;
   gap: var(--gv-space-4, 16px);
+  align-items: center;
   min-height: 120px;
-  max-height: 160px;
-  padding-top: 16px;
-  padding-bottom: 16px;
+  padding-top: 18px;
+  padding-bottom: 18px;
   box-sizing: border-box;
+}
+
+.nil-hero--desk .nil-hero__desk {
+  grid-template-columns: minmax(0, 1.2fr) auto minmax(0, 1fr);
 }
 
 .nil-hero__eyebrow {
@@ -1290,5 +1298,481 @@ a.nil-player-card:focus-visible {
 @media (max-width: 720px) {
   .nil-index-headline {
     grid-template-columns: 1fr;
+  }
+}
+
+
+.nil-hero__dot {
+  margin: 0 0.35em;
+  opacity: 0.5;
+}
+
+.nil-hero__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.nil-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.22);
+  font-size: 0.72rem;
+  color: rgba(232, 238, 248, 0.8);
+}
+
+.nil-chip strong {
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.nil-chip--accent {
+  border-color: rgba(250, 70, 22, 0.45);
+  background: rgba(250, 70, 22, 0.14);
+}
+
+.nil-hero__narrative {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.22);
+  padding: 12px 14px;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.nil-hero__narrative-label {
+  margin: 0 0 8px;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(250, 70, 22, 0.95);
+  font-weight: 700;
+}
+
+.nil-desk-bullets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nil-desk-bullets__item {
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: rgba(232, 238, 248, 0.88);
+  padding-left: 10px;
+  border-left: 2px solid rgba(250, 70, 22, 0.55);
+}
+
+.nil-featured-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.nil-featured-card {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.18));
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 118px;
+}
+
+.nil-featured-card__rank {
+  font-size: 0.7rem;
+  color: rgba(232, 238, 248, 0.5);
+  font-weight: 700;
+}
+
+.nil-featured-card__name {
+  font-size: 0.92rem;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.nil-featured-card__meta,
+.nil-featured-card__source {
+  font-size: 0.7rem;
+  color: rgba(232, 238, 248, 0.6);
+}
+
+.nil-featured-card__val {
+  margin-top: auto;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fa4616;
+}
+
+.nil-desk-intel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nil-desk-intel__row {
+  margin: 0;
+}
+
+.nil-desk-intel__link {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+  text-decoration: none;
+}
+
+.nil-desk-intel__link:hover {
+  border-color: rgba(250, 70, 22, 0.4);
+}
+
+.nil-desk-intel__badge {
+  flex: 0 0 auto;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(232, 238, 248, 0.8);
+}
+
+.nil-desk-intel__badge--on3 {
+  background: rgba(250, 70, 22, 0.18);
+  color: #ffb59a;
+}
+
+.nil-desk-intel__badge--portal {
+  background: rgba(0, 196, 107, 0.16);
+  color: #7dffb8;
+}
+
+.nil-desk-intel__text {
+  font-size: 0.86rem;
+  line-height: 1.35;
+  color: rgba(232, 238, 248, 0.9);
+}
+
+.nil-desk-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+}
+
+.nil-desk-foot__meta {
+  margin: 0;
+  font-size: 0.75rem;
+  color: rgba(232, 238, 248, 0.55);
+}
+
+@media (max-width: 960px) {
+  .nil-hero--desk .nil-hero__desk {
+    grid-template-columns: 1fr;
+  }
+  .nil-hero__dial-wrap {
+    justify-self: start;
+  }
+  .nil-featured-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* ── Fan wow cold-open ── */
+.nil-hero--wow {
+  min-height: min(100svh, 820px);
+  max-height: none;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.nil-hero--wow .nil-hero__bg {
+  background:
+    radial-gradient(ellipse 90% 70% at 80% 10%, rgba(250, 70, 22, 0.28) 0%, transparent 55%),
+    linear-gradient(160deg, #000d1c 0%, #0021a5 48%, #00102a 100%);
+}
+
+.nil-hero__atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 55%, rgba(0, 13, 28, 0.72) 100%),
+    repeating-linear-gradient(
+      -18deg,
+      transparent 0,
+      transparent 14px,
+      rgba(255, 255, 255, 0.015) 14px,
+      rgba(255, 255, 255, 0.015) 15px
+    );
+}
+
+.nil-wow {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 28px 0 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+}
+
+.nil-wow__brand {
+  margin: 0;
+  font-size: clamp(1.7rem, 7vw, 2.6rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 520ms ease, transform 520ms ease;
+}
+
+.nil-wow__product {
+  margin: 2px 0 0;
+  font-size: clamp(2.8rem, 14vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 0.9;
+  color: #fa4616;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 560ms ease 80ms, transform 560ms ease 80ms;
+}
+
+.nil-wow__market {
+  margin-top: 22px;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 600ms ease 140ms, transform 600ms ease 140ms;
+}
+
+.nil-wow__amount {
+  display: block;
+  font-size: clamp(3rem, 15vw, 5.2rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.92;
+  color: #fff;
+}
+
+.nil-wow__amount-label {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  color: rgba(232, 238, 248, 0.78);
+}
+
+.nil-wow__race {
+  margin-top: 22px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 600ms ease 220ms, transform 600ms ease 220ms;
+}
+
+.nil-wow__race-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.78rem;
+  color: rgba(232, 238, 248, 0.7);
+  margin-bottom: 8px;
+}
+
+.nil-wow__race-labels strong {
+  color: #fff;
+}
+
+.nil-wow__race-track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.nil-wow__race-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fa4616 0%, #ff8a4c 100%);
+  transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1) 280ms;
+}
+
+.nil-wow__race-note {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  color: rgba(232, 238, 248, 0.62);
+}
+
+.nil-wow__football {
+  margin: 14px 0 0;
+  font-size: 0.9rem;
+  color: rgba(232, 238, 248, 0.78);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 560ms ease 300ms, transform 560ms ease 300ms;
+}
+
+.nil-wow__football strong {
+  color: #fff;
+}
+
+.nil-wow__faces {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nil-wow__faces-label {
+  margin: 0 0 4px;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: rgba(250, 70, 22, 0.95);
+}
+
+.nil-wow-face {
+  display: grid;
+  grid-template-columns: 28px 48px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 480ms ease, transform 480ms ease, border-color 160ms ease;
+}
+
+.nil-wow-face:nth-child(2) { transition-delay: 360ms; }
+.nil-wow-face:nth-child(3) { transition-delay: 430ms; }
+.nil-wow-face:nth-child(4) { transition-delay: 500ms; }
+
+.nil-wow-face:last-child {
+  border-bottom: 0;
+}
+
+.nil-wow-face:hover {
+  border-color: rgba(250, 70, 22, 0.35);
+}
+
+.nil-wow-face__rank {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(232, 238, 248, 0.45);
+}
+
+.nil-wow-face__photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.nil-wow-face__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nil-wow-face__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.nil-wow-face__copy strong {
+  font-size: 0.98rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nil-wow-face__copy em {
+  font-style: normal;
+  font-size: 0.72rem;
+  color: rgba(232, 238, 248, 0.58);
+}
+
+.nil-wow-face__val {
+  text-align: right;
+}
+
+.nil-wow-face__val strong {
+  display: block;
+  font-size: 1.05rem;
+  color: #fa4616;
+}
+
+.nil-wow-face__val em {
+  display: block;
+  margin-top: 2px;
+  font-style: normal;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(232, 238, 248, 0.5);
+}
+
+.nil-hero--wow.is-live .nil-wow__brand,
+.nil-hero--wow.is-live .nil-wow__product,
+.nil-hero--wow.is-live .nil-wow__market,
+.nil-hero--wow.is-live .nil-wow__race,
+.nil-hero--wow.is-live .nil-wow__football,
+.nil-hero--wow.is-live .nil-wow-face {
+  opacity: 1;
+  transform: none;
+}
+
+@media (min-width: 900px) {
+  .nil-hero--wow {
+    min-height: 720px;
+  }
+  .nil-wow {
+    max-width: 720px;
+  }
+}
+
+@media (max-width: 420px) {
+  .nil-wow-face {
+    grid-template-columns: 22px 42px 1fr auto;
+    gap: 8px;
+  }
+  .nil-wow-face__photo {
+    width: 42px;
+    height: 42px;
   }
 }

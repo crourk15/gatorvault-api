@@ -9,42 +9,50 @@ type Props = {
 
 export function NilProgramRankingsTable({ landscape }: Props): React.ReactElement {
   const [tab, setTab] = useState<'sec' | 'national'>('sec');
+  const [expanded, setExpanded] = useState(false);
   const secRows = landscape.sec || [];
   const nationalRows = landscape.nationalTop || [];
+  const uf = landscape.uf;
+  const visibleSec = expanded ? secRows : secRows.slice(0, 6);
+  const visibleNat = expanded ? nationalRows : nationalRows.slice(0, 8);
 
   return (
     <section className="nil-elite-section" data-testid="nil-sec-landscape">
       <header className="nil-elite-section__head">
         <div>
-          <h2 className="nil-elite-section__title">Sideline Market Index</h2>
-          <p className="nil-elite-section__sub">{landscape.sourceNote}</p>
+          <h2 className="nil-elite-section__title">Market Index</h2>
+          <p className="nil-elite-section__sub">
+            Sideline school markets — all-sport estimates, not football-only.
+          </p>
         </div>
       </header>
 
-      {landscape.headline ? (
+      {landscape.headline || uf ? (
         <div className="nil-index-headline">
           <article>
-            <span>Indexed market</span>
+            <span>Florida</span>
             <strong>
-              {landscape.headline.indexedMarketB != null
-                ? `$${landscape.headline.indexedMarketB}B`
+              {uf?.estimatedAnnualPoolM != null
+                ? `$${Number(uf.estimatedAnnualPoolM).toFixed(1)}M`
                 : '—'}
+              {uf?.secRank != null ? ` · SEC #${uf.secRank}` : ''}
+              {uf?.nationalRank != null ? ` · #${uf.nationalRank}` : ''}
             </strong>
           </article>
           <article>
             <span>Top program</span>
             <strong>
-              {landscape.headline.topProgram || '—'}
-              {landscape.headline.topProgramMarketM != null
+              {landscape.headline?.topProgram || 'Texas'}
+              {landscape.headline?.topProgramMarketM != null
                 ? ` · $${landscape.headline.topProgramMarketM}M`
                 : ''}
             </strong>
           </article>
           <article>
-            <span>{landscape.headline.benefitsCapNote || 'Benefits cap'}</span>
+            <span>Indexed market</span>
             <strong>
-              {landscape.headline.benefitsCapM != null
-                ? `~$${landscape.headline.benefitsCapM}M`
+              {landscape.headline?.indexedMarketB != null
+                ? `$${landscape.headline.indexedMarketB}B`
                 : '—'}
             </strong>
           </article>
@@ -68,7 +76,7 @@ export function NilProgramRankingsTable({ landscape }: Props): React.ReactElemen
           className={`rh-cc-tabs__btn${tab === 'national' ? ' is-active' : ''}`}
           onClick={() => setTab('national')}
         >
-          National top 25
+          National
         </button>
       </div>
 
@@ -80,17 +88,15 @@ export function NilProgramRankingsTable({ landscape }: Props): React.ReactElemen
                 <th>SEC</th>
                 <th>Natl</th>
                 <th>School</th>
-                <th>Collective</th>
                 <th>Market</th>
               </tr>
             </thead>
             <tbody>
-              {secRows.map((row) => (
+              {visibleSec.map((row) => (
                 <tr key={row.id} className={row.id === 'uf' ? 'is-uf' : undefined}>
                   <td>{row.secRank != null ? `#${row.secRank}` : '—'}</td>
                   <td>{row.nationalRank != null ? `#${row.nationalRank}` : '—'}</td>
                   <td>{row.school}</td>
-                  <td>{row.collective || '—'}</td>
                   <td className="nil-rank-table__pool">
                     {row.estimatedAnnualPoolM != null
                       ? `$${Number(row.estimatedAnnualPoolM).toFixed(1)}M`
@@ -111,7 +117,7 @@ export function NilProgramRankingsTable({ landscape }: Props): React.ReactElemen
               </tr>
             </thead>
             <tbody>
-              {nationalRows.map((row) => (
+              {visibleNat.map((row) => (
                 <tr
                   key={`${row.nationalRank}-${row.school}`}
                   className={row.programId === 'uf' || row.school === 'Florida' ? 'is-uf' : undefined}
@@ -125,14 +131,18 @@ export function NilProgramRankingsTable({ landscape }: Props): React.ReactElemen
             </tbody>
           </table>
         )}
-        {landscape.asOf ? (
-          <p className="nil-elite-section__sub">As of {landscape.asOf}</p>
-        ) : null}
+        <button
+          type="button"
+          className="nil-editorial-toggle"
+          onClick={() => setExpanded((v) => !v)}
+          aria-expanded={expanded}
+        >
+          {expanded ? 'Show less' : 'Show full table'}
+        </button>
         <p className="nil-elite-section__sub">
           {landscape.provider || 'Sideline'}
           {landscape.programsIndexed != null ? ` · ${landscape.programsIndexed} programs` : ''}
-          {'. '}
-          {landscape.disclaimer}
+          . All-sport school markets.
         </p>
       </div>
     </section>

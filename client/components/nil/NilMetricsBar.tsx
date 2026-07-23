@@ -5,28 +5,27 @@ import type { NilEliteBundle } from '@/lib/nil-elite-api';
 
 type Props = {
   money?: NilEliteBundle['money'];
-  pulse: NilEliteBundle['pulse'];
+  desk?: NilEliteBundle['desk'];
 };
 
-export function NilMetricsBar({ money, pulse }: Props): React.ReactElement {
+export function NilMetricsBar({ money, desk }: Props): React.ReactElement {
   const metrics = [
-    { label: 'School market (all sports)', value: money?.schoolMarketLabel || money?.rosterMarketLabel || money?.poolLabel || '—' },
+    { label: 'School market', value: money?.schoolMarketLabel || money?.poolLabel || '—' },
     { label: 'Football only', value: money?.footballMarketLabel || '—' },
-    { label: 'Top valuation', value: money?.topEarnerValue || '—' },
-    { label: 'SEC rank', value: money?.secRank != null ? `#${money.secRank}` : '—' },
-    { label: 'Natl rank', value: money?.nationalRank != null ? `#${money.nationalRank}` : '—' },
     {
-      label: 'vs Texas (#1)',
-      value:
-        money?.vsElitePct != null
-          ? `${money.vsElitePct}%`
-          : money?.eliteMarketM != null && money?.rosterMarketM != null
-            ? `${Math.round((money.rosterMarketM / money.eliteMarketM) * 1000) / 10}%`
-            : '—',
+      label: 'Football share',
+      value: desk?.stats?.footballSharePct != null ? `${desk.stats.footballSharePct}%` : '—',
     },
+    { label: 'SEC', value: money?.secRank != null ? `#${money.secRank}` : '—' },
+    { label: 'National', value: money?.nationalRank != null ? `#${money.nationalRank}` : '—' },
     {
-      label: 'Indexed market',
-      value: money?.indexedMarketB != null ? `$${money.indexedMarketB}B` : '—',
+      label: 'vs Texas',
+      value:
+        desk?.stats?.vsElitePct != null
+          ? `${desk.stats.vsElitePct}%`
+          : money?.vsElitePct != null
+            ? `${money.vsElitePct}%`
+            : '—',
     },
   ];
 
@@ -40,15 +39,6 @@ export function NilMetricsBar({ money, pulse }: Props): React.ReactElement {
           </article>
         ))}
       </div>
-      {money?.provider ? (
-        <p className="nil-metrics__note rh-frame">
-          {money.provider}
-          {money.programsIndexed != null ? ` · ${money.programsIndexed} programs` : ''}
-          {money.benefitsCapM != null ? ` · 2026–27 benefits cap ~$${money.benefitsCapM}M` : ''}
-          {money.topEarnerName ? ` · Lead: ${money.topEarnerName}` : ''}
-          {money.attribution ? ` · ${money.attribution}` : ''}
-        </p>
-      ) : null}
     </section>
   );
 }

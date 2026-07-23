@@ -6,9 +6,9 @@ export function NilMobileHeader(): React.ReactElement {
   return (
     <header className="rh-elite-mobile-header" data-testid="nil-mobile-header">
       <p className="rh-elite-mobile-header__eyebrow">GatorVault Insider</p>
-      <h1 className="rh-elite-mobile-header__title">NIL Tracker</h1>
+      <h1 className="rh-elite-mobile-header__title">NIL Desk</h1>
       <p className="rh-elite-mobile-header__sub">
-        UF pool estimates, roster valuations, and SEC NIL market position.
+        School markets, labeled valuations, and UF position — Sideline index.
       </p>
     </header>
   );

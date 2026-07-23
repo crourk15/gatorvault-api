@@ -154,6 +154,32 @@ export type NilEliteLandscape = {
   sec: NilEliteLandscapeRow[];
 };
 
+export type NilEliteDeskBullet = {
+  id: string;
+  tone: string;
+  text: string;
+};
+
+export type NilEliteDesk = {
+  asOf?: string | null;
+  provider: string;
+  headline: string;
+  bullets: NilEliteDeskBullet[];
+  intel: Array<{
+    id: string;
+    category: string;
+    text: string;
+    slug?: string | null;
+  }>;
+  stats: {
+    on3Count: number;
+    sidelineCount: number;
+    footballSharePct: number | null;
+    gapToEliteM: number | null;
+    vsElitePct: number | null;
+  };
+};
+
 export type NilEliteBundle = {
   ok?: boolean;
   generatedAt: string;
@@ -191,6 +217,7 @@ export type NilEliteBundle = {
   collectives: NilEliteCollective[];
   movement: NilEliteMovementItem[];
   landscape?: NilEliteLandscape;
+  desk?: NilEliteDesk;
   editorial?: {
     asOf?: string | null;
     disclaimer: string;
