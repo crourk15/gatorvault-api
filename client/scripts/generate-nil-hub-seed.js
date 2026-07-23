@@ -208,11 +208,34 @@ async function main() {
     throw new Error('NIL seed has no dashboard rankings — refusing empty seed');
   }
 
+  let elite = null;
+  try {
+    const { buildNilEliteBundle } = require(path.join(ROOT, 'server/lib/nil-elite'));
+    elite = await buildNilEliteBundle({ classYear: 2027 });
+    source = source + '+local-elite';
+  } catch (err) {
+    console.warn('[generate-nil-hub-seed] local elite build failed:', err.message);
+  }
+  if (!elite) {
+    try {
+      elite = await fetchJsonRetry(API + '/api/nil/elite', 2);
+      if (elite && elite.marketBoard) source = source + '+prod-elite';
+      else elite = null;
+    } catch (err) {
+      console.warn('[generate-nil-hub-seed] elite fetch failed:', err.message);
+    }
+  }
+  if (!elite && prev?.elite) {
+    elite = prev.elite;
+    source = source + '+retained-elite';
+  }
+
   const seed = {
     generatedAt: new Date().toISOString(),
     source,
     dashboard,
     players,
+    elite: elite || undefined,
   };
 
   fs.writeFileSync(OUT, JSON.stringify(seed, null, 2) + '\n');
@@ -224,7 +247,9 @@ async function main() {
     'sec=',
     (dashboard.secRankings || []).length,
     'players=',
-    players.length
+    players.length,
+    'eliteTargets=',
+    elite?.marketBoard?.targets?.length || 0
   );
 }
 

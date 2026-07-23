@@ -10,23 +10,11 @@ type Props = {
   loading?: boolean;
 };
 
-function competitivenessGrade(secRank: number): string {
-  if (!secRank || secRank <= 0) return 'TBD';
-  if (secRank <= 3) return 'A';
-  if (secRank <= 6) return 'A-';
-  if (secRank <= 10) return 'B+';
-  if (secRank <= 12) return 'B';
-  return 'B-';
-}
-
 export function HomeNilTrends({ data, loading }: Props): React.ReactElement {
-  const secRank = data?.secRank ?? 0;
-  const estPool = data?.estPool ?? '—';
-  const movementLabel = data?.movementLabel ?? 'Stable';
-  const movementDelta = data?.movementDelta ?? '—';
-  const topEarner = data?.topEarner ?? 'Gators Collective';
-  const topEarnerNote = data?.topEarnerNote ?? 'Tracking collective activity';
-  const grade = competitivenessGrade(secRank);
+  const commits = data?.commits != null ? String(data.commits) : data?.estPool ?? '—';
+  const blueChip = data?.blueChipPct != null ? `${data.blueChipPct}%` : data?.movementLabel ?? '—';
+  const collective = data?.collective || data?.topEarner || 'Florida Victorious';
+  const note = data?.topEarnerNote ?? 'Open NIL Tracker for the elite board';
 
   if (loading && !data) {
     return (
@@ -48,20 +36,18 @@ export function HomeNilTrends({ data, loading }: Props): React.ReactElement {
       eyebrow="NIL Tracker"
       title="NIL Tracker Preview"
       stats={[
-        { value: estPool, label: 'NIL valuation', tone: 'accent' },
-        { value: grade, label: 'Competitiveness', tone: 'up' },
-        { value: secRank ? `#${secRank}` : '—', label: 'SEC rank', tone: 'neutral' },
+        { value: commits, label: 'UF commits', tone: 'accent' },
+        { value: blueChip, label: 'Blue-chip share', tone: 'up' },
+        { value: data?.movementDelta ?? '—', label: 'Avg rating', tone: 'neutral' },
       ]}
-      subtitle={`${movementLabel} · ${movementDelta}`}
+      subtitle={note}
       link={{ href: VAULT_NIL, label: 'Open NIL Tracker →' }}
       ariaLabel="NIL tracker preview"
       testId="home-nil-trends"
     >
       <div className="gv-home-inline">
-        <span className="gv-home-label">Top mover</span>
-        <span className="gv-home-body">
-          {topEarner} · <span className="gv-home-meta">{topEarnerNote}</span>
-        </span>
+        <span className="gv-home-label">Collective</span>
+        <span className="gv-home-body">{collective}</span>
       </div>
     </HomeModuleCard>
   );

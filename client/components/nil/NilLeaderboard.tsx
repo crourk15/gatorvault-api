@@ -1,45 +1,51 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { NilPlayerCard } from './NilPlayerCard';
-import { sortNilPlayers, type NilLeaderboardTab } from './nil-sort';
+import type { NilEliteBoardPlayer, NilEliteBundle } from '@/lib/nil-elite-api';
 
-const TABS: { id: NilLeaderboardTab; label: string }[] = [
-  { id: 'top', label: 'Top Earners' },
-  { id: 'rising', label: 'Rising Value' },
+type Tab = 'leaders' | 'targets' | 'movers' | 'commits';
+
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'leaders', label: 'Board Leaders' },
   { id: 'targets', label: 'UF Targets' },
-  { id: 'movers', label: 'Biggest Movers' },
+  { id: 'movers', label: 'Board Heat' },
+  { id: 'commits', label: 'UF Commits' },
 ];
 
-const EMPTY_COPY: Record<NilLeaderboardTab, string> = {
-  top: 'No player valuations loaded.',
-  rising: 'No rising valuations on the board yet.',
+const EMPTY: Record<Tab, string> = {
+  leaders: 'No ranked board names loaded.',
   targets: 'No active UF targets on the board right now.',
-  movers: 'No large board movers in this window.',
+  movers: 'No heated board names in this window.',
+  commits: 'No UF commits loaded for this class.',
 };
 
 type Props = {
-  players: HighPriorityPlayer[];
+  marketBoard: NilEliteBundle['marketBoard'];
 };
 
-export function NilLeaderboard({ players }: Props): React.ReactElement {
-  const [tab, setTab] = useState<NilLeaderboardTab>('top');
-  const rows = useMemo(() => sortNilPlayers(players, tab).slice(0, 12), [players, tab]);
+export function NilLeaderboard({ marketBoard }: Props): React.ReactElement {
+  const [tab, setTab] = useState<Tab>('targets');
+  const rows = useMemo((): NilEliteBoardPlayer[] => {
+    if (tab === 'leaders') return marketBoard.leaders || [];
+    if (tab === 'movers') return marketBoard.movers || [];
+    if (tab === 'commits') return marketBoard.commits || [];
+    return marketBoard.targets || [];
+  }, [marketBoard, tab]);
 
   return (
     <section className="nil-elite-section" data-testid="nil-leaderboard">
       <header className="nil-elite-section__head">
         <div>
-          <h2 className="nil-elite-section__title">Player NIL Leaderboard</h2>
+          <h2 className="nil-elite-section__title">NIL Market Board</h2>
           <p className="nil-elite-section__sub">
-            Modeled valuations and board trends for high-priority names. Tap a row for the FutureCast
-            profile.
+            Proven recruiting board signals — stars, national rank, UF % when confirmed. On3 NIL dollars
+            only appear when publicly reported.
           </p>
         </div>
       </header>
 
-      <div className="rh-cc-tabs" role="tablist" aria-label="Leaderboard sort">
+      <div className="rh-cc-tabs" role="tablist" aria-label="Market board">
         {TABS.map(({ id, label }) => (
           <button
             key={id}
@@ -56,7 +62,7 @@ export function NilLeaderboard({ players }: Props): React.ReactElement {
 
       <div className="nil-leaderboard">
         {rows.length === 0 ? (
-          <p className="rh-cc-empty">{EMPTY_COPY[tab]}</p>
+          <p className="rh-cc-empty">{EMPTY[tab]}</p>
         ) : (
           rows.map((player) => <NilPlayerCard key={player.slug} player={player} />)
         )}

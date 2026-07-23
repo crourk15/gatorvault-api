@@ -17,7 +17,7 @@ import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 
 export function NilElitePage(): React.ReactElement {
   const isDesktop = useIsCommandCenterDesktop();
-  const { dashboard, players, portalGains, portalLosses, loading, error, reload } = useNilEliteData();
+  const { bundle, loading, error, reload } = useNilEliteData();
   const [refreshing, setRefreshing] = useState(false);
 
   const handleRefresh = () => {
@@ -29,7 +29,7 @@ export function NilElitePage(): React.ReactElement {
     <div className="rh-page rh-page--elite gv-nil-page mobile-app" data-testid="vault-nil">
       {!isDesktop ? <NilMobileHeader /> : null}
 
-      {loading && !dashboard ? (
+      {loading && !bundle ? (
         <div className="rh-cc-page rh-frame" aria-busy="true" data-testid="nil-elite-loading">
           <div className="rh-cc-skeleton" style={{ minHeight: 140, borderRadius: 12 }} />
           <div className="rh-cc-skeleton" style={{ minHeight: 88, borderRadius: 12, marginTop: 16 }} />
@@ -37,31 +37,31 @@ export function NilElitePage(): React.ReactElement {
         </div>
       ) : null}
 
-      {error && !dashboard ? (
+      {error && !bundle ? (
         <div className="rh-frame">
           <UiError message={error} retry={() => void reload()} backHref="/vault" backLabel="← Home" />
         </div>
       ) : null}
 
-      {dashboard ? (
+      {bundle ? (
         <div className="rh-cc-page nil-cc-page">
-          <NilHero dashboard={dashboard} />
-          <NilMetricsBar dashboard={dashboard} />
+          <NilHero hero={bundle.hero} pulse={bundle.pulse} />
+          <NilMetricsBar pulse={bundle.pulse} classYear={bundle.classYear} />
 
           <div className="rh-cc-main rh-frame">
             <div className="rh-cc-col">
-              <NilLeaderboard players={players} />
-              <NilProgramRankingsTable dashboard={dashboard} />
-              <NilMovementFeed dashboard={dashboard} players={players} />
-              <NilCollectiveComparison dashboard={dashboard} />
-              <NilPortalImpact gains={portalGains} losses={portalLosses} />
+              <NilLeaderboard marketBoard={bundle.marketBoard} />
+              <NilPortalImpact portal={bundle.portal} />
+              <NilMovementFeed items={bundle.movement} />
+              <NilCollectiveComparison collectives={bundle.collectives} />
+              {bundle.editorial ? <NilProgramRankingsTable editorial={bundle.editorial} /> : null}
               <NilFooterCta onRefresh={handleRefresh} refreshing={refreshing || loading} />
             </div>
           </div>
 
           <p className="nil-disclaimer rh-frame">
-            NIL dollar figures are modeled estimates — not audited deals or reported contracts. Rankings and
-            portal notes reflect modeled collective activity and public signals.
+            Elite NIL rule: only proven board, roster, portal, and collective signals. Dollar figures appear
+            only from On3 when public — never invented deal ranges.
           </p>
         </div>
       ) : null}

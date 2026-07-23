@@ -1,9 +1,20 @@
 /**
- * NIL tracking API — SEC rankings and UF dashboard.
+ * NIL tracking API — SEC rankings and UF dashboard + elite board bundle.
  */
 const nilStore = require('./nil-store');
 
 function mountNilRoutes(app) {
+  app.get('/api/nil/elite', async (req, res) => {
+    try {
+      const { buildNilEliteBundle } = require('./nil-elite');
+      const classYear = parseInt(String(req.query.classYear || '2027'), 10) || 2027;
+      const bundle = await buildNilEliteBundle({ classYear });
+      return res.json(bundle);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/nil/dashboard', (req, res) => {
     try {
       const conference = String(req.query.conference || 'SEC').trim();
