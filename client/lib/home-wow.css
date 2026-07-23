@@ -1098,33 +1098,36 @@
   text-decoration: underline;
 }
 
-/* Home 2028 targets → priority board CTA card */
+/* Home 2028 targets → priority board CTA card (lives on white home-wow-card) */
 .home-targets-board-cta {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
   margin-top: 14px;
-  padding: 14px 16px;
+  padding: 16px 18px;
   border-radius: 12px;
   text-decoration: none;
-  color: inherit;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--home-card-text, #0021a5);
+  background: #f3f6fc;
+  border: 1px solid #d5deef;
   border-top: 3px solid var(--home-gator-orange, #fa4616);
-  transition: background 160ms ease-out, border-color 160ms ease-out, transform 160ms ease-out;
+  box-shadow: 0 2px 8px rgba(0, 33, 165, 0.08);
+  transition: background 160ms ease-out, border-color 160ms ease-out, transform 160ms ease-out,
+    box-shadow 160ms ease-out;
 }
 
 .home-targets-board-cta:hover {
-  background: rgba(250, 70, 22, 0.1);
-  border-color: rgba(250, 70, 22, 0.45);
+  background: #eaf0fb;
+  border-color: color-mix(in srgb, var(--home-gator-orange, #fa4616) 45%, #d5deef);
+  box-shadow: 0 4px 12px rgba(0, 33, 165, 0.12);
   transform: translateY(-1px);
 }
 
 .home-targets-board-cta__copy {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   min-width: 0;
 }
 
@@ -1138,26 +1141,26 @@
 
 .home-targets-board-cta__title {
   font-family: 'Oswald', 'Arial Narrow', sans-serif;
-  font-size: 1.05rem;
+  font-size: 1.125rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: var(--home-text, #fff);
+  color: var(--home-card-text, #0021a5);
 }
 
 .home-targets-board-cta__meta {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   line-height: 1.35;
-  color: var(--home-muted, rgba(255, 255, 255, 0.6));
+  color: #4b5563;
 }
 
 .home-targets-board-cta__chevron {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   display: grid;
   place-items: center;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #fff;
   background: var(--home-gator-orange, #fa4616);
