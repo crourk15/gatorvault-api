@@ -65,8 +65,8 @@ export function NilElitePage(): React.ReactElement {
 
           <div className="rh-cc-main rh-frame">
             <div className="rh-cc-col">
-              {landscape ? <NilProgramRankingsTable landscape={landscape} /> : null}
               <NilRosterEarners earners={bundle.rosterEarners || []} />
+              {landscape ? <NilProgramRankingsTable landscape={landscape} /> : null}
               <NilLeaderboard marketBoard={bundle.marketBoard} />
               <NilPortalImpact portal={bundle.portal} />
               <NilMovementFeed items={bundle.movement} />
@@ -76,8 +76,9 @@ export function NilElitePage(): React.ReactElement {
           </div>
 
           <p className="nil-disclaimer rh-frame">
-            Dollars on this page: program pools from curated public reporting; roster and board player
-            figures are Vault model estimates unless labeled On3. Not audited contracts.
+            Florida player dollars from the Sideline NIL Market Index (On3 value when labeled;
+            otherwise Sideline model). SEC program pools remain curated public estimates. Not audited
+            contracts.
           </p>
         </div>
       ) : null}

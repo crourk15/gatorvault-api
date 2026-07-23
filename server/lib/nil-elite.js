@@ -31,11 +31,32 @@ function formatUsdCompact(amount) {
   const n = Number(amount);
   if (!Number.isFinite(n) || n <= 0) return null;
   if (n >= 1_000_000) {
-    const m = n / 1_000_000;
-    return `$${m >= 10 ? Math.round(m) : Math.round(m * 10) / 10}M`;
+    const m = Math.round((n / 1_000_000) * 100) / 100;
+    return `$${m}M`;
   }
-  if (n >= 1000) return `$${Math.round(n / 1000)}K`;
+  if (n >= 1000) {
+    const k = n / 1000;
+    if (Number.isInteger(k)) return `$${k}K`;
+    return `$${Math.round(k * 10) / 10}K`;
+  }
   return `$${Math.round(n)}`;
+}
+
+function loadSidelineFloridaRoster() {
+  try {
+    return JSON.parse(
+      fs.readFileSync(path.join(__dirname, '../data/nil/sideline-florida-roster.json'), 'utf8')
+    );
+  } catch {
+    return null;
+  }
+}
+
+function sourceLabel(source) {
+  if (source === 'on3') return 'On3 value';
+  if (source === 'sideline') return 'Sideline model';
+  if (source === 'vault_est') return 'Vault est.';
+  return 'Estimate';
 }
 
 /** Public / On3-style fields only — never invent. */
@@ -135,11 +156,53 @@ function loadRosterTransfers() {
     .slice(0, 12);
 }
 
-function buildRosterEarners(limit = 16) {
-  return loadRosterPlayers()
+function buildRosterEarners(limit = 120) {
+  const sideline = loadSidelineFloridaRoster();
+  const roster = loadRosterPlayers();
+  const rosterBySlug = new Map(
+    roster.map((p) => [String(p.slug || '').toLowerCase(), p]).filter(([k]) => k)
+  );
+  const rosterByName = new Map(
+    roster.map((p) => [String(p.name || p.fullName || '').toLowerCase(), p])
+  );
+
+  if (sideline?.players?.length) {
+    return sideline.players
+      .map((row) => {
+        const dollars = Number(row.value);
+        if (!Number.isFinite(dollars) || dollars <= 0) return null;
+        const linked =
+          (row.slug && rosterBySlug.get(String(row.slug).toLowerCase())) ||
+          rosterByName.get(String(row.name || '').toLowerCase()) ||
+          null;
+        const source = row.source === 'on3' ? 'on3' : 'sideline';
+        return {
+          id: String(row.rosterId || row.slug || row.name),
+          slug: row.slug || linked?.slug || null,
+          name: row.name || linked?.name || 'Player',
+          position: row.position || linked?.position || linked?.pos || 'ATH',
+          classYear: linked?.classYear != null ? Number(linked.classYear) : null,
+          stars: linked ? effectiveStars(linked) : null,
+          depthChartTier: linked?.depthChartTier || null,
+          classLabel: linked?.classYearLabel || linked?.year || linked?.eligibility || null,
+          jersey: linked?.number || linked?.jersey || null,
+          nilValuation: row.display || formatUsdCompact(dollars),
+          nilValuationRaw: dollars,
+          nilSource: source,
+          nilSourceLabel: sourceLabel(source),
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.nilValuationRaw - a.nilValuationRaw)
+      .slice(0, limit)
+      .map(({ nilValuationRaw, ...rest }) => rest);
+  }
+
+  return roster
     .map((p) => {
       const dollars = Number(p.nilValuation);
       if (!Number.isFinite(dollars) || dollars <= 0) return null;
+      const source = p.nilSource === 'on3' ? 'on3' : p.nilSource === 'sideline' ? 'sideline' : 'vault_est';
       return {
         id: String(p.id || p.slug || p.name),
         slug: p.slug || null,
@@ -150,7 +213,8 @@ function buildRosterEarners(limit = 16) {
         depthChartTier: p.depthChartTier || null,
         nilValuation: formatUsdCompact(dollars),
         nilValuationRaw: dollars,
-        nilSource: 'vault_est',
+        nilSource: source,
+        nilSourceLabel: p.nilSourceLabel || sourceLabel(source),
       };
     })
     .filter(Boolean)
@@ -355,14 +419,20 @@ async function buildNilEliteBundle(options = {}) {
   const portalPlayers = Array.isArray(portalResult) ? portalResult : portalResult.players || [];
   const portalError = Array.isArray(portalResult) ? null : portalResult.error || null;
   const rosterTransfers = loadRosterTransfers();
-  const rosterEarners = buildRosterEarners(16);
+  const rosterEarners = buildRosterEarners(120);
   const landscape = buildMoneyLandscape();
 
   const chip = blueChipPct(commits);
   const rating = avgRating(commits);
   const ufProgram = nilStore.loadPrograms().find((p) => p.id === nilStore.UF_ID);
-  const poolM = landscape.uf?.estimatedAnnualPoolM ?? null;
-  const poolLabel = poolM != null ? `~$${poolM}M` : null;
+  const sideline = loadSidelineFloridaRoster();
+  const market = sideline?.market || null;
+  const footballM = market?.bySport?.find((s) => /football/i.test(s.sport))?.valueM ?? null;
+  const rosterMarketM = market?.rosterMarketM ?? null;
+  // Prefer Sideline football market for the hero dial; fall back to curated pool.
+  const poolM = footballM ?? landscape.uf?.estimatedAnnualPoolM ?? null;
+  const poolLabel = poolM != null ? `$${poolM}M` : null;
+  const topEarner = rosterEarners[0] || null;
 
   return {
     ok: true,
@@ -373,21 +443,33 @@ async function buildNilEliteBundle(options = {}) {
       school: ufProgram?.school || 'Florida Gators',
       eyebrow: 'GatorVault NIL',
       title: 'NIL Tracker',
-      sub: 'UF pool estimates, roster valuations, and SEC market position — labeled sources, real dollars front and center.',
+      sub: market
+        ? 'Sideline NIL Market Index for Florida — On3 values when labeled, Sideline model otherwise.'
+        : 'UF pool estimates, roster valuations, and SEC market position — labeled sources, real dollars front and center.',
       poolLabel,
-      poolCaption: 'UF annual pool est.',
+      poolCaption: market ? 'Football market est.' : 'UF annual pool est.',
     },
     money: {
       estimatedAnnualPoolM: poolM,
       poolLabel,
+      rosterMarketM,
+      rosterMarketLabel: rosterMarketM != null ? `$${rosterMarketM}M` : null,
+      footballMarketM: footballM,
+      eliteMarketM: market?.eliteMarketM ?? null,
+      vsElitePct: market?.vsElitePct ?? null,
       avgDealK: landscape.uf?.avgDealK ?? null,
       topDealM: landscape.uf?.topDealM ?? null,
-      secRank: landscape.uf?.secRank ?? null,
-      nationalRank: landscape.uf?.nationalRank ?? null,
+      topEarnerName: topEarner?.name || null,
+      topEarnerValue: topEarner?.nilValuation || null,
+      secRank: market?.conferenceRank ?? landscape.uf?.secRank ?? null,
+      nationalRank: market?.nationalRank ?? landscape.uf?.nationalRank ?? null,
       trend: landscape.uf?.trend ?? null,
       trendPct: landscape.uf?.trendPct ?? null,
       collective: landscape.uf?.collective || ufProgram?.collective || 'Florida Victorious',
-      sourceNote: landscape.sourceNote,
+      sourceNote: sideline?.sourceNote || landscape.sourceNote,
+      bySport: market?.bySport || null,
+      attribution: market?.attribution || null,
+      provider: sideline?.provider || null,
     },
     pulse: {
       commits: commits.length,

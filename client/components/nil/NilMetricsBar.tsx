@@ -8,27 +8,19 @@ type Props = {
   pulse: NilEliteBundle['pulse'];
 };
 
-function trendLabel(money?: NilEliteBundle['money']): string {
-  if (!money?.trend) return '—';
-  const pct = money.trendPct != null ? ` ${money.trendPct > 0 ? '+' : ''}${money.trendPct}%` : '';
-  if (money.trend === 'up') return `↑${pct}`;
-  if (money.trend === 'down') return `↓${pct}`;
-  return `→${pct}`;
-}
-
 export function NilMetricsBar({ money, pulse }: Props): React.ReactElement {
   const metrics = [
     {
-      label: 'UF pool est.',
+      label: 'Football market',
       value: money?.poolLabel || '—',
     },
     {
-      label: 'Avg deal',
-      value: money?.avgDealK != null ? `$${money.avgDealK}K` : '—',
+      label: 'Roster market',
+      value: money?.rosterMarketLabel || '—',
     },
     {
-      label: 'Top deal',
-      value: money?.topDealM != null ? `$${money.topDealM}M` : '—',
+      label: 'Top valuation',
+      value: money?.topEarnerValue || '—',
     },
     {
       label: 'SEC rank',
@@ -39,17 +31,14 @@ export function NilMetricsBar({ money, pulse }: Props): React.ReactElement {
       value: money?.nationalRank != null ? `#${money.nationalRank}` : '—',
     },
     {
-      label: 'Pool trend',
-      value: trendLabel(money),
+      label: 'vs #1 market',
+      value: money?.vsElitePct != null ? `${money.vsElitePct}%` : '—',
     },
     {
-      label: 'Roster valuations',
-      value: String(pulse.portalArrivals >= 0 ? 'Live' : '—'),
+      label: 'Active UF targets',
+      value: String(pulse.activeTargets),
     },
   ];
-
-  // Drop the useless "Live" metric — replace with active targets as secondary context
-  metrics[6] = { label: 'Active UF targets', value: String(pulse.activeTargets) };
 
   return (
     <section className="nil-metrics nil-bleed" data-testid="nil-metrics-bar" aria-label="NIL money pulse">
@@ -61,6 +50,13 @@ export function NilMetricsBar({ money, pulse }: Props): React.ReactElement {
           </article>
         ))}
       </div>
+      {money?.provider ? (
+        <p className="nil-metrics__note rh-frame">
+          {money.provider}
+          {money.topEarnerName ? ` · Lead: ${money.topEarnerName}` : ''}
+          {money.attribution ? ` · ${money.attribution}` : ''}
+        </p>
+      ) : null}
     </section>
   );
 }

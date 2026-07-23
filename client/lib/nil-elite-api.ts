@@ -51,8 +51,11 @@ export type NilEliteRosterEarner = {
   classYear: number | null;
   stars: number | null;
   depthChartTier: string | null;
+  classLabel?: string | null;
+  jersey?: string | number | null;
   nilValuation: string;
-  nilSource: 'vault_est' | 'on3';
+  nilSource: 'vault_est' | 'on3' | 'sideline';
+  nilSourceLabel?: string | null;
 };
 
 export type NilEliteMovementItem = {
@@ -72,14 +75,29 @@ export type NilEliteCollective = {
 export type NilEliteMoney = {
   estimatedAnnualPoolM: number | null;
   poolLabel: string | null;
+  rosterMarketM?: number | null;
+  rosterMarketLabel?: string | null;
+  footballMarketM?: number | null;
+  eliteMarketM?: number | null;
+  vsElitePct?: number | null;
   avgDealK: number | null;
   topDealM: number | null;
+  topEarnerName?: string | null;
+  topEarnerValue?: string | null;
   secRank: number | null;
   nationalRank: number | null;
   trend: string | null;
   trendPct: number | null;
   collective: string;
   sourceNote: string;
+  bySport?: Array<{
+    sport: string;
+    valueM?: number;
+    valueK?: number;
+    sharePct: number;
+  }> | null;
+  attribution?: string | null;
+  provider?: string | null;
 };
 
 export type NilEliteLandscapeRow = {

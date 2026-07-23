@@ -1,0 +1,974 @@
+{
+  "version": 1,
+  "asOf": "2026-07-23",
+  "provider": "Sideline NIL Market Index",
+  "school": "Florida",
+  "market": {
+    "label": "2026 Roster Market Estimate",
+    "rosterMarketM": 37.0,
+    "eliteMarketM": 65.3,
+    "vsElitePct": 56.6,
+    "nationalRank": 24,
+    "conferenceRank": 12,
+    "nationalPercentileLabel": "Top 7%",
+    "conference": "SEC",
+    "scope": "Power 4",
+    "bySport": [
+      {
+        "sport": "Football",
+        "valueM": 17.3,
+        "sharePct": 47
+      },
+      {
+        "sport": "Men's Basketball",
+        "valueM": 12.7,
+        "sharePct": 34
+      },
+      {
+        "sport": "Baseball",
+        "valueM": 2.8,
+        "sharePct": 7
+      },
+      {
+        "sport": "Softball",
+        "valueM": 1.0,
+        "sharePct": 3
+      },
+      {
+        "sport": "Track & Field",
+        "valueK": 925,
+        "sharePct": 3
+      },
+      {
+        "sport": "Other Olympic Sports",
+        "valueK": 850,
+        "sharePct": 2
+      },
+      {
+        "sport": "Volleyball",
+        "valueK": 775,
+        "sharePct": 2
+      },
+      {
+        "sport": "Women's Soccer",
+        "valueK": 675,
+        "sharePct": 2
+      }
+    ],
+    "attribution": "The Sideline owns this index."
+  },
+  "players": [
+    {
+      "name": "Aaron Philo",
+      "source": "sideline",
+      "value": 1510000,
+      "display": "$1.51M",
+      "slug": "aaron-philo",
+      "rosterId": "aaron-philo",
+      "position": "QB"
+    },
+    {
+      "name": "Jadan Baugh",
+      "source": "on3",
+      "value": 1000000,
+      "display": "$1M",
+      "slug": "jadan-baugh",
+      "rosterId": "jadan-baugh",
+      "position": "RB"
+    },
+    {
+      "name": "Vernell Brown III",
+      "source": "on3",
+      "value": 1000000,
+      "display": "$1M",
+      "slug": "vernell-brown-iii",
+      "rosterId": "vernell-brown-iii",
+      "position": "WR"
+    },
+    {
+      "name": "Eric Singleton Jr.",
+      "source": "on3",
+      "value": 1000000,
+      "display": "$1M",
+      "slug": "eric-singleton-jr",
+      "rosterId": "eric-singleton-jr",
+      "position": "WR"
+    },
+    {
+      "name": "Kamran James",
+      "source": "sideline",
+      "value": 941000,
+      "display": "$941.0K",
+      "slug": "kamran-james",
+      "rosterId": "kamran-james",
+      "position": "DL"
+    },
+    {
+      "name": "Jayden Woods",
+      "source": "sideline",
+      "value": 842500,
+      "display": "$842.5K",
+      "slug": "jayden-woods",
+      "rosterId": "jayden-woods",
+      "position": "JACK"
+    },
+    {
+      "name": "Caden Jones",
+      "source": "sideline",
+      "value": 800000,
+      "display": "$800K",
+      "slug": "caden-jones",
+      "rosterId": "caden-jones",
+      "position": "OL"
+    },
+    {
+      "name": "Emeka Ugorji",
+      "source": "sideline",
+      "value": 800000,
+      "display": "$800K",
+      "slug": "emeka-ugorji",
+      "rosterId": "emeka-ugorji",
+      "position": "OL"
+    },
+    {
+      "name": "Brendan Bett",
+      "source": "sideline",
+      "value": 720000,
+      "display": "$720K",
+      "slug": "brendan-bett",
+      "rosterId": "brendan-bett",
+      "position": "DL"
+    },
+    {
+      "name": "Cormani McClain",
+      "source": "on3",
+      "value": 700000,
+      "display": "$700K",
+      "slug": "cormani-mcclain",
+      "rosterId": "cormani-mcclain",
+      "position": "CB"
+    },
+    {
+      "name": "TJ Shanahan Jr.",
+      "source": "sideline",
+      "value": 645100,
+      "display": "$645.1K",
+      "slug": "tj-shanahan-jr",
+      "rosterId": "tj-shanahan-jr",
+      "position": "OL"
+    },
+    {
+      "name": "LJ McCray",
+      "source": "on3",
+      "value": 500000,
+      "display": "$500K",
+      "slug": "lj-mccray",
+      "rosterId": "lj-mccray",
+      "position": "DL"
+    },
+    {
+      "name": "Clay Millen",
+      "source": "sideline",
+      "value": 490000,
+      "display": "$490K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Aaron Williams",
+      "source": "sideline",
+      "value": 483900,
+      "display": "$483.9K",
+      "slug": "aaron-williams",
+      "rosterId": "aaron-williams",
+      "position": "QB"
+    },
+    {
+      "name": "Harrison Bailey",
+      "source": "sideline",
+      "value": 355000,
+      "display": "$355K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "TJ Abrams",
+      "source": "sideline",
+      "value": 337000,
+      "display": "$337K",
+      "slug": "tj-abrams",
+      "rosterId": "tj-abrams",
+      "position": "WR"
+    },
+    {
+      "name": "Dallas Wilson",
+      "source": "sideline",
+      "value": 318000,
+      "display": "$318K",
+      "slug": "dallas-wilson",
+      "rosterId": "dallas-wilson",
+      "position": "WR"
+    },
+    {
+      "name": "Alfonzo Allen Jr.",
+      "source": "sideline",
+      "value": 236500,
+      "display": "$236.5K",
+      "slug": "alfonzo-allen-jr",
+      "rosterId": "alfonzo-allen-jr",
+      "position": "S"
+    },
+    {
+      "name": "Dijon Johnson",
+      "source": "sideline",
+      "value": 217500,
+      "display": "$217.5K",
+      "slug": "dijon-johnson",
+      "rosterId": "dijon-johnson",
+      "position": "CB"
+    },
+    {
+      "name": "Jamari Lyons",
+      "source": "sideline",
+      "value": 201500,
+      "display": "$201.5K",
+      "slug": "jamari-lyons",
+      "rosterId": "jamari-lyons",
+      "position": "DL"
+    },
+    {
+      "name": "Jalen Wiggins",
+      "source": "sideline",
+      "value": 190500,
+      "display": "$190.5K",
+      "slug": "jalen-wiggins",
+      "rosterId": "jalen-wiggins",
+      "position": "DL"
+    },
+    {
+      "name": "Aaron Chiles",
+      "source": "sideline",
+      "value": 180000,
+      "display": "$180K",
+      "slug": "aaron-chiles",
+      "rosterId": "aaron-chiles",
+      "position": "ILB"
+    },
+    {
+      "name": "Myles Graham",
+      "source": "sideline",
+      "value": 172500,
+      "display": "$172.5K",
+      "slug": "myles-graham",
+      "rosterId": "myles-graham",
+      "position": "ILB"
+    },
+    {
+      "name": "Aidan Warner",
+      "source": "sideline",
+      "value": 172000,
+      "display": "$172K",
+      "slug": "aidan-warner",
+      "rosterId": "aidan-warner",
+      "position": "QB"
+    },
+    {
+      "name": "Knijeah Harris",
+      "source": "sideline",
+      "value": 163500,
+      "display": "$163.5K",
+      "slug": "knijeah-harris",
+      "rosterId": "knijeah-harris",
+      "position": "OL"
+    },
+    {
+      "name": "London Montgomery",
+      "source": "sideline",
+      "value": 155000,
+      "display": "$155K",
+      "slug": "london-montgomery",
+      "rosterId": "london-montgomery",
+      "position": "RB"
+    },
+    {
+      "name": "Evan Pryor",
+      "source": "sideline",
+      "value": 149000,
+      "display": "$149K",
+      "slug": "evan-pryor",
+      "rosterId": "evan-pryor",
+      "position": "RB"
+    },
+    {
+      "name": "Byron Louis",
+      "source": "sideline",
+      "value": 142000,
+      "display": "$142K",
+      "slug": "byron-louis",
+      "rosterId": "byron-louis",
+      "position": "RB"
+    },
+    {
+      "name": "Roderick Kearney",
+      "source": "sideline",
+      "value": 125500,
+      "display": "$125.5K",
+      "slug": "roderick-kearney",
+      "rosterId": "roderick-kearney",
+      "position": "OL"
+    },
+    {
+      "name": "J'Vari Flowers",
+      "source": "sideline",
+      "value": 117500,
+      "display": "$117.5K",
+      "slug": "jvari-flowers",
+      "rosterId": "jvari-flowers",
+      "position": "CB"
+    },
+    {
+      "name": "Ty Jackson",
+      "source": "sideline",
+      "value": 107500,
+      "display": "$107.5K",
+      "slug": "ty-jackson",
+      "rosterId": "ty-jackson",
+      "position": "ILB"
+    },
+    {
+      "name": "Joseph Mbatchou",
+      "source": "sideline",
+      "value": 98500,
+      "display": "$98.5K",
+      "slug": "joseph-mbatchou",
+      "rosterId": "joseph-mbatchou",
+      "position": "DL"
+    },
+    {
+      "name": "Jeramiah McCloud",
+      "source": "sideline",
+      "value": 95500,
+      "display": "$95.5K",
+      "slug": "jeramiah-mccloud",
+      "rosterId": "jeramiah-mccloud",
+      "position": "DL"
+    },
+    {
+      "name": "Kofi Asare",
+      "source": "sideline",
+      "value": 91000,
+      "display": "$91K",
+      "slug": "kofi-asare",
+      "rosterId": "kofi-asare",
+      "position": "JACK"
+    },
+    {
+      "name": "Tramell Jones Jr.",
+      "source": "sideline",
+      "value": 88500,
+      "display": "$88.5K",
+      "slug": "tramell-jones-jr",
+      "rosterId": "tramell-jones-jr",
+      "position": "QB"
+    },
+    {
+      "name": "Fletcher Westphal",
+      "source": "sideline",
+      "value": 87500,
+      "display": "$87.5K",
+      "slug": "fletcher-westphal",
+      "rosterId": "fletcher-westphal",
+      "position": "OL"
+    },
+    {
+      "name": "Jason Zandamela",
+      "source": "sideline",
+      "value": 85000,
+      "display": "$85K",
+      "slug": "jason-zandamela",
+      "rosterId": "jason-zandamela",
+      "position": "OL"
+    },
+    {
+      "name": "Myles Johnson",
+      "source": "sideline",
+      "value": 83000,
+      "display": "$83K",
+      "slug": "myles-johnson",
+      "rosterId": "myles-johnson",
+      "position": "ILB"
+    },
+    {
+      "name": "Onis Konanbanny",
+      "source": "sideline",
+      "value": 76000,
+      "display": "$76K",
+      "slug": "onis-konanbanny",
+      "rosterId": "onis-konanbanny",
+      "position": "CB"
+    },
+    {
+      "name": "Jaylen Lloyd",
+      "source": "sideline",
+      "value": 73000,
+      "display": "$73K",
+      "slug": "jaylen-lloyd",
+      "rosterId": "jaylen-lloyd",
+      "position": "WR"
+    },
+    {
+      "name": "Micah Mays Jr.",
+      "source": "sideline",
+      "value": 71500,
+      "display": "$71.5K",
+      "slug": "micah-mays-jr",
+      "rosterId": "micah-mays-jr",
+      "position": "WR"
+    },
+    {
+      "name": "Bailey Stockton",
+      "source": "sideline",
+      "value": 69500,
+      "display": "$69.5K",
+      "slug": "bailey-stockton",
+      "rosterId": "bailey-stockton",
+      "position": "WR"
+    },
+    {
+      "name": "Bryce Thornton",
+      "source": "sideline",
+      "value": 60000,
+      "display": "$60K",
+      "slug": "bryce-thornton",
+      "rosterId": "bryce-thornton",
+      "position": "S"
+    },
+    {
+      "name": "Kahleil Jackson",
+      "source": "sideline",
+      "value": 57000,
+      "display": "$57K",
+      "slug": "kahleil-jackson",
+      "rosterId": "kahleil-jackson",
+      "position": "WR"
+    },
+    {
+      "name": "Taylor Spierto",
+      "source": "sideline",
+      "value": 54000,
+      "display": "$54K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Alex Gonzalez",
+      "source": "sideline",
+      "value": 52500,
+      "display": "$52.5K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Jaden Robinson",
+      "source": "sideline",
+      "value": 51000,
+      "display": "$51K",
+      "slug": "jaden-robinson",
+      "rosterId": "jaden-robinson",
+      "position": "ILB"
+    },
+    {
+      "name": "Kanye Clark",
+      "source": "sideline",
+      "value": 49300,
+      "display": "$49.3K",
+      "slug": "kanye-clark",
+      "rosterId": "kanye-clark",
+      "position": "STAR"
+    },
+    {
+      "name": "Bryce Lovett",
+      "source": "sideline",
+      "value": 45500,
+      "display": "$45.5K",
+      "slug": "bryce-lovett",
+      "rosterId": "bryce-lovett",
+      "position": "OL"
+    },
+    {
+      "name": "Jaden Edgecombe",
+      "source": "sideline",
+      "value": 44300,
+      "display": "$44.3K",
+      "slug": "jaden-edgecombe",
+      "rosterId": "jaden-edgecombe",
+      "position": "WR"
+    },
+    {
+      "name": "Eagan Boyer",
+      "source": "sideline",
+      "value": 41800,
+      "display": "$41.8K",
+      "slug": "eagan-boyer",
+      "rosterId": "eagan-boyer",
+      "position": "OL"
+    },
+    {
+      "name": "Cam Dooley",
+      "source": "sideline",
+      "value": 39000,
+      "display": "$39K",
+      "slug": "cam-dooley",
+      "rosterId": "cam-dooley",
+      "position": "S"
+    },
+    {
+      "name": "Evan Jackson",
+      "source": "sideline",
+      "value": 38000,
+      "display": "$38K",
+      "slug": "evan-jackson",
+      "rosterId": "evan-jackson",
+      "position": "ILB"
+    },
+    {
+      "name": "Emmanuel Oyebadejo",
+      "source": "sideline",
+      "value": 36500,
+      "display": "$36.5K",
+      "slug": "emmanuel-oyebadejo",
+      "rosterId": "emmanuel-oyebadejo",
+      "position": "DL"
+    },
+    {
+      "name": "Jahari Medlock",
+      "source": "sideline",
+      "value": 34800,
+      "display": "$34.8K",
+      "slug": "jahari-medlock",
+      "rosterId": "jahari-medlock",
+      "position": "OL"
+    },
+    {
+      "name": "Daniel Pierre Louis",
+      "source": "sideline",
+      "value": 34300,
+      "display": "$34.3K",
+      "slug": "daniel-pierre-louis",
+      "rosterId": "daniel-pierre-louis",
+      "position": "OL"
+    },
+    {
+      "name": "Ace Ciongoli",
+      "source": "sideline",
+      "value": 33500,
+      "display": "$33.5K",
+      "slug": "ace-ciongoli",
+      "rosterId": "ace-ciongoli",
+      "position": "WR"
+    },
+    {
+      "name": "Cary Rifenberick",
+      "source": "sideline",
+      "value": 32800,
+      "display": "$32.8K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Luke Harpring",
+      "source": "sideline",
+      "value": 32000,
+      "display": "$32K",
+      "slug": "luke-harpring",
+      "rosterId": "luke-harpring",
+      "position": "TE"
+    },
+    {
+      "name": "Lacota Dippre",
+      "source": "sideline",
+      "value": 31500,
+      "display": "$31.5K",
+      "slug": "lacota-dippre",
+      "rosterId": "lacota-dippre",
+      "position": "TE"
+    },
+    {
+      "name": "Layne Swafford",
+      "source": "sideline",
+      "value": 31000,
+      "display": "$31K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Micah Jones",
+      "source": "sideline",
+      "value": 30500,
+      "display": "$30.5K",
+      "slug": "micah-jones",
+      "rosterId": "micah-jones",
+      "position": "TE"
+    },
+    {
+      "name": "Anthony Rubio",
+      "source": "sideline",
+      "value": 30000,
+      "display": "$30K",
+      "slug": "anthony-rubio",
+      "rosterId": "anthony-rubio",
+      "position": "RB"
+    },
+    {
+      "name": "Harrison Moore",
+      "source": "sideline",
+      "value": 29000,
+      "display": "$29K",
+      "slug": "harrison-moore",
+      "rosterId": "harrison-moore",
+      "position": "OL"
+    },
+    {
+      "name": "Micheal Caraway Jr.",
+      "source": "sideline",
+      "value": 27500,
+      "display": "$27.5K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Cahron Rackley",
+      "source": "sideline",
+      "value": 26300,
+      "display": "$26.3K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Harold Stubbs IV",
+      "source": "sideline",
+      "value": 25300,
+      "display": "$25.3K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Javion Toombs",
+      "source": "sideline",
+      "value": 25000,
+      "display": "$25K",
+      "slug": "javion-toombs",
+      "rosterId": "javion-toombs",
+      "position": "CB"
+    },
+    {
+      "name": "Titus Bullard",
+      "source": "sideline",
+      "value": 24500,
+      "display": "$24.5K",
+      "slug": "titus-bullard",
+      "rosterId": "titus-bullard",
+      "position": "JACK"
+    },
+    {
+      "name": "Hayden Clem",
+      "source": "sideline",
+      "value": 23800,
+      "display": "$23.8K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Damieon George Jr.",
+      "source": "sideline",
+      "value": 23500,
+      "display": "$23.5K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Kamryn Waites",
+      "source": "sideline",
+      "value": 23300,
+      "display": "$23.3K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Nicolas Flynn",
+      "source": "sideline",
+      "value": 23000,
+      "display": "$23K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Charles Emanuel III",
+      "source": "sideline",
+      "value": 22500,
+      "display": "$22.5K",
+      "slug": "charles-emanuel-iii",
+      "rosterId": "charles-emanuel-iii",
+      "position": "JACK"
+    },
+    {
+      "name": "Erich Seager",
+      "source": "sideline",
+      "value": 22300,
+      "display": "$22.3K",
+      "slug": "erich-seager",
+      "rosterId": "erich-seager",
+      "position": "JACK"
+    },
+    {
+      "name": "Duke Clark",
+      "source": "sideline",
+      "value": 21800,
+      "display": "$21.8K",
+      "slug": "duke-clark",
+      "rosterId": "duke-clark",
+      "position": "RB"
+    },
+    {
+      "name": "Caleb Rillos",
+      "source": "sideline",
+      "value": 21500,
+      "display": "$21.5K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Jordy Lowery",
+      "source": "sideline",
+      "value": 21000,
+      "display": "$21K",
+      "slug": "jordy-lowery",
+      "rosterId": "jordy-lowery",
+      "position": "CB"
+    },
+    {
+      "name": "Vincent Brown Jr.",
+      "source": "sideline",
+      "value": 20500,
+      "display": "$20.5K",
+      "slug": "vincent-brown-jr",
+      "rosterId": "vincent-brown-jr",
+      "position": "CB"
+    },
+    {
+      "name": "Brayden Slade",
+      "source": "sideline",
+      "value": 20500,
+      "display": "$20.5K",
+      "slug": "brayden-slade",
+      "rosterId": "brayden-slade",
+      "position": "S"
+    },
+    {
+      "name": "Kelvin Jimenez",
+      "source": "sideline",
+      "value": 20300,
+      "display": "$20.3K",
+      "slug": "kelvin-jimenez",
+      "rosterId": "kelvin-jimenez",
+      "position": "RB"
+    },
+    {
+      "name": "Sebastian Scott",
+      "source": "sideline",
+      "value": 19500,
+      "display": "$19.5K",
+      "slug": "sebastian-scott",
+      "rosterId": "sebastian-scott",
+      "position": "DL"
+    },
+    {
+      "name": "Lagonza Hayward",
+      "source": "sideline",
+      "value": 18300,
+      "display": "$18.3K",
+      "slug": "lagonza-hayward",
+      "rosterId": "lagonza-hayward",
+      "position": "S"
+    },
+    {
+      "name": "Drake Stubbs",
+      "source": "sideline",
+      "value": 18000,
+      "display": "$18K",
+      "slug": "drake-stubbs",
+      "rosterId": "drake-stubbs",
+      "position": "S"
+    },
+    {
+      "name": "Ben Hanks III",
+      "source": "sideline",
+      "value": 17000,
+      "display": "$17K",
+      "slug": "ben-hanks-iii",
+      "rosterId": "ben-hanks-iii",
+      "position": "CB"
+    },
+    {
+      "name": "DJ Coleman",
+      "source": "sideline",
+      "value": 16500,
+      "display": "$16.5K",
+      "slug": "dj-coleman",
+      "rosterId": "dj-coleman",
+      "position": "S"
+    },
+    {
+      "name": "Winfield Scott",
+      "source": "sideline",
+      "value": 16300,
+      "display": "$16.3K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Mason Clinton",
+      "source": "sideline",
+      "value": 15800,
+      "display": "$15.8K",
+      "slug": "mason-clinton",
+      "rosterId": "mason-clinton",
+      "position": "DL"
+    },
+    {
+      "name": "DK Kalu",
+      "source": "sideline",
+      "value": 15800,
+      "display": "$15.8K",
+      "slug": "dk-kalu",
+      "rosterId": "dk-kalu",
+      "position": "DL"
+    },
+    {
+      "name": "Brian Case",
+      "source": "sideline",
+      "value": 15300,
+      "display": "$15.3K",
+      "slug": "brian-case",
+      "rosterId": "brian-case",
+      "position": "RB"
+    },
+    {
+      "name": "TJ Bullard",
+      "source": "sideline",
+      "value": 15000,
+      "display": "$15K",
+      "slug": "tj-bullard",
+      "rosterId": "tj-bullard",
+      "position": "ILB"
+    },
+    {
+      "name": "TJ Dice Jr.",
+      "source": "sideline",
+      "value": 14800,
+      "display": "$14.8K",
+      "slug": "tj-dice-jr",
+      "rosterId": "tj-dice-jr",
+      "position": "OL"
+    },
+    {
+      "name": "Mark Faircloth",
+      "source": "sideline",
+      "value": 14800,
+      "display": "$14.8K",
+      "slug": "mark-faircloth",
+      "rosterId": "mark-faircloth",
+      "position": "OL"
+    },
+    {
+      "name": "Matthew Kade",
+      "source": "sideline",
+      "value": 14500,
+      "display": "$14.5K",
+      "slug": "matthew-kade",
+      "rosterId": "matthew-kade",
+      "position": "ILB"
+    },
+    {
+      "name": "Jake Xeller",
+      "source": "sideline",
+      "value": 14500,
+      "display": "$14.5K",
+      "slug": null,
+      "rosterId": null
+    },
+    {
+      "name": "Evan Chieca",
+      "source": "sideline",
+      "value": 14000,
+      "display": "$14K",
+      "slug": "evan-chieca",
+      "rosterId": "evan-chieca",
+      "position": "TE"
+    },
+    {
+      "name": "Dylan Leighton",
+      "source": "sideline",
+      "value": 11800,
+      "display": "$11.8K",
+      "slug": "dylan-leighton",
+      "rosterId": "dylan-leighton",
+      "position": "ILB"
+    },
+    {
+      "name": "Liam Padron",
+      "source": "sideline",
+      "value": 5700,
+      "display": "$5.7K",
+      "slug": "liam-padron",
+      "rosterId": "liam-padron",
+      "position": "K"
+    },
+    {
+      "name": "Patrick Durkin",
+      "source": "sideline",
+      "value": 5700,
+      "display": "$5.7K",
+      "slug": "patrick-durkin",
+      "rosterId": "patrick-durkin",
+      "position": "K"
+    },
+    {
+      "name": "Brandon Rabasco",
+      "source": "sideline",
+      "value": 5600,
+      "display": "$5.6K",
+      "slug": "brandon-rabasco",
+      "rosterId": "brandon-rabasco",
+      "position": "K"
+    },
+    {
+      "name": "Alec Clark",
+      "source": "sideline",
+      "value": 5000,
+      "display": "$5K",
+      "slug": "alec-clark",
+      "rosterId": "alec-clark",
+      "position": "P"
+    },
+    {
+      "name": "Nicholas Inglis",
+      "source": "sideline",
+      "value": 4900,
+      "display": "$4.9K",
+      "slug": "nicholas-inglis",
+      "rosterId": "nicholas-inglis",
+      "position": "P"
+    },
+    {
+      "name": "Hunter Solwold",
+      "source": "sideline",
+      "value": 3000,
+      "display": "$3K",
+      "slug": "hunter-solwold",
+      "rosterId": "hunter-solwold",
+      "position": "LS"
+    }
+  ],
+  "sourceNote": "Player values from Sideline NIL Market Index (On3 value when labeled; otherwise Sideline model)."
+}
