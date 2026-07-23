@@ -34,36 +34,38 @@ function EarnerRow({
   rank: number;
 }): React.ReactElement {
   const href = player.slug ? playerProfileRoute(player.slug, 'team') : undefined;
-  const meta = [
-    player.position,
-    player.classLabel,
-    player.jersey != null && player.jersey !== '' ? `#${player.jersey}` : null,
-  ]
-    .filter(Boolean)
-    .join(' · ');
+  const pos = (player.position || 'ATH').toUpperCase();
+  const source =
+    player.nilSourceLabel ||
+    (player.nilSource === 'on3'
+      ? 'On3 value'
+      : player.nilSource === 'sideline'
+        ? 'Sideline model'
+        : 'Vault est.');
+
   const body = (
     <>
       <span className="nil-earner-list__rank">#{rank}</span>
       <span className="nil-earner-list__identity">
         <strong className="nil-earner-list__name">{player.name}</strong>
         <span className="nil-earner-list__meta">
-          {player.stars != null ? `${'★'.repeat(Math.min(5, player.stars))} · ` : ''}
-          {meta || 'Florida'}
+          <span className="nil-earner-list__pos">{pos}</span>
+          {player.classLabel ? <span className="nil-earner-list__chip">{player.classLabel}</span> : null}
+          {player.jersey != null && player.jersey !== '' ? (
+            <span className="nil-earner-list__chip">#{player.jersey}</span>
+          ) : null}
+          {player.stars != null ? (
+            <span className="nil-earner-list__stars">{player.stars}★</span>
+          ) : null}
         </span>
       </span>
       <span className="nil-earner-list__val">
-        <span className="nil-earner-list__val-label">
-          {player.nilSourceLabel ||
-            (player.nilSource === 'on3'
-              ? 'On3 value'
-              : player.nilSource === 'sideline'
-                ? 'Sideline model'
-                : 'Vault est.')}
-        </span>
         <strong>{player.nilValuation}</strong>
+        <span className="nil-earner-list__val-label">{source}</span>
       </span>
     </>
   );
+
   return (
     <li className="nil-earner-list__item">
       {href ? (
@@ -96,14 +98,15 @@ export function NilRosterEarners({ earners, startRank = 1 }: Props): React.React
   const showToggle = !query && filter === 'All' && earners.length > preview.length;
 
   return (
-    <section className="nil-elite-section nil-elite-section--gator-board" data-testid="nil-roster-earners">
+    <section
+      className="nil-elite-section nil-elite-section--gator-board"
+      data-testid="nil-roster-earners"
+    >
       <header className="nil-elite-section__head">
-        <div>
-          <h2 className="nil-elite-section__title">Full Florida board</h2>
-          <p className="nil-elite-section__sub">
-            Every Sideline valuation — On3 when public, Sideline model otherwise.
-          </p>
-        </div>
+        <h2 className="nil-elite-section__title">Full Florida board</h2>
+        <p className="nil-elite-section__sub">
+          Every Sideline valuation — On3 when public, Sideline model otherwise.
+        </p>
       </header>
 
       <label className="nil-search">

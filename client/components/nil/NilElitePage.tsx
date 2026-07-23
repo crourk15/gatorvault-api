@@ -54,28 +54,26 @@ export function NilElitePage(): React.ReactElement {
             topEarners={bundle.rosterEarners || []}
           />
 
-          <div className="rh-cc-main rh-frame">
-            <div className="rh-cc-col">
-              <NilRosterEarners earners={bundle.rosterEarners || []} startRank={1} />
-              {landscape ? <NilProgramRankingsTable landscape={landscape} /> : null}
-              <NilLeaderboard marketBoard={bundle.marketBoard} />
+          <div className="nil-desk-stack rh-frame">
+            <NilRosterEarners earners={bundle.rosterEarners || []} startRank={1} />
+            {landscape ? <NilProgramRankingsTable landscape={landscape} /> : null}
+            <NilLeaderboard marketBoard={bundle.marketBoard} />
 
-              <div className="nil-desk-foot">
-                <p className="nil-desk-foot__meta">
-                  {bundle.desk?.provider || 'Sideline NIL Market Index'}
-                  {bundle.generatedAt
-                    ? ` · Updated ${new Date(bundle.generatedAt).toLocaleString()}`
-                    : ''}
-                </p>
-                <button
-                  type="button"
-                  className="nil-editorial-toggle"
-                  onClick={handleRefresh}
-                  disabled={refreshing || loading}
-                >
-                  {refreshing || loading ? 'Refreshing…' : 'Refresh desk'}
-                </button>
-              </div>
+            <div className="nil-desk-foot">
+              <p className="nil-desk-foot__meta">
+                {bundle.desk?.provider || 'Sideline NIL Market Index'}
+                {bundle.generatedAt
+                  ? ` · Updated ${new Date(bundle.generatedAt).toLocaleString()}`
+                  : ''}
+              </p>
+              <button
+                type="button"
+                className="nil-editorial-toggle"
+                onClick={handleRefresh}
+                disabled={refreshing || loading}
+              >
+                {refreshing || loading ? 'Refreshing…' : 'Refresh desk'}
+              </button>
             </div>
           </div>
 
