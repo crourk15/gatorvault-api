@@ -100,7 +100,7 @@ export const TEAM_COPY = {
   },
   roster: {
     title: 'Roster Rooms',
-    subtitle: 'Starters first · position rooms · tap into a player card',
+    subtitle: 'Starters by default · open Full roster when you need the whole class',
   },
   depthChart: {
     title: '2026 Depth Chart',

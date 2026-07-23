@@ -2146,9 +2146,7 @@
 }
 
 .team-premium-page .gv-team-dc-depth-meta {
-  max-width: 42%;
-  white-space: normal;
-  overflow-wrap: anywhere;
+  max-width: none;
 }
 
 .team-premium-page .team-dest-grid,
@@ -2504,5 +2502,213 @@
   text-transform: uppercase;
   color: var(--team-gator-orange);
   text-decoration: none;
+}
+
+
+/* ============================================================
+   Card readability override (depth + roster)
+   Navy Florida cards, stacked meta, no clipped years.
+   ============================================================ */
+
+.team-premium-page .team-premium-module .gv-team-dc-card,
+.team-premium-page .gv-team-dc-card {
+  position: relative;
+  overflow: hidden;
+  padding: 14px;
+  border-radius: 12px;
+  background: linear-gradient(165deg, #0021a5 0%, #001a33 70%, #00101f 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 8px 20px rgba(0, 26, 51, 0.18);
+  color: #fff;
+}
+
+.team-premium-page .gv-team-dc-card::before {
+  background: linear-gradient(90deg, #fa4616 0%, #ffb199 100%) !important;
+}
+
+.team-premium-page .gv-team-dc-card__head {
+  border-bottom-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+.team-premium-page .gv-team-dc-card__pos {
+  color: #fff !important;
+}
+
+.team-premium-page .gv-team-dc-status--Locked {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+.team-premium-page .gv-team-dc-status--Battle {
+  background: rgba(250, 70, 22, 0.28) !important;
+  color: #ffd2c2 !important;
+  border-color: rgba(250, 70, 22, 0.55) !important;
+}
+
+.team-premium-page .gv-team-dc-status--Watch {
+  background: rgba(148, 163, 184, 0.22) !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(148, 163, 184, 0.4) !important;
+}
+
+.team-premium-page .gv-team-dc-depth-row {
+  display: grid !important;
+  grid-template-columns: 28px minmax(0, 1fr) !important;
+  gap: 10px !important;
+  align-items: start !important;
+  border-top-color: rgba(255, 255, 255, 0.12) !important;
+  min-width: 0;
+}
+
+.team-premium-page .gv-team-dc-depth-rank {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.team-premium-page .gv-team-dc-depth-row:first-child .gv-team-dc-depth-rank {
+  color: #ffb199 !important;
+}
+
+.team-premium-page .gv-team-dc-depth-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.team-premium-page .gv-team-dc-depth-name {
+  color: #fff !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.team-premium-page .gv-team-dc-depth-meta {
+  display: block;
+  max-width: none !important;
+  text-align: left !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  overflow-wrap: anywhere;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+  line-height: 1.35;
+}
+
+.team-premium-page .gv-team-dc-analysis {
+  background: rgba(250, 70, 22, 0.18) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.team-premium-page .team-premium-module .gv-team-roster-card,
+.team-premium-page .gv-team-roster-card,
+.team-premium-page a.gv-team-roster-card {
+  display: block;
+  min-width: 0;
+  padding: 12px 12px 12px 14px !important;
+  border-radius: 12px !important;
+  text-decoration: none;
+  color: #fff !important;
+  background: linear-gradient(165deg, #0021a5 0%, #001a33 72%, #00101f 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-left: 3px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 6px 16px rgba(0, 26, 51, 0.16);
+  overflow: visible !important;
+}
+
+.team-premium-page .gv-team-roster-card.is-starter,
+.team-premium-page a.gv-team-roster-card.is-starter {
+  border-left-color: #fa4616 !important;
+  background:
+    radial-gradient(ellipse 80% 70% at 100% 0%, rgba(250, 70, 22, 0.3), transparent 55%),
+    linear-gradient(165deg, #0021a5 0%, #001a33 72%, #00101f 100%) !important;
+}
+
+.team-premium-page .gv-team-roster-card__pos {
+  color: #ffb199 !important;
+}
+
+.team-premium-page .gv-team-roster-card__starter {
+  color: #fff !important;
+  background: rgba(250, 70, 22, 0.4) !important;
+  border: 1px solid rgba(255, 177, 153, 0.6) !important;
+}
+
+.team-premium-page .team-premium-module .gv-team-roster-card__name,
+.team-premium-page .gv-team-roster-card__name,
+.team-premium-page a.gv-team-roster-card .gv-team-roster-card__name {
+  color: #fff !important;
+  font-size: 1rem !important;
+  font-weight: 800 !important;
+  margin: 0 0 4px !important;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  text-decoration: none !important;
+}
+
+.team-premium-page .gv-team-roster-card__class {
+  margin: 0 0 2px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.3;
+}
+
+.team-premium-page .team-premium-module .gv-team-roster-card__meta,
+.team-premium-page .gv-team-roster-card__meta {
+  color: rgba(255, 255, 255, 0.76) !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.team-premium-page .gv-team-roster-view {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 4px;
+  border-radius: 10px;
+  background: rgba(0, 33, 165, 0.05);
+  border: 1px solid rgba(0, 33, 165, 0.12);
+}
+
+.team-premium-page .gv-team-roster-view__btn {
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(15, 23, 42, 0.7);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.team-premium-page .gv-team-roster-view__btn.is-active {
+  background: linear-gradient(135deg, #0021a5 0%, #001a33 100%);
+  border-color: rgba(250, 70, 22, 0.45);
+  color: #fff;
+}
+
+.team-premium-page .gv-team-roster-room__more {
+  margin-top: 10px;
+  width: 100%;
+  min-height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 33, 165, 0.18);
+  background: rgba(0, 33, 165, 0.05);
+  color: var(--team-uf-blue);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+
+.team-premium-page .gv-team-roster-room__more--collapse {
+  margin-top: 6px;
 }
 

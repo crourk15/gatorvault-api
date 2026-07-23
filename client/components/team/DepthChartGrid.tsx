@@ -20,18 +20,19 @@ export function DepthChartGrid({ positions }: Props): React.ReactElement {
             <span className={`gv-team-dc-status gv-team-dc-status--${pos.status}`}>{pos.status}</span>
           </div>
           <ol className="gv-team-dc-depth">
-            {pos.players.map((player, i) => {
-              const meta = [player.classYear, player.notes].filter(Boolean).join(' · ');
-              return (
-                <li key={`${player.name}-${i}`} className="gv-team-dc-depth-row">
-                  <span className="gv-team-dc-depth-rank" aria-label={`Depth ${i + 1}`}>
-                    {i + 1}
-                  </span>
+            {pos.players.map((player, i) => (
+              <li key={`${player.name}-${i}`} className="gv-team-dc-depth-row">
+                <span className="gv-team-dc-depth-rank" aria-label={`Depth ${i + 1}`}>
+                  {i + 1}
+                </span>
+                <div className="gv-team-dc-depth-main">
                   <span className="gv-team-dc-depth-name">{player.name}</span>
-                  {meta ? <span className="gv-team-dc-depth-meta">{meta}</span> : null}
-                </li>
-              );
-            })}
+                  <span className="gv-team-dc-depth-meta">
+                    {[player.classYear, player.notes].filter(Boolean).join(' · ') || '—'}
+                  </span>
+                </div>
+              </li>
+            ))}
           </ol>
           {pos.analysis ? <p className="gv-team-dc-analysis">{pos.analysis}</p> : null}
         </article>
