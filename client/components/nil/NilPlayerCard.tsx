@@ -5,16 +5,23 @@ import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { PlayerNavLink } from '@/components/vault/PlayerNavLink';
 import { playerProfileRoute } from '@/lib/site-routes';
 import { estimateNilValuation } from '@/components/recruiting-hub/NILTrackerSection/nil-player-utils';
+import { isActiveUfTarget, isCommittedElsewhere, isFloridaSchool } from '@/lib/recruiting-target-filters';
 
 type Props = {
   player: HighPriorityPlayer;
 };
 
-function commitLabel(player: HighPriorityPlayer): string {
-  if (player.committedTo) {
-    return String(player.committedTo).toLowerCase().includes('florida') ? 'UF Commit' : 'Open';
+function commitLabel(player: HighPriorityPlayer): { text: string; tone: 'commit' | 'target' | 'elsewhere' } {
+  if (player.committedTo && isFloridaSchool(player.committedTo)) {
+    return { text: 'UF Commit', tone: 'commit' };
   }
-  return 'UF Target';
+  if (isCommittedElsewhere(player)) {
+    return { text: 'Committed elsewhere', tone: 'elsewhere' };
+  }
+  if (isActiveUfTarget(player)) {
+    return { text: 'UF Target', tone: 'target' };
+  }
+  return { text: 'Board', tone: 'target' };
 }
 
 function trendTone(delta: number): 'up' | 'down' | 'flat' {
@@ -28,15 +35,17 @@ export function NilPlayerCard({ player }: Props): React.ReactElement {
   const photoUrl = `/headshots/${encodeURIComponent(player.slug)}.jpg`;
   const delta = player.delta7d ?? player.movementDelta ?? 0;
   const tone = trendTone(delta);
+  const status = commitLabel(player);
   const initials = player.name
     .split(' ')
     .map((part) => part[0])
     .join('')
     .slice(0, 2)
     .toUpperCase();
+  const href = playerProfileRoute(player.slug, 'futurecast');
 
   return (
-    <article className="nil-player-card" data-testid="nil-player-card">
+    <PlayerNavLink href={href} className="nil-player-card" data-testid="nil-player-card">
       <div className="nil-player-card__photo-wrap">
         {!photoFailed ? (
           <img
@@ -58,14 +67,14 @@ export function NilPlayerCard({ player }: Props): React.ReactElement {
           <p className="nil-player-card__meta">
             {player.position}
             <span className="nil-player-card__dot">·</span>
-            <span className={`nil-player-card__status nil-player-card__status--${commitLabel(player) === 'UF Commit' ? 'commit' : 'target'}`}>
-              {commitLabel(player)}
+            <span className={`nil-player-card__status nil-player-card__status--${status.tone}`}>
+              {status.text}
             </span>
           </p>
         </div>
 
         <div className="nil-player-card__valuation">
-          <span className="nil-player-card__val-label">NIL Valuation</span>
+          <span className="nil-player-card__val-label">Est. NIL</span>
           <strong className="nil-player-card__val">{estimateNilValuation(player)}</strong>
           <span className={`nil-player-card__trend nil-player-card__trend--${tone}`} aria-label={`Trend ${tone}`}>
             {tone === 'up' ? '↑' : tone === 'down' ? '↓' : '→'}
@@ -74,9 +83,9 @@ export function NilPlayerCard({ player }: Props): React.ReactElement {
         </div>
       </div>
 
-      <PlayerNavLink href={playerProfileRoute(player.slug, 'futurecast')} className="nil-player-card__cta">
-        View Profile
-      </PlayerNavLink>
-    </article>
+      <span className="nil-player-card__cta" aria-hidden="true">
+        Profile
+      </span>
+    </PlayerNavLink>
   );
 }

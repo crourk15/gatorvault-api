@@ -8,6 +8,7 @@ import {
   type HighPriorityResponse,
 } from '@/lib/futurecast-high-priority-api';
 import { buildSeedNilEliteBundle } from '@/lib/nil-hub-seed';
+import { isCommittedElsewhere, isFloridaSchool } from '@/lib/recruiting-target-filters';
 
 export type NilPortalImpactRow = {
   id: string;
@@ -16,6 +17,8 @@ export type NilPortalImpactRow = {
   range: string;
   trend: 'up' | 'down' | 'flat';
   note: string;
+  /** FutureCast profile slug when the row is a real player. */
+  slug?: string | null;
 };
 
 export type NilEliteData = {
@@ -37,51 +40,55 @@ function buildPortalImpact(players: HighPriorityPlayer[], dashboard: NilDashboar
   const gains: NilPortalImpactRow[] = [];
   const losses: NilPortalImpactRow[] = [];
 
+  // Portal intel from dashboard events — honest headlines, no fabricated dollar bands.
   for (const ev of dashboard?.recentEvents ?? []) {
-    if (ev.recruitingCorrelation !== 'positive') continue;
-    const headline = ev.title.toLowerCase();
-    if (headline.includes('portal') || headline.includes('commitment') || headline.includes('package')) {
-      gains.push({
-        id: ev.id ?? ev.title,
-        name: ev.title,
-        position: ev.impact?.split(',')[0]?.trim() || 'Portal',
-        range: '$400K–$900K',
-        trend: 'up',
-        note: ev.summary ?? 'UF collective activity correlated with portal win.',
-      });
-    }
+    const headline = String(ev.title || '').toLowerCase();
+    const summary = String(ev.summary || '').toLowerCase();
+    const isPortal = headline.includes('portal') || summary.includes('portal');
+    if (!isPortal) continue;
+    const positive = ev.recruitingCorrelation === 'positive';
+    const row: NilPortalImpactRow = {
+      id: ev.id ?? ev.title,
+      name: ev.title,
+      position: 'Portal intel',
+      range: 'See note',
+      trend: positive ? 'up' : 'flat',
+      note: ev.summary || 'Portal-related NIL signal from recent intel.',
+      slug: null,
+    };
+    if (positive) gains.push(row);
+    else losses.push(row);
   }
 
+  // Player-backed losses: committed elsewhere (modeled est. only).
   for (const p of players) {
-    const delta = p.delta7d ?? p.movementDelta ?? 0;
-    if (p.committedTo && !String(p.committedTo).toLowerCase().includes('florida')) {
-      losses.push({
-        id: `loss-${p.slug}`,
-        name: p.name,
-        position: p.position,
-        range: `$${Math.max(250, parseNil(p) - 40)}K–$${parseNil(p) + 80}K`,
-        trend: 'down',
-        note: `Committed elsewhere — NIL gap cited in movement intel.`,
-      });
-    } else if (delta >= 4) {
-      gains.push({
-        id: `gain-${p.slug}`,
-        name: p.name,
-        position: p.position,
-        range: `$${parseNil(p)}K–$${parseNil(p) + 120}K`,
-        trend: 'up',
-        note: 'Valuation trending up — UF in competitive range.',
-      });
-    } else if (delta <= -4) {
-      losses.push({
-        id: `cool-${p.slug}`,
-        name: p.name,
-        position: p.position,
-        range: `$${Math.max(180, parseNil(p) - 60)}K–$${parseNil(p)}K`,
-        trend: 'down',
-        note: 'Cooling valuation — peer programs gaining leverage.',
-      });
-    }
+    if (!isCommittedElsewhere(p)) continue;
+    const school = String(p.committedTo || '').trim();
+    losses.push({
+      id: `loss-${p.slug}`,
+      name: p.name,
+      position: p.position,
+      range: `Est. $${Math.max(180, parseNil(p) - 40)}K–$${parseNil(p) + 80}K`,
+      trend: 'down',
+      note: school
+        ? `Committed to ${school}. Modeled NIL band — not a reported deal.`
+        : 'Committed elsewhere. Modeled NIL band — not a reported deal.',
+      slug: p.slug,
+    });
+  }
+
+  // Player-backed gains: verified UF commits when present on the HP board.
+  for (const p of players) {
+    if (!p.committedTo || !isFloridaSchool(p.committedTo)) continue;
+    gains.push({
+      id: `gain-${p.slug}`,
+      name: p.name,
+      position: p.position,
+      range: `Est. $${parseNil(p)}K–$${parseNil(p) + 120}K`,
+      trend: 'up',
+      note: 'UF commit — modeled NIL band, not a reported deal.',
+      slug: p.slug,
+    });
   }
 
   return {
