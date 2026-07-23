@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-23T01:19:48.139Z",
-  "source": "prod-dashboard+high-priority+local-elite",
+  "generatedAt": "2026-07-23T01:39:23.329Z",
+  "source": "prod-dashboard+high-priority+local-elite+elite-desk",
   "dashboard": {
     "conference": "SEC",
     "ufStanding": {
@@ -973,14 +973,14 @@
   ],
   "elite": {
     "ok": true,
-    "generatedAt": "2026-07-23T01:21:22.032Z",
+    "generatedAt": "2026-07-23T01:39:23.324Z",
     "classYear": 2027,
     "hero": {
       "collective": "Florida Victorious",
       "school": "Florida Gators",
       "eyebrow": "GatorVault NIL",
       "title": "NIL Tracker",
-      "sub": "Sideline NIL Market Index — school markets and Florida player valuations with On3 / Sideline labels.",
+      "sub": "Elite NIL desk — Sideline school markets, labeled player valuations, and honest UF market position.",
       "poolLabel": "$37.0M",
       "poolCaption": "All-sport school market"
     },
@@ -4502,6 +4502,124 @@
           "source": "sideline"
         }
       ]
+    },
+    "desk": {
+      "asOf": "2026-07-23",
+      "provider": "Sideline NIL Market Index",
+      "headline": "Florida school market $37.0M · football $17.3M",
+      "bullets": [
+        {
+          "id": "market-position",
+          "tone": "market",
+          "text": "Florida's all-sport school market sits at $37.0M — #24 nationally and #12 in the SEC."
+        },
+        {
+          "id": "football-share",
+          "tone": "football",
+          "text": "Football is $17.3M (46.8%) of the school market — the $37.0M figure is all sports, not football alone."
+        },
+        {
+          "id": "gap-elite",
+          "tone": "gap",
+          "text": "$28.3M behind Texas (#1 at $65.3M) — Florida is at 56.6% of the top school market."
+        },
+        {
+          "id": "sec-neighbors",
+          "tone": "sec",
+          "text": "SEC shelf: between Auburn ($39.4M) and Kentucky ($36.4M)."
+        },
+        {
+          "id": "top-earner",
+          "tone": "player",
+          "text": "Top Florida valuation: Aaron Philo at $1.51M (Sideline model)."
+        },
+        {
+          "id": "on3-public",
+          "tone": "on3",
+          "text": "On3-public names: Jadan Baugh $1M · Vernell Brown III $1M · Eric Singleton Jr. $1M (+2 more)."
+        }
+      ],
+      "intel": [
+        {
+          "id": "val-aaron-philo",
+          "category": "Valuation",
+          "text": "Aaron Philo · $1.51M (Sideline model)",
+          "slug": "aaron-philo"
+        },
+        {
+          "id": "val-jadan-baugh",
+          "category": "On3",
+          "text": "Jadan Baugh · $1M (On3 value)",
+          "slug": "jadan-baugh"
+        },
+        {
+          "id": "val-vernell-brown-iii",
+          "category": "On3",
+          "text": "Vernell Brown III · $1M (On3 value)",
+          "slug": "vernell-brown-iii"
+        },
+        {
+          "id": "val-eric-singleton-jr",
+          "category": "On3",
+          "text": "Eric Singleton Jr. · $1M (On3 value)",
+          "slug": "eric-singleton-jr"
+        },
+        {
+          "id": "commit-maxwell-hiller",
+          "category": "Commit",
+          "text": "Maxwell Hiller (IOL · 5★ · $306K) is on the UF board as a commit.",
+          "slug": "maxwell-hiller"
+        },
+        {
+          "id": "commit-elias-pearl",
+          "category": "Commit",
+          "text": "Elias Pearl (WR · 4★ · $173K) is on the UF board as a commit.",
+          "slug": "elias-pearl"
+        },
+        {
+          "id": "commit-elijah-hutcheson",
+          "category": "Commit",
+          "text": "Elijah Hutcheson (OT · 4★ · $169K) is on the UF board as a commit.",
+          "slug": "elijah-hutcheson"
+        },
+        {
+          "id": "commit-davin-davidson",
+          "category": "Commit",
+          "text": "Davin Davidson (QB · 4★ · $161K) is on the UF board as a commit.",
+          "slug": "davin-davidson"
+        },
+        {
+          "id": "commit-cahron-wheeler",
+          "category": "Commit",
+          "text": "Cahron Wheeler (EDGE · 4★ · $157K) is on the UF board as a commit.",
+          "slug": "cahron-wheeler"
+        },
+        {
+          "id": "commit-peyton-miller",
+          "category": "Commit",
+          "text": "Peyton Miller (IOL · 4★ · $155K) is on the UF board as a commit.",
+          "slug": "peyton-miller"
+        },
+        {
+          "id": "else-elijah-guertin",
+          "category": "Elsewhere",
+          "text": "Elijah Guertin committed to Penn State · $48K est..",
+          "slug": "elijah-guertin"
+        },
+        {
+          "id": "else-kyren-caldwell",
+          "category": "Elsewhere",
+          "text": "Kyren Caldwell committed to Maryland · $25K est..",
+          "slug": "kyren-caldwell"
+        }
+      ],
+      "stats": {
+        "on3Count": 5,
+        "sidelineCount": 98,
+        "footballSharePct": 46.8,
+        "gapToEliteM": 28.3,
+        "vsElitePct": 56.6
+      }
     },
     "editorial": {
       "asOf": "2026-07-23",

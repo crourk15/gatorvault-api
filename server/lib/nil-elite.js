@@ -400,6 +400,149 @@ function buildMoneyLandscape() {
   };
 }
 
+
+function shortSchool(name) {
+  return String(name || '')
+    .replace(/\s+Gators$/i, '')
+    .replace(/\s+Tigers$/i, '')
+    .replace(/\s+Bulldogs$/i, '')
+    .replace(/\s+Crimson Tide$/i, '')
+    .replace(/\s+Rebels$/i, '')
+    .replace(/\s+Sooners$/i, '')
+    .replace(/\s+Volunteers$/i, '')
+    .replace(/\s+Aggies$/i, '')
+    .replace(/\s+Longhorns$/i, '')
+    .replace(/\s+Wildcats$/i, '')
+    .replace(/\s+Razorbacks$/i, '')
+    .replace(/\s+Gamecocks$/i, '')
+    .replace(/\s+Commodores$/i, '')
+    .trim();
+}
+
+function buildNilDesk({ money, landscape, rosterEarners, movement, portalPlayers, rosterTransfers, pulse }) {
+  const schoolM = money.schoolMarketM ?? money.rosterMarketM ?? null;
+  const footballM = money.footballMarketM ?? null;
+  const eliteM = money.eliteMarketM ?? null;
+  const footballShare =
+    schoolM && footballM ? Math.round((footballM / schoolM) * 1000) / 10 : null;
+  const gapToElite =
+    schoolM != null && eliteM != null ? Math.round((eliteM - schoolM) * 10) / 10 : null;
+  const vsElite =
+    money.vsElitePct != null
+      ? money.vsElitePct
+      : schoolM != null && eliteM
+        ? Math.round((schoolM / eliteM) * 1000) / 10
+        : null;
+
+  const on3Count = (rosterEarners || []).filter((p) => p.nilSource === 'on3').length;
+  const sidelineCount = (rosterEarners || []).filter((p) => p.nilSource === 'sideline').length;
+  const top = rosterEarners?.[0] || null;
+  const on3Leaders = (rosterEarners || []).filter((p) => p.nilSource === 'on3').slice(0, 3);
+
+  const sec = landscape?.sec || [];
+  const ufIdx = sec.findIndex((r) => r.id === 'uf');
+  const above = ufIdx > 0 ? sec[ufIdx - 1] : null;
+  const below = ufIdx >= 0 && ufIdx < sec.length - 1 ? sec[ufIdx + 1] : null;
+
+  const bullets = [];
+  if (schoolM != null && money.nationalRank != null && money.secRank != null) {
+    bullets.push({
+      id: 'market-position',
+      tone: 'market',
+      text: `Florida's all-sport school market sits at $${Number(schoolM).toFixed(1)}M — #${money.nationalRank} nationally and #${money.secRank} in the SEC.`,
+    });
+  }
+  if (footballM != null && footballShare != null && schoolM != null) {
+    bullets.push({
+      id: 'football-share',
+      tone: 'football',
+      text: `Football is $${Number(footballM).toFixed(1)}M (${footballShare}%) of the school market — the $${Number(schoolM).toFixed(1)}M figure is all sports, not football alone.`,
+    });
+  }
+  if (gapToElite != null && vsElite != null && eliteM != null) {
+    bullets.push({
+      id: 'gap-elite',
+      tone: 'gap',
+      text: `$${gapToElite.toFixed(1)}M behind Texas (#1 at $${Number(eliteM).toFixed(1)}M) — Florida is at ${vsElite}% of the top school market.`,
+    });
+  }
+  if (above && below) {
+    bullets.push({
+      id: 'sec-neighbors',
+      tone: 'sec',
+      text: `SEC shelf: between ${shortSchool(above.school)} ($${Number(above.estimatedAnnualPoolM).toFixed(1)}M) and ${shortSchool(below.school)} ($${Number(below.estimatedAnnualPoolM).toFixed(1)}M).`,
+    });
+  }
+  if (top) {
+    bullets.push({
+      id: 'top-earner',
+      tone: 'player',
+      text: `Top Florida valuation: ${top.name} at ${top.nilValuation} (${top.nilSourceLabel || top.nilSource}).`,
+    });
+  }
+  if (on3Leaders.length) {
+    bullets.push({
+      id: 'on3-public',
+      tone: 'on3',
+      text: `On3-public names: ${on3Leaders.map((p) => `${p.name} ${p.nilValuation}`).join(' · ')}${on3Count > on3Leaders.length ? ` (+${on3Count - on3Leaders.length} more)` : ''}.`,
+    });
+  }
+  if (pulse?.activeTargets != null && pulse?.commits != null) {
+    bullets.push({
+      id: 'board-context',
+      tone: 'board',
+      text: `Board context: ${pulse.activeTargets} active UF targets · ${pulse.commits} commits. Player $ labeled On3 / Sideline / Vault — never unlabeled.`,
+    });
+  }
+
+  const intel = [];
+  for (const p of (rosterEarners || []).slice(0, 4)) {
+    intel.push({
+      id: `val-${p.id}`,
+      category: p.nilSource === 'on3' ? 'On3' : 'Valuation',
+      text: `${p.name} · ${p.nilValuation} (${p.nilSourceLabel || p.nilSource})`,
+      slug: p.slug,
+    });
+  }
+  for (const item of movement || []) {
+    intel.push({ ...item, id: item.id || `mv-${intel.length}` });
+  }
+  for (const p of (portalPlayers || []).slice(0, 3)) {
+    intel.push({
+      id: `portal-${p.id}`,
+      category: 'Portal',
+      text: `${p.name} (${p.position}) — ${p.portalLikelihood}% portal likelihood`,
+      slug: p.slug,
+    });
+  }
+  for (const p of (rosterTransfers || []).slice(0, 2)) {
+    intel.push({
+      id: `arrival-${p.id}`,
+      category: 'Arrival',
+      text: `${p.name} — ${p.transferInfo}${p.nilValuation ? ` · ${p.nilValuation}` : ''}`,
+      slug: p.slug,
+    });
+  }
+
+  return {
+    asOf: landscape?.asOf || null,
+    provider: money.provider || landscape?.provider || 'Sideline NIL Market Index',
+    headline:
+      schoolM != null
+        ? `Florida school market $${Number(schoolM).toFixed(1)}M · football $${Number(footballM || 0).toFixed(1)}M`
+        : 'Florida NIL desk',
+    bullets: bullets.slice(0, 6),
+    intel: intel.slice(0, 12),
+    stats: {
+      on3Count,
+      sidelineCount,
+      footballSharePct: footballShare,
+      gapToEliteM: gapToElite,
+      vsElitePct: vsElite,
+    },
+  };
+}
+
 async function buildNilEliteBundle(options = {}) {
   const classYear = Number(options.classYear) || CLASS_YEAR;
   const all = await store.getAllPlayers();
@@ -497,6 +640,54 @@ async function buildNilEliteBundle(options = {}) {
   const topEarner = rosterEarners[0] || null;
   const indexHeadline = landscape.headline || null;
 
+  const money = {
+    estimatedAnnualPoolM: poolM,
+    poolLabel,
+    rosterMarketM,
+    rosterMarketLabel: rosterMarketM != null ? `$${Number(rosterMarketM).toFixed(1)}M` : null,
+    schoolMarketM: rosterMarketM,
+    schoolMarketLabel: rosterMarketM != null ? `$${Number(rosterMarketM).toFixed(1)}M` : null,
+    footballMarketM: footballM,
+    footballMarketLabel: footballM != null ? `$${Number(footballM).toFixed(1)}M` : null,
+    eliteMarketM: market?.eliteMarketM ?? indexHeadline?.topProgramMarketM ?? null,
+    vsElitePct: market?.vsElitePct ?? null,
+    indexedMarketB: indexHeadline?.indexedMarketB ?? null,
+    benefitsCapM: indexHeadline?.benefitsCapM ?? null,
+    programsIndexed: landscape.programsIndexed ?? null,
+    avgDealK: landscape.uf?.avgDealK ?? null,
+    topDealM: landscape.uf?.topDealM ?? null,
+    topEarnerName: topEarner?.name || null,
+    topEarnerValue: topEarner?.nilValuation || null,
+    secRank: landscape.uf?.secRank ?? market?.conferenceRank ?? null,
+    nationalRank: landscape.uf?.nationalRank ?? market?.nationalRank ?? null,
+    trend: landscape.uf?.trend ?? null,
+    trendPct: landscape.uf?.trendPct ?? null,
+    collective: landscape.uf?.collective || ufProgram?.collective || 'Florida Victorious',
+    sourceNote: sideline?.sourceNote || landscape.sourceNote,
+    bySport: market?.bySport || null,
+    attribution: market?.attribution || null,
+    provider: sideline?.provider || landscape.provider || null,
+  };
+
+  const pulse = {
+    commits: commits.length,
+    blueChipPct: chip,
+    avgRating: rating,
+    activeTargets: targets.length,
+    portalArrivals: rosterTransfers.length,
+    portalWatch: portalPlayers.length,
+  };
+
+  const desk = buildNilDesk({
+    money,
+    landscape,
+    rosterEarners,
+    movement: movementFeed.slice(0, 10),
+    portalPlayers,
+    rosterTransfers,
+    pulse,
+  });
+
   return {
     ok: true,
     generatedAt: new Date().toISOString(),
@@ -506,48 +697,12 @@ async function buildNilEliteBundle(options = {}) {
       school: ufProgram?.school || 'Florida Gators',
       eyebrow: 'GatorVault NIL',
       title: 'NIL Tracker',
-      sub: landscape.provider
-        ? 'Sideline NIL Market Index — school markets and Florida player valuations with On3 / Sideline labels.'
-        : 'UF pool estimates, roster valuations, and SEC market position — labeled sources, real dollars front and center.',
+      sub: 'Elite NIL desk — Sideline school markets, labeled player valuations, and honest UF market position.',
       poolLabel,
       poolCaption: 'All-sport school market',
     },
-    money: {
-      estimatedAnnualPoolM: poolM,
-      poolLabel,
-      rosterMarketM,
-      rosterMarketLabel: rosterMarketM != null ? `$${Number(rosterMarketM).toFixed(1)}M` : null,
-      schoolMarketM: rosterMarketM,
-      schoolMarketLabel: rosterMarketM != null ? `$${Number(rosterMarketM).toFixed(1)}M` : null,
-      footballMarketM: footballM,
-      footballMarketLabel: footballM != null ? `$${Number(footballM).toFixed(1)}M` : null,
-      eliteMarketM: market?.eliteMarketM ?? indexHeadline?.topProgramMarketM ?? null,
-      vsElitePct: market?.vsElitePct ?? null,
-      indexedMarketB: indexHeadline?.indexedMarketB ?? null,
-      benefitsCapM: indexHeadline?.benefitsCapM ?? null,
-      programsIndexed: landscape.programsIndexed ?? null,
-      avgDealK: landscape.uf?.avgDealK ?? null,
-      topDealM: landscape.uf?.topDealM ?? null,
-      topEarnerName: topEarner?.name || null,
-      topEarnerValue: topEarner?.nilValuation || null,
-      secRank: landscape.uf?.secRank ?? market?.conferenceRank ?? null,
-      nationalRank: landscape.uf?.nationalRank ?? market?.nationalRank ?? null,
-      trend: landscape.uf?.trend ?? null,
-      trendPct: landscape.uf?.trendPct ?? null,
-      collective: landscape.uf?.collective || ufProgram?.collective || 'Florida Victorious',
-      sourceNote: sideline?.sourceNote || landscape.sourceNote,
-      bySport: market?.bySport || null,
-      attribution: market?.attribution || null,
-      provider: sideline?.provider || null,
-    },
-    pulse: {
-      commits: commits.length,
-      blueChipPct: chip,
-      avgRating: rating,
-      activeTargets: targets.length,
-      portalArrivals: rosterTransfers.length,
-      portalWatch: portalPlayers.length,
-    },
+    money,
+    pulse,
     rosterEarners,
     marketBoard: {
       leaders: boardLeaders,
@@ -564,6 +719,7 @@ async function buildNilEliteBundle(options = {}) {
     movement: movementFeed.slice(0, 10),
     /** Primary money landscape (always shown). */
     landscape,
+    desk,
     /** Backward-compatible alias for older clients / home pulse. */
     editorial: {
       asOf: landscape.asOf,

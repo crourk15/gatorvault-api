@@ -4,17 +4,15 @@ import React, { useMemo, useState } from 'react';
 import { NilPlayerCard } from './NilPlayerCard';
 import type { NilEliteBoardPlayer, NilEliteBundle } from '@/lib/nil-elite-api';
 
-type Tab = 'leaders' | 'targets' | 'movers' | 'commits';
+type Tab = 'targets' | 'movers' | 'commits';
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'leaders', label: 'Board Leaders' },
   { id: 'targets', label: 'UF Targets' },
   { id: 'movers', label: 'Board Heat' },
   { id: 'commits', label: 'UF Commits' },
 ];
 
 const EMPTY: Record<Tab, string> = {
-  leaders: 'No ranked board names loaded.',
   targets: 'No active UF targets on the board right now.',
   movers: 'No heated board names in this window.',
   commits: 'No UF commits loaded for this class.',
@@ -27,10 +25,9 @@ type Props = {
 export function NilLeaderboard({ marketBoard }: Props): React.ReactElement {
   const [tab, setTab] = useState<Tab>('targets');
   const rows = useMemo((): NilEliteBoardPlayer[] => {
-    if (tab === 'leaders') return marketBoard.leaders || [];
-    if (tab === 'movers') return marketBoard.movers || [];
-    if (tab === 'commits') return marketBoard.commits || [];
-    return marketBoard.targets || [];
+    if (tab === 'movers') return (marketBoard.movers || []).slice(0, 8);
+    if (tab === 'commits') return (marketBoard.commits || []).slice(0, 8);
+    return (marketBoard.targets || []).slice(0, 8);
   }, [marketBoard, tab]);
 
   return (
@@ -39,8 +36,7 @@ export function NilLeaderboard({ marketBoard }: Props): React.ReactElement {
         <div>
           <h2 className="nil-elite-section__title">Recruiting NIL board</h2>
           <p className="nil-elite-section__sub">
-            Player dollars show On3 when public; otherwise a Vault recruiting-band estimate. Never
-            unlabeled.
+            Board context beside the money desk — labeled $ only, never invented deals.
           </p>
         </div>
       </header>

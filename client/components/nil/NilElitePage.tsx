@@ -8,11 +8,8 @@ import { NilHero } from '@/components/nil/NilHero';
 import { NilMetricsBar } from '@/components/nil/NilMetricsBar';
 import { NilRosterEarners } from '@/components/nil/NilRosterEarners';
 import { NilLeaderboard } from '@/components/nil/NilLeaderboard';
-import { NilMovementFeed } from '@/components/nil/NilMovementFeed';
-import { NilCollectiveComparison } from '@/components/nil/NilCollectiveComparison';
 import { NilProgramRankingsTable } from '@/components/nil/NilProgramRankingsTable';
-import { NilPortalImpact } from '@/components/nil/NilPortalImpact';
-import { NilFooterCta } from '@/components/nil/NilFooterCta';
+import { NilDeskIntel } from '@/components/nil/NilDeskIntel';
 import { useNilEliteData } from '@/components/nil/useNilEliteData';
 import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 
@@ -32,9 +29,7 @@ export function NilElitePage(): React.ReactElement {
           asOf: bundle.editorial.asOf,
           sourceNote: 'Estimated annual pools from public reporting — updated quarterly',
           disclaimer: bundle.editorial.disclaimer,
-          uf: bundle.editorial.uf
-            ? { ...bundle.editorial.uf }
-            : null,
+          uf: bundle.editorial.uf ? { ...bundle.editorial.uf } : null,
           sec: bundle.editorial.sec || [],
         }
       : null
@@ -46,9 +41,9 @@ export function NilElitePage(): React.ReactElement {
 
       {loading && !bundle ? (
         <div className="rh-cc-page rh-frame" aria-busy="true" data-testid="nil-elite-loading">
-          <div className="rh-cc-skeleton" style={{ minHeight: 140, borderRadius: 12 }} />
-          <div className="rh-cc-skeleton" style={{ minHeight: 88, borderRadius: 12, marginTop: 16 }} />
-          <div className="rh-cc-skeleton" style={{ minHeight: 220, borderRadius: 12, marginTop: 16 }} />
+          <div className="rh-cc-skeleton" style={{ minHeight: 180, borderRadius: 12 }} />
+          <div className="rh-cc-skeleton" style={{ minHeight: 72, borderRadius: 12, marginTop: 16 }} />
+          <div className="rh-cc-skeleton" style={{ minHeight: 240, borderRadius: 12, marginTop: 16 }} />
         </div>
       ) : null}
 
@@ -60,25 +55,39 @@ export function NilElitePage(): React.ReactElement {
 
       {bundle ? (
         <div className="rh-cc-page nil-cc-page">
-          <NilHero hero={bundle.hero} money={bundle.money} />
-          <NilMetricsBar money={bundle.money} pulse={bundle.pulse} />
+          <NilHero hero={bundle.hero} money={bundle.money} desk={bundle.desk} />
+          <NilMetricsBar money={bundle.money} desk={bundle.desk} />
 
           <div className="rh-cc-main rh-frame">
             <div className="rh-cc-col">
               <NilRosterEarners earners={bundle.rosterEarners || []} />
               {landscape ? <NilProgramRankingsTable landscape={landscape} /> : null}
               <NilLeaderboard marketBoard={bundle.marketBoard} />
-              <NilPortalImpact portal={bundle.portal} />
-              <NilMovementFeed items={bundle.movement} />
-              <NilCollectiveComparison collectives={bundle.collectives} />
-              <NilFooterCta onRefresh={handleRefresh} refreshing={refreshing || loading} />
+              {bundle.desk ? <NilDeskIntel desk={bundle.desk} /> : null}
+
+              <div className="nil-desk-foot">
+                <p className="nil-desk-foot__meta">
+                  {bundle.desk?.provider || 'Sideline NIL Market Index'}
+                  {bundle.generatedAt
+                    ? ` · Updated ${new Date(bundle.generatedAt).toLocaleString()}`
+                    : ''}
+                  {bundle.desk?.asOf ? ` · Index as of ${bundle.desk.asOf}` : ''}
+                </p>
+                <button
+                  type="button"
+                  className="nil-editorial-toggle"
+                  onClick={handleRefresh}
+                  disabled={refreshing || loading}
+                >
+                  {refreshing || loading ? 'Refreshing…' : 'Refresh desk'}
+                </button>
+              </div>
             </div>
           </div>
 
           <p className="nil-disclaimer rh-frame">
-            Florida player dollars from the Sideline NIL Market Index (On3 value when labeled;
-            otherwise Sideline model). SEC program pools remain curated public estimates. Not audited
-            contracts.
+            School markets are all-sport Sideline estimates. Football is broken out separately.
+            Player dollars labeled On3 value or Sideline model. Not audited contracts.
           </p>
         </div>
       ) : null}
