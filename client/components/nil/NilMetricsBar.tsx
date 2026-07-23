@@ -10,33 +10,23 @@ type Props = {
 
 export function NilMetricsBar({ money, pulse }: Props): React.ReactElement {
   const metrics = [
+    { label: 'Roster market', value: money?.rosterMarketLabel || money?.poolLabel || '—' },
+    { label: 'Football market', value: money?.footballMarketLabel || '—' },
+    { label: 'Top valuation', value: money?.topEarnerValue || '—' },
+    { label: 'SEC rank', value: money?.secRank != null ? `#${money.secRank}` : '—' },
+    { label: 'Natl rank', value: money?.nationalRank != null ? `#${money.nationalRank}` : '—' },
     {
-      label: 'Football market',
-      value: money?.poolLabel || '—',
+      label: 'vs Texas (#1)',
+      value:
+        money?.vsElitePct != null
+          ? `${money.vsElitePct}%`
+          : money?.eliteMarketM != null && money?.rosterMarketM != null
+            ? `${Math.round((money.rosterMarketM / money.eliteMarketM) * 1000) / 10}%`
+            : '—',
     },
     {
-      label: 'Roster market',
-      value: money?.rosterMarketLabel || '—',
-    },
-    {
-      label: 'Top valuation',
-      value: money?.topEarnerValue || '—',
-    },
-    {
-      label: 'SEC rank',
-      value: money?.secRank != null ? `#${money.secRank}` : '—',
-    },
-    {
-      label: 'Natl rank',
-      value: money?.nationalRank != null ? `#${money.nationalRank}` : '—',
-    },
-    {
-      label: 'vs #1 market',
-      value: money?.vsElitePct != null ? `${money.vsElitePct}%` : '—',
-    },
-    {
-      label: 'Active UF targets',
-      value: String(pulse.activeTargets),
+      label: 'Indexed market',
+      value: money?.indexedMarketB != null ? `$${money.indexedMarketB}B` : '—',
     },
   ];
 
@@ -53,6 +43,8 @@ export function NilMetricsBar({ money, pulse }: Props): React.ReactElement {
       {money?.provider ? (
         <p className="nil-metrics__note rh-frame">
           {money.provider}
+          {money.programsIndexed != null ? ` · ${money.programsIndexed} programs` : ''}
+          {money.benefitsCapM != null ? ` · 2026–27 benefits cap ~$${money.benefitsCapM}M` : ''}
           {money.topEarnerName ? ` · Lead: ${money.topEarnerName}` : ''}
           {money.attribution ? ` · ${money.attribution}` : ''}
         </p>

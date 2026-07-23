@@ -42,6 +42,16 @@ function formatUsdCompact(amount) {
   return `$${Math.round(n)}`;
 }
 
+function loadSidelineMarketIndex() {
+  try {
+    return JSON.parse(
+      fs.readFileSync(path.join(__dirname, '../data/nil/sideline-market-index.json'), 'utf8')
+    );
+  } catch {
+    return null;
+  }
+}
+
 function loadSidelineFloridaRoster() {
   try {
     return JSON.parse(
@@ -286,6 +296,59 @@ function buildCollectiveDirectory() {
 
 function buildMoneyLandscape() {
   const dash = nilStore.buildDashboard({ conference: 'SEC' });
+  const sidelineIndex = loadSidelineMarketIndex();
+  const programsById = new Map(
+    (nilStore.loadPrograms() || []).map((p) => [p.id, p])
+  );
+  const ufMetrics = dash.primary?.metrics || null;
+  const asOf = sidelineIndex?.asOf || dash.manifest?.updatedAt || dash.updatedAt || null;
+
+  if (sidelineIndex?.sec?.length) {
+    const sec = sidelineIndex.sec.map((row) => {
+      const prog = row.programId ? programsById.get(row.programId) : null;
+      return {
+        id: row.programId || String(row.school).toLowerCase().replace(/\s+/g, '-'),
+        school: prog?.school || row.school,
+        collective: prog?.collective || null,
+        secRank: row.secRank ?? null,
+        nationalRank: row.nationalRank ?? null,
+        score: row.nationalRank != null ? Math.max(1, 100 - row.nationalRank) : null,
+        estimatedAnnualPoolM: row.marketM ?? null,
+        avgDealK: row.programId === nilStore.UF_ID ? ufMetrics?.avgDealK ?? null : null,
+        topDealM: row.programId === nilStore.UF_ID ? ufMetrics?.topDealM ?? null : null,
+        trend: row.programId === nilStore.UF_ID ? ufMetrics?.trend ?? null : null,
+        trendPct: row.programId === nilStore.UF_ID ? ufMetrics?.trendPct ?? null : null,
+        source: 'sideline',
+      };
+    });
+    const ufRow = sec.find((r) => r.id === nilStore.UF_ID) || null;
+    return {
+      asOf,
+      sourceNote:
+        sidelineIndex.methodology ||
+        'Sideline NIL Market Index — one best current estimate per school.',
+      disclaimer:
+        'School market figures from the Sideline NIL Market Index (Sideline Data Desk). Not audited contracts. Player dollars labeled On3 or Sideline model separately.',
+      provider: sidelineIndex.provider || 'Sideline NIL Market Index',
+      programsIndexed: sidelineIndex.programsIndexed || null,
+      headline: sidelineIndex.headline || null,
+      nationalTop: sidelineIndex.nationalTop || [],
+      uf: ufRow
+        ? {
+            collective: ufRow.collective || 'Florida Victorious',
+            secRank: ufRow.secRank,
+            nationalRank: ufRow.nationalRank,
+            estimatedAnnualPoolM: ufRow.estimatedAnnualPoolM,
+            avgDealK: ufMetrics?.avgDealK ?? null,
+            topDealM: ufMetrics?.topDealM ?? null,
+            trend: ufMetrics?.trend ?? null,
+            trendPct: ufMetrics?.trendPct ?? null,
+          }
+        : null,
+      sec,
+    };
+  }
+
   const metricsFile = (() => {
     try {
       return JSON.parse(
@@ -299,8 +362,6 @@ function buildMoneyLandscape() {
     metricsFile.sourceNote ||
     dash.manifest?.disclaimer ||
     'Estimated annual pools from public reporting — updated quarterly';
-  const ufMetrics = dash.primary?.metrics || null;
-  const asOf = dash.manifest?.updatedAt || dash.updatedAt || null;
 
   const uf = dash.ufStanding
     ? {
@@ -333,7 +394,7 @@ function buildMoneyLandscape() {
     asOf,
     sourceNote: metricsNote,
     disclaimer:
-      'Program pool and deal figures are curated public estimates — not audited player contracts. Roster / board player dollars use the Vault model unless On3 is public.',
+      'Program pool and deal figures are curated public estimates — not audited player contracts.',
     uf,
     sec,
   };
@@ -428,11 +489,13 @@ async function buildNilEliteBundle(options = {}) {
   const sideline = loadSidelineFloridaRoster();
   const market = sideline?.market || null;
   const footballM = market?.bySport?.find((s) => /football/i.test(s.sport))?.valueM ?? null;
-  const rosterMarketM = market?.rosterMarketM ?? null;
-  // Prefer Sideline football market for the hero dial; fall back to curated pool.
-  const poolM = footballM ?? landscape.uf?.estimatedAnnualPoolM ?? null;
-  const poolLabel = poolM != null ? `$${poolM}M` : null;
+  const rosterMarketM =
+    market?.rosterMarketM ?? landscape.uf?.estimatedAnnualPoolM ?? null;
+  // School Market Index (Sideline) is the primary dial — Florida $37.0M.
+  const poolM = rosterMarketM ?? footballM ?? null;
+  const poolLabel = poolM != null ? `$${Number(poolM).toFixed(1)}M` : null;
   const topEarner = rosterEarners[0] || null;
+  const indexHeadline = landscape.headline || null;
 
   return {
     ok: true,
@@ -443,26 +506,30 @@ async function buildNilEliteBundle(options = {}) {
       school: ufProgram?.school || 'Florida Gators',
       eyebrow: 'GatorVault NIL',
       title: 'NIL Tracker',
-      sub: market
-        ? 'Sideline NIL Market Index for Florida — On3 values when labeled, Sideline model otherwise.'
+      sub: landscape.provider
+        ? 'Sideline NIL Market Index — school markets and Florida player valuations with On3 / Sideline labels.'
         : 'UF pool estimates, roster valuations, and SEC market position — labeled sources, real dollars front and center.',
       poolLabel,
-      poolCaption: market ? 'Football market est.' : 'UF annual pool est.',
+      poolCaption: 'Roster market est.',
     },
     money: {
       estimatedAnnualPoolM: poolM,
       poolLabel,
       rosterMarketM,
-      rosterMarketLabel: rosterMarketM != null ? `$${rosterMarketM}M` : null,
+      rosterMarketLabel: rosterMarketM != null ? `$${Number(rosterMarketM).toFixed(1)}M` : null,
       footballMarketM: footballM,
-      eliteMarketM: market?.eliteMarketM ?? null,
+      footballMarketLabel: footballM != null ? `$${Number(footballM).toFixed(1)}M` : null,
+      eliteMarketM: market?.eliteMarketM ?? indexHeadline?.topProgramMarketM ?? null,
       vsElitePct: market?.vsElitePct ?? null,
+      indexedMarketB: indexHeadline?.indexedMarketB ?? null,
+      benefitsCapM: indexHeadline?.benefitsCapM ?? null,
+      programsIndexed: landscape.programsIndexed ?? null,
       avgDealK: landscape.uf?.avgDealK ?? null,
       topDealM: landscape.uf?.topDealM ?? null,
       topEarnerName: topEarner?.name || null,
       topEarnerValue: topEarner?.nilValuation || null,
-      secRank: market?.conferenceRank ?? landscape.uf?.secRank ?? null,
-      nationalRank: market?.nationalRank ?? landscape.uf?.nationalRank ?? null,
+      secRank: landscape.uf?.secRank ?? market?.conferenceRank ?? null,
+      nationalRank: landscape.uf?.nationalRank ?? market?.nationalRank ?? null,
       trend: landscape.uf?.trend ?? null,
       trendPct: landscape.uf?.trendPct ?? null,
       collective: landscape.uf?.collective || ufProgram?.collective || 'Florida Victorious',

@@ -1,0 +1,430 @@
+{
+  "version": 1,
+  "asOf": "2026-07-23",
+  "provider": "Sideline NIL Market Index",
+  "desk": "Sideline Data Desk",
+  "programsIndexed": 357,
+  "headline": {
+    "indexedMarketB": 3.87,
+    "topProgram": "Texas",
+    "topProgramMarketM": 65.3,
+    "benefitsCapM": 21.3,
+    "benefitsCapNote": "2026\u201327 benefits cap"
+  },
+  "methodology": "One best current estimate per school, reconciled across sport and player pools with disclosure and source evidence where available.",
+  "attribution": "The Sideline owns this index.",
+  "nationalTop": [
+    {
+      "nationalRank": 1,
+      "secRank": 1,
+      "school": "Texas",
+      "schoolKey": "Texas",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 65.3,
+      "programId": "tex"
+    },
+    {
+      "nationalRank": 2,
+      "secRank": 2,
+      "school": "Texas A&M",
+      "schoolKey": "Texas A&M",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 62.2,
+      "programId": "tamu"
+    },
+    {
+      "nationalRank": 3,
+      "secRank": null,
+      "school": "Oregon",
+      "schoolKey": "Oregon",
+      "conference": "Big Ten",
+      "tier": "Power 4",
+      "marketM": 58.5,
+      "programId": null
+    },
+    {
+      "nationalRank": 4,
+      "secRank": null,
+      "school": "Miami (FL)",
+      "schoolKey": "Miami (FL)",
+      "conference": "ACC",
+      "tier": "Power 4",
+      "marketM": 56.3,
+      "programId": null
+    },
+    {
+      "nationalRank": 5,
+      "secRank": 3,
+      "school": "LSU",
+      "schoolKey": "LSU",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 55.8,
+      "programId": "lsu"
+    },
+    {
+      "nationalRank": 6,
+      "secRank": null,
+      "school": "Ohio State",
+      "schoolKey": "Ohio State",
+      "conference": "Big Ten",
+      "tier": "Power 4",
+      "marketM": 53.0,
+      "programId": null
+    },
+    {
+      "nationalRank": 7,
+      "secRank": null,
+      "school": "USC",
+      "schoolKey": "USC",
+      "conference": "Big Ten",
+      "tier": "Power 4",
+      "marketM": 52.0,
+      "programId": null
+    },
+    {
+      "nationalRank": 8,
+      "secRank": null,
+      "school": "Indiana",
+      "schoolKey": "Indiana",
+      "conference": "Big Ten",
+      "tier": "Power 4",
+      "marketM": 48.5,
+      "programId": null
+    },
+    {
+      "nationalRank": 9,
+      "secRank": null,
+      "school": "Texas Tech",
+      "schoolKey": "Texas Tech",
+      "conference": "Big 12",
+      "tier": "Power 4",
+      "marketM": 48.2,
+      "programId": null
+    },
+    {
+      "nationalRank": 10,
+      "secRank": null,
+      "school": "Notre Dame",
+      "schoolKey": "Notre Dame",
+      "conference": "ACC",
+      "tier": "Power 4",
+      "marketM": 47.0,
+      "programId": null
+    },
+    {
+      "nationalRank": 11,
+      "secRank": 4,
+      "school": "Ole Miss",
+      "schoolKey": "Ole Miss",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 46.8,
+      "programId": "olemiss"
+    },
+    {
+      "nationalRank": 12,
+      "secRank": 5,
+      "school": "Oklahoma",
+      "schoolKey": "Oklahoma",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 45.4,
+      "programId": "okla"
+    },
+    {
+      "nationalRank": 13,
+      "secRank": 6,
+      "school": "Tennessee",
+      "schoolKey": "Tennessee",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 45.1,
+      "programId": "tenn"
+    },
+    {
+      "nationalRank": 14,
+      "secRank": 7,
+      "school": "Alabama",
+      "schoolKey": "Alabama",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 44.7,
+      "programId": "bama"
+    },
+    {
+      "nationalRank": 15,
+      "secRank": 8,
+      "school": "Georgia",
+      "schoolKey": "Georgia",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 44.6,
+      "programId": "uga"
+    },
+    {
+      "nationalRank": 16,
+      "secRank": null,
+      "school": "Michigan",
+      "schoolKey": "Michigan",
+      "conference": "Big Ten",
+      "tier": "Power 4",
+      "marketM": 43.8,
+      "programId": null
+    },
+    {
+      "nationalRank": 17,
+      "secRank": null,
+      "school": "UCLA",
+      "schoolKey": "UCLA",
+      "conference": "Big Ten",
+      "tier": "Power 4",
+      "marketM": 43.5,
+      "programId": null
+    },
+    {
+      "nationalRank": 18,
+      "secRank": 9,
+      "school": "Missouri",
+      "schoolKey": "Missouri",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 41.2,
+      "programId": "mizz"
+    },
+    {
+      "nationalRank": 19,
+      "secRank": 10,
+      "school": "Vanderbilt",
+      "schoolKey": "Vanderbilt",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 40.0,
+      "programId": "vandy"
+    },
+    {
+      "nationalRank": 20,
+      "secRank": 11,
+      "school": "Auburn",
+      "schoolKey": "Auburn",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 39.4,
+      "programId": "auburn"
+    },
+    {
+      "nationalRank": 21,
+      "secRank": null,
+      "school": "Houston",
+      "schoolKey": "Houston",
+      "conference": "Big 12",
+      "tier": "Power 4",
+      "marketM": 38.1,
+      "programId": null
+    },
+    {
+      "nationalRank": 22,
+      "secRank": null,
+      "school": "Florida State",
+      "schoolKey": "Florida State",
+      "conference": "ACC",
+      "tier": "Power 4",
+      "marketM": 37.3,
+      "programId": null
+    },
+    {
+      "nationalRank": 23,
+      "secRank": null,
+      "school": "North Carolina",
+      "schoolKey": "North Carolina",
+      "conference": "ACC",
+      "tier": "Power 4",
+      "marketM": 37.1,
+      "programId": null
+    },
+    {
+      "nationalRank": 24,
+      "secRank": 12,
+      "school": "Florida",
+      "schoolKey": "Florida",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 37.0,
+      "programId": "uf"
+    },
+    {
+      "nationalRank": 25,
+      "secRank": 13,
+      "school": "Kentucky",
+      "schoolKey": "Kentucky",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 36.4,
+      "programId": "uk"
+    }
+  ],
+  "sec": [
+    {
+      "nationalRank": 1,
+      "secRank": 1,
+      "school": "Texas",
+      "schoolKey": "Texas",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 65.3,
+      "programId": "tex"
+    },
+    {
+      "nationalRank": 2,
+      "secRank": 2,
+      "school": "Texas A&M",
+      "schoolKey": "Texas A&M",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 62.2,
+      "programId": "tamu"
+    },
+    {
+      "nationalRank": 5,
+      "secRank": 3,
+      "school": "LSU",
+      "schoolKey": "LSU",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 55.8,
+      "programId": "lsu"
+    },
+    {
+      "nationalRank": 11,
+      "secRank": 4,
+      "school": "Ole Miss",
+      "schoolKey": "Ole Miss",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 46.8,
+      "programId": "olemiss"
+    },
+    {
+      "nationalRank": 12,
+      "secRank": 5,
+      "school": "Oklahoma",
+      "schoolKey": "Oklahoma",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 45.4,
+      "programId": "okla"
+    },
+    {
+      "nationalRank": 13,
+      "secRank": 6,
+      "school": "Tennessee",
+      "schoolKey": "Tennessee",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 45.1,
+      "programId": "tenn"
+    },
+    {
+      "nationalRank": 14,
+      "secRank": 7,
+      "school": "Alabama",
+      "schoolKey": "Alabama",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 44.7,
+      "programId": "bama"
+    },
+    {
+      "nationalRank": 15,
+      "secRank": 8,
+      "school": "Georgia",
+      "schoolKey": "Georgia",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 44.6,
+      "programId": "uga"
+    },
+    {
+      "nationalRank": 18,
+      "secRank": 9,
+      "school": "Missouri",
+      "schoolKey": "Missouri",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 41.2,
+      "programId": "mizz"
+    },
+    {
+      "nationalRank": 19,
+      "secRank": 10,
+      "school": "Vanderbilt",
+      "schoolKey": "Vanderbilt",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 40.0,
+      "programId": "vandy"
+    },
+    {
+      "nationalRank": 20,
+      "secRank": 11,
+      "school": "Auburn",
+      "schoolKey": "Auburn",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 39.4,
+      "programId": "auburn"
+    },
+    {
+      "nationalRank": 24,
+      "secRank": 12,
+      "school": "Florida",
+      "schoolKey": "Florida",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 37.0,
+      "programId": "uf"
+    },
+    {
+      "nationalRank": 25,
+      "secRank": 13,
+      "school": "Kentucky",
+      "schoolKey": "Kentucky",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 36.4,
+      "programId": "uk"
+    },
+    {
+      "nationalRank": 28,
+      "secRank": 14,
+      "school": "Arkansas",
+      "schoolKey": "Arkansas",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 35.3,
+      "programId": "ark"
+    },
+    {
+      "nationalRank": 40,
+      "secRank": 15,
+      "school": "South Carolina",
+      "schoolKey": "South Carolina",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 32.3,
+      "programId": "scar"
+    },
+    {
+      "nationalRank": 56,
+      "secRank": 16,
+      "school": "Mississippi State",
+      "schoolKey": "Mississippi State",
+      "conference": "SEC",
+      "tier": "Power 4",
+      "marketM": 27.5,
+      "programId": "msst"
+    }
+  ]
+}

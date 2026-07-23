@@ -78,8 +78,12 @@ export type NilEliteMoney = {
   rosterMarketM?: number | null;
   rosterMarketLabel?: string | null;
   footballMarketM?: number | null;
+  footballMarketLabel?: string | null;
   eliteMarketM?: number | null;
   vsElitePct?: number | null;
+  indexedMarketB?: number | null;
+  benefitsCapM?: number | null;
+  programsIndexed?: number | null;
   avgDealK: number | null;
   topDealM: number | null;
   topEarnerName?: string | null;
@@ -118,6 +122,23 @@ export type NilEliteLandscape = {
   asOf?: string | null;
   sourceNote: string;
   disclaimer: string;
+  provider?: string | null;
+  programsIndexed?: number | null;
+  headline?: {
+    indexedMarketB?: number;
+    topProgram?: string;
+    topProgramMarketM?: number;
+    benefitsCapM?: number;
+    benefitsCapNote?: string;
+  } | null;
+  nationalTop?: Array<{
+    nationalRank: number;
+    secRank?: number | null;
+    school: string;
+    conference: string;
+    marketM: number;
+    programId?: string | null;
+  }>;
   uf: {
     collective: string;
     secRank: number | null;

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-23T01:15:58.447Z",
-  "source": "prod-dashboard+retained-players+local-elite",
+  "generatedAt": "2026-07-23T01:19:48.139Z",
+  "source": "prod-dashboard+high-priority+local-elite",
   "dashboard": {
     "conference": "SEC",
     "ufStanding": {
@@ -919,7 +919,7 @@
         }
       }
     ],
-    "updatedAt": "2026-07-23T01:15:13.408Z"
+    "updatedAt": "2026-07-23T01:19:37.005Z"
   },
   "players": [
     {
@@ -973,25 +973,29 @@
   ],
   "elite": {
     "ok": true,
-    "generatedAt": "2026-07-23T01:15:58.442Z",
+    "generatedAt": "2026-07-23T01:19:48.134Z",
     "classYear": 2027,
     "hero": {
       "collective": "Florida Victorious",
       "school": "Florida Gators",
       "eyebrow": "GatorVault NIL",
       "title": "NIL Tracker",
-      "sub": "Sideline NIL Market Index for Florida — On3 values when labeled, Sideline model otherwise.",
-      "poolLabel": "$17.3M",
-      "poolCaption": "Football market est."
+      "sub": "Sideline NIL Market Index — school markets and Florida player valuations with On3 / Sideline labels.",
+      "poolLabel": "$37.0M",
+      "poolCaption": "Roster market est."
     },
     "money": {
-      "estimatedAnnualPoolM": 17.3,
-      "poolLabel": "$17.3M",
+      "estimatedAnnualPoolM": 37,
+      "poolLabel": "$37.0M",
       "rosterMarketM": 37,
-      "rosterMarketLabel": "$37M",
+      "rosterMarketLabel": "$37.0M",
       "footballMarketM": 17.3,
+      "footballMarketLabel": "$17.3M",
       "eliteMarketM": 65.3,
       "vsElitePct": 56.6,
+      "indexedMarketB": 3.87,
+      "benefitsCapM": 21.3,
+      "programsIndexed": 357,
       "avgDealK": 34,
       "topDealM": 2.1,
       "topEarnerName": "Aaron Philo",
@@ -3996,14 +4000,275 @@
       }
     ],
     "landscape": {
-      "asOf": "2026-07-23T01:14:47.067Z",
-      "sourceNote": "Estimated annual pools from public reporting — updated quarterly",
-      "disclaimer": "Program pool and deal figures are curated public estimates — not audited player contracts. Roster / board player dollars use the Vault model unless On3 is public.",
+      "asOf": "2026-07-23",
+      "sourceNote": "One best current estimate per school, reconciled across sport and player pools with disclosure and source evidence where available.",
+      "disclaimer": "School market figures from the Sideline NIL Market Index (Sideline Data Desk). Not audited contracts. Player dollars labeled On3 or Sideline model separately.",
+      "provider": "Sideline NIL Market Index",
+      "programsIndexed": 357,
+      "headline": {
+        "indexedMarketB": 3.87,
+        "topProgram": "Texas",
+        "topProgramMarketM": 65.3,
+        "benefitsCapM": 21.3,
+        "benefitsCapNote": "2026–27 benefits cap"
+      },
+      "nationalTop": [
+        {
+          "nationalRank": 1,
+          "secRank": 1,
+          "school": "Texas",
+          "schoolKey": "Texas",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 65.3,
+          "programId": "tex"
+        },
+        {
+          "nationalRank": 2,
+          "secRank": 2,
+          "school": "Texas A&M",
+          "schoolKey": "Texas A&M",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 62.2,
+          "programId": "tamu"
+        },
+        {
+          "nationalRank": 3,
+          "secRank": null,
+          "school": "Oregon",
+          "schoolKey": "Oregon",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 58.5,
+          "programId": null
+        },
+        {
+          "nationalRank": 4,
+          "secRank": null,
+          "school": "Miami (FL)",
+          "schoolKey": "Miami (FL)",
+          "conference": "ACC",
+          "tier": "Power 4",
+          "marketM": 56.3,
+          "programId": null
+        },
+        {
+          "nationalRank": 5,
+          "secRank": 3,
+          "school": "LSU",
+          "schoolKey": "LSU",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 55.8,
+          "programId": "lsu"
+        },
+        {
+          "nationalRank": 6,
+          "secRank": null,
+          "school": "Ohio State",
+          "schoolKey": "Ohio State",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 53,
+          "programId": null
+        },
+        {
+          "nationalRank": 7,
+          "secRank": null,
+          "school": "USC",
+          "schoolKey": "USC",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 52,
+          "programId": null
+        },
+        {
+          "nationalRank": 8,
+          "secRank": null,
+          "school": "Indiana",
+          "schoolKey": "Indiana",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 48.5,
+          "programId": null
+        },
+        {
+          "nationalRank": 9,
+          "secRank": null,
+          "school": "Texas Tech",
+          "schoolKey": "Texas Tech",
+          "conference": "Big 12",
+          "tier": "Power 4",
+          "marketM": 48.2,
+          "programId": null
+        },
+        {
+          "nationalRank": 10,
+          "secRank": null,
+          "school": "Notre Dame",
+          "schoolKey": "Notre Dame",
+          "conference": "ACC",
+          "tier": "Power 4",
+          "marketM": 47,
+          "programId": null
+        },
+        {
+          "nationalRank": 11,
+          "secRank": 4,
+          "school": "Ole Miss",
+          "schoolKey": "Ole Miss",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 46.8,
+          "programId": "olemiss"
+        },
+        {
+          "nationalRank": 12,
+          "secRank": 5,
+          "school": "Oklahoma",
+          "schoolKey": "Oklahoma",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 45.4,
+          "programId": "okla"
+        },
+        {
+          "nationalRank": 13,
+          "secRank": 6,
+          "school": "Tennessee",
+          "schoolKey": "Tennessee",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 45.1,
+          "programId": "tenn"
+        },
+        {
+          "nationalRank": 14,
+          "secRank": 7,
+          "school": "Alabama",
+          "schoolKey": "Alabama",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 44.7,
+          "programId": "bama"
+        },
+        {
+          "nationalRank": 15,
+          "secRank": 8,
+          "school": "Georgia",
+          "schoolKey": "Georgia",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 44.6,
+          "programId": "uga"
+        },
+        {
+          "nationalRank": 16,
+          "secRank": null,
+          "school": "Michigan",
+          "schoolKey": "Michigan",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 43.8,
+          "programId": null
+        },
+        {
+          "nationalRank": 17,
+          "secRank": null,
+          "school": "UCLA",
+          "schoolKey": "UCLA",
+          "conference": "Big Ten",
+          "tier": "Power 4",
+          "marketM": 43.5,
+          "programId": null
+        },
+        {
+          "nationalRank": 18,
+          "secRank": 9,
+          "school": "Missouri",
+          "schoolKey": "Missouri",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 41.2,
+          "programId": "mizz"
+        },
+        {
+          "nationalRank": 19,
+          "secRank": 10,
+          "school": "Vanderbilt",
+          "schoolKey": "Vanderbilt",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 40,
+          "programId": "vandy"
+        },
+        {
+          "nationalRank": 20,
+          "secRank": 11,
+          "school": "Auburn",
+          "schoolKey": "Auburn",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 39.4,
+          "programId": "auburn"
+        },
+        {
+          "nationalRank": 21,
+          "secRank": null,
+          "school": "Houston",
+          "schoolKey": "Houston",
+          "conference": "Big 12",
+          "tier": "Power 4",
+          "marketM": 38.1,
+          "programId": null
+        },
+        {
+          "nationalRank": 22,
+          "secRank": null,
+          "school": "Florida State",
+          "schoolKey": "Florida State",
+          "conference": "ACC",
+          "tier": "Power 4",
+          "marketM": 37.3,
+          "programId": null
+        },
+        {
+          "nationalRank": 23,
+          "secRank": null,
+          "school": "North Carolina",
+          "schoolKey": "North Carolina",
+          "conference": "ACC",
+          "tier": "Power 4",
+          "marketM": 37.1,
+          "programId": null
+        },
+        {
+          "nationalRank": 24,
+          "secRank": 12,
+          "school": "Florida",
+          "schoolKey": "Florida",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 37,
+          "programId": "uf"
+        },
+        {
+          "nationalRank": 25,
+          "secRank": 13,
+          "school": "Kentucky",
+          "schoolKey": "Kentucky",
+          "conference": "SEC",
+          "tier": "Power 4",
+          "marketM": 36.4,
+          "programId": "uk"
+        }
+      ],
       "uf": {
         "collective": "Florida Victorious",
-        "secRank": 8,
-        "nationalRank": 16,
-        "estimatedAnnualPoolM": 11.8,
+        "secRank": 12,
+        "nationalRank": 24,
+        "estimatedAnnualPoolM": 37,
         "avgDealK": 34,
         "topDealM": 2.1,
         "trend": "up",
@@ -4011,336 +4276,352 @@
       },
       "sec": [
         {
-          "id": "tamu",
-          "school": "Texas A&M Aggies",
-          "collective": "Fund 12",
-          "secRank": 1,
-          "nationalRank": 3,
-          "score": 94,
-          "estimatedAnnualPoolM": 22.5,
-          "avgDealK": 48,
-          "topDealM": 4.2,
-          "trend": "up",
-          "trendPct": 12
-        },
-        {
           "id": "tex",
           "school": "Texas Longhorns",
           "collective": "Horns With Heart",
+          "secRank": 1,
+          "nationalRank": 1,
+          "score": 99,
+          "estimatedAnnualPoolM": 65.3,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "tamu",
+          "school": "Texas A&M Aggies",
+          "collective": "Fund 12",
           "secRank": 2,
-          "nationalRank": 4,
-          "score": 92,
-          "estimatedAnnualPoolM": 20.8,
-          "avgDealK": 52,
-          "topDealM": 3.8,
-          "trend": "up",
-          "trendPct": 18
-        },
-        {
-          "id": "bama",
-          "school": "Alabama Crimson Tide",
-          "collective": "Yellowhammer Fund",
-          "secRank": 3,
-          "nationalRank": 5,
-          "score": 90,
-          "estimatedAnnualPoolM": 19.2,
-          "avgDealK": 45,
-          "topDealM": 3.5,
-          "trend": "stable",
-          "trendPct": 2
-        },
-        {
-          "id": "uga",
-          "school": "Georgia Bulldogs",
-          "collective": "Classic City Collective",
-          "secRank": 4,
-          "nationalRank": 7,
-          "score": 88,
-          "estimatedAnnualPoolM": 17.5,
-          "avgDealK": 42,
-          "topDealM": 3.1,
-          "trend": "up",
-          "trendPct": 8
+          "nationalRank": 2,
+          "score": 98,
+          "estimatedAnnualPoolM": 62.2,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
           "id": "lsu",
           "school": "LSU Tigers",
           "collective": "Bayou Traditions",
-          "secRank": 5,
-          "nationalRank": 10,
-          "score": 84,
-          "estimatedAnnualPoolM": 14.8,
-          "avgDealK": 38,
-          "topDealM": 2.6,
-          "trend": "up",
-          "trendPct": 6
+          "secRank": 3,
+          "nationalRank": 5,
+          "score": 95,
+          "estimatedAnnualPoolM": 55.8,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
           "id": "olemiss",
           "school": "Ole Miss Rebels",
           "collective": "Champion Circle",
-          "secRank": 6,
-          "nationalRank": 12,
-          "score": 81,
-          "estimatedAnnualPoolM": 13.2,
-          "avgDealK": 35,
-          "topDealM": 2.2,
-          "trend": "up",
-          "trendPct": 15
-        },
-        {
-          "id": "tenn",
-          "school": "Tennessee Volunteers",
-          "collective": "Spire Collective",
-          "secRank": 7,
-          "nationalRank": 14,
-          "score": 79,
-          "estimatedAnnualPoolM": 12.5,
-          "avgDealK": 36,
-          "topDealM": 2.4,
-          "trend": "up",
-          "trendPct": 9
-        },
-        {
-          "id": "uf",
-          "school": "Florida Gators",
-          "collective": "Florida Victorious",
-          "secRank": 8,
-          "nationalRank": 16,
-          "score": 77,
-          "estimatedAnnualPoolM": 11.8,
-          "avgDealK": 34,
-          "topDealM": 2.1,
-          "trend": "up",
-          "trendPct": 14
-        },
-        {
-          "id": "auburn",
-          "school": "Auburn Tigers",
-          "collective": "Auburn NIL Club",
-          "secRank": 9,
-          "nationalRank": 18,
-          "score": 74,
-          "estimatedAnnualPoolM": 10.5,
-          "avgDealK": 32,
-          "topDealM": 1.9,
-          "trend": "up",
-          "trendPct": 11
+          "secRank": 4,
+          "nationalRank": 11,
+          "score": 89,
+          "estimatedAnnualPoolM": 46.8,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
           "id": "okla",
           "school": "Oklahoma Sooners",
           "collective": "Crimson & Cream",
-          "secRank": 10,
-          "nationalRank": 19,
-          "score": 73,
-          "estimatedAnnualPoolM": 10.2,
-          "avgDealK": 33,
-          "topDealM": 2,
-          "trend": "stable",
-          "trendPct": 3
+          "secRank": 5,
+          "nationalRank": 12,
+          "score": 88,
+          "estimatedAnnualPoolM": 45.4,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
-          "id": "scar",
-          "school": "South Carolina Gamecocks",
-          "collective": "Garnet Trust",
-          "secRank": 11,
-          "nationalRank": 24,
-          "score": 68,
-          "estimatedAnnualPoolM": 8.4,
-          "avgDealK": 28,
-          "topDealM": 1.5,
-          "trend": "up",
-          "trendPct": 7
+          "id": "tenn",
+          "school": "Tennessee Volunteers",
+          "collective": "Spire Collective",
+          "secRank": 6,
+          "nationalRank": 13,
+          "score": 87,
+          "estimatedAnnualPoolM": 45.1,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "bama",
+          "school": "Alabama Crimson Tide",
+          "collective": "Yellowhammer Fund",
+          "secRank": 7,
+          "nationalRank": 14,
+          "score": 86,
+          "estimatedAnnualPoolM": 44.7,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "uga",
+          "school": "Georgia Bulldogs",
+          "collective": "Classic City Collective",
+          "secRank": 8,
+          "nationalRank": 15,
+          "score": 85,
+          "estimatedAnnualPoolM": 44.6,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
           "id": "mizz",
           "school": "Missouri Tigers",
           "collective": "Golden NIL",
-          "secRank": 12,
-          "nationalRank": 28,
-          "score": 64,
-          "estimatedAnnualPoolM": 7.2,
-          "avgDealK": 26,
-          "topDealM": 1.3,
-          "trend": "stable",
-          "trendPct": 1
-        },
-        {
-          "id": "ark",
-          "school": "Arkansas Razorbacks",
-          "collective": "Hogs NIL",
-          "secRank": 13,
-          "nationalRank": 30,
-          "score": 62,
-          "estimatedAnnualPoolM": 6.8,
-          "avgDealK": 25,
-          "topDealM": 1.2,
-          "trend": "up",
-          "trendPct": 5
-        },
-        {
-          "id": "uk",
-          "school": "Kentucky Wildcats",
-          "collective": "Wildcat NIL",
-          "secRank": 14,
-          "nationalRank": 32,
-          "score": 60,
-          "estimatedAnnualPoolM": 6.2,
-          "avgDealK": 24,
-          "topDealM": 1.1,
-          "trend": "stable",
-          "trendPct": 0
-        },
-        {
-          "id": "msst",
-          "school": "Mississippi State Bulldogs",
-          "collective": "Bulldog NIL",
-          "secRank": 15,
-          "nationalRank": 35,
-          "score": 57,
-          "estimatedAnnualPoolM": 5.5,
-          "avgDealK": 22,
-          "topDealM": 0.9,
-          "trend": "up",
-          "trendPct": 4
+          "secRank": 9,
+          "nationalRank": 18,
+          "score": 82,
+          "estimatedAnnualPoolM": 41.2,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         },
         {
           "id": "vandy",
           "school": "Vanderbilt Commodores",
           "collective": "Anchor NIL",
-          "secRank": 16,
-          "nationalRank": 42,
-          "score": 52,
-          "estimatedAnnualPoolM": 4.1,
-          "avgDealK": 20,
-          "topDealM": 0.7,
+          "secRank": 10,
+          "nationalRank": 19,
+          "score": 81,
+          "estimatedAnnualPoolM": 40,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "auburn",
+          "school": "Auburn Tigers",
+          "collective": "Auburn NIL Club",
+          "secRank": 11,
+          "nationalRank": 20,
+          "score": 80,
+          "estimatedAnnualPoolM": 39.4,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "uf",
+          "school": "Florida Gators",
+          "collective": "Florida Victorious",
+          "secRank": 12,
+          "nationalRank": 24,
+          "score": 76,
+          "estimatedAnnualPoolM": 37,
+          "avgDealK": 34,
+          "topDealM": 2.1,
           "trend": "up",
-          "trendPct": 6
+          "trendPct": 14,
+          "source": "sideline"
+        },
+        {
+          "id": "uk",
+          "school": "Kentucky Wildcats",
+          "collective": "Wildcat NIL",
+          "secRank": 13,
+          "nationalRank": 25,
+          "score": 75,
+          "estimatedAnnualPoolM": 36.4,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "ark",
+          "school": "Arkansas Razorbacks",
+          "collective": "Hogs NIL",
+          "secRank": 14,
+          "nationalRank": 28,
+          "score": 72,
+          "estimatedAnnualPoolM": 35.3,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "scar",
+          "school": "South Carolina Gamecocks",
+          "collective": "Garnet Trust",
+          "secRank": 15,
+          "nationalRank": 40,
+          "score": 60,
+          "estimatedAnnualPoolM": 32.3,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
+        },
+        {
+          "id": "msst",
+          "school": "Mississippi State Bulldogs",
+          "collective": "Bulldog NIL",
+          "secRank": 16,
+          "nationalRank": 56,
+          "score": 44,
+          "estimatedAnnualPoolM": 27.5,
+          "avgDealK": null,
+          "topDealM": null,
+          "trend": null,
+          "trendPct": null,
+          "source": "sideline"
         }
       ]
     },
     "editorial": {
-      "asOf": "2026-07-23T01:14:47.067Z",
-      "disclaimer": "Program pool and deal figures are curated public estimates — not audited player contracts. Roster / board player dollars use the Vault model unless On3 is public.",
+      "asOf": "2026-07-23",
+      "disclaimer": "School market figures from the Sideline NIL Market Index (Sideline Data Desk). Not audited contracts. Player dollars labeled On3 or Sideline model separately.",
       "uf": {
         "collective": "Florida Victorious",
-        "secRank": 8,
-        "nationalRank": 16,
-        "estimatedAnnualPoolM": 11.8
+        "secRank": 12,
+        "nationalRank": 24,
+        "estimatedAnnualPoolM": 37
       },
       "sec": [
-        {
-          "id": "tamu",
-          "school": "Texas A&M Aggies",
-          "collective": "Fund 12",
-          "secRank": 1,
-          "estimatedAnnualPoolM": 22.5
-        },
         {
           "id": "tex",
           "school": "Texas Longhorns",
           "collective": "Horns With Heart",
+          "secRank": 1,
+          "estimatedAnnualPoolM": 65.3
+        },
+        {
+          "id": "tamu",
+          "school": "Texas A&M Aggies",
+          "collective": "Fund 12",
           "secRank": 2,
-          "estimatedAnnualPoolM": 20.8
-        },
-        {
-          "id": "bama",
-          "school": "Alabama Crimson Tide",
-          "collective": "Yellowhammer Fund",
-          "secRank": 3,
-          "estimatedAnnualPoolM": 19.2
-        },
-        {
-          "id": "uga",
-          "school": "Georgia Bulldogs",
-          "collective": "Classic City Collective",
-          "secRank": 4,
-          "estimatedAnnualPoolM": 17.5
+          "estimatedAnnualPoolM": 62.2
         },
         {
           "id": "lsu",
           "school": "LSU Tigers",
           "collective": "Bayou Traditions",
-          "secRank": 5,
-          "estimatedAnnualPoolM": 14.8
+          "secRank": 3,
+          "estimatedAnnualPoolM": 55.8
         },
         {
           "id": "olemiss",
           "school": "Ole Miss Rebels",
           "collective": "Champion Circle",
-          "secRank": 6,
-          "estimatedAnnualPoolM": 13.2
-        },
-        {
-          "id": "tenn",
-          "school": "Tennessee Volunteers",
-          "collective": "Spire Collective",
-          "secRank": 7,
-          "estimatedAnnualPoolM": 12.5
-        },
-        {
-          "id": "uf",
-          "school": "Florida Gators",
-          "collective": "Florida Victorious",
-          "secRank": 8,
-          "estimatedAnnualPoolM": 11.8
-        },
-        {
-          "id": "auburn",
-          "school": "Auburn Tigers",
-          "collective": "Auburn NIL Club",
-          "secRank": 9,
-          "estimatedAnnualPoolM": 10.5
+          "secRank": 4,
+          "estimatedAnnualPoolM": 46.8
         },
         {
           "id": "okla",
           "school": "Oklahoma Sooners",
           "collective": "Crimson & Cream",
-          "secRank": 10,
-          "estimatedAnnualPoolM": 10.2
+          "secRank": 5,
+          "estimatedAnnualPoolM": 45.4
         },
         {
-          "id": "scar",
-          "school": "South Carolina Gamecocks",
-          "collective": "Garnet Trust",
-          "secRank": 11,
-          "estimatedAnnualPoolM": 8.4
+          "id": "tenn",
+          "school": "Tennessee Volunteers",
+          "collective": "Spire Collective",
+          "secRank": 6,
+          "estimatedAnnualPoolM": 45.1
+        },
+        {
+          "id": "bama",
+          "school": "Alabama Crimson Tide",
+          "collective": "Yellowhammer Fund",
+          "secRank": 7,
+          "estimatedAnnualPoolM": 44.7
+        },
+        {
+          "id": "uga",
+          "school": "Georgia Bulldogs",
+          "collective": "Classic City Collective",
+          "secRank": 8,
+          "estimatedAnnualPoolM": 44.6
         },
         {
           "id": "mizz",
           "school": "Missouri Tigers",
           "collective": "Golden NIL",
-          "secRank": 12,
-          "estimatedAnnualPoolM": 7.2
-        },
-        {
-          "id": "ark",
-          "school": "Arkansas Razorbacks",
-          "collective": "Hogs NIL",
-          "secRank": 13,
-          "estimatedAnnualPoolM": 6.8
-        },
-        {
-          "id": "uk",
-          "school": "Kentucky Wildcats",
-          "collective": "Wildcat NIL",
-          "secRank": 14,
-          "estimatedAnnualPoolM": 6.2
-        },
-        {
-          "id": "msst",
-          "school": "Mississippi State Bulldogs",
-          "collective": "Bulldog NIL",
-          "secRank": 15,
-          "estimatedAnnualPoolM": 5.5
+          "secRank": 9,
+          "estimatedAnnualPoolM": 41.2
         },
         {
           "id": "vandy",
           "school": "Vanderbilt Commodores",
           "collective": "Anchor NIL",
+          "secRank": 10,
+          "estimatedAnnualPoolM": 40
+        },
+        {
+          "id": "auburn",
+          "school": "Auburn Tigers",
+          "collective": "Auburn NIL Club",
+          "secRank": 11,
+          "estimatedAnnualPoolM": 39.4
+        },
+        {
+          "id": "uf",
+          "school": "Florida Gators",
+          "collective": "Florida Victorious",
+          "secRank": 12,
+          "estimatedAnnualPoolM": 37
+        },
+        {
+          "id": "uk",
+          "school": "Kentucky Wildcats",
+          "collective": "Wildcat NIL",
+          "secRank": 13,
+          "estimatedAnnualPoolM": 36.4
+        },
+        {
+          "id": "ark",
+          "school": "Arkansas Razorbacks",
+          "collective": "Hogs NIL",
+          "secRank": 14,
+          "estimatedAnnualPoolM": 35.3
+        },
+        {
+          "id": "scar",
+          "school": "South Carolina Gamecocks",
+          "collective": "Garnet Trust",
+          "secRank": 15,
+          "estimatedAnnualPoolM": 32.3
+        },
+        {
+          "id": "msst",
+          "school": "Mississippi State Bulldogs",
+          "collective": "Bulldog NIL",
           "secRank": 16,
-          "estimatedAnnualPoolM": 4.1
+          "estimatedAnnualPoolM": 27.5
         }
       ]
     }
