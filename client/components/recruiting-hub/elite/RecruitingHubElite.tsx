@@ -6,7 +6,6 @@ import { RecruitingHeroHydrator, RecruitingHeroStripInline } from '@/components/
 import { SigningDayTracker } from '@/components/recruiting-hub/elite/SigningDayTracker';
 import { ClassCards } from '@/components/recruiting-hub/elite/ClassCards';
 import { MovementIntelFeed } from '@/components/recruiting-hub/elite/MovementIntelFeed';
-import { YoungerProspectsPanel } from '@/components/recruiting-hub/elite/YoungerProspectsPanel';
 import { BattleBoard } from '@/components/recruiting-hub/elite/BattleBoard';
 import { TopTargetsHeatIndex } from '@/components/recruiting-hub/elite/TopTargetsHeatIndex';
 import { RecruitingFootprintMap } from '@/components/recruiting-hub/elite/footprint/RecruitingFootprintMap';
@@ -81,11 +80,6 @@ function RecruitingHubEliteContent({
       <LazyHubSection minHeight={420} testId="rh-lazy-footprint">
         <RecruitingFootprintMap />
       </LazyHubSection>
-      {activeYear === 2028 ? (
-        <LazyHubSection testId="rh-lazy-younger-prospects">
-          <YoungerProspectsPanel />
-        </LazyHubSection>
-      ) : null}
     </>
   );
 
