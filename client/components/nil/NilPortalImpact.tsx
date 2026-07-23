@@ -3,83 +3,92 @@
 import React from 'react';
 import { PlayerNavLink } from '@/components/vault/PlayerNavLink';
 import { playerProfileRoute } from '@/lib/site-routes';
-import type { NilPortalImpactRow } from './useNilEliteData';
+import type { NilEliteBundle } from '@/lib/nil-elite-api';
 
 type Props = {
-  gains: NilPortalImpactRow[];
-  losses: NilPortalImpactRow[];
+  portal: NilEliteBundle['portal'];
 };
 
-function ImpactRow({ row }: { row: NilPortalImpactRow }): React.ReactElement {
-  const body = (
-    <>
-      <div className="nil-portal-col__head">
-        <strong>{row.name}</strong>
-        <span className="nil-portal-col__pos">{row.position}</span>
-      </div>
-      <div className="nil-portal-col__range">{row.range}</div>
-      <p className="nil-portal-col__note">{row.note}</p>
-      <span className={`nil-portal-col__trend nil-portal-col__trend--${row.trend}`} aria-hidden>
-        {row.trend === 'up' ? '↑' : row.trend === 'down' ? '↓' : '→'}
-      </span>
-      {row.slug ? <span className="nil-portal-col__cta">Profile</span> : null}
-    </>
-  );
+export function NilPortalImpact({ portal }: Props): React.ReactElement {
+  const watch = portal.watchlist || [];
+  const arrivals = portal.rosterArrivals || [];
 
-  if (row.slug) {
-    return (
-      <li className="nil-portal-col__item nil-portal-col__item--link">
-        <PlayerNavLink
-          href={playerProfileRoute(row.slug, 'futurecast')}
-          className="nil-portal-col__link"
-        >
-          {body}
-        </PlayerNavLink>
-      </li>
-    );
-  }
-
-  return <li className="nil-portal-col__item">{body}</li>;
-}
-
-function ImpactColumn({
-  title,
-  tone,
-  rows,
-}: {
-  title: string;
-  tone: 'gain' | 'loss';
-  rows: NilPortalImpactRow[];
-}): React.ReactElement {
-  return (
-    <div className={`nil-portal-col nil-portal-col--${tone}`}>
-      <h3 className="nil-portal-col__title">{title}</h3>
-      <ul className="nil-portal-col__list">
-        {rows.length === 0 ? (
-          <li className="nil-portal-col__empty">No tracked portal or commit movement in this window.</li>
-        ) : (
-          rows.map((row) => <ImpactRow key={row.id} row={row} />)
-        )}
-      </ul>
-    </div>
-  );
-}
-
-export function NilPortalImpact({ gains, losses }: Props): React.ReactElement {
   return (
     <section className="nil-elite-section" data-testid="nil-portal-impact">
       <header className="nil-elite-section__head">
         <div>
-          <h2 className="nil-elite-section__title">Portal &amp; Commit NIL Impact</h2>
+          <h2 className="nil-elite-section__title">Portal Pressure</h2>
           <p className="nil-elite-section__sub">
-            Portal intel plus UF commits / commits elsewhere. Dollar bands are modeled estimates —
-            not reported deals. Tap a player name for their profile.
+            Real portal likelihood and roster transfer arrivals — not invented NIL packages.
           </p>
         </div>
       </header>
+
       <div className="nil-portal-grid">
-        <ImpactColumn title="UF side (gains / intel)" tone="gain" rows={gains} />
-        <ImpactColumn title="Lost / elsewhere" tone="loss" rows={losses} />
+        <div className="nil-portal-col nil-portal-col--gain">
+          <h3 className="nil-portal-col__title">UF portal watch</h3>
+          <ul className="nil-portal-col__list">
+            {watch.length === 0 ? (
+              <li className="nil-portal-col__empty">
+                {portal.watchlistError
+                  ? 'Portal watchlist warming — roster arrivals still show below.'
+                  : 'No elevated UF-interest portal names in this window.'}
+              </li>
+            ) : (
+              watch.map((row) => {
+                const body = (
+                  <>
+                    <div className="nil-portal-col__head">
+                      <strong>{row.name}</strong>
+                      <span className="nil-portal-col__pos">{row.position}</span>
+                    </div>
+                    <div className="nil-portal-col__range">
+                      Likelihood {row.portalLikelihood}% · Depth risk {row.depthChartRisk}
+                    </div>
+                    <p className="nil-portal-col__note">Volatility {row.volatility}</p>
+                  </>
+                );
+                return (
+                  <li key={row.id} className="nil-portal-col__item nil-portal-col__item--link">
+                    {row.slug ? (
+                      <PlayerNavLink
+                        href={playerProfileRoute(row.slug, 'futurecast')}
+                        className="nil-portal-col__link"
+                      >
+                        {body}
+                      </PlayerNavLink>
+                    ) : (
+                      body
+                    )}
+                  </li>
+                );
+              })
+            )}
+          </ul>
+        </div>
+
+        <div className="nil-portal-col nil-portal-col--loss">
+          <h3 className="nil-portal-col__title">Roster arrivals (transfers)</h3>
+          <ul className="nil-portal-col__list">
+            {arrivals.length === 0 ? (
+              <li className="nil-portal-col__empty">No transfer arrivals tagged on the roster file.</li>
+            ) : (
+              arrivals.map((row) => (
+                <li key={row.id} className="nil-portal-col__item">
+                  <div className="nil-portal-col__head">
+                    <strong>{row.name}</strong>
+                    <span className="nil-portal-col__pos">{row.position}</span>
+                  </div>
+                  <div className="nil-portal-col__range">{row.transferInfo}</div>
+                  <p className="nil-portal-col__note">
+                    {row.stars != null ? `${row.stars}★` : 'Roster'}
+                    {row.nationalRank != null ? ` · #${row.nationalRank}` : ''}
+                  </p>
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
       </div>
     </section>
   );

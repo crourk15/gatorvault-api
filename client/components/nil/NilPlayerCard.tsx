@@ -1,41 +1,25 @@
 'use client';
 
 import React, { useState } from 'react';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { PlayerNavLink } from '@/components/vault/PlayerNavLink';
 import { playerProfileRoute } from '@/lib/site-routes';
-import { estimateNilValuation } from '@/components/recruiting-hub/NILTrackerSection/nil-player-utils';
-import { isActiveUfTarget, isCommittedElsewhere, isFloridaSchool } from '@/lib/recruiting-target-filters';
+import type { NilEliteBoardPlayer } from '@/lib/nil-elite-api';
 
 type Props = {
-  player: HighPriorityPlayer;
+  player: NilEliteBoardPlayer;
 };
 
-function commitLabel(player: HighPriorityPlayer): { text: string; tone: 'commit' | 'target' | 'elsewhere' } {
-  if (player.committedTo && isFloridaSchool(player.committedTo)) {
-    return { text: 'UF Commit', tone: 'commit' };
-  }
-  if (isCommittedElsewhere(player)) {
-    return { text: 'Committed elsewhere', tone: 'elsewhere' };
-  }
-  if (isActiveUfTarget(player)) {
-    return { text: 'UF Target', tone: 'target' };
-  }
+function statusMeta(player: NilEliteBoardPlayer): { text: string; tone: string } {
+  if (player.status === 'uf_commit') return { text: 'UF Commit', tone: 'commit' };
+  if (player.status === 'elsewhere') return { text: 'Committed elsewhere', tone: 'elsewhere' };
+  if (player.status === 'uf_target') return { text: 'UF Target', tone: 'target' };
   return { text: 'Board', tone: 'target' };
-}
-
-function trendTone(delta: number): 'up' | 'down' | 'flat' {
-  if (delta > 0) return 'up';
-  if (delta < 0) return 'down';
-  return 'flat';
 }
 
 export function NilPlayerCard({ player }: Props): React.ReactElement {
   const [photoFailed, setPhotoFailed] = useState(false);
   const photoUrl = `/headshots/${encodeURIComponent(player.slug)}.jpg`;
-  const delta = player.delta7d ?? player.movementDelta ?? 0;
-  const tone = trendTone(delta);
-  const status = commitLabel(player);
+  const status = statusMeta(player);
   const initials = player.name
     .split(' ')
     .map((part) => part[0])
@@ -66,6 +50,17 @@ export function NilPlayerCard({ player }: Props): React.ReactElement {
           <h3 className="nil-player-card__name">{player.name}</h3>
           <p className="nil-player-card__meta">
             {player.position}
+            {player.stars != null ? (
+              <>
+                <span className="nil-player-card__dot">·</span>
+                {player.stars}★
+              </>
+            ) : null}
+            {player.nationalRank != null ? (
+              <>
+                <span className="nil-player-card__dot">·</span>#{player.nationalRank}
+              </>
+            ) : null}
             <span className="nil-player-card__dot">·</span>
             <span className={`nil-player-card__status nil-player-card__status--${status.tone}`}>
               {status.text}
@@ -74,12 +69,24 @@ export function NilPlayerCard({ player }: Props): React.ReactElement {
         </div>
 
         <div className="nil-player-card__valuation">
-          <span className="nil-player-card__val-label">Est. NIL</span>
-          <strong className="nil-player-card__val">{estimateNilValuation(player)}</strong>
-          <span className={`nil-player-card__trend nil-player-card__trend--${tone}`} aria-label={`Trend ${tone}`}>
-            {tone === 'up' ? '↑' : tone === 'down' ? '↓' : '→'}
-            {delta !== 0 ? ` ${Math.abs(delta)}%` : ''}
-          </span>
+          {player.nilEstimate ? (
+            <>
+              <span className="nil-player-card__val-label">On3 NIL</span>
+              <strong className="nil-player-card__val">{player.nilEstimate}</strong>
+            </>
+          ) : player.ufRpmPct != null ? (
+            <>
+              <span className="nil-player-card__val-label">UF board</span>
+              <strong className="nil-player-card__val">{player.ufRpmPct}%</strong>
+            </>
+          ) : (
+            <>
+              <span className="nil-player-card__val-label">Board</span>
+              <strong className="nil-player-card__val">
+                {player.stars != null ? `${player.stars}★` : '—'}
+              </strong>
+            </>
+          )}
         </div>
       </div>
 

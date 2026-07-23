@@ -1,35 +1,33 @@
 'use client';
 
 import React from 'react';
-import type { NilDashboard } from '@/lib/nil-api';
+import type { NilEliteBundle } from '@/lib/nil-elite-api';
 
 type Props = {
-  dashboard: NilDashboard;
+  pulse: NilEliteBundle['pulse'];
+  classYear: number;
 };
 
-export function NilMetricsBar({ dashboard }: Props): React.ReactElement {
-  const uf = dashboard.ufStanding;
-  const pool = uf?.estimatedAnnualPoolM != null ? `$${uf.estimatedAnnualPoolM}M` : '—';
-  const momentum = uf?.trend === 'up' ? '↑ Rising' : uf?.trend === 'down' ? '↓ Cooling' : '→ Stable';
-  const portalImpact = dashboard.positionImpact?.[0]
-    ? `${dashboard.positionImpact[0].position} +${dashboard.positionImpact[0].count}`
-    : 'Active';
-
+export function NilMetricsBar({ pulse, classYear }: Props): React.ReactElement {
   const metrics = [
-    { icon: '📊', label: 'SEC NIL Trend', value: uf?.secRank != null ? `#${uf.secRank} SEC` : '—' },
-    { icon: '💰', label: 'Team NIL Valuation', value: pool },
-    { icon: '🔥', label: 'UF Collective Momentum', value: momentum },
-    { icon: '🔄', label: 'Portal NIL Impact', value: portalImpact },
+    { label: `${classYear} commits`, value: String(pulse.commits) },
+    {
+      label: 'Blue-chip share',
+      value: pulse.blueChipPct != null ? `${pulse.blueChipPct}%` : '—',
+    },
+    {
+      label: 'Avg rating',
+      value: pulse.avgRating != null ? String(pulse.avgRating) : '—',
+    },
+    { label: 'Active UF targets', value: String(pulse.activeTargets) },
+    { label: 'Portal arrivals', value: String(pulse.portalArrivals) },
   ];
 
   return (
-    <section className="nil-metrics nil-bleed" data-testid="nil-metrics-bar" aria-label="NIL metrics">
+    <section className="nil-metrics nil-bleed" data-testid="nil-metrics-bar" aria-label="NIL pulse">
       <div className="nil-metrics__track rh-frame">
         {metrics.map((m) => (
           <article key={m.label} className="nil-metric-card">
-            <span className="nil-metric-card__icon" aria-hidden>
-              {m.icon}
-            </span>
             <span className="nil-metric-card__label">{m.label}</span>
             <strong className="nil-metric-card__value">{m.value}</strong>
           </article>

@@ -154,6 +154,10 @@ export type HomeNilPulse = {
   movementDelta: string;
   topEarner: string;
   topEarnerNote: string;
+  /** Elite pulse fields (preferred over editorial pool). */
+  commits?: number;
+  blueChipPct?: number | null;
+  collective?: string;
 };
 
 export type HomeGnlItem = {
@@ -603,21 +607,33 @@ export async function fetchHomeNilPulse(force = false): Promise<HomeNilPulse> {
     if (cached) return cached;
   }
 
+  const { fetchNilEliteBundle } = await import('@/lib/nil-elite-api');
+  const elite = await fetchNilEliteBundle().catch(() => null);
+  if (elite?.pulse) {
+    const pulse: HomeNilPulse = {
+      secRank: elite.editorial?.uf?.secRank ?? 0,
+      estPool: `${elite.pulse.commits} commits`,
+      movementLabel: elite.pulse.blueChipPct != null ? `${elite.pulse.blueChipPct}% blue-chip` : 'Board live',
+      movementDelta: elite.pulse.avgRating != null ? `Avg ${elite.pulse.avgRating}` : '—',
+      topEarner: elite.hero.collective || 'Florida Victorious',
+      topEarnerNote: `${elite.pulse.activeTargets} active UF targets · ${elite.pulse.portalArrivals} portal arrivals`,
+      commits: elite.pulse.commits,
+      blueChipPct: elite.pulse.blueChipPct,
+      collective: elite.hero.collective,
+    };
+    return writeCache(memoryCache.nil, pulse);
+  }
+
   const dashboard: NilDashboard = await fetchNilDashboard().catch(() => ({}));
   const standing = dashboard.ufStanding ?? {};
-  const recentEvents = dashboard.recentEvents ?? [];
-  const movement = formatNilMovement(standing.trendPct, standing.trend);
-
   const pulse: HomeNilPulse = {
     secRank: standing.secRank ?? 0,
-    estPool: formatNilPool(standing.estimatedAnnualPoolM),
-    movementLabel: movement.movementLabel,
-    movementDelta: movement.movementDelta,
-    topEarner: standing.collective ?? dashboard.secRankings?.[0]?.collective ?? 'Gators Collective',
-    topEarnerNote:
-      recentEvents.length > 0
-        ? `${recentEvents.length} recent NIL events`
-        : 'Tracking collective activity',
+    estPool: '—',
+    movementLabel: 'Board',
+    movementDelta: '—',
+    topEarner: standing.collective ?? 'Florida Victorious',
+    topEarnerNote: 'Open NIL Tracker for the elite board',
+    collective: standing.collective ?? 'Florida Victorious',
   };
 
   return writeCache(memoryCache.nil, pulse);
