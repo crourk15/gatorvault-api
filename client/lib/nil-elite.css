@@ -1146,6 +1146,93 @@ a.nil-player-card:focus-visible {
 }
 
 
+
+/* Web desk: Florida board + Market Index side-by-side (stacked on phone) */
+.nil-desk-duo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-5, 24px);
+  width: 100%;
+  min-width: 0;
+}
+
+.nil-desk-duo__primary,
+.nil-desk-duo__secondary {
+  min-width: 0;
+  width: 100%;
+}
+
+.nil-elite-section--market-index {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px 16px 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  border-top: 4px solid #0021a5;
+  box-shadow: 0 8px 24px rgba(0, 26, 51, 0.12);
+}
+
+.nil-elite-section--market-index .nil-elite-section__title {
+  color: #001a33;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.nil-elite-section--market-index .nil-elite-section__sub {
+  color: #334155;
+  font-weight: 500;
+}
+
+.nil-elite-section--market-index .rh-cc-tabs__btn {
+  color: rgba(0, 33, 165, 0.55);
+}
+
+.nil-elite-section--market-index .rh-cc-tabs__btn.is-active {
+  color: #0021a5;
+  background: rgba(0, 33, 165, 0.08);
+  border-color: #0021a5;
+  box-shadow: inset 0 -2px 0 #0021a5;
+}
+
+.nil-elite-section--market-index .nil-editorial-toggle {
+  border-color: rgba(0, 33, 165, 0.2);
+  color: #0021a5;
+  background: rgba(0, 33, 165, 0.04);
+}
+
+.nil-elite-section--market-index .nil-index-headline article {
+  border-color: rgba(0, 33, 165, 0.12);
+  background: rgba(0, 33, 165, 0.04);
+}
+
+.nil-elite-section--market-index .nil-index-headline span {
+  color: rgba(0, 33, 165, 0.55);
+}
+
+.nil-elite-section--market-index .nil-index-headline strong {
+  color: #001a33;
+}
+
+@media (min-width: 960px) {
+  .nil-desk-duo {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .nil-desk-duo__primary .nil-elite-section--gator-board,
+  .nil-desk-duo__secondary .nil-elite-section--market-index {
+    height: 100%;
+  }
+
+  .nil-desk-duo__secondary .nil-rank-table-wrap {
+    max-height: min(70vh, 720px);
+    overflow: auto;
+  }
+}
+
 /* Full-width NIL stack (never use 2-col rh-cc-main here) */
 .nil-desk-stack {
   display: flex;

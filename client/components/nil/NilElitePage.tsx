@@ -55,8 +55,16 @@ export function NilElitePage(): React.ReactElement {
           />
 
           <div className="nil-desk-stack rh-frame">
-            <NilRosterEarners earners={bundle.rosterEarners || []} startRank={1} />
-            {landscape ? <NilProgramRankingsTable landscape={landscape} /> : null}
+            <div className="nil-desk-duo">
+              <div className="nil-desk-duo__primary">
+                <NilRosterEarners earners={bundle.rosterEarners || []} startRank={1} />
+              </div>
+              {landscape ? (
+                <div className="nil-desk-duo__secondary">
+                  <NilProgramRankingsTable landscape={landscape} />
+                </div>
+              ) : null}
+            </div>
             <NilLeaderboard marketBoard={bundle.marketBoard} />
 
             <div className="nil-desk-foot">
