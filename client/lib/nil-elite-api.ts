@@ -77,6 +77,8 @@ export type NilEliteMoney = {
   poolLabel: string | null;
   rosterMarketM?: number | null;
   rosterMarketLabel?: string | null;
+  schoolMarketM?: number | null;
+  schoolMarketLabel?: string | null;
   footballMarketM?: number | null;
   footballMarketLabel?: string | null;
   eliteMarketM?: number | null;

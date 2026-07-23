@@ -510,13 +510,15 @@ async function buildNilEliteBundle(options = {}) {
         ? 'Sideline NIL Market Index — school markets and Florida player valuations with On3 / Sideline labels.'
         : 'UF pool estimates, roster valuations, and SEC market position — labeled sources, real dollars front and center.',
       poolLabel,
-      poolCaption: 'Roster market est.',
+      poolCaption: 'All-sport school market',
     },
     money: {
       estimatedAnnualPoolM: poolM,
       poolLabel,
       rosterMarketM,
       rosterMarketLabel: rosterMarketM != null ? `$${Number(rosterMarketM).toFixed(1)}M` : null,
+      schoolMarketM: rosterMarketM,
+      schoolMarketLabel: rosterMarketM != null ? `$${Number(rosterMarketM).toFixed(1)}M` : null,
       footballMarketM: footballM,
       footballMarketLabel: footballM != null ? `$${Number(footballM).toFixed(1)}M` : null,
       eliteMarketM: market?.eliteMarketM ?? indexHeadline?.topProgramMarketM ?? null,

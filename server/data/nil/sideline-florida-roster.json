@@ -55,7 +55,8 @@
         "sharePct": 2
       }
     ],
-    "attribution": "The Sideline owns this index."
+    "attribution": "The Sideline owns this index.",
+    "scopeNote": "rosterMarketM ($37.0M) is the all-sport school market estimate from Sideline \u2014 not football-only. Football is broken out separately in bySport."
   },
   "players": [
     {

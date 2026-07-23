@@ -10,8 +10,8 @@ type Props = {
 
 export function NilMetricsBar({ money, pulse }: Props): React.ReactElement {
   const metrics = [
-    { label: 'Roster market', value: money?.rosterMarketLabel || money?.poolLabel || '—' },
-    { label: 'Football market', value: money?.footballMarketLabel || '—' },
+    { label: 'School market (all sports)', value: money?.schoolMarketLabel || money?.rosterMarketLabel || money?.poolLabel || '—' },
+    { label: 'Football only', value: money?.footballMarketLabel || '—' },
     { label: 'Top valuation', value: money?.topEarnerValue || '—' },
     { label: 'SEC rank', value: money?.secRank != null ? `#${money.secRank}` : '—' },
     { label: 'Natl rank', value: money?.nationalRank != null ? `#${money.nationalRank}` : '—' },

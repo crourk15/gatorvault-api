@@ -973,7 +973,7 @@
   ],
   "elite": {
     "ok": true,
-    "generatedAt": "2026-07-23T01:19:48.134Z",
+    "generatedAt": "2026-07-23T01:21:22.032Z",
     "classYear": 2027,
     "hero": {
       "collective": "Florida Victorious",
@@ -982,13 +982,15 @@
       "title": "NIL Tracker",
       "sub": "Sideline NIL Market Index — school markets and Florida player valuations with On3 / Sideline labels.",
       "poolLabel": "$37.0M",
-      "poolCaption": "Roster market est."
+      "poolCaption": "All-sport school market"
     },
     "money": {
       "estimatedAnnualPoolM": 37,
       "poolLabel": "$37.0M",
       "rosterMarketM": 37,
       "rosterMarketLabel": "$37.0M",
+      "schoolMarketM": 37,
+      "schoolMarketLabel": "$37.0M",
       "footballMarketM": 17.3,
       "footballMarketLabel": "$17.3M",
       "eliteMarketM": 65.3,
