@@ -2200,17 +2200,59 @@
   color: rgba(15, 23, 42, 0.55);
 }
 
+.team-premium-page .gv-team-roster-filters-rail {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 -4px;
+}
+
+.team-premium-page .gv-team-roster-filters-rail::before,
+.team-premium-page .gv-team-roster-filters-rail::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 2px;
+  width: 28px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.team-premium-page .gv-team-roster-filters-rail::before {
+  left: 0;
+  background: linear-gradient(90deg, #fff 10%, rgba(255, 255, 255, 0));
+}
+
+.team-premium-page .gv-team-roster-filters-rail::after {
+  right: 0;
+  background: linear-gradient(270deg, #fff 10%, rgba(255, 255, 255, 0));
+}
+
 .team-premium-page .gv-team-roster-filters {
   display: flex;
   flex-wrap: nowrap;
+  justify-content: flex-start;
   gap: 8px;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
-  scrollbar-width: none;
-  padding-bottom: 2px;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  touch-action: pan-x pinch-zoom;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 33, 165, 0.28) transparent;
+  padding: 2px 20px 8px;
 }
 
 .team-premium-page .gv-team-roster-filters::-webkit-scrollbar {
-  display: none;
+  height: 4px;
+}
+
+.team-premium-page .gv-team-roster-filters::-webkit-scrollbar-thumb {
+  background: rgba(0, 33, 165, 0.28);
+  border-radius: 999px;
 }
 
 .team-premium-page .gv-team-roster-chip {
@@ -2218,14 +2260,17 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 36px;
-  padding: 6px 10px;
+  min-height: 40px;
+  padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid rgba(0, 33, 165, 0.16);
   background: #fff;
   color: rgba(15, 23, 42, 0.7);
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  scroll-snap-align: start;
   cursor: pointer;
 }
 
@@ -2772,17 +2817,6 @@
   margin-top: 14px;
 }
 
-
-.team-premium-page .gv-team-roster-guide {
-  margin: 0;
-  font-size: 0.84rem;
-  line-height: 1.45;
-  color: rgba(15, 23, 42, 0.62);
-}
-
-.team-premium-page .gv-team-roster-guide strong {
-  color: var(--team-uf-blue);
-}
 
 .team-premium-page .gv-team-roster-chip--all {
   border-color: rgba(250, 70, 22, 0.35);

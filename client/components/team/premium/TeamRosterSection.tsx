@@ -72,13 +72,10 @@ export function TeamRosterSection({
               <div className="gv-team-roster-summary__cell">
                 <span className="gv-team-roster-summary__value">{counts[filter] ?? 0}</span>
                 <span className="gv-team-roster-summary__label">
-                  {filter === 'All' ? 'Full directory' : `${filter} room`}
+                  {filter === 'All' ? 'Full roster' : filter}
                 </span>
               </div>
             </div>
-            <p className="gv-team-roster-guide">
-              Browse QB → ST one room at a time. <strong>All</strong> (last) opens the full roster.
-            </p>
             <RosterFilters active={filter} onChange={onFilterChange} counts={counts} />
             <RosterList players={roster} filter={filter} />
           </>

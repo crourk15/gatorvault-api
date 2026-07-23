@@ -104,9 +104,7 @@ export function RosterList({ players, filter }: Props): React.ReactElement {
           </h3>
           <span className="gv-team-roster-room__count">{alpha.length}</span>
         </header>
-        <p className="gv-team-roster-all-note">
-          Every player on the Florida roster, A–Z. Use QB–ST above to browse one room at a time.
-        </p>
+        <p className="gv-team-roster-all-note">Every player on the Florida roster, A–Z.</p>
         <div className="gv-team-roster-grid">
           {alpha.map((player) => (
             <PlayerCard key={player.id} player={player} />

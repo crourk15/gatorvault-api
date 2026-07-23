@@ -99,8 +99,8 @@ export const TEAM_COPY = {
     supportTitle: 'Support Staff',
   },
   roster: {
-    title: 'Roster Rooms',
-    subtitle: 'QB → ST one room at a time · ALL (last) opens the full roster',
+    title: 'Roster',
+    subtitle: 'Florida by position room',
   },
   depthChart: {
     title: '2026 Depth Chart',
