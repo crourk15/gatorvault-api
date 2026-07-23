@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ComposableMap, Geographies } from 'react-simple-maps';
 import type { RhHubFootprintResponse, RhHubFootprintState } from '@/lib/recruiting-hub-elite-api';
 import { fetchRecruitingHubFootprint } from '@/lib/recruiting-hub-elite-api';
@@ -20,11 +20,37 @@ function momentumLabel(momentum: RhHubFootprintState['momentum']): string {
   return 'Holding';
 }
 
-function FootprintTooltip({ state }: { state: RhHubFootprintState }): React.ReactElement {
+function classStory(year: number): { kicker: string; subtitle: string } {
+  if (year >= 2028) {
+    return {
+      kicker: 'Early discovery',
+      subtitle: 'Building the next Florida pipeline — early targets, visits, and state heat.',
+    };
+  }
+  return {
+    kicker: 'Active board',
+    subtitle: 'UF recruiting pipeline by state — commits, targets, visits, and battles.',
+  };
+}
+
+function FootprintIntel({
+  state,
+  year,
+}: {
+  state: RhHubFootprintState;
+  year: number;
+}): React.ReactElement {
   return (
-    <div className="rh-footprint-tooltip">
-      <div className="rh-footprint-tooltip__title">{state.state}</div>
-      <dl className="rh-footprint-tooltip__stats">
+    <div className="rh-footprint-intel">
+      <div className="rh-footprint-intel__head">
+        <p className="rh-footprint-intel__kicker">{year} · State room</p>
+        <h3 className="rh-footprint-intel__title">{state.state}</h3>
+        <p className={`rh-footprint-intel__momentum rh-footprint-intel__momentum--${state.momentum}`}>
+          {momentumLabel(state.momentum)}
+          {state.pipelineScore > 0 ? ` · Pipeline ${state.pipelineScore}` : ''}
+        </p>
+      </div>
+      <dl className="rh-footprint-intel__stats">
         <div>
           <dt>Targets</dt>
           <dd>{state.targets}</dd>
@@ -41,47 +67,50 @@ function FootprintTooltip({ state }: { state: RhHubFootprintState }): React.Reac
           <dt>Visits</dt>
           <dd>{state.visits}</dd>
         </div>
-        <div>
-          <dt>Momentum</dt>
-          <dd>{momentumLabel(state.momentum)}</dd>
-        </div>
-        <div>
-          <dt>Pipeline</dt>
-          <dd>{state.pipelineScore}</dd>
-        </div>
         {state.ufScore != null ? (
           <div>
-            <dt>UF Score</dt>
+            <dt>UF lean</dt>
             <dd>{state.ufScore}</dd>
           </div>
         ) : null}
         {state.competitorPressure != null && state.competitorPressure > 0 ? (
           <div>
-            <dt>Competitor pressure</dt>
-            <dd>{state.competitorPressure} schools</dd>
+            <dt>Pressure</dt>
+            <dd>{state.competitorPressure}</dd>
           </div>
         ) : null}
       </dl>
       {state.topPlayers.length > 0 ? (
-        <ul className="rh-footprint-tooltip__players">
-          {state.topPlayers.slice(0, 3).map((p) => (
-            <li key={p.id}>
-              {p.name} · {p.position}
-              {p.ufScore != null ? ` · UF ${p.ufScore}` : ''}
-            </li>
-          ))}
-        </ul>
+        <div className="rh-footprint-intel__players">
+          <h4 className="rh-footprint-intel__label">Top names</h4>
+          <ul>
+            {state.topPlayers.slice(0, 4).map((p) => (
+              <li key={p.id}>
+                <span className="rh-footprint-intel__name">{p.name}</span>
+                <span className="rh-footprint-intel__meta">
+                  {p.position}
+                  {p.status === 'commit' ? ' · Commit' : ' · Target'}
+                  {p.ufScore != null ? ` · UF ${p.ufScore}` : ''}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
       {state.staffActivity.length > 0 ? (
-        <div className="rh-footprint-tooltip__staff">
+        <div className="rh-footprint-intel__staff">
+          <h4 className="rh-footprint-intel__label">Staff activity</h4>
           {state.staffActivity.slice(0, 3).map((s) => (
-            <span key={s.staffId}>
-              {s.name} ({s.role}): {s.assignedPlayers} assigned
+            <p key={s.staffId}>
+              {s.name} · {s.role} · {s.assignedPlayers} assigned
               {s.wins + s.losses > 0 ? ` · ${s.wins}W/${s.losses}L` : ''}
-            </span>
+            </p>
           ))}
         </div>
       ) : null}
+      <a className="rh-footprint-intel__cta" href={`/vault/recruiting/${year}/targets/`}>
+        Open {year} targets →
+      </a>
     </div>
   );
 }
@@ -97,18 +126,65 @@ export function RecruitingFootprintMap(): React.ReactElement {
     select: selectFootprint,
     fetchFallback: fetchFootprint,
   });
-  const [hoveredState, setHoveredState] = useState<string | null>(null);
+  const [activeStateCode, setActiveStateCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    setActiveStateCode(null);
+  }, [activeYear]);
 
   const states = footprint?.states ?? [];
   const pins = footprint?.pins ?? [];
-  const activeState = hoveredState ? states.find((s) => s.state === hoveredState) : null;
+  const story = classStory(activeYear);
+  const activeState = activeStateCode ? states.find((s) => s.state === activeStateCode) : null;
+
+  const scoreboard = useMemo(() => {
+    const commits = states.reduce((n, s) => n + (s.commits || 0), 0);
+    const targets = states.reduce((n, s) => n + (s.targets || 0), 0);
+    const visits = states.reduce((n, s) => n + (s.visits || 0), 0);
+    const battles = pins.filter((p) => p.pinType === 'battle').length;
+    return {
+      commits,
+      targets,
+      visits,
+      battles,
+      states: states.filter((s) => s.pipelineScore > 0).length,
+      pins: pins.length,
+    };
+  }, [states, pins]);
 
   return (
-    <>
-      <div className="rh-section-header">
-        <div className="rh-section-title">Recruiting Footprint Map</div>
-        <div className="rh-section-subtitle">
-          {activeYear} class — UF recruiting pipeline by state, targets, commits, visits, and battles.
+    <div className="rh-footprint-stage" data-year={activeYear}>
+      <div className="rh-section-header rh-footprint-stage__header">
+        <div>
+          <p className="rh-footprint-stage__kicker">{story.kicker}</p>
+          <div className="rh-section-title">Recruiting Footprint</div>
+          <div className="rh-section-subtitle">{story.subtitle}</div>
+        </div>
+        <div className="rh-footprint-year-chip" aria-label={`Class ${activeYear}`}>
+          Class {activeYear}
+        </div>
+      </div>
+
+      <div className="rh-footprint-scoreboard" aria-label={`${activeYear} footprint scoreboard`}>
+        <div className="rh-footprint-scoreboard__cell">
+          <span className="rh-footprint-scoreboard__value">{scoreboard.commits}</span>
+          <span className="rh-footprint-scoreboard__label">Commits</span>
+        </div>
+        <div className="rh-footprint-scoreboard__cell">
+          <span className="rh-footprint-scoreboard__value">{scoreboard.targets}</span>
+          <span className="rh-footprint-scoreboard__label">Targets</span>
+        </div>
+        <div className="rh-footprint-scoreboard__cell">
+          <span className="rh-footprint-scoreboard__value">{scoreboard.visits}</span>
+          <span className="rh-footprint-scoreboard__label">Visits</span>
+        </div>
+        <div className="rh-footprint-scoreboard__cell">
+          <span className="rh-footprint-scoreboard__value">
+            {scoreboard.battles || scoreboard.states}
+          </span>
+          <span className="rh-footprint-scoreboard__label">
+            {scoreboard.battles ? 'Battles' : 'States'}
+          </span>
         </div>
       </div>
 
@@ -126,6 +202,7 @@ export function RecruitingFootprintMap(): React.ReactElement {
         <section className="rh-card rh-footprint-map" data-testid="rh-elite-footprint">
           <div className="rh-footprint-map__layout">
             <div className="rh-footprint-map__canvas-wrap">
+              <div className="rh-footprint-map__canvas-glow" aria-hidden="true" />
               <ComposableMap
                 projection="geoAlbersUsa"
                 width={MAP_WIDTH}
@@ -138,8 +215,8 @@ export function RecruitingFootprintMap(): React.ReactElement {
                       <StateHeatLayer
                         geographies={geographies}
                         states={states}
-                        hoveredState={hoveredState}
-                        onHover={setHoveredState}
+                        activeState={activeStateCode}
+                        onActivate={setActiveStateCode}
                       />
                       <BattleDifficultyLayer geographies={geographies} states={states} />
                     </>
@@ -147,60 +224,59 @@ export function RecruitingFootprintMap(): React.ReactElement {
                 </Geographies>
                 <TargetPinsLayer pins={pins} />
               </ComposableMap>
+              <div className="rh-footprint-map__pin-legend" aria-hidden="true">
+                <span>
+                  <i className="rh-footprint-dot rh-footprint-dot--commit" /> Commit
+                </span>
+                <span>
+                  <i className="rh-footprint-dot rh-footprint-dot--target" /> Target
+                </span>
+                <span>
+                  <i className="rh-footprint-dot rh-footprint-dot--battle" /> Battle
+                </span>
+              </div>
             </div>
             <aside className="rh-footprint-map__sidebar">
               {activeState ? (
-                <FootprintTooltip state={activeState} />
+                <FootprintIntel state={activeState} year={activeYear} />
               ) : (
                 <div className="rh-footprint-legend">
-                  <h3 className="rh-footprint-legend__title">Map Legend</h3>
+                  <h3 className="rh-footprint-legend__title">Read the map</h3>
                   <ul className="rh-footprint-legend__list">
                     <li>
                       <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--blue" />
-                      State fill — high pipeline activity
+                      Hotter fill = stronger pipeline
                     </li>
                     <li>
                       <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--orange" />
-                      State fill — moderate activity
-                    </li>
-                    <li>
-                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--gray" />
-                      No recruiting activity
-                    </li>
-                    <li>
-                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--blue" />
-                      Border — UF strong (score ≥70)
-                    </li>
-                    <li>
-                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--orange" />
-                      Border — contested (40–69)
-                    </li>
-                    <li>
-                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--red" />
-                      Border — trailing (&lt;40)
+                      Orange border = selected state
                     </li>
                     <li>
                       <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--pin-commit" />
-                      Pin — commit
+                      Orange pin = commit
                     </li>
                     <li>
                       <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--pin-target" />
-                      Pin — target / battle
+                      Blue pin = target
                     </li>
                   </ul>
                   <p className="rh-footprint-legend__hint">
-                    Hover a colored state for targets, commits, offers, visits, momentum, and pipeline score.
+                    Tap a lit state for names, visits, momentum, and staff activity. Switch class year
+                    above to flip between the 2027 board and 2028 discovery map.
                   </p>
                   <div className="rh-footprint-summary">
-                    <span>{states.length} active states</span>
-                    <span>{pins.length} map pins</span>
+                    <span>{scoreboard.states} active states</span>
+                    <span>{scoreboard.pins} map pins</span>
                   </div>
+                  <a className="rh-footprint-intel__cta" href={`/vault/recruiting/${activeYear}/targets/`}>
+                    Open {activeYear} targets →
+                  </a>
                 </div>
               )}
             </aside>
           </div>
         </section>
       )}
-    </>
+    </div>
   );
 }

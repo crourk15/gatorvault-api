@@ -26,7 +26,7 @@ export function TeamPremiumHero({ metrics, loading }: Props): React.ReactElement
           <p className="rh-cc-hero__eyebrow team-premium-hero__eyebrow">GatorVault · 2026</p>
           <h1 className="rh-cc-hero__title team-premium-hero__title">Florida Football</h1>
           <p className="rh-cc-hero__sub team-premium-hero__sub">
-            Built in The Swamp — depth chart, roster rooms, and the recruiting pipeline in one hub.
+            Built in The Swamp — depth chart and roster rooms in one hub.
           </p>
         </div>
         <div

@@ -125,10 +125,9 @@ export const TEAM_QUICK_ACTIONS = [
   { href: '/vault/team/history/', icon: '📜', label: 'Program History' },
 ] as const;
 
-export type TeamTab = 'depth-chart' | 'roster' | 'recruiting-pipeline';
+export type TeamTab = 'depth-chart' | 'roster';
 
 export const TEAM_TABS: { id: TeamTab; label: string }[] = [
   { id: 'depth-chart', label: 'Depth Chart' },
   { id: 'roster', label: 'Roster' },
-  { id: 'recruiting-pipeline', label: 'Recruiting Pipeline' },
 ];

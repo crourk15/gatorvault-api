@@ -15,11 +15,11 @@ type GeoFeature = {
 type Props = {
   geographies: GeoFeature[];
   states: RhHubFootprintState[];
-  hoveredState: string | null;
-  onHover: (state: string | null) => void;
+  activeState: string | null;
+  onActivate: (state: string | null) => void;
 };
 
-export function StateHeatLayer({ geographies, states, hoveredState, onHover }: Props): React.ReactElement {
+export function StateHeatLayer({ geographies, states, activeState, onActivate }: Props): React.ReactElement {
   const stateMap = new Map(states.map((s) => [s.state, s]));
 
   return (
@@ -28,28 +28,32 @@ export function StateHeatLayer({ geographies, states, hoveredState, onHover }: P
         const code = stateCodeFromGeo(geo);
         const data = code ? stateMap.get(code) : null;
         const hasData = Boolean(data && data.pipelineScore > 0);
-        const fill = hasData ? getHeatColor(data!.pipelineScore) : '#1f2937';
-        const fillOpacity = hasData ? 0.55 + (data!.pipelineScore / 100) * 0.4 : 0.15;
-        const isHovered = code != null && hoveredState === code;
+        const fill = hasData ? getHeatColor(data!.pipelineScore) : '#0b1224';
+        const fillOpacity = hasData ? 0.62 + (data!.pipelineScore / 100) * 0.35 : 0.22;
+        const isActive = code != null && activeState === code;
 
         return (
           <Geography
             key={geo.rsmKey}
             geography={geo}
             fill={fill}
-            fillOpacity={fillOpacity}
-            stroke={isHovered ? '#ffffff' : fill}
-            strokeWidth={isHovered ? 1.2 : 0.35}
-            className="rh-footprint-state-path"
+            fillOpacity={isActive ? Math.min(1, fillOpacity + 0.18) : fillOpacity}
+            stroke={isActive ? '#fa4616' : hasData ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.08)'}
+            strokeWidth={isActive ? 1.6 : 0.45}
+            className={`rh-footprint-state-path${isActive ? ' is-active' : ''}${hasData ? ' has-data' : ''}`}
             style={{
               default: { outline: 'none', cursor: hasData ? 'pointer' : 'default' },
-              hover: { outline: 'none', fillOpacity: hasData ? 0.95 : 0.2 },
+              hover: { outline: 'none', fillOpacity: hasData ? 0.98 : 0.28 },
               pressed: { outline: 'none' },
             }}
             onMouseEnter={() => {
-              if (code && hasData) onHover(code);
+              if (code && hasData) onActivate(code);
             }}
-            onMouseLeave={() => onHover(null)}
+            {...({
+              onClick: () => {
+                if (code && hasData) onActivate(code);
+              },
+            } as Record<string, unknown>)}
           />
         );
       })}

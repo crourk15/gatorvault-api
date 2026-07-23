@@ -7,9 +7,6 @@ import {
   readCachedTeamHubBundle,
   type TeamHubBundle,
 } from '@/lib/team-hub-api';
-import { fetchRecruitingBoard, type RecruitingBoardResponse } from '@/lib/recruiting-board-api';
-import { fetchFutureCastMasterBoard } from '@/lib/futurecast-board-api';
-import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import type { DepthChartTab } from '@/lib/team-hub-types';
 import type { RosterFilter } from '@/lib/team-hub-data';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
@@ -18,9 +15,8 @@ import { TeamPremiumHero } from '@/components/team/premium/TeamPremiumHero';
 import { TeamPremiumSubNav } from '@/components/team/premium/TeamPremiumSubNav';
 import { TeamRosterSection } from '@/components/team/premium/TeamRosterSection';
 import { TeamDepthChartSection } from '@/components/team/premium/TeamDepthChartSection';
-import { TeamRecruitingPipelineSection } from '@/components/team/premium/TeamRecruitingPipelineSection';
 import { TeamDestinationGrid } from '@/components/team/TeamDestinationGrid';
-import { buildPipelinePreview, computeHeroMetrics } from '@/components/team/premium/team-premium-metrics';
+import { computeHeroMetrics } from '@/components/team/premium/team-premium-metrics';
 import { TEAM_PREMIUM_TABS, type TeamPremiumTabId } from '@/components/team/premium/team-premium-types';
 
 const SEED_BUNDLE: TeamHubBundle = buildSeedTeamHubBundle();
@@ -32,6 +28,8 @@ const HASH_DESTINATIONS: Record<string, string> = {
   'coaching-staff': '/vault/team/staff/',
   'team-identity': '/vault/team/identity/',
   'program-history': '/vault/team/history/',
+  // Pipeline lives on Recruiting now (US footprint map for 2027/2028).
+  'recruiting-pipeline': '/vault/recruiting/',
 };
 
 function tabFromHash(): TeamPremiumTabId {
@@ -40,28 +38,17 @@ function tabFromHash(): TeamPremiumTabId {
   return SECTION_IDS.includes(hash) ? hash : DEFAULT_TAB;
 }
 
-function boardHasPlayers(board: RecruitingBoardResponse | null): boolean {
-  if (!board) return false;
-  const commits = board.commits?.length ?? 0;
-  const targets = board.targets?.length ?? 0;
-  const players = board.players?.length ?? 0;
-  return commits + targets + players > 0;
-}
-
 export function TeamHubPage(): React.ReactElement {
   const cachedHub = typeof window !== 'undefined' ? readCachedTeamHubBundle() : null;
   const [bundle, setBundle] = useState<TeamHubBundle>(cachedHub ?? SEED_BUNDLE);
   const seedReady = (cachedHub ?? SEED_BUNDLE).roster.length > 0;
   const [loading, setLoading] = useState(!cachedHub && !seedReady);
   const [warming, setWarming] = useState(!cachedHub && !seedReady);
-  const [pipelineLoading, setPipelineLoading] = useState(true);
   const [rosterFilter, setRosterFilter] = useState<RosterFilter>('QB');
   const [dcTab, setDcTab] = useState<DepthChartTab>('offense');
   const [activeTab, setActiveTab] = useState<TeamPremiumTabId>(DEFAULT_TAB);
-  const [pipelinePreview, setPipelinePreview] = useState(() => buildPipelinePreview(null, null));
 
   const pendingPlayerRestoreRef = useRef(false);
-
   const shouldRestoreScrollRef = useRef(false);
 
   useVaultPageRestore(
@@ -78,8 +65,7 @@ export function TeamHubPage(): React.ReactElement {
     { requireRestoreScrollFlag: true }
   );
 
-  // Bottom-nav / fresh Team entry must stay on the hero. Re-assert top after
-  // layout settles (roster chips used to scrollIntoView the page to mid-roster).
+  // Bottom-nav / fresh Team entry must stay on the hero.
   useEffect(() => {
     if (shouldRestoreScrollRef.current) return;
     const toTop = () => window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -91,8 +77,6 @@ export function TeamHubPage(): React.ReactElement {
       window.clearTimeout(t2);
     };
   }, [loading]);
-
-  const pipelineClassYear = primaryRecruitingClassYear();
 
   const loadHub = useCallback(async (isInitial: boolean) => {
     const hadCache = isInitial && readCachedTeamHubBundle() != null;
@@ -111,37 +95,15 @@ export function TeamHubPage(): React.ReactElement {
     }
   }, []);
 
-  const loadPipeline = useCallback(async () => {
-    setPipelineLoading(true);
-    try {
-      let board = await fetchRecruitingBoard(pipelineClassYear).catch(() => null);
-      if (!boardHasPlayers(board)) {
-        const altYear = pipelineClassYear === 2028 ? 2027 : 2028;
-        const alt = await fetchRecruitingBoard(altYear).catch(() => null);
-        if (boardHasPlayers(alt)) board = alt;
-      }
-      const fcBoard = await fetchFutureCastMasterBoard().catch(() => null);
-      setPipelinePreview(buildPipelinePreview(board, fcBoard));
-    } finally {
-      setPipelineLoading(false);
-    }
-  }, [pipelineClassYear]);
-
   useEffect(() => {
     void loadHub(true);
   }, [loadHub]);
 
-  useEffect(() => {
-    void loadPipeline();
-  }, [loadPipeline]);
-
   useVaultDataReload(() => {
     void loadHub(false);
-    void loadPipeline();
   });
 
-  // Save scroll only when leaving into a player profile. Bottom-nav / fresh
-  // Team entry should start at the hero, not mid-page near Roster.
+  // Save scroll only when leaving into a player profile.
   useEffect(() => {
     const onPlayerNav = (event: MouseEvent) => {
       const target = event.target;
@@ -268,7 +230,6 @@ export function TeamHubPage(): React.ReactElement {
           loading={rosterLoading}
           warming={warming}
         />
-        <TeamRecruitingPipelineSection data={pipelinePreview} loading={pipelineLoading} />
         <TeamDestinationGrid />
       </div>
     </TeamElitePageShell>

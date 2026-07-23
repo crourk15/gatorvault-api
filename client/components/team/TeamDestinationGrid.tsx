@@ -40,7 +40,7 @@ export function TeamDestinationGrid(): React.ReactElement {
         <p className="team-dest-grid__kicker">Gator rooms</p>
         <h2 className="team-dest-grid__title">Staff · Identity · History</h2>
         <p className="team-dest-grid__sub">
-          Leave Depth, Roster, and Pipeline on the hub — open the deeper Florida rooms from here.
+          Depth and Roster stay on the hub — open the deeper Florida rooms from here.
         </p>
       </div>
       <div className="team-dest-grid__cards">
