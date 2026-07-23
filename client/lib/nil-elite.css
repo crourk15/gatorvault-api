@@ -1146,22 +1146,139 @@ a.nil-player-card:focus-visible {
 }
 
 
-/* ── Full Florida board (Gator surfaces) ── */
-.nil-elite-section--gator-board {
-  padding: 16px;
+
+/* Web desk: Florida board + Market Index side-by-side (stacked on phone) */
+.nil-desk-duo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-5, 24px);
+  width: 100%;
+  min-width: 0;
+}
+
+.nil-desk-duo__primary,
+.nil-desk-duo__secondary {
+  min-width: 0;
+  width: 100%;
+}
+
+.nil-elite-section--market-index {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px 16px 16px;
   border-radius: 16px;
-  background:
-    linear-gradient(180deg, rgba(0, 33, 165, 0.16) 0%, rgba(255, 255, 255, 0.97) 42%, #ffffff 100%);
-  border: 1px solid rgba(0, 33, 165, 0.16);
+  background: #ffffff;
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  border-top: 4px solid #0021a5;
   box-shadow: 0 8px 24px rgba(0, 26, 51, 0.12);
 }
 
-.nil-elite-section--gator-board .nil-elite-section__title {
+.nil-elite-section--market-index .nil-elite-section__title {
+  color: #001a33;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.nil-elite-section--market-index .nil-elite-section__sub {
+  color: #334155;
+  font-weight: 500;
+}
+
+.nil-elite-section--market-index .rh-cc-tabs__btn {
+  color: rgba(0, 33, 165, 0.55);
+}
+
+.nil-elite-section--market-index .rh-cc-tabs__btn.is-active {
   color: #0021a5;
+  background: rgba(0, 33, 165, 0.08);
+  border-color: #0021a5;
+  box-shadow: inset 0 -2px 0 #0021a5;
+}
+
+.nil-elite-section--market-index .nil-editorial-toggle {
+  border-color: rgba(0, 33, 165, 0.2);
+  color: #0021a5;
+  background: rgba(0, 33, 165, 0.04);
+}
+
+.nil-elite-section--market-index .nil-index-headline article {
+  border-color: rgba(0, 33, 165, 0.12);
+  background: rgba(0, 33, 165, 0.04);
+}
+
+.nil-elite-section--market-index .nil-index-headline span {
+  color: rgba(0, 33, 165, 0.55);
+}
+
+.nil-elite-section--market-index .nil-index-headline strong {
+  color: #001a33;
+}
+
+@media (min-width: 960px) {
+  .nil-desk-duo {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .nil-desk-duo__primary .nil-elite-section--gator-board,
+  .nil-desk-duo__secondary .nil-elite-section--market-index {
+    height: 100%;
+  }
+
+  .nil-desk-duo__secondary .nil-rank-table-wrap {
+    max-height: min(70vh, 720px);
+    overflow: auto;
+  }
+}
+
+/* Full-width NIL stack (never use 2-col rh-cc-main here) */
+.nil-desk-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-5, 24px);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+
+/* ── Full Florida board (Gator surfaces, high contrast) ── */
+.nil-elite-section--gator-board {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 18px 16px 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  border-top: 4px solid #fa4616;
+  box-shadow: 0 8px 24px rgba(0, 26, 51, 0.12);
+  text-align: left;
+}
+
+.nil-elite-section--gator-board .nil-elite-section__head {
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.nil-elite-section--gator-board .nil-elite-section__title {
+  color: #001a33;
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .nil-elite-section--gator-board .nil-elite-section__sub {
-  color: rgba(26, 26, 51, 0.68);
+  margin-top: 6px;
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.45;
 }
 
 .nil-elite-section--gator-board .rh-cc-tabs {
@@ -1189,6 +1306,7 @@ a.nil-player-card:focus-visible {
 }
 
 .nil-elite-section--gator-board .nil-editorial-toggle {
+  margin-top: 12px;
   border-color: rgba(0, 33, 165, 0.2);
   color: #0021a5;
   background: rgba(0, 33, 165, 0.04);
@@ -1209,59 +1327,109 @@ a.nil-player-card:focus-visible {
 
 .nil-earner-list__link {
   display: grid;
-  grid-template-columns: 36px 1fr auto;
-  gap: 12px;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 10px;
   align-items: center;
-  padding: 12px 14px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 12px 12px;
   border-radius: 12px;
   border: 1px solid rgba(0, 33, 165, 0.12);
-  background: #fff;
-  color: #1a1a1a;
+  background: #f8fafc;
+  color: #0f172a;
   text-decoration: none;
-  box-shadow: 0 2px 10px rgba(0, 26, 51, 0.06);
+  text-align: left;
+  justify-items: start;
+  box-shadow: none;
 }
 
 .nil-earner-list__link:hover {
   border-color: rgba(250, 70, 22, 0.45);
-  background: rgba(250, 70, 22, 0.04);
+  background: #fff7f3;
 }
 
 .nil-earner-list__rank {
   font-weight: 800;
   color: #0021a5;
-  font-size: 0.8125rem;
+  font-size: 0.85rem;
+  justify-self: start;
+}
+
+.nil-earner-list__identity {
+  min-width: 0;
+  width: 100%;
+  text-align: left;
 }
 
 .nil-earner-list__name {
   display: block;
-  font-size: 0.95rem;
+  font-size: 0.98rem;
+  font-weight: 800;
   color: #0f172a;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nil-earner-list__meta {
-  display: block;
-  margin-top: 2px;
-  font-size: 0.75rem;
-  color: rgba(26, 26, 51, 0.62);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.nil-earner-list__pos {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #0021a5;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.nil-earner-list__chip,
+.nil-earner-list__stars {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(0, 33, 165, 0.08);
+  color: #0021a5;
+  font-size: 0.72rem;
+  font-weight: 700;
 }
 
 .nil-earner-list__val {
+  justify-self: end;
   text-align: right;
+  min-width: 4.5rem;
 }
 
 .nil-earner-list__val-label {
   display: block;
-  font-size: 0.65rem;
+  margin-top: 2px;
+  font-size: 0.62rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(0, 33, 165, 0.55);
+  color: #475569;
+  font-weight: 700;
 }
 
 .nil-earner-list__val strong {
   display: block;
-  margin-top: 2px;
   font-size: 1.05rem;
+  font-weight: 900;
   color: #fa4616;
+  line-height: 1.1;
 }
 
 .nil-trend-dial__value {

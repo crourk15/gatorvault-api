@@ -54,28 +54,34 @@ export function NilElitePage(): React.ReactElement {
             topEarners={bundle.rosterEarners || []}
           />
 
-          <div className="rh-cc-main rh-frame">
-            <div className="rh-cc-col">
-              <NilRosterEarners earners={bundle.rosterEarners || []} startRank={1} />
-              {landscape ? <NilProgramRankingsTable landscape={landscape} /> : null}
-              <NilLeaderboard marketBoard={bundle.marketBoard} />
-
-              <div className="nil-desk-foot">
-                <p className="nil-desk-foot__meta">
-                  {bundle.desk?.provider || 'Sideline NIL Market Index'}
-                  {bundle.generatedAt
-                    ? ` · Updated ${new Date(bundle.generatedAt).toLocaleString()}`
-                    : ''}
-                </p>
-                <button
-                  type="button"
-                  className="nil-editorial-toggle"
-                  onClick={handleRefresh}
-                  disabled={refreshing || loading}
-                >
-                  {refreshing || loading ? 'Refreshing…' : 'Refresh desk'}
-                </button>
+          <div className="nil-desk-stack rh-frame">
+            <div className="nil-desk-duo">
+              <div className="nil-desk-duo__primary">
+                <NilRosterEarners earners={bundle.rosterEarners || []} startRank={1} />
               </div>
+              {landscape ? (
+                <div className="nil-desk-duo__secondary">
+                  <NilProgramRankingsTable landscape={landscape} />
+                </div>
+              ) : null}
+            </div>
+            <NilLeaderboard marketBoard={bundle.marketBoard} />
+
+            <div className="nil-desk-foot">
+              <p className="nil-desk-foot__meta">
+                {bundle.desk?.provider || 'Sideline NIL Market Index'}
+                {bundle.generatedAt
+                  ? ` · Updated ${new Date(bundle.generatedAt).toLocaleString()}`
+                  : ''}
+              </p>
+              <button
+                type="button"
+                className="nil-editorial-toggle"
+                onClick={handleRefresh}
+                disabled={refreshing || loading}
+              >
+                {refreshing || loading ? 'Refreshing…' : 'Refresh desk'}
+              </button>
             </div>
           </div>
 

@@ -17,7 +17,7 @@ export function NilProgramRankingsTable({ landscape }: Props): React.ReactElemen
   const visibleNat = expanded ? nationalRows : nationalRows.slice(0, 8);
 
   return (
-    <section className="nil-elite-section" data-testid="nil-sec-landscape">
+    <section className="nil-elite-section nil-elite-section--market-index" data-testid="nil-sec-landscape">
       <header className="nil-elite-section__head">
         <div>
           <h2 className="nil-elite-section__title">Market Index</h2>
