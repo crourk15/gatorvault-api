@@ -1,6 +1,13 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { ComposableMap, Geographies } from 'react-simple-maps';
 import type { RhHubFootprintResponse, RhHubFootprintState } from '@/lib/recruiting-hub-elite-api';
 import { fetchRecruitingHubFootprint } from '@/lib/recruiting-hub-elite-api';
@@ -15,6 +22,8 @@ import { US_MAP_GEO_URL } from './state-geo-utils';
 const MAP_WIDTH = 960;
 const MAP_HEIGHT = 560;
 const FOOTPRINT_YEARS = [2027, 2028] as const;
+/** Keep footprint locked in the viewport while hub sections above reflow on year change. */
+const YEAR_SCROLL_PIN_MS = 2400;
 
 function momentumLabel(momentum: RhHubFootprintState['momentum']): string {
   if (momentum === 'up') return 'Gaining';
@@ -122,6 +131,8 @@ export function RecruitingFootprintMap(): React.ReactElement {
   const footprintYear = (FOOTPRINT_YEARS as readonly number[]).includes(activeYear)
     ? activeYear
     : 2027;
+  const stageRef = useRef<HTMLDivElement>(null);
+  const pinViewportTopRef = useRef<number | null>(null);
   const selectFootprint = useCallback((b: { footprint: RhHubFootprintResponse }) => b.footprint, []);
   const fetchFootprint = useCallback(
     (year: number) => fetchRecruitingHubFootprint(year),
@@ -136,6 +147,58 @@ export function RecruitingFootprintMap(): React.ReactElement {
   useEffect(() => {
     setActiveStateCode(null);
   }, [activeYear]);
+
+  const selectFootprintYear = useCallback(
+    (year: RecruitingClassYear) => {
+      if (year === footprintYear) return;
+      // Capture before setState — hub sections above collapse while the new class loads.
+      pinViewportTopRef.current = stageRef.current?.getBoundingClientRect().top ?? null;
+      setActiveYear(year);
+    },
+    [footprintYear, setActiveYear]
+  );
+
+  useLayoutEffect(() => {
+    const pinnedTop = pinViewportTopRef.current;
+    const el = stageRef.current;
+    if (pinnedTop == null || !el) return;
+
+    let alive = true;
+    const adjust = () => {
+      if (!alive || pinViewportTopRef.current == null) return;
+      const delta = el.getBoundingClientRect().top - pinViewportTopRef.current;
+      if (Math.abs(delta) > 0.5) {
+        window.scrollBy(0, delta);
+      }
+    };
+
+    adjust();
+    const root = el.closest('.rh-elite-chrome') ?? document.body;
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(adjust) : null;
+    ro?.observe(root);
+
+    let rafId = 0;
+    const tick = () => {
+      if (!alive) return;
+      adjust();
+      rafId = window.requestAnimationFrame(tick);
+    };
+    rafId = window.requestAnimationFrame(tick);
+
+    const stopId = window.setTimeout(() => {
+      alive = false;
+      pinViewportTopRef.current = null;
+      ro?.disconnect();
+      window.cancelAnimationFrame(rafId);
+    }, YEAR_SCROLL_PIN_MS);
+
+    return () => {
+      alive = false;
+      ro?.disconnect();
+      window.cancelAnimationFrame(rafId);
+      window.clearTimeout(stopId);
+    };
+  }, [footprintYear, loading]);
 
   const states = footprint?.states ?? [];
   const pins = footprint?.pins ?? [];
@@ -158,7 +221,7 @@ export function RecruitingFootprintMap(): React.ReactElement {
   }, [states, pins]);
 
   return (
-    <div className="rh-footprint-stage" data-year={footprintYear}>
+    <div ref={stageRef} className="rh-footprint-stage" data-year={footprintYear}>
       <div className="rh-footprint-stage__top">
         <p className="rh-footprint-stage__kicker">{story.kicker}</p>
         <h2 className="rh-footprint-stage__title">Recruiting Footprint</h2>
@@ -172,7 +235,8 @@ export function RecruitingFootprintMap(): React.ReactElement {
               role="tab"
               aria-selected={footprintYear === year}
               className={`rh-footprint-year-tab${footprintYear === year ? ' is-active' : ''}`}
-              onClick={() => setActiveYear(year as RecruitingClassYear)}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => selectFootprintYear(year as RecruitingClassYear)}
             >
               Class {year}
             </button>

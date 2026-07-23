@@ -1706,7 +1706,7 @@
   margin: 0;
   font-size: 0.92rem;
   line-height: 1.45;
-  color: #cbd5e1;
+  color: #e2e8f0;
   max-width: 36rem;
 }
 
@@ -1793,7 +1793,7 @@
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(0, 26, 51, 0.62);
+  color: rgba(0, 26, 51, 0.72);
 }
 
 .rh-elite-chrome .rh-footprint-skeleton {
@@ -1877,13 +1877,13 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px 12px;
-  padding: 6px 10px;
+  padding: 7px 12px;
   border-radius: 999px;
-  background: rgba(0, 11, 22, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 0.68rem;
-  font-weight: 700;
+  background: rgba(0, 11, 22, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
@@ -1923,8 +1923,9 @@
   height: 100%;
   padding: 14px;
   border-radius: 14px;
-  background: rgba(0, 33, 165, 0.04);
-  border: 1px solid rgba(0, 33, 165, 0.12);
+  background: #f8fafc;
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  color: #001a33;
 }
 
 .rh-elite-chrome .rh-footprint-intel__kicker {
@@ -2095,7 +2096,7 @@
 .rh-elite-chrome .rh-footprint-legend__hint {
   margin: 0 0 10px;
   font-size: 0.78rem;
-  color: rgba(15, 23, 42, 0.58);
+  color: rgba(0, 26, 51, 0.72);
   line-height: 1.45;
 }
 
@@ -2105,6 +2106,11 @@
   gap: 4px;
   margin-bottom: 12px;
   font-size: 0.78rem;
-  color: rgba(15, 23, 42, 0.55);
-  font-weight: 600;
+  color: rgba(0, 26, 51, 0.7);
+  font-weight: 700;
+}
+
+/* Empty / error copy lives on white map cards */
+.rh-elite-chrome .rh-footprint-map .rh-empty {
+  color: rgba(0, 26, 51, 0.72);
 }
