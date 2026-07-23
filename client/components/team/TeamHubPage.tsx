@@ -7,7 +7,7 @@ import {
   readCachedTeamHubBundle,
   type TeamHubBundle,
 } from '@/lib/team-hub-api';
-import { fetchRecruitingBoard } from '@/lib/recruiting-board-api';
+import { fetchRecruitingBoard, type RecruitingBoardResponse } from '@/lib/recruiting-board-api';
 import { fetchFutureCastMasterBoard } from '@/lib/futurecast-board-api';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import type { DepthChartTab } from '@/lib/team-hub-types';
@@ -20,7 +20,7 @@ import { TeamRosterSection } from '@/components/team/premium/TeamRosterSection';
 import { TeamDepthChartSection } from '@/components/team/premium/TeamDepthChartSection';
 import { TeamRecruitingPipelineSection } from '@/components/team/premium/TeamRecruitingPipelineSection';
 import { TeamDestinationGrid } from '@/components/team/TeamDestinationGrid';
-import { buildPipelinePreview, computeHeroPulse } from '@/components/team/premium/team-premium-metrics';
+import { buildPipelinePreview, computeHeroMetrics } from '@/components/team/premium/team-premium-metrics';
 import { TEAM_PREMIUM_TABS, type TeamPremiumTabId } from '@/components/team/premium/team-premium-types';
 
 const SEED_BUNDLE: TeamHubBundle = buildSeedTeamHubBundle();
@@ -38,6 +38,14 @@ function tabFromHash(): TeamPremiumTabId {
   if (typeof window === 'undefined') return DEFAULT_TAB;
   const hash = window.location.hash.replace('#', '') as TeamPremiumTabId;
   return SECTION_IDS.includes(hash) ? hash : DEFAULT_TAB;
+}
+
+function boardHasPlayers(board: RecruitingBoardResponse | null): boolean {
+  if (!board) return false;
+  const commits = board.commits?.length ?? 0;
+  const targets = board.targets?.length ?? 0;
+  const players = board.players?.length ?? 0;
+  return commits + targets + players > 0;
 }
 
 export function TeamHubPage(): React.ReactElement {
@@ -60,40 +68,51 @@ export function TeamHubPage(): React.ReactElement {
 
   const pipelineClassYear = primaryRecruitingClassYear();
 
-  const load = useCallback(
-    async (isInitial: boolean) => {
-      const hadCache = isInitial && readCachedTeamHubBundle() != null;
+  const loadHub = useCallback(async (isInitial: boolean) => {
+    const hadCache = isInitial && readCachedTeamHubBundle() != null;
+    if (isInitial && !hadCache && SEED_BUNDLE.roster.length === 0) {
+      setLoading(true);
+      setWarming(true);
+    }
+    try {
+      const hub = await fetchTeamHubBundle({ onFresh: setBundle });
+      setBundle(hub);
+    } finally {
       if (isInitial) {
-        setPipelineLoading(true);
-        if (!hadCache && SEED_BUNDLE.roster.length === 0) {
-          setLoading(true);
-          setWarming(true);
-        }
+        setLoading(false);
+        setWarming(false);
       }
-      try {
-        const [hub, board, fcBoard] = await Promise.all([
-          fetchTeamHubBundle({ onFresh: setBundle }),
-          fetchRecruitingBoard(pipelineClassYear).catch(() => null),
-          fetchFutureCastMasterBoard().catch(() => null),
-        ]);
-        setBundle(hub);
-        setPipelinePreview(buildPipelinePreview(board, fcBoard));
-      } finally {
-        if (isInitial) {
-          setLoading(false);
-          setWarming(false);
-        }
-        setPipelineLoading(false);
+    }
+  }, []);
+
+  const loadPipeline = useCallback(async () => {
+    setPipelineLoading(true);
+    try {
+      let board = await fetchRecruitingBoard(pipelineClassYear).catch(() => null);
+      if (!boardHasPlayers(board)) {
+        const altYear = pipelineClassYear === 2028 ? 2027 : 2028;
+        const alt = await fetchRecruitingBoard(altYear).catch(() => null);
+        if (boardHasPlayers(alt)) board = alt;
       }
-    },
-    [pipelineClassYear]
-  );
+      const fcBoard = await fetchFutureCastMasterBoard().catch(() => null);
+      setPipelinePreview(buildPipelinePreview(board, fcBoard));
+    } finally {
+      setPipelineLoading(false);
+    }
+  }, [pipelineClassYear]);
 
   useEffect(() => {
-    void load(true);
-  }, [load]);
+    void loadHub(true);
+  }, [loadHub]);
 
-  useVaultDataReload(() => void load(false));
+  useEffect(() => {
+    void loadPipeline();
+  }, [loadPipeline]);
+
+  useVaultDataReload(() => {
+    void loadHub(false);
+    void loadPipeline();
+  });
 
   useEffect(() => {
     const persist = () =>
@@ -166,7 +185,7 @@ export function TeamHubPage(): React.ReactElement {
         ? bundle.depthChart.defense
         : bundle.depthChart.specialTeams;
 
-  const heroPulse = useMemo(() => computeHeroPulse(bundle), [bundle]);
+  const heroMetrics = useMemo(() => computeHeroMetrics(bundle).slice(0, 3), [bundle]);
   const hasDepthChart =
     bundle.depthChart.offense.length +
       bundle.depthChart.defense.length +
@@ -178,7 +197,7 @@ export function TeamHubPage(): React.ReactElement {
 
   return (
     <TeamElitePageShell>
-      <TeamPremiumHero pulse={heroPulse} loading={heroLoading} />
+      <TeamPremiumHero metrics={heroMetrics} loading={heroLoading} />
       <div className="team-premium-subnav-wrap rh-frame">
         <TeamPremiumSubNav active={activeTab} onSelect={scrollToSection} />
       </div>

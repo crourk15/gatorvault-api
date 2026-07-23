@@ -176,19 +176,7 @@
   max-width: 56rem;
 }
 
-.team-premium-page .team-premium-hero__metrics--pulse {
-  grid-template-columns: 1fr;
-  max-width: 36rem;
-}
 
-.team-premium-page .team-premium-hero__metric--pulse {
-  min-height: 64px;
-}
-
-.team-premium-page .team-premium-hero__metric--pulse .team-premium-hero__metric-value {
-  font-size: 1rem;
-  letter-spacing: 0.01em;
-}
 
 .team-premium-page .team-premium-hero__metric {
   display: flex;
@@ -2080,8 +2068,62 @@
 /* Hero polish on hub */
 .team-premium-page .team-premium-hero__title {
   font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: clamp(2.1rem, 6vw, 3.1rem);
   letter-spacing: 0.02em;
   text-transform: uppercase;
+}
+
+.team-premium-page .team-premium-hero__watermark {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: clamp(5rem, 22vw, 11rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.team-premium-page .team-premium-hero__metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 40rem;
+}
+
+.team-premium-page .team-premium-hero__metric-value {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.65rem;
+  font-weight: 700;
+}
+
+@media (max-width: 767px) {
+  .team-premium-page .team-premium-hero {
+    min-height: 0;
+  }
+
+  .team-premium-page .team-premium-hero__inner {
+    padding-top: 22px;
+    padding-bottom: 20px;
+  }
+
+  .team-premium-page .team-premium-hero__metrics {
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .team-premium-page .team-premium-hero__metric {
+    min-height: 58px;
+    padding: 10px 8px;
+  }
+
+  .team-premium-page .team-premium-hero__metric-value {
+    font-size: 1.35rem;
+  }
 }
 
 
@@ -2117,5 +2159,350 @@
 
 .team-premium-page .team-dest-card {
   max-width: 100%;
+}
+
+
+/* ── Roster rooms elevation ── */
+.team-premium-page .team-roster-module .rh-cc-module__title {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.team-premium-page .gv-team-roster-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.team-premium-page .gv-team-roster-summary__cell {
+  padding: 12px 10px;
+  border-radius: 10px;
+  text-align: center;
+  background: rgba(0, 33, 165, 0.05);
+  border: 1px solid rgba(0, 33, 165, 0.12);
+}
+
+.team-premium-page .gv-team-roster-summary__value {
+  display: block;
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--team-uf-blue);
+  line-height: 1;
+}
+
+.team-premium-page .gv-team-roster-summary__label {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(15, 23, 42, 0.55);
+}
+
+.team-premium-page .gv-team-roster-filters {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.team-premium-page .gv-team-roster-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.team-premium-page .gv-team-roster-chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 33, 165, 0.16);
+  background: #fff;
+  color: rgba(15, 23, 42, 0.7);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.team-premium-page .gv-team-roster-chip.is-active {
+  background: linear-gradient(135deg, #0021a5 0%, #001a33 100%);
+  border-color: rgba(250, 70, 22, 0.45);
+  color: #fff;
+}
+
+.team-premium-page .gv-team-roster-chip__count {
+  min-width: 1.25rem;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  background: rgba(250, 70, 22, 0.12);
+  color: #c2410c;
+}
+
+.team-premium-page .gv-team-roster-chip.is-active .gv-team-roster-chip__count {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffb199;
+}
+
+.team-premium-page .gv-team-roster-rooms {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.team-premium-page .gv-team-roster-room__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(0, 33, 165, 0.12);
+}
+
+.team-premium-page .gv-team-roster-room__title {
+  margin: 0;
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--team-uf-blue);
+}
+
+.team-premium-page .gv-team-roster-room__count {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(15, 23, 42, 0.45);
+}
+
+.team-premium-page .gv-team-roster-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 720px) {
+  .team-premium-page .gv-team-roster-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.team-premium-page .gv-team-roster-card {
+  display: block;
+  padding: 12px 12px 12px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(180deg, rgba(0, 33, 165, 0.04), #fff 40%);
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  border-left: 3px solid rgba(0, 33, 165, 0.35);
+  transition: border-color 140ms ease, transform 140ms ease;
+}
+
+.team-premium-page a.gv-team-roster-card:hover {
+  border-color: rgba(250, 70, 22, 0.4);
+  transform: translateY(-1px);
+}
+
+.team-premium-page .gv-team-roster-card.is-starter {
+  border-left-color: var(--team-gator-orange);
+  background: linear-gradient(180deg, rgba(250, 70, 22, 0.08), #fff 42%);
+}
+
+.team-premium-page .gv-team-roster-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.team-premium-page .gv-team-roster-card__pos {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--team-uf-blue);
+}
+
+.team-premium-page .gv-team-roster-card__starter {
+  padding: 3px 7px;
+  border-radius: 4px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #c2410c;
+  background: rgba(250, 70, 22, 0.12);
+  border: 1px solid rgba(250, 70, 22, 0.28);
+}
+
+.team-premium-page .gv-team-roster-card__name {
+  margin: 0 0 4px;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.team-premium-page .gv-team-roster-card__meta {
+  margin: 0;
+  font-size: 0.78rem;
+  color: rgba(15, 23, 42, 0.58);
+}
+
+.team-premium-page .gv-team-roster-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.team-premium-page .gv-team-roster-tag {
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--team-uf-blue);
+  background: rgba(0, 33, 165, 0.08);
+}
+
+/* ── Pipeline elevation ── */
+.team-premium-page .team-pipeline-module .rh-cc-module__title {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.team-premium-page .team-pipeline-metrics--board {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: none;
+}
+
+@media (min-width: 720px) {
+  .team-premium-page .team-pipeline-metrics--board {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.team-premium-page .team-pipeline-metrics__value {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.35rem;
+}
+
+.team-premium-page .team-pipeline-layout {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .team-premium-page .team-pipeline-layout {
+    grid-template-columns: 1.1fr 1fr 1fr;
+  }
+}
+
+.team-premium-page .team-pipeline-map,
+.team-premium-page .team-pipeline-list {
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(0, 33, 165, 0.03);
+  border: 1px solid rgba(0, 33, 165, 0.1);
+}
+
+.team-premium-page .team-pipeline-map__title,
+.team-premium-page .team-pipeline-list__title {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  letter-spacing: 0.04em;
+}
+
+.team-premium-page .team-pipeline-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.team-premium-page .team-pipeline-list__item {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.team-premium-page .team-pipeline-list__rank {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-weight: 700;
+  color: rgba(0, 33, 165, 0.45);
+}
+
+.team-premium-page .team-pipeline-list__item:first-child .team-pipeline-list__rank {
+  color: var(--team-gator-orange);
+}
+
+.team-premium-page .team-pipeline-list__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.team-premium-page .team-pipeline-list__empty {
+  margin: 0;
+  font-size: 0.84rem;
+  color: rgba(15, 23, 42, 0.55);
+}
+
+.team-premium-page .team-pipeline-empty {
+  padding: 22px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  background:
+    radial-gradient(ellipse 80% 70% at 100% 0%, rgba(250, 70, 22, 0.1), transparent 55%),
+    rgba(0, 33, 165, 0.04);
+}
+
+.team-premium-page .team-pipeline-empty__kicker {
+  margin: 0 0 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--team-gator-orange);
+}
+
+.team-premium-page .team-pipeline-empty__title {
+  margin: 0 0 8px;
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--team-uf-blue);
+}
+
+.team-premium-page .team-pipeline-empty__copy {
+  margin: 0 0 14px;
+  max-width: 34rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(15, 23, 42, 0.68);
+}
+
+.team-premium-page .team-pipeline-empty__cta {
+  display: inline-flex;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--team-gator-orange);
+  text-decoration: none;
 }
 

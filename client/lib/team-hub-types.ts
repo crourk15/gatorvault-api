@@ -99,8 +99,8 @@ export const TEAM_COPY = {
     supportTitle: 'Support Staff',
   },
   roster: {
-    title: 'Full Roster',
-    subtitle: 'Filter by position, class, and hometown to explore the full Florida roster.',
+    title: 'Roster Rooms',
+    subtitle: 'Starters first · position rooms · tap into a player card',
   },
   depthChart: {
     title: '2026 Depth Chart',

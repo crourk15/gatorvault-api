@@ -13,15 +13,22 @@ export function PipelineTargetsList({ targets }: Props): React.ReactElement {
   return (
     <div className="team-pipeline-list">
       <h3 className="team-pipeline-list__title">Top Targets</h3>
-      <ul className="team-pipeline-list__items">
-        {targets.map((t) => (
-          <li key={t.name} className="team-pipeline-list__item">
-            <span className="team-pipeline-list__name">{t.name}</span>
-            <span className="team-pipeline-list__meta">{t.position}</span>
-            <span className="team-pipeline-list__prob">{formatPipelineUfPct(t.ufProbability)}</span>
-          </li>
-        ))}
-      </ul>
+      {targets.length === 0 ? (
+        <p className="team-pipeline-list__empty">No targets on this board slice.</p>
+      ) : (
+        <ol className="team-pipeline-list__items">
+          {targets.map((t, i) => (
+            <li key={t.name} className="team-pipeline-list__item">
+              <span className="team-pipeline-list__rank">{i + 1}</span>
+              <span className="team-pipeline-list__body">
+                <span className="team-pipeline-list__name">{t.name}</span>
+                <span className="team-pipeline-list__meta">{t.position}</span>
+              </span>
+              <span className="team-pipeline-list__prob">{formatPipelineUfPct(t.ufProbability)}</span>
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   );
 }
