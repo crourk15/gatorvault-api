@@ -6,13 +6,15 @@ import type { RhHubFootprintResponse, RhHubFootprintState } from '@/lib/recruiti
 import { fetchRecruitingHubFootprint } from '@/lib/recruiting-hub-elite-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
+import type { RecruitingClassYear } from '@/lib/recruiting-cycle';
 import { StateHeatLayer } from './StateHeatLayer';
 import { TargetPinsLayer } from './TargetPinsLayer';
 import { BattleDifficultyLayer } from './BattleDifficultyLayer';
 import { US_MAP_GEO_URL } from './state-geo-utils';
 
 const MAP_WIDTH = 960;
-const MAP_HEIGHT = 520;
+const MAP_HEIGHT = 560;
+const FOOTPRINT_YEARS = [2027, 2028] as const;
 
 function momentumLabel(momentum: RhHubFootprintState['momentum']): string {
   if (momentum === 'up') return 'Gaining';
@@ -24,12 +26,12 @@ function classStory(year: number): { kicker: string; subtitle: string } {
   if (year >= 2028) {
     return {
       kicker: 'Early discovery',
-      subtitle: 'Building the next Florida pipeline — early targets, visits, and state heat.',
+      subtitle: 'Where Florida is planting the next class — early targets and state heat.',
     };
   }
   return {
     kicker: 'Active board',
-    subtitle: 'UF recruiting pipeline by state — commits, targets, visits, and battles.',
+    subtitle: 'Where Florida is winning and fighting right now — commits, targets, visits.',
   };
 }
 
@@ -43,7 +45,7 @@ function FootprintIntel({
   return (
     <div className="rh-footprint-intel">
       <div className="rh-footprint-intel__head">
-        <p className="rh-footprint-intel__kicker">{year} · State room</p>
+        <p className="rh-footprint-intel__kicker">Class {year} · State room</p>
         <h3 className="rh-footprint-intel__title">{state.state}</h3>
         <p className={`rh-footprint-intel__momentum rh-footprint-intel__momentum--${state.momentum}`}>
           {momentumLabel(state.momentum)}
@@ -116,7 +118,10 @@ function FootprintIntel({
 }
 
 export function RecruitingFootprintMap(): React.ReactElement {
-  const { activeYear } = useRecruitingClassYear();
+  const { activeYear, setActiveYear } = useRecruitingClassYear();
+  const footprintYear = (FOOTPRINT_YEARS as readonly number[]).includes(activeYear)
+    ? activeYear
+    : 2027;
   const selectFootprint = useCallback((b: { footprint: RhHubFootprintResponse }) => b.footprint, []);
   const fetchFootprint = useCallback(
     (year: number) => fetchRecruitingHubFootprint(year),
@@ -134,7 +139,7 @@ export function RecruitingFootprintMap(): React.ReactElement {
 
   const states = footprint?.states ?? [];
   const pins = footprint?.pins ?? [];
-  const story = classStory(activeYear);
+  const story = classStory(footprintYear);
   const activeState = activeStateCode ? states.find((s) => s.state === activeStateCode) : null;
 
   const scoreboard = useMemo(() => {
@@ -153,34 +158,44 @@ export function RecruitingFootprintMap(): React.ReactElement {
   }, [states, pins]);
 
   return (
-    <div className="rh-footprint-stage" data-year={activeYear}>
-      <div className="rh-section-header rh-footprint-stage__header">
-        <div>
-          <p className="rh-footprint-stage__kicker">{story.kicker}</p>
-          <div className="rh-section-title">Recruiting Footprint</div>
-          <div className="rh-section-subtitle">{story.subtitle}</div>
-        </div>
-        <div className="rh-footprint-year-chip" aria-label={`Class ${activeYear}`}>
-          Class {activeYear}
+    <div className="rh-footprint-stage" data-year={footprintYear}>
+      <div className="rh-footprint-stage__top">
+        <p className="rh-footprint-stage__kicker">{story.kicker}</p>
+        <h2 className="rh-footprint-stage__title">Recruiting Footprint</h2>
+        <p className="rh-footprint-stage__sub">{story.subtitle}</p>
+
+        <div className="rh-footprint-year-tabs" role="tablist" aria-label="Footprint class year">
+          {FOOTPRINT_YEARS.map((year) => (
+            <button
+              key={year}
+              type="button"
+              role="tab"
+              aria-selected={footprintYear === year}
+              className={`rh-footprint-year-tab${footprintYear === year ? ' is-active' : ''}`}
+              onClick={() => setActiveYear(year as RecruitingClassYear)}
+            >
+              Class {year}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="rh-footprint-scoreboard" aria-label={`${activeYear} footprint scoreboard`}>
+      <div className="rh-footprint-scoreboard" aria-label={`Class ${footprintYear} footprint scoreboard`}>
         <div className="rh-footprint-scoreboard__cell">
-          <span className="rh-footprint-scoreboard__value">{scoreboard.commits}</span>
+          <span className="rh-footprint-scoreboard__value">{loading ? '—' : scoreboard.commits}</span>
           <span className="rh-footprint-scoreboard__label">Commits</span>
         </div>
         <div className="rh-footprint-scoreboard__cell">
-          <span className="rh-footprint-scoreboard__value">{scoreboard.targets}</span>
+          <span className="rh-footprint-scoreboard__value">{loading ? '—' : scoreboard.targets}</span>
           <span className="rh-footprint-scoreboard__label">Targets</span>
         </div>
         <div className="rh-footprint-scoreboard__cell">
-          <span className="rh-footprint-scoreboard__value">{scoreboard.visits}</span>
+          <span className="rh-footprint-scoreboard__value">{loading ? '—' : scoreboard.visits}</span>
           <span className="rh-footprint-scoreboard__label">Visits</span>
         </div>
         <div className="rh-footprint-scoreboard__cell">
           <span className="rh-footprint-scoreboard__value">
-            {scoreboard.battles || scoreboard.states}
+            {loading ? '—' : scoreboard.battles || scoreboard.states}
           </span>
           <span className="rh-footprint-scoreboard__label">
             {scoreboard.battles ? 'Battles' : 'States'}
@@ -191,22 +206,23 @@ export function RecruitingFootprintMap(): React.ReactElement {
       {loading ? (
         <div className="rh-skeleton rh-footprint-skeleton" data-testid="rh-elite-footprint" aria-hidden="true" />
       ) : !footprint || error ? (
-        <section className="rh-card" data-testid="rh-elite-footprint">
+        <section className="rh-card rh-footprint-map" data-testid="rh-elite-footprint">
           <p className="rh-empty">Could not load recruiting footprint map.</p>
         </section>
       ) : !states.length ? (
-        <section className="rh-card" data-testid="rh-elite-footprint">
+        <section className="rh-card rh-footprint-map" data-testid="rh-elite-footprint">
           <p className="rh-empty">No state-level recruiting data available yet.</p>
         </section>
       ) : (
         <section className="rh-card rh-footprint-map" data-testid="rh-elite-footprint">
-          <div className="rh-footprint-map__layout">
+          <div className="rh-footprint-map__stack">
             <div className="rh-footprint-map__canvas-wrap">
               <div className="rh-footprint-map__canvas-glow" aria-hidden="true" />
               <ComposableMap
                 projection="geoAlbersUsa"
                 width={MAP_WIDTH}
                 height={MAP_HEIGHT}
+                projectionConfig={{ scale: 1070 }}
                 className="rh-footprint-map__svg"
               >
                 <Geographies geography={US_MAP_GEO_URL}>
@@ -236,40 +252,26 @@ export function RecruitingFootprintMap(): React.ReactElement {
                 </span>
               </div>
             </div>
+
             <aside className="rh-footprint-map__sidebar">
               {activeState ? (
-                <FootprintIntel state={activeState} year={activeYear} />
+                <FootprintIntel state={activeState} year={footprintYear} />
               ) : (
                 <div className="rh-footprint-legend">
-                  <h3 className="rh-footprint-legend__title">Read the map</h3>
-                  <ul className="rh-footprint-legend__list">
-                    <li>
-                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--blue" />
-                      Hotter fill = stronger pipeline
-                    </li>
-                    <li>
-                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--orange" />
-                      Orange border = selected state
-                    </li>
-                    <li>
-                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--pin-commit" />
-                      Orange pin = commit
-                    </li>
-                    <li>
-                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--pin-target" />
-                      Blue pin = target
-                    </li>
-                  </ul>
+                  <h3 className="rh-footprint-legend__title">Tap a lit state</h3>
                   <p className="rh-footprint-legend__hint">
-                    Tap a lit state for names, visits, momentum, and staff activity. Switch class year
-                    above to flip between the 2027 board and 2028 discovery map.
+                    Hotter blue = more Florida activity. Orange pins are commits. Blue pins are
+                    targets. Gold pins are battles.
                   </p>
                   <div className="rh-footprint-summary">
                     <span>{scoreboard.states} active states</span>
                     <span>{scoreboard.pins} map pins</span>
                   </div>
-                  <a className="rh-footprint-intel__cta" href={`/vault/recruiting/${activeYear}/targets/`}>
-                    Open {activeYear} targets →
+                  <a
+                    className="rh-footprint-intel__cta"
+                    href={`/vault/recruiting/${footprintYear}/targets/`}
+                  >
+                    Open Class {footprintYear} targets →
                   </a>
                 </div>
               )}
