@@ -1098,6 +1098,71 @@
   text-decoration: underline;
 }
 
+/* Home 2028 targets → priority board CTA card */
+.home-targets-board-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 3px solid var(--home-gator-orange, #fa4616);
+  transition: background 160ms ease-out, border-color 160ms ease-out, transform 160ms ease-out;
+}
+
+.home-targets-board-cta:hover {
+  background: rgba(250, 70, 22, 0.1);
+  border-color: rgba(250, 70, 22, 0.45);
+  transform: translateY(-1px);
+}
+
+.home-targets-board-cta__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.home-targets-board-cta__eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--home-gator-orange, #fa4616);
+}
+
+.home-targets-board-cta__title {
+  font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--home-text, #fff);
+}
+
+.home-targets-board-cta__meta {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--home-muted, rgba(255, 255, 255, 0.6));
+}
+
+.home-targets-board-cta__chevron {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--home-gator-orange, #fa4616);
+}
+
 .home-wow-fc-target-strip {
   margin-top: 18px;
   padding-top: 16px;

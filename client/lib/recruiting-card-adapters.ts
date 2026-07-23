@@ -29,11 +29,12 @@ export function minimalRecruitPlayer(slug: string, name: string): RecruitingBoar
 export function fromUnderclassmenTarget(p: UnderclassmenPlayer): RecruitingBoardPlayer {
   const composite = p.composite > 0 ? p.composite : undefined;
   const isLiveOn3 = (p.natlRank ?? 0) > 0 && (p.composite ?? 0) > 0;
-  const ufPct = p.ufConfidence ?? null;
+  const isUfCommit = isFloridaCommit(p.committedTo);
+  const ufPct = isUfCommit ? 100 : p.ufConfidence ?? null;
   return {
     slug: p.slug,
     name: p.name,
-    tier: 'HIGH',
+    tier: isUfCommit ? 'TOP' : 'HIGH',
     position: p.position,
     classYear: p.classYear,
     state: p.state ?? undefined,
@@ -45,11 +46,14 @@ export function fromUnderclassmenTarget(p: UnderclassmenPlayer): RecruitingBoard
     stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
     fitScore: p.fitScore ?? undefined,
     ufProbability: ufPct != null && ufPct > 0 ? ufPct / 100 : undefined,
-    ufStatus: 'TARGET',
+    ufStatus: isUfCommit ? 'COMMITTED' : 'TARGET',
+    statusLabel: isUfCommit ? 'Commit' : undefined,
     school: formatRecruitSchoolLabel(p.school ?? undefined) ?? undefined,
+    committedTo: p.committedTo ?? undefined,
+    isCommittedToUF: isUfCommit,
     inState: p.state === 'FL',
     heatPct: ufPct != null && ufPct > 0 ? ufPct : undefined,
-    heatLabel: 'UF likelihood',
+    heatLabel: isUfCommit ? 'Locked In' : 'UF likelihood',
     ratingLabel: isLiveOn3 ? 'Composite' : composite != null ? 'Vault est.' : undefined,
     showIndustryRanks: isLiveOn3,
     movementDirection:
@@ -60,7 +64,11 @@ export function fromUnderclassmenTarget(p: UnderclassmenPlayer): RecruitingBoard
             ? 'down'
             : 'flat'
         : undefined,
-    skinny: p.tier === 'target' ? 'Locked UF target' : 'Underclassmen watchlist',
+    skinny: isUfCommit
+      ? 'Committed to Florida'
+      : p.tier === 'target'
+        ? 'Locked UF target'
+        : 'Underclassmen watchlist',
   };
 }
 
