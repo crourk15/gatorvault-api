@@ -83,7 +83,7 @@ export function NilMovementFeed({ dashboard, players }: Props): React.ReactEleme
       <header className="nil-elite-section__head">
         <div>
           <h2 className="nil-elite-section__title">NIL Movement Feed</h2>
-          <p className="nil-elite-section__sub">Live NIL intel — collective, portal, and valuation shifts.</p>
+          <p className="nil-elite-section__sub">Recent NIL intel — collective, portal, and valuation shifts.</p>
         </div>
       </header>
       <ul className="nil-feed">

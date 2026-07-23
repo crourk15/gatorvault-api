@@ -21,7 +21,7 @@ export function NilHero({ dashboard }: Props): React.ReactElement {
           <p className="nil-hero__eyebrow">GatorVault NIL</p>
           <h1 className="nil-hero__title">NIL Tracker</h1>
           <p className="nil-hero__sub">
-            Real-time NIL movement, valuations, and UF competitive position.
+            Modeled NIL movement, valuations, and UF competitive position.
           </p>
         </div>
         <div className="nil-hero__dial-wrap">

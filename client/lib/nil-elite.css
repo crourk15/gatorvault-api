@@ -299,6 +299,16 @@
   border: 1px solid rgba(0, 33, 165, 0.12);
   box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08);
   box-sizing: border-box;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+a.nil-player-card:hover,
+a.nil-player-card:focus-visible {
+  border-color: rgba(250, 70, 22, 0.45);
+  box-shadow: 0 6px 18px rgba(0, 26, 51, 0.12);
+  outline: none;
 }
 
 .nil-player-card__photo-wrap {
@@ -351,6 +361,11 @@
 
 .nil-player-card__status--target {
   color: var(--gator-orange, #fa4616);
+  font-weight: 600;
+}
+
+.nil-player-card__status--elsewhere {
+  color: #64748b;
   font-weight: 600;
 }
 
@@ -599,6 +614,35 @@
   border-radius: 10px;
   background: rgba(0, 26, 51, 0.04);
   border: 1px solid rgba(0, 26, 51, 0.08);
+}
+
+.nil-portal-col__item--link {
+  padding: 0;
+}
+
+.nil-portal-col__link {
+  display: block;
+  position: relative;
+  padding: 10px 12px;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+.nil-portal-col__link:hover,
+.nil-portal-col__link:focus-visible {
+  background: rgba(0, 33, 165, 0.06);
+  outline: none;
+}
+
+.nil-portal-col__cta {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #0021a5;
 }
 
 .nil-portal-col__head {

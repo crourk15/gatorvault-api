@@ -60,8 +60,8 @@ export function NilElitePage(): React.ReactElement {
           </div>
 
           <p className="nil-disclaimer rh-frame">
-            NIL estimates are directional — not audited financials. Rankings reflect modeled collective activity and
-            public signals.
+            NIL dollar figures are modeled estimates — not audited deals or reported contracts. Rankings and
+            portal notes reflect modeled collective activity and public signals.
           </p>
         </div>
       ) : null}
