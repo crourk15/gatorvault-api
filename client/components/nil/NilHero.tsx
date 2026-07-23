@@ -93,7 +93,7 @@ export function NilHero({ hero, money, desk, topEarners = [] }: Props): React.Re
       <div className="nil-hero__bg" aria-hidden />
       <div className="nil-hero__atmosphere" aria-hidden />
 
-      <div className="nil-wow rh-frame">
+      <div className="nil-wow">
         <p className="nil-wow__brand">GatorVault</p>
         <h1 className="nil-wow__product">NIL</h1>
 
