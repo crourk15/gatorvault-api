@@ -52,7 +52,7 @@ export function WinProbabilityBar({ winProbability, className = '' }: Props): Re
       >
         <div
           className={`gv-sched-win-bar__fill gv-sched-win-bar__fill--${tone}`}
-          style={{ width: `${pct}%`, background: color }}
+          style={{ width: `${pct}%`, backgroundColor: color, backgroundImage: 'none' }}
         />
       </div>
       <span

@@ -10,12 +10,18 @@ import {
 import { RECRUITING_HUB_ELITE_YEAR } from '@/lib/recruiting-hub-elite-api';
 import type { RhHubClassOverview, RhHubHeroPayload } from '@/lib/recruiting-hub-elite-api';
 import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
-import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
+import {
+  isRecruitingClassYearUserPinned,
+  setRecruitingClassYearStore,
+  useRecruitingClassYear,
+} from '@/lib/recruiting-class-year-store';
 import { RECRUITING_CLASS_YEARS, parseRecruitingClassYear, classCommitMetricLabel } from '@/lib/recruiting-cycle';
 import { initGvHydrate, scheduleHeroHydration, releaseHeroHydrationGate } from '@/lib/gv-hydrate';
 import '@/lib/recruiting-hub-window';
 
 const CLASS_YEARS = RECRUITING_CLASS_YEARS;
+/** Module-level: hero window seed runs at most once per page load. */
+let heroYearSeeded = false;
 
 function heroFromWindow(): RhHubHeroPayload | null {
   if (typeof window === 'undefined') return null;
@@ -80,12 +86,18 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
   const [metricsLoading, setMetricsLoading] = useState(() => !seeded?.classOverview);
 
   useEffect(() => {
-    if (year !== RECRUITING_HUB_ELITE_YEAR) setActiveYear(parseRecruitingClassYear(year));
-  }, [year, setActiveYear]);
+    // Route prop seed only — never override a user year tap.
+    if (year !== RECRUITING_HUB_ELITE_YEAR) {
+      setRecruitingClassYearStore(parseRecruitingClassYear(year));
+    }
+  }, [year]);
 
   useEffect(() => {
-    if (seeded?.year) setActiveYear(parseRecruitingClassYear(seeded.year));
-  }, [seeded?.year, setActiveYear]);
+    if (heroYearSeeded || isRecruitingClassYearUserPinned()) return;
+    if (!seeded?.year) return;
+    heroYearSeeded = true;
+    setRecruitingClassYearStore(parseRecruitingClassYear(seeded.year));
+  }, [seeded?.year]);
 
   useEffect(() => {
     let cancelled = false;

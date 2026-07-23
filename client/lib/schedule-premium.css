@@ -256,11 +256,11 @@
 }
 
 .gv-sched-next .gv-sched-win-bar__fill--tossup {
-  background: #7aa2ff !important;
+  background: #0021a5 !important;
 }
 
 .gv-sched-next .gv-sched-win-bar__fill--underdog {
-  background: #94a3b8 !important;
+  background: #475569 !important;
 }
 
 .gv-sched-next .gv-sched-win-bar__tone {
@@ -768,16 +768,29 @@
   transition: width 0.4s ease;
 }
 
+/* !important beats any leftover hub accent fill overrides */
 .gv-sched-win-bar__fill--favored {
-  background: var(--sched-prob-favored, #fa4616);
+  background: var(--sched-prob-favored, #fa4616) !important;
 }
 
 .gv-sched-win-bar__fill--tossup {
-  background: var(--sched-prob-tossup, #0021a5);
+  background: var(--sched-prob-tossup, #0021a5) !important;
 }
 
 .gv-sched-win-bar__fill--underdog {
-  background: var(--sched-prob-underdog, #475569);
+  background: var(--sched-prob-underdog, #475569) !important;
+}
+
+.gv-sched-win-bar__pct--favored {
+  color: var(--sched-prob-favored, #fa4616) !important;
+}
+
+.gv-sched-win-bar__pct--tossup {
+  color: var(--sched-prob-tossup, #0021a5) !important;
+}
+
+.gv-sched-win-bar__pct--underdog {
+  color: var(--sched-prob-underdog, #475569) !important;
 }
 
 .gv-sched-win-bar__tone {
