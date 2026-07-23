@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-23T01:39:23.329Z",
+  "generatedAt": "2026-07-23T01:49:02.058Z",
   "source": "prod-dashboard+high-priority+local-elite+elite-desk",
   "dashboard": {
     "conference": "SEC",
@@ -973,14 +973,14 @@
   ],
   "elite": {
     "ok": true,
-    "generatedAt": "2026-07-23T01:39:23.324Z",
+    "generatedAt": "2026-07-23T01:49:02.053Z",
     "classYear": 2027,
     "hero": {
       "collective": "Florida Victorious",
       "school": "Florida Gators",
-      "eyebrow": "GatorVault NIL",
-      "title": "NIL Tracker",
-      "sub": "Elite NIL desk — Sideline school markets, labeled player valuations, and honest UF market position.",
+      "eyebrow": "GatorVault",
+      "title": "NIL",
+      "sub": "Florida school market vs the field — labeled dollars, no fake deals.",
       "poolLabel": "$37.0M",
       "poolCaption": "All-sport school market"
     },

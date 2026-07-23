@@ -7,6 +7,7 @@ import type { NilEliteRosterEarner } from '@/lib/nil-elite-api';
 
 type Props = {
   earners: NilEliteRosterEarner[];
+  startRank?: number;
 };
 
 const POS_FILTERS = ['All', 'QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'LB', 'DB', 'ST'] as const;
@@ -76,12 +77,12 @@ function EarnerRow({
   );
 }
 
-export function NilRosterEarners({ earners }: Props): React.ReactElement {
+export function NilRosterEarners({ earners, startRank = 1 }: Props): React.ReactElement {
   const [filter, setFilter] = useState<(typeof POS_FILTERS)[number]>('All');
   const [query, setQuery] = useState('');
   const [showAll, setShowAll] = useState(false);
 
-  const featured = earners.slice(0, 8);
+  const preview = earners.slice(0, 12);
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
     return earners.filter((p) => {
@@ -91,34 +92,19 @@ export function NilRosterEarners({ earners }: Props): React.ReactElement {
     });
   }, [earners, filter, query]);
 
-  const list = showAll || query || filter !== 'All' ? rows : featured;
-  const showToggle = !query && filter === 'All' && earners.length > featured.length;
+  const list = showAll || query || filter !== 'All' ? rows : preview;
+  const showToggle = !query && filter === 'All' && earners.length > preview.length;
 
   return (
     <section className="nil-elite-section" data-testid="nil-roster-earners">
       <header className="nil-elite-section__head">
         <div>
-          <h2 className="nil-elite-section__title">Florida valuations</h2>
+          <h2 className="nil-elite-section__title">Full Florida board</h2>
           <p className="nil-elite-section__sub">
-            Sideline desk — On3 when public, Sideline model otherwise. Why the number matters is in
-            the market read above.
+            Every Sideline valuation — On3 when public, Sideline model otherwise.
           </p>
         </div>
       </header>
-
-      <div className="nil-featured-grid" data-testid="nil-featured-earners">
-        {featured.slice(0, 4).map((player, idx) => (
-          <article key={player.id} className="nil-featured-card">
-            <span className="nil-featured-card__rank">#{idx + 1}</span>
-            <strong className="nil-featured-card__name">{player.name}</strong>
-            <span className="nil-featured-card__meta">{player.position}</span>
-            <span className="nil-featured-card__source">
-              {player.nilSourceLabel || player.nilSource}
-            </span>
-            <span className="nil-featured-card__val">{player.nilValuation}</span>
-          </article>
-        ))}
-      </div>
 
       <label className="nil-search">
         <span className="sr-only">Search Florida players</span>
@@ -151,7 +137,7 @@ export function NilRosterEarners({ earners }: Props): React.ReactElement {
       ) : (
         <ol className="nil-earner-list">
           {list.map((player, idx) => (
-            <EarnerRow key={player.id} player={player} rank={idx + 1} />
+            <EarnerRow key={player.id} player={player} rank={startRank + idx} />
           ))}
         </ol>
       )}
@@ -163,7 +149,7 @@ export function NilRosterEarners({ earners }: Props): React.ReactElement {
           onClick={() => setShowAll((v) => !v)}
           aria-expanded={showAll}
         >
-          {showAll ? 'Show top valuations' : `Show all ${earners.length} players`}
+          {showAll ? 'Show top 12' : `Show all ${earners.length} players`}
         </button>
       ) : null}
     </section>

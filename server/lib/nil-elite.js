@@ -695,9 +695,9 @@ async function buildNilEliteBundle(options = {}) {
     hero: {
       collective: ufProgram?.collective || landscape.uf?.collective || 'Florida Victorious',
       school: ufProgram?.school || 'Florida Gators',
-      eyebrow: 'GatorVault NIL',
-      title: 'NIL Tracker',
-      sub: 'Elite NIL desk — Sideline school markets, labeled player valuations, and honest UF market position.',
+      eyebrow: 'GatorVault',
+      title: 'NIL',
+      sub: 'Florida school market vs the field — labeled dollars, no fake deals.',
       poolLabel,
       poolCaption: 'All-sport school market',
     },
