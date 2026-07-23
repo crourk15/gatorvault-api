@@ -32,9 +32,8 @@ export function TeamRosterSection({
   );
 
   const counts = useMemo(() => {
-    const next: Partial<Record<RosterFilter, number>> = { All: roster.length };
+    const next: Partial<Record<RosterFilter, number>> = {};
     for (const f of ROSTER_FILTER_OPTIONS) {
-      if (f === 'All') continue;
       next[f] = roster.filter((p) => rosterMatchesFilter(p.position, f, p.positionGroup)).length;
     }
     return next;
@@ -73,10 +72,13 @@ export function TeamRosterSection({
               <div className="gv-team-roster-summary__cell">
                 <span className="gv-team-roster-summary__value">{counts[filter] ?? 0}</span>
                 <span className="gv-team-roster-summary__label">
-                  {filter === 'All' ? 'Across rooms' : `${filter} room`}
+                  {filter === 'All' ? 'Full directory' : `${filter} room`}
                 </span>
               </div>
             </div>
+            <p className="gv-team-roster-guide">
+              Browse QB → ST one room at a time. <strong>All</strong> (last) opens the full roster.
+            </p>
             <RosterFilters active={filter} onChange={onFilterChange} counts={counts} />
             <RosterList players={roster} filter={filter} />
           </>

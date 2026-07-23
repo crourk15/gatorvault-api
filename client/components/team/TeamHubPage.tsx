@@ -55,7 +55,7 @@ export function TeamHubPage(): React.ReactElement {
   const [loading, setLoading] = useState(!cachedHub && !seedReady);
   const [warming, setWarming] = useState(!cachedHub && !seedReady);
   const [pipelineLoading, setPipelineLoading] = useState(true);
-  const [rosterFilter, setRosterFilter] = useState<RosterFilter>('All');
+  const [rosterFilter, setRosterFilter] = useState<RosterFilter>('QB');
   const [dcTab, setDcTab] = useState<DepthChartTab>('offense');
   const [activeTab, setActiveTab] = useState<TeamPremiumTabId>(DEFAULT_TAB);
   const [pipelinePreview, setPipelinePreview] = useState(() => buildPipelinePreview(null, null));

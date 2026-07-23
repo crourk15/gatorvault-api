@@ -100,7 +100,7 @@ export const TEAM_COPY = {
   },
   roster: {
     title: 'Roster Rooms',
-    subtitle: 'Walk QB → ST by room · full 111-player directory stays collapsed at the bottom',
+    subtitle: 'One position room at a time · ALL (last) opens the full roster',
   },
   depthChart: {
     title: '2026 Depth Chart',

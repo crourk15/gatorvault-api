@@ -14,16 +14,19 @@ export function RosterFilters({ active, onChange, counts }: Props): React.ReactE
     <div className="gv-team-roster-filters" role="tablist" aria-label="Roster position filters">
       {ROSTER_FILTER_OPTIONS.map((filter) => {
         const count = counts?.[filter];
+        const label = filter === 'All' ? 'ALL' : filter;
         return (
           <button
             key={filter}
             type="button"
             role="tab"
             aria-selected={active === filter}
-            className={`gv-team-roster-chip${active === filter ? ' is-active' : ''}`}
+            className={`gv-team-roster-chip${active === filter ? ' is-active' : ''}${
+              filter === 'All' ? ' gv-team-roster-chip--all' : ''
+            }`}
             onClick={() => onChange(filter)}
           >
-            <span className="gv-team-roster-chip__label">{filter}</span>
+            <span className="gv-team-roster-chip__label">{label}</span>
             {typeof count === 'number' ? (
               <span className="gv-team-roster-chip__count">{count}</span>
             ) : null}
