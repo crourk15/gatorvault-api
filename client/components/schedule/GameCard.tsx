@@ -110,7 +110,11 @@ export function GameCard(props: Props): React.ReactElement {
       </div>
 
       <div className="gv-sched-game-card__right">
-        <GameActions intelUrl={intelUrl} ticketVendors={ticketVendors} />
+        <GameActions
+          intelUrl={intelUrl}
+          ticketVendors={ticketVendors}
+          opponentName={opponentName}
+        />
       </div>
     </article>
   );

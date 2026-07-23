@@ -12,6 +12,8 @@ import { PredictedScoreBlock } from './PredictedScoreBlock';
 import { TVNetworkBadge } from './TVNetworkBadge';
 import { WinProbabilityBar } from './WinProbabilityBar';
 
+const OFFICIAL_TICKETS_URL = 'https://floridagators.com/tickets';
+
 type Props = {
   game: PremiumScheduleGame;
 };
@@ -21,7 +23,6 @@ export function NextUpMatchup({ game }: Props): React.ReactElement {
   const countdown = daysUntilKickoffLabel(game.kickoffRaw);
   const matchup =
     game.homeOrAway === '@' ? `@ ${game.opponentShort}` : `vs ${game.opponentShort}`;
-  const primaryTicket = game.ticketVendors[0];
 
   return (
     <div
@@ -79,13 +80,11 @@ export function NextUpMatchup({ game }: Props): React.ReactElement {
 
       <div className="gv-sched-next__cta">
         <Button href={game.intelUrl} variant="primary">
-          Game Week Intel →
+          Open Game Week
         </Button>
-        {primaryTicket ? (
-          <Button href={primaryTicket.url} variant="secondary" target="_blank" rel="noopener noreferrer">
-            Find tickets
-          </Button>
-        ) : null}
+        <Button href={OFFICIAL_TICKETS_URL} variant="secondary" target="_blank" rel="noopener noreferrer">
+          Find tickets
+        </Button>
       </div>
     </div>
   );

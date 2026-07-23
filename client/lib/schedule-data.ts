@@ -12,6 +12,9 @@ export type ScheduleGame = {
   swing: { name: string; role: string }[];
   film: string;
   pred: string;
+  /** Explicit projected score — prefer over parsing `pred`. */
+  predUF: number;
+  predOpp: number;
   /** Verified Film Room opponent-prep lesson id (knowledge engine). */
   filmLessonId?: string;
   opponentTendencies?: string[];
@@ -35,6 +38,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     film: 'FAU runs spread RPO. The 3-3-5 is built to neutralize this.',
     pred: 'UF 38 · FAU 10',
+    predUF: 38,
+    predOpp: 10,
     filmLessonId: 'frl00004-0000-4000-8000-000000000004',
     opponentTendencies: ['Spread-RPO quick game at tempo', 'Tests STAR communication and edge setting', 'Limited vertical threat — win early downs'],
     howUFWins: ['Faulkner establishes rhythm RPO without negative plays', 'White front sets edge vs conflict reads', 'Win field position and avoid special teams mistakes'],
@@ -56,6 +61,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     film: 'Campbell runs spread concepts. UF should win line of scrimmage.',
     pred: 'UF 45 · Campbell 10',
+    predUF: 45,
+    predOpp: 10,
   },
   {
     id: 'auburn',
@@ -72,6 +79,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     film: 'Auburn runs physical downhill ball. Jordan-Hare in September is tough.',
     pred: 'UF 24 · Auburn 21',
+    predUF: 24,
+    predOpp: 21,
     filmLessonId: 'frl00005-0000-4000-8000-000000000005',
     opponentTendencies: ['Gap-scheme downhill run game', 'Physical at the point of attack', 'Play-action off run success'],
     howUFWins: ['Trautwein OL wins line of scrimmage', 'Gasparato linebackers fit gaps cleanly', 'Avoid negative plays on the road'],
@@ -92,6 +101,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     film: 'Ole Miss tempo offense stresses communication.',
     pred: 'UF 31 · Ole Miss 28',
+    predUF: 31,
+    predOpp: 28,
   },
   {
     id: 'missouri',
@@ -107,6 +118,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     film: 'Missouri uses RPO and play-action.',
     pred: 'UF 27 · Missouri 24',
+    predUF: 27,
+    predOpp: 24,
   },
   {
     id: 'scar',
@@ -122,6 +135,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     film: 'South Carolina RPO-heavy.',
     pred: 'UF 30 · South Carolina 23',
+    predUF: 30,
+    predOpp: 23,
   },
   {
     id: 'texas',
@@ -137,6 +152,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     film: 'Texas balanced attack with elite skill.',
     pred: 'UF 24 · Texas 27',
+    predUF: 24,
+    predOpp: 27,
   },
   {
     id: 'uga',
@@ -153,6 +170,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     film: 'Georgia has owned this series. UF path is controlling the ball.',
     pred: 'UF 27 · Georgia 24',
+    predUF: 27,
+    predOpp: 24,
   },
   {
     id: 'kentucky',
@@ -168,6 +187,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     film: 'Kentucky power run and play-action.',
     pred: 'UF 31 · Kentucky 20',
+    predUF: 31,
+    predOpp: 20,
   },
   {
     id: 'vandy',
@@ -183,6 +204,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     film: 'Vanderbilt improving — treat as SEC test.',
     pred: 'UF 35 · Vanderbilt 17',
+    predUF: 35,
+    predOpp: 17,
   },
   {
     id: 'fsu',
@@ -198,6 +221,8 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     ],
     film: 'Everything on the line. Preparation wins this game.',
     pred: 'UF 31 · FSU 28',
+    predUF: 31,
+    predOpp: 28,
     filmLessonId: 'frl00010-0000-4000-8000-00000000000a',
     opponentTendencies: ['RPO and quick game in rivalry setting', 'TE usage in red zone', 'Tempo spikes in critical moments'],
     howUFWins: ['Faulkner wins early downs without turnovers', 'White coverage matches sim pressure looks', 'Special teams and field position decide it'],

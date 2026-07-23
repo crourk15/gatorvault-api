@@ -99,8 +99,8 @@ function homeOrAwayFromLabel(label: string, venue: string): HomeOrAway {
 }
 
 function parsePrediction(pred: string): { uf: number; opp: number } {
-  // Opponent names can be multi-word ("Ole Miss", "South Carolina").
-  const match = pred.match(/UF\s+(\d+)\s*[·•]\s*.+?\s+(\d+)\s*$/i);
+  // Prefer trailing score pair so multi-word names ("Ole Miss", "South Carolina") still parse.
+  const match = pred.match(/UF\s+(\d+)\D+(\d+)\s*$/i);
   if (match) return { uf: Number(match[1]), opp: Number(match[2]) };
   return { uf: 0, opp: 0 };
 }
@@ -142,7 +142,9 @@ function ticketVendorsForGame(opponent: string): TicketVendor[] {
 }
 
 export function toPremiumScheduleGame(game: ScheduleGame): PremiumScheduleGame {
-  const { uf, opp } = parsePrediction(game.pred);
+  const parsed = parsePrediction(game.pred);
+  const uf = Number.isFinite(game.predUF) ? game.predUF : parsed.uf;
+  const opp = Number.isFinite(game.predOpp) ? game.predOpp : parsed.opp;
   const { date, time } = splitDateTime(game.date);
   const meta = OPPONENT_META[game.id] ?? { short: game.opp.slice(0, 3).toUpperCase(), logo: '🏈' };
 

@@ -19,8 +19,12 @@ export function PredictedScoreBlock({
   gameId,
 }: Props): React.ReactElement {
   return (
-    <div className="gv-sched-scoreboard" aria-label={`Predicted score UF ${ufScore}, ${oppName} ${oppScore}`}>
-      <div className="gv-sched-scoreboard__team gv-sched-scoreboard__team--uf">
+    <div
+      className="gv-sched-scoreboard"
+      aria-label={`Projected score Florida ${ufScore}, ${oppName} ${oppScore}`}
+    >
+      <p className="gv-sched-scoreboard__label">Projected</p>
+      <div className="gv-sched-scoreboard__row">
         <img
           src={ufLogoUrl()}
           alt=""
@@ -28,13 +32,15 @@ export function PredictedScoreBlock({
           width={28}
           height={28}
         />
-        <span className="gv-sched-scoreboard__abbr">UF</span>
-        <span className="gv-sched-scoreboard__score">{ufScore}</span>
-      </div>
-      <span className="gv-sched-scoreboard__divider" aria-hidden="true">
-        —
-      </span>
-      <div className="gv-sched-scoreboard__team gv-sched-scoreboard__team--opp">
+        <span className="gv-sched-scoreboard__line">
+          <span className="gv-sched-scoreboard__abbr">UF</span>
+          <span className="gv-sched-scoreboard__score">{ufScore}</span>
+          <span className="gv-sched-scoreboard__divider" aria-hidden="true">
+            –
+          </span>
+          <span className="gv-sched-scoreboard__score">{oppScore}</span>
+          <span className="gv-sched-scoreboard__abbr">{oppShort}</span>
+        </span>
         <img
           src={opponentLogoUrl(gameId)}
           alt=""
@@ -42,8 +48,6 @@ export function PredictedScoreBlock({
           width={28}
           height={28}
         />
-        <span className="gv-sched-scoreboard__abbr">{oppShort}</span>
-        <span className="gv-sched-scoreboard__score">{oppScore}</span>
       </div>
     </div>
   );

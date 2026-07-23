@@ -239,8 +239,10 @@
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-.gv-sched-next .gv-sched-scoreboard__abbr {
-  color: rgba(255, 255, 255, 0.6);
+.gv-sched-next .gv-sched-scoreboard__label,
+.gv-sched-next .gv-sched-scoreboard__abbr,
+.gv-sched-next .gv-sched-scoreboard__divider {
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .gv-sched-next .gv-sched-scoreboard__score {
@@ -595,21 +597,35 @@
 /* ── Scoreboard ── */
 .gv-sched-scoreboard {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-md, 16px);
+  flex-direction: column;
+  gap: 8px;
   padding: var(--space-md, 16px);
   border-radius: var(--th-radius-card, 12px);
   background: color-mix(in srgb, var(--th-blue) 6%, var(--th-card-bg));
   border: 1px solid var(--th-border);
 }
 
-.gv-sched-scoreboard__team {
+.gv-sched-scoreboard__label {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--th-meta);
+}
+
+.gv-sched-scoreboard__row {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  min-width: 56px;
+  justify-content: center;
+  gap: var(--space-sm, 8px);
+}
+
+.gv-sched-scoreboard__line {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
 }
 
 .gv-sched-scoreboard__logo,
@@ -625,6 +641,7 @@
   width: 28px;
   height: 28px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .gv-sched-scoreboard__logo--text {
@@ -635,8 +652,8 @@
 }
 
 .gv-sched-scoreboard__abbr {
-  font-size: 0.65rem;
-  font-weight: 600;
+  font-size: 0.7rem;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--th-meta);
@@ -648,12 +665,13 @@
   font-weight: 700;
   color: var(--th-heading-light, var(--uf-blue));
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .gv-sched-scoreboard__divider {
   color: var(--th-meta);
-  opacity: 0.5;
-  font-weight: 300;
+  opacity: 0.55;
+  font-weight: 500;
 }
 
 /* ── TV badge ── */
@@ -699,7 +717,7 @@
 .gv-sched-actions {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md, 16px);
+  gap: var(--space-sm, 8px);
 }
 
 .gv-sched-actions__btn {
@@ -708,64 +726,21 @@
   text-align: center;
 }
 
-.gv-sched-tickets__label {
-  margin: 0 0 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
+.gv-sched-actions__hint {
+  margin: 2px 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.35;
   color: var(--th-meta);
 }
 
-.gv-sched-tickets__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 12px;
-}
-
-.gv-sched-tickets__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 44px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--th-heading-light, var(--uf-blue));
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 160ms ease-out, color 160ms ease-out;
-}
-
-.gv-sched-tickets__link:hover {
-  color: var(--th-accent, var(--gator-orange));
-  border-bottom-color: color-mix(in srgb, var(--th-accent) 50%, transparent);
-}
-
-.gv-sched-tickets__price {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--th-accent, var(--gator-orange));
-  font-variant-numeric: tabular-nums;
-}
-
-/* Legacy vendor chrome (kept for any residual markup / cleanup selectors). */
-.gv-sched-tickets__vendors {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm, 8px);
-}
-
+/* Legacy vendor chrome (kept for cleanup selectors). */
+.gv-sched-tickets__label,
+.gv-sched-tickets__links,
+.gv-sched-tickets__link,
+.gv-sched-tickets__price,
+.gv-sched-tickets__vendors,
 .gv-sched-tickets__vendor {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm, 8px);
-  padding: var(--space-sm, 8px) var(--space-md, 16px);
-  min-width: 0;
-  max-width: 100%;
-  border-radius: var(--th-radius-card, 12px);
-  text-decoration: none;
-  color: var(--th-body-dark);
-  background: var(--th-card-bg);
-  border: 1px solid var(--th-border);
+  /* no-op legacy hooks */
 }
 
 /* ── Mobile ── */
