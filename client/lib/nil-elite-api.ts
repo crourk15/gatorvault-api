@@ -15,6 +15,9 @@ export type NilEliteBoardPlayer = {
   committedTo: string | null;
   status: string;
   nilEstimate: string | null;
+  vaultEstimate?: string | null;
+  nilSource?: 'on3' | 'vault_est' | null;
+  nilDisplay?: string | null;
   headliner?: boolean;
 };
 
@@ -37,6 +40,19 @@ export type NilEliteRosterArrival = {
   transferInfo: string;
   stars: number | null;
   nationalRank: number | null;
+  nilValuation?: string | null;
+};
+
+export type NilEliteRosterEarner = {
+  id: string;
+  slug: string | null;
+  name: string;
+  position: string;
+  classYear: number | null;
+  stars: number | null;
+  depthChartTier: string | null;
+  nilValuation: string;
+  nilSource: 'vault_est' | 'on3';
 };
 
 export type NilEliteMovementItem = {
@@ -53,6 +69,50 @@ export type NilEliteCollective = {
   isUf?: boolean;
 };
 
+export type NilEliteMoney = {
+  estimatedAnnualPoolM: number | null;
+  poolLabel: string | null;
+  avgDealK: number | null;
+  topDealM: number | null;
+  secRank: number | null;
+  nationalRank: number | null;
+  trend: string | null;
+  trendPct: number | null;
+  collective: string;
+  sourceNote: string;
+};
+
+export type NilEliteLandscapeRow = {
+  id: string;
+  school: string;
+  collective: string | null;
+  secRank: number | null;
+  nationalRank?: number | null;
+  score?: number | null;
+  estimatedAnnualPoolM: number | null;
+  avgDealK?: number | null;
+  topDealM?: number | null;
+  trend?: string | null;
+  trendPct?: number | null;
+};
+
+export type NilEliteLandscape = {
+  asOf?: string | null;
+  sourceNote: string;
+  disclaimer: string;
+  uf: {
+    collective: string;
+    secRank: number | null;
+    nationalRank: number | null;
+    estimatedAnnualPoolM: number | null;
+    avgDealK?: number | null;
+    topDealM?: number | null;
+    trend?: string | null;
+    trendPct?: number | null;
+  } | null;
+  sec: NilEliteLandscapeRow[];
+};
+
 export type NilEliteBundle = {
   ok?: boolean;
   generatedAt: string;
@@ -63,7 +123,10 @@ export type NilEliteBundle = {
     eyebrow: string;
     title: string;
     sub: string;
+    poolLabel?: string | null;
+    poolCaption?: string | null;
   };
+  money?: NilEliteMoney;
   pulse: {
     commits: number;
     blueChipPct: number | null;
@@ -72,6 +135,7 @@ export type NilEliteBundle = {
     portalArrivals: number;
     portalWatch: number;
   };
+  rosterEarners?: NilEliteRosterEarner[];
   marketBoard: {
     leaders: NilEliteBoardPlayer[];
     targets: NilEliteBoardPlayer[];
@@ -85,6 +149,7 @@ export type NilEliteBundle = {
   };
   collectives: NilEliteCollective[];
   movement: NilEliteMovementItem[];
+  landscape?: NilEliteLandscape;
   editorial?: {
     asOf?: string | null;
     disclaimer: string;

@@ -1,62 +1,55 @@
 'use client';
 
-import React, { useState } from 'react';
-import type { NilEliteBundle } from '@/lib/nil-elite-api';
+import React from 'react';
+import type { NilEliteLandscape } from '@/lib/nil-elite-api';
 
 type Props = {
-  editorial: NonNullable<NilEliteBundle['editorial']>;
+  landscape: NilEliteLandscape;
 };
 
-/** Demoted editorial landscape — clearly labeled, never the page lead. */
-export function NilProgramRankingsTable({ editorial }: Props): React.ReactElement {
-  const [open, setOpen] = useState(false);
-  const rows = editorial.sec || [];
+export function NilProgramRankingsTable({ landscape }: Props): React.ReactElement {
+  const rows = landscape.sec || [];
 
   return (
-    <section className="nil-elite-section nil-elite-section--editorial" data-testid="nil-editorial">
+    <section className="nil-elite-section" data-testid="nil-sec-landscape">
       <header className="nil-elite-section__head">
         <div>
-          <h2 className="nil-elite-section__title">Editorial landscape</h2>
-          <p className="nil-elite-section__sub">{editorial.disclaimer}</p>
+          <h2 className="nil-elite-section__title">SEC NIL landscape</h2>
+          <p className="nil-elite-section__sub">{landscape.sourceNote}</p>
         </div>
-        <button
-          type="button"
-          className="nil-editorial-toggle"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-        >
-          {open ? 'Hide' : 'Show'} estimates
-        </button>
       </header>
-      {open ? (
-        <div className="nil-rank-table-wrap">
-          <table className="nil-rank-table">
-            <thead>
-              <tr>
-                <th>SEC</th>
-                <th>School</th>
-                <th>Collective</th>
-                <th>Pool est.</th>
+      <div className="nil-rank-table-wrap">
+        <table className="nil-rank-table">
+          <thead>
+            <tr>
+              <th>SEC</th>
+              <th>School</th>
+              <th>Collective</th>
+              <th>Pool est.</th>
+              <th>Avg deal</th>
+              <th>Top deal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.id} className={row.id === 'uf' ? 'is-uf' : undefined}>
+                <td>{row.secRank != null ? `#${row.secRank}` : '—'}</td>
+                <td>{row.school}</td>
+                <td>{row.collective || '—'}</td>
+                <td className="nil-rank-table__pool">
+                  {row.estimatedAnnualPoolM != null ? `~$${row.estimatedAnnualPoolM}M` : '—'}
+                </td>
+                <td>{row.avgDealK != null ? `$${row.avgDealK}K` : '—'}</td>
+                <td>{row.topDealM != null ? `$${row.topDealM}M` : '—'}</td>
               </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr key={row.id} className={row.id === 'uf' ? 'is-uf' : undefined}>
-                  <td>{row.secRank != null ? `#${row.secRank}` : '—'}</td>
-                  <td>{row.school}</td>
-                  <td>{row.collective || '—'}</td>
-                  <td>
-                    {row.estimatedAnnualPoolM != null ? `~$${row.estimatedAnnualPoolM}M` : '—'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {editorial.asOf ? (
-            <p className="nil-elite-section__sub">As of {new Date(editorial.asOf).toLocaleDateString()}</p>
-          ) : null}
-        </div>
-      ) : null}
+            ))}
+          </tbody>
+        </table>
+        {landscape.asOf ? (
+          <p className="nil-elite-section__sub">As of {new Date(landscape.asOf).toLocaleDateString()}</p>
+        ) : null}
+        <p className="nil-elite-section__sub">{landscape.disclaimer}</p>
+      </div>
     </section>
   );
 }

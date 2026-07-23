@@ -27,6 +27,15 @@ export function NilPlayerCard({ player }: Props): React.ReactElement {
     .slice(0, 2)
     .toUpperCase();
   const href = playerProfileRoute(player.slug, 'futurecast');
+  const display = player.nilDisplay || player.nilEstimate || player.vaultEstimate;
+  const label =
+    player.nilSource === 'on3' || player.nilEstimate
+      ? 'On3 NIL'
+      : display
+        ? 'Vault est.'
+        : player.ufRpmPct != null
+          ? 'UF board'
+          : 'Board';
 
   return (
     <PlayerNavLink href={href} className="nil-player-card" data-testid="nil-player-card">
@@ -69,10 +78,10 @@ export function NilPlayerCard({ player }: Props): React.ReactElement {
         </div>
 
         <div className="nil-player-card__valuation">
-          {player.nilEstimate ? (
+          {display ? (
             <>
-              <span className="nil-player-card__val-label">On3 NIL</span>
-              <strong className="nil-player-card__val">{player.nilEstimate}</strong>
+              <span className="nil-player-card__val-label">{label}</span>
+              <strong className="nil-player-card__val">{display}</strong>
             </>
           ) : player.ufRpmPct != null ? (
             <>

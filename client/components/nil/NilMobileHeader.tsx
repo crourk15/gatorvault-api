@@ -8,7 +8,7 @@ export function NilMobileHeader(): React.ReactElement {
       <p className="rh-elite-mobile-header__eyebrow">GatorVault Insider</p>
       <h1 className="rh-elite-mobile-header__title">NIL Tracker</h1>
       <p className="rh-elite-mobile-header__sub">
-        Real-time NIL movement, valuations, and UF competitive position.
+        UF pool estimates, roster valuations, and SEC NIL market position.
       </p>
     </header>
   );

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-23T00:31:31.101Z",
-  "source": "prod-dashboard+retained-players+local-elite",
+  "generatedAt": "2026-07-23T01:04:32.497Z",
+  "source": "local-store+prod-players+local-elite",
   "dashboard": {
     "conference": "SEC",
     "ufStanding": {
@@ -919,7 +919,7 @@
         }
       }
     ],
-    "updatedAt": "2026-07-23T00:30:11.319Z"
+    "updatedAt": "2026-07-23T01:04:32.379Z"
   },
   "players": [
     {
@@ -952,7 +952,7 @@
       "name": "Jalen Brewster",
       "position": "DL",
       "school": "Lake Dallas HS, TX",
-      "htWt": null,
+      "htWt": "6-5 / 280",
       "stars": 5,
       "headliner": true,
       "committedTo": "Texas Tech",
@@ -969,402 +969,32 @@
       "notePreview": null,
       "skinny": null,
       "classYear": 2027
-    },
-    {
-      "id": "monshun-sales",
-      "slug": "monshun-sales",
-      "name": "Monshun Sales",
-      "position": "WR",
-      "school": "Lawrence North (Indianapolis, IN)",
-      "htWt": "6-5 / 195",
-      "stars": 5,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 98,
-      "nationalRank": 13,
-      "positionRank": 1,
-      "stateRank": 1,
-      "rating": 98,
-      "natlRank": 13,
-      "posRank": 1,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "tashawn-poole",
-      "slug": "tashawn-poole",
-      "name": "Ta'Shawn Poole",
-      "position": "S",
-      "school": "Howard (Macon, GA)",
-      "htWt": "6-2 / 185",
-      "stars": 4,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 93,
-      "nationalRank": 85,
-      "positionRank": 4,
-      "stateRank": 6,
-      "rating": 93,
-      "natlRank": 85,
-      "posRank": 4,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "brayden-parks",
-      "slug": "brayden-parks",
-      "name": "Brayden Parks",
-      "position": "DL",
-      "school": "Brother Rice (Oak Lawn, IL)",
-      "htWt": "6-3 / 305",
-      "stars": 4,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 91,
-      "nationalRank": 161,
-      "positionRank": 18,
-      "stateRank": 7,
-      "rating": 91,
-      "natlRank": 161,
-      "posRank": 18,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "seth-williams",
-      "slug": "seth-williams",
-      "name": "Seth Williams",
-      "position": "S",
-      "school": "Lakeside (Atlanta, GA)",
-      "htWt": "6-2 / 180",
-      "stars": 4,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 90,
-      "nationalRank": null,
-      "positionRank": 25,
-      "stateRank": 22,
-      "rating": 90,
-      "natlRank": null,
-      "posRank": 25,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "gregory-batson",
-      "slug": "gregory-batson",
-      "name": "Gregory Batson",
-      "position": "LB",
-      "school": "Lee County (Leesburg, GA)",
-      "htWt": "6-1 / 215",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 89,
-      "nationalRank": null,
-      "positionRank": 30,
-      "stateRank": 38,
-      "rating": 89,
-      "natlRank": null,
-      "posRank": 30,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "caden-waye",
-      "slug": "caden-waye",
-      "name": "Caden Waye",
-      "position": "RB",
-      "school": "Ola (McDonough, GA)",
-      "htWt": "5-11 / 185",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 89,
-      "nationalRank": null,
-      "positionRank": 23,
-      "stateRank": 36,
-      "rating": 89,
-      "natlRank": null,
-      "posRank": 23,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "jacob-whitehead",
-      "slug": "jacob-whitehead",
-      "name": "Jacob Whitehead",
-      "position": "CB",
-      "school": "Crean Lutheran (Irvine, CA)",
-      "htWt": "6-2 / 165",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 88,
-      "nationalRank": null,
-      "positionRank": 55,
-      "stateRank": 50,
-      "rating": 88,
-      "natlRank": null,
-      "posRank": 55,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "dolph-mcdonald",
-      "slug": "dolph-mcdonald",
-      "name": "Dolph McDonald",
-      "position": "CB",
-      "school": "Morton (Morton, MS)",
-      "htWt": "6-1 / 160",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 87,
-      "nationalRank": null,
-      "positionRank": 70,
-      "stateRank": 22,
-      "rating": 87,
-      "natlRank": null,
-      "posRank": 70,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "quartavius-lyons-jr",
-      "slug": "quartavius-lyons-jr",
-      "name": "Quartavius Lyons Jr.",
-      "position": "ATH",
-      "school": "Miami Central (Miami, FL)",
-      "htWt": "6-1 / 165",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 87,
-      "nationalRank": null,
-      "positionRank": 93,
-      "stateRank": 88,
-      "rating": 87,
-      "natlRank": null,
-      "posRank": 93,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "liufau-loumoli",
-      "slug": "liufau-loumoli",
-      "name": "Liufau Loumoli",
-      "position": "LB",
-      "school": "IMG Academy (Bradenton, FL)",
-      "htWt": "6-1 / 210",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 86,
-      "nationalRank": null,
-      "positionRank": 89,
-      "stateRank": 91,
-      "rating": 86,
-      "natlRank": null,
-      "posRank": 89,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "brian-demoss",
-      "slug": "brian-demoss",
-      "name": "Brian DeMoss",
-      "position": "EDGE",
-      "school": "Simeon (Chicago, IL)",
-      "htWt": "6-5 / 210",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 86,
-      "nationalRank": null,
-      "positionRank": 89,
-      "stateRank": 36,
-      "rating": 86,
-      "natlRank": null,
-      "posRank": 89,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "kaden-woodie",
-      "slug": "kaden-woodie",
-      "name": "Kaden Woodie",
-      "position": "LB",
-      "school": "Spruce Creek (Port Orange, FL)",
-      "htWt": "6-2 / 211",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 86,
-      "nationalRank": null,
-      "positionRank": 93,
-      "stateRank": 122,
-      "rating": 86,
-      "natlRank": null,
-      "posRank": 93,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "michael-griffin-jr",
-      "slug": "michael-griffin-jr",
-      "name": "Michael Griffin Jr.",
-      "position": "LB",
-      "school": "Hough (Cornelius, NC)",
-      "htWt": "5-11 / 205",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 86,
-      "nationalRank": null,
-      "positionRank": 97,
-      "stateRank": 36,
-      "rating": 86,
-      "natlRank": null,
-      "posRank": 97,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "caleb-mattison",
-      "slug": "caleb-mattison",
-      "name": "Caleb Mattison",
-      "position": "RB",
-      "school": "Bishop Kenny (Jacksonville, FL)",
-      "htWt": "5-9 / 200",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 86,
-      "nationalRank": null,
-      "positionRank": 101,
-      "stateRank": 140,
-      "rating": 86,
-      "natlRank": null,
-      "posRank": 101,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "wesley-winn",
-      "slug": "wesley-winn",
-      "name": "Wesley Winn",
-      "position": "ATH",
-      "school": "Saint Andrew's (Boca Raton, FL)",
-      "htWt": "5-7.5 / 152",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 85,
-      "nationalRank": null,
-      "positionRank": 105,
-      "stateRank": 150,
-      "rating": 85,
-      "natlRank": null,
-      "posRank": 105,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
-    },
-    {
-      "id": "khamarian-young",
-      "slug": "khamarian-young",
-      "name": "Khamarian Young",
-      "position": "WR",
-      "school": "McArthur (Hollywood, FL)",
-      "htWt": "6-0 / 175",
-      "stars": 3,
-      "headliner": false,
-      "committedTo": null,
-      "compositeScore": 85,
-      "nationalRank": null,
-      "positionRank": 187,
-      "stateRank": 162,
-      "rating": 85,
-      "natlRank": null,
-      "posRank": 187,
-      "movementDelta": 0,
-      "delta7d": 0,
-      "insiderNotes": null,
-      "notePreview": null,
-      "skinny": null,
-      "classYear": 2027
     }
   ],
   "elite": {
     "ok": true,
-    "generatedAt": "2026-07-23T00:31:31.095Z",
+    "generatedAt": "2026-07-23T01:04:32.492Z",
     "classYear": 2027,
     "hero": {
       "collective": "Florida Victorious",
       "school": "Florida Gators",
       "eyebrow": "GatorVault NIL",
       "title": "NIL Tracker",
-      "sub": "Live board, portal, and collective signals — proven data only. No invented deal dollars."
+      "sub": "UF pool estimates, roster valuations, and SEC market position — labeled sources, real dollars front and center.",
+      "poolLabel": "~$11.8M",
+      "poolCaption": "UF annual pool est."
+    },
+    "money": {
+      "estimatedAnnualPoolM": 11.8,
+      "poolLabel": "~$11.8M",
+      "avgDealK": 34,
+      "topDealM": 2.1,
+      "secRank": 8,
+      "nationalRank": 16,
+      "trend": "up",
+      "trendPct": 14,
+      "collective": "Florida Victorious",
+      "sourceNote": "Estimated annual pools from public reporting — updated quarterly"
     },
     "pulse": {
       "commits": 26,
@@ -1374,6 +1004,184 @@
       "portalArrivals": 12,
       "portalWatch": 0
     },
+    "rosterEarners": [
+      {
+        "id": "cormani-mcclain",
+        "slug": "cormani-mcclain",
+        "name": "Cormani McClain",
+        "position": "CB",
+        "classYear": null,
+        "stars": 5,
+        "depthChartTier": "starter",
+        "nilValuation": "$668K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "lj-mccray",
+        "slug": "lj-mccray",
+        "name": "LJ McCray",
+        "position": "DL",
+        "classYear": null,
+        "stars": 5,
+        "depthChartTier": "rotation",
+        "nilValuation": "$450K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "eric-singleton-jr",
+        "slug": "eric-singleton-jr",
+        "name": "Eric Singleton Jr.",
+        "position": "WR",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "nilValuation": "$267K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "aaron-philo",
+        "slug": "aaron-philo",
+        "name": "Aaron Philo",
+        "position": "QB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "nilValuation": "$267K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "jayden-woods",
+        "slug": "jayden-woods",
+        "name": "Jayden Woods",
+        "position": "JACK",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "nilValuation": "$243K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "jadan-baugh",
+        "slug": "jadan-baugh",
+        "name": "Jadan Baugh",
+        "position": "RB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "nilValuation": "$243K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "vernell-brown-iii",
+        "slug": "vernell-brown-iii",
+        "name": "Vernell Brown III",
+        "position": "WR",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "nilValuation": "$243K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "myles-graham",
+        "slug": "myles-graham",
+        "name": "Myles Graham",
+        "position": "ILB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "nilValuation": "$243K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "dijon-johnson",
+        "slug": "dijon-johnson",
+        "name": "Dijon Johnson",
+        "position": "CB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "nilValuation": "$243K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "dallas-wilson",
+        "slug": "dallas-wilson",
+        "name": "Dallas Wilson",
+        "position": "WR",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "nilValuation": "$243K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "tramell-jones-jr",
+        "slug": "tramell-jones-jr",
+        "name": "Tramell Jones Jr.",
+        "position": "QB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "nilValuation": "$243K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "jaden-robinson",
+        "slug": "jaden-robinson",
+        "name": "Jaden Robinson",
+        "position": "ILB",
+        "classYear": null,
+        "stars": 4,
+        "depthChartTier": "starter",
+        "nilValuation": "$243K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "lacota-dippre",
+        "slug": "lacota-dippre",
+        "name": "Lacota Dippre",
+        "position": "TE",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "starter",
+        "nilValuation": "$178K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "bryce-thornton",
+        "slug": "bryce-thornton",
+        "name": "Bryce Thornton",
+        "position": "S",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "starter",
+        "nilValuation": "$162K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "kanye-clark",
+        "slug": "kanye-clark",
+        "name": "Kanye Clark",
+        "position": "STAR",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "nilValuation": "$132K",
+        "nilSource": "vault_est"
+      },
+      {
+        "id": "brendan-bett",
+        "slug": "brendan-bett",
+        "name": "Brendan Bett",
+        "position": "DL",
+        "classYear": null,
+        "stars": 3,
+        "depthChartTier": "rotation",
+        "nilValuation": "$132K",
+        "nilSource": "vault_est"
+      }
+    ],
     "marketBoard": {
       "leaders": [
         {
@@ -1391,6 +1199,9 @@
           "committedTo": "Texas Tech",
           "status": "elsewhere",
           "nilEstimate": null,
+          "vaultEstimate": "$307K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$307K",
           "headliner": true
         },
         {
@@ -1408,6 +1219,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$306K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$306K",
           "headliner": false
         },
         {
@@ -1425,6 +1239,9 @@
           "committedTo": "Indiana",
           "status": "elsewhere",
           "nilEstimate": null,
+          "vaultEstimate": "$299K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$299K",
           "headliner": false
         },
         {
@@ -1442,6 +1259,9 @@
           "committedTo": "Florida State",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$178K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$178K",
           "headliner": false
         },
         {
@@ -1459,6 +1279,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$173K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$173K",
           "headliner": false
         },
         {
@@ -1476,6 +1299,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$169K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$169K",
           "headliner": false
         },
         {
@@ -1493,6 +1319,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$161K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$161K",
           "headliner": false
         },
         {
@@ -1510,6 +1339,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$157K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$157K",
           "headliner": false
         },
         {
@@ -1527,6 +1359,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$155K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$155K",
           "headliner": false
         },
         {
@@ -1544,6 +1379,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$155K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$155K",
           "headliner": false
         },
         {
@@ -1561,6 +1399,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$145K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$145K",
           "headliner": false
         },
         {
@@ -1578,6 +1419,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$142K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$142K",
           "headliner": false
         },
         {
@@ -1595,6 +1439,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$140K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$140K",
           "headliner": false
         },
         {
@@ -1612,6 +1459,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$135K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$135K",
           "headliner": false
         },
         {
@@ -1629,6 +1479,9 @@
           "committedTo": "Georgia",
           "status": "elsewhere",
           "nilEstimate": null,
+          "vaultEstimate": "$134K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$134K",
           "headliner": false
         },
         {
@@ -1646,6 +1499,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$129K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$129K",
           "headliner": false
         }
       ],
@@ -1665,6 +1521,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -1682,6 +1541,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$140K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$140K",
           "headliner": false
         },
         {
@@ -1699,6 +1561,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1716,6 +1581,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1733,6 +1601,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1750,6 +1621,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1767,6 +1641,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1784,6 +1661,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1801,6 +1681,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1818,6 +1701,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1835,6 +1721,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1852,6 +1741,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1869,6 +1761,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1886,6 +1781,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1903,6 +1801,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1920,6 +1821,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         }
       ],
@@ -1939,6 +1843,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -1956,6 +1863,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1973,6 +1883,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         },
         {
@@ -1990,6 +1903,9 @@
           "committedTo": null,
           "status": "uf_target",
           "nilEstimate": null,
+          "vaultEstimate": "$120K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$120K",
           "headliner": false
         }
       ],
@@ -2009,6 +1925,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$306K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$306K",
           "headliner": false
         },
         {
@@ -2026,6 +1945,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$173K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$173K",
           "headliner": false
         },
         {
@@ -2043,6 +1965,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$169K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$169K",
           "headliner": false
         },
         {
@@ -2060,6 +1985,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$161K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$161K",
           "headliner": false
         },
         {
@@ -2077,6 +2005,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$157K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$157K",
           "headliner": false
         },
         {
@@ -2094,6 +2025,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$155K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$155K",
           "headliner": false
         },
         {
@@ -2111,6 +2045,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$155K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$155K",
           "headliner": false
         },
         {
@@ -2128,6 +2065,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$145K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$145K",
           "headliner": false
         },
         {
@@ -2145,6 +2085,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$142K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$142K",
           "headliner": false
         },
         {
@@ -2162,6 +2105,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$135K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$135K",
           "headliner": false
         },
         {
@@ -2179,6 +2125,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$129K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$129K",
           "headliner": false
         },
         {
@@ -2196,6 +2145,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$97K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$97K",
           "headliner": false
         },
         {
@@ -2213,6 +2165,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$71K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$71K",
           "headliner": false
         },
         {
@@ -2230,6 +2185,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$60K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$60K",
           "headliner": false
         },
         {
@@ -2247,6 +2205,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$39K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$39K",
           "headliner": false
         },
         {
@@ -2264,6 +2225,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$38K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$38K",
           "headliner": false
         },
         {
@@ -2281,6 +2245,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$36K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$36K",
           "headliner": false
         },
         {
@@ -2298,6 +2265,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2315,6 +2285,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2332,6 +2305,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2349,6 +2325,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2366,6 +2345,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2383,6 +2365,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         },
         {
@@ -2400,6 +2385,9 @@
           "committedTo": "Florida",
           "status": "uf_commit",
           "nilEstimate": null,
+          "vaultEstimate": "$25K",
+          "nilSource": "vault_est",
+          "nilDisplay": "$25K",
           "headliner": false
         }
       ]
@@ -2415,7 +2403,8 @@
           "position": "CB",
           "transferInfo": "Transfer from Colorado",
           "stars": 5,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$668K"
         },
         {
           "id": "eric-singleton-jr",
@@ -2424,7 +2413,8 @@
           "position": "WR",
           "transferInfo": "Transfer from Georgia Tech / Auburn",
           "stars": 4,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$267K"
         },
         {
           "id": "lacota-dippre",
@@ -2433,7 +2423,8 @@
           "position": "TE",
           "transferInfo": "Transfer from Charlotte / James Madison",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$178K"
         },
         {
           "id": "aaron-philo",
@@ -2442,7 +2433,8 @@
           "position": "QB",
           "transferInfo": "Transfer from Georgia Tech",
           "stars": 4,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$267K"
         },
         {
           "id": "kanye-clark",
@@ -2451,7 +2443,8 @@
           "position": "STAR",
           "transferInfo": "Transfer from UCLA",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$132K"
         },
         {
           "id": "brendan-bett",
@@ -2460,7 +2453,8 @@
           "position": "DL",
           "transferInfo": "Transfer from Baylor",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$132K"
         },
         {
           "id": "cam-dooley",
@@ -2469,7 +2463,8 @@
           "position": "S",
           "transferInfo": "Transfer from Kentucky",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$132K"
         },
         {
           "id": "evan-pryor",
@@ -2478,7 +2473,8 @@
           "position": "RB",
           "transferInfo": "Transfer from Ohio State / Cincinnati",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$72K"
         },
         {
           "id": "tj-shanahan-jr",
@@ -2487,7 +2483,8 @@
           "position": "OL",
           "transferInfo": "Transfer from Texas A&M / Penn State",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$72K"
         },
         {
           "id": "kofi-asare",
@@ -2496,7 +2493,8 @@
           "position": "JACK",
           "transferInfo": "Transfer from UMass",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$72K"
         },
         {
           "id": "tj-bullard",
@@ -2505,7 +2503,8 @@
           "position": "ILB",
           "transferInfo": "Transfer from UCF",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$72K"
         },
         {
           "id": "jordy-lowery",
@@ -2514,7 +2513,8 @@
           "position": "CB",
           "transferInfo": "Transfer from Western Carolina / East Carolina",
           "stars": 3,
-          "nationalRank": null
+          "nationalRank": null,
+          "nilValuation": "$72K"
         }
       ]
     },
@@ -2620,67 +2620,292 @@
       {
         "id": "commit-maxwell-hiller",
         "category": "Commit",
-        "text": "Maxwell Hiller (IOL · 5★ · #3) is on the UF board as a commit.",
+        "text": "Maxwell Hiller (IOL · 5★ · $306K) is on the UF board as a commit.",
         "slug": "maxwell-hiller"
       },
       {
         "id": "commit-elias-pearl",
         "category": "Commit",
-        "text": "Elias Pearl (WR · 4★ · #95) is on the UF board as a commit.",
+        "text": "Elias Pearl (WR · 4★ · $173K) is on the UF board as a commit.",
         "slug": "elias-pearl"
       },
       {
         "id": "commit-elijah-hutcheson",
         "category": "Commit",
-        "text": "Elijah Hutcheson (OT · 4★ · #103) is on the UF board as a commit.",
+        "text": "Elijah Hutcheson (OT · 4★ · $169K) is on the UF board as a commit.",
         "slug": "elijah-hutcheson"
       },
       {
         "id": "commit-davin-davidson",
         "category": "Commit",
-        "text": "Davin Davidson (QB · 4★ · #119) is on the UF board as a commit.",
+        "text": "Davin Davidson (QB · 4★ · $161K) is on the UF board as a commit.",
         "slug": "davin-davidson"
       },
       {
         "id": "commit-cahron-wheeler",
         "category": "Commit",
-        "text": "Cahron Wheeler (EDGE · 4★ · #126) is on the UF board as a commit.",
+        "text": "Cahron Wheeler (EDGE · 4★ · $157K) is on the UF board as a commit.",
         "slug": "cahron-wheeler"
       },
       {
         "id": "commit-peyton-miller",
         "category": "Commit",
-        "text": "Peyton Miller (IOL · 4★ · #130) is on the UF board as a commit.",
+        "text": "Peyton Miller (IOL · 4★ · $155K) is on the UF board as a commit.",
         "slug": "peyton-miller"
       },
       {
         "id": "else-elijah-guertin",
         "category": "Elsewhere",
-        "text": "Elijah Guertin committed to Penn State.",
+        "text": "Elijah Guertin committed to Penn State · $48K est..",
         "slug": "elijah-guertin"
       },
       {
         "id": "else-kyren-caldwell",
         "category": "Elsewhere",
-        "text": "Kyren Caldwell committed to Maryland.",
+        "text": "Kyren Caldwell committed to Maryland · $25K est..",
         "slug": "kyren-caldwell"
       },
       {
         "id": "else-jameer-cantrell",
         "category": "Elsewhere",
-        "text": "Jameer Cantrell committed to Arkansas.",
+        "text": "Jameer Cantrell committed to Arkansas · $25K est..",
         "slug": "jameer-cantrell"
       },
       {
         "id": "else-jalen-brewster",
         "category": "Elsewhere",
-        "text": "Jalen Brewster committed to Texas Tech.",
+        "text": "Jalen Brewster committed to Texas Tech · $307K est..",
         "slug": "jalen-brewster"
       }
     ],
+    "landscape": {
+      "asOf": "2026-07-23T01:04:32.379Z",
+      "sourceNote": "Estimated annual pools from public reporting — updated quarterly",
+      "disclaimer": "Program pool and deal figures are curated public estimates — not audited player contracts. Roster / board player dollars use the Vault model unless On3 is public.",
+      "uf": {
+        "collective": "Florida Victorious",
+        "secRank": 8,
+        "nationalRank": 16,
+        "estimatedAnnualPoolM": 11.8,
+        "avgDealK": 34,
+        "topDealM": 2.1,
+        "trend": "up",
+        "trendPct": 14
+      },
+      "sec": [
+        {
+          "id": "tamu",
+          "school": "Texas A&M Aggies",
+          "collective": "Fund 12",
+          "secRank": 1,
+          "nationalRank": 3,
+          "score": 94,
+          "estimatedAnnualPoolM": 22.5,
+          "avgDealK": 48,
+          "topDealM": 4.2,
+          "trend": "up",
+          "trendPct": 12
+        },
+        {
+          "id": "tex",
+          "school": "Texas Longhorns",
+          "collective": "Horns With Heart",
+          "secRank": 2,
+          "nationalRank": 4,
+          "score": 92,
+          "estimatedAnnualPoolM": 20.8,
+          "avgDealK": 52,
+          "topDealM": 3.8,
+          "trend": "up",
+          "trendPct": 18
+        },
+        {
+          "id": "bama",
+          "school": "Alabama Crimson Tide",
+          "collective": "Yellowhammer Fund",
+          "secRank": 3,
+          "nationalRank": 5,
+          "score": 90,
+          "estimatedAnnualPoolM": 19.2,
+          "avgDealK": 45,
+          "topDealM": 3.5,
+          "trend": "stable",
+          "trendPct": 2
+        },
+        {
+          "id": "uga",
+          "school": "Georgia Bulldogs",
+          "collective": "Classic City Collective",
+          "secRank": 4,
+          "nationalRank": 7,
+          "score": 88,
+          "estimatedAnnualPoolM": 17.5,
+          "avgDealK": 42,
+          "topDealM": 3.1,
+          "trend": "up",
+          "trendPct": 8
+        },
+        {
+          "id": "lsu",
+          "school": "LSU Tigers",
+          "collective": "Bayou Traditions",
+          "secRank": 5,
+          "nationalRank": 10,
+          "score": 84,
+          "estimatedAnnualPoolM": 14.8,
+          "avgDealK": 38,
+          "topDealM": 2.6,
+          "trend": "up",
+          "trendPct": 6
+        },
+        {
+          "id": "olemiss",
+          "school": "Ole Miss Rebels",
+          "collective": "Champion Circle",
+          "secRank": 6,
+          "nationalRank": 12,
+          "score": 81,
+          "estimatedAnnualPoolM": 13.2,
+          "avgDealK": 35,
+          "topDealM": 2.2,
+          "trend": "up",
+          "trendPct": 15
+        },
+        {
+          "id": "tenn",
+          "school": "Tennessee Volunteers",
+          "collective": "Spire Collective",
+          "secRank": 7,
+          "nationalRank": 14,
+          "score": 79,
+          "estimatedAnnualPoolM": 12.5,
+          "avgDealK": 36,
+          "topDealM": 2.4,
+          "trend": "up",
+          "trendPct": 9
+        },
+        {
+          "id": "uf",
+          "school": "Florida Gators",
+          "collective": "Florida Victorious",
+          "secRank": 8,
+          "nationalRank": 16,
+          "score": 77,
+          "estimatedAnnualPoolM": 11.8,
+          "avgDealK": 34,
+          "topDealM": 2.1,
+          "trend": "up",
+          "trendPct": 14
+        },
+        {
+          "id": "auburn",
+          "school": "Auburn Tigers",
+          "collective": "Auburn NIL Club",
+          "secRank": 9,
+          "nationalRank": 18,
+          "score": 74,
+          "estimatedAnnualPoolM": 10.5,
+          "avgDealK": 32,
+          "topDealM": 1.9,
+          "trend": "up",
+          "trendPct": 11
+        },
+        {
+          "id": "okla",
+          "school": "Oklahoma Sooners",
+          "collective": "Crimson & Cream",
+          "secRank": 10,
+          "nationalRank": 19,
+          "score": 73,
+          "estimatedAnnualPoolM": 10.2,
+          "avgDealK": 33,
+          "topDealM": 2,
+          "trend": "stable",
+          "trendPct": 3
+        },
+        {
+          "id": "scar",
+          "school": "South Carolina Gamecocks",
+          "collective": "Garnet Trust",
+          "secRank": 11,
+          "nationalRank": 24,
+          "score": 68,
+          "estimatedAnnualPoolM": 8.4,
+          "avgDealK": 28,
+          "topDealM": 1.5,
+          "trend": "up",
+          "trendPct": 7
+        },
+        {
+          "id": "mizz",
+          "school": "Missouri Tigers",
+          "collective": "Golden NIL",
+          "secRank": 12,
+          "nationalRank": 28,
+          "score": 64,
+          "estimatedAnnualPoolM": 7.2,
+          "avgDealK": 26,
+          "topDealM": 1.3,
+          "trend": "stable",
+          "trendPct": 1
+        },
+        {
+          "id": "ark",
+          "school": "Arkansas Razorbacks",
+          "collective": "Hogs NIL",
+          "secRank": 13,
+          "nationalRank": 30,
+          "score": 62,
+          "estimatedAnnualPoolM": 6.8,
+          "avgDealK": 25,
+          "topDealM": 1.2,
+          "trend": "up",
+          "trendPct": 5
+        },
+        {
+          "id": "uk",
+          "school": "Kentucky Wildcats",
+          "collective": "Wildcat NIL",
+          "secRank": 14,
+          "nationalRank": 32,
+          "score": 60,
+          "estimatedAnnualPoolM": 6.2,
+          "avgDealK": 24,
+          "topDealM": 1.1,
+          "trend": "stable",
+          "trendPct": 0
+        },
+        {
+          "id": "msst",
+          "school": "Mississippi State Bulldogs",
+          "collective": "Bulldog NIL",
+          "secRank": 15,
+          "nationalRank": 35,
+          "score": 57,
+          "estimatedAnnualPoolM": 5.5,
+          "avgDealK": 22,
+          "topDealM": 0.9,
+          "trend": "up",
+          "trendPct": 4
+        },
+        {
+          "id": "vandy",
+          "school": "Vanderbilt Commodores",
+          "collective": "Anchor NIL",
+          "secRank": 16,
+          "nationalRank": 42,
+          "score": 52,
+          "estimatedAnnualPoolM": 4.1,
+          "avgDealK": 20,
+          "topDealM": 0.7,
+          "trend": "up",
+          "trendPct": 6
+        }
+      ]
+    },
     "editorial": {
-      "asOf": "2026-07-23T00:28:58.331Z",
-      "disclaimer": "Editorial landscape estimates from curated public signals — not audited deal ledgers. Demoted below live board data.",
+      "asOf": "2026-07-23T01:04:32.379Z",
+      "disclaimer": "Program pool and deal figures are curated public estimates — not audited player contracts. Roster / board player dollars use the Vault model unless On3 is public.",
       "uf": {
         "collective": "Florida Victorious",
         "secRank": 8,

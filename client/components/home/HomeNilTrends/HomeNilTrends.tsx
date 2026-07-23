@@ -11,10 +11,12 @@ type Props = {
 };
 
 export function HomeNilTrends({ data, loading }: Props): React.ReactElement {
-  const commits = data?.commits != null ? String(data.commits) : data?.estPool ?? '—';
-  const blueChip = data?.blueChipPct != null ? `${data.blueChipPct}%` : data?.movementLabel ?? '—';
-  const collective = data?.collective || data?.topEarner || 'Florida Victorious';
-  const note = data?.topEarnerNote ?? 'Open NIL Tracker for the elite board';
+  const pool = data?.estPool ?? '—';
+  const deal = data?.movementLabel ?? '—';
+  const topDeal = data?.movementDelta ?? '—';
+  const collective = data?.collective || 'Florida Victorious';
+  const note = data?.topEarnerNote ?? 'Open NIL Tracker for full valuations';
+  const top = data?.topEarner || collective;
 
   if (loading && !data) {
     return (
@@ -36,9 +38,9 @@ export function HomeNilTrends({ data, loading }: Props): React.ReactElement {
       eyebrow="NIL Tracker"
       title="NIL Tracker Preview"
       stats={[
-        { value: commits, label: 'UF commits', tone: 'accent' },
-        { value: blueChip, label: 'Blue-chip share', tone: 'up' },
-        { value: data?.movementDelta ?? '—', label: 'Avg rating', tone: 'neutral' },
+        { value: pool, label: 'UF pool est.', tone: 'accent' },
+        { value: deal, label: 'Market pulse', tone: 'up' },
+        { value: topDeal, label: 'Top deal', tone: 'neutral' },
       ]}
       subtitle={note}
       link={{ href: VAULT_NIL, label: 'Open NIL Tracker →' }}
@@ -46,8 +48,8 @@ export function HomeNilTrends({ data, loading }: Props): React.ReactElement {
       testId="home-nil-trends"
     >
       <div className="gv-home-inline">
-        <span className="gv-home-label">Collective</span>
-        <span className="gv-home-body">{collective}</span>
+        <span className="gv-home-label">Top roster est.</span>
+        <span className="gv-home-body">{top}</span>
       </div>
     </HomeModuleCard>
   );

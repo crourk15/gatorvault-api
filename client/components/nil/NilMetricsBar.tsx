@@ -4,27 +4,55 @@ import React from 'react';
 import type { NilEliteBundle } from '@/lib/nil-elite-api';
 
 type Props = {
+  money?: NilEliteBundle['money'];
   pulse: NilEliteBundle['pulse'];
-  classYear: number;
 };
 
-export function NilMetricsBar({ pulse, classYear }: Props): React.ReactElement {
+function trendLabel(money?: NilEliteBundle['money']): string {
+  if (!money?.trend) return '—';
+  const pct = money.trendPct != null ? ` ${money.trendPct > 0 ? '+' : ''}${money.trendPct}%` : '';
+  if (money.trend === 'up') return `↑${pct}`;
+  if (money.trend === 'down') return `↓${pct}`;
+  return `→${pct}`;
+}
+
+export function NilMetricsBar({ money, pulse }: Props): React.ReactElement {
   const metrics = [
-    { label: `${classYear} commits`, value: String(pulse.commits) },
     {
-      label: 'Blue-chip share',
-      value: pulse.blueChipPct != null ? `${pulse.blueChipPct}%` : '—',
+      label: 'UF pool est.',
+      value: money?.poolLabel || '—',
     },
     {
-      label: 'Avg rating',
-      value: pulse.avgRating != null ? String(pulse.avgRating) : '—',
+      label: 'Avg deal',
+      value: money?.avgDealK != null ? `$${money.avgDealK}K` : '—',
     },
-    { label: 'Active UF targets', value: String(pulse.activeTargets) },
-    { label: 'Portal arrivals', value: String(pulse.portalArrivals) },
+    {
+      label: 'Top deal',
+      value: money?.topDealM != null ? `$${money.topDealM}M` : '—',
+    },
+    {
+      label: 'SEC rank',
+      value: money?.secRank != null ? `#${money.secRank}` : '—',
+    },
+    {
+      label: 'Natl rank',
+      value: money?.nationalRank != null ? `#${money.nationalRank}` : '—',
+    },
+    {
+      label: 'Pool trend',
+      value: trendLabel(money),
+    },
+    {
+      label: 'Roster valuations',
+      value: String(pulse.portalArrivals >= 0 ? 'Live' : '—'),
+    },
   ];
 
+  // Drop the useless "Live" metric — replace with active targets as secondary context
+  metrics[6] = { label: 'Active UF targets', value: String(pulse.activeTargets) };
+
   return (
-    <section className="nil-metrics nil-bleed" data-testid="nil-metrics-bar" aria-label="NIL pulse">
+    <section className="nil-metrics nil-bleed" data-testid="nil-metrics-bar" aria-label="NIL money pulse">
       <div className="nil-metrics__track rh-frame">
         {metrics.map((m) => (
           <article key={m.label} className="nil-metric-card">
