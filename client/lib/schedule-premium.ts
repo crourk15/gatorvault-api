@@ -9,7 +9,8 @@ export type TicketVendor = {
   name: string;
   logo: string;
   url: string;
-  priceFrom: number;
+  /** Live marketplace floor only — never invent placeholders. */
+  priceFrom?: number;
 };
 
 export type PremiumScheduleGame = {
@@ -108,6 +109,7 @@ function normalizeTv(tv?: string): string {
 }
 
 function ticketVendorsForGame(opponent: string): TicketVendor[] {
+  // Links only — no invented "$42+" floors. Prices appear only when a live feed exists.
   const q = encodeURIComponent(`Florida Gators ${opponent}`);
   return [
     {
@@ -115,21 +117,18 @@ function ticketVendorsForGame(opponent: string): TicketVendor[] {
       name: 'StubHub',
       logo: 'SH',
       url: `https://www.stubhub.com/search?q=${q}`,
-      priceFrom: 45,
     },
     {
       id: 'seatgeek',
       name: 'SeatGeek',
       logo: 'SG',
       url: `https://seatgeek.com/search?q=${q}`,
-      priceFrom: 42,
     },
     {
       id: 'vivid',
       name: 'VividSeats',
       logo: 'VS',
       url: `https://www.vividseats.com/search?q=${q}`,
-      priceFrom: 48,
     },
   ];
 }

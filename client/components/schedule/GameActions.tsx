@@ -11,7 +11,10 @@ type Props = {
 
 export function GameActions({ intelUrl, ticketVendors }: Props): React.ReactElement {
   const vendors = ticketVendors.slice(0, 3);
-  const lowest = vendors.reduce((min, v) => (v.priceFrom < min ? v.priceFrom : min), vendors[0]?.priceFrom ?? 0);
+  const liveFloors = vendors
+    .map((v) => v.priceFrom)
+    .filter((n): n is number => typeof n === 'number' && Number.isFinite(n) && n > 0);
+  const lowest = liveFloors.length ? Math.min(...liveFloors) : null;
 
   return (
     <div className="gv-sched-actions">
@@ -20,7 +23,13 @@ export function GameActions({ intelUrl, ticketVendors }: Props): React.ReactElem
       </Button>
       <div className="gv-sched-tickets">
         <p className="gv-sched-tickets__label">
-          Tickets from <strong>${lowest}+</strong>
+          {lowest != null ? (
+            <>
+              Tickets from <strong>${lowest}+</strong>
+            </>
+          ) : (
+            <>Find tickets</>
+          )}
         </p>
         <div className="gv-sched-tickets__vendors">
           {vendors.map((vendor) => (
@@ -30,13 +39,21 @@ export function GameActions({ intelUrl, ticketVendors }: Props): React.ReactElem
               target="_blank"
               rel="noopener noreferrer"
               className="gv-sched-tickets__vendor"
-              title={`${vendor.name} from $${vendor.priceFrom}`}
+              title={
+                vendor.priceFrom != null
+                  ? `${vendor.name} from $${vendor.priceFrom}`
+                  : `Find tickets on ${vendor.name}`
+              }
             >
               <span className="gv-sched-tickets__logo" aria-hidden="true">
                 {vendor.logo}
               </span>
               <span className="gv-sched-tickets__name">{vendor.name}</span>
-              <span className="gv-sched-tickets__price">${vendor.priceFrom}+</span>
+              {vendor.priceFrom != null ? (
+                <span className="gv-sched-tickets__price">${vendor.priceFrom}+</span>
+              ) : (
+                <span className="gv-sched-tickets__price">Check</span>
+              )}
             </a>
           ))}
         </div>
