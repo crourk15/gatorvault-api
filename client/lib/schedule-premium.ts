@@ -238,3 +238,27 @@ export function daysUntilKickoffLabel(kickoffRaw: string, now = new Date()): str
   if (days === 1) return '1 day';
   return `${days} days`;
 }
+
+/** War Room / schedule board model summary — expected wins from win%, mode record from lean scores. */
+export type SeasonModelSummary = {
+  expectedWins: number;
+  modeWins: number;
+  modeLosses: number;
+  modeRecord: string;
+  gameCount: number;
+  articleHref: string;
+};
+
+export function getSeasonModelSummary(games: PremiumScheduleGame[]): SeasonModelSummary {
+  const expectedWins = games.reduce((sum, g) => sum + g.winProbability / 100, 0);
+  const modeWins = games.filter((g) => g.predictedScoreUF > g.predictedScoreOpp).length;
+  const modeLosses = Math.max(0, games.length - modeWins);
+  return {
+    expectedWins: Math.round(expectedWins * 10) / 10,
+    modeWins,
+    modeLosses,
+    modeRecord: `${modeWins}-${modeLosses}`,
+    gameCount: games.length,
+    articleHref: '/vault/articles/art-win-model/',
+  };
+}

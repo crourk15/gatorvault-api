@@ -21,9 +21,9 @@ export function PredictedScoreBlock({
   return (
     <div
       className="gv-sched-scoreboard"
-      aria-label={`Projected score Florida ${ufScore}, ${oppName} ${oppScore}`}
+      aria-label={`Model lean Florida ${ufScore}, ${oppName} ${oppScore}`}
     >
-      <p className="gv-sched-scoreboard__label">Projected</p>
+      <p className="gv-sched-scoreboard__label">Model lean</p>
       <div className="gv-sched-scoreboard__row">
         <img
           src={ufLogoUrl()}

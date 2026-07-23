@@ -8,6 +8,7 @@ import {
   gamesForSeason,
   getNextScheduleGame,
   getScheduleGameStatus,
+  getSeasonModelSummary,
   groupGamesBySection,
   type ScheduleGameStatus,
   type ScheduleSeason,
@@ -15,6 +16,7 @@ import {
 import { GameSection } from './GameSection';
 import { HeroSchedule } from './HeroSchedule';
 import { NextUpMatchup } from './NextUpMatchup';
+import { SeasonModelStrip } from './SeasonModelStrip';
 
 type Props = {
   defaultSeason?: ScheduleSeason;
@@ -28,6 +30,7 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
   const grouped = useMemo(() => groupGamesBySection(games), [games]);
   const nextGame = useMemo(() => getNextScheduleGame(games), [games]);
   const nextId = nextGame?.id ?? null;
+  const seasonModel = useMemo(() => (games.length ? getSeasonModelSummary(games) : null), [games]);
 
   const statusById = useMemo(() => {
     const map: Record<string, ScheduleGameStatus> = {};
@@ -41,7 +44,7 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
     <div className="gv-schedule-page gv-sched-page" data-testid="vault-schedule">
       <HeroSchedule
         season={season}
-        subtitle="TV, tickets, and game-week intel for every Florida matchup."
+        subtitle="War Room win probabilities, model lean scores, tickets, and Game Week for every matchup."
         primaryCta={{ label: 'Buy Tickets', href: 'https://floridagators.com/tickets' }}
         secondaryCta={{ label: 'Official schedule', href: 'https://floridagators.com/sports/football/schedule' }}
         hideCtas={Boolean(nextGame)}
@@ -50,6 +53,7 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
       </HeroSchedule>
 
       <Container className="gv-sched-page__body">
+        {seasonModel ? <SeasonModelStrip model={seasonModel} /> : null}
         <div className="gv-sched-filters" data-testid="schedule-filters">
           <Tabs
             options={SCHEDULE_SEASONS.map((y) => ({ id: y, label: y }))}

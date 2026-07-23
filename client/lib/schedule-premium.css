@@ -289,6 +289,63 @@
   max-width: var(--th-frame-max, var(--max-width));
 }
 
+/* ── Season model strip ── */
+.gv-sched-model {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md, 16px);
+  margin-bottom: var(--space-lg, 24px);
+  padding: var(--space-md, 16px) var(--space-lg, 24px);
+  background: var(--th-card-bg, #fff);
+  border: 1px solid var(--th-border, var(--card-border));
+  border-top: 3px solid var(--th-accent, var(--gator-orange));
+  border-radius: var(--th-radius-card, 12px);
+  box-shadow: var(--th-shadow, var(--card-shadow));
+}
+
+.gv-sched-model__eyebrow {
+  margin: 0 0 4px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--th-accent, var(--gator-orange));
+}
+
+.gv-sched-model__line {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: var(--th-heading-light, var(--uf-blue));
+}
+
+.gv-sched-model__line strong {
+  font-weight: 800;
+}
+
+.gv-sched-model__note {
+  margin: 6px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--th-meta, var(--subtle-gray));
+  max-width: 40rem;
+}
+
+.gv-sched-model__link {
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--th-heading-light, var(--uf-blue));
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--th-accent) 45%, transparent);
+}
+
+.gv-sched-model__link:hover {
+  color: var(--th-accent, var(--gator-orange));
+}
+
 /* ── Filters ── */
 .gv-sched-filters {
   display: flex;
@@ -733,14 +790,11 @@
   color: var(--th-meta);
 }
 
-/* Legacy vendor chrome (kept for cleanup selectors). */
-.gv-sched-tickets__label,
-.gv-sched-tickets__links,
-.gv-sched-tickets__link,
-.gv-sched-tickets__price,
-.gv-sched-tickets__vendors,
+/* Legacy ticket-vendor hooks retained for shared cleanup CSS selectors. */
 .gv-sched-tickets__vendor {
-  /* no-op legacy hooks */
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* ── Mobile ── */

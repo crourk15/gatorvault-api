@@ -5,5 +5,6 @@ export { HeroSchedule } from './HeroSchedule';
 export { NextUpMatchup } from './NextUpMatchup';
 export { PredictedScoreBlock } from './PredictedScoreBlock';
 export { SchedulePageShell } from './SchedulePageShell';
+export { SeasonModelStrip } from './SeasonModelStrip';
 export { TVNetworkBadge } from './TVNetworkBadge';
 export { WinProbabilityBar } from './WinProbabilityBar';
