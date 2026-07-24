@@ -62,7 +62,11 @@ export function FutureCastMovementPanel({
     [underclassmen, highPriority]
   );
 
-  const closingHasMovers = useMemo(() => {
+  // Prefer year-scoped movement-intel when Lab fetched the discovery class.
+  const useScopedMovementIntel =
+    discoveryFocus && Number(movementIntel.classYear) === focusYear;
+
+  const scopedHasMovers = useMemo(() => {
     return (
       movementIntel.risers.length +
         movementIntel.fallers.length +
@@ -72,6 +76,7 @@ export function FutureCastMovementPanel({
   }, [movementIntel]);
 
   const discoveryHasMovers = useMemo(() => {
+    if (useScopedMovementIntel) return scopedHasMovers;
     if (!discoveryBuckets.believable) return false;
     return (
       discoveryBuckets.risers.length +
@@ -79,21 +84,27 @@ export function FutureCastMovementPanel({
         discoveryBuckets.highVolatility.length >
       0
     );
-  }, [discoveryBuckets]);
+  }, [useScopedMovementIntel, scopedHasMovers, discoveryBuckets]);
 
   const rows = discoveryFocus
-    ? tab === 'risers'
-      ? discoveryBuckets.risers
-      : tab === 'fallers'
-        ? discoveryBuckets.fallers
-        : discoveryBuckets.highVolatility
+    ? useScopedMovementIntel
+      ? tab === 'risers'
+        ? movementIntel.risers
+        : tab === 'fallers'
+          ? movementIntel.fallers
+          : movementIntel.highVolatility
+      : tab === 'risers'
+        ? discoveryBuckets.risers
+        : tab === 'fallers'
+          ? discoveryBuckets.fallers
+          : discoveryBuckets.highVolatility
     : tab === 'risers'
       ? movementIntel.risers
       : tab === 'fallers'
         ? movementIntel.fallers
         : movementIntel.highVolatility;
 
-  if (discoveryFocus ? !discoveryHasMovers : !closingHasMovers) return null;
+  if (discoveryFocus ? !discoveryHasMovers : !scopedHasMovers) return null;
 
   const title = discoveryFocus
     ? `${focusYear} Discovery Movement`

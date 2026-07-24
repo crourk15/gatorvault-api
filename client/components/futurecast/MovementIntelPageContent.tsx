@@ -6,6 +6,7 @@ import { FutureCastSubPageLoading } from '@/components/futurecast/FutureCastSubP
 import { UiError } from '@/components/site/UiMessage';
 import { fetchFutureCastMovementIntel } from '@/lib/futurecast-board-api';
 import type { MovementIntelResponse } from '@/lib/futurecast-board-types';
+import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 
 const REFRESH_MS = 60_000;
 
@@ -13,6 +14,7 @@ export function MovementIntelPageContent(): React.ReactElement {
   const [data, setData] = useState<MovementIntelResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const focusYear = primaryRecruitingClassYear();
 
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) {
@@ -20,7 +22,7 @@ export function MovementIntelPageContent(): React.ReactElement {
       setError(null);
     }
     try {
-      setData(await fetchFutureCastMovementIntel());
+      setData(await fetchFutureCastMovementIntel(focusYear));
       setError(null);
     } catch (err) {
       if (isInitial) {
@@ -29,7 +31,7 @@ export function MovementIntelPageContent(): React.ReactElement {
     } finally {
       if (isInitial) setLoading(false);
     }
-  }, []);
+  }, [focusYear]);
 
   useEffect(() => {
     let cancelled = false;

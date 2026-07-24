@@ -32,6 +32,7 @@ import { UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS } from './allowlist-board';
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { getAllowlistSet } = require('../../lib/recruiting-target-allowlist');
+const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
 
 const EARLY_WATCHLIST_PATH = path.join(__dirname, '../../data/futurecast/early-watchlist.json');
 const DEFAULT_YEARS = [2028, 2029, 2030] as const;
@@ -312,6 +313,9 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
     const watchlist: UnderclassmenPlayer[] = [];
 
     for (const player of enriched) {
+      // Commits (UF or elsewhere) are not discovery targets — keep Lab movement honest.
+      if (!isActiveUfTarget(player)) continue;
+
       const entry = earlyMeta.get(player.slug);
       const tier: UnderclassmenTier =
         year === 2030 || entry?.tier === 'watchlist' ? 'watchlist' : 'target';
@@ -322,15 +326,42 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
         merged,
         movementBySlug.get(player.slug.toLowerCase())
       );
-      const trendDelta7d =
-        withMovement.trendDelta7d ??
-        (entry?.earlyMovement != null ? Number(entry.earlyMovement) : null);
+      // Never fall back to seeded earlyMovement (±4 theater). Real deltas only.
+      let trendDelta7d =
+        withMovement.trendDelta7d != null && Number.isFinite(Number(withMovement.trendDelta7d))
+          ? Number(withMovement.trendDelta7d)
+          : null;
+      if (trendDelta7d != null && Math.abs(Math.round(trendDelta7d)) === 4) {
+        // Classic allowlist-seed flat bump — drop unless durable UF trend confirms a real move.
+        try {
+          const ufTrend = require('../../lib/uf-trend-snapshot') as {
+            computeDelta7d?: (slug: string, asOf?: Date, opts?: object) => number | null;
+          };
+          const snap =
+            typeof ufTrend.computeDelta7d === 'function'
+              ? ufTrend.computeDelta7d(player.slug, new Date(), {
+                  preferSource: 'gatorvault',
+                  requireSource: false,
+                })
+              : null;
+          if (snap == null || !Number.isFinite(snap) || Math.abs(snap) < 1) {
+            trendDelta7d = null;
+          } else if (Math.abs(Math.round(snap)) === 4) {
+            // Snapshot itself is the seed-flat artifact.
+            trendDelta7d = null;
+          } else {
+            trendDelta7d = Math.round(snap);
+          }
+        } catch {
+          trendDelta7d = null;
+        }
+      }
       const volatility7d =
-        withMovement.volatility7d != null && withMovement.volatility7d > 0
-          ? withMovement.volatility7d
-          : trendDelta7d != null
-            ? Math.round(Math.abs(trendDelta7d) * 100) / 100
-            : withMovement.volatility7d;
+        trendDelta7d == null
+          ? 0
+          : withMovement.volatility7d != null && withMovement.volatility7d > 0
+            ? withMovement.volatility7d
+            : Math.round(Math.abs(trendDelta7d) * 100) / 100;
       const row: UnderclassmenPlayer = {
         ...withMovement,
         trendDelta7d,
