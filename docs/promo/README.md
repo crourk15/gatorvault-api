@@ -1,16 +1,13 @@
 # GatorVault App Store social pack
 
-## Main (kept — Schedule big on right)
-`gatorvault-twitter-facebook-1600x900.png`
+## Main (kept)
+`gatorvault-twitter-facebook-1600x900.png` — Schedule large on right
 
-## Background-first (stadium + helmet show; screens small in bottom grass band)
-| File | Screen(s) |
-|---|---|
-| `gatorvault-twitter-background-1600x900.png` | Live + Targets |
-| `gatorvault-facebook-og-1200x630.png` | Live |
-| `gatorvault-square-1080.png` | 2028 Targets |
-| `gatorvault-badge-lockup-1200x280.png` | none |
-
-Screens sit low between the badge and helmet — not over the wordmark / stadium.
+## Other posts (readable phones, stadium still open above)
+| File | Screens | Size |
+|---|---|---|
+| `gatorvault-twitter-background-1600x900.png` | Live + Targets | ~half height, lower right |
+| `gatorvault-facebook-og-1200x630.png` | Live | ~half height, lower right |
+| `gatorvault-square-1080.png` | Targets | ~half height, lower right |
 
 https://apps.apple.com/app/id6783848215
