@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-26T02:34:57.447Z",
+  "updatedAt": "2026-07-24T16:03:35.520Z",
   "entries": [
     {
       "playerSlug": "easton-royal",
@@ -31,6 +31,39 @@
       "profileUrl": "https://www.on3.com/rivals/jalen-brewster-242708/",
       "source": "On3 RPM � UF",
       "syncedAt": "2026-06-26T02:34:57.442Z"
+    },
+    {
+      "playerSlug": "lorenzo-mcmullen-jr",
+      "playerName": "Lorenzo McMullen Jr.",
+      "classYear": 2028,
+      "ufPct": 7,
+      "priorUfPct": null,
+      "profileUrl": "https://www.on3.com/rivals/lorenzo-mcmullen-jr-261606/",
+      "source": "On3 RPM · UF",
+      "sourceBucket": "allowlist",
+      "syncedAt": "2026-07-24T16:03:35.520Z"
+    },
+    {
+      "playerSlug": "hudson-west",
+      "playerName": "Hudson West",
+      "classYear": 2028,
+      "ufPct": 62,
+      "priorUfPct": null,
+      "profileUrl": "https://www.on3.com/rivals/hudson-west-284243/",
+      "source": "On3 RPM · UF",
+      "sourceBucket": "allowlist",
+      "syncedAt": "2026-07-24T16:03:35.520Z"
+    },
+    {
+      "playerSlug": "phoenix-evans",
+      "playerName": "Phoenix Evans",
+      "classYear": 2028,
+      "ufPct": 3,
+      "priorUfPct": null,
+      "profileUrl": "https://www.on3.com/rivals/phoenix-evans-243873/",
+      "source": "On3 RPM · UF",
+      "sourceBucket": "allowlist",
+      "syncedAt": "2026-07-24T16:03:35.520Z"
     }
   ]
 }

@@ -33560,7 +33560,7 @@
     "on3Id": "261606",
     "on3Slug": "lorenzo-mcmullen-jr-261606",
     "on3ProfileUrl": "https://www.on3.com/rivals/lorenzo-mcmullen-jr-261606/",
-    "on3Source": null,
+    "on3Source": "on3-rpm-manual-seed",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -33584,9 +33584,50 @@
     "nilValue": null,
     "nilEstimate": null,
     "nilSource": null,
-    "competitors": [],
-    "ufRpmPct": null,
-    "updatedAt": "2026-07-12T19:10:52.980Z",
+    "competitors": [
+      {
+        "school": "Ohio State",
+        "score": 37.0,
+        "pct": 37.0,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Notre Dame",
+        "score": 17.0,
+        "pct": 17.0,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Cincinnati",
+        "score": 7.9,
+        "pct": 7.9,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Michigan State",
+        "score": 6.6,
+        "pct": 6.6,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Illinois",
+        "score": 6.6,
+        "pct": 6.6,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      }
+    ],
+    "ufRpmPct": 7,
+    "updatedAt": "2026-07-24T16:03:54.207Z",
     "displayRating": null,
     "ratingIsOverride": false,
     "height": "6-2",
@@ -34139,7 +34180,7 @@
     "on3Id": "243873",
     "on3Slug": "phoenix-evans-243873",
     "on3ProfileUrl": "https://www.on3.com/rivals/phoenix-evans-243873/",
-    "on3Source": null,
+    "on3Source": "on3-rpm-manual-seed",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -34163,9 +34204,82 @@
     "nilValue": null,
     "nilEstimate": null,
     "nilSource": null,
-    "competitors": [],
-    "ufRpmPct": null,
-    "updatedAt": "2026-07-24T15:40:00.000Z",
+    "competitors": [
+      {
+        "school": "Rutgers",
+        "score": 25.5,
+        "pct": 25.5,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Penn State",
+        "score": 14.4,
+        "pct": 14.4,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Notre Dame",
+        "score": 7.2,
+        "pct": 7.2,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Texas A&M",
+        "score": 6.0,
+        "pct": 6.0,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "SMU",
+        "score": 4.6,
+        "pct": 4.6,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Tennessee",
+        "score": 3.1,
+        "pct": 3.1,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Georgia Tech",
+        "score": 3.1,
+        "pct": 3.1,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Miami",
+        "score": 3.1,
+        "pct": 3.1,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Kentucky",
+        "score": 3.1,
+        "pct": 3.1,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      }
+    ],
+    "ufRpmPct": 3,
+    "updatedAt": "2026-07-24T16:03:54.207Z",
     "displayRating": null,
     "ratingIsOverride": false,
     "height": "5-9.5",
@@ -34513,7 +34627,7 @@
     "on3Id": "284243",
     "on3Slug": "hudson-west-284243",
     "on3ProfileUrl": "https://www.on3.com/rivals/hudson-west-284243/",
-    "on3Source": null,
+    "on3Source": "on3-rpm-manual-seed",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -34537,9 +34651,18 @@
     "nilValue": null,
     "nilEstimate": null,
     "nilSource": null,
-    "competitors": [],
-    "ufRpmPct": null,
-    "updatedAt": "2026-07-24T15:40:00.000Z",
+    "competitors": [
+      {
+        "school": "SMU",
+        "score": 20.4,
+        "pct": 20.4,
+        "source": "on3-rpm-manual-seed",
+        "updatedAt": "2026-07-24T16:03:54.207Z",
+        "trend": "flat"
+      }
+    ],
+    "ufRpmPct": 62,
+    "updatedAt": "2026-07-24T16:03:54.207Z",
     "displayRating": null,
     "ratingIsOverride": false,
     "height": "6-5",
