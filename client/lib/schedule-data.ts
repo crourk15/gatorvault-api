@@ -33,7 +33,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     tv: 'SEC Network',
     keys: ['Establish run with Baugh early', 'QB1: no turnovers in debut', 'Defense sets physical tone'],
     swing: [
-      { name: 'Jones Jr. / Philo', role: 'Efficiency matters in debut' },
+      { name: 'Philo / Jones Jr.', role: 'QB1 into camp — efficiency matters in debut' },
       { name: 'Jayden Woods', role: 'JACK sets the edge' },
     ],
     film: 'FAU runs spread RPO. The 3-3-5 is built to neutralize this.',
