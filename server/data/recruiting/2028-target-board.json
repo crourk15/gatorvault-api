@@ -537,7 +537,7 @@
       "posRank": null,
       "stateRank": null,
       "htWt": "6-5 / 190",
-      "skinny": "QB \u00b7 6-5 / 190 \u00b7 Sarasota \u00b7 20+ offers \u00b7 UF visit",
+      "skinny": "QB \u00b7 6-5 / 190 \u00b7 Sarasota \u00b7 UF offer \u00b7 feels like top target",
       "ufProbability": null
     },
     {
@@ -603,7 +603,23 @@
       "stars": 4,
       "htWt": null,
       "skinny": "4\u2605 CB \u00b7 UF persistent early \u00b7 now teammates with UF commit"
+    },
+    {
+      "slug": "phoenix-evans",
+      "name": "Phoenix Evans",
+      "pos": "CB",
+      "classYear": 2028,
+      "school": "IMG Academy (Bradenton, FL)",
+      "state": "FL",
+      "inState": false,
+      "stars": 4,
+      "natlRank": null,
+      "posRank": null,
+      "stateRank": null,
+      "htWt": "5-9.5 / 165",
+      "skinny": "4\u2605 CB \u00b7 IMG Academy \u00b7 UF among top options \u00b7 loves coaches",
+      "ufProbability": null
     }
   ],
-  "updatedAt": "2026-07-22T12:46:10.000Z"
+  "updatedAt": "2026-07-24T15:40:00.000Z"
 }

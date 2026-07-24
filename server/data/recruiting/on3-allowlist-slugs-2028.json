@@ -1,8 +1,10 @@
 {
   "version": 1,
   "description": "Verified On3 recruit slugs for locked 2028 UF allowlist targets",
-  "updatedAt": "2026-07-20T01:30:00.000Z",
+  "updatedAt": "2026-07-24T15:40:00.000Z",
   "slugs": {
+    "hudson-west": "hudson-west-284243",
+    "phoenix-evans": "phoenix-evans-243873",
     "kaleb-ballard": "kaleb-ballard-286499",
     "brysen-wright": "brysen-wright-242341",
     "asher-ghioto": "asher-ghioto-242955",
