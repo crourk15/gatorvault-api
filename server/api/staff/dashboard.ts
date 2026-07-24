@@ -6,7 +6,6 @@ import { createRequire } from 'node:module';
 import { listAlerts } from '../../models/alerts';
 import {
   listRollingMovement,
-  MOVEMENT_VOLATILITY_THRESHOLD,
   ROLLING_MOVEMENT_WINDOW_DAYS,
   VOLATILITY_WINDOW_DAYS,
 } from '../../models/predictions';
@@ -22,12 +21,18 @@ import { filterMovementIntelRollingRows } from '../futurecast/feed-filters';
 
 const require = createRequire(import.meta.url);
 const { filterMovementRowsToLiveTargets } = require('../../lib/live-board-targets');
+const { createMemoryCache } = require('../../lib/memory-cache');
 
 const LIST_LIMIT = 10;
 const MOVEMENT_FILTERS = {
   lifecycle: 'HS' as const,
   min_class_year: MOVEMENT_INTEL_MIN_CLASS_YEAR,
 };
+
+/** Staff dashboard is DB-heavy (~2–6s). Cache for launch-feel; keepalive refreshes it. */
+const STAFF_DASH_CACHE_MS = parseInt(process.env.STAFF_DASHBOARD_CACHE_MS || '90000', 10);
+const staffDashCache = createMemoryCache(STAFF_DASH_CACHE_MS);
+const STAFF_DASH_CACHE_KEY = 'staff:dashboard:v1';
 
 export interface StaffDashboardPlayer {
   id: string;
@@ -135,59 +140,73 @@ function buildHeatmapBuckets(rows: Awaited<ReturnType<typeof listRollingMovement
   ];
 }
 
+async function buildStaffDashboardPayload() {
+  // Overlap independent DB work — movement needs boosts, but fit/alerts do not.
+  const [boosts, fitLeaders, fitRisks, alerts] = await Promise.all([
+    listCompetingVolatilityBoosts(ROLLING_MOVEMENT_WINDOW_DAYS).catch(
+      () => new Map<string, number>()
+    ),
+    listFitScorePlayers('desc', LIST_LIMIT),
+    listFitScorePlayers('asc', LIST_LIMIT),
+    listAlerts(LIST_LIMIT, MOVEMENT_INTEL_MIN_CLASS_YEAR).catch((alertErr) => {
+      if (!isFutureCastDataError(alertErr)) throw alertErr;
+      return [] as Awaited<ReturnType<typeof listAlerts>>;
+    }),
+  ]);
+
+  const movementRowsRaw = await listRollingMovement(MOVEMENT_FILTERS, boosts);
+  const movementRowsFiltered = filterMovementIntelRollingRows(movementRowsRaw);
+  const movementRows = await filterMovementRowsToLiveTargets(movementRowsFiltered, 2027);
+  const volatilityHigh = volatilityPlayersFromRolling(movementRows, 'high', LIST_LIMIT);
+  const volatilityLow = volatilityPlayersFromRolling(movementRows, 'low', LIST_LIMIT);
+
+  return {
+    topRisers: movementPlayers(movementRows, 'up', LIST_LIMIT),
+    topFallers: movementPlayers(movementRows, 'down', LIST_LIMIT),
+    highVolatility: volatilityHigh,
+    lowVolatility: volatilityLow,
+    fitLeaders,
+    fitRisks,
+    heatmap: {
+      buckets: buildHeatmapBuckets(movementRows),
+      windowDays: ROLLING_MOVEMENT_WINDOW_DAYS,
+    },
+    alerts,
+    movementWindowDays: ROLLING_MOVEMENT_WINDOW_DAYS,
+    volatilityWindowDays: VOLATILITY_WINDOW_DAYS,
+    lastUpdated: new Date().toISOString(),
+  };
+}
+
 export const handleGetStaffDashboard = asyncHandler(async (_req: Request, res: Response) => {
   try {
-    const boosts = await listCompetingVolatilityBoosts(ROLLING_MOVEMENT_WINDOW_DAYS).catch(
-      () => new Map<string, number>()
+    const { value, hit } = await staffDashCache.wrap(
+      STAFF_DASH_CACHE_KEY,
+      () => buildStaffDashboardPayload(),
+      STAFF_DASH_CACHE_MS
     );
-    const movementRowsRaw = await listRollingMovement(MOVEMENT_FILTERS, boosts);
-    const movementRowsFiltered = filterMovementIntelRollingRows(movementRowsRaw);
-    const movementRows = await filterMovementRowsToLiveTargets(movementRowsFiltered, 2027);
-    const [fitLeaders, fitRisks] = await Promise.all([
-      listFitScorePlayers('desc', LIST_LIMIT),
-      listFitScorePlayers('asc', LIST_LIMIT),
-    ]);
-    const volatilityHigh = volatilityPlayersFromRolling(movementRows, 'high', LIST_LIMIT);
-    const volatilityLow = volatilityPlayersFromRolling(movementRows, 'low', LIST_LIMIT);
-
-    let alerts: Awaited<ReturnType<typeof listAlerts>> = [];
-    try {
-      alerts = await listAlerts(LIST_LIMIT, MOVEMENT_INTEL_MIN_CLASS_YEAR);
-    } catch (alertErr) {
-      if (!isFutureCastDataError(alertErr)) throw alertErr;
-    }
-
-    res.json({
-      topRisers: movementPlayers(movementRows, 'up', LIST_LIMIT),
-      topFallers: movementPlayers(movementRows, 'down', LIST_LIMIT),
-      highVolatility: volatilityHigh,
-      lowVolatility: volatilityLow,
-      fitLeaders,
-      fitRisks,
-      heatmap: {
-        buckets: buildHeatmapBuckets(movementRows),
-        windowDays: ROLLING_MOVEMENT_WINDOW_DAYS,
-      },
-      alerts,
-      movementWindowDays: ROLLING_MOVEMENT_WINDOW_DAYS,
-      volatilityWindowDays: VOLATILITY_WINDOW_DAYS,
-      lastUpdated: new Date().toISOString(),
-    });
+    res.setHeader('X-GatorVault-Cache', hit ? 'HIT' : 'MISS');
+    res.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
+    res.json(value);
   } catch (err) {
     if (isFutureCastDataError(err)) {
-      respondDatabaseUnavailable(res, {
-        topRisers: [],
-        topFallers: [],
-        highVolatility: [],
-        lowVolatility: [],
-        fitLeaders: [],
-        fitRisks: [],
-        heatmap: { buckets: [], windowDays: ROLLING_MOVEMENT_WINDOW_DAYS },
-        alerts: [],
-        movementWindowDays: ROLLING_MOVEMENT_WINDOW_DAYS,
-        volatilityWindowDays: VOLATILITY_WINDOW_DAYS,
-        lastUpdated: new Date().toISOString(),
-      }, err);
+      respondDatabaseUnavailable(
+        res,
+        {
+          topRisers: [],
+          topFallers: [],
+          highVolatility: [],
+          lowVolatility: [],
+          fitLeaders: [],
+          fitRisks: [],
+          heatmap: { buckets: [], windowDays: ROLLING_MOVEMENT_WINDOW_DAYS },
+          alerts: [],
+          movementWindowDays: ROLLING_MOVEMENT_WINDOW_DAYS,
+          volatilityWindowDays: VOLATILITY_WINDOW_DAYS,
+          lastUpdated: new Date().toISOString(),
+        },
+        err
+      );
       return;
     }
     handlePredictionsApiError(res, err);
