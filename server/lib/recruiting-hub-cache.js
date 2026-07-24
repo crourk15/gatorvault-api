@@ -159,6 +159,13 @@ function priorityWarmJobs(elite, years) {
 function secondaryWarmJobs(elite, years) {
   const jobs = [
     [
+      'futurecast:high-priority:lab',
+      async () => {
+        const { warmFuturecastHighPriorityCaches } = require('../api/futurecast/response-cache.ts');
+        return warmFuturecastHighPriorityCaches([2027, 2028]);
+      },
+    ],
+    [
       'hub:intel:high-priority',
       async () => {
         const gm2 = require('./gm2');

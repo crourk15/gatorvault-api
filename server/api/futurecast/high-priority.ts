@@ -433,24 +433,7 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   };
 }
 
-export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const classYear = parseYear(req.query.year ?? req.query.class_year);
-    if (classYear !== FUTURECAST_CLASS_YEAR && !isUnderclassmenHighPriorityYear(classYear)) {
-      res.status(400).json({
-        error: `Only ${FUTURECAST_CLASS_YEAR} and ${HIGH_PRIORITY_UNDERCLASSMEN_YEARS.join('/')} cycles are supported`,
-      });
-      return;
-    }
-
-    const cacheKey = highPriorityCacheKey(classYear);
-
-    if (isUnderclassmenHighPriorityYear(classYear)) {
-      await sendCachedJson(res, cacheKey, () => buildUnderclassmenHighPriorityPayload(classYear));
-      return;
-    }
-
-    await sendCachedJson(res, cacheKey, async () => {
+async function buildClosingClassHighPriorityPayload(classYear: number) {
       const rankings = loadRecruitingRankings();
       const recruitingBySlug = loadRecruitingBySlug();
       const targetSeedBySlug = loadTargetSeedBySlug();
@@ -806,7 +789,28 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         flipWatch,
         movementNarratives,
       };
-    });
+}
+
+/** Shared by HTTP handler + boot/keepalive warm so Lab cache is primed before fans hit. */
+export async function buildHighPriorityPayload(classYear: number) {
+  if (isUnderclassmenHighPriorityYear(classYear)) {
+    return buildUnderclassmenHighPriorityPayload(classYear);
+  }
+  return buildClosingClassHighPriorityPayload(classYear);
+}
+
+export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const classYear = parseYear(req.query.year ?? req.query.class_year);
+    if (classYear !== FUTURECAST_CLASS_YEAR && !isUnderclassmenHighPriorityYear(classYear)) {
+      res.status(400).json({
+        error: `Only ${FUTURECAST_CLASS_YEAR} and ${HIGH_PRIORITY_UNDERCLASSMEN_YEARS.join('/')} cycles are supported`,
+      });
+      return;
+    }
+
+    const cacheKey = highPriorityCacheKey(classYear);
+    await sendCachedJson(res, cacheKey, () => buildHighPriorityPayload(classYear));
   } catch (err) {
     handlePredictionsApiError(res, err);
   }
