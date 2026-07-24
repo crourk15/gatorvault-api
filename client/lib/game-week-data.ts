@@ -224,11 +224,12 @@ function playerSlug(name: string): string {
  * `snapPct` is intentionally unused in the UI (was a synthetic formula, not real snap data).
  */
 function defaultDepthChart(): DepthChartGroup[] {
-  const mk = (position: string, names: [string, string, string?]): DepthChartGroup => ({
+  // Allow 1–3 names so ST roles (K / P / KR) can be single-player rows.
+  const mk = (position: string, names: [string, string?, string?]): DepthChartGroup => ({
     position,
-    players: names.filter(Boolean).map((name, i) => ({
-      name: name!,
-      slug: playerSlug(name!),
+    players: names.filter((name): name is string => Boolean(name)).map((name, i) => ({
+      name,
+      slug: playerSlug(name),
       // Kept for type compat; not shown as "% snaps" (those values were placeholders).
       snapPct: i === 0 ? 100 : Math.max(0, 40 - i * 10),
       isStarter: i === 0,
