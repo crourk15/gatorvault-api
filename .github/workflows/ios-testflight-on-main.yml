@@ -1,11 +1,10 @@
-# Trigger Codemagic ios-release after merges to main (App Store-safe bundled shell).
+# Manual-only Codemagic ios-release trigger.
+# Charles starts iOS builds from Codemagic (or GitHub Actions → Run workflow).
 # Requires repo secret: CODEMAGIC_API_TOKEN
 # App ID defaults to the gatorvault-api Codemagic application (override via secret if needed).
 name: iOS TestFlight (Codemagic)
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -26,7 +25,7 @@ jobs:
         run: |
           export CODEMAGIC_APP_ID="${CODEMAGIC_APP_ID:-6a3ae08903d4d93cf0d1a5de}"
           if [ -z "${CODEMAGIC_API_TOKEN}" ]; then
-            echo "::warning::CODEMAGIC_API_TOKEN not set — skip auto TestFlight trigger. Add the secret or run Codemagic manually."
+            echo "::warning::CODEMAGIC_API_TOKEN not set — skip Codemagic trigger. Add the secret or run Codemagic manually."
             exit 0
           fi
           npm run trigger:codemagic:ios
