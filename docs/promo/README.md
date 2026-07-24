@@ -1,15 +1,16 @@
-# GatorVault social promo pack
+# GatorVault App Store social pack
 
-Built from live app screens: **Schedule (FAU / War Room)**, **GatorNation Live**, and **2028 UF Targets**.
+Clean Apple-style creatives — no stadium photo, no watermark text, no floating logo clutter.
 
 ## Recommended
 | File | Use |
 |---|---|
-| `gatorvault-twitter-facebook-1600x900.png` | **Best default** — brand + Schedule hero |
-| `gatorvault-twitter-triple-1600x900.png` | Live + Schedule + Targets showcase |
+| `gatorvault-twitter-facebook-1600x900.png` | **Best default** (light) |
+| `gatorvault-twitter-dark-1600x900.png` | Same layout, quiet navy |
+| `gatorvault-twitter-triple-1600x900.png` | Live + Schedule + Targets |
 | `gatorvault-square-1080.png` | Square post |
-| `gatorvault-facebook-og-1200x630.png` | Facebook link preview |
+| `gatorvault-facebook-og-1200x630.png` | Facebook OG |
 
 App Store: https://apps.apple.com/app/id6783848215
 
-Only use Download language when status is **Ready for Sale**.
+Post Download language only when status is **Ready for Sale**.
