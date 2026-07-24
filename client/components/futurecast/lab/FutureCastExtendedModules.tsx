@@ -12,7 +12,6 @@ import {
 } from '@/lib/recruiting-intel-feed';
 import { FutureCastPanelShell } from './primitives';
 import { GatorVaultConfirmedBadge } from './GatorVaultConfirmedBadge';
-import { FlipWatchScoreStack } from './FlipWatchScoreStack';
 import { UfTrendSparkline } from '@/components/futurecast/UfTrendSparkline';
 import type { RosterPlayer } from '@/lib/roster-api';
 import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
@@ -510,31 +509,7 @@ export function FutureCastExtendedModules({
               </FutureCastPanelShell>
             ) : null}
 
-            {flipWatch.length > 0 ? (
-              <FutureCastPanelShell
-                title="Flip Watch"
-                sub="Committed elsewhere after a verified UF official visit."
-                testId="fc-lab-flip-watch"
-              >
-                <ModuleList
-                  empty="No flip-watch targets on file."
-                  items={flipWatch.slice(0, 6).map((row) => ({
-                    key: `flip-${row.slug}`,
-                    primary: row.name,
-                    badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
-                    meta: `${row.committedShort} commit · OV ${row.visitStart ?? '—'}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''} · UF ${formatUfDisplay(row)}`,
-                    extra: (
-                      <>
-                        <MovementNarrativeLine text={row.movementNarrative} />
-                        <FlipWatchScoreStack row={row} />
-                        <PlayerIntelTimelineStrip slug={row.slug} staffNotes={staffNotes} />
-                      </>
-                    ),
-                    href: playerProfileRoute(row.slug, 'futurecast'),
-                  }))}
-                />
-              </FutureCastPanelShell>
-            ) : null}
+            {/* Flip Watch lives under Top UF Targets (FutureCastFlipWatchPanel). */}
           </section>
           ) : null}
 

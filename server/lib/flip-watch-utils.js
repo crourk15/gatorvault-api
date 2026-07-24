@@ -1,5 +1,5 @@
 /**
- * Flip Watch — committed elsewhere + verified UF official visit completed.
+ * Flip Watch — curated Closing Class flips + visit-backed elsewhere commits.
  */
 const {
   formatVisitSourceLabel,
@@ -40,6 +40,67 @@ function indexCompletedVerifiedRecap(visitRecap, visitLogs, asOf = new Date()) {
   return recapBySlug;
 }
 
+/**
+ * Curated Flip Watch for Closing Class — always emit ranked rows from the hunt list.
+ * Does not require a verified OV (Charles' locked top-5 flips).
+ */
+function buildCuratedFlipWatchRows({
+  curatedSlugs = [],
+  commitDefaults = {},
+  players = [],
+  visitRecap = [],
+  visitLogs = null,
+  asOf = new Date(),
+  commitBySlug = null,
+  nameBySlug = null,
+  displayNames = {},
+} = {}) {
+  const recapBySlug = indexCompletedVerifiedRecap(visitRecap, visitLogs, asOf);
+  const playerBySlug = new Map(
+    (players || []).map((p) => [String(p.slug || "").toLowerCase(), p])
+  );
+
+  return (curatedSlugs || [])
+    .map((rawSlug, index) => {
+      const slug = String(rawSlug || "").toLowerCase();
+      if (!slug) return null;
+      const p = playerBySlug.get(slug);
+      const committedTo =
+        p?.committedTo ||
+        commitBySlug?.get?.(slug) ||
+        commitDefaults[slug] ||
+        null;
+      if (!committedTo || isFloridaCommit(committedTo)) return null;
+      const recap = recapBySlug.get(slug);
+      return {
+        slug: p?.slug || slug,
+        name:
+          p?.name ||
+          displayNames[slug] ||
+          nameBySlug?.get?.(slug) ||
+          slug,
+        position: p?.pos || p?.position || null,
+        stars: p?.stars ?? null,
+        committedTo,
+        committedShort: shortSchoolName(committedTo),
+        // Closing Class Flip Watch is commit-logo led — hide market % in API too.
+        ufProbability: null,
+        ufProbabilityLabel: null,
+        ufProbabilityLowConfidence: false,
+        visitStart: recap?.visitStart ?? null,
+        visitEnd: recap?.visitEnd ?? null,
+        visitSourceLabel: recap
+          ? recap.visitSourceLabel ?? formatVisitSourceLabel(recap.visitSource)
+          : null,
+        flipRank: index + 1,
+        flipScore: null,
+        flipScoreLabel: null,
+        flipScoreStack: null,
+      };
+    })
+    .filter(Boolean);
+}
+
 function buildFlipWatchRows(
   players,
   visitRecap,
@@ -53,8 +114,25 @@ function buildFlipWatchRows(
     ufLabelBySlug = null,
     ufLowConfidenceBySlug = null,
     nameBySlug = null,
+    curatedSlugs = null,
+    commitDefaults = null,
+    displayNames = null,
   } = {}
 ) {
+  if (Array.isArray(curatedSlugs) && curatedSlugs.length > 0) {
+    return buildCuratedFlipWatchRows({
+      curatedSlugs,
+      commitDefaults: commitDefaults || {},
+      players,
+      visitRecap,
+      visitLogs,
+      asOf,
+      commitBySlug,
+      nameBySlug,
+      displayNames: displayNames || {},
+    }).slice(0, limit);
+  }
+
   const recapBySlug = indexCompletedVerifiedRecap(visitRecap, visitLogs, asOf);
   const playerBySlug = new Map(
     (players || []).map((p) => [String(p.slug || "").toLowerCase(), p])
@@ -76,6 +154,8 @@ function buildFlipWatchRows(
       const base = {
         slug: p?.slug || recap.slug,
         name: p?.name || recap.name || nameBySlug?.get(slug) || slug,
+        position: p?.pos || p?.position || null,
+        stars: p?.stars ?? null,
         committedTo,
         committedShort: shortSchoolName(committedTo),
         ufProbability: p?.ufProbability ?? ufBySlug?.get(slug) ?? null,
@@ -111,6 +191,7 @@ module.exports = {
   isFloridaCommit,
   shortSchoolName,
   indexCompletedVerifiedRecap,
+  buildCuratedFlipWatchRows,
   buildFlipWatchRows,
   prioritizeVisitRecapForTargets,
 };

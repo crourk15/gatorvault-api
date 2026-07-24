@@ -2611,3 +2611,103 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
   line-height: 1.45;
   color: #64748b;
 }
+
+/* Closing Class Flip Watch — commit-school logo cards (no RPM). */
+.fc-lab-targets-flip-watch {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 26, 51, 0.12);
+}
+
+.fc-lab-flip-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 720px) {
+  .fc-lab-flip-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.fc-lab-flip-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--fc-panel-surface, #ffffff);
+  border: 1px solid var(--fc-panel-surface-border, rgba(0, 26, 51, 0.16));
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.fc-lab-flip-card:hover {
+  border-color: rgba(250, 70, 22, 0.45);
+  transform: translateY(-1px);
+}
+
+.fc-lab-flip-card__rank {
+  flex: 0 0 auto;
+  min-width: 2rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fa4616;
+  padding-top: 2px;
+}
+
+.fc-lab-flip-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.fc-lab-flip-card__name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.fc-lab-flip-card__meta {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.fc-lab-flip-card__commit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  color: #1e293b;
+}
+
+.fc-lab-flip-card__commit em {
+  font-style: normal;
+  font-weight: 700;
+}
+
+.fc-lab-flip-card__logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.fc-lab-flip-card__logo-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #0f172a;
+  font-size: 0.625rem;
+  font-weight: 800;
+}

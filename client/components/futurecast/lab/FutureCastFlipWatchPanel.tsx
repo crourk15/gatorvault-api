@@ -1,0 +1,87 @@
+'use client';
+
+import React from 'react';
+import type { FlipWatchRow } from '@/lib/futurecast-high-priority-api';
+import { playerProfileRoute } from '@/lib/vault-route-map';
+import { schoolLogoInitials, schoolLogoUrl } from '@/lib/school-logos';
+import { FutureCastPanelShell } from './primitives';
+import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
+
+type Props = {
+  flipWatch?: FlipWatchRow[];
+  bare?: boolean;
+};
+
+function CommitSchoolMark({ school }: { school: string }): React.ReactElement {
+  const src = schoolLogoUrl(school);
+  const initials = schoolLogoInitials(school);
+  if (src) {
+    return (
+      // ESPN CDN NCAA marks — same source as recruiting battle boards.
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        className="fc-lab-flip-card__logo"
+        src={src}
+        alt=""
+        width={36}
+        height={36}
+        loading="lazy"
+        decoding="async"
+      />
+    );
+  }
+  return <span className="fc-lab-flip-card__logo-fallback">{initials}</span>;
+}
+
+function FlipCard({ row, rank }: { row: FlipWatchRow; rank: number }): React.ReactElement {
+  const href = playerProfileRoute(row.slug, 'futurecast');
+  const school = row.committedTo || row.committedShort;
+  const metaBits = [
+    row.position ? String(row.position) : null,
+    row.stars && row.stars > 0 ? `${row.stars}★` : null,
+  ].filter(Boolean);
+
+  return (
+    <a href={href} className="fc-lab-flip-card" data-testid={`fc-lab-flip-${row.slug}`}>
+      <span className="fc-lab-flip-card__rank" aria-label={`Flip rank ${rank}`}>
+        #{rank}
+      </span>
+      <div className="fc-lab-flip-card__body">
+        <strong className="fc-lab-flip-card__name">{row.name}</strong>
+        {metaBits.length ? <span className="fc-lab-flip-card__meta">{metaBits.join(' · ')}</span> : null}
+        <span className="fc-lab-flip-card__commit">
+          <CommitSchoolMark school={school} />
+          <span>
+            Committed to <em>{row.committedShort || school}</em>
+          </span>
+        </span>
+      </div>
+    </a>
+  );
+}
+
+/**
+ * Closing Class Flip Watch — top curated flips with commit-school logos (no RPM).
+ */
+export function FutureCastFlipWatchPanel({ flipWatch = [], bare }: Props): React.ReactElement | null {
+  const { discoveryView } = useFutureCastLabCycle();
+  if (discoveryView) return null;
+
+  const rows = flipWatch.slice(0, 5);
+  if (!rows.length) return null;
+
+  return (
+    <FutureCastPanelShell
+      bare={bare}
+      title="Flip Watch"
+      sub="Top five flip candidates before signing day — who they pledged, and who Florida is chasing."
+      testId="fc-lab-flip-watch-panel"
+    >
+      <div className="fc-lab-flip-grid">
+        {rows.map((row, i) => (
+          <FlipCard key={row.slug} row={row} rank={row.flipRank ?? i + 1} />
+        ))}
+      </div>
+    </FutureCastPanelShell>
+  );
+}
