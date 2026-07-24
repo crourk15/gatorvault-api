@@ -76,8 +76,8 @@ const SLUG_ALIASES: Record<string, string> = {
 
 /** UF roster Vault grades — used when official photo is unavailable. */
 const ROSTER_VAULT_GRADES: Record<string, number> = {
-  'tramell-jones-jr': 85,
-  'aaron-philo': 82,
+  'tramell-jones-jr': 84,
+  'aaron-philo': 86,
   'jaden-baugh': 88,
   'jadan-baugh': 88,
   'eric-singleton-jr': 87,
@@ -159,7 +159,9 @@ function buildKeys(game: ScheduleGame): GameKeyIntel[] {
 
 function buildSwing(game: ScheduleGame): SwingPlayerIntel[] {
   const posMap: Record<string, string> = {
+    'Philo / Jones Jr.': 'QB',
     'Jones Jr. / Philo': 'QB',
+    'Aaron Philo': 'QB',
     'Jayden Woods': 'JACK',
     'Eric Singleton Jr.': 'WR',
     'Singleton Jr.': 'WR',
@@ -178,7 +180,9 @@ function buildSwing(game: ScheduleGame): SwingPlayerIntel[] {
     Secondary: 'DB',
   };
   const slugMap: Record<string, string> = {
-    'Jones Jr. / Philo': 'tramell-jones-jr',
+    'Philo / Jones Jr.': 'aaron-philo',
+    'Jones Jr. / Philo': 'aaron-philo',
+    'Aaron Philo': 'aaron-philo',
     'Jayden Woods': 'jayden-woods',
     'Eric Singleton Jr.': 'eric-singleton-jr',
     'Singleton Jr.': 'eric-singleton-jr',
@@ -186,7 +190,7 @@ function buildSwing(game: ScheduleGame): SwingPlayerIntel[] {
     'Jadan Baugh': 'jadan-baugh',
     'Cormani McClain': 'cormani-mcclain',
     'Myles Graham': 'myles-graham',
-    QB1: 'tramell-jones-jr',
+    QB1: 'aaron-philo',
   };
   return game.swing.map((s, i) => ({
     name: s.name,
@@ -194,7 +198,7 @@ function buildSwing(game: ScheduleGame): SwingPlayerIntel[] {
     role: s.role,
     impact: Math.min(95, 72 + i * 8 + (game.ufPct > 60 ? 5 : 0)),
     trend: i === 0 ? 'up' : i === 1 ? 'up' : 'flat',
-    slug: slugMap[s.name] ?? 'tramell-jones-jr',
+    slug: slugMap[s.name] ?? 'aaron-philo',
   }));
 }
 
@@ -232,7 +236,7 @@ function defaultDepthChart(): DepthChartGroup[] {
     })),
   });
   return [
-    mk('QB', ['Tramell Jones Jr.', 'Aaron Philo', 'Aidan Warner']),
+    mk('QB', ['Aaron Philo', 'Tramell Jones Jr.', 'Aidan Warner']),
     mk('RB', ['Jaden Baugh', 'Duke Clark']),
     mk('WR', ['Eric Singleton Jr.', 'Dallas Wilson', 'Vernell Brown III']),
     mk('TE', ['Lacota Dippre', 'Amir Jackson']),
@@ -240,7 +244,11 @@ function defaultDepthChart(): DepthChartGroup[] {
     mk('DL', ['Jeremiah McCloud', 'Brendan Bett', 'LJ McCray']),
     mk('LB', ['Jayden Woods', 'Myles Graham', 'Jaden Robinson']),
     mk('DB', ['Cormani McClain', 'Dijon Johnson', 'Kanye Clark']),
-    mk('ST', ['Patrick Durkin', 'Alec Clark', 'Vernell Brown III']),
+    // Special teams by role — do not stack K/P/KR in one "ST" column
+    // (that made Vernell look like 3-deep under the kicker).
+    mk('K', ['Patrick Durkin']),
+    mk('P', ['Alec Clark']),
+    mk('KR', ['Vernell Brown III']),
   ];
 }
 
@@ -283,13 +291,13 @@ const FAU_BUNDLE: GameWeekBundle = {
       id: 'fau-k1',
       side: 'front',
       title: 'Establish run with Baugh early',
-      body: 'FAU loads the box on early downs — Baugh sets physical tone and opens RPO windows for Jones Jr.',
+      body: 'FAU loads the box on early downs — Baugh sets physical tone and opens RPO windows for Philo.',
     },
     {
       id: 'fau-k2',
       side: 'back',
       title: 'QB1: no turnovers in debut',
-      body: 'Owls will test STAR communication with tempo RPO. Protect the football and take what the defense gives.',
+      body: 'Philo’s job to lose into camp. Owls will test STAR communication with tempo RPO — protect the football and take what the defense gives.',
     },
     {
       id: 'fau-k3',
@@ -300,12 +308,12 @@ const FAU_BUNDLE: GameWeekBundle = {
   ],
   swingPlayers: [
     {
-      name: 'Tramell Jones Jr.',
+      name: 'Aaron Philo',
       position: 'QB',
-      role: 'Efficiency matters in debut',
+      role: 'QB1 into camp — job his to lose',
       impact: 88,
       trend: 'up',
-      slug: 'tramell-jones-jr',
+      slug: 'aaron-philo',
     },
     {
       name: 'Jayden Woods',
