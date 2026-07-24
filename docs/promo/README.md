@@ -1,10 +1,12 @@
-# GatorVault App Store social pack
+# GatorVault promo
 
-| File | What’s on it |
-|---|---|
-| `gatorvault-twitter-facebook-1600x900.png` | **Main** — Schedule (kept) |
-| `gatorvault-twitter-background-1600x900.png` | Live — large phone, stadium above |
-| `gatorvault-facebook-og-1200x630.png` | Live — large phone |
-| `gatorvault-square-1080.png` | 2028 Targets — large phone |
+## Desktop pack
+Folder: `GatorVault-Promo/`  
+Zip: [GatorVault-Promo.zip](https://github.com/crourk15/gatorvault-api/raw/fece4d13280eac0183abcd53268201bba88f1836/docs/promo/GatorVault-Promo.zip)
 
-https://apps.apple.com/app/id6783848215
+**To put on your Desktop:**
+1. Download the zip (link above)
+2. Double-click to unzip
+3. Drag the `GatorVault-Promo` folder onto your Desktop
+
+We'll keep adding more creatives into this folder.
