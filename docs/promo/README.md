@@ -1,13 +1,10 @@
 # GatorVault App Store social pack
 
-## Main (kept)
-`gatorvault-twitter-facebook-1600x900.png` — Schedule large on right
-
-## Other posts (readable phones, stadium still open above)
-| File | Screens | Size |
-|---|---|---|
-| `gatorvault-twitter-background-1600x900.png` | Live + Targets | ~half height, lower right |
-| `gatorvault-facebook-og-1200x630.png` | Live | ~half height, lower right |
-| `gatorvault-square-1080.png` | Targets | ~half height, lower right |
+| File | What’s on it |
+|---|---|
+| `gatorvault-twitter-facebook-1600x900.png` | **Main** — Schedule (kept) |
+| `gatorvault-twitter-background-1600x900.png` | Live — large phone, stadium above |
+| `gatorvault-facebook-og-1200x630.png` | Live — large phone |
+| `gatorvault-square-1080.png` | 2028 Targets — large phone |
 
 https://apps.apple.com/app/id6783848215
