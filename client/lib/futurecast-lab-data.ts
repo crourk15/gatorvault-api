@@ -151,7 +151,9 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     board2027R,
   ] = await Promise.allSettled([
       warmFetch<TrendingBoardResponse>('/api/futurecast/trending'),
-      warmFetch<MovementIntelResponse>('/api/futurecast/movement-intel'),
+      warmFetch<MovementIntelResponse>(
+        `/api/futurecast/movement-intel?year=${discoveryYear}`
+      ),
       warmFetch<StaffNotesResponse>(
         `/api/futurecast/staff-notes?year=${ACTIVE_RECRUITING_CLASS_YEAR}`
       ),
@@ -184,7 +186,7 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
 
   const trending = settled(trendingR, { classYear: 2027, updatedAt: '', trendingUp: [], trendingDown: [] });
   const movement = settled(movementR, {
-    classYear: 2027,
+    classYear: discoveryYear,
     updatedAt: '',
     movementHeatmap: { upCount: 0, downCount: 0, flatCount: 0 },
     heatmap: { buckets: [], windowDays: 7 },

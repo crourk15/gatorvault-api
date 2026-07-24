@@ -783,8 +783,42 @@ export async function buildTrendingBoardPayload() {
   };
 }
 
-export async function buildMovementIntelPayload() {
-  const players = await loadAllowlistedBoardPlayers();
+/** Discovery-class (2028+) movement board — live targets only, never UF commits. */
+async function loadDiscoveryMovementPlayers(classYear: number): Promise<FutureCastBoardPlayer[]> {
+  const { getLiveBoardTargets } = require('../../lib/live-board-targets') as {
+    getLiveBoardTargets: (year: number) => Promise<Array<{ slug?: string }>>;
+  };
+  const { ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist') as {
+    ALLOWLIST_2028: string[];
+  };
+
+  const live = await getLiveBoardTargets(classYear);
+  const liveSlugs = live
+    .map((t) => String(t.slug || '').toLowerCase())
+    .filter(Boolean);
+  const liveSet = new Set(liveSlugs);
+  const allowlistFirst =
+    classYear === 2028
+      ? (ALLOWLIST_2028 as string[])
+          .map((s) => String(s).toLowerCase())
+          .filter((slug) => liveSet.has(slug))
+      : [];
+  const extras = liveSlugs.filter((slug) => !allowlistFirst.includes(slug));
+  const slugs = [...allowlistFirst, ...extras];
+  if (!slugs.length) return [];
+  // Same-file loader — avoid circular require into underclassmen-intel.
+  return loadBoardPlayersForSlugs(classYear, slugs);
+}
+
+export async function buildMovementIntelPayload(classYear = FUTURECAST_CLASS_YEAR) {
+  const year = Number(classYear);
+  const resolvedYear =
+    Number.isFinite(year) && year >= 2027 && year <= 2030 ? year : FUTURECAST_CLASS_YEAR;
+
+  const players =
+    resolvedYear >= 2028
+      ? await loadDiscoveryMovementPlayers(resolvedYear)
+      : await loadAllowlistedBoardPlayers();
   const activeTargets = players.filter((p) => isActiveUfTarget(p) && !p.ufPredictionSuppressed);
   const heatmap = buildHeatmap(activeTargets);
 
@@ -810,8 +844,8 @@ export async function buildMovementIntelPayload() {
   let alerts: { id: string; message: string; createdAt: string }[] = [];
   try {
     const { listAlerts } = await import('../../models/alerts');
-    const raw = await listAlerts(8, FUTURECAST_CLASS_YEAR);
-    const allowedSet = await getLiveBoardTargetSlugSet(FUTURECAST_CLASS_YEAR);
+    const raw = await listAlerts(8, resolvedYear);
+    const allowedSet = await getLiveBoardTargetSlugSet(resolvedYear);
     alerts = raw
       .filter((a) => !a.playerSlug || allowedSet.has(String(a.playerSlug).toLowerCase()))
       .map((a) => ({
@@ -824,7 +858,7 @@ export async function buildMovementIntelPayload() {
   }
 
   return {
-    classYear: FUTURECAST_CLASS_YEAR,
+    classYear: resolvedYear,
     updatedAt: new Date().toISOString(),
     movementHeatmap: {
       upCount: heatmap.upCount,

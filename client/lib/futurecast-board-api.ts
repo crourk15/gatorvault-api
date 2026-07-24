@@ -18,10 +18,14 @@ export async function fetchFutureCastTrendingBoard(): Promise<TrendingBoardRespo
   );
 }
 
-export async function fetchFutureCastMovementIntel(): Promise<MovementIntelResponse> {
-  return snapshotFirstFetch('/api/futurecast/movement-intel', () =>
-    snapshotLiveFetch<MovementIntelResponse>('/api/futurecast/movement-intel')
-  );
+export async function fetchFutureCastMovementIntel(
+  year?: number
+): Promise<MovementIntelResponse> {
+  const path =
+    year != null && Number.isFinite(year)
+      ? `/api/futurecast/movement-intel?year=${year}`
+      : '/api/futurecast/movement-intel';
+  return snapshotFirstFetch(path, () => snapshotLiveFetch<MovementIntelResponse>(path));
 }
 
 export async function fetchFutureCastStaffNotesBoard(year = 2027): Promise<StaffNotesResponse> {
