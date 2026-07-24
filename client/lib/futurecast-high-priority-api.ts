@@ -5,7 +5,7 @@
 import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
-/** Bump when high-priority payload shape changes (align with server/api/futurecast/response-cache.ts). */
+/** Bump when high-priority payload shape changes (align with server FUTURECAST_API_CACHE_VERSION). */
 export const FUTURECAST_CLIENT_CACHE_VERSION = 16;
 export const HIGH_PRIORITY_CACHE_KEY = `gv:futurecast:high-priority:v${FUTURECAST_CLIENT_CACHE_VERSION}`;
 export const HIGH_PRIORITY_YEAR = 2027;
