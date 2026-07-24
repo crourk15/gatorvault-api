@@ -11,14 +11,39 @@ const { isActiveUfTarget } = require('./recruiting-target-filters');
  * Locked 2027 Closing Class targets — intentional remaining battles / flips only.
  * Dead elsewhere-commits and UF commits do not belong here.
  * Offer-list / soft 247 open rows are not board membership.
+ *
+ * Board shape: 1 open hunt (Tranard) + curated Flip Watch top 5.
  */
 const ALLOWLIST_2027 = [
-  'jalen-brewster', // 5★ DT — Texas Tech commit, active UF flip watch
   'tranard-roberts', // still open — in-state RB UF is actively hunting
+  // Flip Watch top 5 (order = display rank)
+  'jalen-brewster', // 5★ DT — Texas Tech
+  'easton-royal', // 5★ WR — Texas
+  'keldrid-ben', // 4★ RB — Oklahoma
+  'andre-hyppolite', // S — Miami
+  'ace-alston', // 4★ CB — Notre Dame
 ];
 
-/** Allowlisted 2027 names that stay on the board after committing elsewhere (flip radar). */
-const FLIP_WATCH_2027 = ['jalen-brewster'];
+/**
+ * Allowlisted 2027 names that stay on the board after committing elsewhere (flip radar).
+ * Order is the curated Flip Watch ranking for Closing Class.
+ */
+const FLIP_WATCH_2027 = [
+  'jalen-brewster',
+  'easton-royal',
+  'keldrid-ben',
+  'andre-hyppolite',
+  'ace-alston',
+];
+
+/** Stable commit-school labels for Flip Watch cards (logos + copy). */
+const FLIP_WATCH_COMMITS_2027 = {
+  'jalen-brewster': 'Texas Tech',
+  'easton-royal': 'Texas',
+  'keldrid-ben': 'Oklahoma',
+  'andre-hyppolite': 'Miami',
+  'ace-alston': 'Notre Dame',
+};
 
 /** Locked 2028 target slugs */
 const ALLOWLIST_2028 = [
@@ -67,6 +92,8 @@ const ALLOWLIST_2028 = [
 const CANONICAL_TARGET_NAMES = {
   'easton-royal': 'Easton Royal',
   'jalen-brewster': 'Jalen Brewster',
+  'keldrid-ben': 'Keldrid Ben',
+  'ace-alston': 'Ace Alston',
   'raheem-floyd': 'Raheem Floyd',
   'marquis-evans': 'Marquis Evans',
   'tre-geathers': 'Tre Geathers',
@@ -246,6 +273,7 @@ module.exports = {
   ALLOWLIST_2027,
   ALLOWLIST_2028,
   FLIP_WATCH_2027,
+  FLIP_WATCH_COMMITS_2027,
   CANONICAL_TARGET_NAMES,
   ALL_ALLOWED,
   canonicalTargetSlug,

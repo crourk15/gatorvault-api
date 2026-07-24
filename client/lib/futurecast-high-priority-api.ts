@@ -6,7 +6,7 @@ import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 /** Bump when high-priority payload shape changes (align with server/api/futurecast/response-cache.ts). */
-export const FUTURECAST_CLIENT_CACHE_VERSION = 15;
+export const FUTURECAST_CLIENT_CACHE_VERSION = 16;
 export const HIGH_PRIORITY_CACHE_KEY = `gv:futurecast:high-priority:v${FUTURECAST_CLIENT_CACHE_VERSION}`;
 export const HIGH_PRIORITY_YEAR = 2027;
 export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;
@@ -37,12 +37,16 @@ export interface FlipWatchRow {
   name: string;
   committedTo: string;
   committedShort: string;
+  position?: string | null;
+  stars?: number | null;
   ufProbability: number | null;
   ufProbabilityLabel?: string | null;
   ufProbabilityLowConfidence?: boolean;
   visitStart: string | null;
   visitEnd: string | null;
   visitSourceLabel?: string | null;
+  /** Curated Closing Class Flip Watch rank (1–5). */
+  flipRank?: number | null;
   flipScore?: number;
   flipScoreLabel?: string | null;
   flipScoreStack?: FlipWatchScoreStack;

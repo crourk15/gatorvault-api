@@ -38,24 +38,35 @@ test('isActiveUfTarget excludes UF commits and elsewhere commits', () => {
   );
 });
 
-test('filterAllowlistedTargets drops Hyppolite-style Miami commits', () => {
+test('filterAllowlistedTargets keeps curated Flip Watch commits (Hyppolite / Royal)', () => {
+  const { FLIP_WATCH_2027 } = require('../../lib/recruiting-target-allowlist');
+  assert.ok(FLIP_WATCH_2027.includes('andre-hyppolite'));
+  assert.ok(FLIP_WATCH_2027.includes('easton-royal'));
   const targets = filterAllowlistedTargets(
     [
       { slug: 'andre-hyppolite', name: 'Andre Hyppolite', classYear: 2027, committedTo: 'Miami' },
-      { slug: 'jalen-brewster', name: 'Jalen Brewster', classYear: 2027, committedTo: null },
+      { slug: 'jalen-brewster', name: 'Jalen Brewster', classYear: 2027, committedTo: 'Texas Tech' },
       { slug: 'easton-royal', name: 'Easton Royal', classYear: 2027, committedTo: 'Texas' },
+      { slug: 'adryan-cole', name: 'Adryan Cole', classYear: 2027, committedTo: 'Georgia' },
     ],
     2027
   );
   const slugs = targets.map((p) => p.slug);
-  assert.ok(!slugs.includes('andre-hyppolite'));
-  assert.ok(!slugs.includes('easton-royal'));
+  assert.ok(slugs.includes('andre-hyppolite'));
+  assert.ok(slugs.includes('easton-royal'));
   assert.ok(slugs.includes('jalen-brewster'));
+  assert.ok(!slugs.includes('adryan-cole'));
 });
 
-test('filterAllowlistedTargets keeps Brewster flip watch after Texas Tech commit', () => {
+test('filterAllowlistedTargets keeps Flip Watch top 5 after elsewhere commits', () => {
   const { FLIP_WATCH_2027 } = require('../../lib/recruiting-target-allowlist');
-  assert.ok(FLIP_WATCH_2027.includes('jalen-brewster'));
+  assert.deepEqual(FLIP_WATCH_2027, [
+    'jalen-brewster',
+    'easton-royal',
+    'keldrid-ben',
+    'andre-hyppolite',
+    'ace-alston',
+  ]);
   const targets = filterAllowlistedTargets(
     [
       {
@@ -65,6 +76,15 @@ test('filterAllowlistedTargets keeps Brewster flip watch after Texas Tech commit
         category: 'target',
         status: 'committed',
         committedTo: 'Texas Tech',
+        flipWatch: true,
+      },
+      {
+        slug: 'keldrid-ben',
+        name: 'Keldrid Ben',
+        classYear: 2027,
+        category: 'target',
+        status: 'committed',
+        committedTo: 'Oklahoma',
         flipWatch: true,
       },
       {
@@ -87,7 +107,7 @@ test('filterAllowlistedTargets keeps Brewster flip watch after Texas Tech commit
     2027
   );
   const slugs = targets.map((p) => p.slug);
-  assert.deepEqual(slugs, ['jalen-brewster']);
+  assert.deepEqual(slugs, ['jalen-brewster', 'keldrid-ben']);
 });
 
 test('getAllowlistSet(2027) does not merge Lab soft-visit promotions', () => {
@@ -138,7 +158,17 @@ test('getAllowlistSet(2027) ignores durable admin.slugs2027 pollution', () => {
   delete require.cache[require.resolve('../../lib/recruiting-target-allowlist')];
   const allowlist = require('../../lib/recruiting-target-allowlist');
   const set = allowlist.getAllowlistSet(2027);
-  assert.deepEqual([...set].sort(), ['jalen-brewster', 'tranard-roberts']);
+  assert.deepEqual(
+    [...set].sort(),
+    [
+      'ace-alston',
+      'andre-hyppolite',
+      'easton-royal',
+      'jalen-brewster',
+      'keldrid-ben',
+      'tranard-roberts',
+    ]
+  );
   assert.equal(set.has('xay-mincey'), false);
   const admin = require('../../lib/admin-allowlist-store');
   assert.deepEqual(admin.loadAdminAllowlist().slugs2027, []);
@@ -193,10 +223,10 @@ test('filterAllowlistedTargets drops 2027 247 offer-list rows not on hunt allowl
         slug: 'andre-hyppolite',
         name: 'Andre Hyppolite',
         classYear: 2027,
-        committedTo: null,
+        committedTo: 'Miami',
         boardSource: '247-uf-board-sync',
         category: 'target',
-        status: 'uncommitted',
+        status: 'committed',
       },
       {
         slug: 'tranard-roberts',
@@ -217,8 +247,11 @@ test('filterAllowlistedTargets drops 2027 247 offer-list rows not on hunt allowl
     ],
     2027
   );
-  const slugs = targets.map((p) => p.slug);
-  assert.deepEqual(slugs, ['tranard-roberts']);
+  const slugs = targets.map((p) => p.slug).sort();
+  // Open hunt + curated Flip Watch only — never raw 247 offer-list names.
+  assert.deepEqual(slugs, ['andre-hyppolite', 'tranard-roberts']);
+  assert.ok(!slugs.includes('seth-williams'));
+  assert.ok(!slugs.includes('random-not-on-board'));
 });
 
 test('isActiveUfTarget excludes forced Miami/Notre Dame commits even when store looks open', () => {

@@ -144,12 +144,34 @@ function buildFlipWatchWithUfContext({
     targetSeedBySlug,
     resolveSlugUfMeta,
   });
+  let curated = {};
+  try {
+    const {
+      FLIP_WATCH_2027,
+      FLIP_WATCH_COMMITS_2027,
+      CANONICAL_TARGET_NAMES,
+    } = require('./recruiting-target-allowlist');
+    if (FLIP_WATCH_2027?.length) {
+      curated = {
+        curatedSlugs: FLIP_WATCH_2027,
+        commitDefaults: FLIP_WATCH_COMMITS_2027,
+        displayNames: CANONICAL_TARGET_NAMES,
+        limit: FLIP_WATCH_2027.length,
+      };
+      for (const [slug, school] of Object.entries(FLIP_WATCH_COMMITS_2027 || {})) {
+        if (school) maps.commitBySlug.set(String(slug).toLowerCase(), String(school));
+      }
+    }
+  } catch {
+    /* optional */
+  }
   const flipWatch = buildFlipWatchRows(players, visitRecap, {
     visitLogs,
     asOf,
     limit,
     intelRows,
     ...maps,
+    ...curated,
   });
   return { flipWatch, ...maps, resolveSlugUfMeta };
 }

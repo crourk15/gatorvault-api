@@ -53,6 +53,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
                 masterBoard={data.masterBoard}
                 trendingBoard={data.trendingBoard}
                 highPriority={highPriority}
+                flipWatch={data.flipWatch}
                 battlesCompact
               />
             )}

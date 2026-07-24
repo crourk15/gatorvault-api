@@ -38,7 +38,12 @@ const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields, buildVerifiedVisi
 const { resolveUfProbability, loadUfPctPredictorsBySlug } = require('../../lib/uf-probability-utils');
 const { buildFlipWatchRows } = require('../../lib/flip-watch-utils');
 const intelStore = require('../../lib/recruiting-intel-store');
-const { ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist');
+const {
+  ALLOWLIST_2028,
+  FLIP_WATCH_2027,
+  FLIP_WATCH_COMMITS_2027,
+  CANONICAL_TARGET_NAMES,
+} = require('../../lib/recruiting-target-allowlist');
 const { loadUnderclassmenBoardPlayers } = require('../../lib/underclassmen-intel');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 const TARGET_BOARD_SEED_PATH = path.join(__dirname, '../../data/recruiting/2027-target-board.json');
@@ -694,7 +699,25 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         }
       }
 
-      const flipWatchRaw = buildFlipWatchRows(playersWithVerifiedVisits, visitRecap, {
+      const useCuratedFlipWatch = classYear === FUTURECAST_CLASS_YEAR && FLIP_WATCH_2027.length > 0;
+      // Prefer recruiting-store rows for Flip Watch (stars/pos/commit) over HP board rows.
+      const flipWatchPlayerPool = useCuratedFlipWatch
+        ? [
+            ...playersWithVerifiedVisits,
+            ...[...recruitingBySlug.values()].map((p) => ({
+              slug: p.slug,
+              name: p.name,
+              pos: p.pos,
+              position: p.pos,
+              stars: p.stars,
+              committedTo: p.committedTo,
+            })),
+          ]
+        : playersWithVerifiedVisits;
+      for (const [slug, school] of Object.entries(FLIP_WATCH_COMMITS_2027 || {})) {
+        if (school) commitBySlug.set(String(slug).toLowerCase(), String(school));
+      }
+      const flipWatchRaw = buildFlipWatchRows(flipWatchPlayerPool, visitRecap, {
         visitLogs,
         intelRows: intelStore.loadIntelDoc().items || [],
         commitBySlug,
@@ -702,6 +725,14 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         ufLabelBySlug,
         ufLowConfidenceBySlug,
         nameBySlug,
+        ...(useCuratedFlipWatch
+          ? {
+              curatedSlugs: FLIP_WATCH_2027,
+              commitDefaults: FLIP_WATCH_COMMITS_2027,
+              displayNames: CANONICAL_TARGET_NAMES,
+              limit: FLIP_WATCH_2027.length,
+            }
+          : {}),
       });
       const movementNarrativeLib = require('../../lib/movement-narrative');
       const visitRecapEnriched = movementNarrativeLib.enrichVisitRecapRows(
@@ -719,25 +750,28 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
             player?.ufProbabilityLabel ?? ufLabelBySlug.get(String(row.slug || '').toLowerCase()) ?? null,
         };
       });
-      const flipWatch = movementNarrativeLib.enrichFlipWatchRows(
-        flipWatchRaw,
-        visitLogs,
-        mergedDelta7dBySlug
-      ).map((row) => {
-        const player = playersWithVerifiedVisits.find(
-          (p) => String(p.slug || '').toLowerCase() === String(row.slug || '').toLowerCase()
-        );
-        return {
-          ...row,
-          ufProbability: row.ufProbability ?? player?.ufProbability ?? null,
-          ufProbabilityLabel:
-            player?.ufProbabilityLabel ?? ufLabelBySlug.get(String(row.slug || '').toLowerCase()) ?? null,
-          ufProbabilityLowConfidence:
-            player?.ufProbabilityLowConfidence ??
-            ufLowConfidenceBySlug.get(String(row.slug || '').toLowerCase()) ??
-            false,
-        };
-      });
+      // Curated Closing Class Flip Watch: commit-school cards only (no RPM / UF %).
+      const flipWatch = useCuratedFlipWatch
+        ? flipWatchRaw
+        : movementNarrativeLib
+            .enrichFlipWatchRows(flipWatchRaw, visitLogs, mergedDelta7dBySlug)
+            .map((row) => {
+              const player = playersWithVerifiedVisits.find(
+                (p) => String(p.slug || '').toLowerCase() === String(row.slug || '').toLowerCase()
+              );
+              return {
+                ...row,
+                ufProbability: row.ufProbability ?? player?.ufProbability ?? null,
+                ufProbabilityLabel:
+                  player?.ufProbabilityLabel ??
+                  ufLabelBySlug.get(String(row.slug || '').toLowerCase()) ??
+                  null,
+                ufProbabilityLowConfidence:
+                  player?.ufProbabilityLowConfidence ??
+                  ufLowConfidenceBySlug.get(String(row.slug || '').toLowerCase()) ??
+                  false,
+              };
+            });
       const narrativePlayerSlugs = new Set(
         playersWithVerifiedVisits.map((p) => String(p.slug || '').toLowerCase())
       );
