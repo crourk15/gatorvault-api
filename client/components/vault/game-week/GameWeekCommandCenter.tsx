@@ -109,12 +109,8 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
 
           {tab === 'depth' ? (
             <section className="gv-gw-wow-panel fc-lab-panel-shell">
-              <h3 className="gv-gw-wow-panel__title">Depth chart — Thursday lock</h3>
+              <h3 className="gv-gw-wow-panel__title">Depth chart</h3>
               <div className="gv-gw-wow-panel__body">
-                <p className="gv-gw-depth-note">
-                  <strong>Why Thursday:</strong> UF depth and injury reports usually firm up Wednesday.
-                  We lock the Game Week depth picture Thursday so you get the real board — not a Tuesday guess.
-                </p>
                 <DepthChartGrid groups={bundle.depthChart} />
               </div>
             </section>
