@@ -1116,22 +1116,6 @@
   flex-shrink: 0;
 }
 
-.gv-gw-depth-note {
-  margin: 0 0 1rem;
-  padding: 0.75rem 0.9rem;
-  border-radius: 10px;
-  background: rgba(0, 33, 165, 0.06);
-  border: 1px solid rgba(0, 33, 165, 0.14);
-  border-left: 3px solid var(--color-accent-orange);
-  font-size: 0.8125rem;
-  line-height: 1.45;
-  color: var(--color-text-dark);
-}
-
-.gv-gw-depth-note strong {
-  color: var(--color-accent-blue);
-}
-
 .gv-gw-wow-feed .gv-gw-swing-card {
   border-left: 3px solid var(--color-accent-orange);
 }
