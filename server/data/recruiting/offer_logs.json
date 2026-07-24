@@ -1,7 +1,29 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-22T12:46:10.000Z",
+  "updatedAt": "2026-07-24T15:40:00.000Z",
   "items": [
+    {
+      "id": "olog_hudson-west_florida_2026-06-20",
+      "playerSlug": "hudson-west",
+      "playerName": "Hudson West",
+      "school": "Florida",
+      "date": "2026-06-20",
+      "source": "beat:blake-alderman",
+      "fingerprint": "offer|hudson-west|florida|2026-06-20",
+      "reportedAt": "2026-07-24T15:40:00.000Z",
+      "detail": "UF offer last month; massive push — feels like a top QB target on Florida board (Blake Alderman)."
+    },
+    {
+      "id": "olog_phoenix-evans_florida_2026-06-19",
+      "playerSlug": "phoenix-evans",
+      "playerName": "Phoenix Evans",
+      "school": "Florida",
+      "date": "2026-06-19",
+      "source": "beat:corey-bender",
+      "fingerprint": "offer|phoenix-evans|florida|2026-06-19",
+      "reportedAt": "2026-07-24T15:40:00.000Z",
+      "detail": "UF among top options for 4\u2605 IMG DB; loves coaches — interest not just family legacy (Corey Bender)."
+    },
     {
       "id": "olog_kaydan-whiteside_florida_2026-07-01",
       "playerSlug": "kaydan-whiteside",

@@ -81,6 +81,7 @@ const ALLOWLIST_2028 = [
   'jordyn-murray',
   'hudson-west',
   'nikolay-petrushev',
+  'phoenix-evans',
   // Tyler Harden / 247 — daily contact, visits, recent UF offers
   'kaydan-whiteside',
   'ridge-janes',
@@ -140,6 +141,7 @@ const CANONICAL_TARGET_NAMES = {
   'jordyn-murray': 'Jordyn Murray',
   'hudson-west': 'Hudson West',
   'nikolay-petrushev': 'Nikolay Petrushev',
+  'phoenix-evans': 'Phoenix Evans',
   'kaydan-whiteside': 'Kaydan Whiteside',
   'ridge-janes': 'Ridge Janes',
   'zaiden-jernigan': 'Zaiden Jernigan',
