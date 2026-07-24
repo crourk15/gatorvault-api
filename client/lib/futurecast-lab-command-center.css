@@ -2612,7 +2612,24 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
   color: #64748b;
 }
 
-/* Closing Class Flip Watch — commit-school logo cards (no RPM). */
+/* Closing Class Flip Watch — standalone section with readable dark title. */
+.fc-lab-flip-watch-section {
+  margin-top: 16px;
+}
+
+.fc-lab-flip-watch-section .fc-lab-mobile-section__title,
+.fc-lab-flip-watch-section .fc-lab-panel-shell .fc-lab-mobile-section__title,
+.fc-lab-flip-watch-section .rh-cc-module__title {
+  color: #0f172a !important;
+}
+
+.fc-lab-flip-watch-section .fc-lab-mobile-section__sub,
+.fc-lab-flip-watch-section .fc-lab-panel-shell .fc-lab-mobile-section__sub,
+.fc-lab-flip-watch-section .rh-cc-module__sub {
+  color: #475569 !important;
+  opacity: 1 !important;
+}
+
 .fc-lab-targets-flip-watch {
   margin-top: 18px;
   padding-top: 16px;

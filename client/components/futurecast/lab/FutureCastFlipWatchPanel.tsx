@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import type { FlipWatchRow } from '@/lib/futurecast-high-priority-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 import { schoolLogoInitials, schoolLogoUrl } from '@/lib/school-logos';
+import { resolveClosingClassFlipWatch } from '@/lib/closing-class-flip-watch';
 import { FutureCastPanelShell } from './primitives';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 
@@ -38,7 +39,7 @@ function FlipCard({ row, rank }: { row: FlipWatchRow; rank: number }): React.Rea
   const school = row.committedTo || row.committedShort;
   const metaBits = [
     row.position ? String(row.position) : null,
-    row.stars && row.stars > 0 ? `${row.stars}★` : null,
+    row.stars && row.stars > 0 ? `${row.stars}\u2605` : null,
   ].filter(Boolean);
 
   return (
@@ -48,11 +49,11 @@ function FlipCard({ row, rank }: { row: FlipWatchRow; rank: number }): React.Rea
       </span>
       <div className="fc-lab-flip-card__body">
         <strong className="fc-lab-flip-card__name">{row.name}</strong>
-        {metaBits.length ? <span className="fc-lab-flip-card__meta">{metaBits.join(' · ')}</span> : null}
+        {metaBits.length ? <span className="fc-lab-flip-card__meta">{metaBits.join(' \u00b7 ')}</span> : null}
         <span className="fc-lab-flip-card__commit">
           <CommitSchoolMark school={school} />
           <span>
-            Committed to <em>{row.committedShort || school}</em>
+            Committed to <em>{row.committedTo || row.committedShort || school}</em>
           </span>
         </span>
       </div>
@@ -61,27 +62,29 @@ function FlipCard({ row, rank }: { row: FlipWatchRow; rank: number }): React.Rea
 }
 
 /**
- * Closing Class Flip Watch — top curated flips with commit-school logos (no RPM).
+ * Closing Class Flip Watch — standalone section with a loud section title.
  */
 export function FutureCastFlipWatchPanel({ flipWatch = [], bare }: Props): React.ReactElement | null {
   const { discoveryView } = useFutureCastLabCycle();
-  if (discoveryView) return null;
+  const rows = useMemo(() => resolveClosingClassFlipWatch(flipWatch), [flipWatch]);
 
-  const rows = flipWatch.slice(0, 5);
+  if (discoveryView) return null;
   if (!rows.length) return null;
 
   return (
-    <FutureCastPanelShell
-      bare={bare}
-      title="Flip Watch"
-      sub="Top five flip candidates before signing day — who they pledged, and who Florida is chasing."
-      testId="fc-lab-flip-watch-panel"
-    >
-      <div className="fc-lab-flip-grid">
-        {rows.map((row, i) => (
-          <FlipCard key={row.slug} row={row} rank={row.flipRank ?? i + 1} />
-        ))}
-      </div>
-    </FutureCastPanelShell>
+    <div className="fc-lab-flip-watch-section" data-testid="fc-lab-flip-watch-section">
+      <FutureCastPanelShell
+        bare={bare}
+        title="Top 5 Flip Candidates"
+        sub="Committed elsewhere — Florida's best remaining flip shots before signing day."
+        testId="fc-lab-flip-watch-panel"
+      >
+        <div className="fc-lab-flip-grid">
+          {rows.map((row, i) => (
+            <FlipCard key={row.slug} row={row} rank={row.flipRank ?? i + 1} />
+          ))}
+        </div>
+      </FutureCastPanelShell>
+    </div>
   );
 }

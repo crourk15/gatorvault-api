@@ -7,6 +7,7 @@ import { FUTURECAST_LAB_ANCHORS } from '@/lib/vault-route-map';
 import { useResolvedLabHighPriority } from './FutureCastLabCycleContext';
 import { FutureCastHero } from './FutureCastHero';
 import { FutureCastTargetsPanel } from './FutureCastTargetsPanel';
+import { FutureCastFlipWatchPanel } from './FutureCastFlipWatchPanel';
 import { FutureCastMovementPanel } from './FutureCastMovementPanel';
 import { FutureCastPositionBreakdown } from './FutureCastPositionBreakdown';
 import { FutureCastPortalCrossView } from './FutureCastPortalCrossView';
@@ -53,10 +54,10 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
                 masterBoard={data.masterBoard}
                 trendingBoard={data.trendingBoard}
                 highPriority={highPriority}
-                flipWatch={data.flipWatch}
                 battlesCompact
               />
             )}
+            {pending ? null : <FutureCastFlipWatchPanel flipWatch={data.flipWatch} />}
           </div>
         </div>
 
