@@ -215,13 +215,18 @@ function playerSlug(name: string): string {
   return SLUG_ALIASES[base] ?? base;
 }
 
+/**
+ * Placeholder depth order for Game Week until official weekly boards are wired.
+ * `snapPct` is intentionally unused in the UI (was a synthetic formula, not real snap data).
+ */
 function defaultDepthChart(): DepthChartGroup[] {
   const mk = (position: string, names: [string, string, string?]): DepthChartGroup => ({
     position,
     players: names.filter(Boolean).map((name, i) => ({
       name: name!,
       slug: playerSlug(name!),
-      snapPct: i === 0 ? 78 - i * 12 : 42 - i * 8,
+      // Kept for type compat; not shown as "% snaps" (those values were placeholders).
+      snapPct: i === 0 ? 100 : Math.max(0, 40 - i * 10),
       isStarter: i === 0,
       trend: i === 0 ? 'up' : 'flat',
     })),
