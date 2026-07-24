@@ -77,16 +77,18 @@ function readHubDiskSnapshot(endpoint, year) {
 }
 
 function getHubStatus() {
-  if (warming) return 'warming';
+  // Once priority caches are hot, report ready even if a background refresh is running.
+  // Stuck secondary warm was leaving status="warming" for minutes and slowing first paint UX.
   if (ready) return 'ready';
+  if (warming) return 'warming';
   return 'building';
 }
 
 function getMeta() {
   return {
-    ready,
+    ready: isReady(),
     status: getHubStatus(),
-    warming,
+    warming: warming && !ready,
     lastWarmAt,
     lastRefresh: lastWarmAt,
     lastWarmError,
@@ -98,7 +100,7 @@ function getMeta() {
 }
 
 function isReady() {
-  return ready && !warming;
+  return ready;
 }
 
 function buildingResponse({ endpoint, year, cacheKey, metaExtra = {} }) {
@@ -256,6 +258,8 @@ async function warmEliteHubCaches(options = {}) {
           'ms'
         );
       }
+      // Unblock fan-facing "warming" status before slower secondary jobs finish.
+      warming = false;
     }
 
     if (!priorityOnly) {

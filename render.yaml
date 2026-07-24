@@ -343,7 +343,7 @@ services:
       - key: KEEPALIVE_PING_URL
         value: https://gatorvault-api.onrender.com/api/ping
       - key: KEEPALIVE_TOUCH_CONCURRENCY
-        value: "4"
+        value: "5"
 
   # Beat ingest cron — hardened with API warm check, retries, soft failures (always exit 0).
   # Optional future: move to a dedicated worker service to isolate from API deploys.

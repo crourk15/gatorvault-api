@@ -14,23 +14,33 @@ const PING_URL =
 
 const API_ORIGIN = process.env.KEEPALIVE_API_ORIGIN || 'https://gatorvault-api.onrender.com';
 
-const TOUCH_PATHS = (
-  process.env.KEEPALIVE_TOUCH_PATHS ||
+/** Fan-facing first paint — touch these before the rest so launch traffic stays hot. */
+const PRIORITY_TOUCH_PATHS = (
+  process.env.KEEPALIVE_PRIORITY_TOUCH_PATHS ||
   [
     '/api/recruiting/hub/bundle?year=2027',
     '/api/recruiting/hub/bundle?year=2028',
+    '/api/roster/players',
+    '/api/live/dashboard?limit=10',
+    '/api/staff/dashboard',
+    '/api/futurecast/home',
+  ].join(',')
+)
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const TOUCH_PATHS = (
+  process.env.KEEPALIVE_TOUCH_PATHS ||
+  [
     '/api/recruiting/movement-intel',
     '/api/recruiting/intel/beat?limit=5',
-    '/api/live/dashboard?limit=10',
     '/api/live/podcasts',
     '/api/live/ticker',
     '/api/film-room/catalog',
     '/api/betting/lines',
     '/api/articles/published?limit=5',
     '/api/futurecast/alerts?limit=10',
-    '/api/roster/players',
-    '/api/staff/dashboard',
-    '/api/futurecast/home',
     '/api/community/categories',
     '/api/community/threads?sort=trending&limit=12',
     '/api/nil/dashboard',
@@ -47,7 +57,7 @@ const REQUEST_TIMEOUT_MS = parseInt(process.env.KEEPALIVE_TIMEOUT_MS || '90000',
 const HUB_TIMEOUT_MS = parseInt(process.env.KEEPALIVE_HUB_TIMEOUT_MS || '45000', 10);
 const TOUCH_CONCURRENCY = Math.max(
   1,
-  parseInt(process.env.KEEPALIVE_TOUCH_CONCURRENCY || '4', 10) || 4
+  parseInt(process.env.KEEPALIVE_TOUCH_CONCURRENCY || '5', 10) || 5
 );
 
 async function sleep(ms) {
@@ -121,7 +131,14 @@ async function main() {
   const ping = await wakeUntilReady(PING_URL, 'api/ping');
   let touches = [];
   if (process.env.KEEPALIVE_HUB_TOUCH !== 'false') {
-    touches = await mapPool(TOUCH_PATHS, TOUCH_CONCURRENCY, (path) => softTouch(path));
+    // Priority first (hubs/roster/live/staff) so cold opens hit warm caches.
+    const priority = await mapPool(
+      PRIORITY_TOUCH_PATHS,
+      Math.min(TOUCH_CONCURRENCY, Math.max(2, PRIORITY_TOUCH_PATHS.length)),
+      (path) => softTouch(path)
+    );
+    const secondary = await mapPool(TOUCH_PATHS, TOUCH_CONCURRENCY, (path) => softTouch(path));
+    touches = [...priority, ...secondary];
   }
   const okCount = touches.filter((t) => t && t.ok).length;
   console.log(
@@ -130,6 +147,7 @@ async function main() {
       ping,
       touchOk: okCount,
       touchTotal: touches.length,
+      priorityCount: PRIORITY_TOUCH_PATHS.length,
       touches,
       at: new Date().toISOString(),
     })
