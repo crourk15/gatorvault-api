@@ -15,14 +15,11 @@ import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
 import { closingClassUrgencyScore, isClosingClassInPlayTarget } from './competing-schools';
 import { FutureCastBattlesPanel } from './FutureCastBattlesPanel';
-import { FutureCastFlipWatchPanel } from './FutureCastFlipWatchPanel';
-import type { FlipWatchRow } from '@/lib/futurecast-high-priority-api';
 
 type Props = {
   masterBoard: MasterBoardResponse;
   trendingBoard?: TrendingBoardResponse;
   highPriority?: HighPriorityPlayer[];
-  flipWatch?: FlipWatchRow[];
   bare?: boolean;
   /** When true, nest battles tabs under the target cards (default). */
   includeBattles?: boolean;
@@ -34,7 +31,6 @@ export function FutureCastTargetsPanel({
   masterBoard,
   trendingBoard,
   highPriority = [],
-  flipWatch = [],
   bare,
   includeBattles = true,
   battlesCompact = true,
@@ -84,12 +80,6 @@ export function FutureCastTargetsPanel({
           ))}
         </div>
       )}
-
-      {!discoveryFocus && flipWatch.length > 0 ? (
-        <div className="fc-lab-targets-flip-watch">
-          <FutureCastFlipWatchPanel bare flipWatch={flipWatch} />
-        </div>
-      ) : null}
 
       {includeBattles && trendingBoard ? (
         <div className="fc-lab-targets-battles">
