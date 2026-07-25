@@ -240,13 +240,27 @@ function firstVerifiedIntel(player, fields, playerName) {
   return null;
 }
 
-/** Scouting trait line — not visit news or program-level beat copy. */
+/** Strip player name tokens so last names like "Strong" cannot fake trait keywords. */
+function textWithoutPlayerName(text, playerName) {
+  let s = String(text || '');
+  const name = String(playerName || '').trim();
+  if (!name) return s;
+  for (const token of name.split(/\s+/).filter((t) => t.length >= 3)) {
+    const re = new RegExp(`\\b${token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+    s = s.replace(re, ' ');
+  }
+  return s.replace(/\s+/g, ' ').trim();
+}
+
+/** Scouting trait line — not visit news, composite bios, or program-level beat copy. */
 function isVerifiedScoutingTrait(text, playerName) {
   const s = String(text || '').trim();
   if (!s || s.length < 4 || s.length > 250) return false;
   if (isGenericBeatArticle(s, playerName)) return false;
+  if (isCompositeBio(s)) return false;
   if (SCOUTING_TRAIT_REJECT.some((re) => re.test(s))) return false;
-  return SCOUTING_TRAIT_KEYWORDS.test(s);
+  // Keyword match must survive without the player's own name (e.g. Armani Strong).
+  return SCOUTING_TRAIT_KEYWORDS.test(textWithoutPlayerName(s, playerName));
 }
 
 function verifiedStrengthsList(player) {
@@ -254,7 +268,7 @@ function verifiedStrengthsList(player) {
   if (!Array.isArray(list) || !list.length) return null;
   const cleaned = list
     .map((item) => String(item || '').trim())
-    .filter((s) => isVerifiedScoutingTrait(s, player.name));
+    .filter((s) => isVerifiedScoutingTrait(s, player.name) && !isCompositeBio(s));
   return cleaned.length ? cleaned.slice(0, 2).join(' · ') : null;
 }
 
@@ -308,7 +322,6 @@ function buildSyntheticBreakdown(player) {
   if (!summary) return null;
   const projection =
     summary.match(/\b(?:He|She|They)\s+projects?\s+as[^.]+\./i)?.[0]?.trim() || null;
-  const firstSentence = summary.split(/(?<=[.!?])\s+/)[0]?.trim() || summary;
   return {
     playerSlug: player.slug,
     playerName: player.name,
@@ -323,7 +336,8 @@ function buildSyntheticBreakdown(player) {
         publishedAt: new Date().toISOString().slice(0, 10),
       },
     ],
-    strengths: firstSentence ? [firstSentence] : [],
+    // Identity/rank dump is not a scouting strength — leave empty until real traits exist.
+    strengths: [],
     weaknesses: [],
     comparison: null,
     schemeFit: null,
