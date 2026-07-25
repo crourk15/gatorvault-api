@@ -184,21 +184,20 @@ function futureCastTag(pct) {
 }
 
 function computeHeatScore(enriched) {
-  const uf = enriched.ufScore ?? 0;
-  const fit = Number(enriched.fitScore);
-  let heat = Math.max(uf, Number.isFinite(fit) ? Math.round(fit) : 0);
-
-  if (enriched.tier === 'TOP') heat += 12;
-  else if (enriched.tier === 'HIGH') heat += 6;
-
-  const natl = enriched.natlRank ?? enriched.natl;
-  if (natl != null && Number(natl) <= 100) heat += 12;
-  else if (natl != null && Number(natl) <= 300) heat += 6;
+  // Heat = UF chase temperature from real lean + movement.
+  // Never use fitScore/industry rating here — that made every 2028 card show heat 100
+  // because fitScore falls back to On3 rating (~88–97).
+  const ufRaw = enriched.ufScore;
+  const uf = ufRaw != null && Number.isFinite(Number(ufRaw)) ? Number(ufRaw) : null;
+  let heat = uf != null ? uf : 28;
 
   if (enriched.movementDirection === 'up') heat += 14;
   else if (enriched.movementDirection === 'down') heat -= 10;
 
   if (enriched.headliner) heat += 8;
+
+  // Light staff-chase cues only (do not invent heat from stars/natl rank).
+  if (enriched.nextVisit) heat += 6;
 
   return Math.min(100, Math.max(0, Math.round(heat)));
 }
@@ -1126,7 +1125,12 @@ function buildFootprintPayload(enrichedPlayers, intelRows, logs = {}) {
       (r) => String(r.playerSlug || r.player_slug || '').toLowerCase() === slug
     );
 
-    const isCommit = player.isCommit || player.isCommittedToUF;
+    const isPortal =
+      Boolean(player.isPortal) ||
+      String(player.category || '').toLowerCase() === 'portal' ||
+      Boolean(player.fromSchool && (player.isCommit || player.isCommittedToUF));
+    // Footprint commit pins/tallies match HS signing class — not portal arrivals.
+    const isCommit = (player.isCommit || player.isCommittedToUF) && !isPortal;
     const year = Number(player.classYear);
     const onHuntList =
       year !== 2027 && year !== 2028
@@ -1295,11 +1299,25 @@ function buildFootprintPayload(enrichedPlayers, intelRows, logs = {}) {
 
     for (const rec of bucket.playerRecords) {
       const centroid = STATE_CENTROIDS[bucket.state];
-      let lat = rec.pinLat ?? centroid?.lat ?? null;
-      let lng = rec.pinLng ?? centroid?.lng ?? null;
+      const flCentroid = STATE_CENTROIDS.FL;
+      // Many out-of-state rows still carry the default Florida centroid pins from
+      // older ingest. Prefer the state's centroid whenever stored coords look like FL
+      // but the player is not in Florida.
+      const storedLooksLikeFl =
+        flCentroid &&
+        rec.pinLat != null &&
+        rec.pinLng != null &&
+        Math.abs(Number(rec.pinLat) - flCentroid.lat) < 0.05 &&
+        Math.abs(Number(rec.pinLng) - flCentroid.lng) < 0.05;
+      const rejectStored =
+        bucket.state !== 'FL' && storedLooksLikeFl;
+
+      let lat = !rejectStored && rec.pinLat != null ? Number(rec.pinLat) : centroid?.lat ?? null;
+      let lng = !rejectStored && rec.pinLng != null ? Number(rec.pinLng) : centroid?.lng ?? null;
       if (lat == null || lng == null) continue;
 
-      const usedCentroid = rec.pinLat == null && rec.pinLng == null && centroid;
+      const usedCentroid =
+        rejectStored || (rec.pinLat == null && rec.pinLng == null && centroid);
       if (usedCentroid) {
         const pinIdx = bucket.playerRecords.indexOf(rec);
         const col = pinIdx % 5;

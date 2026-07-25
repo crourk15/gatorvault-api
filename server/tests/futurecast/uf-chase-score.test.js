@@ -5,6 +5,13 @@ const path = require('node:path');
 const { buildChaseFeatureIndex, computeChaseScore } = require('../../lib/uf-chase-score');
 
 describe('UF chase score (Top Targets traction)', () => {
+  it('does not count unofficial_visit as an official visit', () => {
+    const { isOfficialVisit, isUnofficialVisit } = require('../../lib/uf-chase-score');
+    assert.equal(isUnofficialVisit('unofficial_visit'), true);
+    assert.equal(isOfficialVisit('unofficial_visit'), false);
+    assert.equal(isOfficialVisit('official_visit'), true);
+  });
+
   it('ranks visit-heavy chase above offer-only allowlist peers', () => {
     const index = buildChaseFeatureIndex({ classYear: 2028 });
     const heavy = computeChaseScore(
@@ -16,7 +23,7 @@ describe('UF chase score (Top Targets traction)', () => {
       index
     );
     assert.ok(heavy.chaseScore > lighter.chaseScore, 'more OV traction should outrank higher RPM/fit');
-    assert.ok(heavy.chase.ov >= 1, 'hudson-west should carry Florida visit traction');
+    assert.ok((heavy.chase.ov || 0) + (heavy.chase.uv || 0) >= 1, 'hudson-west should carry Florida visit traction');
   });
 
   it('does not let ufFitScore dominate chaseScore', () => {
@@ -31,7 +38,7 @@ describe('UF chase score (Top Targets traction)', () => {
     );
     assert.ok(
       lowFitVisits.chaseScore > highFitNoVisits.chaseScore,
-      'visit traction must beat bare high UF Fit'
+      'visit/offer traction must beat bare high UF Fit'
     );
   });
 

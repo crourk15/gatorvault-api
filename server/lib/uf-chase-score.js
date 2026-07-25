@@ -21,19 +21,25 @@ function slugKey(value) {
   return String(value || '').trim().toLowerCase();
 }
 
-function isOfficialVisit(visitType) {
-  return /official|\bov\b/.test(String(visitType || '').toLowerCase());
+function isUnofficialVisit(visitType) {
+  const t = String(visitType || '').toLowerCase();
+  // Check unofficial FIRST — "unofficial_visit" contains the substring "official".
+  return t.includes('unofficial') || /\buv\b/.test(t) || /junior\s*day/.test(t) || t.includes('camp');
 }
 
-function isUnofficialVisit(visitType) {
-  return /unofficial|\buv\b|junior\s*day|camp/.test(String(visitType || '').toLowerCase());
+function isOfficialVisit(visitType) {
+  const t = String(visitType || '').toLowerCase();
+  if (isUnofficialVisit(t)) return false;
+  return t.includes('official') || t === 'ov' || /(?:^|[^a-z])ov(?:[^a-z]|$)/.test(t);
 }
 
 function buildChaseFeatureIndex(opts = {}) {
-  const days = Number(opts.days) || 120;
-  const since = sinceIso(days);
-  const visits = visitLogStore.listVisitLogs({ limit: 5000, since });
-  const offers = offerLogStore.listOfferLogs({ limit: 5000, since });
+  // Recruiting chase windows are seasonal — keep spring visits relevant into summer.
+  const days = Number(opts.days) || 180;
+  const cutoffMs = Date.now() - days * DAY_MS;
+  // Load broad, then filter on visit/offer DATE (not ingest reportedAt).
+  const visits = visitLogStore.listVisitLogs({ limit: 8000 });
+  const offers = offerLogStore.listOfferLogs({ limit: 8000 });
 
   /** @type {Map<string, any>} */
   const bySlug = new Map();
@@ -54,18 +60,20 @@ function buildChaseFeatureIndex(opts = {}) {
 
   for (const row of visits) {
     if (!isFloridaVisitLog(row)) continue;
+    const ts = new Date(row.date || row.reportedAt).getTime();
+    if (!Number.isFinite(ts) || ts < cutoffMs) continue;
     const feat = ensure(row.playerSlug);
     if (!feat) continue;
     const vt = row.visitType || row.eventType;
     if (isOfficialVisit(vt)) feat.ov += 1;
-    else if (isUnofficialVisit(vt)) feat.uv += 1;
     else feat.uv += 1;
-    const ts = new Date(row.reportedAt || row.date).getTime();
-    if (Number.isFinite(ts) && ts > feat.latestVisitAt) feat.latestVisitAt = ts;
+    if (ts > feat.latestVisitAt) feat.latestVisitAt = ts;
   }
 
   for (const row of offers) {
     if (!isFloridaSchool(row.school || 'Florida')) continue;
+    const ts = new Date(row.date || row.reportedAt).getTime();
+    if (!Number.isFinite(ts) || ts < cutoffMs) continue;
     const feat = ensure(row.playerSlug);
     if (!feat) continue;
     feat.flOffers += 1;
@@ -114,7 +122,7 @@ function buildChaseFeatureIndex(opts = {}) {
 
   try {
     const intelStore = require('./recruiting-intel-store');
-    const intel = intelStore.listIntel({ limit: 2500, since });
+    const intel = intelStore.listIntel({ limit: 2500, since: sinceIso(days) });
     for (const row of intel) {
       const key = slugKey(row.playerSlug || row.player_slug || row.slug);
       if (!key) continue;
@@ -201,4 +209,6 @@ module.exports = {
   buildChaseFeatureIndex,
   computeChaseScore,
   hasChaseTraction,
+  isOfficialVisit,
+  isUnofficialVisit,
 };
