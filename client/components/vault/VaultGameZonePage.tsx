@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchBettingLines, type BettingGame } from '@/lib/betting-api';
 import { buildSeedNextGame } from '@/lib/game-zone-hub-seed';
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
+import { addVaultPoints, hasOneTimeKey, markOneTimeKey } from '@/lib/vault-points';
 import { UiError } from '@/components/site/UiMessage';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import '@/lib/game-zone-ritual.css';
@@ -68,10 +69,10 @@ function formatKickoff(g?: BettingGame | null): string {
   });
 }
 
-function countdownLabel(g?: BettingGame | null): string {
+function countdownLabel(g?: BettingGame | null, nowMs = Date.now()): string {
   const d = kickDate(g);
   if (!d) return 'Kickoff countdown TBA';
-  const ms = d.getTime() - Date.now();
+  const ms = d.getTime() - nowMs;
   if (ms <= 0) return 'Game window is open';
   const days = Math.floor(ms / 86400000);
   const hours = Math.floor((ms % 86400000) / 3600000);
@@ -105,14 +106,18 @@ const HAS_GAME_ZONE_SEED = Boolean(SEED_NEXT_GAME);
 export function VaultGameZonePage(): React.ReactElement {
   const [nextGame, setNextGame] = useState<BettingGame | null>(SEED_NEXT_GAME);
   const [loading, setLoading] = useState(!HAS_GAME_ZONE_SEED);
+  const [warming, setWarming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ufScore, setUfScore] = useState('31');
   const [oppScore, setOppScore] = useState('10');
   const [cover, setCover] = useState<CoverLean>(null);
   const [ticket, setTicket] = useState<SavedTicket | null>(null);
   const [justLocked, setJustLocked] = useState(false);
+  const [pointsAwarded, setPointsAwarded] = useState(0);
+  const [nowMs, setNowMs] = useState(() => Date.now());
 
   const storageKey = useMemo(() => PRED_PREFIX + gameKey(nextGame), [nextGame]);
+  const pointsKey = useMemo(() => `gv_gz_pts_${gameKey(nextGame)}`, [nextGame]);
   const opp = opponentName(nextGame);
   const spread = spreadLine(nextGame);
   const total = nextGame?.total != null ? String(nextGame.total) : null;
@@ -127,6 +132,8 @@ export function VaultGameZonePage(): React.ReactElement {
     if (!HAS_GAME_ZONE_SEED) {
       setLoading(true);
       setError(null);
+    } else {
+      setWarming(true);
     }
     try {
       const data = await fetchBettingLines();
@@ -142,12 +149,19 @@ export function VaultGameZonePage(): React.ReactElement {
       }
     } finally {
       setLoading(false);
+      setWarming(false);
     }
   }, []);
 
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const id = window.setInterval(() => setNowMs(Date.now()), 30000);
+    return () => window.clearInterval(id);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -188,6 +202,13 @@ export function VaultGameZonePage(): React.ReactElement {
     } catch {
       /* ignore */
     }
+    let awarded = 0;
+    if (!hasOneTimeKey(pointsKey)) {
+      addVaultPoints(25);
+      markOneTimeKey(pointsKey);
+      awarded = 25;
+    }
+    setPointsAwarded(awarded);
     setTicket(saved);
     setJustLocked(true);
     window.setTimeout(() => setJustLocked(false), 1200);
@@ -201,6 +222,7 @@ export function VaultGameZonePage(): React.ReactElement {
     }
     setTicket(null);
     setJustLocked(false);
+    setPointsAwarded(0);
   };
 
   const spreadN = spreadNumber(nextGame);
@@ -213,6 +235,7 @@ export function VaultGameZonePage(): React.ReactElement {
         : `You’re taking Florida not to cover ${spread}.`;
 
   return (
+    <div className="rh-page rh-page--elite gv-gz-page mobile-app gv-page" data-testid="vault-game-zone-elite">
     <div
       className={`gv-gz${locked ? ' is-locked' : ''}${justLocked ? ' is-seal' : ''}`}
       data-testid="vault-game-zone"
@@ -225,6 +248,12 @@ export function VaultGameZonePage(): React.ReactElement {
         </div>
       )}
 
+      {HAS_GAME_ZONE_SEED && warming ? (
+        <p className="gv-gz__warming" role="status">
+          Updating lines…
+        </p>
+      ) : null}
+
       {error && !loading && !HAS_GAME_ZONE_SEED && (
         <div className="gv-gz__status">
           <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
@@ -236,7 +265,7 @@ export function VaultGameZonePage(): React.ReactElement {
           <section className="gv-gz__stage" aria-label="Swamp Eve">
             <p className="gv-gz__brand">GatorVault</p>
             <p className="gv-gz__kicker">Swamp Eve</p>
-            <p className="gv-gz__countdown">{countdownLabel(nextGame)}</p>
+            <p className="gv-gz__countdown">{countdownLabel(nextGame, nowMs)}</p>
             <h1 className="gv-gz__matchup">
               <span className="gv-gz__team">Florida</span>
               <span className="gv-gz__vs">vs</span>
@@ -262,6 +291,9 @@ export function VaultGameZonePage(): React.ReactElement {
                 <p className="gv-gz__line-value">{outlook || '—'}</p>
               </div>
             </div>
+            <p className="gv-gz__line-disclaimer">
+              Third-party lines for information only — no wagering in GatorVault.
+            </p>
 
             <p className="gv-gz__headline">
               {locked ? 'Your Swamp Eve ticket is locked.' : 'Build your Swamp Eve ticket.'}
@@ -377,6 +409,11 @@ export function VaultGameZonePage(): React.ReactElement {
                 </button>
               )}
             </div>
+            {locked && pointsAwarded > 0 ? (
+              <p className="gv-gz__points-note" role="status">
+                +{pointsAwarded} Vault Points locked with your ticket.
+              </p>
+            ) : null}
           </section>
 
           <section className="gv-gz__intel" aria-label="Keys to the game">
@@ -419,6 +456,7 @@ export function VaultGameZonePage(): React.ReactElement {
           ) : null}
         </>
       )}
+    </div>
     </div>
   );
 }

@@ -33,6 +33,7 @@ import {
 } from '@/lib/community-ugc';
 import { loadSession } from '@/lib/auth-api';
 import { UiEmpty, UiError, UiWarming } from '@/components/site/UiMessage';
+import '@/lib/community-elite.css';
 
 const SEED_COMMUNITY = buildSeedCommunityPageData();
 const HAS_COMMUNITY_SEED =
@@ -62,6 +63,19 @@ function timeAgo(iso?: string): string {
 
 function threadCategoryLabel(thread: CommunityThread): string {
   return thread.category?.name || thread.categoryLabel || thread.categorySlug || 'General';
+}
+
+function roomIsScheduledFuture(room: LiveRoom): boolean {
+  const raw = room.scheduledAt || room.startsAt;
+  if (!raw) return false;
+  const t = new Date(raw).getTime();
+  return Number.isFinite(t) && t > Date.now();
+}
+
+function roomCtaLabel(room: LiveRoom, existing: CommunityThread | null): string {
+  if (existing) return 'Join open thread →';
+  if (roomIsScheduledFuture(room)) return 'Opens game week →';
+  return 'Start a thread →';
 }
 
 function threadIdFromLocation(): string | null {
@@ -446,13 +460,33 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     </div>
   );
 
+  const repliesToday = pulse?.repliesToday ?? 0;
+  const threadsWithReplies = pulse?.trending ?? 0;
+  const boardWarming = repliesToday === 0 && threadsWithReplies === 0;
+
   return (
+    <div className="rh-page rh-page--elite gv-community-page mobile-app gv-page" data-testid="vault-community-elite">
     <PageLayout
-      theme="white"
-      title="Community"
-      subtitle="Member-led talk, game week analysis, recruiting debate, and insider reaction."
+      theme="navy"
+      title=""
+      subtitle=""
       testId="vault-community"
-      className="gv-community mobile-app"
+      className="gv-community rh-elite-chrome"
+      hero={
+        <section className="gv-community__hero" aria-label="Community">
+          <span className="gv-community__hero-watermark" aria-hidden="true">
+            SWAMP
+          </span>
+          <div className="gv-community__hero-inner">
+            <p className="gv-community__hero-brand">GatorVault</p>
+            <h1 className="gv-community__hero-title">Community</h1>
+            <p className="gv-community__hero-sub">
+              Staff-led talk. Member replies. Report and block stay on every thread.
+            </p>
+          </div>
+          <div className="gv-community__hero-accent" aria-hidden="true" />
+        </section>
+      }
     >
       <div className="gv-community__layout">
         <div className="gv-community__main">
@@ -460,14 +494,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             <PageSection title="Jump in today" subtitle="Staff-led open thread — reply and keep the board alive.">
               <button
                 type="button"
-                className="gv-community__staff-card gv-community__today-card"
+                className="gv-community__today-card"
                 onClick={() => void openThread(todaysThread.id)}
               >
                 <Chip variant="staff">Today</Chip>
-                <h3 className="gv-type-h3" style={{ margin: '0.5rem 0' }}>
-                  {todaysThread.title}
-                </h3>
-                <p style={{ margin: 0, opacity: 0.7 }}>
+                <h3 className="gv-community__today-title">{todaysThread.title}</h3>
+                <p className="gv-community__today-meta">
                   {todaysThread.authorDisplay || 'GatorVault Staff'} ·{' '}
                   {(todaysThread.replyCount ?? 0) === 0
                     ? 'No replies yet — be the first →'
@@ -483,56 +515,19 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             </p>
           ) : null}
 
-          <PageSection title="Trending Topics">
-            <div className="gv-ds-filters">
-              {trendingTopics.map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  className="gv-community__topic-chip-btn"
-                  onClick={() => {
-                    const match = threads.find((th) =>
-                      th.title.toLowerCase().includes(t.toLowerCase().slice(0, 12))
-                    );
-                    if (match) void openThread(match.id);
-                    else {
-                      setShowForm(true);
-                      setNewTitle(t.slice(0, 200));
-                    }
-                  }}
-                >
-                  <Chip variant="trending">{t}</Chip>
-                </button>
-              ))}
-            </div>
-          </PageSection>
-
-          {staffHighlights.length > 0 ? (
-            <PageSection title="Staff Highlights">
-              <div className="gv-community__staff-grid">
-                {staffHighlights.map((p) => (
-                  <button
-                    key={p.id}
-                    type="button"
-                    className="gv-community__staff-card"
-                    onClick={() => void openThread(p.id)}
-                  >
-                    <Chip variant="staff">Staff</Chip>
-                    <h3 className="gv-type-h3" style={{ margin: '0.5rem 0' }}>{p.title}</h3>
-                    <p style={{ margin: 0, opacity: 0.7 }}>{p.author}</p>
-                  </button>
-                ))}
-              </div>
-            </PageSection>
+          {!selectedId && boardWarming && !warming ? (
+            <p className="gv-community__board-note" role="status">
+              Board warming up — be the first reply today.
+            </p>
           ) : null}
 
           <div className="gv-community__toolbar">
-            <div className="gv-alert-choices">
+            <div className="gv-community__sort" role="group" aria-label="Sort threads">
               {(['trending', 'recent', 'active', 'replies'] as SortId[]).map((s) => (
                 <button
                   key={s}
                   type="button"
-                  className={`gv-alert-choice${sort === s ? ' is-active' : ''}`}
+                  className={`gv-community__sort-btn${sort === s ? ' is-active' : ''}`}
                   onClick={() => setSort(s)}
                 >
                   {s === 'trending' ? 'Trending' : s === 'recent' ? 'Recent' : s === 'active' ? 'Active' : 'Replies'}
@@ -543,6 +538,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
               className="gv-community__select"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
+              aria-label="Filter by category"
             >
               <option value="">All categories</option>
               {categories.map((c) => (
@@ -798,7 +794,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                     <UiEmpty message="Be first — start a founding conversation." />
                     <button
                       type="button"
-                      className="gv-btn gv-btn--primary"
+                      className="gv-community__new-btn"
                       onClick={() => setShowForm(true)}
                     >
                       Start a thread
@@ -806,14 +802,70 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                   </li>
                 )}
               </ul>
+              {!selectedId ? (
+                <button
+                  type="button"
+                  className="gv-community__sticky-new"
+                  onClick={() => setShowForm(true)}
+                >
+                  + New Thread
+                </button>
+              ) : null}
             </PageSection>
           )}
+
+          {!selectedId ? (
+            <div className="gv-community__secondary">
+              <PageSection title="Spark a thread" subtitle="Quick topics if you want a new conversation.">
+                <div className="gv-community__topic-row">
+                  {trendingTopics.map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      className="gv-community__topic-chip-btn"
+                      onClick={() => {
+                        const match = threads.find((th) =>
+                          th.title.toLowerCase().includes(t.toLowerCase().slice(0, 12))
+                        );
+                        if (match) void openThread(match.id);
+                        else {
+                          setShowForm(true);
+                          setNewTitle(t.slice(0, 200));
+                        }
+                      }}
+                    >
+                      <Chip variant="trending">{t}</Chip>
+                    </button>
+                  ))}
+                </div>
+              </PageSection>
+
+              {staffHighlights.length > 0 ? (
+                <PageSection title="Staff highlights">
+                  <div className="gv-community__staff-grid">
+                    {staffHighlights.map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        className="gv-community__staff-card"
+                        onClick={() => void openThread(p.id)}
+                      >
+                        <Chip variant="staff">Staff</Chip>
+                        <h3 className="gv-type-h3">{p.title}</h3>
+                        <p className="gv-community__room-meta">{p.author}</p>
+                      </button>
+                    ))}
+                  </div>
+                </PageSection>
+              ) : null}
+            </div>
+          ) : null}
         </div>
 
         <aside className="gv-community__aside">
           {blockedEmails.length > 0 ? (
             <section className="gv-community__panel">
-              <h2 className="gv-vault-alerts__section-title">Blocked members</h2>
+              <h2 className="gv-community__panel-title">Blocked members</h2>
               <ul className="gv-community__blocked-list">
                 {blockedEmails.map((email) => (
                   <li key={email} className="gv-community__blocked-list-item">
@@ -832,30 +884,36 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
           ) : null}
 
           <section className="gv-community__panel">
-            <h2 className="gv-vault-alerts__section-title">Start a conversation</h2>
-            <p className="gv-community__room-desc">
-              Recruiting debate, film takes, and game week keys — staff reads every thread.
+            <h2 className="gv-community__panel-title">Community pulse</h2>
+            <div className="gv-community__pulse-grid">
+              <div className="gv-community__pulse-stat">
+                <span>Replies today</span>
+                <strong>{repliesToday > 0 ? repliesToday : '—'}</strong>
+              </div>
+              <div className="gv-community__pulse-stat">
+                <span>Threads with replies</span>
+                <strong>{threadsWithReplies > 0 ? threadsWithReplies : '—'}</strong>
+              </div>
+            </div>
+            <p className="gv-community__pulse-note">
+              {boardWarming
+                ? 'Board warming up — first replies light the pulse.'
+                : 'Live activity across staff opens and member threads.'}
             </p>
-            <button
-              type="button"
-              className="gv-btn gv-btn--primary"
-              onClick={() => setShowForm(true)}
-            >
-              New thread
-            </button>
           </section>
 
           <section className="gv-community__panel">
-            <h2 className="gv-vault-alerts__section-title">Game Week Rooms</h2>
+            <h2 className="gv-community__panel-title">Game week rooms</h2>
             {rooms.map((r) => {
               const existing = findThreadForRoom(r);
+              const scheduled = !existing && roomIsScheduledFuture(r);
               return (
                 <button
                   key={r.id}
                   type="button"
                   className={`gv-community__room gv-community__room--action${
                     existing ? ' gv-community__room--live' : ''
-                  }`}
+                  }${scheduled ? ' gv-community__room--scheduled' : ''}`}
                   onClick={() => startRoomThread(r)}
                 >
                   <p className="gv-community__room-title">{r.title}</p>
@@ -865,43 +923,12 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                       {new Date(r.scheduledAt || r.startsAt || '').toLocaleString()}
                     </p>
                   ) : null}
-                  <p className="gv-community__room-meta">
-                    {existing ? 'Join open thread →' : 'Start a thread →'}
-                  </p>
+                  <p className="gv-community__room-meta">{roomCtaLabel(r, existing)}</p>
                 </button>
               );
             })}
             {rooms.length === 0 && !loading && (
               <p className="gv-page-status">Rooms open as game week approaches.</p>
-            )}
-          </section>
-
-          <section className="gv-community__panel">
-            <h2 className="gv-vault-alerts__section-title">Community Pulse</h2>
-            {pulse ? (
-              <div className="gv-community__pulse-grid">
-                <div className="gv-recruit-stat">
-                  <span>Replies today</span>
-                  <strong>{pulse.repliesToday ?? '—'}</strong>
-                </div>
-                <div className="gv-recruit-stat">
-                  <span>Threads with replies</span>
-                  <strong>
-                    {(pulse.trending ?? 0) > 0 ? pulse.trending : '—'}
-                  </strong>
-                </div>
-              </div>
-            ) : (
-              <div className="gv-community__pulse-grid">
-                <div className="gv-recruit-stat">
-                  <span>Replies today</span>
-                  <strong>—</strong>
-                </div>
-                <div className="gv-recruit-stat">
-                  <span>Threads with replies</span>
-                  <strong>—</strong>
-                </div>
-              </div>
             )}
           </section>
         </aside>
@@ -930,6 +957,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
         onConfirm={handleBlockConfirm}
       />
     </PageLayout>
+    </div>
   );
 }
 

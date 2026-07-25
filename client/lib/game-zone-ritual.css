@@ -1,4 +1,10 @@
 /* Game Zone — Swamp Eve pre-kickoff hub */
+.gv-gz-page {
+  min-height: 100%;
+  background: #001018;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 .gv-gz {
   --gz-blue: #0021a5;
   --gz-navy: #001018;
@@ -10,6 +16,31 @@
   min-height: calc(100dvh - var(--gv-shell-header-height, 64px));
   overflow: clip;
   isolation: isolate;
+}
+
+.gv-gz__warming {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0.65rem 1.25rem 0;
+  font-size: 0.8125rem;
+  color: var(--gz-mist);
+  text-align: center;
+}
+
+.gv-gz__line-disclaimer {
+  margin: 0.15rem 0 0.35rem;
+  max-width: 28rem;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: rgba(244, 247, 251, 0.55);
+}
+
+.gv-gz__points-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--gz-orange);
 }
 
 .gv-gz__atmosphere {
