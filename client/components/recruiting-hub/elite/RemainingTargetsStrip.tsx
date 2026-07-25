@@ -5,7 +5,7 @@ import type { RhHubHeatTarget } from '@/lib/recruiting-hub-elite-api';
 import { fetchRecruitingHubHeatIndex } from '@/lib/recruiting-hub-elite-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
-import { playerProfileRoute } from '@/lib/vault-route-map';
+import { playerProfileRoute, VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
 import { UiWarming } from '@/components/site/UiMessage';
 
 const MAX_REMAINING = 6;
@@ -22,12 +22,15 @@ function remainingStatus(ufPercent: number | null): { label: string; tone: 'lean
 
 function RemainingRow({ target }: { target: RhHubHeatTarget }): React.ReactElement {
   const status = remainingStatus(target.ufPercent);
-  const href = playerProfileRoute(String(target.id || ''), 'futurecast');
+  // Name → that player's FutureCast intel page.
+  const profileHref = playerProfileRoute(String(target.id || ''), 'futurecast');
+  // "FutureCast →" → the Lab closing board (not another profile link).
+  const labHref = VAULT_PILLAR_ROUTES.futurecast;
 
   return (
     <li className="rh-remaining-row" data-testid={`rh-remaining-${target.id}`}>
       <div className="rh-remaining-row__identity">
-        <a href={href} className="rh-remaining-row__name">
+        <a href={profileHref} className="rh-remaining-row__name">
           {target.name}
         </a>
         <span className="rh-remaining-row__pos">{target.position}</span>
@@ -35,7 +38,7 @@ function RemainingRow({ target }: { target: RhHubHeatTarget }): React.ReactEleme
       <span className={`rh-remaining-row__status rh-remaining-row__status--${status.tone}`}>
         {status.label}
       </span>
-      <a href={href} className="rh-remaining-row__link">
+      <a href={labHref} className="rh-remaining-row__link">
         FutureCast →
       </a>
     </li>
