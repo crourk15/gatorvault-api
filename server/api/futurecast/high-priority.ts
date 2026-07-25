@@ -294,12 +294,42 @@ function allowlist2028Rank(slug: string): number {
 }
 
 function compareUnderclassmenHighPriority(a: HighPriorityPlayer, b: HighPriorityPlayer): number {
-  // Rank by GatorVault priority / likelihood — not allowlist seed order.
+  // Rank by staff-chase traction (visits/offers/staff/beat) — not RPM or fit alone.
   const prio = (b.priorityScore ?? 0) - (a.priorityScore ?? 0);
   if (prio !== 0) return prio;
-  const uf = (b.ufProbability ?? 0) - (a.ufProbability ?? 0);
-  if (uf !== 0) return uf;
-  return (b.fitScore ?? 0) - (a.fitScore ?? 0);
+  const delta = (b.delta7d ?? 0) - (a.delta7d ?? 0);
+  if (delta !== 0) return delta;
+  return allowlist2028Rank(a.slug) - allowlist2028Rank(b.slug);
+}
+
+/**
+ * Re-score Lab High Priority from the same chase engine as Big Board Top Targets.
+ * UF % / fit remain on the card for display; they no longer own the sort.
+ */
+function applyChasePriorityScores<T extends { slug: string; fitScore?: number; delta7d?: number }>(
+  players: T[],
+  classYear: number
+): Array<T & { priorityScore: number; chaseScore: number }> {
+  const { buildChaseFeatureIndex, computeChaseScore } = require('../../lib/uf-chase-score');
+  const index = buildChaseFeatureIndex({ classYear });
+  return players.map((p) => {
+    const chase = computeChaseScore(
+      {
+        slug: p.slug,
+        ufFitScore: p.fitScore,
+        uf_status: 'TARGET',
+      },
+      index
+    );
+    const priorityScore =
+      Math.round((chase.chaseScore + Math.max(0, Number(p.delta7d) || 0) * 0.25) * 10) / 10;
+    return {
+      ...p,
+      chaseScore: chase.chaseScore,
+      chase: chase.chase,
+      priorityScore,
+    };
+  });
 }
 
 function isSeedPredictorName(name: string): boolean {
@@ -355,8 +385,8 @@ function boardPlayerToHighPriority(
     staffFromPredictors && staffFromPredictors.score > 0
       ? Math.round(staffFromPredictors.score)
       : 0;
-  const priorityScore =
-    Math.round((ufProbability * 0.55 + fitScore * 0.3 + Math.max(0, delta7d) * 0.15) * 100) / 100;
+  // Placeholder — overwritten by applyChasePriorityScores before sort.
+  const priorityScore = 0;
 
   return {
     id: p.id,
@@ -411,7 +441,8 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   const ufTrendSnapshot = require('../../lib/uf-trend-snapshot');
   // Record today's GV likelihood, then attach real 7d snapshot deltas (not seed +4).
   const withMovement = ufTrendSnapshot.applySnapshotMovement(mapped, { minAbs: 1 });
-  const sorted = [...withMovement].sort(compareUnderclassmenHighPriority);
+  const withChase = applyChasePriorityScores(withMovement, classYear);
+  const sorted = [...withChase].sort(compareUnderclassmenHighPriority);
   const top10 = sorted.slice(0, HIGH_PRIORITY_UNDERCLASSMEN_LIMIT);
   const lastUpdated = new Date().toISOString();
   const visitBoardSnapshot = getVisitIntelBoardSnapshot([]);
@@ -533,14 +564,8 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
             (ufProbability > 0 ? Math.min(100, ufProbability * 0.85) : 0)
         );
 
-        const priorityScore =
-          Math.round(
-            (ufProbability * 0.5 +
-              fitScore * 0.2 +
-              staffConfidence * 0.2 +
-              Math.max(0, movementDelta) * 0.1) *
-              100
-          ) / 100;
+        // Placeholder — overwritten by applyChasePriorityScores before sort.
+        const priorityScore = 0;
 
         const pgTrendHistory = (historyMap.get(model?.playerId ?? '') ?? []).map((h) => ({
           date: h.date,
@@ -602,7 +627,13 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
         };
       });
 
-      const sorted = [...playersWithVerifiedVisits].sort((a, b) => b.priorityScore - a.priorityScore);
+      const withChase = applyChasePriorityScores(playersWithVerifiedVisits, classYear);
+      const sorted = [...withChase].sort(
+        (a, b) =>
+          (b.priorityScore ?? 0) - (a.priorityScore ?? 0) ||
+          (b.delta7d ?? 0) - (a.delta7d ?? 0) ||
+          String(a.name || '').localeCompare(String(b.name || ''))
+      );
       const top10 = sorted.slice(0, HIGH_PRIORITY_UNDERCLASSMEN_LIMIT);
 
       const visitIntel = buildVerifiedVisitIntelRows(playersWithVerifiedVisits, visitLogs);
