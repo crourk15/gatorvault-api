@@ -694,3 +694,152 @@
     text-align: left;
   }
 }
+
+
+/* Result + weekly board (elite white cards) */
+.gv-gz__result,
+.gv-gz__board {
+  --gz-card: #ffffff;
+  --gz-card-text: #0021a5;
+  --gz-card-muted: #6b7280;
+  --gz-card-border: rgba(0, 33, 165, 0.14);
+  --gz-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: min(100% - 2.5rem, 40rem);
+  margin: 1rem auto 0;
+  padding: 1.2rem 1.15rem 1.25rem;
+  background: var(--gz-card);
+  color: var(--gz-card-text);
+  border: 1px solid var(--gz-card-border);
+  border-top: 4px solid var(--gz-orange);
+  border-radius: 10px;
+  box-shadow: var(--gz-card-shadow);
+  position: relative;
+  z-index: 1;
+  animation: gv-gz-rise 650ms 40ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.gv-gz__panel-kicker {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gz-orange);
+}
+
+.gv-gz__panel-title {
+  margin: 0.35rem 0 0;
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.35rem, 3.6vw, 1.75rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gz-card-text);
+}
+
+.gv-gz__result-summary {
+  margin: 0.75rem 0 0;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gz-card-text);
+}
+
+.gv-gz__result-final {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--gz-card-muted);
+}
+
+.gv-gz__season-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.gv-gz__season-strip > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.55rem 0.45rem;
+  border-radius: 0.55rem;
+  background: rgba(0, 33, 165, 0.05);
+}
+
+.gv-gz__season-strip span {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gz-card-muted);
+}
+
+.gv-gz__season-strip strong {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.15rem;
+  color: var(--gz-card-text);
+}
+
+.gv-gz__board-note {
+  margin: 0.55rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--gz-card-muted);
+}
+
+.gv-gz__board-list {
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.gv-gz__board-row {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.7rem 0.75rem;
+  border-radius: 0.65rem;
+  background: rgba(0, 33, 165, 0.04);
+  border: 1px solid transparent;
+}
+
+.gv-gz__board-row.is-you {
+  border-color: rgba(250, 70, 22, 0.4);
+  background: rgba(250, 70, 22, 0.08);
+}
+
+.gv-gz__board-rank {
+  font-family: 'Oswald', sans-serif;
+  color: var(--gz-orange);
+  letter-spacing: 0.06em;
+}
+
+.gv-gz__board-name {
+  font-weight: 700;
+  color: var(--gz-card-text);
+  font-size: 0.9rem;
+}
+
+.gv-gz__board-meta {
+  font-size: 0.75rem;
+  color: var(--gz-card-muted);
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .gv-gz__season-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .gv-gz__board-row {
+    grid-template-columns: 2rem minmax(0, 1fr);
+  }
+  .gv-gz__board-meta {
+    grid-column: 2;
+    white-space: normal;
+  }
+}

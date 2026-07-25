@@ -3,6 +3,20 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchBettingLines, type BettingGame } from '@/lib/betting-api';
 import { buildSeedNextGame } from '@/lib/game-zone-hub-seed';
+import {
+  buildWeeklyBoard,
+  ensureTicketGraded,
+  gzGameKey,
+  loadSeasonLedger,
+  parseUfSpread,
+  removeSeasonTicket,
+  resolveFinalScore,
+  seasonStats,
+  upsertLockedTicket,
+  type CoverLean,
+  type GzBoardRow,
+  type GzSeasonEntry,
+} from '@/lib/game-zone-season';
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 import { addVaultPoints, hasOneTimeKey, markOneTimeKey } from '@/lib/vault-points';
 import { UiError } from '@/components/site/UiMessage';
@@ -11,12 +25,12 @@ import '@/lib/game-zone-ritual.css';
 
 const PRED_PREFIX = 'gv_gz_ticket_';
 
-type CoverLean = 'cover' | 'no-cover' | null;
+type CoverChoice = CoverLean | null;
 
 type SavedTicket = {
   uf: string;
   opp: string;
-  cover: CoverLean;
+  cover: CoverChoice;
   lockedAt: string;
 };
 
@@ -31,7 +45,7 @@ function opponentName(g?: BettingGame | null): string {
 }
 
 function gameKey(g?: BettingGame | null): string {
-  return String(g?.id || g?.game || g?.date || g?.kickoff || 'next').replace(/\s+/g, '_');
+  return gzGameKey(g);
 }
 
 function spreadLine(g?: BettingGame | null): string | null {
@@ -41,11 +55,7 @@ function spreadLine(g?: BettingGame | null): string | null {
 }
 
 function spreadNumber(g?: BettingGame | null): number | null {
-  if (!g?.spread) return null;
-  if (typeof g.spread !== 'string' && typeof g.spread.uf === 'number') return g.spread.uf;
-  const line = spreadLine(g) || '';
-  const m = line.match(/([+-]?\d+(?:\.\d+)?)/);
-  return m ? Number(m[1]) : null;
+  return parseUfSpread(g);
 }
 
 function kickDate(g?: BettingGame | null): Date | null {
@@ -110,14 +120,18 @@ export function VaultGameZonePage(): React.ReactElement {
   const [error, setError] = useState<string | null>(null);
   const [ufScore, setUfScore] = useState('31');
   const [oppScore, setOppScore] = useState('10');
-  const [cover, setCover] = useState<CoverLean>(null);
+  const [cover, setCover] = useState<CoverChoice>(null);
   const [ticket, setTicket] = useState<SavedTicket | null>(null);
   const [justLocked, setJustLocked] = useState(false);
   const [pointsAwarded, setPointsAwarded] = useState(0);
+  const [gradePointsAwarded, setGradePointsAwarded] = useState(0);
   const [nowMs, setNowMs] = useState(() => Date.now());
+  const [season, setSeason] = useState<GzSeasonEntry[]>([]);
+  const [board, setBoard] = useState<GzBoardRow[]>([]);
 
   const storageKey = useMemo(() => PRED_PREFIX + gameKey(nextGame), [nextGame]);
   const pointsKey = useMemo(() => `gv_gz_pts_${gameKey(nextGame)}`, [nextGame]);
+  const gKey = useMemo(() => gameKey(nextGame), [nextGame]);
   const opp = opponentName(nextGame);
   const spread = spreadLine(nextGame);
   const total = nextGame?.total != null ? String(nextGame.total) : null;
@@ -127,6 +141,15 @@ export function VaultGameZonePage(): React.ReactElement {
   const keys = (schedule?.keys || []).slice(0, 3);
   const outlook = schedule?.pred || null;
   const film = schedule?.film || schedule?.scoutingReport || null;
+  const finalScore = useMemo(
+    () => resolveFinalScore(nextGame, schedule, gKey),
+    [nextGame, schedule, gKey],
+  );
+  const seasonEntry = useMemo(
+    () => season.find((e) => e.gameKey === gKey) || null,
+    [season, gKey],
+  );
+  const stats = useMemo(() => seasonStats(season), [season]);
 
   const load = useCallback(async () => {
     if (!HAS_GAME_ZONE_SEED) {
@@ -163,6 +186,25 @@ export function VaultGameZonePage(): React.ReactElement {
     return () => window.clearInterval(id);
   }, []);
 
+  const refreshSeason = useCallback(() => {
+    const ledger = loadSeasonLedger();
+    setSeason(ledger);
+    setBoard(buildWeeklyBoard(ledger));
+  }, []);
+
+  useEffect(() => {
+    refreshSeason();
+  }, [refreshSeason]);
+
+  useEffect(() => {
+    if (!finalScore || !ticket) return;
+    const graded = ensureTicketGraded(gKey, finalScore);
+    if (graded?.grade) {
+      setGradePointsAwarded(graded.grade.pointsEarned);
+      refreshSeason();
+    }
+  }, [finalScore, ticket, gKey, refreshSeason]);
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
@@ -177,11 +219,24 @@ export function VaultGameZonePage(): React.ReactElement {
         setUfScore(saved.uf);
         setOppScore(saved.opp);
         setCover(saved.cover ?? null);
+        if (saved.cover === 'cover' || saved.cover === 'no-cover') {
+          upsertLockedTicket({
+            gameKey: gKey,
+            opponent: opponentName(nextGame),
+            uf: clampScore(parseInt(saved.uf, 10)),
+            opp: clampScore(parseInt(saved.opp, 10)),
+            cover: saved.cover,
+            spreadUf: spreadNumber(nextGame),
+            lockedAt: saved.lockedAt || new Date().toISOString(),
+            weekLabel: matchSchedule(nextGame)?.label || opponentName(nextGame),
+          });
+          refreshSeason();
+        }
       }
     } catch {
       setTicket(null);
     }
-  }, [storageKey]);
+  }, [storageKey, gKey, nextGame, refreshSeason]);
 
   const nudge = (side: 'uf' | 'opp', delta: number) => {
     if (locked) return;
@@ -191,9 +246,11 @@ export function VaultGameZonePage(): React.ReactElement {
 
   const lockTicket = () => {
     if (!ufScore.trim() || !oppScore.trim() || !cover) return;
+    const uf = clampScore(parseInt(ufScore, 10));
+    const oppN = clampScore(parseInt(oppScore, 10));
     const saved: SavedTicket = {
-      uf: String(clampScore(parseInt(ufScore, 10))),
-      opp: String(clampScore(parseInt(oppScore, 10))),
+      uf: String(uf),
+      opp: String(oppN),
       cover,
       lockedAt: new Date().toISOString(),
     };
@@ -202,6 +259,16 @@ export function VaultGameZonePage(): React.ReactElement {
     } catch {
       /* ignore */
     }
+    upsertLockedTicket({
+      gameKey: gKey,
+      opponent: opp,
+      uf,
+      opp: oppN,
+      cover,
+      spreadUf: spreadNumber(nextGame),
+      lockedAt: saved.lockedAt,
+      weekLabel: schedule?.label || opp,
+    });
     let awarded = 0;
     if (!hasOneTimeKey(pointsKey)) {
       addVaultPoints(25);
@@ -211,6 +278,7 @@ export function VaultGameZonePage(): React.ReactElement {
     setPointsAwarded(awarded);
     setTicket(saved);
     setJustLocked(true);
+    refreshSeason();
     window.setTimeout(() => setJustLocked(false), 1200);
   };
 
@@ -220,9 +288,12 @@ export function VaultGameZonePage(): React.ReactElement {
     } catch {
       /* ignore */
     }
+    if (!seasonEntry?.grade) removeSeasonTicket(gKey);
     setTicket(null);
     setJustLocked(false);
     setPointsAwarded(0);
+    setGradePointsAwarded(0);
+    refreshSeason();
   };
 
   const spreadN = spreadNumber(nextGame);
@@ -424,6 +495,78 @@ export function VaultGameZonePage(): React.ReactElement {
                 </p>
               ) : null}
             </div>
+          </section>
+
+          <section className="gv-gz__result" aria-label="Ticket result">
+            <p className="gv-gz__panel-kicker">After the whistle</p>
+            <h2 className="gv-gz__panel-title">Your ticket result</h2>
+            {seasonEntry?.grade ? (
+              <>
+                <p className="gv-gz__result-summary">{seasonEntry.grade.summary}</p>
+                <p className="gv-gz__result-final">
+                  Final {seasonEntry.grade.finalUf}–{seasonEntry.grade.finalOpp}
+                  {gradePointsAwarded > 0 ? ` · +${gradePointsAwarded} Vault Points` : ''}
+                </p>
+              </>
+            ) : locked ? (
+              <>
+                <p className="gv-gz__result-summary">Pending grade</p>
+                <p className="gv-gz__result-final">
+                  Results drop after the final whistle — cover hit, close score, and exact score pay Vault Points.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="gv-gz__result-summary">Lock a ticket to enter the week</p>
+                <p className="gv-gz__result-final">
+                  +25 to lock · +50 cover · +25 close · +100 exact. No real-money wagering.
+                </p>
+              </>
+            )}
+            <div className="gv-gz__season-strip" aria-label="Season stats">
+              <div>
+                <span>Tickets</span>
+                <strong>{stats.tickets}</strong>
+              </div>
+              <div>
+                <span>Covers</span>
+                <strong>{stats.covers}</strong>
+              </div>
+              <div>
+                <span>Pending</span>
+                <strong>{stats.pending}</strong>
+              </div>
+              <div>
+                <span>GZ points</span>
+                <strong>{stats.points}</strong>
+              </div>
+            </div>
+          </section>
+
+          <section className="gv-gz__board" aria-label="Weekly board">
+            <p className="gv-gz__panel-kicker">This season</p>
+            <h2 className="gv-gz__panel-title">Weekly board</h2>
+            <p className="gv-gz__board-note">
+              Sample Vault Nation ranks until live multiplayer board opens — your real entry is always included.
+            </p>
+            <ol className="gv-gz__board-list">
+              {board.map((row, i) => (
+                <li
+                  key={row.id}
+                  className={`gv-gz__board-row${row.isYou ? ' is-you' : ''}${row.sample ? ' is-sample' : ''}`}
+                >
+                  <span className="gv-gz__board-rank">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="gv-gz__board-name">
+                    {row.name}
+                    {row.isYou ? ' (you)' : ''}
+                    {row.sample ? ' · sample' : ''}
+                  </span>
+                  <span className="gv-gz__board-meta">
+                    {row.covers} covers · {row.points} pts
+                  </span>
+                </li>
+              ))}
+            </ol>
           </section>
 
           <section className="gv-gz__intel" aria-label="Keys to the game">
