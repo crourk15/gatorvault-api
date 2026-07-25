@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchBettingLines, type BettingGame } from '@/lib/betting-api';
 import { buildSeedNextGame } from '@/lib/game-zone-hub-seed';
 import {
-  buildWeeklyBoard,
   ensureTicketGraded,
   gzGameKey,
   loadSeasonLedger,
@@ -14,7 +13,6 @@ import {
   seasonStats,
   upsertLockedTicket,
   type CoverLean,
-  type GzBoardRow,
   type GzSeasonEntry,
 } from '@/lib/game-zone-season';
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
@@ -94,15 +92,24 @@ function countdownLabel(g?: BettingGame | null, nowMs = Date.now()): string {
 }
 
 function matchSchedule(g?: BettingGame | null): ScheduleGame | null {
-  if (!g) return SCHEDULE_GAMES[0] ?? null;
-  const blob = `${g.opponent || ''} ${g.game || ''} ${g.id || ''}`.toLowerCase();
+  if (!g) return null;
+  const blob = `${g.opponent || ''} ${g.game || ''} ${g.id || ''} ${g.awayTeam || ''} ${g.homeTeam || ''}`.toLowerCase();
+  const byId = SCHEDULE_GAMES.find((s) => blob.includes(s.id.toLowerCase()));
+  if (byId) return byId;
   return (
     SCHEDULE_GAMES.find((s) => {
-      const opp = s.opp.toLowerCase();
-      const id = s.id.toLowerCase();
-      return blob.includes(id) || opp.split(/\s+/).some((w) => w.length > 2 && blob.includes(w));
-    }) ?? SCHEDULE_GAMES[0] ?? null
+      const tokens = s.opp.toLowerCase().split(/\s+/).filter((w) => w.length > 2);
+      return tokens.some((w) => blob.includes(w));
+    }) ?? null
   );
+}
+
+function defaultScoresForGame(g?: BettingGame | null): { uf: string; opp: string } {
+  const sched = matchSchedule(g);
+  if (sched && typeof sched.predUF === 'number' && typeof sched.predOpp === 'number') {
+    return { uf: String(sched.predUF), opp: String(sched.predOpp) };
+  }
+  return { uf: '24', opp: '17' };
 }
 
 function clampScore(n: number): number {
@@ -112,14 +119,15 @@ function clampScore(n: number): number {
 
 const SEED_NEXT_GAME = buildSeedNextGame();
 const HAS_GAME_ZONE_SEED = Boolean(SEED_NEXT_GAME);
+const SEED_DEFAULT_SCORES = defaultScoresForGame(SEED_NEXT_GAME);
 
 export function VaultGameZonePage(): React.ReactElement {
   const [nextGame, setNextGame] = useState<BettingGame | null>(SEED_NEXT_GAME);
   const [loading, setLoading] = useState(!HAS_GAME_ZONE_SEED);
   const [warming, setWarming] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [ufScore, setUfScore] = useState('31');
-  const [oppScore, setOppScore] = useState('10');
+  const [ufScore, setUfScore] = useState(SEED_DEFAULT_SCORES.uf);
+  const [oppScore, setOppScore] = useState(SEED_DEFAULT_SCORES.opp);
   const [cover, setCover] = useState<CoverChoice>(null);
   const [ticket, setTicket] = useState<SavedTicket | null>(null);
   const [justLocked, setJustLocked] = useState(false);
@@ -127,7 +135,6 @@ export function VaultGameZonePage(): React.ReactElement {
   const [gradePointsAwarded, setGradePointsAwarded] = useState(0);
   const [nowMs, setNowMs] = useState(() => Date.now());
   const [season, setSeason] = useState<GzSeasonEntry[]>([]);
-  const [board, setBoard] = useState<GzBoardRow[]>([]);
 
   const storageKey = useMemo(() => PRED_PREFIX + gameKey(nextGame), [nextGame]);
   const pointsKey = useMemo(() => `gv_gz_pts_${gameKey(nextGame)}`, [nextGame]);
@@ -135,8 +142,8 @@ export function VaultGameZonePage(): React.ReactElement {
   const opp = opponentName(nextGame);
   const spread = spreadLine(nextGame);
   const total = nextGame?.total != null ? String(nextGame.total) : null;
-  const venue = nextGame?.venue || matchSchedule(nextGame)?.venue || 'The Swamp';
   const schedule = matchSchedule(nextGame);
+  const venue = nextGame?.venue || schedule?.venue || 'Kickoff venue TBA';
   const locked = Boolean(ticket);
   const keys = (schedule?.keys || []).slice(0, 3);
   const outlook = schedule?.pred || null;
@@ -187,9 +194,7 @@ export function VaultGameZonePage(): React.ReactElement {
   }, []);
 
   const refreshSeason = useCallback(() => {
-    const ledger = loadSeasonLedger();
-    setSeason(ledger);
-    setBoard(buildWeeklyBoard(ledger));
+    setSeason(loadSeasonLedger());
   }, []);
 
   useEffect(() => {
@@ -211,6 +216,10 @@ export function VaultGameZonePage(): React.ReactElement {
       const raw = localStorage.getItem(storageKey);
       if (!raw) {
         setTicket(null);
+        const defaults = defaultScoresForGame(nextGame);
+        setUfScore(defaults.uf);
+        setOppScore(defaults.opp);
+        setCover(null);
         return;
       }
       const saved = JSON.parse(raw) as SavedTicket;
@@ -222,6 +231,7 @@ export function VaultGameZonePage(): React.ReactElement {
         if (saved.cover === 'cover' || saved.cover === 'no-cover') {
           upsertLockedTicket({
             gameKey: gKey,
+            scheduleId: matchSchedule(nextGame)?.id,
             opponent: opponentName(nextGame),
             uf: clampScore(parseInt(saved.uf, 10)),
             opp: clampScore(parseInt(saved.opp, 10)),
@@ -261,6 +271,7 @@ export function VaultGameZonePage(): React.ReactElement {
     }
     upsertLockedTicket({
       gameKey: gKey,
+      scheduleId: schedule?.id,
       opponent: opp,
       uf,
       opp: oppN,
@@ -510,16 +521,16 @@ export function VaultGameZonePage(): React.ReactElement {
               </>
             ) : locked ? (
               <>
-                <p className="gv-gz__result-summary">Pending grade</p>
+                <p className="gv-gz__result-summary">Awaiting Florida final</p>
                 <p className="gv-gz__result-final">
-                  Results drop after the final whistle — cover hit, close score, and exact score pay Vault Points.
+                  Grades against the real final score only — cover, close, and exact pay Vault Points. No wagering.
                 </p>
               </>
             ) : (
               <>
-                <p className="gv-gz__result-summary">Lock a ticket to enter the week</p>
+                <p className="gv-gz__result-summary">Lock a ticket for this Gators game</p>
                 <p className="gv-gz__result-final">
-                  +25 to lock · +50 cover · +25 close · +100 exact. No real-money wagering.
+                  +25 to lock · +50 cover · +25 close · +100 exact — scored from the official final.
                 </p>
               </>
             )}
@@ -543,30 +554,33 @@ export function VaultGameZonePage(): React.ReactElement {
             </div>
           </section>
 
-          <section className="gv-gz__board" aria-label="Weekly board">
-            <p className="gv-gz__panel-kicker">This season</p>
-            <h2 className="gv-gz__panel-title">Weekly board</h2>
+          <section className="gv-gz__board" aria-label="Season tickets">
+            <p className="gv-gz__panel-kicker">2026 season</p>
+            <h2 className="gv-gz__panel-title">Your tickets</h2>
             <p className="gv-gz__board-note">
-              Sample Vault Nation ranks until live multiplayer board opens — your real entry is always included.
+              Graded against the real Florida final only — no fake ranks, no wagering.
             </p>
-            <ol className="gv-gz__board-list">
-              {board.map((row, i) => (
-                <li
-                  key={row.id}
-                  className={`gv-gz__board-row${row.isYou ? ' is-you' : ''}${row.sample ? ' is-sample' : ''}`}
-                >
-                  <span className="gv-gz__board-rank">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="gv-gz__board-name">
-                    {row.name}
-                    {row.isYou ? ' (you)' : ''}
-                    {row.sample ? ' · sample' : ''}
-                  </span>
-                  <span className="gv-gz__board-meta">
-                    {row.covers} covers · {row.points} pts
-                  </span>
-                </li>
-              ))}
-            </ol>
+            {season.length === 0 ? (
+              <p className="gv-gz__board-empty">No tickets yet. Lock one for the next Gators game.</p>
+            ) : (
+              <ol className="gv-gz__board-list">
+                {season.map((row) => (
+                  <li
+                    key={row.gameKey}
+                    className={`gv-gz__board-row${row.gameKey === gKey ? ' is-you' : ''}`}
+                  >
+                    <span className="gv-gz__board-rank">{row.grade ? 'FIN' : 'PEND'}</span>
+                    <span className="gv-gz__board-name">{row.weekLabel || row.opponent}</span>
+                    <span className="gv-gz__board-meta">
+                      {row.uf}–{row.opp}
+                      {row.grade
+                        ? ` · ${row.grade.summary} · final ${row.grade.finalUf}–${row.grade.finalOpp}`
+                        : ' · awaiting final'}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            )}
           </section>
 
           <section className="gv-gz__intel" aria-label="Keys to the game">

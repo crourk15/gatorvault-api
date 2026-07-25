@@ -843,3 +843,9 @@
     white-space: normal;
   }
 }
+
+.gv-gz__board-empty {
+  margin: 0.85rem 0 0;
+  font-size: 0.9rem;
+  color: var(--gz-card-muted);
+}

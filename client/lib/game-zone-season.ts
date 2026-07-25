@@ -1,6 +1,6 @@
 /**
- * Game Zone season — local ticket ledger, grading, weekly board.
- * Informational lines only; Vault Points are local rewards (no wagering).
+ * Game Zone season — local tickets graded against real Florida finals.
+ * No fake leaderboard. Informational lines only; Vault Points are local.
  */
 
 import type { BettingGame } from '@/lib/betting-api';
@@ -11,6 +11,7 @@ export type CoverLean = 'cover' | 'no-cover';
 
 export type GzSavedTicket = {
   gameKey: string;
+  scheduleId?: string;
   opponent: string;
   uf: number;
   opp: number;
@@ -35,16 +36,6 @@ export type GzSeasonEntry = GzSavedTicket & {
   grade?: GzTicketGrade;
 };
 
-export type GzBoardRow = {
-  id: string;
-  name: string;
-  points: number;
-  covers: number;
-  tickets: number;
-  isYou?: boolean;
-  sample?: boolean;
-};
-
 const SEASON_KEY = 'gv_gz_season_v1';
 const FINAL_OVERRIDE_PREFIX = 'gv_gz_final_';
 
@@ -52,14 +43,6 @@ const LOCK_POINTS = 25;
 const COVER_POINTS = 50;
 const CLOSE_POINTS = 25;
 const EXACT_POINTS = 100;
-
-/** Sample board until live Nation board ships — labeled in UI. */
-const SAMPLE_BOARD: GzBoardRow[] = [
-  { id: 'sample-1', name: 'SwampScout', points: 200, covers: 2, tickets: 3, sample: true },
-  { id: 'sample-2', name: 'OrangeNation', points: 150, covers: 2, tickets: 2, sample: true },
-  { id: 'sample-3', name: 'TheSwampWatch', points: 100, covers: 1, tickets: 2, sample: true },
-  { id: 'sample-4', name: 'GatorEdge', points: 75, covers: 1, tickets: 1, sample: true },
-];
 
 export function gzGameKey(g?: BettingGame | null): string {
   return String(g?.id || g?.game || g?.date || g?.kickoff || 'next').replace(/\s+/g, '_');
@@ -82,7 +65,7 @@ export function gradeTicket(
   ticket: Pick<GzSavedTicket, 'uf' | 'opp' | 'cover' | 'spreadUf'>,
   finalUf: number,
   finalOpp: number,
-): Omit<GzTicketGrade, 'gradedAt' | 'pointsEarned'> & { pointsEarned: number } {
+): Omit<GzTicketGrade, 'gradedAt'> {
   const exactScore = ticket.uf === finalUf && ticket.opp === finalOpp;
   const closeScore =
     !exactScore &&
@@ -100,8 +83,8 @@ export function gradeTicket(
   else if (closeScore) pointsEarned += CLOSE_POINTS;
 
   const bits: string[] = [];
-  if (coverHit === true) bits.push('Cover ✓');
-  else if (coverHit === false) bits.push('Cover ✗');
+  if (coverHit === true) bits.push('Cover hit');
+  else if (coverHit === false) bits.push('Cover miss');
   else bits.push('Cover n/a');
   if (exactScore) bits.push('Exact score');
   else if (closeScore) bits.push('Close score');
@@ -120,7 +103,7 @@ export function gradeTicket(
 
 export function resolveFinalScore(
   game: BettingGame | null | undefined,
-  schedule: ScheduleGame | null | undefined,
+  schedule: (ScheduleGame & { finalUF?: number; finalOpp?: number }) | null | undefined,
   gameKey: string,
 ): { uf: number; opp: number; source: string } | null {
   if (typeof window !== 'undefined') {
@@ -151,9 +134,8 @@ export function resolveFinalScore(
     if (awayIsUf) return { uf: game.awayScore, opp: game.homeScore, source: 'lines' };
   }
 
-  const sched = schedule as ScheduleGame & { finalUF?: number; finalOpp?: number };
-  if (typeof sched?.finalUF === 'number' && typeof sched?.finalOpp === 'number') {
-    return { uf: sched.finalUF, opp: sched.finalOpp, source: 'schedule' };
+  if (typeof schedule?.finalUF === 'number' && typeof schedule?.finalOpp === 'number') {
+    return { uf: schedule.finalUF, opp: schedule.finalOpp, source: 'schedule' };
   }
 
   return null;
@@ -185,7 +167,6 @@ export function upsertLockedTicket(entry: GzSavedTicket): GzSeasonEntry[] {
   const idx = ledger.findIndex((e) => e.gameKey === entry.gameKey);
   const next: GzSeasonEntry = { ...entry };
   if (idx >= 0) {
-    // Keep grade if already graded.
     next.grade = ledger[idx].grade;
     ledger[idx] = next;
   } else {
@@ -201,7 +182,7 @@ export function removeSeasonTicket(gameKey: string): GzSeasonEntry[] {
   return ledger;
 }
 
-/** Grade ticket when final is available; award grade points once per game. */
+/** Grade ticket when a real final is available; award grade points once per game. */
 export function ensureTicketGraded(
   gameKey: string,
   final: { uf: number; opp: number },
@@ -256,29 +237,8 @@ export function seasonStats(entries: GzSeasonEntry[]): {
       pending += 1;
     }
   }
-  // Lock points are separate; board uses grade points + lock credit estimate
   points += entries.length * LOCK_POINTS;
   return { tickets: entries.length, graded, covers, points, pending };
-}
-
-export function buildWeeklyBoard(entries: GzSeasonEntry[]): GzBoardRow[] {
-  const stats = seasonStats(entries);
-  const you: GzBoardRow = {
-    id: 'you',
-    name: 'You',
-    points: stats.points,
-    covers: stats.covers,
-    tickets: stats.tickets,
-    isYou: true,
-  };
-
-  const rows = [...SAMPLE_BOARD, you].sort((a, b) => {
-    if (b.points !== a.points) return b.points - a.points;
-    if (b.covers !== a.covers) return b.covers - a.covers;
-    return a.name.localeCompare(b.name);
-  });
-
-  return rows;
 }
 
 export { LOCK_POINTS, COVER_POINTS, CLOSE_POINTS, EXACT_POINTS };
