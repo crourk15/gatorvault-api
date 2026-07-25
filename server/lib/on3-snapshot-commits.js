@@ -24,10 +24,29 @@ function normalizeSnapshotStatus(entry) {
   return raw || 'committed';
 }
 
+/**
+ * Portal transfers on the UF commits board lose transferRating in older snapshots.
+ * Recover them: explicit category, portal copy, or HS consensus rating missing
+ * (On3 HS signees always carry rating/natl/pos ranks; portal rows do not).
+ */
+function isSnapshotPortalEntry(entry) {
+  if (!entry || typeof entry !== 'object') return false;
+  if (entry.isPortal === true) return true;
+  if (String(entry.category || '').toLowerCase() === 'portal') return true;
+  if (/transfer|portal/i.test(String(entry.sourceStatus || entry.skinny || entry.fromSchool || ''))) {
+    return true;
+  }
+  const rating = entry.rating;
+  const hasHsRating = rating != null && rating !== '' && Number.isFinite(Number(rating));
+  const hasHsRank =
+    entry.natlRank != null || entry.posRank != null || entry.stateRank != null;
+  return !hasHsRating && !hasHsRank;
+}
+
 function snapshotEntryToPlayer(entry, classYear) {
   const slug = slugify(entry.name);
   const status = normalizeSnapshotStatus(entry);
-  const isPortal = /transfer|portal/i.test(String(entry.sourceStatus || entry.skinny || ''));
+  const isPortal = isSnapshotPortalEntry(entry);
   return {
     slug,
     name: entry.name,
@@ -46,9 +65,10 @@ function snapshotEntryToPlayer(entry, classYear) {
     committedTo: 'Florida',
     commitDate: entry.commitDate || null,
     on3Id: entry.on3Id || null,
-    on3Source: 'on3-board-sync',
+    on3Source: isPortal ? 'on3-portal-sync' : 'on3-board-sync',
     protected: true,
     skinny: entry.skinny || '',
+    fromSchool: entry.fromSchool || null,
   };
 }
 
@@ -65,6 +85,11 @@ function countSnapshotHubCommits(classYear) {
   return getSnapshotHubCommits(classYear).length;
 }
 
+function preferCommitCategory(a, b) {
+  const cats = [a, b].map((p) => String(p?.category || '').toLowerCase());
+  return cats.includes('portal') ? 'portal' : cats.find(Boolean) || 'recruit';
+}
+
 function mergeCommitPlayerLists(...lists) {
   const map = new Map();
   for (const list of lists) {
@@ -73,8 +98,16 @@ function mergeCommitPlayerLists(...lists) {
       const key = String(player.slug).toLowerCase();
       const on3Key = player.on3Id ? `on3:${player.on3Id}` : null;
       const existing = map.get(key) || (on3Key ? map.get(on3Key) : null);
-      map.set(key, existing ? { ...existing, ...player } : player);
-      if (on3Key) map.set(on3Key, map.get(key));
+      const merged = existing
+        ? {
+            ...existing,
+            ...player,
+            // Never let a store 'recruit' tag clobber a snapshot portal identity.
+            category: preferCommitCategory(existing, player),
+          }
+        : player;
+      map.set(key, merged);
+      if (on3Key) map.set(on3Key, merged);
     }
   }
   const seen = new Set();
@@ -94,4 +127,5 @@ module.exports = {
   countSnapshotHubCommits,
   mergeCommitPlayerLists,
   snapshotEntryToPlayer,
+  isSnapshotPortalEntry,
 };

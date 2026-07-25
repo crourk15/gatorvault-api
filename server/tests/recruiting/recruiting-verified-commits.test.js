@@ -95,11 +95,19 @@ test('getHubHsCommits 2026 excludes portal signees', async () => {
   const all = await jsonStore.getHubCommits(2026);
   const hs = await jsonStore.getHubHsCommits(2026);
   assert.ok(hs.length > 0, 'HS commits should exist');
-  assert.ok(hs.length <= all.length, 'HS commits should be a subset of all hub commits');
+  assert.ok(hs.length < all.length, 'HS commits must exclude portal signees from the board');
+  assert.ok(
+    hs.length >= 19 && hs.length <= 22,
+    `2026 HS signees should track On3 class size (~21), got ${hs.length}`
+  );
   assert.ok(hs.every((p) => String(p.category).toLowerCase() !== 'portal'));
-  const portalsInHub = all.filter((p) => String(p.category).toLowerCase() === 'portal');
-  if (portalsInHub.length) {
-    assert.ok(hs.length < all.length, 'portal signees should be excluded from HS commits');
+  // Known portal transfers must not inflate the HS signee metric.
+  for (const slug of ['evan-pryor', 'cam-dooley', 'aaron-philo']) {
+    assert.equal(
+      hs.some((p) => String(p.slug || '').toLowerCase() === slug),
+      false,
+      `${slug} is a portal signee and must not appear in HS commits`
+    );
   }
   delete require.cache[require.resolve('../../lib/recruiting-store')];
   delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];

@@ -93,6 +93,14 @@ function hometownFieldsFromPlayer(player = {}) {
 }
 
 function normalizeOn3Row(row, classYear) {
+  // Portal transfers share the UF commits board — tag them so HS signee counts stay clean.
+  if (isPortalTransferRow(row)) {
+    return {
+      ...normalizeOn3PortalRow(row, classYear),
+      category: 'portal',
+    };
+  }
+
   const player = row.player || {};
   const rating = row.rating || {};
   const status = row.status || {};
@@ -137,6 +145,7 @@ function normalizeOn3Row(row, classYear) {
     status: pickString(status.type, 'Committed').toLowerCase(),
     commitDate: commitDateShort,
     committedTo: pickString(status.committedAsset?.name, 'Florida'),
+    category: 'recruit',
     skinny: '',
     sourceStatus: pickString(status.type)
   };
