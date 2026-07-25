@@ -2,6 +2,29 @@
   "version": 1,
   "entries": [
     {
+      "at": "2026-07-25T13:32:14.228Z",
+      "slug": "armani-strong",
+      "name": "Armani Strong",
+      "classYear": 2028,
+      "source": "fc-top-targets-fix",
+      "removedFromBoards": [
+        2028
+      ],
+      "boardResults": [
+        {
+          "removed": true,
+          "classYear": 2028,
+          "before": 42,
+          "after": 41
+        },
+        {
+          "removed": false,
+          "classYear": 2027,
+          "reason": "not_on_board"
+        }
+      ]
+    },
+    {
       "at": "2026-07-11T11:30:18.065Z",
       "slug": "raheem-floyd",
       "name": "Raheem Floyd",
@@ -3980,27 +4003,7 @@
           "reason": "not_on_board"
         }
       ]
-    },
-    {
-      "at": "2026-07-11T05:12:13.902Z",
-      "slug": "raheem-floyd",
-      "name": "Raheem Floyd",
-      "classYear": 2027,
-      "source": "upsert_player",
-      "removedFromBoards": [],
-      "boardResults": [
-        {
-          "removed": false,
-          "classYear": 2027,
-          "reason": "not_on_board"
-        },
-        {
-          "removed": false,
-          "classYear": 2028,
-          "reason": "not_on_board"
-        }
-      ]
     }
   ],
-  "updatedAt": "2026-07-11T11:30:18.066Z"
+  "updatedAt": "2026-07-25T13:32:14.229Z"
 }

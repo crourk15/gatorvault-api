@@ -21,11 +21,15 @@ export interface BigBoardPlayer extends RankingFields {
   classYear: number;
   position: string;
   lifecycle: BigBoardLifecycle;
+  committedTo?: string | null;
   portalStatus: string | null;
   signalCount: number;
   portalLikelihood: number;
   ufFitScore: number;
   rank: number;
+  inState?: boolean;
+  school?: string | null;
+  state?: string | null;
 }
 
 export interface BigBoardQuery {

@@ -62,7 +62,7 @@ const ALLOWLIST_2028 = [
   'braxton-rein',
   'landon-dawson',
   'taihj-moore',
-  'armani-strong',
+  // armani-strong — UF commit (2026-06-28); removed from active 2028 targets
   'tristin-gaines',
   'tristian-henderson',
   'dominick-harris-payne',

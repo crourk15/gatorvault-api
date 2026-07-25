@@ -20,7 +20,9 @@ const VERIFIED_UF_COMMITS_BY_YEAR = {
     'kailib-dillard',
     'zahmar-tookes',
   ]),
-  2028: new Set(),
+  2028: new Set([
+    'armani-strong',
+  ]),
   2029: new Set(),
 };
 

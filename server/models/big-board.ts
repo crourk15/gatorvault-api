@@ -22,6 +22,7 @@ export interface BigBoardRawPlayer {
   class_year: number;
   position: string;
   lifecycle: PlayerLifecycleStatus;
+  committed_to: string | null;
   portal_status: PortalStatus | null;
   portal_likelihood_stored: number | null;
   uf_fit_score: number | null;
@@ -131,6 +132,7 @@ export async function listBigBoardPlayers(filters: BigBoardFilters = {}): Promis
       class_year: player.class_year,
       position: player.position,
       lifecycle: player.status,
+      committed_to: player.committed_to ?? null,
       portal_status: row.portal_status ? (row.portal_status as PortalStatus) : null,
       portal_likelihood_stored: row.portal_likelihood_stored,
       uf_fit_score: row.uf_fit_score,

@@ -57,6 +57,7 @@ export async function listEarlyDiscoveryPlayers(opts: {
       p.position,
       p.state,
       p.stars,
+      p.committed_to,
       COALESCE(hs.discovery_score, 0)::int AS discovery_score,
       uf.uf_fit_score,
       uf.uf_status,
@@ -73,6 +74,7 @@ export async function listEarlyDiscoveryPlayers(opts: {
       AND p.status = 'HS'
       AND COALESCE(hs.discovery_score, 0) >= $2
       AND COALESCE(uf.uf_fit_score, 0) >= $3
+      AND (p.committed_to IS NULL OR p.committed_to !~* '\\yflorida\\y')
       ${positionClause}
     ORDER BY hs.discovery_score DESC NULLS LAST, p.stars DESC NULLS LAST, p.full_name ASC
     LIMIT ${limitParam}
@@ -81,6 +83,9 @@ export async function listEarlyDiscoveryPlayers(opts: {
   );
 
   const { mergeAllowlistIntoDiscovery } = require('../../lib/early-discovery-allowlist-merge');
+  const { getUfCommitSlugSet } = require('../../lib/recruiting-uf-commit-slugs');
+  const commitSlugs: Set<string> = await getUfCommitSlugSet(classYearGte);
+
   const mergedRows = mergeAllowlistIntoDiscovery(
     rows.map((row: Record<string, unknown>) => ({
       id: row.id,
@@ -90,13 +95,18 @@ export async function listEarlyDiscoveryPlayers(opts: {
       position: row.position,
       state: row.state,
       stars: row.stars,
+      committedTo: row.committed_to ?? null,
       discoveryScore: Number(row.discovery_score) || 0,
       ufFitScore: row.uf_fit_score != null ? Number(row.uf_fit_score) : null,
       ufStatus: row.uf_status,
       signalCount: Number(row.signal_count) || 0,
     })),
     { classYearGte, minDiscoveryScore, minUfFitScore, position, limit }
-  );
+  ).filter((row: { slug?: string; committedTo?: string | null }) => {
+    const slug = String(row.slug || '').toLowerCase();
+    if (slug && commitSlugs.has(slug)) return false;
+    return true;
+  });
 
   return mergedRows.map((row) => enrichWithRankings(row));
 }

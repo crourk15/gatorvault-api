@@ -15,12 +15,13 @@ import type { FitTier } from './engine';
 
 export { asyncHandler, handleApiError, isUuid, parseLimit, parseOptionalInt, parsePosition, sendError };
 
-export type UfFitWatchlistSort = 'ufFitScore' | 'fitDelta' | 'fitVolatility';
+export type UfFitWatchlistSort = 'ufFitScore' | 'fitDelta' | 'fitVolatility' | 'chase';
 
 export function parseUfFitSort(raw: unknown): UfFitWatchlistSort {
   const value = String(raw || 'ufFitScore').toLowerCase();
   if (value === 'fitdelta' || value === 'fit_delta') return 'fitDelta';
   if (value === 'fitvolatility' || value === 'fit_volatility') return 'fitVolatility';
+  if (value === 'chase' || value === 'traction' || value === 'staff') return 'chase';
   return 'ufFitScore';
 }
 

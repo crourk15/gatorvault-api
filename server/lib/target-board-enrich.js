@@ -4,8 +4,17 @@
  */
 const { slugify } = require('./slug');
 const { loadTargetBoardBySlug } = require('./target-board-path');
+const { resolveRecruitDisplayName, looksLikeSlugName } = require('./recruit-display-name');
 
 const BOARD_YEARS = new Set([2027, 2028]);
+
+function canonicalNames() {
+  try {
+    return require('./recruiting-target-allowlist').getMergedCanonicalNames();
+  } catch {
+    return {};
+  }
+}
 
 function firstPositive(...values) {
   for (const raw of values) {
@@ -29,7 +38,15 @@ function mergeBoardSeed(player, boardRow, classYear) {
   const slug = String(player.slug || boardRow.slug || slugify(player.name || boardRow.name || '')).toLowerCase();
   const merged = { ...player, slug: player.slug || boardRow.slug || slug };
 
-  if (!merged.name && boardRow.name) merged.name = boardRow.name;
+  const resolvedName = resolveRecruitDisplayName(
+    { slug, name: merged.name || boardRow.name },
+    { canonicalNames: canonicalNames() }
+  );
+  if (resolvedName && (!merged.name || looksLikeSlugName(merged.name))) {
+    merged.name = resolvedName;
+  } else if (!merged.name && boardRow.name && !looksLikeSlugName(boardRow.name)) {
+    merged.name = boardRow.name;
+  }
   if (!merged.pos && !merged.position && (boardRow.pos || boardRow.position)) {
     merged.pos = boardRow.pos || boardRow.position;
   }
@@ -80,10 +97,14 @@ function mergeBoardSeed(player, boardRow, classYear) {
 function synthesizeFromBoard(boardRow, classYear) {
   const slug = String(boardRow.slug || '').toLowerCase();
   if (!slug) return null;
+  const name = resolveRecruitDisplayName(
+    { slug, name: boardRow.name },
+    { canonicalNames: canonicalNames() }
+  );
   return mergeBoardSeed(
     {
       slug,
-      name: boardRow.name || slug,
+      name,
       pos: boardRow.pos || boardRow.position || null,
       classYear,
       category: 'target',
