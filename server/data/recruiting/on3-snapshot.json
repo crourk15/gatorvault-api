@@ -20,7 +20,8 @@
           "commitDate": "2025-08-11",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:241642": {
           "on3Id": "241642",
@@ -39,7 +40,8 @@
           "commitDate": "2025-06-18",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:176369": {
           "on3Id": "176369",
@@ -58,7 +60,8 @@
           "commitDate": "2025-07-11",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:240430": {
           "on3Id": "240430",
@@ -77,7 +80,8 @@
           "commitDate": "2025-06-08",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:154268": {
           "on3Id": "154268",
@@ -96,7 +100,8 @@
           "commitDate": "2025-06-14",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:239856": {
           "on3Id": "239856",
@@ -115,7 +120,8 @@
           "commitDate": "2025-12-04",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:162624": {
           "on3Id": "162624",
@@ -134,7 +140,8 @@
           "commitDate": "2024-06-01",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:236759": {
           "on3Id": "236759",
@@ -153,7 +160,8 @@
           "commitDate": "2025-07-02",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:243492": {
           "on3Id": "243492",
@@ -172,7 +180,8 @@
           "commitDate": "2025-06-16",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:177521": {
           "on3Id": "177521",
@@ -191,7 +200,8 @@
           "commitDate": "2025-07-07",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:174275": {
           "on3Id": "174275",
@@ -210,7 +220,8 @@
           "commitDate": "2025-07-12",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:177149": {
           "on3Id": "177149",
@@ -229,7 +240,8 @@
           "commitDate": "2025-06-14",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:174822": {
           "on3Id": "174822",
@@ -248,7 +260,8 @@
           "commitDate": "2025-06-03",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:155900": {
           "on3Id": "155900",
@@ -267,7 +280,8 @@
           "commitDate": "2025-07-03",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:176416": {
           "on3Id": "176416",
@@ -286,7 +300,8 @@
           "commitDate": "2025-06-01",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:179743": {
           "on3Id": "179743",
@@ -305,7 +320,8 @@
           "commitDate": "2025-06-08",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:283712": {
           "on3Id": "283712",
@@ -324,7 +340,8 @@
           "commitDate": "2026-01-07",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:236347": {
           "on3Id": "236347",
@@ -343,7 +360,8 @@
           "commitDate": "2025-06-26",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:243619": {
           "on3Id": "243619",
@@ -362,7 +380,8 @@
           "commitDate": "2025-06-16",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "recruit"
         },
         "on3:260787": {
           "on3Id": "260787",
@@ -381,7 +400,8 @@
           "commitDate": "2026-02-05",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Committed"
+          "sourceStatus": "Committed",
+          "category": "recruit"
         },
         "on3:288527": {
           "on3Id": "288527",
@@ -400,7 +420,8 @@
           "commitDate": "2026-05-12",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Committed"
+          "sourceStatus": "Committed",
+          "category": "recruit"
         },
         "on3:43376": {
           "on3Id": "43376",
@@ -419,7 +440,8 @@
           "commitDate": "2026-01-06",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:113148": {
           "on3Id": "113148",
@@ -438,7 +460,8 @@
           "commitDate": "2026-01-06",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:178263": {
           "on3Id": "178263",
@@ -457,7 +480,8 @@
           "commitDate": "2026-01-07",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:87184": {
           "on3Id": "87184",
@@ -476,7 +500,8 @@
           "commitDate": "2026-01-07",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:178849": {
           "on3Id": "178849",
@@ -495,7 +520,8 @@
           "commitDate": "2026-01-10",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:155795": {
           "on3Id": "155795",
@@ -514,7 +540,8 @@
           "commitDate": "2026-01-06",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:147775": {
           "on3Id": "147775",
@@ -533,7 +560,8 @@
           "commitDate": "2026-01-08",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:146069": {
           "on3Id": "146069",
@@ -552,7 +580,8 @@
           "commitDate": "2026-01-06",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:145026": {
           "on3Id": "145026",
@@ -571,7 +600,8 @@
           "commitDate": "2026-01-05",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:175643": {
           "on3Id": "175643",
@@ -590,7 +620,8 @@
           "commitDate": "2026-01-18",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:150237": {
           "on3Id": "150237",
@@ -609,7 +640,8 @@
           "commitDate": "2026-01-04",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:238104": {
           "on3Id": "238104",
@@ -628,7 +660,8 @@
           "commitDate": "2026-01-09",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:154954": {
           "on3Id": "154954",
@@ -647,7 +680,8 @@
           "commitDate": "2026-01-16",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:155719": {
           "on3Id": "155719",
@@ -666,7 +700,8 @@
           "commitDate": "2026-01-10",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:153739": {
           "on3Id": "153739",
@@ -685,7 +720,8 @@
           "commitDate": "2026-01-09",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:113075": {
           "on3Id": "113075",
@@ -704,7 +740,8 @@
           "commitDate": "2026-01-12",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:154828": {
           "on3Id": "154828",
@@ -723,7 +760,8 @@
           "commitDate": "2026-01-05",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:66322": {
           "on3Id": "66322",
@@ -742,7 +780,8 @@
           "commitDate": "2026-01-21",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:283144": {
           "on3Id": "283144",
@@ -761,7 +800,8 @@
           "commitDate": "2026-01-19",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:148026": {
           "on3Id": "148026",
@@ -780,7 +820,8 @@
           "commitDate": "2026-01-12",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:162020": {
           "on3Id": "162020",
@@ -799,7 +840,8 @@
           "commitDate": "2026-01-05",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:239636": {
           "on3Id": "239636",
@@ -818,7 +860,8 @@
           "commitDate": "2026-01-06",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:162609": {
           "on3Id": "162609",
@@ -837,7 +880,8 @@
           "commitDate": "2026-01-06",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:283676": {
           "on3Id": "283676",
@@ -856,7 +900,8 @@
           "commitDate": "2026-01-06",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:283756": {
           "on3Id": "283756",
@@ -875,7 +920,8 @@
           "commitDate": "2026-01-08",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:283795": {
           "on3Id": "283795",
@@ -894,7 +940,8 @@
           "commitDate": "2026-01-10",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:284197": {
           "on3Id": "284197",
@@ -913,7 +960,8 @@
           "commitDate": "2026-01-26",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Enrolled"
+          "sourceStatus": "Enrolled",
+          "category": "portal"
         },
         "on3:288165": {
           "on3Id": "288165",
@@ -932,7 +980,8 @@
           "commitDate": "2026-05-01",
           "committedTo": "Florida",
           "skinny": "",
-          "sourceStatus": "Committed"
+          "sourceStatus": "Committed",
+          "category": "portal"
         }
       },
       "rankings": {

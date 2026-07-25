@@ -252,15 +252,19 @@ async function syncBoardCommitsToPlayers(commits) {
       posRank: p.posRank,
       stateRank: p.stateRank,
       inState: p.inState,
-      category: 'recruit',
-      status: 'committed',
+      category: String(p.category || '').toLowerCase() === 'portal' ? 'portal' : 'recruit',
+      status: String(p.category || '').toLowerCase() === 'portal'
+        ? (p.status || existing?.status || 'committed')
+        : 'committed',
       committedTo: 'Florida',
       protected: true,
       commitDate: p.commitDate || existing?.commitDate || null,
       on3Id: p.on3Id,
       on3Slug: p.on3Slug || existing?.on3Slug || null,
       on3ProfileUrl: buildOn3ProfileUrl({ ...p, slug }),
-      on3Source: 'on3-board-sync',
+      on3Source:
+        String(p.category || '').toLowerCase() === 'portal' ? 'on3-portal-sync' : 'on3-board-sync',
+      fromSchool: p.fromSchool || existing?.fromSchool || null,
       nilValue: p.nilValue ?? existing?.nilValue ?? null,
       nilEstimate: p.nilValue ?? existing?.nilEstimate ?? null,
       skinny: buildSkinny(p),
