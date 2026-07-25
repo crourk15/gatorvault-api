@@ -71,6 +71,13 @@
       ]
     },
     {
+      id: 'members',
+      label: 'Members',
+      mark: 'MB',
+      desc: 'Newest signups — trial, paid, and expired accounts',
+      panels: [{ id: 'recent', label: 'Recent Members', inline: true }]
+    },
+    {
       id: 'gm2',
       label: 'GM',
       mark: 'GM',
@@ -156,11 +163,8 @@
       id: 'settings',
       label: 'Settings',
       mark: 'ST',
-      desc: 'Global config, feature flags, members, admin users, security',
-      panels: [
-        { id: 'members', label: 'Recent Members', inline: true },
-        { id: 'platform', label: 'Platform Settings', inline: true }
-      ]
+      desc: 'Global config, feature flags, admin users, security',
+      panels: [{ id: 'platform', label: 'Platform Settings', inline: true }]
     },
     {
       id: 'player-intel',
@@ -517,9 +521,14 @@
     if (hash === 'product-health' || hash === 'dashboard/product-health') {
       return { section: 'product-intel', panel: 'health' };
     }
+    // Legacy Settings → Members tab (pre top-level Members nav)
+    if (hash === 'settings/members' || hash === 'members') {
+      return { section: 'members', panel: 'recent' };
+    }
     var parts = hash.split('/');
     var section = parts[0] || 'dashboard';
     var panel = parts[1] || (section === 'dashboard' ? 'overview' : null);
+    if (section === 'members' && !panel) panel = 'recent';
     return { section: section, panel: panel };
   }
 
@@ -1032,11 +1041,15 @@
               onNavigate: navigateFromHash
             });
           }
-          else if (panelId === 'members' && global.GVAdminMembers) {
-            GVAdminMembers.render(panelEl, {
-              apiGet: apiGet,
-              onNavigate: navigateFromHash
-            });
+          else if ((panelId === 'recent' || panelId === 'members') && section.id === 'members') {
+            if (global.GVAdminMembers) {
+              GVAdminMembers.render(panelEl, {
+                apiGet: apiGet,
+                onNavigate: navigateFromHash
+              });
+            } else {
+              panelEl.innerHTML = '<p class="hub-meta err">Members panel failed to load. Hard-refresh the page.</p>';
+            }
           }
           else if (panelId === 'platform') renderSettingsPanel(panelEl);
         }

@@ -15,6 +15,7 @@ const { effectiveTier } = require('./session-auth');
 
 const MODULE_IDS = [
   'dashboard',
+  'members',
   'gm2',
   'product-intel',
   'qa',
@@ -408,7 +409,7 @@ function searchUsers(q, limit) {
       title: u.name || u.email || u.id,
       subtitle: u.email || 'Member',
       type: 'user',
-      route: '#settings/members',
+      route: '#members/recent',
       href: ''
     }));
 }
