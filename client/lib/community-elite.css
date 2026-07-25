@@ -1,18 +1,21 @@
 /**
- * Community — elite shell (parity with Film Room / Team / NIL)
+ * Community — elite shell (white cards / UF blue / orange trim)
+ * Matches Recruiting Hub / Team / FutureCast card chrome.
  */
 
 .gv-community-page {
   --cm-blue: #0021a5;
   --cm-orange: #fa4616;
   --cm-navy: #001a33;
-  --cm-card: #121c2e;
-  --cm-border: rgba(0, 48, 135, 0.4);
+  --cm-card: #ffffff;
+  --cm-card-text: #0021a5;
+  --cm-muted: #6b7280;
+  --cm-border: rgba(0, 33, 165, 0.14);
+  --cm-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   --cm-mist: #94a3b8;
-  --cm-cream: #e2e8f0;
   min-height: 100%;
   background: var(--cm-navy);
-  color: var(--cm-cream);
+  color: #e2e8f0;
   padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
 }
 
@@ -102,25 +105,13 @@
 }
 
 @keyframes gv-community-hero-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes gv-community-rise {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ── Layout ── */
@@ -147,24 +138,35 @@
   color: var(--cm-mist);
 }
 
+/* Shared white card */
+.gv-community-page .gv-community__card {
+  background: var(--cm-card);
+  color: var(--cm-card-text);
+  border: 1px solid var(--cm-border);
+  border-top: 4px solid var(--cm-orange);
+  border-radius: 10px;
+  box-shadow: var(--cm-shadow);
+}
+
 /* ── Today card ── */
 .gv-community-page .gv-community__today-card {
   width: 100%;
   text-align: left;
   padding: 1.15rem 1.25rem;
   background: var(--cm-card);
+  color: var(--cm-card-text);
   border: 1px solid var(--cm-border);
   border-top: 4px solid var(--cm-orange);
-  border-radius: 12px;
-  color: inherit;
+  border-radius: 10px;
+  box-shadow: var(--cm-shadow);
   cursor: pointer;
   min-height: 44px;
   animation: gv-community-rise 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  transition: border-color 160ms ease, transform 160ms ease;
+  transition: box-shadow 160ms ease, transform 160ms ease;
 }
 
 .gv-community-page .gv-community__today-card:hover {
-  border-color: rgba(250, 70, 22, 0.55);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
 .gv-community-page .gv-community__today-title {
@@ -172,14 +174,14 @@
   font-family: Oswald, 'Arial Narrow', sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--cm-blue);
   line-height: 1.2;
 }
 
 .gv-community-page .gv-community__today-meta {
   margin: 0;
   font-size: 0.8125rem;
-  color: var(--cm-mist);
+  color: var(--cm-muted);
 }
 
 .gv-community-page .gv-community__live-updating {
@@ -194,7 +196,7 @@
   color: var(--cm-mist);
 }
 
-/* ── Toolbar / sort ── */
+/* ── Toolbar / sort (white card chrome) ── */
 .gv-community-page .gv-community__toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -204,7 +206,9 @@
   padding: 0.85rem 1rem;
   background: var(--cm-card);
   border: 1px solid var(--cm-border);
-  border-radius: 12px;
+  border-top: 4px solid var(--cm-orange);
+  border-radius: 10px;
+  box-shadow: var(--cm-shadow);
 }
 
 .gv-community-page .gv-community__sort {
@@ -214,12 +218,12 @@
 }
 
 .gv-community-page .gv-community__sort-btn {
-  min-height: 44px;
-  padding: 0.45rem 0.85rem;
+  min-height: 40px;
+  padding: 0.4rem 0.8rem;
   border-radius: 999px;
-  border: 1px solid rgba(0, 48, 135, 0.45);
+  border: 1px solid rgba(0, 33, 165, 0.22);
   background: transparent;
-  color: var(--cm-mist);
+  color: var(--cm-blue);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -228,26 +232,26 @@
 }
 
 .gv-community-page .gv-community__sort-btn.is-active {
-  background: rgba(250, 70, 22, 0.16);
+  background: rgba(250, 70, 22, 0.1);
   border-color: rgba(250, 70, 22, 0.55);
-  color: #fff;
+  color: var(--cm-orange);
 }
 
 .gv-community-page .gv-community__select {
   font-size: 0.75rem;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0.5rem 0.75rem;
-  background: #0b1220;
-  border: 1px solid var(--cm-border);
+  background: #fff;
+  border: 1px solid rgba(0, 33, 165, 0.22);
   border-radius: 0.5rem;
-  color: var(--cm-cream);
+  color: var(--cm-blue);
 }
 
 .gv-community-page .gv-community__new-btn,
 .gv-community-page .gv-community__sticky-new {
   font-size: 0.75rem;
   font-weight: 700;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0.55rem 1rem;
   background: var(--cm-orange);
   color: #fff;
@@ -264,8 +268,17 @@
   padding: 1rem;
   background: var(--cm-card);
   border: 1px solid var(--cm-border);
-  border-top: 3px solid var(--cm-orange);
-  border-radius: 12px;
+  border-top: 4px solid var(--cm-orange);
+  border-radius: 10px;
+  box-shadow: var(--cm-shadow);
+  color: var(--cm-card-text);
+}
+
+.gv-community-page .gv-community__form .gv-alert-input,
+.gv-community-page .gv-community__form .gv-community__select {
+  background: #fff;
+  color: var(--cm-blue);
+  border-color: rgba(0, 33, 165, 0.22);
 }
 
 .gv-community-page .gv-community__textarea {
@@ -280,7 +293,7 @@
 .gv-community-page .gv-community__reply-label {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--cm-cream);
+  color: var(--cm-blue);
 }
 
 .gv-community-page .gv-community__reply-locked,
@@ -292,18 +305,18 @@
 
 .gv-community-page .gv-community__post-error {
   font-size: 0.8125rem;
-  color: #f87171;
+  color: #dc2626;
   margin: 0;
 }
 
-/* ── Threads ── */
+/* ── Threads (white rows) ── */
 .gv-community-page .gv-community__threads {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.65rem;
 }
 
 .gv-community-page .gv-community__thread-row {
@@ -313,27 +326,29 @@
   padding: 1rem 1.1rem;
   background: var(--cm-card);
   border: 1px solid var(--cm-border);
-  border-radius: 12px;
+  border-top: 4px solid var(--cm-orange);
+  border-radius: 10px;
+  box-shadow: var(--cm-shadow);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  transition: border-color 160ms ease;
+  transition: box-shadow 160ms ease;
 }
 
 .gv-community-page .gv-community__thread-row:hover {
-  border-color: rgba(250, 70, 22, 0.4);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
 }
 
 .gv-community-page .gv-community__thread-title {
   font-size: 0.9375rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--cm-blue);
 }
 
 .gv-community-page .gv-community__thread-meta {
   font-size: 0.75rem;
-  color: var(--cm-mist);
+  color: var(--cm-muted);
 }
 
 .gv-community-page .gv-community__posts {
@@ -348,8 +363,11 @@
 .gv-community-page .gv-community__post {
   padding: 1rem;
   background: var(--cm-card);
-  border-radius: 12px;
+  border-radius: 10px;
   border: 1px solid var(--cm-border);
+  border-top: 4px solid var(--cm-orange);
+  box-shadow: var(--cm-shadow);
+  color: var(--cm-card-text);
 }
 
 .gv-community-page .gv-community__post-author {
@@ -361,21 +379,21 @@
 
 .gv-community-page .gv-community__post-body {
   font-size: 0.875rem;
-  color: var(--cm-cream);
+  color: var(--cm-card-text);
   margin: 0 0 0.35rem;
   line-height: 1.45;
 }
 
 .gv-community-page .gv-community__post-meta {
   font-size: 0.6875rem;
-  color: var(--cm-mist);
+  color: var(--cm-muted);
   margin: 0;
 }
 
 .gv-community-page .gv-community__thread-op-title {
   font-size: 1.05rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--cm-blue);
   margin: 0 0 0.5rem;
 }
 
@@ -421,15 +439,17 @@
   padding: 1rem;
   background: var(--cm-card);
   border: 1px solid var(--cm-border);
-  border-radius: 12px;
-  color: inherit;
+  border-top: 4px solid var(--cm-orange);
+  border-radius: 10px;
+  box-shadow: var(--cm-shadow);
+  color: var(--cm-card-text);
   cursor: pointer;
   min-height: 44px;
 }
 
 .gv-community-page .gv-community__staff-card h3 {
   margin: 0.5rem 0;
-  color: #fff;
+  color: var(--cm-blue);
 }
 
 /* ── Aside panels ── */
@@ -437,9 +457,11 @@
   padding: 1.15rem;
   background: var(--cm-card);
   border: 1px solid var(--cm-border);
-  border-top: 3px solid var(--cm-orange);
-  border-radius: 12px;
+  border-top: 4px solid var(--cm-orange);
+  border-radius: 10px;
+  box-shadow: var(--cm-shadow);
   margin-bottom: 1rem;
+  color: var(--cm-card-text);
 }
 
 .gv-community-page .gv-community__panel-title {
@@ -449,12 +471,12 @@
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--cm-blue);
 }
 
 .gv-community-page .gv-community__room {
   padding: 0.75rem;
-  background: #0b1220;
+  background: rgba(0, 33, 165, 0.04);
   border-radius: 0.75rem;
   margin-bottom: 0.5rem;
 }
@@ -462,7 +484,7 @@
 .gv-community-page .gv-community__room--action {
   display: block;
   width: 100%;
-  border: 1px solid rgba(0, 48, 135, 0.35);
+  border: 1px solid rgba(0, 33, 165, 0.16);
   text-align: left;
   cursor: pointer;
   color: inherit;
@@ -473,7 +495,7 @@
 
 .gv-community-page .gv-community__room--action:hover {
   border-color: rgba(250, 70, 22, 0.45);
-  background: #132033;
+  background: rgba(250, 70, 22, 0.06);
 }
 
 .gv-community-page .gv-community__room--live {
@@ -488,14 +510,14 @@
 .gv-community-page .gv-community__room-title {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--cm-blue);
   margin: 0 0 0.25rem;
 }
 
 .gv-community-page .gv-community__room-desc,
 .gv-community-page .gv-community__room-meta {
   font-size: 0.75rem;
-  color: var(--cm-mist);
+  color: var(--cm-muted);
   margin: 0;
 }
 
@@ -510,7 +532,7 @@
   flex-direction: column;
   gap: 0.2rem;
   padding: 0.65rem 0.75rem;
-  background: #0b1220;
+  background: rgba(0, 33, 165, 0.04);
   border-radius: 0.65rem;
 }
 
@@ -518,23 +540,23 @@
   font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--cm-mist);
+  color: var(--cm-muted);
 }
 
 .gv-community-page .gv-community__pulse-stat strong {
   font-family: Oswald, 'Arial Narrow', sans-serif;
   font-size: 1.25rem;
-  color: #fff;
+  color: var(--cm-blue);
 }
 
 .gv-community-page .gv-community__pulse-note {
   margin: 0.75rem 0 0;
   font-size: 0.75rem;
-  color: var(--cm-mist);
+  color: var(--cm-muted);
   line-height: 1.4;
 }
 
-/* UGC actions stay usable on navy */
+/* UGC actions on white cards */
 .gv-community-page .gv-community__post-head {
   display: flex;
   align-items: flex-start;
@@ -549,14 +571,14 @@
   min-height: 32px;
   padding: 0.3rem 0.55rem;
   border-radius: 0.375rem;
-  border: 1px solid rgba(0, 48, 135, 0.35);
+  border: 1px solid rgba(0, 33, 165, 0.22);
   background: transparent;
-  color: var(--cm-mist);
+  color: var(--cm-muted);
   cursor: pointer;
 }
 
 .gv-community-page .gv-community__action-btn:hover {
-  color: #e2e8f0;
+  color: var(--cm-blue);
   border-color: rgba(250, 70, 22, 0.45);
 }
 
@@ -565,16 +587,16 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #fbbf24;
-  background: rgba(251, 191, 36, 0.12);
-  border: 1px solid rgba(251, 191, 36, 0.35);
+  color: #b45309;
+  background: rgba(251, 191, 36, 0.16);
+  border: 1px solid rgba(251, 191, 36, 0.45);
   padding: 0.2rem 0.45rem;
   border-radius: 0.375rem;
 }
 
 .gv-community-page .gv-community__post--flagged,
 .gv-community-page .gv-community__thread-row--flagged {
-  border-color: rgba(251, 191, 36, 0.35);
+  border-color: rgba(251, 191, 36, 0.45);
 }
 
 .gv-community-page .gv-community__blocked-chip {
@@ -584,9 +606,9 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--cm-mist);
-  background: rgba(148, 163, 184, 0.12);
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: var(--cm-muted);
+  background: rgba(107, 114, 128, 0.1);
+  border: 1px solid rgba(107, 114, 128, 0.25);
   padding: 0.15rem 0.4rem;
   border-radius: 0.35rem;
   vertical-align: middle;
@@ -607,7 +629,7 @@
   justify-content: space-between;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: var(--cm-mist);
+  color: var(--cm-muted);
 }
 
 .gv-community-page .gv-community__empty-cta {
@@ -615,6 +637,14 @@
   flex-direction: column;
   gap: 0.75rem;
   align-items: flex-start;
+}
+
+.gv-community-page .gv-film-back {
+  color: #fff;
+}
+
+.gv-community-page .gv-page-status {
+  color: var(--cm-mist);
 }
 
 @media (max-width: 767px) {
