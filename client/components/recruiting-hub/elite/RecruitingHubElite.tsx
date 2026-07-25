@@ -76,40 +76,44 @@ function RecruitingHubEliteContent({
       ) : null}
       {deferHero ? <RecruitingHeroHydrator /> : <RecruitingHeroStripInline />}
       {showSigningDay ? <SigningDayTracker /> : null}
-      <LazyHubSection priority="top-fold" testId="rh-lazy-commit-board">
+      <LazyHubSection key="rh-lazy-commit-board" priority="top-fold" testId="rh-lazy-commit-board">
         <EliteCommitBoard year={activeYear} />
       </LazyHubSection>
       {showRemaining ? (
-        <LazyHubSection priority="top-fold" testId="rh-lazy-remaining-targets">
+        <LazyHubSection
+          key="rh-lazy-remaining-targets"
+          priority="top-fold"
+          testId="rh-lazy-remaining-targets"
+        >
           <RemainingTargetsStrip />
         </LazyHubSection>
       ) : null}
       {showRemaining ? (
-        <LazyHubSection testId="rh-lazy-fc-closing-cta">
+        <LazyHubSection key="rh-lazy-fc-closing-cta" testId="rh-lazy-fc-closing-cta">
           <FutureCastClosingCta />
         </LazyHubSection>
       ) : null}
       {showOpenCycle ? (
-        <LazyHubSection testId="rh-lazy-battle-board">
+        <LazyHubSection key="rh-lazy-battle-board" testId="rh-lazy-battle-board">
           <BattleBoard />
         </LazyHubSection>
       ) : null}
       {showOpenCycle ? (
-        <LazyHubSection testId="rh-lazy-heat-index">
+        <LazyHubSection key="rh-lazy-heat-index" testId="rh-lazy-heat-index">
           <TopTargetsHeatIndex />
         </LazyHubSection>
       ) : null}
       {showOpenCycle ? (
-        <LazyHubSection testId="rh-lazy-movement-feed">
+        <LazyHubSection key="rh-lazy-movement-feed" testId="rh-lazy-movement-feed">
           <MovementIntelFeed />
         </LazyHubSection>
       ) : null}
       {showOpenCycle ? (
-        <LazyHubSection testId="rh-lazy-position-snapshot">
+        <LazyHubSection key="rh-lazy-position-snapshot" testId="rh-lazy-position-snapshot">
           <RecruitingPositionSnapshot />
         </LazyHubSection>
       ) : null}
-      <LazyHubSection minHeight={420} testId="rh-lazy-footprint">
+      <LazyHubSection key="rh-lazy-footprint" minHeight={420} testId="rh-lazy-footprint">
         <RecruitingFootprintMap />
       </LazyHubSection>
       <div className="rh-hub-shell-mode" data-testid="rh-hub-shell-mode" data-shell={shell} hidden />

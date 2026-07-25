@@ -186,6 +186,7 @@ export type RhHubFootprintPin = {
 
 export type RhHubFootprintResponse = {
   ok?: boolean;
+  year?: number | null;
   meta?: Record<string, unknown>;
   states: RhHubFootprintState[];
   pins?: RhHubFootprintPin[];
