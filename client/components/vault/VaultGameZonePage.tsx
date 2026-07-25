@@ -304,116 +304,126 @@ export function VaultGameZonePage(): React.ReactElement {
                 : 'Call the cover and the final score. Your ticket stays with you until kickoff.'}
             </p>
 
-            <div className="gv-gz__cover" role="group" aria-label="Cover call">
-              <p className="gv-gz__cover-label">Does Florida cover?</p>
-              <div className="gv-gz__cover-row">
-                <button
-                  type="button"
-                  className={`gv-gz__cover-btn${cover === 'cover' ? ' is-active' : ''}`}
-                  disabled={locked}
-                  onClick={() => setCover('cover')}
-                >
-                  Covers {spread || ''}
-                </button>
-                <button
-                  type="button"
-                  className={`gv-gz__cover-btn${cover === 'no-cover' ? ' is-active' : ''}`}
-                  disabled={locked}
-                  onClick={() => setCover('no-cover')}
-                >
-                  Does not cover
-                </button>
+            <div
+              className={`gv-gz__ticket-build${locked ? ' is-locked' : ''}${justLocked ? ' is-seal' : ''}`}
+              aria-live="polite"
+            >
+              <div className="gv-gz__ticket-build-head">
+                <p className="gv-gz__ticket-build-kicker">Swamp Eve ticket</p>
+                <p className="gv-gz__ticket-build-status">{locked ? 'Locked in' : 'Open'}</p>
               </div>
-              {coverHint ? <p className="gv-gz__cover-hint">{coverHint}</p> : null}
-            </div>
 
-            <div className={`gv-gz__ticket${locked ? ' is-locked' : ''}`} aria-live="polite">
-              <div className="gv-gz__scoreboard">
-                <div className="gv-gz__side">
-                  <p className="gv-gz__side-label">Florida</p>
-                  <div className="gv-gz__dial">
-                    {!locked ? (
-                      <button type="button" className="gv-gz__nudge" onClick={() => nudge('uf', 1)} aria-label="Increase Florida score">
-                        +
-                      </button>
-                    ) : null}
-                    <input
-                      className="gv-gz__score"
-                      type="number"
-                      inputMode="numeric"
-                      min={0}
-                      max={99}
-                      value={ufScore}
-                      disabled={locked}
-                      onChange={(e) => setUfScore(String(clampScore(parseInt(e.target.value, 10) || 0)))}
-                      aria-label="Florida score prediction"
-                    />
-                    {!locked ? (
-                      <button type="button" className="gv-gz__nudge" onClick={() => nudge('uf', -1)} aria-label="Decrease Florida score">
-                        −
-                      </button>
-                    ) : null}
-                  </div>
-                </div>
-                <div className="gv-gz__mid" aria-hidden="true">
-                  <span>{locked ? 'TICKET' : `${margin >= 0 ? '+' : ''}${margin}`}</span>
-                </div>
-                <div className="gv-gz__side">
-                  <p className="gv-gz__side-label">{opp}</p>
-                  <div className="gv-gz__dial">
-                    {!locked ? (
-                      <button type="button" className="gv-gz__nudge" onClick={() => nudge('opp', 1)} aria-label={`Increase ${opp} score`}>
-                        +
-                      </button>
-                    ) : null}
-                    <input
-                      className="gv-gz__score"
-                      type="number"
-                      inputMode="numeric"
-                      min={0}
-                      max={99}
-                      value={oppScore}
-                      disabled={locked}
-                      onChange={(e) => setOppScore(String(clampScore(parseInt(e.target.value, 10) || 0)))}
-                      aria-label={`${opp} score prediction`}
-                    />
-                    {!locked ? (
-                      <button type="button" className="gv-gz__nudge" onClick={() => nudge('opp', -1)} aria-label={`Decrease ${opp} score`}>
-                        −
-                      </button>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-              {locked ? <div className="gv-gz__seal" aria-hidden="true">Locked</div> : null}
-            </div>
-
-            <div className="gv-gz__cta-row">
-              {locked ? (
-                <>
-                  <VaultNavLink href="/vault/live-scores/" className="gv-gz__cta">
-                    Open Gators Live
-                  </VaultNavLink>
-                  <button type="button" className="gv-gz__cta gv-gz__cta--ghost" onClick={clearTicket}>
-                    Change ticket
+              <div className="gv-gz__cover" role="group" aria-label="Cover call">
+                <p className="gv-gz__cover-label">Does Florida cover?</p>
+                <div className="gv-gz__cover-row">
+                  <button
+                    type="button"
+                    className={`gv-gz__cover-btn${cover === 'cover' ? ' is-active' : ''}`}
+                    disabled={locked}
+                    onClick={() => setCover('cover')}
+                  >
+                    Covers {spread || ''}
                   </button>
-                </>
-              ) : (
-                <button
-                  type="button"
-                  className="gv-gz__cta"
-                  onClick={lockTicket}
-                  disabled={!cover || !ufScore.trim() || !oppScore.trim()}
-                >
-                  Lock ticket
-                </button>
-              )}
+                  <button
+                    type="button"
+                    className={`gv-gz__cover-btn${cover === 'no-cover' ? ' is-active' : ''}`}
+                    disabled={locked}
+                    onClick={() => setCover('no-cover')}
+                  >
+                    Does not cover
+                  </button>
+                </div>
+                {coverHint ? <p className="gv-gz__cover-hint">{coverHint}</p> : null}
+              </div>
+
+              <div className={`gv-gz__ticket${locked ? ' is-locked' : ''}`}>
+                <div className="gv-gz__scoreboard">
+                  <div className="gv-gz__side">
+                    <p className="gv-gz__side-label">Florida</p>
+                    <div className="gv-gz__dial">
+                      {!locked ? (
+                        <button type="button" className="gv-gz__nudge" onClick={() => nudge('uf', 1)} aria-label="Increase Florida score">
+                          +
+                        </button>
+                      ) : null}
+                      <input
+                        className="gv-gz__score"
+                        type="number"
+                        inputMode="numeric"
+                        min={0}
+                        max={99}
+                        value={ufScore}
+                        disabled={locked}
+                        onChange={(e) => setUfScore(String(clampScore(parseInt(e.target.value, 10) || 0)))}
+                        aria-label="Florida score prediction"
+                      />
+                      {!locked ? (
+                        <button type="button" className="gv-gz__nudge" onClick={() => nudge('uf', -1)} aria-label="Decrease Florida score">
+                          −
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="gv-gz__mid" aria-hidden="true">
+                    <span>{locked ? 'TICKET' : `${margin >= 0 ? '+' : ''}${margin}`}</span>
+                  </div>
+                  <div className="gv-gz__side">
+                    <p className="gv-gz__side-label">{opp}</p>
+                    <div className="gv-gz__dial">
+                      {!locked ? (
+                        <button type="button" className="gv-gz__nudge" onClick={() => nudge('opp', 1)} aria-label={`Increase ${opp} score`}>
+                          +
+                        </button>
+                      ) : null}
+                      <input
+                        className="gv-gz__score"
+                        type="number"
+                        inputMode="numeric"
+                        min={0}
+                        max={99}
+                        value={oppScore}
+                        disabled={locked}
+                        onChange={(e) => setOppScore(String(clampScore(parseInt(e.target.value, 10) || 0)))}
+                        aria-label={`${opp} score prediction`}
+                      />
+                      {!locked ? (
+                        <button type="button" className="gv-gz__nudge" onClick={() => nudge('opp', -1)} aria-label={`Decrease ${opp} score`}>
+                          −
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+                {locked ? <div className="gv-gz__seal" aria-hidden="true">Locked</div> : null}
+              </div>
+
+              <div className="gv-gz__cta-row">
+                {locked ? (
+                  <>
+                    <VaultNavLink href="/vault/live-scores/" className="gv-gz__cta">
+                      Open Gators Live
+                    </VaultNavLink>
+                    <button type="button" className="gv-gz__cta gv-gz__cta--ghost" onClick={clearTicket}>
+                      Change ticket
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="gv-gz__cta"
+                    onClick={lockTicket}
+                    disabled={!cover || !ufScore.trim() || !oppScore.trim()}
+                  >
+                    Lock ticket
+                  </button>
+                )}
+              </div>
+              {locked && pointsAwarded > 0 ? (
+                <p className="gv-gz__points-note" role="status">
+                  +{pointsAwarded} Vault Points locked with your ticket.
+                </p>
+              ) : null}
             </div>
-            {locked && pointsAwarded > 0 ? (
-              <p className="gv-gz__points-note" role="status">
-                +{pointsAwarded} Vault Points locked with your ticket.
-              </p>
-            ) : null}
           </section>
 
           <section className="gv-gz__intel" aria-label="Keys to the game">
