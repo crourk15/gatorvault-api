@@ -427,10 +427,22 @@
   border-color: rgba(244, 247, 251, 0.35);
 }
 
+/* Below-stage modules use elite white / blue / orange cards */
 .gv-gz__intel {
-  padding: 0.5rem 1.25rem 2.25rem;
-  max-width: 40rem;
-  margin: 0 auto;
+  --gz-card: #ffffff;
+  --gz-card-text: #0021a5;
+  --gz-card-muted: #6b7280;
+  --gz-card-border: rgba(0, 33, 165, 0.14);
+  --gz-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: min(100% - 2.5rem, 40rem);
+  margin: 0.25rem auto 2.25rem;
+  padding: 1.25rem 1.2rem 1.35rem;
+  background: var(--gz-card);
+  color: var(--gz-card-text);
+  border: 1px solid var(--gz-card-border);
+  border-top: 4px solid var(--gz-orange);
+  border-radius: 10px;
+  box-shadow: var(--gz-card-shadow);
   animation: gv-gz-rise 650ms 60ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -449,11 +461,12 @@
   font-size: clamp(1.5rem, 4vw, 2rem);
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  color: var(--gz-card-text);
 }
 
 .gv-gz__intel-film {
   margin: 0.55rem 0 0;
-  color: var(--gz-mist);
+  color: var(--gz-card-muted);
   line-height: 1.45;
 }
 
@@ -471,7 +484,7 @@
   gap: 0.85rem;
   align-items: start;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(244, 247, 251, 0.14);
+  border-top: 1px solid rgba(0, 33, 165, 0.12);
 }
 
 .gv-gz__key-num {
@@ -482,12 +495,13 @@
 
 .gv-gz__key-text {
   line-height: 1.4;
+  color: var(--gz-card-text);
 }
 
 .gv-gz__intel-link {
   display: inline-flex;
   margin-top: 1.15rem;
-  color: #fff;
+  color: var(--gz-card-text);
   font-family: 'Oswald', sans-serif;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -497,6 +511,9 @@
 }
 
 .gv-gz__doors {
+  --gz-card: #ffffff;
+  --gz-card-text: #0021a5;
+  --gz-card-muted: #6b7280;
   padding: 0 1.25rem 3rem;
   animation: gv-gz-rise 650ms 80ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -526,15 +543,20 @@
   flex-direction: column;
   gap: 0.3rem;
   padding: 1.1rem 1rem;
-  border-top: 1px solid rgba(244, 247, 251, 0.18);
-  color: inherit;
+  background: var(--gz-card);
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  border-top: 4px solid var(--gz-orange);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: var(--gz-card-text);
   text-decoration: none;
-  transition: border-color 180ms ease, color 180ms ease;
+  transition: box-shadow 180ms ease, transform 180ms ease;
 }
 
 .gv-gz__door:hover,
 .gv-gz__door:focus-visible {
-  border-top-color: var(--gz-orange);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  transform: translateY(-1px);
 }
 
 .gv-gz__door-title {
@@ -542,11 +564,12 @@
   font-size: 1.15rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--gz-card-text);
 }
 
 .gv-gz__door-copy {
   font-size: 0.88rem;
-  color: var(--gz-mist);
+  color: var(--gz-card-muted);
 }
 
 @keyframes gv-gz-rise {
