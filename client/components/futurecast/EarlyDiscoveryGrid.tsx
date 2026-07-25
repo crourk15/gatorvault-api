@@ -93,6 +93,7 @@ export function EarlyDiscoveryGrid({ query }: EarlyDiscoveryGridProps): React.Re
             <ClassicRecruitCard
               player={fromEarlyDiscovery(player)}
               variant="target"
+              rank={player.rank}
               profileContext="futurecast"
             />
           </div>

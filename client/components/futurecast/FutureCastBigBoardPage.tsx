@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { BigBoardGrid } from '@/components/futurecast/BigBoardGrid';
 import { EarlyDiscoveryGrid } from '@/components/futurecast/EarlyDiscoveryGrid';
+import { PortalWatchlistGrid } from '@/components/futurecast/PortalWatchlistGrid';
 import { UfFitWatchlistGrid } from '@/components/futurecast/UfFitWatchlistGrid';
 import { TAB_SORT, type BigBoardQuery } from '@/lib/big-board-api';
 import { getPortalSeasonState, shouldShowPortalWatchlist } from '@/lib/recruiting-cycle';
@@ -169,6 +170,15 @@ export function FutureCastBigBoardPage(): React.ReactElement {
         />
       ) : activeTab === 'early-discovery' ? (
         <EarlyDiscoveryGrid query={earlyDiscoveryQuery} />
+      ) : activeTab === 'portal-watchlist' ? (
+        <PortalWatchlistGrid
+          query={{
+            class_year: classYear,
+            position: position || undefined,
+            sort: 'likelihood',
+            limit: 100,
+          }}
+        />
       ) : (
         <BigBoardGrid query={query} />
       )}

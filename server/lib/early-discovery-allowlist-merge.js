@@ -1,11 +1,12 @@
 /**
  * Merge locked 2028 allowlist targets into Early Discovery API results.
  */
-const { ALLOWLIST_2028 } = require('./recruiting-target-allowlist');
+const { ALLOWLIST_2028, getMergedCanonicalNames } = require('./recruiting-target-allowlist');
 const { loadTargetBoardBySlug } = require('./target-board-path');
 const { computeDiscoveryScore } = require('./early-discovery-score');
 const { mergeBoardSeed } = require('./target-board-enrich');
 const { resolveFutureCastPosition } = require('./recruiting-editorial-positions');
+const { resolveRecruitDisplayName } = require('./recruit-display-name');
 
 const ALLOWLIST_DISCOVERY_FLOOR = 72;
 
@@ -53,10 +54,14 @@ function buildAllowlistDiscoveryRow(boardRow, classYear) {
     inFlorida,
   });
   discoveryScore = Math.max(discoveryScore, ALLOWLIST_DISCOVERY_FLOOR);
+  const fullName = resolveRecruitDisplayName(
+    { slug, name: merged.name || boardRow.name },
+    { canonicalNames: getMergedCanonicalNames() }
+  );
   return {
     id: slug,
     slug,
-    fullName: merged.name || boardRow.name || slug,
+    fullName,
     classYear,
     position: resolveFutureCastPosition({
       slug,
@@ -107,8 +112,13 @@ function enrichAllowlistRow(row, boardRow) {
         2028
       )
     : null;
+  const fullName = resolveRecruitDisplayName(
+    { slug: row.slug, name: merged?.name, fullName: row.fullName },
+    { canonicalNames: getMergedCanonicalNames() }
+  );
   return {
     ...row,
+    fullName,
     allowlistTarget: true,
     discoveryScore: Math.max(Number(row.discoveryScore) || 0, ALLOWLIST_DISCOVERY_FLOOR),
     ufStatus: row.ufStatus || 'TARGET',

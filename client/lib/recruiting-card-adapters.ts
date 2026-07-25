@@ -168,6 +168,7 @@ type EnrichedBigBoardPlayer = BigBoardPlayer & {
   stateRank?: number | null;
   state?: string | null;
   school?: string | null;
+  inState?: boolean;
   committedTo?: string | null;
   isCommittedToUF?: boolean;
 };
@@ -178,8 +179,9 @@ function isFloridaCommit(committedTo?: string | null): boolean {
 
 export function fromBigBoard(p: EnrichedBigBoardPlayer): RecruitingBoardPlayer {
   const isUfCommit = p.isCommittedToUF === true || isFloridaCommit(p.committedTo);
-  const composite = p.compositeScore ?? p.rating ?? 0;
-  const isLiveOn3 = (p.nationalRank ?? p.natlRank ?? 0) > 0 && composite > 0;
+  const composite = p.compositeScore ?? p.rating ?? undefined;
+  const hasComposite = composite != null && Number(composite) > 0;
+  const isLiveOn3 = (p.nationalRank ?? p.natlRank ?? 0) > 0 && hasComposite;
   const ufScore = isUfCommit ? 100 : p.ufFitScore > 0 ? p.ufFitScore : 0;
   return {
     slug: p.slug,
@@ -188,21 +190,23 @@ export function fromBigBoard(p: EnrichedBigBoardPlayer): RecruitingBoardPlayer {
     position: p.position,
     classYear: p.classYear,
     state: p.state ?? undefined,
-    stars: p.stars ?? 0,
-    rating: composite,
-    displayRating: composite,
+    inState: p.inState ?? undefined,
+    stars: p.stars ?? undefined,
+    rating: hasComposite ? composite : undefined,
+    displayRating: hasComposite ? composite : undefined,
     natlRank: isLiveOn3 ? (p.nationalRank ?? p.natlRank ?? undefined) : undefined,
     posRank: isLiveOn3 ? (p.posRank ?? undefined) : undefined,
     stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
     showIndustryRanks: isLiveOn3,
-    ratingLabel: isLiveOn3 ? 'Composite' : composite > 0 ? 'Vault est.' : 'Composite',
+    ratingLabel: isLiveOn3 ? 'Composite' : hasComposite ? 'Vault est.' : undefined,
     school: formatRecruitSchoolLabel(p.school ?? undefined, p.state ?? undefined) ?? undefined,
     committedTo: p.committedTo ?? undefined,
     isCommittedToUF: isUfCommit,
-    fitScore: ufScore,
-    ufProbability: ufScore > 0 ? ufScore / 100 : 0,
+    fitScore: ufScore > 0 ? ufScore : undefined,
+    // Avoid a fake 0% heat meter when there is no UF Fit score yet.
+    ufProbability: ufScore > 0 ? ufScore / 100 : undefined,
     heatPct: ufScore > 0 ? ufScore : undefined,
-    heatLabel: isUfCommit ? 'Locked In' : 'UF interest',
+    heatLabel: isUfCommit ? 'Locked In' : ufScore > 0 ? 'UF interest' : undefined,
     skinny:
       isUfCommit
         ? `Committed to Florida`

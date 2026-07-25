@@ -21,6 +21,7 @@ export interface BigBoardPlayer {
   classYear: number;
   position: string;
   lifecycle: string;
+  committedTo: string | null;
   portalStatus: string | null;
   signalCount: number;
   portalLikelihood: number;
@@ -63,6 +64,7 @@ function enrichRow(row: BigBoardRawPlayer): Omit<BigBoardPlayer, 'rank'> {
     classYear: row.class_year,
     position: row.position,
     lifecycle: row.lifecycle,
+    committedTo: row.committed_to ?? null,
     portalStatus: row.portal_status,
     signalCount: row.signal_count,
     portalLikelihood: Math.round(portalLikelihood * 1000) / 1000,
