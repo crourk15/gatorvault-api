@@ -126,11 +126,15 @@ function FootprintIntel({
   );
 }
 
+function initialFootprintYear(activeYear: number): number {
+  return (FOOTPRINT_YEARS as readonly number[]).includes(activeYear) ? activeYear : 2027;
+}
+
 export function RecruitingFootprintMap(): React.ReactElement {
-  const { activeYear, setActiveYear } = useRecruitingClassYear();
-  const footprintYear = (FOOTPRINT_YEARS as readonly number[]).includes(activeYear)
-    ? activeYear
-    : 2027;
+  const { activeYear } = useRecruitingClassYear();
+  // Map year is local so Class 2027/2028 tabs do not rebuild the hub shell
+  // (open-cycle sections remounting was killing the 2028 tab after year shells shipped).
+  const [footprintYear, setFootprintYear] = useState(() => initialFootprintYear(activeYear));
   const stageRef = useRef<HTMLDivElement>(null);
   const pinViewportTopRef = useRef<number | null>(null);
   const selectFootprint = useCallback((b: { footprint: RhHubFootprintResponse }) => b.footprint, []);
@@ -141,22 +145,28 @@ export function RecruitingFootprintMap(): React.ReactElement {
   const { data: footprint, loading, error } = useHubBundleSection({
     select: selectFootprint,
     fetchFallback: fetchFootprint,
+    year: footprintYear,
   });
   const [activeStateCode, setActiveStateCode] = useState<string | null>(null);
 
+  // Hero / shell year changes should keep the map in sync when they are footprint years.
   useEffect(() => {
-    setActiveStateCode(null);
+    if (!(FOOTPRINT_YEARS as readonly number[]).includes(activeYear)) return;
+    setFootprintYear((prev) => (prev === activeYear ? prev : activeYear));
   }, [activeYear]);
 
-  const selectFootprintYear = useCallback(
-    (year: RecruitingClassYear) => {
-      // Compare to store year (not display fallback) so 2026→2027 still writes.
-      if (year === activeYear) return;
+  useEffect(() => {
+    setActiveStateCode(null);
+  }, [footprintYear]);
+
+  const selectFootprintYear = useCallback((year: RecruitingClassYear) => {
+    if (!(FOOTPRINT_YEARS as readonly number[]).includes(year)) return;
+    setFootprintYear((prev) => {
+      if (prev === year) return prev;
       pinViewportTopRef.current = stageRef.current?.getBoundingClientRect().top ?? null;
-      setActiveYear(year);
-    },
-    [activeYear, setActiveYear]
-  );
+      return year;
+    });
+  }, []);
 
   useLayoutEffect(() => {
     const pinnedTop = pinViewportTopRef.current;

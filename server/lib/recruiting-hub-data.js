@@ -1359,13 +1359,19 @@ async function buildHubBattleBoard(year = 2027) {
 }
 
 async function buildHubFootprint(year = null) {
-  const classYears =
-    year != null && Number.isFinite(Number(year)) ? [Number(year)] : DEFAULT_CLASS_YEARS;
+  const focusYear =
+    year != null && Number.isFinite(Number(year)) ? Number(year) : null;
+  const classYears = focusYear != null ? [focusYear] : DEFAULT_CLASS_YEARS;
   const dataset = await loadHubDataset({ classYears });
-  return buildFootprintPayload([...dataset.players.values()], dataset.intelRows, {
+  const payload = buildFootprintPayload([...dataset.players.values()], dataset.intelRows, {
     visitLogs: dataset.visitLogs,
     offerLogs: dataset.offerLogs,
   });
+  return {
+    ...payload,
+    // Stamp requested class year so clients can reject stale/mismatched cache hits.
+    year: focusYear,
+  };
 }
 
 module.exports = {
