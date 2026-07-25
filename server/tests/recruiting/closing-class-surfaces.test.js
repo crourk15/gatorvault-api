@@ -110,13 +110,15 @@ describe('Closing Class surface gates', () => {
     const path = require('path');
     const fs = require('fs');
     const os = require('os');
+    const { ALLOWLIST_2027 } = require('../../lib/recruiting-target-allowlist');
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gv-board-lock-'));
     const allowPath = path.join(tmp, 'admin-allowlist.json');
+    const polluted = ['xay-mincey', 'eric-mcfarland', 'seth-williams'];
     fs.writeFileSync(
       allowPath,
       JSON.stringify({
         version: 1,
-        slugs2027: ['xay-mincey', 'eric-mcfarland', 'seth-williams'],
+        slugs2027: polluted,
         slugs2028: [],
         names: {},
       })
@@ -129,7 +131,11 @@ describe('Closing Class surface gates', () => {
     const store = require('../../lib/recruiting-store');
     const board = await store.getBoard(2027);
     const slugs = (board.targets || []).map((p) => p.slug).sort();
-    assert.deepEqual(slugs, ['jalen-brewster', 'tranard-roberts']);
+    // Closing Class ignores durable admin.slugs2027 — only the locked hunt list.
+    assert.deepEqual(slugs, [...ALLOWLIST_2027].sort());
+    for (const slug of polluted) {
+      assert.ok(!slugs.includes(slug), `polluted admin slug leaked onto board: ${slug}`);
+    }
     if (prev == null) delete process.env.GV_ADMIN_ALLOWLIST_PATH;
     else process.env.GV_ADMIN_ALLOWLIST_PATH = prev;
     delete require.cache[require.resolve('../../lib/admin-allowlist-store')];
