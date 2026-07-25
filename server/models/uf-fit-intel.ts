@@ -17,6 +17,9 @@ export interface UfFitIntelRow {
   full_name: string;
   class_year: number;
   position: string;
+  /** Player lifecycle (HS / COLLEGE / PORTAL) — needed to exclude enrolled rows. */
+  status: string | null;
+  committed_to: string | null;
   uf_fit_score: number | null;
   scheme_score: number | null;
   character_score: number | null;
@@ -59,6 +62,8 @@ function mapRow(row: UfFitIntelDbRow): UfFitIntelRow {
     full_name: player.full_name,
     class_year: player.class_year,
     position: player.position,
+    status: player.status ?? null,
+    committed_to: player.committed_to ?? null,
     uf_fit_score: row.uf_fit_score,
     scheme_score: row.scheme_score,
     character_score: row.character_score,

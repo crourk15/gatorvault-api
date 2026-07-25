@@ -1,7 +1,9 @@
 /**
  * GET /api/uf-fit/watchlist — high or rising UF Fit candidates.
+ * Big Board "Top Targets" uses this feed — UF commits must never appear as open targets.
  */
 import type { Request, Response } from 'express';
+import { createRequire } from 'node:module';
 import { computeUfFitIntel } from './engine';
 import { listUfFitCandidates, ufFitRowToEngineInput } from '../../models/uf-fit-intel';
 import {
@@ -15,6 +17,9 @@ import {
   parseUfFitSort,
 } from './utils-api';
 import { enrichWithRankings } from '../futurecast/ranking-enrichment';
+import { isUfCommitRow } from '../futurecast/eligibility';
+
+const require = createRequire(import.meta.url);
 
 export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -26,7 +31,26 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
     const limit = parseLimit(req.query.limit, 100, 500);
     const sort = parseUfFitSort(req.query.sort);
 
-    const rows = await listUfFitCandidates({ class_year, position });
+    const { getUfCommitSlugSet } = require('../../lib/recruiting-uf-commit-slugs');
+    const commitSlugs: Set<string> =
+      class_year != null ? await getUfCommitSlugSet(class_year) : new Set();
+
+    const rows = (await listUfFitCandidates({ class_year, position })).filter((row) => {
+      const slug = String(row.slug || '').toLowerCase();
+      if (slug && commitSlugs.has(slug)) return false;
+      // FutureCast player.status is the lifecycle (HS/COLLEGE/PORTAL).
+      if (
+        isUfCommitRow({
+          lifecycle: row.status || 'HS',
+          committed_to: row.committed_to,
+          uf_status: row.uf_status,
+        })
+      ) {
+        return false;
+      }
+      return true;
+    });
+
     let enriched = rows.map((row) => {
       const intel = computeUfFitIntel(ufFitRowToEngineInput(row));
       return {
@@ -35,6 +59,7 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
         slug: row.slug,
         position: row.position,
         classYear: row.class_year,
+        committedTo: row.committed_to,
         ufFitScore: intel.ufFitScore,
         fitTier: intel.fitTier,
         fitDelta: intel.fitDelta,

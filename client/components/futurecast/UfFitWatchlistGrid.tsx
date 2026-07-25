@@ -9,6 +9,7 @@ import {
   type UfFitWatchlistPlayer,
   type UfFitWatchlistQuery,
 } from '../../lib/uf-fit-api';
+import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
 
 export interface UfFitWatchlistGridProps {
   query: UfFitWatchlistQuery;
@@ -24,7 +25,16 @@ export function UfFitWatchlistGrid({ query }: UfFitWatchlistGridProps): React.Re
     setError(null);
     try {
       const data = await fetchUfFitWatchlist(query);
-      setPlayers(data.players);
+      // Belt-and-suspenders: Top Targets must never render UF commits as open targets.
+      setPlayers(
+        (data.players || []).filter((p) =>
+          isActiveUfTarget({
+            slug: p.slug,
+            committedTo: p.committedTo,
+            classYear: p.classYear,
+          })
+        )
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load UF Fit watchlist');
       setPlayers([]);

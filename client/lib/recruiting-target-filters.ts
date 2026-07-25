@@ -8,6 +8,7 @@ const VERIFIED_UF_COMMIT_SLUGS = new Set([
   'aaron-mcwilliams',
   'kamauri-whitfield',
   'raheem-floyd',
+  'armani-strong',
 ]);
 
 export function isFloridaSchool(value: string | null | undefined): boolean {

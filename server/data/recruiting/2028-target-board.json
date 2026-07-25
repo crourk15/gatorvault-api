@@ -382,7 +382,7 @@
       "stateRank": null,
       "stars": 4,
       "htWt": "6-2 / 175",
-      "skinny": "2028 4-star S \u2014 Blountstown. UF daily contact + early On3 RPM momentum (Alderman)."
+      "skinny": "2028 4-star S — Blountstown. UF daily contact + early On3 RPM momentum (Alderman)."
     },
     {
       "slug": "cassell-cruickshank",
@@ -398,7 +398,7 @@
       "stateRank": 2,
       "stars": 4,
       "htWt": "6-5 / 217",
-      "skinny": "4\u2605 EDGE \u00b7 #14 natl \u00b7 E E Smith, NC"
+      "skinny": "4★ EDGE · #14 natl · E E Smith, NC"
     },
     {
       "slug": "john-matthews",
@@ -442,7 +442,7 @@
       "stateRank": 15,
       "stars": 4,
       "htWt": "6-1 / 205",
-      "skinny": "4\u2605 RB \u00b7 #108 natl \u00b7 The Bolles School, FL"
+      "skinny": "4★ RB · #108 natl · The Bolles School, FL"
     },
     {
       "slug": "merrick-ham",
@@ -458,23 +458,7 @@
       "stateRank": 14,
       "stars": 4,
       "htWt": "6-6 / 230",
-      "skinny": "4\u2605 EDGE \u00b7 #102 natl \u00b7 Marietta, GA"
-    },
-    {
-      "slug": "armani-strong",
-      "name": "Armani Strong",
-      "pos": "WR",
-      "classYear": 2028,
-      "school": "Chaminade-Madonna Prep, FL",
-      "state": "FL",
-      "inState": true,
-      "rating": 90.17898550724637,
-      "natlRank": 209,
-      "posRank": 31,
-      "stateRank": 28,
-      "stars": 4,
-      "htWt": "6-1 / 180",
-      "skinny": "WR \u00b7 4\u2605 \u00b7 Miami, FL \u00b7 #209 natl"
+      "skinny": "4★ EDGE · #102 natl · Marietta, GA"
     },
     {
       "slug": "joey-fleming",
@@ -490,7 +474,7 @@
       "stateRank": 1,
       "stars": 4,
       "htWt": "6-5 / 275",
-      "skinny": "4\u2605 IOL \u00b7 #22 natl \u00b7 Huntsville, AL"
+      "skinny": "4★ IOL · #22 natl · Huntsville, AL"
     },
     {
       "slug": "lorenzo-mcmullen-jr",
@@ -505,7 +489,7 @@
       "posRank": 4,
       "stateRank": 1,
       "htWt": null,
-      "skinny": "4\u2605 WR \u00b7 #11 Rivals \u00b7 Princeton (OH) \u00b7 major UF push",
+      "skinny": "4★ WR · #11 Rivals · Princeton (OH) · major UF push",
       "ufProbability": null
     },
     {
@@ -521,7 +505,7 @@
       "posRank": null,
       "stateRank": null,
       "htWt": null,
-      "skinny": "WR \u00b7 Tampa Bay Tech \u00b7 UF recruiting hard since spring",
+      "skinny": "WR · Tampa Bay Tech · UF recruiting hard since spring",
       "ufProbability": null
     },
     {
@@ -537,7 +521,7 @@
       "posRank": null,
       "stateRank": null,
       "htWt": "6-5 / 190",
-      "skinny": "QB \u00b7 6-5 / 190 \u00b7 Sarasota \u00b7 UF offer \u00b7 feels like top target",
+      "skinny": "QB · 6-5 / 190 · Sarasota · UF offer · feels like top target",
       "ufProbability": null
     },
     {
@@ -553,7 +537,7 @@
       "posRank": null,
       "stateRank": null,
       "htWt": "6-6 / 285",
-      "skinny": "OT \u00b7 6-6 / 285 \u00b7 East Lake \u00b7 UF offer June 2026",
+      "skinny": "OT · 6-6 / 285 · East Lake · UF offer June 2026",
       "ufProbability": null
     },
     {
@@ -566,7 +550,7 @@
       "inState": false,
       "stars": null,
       "htWt": null,
-      "skinny": "ATH \u00b7 Asheville, NC \u00b7 recent UF offer \u00b7 Gators trending up"
+      "skinny": "ATH · Asheville, NC · recent UF offer · Gators trending up"
     },
     {
       "slug": "ridge-janes",
@@ -578,7 +562,7 @@
       "inState": false,
       "stars": 4,
       "htWt": null,
-      "skinny": "4\u2605 TE \u00b7 De Smet, MO \u00b7 UF campus March \u00b7 eyeing fall gameday"
+      "skinny": "4★ TE · De Smet, MO · UF campus March · eyeing fall gameday"
     },
     {
       "slug": "zaiden-jernigan",
@@ -590,7 +574,7 @@
       "inState": false,
       "stars": 4,
       "htWt": null,
-      "skinny": "4\u2605 RB \u00b7 daily UF contact \u00b7 eyeing first Swamp visit this fall"
+      "skinny": "4★ RB · daily UF contact · eyeing first Swamp visit this fall"
     },
     {
       "slug": "nate-dollard",
@@ -602,7 +586,7 @@
       "inState": false,
       "stars": 4,
       "htWt": null,
-      "skinny": "4\u2605 CB \u00b7 UF persistent early \u00b7 now teammates with UF commit"
+      "skinny": "4★ CB · UF persistent early · now teammates with UF commit"
     },
     {
       "slug": "phoenix-evans",
@@ -617,7 +601,7 @@
       "posRank": null,
       "stateRank": null,
       "htWt": "5-9.5 / 165",
-      "skinny": "4\u2605 CB \u00b7 IMG Academy \u00b7 UF among top options \u00b7 loves coaches",
+      "skinny": "4★ CB · IMG Academy · UF among top options · loves coaches",
       "ufProbability": null
     }
   ],

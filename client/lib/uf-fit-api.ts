@@ -19,6 +19,7 @@ export interface UfFitWatchlistPlayer {
   fitVolatility: number;
   rank: number;
   lifecycle?: string | null;
+  committedTo?: string | null;
   compositeScore?: number;
   nationalRank?: number | null;
   positionRank?: number | null;
