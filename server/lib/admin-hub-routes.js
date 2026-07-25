@@ -10,6 +10,8 @@ const recruitingStore = require('./recruiting-store');
 const { loadPublishedArticles } = require('./content-store');
 const { loadUsers } = require('./user-store');
 const { verifyAdminPin, pinFromReq } = require('./admin-pin');
+const { hasPaidAccess, trialState, isSubscriptionActive } = require('./subscription-service');
+const { effectiveTier } = require('./session-auth');
 
 const MODULE_IDS = [
   'dashboard',
@@ -406,9 +408,112 @@ function searchUsers(q, limit) {
       title: u.name || u.email || u.id,
       subtitle: u.email || 'Member',
       type: 'user',
-      route: '#settings/platform',
+      route: '#settings/members',
       href: ''
     }));
+}
+
+function parseSinceMs(sinceRaw) {
+  const since = String(sinceRaw || '30d').trim().toLowerCase();
+  if (since === 'all' || since === '0' || since === '0d') return null;
+  const m = since.match(/^(\d+)\s*d$/);
+  if (m) {
+    const days = Math.min(Math.max(parseInt(m[1], 10) || 30, 1), 3650);
+    return Date.now() - days * 24 * 60 * 60 * 1000;
+  }
+  const ts = Date.parse(since);
+  return Number.isFinite(ts) ? ts : Date.now() - 30 * 24 * 60 * 60 * 1000;
+}
+
+function memberAccessBucket(user) {
+  const paid = hasPaidAccess(user);
+  const trial = trialState(user);
+  if (paid) return 'paid';
+  if (!trial.expired) return 'trial';
+  return 'expired';
+}
+
+function memberBillingSource(user) {
+  const source = String(user?.subscription?.source || '').toLowerCase();
+  if (source) return source;
+  if (user?.stripeCustomerId || user?.subscription?.stripeCustomerId) return 'stripe';
+  return null;
+}
+
+function toSafeMemberRow(user) {
+  const trial = trialState(user);
+  const paid = hasPaidAccess(user);
+  const accessActive = paid || !trial.expired;
+  const sub = user?.subscription || null;
+  return {
+    email: user.email || null,
+    name: user.name || null,
+    createdAt: user.createdAt || null,
+    trialEnd: trial.trialEndISO,
+    trialDaysLeft: trial.daysLeft,
+    tier: effectiveTier(user || {}),
+    paid,
+    accessActive,
+    access: memberAccessBucket(user),
+    subscriptionActive: isSubscriptionActive(user),
+    billingSource: memberBillingSource(user),
+    subscriptionStatus: sub?.status || null,
+    subscriptionTier: sub?.tier || null,
+    hasStripe: Boolean(user?.stripeCustomerId || sub?.stripeCustomerId),
+    hasBeehiiv: Boolean(user?.beehiivSubscriptionId),
+    onboardingSent: Boolean(user?.onboardingSent)
+  };
+}
+
+/**
+ * Newest members first. Never returns passwordHash or secrets.
+ * @param {{ limit?: number, since?: string|null, access?: string }} opts
+ */
+function listRecentMembers(opts = {}) {
+  const limit = Math.min(Math.max(parseInt(String(opts.limit ?? 50), 10) || 50, 1), 200);
+  const sinceMs = parseSinceMs(opts.since == null ? '30d' : opts.since);
+  const accessFilter = String(opts.access || 'all').trim().toLowerCase();
+  let users = [];
+  try {
+    users = loadUsers() || [];
+  } catch {
+    users = [];
+  }
+  const list = Array.isArray(users) ? users : Object.values(users);
+  const filtered = list
+    .filter((u) => u && (u.email || u.name))
+    .filter((u) => {
+      if (sinceMs == null) return true;
+      const created = Date.parse(u.createdAt || '');
+      if (!Number.isFinite(created)) return false;
+      return created >= sinceMs;
+    })
+    .map((u) => toSafeMemberRow(u))
+    .filter((row) => {
+      if (!accessFilter || accessFilter === 'all') return true;
+      return row.access === accessFilter;
+    })
+    .sort((a, b) => {
+      const am = Date.parse(a.createdAt || '') || 0;
+      const bm = Date.parse(b.createdAt || '') || 0;
+      return bm - am;
+    });
+
+  const counts = { all: 0, trial: 0, paid: 0, expired: 0 };
+  for (const row of filtered) {
+    counts.all += 1;
+    if (counts[row.access] != null) counts[row.access] += 1;
+  }
+
+  return {
+    members: filtered.slice(0, limit),
+    total: filtered.length,
+    returned: Math.min(filtered.length, limit),
+    counts,
+    since: opts.since == null ? '30d' : String(opts.since),
+    access: accessFilter || 'all',
+    limit
+  };
 }
 
 function countOpenFeedback() {
@@ -538,6 +643,25 @@ function mountAdminHubRoutes(app) {
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
+
+  /** Newest signups — Admin Hub only; safe fields (no passwordHash). */
+  app.get('/api/admin/members/recent', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const payload = listRecentMembers({
+        limit: req.query.limit,
+        since: req.query.since,
+        access: req.query.access
+      });
+      return res.status(200).json({
+        ok: true,
+        updatedAt: new Date().toISOString(),
+        ...payload
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 }
 
 module.exports = {
@@ -547,5 +671,8 @@ module.exports = {
   buildOverviewPayload,
   buildModuleHealthMap,
   buildTopIssues,
-  filterActionableAlerts
+  filterActionableAlerts,
+  listRecentMembers,
+  toSafeMemberRow,
+  parseSinceMs
 };
