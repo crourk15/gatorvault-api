@@ -156,8 +156,11 @@
       id: 'settings',
       label: 'Settings',
       mark: 'ST',
-      desc: 'Global config, feature flags, admin users, security, color system',
-      panels: [{ id: 'platform', label: 'Platform Settings', inline: true }]
+      desc: 'Members, global config, feature flags, admin users, security',
+      panels: [
+        { id: 'members', label: 'Members', inline: true },
+        { id: 'platform', label: 'Platform Settings', inline: true }
+      ]
     },
     {
       id: 'player-intel',
@@ -1024,6 +1027,13 @@
           }
           else if (panelId === 'summary' && section.id === 'product-intel' && global.GVAdminProductIntelSummary) {
             GVAdminProductIntelSummary.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash
+            });
+          }
+          else if (panelId === 'members' && section.id === 'settings' && global.GVAdminMembersSummary) {
+            GVAdminMembersSummary.render(panelEl, {
               apiGet: apiGet,
               apiPost: apiPost,
               onNavigate: navigateFromHash

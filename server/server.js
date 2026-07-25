@@ -603,6 +603,22 @@ app.post('/api/register', async (req, res) => {
       createdAt: user.createdAt,
     });
 
+    // Owner alert — never block signup if notify fails.
+    try {
+      const { notifyOwnerOfSignup } = require('./lib/signup-members');
+      notifyOwnerOfSignup(user, deliverEmail).then((result) => {
+        if (result && result.sent) {
+          console.log('[signup-notify] owner alert sent to', result.to, 'provider=', result.provider);
+        } else if (result && !result.skipped) {
+          console.warn('[signup-notify] owner alert not sent:', result.error || result.reason || 'unknown');
+        }
+      }).catch((err) => {
+        console.warn('[signup-notify] owner alert error:', err && err.message ? err.message : err);
+      });
+    } catch (notifyErr) {
+      console.warn('[signup-notify] skipped:', notifyErr && notifyErr.message ? notifyErr.message : notifyErr);
+    }
+
     let trialEndStr = trialEnd.toLocaleDateString('en-US', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
