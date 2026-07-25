@@ -8,6 +8,8 @@ import { ClassCards } from '@/components/recruiting-hub/elite/ClassCards';
 import { MovementIntelFeed } from '@/components/recruiting-hub/elite/MovementIntelFeed';
 import { BattleBoard } from '@/components/recruiting-hub/elite/BattleBoard';
 import { TopTargetsHeatIndex } from '@/components/recruiting-hub/elite/TopTargetsHeatIndex';
+import { RemainingTargetsStrip } from '@/components/recruiting-hub/elite/RemainingTargetsStrip';
+import { FutureCastClosingCta } from '@/components/recruiting-hub/elite/FutureCastClosingCta';
 import { RecruitingFootprintMap } from '@/components/recruiting-hub/elite/footprint/RecruitingFootprintMap';
 import { RecruitingPositionSnapshot } from '@/components/recruiting-hub/elite/RecruitingPositionSnapshot';
 import { RecruitingHubBundleProvider } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
@@ -18,6 +20,14 @@ import { EliteCommitBoard } from '@/components/recruiting-hub/elite/EliteCommitB
 import { useRecruitingHubBundle } from '@/components/recruiting-hub/elite/useRecruitingHubBundle';
 import { UiError, UiWarming } from '@/components/site/UiMessage';
 import { initGvHydrate } from '@/lib/gv-hydrate';
+import { hideRhBootClassCards } from '@/lib/recruiting-hub-boot-read';
+import {
+  hubShowsClassCards,
+  hubShowsOpenCycleSections,
+  hubShowsRemainingTargets,
+  hubShowsSigningDay,
+  recruitingHubShellMode,
+} from '@/lib/recruiting-hub-shell';
 
 type Props = {
   /** When true, SSR hero partial is rendered by the page shell — skip duplicate strip. */
@@ -34,10 +44,20 @@ function RecruitingHubEliteContent({
 }: Omit<Props, 'initialYear'>): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
   const bundle = useRecruitingHubBundle(activeYear);
+  const shell = recruitingHubShellMode(activeYear);
+  const showSigningDay = hubShowsSigningDay(activeYear);
+  const showClassCards = hubShowsClassCards(activeYear);
+  const showOpenCycle = hubShowsOpenCycleSections(activeYear);
+  const showRemaining = hubShowsRemainingTargets(activeYear);
 
   React.useEffect(() => {
     initGvHydrate();
   }, []);
+
+  // SSR may still paint class cards for older HTML — hide when this year does not use them.
+  React.useEffect(() => {
+    if (!showClassCards) hideRhBootClassCards();
+  }, [showClassCards, activeYear]);
 
   const content = (
     <>
@@ -58,28 +78,49 @@ function RecruitingHubEliteContent({
         />
       ) : null}
       {deferHero ? <RecruitingHeroHydrator /> : <RecruitingHeroStripInline />}
-      <SigningDayTracker />
+      {showSigningDay ? <SigningDayTracker /> : null}
       <LazyHubSection priority="top-fold" testId="rh-lazy-commit-board">
         <EliteCommitBoard year={activeYear} />
       </LazyHubSection>
-      <LazyHubSection priority="top-fold" testId="rh-lazy-class-cards">
-        <ClassCards />
-      </LazyHubSection>
-      <LazyHubSection testId="rh-lazy-battle-board">
-        <BattleBoard />
-      </LazyHubSection>
-      <LazyHubSection testId="rh-lazy-heat-index">
-        <TopTargetsHeatIndex />
-      </LazyHubSection>
-      <LazyHubSection testId="rh-lazy-movement-feed">
-        <MovementIntelFeed />
-      </LazyHubSection>
-      <LazyHubSection testId="rh-lazy-position-snapshot">
-        <RecruitingPositionSnapshot />
-      </LazyHubSection>
+      {showRemaining ? (
+        <LazyHubSection priority="top-fold" testId="rh-lazy-remaining-targets">
+          <RemainingTargetsStrip />
+        </LazyHubSection>
+      ) : null}
+      {showRemaining ? (
+        <LazyHubSection testId="rh-lazy-fc-closing-cta">
+          <FutureCastClosingCta />
+        </LazyHubSection>
+      ) : null}
+      {showClassCards ? (
+        <LazyHubSection priority="top-fold" testId="rh-lazy-class-cards">
+          <ClassCards />
+        </LazyHubSection>
+      ) : null}
+      {showOpenCycle ? (
+        <LazyHubSection testId="rh-lazy-battle-board">
+          <BattleBoard />
+        </LazyHubSection>
+      ) : null}
+      {showOpenCycle ? (
+        <LazyHubSection testId="rh-lazy-heat-index">
+          <TopTargetsHeatIndex />
+        </LazyHubSection>
+      ) : null}
+      {showOpenCycle ? (
+        <LazyHubSection testId="rh-lazy-movement-feed">
+          <MovementIntelFeed />
+        </LazyHubSection>
+      ) : null}
+      {showOpenCycle ? (
+        <LazyHubSection testId="rh-lazy-position-snapshot">
+          <RecruitingPositionSnapshot />
+        </LazyHubSection>
+      ) : null}
       <LazyHubSection minHeight={420} testId="rh-lazy-footprint">
         <RecruitingFootprintMap />
       </LazyHubSection>
+      <div className="rh-hub-shell-mode" data-testid="rh-hub-shell-mode" data-shell={shell} hidden />
     </>
   );
 
@@ -96,7 +137,7 @@ function RecruitingHubEliteContent({
   );
 }
 
-/** WOW Recruiting Hub Elite — War Room vertical layout. */
+/** WOW Recruiting Hub Elite — year-aware shell (signed / closing / open). */
 export function RecruitingHubElite({
   deferHero = false,
   embedded = false,

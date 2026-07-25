@@ -1,13 +1,18 @@
 import React from 'react';
 import { RECRUITING_CLASS_YEARS, ACTIVE_RECRUITING_CLASS_YEAR, classCommitMetricLabel } from '@/lib/recruiting-cycle';
 import { recruitingHubHeroSeedForYear } from '@/lib/recruiting-hub-hero-seed';
+import { hubShowsClassCards } from '@/lib/recruiting-hub-shell';
 
-/** SSR class cards — seeded with real metrics for first paint. */
+/** SSR class cards — only for open-cycle years (2028). Closing/signed use hero year tabs. */
 export function RecruitingHubBootSectionsSsr({
   year = ACTIVE_RECRUITING_CLASS_YEAR,
 }: {
   year?: number;
-}): React.ReactElement {
+}): React.ReactElement | null {
+  if (!hubShowsClassCards(year)) {
+    return null;
+  }
+
   return (
     <>
       <div className="rh-section-header">
