@@ -3,6 +3,8 @@
  * - signed (2026): signees + footprint only
  * - closing (2027): commits + remaining targets + FutureCast CTA + footprint
  * - open (2028+): full war-room stack
+ *
+ * Mid-page Recruiting Classes cards are removed for every year — hero tabs own switching.
  */
 
 export type RecruitingHubShellMode = 'signed' | 'closing' | 'open';
@@ -27,6 +29,7 @@ export function hubShowsRemainingTargets(year: number): boolean {
   return recruitingHubShellMode(year) === 'closing';
 }
 
-export function hubShowsClassCards(year: number): boolean {
-  return recruitingHubShellMode(year) === 'open';
+/** Always false — hero year tabs replace mid-page class cards. */
+export function hubShowsClassCards(_year: number): boolean {
+  return false;
 }

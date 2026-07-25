@@ -4,7 +4,6 @@ import React from 'react';
 import './recruiting-hub.css';
 import { RecruitingHeroHydrator, RecruitingHeroStripInline } from '@/components/recruiting-hub/elite/RecruitingHeroStrip';
 import { SigningDayTracker } from '@/components/recruiting-hub/elite/SigningDayTracker';
-import { ClassCards } from '@/components/recruiting-hub/elite/ClassCards';
 import { MovementIntelFeed } from '@/components/recruiting-hub/elite/MovementIntelFeed';
 import { BattleBoard } from '@/components/recruiting-hub/elite/BattleBoard';
 import { TopTargetsHeatIndex } from '@/components/recruiting-hub/elite/TopTargetsHeatIndex';
@@ -22,7 +21,6 @@ import { UiError, UiWarming } from '@/components/site/UiMessage';
 import { initGvHydrate } from '@/lib/gv-hydrate';
 import { hideRhBootClassCards } from '@/lib/recruiting-hub-boot-read';
 import {
-  hubShowsClassCards,
   hubShowsOpenCycleSections,
   hubShowsRemainingTargets,
   hubShowsSigningDay,
@@ -46,7 +44,6 @@ function RecruitingHubEliteContent({
   const bundle = useRecruitingHubBundle(activeYear);
   const shell = recruitingHubShellMode(activeYear);
   const showSigningDay = hubShowsSigningDay(activeYear);
-  const showClassCards = hubShowsClassCards(activeYear);
   const showOpenCycle = hubShowsOpenCycleSections(activeYear);
   const showRemaining = hubShowsRemainingTargets(activeYear);
 
@@ -54,10 +51,10 @@ function RecruitingHubEliteContent({
     initGvHydrate();
   }, []);
 
-  // SSR may still paint class cards for older HTML — hide when this year does not use them.
+  // SSR may still paint class cards for older HTML — mid-page cards are retired for all years.
   React.useEffect(() => {
-    if (!showClassCards) hideRhBootClassCards();
-  }, [showClassCards, activeYear]);
+    hideRhBootClassCards();
+  }, [activeYear]);
 
   const content = (
     <>
@@ -90,11 +87,6 @@ function RecruitingHubEliteContent({
       {showRemaining ? (
         <LazyHubSection testId="rh-lazy-fc-closing-cta">
           <FutureCastClosingCta />
-        </LazyHubSection>
-      ) : null}
-      {showClassCards ? (
-        <LazyHubSection priority="top-fold" testId="rh-lazy-class-cards">
-          <ClassCards />
         </LazyHubSection>
       ) : null}
       {showOpenCycle ? (

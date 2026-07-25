@@ -28,3 +28,11 @@ test('client shell helper module is utf8 source', () => {
   assert.match(src, /hubShowsRemainingTargets/);
   assert.match(src, /hubShowsClassCards/);
 });
+
+test('client shell helper disables class cards for all years', () => {
+  const shellPath = path.join(__dirname, '../../../client/lib/recruiting-hub-shell.ts');
+  const src = fs.readFileSync(shellPath, 'utf8');
+  assert.match(src, /hubShowsClassCards/);
+  assert.match(src, /return false/);
+});
+
