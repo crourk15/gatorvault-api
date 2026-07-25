@@ -1,6 +1,7 @@
 /**
- * GET /api/uf-fit/watchlist — high or rising UF Fit candidates.
- * Big Board "Top Targets" uses this feed — UF commits must never appear as open targets.
+ * GET /api/uf-fit/watchlist — UF Fit candidates / Big Board Top Targets.
+ * Top Targets sorts by staff-chase traction (visits, offers, staff, beat intel),
+ * not RPM/UF Fit alone and not star rank alone. UF commits are excluded.
  */
 import type { Request, Response } from 'express';
 import { createRequire } from 'node:module';
@@ -32,8 +33,10 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
     const sort = parseUfFitSort(req.query.sort);
 
     const { getUfCommitSlugSet } = require('../../lib/recruiting-uf-commit-slugs');
+    const { buildChaseFeatureIndex, computeChaseScore } = require('../../lib/uf-chase-score');
     const commitSlugs: Set<string> =
       class_year != null ? await getUfCommitSlugSet(class_year) : new Set();
+    const chaseIndex = buildChaseFeatureIndex({ classYear: class_year });
 
     const rows = (await listUfFitCandidates({ class_year, position })).filter((row) => {
       const slug = String(row.slug || '').toLowerCase();
@@ -53,6 +56,16 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
 
     let enriched = rows.map((row) => {
       const intel = computeUfFitIntel(ufFitRowToEngineInput(row));
+      const chase = computeChaseScore(
+        {
+          slug: row.slug,
+          ufFitScore: intel.ufFitScore,
+          uf_status: row.uf_status,
+          evaluation_notes: row.evaluation_notes,
+          signals: row.signals,
+        },
+        chaseIndex
+      );
       return {
         id: row.id,
         fullName: row.full_name,
@@ -64,17 +77,33 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
         fitTier: intel.fitTier,
         fitDelta: intel.fitDelta,
         fitVolatility: intel.fitVolatility,
+        chaseScore: chase.chaseScore,
+        chase: chase.chase,
       };
     });
 
     if (tier) {
       enriched = enriched.filter((p) => p.fitTier === tier);
     }
-    if (minScore != null) {
-      enriched = enriched.filter((p) => p.ufFitScore >= minScore);
-    }
-    if (maxScore != null) {
-      enriched = enriched.filter((p) => p.ufFitScore <= maxScore);
+
+    // Chase sort = Top Targets: keep players with real traction / hunt-list presence.
+    // Do not gate the board on UF Fit/RPM minScore for that mode.
+    if (sort === 'chase') {
+      enriched = enriched.filter(
+        (p) =>
+          p.chaseScore > 0 ||
+          Boolean(p.chase?.allowlisted) ||
+          Boolean(p.chase?.headliner) ||
+          p.chase?.ufStatus === 'PRIORITY' ||
+          p.chase?.ufStatus === 'TARGET'
+      );
+    } else {
+      if (minScore != null) {
+        enriched = enriched.filter((p) => p.ufFitScore >= minScore);
+      }
+      if (maxScore != null) {
+        enriched = enriched.filter((p) => p.ufFitScore <= maxScore);
+      }
     }
 
     enriched.sort((a, b) => {
@@ -83,6 +112,9 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
           return b.fitDelta - a.fitDelta;
         case 'fitVolatility':
           return b.fitVolatility - a.fitVolatility;
+        case 'chase':
+          if (b.chaseScore !== a.chaseScore) return b.chaseScore - a.chaseScore;
+          return b.ufFitScore - a.ufFitScore;
         default:
           return b.ufFitScore - a.ufFitScore;
       }

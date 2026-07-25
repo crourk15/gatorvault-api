@@ -5,7 +5,7 @@ import { getApiBase } from './big-board-api';
 import type { RecruitingRatingSource } from './early-discovery-api';
 
 export type FitTier = 'elite' | 'strong' | 'moderate' | 'low';
-export type UfFitWatchlistSort = 'ufFitScore' | 'fitDelta' | 'fitVolatility';
+export type UfFitWatchlistSort = 'ufFitScore' | 'fitDelta' | 'fitVolatility' | 'chase';
 
 export interface UfFitWatchlistPlayer {
   id: string;
@@ -17,6 +17,19 @@ export interface UfFitWatchlistPlayer {
   fitTier: FitTier;
   fitDelta: number;
   fitVolatility: number;
+  /** Staff-chase traction score (visits/offers/staff/intel) — Top Targets sort key. */
+  chaseScore?: number;
+  chase?: {
+    ov?: number;
+    uv?: number;
+    flOffers?: number;
+    intel?: number;
+    allowlisted?: boolean;
+    headliner?: boolean;
+    hasStaffFlag?: boolean;
+    hasStaffLead?: boolean;
+    ufStatus?: string | null;
+  };
   rank: number;
   lifecycle?: string | null;
   committedTo?: string | null;

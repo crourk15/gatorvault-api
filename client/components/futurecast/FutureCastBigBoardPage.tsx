@@ -163,8 +163,8 @@ export function FutureCastBigBoardPage(): React.ReactElement {
           query={{
             class_year: classYear,
             position: position || undefined,
-            sort: 'ufFitScore',
-            minScore: 50,
+            // Staff chase traction (visits/offers/staff/beat) — not RPM or star rank.
+            sort: 'chase',
             limit: 100,
           }}
         />
