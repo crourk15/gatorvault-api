@@ -53,7 +53,7 @@ Set `OPS_ADMIN_PIN` in Render for production. A legacy default exists only as a 
 - **Product Fix Queue** — `#product-intel/summary` (scores, open fixes, recompute)
 - Sticky **Activity** rail — recent `/api/ops/logs` + local hub actions
 - **Vault Grades Manager** — `#recruiting/vault-grades` / `#team/vault-grades`
-- **Recent Members** — `#settings/members` (newest signups: trial / paid / expired)
+- **Members** — `#members/recent` (newest signups: trial / paid / expired)
 - **Settings** — `#settings/platform`
 
 Full Ops / Full QA iframe consoles remain as escape hatches.
