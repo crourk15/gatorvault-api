@@ -18,32 +18,35 @@ print(m.group(1) if m else "0")
 PY2
 )"
 
-LATEST="0"
-if LATEST_TF="$(app-store-connect get-latest-testflight-build-number \
+read_build_num() {
+  # stdout: integer build number, or empty
+  local out
+  out="$("$@" 2>/dev/null | tail -n 1 | tr -d '[:space:]' || true)"
+  if [[ "${out}" =~ ^[0-9]+$ ]]; then
+    printf '%s' "${out}"
+  fi
+}
+
+LATEST_TF="$(read_build_num app-store-connect get-latest-testflight-build-number \
   "${APPLE_APP_APPLE_ID}" \
-  --all-versions \
-  2>/dev/null | tail -n 1 | tr -d '[:space:]')"; then
-  if [[ "${LATEST_TF}" =~ ^[0-9]+$ ]]; then
-    LATEST="${LATEST_TF}"
-  fi
-fi
+  --all-versions || true)"
+LATEST_AS="$(read_build_num app-store-connect get-latest-app-store-build-number \
+  "${APPLE_APP_APPLE_ID}" || true)"
 
-if [[ "${LATEST}" == "0" ]]; then
-  if LATEST_AS="$(app-store-connect get-latest-app-store-build-number \
-    "${APPLE_APP_APPLE_ID}" \
-    2>/dev/null | tail -n 1 | tr -d '[:space:]')"; then
-    if [[ "${LATEST_AS}" =~ ^[0-9]+$ ]]; then
-      LATEST="${LATEST_AS}"
-    fi
+LATEST="0"
+for candidate in "${LATEST_TF:-}" "${LATEST_AS:-}"; do
+  if [[ "${candidate}" =~ ^[0-9]+$ ]] && (( candidate > LATEST )); then
+    LATEST="${candidate}"
   fi
-fi
+done
 
+# Always go strictly above the highest known ASC build.
 NEXT="${LOCAL}"
 if [[ "${LATEST}" =~ ^[0-9]+$ ]] && (( LATEST + 1 > NEXT )); then
   NEXT=$((LATEST + 1))
 fi
 
-echo "==> Build number: local=${LOCAL} latest_asc=${LATEST} using=${NEXT}"
+echo "==> Build number: local=${LOCAL} latest_tf=${LATEST_TF:-none} latest_appstore=${LATEST_AS:-none} max_asc=${LATEST} using=${NEXT}"
 
 if [[ "${NEXT}" != "${LOCAL}" ]]; then
   export NEXT
