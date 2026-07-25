@@ -9,6 +9,7 @@ const selfRunnerEngine = require('./self-runner/self-runner-engine');
 const recruitingStore = require('./recruiting-store');
 const { loadPublishedArticles } = require('./content-store');
 const { loadUsers } = require('./user-store');
+const { listRecentMembers, getSignupNotifyEmail } = require('./signup-members');
 const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 
 const MODULE_IDS = [
@@ -406,7 +407,7 @@ function searchUsers(q, limit) {
       title: u.name || u.email || u.id,
       subtitle: u.email || 'Member',
       type: 'user',
-      route: '#settings/platform',
+      route: '#settings/members',
       href: ''
     }));
 }
@@ -538,6 +539,25 @@ function mountAdminHubRoutes(app) {
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
+
+  app.get('/api/admin/hub/members', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const payload = listRecentMembers({
+        limit: req.query.limit,
+        q: req.query.q,
+      });
+      return res.status(200).json({
+        ...payload,
+        notifyEmailConfigured: Boolean(getSignupNotifyEmail()),
+        notifyEmailHint: getSignupNotifyEmail()
+          ? 'Signup alerts go to SIGNUP_NOTIFY_EMAIL / MONITORING_ALERT_EMAIL'
+          : 'Set SIGNUP_NOTIFY_EMAIL (or MONITORING_ALERT_EMAIL) on Render to get an email when someone joins',
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 }
 
 module.exports = {
@@ -547,5 +567,6 @@ module.exports = {
   buildOverviewPayload,
   buildModuleHealthMap,
   buildTopIssues,
-  filterActionableAlerts
+  filterActionableAlerts,
+  listRecentMembers,
 };

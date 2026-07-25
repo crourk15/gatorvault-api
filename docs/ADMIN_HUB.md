@@ -53,9 +53,15 @@ Set `OPS_ADMIN_PIN` in Render for production. A legacy default exists only as a 
 - **Product Fix Queue** — `#product-intel/summary` (scores, open fixes, recompute)
 - Sticky **Activity** rail — recent `/api/ops/logs` + local hub actions
 - **Vault Grades Manager** — `#recruiting/vault-grades` / `#team/vault-grades`
+- **Members** — `#settings/members` (recent signups: name, email, trial/paid, createdAt)
 - **Settings** — `#settings/platform`
 
 Full Ops / Full QA iframe consoles remain as escape hatches.
+
+### Members / signup alerts
+
+- List: `GET /api/admin/hub/members?limit=100&q=` (PIN required)
+- On each `/api/register`, owner gets an email if `SIGNUP_NOTIFY_EMAIL` (or `OWNER_NOTIFY_EMAIL` / `MONITORING_ALERT_EMAIL` / `ALERT_EMAIL`) is set on Render.
 
 ## Shell polish (v16)
 
@@ -102,6 +108,7 @@ Modules without a live signal stay gray (never fake-green).
 | `GET /api/admin/hub/overview` | Command Center payload |
 | `GET /api/admin/hub/module-health` | Sidebar dots + alert count |
 | `GET /api/admin/hub/search` | Global search |
+| `GET /api/admin/hub/members` | Recent signups / member list |
 
 All require a valid admin PIN header.
 
