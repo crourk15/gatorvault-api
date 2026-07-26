@@ -6,7 +6,7 @@ import type { Request, Response } from 'express';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
 import { FUTURECAST_CLASS_YEAR } from './feed-filters';
 import { buildMovementIntelPayload } from './allowlist-board';
-import { sendCachedJson } from './response-cache';
+import { movementIntelCacheKey, sendCachedJson } from './response-cache';
 
 function parseMovementYear(raw: unknown): number {
   const n = parseInt(String(raw ?? ''), 10);
@@ -17,7 +17,7 @@ function parseMovementYear(raw: unknown): number {
 export const handleGetFutureCastMovementIntel = asyncHandler(async (req: Request, res: Response) => {
   try {
     const classYear = parseMovementYear(req.query.year ?? req.query.class_year);
-    const cacheKey = `futurecast:movement-intel:${classYear}`;
+    const cacheKey = movementIntelCacheKey(classYear);
     await sendCachedJson(res, cacheKey, () => buildMovementIntelPayload(classYear));
   } catch (err) {
     handlePredictionsApiError(res, err);

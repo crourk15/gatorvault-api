@@ -13,7 +13,7 @@ const CACHE_TTL_MS = parseInt(process.env.FUTURECAST_CACHE_TTL_MS || String(5 * 
 const cache = createMemoryCache(CACHE_TTL_MS);
 
 /** Bump when high-priority or master-board payload shape changes. */
-export const FUTURECAST_API_CACHE_VERSION = 17;
+export const FUTURECAST_API_CACHE_VERSION = 18;
 
 export function highPriorityCacheKey(classYear: number | string): string {
   return `futurecast:high-priority:v${FUTURECAST_API_CACHE_VERSION}:${classYear}`;
@@ -21,6 +21,14 @@ export function highPriorityCacheKey(classYear: number | string): string {
 
 export function masterBoardCacheKey(): string {
   return `futurecast:master-board:v${FUTURECAST_API_CACHE_VERSION}`;
+}
+
+export function trendingBoardCacheKey(): string {
+  return `futurecast:trending-board:v${FUTURECAST_API_CACHE_VERSION}`;
+}
+
+export function movementIntelCacheKey(classYear: number | string): string {
+  return `futurecast:movement-intel:v${FUTURECAST_API_CACHE_VERSION}:${classYear}`;
 }
 
 export async function sendCachedJson(
@@ -51,6 +59,61 @@ export async function warmFuturecastHighPriorityCaches(
     }
   }
   return { warmed, years };
+}
+
+/**
+ * Elite Lab first-paint warm: master-board + trending + movement + high-priority.
+ * Master-board was previously unwarmed — first Lab open paid the full board rebuild.
+ */
+export async function warmFuturecastLabCaches(
+  years: number[] = [2027, 2028]
+): Promise<{ warmed: string[]; failed: string[] }> {
+  const {
+    buildMasterBoardPayload,
+    buildTrendingBoardPayload,
+    buildMovementIntelPayload,
+  } = require('./allowlist-board');
+  const warmed: string[] = [];
+  const failed: string[] = [];
+
+  const jobs: Array<{ key: string; label: string; build: () => Promise<unknown> }> = [
+    {
+      key: masterBoardCacheKey(),
+      label: 'master-board',
+      build: () => buildMasterBoardPayload(),
+    },
+    {
+      key: trendingBoardCacheKey(),
+      label: 'trending-board',
+      build: () => buildTrendingBoardPayload(),
+    },
+    {
+      key: movementIntelCacheKey(2027),
+      label: 'movement-intel:2027',
+      build: () => buildMovementIntelPayload(2027),
+    },
+  ];
+
+  // Build shared allowlist board first via master-board, then fan out the rest.
+  for (const job of jobs) {
+    try {
+      await cache.wrap(job.key, job.build, CACHE_TTL_MS);
+      warmed.push(job.label);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.warn(`[futurecast-cache] warm ${job.label} failed:`, message);
+      failed.push(job.label);
+    }
+  }
+
+  const hp = await warmFuturecastHighPriorityCaches(years);
+  if (hp.warmed > 0) {
+    warmed.push(`high-priority:${hp.warmed}/${hp.years.length}`);
+  } else {
+    failed.push('high-priority');
+  }
+
+  return { warmed, failed };
 }
 
 export function clearFuturecastCache(): void {
