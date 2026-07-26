@@ -907,30 +907,49 @@ export async function buildTrendingBoardPayload() {
 }
 
 /** Discovery-class (2028+) movement board — live targets only, never UF commits. */
-async function loadDiscoveryMovementPlayers(classYear: number): Promise<FutureCastBoardPlayer[]> {
-  const { getLiveBoardTargets } = require('../../lib/live-board-targets') as {
-    getLiveBoardTargets: (year: number) => Promise<Array<{ slug?: string }>>;
-  };
-  const { ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist') as {
-    ALLOWLIST_2028: string[];
-  };
+const discoveryBoardCache = new Map<number, { expires: number; value: FutureCastBoardPlayer[] }>();
+const discoveryBoardInflight = new Map<number, Promise<FutureCastBoardPlayer[]>>();
 
-  const live = await getLiveBoardTargets(classYear);
-  const liveSlugs = live
-    .map((t) => String(t.slug || '').toLowerCase())
-    .filter(Boolean);
-  const liveSet = new Set(liveSlugs);
-  const allowlistFirst =
-    classYear === 2028
-      ? (ALLOWLIST_2028 as string[])
-          .map((s) => String(s).toLowerCase())
-          .filter((slug) => liveSet.has(slug))
-      : [];
-  const extras = liveSlugs.filter((slug) => !allowlistFirst.includes(slug));
-  const slugs = [...allowlistFirst, ...extras];
-  if (!slugs.length) return [];
-  // Same-file loader — avoid circular require into underclassmen-intel.
-  return loadBoardPlayersForSlugs(classYear, slugs);
+async function loadDiscoveryMovementPlayers(classYear: number): Promise<FutureCastBoardPlayer[]> {
+  const now = Date.now();
+  const cached = discoveryBoardCache.get(classYear);
+  if (cached && cached.expires > now) return cached.value;
+  const inflight = discoveryBoardInflight.get(classYear);
+  if (inflight) return inflight;
+
+  const pending = (async () => {
+    const { getLiveBoardTargets } = require('../../lib/live-board-targets') as {
+      getLiveBoardTargets: (year: number) => Promise<Array<{ slug?: string }>>;
+    };
+    const { ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist') as {
+      ALLOWLIST_2028: string[];
+    };
+
+    const live = await getLiveBoardTargets(classYear);
+    const liveSlugs = live
+      .map((t) => String(t.slug || '').toLowerCase())
+      .filter(Boolean);
+    const liveSet = new Set(liveSlugs);
+    const allowlistFirst =
+      classYear === 2028
+        ? (ALLOWLIST_2028 as string[])
+            .map((s) => String(s).toLowerCase())
+            .filter((slug) => liveSet.has(slug))
+        : [];
+    const extras = liveSlugs.filter((slug) => !allowlistFirst.includes(slug));
+    const slugs = [...allowlistFirst, ...extras];
+    const players = slugs.length ? await loadBoardPlayersForSlugs(classYear, slugs) : [];
+    discoveryBoardCache.set(classYear, {
+      expires: Date.now() + BOARD_PLAYERS_TTL_MS,
+      value: players,
+    });
+    return players;
+  })().finally(() => {
+    discoveryBoardInflight.delete(classYear);
+  });
+
+  discoveryBoardInflight.set(classYear, pending);
+  return pending;
 }
 
 export async function buildMovementIntelPayload(classYear = FUTURECAST_CLASS_YEAR) {
