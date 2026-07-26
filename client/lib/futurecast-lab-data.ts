@@ -44,9 +44,11 @@ const EMPTY_HIGH_PRIORITY: HighPriorityResponse = {
   movementNarratives: [],
 };
 const LAB_FETCH_OPTS = DEFAULT_SNAPSHOT_FETCH_OPTS;
+/** Cap Lab wake retries — unbounded warm-poll turned Discovery cold misses into 3+ minute hangs. */
+const LAB_WARM_POLL = { maxAttempts: 3, delayMs: 1_500 } as const;
 
 function warmFetch<T>(path: string): Promise<T> {
-  return fetchWithWarmPoll(() => snapshotLiveFetch<T>(path, LAB_FETCH_OPTS));
+  return fetchWithWarmPoll(() => snapshotLiveFetch<T>(path, LAB_FETCH_OPTS), LAB_WARM_POLL);
 }
 
 function settled<T>(result: PromiseSettledResult<T>, fallback: T): T {
@@ -167,7 +169,9 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
         ...EMPTY_HIGH_PRIORITY,
         classYear: closingYear,
       })),
-      fetchFutureCastUnderclassmen([2028, 2029, 2030]).catch(() => ({
+      warmFetch<Awaited<ReturnType<typeof fetchFutureCastUnderclassmen>>>(
+        '/api/futurecast/underclassmen?years=2028,2029,2030'
+      ).catch(() => ({
         ok: true,
         updatedAt: new Date().toISOString(),
         years: [2028, 2029, 2030],

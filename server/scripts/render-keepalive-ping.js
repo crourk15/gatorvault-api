@@ -28,6 +28,9 @@ const PRIORITY_TOUCH_PATHS = (
     '/api/futurecast/master-board',
     '/api/futurecast/trending',
     '/api/futurecast/movement-intel?year=2027',
+    // 2028 Discovery — previously unwarmed; cold underclassmen/movement caused 3+ min Lab waits.
+    '/api/futurecast/movement-intel?year=2028',
+    '/api/futurecast/underclassmen?years=2028,2029,2030',
     // Lab Closing Class — cold rebuild is ~10s; keep this in priority so first open is warm.
     '/api/futurecast/high-priority?year=2027',
     '/api/futurecast/high-priority?year=2028',

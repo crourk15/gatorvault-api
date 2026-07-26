@@ -542,13 +542,27 @@ export async function loadUnderclassmenBoardPlayers(
 ): Promise<FutureCastBoardPlayer[]> {
   const rows = await loadEnrichedBoardPlayers(classYear, slugs);
   // Overlay On3 competitor boards + RPM market % — do not replace GV likelihood with RPM.
-  const enriched = await Promise.all(
-    rows.map(async (player) => {
-      const recruiting = await getRecruitingPlayerBySlug(player.slug);
-      return enrichPlayerFromRecruitingStore(player, recruiting, earlyMetaForSlug(player.slug));
-    })
-  );
-  return enriched;
+  // Batch slug lookup (was N+1 getRecruitingPlayerBySlug → multi-minute Discovery boards).
+  const store = require('./recruiting-store') as {
+    getPlayersBySlugs?: (slugs: string[]) => Promise<Map<string, Record<string, unknown>>>;
+  };
+  const slugList = rows.map((p) => p.slug).filter(Boolean);
+  let recruitingBySlug = new Map<string, Awaited<ReturnType<typeof getRecruitingPlayerBySlug>>>();
+  if (typeof store.getPlayersBySlugs === 'function' && slugList.length) {
+    try {
+      recruitingBySlug = (await store.getPlayersBySlugs(slugList)) as typeof recruitingBySlug;
+    } catch (err) {
+      console.warn(
+        '[underclassmen-intel] batch recruiting overlay failed:',
+        err instanceof Error ? err.message : err
+      );
+    }
+  }
+  return rows.map((player) => {
+    const recruiting =
+      recruitingBySlug.get(String(player.slug || '').toLowerCase()) ?? null;
+    return enrichPlayerFromRecruitingStore(player, recruiting as never, earlyMetaForSlug(player.slug));
+  });
 }
 
 function buildRelatedIntel(

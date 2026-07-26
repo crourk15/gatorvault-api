@@ -13,7 +13,11 @@ const CACHE_TTL_MS = parseInt(process.env.FUTURECAST_CACHE_TTL_MS || String(5 * 
 const cache = createMemoryCache(CACHE_TTL_MS);
 
 /** Bump when high-priority or master-board payload shape changes. */
-export const FUTURECAST_API_CACHE_VERSION = 18;
+export const FUTURECAST_API_CACHE_VERSION = 19;
+
+export function underclassmenCacheKey(years: Array<number | string>): string {
+  return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
+}
 
 export function highPriorityCacheKey(classYear: number | string): string {
   return `futurecast:high-priority:v${FUTURECAST_API_CACHE_VERSION}:${classYear}`;
@@ -76,6 +80,8 @@ export async function warmFuturecastLabCaches(
   const warmed: string[] = [];
   const failed: string[] = [];
 
+  const { buildUnderclassmenPayload } = require('./underclassmen');
+
   const jobs: Array<{ key: string; label: string; build: () => Promise<unknown> }> = [
     {
       key: masterBoardCacheKey(),
@@ -91,6 +97,16 @@ export async function warmFuturecastLabCaches(
       key: movementIntelCacheKey(2027),
       label: 'movement-intel:2027',
       build: () => buildMovementIntelPayload(2027),
+    },
+    {
+      key: movementIntelCacheKey(2028),
+      label: 'movement-intel:2028',
+      build: () => buildMovementIntelPayload(2028),
+    },
+    {
+      key: underclassmenCacheKey([2028, 2029, 2030]),
+      label: 'underclassmen:2028-2030',
+      build: () => buildUnderclassmenPayload([2028, 2029, 2030]),
     },
   ];
 

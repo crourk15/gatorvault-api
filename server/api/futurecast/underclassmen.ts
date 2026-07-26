@@ -16,7 +16,7 @@ import {
   listStockBoardRows,
 } from '../../models/predictions';
 import { asyncHandler, handlePredictionsApiError, serializeFeedRowsWithVolatility } from '../predictions/utils-api';
-import { sendCachedJson } from './response-cache';
+import { sendCachedJson, underclassmenCacheKey } from './response-cache';
 import {
   buildUnderclassmenIntelForSlug,
   loadUnderclassmenBoardPlayers,
@@ -282,105 +282,120 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
   const classes: Record<string, UnderclassmenClassBucket> = {};
   const flat: UnderclassmenPlayer[] = [];
 
-  for (const year of years) {
-    const slugs = await slugsForYear(year);
-    if (!slugs.length) {
-      classes[String(year)] = bucketForYear(year, [], []);
-      continue;
-    }
-
-    let enriched = await loadUnderclassmenBoardPlayers(year, slugs);
-    const movementBySlug = await loadMovementEnrichmentBySlug(
-      year,
-      slugs,
-      UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS
-    );
-    const enrichedSlugs = new Set(enriched.map((p) => p.slug.toLowerCase()));
-
-    if (year === 2028) {
-      for (const slug of slugs) {
-        const key = String(slug).toLowerCase();
-        if (enrichedSlugs.has(key)) continue;
-        const fallback = buildAllowlistWatchboardFallback(key, discoveryBySlug.get(key));
-        if (fallback) {
-          enriched.push(fallback);
-          enrichedSlugs.add(key);
-        }
+  // Build years in parallel — sequential 2028→2029→2030 was the Discovery multi-minute stall.
+  const yearBuckets = await Promise.all(
+    years.map(async (year) => {
+      const slugs = await slugsForYear(year);
+      if (!slugs.length) {
+        return { year, targets: [] as UnderclassmenPlayer[], watchlist: [] as UnderclassmenPlayer[] };
       }
-    }
 
-    const targets: UnderclassmenPlayer[] = [];
-    const watchlist: UnderclassmenPlayer[] = [];
+      let enriched = await loadUnderclassmenBoardPlayers(year, slugs);
+      // Board rows already carry 30d movement from loadBoardPlayersForSlugs.
+      // Only backfill slugs still missing a delta (avoid a second full stock/history pass).
+      const missingMovementSlugs = enriched
+        .filter((p) => p.trendDelta7d == null || !Number.isFinite(Number(p.trendDelta7d)))
+        .map((p) => p.slug);
+      const movementBySlug =
+        missingMovementSlugs.length > 0
+          ? await loadMovementEnrichmentBySlug(
+              year,
+              missingMovementSlugs,
+              UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS
+            )
+          : new Map();
+      const enrichedSlugs = new Set(enriched.map((p) => p.slug.toLowerCase()));
 
-    for (const player of enriched) {
-      // Commits (UF or elsewhere) are not discovery targets — keep Lab movement honest.
-      if (!isActiveUfTarget(player)) continue;
-
-      const entry = earlyMeta.get(player.slug);
-      const tier: UnderclassmenTier =
-        year === 2030 || entry?.tier === 'watchlist' ? 'watchlist' : 'target';
-      const discoveryMeta =
-        year === 2028 ? discoveryBySlug.get(player.slug.toLowerCase()) : undefined;
-      const merged = applyDiscoveryEnrichment(player, discoveryMeta);
-      const withMovement = applyMovementEnrichment(
-        merged,
-        movementBySlug.get(player.slug.toLowerCase())
-      );
-      // Never fall back to seeded earlyMovement (±4 theater). Real deltas only.
-      let trendDelta7d =
-        withMovement.trendDelta7d != null && Number.isFinite(Number(withMovement.trendDelta7d))
-          ? Number(withMovement.trendDelta7d)
-          : null;
-      if (trendDelta7d != null && Math.abs(Math.round(trendDelta7d)) === 4) {
-        // Classic allowlist-seed flat bump — drop unless durable UF trend confirms a real move.
-        try {
-          const ufTrend = require('../../lib/uf-trend-snapshot') as {
-            computeDelta7d?: (slug: string, asOf?: Date, opts?: object) => number | null;
-          };
-          const snap =
-            typeof ufTrend.computeDelta7d === 'function'
-              ? ufTrend.computeDelta7d(player.slug, new Date(), {
-                  preferSource: 'gatorvault',
-                  requireSource: false,
-                })
-              : null;
-          if (snap == null || !Number.isFinite(snap) || Math.abs(snap) < 1) {
-            trendDelta7d = null;
-          } else if (Math.abs(Math.round(snap)) === 4) {
-            // Snapshot itself is the seed-flat artifact.
-            trendDelta7d = null;
-          } else {
-            trendDelta7d = Math.round(snap);
+      if (year === 2028) {
+        for (const slug of slugs) {
+          const key = String(slug).toLowerCase();
+          if (enrichedSlugs.has(key)) continue;
+          const fallback = buildAllowlistWatchboardFallback(key, discoveryBySlug.get(key));
+          if (fallback) {
+            enriched.push(fallback);
+            enrichedSlugs.add(key);
           }
-        } catch {
-          trendDelta7d = null;
         }
       }
-      const volatility7d =
-        trendDelta7d == null
-          ? 0
-          : withMovement.volatility7d != null && withMovement.volatility7d > 0
-            ? withMovement.volatility7d
-            : Math.round(Math.abs(trendDelta7d) * 100) / 100;
-      const row: UnderclassmenPlayer = {
-        ...withMovement,
-        trendDelta7d,
-        volatility7d,
-        tier,
-        discoveryScore:
-          discoveryMeta?.discoveryScore ??
-          entry?.discoveryScore ??
-          merged.discoveryScore ??
-          null,
-        earlyMovement: trendDelta7d,
-        allowlistTarget: year === 2028 ? Boolean(discoveryMeta?.allowlistTarget) : merged.allowlistTarget,
-      };
-      if (tier === 'watchlist') watchlist.push(row);
-      else targets.push(row);
-      flat.push(row);
-    }
 
-    classes[String(year)] = bucketForYear(year, targets, watchlist);
+      const targets: UnderclassmenPlayer[] = [];
+      const watchlist: UnderclassmenPlayer[] = [];
+
+      for (const player of enriched) {
+        // Commits (UF or elsewhere) are not discovery targets — keep Lab movement honest.
+        if (!isActiveUfTarget(player)) continue;
+
+        const entry = earlyMeta.get(player.slug);
+        const tier: UnderclassmenTier =
+          year === 2030 || entry?.tier === 'watchlist' ? 'watchlist' : 'target';
+        const discoveryMeta =
+          year === 2028 ? discoveryBySlug.get(player.slug.toLowerCase()) : undefined;
+        const merged = applyDiscoveryEnrichment(player, discoveryMeta);
+        const withMovement = applyMovementEnrichment(
+          merged,
+          movementBySlug.get(player.slug.toLowerCase())
+        );
+        // Never fall back to seeded earlyMovement (±4 theater). Real deltas only.
+        let trendDelta7d =
+          withMovement.trendDelta7d != null && Number.isFinite(Number(withMovement.trendDelta7d))
+            ? Number(withMovement.trendDelta7d)
+            : null;
+        if (trendDelta7d != null && Math.abs(Math.round(trendDelta7d)) === 4) {
+          // Classic allowlist-seed flat bump — drop unless durable UF trend confirms a real move.
+          try {
+            const ufTrend = require('../../lib/uf-trend-snapshot') as {
+              computeDelta7d?: (slug: string, asOf?: Date, opts?: object) => number | null;
+            };
+            const snap =
+              typeof ufTrend.computeDelta7d === 'function'
+                ? ufTrend.computeDelta7d(player.slug, new Date(), {
+                    preferSource: 'gatorvault',
+                    requireSource: false,
+                  })
+                : null;
+            if (snap == null || !Number.isFinite(snap) || Math.abs(snap) < 1) {
+              trendDelta7d = null;
+            } else if (Math.abs(Math.round(snap)) === 4) {
+              // Snapshot itself is the seed-flat artifact.
+              trendDelta7d = null;
+            } else {
+              trendDelta7d = Math.round(snap);
+            }
+          } catch {
+            trendDelta7d = null;
+          }
+        }
+        const volatility7d =
+          trendDelta7d == null
+            ? 0
+            : withMovement.volatility7d != null && withMovement.volatility7d > 0
+              ? withMovement.volatility7d
+              : Math.round(Math.abs(trendDelta7d) * 100) / 100;
+        const row: UnderclassmenPlayer = {
+          ...withMovement,
+          trendDelta7d,
+          volatility7d,
+          tier,
+          discoveryScore:
+            discoveryMeta?.discoveryScore ??
+            entry?.discoveryScore ??
+            merged.discoveryScore ??
+            null,
+          earlyMovement: trendDelta7d,
+          allowlistTarget:
+            year === 2028 ? Boolean(discoveryMeta?.allowlistTarget) : merged.allowlistTarget,
+        };
+        if (tier === 'watchlist') watchlist.push(row);
+        else targets.push(row);
+      }
+
+      return { year, targets, watchlist };
+    })
+  );
+
+  for (const bucket of yearBuckets) {
+    classes[String(bucket.year)] = bucketForYear(bucket.year, bucket.targets, bucket.watchlist);
+    flat.push(...bucket.targets, ...bucket.watchlist);
   }
 
   const updatedAt = new Date().toISOString();
@@ -400,7 +415,7 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
 export const handleGetFutureCastUnderclassmen = asyncHandler(async (req: Request, res: Response) => {
   try {
     const years = parseYears(typeof req.query.years === 'string' ? req.query.years : undefined);
-    const cacheKey = `futurecast:underclassmen:${years.join(',')}`;
+    const cacheKey = underclassmenCacheKey(years);
     await sendCachedJson(res, cacheKey, () => buildUnderclassmenPayload(years));
   } catch (err) {
     handlePredictionsApiError(res, err);
