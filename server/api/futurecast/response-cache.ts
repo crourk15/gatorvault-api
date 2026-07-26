@@ -13,7 +13,7 @@ const CACHE_TTL_MS = parseInt(process.env.FUTURECAST_CACHE_TTL_MS || String(5 * 
 const cache = createMemoryCache(CACHE_TTL_MS);
 
 /** Bump when high-priority or master-board payload shape changes. */
-export const FUTURECAST_API_CACHE_VERSION = 16;
+export const FUTURECAST_API_CACHE_VERSION = 17;
 
 export function highPriorityCacheKey(classYear: number | string): string {
   return `futurecast:high-priority:v${FUTURECAST_API_CACHE_VERSION}:${classYear}`;
