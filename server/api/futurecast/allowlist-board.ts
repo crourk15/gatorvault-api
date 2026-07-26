@@ -219,6 +219,37 @@ async function loadRecruitingPlayer(slug: string): Promise<Record<string, unknow
   }
 }
 
+/** One Supabase round-trip (chunked) instead of N getPlayerBySlug calls. */
+async function loadRecruitingPlayersBySlug(
+  slugs: string[]
+): Promise<Map<string, Record<string, unknown>>> {
+  try {
+    const store = require('../../lib/recruiting-store');
+    if (typeof store.getPlayersBySlugs === 'function') {
+      return await store.getPlayersBySlugs(slugs);
+    }
+  } catch (err) {
+    console.warn(
+      '[allowlist-board] batch recruiting lookup failed:',
+      err instanceof Error ? err.message : err
+    );
+  }
+  const map = new Map<string, Record<string, unknown>>();
+  await Promise.all(
+    slugs.map(async (slug) => {
+      const player = await loadRecruitingPlayer(slug);
+      if (player) map.set(slug, player);
+    })
+  );
+  return map;
+}
+
+/** Shared board rows — single-flight so master/trending/home/movement do not stampede. */
+const BOARD_PLAYERS_TTL_MS =
+  parseInt(process.env.FUTURECAST_BOARD_PLAYERS_TTL_MS || String(90_000), 10) || 90_000;
+let allowlistedBoardPlayersCache: { expires: number; value: FutureCastBoardPlayer[] } | null = null;
+let allowlistedBoardPlayersInflight: Promise<FutureCastBoardPlayer[]> | null = null;
+
 function resolveCompetingSchools(
   rivals: { name: string; pct: number }[] | undefined
 ): { name: string; pct: number }[] {
@@ -433,7 +464,10 @@ export async function loadBoardPlayersForSlugs(
   }
 
   const playerIds = serialized.map((p) => p.playerId).filter(Boolean);
-  const historyMap = await listMovementHistoryByPlayerIds(playerIds, movementWindowDays);
+  const [historyMap, recruitingBySlug] = await Promise.all([
+    listMovementHistoryByPlayerIds(playerIds, movementWindowDays),
+    loadRecruitingPlayersBySlug(allowedSlugs),
+  ]);
 
   const players: FutureCastBoardPlayer[] = [];
 
@@ -441,7 +475,7 @@ export async function loadBoardPlayersForSlugs(
     if (isBlockedRecruit({ slug })) continue;
 
     const seed = { ...(earlyWatchMeta.get(slug) ?? {}), ...(seedMeta.get(slug) ?? {}) };
-    const recruiting = await loadRecruitingPlayer(slug);
+    const recruiting = recruitingBySlug.get(slug) ?? null;
     const override = resolveCommitmentOverride(
       recruiting
         ? { ...recruiting, slug }
@@ -711,8 +745,25 @@ function enrichBoardPlayersWithUfTrendMovement(
 }
 
 export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlayer[]> {
-  const slugs = await resolveBoardSlugs(FUTURECAST_CLASS_YEAR);
-  return loadBoardPlayersForSlugs(FUTURECAST_CLASS_YEAR, slugs);
+  const now = Date.now();
+  if (allowlistedBoardPlayersCache && allowlistedBoardPlayersCache.expires > now) {
+    return allowlistedBoardPlayersCache.value;
+  }
+  if (allowlistedBoardPlayersInflight) return allowlistedBoardPlayersInflight;
+
+  allowlistedBoardPlayersInflight = (async () => {
+    const slugs = await resolveBoardSlugs(FUTURECAST_CLASS_YEAR);
+    const players = await loadBoardPlayersForSlugs(FUTURECAST_CLASS_YEAR, slugs);
+    allowlistedBoardPlayersCache = {
+      expires: Date.now() + BOARD_PLAYERS_TTL_MS,
+      value: players,
+    };
+    return players;
+  })().finally(() => {
+    allowlistedBoardPlayersInflight = null;
+  });
+
+  return allowlistedBoardPlayersInflight;
 }
 
 export async function buildMasterBoardPayload() {

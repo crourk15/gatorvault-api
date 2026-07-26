@@ -112,7 +112,12 @@ export function useFutureCastLabData(): FutureCastLabData {
     }
     try {
       if (isInitial) {
-        const primary = await loadFutureCastLabPrimary();
+        // Elite: fire primary + secondary together — do not wait on master-board
+        // before kicking off trending / high-priority / movement.
+        const primaryPromise = loadFutureCastLabPrimary();
+        const secondaryPromise = loadFutureCastLabSecondaryRaw();
+
+        const primary = await primaryPromise;
         if (!primary.masterBoard.players.length && hasSeedPaint) {
           // Keep seed if live primary is empty/cold.
           setSecondaryLoading(false);
@@ -146,7 +151,7 @@ export function useFutureCastLabData(): FutureCastLabData {
         setLoading(false);
         setWarming(false);
 
-        const secondaryRaw = await loadFutureCastLabSecondaryRaw();
+        const secondaryRaw = await secondaryPromise;
         const discoveryOverlay = applyDiscoverySeasonOverlay(primary, secondaryRaw);
         setData({
           ...EMPTY_LAB_DATA,

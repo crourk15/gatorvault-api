@@ -24,6 +24,10 @@ const PRIORITY_TOUCH_PATHS = (
     '/api/live/dashboard?limit=10',
     '/api/staff/dashboard',
     '/api/futurecast/home',
+    // Lab critical path — master-board was unwarmed; first open paid full board rebuild.
+    '/api/futurecast/master-board',
+    '/api/futurecast/trending',
+    '/api/futurecast/movement-intel?year=2027',
     // Lab Closing Class — cold rebuild is ~10s; keep this in priority so first open is warm.
     '/api/futurecast/high-priority?year=2027',
     '/api/futurecast/high-priority?year=2028',

@@ -1,4 +1,5 @@
-/** Closing Class Lab trending — curated flips stay on board; stock fallback fills blanks. */
+'use strict';
+
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');

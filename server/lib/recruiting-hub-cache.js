@@ -146,7 +146,17 @@ function removeHubCacheKeys(keys) {
 
 /** Fan-facing first paint — warm these before the rest of the elite map. */
 function priorityWarmJobs(elite, years) {
-  const jobs = [[eliteClassOverviewAllCacheKey(), () => elite.buildHubClassOverviewAll()]];
+  const jobs = [
+    [eliteClassOverviewAllCacheKey(), () => elite.buildHubClassOverviewAll()],
+    // FutureCast Lab critical path — keep master-board / trending hot at boot.
+    [
+      'futurecast:lab:elite-warm',
+      async () => {
+        const { warmFuturecastLabCaches } = require('../api/futurecast/response-cache.ts');
+        return warmFuturecastLabCaches([2027, 2028]);
+      },
+    ],
+  ];
   for (const year of years) {
     jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year)]);
     jobs.push([classSnapshotCacheKey(year), () => elite.buildHubClassOverview(year)]);
@@ -158,13 +168,6 @@ function priorityWarmJobs(elite, years) {
 
 function secondaryWarmJobs(elite, years) {
   const jobs = [
-    [
-      'futurecast:high-priority:lab',
-      async () => {
-        const { warmFuturecastHighPriorityCaches } = require('../api/futurecast/response-cache.ts');
-        return warmFuturecastHighPriorityCaches([2027, 2028]);
-      },
-    ],
     [
       'hub:intel:high-priority',
       async () => {

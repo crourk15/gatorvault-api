@@ -710,6 +710,60 @@ async function getPlayerBySlug(slug) {
   return p ? enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(normalizePlayer(p)), slug) : null;
 }
 
+/**
+ * Batch slug lookup for FutureCast Lab board builds (avoids N+1 Supabase round-trips).
+ * Returns Map<slug, player>. Missing slugs are omitted.
+ */
+async function getPlayersBySlugs(slugs) {
+  const { applyEditorialPositionToPlayer } = require('./recruiting-editorial-positions');
+  const unique = [
+    ...new Set(
+      (Array.isArray(slugs) ? slugs : [])
+        .map((s) => String(s || '').trim().toLowerCase())
+        .filter(Boolean)
+    ),
+  ];
+  /** @type {Map<string, object>} */
+  const out = new Map();
+  if (!unique.length) return out;
+
+  const sb = initSupabase();
+  if (sb) {
+    const CHUNK = 80;
+    for (let i = 0; i < unique.length; i += CHUNK) {
+      const chunk = unique.slice(i, i + CHUNK);
+      const { data, error } = await sb.from('players').select('*').in('slug', chunk);
+      if (error) {
+        if (isSupabaseUnavailableError(error)) {
+          disableSupabase(error.message);
+          break;
+        }
+        throw error;
+      }
+      for (const row of data || []) {
+        const player = rowToPlayer(row);
+        const key = String(player.slug || row.slug || '').toLowerCase();
+        if (!key) continue;
+        out.set(key, enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(player), key));
+      }
+    }
+  }
+
+  if (out.size < unique.length) {
+    const local = (await loadPlayersLocal()).map(normalizePlayer);
+    const localBySlug = new Map(local.map((p) => [String(p.slug || '').toLowerCase(), p]));
+    for (const slug of unique) {
+      if (out.has(slug)) continue;
+      const p = localBySlug.get(slug);
+      if (p) {
+        out.set(slug, enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(p), slug));
+      }
+    }
+  }
+
+  return out;
+}
+
 /** Resolve recruiting player by slug or On3 id (hub links sometimes pass numeric ids). */
 async function resolvePlayerKey(key) {
   const raw = String(key || '').trim();
@@ -1459,6 +1513,7 @@ module.exports = {
   getStoreInfo,
   getAllPlayers,
   getPlayerBySlug,
+  getPlayersBySlugs,
   resolvePlayerKey,
   findBySlug,
   findByNameAndClass,
