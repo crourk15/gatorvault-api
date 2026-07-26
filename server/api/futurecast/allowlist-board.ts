@@ -18,6 +18,7 @@ import {
   dedupeFeedRows,
   filterModelPredictionsOnly,
   filterMovementIntelStockRows,
+  filterTrendingStockRows,
   FUTURECAST_CLASS_YEAR,
 } from './feed-filters';
 import { serializeFeedRowsWithVolatility } from '../predictions/utils-api';
@@ -341,12 +342,33 @@ export async function buildAllowlistHeatmapPayload() {
   return buildHeatmapResponse(players);
 }
 
+/** Closing Class Lab members — open hunt + Flip Watch (commits stay on purpose). */
+function isCuratedLabSlug(slug: string, classYear: number): boolean {
+  const key = String(slug || '').toLowerCase();
+  if (!key) return false;
+  if (classYear === FUTURECAST_CLASS_YEAR) {
+    return (ALLOWLIST_2027 as string[]).some((s) => String(s).toLowerCase() === key);
+  }
+  if (classYear === 2028) {
+    return (ALLOWLIST_2028 as string[]).some((s) => String(s).toLowerCase() === key);
+  }
+  return false;
+}
+
 async function resolveBoardSlugs(classYear: number): Promise<string[]> {
   const { getLiveBoardTargets } = require('../../lib/live-board-targets');
   const liveTargets = await getLiveBoardTargets(classYear);
-  return liveTargets
+  const live = liveTargets
     .map((t: { slug?: string }) => String(t.slug || '').toLowerCase())
     .filter(Boolean);
+
+  // 2027 Closing Class: never collapse Lab to only open isActiveUfTarget rows.
+  // Flip Watch commits are intentional board members for trending / master / movement.
+  if (classYear === FUTURECAST_CLASS_YEAR) {
+    const curated = (ALLOWLIST_2027 as string[]).map((s) => String(s).toLowerCase());
+    return [...new Set([...curated, ...live])];
+  }
+  return [...new Set(live)];
 }
 
 /** Build enriched FutureCast player rows for explicit slugs and class year. */
@@ -430,8 +452,16 @@ export async function loadBoardPlayersForSlugs(
             staffNotes: seed.staffNotes,
           }
     );
-    if (recruiting && !isActiveUfTarget(recruiting) && !override) continue;
-    if (!recruiting && seedCommittedTo(seed) && isCommittedElsewhere({ committedTo: seedCommittedTo(seed) }) && !override) {
+    const onCuratedLab = isCuratedLabSlug(slug, classYear);
+    // Curated Flip Watch / Closing Class rows stay on Lab even when committed elsewhere.
+    if (recruiting && !isActiveUfTarget(recruiting) && !override && !onCuratedLab) continue;
+    if (
+      !recruiting &&
+      seedCommittedTo(seed) &&
+      isCommittedElsewhere({ committedTo: seedCommittedTo(seed) }) &&
+      !override &&
+      !onCuratedLab
+    ) {
       continue;
     }
     const rank = rankings.get(slug);
@@ -654,10 +684,12 @@ function enrichBoardPlayersWithUfTrendMovement(
           : null;
       const existing = p.trendDelta7d;
       const existingAbs = existing == null || !Number.isFinite(Number(existing)) ? null : Math.abs(Number(existing));
+      // Legacy allowlist_seed used ±4 placeholders — only replace those when a real
+      // snapshot delta exists. Do not blank genuine stock moves of exactly ±4.
       const seedFlat = existingAbs === 4;
 
       let trendDelta7d = existing;
-      if (seedFlat) trendDelta7d = snapDelta;
+      if (seedFlat && snapDelta != null) trendDelta7d = snapDelta;
       else if (existing == null) trendDelta7d = snapDelta;
 
       const volatility7d =
@@ -771,15 +803,55 @@ export async function buildMasterBoardPayload() {
 
 export async function buildTrendingBoardPayload() {
   const players = (await loadAllowlistedBoardPlayers()).filter((p) => !p.ufPredictionSuppressed);
+  let trendingUp = players
+    .filter((p) => (p.trendDelta7d ?? 0) > 0)
+    .sort((a, b) => (b.trendDelta7d ?? 0) - (a.trendDelta7d ?? 0));
+  let trendingDown = players
+    .filter((p) => (p.trendDelta7d ?? 0) < 0)
+    .sort((a, b) => (a.trendDelta7d ?? 0) - (b.trendDelta7d ?? 0));
+
+  // When the Closing Class hunt list is flat, still surface real 7d stock movers
+  // so Lab Trending is not blank while flip/open targets sit at Δ0.
+  if (!trendingUp.length && !trendingDown.length) {
+    try {
+      const stockRows = filterTrendingStockRows(
+        await listStockBoardRows(MOVEMENT_WINDOW_DAYS, {
+          lifecycle: 'HS',
+          class_year: FUTURECAST_CLASS_YEAR,
+        })
+      );
+      const moverSlugs = [
+        ...new Set(
+          stockRows
+            .filter((row) => Math.abs(Number(row.window_delta) || 0) >= 1)
+            .map((row) => String(row.slug || '').toLowerCase())
+            .filter(Boolean)
+        ),
+      ];
+      if (moverSlugs.length) {
+        const extras = (await loadBoardPlayersForSlugs(FUTURECAST_CLASS_YEAR, moverSlugs)).filter(
+          (p) => !p.ufPredictionSuppressed
+        );
+        trendingUp = extras
+          .filter((p) => (p.trendDelta7d ?? 0) > 0)
+          .sort((a, b) => (b.trendDelta7d ?? 0) - (a.trendDelta7d ?? 0));
+        trendingDown = extras
+          .filter((p) => (p.trendDelta7d ?? 0) < 0)
+          .sort((a, b) => (a.trendDelta7d ?? 0) - (b.trendDelta7d ?? 0));
+      }
+    } catch (err) {
+      console.warn(
+        '[allowlist-board] trending stock fallback failed:',
+        err instanceof Error ? err.message : err
+      );
+    }
+  }
+
   return {
     classYear: FUTURECAST_CLASS_YEAR,
     updatedAt: new Date().toISOString(),
-    trendingUp: players
-      .filter((p) => (p.trendDelta7d ?? 0) > 0)
-      .sort((a, b) => (b.trendDelta7d ?? 0) - (a.trendDelta7d ?? 0)),
-    trendingDown: players
-      .filter((p) => (p.trendDelta7d ?? 0) < 0)
-      .sort((a, b) => (a.trendDelta7d ?? 0) - (b.trendDelta7d ?? 0)),
+    trendingUp,
+    trendingDown,
   };
 }
 
