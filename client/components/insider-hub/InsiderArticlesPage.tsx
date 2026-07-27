@@ -28,14 +28,19 @@ function articleHref(articleId: string, inVault: boolean): string {
 
 function InsiderHero(): React.ReactElement {
   return (
-    <header className="insider-hero" data-testid="insider-hero">
+    <header className="insider-hero" data-testid="insider-hero" aria-label="GatorVault Insider">
+      <div className="insider-hero__bg" aria-hidden="true" />
+      <div className="insider-hero__sweep" aria-hidden="true" />
       <div className="insider-hero__inner">
-        <p className="rh-elite-mobile-header__eyebrow" style={{margin:0}}>GatorVault Insider</p>
-        <h1 className="insider-hero-title">Insider Articles</h1>
+        <h1 className="insider-hero-title">GatorVault Insider</h1>
         <p className="insider-hero-subtitle">
-          Original Gators analysis — film, recruiting, roster, and scheme. Teaser free; full reads for members.
+          Original Gators analysis — film, recruiting, roster, and scheme.
         </p>
-        <div className="insider-hero-underline" aria-hidden />
+        <div className="insider-hero-ctas">
+          <a href="#insider-latest" className="insider-hero-cta">
+            Read latest
+          </a>
+        </div>
       </div>
     </header>
   );
@@ -436,6 +441,7 @@ export function InsiderArticlesPage({
   if (loading && !HAS_ARTICLES_SEED) {
     return (
       <div className="insider-page rh-page rh-page--elite mobile-app gv-page" data-testid="insider-articles-page">
+        <InsiderHero />
         <div className="insider-page__frame">
           <p className="insider-status">Loading Insider articles…</p>
         </div>
@@ -446,6 +452,7 @@ export function InsiderArticlesPage({
   if (error && !HAS_ARTICLES_SEED) {
     return (
       <div className="insider-page rh-page rh-page--elite mobile-app gv-page" data-testid="insider-articles-page">
+        <InsiderHero />
         <div className="insider-page__frame">
           <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
         </div>
@@ -455,10 +462,9 @@ export function InsiderArticlesPage({
 
   return (
     <div className="insider-page rh-page rh-page--elite mobile-app gv-page" data-testid="insider-articles-page">
+      <InsiderHero />
       <div className="insider-page__frame">
-        <InsiderHero />
-
-        <div className="insider-grid">
+        <div className="insider-grid" id="insider-latest">
           <div>
             {featured ? (
               <section className="insider-section">
