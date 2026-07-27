@@ -28,6 +28,8 @@ const ALLOWED_INTEL_EVENTS = new Set([
   'momentum_down',
   'flip_watch',
   'commit_watch',
+  // Beat-writer recruiting narratives (e.g. rising names / Gators in play)
+  'recruiting_narrative',
 ]);
 
 const BLOCKED_SUMMARY =

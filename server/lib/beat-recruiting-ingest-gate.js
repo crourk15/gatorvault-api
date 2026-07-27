@@ -4,7 +4,7 @@
  * 1. Allowed account (UF beat writers + UF official)
  * 2. Football signal in text
  * 3. Recruiting signal in text
- * 4. Class year 2028+ (2029/2030 blocked unless override; missing year allowed — infer from roster)
+ * 4. Class year 2027–2028 in scope (2026 and earlier blocked; 2029+ blocked unless override; missing year allowed)
  * 5. UF mention or locked UF target name in text
  * 6. Player first + last name in text (regex + extractor + roster sync)
  * 7. No rival-program mention without UF context
@@ -222,9 +222,11 @@ function matchesClassYear(text, post = null) {
   if (!years.length) return true;
   const allowFuture = post?.manualClassYearOverride || process.env.BEAT_INGEST_ALLOW_CLASS_2029 === 'true';
   if (years.some((y) => y >= 2029) && !allowFuture) return false;
-  // Mixed-class headlines (e.g. "2027 battles + first 2028 commit") stay eligible when 2028+ is present.
+  // Closing class 2027 + discovery 2028 are in scope. Mixed headlines stay eligible if either is present.
+  if (years.some((y) => y === 2027 || y === 2028)) return true;
   if (years.some((y) => y >= 2028)) return true;
-  if (years.some((y) => y <= 2027)) return false;
+  // Explicit pre-2027 only (e.g. 2026 portal/HS) stays out of recruiting beat ingest.
+  if (years.every((y) => y < 2027)) return false;
   return true;
 }
 
@@ -283,7 +285,13 @@ function evaluateStrictRecruitingIngestGate(post, text) {
     return { pass: false, reason: 'no_recruiting_signal', failedRule: 3 };
   }
   if (!matchesClassYear(body, post)) {
-    return { pass: false, reason: 'class_year_below_2027', failedRule: 4 };
+    const years = extractClassYears(body);
+    const reason = years.some((y) => y >= 2029)
+      ? 'class_year_above_2028'
+      : years.every((y) => y < 2027)
+        ? 'class_year_below_2027'
+        : 'class_year_out_of_scope';
+    return { pass: false, reason, failedRule: 4 };
   }
   if (!matchesUfMention(body, post)) {
     return { pass: false, reason: 'no_uf_mention', failedRule: 5 };
