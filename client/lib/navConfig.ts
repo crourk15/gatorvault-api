@@ -62,10 +62,21 @@ export function insiderUnlockHref(opts?: {
   return `/join/?${params.toString()}`;
 }
 
-/** Logged-out → sign-in with return path; logged-in → vault route. */
+function joinModeForGuest(): 'signin' | 'signup' {
+  if (typeof window === 'undefined') return 'signup';
+  try {
+    if (String(localStorage.getItem('gv_last_email') || '').trim()) return 'signin';
+  } catch {
+    /* ignore */
+  }
+  // First-time guests should Create account, not Sign in.
+  return 'signup';
+}
+
+/** Logged-out → join with return path; logged-in → vault route. */
 export function getVaultNavHref(key: VaultNavKey, loggedIn: boolean): string {
   const item = vaultNavPaths[key];
-  if (!loggedIn) return joinHref(item.href, 'signin');
+  if (!loggedIn) return joinHref(item.href, joinModeForGuest());
   return item.href;
 }
 
@@ -73,7 +84,7 @@ export function getVaultNavHref(key: VaultNavKey, loggedIn: boolean): string {
 export function getNavHref(item: MainNavItem, loggedIn: boolean): string {
   if (item.id === 'home' || item.id === 'insider') return item.href;
   if (!loggedIn && item.previewAnchor) {
-    return joinHref(item.href, 'signin');
+    return joinHref(item.href, joinModeForGuest());
   }
   return item.href;
 }
@@ -82,10 +93,11 @@ export function getNavHref(item: MainNavItem, loggedIn: boolean): string {
 export function vaultGateRedirect(pathname: string, loggedIn: boolean): string | null {
   if (loggedIn) return null;
   const p = pathname.replace(/\/$/, '') || '/';
-  if (p.startsWith('/vault/futurecast')) return joinHref('/vault/futurecast', 'signin');
-  if (p.startsWith('/vault/game-week')) return joinHref('/vault/game-week', 'signin');
-  if (p.startsWith('/vault/recruiting')) return joinHref(p, 'signin');
-  if (p.startsWith('/vault/film-room')) return joinHref('/vault/film-room', 'signin');
+  const mode = joinModeForGuest();
+  if (p.startsWith('/vault/futurecast')) return joinHref('/vault/futurecast', mode);
+  if (p.startsWith('/vault/game-week')) return joinHref('/vault/game-week', mode);
+  if (p.startsWith('/vault/recruiting')) return joinHref(p, mode);
+  if (p.startsWith('/vault/film-room')) return joinHref('/vault/film-room', mode);
   return null;
 }
 

@@ -37,13 +37,23 @@ function isMarketingPath(pathname: string): boolean {
   return p === '/' || p === '/welcome' || p === '/insider';
 }
 
-/** Logged-out → sign-in; logged-in → vault home. */
+function hasRememberedEmail(): boolean {
+  try {
+    return Boolean(String(localStorage.getItem('gv_last_email') || '').trim());
+  } catch {
+    return false;
+  }
+}
+
+/** Logged-out first install → Create account; returning email → Sign in; logged-in → vault. */
 export function nativeEntryDestination(): string {
   const session = loadSession();
-  const rel =
-    session?.email && session?.token
-      ? '/vault/'
-      : '/join/?mode=signin&next=/vault/';
+  let rel = '/vault/';
+  if (!(session?.email && session?.token)) {
+    // First-time App Store users were landing on Sign in and bouncing without registering.
+    const mode = hasRememberedEmail() ? 'signin' : 'signup';
+    rel = `/join/?mode=${mode}&next=/vault/`;
+  }
   return nativeNavigationUrl(rel);
 }
 
