@@ -33,37 +33,46 @@ export function ScoutingRadarChart({ axes, opponentName }: Props): React.ReactEl
 
   return (
     <div className="gv-gw-radar" data-testid="gw-radar-chart">
-      <p className="gv-gw-radar__heading">Scouting radar</p>
+      <p className="gv-gw-radar__heading">Matchup edge</p>
       <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} role="img" aria-label="Scouting radar comparison">
         {gridLevels.map((lvl) => (
           <polygon
             key={lvl}
             points={polygonPoints(Array(n).fill(lvl))}
             fill="none"
-            stroke="rgba(199,199,199,0.2)"
+            stroke="rgba(0,33,165,0.12)"
             strokeWidth="1"
           />
         ))}
         {axes.map((_, i) => {
           const [x, y] = point(i, 100, n);
-          return <line key={i} x1={CENTER} y1={CENTER} x2={x} y2={y} stroke="rgba(199,199,199,0.25)" />;
+          return <line key={i} x1={CENTER} y1={CENTER} x2={x} y2={y} stroke="rgba(0,33,165,0.16)" />;
         })}
         <polygon
           points={polygonPoints(axes.map((a) => a.opp))}
-          fill="rgba(100,116,139,0.25)"
-          stroke="#64748B"
+          fill="rgba(0,33,165,0.12)"
+          stroke="#0021a5"
           strokeWidth="2"
         />
         <polygon
           points={polygonPoints(axes.map((a) => a.uf))}
-          fill="rgba(250,70,22,0.22)"
+          fill="rgba(250,70,22,0.18)"
           stroke="#FA4616"
           strokeWidth="2"
         />
         {axes.map((a, i) => {
           const [x, y] = point(i, 115, n);
           return (
-            <text key={a.label} x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill="#C7C7C7" fontSize="9">
+            <text
+              key={a.label}
+              className="gv-gw-radar__label"
+              x={x}
+              y={y}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize="9"
+              fontWeight="700"
+            >
               {a.label}
             </text>
           );

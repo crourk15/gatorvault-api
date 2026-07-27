@@ -378,13 +378,48 @@ export function VaultGameZonePage(): React.ReactElement {
             </p>
 
             <p className="gv-gz__headline">
-              {locked ? 'Your Swamp Eve ticket is locked.' : 'Build your Swamp Eve ticket.'}
+              {locked ? 'Your Swamp Eve ticket is locked.' : 'Make your Swamp Eve call.'}
             </p>
             <p className="gv-gz__support">
               {locked
-                ? 'Hold it until the final whistle. Watch kickoff on Gators Live — full prep stays on Game Week.'
-                : 'Call the cover and the final score. Your ticket stays with you until kickoff.'}
+                ? 'Ride it to the final whistle. Watch kickoff on Gators Live — full prep stays on Game Week.'
+                : 'Pick the cover. Call the final. Stack Vault Points on the way to kickoff.'}
             </p>
+            <div className="gv-gz__howto" data-testid="gv-gz-howto">
+              <p className="gv-gz__howto-kicker">Vault Points chase</p>
+              <p className="gv-gz__howto-title">Beat the whistle. Climb the board.</p>
+              <p className="gv-gz__howto-lead">
+                Lock a ticket, nail the cover, and hunt the exact score — Scout → Insider → Vault
+                Elite.
+              </p>
+              <ul className="gv-gz__howto-list">
+                <li>
+                  <span className="gv-gz__howto-pts">+25</span>
+                  <span className="gv-gz__howto-copy">
+                    <strong>Lock it in</strong>
+                    Get on the board the second your ticket seals.
+                  </span>
+                </li>
+                <li>
+                  <span className="gv-gz__howto-pts">+50</span>
+                  <span className="gv-gz__howto-copy">
+                    <strong>Nail the cover</strong>
+                    Florida covers the way you called.
+                  </span>
+                </li>
+                <li>
+                  <span className="gv-gz__howto-pts">+100</span>
+                  <span className="gv-gz__howto-copy">
+                    <strong>Perfect score</strong>
+                    Exact final pays big · close call still banks +25.
+                  </span>
+                </li>
+              </ul>
+              <p className="gv-gz__howto-note">
+                Your personal season chase on this phone — bragging rights only. No cash. No betting
+                inside GatorVault.
+              </p>
+            </div>
 
             <div
               className={`gv-gz__ticket-build${locked ? ' is-locked' : ''}${justLocked ? ' is-seal' : ''}`}

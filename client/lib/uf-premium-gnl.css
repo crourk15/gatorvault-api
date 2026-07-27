@@ -96,6 +96,12 @@
   .uf-premium-gnl.gv-gnl-shell {
     --gv-gnl-frame-margin: 1rem;
     --gnl-frame-margin: 1rem;
+    /* Clear fixed Live Pulse FAB + bottom nav so last podcast (Gator Tales) stays tappable */
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .uf-premium-gnl .gv-gnl-elite-podcasts {
+    scroll-margin-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
   }
 }
 

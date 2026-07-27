@@ -617,8 +617,12 @@ body.gv-film-page-active .gv-vault-shell__main {
 
 .gv-vault-tickets__tips {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
   gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .gv-vault-tip {
@@ -646,47 +650,162 @@ body.gv-film-page-active .gv-vault-shell__main {
   color: #fa4616;
 }
 
-/* Apparel */
-.gv-apparel-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
+/* Apparel — same brand hero language as Home / Recruiting */
+.gv-vault-apparel {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  box-sizing: border-box;
+  padding-inline: 0;
+  background: transparent;
 }
 
-.gv-apparel-pill {
-  display: inline-flex;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  background: rgba(250, 70, 22, 0.1);
-  color: #fbbf24;
-  font-size: 0.72rem;
+.gv-apparel-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 1.35rem;
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  min-height: clamp(200px, 28svh, 280px);
+  display: flex;
+  align-items: flex-end;
+}
+
+.gv-apparel-hero__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 28%, rgba(250, 70, 22, 0.18) 0%, transparent 58%),
+    linear-gradient(165deg, #0021a5 0%, #001656 52%, #001a33 100%);
+  pointer-events: none;
+}
+
+.gv-apparel-hero__sweep {
+  position: absolute;
+  top: -40%;
+  left: -20%;
+  width: 160%;
+  height: 160%;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent);
+  transform: translateX(-40%);
+  animation: gv-apparel-hero-sweep 12s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gv-apparel-hero__watermark {
+  position: absolute;
+  right: clamp(12px, 4vw, 28px);
+  bottom: clamp(10px, 2.5vw, 18px);
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(2.6rem, 12vw, 5rem);
   font-weight: 700;
+  opacity: 0.08;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  line-height: 0.9;
+}
+
+.gv-apparel-hero__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: clamp(1.4rem, 3.5vw, 2.1rem) clamp(1.15rem, 3vw, 2rem)
+    clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.gv-apparel-hero__eyebrow {
+  margin: 0 0 0.4rem;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #fa4616;
+}
+
+.gv-apparel-hero__title {
+  margin: 0;
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(2.1rem, 7.5vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 0.95;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
+}
+
+.gv-apparel-hero__sub {
+  margin: 0.65rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.gv-apparel-hero__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+
+.gv-apparel-hero__pill {
+  display: inline-flex;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
+@keyframes gv-apparel-hero-sweep {
+  0% {
+    transform: translateX(-40%);
+  }
+  100% {
+    transform: translateX(40%);
+  }
+}
+
 .gv-apparel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .gv-apparel-card {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  min-height: 230px;
-  padding: 1.5rem;
+  min-height: 220px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 1.25rem;
   border-radius: 1rem;
-  border: 2px solid rgba(0, 48, 135, 0.25);
-  background: rgba(10, 22, 40, 0.85);
+  border: 1px solid rgba(0, 33, 165, 0.18);
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
   transition: border-color 0.15s, transform 0.15s;
+  overflow: hidden;
 }
 
 .gv-apparel-card:hover {
-  border-color: rgba(250, 70, 22, 0.3);
+  border-color: rgba(250, 70, 22, 0.55);
   transform: translateY(-2px);
 }
 
@@ -694,35 +813,45 @@ body.gv-film-page-active .gv-vault-shell__main {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
 }
 
 .gv-apparel-card__icon {
   font-size: 1.75rem;
+  flex-shrink: 0;
 }
 
 .gv-apparel-card__badge {
   font-size: 0.65rem;
   font-weight: 700;
   padding: 0.2rem 0.6rem;
-  border-radius: 9999px;
-  background: rgba(0, 48, 135, 0.35);
-  color: #94a3b8;
+  border-radius: 8px;
+  background: rgba(250, 70, 22, 0.12);
+  color: #fa4616;
+  border: 1px solid rgba(250, 70, 22, 0.35);
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .gv-apparel-card__name {
   font-family: 'Oswald', sans-serif;
   font-size: 1.125rem;
   font-weight: 700;
-  color: #fff;
+  color: #0021a5;
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .gv-apparel-card__desc {
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: #334155;
   margin: 0;
   flex: 1;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .gv-apparel-btn {
@@ -733,10 +862,111 @@ body.gv-film-page-active .gv-vault-shell__main {
   text-decoration: none;
 }
 
-/* Vault alerts */
+/* Vault alerts — brand hero + white Gator cards */
+.gv-vault-alerts {
+  width: 100%;
+  max-width: 100%;
+}
+
+.gv-alerts-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 1.35rem;
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  min-height: clamp(170px, 24svh, 230px);
+  display: flex;
+  align-items: flex-end;
+}
+
+.gv-alerts-hero__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 28%, rgba(250, 70, 22, 0.18) 0%, transparent 58%),
+    linear-gradient(165deg, #0021a5 0%, #001656 52%, #001a33 100%);
+  pointer-events: none;
+}
+
+.gv-alerts-hero__sweep {
+  position: absolute;
+  top: -40%;
+  left: -20%;
+  width: 160%;
+  height: 160%;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent);
+  transform: translateX(-40%);
+  animation: gv-alerts-hero-sweep 12s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gv-alerts-hero__watermark {
+  position: absolute;
+  right: clamp(12px, 4vw, 28px);
+  bottom: clamp(10px, 2.5vw, 18px);
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(2.4rem, 11vw, 4.5rem);
+  font-weight: 700;
+  opacity: 0.08;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  line-height: 0.9;
+}
+
+.gv-alerts-hero__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: clamp(1.25rem, 3vw, 1.85rem) clamp(1.15rem, 3vw, 2rem)
+    clamp(1.15rem, 2.8vw, 1.6rem);
+}
+
+.gv-alerts-hero__eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #fa4616;
+}
+
+.gv-alerts-hero__title {
+  margin: 0;
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(2.1rem, 7vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 0.95;
+  color: #fff;
+}
+
+.gv-alerts-hero__sub {
+  margin: 0.55rem 0 0;
+  max-width: 36rem;
+  font-size: clamp(0.92rem, 2.6vw, 1.05rem);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+@keyframes gv-alerts-hero-sweep {
+  0% {
+    transform: translateX(-40%);
+  }
+  100% {
+    transform: translateX(40%);
+  }
+}
+
 .gv-vault-alerts__layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
   gap: 1.25rem;
 }
 
@@ -750,16 +980,21 @@ body.gv-film-page-active .gv-vault-shell__main {
 .gv-vault-alerts__feed {
   padding: 1.25rem;
   border-radius: 1rem;
-  border: 1px solid rgba(0, 48, 135, 0.25);
-  background: rgba(10, 22, 40, 0.65);
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  border-top: 3px solid #fa4616;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+  color: #0b1b4a;
 }
 
 .gv-vault-alerts__section-title {
   font-family: 'Oswald', sans-serif;
-  font-size: 1.125rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: #fff;
+  color: #0021a5;
   margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .gv-alert-toggle__label {
@@ -777,9 +1012,14 @@ body.gv-film-page-active .gv-vault-shell__main {
 }
 
 .gv-vault-alerts__section-hint {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   color: #64748b;
   margin: 0 0 1rem;
+  line-height: 1.4;
+}
+
+.gv-vault-alerts__section-hint--flush {
+  margin-bottom: 0;
 }
 
 .gv-alert-toggles {
@@ -790,34 +1030,34 @@ body.gv-film-page-active .gv-vault-shell__main {
 }
 
 .gv-alert-toggle {
-  padding: 0.5rem 0.75rem;
+  padding: 0.55rem 0.8rem;
   border-radius: 0.5rem;
-  border: 1px solid rgba(0, 48, 135, 0.35);
-  background: rgba(6, 15, 31, 0.85);
-  color: #94a3b8;
+  border: 1px solid rgba(0, 33, 165, 0.18);
+  background: rgba(0, 33, 165, 0.04);
+  color: #475569;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .gv-alert-toggle.is-active {
   background: #fa4616;
-  color: #000;
+  color: #fff;
   border-color: #fa4616;
 }
 
 .gv-vault-alerts__field {
   margin-bottom: 1.25rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(0, 48, 135, 0.2);
+  border-top: 1px solid rgba(0, 33, 165, 0.1);
 }
 
 .gv-vault-alerts__field-label {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #94a3b8;
+  color: #0021a5;
   margin: 0 0 0.5rem;
 }
 
@@ -830,9 +1070,9 @@ body.gv-film-page-active .gv-vault-shell__main {
 .gv-alert-choice {
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  border: 1px solid rgba(0, 48, 135, 0.35);
-  background: rgba(6, 15, 31, 0.85);
-  color: #94a3b8;
+  border: 1px solid rgba(0, 33, 165, 0.18);
+  background: rgba(0, 33, 165, 0.04);
+  color: #475569;
   font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
@@ -848,9 +1088,9 @@ body.gv-film-page-active .gv-vault-shell__main {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
-  border: 2px solid rgba(0, 48, 135, 0.3);
-  background: #001a33;
-  color: #fff;
+  border: 1px solid rgba(0, 33, 165, 0.22);
+  background: #f8fafc;
+  color: #0b1b4a;
   font-size: 0.875rem;
 }
 
@@ -868,10 +1108,12 @@ body.gv-film-page-active .gv-vault-shell__main {
   align-items: center;
   gap: 0.35rem;
   padding: 0.25rem 0.6rem;
-  border-radius: 9999px;
-  background: rgba(6, 15, 31, 0.85);
+  border-radius: 8px;
+  background: rgba(0, 33, 165, 0.06);
+  border: 1px solid rgba(0, 33, 165, 0.14);
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: #0021a5;
+  font-weight: 600;
 }
 
 .gv-alert-player-tag button {
@@ -911,7 +1153,7 @@ body.gv-film-page-active .gv-vault-shell__main {
 
 .gv-vault-alerts__feed-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 1rem;
@@ -922,44 +1164,128 @@ body.gv-film-page-active .gv-vault-shell__main {
   background: none;
   color: #fa4616;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
+  white-space: nowrap;
+  margin-top: 0.2rem;
 }
 
-.gv-vault-alert-item {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid rgba(0, 48, 135, 0.15);
+.gv-vault-alerts__feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
 }
 
-.gv-vault-alert-item.is-read {
-  opacity: 0.65;
+.gv-vault-alert-card {
+  padding: 0.85rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 33, 165, 0.1);
+  background: rgba(0, 33, 165, 0.03);
+  transition: border-color 0.15s ease, transform 0.15s ease;
 }
 
-.gv-vault-alert-item__message {
-  display: block;
-  color: #fff;
-  font-size: 0.875rem;
+.gv-vault-alert-card:hover {
+  border-color: rgba(250, 70, 22, 0.4);
+  transform: translateY(-1px);
+}
+
+.gv-vault-alert-card.is-read {
+  opacity: 0.7;
+}
+
+.gv-vault-alert-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.gv-vault-alert-card__chip {
+  display: inline-flex;
+  padding: 0.18rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(0, 33, 165, 0.08);
+  color: #0021a5;
+}
+
+.gv-vault-alert-card__chip--rise {
+  background: rgba(22, 163, 74, 0.12);
+  color: #15803d;
+}
+
+.gv-vault-alert-card__chip--fall {
+  background: rgba(220, 38, 38, 0.1);
+  color: #b91c1c;
+}
+
+.gv-vault-alert-card__chip--visit {
+  background: rgba(0, 33, 165, 0.1);
+  color: #0021a5;
+}
+
+.gv-vault-alert-card__chip--flip {
+  background: rgba(250, 70, 22, 0.12);
+  color: #c2410c;
+}
+
+.gv-vault-alert-card__chip--heat,
+.gv-vault-alert-card__chip--intel {
+  background: rgba(100, 116, 139, 0.12);
+  color: #475569;
+}
+
+.gv-vault-alert-card__time {
+  font-size: 0.7rem;
   font-weight: 600;
-  text-decoration: none;
-  margin: 0 0 0.25rem;
+  color: #94a3b8;
 }
 
-.gv-vault-alert-item__meta {
-  font-size: 0.75rem;
+.gv-vault-alert-card__name {
+  display: inline-block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #0021a5;
+  text-decoration: none;
+  line-height: 1.15;
+}
+
+.gv-vault-alert-card__name:hover {
+  color: #fa4616;
+}
+
+.gv-vault-alert-card__headline {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.gv-vault-alert-card__detail {
+  margin: 0.25rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
   color: #64748b;
-  margin: 0;
 }
 
 .gv-vault-alerts__fc-link {
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(0, 48, 135, 0.2);
+  border-top: 1px solid rgba(0, 33, 165, 0.1);
   font-size: 0.8125rem;
 }
 
 .gv-vault-alerts__fc-link a {
   color: #fa4616;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
 }
 
@@ -981,14 +1307,6 @@ body.gv-film-page-active .gv-vault-shell__main {
   font-size: 0.875rem;
   color: #64748b;
   margin: 1rem 0;
-}
-
-.gv-vault-alerts__section-title {
-  font-family: 'Oswald', sans-serif;
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 1rem;
 }
 
 /* Depth chart & team hub */

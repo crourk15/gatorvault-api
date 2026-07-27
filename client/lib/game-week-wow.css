@@ -4,29 +4,27 @@
  */
 
 .gv-gw-wow-page {
-  --color-bg-page: #001656;
+  /* Page plane = vault dark; hero band = homepage-style gator blue */
+  --color-bg-page: #0b1120;
   --color-bg-hero: #0021a5;
-  --color-bg-card-dark: rgba(0, 22, 86, 0.72);
+  --color-bg-card-dark: #ffffff;
   --color-bg-feed: #f7f8fc;
   --color-bg-panel: #ffffff;
   --color-accent-orange: #fa4616;
   --color-accent-blue: #0021a5;
   --color-royal-blue: #0033cc;
   --color-text-primary: #ffffff;
-  --color-text-secondary: rgba(255, 255, 255, 0.78);
+  --color-text-secondary: rgba(255, 255, 255, 0.88);
   --color-text-dark: #0b1b4a;
   --color-text-muted: #5b6b8c;
-  --color-move-up: #22c55e;
-  --color-move-down: #ef4444;
-  --color-volatility: #facc15;
-  --color-slate-stroke: #94a3b8;
+  --color-move-up: #16a34a;
+  --color-move-down: #dc2626;
+  --color-volatility: #ca8a04;
+  --color-slate-stroke: #64748b;
   --color-panel-border: rgba(0, 33, 165, 0.14);
 
   min-height: 100%;
-  background:
-    radial-gradient(ellipse 90% 50% at 10% 0%, rgba(250, 70, 22, 0.28) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 45% at 90% 10%, rgba(0, 51, 204, 0.45) 0%, transparent 50%),
-    linear-gradient(180deg, #0021a5 0%, #001656 42%, #050b20 100%);
+  background: #0b1120;
   color: var(--color-text-primary);
 }
 
@@ -71,9 +69,10 @@
 .gv-gw-wow-hero__bg {
   position: absolute;
   inset: 0;
+  /* Same brand plane language as homepage hero */
   background:
-    linear-gradient(120deg, rgba(250, 70, 22, 0.22) 0%, transparent 38%),
-    linear-gradient(165deg, #0021a5 0%, #001a7a 38%, #001656 72%, #050b20 100%);
+    radial-gradient(ellipse 80% 55% at 50% 28%, rgba(250, 70, 22, 0.18) 0%, transparent 58%),
+    linear-gradient(165deg, #0021a5 0%, #001656 52%, #001a33 100%);
   pointer-events: none;
 }
 
@@ -82,8 +81,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 55% at 70% 20%, rgba(250, 70, 22, 0.32) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 15% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+    linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent 42%),
+    radial-gradient(ellipse 50% 40% at 15% 80%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
 }
 
 .gv-gw-wow-hero__inner {
@@ -187,10 +186,10 @@
 
 .gv-gw-wow-hero .gv-gw-wow-section__title {
   font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.78);
   margin: 0 0 0.75rem;
 }
 
@@ -285,20 +284,18 @@
   color: var(--color-text-secondary);
 }
 
-/* Matchup hero — Gator card in hero band (opponent logos OK here) */
+/* Matchup hero — sits on brand plane like homepage (not a dark nested card) */
 .gv-gw-matchup-hero {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 1.25rem;
-  background:
-    linear-gradient(135deg, rgba(250, 70, 22, 0.16) 0%, transparent 42%),
-    linear-gradient(180deg, rgba(0, 33, 165, 0.55) 0%, rgba(5, 11, 32, 0.88) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-left: 4px solid var(--color-accent-orange);
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32);
+  background: transparent;
+  border: 0;
+  border-bottom: 3px solid var(--color-accent-orange);
+  border-radius: 0;
+  padding: 0.35rem 0 1.35rem;
+  box-shadow: none;
   animation: gv-gw-slide-in 0.6s ease-out;
 }
 
@@ -335,16 +332,20 @@
 }
 
 .gv-gw-matchup-hero__title {
-  font-size: 2rem;
-  font-weight: 800;
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   margin: 0 0 0.35rem;
-  color: var(--gv-gw-text);
-  line-height: 1.15;
+  color: #fff;
+  line-height: 1.05;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.28);
 }
 
 .gv-gw-matchup-hero__meta {
-  font-size: 0.875rem;
-  color: var(--gv-gw-muted);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
   margin: 0.15rem 0;
 }
 
@@ -355,11 +356,11 @@
   justify-content: center;
   gap: 0.35rem;
   margin-top: 0.65rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  background: rgba(250, 70, 22, 0.12);
-  border: 1px solid rgba(250, 70, 22, 0.35);
-  color: var(--color-accent-orange);
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(250, 70, 22, 0.55);
+  color: #ffd7c8;
   font-size: 0.8125rem;
   font-weight: 600;
 }
@@ -375,30 +376,32 @@
   align-items: center;
 }
 
-/* Countdown */
+/* Countdown — white card pop on brand hero */
 .gv-gw-countdown {
   text-align: center;
-  padding: 1rem 1.25rem;
-  background: rgba(0, 0, 0, 0.22);
+  padding: 0.9rem 1.15rem;
+  background: #ffffff;
   border: 2px solid var(--gv-gw-orange);
   border-radius: 12px;
-  animation: gv-gw-pulse-border 2s ease-in-out infinite, gv-gw-fade-in 0.5s ease;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+  animation: gv-gw-fade-in 0.5s ease;
 }
 
 .gv-gw-countdown__label {
   display: block;
   font-size: 0.6875rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--color-text-secondary);
+  color: #0021a5;
 }
 
 .gv-gw-countdown__num {
   display: block;
   margin-top: 0.35rem;
+  font-family: 'Oswald', sans-serif;
   font-size: 2.5rem;
-  font-weight: 900;
+  font-weight: 700;
   color: var(--color-accent-orange);
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -417,19 +420,20 @@
 .gv-gw-timeline__card {
   flex: 0 0 148px;
   scroll-snap-align: start;
-  background: var(--color-bg-card-dark);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 12px;
   padding: 0.75rem;
   cursor: pointer;
-  transition: border-color 0.2s, transform 0.2s;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   text-align: left;
-  color: var(--gv-gw-text);
+  color: #0b1120;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
 
 .gv-gw-timeline__card:hover {
   transform: translateY(-2px);
-  border-color: rgba(250, 70, 22, 0.45);
+  border-color: rgba(250, 70, 22, 0.55);
 }
 
 .gv-gw-timeline__card.is-active {
@@ -437,8 +441,7 @@
   box-shadow:
     0 0 0 1px var(--color-accent-orange),
     0 8px 20px rgba(250, 70, 22, 0.22);
-  background:
-    linear-gradient(180deg, rgba(250, 70, 22, 0.18) 0%, rgba(0, 33, 165, 0.55) 100%);
+  background: #fff8f5;
 }
 
 .gv-gw-timeline__logo {
@@ -450,12 +453,12 @@
   font-size: 0.72rem;
   font-weight: 700;
   margin: 0.35rem 0 0;
-  color: var(--gv-gw-text);
+  color: #0021a5;
 }
 
 .gv-gw-timeline__date {
   font-size: 0.65rem;
-  color: var(--gv-gw-muted);
+  color: #64748b;
   margin: 0.15rem 0 0;
 }
 
@@ -469,13 +472,13 @@
 }
 
 .gv-gw-timeline__ha--home {
-  background: rgba(0, 51, 204, 0.45);
-  color: var(--gv-gw-text);
+  background: rgba(250, 70, 22, 0.14);
+  color: #c2410c;
 }
 
 .gv-gw-timeline__ha--away {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--gv-gw-muted);
+  background: rgba(0, 33, 165, 0.1);
+  color: #0021a5;
 }
 
 .gv-gw-timeline__diff--easy { border-left: 3px solid var(--color-move-up); }
@@ -507,25 +510,31 @@
   box-shadow: 0 4px 12px rgba(250, 70, 22, 0.28);
 }
 
-/* Win probability gauge — dark hero card */
-.gv-gw-wp-gauge {
+/* Win probability + radar — white cards, blue type, orange chrome */
+.gv-gw-wp-gauge,
+.gv-gw-radar {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
-  background: var(--color-bg-card-dark);
+  padding: 1.1rem 1rem 1.15rem;
+  background: #ffffff;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  border-top: 3px solid var(--color-accent-orange);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
   animation: gv-gw-fade-in 0.6s ease;
+  color: #0b1b4a;
 }
 
-.gv-gw-wp-gauge__heading {
+.gv-gw-wp-gauge__heading,
+.gv-gw-radar__heading {
   margin: 0 0 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: #0021a5;
   align-self: flex-start;
 }
 
@@ -537,11 +546,11 @@
 .gv-gw-wp-gauge__pct {
   font-size: 1.75rem;
   font-weight: 900;
-  fill: var(--gv-gw-text);
+  fill: #0021a5;
 }
 
 .gv-gw-wp-gauge__uf-label {
-  fill: var(--gv-gw-muted);
+  fill: #64748b;
   font-size: 10px;
   font-weight: 700;
 }
@@ -554,47 +563,30 @@
 
 .gv-gw-wp-gauge__movement--up { color: var(--color-move-up); }
 .gv-gw-wp-gauge__movement--down { color: var(--color-move-down); }
-.gv-gw-wp-gauge__movement--flat { color: var(--gv-gw-muted); }
+.gv-gw-wp-gauge__movement--flat { color: #64748b; }
 
 .gv-gw-wp-gauge__confidence {
   margin-top: 0.35rem;
   font-size: 0.8125rem;
-  color: var(--gv-gw-text);
-}
-
-/* Radar chart — dark hero card */
-.gv-gw-radar {
-  background: var(--color-bg-card-dark);
-  border-radius: 12px;
-  padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  animation: gv-gw-fade-in 0.7s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.gv-gw-radar__heading {
-  margin: 0 0 0.5rem;
-  align-self: flex-start;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: #334155;
 }
 
 .gv-gw-radar__legend {
   display: flex;
   gap: 1rem;
   justify-content: center;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
   margin-top: 0.5rem;
-  color: var(--gv-gw-muted);
+  color: #475569;
 }
 
-.gv-gw-radar__legend-uf { color: var(--color-accent-orange); }
-.gv-gw-radar__legend-opp { color: var(--color-slate-stroke); }
+.gv-gw-radar__legend-uf { color: #fa4616; }
+.gv-gw-radar__legend-opp { color: #0021a5; }
+
+.gv-gw-radar__label {
+  fill: #334155;
+}
 
 /* Flip cards — light feed */
 .gv-gw-flip-grid {
@@ -1124,24 +1116,7 @@
   color: var(--color-accent-blue) !important;
 }
 
-.gv-gw-wp-gauge,
-.gv-gw-radar {
-  border-color: rgba(250, 70, 22, 0.28);
-  background:
-    linear-gradient(160deg, rgba(250, 70, 22, 0.12) 0%, transparent 45%),
-    var(--color-bg-card-dark);
-}
-
-.gv-gw-wp-gauge__heading,
-.gv-gw-radar__heading {
-  color: var(--color-accent-orange);
-}
-
 .gv-gw-timeline__ha--home {
-  background: rgba(250, 70, 22, 0.85);
-  color: #fff;
-}
-
-.gv-gw-countdown {
-  background: linear-gradient(180deg, rgba(250, 70, 22, 0.18) 0%, rgba(0, 0, 0, 0.28) 100%);
+  background: rgba(250, 70, 22, 0.14);
+  color: #c2410c;
 }

@@ -340,15 +340,21 @@ function buildFutureCastPicks(
   const now = new Date().toISOString();
   const picks: UnderclassmenFutureCastPick[] = [];
 
-  const floridaPct = player.ufConfidence;
+  const floridaPct =
+    player.ufConfidence != null && player.ufConfidence > 0
+      ? player.ufConfidence
+      : player.ufRpmPct != null && player.ufRpmPct > 0
+        ? player.ufRpmPct
+        : null;
   if (floridaPct != null && floridaPct > 0) {
+    const fromRpm = !(player.ufConfidence != null && player.ufConfidence > 0);
     picks.push({
       id: `${intelUuid}-pick-florida`,
       school: 'Florida',
       confidence: Math.round(floridaPct),
       delta: player.trendDelta7d != null ? Math.round(player.trendDelta7d * 1000) / 10 : undefined,
-      sourceType: 'MODEL',
-      predictorId: 'gatorvault',
+      sourceType: fromRpm ? 'BLENDED' : 'MODEL',
+      predictorId: fromRpm ? 'on3-rpm' : 'gatorvault',
       status: 'ACTIVE',
       createdAt: now,
       updatedAt: now,

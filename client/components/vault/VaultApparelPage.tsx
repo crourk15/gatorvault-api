@@ -6,20 +6,27 @@ import { APPAREL_PILLS, APPAREL_SHOPS } from '@/lib/vault-catalog';
 export function VaultApparelPage(): React.ReactElement {
   return (
     <div className="gv-vault-apparel" data-testid="vault-apparel">
-      <div className="gv-page-hero">
-        <h1 className="gv-page-title">👕 Apparel & Gameday Gear</h1>
-        <p className="gv-page-subtitle">
-          Curated picks and trusted storefronts for every Gator fan — from jerseys to tailgate
-          essentials.
-        </p>
-        <div className="gv-apparel-pills">
-          {APPAREL_PILLS.map((pill) => (
-            <span key={pill} className="gv-apparel-pill">
-              {pill}
-            </span>
-          ))}
+      <section className="gv-apparel-hero" aria-label="Apparel and gameday gear">
+        <div className="gv-apparel-hero__bg" aria-hidden="true" />
+        <div className="gv-apparel-hero__sweep" aria-hidden="true" />
+        <div className="gv-apparel-hero__watermark" aria-hidden="true">
+          GATORS
         </div>
-      </div>
+        <div className="gv-apparel-hero__inner">
+          <p className="gv-apparel-hero__eyebrow">GatorVault</p>
+          <h1 className="gv-apparel-hero__title">Apparel &amp; Gameday Gear</h1>
+          <p className="gv-apparel-hero__sub">
+            Jerseys, tailgate gear, and campus classics for every Saturday in The Swamp.
+          </p>
+          <div className="gv-apparel-hero__pills" aria-label="Shop highlights">
+            {APPAREL_PILLS.map((pill) => (
+              <span key={pill} className="gv-apparel-hero__pill">
+                {pill}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <div className="gv-apparel-grid">
         {APPAREL_SHOPS.map((shop) => (
@@ -46,14 +53,14 @@ export function VaultApparelPage(): React.ReactElement {
 
       <div className="gv-vault-tickets__tips">
         <div className="gv-vault-tip">
-          <p className="gv-vault-tip__label">🐊 GatorVault Tip</p>
+          <p className="gv-vault-tip__label">GatorVault Tip</p>
           <p className="gv-vault-tip__text">
             For authentic game-day jerseys, start with the Gator Sportshop (shop.floridagators.com)
             or Fanatics. Both are officially licensed.
           </p>
         </div>
         <div className="gv-vault-tip">
-          <p className="gv-vault-tip__label">🎁 Gift Idea</p>
+          <p className="gv-vault-tip__label">Gift Idea</p>
           <p className="gv-vault-tip__text">
             Campus-exclusive designs live at the UF Bookstore (bkstr.com). For fast shipping,
             Amazon&apos;s Gators search is your best last-minute option.

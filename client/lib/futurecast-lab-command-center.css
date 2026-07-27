@@ -2023,6 +2023,9 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 }
 
 .fc-lab-battle-row__rival {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   min-width: 0;
   font-size: 0.75rem;
   font-weight: 600;
@@ -2030,6 +2033,35 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.fc-lab-battle-row__rival-logo {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  object-fit: contain;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.fc-lab-battle-row__rival-fallback {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-weight: 700;
+  background: rgba(15, 23, 42, 0.08);
+  color: #475569;
+  flex-shrink: 0;
+}
+
+.fc-lab-battle-row__rival-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .fc-lab-battle-row__rival strong {
@@ -2045,6 +2077,25 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 
 .fc-lab-battle-row__rival-empty {
   color: #94a3b8;
+}
+
+.fc-lab-need-plain {
+  margin: 0.35rem 0 0.15rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #0f172a;
+}
+
+.fc-lab-need-plain__odds,
+.fc-lab-need-plain__year {
+  font-weight: 500;
+  color: #64748b;
+}
+
+.fc-lab-need-row__lead-label {
+  font-weight: 600;
+  color: #475569;
 }
 
 .fc-lab-battle-row--compact .fc-lab-battle-row__right {
@@ -2431,6 +2482,146 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 
 .fc-lab-need-row--stable {
   border-left-color: #0021a5;
+}
+
+/* Elite room rows — need chip + UF/field meter + top name */
+.fc-lab-need-row--elite {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 14px 12px;
+}
+
+.fc-lab-need-elite__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fc-lab-need-elite__pos-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fc-lab-need-elite__rank {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+
+.fc-lab-need-elite__pos {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0021a5;
+  letter-spacing: -0.01em;
+}
+
+.fc-lab-need-elite__status {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.fc-lab-need-elite__meter {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(0, 33, 165, 0.04);
+  border: 1px solid rgba(0, 33, 165, 0.08);
+}
+
+.fc-lab-need-elite__meter-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fc-lab-need-elite__meter-caption {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.fc-lab-need-elite__meter-pct {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0021a5;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.fc-lab-need-elite__meter-track {
+  display: flex;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #e2e8f0;
+}
+
+.fc-lab-need-elite__meter-uf {
+  display: block;
+  height: 100%;
+  background: #0021a5;
+  border-radius: 999px;
+  min-width: 0;
+}
+
+.fc-lab-need-elite__lead {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  font-size: 0.95rem;
+  color: #0f172a;
+}
+
+.fc-lab-need-elite__lead-label {
+  width: 100%;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.fc-lab-need-elite__lead a,
+.fc-lab-need-elite__lead strong {
+  font-weight: 800;
+  color: #0021a5;
+  text-decoration: none;
+}
+
+.fc-lab-need-elite__lead a:hover {
+  color: #fa4616;
+}
+
+.fc-lab-need-elite__lead-odds {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.fc-lab-need-elite__lead--empty {
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.fc-lab-need-elite__note {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #64748b;
 }
 
 .fc-lab-need-row__head {

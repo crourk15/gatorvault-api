@@ -12,10 +12,6 @@ export function FutureCastClosingCta(): React.ReactElement {
     <section className="rh-card rh-fc-closing-cta" data-testid="rh-fc-closing-cta">
       <div className="rh-fc-closing-cta__copy">
         <h3 className="rh-fc-closing-cta__title">Chase the closing board on FutureCast</h3>
-        <p className="rh-fc-closing-cta__sub">
-          {activeYear} Flip Watch, top UF targets, rival odds, and visit intel — without duplicating that
-          board here.
-        </p>
       </div>
       <a href={VAULT_PILLAR_ROUTES.futurecast} className="rh-fc-closing-cta__link">
         Open FutureCast {activeYear} Closing →

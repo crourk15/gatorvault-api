@@ -24,7 +24,18 @@ export function FutureCastTargetCard({
   profileHref,
   showMovement = true,
 }: FutureCastTargetCardProps): React.ReactElement {
-  const pct = ufPctFromFc(player.ufProbability);
+  const rpmFromPredictors = (player.predictors ?? []).find(
+    (x) => x?.name && /on3\s*rpm/i.test(String(x.name)) && Number(x.score) > 0
+  );
+  const pctRaw =
+    player.ufProbability != null && Number(player.ufProbability) > 0
+      ? player.ufProbability
+      : player.ufRpmPct != null && Number(player.ufRpmPct) > 0
+        ? player.ufRpmPct
+        : rpmFromPredictors
+          ? Number(rpmFromPredictors.score)
+          : player.ufProbability;
+  const pct = ufPctFromFc(pctRaw);
   const delta = showMovement ? Math.round(player.delta7d ?? 0) : 0;
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
   const hasWeekChange = showMovement && delta !== 0;
