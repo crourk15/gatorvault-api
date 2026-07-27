@@ -32,6 +32,19 @@ Do not optimize for vanity likes. Optimize for installs + Complete Registration.
 
 ---
 
+## Meta AI (restriction-safe)
+
+Paste-ready image + copy prompts: [`meta-ai-prompt.md`](./meta-ai-prompt.md)
+
+Prior agent rule set (avoid rejection / legal trouble):
+
+- No UF alligator head / seal / helmet marks on art
+- Never use the word "priceless"
+- GatorVault is the hero (not Apple, not UF)
+- Official App Store badge only; caption carries App Store link `id6783848215`
+
+---
+
 ## Ad copy (paste into Ads Manager)
 
 ### Primary — App install / feed
@@ -41,11 +54,12 @@ Do not optimize for vanity likes. Optimize for installs + Complete Registration.
 ```
 Open the Vault.
 
-Everything Florida Gators football — FutureCast, Recruiting, Team, Live, Game Week — in one place.
+Everything Florida football — FutureCast, Recruiting, Team, Live, Game Week — in one place.
 
 No rumors. No noise. Just truth.
 
-Download Gator Vault Insider on the App Store.
+Download Gator Vault Insider on the App Store:
+https://apps.apple.com/us/app/gatorvault-insider/id6783848215
 ```
 
 **Headline:** Open the Vault.
@@ -84,6 +98,7 @@ Gator Nation — it's here.
 FutureCast. Recruiting. Team. Live. Game Week.
 
 Open the Vault → Gator Vault Insider
+https://apps.apple.com/us/app/gatorvault-insider/id6783848215
 ```
 
 **Headline:** Open the Vault.
@@ -228,6 +243,8 @@ docs/promo/open-the-vault/
   elite-vault-story.png            ← stories
   download-on-app-store-black.png
   README.txt
+docs/promo/meta-ai-prompt.md       ← Meta AI paste prompts
+docs/META_APP_INSTALL_ADS.md       ← iOS SDK / App promotion setup
 
 client/public/brand/ads-kit/
   facebook-instagram-ad.md         ← short paste copy
