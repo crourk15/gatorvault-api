@@ -41,13 +41,13 @@ export function WinProbabilityGaugeWidget({ ufPct, prediction }: Props): React.R
       <p className="gv-gw-wp-gauge__heading">FutureCast Win Probability</p>
       <div className="gv-gw-wp-gauge__rings">
         <svg className="gv-gw-wp-gauge__svg" viewBox="0 0 128 128" aria-hidden="true">
-          <circle cx="64" cy="64" r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="10" />
+          <circle cx="64" cy="64" r={r} fill="none" stroke="#e2e8f0" strokeWidth="10" />
           <circle
             cx="64"
             cy="64"
             r={r - 14}
             fill="none"
-            stroke="rgba(100,116,139,0.55)"
+            stroke="rgba(0,33,165,0.22)"
             strokeWidth="8"
             strokeDasharray={c - 88}
             strokeDashoffset={oppOffset * 0.85}
@@ -73,7 +73,7 @@ export function WinProbabilityGaugeWidget({ ufPct, prediction }: Props): React.R
             y1="64"
             x2="64"
             y2="22"
-            stroke="#FFFFFF"
+            stroke="#0021a5"
             strokeWidth="2"
             strokeLinecap="round"
             transform={`rotate(${needleAngle} 64 64)`}
@@ -82,7 +82,7 @@ export function WinProbabilityGaugeWidget({ ufPct, prediction }: Props): React.R
             {pct}%
           </text>
           <text x="64" y="74" textAnchor="middle" className="gv-gw-wp-gauge__uf-label">
-            UF
+            Florida
           </text>
         </svg>
       </div>
