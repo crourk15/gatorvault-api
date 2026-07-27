@@ -2023,6 +2023,9 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 }
 
 .fc-lab-battle-row__rival {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   min-width: 0;
   font-size: 0.75rem;
   font-weight: 600;
@@ -2030,6 +2033,35 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.fc-lab-battle-row__rival-logo {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  object-fit: contain;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.fc-lab-battle-row__rival-fallback {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-weight: 700;
+  background: rgba(15, 23, 42, 0.08);
+  color: #475569;
+  flex-shrink: 0;
+}
+
+.fc-lab-battle-row__rival-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .fc-lab-battle-row__rival strong {
@@ -2045,6 +2077,25 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 
 .fc-lab-battle-row__rival-empty {
   color: #94a3b8;
+}
+
+.fc-lab-need-plain {
+  margin: 0.35rem 0 0.15rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #0f172a;
+}
+
+.fc-lab-need-plain__odds,
+.fc-lab-need-plain__year {
+  font-weight: 500;
+  color: #64748b;
+}
+
+.fc-lab-need-row__lead-label {
+  font-weight: 600;
+  color: #475569;
 }
 
 .fc-lab-battle-row--compact .fc-lab-battle-row__right {

@@ -217,6 +217,47 @@
   color: var(--gz-mist);
 }
 
+.gv-gz__howto {
+  width: min(100%, 34rem);
+  margin: 0.85rem 0 0.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.gv-gz__howto-title {
+  margin: 0 0 0.45rem;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffd7c8;
+}
+
+.gv-gz__howto-list {
+  margin: 0;
+  padding: 0 0 0 1.1rem;
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.gv-gz__howto-list strong {
+  color: #fa4616;
+  font-variant-numeric: tabular-nums;
+}
+
+.gv-gz__howto-note {
+  margin: 0.55rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.62);
+}
+
 .gv-gz__ticket-build {
   position: relative;
   width: min(100%, 34rem);

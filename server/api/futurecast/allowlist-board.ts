@@ -545,7 +545,19 @@ export async function loadBoardPlayersForSlugs(
     for (const ext of predictorsBySlug.get(slug) || []) {
       ufPredictors.push(ext);
     }
-    const rpmPct = firstPositiveStorePct(recruiting?.ufRpmPct as number | undefined);
+    let rpmPct = firstPositiveStorePct(recruiting?.ufRpmPct as number | undefined);
+    if (rpmPct == null) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const { loadOn3RpmUfPctBySlug } = require('../../lib/on3-rpm-allowlist') as {
+          loadOn3RpmUfPctBySlug: () => Map<string, number>;
+        };
+        const conf = Number(loadOn3RpmUfPctBySlug().get(slug));
+        if (Number.isFinite(conf) && conf > 0) rpmPct = conf;
+      } catch {
+        /* optional */
+      }
+    }
     const storePct = firstPositiveStorePct(
       seed.ufProbability as number | undefined,
       recruiting?.ufProbability as number | undefined,

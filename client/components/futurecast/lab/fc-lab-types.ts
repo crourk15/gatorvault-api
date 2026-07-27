@@ -73,10 +73,13 @@ export function futureCastPlayerToLabTarget(p: FutureCastPlayer): FcLabTarget {
 
 export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
   const committed = p.committedTo ?? null;
-  // Primary Lab number = GatorVault likelihood (never force On3 RPM over GV).
-  const uf = isFloridaCommit(committed) ? 100 : p.ufProbability;
   const rpm =
     p.ufRpmPct != null && Number(p.ufRpmPct) > 0 ? Math.round(Number(p.ufRpmPct)) : null;
+  // Primary Lab number = GatorVault likelihood. Fall back to On3 RPM only when GV is missing
+  // so names like Hudson West (RPM 62%) still land on Battles.
+  const gv =
+    p.ufProbability != null && Number(p.ufProbability) > 0 ? Number(p.ufProbability) : null;
+  const uf = isFloridaCommit(committed) ? 100 : gv ?? rpm;
   return {
     id: p.id,
     slug: p.slug,
@@ -85,7 +88,7 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
     school: p.school ?? null,
     classYear: p.classYear ?? primaryRecruitingClassYear(),
     ufProbability: uf,
-    ufProbabilityLabel: p.ufProbabilityLabel ?? 'GV',
+    ufProbabilityLabel: p.ufProbabilityLabel ?? (gv != null ? 'GV' : rpm != null ? 'On3 RPM' : 'GV'),
     ufRpmPct: rpm,
     delta7d: p.delta7d ?? p.movementDelta ?? null,
     fitScore: p.fitScore ?? null,

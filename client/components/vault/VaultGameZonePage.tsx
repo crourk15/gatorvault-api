@@ -385,6 +385,23 @@ export function VaultGameZonePage(): React.ReactElement {
                 ? 'Hold it until the final whistle. Watch kickoff on Gators Live — full prep stays on Game Week.'
                 : 'Call the cover and the final score. Your ticket stays with you until kickoff.'}
             </p>
+            <div className="gv-gz__howto" data-testid="gv-gz-howto">
+              <p className="gv-gz__howto-title">What you earn</p>
+              <ul className="gv-gz__howto-list">
+                <li>
+                  <strong>+25</strong> Vault Points when you lock a ticket
+                </li>
+                <li>
+                  <strong>+50</strong> if Florida covers the way you called
+                </li>
+                <li>
+                  <strong>+25</strong> for a close final score · <strong>+100</strong> for exact
+                </li>
+              </ul>
+              <p className="gv-gz__howto-note">
+                Fun season chase only — no real money, no betting inside GatorVault.
+              </p>
+            </div>
 
             <div
               className={`gv-gz__ticket-build${locked ? ' is-locked' : ''}${justLocked ? ' is-seal' : ''}`}

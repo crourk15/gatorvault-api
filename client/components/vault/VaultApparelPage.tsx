@@ -7,10 +7,10 @@ export function VaultApparelPage(): React.ReactElement {
   return (
     <div className="gv-vault-apparel" data-testid="vault-apparel">
       <div className="gv-page-hero">
-        <h1 className="gv-page-title">👕 Apparel & Gameday Gear</h1>
+        <p className="gv-apparel-kicker">Gator Nation</p>
+        <h1 className="gv-page-title">Apparel & Gameday Gear</h1>
         <p className="gv-page-subtitle">
-          Curated picks and trusted storefronts for every Gator fan — from jerseys to tailgate
-          essentials.
+          Jerseys, tailgate gear, and campus classics for every Saturday in The Swamp.
         </p>
         <div className="gv-apparel-pills">
           {APPAREL_PILLS.map((pill) => (
@@ -46,14 +46,14 @@ export function VaultApparelPage(): React.ReactElement {
 
       <div className="gv-vault-tickets__tips">
         <div className="gv-vault-tip">
-          <p className="gv-vault-tip__label">🐊 GatorVault Tip</p>
+          <p className="gv-vault-tip__label">GatorVault Tip</p>
           <p className="gv-vault-tip__text">
             For authentic game-day jerseys, start with the Gator Sportshop (shop.floridagators.com)
             or Fanatics. Both are officially licensed.
           </p>
         </div>
         <div className="gv-vault-tip">
-          <p className="gv-vault-tip__label">🎁 Gift Idea</p>
+          <p className="gv-vault-tip__label">Gift Idea</p>
           <p className="gv-vault-tip__text">
             Campus-exclusive designs live at the UF Bookstore (bkstr.com). For fast shipping,
             Amazon&apos;s Gators search is your best last-minute option.

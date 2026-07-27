@@ -7,7 +7,6 @@ import type { RosterPlayer } from '@/lib/roster-api';
 import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 import {
-  boardStrengthLabel,
   buildPositionNeedBoard,
   needTierLabel,
   type PositionNeedRow,
@@ -24,6 +23,13 @@ type Props = {
   updatedAt?: string | null;
   bare?: boolean;
 };
+
+function boardStrengthPlain(strength: PositionNeedRow['boardStrength']): string {
+  if (strength === 'lean-uf') return 'Florida is winning this room';
+  if (strength === 'battle') return 'Open battles for Florida';
+  if (strength === 'behind') return 'Florida trailing in this room';
+  return 'No active Florida targets yet';
+}
 
 function NeedRowCompact({
   row,
@@ -47,14 +53,18 @@ function NeedRowCompact({
             {needTierLabel(row.needTier)}
           </span>
         </div>
-        <span className={`fc-lab-need-strength fc-lab-need-strength--${row.boardStrength}`}>
-          {boardClassYear} · {boardStrengthLabel(row.boardStrength)}
-          {row.avgUfPct != null ? ` · ${row.avgUfPct}%` : ''}
-        </span>
       </header>
+      <p className={`fc-lab-need-plain fc-lab-need-strength--${row.boardStrength}`}>
+        {boardStrengthPlain(row.boardStrength)}
+        {row.avgUfPct != null ? (
+          <span className="fc-lab-need-plain__odds"> · avg Florida odds {row.avgUfPct}%</span>
+        ) : null}
+        <span className="fc-lab-need-plain__year"> · {boardClassYear} board</span>
+      </p>
       {row.reason ? <p className="fc-lab-need-row__reason">{row.reason}</p> : null}
       {lead ? (
         <p className="fc-lab-need-row__lead">
+          <span className="fc-lab-need-row__lead-label">Top target: </span>
           {lead.slug ? (
             <a href={playerProfileRoute(lead.slug, 'futurecast')}>{lead.name}</a>
           ) : (
@@ -112,8 +122,8 @@ export function FutureCastPositionBreakdown({
 
   const title = 'How the board fits Florida';
   const sub = discoveryFocus
-    ? `Top ${boardClassYear} needs + scheme fits.`
-    : `Top ${boardClassYear} needs on the board.`;
+    ? `Where Florida needs help in ${boardClassYear} — and who’s the top name in each room.`
+    : `Where Florida needs help on the ${boardClassYear} board.`;
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-position-breakdown">

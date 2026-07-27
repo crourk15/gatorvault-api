@@ -14,6 +14,7 @@ import {
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import { closingClassUrgencyScore, isClosingClassInPlayTarget, topThreatVsFlorida } from './competing-schools';
 import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
+import { schoolLogoInitials, schoolLogoUrl } from '@/lib/school-logos';
 
 type Tab = 'battles' | 'lean-uf' | 'lean-elsewhere';
 
@@ -83,8 +84,31 @@ function BattleRowCompact({
       <span className="fc-lab-battle-row__rival">
         {threat ? (
           <>
-            <span className="fc-lab-battle-row__rival-label">vs</span> {threat.label}{' '}
-            <strong>{threat.pct}%</strong>
+            {(() => {
+              const logo = schoolLogoUrl(threat.name);
+              const initials = schoolLogoInitials(threat.name) || threat.label;
+              return logo ? (
+                // ESPN NCAA marks — same source as recruiting battle board.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  className="fc-lab-battle-row__rival-logo"
+                  src={logo}
+                  alt=""
+                  width={22}
+                  height={22}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <span className="fc-lab-battle-row__rival-fallback" aria-hidden>
+                  {initials}
+                </span>
+              );
+            })()}
+            <span className="fc-lab-battle-row__rival-text">
+              <span className="fc-lab-battle-row__rival-label">vs</span> {threat.label}{' '}
+              <strong>{threat.pct}%</strong>
+            </span>
           </>
         ) : (
           <span className="fc-lab-battle-row__rival-empty">—</span>

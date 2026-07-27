@@ -417,19 +417,20 @@
 .gv-gw-timeline__card {
   flex: 0 0 148px;
   scroll-snap-align: start;
-  background: var(--color-bg-card-dark);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 12px;
   padding: 0.75rem;
   cursor: pointer;
-  transition: border-color 0.2s, transform 0.2s;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   text-align: left;
-  color: var(--gv-gw-text);
+  color: #0b1120;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
 
 .gv-gw-timeline__card:hover {
   transform: translateY(-2px);
-  border-color: rgba(250, 70, 22, 0.45);
+  border-color: rgba(250, 70, 22, 0.55);
 }
 
 .gv-gw-timeline__card.is-active {
@@ -437,8 +438,7 @@
   box-shadow:
     0 0 0 1px var(--color-accent-orange),
     0 8px 20px rgba(250, 70, 22, 0.22);
-  background:
-    linear-gradient(180deg, rgba(250, 70, 22, 0.18) 0%, rgba(0, 33, 165, 0.55) 100%);
+  background: #fff8f5;
 }
 
 .gv-gw-timeline__logo {
@@ -450,12 +450,12 @@
   font-size: 0.72rem;
   font-weight: 700;
   margin: 0.35rem 0 0;
-  color: var(--gv-gw-text);
+  color: #0021a5;
 }
 
 .gv-gw-timeline__date {
   font-size: 0.65rem;
-  color: var(--gv-gw-muted);
+  color: #64748b;
   margin: 0.15rem 0 0;
 }
 
@@ -469,13 +469,13 @@
 }
 
 .gv-gw-timeline__ha--home {
-  background: rgba(0, 51, 204, 0.45);
-  color: var(--gv-gw-text);
+  background: rgba(250, 70, 22, 0.14);
+  color: #c2410c;
 }
 
 .gv-gw-timeline__ha--away {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--gv-gw-muted);
+  background: rgba(0, 33, 165, 0.1);
+  color: #0021a5;
 }
 
 .gv-gw-timeline__diff--easy { border-left: 3px solid var(--color-move-up); }
@@ -1138,8 +1138,8 @@
 }
 
 .gv-gw-timeline__ha--home {
-  background: rgba(250, 70, 22, 0.85);
-  color: #fff;
+  background: rgba(250, 70, 22, 0.14);
+  color: #c2410c;
 }
 
 .gv-gw-countdown {

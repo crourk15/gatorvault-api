@@ -5,27 +5,54 @@ import type { RhHubHeatTarget } from '@/lib/recruiting-hub-elite-api';
 import { fetchRecruitingHubHeatIndex } from '@/lib/recruiting-hub-elite-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
-import { playerProfileRoute, VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
+import { playerProfileRoute } from '@/lib/vault-route-map';
+import { schoolLogoInitials, schoolLogoUrl } from '@/lib/school-logos';
 import { UiWarming } from '@/components/site/UiMessage';
 
 const MAX_REMAINING = 6;
 
-/** Thin status only — no heat bars / battle scores (those live on FutureCast). */
+/** Thin status — Flip Watch / deep odds stay on FutureCast. */
 function remainingStatus(ufPercent: number | null): { label: string; tone: 'lean' | 'open' | 'contested' } {
   if (ufPercent == null || !Number.isFinite(ufPercent)) {
-    return { label: 'Open', tone: 'open' };
+    return { label: 'Flip watch', tone: 'open' };
   }
   if (ufPercent >= 60) return { label: 'Lean UF', tone: 'lean' };
   if (ufPercent >= 40) return { label: 'In play', tone: 'open' };
   return { label: 'Contested', tone: 'contested' };
 }
 
+function RivalMark({ school }: { school: string | null | undefined }): React.ReactElement | null {
+  if (!school) return null;
+  const src = schoolLogoUrl(school);
+  const initials = schoolLogoInitials(school) || school.slice(0, 2).toUpperCase();
+  return (
+    <span className="rh-remaining-row__school" title={school}>
+      {src ? (
+        // ESPN NCAA marks
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          className="rh-remaining-row__school-logo"
+          src={src}
+          alt=""
+          width={24}
+          height={24}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <span className="rh-remaining-row__school-fallback" aria-hidden>
+          {initials}
+        </span>
+      )}
+      <span className="rh-remaining-row__school-name">{school}</span>
+    </span>
+  );
+}
+
 function RemainingRow({ target }: { target: RhHubHeatTarget }): React.ReactElement {
   const status = remainingStatus(target.ufPercent);
-  // Name → that player's FutureCast intel page.
   const profileHref = playerProfileRoute(String(target.id || ''), 'futurecast');
-  // "FutureCast →" → the Lab closing board (not another profile link).
-  const labHref = VAULT_PILLAR_ROUTES.futurecast;
+  const school = target.battle?.competitorName || null;
 
   return (
     <li className="rh-remaining-row" data-testid={`rh-remaining-${target.id}`}>
@@ -38,16 +65,14 @@ function RemainingRow({ target }: { target: RhHubHeatTarget }): React.ReactEleme
       <span className={`rh-remaining-row__status rh-remaining-row__status--${status.tone}`}>
         {status.label}
       </span>
-      <a href={labHref} className="rh-remaining-row__link">
-        FutureCast →
-      </a>
+      <RivalMark school={school} />
     </li>
   );
 }
 
 /**
- * Closing-class strip: unsigned targets still in play (e.g. Tranard Roberts).
- * Intentionally thin — Flip Watch / odds / heat stay on FutureCast 2027 Closing.
+ * Closing-class strip: unsigned / flip-watch names still in play.
+ * Intentionally thin — deep odds stay on FutureCast 2027 Closing.
  */
 export function RemainingTargetsStrip(): React.ReactElement | null {
   const { activeYear } = useRecruitingClassYear();
@@ -70,7 +95,7 @@ export function RemainingTargetsStrip(): React.ReactElement | null {
       <div className="rh-section-header">
         <div className="rh-section-title">Remaining Targets</div>
         <div className="rh-section-subtitle">
-          {activeYear} class — unsigned names still in play. Deep odds and flip watch live on FutureCast.
+          {activeYear} flip candidates still in play — committed school when known.
         </div>
       </div>
       {loading ? (

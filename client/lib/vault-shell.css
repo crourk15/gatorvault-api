@@ -646,7 +646,48 @@ body.gv-film-page-active .gv-vault-shell__main {
   color: #fa4616;
 }
 
-/* Apparel */
+/* Apparel — Gator Nation shop strip */
+.gv-vault-apparel {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+
+.gv-vault-apparel .gv-page-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 1.5rem 1.25rem 1.35rem;
+  margin-bottom: 1.25rem;
+  background:
+    radial-gradient(ellipse 70% 80% at 90% 10%, rgba(250, 70, 22, 0.28) 0%, transparent 55%),
+    linear-gradient(145deg, #0021a5 0%, #001656 48%, #0b1120 100%);
+  border: 1px solid rgba(250, 70, 22, 0.25);
+}
+
+.gv-apparel-kicker {
+  margin: 0 0 0.35rem;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fa4616;
+}
+
+.gv-vault-apparel .gv-page-title {
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #fff;
+}
+
+.gv-vault-apparel .gv-page-subtitle {
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 36rem;
+}
+
 .gv-apparel-pills {
   display: flex;
   flex-wrap: wrap;
@@ -656,11 +697,12 @@ body.gv-film-page-active .gv-vault-shell__main {
 
 .gv-apparel-pill {
   display: inline-flex;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  background: rgba(250, 70, 22, 0.1);
-  color: #fbbf24;
-  font-size: 0.72rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  background: rgba(250, 70, 22, 0.16);
+  border: 1px solid rgba(250, 70, 22, 0.45);
+  color: #ffd7c8;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -668,25 +710,31 @@ body.gv-film-page-active .gv-vault-shell__main {
 
 .gv-apparel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .gv-apparel-card {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  min-height: 230px;
-  padding: 1.5rem;
+  min-height: 220px;
+  min-width: 0;
+  padding: 1.25rem;
   border-radius: 1rem;
-  border: 2px solid rgba(0, 48, 135, 0.25);
-  background: rgba(10, 22, 40, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(0, 33, 165, 0.35) 0%, rgba(11, 17, 32, 0.92) 100%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   transition: border-color 0.15s, transform 0.15s;
 }
 
 .gv-apparel-card:hover {
-  border-color: rgba(250, 70, 22, 0.3);
+  border-color: rgba(250, 70, 22, 0.55);
   transform: translateY(-2px);
 }
 
@@ -694,6 +742,7 @@ body.gv-film-page-active .gv-vault-shell__main {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .gv-apparel-card__icon {
@@ -705,8 +754,9 @@ body.gv-film-page-active .gv-vault-shell__main {
   font-weight: 700;
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
-  background: rgba(0, 48, 135, 0.35);
-  color: #94a3b8;
+  background: rgba(250, 70, 22, 0.2);
+  color: #ffd7c8;
+  border: 1px solid rgba(250, 70, 22, 0.35);
 }
 
 .gv-apparel-card__name {
@@ -719,7 +769,7 @@ body.gv-film-page-active .gv-vault-shell__main {
 
 .gv-apparel-card__desc {
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.72);
   margin: 0;
   flex: 1;
   line-height: 1.45;
