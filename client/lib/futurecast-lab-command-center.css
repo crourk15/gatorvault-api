@@ -2058,21 +2058,10 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
   flex-shrink: 0;
 }
 
-.fc-lab-battle-row__rival-text {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.fc-lab-battle-row__rival strong {
+.fc-lab-battle-row__rival-pct {
   font-variant-numeric: tabular-nums;
+  font-weight: 700;
   color: #9a3412;
-}
-
-.fc-lab-battle-row__rival-label {
-  font-weight: 600;
-  color: #94a3b8;
-  text-transform: lowercase;
 }
 
 .fc-lab-battle-row__rival-empty {
@@ -2153,7 +2142,7 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 
   .fc-lab-battle-row--compact .fc-lab-battle-row__rival {
     grid-area: rival;
-    text-align: right;
+    justify-content: flex-end;
   }
 
   .fc-lab-battle-row--compact .fc-lab-battle-row__right {

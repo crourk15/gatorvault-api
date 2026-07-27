@@ -81,7 +81,10 @@ function BattleRowCompact({
         </span>
       </div>
       <span className={`fc-lab-battle-label ${meta.battleClass}`}>{meta.battleLabel}</span>
-      <span className="fc-lab-battle-row__rival">
+      <span
+        className="fc-lab-battle-row__rival"
+        aria-label={threat ? `${threat.name} ${threat.pct}%` : 'No top rival'}
+      >
         {threat ? (
           <>
             {(() => {
@@ -105,13 +108,12 @@ function BattleRowCompact({
                 </span>
               );
             })()}
-            <span className="fc-lab-battle-row__rival-text">
-              <span className="fc-lab-battle-row__rival-label">vs</span> {threat.label}{' '}
-              <strong>{threat.pct}%</strong>
-            </span>
+            <strong className="fc-lab-battle-row__rival-pct">{threat.pct}%</strong>
           </>
         ) : (
-          <span className="fc-lab-battle-row__rival-empty">—</span>
+          <span className="fc-lab-battle-row__rival-empty" aria-hidden>
+            —
+          </span>
         )}
       </span>
       <div className="fc-lab-battle-row__right">

@@ -8,8 +8,11 @@ const VAULT_MENU_BOOT_SCRIPT =
   'btn:document.querySelector("[data-vault-menu-toggle]")||document.querySelector(\'button[aria-controls="gv-app-menu-drawer"]\'),' +
   'drawer:document.getElementById("gv-app-menu-drawer"),' +
   'backdrop:document.querySelector(".gv-app-menu__backdrop")};}' +
+  // Always clear body overflow when closing, even if btn/drawer are missing mid-hydrate.
   'function sync(){' +
-  'var e=els();if(!e.btn||!e.drawer)return;' +
+  'var e=els();' +
+  'if(!open){try{document.body.style.overflow="";}catch(_){}}' +
+  'if(!e.btn||!e.drawer)return;' +
   'if(!e.btn.hasAttribute("data-vault-menu-toggle"))e.btn.setAttribute("data-vault-menu-toggle","");' +
   'e.drawer.classList.toggle("is-open",open);' +
   'e.drawer.setAttribute("aria-hidden",open?"false":"true");' +

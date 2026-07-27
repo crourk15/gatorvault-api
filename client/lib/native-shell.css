@@ -8,9 +8,12 @@ html.gv-native-app body {
   overscroll-behavior-y: none;
 }
 
-/* Film Room needs normal document scroll momentum inside WKWebView. */
+/* Film Room + Live need normal document scroll momentum inside WKWebView. */
 html.gv-native-app body.gv-film-page-active,
-html.gv-native-app body:has(.gv-film-room-page) {
+html.gv-native-app body:has(.gv-film-room-page),
+html.gv-native-app body.gv-live-page-active,
+html.gv-native-app body:has(.uf-premium-gnl),
+html.gv-native-app body:has(.gv-live-feed) {
   overscroll-behavior-y: auto;
 }
 

@@ -95,30 +95,6 @@
   gap: 1.25rem;
 }
 
-.gv-gw-wow-hero__eyebrow {
-  margin: 0;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-accent-orange);
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
-}
-
-.gv-gw-wow-hero__stamp {
-  margin: -0.35rem 0 0;
-  max-width: 36rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.gv-gw-wow-hero__stamp strong {
-  color: #fff;
-  font-weight: 800;
-}
-
 .gv-gw-wow-hero__metrics {
   display: grid;
   grid-template-columns: 1fr;
