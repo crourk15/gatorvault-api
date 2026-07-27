@@ -21,7 +21,8 @@ end
 
 target 'App' do
   capacitor_pods
-  # Add your Pods here
+  # Meta App Events / AEM — required for iOS 14+ App Install ads measurement
+  pod 'FBSDKCoreKit', '~> 18.0'
 end
 
 post_install do |installer|
