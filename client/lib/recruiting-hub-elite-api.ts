@@ -101,6 +101,10 @@ export type RhHubHeatTarget = {
     competitor: number | null;
     competitorName: string | null;
   };
+  /** Hard commit school when known — not the top RPM rival. */
+  committedTo?: string | null;
+  /** True when committed elsewhere and still on the UF chase / flip list. */
+  flipWatch?: boolean;
   nextVisit: string | null;
   insiderNote?: string | null;
   profileUrl: string;

@@ -4,9 +4,10 @@
  */
 
 .gv-gw-wow-page {
-  --color-bg-page: #001656;
-  --color-bg-hero: #0021a5;
-  --color-bg-card-dark: rgba(0, 22, 86, 0.72);
+  /* Match vault shell — dark bluish-gray, not saturated gator blue wash */
+  --color-bg-page: #0a1628;
+  --color-bg-hero: #001a33;
+  --color-bg-card-dark: rgba(10, 22, 40, 0.78);
   --color-bg-feed: #f7f8fc;
   --color-bg-panel: #ffffff;
   --color-accent-orange: #fa4616;
@@ -24,9 +25,9 @@
 
   min-height: 100%;
   background:
-    radial-gradient(ellipse 90% 50% at 10% 0%, rgba(250, 70, 22, 0.28) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 45% at 90% 10%, rgba(0, 51, 204, 0.45) 0%, transparent 50%),
-    linear-gradient(180deg, #0021a5 0%, #001656 42%, #050b20 100%);
+    radial-gradient(ellipse 90% 50% at 10% 0%, rgba(250, 70, 22, 0.16) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 45% at 90% 10%, rgba(0, 33, 165, 0.22) 0%, transparent 50%),
+    linear-gradient(180deg, #0b1a2e 0%, #0a1628 42%, #070d18 100%);
   color: var(--color-text-primary);
 }
 
@@ -72,8 +73,8 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(120deg, rgba(250, 70, 22, 0.22) 0%, transparent 38%),
-    linear-gradient(165deg, #0021a5 0%, #001a7a 38%, #001656 72%, #050b20 100%);
+    linear-gradient(120deg, rgba(250, 70, 22, 0.18) 0%, transparent 38%),
+    linear-gradient(165deg, #001a33 0%, #0a1628 48%, #070d18 100%);
   pointer-events: none;
 }
 
@@ -82,8 +83,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 55% at 70% 20%, rgba(250, 70, 22, 0.32) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 15% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+    radial-gradient(ellipse 70% 55% at 70% 20%, rgba(250, 70, 22, 0.2) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 15% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
 }
 
 .gv-gw-wow-hero__inner {

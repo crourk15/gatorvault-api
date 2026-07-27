@@ -283,6 +283,28 @@ function ufPctFromBoard(value: number | null | undefined): number {
   return n <= 1 ? Math.round(n * 100) : Math.round(n);
 }
 
+/** First positive UF % — treats 0 as missing so RPM can fill Hudson West-style gaps. */
+function firstPositivePct(...vals: Array<number | null | undefined>): number | null {
+  for (const v of vals) {
+    if (v != null && Number.isFinite(Number(v)) && Number(v) > 0) {
+      return ufPctFromBoard(Number(v));
+    }
+  }
+  return null;
+}
+
+function loadAllowlistRpmPct(slug: string): number | null {
+  try {
+    const { loadOn3RpmUfPctBySlug } = require('../../lib/on3-rpm-allowlist') as {
+      loadOn3RpmUfPctBySlug: () => Map<string, number>;
+    };
+    const pct = loadOn3RpmUfPctBySlug().get(String(slug || '').toLowerCase());
+    return pct != null && Number(pct) > 0 ? Math.round(Number(pct)) : null;
+  } catch {
+    return null;
+  }
+}
+
 function isUnderclassmenHighPriorityYear(classYear: number): boolean {
   return (HIGH_PRIORITY_UNDERCLASSMEN_YEARS as readonly number[]).includes(classYear);
 }
@@ -373,12 +395,15 @@ async function loadUnderclassmenHighPrioritySlugs(classYear: number): Promise<st
 function boardPlayerToHighPriority(
   p: import('./allowlist-board').FutureCastBoardPlayer
 ): HighPriorityPlayer {
-  const ufProbability = ufPctFromBoard(p.ufConfidence);
-  const fitScore = Math.round(p.fitScore ?? 0);
-  // Movement comes from uf-trend snapshots after applySnapshotMovement — never seed baselines.
-  const delta7d = 0;
   const ufRpmPct =
     p.ufRpmPct != null && Number(p.ufRpmPct) > 0 ? Math.round(Number(p.ufRpmPct)) : null;
+  const gvRaw = p.ufConfidence != null && Number(p.ufConfidence) > 0 ? Number(p.ufConfidence) : null;
+  // Never invent 0% when GV is missing — fall back to On3 RPM so cards match peers (Hudson West).
+  const ufProbability = gvRaw != null ? ufPctFromBoard(gvRaw) : ufRpmPct != null ? ufRpmPct : 0;
+  const fitScore =
+    p.fitScore != null && Number(p.fitScore) > 0 ? Math.round(Number(p.fitScore)) : 0;
+  // Movement comes from uf-trend snapshots after applySnapshotMovement — never seed baselines.
+  const delta7d = 0;
   const realPredictors = (p.predictors ?? []).filter((x) => x?.name && !isSeedPredictorName(x.name));
   const staffFromPredictors = realPredictors.find((x) => /rivals|staff|insider/i.test(x.name));
   const staffConfidence =
@@ -407,8 +432,8 @@ function boardPlayerToHighPriority(
     natlRank: p.natlRank ?? null,
     posRank: p.posRank ?? null,
     ufProbability,
-    ufProbabilitySource: p.ufProbabilitySource,
-    ufProbabilityLabel: p.ufProbabilityLabel ?? 'GV',
+    ufProbabilitySource: p.ufProbabilitySource ?? (gvRaw != null ? undefined : ufRpmPct != null ? 'on3-rpm' : undefined),
+    ufProbabilityLabel: p.ufProbabilityLabel ?? (gvRaw != null ? 'GV' : ufRpmPct != null ? 'On3 RPM' : 'GV'),
     ufProbabilityLowConfidence: p.ufProbabilityLowConfidence ?? false,
     movementDelta: delta7d,
     delta7d,
@@ -536,13 +561,16 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
           predictors.push(ext);
         }
 
+        const storeRpm = firstPositivePct(recruiting?.ufRpmPct, loadAllowlistRpmPct(slug));
         const resolvedUf = resolveUfProbability({
           modelPct: model?.confidence ?? model?.ufProbability,
-          storePct:
-            target.ufProbability ??
-            recruiting?.ufRpmPct ??
-            recruiting?.ufProbability ??
-            recruiting?.futurecastProbability,
+          // Never let an explicit 0 block On3 RPM (Hudson West / peers).
+          storePct: firstPositivePct(
+            target.ufProbability,
+            storeRpm,
+            recruiting?.ufProbability,
+            recruiting?.futurecastProbability
+          ),
           predictors,
           stars: target.stars ?? rank?.stars ?? null,
           headliner: Boolean(target.headliner),
@@ -552,10 +580,7 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
         const competingSchools = competingSchoolsFromRecruitingRecord(
           recruiting as Record<string, unknown> | null | undefined
         );
-        const ufRpmPct =
-          recruiting?.ufRpmPct != null && Number(recruiting.ufRpmPct) > 0
-            ? Math.round(Number(recruiting.ufRpmPct))
-            : null;
+        const ufRpmPct = storeRpm;
         const delta7d = mergedDelta7dBySlug.get(slug) ?? model?.delta ?? 0;
         const movementDelta = delta7d;
         const fitScore = Math.round(model?.ufFitScore ?? target.rating ?? compositeScore ?? 0);
@@ -665,10 +690,13 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
         }
         return resolveUfProbability({
           modelPct: model?.confidence ?? model?.ufProbability,
-          storePct:
-            seed?.ufProbability ??
-            recruiting?.ufProbability ??
-            recruiting?.futurecastProbability,
+          storePct: firstPositivePct(
+            seed?.ufProbability,
+            recruiting?.ufRpmPct,
+            loadAllowlistRpmPct(slug),
+            recruiting?.ufProbability,
+            recruiting?.futurecastProbability
+          ),
           predictors,
           stars: seed?.stars ?? recruiting?.stars ?? null,
           headliner: Boolean(seed?.headliner),

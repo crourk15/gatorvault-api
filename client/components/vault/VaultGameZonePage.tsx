@@ -399,7 +399,9 @@ export function VaultGameZonePage(): React.ReactElement {
                 </li>
               </ul>
               <p className="gv-gz__howto-note">
-                Fun season chase only — no real money, no betting inside GatorVault.
+                Vault Points are your personal season score on this device — Scout → Insider →
+                Vault Elite. Not a live member leaderboard. Fun chase only — no real money, no
+                betting inside GatorVault.
               </p>
             </div>
 

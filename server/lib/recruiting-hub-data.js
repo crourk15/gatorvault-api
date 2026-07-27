@@ -486,28 +486,55 @@ function buildBattleBoardRows(enrichedPlayers) {
 }
 
 function buildHeatIndexRows(enrichedPlayers) {
-  const scored = enrichedPlayers
-    .filter(
-      (p) =>
-        !p.isCommit &&
-        !p.ufPredictionSuppressed &&
-        isHuntListBattleEligible(p) &&
-        (p.tier === 'TOP' || p.tier === 'HIGH' || (p.ufScore != null && p.ufScore >= 34))
-    )
-    .map((player) => ({
-      id: player.slug || player.name,
-      name: player.name,
-      position: player.position || playerPos(player),
-      heat: computeHeatScore(player),
-      movement: movementArrow(player),
-      ufPercent: player.ufScore,
-      battle: buildBattleContext(player),
-      nextVisit: player.nextVisit,
-      insiderNote: shortInsiderNote(player),
-      profileUrl: player.profileUrl || profileUrl(player),
-    }));
+  let flipCommitLabels = {};
+  try {
+    flipCommitLabels = require('./recruiting-target-allowlist').FLIP_WATCH_COMMITS_2027 || {};
+  } catch {
+    flipCommitLabels = {};
+  }
 
-  scored.sort((a, b) => b.heat - a.heat);
+  const scored = enrichedPlayers
+    .filter((p) => {
+      if (p.ufPredictionSuppressed) return false;
+      if (!isHuntListBattleEligible(p)) return false;
+      // UF hard commits out. Elsewhere commits stay when allowlisted as flip-watch.
+      if (p.isCommittedToUF || (p.committedTo && isFloridaSchool(p.committedTo))) return false;
+      const flipWatch =
+        Boolean(p.committedTo && !isFloridaSchool(p.committedTo)) ||
+        Boolean(p.isCommit && !p.isCommittedToUF);
+      if (flipWatch) return true;
+      if (p.isCommit) return false;
+      return p.tier === 'TOP' || p.tier === 'HIGH' || (p.ufScore != null && p.ufScore >= 34);
+    })
+    .map((player) => {
+      const slug = String(player.slug || player.id || '').toLowerCase();
+      const committedRaw = player.committedTo || flipCommitLabels[slug] || null;
+      const committedTo =
+        committedRaw && !isFloridaSchool(committedRaw) ? committedRaw : committedRaw || null;
+      const flipWatch = Boolean(committedTo && !isFloridaSchool(committedTo));
+      return {
+        id: player.slug || player.name,
+        name: player.name,
+        position: player.position || playerPos(player),
+        heat: computeHeatScore(player),
+        movement: movementArrow(player),
+        ufPercent: player.ufScore,
+        battle: buildBattleContext(player),
+        committedTo: flipWatch ? committedTo : null,
+        flipWatch,
+        nextVisit: player.nextVisit,
+        insiderNote: shortInsiderNote(player),
+        profileUrl: player.profileUrl || profileUrl(player),
+      };
+    });
+
+  scored.sort((a, b) => {
+    // Uncommitted chase first, then flip-watch, then heat.
+    const aFlip = a.flipWatch ? 1 : 0;
+    const bFlip = b.flipWatch ? 1 : 0;
+    if (aFlip !== bFlip) return aFlip - bFlip;
+    return b.heat - a.heat;
+  });
   return scored.slice(0, 12);
 }
 

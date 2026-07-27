@@ -786,6 +786,17 @@
   color: var(--gator-orange, #fa4616);
 }
 
+.rh-elite-chrome .rh-remaining-row__status--flip {
+  color: #b45309;
+}
+
+.rh-elite-chrome .rh-remaining-row__school--open {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  justify-self: end;
+}
+
 .rh-elite-chrome .rh-remaining-row__school {
   display: inline-flex;
   align-items: center;

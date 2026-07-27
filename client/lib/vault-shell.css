@@ -617,8 +617,12 @@ body.gv-film-page-active .gv-vault-shell__main {
 
 .gv-vault-tickets__tips {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
   gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .gv-vault-tip {
@@ -652,6 +656,9 @@ body.gv-film-page-active .gv-vault-shell__main {
   max-width: 100%;
   overflow-x: clip;
   box-sizing: border-box;
+  padding-inline: 0;
+  /* Dark bluish-gray page plane — matches vault shell */
+  background: transparent;
 }
 
 .gv-vault-apparel .gv-page-hero {
@@ -661,9 +668,9 @@ body.gv-film-page-active .gv-vault-shell__main {
   padding: 1.5rem 1.25rem 1.35rem;
   margin-bottom: 1.25rem;
   background:
-    radial-gradient(ellipse 70% 80% at 90% 10%, rgba(250, 70, 22, 0.28) 0%, transparent 55%),
-    linear-gradient(145deg, #0021a5 0%, #001656 48%, #0b1120 100%);
-  border: 1px solid rgba(250, 70, 22, 0.25);
+    radial-gradient(ellipse 70% 80% at 90% 10%, rgba(250, 70, 22, 0.22) 0%, transparent 55%),
+    linear-gradient(145deg, #001a33 0%, #0a1628 55%, #070d18 100%);
+  border: 1px solid rgba(250, 70, 22, 0.28);
 }
 
 .gv-apparel-kicker {
@@ -710,12 +717,13 @@ body.gv-film-page-active .gv-vault-shell__main {
 
 .gv-apparel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .gv-apparel-card {
@@ -724,13 +732,14 @@ body.gv-film-page-active .gv-vault-shell__main {
   gap: 0.75rem;
   min-height: 220px;
   min-width: 0;
+  max-width: 100%;
   padding: 1.25rem;
   border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background:
-    linear-gradient(180deg, rgba(0, 33, 165, 0.35) 0%, rgba(11, 17, 32, 0.92) 100%);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(0, 33, 165, 0.18);
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
   transition: border-color 0.15s, transform 0.15s;
+  overflow: hidden;
 }
 
 .gv-apparel-card:hover {
@@ -743,36 +752,44 @@ body.gv-film-page-active .gv-vault-shell__main {
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+  min-width: 0;
 }
 
 .gv-apparel-card__icon {
   font-size: 1.75rem;
+  flex-shrink: 0;
 }
 
 .gv-apparel-card__badge {
   font-size: 0.65rem;
   font-weight: 700;
   padding: 0.2rem 0.6rem;
-  border-radius: 9999px;
-  background: rgba(250, 70, 22, 0.2);
-  color: #ffd7c8;
+  border-radius: 8px;
+  background: rgba(250, 70, 22, 0.12);
+  color: #fa4616;
   border: 1px solid rgba(250, 70, 22, 0.35);
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .gv-apparel-card__name {
   font-family: 'Oswald', sans-serif;
   font-size: 1.125rem;
   font-weight: 700;
-  color: #fff;
+  color: #0021a5;
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .gv-apparel-card__desc {
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.72);
+  color: #334155;
   margin: 0;
   flex: 1;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .gv-apparel-btn {

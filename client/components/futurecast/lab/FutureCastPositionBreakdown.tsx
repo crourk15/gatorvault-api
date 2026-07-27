@@ -25,56 +25,61 @@ type Props = {
 };
 
 function boardStrengthPlain(strength: PositionNeedRow['boardStrength']): string {
-  if (strength === 'lean-uf') return 'Florida is winning this room';
-  if (strength === 'battle') return 'Open battles for Florida';
-  if (strength === 'behind') return 'Florida trailing in this room';
-  return 'No active Florida targets yet';
+  if (strength === 'lean-uf') return 'Florida leading';
+  if (strength === 'battle') return 'Open battles';
+  if (strength === 'behind') return 'Florida trailing';
+  return 'No targets yet';
 }
 
-function NeedRowCompact({
-  row,
-  boardClassYear,
-}: {
-  row: PositionNeedRow;
-  boardClassYear: number;
-}): React.ReactElement {
+function NeedRowElite({ row }: { row: PositionNeedRow }): React.ReactElement {
   const lead = row.topTargets[0];
+  const ufPct = row.avgUfPct != null ? Math.max(0, Math.min(100, row.avgUfPct)) : 0;
+  const fieldPct = 100 - ufPct;
+  const leadOdds = lead?.detail ? String(lead.detail) : null;
 
   return (
     <article
-      className={`fc-lab-need-row fc-lab-need-row--compact fc-lab-need-row--${row.needTier}`}
+      className={`fc-lab-need-row fc-lab-need-row--elite fc-lab-need-row--${row.needTier}`}
       data-testid="fc-lab-need-row"
     >
-      <header className="fc-lab-need-row__head">
-        <div className="fc-lab-need-row__rank-wrap">
-          <span className="fc-lab-need-row__rank">#{row.needRank}</span>
-          <strong className="fc-lab-need-row__pos">{row.position}</strong>
+      <header className="fc-lab-need-elite__head">
+        <div className="fc-lab-need-elite__pos-wrap">
+          <span className="fc-lab-need-elite__rank">#{row.needRank}</span>
+          <strong className="fc-lab-need-elite__pos">{row.position}</strong>
           <span className={`fc-lab-need-tier fc-lab-need-tier--${row.needTier}`}>
             {needTierLabel(row.needTier)}
           </span>
         </div>
+        <span className={`fc-lab-need-elite__status fc-lab-need-strength--${row.boardStrength}`}>
+          {boardStrengthPlain(row.boardStrength)}
+        </span>
       </header>
-      <p className={`fc-lab-need-plain fc-lab-need-strength--${row.boardStrength}`}>
-        {boardStrengthPlain(row.boardStrength)}
-        {row.avgUfPct != null ? (
-          <span className="fc-lab-need-plain__odds"> · avg Florida odds {row.avgUfPct}%</span>
-        ) : null}
-        <span className="fc-lab-need-plain__year"> · {boardClassYear} board</span>
-      </p>
-      {row.reason ? <p className="fc-lab-need-row__reason">{row.reason}</p> : null}
+
+      <div className="fc-lab-need-elite__meter" aria-label={`Florida room odds ${ufPct}%`}>
+        <div className="fc-lab-need-elite__meter-track">
+          <span className="fc-lab-need-elite__meter-uf" style={{ width: `${ufPct}%` }} />
+          <span className="fc-lab-need-elite__meter-field" style={{ width: `${fieldPct}%` }} />
+        </div>
+        <div className="fc-lab-need-elite__meter-labels">
+          <span>UF {ufPct}%</span>
+          <span>Field {fieldPct}%</span>
+        </div>
+      </div>
+
       {lead ? (
-        <p className="fc-lab-need-row__lead">
-          <span className="fc-lab-need-row__lead-label">Top target: </span>
+        <p className="fc-lab-need-elite__lead">
           {lead.slug ? (
             <a href={playerProfileRoute(lead.slug, 'futurecast')}>{lead.name}</a>
           ) : (
-            lead.name
+            <strong>{lead.name}</strong>
           )}
-          {lead.detail ? <span> · {lead.detail}</span> : null}
+          {leadOdds ? <span className="fc-lab-need-elite__lead-odds">{leadOdds}</span> : null}
         </p>
       ) : (
-        <p className="fc-lab-need-row__lead fc-lab-need-row__lead--empty">No active board leader yet</p>
+        <p className="fc-lab-need-elite__lead fc-lab-need-elite__lead--empty">No board leader yet</p>
       )}
+
+      {row.reason ? <p className="fc-lab-need-elite__note">{row.reason}</p> : null}
     </article>
   );
 }
@@ -122,8 +127,8 @@ export function FutureCastPositionBreakdown({
 
   const title = 'How the board fits Florida';
   const sub = discoveryFocus
-    ? `Where Florida needs help in ${boardClassYear} — and who’s the top name in each room.`
-    : `Where Florida needs help on the ${boardClassYear} board.`;
+    ? `${boardClassYear} rooms — need, UF vs field, top name.`
+    : `${boardClassYear} rooms — need, UF vs field, top name.`;
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-position-breakdown">
@@ -132,7 +137,7 @@ export function FutureCastPositionBreakdown({
       ) : (
         <div className="fc-lab-need-list-wrap">
           {visible.map((row) => (
-            <NeedRowCompact key={row.position} row={row} boardClassYear={board.boardClassYear} />
+            <NeedRowElite key={row.position} row={row} />
           ))}
           {hiddenCount > 0 ? (
             <button
