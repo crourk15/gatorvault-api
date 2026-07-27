@@ -2531,7 +2531,32 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 .fc-lab-need-elite__meter {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(0, 33, 165, 0.04);
+  border: 1px solid rgba(0, 33, 165, 0.08);
+}
+
+.fc-lab-need-elite__meter-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fc-lab-need-elite__meter-caption {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.fc-lab-need-elite__meter-pct {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0021a5;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 .fc-lab-need-elite__meter-track {
@@ -2547,22 +2572,8 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
   display: block;
   height: 100%;
   background: #0021a5;
-}
-
-.fc-lab-need-elite__meter-field {
-  display: block;
-  height: 100%;
-  background: #fa4616;
-}
-
-.fc-lab-need-elite__meter-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: #475569;
-  font-variant-numeric: tabular-nums;
+  border-radius: 999px;
+  min-width: 0;
 }
 
 .fc-lab-need-elite__lead {
@@ -2573,6 +2584,15 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
   gap: 0.35rem 0.65rem;
   font-size: 0.95rem;
   color: #0f172a;
+}
+
+.fc-lab-need-elite__lead-label {
+  width: 100%;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #64748b;
 }
 
 .fc-lab-need-elite__lead a,

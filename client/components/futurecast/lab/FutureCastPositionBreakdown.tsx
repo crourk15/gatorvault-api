@@ -8,7 +8,6 @@ import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 import {
   buildPositionNeedBoard,
-  needTierLabel,
   type PositionNeedRow,
 } from '@/lib/fc-position-need-board';
 import { buildSchemeMatchLeaders } from '@/lib/scheme-match-leaders';
@@ -24,18 +23,49 @@ type Props = {
   bare?: boolean;
 };
 
-function boardStrengthPlain(strength: PositionNeedRow['boardStrength']): string {
-  if (strength === 'lean-uf') return 'Florida leading';
-  if (strength === 'battle') return 'Open battles';
-  if (strength === 'behind') return 'Florida trailing';
-  return 'No targets yet';
+function positionTitle(pos: string): string {
+  const map: Record<string, string> = {
+    QB: 'Quarterback',
+    RB: 'Running back',
+    WR: 'Wide receiver',
+    TE: 'Tight end',
+    OT: 'Offensive tackle',
+    IOL: 'Interior line',
+    OL: 'Offensive line',
+    EDGE: 'Edge',
+    DL: 'Defensive line',
+    LB: 'Linebacker',
+    CB: 'Cornerback',
+    S: 'Safety',
+    ATH: 'Athlete',
+  };
+  return map[pos] || pos;
+}
+
+function needChip(tier: PositionNeedRow['needTier']): { label: string; tone: string } {
+  if (tier === 'critical') return { label: 'Must add', tone: 'critical' };
+  if (tier === 'high') return { label: 'Needs help', tone: 'high' };
+  if (tier === 'watch') return { label: 'Keep an eye', tone: 'watch' };
+  return { label: 'In good shape', tone: 'stable' };
+}
+
+function chasePlain(strength: PositionNeedRow['boardStrength'], ufPct: number): string {
+  if (strength === 'lean-uf') return 'Florida is ahead here';
+  if (strength === 'battle') return 'Still up for grabs';
+  if (strength === 'behind') {
+    return ufPct <= 15 ? 'Other schools are ahead' : 'Florida is behind right now';
+  }
+  return 'No clear Florida targets yet';
 }
 
 function NeedRowElite({ row }: { row: PositionNeedRow }): React.ReactElement {
   const lead = row.topTargets[0];
   const ufPct = row.avgUfPct != null ? Math.max(0, Math.min(100, row.avgUfPct)) : 0;
-  const fieldPct = 100 - ufPct;
-  const leadOdds = lead?.detail ? String(lead.detail) : null;
+  const hasBoard = row.avgUfPct != null;
+  const chip = needChip(row.needTier);
+  const chase = chasePlain(row.boardStrength, ufPct);
+  const leadOddsMatch = lead?.detail ? String(lead.detail).match(/(\d+)\s*%/) : null;
+  const leadOdds = leadOddsMatch ? `${leadOddsMatch[1]}% Florida` : null;
 
   return (
     <article
@@ -45,29 +75,37 @@ function NeedRowElite({ row }: { row: PositionNeedRow }): React.ReactElement {
       <header className="fc-lab-need-elite__head">
         <div className="fc-lab-need-elite__pos-wrap">
           <span className="fc-lab-need-elite__rank">#{row.needRank}</span>
-          <strong className="fc-lab-need-elite__pos">{row.position}</strong>
-          <span className={`fc-lab-need-tier fc-lab-need-tier--${row.needTier}`}>
-            {needTierLabel(row.needTier)}
-          </span>
+          <strong className="fc-lab-need-elite__pos">{positionTitle(row.position)}</strong>
+          <span className={`fc-lab-need-tier fc-lab-need-tier--${chip.tone}`}>{chip.label}</span>
         </div>
         <span className={`fc-lab-need-elite__status fc-lab-need-strength--${row.boardStrength}`}>
-          {boardStrengthPlain(row.boardStrength)}
+          {chase}
         </span>
       </header>
 
-      <div className="fc-lab-need-elite__meter" aria-label={`Florida room odds ${ufPct}%`}>
-        <div className="fc-lab-need-elite__meter-track">
-          <span className="fc-lab-need-elite__meter-uf" style={{ width: `${ufPct}%` }} />
-          <span className="fc-lab-need-elite__meter-field" style={{ width: `${fieldPct}%` }} />
+      <div
+        className="fc-lab-need-elite__meter"
+        aria-label={
+          hasBoard
+            ? `Florida chance in this room ${ufPct} percent`
+            : 'Florida chance in this room unavailable'
+        }
+      >
+        <div className="fc-lab-need-elite__meter-head">
+          <span className="fc-lab-need-elite__meter-caption">Florida’s chance in this room</span>
+          <strong className="fc-lab-need-elite__meter-pct">{hasBoard ? `${ufPct}%` : '—'}</strong>
         </div>
-        <div className="fc-lab-need-elite__meter-labels">
-          <span>UF {ufPct}%</span>
-          <span>Field {fieldPct}%</span>
+        <div className="fc-lab-need-elite__meter-track">
+          <span
+            className="fc-lab-need-elite__meter-uf"
+            style={{ width: hasBoard ? `${ufPct}%` : '0%' }}
+          />
         </div>
       </div>
 
       {lead ? (
         <p className="fc-lab-need-elite__lead">
+          <span className="fc-lab-need-elite__lead-label">Best Florida shot</span>
           {lead.slug ? (
             <a href={playerProfileRoute(lead.slug, 'futurecast')}>{lead.name}</a>
           ) : (
@@ -76,7 +114,9 @@ function NeedRowElite({ row }: { row: PositionNeedRow }): React.ReactElement {
           {leadOdds ? <span className="fc-lab-need-elite__lead-odds">{leadOdds}</span> : null}
         </p>
       ) : (
-        <p className="fc-lab-need-elite__lead fc-lab-need-elite__lead--empty">No board leader yet</p>
+        <p className="fc-lab-need-elite__lead fc-lab-need-elite__lead--empty">
+          No clear Florida shot yet
+        </p>
       )}
 
       {row.reason ? <p className="fc-lab-need-elite__note">{row.reason}</p> : null}
@@ -125,10 +165,8 @@ export function FutureCastPositionBreakdown({
   const hiddenCount = Math.max(0, board.rows.length - featured.length);
   const visible = showAll ? board.rows : featured;
 
-  const title = 'How the board fits Florida';
-  const sub = discoveryFocus
-    ? `${boardClassYear} rooms — need, UF vs field, top name.`
-    : `${boardClassYear} rooms — need, UF vs field, top name.`;
+  const title = 'Where Florida needs help';
+  const sub = `${boardClassYear} — which rooms need the next commit, and how Florida is doing there.`;
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-position-breakdown">
@@ -146,7 +184,7 @@ export function FutureCastPositionBreakdown({
               onClick={() => setShowAll((v) => !v)}
               data-testid="fc-lab-need-more"
             >
-              {showAll ? 'Show top needs only' : `All rooms → (${hiddenCount} more)`}
+              {showAll ? 'Show top needs only' : `See all rooms (${hiddenCount} more)`}
             </button>
           ) : null}
         </div>
