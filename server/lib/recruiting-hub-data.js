@@ -619,6 +619,9 @@ function buildIntelSummary(row, meta) {
   if (et === 'staff_note' || et === 'target_update') {
     return detail ? `Staff note — ${detail.slice(0, 100)}` : 'Staff note';
   }
+  if (et === 'recruiting_narrative') {
+    return detail ? detail.slice(0, 120) : 'Beat intel';
+  }
   if (et === 'flip_watch' || et === 'commit_watch') {
     return detail ? detail.slice(0, 120) : 'Flip watch';
   }
