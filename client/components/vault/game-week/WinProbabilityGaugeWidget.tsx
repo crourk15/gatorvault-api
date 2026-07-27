@@ -38,7 +38,7 @@ export function WinProbabilityGaugeWidget({ ufPct, prediction }: Props): React.R
 
   return (
     <div className="gv-gw-wp-gauge" data-testid="gw-wp-gauge">
-      <p className="gv-gw-wp-gauge__heading">FutureCast Win Probability</p>
+      <p className="gv-gw-wp-gauge__heading">Florida win chance</p>
       <div className="gv-gw-wp-gauge__rings">
         <svg className="gv-gw-wp-gauge__svg" viewBox="0 0 128 128" aria-hidden="true">
           <circle cx="64" cy="64" r={r} fill="none" stroke="#e2e8f0" strokeWidth="10" />

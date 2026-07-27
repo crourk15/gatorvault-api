@@ -33,7 +33,7 @@ export function ScoutingRadarChart({ axes, opponentName }: Props): React.ReactEl
 
   return (
     <div className="gv-gw-radar" data-testid="gw-radar-chart">
-      <p className="gv-gw-radar__heading">Scouting radar</p>
+      <p className="gv-gw-radar__heading">Matchup edge</p>
       <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} role="img" aria-label="Scouting radar comparison">
         {gridLevels.map((lvl) => (
           <polygon

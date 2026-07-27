@@ -186,10 +186,10 @@
 
 .gv-gw-wow-hero .gv-gw-wow-section__title {
   font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 800;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.78);
   margin: 0 0 0.75rem;
 }
 
