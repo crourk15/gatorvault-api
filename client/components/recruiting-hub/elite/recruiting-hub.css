@@ -787,7 +787,17 @@
 }
 
 .rh-elite-chrome .rh-remaining-row__status--flip {
-  color: #b45309;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  color: #9a3412;
+  background: rgba(250, 70, 22, 0.1);
+  border: 1px solid rgba(250, 70, 22, 0.28);
+}
+
+.rh-elite-chrome .rh-remaining-row--flip {
+  background: linear-gradient(90deg, rgba(250, 70, 22, 0.04), transparent 55%);
 }
 
 .rh-elite-chrome .rh-remaining-row__school--open {
@@ -803,6 +813,11 @@
   gap: 0.4rem;
   min-width: 0;
   justify-self: end;
+}
+
+.rh-elite-chrome .rh-remaining-row--flip .rh-remaining-row__school-name {
+  color: #0f172a;
+  font-weight: 700;
 }
 
 .rh-elite-chrome .rh-remaining-row__school-logo {
