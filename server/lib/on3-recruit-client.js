@@ -1,5 +1,5 @@
-const { fetchText } = require('./qa/qa-utils');
 const { slugify } = require('./slug');
+const { fetchOn3Html, extractNextDataJson } = require('./on3-fetch');
 
 const SITE = process.env.ON3_SITE_BASE || 'https://www.on3.com';
 const ORG = process.env.ON3_ORG_SLUG || 'florida-gators';
@@ -22,27 +22,12 @@ function pageUrl(path) {
   return `${SITE}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
-function defaultHeaders(classYear) {
-  return {
-    Accept: 'text/html,application/json;q=0.9,*/*;q=0.8',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'User-Agent':
-      process.env.ON3_USER_AGENT ||
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-    Referer: pageUrl(`/college/${ORG}/${SPORT}/${classYear || 2027}/commits/`)
-  };
-}
-
 async function fetchNextPageProps(url, classYear) {
-  const retries = Math.max(0, parseInt(process.env.ON3_FETCH_RETRIES || '3', 10) || 3);
-  const { text: html } = await fetchText(url, {
-    headers: defaultHeaders(classYear),
-    retries,
-    timeout: parseInt(process.env.ON3_FETCH_TIMEOUT_MS || '45000', 10) || 45000,
-  });
-  const match = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
-  if (!match) throw new Error('On3 page missing __NEXT_DATA__');
-  return JSON.parse(match[1])?.props?.pageProps || null;
+  const { text: html, source } = await fetchOn3Html(url, { classYear });
+  if (source === 'fallback') {
+    console.log(`[on3-recruit-client] pageProps via fallback: ${url}`);
+  }
+  return extractNextDataJson(html)?.props?.pageProps || null;
 }
 
 function flattenVisits(pageProps) {
