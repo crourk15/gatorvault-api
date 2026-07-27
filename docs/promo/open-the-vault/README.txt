@@ -24,3 +24,8 @@ Caption suggestion
   Open the Vault.
   Everything Florida Gators football — FutureCast, Recruiting, Team, Live, Game Week — in one place.
   Download Gator Vault Insider on the App Store.
+
+Facebook / Instagram paid runbook
+  See ../facebook-campaign-brief.md
+  Destination domain: gatorvaultinsider.com
+  App listing name: Gator Vault Insider
