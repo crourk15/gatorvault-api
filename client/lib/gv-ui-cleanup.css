@@ -1195,6 +1195,67 @@ body {
   }
 }
 
+/*
+ * Gator Nation Live — same document-only scroll contract as Film Room.
+ * Incomplete unlock left nested scrollports that intermittently trap gestures.
+ */
+@media (max-width: 1023px) {
+  html:has(body.gv-live-page-active),
+  html:has(.uf-premium-gnl),
+  html:has(.gv-live-feed) {
+    overflow-x: clip !important;
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
+  body.gv-live-page-active,
+  body:has(.uf-premium-gnl),
+  body:has(.gv-live-feed) {
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    height: auto !important;
+    overscroll-behavior-y: auto;
+    touch-action: manipulation;
+  }
+
+  body.gv-live-page-active .gv-vault-shell,
+  body.gv-live-page-active .gv-vault-shell__body,
+  body.gv-live-page-active .gv-vault-shell__main,
+  body.gv-live-page-active .uf-premium-gnl,
+  body:has(.uf-premium-gnl) .gv-vault-shell,
+  body:has(.uf-premium-gnl) .gv-vault-shell__body,
+  body:has(.uf-premium-gnl) .gv-vault-shell__main,
+  body:has(.gv-live-feed) .gv-vault-shell,
+  body:has(.gv-live-feed) .gv-vault-shell__body,
+  body:has(.gv-live-feed) .gv-vault-shell__main {
+    overflow: visible !important;
+    max-height: none !important;
+    touch-action: manipulation;
+  }
+
+  body.gv-live-page-active .gv-live-feed__list,
+  body.gv-live-page-active .live-feed-list,
+  .uf-premium-gnl .gv-live-feed__list,
+  .uf-premium-gnl .live-feed-list {
+    max-height: none !important;
+    overflow: visible !important;
+    -webkit-overflow-scrolling: auto;
+  }
+
+  /* Already on Live — hide pulse FAB so it doesn't sit in the scroll end-zone. */
+  body.gv-live-page-active .gv-live-pulse-fab,
+  body:has(.uf-premium-gnl) .gv-live-pulse-fab,
+  body:has(.gv-live-feed) .gv-live-pulse-fab {
+    display: none !important;
+  }
+
+  /* Soft-nav briefly sets pointer-events:none on main — keep Live scrollable. */
+  body.gv-live-page-active .gv-vault-shell.is-navigating .gv-vault-shell__main,
+  body:has(.uf-premium-gnl) .gv-vault-shell.is-navigating .gv-vault-shell__main {
+    pointer-events: auto;
+  }
+}
+
 
 /* ── 2. Game Week ── */
 .gv-gw-hero .gv-page-layout__hero-inner {

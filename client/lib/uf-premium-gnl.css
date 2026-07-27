@@ -26,12 +26,17 @@
   min-height: 100%;
   color: rgba(255, 255, 255, 0.92);
   background: var(--uf-page-bg);
-  overflow-x: hidden;
+  /* Prefer clip over hidden so we don't coerce a nested Y scroller on iOS. */
+  overflow-x: clip;
 }
 
-/* Live Stream sits on white cards — override legacy white-on-dark feed colors */
-.uf-premium-gnl .gv-gnl-elite-stream .gv-live-feed__list {
+/* Live Stream — document scroll only (no nested list scrollport). */
+.uf-premium-gnl .gv-gnl-elite-stream .gv-live-feed__list,
+.uf-premium-gnl .gv-live-feed__list,
+.uf-premium-gnl .live-feed-list {
   max-height: none;
+  overflow: visible;
+  -webkit-overflow-scrolling: auto;
 }
 
 .uf-premium-gnl .gv-gnl-elite-stream .gv-live-feed__row {

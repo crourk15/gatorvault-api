@@ -18,7 +18,10 @@
   }
 
   .gv-vault-shell__main:has(.gv-film-room-page),
-  body.gv-film-page-active .gv-vault-shell__main {
+  .gv-vault-shell__main:has(.uf-premium-gnl),
+  .gv-vault-shell__main:has(.gv-live-feed),
+  body.gv-film-page-active .gv-vault-shell__main,
+  body.gv-live-page-active .gv-vault-shell__main {
     overflow: visible;
   }
 
