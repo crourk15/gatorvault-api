@@ -1,11 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  gameWeekBriefingEyebrow,
-  gameWeekBriefingStamp,
-  getGameWeekBundle,
-} from '@/lib/game-week-data';
+import { getGameWeekBundle } from '@/lib/game-week-data';
 import { MatchupHeroWidget } from './MatchupHeroWidget';
 import { SeasonTimeline } from './SeasonTimeline';
 import { WinProbabilityGaugeWidget } from './WinProbabilityGaugeWidget';
@@ -52,10 +48,6 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
       <section className="gv-gw-wow-hero fc-lab-bleed" aria-label="Game week overview">
         <div className="gv-gw-wow-hero__bg" aria-hidden />
         <div className="gv-gw-wow-hero__inner rh-frame">
-          <p className="gv-gw-wow-hero__eyebrow">{gameWeekBriefingEyebrow()}</p>
-          <p className="gv-gw-wow-hero__stamp">
-            <strong>Thursday ritual.</strong> {gameWeekBriefingStamp()}
-          </p>
           <MatchupHeroWidget bundle={bundle} />
           <SeasonTimeline activeGameId={gameId} onSelect={handleGameSelect} />
           <div className="gv-gw-wow-hero__metrics">

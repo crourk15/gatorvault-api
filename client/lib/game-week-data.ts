@@ -400,16 +400,3 @@ export function getGameWeekBundle(gameId: string): GameWeekBundle {
   return generateBundle(gameId);
 }
 
-/**
- * Weekly Game Week ritual: refresh Thursday after UF depth chart + injury picture
- * firm up (usually Wednesday+). Tue/Wed = quiet prep only.
- */
-export const GAME_WEEK_BRIEFING_CADENCE = 'Thursday';
-
-export function gameWeekBriefingEyebrow(): string {
-  return 'Game Week · Thursday Briefing';
-}
-
-export function gameWeekBriefingStamp(): string {
-  return 'Locked after official depth & injury reports (Wed+). Fresh drop each Thursday.';
-}
