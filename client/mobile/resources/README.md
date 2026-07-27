@@ -22,6 +22,6 @@ npm run cap:sync
 
 Drag icon sets into **Assets.xcassets → AppIcon** in `client/ios/App/App/`.
 
-Until custom PNGs exist, the default Capacitor placeholder icon is used for development only — replace before App Store submission.
+**Status:** Splash PNGs in `ios/.../Splash.imageset/` are GatorVault-branded (navy `#0a1628` + wordmark). Do not ship the default Capacitor “blue capacitor” splash — that white screen was a first-open drop-off.
 
-**Status:** `icon.png` and `ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png` should use the finalized GatorVault 1024×1024 mark before each App Store archive.
+`icon.png` / AppIcon should use the finalized GatorVault 1024×1024 mark before each App Store archive.

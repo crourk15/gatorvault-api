@@ -68,11 +68,16 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
       } catch (e) { return false; }
     }
 
-    /** Fresh process: sign-in if logged out, vault home if logged in (ignore WKWebView restore). */
+    /** Fresh process: Create account on first install; Sign in if we remember an email. */
     function vaultDest() {
-      return sessionOk()
-        ? abs('/vault/')
-        : abs('/join/?mode=signin&next=/vault/');
+      if (sessionOk()) return abs('/vault/');
+      var remembered = false;
+      try {
+        remembered = !!(localStorage.getItem('gv_last_email') || '').trim();
+      } catch (e) {}
+      return abs(remembered
+        ? '/join/?mode=signin&next=/vault/'
+        : '/join/?mode=signup&next=/vault/');
     }
 
     /** iOS may wipe localStorage; Preferences (UserDefaults) survives — restore before join bounce. */
@@ -90,7 +95,9 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
           settled = true;
           done();
         };
-        setTimeout(finish, 1200);
+        // First install has nothing in Preferences — don't burn ~1.2s on an empty wait.
+        var prefsBudget = sessionOk() ? 1200 : 350;
+        setTimeout(finish, prefsBudget);
         Prefs.get({ key: 'gv_session' }).then(function(res) {
           try {
             if (res && res.value) {

@@ -25,8 +25,8 @@ const config: CapacitorConfig = {
     : {}),
   plugins: {
     SplashScreen: {
-      // Keep splash until first paint (native-shell hides it). Avoids blank WebView flash.
-      launchShowDuration: 3000,
+      // Keep branded splash until first paint (native-shell hides it). Never ship Capacitor default.
+      launchShowDuration: 2000,
       launchAutoHide: false,
       backgroundColor: '#0a1628',
       showSpinner: false,

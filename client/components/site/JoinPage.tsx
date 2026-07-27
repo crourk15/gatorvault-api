@@ -72,8 +72,8 @@ function initialJoinMode(): Mode {
   if (params.get('mode') === 'reset') return 'reset';
   if (params.get('mode') === 'signin') return 'signin';
   if (params.get('mode') === 'signup') return 'signup';
-  // Returning app users / prior emails → Sign in, not Create account.
-  if (readLastEmail() || isNativeApp()) return 'signin';
+  // Returning emails → Sign in. First native install (no remembered email) → Create account.
+  if (readLastEmail()) return 'signin';
   return 'signup';
 }
 
@@ -327,7 +327,7 @@ export function JoinPage(): React.ReactElement {
           {existingSession
             ? "You are already signed in — continue below."
             : mode === 'signin'
-              ? 'Sign in with your account email and password (not your display name).'
+              ? 'Already a member? Sign in with your email and password. New here? Tap Create account — 30-day free trial, no card.'
               : mode === 'forgot'
                 ? 'Enter your account email and we will send a reset link if it exists.'
                 : mode === 'reset'

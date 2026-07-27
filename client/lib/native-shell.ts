@@ -29,7 +29,8 @@ export async function initNativeShell(): Promise<void> {
     /* simulator / unsupported */
   }
 
-  // Own splash hide (launchAutoHide: false) — first paint, hard cap 2.5s.
+  // Hide splash ASAP after first paint (hard cap 1.2s). Long white Capacitor splash
+  // was scaring first-time App Store users before Join ever appeared.
   try {
     await Promise.race([
       new Promise<void>((resolve) => {
@@ -38,7 +39,7 @@ export async function initNativeShell(): Promise<void> {
         });
       }),
       new Promise<void>((resolve) => {
-        window.setTimeout(resolve, 2500);
+        window.setTimeout(resolve, 1200);
       }),
     ]);
     await SplashScreen.hide();
