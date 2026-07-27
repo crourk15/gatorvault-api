@@ -66,13 +66,18 @@ function readBootMetrics(): ClassMetricsResponse | null {
   if (typeof window === 'undefined') return null;
   const fromBoot = window.__GV_HOME_WOW__?.metrics;
   if (fromBoot) return fromBoot;
+  const year = ACTIVE_RECRUITING_CLASS_YEAR;
+  const key = `gv_class_metrics_v1:${year}`;
   try {
-    const year = ACTIVE_RECRUITING_CLASS_YEAR;
-    const raw = sessionStorage.getItem(`gv_class_metrics_v1:${year}`);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as { at: number; data: ClassMetricsResponse };
-    if (!parsed?.data || Date.now() - parsed.at > 5 * 60_000) return null;
-    return parsed.data;
+    for (const store of [sessionStorage, localStorage]) {
+      const raw = store.getItem(key);
+      if (!raw) continue;
+      const parsed = JSON.parse(raw) as { at: number; data: ClassMetricsResponse };
+      // Keep overnight revisits instant (was 5 minutes — felt cold every morning).
+      if (!parsed?.data || Date.now() - parsed.at > 24 * 60 * 60_000) continue;
+      return parsed.data;
+    }
+    return null;
   } catch {
     return null;
   }
@@ -128,10 +133,10 @@ export function HomePremiumPage(): React.ReactElement {
   }, []);
 
   const load = useCallback(async (isInitial: boolean) => {
-    if (isInitial && readBootMetrics()) {
+    // Seeds already paint recruiting metrics — never flip the whole home into
+    // skeleton mode on first open while the API warms (scares new fans away).
+    if (isInitial) {
       setLoading(false);
-    } else if (isInitial) {
-      setLoading(true);
     }
     const poll = warmPollProfile();
     try {
@@ -140,21 +145,34 @@ export function HomePremiumPage(): React.ReactElement {
       const [hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets] =
         await Promise.all([
           fetchWithWarmPoll(() => fetchRecruitingHubBundle(year), poll).catch(() => null),
-          fetchHighPriorityIntel().catch(() => []),
+          fetchHighPriorityIntel().catch(() => null),
           fetchMovementIntel().catch(() => null),
-          fetchBeatIntel().catch(() => []),
+          fetchBeatIntel().catch(() => null),
           fetchWithWarmPoll(() => fetchRecruitingBoard(year), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchFutureCastHome(), poll).catch(() => null),
           fetchWithWarmPoll(() => fetchHighPriorityTargets(year), poll).catch(() => null),
         ]);
-      setHubTicker(hubBundle?.ticker ?? []);
-      setHpIntel(intel);
-      setMovementIntel(movement);
-      setBeatIntel(beat);
-      setBoard(recruitingBoard);
-      setClassMetrics(hubBundle?.classOverview ? { ...hubBundle.classOverview } : null);
-      setFutureCastHome(fcHome);
-      setHighPriority(hpTargets);
+      // Cold API miss must NOT wipe build-time seeds — first-open chill was clearing
+      // metrics/beat to null/[] and looking broken until a later warm revisit.
+      if (hubBundle?.ticker?.length) setHubTicker(hubBundle.ticker);
+      if (Array.isArray(intel) && intel.length) setHpIntel(intel);
+      if (movement) setMovementIntel(movement);
+      if (Array.isArray(beat) && beat.length) setBeatIntel(beat);
+      if (recruitingBoard) setBoard(recruitingBoard);
+      if (hubBundle?.classOverview) {
+        const nextMetrics = { ...hubBundle.classOverview };
+        setClassMetrics(nextMetrics);
+        try {
+          const payload = JSON.stringify({ at: Date.now(), data: nextMetrics });
+          const key = `gv_class_metrics_v1:${year}`;
+          sessionStorage.setItem(key, payload);
+          localStorage.setItem(key, payload);
+        } catch {
+          /* ignore quota */
+        }
+      }
+      if (fcHome) setFutureCastHome(fcHome);
+      if (hpTargets) setHighPriority(hpTargets);
     } finally {
       if (isInitial) {
         setLoading(false);
