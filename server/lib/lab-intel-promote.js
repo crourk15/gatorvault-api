@@ -38,8 +38,8 @@ function floridaOfferOnPlayer(player) {
 function floridaVisitOnPlayer(player) {
   const ov = String(player?.ufOvStatus || player?.uf_ov_status || '').toLowerCase();
   if (ov && /cancel/.test(ov)) return false;
-  // Soft player-field visit signal (watchlist-grade unless visit log verifies).
-  if (ov && /\b(visit|scheduled|official|unofficial)\b/.test(ov)) return true;
+  // Soft OV signal only — bare "visit" was polluted by beat ingest and is not proof.
+  if (ov && /\b(scheduled|official|unofficial|completed)\b/.test(ov)) return true;
   if (player?.visitStart || player?.visitEnd) return true;
   const visits = Array.isArray(player?.visits) ? player.visits : [];
   return visits.some((v) => {

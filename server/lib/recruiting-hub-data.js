@@ -26,7 +26,11 @@ const {
   resolvePlayerState,
   normalizePlayerGeo,
 } = require('./recruiting-geo-normalize');
-const { isCuratedHubIntel, loadHubRecruitingPool } = require('./recruiting-hub-intel-store');
+const {
+  isCuratedHubIntel,
+  loadHubRecruitingPool,
+  WATCH_FEED_EVENTS,
+} = require('./recruiting-hub-intel-store');
 const { getAllowlistSet } = require('./recruiting-target-allowlist');
 const {
   applyCommitmentPredictionOverride,
@@ -37,6 +41,8 @@ const {
 const DEFAULT_CLASS_YEARS = [2026, 2027, 2028];
 /** Intel / offers / visits eligible for the hub feed. */
 const FEED_WINDOW_MS = 14 * 24 * 60 * 60 * 1000;
+/** Watch-only narratives stay fresher — hear→watch, not stale board noise. */
+const WATCH_NARRATIVE_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 /** Commits older than this belong on Commit Class, not Movement. */
 const COMMIT_FEED_MAX_AGE_MS = 5 * 24 * 60 * 60 * 1000;
 const RECENT_VISIT_MS = 14 * 24 * 60 * 60 * 1000;
@@ -635,15 +641,21 @@ function buildIntelSummary(row, meta) {
 }
 
 function mapIntelToFeedItem(row, meta) {
+  let event = mapIntelEventType(row);
+  // Monitoring names never read as board rise (up/down) from soft beat intel.
+  if (meta?.isWatch && event !== 'offer' && event !== 'visit') {
+    event = 'intel';
+  }
   return {
     id: String(row.fingerprint || row.id),
     timestamp: row.reportedAt || row.timestamp || row.createdAt,
     name: meta.name,
     position: meta.position,
     class: meta.classYear,
-    event: mapIntelEventType(row),
+    event,
     summary: buildIntelSummary(row, meta),
     profileUrl: meta.profileUrl,
+    watch: Boolean(meta?.isWatch),
   };
 }
 
@@ -896,7 +908,9 @@ function curateHubMovementFeed(items) {
             visit: 12,
           }[item.event] ?? 0;
         const narrativeBoost = item.movementNarrative ? 18 : 0;
-        return eventBoost + narrativeBoost - ageHours;
+        // Prefer fresh beat narratives over stale visit dumps.
+        const freshIntelBoost = item.event === 'intel' && ageHours <= 72 ? 12 : 0;
+        return eventBoost + narrativeBoost + freshIntelBoost - ageHours;
       };
       return score(b) - score(a);
     });
@@ -946,9 +960,16 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
     const meta = resolveFeedMeta(slug, pool, rawMap);
     if (!meta) continue;
     if (focusYear != null && Number(meta.classYear) !== focusYear) continue;
-    // Closing Class / underclassmen movement: hunt-list only (UF commits added below).
-    if ((focusYear === 2027 || focusYear === 2028) && !getAllowlistSet(focusYear).has(slug)) {
-      continue;
+    const et = String(row.eventType || '').toLowerCase();
+    const onHuntList =
+      focusYear !== 2027 && focusYear !== 2028
+        ? true
+        : getAllowlistSet(focusYear).has(slug);
+    // Closing Class / underclassmen: hunt-list for prove→rise; watch monitors
+    // may surface fresh narrative intel only (hear→watch, no board soft-add).
+    if (!onHuntList) {
+      if (!(meta.isWatch && WATCH_FEED_EVENTS.has(et))) continue;
+      if (ts < Date.now() - WATCH_NARRATIVE_WINDOW_MS) continue;
     }
     const playerCtx = { ...(rawMap.get(slug) || {}), ...(meta || {}), slug };
     const filtered = filterMovementIntelForPlayer([row], playerCtx);
