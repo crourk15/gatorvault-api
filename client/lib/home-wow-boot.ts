@@ -76,10 +76,10 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
         if (metrics) {
           window.__GV_HOME_WOW__.metrics = metrics;
           try {
-            sessionStorage.setItem(
-              'gv_class_metrics_v1:' + year,
-              JSON.stringify({ at: Date.now(), data: metrics })
-            );
+            var payload = JSON.stringify({ at: Date.now(), data: metrics });
+            sessionStorage.setItem('gv_class_metrics_v1:' + year, payload);
+            // Survive app kill / overnight reopen (sessionStorage alone felt cold each morning).
+            localStorage.setItem('gv_class_metrics_v1:' + year, payload);
           } catch (e) {}
         }
         var home = results[1];
