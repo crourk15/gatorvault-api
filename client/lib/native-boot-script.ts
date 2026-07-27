@@ -95,7 +95,9 @@ export const NATIVE_BOOT_SCRIPT = `(function(){
           settled = true;
           done();
         };
-        setTimeout(finish, 1200);
+        // First install has nothing in Preferences — don't burn ~1.2s on an empty wait.
+        var prefsBudget = sessionOk() ? 1200 : 350;
+        setTimeout(finish, prefsBudget);
         Prefs.get({ key: 'gv_session' }).then(function(res) {
           try {
             if (res && res.value) {
