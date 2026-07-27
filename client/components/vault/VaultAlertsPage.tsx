@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ALERT_CATEGORY_META,
   DEFAULT_ALERT_PREFS,
@@ -17,6 +17,7 @@ import {
 } from '@/lib/alert-prefs';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
 import { buildSeedAlerts } from '@/lib/alerts-hub-seed';
+import { buildFanAlertCards, formatAlertTime } from '@/lib/alert-fan-copy';
 import { sendTestPushAlert, syncAlertPushPrefs, unsubscribeVisitPush } from '@/lib/push-alerts-api';
 import { syncEmailAlertPrefs } from '@/lib/alert-email-api';
 import { isNativeApp } from '@/lib/api-base';
@@ -234,22 +235,31 @@ export function VaultAlertsPage(): React.ReactElement {
     setLocalAlerts(loadLocalRecentAlerts());
   };
 
+  const fanCards = useMemo(() => buildFanAlertCards(apiAlerts), [apiAlerts]);
+
   return (
     <div className="gv-vault-alerts" data-testid="vault-alerts">
-      <div className="gv-page-hero">
-        <h1 className="gv-page-title">My Alerts</h1>
-        <p className="gv-page-subtitle">
-          Lock-screen and email for visits, commits, and Gator scores. Everything else stays in your
-          in-app feed.
-        </p>
-      </div>
+      <section className="gv-alerts-hero" aria-label="My Alerts">
+        <div className="gv-alerts-hero__bg" aria-hidden="true" />
+        <div className="gv-alerts-hero__sweep" aria-hidden="true" />
+        <div className="gv-alerts-hero__watermark" aria-hidden="true">
+          GATORS
+        </div>
+        <div className="gv-alerts-hero__inner">
+          <p className="gv-alerts-hero__eyebrow">GatorVault</p>
+          <h1 className="gv-alerts-hero__title">My Alerts</h1>
+          <p className="gv-alerts-hero__sub">
+            Visits, commits, and Gator scores on your lock screen — plus the board moves that matter
+            inside the Vault.
+          </p>
+        </div>
+      </section>
 
       <div className="gv-vault-alerts__layout">
         <section className="gv-vault-alerts__prefs">
           <h2 className="gv-vault-alerts__section-title">Lock-screen &amp; email</h2>
           <p className="gv-vault-alerts__section-hint">
-            Only these three categories leave the app. Verified UF visits support email digests;
-            commits and scores are instant push.
+            Choose what hits your phone. Visits can digest by email; commits and scores fire push.
           </p>
 
           <div className="gv-alert-toggles">
@@ -390,66 +400,89 @@ export function VaultAlertsPage(): React.ReactElement {
 
         <section className="gv-vault-alerts__feed">
           <div className="gv-vault-alerts__feed-header">
-            <h2 className="gv-vault-alerts__section-title">In-app feed</h2>
-            <button type="button" className="gv-alert-mark-read" onClick={handleMarkAllRead}>
-              Mark all as read
-            </button>
+            <div>
+              <h2 className="gv-vault-alerts__section-title">Board intel</h2>
+              <p className="gv-vault-alerts__section-hint gv-vault-alerts__section-hint--flush">
+                Visits, flip watch, and the Florida odds moves worth opening.
+              </p>
+            </div>
+            {localAlerts.length > 0 ? (
+              <button type="button" className="gv-alert-mark-read" onClick={handleMarkAllRead}>
+                Mark all as read
+              </button>
+            ) : null}
           </div>
-          <p className="gv-vault-alerts__section-hint">
-            Movement and intel show up here as they land.
-          </p>
 
-          {loading && <p className="gv-page-status">Loading alerts…</p>}
+          {loading && <p className="gv-page-status">Loading board intel…</p>}
 
           {!loading && error && (
             <UiError
               title="Alerts unavailable"
               message={error}
               retry={() => void loadFeed(true)}
-              backHref="/vault/futurecast/alerts"
-              backLabel="← FutureCast Alerts"
+              backHref="/vault/futurecast/"
+              backLabel="← FutureCast"
             />
           )}
 
           {!loading && !error && (
             <div className="gv-vault-alerts__feed-list">
-              {apiAlerts.map((alert) => (
-                <article key={alert.id} className="gv-vault-alert-item">
+              {fanCards.map((card) => (
+                <article
+                  key={card.id}
+                  className={`gv-vault-alert-card gv-vault-alert-card--${card.tone}`}
+                  data-testid="vault-alert-card"
+                >
+                  <div className="gv-vault-alert-card__top">
+                    <span className={`gv-vault-alert-card__chip gv-vault-alert-card__chip--${card.tone}`}>
+                      {card.chip}
+                    </span>
+                    <time className="gv-vault-alert-card__time" dateTime={card.createdAt}>
+                      {formatAlertTime(card.createdAt)}
+                    </time>
+                  </div>
                   <a
-                    href={playerProfilePath(alert.playerSlug, alert.lifecycle, true)}
-                    className="gv-vault-alert-item__message"
+                    href={playerProfilePath(card.playerSlug, card.lifecycle, true)}
+                    className="gv-vault-alert-card__name"
                   >
-                    {alert.message}
+                    {card.playerName}
                   </a>
-                  <p className="gv-vault-alert-item__meta">
-                    {alert.type} · {alert.playerName}
-                  </p>
+                  <p className="gv-vault-alert-card__headline">{card.headline}</p>
+                  {card.detail ? <p className="gv-vault-alert-card__detail">{card.detail}</p> : null}
                 </article>
               ))}
 
               {localAlerts.map((alert, idx) => (
                 <article
                   key={`local-${idx}-${alert._ts ?? idx}`}
-                  className={`gv-vault-alert-item${alert.read ? ' is-read' : ''}`}
+                  className={`gv-vault-alert-card gv-vault-alert-card--intel${alert.read ? ' is-read' : ''}`}
                 >
-                  <p className="gv-vault-alert-item__message">{alert.title || alert.text}</p>
-                  {alert.type ? (
-                    <p className="gv-vault-alert-item__meta">{alert.type}</p>
-                  ) : null}
+                  <div className="gv-vault-alert-card__top">
+                    <span className="gv-vault-alert-card__chip gv-vault-alert-card__chip--intel">
+                      {alert.type === 'visit'
+                        ? 'Visit'
+                        : alert.type === 'commit'
+                          ? 'Commit'
+                          : alert.type === 'score'
+                            ? 'Score'
+                            : 'Alert'}
+                    </span>
+                  </div>
+                  <p className="gv-vault-alert-card__headline">{alert.title || alert.text}</p>
                 </article>
               ))}
 
-              {apiAlerts.length === 0 && localAlerts.length === 0 && (
+              {fanCards.length === 0 && localAlerts.length === 0 && (
                 <UiEmpty
-                  message="No alerts yet."
-                  hint="Enable Visits, Commits, or Scores on the left — or open FutureCast movement."
+                  message="No board intel yet."
+                  hint="Turn on Visits, Commits, or Scores — or check FutureCast for live movement."
                 />
               )}
             </div>
           )}
 
           <p className="gv-vault-alerts__fc-link">
-            <a href="/vault/futurecast/alerts">View FutureCast movement alerts →</a>
+            <a href="/vault/futurecast/">Open FutureCast Lab →</a>
           </p>
         </section>
       </div>
