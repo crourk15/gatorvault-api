@@ -6,20 +6,27 @@ import { APPAREL_PILLS, APPAREL_SHOPS } from '@/lib/vault-catalog';
 export function VaultApparelPage(): React.ReactElement {
   return (
     <div className="gv-vault-apparel" data-testid="vault-apparel">
-      <div className="gv-page-hero">
-        <p className="gv-apparel-kicker">Gator Nation</p>
-        <h1 className="gv-page-title">Apparel & Gameday Gear</h1>
-        <p className="gv-page-subtitle">
-          Jerseys, tailgate gear, and campus classics for every Saturday in The Swamp.
-        </p>
-        <div className="gv-apparel-pills">
-          {APPAREL_PILLS.map((pill) => (
-            <span key={pill} className="gv-apparel-pill">
-              {pill}
-            </span>
-          ))}
+      <section className="gv-apparel-hero" aria-label="Apparel and gameday gear">
+        <div className="gv-apparel-hero__bg" aria-hidden="true" />
+        <div className="gv-apparel-hero__sweep" aria-hidden="true" />
+        <div className="gv-apparel-hero__watermark" aria-hidden="true">
+          GATORS
         </div>
-      </div>
+        <div className="gv-apparel-hero__inner">
+          <p className="gv-apparel-hero__eyebrow">GatorVault</p>
+          <h1 className="gv-apparel-hero__title">Apparel &amp; Gameday Gear</h1>
+          <p className="gv-apparel-hero__sub">
+            Jerseys, tailgate gear, and campus classics for every Saturday in The Swamp.
+          </p>
+          <div className="gv-apparel-hero__pills" aria-label="Shop highlights">
+            {APPAREL_PILLS.map((pill) => (
+              <span key={pill} className="gv-apparel-hero__pill">
+                {pill}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <div className="gv-apparel-grid">
         {APPAREL_SHOPS.map((shop) => (
