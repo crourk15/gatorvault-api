@@ -8,6 +8,25 @@ function normalizeSlug(slug) {
   return String(slug || '').trim().toLowerCase();
 }
 
+function isCommittedPlayer(player, research) {
+  if (!player && !research) return false;
+  if (research?.eventType === 'commit' || research?.eventType === 'flip') return true;
+  if (/committed/i.test(String(research?.ufPosition || ''))) return true;
+  const status = String(player?.ufStatus || player?.status || '');
+  if (/committed|signed|enrolled/i.test(status)) return true;
+  if (player?.committedTo && /florida|gators/i.test(String(player.committedTo))) return true;
+  const teams = player?.on3TopTeams || player?.topTeams || [];
+  try {
+    const on3 = require('./on3-recruit-client');
+    const year = Number(player?.classYear) || 2028;
+    const uf = on3.getFloridaTeam(teams, year);
+    if (uf && /commit|signed|enrolled/i.test(String(uf.status || ''))) return true;
+  } catch {
+    /* optional */
+  }
+  return false;
+}
+
 function line(label, value) {
   if (value == null || value === '') return null;
   const v = String(value).trim();
@@ -173,10 +192,15 @@ function offerSummary(intelligence, player = null) {
     try {
       const on3 = require('./on3-recruit-client');
       const year = Number(player?.classYear) || 2028;
-      const offered = on3
-        .getYearTopTeams(teams, year)
-        .filter((t) => !on3.isHighSchoolOrg(t) && /offer/i.test(String(t.status || '')))
-        .map((t) => t.team?.name || t.name || t.school)
+      const yearTeams = on3.getYearTopTeams(teams, year).filter((t) => !on3.isHighSchoolOrg(t));
+      const offered = yearTeams
+        .filter((t) => /offer|commit|signed|enrolled/i.test(String(t.status || '')))
+        .map((t) => {
+          const school = t.team?.name || t.name || t.school;
+          const status = String(t.status || '');
+          if (/commit|signed|enrolled/i.test(status) && school) return `${school} (Committed)`;
+          return school;
+        })
         .filter(Boolean);
       if (offered.length) return offered.slice(0, 10).join(', ');
     } catch {
@@ -371,6 +395,7 @@ function buildBoardFacts({ player, intelligence, research, rivals }) {
 function buildWhyFlorida({ player, research, intelligence, beatRows, rivals }) {
   rivals = Array.isArray(rivals) ? rivals : [];
   beatRows = Array.isArray(beatRows) ? beatRows : [];
+  const committed = isCommittedPlayer(player, research);
   const bits = [];
   const meas = measurementsSummary(player);
   const school = player?.school || player?.highSchool;
@@ -389,18 +414,25 @@ function buildWhyFlorida({ player, research, intelligence, beatRows, rivals }) {
   const ladder = schoolLadderSummary(player, 5);
   const ufRpm = pct(player?.ufRpmPct ?? player?.ufProbability ?? player?.ufConfidence ?? player?.floridaOdds);
   if (ufRpm) {
-    bits.push(`Florida On3 RPM ~${ufRpm}${interested && /florida/i.test(interested) ? ' (leads involved schools)' : ''}.`);
+    bits.push(
+      committed
+        ? `Florida On3 RPM ~${ufRpm} (commit locked).`
+        : `Florida On3 RPM ~${ufRpm}${interested && /florida/i.test(interested) ? ' (leads involved schools)' : ''}.`
+    );
   }
   const staff = ufStaffSummary(player);
   if (staff) bits.push(`${staff}.`);
 
-  const ufPos = research?.ufPosition;
-  const eventType = research?.eventType;
+  const ufPos = committed ? 'committed' : research?.ufPosition;
+  const eventType = committed && (!research?.eventType || research.eventType === 'target_update' || research.eventType === 'update' || research.eventType === 'trending')
+    ? 'commit_culture'
+    : research?.eventType;
   if (ufPos) bits.push(`UF board read: ${ufPos}.`);
   if (eventType && eventType !== 'update') bits.push(`Latest signal type: ${eventType.replace(/_/g, ' ')}.`);
 
   const ufStatus = player?.ufStatus || player?.status;
   if (ufStatus) bits.push(`Tracked UF status: ${ufStatus}.`);
+  if (committed && player?.committedTo) bits.push(`Committed to: ${player.committedTo}.`);
 
   const visits = visitSummary(intelligence, player);
   if (visits) bits.push(`Visit / OV trail: ${visits}.`);
@@ -460,18 +492,31 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
   const rivalHook = rivals.filter((r) => { try { return !require('./on3-board-hydrate').isUfSchoolName(r); } catch { return !/^(florida|gators|uf)$/i.test(String(r||'').trim()); } }).slice(0, 2);
   const gaps = intelligence?.gaps || research?.gaps || [];
 
+  const committed = isCommittedPlayer(player, research);
+  const stake = committed ? 'committed' : ufPos;
+  const signal = committed && (eventType === 'update' || eventType === 'target update' || eventType === 'trending')
+    ? 'commit culture'
+    : eventType;
   const lines = [];
-  if (concrete) {
+  if (committed) {
     lines.push(
-      `Angle: Don't recap the ${eventType} headline on ${name}. Lead with Florida's stake (${ufPos}) and the board fact beat writers bury: ${concrete}.`
+      `Angle: ${name} is a Florida COMMIT — do not frame as an open board chase. Advance the culture/ownership beat (member-of-the-program, fall plans, class leadership). Lead with commit stake + one board credential (${concrete || 'ranks/size/staff'}).`
+    );
+  } else if (concrete) {
+    lines.push(
+      `Angle: Don't recap the ${signal} headline on ${name}. Lead with Florida's stake (${stake}) and the board fact beat writers bury: ${concrete}.`
     );
   } else {
     lines.push(
-      `Angle: Take today's ${eventType} beat on ${name} and frame UF as ${ufPos} — not a recap. Lead with the Florida stake, then one concrete board fact.`
+      `Angle: Take today's ${signal} beat on ${name} and frame UF as ${stake} — not a recap. Lead with the Florida stake, then one concrete board fact.`
     );
   }
   if (fresh) lines.push(`Beat hook to advance: "${fresh}"`);
-  if (rivalHook.length) {
+  if (committed) {
+    lines.push(
+      'Pressure angle: none — commitment is locked. If rivals appear on the ladder they are former board noise; use them only as contrast to how locked UF already is.'
+    );
+  } else if (rivalHook.length) {
     lines.push(
       `Pressure angle vs ${rivalHook.join(' / ')}: use On3 interest/RPM + visit/staff access UF still controls — not the same school-list dump the beat used.`
     );
@@ -488,7 +533,9 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
     if (visits) parts.push(`visits ${String(visits).slice(0, 140)}`);
     if (ladder) parts.push(`ladder ${String(ladder).split(';').slice(0, 4).join('; ')}`);
     lines.push(
-      `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. Elite verified post, not a beat echo.`
+      committed
+        ? `Vault edge (verified long-form COMMIT): stack ${parts.join(' | ')} under the ownership/culture hook — elite post, not a chase recap.`
+        : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. Elite verified post, not a beat echo.`
     );
   } else if (gaps.length) {
     lines.push(`Vault edge (fill what beat skipped): ${gaps.slice(0, 4).join(', ')}.`);
@@ -726,6 +773,13 @@ async function buildBeatBrief(slug, opts = {}) {
     intelligence = null;
   }
 
+  if (research && isCommittedPlayer(player, research)) {
+    research.ufPosition = 'committed';
+    if (!research.eventType || research.eventType === 'target_update' || research.eventType === 'update' || research.eventType === 'trending') {
+      research.eventType = 'commit_culture';
+    }
+  }
+
   const rivals = rivalList(player || {}, research, intelligence);
   const whyFlorida = buildWhyFlorida({
     player: player || {},
@@ -944,6 +998,7 @@ module.exports = {
   formatBriefText,
   buildWhyFlorida,
   buildVaultAngle,
+  isCommittedPlayer,
   buildBoardFacts,
   rankingSummary,
   interestedSchoolsSummary,

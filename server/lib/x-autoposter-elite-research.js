@@ -202,6 +202,9 @@ function inferEventTypeFromText(text) {
   }
   if (/\bsurprised\b.*\bofficial visit\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'official_visit';
   if (/\b(?:committed|commits)\b.*\b(florida|gators|\buf\b)/i.test(t)) return 'commit';
+  if (/\b(?:florida|gators|\buf\b).{0,40}\b(?:\d+-star\s+)?(?:qb|wr|rb|te|ol|dl|lb|cb|s|ath)?\s*commit\b/i.test(t)) return 'commit';
+  if (/\b\w+['’]?s commitment\b/i.test(t) && /\b(florida|gators|\buf\b|gator)/i.test(t)) return 'commit';
+  if (/\b\w+['’]?s commitment\b/i.test(t) && /\b(recruit|program|class)\b/i.test(t)) return 'commit';
   if (/cancel(?:led|s)?.*(?:ov|official visit).*(?:florida|gators|gainesville|\buf\b)/i.test(t)) return 'visit_cancelled';
   if (/\b(official visit|\bov\b).*?(?:florida|gators|gainesville|\buf\b)/i.test(t)) return 'official_visit';
   if (/\b(unofficial visit|\buv\b).*?(?:florida|gators|gainesville|\buf\b)/i.test(t)) return 'unofficial_visit';
@@ -216,10 +219,12 @@ function inferEventTypeFromText(text) {
 }
 
 function inferUfPosition(research) {
-  const { intelRows, predictions, beatSnippets, eventType } = research;
+  const { intelRows, predictions, beatSnippets, eventType, player } = research;
   const conf = predictions.map((p) => p.confidencePct || p.ufRpmPct).filter((n) => n > 0);
   const maxConf = conf.length ? Math.max(...conf) : null;
-  if (eventType === 'commit' || eventType === 'flip') return 'committed';
+  const status = String(player?.ufStatus || player?.status || player?.committedTo || '');
+  if (/committed|signed|enrolled/i.test(status)) return 'committed';
+  if (eventType === 'commit' || eventType === 'flip' || eventType === 'commit_culture') return 'committed';
   if (eventType === 'decision_day') return 'in the mix';
   if (eventType === 'official_visit') return 'hosting OV';
   if (maxConf != null && maxConf >= 70) return 'leading';

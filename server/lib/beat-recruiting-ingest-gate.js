@@ -157,11 +157,17 @@ function resolvePlayerFromTextSync(text) {
   const t = teaser?.textWithoutRelationalNames ? teaser.textWithoutRelationalNames(raw) : raw;
   const relationalOk = (name) => !(teaser?.isRelationalMention && teaser.isRelationalMention(raw, name));
 
-  let name = extractPlayerFromText(t);
+  const cleanName = (n) => {
+    let s = String(n || '').trim();
+    // "Davin Davidson's" → Davin Davidson
+    s = s.replace(/['’]s$/i, '').trim();
+    return s || null;
+  };
+  let name = cleanName(extractPlayerFromText(t));
   if (name && !relationalOk(name)) name = null;
   if (!name) {
     const candidates = extractAllPlayerNameCandidates(t) || [];
-    name = candidates.find((n) => relationalOk(n)) || null;
+    name = cleanName(candidates.find((n) => relationalOk(cleanName(n) || n)) || null);
   }
   if (!name) {
     try {
