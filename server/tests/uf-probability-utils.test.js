@@ -4,6 +4,8 @@ const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const {
   resolveGatorVaultLikelihood,
+  sanitizeRpmPct,
+  canExposeWeekDelta,
 } = require('../lib/uf-probability-utils');
 
 describe('resolveGatorVaultLikelihood market anchor', () => {
@@ -47,5 +49,16 @@ describe('resolveGatorVaultLikelihood market anchor', () => {
       fitScore: 86,
     });
     assert.ok(resolved.value <= 16, `expected <=16 got ${resolved.value}`);
+  });
+});
+
+describe('odds trust guards', () => {
+  it('sanitizeRpmPct rejects residual fractions', () => {
+    assert.equal(sanitizeRpmPct(0.6887), null);
+    assert.equal(sanitizeRpmPct(15), 15);
+  });
+
+  it('canExposeWeekDelta blocks thin +72', () => {
+    assert.equal(canExposeWeekDelta({ delta: 72, lowConfidence: true }), false);
   });
 });

@@ -504,7 +504,7 @@ async function feedDeskIntelToFutureCast({
         stateRank: saved.stateRank || null,
         inState: String(saved.state || '').toUpperCase() === 'FL',
         committedTo: saved.committedTo || null,
-        ufProbability: decision.pct != null ? decision.pct / 100 : null,
+        ufProbability: decision.pct != null ? decision.pct : null, // 0–100 points
         source: 'desk-intel-futurecast-feed',
         updatedAt: new Date().toISOString()
       };

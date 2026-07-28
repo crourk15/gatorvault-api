@@ -4,11 +4,81 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-function toPercent(value) {
-  if (value == null || Number.isNaN(Number(value))) return 0;
+/** Max week-over-week Δ shown without a confirmed On3 RPM anchor. */
+const MAX_WEEK_DELTA_WITHOUT_RPM = 15;
+/** Absolute ceiling for any public week-over-week Δ (percentage points). */
+const MAX_WEEK_DELTA_HARD = 35;
+
+/**
+ * Normalize a value that may be percentage points OR a 0–1 fraction.
+ * @param {unknown} value
+ * @param {{ allowUnitInterval?: boolean }} [opts]
+ * @returns {number|null} integer 1–100, or null
+ */
+function normalizeOddsPct(value, { allowUnitInterval = false } = {}) {
+  if (value == null || !Number.isFinite(Number(value))) return null;
   const n = Number(value);
-  if (n <= 0) return 0;
-  return n <= 1 ? Math.round(n * 100) : Math.round(n);
+  if (n <= 0) return null;
+  if (n > 100) return 100;
+  if (n > 1) return Math.round(n);
+  if (!allowUnitInterval) return null;
+  return Math.round(n * 100);
+}
+
+/**
+ * On3 / market RPM must be percentage points.
+ * Rejects residual unit-interval leftovers (0.99, 0.6887) that used to become 99%/69%.
+ */
+function sanitizeRpmPct(value) {
+  return normalizeOddsPct(value, { allowUnitInterval: false });
+}
+
+/**
+ * Store/model odds may still be 0–1 fractions in legacy rows.
+ * Extreme unit-interval values (>=85%) without a strong RPM are treated as residual leaks.
+ */
+function sanitizeStoreOddsPct(value, { rpmPct = null } = {}) {
+  if (value == null || !Number.isFinite(Number(value))) return null;
+  const raw = Number(value);
+  const rpm = sanitizeRpmPct(rpmPct);
+  const n = normalizeOddsPct(raw, { allowUnitInterval: true });
+  if (n == null) return null;
+  if (raw > 0 && raw <= 1 && n >= 85 && !(rpm != null && rpm >= 50)) {
+    return null;
+  }
+  return n;
+}
+
+/**
+ * Legacy helper — percentage points, with unit-interval expand for store fractions.
+ * Prefer sanitizeRpmPct / sanitizeStoreOddsPct at trust boundaries.
+ */
+function toPercent(value) {
+  const n = normalizeOddsPct(value, { allowUnitInterval: true });
+  return n == null ? 0 : n;
+}
+
+/**
+ * Whether a week Δ is safe to show fans on Discovery Movement / Lab.
+ * Suppresses seed theater (±4), residual jumps, and thin-data fireworks.
+ */
+function canExposeWeekDelta({
+  delta,
+  rpmPct = null,
+  lowConfidence = false,
+  snapshotPointCount = null,
+} = {}) {
+  if (delta == null || !Number.isFinite(Number(delta))) return false;
+  const abs = Math.abs(Number(delta));
+  if (abs < 1) return false;
+  if (snapshotPointCount != null && snapshotPointCount < 2) return false;
+  if (abs > MAX_WEEK_DELTA_HARD) return false;
+  const rpm = sanitizeRpmPct(rpmPct);
+  const thin = Boolean(lowConfidence) || rpm == null;
+  if (thin && abs > MAX_WEEK_DELTA_WITHOUT_RPM) return false;
+  // Legacy allowlist_seed used synchronized ±4 placeholders.
+  if (thin && abs === 4) return false;
+  return true;
 }
 
 function pickRivalsPmScore(predictors) {
@@ -25,7 +95,7 @@ function pickOn3RpmScore(predictors) {
   for (const p of predictors || []) {
     const name = String(p?.name || "").toLowerCase();
     if (name.includes("on3") && Number(p.score) > 0) {
-      return toPercent(p.score);
+      return sanitizeRpmPct(p.score) || 0;
     }
   }
   return 0;
@@ -92,10 +162,10 @@ function resolveGatorVaultLikelihood({
   headliner = false,
 } = {}) {
   const model = toPercent(modelPct);
-  const rpm = toPercent(rpmPct);
+  const rpm = sanitizeRpmPct(rpmPct) || 0;
   const rivals = toPercent(rivalsPct);
   const fit = toPercent(fitScore);
-  let store = toPercent(storePct);
+  let store = sanitizeStoreOddsPct(storePct, { rpmPct: rpm }) || 0;
   // Avoid double-counting store when it is already the On3 RPM value.
   if (store > 0 && rpm > 0 && Math.abs(store - rpm) <= 1) store = 0;
 
@@ -258,7 +328,13 @@ function loadOn3RpmPriorBySlug(on3Path) {
 }
 
 module.exports = {
+  MAX_WEEK_DELTA_WITHOUT_RPM,
+  MAX_WEEK_DELTA_HARD,
+  normalizeOddsPct,
+  sanitizeRpmPct,
+  sanitizeStoreOddsPct,
   toPercent,
+  canExposeWeekDelta,
   pickRivalsPmScore,
   pickOn3RpmScore,
   pickExternalPmScore,

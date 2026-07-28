@@ -162,10 +162,20 @@ function ufRpmFromTopTeams(topTeams, classYear) {
   const year = Number(classYear) || 2028;
   const yearRows = on3Recruit.getYearTopTeams(topTeams || [], year);
   const rows = yearRows.length ? yearRows : topTeams || [];
-  const scale = detectTopTeamsPctScale(rows.filter((t) => !on3Recruit.isHighSchoolOrg(t)));
+  const collegeRows = rows.filter((t) => !on3Recruit.isHighSchoolOrg(t));
+  const scale = detectTopTeamsPctScale(collegeRows);
+  const residual = residualPredictionKeys(collegeRows, scale);
   const uf = on3Recruit.getFloridaTeam(topTeams || [], year);
   if (!uf) return null;
-  return teamPct(uf, scale);
+  const raw = rawTeamPrediction(uf);
+  // Shared residual fractions on percent-scale boards are noise — never Florida RPM.
+  if (raw != null && residual.has(String(raw))) return null;
+  const pct = teamPct(uf, scale);
+  if (pct == null || !Number.isFinite(pct) || pct <= 0) return null;
+  // Sub-2.5% on a percent-scale Industry Consensus board is residual/micro, not a market call.
+  if (scale === 'percent' && pct < 2.5) return null;
+  // Keep one decimal so 15.4% Industry Consensus does not collapse to 15.
+  return Math.round(pct * 10) / 10;
 }
 
 function rankingLine(player = {}) {
@@ -338,9 +348,10 @@ function mergePlayerWithProfile(player, profile, recruitSlug) {
     topTeams,
     competingSchools: rivals.length ? rivals : player?.competingSchools || null,
     rivals: rivals.length ? rivals : player?.rivals || null,
+    // Always persist RPM as integer percentage points (never unit-interval residuals).
     ufRpmPct: ufRpm != null ? ufRpm : player?.ufRpmPct ?? null,
-    ufProbability:
-      ufRpm != null ? (ufRpm > 1 ? ufRpm / 100 : ufRpm) : player?.ufProbability ?? null,
+    // Keep store odds as 0–100 points when hydrated from RPM (readers accept both scales).
+    ufProbability: ufRpm != null ? ufRpm : player?.ufProbability ?? null,
     ufStatus:
       player?.ufStatus ||
       (ufTeam?.status ? `Florida ${ufTeam.status}` : player?.status) ||

@@ -163,10 +163,12 @@ function synthesizeMovementHistory(
   trendDelta7d: number
 ): Array<{ date: string; confidence: number }> {
   const now = Date.now();
+  // trendDelta7d is already percentage points (e.g. +4), never a 0–1 fraction.
+  const deltaPp = Number(trendDelta7d) || 0;
   const points: Array<{ date: string; confidence: number }> = [];
   for (let i = 6; i >= 0; i -= 1) {
     const t = i / 6;
-    const confidence = Math.round((ufConfidence - trendDelta7d * 100 * t) * 10) / 10;
+    const confidence = Math.round((ufConfidence - deltaPp * t) * 10) / 10;
     points.push({
       date: new Date(now - i * 86_400_000).toISOString().slice(0, 10),
       confidence: Math.max(0, Math.min(100, confidence)),
@@ -176,10 +178,11 @@ function synthesizeMovementHistory(
 }
 
 function parseRecruitingUfPct(raw: unknown): number | null {
-  if (raw == null || !Number.isFinite(Number(raw))) return null;
-  const num = Number(raw);
-  const pct = num <= 1 ? num * 100 : num;
-  return Math.min(100, Math.max(0, Math.round(pct * 10) / 10));
+  // RPM-only reader: reject unit-interval residual leftovers (0.99 / 0.6887).
+  const { sanitizeRpmPct } = require('./uf-probability-utils') as {
+    sanitizeRpmPct: (v: unknown) => number | null;
+  };
+  return sanitizeRpmPct(raw);
 }
 
 /** Min peer % when falling back to legacy competitors (UF + 1–2 rivals). */
@@ -352,7 +355,7 @@ function buildFutureCastPicks(
       id: `${intelUuid}-pick-florida`,
       school: 'Florida',
       confidence: Math.round(floridaPct),
-      delta: player.trendDelta7d != null ? Math.round(player.trendDelta7d * 1000) / 10 : undefined,
+      delta: player.trendDelta7d != null ? Math.round(player.trendDelta7d) : undefined,
       sourceType: fromRpm ? 'BLENDED' : 'MODEL',
       predictorId: fromRpm ? 'on3-rpm' : 'gatorvault',
       status: 'ACTIVE',
@@ -707,8 +710,9 @@ export async function buildUnderclassmenIntelForSlug(
       ufConfidence != null && trendDelta7d != null
         ? {
             ufProbNow: ufConfidence,
-            ufProb7dAgo: Math.max(0, ufConfidence - trendDelta7d * 100),
-            delta7d: trendDelta7d * 100,
+            // trendDelta7d is percentage points already — do not *100 (that invented +72 theater).
+            ufProb7dAgo: Math.max(0, ufConfidence - trendDelta7d),
+            delta7d: trendDelta7d,
             volatilityScore: player.volatility7d,
             windowDays: UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS,
           }

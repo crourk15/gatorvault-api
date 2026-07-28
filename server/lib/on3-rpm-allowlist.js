@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 const on3 = require('./on3-recruit-client');
 const { buildOn3ProfileUrl } = require('./on3-urls');
-const { toPercent } = require('./uf-probability-utils');
+const { toPercent, sanitizeRpmPct, sanitizeStoreOddsPct } = require('./uf-probability-utils');
 
 const DATA_PATH = path.join(__dirname, '..', 'data', 'war-room', 'on3-rpm-allowlist.json');
 const DEFAULT_CLASS_YEAR = 2027;
@@ -95,8 +95,8 @@ function resolveUfPctFromProfile(profile, classYear = DEFAULT_CLASS_YEAR) {
     const uf = on3.getFloridaTeam(profile.topTeams, classYear);
     const pct = uf?.prediction;
     if (pct == null || !Number.isFinite(Number(pct)) || Number(pct) <= 0) return null;
-    // Prefer percentage points (>1). Avoid toPercent() on residual fractions in mixed boards.
-    return Number(pct) > 1 ? Math.round(Number(pct)) : toPercent(pct);
+    // Prefer percentage points (>1). Never expand residual unit-interval leftovers.
+    return sanitizeRpmPct(pct);
   }
 }
 
@@ -405,7 +405,9 @@ async function syncAllowlistOn3Rpm(options = {}) {
         existingPlayer?.ufRpmPct ??
         existingPlayer?.ufProbability ??
         existingPlayer?.futurecastProbability;
-      ufPct = fallback != null ? toPercent(fallback) : null;
+      ufPct =
+        sanitizeRpmPct(fallback) ??
+        sanitizeStoreOddsPct(fallback, { rpmPct: null });
     }
 
     // On3 403 / network misses: keep last-good RPM instead of wiping the board.
@@ -416,7 +418,7 @@ async function syncAllowlistOn3Rpm(options = {}) {
       existing?.ufPct != null &&
       Number(existing.ufPct) > 0
     ) {
-      ufPct = toPercent(existing.ufPct);
+      ufPct = sanitizeRpmPct(existing.ufPct) ?? sanitizeStoreOddsPct(existing.ufPct);
       source = 'on3_rpm_last_good';
     }
 
@@ -512,8 +514,12 @@ function loadOn3RpmUfPctBySlug() {
   for (const row of doc.entries || []) {
     const slug = String(row.playerSlug || '').toLowerCase();
     if (!slug) continue;
-    const conf = Number(row.ufPct ?? row.confidence) || 0;
-    if (conf > 0) map.set(slug, conf);
+    const conf = sanitizeRpmPct(row.ufPct ?? row.confidence);
+    if (conf == null || conf <= 0) continue;
+    const prior = sanitizeRpmPct(row.priorUfPct);
+    // Drop explosive UP jumps (residual *100 class), not real fallers.
+    if (prior != null && conf - prior > 35) continue;
+    map.set(slug, conf);
   }
   return map;
 }

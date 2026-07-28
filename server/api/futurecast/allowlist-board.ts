@@ -545,24 +545,32 @@ export async function loadBoardPlayersForSlugs(
     for (const ext of predictorsBySlug.get(slug) || []) {
       ufPredictors.push(ext);
     }
-    let rpmPct = firstPositiveStorePct(recruiting?.ufRpmPct as number | undefined);
+    const {
+      sanitizeRpmPct,
+      sanitizeStoreOddsPct,
+    } = require('../../lib/uf-probability-utils') as {
+      sanitizeRpmPct: (v: unknown) => number | null;
+      sanitizeStoreOddsPct: (v: unknown, opts?: { rpmPct?: number | null }) => number | null;
+    };
+    let rpmPct =
+      sanitizeRpmPct(recruiting?.ufRpmPct) ??
+      sanitizeRpmPct(firstPositiveStorePct(recruiting?.ufRpmPct as number | undefined));
     if (rpmPct == null) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { loadOn3RpmUfPctBySlug } = require('../../lib/on3-rpm-allowlist') as {
           loadOn3RpmUfPctBySlug: () => Map<string, number>;
         };
-        const conf = Number(loadOn3RpmUfPctBySlug().get(slug));
-        if (Number.isFinite(conf) && conf > 0) rpmPct = conf;
+        rpmPct = sanitizeRpmPct(loadOn3RpmUfPctBySlug().get(slug));
       } catch {
         /* optional */
       }
     }
-    const storePct = firstPositiveStorePct(
-      seed.ufProbability as number | undefined,
-      recruiting?.ufProbability as number | undefined,
-      recruiting?.futurecastProbability as number | undefined
-    );
+    const storePct =
+      sanitizeStoreOddsPct(seed.ufProbability, { rpmPct }) ??
+      sanitizeStoreOddsPct(recruiting?.ufProbability, { rpmPct }) ??
+      sanitizeStoreOddsPct(recruiting?.futurecastProbability, { rpmPct }) ??
+      undefined;
     const fitScore = resolveBoardFitScore({
       override: Boolean(override),
       classYear: resolvedClassYear,
@@ -738,12 +746,26 @@ function enrichBoardPlayersWithUfTrendMovement(
       if (seedFlat && snapDelta != null) trendDelta7d = snapDelta;
       else if (existing == null) trendDelta7d = snapDelta;
 
+      const { canExposeWeekDelta } = require('../../lib/uf-probability-utils') as {
+        canExposeWeekDelta: (opts: Record<string, unknown>) => boolean;
+      };
+      if (
+        trendDelta7d != null &&
+        !canExposeWeekDelta({
+          delta: trendDelta7d,
+          rpmPct: p.ufRpmPct,
+          lowConfidence: p.ufProbabilityLowConfidence,
+        })
+      ) {
+        trendDelta7d = null;
+      }
+
       const volatility7d =
-        p.volatility7d > 0
-          ? p.volatility7d
-          : trendDelta7d != null
-            ? Math.round(Math.abs(Number(trendDelta7d)) * 100) / 100
-            : 0;
+        trendDelta7d == null
+          ? 0
+          : p.volatility7d > 0
+            ? p.volatility7d
+            : Math.round(Math.abs(Number(trendDelta7d)) * 100) / 100;
 
       return { ...p, trendDelta7d, volatility7d };
     });
@@ -973,7 +995,24 @@ export async function buildMovementIntelPayload(classYear = FUTURECAST_CLASS_YEA
     resolvedYear >= 2028
       ? await loadDiscoveryMovementPlayers(resolvedYear)
       : await loadAllowlistedBoardPlayers();
-  const activeTargets = players.filter((p) => isActiveUfTarget(p) && !p.ufPredictionSuppressed);
+  const { canExposeWeekDelta } = require('../../lib/uf-probability-utils') as {
+    canExposeWeekDelta: (opts: Record<string, unknown>) => boolean;
+  };
+  const activeTargets = players
+    .filter((p) => isActiveUfTarget(p) && !p.ufPredictionSuppressed)
+    .map((p) => {
+      if (
+        p.trendDelta7d != null &&
+        !canExposeWeekDelta({
+          delta: p.trendDelta7d,
+          rpmPct: p.ufRpmPct,
+          lowConfidence: p.ufProbabilityLowConfidence,
+        })
+      ) {
+        return { ...p, trendDelta7d: null, volatility7d: 0 };
+      }
+      return p;
+    });
   const heatmap = buildHeatmap(activeTargets);
 
   const risers = activeTargets
