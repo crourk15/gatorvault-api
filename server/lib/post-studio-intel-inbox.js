@@ -173,11 +173,26 @@ async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 }
     gate = null;
   }
 
+  let prefilter = null;
+  try {
+    prefilter = require('./beat-intel-prefilter');
+  } catch {
+    prefilter = null;
+  }
+
   const cutoff = Date.now() - maxAgeMs;
   const rows = [];
   for (const p of posts) {
     const text = String(p.text || '').trim();
     if (text.length < 24) continue;
+    // Soft-sell / Athletic / Gators Online promos must never become desk packets
+    // (they were being misread as players like "FALL CAMP" + portal_in).
+    if (prefilter?.isSubscribePromoIntel?.(text) || prefilter?.isGenericNonPlayerIntel?.(text)) {
+      continue;
+    }
+    if (prefilter?.isTeamEventIntel?.(text) || prefilter?.isProgramNewsIntel?.(text, p)) {
+      continue;
+    }
     const reportedAt = p.publishedAt || p.fetchedAt || fetchedAt || null;
     const ts = new Date(reportedAt || 0).getTime();
     if (Number.isFinite(ts) && ts > 0 && ts < cutoff) continue;

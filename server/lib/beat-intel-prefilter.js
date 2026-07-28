@@ -33,8 +33,27 @@ const GENERIC_INTEL_RES = [
   /is\s+loaded\s+with\s+intel/i,
   /\bintel\s+on\s+the\s+way\b/i,
   /promo\s+for\s+the\s+blog/i,
-  /check\s+out\s+our\s+(?:blog|weekend)/i
+  /check\s+out\s+our\s+(?:blog|weekend)/i,
+  /full\s+year\s+of\s+access\s+to\s+the\s+athletic/i,
 ];
+
+/**
+ * Soft-sell / subscribe promos (Athletic, Gators Online $1, etc.) — never Beat Desk packets.
+ */
+function isSubscribePromoIntel(text) {
+  const t = String(text || '');
+  if (!t.trim()) return false;
+  if (/\bgators?\s+online\b/i.test(t) && /(\$\s*1|subscribe|join|membership)/i.test(t)) return true;
+  if (/\bthe\s*athletic\b|theathletic\.com/i.test(t) && /(\$\s*1|subscribe|join\s+today|full\s+year|membership)/i.test(t)) {
+    return true;
+  }
+  if (/for\s*\$\s*1|\$\s*1\b/i.test(t) && /\b(join|subscribe|coverage|intel|message\s+board)\b/i.test(t)) {
+    return true;
+  }
+  // Checklist soft-sell: checkmarks + join CTA, no real player intel.
+  if (/✅/.test(t) && /\b(join\s+today|subscribe|gators?\s+online)\b/i.test(t)) return true;
+  return false;
+}
 
 const PREVIEW_HEADER_RES = [
   /^official\s+visitor\s+preview\b/i,
@@ -139,6 +158,7 @@ function isCorruptedOrHeadlinePhrase(text) {
 function isGenericNonPlayerIntel(text) {
   const t = normalizePhrase(text);
   if (!t) return true;
+  if (isSubscribePromoIntel(text)) return true;
   if (isCorruptedOrHeadlinePhrase(t)) return true;
   if (PREVIEW_HEADER_RES.some((re) => re.test(t))) return true;
   if (GENERIC_INTEL_RES.some((re) => re.test(t))) return true;
@@ -905,6 +925,7 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
 module.exports = {
   normalizePhrase,
   isCorruptedOrHeadlinePhrase,
+  isSubscribePromoIntel,
   isGenericNonPlayerIntel,
   hasStrongRecruitingSignals,
   extractCleanFullName,

@@ -474,6 +474,11 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     return null;
   }
 
+  if (prefilter.isSubscribePromoIntel?.(text)) {
+    if (logSkips) logBeatPostSkip(post, 'subscribe_promo', 'non_player_intel');
+    return null;
+  }
+
   if (prefilter.isProgramNewsIntel(text, post)) {
     const gate = prefilter.evaluateProgramNewsEligibility(text, { post });
     if (!gate.eligible) {
