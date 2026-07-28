@@ -472,19 +472,41 @@ function extractOn3ProfileOffers(topTeams, classYear) {
 
 function extractOn3CompetitorEntries(topTeams, classYear) {
   const updatedAt = new Date().toISOString();
-  return on3Recruit
-    .getYearTopTeams(topTeams, classYear)
-    .filter((t) => !on3Recruit.isHighSchoolOrg(t) && !on3Recruit.isFloridaTeam(t))
-    .sort((a, b) => (Number(b.percent) || 0) - (Number(a.percent) || 0))
-    .slice(0, 5)
-    .map((t) => ({
-      school: teamNameFromOn3(t.team),
-      score: t.percent != null ? Math.round(Number(t.percent) * 10) / 10 : null,
-      source: 'on3',
-      updatedAt,
-      trend: 'flat',
-    }))
-    .filter((e) => e.school);
+  // Prefer scale-aware RPM from board hydrate so residual On3 fractions
+  // (e.g. shared 0.6887 → fake 69%) never outrank real Industry Consensus.
+  try {
+    const hydrate = require('./on3-board-hydrate');
+    return hydrate
+      .interestedSchoolsFromTopTeams(topTeams, classYear, 8)
+      .filter((s) => s.school && !on3Recruit.UF_MATCH.test(s.school) && s.pct != null)
+      .slice(0, 5)
+      .map((s) => ({
+        school: s.school,
+        score: Math.round(Number(s.pct) * 10) / 10,
+        pct: Number(s.pct) > 1 ? Number(s.pct) / 100 : Number(s.pct),
+        source: 'on3',
+        updatedAt,
+        trend: 'flat',
+      }))
+      .filter((e) => e.school);
+  } catch {
+    return on3Recruit
+      .getYearTopTeams(topTeams, classYear)
+      .filter((t) => !on3Recruit.isHighSchoolOrg(t) && !on3Recruit.isFloridaTeam(t))
+      .map((t) => {
+        const raw = t.prediction != null ? Number(t.prediction) : t.percent != null ? Number(t.percent) : null;
+        return {
+          school: teamNameFromOn3(t.team),
+          score: raw != null && raw > 1 ? Math.round(raw * 10) / 10 : null,
+          source: 'on3',
+          updatedAt,
+          trend: 'flat',
+        };
+      })
+      .filter((e) => e.school)
+      .sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0))
+      .slice(0, 5);
+  }
 }
 
 async function syncOn3VisitOfferIntel(classYears, options = {}) {
