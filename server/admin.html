@@ -351,12 +351,14 @@
       <div id="hub-api-banner" class="hub-api-banner hidden" role="alert"></div>
       <div id="hub-ops-strip" class="hub-ops-strip hidden" aria-live="polite">
         <div>
-          <p class="hub-ops-strip__label">Top issue</p>
+          <p class="hub-ops-strip__label">What to do</p>
           <p class="hub-ops-strip__title" id="hub-ops-strip-title">All clear</p>
           <p class="hub-ops-strip__detail" id="hub-ops-strip-detail">No critical issues</p>
+          <p class="hub-ops-strip__status" id="hub-fixer-status" style="margin:4px 0 0;font-size:12px;color:#93c5fd;min-height:1em"></p>
         </div>
         <div class="hub-ops-strip__actions">
-          <button type="button" class="hub-btn" id="hub-ops-strip-primary">Open Runbooks</button>
+          <button type="button" class="hub-btn hub-fixer-btn" id="hub-ops-strip-fixer" data-fixer="1">Clear the red</button>
+          <button type="button" class="hub-btn" id="hub-ops-strip-primary">Go post</button>
           <button type="button" class="hub-btn secondary" id="hub-ops-strip-secondary">Command Center</button>
         </div>
       </div>
@@ -378,9 +380,9 @@
   <script src="/js/admin-api-fetch.js?v=4"></script>
   <script src="/js/vault-grade-editor.js?v=vge-20260611"></script>
   <script src="/js/admin-hub-notecards.js?v=hub-nc-v4"></script>
-  <script src="/js/admin-hub-fixer.js?v=hub-fixer-v1"></script>
-  <script src="/js/admin-hub-coach.js?v=hub-coach-v3"></script>
-  <script src="/js/admin-hub-dashboard.js?v=hub-dash-v12"></script>
+  <script src="/js/admin-hub-fixer.js?v=hub-fixer-v2"></script>
+  <script src="/js/admin-hub-coach.js?v=hub-coach-v4"></script>
+  <script src="/js/admin-hub-dashboard.js?v=hub-dash-v13"></script>
   <script src="/js/admin-hub-runbooks.js?v=hub-runbooks-v3"></script>
   <script src="/js/admin-hub-ops.js?v=hub-ops-v2"></script>
   <script src="/js/admin-hub-job-queue.js?v=hub-jobs-v1"></script>
@@ -395,7 +397,7 @@
   <script src="/js/admin-hub-unresolved-predictions.js?v=hub-upq-v2"></script>
   <script src="/js/admin-hub-product-intel.js?v=hub-pi-v1"></script>
   <script src="/js/admin-hub-members.js?v=hub-mem-v2"></script>
-  <script src="/js/admin-hub-core.js?v=hub-core-v7"></script>
+  <script src="/js/admin-hub-core.js?v=hub-core-v8"></script>
   <script>
     document.getElementById('hub-lock-top').addEventListener('click', function () {
       document.getElementById('hub-lock').click();

@@ -462,7 +462,8 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
     buildIdentityPatternsTile(),
     tile('api-health', 'API Health', api.status, {
       lastRun: new Date().toISOString(),
-      summary: `${api.totalRequests} reqs · ${Math.round((api.serverErrorRate || 0) * 100)}% 5xx · ${api.avgResponseMs}ms avg`,
+      summary: `${api.totalRequests} reqs · ${Math.round((api.serverErrorRate || 0) * 100)}% 5xx · ${api.avgResponseMs}ms avg` +
+        (api.recentAvgResponseMs != null ? ` · recent ${api.recentAvgResponseMs}ms` : ''),
       ...api,
       errors24h: api.errors5xx + (api.actionable4xx || 0)
     }),

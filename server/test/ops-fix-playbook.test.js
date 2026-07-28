@@ -27,19 +27,17 @@ describe('ops fix playbook', () => {
     assert.match(issue.action, /Rebuild Film Room catalog/i);
   });
 
-  it('API Health slow + 0% 5xx → auto-wait, not Deploy recovery', () => {
+  it('API Health slow + 0% 5xx → ignore-ok, go post', () => {
     const issue = enrichIssueFromTile({
       id: 'api-health',
       label: 'API Health',
-      status: 'red',
+      status: 'yellow',
       summary: '49 reqs · 0% 5xx · 2040ms avg',
     });
-    assert.equal(issue.mode, 'auto-wait');
-    assert.equal(issue.actionType, 'hub-auto-wait');
-    assert.match(issue.coach.doThisNow, /sit tight/i);
-    assert.match(issue.coach.doThisNow, /Deploy recovery/i);
-    assert.ok(issue.autoWaitSec >= 60);
-    assert.notEqual(issue.route, '#dashboard/runbooks');
+    assert.equal(issue.mode, 'ignore-ok');
+    assert.equal(issue.route, '#beat-desk/desk');
+    assert.match(issue.coach.doThisNow, /Ignore|Go post|Beat Desk/i);
+    assert.doesNotMatch(issue.coach.doThisNow, /Sit tight ~90/);
   });
 
   it('translates product_intel_below_90 into Charles English + coach', () => {
@@ -67,13 +65,13 @@ describe('ops fix playbook', () => {
     }
   });
 
-  it('ships Make it green fixer + coach auto-wait', () => {
+  it('ships Clear the red fixer + coach auto-wait', () => {
     const html = fs.readFileSync(path.join(ROOT, 'admin.html'), 'utf8');
     const coach = fs.readFileSync(path.join(ROOT, 'js/admin-hub-coach.js'), 'utf8');
     const fixer = fs.readFileSync(path.join(ROOT, 'js/admin-hub-fixer.js'), 'utf8');
-    assert.match(html, /admin-hub-fixer\.js\?v=hub-fixer-v1/);
-    assert.match(html, /admin-hub-coach\.js\?v=hub-coach-v3/);
-    assert.match(coach, /Auto-refresh in/);
-    assert.match(fixer, /Make it green/);
+    assert.match(html, /admin-hub-fixer\.js\?v=hub-fixer-v2/);
+    assert.match(html, /admin-hub-coach\.js\?v=hub-coach-v4/);
+    assert.match(coach, /Clear the red|Go post|ignore-ok|easiest path/);
+    assert.match(fixer, /Clear the red/);
   });
 });

@@ -885,6 +885,17 @@
   function wireOpsStrip() {
     var primary = document.getElementById('hub-ops-strip-primary');
     var secondary = document.getElementById('hub-ops-strip-secondary');
+    var fixerBtn = document.getElementById('hub-ops-strip-fixer');
+    if (fixerBtn && global.GVAdminFixer && typeof global.GVAdminFixer.wire === 'function') {
+      global.GVAdminFixer.wire(document.getElementById('hub-ops-strip') || document, {
+        apiGet: apiGet,
+        apiPost: apiPost,
+        onNavigate: navigateFromHash,
+        onDone: function () {
+          apiGet('/api/admin/hub/overview').then(applyOpsStrip).catch(function () {});
+        }
+      });
+    }
     if (primary) {
       primary.addEventListener('click', function () {
         var jobId = primary.getAttribute('data-job');
@@ -961,43 +972,53 @@
     var titleEl = document.getElementById('hub-ops-strip-title');
     var detailEl = document.getElementById('hub-ops-strip-detail');
     var primary = document.getElementById('hub-ops-strip-primary');
+    var fixerBtn = document.getElementById('hub-ops-strip-fixer');
     if (!strip || !titleEl || !detailEl || !primary) return;
 
     var issues = (data && data.topIssues) || [];
     var top = issues[0];
+    var fixer = global.GVAdminFixer;
+    var ignorable = !!(fixer && typeof fixer.isIgnorableIssue === 'function' && fixer.isIgnorableIssue(top));
+    var reds = fixer && typeof fixer.actionableReds === 'function'
+      ? fixer.actionableReds(data)
+      : issues.filter(function (i) { return i && i.severity === 'red'; });
     strip.classList.remove('hidden');
     primary.removeAttribute('data-job');
 
-    if (!top) {
-      titleEl.textContent = 'All clear';
-      detailEl.textContent = 'No critical issues — runbooks ready if you need them.';
-      primary.textContent = 'Open Runbooks';
-      primary.setAttribute('data-route', '#dashboard/runbooks');
+    if (fixerBtn) {
+      // Show Clear the red only when there is something worth auto-fixing.
+      if (!reds.length) fixerBtn.classList.add('hidden');
+      else fixerBtn.classList.remove('hidden');
+      fixerBtn.textContent = 'Clear the red';
+    }
+
+    if (!top || (!reds.length && ignorable)) {
+      titleEl.textContent = reds.length ? (top.title || 'Attention needed') : 'You’re clear to post';
+      detailEl.textContent = reds.length
+        ? ((top && (top.coach && top.coach.doThisNow || top.fixHowTo)) || 'Press Clear the red.')
+        : 'No emergency. Press Go post and make today’s Beat Desk posts.';
+      primary.textContent = 'Go post';
+      primary.setAttribute('data-route', '#beat-desk/desk');
       return;
     }
 
     titleEl.textContent = top.title || 'Attention needed';
     var doNow = (top.coach && top.coach.doThisNow) || top.fixHowTo || '';
-    var bits = [];
-    if (top.why) bits.push(String(top.why));
-    else if (top.detail) bits.push(String(top.detail));
-    if (doNow) bits.push('Do this now: ' + String(doNow));
-    detailEl.textContent = bits.join(' — ') || 'Follow Coach on Command Center.';
-    if (top.actionType === 'hub-auto-wait' || (top.coach && top.coach.mode === 'auto-wait')) {
-      primary.textContent = 'Sit tight (auto)';
-      primary.setAttribute('data-job', 'hub-refresh');
-      primary.setAttribute('data-route', '#dashboard/overview');
-    } else if (top.actionType) {
+    detailEl.textContent = doNow
+      || (top.why || top.detail || 'Press Clear the red — one button.');
+    if (ignorable) {
+      primary.textContent = 'Go post';
+      primary.setAttribute('data-route', '#beat-desk/desk');
+    } else if (top.actionType && top.actionType !== 'hub-auto-wait' && top.actionType !== 'hub-refresh') {
       primary.textContent = top.action || 'Run fix';
       primary.setAttribute('data-job', top.actionType);
       primary.setAttribute('data-route', top.route || '#dashboard/overview');
     } else if (top.route) {
-      primary.textContent = top.action || 'Open';
+      primary.textContent = top.action || 'Go post';
       primary.setAttribute('data-route', top.route);
     } else {
-      primary.textContent = 'Refresh now';
-      primary.setAttribute('data-job', 'hub-refresh');
-      primary.setAttribute('data-route', '#dashboard/overview');
+      primary.textContent = 'Go post';
+      primary.setAttribute('data-route', '#beat-desk/desk');
     }
   }
 
