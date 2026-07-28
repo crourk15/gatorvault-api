@@ -1,16 +1,18 @@
 /**
- * Beat Desk must not turn Athletic / Gators Online promos into player packets.
+ * Beat Desk: block subscribe promos; keep real team/staff/camp as hub topics.
  * Run: node --test server/test/beat-desk-block-promos.test.js
  */
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const { isValidPlayerName } = require('../lib/x-autoposter-player-context');
-const {
-  isSubscribePromoIntel,
-  isGenericNonPlayerIntel,
-  isTeamEventIntel,
-} = require('../lib/beat-intel-prefilter');
+const { isSubscribePromoIntel, isTeamEventIntel } = require('../lib/beat-intel-prefilter');
 const { extractPlayerFromText } = require('../lib/x-autoposter-copy');
+const {
+  classifyHubDeskBeat,
+  isHubDeskSlug,
+  hubDeskSlug,
+} = require('../lib/hub-desk-topics');
+const { buildHubDeskBrief } = require('../lib/beat-brief-packet');
 
 const PROMO = `FALL CAMP is almost here. Right now, you can join Gators Online for $1
 
@@ -23,28 +25,42 @@ You'll get ...
 
 JOIN TODAY! https://t.co/RylV3nG7qF`;
 
-describe('Beat Desk promo / fall-camp guard', () => {
-  it('rejects FALL CAMP as a player name', () => {
-    assert.equal(isValidPlayerName('FALL CAMP'), false);
-    assert.equal(isValidPlayerName('Fall Camp'), false);
-    assert.equal(isValidPlayerName('Spring Practice'), false);
-    assert.equal(isValidPlayerName('DJ Lagway'), true);
-  });
+const REAL_CAMP = 'Fall camp is almost here for the Gators. First practice sets the tone for September.';
+const REAL_STAFF = 'Florida has hired a new defensive coordinator and the staff room is reshaping fast.';
 
-  it('does not extract FALL CAMP from the Alderman promo', () => {
+describe('Beat Desk promo vs hub topics', () => {
+  it('rejects FALL CAMP / Transfer Portal as player names', () => {
+    assert.equal(isValidPlayerName('FALL CAMP'), false);
+    assert.equal(isValidPlayerName('Transfer Portal'), false);
     assert.equal(extractPlayerFromText(PROMO), null);
   });
 
-  it('flags Athletic / Gators Online $1 soft-sell as subscribe promo', () => {
+  it('blocks Athletic $1 soft-sell from hub classification', () => {
     assert.equal(isSubscribePromoIntel(PROMO), true);
-    assert.equal(isGenericNonPlayerIntel(PROMO), true);
-    assert.equal(
-      isSubscribePromoIntel('DJ Lagway earned a Florida offer this morning.'),
-      false
-    );
+    assert.equal(classifyHubDeskBeat(PROMO), null);
   });
 
-  it('treats fall camp language as team-event (not a desk player)', () => {
-    assert.equal(isTeamEventIntel('Fall camp is almost here for the Gators.'), true);
+  it('routes real fall camp / staff beats to TEAM hub slugs', () => {
+    assert.equal(isTeamEventIntel(REAL_CAMP), true);
+    const camp = classifyHubDeskBeat(REAL_CAMP);
+    assert.ok(camp);
+    assert.equal(camp.deskKind, 'team');
+    assert.equal(camp.playerSlug, hubDeskSlug('team', camp.topicType));
+    assert.match(camp.playerName, /camp|practice|Team/i);
+    assert.ok(isHubDeskSlug(camp.playerSlug));
+
+    const staff = classifyHubDeskBeat(REAL_STAFF);
+    assert.ok(staff);
+    assert.equal(staff.deskKind, 'team');
+    assert.match(staff.topicType, /staff|general/);
+  });
+
+  it('builds a hub brief without FutureCast thin_board', async () => {
+    const brief = await buildHubDeskBrief('uf-team-camp');
+    assert.equal(brief.ok, true);
+    assert.equal(brief.hubTopic, true);
+    assert.match(brief.pasteText, /HUB BRIEF|team \/ program/i);
+    assert.match(brief.pasteText, /n\/a — hub team\/program/i);
+    assert.doesNotMatch(brief.pasteText, /thin_board/);
   });
 });

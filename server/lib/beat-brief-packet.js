@@ -98,6 +98,12 @@ function postsFromBeatCache(limit = 120) {
 
 function liveBeatRowsForPlayer(slug, playerName, limit = 8) {
   const slugKey = normalizeSlug(slug);
+  let hub = null;
+  try {
+    hub = require('./hub-desk-topics').parseHubDeskSlug(slugKey);
+  } catch {
+    hub = null;
+  }
   const nameKey = String(playerName || '')
     .toLowerCase()
     .trim();
@@ -109,19 +115,42 @@ function liveBeatRowsForPlayer(slug, playerName, limit = 8) {
   for (const p of posts) {
     const text = String(p.text || '').trim();
     if (!text) continue;
+    try {
+      const pre = require('./beat-intel-prefilter');
+      if (pre.isSubscribePromoIntel?.(text)) continue;
+    } catch {
+      /* optional */
+    }
     const lower = text.toLowerCase();
     let matched = false;
-    if (nameKey && lower.includes(nameKey)) matched = true;
-    if (!matched && nameBits.length >= 2) {
-      matched = nameBits.every((bit) => lower.includes(bit));
-    }
-    if (!matched && slugKey) {
+    if (hub) {
       try {
-        const gate = require('./beat-recruiting-ingest-gate');
-        const hit = gate.resolvePlayerFromTextSync(text);
-        if (hit && normalizeSlug(hit.playerSlug) === slugKey) matched = true;
+        const pre = require('./beat-intel-prefilter');
+        const typed =
+          hub.kind === 'program'
+            ? pre.classifyProgramNewsType?.(text)
+            : pre.classifyTeamEventType?.(text);
+        matched = typed === hub.type || (hub.type === 'general' && !!typed);
+        if (!matched) {
+          const hubRow = require('./hub-desk-topics').classifyHubDeskBeat(text, p);
+          matched = !!(hubRow && normalizeSlug(hubRow.playerSlug) === slugKey);
+        }
       } catch {
-        /* optional */
+        matched = false;
+      }
+    } else {
+      if (nameKey && lower.includes(nameKey)) matched = true;
+      if (!matched && nameBits.length >= 2) {
+        matched = nameBits.every((bit) => lower.includes(bit));
+      }
+      if (!matched && slugKey) {
+        try {
+          const gate = require('./beat-recruiting-ingest-gate');
+          const hit = gate.resolvePlayerFromTextSync(text);
+          if (hit && normalizeSlug(hit.playerSlug) === slugKey) matched = true;
+        } catch {
+          /* optional */
+        }
       }
     }
     if (!matched) continue;
@@ -698,9 +727,130 @@ function formatBriefText({
  * Full brief packet for Beat Desk UI + copy/paste.
  * Research always runs. Heavy inspect/compose only when opts.full === true.
  */
+async function buildHubDeskBrief(slug, opts = {}) {
+  const { parseHubDeskSlug, hubDeskLabel } = require('./hub-desk-topics');
+  const normalized = normalizeSlug(slug);
+  const hub = parseHubDeskSlug(normalized);
+  if (!hub) return { ok: false, error: 'not_hub_topic' };
+
+  await intelStore.initIntelStore().catch(() => {});
+  const topicName = hubDeskLabel(hub.kind, hub.type);
+  const liveRows = liveBeatRowsForPlayer(normalized, topicName, 12);
+  const stored = (intelStore.listIntel({ limit: 200 }) || [])
+    .filter((r) => {
+      const et = String(r.eventType || r.triggerType || '');
+      if (hub.kind === 'team') return et === 'team_event';
+      return et === 'program_news';
+    })
+    .filter((r) => {
+      const type = r.teamEventType || r.programNewsType || r.status || 'general';
+      return String(type).replace(/-/g, '_') === hub.type || hub.type === 'general';
+    })
+    .slice(0, 12);
+  const beatRows = mergeBeatRows(stored, liveRows);
+  const primary = beatRows[0] || null;
+  const seed = primary
+    ? String(primary.detail || primary.skinny || primary.text || '').replace(/\s+/g, ' ').trim()
+    : '';
+
+  const whyFlorida = [
+    `UF hub topic: ${topicName} (${hub.kind}/${hub.type}).`,
+    seed ? `Latest beat seed: ${seed.slice(0, 280)}` : 'No live beat text on file — write from known UF program context only.',
+    'This is team/program coverage — not a recruit board packet.'
+  ].join(' ');
+
+  const vaultAngle = [
+    `Angle: Own today's ${topicName} story in Vault voice — Florida-first, original take, not a recap desk.`,
+    seed
+      ? `INTERNAL intel seed (absorb into Vault voice — NEVER name writers, never say beat/report/according to): "${seed.slice(0, 220)}"`
+      : 'INTERNAL: no fresh seed — stay high-level on UF program momentum; do not invent hires, injuries, or scheme details.',
+    'Vault edge: explain why this matters for Florida fans now (culture, roster, season timing) without inventing facts.'
+  ].join('\n');
+
+  const lines = [
+    'GATORVAULT HUB BRIEF (team / program)',
+    '====================================',
+    `Topic: ${topicName}`,
+    `Slug: ${normalized}`,
+    `Kind: ${hub.kind}`,
+    `Type: ${hub.type}`,
+    '',
+    'WHY FLORIDA',
+    '-----------',
+    whyFlorida,
+    '',
+    'VAULT ANGLE (own the story — Vault voice)',
+    '-------------------------------',
+    vaultAngle,
+    '',
+    'BEAT INTEL (newest first)',
+    '------------------------'
+  ];
+  if (!beatRows.length) {
+    lines.push('(no beat rows — keep copy general and factual)');
+  } else {
+    beatRows.slice(0, 8).forEach((row, i) => {
+      const when = row.reportedAt || row.createdAt || '';
+      const src = row.source || 'beat';
+      const body = String(row.detail || row.skinny || row.text || '').trim();
+      lines.push(`${i + 1}. [${when}] (${src})`);
+      lines.push(body.slice(0, 500));
+      if (row.articleUrl) lines.push(`Source: ${row.articleUrl}`);
+      lines.push('');
+    });
+  }
+  lines.push(
+    '',
+    'INSTRUCTIONS FOR AI',
+    '-------------------',
+    'Write one GatorVault Insider X post about this UF team/program topic (long-form OK). Target 600–900 characters (hard cap 1000).',
+    'VOICE RULE (hard): GatorVault original take. FORBIDDEN: naming beat writers, "according to", "reports say", "per On3/247".',
+    'Structure: (1) Florida stake opener, (2) what is happening for the program, (3) why fans should care now, (4) sharp closer.',
+    'Stay factual to the beat seed above — no invented hires, firings, injuries, depth chart moves, or quotes.',
+    'This is NOT a recruiting board post — skip RPM / offer ladder / OV checklist unless the seed explicitly has them.',
+    '',
+    'FUTURECAST FEED',
+    '---------------',
+    '(n/a — hub team/program topic, not a recruit target board write)'
+  );
+
+  const pasteText = lines.join('\n');
+  return {
+    ok: true,
+    slug: normalized,
+    playerName: topicName,
+    deskKind: hub.kind,
+    topicType: hub.type,
+    hubTopic: true,
+    updatedAt: new Date().toISOString(),
+    player: null,
+    whyFlorida,
+    vaultAngle,
+    boardFacts: '— (team/program hub brief)',
+    futurecastFeed: { ok: true, skipped: true, reason: 'hub_topic' },
+    pasteText,
+    beat: primary
+      ? {
+          text: String(primary.detail || primary.skinny || '').slice(0, 1200),
+          source: primary.source || null,
+          reportedAt: primary.reportedAt || primary.createdAt || null,
+          articleUrl: primary.articleUrl || null
+        }
+      : null
+  };
+}
+
 async function buildBeatBrief(slug, opts = {}) {
   const normalized = normalizeSlug(slug);
   if (!normalized) return { ok: false, error: 'missing_slug' };
+
+  try {
+    if (require('./hub-desk-topics').isHubDeskSlug(normalized)) {
+      return buildHubDeskBrief(normalized, opts);
+    }
+  } catch {
+    /* fall through to recruit brief */
+  }
 
   const { inspectPlayer, isBeatIntel } = require('./post-studio-intel-inbox');
 
@@ -1005,6 +1155,7 @@ async function buildBeatBrief(slug, opts = {}) {
 
 module.exports = {
   buildBeatBrief,
+  buildHubDeskBrief,
   formatBriefText,
   buildWhyFlorida,
   buildVaultAngle,
