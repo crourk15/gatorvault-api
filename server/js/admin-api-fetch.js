@@ -116,6 +116,11 @@
       return fetchJsonOnce(url, fetchOpts).catch(function (err) {
         var status = err && err.status;
         if (attempt >= retries || !isRetryableError(err, status)) {
+          // Final failure after wake retries — plain English for Charles, not “Waking kitchen…”.
+          if (err && (err.wake || isRetryableError(err, status) || /waking kitchen|kitchen starting|connecting to kitchen/i.test(String(err.message || '')))) {
+            err.message = 'Server still starting after several tries. Wait 2 minutes, then try again.';
+            err.wake = true;
+          }
           throw err;
         }
         var msg = softWakeMessage(status, attempt, maxAttempts);
