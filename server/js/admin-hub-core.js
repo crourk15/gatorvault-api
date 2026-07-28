@@ -379,8 +379,8 @@
     }
     // Soften scary wake copy — retries happen quietly in GVAdminApiFetch.
     var soft = String(message || '');
-    if (/unavailable|waking|502|503|504|HTML instead of JSON/i.test(soft)) {
-      soft = 'Kitchen is busy (deploy or heavy job). Retrying quietly — no Codemagic needed.';
+    if (/unavailable|waking|warming|502|503|504|HTML instead of JSON|Kitchen busy|kitchen/i.test(soft)) {
+      soft = 'Waking kitchen… hang tight.';
     }
     el.textContent = soft;
     el.classList.remove('hidden');
@@ -403,9 +403,10 @@
     });
   }
 
-  function apiPost(path, body) {
+  function apiPost(path, body, postOpts) {
     var p = pin();
     if (!p) return Promise.reject(new Error('Admin PIN required'));
+    postOpts = postOpts || {};
     var opts = {
       method: 'POST',
       headers: {
@@ -414,22 +415,38 @@
         'X-Ops-Pin': p,
         'X-Roster-Pin': p
       },
-      body: JSON.stringify(Object.assign({ pin: p }, body || {}))
+      body: JSON.stringify(Object.assign({ pin: p }, body || {})),
+      retries: postOpts.retries,
+      retryDelayMs: postOpts.retryDelayMs,
+      onAttempt: postOpts.onAttempt,
+      skipWake: postOpts.skipWake
     };
     var fetchApi = global.GVAdminApiFetch;
+    if (fetchApi && fetchApi.fetchJsonAwake) {
+      return fetchApi.fetchJsonAwake(API + path, opts);
+    }
     if (fetchApi && fetchApi.fetchJson) {
       return fetchApi.fetchJson(API + path, opts);
     }
     return fetch(API + path, opts).then(parseApiResponse);
   }
 
-  function apiGet(path) {
+  function apiGet(path, getOpts) {
     var p = pin();
     if (!p) return Promise.reject(new Error('Admin PIN required'));
+    getOpts = getOpts || {};
     var opts = {
-      headers: { 'X-Recruiting-Pin': p, 'X-Ops-Pin': p, 'X-Roster-Pin': p }
+      headers: { 'X-Recruiting-Pin': p, 'X-Ops-Pin': p, 'X-Roster-Pin': p },
+      retries: getOpts.retries,
+      retryDelayMs: getOpts.retryDelayMs,
+      onAttempt: getOpts.onAttempt,
+      skipWake: getOpts.skipWake
     };
     var fetchApi = global.GVAdminApiFetch;
+    // Wake kitchen once, then hit the real route — kills cold-start 502 loops.
+    if (fetchApi && fetchApi.fetchJsonAwake) {
+      return fetchApi.fetchJsonAwake(API + path, opts);
+    }
     if (fetchApi && fetchApi.fetchJson) {
       return fetchApi.fetchJson(API + path, opts);
     }
@@ -1017,6 +1034,7 @@
           else if (panelId === 'desk' && section.id === 'beat-desk' && global.GVAdminBeatDesk) {
             GVAdminBeatDesk.render(panelEl, {
               apiGet: apiGet,
+              apiBase: API,
               apiPost: apiPost,
               onNavigate: navigateFromHash,
               pushActivity: pushActivity

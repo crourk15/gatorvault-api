@@ -4,6 +4,9 @@
  */
 (function (global) {
   var FRESH_MS = 24 * 60 * 60 * 1000;
+  var INBOX_CACHE_KEY = 'gv:beat-desk:inbox:v1';
+  var AUTO_RETRY_MS = 8000;
+  var MAX_AUTO_RETRIES = 4;
 
   function esc(s) {
     var d = document.createElement('div');
@@ -47,8 +50,37 @@
     });
   }
 
+
+  function readInboxCache() {
+    try {
+      var raw = sessionStorage.getItem(INBOX_CACHE_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (!parsed || !Array.isArray(parsed.items)) return null;
+      return parsed;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writeInboxCache(items) {
+    try {
+      sessionStorage.setItem(
+        INBOX_CACHE_KEY,
+        JSON.stringify({ savedAt: Date.now(), items: items || [] })
+      );
+    } catch (e) { /* ignore */ }
+  }
+
+  function wakeLabel(info) {
+    if (!info) return 'Connecting…';
+    if (info.error) return info.error.message || 'Waking kitchen…';
+    return 'Waking kitchen (' + ((info.attempt || 0) + 1) + '/' + (info.maxAttempts || '?') + ')…';
+  }
+
   function render(container, ctx) {
     var apiGet = ctx.apiGet;
+    var apiBase = ctx.apiBase || (global.location && global.location.origin) || '';
     var selectedSlug = '';
     var lastBrief = null;
     var allItems = [];
@@ -67,8 +99,8 @@
       + '<button type="button" class="hub-btn secondary" id="hub-bd-refresh">Refresh</button>'
       + '<button type="button" class="hub-btn secondary" id="hub-bd-ping">Check API</button>'
       + '</div></div>'
-      + '<div id="hub-bd-pulse" class="hub-meta" style="margin:0 0 12px">Checking kitchen…</div>'
-      + '<div id="hub-bd-loading" class="hub-dash-loading">Loading beat inbox…</div>'
+      + '<div id="hub-bd-pulse" class="hub-meta" style="margin:0 0 12px">Connecting to kitchen…</div>'
+      + '<div id="hub-bd-loading" class="hub-dash-loading">Opening Beat Desk…</div>'
       + '<div id="hub-bd-body" class="hidden"></div>'
       + '<p id="hub-bd-msg" class="hub-meta" style="margin-top:12px"></p>'
       + '</div>';
@@ -87,22 +119,43 @@
       msg.style.color = isErr ? '#fca5a5' : '';
     }
 
-    function updatePulse() {
+    function updatePulse(opts) {
+      opts = opts || {};
       var started = Date.now();
-      return apiGet('/api/ping')
+      if (pulse && opts.quiet) {
+        pulse.innerHTML = '<span class="hub-env-badge hub-st-yellow">Waking</span> · connecting…';
+      }
+      var fetchApi = global.GVAdminApiFetch;
+      var ping = apiGet('/api/ping', { skipWake: true, retries: opts.retries != null ? opts.retries : 2 });
+      // Prefer shared wake latch when available so ping storms collapse.
+      if (!opts.skipEnsure && fetchApi && fetchApi.ensureAwake) {
+        ping = fetchApi.ensureAwake(apiBase, {
+          onAttempt: function (info) {
+            if (!pulse) return;
+            pulse.innerHTML =
+              '<span class="hub-env-badge hub-st-yellow">Waking</span> · '
+              + esc(wakeLabel(info));
+          }
+        }).then(function () {
+          return apiGet('/api/ping', { skipWake: true, retries: 1 });
+        });
+      }
+      return ping
         .then(function (j) {
           var ms = Date.now() - started;
-          if (!pulse) return;
+          if (!pulse) return j;
           pulse.innerHTML =
-            '<span class="hub-env-badge hub-st-green">API up</span> · '
+            '<span class="hub-env-badge hub-st-green">Kitchen ready</span> · '
             + esc(ms + 'ms')
-            + (j && j.ready === false ? ' · warming' : '');
+            + (j && j.ready === false ? ' · still warming' : '');
+          return j;
         })
         .catch(function (err) {
-          if (!pulse) return;
+          if (!pulse) return null;
           pulse.innerHTML =
-            '<span class="hub-env-badge hub-st-yellow">API busy</span> · '
+            '<span class="hub-env-badge hub-st-yellow">Waking</span> · '
             + esc((err && err.message) || 'retrying…');
+          return null;
         });
     }
 
@@ -324,44 +377,147 @@
       }
     }
 
-    function load() {
+    var autoRetryTimer = null;
+    var autoRetryCount = 0;
+    var loadingInbox = false;
+
+    function paintWakeShell(statusText, cachedItems) {
+      loading.classList.add('hidden');
+      body.classList.remove('hidden');
+      var cacheNote = cachedItems && cachedItems.length
+        ? '<p class="hub-meta" style="margin:0 0 12px">Showing last good inbox while kitchen wakes.</p>'
+        : '';
+      var listHtml = '';
+      if (cachedItems && cachedItems.length) {
+        allItems = cachedItems;
+        // paintInbox needs the grid shell — call after injecting brief placeholder
+      }
+      body.innerHTML =
+        '<div class="hub-card hub-card-wide" style="border-color:#334155">'
+        + '<h3 style="margin:0 0 8px">Opening Beat Desk</h3>'
+        + '<p class="hub-meta" style="margin:0 0 12px;color:#e2e8f0">' + esc(statusText || 'Waking kitchen…') + '</p>'
+        + '<div class="hub-dash-loading" style="margin:0 0 12px">No Codemagic needed — cold start only.</div>'
+        + cacheNote
+        + '<div class="hub-btn-row">'
+        + '<button type="button" class="hub-btn" id="hub-bd-retry">Retry now</button>'
+        + '</div></div>'
+        + '<div id="hub-bd-cache-host"></div>';
+      var retry = document.getElementById('hub-bd-retry');
+      if (retry) retry.addEventListener('click', function () {
+        autoRetryCount = 0;
+        load({ force: true });
+      });
+      if (cachedItems && cachedItems.length) {
+        var host = document.getElementById('hub-bd-cache-host');
+        if (host) {
+          host.innerHTML = '<div id="hub-bd-cache-mount"></div>';
+        }
+        // Re-use paintInbox into a temp body swap: simplest — call paintInbox which overwrites body.
+        // Instead keep wake card + append a compact list below.
+        var rows = cachedItems.slice(0, 8).map(function (it) {
+          return '<div class="hub-meta" style="padding:8px 0;border-top:1px solid #1e293b">'
+            + '<strong style="color:#fff">' + esc(it.playerName || it.slug) + '</strong>'
+            + ' · ' + esc(it.ageLabel || '—')
+            + '<div style="color:#94a3b8">' + esc((it.beatText || '').slice(0, 120)) + '</div></div>';
+        }).join('');
+        if (host) host.innerHTML = '<div class="hub-card hub-card-wide" style="margin-top:12px"><h3>Last inbox</h3>' + rows + '</div>';
+      }
+    }
+
+    function scheduleAutoRetry() {
+      if (autoRetryTimer) clearTimeout(autoRetryTimer);
+      if (autoRetryCount >= MAX_AUTO_RETRIES) return;
+      autoRetryCount += 1;
+      var wait = AUTO_RETRY_MS * autoRetryCount;
+      if (pulse) {
+        pulse.innerHTML =
+          '<span class="hub-env-badge hub-st-yellow">Auto-retry</span> · '
+          + esc('again in ' + Math.round(wait / 1000) + 's (' + autoRetryCount + '/' + MAX_AUTO_RETRIES + ')');
+      }
+      autoRetryTimer = setTimeout(function () { load({ auto: true }); }, wait);
+    }
+
+    function load(opts) {
+      opts = opts || {};
+      if (loadingInbox && !opts.force) return Promise.resolve();
+      loadingInbox = true;
+      if (autoRetryTimer) clearTimeout(autoRetryTimer);
+
+      var cached = readInboxCache();
       loading.classList.remove('hidden');
       body.classList.add('hidden');
       setMsg('');
-      updatePulse();
-      return apiGet('/api/x/post-studio/inbox?desk=1&limit=40')
+
+      if (pulse) {
+        pulse.innerHTML = '<span class="hub-env-badge hub-st-yellow">Waking</span> · opening desk…';
+      }
+
+      var fetchApi = global.GVAdminApiFetch;
+      var wake = Promise.resolve();
+      if (fetchApi && fetchApi.ensureAwake) {
+        wake = fetchApi.ensureAwake(apiBase, {
+          onAttempt: function (info) {
+            if (!pulse) return;
+            pulse.innerHTML =
+              '<span class="hub-env-badge hub-st-yellow">Waking</span> · '
+              + esc(wakeLabel(info));
+            if (loading && !loading.classList.contains('hidden')) {
+              loading.textContent = wakeLabel(info);
+            }
+          }
+        }).catch(function () { return null; });
+      }
+
+      return wake
+        .then(function () {
+          return apiGet('/api/x/post-studio/inbox?desk=1&limit=40', {
+            skipWake: true,
+            retries: 5,
+            retryDelayMs: 2200,
+            onAttempt: function (info) {
+              if (!pulse) return;
+              pulse.innerHTML =
+                '<span class="hub-env-badge hub-st-yellow">Loading</span> · '
+                + esc(info.error ? wakeLabel(info) : ('beat inbox ' + ((info.attempt || 0) + 1) + '/' + (info.maxAttempts || '?')));
+            }
+          });
+        })
         .then(function (inbox) {
+          loadingInbox = false;
+          autoRetryCount = 0;
           allItems = (inbox && inbox.items) || [];
+          writeInboxCache(allItems);
           loading.classList.add('hidden');
           body.classList.remove('hidden');
           paintInbox();
+          updatePulse({ skipEnsure: true, retries: 0 });
           var freshCount = allItems.filter(function (it) {
             return it.ageMs == null || it.ageMs <= FRESH_MS;
           }).length;
           setMsg(
             freshCount
-              ? 'Inbox ready — ' + freshCount + ' fresh beat(s). Press Open or Copy Brief.'
+              ? 'Desk ready — ' + freshCount + ' fresh beat(s). Press Open or Copy Brief.'
               : 'No fresh beats (under 24h). Showing older — press Show older / Open for catch-up posts.'
           );
         })
         .catch(function (err) {
-          loading.classList.add('hidden');
-          body.classList.remove('hidden');
-          body.innerHTML =
-            '<div class="hub-card hub-card-wide hub-st-yellow">'
-            + '<h3>Kitchen busy</h3>'
-            + '<p class="hub-meta">' + esc((err && err.message) || 'API unavailable') + '</p>'
-            + '<button type="button" class="hub-btn" id="hub-bd-retry">Retry</button>'
-            + '</div>';
-          var retry = document.getElementById('hub-bd-retry');
-          if (retry) retry.addEventListener('click', load);
-          setMsg((err && err.message) || 'Could not load inbox.', true);
+          loadingInbox = false;
+          var msg = (err && err.message) || 'Could not load inbox';
+          // One calm status — never triple-spam Kitchen busy / 502.
+          if (pulse) {
+            pulse.innerHTML =
+              '<span class="hub-env-badge hub-st-yellow">Waking</span> · '
+              + esc(msg);
+          }
+          paintWakeShell(msg, cached && cached.items);
+          setMsg('');
+          scheduleAutoRetry();
         });
     }
 
     load();
     if (pulseTimer) clearInterval(pulseTimer);
-    pulseTimer = setInterval(updatePulse, 60000);
+    pulseTimer = setInterval(function () { updatePulse({ skipEnsure: true }); }, 90000);
   }
 
   global.GVAdminBeatDesk = { render: render };
