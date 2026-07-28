@@ -57,7 +57,9 @@
           else if (action === 'pi-recompute') p = apiPost('/api/product-intel/recompute', {});
           else if (action === 'sr-generate') p = apiPost('/api/self-runner/generate', { runQa: false });
           else if (action === 'hub-cache') p = apiPost('/api/live/refresh', {});
-          else if (action === 'recruiting-ingest') p = apiPost('/api/ops/run-job', { jobId: 'recruiting-ingest' });
+          else if (action === 'recruiting-ingest' || action === 'film-room-weekly' || action === 'portal-ingest' || action === 'nil-refresh' || action === 'depth-chart-refresh' || action === 'article-engine-weekly-draft') {
+            p = apiPost('/api/ops/run-job', { jobId: action });
+          }
           else p = Promise.resolve();
           p.then(function () { load(); })
             .catch(function (e) { alert(e.message || 'Action failed'); })
@@ -80,9 +82,12 @@
             + '<div class="hub-issue-body">'
             + '<strong>' + esc(issue.title) + '</strong>'
             + (issue.detail ? '<span>' + esc(issue.detail) + '</span>' : '')
+            + (issue.fixHowTo ? '<span style="display:block;margin-top:4px;color:#fde047">What to do: ' + esc(issue.fixHowTo) + '</span>' : '')
             + '<div class="hub-issue-actions">'
-            + (issue.route ? '<button type="button" class="hub-link-btn" data-dash-route="' + esc(issue.route) + '">Open module</button>' : '')
-            + (issue.actionType ? '<button type="button" class="hub-link-btn" data-dash-action="' + esc(issue.actionType) + '">' + esc(issue.action || 'Fix') + '</button>' : '')
+            + (issue.actionType
+              ? '<button type="button" class="hub-btn" data-dash-action="' + esc(issue.actionType) + '">' + esc(issue.action || 'Run fix') + '</button>'
+              : '')
+            + (issue.route ? '<button type="button" class="hub-link-btn" data-dash-route="' + esc(issue.route) + '">' + esc(issue.actionType ? 'Open page' : (issue.action || 'Open fix page')) + '</button>' : '')
             + '</div></div></li>';
         })
         .join('');
@@ -125,8 +130,14 @@
       var heroIssue = top
         ? '<strong style="display:block;color:#fff;font-size:1rem;margin-bottom:4px">' + esc(top.title) + '</strong>'
           + '<span class="hub-meta" style="margin:0">' + esc(top.detail || 'Needs attention') + '</span>'
+          + (top.fixHowTo ? '<span class="hub-meta" style="display:block;margin-top:6px;color:#fde047">What to do: ' + esc(top.fixHowTo) + '</span>' : '')
         : '<strong style="display:block;color:#fff;font-size:1rem;margin-bottom:4px">Systems steady</strong>'
           + '<span class="hub-meta" style="margin:0">No top issue — keep an eye on pipelines below.</span>';
+
+      if (top && top.actionType) {
+        primaryBtn = '<button type="button" class="hub-btn" data-dash-action="' + esc(top.actionType) + '">'
+          + esc(top.action || 'Run fix') + '</button>';
+      }
 
       var qaPass = data.qa && data.qa.pass;
       var qaLine = qaPass === true ? 'Last crawl passed' : qaPass === false ? 'Failures detected' : 'No crawl signal yet';

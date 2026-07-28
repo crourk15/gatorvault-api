@@ -75,12 +75,14 @@
            'Server is starting. Wait 20–40 seconds, press <strong>Refresh</strong>. Don’t click a dozen times.'],
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>FAIL / error / Open won’t load</strong>',
            'Press <strong>Check API</strong>. If still bad, wait a minute + Refresh. If it keeps failing, open <strong>Runbooks → Deploy recovery</strong>.'],
+          ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Film Room Engine red (or “Catalog …h ago”)</strong>',
+           'Catalog is stale. Click <strong>Rebuild Film Room catalog</strong> (orange Fix button / Re-run). Wait 1–2 minutes, Refresh. Not a Beat Desk problem.'],
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Beat Desk sidebar dot is red</strong>',
            'Kitchen/API is unhealthy. Don’t force posts — Check API / wait for green, then Refresh the desk.']
         ]
       : [
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Top issue is red</strong>',
-           'Click <strong>Open module</strong> on that issue (or the primary button). Fix/run what’s asked, then go back to Beat Desk.'],
+           'Read the yellow “What to do” line. Press the orange Fix button (ex: Rebuild Film Room catalog). Don’t just open Full Ops and guess.'],
           ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>Yellow module / backlog</strong>',
            'Finish today’s posts first if you can. Then open that yellow module when you have a minute.'],
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>QA is red</strong>',

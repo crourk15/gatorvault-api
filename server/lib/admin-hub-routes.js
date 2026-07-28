@@ -268,16 +268,12 @@ function buildTopIssues({ ops, qa, productIntel, selfRunner, alerts, appStoreGat
       action: 'Run crawl'
     });
   }
+  const { enrichIssueFromTile } = require('./ops-fix-playbook');
   (ops.tiles || [])
     .filter((t) => t.status === 'red')
     .slice(0, 3)
     .forEach((t) => {
-      issues.push({
-        severity: 'red',
-        title: t.label,
-        detail: t.summary || 'Subsystem unhealthy',
-        route: '#dashboard/ops'
-      });
+      issues.push(enrichIssueFromTile(t));
     });
   filterActionableAlerts(alerts, qa)
     .slice(0, 3)
@@ -338,6 +334,10 @@ function buildRecommendedActions(ctx) {
   const rec = tileById(ctx.ops, 'recruiting-board');
   if (rec && rec.status !== 'green') {
     actions.push({ id: 'recruiting-ingest', label: 'Run recruiting ingest' });
+  }
+  const film = tileById(ctx.ops, 'film-room');
+  if (film && film.status === 'red') {
+    actions.unshift({ id: 'film-room-weekly', label: 'Rebuild Film Room catalog' });
   }
   return actions.slice(0, 6);
 }

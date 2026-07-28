@@ -20,7 +20,8 @@ Legacy bookmarks (`/admin/ops`, `/recruiting-admin.html`, etc.) redirect into hu
 Plain-English playbook cards on **Beat Desk** and **Command Center**:
 
 - **Do this now** — numbered daily steps
-- **If red / yellow — do this** — concrete next steps (STALE vs FAIL vs kitchen waking vs sidebar red)
+- **If red / yellow — do this** — concrete next steps (STALE vs FAIL vs kitchen waking vs Film Room catalog vs sidebar red)
+- **Red tile playbook** — Top Issue strip + Full Ops cards show a yellow **What to do** line and an orange fix button (ex: **Rebuild Film Room catalog**), not just “Open module”
 - **What the buttons mean** — Open / Copy Brief / Refresh / etc.
 - **Don’t touch** — Legacy consoles + calm guidance for “kitchen waking”
 

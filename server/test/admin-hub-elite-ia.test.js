@@ -46,8 +46,8 @@ describe('Admin Hub elite IA', () => {
 
   it('wires FutureCast script + cache-busted core/desk', () => {
     assert.match(html, /admin-hub-futurecast\.js\?v=hub-fc-v1/);
-    assert.match(html, /admin-hub-core\.js\?v=hub-core-v4/);
-    assert.match(html, /admin-hub-beat-desk\.js\?v=hub-bd-v9/);
+    assert.match(html, /admin-hub-core\.js\?v=hub-core-v5/);
+    assert.match(html, /admin-hub-beat-desk\.js\?v=hub-bd-v11/);
     assert.match(html, /#futurecast\/control/);
   });
 
