@@ -7,7 +7,7 @@ const PREDICTION_TEXT_RE =
   /\b(?:prediction machine|futurecast|expert pick|crystal ball|\brpm\b|new\s*rpm|dropping a prediction|prediction in (?:their|his|her) favor|predicting the|projected to (?:land|get)|logging a new rpm|logged (?:an? )?rpm)\b/i;
 
 const TEASER_URL_RE =
-  /(?:new-rpm|crystal-ball|predicting-the|prediction-logged|projected-to-land|add-defensive-target-new-rpm|land-a-\d-star)/i;
+  /(?:new-rpm|crystal-ball|predicting-the|prediction-logged|projected-to-land|add-defensive-target-new-rpm|land-a-\d-star|prediction-machine-pick|recruiting-prediction-machine)/i;
 
 function blobOf(input = {}) {
   return [input.text, input.title, input.url, input.detail, input.excerpt]

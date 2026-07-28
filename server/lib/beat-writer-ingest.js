@@ -453,7 +453,14 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
   const prefilter = require('./beat-intel-prefilter');
   const { parseOn3BeatUrlIdentity } = require('./on3-recruit-discovery');
   const text = String(post.text || '').trim();
-  const urlIdentity = parseOn3BeatUrlIdentity(text, post.url);
+  let urlIdentity = null;
+  try {
+    const teaserResolve = require('./beat-teaser-resolve');
+    urlIdentity = teaserResolve.parseSyncOn3Identity(post);
+  } catch {
+    urlIdentity = null;
+  }
+  if (!urlIdentity) urlIdentity = parseOn3BeatUrlIdentity(text, post.url);
 
   if (!text) {
     if (logSkips) logBeatPostSkip(post, 'empty_text', 'non_player_intel');
@@ -617,12 +624,14 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     if (logSkips) logBeatPostSkip(post, strict.reason, 'filtered');
     try {
       const { safeEnqueueUnresolvedPrediction } = require('./unresolved-predictions-detect');
+      const teaserResolve = require('./beat-teaser-resolve');
+      const articleUrl = teaserResolve.pickOn3ArticleUrl(post) || post.url || null;
       safeEnqueueUnresolvedPrediction({
         reason: strict.reason || 'strict_gate_fail',
         source: 'beat-writer-ingest',
         title: String(text || '').replace(/\s+/g, ' ').slice(0, 160) || 'Beat prediction (gate fail)',
         textPreview: text,
-        url: post.url || null,
+        url: articleUrl,
         handle: post.handle || null,
         writerName: post.writerName || null,
         eventType: 'prediction',
@@ -635,10 +644,34 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
   }
 
   let playerName =
-    urlIdentity?.playerName && isUsableExtractedName(urlIdentity.playerName)
+    (post._teaserResolved?.playerName && isUsableExtractedName(post._teaserResolved.playerName)
+      ? post._teaserResolved.playerName
+      : null) ||
+    (urlIdentity?.playerName && isUsableExtractedName(urlIdentity.playerName)
       ? urlIdentity.playerName
-      : null;
+      : null);
+  if (!playerName) {
+    try {
+      const teaserResolve = require('./beat-teaser-resolve');
+      const cleanedHit = teaserResolve.resolvePlayerFromBeatPostSync(post);
+      if (cleanedHit?.playerName && isUsableExtractedName(cleanedHit.playerName)) {
+        playerName = cleanedHit.playerName;
+      }
+    } catch {
+      /* optional */
+    }
+  }
   if (!playerName) playerName = extractVisitPlayerName(text);
+  // Never keep a cousin/relative name as the prospect.
+  try {
+    const teaserResolve = require('./beat-teaser-resolve');
+    if (playerName && teaserResolve.isRelationalMention(text, playerName)) {
+      playerName = post._teaserResolved?.playerName || urlIdentity?.playerName || null;
+      if (playerName && teaserResolve.isRelationalMention(text, playerName)) playerName = null;
+    }
+  } catch {
+    /* optional */
+  }
   if (!playerName || !isUsableExtractedName(playerName)) {
     const copy = require('./x-autoposter-copy');
     const fallback = copy.extractPlayerFromText(text);
@@ -1830,10 +1863,34 @@ async function collectBeatVisitIntelRows({ posts = null, logSkips = false } = {}
   const beat = posts ? { posts } : getBeatPosts(80);
   const cutoff = Date.now() - 7 * 86400000;
   const rows = [];
+  let teaser = null;
+  try {
+    teaser = require('./beat-teaser-resolve');
+  } catch {
+    teaser = null;
+  }
   for (const post of beat.posts || []) {
     if (new Date(post.publishedAt).getTime() < cutoff) continue;
-    const parsed = parseBeatPostForVisitIntel(post, { logSkips });
-    if (parsed) rows.push(parsed);
+    let working = post;
+    if (teaser?.enrichBeatPostIdentity) {
+      try {
+        const enriched = await teaser.enrichBeatPostIdentity(post);
+        if (enriched?.enriched && enriched.post) working = enriched.post;
+      } catch {
+        working = post;
+      }
+    }
+    const parsed = parseBeatPostForVisitIntel(working, { logSkips });
+    if (parsed) {
+      if (working._teaserResolved?.playerName && !parsed.playerName) {
+        parsed.playerName = working._teaserResolved.playerName;
+        parsed.playerSlug = working._teaserResolved.playerSlug || parsed.playerSlug;
+      }
+      if (working._teaserResolved?.on3ArticleUrl) {
+        parsed.articleUrl = parsed.articleUrl || working._teaserResolved.on3ArticleUrl;
+      }
+      rows.push(parsed);
+    }
   }
   return rows;
 }

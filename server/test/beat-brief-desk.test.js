@@ -51,7 +51,7 @@ async function main() {
     const mentions = loadBeatMentions('Joey Fleming', 5);
     assert.ok(mentions.length >= 1, 'loadBeatMentions finds Fleming (was broken when treating {posts} as array)');
 
-    const live = liveBeatInboxRows({ maxAgeMs: 48 * 3600000 });
+    const live = await liveBeatInboxRows({ maxAgeMs: 48 * 3600000 });
     assert.ok(live.rows.some((r) => r.playerSlug === 'joey-fleming'), 'live inbox matches Fleming');
 
     const desk = await getIntelInbox({ limit: 20, deskMode: true });

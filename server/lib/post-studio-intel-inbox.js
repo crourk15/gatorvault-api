@@ -154,7 +154,7 @@ function groupInboxRows(rows = []) {
  * Map live beat-cache posts → inbox rows (matched to a player).
  * Desk mode uses this so today's writer posts surface even before intel DB ingest.
  */
-function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 } = {}) {
+async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 } = {}) {
   let posts = [];
   let fetchedAt = null;
   try {
@@ -183,7 +183,23 @@ function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 } = {})
     if (Number.isFinite(ts) && ts > 0 && ts < cutoff) continue;
 
     let hit = null;
-    if (gate?.resolvePlayerFromTextSync) {
+    let articleUrl = p.url || p.link || null;
+    try {
+      const teaser = require('./beat-teaser-resolve');
+      const enriched = await teaser.enrichBeatPostIdentity(p);
+      if (enriched?.resolved?.playerSlug) {
+        hit = enriched.resolved;
+        if (enriched.resolved.on3ArticleUrl) articleUrl = enriched.resolved.on3ArticleUrl;
+        if (enriched.post?.text) {
+          // keep original beat text in detail; name is on the row
+        }
+      } else {
+        hit = teaser.resolvePlayerFromBeatPostSync(p);
+      }
+    } catch {
+      hit = null;
+    }
+    if (!hit?.playerSlug && gate?.resolvePlayerFromTextSync) {
       try {
         hit = gate.resolvePlayerFromTextSync(text);
       } catch {
@@ -201,9 +217,10 @@ function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 } = {})
       skinny: text.slice(0, 200),
       reportedAt,
       createdAt: reportedAt,
-      articleUrl: p.url || p.link || null,
+      articleUrl,
       ufRelevant: true,
       liveBeat: true,
+      teaserResolved: !!hit.matchMode && String(hit.matchMode).includes('on3'),
       writerName: p.writerName || p.handle || null,
       outlet: p.outlet || null
     });
@@ -231,7 +248,7 @@ async function getIntelInbox({
   if (deskMode) {
     // Desk = research surface: today's live beats + recent intel (including already posted).
     // Compose inbox still uses unqueued-only below.
-    liveMeta = liveBeatInboxRows({ maxAgeMs, limit: 100 });
+    liveMeta = await liveBeatInboxRows({ maxAgeMs, limit: 100 });
     const recent = recentBeatIntelRows({ maxAgeMs });
     beatRows = [...liveMeta.rows, ...recent];
   } else {
