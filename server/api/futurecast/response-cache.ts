@@ -13,10 +13,26 @@ const CACHE_TTL_MS = parseInt(process.env.FUTURECAST_CACHE_TTL_MS || String(5 * 
 const cache = createMemoryCache(CACHE_TTL_MS);
 
 /** Bump when high-priority or master-board payload shape changes. */
-export const FUTURECAST_API_CACHE_VERSION = 19;
+export const FUTURECAST_API_CACHE_VERSION = 20;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
+}
+
+/** Lab "2028 Early Discovery" panel + Big Board Early Discovery tab. */
+export function earlyDiscoveryCacheKey(opts: {
+  classYearGte?: number;
+  minDiscoveryScore?: number;
+  minUfFitScore?: number;
+  position?: string | null;
+  limit?: number;
+}): string {
+  const classYearGte = opts.classYearGte ?? 2028;
+  const minDiscoveryScore = opts.minDiscoveryScore ?? 0;
+  const minUfFitScore = opts.minUfFitScore ?? 0;
+  const position = opts.position ? String(opts.position).toUpperCase() : '';
+  const limit = opts.limit ?? 100;
+  return `futurecast:early-discovery:v${FUTURECAST_API_CACHE_VERSION}:${classYearGte}:${minDiscoveryScore}:${minUfFitScore}:${position}:${limit}`;
 }
 
 export function highPriorityCacheKey(classYear: number | string): string {
@@ -81,6 +97,7 @@ export async function warmFuturecastLabCaches(
   const failed: string[] = [];
 
   const { buildUnderclassmenPayload } = require('./underclassmen');
+  const { buildEarlyDiscoveryPayload } = require('./early-discovery');
 
   const jobs: Array<{ key: string; label: string; build: () => Promise<unknown> }> = [
     {
@@ -107,6 +124,17 @@ export async function warmFuturecastLabCaches(
       key: underclassmenCacheKey([2028, 2029, 2030]),
       label: 'underclassmen:2028-2030',
       build: () => buildUnderclassmenPayload([2028, 2029, 2030]),
+    },
+    // Lab More boards panel hits this separately from underclassmen — was unwarmed.
+    {
+      key: earlyDiscoveryCacheKey({ classYearGte: 2028, limit: 4 }),
+      label: 'early-discovery:2028:limit4',
+      build: () => buildEarlyDiscoveryPayload({ classYearGte: 2028, limit: 4 }),
+    },
+    {
+      key: earlyDiscoveryCacheKey({ classYearGte: 2028, limit: 100 }),
+      label: 'early-discovery:2028',
+      build: () => buildEarlyDiscoveryPayload({ classYearGte: 2028, limit: 100 }),
     },
   ];
 

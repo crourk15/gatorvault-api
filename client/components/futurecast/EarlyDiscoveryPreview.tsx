@@ -7,6 +7,7 @@ import {
   fetchEarlyDiscovery,
   type EarlyDiscoveryQuery,
 } from '@/lib/early-discovery-api';
+import { fetchWithWarmPoll, userFacingLoadError } from '@/lib/api-warm-poll';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 
@@ -35,17 +36,21 @@ export function EarlyDiscoveryPreview({
       setLoading(true);
       setError(null);
       try {
-        const data = await fetchEarlyDiscovery({
-          ...query,
-          class_year_gte: classYearGte,
-          limit,
-        });
+        const data = await fetchWithWarmPoll(
+          () =>
+            fetchEarlyDiscovery({
+              ...query,
+              class_year_gte: classYearGte,
+              limit,
+            }),
+          { maxAttempts: 3, delayMs: 1_500 }
+        );
         if (cancelled) return;
         setCount(data.count ?? data.players?.length ?? 0);
         setPlayers((data.players ?? []).slice(0, limit).map(fromEarlyDiscovery));
       } catch (err) {
         if (cancelled) return;
-        setError(err instanceof Error ? err.message : 'Failed to load Early Discovery');
+        setError(userFacingLoadError(err, 'Early Discovery is warming up — try again in a moment.'));
         setPlayers([]);
         setCount(0);
       } finally {
