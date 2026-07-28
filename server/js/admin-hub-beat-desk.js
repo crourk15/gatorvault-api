@@ -214,17 +214,28 @@
         + '<p style="margin:0;white-space:pre-wrap;line-height:1.5;color:#e2e8f0">'
         + esc(research.vaultAngle || '—') + '</p></div>'
         + '<div class="hub-card" style="margin-bottom:12px">'
-        + '<h3>Board facts</h3>'
+        + '<h3>Board facts (elite depth)</h3>'
         + '<p class="hub-meta" style="margin:0 0 8px">'
-        + (research.offers ? '<strong style="color:#fff">Offers:</strong> ' + esc(research.offers) + '<br>' : '')
-        + (research.visits ? '<strong style="color:#fff">Visits:</strong> ' + esc(research.visits) + '<br>' : '')
+        + (research.measurements || (p && p.htWt) ? '<strong style="color:#fff">Size:</strong> ' + esc(research.measurements || p.htWt) + '<br>' : '')
+        + (research.rankings || (p && p.rankings) ? '<strong style="color:#fff">On3 ranks:</strong> ' + esc(research.rankings || p.rankings) + '<br>' : '')
+        + (research.ufStaff ? '<strong style="color:#fff">UF staff:</strong> ' + esc(research.ufStaff) + '<br>' : '')
         + (research.rpm ? '<strong style="color:#fff">RPM:</strong> ' + esc(research.rpm) + '<br>' : '')
-        + ((p.rivals && p.rivals.length) ? '<strong style="color:#fff">Rivals:</strong> ' + esc(p.rivals.join(', ')) : '')
+        + (research.schoolLadder || research.interestedSchools || (p && p.interestedSchools) ? '<strong style="color:#fff">School ladder:</strong> ' + esc(research.schoolLadder || research.interestedSchools || p.interestedSchools) + '<br>' : '')
+        + (research.offers ? '<strong style="color:#fff">Offers:</strong> ' + esc(research.offers) + '<br>' : '')
+        + (research.visits || (p && p.visitTrail) ? '<strong style="color:#fff">Visits:</strong> ' + esc(research.visits || p.visitTrail) + '<br>' : '')
+        + ((p.rivals && p.rivals.length) ? '<strong style="color:#fff">Rivals:</strong> ' + esc(p.rivals.join(', ')) + '<br>' : '')
+        + (research.on3ProfileUrl ? '<strong style="color:#fff">On3:</strong> ' + esc(research.on3ProfileUrl) : '')
+        + (!research.rankings && !research.interestedSchools && !research.schoolLadder && !research.offers && !research.visits && !research.rpm && !(p.rivals && p.rivals.length) ? '—' : '')
         + '</p>'
         + (research.staffNotes || research.scoutingSummary
           ? '<p style="margin:8px 0 0;white-space:pre-wrap;line-height:1.45;color:#cbd5e1">'
             + esc(research.staffNotes || research.scoutingSummary) + '</p>'
           : '')
+        + (research.archiveLines && research.archiveLines.length
+          ? '<p style="margin:8px 0 0;white-space:pre-wrap;line-height:1.45;color:#94a3b8">'
+            + research.archiveLines.map(function (l) { return esc(l); }).join('<br>') + '</p>'
+          : '')
+        + '<p class="hub-meta" style="margin:10px 0 0">Verified long-form target: <strong style="color:#fff">600–900 chars</strong> (cap 1000). Copy Brief for the full packet.</p>'
         + '</div>'
         + '<div class="hub-card" style="margin-bottom:12px">'
         + '<h3>Latest beat</h3>'
