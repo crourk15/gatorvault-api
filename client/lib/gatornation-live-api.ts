@@ -314,8 +314,7 @@ export function normalizePodcasts(shows: PodcastShow[]): PodcastCardProps[] {
         publishedAt: show.publishedAt,
       };
     })
-    .filter((pod) => Boolean(pod.episodeTitle?.trim()))
-    .slice(0, 2);
+    .filter((pod) => Boolean(pod.episodeTitle?.trim()));
 }
 
 /** Chronological stream for the Live page — newest first, no RH/FC noise. */

@@ -24,6 +24,26 @@ function mountLiveRoutes(app) {
     const feedLimit = parseInt(req.query.limit || '60', 10) || 60;
     const force = req.query.refresh === '1' || req.query.force === '1';
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    // Keep podcast episode titles warm even when full live-refresh cron is off.
+    try {
+      const { getPodcastHub, refreshPodcasts } = require('./live-podcasts');
+      const hub = getPodcastHub();
+      const staleMs = parseInt(process.env.PODCAST_STALE_MS || String(30 * 60 * 1000), 10);
+      const age = hub.fetchedAt ? Date.now() - new Date(hub.fetchedAt).getTime() : Infinity;
+      if (age > staleMs) {
+        void refreshPodcasts()
+          .then(() => {
+            try {
+              require('./live-dashboard-cache').warmDashboardCache();
+            } catch {
+              /* optional */
+            }
+          })
+          .catch((e) => console.warn('[live/dashboard] podcast refresh:', e.message));
+      }
+    } catch {
+      /* optional */
+    }
     try {
       const dashCache = require('./live-dashboard-cache');
       const dash = dashCache.getCachedDashboard({ feedLimit, force });
