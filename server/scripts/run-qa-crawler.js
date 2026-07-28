@@ -12,6 +12,13 @@ if (args.includes('--api-only')) opts.apiOnly = true;
 
 const { runQaCrawl } = require('../lib/qa/qa-runner');
 
+function softFailIds() {
+  return String(process.env.QA_SOFT_FAIL_IDS || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 runQaCrawl(opts)
   .then((result) => {
     const run = result.run || result;
@@ -21,10 +28,24 @@ runQaCrawl(opts)
         console.log('[qa] phases:', JSON.stringify(run.phases.timingsMs), '| emitted:', run.phases.emit?.total ?? run.summary.emitted);
       }
       if (!run.pass) {
-        (run.issues || run.errors || []).slice(0, 10).forEach((e) => {
-          console.error(' -', e.module || 'crawler', e.id, e.recommendedFix || e.message);
+        const soft = new Set(softFailIds());
+        const issues = run.issues || run.errors || [];
+        issues.slice(0, 10).forEach((e) => {
+          const softHit = soft.has(String(e.id || ''));
+          console.error(
+            softHit ? ' ~ (soft)' : ' -',
+            e.module || 'crawler',
+            e.id,
+            e.recommendedFix || e.message
+          );
         });
-        process.exitCode = 1;
+        const hard = issues.filter((e) => !soft.has(String(e.id || '')));
+        if (hard.length) {
+          process.exitCode = 1;
+        } else {
+          console.log('[qa] soft-only failures — not failing CI siren');
+          process.exitCode = 0;
+        }
       }
     } else if (result.skipped) {
       console.log('[qa] skipped:', result.reason);

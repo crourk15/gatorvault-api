@@ -403,6 +403,20 @@ function mountXAutoposterRoutes(app) {
     }
   });
 
+  /** Beat Brief Desk — paste-ready player/UF packet for Cursor / Copilot → X. */
+  app.get('/api/x/post-studio/brief/:slug', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const { buildBeatBrief } = require('./beat-brief-packet');
+      const out = await buildBeatBrief(req.params.slug);
+      return res.status(out.ok ? 200 : 400).json(out);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/x/autoposter/republish/:slug', async (req, res) => {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });

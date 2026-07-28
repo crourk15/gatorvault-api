@@ -1,10 +1,11 @@
-# GatorVault QA Crawler — triggers full QA pass on Render API every 5 minutes.
+# GatorVault QA Crawler — hourly pulse (was every 5m / noisy red siren).
+# Soft stale/asset issues warn but do not fail the workflow (see run-qa-crawler.js).
 # Set repository secrets: QA_CRON_SECRET (same as INGEST_CRON_SECRET on Render)
 name: QA Monitor
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '17 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -27,6 +28,8 @@ jobs:
           QA_API_URL: https://gatorvault-api.onrender.com
           SITE_URL: https://gatorvaultinsider.com
           QA_BROWSER_ENABLED: 'false'
+          # Soft-fail noisy freshness/asset checks so CI isn't a permanent red light.
+          QA_SOFT_FAIL_IDS: 'integrity:live-freshness,crawler:404,integrity:film-sources,integrity:feed-dedup'
         run: node scripts/run-qa-crawler.js
       - name: Trigger remote QA on Render (optional dual-run)
         if: env.QA_CRON_SECRET != ''

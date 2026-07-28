@@ -57,6 +57,13 @@
 
   var SECTIONS = [
     {
+      id: 'beat-desk',
+      label: 'Beat Desk',
+      mark: 'BD',
+      desc: 'Daily desk — beat intel → player packet → Copy Brief → X',
+      panels: [{ id: 'desk', label: 'Brief Desk', inline: true }]
+    },
+    {
       id: 'dashboard',
       label: 'Dashboard',
       mark: 'CC',
@@ -66,7 +73,7 @@
         { id: 'runbooks', label: 'Runbooks', inline: true },
         { id: 'ops-summary', label: 'Ops Summary', inline: true },
         { id: 'jobs', label: 'Job Queue', inline: true },
-        { id: 'post-studio', label: 'Post Studio', inline: true },
+        { id: 'post-studio', label: 'Post Studio (advanced)', inline: true },
         { id: 'ops', label: 'Full Ops', embed: 'ops' }
       ]
     },
@@ -183,7 +190,7 @@
   ];
 
   function loginUrl() {
-    var next = location.pathname + (location.hash || '#dashboard/overview');
+    var next = location.pathname + (location.hash || '#beat-desk/desk');
     return '/admin/login?next=' + encodeURIComponent(next);
   }
 
@@ -370,7 +377,12 @@
       el.textContent = '';
       return;
     }
-    el.textContent = message;
+    // Soften scary wake copy — retries happen quietly in GVAdminApiFetch.
+    var soft = String(message || '');
+    if (/unavailable|waking|502|503|504|HTML instead of JSON/i.test(soft)) {
+      soft = 'Kitchen is busy (deploy or heavy job). Retrying quietly — no Codemagic needed.';
+    }
+    el.textContent = soft;
     el.classList.remove('hidden');
   }
 
@@ -394,7 +406,7 @@
   function apiPost(path, body) {
     var p = pin();
     if (!p) return Promise.reject(new Error('Admin PIN required'));
-    return fetch(API + path, {
+    var opts = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -403,15 +415,25 @@
         'X-Roster-Pin': p
       },
       body: JSON.stringify(Object.assign({ pin: p }, body || {}))
-    }).then(parseApiResponse);
+    };
+    var fetchApi = global.GVAdminApiFetch;
+    if (fetchApi && fetchApi.fetchJson) {
+      return fetchApi.fetchJson(API + path, opts);
+    }
+    return fetch(API + path, opts).then(parseApiResponse);
   }
 
   function apiGet(path) {
     var p = pin();
     if (!p) return Promise.reject(new Error('Admin PIN required'));
-    return fetch(API + path, {
+    var opts = {
       headers: { 'X-Recruiting-Pin': p, 'X-Ops-Pin': p, 'X-Roster-Pin': p }
-    }).then(parseApiResponse);
+    };
+    var fetchApi = global.GVAdminApiFetch;
+    if (fetchApi && fetchApi.fetchJson) {
+      return fetchApi.fetchJson(API + path, opts);
+    }
+    return fetch(API + path, opts).then(parseApiResponse);
   }
 
   function adminPinHeaders(p) {
@@ -514,7 +536,7 @@
   }
 
   function parseRoute() {
-    var hash = (location.hash || '#dashboard').replace(/^#/, '');
+    var hash = (location.hash || '#beat-desk/desk').replace(/^#/, '');
     if (hash === 'qa' || hash === 'dashboard/qa') {
       return { section: 'qa', panel: 'monitor' };
     }
@@ -526,8 +548,10 @@
       return { section: 'members', panel: 'recent' };
     }
     var parts = hash.split('/');
-    var section = parts[0] || 'dashboard';
-    var panel = parts[1] || (section === 'dashboard' ? 'overview' : null);
+    var section = parts[0] || 'beat-desk';
+    var panel = parts[1] || null;
+    if (section === 'beat-desk' && !panel) panel = 'desk';
+    if (section === 'dashboard' && !panel) panel = 'overview';
     if (section === 'members' && !panel) panel = 'recent';
     return { section: section, panel: panel };
   }
@@ -984,6 +1008,14 @@
           }
           else if (panelId === 'jobs' && global.GVAdminJobQueue) {
             GVAdminJobQueue.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              onNavigate: navigateFromHash,
+              pushActivity: pushActivity
+            });
+          }
+          else if (panelId === 'desk' && section.id === 'beat-desk' && global.GVAdminBeatDesk) {
+            GVAdminBeatDesk.render(panelEl, {
               apiGet: apiGet,
               apiPost: apiPost,
               onNavigate: navigateFromHash,
