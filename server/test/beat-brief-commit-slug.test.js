@@ -103,6 +103,13 @@ function main() {
   assert.ok(/VOICE RULE/i.test(paste), paste);
   assert.ok(/FORBIDDEN|NEVER name writers|never tip/i.test(paste), paste);
   assert.ok(!/Beat hook to advance/i.test(paste), paste);
+  assert.ok(!/beat writers bury/i.test(paste), paste);
+  assert.ok(/INTERNAL intel seed/i.test(paste), paste);
+  // "beat line" is allowed only inside the FORBIDDEN instruction list
+  const outsideForbidden = paste.replace(/FORBIDDEN[\s\S]*?(?=\nStructure:)/i, '');
+  assert.ok(!/\bbeat line\b/i.test(outsideForbidden), outsideForbidden);
+  assert.ok(!/Beat line to advance/i.test(outsideForbidden), outsideForbidden);
+
 
   console.log('beat-brief-commit-slug.test.js PASS');
 }

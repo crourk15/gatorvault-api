@@ -465,7 +465,7 @@ function buildWhyFlorida({ player, research, intelligence, beatRows, rivals }) {
   }
 
   if (!bits.length) {
-    return 'Florida is tracking this prospect; vault file is thin on a hard why-UF hook — lean on the freshest beat line and board facts only.';
+    return 'Florida is tracking this prospect; vault file is thin on a hard why-UF hook — lean on verified board facts only.';
   }
   return bits.join(' ');
 }
@@ -504,11 +504,11 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
     );
   } else if (concrete) {
     lines.push(
-      `Angle: Don't recap the ${signal} headline on ${name}. Lead with Florida's stake (${stake}) and the board fact beat writers bury: ${concrete}.`
+      `Angle: Don't chase the ${signal} news cycle on ${name}. Lead with Florida's stake (${stake}) and the board fact most feeds skip: ${concrete}.`
     );
   } else {
     lines.push(
-      `Angle: Take today's ${signal} beat on ${name} and frame UF as ${stake} — not a recap. Lead with the Florida stake, then one concrete board fact.`
+      `Angle: Own today's ${signal} story on ${name} and frame UF as ${stake} — original Vault take, not a recap. Lead with the Florida stake, then one concrete board fact.`
     );
   }
   if (fresh) {
@@ -522,7 +522,7 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
     );
   } else if (rivalHook.length) {
     lines.push(
-      `Pressure angle vs ${rivalHook.join(' / ')}: use On3 interest/RPM + visit/staff access UF still controls — not the same school-list dump the beat used.`
+      `Pressure angle vs ${rivalHook.join(' / ')}: use On3 interest/RPM + visit/staff access UF still controls — not a flat school-list dump.`
     );
   }
   const meas = measurementsSummary(player);
@@ -542,10 +542,10 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
         : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. Elite verified Vault voice — facts from intel, never a writer echo.`
     );
   } else if (gaps.length) {
-    lines.push(`Vault edge (fill what beat skipped): ${gaps.slice(0, 4).join(', ')}.`);
+    lines.push(`Vault edge (fill the board gaps): ${gaps.slice(0, 4).join(', ')}.`);
   } else {
     lines.push(
-      'Vault edge: stack offers/visits/RPM + staff note under the beat so readers get the UF why, not just the headline.'
+      'Vault edge: stack offers/visits/RPM + staff note under the hook so readers get the UF why, not just the headline.'
     );
   }
   lines.push(`Why UF (use in copy, don't invent beyond this): ${whyFlorida}`);
@@ -604,7 +604,7 @@ function formatBriefText({
   lines.push(whyFlorida || '(thin)');
 
   lines.push('');
-  lines.push('VAULT ANGLE (ahead of the beat)');
+  lines.push('VAULT ANGLE (own the story — Vault voice)');
   lines.push('-------------------------------');
   lines.push(vaultAngle || '(thin)');
 
