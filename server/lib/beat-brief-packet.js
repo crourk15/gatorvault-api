@@ -465,7 +465,7 @@ function buildWhyFlorida({ player, research, intelligence, beatRows, rivals }) {
   }
 
   if (!bits.length) {
-    return 'Florida is tracking this prospect; vault file is thin on a hard why-UF hook — lean on the freshest beat line and board facts only.';
+    return 'Florida is tracking this prospect; vault file is thin on a hard why-UF hook — lean on verified board facts only.';
   }
   return bits.join(' ');
 }
@@ -500,25 +500,29 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
   const lines = [];
   if (committed) {
     lines.push(
-      `Angle: ${name} is a Florida COMMIT — do not frame as an open board chase. Advance the culture/ownership beat (member-of-the-program, fall plans, class leadership). Lead with commit stake + one board credential (${concrete || 'ranks/size/staff'}).`
+      `Angle: ${name} is a Florida COMMIT — do not frame as an open board chase. Own the culture/ownership story in Vault voice (program member energy, fall plans, class leadership) without citing writers. Lead with commit stake + one board credential (${concrete || 'ranks/size/staff'}).`
     );
   } else if (concrete) {
     lines.push(
-      `Angle: Don't recap the ${signal} headline on ${name}. Lead with Florida's stake (${stake}) and the board fact beat writers bury: ${concrete}.`
+      `Angle: Don't chase the ${signal} news cycle on ${name}. Lead with Florida's stake (${stake}) and the board fact most feeds skip: ${concrete}.`
     );
   } else {
     lines.push(
-      `Angle: Take today's ${signal} beat on ${name} and frame UF as ${stake} — not a recap. Lead with the Florida stake, then one concrete board fact.`
+      `Angle: Own today's ${signal} story on ${name} and frame UF as ${stake} — original Vault take, not a recap. Lead with the Florida stake, then one concrete board fact.`
     );
   }
-  if (fresh) lines.push(`Beat hook to advance: "${fresh}"`);
+  if (fresh) {
+    lines.push(
+      `INTERNAL intel seed (absorb into Vault voice — NEVER name writers, never say beat/report/according to): "${fresh}"`
+    );
+  }
   if (committed) {
     lines.push(
       'Pressure angle: none — commitment is locked. If rivals appear on the ladder they are former board noise; use them only as contrast to how locked UF already is.'
     );
   } else if (rivalHook.length) {
     lines.push(
-      `Pressure angle vs ${rivalHook.join(' / ')}: use On3 interest/RPM + visit/staff access UF still controls — not the same school-list dump the beat used.`
+      `Pressure angle vs ${rivalHook.join(' / ')}: use On3 interest/RPM + visit/staff access UF still controls — not a flat school-list dump.`
     );
   }
   const meas = measurementsSummary(player);
@@ -534,14 +538,14 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
     if (ladder) parts.push(`ladder ${String(ladder).split(';').slice(0, 4).join('; ')}`);
     lines.push(
       committed
-        ? `Vault edge (verified long-form COMMIT): stack ${parts.join(' | ')} under the ownership/culture hook — elite post, not a chase recap.`
-        : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. Elite verified post, not a beat echo.`
+        ? `Vault edge (verified long-form COMMIT): stack ${parts.join(' | ')} under the ownership/culture hook — elite Vault voice — ownership story, not a chase recap.`
+        : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. Elite verified Vault voice — facts from intel, never a writer echo.`
     );
   } else if (gaps.length) {
-    lines.push(`Vault edge (fill what beat skipped): ${gaps.slice(0, 4).join(', ')}.`);
+    lines.push(`Vault edge (fill the board gaps): ${gaps.slice(0, 4).join(', ')}.`);
   } else {
     lines.push(
-      'Vault edge: stack offers/visits/RPM + staff note under the beat so readers get the UF why, not just the headline.'
+      'Vault edge: stack offers/visits/RPM + staff note under the hook so readers get the UF why, not just the headline.'
     );
   }
   lines.push(`Why UF (use in copy, don't invent beyond this): ${whyFlorida}`);
@@ -600,7 +604,7 @@ function formatBriefText({
   lines.push(whyFlorida || '(thin)');
 
   lines.push('');
-  lines.push('VAULT ANGLE (ahead of the beat)');
+  lines.push('VAULT ANGLE (own the story — Vault voice)');
   lines.push('-------------------------------');
   lines.push(vaultAngle || '(thin)');
 
@@ -671,14 +675,20 @@ function formatBriefText({
   lines.push('- Florida stake: RPM %, offer/status, UF staff names if listed');
   lines.push('- School ladder: top interested schools with RPM + visit counts');
   lines.push('- Visit trail: OV/UOV + latest dates when present');
-  lines.push('- Beat/insider archive: advance the freshest line, do not rewrite it');
-  lines.push('- Vault angle: Florida-first narrative ahead of the beat recap');
+  lines.push('- Internal intel seed: steal the FACT, own the VOICE — never tip that a beat writer said it');
+  lines.push('- Vault angle: Florida-first narrative that sounds like GatorVault, not a recap desk');
 
   lines.push('');
   lines.push('INSTRUCTIONS FOR AI');
   lines.push('-------------------');
   lines.push(
-    'Write one GatorVault Insider X post for a VERIFIED account (long-form OK). Target 600–900 characters (hard cap 1000). Use WHY FLORIDA + VAULT ANGLE + ELITE DEPTH CHECKLIST. Structure: (1) Florida stake opener, (2) On3 ranks/size/school identity, (3) RPM ladder + 1–2 rival pressure points, (4) visit/staff fact if on file, (5) ahead-of-the-beat closer. Stay factual to board + beat above only — no invented offers, visits, rankings, or quotes. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
+    'Write one GatorVault Insider X post for a VERIFIED account (long-form OK). Target 600–900 characters (hard cap 1000).'
+  );
+  lines.push(
+    'VOICE RULE (hard): This is GatorVault\'s take — not a beat recap. Absorb facts from the intel seed/board, then rewrite in original Vault voice. FORBIDDEN in the post: naming beat writers, "beat line", "beat writers", "according to reports", "per On3/247", "as reported", "reports say", "insiders say", or any phrasing that tells the audience we are regurgitating someone else\'s story. Board facts (ranks, RPM, visits, staff, commit status) may be stated as Vault fact.'
+  );
+  lines.push(
+    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) commit/RPM/staff or rival pressure as relevant, (4) one ownership/culture or visit detail stated as ours, (5) sharp closer. Stay factual to board + intel above only — no invented offers, visits, rankings, or quotes. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
   );
 
   return lines.filter((l) => l !== null).join('\n');

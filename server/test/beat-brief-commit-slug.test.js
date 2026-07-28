@@ -84,6 +84,32 @@ function main() {
   assert.ok(/COMMIT/i.test(angle), angle);
   assert.ok(!/Pressure angle vs Northwestern/i.test(angle), angle);
   assert.ok(/commitment is locked|none — commitment/i.test(angle), angle);
+  assert.ok(!/Beat hook to advance/i.test(angle), angle);
+  assert.ok(/INTERNAL intel seed|NEVER name writers/i.test(angle), angle);
+
+  const { formatBriefText } = require('../lib/beat-brief-packet');
+  const paste = formatBriefText({
+    slug: 'davin-davidson',
+    playerName: 'Davin Davidson',
+    player,
+    inspect: null,
+    beatRows: [{ detail: 'acting less like a recruit', source: 'Corey Bender' }],
+    research: { ufPosition: 'committed', eventType: 'commit_culture' },
+    intelligence: null,
+    whyFlorida: why,
+    vaultAngle: angle,
+    rivals: ['Northwestern', 'Miami']
+  });
+  assert.ok(/VOICE RULE/i.test(paste), paste);
+  assert.ok(/FORBIDDEN|NEVER name writers|never tip/i.test(paste), paste);
+  assert.ok(!/Beat hook to advance/i.test(paste), paste);
+  assert.ok(!/beat writers bury/i.test(paste), paste);
+  assert.ok(/INTERNAL intel seed/i.test(paste), paste);
+  // "beat line" is allowed only inside the FORBIDDEN instruction list
+  const outsideForbidden = paste.replace(/FORBIDDEN[\s\S]*?(?=\nStructure:)/i, '');
+  assert.ok(!/\bbeat line\b/i.test(outsideForbidden), outsideForbidden);
+  assert.ok(!/Beat line to advance/i.test(outsideForbidden), outsideForbidden);
+
 
   console.log('beat-brief-commit-slug.test.js PASS');
 }
