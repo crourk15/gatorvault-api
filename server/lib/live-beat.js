@@ -16,7 +16,7 @@ const NITTER_BASES = (process.env.NITTER_BASES || 'https://nitter.poast.org,http
 /** Default tweets pulled per writer — keep low to conserve X API credits. */
 const DEFAULT_MAX_POSTS = Math.min(
   20,
-  Math.max(5, parseInt(process.env.X_BEAT_MAX_POSTS_PER_WRITER || '5', 10) || 5)
+  Math.max(5, parseInt(process.env.X_BEAT_MAX_POSTS_PER_WRITER || '12', 10) || 12)
 );
 const NATIONAL_MAX_POSTS = Math.min(
   DEFAULT_MAX_POSTS,
@@ -561,7 +561,9 @@ async function refreshBeatStreamInner(cache) {
   try {
     // Optional — heavy identity/intel work can OOM Starter right after a successful beat pull.
     // Dedicated beat-ingest cron still runs this as its own step.
-    if (process.env.BEAT_WRITER_INGEST_ON_REFRESH === 'true') {
+    // Default ON so daily Alderman/Bender offers land without a separate cron flag.
+    // Set BEAT_WRITER_INGEST_ON_REFRESH=false to disable on tiny instances.
+    if (process.env.BEAT_WRITER_INGEST_ON_REFRESH !== 'false') {
       const { runBeatWriterIngest } = require('./beat-writer-ingest');
       runBeatWriterIngest().catch((err) => console.warn('[beat-writer-ingest]', err.message));
     }

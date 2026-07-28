@@ -367,7 +367,14 @@ function parseVisitWindow(text) {
 }
 
 function parseSchool(text) {
-  const m = String(text || '').match(SCHOOL_RE);
+  const t = String(text || '');
+  const ofHs = t.match(
+    /\b(?:of|from)\s+([A-Z][A-Za-z0-9'.&\-]+(?:\s+[A-Z][A-Za-z0-9'.&\-]+){0,5}\s+(?:Academy|High School|HS|Prep|Christian|Catholic))\b/
+  );
+  if (ofHs?.[1]) return ofHs[1].trim();
+  const img = t.match(/\b(IMG Academy)\b/i);
+  if (img) return 'IMG Academy';
+  const m = t.match(SCHOOL_RE);
   return m ? m[1].trim() : null;
 }
 
@@ -542,7 +549,17 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     }
   }
 
-  if (prefilter.isRecruitingNarrativeEliteIntel(text, post)) {
+  // Fresh offer announcements must NOT take the thin narrative path
+  // (coach "relationship with" language used to mis-route Blake Alderman offers).
+  let freshOfferAnnounce = false;
+  try {
+    const { isFreshOfferBeat } = require('./autoposter/recruiting-offer-disambiguation');
+    freshOfferAnnounce = isFreshOfferBeat(text);
+  } catch {
+    freshOfferAnnounce = /\b(?:has|have)\s+offered\b/i.test(text);
+  }
+
+  if (!freshOfferAnnounce && prefilter.isRecruitingNarrativeEliteIntel(text, post)) {
     const gate = prefilter.evaluateRecruitingNarrativeEliteEligibility(text, { post });
     if (!gate.eligible) {
       if (logSkips) logBeatPostSkip(post, gate.reason || 'not_recruiting_narrative', 'filtered');
@@ -572,7 +589,7 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
       detail,
       text: detail,
       timestamp,
-      articleUrl: post.url || null,
+      articleUrl: (require('./beat-teaser-resolve').pickOn3ArticleUrl(post) || post.url || null),
       source: analystName,
       sourceHandle: post.handle || null,
       sourceType: 'beat',
@@ -643,13 +660,16 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     return null;
   }
 
-  let playerName =
-    (post._teaserResolved?.playerName && isUsableExtractedName(post._teaserResolved.playerName)
-      ? post._teaserResolved.playerName
-      : null) ||
-    (urlIdentity?.playerName && isUsableExtractedName(urlIdentity.playerName)
-      ? urlIdentity.playerName
-      : null);
+  let playerName = null;
+  // Prefer beat-text casing over On3 slug Title Case ("Foster Ii").
+  const textName = extractVisitPlayerName(text);
+  if (textName && isUsableExtractedName(textName)) playerName = textName;
+  if (!playerName && post._teaserResolved?.playerName && isUsableExtractedName(post._teaserResolved.playerName)) {
+    playerName = post._teaserResolved.playerName;
+  }
+  if (!playerName && urlIdentity?.playerName && isUsableExtractedName(urlIdentity.playerName)) {
+    playerName = urlIdentity.playerName;
+  }
   if (!playerName) {
     try {
       const teaserResolve = require('./beat-teaser-resolve');
@@ -661,7 +681,6 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
       /* optional */
     }
   }
-  if (!playerName) playerName = extractVisitPlayerName(text);
   // Never keep a cousin/relative name as the prospect.
   try {
     const teaserResolve = require('./beat-teaser-resolve');
@@ -1530,7 +1549,26 @@ async function processBeatVisitIntelRow(row, snapshot) {
     }
   }
 
-  const existing = await store.getPlayerBySlug(row.playerSlug);
+  let existing = row.playerSlug ? await store.getPlayerBySlug(row.playerSlug) : null;
+
+  // Trusted beat offers/visits for unknown prospects: provision monitor entry first
+  // so identity confirm + desk intel can land the same day.
+  if (needsBeatProspectProvision(existing, row.classYear) && trustedWriter) {
+    try {
+      const provision = await provisionBeatProspect({
+        playerName: row.playerName,
+        classYear: row.classYear,
+        trustedWriter,
+        existing
+      });
+      if (provision?.ok && provision.slug) {
+        row.playerSlug = provision.slug || row.playerSlug;
+        existing = (await store.getPlayerBySlug(row.playerSlug)) || existing;
+      }
+    } catch {
+      /* provision optional — continue to identity path */
+    }
+  }
 
   const identityLookup = require('./player-identity-lookup');
   const enrichment = await identityLookup.enrichAndConfirmIntelIdentity({
