@@ -1886,12 +1886,30 @@ async function processBeatVisitIntelRow(row, snapshot) {
     player
   );
 
+  // Feed full On3 board intel into FutureCast (seed new / nudge existing %).
+  let futurecastFeed = null;
+  try {
+    const { feedDeskIntelToFutureCast } = require('./desk-intel-futurecast-feed');
+    futurecastFeed = await feedDeskIntelToFutureCast({
+      slug: player.slug,
+      player,
+      signalType: row.eventType || row.status || null,
+      forceHydrate: true
+    });
+  } catch (err) {
+    futurecastFeed = {
+      ok: false,
+      error: err instanceof Error ? err.message : String(err)
+    };
+  }
+
   return {
     processed: true,
     player: player.slug,
     source: row.source,
     autopost,
     detectivesHandoff,
+    futurecastFeed,
     identityConfirmed: true,
     fingerprint: row.fingerprint
   };

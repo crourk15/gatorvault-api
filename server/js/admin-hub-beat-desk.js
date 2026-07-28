@@ -284,7 +284,14 @@
         .then(function (brief) {
           if (!brief || !brief.ok) throw new Error((brief && brief.error) || 'Brief failed');
           paintBrief(brief);
-          setMsg('Brief ready for ' + (brief.playerName || slug) + '. Press Copy Brief, then paste into Cursor.');
+          var fc = brief.futurecastFeed;
+          var fcNote = '';
+          if (fc && fc.ok) {
+            fcNote = ' FutureCast: ' + (fc.isNew ? 'seeded' : fc.promoted ? 'promoted' : 'refreshed');
+            if (fc.decision && fc.decision.pct != null) fcNote += ' @ ' + fc.decision.pct + '%';
+            fcNote += '.';
+          }
+          setMsg('Brief ready for ' + (brief.playerName || slug) + '.' + fcNote + ' Press Copy Brief, then paste into Cursor.');
         })
         .catch(function (err) {
           var panel = document.getElementById('hub-bd-brief');

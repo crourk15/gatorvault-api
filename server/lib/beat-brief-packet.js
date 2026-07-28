@@ -751,6 +751,38 @@ async function buildBeatBrief(slug, opts = {}) {
     rivals
   });
 
+  // Persist desk board intel into FutureCast targeting (new seed or % nudge).
+  let futurecastFeed = null;
+  if (opts.feedFutureCast !== false) {
+    try {
+      const { feedDeskIntelToFutureCast } = require('./desk-intel-futurecast-feed');
+      futurecastFeed = await feedDeskIntelToFutureCast({
+        slug: normalized,
+        player: player || null,
+        research: {
+          eventType: research?.eventType,
+          ufPosition: research?.ufPosition,
+          playerName
+        },
+        signalType: research?.eventType || research?.ufPosition || null,
+        dryRun: opts.dryRun === true
+      });
+      if (futurecastFeed?.player && player) {
+        // Keep brief response aligned with what we just wrote.
+        if (futurecastFeed.player.ufProbability != null) {
+          player.ufProbability = futurecastFeed.player.ufProbability;
+          player.futurecastProbability = futurecastFeed.player.ufProbability;
+        }
+        if (futurecastFeed.player.ufRpmPct != null) player.ufRpmPct = futurecastFeed.player.ufRpmPct;
+      }
+    } catch (err) {
+      futurecastFeed = {
+        ok: false,
+        error: err instanceof Error ? err.message : String(err)
+      };
+    }
+  }
+
   const pasteText = formatBriefText({
     slug: normalized,
     playerName,
@@ -763,6 +795,41 @@ async function buildBeatBrief(slug, opts = {}) {
     vaultAngle,
     rivals
   });
+
+  let pasteOut = pasteText;
+  if (futurecastFeed?.ok) {
+    const mode = futurecastFeed.isNew
+      ? 'brand-new → seed'
+      : futurecastFeed.promoted
+        ? 'promoted onto board'
+        : 'existing target → refresh';
+    const d = futurecastFeed.decision || null;
+    let pctLine = null;
+    if (d) {
+      const pctLabel = d.pct != null ? d.pct + '%' : 'n/a';
+      let deltaLabel = '';
+      if (d.delta) deltaLabel = ', Δ' + (d.delta > 0 ? '+' : '') + d.delta;
+      pctLine = 'UF targeting %: ' + pctLabel + ' (' + d.source + deltaLabel + ')';
+    }
+    const fcLines = [
+      '',
+      'FUTURECAST FEED',
+      '---------------',
+      'Mode: ' + mode,
+      pctLine,
+      futurecastFeed.allowlisted != null
+        ? 'Allowlist: ' + (futurecastFeed.allowlisted ? 'yes' : 'no')
+        : null,
+      'Board fields synced: ranks, size, schools, visits, RPM, staff (when on file).'
+    ].filter(Boolean);
+    pasteOut = pasteText + '\n' + fcLines.join('\n') + '\n';
+  } else if (futurecastFeed && futurecastFeed.ok === false) {
+    pasteOut =
+      pasteText +
+      '\n\nFUTURECAST FEED\n---------------\n(deferred: ' +
+      (futurecastFeed.error || 'unavailable') +
+      ')\n';
+  }
 
   const liveMentions = [
     ...(research?.hayesMentions || []),
@@ -858,6 +925,7 @@ async function buildBeatBrief(slug, opts = {}) {
       sourcesUsed: (research?.sourcesUsed || []).slice(0, 12),
       timing: research?.timing || null
     },
+    futurecastFeed,
     draftSuggestion:
       inspect?.fullCompose?.ok && inspect.fullCompose.text
         ? {
@@ -867,7 +935,7 @@ async function buildBeatBrief(slug, opts = {}) {
           }
         : null,
     verdict: inspect?.verdict || null,
-    pasteText
+    pasteText: typeof pasteOut !== 'undefined' ? pasteOut : pasteText
   };
 }
 
