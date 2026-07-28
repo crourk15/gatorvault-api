@@ -885,6 +885,42 @@
     var secondary = document.getElementById('hub-ops-strip-secondary');
     if (primary) {
       primary.addEventListener('click', function () {
+        var jobId = primary.getAttribute('data-job');
+        if (jobId) {
+          primary.disabled = true;
+          var prev = primary.textContent;
+          primary.textContent = 'Running…';
+          apiPost('/api/ops/run-job', { jobId: jobId })
+            .then(function () {
+              pushActivity({
+                status: 'success',
+                message: 'Fix job finished: ' + jobId,
+                subsystem: 'ops'
+              });
+              primary.textContent = 'Done — refreshing';
+              return apiGet('/api/admin/hub/overview').then(function (data) {
+                applyOpsStrip(data);
+                if (global.GVAdminHub && typeof global.GVAdminHub.applyModuleHealth === 'function') {
+                  global.GVAdminHub.applyModuleHealth(Object.assign({}, data.moduleHealth || {}, {
+                    _environment: data.environment
+                  }));
+                }
+              });
+            })
+            .catch(function (e) {
+              primary.textContent = prev || 'Retry fix';
+              pushActivity({
+                status: 'error',
+                message: (e && e.message) || 'Fix job failed',
+                subsystem: 'ops'
+              });
+              alert((e && e.message) || 'Fix failed — open Ops Summary and try again.');
+            })
+            .finally(function () {
+              primary.disabled = false;
+            });
+          return;
+        }
         var route = primary.getAttribute('data-route') || '#dashboard/runbooks';
         navigateFromHash(route);
       });
@@ -906,6 +942,7 @@
     var issues = (data && data.topIssues) || [];
     var top = issues[0];
     strip.classList.remove('hidden');
+    primary.removeAttribute('data-job');
 
     if (!top) {
       titleEl.textContent = 'All clear';
@@ -916,9 +953,16 @@
     }
 
     titleEl.textContent = top.title || 'Attention needed';
-    detailEl.textContent = top.detail || '';
-    if (top.route) {
-      primary.textContent = 'Open module';
+    var bits = [];
+    if (top.detail) bits.push(String(top.detail));
+    if (top.fixHowTo) bits.push('What to do: ' + String(top.fixHowTo));
+    detailEl.textContent = bits.join(' — ') || (top.why || '');
+    if (top.actionType) {
+      primary.textContent = top.action || 'Run fix';
+      primary.setAttribute('data-job', top.actionType);
+      primary.setAttribute('data-route', top.route || '#dashboard/ops-summary');
+    } else if (top.route) {
+      primary.textContent = top.action || 'Open fix page';
       primary.setAttribute('data-route', top.route);
     } else {
       primary.textContent = 'Open Runbooks';

@@ -370,9 +370,25 @@
             '<div class="meta">Last: '+fmtTime(t.lastRun)+'</div>';
         }
 
-        if(t.id==='film-room') actions+='<button class="secondary sm" data-job="film-room-weekly">Re-run weekly</button>';
+        var fixHint='';
+        if(t.status==='red' || t.status==='yellow'){
+          var hints={
+            'film-room':'What to do: click Rebuild Film Room catalog below. Catalog is stale — wait 1–2 min, then refresh.',
+            'recruiting-board':'What to do: click Run recruiting ingest below, wait, then refresh.',
+            'portal-tracker':'What to do: click Re-run portal below, wait, then refresh.',
+            'nil-tracker':'What to do: click Re-run NIL below, wait, then refresh.',
+            'depth-gamezone':'What to do: click Re-run depth (and lines if needed), wait, then refresh.',
+            'insider-articles':'What to do: generate drafts, then Manage pending drafts.',
+            'api-health':'What to do: wait 1–2 min (kitchen may be waking). If still red, open Runbooks.',
+            'db-health':'What to do: open Logs / Runbooks. Do not spam jobs.'
+          };
+          if(hints[t.id]) fixHint='<div class="summary" style="color:#fde047;margin:.35rem 0 .5rem">'+esc(hints[t.id])+'</div>';
+        }
+        if(fixHint) body+=fixHint;
+
+        if(t.id==='film-room') actions+='<button class="'+(t.status==='red'?'':'secondary ')+'sm" data-job="film-room-weekly">Rebuild Film Room catalog</button>';
         if(t.id==='recruiting-board') actions+='<a href="/recruiting-board" class="secondary sm" style="display:inline-block;padding:.35rem .6rem;border-radius:.5rem;text-decoration:none;background:#334155;color:#fff;font-size:.75rem;font-weight:600">Open Board</a>';
-        if(t.id==='recruiting-board') actions+='<button class="secondary sm" data-job="recruiting-ingest">Re-run ingest</button>';
+        if(t.id==='recruiting-board') actions+='<button class="'+(t.status==='red'?'':'secondary ')+'sm" data-job="recruiting-ingest">Run recruiting ingest</button>';
         if(t.id==='portal-tracker') actions+='<button class="secondary sm" data-job="portal-ingest">Re-run portal</button>';
         if(t.id==='nil-tracker') actions+='<button class="secondary sm" data-job="nil-refresh">Re-run NIL</button>';
         if(t.id==='depth-gamezone'){

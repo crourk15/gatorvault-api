@@ -89,10 +89,23 @@
       if (!Array.isArray(alerts)) alerts = [];
       var pipelines = data.pipelines || [];
 
+      var tileFixJobs = {
+        'film-room': { job: 'film-room-weekly', label: 'Rebuild Film Room catalog' },
+        'recruiting-board': { job: 'recruiting-ingest', label: 'Run recruiting ingest' },
+        'portal-tracker': { job: 'portal-ingest', label: 'Re-run portal' },
+        'nil-tracker': { job: 'nil-refresh', label: 'Re-run NIL' },
+        'depth-gamezone': { job: 'depth-chart-refresh', label: 'Re-run depth' },
+        'insider-articles': { job: 'article-engine-weekly-draft', label: 'Generate drafts' }
+      };
       var tileHtml = tiles.map(function (t) {
+        var fix = tileFixJobs[t.id];
+        var needsFix = t.status === 'red' || t.status === 'yellow';
         return '<div class="hub-stat ' + statusClass(t.status) + '">'
           + '<span class="hub-stat-label">' + esc(t.label || t.id) + '</span>'
           + '<span class="hub-stat-val">' + esc(t.summary || t.status || '—') + '</span>'
+          + (needsFix && fix
+            ? '<button type="button" class="hub-btn" style="margin-top:8px" data-ops-job="' + esc(fix.job) + '">' + esc(fix.label) + '</button>'
+            : '')
           + '</div>';
       }).join('');
 

@@ -40,7 +40,8 @@ describe('Operator Notecards', () => {
   });
 
   it('is loaded before dashboard/desk scripts with styles', () => {
-    assert.match(html, /admin-hub-notecards\.js\?v=hub-nc-v2/);
+    assert.match(html, /admin-hub-notecards\.js\?v=hub-nc-v3/);
+    assert.match(nc, /Film Room Engine red|Rebuild Film Room catalog/);
     const ncIdx = html.indexOf('admin-hub-notecards.js');
     const dashIdx = html.indexOf('admin-hub-dashboard.js');
     const deskIdx = html.indexOf('admin-hub-beat-desk.js');
