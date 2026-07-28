@@ -86,10 +86,18 @@ function entryBySlug(doc, slug) {
 
 function resolveUfPctFromProfile(profile, classYear = DEFAULT_CLASS_YEAR) {
   if (!profile || profile.error) return null;
-  const uf = on3.getFloridaTeam(profile.topTeams, classYear);
-  const pct = uf?.prediction;
-  if (pct == null || !Number.isFinite(Number(pct)) || Number(pct) <= 0) return null;
-  return toPercent(pct);
+  try {
+    const hydrate = require('./on3-board-hydrate');
+    const pct = hydrate.ufRpmFromTopTeams(profile.topTeams || [], classYear);
+    if (pct == null || !Number.isFinite(Number(pct)) || Number(pct) <= 0) return null;
+    return Math.round(Number(pct));
+  } catch {
+    const uf = on3.getFloridaTeam(profile.topTeams, classYear);
+    const pct = uf?.prediction;
+    if (pct == null || !Number.isFinite(Number(pct)) || Number(pct) <= 0) return null;
+    // Prefer percentage points (>1). Avoid toPercent() on residual fractions in mixed boards.
+    return Number(pct) > 1 ? Math.round(Number(pct)) : toPercent(pct);
+  }
 }
 
 function resolveRecruitSlugForTarget(target, recruiting) {

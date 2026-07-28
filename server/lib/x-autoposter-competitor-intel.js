@@ -23,16 +23,25 @@ function competitorsFromPlayer(player, limit = 4) {
 }
 
 function competitorsFromOn3TopTeams(topTeams, classYear, limit = 4) {
-  return on3Recruit
-    .getYearTopTeams(topTeams || [], classYear)
-    .filter((t) => !on3Recruit.isHighSchoolOrg(t) && !on3Recruit.isFloridaTeam(t))
-    .map((t) => ({
-      school: teamNameFromOn3(t.team),
-      pct: t.percent != null ? Number(t.percent) : t.prediction != null ? Number(t.prediction) : null
-    }))
-    .filter((c) => c.school)
-    .sort((a, b) => (Number(b.pct) || 0) - (Number(a.pct) || 0))
-    .slice(0, limit);
+  try {
+    const hydrate = require('./on3-board-hydrate');
+    return hydrate
+      .interestedSchoolsFromTopTeams(topTeams, classYear, limit + 4)
+      .filter((s) => s.school && !UF_MATCH.test(s.school) && s.pct != null)
+      .slice(0, limit)
+      .map((s) => ({ school: s.school, pct: s.pct }));
+  } catch {
+    return on3Recruit
+      .getYearTopTeams(topTeams || [], classYear)
+      .filter((t) => !on3Recruit.isHighSchoolOrg(t) && !on3Recruit.isFloridaTeam(t))
+      .map((t) => ({
+        school: teamNameFromOn3(t.team),
+        pct: t.prediction != null && Number(t.prediction) > 1 ? Number(t.prediction) : null
+      }))
+      .filter((c) => c.school && c.pct != null)
+      .sort((a, b) => (Number(b.pct) || 0) - (Number(a.pct) || 0))
+      .slice(0, limit);
+  }
 }
 
 function ufPctFromPlayer(player, predictions = []) {
@@ -50,10 +59,16 @@ function ufPctFromPlayer(player, predictions = []) {
 }
 
 function ufPctFromOn3TopTeams(topTeams, classYear) {
-  const uf = on3Recruit.getFloridaTeam(topTeams || [], classYear);
-  if (!uf) return null;
-  const v = uf.percent != null ? Number(uf.percent) : uf.prediction != null ? Number(uf.prediction) : null;
-  return v != null && Number.isFinite(v) ? v : null;
+  try {
+    const hydrate = require('./on3-board-hydrate');
+    return hydrate.ufRpmFromTopTeams(topTeams, classYear);
+  } catch {
+    const uf = on3Recruit.getFloridaTeam(topTeams || [], classYear);
+    if (!uf) return null;
+    const v = uf.prediction != null ? Number(uf.prediction) : uf.percent != null ? Number(uf.percent) : null;
+    if (v == null || !Number.isFinite(v)) return null;
+    return v > 1 ? v : v * 100;
+  }
 }
 
 function resolveBoard(research = {}) {
