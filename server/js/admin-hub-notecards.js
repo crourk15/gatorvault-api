@@ -44,7 +44,7 @@
         ]
       : [
           'If everything looks green / “All clear,” go to <strong>Beat Desk</strong> and make today’s posts.',
-          'If something is red/yellow up top, open that module first — then come back to posting.',
+          'If something is red/yellow up top, follow the <strong>If red / yellow</strong> card — then come back to posting.',
           'Use <strong>FutureCast</strong> when you want to see who is on the 2028 board / allowlist.',
           'Ignore <strong>Legacy consoles</strong> unless support or content asks for them.'
         ];
@@ -65,6 +65,32 @@
           ['Members', 'Who signed up recently (trial / paid / expired).']
         ];
 
+    var ifRedYellow = deskFocus
+      ? [
+          ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>STALE</strong> (red/yellow on a beat row)',
+           'That beat is older than 24 hours — not broken. You can still press <strong>Open</strong> for a catch-up post. Prefer a LIVE row when you have one.'],
+          ['<span class="hub-nc-dot hub-nc-dot--green"></span><strong>LIVE</strong>',
+           'Fresh beat. This is the best one to Open and post.'],
+          ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>Waking / kitchen busy</strong>',
+           'Server is starting. Wait 20–40 seconds, press <strong>Refresh</strong>. Don’t click a dozen times.'],
+          ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>FAIL / error / Open won’t load</strong>',
+           'Press <strong>Check API</strong>. If still bad, wait a minute + Refresh. If it keeps failing, open <strong>Runbooks → Deploy recovery</strong>.'],
+          ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Beat Desk sidebar dot is red</strong>',
+           'Kitchen/API is unhealthy. Don’t force posts — Check API / wait for green, then Refresh the desk.']
+        ]
+      : [
+          ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Top issue is red</strong>',
+           'Click <strong>Open module</strong> on that issue (or the primary button). Fix/run what’s asked, then go back to Beat Desk.'],
+          ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>Yellow module / backlog</strong>',
+           'Finish today’s posts first if you can. Then open that yellow module when you have a minute.'],
+          ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>QA is red</strong>',
+           'Open <strong>QA Monitor</strong> or Runbooks → “QA is red”. Don’t ignore a red QA for days.'],
+          ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>Kitchen waking on any page</strong>',
+           'Wait 20–40s and Refresh. Normal after the server sleeps.'],
+          ['<span class="hub-nc-dot hub-nc-dot--gray"></span><strong>Gray dots</strong>',
+           'No probe yet — not an emergency. Keep using Beat Desk.']
+        ];
+
     var ignore = deskFocus
       ? 'Skip Full Ops, Self-Runner, Product Health, and anything under <strong>Legacy consoles</strong> unless Charles is fixing a break.'
       : 'Skip Content / Community / Feedback / Player Intel / Self-Runner (Legacy) unless you have a specific support or content task.';
@@ -81,13 +107,22 @@
       })
       .join('');
 
+    var redHtml = ifRedYellow
+      .map(function (row) {
+        return '<div class="hub-nc-alert-row">'
+          + '<div class="hub-nc-alert-title">' + row[0] + '</div>'
+          + '<div class="hub-nc-alert-body">' + row[1] + '</div>'
+          + '</div>';
+      })
+      .join('');
+
     return ''
       + '<section class="hub-notecards' + (collapsed ? ' is-collapsed' : '') + '" id="hub-notecards" aria-label="Operator notecards">'
       + '<div class="hub-notecards__head">'
       + '<div>'
       + '<p class="hub-notecards__eyebrow">Operator notecards</p>'
       + '<h3 class="hub-notecards__title">' + (deskFocus ? 'Your daily posting playbook' : 'How to run this hub') + '</h3>'
-      + '<p class="hub-notecards__sub">Plain English. Do the numbered steps. Ignore the rest unless something is red.</p>'
+      + '<p class="hub-notecards__sub">Plain English. Do the numbered steps. If something is red or yellow, use the card below — don’t guess.</p>'
       + '</div>'
       + '<button type="button" class="hub-btn secondary" id="hub-nc-toggle" aria-expanded="' + (collapsed ? 'false' : 'true') + '">'
       + (collapsed ? 'Show notecards' : 'Hide notecards')
@@ -102,23 +137,21 @@
         ? ''
         : '<p class="hub-nc-cta"><button type="button" class="hub-btn" data-nc-route="#beat-desk/desk">Go to Beat Desk</button></p>')
       + '</article>'
+      + '<article class="hub-nc-card hub-nc-card--alert">'
+      + '<h4>If red / yellow — do this</h4>'
+      + '<div class="hub-nc-alerts">' + redHtml + '</div>'
+      + '</article>'
       + '<article class="hub-nc-card">'
       + '<h4>What the buttons mean</h4>'
       + '<div class="hub-nc-buttons">' + btnHtml + '</div>'
       + '</article>'
-      + '<article class="hub-nc-card">'
-      + '<h4>Colors (sidebar dots)</h4>'
-      + '<ul class="hub-nc-colors">'
-      + '<li><span class="hub-nc-dot hub-nc-dot--green"></span><strong>Green</strong> — healthy. Keep posting.</li>'
-      + '<li><span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>Yellow</strong> — backlog / warning. Finish posts, then check it.</li>'
-      + '<li><span class="hub-nc-dot hub-nc-dot--red"></span><strong>Red</strong> — something failed. Open that module or Runbooks.</li>'
-      + '<li><span class="hub-nc-dot hub-nc-dot--gray"></span><strong>Gray</strong> — no signal yet. Not an emergency.</li>'
-      + '</ul>'
-      + '</article>'
       + '<article class="hub-nc-card hub-nc-card--ignore">'
       + '<h4>Don’t touch (unless red / asked)</h4>'
       + '<p>' + ignore + '</p>'
-      + '<p class="hub-meta" style="margin:10px 0 0">Kitchen waking / 502 messages = server starting up. Wait 20–40s, hit Refresh. Don’t panic.</p>'
+      + '<p class="hub-meta" style="margin:10px 0 0">Sidebar dots: <strong style="color:#86efac">green</strong> = healthy · '
+      + '<strong style="color:#fde047">yellow</strong> = warning · '
+      + '<strong style="color:#fca5a5">red</strong> = failed · '
+      + '<strong style="color:#94a3b8">gray</strong> = unknown (not urgent).</p>'
       + '</article>'
       + '</div>'
       + '</div>'

@@ -21,9 +21,11 @@
 
   function statusClass(status) {
     var s = String(status || '').toLowerCase();
-    if (s.indexOf('fail') >= 0 || s === 'error' || s === 'red' || s === 'stale') return 'hub-st-red';
+    // STALE = old beat (warning), not a broken system — keep it yellow.
+    if (s === 'stale') return 'hub-st-yellow';
+    if (s.indexOf('fail') >= 0 || s === 'error' || s === 'red') return 'hub-st-red';
     if (s.indexOf('review') >= 0 || s === 'needs_you' || s === 'yellow' || s === 'pending') return 'hub-st-yellow';
-    if (s === 'ready_to_compose' || s === 'draft_ready' || s === 'ok' || s === 'green') return 'hub-st-green';
+    if (s === 'ready_to_compose' || s === 'draft_ready' || s === 'ok' || s === 'green' || s === 'live') return 'hub-st-green';
     return 'hub-st-unknown';
   }
 
@@ -397,7 +399,12 @@
         + '<div class="hub-dash-head" style="margin-bottom:10px">'
         + '<div><h3 style="margin:0">Beat inbox <span class="hub-meta">(' + esc(items.length) + ' shown)</span></h3>'
         + '<p class="hub-meta" style="margin:6px 0 0">Fresh (&lt;24h): <strong style="color:#fff">' + esc(freshCount)
-        + '</strong> · Older: <strong style="color:#fff">' + esc(olderCount) + '</strong></p></div>'
+        + '</strong> · Older: <strong style="color:#fff">' + esc(olderCount) + '</strong></p>'
+        + '<p class="hub-bd-legend" style="margin:8px 0 0">'
+        + '<span class="hub-env-badge hub-st-green">LIVE</span> = fresh — best to Open · '
+        + '<span class="hub-env-badge hub-st-yellow">STALE</span> = older than 24h — still OK to Open for catch-up · '
+        + '<span class="hub-env-badge hub-st-red">FAIL</span> = broken Open — Check API / Refresh'
+        + '</p></div>'
         + '<div class="hub-btn-row">'
         + '<button type="button" class="hub-btn secondary" id="hub-bd-toggle-age">'
         + (showOlder ? 'Hide older beats' : 'Show older beats') + '</button>'
