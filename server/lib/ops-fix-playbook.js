@@ -1,6 +1,6 @@
 /**
- * Plain-English fix playbook for red/yellow ops tiles.
- * Used by Admin Hub top issues, ops strip, Full Ops cards.
+ * Plain-English fix playbook for red/yellow ops tiles + App Store gate.
+ * Used by Admin Hub top issues, ops strip, Full Ops cards, Coach panel.
  */
 'use strict';
 
@@ -77,6 +77,43 @@ const PLAYBOOK = {
   },
 };
 
+/** Machine reason codes → Charles-language lines */
+const GATE_REASON_COPY = {
+  qa_crawl_failed: {
+    plain: 'The automatic website check (QA crawl) did not pass today.',
+    step: 'Click Run QA crawl. Wait for it to finish, then Refresh.',
+  },
+  health_not_ready: {
+    plain: 'The kitchen (API) is not ready yet.',
+    step: 'Wait 1–2 minutes and Refresh. If it stays bad, open Runbooks → Deploy recovery.',
+  },
+  crawler_failures: {
+    plain: 'The site crawler found page errors.',
+    step: 'Open QA Monitor, note what failed, then Run QA crawl again after fixes.',
+  },
+  api_failures: {
+    plain: 'Some API checks failed during the QA crawl.',
+    step: 'Wait a minute (kitchen may be waking), then Run QA crawl again.',
+  },
+};
+
+function gateReasonPlain(reason, piMin) {
+  const r = String(reason || '');
+  if (GATE_REASON_COPY[r]) return GATE_REASON_COPY[r];
+  const m = r.match(/^product_intel_below_(\d+)$/);
+  if (m) {
+    const need = Number(m[1]) || piMin || 90;
+    return {
+      plain: `Product Health score is below ${need}. That score is a report card for the vault site — not Apple rejecting the app.`,
+      step: 'Open Product Health, click Recompute product scores. If red ops tiles exist (Film Room, recruiting, etc.), fix those first — they pull the score down.',
+    };
+  }
+  return {
+    plain: `Gate check failed: ${r}.`,
+    step: 'Open Command Center / Runbooks and follow the Fix buttons on red tiles.',
+  };
+}
+
 function forTile(tile) {
   const id = String(tile?.id || '').toLowerCase();
   const base = PLAYBOOK[id] || {
@@ -94,6 +131,16 @@ function forTile(tile) {
   };
 }
 
+function coachFromParts({ title, why, howTo, dontWorry, steps }) {
+  return {
+    title: title || 'Coach',
+    plain: why || '',
+    howTo: howTo || '',
+    steps: Array.isArray(steps) ? steps : [],
+    dontWorry: dontWorry || '',
+  };
+}
+
 function enrichIssueFromTile(tile) {
   const pb = forTile(tile);
   return {
@@ -106,11 +153,126 @@ function enrichIssueFromTile(tile) {
     actionType: pb.jobId || null,
     route: pb.route,
     tileId: pb.tileId,
+    coach: coachFromParts({
+      title: tile.label || tile.id,
+      why: pb.why,
+      howTo: pb.howTo,
+      steps: [pb.howTo],
+      dontWorry: 'This is a kitchen / data refresh — not an App Store Connect emergency.',
+    }),
+  };
+}
+
+/**
+ * @param {object|null} appStoreGate summarizeAppStoreGate() shape
+ */
+function enrichAppStoreGateIssue(appStoreGate) {
+  if (!appStoreGate) return null;
+  const evaln = appStoreGate.evaluation || {};
+  const reasons = Array.isArray(evaln.reasons) ? evaln.reasons : [];
+  const piMin = appStoreGate.piMin || 90;
+  const score = evaln.productIntelOverall != null
+    ? evaln.productIntelOverall
+    : (appStoreGate.sample && appStoreGate.sample.productIntelOverall);
+  const days = appStoreGate.consecutiveGreenDays || 0;
+  const need = appStoreGate.requiredDays || 7;
+
+  if (evaln.green) {
+    if (appStoreGate.readyForSubmission) return null;
+    return {
+      severity: 'yellow',
+      title: 'App Store gate — building a green streak',
+      detail: `Day ${days}/${need} green`,
+      why: `Today looks OK. You need ${need} green days in a row before the stability gate says ready.`,
+      fixHowTo: 'Nothing urgent. Keep posting on Beat Desk. If something turns red later today, fix that — one red day resets the streak.',
+      action: 'Open Product Health',
+      actionType: null,
+      route: '#product-intel/summary',
+      coach: coachFromParts({
+        title: 'App Store gate (in progress)',
+        why: `You are on day ${days} of ${need}. Green means the site checks passed that day.`,
+        howTo: 'No button to mash. Keep the kitchen healthy. Finish today’s Beat Desk posts.',
+        steps: [
+          'Do today’s Beat Desk posts as usual.',
+          'If Top Issue turns red later, fix that red thing the same day.',
+          `After ${need} green days in a row, the gate turns ready — then we talk App Store Connect.`,
+        ],
+        dontWorry: 'Yellow here is patience, not a fire.',
+      }),
+    };
+  }
+
+  const copies = reasons.map((r) => gateReasonPlain(r, piMin));
+  const onlyPi = reasons.length === 1 && /^product_intel_below_/.test(reasons[0]);
+  const hasQa = reasons.includes('qa_crawl_failed') || reasons.includes('crawler_failures') || reasons.includes('api_failures');
+  const scoreBit = score != null ? ` Product Health score right now: ${score} (need ${piMin}+).` : '';
+  const reasonPlain = copies.map((c) => c.plain).join(' ');
+  const steps = copies.map((c) => c.step);
+
+  let action = 'Open Product Health';
+  let actionType = 'pi-recompute';
+  let route = '#product-intel/summary';
+  if (hasQa) {
+    action = 'Run QA crawl';
+    actionType = 'qa-run';
+    route = '#qa/monitor';
+  }
+
+  return {
+    severity: onlyPi ? 'yellow' : 'red',
+    title: 'App Store gate — today not green',
+    detail: score != null
+      ? `Score ${score}/${piMin}+ · ${reasons.join(', ') || 'criteria not met'}`
+      : (reasons.join(', ') || 'criteria not met'),
+    why: `${reasonPlain}${scoreBit} This is an internal “ready for a calm App Store week” checklist — not a message from Apple.`,
+    fixHowTo: steps[0] || 'Open Product Health and Recompute. Fix any red ops tiles first.',
+    action,
+    actionType,
+    route,
+    coach: coachFromParts({
+      title: 'App Store gate',
+      why: `${reasonPlain}${scoreBit}`,
+      howTo: steps[0] || 'Open Product Health.',
+      steps: [
+        ...steps,
+        'Refresh Command Center when jobs finish.',
+        'A green day only counts after the daily sample records — one bad day resets the 7-day streak.',
+      ],
+      dontWorry: 'You do NOT need to open App Store Connect for this. Fix kitchen health / Product Health first. Keep posting on Beat Desk.',
+    }),
+  };
+}
+
+function enrichQaIssue(qa) {
+  if (!qa || qa.pass !== false) return null;
+  const detail = `${qa.failed || 0} failed checks`;
+  const howTo = 'Click Run QA crawl (or open QA Monitor). Wait for results. Fix red ops tiles if the crawl points at them.';
+  return {
+    severity: 'red',
+    title: 'QA crawl failing',
+    detail,
+    why: 'The automatic site check found failures.',
+    fixHowTo: howTo,
+    action: 'Run crawl',
+    actionType: 'qa-run',
+    route: '#qa/monitor',
+    coach: coachFromParts({
+      title: 'QA crawl',
+      why: 'QA is a robot that clicks through the vault site looking for broken pages.',
+      howTo,
+      steps: [howTo, 'If the same pages keep failing, open Runbooks → “QA is red”.'],
+      dontWorry: 'This is site health — not your X posting workflow.',
+    }),
   };
 }
 
 module.exports = {
   PLAYBOOK,
+  GATE_REASON_COPY,
   forTile,
   enrichIssueFromTile,
+  enrichAppStoreGateIssue,
+  enrichQaIssue,
+  gateReasonPlain,
+  coachFromParts,
 };

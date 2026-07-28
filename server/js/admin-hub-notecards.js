@@ -77,12 +77,16 @@
            'Press <strong>Check API</strong>. If still bad, wait a minute + Refresh. If it keeps failing, open <strong>Runbooks → Deploy recovery</strong>.'],
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Film Room Engine red (or “Catalog …h ago”)</strong>',
            'Catalog is stale. Click <strong>Rebuild Film Room catalog</strong> (orange Fix button / Re-run). Wait 1–2 minutes, Refresh. Not a Beat Desk problem.'],
+          ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>App Store gate / product_intel_below_90 (Top Issue)</strong>',
+           'Ignore for posting. Scorecard issue — open Command Center Coach later. Keep using Beat Desk.'],
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Beat Desk sidebar dot is red</strong>',
            'Kitchen/API is unhealthy. Don’t force posts — Check API / wait for green, then Refresh the desk.']
         ]
       : [
+          ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>App Store gate / product_intel_below_90</strong>',
+           'Product Health score is under 90. That is an internal report card — <strong>not Apple rejecting you</strong>. Open Product Health → Recompute. Fix red ops tiles first (they drag the score down). Keep posting on Beat Desk.'],
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Top issue is red</strong>',
-           'Read the yellow “What to do” line. Press the orange Fix button (ex: Rebuild Film Room catalog). Don’t just open Full Ops and guess.'],
+           'Read the yellow “What to do” line / <strong>Coach says</strong> box. Press the orange Fix button. Don’t just open Full Ops and guess.'],
           ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>Yellow module / backlog</strong>',
            'Finish today’s posts first if you can. Then open that yellow module when you have a minute.'],
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>QA is red</strong>',
@@ -94,7 +98,7 @@
         ];
 
     var ignore = deskFocus
-      ? 'Skip Full Ops, Self-Runner, Product Health, and anything under <strong>Legacy consoles</strong> unless Charles is fixing a break.'
+      ? 'Skip Full Ops, Self-Runner, and Legacy consoles unless fixing a break. Open <strong>Product Health</strong> only when Coach / Top Issue says the App Store gate score is low.'
       : 'Skip Content / Community / Feedback / Player Intel / Self-Runner (Legacy) unless you have a specific support or content task.';
 
     var stepsHtml = todaySteps
