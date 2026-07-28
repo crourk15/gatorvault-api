@@ -117,6 +117,7 @@ function summarizeAppStoreGate() {
     const snap = gate.buildSnapshot({ healthReady: true });
     return {
       requiredDays: snap.requiredDays,
+      piMin: snap.piMin,
       consecutiveGreenDays: snap.consecutiveGreenDays || 0,
       readyForSubmission: !!snap.readyForSubmission,
       windowStartedAt: snap.windowStartedAt,
@@ -257,18 +258,15 @@ function buildModuleHealthMap({ ops, qa, productIntel, selfRunner, feedbackOpen,
 }
 
 function buildTopIssues({ ops, qa, productIntel, selfRunner, alerts, appStoreGate }) {
+  const {
+    enrichIssueFromTile,
+    enrichAppStoreGateIssue,
+    enrichQaIssue,
+    coachFromParts,
+  } = require('./ops-fix-playbook');
   const issues = [];
-  if (qa.pass === false) {
-    issues.push({
-      severity: 'red',
-      title: 'QA crawl failing',
-      detail: `${qa.failed || 0} failed checks`,
-      route: '#qa/monitor',
-      actionType: 'qa-run',
-      action: 'Run crawl'
-    });
-  }
-  const { enrichIssueFromTile } = require('./ops-fix-playbook');
+  const qaIssue = enrichQaIssue(qa);
+  if (qaIssue) issues.push(qaIssue);
   (ops.tiles || [])
     .filter((t) => t.status === 'red')
     .slice(0, 3)
@@ -281,7 +279,16 @@ function buildTopIssues({ ops, qa, productIntel, selfRunner, alerts, appStoreGat
     issues.push({
       severity: a.severity === 'critical' || a.severity === 'error' ? 'red' : 'yellow',
       title: a.title || a.type || 'Ops alert',
-      detail: a.message || ''
+      detail: a.message || '',
+      why: a.message || a.title || 'Ops alert needs a look.',
+      fixHowTo: 'Open Alerts / Full Ops logs for this item. If a red tile Fix button exists, use that first.',
+      coach: coachFromParts({
+        title: a.title || 'Ops alert',
+        why: a.message || 'Something in ops needs attention.',
+        howTo: 'Open the Alerts panel (bell) and read the newest matching alert.',
+        steps: ['Open Alerts', 'If a red module tile matches, use its orange Fix button', 'Refresh after the job finishes'],
+        dontWorry: 'Alerts pile up — fix the red tile first, not every gray notice.',
+      }),
     });
   });
   if (selfRunner.queue && selfRunner.queue.pending > 0) {
@@ -289,7 +296,16 @@ function buildTopIssues({ ops, qa, productIntel, selfRunner, alerts, appStoreGat
       severity: 'yellow',
       title: 'Self-Runner pending approval',
       detail: `${selfRunner.queue.pending} fix proposal(s)`,
-      route: '#self-runner/pending'
+      route: '#self-runner/pending',
+      why: 'Self-Runner drafted fix proposals waiting for a human click.',
+      fixHowTo: 'Open Self-Runner pending. Only approve if you understand the change — or leave for later.',
+      coach: coachFromParts({
+        title: 'Self-Runner',
+        why: 'The bot wrote suggested code/content fixes. They do nothing until approved.',
+        howTo: 'Open Self-Runner pending when you have time. Skip during daily posting.',
+        steps: ['Finish Beat Desk posts first', 'Open Self-Runner only if you are reviewing fixes'],
+        dontWorry: 'Pending proposals are not fires.',
+      }),
     });
   }
   if (productIntel.fixQueueOpen >= 6) {
@@ -299,25 +315,20 @@ function buildTopIssues({ ops, qa, productIntel, selfRunner, alerts, appStoreGat
       detail: `${productIntel.fixQueueOpen} open items`,
       route: '#product-intel/health',
       actionType: 'pi-recompute',
-      action: 'Recompute'
+      action: 'Recompute',
+      why: 'Product Health has a backlog of open fix items.',
+      fixHowTo: 'Open Product Health and Recompute. Work the queue when you are not mid-posting.',
+      coach: coachFromParts({
+        title: 'Product fix queue',
+        why: 'The vault site scorecard has several open fix items.',
+        howTo: 'Click Recompute, then open Product Health when you have a quiet minute.',
+        steps: ['Recompute scores', 'Open Product Health', 'Ask support before changing code-level items'],
+        dontWorry: 'You can still post on Beat Desk with a yellow queue.',
+      }),
     });
   }
-  if (appStoreGate && !appStoreGate.evaluation?.green) {
-    const reasons = (appStoreGate.evaluation?.reasons || []).join(', ') || 'gate criteria not met';
-    issues.push({
-      severity: 'red',
-      title: 'App Store gate — today not green',
-      detail: reasons,
-      route: '#dashboard'
-    });
-  } else if (appStoreGate && !appStoreGate.readyForSubmission) {
-    issues.push({
-      severity: 'yellow',
-      title: 'App Store gate in progress',
-      detail: `Day ${appStoreGate.consecutiveGreenDays || 0}/${appStoreGate.requiredDays || 7} green`,
-      route: '#dashboard'
-    });
-  }
+  const gateIssue = enrichAppStoreGateIssue(appStoreGate);
+  if (gateIssue) issues.push(gateIssue);
   return issues.slice(0, 5);
 }
 
@@ -338,6 +349,15 @@ function buildRecommendedActions(ctx) {
   const film = tileById(ctx.ops, 'film-room');
   if (film && film.status === 'red') {
     actions.unshift({ id: 'film-room-weekly', label: 'Rebuild Film Room catalog' });
+  }
+  const gate = ctx.appStoreGate;
+  if (gate && gate.evaluation && !gate.evaluation.green) {
+    const reasons = gate.evaluation.reasons || [];
+    if (reasons.includes('qa_crawl_failed') || reasons.includes('crawler_failures') || reasons.includes('api_failures')) {
+      actions.unshift({ id: 'qa-run', label: 'Run QA crawl' });
+    } else {
+      actions.unshift({ id: 'pi-recompute', label: 'Recompute product scores' });
+    }
   }
   return actions.slice(0, 6);
 }
@@ -605,7 +625,7 @@ async function buildOverviewPayload() {
     alerts,
     topIssues: buildTopIssues({ ops, qa, productIntel, selfRunner, alerts, appStoreGate }),
     moduleHealth,
-    recommendedActions: buildRecommendedActions({ ops, qa, productIntel, selfRunner }),
+    recommendedActions: buildRecommendedActions({ ops, qa, productIntel, selfRunner, appStoreGate }),
     pipelines: buildPipelines(ops)
   };
 }

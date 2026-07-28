@@ -40,6 +40,17 @@
       global.GVAdminNotecards.wire(container, { onNavigate: onNavigate });
     }
 
+    function runDashAction(action) {
+      if (action === 'qa-run') return apiPost('/api/qa/run', { force: true });
+      if (action === 'pi-recompute') return apiPost('/api/product-intel/recompute', {});
+      if (action === 'sr-generate') return apiPost('/api/self-runner/generate', { runQa: false });
+      if (action === 'hub-cache') return apiPost('/api/live/refresh', {});
+      if (action === 'recruiting-ingest' || action === 'film-room-weekly' || action === 'portal-ingest' || action === 'nil-refresh' || action === 'depth-chart-refresh' || action === 'article-engine-weekly-draft') {
+        return apiPost('/api/ops/run-job', { jobId: action });
+      }
+      return Promise.resolve();
+    }
+
     function bindActions(root) {
       root.querySelectorAll('[data-dash-route]').forEach(function (el) {
         el.addEventListener('click', function () {
@@ -52,16 +63,8 @@
         btn.addEventListener('click', function () {
           var action = btn.getAttribute('data-dash-action');
           btn.disabled = true;
-          var p;
-          if (action === 'qa-run') p = apiPost('/api/qa/run', { force: true });
-          else if (action === 'pi-recompute') p = apiPost('/api/product-intel/recompute', {});
-          else if (action === 'sr-generate') p = apiPost('/api/self-runner/generate', { runQa: false });
-          else if (action === 'hub-cache') p = apiPost('/api/live/refresh', {});
-          else if (action === 'recruiting-ingest' || action === 'film-room-weekly' || action === 'portal-ingest' || action === 'nil-refresh' || action === 'depth-chart-refresh' || action === 'article-engine-weekly-draft') {
-            p = apiPost('/api/ops/run-job', { jobId: action });
-          }
-          else p = Promise.resolve();
-          p.then(function () { load(); })
+          runDashAction(action)
+            .then(function () { load(); })
             .catch(function (e) { alert(e.message || 'Action failed'); })
             .finally(function () { btn.disabled = false; });
         });
@@ -143,7 +146,8 @@
       var qaLine = qaPass === true ? 'Last crawl passed' : qaPass === false ? 'Failures detected' : 'No crawl signal yet';
 
       body.innerHTML =
-        '<div class="hub-dash-grid">'
+        '<div id="hub-coach-slot"></div>'
+        + '<div class="hub-dash-grid">'
         + '<section class="hub-card hub-card-wide hub-dash-overall ' + statusClass(data.overall) + '">'
         + '<div class="hub-dash-hero">'
         + '<div><span class="hub-overall-label">Overall health</span>'
@@ -179,7 +183,10 @@
 
         + '<section class="hub-card"><h3>App Store Gate</h3>'
         + '<p class="hub-meta">Progress: ' + esc(data.appStoreGate ? ((data.appStoreGate.consecutiveGreenDays || 0) + '/' + (data.appStoreGate.requiredDays || 7) + ' green days') : '—') + '</p>'
-        + '<p class="hub-meta">Today: ' + esc(data.appStoreGate && data.appStoreGate.evaluation ? (data.appStoreGate.evaluation.green ? 'Green' : 'Red') : '—') + '</p>'
+        + '<p class="hub-meta">Today: ' + esc(data.appStoreGate && data.appStoreGate.evaluation ? (data.appStoreGate.evaluation.green ? 'Green' : 'Not green yet') : '—') + '</p>'
+        + '<p class="hub-meta">Product Health: ' + esc(data.appStoreGate && data.appStoreGate.evaluation && data.appStoreGate.evaluation.productIntelOverall != null ? data.appStoreGate.evaluation.productIntelOverall : (data.productIntel && data.productIntel.overall != null ? data.productIntel.overall : '—')) + ' (need ' + esc(data.appStoreGate && data.appStoreGate.piMin != null ? data.appStoreGate.piMin : 90) + '+)</p>'
+        + '<p class="hub-meta" style="color:#fde047">Internal checklist for a calm App Store week — not a message from Apple.</p>'
+        + '<button type="button" class="hub-btn secondary" data-dash-route="#product-intel/summary">Open Product Health</button>'
         + '</section>'
 
         + '<section class="hub-card hub-card-wide"><h3>Module health</h3><div class="hub-mod-grid">' + moduleCards + '</div></section>'
@@ -191,6 +198,14 @@
 
       body.classList.remove('hidden');
       bindActions(body);
+      if (global.GVAdminCoach && typeof global.GVAdminCoach.renderInto === 'function') {
+        global.GVAdminCoach.renderInto(body, data, {
+          onNavigate: onNavigate,
+          onAction: function (action) {
+            return runDashAction(action).then(function () { load(); });
+          }
+        });
+      }
 
       if (global.GVAdminHub && typeof global.GVAdminHub.applyModuleHealth === 'function') {
         var alertList = (data.alerts && data.alerts.alerts) || [];
