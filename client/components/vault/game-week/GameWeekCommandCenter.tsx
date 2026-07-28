@@ -93,7 +93,7 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
               <section className="gv-gw-wow-panel fc-lab-panel-shell">
                 <h3 className="gv-gw-wow-panel__title">Film Notes</h3>
                 <div className="gv-gw-wow-panel__body">
-                  <FilmNotesPanel notes={bundle.filmNotes} game={bundle.game} />
+                  <FilmNotesPanel notes={bundle.filmNotes} />
                 </div>
               </section>
             </div>
