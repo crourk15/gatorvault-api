@@ -1972,6 +1972,13 @@ function startPostBootServices() {
   } catch (e) {
     console.warn('[guardian] runtime watchdog failed to start', e.message);
   }
+  // Heal Supabase Advisor criticals after deploy (RLS + revoke anon grants).
+  // Non-blocking; skips when DATABASE_URL unset or SUPABASE_RLS_LOCKDOWN_ON_BOOT=0.
+  try {
+    require('./lib/supabase-rls-lockdown').scheduleSupabaseRlsLockdownOnBoot();
+  } catch (e) {
+    console.warn('[rls-lockdown] boot schedule failed:', e.message);
+  }
 } // startPostBootServices
 
 } // wireApplication

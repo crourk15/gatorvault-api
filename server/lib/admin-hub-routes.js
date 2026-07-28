@@ -755,6 +755,48 @@ function mountAdminHubRoutes(app) {
       return res.status(400).json({ ok: false, error: err.message });
     }
   });
+
+  /** Supabase Advisor lockdown status (RLS / sensitive columns). */
+  app.get('/api/admin/hub/security/rls-status', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const rls = require('./supabase-rls-lockdown');
+      if (!rls.databaseUrl()) {
+        return res.status(200).json({
+          ok: false,
+          configured: false,
+          error: 'DATABASE_URL not configured on this host',
+        });
+      }
+      const status = await rls.getSupabaseRlsStatus();
+      return res.status(200).json({ ...status, updatedAt: new Date().toISOString() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Apply RLS lockdown now — clears Supabase email criticals. Idempotent. */
+  app.post('/api/admin/hub/security/lockdown-rls', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const rls = require('./supabase-rls-lockdown');
+      if (!rls.databaseUrl()) {
+        return res.status(503).json({
+          ok: false,
+          error: 'DATABASE_URL not configured on this host',
+        });
+      }
+      const force = !!(req.body && req.body.force);
+      const result = await rls.applySupabaseRlsLockdown({ source: 'admin-hub', force });
+      return res.status(result.ok ? 200 : 500).json({
+        ...result,
+        updatedAt: new Date().toISOString(),
+        next: 'Supabase → Advisors → refresh; expect Critical issues cleared',
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 }
 
 module.exports = {
