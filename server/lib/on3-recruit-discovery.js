@@ -330,10 +330,34 @@ async function searchOn3ProfileUrls(name, classYear, pos) {
   return urls;
 }
 
+function humanizeSlugAsName(slugOrName) {
+  const raw = String(slugOrName || '').trim();
+  if (!raw) return null;
+  if (/\s/.test(raw)) return raw;
+  // slug-like: nick-carroll / nick-carroll-281042 → Nick Carroll
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)+$/i.test(raw)) return raw;
+  return raw
+    .replace(/-\d+$/, '')
+    .split('-')
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+}
+
+function profileFitsClassYear(profile, classYear) {
+  if (!profile || profile.error) return false;
+  const cy = Number(profile.classYear);
+  const want = Number(classYear);
+  if (!Number.isFinite(cy) || !Number.isFinite(want)) return true;
+  if (want >= 2027 && cy <= 2025) return false;
+  return Math.abs(cy - want) <= 2;
+}
+
 async function discoverOn3RecruitSlug(slug, options = {}) {
   const classYear = Number(options.classYear) || 2028;
   const player = options.player || null;
-  const name = options.name || CANONICAL_TARGET_NAMES[slug] || player?.name || slug;
+  const rawName = options.name || CANONICAL_TARGET_NAMES[slug] || player?.name || slug;
+  const name = humanizeSlugAsName(rawName) || rawName;
   const pos = options.pos || player?.pos || null;
 
   const stored = resolveStoredOn3Slug(player);
@@ -343,7 +367,12 @@ async function discoverOn3RecruitSlug(slug, options = {}) {
   for (const candidate of [stored, mappedSlug]) {
     if (!candidate) continue;
     const profile = await on3Recruit.fetchRecruitProfile(candidate, classYear);
-    if (profile && !profile.error && nameMatchesProfile(profile.name, name)) {
+    if (
+      profile &&
+      !profile.error &&
+      nameMatchesProfile(profile.name, name) &&
+      profileFitsClassYear(profile, classYear)
+    ) {
       return { recruitSlug: candidate, profile, source: mappedSlug === candidate ? 'slug_map' : 'stored_slug' };
     }
   }
@@ -359,6 +388,7 @@ async function discoverOn3RecruitSlug(slug, options = {}) {
     const profile = await on3Recruit.fetchRecruitProfile(recruitSlug, classYear);
     if (profile?.error) continue;
     if (!nameMatchesProfile(profile.name, name)) continue;
+    if (!profileFitsClassYear(profile, classYear)) continue;
     return { recruitSlug, profile, source: 'search' };
   }
 
@@ -420,5 +450,7 @@ module.exports = {
   parseOn3NewsArticleSlug,
   parseOn3BeatUrlIdentity,
   loadCanonicalOn3SlugMap,
+  humanizeSlugAsName,
+  profileFitsClassYear,
   ON3_SLUG_MAP_PATH,
 };

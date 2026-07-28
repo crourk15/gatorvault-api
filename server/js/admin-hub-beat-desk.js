@@ -216,10 +216,13 @@
         + '<div class="hub-card" style="margin-bottom:12px">'
         + '<h3>Board facts</h3>'
         + '<p class="hub-meta" style="margin:0 0 8px">'
+        + (research.rankings || (p && p.rankings) ? '<strong style="color:#fff">On3 ranks:</strong> ' + esc(research.rankings || p.rankings) + '<br>' : '')
+        + (research.interestedSchools || (p && p.interestedSchools) ? '<strong style="color:#fff">Interested schools:</strong> ' + esc(research.interestedSchools || p.interestedSchools) + '<br>' : '')
         + (research.offers ? '<strong style="color:#fff">Offers:</strong> ' + esc(research.offers) + '<br>' : '')
         + (research.visits ? '<strong style="color:#fff">Visits:</strong> ' + esc(research.visits) + '<br>' : '')
         + (research.rpm ? '<strong style="color:#fff">RPM:</strong> ' + esc(research.rpm) + '<br>' : '')
         + ((p.rivals && p.rivals.length) ? '<strong style="color:#fff">Rivals:</strong> ' + esc(p.rivals.join(', ')) : '')
+        + (!research.rankings && !research.interestedSchools && !research.offers && !research.visits && !research.rpm && !(p.rivals && p.rivals.length) ? '—' : '')
         + '</p>'
         + (research.staffNotes || research.scoutingSummary
           ? '<p style="margin:8px 0 0;white-space:pre-wrap;line-height:1.45;color:#cbd5e1">'

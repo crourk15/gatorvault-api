@@ -454,9 +454,32 @@ async function researchUpdate(input = {}) {
       .join(' ')
   );
 
-  const player = await loadPlayerRecord(playerSlug || intel?.playerSlug, playerName || intel?.playerName);
-  const resolvedSlug = player?.slug || playerSlug || intel?.playerSlug || null;
-  let on3TopTeams = player?.on3TopTeams || null;
+  let player = await loadPlayerRecord(playerSlug || intel?.playerSlug, playerName || intel?.playerName);
+  let resolvedSlug = player?.slug || playerSlug || intel?.playerSlug || null;
+  let resolvedName = player?.name || playerName || intel?.playerName || null;
+
+  // Hydrate thin store records via On3 discovery/slug map (ranks + interested schools).
+  try {
+    const hydrate = require('./on3-board-hydrate');
+    if (hydrate.boardNeedsHydration(player) && (resolvedSlug || resolvedName)) {
+      const hydrated = await hydrate.hydrateRecruitBoard({
+        slug: resolvedSlug || hydrate.humanizeSlugName(resolvedName),
+        name: resolvedName || resolvedSlug,
+        player,
+        classYear: player?.classYear || intel?.classYear || null,
+        pos: player?.pos || player?.position || intel?.pos || null
+      });
+      if (hydrated?.player) {
+        player = hydrated.player;
+        resolvedSlug = player.slug || resolvedSlug;
+        resolvedName = player.name || resolvedName;
+      }
+    }
+  } catch {
+    /* optional */
+  }
+
+  let on3TopTeams = player?.on3TopTeams || player?.topTeams || null;
   if (!on3TopTeams?.length) {
     try {
       const golden = require('./player-intelligence/golden-four-on3');
@@ -475,11 +498,7 @@ async function researchUpdate(input = {}) {
       /* optional golden-four board pull */
     }
   }
-  if (
-    !on3TopTeams?.length &&
-    player?.on3Slug &&
-    process.env.X_AUTOPOST_ON3_LIVE_BOARD === 'true'
-  ) {
+  if (!on3TopTeams?.length && player?.on3Slug) {
     try {
       const on3Recruit = require('./on3-recruit-client');
       const slug = String(player.on3Slug).replace(/^\//, '');
@@ -490,7 +509,7 @@ async function researchUpdate(input = {}) {
     }
   }
 
-  let resolvedName = player?.name || playerName || intel?.playerName || null;
+  if (!resolvedName) resolvedName = player?.name || playerName || intel?.playerName || null;
   if (!resolvedName && combinedText.length >= 20) {
     resolvedName = extractPlayerNameFromText(combinedText);
   }
