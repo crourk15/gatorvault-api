@@ -301,7 +301,7 @@
       var trimmed = (text || '').trim();
       if (trimmed.charAt(0) === '<' || ct.indexOf('text/html') >= 0) {
         var hint = r.status >= 500
-          ? 'API unavailable (' + r.status + '). Render may be waking — retry in 30s.'
+          ? 'Kitchen busy (' + r.status + '). Retrying quietly…'
           : 'Got HTML instead of JSON (' + r.status + '). Check /api/* proxy routing.';
         throw new Error(hint);
       }

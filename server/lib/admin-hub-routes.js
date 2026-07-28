@@ -14,6 +14,7 @@ const { hasPaidAccess, trialState, isSubscriptionActive } = require('./subscript
 const { effectiveTier } = require('./session-auth');
 
 const MODULE_IDS = [
+  'beat-desk',
   'dashboard',
   'members',
   'gm2',
@@ -191,7 +192,11 @@ function buildModuleHealthMap({ ops, qa, productIntel, selfRunner, feedbackOpen,
     map[id] = 'unknown';
   });
 
-  if (ops && ops.overall) map.dashboard = ops.overall;
+  if (ops && ops.overall) {
+    map.dashboard = ops.overall;
+    // Beat Desk rides the same kitchen — mirror ops health.
+    map['beat-desk'] = ops.overall;
+  }
   const identity = tileById(ops, 'identity-patterns');
   const gmTile = tileById(ops, 'cron-jobs');
   if (identity && identity.status) map.gm2 = identity.status;
