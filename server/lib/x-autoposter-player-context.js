@@ -19,7 +19,8 @@ const INVALID_NAME_PARTS = new Set([
   'schools', "i'm", 'im', "we're", "they're", "you're", "he's", "she's", 'who', 'what', 'when', 'where',
   'cant', "can't", 'wont', "won't", 'ignore', 'ignores', 'ignored', 'cannot',
   'battles', 'upcoming', 'decisions', 'storylines', 'storyline', 'roundup', 'breakdown',
-  'lands', 'gathered', 'targets', 'hunting', 'remaining'
+  'lands', 'gathered', 'targets', 'hunting', 'remaining',
+  'portal', 'transfer', 'message', 'board', 'preseason', 'coverage', 'camp', 'practice'
 ]);
 
 function isUsableBeatLine(line) {
@@ -41,10 +42,27 @@ function coreNameParts(name) {
     .filter((p) => !NAME_SUFFIXES.has(p.toLowerCase()));
 }
 
+/** Team/calendar phrases that look like Title Case "players" (e.g. FALL CAMP). */
+const INVALID_NAME_PHRASES = [
+  /^fall\s+camp$/i,
+  /^spring\s+practice$/i,
+  /^spring\s+game$/i,
+  /^fall\s+practice$/i,
+  /^signing\s+day$/i,
+  /^national\s+signing$/i,
+  /^early\s+signing$/i,
+  /^gators?\s+online$/i,
+  /^transfer\s+portal$/i,
+  /^message\s+board$/i,
+  /^preseason\s+coverage$/i,
+  /^recruiting\s+intel$/i,
+];
+
 function isValidPlayerName(name) {
   if (!name || typeof name !== 'string') return false;
   const trimmed = name.trim();
   if (trimmed.length < 4 || trimmed.length > 56) return false;
+  if (INVALID_NAME_PHRASES.some((re) => re.test(trimmed))) return false;
   const parts = trimmed.split(/\s+/).filter(Boolean);
   const core = coreNameParts(trimmed);
   if (core.length < 2) return false;

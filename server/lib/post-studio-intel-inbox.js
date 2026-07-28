@@ -173,14 +173,52 @@ async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 }
     gate = null;
   }
 
+  let prefilter = null;
+  try {
+    prefilter = require('./beat-intel-prefilter');
+  } catch {
+    prefilter = null;
+  }
+
   const cutoff = Date.now() - maxAgeMs;
   const rows = [];
   for (const p of posts) {
     const text = String(p.text || '').trim();
     if (text.length < 24) continue;
+    // Soft-sell only — team/staff/camp/program beats stay on the desk as hub topics.
+    if (prefilter?.isSubscribePromoIntel?.(text)) continue;
+
     const reportedAt = p.publishedAt || p.fetchedAt || fetchedAt || null;
     const ts = new Date(reportedAt || 0).getTime();
     if (Number.isFinite(ts) && ts > 0 && ts < cutoff) continue;
+
+    let hub = null;
+    try {
+      hub = require('./hub-desk-topics').classifyHubDeskBeat(text, p);
+    } catch {
+      hub = null;
+    }
+    if (hub?.playerSlug) {
+      rows.push({
+        playerSlug: normalizeSlug(hub.playerSlug),
+        playerName: hub.playerName,
+        source: `beat-writer:${String(p.handle || p.writerName || 'live').replace(/^@/, '')}`,
+        eventType: hub.eventType,
+        deskKind: hub.deskKind,
+        topicType: hub.topicType,
+        detail: text,
+        skinny: text.slice(0, 200),
+        reportedAt,
+        createdAt: reportedAt,
+        articleUrl: p.url || p.link || null,
+        ufRelevant: true,
+        liveBeat: true,
+        teaserResolved: false,
+        writerName: p.writerName || p.handle || null,
+        outlet: p.outlet || null
+      });
+      continue;
+    }
 
     let hit = null;
     let articleUrl = p.url || p.link || null;
@@ -190,9 +228,6 @@ async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 }
       if (enriched?.resolved?.playerSlug) {
         hit = enriched.resolved;
         if (enriched.resolved.on3ArticleUrl) articleUrl = enriched.resolved.on3ArticleUrl;
-        if (enriched.post?.text) {
-          // keep original beat text in detail; name is on the row
-        }
       } else {
         hit = teaser.resolvePlayerFromBeatPostSync(p);
       }
@@ -213,6 +248,7 @@ async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 }
       playerName: hit.playerName || null,
       source: `beat-writer:${String(p.handle || p.writerName || 'live').replace(/^@/, '')}`,
       eventType: 'beat_live',
+      deskKind: 'recruit',
       detail: text,
       skinny: text.slice(0, 200),
       reportedAt,
@@ -231,7 +267,40 @@ async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 }
 function recentBeatIntelRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS } = {}) {
   const cutoffIso = new Date(Date.now() - maxAgeMs).toISOString();
   const recent = intelStore.listIntel({ limit: 400, since: cutoffIso }) || [];
-  return recent.filter((row) => isBeatIntel(row) || row.ufRelevant === true);
+  let hubTopics = null;
+  try {
+    hubTopics = require('./hub-desk-topics');
+  } catch {
+    hubTopics = null;
+  }
+  return recent
+    .filter((row) => isBeatIntel(row) || row.ufRelevant === true)
+    .map((row) => {
+      if (row.playerSlug) return row;
+      if (!hubTopics) return row;
+      const et = String(row.eventType || row.triggerType || '');
+      if (et === 'team_event') {
+        const type = row.teamEventType || row.status || 'general';
+        return {
+          ...row,
+          playerSlug: hubTopics.hubDeskSlug('team', type),
+          playerName: hubTopics.hubDeskLabel('team', type),
+          deskKind: 'team',
+          topicType: type
+        };
+      }
+      if (et === 'program_news') {
+        const type = row.programNewsType || row.status || 'general';
+        return {
+          ...row,
+          playerSlug: hubTopics.hubDeskSlug('program', type),
+          playerName: hubTopics.hubDeskLabel('program', type),
+          deskKind: 'program',
+          topicType: type
+        };
+      }
+      return row;
+    });
 }
 
 async function getIntelInbox({
@@ -274,6 +343,8 @@ async function getIntelInbox({
       playerName: intel.playerName || null,
       source: intel.source || null,
       eventType: intel.eventType || null,
+      deskKind: intel.deskKind || (String(slug).startsWith('uf-team-') || String(slug).startsWith('uf-program-') ? 'team' : 'recruit'),
+      topicType: intel.topicType || null,
       reportedAt: intel.reportedAt || intel.createdAt || null,
       ageLabel: formatAge(age),
       ageMs: age,

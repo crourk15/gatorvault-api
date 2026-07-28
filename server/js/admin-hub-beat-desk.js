@@ -379,8 +379,14 @@
         var slug = it.slug || '';
         var stale = it.ageMs != null && it.ageMs > FRESH_MS;
         var name = it.playerName || slug || '—';
+        var kind = it.deskKind || (String(slug).indexOf('uf-team-') === 0 || String(slug).indexOf('uf-program-') === 0
+          ? (String(slug).indexOf('uf-program-') === 0 ? 'program' : 'team')
+          : 'recruit');
+        var kindBadge = kind === 'recruit'
+          ? ''
+          : '<span class="hub-env-badge" style="margin-left:6px;background:#1d4ed8">' + esc(kind === 'program' ? 'PROGRAM' : 'TEAM') + '</span>';
         return '<tr data-bd-slug="' + esc(slug) + '" class="hub-ps-row' + (slug === selectedSlug ? ' hub-ps-row--active' : '') + '">'
-          + '<td><strong style="color:#fff">' + esc(name) + '</strong>'
+          + '<td><strong style="color:#fff">' + esc(name) + '</strong>' + kindBadge
           + '<div class="hub-meta" style="margin:2px 0 0">' + esc(slug) + '</div></td>'
           + '<td><span class="hub-env-badge ' + statusClass(stale ? 'stale' : (it.liveBeat ? 'ok' : ((it.status && it.status.status) || st))) + '">'
           + esc(stale ? 'STALE' : (it.liveBeat ? 'LIVE' : (typeof st === 'string' ? st : '—'))) + '</span></td>'
@@ -410,11 +416,12 @@
         + (showOlder ? 'Hide older beats' : 'Show older beats') + '</button>'
         + '</div></div>'
         + '<div class="hub-table-wrap"><table class="hub-table" style="width:100%">'
-        + '<thead><tr><th>Player</th><th>Status</th><th>Age</th><th>Beat</th><th>Action</th></tr></thead>'
+        + '<thead><tr><th>Topic / Player</th><th>Status</th><th>Age</th><th>Beat</th><th>Action</th></tr></thead>'
         + '<tbody>' + rows + '</tbody></table></div>'
+        + '<p class="hub-meta" style="margin:10px 0 0">TEAM / PROGRAM rows = camp, staff, schedule, facilities — whole-hub coverage, not just recruiting.</p>'
         + '</section>'
         + '<section class="hub-card hub-card-wide" id="hub-bd-brief">'
-        + '<h3>Player packet</h3>'
+        + '<h3>Vault packet</h3>'
         + '<p class="hub-meta" style="margin:0">Press <strong style="color:#fff">Open</strong> or <strong style="color:#fff">Copy Brief</strong> on a row above.</p>'
         + '</section>'
         + '</div>';
