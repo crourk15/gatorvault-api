@@ -122,7 +122,7 @@ function formatBriefText({ slug, playerName, player, inspect, beatRows }) {
 /**
  * Full brief packet for Beat Desk UI + copy/paste.
  */
-async function buildBeatBrief(slug) {
+async function buildBeatBrief(slug, opts = {}) {
   const normalized = normalizeSlug(slug);
   if (!normalized) return { ok: false, error: 'missing_slug' };
 
@@ -130,8 +130,12 @@ async function buildBeatBrief(slug) {
 
   await intelStore.initIntelStore().catch(() => {});
 
+  // Desk needs facts + beat text fast. Skip heavy elite compose unless ?full=1.
+  const wantFull = opts && opts.full === true;
   const [inspect, player] = await Promise.all([
-    inspectPlayer(normalized).catch((err) => ({ ok: false, error: err.message })),
+    wantFull
+      ? inspectPlayer(normalized).catch((err) => ({ ok: false, error: err.message }))
+      : Promise.resolve({ ok: true, playerName: null, verdict: null, fullCompose: null, drafts: [] }),
     loadRecruitingPlayer(normalized),
   ]);
 
@@ -149,6 +153,8 @@ async function buildBeatBrief(slug) {
     player?.fullName ||
     beatRows[0]?.playerName ||
     normalized;
+
+  if (inspect && !inspect.playerName) inspect.playerName = playerName;
 
   const pasteText = formatBriefText({
     slug: normalized,

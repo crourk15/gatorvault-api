@@ -334,11 +334,17 @@ function buildRecommendedActions(ctx) {
   return actions.slice(0, 6);
 }
 
-function searchPlayers(q, limit) {
+async function searchPlayers(q, limit) {
   const needle = String(q || '').trim().toLowerCase();
   if (!needle || needle.length < 2) return [];
-  return recruitingStore
-    .getAllPlayers()
+  let players = [];
+  try {
+    players = (await recruitingStore.getAllPlayers()) || [];
+  } catch {
+    players = [];
+  }
+  if (!Array.isArray(players)) players = [];
+  return players
     .filter((p) => {
       const name = `${p.name || ''} ${p.fullName || ''} ${p.slug || ''}`.toLowerCase();
       return name.includes(needle) || String(p.id || '').includes(needle);
@@ -630,17 +636,18 @@ function mountAdminHubRoutes(app) {
     }
   });
 
-  app.get('/api/admin/hub/search', (req, res) => {
+  app.get('/api/admin/hub/search', async (req, res) => {
     if (!requireAdmin(req, res)) return;
     const q = String(req.query.q || '').trim();
     if (!q) return res.status(400).json({ ok: false, error: 'q required' });
     try {
       const limit = Math.min(parseInt(String(req.query.limit || '8'), 10) || 8, 25);
+      const players = await searchPlayers(q, limit);
       return res.status(200).json({
         ok: true,
         q,
         results: {
-          players: searchPlayers(q, limit),
+          players,
           articles: searchArticles(q, limit),
           users: searchUsers(q, limit)
         }

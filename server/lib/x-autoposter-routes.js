@@ -410,7 +410,8 @@ function mountXAutoposterRoutes(app) {
     }
     try {
       const { buildBeatBrief } = require('./beat-brief-packet');
-      const out = await buildBeatBrief(req.params.slug);
+      const full = req.query.full === '1' || req.query.full === 'true';
+      const out = await buildBeatBrief(req.params.slug, { full });
       return res.status(out.ok ? 200 : 400).json(out);
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
