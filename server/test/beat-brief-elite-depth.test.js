@@ -120,6 +120,8 @@ async function main() {
   assert.ok(/Interested schools:/i.test(paste), paste);
   assert.ok(/Natl #70/i.test(paste), paste);
   assert.ok(/Georgia/i.test(paste), paste);
+  assert.ok(/600|900|1000|VERIFIED|long-form/i.test(paste), 'verified long-form instructions');
+  assert.ok(/ELITE DEPTH CHECKLIST/i.test(paste), paste);
 
   // Live hydration via slug map (network) — skip soft-fail if On3 blocked.
   const { hydrateRecruitBoard } = require('../lib/on3-board-hydrate');
@@ -128,10 +130,28 @@ async function main() {
     assert.strictEqual(live.recruitSlug, 'nick-carroll-281042');
     assert.ok(live.player?.natlRank != null, 'live natlRank');
     assert.ok((live.player?.on3TopTeams || []).length >= 3, 'live topTeams');
-    console.log('live hydrate OK', live.player.natlRank, live.player.posRank, live.player.stateRank);
+    assert.ok(live.player?.htWt || live.player?.height, 'measurements');
+    assert.ok(Array.isArray(live.player?.visitTrail), 'visitTrail array');
+    assert.ok(live.player?.ufStaff || live.player?.schoolLadder?.length, 'staff or ladder');
+    console.log(
+      'live hydrate OK',
+      live.player.natlRank,
+      live.player.posRank,
+      live.player.stateRank,
+      live.player.htWt,
+      live.player.ufStaff?.label || null
+    );
   } else {
     console.log('live hydrate skipped (On3 unavailable)');
   }
+
+  const brief = await require('../lib/beat-brief-packet').buildBeatBrief('nick-carroll');
+  assert.ok(brief.ok);
+  assert.ok(brief.research?.postGuidance?.verifiedLongForm);
+  assert.ok(brief.research?.measurements || brief.player?.htWt);
+  assert.ok(brief.research?.schoolLadder || brief.research?.interestedSchools);
+  assert.ok(/Chris Collins|UF staff|Florida staff/i.test(brief.pasteText + ' ' + (brief.research?.ufStaff || '')));
+  assert.ok(brief.pasteText.length > 1200, 'paste packet should be dense');
 
   console.log('beat-brief-elite-depth.test.js PASS');
 }

@@ -132,6 +132,116 @@ function isUfSchoolName(name) {
   return /^florida\b/.test(s) && !/state|south/.test(s);
 }
 
+
+function formatVisitDate(ts) {
+  if (ts == null || ts === '') return null;
+  const n = Number(ts);
+  if (!Number.isFinite(n) || n <= 0) return null;
+  // On3 uses unix seconds
+  const ms = n > 1e12 ? n : n * 1000;
+  try {
+    return new Date(ms).toISOString().slice(0, 10);
+  } catch {
+    return null;
+  }
+}
+
+function coachNames(row) {
+  return (row?.coaches || [])
+    .filter(Boolean)
+    .map((c) => String(c.name || '').trim())
+    .filter(Boolean);
+}
+
+function visitTrailFromTopTeams(topTeams, classYear, limit = 10) {
+  const year = Number(classYear) || 2028;
+  const yearRows = on3Recruit.getYearTopTeams(topTeams || [], year);
+  const rows = yearRows.length ? yearRows : topTeams || [];
+  return rows
+    .filter((t) => !on3Recruit.isHighSchoolOrg(t))
+    .map((t) => {
+      const school = teamLabel(t);
+      if (!school) return null;
+      const ov = Number(t.officialVisitCount) || 0;
+      const uov = Number(t.unOfficialVisitCount) || 0;
+      const latest = t.latestVisit || null;
+      const latestDate = formatVisitDate(latest?.dateOccurred);
+      const kind = latest
+        ? latest.official
+          ? 'OV'
+          : 'UOV'
+        : ov
+          ? 'OV'
+          : uov
+            ? 'UOV'
+            : null;
+      if (!ov && !uov && !latestDate) return null;
+      const bits = [school];
+      if (ov) bits.push(`${ov} OV`);
+      if (uov) bits.push(`${uov} UOV`);
+      if (latestDate) bits.push(`latest ${kind || 'visit'} ${latestDate}`);
+      return {
+        school,
+        officialVisitCount: ov,
+        unOfficialVisitCount: uov,
+        latestDate,
+        latestOfficial: latest ? !!latest.official : null,
+        label: bits.join(' · ')
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => {
+      const ad = a.latestDate || '';
+      const bd = b.latestDate || '';
+      return bd.localeCompare(ad);
+    })
+    .slice(0, limit);
+}
+
+function ufStaffFromTopTeams(topTeams, classYear) {
+  const uf = on3Recruit.getFloridaTeam(topTeams || [], Number(classYear) || 2028);
+  if (!uf) return null;
+  const coaches = coachNames(uf);
+  if (!coaches.length) return null;
+  return {
+    school: 'Florida',
+    status: uf.status || null,
+    coaches,
+    label: `Florida staff: ${coaches.join(', ')}${uf.status ? ` (${uf.status})` : ''}`
+  };
+}
+
+function schoolLadderDetailed(topTeams, classYear, limit = 10) {
+  const year = Number(classYear) || 2028;
+  const schools = interestedSchoolsFromTopTeams(topTeams, year, limit);
+  const visits = visitTrailFromTopTeams(topTeams, year, 20);
+  const visitMap = new Map(visits.map((v) => [v.school, v]));
+  const yearRows = on3Recruit.getYearTopTeams(topTeams || [], year);
+  const rows = yearRows.length ? yearRows : topTeams || [];
+  const coachMap = new Map();
+  for (const t of rows) {
+    const school = teamLabel(t);
+    if (!school) continue;
+    const coaches = coachNames(t);
+    if (coaches.length) coachMap.set(school, coaches);
+  }
+  return schools.map((s) => {
+    const v = visitMap.get(s.school);
+    const coaches = coachMap.get(s.school) || [];
+    const bits = [s.label];
+    if (v?.officialVisitCount) bits.push(`${v.officialVisitCount} OV`);
+    if (v?.unOfficialVisitCount) bits.push(`${v.unOfficialVisitCount} UOV`);
+    if (v?.latestDate) bits.push(`last ${v.latestDate}`);
+    if (coaches.length) bits.push(`coach ${coaches[0]}`);
+    return { ...s, coaches, visit: v || null, detail: bits.join(' · ') };
+  });
+}
+
+function measurementsLine(player = {}) {
+  const ht = player.htWt || [player.height, player.weight].filter(Boolean).join(' / ');
+  return ht ? String(ht).trim() : null;
+}
+
 function mergePlayerWithProfile(player, profile, recruitSlug) {
   const patch = profileToSchoolPatch(profile);
   const classYear = profile.classYear || player?.classYear || null;
@@ -172,6 +282,17 @@ function mergePlayerWithProfile(player, profile, recruitSlug) {
       player?.ufStatus ||
       (ufTeam?.status ? `Florida ${ufTeam.status}` : player?.status) ||
       null,
+    height: profile.height || player?.height || null,
+    weight: profile.weight ?? player?.weight ?? null,
+    htWt: profile.htWt || player?.htWt || null,
+    nilValue: profile.nilValue ?? player?.nilValue ?? null,
+    on3ProfileUrl:
+      profile.on3ProfileUrl ||
+      (recruitSlug ? `https://www.on3.com/rivals/${recruitSlug}/` : player?.on3ProfileUrl) ||
+      null,
+    visitTrail: visitTrailFromTopTeams(topTeams, classYear, 12),
+    ufStaff: ufStaffFromTopTeams(topTeams, classYear),
+    schoolLadder: schoolLadderDetailed(topTeams, classYear, 10),
     hydrationSource: 'on3-live'
   };
 }
@@ -241,6 +362,10 @@ module.exports = {
   interestedSchoolsFromTopTeams,
   ufRpmFromTopTeams,
   rankingLine,
+  visitTrailFromTopTeams,
+  ufStaffFromTopTeams,
+  schoolLadderDetailed,
+  measurementsLine,
   mergePlayerWithProfile,
   hydrateRecruitBoard
 };

@@ -192,7 +192,7 @@ function visitSummary(intelligence, player) {
   if (vs) parts.push(String(vs));
   const visits = intelligence?.visits;
   const items = Array.isArray(visits) ? visits : visits?.items || [];
-  for (const v of items.slice(0, 4)) {
+  for (const v of items.slice(0, 6)) {
     const school = v.school || v.name || 'UF';
     const when = v.date || v.reportedAt || v.window || '';
     const kind = v.type || v.visitType || 'visit';
@@ -200,7 +200,89 @@ function visitSummary(intelligence, player) {
   }
   const window = [player?.visitStart, player?.visitEnd].filter(Boolean).join(' → ');
   if (window) parts.push(`window ${window}`);
+
+  // Live On3 visit trail when intel DB is thin
+  const trail = player?.visitTrail;
+  if (Array.isArray(trail) && trail.length) {
+    for (const row of trail.slice(0, 8)) {
+      if (row?.label) parts.push(row.label);
+    }
+  } else if (player?.on3TopTeams || player?.topTeams) {
+    try {
+      const hydrate = require('./on3-board-hydrate');
+      for (const row of hydrate.visitTrailFromTopTeams(
+        player.on3TopTeams || player.topTeams,
+        player.classYear || 2028,
+        8
+      )) {
+        parts.push(row.label);
+      }
+    } catch {
+      /* optional */
+    }
+  }
+
   return parts.length ? [...new Set(parts)].join('; ') : null;
+}
+
+function measurementsSummary(player) {
+  try {
+    return require('./on3-board-hydrate').measurementsLine(player || {});
+  } catch {
+    const ht = player?.htWt || [player?.height, player?.weight].filter(Boolean).join(' / ');
+    return ht || null;
+  }
+}
+
+function ufStaffSummary(player) {
+  if (player?.ufStaff?.label) return player.ufStaff.label;
+  if (Array.isArray(player?.ufStaff?.coaches) && player.ufStaff.coaches.length) {
+    return `Florida staff: ${player.ufStaff.coaches.join(', ')}`;
+  }
+  try {
+    const staff = require('./on3-board-hydrate').ufStaffFromTopTeams(
+      player?.on3TopTeams || player?.topTeams || [],
+      player?.classYear || 2028
+    );
+    return staff?.label || null;
+  } catch {
+    return null;
+  }
+}
+
+function schoolLadderSummary(player, limit = 8) {
+  const ladder = player?.schoolLadder;
+  if (Array.isArray(ladder) && ladder.length) {
+    return ladder
+      .slice(0, limit)
+      .map((s) => s.detail || s.label)
+      .join('; ');
+  }
+  try {
+    const hydrate = require('./on3-board-hydrate');
+    return hydrate
+      .schoolLadderDetailed(player?.on3TopTeams || player?.topTeams || [], player?.classYear || 2028, limit)
+      .map((s) => s.detail)
+      .join('; ');
+  } catch {
+    return interestedSchoolsSummary(player, []);
+  }
+}
+
+function researchArchiveSummary(research) {
+  const bits = [];
+  for (const m of research?.hayesMentions || []) {
+    bits.push(`Hayes: ${String(m.text || '').replace(/\s+/g, ' ').trim().slice(0, 160)}`);
+  }
+  for (const m of research?.beatMentions || []) {
+    bits.push(`${m.label || 'Beat'}: ${String(m.text || '').replace(/\s+/g, ' ').trim().slice(0, 160)}`);
+  }
+  for (const h of research?.heatSignals || []) {
+    bits.push(
+      `Heat: ${[h.trigger, h.direction, h.predictionSchool, h.insider].filter(Boolean).join(' · ')}`
+    );
+  }
+  return bits.length ? bits.slice(0, 8) : [];
 }
 
 function rpmSummary(intelligence, research, player) {
@@ -259,17 +341,30 @@ function interestedSchoolsSummary(player, rivals = []) {
 }
 
 function buildBoardFacts({ player, intelligence, research, rivals }) {
+  const staffNotes =
+    research?.breakdown?.staffNotes ||
+    research?.breakdown?.insiderNotes ||
+    research?.scouting?.scoutingSummary ||
+    research?.breakdown?.recruitingStory ||
+    null;
+  const archive = researchArchiveSummary(research);
   return {
+    measurements: measurementsSummary(player),
     rankings: rankingSummary(player),
+    rating: player?.rating != null ? String(Number(player.rating).toFixed(2)) : null,
+    nilValue: player?.nilValue != null ? String(player.nilValue) : null,
+    hometown: player?.hometown || null,
+    school: player?.school || player?.highSchool || null,
     interestedSchools: interestedSchoolsSummary(player, rivals),
+    schoolLadder: schoolLadderSummary(player, 8),
     offers: offerSummary(intelligence, player),
     visits: visitSummary(intelligence, player),
     rpm: rpmSummary(intelligence, research, player),
-    staffNotes:
-      research?.breakdown?.staffNotes ||
-      research?.breakdown?.insiderNotes ||
-      research?.scouting?.scoutingSummary ||
-      null
+    ufStaff: ufStaffSummary(player),
+    staffNotes,
+    archiveLines: archive,
+    on3ProfileUrl: player?.on3ProfileUrl || null,
+    profile247: research?.profile247?.url || null
   };
 }
 
@@ -277,14 +372,27 @@ function buildWhyFlorida({ player, research, intelligence, beatRows, rivals }) {
   rivals = Array.isArray(rivals) ? rivals : [];
   beatRows = Array.isArray(beatRows) ? beatRows : [];
   const bits = [];
+  const meas = measurementsSummary(player);
+  const school = player?.school || player?.highSchool;
+  const hometown = player?.hometown;
+  if (meas || school || hometown) {
+    bits.push(
+      `Profile: ${[meas, player?.position || player?.pos, player?.classYear ? `Class ${player.classYear}` : null, school, hometown]
+        .filter(Boolean)
+        .join(' · ')}.`
+    );
+  }
   const ranks = rankingSummary(player);
-  if (ranks) bits.push(`On3 board: ${ranks}.`);
+  if (ranks) bits.push(`On3 board: ${ranks}${player?.rating != null ? ` (rating ${Number(player.rating).toFixed(2)})` : ''}.`);
 
   const interested = interestedSchoolsSummary(player, rivals);
+  const ladder = schoolLadderSummary(player, 5);
   const ufRpm = pct(player?.ufRpmPct ?? player?.ufProbability ?? player?.ufConfidence ?? player?.floridaOdds);
   if (ufRpm) {
-    bits.push(`Florida On3 RPM ~${ufRpm}${interested && /florida/i.test(interested) ? ' (among involved schools)' : ''}.`);
+    bits.push(`Florida On3 RPM ~${ufRpm}${interested && /florida/i.test(interested) ? ' (leads involved schools)' : ''}.`);
   }
+  const staff = ufStaffSummary(player);
+  if (staff) bits.push(`${staff}.`);
 
   const ufPos = research?.ufPosition;
   const eventType = research?.eventType;
@@ -300,15 +408,19 @@ function buildWhyFlorida({ player, research, intelligence, beatRows, rivals }) {
   const offers = offerSummary(intelligence, player);
   if (offers) bits.push(`Offer picture: ${offers}.`);
 
-  if (interested) bits.push(`Interested / involved schools: ${interested}.`);
+  if (ladder) bits.push(`School ladder (RPM / visits / coaches): ${ladder}.`);
+  else if (interested) bits.push(`Interested / involved schools: ${interested}.`);
   else if (rivals.length) bits.push(`Competition set: ${rivals.slice(0, 6).join(', ')}.`);
 
-  const staff =
+  const archive = researchArchiveSummary(research);
+  for (const line of archive.slice(0, 3)) bits.push(line);
+
+  const staffNotes =
     research?.breakdown?.staffNotes ||
     research?.breakdown?.insiderNotes ||
     research?.scouting?.scoutingSummary ||
     research?.breakdown?.recruitingStory;
-  if (staff) bits.push(`Staff / insider note: ${String(staff).replace(/\s+/g, ' ').trim().slice(0, 220)}`);
+  if (staffNotes) bits.push(`Staff / insider note: ${String(staffNotes).replace(/\s+/g, ' ').trim().slice(0, 220)}`);
 
   const freshBeat = beatRows.find((r) => daysAgo(r.reportedAt || r.createdAt) != null && daysAgo(r.reportedAt || r.createdAt) <= 2);
   if (freshBeat) {
@@ -364,15 +476,19 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
       `Pressure angle vs ${rivalHook.join(' / ')}: use On3 interest/RPM + visit/staff access UF still controls — not the same school-list dump the beat used.`
     );
   }
-  if (ranks && interested) {
-    const topSchools = String(interested)
-      .split(';')
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .slice(0, 4)
-      .join('; ');
+  const meas = measurementsSummary(player);
+  const staff = ufStaffSummary(player);
+  const visits = visitSummary(intelligence, player);
+  const ladder = schoolLadderSummary(player, 5);
+  if (ranks || ladder || staff || visits) {
+    const parts = [];
+    if (meas) parts.push(`size ${meas}`);
+    if (ranks) parts.push(`ranks ${ranks}`);
+    if (staff) parts.push(staff);
+    if (visits) parts.push(`visits ${String(visits).slice(0, 140)}`);
+    if (ladder) parts.push(`ladder ${String(ladder).split(';').slice(0, 4).join('; ')}`);
     lines.push(
-      `Vault edge: put On3 ranks (${ranks}) and the school ladder (${topSchools}) under the UF why — elite post, not beat echo.`
+      `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. Elite verified post, not a beat echo.`
     );
   } else if (gaps.length) {
     lines.push(`Vault edge (fill what beat skipped): ${gaps.slice(0, 4).join(', ')}.`);
@@ -413,17 +529,23 @@ function formatBriefText({
   lines.push(line('Position rank', player?.posRank || player?.positionRank));
   lines.push(line('State rank', player?.stateRank));
   lines.push(line('On3 ranks', rankingSummary(player)));
+  lines.push(line('Size / measurables', measurementsSummary(player)));
   lines.push(line('Composite / rating', player?.composite || player?.rating || player?.compositeScore));
+  lines.push(line('NIL value (On3)', player?.nilValue));
   lines.push(line('UF likelihood', pct(player?.ufRpmPct ?? player?.ufProbability ?? player?.ufConfidence ?? player?.floridaOdds)));
   lines.push(line('UF status', player?.ufStatus || player?.status));
+  lines.push(line('UF staff', ufStaffSummary(player)));
   lines.push(line('UF board read', research?.ufPosition));
   lines.push(line('Signal type', research?.eventType));
   lines.push(line('Committed to', player?.committedTo));
   lines.push(line('Interested schools', interestedSchoolsSummary(player, rivals)));
+  lines.push(line('School ladder', schoolLadderSummary(player, 8)));
   if (rivals.length) lines.push(line('Rivals / involved', rivals.join(', ')));
-  lines.push(line('Visit / OV', visitSummary(intelligence, player)));
+  lines.push(line('Visit / OV trail', visitSummary(intelligence, player)));
   lines.push(line('Offers', offerSummary(intelligence, player)));
   lines.push(line('RPM / predictions', rpmSummary(intelligence, research, player)));
+  lines.push(line('On3 profile', player?.on3ProfileUrl));
+  if (research?.profile247?.url) lines.push(line('247 profile', research.profile247.url));
 
   lines.push('');
   lines.push('WHY FLORIDA');
@@ -486,10 +608,30 @@ function formatBriefText({
     lines.push('');
   }
 
+  const archive = researchArchiveSummary(research);
+  if (archive.length) {
+    lines.push('');
+    lines.push('BEAT / INSIDER ARCHIVE');
+    lines.push('----------------------');
+    archive.forEach((row, i) => lines.push(`${i + 1}. ${row}`));
+  }
+
+  lines.push('');
+  lines.push('ELITE DEPTH CHECKLIST (use what is on file — do not invent)');
+  lines.push('-------------------------------------------------------------');
+  lines.push('- Identity: name, class, position, high school, hometown, size');
+  lines.push('- On3 ranks: national + position + state + stars/rating');
+  lines.push('- Florida stake: RPM %, offer/status, UF staff names if listed');
+  lines.push('- School ladder: top interested schools with RPM + visit counts');
+  lines.push('- Visit trail: OV/UOV + latest dates when present');
+  lines.push('- Beat/insider archive: advance the freshest line, do not rewrite it');
+  lines.push('- Vault angle: Florida-first narrative ahead of the beat recap');
+
+  lines.push('');
   lines.push('INSTRUCTIONS FOR AI');
   lines.push('-------------------');
   lines.push(
-    'Write one sharp X/Twitter post for GatorVault Insider. Use WHY FLORIDA + VAULT ANGLE to get ahead of a plain beat recap. Stay factual to beat + board facts above. No invented offers, visits, or rankings. UF voice, no banned claims. Keep it under 280 chars unless I ask for a thread.'
+    'Write one GatorVault Insider X post for a VERIFIED account (long-form OK). Target 600–900 characters (hard cap 1000). Use WHY FLORIDA + VAULT ANGLE + ELITE DEPTH CHECKLIST. Structure: (1) Florida stake opener, (2) On3 ranks/size/school identity, (3) RPM ladder + 1–2 rival pressure points, (4) visit/staff fact if on file, (5) ahead-of-the-beat closer. Stay factual to board + beat above only — no invented offers, visits, rankings, or quotes. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
   );
 
   return lines.filter((l) => l !== null).join('\n');
@@ -640,18 +782,26 @@ async function buildBeatBrief(slug, opts = {}) {
           school: player.school || player.highSchool || null,
           state: player.state || player.hometownState || null,
           hometown: player.hometown || null,
+          height: player.height || null,
+          weight: player.weight ?? null,
+          htWt: player.htWt || measurementsSummary(player),
           ufProbability: player.ufProbability ?? player.ufConfidence ?? null,
           ufRpmPct: player.ufRpmPct ?? null,
           ufStatus: player.ufStatus || player.status || null,
+          ufStaff: ufStaffSummary(player),
           committedTo: player.committedTo || null,
           rivals,
           natlRank: player.natlRank || player.nationalRank || null,
           posRank: player.posRank || player.positionRank || null,
           stateRank: player.stateRank || null,
           rating: player.rating || player.composite || null,
+          nilValue: player.nilValue ?? null,
           on3Slug: player.on3Slug || null,
+          on3ProfileUrl: player.on3ProfileUrl || null,
           rankings: rankingSummary(player),
           interestedSchools: interestedSchoolsSummary(player, rivals),
+          schoolLadder: schoolLadderSummary(player, 8),
+          visitTrail: visitSummary(null, player),
           visitStatus: player.ufOvStatus || player.visitStatus || null
         }
       : { rivals },
@@ -671,16 +821,34 @@ async function buildBeatBrief(slug, opts = {}) {
       eventType: research?.eventType || null,
       hasUsableSignal: !!research?.hasUsableSignal,
       topSchools: rivals,
+      measurements: boardFacts.measurements,
       rankings: boardFacts.rankings,
       interestedSchools: boardFacts.interestedSchools,
+      schoolLadder: boardFacts.schoolLadder,
       offers: boardFacts.offers,
       visits: boardFacts.visits,
       rpm: boardFacts.rpm,
+      ufStaff: boardFacts.ufStaff,
       staffNotes: boardFacts.staffNotes,
+      archiveLines: boardFacts.archiveLines,
+      on3ProfileUrl: boardFacts.on3ProfileUrl,
       scoutingSummary: research?.scouting?.scoutingSummary || null,
       boardFacts,
       whyFlorida,
       vaultAngle,
+      postGuidance: {
+        verifiedLongForm: true,
+        targetCharsMin: 600,
+        targetCharsMax: 900,
+        hardCap: 1000,
+        structure: [
+          'Florida stake opener',
+          'On3 ranks / size / school identity',
+          'RPM ladder + rival pressure',
+          'Visit or staff fact if on file',
+          'Ahead-of-the-beat closer'
+        ]
+      },
       liveMentions: liveMentions.map((m) => ({
         label: m.label,
         text: m.text,
@@ -711,6 +879,10 @@ module.exports = {
   buildBoardFacts,
   rankingSummary,
   interestedSchoolsSummary,
+  schoolLadderSummary,
+  visitSummary,
+  ufStaffSummary,
+  measurementsSummary,
   liveBeatRowsForPlayer,
   mergeBeatRows,
   postsFromBeatCache
