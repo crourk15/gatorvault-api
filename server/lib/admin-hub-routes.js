@@ -328,7 +328,17 @@ function buildTopIssues({ ops, qa, productIntel, selfRunner, alerts, appStoreGat
     });
   }
   const gateIssue = enrichAppStoreGateIssue(appStoreGate);
+  // Score-only / ignore-ok gate is kept for strip context, but coach/fixer skip it.
   if (gateIssue) issues.push(gateIssue);
+  // Prefer actionable issues first; bury ignore-ok at the end.
+  issues.sort((a, b) => {
+    const ai = a?.mode === 'ignore-ok' || a?.coach?.mode === 'ignore-ok' ? 1 : 0;
+    const bi = b?.mode === 'ignore-ok' || b?.coach?.mode === 'ignore-ok' ? 1 : 0;
+    if (ai !== bi) return ai - bi;
+    const ar = a?.severity === 'red' ? 0 : 1;
+    const br = b?.severity === 'red' ? 0 : 1;
+    return ar - br;
+  });
   return issues.slice(0, 5);
 }
 
@@ -353,14 +363,13 @@ function buildRecommendedActions(ctx) {
   const apiTile = tileById(ctx.ops, 'api-health');
   const apiRed = apiTile && apiTile.status === 'red';
   const gate = ctx.appStoreGate;
-  // Never push Recompute as the lead action while API Health is red — Charles will mash the wrong button.
+  // Never lead with Recompute for score-only gate — that traps Charles in a Command Center loop.
   if (gate && gate.evaluation && !gate.evaluation.green && !apiRed) {
     const reasons = gate.evaluation.reasons || [];
     if (reasons.includes('qa_crawl_failed') || reasons.includes('crawler_failures') || reasons.includes('api_failures')) {
       actions.unshift({ id: 'qa-run', label: 'Run QA crawl' });
-    } else {
-      actions.push({ id: 'pi-recompute', label: 'Recompute product scores' });
     }
+    // product_intel_below_90 alone: omit Recompute from recommended lead actions
   }
   return actions.slice(0, 6);
 }
@@ -755,6 +764,7 @@ module.exports = {
   buildOverviewPayload,
   buildModuleHealthMap,
   buildTopIssues,
+  buildRecommendedActions,
   filterActionableAlerts,
   listRecentMembers,
   toSafeMemberRow,

@@ -13,7 +13,15 @@
 
   function pickIssue(data) {
     var issues = (data && data.topIssues) || [];
-    return issues[0] || null;
+    var fixer = global.GVAdminFixer;
+    for (var i = 0; i < issues.length; i++) {
+      var issue = issues[i];
+      if (!issue) continue;
+      if (issue.mode === 'ignore-ok' || (issue.coach && issue.coach.mode === 'ignore-ok')) continue;
+      if (fixer && typeof fixer.isIgnorableIssue === 'function' && fixer.isIgnorableIssue(issue)) continue;
+      return issue;
+    }
+    return null;
   }
 
   function clearAutoWait() {
@@ -146,8 +154,13 @@
         apiGet: opts.apiGet,
         apiPost: opts.apiPost,
         onNavigate: opts.onNavigate,
-        onDone: function () {
-          if (typeof opts.onAction === 'function') opts.onAction('hub-refresh');
+        onDone: function (result) {
+          // Leave Command Center — do not refresh Coach into the same trap card.
+          if (typeof opts.onNavigate === 'function') {
+            opts.onNavigate('#beat-desk/desk');
+            return;
+          }
+          if (result && result.ok && typeof opts.onAction === 'function') opts.onAction('hub-refresh');
         }
       });
     }

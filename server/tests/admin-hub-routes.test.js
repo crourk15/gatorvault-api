@@ -89,6 +89,40 @@ test('buildTopIssues does not surface ancient QA alerts', () => {
   assert.equal(issues.length, 0);
 });
 
+test('score-only App Store gate is ignore-ok and does not recommend Recompute', () => {
+  const gate = {
+    requiredDays: 7,
+    piMin: 90,
+    consecutiveGreenDays: 0,
+    readyForSubmission: false,
+    evaluation: {
+      green: false,
+      reasons: ['product_intel_below_90'],
+      productIntelOverall: 76,
+    },
+  };
+  const issues = hub.buildTopIssues({
+    ops: { tiles: [] },
+    qa: { pass: true, failed: 0 },
+    productIntel: { fixQueueOpen: 0 },
+    selfRunner: { queue: { pending: 0 } },
+    alerts: { alerts: [] },
+    appStoreGate: gate,
+  });
+  assert.equal(issues.length, 1);
+  assert.equal(issues[0].mode, 'ignore-ok');
+  assert.notEqual(issues[0].actionType, 'pi-recompute');
+
+  const actions = hub.buildRecommendedActions({
+    ops: { tiles: [] },
+    qa: { pass: true },
+    productIntel: { fixQueueOpen: 0 },
+    selfRunner: { eligibleOpenIssues: 0 },
+    appStoreGate: gate,
+  });
+  assert.ok(!actions.some((a) => a.id === 'pi-recompute'));
+});
+
 test('search result mappers include navigable route fields', () => {
   // Exercise private mappers indirectly via module internals if exported later;
   // for now assert health map + MODULE_IDS stay stable for hub shell.
