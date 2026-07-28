@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Render cron — light On3 + hub refresh for elite board freshness.
- * Heavy portal / beat-writer stay on the 2h recruiting-ingest cron (Starter OOM guard).
+ * Render cron — light On3 + beat-writer + hub refresh for elite board freshness.
+ * Heavy portal / lab-promote stay on the 2h recruiting-ingest cron (Starter OOM guard).
  */
 require('./render-cron-env');
 
@@ -18,6 +18,15 @@ const STEPS = [
     name: 'on3',
     path: '/api/recruiting/ingest',
     summarize: (r) => ({ fired: r?.fired?.length ?? 0 }),
+  },
+  {
+    // Keep beat intel flowing into recruiting/FutureCast without waiting on the 2h heavy cron.
+    name: 'beat-writer',
+    path: '/api/recruiting/beat-writer/ingest',
+    summarize: (r) => ({
+      processedCount: r?.processedCount ?? r?.processed?.length ?? null,
+      softFailure: r?.softFailure === true,
+    }),
   },
   {
     name: 'hub-refresh',

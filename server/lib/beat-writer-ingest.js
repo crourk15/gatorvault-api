@@ -16,8 +16,11 @@ const { buildOn3ProfileUrl } = require('./on3-urls');
 const { slugify } = require('./slug');
 const { enrichIntelCompetitors } = require('./recruiting-competitor-extract');
 const { recordBeatDigDeeper } = require('./recruiting-dig-deeper-ingest');
-const { enterPlayerIntel } = require('./player-intel-entry');
-const { getAllowlistSet } = require('./recruiting-target-allowlist');
+const {
+  enterPlayerIntel,
+  upsertEarlyWatchEntry,
+  isOnEarlyWatchlist,
+} = require('./player-intel-entry');
 
 /** Skips that should retry on a later ingest pass — do not burn snapshot fingerprint. */
 const RETRYABLE_BEAT_SKIP_REASONS = new Set([
@@ -490,35 +493,46 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
   }
 
   if (prefilter.isTeamEventIntel(text, post)) {
-    const gate = prefilter.evaluateTeamEventEligibility(text, { post });
-    if (!gate.eligible) {
-      if (logSkips) logBeatPostSkip(post, gate.reason || 'not_team_event', 'non_player_intel');
-      return null;
+    // Player-specific recruiting intel (named prospect + visit/offer/target) must not be
+    // swallowed as a bare team_event just because it mentions Friday Night Lights / camp.
+    const namedProspect = extractVisitPlayerName(text);
+    const playerRecruitSignal =
+      namedProspect &&
+      isUsableExtractedName(namedProspect) &&
+      /\b(offer|offers|visit|visits|ov|official visit|unofficial|commit|commitment|target|targets|recruit|recruiting|in the mix|near the top)\b/i.test(
+        text
+      );
+    if (!playerRecruitSignal) {
+      const gate = prefilter.evaluateTeamEventEligibility(text, { post });
+      if (!gate.eligible) {
+        if (logSkips) logBeatPostSkip(post, gate.reason || 'not_team_event', 'non_player_intel');
+        return null;
+      }
+      const timestamp = resolvePostTimestamp(post);
+      const handle = String(post.handle || '').toLowerCase() || 'beat';
+      const day = timestamp.slice(0, 10);
+      const postKey = String(post.id || post.url || day)
+        .replace(/[^a-z0-9_-]+/gi, '')
+        .slice(0, 32);
+      const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
+      const detail = text.replace(/\s+/g, ' ').slice(0, 280);
+      return {
+        playerName: null,
+        playerSlug: null,
+        eventType: 'team_event',
+        triggerType: 'team_event',
+        teamEventType: gate.teamEventType || 'general',
+        status: prefilter.classifyTeamEventType(text) || gate.teamEventType || 'general',
+        detail,
+        text: detail,
+        timestamp,
+        articleUrl: post.url || null,
+        source: analystName,
+        sourceHandle: post.handle || null,
+        sourceType: 'beat',
+        fingerprint: `team_event_${gate.teamEventType || 'general'}_${postKey}_${day}_${handle}`
+      };
     }
-    const timestamp = resolvePostTimestamp(post);
-    const handle = String(post.handle || '').toLowerCase() || 'beat';
-    const day = timestamp.slice(0, 10);
-    const postKey = String(post.id || post.url || day)
-      .replace(/[^a-z0-9_-]/gi, '')
-      .slice(0, 32);
-    const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
-    const detail = text.replace(/\s+/g, ' ').slice(0, 280);
-    return {
-      playerName: null,
-      playerSlug: null,
-      eventType: 'team_event',
-      triggerType: 'team_event',
-      teamEventType: gate.teamEventType || 'general',
-      status: prefilter.classifyTeamEventType(text) || gate.teamEventType || 'general',
-      detail,
-      text: detail,
-      timestamp,
-      articleUrl: post.url || null,
-      source: analystName,
-      sourceHandle: post.handle || null,
-      sourceType: 'beat',
-      fingerprint: `team_event_${gate.teamEventType || 'general'}_${postKey}_${day}_${handle}`
-    };
   }
 
   if (prefilter.isRecruitingNarrativeEliteIntel(text, post)) {
@@ -1263,6 +1277,23 @@ function parseCollegeSchool(text) {
   return resolver.parseVagueClues(text).school;
 }
 
+/**
+ * Visit-related OV status only. Bare beat mentions must never invent ufOvStatus='visit'
+ * (that fake heat soft-promotes via lab-intel floridaVisitOnPlayer).
+ */
+function resolveBeatUfOvPatch(eventType, existingStatus) {
+  const et = String(eventType || '').toLowerCase();
+  const prev = existingStatus != null ? String(existingStatus).trim() : '';
+  if (et === 'visit_cancelled') return { ufOvStatus: 'canceled' };
+  if (et === 'official_visit' || et === 'ov_change') return { ufOvStatus: 'scheduled' };
+  if (et === 'unofficial_visit' || et === 'visit') {
+    return { ufOvStatus: prev && !/^visit$/i.test(prev) ? prev : 'unofficial' };
+  }
+  // Non-visit intel: clear synthetic placeholders; keep real OV states.
+  if (!prev || /^visit$/i.test(prev)) return { ufOvStatus: null };
+  return {};
+}
+
 function needsBeatProspectProvision(existing, classYear) {
   const year = parseInt(classYear, 10);
   if (!Number.isFinite(year) || year < 2027 || year > 2030) return false;
@@ -1270,11 +1301,12 @@ function needsBeatProspectProvision(existing, classYear) {
   const slug = String(existing.slug || '').toLowerCase();
   if (!existing.on3Id && !existing.on3Slug) return true;
   if (!existing.stars && !existing.natlRank) return true;
-  if (year === 2028 && slug && !getAllowlistSet(2028).has(slug)) return true;
+  // Hear→watch: register early watchlist without soft-adding hunt allowlist.
+  if (slug && !isOnEarlyWatchlist(slug, year)) return true;
   return false;
 }
 
-async function provisionBeatProspect({ playerName, classYear, trustedWriter = false }) {
+async function provisionBeatProspect({ playerName, classYear, trustedWriter = false, existing = null }) {
   if (!trustedWriter) return { skipped: true, reason: 'untrusted_writer' };
   const year = parseInt(classYear, 10);
   if (!Number.isFinite(year) || year < 2027 || year > 2030) {
@@ -1282,14 +1314,47 @@ async function provisionBeatProspect({ playerName, classYear, trustedWriter = fa
   }
   const trimmed = String(playerName || '').trim();
   if (!trimmed) return { skipped: true, reason: 'missing_name' };
+
+  // Known identity: monitor-only early-watch seed (no allowlist / board / FC soft-add).
+  if (
+    existing?.slug &&
+    (existing.on3Id || existing.on3Slug) &&
+    (existing.stars || existing.natlRank)
+  ) {
+    const watch = upsertEarlyWatchEntry({
+      slug: existing.slug,
+      name: existing.name || trimmed,
+      classYear: year,
+      pos: existing.pos,
+      school: existing.school,
+      stars: existing.stars,
+      rating: existing.rating,
+      tier: 'monitor',
+    });
+    return {
+      skipped: false,
+      ok: true,
+      slug: existing.slug,
+      monitorOnly: true,
+      steps: [{ step: 'early_watchlist', slug: watch.slug, monitorOnly: true }],
+    };
+  }
+
   try {
     const result = await enterPlayerIntel({
       name: trimmed,
       classYear: year,
       offer: false,
       rebuildSnapshots: false,
+      monitorOnly: true,
     });
-    return { skipped: false, ok: true, slug: result.slug, steps: result.steps };
+    return {
+      skipped: false,
+      ok: true,
+      slug: result.slug,
+      monitorOnly: true,
+      steps: result.steps,
+    };
   } catch (err) {
     return { skipped: false, ok: false, error: err.message };
   }
@@ -1586,6 +1651,7 @@ async function processBeatVisitIntelRow(row, snapshot) {
       playerName: row.playerName,
       classYear: row.classYear,
       trustedWriter,
+      existing,
     });
     if (provision.ok) {
       const provisioned = await store.getPlayerBySlug(provision.slug || row.playerSlug);
@@ -1640,7 +1706,7 @@ async function processBeatVisitIntelRow(row, snapshot) {
     stars: row.stars || playerBase?.stars,
     category: 'target',
     status: playerBase?.status || 'uncommitted',
-    ufOvStatus: row.eventType === 'official_visit' ? 'scheduled' : playerBase?.ufOvStatus || 'visit',
+    ...resolveBeatUfOvPatch(row.eventType, playerBase?.ufOvStatus),
     visitStart: row.visitStart || playerBase?.visitStart,
     visitEnd: row.visitEnd || playerBase?.visitEnd,
     skinny: copy.skinny,
@@ -1935,6 +2001,7 @@ module.exports = {
   logBeatPostSkip,
   needsBeatProspectProvision,
   provisionBeatProspect,
+  resolveBeatUfOvPatch,
   VISIT_INGEST_HANDLES,
   SNAPSHOT_PATH,
   shouldSnapshotBeatSkip,

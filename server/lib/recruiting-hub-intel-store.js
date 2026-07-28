@@ -1,12 +1,24 @@
 /**
  * Recruiting Hub Intel Store — intel curation + thin delegates to recruiting-hub-data.
  */
+const fs = require('fs');
+const path = require('path');
 const store = require('./recruiting-store');
 const { enrichBoard } = require('./recruiting-board-enrich');
 const { STAFF_DIRECTORY } = require('./recruiting-staff-directory');
 
 const HUB_CLASS_YEARS = [2026, 2027, 2028];
 const VERIFIED_SOURCES = new Set(['on3', 'manual', 'rivals_pm', 'auto:beat-writer']);
+const EARLY_WATCHLIST_PATH = path.join(__dirname, '..', 'data', 'futurecast', 'early-watchlist.json');
+
+/** Monitoring (hear→watch) names may surface these events without hunt-list allowlist. */
+const WATCH_FEED_EVENTS = new Set([
+  'recruiting_narrative',
+  'flip_watch',
+  'commit_watch',
+  'staff_note',
+  'target_update',
+]);
 
 const BLOCKED_SOURCE =
   /beat_writer|auto:beat(?!-writer)|twitter|x_post|x-autoposter|podcast|program_news|camp_recap|live_feed|headline/i;
@@ -28,6 +40,8 @@ const ALLOWED_INTEL_EVENTS = new Set([
   'momentum_down',
   'flip_watch',
   'commit_watch',
+  // Beat-writer recruiting narratives (e.g. rising names / Gators in play)
+  'recruiting_narrative',
 ]);
 
 const BLOCKED_SUMMARY =
@@ -93,8 +107,18 @@ function normalizePoolPlayer(player, classYear, kind) {
     leaderSchool: player.leaderSchool ?? player.predictionLeader ?? player.topSchool ?? null,
     isCommit: kind === 'commit',
     isPortal: kind === 'portal',
+    isWatch: kind === 'watch',
     profileUrl: profileUrl(player),
   };
+}
+
+function loadEarlyWatchEntries() {
+  try {
+    const doc = JSON.parse(fs.readFileSync(EARLY_WATCHLIST_PATH, 'utf8'));
+    return Array.isArray(doc?.entries) ? doc.entries : [];
+  } catch {
+    return [];
+  }
 }
 
 async function loadHubRecruitingPool() {
@@ -110,6 +134,12 @@ async function loadHubRecruitingPool() {
   }
 
   const all = await store.getAllPlayers();
+  const bySlug = new Map(
+    (all || [])
+      .filter((p) => p?.slug)
+      .map((p) => [String(p.slug).toLowerCase(), p])
+  );
+
   for (const player of all) {
     if (!player.slug || isRosterPlayer(player)) continue;
     const year = Number(player.classYear);
@@ -137,6 +167,28 @@ async function loadHubRecruitingPool() {
     }
   }
 
+  // Hear→watch monitors: early-watchlist names surface narrative intel without board rise.
+  for (const entry of loadEarlyWatchEntries()) {
+    const slug = String(entry.slug || '').toLowerCase();
+    const year = Number(entry.classYear);
+    if (!slug || !HUB_CLASS_YEARS.includes(year) || pool.has(slug)) continue;
+    const player = bySlug.get(slug);
+    if (player && !isRosterPlayer(player)) {
+      pool.set(slug, normalizePoolPlayer(player, year, 'watch'));
+      continue;
+    }
+    pool.set(slug, {
+      slug,
+      name: entry.name || slug,
+      position: entry.pos || '—',
+      classYear: year,
+      isCommit: false,
+      isPortal: false,
+      isWatch: true,
+      profileUrl: profileUrl({ slug, name: entry.name }),
+    });
+  }
+
   return pool;
 }
 
@@ -148,6 +200,11 @@ function intelMatchesPool(row, pool) {
   if (meta.isPortal && row.eventType === 'offer') {
     const cy = Number(row.classYear || meta.classYear);
     if (!HUB_CLASS_YEARS.includes(cy)) return false;
+  }
+  // Watch-only monitors: narrative / soft intel only — never offer/visit board heat.
+  if (meta.isWatch) {
+    const et = String(row.eventType || '').toLowerCase();
+    return WATCH_FEED_EVENTS.has(et);
   }
   return true;
 }
@@ -207,6 +264,7 @@ module.exports = {
   isCuratedHubIntel,
   VERIFIED_SOURCES,
   BLOCKED_SOURCE,
+  WATCH_FEED_EVENTS,
   STAFF_ALLOWLIST: STAFF_DIRECTORY,
   buildHubMovementFeed,
   buildHubBattleBoard,

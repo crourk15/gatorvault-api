@@ -405,16 +405,21 @@ async function enterPlayerIntel(input) {
     throw new Error(intelQuality.message);
   }
   const hasOffer = parseOfferFlag(input.offer);
+  // monitorOnly = hear→watch: store + early watchlist only. Never soft-add hunt
+  // allowlist / 2028 board seed / FC prediction from a bare trusted beat mention.
+  const monitorOnly = input.monitorOnly === true;
   const placement = placementForClassYear(input.classYear);
   const steps = [];
 
-  if (placement.allowlist) {
+  if (placement.allowlist && !monitorOnly) {
     const allow = addToAdminAllowlist({
       slug: resolved.slug,
       name: resolved.name,
       classYear: resolved.classYear,
     });
     steps.push({ step: 'allowlist', ...allow });
+  } else if (monitorOnly && placement.allowlist) {
+    steps.push({ step: 'allowlist', skipped: true, reason: 'monitor_only' });
   }
 
   let patch = buildPlayerPatch(resolved, hasOffer, await store.getPlayerBySlug(resolved.slug));
@@ -444,7 +449,7 @@ async function enterPlayerIntel(input) {
   await ensureScoutingBreakdown(saved);
   steps.push({ step: 'war_room_breakdown', slug: saved.slug });
 
-  if (placement.earlyWatch) {
+  if (placement.earlyWatch || monitorOnly) {
     const watch = upsertEarlyWatchEntry({
       slug: saved.slug,
       name: saved.name,
@@ -453,12 +458,12 @@ async function enterPlayerIntel(input) {
       school: saved.school,
       stars: saved.stars,
       rating: saved.rating,
-      tier: 'target',
+      tier: monitorOnly ? 'monitor' : 'target',
     });
-    steps.push({ step: 'early_watchlist', slug: watch.slug });
+    steps.push({ step: 'early_watchlist', slug: watch.slug, monitorOnly });
   }
 
-  if (Number(saved.classYear) === 2028) {
+  if (Number(saved.classYear) === 2028 && !monitorOnly) {
     upsert2028TargetBoardSeed(saved);
     steps.push({ step: '2028_target_board_seed', slug: saved.slug });
     try {
@@ -472,6 +477,9 @@ async function enterPlayerIntel(input) {
         error: err instanceof Error ? err.message : String(err),
       });
     }
+  } else if (monitorOnly && Number(saved.classYear) === 2028) {
+    steps.push({ step: '2028_target_board_seed', skipped: true, reason: 'monitor_only' });
+    steps.push({ step: 'futurecast_prediction_seed', skipped: true, reason: 'monitor_only' });
   }
 
   let snapshots = null;
@@ -501,6 +509,22 @@ async function enterPlayerIntel(input) {
   };
 }
 
+function isOnEarlyWatchlist(slug, classYear) {
+  const key = String(slug || '').toLowerCase();
+  if (!key) return false;
+  try {
+    const doc = JSON.parse(fs.readFileSync(EARLY_WATCHLIST_PATH, 'utf8'));
+    const year = classYear != null ? Number(classYear) : null;
+    return (doc.entries || []).some((entry) => {
+      if (String(entry.slug || '').toLowerCase() !== key) return false;
+      if (year == null || !Number.isFinite(year)) return true;
+      return Number(entry.classYear) === year;
+    });
+  } catch {
+    return false;
+  }
+}
+
 module.exports = {
   previewPlayerIntel,
   enterPlayerIntel,
@@ -508,4 +532,6 @@ module.exports = {
   placementForClassYear,
   resolveRecruitIdentity,
   assessOn3Intel,
+  upsertEarlyWatchEntry,
+  isOnEarlyWatchlist,
 };

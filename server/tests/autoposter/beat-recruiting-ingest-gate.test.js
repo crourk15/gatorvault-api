@@ -44,13 +44,21 @@ describe('beat-recruiting-ingest-gate', () => {
     assert.equal(result.reason, 'class_year_below_2027');
   });
 
+  it('allows closing-class 2027 recruiting intel', () => {
+    const result = gate.evaluateStrictRecruitingIngestGate({
+      ...GOOD_POST,
+      text: '2027 WR Braylon Smith visits Florida and the Gators are in play.',
+    });
+    assert.equal(result.pass, true);
+  });
+
   it('rejects posts with explicit class year 2029', () => {
     const result = gate.evaluateStrictRecruitingIngestGate({
       ...GOOD_POST,
       text: '2029 WR Easton Royal will take an official visit to Florida.',
     });
     assert.equal(result.pass, false);
-    assert.equal(result.reason, 'class_year_below_2027');
+    assert.equal(result.reason, 'class_year_above_2028');
   });
 
   it('allows 2028 recruiting intel', () => {
