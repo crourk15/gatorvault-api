@@ -161,20 +161,20 @@ function specializeApiHealth(tile, pb) {
 
   if (slowOnly && !hasServerErrors) {
     return {
-      why: `The server is waking up (slow replies, ${avgMs}ms). Error rate is 0% — that is normal after sleep.`,
-      howTo: 'Sit tight. Do not run Deploy recovery yet. This screen will refresh itself.',
-      fixLabel: 'I’m waiting — refresh for me',
-      jobId: 'hub-auto-wait',
-      route: '#dashboard/overview',
-      doThisNow: 'Do nothing. Sit tight ~90 seconds. Do NOT press Deploy recovery.',
-      autoWaitSec: 90,
-      mode: 'auto-wait',
+      why: `Server is a little slow (${avgMs}ms) with 0% errors — wake lag, not a crash.`,
+      howTo: 'Ignore this. Go to Beat Desk and post. Do not open Runbooks.',
+      fixLabel: 'Go post on Beat Desk',
+      jobId: null,
+      route: '#beat-desk/desk',
+      doThisNow: 'Ignore API yellow/red from wake lag. Press Go post on Beat Desk.',
+      autoWaitSec: null,
+      mode: 'ignore-ok',
       steps: [
-        'Do nothing — the hub will refresh itself.',
-        'Do not run Deploy recovery while the top banner says the server is waking.',
-        'When API Health leaves red, go to Beat Desk and post.',
+        'Press Go post on Beat Desk.',
+        'Make today’s posts.',
+        'Only press Clear the red if a DIFFERENT tile is red (Film Room, recruiting, etc.).',
       ],
-      dontWorry: 'Those Deploy recovery “Waking kitchen” fails are expected if you click early. Ignore Recompute too.',
+      dontWorry: 'Slow with 0% errors is normal after sleep. Not App Store Connect. Not Deploy recovery.',
     };
   }
 

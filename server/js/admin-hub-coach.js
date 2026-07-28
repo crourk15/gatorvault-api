@@ -1,5 +1,5 @@
 /**
- * Operator Coach — sit-tight auto-wait + Make it green for Charles.
+ * Operator Coach — sit-tight auto-wait + Clear the red for Charles.
  */
 (function (global) {
   var _autoWaitTimer = null;
@@ -48,6 +48,19 @@
     var dont = coach.dontWorry || '';
     var autoWait = coach.autoWaitSec || issue.autoWaitSec || 0;
     var mode = coach.mode || issue.mode || '';
+    if (mode === 'ignore-ok') {
+      return '<section class="hub-coach hub-coach--ok" id="hub-coach" aria-label="Operator coach">'
+        + '<p class="hub-coach__eyebrow">Coach — easiest path</p>'
+        + '<h3 class="hub-coach__title">' + esc(title) + '</h3>'
+        + '<p class="hub-coach__plain">' + esc(plain) + '</p>'
+        + '<p class="hub-coach__do"><strong>Do this now:</strong> ' + esc(doNow || 'Go post on Beat Desk.') + '</p>'
+        + '<div class="hub-coach__actions">'
+        + '<button type="button" class="hub-btn hub-coach__primary" data-coach-route="#beat-desk/desk">Go post on Beat Desk</button>'
+        + (global.GVAdminFixer && global.GVAdminFixer.buttonHtml ? global.GVAdminFixer.buttonHtml('Clear the red') : '')
+        + '</div>'
+        + '<p class="hub-coach__status" id="hub-fixer-status"></p>'
+        + '</section>';
+    }
     var stepsHtml = steps.length
       ? '<ol class="hub-coach__steps">' + steps.map(function (s) {
           return '<li>' + esc(s) + '</li>';

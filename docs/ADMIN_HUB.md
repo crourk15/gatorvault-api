@@ -23,7 +23,8 @@ Plain-English playbook cards on **Beat Desk** and **Command Center**:
 - **If red / yellow — do this** — concrete next steps (STALE vs FAIL vs kitchen waking vs Film Room catalog vs sidebar red)
 - **Red tile playbook** — Top Issue strip + Full Ops cards show a yellow **What to do** line and an orange fix button (ex: **Rebuild Film Room catalog**), not just “Open module”
 - **Coach says** (Command Center) — elementary-English explanation of the current Top Issue (what it means, numbered steps, what not to worry about)
-- **Make it green** — one green button that wakes the server, waits out slow starts, and runs safe fix jobs so Charles doesn’t have to think
+- **Clear the red** — sticky green button on every page; wakes server and runs safe fix jobs for real reds (Film Room, recruiting, etc.)
+- **Go post** — default when nothing actionable is red; wake-lag / latency-only API is yellow (ignore) so Charles isn’t blocked from Beat Desk
 - **Wake lock** — while the server is waking, Deploy recovery stays disabled (spamming it makes fail noise)
 - **App Store gate** — internal 7-day stability checklist (QA + Product Health ≥ 90). Codes like `product_intel_below_90` mean the vault scorecard is under 90 — **not** a message from Apple / App Store Connect
 - **What the buttons mean** — Open / Copy Brief / Refresh / etc.

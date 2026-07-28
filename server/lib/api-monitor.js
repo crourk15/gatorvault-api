@@ -103,9 +103,27 @@ function getApiHealthReport(config = {}) {
   const warnMs = config.apiLatencyWarningMs ?? 800;
   const critMs = config.apiLatencyCriticalMs ?? 2000;
 
+  // Recent window — cold-start spikes in the 24h average must not panic Charles forever.
+  const recentCutoff = Date.now() - 10 * 60 * 1000;
+  const recent = reqs.filter((r) => r.at >= recentCutoff);
+  const recentTotal = recent.length;
+  const recent5xx = recent.filter((r) => r.statusCode >= 500).length;
+  const recentAvgMs = recentTotal
+    ? Math.round(recent.reduce((s, r) => s + r.durationMs, 0) / recentTotal)
+    : avgMs;
+  const recentServerErrorRate = recentTotal ? recent5xx / recentTotal : 0;
+
   let status = 'green';
-  if (serverErrorRate >= critRate || avgMs >= critMs || errors5xx > 10) status = 'red';
-  else if (serverErrorRate > 0 || errorRate >= warnRate || avgMs >= warnMs) status = 'yellow';
+  if (recentServerErrorRate >= critRate || recent5xx > 5 || errors5xx > 10 || serverErrorRate >= critRate) {
+    status = 'red';
+  } else if (errors5xx === 0 && serverErrorRate === 0) {
+    // Latency-only (wake lag): yellow at most — never red. Charles can keep posting.
+    if (recentAvgMs >= critMs || avgMs >= critMs || recentAvgMs >= warnMs || avgMs >= warnMs || errorRate >= warnRate) {
+      status = 'yellow';
+    }
+  } else if (serverErrorRate > 0 || errorRate >= warnRate || avgMs >= warnMs || recentAvgMs >= warnMs) {
+    status = 'yellow';
+  }
 
   return {
     status,
@@ -119,6 +137,8 @@ function getApiHealthReport(config = {}) {
     errorRate: Math.round(errorRate * 1000) / 1000,
     serverErrorRate: Math.round(serverErrorRate * 1000) / 1000,
     avgResponseMs: avgMs,
+    recentAvgResponseMs: recentAvgMs,
+    recentRequests: recentTotal,
     p95ResponseMs: p95Ms,
     lastError: stats.lastError,
     last5xx: stats.last5xx
