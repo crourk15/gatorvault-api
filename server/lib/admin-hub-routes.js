@@ -17,6 +17,7 @@ const MODULE_IDS = [
   'beat-desk',
   'dashboard',
   'members',
+  'futurecast',
   'gm2',
   'product-intel',
   'qa',
@@ -27,7 +28,8 @@ const MODULE_IDS = [
   'feedback',
   'settings',
   'player-intel',
-  'self-runner'
+  'self-runner',
+  'legacy'
 ];
 
 function detectEnvironment() {
@@ -196,6 +198,7 @@ function buildModuleHealthMap({ ops, qa, productIntel, selfRunner, feedbackOpen,
     map.dashboard = ops.overall;
     // Beat Desk rides the same kitchen — mirror ops health.
     map['beat-desk'] = ops.overall;
+    map.futurecast = ops.overall;
   }
   const identity = tileById(ops, 'identity-patterns');
   const gmTile = tileById(ops, 'cron-jobs');
@@ -245,6 +248,11 @@ function buildModuleHealthMap({ ops, qa, productIntel, selfRunner, feedbackOpen,
 
   // Settings has no live probe yet — leave unknown (not fake-green).
   map['player-intel'] = map.recruiting !== 'unknown' ? map.recruiting : 'unknown';
+  // Legacy group mirrors the worst of its escape-hatch modules when known.
+  map.legacy = worstStatus(
+    worstStatus(map.content, map.community),
+    worstStatus(map.feedback, map['self-runner'])
+  );
   return map;
 }
 
@@ -673,6 +681,46 @@ function mountAdminHubRoutes(app) {
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** FutureCast targeting + admin allowlist control surface. */
+  app.get('/api/admin/hub/futurecast', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const fc = require('./admin-hub-futurecast');
+      return res.status(200).json(fc.buildFutureCastHubSummary());
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/admin/hub/allowlist/add', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const fc = require('./admin-hub-futurecast');
+      const result = fc.addAllowlistTarget({
+        slug: req.body?.slug,
+        name: req.body?.name,
+        classYear: req.body?.classYear || 2028,
+      });
+      return res.status(200).json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/admin/hub/allowlist/remove', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const fc = require('./admin-hub-futurecast');
+      const result = fc.removeAllowlistTarget({
+        slug: req.body?.slug,
+        classYear: req.body?.classYear || 2028,
+      });
+      return res.status(200).json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
     }
   });
 }

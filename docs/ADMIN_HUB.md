@@ -13,6 +13,8 @@ Canonical ops console for GatorVault. **Not part of the iOS App Store review sur
 
 Legacy bookmarks (`/admin/ops`, `/recruiting-admin.html`, etc.) redirect into hub hash routes.
 
+**Default landing:** `#beat-desk/desk`
+
 ## Freeze boundary (App Store review)
 
 Safe to change while an iOS build is in review:
@@ -32,49 +34,62 @@ Do **not** couple Admin Hub work to:
 
 Hub login accepts configured operator env pins **and** legacy `GV2026admin` (cron secrets alone do not lock out the legacy PIN). Set `DISABLE_DEFAULT_ADMIN_PIN=true` only when you intentionally want env-only pins.
 
-
 1. Operator enters PIN on `/admin/login`.
 2. PIN is stored in `sessionStorage` (`gv_admin_pin` / `gv_ops_pin`).
 3. Hub API calls send `X-Ops-Pin` / `X-Recruiting-Pin` headers (not query strings).
 4. Iframe embeds receive PIN via same-origin `sessionStorage` + `postMessage` to `location.origin` — **PIN is not appended to iframe URLs**.
 
 Accepted pins come from env vars (`OPS_ADMIN_PIN`, `ADMIN_PASSWORD`, `RECRUITING_ADMIN_PIN`, …).  
-Set `OPS_ADMIN_PIN` in Render for production. A legacy default exists only as a last-resort fallback when no env pins are configured — do not rely on it long term.
+Set `OPS_ADMIN_PIN` in Render for production.
 
-## In-shell panels (no iframe)
+## Primary in-shell panels
 
-- **Command Center** — `#dashboard/overview`
-- **Runbooks** — `#dashboard/runbooks` (also `#gm2/rerun`)
-- **Ops Summary** — `#dashboard/ops-summary` (tiles, cron freshness, safe re-runs)
-- **Job Queue** — `#dashboard/jobs` (safe re-runs + heartbeats + recent ops logs)
-- **Post Studio** — `#dashboard/post-studio` (inbox, drafts, compose/dismiss/mark-posted; no X API post)
-- **QA Summary** — `#qa/summary` (last crawl, modules, open errors)
-- **Recruiting Daily** — `#recruiting/daily` (events, ingest, pipeline actions)
-- **Product Fix Queue** — `#product-intel/summary` (scores, open fixes, recompute)
-- Sticky **Activity** rail — recent `/api/ops/logs` + local hub actions
-- **Vault Grades Manager** — `#recruiting/vault-grades` / `#team/vault-grades`
-- **Members** — `#members/recent` (newest signups: trial / paid / expired)
-- **Settings** — `#settings/platform`
+| Panel | Route | Role |
+|---|---|---|
+| **Beat Desk** | `#beat-desk/desk` | Daily loop — Open → packet → Copy Brief → X (+ FutureCast feed card) |
+| **Command Center** | `#dashboard/overview` | Health, top issues, pipelines |
+| **Runbooks** | `#dashboard/runbooks` | Preset ops flows (also replaces old GM re-run tab) |
+| **Ops Summary** | `#dashboard/ops-summary` | Tiles, cron freshness, safe re-runs |
+| **Job Queue** | `#dashboard/jobs` | Safe re-runs + heartbeats + recent ops logs |
+| **Post Studio** | `#dashboard/post-studio` | Advanced inbox/drafts (secondary to Beat Desk) |
+| **Members** | `#members/recent` | Newest signups: trial / paid / expired |
+| **FutureCast** | `#futurecast/control` | Targets, 2028 admin allowlist add/remove, early watch |
+| **Recruiting Daily** | `#recruiting/daily` | Events, ingest, pipeline |
+| **Unresolved Predictions** | `#recruiting/unresolved` | Nameless RPM teasers |
+| **Roster & Board** | `#team/board` | In-shell board editor + Vault Grades |
+| **QA / Product summaries** | `#qa/summary`, `#product-intel/summary` | In-shell digests |
+| **Settings** | `#settings/platform` | Points, tiers, rebuild tools, PIN env reference (no feature-flag UI) |
 
-Full Ops / Full QA iframe consoles remain as escape hatches.
+Sticky **Activity** rail — recent `/api/ops/logs` + local hub actions.
 
-## Shell polish (v16)
+Inline panels **re-render on every visit** so Beat Desk / Command Center / FutureCast stay fresh.
+
+## Legacy consoles (iframe escape hatches)
+
+Nav section marked **Legacy consoles**:
+
+- Content & Media
+- Community Admin
+- Feedback & Support
+- Player Intel Entry (prefer Beat Desk for daily intel → board)
+- Self-Runner
+
+Full Ops / Full QA iframes remain under Dashboard / QA as escape hatches.
+
+## FutureCast wiring
+
+1. Beat Desk **Open** hydrates On3 + builds brief.
+2. `feedDeskIntelToFutureCast` may seed/promote/refresh 2028 targets (never expands 2027 Closing Class).
+3. Desk shows a **FutureCast feed** card (seeded / promoted / refreshed + %).
+4. `#futurecast/control` lists admin allowlist extras, board sample, early watch — add/remove 2028 only.
+
+## Shell polish
 
 - Typography: Source Sans 3 + Oswald (not Inter)
 - Blue/orange atmospheric gradients on the shell background
-- Letter nav marks (CC / GM / QA…) instead of emoji icons
-- Sticky **ops strip** under the top bar: top issue + primary CTA + jump to Command Center
-- Command Center hero: overall health + top issue + primary action in one composition
-
-## Runbooks
-
-Presets with step status (session log):
-
-- Deploy recovery
-- QA is red
-- Ingest lag
-- Content rebuild
-- Live feed quiet
+- Letter nav marks (BD / CC / FC…) instead of emoji icons
+- Sticky **ops strip** under the top bar
+- Legacy nav grouped under a divider
 
 ## Module health dots
 
@@ -89,13 +104,6 @@ Sidebar dots are **honest**:
 
 Modules without a live signal stay gray (never fake-green).
 
-## Global search
-
-`GET /api/admin/hub/search?q=` returns players / articles / users with:
-
-- `route` — hub hash navigation (click)
-- `href` — public vault URL (Cmd/Ctrl-click)
-
 ## Aggregated APIs
 
 | Endpoint | Role |
@@ -103,7 +111,10 @@ Modules without a live signal stay gray (never fake-green).
 | `GET /api/admin/hub/overview` | Command Center payload |
 | `GET /api/admin/hub/module-health` | Sidebar dots + alert count |
 | `GET /api/admin/hub/search` | Global search |
-| `GET /api/admin/members/recent` | Newest members (`limit`, `since=7d|30d|90d|all`, `access=all|trial|paid|expired`) |
+| `GET /api/admin/members/recent` | Newest members |
+| `GET /api/admin/hub/futurecast` | Targets + allowlist summary |
+| `POST /api/admin/hub/allowlist/add` | Add 2028 admin allowlist slug |
+| `POST /api/admin/hub/allowlist/remove` | Remove 2028 admin allowlist slug |
 
 All require a valid admin PIN header. Member responses never include `passwordHash`.
 
@@ -111,6 +122,9 @@ All require a valid admin PIN header. Member responses never include `passwordHa
 
 ```bash
 node --test server/tests/admin-hub-routes.test.js
+node --test server/test/admin-hub-elite-ia.test.js
+node --test server/test/admin-hub-futurecast.test.js
+node --test server/test/on3-rpm-scale.test.js
 ```
 
-After Netlify deploy: open `/admin/hub`, confirm Runbooks, search navigation, and that iframe URLs do not contain `pin=`.
+After Netlify deploy: open `/admin/hub`, confirm Beat Desk default, FutureCast panel, refresh-on-revisit, and that iframe URLs do not contain `pin=`.
