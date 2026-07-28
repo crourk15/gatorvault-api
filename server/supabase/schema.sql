@@ -96,3 +96,11 @@ drop trigger if exists players_updated_at on players;
 create trigger players_updated_at
   before update on players
   for each row execute function set_updated_at();
+
+-- PostgREST lockdown — API uses service_role; anon must not read/write.
+ALTER TABLE IF EXISTS class_rankings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS players ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS recruiting_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS recruiting_identity_patterns ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON ALL TABLES IN SCHEMA public FROM anon, authenticated;
+

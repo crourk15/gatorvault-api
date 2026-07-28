@@ -22,3 +22,6 @@ CREATE TABLE IF NOT EXISTS autoposter_player_resolution (
   payload JSONB NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE IF EXISTS autoposter_sent_ledger ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS autoposter_player_resolution ENABLE ROW LEVEL SECURITY;

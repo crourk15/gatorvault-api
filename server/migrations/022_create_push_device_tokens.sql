@@ -10,3 +10,6 @@ CREATE TABLE IF NOT EXISTS push_device_tokens (
 
 CREATE INDEX IF NOT EXISTS idx_push_device_tokens_email
   ON push_device_tokens (email);
+
+-- Lock down PostgREST (device tokens + emails).
+ALTER TABLE IF EXISTS push_device_tokens ENABLE ROW LEVEL SECURITY;
