@@ -886,6 +886,28 @@
     if (primary) {
       primary.addEventListener('click', function () {
         var jobId = primary.getAttribute('data-job');
+        if (jobId === 'hub-refresh') {
+          primary.disabled = true;
+          primary.textContent = 'Refreshing…';
+          apiGet('/api/admin/hub/overview')
+            .then(function (data) {
+              applyOpsStrip(data);
+              if (global.GVAdminHub && typeof global.GVAdminHub.applyModuleHealth === 'function') {
+                global.GVAdminHub.applyModuleHealth(Object.assign({}, data.moduleHealth || {}, {
+                  _environment: data.environment
+                }));
+              }
+              // Re-enter overview so Coach reloads with fresh top issue.
+              navigateFromHash('#dashboard/overview');
+            })
+            .catch(function (e) {
+              alert((e && e.message) || 'Refresh failed');
+            })
+            .finally(function () {
+              primary.disabled = false;
+            });
+          return;
+        }
         if (jobId) {
           primary.disabled = true;
           var prev = primary.textContent;
@@ -953,20 +975,23 @@
     }
 
     titleEl.textContent = top.title || 'Attention needed';
+    var doNow = (top.coach && top.coach.doThisNow) || top.fixHowTo || '';
     var bits = [];
-    if (top.detail) bits.push(String(top.detail));
-    if (top.fixHowTo) bits.push('What to do: ' + String(top.fixHowTo));
-    detailEl.textContent = bits.join(' — ') || (top.why || '');
+    if (top.why) bits.push(String(top.why));
+    else if (top.detail) bits.push(String(top.detail));
+    if (doNow) bits.push('Do this now: ' + String(doNow));
+    detailEl.textContent = bits.join(' — ') || 'Follow Coach on Command Center.';
     if (top.actionType) {
       primary.textContent = top.action || 'Run fix';
       primary.setAttribute('data-job', top.actionType);
-      primary.setAttribute('data-route', top.route || '#dashboard/ops-summary');
+      primary.setAttribute('data-route', top.route || '#dashboard/overview');
     } else if (top.route) {
-      primary.textContent = top.action || 'Open fix page';
+      primary.textContent = top.action || 'Open';
       primary.setAttribute('data-route', top.route);
     } else {
-      primary.textContent = 'Open Runbooks';
-      primary.setAttribute('data-route', '#dashboard/runbooks');
+      primary.textContent = 'Refresh now';
+      primary.setAttribute('data-job', 'hub-refresh');
+      primary.setAttribute('data-route', '#dashboard/overview');
     }
   }
 

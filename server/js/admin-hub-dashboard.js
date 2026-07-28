@@ -41,6 +41,7 @@
     }
 
     function runDashAction(action) {
+      if (action === 'hub-refresh') return Promise.resolve({ ok: true, refreshOnly: true });
       if (action === 'qa-run') return apiPost('/api/qa/run', { force: true });
       if (action === 'pi-recompute') return apiPost('/api/product-intel/recompute', {});
       if (action === 'sr-generate') return apiPost('/api/self-runner/generate', { runQa: false });
@@ -126,21 +127,27 @@
         })
         .join('');
 
-      var primaryBtn = primaryAction
-        ? '<button type="button" class="hub-btn" data-dash-action="' + esc(primaryAction.id) + '">' + esc(primaryAction.label) + '</button>'
-        : '<button type="button" class="hub-btn" data-dash-route="#dashboard/runbooks">Open Runbooks</button>';
-
-      var heroIssue = top
-        ? '<strong style="display:block;color:#fff;font-size:1rem;margin-bottom:4px">' + esc(top.title) + '</strong>'
-          + '<span class="hub-meta" style="margin:0">' + esc(top.detail || 'Needs attention') + '</span>'
-          + (top.fixHowTo ? '<span class="hub-meta" style="display:block;margin-top:6px;color:#fde047">What to do: ' + esc(top.fixHowTo) + '</span>' : '')
-        : '<strong style="display:block;color:#fff;font-size:1rem;margin-bottom:4px">Systems steady</strong>'
-          + '<span class="hub-meta" style="margin:0">No top issue — keep an eye on pipelines below.</span>';
-
+      // Primary CTA always matches Top Issue / Coach — never a mismatched recommended action.
+      var primaryBtn;
       if (top && top.actionType) {
         primaryBtn = '<button type="button" class="hub-btn" data-dash-action="' + esc(top.actionType) + '">'
           + esc(top.action || 'Run fix') + '</button>';
+      } else if (top && top.route) {
+        primaryBtn = '<button type="button" class="hub-btn" data-dash-route="' + esc(top.route) + '">'
+          + esc(top.action || 'Open') + '</button>';
+      } else if (primaryAction) {
+        primaryBtn = '<button type="button" class="hub-btn" data-dash-action="' + esc(primaryAction.id) + '">'
+          + esc(primaryAction.label) + '</button>';
+      } else {
+        primaryBtn = '<button type="button" class="hub-btn" data-dash-action="hub-refresh">Refresh now</button>';
       }
+
+      var heroIssue = top
+        ? '<strong style="display:block;color:#fff;font-size:1rem;margin-bottom:4px">' + esc(top.title) + '</strong>'
+          + '<span class="hub-meta" style="margin:0">' + esc(top.why || top.detail || 'Needs attention') + '</span>'
+          + (top.fixHowTo ? '<span class="hub-meta" style="display:block;margin-top:6px;color:#fde047">Do this now: ' + esc(top.fixHowTo) + '</span>' : '')
+        : '<strong style="display:block;color:#fff;font-size:1rem;margin-bottom:4px">Systems steady</strong>'
+          + '<span class="hub-meta" style="margin:0">No top issue — keep an eye on pipelines below.</span>';
 
       var qaPass = data.qa && data.qa.pass;
       var qaLine = qaPass === true ? 'Last crawl passed' : qaPass === false ? 'Failures detected' : 'No crawl signal yet';

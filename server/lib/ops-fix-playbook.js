@@ -7,7 +7,7 @@
 const PLAYBOOK = {
   'film-room': {
     why: 'Film Room catalog is stale — the public Film Room list is out of date.',
-    howTo: 'Click Rebuild Film Room catalog. Wait 1–2 minutes, then Refresh. It should leave red.',
+    howTo: 'Click Rebuild Film Room catalog. Wait 1–2 minutes, then Refresh.',
     fixLabel: 'Rebuild Film Room catalog',
     jobId: 'film-room-weekly',
     route: '#dashboard/ops-summary',
@@ -55,22 +55,22 @@ const PLAYBOOK = {
     route: '#gm2/identity',
   },
   'api-health': {
-    why: 'API is returning elevated errors.',
-    howTo: 'Wait 1–2 minutes (kitchen may be waking). If still red, open Runbooks → Deploy recovery.',
-    fixLabel: 'Open Runbooks',
-    jobId: null,
-    route: '#dashboard/runbooks',
+    why: 'The server looks unhealthy.',
+    howTo: 'Wait 90 seconds, press Refresh. If still red after 2 tries, open Runbooks.',
+    fixLabel: 'Refresh now',
+    jobId: 'hub-refresh',
+    route: '#dashboard/overview',
   },
   'db-health': {
-    why: 'Database errors or slow queries spiked.',
-    howTo: 'Open Runbooks / Full Ops logs. Do not spam jobs — check errors first.',
-    fixLabel: 'Open Full Ops',
-    jobId: null,
-    route: '#dashboard/ops',
+    why: 'The database looks slow or erroring.',
+    howTo: 'Wait 90 seconds and Refresh. Do not spam jobs. If still red, open Full Ops logs.',
+    fixLabel: 'Refresh now',
+    jobId: 'hub-refresh',
+    route: '#dashboard/overview',
   },
   autoposter: {
     why: 'Autoposter has not posted or needs attention.',
-    howTo: 'Open Beat Desk / Post Studio and post manually if needed. Check autoposter logs in Full Ops.',
+    howTo: 'Open Beat Desk and post manually if needed.',
     fixLabel: 'Open Beat Desk',
     jobId: null,
     route: '#beat-desk/desk',
@@ -84,8 +84,8 @@ const GATE_REASON_COPY = {
     step: 'Click Run QA crawl. Wait for it to finish, then Refresh.',
   },
   health_not_ready: {
-    plain: 'The kitchen (API) is not ready yet.',
-    step: 'Wait 1–2 minutes and Refresh. If it stays bad, open Runbooks → Deploy recovery.',
+    plain: 'The server is still starting.',
+    step: 'Wait 90 seconds and press Refresh.',
   },
   crawler_failures: {
     plain: 'The site crawler found page errors.',
@@ -93,7 +93,7 @@ const GATE_REASON_COPY = {
   },
   api_failures: {
     plain: 'Some API checks failed during the QA crawl.',
-    step: 'Wait a minute (kitchen may be waking), then Run QA crawl again.',
+    step: 'Wait a minute, then Run QA crawl again.',
   },
 };
 
@@ -104,13 +104,23 @@ function gateReasonPlain(reason, piMin) {
   if (m) {
     const need = Number(m[1]) || piMin || 90;
     return {
-      plain: `Product Health score is below ${need}. That score is a report card for the vault site — not Apple rejecting the app.`,
-      step: 'Open Product Health, click Recompute product scores. If red ops tiles exist (Film Room, recruiting, etc.), fix those first — they pull the score down.',
+      plain: `Product Health score is below ${need}. That is a vault report card — not Apple rejecting the app.`,
+      step: 'Only after red tiles are fixed: open Product Health → Recompute. Ignore Recompute while API Health is red.',
     };
   }
   return {
     plain: `Gate check failed: ${r}.`,
-    step: 'Open Command Center / Runbooks and follow the Fix buttons on red tiles.',
+    step: 'Follow the Coach “Do this now” steps on Command Center.',
+  };
+}
+
+function parseApiSummary(summary) {
+  const s = String(summary || '');
+  const ms = s.match(/(\d+)\s*ms\s*avg/i);
+  const five = s.match(/(\d+)\s*%\s*5xx/i);
+  return {
+    avgMs: ms ? Number(ms[1]) : null,
+    fivePct: five ? Number(five[1]) : null,
   };
 }
 
@@ -118,7 +128,7 @@ function forTile(tile) {
   const id = String(tile?.id || '').toLowerCase();
   const base = PLAYBOOK[id] || {
     why: `${tile?.label || 'This module'} needs attention.`,
-    howTo: 'Open Ops Summary and use the Fix button, or open Runbooks if you are unsure.',
+    howTo: 'Open Ops Summary and use the Fix button, or follow Coach on Command Center.',
     fixLabel: 'Open Ops Summary',
     jobId: null,
     route: '#dashboard/ops-summary',
@@ -131,34 +141,123 @@ function forTile(tile) {
   };
 }
 
-function coachFromParts({ title, why, howTo, dontWorry, steps }) {
+function coachFromParts({ title, why, howTo, dontWorry, steps, doThisNow }) {
   return {
     title: title || 'Coach',
     plain: why || '',
     howTo: howTo || '',
+    doThisNow: doThisNow || howTo || '',
     steps: Array.isArray(steps) ? steps : [],
     dontWorry: dontWorry || '',
   };
 }
 
+function specializeApiHealth(tile, pb) {
+  const { avgMs, fivePct } = parseApiSummary(tile.summary);
+  const slowOnly = (fivePct === 0 || fivePct == null) && avgMs != null && avgMs >= 800;
+  const hasServerErrors = fivePct != null && fivePct > 0;
+
+  if (slowOnly && !hasServerErrors) {
+    return {
+      why: `The server is answering slowly (${avgMs}ms). Error rate is 0% — usually it just woke up from sleep.`,
+      howTo: 'Wait about 90 seconds. Press Refresh. Do not click Recompute.',
+      fixLabel: 'Refresh now',
+      jobId: 'hub-refresh',
+      route: '#dashboard/overview',
+      doThisNow: 'Wait 90 seconds, then press Refresh now.',
+      steps: [
+        'Wait about 90 seconds (let the server finish waking up).',
+        'Press the orange Refresh now button.',
+        'If Beat Desk still loads, keep posting — you can ignore this red for a minute.',
+        'If it is still red after 2 refreshes, then open Runbooks → Deploy recovery.',
+      ],
+      dontWorry: 'Slow ≠ broken. Ignore “Recompute product scores” for this. Not an App Store Connect problem.',
+    };
+  }
+
+  if (hasServerErrors) {
+    return {
+      why: `The server returned real errors (${fivePct}% of recent requests).`,
+      howTo: 'Wait 90 seconds and Refresh once. If still red, open Runbooks → Deploy recovery.',
+      fixLabel: 'Refresh now',
+      jobId: 'hub-refresh',
+      route: '#dashboard/runbooks',
+      doThisNow: 'Refresh once. If still red after 2 minutes, open Runbooks.',
+      steps: [
+        'Press Refresh now once.',
+        'Wait up to 2 minutes.',
+        'Refresh again.',
+        'If still red, open Runbooks and run Deploy recovery (or ping support).',
+      ],
+      dontWorry: 'Finish or pause Beat Desk posts until green if Open/Check API keeps failing.',
+    };
+  }
+
+  return {
+    why: pb.why,
+    howTo: pb.howTo,
+    fixLabel: 'Refresh now',
+    jobId: 'hub-refresh',
+    route: pb.route || '#dashboard/overview',
+    doThisNow: 'Wait 90 seconds, then press Refresh now.',
+    steps: [
+      'Wait about 90 seconds.',
+      'Press Refresh now.',
+      'If still red after 2 tries, open Runbooks.',
+    ],
+    dontWorry: 'Not an App Store Connect emergency.',
+  };
+}
+
 function enrichIssueFromTile(tile) {
   const pb = forTile(tile);
+  let specialized = null;
+  if (pb.tileId === 'api-health') specialized = specializeApiHealth(tile, pb);
+  if (pb.tileId === 'db-health') {
+    specialized = {
+      why: 'The database looks slow or busy.',
+      howTo: 'Wait 90 seconds and press Refresh. Do not spam jobs.',
+      fixLabel: 'Refresh now',
+      jobId: 'hub-refresh',
+      route: '#dashboard/overview',
+      doThisNow: 'Wait 90 seconds, then press Refresh now.',
+      steps: [
+        'Wait about 90 seconds.',
+        'Press Refresh now.',
+        'If still red, open Full Ops → Logs (do not re-run many jobs).',
+      ],
+      dontWorry: 'Not an App Store Connect emergency.',
+    };
+  }
+
+  const pack = specialized || {
+    why: pb.why,
+    howTo: pb.howTo,
+    fixLabel: pb.fixLabel,
+    jobId: pb.jobId,
+    route: pb.route,
+    doThisNow: pb.howTo,
+    steps: [pb.howTo],
+    dontWorry: 'Follow the orange button. Not an App Store Connect emergency unless Coach says otherwise.',
+  };
+
   return {
     severity: tile.status === 'red' ? 'red' : 'yellow',
     title: tile.label || tile.id,
-    detail: tile.summary || 'Subsystem unhealthy',
-    why: pb.why,
-    fixHowTo: pb.howTo,
-    action: pb.fixLabel,
-    actionType: pb.jobId || null,
-    route: pb.route,
+    detail: tile.summary || 'Needs attention',
+    why: pack.why,
+    fixHowTo: pack.howTo,
+    action: pack.fixLabel,
+    actionType: pack.jobId || null,
+    route: pack.route,
     tileId: pb.tileId,
     coach: coachFromParts({
       title: tile.label || tile.id,
-      why: pb.why,
-      howTo: pb.howTo,
-      steps: [pb.howTo],
-      dontWorry: 'This is a kitchen / data refresh — not an App Store Connect emergency.',
+      why: pack.why,
+      howTo: pack.howTo,
+      doThisNow: pack.doThisNow,
+      steps: pack.steps,
+      dontWorry: pack.dontWorry,
     }),
   };
 }
@@ -184,18 +283,19 @@ function enrichAppStoreGateIssue(appStoreGate) {
       title: 'App Store gate — building a green streak',
       detail: `Day ${days}/${need} green`,
       why: `Today looks OK. You need ${need} green days in a row before the stability gate says ready.`,
-      fixHowTo: 'Nothing urgent. Keep posting on Beat Desk. If something turns red later today, fix that — one red day resets the streak.',
-      action: 'Open Product Health',
+      fixHowTo: 'Nothing urgent. Keep posting on Beat Desk.',
+      action: 'Go to Beat Desk',
       actionType: null,
-      route: '#product-intel/summary',
+      route: '#beat-desk/desk',
       coach: coachFromParts({
         title: 'App Store gate (in progress)',
         why: `You are on day ${days} of ${need}. Green means the site checks passed that day.`,
-        howTo: 'No button to mash. Keep the kitchen healthy. Finish today’s Beat Desk posts.',
+        howTo: 'No button to mash. Keep the server healthy and finish today’s posts.',
+        doThisNow: 'Go make today’s Beat Desk posts.',
         steps: [
           'Do today’s Beat Desk posts as usual.',
           'If Top Issue turns red later, fix that red thing the same day.',
-          `After ${need} green days in a row, the gate turns ready — then we talk App Store Connect.`,
+          `After ${need} green days in a row, the gate turns ready.`,
         ],
         dontWorry: 'Yellow here is patience, not a fire.',
       }),
@@ -209,7 +309,7 @@ function enrichAppStoreGateIssue(appStoreGate) {
   const reasonPlain = copies.map((c) => c.plain).join(' ');
   const steps = copies.map((c) => c.step);
 
-  let action = 'Open Product Health';
+  let action = 'Recompute product scores';
   let actionType = 'pi-recompute';
   let route = '#product-intel/summary';
   if (hasQa) {
@@ -224,8 +324,8 @@ function enrichAppStoreGateIssue(appStoreGate) {
     detail: score != null
       ? `Score ${score}/${piMin}+ · ${reasons.join(', ') || 'criteria not met'}`
       : (reasons.join(', ') || 'criteria not met'),
-    why: `${reasonPlain}${scoreBit} This is an internal “ready for a calm App Store week” checklist — not a message from Apple.`,
-    fixHowTo: steps[0] || 'Open Product Health and Recompute. Fix any red ops tiles first.',
+    why: `${reasonPlain}${scoreBit} Internal checklist — not a message from Apple.`,
+    fixHowTo: steps[0] || 'Open Product Health and Recompute after red tiles are fixed.',
     action,
     actionType,
     route,
@@ -233,12 +333,13 @@ function enrichAppStoreGateIssue(appStoreGate) {
       title: 'App Store gate',
       why: `${reasonPlain}${scoreBit}`,
       howTo: steps[0] || 'Open Product Health.',
+      doThisNow: hasQa ? 'Run QA crawl.' : 'Fix red tiles first, then Recompute product scores.',
       steps: [
+        'If any ops tile is red (API, Film Room, etc.), fix that first.',
         ...steps,
         'Refresh Command Center when jobs finish.',
-        'A green day only counts after the daily sample records — one bad day resets the 7-day streak.',
       ],
-      dontWorry: 'You do NOT need to open App Store Connect for this. Fix kitchen health / Product Health first. Keep posting on Beat Desk.',
+      dontWorry: 'Do NOT open App Store Connect for this. Keep posting on Beat Desk.',
     }),
   };
 }
@@ -246,7 +347,7 @@ function enrichAppStoreGateIssue(appStoreGate) {
 function enrichQaIssue(qa) {
   if (!qa || qa.pass !== false) return null;
   const detail = `${qa.failed || 0} failed checks`;
-  const howTo = 'Click Run QA crawl (or open QA Monitor). Wait for results. Fix red ops tiles if the crawl points at them.';
+  const howTo = 'Click Run QA crawl. Wait for results.';
   return {
     severity: 'red',
     title: 'QA crawl failing',
@@ -260,6 +361,7 @@ function enrichQaIssue(qa) {
       title: 'QA crawl',
       why: 'QA is a robot that clicks through the vault site looking for broken pages.',
       howTo,
+      doThisNow: 'Press Run crawl.',
       steps: [howTo, 'If the same pages keep failing, open Runbooks → “QA is red”.'],
       dontWorry: 'This is site health — not your X posting workflow.',
     }),
@@ -275,4 +377,6 @@ module.exports = {
   enrichQaIssue,
   gateReasonPlain,
   coachFromParts,
+  parseApiSummary,
+  specializeApiHealth,
 };

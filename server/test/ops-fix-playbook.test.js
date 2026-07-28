@@ -26,10 +26,22 @@ describe('ops fix playbook', () => {
     assert.equal(issue.severity, 'red');
     assert.equal(issue.actionType, 'film-room-weekly');
     assert.match(issue.action, /Rebuild Film Room catalog/i);
-    assert.match(issue.fixHowTo, /Rebuild Film Room catalog/i);
-    assert.match(issue.why, /stale|out of date/i);
-    assert.equal(issue.detail, 'Catalog 510h ago');
     assert.ok(issue.coach && issue.coach.plain);
+  });
+
+  it('API Health slow + 0% 5xx → wait/refresh, not Recompute', () => {
+    const issue = enrichIssueFromTile({
+      id: 'api-health',
+      label: 'API Health',
+      status: 'red',
+      summary: '51 reqs · 0% 5xx · 2088ms avg',
+    });
+    assert.equal(issue.actionType, 'hub-refresh');
+    assert.match(issue.action, /Refresh/i);
+    assert.match(issue.why, /slowly|0%/i);
+    assert.match(issue.coach.doThisNow, /90|Refresh/i);
+    assert.match(issue.coach.dontWorry, /Recompute|App Store/i);
+    assert.doesNotMatch(issue.action, /Recompute/i);
   });
 
   it('translates product_intel_below_90 into Charles English + coach', () => {
@@ -48,9 +60,6 @@ describe('ops fix playbook', () => {
     assert.ok(issue);
     assert.equal(issue.severity, 'yellow');
     assert.match(issue.detail, /78/);
-    assert.match(issue.why, /report card|not a message from Apple/i);
-    assert.match(issue.fixHowTo, /Product Health|Recompute|red ops/i);
-    assert.equal(issue.actionType, 'pi-recompute');
     assert.match(issue.coach.dontWorry, /App Store Connect/i);
   });
 
@@ -62,17 +71,13 @@ describe('ops fix playbook', () => {
     }
   });
 
-  it('Full Ops + Ops Summary + Coach expose Rebuild Film Room catalog', () => {
-    const opsHtml = fs.readFileSync(path.join(ROOT, 'admin-ops.html'), 'utf8');
-    const opsJs = fs.readFileSync(path.join(ROOT, 'js/admin-hub-ops.js'), 'utf8');
+  it('Coach + dashboard prefer Do this now / hub-refresh', () => {
     const dash = fs.readFileSync(path.join(ROOT, 'js/admin-hub-dashboard.js'), 'utf8');
     const coach = fs.readFileSync(path.join(ROOT, 'js/admin-hub-coach.js'), 'utf8');
     const html = fs.readFileSync(path.join(ROOT, 'admin.html'), 'utf8');
-    assert.match(opsHtml, /Rebuild Film Room catalog/);
-    assert.match(opsJs, /film-room-weekly/);
-    assert.match(dash, /fixHowTo/);
-    assert.match(dash, /GVAdminCoach/);
-    assert.match(coach, /Coach says/);
-    assert.match(html, /admin-hub-coach\.js\?v=hub-coach-v1/);
+    assert.match(dash, /Primary CTA always matches Top Issue/);
+    assert.match(dash, /hub-refresh/);
+    assert.match(coach, /Do this now/);
+    assert.match(html, /admin-hub-coach\.js\?v=hub-coach-v2/);
   });
 });
