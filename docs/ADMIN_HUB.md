@@ -20,9 +20,11 @@ Legacy bookmarks (`/admin/ops`, `/recruiting-admin.html`, etc.) redirect into hu
 Plain-English playbook cards on **Beat Desk** and **Command Center**:
 
 - **Do this now** — numbered daily steps
+- **If red / yellow — do this** — concrete next steps (STALE vs FAIL vs kitchen waking vs sidebar red)
 - **What the buttons mean** — Open / Copy Brief / Refresh / etc.
-- **Colors** — green / yellow / red / gray in one glance
-- **Don’t touch** — Legacy consoles + panic guidance for “kitchen waking”
+- **Don’t touch** — Legacy consoles + calm guidance for “kitchen waking”
+
+Beat inbox legend: **LIVE** = fresh · **STALE** = older than 24h (still OK to Open) · **FAIL** = Check API / Refresh.
 
 Collapse/expand is remembered for the browser session (`Show notecards` / `Hide notecards`).
 
