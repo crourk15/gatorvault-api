@@ -41,7 +41,9 @@
     }
 
     function runDashAction(action) {
-      if (action === 'hub-refresh') return Promise.resolve({ ok: true, refreshOnly: true });
+      if (action === 'hub-refresh' || action === 'hub-auto-wait') {
+        return Promise.resolve({ ok: true, refreshOnly: true });
+      }
       if (action === 'qa-run') return apiPost('/api/qa/run', { force: true });
       if (action === 'pi-recompute') return apiPost('/api/product-intel/recompute', {});
       if (action === 'sr-generate') return apiPost('/api/self-runner/generate', { runQa: false });
@@ -129,7 +131,10 @@
 
       // Primary CTA always matches Top Issue / Coach — never a mismatched recommended action.
       var primaryBtn;
-      if (top && top.actionType) {
+      if (top && (top.actionType === 'hub-auto-wait' || top.mode === 'auto-wait')) {
+        primaryBtn = '<button type="button" class="hub-btn" data-dash-action="hub-refresh">'
+          + 'Sit tight — auto-refreshing</button>';
+      } else if (top && top.actionType) {
         primaryBtn = '<button type="button" class="hub-btn" data-dash-action="' + esc(top.actionType) + '">'
           + esc(top.action || 'Run fix') + '</button>';
       } else if (top && top.route) {
@@ -208,6 +213,8 @@
       if (global.GVAdminCoach && typeof global.GVAdminCoach.renderInto === 'function') {
         global.GVAdminCoach.renderInto(body, data, {
           onNavigate: onNavigate,
+          apiGet: apiGet,
+          apiPost: apiPost,
           onAction: function (action) {
             return runDashAction(action).then(function () { load(); });
           }

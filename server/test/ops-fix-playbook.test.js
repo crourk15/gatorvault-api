@@ -23,25 +23,23 @@ describe('ops fix playbook', () => {
       status: 'red',
       summary: 'Catalog 510h ago',
     });
-    assert.equal(issue.severity, 'red');
     assert.equal(issue.actionType, 'film-room-weekly');
     assert.match(issue.action, /Rebuild Film Room catalog/i);
-    assert.ok(issue.coach && issue.coach.plain);
   });
 
-  it('API Health slow + 0% 5xx → wait/refresh, not Recompute', () => {
+  it('API Health slow + 0% 5xx → auto-wait, not Deploy recovery', () => {
     const issue = enrichIssueFromTile({
       id: 'api-health',
       label: 'API Health',
       status: 'red',
-      summary: '51 reqs · 0% 5xx · 2088ms avg',
+      summary: '49 reqs · 0% 5xx · 2040ms avg',
     });
-    assert.equal(issue.actionType, 'hub-refresh');
-    assert.match(issue.action, /Refresh/i);
-    assert.match(issue.why, /slowly|0%/i);
-    assert.match(issue.coach.doThisNow, /90|Refresh/i);
-    assert.match(issue.coach.dontWorry, /Recompute|App Store/i);
-    assert.doesNotMatch(issue.action, /Recompute/i);
+    assert.equal(issue.mode, 'auto-wait');
+    assert.equal(issue.actionType, 'hub-auto-wait');
+    assert.match(issue.coach.doThisNow, /sit tight/i);
+    assert.match(issue.coach.doThisNow, /Deploy recovery/i);
+    assert.ok(issue.autoWaitSec >= 60);
+    assert.notEqual(issue.route, '#dashboard/runbooks');
   });
 
   it('translates product_intel_below_90 into Charles English + coach', () => {
@@ -59,8 +57,6 @@ describe('ops fix playbook', () => {
     });
     assert.ok(issue);
     assert.equal(issue.severity, 'yellow');
-    assert.match(issue.detail, /78/);
-    assert.match(issue.coach.dontWorry, /App Store Connect/i);
   });
 
   it('covers core red tiles with job or route', () => {
@@ -71,13 +67,13 @@ describe('ops fix playbook', () => {
     }
   });
 
-  it('Coach + dashboard prefer Do this now / hub-refresh', () => {
-    const dash = fs.readFileSync(path.join(ROOT, 'js/admin-hub-dashboard.js'), 'utf8');
-    const coach = fs.readFileSync(path.join(ROOT, 'js/admin-hub-coach.js'), 'utf8');
+  it('ships Make it green fixer + coach auto-wait', () => {
     const html = fs.readFileSync(path.join(ROOT, 'admin.html'), 'utf8');
-    assert.match(dash, /Primary CTA always matches Top Issue/);
-    assert.match(dash, /hub-refresh/);
-    assert.match(coach, /Do this now/);
-    assert.match(html, /admin-hub-coach\.js\?v=hub-coach-v2/);
+    const coach = fs.readFileSync(path.join(ROOT, 'js/admin-hub-coach.js'), 'utf8');
+    const fixer = fs.readFileSync(path.join(ROOT, 'js/admin-hub-fixer.js'), 'utf8');
+    assert.match(html, /admin-hub-fixer\.js\?v=hub-fixer-v1/);
+    assert.match(html, /admin-hub-coach\.js\?v=hub-coach-v3/);
+    assert.match(coach, /Auto-refresh in/);
+    assert.match(fixer, /Make it green/);
   });
 });

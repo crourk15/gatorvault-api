@@ -275,12 +275,16 @@
     .hub-coach{margin:0 0 16px;padding:16px 18px;border-radius:14px;border:1px solid rgba(234,179,8,.45);background:linear-gradient(135deg,rgba(15,23,42,.95),rgba(66,32,6,.55));}
     .hub-coach--ok{border-color:rgba(34,197,94,.35);background:linear-gradient(135deg,rgba(15,23,42,.95),rgba(6,40,20,.45))}
     .hub-coach--bad{border-color:rgba(239,68,68,.45)}
+    .hub-coach--wait{border-color:rgba(56,189,248,.5);background:linear-gradient(135deg,rgba(15,23,42,.95),rgba(8,47,73,.55))}
     .hub-coach__eyebrow{margin:0 0 4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#fde047;font-weight:700}
     .hub-coach__title{margin:0 0 8px;font-family:var(--hub-display);font-size:1.25rem;color:#fff;letter-spacing:.03em}
-    .hub-coach__plain,.hub-coach__howto,.hub-coach__do,.hub-coach__calm{margin:0 0 8px;color:#e2e8f0;font-size:14px;line-height:1.5;max-width:62ch}
+    .hub-coach__plain,.hub-coach__howto,.hub-coach__do,.hub-coach__calm,.hub-coach__countdown,.hub-coach__status{margin:0 0 8px;color:#e2e8f0;font-size:14px;line-height:1.5;max-width:62ch}
     .hub-coach__howto,.hub-coach__do{color:#fde047;font-size:15px}
+    .hub-coach__countdown{color:#7dd3fc;font-weight:700;font-size:15px}
+    .hub-coach__status{color:#93c5fd;min-height:1.2em}
     .hub-coach__calm{color:#94a3b8;font-size:13px}
-    .hub-coach__primary{min-width:160px}
+    .hub-coach__primary,.hub-fixer-btn{min-width:160px}
+    .hub-fixer-btn{background:#16a34a}
     .hub-coach__steps{margin:0 0 10px;padding-left:1.2rem;color:#e2e8f0;font-size:14px;line-height:1.45}
     .hub-coach__steps li{margin:0 0 4px}
     .hub-coach__actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
@@ -374,9 +378,10 @@
   <script src="/js/admin-api-fetch.js?v=4"></script>
   <script src="/js/vault-grade-editor.js?v=vge-20260611"></script>
   <script src="/js/admin-hub-notecards.js?v=hub-nc-v4"></script>
-  <script src="/js/admin-hub-coach.js?v=hub-coach-v2"></script>
-  <script src="/js/admin-hub-dashboard.js?v=hub-dash-v11"></script>
-  <script src="/js/admin-hub-runbooks.js?v=hub-runbooks-v2"></script>
+  <script src="/js/admin-hub-fixer.js?v=hub-fixer-v1"></script>
+  <script src="/js/admin-hub-coach.js?v=hub-coach-v3"></script>
+  <script src="/js/admin-hub-dashboard.js?v=hub-dash-v12"></script>
+  <script src="/js/admin-hub-runbooks.js?v=hub-runbooks-v3"></script>
   <script src="/js/admin-hub-ops.js?v=hub-ops-v2"></script>
   <script src="/js/admin-hub-job-queue.js?v=hub-jobs-v1"></script>
   <script src="/js/admin-hub-beat-desk.js?v=hub-bd-v11"></script>
@@ -390,7 +395,7 @@
   <script src="/js/admin-hub-unresolved-predictions.js?v=hub-upq-v2"></script>
   <script src="/js/admin-hub-product-intel.js?v=hub-pi-v1"></script>
   <script src="/js/admin-hub-members.js?v=hub-mem-v2"></script>
-  <script src="/js/admin-hub-core.js?v=hub-core-v6"></script>
+  <script src="/js/admin-hub-core.js?v=hub-core-v7"></script>
   <script>
     document.getElementById('hub-lock-top').addEventListener('click', function () {
       document.getElementById('hub-lock').click();

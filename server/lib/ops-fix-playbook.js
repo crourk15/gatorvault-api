@@ -141,7 +141,7 @@ function forTile(tile) {
   };
 }
 
-function coachFromParts({ title, why, howTo, dontWorry, steps, doThisNow }) {
+function coachFromParts({ title, why, howTo, dontWorry, steps, doThisNow, autoWaitSec, mode }) {
   return {
     title: title || 'Coach',
     plain: why || '',
@@ -149,6 +149,8 @@ function coachFromParts({ title, why, howTo, dontWorry, steps, doThisNow }) {
     doThisNow: doThisNow || howTo || '',
     steps: Array.isArray(steps) ? steps : [],
     dontWorry: dontWorry || '',
+    autoWaitSec: autoWaitSec || null,
+    mode: mode || null,
   };
 }
 
@@ -159,19 +161,20 @@ function specializeApiHealth(tile, pb) {
 
   if (slowOnly && !hasServerErrors) {
     return {
-      why: `The server is answering slowly (${avgMs}ms). Error rate is 0% — usually it just woke up from sleep.`,
-      howTo: 'Wait about 90 seconds. Press Refresh. Do not click Recompute.',
-      fixLabel: 'Refresh now',
-      jobId: 'hub-refresh',
+      why: `The server is waking up (slow replies, ${avgMs}ms). Error rate is 0% — that is normal after sleep.`,
+      howTo: 'Sit tight. Do not run Deploy recovery yet. This screen will refresh itself.',
+      fixLabel: 'I’m waiting — refresh for me',
+      jobId: 'hub-auto-wait',
       route: '#dashboard/overview',
-      doThisNow: 'Wait 90 seconds, then press Refresh now.',
+      doThisNow: 'Do nothing. Sit tight ~90 seconds. Do NOT press Deploy recovery.',
+      autoWaitSec: 90,
+      mode: 'auto-wait',
       steps: [
-        'Wait about 90 seconds (let the server finish waking up).',
-        'Press the orange Refresh now button.',
-        'If Beat Desk still loads, keep posting — you can ignore this red for a minute.',
-        'If it is still red after 2 refreshes, then open Runbooks → Deploy recovery.',
+        'Do nothing — the hub will refresh itself.',
+        'Do not run Deploy recovery while the top banner says the server is waking.',
+        'When API Health leaves red, go to Beat Desk and post.',
       ],
-      dontWorry: 'Slow ≠ broken. Ignore “Recompute product scores” for this. Not an App Store Connect problem.',
+      dontWorry: 'Those Deploy recovery “Waking kitchen” fails are expected if you click early. Ignore Recompute too.',
     };
   }
 
@@ -239,6 +242,8 @@ function enrichIssueFromTile(tile) {
     doThisNow: pb.howTo,
     steps: [pb.howTo],
     dontWorry: 'Follow the orange button. Not an App Store Connect emergency unless Coach says otherwise.',
+    autoWaitSec: null,
+    mode: null,
   };
 
   return {
@@ -258,7 +263,11 @@ function enrichIssueFromTile(tile) {
       doThisNow: pack.doThisNow,
       steps: pack.steps,
       dontWorry: pack.dontWorry,
+      autoWaitSec: pack.autoWaitSec,
+      mode: pack.mode,
     }),
+    autoWaitSec: pack.autoWaitSec || null,
+    mode: pack.mode || null,
   };
 }
 

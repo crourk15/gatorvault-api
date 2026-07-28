@@ -397,12 +397,14 @@
     if (!message) {
       el.classList.add('hidden');
       el.textContent = '';
+      try { sessionStorage.removeItem('gv:hub:wakeMode'); } catch (e) { /* ignore */ }
       return;
     }
     // Soften scary wake copy — retries happen quietly in GVAdminApiFetch.
     var soft = String(message || '');
-    if (/unavailable|waking|warming|502|503|504|HTML instead of JSON|Kitchen busy|kitchen/i.test(soft)) {
-      soft = 'Waking kitchen… hang tight.';
+    if (/unavailable|waking|warming|502|503|504|HTML instead of JSON|Kitchen busy|kitchen|still starting/i.test(soft)) {
+      soft = 'Server waking up — sit tight. Do not run Deploy recovery yet.';
+      try { sessionStorage.setItem('gv:hub:wakeMode', '1'); } catch (e) { /* ignore */ }
     }
     el.textContent = soft;
     el.classList.remove('hidden');
@@ -981,7 +983,11 @@
     else if (top.detail) bits.push(String(top.detail));
     if (doNow) bits.push('Do this now: ' + String(doNow));
     detailEl.textContent = bits.join(' — ') || 'Follow Coach on Command Center.';
-    if (top.actionType) {
+    if (top.actionType === 'hub-auto-wait' || (top.coach && top.coach.mode === 'auto-wait')) {
+      primary.textContent = 'Sit tight (auto)';
+      primary.setAttribute('data-job', 'hub-refresh');
+      primary.setAttribute('data-route', '#dashboard/overview');
+    } else if (top.actionType) {
       primary.textContent = top.action || 'Run fix';
       primary.setAttribute('data-job', top.actionType);
       primary.setAttribute('data-route', top.route || '#dashboard/overview');

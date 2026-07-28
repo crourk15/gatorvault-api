@@ -113,6 +113,21 @@
     return (stepLabel ? stepLabel + ' failed: ' : '') + (msg || 'Unknown error');
   }
 
+  function isWakeMode() {
+    try {
+      if (sessionStorage.getItem('gv:hub:wakeMode') === '1') return true;
+    } catch (e) { /* ignore */ }
+    var banner = document.getElementById('hub-api-banner');
+    if (banner && !banner.classList.contains('hidden')) {
+      var t = String(banner.textContent || '');
+      if (/waking|sit tight|still starting/i.test(t)) return true;
+    }
+    var recent = readLog().slice(0, 3);
+    return recent.some(function (row) {
+      return row.status === 'fail' && /still starting|waking kitchen/i.test(String(row.detail || ''));
+    });
+  }
+
   function renderLog(el) {
     if (!el) return;
     var list = readLog();
@@ -197,7 +212,7 @@
     container.innerHTML = ''
       + '<div class="hub-section-head">'
       + '<h2>Runbooks</h2>'
-      + '<p>One-click fix recipes. If a job says the server is still starting, wait 2 minutes and Run again — don’t spam.</p>'
+      + '<p>One-click fix recipes. While the server is waking, Deploy recovery stays locked — use Command Center → Make it green instead.</p>'
       + '</div>'
       + '<div class="hub-settings-grid" id="hub-runbook-grid"></div>'
       + '<div class="hub-card hub-card-wide" style="margin-top:16px">'
@@ -209,16 +224,27 @@
     var logEl = container.querySelector('#hub-runbook-log');
     var busy = false;
 
+    var wake = isWakeMode();
     RUNBOOKS.forEach(function (book) {
       var card = document.createElement('div');
       card.className = 'hub-card';
+      var blocked = wake && (book.id === 'deploy-recovery' || book.id === 'ingest-lag' || book.id === 'live-quiet');
       card.innerHTML = ''
         + '<h3>' + esc(book.title) + '</h3>'
         + '<p class="hub-meta">' + esc(book.desc) + '</p>'
         + '<p class="hub-meta">' + book.steps.length + ' step' + (book.steps.length === 1 ? '' : 's') + '</p>'
-        + '<button type="button" class="hub-btn" data-runbook="' + esc(book.id) + '">Run</button>';
+        + (blocked
+          ? '<p class="hub-meta" style="color:#fde047">Wait — server still waking. Do not run this yet.</p>'
+            + '<button type="button" class="hub-btn secondary" disabled>Wait…</button>'
+          : '<button type="button" class="hub-btn" data-runbook="' + esc(book.id) + '">Run</button>');
       grid.appendChild(card);
     });
+    if (wake) {
+      var tip = document.createElement('div');
+      tip.className = 'hub-card hub-card-wide';
+      tip.innerHTML = '<p class="hub-meta" style="color:#fde047;margin:0">Server is waking. Go to <strong>Command Center</strong>, sit tight / press <strong>Make it green</strong>. Do not spam Deploy recovery.</p>';
+      grid.insertBefore(tip, grid.firstChild);
+    }
 
     var ui = {
       logEl: logEl,
