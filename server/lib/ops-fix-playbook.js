@@ -156,12 +156,15 @@ function coachFromParts({ title, why, howTo, dontWorry, steps, doThisNow, autoWa
 
 function specializeApiHealth(tile, pb) {
   const { avgMs, fivePct } = parseApiSummary(tile.summary);
-  const slowOnly = (fivePct === 0 || fivePct == null) && avgMs != null && avgMs >= 800;
   const hasServerErrors = fivePct != null && fivePct > 0;
+  // Latency / wake lag with 0% 5xx is never a posting emergency — even under 800ms.
+  const wakeLagOk = !hasServerErrors && (fivePct === 0 || fivePct == null)
+    && (tile.status === 'yellow' || tile.status === 'red' || (avgMs != null && avgMs >= 800));
 
-  if (slowOnly && !hasServerErrors) {
+  if (wakeLagOk) {
+    const msBit = avgMs != null ? ` (${avgMs}ms)` : '';
     return {
-      why: `Server is a little slow (${avgMs}ms) with 0% errors — wake lag, not a crash.`,
+      why: `Server looks fine on errors (0% 5xx)${msBit} — wake lag or mild latency, not a crash.`,
       howTo: 'Ignore this. Go to Beat Desk and post. Do not open Runbooks.',
       fixLabel: 'Go post on Beat Desk',
       jobId: null,
@@ -174,7 +177,7 @@ function specializeApiHealth(tile, pb) {
         'Make today’s posts.',
         'Only press Clear the red if a DIFFERENT tile is red (Film Room, recruiting, etc.).',
       ],
-      dontWorry: 'Slow with 0% errors is normal after sleep. Not App Store Connect. Not Deploy recovery.',
+      dontWorry: 'Slow/yellow with 0% errors is normal after sleep. Not App Store Connect. Not Deploy recovery.',
     };
   }
 
@@ -318,6 +321,37 @@ function enrichAppStoreGateIssue(appStoreGate) {
   const reasonPlain = copies.map((c) => c.plain).join(' ');
   const steps = copies.map((c) => c.step);
 
+  // Score-only gate must NOT trap Charles on Command Center / Recompute loops.
+  // Raising Product Health to 90 is a longer project — daily job is Beat Desk.
+  if (onlyPi && !hasQa) {
+    return {
+      severity: 'yellow',
+      title: 'App Store gate — scorecard below target',
+      detail: score != null
+        ? `Score ${score}/${piMin}+ · not blocking daily posts`
+        : 'Score below target · not blocking daily posts',
+      why: `${reasonPlain}${scoreBit} This does not block Beat Desk.`,
+      fixHowTo: 'Ignore for now. Go post on Beat Desk. Recompute later only if you have spare time.',
+      action: 'Go post on Beat Desk',
+      actionType: null,
+      route: '#beat-desk/desk',
+      mode: 'ignore-ok',
+      coach: coachFromParts({
+        title: 'App Store gate (ignore for posting)',
+        why: `${reasonPlain}${scoreBit}`,
+        howTo: 'Ignore. Go post on Beat Desk.',
+        doThisNow: 'Press Go post on Beat Desk. Leave Product Health alone for now.',
+        steps: [
+          'Press Go post on Beat Desk and make today’s posts.',
+          'Leave Product Health / Recompute for a quiet later session.',
+          'Do not open App Store Connect for this.',
+        ],
+        dontWorry: 'Score 76–89 is a longer scorecard project. It is not today’s posting fire.',
+        mode: 'ignore-ok',
+      }),
+    };
+  }
+
   let action = 'Recompute product scores';
   let actionType = 'pi-recompute';
   let route = '#product-intel/summary';
@@ -328,7 +362,7 @@ function enrichAppStoreGateIssue(appStoreGate) {
   }
 
   return {
-    severity: onlyPi ? 'yellow' : 'red',
+    severity: 'red',
     title: 'App Store gate — today not green',
     detail: score != null
       ? `Score ${score}/${piMin}+ · ${reasons.join(', ') || 'criteria not met'}`
