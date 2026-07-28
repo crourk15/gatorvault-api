@@ -385,7 +385,11 @@ function mountXAutoposterRoutes(app) {
     try {
       const inbox = require('./post-studio-intel-inbox');
       const limit = parseInt(req.query.limit || '40', 10);
-      return res.json(await inbox.getIntelInbox({ limit }));
+      const deskMode =
+        req.query.desk === '1' ||
+        req.query.desk === 'true' ||
+        req.query.mode === 'desk';
+      return res.json(await inbox.getIntelInbox({ limit, deskMode }));
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

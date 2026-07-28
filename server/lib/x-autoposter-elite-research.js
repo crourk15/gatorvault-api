@@ -316,11 +316,22 @@ function loadPredictionsForPlayer(slug, name, intelRows) {
   return preds;
 }
 
+/** getBeatPosts() returns { posts, fetchedAt, ... } — never treat the object as an array. */
+function postsFromLiveBeat(limit = 80) {
+  try {
+    const liveBeat = require('./live-beat');
+    const result = liveBeat.getBeatPosts(limit);
+    if (Array.isArray(result)) return result;
+    return Array.isArray(result?.posts) ? result.posts : [];
+  } catch {
+    return [];
+  }
+}
+
 function loadBeatMentions(name, limit = 5) {
   if (!name) return [];
   try {
-    const liveBeat = require('./live-beat');
-    const posts = liveBeat.getBeatPosts(80) || [];
+    const posts = postsFromLiveBeat(80);
     const key = String(name).toLowerCase();
     return posts
       .filter((p) => String(p.text || '').toLowerCase().includes(key))
@@ -377,8 +388,7 @@ function loadHayesFawcettMentions(name, limit = 3) {
   if (!name) return [];
   try {
     const beatFilters = require('./beat-writer-filters');
-    const liveBeat = require('./live-beat');
-    const posts = liveBeat.getBeatPosts(120) || [];
+    const posts = postsFromLiveBeat(120);
     const key = String(name).toLowerCase();
     return posts
       .filter((p) => beatFilters.isHayesFawcettPost(p) && String(p.text || '').toLowerCase().includes(key))
@@ -599,5 +609,7 @@ module.exports = {
   resolveOn3Board,
   competitorsFromPlayer,
   rpmLeaderFromBeatText,
-  competitorsFromBeatText
+  competitorsFromBeatText,
+  postsFromLiveBeat,
+  loadBeatMentions
 };

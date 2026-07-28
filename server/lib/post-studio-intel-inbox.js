@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Post Studio Intel Inbox — persistent beat intel + pipeline visibility for operators.
  */
 const intelStore = require('./recruiting-intel-store');
@@ -150,11 +150,94 @@ function groupInboxRows(rows = []) {
   );
 }
 
-async function getIntelInbox({ limit = 40, maxAgeMs = DEFAULT_INBOX_AGE_MS } = {}) {
+/**
+ * Map live beat-cache posts → inbox rows (matched to a player).
+ * Desk mode uses this so today's writer posts surface even before intel DB ingest.
+ */
+function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 } = {}) {
+  let posts = [];
+  let fetchedAt = null;
+  try {
+    const liveBeat = require('./live-beat');
+    const result = liveBeat.getBeatPosts(Math.max(limit, 80));
+    posts = Array.isArray(result) ? result : result?.posts || [];
+    fetchedAt = result?.fetchedAt || null;
+  } catch {
+    return { rows: [], fetchedAt: null, postCount: 0 };
+  }
+
+  let gate = null;
+  try {
+    gate = require('./beat-recruiting-ingest-gate');
+  } catch {
+    gate = null;
+  }
+
+  const cutoff = Date.now() - maxAgeMs;
+  const rows = [];
+  for (const p of posts) {
+    const text = String(p.text || '').trim();
+    if (text.length < 24) continue;
+    const reportedAt = p.publishedAt || p.fetchedAt || fetchedAt || null;
+    const ts = new Date(reportedAt || 0).getTime();
+    if (Number.isFinite(ts) && ts > 0 && ts < cutoff) continue;
+
+    let hit = null;
+    if (gate?.resolvePlayerFromTextSync) {
+      try {
+        hit = gate.resolvePlayerFromTextSync(text);
+      } catch {
+        hit = null;
+      }
+    }
+    if (!hit?.playerSlug) continue;
+
+    rows.push({
+      playerSlug: normalizeSlug(hit.playerSlug),
+      playerName: hit.playerName || null,
+      source: `beat-writer:${String(p.handle || p.writerName || 'live').replace(/^@/, '')}`,
+      eventType: 'beat_live',
+      detail: text,
+      skinny: text.slice(0, 200),
+      reportedAt,
+      createdAt: reportedAt,
+      articleUrl: p.url || p.link || null,
+      ufRelevant: true,
+      liveBeat: true,
+      writerName: p.writerName || p.handle || null,
+      outlet: p.outlet || null
+    });
+  }
+  return { rows, fetchedAt, postCount: posts.length };
+}
+
+function recentBeatIntelRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS } = {}) {
+  const cutoffIso = new Date(Date.now() - maxAgeMs).toISOString();
+  const recent = intelStore.listIntel({ limit: 400, since: cutoffIso }) || [];
+  return recent.filter((row) => isBeatIntel(row) || row.ufRelevant === true);
+}
+
+async function getIntelInbox({
+  limit = 40,
+  maxAgeMs = DEFAULT_INBOX_AGE_MS,
+  deskMode = false
+} = {}) {
   await intelStore.initIntelStore().catch(() => {});
 
   const unqueued = intelStore.getUnqueuedIntel({ maxAgeMs, limit: null }) || [];
-  const beatRows = unqueued.filter((row) => isBeatIntel(row) || row.ufRelevant === true);
+  let beatRows;
+  let liveMeta = { rows: [], fetchedAt: null, postCount: 0 };
+
+  if (deskMode) {
+    // Desk = research surface: today's live beats + recent intel (including already posted).
+    // Compose inbox still uses unqueued-only below.
+    liveMeta = liveBeatInboxRows({ maxAgeMs, limit: 100 });
+    const recent = recentBeatIntelRows({ maxAgeMs });
+    beatRows = [...liveMeta.rows, ...recent];
+  } else {
+    beatRows = unqueued.filter((row) => isBeatIntel(row) || row.ufRelevant === true);
+  }
+
   const grouped = groupInboxRows(beatRows).slice(0, limit);
   const slugs = grouped.map((r) => normalizeSlug(r.playerSlug));
 
@@ -181,6 +264,7 @@ async function getIntelInbox({ limit = 40, maxAgeMs = DEFAULT_INBOX_AGE_MS } = {
       articleUrl: intel.articleUrl || intel.url || null,
       fingerprint: intel.fingerprint || null,
       ufRelevant: intel.ufRelevant === true,
+      liveBeat: !!intel.liveBeat,
       status,
       draftCount: drafts.length,
       detectivesCount: detectives.length,
@@ -199,8 +283,14 @@ async function getIntelInbox({ limit = 40, maxAgeMs = DEFAULT_INBOX_AGE_MS } = {
   return {
     ok: true,
     updatedAt: new Date().toISOString(),
+    deskMode: !!deskMode,
+    liveBeatFetchedAt: liveMeta.fetchedAt,
+    liveBeatPostCount: liveMeta.postCount,
+    liveBeatMatched: liveMeta.rows.length,
     totalUnqueued: unqueued.length,
-    beatUnqueued: beatRows.length,
+    beatUnqueued: deskMode
+      ? unqueued.filter((row) => isBeatIntel(row) || row.ufRelevant === true).length
+      : beatRows.length,
     shown: items.length,
     items
   };
@@ -356,5 +446,6 @@ module.exports = {
   getPipelineDashboard,
   inspectPlayer,
   isBeatIntel,
-  BEAT_INTEL_SOURCES
+  BEAT_INTEL_SOURCES,
+  liveBeatInboxRows
 };

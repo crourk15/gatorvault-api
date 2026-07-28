@@ -3,7 +3,7 @@
  * Tap Open → Copy Brief → paste to Cursor/Copilot → post on X.
  */
 (function (global) {
-  var FRESH_MS = 48 * 60 * 60 * 1000;
+  var FRESH_MS = 24 * 60 * 60 * 1000;
 
   function esc(s) {
     var d = document.createElement('div');
@@ -60,9 +60,9 @@
       + '<div class="hub-dash-head">'
       + '<div><h2 class="hub-dash-title">Beat Brief Desk</h2>'
       + '<p class="hub-dash-sub"><strong style="color:#fff">What to do:</strong> '
-      + '1) Press <strong style="color:#fff">Open</strong> on a fresh beat · '
-      + '2) Press <strong style="color:#fff">Copy Brief</strong> · '
-      + '3) Paste into Cursor/Copilot · 4) Post on X</p></div>'
+      + '1) Press <strong style="color:#fff">Open</strong> on today\'s beat · '
+      + '2) System researches the player + why UF · '
+      + '3) <strong style="color:#fff">Copy Brief</strong> → Cursor/Copilot → X</p></div>'
       + '<div class="hub-btn-row">'
       + '<button type="button" class="hub-btn secondary" id="hub-bd-refresh">Refresh</button>'
       + '<button type="button" class="hub-btn secondary" id="hub-bd-ping">Check API</button>'
@@ -121,7 +121,7 @@
         '<h3>Player packet</h3>'
         + '<p class="hub-meta">Building brief for <strong style="color:#fff">'
         + esc(name || slug) + '</strong>…</p>'
-        + '<p class="hub-dash-loading" style="margin-top:12px">Gathering beat + UF facts…</p>';
+        + '<p class="hub-dash-loading" style="margin-top:12px">Researching player + why UF + vault angle…</p>';
       try { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { /* ignore */ }
     }
 
@@ -131,6 +131,7 @@
       if (!panel) return;
       var p = brief.player || {};
       var beat = brief.primaryBeat || {};
+      var research = brief.research || {};
       var ageMs = beat.reportedAt ? (Date.now() - new Date(beat.reportedAt).getTime()) : null;
       var stale = ageMs != null && ageMs > FRESH_MS;
 
@@ -140,15 +141,38 @@
         + '<strong class="hub-overall-val">' + esc(brief.playerName || brief.slug) + '</strong>'
         + '<p class="hub-dash-ts" style="margin-top:8px">'
         + esc([p.position, p.classYear, p.school, p.state].filter(Boolean).join(' · ') || brief.slug)
+        + (research.ufPosition ? ' · <span style="color:#93c5fd">UF: ' + esc(research.ufPosition) + '</span>' : '')
         + (stale ? ' · <span class="hub-env-badge hub-st-yellow">STALE BEAT</span>' : '')
+        + (beat.liveBeat ? ' · <span class="hub-env-badge hub-st-green">LIVE BEAT</span>' : '')
         + '</p></div>'
         + '<div class="hub-dash-primary">'
         + '<button type="button" class="hub-btn" id="hub-bd-copy">Copy Brief</button>'
         + '<button type="button" class="hub-btn secondary" id="hub-bd-copy-draft">Copy draft only</button>'
         + '</div></div>'
         + (stale
-          ? '<p class="hub-meta" style="color:#fbbf24;margin:0 0 12px">This beat is older than 48h. Still usable for a catch-up post, but prefer fresher rows when you can.</p>'
+          ? '<p class="hub-meta" style="color:#fbbf24;margin:0 0 12px">This beat is older than 24h. Still usable for a catch-up post, but prefer fresher rows when you can.</p>'
           : '')
+        + '<div class="hub-card" style="margin-bottom:12px">'
+        + '<h3>Why Florida</h3>'
+        + '<p style="margin:0;white-space:pre-wrap;line-height:1.5;color:#e2e8f0">'
+        + esc(research.whyFlorida || 'Researching…') + '</p></div>'
+        + '<div class="hub-card" style="margin-bottom:12px">'
+        + '<h3>Vault angle (ahead of the beat)</h3>'
+        + '<p style="margin:0;white-space:pre-wrap;line-height:1.5;color:#e2e8f0">'
+        + esc(research.vaultAngle || '—') + '</p></div>'
+        + '<div class="hub-card" style="margin-bottom:12px">'
+        + '<h3>Board facts</h3>'
+        + '<p class="hub-meta" style="margin:0 0 8px">'
+        + (research.offers ? '<strong style="color:#fff">Offers:</strong> ' + esc(research.offers) + '<br>' : '')
+        + (research.visits ? '<strong style="color:#fff">Visits:</strong> ' + esc(research.visits) + '<br>' : '')
+        + (research.rpm ? '<strong style="color:#fff">RPM:</strong> ' + esc(research.rpm) + '<br>' : '')
+        + ((p.rivals && p.rivals.length) ? '<strong style="color:#fff">Rivals:</strong> ' + esc(p.rivals.join(', ')) : '')
+        + '</p>'
+        + (research.staffNotes || research.scoutingSummary
+          ? '<p style="margin:8px 0 0;white-space:pre-wrap;line-height:1.45;color:#cbd5e1">'
+            + esc(research.staffNotes || research.scoutingSummary) + '</p>'
+          : '')
+        + '</div>'
         + '<div class="hub-card" style="margin-bottom:12px">'
         + '<h3>Latest beat</h3>'
         + '<p class="hub-meta" style="margin:0 0 8px">' + esc(fmtTime(beat.reportedAt))
@@ -161,13 +185,13 @@
         + '</div>'
         + '<div class="hub-card">'
         + '<h3>Paste brief (for Cursor / Copilot)</h3>'
-        + '<pre id="hub-bd-paste" style="margin:0;white-space:pre-wrap;font-size:12px;line-height:1.45;max-height:280px;overflow:auto;background:#0b1220;padding:12px;border-radius:8px;color:#e2e8f0">'
+        + '<pre id="hub-bd-paste" style="margin:0;white-space:pre-wrap;font-size:12px;line-height:1.45;max-height:280px;overflow:auto;background:#0f172a;padding:12px;border-radius:8px;color:#e2e8f0">'
         + esc(brief.pasteText || '')
         + '</pre></div>';
 
       document.getElementById('hub-bd-copy').addEventListener('click', function () {
         copyText(brief.pasteText || '')
-          .then(function () { setMsg('Brief copied — paste into Cursor or Copilot now.'); })
+          .then(function () { setMsg('Brief copied → paste into Cursor or Copilot now.'); })
           .catch(function () { setMsg('Copy failed — select the brief text manually.', true); });
       });
       document.getElementById('hub-bd-copy-draft').addEventListener('click', function () {
@@ -181,7 +205,7 @@
           .catch(function () { setMsg('Copy failed.', true); });
       });
 
-      try { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { /* ignore */ }
+      try { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (_) { /* ignore */ }
     }
 
     function openBrief(slug, name) {
@@ -243,8 +267,8 @@
         return '<tr data-bd-slug="' + esc(slug) + '" class="hub-ps-row' + (slug === selectedSlug ? ' hub-ps-row--active' : '') + '">'
           + '<td><strong style="color:#fff">' + esc(name) + '</strong>'
           + '<div class="hub-meta" style="margin:2px 0 0">' + esc(slug) + '</div></td>'
-          + '<td><span class="hub-env-badge ' + statusClass(stale ? 'stale' : ((it.status && it.status.status) || st)) + '">'
-          + esc(stale ? 'STALE' : (typeof st === 'string' ? st : '—')) + '</span></td>'
+          + '<td><span class="hub-env-badge ' + statusClass(stale ? 'stale' : (it.liveBeat ? 'ok' : ((it.status && it.status.status) || st))) + '">'
+          + esc(stale ? 'STALE' : (it.liveBeat ? 'LIVE' : (typeof st === 'string' ? st : '—'))) + '</span></td>'
           + '<td>' + esc(it.ageLabel || fmtTime(it.reportedAt)) + '</td>'
           + '<td>' + esc((it.beatText || '').slice(0, 90)) + '</td>'
           + '<td style="white-space:nowrap">'
@@ -259,7 +283,7 @@
         + '<section class="hub-card hub-card-wide">'
         + '<div class="hub-dash-head" style="margin-bottom:10px">'
         + '<div><h3 style="margin:0">Beat inbox <span class="hub-meta">(' + esc(items.length) + ' shown)</span></h3>'
-        + '<p class="hub-meta" style="margin:6px 0 0">Fresh (&lt;48h): <strong style="color:#fff">' + esc(freshCount)
+        + '<p class="hub-meta" style="margin:6px 0 0">Fresh (&lt;24h): <strong style="color:#fff">' + esc(freshCount)
         + '</strong> · Older: <strong style="color:#fff">' + esc(olderCount) + '</strong></p></div>'
         + '<div class="hub-btn-row">'
         + '<button type="button" class="hub-btn secondary" id="hub-bd-toggle-age">'
@@ -305,7 +329,7 @@
       body.classList.add('hidden');
       setMsg('');
       updatePulse();
-      return apiGet('/api/x/post-studio/inbox?limit=40')
+      return apiGet('/api/x/post-studio/inbox?desk=1&limit=40')
         .then(function (inbox) {
           allItems = (inbox && inbox.items) || [];
           loading.classList.add('hidden');
@@ -317,7 +341,7 @@
           setMsg(
             freshCount
               ? 'Inbox ready — ' + freshCount + ' fresh beat(s). Press Open or Copy Brief.'
-              : 'No fresh beats (under 48h). Showing older — press Show older / Open for catch-up posts.'
+              : 'No fresh beats (under 24h). Showing older — press Show older / Open for catch-up posts.'
           );
         })
         .catch(function (err) {
