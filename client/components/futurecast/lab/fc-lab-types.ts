@@ -7,6 +7,10 @@ import {
   primaryRecruitingClassYear,
   shouldShowPortalWatchlist,
 } from '@/lib/recruiting-cycle';
+import {
+  canExposeWeekDelta,
+  ufPctFromRaw,
+} from '@/lib/uf-odds-scale';
 
 /** Normalized target row for FutureCast Lab UI modules. */
 export type FcLabTarget = {
@@ -121,8 +125,7 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
 }
 
 export function ufPctFromFc(raw: number | null | undefined): number {
-  if (raw == null) return 0;
-  return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
+  return ufPctFromRaw(raw);
 }
 
 /** UF probability in the contested battle band (34–66%). */
@@ -364,13 +367,28 @@ export function discoveryMovementBuckets(
     return { risers: [], fallers: [], highVolatility: [], believable: false };
   }
 
-  const risers = pool
+  const trusted = pool.map((p) => {
+    const delta = p.trendDelta7d;
+    if (
+      delta != null &&
+      !canExposeWeekDelta({
+        delta,
+        rpmPct: (p as { ufRpmPct?: number | null }).ufRpmPct,
+        lowConfidence: p.ufProbabilityLowConfidence,
+      })
+    ) {
+      return { ...p, trendDelta7d: null, volatility7d: 0 };
+    }
+    return p;
+  });
+
+  const risers = trusted
     .filter((p) => (p.trendDelta7d ?? 0) > 0)
     .sort((a, b) => (b.trendDelta7d ?? 0) - (a.trendDelta7d ?? 0));
-  const fallers = pool
+  const fallers = trusted
     .filter((p) => (p.trendDelta7d ?? 0) < 0)
     .sort((a, b) => (a.trendDelta7d ?? 0) - (b.trendDelta7d ?? 0));
-  const highVolatility = [...pool]
+  const highVolatility = [...trusted]
     .sort(
       (a, b) =>
         (b.volatility7d ?? Math.abs(b.trendDelta7d ?? 0)) -

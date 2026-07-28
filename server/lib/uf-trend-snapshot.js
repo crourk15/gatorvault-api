@@ -3,6 +3,11 @@
  */
 const fs = require("fs");
 const path = require("path");
+const {
+  sanitizeRpmPct,
+  sanitizeStoreOddsPct,
+  canExposeWeekDelta,
+} = require("./uf-probability-utils");
 
 const BUNDLE_SNAPSHOT_PATH = path.join(
   __dirname,
@@ -194,12 +199,21 @@ function recordGvSnapshots(players = [], asOf = new Date()) {
   let written = 0;
   for (const p of players) {
     const slug = slugKey(p?.slug);
-    const ufPct = clampPct(p?.ufProbability ?? p?.ufPct ?? p?.ufConfidence);
-    if (!slug || ufPct == null) continue;
     const rpmPct =
       p?.ufRpmPct != null || p?.rpmPct != null
-        ? clampPct(p?.ufRpmPct ?? p?.rpmPct)
+        ? sanitizeRpmPct(p?.ufRpmPct ?? p?.rpmPct)
         : null;
+    // Never freeze residual/unit-interval poison (e.g. 0.99 → 99) into durable history.
+    const rawOdds = p?.ufProbability ?? p?.ufPct ?? p?.ufConfidence;
+    const ufPct =
+      sanitizeStoreOddsPct(rawOdds, { rpmPct }) ??
+      // Integer percentage points only as fallback (never expand unit-interval here).
+      (Number(rawOdds) > 1 ? clampPct(rawOdds) : null);
+    if (!slug || ufPct == null) continue;
+    // Skip recording extreme thin estimates — they are not market movement.
+    if (rpmPct == null && ufPct >= 85 && !(p?.committedTo && /florida|gators/i.test(String(p.committedTo)))) {
+      continue;
+    }
     const rows = doc.snapshots[slug] || [];
     const idx = rows.findIndex((row) => row.date === dayKey);
     const next = { date: dayKey, ufPct, source: "gatorvault" };
@@ -253,12 +267,23 @@ function applySnapshotMovement(players = [], { asOf = new Date(), minAbs = 1 } =
   return players.map((p) => {
     const key = slugKey(p.slug);
     const raw = deltaMap.get(key);
-    const delta7d =
+    let delta7d =
       raw != null && Number.isFinite(raw) && Math.abs(raw) >= minAbs ? Math.round(raw) : 0;
-    const trendHistory = buildTrendHistoryForSlug(key, {
+    const history = buildTrendHistoryForSlug(key, {
       asOf,
       preferSource: "gatorvault",
     });
+    if (
+      delta7d !== 0 &&
+      !canExposeWeekDelta({
+        delta: delta7d,
+        rpmPct: p.ufRpmPct ?? p.rpmPct,
+        lowConfidence: p.ufProbabilityLowConfidence || p.lowConfidence,
+        snapshotPointCount: history.length,
+      })
+    ) {
+      delta7d = 0;
+    }
     const priorityScore =
       Math.round(
         ((Number(p.ufProbability) || 0) * 0.55 +
@@ -270,7 +295,7 @@ function applySnapshotMovement(players = [], { asOf = new Date(), minAbs = 1 } =
       ...p,
       delta7d,
       movementDelta: delta7d,
-      trendHistory,
+      trendHistory: history,
       priorityScore,
     };
   });

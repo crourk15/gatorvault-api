@@ -20,7 +20,11 @@ type Props = {
 
 function MovementRow({ player, tone }: { player: FutureCastPlayer; tone: Tab }): React.ReactElement {
   const pct = ufPctFromFc(player.ufConfidence);
-  const delta = Math.round(player.trendDelta7d ?? 0);
+  const hasDelta = player.trendDelta7d != null && Number.isFinite(Number(player.trendDelta7d));
+  const delta = hasDelta ? Math.round(Number(player.trendDelta7d)) : 0;
+  const oddsLabel = player.ufProbabilityLabel
+    ? `GatorVault · Florida odds (${player.ufProbabilityLabel})`
+    : 'GatorVault · Florida odds';
 
   return (
     <div className={`rh-cc-move-row${tone === 'volatile' ? ' rh-cc-move-row--volatile' : ''}`}>
@@ -31,16 +35,18 @@ function MovementRow({ player, tone }: { player: FutureCastPlayer; tone: Tab }):
         <span className="rh-cc-move-row__meta">
           {player.position} · {player.school ?? '—'}
         </span>
-        <span className="fc-lab-battle-row__metric-label">GatorVault · Florida odds</span>
+        <span className="fc-lab-battle-row__metric-label">{oddsLabel}</span>
         <UfProbBar value={pct} />
       </div>
       <div className="rh-cc-move-row__right">
-        <MovementSparkline end={pct} delta={delta} />
-        <MovementBadge
-          delta={delta}
-          tone={tone === 'volatile' ? 'volatile' : delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat'}
-        />
-        {tone === 'volatile' ? (
+        {hasDelta && delta !== 0 ? <MovementSparkline end={pct} delta={delta} /> : null}
+        {hasDelta && delta !== 0 ? (
+          <MovementBadge
+            delta={delta}
+            tone={tone === 'volatile' ? 'volatile' : delta > 0 ? 'rise' : 'fall'}
+          />
+        ) : null}
+        {tone === 'volatile' && hasDelta ? (
           <span className="rh-cc-move-row__vol">Volatility: {Math.abs(player.volatility7d)}</span>
         ) : null}
       </div>

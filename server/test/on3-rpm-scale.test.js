@@ -70,3 +70,19 @@ describe('Ryan Peterson ladder regression', () => {
     assert.ok(!/RPM ~69%/.test(detailed.map((s) => s.detail).join('; ')));
   });
 });
+
+describe('Cyion-class residual Florida micro', () => {
+  it('does not report UF RPM as 99% from residual 0.99 on percent board', () => {
+    const residual = 0.99;
+    const board = [
+      { team: { name: 'Georgia' }, status: 'Offered', prediction: 42.1, year: 2028 },
+      { team: { name: 'Alabama' }, status: 'Offered', prediction: 28.4, year: 2028 },
+      { team: { name: 'Florida' }, status: 'Offered', prediction: residual, year: 2028 },
+      { team: { name: 'Penn State' }, status: 'Offered', prediction: residual, year: 2028 },
+      { team: { name: 'Notre Dame' }, status: 'Offered', prediction: residual, year: 2028 },
+      { team: { name: 'SMU' }, status: 'Offered', prediction: residual, year: 2028 },
+    ];
+    const uf = ufRpmFromTopTeams(board, 2028);
+    assert.equal(uf, null);
+  });
+});
