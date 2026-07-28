@@ -19,3 +19,7 @@ CREATE TABLE IF NOT EXISTS push_dispatch_fingerprints (
 
 CREATE INDEX IF NOT EXISTS idx_push_dispatch_fingerprints_created_at
   ON push_dispatch_fingerprints (created_at DESC);
+
+-- Lock down PostgREST (emails + push keys).
+ALTER TABLE IF EXISTS push_subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS push_dispatch_fingerprints ENABLE ROW LEVEL SECURITY;

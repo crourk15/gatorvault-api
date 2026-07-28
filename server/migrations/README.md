@@ -30,5 +30,23 @@ psql "$DATABASE_URL" -f server/migrations/011_create_predictions_table.sql
 | `006_create_discovery_signals_table.sql` | #17 | `futurecast.discovery_signals` — immutable Early Discovery event log |
 | `020_create_push_subscriptions.sql` | — | `push_subscriptions`, `push_dispatch_fingerprints` |
 | `022_enable_rls_public_tables.sql` | Security | Enable RLS on `public` + `futurecast`; revoke anon/authenticated table grants |
+| `024_lockdown_supabase_api.sql` | **CRITICAL** | Paste into Supabase SQL Editor — clears `rls_disabled_in_public` + `sensitive_columns_exposed` |
 
 **Note:** FutureCast tables live in the `futurecast` schema to avoid conflicting with legacy `public.players` (GatorVault recruiting store). The TypeScript model uses `FUTURECAST_PLAYERS_TABLE = 'futurecast.players'`.
+
+
+## Supabase Advisor lockdown (do this when email warns)
+
+1. Open [Supabase](https://supabase.com/dashboard) → project **GatorVault** (`ualpmnglskpqmkpnckid`)
+2. **SQL Editor** → New query
+3. Paste entire contents of `024_lockdown_supabase_api.sql`
+4. Run → verify the final SELECT returns **0 rows**
+5. **Advisors** → refresh — Critical issues should clear
+
+Or with `DATABASE_URL` locally:
+
+```bash
+cd server && node scripts/apply-supabase-rls.js
+```
+
+App traffic is unaffected: Render uses `SUPABASE_SERVICE_KEY` / `DATABASE_URL`, which bypass RLS.

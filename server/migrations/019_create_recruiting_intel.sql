@@ -22,3 +22,6 @@ CREATE INDEX IF NOT EXISTS idx_recruiting_intel_player_slug
 
 CREATE INDEX IF NOT EXISTS idx_recruiting_intel_event_type
   ON recruiting_intel (event_type);
+
+-- Lock down PostgREST.
+ALTER TABLE IF EXISTS recruiting_intel ENABLE ROW LEVEL SECURITY;

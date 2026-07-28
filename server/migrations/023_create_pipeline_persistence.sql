@@ -17,3 +17,7 @@ CREATE INDEX IF NOT EXISTS idx_autoposter_detectives_doc_updated
 
 CREATE INDEX IF NOT EXISTS idx_autoposter_queue_doc_updated
   ON autoposter_queue_doc (updated_at DESC);
+
+-- Lock down PostgREST (ops ledgers).
+ALTER TABLE IF EXISTS autoposter_detectives_doc ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS autoposter_queue_doc ENABLE ROW LEVEL SECURITY;
