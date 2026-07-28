@@ -717,19 +717,6 @@
   color: var(--color-text-muted);
 }
 
-.gv-gw-film-panel__link {
-  display: inline-block;
-  margin-top: 0.75rem;
-  color: var(--gv-gw-orange);
-  font-weight: 700;
-  font-size: 0.85rem;
-  text-decoration: none;
-}
-
-.gv-gw-film-panel__link:hover {
-  text-decoration: underline;
-}
-
 /* Depth chart — light feed */
 .gv-gw-depth-grid {
   display: grid;
