@@ -859,12 +859,18 @@ async function runOn3IngestInner(options = {}) {
   }
 
   pushLog({
-    level: 'info',
+    level: result.ok ? 'info' : 'error',
     baseline: result.baseline,
     fired: result.fired.length,
     errors: result.errors.length,
     parsedCounts: result.parsedCounts,
-    urls: result.urls
+    urls: result.urls,
+    sources: live.sources || null,
+    errorDetails: (result.errors || []).slice(0, 12).map((e) => ({
+      year: e.year || null,
+      type: e.type || null,
+      error: e.error || e.message || String(e),
+    })),
   });
 
   try {

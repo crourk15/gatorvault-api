@@ -1,5 +1,5 @@
-const { fetchText } = require('./qa/qa-utils');
 const { buildOn3ProfileUrl } = require('./on3-urls');
+const { fetchOn3Html, extractNextDataJson } = require('./on3-fetch');
 const {
   looksLikeHometownAsSchool,
   parseHometown,
@@ -14,31 +14,16 @@ function pageUrl(classYear) {
   return `${SITE_BASE}/college/${ORG}/${SPORT}/${classYear}/commits/`;
 }
 
-function defaultHeaders(classYear) {
-  return {
-    Accept: 'text/html,application/json;q=0.9,*/*;q=0.8',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'User-Agent':
-      process.env.ON3_USER_AGENT ||
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-    Referer: pageUrl(classYear)
-  };
-}
-
 async function fetchHtml(url, classYear) {
-  const retries = Math.max(0, parseInt(process.env.ON3_FETCH_RETRIES || '3', 10) || 3);
-  const { text } = await fetchText(url, {
-    headers: defaultHeaders(classYear),
-    retries,
-    timeout: parseInt(process.env.ON3_FETCH_TIMEOUT_MS || '45000', 10) || 45000,
-  });
+  const { text, source, fallbackUsed } = await fetchOn3Html(url, { classYear });
+  if (fallbackUsed) {
+    console.log(`[on3-client] fetched via ${source}: ${url}`);
+  }
   return text;
 }
 
 function extractNextData(html) {
-  const match = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
-  if (!match) throw new Error('On3 page missing __NEXT_DATA__');
-  return JSON.parse(match[1]);
+  return extractNextDataJson(html);
 }
 
 function pickString(...vals) {
@@ -224,14 +209,18 @@ async function fetchFloridaSnapshot(classYears) {
   const rankings = {};
   const errors = [];
   const urls = [];
+  const sources = {};
+  const gapMs = Math.max(0, parseInt(process.env.ON3_YEAR_GAP_MS || '500', 10) || 500);
 
-  for (const year of years) {
+  for (let i = 0; i < years.length; i += 1) {
+    const year = years[i];
     try {
       const url = pageUrl(year);
       urls.push(url);
       console.log(`[on3-client] fetching class ${year}: ${url}`);
-      const html = await fetchHtml(url, year);
-      const next = extractNextData(html);
+      const fetched = await fetchOn3Html(url, { classYear: year });
+      sources[year] = fetched.source || 'direct';
+      const next = extractNextData(fetched.text);
       const pageProps = next?.props?.pageProps || {};
       const list =
         pageProps.playerList?.list ||
@@ -242,7 +231,7 @@ async function fetchFloridaSnapshot(classYears) {
       boards[year] = list.map((row) => normalizeOn3Row(row, year)).filter((p) => p.name);
       rankings[year] = normalizeTeamRank(pageProps.teamRank, year);
       console.log(
-        `[on3-client] class ${year}: ${boards[year].length} commit(s), nationalRank=${rankings[year]?.nationalRank ?? 'n/a'}`
+        `[on3-client] class ${year}: ${boards[year].length} commit(s), nationalRank=${rankings[year]?.nationalRank ?? 'n/a'} via ${sources[year]}`
       );
       if (!boards[year].length) {
         errors.push({
@@ -255,10 +244,14 @@ async function fetchFloridaSnapshot(classYears) {
       console.warn(`[on3-client] class ${year} fetch failed: ${e.message}`);
       errors.push({ year, type: 'commits', error: e.message });
       boards[year] = [];
+      sources[year] = 'error';
+    }
+    if (i < years.length - 1 && gapMs) {
+      await new Promise((resolve) => setTimeout(resolve, gapMs));
     }
   }
 
-  return { boards, rankings, errors, urls };
+  return { boards, rankings, errors, urls, sources };
 }
 
 /** Portal transfer row on the UF commits board (has transferRating, not HS recruit rating). */
