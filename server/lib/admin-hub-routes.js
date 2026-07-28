@@ -350,13 +350,16 @@ function buildRecommendedActions(ctx) {
   if (film && film.status === 'red') {
     actions.unshift({ id: 'film-room-weekly', label: 'Rebuild Film Room catalog' });
   }
+  const apiTile = tileById(ctx.ops, 'api-health');
+  const apiRed = apiTile && apiTile.status === 'red';
   const gate = ctx.appStoreGate;
-  if (gate && gate.evaluation && !gate.evaluation.green) {
+  // Never push Recompute as the lead action while API Health is red — Charles will mash the wrong button.
+  if (gate && gate.evaluation && !gate.evaluation.green && !apiRed) {
     const reasons = gate.evaluation.reasons || [];
     if (reasons.includes('qa_crawl_failed') || reasons.includes('crawler_failures') || reasons.includes('api_failures')) {
       actions.unshift({ id: 'qa-run', label: 'Run QA crawl' });
     } else {
-      actions.unshift({ id: 'pi-recompute', label: 'Recompute product scores' });
+      actions.push({ id: 'pi-recompute', label: 'Recompute product scores' });
     }
   }
   return actions.slice(0, 6);

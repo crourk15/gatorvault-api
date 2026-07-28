@@ -397,12 +397,14 @@
     if (!message) {
       el.classList.add('hidden');
       el.textContent = '';
+      try { sessionStorage.removeItem('gv:hub:wakeMode'); } catch (e) { /* ignore */ }
       return;
     }
     // Soften scary wake copy — retries happen quietly in GVAdminApiFetch.
     var soft = String(message || '');
-    if (/unavailable|waking|warming|502|503|504|HTML instead of JSON|Kitchen busy|kitchen/i.test(soft)) {
-      soft = 'Waking kitchen… hang tight.';
+    if (/unavailable|waking|warming|502|503|504|HTML instead of JSON|Kitchen busy|kitchen|still starting/i.test(soft)) {
+      soft = 'Server waking up — sit tight. Do not run Deploy recovery yet.';
+      try { sessionStorage.setItem('gv:hub:wakeMode', '1'); } catch (e) { /* ignore */ }
     }
     el.textContent = soft;
     el.classList.remove('hidden');
@@ -886,6 +888,28 @@
     if (primary) {
       primary.addEventListener('click', function () {
         var jobId = primary.getAttribute('data-job');
+        if (jobId === 'hub-refresh') {
+          primary.disabled = true;
+          primary.textContent = 'Refreshing…';
+          apiGet('/api/admin/hub/overview')
+            .then(function (data) {
+              applyOpsStrip(data);
+              if (global.GVAdminHub && typeof global.GVAdminHub.applyModuleHealth === 'function') {
+                global.GVAdminHub.applyModuleHealth(Object.assign({}, data.moduleHealth || {}, {
+                  _environment: data.environment
+                }));
+              }
+              // Re-enter overview so Coach reloads with fresh top issue.
+              navigateFromHash('#dashboard/overview');
+            })
+            .catch(function (e) {
+              alert((e && e.message) || 'Refresh failed');
+            })
+            .finally(function () {
+              primary.disabled = false;
+            });
+          return;
+        }
         if (jobId) {
           primary.disabled = true;
           var prev = primary.textContent;
@@ -953,20 +977,27 @@
     }
 
     titleEl.textContent = top.title || 'Attention needed';
+    var doNow = (top.coach && top.coach.doThisNow) || top.fixHowTo || '';
     var bits = [];
-    if (top.detail) bits.push(String(top.detail));
-    if (top.fixHowTo) bits.push('What to do: ' + String(top.fixHowTo));
-    detailEl.textContent = bits.join(' — ') || (top.why || '');
-    if (top.actionType) {
+    if (top.why) bits.push(String(top.why));
+    else if (top.detail) bits.push(String(top.detail));
+    if (doNow) bits.push('Do this now: ' + String(doNow));
+    detailEl.textContent = bits.join(' — ') || 'Follow Coach on Command Center.';
+    if (top.actionType === 'hub-auto-wait' || (top.coach && top.coach.mode === 'auto-wait')) {
+      primary.textContent = 'Sit tight (auto)';
+      primary.setAttribute('data-job', 'hub-refresh');
+      primary.setAttribute('data-route', '#dashboard/overview');
+    } else if (top.actionType) {
       primary.textContent = top.action || 'Run fix';
       primary.setAttribute('data-job', top.actionType);
-      primary.setAttribute('data-route', top.route || '#dashboard/ops-summary');
+      primary.setAttribute('data-route', top.route || '#dashboard/overview');
     } else if (top.route) {
-      primary.textContent = top.action || 'Open fix page';
+      primary.textContent = top.action || 'Open';
       primary.setAttribute('data-route', top.route);
     } else {
-      primary.textContent = 'Open Runbooks';
-      primary.setAttribute('data-route', '#dashboard/runbooks');
+      primary.textContent = 'Refresh now';
+      primary.setAttribute('data-job', 'hub-refresh');
+      primary.setAttribute('data-route', '#dashboard/overview');
     }
   }
 

@@ -1,5 +1,5 @@
 /**
- * Admin Hub Runbooks — preset ops flows with job status (in-shell, no iframe).
+ * Admin Hub Runbooks — preset ops flows with Charles-friendly status.
  */
 (function (global) {
   var JOB_LOG_KEY = 'gv_admin_runbook_jobs';
@@ -9,16 +9,16 @@
     {
       id: 'deploy-recovery',
       title: 'Deploy recovery',
-      desc: 'Refresh live hub cache, then signal mobile clients to pull fresh data.',
+      desc: 'Nudge the live feed cache after the server wakes up. If it fails with “still starting”, wait 2 minutes and Run again.',
       steps: [
         { id: 'live-refresh', label: 'Refresh live hub', kind: 'post', path: '/api/live/refresh', body: {} },
-        { id: 'mobile-signal', label: 'Mobile refresh signal', kind: 'post', path: '/api/live/admin/mobile-refresh-signal', body: {} }
+        { id: 'mobile-signal', label: 'Tell phones to refresh', kind: 'post', path: '/api/live/admin/mobile-refresh-signal', body: {} }
       ]
     },
     {
       id: 'qa-red',
       title: 'QA is red',
-      desc: 'Run a full QA crawl and open the QA monitor when finished.',
+      desc: 'Run a full website check, then open the QA monitor.',
       steps: [
         { id: 'qa-run', label: 'Run QA crawl', kind: 'post', path: '/api/qa/run', body: { scope: 'full' } }
       ],
@@ -27,7 +27,7 @@
     {
       id: 'ingest-lag',
       title: 'Ingest lag',
-      desc: 'Force recruiting heat refresh and live hub rebuild when boards look stale.',
+      desc: 'When recruiting boards look stale: force a heat check, then refresh the live hub.',
       steps: [
         { id: 'heat', label: 'Force heat check', kind: 'get', path: '/api/recruiting/heat-check?force=1' },
         { id: 'live-refresh', label: 'Refresh live hub', kind: 'post', path: '/api/live/refresh', body: {} }
@@ -36,7 +36,7 @@
     {
       id: 'content-rebuild',
       title: 'Content rebuild',
-      desc: 'Rebuild Film Room and Scouting DB after content pipeline stalls.',
+      desc: 'Rebuild Film Room + Scouting when those pages look stuck.',
       steps: [
         { id: 'film', label: 'Rebuild Film Room', kind: 'post', path: '/api/film-room/admin/rebuild', body: { scope: 'all' } },
         { id: 'scouting', label: 'Rebuild Scouting DB', kind: 'post', path: '/api/war-room/admin/rebuild-scouting', body: {} }
@@ -45,7 +45,7 @@
     {
       id: 'live-quiet',
       title: 'Live feed quiet',
-      desc: 'Purge non-UF beat noise, then refresh the live hub.',
+      desc: 'Clear non-UF beat noise, then refresh the live hub.',
       steps: [
         { id: 'purge', label: 'Purge non-UF beat', kind: 'post', path: '/api/live/admin/purge-non-uf-beat', body: {} },
         { id: 'live-refresh', label: 'Refresh live hub', kind: 'post', path: '/api/live/refresh', body: {} }
@@ -99,6 +99,35 @@
     return 'info';
   }
 
+  function charlesFailMessage(err, stepLabel) {
+    var msg = String((err && err.message) || '');
+    var wake = !!(err && err.wake) || /waking kitchen|kitchen starting|connecting to kitchen|warming|502|503|504|Failed to fetch|NetworkError|Load failed/i.test(msg);
+    if (wake) {
+      return 'Server still starting'
+        + (stepLabel ? ' during “' + stepLabel + '”' : '')
+        + '. Wait 2 minutes, then press Run again. Normal after sleep — not a broken deploy.';
+    }
+    if (/Invalid PIN|401/i.test(msg)) {
+      return 'PIN rejected. Lock the hub and log in again with the ops PIN.';
+    }
+    return (stepLabel ? stepLabel + ' failed: ' : '') + (msg || 'Unknown error');
+  }
+
+  function isWakeMode() {
+    try {
+      if (sessionStorage.getItem('gv:hub:wakeMode') === '1') return true;
+    } catch (e) { /* ignore */ }
+    var banner = document.getElementById('hub-api-banner');
+    if (banner && !banner.classList.contains('hidden')) {
+      var t = String(banner.textContent || '');
+      if (/waking|sit tight|still starting/i.test(t)) return true;
+    }
+    var recent = readLog().slice(0, 3);
+    return recent.some(function (row) {
+      return row.status === 'fail' && /still starting|waking kitchen/i.test(String(row.detail || ''));
+    });
+  }
+
   function renderLog(el) {
     if (!el) return;
     var list = readLog();
@@ -117,12 +146,20 @@
   }
 
   function runStep(api, step) {
-    if (step.kind === 'get') return api.apiGet(step.path);
-    return api.apiPost(step.path, step.body || {});
+    var opts = { retries: 8, retryDelayMs: 2500 };
+    if (step.kind === 'get') {
+      return typeof api.apiGet === 'function' && api.apiGet.length > 1
+        ? api.apiGet(step.path, opts)
+        : api.apiGet(step.path);
+    }
+    return typeof api.apiPost === 'function' && api.apiPost.length > 2
+      ? api.apiPost(step.path, step.body || {}, opts)
+      : api.apiPost(step.path, step.body || {});
   }
 
   function runBook(api, book, ui) {
     var jobId = book.id + '-' + Date.now();
+    var currentStep = null;
     pushJob({
       id: jobId,
       title: book.title,
@@ -136,9 +173,10 @@
     var chain = Promise.resolve();
     book.steps.forEach(function (step, idx) {
       chain = chain.then(function () {
+        currentStep = step;
         updateJob(jobId, {
           status: 'running',
-          detail: 'Step ' + (idx + 1) + '/' + book.steps.length + ': ' + step.label
+          detail: 'Step ' + (idx + 1) + '/' + book.steps.length + ': ' + step.label + ' (waiting on server if needed)…'
         });
         renderLog(ui.logEl);
         return runStep(api, step);
@@ -147,7 +185,11 @@
 
     return chain
       .then(function () {
-        updateJob(jobId, { status: 'ok', detail: 'All steps finished', at: new Date().toISOString() });
+        updateJob(jobId, {
+          status: 'ok',
+          detail: 'All steps finished. Go back to Command Center and press Refresh.',
+          at: new Date().toISOString()
+        });
         renderLog(ui.logEl);
         if (book.afterRoute && typeof api.onNavigate === 'function') {
           api.onNavigate(book.afterRoute);
@@ -156,7 +198,7 @@
       .catch(function (err) {
         updateJob(jobId, {
           status: 'fail',
-          detail: (err && err.message) || 'Runbook failed',
+          detail: charlesFailMessage(err, currentStep && currentStep.label),
           at: new Date().toISOString()
         });
         renderLog(ui.logEl);
@@ -170,7 +212,7 @@
     container.innerHTML = ''
       + '<div class="hub-section-head">'
       + '<h2>Runbooks</h2>'
-      + '<p>One-click ops presets with step status. Prefer these over scattered rebuild buttons.</p>'
+      + '<p>One-click fix recipes. While the server is waking, Deploy recovery stays locked — use Command Center → Make it green instead.</p>'
       + '</div>'
       + '<div class="hub-settings-grid" id="hub-runbook-grid"></div>'
       + '<div class="hub-card hub-card-wide" style="margin-top:16px">'
@@ -182,16 +224,27 @@
     var logEl = container.querySelector('#hub-runbook-log');
     var busy = false;
 
+    var wake = isWakeMode();
     RUNBOOKS.forEach(function (book) {
       var card = document.createElement('div');
       card.className = 'hub-card';
+      var blocked = wake && (book.id === 'deploy-recovery' || book.id === 'ingest-lag' || book.id === 'live-quiet');
       card.innerHTML = ''
         + '<h3>' + esc(book.title) + '</h3>'
         + '<p class="hub-meta">' + esc(book.desc) + '</p>'
         + '<p class="hub-meta">' + book.steps.length + ' step' + (book.steps.length === 1 ? '' : 's') + '</p>'
-        + '<button type="button" class="hub-btn" data-runbook="' + esc(book.id) + '">Run</button>';
+        + (blocked
+          ? '<p class="hub-meta" style="color:#fde047">Wait — server still waking. Do not run this yet.</p>'
+            + '<button type="button" class="hub-btn secondary" disabled>Wait…</button>'
+          : '<button type="button" class="hub-btn" data-runbook="' + esc(book.id) + '">Run</button>');
       grid.appendChild(card);
     });
+    if (wake) {
+      var tip = document.createElement('div');
+      tip.className = 'hub-card hub-card-wide';
+      tip.innerHTML = '<p class="hub-meta" style="color:#fde047;margin:0">Server is waking. Go to <strong>Command Center</strong>, sit tight / press <strong>Make it green</strong>. Do not spam Deploy recovery.</p>';
+      grid.insertBefore(tip, grid.firstChild);
+    }
 
     var ui = {
       logEl: logEl,
@@ -218,6 +271,7 @@
 
   global.GVAdminRunbooks = {
     render: render,
-    RUNBOOKS: RUNBOOKS
+    RUNBOOKS: RUNBOOKS,
+    charlesFailMessage: charlesFailMessage
   };
 })(window);
