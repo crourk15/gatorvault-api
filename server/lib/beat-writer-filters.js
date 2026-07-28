@@ -509,6 +509,8 @@ module.exports = {
   EXPLICIT_UF_KEYWORD_RES,
   isFloridaRelevant,
   isFloridaRelevantPost,
+  postUrls,
+  isFloridaRelatedUrl,
   isFloridaRelatedText,
   isFloridaRelatedPost,
   mentionsOtherProgram,

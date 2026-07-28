@@ -1,6 +1,6 @@
 /**
- * Beat Brief Desk — paste-ready player/UF packet for Charles → Cursor/Copilot → X.
- * Built from beat intel + recruiting store + inspect/compose context.
+ * Beat Brief Desk — paste-ready player/UF research packet for Charles → Cursor/Copilot → X.
+ * Fuses beat writers + recruiting store + elite research so every Open yields a full UF angle.
  */
 const intelStore = require('./recruiting-intel-store');
 
@@ -23,6 +23,13 @@ function pct(n) {
   return `${Math.round(num)}%`;
 }
 
+function daysAgo(iso) {
+  if (!iso) return null;
+  const t = new Date(iso).getTime();
+  if (!Number.isFinite(t) || t <= 0) return null;
+  return Math.max(0, Math.round((Date.now() - t) / 86400000));
+}
+
 async function loadRecruitingPlayer(slug) {
   try {
     const store = require('./recruiting-store');
@@ -32,25 +39,252 @@ async function loadRecruitingPlayer(slug) {
   }
 }
 
-function rivalList(player = {}) {
+function rivalList(player = {}, research = null, intelligence = null) {
+  const fromResearch = (research?.topSchools || research?.on3TopTeams || [])
+    .map((s) => (typeof s === 'string' ? s : s?.name || s?.school || s?.team || ''))
+    .map((s) => String(s || '').trim())
+    .filter(Boolean);
+  const fromIntel = (intelligence?.competitors || [])
+    .map((s) => (typeof s === 'string' ? s : s?.name || s?.school || ''))
+    .map((s) => String(s || '').trim())
+    .filter(Boolean);
   const raw =
     player.competingSchools ||
     player.rivals ||
     player.schoolsInvolved ||
     player.interestSchools ||
     [];
-  if (Array.isArray(raw)) {
-    return raw
-      .map((s) => (typeof s === 'string' ? s : s?.name || s?.school || ''))
-      .map((s) => String(s || '').trim())
-      .filter(Boolean)
-      .slice(0, 8);
-  }
-  if (typeof raw === 'string' && raw.trim()) return [raw.trim()];
-  return [];
+  const fromPlayer = Array.isArray(raw)
+    ? raw
+        .map((s) => (typeof s === 'string' ? s : s?.name || s?.school || ''))
+        .map((s) => String(s || '').trim())
+        .filter(Boolean)
+    : typeof raw === 'string' && raw.trim()
+      ? [raw.trim()]
+      : [];
+  return [...new Set([...fromResearch, ...fromIntel, ...fromPlayer])].slice(0, 10);
 }
 
-function formatBriefText({ slug, playerName, player, inspect, beatRows }) {
+/** Normalize live-beat getBeatPosts() which returns { posts } (not an array). */
+function postsFromBeatCache(limit = 120) {
+  try {
+    const liveBeat = require('./live-beat');
+    const result = liveBeat.getBeatPosts(limit);
+    if (Array.isArray(result)) return result;
+    return Array.isArray(result?.posts) ? result.posts : [];
+  } catch {
+    return [];
+  }
+}
+
+function liveBeatRowsForPlayer(slug, playerName, limit = 8) {
+  const slugKey = normalizeSlug(slug);
+  const nameKey = String(playerName || '')
+    .toLowerCase()
+    .trim();
+  const nameBits = nameKey
+    ? nameKey.split(/\s+/).filter((p) => p.length >= 3)
+    : [];
+  const posts = postsFromBeatCache(120);
+  const rows = [];
+  for (const p of posts) {
+    const text = String(p.text || '').trim();
+    if (!text) continue;
+    const lower = text.toLowerCase();
+    let matched = false;
+    if (nameKey && lower.includes(nameKey)) matched = true;
+    if (!matched && nameBits.length >= 2) {
+      matched = nameBits.every((bit) => lower.includes(bit));
+    }
+    if (!matched && slugKey) {
+      try {
+        const gate = require('./beat-recruiting-ingest-gate');
+        const hit = gate.resolvePlayerFromTextSync(text);
+        if (hit && normalizeSlug(hit.playerSlug) === slugKey) matched = true;
+      } catch {
+        /* optional */
+      }
+    }
+    if (!matched) continue;
+    rows.push({
+      playerSlug: slugKey,
+      playerName: playerName || null,
+      source: `beat-writer:${p.handle || p.writerName || 'live'}`,
+      detail: text,
+      reportedAt: p.publishedAt || p.fetchedAt || null,
+      articleUrl: p.url || p.link || null,
+      ufRelevant: true,
+      liveBeat: true,
+      writerName: p.writerName || p.handle || null,
+      outlet: p.outlet || null
+    });
+    if (rows.length >= limit) break;
+  }
+  return rows;
+}
+
+function mergeBeatRows(intelRows = [], liveRows = []) {
+  const seen = new Set();
+  const out = [];
+  const push = (row) => {
+    const text = String(row.detail || row.skinny || row.text || '')
+      .trim()
+      .toLowerCase()
+      .slice(0, 160);
+    const key = `${row.reportedAt || ''}|${text}`;
+    if (!text || seen.has(key)) return;
+    seen.add(key);
+    out.push(row);
+  };
+  [...liveRows, ...intelRows]
+    .sort(
+      (a, b) =>
+        new Date(b.reportedAt || b.createdAt || 0) - new Date(a.reportedAt || a.createdAt || 0)
+    )
+    .forEach(push);
+  return out;
+}
+
+function offerSummary(intelligence) {
+  const offers = intelligence?.offers;
+  if (!offers) return null;
+  if (Array.isArray(offers)) {
+    return offers
+      .slice(0, 8)
+      .map((o) => (typeof o === 'string' ? o : o?.school || o?.name || ''))
+      .filter(Boolean)
+      .join(', ');
+  }
+  if (Array.isArray(offers.items)) {
+    return offers.items
+      .slice(0, 8)
+      .map((o) => o.school || o.name || '')
+      .filter(Boolean)
+      .join(', ');
+  }
+  if (offers.ufOffer === true) return 'UF offer on file';
+  if (offers.count != null) return `${offers.count} offers tracked`;
+  return null;
+}
+
+function visitSummary(intelligence, player) {
+  const parts = [];
+  const vs = player?.ufOvStatus || player?.visitStatus || player?.officialVisitStatus;
+  if (vs) parts.push(String(vs));
+  const visits = intelligence?.visits;
+  const items = Array.isArray(visits) ? visits : visits?.items || [];
+  for (const v of items.slice(0, 4)) {
+    const school = v.school || v.name || 'UF';
+    const when = v.date || v.reportedAt || v.window || '';
+    const kind = v.type || v.visitType || 'visit';
+    parts.push([kind, school, when].filter(Boolean).join(' · '));
+  }
+  const window = [player?.visitStart, player?.visitEnd].filter(Boolean).join(' → ');
+  if (window) parts.push(`window ${window}`);
+  return parts.length ? [...new Set(parts)].join('; ') : null;
+}
+
+function rpmSummary(intelligence, research, player) {
+  const rpm = intelligence?.rpm || {};
+  const preds = research?.predictions || [];
+  const bits = [];
+  const ufPct = rpm.ufPct ?? rpm.floridaPct ?? player?.ufProbability ?? player?.ufConfidence;
+  if (ufPct != null) bits.push(`UF ${pct(ufPct)}`);
+  const leader = rpm.leader || rpm.leaderSchool;
+  if (leader) bits.push(`leader ${leader}`);
+  for (const p of preds.slice(0, 3)) {
+    const conf = p.confidencePct ?? p.ufRpmPct;
+    bits.push(`${p.source || 'Analyst'}${conf != null ? ` ${pct(conf)}` : ''}${p.detail ? ` — ${String(p.detail).slice(0, 80)}` : ''}`);
+  }
+  return bits.length ? bits.join(' | ') : null;
+}
+
+function buildWhyFlorida({ player, research, intelligence, beatRows, rivals }) {
+  const bits = [];
+  const ufPos = research?.ufPosition;
+  const eventType = research?.eventType;
+  if (ufPos) bits.push(`UF board read: ${ufPos}.`);
+  if (eventType && eventType !== 'update') bits.push(`Latest signal type: ${eventType.replace(/_/g, ' ')}.`);
+
+  const ufStatus = player?.ufStatus || player?.status;
+  if (ufStatus) bits.push(`Tracked UF status: ${ufStatus}.`);
+
+  const likelihood = pct(player?.ufProbability ?? player?.ufConfidence ?? player?.floridaOdds);
+  if (likelihood) bits.push(`UF likelihood on file: ${likelihood}.`);
+
+  const visits = visitSummary(intelligence, player);
+  if (visits) bits.push(`Visit / OV trail: ${visits}.`);
+
+  const offers = offerSummary(intelligence);
+  if (offers) bits.push(`Offer picture: ${offers}.`);
+
+  const staff =
+    research?.breakdown?.staffNotes ||
+    research?.breakdown?.insiderNotes ||
+    research?.scouting?.scoutingSummary ||
+    research?.breakdown?.recruitingStory;
+  if (staff) bits.push(`Staff / insider note: ${String(staff).replace(/\s+/g, ' ').trim().slice(0, 220)}`);
+
+  if (rivals.length) bits.push(`Competition set: ${rivals.slice(0, 6).join(', ')}.`);
+
+  const freshBeat = beatRows.find((r) => daysAgo(r.reportedAt || r.createdAt) != null && daysAgo(r.reportedAt || r.createdAt) <= 2);
+  if (freshBeat) {
+    bits.push(
+      `Fresh beat (${freshBeat.source || 'writer'}): ${String(freshBeat.detail || freshBeat.skinny || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 180)}`
+    );
+  }
+
+  if (!bits.length) {
+    return 'Florida is tracking this prospect; vault file is thin on a hard why-UF hook — lean on the freshest beat line and board facts only.';
+  }
+  return bits.join(' ');
+}
+
+function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals, whyFlorida }) {
+  const name = playerName || 'This prospect';
+  const eventType = (research?.eventType || 'update').replace(/_/g, ' ');
+  const ufPos = research?.ufPosition || 'tracking';
+  const fresh = beatRows[0]
+    ? String(beatRows[0].detail || beatRows[0].skinny || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 140)
+    : null;
+  const rivalHook = rivals.filter((r) => !/florida|gators/i.test(r)).slice(0, 2);
+  const gaps = intelligence?.gaps || research?.gaps || [];
+
+  const lines = [];
+  lines.push(
+    `Angle: Take today's ${eventType} beat on ${name} and frame UF as ${ufPos} — not a recap. Lead with the Florida stake, then one concrete board fact.`
+  );
+  if (fresh) lines.push(`Beat hook to advance: "${fresh}"`);
+  if (rivalHook.length) {
+    lines.push(`Pressure angle vs ${rivalHook.join(' / ')}: what UF still controls (visit, staff access, NIL path) that the beat left implied.`);
+  }
+  if (gaps.length) {
+    lines.push(`Vault edge (fill what beat skipped): ${gaps.slice(0, 4).join(', ')}.`);
+  } else {
+    lines.push('Vault edge: stack offers/visits/RPM + staff note under the beat so readers get the UF why, not just the headline.');
+  }
+  lines.push(`Why UF (use in copy, don't invent beyond this): ${whyFlorida}`);
+  return lines.join('\n');
+}
+
+function formatBriefText({
+  slug,
+  playerName,
+  player,
+  inspect,
+  beatRows,
+  research,
+  intelligence,
+  whyFlorida,
+  vaultAngle,
+  rivals
+}) {
   const lines = [];
   lines.push('GATORVAULT BEAT BRIEF');
   lines.push('=====================');
@@ -59,44 +293,69 @@ function formatBriefText({ slug, playerName, player, inspect, beatRows }) {
   lines.push(line('Class', player?.classYear || player?.year));
   lines.push(line('Position', player?.position || player?.pos));
   lines.push(line('Stars', player?.stars));
-  lines.push(
-    line(
-      'School',
-      player?.school || player?.highSchool || player?.fromSchool
-    )
-  );
+  lines.push(line('School', player?.school || player?.highSchool || player?.fromSchool));
   lines.push(line('Hometown / State', player?.hometown || player?.state || player?.hometownState));
   lines.push(line('National rank', player?.natlRank || player?.nationalRank));
   lines.push(line('Position rank', player?.posRank || player?.positionRank));
   lines.push(line('Composite / rating', player?.composite || player?.rating || player?.compositeScore));
   lines.push(line('UF likelihood', pct(player?.ufProbability ?? player?.ufConfidence ?? player?.floridaOdds)));
   lines.push(line('UF status', player?.ufStatus || player?.status));
+  lines.push(line('UF board read', research?.ufPosition));
+  lines.push(line('Signal type', research?.eventType));
   lines.push(line('Committed to', player?.committedTo));
-  const rivals = rivalList(player);
   if (rivals.length) lines.push(line('Rivals / involved', rivals.join(', ')));
-  lines.push(line('Visit / OV', player?.ufOvStatus || player?.visitStatus || player?.officialVisitStatus));
-  lines.push(
-    line(
-      'Visit window',
-      [player?.visitStart, player?.visitEnd].filter(Boolean).join(' → ') || null
-    )
-  );
+  lines.push(line('Visit / OV', visitSummary(intelligence, player)));
+  lines.push(line('Offers', offerSummary(intelligence)));
+  lines.push(line('RPM / predictions', rpmSummary(intelligence, research, player)));
 
   lines.push('');
-  lines.push('BEAT INTEL (newest first)');
-  lines.push('-------------------------');
+  lines.push('WHY FLORIDA');
+  lines.push('-----------');
+  lines.push(whyFlorida || '(thin)');
+
+  lines.push('');
+  lines.push('VAULT ANGLE (ahead of the beat)');
+  lines.push('-------------------------------');
+  lines.push(vaultAngle || '(thin)');
+
+  const staff =
+    research?.breakdown?.staffNotes ||
+    research?.breakdown?.insiderNotes ||
+    research?.scouting?.scoutingSummary ||
+    research?.breakdown?.recruitingStory;
+  if (staff) {
+    lines.push('');
+    lines.push('STAFF / SCOUTING');
+    lines.push('----------------');
+    lines.push(String(staff).replace(/\s+/g, ' ').trim().slice(0, 500));
+  }
+
+  lines.push('');
+  lines.push('BEAT INTEL (newest first — live stream + intel DB)');
+  lines.push('--------------------------------------------------');
   if (!beatRows.length) {
     lines.push('(No beat intel rows on file for this player.)');
   } else {
-    beatRows.slice(0, 8).forEach((row, i) => {
+    beatRows.slice(0, 10).forEach((row, i) => {
       const when = row.reportedAt || row.createdAt || '';
       const src = row.source || 'beat';
+      const live = row.liveBeat ? ' LIVE' : '';
       const text = String(row.detail || row.skinny || row.text || '').trim();
-      lines.push(`${i + 1}. [${when}] (${src})`);
+      lines.push(`${i + 1}. [${when}] (${src}${live})`);
       lines.push(text || '(empty)');
       if (row.articleUrl || row.url) lines.push(`Source: ${row.articleUrl || row.url}`);
       lines.push('');
     });
+  }
+
+  const sources = research?.sourcesUsed || [];
+  if (sources.length) {
+    lines.push('RESEARCH SOURCES');
+    lines.push('----------------');
+    sources.slice(0, 12).forEach((s, i) => {
+      lines.push(`${i + 1}. ${s.label}${s.snippet ? ` — ${s.snippet}` : ''}`);
+    });
+    lines.push('');
   }
 
   const draftText =
@@ -113,7 +372,7 @@ function formatBriefText({ slug, playerName, player, inspect, beatRows }) {
   lines.push('INSTRUCTIONS FOR AI');
   lines.push('-------------------');
   lines.push(
-    'Write one sharp X/Twitter post for GatorVault Insider from this beat intel. Stay factual to the beat. No invented offers, visits, or rankings. UF voice, no banned claims. Keep it under 280 chars unless I ask for a thread.'
+    'Write one sharp X/Twitter post for GatorVault Insider. Use WHY FLORIDA + VAULT ANGLE to get ahead of a plain beat recap. Stay factual to beat + board facts above. No invented offers, visits, or rankings. UF voice, no banned claims. Keep it under 280 chars unless I ask for a thread.'
   );
 
   return lines.filter((l) => l !== null).join('\n');
@@ -121,6 +380,7 @@ function formatBriefText({ slug, playerName, player, inspect, beatRows }) {
 
 /**
  * Full brief packet for Beat Desk UI + copy/paste.
+ * Research always runs. Heavy inspect/compose only when opts.full === true.
  */
 async function buildBeatBrief(slug, opts = {}) {
   const normalized = normalizeSlug(slug);
@@ -130,31 +390,77 @@ async function buildBeatBrief(slug, opts = {}) {
 
   await intelStore.initIntelStore().catch(() => {});
 
-  // Desk needs facts + beat text fast. Skip heavy elite compose unless ?full=1.
   const wantFull = opts && opts.full === true;
   const [inspect, player] = await Promise.all([
     wantFull
       ? inspectPlayer(normalized).catch((err) => ({ ok: false, error: err.message }))
       : Promise.resolve({ ok: true, playerName: null, verdict: null, fullCompose: null, drafts: [] }),
-    loadRecruitingPlayer(normalized),
+    loadRecruitingPlayer(normalized)
   ]);
 
   const allIntel = intelStore.getIntelForPlayer({ playerSlug: normalized }) || [];
-  const beatRows = allIntel
+  const intelBeatRows = allIntel
     .filter((r) => isBeatIntel(r) || r.ufRelevant === true)
     .sort(
       (a, b) =>
         new Date(b.reportedAt || b.createdAt || 0) - new Date(a.reportedAt || a.createdAt || 0)
     );
 
-  const playerName =
+  let playerName =
     inspect?.playerName ||
     player?.name ||
     player?.fullName ||
-    beatRows[0]?.playerName ||
+    intelBeatRows[0]?.playerName ||
     normalized;
 
+  const liveRows = liveBeatRowsForPlayer(normalized, playerName, 10);
+  if (!playerName || playerName === normalized) {
+    playerName = liveRows[0]?.playerName || playerName;
+  }
+  const beatRows = mergeBeatRows(intelBeatRows, liveRows);
+
   if (inspect && !inspect.playerName) inspect.playerName = playerName;
+
+  const primaryBeat = beatRows[0] || null;
+  let research = null;
+  try {
+    const { researchUpdate } = require('./x-autoposter-elite-research');
+    research = await researchUpdate({
+      playerSlug: normalized,
+      playerName,
+      beatText: primaryBeat ? String(primaryBeat.detail || primaryBeat.skinny || '') : null,
+      sourceLabel: primaryBeat?.source || null,
+      intel: primaryBeat,
+      headline: `${playerName} Florida recruiting`
+    });
+  } catch (err) {
+    research = { error: err.message, sourcesUsed: [], predictions: [], beatMentions: [] };
+  }
+
+  let intelligence = null;
+  try {
+    const { getPlayerIntelligence } = require('./player-intelligence');
+    intelligence = await getPlayerIntelligence(normalized, { coverageTier: 'standard' });
+  } catch {
+    intelligence = null;
+  }
+
+  const rivals = rivalList(player || {}, research, intelligence);
+  const whyFlorida = buildWhyFlorida({
+    player: player || {},
+    research,
+    intelligence,
+    beatRows,
+    rivals
+  });
+  const vaultAngle = buildVaultAngle({
+    playerName,
+    research,
+    intelligence,
+    beatRows,
+    rivals,
+    whyFlorida
+  });
 
   const pasteText = formatBriefText({
     slug: normalized,
@@ -162,7 +468,17 @@ async function buildBeatBrief(slug, opts = {}) {
     player: player || {},
     inspect: inspect?.ok ? inspect : null,
     beatRows,
+    research,
+    intelligence,
+    whyFlorida,
+    vaultAngle,
+    rivals
   });
+
+  const liveMentions = [
+    ...(research?.hayesMentions || []),
+    ...(research?.beatMentions || [])
+  ].slice(0, 8);
 
   return {
     ok: true,
@@ -179,34 +495,62 @@ async function buildBeatBrief(slug, opts = {}) {
           ufProbability: player.ufProbability ?? player.ufConfidence ?? null,
           ufStatus: player.ufStatus || player.status || null,
           committedTo: player.committedTo || null,
-          rivals: rivalList(player),
+          rivals,
           natlRank: player.natlRank || player.nationalRank || null,
-          visitStatus: player.ufOvStatus || player.visitStatus || null,
+          visitStatus: player.ufOvStatus || player.visitStatus || null
         }
-      : null,
+      : { rivals },
     beatCount: beatRows.length,
-    primaryBeat: beatRows[0]
+    liveBeatCount: liveRows.length,
+    primaryBeat: primaryBeat
       ? {
-          text: String(beatRows[0].detail || beatRows[0].skinny || '').trim(),
-          source: beatRows[0].source || null,
-          reportedAt: beatRows[0].reportedAt || beatRows[0].createdAt || null,
-          articleUrl: beatRows[0].articleUrl || beatRows[0].url || null,
+          text: String(primaryBeat.detail || primaryBeat.skinny || '').trim(),
+          source: primaryBeat.source || null,
+          reportedAt: primaryBeat.reportedAt || primaryBeat.createdAt || null,
+          articleUrl: primaryBeat.articleUrl || primaryBeat.url || null,
+          liveBeat: !!primaryBeat.liveBeat
         }
       : null,
+    research: {
+      ufPosition: research?.ufPosition || null,
+      eventType: research?.eventType || null,
+      hasUsableSignal: !!research?.hasUsableSignal,
+      topSchools: rivals,
+      offers: offerSummary(intelligence),
+      visits: visitSummary(intelligence, player || {}),
+      rpm: rpmSummary(intelligence, research, player || {}),
+      staffNotes: research?.breakdown?.staffNotes || research?.breakdown?.insiderNotes || null,
+      scoutingSummary: research?.scouting?.scoutingSummary || null,
+      whyFlorida,
+      vaultAngle,
+      liveMentions: liveMentions.map((m) => ({
+        label: m.label,
+        text: m.text,
+        url: m.url || null,
+        at: m.at || null
+      })),
+      sourcesUsed: (research?.sourcesUsed || []).slice(0, 12),
+      timing: research?.timing || null
+    },
     draftSuggestion:
       inspect?.fullCompose?.ok && inspect.fullCompose.text
         ? {
             text: inspect.fullCompose.text,
             thin: !!inspect.fullCompose.thin,
-            path: inspect.fullCompose.composePath || null,
+            path: inspect.fullCompose.composePath || null
           }
         : null,
     verdict: inspect?.verdict || null,
-    pasteText,
+    pasteText
   };
 }
 
 module.exports = {
   buildBeatBrief,
   formatBriefText,
+  buildWhyFlorida,
+  buildVaultAngle,
+  liveBeatRowsForPlayer,
+  mergeBeatRows,
+  postsFromBeatCache
 };

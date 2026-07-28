@@ -61,6 +61,12 @@ const RECRUITING_TERMS = [
   'top schools',
   'top 5',
   'top 10',
+  'top-100',
+  'top 100',
+  'prospect',
+  'pushing hard',
+  'in the building',
+  'connection in the building',
   'gainesville',
   'target',
   'targets',
@@ -76,6 +82,7 @@ const RECRUITING_TERMS = [
   'prediction',
   'futurecast',
   'rpm',
+  'prediction machine',
   'top remaining',
   'decision date',
   'flip target',
@@ -138,17 +145,31 @@ function extractClassYears(text) {
 }
 
 function resolvePlayerFromTextSync(text) {
-  const t = String(text || '').trim();
-  if (!t) return null;
+  const raw = String(text || '').trim();
+  if (!raw) return null;
+
+  let teaser = null;
+  try {
+    teaser = require('./beat-teaser-resolve');
+  } catch {
+    teaser = null;
+  }
+  const t = teaser?.textWithoutRelationalNames ? teaser.textWithoutRelationalNames(raw) : raw;
+  const relationalOk = (name) => !(teaser?.isRelationalMention && teaser.isRelationalMention(raw, name));
+
   let name = extractPlayerFromText(t);
-  if (!name) name = extractAllPlayerNameCandidates(t)[0] || null;
+  if (name && !relationalOk(name)) name = null;
+  if (!name) {
+    const candidates = extractAllPlayerNameCandidates(t) || [];
+    name = candidates.find((n) => relationalOk(n)) || null;
+  }
   if (!name) {
     try {
       const allowlist = require('./recruiting-target-allowlist');
       const names = Object.values(allowlist.getMergedCanonicalNames?.() || allowlist.CANONICAL_TARGET_NAMES || {});
       for (const n of names) {
         const re = new RegExp(`\\b${String(n).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-        if (re.test(t)) {
+        if (re.test(t) && relationalOk(n)) {
           name = n;
           break;
         }
@@ -202,9 +223,21 @@ function matchesFootball(text) {
 function matchesRecruiting(text, post = null) {
   const hay = text.toLowerCase();
   if (RECRUITING_TERMS.some((term) => hay.includes(term))) return true;
+  // Cousin / family-hook teasers are recruiting intel even without classic verbs.
+  if (/\bcousin/.test(hay) && /\b(florida|gators|uf)\b/.test(hay) && /\b(prospect|top[\s-]?100|ranked|pushing)\b/.test(hay)) {
+    return true;
+  }
   try {
     const prefilter = require('./beat-intel-prefilter');
     if (prefilter.hasStrongRecruitingSignals(text, post)) return true;
+  } catch {
+    /* optional */
+  }
+  try {
+    const teaser = require('./beat-teaser-resolve');
+    if (teaser.hasResolvableOn3Article(post || { text })) return true;
+    const sync = teaser.parseSyncOn3Identity(post || { text });
+    if (sync?.playerSlug) return true;
   } catch {
     /* optional */
   }
@@ -243,14 +276,31 @@ function matchesPlayerName(text, post = null) {
   if (/\b(db battles|battles heat up|first 20\d{2} commit lands|recruiting storylines?|flip targets|decision dates dropping)\b/i.test(body)) {
     return false;
   }
-  const fromExtract = extractPlayerFromText(body);
-  if (fromExtract && isValidPlayerName(fromExtract)) return true;
-  if (PLAYER_NAME_RE.test(body)) {
-    const m = body.match(PLAYER_NAME_RE);
-    if (m?.[0] && isValidPlayerName(m[0])) return true;
+
+  let teaser = null;
+  try {
+    teaser = require('./beat-teaser-resolve');
+  } catch {
+    teaser = null;
+  }
+
+  const cleaned = teaser?.textWithoutRelationalNames ? teaser.textWithoutRelationalNames(body) : body;
+  const fromExtract = extractPlayerFromText(cleaned);
+  if (fromExtract && isValidPlayerName(fromExtract) && !(teaser?.isRelationalMention && teaser.isRelationalMention(body, fromExtract))) {
+    return true;
+  }
+  if (PLAYER_NAME_RE.test(cleaned)) {
+    const m = cleaned.match(PLAYER_NAME_RE);
+    if (m?.[0] && isValidPlayerName(m[0]) && !(teaser?.isRelationalMention && teaser.isRelationalMention(body, m[0]))) {
+      return true;
+    }
   }
   const resolved = resolvePlayerFromTextSync(body);
   if (resolved?.playerName && isValidPlayerName(resolved.playerName)) return true;
+
+  // Nameless teaser with an On3 article link — identity comes from the article.
+  if (teaser?.hasResolvableOn3Article?.(post || { text: body })) return true;
+
   try {
     const { parseOn3BeatUrlIdentity } = require('./on3-recruit-discovery');
     if (parseOn3BeatUrlIdentity(text, post?.url)?.playerSlug) return true;
