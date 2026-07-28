@@ -15,6 +15,17 @@ Legacy bookmarks (`/admin/ops`, `/recruiting-admin.html`, etc.) redirect into hu
 
 **Default landing:** `#beat-desk/desk`
 
+## Operator Notecards (Charles mode)
+
+Plain-English playbook cards on **Beat Desk** and **Command Center**:
+
+- **Do this now** — numbered daily steps
+- **What the buttons mean** — Open / Copy Brief / Refresh / etc.
+- **Colors** — green / yellow / red / gray in one glance
+- **Don’t touch** — Legacy consoles + panic guidance for “kitchen waking”
+
+Collapse/expand is remembered for the browser session (`Show notecards` / `Hide notecards`).
+
 ## Freeze boundary (App Store review)
 
 Safe to change while an iOS build is in review:

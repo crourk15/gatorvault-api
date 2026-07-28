@@ -20,16 +20,25 @@
     var apiPost = ctx.apiPost;
     var onNavigate = ctx.onNavigate || function () {};
 
+    var notecardsHtml = (global.GVAdminNotecards && global.GVAdminNotecards.html)
+      ? global.GVAdminNotecards.html('command', { onNavigate: onNavigate })
+      : '';
+
     container.innerHTML =
       '<div class="hub-dash">'
+      + notecardsHtml
       + '<div class="hub-dash-head">'
       + '<div><h2 class="hub-dash-title">Command Center</h2>'
-      + '<p class="hub-dash-sub">One surface for health, top issues, and the next action</p></div>'
+      + '<p class="hub-dash-sub">Health + top issues. For daily posts, use Beat Desk (notecards above).</p></div>'
       + '<button type="button" class="hub-btn secondary hub-dash-refresh" id="hub-dash-refresh">Refresh</button>'
       + '</div>'
       + '<div id="hub-dash-loading" class="hub-dash-loading">Loading overview…</div>'
       + '<div id="hub-dash-body" class="hidden"></div>'
       + '</div>';
+
+    if (global.GVAdminNotecards && typeof global.GVAdminNotecards.wire === 'function') {
+      global.GVAdminNotecards.wire(container, { onNavigate: onNavigate });
+    }
 
     function bindActions(root) {
       root.querySelectorAll('[data-dash-route]').forEach(function (el) {
