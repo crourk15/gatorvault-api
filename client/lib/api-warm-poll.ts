@@ -17,7 +17,13 @@ export function userFacingLoadError(err: unknown, fallback = 'Could not load dat
     if (err.timedOut || err.unavailable || err.status === 503) {
       return 'Loading live data — almost ready.';
     }
+    if (/load failed/i.test(err.message)) {
+      return 'Loading live data — almost ready.';
+    }
     return err.message || fallback;
+  }
+  if (err instanceof Error && /load failed/i.test(err.message)) {
+    return 'Loading live data — almost ready.';
   }
   return err instanceof Error ? err.message : fallback;
 }

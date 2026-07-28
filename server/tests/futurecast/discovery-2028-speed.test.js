@@ -39,8 +39,20 @@ describe('FutureCast 2028 Discovery load speed', () => {
     );
     assert.match(cache, /movement-intel:2028/);
     assert.match(cache, /underclassmen:2028-2030/);
+    assert.match(cache, /early-discovery:2028/);
     assert.match(keep, /movement-intel\?year=2028/);
     assert.match(keep, /underclassmen\?years=2028,2029,2030/);
+    assert.match(keep, /early-discovery\?class_year_gte=2028/);
+  });
+
+  it('caches Early Discovery endpoint used by Lab panel', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'api', 'futurecast', 'early-discovery.ts'),
+      'utf8'
+    );
+    assert.match(src, /sendCachedJson/);
+    assert.match(src, /earlyDiscoveryCacheKey/);
+    assert.match(src, /buildEarlyDiscoveryPayload/);
   });
 
   it('Lab warm-poll is capped to avoid multi-minute hangs', () => {

@@ -31,6 +31,9 @@ const PRIORITY_TOUCH_PATHS = (
     // 2028 Discovery — previously unwarmed; cold underclassmen/movement caused 3+ min Lab waits.
     '/api/futurecast/movement-intel?year=2028',
     '/api/futurecast/underclassmen?years=2028,2029,2030',
+    // Lab "2028 Early Discovery" panel uses this endpoint (not underclassmen).
+    '/api/futurecast/early-discovery?class_year_gte=2028&limit=4',
+    '/api/futurecast/early-discovery?class_year_gte=2028&limit=100',
     // Lab Closing Class — cold rebuild is ~10s; keep this in priority so first open is warm.
     '/api/futurecast/high-priority?year=2027',
     '/api/futurecast/high-priority?year=2028',

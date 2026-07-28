@@ -6,6 +6,7 @@ import {
   type EarlyDiscoveryPlayer,
   type EarlyDiscoveryQuery,
 } from '@/lib/early-discovery-api';
+import { fetchWithWarmPoll, userFacingLoadError } from '@/lib/api-warm-poll';
 import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
 import { fromEarlyDiscovery } from '@/lib/recruiting-card-adapters';
 
@@ -33,18 +34,22 @@ export function EarlyDiscoveryGrid({ query }: EarlyDiscoveryGridProps): React.Re
       setError(null);
       setIsRefreshing(true);
       try {
-        const data = await fetchEarlyDiscovery({
-          class_year_gte: classYearGte,
-          min_discovery_score: minDiscoveryScore,
-          limit,
-          position,
-        });
+        const data = await fetchWithWarmPoll(
+          () =>
+            fetchEarlyDiscovery({
+              class_year_gte: classYearGte,
+              min_discovery_score: minDiscoveryScore,
+              limit,
+              position,
+            }),
+          { maxAttempts: 3, delayMs: 1_500 }
+        );
         if (cancelled) return;
         setFetched(data.players ?? []);
         setHasLoaded(true);
       } catch (err) {
         if (cancelled) return;
-        setError(err instanceof Error ? err.message : 'Failed to load Early Discovery');
+        setError(userFacingLoadError(err, 'Early Discovery is warming up — try again in a moment.'));
       } finally {
         if (!cancelled) setIsRefreshing(false);
       }

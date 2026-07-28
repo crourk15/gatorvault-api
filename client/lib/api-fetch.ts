@@ -58,7 +58,8 @@ function isRetryableError(err: unknown, status?: number): boolean {
   }
   if (err instanceof DOMException && err.name === 'AbortError') return true;
   const msg = String((err as Error)?.message || err || '');
-  return /fetch failed|network|ECONNRESET|ECONNREFUSED|Failed to fetch/i.test(msg);
+  // WebKit/Safari often surfaces transport failures as bare "Load failed".
+  return /load failed|fetch failed|network|ECONNRESET|ECONNREFUSED|Failed to fetch/i.test(msg);
 }
 
 async function sleep(ms: number): Promise<void> {

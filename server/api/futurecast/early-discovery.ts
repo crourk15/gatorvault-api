@@ -6,6 +6,7 @@ import { createRequire } from 'node:module';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
 import { enrichWithRankings } from './ranking-enrichment';
 import { expandPositionFilter, parsePositionFilter } from './position-filter';
+import { earlyDiscoveryCacheKey, sendCachedJson } from './response-cache';
 
 const require = createRequire(import.meta.url);
 
@@ -111,6 +112,35 @@ export async function listEarlyDiscoveryPlayers(opts: {
   return mergedRows.map((row) => enrichWithRankings(row));
 }
 
+export async function buildEarlyDiscoveryPayload(opts: {
+  classYearGte?: number;
+  minDiscoveryScore?: number;
+  minUfFitScore?: number;
+  position?: string;
+  limit?: number;
+}) {
+  const classYearGte = opts.classYearGte ?? 2028;
+  const minDiscoveryScore = opts.minDiscoveryScore ?? 0;
+  const minUfFitScore = opts.minUfFitScore ?? 0;
+  const position = opts.position;
+  const limit = opts.limit ?? 100;
+  const players = await listEarlyDiscoveryPlayers({
+    classYearGte,
+    minDiscoveryScore,
+    minUfFitScore,
+    position,
+    limit,
+  });
+  return {
+    ok: true,
+    classYearGte,
+    position: position ?? null,
+    count: players.length,
+    players,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
 export const handleGetEarlyDiscovery = asyncHandler(async (req: Request, res: Response) => {
   try {
     const classYearGte =
@@ -121,8 +151,7 @@ export const handleGetEarlyDiscovery = asyncHandler(async (req: Request, res: Re
       parseOptionalInt(req.query.min_uf_fit_score ?? req.query.minUfFitScore, 'min_uf_fit_score') ?? 0;
     const position = parsePositionFilter(req.query.position);
     const limit = parseLimit(req.query.limit);
-
-    const players = await listEarlyDiscoveryPlayers({
+    const cacheKey = earlyDiscoveryCacheKey({
       classYearGte,
       minDiscoveryScore,
       minUfFitScore,
@@ -130,14 +159,15 @@ export const handleGetEarlyDiscovery = asyncHandler(async (req: Request, res: Re
       limit,
     });
 
-    res.json({
-      ok: true,
-      classYearGte,
-      position: position ?? null,
-      count: players.length,
-      players,
-      updatedAt: new Date().toISOString(),
-    });
+    await sendCachedJson(res, cacheKey, () =>
+      buildEarlyDiscoveryPayload({
+        classYearGte,
+        minDiscoveryScore,
+        minUfFitScore,
+        position,
+        limit,
+      })
+    );
   } catch (err) {
     handlePredictionsApiError(res, err);
   }
