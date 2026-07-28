@@ -51,6 +51,12 @@ const PERSON_SLUG_NOISE = new Set([
   'interest', 'priority', 'top', 'high', 'school', 'football', 'recruiting', 'visit', 'official', 'unofficial',
   // Teaser RPM / crystal-ball article tails — never treat as a person slug
   'new', 'rpm', 'new-rpm', 'crystal', 'ball', 'prediction', 'defender', 'target', 'standout', 'prospect',
+  // Narrative / calendar tails from long On3 news slugs (…-plans-to-show-it-this-fall)
+  'this', 'that', 'fall', 'spring', 'summer', 'winter', 'season', 'week', 'year', 'today', 'tonight',
+  'show', 'shows', 'it', 'its', 'him', 'her', 'them', 'all', 'in', 'on', 'to', 'for', 'with', 'about',
+  'plans', 'planning', 'talks', 'talk', 'says', 'said', 'joins', 'join', 'named', 'returns', 'reacts',
+  'hopped', 'member', 'program', 'class', 'hungry', 'details', 'podcast',
+  'is', 'are', 'was', 'were', 'has', 'have', 'be', 'been',
 ]);
 const POS_SLUG_PREFIX = new Set([
   'wr', 'qb', 'rb', 'te', 'ol', 'ot', 'og', 'c', 'dl', 'dt', 'de', 'edge', 'lb', 'cb', 's', 'ath', 'k', 'p',
@@ -97,11 +103,43 @@ function isLikelyPersonSlug(slug) {
   return parts.every((p) => /^[a-z]{2,}$/.test(p));
 }
 
+function extractLeadingPersonFromNewsSlug(slug) {
+  // davin-davidson-is-all-in-on-florida-and-plans-to-show-it-this-fall → davin-davidson
+  const s = String(slug || '').toLowerCase();
+  const verb =
+    'is|are|has|have|was|were|plans?|planning|talks?|commits?|committed|visits?|visited|offers?|offered|named|joins?|signs?|signed|enrolls?|shows?|hopped|returns?|reacts?|says?|said';
+  // Prefer exact first-last before narrative verb (avoids swallowing "is").
+  let m = s.match(new RegExp(`^([a-z]{2,}-[a-z]{2,})-(?:${verb}|all)-`));
+  if (m) {
+    const playerSlug = m[1].replace(/-\d+$/, '');
+    if (isLikelyPersonSlug(playerSlug)) return playerSlug;
+  }
+  // Rare three-token names: john-paul-jones-commits-to-...
+  m = s.match(new RegExp(`^([a-z]{2,}-[a-z]{2,}-[a-z]{2,})-(?:${verb})-`));
+  if (m) {
+    const playerSlug = m[1].replace(/-\d+$/, '');
+    if (isLikelyPersonSlug(playerSlug)) return playerSlug;
+  }
+  return null;
+}
+
 function parseOn3NewsArticleSlug(pathSlug) {
   const slug = String(pathSlug || '')
     .toLowerCase()
     .replace(/\/$/, '');
   if (!slug) return null;
+
+  // Prefer leading firstname-lastname before narrative verbs in long news slugs.
+  const leading = extractLeadingPersonFromNewsSlug(slug);
+  if (leading) {
+    return {
+      playerSlug: leading,
+      playerName: slugToPlayerName(leading),
+      stars: null,
+      pos: null,
+      classYear: null,
+    };
+  }
 
   let m = slug.match(/(\d)-star-(wr|qb|rb|te|ol|ot|og|c|dl|dt|de|edge|lb|cb|s|ath|k|p)-([a-z0-9-]+)$/i);
   if (m) {
@@ -199,17 +237,21 @@ function parseOn3NewsArticleSlug(pathSlug) {
     };
   }
 
-  m = slug.match(/-([a-z0-9]+-[a-z0-9]+)$/i);
-  if (m) {
-    const playerSlug = m[1].replace(/-\d+$/, '');
-    if (isLikelyPersonSlug(playerSlug)) {
-      return {
-        playerSlug,
-        playerName: slugToPlayerName(playerSlug),
-        stars: null,
-        pos: null,
-        classYear: null,
-      };
+  // Trailing two-token fallback only for short, name-shaped slugs — never long story URLs.
+  const hyphenCount = (slug.match(/-/g) || []).length;
+  if (hyphenCount <= 4) {
+    m = slug.match(/-([a-z0-9]+-[a-z0-9]+)$/i);
+    if (m) {
+      const playerSlug = m[1].replace(/-\d+$/, '');
+      if (isLikelyPersonSlug(playerSlug)) {
+        return {
+          playerSlug,
+          playerName: slugToPlayerName(playerSlug),
+          stars: null,
+          pos: null,
+          classYear: null,
+        };
+      }
     }
   }
 
@@ -452,5 +494,7 @@ module.exports = {
   loadCanonicalOn3SlugMap,
   humanizeSlugAsName,
   profileFitsClassYear,
+  extractLeadingPersonFromNewsSlug,
+  isLikelyPersonSlug,
   ON3_SLUG_MAP_PATH,
 };
