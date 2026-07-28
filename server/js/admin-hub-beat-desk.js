@@ -50,6 +50,33 @@
     });
   }
 
+  function futurecastCardHtml(fc) {
+    if (!fc) {
+      return '<div class="hub-card" style="margin-bottom:12px">'
+        + '<h3>FutureCast feed</h3>'
+        + '<p class="hub-meta" style="margin:0">No feed result on this Open. Open <button type="button" class="hub-btn secondary" id="hub-bd-to-fc" style="margin-left:8px">Targets &amp; Allowlist</button></p>'
+        + '</div>';
+    }
+    if (fc.ok === false) {
+      return '<div class="hub-card hub-st-yellow" style="margin-bottom:12px">'
+        + '<h3>FutureCast feed</h3>'
+        + '<p class="hub-meta" style="margin:0">' + esc(fc.error || fc.reason || 'Skipped') + '</p>'
+        + '<p style="margin:10px 0 0"><button type="button" class="hub-btn secondary" id="hub-bd-to-fc">Open Targets &amp; Allowlist</button></p>'
+        + '</div>';
+    }
+    var action = fc.isNew ? 'Seeded new target' : fc.promoted ? 'Promoted to board' : 'Refreshed board fields';
+    var pct = fc.decision && fc.decision.pct != null ? (' · UF targeting ' + fc.decision.pct + '%') : '';
+    var allow = fc.allowlist && fc.allowlist.added ? ' · allowlist +1' : '';
+    return '<div class="hub-card hub-st-green" style="margin-bottom:12px">'
+      + '<h3>FutureCast feed</h3>'
+      + '<p style="margin:0;color:#e2e8f0"><strong>' + esc(action) + '</strong>' + esc(pct + allow) + '</p>'
+      + (fc.decision && fc.decision.source
+        ? '<p class="hub-meta" style="margin:6px 0 0">Source: ' + esc(fc.decision.source) + (fc.decision.rivalsLocked ? ' · Rivals PM locked' : '') + '</p>'
+        : '')
+      + '<p style="margin:10px 0 0"><button type="button" class="hub-btn secondary" id="hub-bd-to-fc">Inspect Targets &amp; Allowlist</button></p>'
+      + '</div>';
+  }
+
 
   function readInboxCache() {
     try {
@@ -81,6 +108,7 @@
   function render(container, ctx) {
     var apiGet = ctx.apiGet;
     var apiBase = ctx.apiBase || (global.location && global.location.origin) || '';
+    var onNavigate = ctx.onNavigate;
     var selectedSlug = '';
     var lastBrief = null;
     var allItems = [];
@@ -210,9 +238,10 @@
         + '<p style="margin:0;white-space:pre-wrap;line-height:1.5;color:#e2e8f0">'
         + esc(research.whyFlorida || 'Researching…') + '</p></div>'
         + '<div class="hub-card" style="margin-bottom:12px">'
-        + '<h3>Vault angle (ahead of the beat)</h3>'
+        + '<h3>Vault angle — own the story</h3>'
         + '<p style="margin:0;white-space:pre-wrap;line-height:1.5;color:#e2e8f0">'
         + esc(research.vaultAngle || '—') + '</p></div>'
+        + futurecastCardHtml(brief.futurecastFeed)
         + '<div class="hub-card" style="margin-bottom:12px">'
         + '<h3>Board facts (elite depth)</h3>'
         + '<p class="hub-meta" style="margin:0 0 8px">'
@@ -268,6 +297,12 @@
           .then(function () { setMsg('Draft copied.'); })
           .catch(function () { setMsg('Copy failed.', true); });
       });
+      var fcBtn = document.getElementById('hub-bd-to-fc');
+      if (fcBtn) {
+        fcBtn.addEventListener('click', function () {
+          if (typeof onNavigate === 'function') onNavigate('#futurecast/control');
+        });
+      }
 
       try { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (_) { /* ignore */ }
     }

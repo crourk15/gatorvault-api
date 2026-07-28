@@ -105,8 +105,43 @@ function addToAdminAllowlist({ slug, name, classYear }) {
   return { added: true, slug: s, classYear: year, key: 'slugs2028' };
 }
 
+function removeFromAdminAllowlist({ slug, classYear }) {
+  const year = parseInt(classYear, 10);
+  const s = normalizeSlug(slug);
+  if (!s) throw new Error('slug required');
+  if (year === 2027) {
+    return {
+      removed: false,
+      reason: 'closing_class_2027_hard_locked',
+      slug: s,
+      classYear: year,
+    };
+  }
+  if (year !== 2028) {
+    return { removed: false, reason: 'admin_allowlist_only_2028', slug: s };
+  }
+
+  const doc = readDoc();
+  doc.slugs2027 = [];
+  doc.slugs2028 = doc.slugs2028 || [];
+  doc.names = doc.names || {};
+  const before = doc.slugs2028.length;
+  doc.slugs2028 = doc.slugs2028.filter((row) => row !== s);
+  if (doc.names[s]) delete doc.names[s];
+  doc.updatedAt = new Date().toISOString();
+  writeDoc(doc);
+
+  return {
+    removed: before !== doc.slugs2028.length,
+    slug: s,
+    classYear: year,
+    key: 'slugs2028',
+  };
+}
+
 module.exports = {
   ALLOWLIST_PATH,
   loadAdminAllowlist,
   addToAdminAllowlist,
+  removeFromAdminAllowlist,
 };

@@ -230,6 +230,11 @@
     .hub-pipe-grid .hub-st-yellow .hub-pipe-dot{background:#eab308}
     .hub-pipe-grid .hub-st-green .hub-pipe-dot{background:#22c55e}
 
+    .hub-nav-divider{padding:14px 14px 6px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#64748b;font-weight:700}
+    .hub-nav-divider span{display:block;border-top:1px solid rgba(100,116,139,.45);padding-top:10px}
+    .hub-nav-btn--legacy{opacity:.82}
+    .hub-nav-btn--legacy .hub-nav-mark{background:#1e293b;color:#94a3b8}
+
     @media(max-width:900px){
       #hub-shell{flex-direction:column}
       .hub-sidebar{width:100%;height:auto;position:relative;border-right:0;border-bottom:2px solid #003087}
@@ -239,6 +244,7 @@
       .hub-sidebar-foot{display:none}
       .hub-main{max-height:none}
       .hub-iframe{min-height:70vh}
+      .hub-nav-divider{display:none}
     }
   </style>
 </head>
@@ -262,8 +268,8 @@
       </div>
       <nav id="hub-nav" class="hub-nav" aria-label="Admin sections"></nav>
       <div class="hub-sidebar-foot">
-        <a href="/admin/hub#qa/monitor">QA Monitor</a>
-        <a href="/admin/hub#product-intel/health">Product Health</a>
+        <a href="/admin/hub#beat-desk/desk">Beat Desk</a>
+        <a href="/admin/hub#futurecast/control">FutureCast</a>
         <a href="/admin/hub#dashboard/runbooks">Runbooks</a>
         <a href="/" target="_blank" rel="noopener">Open public site</a>
         <button type="button" id="hub-lock">Lock &amp; sign out</button>
@@ -317,7 +323,8 @@
   <script src="/js/admin-hub-runbooks.js?v=hub-runbooks-v1"></script>
   <script src="/js/admin-hub-ops.js?v=hub-ops-v1"></script>
   <script src="/js/admin-hub-job-queue.js?v=hub-jobs-v1"></script>
-  <script src="/js/admin-hub-beat-desk.js?v=hub-bd-v8"></script>
+  <script src="/js/admin-hub-beat-desk.js?v=hub-bd-v9"></script>
+  <script src="/js/admin-hub-futurecast.js?v=hub-fc-v1"></script>
   <script src="/js/admin-hub-post-studio.js?v=hub-ps-v1"></script>
   <script src="/js/admin-hub-qa-summary.js?v=hub-qa-sum-v1"></script>
   <script src="/js/admin-hub-recruiting.js?v=hub-rh-v3"></script>
@@ -327,7 +334,7 @@
   <script src="/js/admin-hub-unresolved-predictions.js?v=hub-upq-v2"></script>
   <script src="/js/admin-hub-product-intel.js?v=hub-pi-v1"></script>
   <script src="/js/admin-hub-members.js?v=hub-mem-v2"></script>
-  <script src="/js/admin-hub-core.js?v=hub-core-v3"></script>
+  <script src="/js/admin-hub-core.js?v=hub-core-v4"></script>
   <script>
     document.getElementById('hub-lock-top').addEventListener('click', function () {
       document.getElementById('hub-lock').click();

@@ -46,7 +46,8 @@
     '/admin/ops': { section: 'dashboard', panel: 'ops' },
     '/admin/feedback': { section: 'feedback', panel: 'inbox' },
     '/admin/monitoring': { section: 'recruiting', panel: 'monitoring-full' },
-    '/admin/ops/gm2': { section: 'gm2', panel: 'rerun' },
+    '/admin/ops/gm2': { section: 'gm2', panel: 'integrity' },
+    '/admin/ops/gm2/rerun': { section: 'dashboard', panel: 'runbooks' },
     '/admin/ops/identity-patterns': { section: 'gm2', panel: 'identity' },
     '/vault/ops': { section: 'dashboard', panel: 'ops' },
     '/recruiting-admin.html': { section: 'recruiting', panel: 'alerts-full' },
@@ -60,6 +61,7 @@
       id: 'beat-desk',
       label: 'Beat Desk',
       mark: 'BD',
+      group: 'primary',
       desc: 'Daily desk — beat intel → player packet → Copy Brief → X',
       panels: [{ id: 'desk', label: 'Brief Desk', inline: true }]
     },
@@ -67,6 +69,7 @@
       id: 'dashboard',
       label: 'Dashboard',
       mark: 'CC',
+      group: 'primary',
       desc: 'Command center — system health, top issues, pipelines, recommended actions',
       panels: [
         { id: 'overview', label: 'Command Center', inline: true },
@@ -81,46 +84,24 @@
       id: 'members',
       label: 'Members',
       mark: 'MB',
+      group: 'primary',
       desc: 'Newest signups — trial, paid, and expired accounts',
       panels: [{ id: 'recent', label: 'Recent Members', inline: true }]
     },
     {
-      id: 'gm2',
-      label: 'GM',
-      mark: 'GM',
-      desc: 'Roster, scholarships, depth chart, re-run modules, identity resolution',
-      panels: [
-        { id: 'rerun', label: 'Runbooks', inline: true },
-        { id: 'integrity', label: 'GM Integrity', embed: 'gm2' },
-        { id: 'identity', label: 'Identity Patterns', embed: 'identity' }
-      ]
-    },
-    {
-      id: 'product-intel',
-      label: 'Product Health',
-      mark: 'PI',
-      desc: 'API uptime, latency, error rates, deploy status, fix queue',
-      panels: [
-        { id: 'summary', label: 'Fix Queue', inline: true },
-        { id: 'health', label: 'Full console', embed: 'product-intel' }
-      ]
-    },
-    {
-      id: 'qa',
-      label: 'QA Monitor',
-      mark: 'QA',
-      desc: '24/7 crawler — pass/fail, broken pages, UX integrity',
-      panels: [
-        { id: 'summary', label: 'QA Summary', inline: true },
-        { id: 'monitor', label: 'Full QA', embed: 'qa' },
-        { id: 'mobile-behavior', label: 'Mobile Behavior', embed: 'qa-mobile' }
-      ]
+      id: 'futurecast',
+      label: 'FutureCast',
+      mark: 'FC',
+      group: 'primary',
+      desc: 'Targets, 2028 admin allowlist, early watch — what Beat Desk seeds into FutureCast',
+      panels: [{ id: 'control', label: 'Targets & Allowlist', inline: true }]
     },
     {
       id: 'recruiting',
       label: 'Recruiting Admin',
       mark: 'RH',
-      desc: 'Classes, boards, intel, predictions, hub bundle inputs, pipeline status',
+      group: 'primary',
+      desc: 'Daily pipeline, unresolved RPM teasers, alerts, monitoring, Vault Grades',
       panels: [
         { id: 'daily', label: 'Daily Summary', inline: true },
         { id: 'unresolved', label: 'Unresolved Predictions', inline: true },
@@ -135,7 +116,8 @@
       id: 'team',
       label: 'Team Admin',
       mark: 'TM',
-      desc: 'Schedule, opponents, depth chart, staff, film room, game zone',
+      group: 'primary',
+      desc: 'Roster & board editor + Vault Grades (depth/staff live on the public Team vault)',
       panels: [
         { id: 'board', label: 'Roster & Board', inline: true },
         { id: 'board-full', label: 'Full Board', inline: true },
@@ -143,10 +125,53 @@
       ]
     },
     {
+      id: 'gm2',
+      label: 'GM',
+      mark: 'GM',
+      group: 'primary',
+      desc: 'GM integrity checks + identity patterns (runbooks live under Dashboard)',
+      panels: [
+        { id: 'integrity', label: 'GM Integrity', embed: 'gm2' },
+        { id: 'identity', label: 'Identity Patterns', embed: 'identity' }
+      ]
+    },
+    {
+      id: 'product-intel',
+      label: 'Product Health',
+      mark: 'PI',
+      group: 'primary',
+      desc: 'API uptime, latency, error rates, deploy status, fix queue',
+      panels: [
+        { id: 'summary', label: 'Fix Queue', inline: true },
+        { id: 'health', label: 'Full console', embed: 'product-intel' }
+      ]
+    },
+    {
+      id: 'qa',
+      label: 'QA Monitor',
+      mark: 'QA',
+      group: 'primary',
+      desc: '24/7 crawler — pass/fail, broken pages, UX integrity',
+      panels: [
+        { id: 'summary', label: 'QA Summary', inline: true },
+        { id: 'monitor', label: 'Full QA', embed: 'qa' },
+        { id: 'mobile-behavior', label: 'Mobile Behavior', embed: 'qa-mobile' }
+      ]
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      mark: 'ST',
+      group: 'primary',
+      desc: 'Member points, tiers, film/live rebuild tools, PIN env reference (no feature-flag UI yet)',
+      panels: [{ id: 'platform', label: 'Platform Settings', inline: true }]
+    },
+    {
       id: 'content',
       label: 'Content & Media',
       mark: 'CM',
-      desc: 'Articles, War Room, videos, assets, draft/publish, featured slots',
+      group: 'legacy',
+      desc: 'Legacy iframe — articles / content accuracy escape hatch',
       panels: [
         { id: 'content-accuracy', label: 'Content Accuracy', embed: 'content' },
         { id: 'insider-articles', label: 'Insider Articles', embed: 'ops', hash: '#insider-articles' }
@@ -156,35 +181,32 @@
       id: 'community',
       label: 'Community Admin',
       mark: 'CO',
-      desc: 'Comments, moderation queue, bans, engagement metrics',
+      group: 'legacy',
+      desc: 'Legacy iframe — moderation queue escape hatch',
       panels: [{ id: 'moderation', label: 'Moderation Queue', embed: 'community' }]
     },
     {
       id: 'feedback',
       label: 'Feedback & Support',
       mark: 'FB',
-      desc: 'User feedback, bug reports, support tickets, status tracking',
+      group: 'legacy',
+      desc: 'Legacy iframe — feedback inbox escape hatch',
       panels: [{ id: 'inbox', label: 'Feedback Inbox', embed: 'feedback' }]
-    },
-    {
-      id: 'settings',
-      label: 'Settings',
-      mark: 'ST',
-      desc: 'Global config, feature flags, admin users, security',
-      panels: [{ id: 'platform', label: 'Platform Settings', inline: true }]
     },
     {
       id: 'player-intel',
       label: 'Player Intel Entry',
       mark: 'PX',
-      desc: 'Fast form — player selector, event type, source, notes → intel store + hub snapshot',
+      group: 'legacy',
+      desc: 'Legacy iframe — prefer Beat Desk for daily intel → board',
       panels: [{ id: 'entry', label: 'Intel Entry', embed: 'player-intel' }]
     },
     {
       id: 'self-runner',
       label: 'Self-Runner',
       mark: 'SR',
-      desc: 'Smart automation — monitor, detect, suggest fixes across the entire stack',
+      group: 'legacy',
+      desc: 'Legacy iframe — automation pending-fixes console',
       panels: [{ id: 'pending', label: 'Pending Fixes', embed: 'self-runner' }]
     }
   ];
@@ -677,6 +699,9 @@
   function renderSettingsPanel(container) {
     container.innerHTML = ''
       + '<div class="hub-settings-grid">'
+      + '<div class="hub-card hub-card-wide"><h3>What Settings covers today</h3>'
+      + '<p class="hub-meta" style="margin:0;color:#e2e8f0">Member points, tier lookup, and kitchen rebuild tools. There is <strong style="color:#fff">no feature-flag UI</strong> and no admin-user manager yet — those stay in Render env / code.</p>'
+      + '</div>'
       + '<div class="hub-card"><h3>Member Points</h3>'
       + '<label>Member email</label><input id="hub-pts-email" type="email" placeholder="member@example.com">'
       + '<button type="button" class="hub-btn secondary" id="hub-pts-lookup">Look Up</button>'
@@ -696,9 +721,9 @@
       + '<button type="button" class="hub-btn secondary" data-hub-action="purge-beat">Purge Non-UF Beat</button>'
       + '<button type="button" class="hub-btn secondary" data-hub-action="scouting-rebuild">Rebuild Scouting DB</button>'
       + '</div></div>'
-      + '<div class="hub-card"><h3>Permissions &amp; API Keys</h3>'
-      + '<p class="hub-meta">PIN env vars: <code>OPS_ADMIN_PIN</code>, <code>RECRUITING_ADMIN_PIN</code>, <code>CONTENT_ADMIN_PIN</code>, <code>COMMUNITY_ADMIN_PIN</code>, <code>LIVE_ADMIN_PIN</code></p>'
-      + '<p class="hub-meta">Branding and theme controls ship in a future settings release. Use Render env + <code>official-names.json</code> for coach identity today.</p>'
+      + '<div class="hub-card"><h3>PIN env reference</h3>'
+      + '<p class="hub-meta">Set on Render: <code>OPS_ADMIN_PIN</code>, <code>RECRUITING_ADMIN_PIN</code>, <code>CONTENT_ADMIN_PIN</code>, <code>COMMUNITY_ADMIN_PIN</code>, <code>LIVE_ADMIN_PIN</code></p>'
+      + '<p class="hub-meta">Coach identity: <code>official-names.json</code>. Branding/theme controls are not in this panel.</p>'
       + '</div>'
       + '<div class="hub-card hub-card-wide"><h3>Admin Log</h3><div id="hub-log" class="hub-log"></div></div>'
       + '</div>';
@@ -784,10 +809,19 @@
     var mainEl = document.getElementById('hub-main');
     if (!navEl || !mainEl) return;
 
+    var sawLegacy = false;
     SECTIONS.forEach(function (sec) {
+      if (sec.group === 'legacy' && !sawLegacy) {
+        sawLegacy = true;
+        var divider = document.createElement('div');
+        divider.className = 'hub-nav-divider';
+        divider.setAttribute('role', 'presentation');
+        divider.innerHTML = '<span>Legacy consoles</span>';
+        navEl.appendChild(divider);
+      }
       var btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'hub-nav-btn';
+      btn.className = 'hub-nav-btn' + (sec.group === 'legacy' ? ' hub-nav-btn--legacy' : '');
       btn.setAttribute('data-section', sec.id);
       btn.innerHTML = '<span class="hub-health-dot hub-health-unknown"></span><span class="hub-nav-mark">' + (sec.mark || sec.label.slice(0, 2).toUpperCase()) + '</span><span class="hub-nav-label">' + sec.label + '</span>';
       btn.addEventListener('click', function () { setRoute(sec.id, sec.panels[0] && sec.panels[0].id); renderRoute(); });
@@ -990,118 +1024,128 @@
       if (!isActive) return;
 
       if (panelEl.getAttribute('data-inline') === '1') {
-        if (!panelEl.getAttribute('data-rendered')) {
-          panelEl.setAttribute('data-rendered', '1');
-          if (panelId === 'rerun' || panelId === 'runbooks') renderRunbooksPanel(panelEl);
-          else if (panelId === 'vault-grades') renderVaultGradesPanel(panelEl);
-          else if (panelId === 'board' && section.id === 'team' && global.GVAdminBoardSummary) {
-            GVAdminBoardSummary.render(panelEl, {
+        // Re-render on every visit so Command Center / Beat Desk / FC stay fresh.
+        panelEl.setAttribute('data-rendered', '1');
+        if (panelId === 'rerun' || panelId === 'runbooks') renderRunbooksPanel(panelEl);
+        else if (panelId === 'vault-grades') renderVaultGradesPanel(panelEl);
+        else if (panelId === 'board' && section.id === 'team' && global.GVAdminBoardSummary) {
+          GVAdminBoardSummary.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash
+          });
+        }
+        else if (panelId === 'board-full' && section.id === 'team' && global.GVAdminBoardFull) {
+          GVAdminBoardFull.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash
+          });
+        }
+        else if (panelId === 'overview' && global.GVAdminDashboard) {
+          GVAdminDashboard.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            pin: pin,
+            onNavigate: navigateFromHash
+          });
+        }
+        else if (panelId === 'ops-summary' && global.GVAdminOpsSummary) {
+          GVAdminOpsSummary.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash
+          });
+        }
+        else if (panelId === 'jobs' && global.GVAdminJobQueue) {
+          GVAdminJobQueue.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash,
+            pushActivity: pushActivity
+          });
+        }
+        else if (panelId === 'desk' && section.id === 'beat-desk' && global.GVAdminBeatDesk) {
+          GVAdminBeatDesk.render(panelEl, {
+            apiGet: apiGet,
+            apiBase: API,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash,
+            pushActivity: pushActivity
+          });
+        }
+        else if (panelId === 'control' && section.id === 'futurecast' && global.GVAdminFutureCast) {
+          GVAdminFutureCast.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash,
+            pushActivity: pushActivity
+          });
+        }
+        else if (panelId === 'post-studio' && global.GVAdminPostStudio) {
+          GVAdminPostStudio.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash,
+            pushActivity: pushActivity
+          });
+        }
+        else if (panelId === 'summary' && section.id === 'qa' && global.GVAdminQaSummary) {
+          GVAdminQaSummary.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash
+          });
+        }
+        else if (panelId === 'daily' && section.id === 'recruiting' && global.GVAdminRecruitingSummary) {
+          GVAdminRecruitingSummary.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash
+          });
+        }
+        else if (panelId === 'unresolved' && section.id === 'recruiting' && global.GVAdminUnresolvedPredictions) {
+          GVAdminUnresolvedPredictions.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash,
+            pushActivity: pushActivity
+          });
+        }
+        else if (panelId === 'alerts' && section.id === 'recruiting' && global.GVAdminAlertsSummary) {
+          GVAdminAlertsSummary.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash
+          });
+        }
+        else if (panelId === 'monitoring' && section.id === 'recruiting' && global.GVAdminMonitoringSummary) {
+          GVAdminMonitoringSummary.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash
+          });
+        }
+        else if (panelId === 'summary' && section.id === 'product-intel' && global.GVAdminProductIntelSummary) {
+          GVAdminProductIntelSummary.render(panelEl, {
+            apiGet: apiGet,
+            apiPost: apiPost,
+            onNavigate: navigateFromHash
+          });
+        }
+        else if ((panelId === 'recent' || panelId === 'members') && section.id === 'members') {
+          if (global.GVAdminMembers) {
+            GVAdminMembers.render(panelEl, {
               apiGet: apiGet,
-              apiPost: apiPost,
               onNavigate: navigateFromHash
             });
+          } else {
+            panelEl.innerHTML = '<p class="hub-meta err">Members panel failed to load. Hard-refresh the page.</p>';
           }
-          else if (panelId === 'board-full' && section.id === 'team' && global.GVAdminBoardFull) {
-            GVAdminBoardFull.render(panelEl, {
-              apiGet: apiGet,
-              apiPost: apiPost,
-              onNavigate: navigateFromHash
-            });
-          }
-          else if (panelId === 'overview' && global.GVAdminDashboard) {
-            GVAdminDashboard.render(panelEl, {
-              apiGet: apiGet,
-              apiPost: apiPost,
-              pin: pin,
-              onNavigate: navigateFromHash
-            });
-          }
-          else if (panelId === 'ops-summary' && global.GVAdminOpsSummary) {
-            GVAdminOpsSummary.render(panelEl, {
-              apiGet: apiGet,
-              apiPost: apiPost,
-              onNavigate: navigateFromHash
-            });
-          }
-          else if (panelId === 'jobs' && global.GVAdminJobQueue) {
-            GVAdminJobQueue.render(panelEl, {
-              apiGet: apiGet,
-              apiPost: apiPost,
-              onNavigate: navigateFromHash,
-              pushActivity: pushActivity
-            });
-          }
-          else if (panelId === 'desk' && section.id === 'beat-desk' && global.GVAdminBeatDesk) {
-            GVAdminBeatDesk.render(panelEl, {
-              apiGet: apiGet,
-              apiBase: API,
-              apiPost: apiPost,
-              onNavigate: navigateFromHash,
-              pushActivity: pushActivity
-            });
-          }
-          else if (panelId === 'post-studio' && global.GVAdminPostStudio) {
-            GVAdminPostStudio.render(panelEl, {
-              apiGet: apiGet,
-              apiPost: apiPost,
-              onNavigate: navigateFromHash,
-              pushActivity: pushActivity
-            });
-          }
-          else if (panelId === 'summary' && section.id === 'qa' && global.GVAdminQaSummary) {
-            GVAdminQaSummary.render(panelEl, {
-              apiGet: apiGet,
-              apiPost: apiPost,
-              onNavigate: navigateFromHash
-            });
-          }
-          else if (panelId === 'daily' && section.id === 'recruiting' && global.GVAdminRecruitingSummary) {
-            GVAdminRecruitingSummary.render(panelEl, {
-              apiGet: apiGet,
-              apiPost: apiPost,
-              onNavigate: navigateFromHash
-            });
-          }
-          else if (panelId === 'unresolved' && section.id === 'recruiting' && global.GVAdminUnresolvedPredictions) {
-            GVAdminUnresolvedPredictions.render(panelEl, {
-              apiGet: apiGet,
-              apiPost: apiPost,
-              onNavigate: navigateFromHash,
-              pushActivity: pushActivity
-            });
-          }
-          else if (panelId === 'alerts' && section.id === 'recruiting' && global.GVAdminAlertsSummary) {
-            GVAdminAlertsSummary.render(panelEl, {
-              apiGet: apiGet,
-              apiPost: apiPost,
-              onNavigate: navigateFromHash
-            });
-          }
-          else if (panelId === 'monitoring' && section.id === 'recruiting' && global.GVAdminMonitoringSummary) {
-            GVAdminMonitoringSummary.render(panelEl, {
-              apiGet: apiGet,
-              apiPost: apiPost,
-              onNavigate: navigateFromHash
-            });
-          }
-          else if (panelId === 'summary' && section.id === 'product-intel' && global.GVAdminProductIntelSummary) {
-            GVAdminProductIntelSummary.render(panelEl, {
-              apiGet: apiGet,
-              apiPost: apiPost,
-              onNavigate: navigateFromHash
-            });
-          }
-          else if ((panelId === 'recent' || panelId === 'members') && section.id === 'members') {
-            if (global.GVAdminMembers) {
-              GVAdminMembers.render(panelEl, {
-                apiGet: apiGet,
-                onNavigate: navigateFromHash
-              });
-            } else {
-              panelEl.innerHTML = '<p class="hub-meta err">Members panel failed to load. Hard-refresh the page.</p>';
-            }
-          }
-          else if (panelId === 'platform') renderSettingsPanel(panelEl);
+        }
+        else if (panelId === 'platform') renderSettingsPanel(panelEl);
+        else if (panelId === 'control' && section.id === 'futurecast') {
+          panelEl.innerHTML = '<p class="hub-meta err">FutureCast panel failed to load. Hard-refresh the page.</p>';
         }
         return;
       }
