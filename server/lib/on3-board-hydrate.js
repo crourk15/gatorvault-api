@@ -58,39 +58,98 @@ function teamLabel(row) {
   );
 }
 
-function teamPct(row) {
+/**
+ * Raw On3 Team Predictions value.
+ * Live Industry Consensus uses percentage points (17.63). Some lower-board rows
+ * carry an identical residual fraction (~0.6887) that must NOT be treated as 69%.
+ */
+function rawTeamPrediction(row) {
   if (!row) return null;
   const v =
     row.percent != null ? Number(row.percent) : row.prediction != null ? Number(row.prediction) : null;
-  if (v == null || !Number.isFinite(v)) return null;
-  return v > 1 ? v : v * 100;
+  if (v == null || !Number.isFinite(v) || v < 0) return null;
+  return v;
+}
+
+/**
+ * Detect whether a topTeams board is percentage-points or 0–1 fractions.
+ * Mixed boards (real RPM > 1 plus residual fractions) are percent-scale.
+ */
+function detectTopTeamsPctScale(rows = []) {
+  const vals = (rows || []).map(rawTeamPrediction).filter((v) => v != null && v > 0);
+  if (!vals.length) return 'unknown';
+  if (vals.some((v) => v > 1)) return 'percent';
+  return 'fraction';
+}
+
+/**
+ * Values that appear identically on many schools are On3 residual noise, not RPM.
+ * Example: Penn State/ND/SMU/... all share prediction 0.6887052341597797.
+ */
+function residualPredictionKeys(rows = [], scale = 'unknown') {
+  const counts = new Map();
+  for (const row of rows || []) {
+    const raw = rawTeamPrediction(row);
+    if (raw == null || raw <= 0) continue;
+    const key = String(raw);
+    counts.set(key, (counts.get(key) || 0) + 1);
+  }
+  const residual = new Set();
+  for (const [key, count] of counts) {
+    if (count < 3) continue;
+    const raw = Number(key);
+    const pct = scale === 'fraction' ? raw * 100 : raw;
+    // Shared micro-defaults only — never drop a real differentiated consensus stack.
+    if (pct < 2.5) residual.add(key);
+  }
+  return residual;
+}
+
+function normalizePredictionToPct(raw, scale = 'unknown') {
+  if (raw == null || !Number.isFinite(Number(raw))) return null;
+  const v = Number(raw);
+  if (v < 0) return null;
+  if (scale === 'fraction') return v <= 1 ? v * 100 : v;
+  // percent / unknown with value > 1: already percentage points
+  if (v > 1) return v;
+  // Ambiguous lone fraction with no board context: keep legacy fraction→percent.
+  if (scale === 'unknown') return v * 100;
+  // percent-scale board: 0.6887 means 0.69%, not 69%
+  return v;
+}
+
+function teamPct(row, scale = 'unknown') {
+  return normalizePredictionToPct(rawTeamPrediction(row), scale);
 }
 
 function formatPct(v) {
   if (v == null || !Number.isFinite(Number(v))) return null;
-  const n = Number(v);
-  const pct = n <= 1 ? n * 100 : n;
-  return `${Math.round(pct)}%`;
+  return `${Math.round(Number(v))}%`;
 }
 
 function interestedSchoolsFromTopTeams(topTeams, classYear, limit = 8) {
   const year = Number(classYear) || 2028;
   const yearRows = on3Recruit.getYearTopTeams(topTeams || [], year);
   const rows = yearRows.length ? yearRows : topTeams || [];
-  return rows
-    .filter((t) => !on3Recruit.isHighSchoolOrg(t))
+  const collegeRows = rows.filter((t) => !on3Recruit.isHighSchoolOrg(t));
+  const scale = detectTopTeamsPctScale(collegeRows);
+  const residual = residualPredictionKeys(collegeRows, scale);
+  return collegeRows
     .map((t) => {
       const school = teamLabel(t);
       if (!school) return null;
-      const pct = formatPct(teamPct(t));
+      const raw = rawTeamPrediction(t);
+      const isResidual = raw != null && residual.has(String(raw));
+      const pct = isResidual ? null : teamPct(t, scale);
       const status = t.status ? String(t.status) : null;
       const bits = [school];
-      if (pct) bits.push(`RPM ~${pct}`);
+      if (pct != null && pct > 0) bits.push(`RPM ~${formatPct(pct)}`);
       if (status && !/unknown/i.test(status)) bits.push(status);
       return {
         school,
-        pct: teamPct(t),
+        pct,
         status,
+        residual: isResidual,
         label: bits.join(' · ')
       };
     })
@@ -100,9 +159,13 @@ function interestedSchoolsFromTopTeams(topTeams, classYear, limit = 8) {
 }
 
 function ufRpmFromTopTeams(topTeams, classYear) {
-  const uf = on3Recruit.getFloridaTeam(topTeams || [], Number(classYear) || 2028);
+  const year = Number(classYear) || 2028;
+  const yearRows = on3Recruit.getYearTopTeams(topTeams || [], year);
+  const rows = yearRows.length ? yearRows : topTeams || [];
+  const scale = detectTopTeamsPctScale(rows.filter((t) => !on3Recruit.isHighSchoolOrg(t)));
+  const uf = on3Recruit.getFloridaTeam(topTeams || [], year);
   if (!uf) return null;
-  return teamPct(uf);
+  return teamPct(uf, scale);
 }
 
 function rankingLine(player = {}) {
@@ -359,6 +422,11 @@ module.exports = {
   isUfSchoolName,
   boardNeedsHydration,
   profileUsableForClass,
+  rawTeamPrediction,
+  detectTopTeamsPctScale,
+  residualPredictionKeys,
+  normalizePredictionToPct,
+  teamPct,
   interestedSchoolsFromTopTeams,
   ufRpmFromTopTeams,
   rankingLine,
