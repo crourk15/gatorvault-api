@@ -60,6 +60,9 @@ describe('Beat Brief Desk', () => {
     assert.match(core, /GVAdminBeatDesk/);
     assert.match(core, /#beat-desk\/desk/);
     assert.match(html, /admin-hub-beat-desk\.js/);
+    const desk = fs.readFileSync(path.join(__dirname, '..', '..', 'js', 'admin-hub-beat-desk.js'), 'utf8');
+    assert.match(desk, /data-bd-open/);
+    assert.match(desk, /Copy Brief/);
     assert.match(routes, /post-studio\/brief\/:slug/);
   });
 
