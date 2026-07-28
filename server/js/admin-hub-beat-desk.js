@@ -115,14 +115,17 @@
     var showOlder = false;
     var pulseTimer = null;
 
+    var notecardsHtml = (global.GVAdminNotecards && global.GVAdminNotecards.html)
+      ? global.GVAdminNotecards.html('desk', { onNavigate: onNavigate })
+      : '';
+
     container.innerHTML =
       '<div class="hub-sum">'
+      + notecardsHtml
       + '<div class="hub-dash-head">'
       + '<div><h2 class="hub-dash-title">Beat Brief Desk</h2>'
-      + '<p class="hub-dash-sub"><strong style="color:#fff">What to do:</strong> '
-      + '1) Press <strong style="color:#fff">Open</strong> on today\'s beat · '
-      + '2) System researches the player + why UF · '
-      + '3) <strong style="color:#fff">Copy Brief</strong> → Cursor/Copilot → X</p></div>'
+      + '<p class="hub-dash-sub"><strong style="color:#fff">Quick path:</strong> '
+      + 'Open → Copy Brief → Cursor → X. Notecards above explain every button.</p></div>'
       + '<div class="hub-btn-row">'
       + '<button type="button" class="hub-btn secondary" id="hub-bd-refresh">Refresh</button>'
       + '<button type="button" class="hub-btn secondary" id="hub-bd-ping">Check API</button>'
@@ -137,6 +140,10 @@
     var body = document.getElementById('hub-bd-body');
     var msg = document.getElementById('hub-bd-msg');
     var pulse = document.getElementById('hub-bd-pulse');
+
+    if (global.GVAdminNotecards && typeof global.GVAdminNotecards.wire === 'function') {
+      global.GVAdminNotecards.wire(container, { onNavigate: onNavigate });
+    }
 
     document.getElementById('hub-bd-refresh').addEventListener('click', load);
     document.getElementById('hub-bd-ping').addEventListener('click', updatePulse);

@@ -1,0 +1,166 @@
+/**
+ * Operator Notecards — plain-English playbook for Charles.
+ * Shared by Beat Desk + Command Center.
+ */
+(function (global) {
+  var STORAGE_KEY = 'gv:hub:notecards:collapsed';
+
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = s == null ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  function isCollapsed() {
+    try {
+      return sessionStorage.getItem(STORAGE_KEY) === '1';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function setCollapsed(on) {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, on ? '1' : '0');
+    } catch (e) { /* ignore */ }
+  }
+
+  /**
+   * @param {'desk'|'command'} variant
+   * @param {{ onNavigate?: Function }} [opts]
+   */
+  function html(variant, opts) {
+    opts = opts || {};
+    var collapsed = isCollapsed();
+    var deskFocus = variant === 'desk';
+
+    var todaySteps = deskFocus
+      ? [
+          'Look at today’s beats in the list below.',
+          'Press <strong>Open</strong> on the one you want to post about.',
+          'Read the packet — Why Florida + Vault angle + board facts.',
+          'Press <strong>Copy Brief</strong>, paste into Cursor/Copilot, then post on X.',
+          'Check the green <strong>FutureCast feed</strong> card — that means the board got the update too.'
+        ]
+      : [
+          'If everything looks green / “All clear,” go to <strong>Beat Desk</strong> and make today’s posts.',
+          'If something is red/yellow up top, open that module first — then come back to posting.',
+          'Use <strong>FutureCast</strong> when you want to see who is on the 2028 board / allowlist.',
+          'Ignore <strong>Legacy consoles</strong> unless support or content asks for them.'
+        ];
+
+    var buttons = deskFocus
+      ? [
+          ['Open', 'Builds the full player packet (research + board + draft angle).'],
+          ['Copy Brief', 'Puts the packet on your clipboard for Cursor / Copilot.'],
+          ['Refresh', 'Reloads today’s beat list from the kitchen.'],
+          ['Check API', 'Pings the server — if it says waking, wait and try again.'],
+          ['FutureCast card', 'Shows if this Open seeded/updated the recruiting board.']
+        ]
+      : [
+          ['Beat Desk', 'Your daily posting desk — start here most days.'],
+          ['FutureCast', 'Who’s on the board / allowlist. Add or remove 2028 names here.'],
+          ['Runbooks', 'Only if something is broken (QA red, ingest lag, deploy).'],
+          ['Job Queue', 'Safe re-runs. Don’t spam buttons — one job at a time.'],
+          ['Members', 'Who signed up recently (trial / paid / expired).']
+        ];
+
+    var ignore = deskFocus
+      ? 'Skip Full Ops, Self-Runner, Product Health, and anything under <strong>Legacy consoles</strong> unless Charles is fixing a break.'
+      : 'Skip Content / Community / Feedback / Player Intel / Self-Runner (Legacy) unless you have a specific support or content task.';
+
+    var stepsHtml = todaySteps
+      .map(function (s, i) {
+        return '<li><span class="hub-nc-num">' + (i + 1) + '</span><span>' + s + '</span></li>';
+      })
+      .join('');
+
+    var btnHtml = buttons
+      .map(function (row) {
+        return '<div class="hub-nc-btn-row"><strong>' + esc(row[0]) + '</strong><span>' + esc(row[1]) + '</span></div>';
+      })
+      .join('');
+
+    return ''
+      + '<section class="hub-notecards' + (collapsed ? ' is-collapsed' : '') + '" id="hub-notecards" aria-label="Operator notecards">'
+      + '<div class="hub-notecards__head">'
+      + '<div>'
+      + '<p class="hub-notecards__eyebrow">Operator notecards</p>'
+      + '<h3 class="hub-notecards__title">' + (deskFocus ? 'Your daily posting playbook' : 'How to run this hub') + '</h3>'
+      + '<p class="hub-notecards__sub">Plain English. Do the numbered steps. Ignore the rest unless something is red.</p>'
+      + '</div>'
+      + '<button type="button" class="hub-btn secondary" id="hub-nc-toggle" aria-expanded="' + (collapsed ? 'false' : 'true') + '">'
+      + (collapsed ? 'Show notecards' : 'Hide notecards')
+      + '</button>'
+      + '</div>'
+      + '<div class="hub-notecards__body">'
+      + '<div class="hub-nc-grid">'
+      + '<article class="hub-nc-card hub-nc-card--do">'
+      + '<h4>Do this now</h4>'
+      + '<ol class="hub-nc-steps">' + stepsHtml + '</ol>'
+      + (deskFocus
+        ? ''
+        : '<p class="hub-nc-cta"><button type="button" class="hub-btn" data-nc-route="#beat-desk/desk">Go to Beat Desk</button></p>')
+      + '</article>'
+      + '<article class="hub-nc-card">'
+      + '<h4>What the buttons mean</h4>'
+      + '<div class="hub-nc-buttons">' + btnHtml + '</div>'
+      + '</article>'
+      + '<article class="hub-nc-card">'
+      + '<h4>Colors (sidebar dots)</h4>'
+      + '<ul class="hub-nc-colors">'
+      + '<li><span class="hub-nc-dot hub-nc-dot--green"></span><strong>Green</strong> — healthy. Keep posting.</li>'
+      + '<li><span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>Yellow</strong> — backlog / warning. Finish posts, then check it.</li>'
+      + '<li><span class="hub-nc-dot hub-nc-dot--red"></span><strong>Red</strong> — something failed. Open that module or Runbooks.</li>'
+      + '<li><span class="hub-nc-dot hub-nc-dot--gray"></span><strong>Gray</strong> — no signal yet. Not an emergency.</li>'
+      + '</ul>'
+      + '</article>'
+      + '<article class="hub-nc-card hub-nc-card--ignore">'
+      + '<h4>Don’t touch (unless red / asked)</h4>'
+      + '<p>' + ignore + '</p>'
+      + '<p class="hub-meta" style="margin:10px 0 0">Kitchen waking / 502 messages = server starting up. Wait 20–40s, hit Refresh. Don’t panic.</p>'
+      + '</article>'
+      + '</div>'
+      + '</div>'
+      + '</section>';
+  }
+
+  function wire(root, opts) {
+    opts = opts || {};
+    if (!root) return;
+    var section = root.querySelector('#hub-notecards') || (root.id === 'hub-notecards' ? root : null);
+    if (!section) return;
+    var toggle = section.querySelector('#hub-nc-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', function () {
+        var next = !section.classList.contains('is-collapsed');
+        section.classList.toggle('is-collapsed', next);
+        setCollapsed(next);
+        toggle.textContent = next ? 'Show notecards' : 'Hide notecards';
+        toggle.setAttribute('aria-expanded', next ? 'false' : 'true');
+      });
+    }
+    section.querySelectorAll('[data-nc-route]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var route = btn.getAttribute('data-nc-route');
+        if (route && typeof opts.onNavigate === 'function') opts.onNavigate(route);
+      });
+    });
+  }
+
+  function mount(container, variant, opts) {
+    if (!container) return;
+    var wrap = document.createElement('div');
+    wrap.innerHTML = html(variant, opts);
+    var node = wrap.firstChild;
+    container.insertBefore(node, container.firstChild);
+    wire(node, opts);
+    return node;
+  }
+
+  global.GVAdminNotecards = {
+    html: html,
+    wire: wire,
+    mount: mount
+  };
+})(window);
