@@ -59,16 +59,22 @@ async function fetchPodcastShow(podcast) {
   const channelImage =
     (xml.match(/<image>[\s\S]*?<url>([^<]+)<\/url>/i) || [])[1] ||
     (xml.match(/<itunes:image[^>]+href=["']([^"']+)["']/i) || [])[1];
-  const episodes = parseRssItems(xml, 12).map((ep) => ({
-    id: `${podcast.id}_${ep.id}`,
-    showId: podcast.id,
-    showName: podcast.name,
-    title: ep.title,
-    description: ep.summary,
-    imageUrl: ep.imageUrl || channelImage || null,
-    playUrl: ep.link || podcast.siteUrl || null,
-    publishedAt: ep.publishedAt
-  }));
+  const episodes = parseRssItems(xml, 12)
+    .map((ep) => ({
+      id: `${podcast.id}_${ep.id}`,
+      showId: podcast.id,
+      showName: podcast.name,
+      title: ep.title,
+      description: ep.summary,
+      imageUrl: ep.imageUrl || channelImage || null,
+      playUrl: ep.link || podcast.siteUrl || null,
+      publishedAt: ep.publishedAt
+    }))
+    .sort((a, b) => {
+      const tb = Date.parse(b.publishedAt || '') || 0;
+      const ta = Date.parse(a.publishedAt || '') || 0;
+      return tb - ta;
+    });
   return {
     id: podcast.id,
     name: podcast.name,

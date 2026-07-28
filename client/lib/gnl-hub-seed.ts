@@ -17,7 +17,7 @@ export function buildSeedLiveHubBundle(): LiveHubBundle {
   return {
     ticker: GNL_HUB_SEED.ticker ?? [],
     feed: GNL_HUB_SEED.feed ?? [],
-    podcasts: DEFAULT_PODCASTS.slice(0, 2),
+    podcasts: DEFAULT_PODCASTS,
     panels: {
       visitsNow: GNL_HUB_SEED.panels?.visitsNow ?? [],
       portalBuzz: GNL_HUB_SEED.panels?.portalBuzz ?? [],

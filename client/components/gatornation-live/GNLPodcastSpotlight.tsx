@@ -94,7 +94,14 @@ export function GNLPodcastSpotlight({
   }, []);
 
   useEffect(() => {
-    if (propPodcasts?.length) setLivePods(propPodcasts);
+    if (!propPodcasts?.length) return;
+    // Never clobber a richer /api/live/podcasts fetch with a thinner hub snapshot.
+    setLivePods((prev) => {
+      const propEps = propPodcasts.filter((p) => p.episodeTitle?.trim()).length;
+      const prevEps = prev.filter((p) => p.episodeTitle?.trim()).length;
+      if (!prev.length || propEps >= prevEps) return propPodcasts;
+      return prev;
+    });
     if (propUpdatedAt) setUpdatedAt(propUpdatedAt);
   }, [propPodcasts, propUpdatedAt]);
 
