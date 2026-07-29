@@ -162,4 +162,20 @@ describe('beat-recruiting-ingest-gate', () => {
     );
     assert.equal(row, null);
   });
+
+  it('does not resolve UF coaches as recruit prospects', () => {
+    assert.equal(gate.resolvePlayerFromTextSync('Joe Craddock commits to Florida culture.'), null);
+    assert.equal(
+      gate.resolvePlayerFromTextSync('Phil Trautwein is eyeing a top prospect for the Gators.'),
+      null
+    );
+  });
+
+  it('skips coach names and resolves the prospect in the same beat', () => {
+    const hit = gate.resolvePlayerFromTextSync(
+      'Joe Craddock and Buster Faulkner hosted Davin Davidson on his Florida visit.'
+    );
+    assert.equal(hit?.playerSlug, 'davin-davidson');
+    assert.equal(hit?.playerName, 'Davin Davidson');
+  });
 });

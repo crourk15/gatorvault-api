@@ -276,11 +276,12 @@ function ufStaffFromTopTeams(topTeams, classYear) {
   if (!uf) return null;
   const coaches = coachNames(uf);
   if (!coaches.length) return null;
+  // Keep recruit UF status off the coach label — "Joe Craddock (Committed)" reads like the coach is the commit.
   return {
     school: 'Florida',
     status: uf.status || null,
     coaches,
-    label: `Florida staff: ${coaches.join(', ')}${uf.status ? ` (${uf.status})` : ''}`
+    label: `Florida staff: ${coaches.join(', ')}`
   };
 }
 

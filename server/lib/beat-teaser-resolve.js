@@ -140,8 +140,16 @@ function resolvePlayerFromBeatPostSync(postOrText) {
       copy.extractPlayerFromText(cleaned),
       ...(copy.extractAllPlayerNameCandidates?.(cleaned) || [])
     ].filter(Boolean);
+    let isStaff = () => false;
+    try {
+      const { isStaffOrCoachName } = require('./recruiting-staff-directory');
+      isStaff = (n) => isStaffOrCoachName(n);
+    } catch {
+      /* optional */
+    }
     for (const name of candidates) {
       if (!isValidPlayerName(name)) continue;
+      if (isStaff(name)) continue;
       if (isRelationalMention(text, name)) continue;
       return {
         playerName: name,
