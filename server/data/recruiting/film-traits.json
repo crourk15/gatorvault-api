@@ -1,6 +1,6 @@
 {
   "updatedAt": "2026-07-29T14:30:00.000Z",
-  "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste a beat item → brief already includes film so Vault posts can lead with tape, not echo. Upsert via Admin Hub API or edit this file.",
+  "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
       "playerName": "CJ Craig-James",
@@ -21,7 +21,7 @@
         "Rangy frame; AL competition on tape (Carrollton looks appear)",
         "Athlete package: some WR / returner looks mixed into the reel"
       ],
-      "vaultFilmAngle": "Use length + centerfield range as Florida's concrete sell against Alabama backyard gravity — tape proof, not a restated offer tweet.",
+      "vaultFilmAngle": "Stack length + centerfield range with Alabama backyard gravity and Florida's game-day visit process — state it as board + film, no meta.",
       "doNotClaim": [
         "Do not invent tackle totals, INT counts, or ballhawk rates from this short reel",
         "Do not overclaim coverage grade from highlights alone",

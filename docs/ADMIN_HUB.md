@@ -112,7 +112,7 @@ Curated Hudl / On3 highlight traits live in `server/data/recruiting/film-traits.
    - `GET /api/admin/hub/film-traits` — list
    - `GET /api/admin/hub/film-traits/:slug` — one player
    - `POST /api/admin/hub/film-traits` — body `{ slug, playerName, sources[], traits[], vaultFilmAngle, doNotClaim[], clipNotes }`
-4. Goal: paste brief → Cursor already has tape facts so Vault posts lead with film, not a beat echo.
+4. Goal: paste brief → Cursor already has tape facts. Use them in the post; never announce that you’re “different” or ahead of the beat.
 
 ## Shell polish
 

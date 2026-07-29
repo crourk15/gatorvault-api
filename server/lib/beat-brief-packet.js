@@ -547,11 +547,11 @@ function buildVaultAngle({
     );
   } else if (filmHook) {
     lines.push(
-      `Angle: Don't chase the ${signal} news cycle on ${name}. Lead with Florida's stake (${stake}) and curated FILM the beat usually skips: ${String(filmHook).slice(0, 220)}`
+      `Angle: Own ${name} in Vault voice. Lead with Florida's stake (${stake}) and the film on file: ${String(filmHook).slice(0, 220)}`
     );
   } else if (concrete) {
     lines.push(
-      `Angle: Don't chase the ${signal} news cycle on ${name}. Lead with Florida's stake (${stake}) and the board fact most feeds skip: ${concrete}.`
+      `Angle: Own ${name} in Vault voice. Lead with Florida's stake (${stake}) and this board fact: ${concrete}.`
     );
   } else {
     lines.push(
@@ -589,7 +589,7 @@ function buildVaultAngle({
     lines.push(
       committed
         ? `Vault edge (verified long-form COMMIT): stack ${parts.join(' | ')} under the ownership/culture hook — elite Vault voice — ownership story, not a chase recap.`
-        : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. Elite verified Vault voice — facts from intel + film traits, never a writer echo.`
+        : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. State board + film as Vault fact; never announce that you’re different or ahead of anyone.`
     );
   } else if (gaps.length) {
     lines.push(`Vault edge (fill the board gaps): ${gaps.slice(0, 4).join(', ')}.`);
@@ -606,8 +606,8 @@ function buildVaultAngle({
 function formatFilmTraitsBlock(filmTraits) {
   if (!filmTraits || typeof filmTraits !== 'object') return null;
   const lines = [];
-  lines.push('FILM / HIGHLIGHTS (curated — use this; beat writers usually skip the tape)');
-  lines.push('------------------------------------------------------------------');
+  lines.push('FILM / HIGHLIGHTS (curated — weave into the post as Vault fact)');
+  lines.push('---------------------------------------------------------------');
   if (filmTraits.playerName) lines.push(`Player: ${filmTraits.playerName}`);
   const sources = Array.isArray(filmTraits.sources) ? filmTraits.sources : [];
   if (sources.length) {
@@ -776,9 +776,10 @@ function formatBriefText({
   lines.push('- Florida stake: RPM %, offer/status, UF staff names if listed');
   lines.push('- School ladder: top interested schools with RPM + visit counts');
   lines.push('- Visit trail: OV/UOV + latest dates when present');
-  lines.push('- Film / highlights: if FILM section has traits, lead with 1–2 tape facts beat writers skip');
+  lines.push('- Film / highlights: if FILM section has traits, put 1–2 tape facts in the post as plain Vault observation');
   lines.push('- Internal intel seed: steal the FACT, own the VOICE — never tip that a beat writer said it');
   lines.push('- Vault angle: Florida-first narrative that sounds like GatorVault, not a recap desk');
+  lines.push('- Show, don\'t announce: never claim to be different, ahead of the beat, or what "most feeds / timelines" miss');
 
   lines.push('');
   lines.push('INSTRUCTIONS FOR AI');
@@ -787,10 +788,10 @@ function formatBriefText({
     'Write one GatorVault Insider X post for a VERIFIED account (long-form OK). Target 600–900 characters (hard cap 1000).'
   );
   lines.push(
-    'VOICE RULE (hard): This is GatorVault\'s take — not a beat recap. Absorb facts from the intel seed/board/film, then rewrite in original Vault voice. FORBIDDEN in the post: naming beat writers, "beat line", "beat writers", "according to reports", "per On3/247", "as reported", "reports say", "insiders say", or any phrasing that tells the audience we are regurgitating someone else\'s story. Board facts (ranks, RPM, visits, staff, commit status) and curated film traits may be stated as Vault fact.'
+    'VOICE RULE (hard): This is GatorVault\'s take — not a beat recap. Absorb facts from the intel seed/board/film, then rewrite in original Vault voice. FORBIDDEN in the post: naming beat writers; "beat line"; "according to reports"; "per On3/247"; "as reported"; "reports say"; "insiders say"; and any meta flex about being different, exclusive, ahead of the timeline, or what other accounts skip. Just state the board + film. Board facts (ranks, RPM, visits, staff, commit status) and curated film traits may be stated as Vault fact.'
   );
   lines.push(
-    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) if FILM / HIGHLIGHTS traits exist, weave 1–2 tape facts as the edge vs beat writers, (4) commit/RPM/staff or rival pressure as relevant, (5) one ownership/culture or visit detail stated as ours, (6) sharp closer. Stay factual to board + intel + film above only — no invented offers, visits, rankings, tackle totals, or quotes. Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
+    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) if FILM / HIGHLIGHTS traits exist, weave 1–2 tape facts naturally, (4) commit/RPM/staff or rival pressure as relevant, (5) one ownership/culture or visit detail, (6) sharp closer. Stay factual to board + intel + film above only — no invented offers, visits, rankings, tackle totals, or quotes. Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
   );
 
   return lines.filter((l) => l !== null).join('\n');
@@ -1227,7 +1228,7 @@ async function buildBeatBrief(slug, opts = {}) {
           'Film traits when on file (Hudl/On3 highlights)',
           'RPM ladder + rival pressure',
           'Visit or staff fact if on file',
-          'Ahead-of-the-beat closer'
+          'Sharp closer'
         ]
       },
       liveMentions: liveMentions.map((m) => ({

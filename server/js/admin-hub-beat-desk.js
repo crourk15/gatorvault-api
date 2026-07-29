@@ -81,7 +81,7 @@
       + (film.vaultFilmAngle
         ? '<p style="margin:10px 0 0;color:#cbd5e1;line-height:1.45">' + esc(film.vaultFilmAngle) + '</p>'
         : '')
-      + '<p class="hub-meta" style="margin:10px 0 0">Included in <strong style="color:#fff">Copy Brief</strong> so Cursor can lead with tape, not a beat echo.</p>'
+      + '<p class="hub-meta" style="margin:10px 0 0">Included in <strong style="color:#fff">Copy Brief</strong> — use the tape in the post; don\'t announce the edge.</p>'
       + '</div>';
   }
 

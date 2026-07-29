@@ -110,7 +110,8 @@ describe('beat brief film section', () => {
     assert.match(paste, /Vault film angle/);
     assert.match(paste, /Do not claim/);
     assert.match(paste, /Film \/ highlights: if FILM section/);
-    assert.match(paste, /weave 1–2 tape facts/);
+    assert.match(paste, /tape facts naturally/);
+    assert.match(paste, /Show, don't announce|meta flex/i);
   });
 
   it('shows empty film placeholder when no traits', () => {
