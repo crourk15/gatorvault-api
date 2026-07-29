@@ -38,8 +38,8 @@
       ? [
           'Look at today’s beats in the list below.',
           'Press <strong>Open</strong> on the one you want to post about.',
-          'Read the packet — Why Florida + Vault angle + board facts.',
-          'Press <strong>Copy Brief</strong>, paste into Cursor/Copilot, then post on X.',
+          'Read the packet — Why Florida + Vault angle + <strong>Film / highlights</strong> + board facts.',
+          'Press <strong>Copy Brief</strong>, paste into Cursor/Copilot, then post on X (film traits ride along when on file).',
           'Check the green <strong>FutureCast feed</strong> card — that means the board got the update too.'
         ]
       : [
@@ -52,7 +52,8 @@
     var buttons = deskFocus
       ? [
           ['Open', 'Builds the full player packet (research + board + draft angle).'],
-          ['Copy Brief', 'Puts the packet on your clipboard for Cursor / Copilot.'],
+          ['Copy Brief', 'Puts the packet on your clipboard for Cursor / Copilot — includes film traits when curated.'],
+          ['Film card', 'Hudl/On3 highlight traits for this player (edge vs beat writers).'],
           ['Refresh', 'Reloads today’s beat list from the kitchen.'],
           ['Check API', 'Pings the server — if it says waking, wait and try again.'],
           ['FutureCast card', 'Shows if this Open seeded/updated the recruiting board.']

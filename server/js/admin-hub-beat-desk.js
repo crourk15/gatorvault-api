@@ -52,6 +52,39 @@
     });
   }
 
+  function filmTraitsCardHtml(film) {
+    var hasTraits = !!(film && film.traits && film.traits.length);
+    var hasSources = !!(film && film.sources && film.sources.length);
+    if (!film || (!hasTraits && !hasSources)) {
+      return '<div class="hub-card" style="margin-bottom:12px">'
+        + '<h3>Film / highlights</h3>'
+        + '<p class="hub-meta" style="margin:0">No curated Hudl/On3 tape on file for this player yet. When added, Copy Brief embeds traits automatically.</p>'
+        + '</div>';
+    }
+    var traits = (film.traits || []).slice(0, 6).map(function (t) {
+      return '<li style="margin:0 0 4px">' + esc(t) + '</li>';
+    }).join('');
+    var src = (film.sources && film.sources[0]) || null;
+    return '<div class="hub-card hub-st-green" style="margin-bottom:12px">'
+      + '<h3>Film / highlights</h3>'
+      + (src
+        ? '<p class="hub-meta" style="margin:0 0 8px">'
+          + esc(src.label || src.type || 'Highlight')
+          + (src.url
+            ? ' · <a href="' + esc(src.url) + '" target="_blank" rel="noopener" style="color:#93c5fd">Open tape →</a>'
+            : '')
+          + '</p>'
+        : '')
+      + (traits
+        ? '<ul style="margin:0;padding-left:18px;color:#e2e8f0;line-height:1.45">' + traits + '</ul>'
+        : '')
+      + (film.vaultFilmAngle
+        ? '<p style="margin:10px 0 0;color:#cbd5e1;line-height:1.45">' + esc(film.vaultFilmAngle) + '</p>'
+        : '')
+      + '<p class="hub-meta" style="margin:10px 0 0">Included in <strong style="color:#fff">Copy Brief</strong> so Cursor can lead with tape, not a beat echo.</p>'
+      + '</div>';
+  }
+
   function futurecastCardHtml(fc) {
     if (!fc) {
       return '<div class="hub-card" style="margin-bottom:12px">'
@@ -251,6 +284,7 @@
         + '<p style="margin:0;white-space:pre-wrap;line-height:1.5;color:#e2e8f0">'
         + esc(research.vaultAngle || '—') + '</p></div>'
         + futurecastCardHtml(brief.futurecastFeed)
+        + filmTraitsCardHtml(brief.filmTraits || (research && research.filmTraits))
         + '<div class="hub-card" style="margin-bottom:12px">'
         + '<h3>Board facts (elite depth)</h3>'
         + '<p class="hub-meta" style="margin:0 0 8px">'

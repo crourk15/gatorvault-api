@@ -1,0 +1,33 @@
+{
+  "updatedAt": "2026-07-29T14:30:00.000Z",
+  "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste a beat item → brief already includes film so Vault posts can lead with tape, not echo. Upsert via Admin Hub API or edit this file.",
+  "bySlug": {
+    "cj-craig-james": {
+      "playerName": "CJ Craig-James",
+      "position": "S",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "url": "https://www.hudl.com/embed/video/3/19296947/68afc5668a2aca5d1686b639",
+          "label": "Hudl highlight reel (~2:12)",
+          "durationSec": 132,
+          "reviewedAt": "2026-07-29",
+          "reviewedBy": "vault"
+        }
+      ],
+      "traits": [
+        "Deep / centerfield safety look — length over the top, not a box-only silhouette",
+        "Rangy frame; AL competition on tape (Carrollton looks appear)",
+        "Athlete package: some WR / returner looks mixed into the reel"
+      ],
+      "vaultFilmAngle": "Use length + centerfield range as Florida's concrete sell against Alabama backyard gravity — tape proof, not a restated offer tweet.",
+      "doNotClaim": [
+        "Do not invent tackle totals, INT counts, or ballhawk rates from this short reel",
+        "Do not overclaim coverage grade from highlights alone",
+        "Hudl owner metadata shows Anthony \"CJ\" Craig — confirm identity before public attribution if challenged"
+      ],
+      "clipNotes": "Short reel (~2:12). Best as length/centerfield proof next to board process (game-day visits), not a full evaluation."
+    }
+  }
+}

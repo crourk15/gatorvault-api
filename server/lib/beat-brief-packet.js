@@ -499,7 +499,16 @@ function buildWhyFlorida({ player, research, intelligence, beatRows, rivals }) {
   return bits.join(' ');
 }
 
-function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals, whyFlorida, player }) {
+function buildVaultAngle({
+  playerName,
+  research,
+  intelligence,
+  beatRows,
+  rivals,
+  whyFlorida,
+  player,
+  filmTraits = null,
+}) {
   rivals = Array.isArray(rivals) ? rivals : [];
   beatRows = Array.isArray(beatRows) ? beatRows : [];
   const name = playerName || 'This prospect';
@@ -507,7 +516,12 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
   const ufPos = research?.ufPosition || 'tracking';
   const ranks = rankingSummary(player);
   const interested = interestedSchoolsSummary(player, rivals);
+  const filmHook =
+    filmTraits?.vaultFilmAngle ||
+    (Array.isArray(filmTraits?.traits) && filmTraits.traits[0]) ||
+    null;
   const concrete =
+    filmHook ||
     ranks ||
     (interested ? String(interested).split(';')[0].trim() : null) ||
     rivals.filter((r) => { try { return !require('./on3-board-hydrate').isUfSchoolName(r); } catch { return !/^(florida|gators|uf)$/i.test(String(r||'').trim()); } })[0] ||
@@ -530,6 +544,10 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
   if (committed) {
     lines.push(
       `Angle: ${name} is a Florida COMMIT — do not frame as an open board chase. Own the culture/ownership story in Vault voice (program member energy, fall plans, class leadership) without citing writers. Lead with commit stake + one board credential (${concrete || 'ranks/size/staff'}).`
+    );
+  } else if (filmHook) {
+    lines.push(
+      `Angle: Don't chase the ${signal} news cycle on ${name}. Lead with Florida's stake (${stake}) and curated FILM the beat usually skips: ${String(filmHook).slice(0, 220)}`
     );
   } else if (concrete) {
     lines.push(
@@ -558,8 +576,11 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
   const staff = ufStaffSummary(player);
   const visits = visitSummary(intelligence, player);
   const ladder = schoolLadderSummary(player, 5);
-  if (ranks || ladder || staff || visits) {
+  if (filmTraits?.traits?.length || ranks || ladder || staff || visits) {
     const parts = [];
+    if (filmTraits?.traits?.length) {
+      parts.push(`film ${filmTraits.traits.slice(0, 2).join('; ')}`);
+    }
     if (meas) parts.push(`size ${meas}`);
     if (ranks) parts.push(`ranks ${ranks}`);
     if (staff) parts.push(staff);
@@ -568,7 +589,7 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
     lines.push(
       committed
         ? `Vault edge (verified long-form COMMIT): stack ${parts.join(' | ')} under the ownership/culture hook — elite Vault voice — ownership story, not a chase recap.`
-        : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. Elite verified Vault voice — facts from intel, never a writer echo.`
+        : `Vault edge (verified long-form): stack ${parts.join(' | ')} — then the UF why. Elite verified Vault voice — facts from intel + film traits, never a writer echo.`
     );
   } else if (gaps.length) {
     lines.push(`Vault edge (fill the board gaps): ${gaps.slice(0, 4).join(', ')}.`);
@@ -578,6 +599,43 @@ function buildVaultAngle({ playerName, research, intelligence, beatRows, rivals,
     );
   }
   lines.push(`Why UF (use in copy, don't invent beyond this): ${whyFlorida}`);
+  return lines.join('\n');
+}
+
+/** Format curated Hudl/On3 film traits for paste-ready Copy Brief. */
+function formatFilmTraitsBlock(filmTraits) {
+  if (!filmTraits || typeof filmTraits !== 'object') return null;
+  const lines = [];
+  lines.push('FILM / HIGHLIGHTS (curated — use this; beat writers usually skip the tape)');
+  lines.push('------------------------------------------------------------------');
+  if (filmTraits.playerName) lines.push(`Player: ${filmTraits.playerName}`);
+  const sources = Array.isArray(filmTraits.sources) ? filmTraits.sources : [];
+  if (sources.length) {
+    sources.slice(0, 4).forEach((s, i) => {
+      const label = s.label || s.type || 'source';
+      const url = s.url || '';
+      const when = s.reviewedAt ? ` (reviewed ${s.reviewedAt})` : '';
+      lines.push(`Source ${i + 1}: ${label}${when}${url ? ` — ${url}` : ''}`);
+    });
+  } else {
+    lines.push('Source: (no URL on file — traits only)');
+  }
+  const traits = Array.isArray(filmTraits.traits) ? filmTraits.traits.filter(Boolean) : [];
+  if (traits.length) {
+    lines.push('Traits from tape:');
+    traits.slice(0, 8).forEach((t) => lines.push(`- ${t}`));
+  }
+  if (filmTraits.vaultFilmAngle) {
+    lines.push(`Vault film angle: ${String(filmTraits.vaultFilmAngle).trim()}`);
+  }
+  if (filmTraits.clipNotes) {
+    lines.push(`Clip notes: ${String(filmTraits.clipNotes).trim()}`);
+  }
+  const dont = Array.isArray(filmTraits.doNotClaim) ? filmTraits.doNotClaim.filter(Boolean) : [];
+  if (dont.length) {
+    lines.push('Do not claim from this reel:');
+    dont.slice(0, 6).forEach((t) => lines.push(`- ${t}`));
+  }
   return lines.join('\n');
 }
 
@@ -591,7 +649,8 @@ function formatBriefText({
   intelligence,
   whyFlorida,
   vaultAngle,
-  rivals
+  rivals,
+  filmTraits = null,
 }) {
   rivals = Array.isArray(rivals) ? rivals : [];
   beatRows = Array.isArray(beatRows) ? beatRows : [];
@@ -636,6 +695,19 @@ function formatBriefText({
   lines.push('VAULT ANGLE (own the story — Vault voice)');
   lines.push('-------------------------------');
   lines.push(vaultAngle || '(thin)');
+
+  const filmBlock = formatFilmTraitsBlock(filmTraits);
+  if (filmBlock) {
+    lines.push('');
+    lines.push(filmBlock);
+  } else {
+    lines.push('');
+    lines.push('FILM / HIGHLIGHTS');
+    lines.push('-----------------');
+    lines.push(
+      '(No curated Hudl/On3 film traits on file for this slug yet. Add via Admin Hub film-traits API or server/data/recruiting/film-traits.json — then Copy Brief includes tape for the next paste.)'
+    );
+  }
 
   const staff =
     research?.breakdown?.staffNotes ||
@@ -704,6 +776,7 @@ function formatBriefText({
   lines.push('- Florida stake: RPM %, offer/status, UF staff names if listed');
   lines.push('- School ladder: top interested schools with RPM + visit counts');
   lines.push('- Visit trail: OV/UOV + latest dates when present');
+  lines.push('- Film / highlights: if FILM section has traits, lead with 1–2 tape facts beat writers skip');
   lines.push('- Internal intel seed: steal the FACT, own the VOICE — never tip that a beat writer said it');
   lines.push('- Vault angle: Florida-first narrative that sounds like GatorVault, not a recap desk');
 
@@ -714,10 +787,10 @@ function formatBriefText({
     'Write one GatorVault Insider X post for a VERIFIED account (long-form OK). Target 600–900 characters (hard cap 1000).'
   );
   lines.push(
-    'VOICE RULE (hard): This is GatorVault\'s take — not a beat recap. Absorb facts from the intel seed/board, then rewrite in original Vault voice. FORBIDDEN in the post: naming beat writers, "beat line", "beat writers", "according to reports", "per On3/247", "as reported", "reports say", "insiders say", or any phrasing that tells the audience we are regurgitating someone else\'s story. Board facts (ranks, RPM, visits, staff, commit status) may be stated as Vault fact.'
+    'VOICE RULE (hard): This is GatorVault\'s take — not a beat recap. Absorb facts from the intel seed/board/film, then rewrite in original Vault voice. FORBIDDEN in the post: naming beat writers, "beat line", "beat writers", "according to reports", "per On3/247", "as reported", "reports say", "insiders say", or any phrasing that tells the audience we are regurgitating someone else\'s story. Board facts (ranks, RPM, visits, staff, commit status) and curated film traits may be stated as Vault fact.'
   );
   lines.push(
-    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) commit/RPM/staff or rival pressure as relevant, (4) one ownership/culture or visit detail stated as ours, (5) sharp closer. Stay factual to board + intel above only — no invented offers, visits, rankings, or quotes. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
+    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) if FILM / HIGHLIGHTS traits exist, weave 1–2 tape facts as the edge vs beat writers, (4) commit/RPM/staff or rival pressure as relevant, (5) one ownership/culture or visit detail stated as ours, (6) sharp closer. Stay factual to board + intel + film above only — no invented offers, visits, rankings, tackle totals, or quotes. Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
   );
 
   return lines.filter((l) => l !== null).join('\n');
@@ -941,6 +1014,19 @@ async function buildBeatBrief(slug, opts = {}) {
   }
 
   const rivals = rivalList(player || {}, research, intelligence);
+
+  let filmTraits = null;
+  try {
+    const filmStore = require('./film-traits-store');
+    filmTraits = filmStore.resolveFilmTraits({
+      slug: normalized,
+      playerName,
+      aliases: [player?.on3Slug, player?.slug].filter(Boolean),
+    });
+  } catch {
+    filmTraits = null;
+  }
+
   const whyFlorida = buildWhyFlorida({
     player: player || {},
     research,
@@ -955,7 +1041,8 @@ async function buildBeatBrief(slug, opts = {}) {
     beatRows,
     rivals,
     whyFlorida,
-    player: player || {}
+    player: player || {},
+    filmTraits,
   });
 
   const boardFacts = buildBoardFacts({
@@ -1007,7 +1094,8 @@ async function buildBeatBrief(slug, opts = {}) {
     intelligence,
     whyFlorida,
     vaultAngle,
-    rivals
+    rivals,
+    filmTraits,
   });
 
   let pasteOut = pasteText;
@@ -1117,6 +1205,17 @@ async function buildBeatBrief(slug, opts = {}) {
       boardFacts,
       whyFlorida,
       vaultAngle,
+      filmTraits: filmTraits
+        ? {
+            slug: filmTraits.slug || normalized,
+            playerName: filmTraits.playerName || playerName,
+            sources: filmTraits.sources || [],
+            traits: filmTraits.traits || [],
+            vaultFilmAngle: filmTraits.vaultFilmAngle || null,
+            doNotClaim: filmTraits.doNotClaim || [],
+            clipNotes: filmTraits.clipNotes || null,
+          }
+        : null,
       postGuidance: {
         verifiedLongForm: true,
         targetCharsMin: 600,
@@ -1125,6 +1224,7 @@ async function buildBeatBrief(slug, opts = {}) {
         structure: [
           'Florida stake opener',
           'On3 ranks / size / school identity',
+          'Film traits when on file (Hudl/On3 highlights)',
           'RPM ladder + rival pressure',
           'Visit or staff fact if on file',
           'Ahead-of-the-beat closer'
@@ -1140,6 +1240,17 @@ async function buildBeatBrief(slug, opts = {}) {
       timing: research?.timing || null
     },
     futurecastFeed,
+    filmTraits: filmTraits
+      ? {
+          slug: filmTraits.slug || normalized,
+          playerName: filmTraits.playerName || playerName,
+          sources: filmTraits.sources || [],
+          traits: filmTraits.traits || [],
+          vaultFilmAngle: filmTraits.vaultFilmAngle || null,
+          doNotClaim: filmTraits.doNotClaim || [],
+          clipNotes: filmTraits.clipNotes || null,
+        }
+      : null,
     draftSuggestion:
       inspect?.fullCompose?.ok && inspect.fullCompose.text
         ? {
@@ -1157,6 +1268,7 @@ module.exports = {
   buildBeatBrief,
   buildHubDeskBrief,
   formatBriefText,
+  formatFilmTraitsBlock,
   buildWhyFlorida,
   buildVaultAngle,
   isCommittedPlayer,
