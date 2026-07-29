@@ -40,9 +40,12 @@ describe('FutureCast 2028 Discovery load speed', () => {
     assert.match(cache, /movement-intel:2028/);
     assert.match(cache, /underclassmen:2028-2030/);
     assert.match(cache, /early-discovery:2028/);
+    assert.match(cache, /early-discovery:2028:score50/);
+    assert.match(cache, /minDiscoveryScore:\s*50/);
     assert.match(keep, /movement-intel\?year=2028/);
     assert.match(keep, /underclassmen\?years=2028,2029,2030/);
     assert.match(keep, /early-discovery\?class_year_gte=2028/);
+    assert.match(keep, /min_discovery_score=50/);
   });
 
   it('caches Early Discovery endpoint used by Lab panel', () => {
@@ -53,6 +56,9 @@ describe('FutureCast 2028 Discovery load speed', () => {
     assert.match(src, /sendCachedJson/);
     assert.match(src, /earlyDiscoveryCacheKey/);
     assert.match(src, /buildEarlyDiscoveryPayload/);
+    assert.match(src, /WITH ranked AS/);
+    assert.match(src, /allowlist_only/);
+    assert.match(src, /EARLY_DISCOVERY_QUERY_MS/);
   });
 
   it('Lab warm-poll is capped to avoid multi-minute hangs', () => {

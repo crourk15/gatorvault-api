@@ -34,6 +34,8 @@ const PRIORITY_TOUCH_PATHS = (
     // Lab "2028 Early Discovery" panel uses this endpoint (not underclassmen).
     '/api/futurecast/early-discovery?class_year_gte=2028&limit=4',
     '/api/futurecast/early-discovery?class_year_gte=2028&limit=100',
+    // Full board Early Discovery tab defaults to min_discovery_score=50 — was unwarmed (502/Load failed).
+    '/api/futurecast/early-discovery?class_year_gte=2028&min_discovery_score=50&limit=100',
     // Lab Closing Class — cold rebuild is ~10s; keep this in priority so first open is warm.
     '/api/futurecast/high-priority?year=2027',
     '/api/futurecast/high-priority?year=2028',
