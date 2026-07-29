@@ -226,7 +226,6 @@ export function FutureCastExtendedModules({
   underclassmen,
 }: Props): React.ReactElement {
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
-  const discoveryYear = discoveryFocus ? 2028 : 2027;
 
   const fitLeaders = useMemo(
     () =>
@@ -376,35 +375,42 @@ export function FutureCastExtendedModules({
     return dedupeIntelFeedItems(raw, 6);
   }, [movementIntel, flipWatch, upcomingVisitIntel, movementNarratives]);
 
+  const earlyDiscoveryPanel = (
+    <FutureCastPanelShell
+      title="2028 Early Discovery"
+      sub="Prospects ranked by discovery score — Vault estimates until On3 syncs."
+      testId="fc-lab-early-discovery"
+      action={
+        <a href="/vault/futurecast/big-board" className="rh-cc-link">
+          Full board →
+        </a>
+      }
+    >
+      <EarlyDiscoveryPreview
+        query={{ class_year_gte: 2028, limit: 4 }}
+        footerHref="/vault/futurecast/big-board"
+        footerLabel="Open Early Discovery board →"
+      />
+    </FutureCastPanelShell>
+  );
+
   return (
     <>
-      {discoveryFocus ? (
-        <div className="fc-lab-more-boards" data-testid="fc-lab-more-boards">
-          <h2 className="fc-lab-more-boards__title">More boards</h2>
-          <p className="fc-lab-more-boards__sub">
-            Early discovery and younger classes — secondary to the {discoveryYear} UF targets above.
-          </p>
+      {/* Always mount 2028 Early Discovery — do not hide it behind the 2027 cycle tab. */}
+      <div className="fc-lab-more-boards" data-testid="fc-lab-more-boards">
+        <h2 className="fc-lab-more-boards__title">More boards</h2>
+        <p className="fc-lab-more-boards__sub">
+          {discoveryFocus
+            ? 'Early discovery and younger classes — secondary to the 2028 UF targets above.'
+            : '2028 Early Discovery stays available while you work the 2027 Closing Class.'}
+        </p>
 
-          <FutureCastPanelShell
-            title={`${discoveryYear} Early Discovery`}
-            sub="Prospects ranked by discovery score — Vault estimates until On3 syncs."
-            testId="fc-lab-early-discovery"
-            action={
-              <a href="/vault/futurecast/big-board" className="rh-cc-link">
-                Full board →
-              </a>
-            }
-          >
-            <EarlyDiscoveryPreview
-              query={{ class_year_gte: discoveryYear, limit: 4 }}
-              footerHref="/vault/futurecast/big-board"
-              footerLabel="Open Early Discovery board →"
-            />
-          </FutureCastPanelShell>
+        {earlyDiscoveryPanel}
 
-          <YoungerProspectsLabBoard columns={youngerProspectColumns} />
-        </div>
-      ) : (
+        {discoveryFocus ? <YoungerProspectsLabBoard columns={youngerProspectColumns} /> : null}
+      </div>
+
+      {!discoveryFocus ? (
         <>
           <YoungerProspectsLabBoard columns={youngerProspectColumns} />
 
@@ -550,7 +556,7 @@ export function FutureCastExtendedModules({
 
           <SmartAlertsPanel alerts={smartAlerts} />
         </>
-      )}
+      ) : null}
     </>
   );
 }

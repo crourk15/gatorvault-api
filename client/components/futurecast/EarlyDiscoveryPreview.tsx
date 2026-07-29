@@ -24,10 +24,13 @@ export function EarlyDiscoveryPreview({
 }: EarlyDiscoveryPreviewProps): React.ReactElement {
   const classYearGte = query?.class_year_gte ?? primaryRecruitingClassYear();
   const limit = query?.limit ?? 6;
+  const minDiscoveryScore = query?.min_discovery_score;
+  const position = query?.position;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [count, setCount] = useState(0);
   const [players, setPlayers] = useState<RecruitingBoardPlayer[]>([]);
+  const [retryTick, setRetryTick] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -39,11 +42,13 @@ export function EarlyDiscoveryPreview({
         const data = await fetchWithWarmPoll(
           () =>
             fetchEarlyDiscovery({
-              ...query,
               class_year_gte: classYearGte,
+              min_discovery_score: minDiscoveryScore,
+              position,
               limit,
             }),
-          { maxAttempts: 3, delayMs: 1_500 }
+          // Lab panel is fan-facing — keep polling through short Render/Netlify wake gaps.
+          { maxAttempts: 6, delayMs: 1_500 }
         );
         if (cancelled) return;
         setCount(data.count ?? data.players?.length ?? 0);
@@ -62,13 +67,26 @@ export function EarlyDiscoveryPreview({
     return () => {
       cancelled = true;
     };
-  }, [classYearGte, limit, query?.min_discovery_score, query?.position]);
+  }, [classYearGte, limit, minDiscoveryScore, position, retryTick]);
 
   if (loading) {
     return <p className="fc-home-section__empty">Loading Early Discovery…</p>;
   }
   if (error && !players.length) {
-    return <p className="fc-home-section__empty">{error}</p>;
+    return (
+      <div className="fc-home-section__empty" data-testid="early-discovery-preview-error">
+        <p>{error}</p>
+        <p>
+          <button
+            type="button"
+            className="rh-cc-link"
+            onClick={() => setRetryTick((n) => n + 1)}
+          >
+            Retry Early Discovery →
+          </button>
+        </p>
+      </div>
+    );
   }
   if (!players.length) {
     return <p className="fc-home-section__empty">No underclassmen on the discovery board yet.</p>;

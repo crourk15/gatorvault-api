@@ -72,4 +72,28 @@ describe('FutureCast 2028 Discovery load speed', () => {
     assert.match(src, /maxAttempts: 3/);
     assert.match(src, /underclassmen\?years=2028,2029,2030/);
   });
+
+  it('Lab always mounts 2028 Early Discovery (not only on Discovery cycle tab)', () => {
+    const src = fs.readFileSync(
+      path.join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        'client',
+        'components',
+        'futurecast',
+        'lab',
+        'FutureCastExtendedModules.tsx'
+      ),
+      'utf8'
+    );
+    assert.match(src, /testId="fc-lab-early-discovery"/);
+    assert.match(src, /class_year_gte:\s*2028/);
+    // Must not wrap the Early Discovery panel in discoveryFocus-only JSX.
+    assert.doesNotMatch(
+      src,
+      /discoveryFocus\s*\?\s*\([\s\S]*testId="fc-lab-early-discovery"/
+    );
+  });
 });
