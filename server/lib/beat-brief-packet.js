@@ -569,7 +569,7 @@ function buildVaultAngle({
     );
   } else if (rivalHook.length) {
     lines.push(
-      `Pressure angle vs ${rivalHook.join(' / ')}: use On3 interest/RPM + visit/staff access UF still controls — not a flat school-list dump.`
+      `Rival context (optional, mid-post only — never the closer/punchline): ${rivalHook.join(' / ')} may appear as calm board fact (RPM/interest). Do not dunk on them, do not frame the post as beating their inevitability. Close on Florida process (visits/staff/film).`
     );
   }
   const meas = measurementsSummary(player);
@@ -780,6 +780,7 @@ function formatBriefText({
   lines.push('- Internal intel seed: steal the FACT, own the VOICE — never tip that a beat writer said it');
   lines.push('- Vault angle: Florida-first narrative that sounds like GatorVault, not a recap desk');
   lines.push('- Show, don\'t announce: never claim to be different, ahead of the beat, or what "most feeds / timelines" miss');
+  lines.push('- Rivals: context only (one calm board fact mid-post if needed). Never dunk, never make the rival the punchline or closer');
 
   lines.push('');
   lines.push('INSTRUCTIONS FOR AI');
@@ -791,7 +792,10 @@ function formatBriefText({
     'VOICE RULE (hard): This is GatorVault\'s take — not a beat recap. Absorb facts from the intel seed/board/film, then rewrite in original Vault voice. FORBIDDEN in the post: naming beat writers; "beat line"; "according to reports"; "per On3/247"; "as reported"; "reports say"; "insiders say"; and any meta flex about being different, exclusive, ahead of the timeline, or what other accounts skip. Just state the board + film. Board facts (ranks, RPM, visits, staff, commit status) and curated film traits may be stated as Vault fact.'
   );
   lines.push(
-    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) if FILM / HIGHLIGHTS traits exist, weave 1–2 tape facts naturally, (4) commit/RPM/staff or rival pressure as relevant, (5) one ownership/culture or visit detail, (6) sharp closer. Stay factual to board + intel + film above only — no invented offers, visits, rankings, tackle totals, or quotes. Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
+    'RIVAL RULE (hard): Speak about what Florida has going with this player. Rivals (Alabama, Georgia, etc.) are optional mid-post board context only — one calm fact (e.g. who leads RPM). Do NOT dunk on the opponent, do NOT frame Florida as waiting for a rival "inevitability" to break, and never close on the rival. Closer = Florida process (visits, staff, film, ownership).'
+  );
+  lines.push(
+    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) if FILM / HIGHLIGHTS traits exist, weave 1–2 tape facts naturally, (4) Florida offer/staff/visits (rival RPM only as calm context if useful), (5) ownership/culture or visit detail, (6) sharp Florida-forward closer. Stay factual to board + intel + film above only — no invented offers, visits, rankings, tackle totals, or quotes. Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
   );
 
   return lines.filter((l) => l !== null).join('\n');
@@ -1226,9 +1230,9 @@ async function buildBeatBrief(slug, opts = {}) {
           'Florida stake opener',
           'On3 ranks / size / school identity',
           'Film traits when on file (Hudl/On3 highlights)',
-          'RPM ladder + rival pressure',
+          'Florida offer/staff/visits (rival RPM as calm context only)',
           'Visit or staff fact if on file',
-          'Sharp closer'
+          'Florida-forward closer (never rival punchline)'
         ]
       },
       liveMentions: liveMentions.map((m) => ({

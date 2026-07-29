@@ -112,6 +112,7 @@ describe('beat brief film section', () => {
     assert.match(paste, /Film \/ highlights: if FILM section/);
     assert.match(paste, /tape facts naturally/);
     assert.match(paste, /Show, don't announce|meta flex/i);
+    assert.match(paste, /RIVAL RULE|Rivals: context only/i);
   });
 
   it('shows empty film placeholder when no traits', () => {
