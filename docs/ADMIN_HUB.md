@@ -102,6 +102,19 @@ Full Ops / Full QA iframes remain under Dashboard / QA as escape hatches.
 3. Desk shows a **FutureCast feed** card (seeded / promoted / refreshed + %).
 4. `#futurecast/control` lists admin allowlist extras, board sample, early watch — add/remove 2028 only.
 
+## Film / highlights in Copy Brief
+
+Curated Hudl / On3 highlight traits live in `server/data/recruiting/film-traits.json` (keyed by player slug).
+
+1. Beat Desk **Open** / **Copy Brief** resolves film traits for the slug and embeds a **FILM / HIGHLIGHTS** section in the paste packet.
+2. Desk shows a **Film / highlights** card when traits exist.
+3. Upsert via Admin Hub API (PIN required):
+   - `GET /api/admin/hub/film-traits` — list
+   - `GET /api/admin/hub/film-traits/:slug` — one player
+   - `POST /api/admin/hub/film-traits` — body `{ slug, playerName, sources[], traits[], vaultFilmAngle, doNotClaim[], clipNotes }`
+4. Goal: paste brief → Cursor already has tape facts. Use them in the post; never announce that you’re “different” or ahead of the beat.
+5. **Rival rule:** rivals are calm mid-post board context only — never dunk, never the punchline/closer. Close on Florida process.
+
 ## Shell polish
 
 - Typography: Source Sans 3 + Oswald (not Inter)

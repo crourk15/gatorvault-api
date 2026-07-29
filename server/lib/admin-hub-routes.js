@@ -786,6 +786,42 @@ function mountAdminHubRoutes(app) {
       return res.status(400).json({ ok: false, error: err.message });
     }
   });
+
+  /** Curated Hudl/On3 film traits for Beat Desk Copy Brief. */
+  app.get('/api/admin/hub/film-traits', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const store = require('./film-traits-store');
+      return res.status(200).json({ ok: true, items: store.listFilmTraits() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/admin/hub/film-traits/:slug', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const store = require('./film-traits-store');
+      const entry = store.getFilmTraitsBySlug(req.params.slug);
+      if (!entry) return res.status(404).json({ ok: false, error: 'not_found' });
+      return res.status(200).json({ ok: true, filmTraits: entry });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/admin/hub/film-traits', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const store = require('./film-traits-store');
+      const body = req.body || {};
+      const entry = store.upsertFilmTraits(body.slug || body.playerSlug, body);
+      return res.status(200).json({ ok: true, filmTraits: entry });
+    } catch (err) {
+      const code = err.statusCode || 400;
+      return res.status(code).json({ ok: false, error: err.message });
+    }
+  });
 }
 
 module.exports = {
