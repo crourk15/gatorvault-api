@@ -107,10 +107,9 @@ describe('beat brief film section', () => {
       filmTraits: film,
     });
     assert.match(paste, /FILM \/ HIGHLIGHTS/);
-    assert.match(paste, /Vault film angle/);
-    assert.match(paste, /Do not claim/);
-    assert.match(paste, /Film \/ highlights: if FILM section/);
-    assert.match(paste, /tape facts naturally/);
+    assert.match(paste, /REQUIRED AGENT REVIEW|Highlight /);
+    assert.match(paste, /FILM REVIEW RULE|Open every Highlight LINK/i);
+    assert.match(paste, /Film \/ highlights: OPEN the Highlight LINK/);
     assert.match(paste, /Show, don't announce|meta flex/i);
     assert.match(paste, /RIVAL RULE|Rivals: context only/i);
   });
@@ -129,7 +128,7 @@ describe('beat brief film section', () => {
       rivals: [],
       filmTraits: null,
     });
-    assert.match(paste, /No On3\/Hudl tape linked yet|No curated Hudl\/On3 film traits/);
+    assert.match(paste, /No highlight LINK on file yet|No On3\/Hudl tape linked yet|No curated Hudl\/On3 film traits/);
   });
 
   it('seed file exists beside recruiting data', () => {

@@ -610,41 +610,38 @@ function formatFilmTraitsBlock(filmTraits) {
   if (!sources.length && !traits.length && !filmTraits.clipNotes) return null;
 
   const lines = [];
-  if (traits.length) {
-    lines.push('FILM / HIGHLIGHTS (Vault traits — weave into the post as fact)');
-    lines.push('-----------------------------------------------------------');
-  } else {
-    lines.push('FILM / HIGHLIGHTS (tape linked from On3/Hudl — Vault traits pending review)');
-    lines.push('--------------------------------------------------------------------------');
-  }
+  lines.push('FILM / HIGHLIGHTS (Hudl / On3 links — REQUIRED AGENT REVIEW)');
+  lines.push('-------------------------------------------------------------');
+  lines.push(
+    'AGENT STEP (do this before drafting): Open every highlight URL below, review the tape, then write 1–2 concrete film observations into the post as Vault fact. Do not invent tackle totals or grades. Do not tell the audience you watched film or that you are different — just use what you saw.'
+  );
   if (filmTraits.playerName) lines.push(`Player: ${filmTraits.playerName}`);
   if (filmTraits.on3ProfileUrl) lines.push(`On3 profile: ${filmTraits.on3ProfileUrl}`);
   if (sources.length) {
     sources.slice(0, 4).forEach((s, i) => {
-      const label = s.label || s.type || 'source';
+      const label = s.label || s.type || 'Highlight';
       const url = s.url || '';
-      const when = s.reviewedAt ? ` (reviewed ${s.reviewedAt})` : s.ingestedAt ? ` (linked ${s.ingestedAt})` : '';
-      lines.push(`Source ${i + 1}: ${label}${when}${url ? ` — ${url}` : ''}`);
+      lines.push(`Highlight ${i + 1}: ${label}`);
+      if (url) lines.push(`  LINK: ${url}`);
     });
   } else {
-    lines.push('Source: (no URL on file — traits only)');
+    lines.push('Highlight LINK: (none on file yet — ask to hydrate or paste a Hudl/On3 URL)');
   }
+  // Optional cached notes if present — agent still must review the link
   if (traits.length) {
-    lines.push('Traits from tape:');
-    traits.slice(0, 8).forEach((t) => lines.push(`- ${t}`));
-  } else if (sources.length) {
-    lines.push('Traits: (pending Vault review — open the tape, evaluate like a scout, upsert traits)');
+    lines.push('Optional prior notes (verify against the LINK — do not trust blindly):');
+    traits.slice(0, 6).forEach((tr) => lines.push(`- ${tr}`));
   }
   if (filmTraits.vaultFilmAngle) {
-    lines.push(`Vault film angle: ${String(filmTraits.vaultFilmAngle).trim()}`);
+    lines.push(`Optional angle hint: ${String(filmTraits.vaultFilmAngle).trim()}`);
   }
   if (filmTraits.clipNotes) {
     lines.push(`Clip notes: ${String(filmTraits.clipNotes).trim()}`);
   }
   const dont = Array.isArray(filmTraits.doNotClaim) ? filmTraits.doNotClaim.filter(Boolean) : [];
   if (dont.length) {
-    lines.push('Do not claim from this reel:');
-    dont.slice(0, 6).forEach((t) => lines.push(`- ${t}`));
+    lines.push('Do not claim:');
+    dont.slice(0, 6).forEach((d) => lines.push(`- ${d}`));
   }
   return lines.join('\n');
 }
@@ -715,7 +712,7 @@ function formatBriefText({
     lines.push('FILM / HIGHLIGHTS');
     lines.push('-----------------');
     lines.push(
-      '(No On3/Hudl tape linked yet. Open this player again after hydrate, or POST /api/admin/hub/film-traits/hydrate.)'
+      '(No highlight LINK on file yet. Open this player again to auto-pull On3/Hudl, or paste a Hudl URL into the chat with the brief.)'
     );
   }
 
@@ -786,7 +783,7 @@ function formatBriefText({
   lines.push('- Florida stake: RPM %, offer/status, UF staff names if listed');
   lines.push('- School ladder: top interested schools with RPM + visit counts');
   lines.push('- Visit trail: OV/UOV + latest dates when present');
-  lines.push('- Film / highlights: if FILM section has traits, put 1–2 tape facts in the post as plain Vault observation');
+  lines.push('- Film / highlights: OPEN the Highlight LINK(s), review the tape, then put 1–2 tape facts in the post as plain Vault observation');
   lines.push('- Internal intel seed: steal the FACT, own the VOICE — never tip that a beat writer said it');
   lines.push('- Vault angle: Florida-first narrative that sounds like GatorVault, not a recap desk');
   lines.push('- Show, don\'t announce: never claim to be different, ahead of the beat, or what "most feeds / timelines" miss');
@@ -799,13 +796,16 @@ function formatBriefText({
     'Write one GatorVault Insider X post for a VERIFIED account (long-form OK). Target 600–900 characters (hard cap 1000).'
   );
   lines.push(
-    'VOICE RULE (hard): This is GatorVault\'s take — not a beat recap. Absorb facts from the intel seed/board/film, then rewrite in original Vault voice. FORBIDDEN in the post: naming beat writers; "beat line"; "according to reports"; "per On3/247"; "as reported"; "reports say"; "insiders say"; and any meta flex about being different, exclusive, ahead of the timeline, or what other accounts skip. Just state the board + film. Board facts (ranks, RPM, visits, staff, commit status) and curated film traits may be stated as Vault fact.'
+    'FILM REVIEW RULE (hard): Before writing, open every Highlight LINK in FILM / HIGHLIGHTS. Review the Hudl/On3 tape. Your post must include 1–2 concrete observations from that tape (movement, coverage, length, ball skills, etc.). If a link will not open, say so and write from board facts only — do not invent film.'
+  );
+  lines.push(
+    'VOICE RULE (hard): This is GatorVault\'s take — not a beat recap. Absorb facts from the intel seed/board + what you saw on the highlight link, then rewrite in original Vault voice. FORBIDDEN in the post: naming beat writers; "beat line"; "according to reports"; "per On3/247"; "as reported"; "reports say"; "insiders say"; "I watched the film"; and any meta flex about being different or ahead of the timeline. Just state the board + film. Board facts and tape observations may be stated as Vault fact.'
   );
   lines.push(
     'RIVAL RULE (hard): Speak about what Florida has going with this player. Rivals (Alabama, Georgia, etc.) are optional mid-post board context only — one calm fact (e.g. who leads RPM). Do NOT dunk on the opponent, do NOT frame Florida as waiting for a rival "inevitability" to break, and never close on the rival. Closer = Florida process (visits, staff, film, ownership).'
   );
   lines.push(
-    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) if FILM / HIGHLIGHTS traits exist, weave 1–2 tape facts naturally, (4) Florida offer/staff/visits (rival RPM only as calm context if useful), (5) ownership/culture or visit detail, (6) sharp Florida-forward closer. Stay factual to board + intel + film above only — no invented offers, visits, rankings, tackle totals, or quotes. Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
+    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) 1–2 tape facts from the Highlight LINK review, (4) Florida offer/staff/visits (rival RPM only as calm context if useful), (5) ownership/culture or visit detail, (6) sharp Florida-forward closer. Stay factual to board + intel + the tape you reviewed — no invented offers, visits, rankings, tackle totals, or quotes. Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
   );
 
   return lines.filter((l) => l !== null).join('\n');
@@ -1047,6 +1047,7 @@ async function buildBeatBrief(slug, opts = {}) {
           playerName,
           player: player || null,
           classYear: player?.classYear || player?.year || null,
+          evaluate: false, // links only — Cursor reviews the highlight LINK from the brief
         });
         if (hydrated?.ok && hydrated.filmTraits) {
           filmTraits = { slug: hydrated.slug || normalized, ...hydrated.filmTraits };

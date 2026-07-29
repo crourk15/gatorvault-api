@@ -82,7 +82,7 @@ async function hydrateFilmTraitsFromOn3({
   classYear = null,
   force = false,
   dryRun = false,
-  evaluate = true,
+  evaluate = false,
 } = {}) {
   const key = filmStore.normalizeSlug(slug);
   if (!key) {
