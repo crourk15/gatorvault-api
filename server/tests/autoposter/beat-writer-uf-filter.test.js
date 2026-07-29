@@ -104,4 +104,42 @@ describe('beat-writer UF-only filter', () => {
     };
     assert.equal(beatFilters.shouldIncludeBeatPost(post), true);
   });
+
+  it('blocks national Chad Simmons Trace Hawkins post with no UF context', () => {
+    const post = {
+      handle: 'chadsimmons_',
+      writerName: 'Chad Simmons',
+      outlet: 'On3',
+      text:
+        'Spent time at Calhoun HS today, and a lot of eyes are on 2028 4-star QB Trace Hawkins. He helped the Yellow Jackets win a state title as a freshman in 2024, and he will announce his commitment on Thursday.',
+      url: 'https://www.on3.com/rivals/trace-hawkins-247268/',
+    };
+    assert.equal(beatFilters.shouldIncludeBeatPost(post), false);
+    assert.equal(beatFilters.strictUfOnlyBlockReason(post, post.text), 'national_missing_explicit_uf');
+  });
+
+  it('allows Chad Simmons when the post is explicitly about Florida', () => {
+    const post = {
+      handle: 'chadsimmons_',
+      writerName: 'Chad Simmons',
+      outlet: 'On3',
+      text: 'Florida is pushing hard for 2028 QB Trace Hawkins after his unofficial visit to Gainesville.',
+    };
+    assert.equal(beatFilters.shouldIncludeBeatPost(post), true);
+  });
+
+  it('does not treat aggregator URLs as Florida-related', () => {
+    assert.equal(beatFilters.isFloridaRelatedUrl('https://example.com/aggregator/feed'), false);
+    assert.equal(beatFilters.isFloridaRelatedUrl('https://www.on3.com/teams/florida/news/x'), true);
+  });
+
+  it('blocks national reporter posts that only name a UF target with no Florida keywords', () => {
+    const post = {
+      handle: 'chadsimmons_',
+      writerName: 'Chad Simmons',
+      outlet: 'On3',
+      text: '2028 WR Easton Royal is heating up on the trail this week.',
+    };
+    assert.equal(beatFilters.shouldIncludeBeatPost(post), false);
+  });
 });
