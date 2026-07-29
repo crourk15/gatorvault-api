@@ -42,7 +42,8 @@ export function EarlyDiscoveryGrid({ query }: EarlyDiscoveryGridProps): React.Re
               limit,
               position,
             }),
-          { maxAttempts: 3, delayMs: 1_500 }
+          // Full board hits score≥50 (cold cache miss) — poll through Render/Netlify wake.
+          { maxAttempts: 8, delayMs: 1_500 }
         );
         if (cancelled) return;
         setFetched(data.players ?? []);

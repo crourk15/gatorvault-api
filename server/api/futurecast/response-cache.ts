@@ -136,6 +136,13 @@ export async function warmFuturecastLabCaches(
       label: 'early-discovery:2028',
       build: () => buildEarlyDiscoveryPayload({ classYearGte: 2028, limit: 100 }),
     },
+    // Full board Early Discovery tab defaults to discovery score ≥ 50.
+    {
+      key: earlyDiscoveryCacheKey({ classYearGte: 2028, minDiscoveryScore: 50, limit: 100 }),
+      label: 'early-discovery:2028:score50',
+      build: () =>
+        buildEarlyDiscoveryPayload({ classYearGte: 2028, minDiscoveryScore: 50, limit: 100 }),
+    },
   ];
 
   // Build shared allowlist board first via master-board, then fan out the rest.
