@@ -4,6 +4,7 @@
 const engine = require('./film-room-knowledge-engine');
 const store = require('./film-room-knowledge-store');
 const legacy = require('./film-room-legacy');
+const cacheStore = require('./film-room-cache-store');
 
 const KNOWLEDGE_CATEGORIES = [
   'Scheme Library',
@@ -169,6 +170,21 @@ function buildFilmRoomCatalog() {
     manifestUpdatedAt = new Date().toISOString();
   }
 
+  // Prefer last rebuild stamp so ops freshness survives Render sleep
+  // (knowledge manifest.updatedAt can sit for months without content edits).
+  let stampUpdatedAt = null;
+  try {
+    stampUpdatedAt = cacheStore.loadCatalogStamp()?.updatedAt || null;
+  } catch {
+    stampUpdatedAt = null;
+  }
+  const stampMs = stampUpdatedAt ? new Date(stampUpdatedAt).getTime() : NaN;
+  const manifestMs = manifestUpdatedAt ? new Date(manifestUpdatedAt).getTime() : NaN;
+  const updatedAt =
+    Number.isFinite(stampMs) && (!Number.isFinite(manifestMs) || stampMs >= manifestMs)
+      ? stampUpdatedAt
+      : manifestUpdatedAt;
+
   let totalLessons = 0;
   let skippedLessons = 0;
   try {
@@ -192,7 +208,9 @@ function buildFilmRoomCatalog() {
       validated: lessonItems.length,
       skipped: skippedLessons
     },
-    updatedAt: manifestUpdatedAt,
+    updatedAt,
+    knowledgeUpdatedAt: manifestUpdatedAt,
+    rebuiltAt: stampUpdatedAt,
     degraded: !!knowledgeError,
     warning: knowledgeError,
     policy: {
@@ -210,7 +228,24 @@ function buildFilmRoomCatalog() {
 
 function rebuildFilmRoomCatalog() {
   store.reloadKnowledge();
-  return buildFilmRoomCatalog();
+  const catalog = buildFilmRoomCatalog();
+  const now = new Date().toISOString();
+  const stamped = {
+    ...catalog,
+    updatedAt: now,
+    rebuiltAt: now,
+  };
+  try {
+    cacheStore.saveCatalogStamp({
+      updatedAt: now,
+      rebuiltAt: now,
+      counts: stamped.counts,
+      mode: stamped.mode,
+    });
+  } catch (err) {
+    stamped.warning = stamped.warning || (err && err.message) || 'catalog stamp save failed';
+  }
+  return stamped;
 }
 
 function getLessonDetail(lessonId) {
