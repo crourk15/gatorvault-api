@@ -82,14 +82,15 @@ describe('film-traits-ingest helpers', () => {
 });
 
 describe('brief film pending state', () => {
-  it('marks traits pending when only sources exist', () => {
+  it('embeds highlight LINK and requires agent review', () => {
     const block = formatFilmTraitsBlock({
       playerName: 'Casey Barner',
       sources: [{ type: 'hudl', url: 'https://www.hudl.com/embed/video/3/1/abc', label: 'Highlights' }],
       traits: [],
     });
-    assert.match(block, /traits pending review/i);
-    assert.match(block, /hudl/i);
+    assert.match(block, /REQUIRED AGENT REVIEW/i);
+    assert.match(block, /LINK: https:\/\/www\.hudl\.com/);
+    assert.match(block, /Open every highlight URL/i);
   });
 });
 

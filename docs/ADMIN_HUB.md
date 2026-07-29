@@ -115,17 +115,16 @@ Curated Hudl / On3 highlight traits live in `server/data/recruiting/film-traits.
 4. Goal: paste brief → Cursor already has tape facts. Use them in the post; never announce that you’re “different” or ahead of the beat.
 5. **Rival rule:** rivals are calm mid-post board context only — never dunk, never the punchline/closer. Close on Florida process.
 
-### On3 / Hudl auto-link (Vault scout workflow)
+### On3 / Hudl highlight LINK in Copy Brief
 
-Charles Power–style evaluation needs **tape on file** for every Beat Desk recruit:
+For **every** Beat Desk recruit:
 
-1. **Open** a player → brief auto-pulls On3 `videos.list` Hudl/YouTube URLs into `film-traits` when missing.
-2. Desk card shows **TRAITS PENDING** briefly, then **Vault AI** fills traits automatically (you do not write them).
-3. Bulk: `POST /api/admin/hub/film-traits/hydrate-desk` or `node server/scripts/hydrate-film-traits-from-on3.js --desk`
-4. Single: `POST /api/admin/hub/film-traits/hydrate` `{ "slug": "casey-barner" }` (also auto-evaluates)
-5. Force AI re-eval: `POST /api/admin/hub/film-traits/evaluate` `{ "slug": "casey-barner" }`
-6. Vision path uses OpenAI when `OPENAI_API_KEY` / `INSIDER_ARTICLE_LLM_KEY` is set; otherwise rewrites On3 film/camp signals into Vault voice (no writer names).
-5. Curated traits still win — hydrate never overwrites Vault traits / vaultFilmAngle / doNotClaim.
+1. **Open** → auto-pull On3/Hudl highlight URL(s) into the brief (free — no OpenAI).
+2. Desk shows **LINK READY** when a highlight URL is on file.
+3. **Copy Brief** includes `FILM / HIGHLIGHTS` with the LINK plus an agent instruction: review the tape, then draft.
+4. Charles pastes into Cursor → agent opens the highlight link, evaluates, writes the post (board + tape).
+5. Bulk link pull: `POST /api/admin/hub/film-traits/hydrate-desk` or `node server/scripts/hydrate-film-traits-from-on3.js --desk`
+6. No paid OpenAI vision required for this workflow.
 
 
 ## Shell polish

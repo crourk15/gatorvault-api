@@ -58,14 +58,14 @@
     if (!film || (!hasTraits && !hasSources)) {
       return '<div class="hub-card" style="margin-bottom:12px">'
         + '<h3>Film / highlights</h3>'
-        + '<p class="hub-meta" style="margin:0">No On3/Hudl tape linked yet. Open again — Vault AI will pull tape and evaluate.</p>'
+        + '<p class="hub-meta" style="margin:0">No On3/Hudl highlight link yet. Open again to auto-pull from On3 — Copy Brief will include the LINK for Cursor to review.</p>'
         + '</div>';
     }
     var traits = (film.traits || []).slice(0, 6).map(function (t) {
       return '<li style="margin:0 0 4px">' + esc(t) + '</li>';
     }).join('');
     var src = (film.sources && film.sources[0]) || null;
-    var tone = hasTraits ? 'hub-st-green' : 'hub-st-yellow';
+    var tone = hasSources ? 'hub-st-green' : 'hub-st-yellow';
     return '<div class="hub-card ' + tone + '" style="margin-bottom:12px">'
       + '<h3>Film / highlights</h3>'
       + (src
@@ -74,12 +74,12 @@
           + (src.url
             ? ' · <a href="' + esc(src.url) + '" target="_blank" rel="noopener" style="color:#93c5fd">Open tape →</a>'
             : '')
-          + (!hasTraits ? ' · <span class="hub-env-badge hub-st-yellow">TRAITS PENDING</span>' : '')
+          + (hasSources ? ' · <span class="hub-env-badge hub-st-green">LINK READY</span>' : '')
           + '</p>'
         : '')
       + (traits
         ? '<ul style="margin:0;padding-left:18px;color:#e2e8f0;line-height:1.45">' + traits + '</ul>'
-        : '<p class="hub-meta" style="margin:0">Tape is linked. Watch it, write Vault traits (Charles Power–style eval), then upsert — Copy Brief will use them.</p>')
+        : '<p class="hub-meta" style="margin:0">Highlight LINK is in Copy Brief. Paste into Cursor — the agent reviews the tape, then writes the post.</p>')
       + (film.vaultFilmAngle
         ? '<p style="margin:10px 0 0;color:#cbd5e1;line-height:1.45">' + esc(film.vaultFilmAngle) + '</p>'
         : '')
