@@ -605,25 +605,35 @@ function buildVaultAngle({
 /** Format curated Hudl/On3 film traits for paste-ready Copy Brief. */
 function formatFilmTraitsBlock(filmTraits) {
   if (!filmTraits || typeof filmTraits !== 'object') return null;
+  const sources = Array.isArray(filmTraits.sources) ? filmTraits.sources.filter((s) => s && s.url) : [];
+  const traits = Array.isArray(filmTraits.traits) ? filmTraits.traits.filter(Boolean) : [];
+  if (!sources.length && !traits.length && !filmTraits.clipNotes) return null;
+
   const lines = [];
-  lines.push('FILM / HIGHLIGHTS (curated — weave into the post as Vault fact)');
-  lines.push('---------------------------------------------------------------');
+  if (traits.length) {
+    lines.push('FILM / HIGHLIGHTS (Vault traits — weave into the post as fact)');
+    lines.push('-----------------------------------------------------------');
+  } else {
+    lines.push('FILM / HIGHLIGHTS (tape linked from On3/Hudl — Vault traits pending review)');
+    lines.push('--------------------------------------------------------------------------');
+  }
   if (filmTraits.playerName) lines.push(`Player: ${filmTraits.playerName}`);
-  const sources = Array.isArray(filmTraits.sources) ? filmTraits.sources : [];
+  if (filmTraits.on3ProfileUrl) lines.push(`On3 profile: ${filmTraits.on3ProfileUrl}`);
   if (sources.length) {
     sources.slice(0, 4).forEach((s, i) => {
       const label = s.label || s.type || 'source';
       const url = s.url || '';
-      const when = s.reviewedAt ? ` (reviewed ${s.reviewedAt})` : '';
+      const when = s.reviewedAt ? ` (reviewed ${s.reviewedAt})` : s.ingestedAt ? ` (linked ${s.ingestedAt})` : '';
       lines.push(`Source ${i + 1}: ${label}${when}${url ? ` — ${url}` : ''}`);
     });
   } else {
     lines.push('Source: (no URL on file — traits only)');
   }
-  const traits = Array.isArray(filmTraits.traits) ? filmTraits.traits.filter(Boolean) : [];
   if (traits.length) {
     lines.push('Traits from tape:');
     traits.slice(0, 8).forEach((t) => lines.push(`- ${t}`));
+  } else if (sources.length) {
+    lines.push('Traits: (pending Vault review — open the tape, evaluate like a scout, upsert traits)');
   }
   if (filmTraits.vaultFilmAngle) {
     lines.push(`Vault film angle: ${String(filmTraits.vaultFilmAngle).trim()}`);
@@ -705,7 +715,7 @@ function formatBriefText({
     lines.push('FILM / HIGHLIGHTS');
     lines.push('-----------------');
     lines.push(
-      '(No curated Hudl/On3 film traits on file for this slug yet. Add via Admin Hub film-traits API or server/data/recruiting/film-traits.json — then Copy Brief includes tape for the next paste.)'
+      '(No On3/Hudl tape linked yet. Open this player again after hydrate, or POST /api/admin/hub/film-traits/hydrate.)'
     );
   }
 
@@ -1028,6 +1038,21 @@ async function buildBeatBrief(slug, opts = {}) {
       playerName,
       aliases: [player?.on3Slug, player?.slug].filter(Boolean),
     });
+    // Auto-attach On3/Hudl highlight URLs when missing (traits still Vault-curated).
+    if (opts.hydrateFilm !== false) {
+      const ingest = require('./film-traits-ingest');
+      if (ingest.needsSourceHydration(filmTraits)) {
+        const hydrated = await ingest.hydrateFilmTraitsFromOn3({
+          slug: normalized,
+          playerName,
+          player: player || null,
+          classYear: player?.classYear || player?.year || null,
+        });
+        if (hydrated?.ok && hydrated.filmTraits) {
+          filmTraits = { slug: hydrated.slug || normalized, ...hydrated.filmTraits };
+        }
+      }
+    }
   } catch {
     filmTraits = null;
   }

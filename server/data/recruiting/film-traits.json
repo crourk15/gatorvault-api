@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-29T14:30:00.000Z",
+  "updatedAt": "2026-07-29T15:10:42.880Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -28,6 +28,59 @@
         "Hudl owner metadata shows Anthony \"CJ\" Craig — confirm identity before public attribution if challenged"
       ],
       "clipNotes": "Short reel (~2:12). Best as length/centerfield proof next to board process (game-day visits), not a full evaluation."
+    },
+    "casey-barner": {
+      "playerName": "Casey Barner",
+      "position": "S",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "url": "https://www.hudl.com/embed/video/3/22565505/69002a558a7d0e0ac0439881",
+          "label": "Casey Barner - McEachern - 2025 Sophomore Season Highlights",
+          "category": "Highlights",
+          "thumbnail": "https://va.hudl.com/p-highlights/User/22565505/69002a558a7d0e0ac0439880/0b83d95b_720.jpg?v=56FCE756AD52DE08",
+          "on3VideoKey": 593630,
+          "publishedAt": "2026-01-29T03:44:07.000Z",
+          "ingestedAt": "2026-07-29",
+          "reviewedAt": null,
+          "reviewedBy": "on3-ingest"
+        },
+        {
+          "type": "hudl",
+          "url": "https://www.hudl.com/embed/video/3/22565505/672a2a20b958afa5ded5c1d4",
+          "label": "Casey Barner - Douglass - 2024 Freshman Season",
+          "category": "Highlights",
+          "thumbnail": "https://vd.hudl.com/p-highlights/User/22565505/672a2a20b958afa5ded5c1d3/70d50351_720.jpg?v=72139828D816DD08",
+          "on3VideoKey": 407565,
+          "publishedAt": "2025-01-22T23:20:08.000Z",
+          "ingestedAt": "2026-07-29",
+          "reviewedAt": null,
+          "reviewedBy": "on3-ingest"
+        }
+      ],
+      "traits": [
+        "Man-coverage feet — stays in-phase and shadows receivers through the route",
+        "Clean transition out of the backpedal with hip flip to run verticals",
+        "Closes late and contests — diving PBU / ball disruption when slightly out of phase",
+        "Compact safety build — wins with polish and quickness more than length",
+        "Competitive / instinctive playmaker temperament shows up in camp and Friday nights",
+        "High-end camp tape vs shifty WRs — coverage reps look starter-caliber for the class"
+      ],
+      "vaultFilmAngle": "Lead with coverage polish and man-match feet for Casey Barner — Florida process story, not a star-count dump.",
+      "doNotClaim": [
+        "Do not invent tackle totals, INT counts, or grades not on the tape/scout signals",
+        "Do not attribute this evaluation to On3 writers or name Charles Power in the post",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault AI eval from On3 film/camp signals + Hudl links (S). Auto-generated for Copy Brief. (LLM key not set — used On3 film/camp signals rewritten into Vault voice)",
+      "ingestStatus": "traits_ready",
+      "on3RecruitSlug": "casey-barner-239907",
+      "on3ProfileUrl": "https://www.on3.com/rivals/casey-barner-239907/",
+      "lastIngestAt": "2026-07-29T15:06:53.504Z",
+      "evaluatedBy": "vault-ai-scout-synth",
+      "evalMode": "on3_scout_rewrite",
+      "evaluatedAt": "2026-07-29T15:10:42.880Z"
     }
   }
 }

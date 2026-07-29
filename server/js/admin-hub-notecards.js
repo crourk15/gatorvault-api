@@ -53,7 +53,7 @@
       ? [
           ['Open', 'Builds the full player packet (research + board + draft angle).'],
           ['Copy Brief', 'Puts the packet on your clipboard for Cursor / Copilot — includes film traits when curated.'],
-          ['Film card', 'Hudl/On3 highlight traits for this player — put them in the post, don’t announce the edge.'],
+          ['Film card', 'Vault AI pulls On3/Hudl tape and writes traits — you just Copy Brief and post.'],
           ['Refresh', 'Reloads today’s beat list from the kitchen.'],
           ['Check API', 'Pings the server — if it says waking, wait and try again.'],
           ['FutureCast card', 'Shows if this Open seeded/updated the recruiting board.']
