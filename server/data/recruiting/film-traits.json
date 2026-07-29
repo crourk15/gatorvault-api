@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-29T15:06:53.504Z",
+  "updatedAt": "2026-07-29T15:10:42.880Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -59,14 +59,28 @@
           "reviewedBy": "on3-ingest"
         }
       ],
-      "traits": [],
-      "vaultFilmAngle": "",
-      "doNotClaim": [],
-      "clipNotes": "Tape linked from On3/Hudl. Vault traits pending review — watch the reel, then upsert traits.",
-      "ingestStatus": "sources_ready",
+      "traits": [
+        "Man-coverage feet — stays in-phase and shadows receivers through the route",
+        "Clean transition out of the backpedal with hip flip to run verticals",
+        "Closes late and contests — diving PBU / ball disruption when slightly out of phase",
+        "Compact safety build — wins with polish and quickness more than length",
+        "Competitive / instinctive playmaker temperament shows up in camp and Friday nights",
+        "High-end camp tape vs shifty WRs — coverage reps look starter-caliber for the class"
+      ],
+      "vaultFilmAngle": "Lead with coverage polish and man-match feet for Casey Barner — Florida process story, not a star-count dump.",
+      "doNotClaim": [
+        "Do not invent tackle totals, INT counts, or grades not on the tape/scout signals",
+        "Do not attribute this evaluation to On3 writers or name Charles Power in the post",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault AI eval from On3 film/camp signals + Hudl links (S). Auto-generated for Copy Brief. (LLM key not set — used On3 film/camp signals rewritten into Vault voice)",
+      "ingestStatus": "traits_ready",
       "on3RecruitSlug": "casey-barner-239907",
       "on3ProfileUrl": "https://www.on3.com/rivals/casey-barner-239907/",
-      "lastIngestAt": "2026-07-29T15:06:53.504Z"
+      "lastIngestAt": "2026-07-29T15:06:53.504Z",
+      "evaluatedBy": "vault-ai-scout-synth",
+      "evalMode": "on3_scout_rewrite",
+      "evaluatedAt": "2026-07-29T15:10:42.880Z"
     }
   }
 }

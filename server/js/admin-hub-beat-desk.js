@@ -58,7 +58,7 @@
     if (!film || (!hasTraits && !hasSources)) {
       return '<div class="hub-card" style="margin-bottom:12px">'
         + '<h3>Film / highlights</h3>'
-        + '<p class="hub-meta" style="margin:0">No On3/Hudl tape linked yet. Open again to auto-pull from On3, or run desk hydrate.</p>'
+        + '<p class="hub-meta" style="margin:0">No On3/Hudl tape linked yet. Open again — Vault AI will pull tape and evaluate.</p>'
         + '</div>';
     }
     var traits = (film.traits || []).slice(0, 6).map(function (t) {

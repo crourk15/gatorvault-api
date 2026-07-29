@@ -92,3 +92,33 @@ describe('brief film pending state', () => {
     assert.match(block, /hudl/i);
   });
 });
+
+
+describe('vault AI film eval', () => {
+  it('synthesizes traits from On3 scout signals without naming writers', () => {
+    const { synthesizeTraitsFromScout, stripWriterAttribution } = require('../lib/film-traits-ai-eval');
+    const cleaned = stripWriterAttribution('Charles Power says Barner wins in man coverage.');
+    assert.doesNotMatch(cleaned, /Charles Power/);
+    const out = synthesizeTraitsFromScout({
+      playerName: 'Casey Barner',
+      position: 'S',
+      scout: {
+        summaryText:
+          'Barner consistently shut down shifty wide receivers in man coverage. He showed excellent polish transitioning out of his backpedal, flipping his hips. Compactly built safety with diving pass breakup ability.',
+      },
+      sources: [{ label: 'Highlights', url: 'https://www.hudl.com/x' }],
+    });
+    assert.ok(out.traits.length >= 3);
+    assert.match(out.traits.join(' '), /man-coverage|backpedal|compact/i);
+    assert.doesNotMatch(out.vaultFilmAngle, /Charles Power|beat writer/i);
+  });
+
+  it('has casey-barner AI traits seeded', () => {
+    const store = require('../lib/film-traits-store');
+    const entry = store.getFilmTraitsBySlug('casey-barner');
+    assert.ok(entry);
+    assert.ok(entry.sources?.length >= 1);
+    assert.ok(entry.traits?.length >= 3);
+    assert.ok(entry.evaluatedBy);
+  });
+});

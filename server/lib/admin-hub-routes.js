@@ -859,6 +859,21 @@ function mountAdminHubRoutes(app) {
     }
   });
 
+  /** AI-evaluate film traits for a slug (Vault scout — Charles does not write traits). */
+  app.post('/api/admin/hub/film-traits/evaluate', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const ai = require('./film-traits-ai-eval');
+      const body = req.body || {};
+      const slug = body.slug || body.playerSlug;
+      if (!slug) return res.status(400).json({ ok: false, error: 'slug required' });
+      const out = await ai.evaluateFilmTraitsForSlug(slug, { force: body.force !== false });
+      return res.status(out.ok ? 200 : 502).json(out);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   /** Hydrate film for current Beat Desk inbox recruit slugs. */
   app.post('/api/admin/hub/film-traits/hydrate-desk', async (req, res) => {
     if (!requireAdmin(req, res)) return;

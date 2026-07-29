@@ -82,6 +82,7 @@ async function hydrateFilmTraitsFromOn3({
   classYear = null,
   force = false,
   dryRun = false,
+  evaluate = true,
 } = {}) {
   const key = filmStore.normalizeSlug(slug);
   if (!key) {
@@ -257,7 +258,17 @@ async function hydrateFilmTraitsFromOn3({
     };
   }
 
-  const saved = filmStore.upsertFilmTraits(key, payload);
+  let saved = filmStore.upsertFilmTraits(key, payload);
+  let evalResult = null;
+  if (evaluate && !dryRun && (!(saved.traits && saved.traits.length) || force)) {
+    try {
+      const ai = require('./film-traits-ai-eval');
+      evalResult = await ai.evaluateFilmTraitsForSlug(key, { force: true, player });
+      if (evalResult?.ok && evalResult.filmTraits) saved = evalResult.filmTraits;
+    } catch (err) {
+      evalResult = { ok: false, error: err instanceof Error ? err.message : String(err) };
+    }
+  }
   return {
     ok: true,
     slug: key,
@@ -267,6 +278,7 @@ async function hydrateFilmTraitsFromOn3({
     filmTraits: saved,
     isNew: !existing,
     traitsPending: !(saved.traits && saved.traits.length),
+    eval: evalResult,
   };
 }
 
