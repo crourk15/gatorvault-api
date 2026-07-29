@@ -112,7 +112,14 @@ Full Ops / Full QA iframes remain under Dashboard / QA as escape hatches.
 
 ## Module health dots
 
-Sidebar dots are **honest**:
+Sidebar dots are **honest**, but desks are scoped so Charles is not blocked by unrelated kitchen noise:
+
+| Module | Dot source |
+|---|---|
+| **Beat Desk** | API posting health only (wake-lag / 0% 5xx → green) |
+| **FutureCast** | Recruiting board freshness |
+| **Dashboard** | Full ops overall (Film Room, drafts, API, etc.) |
+| **Content** | Film Room + Insider articles |
 
 | Color | Meaning |
 |---|---|

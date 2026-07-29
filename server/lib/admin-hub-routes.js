@@ -188,6 +188,35 @@ function worstStatus(a, b) {
   return ra >= rb ? a : b;
 }
 
+/**
+ * Beat Desk sidebar health = "can Charles post?" — not full kitchen overall.
+ * Wake-lag / latency-only API (ignore-ok) must not paint BD red/yellow.
+ * Film Room / drafts / scorecard stay on Content / Product Health / Dashboard.
+ */
+function beatDeskModuleHealth(ops) {
+  const api = tileById(ops, 'api-health');
+  if (!api || !api.status) {
+    return ops && ops.overall ? ops.overall : 'unknown';
+  }
+  try {
+    const { enrichIssueFromTile } = require('./ops-fix-playbook');
+    const issue = enrichIssueFromTile(api);
+    if (issue && (issue.mode === 'ignore-ok' || (issue.coach && issue.coach.mode === 'ignore-ok'))) {
+      return 'green';
+    }
+  } catch {
+    /* playbook optional */
+  }
+  return api.status;
+}
+
+/** FutureCast desk health follows recruiting board — not Film Room catalog age. */
+function futurecastModuleHealth(ops) {
+  const rec = tileById(ops, 'recruiting-board');
+  if (rec && rec.status) return rec.status;
+  return ops && ops.overall ? ops.overall : 'unknown';
+}
+
 /** Never default green without a real signal — unchecked modules stay `unknown`. */
 function buildModuleHealthMap({ ops, qa, productIntel, selfRunner, feedbackOpen, communityOpen }) {
   const map = {};
@@ -196,11 +225,13 @@ function buildModuleHealthMap({ ops, qa, productIntel, selfRunner, feedbackOpen,
   });
 
   if (ops && ops.overall) {
+    // Command Center / Dashboard keeps full kitchen truth.
     map.dashboard = ops.overall;
-    // Beat Desk rides the same kitchen — mirror ops health.
-    map['beat-desk'] = ops.overall;
-    map.futurecast = ops.overall;
   }
+  // Daily desks: stop Film Room / wake-lag from painting BD + FC red together.
+  map['beat-desk'] = beatDeskModuleHealth(ops);
+  map.futurecast = futurecastModuleHealth(ops);
+
   const identity = tileById(ops, 'identity-patterns');
   const gmTile = tileById(ops, 'cron-jobs');
   if (identity && identity.status) map.gm2 = identity.status;

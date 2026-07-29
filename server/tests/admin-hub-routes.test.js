@@ -34,6 +34,68 @@ test('buildModuleHealthMap does not fake-green unchecked modules', () => {
   assert.equal(map.feedback, 'unknown');
 });
 
+test('Beat Desk stays green when Film Room red + API wake lag only', () => {
+  const map = hub.buildModuleHealthMap({
+    ops: {
+      overall: 'red',
+      tiles: [
+        {
+          id: 'film-room',
+          label: 'Film Room Engine',
+          status: 'red',
+          summary: 'Catalog 400h ago'
+        },
+        {
+          id: 'api-health',
+          label: 'API Health',
+          status: 'yellow',
+          summary: '40 reqs · 0% 5xx · 2400ms avg · recent 2400ms'
+        },
+        {
+          id: 'recruiting-board',
+          label: 'Recruiting Board',
+          status: 'green',
+          summary: 'Updated 1h ago'
+        }
+      ]
+    },
+    qa: { pass: true, failed: 0 },
+    productIntel: { fixQueueOpen: 0, overall: 90 },
+    selfRunner: { queue: { pending: 0 }, enabled: true }
+  });
+  assert.equal(map.dashboard, 'red', 'Dashboard keeps full kitchen red');
+  assert.equal(map.content, 'red', 'Content follows Film Room');
+  assert.equal(map['beat-desk'], 'green', 'Beat Desk ignores Film Room + wake lag');
+  assert.equal(map.futurecast, 'green', 'FutureCast follows recruiting board');
+});
+
+test('Beat Desk goes red only when API has real errors', () => {
+  const map = hub.buildModuleHealthMap({
+    ops: {
+      overall: 'red',
+      tiles: [
+        {
+          id: 'api-health',
+          label: 'API Health',
+          status: 'red',
+          summary: '20 reqs · 20% 5xx · 900ms avg · recent 900ms'
+        },
+        {
+          id: 'recruiting-board',
+          label: 'Recruiting Board',
+          status: 'green',
+          summary: 'Updated 1h ago'
+        }
+      ]
+    },
+    qa: { pass: true, failed: 0 },
+    productIntel: { fixQueueOpen: 0, overall: 90 },
+    selfRunner: { queue: { pending: 0 }, enabled: true }
+  });
+  assert.equal(map['beat-desk'], 'red');
+  assert.equal(map.futurecast, 'green');
+});
+
 test('buildModuleHealthMap uses community/feedback backlog signals', () => {
   const map = hub.buildModuleHealthMap({
     ops: { overall: 'green', tiles: [] },

@@ -1,10 +1,13 @@
 /**
  * Film Room video cache — repo seed + durable overlay on Render disk.
+ * Also persists catalog rebuild freshness so Admin Hub Film Room stays green
+ * across Render sleep/restarts (ops heartbeats alone are not enough).
  */
 const fs = require('fs');
 const path = require('path');
 
 const REPO_CACHE_PATH = path.join(__dirname, '..', 'data', 'film-room', 'cache.json');
+const REPO_CATALOG_STAMP_PATH = path.join(__dirname, '..', 'data', 'film-room', 'catalog.json');
 
 function durableRoot() {
   if (process.env.FILM_ROOM_DATA_DIR) return String(process.env.FILM_ROOM_DATA_DIR).trim();
@@ -17,6 +20,13 @@ function resolveCachePath() {
   const root = durableRoot();
   if (root) return path.join(root, 'cache.json');
   return REPO_CACHE_PATH;
+}
+
+function resolveCatalogStampPath() {
+  if (process.env.FILM_ROOM_CATALOG_PATH) return String(process.env.FILM_ROOM_CATALOG_PATH).trim();
+  const root = durableRoot();
+  if (root) return path.join(root, 'catalog.json');
+  return REPO_CATALOG_STAMP_PATH;
 }
 
 function readJson(filePath, fallback) {
@@ -65,10 +75,70 @@ function saveFilmRoomCache(cache) {
   return { path: target, durable: target !== REPO_CACHE_PATH };
 }
 
+/**
+ * Load last catalog rebuild stamp (durable disk first, then repo path).
+ * Shape: { updatedAt, rebuiltAt?, counts?, mode?, path? }
+ */
+function loadCatalogStamp() {
+  const durablePath = resolveCatalogStampPath();
+  if (durablePath !== REPO_CATALOG_STAMP_PATH && fs.existsSync(durablePath)) {
+    const durable = readJson(durablePath, null);
+    if (durable && durable.updatedAt) return durable;
+  }
+  const seeded = readJson(REPO_CATALOG_STAMP_PATH, null);
+  if (seeded && seeded.updatedAt) return seeded;
+  return null;
+}
+
+/**
+ * Persist catalog rebuild freshness to durable disk (when present) and repo path
+ * so ops-status can read either after a cold start.
+ */
+function saveCatalogStamp(stamp) {
+  const updatedAt = stamp?.updatedAt || new Date().toISOString();
+  const payload = {
+    ok: true,
+    updatedAt,
+    rebuiltAt: stamp?.rebuiltAt || updatedAt,
+    counts: stamp?.counts || null,
+    mode: stamp?.mode || 'merged',
+    source: 'film-room-rebuild',
+  };
+
+  const durablePath = resolveCatalogStampPath();
+  const targets = [durablePath];
+  // Mirror into repo path on real durable disk (/var/data). Skip when FILM_ROOM_DATA_DIR
+  // is overridden (tests) so we do not dirty committed seed data.
+  if (
+    durablePath !== REPO_CATALOG_STAMP_PATH
+    && !process.env.FILM_ROOM_DATA_DIR
+  ) {
+    targets.push(REPO_CATALOG_STAMP_PATH);
+  }
+
+  const written = [];
+  for (const target of targets) {
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    const body = { ...payload, path: target };
+    fs.writeFileSync(target, JSON.stringify(body, null, 2) + '\n', 'utf8');
+    written.push(target);
+  }
+
+  return {
+    updatedAt,
+    paths: written,
+    durable: durablePath !== REPO_CATALOG_STAMP_PATH,
+  };
+}
+
 module.exports = {
   REPO_CACHE_PATH,
+  REPO_CATALOG_STAMP_PATH,
   durableRoot,
   resolveCachePath,
+  resolveCatalogStampPath,
   loadFilmRoomCache,
   saveFilmRoomCache,
+  loadCatalogStamp,
+  saveCatalogStamp,
 };

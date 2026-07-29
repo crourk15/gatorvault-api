@@ -298,6 +298,12 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
 
   const on3Snap = readJson('recruiting/on3-snapshot.json', {});
   const nilManifest = readJson('nil/manifest.json', {});
+  let filmCatalogStamp = null;
+  try {
+    filmCatalogStamp = require('./film-room-cache-store').loadCatalogStamp();
+  } catch {
+    filmCatalogStamp = null;
+  }
   const filmCatalog = readJson('film-room-knowledge/catalog.json', readJson('film-room/catalog.json', {}));
   const rosterMtime = fileMtime('roster/players.json');
   let depthMeta = null;
@@ -336,6 +342,8 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
   );
   const filmHb = opsMonitor.getHeartbeat('cron:film-room-weekly');
   const filmUpdated = newestTimestamp(
+    filmCatalogStamp?.updatedAt,
+    filmCatalogStamp?.rebuiltAt,
     filmCatalog.updatedAt,
     filmHb?.lastSuccess,
     filmHb?.lastRun
