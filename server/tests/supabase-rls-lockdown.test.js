@@ -26,12 +26,34 @@ describe('supabase RLS lockdown', () => {
     assert.match(sql, /sensitive_columns_exposed/);
   });
 
-  it('apply-supabase-rls script covers sensitive tables + policy drop', () => {
+  it('lib + apply script cover sensitive tables + policy drop', () => {
+    const lib = fs.readFileSync(path.join(ROOT, 'lib/supabase-rls-lockdown.js'), 'utf8');
+    assert.match(lib, /SENSITIVE_PUBLIC_TABLES/);
+    assert.match(lib, /push_device_tokens/);
+    assert.match(lib, /DROP POLICY/);
+    assert.match(lib, /scheduleSupabaseRlsLockdownOnBoot/);
+    assert.match(lib, /applySupabaseRlsLockdown/);
+
     const js = fs.readFileSync(path.join(ROOT, 'scripts/apply-supabase-rls.js'), 'utf8');
-    assert.match(js, /SENSITIVE_PUBLIC_TABLES/);
-    assert.match(js, /push_device_tokens/);
-    assert.match(js, /DROP POLICY/);
+    assert.match(js, /supabase-rls-lockdown/);
     assert.match(js, /024_lockdown_supabase_api/);
+  });
+
+  it('boot + admin hub wire lockdown apply', () => {
+    const serverJs = fs.readFileSync(path.join(ROOT, 'server.js'), 'utf8');
+    assert.match(serverJs, /scheduleSupabaseRlsLockdownOnBoot/);
+
+    const hub = fs.readFileSync(path.join(ROOT, 'lib/admin-hub-routes.js'), 'utf8');
+    assert.match(hub, /\/api\/admin\/hub\/security\/rls-status/);
+    assert.match(hub, /\/api\/admin\/hub\/security\/lockdown-rls/);
+  });
+
+  it('exports schedule/apply helpers', () => {
+    const rls = require('../lib/supabase-rls-lockdown');
+    assert.equal(typeof rls.applySupabaseRlsLockdown, 'function');
+    assert.equal(typeof rls.getSupabaseRlsStatus, 'function');
+    assert.equal(typeof rls.scheduleSupabaseRlsLockdownOnBoot, 'function');
+    assert.ok(rls.SENSITIVE_PUBLIC_TABLES.includes('push_device_tokens'));
   });
 
   it('push/email table migrations enable RLS at create time', () => {

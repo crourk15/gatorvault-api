@@ -37,6 +37,17 @@ psql "$DATABASE_URL" -f server/migrations/011_create_predictions_table.sql
 
 ## Supabase Advisor lockdown (do this when email warns)
 
+**Automatic (preferred):** After this lands on `main`, Render `gatorvault-api` auto-applies RLS ~45s after boot (`scheduleSupabaseRlsLockdownOnBoot`). Disable with `SUPABASE_RLS_LOCKDOWN_ON_BOOT=0`.
+
+**Admin Hub (manual):**
+```bash
+curl -X POST https://gatorvault-api.onrender.com/api/admin/hub/security/lockdown-rls \
+  -H "Content-Type: application/json" \
+  -H "X-Ops-Pin: $OPS_ADMIN_PIN"
+```
+Status: `GET /api/admin/hub/security/rls-status` (same pin header).
+
+**SQL Editor fallback:**
 1. Open [Supabase](https://supabase.com/dashboard) → project **GatorVault** (`ualpmnglskpqmkpnckid`)
 2. **SQL Editor** → New query
 3. Paste entire contents of `024_lockdown_supabase_api.sql`
