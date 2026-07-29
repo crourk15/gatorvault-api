@@ -129,7 +129,7 @@ describe('beat brief film section', () => {
       rivals: [],
       filmTraits: null,
     });
-    assert.match(paste, /No curated Hudl\/On3 film traits/);
+    assert.match(paste, /No On3\/Hudl tape linked yet|No curated Hudl\/On3 film traits/);
   });
 
   it('seed file exists beside recruiting data', () => {

@@ -204,6 +204,9 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
     recruitmentRating.rating ??
     null;
 
+  const { extractOn3Videos } = require('./on3-recruit-videos');
+  const videos = extractOn3Videos(pp);
+
   return {
     slug: recruitSlug,
     name: pp.player?.fullName || nameFromSlug(recruitSlug) || recruitSlug,
@@ -237,6 +240,7 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
     visits: pp.visits?.list || pp.visits || [],
     recruitments: pp.recruitments || [],
     nilValue: parseOn3NilValue(pp.player?.nilValue ?? pp.nilValue),
+    videos,
     on3ProfileUrl: pageUrl(`/rivals/${recruitSlug.replace(/^\//, '')}/`),
     fetchedAt: new Date().toISOString()
   };
@@ -322,4 +326,6 @@ module.exports = {
   stateFromHighSchoolSlug,
   cityStateFromHighSchoolSlug,
   schoolLabelFromOn3,
+  // re-export for callers that already require this module
+  extractOn3Videos: (...args) => require('./on3-recruit-videos').extractOn3Videos(...args),
 };

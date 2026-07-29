@@ -822,6 +822,75 @@ function mountAdminHubRoutes(app) {
       return res.status(code).json({ ok: false, error: err.message });
     }
   });
+
+  /** Pull On3/Hudl highlight URLs into film-traits (single slug or batch). */
+  app.post('/api/admin/hub/film-traits/hydrate', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const ingest = require('./film-traits-ingest');
+      const body = req.body || {};
+      const force = body.force === true;
+
+      if (Array.isArray(body.slugs) && body.slugs.length) {
+        const items = body.slugs.map((s) =>
+          typeof s === 'string' ? { slug: s } : { slug: s.slug || s.playerSlug, playerName: s.name || s.playerName, classYear: s.classYear }
+        );
+        const out = await ingest.hydrateFilmTraitsBatch(items, {
+          concurrency: Math.min(Number(body.concurrency) || 2, 4),
+          force,
+        });
+        return res.status(200).json(out);
+      }
+
+      const slug = body.slug || body.playerSlug || req.query?.slug;
+      if (!slug) {
+        return res.status(400).json({ ok: false, error: 'slug or slugs[] required' });
+      }
+      const out = await ingest.hydrateFilmTraitsFromOn3({
+        slug,
+        playerName: body.playerName || body.name,
+        classYear: body.classYear,
+        force,
+        dryRun: body.dryRun === true,
+      });
+      return res.status(out.ok ? 200 : 502).json(out);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Hydrate film for current Beat Desk inbox recruit slugs. */
+  app.post('/api/admin/hub/film-traits/hydrate-desk', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const ingest = require('./film-traits-ingest');
+      const { getIntelInbox } = require('./post-studio-intel-inbox');
+      const limit = Math.min(Number(req.body?.limit) || 40, 80);
+      const inbox = await getIntelInbox({ deskMode: true, limit });
+      const items = (inbox?.items || [])
+        .map((it) => ({
+          slug: it.slug || it.playerSlug,
+          playerName: it.playerName || it.name,
+          classYear: it.classYear || it.year || 2028,
+        }))
+        .filter((it) => it.slug && !String(it.slug).startsWith('hub-') && !String(it.slug).startsWith('uf-'));
+      // unique by slug
+      const seen = new Set();
+      const unique = [];
+      for (const it of items) {
+        if (seen.has(it.slug)) continue;
+        seen.add(it.slug);
+        unique.push(it);
+      }
+      const out = await ingest.hydrateFilmTraitsBatch(unique, {
+        concurrency: 2,
+        force: req.body?.force === true,
+      });
+      return res.status(200).json({ ...out, deskCount: unique.length });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 }
 
 module.exports = {

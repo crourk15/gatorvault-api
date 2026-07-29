@@ -115,6 +115,17 @@ Curated Hudl / On3 highlight traits live in `server/data/recruiting/film-traits.
 4. Goal: paste brief → Cursor already has tape facts. Use them in the post; never announce that you’re “different” or ahead of the beat.
 5. **Rival rule:** rivals are calm mid-post board context only — never dunk, never the punchline/closer. Close on Florida process.
 
+### On3 / Hudl auto-link (Vault scout workflow)
+
+Charles Power–style evaluation needs **tape on file** for every Beat Desk recruit:
+
+1. **Open** a player → brief auto-pulls On3 `videos.list` Hudl/YouTube URLs into `film-traits` when missing.
+2. Desk card shows **TRAITS PENDING** until Vault writes traits (watch tape → upsert traits).
+3. Bulk: `POST /api/admin/hub/film-traits/hydrate-desk` or `node server/scripts/hydrate-film-traits-from-on3.js --desk`
+4. Single: `POST /api/admin/hub/film-traits/hydrate` `{ "slug": "casey-barner" }`
+5. Curated traits still win — hydrate never overwrites Vault traits / vaultFilmAngle / doNotClaim.
+
+
 ## Shell polish
 
 - Typography: Source Sans 3 + Oswald (not Inter)

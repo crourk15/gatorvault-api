@@ -114,6 +114,18 @@ function upsertFilmTraits(slug, payload = {}) {
       : prev.doNotClaim || [],
     clipNotes:
       payload.clipNotes != null ? String(payload.clipNotes).trim() : prev.clipNotes || '',
+    ingestStatus:
+      payload.ingestStatus != null ? String(payload.ingestStatus).trim() : prev.ingestStatus || null,
+    on3RecruitSlug:
+      payload.on3RecruitSlug != null
+        ? String(payload.on3RecruitSlug).trim()
+        : prev.on3RecruitSlug || null,
+    on3ProfileUrl:
+      payload.on3ProfileUrl != null
+        ? String(payload.on3ProfileUrl).trim()
+        : prev.on3ProfileUrl || null,
+    lastIngestAt:
+      payload.lastIngestAt != null ? String(payload.lastIngestAt).trim() : prev.lastIngestAt || null,
   };
 
   doc.bySlug[key] = nextEntry;
