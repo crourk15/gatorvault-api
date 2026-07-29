@@ -80,7 +80,9 @@
           ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>App Store gate / product_intel_below_90 (Top Issue)</strong>',
            'Ignore for posting. Scorecard issue — open Command Center Coach later. Keep using Beat Desk.'],
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Beat Desk sidebar dot is red</strong>',
-           'Kitchen/API is unhealthy. Don’t force posts — Check API / wait for green, then Refresh the desk.']
+           'API is actually failing (not Film Room / wake lag). Press <strong>Check API</strong>, wait a minute, Refresh. Film Room red shows under Content — keep posting if BD is green/yellow.'],
+          ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>Dashboard yellow while Beat Desk green</strong>',
+           'Normal. Dashboard shows kitchen noise (wake lag, drafts, Film Room). Beat Desk green means you can still post.']
         ]
       : [
           ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>App Store gate / product_intel_below_90</strong>',
