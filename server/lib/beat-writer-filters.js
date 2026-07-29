@@ -1,8 +1,9 @@
 /**
  * Beat writer filtering — national UF-only gates, momentum detection, trusted handles.
  */
+/** Florida URL gate — keep specific; bare "gator" matched "aggregator" and leaked national posts. */
 const FLORIDA_URL_RE =
-  /florida|gators|gator|uf\.edu|on3\.com\/teams\/florida|gatorsonline|247sports\.com\/.*florida|floridagators\.com/i;
+  /(?:\bflorida\b|\bgators\b|gator\s?nation|gatorsfb|gatorsonline|gatorsterritory|insidethegators|floridagators|onlygators|alligatorarmy|uf\.edu|on3\.com\/teams\/florida|247sports\.com\/[^?\s]*florida)/i;
 
 /** National reporters — only UF-related posts pass through. */
 const NATIONAL_UF_ONLY_HANDLES = new Set([
@@ -294,8 +295,11 @@ function matchesUfTargetNameInText(text) {
 }
 
 function strictUfOnlyBlockReason(post, text) {
-  if (isSteveWiltfongPost(post) && !matchesExplicitUfKeywords(text) && !postUrls(post).some(isFloridaRelatedUrl)) {
-    return 'wiltfong_non_uf_keywords';
+  if (
+    (requiresUfContextReporter(post) || isNationalUfOnlyReporter(post) || isSteveWiltfongPost(post)) &&
+    !hasExplicitUfReporterContext(post, text)
+  ) {
+    return isSteveWiltfongPost(post) ? 'wiltfong_non_uf_keywords' : 'national_missing_explicit_uf';
   }
   if (isOtherProgramReporter(post) && !hasUfIngestContext(post, text)) return 'rival_program_reporter';
   if (mentionsOtherProgramWithoutUf(text, post)) return 'other_program_without_uf';
@@ -327,6 +331,19 @@ function isUfFootballEligible(post, text) {
   }
 }
 
+/**
+ * National / multi-program reporters must mention UF explicitly (or link a Florida URL).
+ * Allowlisted recruit names alone are not enough — that leaked national commitment chatter
+ * (e.g. Chad Simmons on Trace Hawkins) into Live Stream.
+ */
+function hasExplicitUfReporterContext(post, text) {
+  const body = `${text || ''} ${post?.summary || ''} ${post?.title || ''}`.trim();
+  if (!body) return false;
+  if (matchesExplicitUfKeywords(body)) return true;
+  if (postUrls(post).some(isFloridaRelatedUrl)) return true;
+  return false;
+}
+
 /** Strict UF football-only gate for beat ingest + Movement Intel surfacing. */
 function passesStrictUfOnlyFilter(post, text) {
   const body = `${text || ''} ${post?.summary || ''} ${post?.title || ''}`.trim();
@@ -338,12 +355,11 @@ function passesStrictUfOnlyFilter(post, text) {
   if (isHardBlockedNonUfContent(body, post)) return false;
   if (mentionsOtherProgramWithoutUf(body, post)) return false;
 
-  if (isSteveWiltfongPost(post)) {
-    const explicit = matchesExplicitUfKeywords(body) || postUrls(post).some(isFloridaRelatedUrl);
-    if (!explicit) return false;
+  // National + multi-program handles: UF keywords/URL required (not target-name-only).
+  if (requiresUfContextReporter(post) || isNationalUfOnlyReporter(post)) {
+    if (!hasExplicitUfReporterContext(post, body)) return false;
+    return isUfFootballEligible(post, body);
   }
-
-  if (requiresUfContextReporter(post) && !hasUfIngestContext(post, body)) return false;
 
   if (!hasUfIngestContext(post, body)) return false;
   return isUfFootballEligible(post, body);
@@ -518,6 +534,7 @@ module.exports = {
   hasUfContextInText,
   matchesUfTargetNameInText,
   hasUfIngestContext,
+  hasExplicitUfReporterContext,
   passesStrictUfOnlyFilter,
   isUfFootballEligible,
   strictUfOnlyBlockReason,

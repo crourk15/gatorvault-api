@@ -256,9 +256,32 @@ export function pickBreakingNews(
   return null;
 }
 
+/** Client safety net — Live Stream is UF football only (server also filters). */
+const UF_LIVE_SIGNAL_RE =
+  /\b(florida|gators|\buf\b|gainesville|the swamp|gator nation|napier|sumrall|official visit|unofficial visit|ov to florida)\b/i;
+const OTHER_PROGRAM_LIVE_RE =
+  /\b(florida state|\bfsu\b|seminoles|\bgeorgia\b|\buga\b|bulldogs|\balabama\b|crimson tide|\bauburn\b|\blsu\b|\btennessee\b|volunteers|ole miss|mississippi state|south carolina|\bclemson\b|\bmiami\b|\bcanes\b|\bhurricanes\b|ohio state|\bmichigan\b|\bnotre dame\b|\boklahoma\b|\bpenn state\b)\b/i;
+
+export function isUfFootballLiveStreamItem(item: Pick<LiveFeedItem, 'title' | 'type' | 'source' | 'url'>): boolean {
+  const title = String(item.title || '').trim();
+  if (!title) return false;
+  const type = String(item.type || '').toLowerCase();
+  if (type === 'podcast' || type === 'audio') return true;
+  if (OTHER_PROGRAM_LIVE_RE.test(title) && !UF_LIVE_SIGNAL_RE.test(title)) return false;
+  if (UF_LIVE_SIGNAL_RE.test(title)) return true;
+  // Structured UF visit/offer cards sometimes omit the word Florida in the title.
+  if (type === 'visit' || type === 'offer') {
+    return /official visit|unofficial visit|visit scheduled|visit cancelled|\boffer\b/i.test(title);
+  }
+  // Beat / recruiting rows without UF signal stay off the stream.
+  if (type === 'beat' || type === 'recruiting' || type === 'info') return false;
+  return true;
+}
+
 function isExcludedLiveFeedItem(item: LiveFeedItem): boolean {
   const blob = `${item.title ?? ''} ${item.type ?? ''}`.toLowerCase();
   if (!blob.trim()) return true;
+  if (!isUfFootballLiveStreamItem(item)) return true;
   // Beat-writer X posts stay visible longer — they are the GNL primary signal.
   const maxAgeMs =
     String(item.type || '').toLowerCase() === 'beat'

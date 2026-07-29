@@ -275,6 +275,66 @@ function isBrewsterFalseFeedItem(item) {
   return false;
 }
 
+function isUfFootballLiveFeedItem(item) {
+  const type = String(item?.type || item?.meta?.eventType || '').toLowerCase();
+  const titleSummary = `${item?.title || ''} ${item?.summary || ''} ${item?.meta?.status || ''}`;
+  if (!titleSummary.trim()) return false;
+
+  try {
+    const beatFilters = require('./beat-writer-filters');
+    if (beatFilters.mentionsOtherProgramWithoutUf(titleSummary, {
+      url: item?.source_url || item?.url,
+      handle: item?.meta?.handle,
+      writerName: item?.author || item?.meta?.writerName,
+    })) {
+      return false;
+    }
+
+    if (type === 'beat') {
+      return beatFilters.shouldIncludeBeatPost({
+        text: item.summary || item.title || '',
+        title: item.title,
+        summary: item.summary,
+        writerName: item.author || item.meta?.writerName,
+        handle: item.meta?.handle,
+        url: item.source_url || item.url,
+        outlet: item.meta?.outlet,
+        attachmentUrls: item.meta?.attachmentUrls,
+      });
+    }
+
+    if (type === 'visit' || type === 'offer' || type === 'recruiting' || type === 'info') {
+      if (beatFilters.isFloridaRelevant(titleSummary)) return true;
+      if (beatFilters.isFloridaRelatedUrl(item.source_url || item.url || '')) return true;
+      // Structured UF visit/offer cards from recruiting intel (title may omit "Florida").
+      if (
+        /official visit|unofficial visit|ov to florida|visit scheduled|visit cancelled|\boffer\b/i.test(
+          titleSummary
+        )
+      ) {
+        return true;
+      }
+      // Generic "Player — Recruiting intel" with no UF signal stays off Live Stream.
+      return false;
+    }
+
+    if (type === 'article' || type === 'content' || sourceLooksLikeArticle(item)) {
+      return beatFilters.isFloridaRelevant(titleSummary) || beatFilters.isUfFootballEligible(
+        { title: item.title, summary: item.summary },
+        titleSummary
+      );
+    }
+  } catch {
+    return /\b(florida|gators|\buf\b|gainesville|swamp|napier|sumrall)\b/i.test(titleSummary);
+  }
+  return true;
+}
+
+function sourceLooksLikeArticle(item) {
+  const source = String(item?.source || '').toLowerCase();
+  return source === 'content' || source === 'article' || source === 'gatorvault';
+}
+
 function isPublicLiveFeedItem(item) {
   if (!item) return false;
   if (isInvalidHeadlineFeedItem(item)) return false;
@@ -308,6 +368,7 @@ function isPublicLiveFeedItem(item) {
     if (et === 'commit' || et === 'flip') return false;
     if (!item.meta?.identityConfirmed && !item.meta?.alertPosted) return false;
   }
+  if (!isUfFootballLiveFeedItem(item)) return false;
   return true;
 }
 

@@ -742,6 +742,45 @@ function isConfirmedOn3TeamNewsIntel(intel) {
   return playerName && playerName.toLowerCase() !== 'unknown' && isValidPlayerName(playerName) && !isSingleTokenName(playerName);
 }
 
+const UF_STRUCTURED_LIVE_EVENTS = new Set([
+  'official_visit',
+  'unofficial_visit',
+  'visit_cancelled',
+  'ov_change',
+  'offer',
+]);
+
+/** Live Stream / public intel must stay UF football — player name alone is not enough. */
+function intelHasUfFootballContext(intel) {
+  const blob = [
+    intel?.detail,
+    intel?.status,
+    intel?.title,
+    intel?.articleUrl,
+    intel?.sourceUrl,
+    intel?.fingerprint,
+    intel?.playerName,
+  ]
+    .map((v) => String(v || ''))
+    .join(' ');
+  try {
+    const beatFilters = require('./beat-writer-filters');
+    if (beatFilters.mentionsOtherProgramWithoutUf(blob)) return false;
+    if (beatFilters.isFloridaRelevant(blob)) return true;
+    if (beatFilters.isFloridaRelatedUrl(intel?.articleUrl || intel?.sourceUrl || '')) return true;
+    const et = String(intel?.eventType || '').toLowerCase();
+    // Structured UF visit/offer rows are UF-scoped by store design — still block rival-only blurbs.
+    if (UF_STRUCTURED_LIVE_EVENTS.has(et) && intel?.identityConfirmed) {
+      return !beatFilters.mentionsOtherProgramWithoutUf(blob);
+    }
+    // Generic "Recruiting intel" / narrative rows need explicit UF signal or locked UF target.
+    if (beatFilters.matchesUfTargetNameInText(String(intel?.playerName || ''))) return true;
+    return false;
+  } catch {
+    return /\b(florida|gators|\buf\b|gainesville)\b/i.test(blob);
+  }
+}
+
 /**
  * Whether recruiting intel should appear on the live feed or in stores.
  * Sync check — use for feed filtering; async evaluateBeatIntelEligibility for ingest gates.
@@ -749,7 +788,9 @@ function isConfirmedOn3TeamNewsIntel(intel) {
 function shouldSurfaceRecruitingIntelSync(intel) {
   if (!intel || typeof intel !== 'object') return false;
   if (intel.resolutionStatus === 'needs_resolution' || intel.surfaced === false) return false;
-  if (isConfirmedOn3TeamNewsIntel(intel)) return true;
+  if (isConfirmedOn3TeamNewsIntel(intel)) {
+    return intelHasUfFootballContext(intel);
+  }
   const playerName = String(intel.playerName || '').trim();
   if (!playerName || playerName.toLowerCase() === 'unknown') return false;
   if (isSingleTokenName(playerName) || !isValidPlayerName(playerName)) return false;
@@ -757,12 +798,12 @@ function shouldSurfaceRecruitingIntelSync(intel) {
   if (!phrase) return false;
   if (isGenericNonPlayerIntel(phrase)) return false;
   if (isCorruptedOrHeadlinePhrase(phrase)) return false;
-  return true;
+  return intelHasUfFootballContext(intel);
 }
 
 async function shouldSurfaceRecruitingIntel(intel) {
-  if (isConfirmedOn3TeamNewsIntel(intel)) return true;
   if (!shouldSurfaceRecruitingIntelSync(intel)) return false;
+  if (isConfirmedOn3TeamNewsIntel(intel)) return true;
   const gate = await evaluateBeatIntelEligibility(intel.detail || '', {
     playerName: intel.playerName,
     playerSlug: intel.playerSlug
@@ -946,6 +987,7 @@ module.exports = {
   logNonPlayerIntel,
   isNonPlayerIntelSkip,
   bypassRecruitingPipeline,
+  intelHasUfFootballContext,
   shouldSurfaceRecruitingIntelSync,
   shouldSurfaceRecruitingIntel,
   guardBeatPost,
