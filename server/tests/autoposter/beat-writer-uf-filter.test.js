@@ -142,4 +142,18 @@ describe('beat-writer UF-only filter', () => {
     };
     assert.equal(beatFilters.shouldIncludeBeatPost(post), false);
   });
+
+  it('treats @gatorvault as brand live-feed, not recruiting ingest', () => {
+    const post = {
+      handle: 'gatorvault',
+      writerName: 'GatorVault',
+      outlet: 'GatorVault',
+      text: 'VAULT TARGET: Florida is chasing 2028 TE Braxton Rein after the spring tape.',
+    };
+    assert.equal(beatFilters.isBrandLiveFeedAccount(post), true);
+    assert.equal(beatFilters.TRUSTED_HANDLES.has('gatorvault'), true);
+    assert.equal(beatFilters.BEAT_RECRUITING_INGEST_HANDLES.has('gatorvault'), false);
+    assert.equal(beatFilters.shouldIncludeBeatPost(post), true);
+    assert.equal(gate.isAllowedIngestAccount(post), false);
+  });
 });

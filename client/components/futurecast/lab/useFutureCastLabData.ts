@@ -11,9 +11,38 @@ import {
 import { buildSeedFutureCastLabData } from '@/lib/futurecast-lab-seed';
 import { deriveHeatLevel } from '@/lib/api/futurecast';
 import { userFacingLoadError } from '@/lib/api-warm-poll';
+import {
+  HIGH_PRIORITY_YEAR,
+  readStaleHighPriorityCache,
+  type HighPriorityPlayer,
+} from '@/lib/futurecast-high-priority-api';
+import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 
 const LAB_POLL_MS = 90_000;
 const SEED_LAB_DATA = buildSeedFutureCastLabData();
+
+function hasUsableUfProbability(players: HighPriorityPlayer[] | undefined): boolean {
+  return (players ?? []).some(
+    (p) => p?.ufProbability != null && Number.isFinite(Number(p.ufProbability))
+  );
+}
+
+/** Prefer stale localStorage HP (real UF%) over seed rows that often ship with null odds. */
+function initialLabData(): FutureCastLabDataMap | null {
+  if (!SEED_LAB_DATA.masterBoard.players.length) return null;
+  const discoveryYear = primaryRecruitingClassYear();
+  const staleDiscovery = readStaleHighPriorityCache(discoveryYear);
+  const staleClosing = readStaleHighPriorityCache(HIGH_PRIORITY_YEAR);
+  return {
+    ...SEED_LAB_DATA,
+    highPriority: hasUsableUfProbability(staleDiscovery?.players)
+      ? staleDiscovery!.players
+      : SEED_LAB_DATA.highPriority,
+    highPriorityClosing: hasUsableUfProbability(staleClosing?.players)
+      ? staleClosing!.players
+      : SEED_LAB_DATA.highPriorityClosing,
+  };
+}
 
 const EMPTY_LAB_DATA: FutureCastLabDataMap = {
   masterBoard: {
@@ -87,9 +116,7 @@ export type FutureCastLabData = FutureCastLabDataMap & {
 
 export function useFutureCastLabData(): FutureCastLabData {
   const seedReady = SEED_LAB_DATA.masterBoard.players.length > 0;
-  const [data, setData] = useState<FutureCastLabDataMap | null>(
-    seedReady ? SEED_LAB_DATA : null
-  );
+  const [data, setData] = useState<FutureCastLabDataMap | null>(() => initialLabData());
   const [loading, setLoading] = useState(!seedReady);
   const [secondaryLoading, setSecondaryLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -125,28 +152,40 @@ export function useFutureCastLabData(): FutureCastLabData {
           setWarming(false);
           return;
         }
-        const partialOverlay = applyDiscoverySeasonOverlay(primary, {
-          trendingBoard: EMPTY_LAB_DATA.trendingBoard,
-          movementIntel: EMPTY_LAB_DATA.movementIntel,
-          staffNotes: EMPTY_LAB_DATA.staffNotes,
-          home: EMPTY_LAB_DATA.home,
-          stock: EMPTY_LAB_DATA.stock,
-          highPriority: [],
-          highPriorityClosing: [],
-          visitIntel: [],
-          visitRecap: [],
-          flipWatch: [],
-          movementNarratives: [],
-          underclassmen: [],
-          roster: [],
-          commits2027: [],
-        });
-        setData({
-          ...EMPTY_LAB_DATA,
-          ...primary,
-          ...partialOverlay,
-          heatLevel: 'warm',
-          lastUpdated: primary.lastUpdated,
+        // Keep usable HP through primary paint — wiping to [] made the 2028 meter
+        // fall back to Closing Class board math until secondary landed.
+        setData((prev) => {
+          const keepHp = hasUsableUfProbability(prev?.highPriority)
+            ? prev!.highPriority
+            : [];
+          const keepHpc = hasUsableUfProbability(prev?.highPriorityClosing)
+            ? prev!.highPriorityClosing
+            : [];
+          const partialOverlay = applyDiscoverySeasonOverlay(primary, {
+            trendingBoard: EMPTY_LAB_DATA.trendingBoard,
+            movementIntel: EMPTY_LAB_DATA.movementIntel,
+            staffNotes: EMPTY_LAB_DATA.staffNotes,
+            home: EMPTY_LAB_DATA.home,
+            stock: EMPTY_LAB_DATA.stock,
+            highPriority: keepHp,
+            highPriorityClosing: keepHpc,
+            visitIntel: prev?.visitIntel ?? [],
+            visitRecap: prev?.visitRecap ?? [],
+            flipWatch: prev?.flipWatch ?? [],
+            movementNarratives: prev?.movementNarratives ?? [],
+            underclassmen: [],
+            roster: [],
+            commits2027: [],
+          });
+          return {
+            ...EMPTY_LAB_DATA,
+            ...primary,
+            ...partialOverlay,
+            highPriority: keepHp,
+            highPriorityClosing: keepHpc,
+            heatLevel: 'warm',
+            lastUpdated: primary.lastUpdated,
+          };
         });
         setLoading(false);
         setWarming(false);

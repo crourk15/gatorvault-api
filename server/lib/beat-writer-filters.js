@@ -3,7 +3,10 @@
  */
 /** Florida URL gate — keep specific; bare "gator" matched "aggregator" and leaked national posts. */
 const FLORIDA_URL_RE =
-  /(?:\bflorida\b|\bgators\b|gator\s?nation|gatorsfb|gatorsonline|gatorsterritory|insidethegators|floridagators|onlygators|alligatorarmy|uf\.edu|on3\.com\/teams\/florida|247sports\.com\/[^?\s]*florida)/i;
+  /(?:\bflorida\b|\bgators\b|gator\s?nation|gatorsfb|gatorsonline|gatorsterritory|insidethegators|floridagators|onlygators|alligatorarmy|gatorvault|gatorvaultinsider|uf\.edu|on3\.com\/teams\/florida|247sports\.com\/[^?\s]*florida)/i;
+
+/** Own brand — show on GNL Live, never feed back into recruiting ingest (echo loop). */
+const BRAND_LIVE_FEED_HANDLES = new Set(['gatorvault']);
 
 /** National reporters — only UF-related posts pass through. */
 const NATIONAL_UF_ONLY_HANDLES = new Set([
@@ -70,19 +73,26 @@ const TRUSTED_HANDLES = new Set([
   'on3recruits',
   'rivalsportal',
   'gatorsterritory',
-  'insidethegators'
+  'insidethegators',
+  'gatorvault'
 ]);
 
 /** All beat writers polled for recruiting ingest (lowercase handles). */
-const BEAT_RECRUITING_INGEST_HANDLES = new Set([
-  ...TRUSTED_HANDLES,
-  'keithniebuhr',
-  'nickdelatorregc',
-  'thomasgoldkamp'
-]);
+const BEAT_RECRUITING_INGEST_HANDLES = new Set(
+  [...TRUSTED_HANDLES, 'keithniebuhr', 'nickdelatorregc', 'thomasgoldkamp'].filter(
+    (handle) => !BRAND_LIVE_FEED_HANDLES.has(handle)
+  )
+);
 
 const TRUSTED_PATTERN =
-  /bender|alderman|niebuhr|simmons|fawcett|harden|abolverdi|gatorsonline|ivins|wiltfong|power|gators breakdown|gatorsterritory|insidethegators|on3recruits|rivalsportal/i;
+  /bender|alderman|niebuhr|simmons|fawcett|harden|abolverdi|gatorsonline|ivins|wiltfong|power|gators breakdown|gatorsterritory|insidethegators|on3recruits|rivalsportal|gatorvault/i;
+
+function isBrandLiveFeedAccount(post) {
+  const handle = String(post?.handle || post?.writerId || '')
+    .toLowerCase()
+    .replace(/^@/, '');
+  return BRAND_LIVE_FEED_HANDLES.has(handle);
+}
 
 const MOMENTUM_KEYWORDS = [
   'trending up',
@@ -511,8 +521,10 @@ module.exports = {
   REQUIRES_UF_CONTEXT_HANDLES,
   OTHER_PROGRAM_REPORTER_HANDLES,
   UF_OFFICIAL_HANDLES,
+  BRAND_LIVE_FEED_HANDLES,
   TRUSTED_HANDLES,
   BEAT_RECRUITING_INGEST_HANDLES,
+  isBrandLiveFeedAccount,
   isNationalUfOnlyReporter,
   isOtherProgramReporter,
   requiresUfContextReporter,

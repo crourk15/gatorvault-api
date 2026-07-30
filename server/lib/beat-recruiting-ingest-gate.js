@@ -210,6 +210,8 @@ function isUfOfficialAccount(post) {
 
 /** Rule 1 — beat writers + UF official accounts only. */
 function isAllowedIngestAccount(post) {
+  // Own brand posts show on GNL Live but must not re-enter recruiting ingest (echo).
+  if (beatFilters.isBrandLiveFeedAccount?.(post)) return false;
   if (isUfOfficialAccount(post)) return true;
   const handle = normalizeHandle(post);
   if (beatFilters.BEAT_RECRUITING_INGEST_HANDLES?.has(handle)) return true;
