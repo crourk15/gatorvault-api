@@ -29,11 +29,27 @@ assert('generates 5 star WR Jaylen', patterns.some((p) => /^5 star WR Jaylen$/i.
 assert('generates five-star WR Jaylen', patterns.some((p) => /^five-star WR Jaylen$/i.test(p)));
 assert('generates IMG Academy 5 star', patterns.some((p) => /IMG Academy 5 star/i.test(p)));
 assert('generates Jaylen Brown full name', patterns.includes('Jaylen Brown'));
-assert('generates Brown last name', patterns.includes('Brown'));
+assert('generates Brown last name (len>=5)', patterns.includes('Brown'));
 assert('generates five star WR Brown', patterns.some((p) => /^five star WR Brown$/i.test(p)));
+assert('does not generate bare star+pos without name', !patterns.some((p) => /^5-?star WR$/i.test(p)));
 assert('generates 5 star IMG Academy commit', patterns.some((p) => /5 star IMG Academy commit/i.test(p)));
 assert('generates class year pattern', patterns.some((p) => /2025 WR Jaylen/i.test(p)));
 assert('generates ranking pattern', patterns.some((p) => /#42 Jaylen/i.test(p)));
+
+const merrick = {
+  slug: 'merrick-ham',
+  name: 'Merrick Ham',
+  stars: 4,
+  pos: 'EDGE',
+  school: 'Marietta (Marietta, GA)',
+  classYear: 2028,
+  natlRank: 102
+};
+const hamPatterns = generator.generateIdentityPatterns(merrick);
+assert('generates Merrick Ham full name', hamPatterns.includes('Merrick Ham'));
+assert('does not generate bare Ham surname', !hamPatterns.includes('Ham'));
+assert('does not generate bare 4-star EDGE', !hamPatterns.some((p) => /^4-?star EDGE$/i.test(p)));
+assert('generates 4-star EDGE Merrick', hamPatterns.some((p) => /^4-star EDGE Merrick$/i.test(p)));
 
 const texasTech = {
   slug: 'rival-edge',
