@@ -115,6 +115,27 @@ Curated Hudl / On3 highlight traits live in `server/data/recruiting/film-traits.
 4. Goal: paste brief → Cursor already has tape facts. Use them in the post; never announce that you’re “different” or ahead of the beat.
 5. **Rival rule:** rivals are calm mid-post board context only — never dunk, never the punchline/closer. Close on Florida process.
 
+## Player projection / comp in Copy Brief
+
+Recruit briefs embed a **PLAYER PROJECTION / COMP** block from War Room breakdowns (`comparison`, `projection`, optional `schemeFit` / `nflProjection` in `server/data/war-room/breakdowns.json`). Beat Desk shows the same card on **Open**.
+
+### Charles standard (do not re-litigate per player)
+
+**Projection** = contribution path + ceiling, sold clean:
+- **When:** packages as a freshman / Year 2–3 regular / multi-year project
+- **Role:** depth · rotation · every-down
+- **Ceiling:** regular contributor · All-SEC upside (sell the upside — never write “not All-American” or other downplay lines)
+
+**Player comp** = same band + similar **body style** + similar **win traits** from tape:
+- Not size-only (“also 6-6”)
+- Not a higher elite band than the projection (if the comp is an All-American household name, the projection has to match)
+- Prefer a comparable who filled into a similar frame path (e.g. long/rangy EDGE → Yetur Gross-Matos band, not a short/dense 270 prototype)
+
+1. Film desk / Open fills War Room `projection` + `comparison` from tape.
+2. **Copy Brief** prints both (or “none on file — do not invent”).
+3. Cursor post must weave a short projection clause + one calm comp mid-post when on file — never invent, never close on the comp.
+4. FutureCast player profiles read the same War Room fields — **confirm with Charles before treating a new eval/comp as live profile copy**.
+
 ### On3 / Hudl highlight LINK in Copy Brief
 
 For **every** Beat Desk recruit:

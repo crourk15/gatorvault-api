@@ -44,6 +44,50 @@ describe('Beat Brief Desk', () => {
     assert.match(text, /Florida offered Hudson West/);
     assert.match(text, /INSTRUCTIONS FOR AI/);
     assert.match(text, /Sample draft for Hudson West/);
+    assert.match(text, /PLAYER PROJECTION \/ COMP/);
+    assert.match(text, /PROJECTION \/ COMP RULE/);
+    assert.match(text, /Player projection:/);
+    assert.match(text, /Player comp:/);
+  });
+
+  it('embeds War Room projection + player comp into the brief paste', () => {
+    const mod = require('../../lib/beat-brief-packet');
+    const text = mod.formatBriefText({
+      slug: 'merrick-ham',
+      playerName: 'Merrick Ham',
+      player: {
+        classYear: 2028,
+        position: 'EDGE',
+        stars: 4,
+        status: 'uncommitted',
+        ufStatus: 'Florida Offered',
+      },
+      research: {
+        ufPosition: 'tracking',
+        eventType: 'unofficial_visit',
+        breakdown: {
+          projection:
+            'Ham projects as a developmental EDGE/OLB who wins the corner with length and hand counters.',
+          comparison:
+            'Ham comps to Josh Sweat — rangy length EDGE who wins with reach and strip pressure.',
+          schemeFit: 'Ham fits a wide-9 / stand-up EDGE role.',
+        },
+      },
+      beatRows: [],
+      whyFlorida: 'Florida offered; tracking.',
+      vaultAngle: 'Own Merrick Ham.',
+      rivals: ['Auburn'],
+    });
+
+    assert.match(text, /PLAYER PROJECTION \/ COMP/);
+    assert.match(text, /Projection: Ham projects as a developmental EDGE/);
+    assert.match(text, /Player comp: Ham comps to Josh Sweat/);
+    assert.match(text, /Scheme fit: Ham fits a wide-9/);
+    assert.match(text, /PROJECTION \/ COMP RULE/);
+    assert.match(
+      text,
+      /Structure:[\s\S]*projection and\/or player comp when on file/
+    );
   });
 
   it('wires Beat Desk into Admin Hub nav + scripts', () => {

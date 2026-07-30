@@ -309,10 +309,23 @@ function buildVerifiedOn3Summary(player) {
     !isGenericBeatArticle(profileNote, player.name)
   ) {
     body += ` ${profileNote}`;
-  } else if (player.commitDate) {
-    body += ` Committed to Florida on ${player.commitDate}.`;
   } else {
-    body += ' Committed to Florida.';
+    const committedToUf =
+      !!player.commitDate ||
+      /^(committed|signed|enrolled)$/i.test(String(player.status || '').trim()) ||
+      /florida|gators/i.test(String(player.committedTo || ''));
+    if (committedToUf) {
+      body += player.commitDate
+        ? ` Committed to Florida on ${player.commitDate}.`
+        : ' Committed to Florida.';
+    } else {
+      const ufStake = String(player.ufStatus || player.status || '').trim();
+      if (ufStake && !/^uncommitted$/i.test(ufStake)) {
+        body += ` UF board status: ${ufStake}.`;
+      } else {
+        body += ' Still an open board target — not a Florida commit.';
+      }
+    }
   }
   return body.length >= 80 ? body : null;
 }
