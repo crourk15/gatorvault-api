@@ -576,13 +576,32 @@ function buildVaultAngle({
   const staff = ufStaffSummary(player);
   const visits = visitSummary(intelligence, player);
   const ladder = schoolLadderSummary(player, 5);
-  if (filmTraits?.traits?.length || ranks || ladder || staff || visits) {
+  const projection =
+    String(research?.breakdown?.projection || player?.projection || '').trim() || null;
+  const comparison =
+    String(
+      research?.breakdown?.comparison || player?.playerComp || player?.comparison || ''
+    ).trim() || null;
+  if (projection || comparison) {
+    lines.push(
+      [
+        'Scout identity (required when on file — put in the post, do not invent):',
+        projection ? `Projection: ${projection.slice(0, 220)}` : null,
+        comparison ? `Player comp: ${comparison.slice(0, 180)}` : null,
+      ]
+        .filter(Boolean)
+        .join(' ')
+    );
+  }
+  if (filmTraits?.traits?.length || ranks || ladder || staff || visits || projection || comparison) {
     const parts = [];
     if (filmTraits?.traits?.length) {
       parts.push(`film ${filmTraits.traits.slice(0, 2).join('; ')}`);
     }
     if (meas) parts.push(`size ${meas}`);
     if (ranks) parts.push(`ranks ${ranks}`);
+    if (projection) parts.push(`projection ${projection.slice(0, 120)}`);
+    if (comparison) parts.push(`comp ${comparison.slice(0, 100)}`);
     if (staff) parts.push(staff);
     if (visits) parts.push(`visits ${String(visits).slice(0, 140)}`);
     if (ladder) parts.push(`ladder ${String(ladder).split(';').slice(0, 4).join('; ')}`);
@@ -599,6 +618,54 @@ function buildVaultAngle({
     );
   }
   lines.push(`Why UF (use in copy, don't invent beyond this): ${whyFlorida}`);
+  return lines.join('\n');
+}
+
+/**
+ * Player projection + NFL/college comp from War Room breakdown (required recruit post ingredients).
+ */
+function formatProjectionCompBlock(research = null, player = null) {
+  const bd = research?.breakdown || {};
+  const projection =
+    String(bd.projection || player?.projection || '').trim() || null;
+  const comparison =
+    String(bd.comparison || player?.playerComp || player?.comparison || '').trim() ||
+    null;
+  const schemeFit = String(bd.schemeFit || player?.schemeFit || '').trim() || null;
+  const nflProjection =
+    String(bd.nflProjection || player?.nflProjection || '').trim() || null;
+
+  // Skip obvious scrape junk (page chrome / fantasy dump) if it slipped into projection.
+  const looksJunk = (s) =>
+    !s ||
+    s.length > 420 ||
+    /\bPFF\b|\bFantasy Football\b|Crystal Ball|Manage Predictions/i.test(s);
+
+  const proj = looksJunk(projection) ? null : projection;
+  const comp = looksJunk(comparison) ? null : comparison;
+  const scheme = looksJunk(schemeFit) ? null : schemeFit;
+  const nfl = looksJunk(nflProjection) ? null : nflProjection;
+
+  const lines = [];
+  lines.push('PLAYER PROJECTION / COMP (required in recruit posts when on file)');
+  lines.push('----------------------------------------------------------------');
+  if (proj) lines.push(`Projection: ${proj}`);
+  else {
+    lines.push(
+      'Projection: (none on file — write board + film only; do NOT invent a college/NFL projection)'
+    );
+  }
+  if (comp) lines.push(`Player comp: ${comp}`);
+  else {
+    lines.push(
+      'Player comp: (none on file — do NOT invent an NFL/college comp; omit from the post)'
+    );
+  }
+  if (scheme) lines.push(`Scheme fit: ${scheme}`);
+  if (nfl) lines.push(`NFL projection: ${nfl}`);
+  lines.push(
+    'AGENT RULE: When Projection and/or Player comp are on file, weave ONE short projection clause and/or ONE calm comp into the post (mid-body, after identity/tape). Never invent either. Never make the comp the closer.'
+  );
   return lines.join('\n');
 }
 
@@ -703,6 +770,9 @@ function formatBriefText({
   lines.push('-------------------------------');
   lines.push(vaultAngle || '(thin)');
 
+  lines.push('');
+  lines.push(formatProjectionCompBlock(research, player));
+
   const filmBlock = formatFilmTraitsBlock(filmTraits);
   if (filmBlock) {
     lines.push('');
@@ -784,6 +854,8 @@ function formatBriefText({
   lines.push('- School ladder: top interested schools with RPM + visit counts');
   lines.push('- Visit trail: OV/UOV + latest dates when present');
   lines.push('- Film / highlights: OPEN the Highlight LINK(s), review the tape, then put 1–2 tape facts in the post as plain Vault observation');
+  lines.push('- Player projection: use Projection line when on file (college role/ceiling) — never invent');
+  lines.push('- Player comp: use Player comp line when on file (one calm comparable) — never invent; never close on the comp');
   lines.push('- Internal intel seed: steal the FACT, own the VOICE — never tip that a beat writer said it');
   lines.push('- Vault angle: Florida-first narrative that sounds like GatorVault, not a recap desk');
   lines.push('- Show, don\'t announce: never claim to be different, ahead of the beat, or what "most feeds / timelines" miss');
@@ -799,13 +871,16 @@ function formatBriefText({
     'FILM REVIEW RULE (hard): Before writing, open every Highlight LINK in FILM / HIGHLIGHTS. Review the Hudl/On3 tape. Your post must include 1–2 concrete observations from that tape (movement, coverage, length, ball skills, etc.). If a link will not open, say so and write from board facts only — do not invent film.'
   );
   lines.push(
+    'PROJECTION / COMP RULE (hard): If PLAYER PROJECTION / COMP lists Projection and/or Player comp on file, include them in the post as Vault fact (short clause each). If marked "(none on file)", omit — do not invent a projection or NFL/college comparable.'
+  );
+  lines.push(
     'VOICE RULE (hard): This is GatorVault\'s take — not a beat recap. Absorb facts from the intel seed/board + what you saw on the highlight link, then rewrite in original Vault voice. FORBIDDEN in the post: naming beat writers; "beat line"; "according to reports"; "per On3/247"; "as reported"; "reports say"; "insiders say"; "I watched the film"; and any meta flex about being different or ahead of the timeline. Just state the board + film. Board facts and tape observations may be stated as Vault fact.'
   );
   lines.push(
     'RIVAL RULE (hard): Speak about what Florida has going with this player. Rivals (Alabama, Georgia, etc.) are optional mid-post board context only — one calm fact (e.g. who leads RPM). Do NOT dunk on the opponent, do NOT frame Florida as waiting for a rival "inevitability" to break, and never close on the rival. Closer = Florida process (visits, staff, film, ownership).'
   );
   lines.push(
-    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) 1–2 tape facts from the Highlight LINK review, (4) Florida offer/staff/visits (rival RPM only as calm context if useful), (5) ownership/culture or visit detail, (6) sharp Florida-forward closer. Stay factual to board + intel + the tape you reviewed — no invented offers, visits, rankings, tackle totals, or quotes. Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
+    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) 1–2 tape facts from the Highlight LINK review, (4) projection and/or player comp when on file, (5) Florida offer/staff/visits (rival RPM only as calm context if useful), (6) ownership/culture or visit detail, (7) sharp Florida-forward closer. Stay factual to board + intel + the tape you reviewed — no invented offers, visits, rankings, tackle totals, projections, comps, or quotes. Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
   );
 
   return lines.filter((l) => l !== null).join('\n');
@@ -1300,6 +1375,7 @@ module.exports = {
   buildHubDeskBrief,
   formatBriefText,
   formatFilmTraitsBlock,
+  formatProjectionCompBlock,
   buildWhyFlorida,
   buildVaultAngle,
   isCommittedPlayer,

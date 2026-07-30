@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-11T11:30:35.703Z",
+  "updatedAt": "2026-07-30T14:02:08.649Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -17556,27 +17556,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl / On3)",
+          "url": "https://www.on3.com/rivals/merrick-ham-281179/",
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Ham converts length into longarm/swim pressure off the edge.",
+        "Ham finishes rushes with strip ability — sophomore reel shows longarm-to-swim strip sack.",
+        "Ham plays stand-up / wide-9 alignments and keeps tackles off his chest with reach."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
+      "weaknesses": [
+        "Ham still needs to add mass to hold up consistently vs SEC offensive tackles."
+      ],
+      "comparison": "Ham comps to Josh Sweat — rangy length EDGE who wins with reach, hand counters, and strip pressure on the corner.",
+      "schemeFit": "Ham fits a wide-9 / stand-up EDGE or 3-4 OLB who attacks the arc with length before bulk arrives.",
+      "staffNotes": "Florida offered Ham; Bam Hardmon is the listed UF staffer. Board read is tracking — not a commit.",
+      "projection": "Ham projects as a developmental EDGE/OLB who wins the corner with length and hand counters, with mass still to add before he is a finished SEC pass-rush piece.",
+      "insiderNotes": "Merrick Ham is a 4-star EDGE · 6-6 / 230 · Marietta, GA · Natl #107 · Pos #14 · State #12 (GA). Florida Offered. Open board target.",
       "recruitingStory": null,
-      "nflProjection": null,
+      "nflProjection": "Ham has a high-upside developmental EDGE frame if the length/hand package continues to produce strip pressure as he adds weight.",
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:09.934Z"
+      "updatedAt": "2026-07-30T14:02:08.642Z"
     },
     "ryan-drakeford": {
       "playerSlug": "ryan-drakeford",

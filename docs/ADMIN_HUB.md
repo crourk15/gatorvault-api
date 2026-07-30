@@ -115,6 +115,14 @@ Curated Hudl / On3 highlight traits live in `server/data/recruiting/film-traits.
 4. Goal: paste brief → Cursor already has tape facts. Use them in the post; never announce that you’re “different” or ahead of the beat.
 5. **Rival rule:** rivals are calm mid-post board context only — never dunk, never the punchline/closer. Close on Florida process.
 
+## Player projection / comp in Copy Brief
+
+Recruit briefs also embed a **PLAYER PROJECTION / COMP** block from War Room breakdowns (`comparison`, `projection`, optional `schemeFit` / `nflProjection` in `server/data/war-room/breakdowns.json`).
+
+1. **Open** / **Copy Brief** prints Projection + Player comp when on file (or explicit “none on file — do not invent”).
+2. AI instructions require weaving a short projection clause and/or one calm comp mid-post when present — never invent, never close on the comp.
+3. Fill via War Room upsert / trusted scout sources; film-desk evaluations should set both fields so the next brief is complete.
+
 ### On3 / Hudl highlight LINK in Copy Brief
 
 For **every** Beat Desk recruit:

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-29T15:10:42.880Z",
+  "updatedAt": "2026-07-30T14:02:24.992Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -81,6 +81,40 @@
       "evaluatedBy": "vault-ai-scout-synth",
       "evalMode": "on3_scout_rewrite",
       "evaluatedAt": "2026-07-29T15:10:42.880Z"
+    },
+    "merrick-ham": {
+      "playerName": "Merrick Ham",
+      "position": "EDGE",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Merrick Ham - Marietta - 2025 Sophomore Season Highlights",
+          "url": "https://www.hudl.com/embed/video/3/22616802/68d476200f5aa350d2c69b13"
+        },
+        {
+          "type": "hudl",
+          "label": "Merrick Ham - Marietta - 2024 Freshman Season Highlights",
+          "url": "https://www.hudl.com/embed/video/3/22616802/67605ec1f20bc0734c2b3385"
+        }
+      ],
+      "traits": [
+        "Longarm into swim finishes as strip sack (sophomore reel caption + play).",
+        "Rangs out as a stand-up / wide-9 EDGE — keeps tackles off his chest with length."
+      ],
+      "vaultFilmAngle": "Length-first EDGE who already converts hand counters into strip pressure; Florida tracking with Hardmon offer.",
+      "doNotClaim": [
+        "Do not claim Florida commit — board is Offered / tracking / ~2% RPM.",
+        "Do not invent tackle totals, sack counts, or grades."
+      ],
+      "clipNotes": "Vault-reviewed sophomore Hudl reel 2026-07-30.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": "https://www.on3.com/rivals/merrick-ham-281179/",
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T14:01:52.252Z"
     }
   }
 }
