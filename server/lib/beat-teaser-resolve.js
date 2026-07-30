@@ -76,13 +76,89 @@ function collectPostUrls(post = {}) {
   return [...new Set(urls.map((u) => String(u || '').trim()).filter(Boolean))];
 }
 
-function pickOn3ArticleUrl(post = {}) {
+const SHORT_URL_HOST_RE = /^(?:t\.co|bit\.ly|tinyurl\.com|ow\.ly|buff\.ly)$/i;
+const _shortUrlCache = new Map();
+
+function isShortUrl(url) {
+  try {
+    const u = new URL(String(url || '').trim());
+    return SHORT_URL_HOST_RE.test(u.hostname);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Expand t.co / short links so On3 article URLs become visible to teaser resolve.
+ * HEAD first; follow redirects without downloading the body.
+ */
+async function expandShortUrl(url, { fetchImpl = null, timeoutMs = 4500 } = {}) {
+  const raw = String(url || '').trim();
+  if (!raw || !isShortUrl(raw)) return raw;
+  if (_shortUrlCache.has(raw)) return _shortUrlCache.get(raw);
+
+  const fetchFn =
+    fetchImpl ||
+    (typeof fetch === 'function'
+      ? fetch
+      : (...args) => import('node-fetch').then(({ default: f }) => f(...args)));
+
+  let resolved = raw;
+  try {
+    const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), timeoutMs) : null;
+    const res = await fetchFn(raw, {
+      method: 'HEAD',
+      redirect: 'follow',
+      signal: ctrl?.signal
+    });
+    if (timer) clearTimeout(timer);
+    if (res?.url && String(res.url).startsWith('http')) resolved = String(res.url);
+  } catch {
+    try {
+      const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      const timer = ctrl ? setTimeout(() => ctrl.abort(), timeoutMs) : null;
+      const res = await fetchFn(raw, {
+        method: 'GET',
+        redirect: 'follow',
+        signal: ctrl?.signal,
+        headers: { Range: 'bytes=0-0' }
+      });
+      if (timer) clearTimeout(timer);
+      if (res?.url && String(res.url).startsWith('http')) resolved = String(res.url);
+    } catch {
+      resolved = raw;
+    }
+  }
+
+  _shortUrlCache.set(raw, resolved);
+  return resolved;
+}
+
+async function expandPostUrls(post = {}, opts = {}) {
   const urls = collectPostUrls(post);
+  const expanded = [];
+  for (const u of urls) {
+    expanded.push(isShortUrl(u) ? await expandShortUrl(u, opts) : u);
+  }
+  return [...new Set(expanded.filter(Boolean))];
+}
+
+function pickOn3ArticleUrlFromList(urls = []) {
   return (
     urls.find((u) => ON3_NEWS_RE.test(u)) ||
-    urls.find((u) => ON3_ANY_RE.test(u) && !/x\.com|twitter\.com/i.test(u)) ||
+    urls.find((u) => ON3_ANY_RE.test(u) && !/x\.com|twitter\.com|t\.co/i.test(u)) ||
     null
   );
+}
+
+function pickOn3ArticleUrl(post = {}) {
+  return pickOn3ArticleUrlFromList(collectPostUrls(post));
+}
+
+async function pickOn3ArticleUrlExpanded(post = {}, opts = {}) {
+  const urls = await expandPostUrls(post, opts);
+  return pickOn3ArticleUrlFromList(urls);
 }
 
 function hasResolvableOn3Article(post = {}) {
@@ -159,18 +235,49 @@ function resolvePlayerFromBeatPostSync(postOrText) {
 }
 
 /**
- * Async: fetch On3 news pageProps when the tweet teases without naming the prospect.
+ * Async: expand short links, then fetch On3 news pageProps when the tweet
+ * teases without naming the prospect (common Bender On3+ pattern).
  */
 async function resolvePlayerFromBeatPost(post = {}, opts = {}) {
-  const sync = resolvePlayerFromBeatPostSync(post);
+  const expandedUrls = await expandPostUrls(post, opts);
+  const articleUrl = pickOn3ArticleUrlFromList(expandedUrls);
+  const postWithUrls = {
+    ...post,
+    attachmentUrls: [...new Set([...(post.attachmentUrls || []), ...expandedUrls])],
+    articleUrl: articleUrl || post.articleUrl || null,
+    url: articleUrl && (!post.url || isShortUrl(post.url) || /x\.com|twitter\.com/i.test(post.url))
+      ? articleUrl
+      : post.url
+  };
+
+  const sync = resolvePlayerFromBeatPostSync(postWithUrls);
   if (sync?.playerSlug && sync.matchMode !== 'text_extract') {
     // Prefer URL/article identity over bare text when available.
     if (sync.matchMode && String(sync.matchMode).startsWith('on3')) return sync;
   }
 
-  const articleUrl = pickOn3ArticleUrl(post);
   if (!articleUrl || !ON3_NEWS_RE.test(articleUrl)) {
     return sync;
+  }
+
+  // Sync parse often works once t.co → on3.com is expanded (slug embeds the name).
+  try {
+    const { parseOn3BeatUrlIdentity } = require('./on3-recruit-discovery');
+    const fromExpanded = parseOn3BeatUrlIdentity(postWithUrls.text || '', articleUrl);
+    if (fromExpanded?.playerSlug && fromExpanded.playerName) {
+      if (!isRelationalMention(post.text || '', fromExpanded.playerName)) {
+        return {
+          playerName: fromExpanded.playerName,
+          playerSlug: fromExpanded.playerSlug,
+          classYear: fromExpanded.classYear || null,
+          pos: fromExpanded.pos || null,
+          matchMode: fromExpanded.source || 'on3_news_url',
+          on3ArticleUrl: articleUrl
+        };
+      }
+    }
+  } catch {
+    /* optional */
   }
 
   try {
@@ -234,7 +341,10 @@ module.exports = {
   isRelationalMention,
   textWithoutRelationalNames,
   collectPostUrls,
+  expandShortUrl,
+  expandPostUrls,
   pickOn3ArticleUrl,
+  pickOn3ArticleUrlExpanded,
   hasResolvableOn3Article,
   parseSyncOn3Identity,
   resolvePlayerFromBeatPostSync,

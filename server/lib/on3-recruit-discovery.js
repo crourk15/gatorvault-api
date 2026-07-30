@@ -210,6 +210,48 @@ function parseOn3NewsArticleSlug(pathSlug) {
     };
   }
 
+  // …contender-for-merrick-ham-ahead-of-fall-visit / …on-joe-craddock-this-weekend
+  m = slug.match(
+    /\b(?:for|on|with)-([a-z]{2,}(?:-[a-z]{2,}){1,2})-(?:ahead|before|after|this|next|on|to|with|as|in|for)\b/i
+  );
+  if (m) {
+    const playerSlug = m[1].replace(/-\d+$/, '');
+    if (isLikelyPersonSlug(playerSlug) && !PERSON_SLUG_NOISE.has(playerSlug.split('-')[0])) {
+      return {
+        playerSlug,
+        playerName: slugToPlayerName(playerSlug),
+        stars: null,
+        pos: null,
+        classYear: null,
+      };
+    }
+  }
+
+  // Long teasers that embed a known board/allowlist slug anywhere in the path.
+  try {
+    const allowlist = require('./recruiting-target-allowlist');
+    const known = new Set(
+      [...(allowlist.ALLOWLIST_2028 || []), ...(allowlist.ALLOWLIST_2027 || [])]
+        .map((s) => String(s || '').toLowerCase())
+        .filter((s) => s.split('-').length >= 2)
+    );
+    // Prefer longer slug matches (jordan-williams-jr before jordan)
+    const hits = [...known]
+      .filter((s) => slug === s || slug.includes(`-${s}-`) || slug.endsWith(`-${s}`) || slug.startsWith(`${s}-`))
+      .sort((a, b) => b.length - a.length);
+    if (hits[0] && isLikelyPersonSlug(hits[0])) {
+      return {
+        playerSlug: hits[0],
+        playerName: slugToPlayerName(hits[0]),
+        stars: null,
+        pos: null,
+        classYear: null,
+      };
+    }
+  } catch {
+    /* optional */
+  }
+
   m = slug.match(/\bno-\d+-interior-ol-([a-z0-9-]+)$/i);
   if (m) {
     const playerSlug = m[1].replace(/-\d+$/, '');
