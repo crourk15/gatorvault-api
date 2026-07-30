@@ -136,10 +136,39 @@ function fallbackCommitBlurb(player) {
   return `NATL ${formatRank(natl)}${RANK_LINE_SEP}POS ${formatRank(player.posRank)} (${pos})`;
 }
 
+/** Escape a name for safe RegExp use. */
+function escapeRegExp(value) {
+  return String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/** Strip leading "Lastname …" / "Name shows…" noise for tighter card copy. */
+function polishScoutingSentence(text, playerName) {
+  let s = String(text || '').trim();
+  if (!s) return '';
+  const name = String(playerName || '').trim();
+  const last = name.split(/\s+/).filter(Boolean).pop() || '';
+  if (name) {
+    s = s.replace(new RegExp(`^${escapeRegExp(name)}\\s+`, 'i'), '');
+  }
+  if (last && last.length > 2) {
+    s = s.replace(new RegExp(`^${escapeRegExp(last)}\\s+`, 'i'), '');
+  }
+  // Re-capitalize after stripping the name.
+  if (s) s = s.charAt(0).toUpperCase() + s.slice(1);
+  return s.trim();
+}
+
+function withVaultLabel(label, body) {
+  const text = String(body || '').trim();
+  if (!text) return null;
+  const re = new RegExp(`^vault\\s+${escapeRegExp(label)}\\b`, 'i');
+  if (re.test(text)) return text;
+  return `Vault ${label} — ${text}`;
+}
+
 /**
- * Fan-facing commit skinny — Evaluation prose for the existing card body slot.
- * Strengths / Comp / Projection render as separate card callouts (same slots iOS already has).
- * Full labeled Vault Scouting also lives on the player profile.
+ * Fan-facing commit skinny — Vault Eval prose for the existing card body slot.
+ * Prefixed for iOS (no CSS label on skinny). Web may strip the prefix and use its own label.
  */
 function buildCommitFanSkinny(player) {
   const name = String(player.name || 'This commit').trim();
@@ -162,7 +191,8 @@ function buildCommitFanSkinny(player) {
     !isChaseProcessIntel(verified) &&
     !isMetaDumpAsSkinny(verified)
   ) {
-    return verified.length > 360 ? `${verified.slice(0, 357).trim()}…` : verified;
+    const body = verified.length > 340 ? `${verified.slice(0, 337).trim()}…` : verified;
+    return withVaultLabel('Eval', body);
   }
 
   const sentences = [];
@@ -202,7 +232,50 @@ function buildCommitFanSkinny(player) {
     sentences.push(`${bits.join(' ')}.`);
   }
 
-  return sentences.join(' ');
+  return withVaultLabel('Eval', sentences.join(' '));
+}
+
+/** Clean Vault Comp line — drop "Name comps to" so the name reads first. */
+function formatVaultComp(raw, playerName) {
+  let s = String(raw || '').trim();
+  if (!s || /^tbd$/i.test(s)) return null;
+  s = s.replace(/^vault\s+comp(?:arison)?\s*[—\-:]\s*/i, '');
+  const name = String(playerName || '').trim();
+  const last = name.split(/\s+/).filter(Boolean).pop() || '';
+  if (name) {
+    s = s.replace(new RegExp(`^${escapeRegExp(name)}\\s+comps?\\s+to\\s+`, 'i'), '');
+  }
+  if (last && last.length > 2) {
+    s = s.replace(new RegExp(`^${escapeRegExp(last)}\\s+comps?\\s+to\\s+`, 'i'), '');
+  }
+  s = s.replace(/^comps?\s+to\s+/i, '');
+  s = s.trim();
+  if (!s) return null;
+  // iOS still shows a baked "Comp" label — lead with Vault Comp so the brand lands in the text.
+  return withVaultLabel('Comp', s);
+}
+
+/** Vault Projection — labeled in-text so iOS (no CSS label) still reads clearly. */
+function formatVaultProjection(raw, playerName) {
+  let s = String(raw || '').trim();
+  if (!s) return null;
+  s = s.replace(/^vault\s+projection\s*[—\-:]\s*/i, '');
+  s = polishScoutingSentence(s, playerName) || s;
+  s = s.replace(/^(?:he|she|they)\s+projects?\s+as\s+/i, '');
+  s = s.replace(/^projects?\s+as\s+/i, '');
+  if (s) s = s.charAt(0).toUpperCase() + s.slice(1);
+  return withVaultLabel('Projection', s);
+}
+
+/** Punchier Strengths line under the baked Strengths label. */
+function formatVaultStrengths(player) {
+  const raw = verifiedStrengthsList(player);
+  if (!raw) return null;
+  const parts = String(raw)
+    .split(/\s*·\s*/)
+    .map((part) => polishScoutingSentence(part, player.name))
+    .filter(Boolean);
+  return parts.length ? parts.join(' · ') : raw;
 }
 
 function distinctIntel(primary, playerName, ...candidates) {
@@ -395,7 +468,7 @@ function formatNilEstimate(player) {
 }
 
 function formatStrengths(player) {
-  return verifiedStrengthsList(player);
+  return formatVaultStrengths(player);
 }
 
 function formatWeaknesses(player) {
@@ -413,10 +486,10 @@ function mapHubCommit(player, classYear) {
   const slug = player.slug || player.name;
   const metaLine = buildCommitMetaLine(player);
   const skinny = buildCommitFanSkinny(player);
-  const projection = verifiedProjection(player);
+  const projection = formatVaultProjection(verifiedProjection(player), player.name);
   const strengths = formatStrengths(player);
   const rawComp = String(player.playerComp ?? player.comp ?? player.comparison ?? '').trim();
-  const playerComp = rawComp && !/^tbd$/i.test(rawComp) ? rawComp : null;
+  const playerComp = formatVaultComp(rawComp, player.name);
   const isFutureCommit = classYear >= 2027;
   const stars = effectiveStars(player) || 0;
   const badge = isFutureCommit

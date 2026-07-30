@@ -8,17 +8,26 @@ type Props = {
   year: number;
 };
 
+/** Strip API "Vault X —" prefix when the card already has a CSS label. */
+function stripVaultLabel(text: string | null | undefined, label: string): string | null {
+  const raw = String(text || '').trim();
+  if (!raw) return null;
+  const re = new RegExp(`^vault\\s+${label}\\s*[—\\-:]\\s*`, 'i');
+  return raw.replace(re, '').trim() || raw;
+}
+
 /**
- * Fan-first commit card — uses the same slots the iOS binary already renders:
- * Evaluation skinny · Strengths · Comp · Projection (live from the hub API).
- * Profile click still opens the full Vault Scouting page.
+ * Fan-first commit card — Vault Eval / Strengths / Vault Comp / Vault Projection.
+ * API text carries Vault labels for the iOS binary; web uses CSS labels + stripped body.
  */
 export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
   const meta = commit.metaLine || commit.rankNote;
-  const skinny = commit.skinny?.trim() || null;
+  const skinnyRaw = commit.skinny?.trim() || null;
+  const skinny = stripVaultLabel(skinnyRaw, 'Eval');
   const showJersey = year <= 2026 && commit.jerseyNumber != null && String(commit.jerseyNumber).trim() !== '';
-  const comp = commit.playerComp?.trim() || null;
+  const comp = stripVaultLabel(commit.playerComp, 'Comp');
   const showComp = Boolean(comp && !/^tbd$/i.test(comp) && !(skinny && skinny.includes(comp)));
+  const projection = stripVaultLabel(commit.projection, 'Projection');
 
   return (
     <article className="rh-commit-card rh-elite-commit-card" data-testid="rh-elite-commit-card">
@@ -35,7 +44,12 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
         </div>
       </div>
 
-      {skinny ? <p className="rh-commit-skinny">{skinny}</p> : null}
+      {skinny ? (
+        <p className="rh-commit-strengths rh-commit-skinny">
+          <span className="rh-commit-strengths__label">Vault Eval</span>
+          {skinny}
+        </p>
+      ) : null}
 
       {commit.strengths ? (
         <p className="rh-commit-strengths">
@@ -46,12 +60,17 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
 
       {showComp ? (
         <p className="rh-commit-strengths">
-          <span className="rh-commit-strengths__label">Comp</span>
+          <span className="rh-commit-strengths__label">Vault Comp</span>
           {comp}
         </p>
       ) : null}
 
-      {commit.projection ? <p className="rh-commit-projection">{commit.projection}</p> : null}
+      {projection ? (
+        <p className="rh-commit-strengths rh-commit-projection">
+          <span className="rh-commit-strengths__label">Vault Projection</span>
+          {projection}
+        </p>
+      ) : null}
 
       <div className="rh-commit-footer">
         <span>Committed {commit.commitDate}</span>
