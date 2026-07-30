@@ -1,118 +1,134 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-30T14:15:05.262Z",
+  "updatedAt": "2026-07-30T15:22:04.739Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
       "playerName": "Elias Pearl",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/player/elias-pearl-46159350/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22307377/6935e048ea0d31db03939058",
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "s Florida Gators Hard Commit - 5/19/2026 Elias Pearl Pos WR Height 5-10 Weight 180"
+        "Pearl creates after the catch with suddenness and YAC violence.",
+        "Pearl stacks cushions on trailing DBs with track-style acceleration.",
+        "Pearl finishes with violence and can move all over the formation."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "s Florida Gators Hard Commit - 5/19/2026 Elias Pearl Pos WR Height 5-10 Weight 180",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Pearl is not a jump-ball X — wins with suddenness more than contested size."
+      ],
+      "comparison": "Pearl comps to Deebo Samuel — 5-11 frame band; suddenness + YAC/violence after the catch.",
+      "schemeFit": "Pearl fits as a versatile perimeter / slot who can play all over the formation.",
+      "staffNotes": "Florida commit · Vault film desk verified 2026-07-30.",
+      "projection": "Pearl projects as a Year 2 SEC starter (packages Year 1). Ceiling: All-SEC playmaker — the explosive every-down WR who changes drives after the catch.",
+      "insiderNotes": "Pearl is a compact, twitchy playmaker who creates after the catch. Track-style acceleration, stacks cushions, finishes with violence. Wins with suddenness and YAC — a mover who stresses the defense all over the formation.",
+      "recruitingStory": "Elias Pearl is a Florida commit in the 2027 class.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:44.224Z"
+      "updatedAt": "2026-07-30T15:22:04.550Z"
     },
     "maxwell-hiller": {
       "playerSlug": "maxwell-hiller",
       "playerName": "Maxwell Hiller",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/maxwell-hiller-180637/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19167018/68d0d8e68a61b935346bdbf4",
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity."
+        "Hiller shows college-ready 300-pound mass with a low, wide base.",
+        "Hiller uses length and hand placement to keep defenders off his chest.",
+        "Hiller climbs and pulls without looking heavy for an interior."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Hiller will still refine consistency vs elite SEC interior rush games."
+      ],
+      "comparison": "Hiller comps to David DeCastro — 6-5 / ~316 ready IOL; second-level movement + mean run finish.",
+      "schemeFit": "Hiller fits as an interior cornerstone; OG first, swing OT possible.",
+      "staffNotes": "Florida commit · Vault film desk verified 2026-07-30.",
+      "projection": "Hiller projects as an immediate SEC starter at guard — multi-year cornerstone with an All-SEC floor and All-American upside if the mean streak and second-level juice keep showing at Florida.",
+      "insiderNotes": "Hiller is a college-ready interior with true 300-pound mass, a low wide base, and length that keeps defenders off his chest. Climbs and pulls without looking heavy. Wins with power, hand placement, and ready-made trench size — already looks like a Power conference starter on Friday nights.",
+      "recruitingStory": "Maxwell Hiller is a Florida commit in the 2027 class.",
       "nflProjection": null,
-      "featured": false,
-      "updatedAt": "2026-07-11T11:29:23.514Z"
+      "featured": true,
+      "updatedAt": "2026-07-30T15:22:04.518Z"
     },
     "davin-davidson": {
       "playerSlug": "davin-davidson",
       "playerName": "Davin Davidson",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/player/davin-davidson-46151041/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19357701/68a9db15d57aa0fded8ade4c",
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "s Florida Gators Hard Commit - 4/9/2026 Davin Davidson High School Sarasota (HS) Cardinal Mooney (HS) Pos QB Height 6-6.5 Weight 215"
+        "Davidson has true jumbo height and over-the-top sightlines.",
+        "Davidson shows pocket poise — balanced drops and eyes downfield.",
+        "Davidson has enough athleticism to extend when the play breaks."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "s Florida Gators Hard Commit - 4/9/2026 Davin Davidson High School Sarasota (HS) Cardinal Mooney (HS) Pos QB Height 6-6.5 Weight 215",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Davidson still needs mass and volume reps to finish the developmental climb."
+      ],
+      "comparison": "Davidson comps to Josh Freeman — 6-6 jumbo QB; developmental sequencing + arm talent.",
+      "schemeFit": "Davidson fits a pro-style spread with intermediate and deep-ball traits.",
+      "staffNotes": "Florida commit · Vault film desk verified 2026-07-30.",
+      "projection": "Davidson projects as a Year 2–3 SEC starting quarterback. Ceiling: multi-year SEC starter with pro size — the big-armed quarterback who grows into the room and owns it.",
+      "insiderNotes": "Davidson is a jumbo pocket quarterback — natural height over the line, long levers, calm eyes downfield. Balanced drops and enough athleticism to extend. Wins with size, arm, and poise; the frame is still thickening into the job.",
+      "recruitingStory": "Davin Davidson is a Florida commit in the 2027 class.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:45.447Z"
+      "updatedAt": "2026-07-30T15:22:04.598Z"
     },
     "aamaury-fountain": {
       "playerSlug": "aamaury-fountain",
       "playerName": "Aamaury Fountain",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/aamaury-fountain-281368/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19193986/690cea3c197f9dd5bd812203",
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity."
+        "Fountain wins with boundary length and a high-cut 6-3 frame.",
+        "Fountain occupies the throw window with wingspan in off coverage.",
+        "Fountain projects as a lockdown-size corner as the weight comes on."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Fountain still needs mass on a wiry 182-pound frame."
+      ],
+      "comparison": "Fountain comps to Julius Brents — 6-3 high-cut CB; press length / redirect ability.",
+      "schemeFit": "Fountain fits press-man / boundary length corner.",
+      "staffNotes": "Florida commit · Vault film desk verified 2026-07-30.",
+      "projection": "Fountain projects as a Year 2–3 SEC starter on the boundary. Ceiling: All-SEC corner — the length CB who erases his side once the frame fills.",
+      "insiderNotes": "Fountain is length on the boundary. High-cut 6-3 frame, off-man cushion, wingspan that occupies the throw window. Wins with size and disruption as the weight comes on — a lockdown-size corner in the making.",
+      "recruitingStory": "Aamaury Fountain is a Florida commit in the 2027 class.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:16.238Z"
+      "updatedAt": "2026-07-30T15:22:04.714Z"
     },
     "easton-royal": {
       "playerSlug": "easton-royal",
@@ -2491,30 +2507,34 @@
     "elijah-hutcheson": {
       "playerSlug": "elijah-hutcheson",
       "playerName": "Elijah Hutcheson",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
           "url": "https://www.on3.com/rivals/elijah-hutcheson-241889/",
-          "publishedAt": "2026-07-11"
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity."
+        "Hutcheson wins with length — long arms and hands inside on the edge.",
+        "Hutcheson shows knee bend and feet that keep churning for a tall tackle.",
+        "Hutcheson has a clear add-weight runway on a high-cut athletic frame."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Hutcheson still needs mass before he is a finished every-down SEC tackle."
+      ],
+      "comparison": "Hutcheson comps to Walter Rouse — lean, long developmental LT; movement-first profile.",
+      "schemeFit": "Hutcheson fits as a developmental LT/RT with length to survive SEC edges.",
+      "staffNotes": "Florida commit · Vault film desk verified 2026-07-30.",
+      "projection": "Hutcheson projects as a Year 2–3 SEC starter at tackle once the mass lands. Ceiling: multi-year starting LT who holds up on the edge — franchise tackle path if the frame fills.",
+      "insiderNotes": "Hutcheson is a length-first tackle with a high-cut frame and real add-weight runway. Long arms, flat back, hands inside, feet that churn. Wins with levers and athleticism — the body is still catching up to the tools.",
+      "recruitingStory": "Elijah Hutcheson is a Florida commit in the 2027 class.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:21.113Z"
+      "updatedAt": "2026-07-30T15:22:04.575Z"
     },
     "kalib-spivey": {
       "playerSlug": "kalib-spivey",
@@ -3376,31 +3396,34 @@
     "jabios-smith": {
       "playerSlug": "jabios-smith",
       "playerName": "Ja'Bios Smith",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/jabios-smith-245408/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/20014986/6918f3a2de3053ffde6d0389",
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "The Florida Gators' official visit season produced a lot of wins for the coaching staff.",
-        "Some assistants added to already strong position groups,"
+        "Smith shows a rangy space-LB frame with long levers.",
+        "Smith aligns as a stand-up overhang/WILL with trigger-ready feet.",
+        "Smith wins with length and range in space."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "The Florida Gators' official visit season produced a lot of wins for the coaching staff.  Some assistants added to already strong position groups,",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Smith film sample is short — longer reel would lock the every-down starter projection tighter."
+      ],
+      "comparison": "Smith comps to Devin Lloyd — ~6-3 / 225 rangy space LB; height/length band match.",
+      "schemeFit": "Smith fits WILL / space LB with early special-teams value.",
+      "staffNotes": "Florida commit · Vault film desk verified 2026-07-30.",
+      "projection": "Smith projects as a Year 2–3 SEC starter at WILL/space LB (special teams Year 1). Ceiling: SEC starting linebacker who runs, covers, and stays on the field — All-SEC upside if longer tape matches this athletic look.",
+      "insiderNotes": "Smith is a rangy modern space LB — stand-up overhang/WILL look, long levers, trigger-ready feet. Wins with length and range in space; body projects cleanly into an every-down role.",
+      "recruitingStory": "Ja'Bios Smith is a Florida commit in the 2027 class.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:20.539Z"
+      "updatedAt": "2026-07-30T15:22:04.694Z"
     },
     "samuel-roseborough": {
       "playerSlug": "samuel-roseborough",
@@ -4797,26 +4820,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/raheem-floyd-242853/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/20080624/69701cb66305a8e81b1f4bc4",
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity."
+        "Floyd shows a lean long-strider CB frame with recovery-speed traits.",
+        "Floyd covers ground without looking heavy.",
+        "Floyd has a clear path from 170 toward a 185–195 starter body."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Floyd reel sample is thinner on pure DB reps — CB-focused cut would tighten the eval."
+      ],
+      "comparison": "Floyd comps to Tyson Campbell — lean ~6-1 outside CB body that fills into a starter.",
+      "schemeFit": "Floyd fits boundary / nickel developmental CB.",
+      "staffNotes": "Florida commit · Vault film desk verified 2026-07-30.",
+      "projection": "Floyd projects on a Year 2–3 SEC starter path on the outside. Ceiling: SEC starting CB with recovery speed — the long-strider who grows into a full-time boundary role.",
+      "insiderNotes": "Floyd is a lean long-strider corner — speed/length first at 170 with a clear path to 185–195. Covers ground without looking heavy. Wins with recovery speed and frame projection.",
+      "recruitingStory": "Raheem Floyd is a Florida commit in the 2027 class.",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-07-11T11:30:26.160Z"
+      "featured": false,
+      "updatedAt": "2026-07-30T15:22:04.734Z"
     },
     "isaac-mcneil": {
       "playerSlug": "isaac-mcneil",
@@ -9265,30 +9292,34 @@
     "tramond-collins": {
       "playerSlug": "tramond-collins",
       "playerName": "Tramond Collins",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/Player/tramond-collins-46156157/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22463616/69135fe61e7a4800429ce9b0",
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "s Florida Gators Hard Commit - 3/11/2026 Tramond Collins Pos WR Height 6-2 Weight 183"
+        "Collins is a true blur — house-call speed with huge chase separation.",
+        "Collins forces cushion with coiled releases and vertical juice.",
+        "Collins wins with stride and chunk-play explosiveness on the perimeter."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "s Florida Gators Hard Commit - 3/11/2026 Tramond Collins Pos WR Height 6-2 Weight 183",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Collins is not a 6-4 contested X — wins with speed more than size."
+      ],
+      "comparison": "Collins comps to Chris Olave — true 6-0 / ~185 lean perimeter; elite speed/separation traits.",
+      "schemeFit": "Collins fits perimeter / Z with jet and motion juice.",
+      "staffNotes": "Florida commit · Vault film desk verified 2026-07-30.",
+      "projection": "Collins projects as a Year 2 SEC starter on the perimeter (jet/packages Year 1). Ceiling: All-SEC deep threat — the blur who takes the top off and stacks chunk plays.",
+      "insiderNotes": "Collins is a blur on the perimeter. Lean 6-0 frame, coiled releases, and chase scenes with huge separation — house-call speed that forces cushion. Wins with pure juice and stride; a vertical/chunk-play weapon, not a 6-4 contested X.",
+      "recruitingStory": "Tramond Collins is a Florida commit in the 2027 class.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:45.867Z"
+      "updatedAt": "2026-07-30T15:22:04.672Z"
     },
     "cameron-wagner": {
       "playerSlug": "cameron-wagner",
@@ -9831,30 +9862,34 @@
     "cahron-wheeler": {
       "playerSlug": "cahron-wheeler",
       "playerName": "Cahron Wheeler",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/cahron-wheeler-282819/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19728987/655670a40660fe08747df24e",
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity."
+        "Wheeler wins with length — arms and levers eat space on the edge.",
+        "Wheeler shows stand-up wide-9 and three-point get-off versatility.",
+        "Wheeler has a projectable pass-rush frame built for a feature role."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Wheeler still needs mass (toward 260+) to be a finished every-down SEC edge."
+      ],
+      "comparison": "Wheeler comps to Princely Umanmielen — ~6-5 athletic EDGE; basketball movement + projectable mass.",
+      "schemeFit": "Wheeler fits wide-9 / stand-up EDGE or 3-4 OLB.",
+      "staffNotes": "Florida commit · Vault film desk verified 2026-07-30.",
+      "projection": "Wheeler projects as a Year 2 SEC starter at EDGE (packages Year 1). Ceiling: All-SEC edge rusher — the featured rush piece who becomes a weekly problem once he hits 260+.",
+      "insiderNotes": "Wheeler is a long, lean, high-waisted EDGE. Stand-up wide-9 and three-point get-off; length eats space vs shorter tackles. Wins with first-step and reach — a pass-rush frame built to grow into a feature role.",
+      "recruitingStory": "Cahron Wheeler is a Florida commit in the 2027 class.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:15.404Z"
+      "updatedAt": "2026-07-30T15:22:04.620Z"
     },
     "alijah-jones": {
       "playerSlug": "alijah-jones",
@@ -12757,30 +12792,34 @@
     "peyton-miller": {
       "playerSlug": "peyton-miller",
       "playerName": "Peyton Miller",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/peyton-miller-238083/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19650472/68daf5a7824025013756fcf4",
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity."
+        "Miller carries true 310-pound mass with length for an interior.",
+        "Miller wins with wide base, hands inside, and drive finish.",
+        "Miller is powerful through the middle — not soft at the POA."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Miller will still refine consistency and technique vs elite SEC interiors."
+      ],
+      "comparison": "Miller comps to Trey Smith — 6-5 / ~320 IOL; same height/mass band, size + base + length.",
+      "schemeFit": "Miller fits OG first as heavy interior mass.",
+      "staffNotes": "Florida commit · Vault film desk verified 2026-07-30.",
+      "projection": "Miller projects as a Year 2 SEC starter at guard (can steal snaps Year 1). Ceiling: All-SEC interior — a road-grading OG Florida builds the line around.",
+      "insiderNotes": "Miller is heavy trench mass with real length for an interior. Wide base, hands inside, flat back, drive finish — powerful through the middle, not soft. Wins with size, base, and length at the point of attack.",
+      "recruitingStory": "Peyton Miller is a Florida commit in the 2027 class.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:19.435Z"
+      "updatedAt": "2026-07-30T15:22:04.640Z"
     },
     "tyler-atkinson": {
       "playerSlug": "tyler-atkinson",
