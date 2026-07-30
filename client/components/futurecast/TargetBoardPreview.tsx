@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
-import { fromUnderclassmenTarget, resolveCardVariant } from '@/lib/recruiting-card-adapters';
-import { fetchFutureCastUnderclassmen } from '@/lib/futurecast-underclassmen-api';
+import { fromHighPriorityTarget, resolveCardVariant } from '@/lib/recruiting-card-adapters';
 import { fetchHighPriorityTargets } from '@/lib/futurecast-high-priority-api';
 import { RECRUITING_TAB_PATHS } from '@/lib/vault-route-map';
 import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
@@ -15,18 +14,11 @@ export interface TargetBoardPreviewProps {
   footerLabel?: string;
 }
 
-function sortTargets(a: RecruitingBoardPlayer, b: RecruitingBoardPlayer): number {
-  // Keep UF commits visible, but don't let them bury the active chase board.
-  const commitA = a.isCommittedToUF ? 1 : 0;
-  const commitB = b.isCommittedToUF ? 1 : 0;
-  if (commitA !== commitB) return commitA - commitB;
-  const uf = (Number(b.ufProbability) || 0) - (Number(a.ufProbability) || 0);
-  if (uf !== 0) return uf;
-  const na = a.natlRank ?? 9999;
-  const nb = b.natlRank ?? 9999;
-  return na - nb;
-}
-
+/**
+ * Home "2028 UF Targets to watch" — top of the chase board (high-priority),
+ * not the full underclassmen census sorted by raw UF% (that surface leaked
+ * soft-promoted / residual-poison rows like Trace Hawkins @ 99%).
+ */
 export function TargetBoardPreview({
   classYear = 2028,
   limit = 6,
@@ -45,17 +37,11 @@ export function TargetBoardPreview({
       setLoading(true);
       setError(null);
       try {
-        const [underclassmen, priority] = await Promise.all([
-          fetchFutureCastUnderclassmen([classYear]),
-          fetchHighPriorityTargets(classYear).catch(() => null),
-        ]);
+        const priority = await fetchHighPriorityTargets(classYear);
         if (cancelled) return;
-        const bucket = underclassmen.classes[String(classYear)];
-        const targets = (bucket?.targets ?? []).map(fromUnderclassmenTarget).sort(sortTargets);
-        setPlayers(targets.slice(0, limit));
-        // Destination board is the priority chase list (capped) — never the full class census.
-        const destinationCount = priority?.count ?? priority?.players?.length ?? 0;
-        setBoardCount(destinationCount > 0 ? destinationCount : Math.min(targets.length, limit));
+        const ranked = priority.players ?? [];
+        setPlayers(ranked.slice(0, limit).map(fromHighPriorityTarget));
+        setBoardCount(priority.count ?? ranked.length);
       } catch (err) {
         if (cancelled) return;
         setError(err instanceof Error ? err.message : 'Failed to load target board');

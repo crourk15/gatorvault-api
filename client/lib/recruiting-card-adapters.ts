@@ -10,6 +10,7 @@ import type { PortalWatchlistPlayer } from './portal-api';
 import type { UfFitWatchlistPlayer } from './uf-fit-api';
 import type { EarlyDiscoveryPlayer } from './early-discovery-api';
 import type { UnderclassmenPlayer } from './futurecast-underclassmen-api';
+import type { HighPriorityPlayer } from './futurecast-high-priority-api';
 import { formatRecruitSchoolLabel } from './recruiting-display-utils';
 import type { StaffDashboardPlayer } from './staff-api';
 import type { PortalIncomingPlayer } from './recruiting-api';
@@ -22,8 +23,61 @@ import {
   youngerProspectUfPct,
 } from './younger-prospects';
 
+function isFloridaCommit(committedTo?: string | null): boolean {
+  return /\bflorida\b|\bgators\b|\buf\b/i.test(String(committedTo || ''));
+}
+
 export function minimalRecruitPlayer(slug: string, name: string): RecruitingBoardPlayer {
   return { slug, name, tier: 'HIGH' };
+}
+
+/** High-priority chase-board row → ClassicRecruitCard (Home "Targets to watch"). */
+export function fromHighPriorityTarget(p: HighPriorityPlayer): RecruitingBoardPlayer {
+  const isUfCommit = isFloridaCommit(p.committedTo);
+  const rawUf = p.ufProbability != null ? Number(p.ufProbability) : null;
+  // HP API returns percentage points (0–100); tolerate legacy 0–1 fractions.
+  const ufPct =
+    rawUf == null || !Number.isFinite(rawUf) || rawUf <= 0
+      ? null
+      : rawUf <= 1
+        ? Math.round(rawUf * 100)
+        : Math.round(rawUf);
+  const composite = p.compositeScore > 0 ? p.compositeScore : undefined;
+  const natl = p.natlRank ?? p.nationalRank ?? null;
+  const isLiveOn3 = (natl ?? 0) > 0 && (composite ?? 0) > 0;
+  return {
+    slug: p.slug,
+    name: p.name,
+    tier: isUfCommit ? 'TOP' : 'HIGH',
+    position: p.position,
+    classYear: p.classYear ?? undefined,
+    stars: p.stars ?? 0,
+    rating: composite,
+    displayRating: composite,
+    natlRank: isLiveOn3 ? (natl ?? undefined) : undefined,
+    posRank: isLiveOn3 ? (p.posRank ?? p.positionRank ?? undefined) : undefined,
+    stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
+    fitScore: p.fitScore ?? undefined,
+    ufProbability: isUfCommit ? 1 : ufPct != null ? ufPct / 100 : undefined,
+    ufStatus: isUfCommit ? 'COMMITTED' : 'TARGET',
+    statusLabel: isUfCommit ? 'Commit' : undefined,
+    school: formatRecruitSchoolLabel(p.school ?? undefined) ?? undefined,
+    committedTo: p.committedTo ?? undefined,
+    isCommittedToUF: isUfCommit,
+    heatPct: isUfCommit ? 100 : ufPct ?? undefined,
+    heatLabel: isUfCommit ? 'Locked In' : 'UF likelihood',
+    ratingLabel: isLiveOn3 ? 'Composite' : composite != null ? 'Vault est.' : undefined,
+    showIndustryRanks: isLiveOn3,
+    movementDirection:
+      p.delta7d != null
+        ? p.delta7d > 0
+          ? 'up'
+          : p.delta7d < 0
+            ? 'down'
+            : 'flat'
+        : undefined,
+    skinny: isUfCommit ? 'Committed to Florida' : p.skinny || 'Priority UF target',
+  };
 }
 
 export function fromUnderclassmenTarget(p: UnderclassmenPlayer): RecruitingBoardPlayer {
@@ -172,10 +226,6 @@ type EnrichedBigBoardPlayer = BigBoardPlayer & {
   committedTo?: string | null;
   isCommittedToUF?: boolean;
 };
-
-function isFloridaCommit(committedTo?: string | null): boolean {
-  return /\bflorida\b|\bgators\b|\buf\b/i.test(String(committedTo || ''));
-}
 
 export function fromBigBoard(p: EnrichedBigBoardPlayer): RecruitingBoardPlayer {
   const isUfCommit = p.isCommittedToUF === true || isFloridaCommit(p.committedTo);

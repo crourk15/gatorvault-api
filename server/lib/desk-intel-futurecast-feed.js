@@ -13,7 +13,11 @@
 const fs = require('fs');
 const path = require('path');
 const store = require('./recruiting-store');
-const { toPercent, loadRivalsOnlyUfPctBySlug } = require('./uf-probability-utils');
+const {
+  toPercent,
+  sanitizeRpmPct,
+  loadRivalsOnlyUfPctBySlug,
+} = require('./uf-probability-utils');
 const { isAllowlistedTarget, canonicalTargetSlug } = require('./recruiting-target-allowlist');
 const { isFloridaSchool } = require('./recruiting-target-filters');
 const on3Recruit = require('./on3-recruit-client');
@@ -57,10 +61,13 @@ function shouldPromoteToFutureCast(player, classYear) {
   if (year === 2027) return false;
   if (year !== 2028) return false;
   if (!player?.name || !player?.on3Slug) return false;
+  // Offer = real UF involvement. Visit-only national prospects (e.g. Trace Hawkins)
+  // must not soft-expand the 2028 Home / underclassmen board.
   if (floridaOfferedOnPlayer(player)) return true;
-  if (floridaVisitOnPlayer(player)) return true;
-  const rpm = toPercent(player.ufRpmPct ?? player.ufProbability);
-  if (rpm >= 15) return true;
+  // Sanitize — never let residual 0.99→99 poison force a promote.
+  const rpm = sanitizeRpmPct(player.ufRpmPct ?? player.ufProbability);
+  // Extreme 90%+ on an uncommitted kid is residual poison, not a market call.
+  if (rpm != null && rpm >= 15 && rpm < 90) return true;
   return false;
 }
 
