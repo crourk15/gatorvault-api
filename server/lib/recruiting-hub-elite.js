@@ -137,9 +137,9 @@ function fallbackCommitBlurb(player) {
 }
 
 /**
- * Fan-facing commit skinny — SHORT teaser for the front card only.
- * Full Evaluation / Comp / Projection belong on the player profile (click name).
- * Never dump the long Vault eval or "Fan comp:" onto the card.
+ * Fan-facing commit skinny — Evaluation prose for the existing card body slot.
+ * Strengths / Comp / Projection render as separate card callouts (same slots iOS already has).
+ * Full labeled Vault Scouting also lives on the player profile.
  */
 function buildCommitFanSkinny(player) {
   const name = String(player.name || 'This commit').trim();
@@ -150,13 +150,11 @@ function buildCommitFanSkinny(player) {
   const natl = player.natlRank ?? player.natl;
   const posRank = player.posRank;
 
-  // Optional one-sentence hook from eval — first sentence only, hard-capped.
   const verified = firstVerifiedIntel(
     player,
     ['evaluatorNotes', 'evaluationSummary', 'insiderNotes', 'skinny', 'profileNote', 'notes'],
     player.name
   );
-  let hook = null;
   if (
     verified &&
     verified.length >= 40 &&
@@ -164,8 +162,7 @@ function buildCommitFanSkinny(player) {
     !isChaseProcessIntel(verified) &&
     !isMetaDumpAsSkinny(verified)
   ) {
-    const first = verified.split(/(?<=[.!?])\s+/)[0] || verified;
-    hook = first.length > 140 ? `${first.slice(0, 137).trim()}…` : first;
+    return verified.length > 360 ? `${verified.slice(0, 357).trim()}…` : verified;
   }
 
   const sentences = [];
@@ -184,12 +181,28 @@ function buildCommitFanSkinny(player) {
   if (player.headliner) facts.push('Class headliner');
   if (facts.length) sentences.push(`${facts.join(' · ')}.`);
 
-  if (hook && !sentences.some((s) => s.includes(hook.slice(0, 40)))) {
-    sentences.push(hook.endsWith('.') || hook.endsWith('…') ? hook : `${hook}.`);
+  const scheme = String(player.schemeFit || '').trim();
+  if (
+    scheme &&
+    scheme.length >= 20 &&
+    isVerifiedScoutingTrait(scheme, player.name) &&
+    !isCompositeBio(scheme)
+  ) {
+    sentences.push(scheme.endsWith('.') ? scheme : `${scheme}.`);
   }
 
-  const out = sentences.join(' ');
-  return out.length > 220 ? `${out.slice(0, 217).trim()}…` : out;
+  // Comp has its own card slot — do not dump "Fan comp:" into the skinny body.
+  if (sentences.length < 2) {
+    const bits = [];
+    if (stars >= 4) bits.push('A blue-chip addition');
+    else if (stars) bits.push(`A ${stars}-star addition`);
+    else bits.push('A new piece');
+    if (player.inState) bits.push('from inside Florida');
+    if (pos && pos !== '—') bits.push(`for the ${pos} room`);
+    sentences.push(`${bits.join(' ')}.`);
+  }
+
+  return sentences.join(' ');
 }
 
 function distinctIntel(primary, playerName, ...candidates) {
@@ -402,6 +415,8 @@ function mapHubCommit(player, classYear) {
   const skinny = buildCommitFanSkinny(player);
   const projection = verifiedProjection(player);
   const strengths = formatStrengths(player);
+  const rawComp = String(player.playerComp ?? player.comp ?? player.comparison ?? '').trim();
+  const playerComp = rawComp && !/^tbd$/i.test(rawComp) ? rawComp : null;
   const isFutureCommit = classYear >= 2027;
   const stars = effectiveStars(player) || 0;
   const badge = isFutureCommit
@@ -431,7 +446,7 @@ function mapHubCommit(player, classYear) {
     earlyImpactProjection: projection,
     strengths,
     weaknesses: formatWeaknesses(player),
-    playerComp: player.playerComp ?? player.comp ?? null,
+    playerComp,
     gvGrade: null,
     nilEstimate: formatNilEstimate(player),
     projection,

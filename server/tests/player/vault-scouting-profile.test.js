@@ -13,13 +13,15 @@ describe('full-profile vaultScouting', () => {
     assert.match(String(scouting.projection || ''), /SEC starter|All-American|All-SEC/i);
   });
 
-  it('commit board skinny stays short for film-desk commits', async () => {
+  it('commit board fills skinny + Strengths + Comp + Projection for film-desk commits', async () => {
     const { buildHubCommits } = require('../../lib/recruiting-hub-elite');
     const rows = await buildHubCommits(2027);
     const hiller = rows.find((r) => r.id === 'maxwell-hiller' || /Hiller/i.test(r.name));
     assert.ok(hiller, 'hiller on 2027 board');
-    assert.ok((hiller.skinny || '').length <= 240, `skinny too long: ${hiller.skinny?.length}`);
-    assert.doesNotMatch(hiller.skinny || '', /Fan comp:/i);
-    assert.doesNotMatch(hiller.skinny || '', /All-American upside/i);
+    assert.match(String(hiller.skinny || ''), /Hiller|interior|mass/i);
+    assert.doesNotMatch(String(hiller.skinny || ''), /Fan comp:/i);
+    assert.ok(hiller.strengths, 'strengths slot');
+    assert.match(String(hiller.playerComp || ''), /DeCastro/);
+    assert.match(String(hiller.projection || ''), /SEC starter|All-American|All-SEC/i);
   });
 });
