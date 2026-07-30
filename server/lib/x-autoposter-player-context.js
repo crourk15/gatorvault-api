@@ -20,7 +20,12 @@ const INVALID_NAME_PARTS = new Set([
   'cant', "can't", 'wont', "won't", 'ignore', 'ignores', 'ignored', 'cannot',
   'battles', 'upcoming', 'decisions', 'storylines', 'storyline', 'roundup', 'breakdown',
   'lands', 'gathered', 'targets', 'hunting', 'remaining',
-  'portal', 'transfer', 'message', 'board', 'preseason', 'coverage', 'camp', 'practice'
+  'portal', 'transfer', 'message', 'board', 'preseason', 'coverage', 'camp', 'practice',
+  // Headline verbs that Title-Case into fake surnames ("Isaiah Reeves Continues…")
+  'continues', 'continue', 'remains', 'remain', 'leads', 'lead', 'opens', 'open',
+  'names', 'name', 'details', 'detail', 'discusses', 'discuss', 'says', 'said',
+  'adds', 'added', 'joins', 'join', 'visits', 'visit', 'returns', 'return',
+  'rises', 'rise', 'enters', 'enter', 'talks', 'talk', 'breaking'
 ]);
 
 function isUsableBeatLine(line) {
@@ -77,6 +82,12 @@ function isValidPlayerName(name) {
   if (SPATIAL_FALSE_SURNAMES.has(core[core.length - 1].toLowerCase())) return false;
   const POS_TOKENS = new Set(['qb', 'rb', 'wr', 'te', 'ol', 'ot', 'og', 'c', 'dl', 'dt', 'de', 'edge', 'lb', 'cb', 's', 'ath', 'k', 'p']);
   if (POS_TOKENS.has(core[0].toLowerCase())) return false;
+  // Full position words that Title-Case into fake first names ("Safety Isaiah Reeves")
+  const POS_WORD_FIRST = new Set([
+    'safety', 'safeties', 'corner', 'cornerback', 'linebacker', 'quarterback', 'runningback',
+    'wideout', 'receiver', 'tightend', 'offensive', 'defensive', 'athlete', 'prospect', 'recruit'
+  ]);
+  if (POS_WORD_FIRST.has(core[0].toLowerCase())) return false;
   if (/^(?:upcoming|early|first|major|top|new)\s+/i.test(trimmed)) return false;
   if (/\b(battles heat|heat up|commit lands|recruiting storylines?|flip targets|decision dates)\b/i.test(trimmed)) return false;
   if (parts.some((p) => /https?|www|\.com/i.test(p))) return false;
