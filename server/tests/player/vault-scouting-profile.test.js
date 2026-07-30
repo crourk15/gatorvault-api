@@ -13,18 +13,19 @@ describe('full-profile vaultScouting', () => {
     assert.match(String(scouting.projection || ''), /SEC starter|All-American|All-SEC/i);
   });
 
-  it('commit board uses Vault Eval / Comp / Projection card copy', async () => {
+  it('commit board: Vault Eval/Comp/Projection, no Strengths, full rank meta', async () => {
     const { buildHubCommits } = require('../../lib/recruiting-hub-elite');
     const rows = await buildHubCommits(2027);
     const hiller = rows.find((r) => r.id === 'maxwell-hiller' || /Hiller/i.test(r.name));
     assert.ok(hiller, 'hiller on 2027 board');
     assert.match(String(hiller.skinny || ''), /^Vault Eval —/i);
-    assert.match(String(hiller.skinny || ''), /interior|mass/i);
-    assert.doesNotMatch(String(hiller.skinny || ''), /Fan comp:/i);
-    assert.ok(hiller.strengths, 'strengths slot');
     assert.match(String(hiller.playerComp || ''), /^Vault Comp —/i);
-    assert.match(String(hiller.playerComp || ''), /DeCastro/);
     assert.match(String(hiller.projection || ''), /^Vault Projection —/i);
-    assert.match(String(hiller.projection || ''), /SEC starter|All-American|All-SEC/i);
+    assert.equal(hiller.strengths, null);
+    const meta = String(hiller.metaLine || hiller.rankNote || '');
+    assert.match(meta, /IOL|#\d+\s*natl/i);
+    assert.match(meta, /#\d+\s*natl/i);
+    assert.match(meta, /#\d+\s*IOL/i);
+    assert.match(meta, /#\d+\s*PA/i);
   });
 });

@@ -17,7 +17,8 @@ function stripVaultLabel(text: string | null | undefined, label: string): string
 }
 
 /**
- * Fan-first commit card — Vault Eval / Strengths / Vault Comp / Vault Projection.
+ * Fan-first commit card — Vault Eval / Vault Comp / Vault Projection.
+ * Strengths omitted (duplicates Vault Eval). Meta line carries ranks under the name.
  * API text carries Vault labels for the iOS binary; web uses CSS labels + stripped body.
  */
 export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
@@ -48,13 +49,6 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
         <p className="rh-commit-strengths rh-commit-skinny">
           <span className="rh-commit-strengths__label">Vault Eval</span>
           {skinny}
-        </p>
-      ) : null}
-
-      {commit.strengths ? (
-        <p className="rh-commit-strengths">
-          <span className="rh-commit-strengths__label">Strengths</span>
-          {commit.strengths}
         </p>
       ) : null}
 
