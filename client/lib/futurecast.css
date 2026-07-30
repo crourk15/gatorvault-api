@@ -449,6 +449,52 @@
   letter-spacing: 0.04em;
 }
 
+/* Vault film-desk scouting on player profiles (full room — not front cards). */
+.fc-vault-scouting__block {
+  margin: 0 0 1.1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 33, 165, 0.12);
+}
+
+.fc-vault-scouting__block:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.fc-vault-scouting__block h3 {
+  margin: 0 0 0.45rem;
+  font-family: Source Sans 3, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gv-orange, #fa4616);
+}
+
+.fc-vault-scouting__block p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--gv-navy, #001a33);
+}
+
+.fc-vault-scouting__block--projection p {
+  font-weight: 600;
+}
+
+.fc-vault-scouting__traits {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--gv-navy, #001a33);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.fc-vault-scouting__traits li {
+  margin: 0 0 0.35rem;
+}
+
 .fc-profile-dl {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr));

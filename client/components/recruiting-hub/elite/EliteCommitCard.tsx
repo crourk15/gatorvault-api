@@ -8,13 +8,15 @@ type Props = {
   year: number;
 };
 
-/** Fan-first commit card — meta facts + real skinny about who Florida landed. */
+/**
+ * Fan-first commit card — light teaser only.
+ * Full Evaluation / Vault Comp / Vault Projection live on the player profile
+ * (click the name → /vault/recruiting/player/:slug).
+ */
 export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
   const meta = commit.metaLine || commit.rankNote;
   const skinny = commit.skinny?.trim() || null;
   const showJersey = year <= 2026 && commit.jerseyNumber != null && String(commit.jerseyNumber).trim() !== '';
-  const comp = commit.playerComp?.trim() || null;
-  const showComp = Boolean(comp && !/^tbd$/i.test(comp) && !(skinny && skinny.includes(comp)));
 
   return (
     <article className="rh-commit-card rh-elite-commit-card" data-testid="rh-elite-commit-card">
@@ -33,21 +35,9 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
 
       {skinny ? <p className="rh-commit-skinny">{skinny}</p> : null}
 
-      {commit.strengths ? (
-        <p className="rh-commit-strengths">
-          <span className="rh-commit-strengths__label">Strengths</span>
-          {commit.strengths}
-        </p>
-      ) : null}
-
-      {showComp ? (
-        <p className="rh-commit-strengths">
-          <span className="rh-commit-strengths__label">Comp</span>
-          {comp}
-        </p>
-      ) : null}
-
-      {commit.projection ? <p className="rh-commit-projection">{commit.projection}</p> : null}
+      <p className="rh-commit-profile-hint">
+        <a href={commit.profileUrl}>Full Vault eval · Comp · Projection →</a>
+      </p>
 
       <div className="rh-commit-footer">
         <span>Committed {commit.commitDate}</span>

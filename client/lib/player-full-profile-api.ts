@@ -41,6 +41,14 @@ export type FullProfileFuturecastSummary = {
   volatilityScore: number | null;
 };
 
+export type FullProfileVaultScouting = {
+  evaluation: string | null;
+  comparison: string | null;
+  projection: string | null;
+  strengths: string[];
+  schemeFit?: string | null;
+};
+
 export type FullProfilePayload = {
   lastUpdated: string;
   source: 'postgres' | 'recruiting-store';
@@ -60,6 +68,7 @@ export type FullProfilePayload = {
   fitIntel: UfFitIntelResponse | null;
   competingSchools: FullProfileCompetingSchool[];
   futurecastSummary: FullProfileFuturecastSummary | null;
+  vaultScouting?: FullProfileVaultScouting | null;
 };
 
 export type ResolvePlayerKind = 'futurecast' | 'roster' | 'recruiting-fallback';
@@ -122,6 +131,7 @@ export async function fetchFullProfile(
       fitIntel,
       competingSchools,
       futurecastSummary,
+      vaultScouting,
     } = raw;
     const data: FullProfilePayload = normalizeFullProfilePayload({
       lastUpdated,
@@ -139,6 +149,7 @@ export async function fetchFullProfile(
       fitIntel: fitIntel ?? null,
       competingSchools: competingSchools ?? [],
       futurecastSummary: futurecastSummary ?? null,
+      vaultScouting: vaultScouting ?? null,
     });
     writeProfileCache(key, data);
     if (data.player?.id) {

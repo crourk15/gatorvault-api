@@ -19,6 +19,8 @@ import {
 } from '@/lib/player-overview-mode';
 import { resolveCommittedTo } from '@/lib/recruiting-target-filters';
 import { OverviewFourSlot } from '@/components/player/OverviewFourSlot';
+import { VaultScoutingSection } from './VaultScoutingSection';
+import type { FullProfileVaultScouting } from '@/lib/player-full-profile-api';
 
 function profileNotesDeduped(
   recruitingNotes: unknown,
@@ -51,6 +53,7 @@ export interface OverviewTabProps {
   competingSchools?: FullProfileCompetingSchool[];
   futurecastSummary?: FullProfileFuturecastSummary | null;
   initialPredictions?: PlayerPrediction[];
+  vaultScouting?: FullProfileVaultScouting | null;
 }
 
 export function OverviewTab({
@@ -59,6 +62,7 @@ export function OverviewTab({
   competingSchools = [],
   futurecastSummary = null,
   initialPredictions,
+  vaultScouting = null,
 }: OverviewTabProps): React.ReactElement {
   const { player, signals, related, highSchoolProfile, collegeProfile, portalProfile, ufSpecificProfile } =
     data;
@@ -138,6 +142,8 @@ export function OverviewTab({
   return (
     <div className="fc-profile-panel" data-testid="tab-overview">
       <OverviewFourSlot mode={mode} who={who} stand={stand} context={context} pulse={pulse} />
+
+      <VaultScoutingSection scouting={vaultScouting} />
 
       {showPicks ? (
         <section className="fc-profile-section fc-profile-section--picks">

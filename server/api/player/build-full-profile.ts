@@ -112,6 +112,23 @@ export interface FullProfileResponse {
     fitScore: number | null;
     volatilityScore: number | null;
   } | null;
+  /** Vault film-desk scouting for profile (off the front commit card). */
+  vaultScouting?: {
+    evaluation: string | null;
+    comparison: string | null;
+    projection: string | null;
+    strengths: string[];
+    schemeFit: string | null;
+  } | null;
+}
+
+function vaultScoutingFromWarRoom(slug: string): FullProfileResponse['vaultScouting'] {
+  try {
+    const elite = require('../../lib/recruiting-hub-elite');
+    return elite.getVaultScoutingForSlug(slug) as FullProfileResponse['vaultScouting'];
+  } catch {
+    return null;
+  }
 }
 
 function rosterPlayerBySlug(slug: string): Record<string, unknown> | null {
@@ -224,6 +241,8 @@ async function finalizeProfileResponse(
     }
   }
 
+  const vaultScouting = profile.vaultScouting ?? vaultScoutingFromWarRoom(slug);
+
   return {
     ...profile,
     player,
@@ -234,6 +253,7 @@ async function finalizeProfileResponse(
     signals,
     portalPredictions,
     futurecastSummary: futurecastSummary as FullProfileResponse['futurecastSummary'],
+    vaultScouting,
   };
 }
 

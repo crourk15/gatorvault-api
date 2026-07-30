@@ -237,6 +237,7 @@ export function PlayerProfilePage({
             competingSchools={profile?.competingSchools ?? []}
             futurecastSummary={profile?.futurecastSummary ?? null}
             initialPredictions={initialPredictions}
+            vaultScouting={profile?.vaultScouting ?? null}
           />
         )}
         {activeTab === 'high-school' && (
