@@ -101,24 +101,43 @@ const RANK_LINE_SEP = ' | ';
 function hometownLabel(player) {
   const school = String(player.school || player.fromSchool || '').trim();
   const city = String(player.hometownCity || player.city || '').trim();
-  const state = String(player.state || player.hometownState || '').trim();
+  const state = String(player.state || player.hometownState || player.st || '').trim();
+  // Prefer city + state under the name (where they're from).
+  if (city && state) return `${city}, ${state}`;
+  if (city) return city;
   if (school && state && !school.includes(state)) return `${school}, ${state}`;
   if (school) return school;
-  if (city && state) return `${city}, ${state}`;
   if (state) return state;
   return '';
 }
 
+/**
+ * Line under the player name: stars · position · hometown · natl / pos / state ranks.
+ * Example: 5★ IOL · Coatesville, PA · #3 natl · #1 IOL · #1 PA
+ */
 function buildCommitMetaLine(player) {
   const pos = playerPos(player);
   const stars = effectiveStars(player) || 0;
   const parts = [];
   if (stars) parts.push(`${stars}★ ${pos}`);
-  else if (pos) parts.push(pos);
+  else if (pos && pos !== '—') parts.push(pos);
+
   const home = hometownLabel(player);
   if (home) parts.push(home);
+
   const natl = player.natlRank ?? player.natl;
-  if (natl != null) parts.push(`#${natl} natl`);
+  const posRank = player.posRank;
+  const stateRank = player.stateRank;
+  const state = String(player.state || player.hometownState || player.st || '').trim().toUpperCase();
+
+  if (natl != null && natl !== '' && Number(natl) > 0) parts.push(`#${natl} natl`);
+  if (posRank != null && posRank !== '' && Number(posRank) > 0) {
+    parts.push(pos && pos !== '—' ? `#${posRank} ${pos}` : `#${posRank} pos`);
+  }
+  if (stateRank != null && stateRank !== '' && Number(stateRank) > 0) {
+    parts.push(state ? `#${stateRank} ${state}` : `#${stateRank} state`);
+  }
+
   return parts.join(' · ') || fallbackCommitBlurb(player);
 }
 
@@ -487,7 +506,8 @@ function mapHubCommit(player, classYear) {
   const metaLine = buildCommitMetaLine(player);
   const skinny = buildCommitFanSkinny(player);
   const projection = formatVaultProjection(verifiedProjection(player), player.name);
-  const strengths = formatStrengths(player);
+  // Strengths dropped from commit cards — Vault Eval already covers the traits.
+  const strengths = null;
   const rawComp = String(player.playerComp ?? player.comp ?? player.comparison ?? '').trim();
   const playerComp = formatVaultComp(rawComp, player.name);
   const isFutureCommit = classYear >= 2027;
