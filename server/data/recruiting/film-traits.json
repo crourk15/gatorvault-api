@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-30T14:15:05.276Z",
+  "updatedAt": "2026-07-30T15:22:04.753Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -115,6 +115,286 @@
       "evaluatedBy": "vault-film-desk",
       "evalMode": "manual_frame_review",
       "evaluatedAt": "2026-07-30T14:01:52.252Z"
+    },
+    "maxwell-hiller": {
+      "playerName": "Maxwell Hiller",
+      "position": "IOL",
+      "classYear": 2027,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Maxwell Hiller - Coatesville - First 5 Weeks",
+          "url": "https://www.hudl.com/embed/video/3/19167018/68d0d8e68a61b935346bdbf4"
+        }
+      ],
+      "traits": [
+        "College-ready mass; low wide three-point with flat back.",
+        "Length/hands keep defenders off his chest; climbs to second level."
+      ],
+      "vaultFilmAngle": "Hiller is a college-ready interior with true 300-pound mass, a low wide base, and length that keeps defenders off his chest. Climbs and pulls without looking heavy. Wins with power, hand placement, and ready-made trench",
+      "doNotClaim": [
+        "Do not invent tackle totals, sack counts, or grades beyond Vault film notes."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-30 — Charles green light.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T15:22:04.549Z"
+    },
+    "elias-pearl": {
+      "playerName": "Elias Pearl",
+      "position": "WR",
+      "classYear": 2027,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Elias Pearl - Port Charlotte - Junior Season Highlights",
+          "url": "https://www.hudl.com/embed/video/3/22307377/6935e048ea0d31db03939058"
+        }
+      ],
+      "traits": [
+        "Track-style acceleration; stacks cushions on trailing DBs.",
+        "YAC suddenness; ball security while still accelerating."
+      ],
+      "vaultFilmAngle": "Pearl is a compact, twitchy playmaker who creates after the catch. Track-style acceleration, stacks cushions, finishes with violence. Wins with suddenness and YAC — a mover who stresses the defense all over the formation",
+      "doNotClaim": [
+        "Do not invent tackle totals, sack counts, or grades beyond Vault film notes."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-30 — Charles green light.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T15:22:04.575Z"
+    },
+    "elijah-hutcheson": {
+      "playerName": "Elijah Hutcheson",
+      "position": "OT",
+      "classYear": 2027,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Elijah Hutcheson - Rabun Gap - Season Highlights",
+          "url": "https://www.hudl.com/embed/video/3/20165432/67439b2fca1e3e0a35429a0a"
+        }
+      ],
+      "traits": [
+        "High-cut length tackle; long-arm engagement with hands inside.",
+        "Athletic climber with add-weight runway at 6-5 / 265."
+      ],
+      "vaultFilmAngle": "Hutcheson is a length-first tackle with a high-cut frame and real add-weight runway. Long arms, flat back, hands inside, feet that churn. Wins with levers and athleticism — the body is still catching up to the tools.",
+      "doNotClaim": [
+        "Do not invent tackle totals, sack counts, or grades beyond Vault film notes."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-30 — Charles green light.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": "https://www.on3.com/rivals/elijah-hutcheson-241889/",
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T15:22:04.597Z"
+    },
+    "davin-davidson": {
+      "playerName": "Davin Davidson",
+      "position": "QB",
+      "classYear": 2027,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Davin Davidson - Cardinal Mooney - Junior Season",
+          "url": "https://www.hudl.com/embed/video/3/19357701/68a9db15d57aa0fded8ade4c"
+        }
+      ],
+      "traits": [
+        "Jumbo pocket frame; balanced shotgun drops with eyes downfield.",
+        "Poise in the pocket with enough mobility to extend."
+      ],
+      "vaultFilmAngle": "Davidson is a jumbo pocket quarterback — natural height over the line, long levers, calm eyes downfield. Balanced drops and enough athleticism to extend. Wins with size, arm, and poise; the frame is still thickening into",
+      "doNotClaim": [
+        "Do not invent tackle totals, sack counts, or grades beyond Vault film notes."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-30 — Charles green light.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T15:22:04.620Z"
+    },
+    "cahron-wheeler": {
+      "playerName": "Cahron Wheeler",
+      "position": "EDGE",
+      "classYear": 2027,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Cahron Wheeler - St. Paul's - Highlights",
+          "url": "https://www.hudl.com/embed/video/3/19728987/655670a40660fe08747df24e"
+        }
+      ],
+      "traits": [
+        "Long lean EDGE; wide-9 / three-point versatility.",
+        "Length eats space; first-step and reach as primary win traits."
+      ],
+      "vaultFilmAngle": "Wheeler is a long, lean, high-waisted EDGE. Stand-up wide-9 and three-point get-off; length eats space vs shorter tackles. Wins with first-step and reach — a pass-rush frame built to grow into a feature role.",
+      "doNotClaim": [
+        "Do not invent tackle totals, sack counts, or grades beyond Vault film notes."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-30 — Charles green light.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T15:22:04.640Z"
+    },
+    "peyton-miller": {
+      "playerName": "Peyton Miller",
+      "position": "IOL",
+      "classYear": 2027,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Peyton Miller - Anna - Full Junior Season",
+          "url": "https://www.hudl.com/embed/video/3/19650472/68daf5a7824025013756fcf4"
+        }
+      ],
+      "traits": [
+        "Heavy 310 interior with length; wide base and hands inside.",
+        "Drive finish — powerful through the middle, not soft."
+      ],
+      "vaultFilmAngle": "Miller is heavy trench mass with real length for an interior. Wide base, hands inside, flat back, drive finish — powerful through the middle, not soft. Wins with size, base, and length at the point of attack.",
+      "doNotClaim": [
+        "Do not invent tackle totals, sack counts, or grades beyond Vault film notes."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-30 — Charles green light.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T15:22:04.671Z"
+    },
+    "tramond-collins": {
+      "playerName": "Tramond Collins",
+      "position": "WR",
+      "classYear": 2027,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Tramond Collins - Cottondale - Jr Season Highlights",
+          "url": "https://www.hudl.com/embed/video/3/22463616/69135fe61e7a4800429ce9b0"
+        }
+      ],
+      "traits": [
+        "Blur/separation — pulls away in the open field; house-call speed.",
+        "Lean 6-0 perimeter; coiled get-off; DBs often give cushion."
+      ],
+      "vaultFilmAngle": "Collins is a blur on the perimeter. Lean 6-0 frame, coiled releases, and chase scenes with huge separation — house-call speed that forces cushion. Wins with pure juice and stride; a vertical/chunk-play weapon, not a 6-4",
+      "doNotClaim": [
+        "Do not invent tackle totals, sack counts, or grades beyond Vault film notes."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-30 — Charles green light.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T15:22:04.693Z"
+    },
+    "jabios-smith": {
+      "playerName": "Ja'Bios Smith",
+      "position": "LB",
+      "classYear": 2027,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Ja'Bios Smith - Junior cut",
+          "url": "https://www.hudl.com/embed/video/3/20014986/6918f3a2de3053ffde6d0389"
+        }
+      ],
+      "traits": [
+        "Rangy stand-up LB/edge-hybrid look; long levers.",
+        "Space-defense posture; clear +15–20 lb projection."
+      ],
+      "vaultFilmAngle": "Smith is a rangy modern space LB — stand-up overhang/WILL look, long levers, trigger-ready feet. Wins with length and range in space; body projects cleanly into an every-down role.",
+      "doNotClaim": [
+        "Do not invent tackle totals, sack counts, or grades beyond Vault film notes."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-30 — Charles green light.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T15:22:04.713Z"
+    },
+    "aamaury-fountain": {
+      "playerName": "Aamaury Fountain",
+      "position": "CB",
+      "classYear": 2027,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Aamaury Fountain - Northside - JR SZN",
+          "url": "https://www.hudl.com/embed/video/3/19193986/690cea3c197f9dd5bd812203"
+        }
+      ],
+      "traits": [
+        "High-cut 6-3 CB; off-man cushion with length in the window.",
+        "Wingspan/disruption traits; clear add-weight runway."
+      ],
+      "vaultFilmAngle": "Fountain is length on the boundary. High-cut 6-3 frame, off-man cushion, wingspan that occupies the throw window. Wins with size and disruption as the weight comes on — a lockdown-size corner in the making.",
+      "doNotClaim": [
+        "Do not invent tackle totals, sack counts, or grades beyond Vault film notes."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-30 — Charles green light.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T15:22:04.734Z"
+    },
+    "raheem-floyd": {
+      "playerName": "Raheem Floyd",
+      "position": "CB",
+      "classYear": 2027,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Raheem Floyd - St. Laurence / ESL environment",
+          "url": "https://www.hudl.com/embed/video/3/20080624/69701cb66305a8e81b1f4bc4"
+        }
+      ],
+      "traits": [
+        "Lean long-strider CB frame; covers ground without heaviness.",
+        "Speed/length-first projection from 170 toward starter mass."
+      ],
+      "vaultFilmAngle": "Floyd is a lean long-strider corner — speed/length first at 170 with a clear path to 185–195. Covers ground without looking heavy. Wins with recovery speed and frame projection.",
+      "doNotClaim": [
+        "Do not invent tackle totals, sack counts, or grades beyond Vault film notes."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-30 — Charles green light.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T15:22:04.753Z"
     }
   }
 }
