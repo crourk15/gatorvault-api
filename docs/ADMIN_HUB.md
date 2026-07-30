@@ -134,8 +134,8 @@ Recruit briefs embed a **PLAYER PROJECTION / COMP** block from War Room breakdow
 1. Film desk / Open fills War Room `projection` + `comparison` from tape.
 2. **Copy Brief** prints both (or “none on file — do not invent”).
 3. Cursor post must weave a short projection clause + one calm comp mid-post when on file — never invent, never close on the comp.
-4. FutureCast / recruiting **player profiles** (click the name off a commit card) show labeled **Evaluation · Vault Player Comp · Vault Projection** from War Room — keep front commit cards as short teasers only.
-5. Confirm with Charles before treating a new eval/comp as live profile copy.
+4. Commit cards use existing slots (**skinny / Strengths / Comp / Projection**) from War Room — live API, no app rebuild. Player profiles also show labeled **Evaluation · Vault Player Comp · Vault Projection**.
+5. Confirm with Charles before treating a new eval/comp as live card/profile copy.
 
 ### On3 / Hudl highlight LINK in Copy Brief
 
