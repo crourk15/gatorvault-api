@@ -52,6 +52,35 @@
     });
   }
 
+  function projectionCompCardHtml(research, player) {
+    var bd = (research && research.breakdown) || {};
+    var projection = String((bd && bd.projection) || (player && player.projection) || '').trim();
+    var comparison = String(
+      (bd && bd.comparison) || (player && (player.playerComp || player.comparison)) || ''
+    ).trim();
+    var scheme = String((bd && bd.schemeFit) || (player && player.schemeFit) || '').trim();
+    if (!projection && !comparison) {
+      return '<div class="hub-card hub-st-yellow" style="margin-bottom:12px">'
+        + '<h3>Projection / Comp</h3>'
+        + '<p class="hub-meta" style="margin:0">None on file yet. Film desk should set War Room projection + a body/traits-matched comp before the X post. Copy Brief will say “do not invent.”</p>'
+        + '<p class="hub-meta" style="margin:8px 0 0">Standard: contribution path (when / role / ceiling) + comparable with similar body + win traits — not size-only, no downplay lines.</p>'
+        + '</div>';
+    }
+    return '<div class="hub-card hub-st-green" style="margin-bottom:12px">'
+      + '<h3>Projection / Comp</h3>'
+      + (projection
+        ? '<p style="margin:0 0 8px;color:#e2e8f0;line-height:1.45"><strong>Projection:</strong> ' + esc(projection) + '</p>'
+        : '<p class="hub-meta" style="margin:0 0 8px">Projection: (none — omit from post)</p>')
+      + (comparison
+        ? '<p style="margin:0 0 8px;color:#e2e8f0;line-height:1.45"><strong>Player comp:</strong> ' + esc(comparison) + '</p>'
+        : '<p class="hub-meta" style="margin:0 0 8px">Player comp: (none — omit from post)</p>')
+      + (scheme
+        ? '<p class="hub-meta" style="margin:0 0 8px">Scheme fit: ' + esc(scheme) + '</p>'
+        : '')
+      + '<p class="hub-meta" style="margin:0">Required in the X post when on file. Confirm before treating as live FutureCast profile copy.</p>'
+      + '</div>';
+  }
+
   function filmTraitsCardHtml(film) {
     var hasTraits = !!(film && film.traits && film.traits.length);
     var hasSources = !!(film && film.sources && film.sources.length);
@@ -286,6 +315,7 @@
         + '<p style="margin:0;white-space:pre-wrap;line-height:1.5;color:#e2e8f0">'
         + esc(research.vaultAngle || '—') + '</p></div>'
         + futurecastCardHtml(brief.futurecastFeed)
+        + projectionCompCardHtml(research, p)
         + filmTraitsCardHtml(brief.filmTraits || (research && research.filmTraits))
         + '<div class="hub-card" style="margin-bottom:12px">'
         + '<h3>Board facts (elite depth)</h3>'
