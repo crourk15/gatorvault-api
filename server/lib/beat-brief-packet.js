@@ -664,7 +664,7 @@ function formatProjectionCompBlock(research = null, player = null) {
   if (scheme) lines.push(`Scheme fit: ${scheme}`);
   if (nfl) lines.push(`NFL projection: ${nfl}`);
   lines.push(
-    'AGENT RULE: When Projection and/or Player comp are on file, weave ONE short projection clause and/or ONE calm comp into the post (mid-body, after identity/tape). Never invent either. Never make the comp the closer.'
+    'AGENT RULE: When Projection and/or Player comp are on file, weave ONE short projection clause and/or ONE calm comp into the post (mid-body, after identity/tape). Projection = contribution timeline + role + ceiling (e.g. Year 2–3 regular contributor / All-SEC upside) — sell the upside, do not write “not All-American” or other downplay lines. Player comp must MATCH that level and the way he wins on tape (not size-only). Never invent either. Never make the comp the closer.'
   );
   return lines.join('\n');
 }
