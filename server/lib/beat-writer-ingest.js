@@ -82,7 +82,7 @@ const VISIT_INGEST_HANDLES = new Set([
 
 const RECRUITING_INTEL_SIGNAL_RES = [
   /\b(?:commit(?:ted|ment)?|decommit(?:ted)?|flip(?:ped)?|portal|offer(?:ed|s)?|verb(?:ed|al)?)\b/i,
-  /\b(?:official visit|\bov\b|\buv\b|unofficial visit|on campus|in gainesville|the swamp)\b/i,
+  /\b(?:official visit|\bov\b|\buv\b|unofficial visit|on campus|in gainesville)\b/i,
   /\b(?:prediction machine|futurecast|expert pick|crystal ball|rpm|rivals)\b/i,
   /\b(?:recruiting battle|flip race|pulling ahead|leaning|momentum|heating up|staff loves)\b/i,
   /\b20\d{2}\s+(?:\d+-[Ss]tar\s+)?(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH)\s+[A-Z]/,
@@ -99,7 +99,8 @@ const VISIT_SIGNAL_RES = [
   /(?:taking|took|heads?\s+to|heading\s+to)\s+(?:an?\s+)?(?:official\s+)?visit.*?(?:florida|gators|gainesville|\buf\b)/i
 ];
 
-const UNOFFICIAL_VISIT_RE = /unofficial\s+visit|\buv\b|on\s+campus|in\s+gainesville|the\s+swamp/i;
+// Do not treat historical "the swamp" highlight clips as unofficial visits.
+const UNOFFICIAL_VISIT_RE = /unofficial\s+visit|\buv\b|on\s+campus|in\s+gainesville/i;
 
 const VISIT_DATE_RES = [
   { re: /this\s+weekend/i, label: 'this weekend' },

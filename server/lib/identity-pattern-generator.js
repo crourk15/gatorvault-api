@@ -3,6 +3,9 @@
  */
 const STAR_WORDS = { 5: 'five', 4: 'four', 3: 'three', 2: 'two', 1: 'one' };
 
+/** Bare surnames shorter than this collide (Ham→Hambrick, Lee, King, etc.). */
+const BARE_LAST_NAME_MIN_LEN = 5;
+
 function splitName(name) {
   const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
   return {
@@ -13,6 +16,12 @@ function splitName(name) {
 
 function isFloridaSchool(label) {
   return /^florida|gators|\buf\b/i.test(String(label || '').trim());
+}
+
+function canUseBareLastName(lastName) {
+  const last = String(lastName || '').trim();
+  if (!last || /\s/.test(last)) return false;
+  return last.length >= BARE_LAST_NAME_MIN_LEN;
 }
 
 function generateIdentityPatterns(player) {
@@ -28,6 +37,7 @@ function generateIdentityPatterns(player) {
   const natlRank = player.natlRank != null ? parseInt(player.natlRank, 10) : null;
   const committedTo = String(player.committedTo || player.committed_to || '').trim();
   const commitSchool = committedTo && !isFloridaSchool(committedTo) ? committedTo : null;
+  const bareLastOk = canUseBareLastName(lastName);
 
   const patterns = new Set();
   const add = (value) => {
@@ -48,7 +58,7 @@ function generateIdentityPatterns(player) {
   };
 
   addStarPosNameVariants(firstName);
-  addStarPosNameVariants(lastName.length >= 3 ? lastName : null);
+  addStarPosNameVariants(bareLastOk ? lastName : null);
 
   if (school && stars) {
     add(`${school} ${stars} star`);
@@ -58,19 +68,14 @@ function generateIdentityPatterns(player) {
   if (school && pos) add(`${school} ${pos}`);
 
   if (firstName && lastName) add(`${firstName} ${lastName}`);
-  if (lastName && lastName.length >= 3) add(lastName);
+  // Never emit bare short surnames like "Ham" — they false-match Hambrick and similar.
+  if (bareLastOk) add(lastName);
 
-  if (stars && pos) {
-    add(`${stars} star ${pos}`);
-    add(`${stars}-star ${pos}`);
-    if (starWord) {
-      add(`${starWord} star ${pos}`);
-      add(`${starWord}-star ${pos}`);
-    }
-  }
+  // Do NOT emit bare `${stars} star ${pos}` / `${stars}-star ${pos}` without a name/school
+  // token — those latch onto any 4★ EDGE mention (e.g. Hambrick pick-six tweets).
 
   if (pos && firstName) add(`${pos} ${firstName}`);
-  if (pos && lastName && lastName.length >= 3) add(`${pos} ${lastName}`);
+  if (pos && bareLastOk) add(`${pos} ${lastName}`);
 
   if (stars && school) {
     add(`${stars} star ${school} commit`);
@@ -94,9 +99,10 @@ function generateIdentityPatterns(player) {
 
   if (classYear) {
     if (pos && firstName) add(`${classYear} ${pos} ${firstName}`);
-    if (stars && pos) {
-      add(`${classYear} ${stars}-star ${pos}`);
-      if (starWord) add(`${classYear} ${starWord}-star ${pos}`);
+    // Require a name token with class+stars+pos (avoid bare "2028 4-star EDGE").
+    if (stars && pos && firstName) {
+      add(`${classYear} ${stars}-star ${pos} ${firstName}`);
+      if (starWord) add(`${classYear} ${starWord}-star ${pos} ${firstName}`);
     }
     if (firstName && lastName) add(`${classYear} ${firstName} ${lastName}`);
   }
@@ -104,8 +110,9 @@ function generateIdentityPatterns(player) {
   if (natlRank && natlRank > 0 && natlRank <= 500) {
     if (firstName) add(`#${natlRank} ${firstName}`);
     if (pos && firstName) add(`top ${natlRank} ${pos} ${firstName}`);
-    if (stars && pos) add(`${natlRank} ${stars} star ${pos}`);
-    if (starWord && pos) add(`${natlRank} ${starWord} star ${pos}`);
+    // Rank + stars + pos alone is too broad without a name token.
+    if (stars && pos && firstName) add(`${natlRank} ${stars} star ${pos} ${firstName}`);
+    if (starWord && pos && firstName) add(`${natlRank} ${starWord} star ${pos} ${firstName}`);
   }
 
   return Array.from(patterns);
@@ -138,8 +145,10 @@ function buildPatternRecord(player) {
 
 module.exports = {
   STAR_WORDS,
+  BARE_LAST_NAME_MIN_LEN,
   splitName,
   isFloridaSchool,
+  canUseBareLastName,
   generateIdentityPatterns,
   buildPatternRecord
 };

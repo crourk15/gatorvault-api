@@ -571,8 +571,9 @@ async function refreshBeatStreamInner(cache) {
 
   try {
     // Optional — heavy identity/intel work can OOM Starter right after a successful beat pull.
-    // Dedicated beat-ingest cron still runs this as its own step.
-    // Default ON so daily Alderman/Bender offers land without a separate cron flag.
+    // Durable ingest still runs on recruiting-light (*/20) + recruiting-ingest (0 */2).
+    // The named beat-ingest cron is refresh-only on Starter (OOM-safe).
+    // Default ON so daily Alderman/Bender offers land without waiting for the 20m light cron.
     // Set BEAT_WRITER_INGEST_ON_REFRESH=false to disable on tiny instances.
     if (process.env.BEAT_WRITER_INGEST_ON_REFRESH !== 'false') {
       const { runBeatWriterIngest } = require('./beat-writer-ingest');

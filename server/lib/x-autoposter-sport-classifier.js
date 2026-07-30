@@ -114,10 +114,17 @@ const FOOTBALL_STRONG_RES = [
   /\bRB\b/,
   /\bTE\b/,
   /\bOL\b/,
+  /\bIOL\b/,
+  /\bOT\b/,
+  /\bOG\b/,
   /\bDL\b/,
+  /\bDT\b/,
+  /\bDE\b/,
   /\bLB\b/,
   /\bCB\b/,
   /\bS\b/,
+  /\bATH\b/,
+  /\bEDGE\b/,
   /\bfuturecast\b/i,
   /\bcrystal ball\b/i,
   /\bprediction machine\b/i,
@@ -135,6 +142,8 @@ const FOOTBALL_STRONG_RES = [
   /\bdefensive end\b/i,
   /\bdefensive tackle\b/i,
   /\bedge rusher\b/i,
+  /\bpass rusher\b/i,
+  /\bprospects?\b/i,
   /\b3-3-5\b/i,
   /\bspring game\b/i,
   /\bfall camp\b/i,
@@ -267,7 +276,12 @@ function classifySport(text, post = null) {
     return { sport: SPORTS.IRRELEVANT, confidence: 80, reason: 'no_uf_relevance', signals: [] };
   }
 
-  if (!/\b(recruit|commit|portal|coach|roster|schedule|game|visit|offer|sign|camp|practice|nil|stadium|facility|athletics)\b/i.test(hay)) {
+  // Soft football/recruiting content — include verb forms (visited/offered) used by beat writers.
+  const softFootballContent =
+    /\b(recruit(?:ing|s|er)?|commit(?:ted|ment|s)?|portal|coach(?:es|ing)?|roster|schedule|game(?:day)?|visit(?:ed|s|ing)?|offer(?:ed|s|ing)?|sign(?:ed|ing)?|camp|practice|nil|stadium|facility|athletics|prospects?|target(?:s|ed|ing)?)\b/i.test(
+      hay
+    );
+  if (!softFootballContent) {
     return { sport: SPORTS.IRRELEVANT, confidence: 75, reason: 'uf_no_sport_content', signals: ['uf_generic'] };
   }
 
@@ -275,11 +289,13 @@ function classifySport(text, post = null) {
     return { sport: SPORTS.NON_UF, confidence: 82, reason: 'other_program', signals: ['non_uf_program'] };
   }
 
+  // UF + recruiting/visit/offer language from beat writers is football, not "other UF sport".
+  // This is what lets Bender/Alderman EDGE + visit copy into beat-writer ingest.
   return {
-    sport: SPORTS.OTHER_UF,
-    confidence: 60,
-    reason: 'uf_without_football_signals',
-    signals: ['uf_generic']
+    sport: SPORTS.FOOTBALL,
+    confidence: 72,
+    reason: 'uf_recruiting_soft_football',
+    signals: ['uf_generic', 'soft_recruiting']
   };
 }
 

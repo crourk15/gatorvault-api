@@ -179,33 +179,19 @@
         "4-star EDGE Merrick",
         "four star EDGE Merrick",
         "four-star EDGE Merrick",
-        "4 star EDGE Ham",
-        "4-star EDGE Ham",
-        "four star EDGE Ham",
-        "four-star EDGE Ham",
         "Marietta (Marietta, GA) 4 star",
         "Marietta (Marietta, GA) four star",
         "Marietta (Marietta, GA) EDGE",
         "Merrick Ham",
-        "Ham",
-        "4 star EDGE",
-        "4-star EDGE",
-        "four star EDGE",
-        "four-star EDGE",
         "EDGE Merrick",
-        "EDGE Ham",
         "4 star Marietta (Marietta, GA) commit",
         "four star Marietta (Marietta, GA) commit",
         "2028 EDGE Merrick",
-        "2028 4-star EDGE",
-        "2028 four-star EDGE",
         "2028 Merrick Ham",
         "#102 Merrick",
-        "top 102 EDGE Merrick",
-        "102 4 star EDGE",
-        "102 four star EDGE"
+        "top 102 EDGE Merrick"
       ],
-      "updatedAt": "2026-07-12T18:57:14.016Z"
+      "updatedAt": "2026-07-30T13:25:00.000Z"
     },
     "davian-groce": {
       "slug": "davian-groce",
@@ -4780,5 +4766,5 @@
       "updatedAt": "2026-07-11T11:30:20.411Z"
     }
   },
-  "updatedAt": "2026-07-12T19:06:48.062Z"
+  "updatedAt": "2026-07-30T13:25:00.000Z"
 }
