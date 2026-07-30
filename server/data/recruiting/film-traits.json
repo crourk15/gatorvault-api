@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-30T15:22:04.753Z",
+  "updatedAt": "2026-07-30T19:11:51.158Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -395,6 +395,39 @@
       "evaluatedBy": "vault-film-desk",
       "evalMode": "manual_frame_review",
       "evaluatedAt": "2026-07-30T15:22:04.753Z"
+    },
+    "andre-alexander": {
+      "playerName": "Andre Alexander",
+      "position": "LB",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Andre Alexander - IMG Academy - 2025 Sophomore Season Highlights",
+          "url": "https://www.hudl.com/embed/video/3/21668249/6917680eee0b19f59aacea73"
+        },
+        {
+          "type": "hudl",
+          "label": "Andre Alexander - 2024 Freshman Season Highlights",
+          "url": "https://www.hudl.com/embed/video/3/21668249/6757a8bd73169ae0d36898b6"
+        }
+      ],
+      "traits": [
+        "Second-level patience; square to the mesh with eyes in the backfield.",
+        "Closes space and finishes low with wrap tackles on the boundary."
+      ],
+      "vaultFilmAngle": "Alexander is an off-ball linebacker who wins with second-level patience — square to the mesh, eyes in the backfield — then closes space and finishes low on the boundary with wrap tackles. Built at 6-0.5 / 215 for the position and already looks like a Power conference LB on sophomore tape.",
+      "doNotClaim": [
+        "Do not invent tackle totals, sack counts, or grades beyond Vault film notes."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-30 — Charles green light (Kwon Alexander comp / Y2–3 SEC starter projection).",
+      "ingestStatus": "traits_ready",
+      "on3RecruitSlug": "andre-alexander-240834",
+      "on3ProfileUrl": "https://www.on3.com/rivals/andre-alexander-240834/",
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-30T19:11:51.127Z"
     }
   }
 }

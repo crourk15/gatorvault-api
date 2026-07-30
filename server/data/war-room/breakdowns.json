@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-30T15:22:04.739Z",
+  "updatedAt": "2026-07-30T19:12:11.876Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -13029,27 +13029,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/21668249/6917680eee0b19f59aacea73",
+          "publishedAt": "2026-07-30"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Alexander scrapes with balance and keeps his eyes in the backfield at the second level.",
+        "Alexander closes space quickly and finishes low with wrap-up tackles on the boundary.",
+        "Alexander already carries a filled-out 6-0.5 / 215 frame for an off-ball 2028 LB."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Alexander will still prove consistency vs elite Power conference skill speed in coverage."
+      ],
+      "comparison": "Alexander comps to Kwon Alexander — ~6-1 / 225-range off-ball LB; second-level reads + chase-and-finish, not a size-only lookalike.",
+      "schemeFit": "Alexander fits as an off-ball LB who can scrape, chase, and finish in space.",
+      "staffNotes": "Florida target · Vault film desk verified 2026-07-30 (2025 sophomore Hudl).",
+      "projection": "Alexander projects as a Year 2–3 SEC starting LB with All-SEC upside if the pursuit and wrap finish keep showing at Florida.",
+      "insiderNotes": "Alexander is an off-ball linebacker who wins with second-level patience — square to the mesh, eyes in the backfield — then closes space and finishes low on the boundary with wrap tackles. Built at 6-0.5 / 215 for the position and already looks like a Power conference LB on sophomore tape.",
+      "recruitingStory": "Andre Alexander is a 2028 4-star LB from IMG Academy (Chesapeake, VA) with a Florida offer; open board target, not a commit.",
       "nflProjection": null,
-      "featured": false,
-      "updatedAt": "2026-07-11T11:30:04.077Z"
+      "featured": true,
+      "updatedAt": "2026-07-30T19:11:51.127Z"
     },
     "izayah-vickers": {
       "playerSlug": "izayah-vickers",
