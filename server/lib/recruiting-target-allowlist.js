@@ -171,6 +171,12 @@ function loadLabPromotionSlugs(classYear) {
   }
 }
 
+/**
+ * Soft-promote mistakes that must never reappear on the 2028 board / Home teaser.
+ * (Visit-only national prospects, etc.)
+ */
+const BLOCKED_SOFT_2028 = new Set(['trace-hawkins']);
+
 function getAllowlistSet(classYear) {
   const year = parseInt(classYear, 10);
   // Closing Class is hard-locked to Charles' hunt list only.
@@ -184,7 +190,11 @@ function getAllowlistSet(classYear) {
   const extra = admin.slugs2028 || [];
   // 2028 still merges Lab promotions for elite offer/visit discovery.
   const promoted = loadLabPromotionSlugs(2028);
-  return new Set([...ALLOWLIST_2028, ...extra, ...promoted].map((s) => canonicalTargetSlug(s)));
+  return new Set(
+    [...ALLOWLIST_2028, ...extra, ...promoted]
+      .map((s) => canonicalTargetSlug(s))
+      .filter((s) => s && !BLOCKED_SOFT_2028.has(s))
+  );
 }
 
 function isFlipWatchAllowlisted(slug, classYear) {
@@ -274,6 +284,7 @@ function demoteNonAllowlistedTargets(players) {
 module.exports = {
   ALLOWLIST_2027,
   ALLOWLIST_2028,
+  BLOCKED_SOFT_2028,
   FLIP_WATCH_2027,
   FLIP_WATCH_COMMITS_2027,
   CANONICAL_TARGET_NAMES,

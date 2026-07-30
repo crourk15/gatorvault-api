@@ -67,6 +67,20 @@ function mainSync() {
   assert.ok(shouldPromoteToFutureCast(player, 2028));
   assert.ok(!shouldPromoteToFutureCast(player, 2027));
 
+  // Visit-only national prospect with residual poison RPM must NOT soft-promote.
+  const visitOnlyPoison = {
+    name: 'Trace Hawkins',
+    classYear: 2028,
+    on3Slug: 'trace-hawkins-247268',
+    ufRpmPct: 99,
+    ufStatus: 'Uncommitted',
+    visitTrail: [{ school: 'Florida', type: 'unofficial_visit' }],
+    on3TopTeams: [
+      { team: { name: 'Florida' }, status: 'Visited', prediction: 0.99, year: 2028, unOfficialVisitCount: 1 },
+    ],
+  };
+  assert.ok(!shouldPromoteToFutureCast(visitOnlyPoison, 2028));
+
   console.log('sync asserts PASS');
 }
 

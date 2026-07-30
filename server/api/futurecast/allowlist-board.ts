@@ -566,11 +566,19 @@ export async function loadBoardPlayersForSlugs(
         /* optional */
       }
     }
-    const storePct =
+    // Persisted residual poison (0.99→99/100) still lives on some Render store rows
+    // (Trace Hawkins / Cyion Smith). Uncommitted kids cannot sit at 95%+ UF RPM.
+    if (rpmPct != null && rpmPct >= 95 && !ufCommitted) {
+      rpmPct = null;
+    }
+    let storePct =
       sanitizeStoreOddsPct(seed.ufProbability, { rpmPct }) ??
       sanitizeStoreOddsPct(recruiting?.ufProbability, { rpmPct }) ??
       sanitizeStoreOddsPct(recruiting?.futurecastProbability, { rpmPct }) ??
       undefined;
+    if (storePct != null && storePct >= 95 && !ufCommitted) {
+      storePct = undefined;
+    }
     const fitScore = resolveBoardFitScore({
       override: Boolean(override),
       classYear: resolvedClassYear,
