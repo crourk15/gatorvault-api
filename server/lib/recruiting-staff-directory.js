@@ -47,12 +47,26 @@ function normalizeStaffId(id) {
   return key;
 }
 
+function staffNameSlug(name) {
+  return String(name || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 function resolveStaffById(id) {
   const normalized = normalizeStaffId(id);
   if (!normalized) return null;
   if (STAFF_DIRECTORY[normalized]) return STAFF_DIRECTORY[normalized];
   for (const entry of Object.values(STAFF_DIRECTORY)) {
     if (entry.staffId === normalized || entry.name.toLowerCase() === normalized) return entry;
+  }
+  const slug = staffNameSlug(id);
+  if (slug) {
+    for (const entry of Object.values(STAFF_DIRECTORY)) {
+      if (staffNameSlug(entry.name) === slug) return entry;
+    }
   }
   return null;
 }
@@ -64,13 +78,18 @@ function listStaff() {
 function isStaffOrCoachName(name) {
   const lower = String(name || '').trim().toLowerCase();
   if (!lower) return false;
+  const slug = staffNameSlug(lower);
   for (const entry of listStaff()) {
     if (entry.name.toLowerCase() === lower) return true;
+    if (entry.staffId === lower || entry.staffId === slug) return true;
+    if (staffNameSlug(entry.name) === slug) return true;
   }
   try {
     const { getCanonicalCoachNames } = require('./official-coach-identity');
     for (const coach of getCanonicalCoachNames()) {
-      if (String(coach).toLowerCase() === lower) return true;
+      const c = String(coach || '').trim().toLowerCase();
+      if (!c) continue;
+      if (c === lower || staffNameSlug(c) === slug) return true;
     }
   } catch {
     /* optional */

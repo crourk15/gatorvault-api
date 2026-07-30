@@ -38,4 +38,18 @@ describe('recruiting-staff-directory', () => {
     assert.ok(staff.length >= 20);
     assert.ok(staff.some((s) => s.staffId === 'drew-hughes'));
   });
+
+  it('isStaffOrCoachName matches full names and name slugs', () => {
+    const { isStaffOrCoachName } = require('../../lib/recruiting-staff-directory');
+    assert.equal(isStaffOrCoachName('Joe Craddock'), true);
+    assert.equal(isStaffOrCoachName('joe-craddock'), true);
+    assert.equal(isStaffOrCoachName('Phil Trautwein'), true);
+    assert.equal(isStaffOrCoachName('Davin Davidson'), false);
+  });
+
+  it('resolveStaffById accepts joe-craddock slug', () => {
+    const entry = resolveStaffById('joe-craddock');
+    assert.equal(entry?.name, 'Joe Craddock');
+    assert.equal(entry?.role, 'Quarterbacks Coach');
+  });
 });

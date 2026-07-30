@@ -242,6 +242,12 @@ async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 }
       }
     }
     if (!hit?.playerSlug) continue;
+    try {
+      const { isStaffOrCoachName } = require('./recruiting-staff-directory');
+      if (isStaffOrCoachName(hit.playerName) || isStaffOrCoachName(hit.playerSlug)) continue;
+    } catch {
+      /* optional */
+    }
 
     rows.push({
       playerSlug: normalizeSlug(hit.playerSlug),

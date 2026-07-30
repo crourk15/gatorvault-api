@@ -940,6 +940,25 @@ async function buildBeatBrief(slug, opts = {}) {
     /* fall through to recruit brief */
   }
 
+  try {
+    const { isStaffOrCoachName, resolveStaffById } = require('./recruiting-staff-directory');
+    const entry = resolveStaffById(normalized);
+    if (entry || isStaffOrCoachName(normalized)) {
+      const staffName = entry?.name || normalized;
+      const role = entry?.role || 'UF coaching staff';
+      return {
+        ok: false,
+        error: 'staff_not_recruit',
+        slug: normalized,
+        playerName: staffName,
+        deskKind: 'staff',
+        message: `${staffName} is ${role} — not a recruit. Open a prospect packet instead.`
+      };
+    }
+  } catch {
+    /* optional */
+  }
+
   const { inspectPlayer, isBeatIntel } = require('./post-studio-intel-inbox');
 
   await intelStore.initIntelStore().catch(() => {});

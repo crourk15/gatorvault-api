@@ -157,45 +157,61 @@ function resolvePlayerFromTextSync(text) {
   const t = teaser?.textWithoutRelationalNames ? teaser.textWithoutRelationalNames(raw) : raw;
   const relationalOk = (name) => !(teaser?.isRelationalMention && teaser.isRelationalMention(raw, name));
 
+  let isStaff = () => false;
+  try {
+    const { isStaffOrCoachName } = require('./recruiting-staff-directory');
+    isStaff = (n) => {
+      const cleaned = String(n || '').trim();
+      return !cleaned ? false : isStaffOrCoachName(cleaned) || isStaffOrCoachName(slugify(cleaned));
+    };
+  } catch {
+    /* optional */
+  }
+
   const cleanName = (n) => {
     let s = String(n || '').trim();
     // "Davin Davidson's" → Davin Davidson
     s = s.replace(/['’]s$/i, '').trim();
     return s || null;
   };
-  let name = cleanName(extractPlayerFromText(t));
-  if (name && !relationalOk(name)) name = null;
-  if (!name) {
-    const candidates = extractAllPlayerNameCandidates(t) || [];
-    name = cleanName(candidates.find((n) => relationalOk(cleanName(n) || n)) || null);
-  }
-  if (!name) {
-    try {
-      const allowlist = require('./recruiting-target-allowlist');
-      const names = Object.values(allowlist.getMergedCanonicalNames?.() || allowlist.CANONICAL_TARGET_NAMES || {});
-      for (const n of names) {
-        const re = new RegExp(`\\b${String(n).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-        if (re.test(t) && relationalOk(n)) {
-          name = n;
-          break;
-        }
-      }
-    } catch {
-      /* optional */
+  const candidateOk = (n) => {
+    const name = cleanName(n);
+    if (!name || !relationalOk(name) || isStaff(name)) return null;
+    return name;
+  };
+
+  const ordered = [];
+  const pushUnique = (n) => {
+    const name = candidateOk(n);
+    if (!name) return;
+    if (!ordered.some((x) => x.toLowerCase() === name.toLowerCase())) ordered.push(name);
+  };
+  pushUnique(extractPlayerFromText(t));
+  for (const n of extractAllPlayerNameCandidates(t) || []) pushUnique(n);
+  try {
+    const allowlist = require('./recruiting-target-allowlist');
+    const names = Object.values(allowlist.getMergedCanonicalNames?.() || allowlist.CANONICAL_TARGET_NAMES || {});
+    for (const n of names) {
+      const re = new RegExp(`\\b${String(n).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+      if (re.test(t)) pushUnique(n);
     }
+  } catch {
+    /* optional */
   }
-  if (!name) return null;
-  const roster = matchRosterByName(name);
-  if (roster?.name) {
-    return {
-      playerName: roster.name,
-      playerSlug: roster.slug || slugify(roster.name),
-      classYear: roster.classYear != null ? Number(roster.classYear) : null,
-      matchMode: 'roster_sync'
-    };
-  }
-  if (isValidPlayerName(name)) {
-    return { playerName: name, playerSlug: slugify(name), classYear: null, matchMode: 'text_extract' };
+
+  for (const name of ordered) {
+    const roster = matchRosterByName(name);
+    if (roster?.name) {
+      return {
+        playerName: roster.name,
+        playerSlug: roster.slug || slugify(roster.name),
+        classYear: roster.classYear != null ? Number(roster.classYear) : null,
+        matchMode: 'roster_sync'
+      };
+    }
+    if (isValidPlayerName(name)) {
+      return { playerName: name, playerSlug: slugify(name), classYear: null, matchMode: 'text_extract' };
+    }
   }
   return null;
 }
@@ -292,19 +308,37 @@ function matchesPlayerName(text, post = null) {
     teaser = null;
   }
 
+  let isStaff = () => false;
+  try {
+    const { isStaffOrCoachName } = require('./recruiting-staff-directory');
+    isStaff = (n) => isStaffOrCoachName(n);
+  } catch {
+    /* optional */
+  }
+
   const cleaned = teaser?.textWithoutRelationalNames ? teaser.textWithoutRelationalNames(body) : body;
   const fromExtract = extractPlayerFromText(cleaned);
-  if (fromExtract && isValidPlayerName(fromExtract) && !(teaser?.isRelationalMention && teaser.isRelationalMention(body, fromExtract))) {
+  if (
+    fromExtract &&
+    isValidPlayerName(fromExtract) &&
+    !isStaff(fromExtract) &&
+    !(teaser?.isRelationalMention && teaser.isRelationalMention(body, fromExtract))
+  ) {
     return true;
   }
   if (PLAYER_NAME_RE.test(cleaned)) {
     const m = cleaned.match(PLAYER_NAME_RE);
-    if (m?.[0] && isValidPlayerName(m[0]) && !(teaser?.isRelationalMention && teaser.isRelationalMention(body, m[0]))) {
+    if (
+      m?.[0] &&
+      isValidPlayerName(m[0]) &&
+      !isStaff(m[0]) &&
+      !(teaser?.isRelationalMention && teaser.isRelationalMention(body, m[0]))
+    ) {
       return true;
     }
   }
   const resolved = resolvePlayerFromTextSync(body);
-  if (resolved?.playerName && isValidPlayerName(resolved.playerName)) return true;
+  if (resolved?.playerName && isValidPlayerName(resolved.playerName) && !isStaff(resolved.playerName)) return true;
 
   // Nameless teaser with an On3 article link — identity comes from the article.
   if (teaser?.hasResolvableOn3Article?.(post || { text: body })) return true;
