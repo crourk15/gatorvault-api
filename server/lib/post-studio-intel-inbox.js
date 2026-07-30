@@ -192,6 +192,50 @@ async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 }
     const ts = new Date(reportedAt || 0).getTime();
     if (Number.isFinite(ts) && ts > 0 && ts < cutoff) continue;
 
+    // Resolve recruit teasers (nameless Bender On3+ posts) BEFORE hub Team/Program
+    // classification — otherwise "top EDGE prospect… Florida visit" collapses to Team news.
+    let hit = null;
+    let articleUrl = p.url || p.link || null;
+    try {
+      const teaser = require('./beat-teaser-resolve');
+      const enriched = await teaser.enrichBeatPostIdentity(p);
+      if (enriched?.resolved?.playerSlug) {
+        hit = enriched.resolved;
+        if (enriched.resolved.on3ArticleUrl) articleUrl = enriched.resolved.on3ArticleUrl;
+      } else {
+        hit = teaser.resolvePlayerFromBeatPostSync(p);
+      }
+    } catch {
+      hit = null;
+    }
+    if (!hit?.playerSlug && gate?.resolvePlayerFromTextSync) {
+      try {
+        hit = gate.resolvePlayerFromTextSync(text);
+      } catch {
+        hit = null;
+      }
+    }
+    if (hit?.playerSlug) {
+      rows.push({
+        playerSlug: normalizeSlug(hit.playerSlug),
+        playerName: hit.playerName || null,
+        source: `beat-writer:${String(p.handle || p.writerName || 'live').replace(/^@/, '')}`,
+        eventType: 'beat_live',
+        deskKind: 'recruit',
+        detail: text,
+        skinny: text.slice(0, 200),
+        reportedAt,
+        createdAt: reportedAt,
+        articleUrl,
+        ufRelevant: true,
+        liveBeat: true,
+        teaserResolved: !!hit.matchMode && String(hit.matchMode).includes('on3'),
+        writerName: p.writerName || p.handle || null,
+        outlet: p.outlet || null
+      });
+      continue;
+    }
+
     let hub = null;
     try {
       hub = require('./hub-desk-topics').classifyHubDeskBeat(text, p);
@@ -217,49 +261,7 @@ async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 }
         writerName: p.writerName || p.handle || null,
         outlet: p.outlet || null
       });
-      continue;
     }
-
-    let hit = null;
-    let articleUrl = p.url || p.link || null;
-    try {
-      const teaser = require('./beat-teaser-resolve');
-      const enriched = await teaser.enrichBeatPostIdentity(p);
-      if (enriched?.resolved?.playerSlug) {
-        hit = enriched.resolved;
-        if (enriched.resolved.on3ArticleUrl) articleUrl = enriched.resolved.on3ArticleUrl;
-      } else {
-        hit = teaser.resolvePlayerFromBeatPostSync(p);
-      }
-    } catch {
-      hit = null;
-    }
-    if (!hit?.playerSlug && gate?.resolvePlayerFromTextSync) {
-      try {
-        hit = gate.resolvePlayerFromTextSync(text);
-      } catch {
-        hit = null;
-      }
-    }
-    if (!hit?.playerSlug) continue;
-
-    rows.push({
-      playerSlug: normalizeSlug(hit.playerSlug),
-      playerName: hit.playerName || null,
-      source: `beat-writer:${String(p.handle || p.writerName || 'live').replace(/^@/, '')}`,
-      eventType: 'beat_live',
-      deskKind: 'recruit',
-      detail: text,
-      skinny: text.slice(0, 200),
-      reportedAt,
-      createdAt: reportedAt,
-      articleUrl,
-      ufRelevant: true,
-      liveBeat: true,
-      teaserResolved: !!hit.matchMode && String(hit.matchMode).includes('on3'),
-      writerName: p.writerName || p.handle || null,
-      outlet: p.outlet || null
-    });
   }
   return { rows, fetchedAt, postCount: posts.length };
 }

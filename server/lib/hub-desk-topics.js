@@ -76,6 +76,27 @@ function hasNamedRecruitSignal(text) {
   }
 }
 
+/** Nameless On3+ teasers (EDGE prospect + visit) must not become Team news. */
+function looksLikeNamelessRecruitTeaser(text, post = null) {
+  const t = String(text || '');
+  if (!t) return false;
+  const recruitCue =
+    /\b(EDGE|WR|QB|RB|TE|OL|DL|LB|CB|ATH|prospect|pass rusher|4-star|five-star|four-star|3-star)\b/i.test(
+      t
+    ) &&
+    /\b(visit|visited|offer|offered|target|recruit|momentum|in the mix|frontrunner)\b/i.test(t);
+  if (!recruitCue) return false;
+  try {
+    const teaser = require('./beat-teaser-resolve');
+    if (teaser.hasResolvableOn3Article?.(post) || teaser.collectPostUrls?.(post)?.some((u) => /t\.co\//i.test(u))) {
+      return true;
+    }
+  } catch {
+    /* fall through */
+  }
+  return /on3\+|t\.co\//i.test(t);
+}
+
 /**
  * Classify a beat into a hub desk row (team/program) or null.
  * Subscribe promos return null (caller should skip).
@@ -85,6 +106,10 @@ function classifyHubDeskBeat(text, post = null) {
   const t = String(text || '').trim();
   if (!t) return null;
   if (prefilter.isSubscribePromoIntel?.(t)) return null;
+
+  if (looksLikeNamelessRecruitTeaser(t, post)) {
+    return null;
+  }
 
   if (prefilter.isProgramNewsIntel?.(t, post) && !hasNamedRecruitSignal(t)) {
     const type = prefilter.classifyProgramNewsType?.(t) || 'general';
@@ -118,6 +143,7 @@ module.exports = {
   parseHubDeskSlug,
   isHubDeskSlug,
   hubDeskLabel,
+  looksLikeNamelessRecruitTeaser,
   hasNamedRecruitSignal,
   classifyHubDeskBeat,
   normalizeSlug,
