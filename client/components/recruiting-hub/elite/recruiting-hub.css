@@ -467,6 +467,23 @@
   color: var(--card-text);
 }
 
+/* Front cards stay light — deep eval lives on the player profile. */
+.rh-elite-chrome .rh-commit-profile-hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.rh-elite-chrome .rh-commit-profile-hint a {
+  color: var(--gator-orange, #fa4616);
+  text-decoration: none;
+}
+
+.rh-elite-chrome .rh-commit-profile-hint a:hover {
+  text-decoration: underline;
+}
+
 .rh-elite-chrome .rh-commit-strengths {
   margin: 8px 0 0;
   font-size: 12px;

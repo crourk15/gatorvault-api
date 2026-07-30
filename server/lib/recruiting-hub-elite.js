@@ -137,9 +137,9 @@ function fallbackCommitBlurb(player) {
 }
 
 /**
- * Fan-facing commit skinny — who they are and why the get matters.
- * Prefer real scouting notes; otherwise write an honest factual story (never On3 composite bios as "intel").
- * Strengths / projection render as card callouts — keep this paragraph about the get itself.
+ * Fan-facing commit skinny — SHORT teaser for the front card only.
+ * Full Evaluation / Comp / Projection belong on the player profile (click name).
+ * Never dump the long Vault eval or "Fan comp:" onto the card.
  */
 function buildCommitFanSkinny(player) {
   const name = String(player.name || 'This commit').trim();
@@ -150,12 +150,13 @@ function buildCommitFanSkinny(player) {
   const natl = player.natlRank ?? player.natl;
   const posRank = player.posRank;
 
+  // Optional one-sentence hook from eval — first sentence only, hard-capped.
   const verified = firstVerifiedIntel(
     player,
-    // Prefer true scouting fields; profileNote/notes often hold chase templates.
     ['evaluatorNotes', 'evaluationSummary', 'insiderNotes', 'skinny', 'profileNote', 'notes'],
     player.name
   );
+  let hook = null;
   if (
     verified &&
     verified.length >= 40 &&
@@ -163,7 +164,8 @@ function buildCommitFanSkinny(player) {
     !isChaseProcessIntel(verified) &&
     !isMetaDumpAsSkinny(verified)
   ) {
-    return verified.length > 360 ? `${verified.slice(0, 357).trim()}…` : verified;
+    const first = verified.split(/(?<=[.!?])\s+/)[0] || verified;
+    hook = first.length > 140 ? `${first.slice(0, 137).trim()}…` : first;
   }
 
   const sentences = [];
@@ -182,33 +184,12 @@ function buildCommitFanSkinny(player) {
   if (player.headliner) facts.push('Class headliner');
   if (facts.length) sentences.push(`${facts.join(' · ')}.`);
 
-  const scheme = String(player.schemeFit || '').trim();
-  if (
-    scheme &&
-    scheme.length >= 20 &&
-    isVerifiedScoutingTrait(scheme, player.name) &&
-    !isCompositeBio(scheme)
-  ) {
-    sentences.push(scheme.endsWith('.') ? scheme : `${scheme}.`);
+  if (hook && !sentences.some((s) => s.includes(hook.slice(0, 40)))) {
+    sentences.push(hook.endsWith('.') || hook.endsWith('…') ? hook : `${hook}.`);
   }
 
-  const comp = String(player.playerComp || player.comp || '').trim();
-  if (comp && comp.length >= 3 && !/^tbd$/i.test(comp)) {
-    sentences.push(`Fan comp: ${comp}.`);
-  }
-
-  // If we only have the opener + thin facts, add one more honest line so fans always get substance.
-  if (sentences.length < 2) {
-    const bits = [];
-    if (stars >= 4) bits.push('A blue-chip addition');
-    else if (stars) bits.push(`A ${stars}-star addition`);
-    else bits.push('A new piece');
-    if (player.inState) bits.push('from inside Florida');
-    if (pos && pos !== '—') bits.push(`for the ${pos} room`);
-    sentences.push(`${bits.join(' ')}.`);
-  }
-
-  return sentences.join(' ');
+  const out = sentences.join(' ');
+  return out.length > 220 ? `${out.slice(0, 217).trim()}…` : out;
 }
 
 function distinctIntel(primary, playerName, ...candidates) {
@@ -277,6 +258,34 @@ function commitMovementLabel(player) {
 function profileUrl(player) {
   const slug = player.slug || String(player.name || '').toLowerCase().replace(/\s+/g, '-');
   return `/vault/recruiting/player/${encodeURIComponent(slug)}`;
+}
+
+/**
+ * Full Vault scouting for the player profile page (not the front commit card).
+ * Evaluation · Vault Player Comp · Vault Projection from War Room / film desk.
+ */
+function getVaultScoutingForSlug(slug) {
+  try {
+    const warRoom = require('./war-room-store');
+    const quality = require('./recruiting-intel-quality');
+    const key = String(slug || '').trim();
+    if (!key) return null;
+    const bd = warRoom.getBreakdownBySlug(key);
+    if (!bd || quality.breakdownIsCorrupt?.(bd, bd.playerName || key)) return null;
+
+    const evaluation = String(bd.insiderNotes || bd.staffNotes || bd.recruitingStory || '').trim() || null;
+    const comparison = String(bd.comparison || '').trim() || null;
+    const projection = String(bd.projection || '').trim() || null;
+    const strengths = Array.isArray(bd.strengths)
+      ? bd.strengths.map((s) => String(s || '').trim()).filter(Boolean).slice(0, 6)
+      : [];
+    const schemeFit = String(bd.schemeFit || '').trim() || null;
+
+    if (!evaluation && !comparison && !projection && !strengths.length) return null;
+    return { evaluation, comparison, projection, strengths, schemeFit };
+  } catch {
+    return null;
+  }
 }
 
 async function loadEnrichedBoard(year) {
@@ -618,4 +627,6 @@ module.exports = {
   buildHubFootprint,
   buildHubHero,
   buildHubBundle,
+  getVaultScoutingForSlug,
+  buildCommitFanSkinny,
 };

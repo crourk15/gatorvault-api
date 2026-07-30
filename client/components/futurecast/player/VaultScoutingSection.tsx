@@ -1,0 +1,67 @@
+'use client';
+
+/**
+ * Full Vault scouting block for player profiles.
+ * Evaluation · Vault Player Comp · Vault Projection — room to breathe off the front card.
+ */
+import React from 'react';
+import { coerceDisplayText } from '../../../lib/coerce-text';
+import type { FullProfileVaultScouting } from '@/lib/player-full-profile-api';
+
+type Props = {
+  scouting?: FullProfileVaultScouting | null;
+};
+
+export function VaultScoutingSection({ scouting }: Props): React.ReactElement | null {
+  if (!scouting) return null;
+
+  const evaluation = coerceDisplayText(scouting.evaluation);
+  const comparison = coerceDisplayText(scouting.comparison);
+  const projection = coerceDisplayText(scouting.projection);
+  const strengths = Array.isArray(scouting.strengths)
+    ? scouting.strengths.map((s) => coerceDisplayText(s)).filter(Boolean)
+    : [];
+
+  if (!evaluation && !comparison && !projection && !strengths.length) return null;
+
+  return (
+    <section className="fc-profile-section fc-vault-scouting" data-testid="vault-scouting-section">
+      <h2>Vault Scouting</h2>
+      <p className="fc-profile-muted fc-profile-section__lede">
+        Film-desk evaluation, player comp, and projection — how Florida sees this get.
+      </p>
+
+      {evaluation ? (
+        <div className="fc-vault-scouting__block">
+          <h3>Evaluation</h3>
+          <p>{evaluation}</p>
+        </div>
+      ) : null}
+
+      {strengths.length ? (
+        <div className="fc-vault-scouting__block">
+          <h3>Traits</h3>
+          <ul className="fc-vault-scouting__traits">
+            {strengths.map((trait) => (
+              <li key={trait}>{trait}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {comparison ? (
+        <div className="fc-vault-scouting__block">
+          <h3>Vault Player Comp</h3>
+          <p>{comparison}</p>
+        </div>
+      ) : null}
+
+      {projection ? (
+        <div className="fc-vault-scouting__block fc-vault-scouting__block--projection">
+          <h3>Vault Projection</h3>
+          <p>{projection}</p>
+        </div>
+      ) : null}
+    </section>
+  );
+}
