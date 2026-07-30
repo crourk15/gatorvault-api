@@ -99,6 +99,10 @@ export async function warmFuturecastLabCaches(
   const { buildUnderclassmenPayload } = require('./underclassmen');
   const { buildEarlyDiscoveryPayload } = require('./early-discovery');
 
+  // Hero commit-likelihood meter needs high-priority ASAP — kick it off first,
+  // in parallel with master-board, instead of waiting until every ED warm finishes.
+  const hpPromise = warmFuturecastHighPriorityCaches(years);
+
   const jobs: Array<{ key: string; label: string; build: () => Promise<unknown> }> = [
     {
       key: masterBoardCacheKey(),
@@ -145,19 +149,31 @@ export async function warmFuturecastLabCaches(
     },
   ];
 
-  // Build shared allowlist board first via master-board, then fan out the rest.
-  for (const job of jobs) {
-    try {
-      await cache.wrap(job.key, job.build, CACHE_TTL_MS);
-      warmed.push(job.label);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.warn(`[futurecast-cache] warm ${job.label} failed:`, message);
-      failed.push(job.label);
-    }
+  // Master-board first (shared allowlist), then fan out the rest concurrently.
+  const [masterJob, ...restJobs] = jobs;
+  try {
+    await cache.wrap(masterJob.key, masterJob.build, CACHE_TTL_MS);
+    warmed.push(masterJob.label);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn(`[futurecast-cache] warm ${masterJob.label} failed:`, message);
+    failed.push(masterJob.label);
   }
 
-  const hp = await warmFuturecastHighPriorityCaches(years);
+  await Promise.all(
+    restJobs.map(async (job) => {
+      try {
+        await cache.wrap(job.key, job.build, CACHE_TTL_MS);
+        warmed.push(job.label);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.warn(`[futurecast-cache] warm ${job.label} failed:`, message);
+        failed.push(job.label);
+      }
+    })
+  );
+
+  const hp = await hpPromise;
   if (hp.warmed > 0) {
     warmed.push(`high-priority:${hp.warmed}/${hp.years.length}`);
   } else {

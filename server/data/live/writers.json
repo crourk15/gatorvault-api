@@ -22,5 +22,6 @@
   { "id": "gatorsterritory", "name": "Gators Territory", "handle": "GatorsTerritory", "outlet": "Gators Territory" },
   { "id": "insidethegators", "name": "Inside the Gators", "handle": "InsideTheGators", "outlet": "Inside the Gators" },
   { "id": "gatorsfb", "name": "Florida Gators Football", "handle": "GatorsFB", "outlet": "UF Official" },
-  { "id": "floridagators", "name": "Florida Gators", "handle": "FloridaGators", "outlet": "UF Official" }
+  { "id": "floridagators", "name": "Florida Gators", "handle": "FloridaGators", "outlet": "UF Official" },
+  { "id": "gatorvault", "name": "GatorVault", "handle": "gatorvault", "outlet": "GatorVault" }
 ]

@@ -42,10 +42,13 @@ export function FutureCastHero({
   const focusYear = discoveryFocus ? 2028 : 2027;
 
   const top10 = useMemo(() => {
-    if (discoveryFocus && highPriority.length) {
+    // Discovery meter must stay on the 2028 high-priority board — never fall back to
+    // Closing Class masterBoard under a "top 2028" label while HP is still loading.
+    if (discoveryFocus) {
       return [...highPriority]
         .filter((p) => isActiveUfTarget(p))
         .filter((p) => Number(p.classYear) === focusYear)
+        .filter((p) => p.ufProbability != null && Number.isFinite(Number(p.ufProbability)))
         .sort((a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0))
         .slice(0, 10)
         .map(highPriorityToLabTarget);
@@ -61,7 +64,7 @@ export function FutureCastHero({
   const top10Avg = useMemo(() => {
     if (!top10.length) {
       return discoveryFocus
-        ? metrics.avgUFProbability
+        ? Math.round(metrics.avgUFProbability || 0)
         : Math.round(masterBoard.ufConfidenceAverage ?? metrics.avgUFProbability);
     }
     return Math.round(top10.reduce((acc, p) => acc + ufPctFromFc(p.ufProbability), 0) / top10.length);

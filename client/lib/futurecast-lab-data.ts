@@ -13,6 +13,8 @@ import { deriveHeatLevel } from './api/futurecast';
 import { fetchStockBoard, type StockBoardResponse } from './predictions-api';
 import {
   fetchHighPriorityTargets,
+  readStaleHighPriorityCache,
+  writeHighPriorityCache,
   type FlipWatchRow,
   type HighPriorityPlayer,
   type HighPriorityResponse,
@@ -49,6 +51,24 @@ const LAB_WARM_POLL = { maxAttempts: 3, delayMs: 1_500 } as const;
 
 function warmFetch<T>(path: string): Promise<T> {
   return fetchWithWarmPoll(() => snapshotLiveFetch<T>(path, LAB_FETCH_OPTS), LAB_WARM_POLL);
+}
+
+/** Hero commit-likelihood meter depends on HP — warm-poll + stale cache, same as other Lab boards. */
+async function warmFetchHighPriority(year: number): Promise<HighPriorityResponse> {
+  const path = `/api/futurecast/high-priority?year=${year}`;
+  try {
+    const live = await warmFetch<HighPriorityResponse>(path);
+    if ((live.players?.length ?? 0) > 0) writeHighPriorityCache(live);
+    return live;
+  } catch {
+    const stale = readStaleHighPriorityCache(year);
+    if (stale) return stale;
+    try {
+      return await fetchHighPriorityTargets(year);
+    } catch {
+      return { ...EMPTY_HIGH_PRIORITY, classYear: year };
+    }
+  }
 }
 
 function settled<T>(result: PromiseSettledResult<T>, fallback: T): T {
@@ -161,14 +181,8 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
       ),
       warmFetch<FutureCastHomeResponse>('/api/futurecast/home'),
       fetchStockBoard().catch(() => EMPTY_STOCK),
-      fetchHighPriorityTargets(discoveryYear).catch((): HighPriorityResponse => ({
-        ...EMPTY_HIGH_PRIORITY,
-        classYear: discoveryYear,
-      })),
-      fetchHighPriorityTargets(closingYear).catch((): HighPriorityResponse => ({
-        ...EMPTY_HIGH_PRIORITY,
-        classYear: closingYear,
-      })),
+      warmFetchHighPriority(discoveryYear),
+      warmFetchHighPriority(closingYear),
       warmFetch<Awaited<ReturnType<typeof fetchFutureCastUnderclassmen>>>(
         '/api/futurecast/underclassmen?years=2028,2029,2030'
       ).catch(() => ({

@@ -419,6 +419,17 @@ function isAllowedFetchWriter(writer) {
     .toLowerCase()
     .replace(/^@/, '');
   if (SKIP_FETCH_HANDLES.has(handle)) return false;
+  // Brand account (@gatorvault) — poll for GNL Live, but recruiting ingest excludes it.
+  if (
+    beatFilters.isBrandLiveFeedAccount?.({
+      handle: writer.handle,
+      writerId: writer.id,
+      writerName: writer.name,
+      outlet: writer.outlet,
+    })
+  ) {
+    return true;
+  }
   return ingestGate.isAllowedIngestAccount({
     handle: writer.handle,
     writerId: writer.id,

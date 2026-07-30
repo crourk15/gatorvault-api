@@ -67,5 +67,44 @@ describe('FutureCast elite Lab load path', () => {
     assert.match(src, /const primaryPromise = loadFutureCastLabPrimary\(\)/);
     assert.match(src, /const secondaryPromise = loadFutureCastLabSecondaryRaw\(\)/);
     assert.match(src, /await secondaryPromise/);
+    assert.match(src, /hasUsableUfProbability/);
+    assert.match(src, /keepHp/);
+  });
+
+  it('Lab high-priority fetch warm-polls for the commit-likelihood meter', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', '..', '..', 'client', 'lib', 'futurecast-lab-data.ts'),
+      'utf8'
+    );
+    assert.match(src, /warmFetchHighPriority/);
+    assert.match(src, /writeHighPriorityCache/);
+  });
+
+  it('warmFuturecastLabCaches starts high-priority early', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'api', 'futurecast', 'response-cache.ts'),
+      'utf8'
+    );
+    assert.match(src, /const hpPromise = warmFuturecastHighPriorityCaches\(years\)/);
+    assert.match(src, /Promise\.all/);
+  });
+
+  it('discovery hero meter does not fall back to Closing Class masterBoard', () => {
+    const src = fs.readFileSync(
+      path.join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        'client',
+        'components',
+        'futurecast',
+        'lab',
+        'FutureCastHero.tsx'
+      ),
+      'utf8'
+    );
+    assert.match(src, /if \(discoveryFocus\)/);
+    assert.match(src, /ufProbability != null/);
   });
 });
