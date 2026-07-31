@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-30T15:22:04.739Z",
+  "updatedAt": "2026-07-31T13:34:46.602Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -14310,6 +14310,13 @@
       "verified": true,
       "sources": [
         {
+          "writer": "GatorVault",
+          "writerId": "vault-film-desk",
+          "outlet": "GatorVault film desk (Hudl / On3)",
+          "url": "https://www.hudl.com/embed/video/3/13575393/68dd4e5cc7273590630152b9",
+          "publishedAt": "2026-07-31"
+        },
+        {
           "writer": "Charles Power",
           "writerId": "power",
           "outlet": "On3",
@@ -14318,22 +14325,24 @@
         }
       ],
       "strengths": [
-        "Approved · Feb 1, 2026 Madoxx Davis Scouted by Charles Power WR 2028 · Football Madoxx Davis had a great showing at Rivals Camp Atlanta.",
-        "The Cartersville (Ga.) High pass-catcher measured in at 5-foot-10.5 and around 190 pounds and tied for the fastest 40 at the event, with a 4.43.",
-        "Davis was a tough cover during 1-on-1’s consistently breaking off corners at the top his route to gain easy separation.",
-        "He made a strong case as the top route-runner on hand, using his long speed and deceleration ability to create issues for defensive backs.",
-        "One of Davis’ best reps on the day came on a comeback route that resulted in a toe-tapping grab on the…"
+        "Outside/perimeter WR in Cartersville’s spread — regularly sees off-man cushion and stacks it.",
+        "Vertical stems create real mid-route separation vs trailing corners.",
+        "Open-field juice after the catch — chase scenes where the defense is late to the angle.",
+        "Same athlete package shows up in the return game.",
+        "Lean 6-0 / 190 frame that already looks like a college outside receiver."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Approved · Feb 1, 2026 Madoxx Davis Scouted by Charles Power WR 2028 · Football Madoxx Davis had a great showing at Rivals Camp Atlanta. The Cartersville (Ga.) High pass-catcher measured in at 5-foot-10.5 and around 190 pounds and tied for the fastest 40 at the event, with a 4.43. Davis was a tough cover during 1-on-1’s consistently breaking off corners at the top his route to gain easy separation. He made a strong case as the top route-runner on hand, using his long speed and deceleration ability to create issues for defensive backs. One of Davis’ best reps on the day came on a comeback route that resulted in a toe-tapping grab on the…",
-      "recruitingStory": null,
-      "nflProjection": null,
+      "weaknesses": [
+        "Route polish vs press and full-tree consistency still stacking as the cycle continues."
+      ],
+      "comparison": "Davis comps to Calvin Ridley — same ~6-0 / 190 band; route craft, vertical separation, and open-field speed after the catch. Not a size-only lookalike.",
+      "schemeFit": "Perimeter / outside WR who stresses verticals and yards after catch; can touch return packages.",
+      "staffNotes": "Florida offered; Marcus Davis is the listed UF staffer. Board read is tracking — open chase, not a commit. Madoxx logged a Florida UOV on 2026-04-07.",
+      "projection": "Davis projects as a Year 2–3 featured perimeter WR at Florida who can touch packages earlier if the juice translates — ceiling All-SEC if the separation and finish hold against Power conference corners.",
+      "insiderNotes": "Madoxx Davis is a 4-star WR · 6-0 / 190 · Cartersville, GA · Natl #26 · Pos #6 · State #3 (GA). Florida Offered. Open board target. Georgia leads RPM ladder; Florida tracking with Marcus Davis.",
+      "recruitingStory": "Florida offered with Marcus Davis on the file; Madoxx hit Gainesville on a UOV (April 7). Georgia leads RPM (~15%); Florida ~5% with the board still open.",
+      "nflProjection": "Davis’s route craft + vertical separation + YAC juice points to a productive perimeter WR who can keep climbing as the route tree polishes.",
       "featured": false,
-      "updatedAt": "2026-07-11T05:13:12.458Z"
+      "updatedAt": "2026-07-31T13:34:46.602Z"
     },
     "blake-mccullough": {
       "playerSlug": "blake-mccullough",
