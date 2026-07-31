@@ -1,9 +1,12 @@
 // Live product host is gatorvaultinsider.com — gatorvault.com/vault 404s and must not be emailed.
 const SITE_URL = String(process.env.SITE_URL || 'https://gatorvaultinsider.com').replace(/\/$/, '');
 const VAULT_URL = process.env.GV_VAULT_URL || `${SITE_URL}/join/?mode=signin&next=/vault/`;
+const ALERTS_URL =
+  process.env.GV_ALERTS_URL || `${SITE_URL}/join/?mode=signin&next=${encodeURIComponent('/vault/alerts/')}`;
 const MEMBERSHIP_URL = process.env.GV_MEMBERSHIP_URL || `${SITE_URL}/vault/membership/`;
 const VAULT_LINK_LABEL = 'Open your vault';
 const MEMBERSHIP_LINK_LABEL = 'Choose your membership';
+const ALERTS_LINK_LABEL = 'Turn on visit alerts';
 const VAULT_URL_DISPLAY = `${SITE_URL.replace(/^https?:\/\//, '')}/join`;
 const SUPPORT_EMAIL = process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com';
 
@@ -210,8 +213,8 @@ function checklistBodyHtml({ name, email } = {}) {
   <p style="margin:0 0 8px;font-size:14px;line-height:1.55;">☑ Read one Film Room / Scheme School piece</p>
   <p style="margin:0 0 8px;font-size:14px;line-height:1.55;">☑ Check Team roster + depth chart</p>
   <p style="margin:0 0 8px;font-size:14px;line-height:1.55;">☑ Join or follow a Community thread</p>
-  <p style="margin:0 0 16px;font-size:14px;line-height:1.55;">☑ Turn on visit alerts if you want OV emails</p>
-  ${ctaButton(VAULT_URL, 'Finish your checklist')}
+  <p style="margin:0 0 16px;font-size:14px;line-height:1.55;">☑ Turn on Visits in My Alerts (set Email or Both) if you want OV emails</p>
+  ${ctaButton(ALERTS_URL, ALERTS_LINK_LABEL)}
   <p style="margin:16px 0 0;font-size:14px;color:#94a3b8;line-height:1.6;">— GatorVault Media, LLC</p>`;
 }
 
