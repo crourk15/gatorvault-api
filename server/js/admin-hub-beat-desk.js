@@ -63,7 +63,7 @@
       return '<div class="hub-card hub-st-yellow" style="margin-bottom:12px">'
         + '<h3>Projection / Comp</h3>'
         + '<p class="hub-meta" style="margin:0">None on file yet in War Room — Copy Brief still <strong style="color:#fff">requires</strong> both. Cursor must draft a matched-band projection + comp from tape + board.</p>'
-        + '<p class="hub-meta" style="margin:8px 0 0">Standard: contribution path (when / role / ceiling) + comparable with similar body + win traits — not size-only, no downplay lines. Also deliver a HEADER line.</p>'
+        + '<p class="hub-meta" style="margin:8px 0 0">Standard: contribution path (when / role / ceiling) + GatorVault comp with <strong style="color:#fff">body size first</strong> (height ~1–2"), then win traits. 6-5 ≠ 6-1. Also deliver a HEADER leap.</p>'
         + '</div>';
     }
     return '<div class="hub-card hub-st-green" style="margin-bottom:12px">'
@@ -72,12 +72,12 @@
         ? '<p style="margin:0 0 8px;color:#e2e8f0;line-height:1.45"><strong>Projection:</strong> ' + esc(projection) + '</p>'
         : '<p class="hub-meta" style="margin:0 0 8px">Projection: (none on file — agent must draft from tape + board)</p>')
       + (comparison
-        ? '<p style="margin:0 0 8px;color:#e2e8f0;line-height:1.45"><strong>Player comp:</strong> ' + esc(comparison) + '</p>'
-        : '<p class="hub-meta" style="margin:0 0 8px">Player comp: (none on file — agent must draft from tape + board)</p>')
+        ? '<p style="margin:0 0 8px;color:#e2e8f0;line-height:1.45"><strong>GatorVault comp:</strong> ' + esc(comparison) + '</p>'
+        : '<p class="hub-meta" style="margin:0 0 8px">GatorVault comp: (none on file — agent must draft size-matched body + traits)</p>')
       + (scheme
         ? '<p class="hub-meta" style="margin:0 0 8px">Scheme fit: ' + esc(scheme) + '</p>'
         : '')
-      + '<p class="hub-meta" style="margin:0">Always required in the X post (plus HEADER). Confirm before treating as live FutureCast profile copy.</p>'
+      + '<p class="hub-meta" style="margin:0">Always required in the X post (plus HEADER). Comp must clear the size filter. Confirm before treating as live FutureCast profile copy.</p>'
       + '</div>';
   }
 

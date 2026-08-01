@@ -126,10 +126,12 @@ Recruit briefs embed a **PLAYER PROJECTION / COMP** block from War Room breakdow
 - **Role:** depth · rotation · every-down
 - **Ceiling:** regular contributor · All-SEC upside (sell the upside — never write “not All-American” or other downplay lines)
 
-**Player comp** = same band + similar **body style** + similar **win traits** from tape:
-- Not size-only (“also 6-6”)
+**GatorVault player comp** = size filter first, then traits:
+- **Body size is non-negotiable:** height within ~1–2" of the recruit; same frame/build family
+- Then similar **win traits** from tape (not size-only, not traits-only at the wrong height)
 - Not a higher elite band than the projection (if the comp is an All-American household name, the projection has to match)
-- Prefer a comparable who filled into a similar frame path (e.g. long/rangy EDGE → Yetur Gross-Matos band, not a short/dense 270 prototype)
+- Do **not** default to Florida alumni — only if that is clearly the best size + tape fit
+- Example fail: 6-5 / 190 QB ≠ 6-1 pocket QB, even if both are “upright progressive”
 
 1. Film desk / Open fills War Room `projection` + `comparison` from tape when available.
 2. **Copy Brief** always prints both — War Room values when present, or “none on file — AGENT MUST DRAFT” instructions when empty.
