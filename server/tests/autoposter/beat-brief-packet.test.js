@@ -90,8 +90,9 @@ describe('Beat Brief Desk', () => {
     assert.match(text, /Player comp: Ham comps to Josh Sweat/);
     assert.match(text, /Scheme fit: Ham fits a wide-9/);
     assert.match(text, /PROJECTION \/ COMP RULE/);
-    assert.match(text, /Structure:[\s\S]*ALWAYS projection \+ player comp/);
+    assert.match(text, /Structure:[\s\S]*GatorVault player comp with BODY SIZE match first/);
     assert.match(text, /HEADER RULE/);
+    assert.match(text, /COMP SIZE RULE/);
   });
 
   it('wires Beat Desk into Admin Hub nav + scripts', () => {
