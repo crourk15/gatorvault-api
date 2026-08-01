@@ -75,6 +75,39 @@ describe('Live Stream UF football-only', () => {
     assert.equal(publicAlerts.isPublicLiveFeedItem(item), false);
   });
 
+  it('blocks Florida ATH / state-origin rival beat rows', () => {
+    const item = {
+      type: 'beat',
+      title: 'Chad Simmons: Florida ATH A\'mir Sears commits to Miami',
+      summary: 'Florida ATH A\'mir Sears commits to Miami',
+      source: 'x',
+      author: 'Chad Simmons',
+      meta: { handle: 'chadsimmons_', outlet: 'On3' },
+    };
+    assert.equal(publicAlerts.isPublicLiveFeedItem(item), false);
+  });
+
+  it('blocks visit/offer cards with no Florida Gators signal', () => {
+    const item = {
+      type: 'visit',
+      title: 'John Smith — Official Visit Scheduled',
+      summary: 'Official visit scheduled',
+      source: 'on3',
+      meta: { eventType: 'official_visit', playerSlug: 'john-smith' },
+    };
+    assert.equal(publicAlerts.isPublicLiveFeedItem(item), false);
+  });
+
+  it('blocks unknown feed types by default', () => {
+    const item = {
+      type: 'trending',
+      title: 'National recruiting buzz',
+      summary: 'Around the country chatter',
+      source: 'internal',
+    };
+    assert.equal(publicAlerts.isPublicLiveFeedItem(item), false);
+  });
+
   it('blocks generic Player — Recruiting intel feed cards without UF signal', () => {
     const item = {
       type: 'visit',

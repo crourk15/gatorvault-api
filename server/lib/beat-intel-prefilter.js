@@ -769,15 +769,19 @@ function intelHasUfFootballContext(intel) {
     if (beatFilters.isFloridaRelevant(blob)) return true;
     if (beatFilters.isFloridaRelatedUrl(intel?.articleUrl || intel?.sourceUrl || '')) return true;
     const et = String(intel?.eventType || '').toLowerCase();
-    // Structured UF visit/offer rows are UF-scoped by store design — still block rival-only blurbs.
+    // Structured visit/offer rows still need explicit UF school context in the blurb/fingerprint.
     if (UF_STRUCTURED_LIVE_EVENTS.has(et) && intel?.identityConfirmed) {
-      return !beatFilters.mentionsOtherProgramWithoutUf(blob);
+      return (
+        beatFilters.isFloridaRelevant(blob) ||
+        beatFilters.hasStrongUfSchoolSignal(blob) ||
+        /(?:florida|gators|\buf\b|gainesville)/i.test(String(intel?.fingerprint || ''))
+      );
     }
-    // Generic "Recruiting intel" / narrative rows need explicit UF signal or locked UF target.
-    if (beatFilters.matchesUfTargetNameInText(String(intel?.playerName || ''))) return true;
+    // Generic "Recruiting intel" / narrative rows need explicit UF signal (not name-only).
+    // Allowlisted target names alone previously leaked national chatter into Live.
     return false;
   } catch {
-    return /\b(florida|gators|\buf\b|gainesville)\b/i.test(blob);
+    return /\b(florida gators|florida football|\bgators\b|\buf\b|gainesville)\b/i.test(blob);
   }
 }
 

@@ -1,9 +1,12 @@
 /**
  * Beat writer filtering — national UF-only gates, momentum detection, trusted handles.
+ *
+ * Hard rule: Live / beat ingest is Florida Gators football only.
+ * Geo "Florida", state-of-origin "Florida ATH", FAU/FIU/USF, and rival chatter must not pass.
  */
-/** Florida URL gate — keep specific; bare "gator" matched "aggregator" and leaked national posts. */
+/** UF school URL gate — never match florida-state / south-florida / florida-atlantic via bare "florida". */
 const FLORIDA_URL_RE =
-  /(?:\bflorida\b|\bgators\b|gator\s?nation|gatorsfb|gatorsonline|gatorsterritory|insidethegators|floridagators|onlygators|alligatorarmy|gatorvault|gatorvaultinsider|uf\.edu|on3\.com\/teams\/florida|247sports\.com\/[^?\s]*florida)/i;
+  /(?:gator\s?nation|gatorsfb|gatorsonline|gatorsterritory|insidethegators|floridagators|florida-gators|onlygators|alligatorarmy|gatorvault|gatorvaultinsider|uf\.edu|on3\.com\/teams\/florida(?:-gators)?(?:\/|\?|$)|247sports\.com\/(?:college\/)?florida(?:-gators)?(?:\/|\?|$))/i;
 
 /** Own brand — show on GNL Live, never feed back into recruiting ingest (echo loop). */
 const BRAND_LIVE_FEED_HANDLES = new Set(['gatorvault']);
@@ -113,9 +116,9 @@ const RECRUITING_SIGNAL_RE =
 const UF_COACH_STAFF_RE =
   /\b(billy napier|jon sumrall|buster faulkner|brad white|rob ashford|austin bailey|will black|juan carlos delgado|austin lehman)\b/i;
 
-/** Other programs — block when UF is not mentioned. */
+/** Other programs / rival signals — block unless strong UF school context is also present. */
 const OTHER_PROGRAM_RE =
-  /\b(florida state|\bfsu\b|seminoles|\bgeorgia\b|\buga\b|bulldogs|\balabama\b|crimson tide|\bauburn\b|\blsu\b|\btennessee\b|volunteers|ole miss|mississippi state|south carolina|\bclemson\b|\bmiami\b|\bcanes\b|\bhurricanes\b|mario\s+cristobal|texas a&m|\baggies\b|ohio state|\bmichigan\b|\bnotre dame\b|\boklahoma\b|\btexas longhorns\b|\bpenn state\b)\b/i;
+  /\b(florida state|\bfsu\b|seminoles|\bnoles\b|\bgeorgia\b|\buga\b|bulldogs|\bdawgs\b|\balabama\b|crimson tide|\btide\b|\bauburn\b|\blsu\b|\btennessee\b|volunteers|\bvols\b|ole miss|mississippi state|south carolina|\bclemson\b|\bmiami\b|\bcanes\b|\bhurricanes\b|\bum\b|the u|mario\s+cristobal|mike\s+norvell|kirby\s+smart|kalen\s+deboer|texas a&m|\baggies\b|ohio state|\bmichigan\b|\bnotre dame\b|\boklahoma\b|\btexas longhorns\b|\bpenn state\b|\bucf\b|\busf\b|\bfau\b|\bfiu\b|\bfamu\b)\b/i;
 
 const NATIONAL_ROUNDUP_RE =
   /\b(top \d+|national roundup|around the country|across the sec|sec update|national recruiting|recruiting roundup)\b/i;
@@ -153,36 +156,57 @@ function isSteveWiltfongPost(post) {
   return handle === 'stevewiltfong' || /steve\s*wiltfong|stevewiltfong/i.test(writer);
 }
 
-/** Explicit UF keyword gate — required for Steve Wiltfong national posts. */
+/** Explicit UF keyword gate — required for national reporters (post non-UF Florida strip). */
 const EXPLICIT_UF_KEYWORD_RES = [
   /\bflorida\b/i,
   /\bgators\b/i,
   /\buf\b/i,
   /\bgainesville\b/i,
   /\bbilly napier\b/i,
+  /\bjon sumrall\b/i,
   /\buf staff\b/i,
   /\bflorida visit\b/i,
   /\bflorida commit\b/i,
-  /\bflorida target\b/i
+  /\bflorida target\b/i,
+  /\bflorida offer\b/i,
+  /\bflorida staff\b/i,
+  /\bflorida football\b/i,
+  /\bflorida gators\b/i
 ];
 
 /**
- * Geographic / non-UF "Florida" phrases. Bare `\bflorida\b` must not match these
- * (e.g. Chad Simmons on Mario Cristobal / A'mir Sears / South Florida).
+ * Geographic / non-UF "Florida" phrases + other Florida schools.
+ * Bare `\bflorida\b` must not match these (South Florida / FAU / USF / etc.).
  */
 const NON_UF_FLORIDA_GEO_RE =
-  /\b(?:(?:south|central|north|west|southwest|southeast|northeast|northwest)\s+florida|university\s+of\s+south\s+florida|\busf\b)\b/gi;
+  /\b(?:(?:south|central|north|west|southwest|southeast|northeast|northwest|s\.?|so\.?|se|ne|sw|nw)\s+florida|sofla|university\s+of\s+south\s+florida|\busf\b|florida\s+(?:atlantic|international|a\s*&\s*m|a&m|gulf\s+coast)|(?:\bfau\b|\bfiu\b|\bfamu\b|\bucf\b))\b/gi;
+
+/** State-of-origin / high-school "Florida" — not the Gators program. */
+const NON_UF_FLORIDA_STATE_ORIGIN_RE =
+  /\b(?:florida\s+(?:ath|qb|wr|rb|te|ol|dl|lb|edge|cb|s|k|p|ot|og|c|de|dt|ilb|olb|safety|prospects?|product|kid|standout|signee|stars?)|from\s+florida|florida\s+high\s+school)\b/gi;
 
 function stripNonUfFloridaGeography(text) {
-  return String(text || '').replace(NON_UF_FLORIDA_GEO_RE, ' ');
+  return String(text || '')
+    .replace(NON_UF_FLORIDA_GEO_RE, ' ')
+    .replace(NON_UF_FLORIDA_STATE_ORIGIN_RE, ' ')
+    .replace(/\bflorida\s+state\b/gi, ' ');
+}
+
+/** Strong Gators school signal — required when a rival program is also mentioned. */
+const STRONG_UF_SCHOOL_RE =
+  /\b(florida gators|florida football|university of florida|uf football|gator nation|gator football|\bgators\b|\bgator\b|\buf\b|@gatorsfb|#gators|#gatornation|the swamp|gainesville|florida visit|florida commit|florida target|florida offer|florida staff|florida coaches?|florida program|(?:to|at|for)\s+florida|florida\s+(?:is|has|was|will|lands?|landed|hosts?|hosted|adds?|added|secures?|secured|pushes?|pushing|leads?|leading|battling|offers?|offered|wants?|wanted|targets?|targeting|and))\b/i;
+
+function hasStrongUfSchoolSignal(text) {
+  const t = stripNonUfFloridaGeography(text);
+  if (!t.trim()) return false;
+  return STRONG_UF_SCHOOL_RE.test(t) || UF_COACH_STAFF_RE.test(t);
 }
 
 function matchesExplicitUfKeywords(text) {
   const t = stripNonUfFloridaGeography(text);
   if (!t.trim()) return false;
-  if (/\bflorida state\b/i.test(t) && !/\bflorida gators\b/i.test(t) && !/\bflorida football\b/i.test(t)) {
-    if (!/\bgators\b/i.test(t) && !/\buf\b/i.test(t)) return false;
-  }
+  // After strips, rival-only leftovers must not pass via a residual bare "florida".
+  if (mentionsOtherProgram(t) && !hasStrongUfSchoolSignal(t)) return false;
   return EXPLICIT_UF_KEYWORD_RES.some((re) => re.test(t));
 }
 
@@ -192,28 +216,29 @@ function matchesExplicitUfKeywords(text) {
 function isFloridaRelevant(text) {
   const raw = String(text || '');
   if (!raw.trim()) return false;
-  // Strip South Florida / Central Florida / etc. before bare-"florida" checks.
   const t = stripNonUfFloridaGeography(raw);
   if (!t.trim()) return false;
 
-  const hasUfSignal =
-    /\b(florida gators|florida football|uf football|gator nation|gator football|\bgators\b|\bgator\b|\buf\b|@gatorsfb|#gators|#gatornation|the swamp|gainesville)\b/i.test(
-      t
-    ) ||
-    UF_COACH_STAFF_RE.test(t) ||
-    /\bbilly napier\b/i.test(t) ||
-    /\bbrad white\b/i.test(t);
+  if (hasStrongUfSchoolSignal(raw)) return true;
 
-  if (hasUfSignal) return true;
-
-  // Standalone "Florida" — not Florida State / FSU / geo regions already stripped
-  if (/\bflorida\b/i.test(t) && !/\bflorida state\b/i.test(t)) return true;
+  // Bare "Florida" after geo/state-origin strip — school shorthand ("Florida is pushing…").
+  // Never when a rival program is also present without a strong UF school signal.
+  if (/\bflorida\b/i.test(t)) {
+    if (mentionsOtherProgram(raw) && !hasStrongUfSchoolSignal(raw)) return false;
+    return true;
+  }
 
   return false;
 }
 
 function isFloridaRelatedUrl(url) {
-  return FLORIDA_URL_RE.test(String(url || '').toLowerCase());
+  const u = String(url || '').toLowerCase();
+  if (!u) return false;
+  // Explicit reject common non-UF Florida school paths before positive match.
+  if (/florida-state|south-florida|florida-atlantic|florida-international|florida-a-?m|\/usf\b|\/fau\b|\/fiu\b|\/ucf\b/.test(u)) {
+    return false;
+  }
+  return FLORIDA_URL_RE.test(u);
 }
 
 function postUrls(post) {
@@ -274,6 +299,12 @@ function mentionsOtherProgram(text) {
 function hasUfContextInText(text, post = null) {
   const t = String(text || '');
   if (!t.trim()) return false;
+  // Rival in the same blurb → require strong Gators school signal (not bare/state Florida).
+  if (mentionsOtherProgram(t)) {
+    if (hasStrongUfSchoolSignal(t)) return true;
+    if (post && postUrls(post).some(isFloridaRelatedUrl)) return true;
+    return false;
+  }
   if (isFloridaRelevant(t)) return true;
   if (matchesUfTargetNameInText(t)) return true;
   if (/"[^"]*(?:florida|gators|\buf\b|gainesville|the swamp)[^"]*"/i.test(t)) return true;
@@ -334,12 +365,20 @@ function strictUfOnlyBlockReason(post, text) {
 
 function isHardBlockedNonUfContent(text, post = null) {
   const t = String(text || '');
-  if (isFloridaRelevant(t)) return false;
-  if (mentionsOtherProgramWithoutUf(t, post)) return true;
-  if (NATIONAL_ROUNDUP_RE.test(t)) return true;
-  if (/\b(commits? to|committed to|flips? to|pledges? to|signs? with)\b/i.test(t) && OTHER_PROGRAM_RE.test(t)) {
+  // Rival commit/flip language without a strong UF school signal — always block first.
+  // (Bare/state-origin "Florida" must not cancel this.)
+  if (
+    /\b(commits? to|committed to|flips? to|pledges? to|signs? with|lands?(?:\s+a)?|keeps?|stays?(?:\s+in)?)\b/i.test(
+      t
+    ) &&
+    OTHER_PROGRAM_RE.test(t) &&
+    !hasStrongUfSchoolSignal(t)
+  ) {
     return true;
   }
+  if (mentionsOtherProgramWithoutUf(t, post)) return true;
+  if (NATIONAL_ROUNDUP_RE.test(t) && !hasStrongUfSchoolSignal(t)) return true;
+  if (hasStrongUfSchoolSignal(t) || isFloridaRelevant(t)) return false;
   return false;
 }
 
@@ -551,6 +590,8 @@ module.exports = {
   EXPLICIT_UF_KEYWORD_RES,
   stripNonUfFloridaGeography,
   NON_UF_FLORIDA_GEO_RE,
+  NON_UF_FLORIDA_STATE_ORIGIN_RE,
+  hasStrongUfSchoolSignal,
   isFloridaRelevant,
   isFloridaRelevantPost,
   postUrls,

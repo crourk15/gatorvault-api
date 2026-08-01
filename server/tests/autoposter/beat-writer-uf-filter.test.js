@@ -165,6 +165,68 @@ describe('beat-writer UF-only filter', () => {
     }
   });
 
+  it('blocks state-of-origin Florida ATH / from Florida rival commits', () => {
+    const samples = [
+      'Florida ATH A\'mir Sears commits to Miami',
+      '5-star Florida ATH commits to the Hurricanes',
+      'Prospect from Florida commits to Alabama',
+      'Noles land top Florida ATH',
+      'Dawgs add Florida WR',
+      'Mike Norvell lands another Florida prospect',
+      'S. Florida ATH commits to the Canes',
+      'Florida Atlantic lands 4-star WR',
+      'On3: Top 10 Florida prospects in the 2027 class (national roundup)',
+      'BREAKING: commitment coming Thursday from a Florida high school star',
+    ];
+    for (const text of samples) {
+      const post = {
+        handle: 'chadsimmons_',
+        writerName: 'Chad Simmons',
+        outlet: 'On3',
+        text,
+      };
+      assert.equal(beatFilters.shouldIncludeBeatPost(post), false, text);
+    }
+  });
+
+  it('does not treat FSU/USF/FAU URLs as Florida Gators URLs', () => {
+    assert.equal(
+      beatFilters.isFloridaRelatedUrl('https://www.on3.com/teams/florida-state/news/x'),
+      false
+    );
+    assert.equal(
+      beatFilters.isFloridaRelatedUrl('https://www.on3.com/teams/south-florida/news/x'),
+      false
+    );
+    assert.equal(
+      beatFilters.isFloridaRelatedUrl('https://247sports.com/college/florida-atlantic/Article.htm'),
+      false
+    );
+    assert.equal(beatFilters.isFloridaRelatedUrl('https://www.on3.com/teams/florida/news/x'), true);
+    assert.equal(
+      beatFilters.isFloridaRelatedUrl('https://247sports.com/college/florida/Article.htm'),
+      true
+    );
+  });
+
+  it('requires strong UF school signal when a rival is mentioned', () => {
+    assert.equal(beatFilters.hasStrongUfSchoolSignal('Florida ATH commits to Miami'), false);
+    assert.equal(
+      beatFilters.hasStrongUfSchoolSignal('Florida is battling Miami after a Gainesville OV'),
+      true
+    );
+    assert.equal(
+      beatFilters.mentionsOtherProgramWithoutUf('Florida ATH commits to Miami'),
+      true
+    );
+    assert.equal(
+      beatFilters.mentionsOtherProgramWithoutUf(
+        'Florida and Miami are battling for 2028 WR Easton Royal after his OV in Gainesville'
+      ),
+      false
+    );
+  });
+
   it('does not treat aggregator URLs as Florida-related', () => {
     assert.equal(beatFilters.isFloridaRelatedUrl('https://example.com/aggregator/feed'), false);
     assert.equal(beatFilters.isFloridaRelatedUrl('https://www.on3.com/teams/florida/news/x'), true);
