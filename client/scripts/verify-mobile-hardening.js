@@ -24,7 +24,7 @@ mustInclude('lib/body-scroll-lock.ts', ['export function lockBodyScroll', 'gv-sc
 mustInclude('components/community/CommunityReportModal.tsx', ['lockBodyScroll']);
 mustInclude('components/community/CommunityConfirmModal.tsx', ['lockBodyScroll']);
 mustInclude('components/shell/AppMenuDrawer.tsx', ['lockBodyScroll']);
-mustInclude('components/team/TeamHubPage.tsx', ['lockBodyScroll']);
+mustInclude('components/team/TeamStaffDestinationPage.tsx', ['lockBodyScroll']);
 mustInclude('components/vault/VaultCommunityPage.tsx', ['mobile-app', 'gv-community']);
 mustInclude('lib/vault-shell.css', [
   'body.gv-scroll-locked',
