@@ -585,9 +585,9 @@ function buildVaultAngle({
   if (projection || comparison) {
     lines.push(
       [
-        'Scout identity (required when on file — put in the post, do not invent):',
-        projection ? `Projection: ${projection.slice(0, 220)}` : null,
-        comparison ? `Player comp: ${comparison.slice(0, 180)}` : null,
+        'Scout identity (required when on file — full GatorVault Eval / Comp / Projection blocks in the post, do not invent):',
+        projection ? `Projection: ${projection.slice(0, 500)}` : null,
+        comparison ? `Player comp: ${comparison.slice(0, 320)}` : null,
       ]
         .filter(Boolean)
         .join(' ')
@@ -638,7 +638,7 @@ function formatProjectionCompBlock(research = null, player = null) {
   // Skip obvious scrape junk (page chrome / fantasy dump) if it slipped into projection.
   const looksJunk = (s) =>
     !s ||
-    s.length > 420 ||
+    s.length > 900 ||
     /\bPFF\b|\bFantasy Football\b|Crystal Ball|Manage Predictions/i.test(s);
 
   const proj = looksJunk(projection) ? null : projection;
@@ -664,7 +664,22 @@ function formatProjectionCompBlock(research = null, player = null) {
   if (scheme) lines.push(`Scheme fit: ${scheme}`);
   if (nfl) lines.push(`NFL projection: ${nfl}`);
   lines.push(
-    'AGENT RULE: When Projection and/or Player comp are on file, weave ONE short projection clause and/or ONE calm comp into the post (mid-body, after identity/tape). Projection = contribution timeline + role + ceiling (e.g. Year 2–3 regular contributor / All-SEC upside) — sell the upside, do not write “not All-American” or other downplay lines. Player comp must MATCH that level AND similar body style + win traits from tape (not size-only; not a higher elite band than the projection). Never invent either. Never make the comp the closer.'
+    'AGENT RULE — recruit post structure (required when Eval/Comp/Projection on file):'
+  );
+  lines.push(
+    '1) X HEADER — one attention line (board lead / Top-N rank / process fact). Not soft filler like “Florida is high on… early.”'
+  );
+  lines.push(
+    '2) RECRUITING — stars, ranks, size, school/hometown, UF offer/RPM/visits, calm rival board fact. Open board vs committed.'
+  );
+  lines.push(
+    '3) GATORVAULT EVAL — multi-paragraph film take from War Room insiderNotes / film traits. Depth required (not 1–2 sentences). Say “on film” / “based on film.” NEVER name sophomore/freshman reels, Hudl labels, or which exact tape was watched.'
+  );
+  lines.push(
+    '4) GATORVAULT COMP — labeled. Body style + win traits match (not size-only). Never invent. Never the closer.'
+  );
+  lines.push(
+    '5) GATORVAULT PROJECTION — labeled. Answer Florida path: day-one vs Year 2–3 development, role, All-SEC / starter ceiling. Sell upside; do not write “not All-American.”'
   );
   return lines.join('\n');
 }
@@ -680,7 +695,7 @@ function formatFilmTraitsBlock(filmTraits) {
   lines.push('FILM / HIGHLIGHTS (Hudl / On3 links — REQUIRED AGENT REVIEW)');
   lines.push('-------------------------------------------------------------');
   lines.push(
-    'AGENT STEP (do this before drafting): Open every highlight URL below, review the tape, then write 1–2 concrete film observations into the post as Vault fact. Do not invent tackle totals or grades. Do not tell the audience you watched film or that you are different — just use what you saw.'
+    'AGENT STEP (do this before drafting): Open every highlight URL below for INTERNAL review only. When War Room Eval is on file, use that deep take as GatorVault Eval — expand from film traits if needed. Public copy: “on film” / “based on film” only. NEVER name sophomore/freshman reels, Hudl titles, or which exact tape was watched. Do not invent tackle totals or grades.'
   );
   if (filmTraits.playerName) lines.push(`Player: ${filmTraits.playerName}`);
   if (filmTraits.on3ProfileUrl) lines.push(`On3 profile: ${filmTraits.on3ProfileUrl}`);

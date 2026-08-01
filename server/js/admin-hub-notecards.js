@@ -157,10 +157,13 @@
       + '</article>'
       + (deskFocus
         ? '<article class="hub-nc-card">'
-          + '<h4>Projection / Comp (every recruit post)</h4>'
-          + '<p><strong>Projection</strong> = when he contributes + role + ceiling (packages early / Year 2–3 regular / every-down · All-SEC upside). Sell the upside — never write “not All-American.”</p>'
-          + '<p style="margin:8px 0 0"><strong>Player comp</strong> = same level + similar <em>body style</em> + similar <em>win traits</em> from tape. Not size-only. Not a higher band than the projection.</p>'
-          + '<p class="hub-meta" style="margin:8px 0 0">If the Open card says none on file, omit from the post — don’t invent. Confirm with Charles before treating a new eval/comp as live FutureCast profile copy.</p>'
+          + '<h4>Recruit post shape (every target)</h4>'
+          + '<p><strong>1) X header</strong> — attention line (board lead / Top-N / process). Not “Florida is high on… early.”</p>'
+          + '<p style="margin:8px 0 0"><strong>2) Recruiting</strong> — ranks, size, offer/RPM/visits, calm rival fact.</p>'
+          + '<p style="margin:8px 0 0"><strong>3) GatorVault Eval</strong> — deep film take (multi-paragraph). Say “on film” / “based on film.” Never name which reel you watched.</p>'
+          + '<p style="margin:8px 0 0"><strong>4) GatorVault Comp</strong> — body + win traits match. Not size-only.</p>'
+          + '<p style="margin:8px 0 0"><strong>5) GatorVault Projection</strong> — Florida path: day-one vs Year 2–3, role, All-SEC / starter ceiling. Sell upside — never “not All-American.”</p>'
+          + '<p class="hub-meta" style="margin:8px 0 0">If Open says none on file, omit that block — don’t invent. Confirm with Charles before treating a new eval/comp as live FutureCast copy.</p>'
           + '</article>'
         : '')
       + '<article class="hub-nc-card hub-nc-card--ignore">'
