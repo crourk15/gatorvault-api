@@ -128,6 +128,43 @@ describe('beat-writer UF-only filter', () => {
     assert.equal(beatFilters.shouldIncludeBeatPost(post), true);
   });
 
+  it('does not treat South Florida geography as UF context', () => {
+    assert.equal(beatFilters.isFloridaRelevant('A\'mir Sears stays in South Florida'), false);
+    assert.equal(beatFilters.matchesExplicitUfKeywords('get out of South Florida'), false);
+    assert.equal(beatFilters.isFloridaRelevant('Central Florida prospect visits Gainesville'), true);
+  });
+
+  it('blocks Chad Simmons Mario Cristobal / A\'mir Sears South Florida post', () => {
+    const post = {
+      handle: 'chadsimmons_',
+      writerName: 'Chad Simmons',
+      outlet: 'On3',
+      text:
+        "NEW: Mario Cristobal was not going to let 5-star ATH A'mir Sears get out of South Florida.",
+    };
+    assert.equal(beatFilters.isFloridaRelevant(post.text), false);
+    assert.equal(beatFilters.matchesExplicitUfKeywords(post.text), false);
+    assert.equal(beatFilters.shouldIncludeBeatPost(post), false);
+    assert.equal(beatFilters.strictUfOnlyBlockReason(post, post.text), 'national_missing_explicit_uf');
+  });
+
+  it('blocks Miami/South Florida commit chatter that only has geo Florida', () => {
+    const samples = [
+      'Miami lands 2027 ATH A\'mir Sears from South Florida',
+      'South Florida ATH A\'mir Sears commits to Miami Hurricanes',
+      'Mario Cristobal keeps 5-star ATH A\'mir Sears in South Florida',
+    ];
+    for (const text of samples) {
+      const post = {
+        handle: 'chadsimmons_',
+        writerName: 'Chad Simmons',
+        outlet: 'On3',
+        text,
+      };
+      assert.equal(beatFilters.shouldIncludeBeatPost(post), false, text);
+    }
+  });
+
   it('does not treat aggregator URLs as Florida-related', () => {
     assert.equal(beatFilters.isFloridaRelatedUrl('https://example.com/aggregator/feed'), false);
     assert.equal(beatFilters.isFloridaRelatedUrl('https://www.on3.com/teams/florida/news/x'), true);
