@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-30T15:22:04.753Z",
+  "updatedAt": "2026-07-31T13:34:46.602Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -395,6 +395,39 @@
       "evaluatedBy": "vault-film-desk",
       "evalMode": "manual_frame_review",
       "evaluatedAt": "2026-07-30T15:22:04.753Z"
+    },
+    "madoxx-davis": {
+      "playerName": "Madoxx Davis",
+      "position": "WR",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "url": "https://www.hudl.com/embed/video/3/13575393/68dd4e5cc7273590630152b9",
+          "label": "MADOXX DAVIS SOPH SZN HIGHLIGHTS",
+          "durationSec": 582,
+          "reviewedAt": "2026-07-31",
+          "reviewedBy": "vault"
+        }
+      ],
+      "traits": [
+        "Outside/perimeter WR — stacks off-man cushion on vertical stems.",
+        "Creates mid-route separation vs trailing CBs; open-field YAC juice.",
+        "Returner usage on tape; lean college WR frame at 6-0 / 190."
+      ],
+      "vaultFilmAngle": "Davis is a perimeter WR who stresses off coverage. Stacks the cushion on vertical stems, creates real separation, and finishes with open-field juice. Wins with route suddenness + YAC — Calvin Ridley mold at 6-0 / 190.",
+      "doNotClaim": [
+        "Do not invent reception totals, yards, contested-catch rates, or grades beyond Vault film notes.",
+        "Do not claim day-one starter — Vault projection is Year 2–3 featured with earlier packages possible."
+      ],
+      "clipNotes": "Vault film desk verified 2026-07-31 — Charles green light (comp Ridley + Year 2–3 All-SEC ceiling).",
+      "ingestStatus": null,
+      "on3RecruitSlug": "madoxx-davis-254776",
+      "on3ProfileUrl": "https://www.on3.com/rivals/madoxx-davis-254776/",
+      "lastIngestAt": null,
+      "evaluatedBy": "vault-film-desk",
+      "evalMode": "manual_frame_review",
+      "evaluatedAt": "2026-07-31T13:34:46.602Z"
     }
   }
 }
