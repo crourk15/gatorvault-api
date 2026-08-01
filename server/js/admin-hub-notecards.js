@@ -158,7 +158,7 @@
       + (deskFocus
         ? '<article class="hub-nc-card">'
           + '<h4>Header + Projection / Comp (every recruit post)</h4>'
-          + '<p><strong>HEADER</strong> = 4–10 word Florida board-stake line above the post (required). Never “owns” a recruit.</p>'
+          + '<p><strong>HEADER</strong> = elite intel leap above the post (required) — “New intel has emerged…” energy, not a flat “Florida leads X” label. Never “owns” a recruit.</p>'
           + '<p style="margin:8px 0 0"><strong>Projection</strong> = when he contributes + role + ceiling (packages early / Year 2–3 regular / every-down · All-SEC upside). Sell the upside — never write “not All-American.”</p>'
           + '<p style="margin:8px 0 0"><strong>Player comp</strong> = same level + similar <em>body style</em> + similar <em>win traits</em> from tape. Not size-only. Not a higher band than the projection. Don’t default to Florida alumni — only if it’s clearly the best tape fit.</p>'
           + '<p class="hub-meta" style="margin:8px 0 0">If War Room says none on file, Cursor still drafts both from tape + board (matched band). Confirm before treating a new eval/comp as live FutureCast profile copy.</p>'
