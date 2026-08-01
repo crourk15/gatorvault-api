@@ -131,9 +131,9 @@ Recruit briefs embed a **PLAYER PROJECTION / COMP** block from War Room breakdow
 - Not a higher elite band than the projection (if the comp is an All-American household name, the projection has to match)
 - Prefer a comparable who filled into a similar frame path (e.g. long/rangy EDGE → Yetur Gross-Matos band, not a short/dense 270 prototype)
 
-1. Film desk / Open fills War Room `projection` + `comparison` from tape.
-2. **Copy Brief** prints both (or “none on file — do not invent”).
-3. Cursor post must weave a short projection clause + one calm comp mid-post when on file — never invent, never close on the comp.
+1. Film desk / Open fills War Room `projection` + `comparison` from tape when available.
+2. **Copy Brief** always prints both — War Room values when present, or “none on file — AGENT MUST DRAFT” instructions when empty.
+3. Cursor post must always include: **HEADER** (4–10 words) + deeper film eval (2–3 tape specifics) + short projection clause + one calm comp mid-post. Never close on the comp. Prefer War Room; if empty, draft matched-band projection/comp from tape + board.
 4. Commit cards use existing slots (**skinny / Strengths / Comp / Projection**) from War Room — live API, no app rebuild. Player profiles also show labeled **Evaluation · Vault Player Comp · Vault Projection**.
 5. Confirm with Charles before treating a new eval/comp as live card/profile copy.
 
