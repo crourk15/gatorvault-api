@@ -849,12 +849,12 @@ function formatBriefText({
   lines.push('POST HEADER (required — deliver BEFORE the post body)');
   lines.push('---------------------------------------------------------');
   lines.push(
-    'AGENT RULE (hard): Always output an elite HEADER above the post. This is the LEAP — the same energy as a top recruiting intel hook (“New intel has emerged on …”), not a dull board label. Specific + urgent + Florida stake in one line. Name the player, class/pos signal when it helps, and why this post exists right now (new intel, RPM move, visit heat, staff push, separation). FORBIDDEN: “owns/own,” flat titles like “Florida leads [Player],” “Breaking,” emoji spam. Format exactly:'
+    'AGENT RULE (hard): Always output an elite HEADER above the post. This is the LEAP — same ENERGY as a top recruiting intel hook (urgency + specificity + Florida stake), but ORIGINAL Vault wording every time. Never clone stock phrases like “New intel has emerged on…” or any beat-writer opener. Invent a fresh hook from THIS player’s signal (RPM move, visit heat, staff push, separation, priority feel). FORBIDDEN: copied beat phrasing, “owns/own,” flat titles like “Florida leads [Player],” “Breaking,” emoji spam. Format exactly:'
   );
   lines.push('HEADER: <your header here>');
   lines.push('Then a blank line, then the post body.');
   lines.push(
-    'Examples of tone (do not copy verbatim): “New intel has emerged on 2028 Florida QB target Hudson West” · “Florida creating real separation with Sarasota QB Hudson West” · “New RPM signal: Gators pulling ahead on Hudson West”'
+    'Examples of energy (do not copy — invent fresh each post): “The [Player] race just tilted harder toward Florida” · “[School]’s [Player] is turning into a Florida priority” · “Gators building daylight with 2028 [Pos] [Player]”'
   );
 
   lines.push('');
