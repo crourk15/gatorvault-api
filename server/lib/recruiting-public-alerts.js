@@ -306,28 +306,40 @@ function isUfFootballLiveFeedItem(item) {
     if (type === 'visit' || type === 'offer' || type === 'recruiting' || type === 'info') {
       if (beatFilters.isFloridaRelevant(titleSummary)) return true;
       if (beatFilters.isFloridaRelatedUrl(item.source_url || item.url || '')) return true;
-      // Structured UF visit/offer cards from recruiting intel (title may omit "Florida").
+      // Only allow visit/offer cards that explicitly name Florida / Gators (not any OV/offer).
       if (
-        /official visit|unofficial visit|ov to florida|visit scheduled|visit cancelled|\boffer\b/i.test(
+        /(?:ov|official visit|unofficial visit)\s+to\s+florida|florida\s+(?:official|unofficial)\s+visit|visit\s+to\s+(?:the\s+)?(?:florida|gators|\buf\b)|(?:florida|gators|\buf\b).{0,40}\boffer\b|\boffer\b.{0,40}(?:florida|gators|\buf\b)/i.test(
           titleSummary
         )
       ) {
         return true;
       }
-      // Generic "Player — Recruiting intel" with no UF signal stays off Live Stream.
       return false;
     }
 
     if (type === 'article' || type === 'content' || sourceLooksLikeArticle(item)) {
-      return beatFilters.isFloridaRelevant(titleSummary) || beatFilters.isUfFootballEligible(
-        { title: item.title, summary: item.summary },
-        titleSummary
+      return (
+        beatFilters.isFloridaRelevant(titleSummary) &&
+        beatFilters.isUfFootballEligible({ title: item.title, summary: item.summary }, titleSummary)
+      );
+    }
+
+    // Curated Gators podcast shows only — never default-allow unknown feed types.
+    if (type === 'podcast') {
+      return /\bgator/i.test(titleSummary) || beatFilters.isFloridaRelevant(titleSummary);
+    }
+
+    if (type === 'commit' || type === 'flip') {
+      return (
+        beatFilters.isFloridaRelevant(titleSummary) || beatFilters.hasStrongUfSchoolSignal(titleSummary)
       );
     }
   } catch {
-    return /\b(florida|gators|\buf\b|gainesville|swamp|napier|sumrall)\b/i.test(titleSummary);
+    return /\b(florida gators|florida football|\bgators\b|\buf\b|gainesville|swamp|napier|sumrall)\b/i.test(
+      titleSummary
+    );
   }
-  return true;
+  return false;
 }
 
 function sourceLooksLikeArticle(item) {
