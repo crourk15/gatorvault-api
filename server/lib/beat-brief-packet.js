@@ -658,13 +658,13 @@ function formatProjectionCompBlock(research = null, player = null) {
   if (comp) lines.push(`Player comp: ${comp}`);
   else {
     lines.push(
-      'Player comp: (none on file — AGENT MUST DRAFT one calm comparable from tape body + win traits, matched to the projection band. Not size-only. Not a higher elite household name than the band. Never close on the comp.)'
+      'Player comp: (none on file — AGENT MUST DRAFT one calm comparable from tape body + win traits, matched to the projection band. Not size-only. Not a higher elite household name than the band. Do NOT default to Florida alumni comps — pick the best body/traits match first; a Gator alum only if that is clearly the strongest tape fit. Never close on the comp.)'
     );
   }
   if (scheme) lines.push(`Scheme fit: ${scheme}`);
   if (nfl) lines.push(`NFL projection: ${nfl}`);
   lines.push(
-    'AGENT RULE (hard): EVERY recruit post must include BOTH (a) one short forward projection clause and (b) one calm player comp — mid-body, after identity/tape. Prefer War Room values when on file. If marked “(none on file)”, draft both from board + tape (matched band). Projection = contribution timeline + role + ceiling. Comp = similar body style + win traits from tape. Never make the comp the closer. Never skip either because the card was empty.'
+    'AGENT RULE (hard): EVERY recruit post must include BOTH (a) one short forward projection clause and (b) one calm player comp — mid-body, after identity/tape. Prefer War Room values when on file. If marked “(none on file)”, draft both from board + tape (matched band). Projection = contribution timeline + role + ceiling. Comp = similar body style + win traits from tape — never a lazy Florida-alum default. Never make the comp the closer. Never skip either because the card was empty.'
   );
   return lines.join('\n');
 }
@@ -849,18 +849,18 @@ function formatBriefText({
   lines.push('POST HEADER (required — deliver BEFORE the post body)');
   lines.push('---------------------------------------------------------');
   lines.push(
-    'AGENT RULE (hard): Always output an elite HEADER line above the post (4–10 words). Punchy Vault ownership tied to Florida’s stake — not a news wire headline, not “Breaking,” not emoji spam. Format exactly:'
+    'AGENT RULE (hard): Always output an elite HEADER line above the post (4–10 words). Punchy Florida-board stake — lead, pace, priority, process. FORBIDDEN in headers: “owns,” “own,” “we own,” or any line that treats the recruit like Florida’s property. Not a news wire headline, not “Breaking,” not emoji spam. Format exactly:'
   );
   lines.push('HEADER: <your header here>');
   lines.push('Then a blank line, then the post body.');
   lines.push(
-    'Examples of tone (do not copy verbatim): “Florida owns Hudson West” · “Sarasota QB. Florida’s lead.” · “99% Florida — Hudson West”'
+    'Examples of tone (do not copy verbatim): “Florida leads Hudson West” · “Sarasota QB. Florida’s pace.” · “Hudson West — Florida’s board”'
   );
 
   lines.push('');
   lines.push('ELITE DEPTH CHECKLIST (board facts from file; projection/comp always required)');
   lines.push('-------------------------------------------------------------');
-  lines.push('- HEADER: 4–10 word Vault ownership line (required — print as HEADER: …)');
+  lines.push('- HEADER: 4–10 word Florida-board stake line (required — print as HEADER: …). Never “owns” the player.');
   lines.push('- Identity: name, class, position, high school, hometown, size');
   lines.push('- On3 ranks: national + position + state + stars/rating');
   lines.push('- Florida stake: RPM %, offer/status, UF staff names if listed');
@@ -868,10 +868,11 @@ function formatBriefText({
   lines.push('- Visit trail: OV/UOV + latest dates when present');
   lines.push('- Film / highlights: OPEN the Highlight LINK(s), deeper eval — 2–3 specific tape facts (platform, release, eyes, windows), not generic filler');
   lines.push('- Player projection: ALWAYS include — War Room when on file; otherwise draft from tape + board (timeline + role + ceiling)');
-  lines.push('- Player comp: ALWAYS include — War Room when on file; otherwise draft from tape body + win traits (matched band; never the closer)');
-  lines.push('- Internal intel seed: steal the FACT, own the VOICE — never tip that a beat writer said it');
+  lines.push('- Player comp: ALWAYS include — War Room when on file; otherwise draft from tape body + win traits (matched band; never the closer; no lazy Florida-alum default)');
+  lines.push('- Internal intel seed: steal the FACT, rewrite in Vault voice — never tip that a beat writer said it');
   lines.push('- Vault angle: Florida-first narrative that sounds like GatorVault, not a recap desk');
   lines.push('- Show, don\'t announce: never claim to be different, ahead of the beat, or what "most feeds / timelines" miss');
+  lines.push('- Never say Florida “owns” a recruit in the header or closer — speak board lead / process / pace');
   lines.push('- Rivals: context only (one calm board fact mid-post if needed). Never dunk, never make the rival the punchline or closer');
 
   lines.push('');
@@ -881,13 +882,13 @@ function formatBriefText({
     'Write one GatorVault Insider X post for a VERIFIED account (long-form OK). Target 600–900 characters for the BODY (hard cap 1000). HEADER is separate and does not count against the body cap.'
   );
   lines.push(
-    'HEADER RULE (hard): First line of your deliverable must be `HEADER: …` (4–10 words, elite Vault ownership). Then a blank line, then the post body.'
+    'HEADER RULE (hard): First line of your deliverable must be `HEADER: …` (4–10 words, Florida board stake / pace / lead). Forbidden: “owns,” “own,” or property language about the recruit. Then a blank line, then the post body.'
   );
   lines.push(
     'FILM REVIEW RULE (hard): Before writing, open every Highlight LINK in FILM / HIGHLIGHTS. Review the Hudl/On3 tape in depth. Your post must include 2–3 concrete, specific observations from that tape (platform/drop, release, eyes vs pressure, intermediate/sideline windows, red-zone look, length over the line). No generic “good arm.” If a link will not open, say so and write from board facts only — do not invent film.'
   );
   lines.push(
-    'PROJECTION / COMP RULE (hard): ALWAYS include both in the post body (mid-body, after identity/tape). Prefer PLAYER PROJECTION / COMP values when on file. If marked “(none on file)”, YOU MUST draft both from board + tape: (1) forward projection = contribution timeline + role + ceiling matched to stars/rank band; (2) one calm player comp = similar body + win traits, matched band — never a higher elite household name than the band. Never omit either. Never close on the comp.'
+    'PROJECTION / COMP RULE (hard): ALWAYS include both in the post body (mid-body, after identity/tape). Prefer PLAYER PROJECTION / COMP values when on file. If marked “(none on file)”, YOU MUST draft both from board + tape: (1) forward projection = contribution timeline + role + ceiling matched to stars/rank band; (2) one calm player comp = similar body + win traits, matched band — never a higher elite household name than the band. Do NOT default to Florida alumni comps out of habit — only use a Gator alum if that is clearly the best tape/body fit. Never omit either. Never close on the comp.'
   );
   lines.push(
     'VOICE RULE (hard): This is GatorVault\'s take — not a beat recap. Absorb facts from the intel seed/board + what you saw on the highlight link, then rewrite in original Vault voice. FORBIDDEN in the post: naming beat writers; "beat line"; "according to reports"; "per On3/247"; "as reported"; "reports say"; "insiders say"; "I watched the film"; and any meta flex about being different or ahead of the timeline. Just state the board + film. Board facts and tape observations may be stated as Vault fact.'
@@ -896,7 +897,7 @@ function formatBriefText({
     'RIVAL RULE (hard): Speak about what Florida has going with this player. Rivals (Alabama, Georgia, etc.) are optional mid-post board context only — one calm fact (e.g. who leads RPM). Do NOT dunk on the opponent, do NOT frame Florida as waiting for a rival "inevitability" to break, and never close on the rival. Closer = Florida process (visits, staff, film, ownership).'
   );
   lines.push(
-    'Structure: (0) HEADER line, (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) deeper tape eval (2–3 specifics), (4) ALWAYS projection + player comp, (5) Florida offer/staff/visits (rival RPM only as calm context if useful), (6) ownership/culture or visit detail, (7) sharp Florida-forward closer. Stay factual to board + intel + the tape you reviewed — no invented offers, visits, rankings, or tackle totals. Projection/comp may be agent-drafted when War Room is empty (matched band). Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
+    'Structure: (0) HEADER line (board lead/pace — never “owns”), (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) deeper tape eval (2–3 specifics), (4) ALWAYS projection + player comp (no lazy Florida-alum default), (5) Florida offer/staff/visits with real process detail (rival RPM only as calm context if useful), (6) culture or visit detail, (7) sharp Florida-forward closer about process/separation — not “we own him.” Stay factual to board + intel + the tape you reviewed — no invented offers, visits, rankings, or tackle totals. Projection/comp may be agent-drafted when War Room is empty (matched band). Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
   );
 
   return lines.filter((l) => l !== null).join('\n');
