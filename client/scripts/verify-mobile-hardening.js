@@ -30,6 +30,16 @@ mustInclude('lib/vault-shell.css', [
   'body.gv-scroll-locked',
   'min-height: 44px',
   '.gv-community__action-btn',
+  '.gv-vault-shell__main:has(.home-wow-page)',
+]);
+mustInclude('lib/gv-ui-cleanup.css', [
+  'html:has(.home-wow-page)',
+  'body:has(.home-wow-page):not(.gv-scroll-locked)',
+  '.gv-vault-shell--home.is-navigating .gv-vault-shell__main',
+]);
+mustInclude('lib/vault-menu-boot.js', [
+  'clearBodyLock',
+  'gv-scroll-locked',
 ]);
 
 if (failures.length) {
