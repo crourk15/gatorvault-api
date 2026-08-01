@@ -849,18 +849,18 @@ function formatBriefText({
   lines.push('POST HEADER (required — deliver BEFORE the post body)');
   lines.push('---------------------------------------------------------');
   lines.push(
-    'AGENT RULE (hard): Always output an elite HEADER line above the post (4–10 words). Punchy Florida-board stake — lead, pace, priority, process. FORBIDDEN in headers: “owns,” “own,” “we own,” or any line that treats the recruit like Florida’s property. Not a news wire headline, not “Breaking,” not emoji spam. Format exactly:'
+    'AGENT RULE (hard): Always output an elite HEADER above the post. This is the LEAP — the same energy as a top recruiting intel hook (“New intel has emerged on …”), not a dull board label. Specific + urgent + Florida stake in one line. Name the player, class/pos signal when it helps, and why this post exists right now (new intel, RPM move, visit heat, staff push, separation). FORBIDDEN: “owns/own,” flat titles like “Florida leads [Player],” “Breaking,” emoji spam. Format exactly:'
   );
   lines.push('HEADER: <your header here>');
   lines.push('Then a blank line, then the post body.');
   lines.push(
-    'Examples of tone (do not copy verbatim): “Florida leads Hudson West” · “Sarasota QB. Florida’s pace.” · “Hudson West — Florida’s board”'
+    'Examples of tone (do not copy verbatim): “New intel has emerged on 2028 Florida QB target Hudson West” · “Florida creating real separation with Sarasota QB Hudson West” · “New RPM signal: Gators pulling ahead on Hudson West”'
   );
 
   lines.push('');
   lines.push('ELITE DEPTH CHECKLIST (board facts from file; projection/comp always required)');
   lines.push('-------------------------------------------------------------');
-  lines.push('- HEADER: 4–10 word Florida-board stake line (required — print as HEADER: …). Never “owns” the player.');
+  lines.push('- HEADER: elite intel leap (required — print as HEADER: …). New intel / separation / RPM / staff push — not a flat “Florida leads X” label. Never “owns” the player.');
   lines.push('- Identity: name, class, position, high school, hometown, size');
   lines.push('- On3 ranks: national + position + state + stars/rating');
   lines.push('- Florida stake: RPM %, offer/status, UF staff names if listed');
@@ -882,7 +882,7 @@ function formatBriefText({
     'Write one GatorVault Insider X post for a VERIFIED account (long-form OK). Target 600–900 characters for the BODY (hard cap 1000). HEADER is separate and does not count against the body cap.'
   );
   lines.push(
-    'HEADER RULE (hard): First line of your deliverable must be `HEADER: …` (4–10 words, Florida board stake / pace / lead). Forbidden: “owns,” “own,” or property language about the recruit. Then a blank line, then the post body.'
+    'HEADER RULE (hard): First line of your deliverable must be `HEADER: …` — an elite intel leap, not a board sticker. Model the energy of “New intel has emerged on [player]…”: specific, urgent, Florida-relevant. Forbidden: “owns/own,” flat “Florida leads [Player]” labels, “Breaking,” emoji spam. Then a blank line, then the post body. Body opener should not just repeat the header.'
   );
   lines.push(
     'FILM REVIEW RULE (hard): Before writing, open every Highlight LINK in FILM / HIGHLIGHTS. Review the Hudl/On3 tape in depth. Your post must include 2–3 concrete, specific observations from that tape (platform/drop, release, eyes vs pressure, intermediate/sideline windows, red-zone look, length over the line). No generic “good arm.” If a link will not open, say so and write from board facts only — do not invent film.'
