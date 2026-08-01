@@ -110,13 +110,18 @@
     overflow-x: hidden;
   }
 
-  /* Film Room + Live: do not create a nested Y scroller (overflow-x:hidden → overflow-y:auto). */
+  /* Home + Film Room + Live: do not create a nested Y scroller (overflow-x:hidden → overflow-y:auto). */
+  .gv-vault-shell__main:has(.home-wow-page),
   .gv-vault-shell__main:has(.gv-film-room-page),
   .gv-vault-shell__main:has(.uf-premium-gnl),
   .gv-vault-shell__main:has(.gv-live-feed),
+  .gv-app-shell__main:has(.home-wow-page),
   .gv-app-shell__main:has(.gv-film-room-page),
   .gv-app-shell__main:has(.uf-premium-gnl),
   .gv-app-shell__main:has(.gv-live-feed),
+  .gv-vault-shell--home,
+  .gv-vault-shell--home .gv-vault-shell__main,
+  .gv-vault-shell--home .gv-app-shell__main,
   body.gv-film-page-active .gv-vault-shell,
   body.gv-film-page-active .gv-vault-shell__main,
   body.gv-film-page-active .gv-app-shell__main,

@@ -1131,8 +1131,8 @@ body {
     height: auto !important;
   }
 
-  body.gv-film-page-active,
-  body:has(.gv-film-room-page) {
+  body.gv-film-page-active:not(.gv-scroll-locked),
+  body:has(.gv-film-room-page):not(.gv-scroll-locked) {
     overflow-x: clip !important;
     overflow-y: visible !important;
     height: auto !important;
@@ -1196,6 +1196,49 @@ body {
 }
 
 /*
+ * Vault Home — same document-only scroll contract as Film Room / Live.
+ * overflow-x:hidden on shell/main + flex min-height:0 created a nested
+ * scrollport that intermittently stole vertical gestures on /vault/.
+ */
+@media (max-width: 1023px) {
+  html:has(.home-wow-page),
+  html:has(.gv-vault-shell--home) {
+    overflow-x: clip !important;
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
+  /* Exclude menu/modal lock — :not(.gv-scroll-locked) keeps drawer body-lock winning. */
+  body:has(.home-wow-page):not(.gv-scroll-locked),
+  body:has(.gv-vault-shell--home):not(.gv-scroll-locked) {
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    height: auto !important;
+    overscroll-behavior-y: auto;
+    touch-action: manipulation;
+  }
+
+  body:has(.home-wow-page) .gv-vault-shell,
+  body:has(.home-wow-page) .gv-vault-shell__body,
+  body:has(.home-wow-page) .gv-vault-shell__main,
+  body:has(.home-wow-page) .home-wow-page,
+  .gv-vault-shell--home,
+  .gv-vault-shell--home .gv-vault-shell__body,
+  .gv-vault-shell--home .gv-vault-shell__main,
+  .gv-vault-shell--home .home-wow-page {
+    overflow: visible !important;
+    max-height: none !important;
+    touch-action: manipulation;
+  }
+
+  /* Soft-nav briefly sets pointer-events:none on main — keep Home scrollable. */
+  .gv-vault-shell--home.is-navigating .gv-vault-shell__main,
+  body:has(.home-wow-page) .gv-vault-shell.is-navigating .gv-vault-shell__main {
+    pointer-events: auto;
+  }
+}
+
+/*
  * Gator Nation Live — same document-only scroll contract as Film Room.
  * Incomplete unlock left nested scrollports that intermittently trap gestures.
  */
@@ -1208,9 +1251,9 @@ body {
     height: auto !important;
   }
 
-  body.gv-live-page-active,
-  body:has(.uf-premium-gnl),
-  body:has(.gv-live-feed) {
+  body.gv-live-page-active:not(.gv-scroll-locked),
+  body:has(.uf-premium-gnl):not(.gv-scroll-locked),
+  body:has(.gv-live-feed):not(.gv-scroll-locked) {
     overflow-x: clip !important;
     overflow-y: visible !important;
     height: auto !important;

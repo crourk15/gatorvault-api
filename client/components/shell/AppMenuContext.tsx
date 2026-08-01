@@ -26,10 +26,37 @@ export function AppMenuProvider({ children }: { children: React.ReactNode }): Re
   useEffect(() => {
     const boot = window.__GV_MENU_BOOT__;
     if (!boot) return undefined;
+
+    // Stable wrapper so Strict Mode remount doesn't leave boot.onChange pointing
+    // at a stale setter — and we only detach if we still own the handler.
+    const onChange = (open: boolean) => {
+      setIsOpen(open);
+    };
     setIsOpen(boot.isOpen());
-    boot.onChange = setIsOpen;
+    boot.onChange = onChange;
+
+    // Re-sync if menu closed while onChange was briefly null (hydrate gap).
+    const syncFromBoot = () => {
+      const open = boot.isOpen();
+      setIsOpen((prev) => (prev === open ? prev : open));
+      if (!open) {
+        try {
+          document.body.style.overflow = '';
+          document.body.classList.remove('gv-scroll-locked');
+        } catch {
+          /* ignore */
+        }
+      }
+    };
+    window.addEventListener('gv-vault-restored', syncFromBoot);
+    document.addEventListener('visibilitychange', syncFromBoot);
+
     return () => {
-      boot.onChange = null;
+      window.removeEventListener('gv-vault-restored', syncFromBoot);
+      document.removeEventListener('visibilitychange', syncFromBoot);
+      if (boot.onChange === onChange) {
+        boot.onChange = null;
+      }
     };
   }, []);
 

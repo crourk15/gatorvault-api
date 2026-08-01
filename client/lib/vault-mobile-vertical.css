@@ -17,9 +17,11 @@
     overflow-x: hidden;
   }
 
+  .gv-vault-shell__main:has(.home-wow-page),
   .gv-vault-shell__main:has(.gv-film-room-page),
   .gv-vault-shell__main:has(.uf-premium-gnl),
   .gv-vault-shell__main:has(.gv-live-feed),
+  .gv-vault-shell--home .gv-vault-shell__main,
   body.gv-film-page-active .gv-vault-shell__main,
   body.gv-live-page-active .gv-vault-shell__main {
     overflow: visible;

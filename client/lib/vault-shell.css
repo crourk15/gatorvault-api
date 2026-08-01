@@ -277,8 +277,8 @@ body.gv-team-modal-open .gv-vault-bottom-nav {
 }
 
 body.gv-scroll-locked {
-  overflow: hidden;
-  touch-action: none;
+  overflow: hidden !important;
+  touch-action: none !important;
 }
 
 body.gv-scroll-locked .gv-vault-shell__header,
@@ -287,11 +287,15 @@ body.gv-scroll-locked .gv-vault-bottom-nav {
   z-index: 1;
 }
 
-/* Live + Film Room — document scroll. overflow-x:hidden on shell/main
+/* Home + Live + Film Room — document scroll. overflow-x:hidden on shell/main
    coerces overflow-y:auto and traps vertical gestures inside the shell. */
+.gv-vault-shell__main:has(.home-wow-page),
 .gv-vault-shell__main:has(.uf-premium-gnl),
 .gv-vault-shell__main:has(.gv-live-feed),
 .gv-vault-shell__main:has(.gv-film-room-page),
+.gv-vault-shell--home,
+.gv-vault-shell--home .gv-vault-shell__body,
+.gv-vault-shell--home .gv-vault-shell__main,
 body.gv-live-page-active .gv-vault-shell,
 body.gv-live-page-active .gv-vault-shell__body,
 body.gv-live-page-active .gv-vault-shell__main,
@@ -2700,8 +2704,8 @@ a.gv-live-item__title:hover {
 
 body.gv-community-modal-open,
 body.gv-scroll-locked {
-  overflow: hidden;
-  touch-action: none;
+  overflow: hidden !important;
+  touch-action: none !important;
 }
 
 @media (max-width: 767px) {

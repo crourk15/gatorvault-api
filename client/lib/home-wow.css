@@ -19,7 +19,10 @@
   color: #ffffff;
   min-height: 100%;
   padding: 0 0 48px;
+  /* Prefer clip over hidden so we don't coerce a nested Y scroller on iOS.
+     Shell/main ancestors are unlocked to overflow:visible (see vault-shell.css). */
   overflow-x: clip;
+  overflow-y: visible;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
