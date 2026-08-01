@@ -39,6 +39,7 @@ mustInclude('lib/gv-ui-cleanup.css', [
 ]);
 mustInclude('lib/vault-menu-boot.js', [
   'clearBodyLock',
+  'applyBodyLock',
   'gv-scroll-locked',
 ]);
 

@@ -8,9 +8,10 @@ const VAULT_MENU_BOOT_SCRIPT =
   'btn:document.querySelector("[data-vault-menu-toggle]")||document.querySelector(\'button[aria-controls="gv-app-menu-drawer"]\'),' +
   'drawer:document.getElementById("gv-app-menu-drawer"),' +
   'backdrop:document.querySelector(".gv-app-menu__backdrop")};}' +
-  // Always clear body overflow + React scroll-lock class when closing, even if
-  // btn/drawer are missing mid-hydrate or React onChange was briefly null.
+  // Own the same gv-scroll-locked class React uses so document-scroll unlock
+  // CSS (:not(.gv-scroll-locked)) cannot override a pre-hydrate menu lock.
   'function clearBodyLock(){try{document.body.style.overflow="";document.body.classList.remove("gv-scroll-locked");}catch(_){}}' +
+  'function applyBodyLock(){try{document.body.style.overflow="hidden";document.body.classList.add("gv-scroll-locked");}catch(_){}}' +
   'function sync(){' +
   'var e=els();' +
   'if(!open)clearBodyLock();' +
@@ -21,7 +22,7 @@ const VAULT_MENU_BOOT_SCRIPT =
   'if(e.backdrop){e.backdrop.classList.toggle("is-open",open);e.backdrop.setAttribute("aria-hidden",open?"false":"true");}' +
   'e.btn.classList.toggle("is-menu-open",open);' +
   'e.btn.setAttribute("aria-expanded",open?"true":"false");' +
-  'if(open){document.body.style.overflow="hidden";}else{clearBodyLock();}' +
+  'if(open){applyBodyLock();}else{clearBodyLock();}' +
   '}' +
   'function setOpen(next){open=!!next;sync();if(window.__GV_MENU_BOOT__&&window.__GV_MENU_BOOT__.onChange){window.__GV_MENU_BOOT__.onChange(open);}}' +
   'function bind(){sync();}' +
