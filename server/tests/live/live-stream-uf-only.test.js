@@ -61,6 +61,20 @@ describe('Live Stream UF football-only', () => {
     assert.equal(publicAlerts.isPublicLiveFeedItem(item), true);
   });
 
+  it('blocks Chad Simmons South Florida / Mario Cristobal A\'mir Sears beat row', () => {
+    const item = {
+      type: 'beat',
+      title:
+        "Chad Simmons: NEW: Mario Cristobal was not going to let 5-star ATH A'mir Sears get out of South Florida.",
+      summary:
+        "NEW: Mario Cristobal was not going to let 5-star ATH A'mir Sears get out of South Florida.",
+      source: 'x',
+      author: 'Chad Simmons',
+      meta: { handle: 'chadsimmons_', outlet: 'On3' },
+    };
+    assert.equal(publicAlerts.isPublicLiveFeedItem(item), false);
+  });
+
   it('blocks generic Player — Recruiting intel feed cards without UF signal', () => {
     const item = {
       type: 'visit',

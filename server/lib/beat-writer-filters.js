@@ -115,7 +115,7 @@ const UF_COACH_STAFF_RE =
 
 /** Other programs — block when UF is not mentioned. */
 const OTHER_PROGRAM_RE =
-  /\b(florida state|\bfsu\b|seminoles|\bgeorgia\b|\buga\b|bulldogs|\balabama\b|crimson tide|\bauburn\b|\blsu\b|\btennessee\b|volunteers|ole miss|mississippi state|south carolina|\bclemson\b|\bmiami\b|\bcanes\b|\bhurricanes\b|texas a&m|\baggies\b|ohio state|\bmichigan\b|\bnotre dame\b|\boklahoma\b|\btexas longhorns\b|\bpenn state\b)\b/i;
+  /\b(florida state|\bfsu\b|seminoles|\bgeorgia\b|\buga\b|bulldogs|\balabama\b|crimson tide|\bauburn\b|\blsu\b|\btennessee\b|volunteers|ole miss|mississippi state|south carolina|\bclemson\b|\bmiami\b|\bcanes\b|\bhurricanes\b|mario\s+cristobal|texas a&m|\baggies\b|ohio state|\bmichigan\b|\bnotre dame\b|\boklahoma\b|\btexas longhorns\b|\bpenn state\b)\b/i;
 
 const NATIONAL_ROUNDUP_RE =
   /\b(top \d+|national roundup|around the country|across the sec|sec update|national recruiting|recruiting roundup)\b/i;
@@ -166,8 +166,19 @@ const EXPLICIT_UF_KEYWORD_RES = [
   /\bflorida target\b/i
 ];
 
+/**
+ * Geographic / non-UF "Florida" phrases. Bare `\bflorida\b` must not match these
+ * (e.g. Chad Simmons on Mario Cristobal / A'mir Sears / South Florida).
+ */
+const NON_UF_FLORIDA_GEO_RE =
+  /\b(?:(?:south|central|north|west|southwest|southeast|northeast|northwest)\s+florida|university\s+of\s+south\s+florida|\busf\b)\b/gi;
+
+function stripNonUfFloridaGeography(text) {
+  return String(text || '').replace(NON_UF_FLORIDA_GEO_RE, ' ');
+}
+
 function matchesExplicitUfKeywords(text) {
-  const t = String(text || '');
+  const t = stripNonUfFloridaGeography(text);
   if (!t.trim()) return false;
   if (/\bflorida state\b/i.test(t) && !/\bflorida gators\b/i.test(t) && !/\bflorida football\b/i.test(t)) {
     if (!/\bgators\b/i.test(t) && !/\buf\b/i.test(t)) return false;
@@ -179,7 +190,10 @@ function matchesExplicitUfKeywords(text) {
  * Hard UF relevance gate — national beat items must match Florida Gators context.
  */
 function isFloridaRelevant(text) {
-  const t = String(text || '');
+  const raw = String(text || '');
+  if (!raw.trim()) return false;
+  // Strip South Florida / Central Florida / etc. before bare-"florida" checks.
+  const t = stripNonUfFloridaGeography(raw);
   if (!t.trim()) return false;
 
   const hasUfSignal =
@@ -192,7 +206,7 @@ function isFloridaRelevant(text) {
 
   if (hasUfSignal) return true;
 
-  // Standalone "Florida" — not Florida State / FSU
+  // Standalone "Florida" — not Florida State / FSU / geo regions already stripped
   if (/\bflorida\b/i.test(t) && !/\bflorida state\b/i.test(t)) return true;
 
   return false;
@@ -535,6 +549,8 @@ module.exports = {
   isSteveWiltfongPost,
   matchesExplicitUfKeywords,
   EXPLICIT_UF_KEYWORD_RES,
+  stripNonUfFloridaGeography,
+  NON_UF_FLORIDA_GEO_RE,
   isFloridaRelevant,
   isFloridaRelevantPost,
   postUrls,
