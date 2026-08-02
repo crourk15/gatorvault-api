@@ -457,11 +457,13 @@ function extractOn3ProfileOffers(topTeams, classYear) {
   for (const t of teams) {
     if (on3Recruit.isHighSchoolOrg(t)) continue;
     const school = teamNameFromOn3(t.team);
-    if (!school || on3Recruit.isFloridaTeam(t)) continue;
+    if (!school) continue;
     const status = String(t.status || '');
     if (!/offer/i.test(status)) continue;
+    // Include Florida — chase score / Detectives treat missing UF offer as a gap.
+    // (allowlist-target-sync.extractOffersFromOn3Profile already does this.)
     offers.push({
-      school,
+      school: on3Recruit.isFloridaTeam(t) ? 'Florida' : school,
       offerType: status || 'offer',
       date: t.dateAdded || t.date || null,
       source: 'on3',
@@ -1014,6 +1016,7 @@ module.exports = {
   runOn3Ingest,
   syncPortalFromOn3,
   syncOn3VisitOfferIntel,
+  extractOn3ProfileOffers,
   getIngestStatus,
   loadSnapshot,
   SNAPSHOT_PATH

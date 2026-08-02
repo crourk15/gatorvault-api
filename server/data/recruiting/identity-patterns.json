@@ -4764,7 +4764,45 @@
         "222 four star QB"
       ],
       "updatedAt": "2026-07-11T11:30:20.411Z"
+    },
+    "samuel-bailey": {
+      "slug": "samuel-bailey",
+      "name": "Samuel Bailey",
+      "stars": 4,
+      "position": "OT",
+      "school": "Jemison (Jemison, AL)",
+      "commitSchool": null,
+      "class": 2028,
+      "natlRank": 49,
+      "patterns": [
+        "4 star OT Samuel",
+        "4-star OT Samuel",
+        "four star OT Samuel",
+        "four-star OT Samuel",
+        "4 star OT Bailey",
+        "4-star OT Bailey",
+        "four star OT Bailey",
+        "four-star OT Bailey",
+        "Jemison (Jemison, AL) 4 star",
+        "Jemison (Jemison, AL) four star",
+        "Jemison (Jemison, AL) OT",
+        "Samuel Bailey",
+        "Bailey",
+        "OT Samuel",
+        "OT Bailey",
+        "4 star Jemison (Jemison, AL) commit",
+        "four star Jemison (Jemison, AL) commit",
+        "2028 OT Samuel",
+        "2028 4-star OT Samuel",
+        "2028 four-star OT Samuel",
+        "2028 Samuel Bailey",
+        "#49 Samuel",
+        "top 49 OT Samuel",
+        "49 4 star OT Samuel",
+        "49 four star OT Samuel"
+      ],
+      "updatedAt": "2026-08-02T13:37:20.400Z"
     }
   },
-  "updatedAt": "2026-07-30T13:25:00.000Z"
+  "updatedAt": "2026-08-02T13:37:20.400Z"
 }
