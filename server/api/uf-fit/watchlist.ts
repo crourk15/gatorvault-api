@@ -1,7 +1,8 @@
 /**
  * GET /api/uf-fit/watchlist — UF Fit candidates / Big Board Top Targets.
- * Top Targets sorts by staff-chase traction (visits, offers, staff, beat intel),
- * not RPM/UF Fit alone and not star rank alone. UF commits are excluded.
+ * Top Targets (sort=chase) uses Hottest Targets composite:
+ * staff heat × must-get fit × positional need × FL geo × market pressure.
+ * Campus UV stacks do not own the board. UF commits are excluded.
  */
 import type { Request, Response } from 'express';
 import { createRequire } from 'node:module';
@@ -33,10 +34,9 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
     const sort = parseUfFitSort(req.query.sort);
 
     const { getUfCommitSlugSet } = require('../../lib/recruiting-uf-commit-slugs');
-    const { buildChaseFeatureIndex, computeChaseScore } = require('../../lib/uf-chase-score');
+    const { scoreHotTargetBoard } = require('../../lib/hot-florida-targets');
     const commitSlugs: Set<string> =
       class_year != null ? await getUfCommitSlugSet(class_year) : new Set();
-    const chaseIndex = buildChaseFeatureIndex({ classYear: class_year });
 
     const rows = (await listUfFitCandidates({ class_year, position })).filter((row) => {
       const slug = String(row.slug || '').toLowerCase();
@@ -54,18 +54,35 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
       return true;
     });
 
-    let enriched = rows.map((row) => {
-      const intel = computeUfFitIntel(ufFitRowToEngineInput(row));
-      const chase = computeChaseScore(
-        {
+    const intelBySlug = new Map(
+      rows.map((row) => [String(row.slug || '').toLowerCase(), computeUfFitIntel(ufFitRowToEngineInput(row))])
+    );
+
+    // Identity/fit/geo come from recruiting-store enrich inside scoreHotTargetBoard.
+    const hotBoard = scoreHotTargetBoard(
+      rows.map((row) => {
+        const intel = intelBySlug.get(String(row.slug || '').toLowerCase());
+        return {
+          id: row.id,
           slug: row.slug,
-          ufFitScore: intel.ufFitScore,
+          name: row.full_name,
+          pos: row.position,
+          position: row.position,
+          classYear: row.class_year,
+          fitScore: intel?.ufFitScore ?? 0,
           uf_status: row.uf_status,
           evaluation_notes: row.evaluation_notes,
           signals: row.signals,
-        },
-        chaseIndex
-      );
+          delta7d: intel?.fitDelta ?? 0,
+        };
+      }),
+      { classYear: class_year }
+    );
+    const hotBySlug = new Map(hotBoard.map((p: { slug?: string }) => [String(p.slug || '').toLowerCase(), p]));
+
+    let enriched = rows.map((row) => {
+      const intel = intelBySlug.get(String(row.slug || '').toLowerCase()) || computeUfFitIntel(ufFitRowToEngineInput(row));
+      const hot = hotBySlug.get(String(row.slug || '').toLowerCase());
       return {
         id: row.id,
         fullName: row.full_name,
@@ -77,8 +94,12 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
         fitTier: intel.fitTier,
         fitDelta: intel.fitDelta,
         fitVolatility: intel.fitVolatility,
-        chaseScore: chase.chaseScore,
-        chase: chase.chase,
+        chaseScore: hot?.chaseScore ?? 0,
+        chase: hot?.chase || null,
+        hotScore: hot?.hotScore ?? 0,
+        hotLanes: hot?.hotLanes || null,
+        hotBadges: hot?.hotBadges || null,
+        priorityScore: hot?.hotScore ?? 0,
       };
     });
 
@@ -86,11 +107,12 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
       enriched = enriched.filter((p) => p.fitTier === tier);
     }
 
-    // Chase sort = Top Targets: keep players with real traction / hunt-list presence.
+    // Chase sort = Top Targets hottest composite: keep real traction / hunt-list presence.
     // Do not gate the board on UF Fit/RPM minScore for that mode.
     if (sort === 'chase') {
       enriched = enriched.filter(
         (p) =>
+          p.hotScore > 0 ||
           p.chaseScore > 0 ||
           Boolean(p.chase?.allowlisted) ||
           Boolean(p.chase?.headliner) ||
@@ -113,6 +135,7 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
         case 'fitVolatility':
           return b.fitVolatility - a.fitVolatility;
         case 'chase':
+          if (b.hotScore !== a.hotScore) return b.hotScore - a.hotScore;
           if (b.chaseScore !== a.chaseScore) return b.chaseScore - a.chaseScore;
           return b.ufFitScore - a.ufFitScore;
         default:

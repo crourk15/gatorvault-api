@@ -44,10 +44,11 @@ describe('UF chase score (Top Targets traction)', () => {
     );
   });
 
-  it('watchlist API defaults Top Targets path to chase sort support', () => {
+  it('watchlist API defaults Top Targets path to hottest-target sort', () => {
     const src = fs.readFileSync(path.join(__dirname, '..', '..', 'api', 'uf-fit', 'watchlist.ts'), 'utf8');
     assert.match(src, /sort === 'chase'/);
-    assert.match(src, /computeChaseScore/);
+    assert.match(src, /scoreHotTargetBoard/);
+    assert.match(src, /hotScore/);
     const page = fs.readFileSync(
       path.join(__dirname, '..', '..', '..', 'client', 'components', 'futurecast', 'FutureCastBigBoardPage.tsx'),
       'utf8'

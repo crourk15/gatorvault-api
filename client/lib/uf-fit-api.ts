@@ -17,11 +17,28 @@ export interface UfFitWatchlistPlayer {
   fitTier: FitTier;
   fitDelta: number;
   fitVolatility: number;
-  /** Staff-chase traction score (visits/offers/staff/intel) — Top Targets sort key. */
+  /** Staff-heat lane (process) — component of Hottest Targets. */
   chaseScore?: number;
+  /** Hottest Targets composite — Top Targets sort key. */
+  hotScore?: number;
+  priorityScore?: number;
+  hotLanes?: {
+    staffHeat?: number;
+    mustGetFit?: number;
+    positionalNeed?: number;
+    geoPipeline?: number;
+    marketPressure?: number;
+  } | null;
+  hotBadges?: {
+    quietChase?: boolean;
+    inState?: boolean;
+    homeVisit?: boolean;
+    staffAssigned?: boolean;
+  } | null;
   chase?: {
     ov?: number;
     uv?: number;
+    home?: number;
     flOffers?: number;
     intel?: number;
     allowlisted?: boolean;

@@ -163,7 +163,7 @@ export function FutureCastBigBoardPage(): React.ReactElement {
           query={{
             class_year: classYear,
             position: position || undefined,
-            // Staff chase traction (visits/offers/staff/beat) — not RPM or star rank.
+            // Hottest Targets composite (staff × fit × need × geo) — not UV stacks / RPM.
             sort: 'chase',
             limit: 100,
           }}
