@@ -48,7 +48,7 @@ export const viewport: Viewport = {
 };
 
 const vaultShellCriticalCss =
-  '.gv-vault-shell{min-height:100vh;min-height:100dvh;background:#001a33;color:#ffffff;display:flex;flex-direction:column}.gv-vault-shell__main{flex:1;min-height:0;width:100%}.gv-vault-shell--home .gv-vault-shell__body,.gv-vault-shell__main:has(.gv-home){margin:0;padding-top:0}.gv-vault-shell--home .gv-vault-shell__main,.gv-vault-shell__main:has(.gv-home){padding:0}.gv-home__frame,.gv-home__frame.gv-home__command{padding-top:24px}';
+  '.gv-vault-shell{min-height:100vh;min-height:100dvh;background:#001a33;color:#ffffff;display:flex;flex-direction:column}.gv-vault-shell__main{flex:1;min-height:0;width:100%}.gv-vault-shell--home .gv-vault-shell__main,.gv-vault-shell__main:has(.home-wow-page){flex:1 0 auto;min-height:auto;height:auto;overflow:visible}.gv-vault-shell--home .gv-vault-shell__body,.gv-vault-shell__main:has(.gv-home){margin:0;padding-top:0}.gv-vault-shell--home .gv-vault-shell__main,.gv-vault-shell__main:has(.gv-home){padding:0}.gv-home__frame,.gv-home__frame.gv-home__command{padding-top:24px}';
 
 export default function VaultLayout({
   children,

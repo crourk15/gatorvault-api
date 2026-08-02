@@ -19,10 +19,10 @@
   color: #ffffff;
   min-height: 100%;
   padding: 0 0 48px;
-  /* Prefer clip over hidden so we don't coerce a nested Y scroller on iOS.
-     Shell/main ancestors are unlocked to overflow:visible (see vault-shell.css). */
-  overflow-x: clip;
-  overflow-y: visible;
+  /* Never set overflow-x without matching overflow-y — CSS coerces the other
+     axis to auto and nests a Y scrollport that fights WKWebView document scroll.
+     Horizontal containment lives on html (gv-ui-cleanup home unlock). */
+  overflow: visible;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
