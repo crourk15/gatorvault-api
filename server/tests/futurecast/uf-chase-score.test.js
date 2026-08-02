@@ -12,9 +12,9 @@ describe('UF chase score (Top Targets traction)', () => {
     assert.equal(isOfficialVisit('official_visit'), true);
   });
 
-  it('ranks visit-heavy chase above offer-only allowlist peers', () => {
+  it('ranks process + intel chase above bare high-fit allowlist peers', () => {
     const index = buildChaseFeatureIndex({ classYear: 2028 });
-    const heavy = computeChaseScore(
+    const engaged = computeChaseScore(
       { slug: 'hudson-west', ufFitScore: 40, uf_status: 'TARGET' },
       index
     );
@@ -22,23 +22,25 @@ describe('UF chase score (Top Targets traction)', () => {
       { slug: 'kaydan-whiteside', ufFitScore: 90, uf_status: 'TARGET' },
       index
     );
-    assert.ok(heavy.chaseScore > lighter.chaseScore, 'more OV traction should outrank higher RPM/fit');
-    assert.ok((heavy.chase.ov || 0) + (heavy.chase.uv || 0) >= 1, 'hudson-west should carry Florida visit traction');
+    assert.ok(
+      engaged.chaseScore > lighter.chaseScore,
+      'offer/intel/presence should outrank higher fit with thinner chase signals'
+    );
   });
 
   it('does not let ufFitScore dominate chaseScore', () => {
     const index = buildChaseFeatureIndex({ classYear: 2028 });
-    const lowFitVisits = computeChaseScore(
-      { slug: 'kaleb-ballard', ufFitScore: 10, uf_status: 'TARGET' },
+    const staffChase = computeChaseScore(
+      { slug: 'braxton-rein', ufFitScore: 10, uf_status: 'TARGET' },
       index
     );
-    const highFitNoVisits = computeChaseScore(
+    const highFitThin = computeChaseScore(
       { slug: 'kaydan-whiteside', ufFitScore: 99, uf_status: 'TARGET' },
       index
     );
     assert.ok(
-      lowFitVisits.chaseScore > highFitNoVisits.chaseScore,
-      'visit/offer traction must beat bare high UF Fit'
+      staffChase.chaseScore > highFitThin.chaseScore,
+      'staff-side chase must beat bare high UF Fit'
     );
   });
 
@@ -69,7 +71,7 @@ describe('UF chase score (Top Targets traction)', () => {
     );
     assert.equal(bare.chase.ufStatus, null);
     assert.equal(tagged.chase.ufStatus, 'TARGET');
-    assert.ok(tagged.chaseScore >= bare.chaseScore + 6.9);
+    assert.ok(tagged.chaseScore >= bare.chaseScore + 7.9);
   });
 
   it('Lab high-priority path does not hardcode uf_status TARGET', () => {
@@ -81,57 +83,57 @@ describe('UF chase score (Top Targets traction)', () => {
     assert.doesNotMatch(src, /uf_status:\s*'TARGET'/);
   });
 
-  it('tapers repeat visits so 3 UVs are not ~3x a single UV', () => {
+  it('does not score visit count — locals stacking UVs get the same presence pts', () => {
     const { visitChasePoints } = require('../../lib/uf-chase-score');
-    assert.equal(visitChasePoints(0, 1), 7);
-    assert.equal(visitChasePoints(0, 2), 10);
-    assert.equal(visitChasePoints(0, 3), 11);
-    assert.ok(visitChasePoints(0, 3) - visitChasePoints(0, 1) < 7, 'extra UVs must not stack linearly');
-    assert.equal(visitChasePoints(1, 0), 14);
-    assert.equal(visitChasePoints(2, 0), 19);
+    assert.equal(visitChasePoints(0, 1), 3);
+    assert.equal(visitChasePoints(0, 2), 3);
+    assert.equal(visitChasePoints(0, 5), 3);
+    assert.equal(visitChasePoints(1, 0), 6);
+    assert.equal(visitChasePoints(2, 3), 6, 'extra OVs/UVs must not add chase points');
   });
 
-  it('grades recent visits instead of a flat 45-day cliff', () => {
+  it('grades recent campus presence lightly', () => {
     const { recentVisitPoints } = require('../../lib/uf-chase-score');
     const now = Date.UTC(2026, 7, 2);
     const day = 24 * 60 * 60 * 1000;
-    assert.equal(recentVisitPoints(now - 10 * day, now), 8);
-    assert.equal(recentVisitPoints(now - 30 * day, now), 5);
-    assert.equal(recentVisitPoints(now - 60 * day, now), 2);
+    assert.equal(recentVisitPoints(now - 10 * day, now), 3);
+    assert.equal(recentVisitPoints(now - 30 * day, now), 2);
+    assert.equal(recentVisitPoints(now - 60 * day, now), 1);
     assert.equal(recentVisitPoints(now - 120 * day, now), 0);
   });
 
-  it('lets pursuit intensity outrank extra campus trips alone', () => {
+  it('ranks staff-side pursuit over multi-visit logistics alone', () => {
     const { computeChaseScore, visitChasePoints } = require('../../lib/uf-chase-score');
     const index = {
       bySlug: new Map([
-        ['busy-priority', { ov: 0, uv: 1, flOffers: 1, latestVisitAt: 0, pursuitHits: 2, scheduledOv: true }],
-        ['camp-regular', { ov: 0, uv: 3, flOffers: 1, latestVisitAt: 0, pursuitHits: 0, scheduledOv: false }],
+        ['staff-priority', { ov: 0, uv: 1, flOffers: 1, latestVisitAt: 0, pursuitHits: 2, scheduledOv: true }],
+        ['local-regular', { ov: 0, uv: 4, flOffers: 1, latestVisitAt: 0, pursuitHits: 0, scheduledOv: false }],
       ]),
-      allowlisted: new Set(['busy-priority', 'camp-regular']),
+      allowlisted: new Set(['staff-priority', 'local-regular']),
       staffMap: {
-        'busy-priority': { staff_lead_id: 'harris', secondary_recruiter_id: 'chris-prescott' },
-        'camp-regular': {},
+        'staff-priority': { staff_lead_id: 'harris', secondary_recruiter_id: 'chris-prescott' },
+        'local-regular': {},
       },
       headliners: new Set(),
       intelCounts: new Map(),
       intelFamilies: new Map(),
       pursuitCounts: new Map([
-        ['busy-priority', 2],
-        ['camp-regular', 0],
+        ['staff-priority', 2],
+        ['local-regular', 0],
       ]),
-      scheduledOvSlugs: new Set(['busy-priority']),
+      scheduledOvSlugs: new Set(['staff-priority']),
       days: 180,
     };
-    const priority = computeChaseScore({ slug: 'busy-priority', ufFitScore: 40 }, index);
-    const camper = computeChaseScore({ slug: 'camp-regular', ufFitScore: 90 }, index);
+    const priority = computeChaseScore({ slug: 'staff-priority', ufFitScore: 40 }, index);
+    const local = computeChaseScore({ slug: 'local-regular', ufFitScore: 90 }, index);
     assert.ok(
-      priority.chaseScore > camper.chaseScore,
-      `1-visit pursuit (${priority.chaseScore}) should beat 3-UV camper (${camper.chaseScore})`
+      priority.chaseScore > local.chaseScore,
+      `staff pursuit (${priority.chaseScore}) should beat local multi-UV (${local.chaseScore})`
     );
+    assert.equal(visitChasePoints(0, 4), visitChasePoints(0, 1));
+    assert.equal(priority.chase.visitPts, local.chase.visitPts);
     assert.ok(priority.chase.pursuit >= 2);
     assert.equal(priority.chase.hasSecondaryRecruiter, true);
     assert.equal(priority.chase.scheduledOv, true);
-    assert.ok(visitChasePoints(0, 3) > visitChasePoints(0, 1));
   });
 });

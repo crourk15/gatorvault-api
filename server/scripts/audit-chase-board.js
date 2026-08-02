@@ -23,13 +23,13 @@ function ptsBreakdown(chase, feat) {
     recentVisit: recentVisitPoints(feat.latestVisitAt),
     flOffer: (feat.flOffers || 0) > 0 ? 14 : 0,
     ufStatus:
-      chase.ufStatus === 'PRIORITY' ? 12 : chase.ufStatus === 'TARGET' ? 7 : 0,
-    staffLead: chase.hasStaffLead ? 6 : 0,
-    secondary: chase.hasSecondaryRecruiter ? 4 : 0,
+      chase.ufStatus === 'PRIORITY' ? 14 : chase.ufStatus === 'TARGET' ? 8 : 0,
+    staffLead: chase.hasStaffLead ? 8 : 0,
+    secondary: chase.hasSecondaryRecruiter ? 6 : 0,
     staffFlag: chase.hasStaffFlag ? 16 : 0,
-    pursuit: Math.min(12, (chase.pursuit || 0) * 4),
-    scheduledOv: chase.scheduledOv ? 6 : 0,
-    intel: Math.min(12, (chase.intel || 0) * 2),
+    pursuit: Math.min(16, (chase.pursuit || 0) * 5),
+    scheduledOv: chase.scheduledOv ? 8 : 0,
+    intel: Math.min(14, (chase.intel || 0) * 2),
     allowlist: chase.allowlisted || chase.headliner ? 10 : 0,
   };
 }
@@ -131,9 +131,9 @@ async function main() {
 function recentVisitAgeLabel(latestVisitAt) {
   const { recentVisitPoints } = require('../lib/uf-chase-score');
   const pts = recentVisitPoints(latestVisitAt);
-  if (pts >= 8) return 'recent21';
-  if (pts >= 5) return 'recent45';
-  if (pts >= 2) return 'recent90';
+  if (pts >= 3) return 'recent21';
+  if (pts >= 2) return 'recent45';
+  if (pts >= 1) return 'recent90';
   return '';
 }
 

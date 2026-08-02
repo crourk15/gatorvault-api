@@ -1,10 +1,11 @@
 /**
- * UF staff-chase / traction score for Big Board Top Targets.
+ * UF staff-chase score for Big Board Top Targets / Lab High Priority.
  *
- * Visits still matter as process proof — but repeat campus trips are NOT the same
- * as staff chasing harder. A busy high-priority target with one UF visit can be
- * pursued harder than a multi-visit camper. Score pursuit intensity (staff,
- * beat "pushing hard", scheduled OV, dual recruiters) alongside tapered visits.
+ * Core idea: visit *count* is mostly prospect logistics (locals / free calendars
+ * stack UVs). Florida invites a lot of kids — making the trip is on the player,
+ * not proof staff is chasing harder. Rank by staff-side pursuit (offer, staff
+ * assign, PRIORITY/STAFF_FLAG, beat "pushing hard", scheduled OV). Campus
+ * presence is a light checkmark only — never a trip-count race.
  */
 const fs = require('fs');
 const path = require('path');
@@ -47,27 +48,26 @@ function isOfficialVisit(visitType) {
 }
 
 /**
- * Tapered visit points — first trip proves engagement; extras are weaker evidence
- * of "who's Florida after hardest" (busy kids often visit once).
+ * Campus presence only — never score visit *count*.
+ * OV > UV because the program hosts a limited official; extra UVs add nothing
+ * (local kids / open weekends inflate trip totals without more staff chase).
  */
 function visitChasePoints(ovCount, uvCount) {
-  let pts = 0;
-  const ovWeights = [14, 5, 2];
-  const uvWeights = [7, 3, 1];
   const ov = Math.max(0, Number(ovCount) || 0);
   const uv = Math.max(0, Number(uvCount) || 0);
-  for (let i = 0; i < ov; i += 1) pts += ovWeights[i] ?? 1;
-  for (let i = 0; i < uv; i += 1) pts += uvWeights[i] ?? 1;
-  return Math.min(32, pts);
+  if (ov >= 1) return 6; // program hosted an official — light staff-side signal
+  if (uv >= 1) return 3; // been on campus at least once — process checkmark only
+  return 0;
 }
 
+/** Small recency nudge on presence — still not a chase proxy. */
 function recentVisitPoints(latestVisitAt, nowMs = Date.now()) {
   const ts = Number(latestVisitAt) || 0;
   if (!ts) return 0;
   const age = nowMs - ts;
-  if (age < 21 * DAY_MS) return 8;
-  if (age < 45 * DAY_MS) return 5;
-  if (age < 90 * DAY_MS) return 2;
+  if (age < 21 * DAY_MS) return 3;
+  if (age < 45 * DAY_MS) return 2;
+  if (age < 90 * DAY_MS) return 1;
   return 0;
 }
 
@@ -278,31 +278,28 @@ function computeChaseScore(player, index) {
     playerOvStatus === 'pending';
 
   let score = 0;
-  // Visits prove process — first trip weighs most; repeats taper hard.
+  // Campus presence = light process checkmark. Trip count is ignored (locals stack).
   const visitPts = visitChasePoints(feat.ov, feat.uv);
   score += visitPts;
   score += recentVisitPoints(feat.latestVisitAt);
 
-  // Florida offer on file.
+  // Staff-side chase signals dominate.
   if (feat.flOffers > 0 || hasOfferSignal) score += 14;
-
-  // Staff activity / editorial priority.
   if (hasStaffFlag) score += 16;
-  if (ufStatus === 'PRIORITY') score += 12;
-  else if (ufStatus === 'TARGET') score += 7;
-  if (hasStaffLead) score += 6;
+  if (ufStatus === 'PRIORITY') score += 14;
+  else if (ufStatus === 'TARGET') score += 8;
+  if (hasStaffLead) score += 8;
   // Dual-staff assignment = real chase investment beyond lead only.
-  if (hasSecondaryRecruiter) score += 4;
+  if (hasSecondaryRecruiter) score += 6;
   if (noteLen > 80) score += 5;
 
-  // Pursuit intensity from beat/intel (pushing hard, narratives, scheduled OV).
-  // This is how a 1-visit priority can outrank a multi-visit camper.
-  score += Math.min(12, pursuitHits * 4);
-  if (scheduledOv) score += 6;
+  // Beat/intel pursuit ("pushing hard", narratives) + scheduled OV (staff invited).
+  score += Math.min(16, pursuitHits * 5);
+  if (scheduledOv) score += 8;
 
   // Intel is first-class: unique source-days + multi-channel breadth.
   // Cap volume so one auto source cannot drown continuous allowlist coverage.
-  score += Math.min(12, intel90 * 2);
+  score += Math.min(14, intel90 * 2);
   score += Math.min(6, Math.max(0, intelFamilyCount - 1) * 2);
 
   // Editorial chase gate (hunt list / headliner) — boost, not the whole board.

@@ -23,20 +23,20 @@ describe('Lab High Priority uses staff-chase ranking', () => {
     );
   });
 
-  it('2028 discovery board ranks chase traction over bare high UF fit', async () => {
+  it('2028 discovery board ranks staff-side chase over bare high UF fit', async () => {
     const { buildChaseFeatureIndex, computeChaseScore } = require('../../lib/uf-chase-score');
     const index = buildChaseFeatureIndex({ classYear: 2028 });
     const highFit = computeChaseScore(
       { slug: 'kaydan-whiteside', ufFitScore: 95, uf_status: 'TARGET' },
       index
     );
-    const visitHeavy = computeChaseScore(
-      { slug: 'hudson-west', ufFitScore: 40, uf_status: 'TARGET' },
+    const staffChase = computeChaseScore(
+      { slug: 'braxton-rein', ufFitScore: 40, uf_status: 'TARGET' },
       index
     );
     assert.ok(
-      visitHeavy.chaseScore > highFit.chaseScore,
-      'visit-heavy chase must outrank high-fit / low-traction peer'
+      staffChase.chaseScore > highFit.chaseScore,
+      'staff-side chase must outrank high-fit / low-pursuit peer'
     );
   });
 });
