@@ -52,4 +52,32 @@ describe('UF chase score (Top Targets traction)', () => {
     );
     assert.match(page, /sort:\s*'chase'/);
   });
+
+  it('counts intel by unique source-day (not raw row spam)', () => {
+    const index = buildChaseFeatureIndex({ classYear: 2028 });
+    // antonio-thomas-jr has repeated auto:detectives-beat rows on one day locally
+    const n = index.intelCounts.get('antonio-thomas-jr') || 0;
+    assert.ok(n <= 3, `expected deduped intel count, got ${n}`);
+  });
+
+  it('does not invent TARGET status when uf_status is omitted', () => {
+    const index = buildChaseFeatureIndex({ classYear: 2028 });
+    const bare = computeChaseScore({ slug: 'hudson-west', ufFitScore: 40 }, index);
+    const tagged = computeChaseScore(
+      { slug: 'hudson-west', ufFitScore: 40, uf_status: 'TARGET' },
+      index
+    );
+    assert.equal(bare.chase.ufStatus, null);
+    assert.equal(tagged.chase.ufStatus, 'TARGET');
+    assert.ok(tagged.chaseScore >= bare.chaseScore + 6.9);
+  });
+
+  it('Lab high-priority path does not hardcode uf_status TARGET', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'api', 'futurecast', 'high-priority.ts'),
+      'utf8'
+    );
+    assert.match(src, /applyChasePriorityScores/);
+    assert.doesNotMatch(src, /uf_status:\s*'TARGET'/);
+  });
 });

@@ -123,10 +123,18 @@ function buildChaseFeatureIndex(opts = {}) {
   try {
     const intelStore = require('./recruiting-intel-store');
     const intel = intelStore.listIntel({ limit: 2500, since: sinceIso(days) });
+    /** Dedupe auto-ingest spam: count unique source+day, not raw rows. */
+    const intelKeys = new Map();
     for (const row of intel) {
       const key = slugKey(row.playerSlug || row.player_slug || row.slug);
       if (!key) continue;
-      intelCounts.set(key, (intelCounts.get(key) || 0) + 1);
+      if (!intelKeys.has(key)) intelKeys.set(key, new Set());
+      const src = String(row.source || row.outlet || 'unknown').trim().toLowerCase() || 'unknown';
+      const day = String(row.reportedAt || row.createdAt || row.date || '').slice(0, 10) || 'nodate';
+      intelKeys.get(key).add(`${src}|${day}`);
+    }
+    for (const [key, set] of intelKeys) {
+      intelCounts.set(key, set.size);
     }
   } catch {
     /* optional */
