@@ -89,6 +89,9 @@ const RECRUITING_INTEL_SIGNAL_RES = [
   /\b(?:Class of 20\d{2})\b/i
 ];
 
+const HOME_VISIT_RE =
+  /\b(?:home visit|in[- ]home(?:\s+visit)?|visited (?:him|her|them|the family) at home|coaches? (?:were |was )?in (?:the |his |her |their )?home|in the home with)\b/i;
+
 const VISIT_SIGNAL_RES = [
   /(?:official\s+visit|\bov\b).*?(?:florida|gators|gainesville|\buf\b|the\s+swamp)/i,
   /(?:florida|gators|gainesville|\buf\b|the\s+swamp).*?(?:official\s+visit|\bov\b)/i,
@@ -96,7 +99,10 @@ const VISIT_SIGNAL_RES = [
   /(?:returning\s+to\s+gainesville|back\s+in\s+gainesville|arrived\s+in\s+gainesville)/i,
   /set\s+to\s+(?:officially\s+)?visit.*?(?:florida|gators|gainesville|\buf\b|the\s+swamp)/i,
   /(?:will|is\s+set\s+to|plans\s+to|scheduled\s+to)\s+(?:officially\s+)?visit.*?(?:florida|gators|gainesville|\buf\b)/i,
-  /(?:taking|took|heads?\s+to|heading\s+to)\s+(?:an?\s+)?(?:official\s+)?visit.*?(?:florida|gators|gainesville|\buf\b)/i
+  /(?:taking|took|heads?\s+to|heading\s+to)\s+(?:an?\s+)?(?:official\s+)?visit.*?(?:florida|gators|gainesville|\buf\b)/i,
+  // Coach in-home / living-room visits (scarce NCAA off-campus contacts).
+  /(?:florida|gators|\buf\b).{0,60}(?:home visit|in[- ]home|in the home)/i,
+  /(?:home visit|in[- ]home|in the home).{0,60}(?:florida|gators|\buf\b)/i,
 ];
 
 // Do not treat historical "the swamp" highlight clips as unofficial visits.
@@ -267,6 +273,7 @@ function resolveRecruitingEventType(text) {
     if (/\boffer(?:ed|s)?\b/i.test(t)) return 'offer';
   }
   if (/\b(prediction machine|futurecast|expert pick|rpm)\b/i.test(t)) return 'prediction';
+  if (isHomeVisitText(t)) return 'home_visit';
   if (isOfficialVisitText(t)) return 'official_visit';
   if (UNOFFICIAL_VISIT_RE.test(t)) return 'unofficial_visit';
   if (isVisitSchedulePost(t)) return resolveEventType(t);
@@ -274,6 +281,7 @@ function resolveRecruitingEventType(text) {
 }
 
 function buildRecruitingStatus(eventType, text) {
+  if (eventType === 'home_visit') return 'Home visit · Florida staff';
   if (eventType === 'official_visit') return 'Official Visit · Florida';
   if (eventType === 'unofficial_visit') return 'Visit · Gainesville';
   if (eventType === 'commit') return 'Committed · Florida';
@@ -396,13 +404,22 @@ function parseStars(text) {
   return m ? parseInt(m[1], 10) : null;
 }
 
+function isHomeVisitText(text) {
+  const t = String(text || '');
+  if (!HOME_VISIT_RE.test(t)) return false;
+  // Prefer explicit Florida staff context; alone "home visit" without school is weak.
+  return /\b(?:florida|gators|\buf\b)\b/i.test(t) || /\b(?:coach|staff|gators?)\b/i.test(t);
+}
+
 function isOfficialVisitText(text) {
   const t = String(text || '');
+  if (isHomeVisitText(t)) return false;
   if (/unofficial\s+visit|\buv\b/i.test(t)) return false;
   return /official\s+visit|\bov\b/i.test(t);
 }
 
 function resolveEventType(text) {
+  if (isHomeVisitText(text)) return 'home_visit';
   if (isOfficialVisitText(text)) return 'official_visit';
   if (UNOFFICIAL_VISIT_RE.test(text)) return 'unofficial_visit';
   return 'official_visit';

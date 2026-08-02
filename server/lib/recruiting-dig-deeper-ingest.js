@@ -6,6 +6,7 @@ const offerLogStore = require('./recruiting-offer-log-store');
 const { mergeCompetitorsOnPlayer } = require('./recruiting-competitor-merge');
 
 const VISIT_EVENT_TYPES = new Set([
+  'home_visit',
   'official_visit',
   'unofficial_visit',
   'visit_cancelled',

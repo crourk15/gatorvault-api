@@ -4,8 +4,11 @@
  * Core idea: visit *count* is mostly prospect logistics (locals / free calendars
  * stack UVs). Florida invites a lot of kids — making the trip is on the player,
  * not proof staff is chasing harder. Rank by staff-side pursuit (offer, staff
- * assign, PRIORITY/STAFF_FLAG, beat "pushing hard", scheduled OV). Campus
- * presence is a light checkmark only — never a trip-count race.
+ * assign, PRIORITY/STAFF_FLAG, in-home visits, beat "pushing hard", scheduled
+ * OV). Campus presence is a light checkmark only — never a trip-count race.
+ *
+ * In-home visits are scarce NCAA contacts (max ~6 off-campus contacts/prospect)
+ * — strong proof staff is investing, unlike stacked UVs from local kids.
  */
 const fs = require('fs');
 const path = require('path');
@@ -22,7 +25,11 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 /** Beat / intel language that signals active Florida pursuit (not just a visit). */
 const PURSUIT_TEXT_RE =
-  /\b(?:pushing hard|recruiting hard|staff loves|priority target|high[- ]priority(?:\s+target)?|staff priority|in the lead(?: group)?|pulling ahead|heating up|home visit|coaches? (?:are )?(?:all[- ]in|heavy)|going to get you|want you and|another trip to (?:gainesville|florida)|staff (?:is |are )?(?:all[- ]in|heavy|pushing))\b/i;
+  /\b(?:pushing hard|recruiting hard|staff loves|priority target|high[- ]priority(?:\s+target)?|staff priority|in the lead(?: group)?|pulling ahead|heating up|coaches? (?:are )?(?:all[- ]in|heavy)|going to get you|want you and|another trip to (?:gainesville|florida)|staff (?:is |are )?(?:all[- ]in|heavy|pushing))\b/i;
+
+/** Coach in-home / living-room visit — scarce staff-side contact (not campus UV). */
+const HOME_VISIT_TEXT_RE =
+  /\b(?:home visit|in[- ]home(?:\s+visit)?|in[- ]home visit|visited (?:him|her|them|the family) at home|coaches? (?:were |was )?in (?:the |his |her |their )?home|in the home with)\b/i;
 
 const SCHEDULED_OV_RE =
   /\b(?:scheduled|set|slated)\b.{0,48}\b(?:official visit|\bov\b)|(?:official visit|\bov\b).{0,48}\b(?:scheduled|set|slated)\b/i;
@@ -35,16 +42,32 @@ function slugKey(value) {
   return String(value || '').trim().toLowerCase();
 }
 
+function isHomeVisit(visitType, detail = '') {
+  const t = `${visitType || ''} ${detail || ''}`.toLowerCase();
+  if (!t.trim()) return false;
+  if (/home[_-\s]?visit|in[_-\s]?home|in the home/.test(t)) return true;
+  return HOME_VISIT_TEXT_RE.test(t);
+}
+
 function isUnofficialVisit(visitType) {
   const t = String(visitType || '').toLowerCase();
+  if (isHomeVisit(t)) return false;
   // Check unofficial FIRST — "unofficial_visit" contains the substring "official".
   return t.includes('unofficial') || /\buv\b/.test(t) || /junior\s*day/.test(t) || t.includes('camp');
 }
 
 function isOfficialVisit(visitType) {
   const t = String(visitType || '').toLowerCase();
-  if (isUnofficialVisit(t)) return false;
+  if (isHomeVisit(t) || isUnofficialVisit(t)) return false;
   return t.includes('official') || t === 'ov' || /(?:^|[^a-z])ov(?:[^a-z]|$)/.test(t);
+}
+
+/** Staff-side: first in-home is huge; a second still matters; count beyond that is rare. */
+function homeVisitChasePoints(homeCount) {
+  const n = Math.max(0, Number(homeCount) || 0);
+  if (n <= 0) return 0;
+  if (n === 1) return 18;
+  return 18 + Math.min(8, (n - 1) * 4);
 }
 
 /**
@@ -100,13 +123,31 @@ function buildChaseFeatureIndex(opts = {}) {
       bySlug.set(key, {
         ov: 0,
         uv: 0,
+        home: 0,
         flOffers: 0,
         latestVisitAt: 0,
+        latestHomeVisitAt: 0,
         pursuitHits: 0,
         scheduledOv: false,
       });
     }
     return bySlug.get(key);
+  }
+
+  /** Dedupe home visits from logs + beat text (source|day). */
+  const homeVisitKeys = new Map();
+
+  function bumpHomeVisit(slug, src, day, ts = 0) {
+    const key = slugKey(slug);
+    if (!key) return;
+    const feat = ensure(key);
+    if (!feat) return;
+    if (!homeVisitKeys.has(key)) homeVisitKeys.set(key, new Set());
+    const token = `${src || 'unknown'}|${day || 'nodate'}`;
+    if (homeVisitKeys.get(key).has(token)) return;
+    homeVisitKeys.get(key).add(token);
+    feat.home += 1;
+    if (ts > (feat.latestHomeVisitAt || 0)) feat.latestHomeVisitAt = ts;
   }
 
   for (const row of visits) {
@@ -116,9 +157,16 @@ function buildChaseFeatureIndex(opts = {}) {
     const feat = ensure(row.playerSlug);
     if (!feat) continue;
     const vt = row.visitType || row.eventType;
-    if (isOfficialVisit(vt)) feat.ov += 1;
-    else feat.uv += 1;
-    if (ts > feat.latestVisitAt) feat.latestVisitAt = ts;
+    if (isHomeVisit(vt, row.detail)) {
+      const day = String(row.date || row.reportedAt || '').slice(0, 10) || 'nodate';
+      bumpHomeVisit(row.playerSlug, row.source || 'visit-log', day, ts);
+    } else if (isOfficialVisit(vt)) {
+      feat.ov += 1;
+      if (ts > feat.latestVisitAt) feat.latestVisitAt = ts;
+    } else {
+      feat.uv += 1;
+      if (ts > feat.latestVisitAt) feat.latestVisitAt = ts;
+    }
   }
 
   for (const row of offers) {
@@ -190,6 +238,11 @@ function buildChaseFeatureIndex(opts = {}) {
 
       const eventType = String(row.eventType || row.triggerType || '').toLowerCase();
       const text = `${row.detail || ''} ${row.status || ''} ${row.headline || ''} ${row.title || ''}`;
+      const floridaCtx = /\b(?:florida|gators|\buf\b|gainesville)\b/i.test(text) || eventType === 'home_visit';
+      if (eventType === 'home_visit' || (floridaCtx && HOME_VISIT_TEXT_RE.test(text))) {
+        const ts = new Date(row.reportedAt || row.createdAt || row.date || day).getTime();
+        bumpHomeVisit(key, src, day, Number.isFinite(ts) ? ts : 0);
+      }
       const pursuitEvent =
         eventType === 'recruiting_narrative' ||
         eventType === 'staff_push' ||
@@ -250,8 +303,10 @@ function computeChaseScore(player, index) {
   const feat = index.bySlug.get(slug) || {
     ov: 0,
     uv: 0,
+    home: 0,
     flOffers: 0,
     latestVisitAt: 0,
+    latestHomeVisitAt: 0,
     pursuitHits: 0,
     scheduledOv: false,
   };
@@ -283,6 +338,11 @@ function computeChaseScore(player, index) {
   score += visitPts;
   score += recentVisitPoints(feat.latestVisitAt);
 
+  // In-home visit = scarce staff contact (NCAA ~6 off-campus contacts). Dominates UV stacks.
+  const homePts = homeVisitChasePoints(feat.home);
+  score += homePts;
+  if (feat.home > 0) score += recentVisitPoints(feat.latestHomeVisitAt || feat.latestVisitAt);
+
   // Staff-side chase signals dominate.
   if (feat.flOffers > 0 || hasOfferSignal) score += 14;
   if (hasStaffFlag) score += 16;
@@ -313,8 +373,10 @@ function computeChaseScore(player, index) {
     chase: {
       ov: feat.ov,
       uv: feat.uv,
+      home: feat.home || 0,
       flOffers: feat.flOffers,
       visitPts,
+      homePts,
       intel: intel90,
       intelFamilies: intelFamilyCount,
       pursuit: pursuitHits,
@@ -341,8 +403,11 @@ module.exports = {
   hasChaseTraction,
   isOfficialVisit,
   isUnofficialVisit,
+  isHomeVisit,
   intelSourceFamily,
   visitChasePoints,
+  homeVisitChasePoints,
   recentVisitPoints,
   PURSUIT_TEXT_RE,
+  HOME_VISIT_TEXT_RE,
 };

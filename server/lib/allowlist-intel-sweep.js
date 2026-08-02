@@ -41,6 +41,7 @@ function isFloridaVisit(entry) {
 
 function visitLabel(visitType) {
   const t = String(visitType || '').toLowerCase();
+  if (/home/.test(t)) return 'home visit';
   if (t.includes('unofficial') || /\buv\b/.test(t) || /junior/.test(t) || t.includes('camp')) {
     return 'unofficial visit';
   }

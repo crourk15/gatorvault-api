@@ -106,8 +106,8 @@ describe('UF chase score (Top Targets traction)', () => {
     const { computeChaseScore, visitChasePoints } = require('../../lib/uf-chase-score');
     const index = {
       bySlug: new Map([
-        ['staff-priority', { ov: 0, uv: 1, flOffers: 1, latestVisitAt: 0, pursuitHits: 2, scheduledOv: true }],
-        ['local-regular', { ov: 0, uv: 4, flOffers: 1, latestVisitAt: 0, pursuitHits: 0, scheduledOv: false }],
+        ['staff-priority', { ov: 0, uv: 1, home: 0, flOffers: 1, latestVisitAt: 0, pursuitHits: 2, scheduledOv: true }],
+        ['local-regular', { ov: 0, uv: 4, home: 0, flOffers: 1, latestVisitAt: 0, pursuitHits: 0, scheduledOv: false }],
       ]),
       allowlisted: new Set(['staff-priority', 'local-regular']),
       staffMap: {
@@ -135,5 +135,35 @@ describe('UF chase score (Top Targets traction)', () => {
     assert.ok(priority.chase.pursuit >= 2);
     assert.equal(priority.chase.hasSecondaryRecruiter, true);
     assert.equal(priority.chase.scheduledOv, true);
+  });
+
+  it('treats in-home visits as scarce staff chase — beats stacked campus UVs', () => {
+    const { computeChaseScore, isHomeVisit, homeVisitChasePoints } = require('../../lib/uf-chase-score');
+    assert.equal(isHomeVisit('home_visit'), true);
+    assert.equal(isHomeVisit('unofficial_visit'), false);
+    assert.equal(homeVisitChasePoints(1), 18);
+    assert.equal(homeVisitChasePoints(2), 22);
+    const index = {
+      bySlug: new Map([
+        ['home-kid', { ov: 0, uv: 0, home: 1, flOffers: 1, latestVisitAt: 0, latestHomeVisitAt: 0 }],
+        ['uv-stacker', { ov: 0, uv: 4, home: 0, flOffers: 1, latestVisitAt: 0, latestHomeVisitAt: 0 }],
+      ]),
+      allowlisted: new Set(['home-kid', 'uv-stacker']),
+      staffMap: {},
+      headliners: new Set(),
+      intelCounts: new Map(),
+      intelFamilies: new Map(),
+      pursuitCounts: new Map(),
+      scheduledOvSlugs: new Set(),
+      days: 180,
+    };
+    const home = computeChaseScore({ slug: 'home-kid', ufFitScore: 40 }, index);
+    const local = computeChaseScore({ slug: 'uv-stacker', ufFitScore: 90 }, index);
+    assert.ok(
+      home.chaseScore > local.chaseScore,
+      `home visit (${home.chaseScore}) should beat UV stack (${local.chaseScore})`
+    );
+    assert.equal(home.chase.home, 1);
+    assert.equal(home.chase.homePts, 18);
   });
 });

@@ -20,6 +20,7 @@ function ptsBreakdown(chase, feat) {
   const { visitChasePoints, recentVisitPoints } = require('../lib/uf-chase-score');
   return {
     visits: chase.visitPts != null ? chase.visitPts : visitChasePoints(feat.ov, feat.uv),
+    home: chase.homePts != null ? chase.homePts : 0,
     recentVisit: recentVisitPoints(feat.latestVisitAt),
     flOffer: (feat.flOffers || 0) > 0 ? 14 : 0,
     ufStatus:
@@ -90,6 +91,7 @@ async function main() {
   for (let i = 0; i < Math.min(topN, scored.length); i += 1) {
     const r = scored[i];
     const tags = [
+      r.chase.home ? `home${r.chase.home}` : '',
       r.chase.hasStaffLead ? 'staff' : '',
       r.chase.hasSecondaryRecruiter ? '2nd' : '',
       r.chase.pursuit ? `pursue${r.chase.pursuit}` : '',
@@ -99,7 +101,7 @@ async function main() {
       .filter(Boolean)
       .join(' ');
     console.log(
-      `${String(i + 1).padStart(2)}. ${r.name.padEnd(22)} ${String(r.pos).padEnd(4)} chase=${String(r.chaseScore).padStart(5)}  ov${r.feat.ov}/uv${r.feat.uv}/off${r.feat.flOffers} intel${r.chase.intel}${tags ? ` ${tags}` : ''}  pts=${JSON.stringify(r.pts)}`
+      `${String(i + 1).padStart(2)}. ${r.name.padEnd(22)} ${String(r.pos).padEnd(4)} chase=${String(r.chaseScore).padStart(5)}  ov${r.feat.ov}/uv${r.feat.uv}/home${r.feat.home || 0}/off${r.feat.flOffers} intel${r.chase.intel}${tags ? ` ${tags}` : ''}  pts=${JSON.stringify(r.pts)}`
     );
   }
 
