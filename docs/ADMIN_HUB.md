@@ -133,11 +133,12 @@ Recruit briefs embed a **PLAYER PROJECTION / COMP** block from War Room breakdow
 - Do **not** default to Florida alumni — only if that is clearly the best size + tape fit
 - Example fail: 6-5 / 190 QB ≠ 6-1 pocket QB, even if both are “upright progressive”
 
-1. Film desk / Open fills War Room `projection` + `comparison` from tape when available.
+1. Film desk / Open **reads** War Room `projection` + `comparison` when available.
 2. **Copy Brief** always prints both — War Room values when present, or “none on file — AGENT MUST DRAFT” instructions when empty.
-3. Cursor post must always include: **HEADER** (4–10 words) + deeper film eval (2–3 tape specifics) + short projection clause + one calm comp mid-post. Never close on the comp. Prefer War Room; if empty, draft matched-band projection/comp from tape + board.
-4. Commit cards use existing slots (**skinny / Strengths / Comp / Projection**) from War Room — live API, no app rebuild. Player profiles also show labeled **Evaluation · Vault Player Comp · Vault Projection**.
-5. Confirm with Charles before treating a new eval/comp as live card/profile copy.
+3. Cursor post must always include: **HEADER** (intel leap) + deeper film eval (2–3 tape specifics) + short projection clause + one calm size-matched GatorVault comp mid-post. Never close on the comp.
+4. **Persist (required):** after drafting a new eval/comp/projection, write it into War Room + film-traits with `node server/scripts/upsert-vault-film-eval.js` (JSON under `server/data/war-room/vault-evals/`). Do not leave comps only in the X draft.
+5. Commit cards / profiles pull Comp + Projection live from War Room (`getVaultScoutingForSlug`) — no app rebuild.
+6. Confirm with Charles before treating a brand-new eval/comp as live FutureCast card copy (Charles asking to embed = confirmation).
 
 ### On3 / Hudl highlight LINK in Copy Brief
 

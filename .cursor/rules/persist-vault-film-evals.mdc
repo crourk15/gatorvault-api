@@ -1,0 +1,44 @@
+---
+description: After any 2028 Beat Desk film eval, persist comp + projection into War Room profiles
+alwaysApply: true
+---
+
+# Persist Vault film evals into player profiles
+
+## Policy
+
+Whenever a Beat Desk / film-desk session drafts an **eval**, **GatorVault player comp**, or **projection** for a 2028 recruit/target, those values **must** be written into War Room (and film-traits) so FutureCast + player profiles pick them up. Do **not** leave comps/projections only in the X draft.
+
+This was the prior-agent design: profiles read live from War Room via `getVaultScoutingForSlug` / `getBreakdownBySlug`. Beat Desk Open/Copy Brief only **reads**; agents must **upsert** after drafting.
+
+## Required write path
+
+1. Save JSON under `server/data/war-room/vault-evals/<slug>.json` (UTF-8).
+2. Run:
+
+```bash
+node server/scripts/upsert-vault-film-eval.js --file=server/data/war-room/vault-evals/<slug>.json
+```
+
+Required fields: `slug`, `name`, `comparison`, `projection`, `strengths` (tape traits), and usually `hudl`.
+
+3. Confirm War Room is live:
+
+```bash
+node -e "const wr=require('./server/lib/war-room-store'); console.log(wr.getBreakdownBySlug('<slug>').comparison, wr.getBreakdownBySlug('<slug>').projection)"
+```
+
+4. Commit `breakdowns.json`, `film-traits.json`, the vault-eval JSON, and any brief/docs updates together.
+
+## Content rules (reminders)
+
+- **Comp:** height within ~1–2", same frame, then traits — never lazy Florida-alum defaults.
+- **QB projection:** develop → compete for the job → starter upside — never “rotational QB”.
+- Narrative fields should include the player’s **last name** (War Room corrupt-gate).
+- Confirm with Charles before treating a brand-new eval as live FutureCast card copy (asking to embed = confirmation).
+
+## System notes already wired
+
+- Copy Brief **PERSIST RULE** in `server/lib/beat-brief-packet.js`
+- Admin Hub docs: `docs/ADMIN_HUB.md` (Player projection / comp)
+- Hub notecards mention `upsert-vault-film-eval.js`

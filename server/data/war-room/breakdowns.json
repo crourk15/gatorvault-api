@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-30T15:22:04.739Z",
+  "updatedAt": "2026-08-02T02:51:05.158Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -14399,27 +14399,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/hudson-west-284243/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/17526976/690f8a3774301bea69fa191d",
+          "publishedAt": "2026-08-02"
         }
       ],
       "strengths": [
-        "The city of Sarasota is becoming a familiar spot on the Florida Gators' quarterback board.",
-        "The Gators hold have a commitment in the 2027 class from"
+        "West stands tall in the shotgun and sees over the line with a high ready point.",
+        "West keeps his eyes downfield when the edge climbs and still finds the intermediate window.",
+        "West delivers a clean high release to the perimeter from an upright platform."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "The city of Sarasota is becoming a familiar spot on the Florida Gators' quarterback board.  The Gators hold have a commitment in the 2027 class from",
-      "recruitingStory": null,
+      "weaknesses": [
+        "West still needs to fill out the 6-5 / 190 frame before he can win with mass in a college pocket."
+      ],
+      "comparison": "West comps to Joe Flacco — 6-5 / 6-6 tall pocket mold; stands up, sees the field, and delivers from height.",
+      "schemeFit": "West fits a pocket-progression QB room that values height, platform, and eyes over the line.",
+      "staffNotes": "Vault film desk verified 2026-08-02. Charles confirmed Flacco mold + QB-room projection path in Beat Desk session.",
+      "projection": "West projects as develop in the Florida QB room, then compete to take the keys — campus starter upside as the 6-5 frame fills.",
+      "insiderNotes": "Vault film desk on Hudson West: stand-tall 6-5 shotgun QB — height and eyes, clean high release, progressive looks under edge pressure. Florida leading hard with Craddock offer and three unofficials (latest 2026-06-19).",
+      "recruitingStory": "Hudson West is a 2028 Sarasota QB and Florida target with a UF offer and multiple unofficial visits.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:12:30.266Z"
+      "updatedAt": "2026-08-02T02:51:05.149Z"
     },
     "jackson-stecher": {
       "playerSlug": "jackson-stecher",

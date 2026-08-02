@@ -52,6 +52,8 @@ describe('Beat Brief Desk', () => {
     assert.match(text, /AGENT MUST DRAFT/);
     assert.match(text, /BODY SIZE|body size|within ~1/);
     assert.match(text, /GatorVault/);
+    assert.match(text, /PERSIST RULE/);
+    assert.match(text, /upsert-vault-film-eval/);
     assert.match(text, /Player projection:/);
     assert.match(text, /Player comp:/);
   });

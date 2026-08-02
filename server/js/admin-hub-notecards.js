@@ -161,7 +161,7 @@
           + '<p><strong>HEADER</strong> = elite intel leap above the post (required) — same urgency as top recruiting hooks, but original Vault wording every time. Never clone “New intel has emerged…” Never “owns” a recruit.</p>'
           + '<p style="margin:8px 0 0"><strong>Projection</strong> = when he contributes + role + ceiling — written for the position. QB = develop → compete for the job → starter upside (never “rotational QB”). EDGE/WR/DL can use rotation/every-down when true. Sell the upside — never write “not All-American.”</p>'
           + '<p style="margin:8px 0 0"><strong>GatorVault player comp</strong> = <em>body size first</em> (height within ~1–2", same frame), then win traits from tape, then projection band. A 6-5 recruit cannot comp to a 6-1 QB. Not size-only. Don’t default to Florida alumni.</p>'
-          + '<p class="hub-meta" style="margin:8px 0 0">If War Room says none on file, Cursor still drafts both from tape + board (matched band). Confirm before treating a new eval/comp as live FutureCast profile copy.</p>'
+          + '<p class="hub-meta" style="margin:8px 0 0">If War Room says none on file, Cursor drafts both from tape + board, then <strong style="color:#fff">must persist</strong> via <code>upsert-vault-film-eval.js</code> so the profile/FutureCast card updates. Confirm before treating a brand-new eval as live card copy.</p>'
           + '</article>'
         : '')
       + '<article class="hub-nc-card hub-nc-card--ignore">'
