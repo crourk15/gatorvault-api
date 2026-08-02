@@ -121,10 +121,10 @@ Recruit briefs embed a **PLAYER PROJECTION / COMP** block from War Room breakdow
 
 ### Charles standard (do not re-litigate per player)
 
-**Projection** = contribution path + ceiling, sold clean:
-- **When:** packages as a freshman / Year 2–3 regular / multi-year project
-- **Role:** depth · rotation · every-down
-- **Ceiling:** regular contributor · All-SEC upside (sell the upside — never write “not All-American” or other downplay lines)
+**Projection** = contribution path + ceiling, sold clean — and **position-true**:
+- **When:** packages as a freshman / Year 2–3 / multi-year project
+- **Role:** must fit the position — QB is develop → compete for the job → starter upside (**never** “rotational QB”); EDGE/WR/DL/OL may use depth · rotation · every-down when true
+- **Ceiling:** starter / every-down / All-SEC upside as appropriate (sell the upside — never write “not All-American” or other downplay lines)
 
 **GatorVault player comp** = size filter first, then traits:
 - **Body size is non-negotiable:** height within ~1–2" of the recruit; same frame/build family

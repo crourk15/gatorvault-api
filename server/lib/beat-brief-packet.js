@@ -652,7 +652,7 @@ function formatProjectionCompBlock(research = null, player = null) {
   if (proj) lines.push(`Projection: ${proj}`);
   else {
     lines.push(
-      'Projection: (none on file — AGENT MUST DRAFT one from tape + board: contribution timeline + role + ceiling, matched to stars/rank band. Example shape: “Year 2–3 rotation QB / every-down upside once the frame fills.” Sell the upside — no downplay lines.)'
+      'Projection: (none on file — AGENT MUST DRAFT one from tape + board: contribution timeline + role + ceiling, matched to stars/rank band AND position. POSITION RULE: do NOT use generic “Year 2–3 rotation / every-down” template language — that fits EDGE/WR/DL more than QB. For QB, project the room path (sit/develop → compete for the job → starter upside), never “rotational QB.” Sell the upside — no downplay lines.)'
     );
   }
   if (comp) lines.push(`Player comp: ${comp}`);
