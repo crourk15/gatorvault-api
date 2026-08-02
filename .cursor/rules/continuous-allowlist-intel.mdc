@@ -1,0 +1,34 @@
+---
+description: Continuously gather intel for every FutureCast allowlist target — intel is first-class
+alwaysApply: true
+---
+
+# Continuous allowlist intel (not Desk-only)
+
+## Policy
+
+Intel is a **first-class** FutureCast / chase signal. Do **not** treat uneven intel as “noise” or an excuse for wrong board order.
+
+Every 2028 allowlist / live-board target must keep receiving process intel — visits, FL offers, On3/beat rows — on a schedule. Beat Desk Open amplifies; it does **not** own coverage.
+
+## Required path
+
+1. Cron (recruiting-light): `POST /api/recruiting/allowlist-intel/sweep`
+2. Module: `server/lib/allowlist-intel-sweep.js` (`runAllowlistIntelSweep`)
+3. Ops job: `allowlist-intel-sweep`
+4. Coverage check: `measureAllowlistIntelCoverage(2028)` — aim for high `coveragePct` / low `missing`
+
+```bash
+node -e "console.log(require('./server/lib/allowlist-intel-sweep').measureAllowlistIntelCoverage(2028))"
+```
+
+## Chase scoring
+
+- Intel counts by **unique source+day** (anti-spam) plus **source-family breadth**
+- Visits/offers still dominate; intel must stay gathered for everyone so breadth is fair
+
+## Do not
+
+- Rely only on whoever Cursor/Beat Desk opened recently
+- Leave top targets (e.g. Vickers) at 0 intel rows while desk-hot names accumulate auto rows
+- Disable allowlist-intel from recruiting-light without a replacement gatherer

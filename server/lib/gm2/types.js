@@ -58,6 +58,7 @@ const INTERNAL_SOURCES = new Set([
   'auto:beat-momentum',
   'auto:beat-writer',
   'auto:program-news',
+  'auto:allowlist-intel-sweep',
   'needs_resolution',
   'snapshot',
   'internal'

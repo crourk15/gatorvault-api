@@ -86,6 +86,20 @@ const JOBS = {
       return runBeatLateIngestSweep(opts);
     }
   },
+  'allowlist-intel-sweep': {
+    label: 'Allowlist continuous intel sweep (visits/offers → intel)',
+    subsystem: 'cron:allowlist-intel-sweep',
+    schedule: 'With recruiting-light cron',
+    async run(opts = {}) {
+      const { runAllowlistIntelSweep } = require('./allowlist-intel-sweep');
+      const classYear = parseInt(opts.classYear || process.env.ALLOWLIST_INTEL_CLASS_YEAR || '2028', 10);
+      return runAllowlistIntelSweep({
+        classYear,
+        dryRun: opts.dryRun === true,
+        maxCreates: opts.maxCreates != null ? Number(opts.maxCreates) : 200,
+      });
+    }
+  },
   'uf-on3-news-discovery': {
     label: 'UF On3 team news discovery',
     subsystem: 'cron:uf-on3-news-discovery',
