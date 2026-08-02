@@ -16,17 +16,21 @@ function argValue(flag, fallback = null) {
   return hit ? hit.slice(flag.length + 1) : fallback;
 }
 
-function ptsBreakdown(chase, feat, recent) {
-  const visitPts = Math.min(42, (feat.ov || 0) * 14 + (feat.uv || 0) * 7);
+function ptsBreakdown(chase, feat) {
+  const { visitChasePoints, recentVisitPoints } = require('../lib/uf-chase-score');
   return {
-    visits: visitPts,
-    recentVisit: recent ? 8 : 0,
+    visits: chase.visitPts != null ? chase.visitPts : visitChasePoints(feat.ov, feat.uv),
+    home: chase.homePts != null ? chase.homePts : 0,
+    recentVisit: recentVisitPoints(feat.latestVisitAt),
     flOffer: (feat.flOffers || 0) > 0 ? 14 : 0,
     ufStatus:
-      chase.ufStatus === 'PRIORITY' ? 12 : chase.ufStatus === 'TARGET' ? 7 : 0,
-    staffLead: chase.hasStaffLead ? 6 : 0,
+      chase.ufStatus === 'PRIORITY' ? 14 : chase.ufStatus === 'TARGET' ? 8 : 0,
+    staffLead: chase.hasStaffLead ? 8 : 0,
+    secondary: chase.hasSecondaryRecruiter ? 6 : 0,
     staffFlag: chase.hasStaffFlag ? 16 : 0,
-    intel: Math.min(12, (chase.intel || 0) * 2),
+    pursuit: Math.min(16, (chase.pursuit || 0) * 5),
+    scheduledOv: chase.scheduledOv ? 8 : 0,
+    intel: Math.min(14, (chase.intel || 0) * 2),
     allowlist: chase.allowlisted || chase.headliner ? 10 : 0,
   };
 }
@@ -52,7 +56,7 @@ async function main() {
         index
       );
       const feat = index.bySlug.get(slug) || { ov: 0, uv: 0, flOffers: 0, latestVisitAt: 0 };
-      const recent = feat.latestVisitAt > Date.now() - 45 * 24 * 60 * 60 * 1000;
+      const recent = (result.chase?.visitPts || 0) > 0 && recentVisitAgeLabel(feat.latestVisitAt);
       return {
         slug,
         name: t.name || slug,
@@ -61,7 +65,7 @@ async function main() {
         chase: result.chase,
         feat,
         recent,
-        pts: ptsBreakdown(result.chase, feat, recent),
+        pts: ptsBreakdown(result.chase, feat),
         allowlisted: allow.has(slug),
       };
     })
@@ -75,6 +79,7 @@ async function main() {
         allowlist: allow.size,
         visitFeatureSlugs: index.bySlug.size,
         intelSlugs: index.intelCounts.size,
+        pursuitSlugs: index.pursuitCounts?.size || 0,
         staffAssigned: Object.keys(index.staffMap || {}).length,
       },
       null,
@@ -85,8 +90,18 @@ async function main() {
   console.log(`\nTop ${topN} by chaseScore:`);
   for (let i = 0; i < Math.min(topN, scored.length); i += 1) {
     const r = scored[i];
+    const tags = [
+      r.chase.home ? `home${r.chase.home}` : '',
+      r.chase.hasStaffLead ? 'staff' : '',
+      r.chase.hasSecondaryRecruiter ? '2nd' : '',
+      r.chase.pursuit ? `pursue${r.chase.pursuit}` : '',
+      r.chase.scheduledOv ? 'schedOV' : '',
+      r.recent || '',
+    ]
+      .filter(Boolean)
+      .join(' ');
     console.log(
-      `${String(i + 1).padStart(2)}. ${r.name.padEnd(22)} ${String(r.pos).padEnd(4)} chase=${String(r.chaseScore).padStart(5)}  ov${r.feat.ov}/uv${r.feat.uv}/off${r.feat.flOffers} intel${r.chase.intel}${r.chase.hasStaffLead ? ' staff' : ''}${r.recent ? ' recent' : ''}  pts=${JSON.stringify(r.pts)}`
+      `${String(i + 1).padStart(2)}. ${r.name.padEnd(22)} ${String(r.pos).padEnd(4)} chase=${String(r.chaseScore).padStart(5)}  ov${r.feat.ov}/uv${r.feat.uv}/home${r.feat.home || 0}/off${r.feat.flOffers} intel${r.chase.intel}${tags ? ` ${tags}` : ''}  pts=${JSON.stringify(r.pts)}`
     );
   }
 
@@ -106,7 +121,22 @@ async function main() {
 
   const flat = scored.filter((r) => r.feat.ov === 0 && r.feat.uv === 2 && r.feat.flOffers >= 1);
   console.log(`\nFlat cluster (0 OV / 2 UV / FL offer): ${flat.length} of ${scored.length} live targets`);
+  const oneVisitPursuit = scored.filter(
+    (r) => (r.feat.ov || 0) + (r.feat.uv || 0) === 1 && (r.chase.pursuit || r.chase.hasSecondaryRecruiter)
+  );
+  console.log(
+    `1-visit + pursuit/secondary: ${oneVisitPursuit.length} (should be able to outrank multi-visit campers)`
+  );
   console.log('Done.\n');
+}
+
+function recentVisitAgeLabel(latestVisitAt) {
+  const { recentVisitPoints } = require('../lib/uf-chase-score');
+  const pts = recentVisitPoints(latestVisitAt);
+  if (pts >= 3) return 'recent21';
+  if (pts >= 2) return 'recent45';
+  if (pts >= 1) return 'recent90';
+  return '';
 }
 
 main().catch((err) => {

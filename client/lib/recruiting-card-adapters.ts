@@ -356,14 +356,18 @@ export function fromUfFitWatchlist(p: UfFitWatchlistPlayer): RecruitingBoardPlay
   const composite = p.compositeScore ?? undefined;
   const chase = p.chase;
   const visitBits = [
+    chase?.home ? 'Home visit' : null,
     chase?.ov ? `${chase.ov} OV` : null,
-    chase?.uv ? `${chase.uv} UV` : null,
+    chase?.uv ? 'Campus' : null,
     chase?.flOffers ? 'UF offer' : null,
   ].filter(Boolean);
-  const chaseLine =
-    p.chaseScore != null
-      ? `Chase ${Math.round(p.chaseScore)}${visitBits.length ? ` · ${visitBits.join(' · ')}` : ''}`
-      : null;
+  const hot = p.hotScore != null ? Math.round(p.hotScore) : null;
+  const hotLine =
+    hot != null
+      ? `Hot ${hot}${visitBits.length ? ` · ${visitBits.join(' · ')}` : ''}`
+      : p.chaseScore != null
+        ? `Chase ${Math.round(p.chaseScore)}${visitBits.length ? ` · ${visitBits.join(' · ')}` : ''}`
+        : null;
   return {
     slug: p.slug,
     name: p.fullName,
@@ -379,14 +383,21 @@ export function fromUfFitWatchlist(p: UfFitWatchlistPlayer): RecruitingBoardPlay
     posRank: isLiveOn3 ? (p.positionRank ?? undefined) : undefined,
     stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
     fitScore: p.ufFitScore,
-    // Heat meter reflects chase traction when present; UF Fit is secondary context.
-    heatPct: p.chaseScore != null && p.chaseScore > 0 ? Math.min(100, p.chaseScore) : p.ufFitScore > 0 ? p.ufFitScore : undefined,
-    heatLabel: p.chaseScore != null ? 'Staff chase' : 'UF Fit',
+    // Heat meter = Hottest Targets composite when present.
+    heatPct:
+      hot != null && hot > 0
+        ? Math.min(100, hot)
+        : p.chaseScore != null && p.chaseScore > 0
+          ? Math.min(100, p.chaseScore)
+          : p.ufFitScore > 0
+            ? p.ufFitScore
+            : undefined,
+    heatLabel: hot != null ? 'Hottest' : p.chaseScore != null ? 'Staff chase' : 'UF Fit',
     ratingLabel: isLiveOn3 ? 'Composite' : composite != null ? 'Vault est.' : undefined,
     showIndustryRanks: isLiveOn3,
     movementDirection: p.fitDelta > 0 ? 'up' : p.fitDelta < 0 ? 'down' : 'flat',
     skinny:
-      chaseLine ||
+      hotLine ||
       `UF Fit ${p.ufFitScore} · Δ ${p.fitDelta >= 0 ? '+' : ''}${p.fitDelta} · Vol ${p.fitVolatility}`,
   };
 }
