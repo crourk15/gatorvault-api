@@ -325,8 +325,9 @@ function compareUnderclassmenHighPriority(a: HighPriorityPlayer, b: HighPriority
 }
 
 /**
- * Re-score Lab High Priority from the same chase engine as Big Board Top Targets.
- * UF % / fit remain on the card for display; they no longer own the sort.
+ * Re-score Lab High Priority as Hottest Targets:
+ * staff heat × must-get fit × positional need × FL geo × market pressure.
+ * Campus UV stacks do not own the sort.
  */
 function applyChasePriorityScores<
   T extends {
@@ -338,32 +339,35 @@ function applyChasePriorityScores<
     evaluationNotes?: string | null;
     evaluation_notes?: string | null;
     signals?: unknown[];
+    pos?: string | null;
+    position?: string | null;
+    stars?: number | null;
+    rating?: number | null;
+    vaultGrade?: number | null;
+    natlRank?: number | null;
+    htWt?: string | null;
+    height?: string | null;
+    inState?: boolean | null;
+    state?: string | null;
+    hometownState?: string | null;
+    skinny?: string | null;
+    profileNote?: string | null;
+    classYear?: number | null;
   },
->(players: T[], classYear: number): Array<T & { priorityScore: number; chaseScore: number }> {
-  const { buildChaseFeatureIndex, computeChaseScore } = require('../../lib/uf-chase-score');
-  const index = buildChaseFeatureIndex({ classYear });
-  return players.map((p) => {
-    // Do not invent TARGET for every card — only score real status/signals/notes when present.
-    // (Previous hardcode gave every player +7 and hid PRIORITY / STAFF_FLAG differentiation.)
-    const chase = computeChaseScore(
-      {
-        slug: p.slug,
-        ufFitScore: p.fitScore,
-        uf_status: p.uf_status || p.ufStatus || null,
-        evaluation_notes: p.evaluation_notes || p.evaluationNotes || null,
-        signals: Array.isArray(p.signals) ? p.signals : [],
-      },
-      index
-    );
-    const priorityScore =
-      Math.round((chase.chaseScore + Math.max(0, Number(p.delta7d) || 0) * 0.25) * 10) / 10;
-    return {
-      ...p,
-      chaseScore: chase.chaseScore,
-      chase: chase.chase,
-      priorityScore,
-    };
-  });
+>(
+  players: T[],
+  classYear: number
+): Array<
+  T & {
+    priorityScore: number;
+    chaseScore: number;
+    hotScore: number;
+    hotLanes?: Record<string, number>;
+    hotBadges?: Record<string, boolean>;
+  }
+> {
+  const { scoreHotTargetBoard } = require('../../lib/hot-florida-targets');
+  return scoreHotTargetBoard(players, { classYear });
 }
 
 function isSeedPredictorName(name: string): boolean {

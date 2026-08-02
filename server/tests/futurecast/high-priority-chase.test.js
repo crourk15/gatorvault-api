@@ -6,13 +6,14 @@ const path = require('node:path');
 require('tsx/cjs');
 
 describe('Lab High Priority uses staff-chase ranking', () => {
-  it('high-priority module applies chase scores before sort', () => {
+  it('high-priority module applies hottest-target scores before sort', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', '..', 'api', 'futurecast', 'high-priority.ts'),
       'utf8'
     );
     assert.match(src, /applyChasePriorityScores/);
-    assert.match(src, /buildChaseFeatureIndex/);
+    assert.match(src, /scoreHotTargetBoard/);
+    assert.match(src, /hot-florida-targets/);
     assert.doesNotMatch(
       src,
       /ufProbability \* 0\.55 \+ fitScore \* 0\.3/
