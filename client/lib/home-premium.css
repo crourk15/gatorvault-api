@@ -12,11 +12,13 @@
   color: var(--heading-color-dark);
 }
 
+/* Avoid 100vw — on iOS it includes the scrollbar gutter and creates a
+   horizontal overflow that fights vertical document scroll. */
 .home-premium-bleed {
-  width: 100vw;
-  max-width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .home-premium-hero {

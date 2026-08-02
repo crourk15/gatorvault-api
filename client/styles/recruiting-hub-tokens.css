@@ -51,18 +51,15 @@
   --text-body: 1rem;
   --text-small: 0.875rem;
 
-  /* Spacing */
+  /* Spacing aliases only. Do not redeclare --space-md/lg/xl as self-references;
+     that invalidates the tokens app-wide and breaks --mobile-gutter consumers
+     (homepage back-to-top right positioning). */
   --space-1: var(--space-xs);
   --space-2: var(--space-sm);
   --space-3: 0.75rem;
   --space-4: var(--space-md);
   --space-6: var(--space-lg);
   --space-8: var(--space-xl);
-  --space-xs: var(--space-sm);
-  --space-sm: 0.75rem;
-  --space-md: var(--space-md);
-  --space-lg: var(--space-lg);
-  --space-xl: var(--space-xl);
   --space-xxl: var(--space-2xl);
 
   /* Shape */

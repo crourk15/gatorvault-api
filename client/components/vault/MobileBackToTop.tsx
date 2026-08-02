@@ -14,7 +14,12 @@ export function MobileBackToTop(): React.ReactElement | null {
 
   useEffect(() => {
     if (isFutureCastLab) return;
-    const onScroll = () => setVisible(window.scrollY > 480);
+    const scrollTop = () =>
+      window.scrollY ||
+      document.documentElement.scrollTop ||
+      document.scrollingElement?.scrollTop ||
+      0;
+    const onScroll = () => setVisible(scrollTop() > 480);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -27,7 +32,14 @@ export function MobileBackToTop(): React.ReactElement | null {
       type="button"
       className="gv-mobile-back-top"
       aria-label="Back to top"
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      onClick={() => {
+        const scroller = document.scrollingElement || document.documentElement;
+        try {
+          scroller.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch {
+          window.scrollTo(0, 0);
+        }
+      }}
     >
       ↑
     </button>

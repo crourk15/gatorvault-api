@@ -1131,12 +1131,13 @@ body {
     height: auto !important;
   }
 
+  /* Both axes visible — overflow-x:clip + overflow-y:visible coerces Y→auto on iOS. */
   body.gv-film-page-active:not(.gv-scroll-locked),
   body:has(.gv-film-room-page):not(.gv-scroll-locked) {
-    overflow-x: clip !important;
-    overflow-y: visible !important;
+    overflow: visible !important;
     height: auto !important;
     overscroll-behavior-y: auto;
+    overscroll-behavior-x: none;
     touch-action: manipulation;
   }
 
@@ -1196,9 +1197,10 @@ body {
 }
 
 /*
- * Vault Home — same document-only scroll contract as Film Room / Live.
- * overflow-x:hidden on shell/main + flex min-height:0 created a nested
- * scrollport that intermittently stole vertical gestures on /vault/.
+ * Vault Home — single document scrollport (html only).
+ * overflow-x:hidden/clip on shell/main + flex min-height:0 nested a Y scroller.
+ * Worse on iOS: overflow-x:clip + overflow-y:visible on body coerces Y→auto
+ * (CSS Overflow), so html AND body both scroll and fight ("back and forth").
  */
 @media (max-width: 1023px) {
   html:has(.home-wow-page),
@@ -1208,13 +1210,13 @@ body {
     height: auto !important;
   }
 
-  /* Exclude menu/modal lock — :not(.gv-scroll-locked) keeps drawer body-lock winning. */
+  /* Both axes visible — do NOT set overflow-x:clip here (coerces Y to auto). */
   body:has(.home-wow-page):not(.gv-scroll-locked),
   body:has(.gv-vault-shell--home):not(.gv-scroll-locked) {
-    overflow-x: clip !important;
-    overflow-y: visible !important;
+    overflow: visible !important;
     height: auto !important;
     overscroll-behavior-y: auto;
+    overscroll-behavior-x: none;
     touch-action: manipulation;
   }
 
@@ -1228,6 +1230,9 @@ body {
   .gv-vault-shell--home .home-wow-page {
     overflow: visible !important;
     max-height: none !important;
+    /* Critical CSS sets flex:1;min-height:0 on main — defeat the shrink trap. */
+    min-height: auto !important;
+    height: auto !important;
     touch-action: manipulation;
   }
 
@@ -1251,13 +1256,14 @@ body {
     height: auto !important;
   }
 
+  /* Both axes visible — overflow-x:clip + overflow-y:visible coerces Y→auto on iOS. */
   body.gv-live-page-active:not(.gv-scroll-locked),
   body:has(.uf-premium-gnl):not(.gv-scroll-locked),
   body:has(.gv-live-feed):not(.gv-scroll-locked) {
-    overflow-x: clip !important;
-    overflow-y: visible !important;
+    overflow: visible !important;
     height: auto !important;
     overscroll-behavior-y: auto;
+    overscroll-behavior-x: none;
     touch-action: manipulation;
   }
 

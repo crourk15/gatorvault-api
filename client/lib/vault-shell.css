@@ -303,6 +303,9 @@ body.gv-film-page-active .gv-vault-shell,
 body.gv-film-page-active .gv-vault-shell__body,
 body.gv-film-page-active .gv-vault-shell__main {
   overflow: visible;
+  max-height: none;
+  min-height: auto;
+  height: auto;
 }
 
 .gv-vault-shell__main .gv-live-feed {
