@@ -29,6 +29,15 @@ const STEPS = [
     }),
   },
   {
+    name: 'allowlist-intel',
+    path: '/api/recruiting/allowlist-intel/sweep',
+    summarize: (r) => ({
+      createdCount: r?.createdCount ?? null,
+      coveragePct: r?.coverage?.coveragePct ?? null,
+      missing: Array.isArray(r?.coverage?.missing) ? r.coverage.missing.length : null,
+    }),
+  },
+  {
     name: 'hub-refresh',
     path: '/api/recruiting/hub/refresh?geoBackfill=true',
     summarize: (r) => ({ enrichedPlayerCount: r?.enrichedPlayerCount ?? null }),

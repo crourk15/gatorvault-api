@@ -39,7 +39,7 @@
           'Look at today’s beats in the list below.',
           'Press <strong>Open</strong> on the one you want to post about.',
           'Read the packet — Why Florida + Vault angle + <strong>Film / highlights</strong> + <strong>Projection / Comp</strong> + board facts.',
-          'Press <strong>Copy Brief</strong>, paste into Cursor/Copilot, then post on X (film + projection/comp ride along when on file).',
+          'Press <strong>Copy Brief</strong>, paste into Cursor/Copilot, then post on X — require <strong>HEADER</strong> + deeper film eval + projection + player comp every time.',
           'Check the green <strong>FutureCast feed</strong> card — that means the board got the update too.'
         ]
       : [
@@ -52,9 +52,9 @@
     var buttons = deskFocus
       ? [
           ['Open', 'Builds the full player packet (research + board + draft angle).'],
-          ['Copy Brief', 'Puts the packet on your clipboard for Cursor / Copilot — includes film + projection/comp when curated.'],
-          ['Film card', 'Copy Brief includes the Hudl/On3 highlight LINK — Cursor reviews it, then drafts — you just Copy Brief and post.'],
-          ['Projection / Comp card', 'Contribution path (when he plays / role / ceiling) + a body+traits-matched comparable. Must ride in the X post when on file.'],
+          ['Copy Brief', 'Puts the packet on your clipboard for Cursor / Copilot — HEADER + film + projection/comp are always required in the draft.'],
+          ['Film card', 'Copy Brief includes the Hudl/On3 highlight LINK — Cursor reviews it in depth (2–3 tape specifics), then drafts.'],
+          ['Projection / Comp card', 'Contribution path (when / role / ceiling) + body+traits-matched comparable. Always in the X post — agent drafts if War Room is empty.'],
           ['Refresh', 'Reloads today’s beat list from the kitchen.'],
           ['Check API', 'Pings the server — if it says waking, wait and try again.'],
           ['FutureCast card', 'Shows if this Open seeded/updated the recruiting board.']
@@ -157,10 +157,11 @@
       + '</article>'
       + (deskFocus
         ? '<article class="hub-nc-card">'
-          + '<h4>Projection / Comp (every recruit post)</h4>'
-          + '<p><strong>Projection</strong> = when he contributes + role + ceiling (packages early / Year 2–3 regular / every-down · All-SEC upside). Sell the upside — never write “not All-American.”</p>'
-          + '<p style="margin:8px 0 0"><strong>Player comp</strong> = same level + similar <em>body style</em> + similar <em>win traits</em> from tape. Not size-only. Not a higher band than the projection.</p>'
-          + '<p class="hub-meta" style="margin:8px 0 0">If the Open card says none on file, omit from the post — don’t invent. Confirm with Charles before treating a new eval/comp as live FutureCast profile copy.</p>'
+          + '<h4>Header + Projection / Comp (every recruit post)</h4>'
+          + '<p><strong>HEADER</strong> = elite intel leap above the post (required) — same urgency as top recruiting hooks, but original Vault wording every time. Never clone “New intel has emerged…” Never “owns” a recruit.</p>'
+          + '<p style="margin:8px 0 0"><strong>Projection</strong> = when he contributes + role + ceiling — written for the position. QB = develop → compete for the job → starter upside (never “rotational QB”). EDGE/WR/DL can use rotation/every-down when true. Sell the upside — never write “not All-American.”</p>'
+          + '<p style="margin:8px 0 0"><strong>GatorVault player comp</strong> = <em>body size first</em> (height within ~1–2", same frame), then win traits from tape, then projection band. A 6-5 recruit cannot comp to a 6-1 QB. Not size-only. Don’t default to Florida alumni.</p>'
+          + '<p class="hub-meta" style="margin:8px 0 0">If War Room says none on file, Cursor drafts both from tape + board, then <strong style="color:#fff">must persist</strong> via <code>upsert-vault-film-eval.js</code> so the profile/FutureCast card updates. Confirm before treating a brand-new eval as live card copy.</p>'
           + '</article>'
         : '')
       + '<article class="hub-nc-card hub-nc-card--ignore">'

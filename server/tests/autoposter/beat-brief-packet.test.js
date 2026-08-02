@@ -46,6 +46,14 @@ describe('Beat Brief Desk', () => {
     assert.match(text, /Sample draft for Hudson West/);
     assert.match(text, /PLAYER PROJECTION \/ COMP/);
     assert.match(text, /PROJECTION \/ COMP RULE/);
+    assert.match(text, /POST HEADER/);
+    assert.match(text, /HEADER RULE/);
+    assert.match(text, /ALWAYS required/);
+    assert.match(text, /AGENT MUST DRAFT/);
+    assert.match(text, /BODY SIZE|body size|within ~1/);
+    assert.match(text, /GatorVault/);
+    assert.match(text, /PERSIST RULE/);
+    assert.match(text, /upsert-vault-film-eval/);
     assert.match(text, /Player projection:/);
     assert.match(text, /Player comp:/);
   });
@@ -84,10 +92,9 @@ describe('Beat Brief Desk', () => {
     assert.match(text, /Player comp: Ham comps to Josh Sweat/);
     assert.match(text, /Scheme fit: Ham fits a wide-9/);
     assert.match(text, /PROJECTION \/ COMP RULE/);
-    assert.match(
-      text,
-      /Structure:[\s\S]*projection and\/or player comp when on file/
-    );
+    assert.match(text, /Structure:[\s\S]*GatorVault player comp with BODY SIZE match first/);
+    assert.match(text, /HEADER RULE/);
+    assert.match(text, /COMP SIZE RULE/);
   });
 
   it('wires Beat Desk into Admin Hub nav + scripts', () => {

@@ -120,13 +120,26 @@ function buildChaseFeatureIndex(opts = {}) {
     /* optional */
   }
 
+  /** @type {Map<string, Set<string>>} */
+  const intelFamilies = new Map();
+
   try {
     const intelStore = require('./recruiting-intel-store');
     const intel = intelStore.listIntel({ limit: 2500, since: sinceIso(days) });
+    /** Dedupe auto-ingest spam: count unique source+day, not raw rows. */
+    const intelKeys = new Map();
     for (const row of intel) {
       const key = slugKey(row.playerSlug || row.player_slug || row.slug);
       if (!key) continue;
-      intelCounts.set(key, (intelCounts.get(key) || 0) + 1);
+      if (!intelKeys.has(key)) intelKeys.set(key, new Set());
+      const src = String(row.source || row.outlet || 'unknown').trim().toLowerCase() || 'unknown';
+      const day = String(row.reportedAt || row.createdAt || row.date || '').slice(0, 10) || 'nodate';
+      intelKeys.get(key).add(`${src}|${day}`);
+      if (!intelFamilies.has(key)) intelFamilies.set(key, new Set());
+      intelFamilies.get(key).add(intelSourceFamily(src, row.sourceType || row.eventType));
+    }
+    for (const [key, set] of intelKeys) {
+      intelCounts.set(key, set.size);
     }
   } catch {
     /* optional */
@@ -138,8 +151,20 @@ function buildChaseFeatureIndex(opts = {}) {
     staffMap,
     headliners,
     intelCounts,
+    intelFamilies,
     days,
   };
+}
+
+/** Broad intel families — rewards real multi-channel coverage, not one spammy source. */
+function intelSourceFamily(source, sourceTypeOrEvent) {
+  const s = `${source || ''} ${sourceTypeOrEvent || ''}`.toLowerCase();
+  if (/visit|ov|uv|junior\s*day|camp/.test(s)) return 'visit';
+  if (/offer/.test(s)) return 'offer';
+  if (/on3|rpm|team-news/.test(s)) return 'on3';
+  if (/rivals/.test(s)) return 'rivals';
+  if (/detectives|beat|writer|allowlist-intel/.test(s)) return 'beat';
+  return 'other';
 }
 
 /**
@@ -158,6 +183,7 @@ function computeChaseScore(player, index) {
   const headliner = index.headliners.has(slug);
   const hasStaffLead = Boolean(index.staffMap[slug]?.staff_lead_id || index.staffMap[slug]?.staffLeadId);
   const intel90 = index.intelCounts.get(slug) || 0;
+  const intelFamilyCount = index.intelFamilies?.get(slug)?.size || 0;
 
   let score = 0;
   // Visits dominate — real campus/staff chase.
@@ -174,8 +200,10 @@ function computeChaseScore(player, index) {
   if (hasStaffLead) score += 6;
   if (noteLen > 80) score += 5;
 
-  // Beat intel volume (capped).
+  // Intel is first-class: unique source-days + multi-channel breadth.
+  // Cap volume so one auto source cannot drown continuous allowlist coverage.
   score += Math.min(12, intel90 * 2);
+  score += Math.min(6, Math.max(0, intelFamilyCount - 1) * 2);
 
   // Editorial chase gate (hunt list / headliner) — boost, not the whole board.
   if (allowlisted || headliner) score += 10;
@@ -190,6 +218,7 @@ function computeChaseScore(player, index) {
       uv: feat.uv,
       flOffers: feat.flOffers,
       intel: intel90,
+      intelFamilies: intelFamilyCount,
       allowlisted,
       headliner,
       hasStaffFlag,
@@ -211,4 +240,5 @@ module.exports = {
   hasChaseTraction,
   isOfficialVisit,
   isUnofficialVisit,
+  intelSourceFamily,
 };

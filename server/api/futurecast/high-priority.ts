@@ -328,18 +328,30 @@ function compareUnderclassmenHighPriority(a: HighPriorityPlayer, b: HighPriority
  * Re-score Lab High Priority from the same chase engine as Big Board Top Targets.
  * UF % / fit remain on the card for display; they no longer own the sort.
  */
-function applyChasePriorityScores<T extends { slug: string; fitScore?: number; delta7d?: number }>(
-  players: T[],
-  classYear: number
-): Array<T & { priorityScore: number; chaseScore: number }> {
+function applyChasePriorityScores<
+  T extends {
+    slug: string;
+    fitScore?: number;
+    delta7d?: number;
+    ufStatus?: string | null;
+    uf_status?: string | null;
+    evaluationNotes?: string | null;
+    evaluation_notes?: string | null;
+    signals?: unknown[];
+  },
+>(players: T[], classYear: number): Array<T & { priorityScore: number; chaseScore: number }> {
   const { buildChaseFeatureIndex, computeChaseScore } = require('../../lib/uf-chase-score');
   const index = buildChaseFeatureIndex({ classYear });
   return players.map((p) => {
+    // Do not invent TARGET for every card — only score real status/signals/notes when present.
+    // (Previous hardcode gave every player +7 and hid PRIORITY / STAFF_FLAG differentiation.)
     const chase = computeChaseScore(
       {
         slug: p.slug,
         ufFitScore: p.fitScore,
-        uf_status: 'TARGET',
+        uf_status: p.uf_status || p.ufStatus || null,
+        evaluation_notes: p.evaluation_notes || p.evaluationNotes || null,
+        signals: Array.isArray(p.signals) ? p.signals : [],
       },
       index
     );

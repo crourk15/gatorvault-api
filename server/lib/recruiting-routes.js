@@ -602,6 +602,24 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  app.post('/api/recruiting/allowlist-intel/sweep', async (req, res) => {
+    try {
+      if (!requireIngestCronAuth(req, res)) return;
+      const { runAllowlistIntelSweep, measureAllowlistIntelCoverage } = require('./allowlist-intel-sweep');
+      const forceCoverageOnly = req.body.coverageOnly === true || req.query.coverageOnly === 'true';
+      const classYear = parseInt(req.body.classYear || req.query.classYear || '2028', 10);
+      if (forceCoverageOnly) {
+        return res.json({ ok: true, coverage: measureAllowlistIntelCoverage(classYear, { days: 30 }) });
+      }
+      const dryRun = req.body.dryRun === true || req.query.dryRun === 'true';
+      const result = await runAllowlistIntelSweep({ classYear, dryRun });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      console.error('allowlist intel sweep error', err);
+      return res.status(200).json({ ok: false, softFailure: true, error: err.message, cached: true });
+    }
+  });
+
   app.post('/api/recruiting/uf-on3-news/discover', async (req, res) => {
     try {
       if (!requireIngestCronAuth(req, res)) return;

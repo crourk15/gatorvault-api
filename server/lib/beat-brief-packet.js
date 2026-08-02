@@ -647,24 +647,24 @@ function formatProjectionCompBlock(research = null, player = null) {
   const nfl = looksJunk(nflProjection) ? null : nflProjection;
 
   const lines = [];
-  lines.push('PLAYER PROJECTION / COMP (required in recruit posts when on file)');
+  lines.push('PLAYER PROJECTION / COMP (ALWAYS required in recruit posts)');
   lines.push('----------------------------------------------------------------');
   if (proj) lines.push(`Projection: ${proj}`);
   else {
     lines.push(
-      'Projection: (none on file — write board + film only; do NOT invent a college/NFL projection)'
+      'Projection: (none on file — AGENT MUST DRAFT one from tape + board: contribution timeline + role + ceiling, matched to stars/rank band AND position. POSITION RULE: do NOT use generic “Year 2–3 rotation / every-down” template language — that fits EDGE/WR/DL more than QB. For QB, project the room path (sit/develop → compete for the job → starter upside), never “rotational QB.” Sell the upside — no downplay lines.)'
     );
   }
   if (comp) lines.push(`Player comp: ${comp}`);
   else {
     lines.push(
-      'Player comp: (none on file — do NOT invent an NFL/college comp; omit from the post)'
+      'Player comp: (none on file — AGENT MUST DRAFT a GatorVault comparison: same POSITION band + similar BODY SIZE first, then similar win traits from tape. Height must be within ~1–2 inches of the recruit’s listed height; weight/frame in the same build family. Example fail: 6-5 recruit ≠ 6-1 pocket QB. Not size-only. Not a higher elite household name than the projection band. Do NOT default to Florida alumni. Never close on the comp.)'
     );
   }
   if (scheme) lines.push(`Scheme fit: ${scheme}`);
   if (nfl) lines.push(`NFL projection: ${nfl}`);
   lines.push(
-    'AGENT RULE: When Projection and/or Player comp are on file, weave ONE short projection clause and/or ONE calm comp into the post (mid-body, after identity/tape). Projection = contribution timeline + role + ceiling (e.g. Year 2–3 regular contributor / All-SEC upside) — sell the upside, do not write “not All-American” or other downplay lines. Player comp must MATCH that level AND similar body style + win traits from tape (not size-only; not a higher elite band than the projection). Never invent either. Never make the comp the closer.'
+    'AGENT RULE (hard): EVERY recruit post must include BOTH (a) one short forward projection clause and (b) one GatorVault player comp — mid-body, after identity/tape. Prefer War Room values when on file (still verify size match). If marked “(none on file)”, draft both from board + tape. Projection = contribution timeline + role + ceiling — written for THIS position (QB ≠ “rotation”; OL/EDGE/WR can use rotation/every-down language when true). Comp filter ORDER: (1) position, (2) body size/height/frame match, (3) win traits from tape, (4) projection band. Reject any comp that fails the size filter — even if traits feel close. Never a lazy Florida-alum default. Never make the comp the closer. Never skip either because the card was empty.'
   );
   return lines.join('\n');
 }
@@ -680,7 +680,7 @@ function formatFilmTraitsBlock(filmTraits) {
   lines.push('FILM / HIGHLIGHTS (Hudl / On3 links — REQUIRED AGENT REVIEW)');
   lines.push('-------------------------------------------------------------');
   lines.push(
-    'AGENT STEP (do this before drafting): Open every highlight URL below, review the tape, then write 1–2 concrete film observations into the post as Vault fact. Do not invent tackle totals or grades. Do not tell the audience you watched film or that you are different — just use what you saw.'
+    'AGENT STEP (do this before drafting): Open every highlight URL below and actually review the tape (not the title). Write a DEEPER film eval into the post — 2–3 concrete observations with specificity (platform/drop, release/arm slot, eyes vs pressure, sideline vs intermediate window, red-zone look, length over the line). Avoid generic “good arm / athletic” filler. Do not invent tackle totals, completion %, or grades. Do not tell the audience you watched film — just use what you saw as Vault fact.'
   );
   if (filmTraits.playerName) lines.push(`Player: ${filmTraits.playerName}`);
   if (filmTraits.on3ProfileUrl) lines.push(`On3 profile: ${filmTraits.on3ProfileUrl}`);
@@ -846,32 +846,49 @@ function formatBriefText({
   }
 
   lines.push('');
-  lines.push('ELITE DEPTH CHECKLIST (use what is on file — do not invent)');
+  lines.push('POST HEADER (required — deliver BEFORE the post body)');
+  lines.push('---------------------------------------------------------');
+  lines.push(
+    'AGENT RULE (hard): Always output an elite HEADER above the post. This is the LEAP — same ENERGY as a top recruiting intel hook (urgency + specificity + Florida stake), but ORIGINAL Vault wording every time. Never clone stock phrases like “New intel has emerged on…” or any beat-writer opener. Invent a fresh hook from THIS player’s signal (RPM move, visit heat, staff push, separation, priority feel). FORBIDDEN: copied beat phrasing, “owns/own,” flat titles like “Florida leads [Player],” “Breaking,” emoji spam. Format exactly:'
+  );
+  lines.push('HEADER: <your header here>');
+  lines.push('Then a blank line, then the post body.');
+  lines.push(
+    'Examples of energy (do not copy — invent fresh each post): “The [Player] race just tilted harder toward Florida” · “[School]’s [Player] is turning into a Florida priority” · “Gators building daylight with 2028 [Pos] [Player]”'
+  );
+
+  lines.push('');
+  lines.push('ELITE DEPTH CHECKLIST (board facts from file; projection/comp always required)');
   lines.push('-------------------------------------------------------------');
+  lines.push('- HEADER: elite intel leap (required — print as HEADER: …). New intel / separation / RPM / staff push — not a flat “Florida leads X” label. Never “owns” the player.');
   lines.push('- Identity: name, class, position, high school, hometown, size');
   lines.push('- On3 ranks: national + position + state + stars/rating');
   lines.push('- Florida stake: RPM %, offer/status, UF staff names if listed');
   lines.push('- School ladder: top interested schools with RPM + visit counts');
   lines.push('- Visit trail: OV/UOV + latest dates when present');
-  lines.push('- Film / highlights: OPEN the Highlight LINK(s), review the tape, then put 1–2 tape facts in the post as plain Vault observation');
-  lines.push('- Player projection: use Projection line when on file (college role/ceiling) — never invent');
-  lines.push('- Player comp: use Player comp line when on file (one calm comparable) — never invent; never close on the comp');
-  lines.push('- Internal intel seed: steal the FACT, own the VOICE — never tip that a beat writer said it');
+  lines.push('- Film / highlights: OPEN the Highlight LINK(s), deeper eval — 2–3 specific tape facts (platform, release, eyes, windows), not generic filler');
+  lines.push('- Player projection: ALWAYS include — War Room when on file; otherwise draft from tape + board (timeline + role + ceiling)');
+  lines.push('- GatorVault player comp: ALWAYS include — BODY SIZE first (height within ~1–2", same frame family), then win traits, then band. 6-5 ≠ 6-1. Never the closer. No lazy Florida-alum default');
+  lines.push('- Internal intel seed: steal the FACT, rewrite in Vault voice — never tip that a beat writer said it');
   lines.push('- Vault angle: Florida-first narrative that sounds like GatorVault, not a recap desk');
   lines.push('- Show, don\'t announce: never claim to be different, ahead of the beat, or what "most feeds / timelines" miss');
+  lines.push('- Never say Florida “owns” a recruit in the header or closer — speak board lead / process / pace');
   lines.push('- Rivals: context only (one calm board fact mid-post if needed). Never dunk, never make the rival the punchline or closer');
 
   lines.push('');
   lines.push('INSTRUCTIONS FOR AI');
   lines.push('-------------------');
   lines.push(
-    'Write one GatorVault Insider X post for a VERIFIED account (long-form OK). Target 600–900 characters (hard cap 1000).'
+    'Write one GatorVault Insider X post for a VERIFIED account (long-form OK). Target 600–900 characters for the BODY (hard cap 1000). HEADER is separate and does not count against the body cap.'
   );
   lines.push(
-    'FILM REVIEW RULE (hard): Before writing, open every Highlight LINK in FILM / HIGHLIGHTS. Review the Hudl/On3 tape. Your post must include 1–2 concrete observations from that tape (movement, coverage, length, ball skills, etc.). If a link will not open, say so and write from board facts only — do not invent film.'
+    'HEADER RULE (hard): First line of your deliverable must be `HEADER: …` — an elite intel leap, not a board sticker. Match the ENERGY of top recruiting hooks (urgent, specific, Florida-relevant) but write ORIGINAL Vault copy — never reuse “New intel has emerged…” or any beat-writer phrasing. Forbidden: cloned openers, “owns/own,” flat “Florida leads [Player]” labels, “Breaking,” emoji spam. Then a blank line, then the post body. Body opener should not just repeat the header.'
   );
   lines.push(
-    'PROJECTION / COMP RULE (hard): If PLAYER PROJECTION / COMP lists Projection and/or Player comp on file, include them in the post as Vault fact (short clause each). If marked "(none on file)", omit — do not invent a projection or NFL/college comparable.'
+    'FILM REVIEW RULE (hard): Before writing, open every Highlight LINK in FILM / HIGHLIGHTS. Review the Hudl/On3 tape in depth. Your post must include 2–3 concrete, specific observations from that tape (platform/drop, release, eyes vs pressure, intermediate/sideline windows, red-zone look, length over the line). No generic “good arm.” If a link will not open, say so and write from board facts only — do not invent film.'
+  );
+  lines.push(
+    'PROJECTION / COMP RULE (hard): ALWAYS include both in the post body (mid-body, after identity/tape). Prefer PLAYER PROJECTION / COMP values when on file (still verify size). If marked “(none on file)”, YOU MUST draft both from board + tape: (1) forward projection = contribution timeline + role + ceiling matched to stars/rank band AND position reality; (2) one GatorVault player comp. QB PROJECTION RULE: never write “rotational QB” / generic “Year 2–3 rotation / every-down” filler — project develop → compete for the job → starter upside (or campus QB battle). Other positions may use rotation/every-down when it fits. COMP SIZE RULE (non-negotiable): listed height within ~1–2 inches of the recruit; same frame/build family; then match win traits from tape. A traits-only match at the wrong height is a FAIL (e.g. 6-5 / 190 recruit cannot comp to a 6-1 pocket QB). State the size logic briefly when helpful (“6-5 mold…”). Never a higher elite household name than the band. Do NOT default to Florida alumni. Never omit either. Never close on the comp.'
   );
   lines.push(
     'VOICE RULE (hard): This is GatorVault\'s take — not a beat recap. Absorb facts from the intel seed/board + what you saw on the highlight link, then rewrite in original Vault voice. FORBIDDEN in the post: naming beat writers; "beat line"; "according to reports"; "per On3/247"; "as reported"; "reports say"; "insiders say"; "I watched the film"; and any meta flex about being different or ahead of the timeline. Just state the board + film. Board facts and tape observations may be stated as Vault fact.'
@@ -880,7 +897,10 @@ function formatBriefText({
     'RIVAL RULE (hard): Speak about what Florida has going with this player. Rivals (Alabama, Georgia, etc.) are optional mid-post board context only — one calm fact (e.g. who leads RPM). Do NOT dunk on the opponent, do NOT frame Florida as waiting for a rival "inevitability" to break, and never close on the rival. Closer = Florida process (visits, staff, film, ownership).'
   );
   lines.push(
-    'Structure: (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) 1–2 tape facts from the Highlight LINK review, (4) projection and/or player comp when on file, (5) Florida offer/staff/visits (rival RPM only as calm context if useful), (6) ownership/culture or visit detail, (7) sharp Florida-forward closer. Stay factual to board + intel + the tape you reviewed — no invented offers, visits, rankings, tackle totals, projections, comps, or quotes. Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
+    'Structure: (0) HEADER line (original intel leap — never “owns,” never cloned beat openers), (1) Florida stake opener in Vault voice, (2) identity + On3 ranks/size/school, (3) deeper tape eval (2–3 specifics), (4) ALWAYS projection + GatorVault player comp with BODY SIZE match first, (5) Florida offer/staff/visits with real process detail (rival RPM only as calm context if useful), (6) culture or visit detail, (7) sharp Florida-forward closer about process/separation — not “we own him.” Stay factual to board + intel + the tape you reviewed — no invented offers, visits, rankings, or tackle totals. Projection/comp may be agent-drafted when War Room is empty (size + band matched). Respect "Do not claim" under FILM. UF voice, no banned claims. Prefer one dense post over a thread unless asked.'
+  );
+  lines.push(
+    'PERSIST RULE (hard): After you draft eval + GatorVault comp + projection for a 2028 recruit/target, you MUST write them into War Room (and film-traits) so FutureCast / player profiles pick them up. Do not leave comps/projections only in the X draft. Use: `node server/scripts/upsert-vault-film-eval.js --file=server/data/war-room/vault-evals/<slug>.json` (or pass --slug/--comparison/--projection/--strengths/--hudl). Then confirm the Copy Brief Projection/Comp card is no longer empty on next Open.'
   );
 
   return lines.filter((l) => l !== null).join('\n');
