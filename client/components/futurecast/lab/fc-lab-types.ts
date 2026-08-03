@@ -128,6 +128,39 @@ export function ufPctFromFc(raw: number | null | undefined): number {
   return ufPctFromRaw(raw);
 }
 
+/** Fit threshold for "Elite scheme fit" hero treatment. */
+export const LAB_HERO_ELITE_FIT_MIN = 80;
+
+/**
+ * Absolute Florida-% floor before elite fit can steal the Lab hero lead.
+ * Without this, a 94-fit / 8% kid beats a 2% board #1 via the ±15 band.
+ */
+export const LAB_HERO_ELITE_UF_FLOOR = 25;
+
+/** Elite-fit lead must stay within this many points of the Hottest #1 UF%. */
+export const LAB_HERO_ELITE_UF_BAND = 15;
+
+/**
+ * Lab hero lead: Hottest #1 by default. Prefer an elite-scheme-fit target only
+ * when that kid also has real Florida odds (not single-digit RPM leftovers).
+ */
+export function pickLabHeroLead(top10: FcLabTarget[]): FcLabTarget | null {
+  if (!top10.length) return null;
+  const topByPriority = top10[0];
+  const elite = [...top10]
+    .filter((p) => (p.fitScore ?? 0) >= LAB_HERO_ELITE_FIT_MIN)
+    .filter((p) => ufPctFromFc(p.ufProbability) >= LAB_HERO_ELITE_UF_FLOOR)
+    .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0))[0];
+  if (
+    elite &&
+    ufPctFromFc(elite.ufProbability) >=
+      ufPctFromFc(topByPriority.ufProbability) - LAB_HERO_ELITE_UF_BAND
+  ) {
+    return elite;
+  }
+  return topByPriority;
+}
+
 /** UF probability in the contested battle band (34–66%). */
 export function isBattleTarget(ufPct: number): boolean {
   return ufPct >= 34 && ufPct < 67;
