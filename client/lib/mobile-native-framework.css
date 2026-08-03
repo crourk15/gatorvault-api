@@ -129,6 +129,9 @@
   body.gv-live-page-active .gv-vault-shell__main,
   body.gv-live-page-active .gv-app-shell__main {
     overflow: visible;
+    max-height: none;
+    min-height: auto;
+    height: auto;
   }
 
   /* Edge-to-edge content with safe padding */
@@ -1097,22 +1100,35 @@
     }
   }
 
-  /* Floating back-to-top */
+  /* Floating back-to-top — keep literal fallbacks so a broken token cascade
+     cannot invalidate `right` and pin the control to the left edge.
+     Sit above bottom-nav (z-index 55) so taps aren't stolen on iOS. */
   .gv-mobile-back-top {
     position: fixed;
-    right: max(var(--mobile-gutter), env(safe-area-inset-right, 0px));
+    top: auto;
+    left: auto;
+    inset-inline-start: auto;
+    inset-inline-end: max(16px, env(safe-area-inset-right, 0px));
+    right: max(16px, var(--mobile-gutter, 16px), env(safe-area-inset-right, 0px));
     bottom: max(calc(72px + env(safe-area-inset-bottom, 0px)), 80px);
-    z-index: 45;
+    z-index: 60;
     width: 44px;
     height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     border: none;
-    border-radius: var(--mobile-radius);
+    border-radius: var(--mobile-radius, 12px);
     background: var(--gv-blue, #0021a5);
     color: #fff;
     font-size: 1.125rem;
     font-weight: 700;
     box-shadow: 0 4px 16px rgba(0, 33, 165, 0.35);
     cursor: pointer;
+    pointer-events: auto;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .gv-mobile-back-top:active {
