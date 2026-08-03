@@ -1,5 +1,5 @@
 /**
- * Current UF roster names must not become phantom 2028 recruiting targets.
+ * Current UF roster names must become Florida football roster briefs — not phantom 2028 recruits.
  * Run: node server/test/roster-recruit-collision.test.js
  */
 'use strict';
@@ -29,9 +29,17 @@ async function main() {
   assert.ok(/ol|rg|ot|g/i.test(String(roster.pos || roster.position || '')), JSON.stringify(roster));
 
   const brief = await buildBeatBrief('bryce-lovett', { feedFutureCast: false, hydrateFilm: false });
-  assert.equal(brief.ok, false);
-  assert.equal(brief.error, 'current_roster_player');
-  assert.ok(/ROSTER COLLISION/i.test(brief.pasteText || ''), brief.pasteText);
+  assert.equal(brief.ok, true, JSON.stringify({ error: brief.error, deskKind: brief.deskKind }));
+  assert.equal(brief.deskKind, 'roster');
+  assert.ok(brief.rosterPlayer);
+  assert.ok(/GATORVAULT ROSTER BRIEF/i.test(brief.pasteText || ''), brief.pasteText.slice(0, 200));
+  assert.ok(/NOT a recruiting target|not a recruiting chase|SCOPE RULE/i.test(brief.pasteText || ''), brief.pasteText);
+  assert.ok(!/commit_culture|Florida COMMIT — do not frame/i.test(brief.pasteText || ''), brief.pasteText);
+  assert.ok(brief.futurecastFeed?.skipped === true);
+  // Depth chart battle should surface for Lovett when client data is present.
+  if (brief.depthChart?.analysis) {
+    assert.ok(/Lovett|Shanahan|RG/i.test(brief.depthChart.analysis), brief.depthChart);
+  }
 
   const feed = await feedDeskIntelToFutureCast({
     slug: 'bryce-lovett',

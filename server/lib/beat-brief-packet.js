@@ -922,6 +922,199 @@ function formatBriefText({
   return lines.filter((l) => l !== null).join('\n');
 }
 
+function depthChartHintForRosterPlayer(roster) {
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const depthPath = path.join(__dirname, '..', '..', 'client', 'lib', 'depth-chart-data.ts');
+    const text = fs.readFileSync(depthPath, 'utf8');
+    const name = String(roster?.name || '').trim();
+    if (!name) return null;
+    const last = name.split(/\s+/).filter(Boolean).pop();
+    if (!last || last.length < 3) return null;
+    const re = new RegExp(
+      `\\{[^{}]*${last.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[^{}]*\\}`,
+      'i'
+    );
+    const m = text.match(re);
+    if (!m) return null;
+    const row = m[0];
+    const pos = (row.match(/\bpos:\s*'([^']+)'/) || [])[1] || null;
+    const status = (row.match(/\bstatus:\s*'([^']+)'/) || [])[1] || null;
+    const analysis = (row.match(/\banalysis:\s*'([^']+)'/) || [])[1] || null;
+    const starters = (row.match(/\bs:\s*'([^']+)'/) || [])[1] || null;
+    return { pos, status, analysis, starters };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Current UF roster player → Florida football / team post packet.
+ * GatorVault covers the whole program — not just recruiting.
+ */
+async function buildRosterDeskBrief(slug, roster, opts = {}) {
+  const normalized = normalizeSlug(slug);
+  const name = roster.name || normalized;
+  const pos = roster.pos || roster.position || 'player';
+  const year = roster.year || roster.class || '';
+  const jersey = roster.jersey != null ? `#${roster.jersey}` : '';
+  const unit = roster.unit || null;
+  const tier = roster.depthChartTier || null;
+  const hometown = roster.hometown || null;
+  const htWt = [roster.height, roster.weight].filter(Boolean).join(' / ') || null;
+  const depth = depthChartHintForRosterPlayer(roster);
+
+  await intelStore.initIntelStore().catch(() => {});
+  const liveRows = liveBeatRowsForPlayer(normalized, name, 12);
+  const stored = (intelStore.getIntelForPlayer({ playerSlug: normalized }) || []).slice(0, 12);
+  const beatRows = mergeBeatRows(stored, liveRows);
+  const primary = beatRows[0] || null;
+  const seed = primary
+    ? String(primary.detail || primary.skinny || primary.text || '').replace(/\s+/g, ' ').trim()
+    : '';
+
+  const identityBits = [
+    name,
+    jersey || null,
+    pos,
+    year || null,
+    htWt,
+    hometown,
+    unit ? `${unit}` : null,
+    tier ? `depth: ${tier}` : null
+  ].filter(Boolean);
+
+  const whyFlorida = [
+    `${name} is on the current Florida roster — write Florida football / team coverage, not a recruiting chase.`,
+    `Identity: ${identityBits.join(' · ')}.`,
+    depth?.analysis
+      ? `Depth chart: ${depth.pos || pos}${depth.status ? ` (${depth.status})` : ''} — ${depth.analysis}${depth.starters ? ` Starters listed: ${depth.starters}.` : ''}`
+      : tier
+        ? `Depth tier on file: ${tier}.`
+        : 'Use roster identity + any live beat seed; do not invent snap counts or injuries.',
+    seed
+      ? `Latest beat seed: ${seed.slice(0, 280)}`
+      : 'No live beat text on file — write from roster/depth facts only (camp, weight room, position battle, role).'
+  ].join(' ');
+
+  const vaultAngle = [
+    `Angle: Own ${name}'s Florida roster story in Vault voice — camp / weight program / depth-chart / role energy. This is program football, not HS recruiting.`,
+    seed
+      ? `INTERNAL intel seed (absorb into Vault voice — NEVER name writers, never say beat/report/according to): "${seed.slice(0, 220)}"`
+      : 'INTERNAL: no fresh seed — lean on verified roster + depth-chart facts only.',
+    depth?.status === 'battle'
+      ? `Vault edge: position battle at ${depth.pos || pos} — frame the competition without inventing a winner.`
+      : `Vault edge: why ${name} matters for Florida fans right now (role, trench/space impact, camp timeline) without inventing facts.`,
+    'FORBIDDEN: commit culture, offer ladders, RPM, OV checklists, FutureCast board language, class-of-2028 framing.'
+  ].join('\n');
+
+  const lines = [
+    'GATORVAULT ROSTER BRIEF (Florida football / team)',
+    '=================================================',
+    `Player: ${name}`,
+    `Slug: ${normalized}`,
+    `Desk: roster (current UF player — NOT a recruiting target)`,
+    line('Jersey', jersey || null),
+    line('Position', pos),
+    line('Class', year || null),
+    line('Size', htWt),
+    line('Hometown', hometown),
+    line('Unit', unit),
+    line('Depth tier', tier),
+    depth?.pos ? line('Depth chart spot', `${depth.pos}${depth.status ? ` · ${depth.status}` : ''}`) : null,
+    depth?.analysis ? line('Depth note', depth.analysis) : null,
+    '',
+    'WHY FLORIDA',
+    '-----------',
+    whyFlorida,
+    '',
+    'VAULT ANGLE (own the story — Vault voice)',
+    '-------------------------------',
+    vaultAngle,
+    '',
+    'BEAT INTEL (newest first)',
+    '------------------------'
+  ].filter((l) => l !== null);
+
+  if (!beatRows.length) {
+    lines.push('(no beat rows — write from roster + depth facts; camp/weight-room/role angles OK when grounded)');
+  } else {
+    beatRows.slice(0, 8).forEach((row, i) => {
+      const when = row.reportedAt || row.createdAt || '';
+      const src = row.source || 'beat';
+      const body = String(row.detail || row.skinny || row.text || '').trim();
+      lines.push(`${i + 1}. [${when}] (${src})`);
+      lines.push(body.slice(0, 500));
+      if (row.articleUrl) lines.push(`Source: ${row.articleUrl}`);
+      lines.push('');
+    });
+  }
+
+  lines.push(
+    '',
+    'POST HEADER (required — deliver BEFORE the post body)',
+    '---------------------------------------------------------',
+    'AGENT RULE (hard): Always output an elite HEADER above the post.',
+    'Format exactly:',
+    'HEADER: <your header here>',
+    'Then a blank line, then the post body.',
+    'Energy: Florida football urgency + specificity (camp, trench battle, weight-room leap, role) — ORIGINAL Vault wording. Forbidden: "Breaking", emoji spam, cloned beat openers, recruiting RPM/offer language.',
+    '',
+    'INSTRUCTIONS FOR AI',
+    '-------------------',
+    'Write one GatorVault Insider X post about this CURRENT Florida roster player / team story (long-form OK). Target 600–900 characters for the BODY (hard cap 1000). HEADER is separate and does not count against the body cap.',
+    'SCOPE RULE (hard): This is Florida Gators football coverage — roster, camp, weight program, depth chart, role. GatorVault is not recruiting-only. Do NOT draft a commit/offer/OV/FutureCast recruit post.',
+    'VOICE RULE (hard): GatorVault original take. FORBIDDEN: naming beat writers, "according to", "reports say", "per On3/247", "I watched the film".',
+    'Structure: (0) HEADER, (1) Florida stake opener, (2) identity (name/pos/class/size), (3) depth-chart or camp/weight-room stake from facts on file, (4) why fans should care now, (5) sharp Florida-forward closer.',
+    'Stay factual to roster + depth note + beat seed — no invented injuries, snap counts, starters named as locked unless the depth note says so, or quotes.',
+    '',
+    'FUTURECAST FEED',
+    '---------------',
+    '(n/a — current roster player; do not seed recruiting board / allowlist)'
+  );
+
+  const pasteText = lines.join('\n');
+  return {
+    ok: true,
+    slug: normalized,
+    playerName: name,
+    deskKind: 'roster',
+    rosterPlayer: true,
+    updatedAt: new Date().toISOString(),
+    player: null,
+    roster: {
+      slug: normalized,
+      name,
+      pos,
+      year,
+      jersey: roster.jersey ?? null,
+      unit,
+      depthChartTier: tier,
+      height: roster.height || null,
+      weight: roster.weight || null,
+      hometown
+    },
+    depthChart: depth,
+    whyFlorida,
+    vaultAngle,
+    boardFacts: depth?.analysis
+      ? `Depth: ${depth.pos || pos} · ${depth.status || tier || 'roster'} — ${depth.analysis}`
+      : `Roster: ${identityBits.join(' · ')}`,
+    futurecastFeed: { ok: true, skipped: true, reason: 'roster_player' },
+    beatRows,
+    liveBeatCount: beatRows.filter((r) => r.liveBeat).length,
+    research: {
+      whyFlorida,
+      vaultAngle,
+      eventType: 'team_event',
+      ufPosition: 'roster'
+    },
+    pasteText,
+    opts
+  };
+}
+
 /**
  * Full brief packet for Beat Desk UI + copy/paste.
  * Research always runs. Heavy inspect/compose only when opts.full === true.
@@ -1051,45 +1244,10 @@ async function buildBeatBrief(slug, opts = {}) {
     /* fall through to recruit brief */
   }
 
-  // Current UF roster identity — do not invent a 2028 commit chase brief.
+  // Current UF roster identity → Florida football / team packet (not recruiting).
   const rosterHit = currentRosterCollision(normalized);
   if (rosterHit) {
-    const pos = rosterHit.pos || rosterHit.position || 'player';
-    const year = rosterHit.year || rosterHit.class || '';
-    const jersey = rosterHit.jersey != null ? `#${rosterHit.jersey}` : '';
-    const label = [rosterHit.name || normalized, jersey, pos, year].filter(Boolean).join(' · ');
-    const pasteText = [
-      'GATORVAULT BEAT BRIEF',
-      '=====================',
-      `Player: ${rosterHit.name || normalized}`,
-      `Slug: ${normalized}`,
-      '',
-      'ROSTER COLLISION — NOT A RECRUITING TARGET',
-      '-----------------------------------------',
-      `${label} is on the current Florida roster (Team / depth chart / weight program),`,
-      'not a high-school board chase. Do NOT draft a commit-culture or FutureCast recruit post.',
-      'If this name appeared from summer-workout / roster chatter, ignore it for Beat Desk recruiting.',
-      '',
-      'Open the Team profile instead of Recruiting / FutureCast for this slug.'
-    ].join('\n');
-    return {
-      ok: false,
-      error: 'current_roster_player',
-      slug: normalized,
-      playerName: rosterHit.name || normalized,
-      roster: {
-        slug: normalized,
-        name: rosterHit.name || normalized,
-        pos,
-        year,
-        jersey: rosterHit.jersey ?? null
-      },
-      pasteText,
-      research: {
-        whyFlorida: 'N/A — current UF roster player, not a board target.',
-        vaultAngle: 'Do not post. Roster collision / false recruiting intel.'
-      }
-    };
+    return buildRosterDeskBrief(normalized, rosterHit, opts);
   }
 
   const { inspectPlayer, isBeatIntel } = require('./post-studio-intel-inbox');
@@ -1462,6 +1620,7 @@ async function buildBeatBrief(slug, opts = {}) {
 module.exports = {
   buildBeatBrief,
   buildHubDeskBrief,
+  buildRosterDeskBrief,
   formatBriefText,
   formatFilmTraitsBlock,
   formatProjectionCompBlock,

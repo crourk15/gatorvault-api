@@ -216,12 +216,30 @@ async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 }
       }
     }
     if (hit?.playerSlug) {
+      const playerSlug = normalizeSlug(hit.playerSlug);
+      // Current UF roster names are Florida football coverage — not HS recruiting.
+      let deskKind = 'recruit';
+      let eventType = 'beat_live';
+      try {
+        const rosterStore = require('./roster-store');
+        const onRoster = rosterStore.getRosterPlayerBySlug(playerSlug);
+        const recruitingCue =
+          /\b(offer(?:ed)?|official visit|\bov\b|unofficial visit|commits? to|commitment|class of 202[7-9]|4-star|5-star|\brpm\b|top ?100)\b/i.test(
+            text
+          );
+        if (onRoster && !recruitingCue) {
+          deskKind = 'roster';
+          eventType = 'team_event';
+        }
+      } catch {
+        /* optional */
+      }
       rows.push({
-        playerSlug: normalizeSlug(hit.playerSlug),
+        playerSlug,
         playerName: hit.playerName || null,
         source: `beat-writer:${String(p.handle || p.writerName || 'live').replace(/^@/, '')}`,
-        eventType: 'beat_live',
-        deskKind: 'recruit',
+        eventType,
+        deskKind,
         detail: text,
         skinny: text.slice(0, 200),
         reportedAt,
