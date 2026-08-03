@@ -262,6 +262,45 @@
     _healthPollTimer = setInterval(pollModuleHealth, ms);
   }
 
+  /**
+   * Always-visible topbar light: green = OK, yellow = waking, red flash = DOWN.
+   * Charles should never have to guess whether Render is healthy.
+   */
+  function setApiStatusLight(level, detail) {
+    var btn = document.getElementById('hub-api-light');
+    if (!btn) return;
+    var label = btn.querySelector('.hub-api-light__label');
+    btn.classList.remove(
+      'hub-api-light--checking',
+      'hub-api-light--ok',
+      'hub-api-light--wake',
+      'hub-api-light--down'
+    );
+    var text = 'API …';
+    var title = 'API status — click to recheck';
+    if (level === 'ok') {
+      btn.classList.add('hub-api-light--ok');
+      text = 'API OK';
+      title = 'Render API healthy — App Store / War Room login should work. Click to recheck.';
+    } else if (level === 'wake') {
+      btn.classList.add('hub-api-light--wake');
+      text = 'API waking';
+      title = 'Server waking (503) — sit tight. Click to recheck.';
+    } else if (level === 'critical' || level === 'down') {
+      btn.classList.add('hub-api-light--down');
+      text = 'API DOWN';
+      title = 'API DOWN — App Store / War Room login will fail. Restart gatorvault-api on Render. Click to recheck.';
+    } else {
+      btn.classList.add('hub-api-light--checking');
+      text = 'API …';
+    }
+    if (label) label.textContent = text;
+    if (detail) title = detail + ' Click to recheck.';
+    btn.title = title;
+    btn.setAttribute('aria-label', text);
+    btn.setAttribute('data-api-status', level || 'checking');
+  }
+
   /** Cheap public probe — no PIN, no wake storm. Uses /api/ping (Netlify proxies /api/*). */
   function probeApiAlive() {
     return fetch(API + '/api/ping', {
@@ -359,14 +398,17 @@
     _apiDownLevel = null;
     setDocTitleApiDown(false);
     clearOpsStripApiDown();
+    setApiStatusLight('ok');
     scheduleHealthPoll(HEALTH_POLL_OK_MS);
   }
 
   function pollModuleHealth() {
     if (!pin()) return;
+    setApiStatusLight(_apiDownLevel === 'critical' ? 'critical' : (_apiDownLevel === 'wake' ? 'wake' : 'checking'));
     probeApiAlive()
       .then(function () {
         if (_apiDownLevel) clearApiDownState();
+        else setApiStatusLight('ok');
         showApiBanner(null);
         var healthP = apiGet('/api/admin/hub/module-health', { skipWake: true, retries: 1 })
           .then(function (j) {
@@ -396,7 +438,19 @@
       });
   }
 
+  function wireApiStatusLight() {
+    var btn = document.getElementById('hub-api-light');
+    if (!btn || btn.getAttribute('data-wired') === '1') return;
+    btn.setAttribute('data-wired', '1');
+    btn.addEventListener('click', function () {
+      setApiStatusLight('checking');
+      pollModuleHealth();
+    });
+  }
+
   function startHealthPoll() {
+    wireApiStatusLight();
+    setApiStatusLight('checking');
     pollModuleHealth();
     scheduleHealthPoll(HEALTH_POLL_OK_MS);
   }
@@ -526,6 +580,7 @@
       try { sessionStorage.removeItem('gv:hub:wakeMode'); } catch (e) { /* ignore */ }
       setDocTitleApiDown(false);
       clearOpsStripApiDown();
+      setApiStatusLight('ok');
       return;
     }
     var raw = String(message || '');
@@ -545,12 +600,14 @@
       try { sessionStorage.removeItem('gv:hub:wakeMode'); } catch (e) { /* ignore */ }
       setDocTitleApiDown(true);
       applyOpsStripApiDown(opts.status);
+      setApiStatusLight('critical');
     } else {
       el.classList.add('hub-api-banner--wake');
       el.textContent = 'Server waking up — sit tight. Do not run Deploy recovery yet.';
       try { sessionStorage.setItem('gv:hub:wakeMode', '1'); } catch (e) { /* ignore */ }
       setDocTitleApiDown(false);
       clearOpsStripApiDown();
+      setApiStatusLight('wake');
     }
     el.classList.remove('hidden');
   }
@@ -1487,7 +1544,8 @@
     applyOpsStrip: applyOpsStrip,
     pushActivity: pushActivity,
     showApiBanner: showApiBanner,
-    probeApiAlive: probeApiAlive
+    probeApiAlive: probeApiAlive,
+    setApiStatusLight: setApiStatusLight
   };
 
   if (document.readyState === 'loading') {
