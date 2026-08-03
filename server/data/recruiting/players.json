@@ -33058,13 +33058,13 @@
     "school": "Blountstown (Blountstown, FL)",
     "htWt": "6-2 / 175",
     "stars": 4,
-    "rating": null,
+    "rating": 89.51231884057971,
     "ratingOverride": null,
     "vaultGrade": null,
     "vaultGradeUpdatedAt": null,
     "natlRank": 175,
     "posRank": 14,
-    "stateRank": null,
+    "stateRank": 29,
     "inState": true,
     "category": "target",
     "status": "uncommitted",
@@ -33073,10 +33073,10 @@
     "commitDate": null,
     "skinny": "2028 4-star S — Blountstown. UF daily contact + early On3 RPM momentum (Alderman).",
     "profileNote": "Promoted to 2028 allowlist after Blake Alderman UF RPM teaser (2026-07-18).",
-    "on3Id": 242617,
+    "on3Id": "242617",
     "on3Slug": "cyion-smith-242617",
     "on3ProfileUrl": "https://www.on3.com/rivals/cyion-smith-242617/",
-    "on3Source": "allowlist",
+    "on3Source": "on3-board-sync",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -33090,20 +33090,53 @@
     "headliner": false,
     "ufProbability": null,
     "fitScore": null,
-    "staff_lead_id": null,
+    "staff_lead_id": "collins",
     "secondary_recruiter_id": null,
     "hometownCity": "Blountstown",
     "hometownState": "FL",
-    "stateFips": null,
-    "pinLat": null,
-    "pinLng": null,
+    "stateFips": "12",
+    "pinLat": 27.766279,
+    "pinLng": -81.686783,
     "nilValue": null,
     "nilEstimate": null,
     "nilSource": null,
-    "competitors": [],
+    "competitors": [
+      {
+        "school": "USF Bulls",
+        "score": 1.3480055020632735,
+        "pct": 1.3480055020632735,
+        "source": "legacy",
+        "updatedAt": "2026-08-03T02:53:32.455Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Auburn",
+        "score": 0.6602475928473175,
+        "pct": 0.6602475928473175,
+        "source": "legacy",
+        "updatedAt": "2026-08-03T02:53:32.455Z",
+        "trend": "flat"
+      },
+      {
+        "school": "Miami",
+        "score": 0.09170105456212745,
+        "pct": 0.09170105456212745,
+        "source": "legacy",
+        "updatedAt": "2026-08-03T02:53:32.455Z",
+        "trend": "flat"
+      },
+      {
+        "school": "South Carolina",
+        "score": 0.09170105456212745,
+        "pct": 0.09170105456212745,
+        "source": "legacy",
+        "updatedAt": "2026-08-03T02:53:32.455Z",
+        "trend": "flat"
+      }
+    ],
     "ufRpmPct": 97,
-    "updatedAt": "2026-08-03T02:27:45.768Z",
-    "displayRating": null,
+    "updatedAt": "2026-08-03T02:53:53.759Z",
+    "displayRating": 89.51231884057971,
     "ratingIsOverride": false,
     "height": "6-2",
     "weight": 175,
@@ -33114,8 +33147,1890 @@
         "offerType": "Offered",
         "date": null,
         "source": "on3"
+      },
+      {
+        "school": "USF Bulls",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Auburn Tigers",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Miami Hurricanes",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "South Carolina Gamecocks",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Mississippi State Bulldogs",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Oregon Ducks",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "North Carolina Tar Heels",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Wisconsin Badgers",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Virginia Tech Hokies",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Wake Forest Demon Deacons",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Louisville Cardinals",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Boston College Eagles",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Michigan Wolverines",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
       }
-    ]
+    ],
+    "boardSource": null,
+    "protected": false,
+    "verifiedCommit": false,
+    "offerList": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      }
+    ],
+    "visits": [
+      {
+        "school": "Florida Gators",
+        "visitType": "unofficial_visit",
+        "date": "2026-06-20",
+        "source": "on3"
+      },
+      {
+        "school": "Florida Gators",
+        "visitType": "unofficial_visit",
+        "date": "2026-06-03",
+        "source": "on3"
+      },
+      {
+        "school": "USF Bulls",
+        "visitType": "unofficial_visit",
+        "date": "2026-04-16",
+        "source": "on3"
+      },
+      {
+        "school": "Auburn Tigers",
+        "visitType": "unofficial_visit",
+        "date": "2026-03-24",
+        "source": "on3"
+      },
+      {
+        "school": "USF Bulls",
+        "visitType": "unofficial_visit",
+        "date": "2024-08-31",
+        "source": "on3"
+      }
+    ],
+    "on3TopTeams": [
+      {
+        "team": {
+          "assetUrl": {
+            "key": 19488,
+            "url": "https://on3static.com/uploads/assets/935/149/149935.svg",
+            "slug": "florida-gators",
+            "fullName": "Florida Gators"
+          },
+          "fullName": "Florida Gators",
+          "key": 19488,
+          "name": "Florida",
+          "mascot": "Gators",
+          "abbreviation": "UF",
+          "asset": {
+            "key": 149935,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/935/149/149935.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/935/149",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "florida-gators",
+          "urlSlug": "florida-gators-19488",
+          "primaryColor": "#0352a1"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          {
+            "type": "primary",
+            "key": 132060,
+            "name": "Chris Collins",
+            "lastName": "",
+            "slug": "chris-collins-132060"
+          },
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 172.6752484605905,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 2,
+        "latestVisit": {
+          "official": false,
+          "dateOccurred": 1781913600,
+          "organizationKey": 19488
+        },
+        "prediction": 96.983035304906,
+        "committedDate": null,
+        "draftPositionCount": 1,
+        "draftTotal": 21,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 21323,
+            "url": "https://on3static.com/uploads/assets/309/150/150309.svg",
+            "slug": "usf-bulls",
+            "fullName": "USF Bulls"
+          },
+          "fullName": "USF Bulls",
+          "key": 21323,
+          "name": "USF",
+          "mascot": "Bulls",
+          "abbreviation": "USF",
+          "asset": {
+            "key": 150309,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/309/150/150309.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/309/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "usf-bulls",
+          "urlSlug": "usf-bulls-21323",
+          "primaryColor": "#005841"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 231.24768328397928,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 2,
+        "latestVisit": {
+          "official": false,
+          "dateOccurred": 1776297600,
+          "organizationKey": 21323
+        },
+        "prediction": 1.3480055020632735,
+        "committedDate": null,
+        "draftPositionCount": 0,
+        "draftTotal": 0,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 1894,
+            "url": "https://on3static.com/uploads/assets/732/149/149732.svg",
+            "slug": "auburn-tigers",
+            "fullName": "Auburn Tigers"
+          },
+          "fullName": "Auburn Tigers",
+          "key": 1894,
+          "name": "Auburn",
+          "mascot": "Tigers",
+          "abbreviation": "AUB",
+          "asset": {
+            "key": 149732,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/732/149/149732.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/732/149",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "auburn-tigers",
+          "urlSlug": "auburn-tigers-1894",
+          "primaryColor": "#002649"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 148.71681397823383,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 1,
+        "latestVisit": {
+          "official": false,
+          "dateOccurred": 1774310400,
+          "organizationKey": 1894
+        },
+        "prediction": 0.6602475928473175,
+        "committedDate": null,
+        "draftPositionCount": 1,
+        "draftTotal": 18,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 15977,
+            "url": "https://on3static.com/uploads/assets/81/146/146081.svg",
+            "slug": "miami-hurricanes",
+            "fullName": "Miami Hurricanes"
+          },
+          "fullName": "Miami Hurricanes",
+          "key": 15977,
+          "name": "Miami",
+          "mascot": "Hurricanes",
+          "abbreviation": "MIA",
+          "asset": {
+            "key": 146081,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/81/146/146081.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/81/146",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "miami-hurricanes",
+          "urlSlug": "miami-hurricanes-15977",
+          "primaryColor": "#034702"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 435.3252863402592,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 3,
+        "draftTotal": 23,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 16266,
+            "url": "https://on3static.com/uploads/assets/233/150/150233.svg",
+            "slug": "south-carolina-gamecocks",
+            "fullName": "South Carolina Gamecocks"
+          },
+          "fullName": "South Carolina Gamecocks",
+          "key": 16266,
+          "name": "South Carolina",
+          "mascot": "Gamecocks",
+          "abbreviation": "SC",
+          "asset": {
+            "key": 150233,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/233/150/150233.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/233/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "south-carolina-gamecocks",
+          "urlSlug": "south-carolina-gamecocks-16266",
+          "primaryColor": "#73000A"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 341.6257358570635,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 2,
+        "draftTotal": 17,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 16253,
+            "url": "https://on3static.com/uploads/assets/526/238/238526.svg",
+            "slug": "mississippi-state-bulldogs",
+            "fullName": "Mississippi State Bulldogs"
+          },
+          "fullName": "Mississippi State Bulldogs",
+          "key": 16253,
+          "name": "Mississippi State",
+          "mascot": "Bulldogs",
+          "abbreviation": "MSST",
+          "asset": {
+            "key": 238526,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/526/238/238526.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/526/238",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "mississippi-state-bulldogs",
+          "urlSlug": "mississippi-state-bulldogs-16253",
+          "primaryColor": "#500000"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 303.271242301897,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": "2025-10-09T15:38:00",
+        "draftPositionCount": 0,
+        "draftTotal": 7,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 10273,
+            "url": "https://on3static.com/uploads/assets/136/150/150136.svg",
+            "slug": "oregon-ducks",
+            "fullName": "Oregon Ducks"
+          },
+          "fullName": "Oregon Ducks",
+          "key": 10273,
+          "name": "Oregon",
+          "mascot": "Ducks",
+          "abbreviation": "ORE",
+          "asset": {
+            "key": 150136,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/136/150/150136.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/136/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "oregon-ducks",
+          "urlSlug": "oregon-ducks-10273",
+          "primaryColor": "#004F27"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 2268.2555092116727,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 3,
+        "draftTotal": 31,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 9486,
+            "url": "https://on3static.com/uploads/assets/102/150/150102.svg",
+            "slug": "north-carolina-tar-heels",
+            "fullName": "North Carolina Tar Heels"
+          },
+          "fullName": "North Carolina Tar Heels",
+          "key": 9486,
+          "name": "North Carolina",
+          "mascot": "Tar Heels",
+          "abbreviation": "UNC",
+          "asset": {
+            "key": 150102,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/102/150/150102.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/102/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "north-carolina-tar-heels",
+          "urlSlug": "north-carolina-tar-heels-9486",
+          "primaryColor": "#7BAFD4"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 518.0500920858242,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 0,
+        "draftTotal": 8,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 5667,
+            "url": "https://on3static.com/uploads/assets/762/149/149762.svg",
+            "slug": "wisconsin-badgers",
+            "fullName": "Wisconsin Badgers"
+          },
+          "fullName": "Wisconsin Badgers",
+          "key": 5667,
+          "name": "Wisconsin",
+          "mascot": "Badgers",
+          "abbreviation": "WIS",
+          "asset": {
+            "key": 149762,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/762/149/149762.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/762/149",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "wisconsin-badgers",
+          "urlSlug": "wisconsin-badgers-5667",
+          "primaryColor": "#940000"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          {
+            "type": "primary",
+            "key": 101325,
+            "name": "Robert Steeples",
+            "lastName": "",
+            "slug": "robert-steeples-101325"
+          },
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 906.6806592244275,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 1,
+        "draftTotal": 7,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 20439,
+            "url": "https://on3static.com/uploads/assets/334/150/150334.svg",
+            "slug": "virginia-tech-hokies",
+            "fullName": "Virginia Tech Hokies"
+          },
+          "fullName": "Virginia Tech Hokies",
+          "key": 20439,
+          "name": "Virginia Tech",
+          "mascot": "Hokies",
+          "abbreviation": "VT",
+          "asset": {
+            "key": 150334,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/334/150/150334.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/334/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "virginia-tech-hokies",
+          "urlSlug": "virginia-tech-hokies-20439",
+          "primaryColor": "#942942"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 542.9127354320274,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 1,
+        "draftTotal": 6,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 20147,
+            "url": "https://on3static.com/uploads/assets/338/150/150338.svg",
+            "slug": "wake-forest-demon-deacons",
+            "fullName": "Wake Forest Demon Deacons"
+          },
+          "fullName": "Wake Forest Demon Deacons",
+          "key": 20147,
+          "name": "Wake Forest",
+          "mascot": "Demon Deacons",
+          "abbreviation": "WAKE",
+          "asset": {
+            "key": 150338,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/338/150/150338.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/338/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "wake-forest-demon-deacons",
+          "urlSlug": "wake-forest-demon-deacons-20147",
+          "primaryColor": "#000"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 484.96346121249724,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 1,
+        "draftTotal": 7,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 12005,
+            "url": "https://on3static.com/uploads/assets/5/150/150005.svg",
+            "slug": "louisville-cardinals",
+            "fullName": "Louisville Cardinals"
+          },
+          "fullName": "Louisville Cardinals",
+          "key": 12005,
+          "name": "Louisville",
+          "mascot": "Cardinals",
+          "abbreviation": "LOU",
+          "asset": {
+            "key": 150005,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/5/150/150005.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/5/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "louisville-cardinals",
+          "urlSlug": "louisville-cardinals-12005",
+          "primaryColor": "#bd0000"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 542.9580144200464,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 0,
+        "draftTotal": 11,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 20485,
+            "url": "https://on3static.com/uploads/assets/841/149/149841.svg",
+            "slug": "boston-college-eagles",
+            "fullName": "Boston College Eagles"
+          },
+          "fullName": "Boston College Eagles",
+          "key": 20485,
+          "name": "Boston College",
+          "mascot": "Eagles",
+          "abbreviation": "BC",
+          "asset": {
+            "key": 149841,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/841/149/149841.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/841/149",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "boston-college-eagles",
+          "urlSlug": "boston-college-eagles-20485",
+          "primaryColor": "#910029"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 1126.6741458222898,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 0,
+        "draftTotal": 10,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 15421,
+            "url": "https://on3static.com/uploads/assets/39/150/150039.svg",
+            "slug": "michigan-wolverines",
+            "fullName": "Michigan Wolverines"
+          },
+          "fullName": "Michigan Wolverines",
+          "key": 15421,
+          "name": "Michigan",
+          "mascot": "Wolverines",
+          "abbreviation": "MICH",
+          "asset": {
+            "key": 150039,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/39/150/150039.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/39/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "michigan-wolverines",
+          "urlSlug": "michigan-wolverines-15421",
+          "primaryColor": "#00284f"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 821.7015795035855,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 0,
+        "draftTotal": 35,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      }
+    ],
+    "topTeams": [
+      {
+        "team": {
+          "assetUrl": {
+            "key": 19488,
+            "url": "https://on3static.com/uploads/assets/935/149/149935.svg",
+            "slug": "florida-gators",
+            "fullName": "Florida Gators"
+          },
+          "fullName": "Florida Gators",
+          "key": 19488,
+          "name": "Florida",
+          "mascot": "Gators",
+          "abbreviation": "UF",
+          "asset": {
+            "key": 149935,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/935/149/149935.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/935/149",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "florida-gators",
+          "urlSlug": "florida-gators-19488",
+          "primaryColor": "#0352a1"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          {
+            "type": "primary",
+            "key": 132060,
+            "name": "Chris Collins",
+            "lastName": "",
+            "slug": "chris-collins-132060"
+          },
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 172.6752484605905,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 2,
+        "latestVisit": {
+          "official": false,
+          "dateOccurred": 1781913600,
+          "organizationKey": 19488
+        },
+        "prediction": 96.983035304906,
+        "committedDate": null,
+        "draftPositionCount": 1,
+        "draftTotal": 21,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 21323,
+            "url": "https://on3static.com/uploads/assets/309/150/150309.svg",
+            "slug": "usf-bulls",
+            "fullName": "USF Bulls"
+          },
+          "fullName": "USF Bulls",
+          "key": 21323,
+          "name": "USF",
+          "mascot": "Bulls",
+          "abbreviation": "USF",
+          "asset": {
+            "key": 150309,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/309/150/150309.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/309/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "usf-bulls",
+          "urlSlug": "usf-bulls-21323",
+          "primaryColor": "#005841"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 231.24768328397928,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 2,
+        "latestVisit": {
+          "official": false,
+          "dateOccurred": 1776297600,
+          "organizationKey": 21323
+        },
+        "prediction": 1.3480055020632735,
+        "committedDate": null,
+        "draftPositionCount": 0,
+        "draftTotal": 0,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 1894,
+            "url": "https://on3static.com/uploads/assets/732/149/149732.svg",
+            "slug": "auburn-tigers",
+            "fullName": "Auburn Tigers"
+          },
+          "fullName": "Auburn Tigers",
+          "key": 1894,
+          "name": "Auburn",
+          "mascot": "Tigers",
+          "abbreviation": "AUB",
+          "asset": {
+            "key": 149732,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/732/149/149732.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/732/149",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "auburn-tigers",
+          "urlSlug": "auburn-tigers-1894",
+          "primaryColor": "#002649"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 148.71681397823383,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 1,
+        "latestVisit": {
+          "official": false,
+          "dateOccurred": 1774310400,
+          "organizationKey": 1894
+        },
+        "prediction": 0.6602475928473175,
+        "committedDate": null,
+        "draftPositionCount": 1,
+        "draftTotal": 18,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 15977,
+            "url": "https://on3static.com/uploads/assets/81/146/146081.svg",
+            "slug": "miami-hurricanes",
+            "fullName": "Miami Hurricanes"
+          },
+          "fullName": "Miami Hurricanes",
+          "key": 15977,
+          "name": "Miami",
+          "mascot": "Hurricanes",
+          "abbreviation": "MIA",
+          "asset": {
+            "key": 146081,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/81/146/146081.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/81/146",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "miami-hurricanes",
+          "urlSlug": "miami-hurricanes-15977",
+          "primaryColor": "#034702"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 435.3252863402592,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 3,
+        "draftTotal": 23,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 16266,
+            "url": "https://on3static.com/uploads/assets/233/150/150233.svg",
+            "slug": "south-carolina-gamecocks",
+            "fullName": "South Carolina Gamecocks"
+          },
+          "fullName": "South Carolina Gamecocks",
+          "key": 16266,
+          "name": "South Carolina",
+          "mascot": "Gamecocks",
+          "abbreviation": "SC",
+          "asset": {
+            "key": 150233,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/233/150/150233.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/233/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "south-carolina-gamecocks",
+          "urlSlug": "south-carolina-gamecocks-16266",
+          "primaryColor": "#73000A"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 341.6257358570635,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 2,
+        "draftTotal": 17,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 16253,
+            "url": "https://on3static.com/uploads/assets/526/238/238526.svg",
+            "slug": "mississippi-state-bulldogs",
+            "fullName": "Mississippi State Bulldogs"
+          },
+          "fullName": "Mississippi State Bulldogs",
+          "key": 16253,
+          "name": "Mississippi State",
+          "mascot": "Bulldogs",
+          "abbreviation": "MSST",
+          "asset": {
+            "key": 238526,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/526/238/238526.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/526/238",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "mississippi-state-bulldogs",
+          "urlSlug": "mississippi-state-bulldogs-16253",
+          "primaryColor": "#500000"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 303.271242301897,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": "2025-10-09T15:38:00",
+        "draftPositionCount": 0,
+        "draftTotal": 7,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 10273,
+            "url": "https://on3static.com/uploads/assets/136/150/150136.svg",
+            "slug": "oregon-ducks",
+            "fullName": "Oregon Ducks"
+          },
+          "fullName": "Oregon Ducks",
+          "key": 10273,
+          "name": "Oregon",
+          "mascot": "Ducks",
+          "abbreviation": "ORE",
+          "asset": {
+            "key": 150136,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/136/150/150136.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/136/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "oregon-ducks",
+          "urlSlug": "oregon-ducks-10273",
+          "primaryColor": "#004F27"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 2268.2555092116727,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 3,
+        "draftTotal": 31,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 9486,
+            "url": "https://on3static.com/uploads/assets/102/150/150102.svg",
+            "slug": "north-carolina-tar-heels",
+            "fullName": "North Carolina Tar Heels"
+          },
+          "fullName": "North Carolina Tar Heels",
+          "key": 9486,
+          "name": "North Carolina",
+          "mascot": "Tar Heels",
+          "abbreviation": "UNC",
+          "asset": {
+            "key": 150102,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/102/150/150102.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/102/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "north-carolina-tar-heels",
+          "urlSlug": "north-carolina-tar-heels-9486",
+          "primaryColor": "#7BAFD4"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 518.0500920858242,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 0,
+        "draftTotal": 8,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 5667,
+            "url": "https://on3static.com/uploads/assets/762/149/149762.svg",
+            "slug": "wisconsin-badgers",
+            "fullName": "Wisconsin Badgers"
+          },
+          "fullName": "Wisconsin Badgers",
+          "key": 5667,
+          "name": "Wisconsin",
+          "mascot": "Badgers",
+          "abbreviation": "WIS",
+          "asset": {
+            "key": 149762,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/762/149/149762.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/762/149",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "wisconsin-badgers",
+          "urlSlug": "wisconsin-badgers-5667",
+          "primaryColor": "#940000"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          {
+            "type": "primary",
+            "key": 101325,
+            "name": "Robert Steeples",
+            "lastName": "",
+            "slug": "robert-steeples-101325"
+          },
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 906.6806592244275,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 1,
+        "draftTotal": 7,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 20439,
+            "url": "https://on3static.com/uploads/assets/334/150/150334.svg",
+            "slug": "virginia-tech-hokies",
+            "fullName": "Virginia Tech Hokies"
+          },
+          "fullName": "Virginia Tech Hokies",
+          "key": 20439,
+          "name": "Virginia Tech",
+          "mascot": "Hokies",
+          "abbreviation": "VT",
+          "asset": {
+            "key": 150334,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/334/150/150334.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/334/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "virginia-tech-hokies",
+          "urlSlug": "virginia-tech-hokies-20439",
+          "primaryColor": "#942942"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 542.9127354320274,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 1,
+        "draftTotal": 6,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 20147,
+            "url": "https://on3static.com/uploads/assets/338/150/150338.svg",
+            "slug": "wake-forest-demon-deacons",
+            "fullName": "Wake Forest Demon Deacons"
+          },
+          "fullName": "Wake Forest Demon Deacons",
+          "key": 20147,
+          "name": "Wake Forest",
+          "mascot": "Demon Deacons",
+          "abbreviation": "WAKE",
+          "asset": {
+            "key": 150338,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/338/150/150338.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/338/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "wake-forest-demon-deacons",
+          "urlSlug": "wake-forest-demon-deacons-20147",
+          "primaryColor": "#000"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 484.96346121249724,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 1,
+        "draftTotal": 7,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 12005,
+            "url": "https://on3static.com/uploads/assets/5/150/150005.svg",
+            "slug": "louisville-cardinals",
+            "fullName": "Louisville Cardinals"
+          },
+          "fullName": "Louisville Cardinals",
+          "key": 12005,
+          "name": "Louisville",
+          "mascot": "Cardinals",
+          "abbreviation": "LOU",
+          "asset": {
+            "key": 150005,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/5/150/150005.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/5/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "louisville-cardinals",
+          "urlSlug": "louisville-cardinals-12005",
+          "primaryColor": "#bd0000"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 542.9580144200464,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 0,
+        "draftTotal": 11,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 20485,
+            "url": "https://on3static.com/uploads/assets/841/149/149841.svg",
+            "slug": "boston-college-eagles",
+            "fullName": "Boston College Eagles"
+          },
+          "fullName": "Boston College Eagles",
+          "key": 20485,
+          "name": "Boston College",
+          "mascot": "Eagles",
+          "abbreviation": "BC",
+          "asset": {
+            "key": 149841,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/841/149/149841.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/841/149",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "boston-college-eagles",
+          "urlSlug": "boston-college-eagles-20485",
+          "primaryColor": "#910029"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 1126.6741458222898,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 0,
+        "draftTotal": 10,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      },
+      {
+        "team": {
+          "assetUrl": {
+            "key": 15421,
+            "url": "https://on3static.com/uploads/assets/39/150/150039.svg",
+            "slug": "michigan-wolverines",
+            "fullName": "Michigan Wolverines"
+          },
+          "fullName": "Michigan Wolverines",
+          "key": 15421,
+          "name": "Michigan",
+          "mascot": "Wolverines",
+          "abbreviation": "MICH",
+          "asset": {
+            "key": 150039,
+            "domainOverride": null,
+            "domain": "on3static.com",
+            "sourceOverride": null,
+            "source": "/uploads/assets/39/150/150039.svg",
+            "title": "Organization Logo",
+            "description": null,
+            "caption": null,
+            "category": null,
+            "altText": null,
+            "height": 1600,
+            "width": 2000,
+            "assetType": "Image",
+            "fileSystem": "s3",
+            "path": "/uploads/assets/39/150",
+            "type": "svg",
+            "thumbnail": null,
+            "duration": 0,
+            "mimeType": "image/svg+xml"
+          },
+          "slug": "michigan-wolverines",
+          "urlSlug": "michigan-wolverines-15421",
+          "primaryColor": "#00284f"
+        },
+        "year": 2028,
+        "sport": {
+          "key": 1,
+          "name": "Football"
+        },
+        "coaches": [
+          null,
+          null
+        ],
+        "status": "Offered",
+        "interest": 1,
+        "distance": 821.7015795035855,
+        "classRank": null,
+        "officialVisitCount": 0,
+        "unOfficialVisitCount": 0,
+        "latestVisit": null,
+        "prediction": 0.09170105456212745,
+        "committedDate": null,
+        "draftPositionCount": 0,
+        "draftTotal": 35,
+        "positionAbbreviation": "S",
+        "positionKey": 11
+      }
+    ],
+    "evaluationSummary": "4★ S · #175 natl · Blountstown (Blountstown, FL)"
   },
   {
     "id": "dominick-harris-payne",

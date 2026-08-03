@@ -435,16 +435,41 @@ function resolvePlayerSlugFromOn3(player, byOn3Id) {
   return String(rawSlug).replace(/-\d+$/, '') || store.slugify(player?.fullName || player?.name || '');
 }
 
+function on3VisitDate(v) {
+  if (!v) return null;
+  if (v.date || v.visitDate) return v.date || v.visitDate;
+  const ts = Number(v.dateOccurred);
+  if (Number.isFinite(ts) && ts > 0) {
+    const ms = ts < 1e12 ? ts * 1000 : ts;
+    return new Date(ms).toISOString().slice(0, 10);
+  }
+  return null;
+}
+
 function extractOn3ProfileVisits(profile) {
   const visits = [];
-  const list = Array.isArray(profile.visits) ? profile.visits : profile.visits?.list || [];
+  // On3 recruit pageProps shape: { visits: { visits: [...], organizationCounts } }
+  const list = Array.isArray(profile.visits)
+    ? profile.visits
+    : Array.isArray(profile.visits?.visits)
+      ? profile.visits.visits
+      : Array.isArray(profile.visits?.list)
+        ? profile.visits.list
+        : [];
   for (const v of list) {
     const school = teamNameFromOn3(v.organization || v.team || v.school);
     if (!school) continue;
+    const typeRaw = String(v.visitType || v.type || '');
+    const official =
+      v.official === true || (/official/i.test(typeRaw) && !/unofficial/i.test(typeRaw));
+    const org = v.organization || v.team || v.school;
     visits.push({
-      school,
-      visitType: v.official ? 'official_visit' : 'unofficial_visit',
-      date: v.date || v.visitDate || null,
+      school:
+        on3Recruit.isFloridaTeam(org) || /^florida(\s+gators)?$/i.test(String(school || ''))
+          ? 'Florida'
+          : school,
+      visitType: official ? 'official_visit' : 'unofficial_visit',
+      date: on3VisitDate(v),
       source: 'on3',
     });
   }
