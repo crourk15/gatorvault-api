@@ -450,7 +450,10 @@
           : 'recruit');
         var kindBadge = kind === 'recruit'
           ? ''
-          : '<span class="hub-env-badge" style="margin-left:6px;background:#1d4ed8">' + esc(kind === 'program' ? 'PROGRAM' : 'TEAM') + '</span>';
+          : '<span class="hub-env-badge" style="margin-left:6px;background:'
+            + (kind === 'roster' ? '#0f766e' : '#1d4ed8') + '">'
+            + esc(kind === 'program' ? 'PROGRAM' : (kind === 'roster' ? 'ROSTER' : 'TEAM'))
+            + '</span>';
         return '<tr data-bd-slug="' + esc(slug) + '" class="hub-ps-row' + (slug === selectedSlug ? ' hub-ps-row--active' : '') + '">'
           + '<td><strong style="color:#fff">' + esc(name) + '</strong>' + kindBadge
           + '<div class="hub-meta" style="margin:2px 0 0">' + esc(slug) + '</div></td>'
@@ -484,7 +487,7 @@
         + '<div class="hub-table-wrap"><table class="hub-table" style="width:100%">'
         + '<thead><tr><th>Topic / Player</th><th>Status</th><th>Age</th><th>Beat</th><th>Action</th></tr></thead>'
         + '<tbody>' + rows + '</tbody></table></div>'
-        + '<p class="hub-meta" style="margin:10px 0 0">TEAM / PROGRAM rows = camp, staff, schedule, facilities — whole-hub coverage, not just recruiting.</p>'
+        + '<p class="hub-meta" style="margin:10px 0 0">TEAM / PROGRAM / ROSTER rows = camp, staff, schedule, facilities, current players — whole Florida football coverage, not just recruiting.</p>'
         + '</section>'
         + '<section class="hub-card hub-card-wide" id="hub-bd-brief">'
         + '<h3>Vault packet</h3>'
