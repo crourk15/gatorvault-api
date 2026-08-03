@@ -154,6 +154,11 @@ function getCacheMeta() {
 }
 
 function scheduleBackgroundRefresh() {
+  // Opt-in — a 45s sync warm loop was crash-looping Render /health after boot.
+  if (process.env.LIVE_DASHBOARD_BACKGROUND_REFRESH !== 'true') {
+    console.log('[live-dashboard-cache] background refresh off (set LIVE_DASHBOARD_BACKGROUND_REFRESH=true)');
+    return;
+  }
   setInterval(() => {
     // Async only — sync warm here was stalling /health during App Review.
     scheduleAsyncWarm();
