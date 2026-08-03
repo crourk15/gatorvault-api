@@ -42,6 +42,29 @@ mustInclude('lib/vault-menu-boot.js', [
   'applyBodyLock',
   'gv-scroll-locked',
 ]);
+mustInclude('lib/mobile-native-framework.css', [
+  '.gv-mobile-back-top',
+  'var(--mobile-gutter, 16px)',
+  'left: auto',
+]);
+
+// Cyclic custom props invalidate tokens app-wide (broke homepage back-to-top).
+{
+  const tokensRel = 'styles/recruiting-hub-tokens.css';
+  const abs = path.join(ROOT, tokensRel);
+  if (!fs.existsSync(abs)) {
+    failures.push(`missing file: ${tokensRel}`);
+  } else {
+    const text = fs
+      .readFileSync(abs, 'utf8')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\/\/.*$/gm, '');
+    const cyclic = text.match(/--(space-(?:md|lg|xl))\s*:\s*var\(\s*--\1\s*\)/g);
+    if (cyclic && cyclic.length) {
+      failures.push(`${tokensRel}: cyclic custom props ${cyclic.join(', ')}`);
+    }
+  }
+}
 
 if (failures.length) {
   console.error('[verify-mobile-hardening] FAIL');

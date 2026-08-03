@@ -1097,16 +1097,18 @@
     }
   }
 
-  /* Floating back-to-top */
+  /* Floating back-to-top — keep literal fallbacks so a broken token cascade
+     cannot invalidate `right` and pin the control to the left edge. */
   .gv-mobile-back-top {
     position: fixed;
-    right: max(var(--mobile-gutter), env(safe-area-inset-right, 0px));
+    left: auto;
+    right: max(var(--mobile-gutter, 16px), env(safe-area-inset-right, 0px));
     bottom: max(calc(72px + env(safe-area-inset-bottom, 0px)), 80px);
     z-index: 45;
     width: 44px;
     height: 44px;
     border: none;
-    border-radius: var(--mobile-radius);
+    border-radius: var(--mobile-radius, 12px);
     background: var(--gv-blue, #0021a5);
     color: #fff;
     font-size: 1.125rem;
