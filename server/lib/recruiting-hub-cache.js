@@ -451,8 +451,13 @@ function scheduleHubBootPipeline() {
   }
 
   // Hub warm is fan-facing infrastructure — do NOT gate on X_SCHEDULED_JOBS_ENABLED.
-  const bootDelay = parseInt(process.env.HUB_BOOT_WARM_DELAY_MS || '0', 10);
-  const immediateWarm = process.env.HUB_BOOT_IMMEDIATE_WARM !== 'false';
+  // Default DEFERRED: immediate warm + sync dashboard traffic was blocking /health >5s
+  // and triggering Render restart loops (exit 143) during App Review.
+  const bootDelay = Math.max(
+    60000,
+    parseInt(process.env.HUB_BOOT_WARM_DELAY_MS || '90000', 10) || 90000
+  );
+  const immediateWarm = process.env.HUB_BOOT_IMMEDIATE_WARM === 'true';
   // Starter can OOM on full warm; priority hero/bundle/class keys first (higher RSS ceiling).
   const priorityRssLimit = parseInt(process.env.HUB_PRIORITY_WARM_RSS_MB || '520', 10) || 520;
 
@@ -471,7 +476,7 @@ function scheduleHubBootPipeline() {
   if (immediateWarm) {
     setImmediate(runPriorityWarm);
   } else {
-    setTimeout(runPriorityWarm, Math.max(bootDelay, 15_000));
+    setTimeout(runPriorityWarm, bootDelay);
   }
 
   // Heavy geo refresh stays optional / scheduled-jobs gated (not required for first paint).

@@ -1492,6 +1492,8 @@ console.log('🚀 API server started with commit:', process.env.RENDER_GIT_COMMI
 console.log('GatorVault server running on port', PORT);
 
 // Yield so Render /ready can answer before post-boot schedulers/store init.
+// Light path first (App Review account); heavy sync work is deferred so /health
+// stays under Render's ~5s probe during the first minutes after deploy.
 setImmediate(startPostBootServices);
 
 function startPostBootServices() {
@@ -1531,6 +1533,22 @@ function startPostBootServices() {
   } catch (e) {
     console.warn('[app-review] boot provision skipped:', e.message);
   }
+
+  const deferHeavyMs = Math.max(
+    60000,
+    parseInt(process.env.API_BOOT_DEFER_HEAVY_MS || '120000', 10) || 120000
+  );
+  const deferLightMs = Math.max(
+    8000,
+    parseInt(process.env.API_BOOT_DEFER_LIGHT_MS || '12000', 10) || 12000
+  );
+  console.log('[boot] deferring light post-boot', deferLightMs, 'ms; heavy warm', deferHeavyMs, 'ms');
+  setTimeout(startPostBootLightServices, deferLightMs);
+  setTimeout(startPostBootHeavyServices, deferHeavyMs);
+}
+
+/** Store seeds + scheduler registration — after a short quiet window for /health. */
+function startPostBootLightServices() {
   try {
     const { rememberTrial } = require('./lib/trial-ledger');
     const existingUsers = loadUsers();
@@ -1555,15 +1573,15 @@ function startPostBootServices() {
   } catch (e) {
     console.warn('[deploy-cache] invalidate skipped:', e.message);
   }
+  // Schedulers + store init — hub/dashboard sync warms stay in the heavy phase.
+  setImmediate(startPostBootRecruitingAndSchedulers);
+}
+
+/** Dashboard warm only — deliberately late so Render probes stay green. */
+function startPostBootHeavyServices() {
   try {
     const dashCache = require('./lib/live-dashboard-cache');
-    // Default defer heavy warm so Render /health + /ready stay under the ~5s timeout
-    // during App Review (sync warmDashboardCache blocks the event loop).
-    const deferHeavyMs = Math.max(
-      15000,
-      parseInt(process.env.API_BOOT_DEFER_HEAVY_MS || '30000', 10) || 30000
-    );
-    const startDashboardWarm = () => {
+    setImmediate(() => {
       try {
         dashCache.warmDashboardCache();
         dashCache.scheduleBackgroundRefresh();
@@ -1573,12 +1591,14 @@ function startPostBootServices() {
       } catch (warmErr) {
         console.warn('[live-dashboard] cache warm failed:', warmErr.message || warmErr);
       }
-    };
-    setTimeout(startDashboardWarm, deferHeavyMs);
-    console.log('[live-dashboard] cache warm deferred', deferHeavyMs, 'ms');
+    });
+    console.log('[live-dashboard] heavy cache warm starting (deferred boot phase)');
   } catch (e) {
     console.warn('[live-dashboard] cache warm skipped:', e.message);
   }
+}
+
+function startPostBootRecruitingAndSchedulers() {
   try {
     const store = require('./lib/recruiting-store');
     console.log('Recruiting API: ready (storage:', store.storageMode() + ')');
@@ -1653,17 +1673,25 @@ function startPostBootServices() {
         refreshTierAIntelligence
       } = require('./lib/player-intelligence-refresh');
       schedulePlayerIntelligenceRefresh();
-      if (process.env.PLAYER_INTEL_REFRESH_ON_BOOT !== 'false') {
-        refreshTierAIntelligence({ verbose: false })
-          .then((result) => {
-            console.log(
-              '[player-intelligence] boot refresh:',
-              result.processed,
-              'players, goldenFour complete:',
-              result.goldenFour?.complete === true
-            );
-          })
-          .catch((err) => console.warn('[player-intelligence] boot refresh failed:', err.message));
+      // Opt-in only — boot Tier-A refresh was blocking /health on Starter.
+      if (process.env.PLAYER_INTEL_REFRESH_ON_BOOT === 'true') {
+        const intelDelay = Math.max(
+          60000,
+          parseInt(process.env.PLAYER_INTEL_BOOT_DELAY_MS || '180000', 10) || 180000
+        );
+        setTimeout(() => {
+          if (pipelineGuards.shouldSkipHeavyJob('player-intel-boot')) return;
+          refreshTierAIntelligence({ verbose: false })
+            .then((result) => {
+              console.log(
+                '[player-intelligence] boot refresh:',
+                result.processed,
+                'players, goldenFour complete:',
+                result.goldenFour?.complete === true
+              );
+            })
+            .catch((err) => console.warn('[player-intelligence] boot refresh failed:', err.message));
+        }, intelDelay);
       }
     } catch (e) {
       console.warn('[player-intelligence] refresh scheduler skipped:', e.message);
@@ -1882,11 +1910,15 @@ function startPostBootServices() {
           runContinuousScoutingUpdate({ reason: 'scheduled_cron' })
         );
       };
+      const scoutingBootDelay = Math.max(
+        180000,
+        parseInt(process.env.SCOUTING_UPDATE_BOOT_DELAY_MS || '300000', 10) || 300000
+      );
       setTimeout(() => {
         runScoutingUpdate()
           .then((r) => console.log('[scouting-update] initial run:', r?.updated ?? 0, 'updated of', r?.total ?? 0))
           .catch((err) => console.warn('[scouting-update] initial run failed:', err.message));
-      }, 45000);
+      }, scoutingBootDelay);
       setInterval(() => {
         runScoutingUpdate()
           .then((r) => {
@@ -1912,7 +1944,7 @@ function startPostBootServices() {
           .then((r) => console.log('[insider-articles] weekly draft run:', r?.selected ?? r?.reason ?? r))
           .catch((err) => console.warn('[insider-articles] weekly draft failed:', err.message));
       };
-      setTimeout(runArticleEngine, 90000);
+      setTimeout(runArticleEngine, Math.max(180000, parseInt(process.env.ARTICLE_ENGINE_BOOT_DELAY_MS || '300000', 10) || 300000));
       setInterval(runArticleEngine, articleInterval);
       console.log('[insider-articles] weekly scheduler enabled (every', Math.round(articleInterval / 3600000), 'h)');
       try {
@@ -1979,6 +2011,6 @@ function startPostBootServices() {
   } catch (e) {
     console.warn('[guardian] runtime watchdog failed to start', e.message);
   }
-} // startPostBootServices
+} // startPostBootRecruitingAndSchedulers
 
 } // wireApplication
