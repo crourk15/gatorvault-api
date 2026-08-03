@@ -1461,35 +1461,48 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-try {
-  require('./lib/guardian/boot-guardian').verifyBoot({
-    alert: process.env.NODE_ENV === 'production'
-  });
-  console.log('[guardian] boot verified, routes ready');
-} catch (err) {
-  console.error(err.message || err);
-  if (process.env.GUARDIAN_BOOT_LENIENT === 'true') {
-    console.warn('[guardian] GUARDIAN_BOOT_LENIENT=true — continuing despite boot verification failure');
-  } else {
-    console.error('[guardian] boot verification failed after early listen — continuing in degraded mode');
-    require('./lib/guardian/guardian-alerts')
-      .alertGuardian({
-        type: 'boot_failed',
-        severity: 'critical',
-        title: 'API boot degraded',
-        message: String(err.message || err).slice(0, 500),
-        notifySms: true
-      })
-      .catch(() => {});
-  }
-}
-
 apiRoutesReady = true;
 global.__GV_API_ROUTES_READY__ = true;
 console.log('[boot] API routes ready');
 const providers = getEmailProviders();
 console.log('🚀 API server started with commit:', process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev');
 console.log('GatorVault server running on port', PORT);
+
+// CRITICAL: verifyBoot is sync and takes ~6s locally (longer on Render Starter).
+// Running it inline blocks the event loop past Render's ~5s /health timeout → 502 crash loop.
+// Mark routes ready first, keep /health answering, then verify in the background.
+const guardianBootDelay = Math.max(
+  5000,
+  parseInt(process.env.GUARDIAN_BOOT_DELAY_MS || '20000', 10) || 20000
+);
+setTimeout(() => {
+  const guardian = require('./lib/guardian/boot-guardian');
+  const run = typeof guardian.verifyBootAsync === 'function'
+    ? guardian.verifyBootAsync({ alert: process.env.NODE_ENV === 'production' })
+    : Promise.resolve().then(() => guardian.verifyBoot({ alert: process.env.NODE_ENV === 'production' }));
+  run
+    .then(() => {
+      console.log('[guardian] boot verified (deferred', guardianBootDelay, 'ms)');
+    })
+    .catch((err) => {
+      console.error(err.message || err);
+      if (process.env.GUARDIAN_BOOT_LENIENT === 'true') {
+        console.warn('[guardian] GUARDIAN_BOOT_LENIENT=true — continuing despite boot verification failure');
+        return;
+      }
+      console.error('[guardian] boot verification failed after early listen — continuing in degraded mode');
+      require('./lib/guardian/guardian-alerts')
+        .alertGuardian({
+          type: 'boot_failed',
+          severity: 'critical',
+          title: 'API boot degraded',
+          message: String(err.message || err).slice(0, 500),
+          notifySms: true
+        })
+        .catch(() => {});
+    });
+}, guardianBootDelay);
+console.log('[guardian] boot verify deferred', guardianBootDelay, 'ms');
 
 // Yield so Render /ready can answer before post-boot schedulers/store init.
 // Light path first (App Review account); heavy sync work is deferred so /health
