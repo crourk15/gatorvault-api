@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-02T02:51:05.158Z",
+  "updatedAt": "2026-08-03T03:01:48.655Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -15646,27 +15646,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19078249/6938ab925f0564b29d339b80",
+          "publishedAt": "2026-08-03"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Smith plays with real length at 6-2 — covers ground in a few strides when the ball leaves the hash.",
+        "Smith stays stacked on the perimeter as a deep-third / alley safety and does not panic when receivers stem at him.",
+        "Smith finishes pursuit angles downhill and is willing to stick his face in the run after the catch."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Smith still needs to fill out the 6-2 / 175 frame before he can win with mass against SEC tight ends in the box."
+      ],
+      "comparison": "Smith comps to Justin Simmons — 6-2 rangy free-safety mold; length, center-field range, and eyes over the top before the frame fills.",
+      "schemeFit": "Smith fits a length-first safety room that asks the deep defender to range over the top and fill the alley without guessing.",
+      "staffNotes": "Vault film desk verified 2026-08-03 from Charles-supplied Hudl embed (soph season). Size-matched Simmons mold — not a Florida-alum default.",
+      "projection": "Smith projects as develop in the Florida safety room under Collins, earn special-teams / package snaps early, then compete for FS/nickel work — starter upside in the back end as he adds 15–20 pounds.",
+      "insiderNotes": "Vault film desk on Cyion Smith soph-season Hudl (2:33): Blountstown S tagged on the perimeter with an orange spotlight — long strider at 6-2 / 175, range to the football, calm feet when receivers stem. Florida offered with Chris Collins primary and ~97% On3 RPM; two UF unofficials (2026-06-03, 2026-06-20).",
+      "recruitingStory": "Cyion Smith is a 2028 Blountstown (FL) safety and Florida target with a UF offer, Chris Collins as primary, and two unofficial visits.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:14:39.135Z"
+      "updatedAt": "2026-08-03T03:01:48.646Z"
     },
     "josiah-taylor": {
       "playerSlug": "josiah-taylor",

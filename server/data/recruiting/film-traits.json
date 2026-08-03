@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-02T02:51:05.170Z",
+  "updatedAt": "2026-08-03T03:01:48.667Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -413,6 +413,38 @@
         "West delivers a clean high release to the perimeter from an upright platform."
       ],
       "vaultFilmAngle": "Lead with stand-tall 6-5 pocket tape (height + eyes) and Florida process (Craddock offer, three UOVs). Flacco mold for size/traits — never rotational-QB language.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "cyion-smith": {
+      "playerName": "Cyion Smith",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/19078249/6938ab925f0564b29d339b80"
+        }
+      ],
+      "traits": [
+        "length",
+        "range",
+        "center-field eyes",
+        "pursuit angles",
+        "perimeter calm"
+      ],
+      "vaultFilmAngle": "Lead with 6-2 length + range on the soph Hudl, then Florida process (Collins offer, 97% RPM, two UOVs). Simmons mold for size/traits — fill-out note is the only brake.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"
