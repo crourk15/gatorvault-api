@@ -49,8 +49,16 @@ mustInclude('lib/mobile-native-framework.css', [
   '.gv-mobile-back-top',
   'var(--mobile-gutter, 16px)',
   'left: auto',
+  'inset-inline-end:',
+  'z-index: 60',
+  'touch-action: manipulation',
 ]);
-mustInclude('components/vault/MobileBackToTop.tsx', ['scrollingElement']);
+mustInclude('components/vault/MobileBackToTop.tsx', [
+  'scrollingElement',
+  'scrollDocumentToTop',
+  'data-testid="mobile-back-to-top"',
+  'onTouchEnd',
+]);
 
 // Cyclic custom props invalidate tokens app-wide (broke homepage back-to-top).
 {
