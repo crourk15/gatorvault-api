@@ -42,36 +42,36 @@ module.exports = (app) => {
 
   /** Render liveness probe — must return 2xx while the process is listening. */
   app.get('/health', (_req, res) => {
+    // Keep this zero-cost: no module requires, no hub/cache I/O.
+    // Render health checks time out at ~5s if the event loop is busy.
     const rssMb = Math.round(process.memoryUsage().rss / 1024 / 1024);
     res.status(200).json({
       ok: true,
       alive: true,
       ready: global.__GV_API_ROUTES_READY__ === true,
       memoryMb: rssMb,
-      time: Date.now()
+      time: Date.now(),
     });
   });
 
   /**
-   * Readiness probe — must stay 200 while the process is listening.
-   * Route wiring can take 30s+ on Starter; returning 503 here causes Render
-   * restart loops (health timeout → kill → boot again).
+   * Readiness probe — must stay 200 + fast while the process is listening.
+   * Returning 503 (or taking >5s) causes Render restart loops during App Review.
+   * Hub/cache meta is optional diagnostics only — never block the probe on it.
    */
   app.get('/ready', (_req, res) => {
     const routesReady = global.__GV_API_ROUTES_READY__ === true;
-    let hubReady = false;
-    let hubMeta = {};
-    try {
-      hubMeta = require('./recruiting-hub-cache').getMeta() || {};
-      hubReady = hubMeta.ready === true;
-    } catch {
-      hubReady = false;
-    }
-    const fullyReady = routesReady && hubReady;
+    // Cheap snapshot only — never require() heavy hub modules on the probe path.
+    const hubMeta =
+      global.__GV_HUB_META__ && typeof global.__GV_HUB_META__ === 'object'
+        ? global.__GV_HUB_META__
+        : { ready: false, probe: 'deferred' };
+    const hubReady = hubMeta.ready === true;
     res.status(200).json({
       ok: true,
       alive: true,
-      ready: fullyReady,
+      // Process is accepting traffic; hub warm is non-blocking for Render probes.
+      ready: true,
       deployReady: routesReady,
       routesReady,
       hubReady,

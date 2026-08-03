@@ -1557,18 +1557,25 @@ function startPostBootServices() {
   }
   try {
     const dashCache = require('./lib/live-dashboard-cache');
-    const deferHeavyMs = parseInt(process.env.API_BOOT_DEFER_HEAVY_MS || '0', 10);
+    // Default defer heavy warm so Render /health + /ready stay under the ~5s timeout
+    // during App Review (sync warmDashboardCache blocks the event loop).
+    const deferHeavyMs = Math.max(
+      15000,
+      parseInt(process.env.API_BOOT_DEFER_HEAVY_MS || '30000', 10) || 30000
+    );
     const startDashboardWarm = () => {
-      dashCache.warmDashboardCache();
-      dashCache.scheduleBackgroundRefresh();
-      console.log('[live-dashboard] cache warmed (' + (dashCache.getCacheMeta().feedCount || 0) + ' feed items)');
+      try {
+        dashCache.warmDashboardCache();
+        dashCache.scheduleBackgroundRefresh();
+        console.log(
+          '[live-dashboard] cache warmed (' + (dashCache.getCacheMeta().feedCount || 0) + ' feed items)'
+        );
+      } catch (warmErr) {
+        console.warn('[live-dashboard] cache warm failed:', warmErr.message || warmErr);
+      }
     };
-    if (deferHeavyMs > 0) {
-      setTimeout(startDashboardWarm, deferHeavyMs);
-      console.log('[live-dashboard] cache warm deferred', deferHeavyMs, 'ms');
-    } else {
-      startDashboardWarm();
-    }
+    setTimeout(startDashboardWarm, deferHeavyMs);
+    console.log('[live-dashboard] cache warm deferred', deferHeavyMs, 'ms');
   } catch (e) {
     console.warn('[live-dashboard] cache warm skipped:', e.message);
   }

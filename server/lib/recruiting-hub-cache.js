@@ -85,7 +85,7 @@ function getHubStatus() {
 }
 
 function getMeta() {
-  return {
+  const meta = {
     ready: isReady(),
     status: getHubStatus(),
     warming: warming && !ready,
@@ -97,6 +97,13 @@ function getMeta() {
     cacheTtlMs: HUB_CACHE_MS,
     buildTimeoutMs: BUILD_TIMEOUT_MS,
   };
+  // Cheap snapshot for /ready probe — avoids require()+I/O on the health path.
+  try {
+    global.__GV_HUB_META__ = meta;
+  } catch {
+    /* ignore */
+  }
+  return meta;
 }
 
 function isReady() {
