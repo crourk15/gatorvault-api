@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import type { RosterPlayer } from '@/lib/roster-api';
 import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
@@ -11,12 +12,14 @@ import {
   type PositionNeedRow,
 } from '@/lib/fc-position-need-board';
 import { buildSchemeMatchLeaders } from '@/lib/scheme-match-leaders';
+import { discoveryNeedBoardPlayers } from './fc-lab-types';
 import { FutureCastPanelShell } from './primitives';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 
 type Props = {
   players: FutureCastPlayer[];
   highPriority?: HighPriorityPlayer[];
+  underclassmen?: UnderclassmenPlayer[];
   roster?: RosterPlayer[];
   commits2027?: RecruitingBoardPlayer[];
   updatedAt?: string | null;
@@ -127,6 +130,7 @@ function NeedRowElite({ row }: { row: PositionNeedRow }): React.ReactElement {
 export function FutureCastPositionBreakdown({
   players,
   highPriority = [],
+  underclassmen = [],
   roster = [],
   commits2027 = [],
   updatedAt,
@@ -137,17 +141,28 @@ export function FutureCastPositionBreakdown({
   const [showAll, setShowAll] = useState(false);
 
   const board = useMemo(() => {
-    const boardPlayers =
-      discoveryFocus && highPriority.length ? highPriority : players;
+    // Discovery: full 2028 target board (underclassmen + HP), not Hottest top-18 only.
+    const boardPlayers = discoveryFocus
+      ? discoveryNeedBoardPlayers(highPriority, underclassmen, boardClassYear)
+      : players;
     return buildPositionNeedBoard({
       roster,
       commits2027,
-      boardPlayers,
+      boardPlayers: boardPlayers.length ? boardPlayers : players,
       boardClassYear,
       commitClassYear: 2027,
       updatedAt,
     });
-  }, [discoveryFocus, highPriority, players, roster, commits2027, boardClassYear, updatedAt]);
+  }, [
+    discoveryFocus,
+    highPriority,
+    underclassmen,
+    players,
+    roster,
+    commits2027,
+    boardClassYear,
+    updatedAt,
+  ]);
 
   const schemeMatches = useMemo(() => {
     if (!discoveryFocus || !highPriority.length) return [];
