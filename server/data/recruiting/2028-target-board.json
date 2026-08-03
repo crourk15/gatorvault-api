@@ -591,12 +591,17 @@
       "name": "Nate Dollard",
       "pos": "CB",
       "classYear": 2028,
-      "school": "TBD",
-      "state": null,
+      "school": "Providence Day School (Charlotte, NC)",
+      "state": "NC",
       "inState": false,
       "stars": 4,
-      "htWt": null,
-      "skinny": "4★ CB · UF persistent early · now teammates with UF commit"
+      "htWt": "6-0 / 160",
+      "skinny": "4★ CB · UF persistent early · now teammates with UF commit",
+      "rating": 90.7427536231884,
+      "natlRank": 177,
+      "posRank": 18,
+      "stateRank": 8,
+      "on3Slug": "nate-dollard-251092"
     },
     {
       "slug": "phoenix-evans",

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "description": "Verified On3 recruit slugs for locked 2028 UF allowlist targets",
-  "updatedAt": "2026-08-03T02:32:48.071Z",
+  "updatedAt": "2026-08-03T02:34:05.136Z",
   "slugs": {
     "hudson-west": "hudson-west-284243",
     "phoenix-evans": "phoenix-evans-243873",
@@ -38,6 +38,7 @@
     "lorenzo-mcmullen-jr": "lorenzo-mcmullen-jr-261606",
     "nick-carroll": "nick-carroll-281042",
     "ridge-janes": "ridge-janes-242976",
-    "zaiden-jernigan": "zaiden-jernigan-237698"
+    "zaiden-jernigan": "zaiden-jernigan-237698",
+    "nate-dollard": "nate-dollard-251092"
   }
 }
