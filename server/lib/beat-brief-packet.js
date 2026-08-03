@@ -8,23 +8,39 @@ function normalizeSlug(slug) {
   return String(slug || '').trim().toLowerCase();
 }
 
+/** True committed/signed — never match the substring inside "uncommitted". */
+function statusLooksCommitted(raw) {
+  const s = String(raw || '').trim().toLowerCase();
+  if (!s) return false;
+  if (s === 'uncommitted' || /\buncommitted\b/.test(s)) return false;
+  return /\b(committed|signed|enrolled)\b/i.test(s);
+}
+
 function isCommittedPlayer(player, research) {
   if (!player && !research) return false;
   if (research?.eventType === 'commit' || research?.eventType === 'flip') return true;
-  if (/committed/i.test(String(research?.ufPosition || ''))) return true;
-  const status = String(player?.ufStatus || player?.status || '');
-  if (/committed|signed|enrolled/i.test(status)) return true;
+  if (statusLooksCommitted(research?.ufPosition)) return true;
+  if (statusLooksCommitted(player?.ufStatus || player?.status)) return true;
   if (player?.committedTo && /florida|gators/i.test(String(player.committedTo))) return true;
   const teams = player?.on3TopTeams || player?.topTeams || [];
   try {
     const on3 = require('./on3-recruit-client');
     const year = Number(player?.classYear) || 2028;
     const uf = on3.getFloridaTeam(teams, year);
-    if (uf && /commit|signed|enrolled/i.test(String(uf.status || ''))) return true;
+    if (uf && statusLooksCommitted(uf.status)) return true;
   } catch {
     /* optional */
   }
   return false;
+}
+
+function currentRosterCollision(slug) {
+  try {
+    const rosterStore = require('./roster-store');
+    return rosterStore.getRosterPlayerBySlug(normalizeSlug(slug)) || null;
+  } catch {
+    return null;
+  }
 }
 
 function line(label, value) {
@@ -1035,6 +1051,47 @@ async function buildBeatBrief(slug, opts = {}) {
     /* fall through to recruit brief */
   }
 
+  // Current UF roster identity — do not invent a 2028 commit chase brief.
+  const rosterHit = currentRosterCollision(normalized);
+  if (rosterHit) {
+    const pos = rosterHit.pos || rosterHit.position || 'player';
+    const year = rosterHit.year || rosterHit.class || '';
+    const jersey = rosterHit.jersey != null ? `#${rosterHit.jersey}` : '';
+    const label = [rosterHit.name || normalized, jersey, pos, year].filter(Boolean).join(' · ');
+    const pasteText = [
+      'GATORVAULT BEAT BRIEF',
+      '=====================',
+      `Player: ${rosterHit.name || normalized}`,
+      `Slug: ${normalized}`,
+      '',
+      'ROSTER COLLISION — NOT A RECRUITING TARGET',
+      '-----------------------------------------',
+      `${label} is on the current Florida roster (Team / depth chart / weight program),`,
+      'not a high-school board chase. Do NOT draft a commit-culture or FutureCast recruit post.',
+      'If this name appeared from summer-workout / roster chatter, ignore it for Beat Desk recruiting.',
+      '',
+      'Open the Team profile instead of Recruiting / FutureCast for this slug.'
+    ].join('\n');
+    return {
+      ok: false,
+      error: 'current_roster_player',
+      slug: normalized,
+      playerName: rosterHit.name || normalized,
+      roster: {
+        slug: normalized,
+        name: rosterHit.name || normalized,
+        pos,
+        year,
+        jersey: rosterHit.jersey ?? null
+      },
+      pasteText,
+      research: {
+        whyFlorida: 'N/A — current UF roster player, not a board target.',
+        vaultAngle: 'Do not post. Roster collision / false recruiting intel.'
+      }
+    };
+  }
+
   const { inspectPlayer, isBeatIntel } = require('./post-studio-intel-inbox');
 
   await intelStore.initIntelStore().catch(() => {});
@@ -1411,6 +1468,8 @@ module.exports = {
   buildWhyFlorida,
   buildVaultAngle,
   isCommittedPlayer,
+  statusLooksCommitted,
+  currentRosterCollision,
   buildBoardFacts,
   rankingSummary,
   interestedSchoolsSummary,

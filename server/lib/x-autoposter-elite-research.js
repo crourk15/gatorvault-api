@@ -238,7 +238,12 @@ function inferUfPosition(research) {
   const conf = predictions.map((p) => p.confidencePct || p.ufRpmPct).filter((n) => n > 0);
   const maxConf = conf.length ? Math.max(...conf) : null;
   const status = String(player?.ufStatus || player?.status || player?.committedTo || '');
-  if (/committed|signed|enrolled/i.test(status)) return 'committed';
+  // Never treat "uncommitted" as committed (substring match on /committed/).
+  const looksCommitted =
+    status &&
+    !/\buncommitted\b/i.test(status) &&
+    /\b(committed|signed|enrolled)\b/i.test(status);
+  if (looksCommitted) return 'committed';
   if (eventType === 'commit' || eventType === 'flip' || eventType === 'commit_culture') return 'committed';
   if (eventType === 'decision_day') return 'in the mix';
   if (eventType === 'official_visit') return 'hosting OV';

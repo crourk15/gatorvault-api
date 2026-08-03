@@ -62,6 +62,25 @@ function main() {
   };
   assert.ok(isCommittedPlayer(player, { eventType: 'target_update', ufPosition: 'tracking' }));
 
+  // Regression: "uncommitted" must NEVER match /committed/ substring and invent commit_culture.
+  assert.equal(
+    isCommittedPlayer({ status: 'uncommitted', ufStatus: 'uncommitted' }, { ufPosition: 'tracking' }),
+    false
+  );
+  assert.equal(
+    isCommittedPlayer({ status: 'uncommitted' }, { eventType: 'target_update', ufPosition: 'uncommitted' }),
+    false
+  );
+  const whyOpen = buildWhyFlorida({
+    player: { name: 'Open Board Kid', status: 'uncommitted', stars: 0, pos: 'ATH', classYear: 2028 },
+    research: { ufPosition: 'tracking', eventType: 'target_update' },
+    intelligence: null,
+    beatRows: [],
+    rivals: []
+  });
+  assert.ok(!/UF board read: committed/i.test(whyOpen), whyOpen);
+  assert.ok(!/commit locked/i.test(whyOpen), whyOpen);
+
   const why = buildWhyFlorida({
     player,
     research: { ufPosition: 'tracking', eventType: 'target_update' },
