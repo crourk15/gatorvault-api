@@ -119,8 +119,14 @@ app.use('/api', (req, res, next) => {
 
 app.listen(PORT, () => {
   console.log('[boot] early listen on port', PORT);
-  // Yield the event loop so Render /health succeeds before synchronous route wiring.
-  setImmediate(wireApplication);
+  // Keep /health green through Render's deploy probes before sync route wiring.
+  // Starter CPUs can spend multiple seconds inside wireApplication mounts.
+  const wireDelay = Math.max(
+    0,
+    parseInt(process.env.API_WIRE_DELAY_MS || '10000', 10) || 10000
+  );
+  console.log('[boot] deferring route wiring', wireDelay, 'ms');
+  setTimeout(() => setImmediate(wireApplication), wireDelay);
 });
 
 function wireApplication() {
@@ -1529,23 +1535,26 @@ function startPostBootServices() {
   } catch (storeErr) {
     console.warn('[user-store] boot info failed:', storeErr.message || storeErr);
   }
-  try {
-    const { ensureAppReviewAccountOnBoot } = require('./lib/app-review-provision');
-    const reviewBoot = ensureAppReviewAccountOnBoot();
-    if (reviewBoot.skipped) {
-      console.log('[app-review] boot provision skipped:', reviewBoot.reason);
-    } else if (reviewBoot.ok) {
-      console.log(
-        '[app-review] boot provision ok —',
-        reviewBoot.created ? 'created' : reviewBoot.passwordReset ? 'password-reset' : 'ready',
-        reviewBoot.email
-      );
-    } else {
-      console.warn('[app-review] boot provision failed:', reviewBoot.error || 'unknown');
+  // Defer scrypt user-store work so first /health probes stay instant after wiring.
+  setTimeout(() => {
+    try {
+      const { ensureAppReviewAccountOnBoot } = require('./lib/app-review-provision');
+      const reviewBoot = ensureAppReviewAccountOnBoot();
+      if (reviewBoot.skipped) {
+        console.log('[app-review] boot provision skipped:', reviewBoot.reason);
+      } else if (reviewBoot.ok) {
+        console.log(
+          '[app-review] boot provision ok —',
+          reviewBoot.created ? 'created' : reviewBoot.passwordReset ? 'password-reset' : 'ready',
+          reviewBoot.email
+        );
+      } else {
+        console.warn('[app-review] boot provision failed:', reviewBoot.error || 'unknown');
+      }
+    } catch (e) {
+      console.warn('[app-review] boot provision skipped:', e.message);
     }
-  } catch (e) {
-    console.warn('[app-review] boot provision skipped:', e.message);
-  }
+  }, Math.max(2000, parseInt(process.env.APP_REVIEW_BOOT_DELAY_MS || '5000', 10) || 5000));
 
   const deferHeavyMs = Math.max(
     60000,
