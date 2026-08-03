@@ -1631,8 +1631,17 @@ function startPostBootLightServices() {
   }
 }
 
-/** Dashboard warm only — deliberately late so Render probes stay green. */
+/**
+ * Dashboard warm — opt-in only.
+ * Sync warmDashboardCache + 45s background refresh was still stalling Render
+ * /health (~5s) ~20 minutes after deploy (API_BOOT_DEFER_HEAVY_MS) → crash loop.
+ * Set API_BOOT_HEAVY_WARM=true only when the API is proven stable.
+ */
 function startPostBootHeavyServices() {
+  if (process.env.API_BOOT_HEAVY_WARM !== 'true') {
+    console.log('[live-dashboard] heavy cache warm skipped (set API_BOOT_HEAVY_WARM=true to enable)');
+    return;
+  }
   try {
     const dashCache = require('./lib/live-dashboard-cache');
     setImmediate(() => {
@@ -1692,63 +1701,72 @@ function startPostBootRecruitingAndSchedulers() {
         return null;
       })
       .catch((err) => console.warn('[identity-patterns] boot sync skipped:', err.message));
-    const { runPurgeFalseBrewsterIntel } = require('./lib/recruiting-public-alerts');
-    const purgeDelay = Math.max(
-      60000,
-      parseInt(process.env.ALERT_PURGE_BOOT_DELAY_MS || '300000', 10) || 300000
-    );
-    setTimeout(() => {
-      if (pipelineGuards.shouldSkipHeavyJob('alert-purge-boot')) return;
-      runPurgeFalseBrewsterIntel({ refresh: true })
-        .then((r) => {
-          if (r.before.falseCommitEvents || r.before.falseCommitIntel || r.before.falseCommitFeed) {
-            console.log('[recruiting-alerts] purged false Brewster intel:', r.before, '→', r.after);
-          }
-        })
-        .catch((err) => console.warn('[recruiting-alerts] Brewster purge skipped:', err.message));
-      const { runPurgeInvalidHeadlines } = require('./lib/recruiting-public-alerts');
-      runPurgeInvalidHeadlines({ refresh: true })
-        .then((r) => {
-          if (r.before?.invalidHeadlines || r.feedResult?.removed) {
-            console.log('[headlines] purged invalid/stale headlines:', r.before, '→', r.after, 'removed', r.feedResult?.removed);
-          }
-        })
-        .catch((err) => console.warn('[headlines] purge skipped:', err.message));
-    }, purgeDelay);
-    try {
-      const { scheduleRecruitingHubRefresh } = require('./lib/recruiting-hub-refresh');
-      scheduleRecruitingHubRefresh();
-    } catch (e) {
-      console.warn('[recruiting-hub] refresh scheduler skipped:', e.message);
+    if (!pipelineGuards.scheduledJobsEnabled()) {
+      console.log('[recruiting-alerts] boot purge skipped — X_SCHEDULED_JOBS_ENABLED is not true');
+    } else {
+      const { runPurgeFalseBrewsterIntel } = require('./lib/recruiting-public-alerts');
+      const purgeDelay = Math.max(
+        60000,
+        parseInt(process.env.ALERT_PURGE_BOOT_DELAY_MS || '300000', 10) || 300000
+      );
+      setTimeout(() => {
+        if (pipelineGuards.shouldSkipHeavyJob('alert-purge-boot')) return;
+        runPurgeFalseBrewsterIntel({ refresh: true })
+          .then((r) => {
+            if (r.before.falseCommitEvents || r.before.falseCommitIntel || r.before.falseCommitFeed) {
+              console.log('[recruiting-alerts] purged false Brewster intel:', r.before, '→', r.after);
+            }
+          })
+          .catch((err) => console.warn('[recruiting-alerts] Brewster purge skipped:', err.message));
+        const { runPurgeInvalidHeadlines } = require('./lib/recruiting-public-alerts');
+        runPurgeInvalidHeadlines({ refresh: true })
+          .then((r) => {
+            if (r.before?.invalidHeadlines || r.feedResult?.removed) {
+              console.log('[headlines] purged invalid/stale headlines:', r.before, '→', r.after, 'removed', r.feedResult?.removed);
+            }
+          })
+          .catch((err) => console.warn('[headlines] purge skipped:', err.message));
+      }, purgeDelay);
     }
-    try {
-      const {
-        schedulePlayerIntelligenceRefresh,
-        refreshTierAIntelligence
-      } = require('./lib/player-intelligence-refresh');
-      schedulePlayerIntelligenceRefresh();
-      // Opt-in only — boot Tier-A refresh was blocking /health on Starter.
-      if (process.env.PLAYER_INTEL_REFRESH_ON_BOOT === 'true') {
-        const intelDelay = Math.max(
-          60000,
-          parseInt(process.env.PLAYER_INTEL_BOOT_DELAY_MS || '180000', 10) || 180000
-        );
-        setTimeout(() => {
-          if (pipelineGuards.shouldSkipHeavyJob('player-intel-boot')) return;
-          refreshTierAIntelligence({ verbose: false })
-            .then((result) => {
-              console.log(
-                '[player-intelligence] boot refresh:',
-                result.processed,
-                'players, goldenFour complete:',
-                result.goldenFour?.complete === true
-              );
-            })
-            .catch((err) => console.warn('[player-intelligence] boot refresh failed:', err.message));
-        }, intelDelay);
+    if (!pipelineGuards.scheduledJobsEnabled()) {
+      console.log('[recruiting-hub] in-process refresh skipped — X_SCHEDULED_JOBS_ENABLED is not true');
+      console.log('[player-intelligence] in-process refresh skipped — X_SCHEDULED_JOBS_ENABLED is not true');
+    } else {
+      try {
+        const { scheduleRecruitingHubRefresh } = require('./lib/recruiting-hub-refresh');
+        scheduleRecruitingHubRefresh();
+      } catch (e) {
+        console.warn('[recruiting-hub] refresh scheduler skipped:', e.message);
       }
-    } catch (e) {
-      console.warn('[player-intelligence] refresh scheduler skipped:', e.message);
+      try {
+        const {
+          schedulePlayerIntelligenceRefresh,
+          refreshTierAIntelligence
+        } = require('./lib/player-intelligence-refresh');
+        schedulePlayerIntelligenceRefresh();
+        // Opt-in only — boot Tier-A refresh was blocking /health on Starter.
+        if (process.env.PLAYER_INTEL_REFRESH_ON_BOOT === 'true') {
+          const intelDelay = Math.max(
+            60000,
+            parseInt(process.env.PLAYER_INTEL_BOOT_DELAY_MS || '180000', 10) || 180000
+          );
+          setTimeout(() => {
+            if (pipelineGuards.shouldSkipHeavyJob('player-intel-boot')) return;
+            refreshTierAIntelligence({ verbose: false })
+              .then((result) => {
+                console.log(
+                  '[player-intelligence] boot refresh:',
+                  result.processed,
+                  'players, goldenFour complete:',
+                  result.goldenFour?.complete === true
+                );
+              })
+              .catch((err) => console.warn('[player-intelligence] boot refresh failed:', err.message));
+          }, intelDelay);
+        }
+      } catch (e) {
+        console.warn('[player-intelligence] refresh scheduler skipped:', e.message);
+      }
     }
     try {
       const { scheduleHubBootPipeline } = require('./lib/recruiting-hub-cache');
