@@ -58,13 +58,29 @@ async function main() {
     fail('membership-delete-ui', 'delete API/UI not detected');
   }
 
-  const login = await fetch(API + '/api/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: EMAIL, password: PASSWORD }),
-  });
-  const body = await login.json();
-  if (!login.ok || !body.session?.token) {
+  // Native iOS uses the site origin proxy (getApiBase → gatorvaultinsider.com), not Render direct.
+  // Prefer SITE so smoke matches App Review; fall back to API if the proxy is down.
+  let login = null;
+  let body = null;
+  for (const base of [SITE, API]) {
+    try {
+      login = await fetch(base + '/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ email: EMAIL, password: PASSWORD }),
+      });
+      const raw = await login.text();
+      try {
+        body = JSON.parse(raw);
+      } catch {
+        body = { error: `non-json from ${base}`, status: login.status, preview: raw.slice(0, 120) };
+      }
+      if (login.ok && body?.session?.token) break;
+    } catch (err) {
+      body = { error: String(err), base };
+    }
+  }
+  if (!login?.ok || !body?.session?.token) {
     fail('login', JSON.stringify(body));
   } else {
     const tier = String(body.session.tier || '').toLowerCase();

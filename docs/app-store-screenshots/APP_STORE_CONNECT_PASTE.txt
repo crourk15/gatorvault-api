@@ -50,14 +50,18 @@ Privacy Policy URL: https://gatorvaultinsider.com/privacy/
 
 --- App Review Information ---
 Sign-in required: Yes
-Username: appreview@gatorvaultinsider.com
+Username: [REDACTED]
 Password: (enter your demo password in Connect only - never commit)
 
 Notes for reviewer:
 GatorVault Insider — demo account has War Room tier (full access).
 
-SIGN IN: Tap "Sign in" on the join screen (not Create account). The app opens Sign in by default on iOS.
-Email: appreview@gatorvaultinsider.com
+SIGN IN (cold launch opens Sign in by default — do not use Create account):
+1. Launch the app → join screen shows Sign in (email + password).
+2. Enter the demo email/password from App Review Information above.
+3. Tap Sign in → lands in the Vault with War Room access.
+Do NOT tap Create account with these credentials (that email already exists).
+Email: [REDACTED]
 Password: (same as Sign-in required field above)
 
 SUBSCRIPTIONS / LEGAL (Guideline 3.1.2):

@@ -72,7 +72,8 @@ function initialJoinMode(): Mode {
   if (params.get('mode') === 'reset') return 'reset';
   if (params.get('mode') === 'signin') return 'signin';
   if (params.get('mode') === 'signup') return 'signup';
-  // Returning emails → Sign in. First native install (no remembered email) → Create account.
+  // Native shell: Sign in first (App Review). Web guests without a remembered email → Create account.
+  if (isNativeApp()) return 'signin';
   if (readLastEmail()) return 'signin';
   return 'signup';
 }

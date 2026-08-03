@@ -37,22 +37,14 @@ function isMarketingPath(pathname: string): boolean {
   return p === '/' || p === '/welcome' || p === '/insider';
 }
 
-function hasRememberedEmail(): boolean {
-  try {
-    return Boolean(String(localStorage.getItem('gv_last_email') || '').trim());
-  } catch {
-    return false;
-  }
-}
-
-/** Logged-out first install → Create account; returning email → Sign in; logged-in → vault. */
+/** Logged-out → Sign in (App Review demo login); logged-in → vault. Create account remains on the join screen. */
 export function nativeEntryDestination(): string {
   const session = loadSession();
   let rel = '/vault/';
   if (!(session?.email && session?.token)) {
-    // First-time App Store users were landing on Sign in and bouncing without registering.
-    const mode = hasRememberedEmail() ? 'signin' : 'signup';
-    rel = `/join/?mode=${mode}&next=/vault/`;
+    // Always Sign in on native cold start. Prior signup-default mismatched ASC notes and
+    // caused App Review to paste demo creds into Create account → "unable to log in".
+    rel = '/join/?mode=signin&next=/vault/';
   }
   return nativeNavigationUrl(rel);
 }

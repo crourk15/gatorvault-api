@@ -12,6 +12,7 @@ const steps = [
   ['verify-ios-iap-wiring.js', 'IAP wiring'],
   ['verify-ios-app-icon.js', 'App icon asset'],
   ['verify-native-deep-link.js', 'Native deep-link parsing'],
+  ['verify-native-login-entry.js', 'Native Sign in cold start'],
 ];
 
 let failed = false;

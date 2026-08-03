@@ -13,7 +13,7 @@
 
 Enter credentials **only** in App Store Connect (not in git):
 
-- Email: `appreview@gatorvaultinsider.com`
+- Email: `[REDACTED]`
 - Password: same value entered in App Store Connect App Review Information (min 12 characters)
 - Tier: War Room (full access)
 
@@ -37,10 +37,42 @@ The script creates the account if missing, **resets the password** if it already
 
 ### Sign-in instructions for Apple
 
-Reviewers must tap **Sign in** (not Create account) on the join screen:
+iOS cold launch opens **Sign in** by default (not Create account). Reviewers enter the demo email/password and tap Sign in.
 
 - Web: https://gatorvaultinsider.com/join/?mode=signin
-- iOS app: Menu → Sign in (or Join → Sign in tab)
+- iOS app: cold launch → Sign in form (Create account is a separate tab — do not use it for the demo account)
+
+### Reply to App Review (Resolution Center) — August 3, 2026
+
+```
+Hello App Review,
+
+Thank you for the feedback on submission 317aee73-09ef-4bda-93a0-885abc8def83 (1.0.12).
+
+Guideline 2.1(a) — Unable to log in:
+We fixed the iOS cold-launch path so the app opens Sign in by default (not Create account). The demo account is live on production with War Room full access.
+
+Please:
+1. Launch the app (cold start opens the Sign in form).
+2. Enter the demo credentials from App Review Information.
+3. Tap Sign in — do not use Create account (that email already exists).
+
+Email: [REDACTED]
+Password: (same value entered in App Review Information)
+
+Review paths after sign-in:
+1. Game Week — /vault/game-week/
+2. Film Room — /vault/film-room/
+3. FutureCast — /vault/futurecast/
+4. Membership & IAP — /vault/membership/
+5. Community — /vault/community/ (Report / Block)
+6. Privacy & Terms — https://gatorvaultinsider.com/privacy/ and https://gatorvaultinsider.com/terms/
+
+Support: support@gatorvaultinsider.com
+
+Thank you,
+Charles Rourk
+```
 
 ### Reply to App Review (Resolution Center) — July 11, 2026
 
@@ -52,7 +84,7 @@ Thank you for the feedback on submission 475e2270-8df3-4c10-937a-a06ad88f47bc (1
 Guideline 2.1 — Demo account:
 We verified and reprovisioned the demo account on production. Sign-in works with War Room full access.
 
-Email: appreview@gatorvaultinsider.com
+Email: [REDACTED]
 Password: GvAppReview!2026
 
 Please tap Sign in on the join screen (not Create account), then enter the credentials above.
@@ -89,7 +121,7 @@ In the app, Membership & Account lists each auto-renewable subscription (title, 
 Guideline 2.1 — Demo account:
 We reprovisioned the demo account on production. Please use:
 
-Email: appreview@gatorvaultinsider.com
+Email: [REDACTED]
 Password: GvAppReview!2026
 
 Sign in: tap "Sign in" on the join screen (not "Create account"), then enter the credentials above.
@@ -116,7 +148,7 @@ Hello,
 
 We have reprovisioned the demo account on our production server. Please use:
 
-Email: appreview@gatorvaultinsider.com
+Email: [REDACTED]
 Password: GvAppReview!2026
 
 Sign in: tap "Sign in" on the join screen (not "Create account"), then enter the credentials above.

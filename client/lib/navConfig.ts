@@ -1,3 +1,4 @@
+import { isNativeApp } from './api-base';
 import { loadSession, type PaymentTierId } from './auth-api';
 
 /** Main site navigation — single source for labels and default hrefs. */
@@ -64,12 +65,14 @@ export function insiderUnlockHref(opts?: {
 
 function joinModeForGuest(): 'signin' | 'signup' {
   if (typeof window === 'undefined') return 'signup';
+  // Native App Store shell: prefer Sign in so App Review / returning members never land on Create account.
+  if (isNativeApp()) return 'signin';
   try {
     if (String(localStorage.getItem('gv_last_email') || '').trim()) return 'signin';
   } catch {
     /* ignore */
   }
-  // First-time guests should Create account, not Sign in.
+  // First-time web guests should Create account, not Sign in.
   return 'signup';
 }
 
