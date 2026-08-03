@@ -80,6 +80,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
               <FutureCastPositionBreakdown
                 players={data.masterBoard.players}
                 highPriority={highPriority}
+                underclassmen={data.underclassmen}
                 roster={data.roster}
                 commits2027={data.commits2027}
                 updatedAt={data.lastUpdated}

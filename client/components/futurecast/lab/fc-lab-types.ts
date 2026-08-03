@@ -212,6 +212,29 @@ export function underclassmenTargetsForYear(
   return players.filter((p) => Number(p.classYear) === classYear && p.tier === 'target');
 }
 
+/**
+ * Discovery "Where Florida needs help" must see the full 2028 chase board,
+ * not only Hottest top-18. Otherwise a real safety chase (e.g. Drakeford)
+ * vanishes and the room falsely reads "No clear Florida shot yet".
+ * Prefer High Priority rows when the same slug appears in both.
+ */
+export function discoveryNeedBoardPlayers(
+  highPriority: HighPriorityPlayer[],
+  underclassmen: UnderclassmenPlayer[],
+  classYear: number
+): Array<FutureCastPlayer | HighPriorityPlayer> {
+  const bySlug = new Map<string, FutureCastPlayer | HighPriorityPlayer>();
+  for (const p of underclassmenTargetsForYear(underclassmen, classYear)) {
+    if (!p?.slug) continue;
+    bySlug.set(p.slug, p);
+  }
+  for (const p of highPriority) {
+    if (!p?.slug) continue;
+    if (Number(p.classYear) === classYear) bySlug.set(p.slug, p);
+  }
+  return [...bySlug.values()];
+}
+
 /** Map underclassmen board row → high-priority shape for lab fit/SCI panels. */
 export function underclassmenToFitLeader(p: UnderclassmenPlayer): HighPriorityPlayer {
   const uf = ufPctFromFc(p.ufConfidence);
