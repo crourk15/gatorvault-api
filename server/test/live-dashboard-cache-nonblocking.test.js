@@ -58,5 +58,22 @@ describe('live-dashboard-cache request path', () => {
     assert.match(src, /API_BOOT_DEFER_HEAVY_MS \|\| '120000'/);
     assert.match(src, /startPostBootHeavyServices/);
     assert.match(src, /PLAYER_INTEL_REFRESH_ON_BOOT === 'true'/);
+    assert.match(src, /GUARDIAN_BOOT_DELAY_MS \|\| '20000'/);
+    assert.match(src, /boot verify deferred/);
+  });
+});
+
+describe('guardian boot must not block health', () => {
+  it('defers guardian verify and caches wiring case map', () => {
+    const src = require('fs').readFileSync(path.join(__dirname, '..', 'server.js'), 'utf8');
+    assert.match(src, /boot verify deferred/);
+    assert.match(src, /verifyBootAsync/);
+    assert.match(src, /GUARDIAN_BOOT_DELAY_MS/);
+    const wiring = require('fs').readFileSync(
+      path.join(__dirname, '..', 'lib/guardian/platform-wiring.js'),
+      'utf8'
+    );
+    assert.match(wiring, /_caseMapCache/);
+    assert.match(wiring, /GUARDIAN_WIRING_DOUBLE_SIMULATE/);
   });
 });

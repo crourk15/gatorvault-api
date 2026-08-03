@@ -32,8 +32,20 @@ function listDirCaseMap(dir, acc = {}) {
   return acc;
 }
 
+// Cache once — rebuilding the full server tree per path made boot verify ~6s and
+// blocked Render /health (5s) → 502 crash loops.
+let _caseMapCache = null;
+function getCaseMap() {
+  if (!_caseMapCache) _caseMapCache = listDirCaseMap(SERVER_ROOT);
+  return _caseMapCache;
+}
+
+function clearCaseMapCache() {
+  _caseMapCache = null;
+}
+
 function checkCaseSensitivity(relPath) {
-  const caseMap = listDirCaseMap(SERVER_ROOT);
+  const caseMap = getCaseMap();
   const normalized = normalizeRel(relPath);
   const key = normalized.toLowerCase();
   const actual = caseMap[key];
@@ -185,13 +197,18 @@ function simulateBoot() {
 }
 
 function verifyPlatformWiring({ simulate = true } = {}) {
+  // Build case map once up front for all path checks.
+  getCaseMap();
   const errors = [
     ...verifyCriticalFiles(),
     ...verifyRouteWiring(),
     ...verifyServerJsWiring(),
     ...verifyAllRouteFiles()
   ];
-  if (simulate) errors.push(...simulateBoot());
+  // simulateBoot() previously re-ran verifyRouteWiring() — pure duplicate cost.
+  if (simulate && process.env.GUARDIAN_WIRING_DOUBLE_SIMULATE === 'true') {
+    errors.push(...simulateBoot());
+  }
   const unique = [...new Set(errors)];
   return { ok: unique.length === 0, errors: unique, checkedAt: new Date().toISOString() };
 }
@@ -204,5 +221,6 @@ module.exports = {
   verifyServerJsWiring,
   simulateBoot,
   checkCaseSensitivity,
+  clearCaseMapCache,
   parseRequires
 };
