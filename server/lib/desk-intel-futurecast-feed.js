@@ -295,6 +295,15 @@ async function persistOfferVisitLogs(slug, player, profile) {
 /**
  * Main entry: feed hydrated desk intel into FutureCast surfaces.
  */
+function currentRosterCollision(slug) {
+  try {
+    const rosterStore = require('./roster-store');
+    return rosterStore.getRosterPlayerBySlug(String(slug || '').toLowerCase()) || null;
+  } catch {
+    return null;
+  }
+}
+
 async function feedDeskIntelToFutureCast({
   slug,
   player = null,
@@ -307,6 +316,27 @@ async function feedDeskIntelToFutureCast({
   const steps = [];
   const key = canonicalTargetSlug(slug || player?.slug || '');
   if (!key) return { ok: false, error: 'missing_slug', steps };
+
+  // Never soft-create HS/FC targets from current UF roster names (weight-room /
+  // depth-chart chatter). Bryce Lovett = R-Jr OL, not a 2028 ATH commit.
+  const rosterHit = currentRosterCollision(key);
+  if (rosterHit) {
+    steps.push({
+      step: 'roster_collision_block',
+      ok: true,
+      blocked: true,
+      rosterPos: rosterHit.pos || rosterHit.position || null,
+      rosterYear: rosterHit.year || rosterHit.class || null
+    });
+    return {
+      ok: false,
+      error: 'current_roster_player',
+      slug: key,
+      name: rosterHit.name || key,
+      steps,
+      allowlisted: false
+    };
+  }
 
   let board = player;
   let usedProfile = profile;

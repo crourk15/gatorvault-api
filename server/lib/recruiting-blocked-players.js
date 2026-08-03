@@ -8,6 +8,8 @@ const BLOCKED_PLAYER_SLUGS = new Set([
   'kennedee-jackson',
   'tj-shanahan-jr',
   't-j-shanahan',
+  // Current UF roster OL (#53, R-Jr) — Desk soft-created a phantom 2028 ATH commit.
+  'bryce-lovett',
   'devon-hall',
   'derrick-malone',
   'camron-cooper',
@@ -25,6 +27,7 @@ const BLOCKED_PLAYER_NAMES = new Set([
   'malik clark',
   'michael johnson jr.',
   'michael johnson jr',
+  'bryce lovett',
 ]);
 
 function isBlockedRecruit(player) {
