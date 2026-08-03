@@ -130,99 +130,136 @@ app.listen(PORT, () => {
 });
 
 function wireApplication() {
-
-app.get('/highlight/:slug', (req, res) => {
-  res.sendFile(path.join(__dirname, 'highlight.html'));
-});
-
-app.get('/futurecast/big-board', (req, res) => {
-  res.sendFile(path.join(__dirname, 'futurecast-big-board.html'));
-});
-app.get('/futurecast-big-board.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'futurecast-big-board.html'));
-});
-
-app.get('/futurecast/player/:slug', (req, res) => {
-  res.redirect(301, `/player/${encodeURIComponent(req.params.slug)}`);
-});
-
-app.get('/futurecast/portal-watchlist', (req, res) => {
-  res.sendFile(path.join(__dirname, 'futurecast-portal-watchlist.html'));
-});
-
-app.get('/futurecast/uf-fit-watchlist', (req, res) => {
-  res.sendFile(path.join(__dirname, 'futurecast-uf-fit-watchlist.html'));
-});
-
-app.get('/futurecast/predictions', (req, res) => {
-  res.redirect(301, '/futurecast');
-});
-
-app.get('/futurecast/predictors', (req, res) => {
-  res.redirect(301, '/futurecast');
-});
-
-const { mountFutureCastUiRoutes } = require('./lib/futurecast-ui-routes');
-mountFutureCastUiRoutes(app);
-
-mountRecruitingRoutes(app);
-mountContentRoutes(app);
-mountCommunityRoutes(app);
-mountRosterRoutes(app);
-mountLiveRoutes(app);
-mountVaultDashboardRoutes(app);
-mountHighlightsRoutes(app);
-mountInterviewsRoutes(app);
-mountMediaIngestRoutes(app);
-mountWarRoomRoutes(app);
-mountPlatformRoutes(app);
-/** Bound after deliverEmail is defined — subscription confirm emails use the same Resend path. */
-const subscriptionMail = {
-  deliverEmail: async (...args) => {
-    if (typeof subscriptionMail._impl !== 'function') {
-      return { sent: false, provider: null, error: 'Email deliverer not ready' };
+  // Mount routes in small yielded steps so Render /health can answer between them.
+  const steps = [
+    function stepStaticHtml() {
+      app.get('/highlight/:slug', (req, res) => {
+        res.sendFile(path.join(__dirname, 'highlight.html'));
+      });
+      app.get('/futurecast/big-board', (req, res) => {
+        res.sendFile(path.join(__dirname, 'futurecast-big-board.html'));
+      });
+      app.get('/futurecast-big-board.html', (req, res) => {
+        res.sendFile(path.join(__dirname, 'futurecast-big-board.html'));
+      });
+      app.get('/futurecast/player/:slug', (req, res) => {
+        res.redirect(301, `/player/${encodeURIComponent(req.params.slug)}`);
+      });
+      app.get('/futurecast/portal-watchlist', (req, res) => {
+        res.sendFile(path.join(__dirname, 'futurecast-portal-watchlist.html'));
+      });
+      app.get('/futurecast/uf-fit-watchlist', (req, res) => {
+        res.sendFile(path.join(__dirname, 'futurecast-uf-fit-watchlist.html'));
+      });
+      app.get('/futurecast/predictions', (req, res) => {
+        res.redirect(301, '/futurecast');
+      });
+      app.get('/futurecast/predictors', (req, res) => {
+        res.redirect(301, '/futurecast');
+      });
+    },
+    function stepFutureCastUi() {
+      const { mountFutureCastUiRoutes } = require('./lib/futurecast-ui-routes');
+      mountFutureCastUiRoutes(app);
+    },
+    function stepCoreContent() {
+      mountRecruitingRoutes(app);
+      mountContentRoutes(app);
+      mountCommunityRoutes(app);
+      mountRosterRoutes(app);
+    },
+    function stepLiveMedia() {
+      mountLiveRoutes(app);
+      mountVaultDashboardRoutes(app);
+      mountHighlightsRoutes(app);
+      mountInterviewsRoutes(app);
+      mountMediaIngestRoutes(app);
+    },
+    function stepWarPlatform() {
+      mountWarRoomRoutes(app);
+      mountPlatformRoutes(app);
+    },
+    function stepAccountSubs() {
+      global.__GV_SUBSCRIPTION_MAIL__ = global.__GV_SUBSCRIPTION_MAIL__ || {
+        deliverEmail: async (...args) => {
+          if (typeof global.__GV_SUBSCRIPTION_MAIL__._impl !== 'function') {
+            return { sent: false, provider: null, error: 'Email deliverer not ready' };
+          }
+          return global.__GV_SUBSCRIPTION_MAIL__._impl(...args);
+        },
+        _impl: null,
+      };
+      mountSubscriptionRoutes(app, {
+        deliverEmail: (...args) => global.__GV_SUBSCRIPTION_MAIL__.deliverEmail(...args)
+      });
+      mountPushAlertRoutes(app);
+      mountAlertEmailRoutes(app);
+      mountAccountRoutes(app);
+    },
+    function stepAdmin() {
+      mountXAutoposterRoutes(app);
+      mountMonitoringRoutes(app);
+      mountAdminRoutes(app);
+      mountAdminHubRoutes(app);
+      try {
+        require('tsx/cjs');
+        const { mountAdminEngineRoutes } = require('./api/v1/admin/run-engines.ts');
+        mountAdminEngineRoutes(app);
+      } catch (err) {
+        console.warn('[admin-engines] not mounted:', err.message);
+      }
+    },
+    function stepOpsQa() {
+      mountFilmRoomKnowledgeRoutes(app);
+      mountNilRoutes(app);
+      mountOpsRoutes(app);
+      mountTeamStaffRoutes(app);
+      require('./lib/ops-restart')(app);
+      require('./lib/redeploy')(app);
+      mountQaRoutes(app);
+      mountProductIntelRoutes(app);
+      mountUnresolvedPredictionsRoutes(app);
+    },
+    function stepIntelGm2() {
+      const { mountSelfRunnerRoutes } = require('./lib/self-runner/self-runner-routes');
+      mountSelfRunnerRoutes(app);
+      mountGm2Routes(app);
+      require('./lib/insider-articles-routes').mountInsiderArticlesRoutes(app);
+      require('./lib/insider-hub-routes').mountInsiderHubRoutes(app);
+      require('./lib/insider-analytics-engine').mountAnalyticsRoutes(app);
+      mountVaultGradeAdminRoutes(app);
+      mountPlayerIntelEntryRoutes(app);
+      try {
+        require('./lib/futurecast-players-routes').mountFutureCastPlayersRoutes(app);
+      } catch (err) {
+        console.warn('[futurecast] Players API not mounted:', err.message);
+      }
     }
-    return subscriptionMail._impl(...args);
-  },
-  _impl: null,
-};
-mountSubscriptionRoutes(app, { deliverEmail: (...args) => subscriptionMail.deliverEmail(...args) });
-mountPushAlertRoutes(app);
-mountAlertEmailRoutes(app);
-mountAccountRoutes(app);
-mountXAutoposterRoutes(app);
-mountMonitoringRoutes(app);
-mountAdminRoutes(app);
-mountAdminHubRoutes(app);
-try {
-  require('tsx/cjs');
-  const { mountAdminEngineRoutes } = require('./api/v1/admin/run-engines.ts');
-  mountAdminEngineRoutes(app);
-} catch (err) {
-  console.warn('[admin-engines] not mounted:', err.message);
+  ];
+  let i = 0;
+  function next() {
+    if (i >= steps.length) {
+      console.log('[boot] route mounts complete — wiring auth/services');
+      wireApplicationRest();
+      return;
+    }
+    const step = steps[i++];
+    try {
+      step();
+    } catch (err) {
+      console.warn('[boot] wire step failed:', step.name || i, err && err.message ? err.message : err);
+    }
+    setImmediate(next);
+  }
+  next();
 }
-mountFilmRoomKnowledgeRoutes(app);
-mountNilRoutes(app);
-mountOpsRoutes(app);
-mountTeamStaffRoutes(app);
-require('./lib/ops-restart')(app);
-require('./lib/redeploy')(app);
-mountQaRoutes(app);
-mountProductIntelRoutes(app);
-mountUnresolvedPredictionsRoutes(app);
-const { mountSelfRunnerRoutes } = require('./lib/self-runner/self-runner-routes');
-mountSelfRunnerRoutes(app);
-mountGm2Routes(app);
-require('./lib/insider-articles-routes').mountInsiderArticlesRoutes(app);
-require('./lib/insider-hub-routes').mountInsiderHubRoutes(app);
-require('./lib/insider-analytics-engine').mountAnalyticsRoutes(app);
-mountVaultGradeAdminRoutes(app);
-mountPlayerIntelEntryRoutes(app);
-try {
-  require('./lib/futurecast-players-routes').mountFutureCastPlayersRoutes(app);
-} catch (err) {
-  console.warn('[futurecast] Players API not mounted:', err.message);
-}
+
+function wireApplicationRest() {
+  // subscriptionMail bridge used by deliverEmail wiring below
+  const subscriptionMail = global.__GV_SUBSCRIPTION_MAIL__ || {
+    deliverEmail: async () => ({ sent: false, provider: null, error: 'Email deliverer not ready' }),
+    _impl: null
+  };
 
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;
 const SESSION_SECRET = process.env.SESSION_SECRET || 'change-me-in-production';
@@ -2046,4 +2083,4 @@ function startPostBootRecruitingAndSchedulers() {
   }
 } // startPostBootRecruitingAndSchedulers
 
-} // wireApplication
+} // wireApplicationRest
