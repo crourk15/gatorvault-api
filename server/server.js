@@ -1254,9 +1254,6 @@ function startLiveDashboardScheduler() {
       .catch((err) => console.warn('[live-dashboard]', err.message));
   };
 
-  // When in-process crons are off (Starter / hub mode), only warm the beat cache on boot.
-  // Full live-refresh OOMs this plan; light beat pull is enough for GNL.
-  const hasBearer = !!(process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN);
   if (!pipelineGuards.guardScheduledJobStart('live-dashboard')) {
     // Do not one-shot refreshBeatStream when schedulers are off — X timeline pulls
     // can block the event loop past Render's 5s /health timeout.
