@@ -1549,18 +1549,31 @@ function startPostBootServices() {
 
   const deferHeavyMs = Math.max(
     60000,
-    parseInt(process.env.API_BOOT_DEFER_HEAVY_MS || '120000', 10) || 120000
+    parseInt(process.env.API_BOOT_DEFER_HEAVY_MS || '180000', 10) || 180000
   );
   const deferLightMs = Math.max(
-    8000,
-    parseInt(process.env.API_BOOT_DEFER_LIGHT_MS || '12000', 10) || 12000
+    15000,
+    parseInt(process.env.API_BOOT_DEFER_LIGHT_MS || '30000', 10) || 30000
   );
-  console.log('[boot] deferring light post-boot', deferLightMs, 'ms; heavy warm', deferHeavyMs, 'ms');
+  const deferSchedMs = Math.max(
+    deferLightMs + 30000,
+    parseInt(process.env.API_BOOT_DEFER_SCHED_MS || '120000', 10) || 120000
+  );
+  console.log(
+    '[boot] deferring light',
+    deferLightMs,
+    'ms; schedulers',
+    deferSchedMs,
+    'ms; heavy warm',
+    deferHeavyMs,
+    'ms'
+  );
   setTimeout(startPostBootLightServices, deferLightMs);
+  setTimeout(startPostBootRecruitingAndSchedulers, deferSchedMs);
   setTimeout(startPostBootHeavyServices, deferHeavyMs);
 }
 
-/** Store seeds + scheduler registration — after a short quiet window for /health. */
+/** Tiny store seeds only — keep this cheap so /health stays green. */
 function startPostBootLightServices() {
   try {
     const { rememberTrial } = require('./lib/trial-ledger');
@@ -1586,8 +1599,6 @@ function startPostBootLightServices() {
   } catch (e) {
     console.warn('[deploy-cache] invalidate skipped:', e.message);
   }
-  // Schedulers + store init — hub/dashboard sync warms stay in the heavy phase.
-  setImmediate(startPostBootRecruitingAndSchedulers);
 }
 
 /** Dashboard warm only — deliberately late so Render probes stay green. */
