@@ -70,7 +70,48 @@ function buildUfFitSeedProfile({
   );
   const ufCommitProbability = modelPct || storePct || null;
 
-  const scheme_score = clamp100(modelPct || storePct || ratingToAthleticScore(rating, stars) - 8);
+  const pos = targetSeed?.pos || targetSeed?.position || recruiting?.pos || recruiting?.position || null;
+  let schemeFromEvidence = null;
+  let fitEvidenceLevel = "none";
+  try {
+    const { schemeScoreFromEvidence, assessFitEvidence } = require("./scheme-fit-evidence");
+    fitEvidenceLevel = assessFitEvidence(slug).level;
+    schemeFromEvidence = schemeScoreFromEvidence({
+      slug,
+      pos,
+      position: pos,
+      state,
+      inState: inFlorida,
+    });
+  } catch {
+    /* optional evidence module */
+  }
+
+  // No War Room / film evidence → do not invent Fit from rating/UF%.
+  if (fitEvidenceLevel === "none" || schemeFromEvidence == null) {
+    return {
+      player_id: playerId,
+      scheme_score: null,
+      character_score: null,
+      athletic_score: ratingToAthleticScore(rating, stars),
+      timeline_score: timelineScoreForClassYear(classYear),
+      uf_status: resolveUfStatus({ headliner, natlRank, modelPct: ufCommitProbability || 0 }),
+      uf_commit_probability: ufCommitProbability,
+      uf_fit_score: null,
+      evaluation_notes: null,
+      score_computed_at: new Date().toISOString(),
+      tags: headliner ? ["headliner"] : [],
+      metadata: {
+        seedSource: "uf-fit-score-seed-v2-evidence",
+        fitEvidence: "none",
+        slug,
+        modelPct: modelPct || null,
+        storePct: storePct || null,
+      },
+    };
+  }
+
+  const scheme_score = clamp100(schemeFromEvidence);
   const athletic_score = ratingToAthleticScore(rating, stars);
   const character_score = clamp100(56 + (headliner ? 14 : 0) + (inFlorida ? 8 : 0));
   const timeline_score = timelineScoreForClassYear(classYear);
@@ -93,13 +134,22 @@ function buildUfFitSeedProfile({
     evaluation_notes: typeof notes === "string" ? notes : null,
     score_computed_at: null,
     metadata: {
-      seedSource: "uf-fit-score-seed-v1",
+      seedSource: "uf-fit-score-seed-v2-evidence",
+      fitEvidence: fitEvidenceLevel,
       slug,
       modelPct: modelPct || null,
       storePct: storePct || null,
     },
     signals: [],
   });
+
+  let ufFitScore = intel.ufFitScore;
+  try {
+    const { applyFitCoverageGate, assessFitEvidence } = require("./scheme-fit-evidence");
+    ufFitScore = applyFitCoverageGate(ufFitScore, assessFitEvidence(slug));
+  } catch {
+    /* keep engine score */
+  }
 
   return {
     player_id: playerId,
@@ -109,12 +159,13 @@ function buildUfFitSeedProfile({
     timeline_score,
     uf_status,
     uf_commit_probability: ufCommitProbability,
-    uf_fit_score: intel.ufFitScore,
+    uf_fit_score: ufFitScore,
     evaluation_notes: typeof notes === "string" ? notes.slice(0, 500) : null,
     score_computed_at: new Date().toISOString(),
     tags: headliner ? ["headliner"] : [],
     metadata: {
-      seedSource: "uf-fit-score-seed-v1",
+      seedSource: "uf-fit-score-seed-v2-evidence",
+      fitEvidence: fitEvidenceLevel,
       fitTier: intel.fitTier,
       fitDelta: intel.fitDelta,
       slug,

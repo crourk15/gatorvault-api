@@ -89,7 +89,23 @@ function mergeBoardSeed(player, boardRow, classYear) {
       /* optional seed */
     }
   }
-  if (fitScore != null) merged.fitScore = Math.round(Number(fitScore));
+  // Airtight Fit gate — Sumrall / Faulkner / White scheme evidence required.
+  try {
+    const { resolveEvidenceBackedFitScore } = require('./scheme-fit-evidence');
+    const gated = resolveEvidenceBackedFitScore(
+      {
+        slug,
+        pos: merged.pos || merged.position || boardRow.pos || boardRow.position,
+        position: merged.pos || merged.position || boardRow.pos || boardRow.position,
+        fitScore,
+      },
+      { existingFit: fitScore }
+    );
+    if (gated.fitScore != null) merged.fitScore = gated.fitScore;
+    else delete merged.fitScore;
+  } catch {
+    if (fitScore != null) merged.fitScore = Math.round(Number(fitScore));
+  }
 
   return merged;
 }

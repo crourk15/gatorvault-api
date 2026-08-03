@@ -1,0 +1,217 @@
+{
+  "version": "2026-08-03",
+  "staff": {
+    "hc": { "id": "sumrall", "name": "Jon Sumrall" },
+    "oc": { "id": "faulkner", "name": "Buster Faulkner" },
+    "dc": { "id": "white", "name": "Brad White" }
+  },
+  "programTraits": [
+    "physicality",
+    "culture",
+    "conflict",
+    "versatile",
+    "high motor",
+    "toughness",
+    "competitive",
+    "multi-phase"
+  ],
+  "positions": {
+    "QB": {
+      "unit": "offense",
+      "coach": "faulkner",
+      "scheme": "Faulkner RPO / conflict-read rhythm offense",
+      "wanted": [
+        "processing",
+        "pre-snap",
+        "conflict",
+        "RPO",
+        "quick game",
+        "decision",
+        "platform",
+        "accuracy",
+        "pocket",
+        "football IQ"
+      ]
+    },
+    "RB": {
+      "unit": "offense",
+      "coach": "faulkner",
+      "scheme": "Gap/zone + pass-pro back in spread sets",
+      "wanted": [
+        "vision",
+        "pass pro",
+        "pass protection",
+        "receiving",
+        "burst",
+        "contact balance",
+        "patience",
+        "zone"
+      ]
+    },
+    "WR": {
+      "unit": "offense",
+      "coach": "faulkner",
+      "scheme": "Rhythm RPO + vertical shot menu",
+      "wanted": [
+        "separation",
+        "route",
+        "vertical",
+        "YAC",
+        "contested",
+        "release",
+        "speed",
+        "slot",
+        "boundary"
+      ]
+    },
+    "TE": {
+      "unit": "offense",
+      "coach": "faulkner",
+      "scheme": "12/11 personnel — inline + seam conflict",
+      "wanted": [
+        "inline",
+        "seam",
+        "blocking",
+        "YAC",
+        "mismatch",
+        "hand",
+        "versatile"
+      ]
+    },
+    "OT": {
+      "unit": "offense",
+      "coach": "faulkner",
+      "scheme": "Faulkner OL — length, anchor, zone/gap versatility",
+      "wanted": [
+        "length",
+        "anchor",
+        "pass set",
+        "kick slide",
+        "frame",
+        "mauler",
+        "zone",
+        "functional strength"
+      ]
+    },
+    "IOL": {
+      "unit": "offense",
+      "coach": "faulkner",
+      "scheme": "Interior anchor for RPO / gap-zone mix",
+      "wanted": [
+        "anchor",
+        "pull",
+        "combo",
+        "functional strength",
+        "leverage",
+        "processor",
+        "toughness"
+      ]
+    },
+    "OL": {
+      "unit": "offense",
+      "coach": "faulkner",
+      "scheme": "Faulkner OL — length, anchor, zone/gap versatility",
+      "wanted": ["length", "anchor", "pass set", "frame", "mauler", "zone", "functional strength"]
+    },
+    "OG": {
+      "unit": "offense",
+      "coach": "faulkner",
+      "scheme": "Interior anchor for RPO / gap-zone mix",
+      "wanted": ["anchor", "pull", "combo", "functional strength", "leverage", "toughness"]
+    },
+    "C": {
+      "unit": "offense",
+      "coach": "faulkner",
+      "scheme": "Center as communication / RPO pivot",
+      "wanted": ["communication", "anchor", "snap", "processor", "leverage", "toughness"]
+    },
+    "EDGE": {
+      "unit": "defense",
+      "coach": "white",
+      "scheme": "Brad White 3-3-5 — JACK/arc rush + run fit",
+      "wanted": [
+        "bend",
+        "burst",
+        "arc",
+        "length",
+        "pass rush",
+        "run fit",
+        "twitch",
+        "JACK",
+        "stand-up"
+      ]
+    },
+    "DE": {
+      "unit": "defense",
+      "coach": "white",
+      "scheme": "Brad White 3-3-5 — JACK/arc rush + run fit",
+      "wanted": ["bend", "burst", "arc", "length", "pass rush", "run fit", "twitch"]
+    },
+    "DL": {
+      "unit": "defense",
+      "coach": "white",
+      "scheme": "Three-man front — disrupt + two-gap integrity",
+      "wanted": ["anchor", "penetrate", "length", "first step", "run fit", "functional strength"]
+    },
+    "DT": {
+      "unit": "defense",
+      "coach": "white",
+      "scheme": "Nose / 3-tech in odd front",
+      "wanted": ["anchor", "penetrate", "leverage", "functional strength", "two-gap", "quick"]
+    },
+    "LB": {
+      "unit": "defense",
+      "coach": "white",
+      "scheme": "3-3-5 second-level — chase + diagnosis",
+      "wanted": ["diagnosis", "range", "tackle", "blitz", "coverage", "instincts", "physical"]
+    },
+    "ILB": {
+      "unit": "defense",
+      "coach": "white",
+      "scheme": "3-3-5 second-level — chase + diagnosis",
+      "wanted": ["diagnosis", "range", "tackle", "blitz", "coverage", "instincts", "physical"]
+    },
+    "OLB": {
+      "unit": "defense",
+      "coach": "white",
+      "scheme": "Hybrid edge/LB — JACK/STAR overlap",
+      "wanted": ["versatile", "blitz", "coverage", "edge", "range", "physical", "JACK", "STAR"]
+    },
+    "CB": {
+      "unit": "defense",
+      "coach": "white",
+      "scheme": "Press/man + pattern-match in 3-3-5",
+      "wanted": [
+        "press",
+        "man",
+        "length",
+        "ball skills",
+        "mirror",
+        "twitch",
+        "recovery",
+        "physical"
+      ]
+    },
+    "S": {
+      "unit": "defense",
+      "coach": "white",
+      "scheme": "Range safety / STAR alley filler in 3-3-5",
+      "wanted": [
+        "range",
+        "alley",
+        "STAR",
+        "length",
+        "instincts",
+        "tackle",
+        "versatile",
+        "deep"
+      ]
+    },
+    "ATH": {
+      "unit": "program",
+      "coach": "sumrall",
+      "scheme": "Sumrall multi-phase / conflict athlete",
+      "wanted": ["versatile", "athlete", "speed", "physicality", "multi", "upside"]
+    }
+  }
+}

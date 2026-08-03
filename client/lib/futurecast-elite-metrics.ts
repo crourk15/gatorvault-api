@@ -10,8 +10,8 @@
  *    - Reflects internal confidence based on notes, evaluations, and recruiting feel.
  *
  * Fit % (fitScore):
- *    - Scheme + roster + athletic fit score.
- *    - Represents how well the player fits Florida’s system and positional needs.
+ *    - Scheme Match for Sumrall / Faulkner / Brad White (evidence-backed).
+ *    - Requires War Room / film evidence — not star rating or On3 RPM.
  *
  * Priority Score (priorityScore):
  *    - Weighted importance metric for UF’s class strategy.
@@ -39,7 +39,8 @@ export const FC_METRIC_STAFF = {
 export const FC_METRIC_FIT = {
   label: 'Fit %',
   name: 'Scheme Match',
-  description: 'Scheme, roster, and athletic fit; how well the player fits Florida’s system and positional needs.',
+  description:
+    'Scheme match vs Sumrall staff (Faulkner offense / Brad White 3-3-5). Evidence-backed from War Room + film — not public rankings.',
   fields: ['fitScore'] as const,
 } as const;
 
@@ -86,6 +87,9 @@ export function formatStaffPercent(value: number): string {
 }
 
 export function formatFitPercent(value: number | null | undefined): string {
+  if (value == null || !Number.isFinite(Number(value)) || Number(value) <= 0) {
+    return '—';
+  }
   return `${normalizePercent(value)}%`;
 }
 

@@ -124,7 +124,9 @@ export function HighPriorityTargetCard({
           <div className="gv-hp-card__fit-track" aria-hidden>
             <div
               className={`gv-hp-card__fit-fill gv-hp-card__fit-fill--${fitTone}`}
-              style={{ width: `${Math.min(100, Math.max(0, player.fitScore))}%` }}
+              style={{
+                width: `${Math.min(100, Math.max(0, Number(player.fitScore) || 0))}%`,
+              }}
             />
           </div>
         </div>

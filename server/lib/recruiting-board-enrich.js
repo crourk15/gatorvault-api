@@ -127,7 +127,8 @@ function enrichPlayer(player, isCommit, staffMode) {
     classYear: player.classYear,
     state: player.state || player.st || null,
     ufProbability: player.ufProbability ?? null,
-    fitScore: player.fitScore ?? (playerRating(player) || null),
+    // Never forge Fit % from composite rating — Fit requires scheme evidence (see scheme-fit-evidence.js).
+    fitScore: player.fitScore != null && Number(player.fitScore) > 0 ? Number(player.fitScore) : null,
     staffGrade: staffGrade(player),
     status: evalStatus(player, isCommit),
     notes: staffMode ? player.skinny || player.profileNote || null : null,

@@ -174,38 +174,65 @@ function resolveBoardFitScore(input: {
 }): number | null {
   if (input.override) return null;
 
+  let candidate: number | null = null;
   const modelFit = input.model?.ufFitScore;
   if (modelFit != null && Number.isFinite(Number(modelFit))) {
-    return Math.round(Number(modelFit));
+    candidate = Math.round(Number(modelFit));
   }
 
-  for (const raw of [
-    input.seed.fitScore,
-    input.recruiting?.fitScore,
-    input.recruiting?.ufFitScore,
-  ]) {
-    if (raw != null && Number.isFinite(Number(raw)) && Number(raw) > 0) {
-      return Math.round(Number(raw));
+  if (candidate == null) {
+    for (const raw of [
+      input.seed.fitScore,
+      input.recruiting?.fitScore,
+      input.recruiting?.ufFitScore,
+    ]) {
+      if (raw != null && Number.isFinite(Number(raw)) && Number(raw) > 0) {
+        candidate = Math.round(Number(raw));
+        break;
+      }
     }
   }
 
-  if (!isUnderclassmenClassYear(input.classYear)) return null;
+  if (candidate == null && isUnderclassmenClassYear(input.classYear)) {
+    try {
+      const { buildUfFitSeedProfile } = require('../../lib/uf-fit-score-seed');
+      const profile = buildUfFitSeedProfile({
+        playerId: intelUuidForSlug(input.slug),
+        slug: input.slug,
+        classYear: input.classYear,
+        state: String(input.recruiting?.state ?? input.seed.state ?? ''),
+        targetSeed: input.seed,
+        recruiting: input.recruiting,
+        modelPred: input.model ?? null,
+      });
+      const score = profile?.uf_fit_score;
+      if (score != null && Number.isFinite(Number(score))) {
+        candidate = Math.round(Number(score));
+      }
+    } catch {
+      candidate = null;
+    }
+  }
 
+  // Airtight Fit: Sumrall-staff scheme match requires War Room / film evidence.
+  // No evidence → null (do not show rating-forged Fit %).
   try {
-    const { buildUfFitSeedProfile } = require('../../lib/uf-fit-score-seed');
-    const profile = buildUfFitSeedProfile({
-      playerId: intelUuidForSlug(input.slug),
-      slug: input.slug,
-      classYear: input.classYear,
-      state: String(input.recruiting?.state ?? input.seed.state ?? ''),
-      targetSeed: input.seed,
-      recruiting: input.recruiting,
-      modelPred: input.model ?? null,
-    });
-    const score = profile?.uf_fit_score;
-    return score != null && Number.isFinite(Number(score)) ? Math.round(Number(score)) : null;
+    const { resolveEvidenceBackedFitScore } = require('../../lib/scheme-fit-evidence');
+    const pos = String(
+      input.recruiting?.pos ??
+        input.recruiting?.position ??
+        input.seed.pos ??
+        input.seed.position ??
+        ''
+    );
+    const resolved = resolveEvidenceBackedFitScore(
+      { slug: input.slug, pos, position: pos, fitScore: candidate },
+      { existingFit: candidate }
+    );
+    return resolved.fitScore;
   } catch {
-    return null;
+    if (isUnderclassmenClassYear(input.classYear)) return null;
+    return candidate;
   }
 }
 
