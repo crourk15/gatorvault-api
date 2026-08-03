@@ -105,23 +105,21 @@ function scheduleAsyncWarm(feedLimit = DEFAULT_FEED_LIMIT) {
 function getCachedDashboard({ feedLimit = DEFAULT_FEED_LIMIT, allowStale = true, force = false } = {}) {
   const now = Date.now();
   const stale = force || !snapshotAt || now - snapshotAt > REFRESH_MS;
+  const limit = Math.min(Math.max(parseInt(feedLimit, 10) || DEFAULT_FEED_LIMIT, 10), 80);
 
+  // Never sync-warm on the request path — warmDashboardCache blocks the event loop
+  // long enough for Render's ~5s /health probe to kill the process (502 crash loop).
   if (!snapshot || stale) {
-    if (!warming) {
-      warmDashboardCache(feedLimit);
-    } else {
-      scheduleAsyncWarm(feedLimit);
-    }
+    scheduleAsyncWarm(limit);
   }
 
   const cacheAgeMs = snapshotAt ? Date.now() - snapshotAt : null;
   const stillStale = force ? false : cacheAgeMs == null || cacheAgeMs > REFRESH_MS;
 
   if (!snapshot) {
-    return { ...minimalFallback(snapshot ? 'warming' : 'cache_miss'), ok: true };
+    return { ...minimalFallback('warming'), ok: true, stale: true };
   }
 
-  const limit = Math.min(Math.max(parseInt(feedLimit, 10) || DEFAULT_FEED_LIMIT, 10), 80);
   const out = {
     ...snapshot,
     feed: (snapshot.feed || []).slice(0, limit),
@@ -157,11 +155,8 @@ function getCacheMeta() {
 
 function scheduleBackgroundRefresh() {
   setInterval(() => {
-    try {
-      warmDashboardCache();
-    } catch (err) {
-      console.warn('[live-dashboard-cache] background refresh:', err.message);
-    }
+    // Async only — sync warm here was stalling /health during App Review.
+    scheduleAsyncWarm();
   }, REFRESH_MS).unref?.();
 }
 
