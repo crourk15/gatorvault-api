@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-30T00:00:00.000Z",
+  "updatedAt": "2026-08-03T02:55:00.000Z",
   "assignments": {
     "kamauri-whitfield": {
       "staff_lead_id": "harris",
@@ -44,6 +44,18 @@
     },
     "izayah-vickers": {
       "staff_lead_id": "harris"
+    },
+    "cyion-smith": {
+      "staff_lead_id": "collins"
+    },
+    "ryan-drakeford": {
+      "staff_lead_id": "collins"
+    },
+    "nate-dollard": {
+      "staff_lead_id": "harris"
+    },
+    "zaiden-jernigan": {
+      "staff_lead_id": "foster"
     },
     "cain-van-norden": {
       "staff_lead_id": "chris-prescott"

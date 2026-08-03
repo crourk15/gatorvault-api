@@ -68,6 +68,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
             <FutureCastPositionBreakdown
               players={data.masterBoard.players}
               highPriority={highPriority}
+              underclassmen={data.underclassmen}
               roster={data.roster}
               commits2027={data.commits2027}
               updatedAt={data.lastUpdated}

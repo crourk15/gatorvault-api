@@ -175,15 +175,29 @@ function scoreGeoPipeline(player) {
   return Math.min(100, pts);
 }
 
-/** Market pressure modifier from FutureCast movement — not the brain. */
-function scoreMarketPressure(delta7d) {
+/**
+ * Market pressure = movement OR locked-in UF market standing.
+ * A 97% On3 RPM board (Cyion Smith) must not score 0 just because delta7d is flat.
+ */
+function scoreMarketPressure(delta7d, ufMarketPct = null) {
   const d = Number(delta7d) || 0;
-  if (d >= 12) return 100;
-  if (d >= 8) return 75;
-  if (d >= 5) return 55;
-  if (d >= 2) return 35;
-  if (d > 0) return 20;
-  return 0;
+  let fromDelta = 0;
+  if (d >= 12) fromDelta = 100;
+  else if (d >= 8) fromDelta = 75;
+  else if (d >= 5) fromDelta = 55;
+  else if (d >= 2) fromDelta = 35;
+  else if (d > 0) fromDelta = 20;
+
+  const rpm = Number(ufMarketPct);
+  let fromRpm = 0;
+  if (Number.isFinite(rpm) && rpm > 0) {
+    if (rpm >= 90) fromRpm = 95;
+    else if (rpm >= 75) fromRpm = 80;
+    else if (rpm >= 50) fromRpm = 55;
+    else if (rpm >= 30) fromRpm = 30;
+    else if (rpm >= 15) fromRpm = 15;
+  }
+  return Math.max(fromDelta, fromRpm);
 }
 
 /** Normalize chase score onto 0–100 for blending. */
@@ -235,7 +249,13 @@ function computeHotTargetScore(player, opts = {}) {
   const mustGetFit = scoreMustGetFit(player, warRoom, film);
   const positionalNeed = scorePositionalNeed(player);
   const geoPipeline = scoreGeoPipeline(player);
-  const marketPressure = scoreMarketPressure(opts.delta7d ?? player.delta7d);
+  const ufMarketPct =
+    opts.ufRpmPct ??
+    player.ufRpmPct ??
+    player.ufProbability ??
+    player.ufConfidence ??
+    null;
+  const marketPressure = scoreMarketPressure(opts.delta7d ?? player.delta7d, ufMarketPct);
 
   const hotScore =
     Math.round(

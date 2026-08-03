@@ -1,6 +1,11 @@
 /**
  * Mobile deploy proof matrix — routes, recordings, section checklist.
  * Used by capture-mobile-deploy-proof.js before any push/deploy.
+ *
+ * Keep in sync with recruiting hub shell modes + Team destination rooms:
+ * - Class year switching lives in hero tabs (mid-page class cards retired)
+ * - Open-cycle war-room stack (movement/battle/position) is 2028+
+ * - Staff lives on /vault/team/staff/; pipeline footprint on Recruiting
  */
 
 /** User-facing routes for screenshot + menu proof (canonical vault paths). */
@@ -28,6 +33,7 @@ const RECORDING_ROUTES = [
 /**
  * Section checklist — pass/fail per feature area.
  * Each entry is evaluated on the given path after SETTLE_MS.
+ * `activateYear` clicks the recruiting hero year tab before asserting.
  */
 const SECTION_CHECKLIST = [
   {
@@ -48,21 +54,23 @@ const SECTION_CHECKLIST = [
   {
     id: 'staff',
     label: 'Staff',
-    path: '/vault/team/',
-    selector: '[data-section="coaching-staff"]',
+    path: '/vault/team/staff/',
+    selector: '[data-section="coaching-staff"], [data-testid="vault-team-staff"]',
     minText: 20,
   },
   {
     id: 'pipeline',
     label: 'Pipeline',
-    path: '/vault/team/',
-    selector: '[data-section="recruiting-pipeline"]',
-    minText: 15,
+    path: '/vault/recruiting/',
+    selector: '[data-testid="rh-elite-footprint"]',
+    minText: 20,
+    noSkeleton: true,
   },
   {
     id: 'movement',
     label: 'Movement',
     path: '/vault/recruiting/',
+    activateYear: 2028,
     selector: '[data-testid="rh-elite-movement-feed"]',
     minText: 30,
     noSkeleton: true,
@@ -97,8 +105,9 @@ const SECTION_CHECKLIST = [
     id: 'class-cards',
     label: 'Class cards',
     path: '/vault/recruiting/',
-    selector: '[data-testid="rh-class-cards"]',
-    minText: 40,
+    // Mid-page class cards retired — hero year tabs own class switching.
+    selector: '.rh-hero-year-tabs, [data-hero-field="year-tabs"]',
+    minText: 10,
   },
   {
     id: 'commit-class',
@@ -112,6 +121,7 @@ const SECTION_CHECKLIST = [
     id: 'below-nsd-movement',
     label: 'Below NSD — Movement feed',
     path: '/vault/recruiting/',
+    activateYear: 2028,
     selector: '[data-testid="rh-elite-movement-feed"]',
     minText: 30,
     noSkeleton: true,
@@ -121,6 +131,7 @@ const SECTION_CHECKLIST = [
     id: 'below-nsd-battle',
     label: 'Below NSD — Battle board',
     path: '/vault/recruiting/',
+    activateYear: 2028,
     selector: '[data-testid="rh-elite-battle-board"]',
     minText: 30,
     noSkeleton: true,
@@ -139,6 +150,7 @@ const SECTION_CHECKLIST = [
     id: 'below-nsd-positions',
     label: 'Below NSD — Position snapshot',
     path: '/vault/recruiting/',
+    activateYear: 2028,
     selector: '[data-testid="rh-elite-position-snapshot"]',
     minText: 20,
     noSkeleton: true,

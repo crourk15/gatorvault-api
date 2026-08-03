@@ -6,6 +6,7 @@ const {
   scoreGeoPipeline,
   scoreMustGetFit,
   normalizeStaffHeat,
+  scoreMarketPressure,
 } = require('../../lib/hot-florida-targets');
 
 describe('Hottest Florida Targets composite', () => {
@@ -84,3 +85,10 @@ describe('Hottest Florida Targets composite', () => {
     assert.ok(normalizeStaffHeat(hot.chaseScore) >= hot.lanes.staffHeat - 1);
   });
 });
+
+  it('treats high UF RPM as market pressure even when delta7d is flat', () => {
+    assert.equal(scoreMarketPressure(0, null), 0);
+    assert.ok(scoreMarketPressure(0, 97) >= 90, '97% RPM should lock market pressure');
+    assert.ok(scoreMarketPressure(0, 97) > scoreMarketPressure(0, 20));
+    assert.ok(scoreMarketPressure(6, 10) >= 55, 'delta still counts');
+  });

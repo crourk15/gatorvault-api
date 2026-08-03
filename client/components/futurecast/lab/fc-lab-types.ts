@@ -128,6 +128,55 @@ export function ufPctFromFc(raw: number | null | undefined): number {
   return ufPctFromRaw(raw);
 }
 
+/** Fit threshold for "Elite scheme fit" hero treatment. */
+export const LAB_HERO_ELITE_FIT_MIN = 80;
+
+/**
+ * Absolute Florida-% floor before elite fit can steal the Lab hero lead.
+ * Without this, a 94-fit / 8% kid beats a 2% board #1 via the ±15 band.
+ */
+export const LAB_HERO_ELITE_UF_FLOOR = 25;
+
+/** Elite-fit lead must stay within this many points of the Hottest #1 UF%. */
+export const LAB_HERO_ELITE_UF_BAND = 15;
+
+/** True when fit is elite AND Florida odds clear the hero floor (not 8% RPM leftovers). */
+export function isLabHeroEliteFit(target: FcLabTarget | null | undefined): boolean {
+  if (!target) return false;
+  return (
+    (target.fitScore ?? 0) >= LAB_HERO_ELITE_FIT_MIN &&
+    ufPctFromFc(target.ufProbability) >= LAB_HERO_ELITE_UF_FLOOR
+  );
+}
+
+/**
+ * Lab hero lead: Hottest #1 when they have real Florida odds.
+ * If #1 is single-digit RPM, prefer the first top-10 kid who clears the UF floor
+ * so we never market "Elite scheme fit · 8% Florida". Elite-fit can still steal
+ * only among kids already at/above that floor.
+ */
+export function pickLabHeroLead(top10: FcLabTarget[]): FcLabTarget | null {
+  if (!top10.length) return null;
+  const topByPriority = top10[0];
+  const realUfPool = top10.filter(
+    (p) => ufPctFromFc(p.ufProbability) >= LAB_HERO_ELITE_UF_FLOOR
+  );
+  const base =
+    ufPctFromFc(topByPriority.ufProbability) >= LAB_HERO_ELITE_UF_FLOOR || !realUfPool.length
+      ? topByPriority
+      : realUfPool[0];
+  const elite = [...(realUfPool.length ? realUfPool : top10)]
+    .filter((p) => (p.fitScore ?? 0) >= LAB_HERO_ELITE_FIT_MIN)
+    .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0))[0];
+  if (
+    elite &&
+    ufPctFromFc(elite.ufProbability) >= ufPctFromFc(base.ufProbability) - LAB_HERO_ELITE_UF_BAND
+  ) {
+    return elite;
+  }
+  return base;
+}
+
 /** UF probability in the contested battle band (34–66%). */
 export function isBattleTarget(ufPct: number): boolean {
   return ufPct >= 34 && ufPct < 67;
@@ -177,6 +226,29 @@ export function underclassmenTargetsForYear(
   classYear: number
 ): UnderclassmenPlayer[] {
   return players.filter((p) => Number(p.classYear) === classYear && p.tier === 'target');
+}
+
+/**
+ * Discovery "Where Florida needs help" must see the full 2028 chase board,
+ * not only Hottest top-18. Otherwise a real safety chase (e.g. Drakeford)
+ * vanishes and the room falsely reads "No clear Florida shot yet".
+ * Prefer High Priority rows when the same slug appears in both.
+ */
+export function discoveryNeedBoardPlayers(
+  highPriority: HighPriorityPlayer[],
+  underclassmen: UnderclassmenPlayer[],
+  classYear: number
+): Array<FutureCastPlayer | HighPriorityPlayer> {
+  const bySlug = new Map<string, FutureCastPlayer | HighPriorityPlayer>();
+  for (const p of underclassmenTargetsForYear(underclassmen, classYear)) {
+    if (!p?.slug) continue;
+    bySlug.set(p.slug, p);
+  }
+  for (const p of highPriority) {
+    if (!p?.slug) continue;
+    if (Number(p.classYear) === classYear) bySlug.set(p.slug, p);
+  }
+  return [...bySlug.values()];
 }
 
 /** Map underclassmen board row → high-priority shape for lab fit/SCI panels. */

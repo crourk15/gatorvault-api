@@ -44,16 +44,16 @@ Plus **menu open + menu closed** screenshot on each route.
 
 | Section | Where |
 |---------|-------|
-| Roster | Team |
-| Depth chart | Team |
-| Staff | Team |
-| Pipeline | Team |
-| Movement | Recruiting |
+| Roster | Team hub |
+| Depth chart | Team hub |
+| Staff | Team staff room (`/vault/team/staff/`) |
+| Pipeline | Recruiting footprint map |
+| Movement | Recruiting (2028 open-cycle shell) |
 | Beat intel | Home |
 | GNL | Live feed |
 | FutureCast | FutureCast page |
-| Class cards | Recruiting |
-| Everything below NSD | Movement, battle board, footprint, position snapshot |
+| Class cards | Recruiting hero year tabs |
+| Everything below NSD | Movement, battle board, footprint, position snapshot (2028 for war-room stack) |
 
 All rows must **PASS** in `CHECKLIST.md` and `checklist.json`.
 

@@ -13,7 +13,9 @@ import { UfProbabilityBarHero } from './primitives';
 import {
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
+  isLabHeroEliteFit,
   movementDeltasAreBelievable,
+  pickLabHeroLead,
   ufPctFromFc,
 } from './fc-lab-types';
 import { closingClassUrgencyScore, isClosingClassInPlayTarget } from './competing-schools';
@@ -78,21 +80,8 @@ export function FutureCastHero({
     return Math.round(withDelta.reduce((acc, p) => acc + (p.delta7d ?? 0), 0) / withDelta.length);
   }, [top10]);
 
-  /** One lead signal — highest UF urgency, prefer elite scheme fit when close. */
-  const lead = useMemo(() => {
-    if (!top10.length) return null;
-    const topUf = top10[0];
-    const elite = [...top10]
-      .filter((p) => (p.fitScore ?? 0) >= 80)
-      .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0))[0];
-    if (
-      elite &&
-      ufPctFromFc(elite.ufProbability) >= ufPctFromFc(topUf.ufProbability) - 15
-    ) {
-      return elite;
-    }
-    return topUf;
-  }, [top10]);
+  /** Hottest #1; elite scheme fit only steals the lead with real Florida odds (≥25%). */
+  const lead = useMemo(() => pickLabHeroLead(top10), [top10]);
 
   const updatedLabel = lastUpdated ? formatRelativeUpdated(lastUpdated) : 'just now';
   const meterLabel = discoveryFocus
@@ -121,7 +110,7 @@ export function FutureCastHero({
               >
                 <span className="fc-lab-hero__lead-name">{lead.name}</span>
                 <span className="fc-lab-hero__lead-meta">
-                  {(lead.fitScore ?? 0) >= 80 ? 'Elite scheme fit' : lead.position}
+                  {isLabHeroEliteFit(lead) ? 'Elite scheme fit' : lead.position}
                   {' · '}
                   {ufPctFromFc(lead.ufProbability)}% Florida
                 </span>

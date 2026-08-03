@@ -599,7 +599,13 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
         const ufRpmPct = storeRpm;
         const delta7d = mergedDelta7dBySlug.get(slug) ?? model?.delta ?? 0;
         const movementDelta = delta7d;
-        const fitScore = Math.round(model?.ufFitScore ?? target.rating ?? compositeScore ?? 0);
+        // Scheme fit only — never fall back to On3 rating/composite (that forged
+        // "Elite scheme fit · 8% Florida" hero copy from a 90+ rating).
+        const storeFit =
+          recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
+            ? Number(recruiting.fitScore)
+            : 0;
+        const fitScore = Math.round(model?.ufFitScore ?? storeFit ?? 0);
         const staffConfidence = Math.round(
           model?.fitScoreBreakdown?.staff ??
             (ufProbability > 0 ? Math.min(100, ufProbability * 0.85) : 0)
