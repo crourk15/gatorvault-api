@@ -35,6 +35,17 @@ function floridaOfferedOnPlayer(player) {
     return true;
   }
   if (/florida\s+offered|offered/i.test(String(player.ufStatus || ''))) return true;
+  const offerLists = [player.offers, player.offerList].filter(Array.isArray);
+  if (
+    offerLists.some((list) =>
+      list.some((o) => {
+        const school = String(o?.school || o?.name || o || '');
+        return /^florida$/i.test(school.trim()) || /^florida gators$/i.test(school.trim());
+      })
+    )
+  ) {
+    return true;
+  }
   const teams = player.on3TopTeams || player.topTeams || [];
   const year = Number(player.classYear) || 2028;
   const uf = on3Recruit.getFloridaTeam(teams, year);

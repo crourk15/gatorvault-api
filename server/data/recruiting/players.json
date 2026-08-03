@@ -339,14 +339,22 @@
       }
     ],
     "ufRpmPct": 10,
-    "updatedAt": "2026-07-12T18:56:58.014Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "AL",
     "displayRating": 92.63260869565217,
     "ratingIsOverride": false,
     "height": "6-5",
     "weight": 215,
     "evaluationSummary": "4★ TE · #200 natl · Wetumpka (Wetumpka, AL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "cain-van-norden",
@@ -614,12 +622,20 @@
       }
     ],
     "ufRpmPct": 7,
-    "updatedAt": "2026-07-12T19:10:52.979Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "TN",
     "displayRating": 93.56227208976156,
     "ratingIsOverride": false,
     "height": "6-0",
-    "weight": 175
+    "weight": 175,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "kyren-caldwell",
@@ -3263,14 +3279,22 @@
       }
     ],
     "ufRpmPct": 21,
-    "updatedAt": "2026-07-12T18:57:21.027Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "FL",
     "displayRating": 88.70471014492753,
     "ratingIsOverride": false,
     "height": "6-0",
     "weight": 185,
     "evaluationSummary": "4★ QB · #336 natl · Chaminade-Madonna Prep (Hollywood, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "kendall-guervil",
@@ -3452,14 +3476,22 @@
       }
     ],
     "ufRpmPct": 21,
-    "updatedAt": "2026-07-12T18:57:25.647Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "SC",
     "displayRating": 86.31702898550725,
     "ratingIsOverride": false,
     "height": "6-4",
     "weight": 180,
     "evaluationSummary": "4★ WR · #368 natl · IMG Academy (Saint Stephen, SC)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "derrick-hooker",
@@ -5027,7 +5059,7 @@
       }
     ],
     "ufRpmPct": 19,
-    "updatedAt": "2026-07-20T04:01:02.755Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "GA",
     "displayRating": 86.46014492753623,
     "ratingIsOverride": false,
@@ -5035,7 +5067,15 @@
     "weight": 181,
     "evaluationSummary": "4★ CB · #352 natl · North Atlanta (Atlanta, GA)",
     "protected": false,
-    "name": "Bryce Willingham"
+    "name": "Bryce Willingham",
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "ryan-drakeford",
@@ -5111,12 +5151,20 @@
       }
     ],
     "ufRpmPct": 5,
-    "updatedAt": "2026-07-12T19:10:52.979Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "MD",
     "displayRating": 86.04528985507247,
     "ratingIsOverride": false,
     "height": "6-1",
-    "weight": 175
+    "weight": 175,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "justin-williams",
@@ -5488,12 +5536,20 @@
       }
     ],
     "ufRpmPct": 2,
-    "updatedAt": "2026-07-20T04:00:54.529Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "GA",
     "displayRating": 91.77028985507248,
     "ratingIsOverride": false,
     "protected": false,
-    "name": "Zyon Robinson"
+    "name": "Zyon Robinson",
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "kahmaree-crumity",
@@ -5581,14 +5637,22 @@
       }
     ],
     "ufRpmPct": 18,
-    "updatedAt": "2026-07-12T18:57:26.613Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "FL",
     "displayRating": 85.96739130434781,
     "ratingIsOverride": false,
     "height": "5-10",
     "weight": 175,
     "evaluationSummary": "3★ CB · #376 natl · Lincoln (Tallahassee, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "cj-hester",
@@ -6241,14 +6305,22 @@
       }
     ],
     "ufRpmPct": 10,
-    "updatedAt": "2026-07-12T18:56:59.158Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "FL",
     "displayRating": 97.7731182795699,
     "ratingIsOverride": false,
     "height": "6-3.5",
     "weight": 210,
     "evaluationSummary": "5★ WR · #208 natl · Mandarin (Jacksonville, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "heze-kent",
@@ -6430,14 +6502,22 @@
       }
     ],
     "ufRpmPct": 34,
-    "updatedAt": "2026-07-12T18:57:28.087Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "MS",
     "displayRating": 85.7731884057971,
     "ratingIsOverride": false,
     "height": "6-2",
     "weight": 335,
     "evaluationSummary": "3★ IOL · #384 natl · Jackson Academy (Jackson, MS)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "will-griffin",
@@ -6619,14 +6699,22 @@
       }
     ],
     "ufRpmPct": 8,
-    "updatedAt": "2026-07-12T18:57:00.125Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "FL",
     "displayRating": 96.03709677419356,
     "ratingIsOverride": false,
     "height": "6-5",
     "weight": 240,
     "evaluationSummary": "5★ EDGE · #216 natl · The Bolles School (Jacksonville, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "davian-groce",
@@ -8573,14 +8661,22 @@
       }
     ],
     "ufRpmPct": 15,
-    "updatedAt": "2026-07-12T18:57:24.160Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "FL",
     "displayRating": 86.41485507246377,
     "ratingIsOverride": false,
     "height": "6-0",
     "weight": 160,
     "evaluationSummary": "4★ CB · #360 natl · Miami Central (Miami, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "man-robinson",
@@ -8656,12 +8752,20 @@
       }
     ],
     "ufRpmPct": 20,
-    "updatedAt": "2026-07-12T19:10:52.979Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "KY",
     "displayRating": 85.66666666666667,
     "ratingIsOverride": false,
     "height": "5-10",
-    "weight": 180
+    "weight": 180,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "merrick-ham",
@@ -8748,7 +8852,7 @@
       }
     ],
     "ufRpmPct": 2,
-    "updatedAt": "2026-07-20T04:01:03.755Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "GA",
     "displayRating": 91.77934782608696,
     "ratingIsOverride": false,
@@ -8756,7 +8860,15 @@
     "weight": 230,
     "evaluationSummary": "4★ EDGE · #102 natl · Marietta (Marietta, GA)",
     "protected": false,
-    "name": "Merrick Ham"
+    "name": "Merrick Ham",
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "raheem-floyd",
@@ -32989,13 +33101,21 @@
     "nilEstimate": null,
     "nilSource": null,
     "competitors": [],
-    "ufRpmPct": null,
-    "updatedAt": "2026-07-20T01:30:00.000Z",
+    "ufRpmPct": 97,
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "displayRating": null,
     "ratingIsOverride": false,
     "height": "6-2",
     "weight": 175,
-    "state": "FL"
+    "state": "FL",
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "dominick-harris-payne",
@@ -33083,14 +33203,22 @@
       }
     ],
     "ufRpmPct": 42,
-    "updatedAt": "2026-07-12T18:57:19.987Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "FL",
     "displayRating": 88.98695652173912,
     "ratingIsOverride": false,
     "height": "6-3",
     "weight": 165,
     "evaluationSummary": "4★ CB · #272 natl · Lakeland (Lakeland, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "lee-steele",
@@ -33466,12 +33594,20 @@
       }
     ],
     "ufRpmPct": 9,
-    "updatedAt": "2026-07-12T19:10:52.980Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "MD",
     "displayRating": 96.0263440860215,
     "ratingIsOverride": false,
     "height": "6-3.5",
-    "weight": 265
+    "weight": 265,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "antonio-thomas-jr",
@@ -33627,7 +33763,7 @@
       }
     ],
     "ufRpmPct": 7,
-    "updatedAt": "2026-07-24T16:03:54.207Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "displayRating": null,
     "ratingIsOverride": false,
     "height": "6-2",
@@ -33636,7 +33772,15 @@
     "position": "WR",
     "hasUFOffer": true,
     "ufOffer": true,
-    "ufOfferVerified": true
+    "ufOfferVerified": true,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-06-19",
+        "source": "beat:corey-bender"
+      }
+    ]
   },
   {
     "id": "jaelyn-easterling-flores",
@@ -34024,14 +34168,22 @@
       }
     ],
     "ufRpmPct": 33,
-    "updatedAt": "2026-07-12T18:57:11.644Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "FL",
     "displayRating": 91.54710144927536,
     "ratingIsOverride": false,
     "height": "5-11",
     "weight": 180,
     "evaluationSummary": "4★ CB · #117 natl · Florida State Univ. School (Tallahassee, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "shamar-evans",
@@ -34279,7 +34431,7 @@
       }
     ],
     "ufRpmPct": 3,
-    "updatedAt": "2026-07-24T16:03:54.207Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "displayRating": null,
     "ratingIsOverride": false,
     "height": "5-9.5",
@@ -34288,7 +34440,15 @@
     "position": "CB",
     "hasUFOffer": true,
     "ufOffer": true,
-    "ufOfferVerified": true
+    "ufOfferVerified": true,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-06-19",
+        "source": "beat:corey-bender"
+      }
+    ]
   },
   {
     "id": "braxton-rein",
@@ -34376,14 +34536,22 @@
       }
     ],
     "ufRpmPct": 37,
-    "updatedAt": "2026-07-12T18:57:15.359Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "TN",
     "displayRating": 91.01449275362317,
     "ratingIsOverride": false,
     "height": "6-6",
     "weight": 235,
     "evaluationSummary": "4★ TE · #161 natl · Baylor School (Chattanooga, TN)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "john-matthews",
@@ -34471,14 +34639,22 @@
       }
     ],
     "ufRpmPct": 60,
-    "updatedAt": "2026-07-12T18:57:22.017Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "GA",
     "displayRating": 88.381884057971,
     "ratingIsOverride": false,
     "height": "5-10.5",
     "weight": 188,
     "evaluationSummary": "4★ WR · #279 natl · Newnan (Newnan, GA)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "darryl-blackmon",
@@ -34662,7 +34838,7 @@
       }
     ],
     "ufRpmPct": 62,
-    "updatedAt": "2026-07-24T16:03:54.207Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "displayRating": null,
     "ratingIsOverride": false,
     "height": "6-5",
@@ -34671,7 +34847,15 @@
     "position": "QB",
     "hasUFOffer": true,
     "ufOffer": true,
-    "ufOfferVerified": true
+    "ufOfferVerified": true,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-06-20",
+        "source": "beat:blake-alderman"
+      }
+    ]
   },
   {
     "id": "turner-wilkie",
@@ -35026,7 +35210,7 @@
     "nilSource": null,
     "competitors": [],
     "ufRpmPct": null,
-    "updatedAt": "2026-07-12T19:10:52.980Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "displayRating": null,
     "ratingIsOverride": false,
     "height": "6-6",
@@ -35035,7 +35219,15 @@
     "position": "OT",
     "hasUFOffer": true,
     "ufOffer": true,
-    "ufOfferVerified": true
+    "ufOfferVerified": true,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-06-01",
+        "source": "beat:corey-bender"
+      }
+    ]
   },
   {
     "id": "josiah-taylor",
@@ -35788,14 +35980,22 @@
       }
     ],
     "ufRpmPct": 24,
-    "updatedAt": "2026-07-12T18:57:19.003Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "FL",
     "displayRating": 89.18804347826087,
     "ratingIsOverride": false,
     "height": "6-4",
     "weight": 217,
     "evaluationSummary": "4★ EDGE · #262 natl · Pine Forest (Pensacola, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "anthony-howard-jr",
@@ -35883,14 +36083,22 @@
       }
     ],
     "ufRpmPct": 63,
-    "updatedAt": "2026-07-12T18:57:29.520Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "FL",
     "displayRating": 85.76449275362319,
     "ratingIsOverride": false,
     "height": "5-10.5",
     "weight": 195,
     "evaluationSummary": "3★ RB · #349 natl · IMG Academy (Auburndale, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "ismael-schiefer",
@@ -36398,14 +36606,22 @@
       }
     ],
     "ufRpmPct": 21,
-    "updatedAt": "2026-07-12T18:57:01.464Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "NC",
     "displayRating": 95.22258064516129,
     "ratingIsOverride": false,
     "height": "6-5",
     "weight": 217,
     "evaluationSummary": "4★ EDGE · #14 natl · E E Smith (Fayetteville, NC)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "tahj-gray",
@@ -36553,14 +36769,22 @@
       }
     ],
     "ufRpmPct": 23,
-    "updatedAt": "2026-07-12T18:57:06.903Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "VA",
     "displayRating": 92.24057971014493,
     "ratingIsOverride": false,
     "height": "6-0.5",
     "weight": 215,
     "evaluationSummary": "4★ LB · #72 natl · IMG Academy (Chesapeake, VA)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "carter-barrett",
@@ -37008,14 +37232,22 @@
       }
     ],
     "ufRpmPct": 19,
-    "updatedAt": "2026-07-12T18:57:08.850Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "FL",
     "displayRating": 91.91340579710146,
     "ratingIsOverride": false,
     "height": "6-1",
     "weight": 190,
     "evaluationSummary": "4★ WR · #95 natl · Lowndes (Valdosta, GA)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "hunter-fujikawa",
@@ -37102,14 +37334,21 @@
       }
     ],
     "ufRpmPct": 11,
-    "updatedAt": "2026-07-20T04:01:04.935Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "HI",
     "displayRating": 89.96739130434783,
     "ratingIsOverride": false,
     "height": "6-2",
     "weight": 200,
     "protected": false,
-    "offers": [],
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ],
     "visits": [],
     "on3TopTeams": null,
     "topTeams": null,
@@ -37382,14 +37621,22 @@
       }
     ],
     "ufRpmPct": 12,
-    "updatedAt": "2026-07-12T18:57:10.730Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "FL",
     "displayRating": 91.63152173913043,
     "ratingIsOverride": false,
     "height": "6-1",
     "weight": 205,
     "evaluationSummary": "4★ RB · #108 natl · The Bolles School (Jacksonville, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "gabriel-player",
@@ -37477,14 +37724,22 @@
       }
     ],
     "ufRpmPct": 9,
-    "updatedAt": "2026-07-12T18:57:04.178Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "FL",
     "displayRating": 93.05582047685834,
     "ratingIsOverride": false,
     "height": "6-3",
     "weight": 190,
     "evaluationSummary": "4★ LB · #40 natl · Eau Gallie (Melbourne, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "kingston-preyear",
@@ -39820,14 +40075,22 @@
       }
     ],
     "ufRpmPct": 25,
-    "updatedAt": "2026-07-12T18:57:18.227Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "TX",
     "displayRating": 89.99782608695652,
     "ratingIsOverride": false,
     "height": "6-1",
     "weight": 185,
     "evaluationSummary": "4★ QB · #217 natl · Waller (Waller, TX)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "ridge-janes",
@@ -39882,13 +40145,21 @@
     "nilSource": null,
     "competitors": [],
     "ufRpmPct": null,
-    "updatedAt": "2026-07-12T19:10:52.980Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "displayRating": null,
     "ratingIsOverride": false,
     "height": "6-5",
     "weight": 235,
     "state": "MO",
-    "position": "TE"
+    "position": "TE",
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "dracen-martin",
@@ -40156,14 +40427,22 @@
       }
     ],
     "ufRpmPct": 13,
-    "updatedAt": "2026-07-12T18:57:02.834Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "GA",
     "displayRating": 94.44516129032257,
     "ratingIsOverride": false,
     "height": "6-3",
     "weight": 305,
     "evaluationSummary": "4★ DL · #20 natl · Thomas County Central (Thomasville, GA)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "kweli-fielder",
@@ -41091,14 +41370,22 @@
       }
     ],
     "ufRpmPct": 7,
-    "updatedAt": "2026-07-12T18:57:30.708Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "AL",
     "displayRating": 93.97903225806452,
     "ratingIsOverride": false,
     "height": "6-5",
     "weight": 275,
     "evaluationSummary": "4★ IOL · #22 natl · Huntsville (Huntsville, AL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "nehemiah-mccary",
@@ -42326,14 +42613,22 @@
       }
     ],
     "ufRpmPct": 7,
-    "updatedAt": "2026-07-12T18:57:12.946Z",
+    "updatedAt": "2026-08-03T02:27:45.767Z",
     "state": "GA",
     "displayRating": 90,
     "ratingIsOverride": false,
     "height": "6-6",
     "weight": 320,
     "evaluationSummary": "4★ OT · #204 natl · Heritage (Conyers, GA)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "landon-dawson",
@@ -42421,14 +42716,22 @@
       }
     ],
     "ufRpmPct": 3,
-    "updatedAt": "2026-07-12T18:57:16.289Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "OH",
     "displayRating": 90,
     "ratingIsOverride": false,
     "height": "6-3",
     "weight": 210,
     "evaluationSummary": "4★ TE · #566 natl · Mount Vernon (Vernon, OH)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "taihj-moore",
@@ -42516,14 +42819,22 @@
       }
     ],
     "ufRpmPct": 2,
-    "updatedAt": "2026-07-12T18:57:17.350Z",
+    "updatedAt": "2026-08-03T02:27:45.768Z",
     "state": "FL",
     "displayRating": 90.5072463768116,
     "ratingIsOverride": false,
     "height": "5-10",
     "weight": 179,
     "evaluationSummary": "4★ RB · #296 natl · Deland (Deland, FL)",
-    "protected": false
+    "protected": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-11",
+        "source": "on3"
+      }
+    ]
   },
   {
     "id": "monshun-sales",
@@ -44195,7 +44506,16 @@
     "hasUFOffer": true,
     "ufOffer": true,
     "ufOfferVerified": false,
-    "profileNote": "Tampa Bay Tech WR — UF involved since spring and recruiting hard (Corey Bender)."
+    "profileNote": "Tampa Bay Tech WR — UF involved since spring and recruiting hard (Corey Bender).",
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-04-01",
+        "source": "beat:corey-bender"
+      }
+    ],
+    "updatedAt": "2026-08-03T02:27:45.768Z"
   },
   {
     "id": "kaydan-whiteside",
@@ -44211,7 +44531,16 @@
     "state": "NC",
     "hasUFOffer": true,
     "ufOffer": true,
-    "ufOfferVerified": true
+    "ufOfferVerified": true,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-07-01",
+        "source": "beat:tyler-harden"
+      }
+    ],
+    "updatedAt": "2026-08-03T02:27:45.768Z"
   },
   {
     "id": "zaiden-jernigan",

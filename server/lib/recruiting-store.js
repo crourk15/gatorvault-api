@@ -451,6 +451,14 @@ function normalizePlayer(raw) {
           : null,
     nilSource: raw.nilSource || raw.nil_source || null,
     competitors: Array.isArray(raw.competitors) ? raw.competitors : [],
+    // Chase / Detectives / desk-intel need offer + On3 team signals — never drop them.
+    offers: Array.isArray(raw.offers) ? raw.offers : Array.isArray(raw.offerList) ? raw.offerList : undefined,
+    offerList: Array.isArray(raw.offerList) ? raw.offerList : Array.isArray(raw.offers) ? raw.offers : undefined,
+    visits: Array.isArray(raw.visits) ? raw.visits : undefined,
+    on3TopTeams: Array.isArray(raw.on3TopTeams) ? raw.on3TopTeams : Array.isArray(raw.topTeams) ? raw.topTeams : undefined,
+    topTeams: Array.isArray(raw.topTeams) ? raw.topTeams : Array.isArray(raw.on3TopTeams) ? raw.on3TopTeams : undefined,
+    height: raw.height || null,
+    weight: raw.weight != null ? Number(raw.weight) : null,
     ufRpmPct:
       raw.ufRpmPct != null
         ? Number(raw.ufRpmPct)
@@ -459,6 +467,13 @@ function normalizePlayer(raw) {
           : null,
     updatedAt: raw.updatedAt || raw.updated_at || nowIso()
   };
+  if (!player.offers) delete player.offers;
+  if (!player.offerList) delete player.offerList;
+  if (!player.visits) delete player.visits;
+  if (!player.on3TopTeams) delete player.on3TopTeams;
+  if (!player.topTeams) delete player.topTeams;
+  if (!player.height) delete player.height;
+  if (player.weight == null || !Number.isFinite(player.weight)) delete player.weight;
   const geoPatch = normalizePlayerGeo({ ...raw, ...player });
   Object.assign(player, geoPatch);
   if (player.ratingOverride != null && player.ratingOverride !== '') {
@@ -621,6 +636,20 @@ function enrichPlayerFromLocalJson(player, slug) {
   if (local.natlRank != null && player.natlRank == null) patch.natlRank = local.natlRank;
   if (local.posRank != null && player.posRank == null) patch.posRank = local.posRank;
   if (local.stateRank != null && player.stateRank == null) patch.stateRank = local.stateRank;
+  if (!player.offers?.length && Array.isArray(local.offers) && local.offers.length) {
+    patch.offers = local.offers;
+    patch.offerList = local.offers;
+  }
+  if (!player.visits?.length && Array.isArray(local.visits) && local.visits.length) {
+    patch.visits = local.visits;
+  }
+  if (!player.on3TopTeams?.length && Array.isArray(local.on3TopTeams) && local.on3TopTeams.length) {
+    patch.on3TopTeams = local.on3TopTeams;
+    if (!player.topTeams?.length) patch.topTeams = local.on3TopTeams;
+  } else if (!player.topTeams?.length && Array.isArray(local.topTeams) && local.topTeams.length) {
+    patch.topTeams = local.topTeams;
+    if (!player.on3TopTeams?.length) patch.on3TopTeams = local.topTeams;
+  }
   return Object.keys(patch).length ? { ...player, ...patch } : player;
 }
 
@@ -889,6 +918,16 @@ function preservePlayerFields(existing, incoming) {
   const mergedOffers = mergeVisitOfferArrays(existing.offers, incoming.offers, offerArrayKey);
   if (mergedOffers) merged.offers = mergedOffers;
   else if (Array.isArray(existing.offers) && existing.offers.length) merged.offers = existing.offers;
+
+  // Keep On3 prediction boards across upserts that omit topTeams.
+  if (!merged.on3TopTeams?.length && Array.isArray(existing.on3TopTeams) && existing.on3TopTeams.length) {
+    merged.on3TopTeams = existing.on3TopTeams;
+  }
+  if (!merged.topTeams?.length && Array.isArray(existing.topTeams) && existing.topTeams.length) {
+    merged.topTeams = existing.topTeams;
+  } else if (!merged.topTeams?.length && Array.isArray(merged.on3TopTeams) && merged.on3TopTeams.length) {
+    merged.topTeams = merged.on3TopTeams;
+  }
 
   merged.updatedAt = nowIso();
   return merged;

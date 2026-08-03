@@ -376,10 +376,10 @@
       "school": "Blountstown (Blountstown, FL)",
       "state": "FL",
       "inState": true,
-      "rating": null,
+      "rating": 89.51231884057971,
       "natlRank": 175,
       "posRank": 14,
-      "stateRank": null,
+      "stateRank": 29,
       "stars": 4,
       "htWt": "6-2 / 175",
       "skinny": "2028 4-star S — Blountstown. UF daily contact + early On3 RPM momentum (Alderman)."
@@ -562,7 +562,11 @@
       "inState": false,
       "stars": 4,
       "htWt": null,
-      "skinny": "4★ TE · De Smet, MO · UF campus March · eyeing fall gameday"
+      "skinny": "4★ TE · De Smet, MO · UF campus March · eyeing fall gameday",
+      "rating": 91.1177536231884,
+      "natlRank": 154,
+      "posRank": 8,
+      "stateRank": 2
     },
     {
       "slug": "zaiden-jernigan",
