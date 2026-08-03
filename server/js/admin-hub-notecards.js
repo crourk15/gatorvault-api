@@ -81,6 +81,8 @@
            'Catalog is stale. Click <strong>Rebuild Film Room catalog</strong> (orange Fix button / Re-run). Wait 1–2 minutes, Refresh. Not a Beat Desk problem.'],
           ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>App Store gate / product_intel_below_90 (Top Issue)</strong>',
            'Ignore for posting. Scorecard issue — open Command Center Coach later. Keep using Beat Desk.'],
+          ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Flashing red “API DOWN” banner</strong>',
+           'Render is 502 — App Store login will fail. Restart/redeploy <strong>gatorvault-api</strong> on Render. Orange “waking” is fine; flashing red is not.'],
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Beat Desk sidebar dot is red</strong>',
            'API is actually failing (not Film Room / wake lag). Press <strong>Check API</strong>, wait a minute, Refresh. Film Room red shows under Content — keep posting if BD is green/yellow.'],
           ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>Dashboard yellow while Beat Desk green</strong>',
@@ -89,6 +91,8 @@
       : [
           ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>App Store gate / product_intel_below_90</strong>',
            'Product Health score is under 90. That is an internal report card — <strong>not Apple rejecting you</strong>. Open Product Health → Recompute. Fix red ops tiles first (they drag the score down). Keep posting on Beat Desk.'],
+          ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Flashing red “API DOWN” banner / tab title</strong>',
+           'Not kitchen wake. Restart or redeploy Render <strong>gatorvault-api</strong> — War Room + App Store login fail until it recovers.'],
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>Top issue is red</strong>',
            'Read the yellow “What to do” line / <strong>Coach says</strong> box. Press the orange Fix button. Don’t just open Full Ops and guess.'],
           ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>Yellow module / backlog</strong>',
@@ -96,7 +100,7 @@
           ['<span class="hub-nc-dot hub-nc-dot--red"></span><strong>QA is red</strong>',
            'Open <strong>QA Monitor</strong> or Runbooks → “QA is red”. Don’t ignore a red QA for days.'],
           ['<span class="hub-nc-dot hub-nc-dot--yellow"></span><strong>Kitchen waking on any page</strong>',
-           'Wait 20–40s and Refresh. Normal after the server sleeps.'],
+           'Wait 20–40s and Refresh. Normal after the server sleeps. If the banner turns flashing red, treat it as API DOWN.'],
           ['<span class="hub-nc-dot hub-nc-dot--gray"></span><strong>Gray dots</strong>',
            'No probe yet — not an emergency. Keep using Beat Desk.']
         ];
