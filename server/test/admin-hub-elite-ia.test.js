@@ -46,9 +46,28 @@ describe('Admin Hub elite IA', () => {
 
   it('wires FutureCast script + cache-busted core/desk', () => {
     assert.match(html, /admin-hub-futurecast\.js\?v=hub-fc-v1/);
-    assert.match(html, /admin-hub-core\.js\?v=hub-core-v9/);
+    assert.match(html, /admin-hub-core\.js\?v=hub-core-v11/);
     assert.match(html, /admin-hub-beat-desk\.js\?v=hub-bd-v16/);
     assert.match(html, /#futurecast\/control/);
+  });
+
+  it('flashes critical red when API is 502 (not soft wake)', () => {
+    assert.match(html, /hub-api-banner--critical/);
+    assert.match(html, /@keyframes hub-api-flash/);
+    assert.match(html, /hub-ops-strip--api-down/);
+    assert.match(html, /id="hub-api-light"/);
+    assert.match(html, /hub-api-light--ok/);
+    assert.match(html, /hub-api-light--down/);
+    assert.match(core, /probeApiAlive/);
+    assert.match(core, /setApiStatusLight/);
+    assert.match(core, /\/api\/ping/);
+    assert.match(core, /level === 'critical'/);
+    assert.match(core, /API DOWN/);
+    assert.match(core, /App Store \/ War Room login will fail/);
+    assert.match(core, /HEALTH_POLL_DOWN_MS = 15000/);
+    // Soft wake must not swallow hard 502 into orange-only copy.
+    assert.match(core, /status === 502 \|\| status === 504/);
+    assert.match(docs, /API status light/);
   });
 
   it('docs list Beat Desk default + FutureCast control', () => {

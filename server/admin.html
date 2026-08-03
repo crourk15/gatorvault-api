@@ -81,14 +81,59 @@
     .hub-env-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em}
     .hub-env-prod{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.35)}
     .hub-env-stage{background:rgba(234,179,8,.12);color:#fde047;border:1px solid rgba(234,179,8,.35)}
+    .hub-api-light{
+      display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;
+      font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+      border:1px solid transparent;cursor:pointer;font:inherit;min-height:36px;user-select:none;
+    }
+    .hub-api-light__dot{
+      width:10px;height:10px;border-radius:50%;flex-shrink:0;background:currentColor;
+      box-shadow:0 0 0 0 currentColor;
+    }
+    .hub-api-light--checking{background:rgba(100,116,139,.18);color:#94a3b8;border-color:rgba(148,163,184,.35)}
+    .hub-api-light--ok{
+      background:rgba(34,197,94,.18);color:#86efac;border-color:rgba(34,197,94,.55);
+    }
+    .hub-api-light--ok .hub-api-light__dot{box-shadow:0 0 8px rgba(34,197,94,.85)}
+    .hub-api-light--wake{
+      background:rgba(234,179,8,.16);color:#fde047;border-color:rgba(234,179,8,.5);
+    }
+    .hub-api-light--down{
+      background:rgba(239,68,68,.22);color:#fecaca;border-color:#ef4444;
+      animation:hub-api-flash .85s ease-in-out infinite;
+    }
+    .hub-api-light--down .hub-api-light__dot{
+      background:#ef4444;color:#ef4444;box-shadow:0 0 10px rgba(239,68,68,.95);
+      animation:hub-api-dot-pulse .85s ease-in-out infinite;
+    }
+    @keyframes hub-api-dot-pulse{
+      0%,100%{transform:scale(1);opacity:1}
+      50%{transform:scale(1.35);opacity:.75}
+    }
     .hub-api-banner{background:#451a03;border-bottom:1px solid #ea580c;color:#fed7aa;padding:10px 20px;font-size:13px;line-height:1.45;flex-shrink:0}
     .hub-api-banner.hidden{display:none!important}
+    .hub-api-banner--wake{background:#451a03;border-bottom:1px solid #ea580c;color:#fed7aa;font-weight:600}
+    .hub-api-banner--critical{
+      background:#7f1d1d;border-bottom:2px solid #ef4444;color:#fecaca;font-weight:800;
+      letter-spacing:.01em;animation:hub-api-flash .85s ease-in-out infinite;
+    }
+    @keyframes hub-api-flash{
+      0%,100%{background:#7f1d1d;box-shadow:inset 0 0 0 0 rgba(239,68,68,0)}
+      50%{background:#b91c1c;box-shadow:inset 0 0 48px rgba(239,68,68,.55)}
+    }
     .hub-ops-strip{
       display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
       padding:10px 20px;background:linear-gradient(90deg,rgba(0,33,165,.35),rgba(250,70,22,.12));
       border-bottom:1px solid rgba(250,70,22,.35);flex-shrink:0;
     }
     .hub-ops-strip.hidden{display:none!important}
+    .hub-ops-strip--api-down{
+      background:linear-gradient(90deg,#7f1d1d,#991b1b 55%,#7f1d1d);
+      border-bottom:2px solid #ef4444;animation:hub-api-flash .85s ease-in-out infinite;
+    }
+    .hub-ops-strip--api-down .hub-ops-strip__label{color:#fecaca}
+    .hub-ops-strip--api-down .hub-ops-strip__title{color:#fff}
+    .hub-ops-strip--api-down .hub-ops-strip__detail{color:#fecaca}
     .hub-ops-strip__label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#fdba74;font-weight:700;margin:0 0 2px}
     .hub-ops-strip__title{margin:0;font-family:var(--hub-display);font-size:1rem;color:#fff;letter-spacing:.03em}
     .hub-ops-strip__detail{margin:2px 0 0;font-size:12px;color:#cbd5e1}
@@ -343,6 +388,10 @@
           </div>
         </div>
         <div class="hub-topbar-actions">
+          <button type="button" id="hub-api-light" class="hub-api-light hub-api-light--checking" title="API status — click to recheck" aria-live="polite">
+            <span class="hub-api-light__dot" aria-hidden="true"></span>
+            <span class="hub-api-light__label">API …</span>
+          </button>
           <span id="hub-env-badge" class="hub-env-badge hub-env-stage">Stage</span>
           <button type="button" class="hub-alerts-btn" id="hub-alerts-btn" title="Alerts">Alerts</button>
           <button type="button" class="hub-btn secondary" id="hub-lock-top">Lock</button>
@@ -379,11 +428,11 @@
 
   <script src="/js/admin-api-fetch.js?v=4"></script>
   <script src="/js/vault-grade-editor.js?v=vge-20260611"></script>
-  <script src="/js/admin-hub-notecards.js?v=hub-nc-v8"></script>
+  <script src="/js/admin-hub-notecards.js?v=hub-nc-v9"></script>
   <script src="/js/admin-hub-fixer.js?v=hub-fixer-v2"></script>
   <script src="/js/admin-hub-coach.js?v=hub-coach-v5"></script>
   <script src="/js/admin-hub-dashboard.js?v=hub-dash-v13"></script>
-  <script src="/js/admin-hub-runbooks.js?v=hub-runbooks-v3"></script>
+  <script src="/js/admin-hub-runbooks.js?v=hub-runbooks-v4"></script>
   <script src="/js/admin-hub-ops.js?v=hub-ops-v2"></script>
   <script src="/js/admin-hub-job-queue.js?v=hub-jobs-v1"></script>
   <script src="/js/admin-hub-beat-desk.js?v=hub-bd-v16"></script>
@@ -397,7 +446,7 @@
   <script src="/js/admin-hub-unresolved-predictions.js?v=hub-upq-v2"></script>
   <script src="/js/admin-hub-product-intel.js?v=hub-pi-v1"></script>
   <script src="/js/admin-hub-members.js?v=hub-mem-v2"></script>
-  <script src="/js/admin-hub-core.js?v=hub-core-v9"></script>
+  <script src="/js/admin-hub-core.js?v=hub-core-v11"></script>
   <script>
     document.getElementById('hub-lock-top').addEventListener('click', function () {
       document.getElementById('hub-lock').click();

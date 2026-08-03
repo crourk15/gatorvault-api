@@ -119,7 +119,10 @@
     } catch (e) { /* ignore */ }
     var banner = document.getElementById('hub-api-banner');
     if (banner && !banner.classList.contains('hidden')) {
+      // Critical API-down flash is NOT wake — Deploy recovery must stay available.
+      if (banner.classList.contains('hub-api-banner--critical')) return false;
       var t = String(banner.textContent || '');
+      if (/API DOWN/i.test(t)) return false;
       if (/waking|sit tight|still starting/i.test(t)) return true;
     }
     var recent = readLog().slice(0, 3);

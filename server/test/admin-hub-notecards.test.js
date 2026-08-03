@@ -40,7 +40,7 @@ describe('Operator Notecards', () => {
   });
 
   it('is loaded before dashboard/desk scripts with styles', () => {
-    assert.match(html, /admin-hub-notecards\.js\?v=hub-nc-v8/);
+    assert.match(html, /admin-hub-notecards\.js\?v=hub-nc-v9/);
     assert.match(nc, /Film Room Engine red|Rebuild Film Room catalog/);
     assert.match(nc, /product_intel_below_90|App Store gate/);
     const ncIdx = html.indexOf('admin-hub-notecards.js');

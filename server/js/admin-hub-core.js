@@ -16,6 +16,13 @@
   var _hubInitialized = false;
   var _moduleHealth = {};
   var _healthPollTimer = null;
+  var HEALTH_POLL_OK_MS = 60000;
+  var HEALTH_POLL_DOWN_MS = 15000;
+  var API_WAKE_GRACE_MS = 45000;
+  var _apiDownSince = 0;
+  var _apiFailCount = 0;
+  var _apiDownLevel = null; // null | 'wake' | 'critical'
+  var _docTitleBase = null;
 
   var EMBED_SRC = {
     ops: '/admin-ops.html?embed=1',
@@ -250,32 +257,202 @@
     }
   }
 
+  function scheduleHealthPoll(ms) {
+    if (_healthPollTimer) clearInterval(_healthPollTimer);
+    _healthPollTimer = setInterval(pollModuleHealth, ms);
+  }
+
+  /**
+   * Always-visible topbar light: green = OK, yellow = waking, red flash = DOWN.
+   * Charles should never have to guess whether Render is healthy.
+   */
+  function setApiStatusLight(level, detail) {
+    var btn = document.getElementById('hub-api-light');
+    if (!btn) return;
+    var label = btn.querySelector('.hub-api-light__label');
+    btn.classList.remove(
+      'hub-api-light--checking',
+      'hub-api-light--ok',
+      'hub-api-light--wake',
+      'hub-api-light--down'
+    );
+    var text = 'API …';
+    var title = 'API status — click to recheck';
+    if (level === 'ok') {
+      btn.classList.add('hub-api-light--ok');
+      text = 'API OK';
+      title = 'Render API healthy — App Store / War Room login should work. Click to recheck.';
+    } else if (level === 'wake') {
+      btn.classList.add('hub-api-light--wake');
+      text = 'API waking';
+      title = 'Server waking (503) — sit tight. Click to recheck.';
+    } else if (level === 'critical' || level === 'down') {
+      btn.classList.add('hub-api-light--down');
+      text = 'API DOWN';
+      title = 'API DOWN — App Store / War Room login will fail. Restart gatorvault-api on Render. Click to recheck.';
+    } else {
+      btn.classList.add('hub-api-light--checking');
+      text = 'API …';
+    }
+    if (label) label.textContent = text;
+    if (detail) title = detail + ' Click to recheck.';
+    btn.title = title;
+    btn.setAttribute('aria-label', text);
+    btn.setAttribute('data-api-status', level || 'checking');
+  }
+
+  /** Cheap public probe — no PIN, no wake storm. Uses /api/ping (Netlify proxies /api/*). */
+  function probeApiAlive() {
+    return fetch(API + '/api/ping', {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      cache: 'no-store'
+    }).then(function (r) {
+      if (!r.ok) {
+        var err = new Error('HTTP ' + r.status);
+        err.status = r.status;
+        throw err;
+      }
+      return r.text().then(function (text) {
+        var trimmed = String(text || '').trim();
+        if (trimmed.charAt(0) === '<') {
+          var htmlErr = new Error('HTTP 502');
+          htmlErr.status = r.status || 502;
+          throw htmlErr;
+        }
+        try {
+          return trimmed ? JSON.parse(trimmed) : { ok: true };
+        } catch (e) {
+          return { ok: true };
+        }
+      });
+    });
+  }
+
+  function setDocTitleApiDown(on) {
+    try {
+      if (!_docTitleBase) _docTitleBase = document.title || 'GatorVault Admin Hub';
+      if (on) {
+        if (document.title.indexOf('[API DOWN]') !== 0) {
+          document.title = '[API DOWN] ' + _docTitleBase.replace(/^\[API DOWN\]\s*/, '');
+        }
+      } else if (_docTitleBase) {
+        document.title = _docTitleBase;
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  function applyOpsStripApiDown(status) {
+    var strip = document.getElementById('hub-ops-strip');
+    var titleEl = document.getElementById('hub-ops-strip-title');
+    var detailEl = document.getElementById('hub-ops-strip-detail');
+    var primary = document.getElementById('hub-ops-strip-primary');
+    var fixerBtn = document.getElementById('hub-ops-strip-fixer');
+    if (!strip || !titleEl || !detailEl) return;
+    strip.classList.remove('hidden');
+    strip.classList.add('hub-ops-strip--api-down');
+    titleEl.textContent = 'API DOWN — Render 502';
+    detailEl.textContent = 'App Store / War Room login will fail until gatorvault-api is healthy. Restart or redeploy on Render'
+      + (status ? ' (HTTP ' + status + ')' : '')
+      + '.';
+    if (fixerBtn) fixerBtn.classList.add('hidden');
+    if (primary) {
+      primary.textContent = 'Check API';
+      primary.removeAttribute('data-job');
+      primary.setAttribute('data-route', '#dashboard/overview');
+    }
+  }
+
+  function clearOpsStripApiDown() {
+    var strip = document.getElementById('hub-ops-strip');
+    if (strip) strip.classList.remove('hub-ops-strip--api-down');
+  }
+
+  function escalateApiDown(err) {
+    var now = Date.now();
+    if (!_apiDownSince) _apiDownSince = now;
+    _apiFailCount += 1;
+    var elapsed = now - _apiDownSince;
+    var status = err && err.status;
+    var msg = String((err && err.message) || '');
+    // 502/504 = crash / bad gateway — flash red immediately (not "waking").
+    // 503 / first network blip = soft wake for a short grace window.
+    var hardDown = status === 502 || status === 504
+      || /still starting after several|API DOWN|Failed to fetch|NetworkError|Load failed/i.test(msg);
+    var pastGrace = elapsed >= API_WAKE_GRACE_MS || _apiFailCount >= 3;
+    if (hardDown || pastGrace) {
+      var code = status || (/502/.test(msg) ? 502 : (/504/.test(msg) ? 504 : 'down'));
+      showApiBanner(
+        'API DOWN — Render returned ' + code + '. App Store / War Room login will fail until gatorvault-api is healthy. Restart or redeploy on Render. Rechecking every 15s…',
+        { level: 'critical', status: status }
+      );
+    } else {
+      showApiBanner('Server waking up — sit tight. Do not run Deploy recovery yet.', { level: 'wake' });
+    }
+    scheduleHealthPoll(HEALTH_POLL_DOWN_MS);
+  }
+
+  function clearApiDownState() {
+    _apiDownSince = 0;
+    _apiFailCount = 0;
+    _apiDownLevel = null;
+    setDocTitleApiDown(false);
+    clearOpsStripApiDown();
+    setApiStatusLight('ok');
+    scheduleHealthPoll(HEALTH_POLL_OK_MS);
+  }
+
   function pollModuleHealth() {
     if (!pin()) return;
-    apiGet('/api/admin/hub/module-health')
-      .then(function (j) {
+    setApiStatusLight(_apiDownLevel === 'critical' ? 'critical' : (_apiDownLevel === 'wake' ? 'wake' : 'checking'));
+    probeApiAlive()
+      .then(function () {
+        if (_apiDownLevel) clearApiDownState();
+        else setApiStatusLight('ok');
         showApiBanner(null);
-        var health = (j && (j.moduleHealth || j.modules)) || null;
-        if (health) {
-          var merged = Object.assign({}, health);
-          merged._environment = j.environment;
-          merged._alertCount = j.alertCount;
-          applyModuleHealth(merged);
-        }
+        var healthP = apiGet('/api/admin/hub/module-health', { skipWake: true, retries: 1 })
+          .then(function (j) {
+            var health = (j && (j.moduleHealth || j.modules)) || null;
+            if (health) {
+              var merged = Object.assign({}, health);
+              merged._environment = j.environment;
+              merged._alertCount = j.alertCount;
+              applyModuleHealth(merged);
+            }
+          })
+          .catch(function (err) {
+            // Ping ok but hub route failing — still surface.
+            escalateApiDown(err);
+          });
+        // Keep the sticky ops strip fresh even when Command Center is not open.
+        var overviewP = apiGet('/api/admin/hub/overview', { skipWake: true, retries: 1 })
+          .then(function (overview) {
+            if (_apiDownLevel === 'critical') return;
+            applyOpsStrip(overview);
+          })
+          .catch(function () { /* strip stays as-is */ });
+        return Promise.all([healthP, overviewP]);
       })
       .catch(function (err) {
-        showApiBanner((err && err.message) || 'Admin Hub API unreachable — Render may be waking.');
+        escalateApiDown(err);
       });
-    // Keep the sticky ops strip fresh even when Command Center is not open.
-    apiGet('/api/admin/hub/overview')
-      .then(function (overview) { applyOpsStrip(overview); })
-      .catch(function () { /* strip stays as-is */ });
+  }
+
+  function wireApiStatusLight() {
+    var btn = document.getElementById('hub-api-light');
+    if (!btn || btn.getAttribute('data-wired') === '1') return;
+    btn.setAttribute('data-wired', '1');
+    btn.addEventListener('click', function () {
+      setApiStatusLight('checking');
+      pollModuleHealth();
+    });
   }
 
   function startHealthPoll() {
+    wireApiStatusLight();
+    setApiStatusLight('checking');
     pollModuleHealth();
-    if (_healthPollTimer) clearInterval(_healthPollTimer);
-    _healthPollTimer = setInterval(pollModuleHealth, 60000);
+    scheduleHealthPoll(HEALTH_POLL_OK_MS);
   }
 
   function navigateFromHash(routeStr) {
@@ -391,22 +568,47 @@
     return sessionStorage.getItem(SESSION_KEY) || '';
   }
 
-  function showApiBanner(message) {
+  function showApiBanner(message, opts) {
     var el = document.getElementById('hub-api-banner');
     if (!el) return;
+    opts = opts || {};
+    el.classList.remove('hub-api-banner--wake', 'hub-api-banner--critical');
     if (!message) {
       el.classList.add('hidden');
       el.textContent = '';
+      _apiDownLevel = null;
       try { sessionStorage.removeItem('gv:hub:wakeMode'); } catch (e) { /* ignore */ }
+      setDocTitleApiDown(false);
+      clearOpsStripApiDown();
+      setApiStatusLight('ok');
       return;
     }
-    // Soften scary wake copy — retries happen quietly in GVAdminApiFetch.
-    var soft = String(message || '');
-    if (/unavailable|waking|warming|502|503|504|HTML instead of JSON|Kitchen busy|kitchen|still starting/i.test(soft)) {
-      soft = 'Server waking up — sit tight. Do not run Deploy recovery yet.';
-      try { sessionStorage.setItem('gv:hub:wakeMode', '1'); } catch (e) { /* ignore */ }
+    var raw = String(message || '');
+    var level = opts.level || null;
+    if (!level) {
+      // 502/504 + exhausted retries = critical red. Soft 503 wake stays orange.
+      if (/API DOWN|still starting after several|\b502\b|\b504\b/i.test(raw)) level = 'critical';
+      else if (/unavailable|waking|warming|503|HTML instead of JSON|Kitchen busy|kitchen|still starting/i.test(raw)) level = 'wake';
+      else level = 'critical';
     }
-    el.textContent = soft;
+    _apiDownLevel = level;
+    if (level === 'critical') {
+      el.classList.add('hub-api-banner--critical');
+      el.textContent = /API DOWN/i.test(raw)
+        ? raw
+        : ('API DOWN — ' + raw + ' App Store / War Room login will fail until gatorvault-api is healthy. Restart or redeploy on Render.');
+      try { sessionStorage.removeItem('gv:hub:wakeMode'); } catch (e) { /* ignore */ }
+      setDocTitleApiDown(true);
+      applyOpsStripApiDown(opts.status);
+      setApiStatusLight('critical');
+    } else {
+      el.classList.add('hub-api-banner--wake');
+      el.textContent = 'Server waking up — sit tight. Do not run Deploy recovery yet.';
+      try { sessionStorage.setItem('gv:hub:wakeMode', '1'); } catch (e) { /* ignore */ }
+      setDocTitleApiDown(false);
+      clearOpsStripApiDown();
+      setApiStatusLight('wake');
+    }
     el.classList.remove('hidden');
   }
 
@@ -974,6 +1176,12 @@
     var primary = document.getElementById('hub-ops-strip-primary');
     var fixerBtn = document.getElementById('hub-ops-strip-fixer');
     if (!strip || !titleEl || !detailEl || !primary) return;
+    // Never let a stale overview paint over a live API-down flash.
+    if (_apiDownLevel === 'critical') {
+      applyOpsStripApiDown();
+      return;
+    }
+    strip.classList.remove('hub-ops-strip--api-down');
 
     var issues = (data && data.topIssues) || [];
     var top = issues[0];
@@ -1334,7 +1542,10 @@
     wireGate: wireGate,
     applyModuleHealth: applyModuleHealth,
     applyOpsStrip: applyOpsStrip,
-    pushActivity: pushActivity
+    pushActivity: pushActivity,
+    showApiBanner: showApiBanner,
+    probeApiAlive: probeApiAlive,
+    setApiStatusLight: setApiStatusLight
   };
 
   if (document.readyState === 'loading') {

@@ -25,6 +25,7 @@ describe('Admin Hub runbooks', () => {
 
   it('is cache-busted in admin.html', () => {
     const html = fs.readFileSync(path.join(ROOT, 'admin.html'), 'utf8');
-    assert.match(html, /admin-hub-runbooks\.js\?v=hub-runbooks-v3/);
+    assert.match(html, /admin-hub-runbooks\.js\?v=hub-runbooks-v4/);
+    assert.match(fs.readFileSync(path.join(ROOT, 'js/admin-hub-runbooks.js'), 'utf8'), /hub-api-banner--critical/);
   });
 });
