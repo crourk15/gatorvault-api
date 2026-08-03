@@ -121,10 +121,8 @@ app.listen(PORT, () => {
   console.log('[boot] early listen on port', PORT);
   // Keep /health green through Render's deploy probes before sync route wiring.
   // Starter CPUs can spend multiple seconds inside wireApplication mounts.
-  const wireDelay = Math.max(
-    0,
-    parseInt(process.env.API_WIRE_DELAY_MS || '10000', 10) || 10000
-  );
+  const parsedWire = parseInt(process.env.API_WIRE_DELAY_MS || '10000', 10);
+  const wireDelay = Number.isFinite(parsedWire) ? Math.max(0, parsedWire) : 10000;
   console.log('[boot] deferring route wiring', wireDelay, 'ms');
   setTimeout(() => setImmediate(wireApplication), wireDelay);
 });
@@ -1256,27 +1254,10 @@ function startLiveDashboardScheduler() {
       .catch((err) => console.warn('[live-dashboard]', err.message));
   };
 
-  // When in-process crons are off (Starter / hub mode), only warm the beat cache on boot.
-  // Full live-refresh OOMs this plan; light beat pull is enough for GNL.
-  const hasBearer = !!(process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN);
   if (!pipelineGuards.guardScheduledJobStart('live-dashboard')) {
-    if (hasBearer && !_gvLiveSchedulerStarted) {
-      _gvLiveSchedulerStarted = true;
-      setTimeout(() => {
-        if (pipelineGuards.shouldSkipHeavyJob('live-dashboard')) return;
-        const opsMonitor = require('./lib/ops-monitor');
-        const { refreshBeatStream } = require('./lib/live-beat');
-        opsMonitor
-          .wrapJob('beat-refresh', 'cron:live-refresh', () => refreshBeatStream())
-          .then((result) => {
-            const n = Array.isArray(result?.posts) ? result.posts.length : 0;
-            if (result?.error) console.warn('[live-dashboard] boot beat:', result.error);
-            else console.log('[live-dashboard] boot beat refreshed', n, 'posts');
-          })
-          .catch((err) => console.warn('[live-dashboard] boot beat', err.message));
-      }, bootDelay);
-      console.log('Live dashboard: one-shot boot beat refresh (scheduled jobs off)');
-    }
+    // Do not one-shot refreshBeatStream when schedulers are off — X timeline pulls
+    // can block the event loop past Render's 5s /health timeout.
+    console.log('Live dashboard: boot beat refresh skipped (scheduled jobs off)');
     return;
   }
 
@@ -1511,41 +1492,44 @@ const providers = getEmailProviders();
 console.log('🚀 API server started with commit:', process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev');
 console.log('GatorVault server running on port', PORT);
 
-// CRITICAL: verifyBoot is sync and takes ~6s locally (longer on Render Starter).
-// Running it inline blocks the event loop past Render's ~5s /health timeout → 502 crash loop.
+// CRITICAL: verifyBoot can block the event loop past Render's ~5s /health timeout.
 // Mark routes ready first, keep /health answering, then verify in the background.
-const guardianBootDelay = Math.max(
-  5000,
-  parseInt(process.env.GUARDIAN_BOOT_DELAY_MS || '20000', 10) || 20000
-);
-setTimeout(() => {
-  const guardian = require('./lib/guardian/boot-guardian');
-  const run = typeof guardian.verifyBootAsync === 'function'
-    ? guardian.verifyBootAsync({ alert: process.env.NODE_ENV === 'production' })
-    : Promise.resolve().then(() => guardian.verifyBoot({ alert: process.env.NODE_ENV === 'production' }));
-  run
-    .then(() => {
-      console.log('[guardian] boot verified (deferred', guardianBootDelay, 'ms)');
-    })
-    .catch((err) => {
-      console.error(err.message || err);
-      if (process.env.GUARDIAN_BOOT_LENIENT === 'true') {
-        console.warn('[guardian] GUARDIAN_BOOT_LENIENT=true — continuing despite boot verification failure');
-        return;
-      }
-      console.error('[guardian] boot verification failed after early listen — continuing in degraded mode');
-      require('./lib/guardian/guardian-alerts')
-        .alertGuardian({
-          type: 'boot_failed',
-          severity: 'critical',
-          title: 'API boot degraded',
-          message: String(err.message || err).slice(0, 500),
-          notifySms: true
-        })
-        .catch(() => {});
-    });
-}, guardianBootDelay);
-console.log('[guardian] boot verify deferred', guardianBootDelay, 'ms');
+if (process.env.GUARDIAN_BOOT_SKIP === 'true') {
+  console.warn('[guardian] GUARDIAN_BOOT_SKIP=true — boot verification disabled');
+} else {
+  const parsedGuardianDelay = parseInt(process.env.GUARDIAN_BOOT_DELAY_MS || '20000', 10);
+  const guardianBootDelay = Number.isFinite(parsedGuardianDelay)
+    ? Math.max(5000, parsedGuardianDelay)
+    : 20000;
+  setTimeout(() => {
+    const guardian = require('./lib/guardian/boot-guardian');
+    const run = typeof guardian.verifyBootAsync === 'function'
+      ? guardian.verifyBootAsync({ alert: process.env.NODE_ENV === 'production' })
+      : Promise.resolve().then(() => guardian.verifyBoot({ alert: process.env.NODE_ENV === 'production' }));
+    run
+      .then(() => {
+        console.log('[guardian] boot verified (deferred', guardianBootDelay, 'ms)');
+      })
+      .catch((err) => {
+        console.error(err.message || err);
+        if (process.env.GUARDIAN_BOOT_LENIENT === 'true') {
+          console.warn('[guardian] GUARDIAN_BOOT_LENIENT=true — continuing despite boot verification failure');
+          return;
+        }
+        console.error('[guardian] boot verification failed after early listen — continuing in degraded mode');
+        require('./lib/guardian/guardian-alerts')
+          .alertGuardian({
+            type: 'boot_failed',
+            severity: 'critical',
+            title: 'API boot degraded',
+            message: String(err.message || err).slice(0, 500),
+            notifySms: true
+          })
+          .catch(() => {});
+      });
+  }, guardianBootDelay);
+  console.log('[guardian] boot verify deferred', guardianBootDelay, 'ms');
+}
 
 // Yield so Render /ready can answer before post-boot schedulers/store init.
 // Light path first (App Review account); heavy sync work is deferred so /health
@@ -1880,7 +1864,11 @@ function startPostBootRecruitingAndSchedulers() {
     console.warn('Live dashboard scheduler failed to start', e.message);
   }
   try {
-    startOnboardingScheduler({ loadUsers, saveUsers, deliverEmail, pushEmailLog });
+    if (!pipelineGuards.scheduledJobsEnabled()) {
+      console.log('[onboarding] scheduler skipped — X_SCHEDULED_JOBS_ENABLED is not true');
+    } else {
+      startOnboardingScheduler({ loadUsers, saveUsers, deliverEmail, pushEmailLog });
+    }
   } catch (e) {
     console.warn('Onboarding scheduler init skipped', e.message);
   }
@@ -2052,34 +2040,38 @@ function startPostBootRecruitingAndSchedulers() {
   } catch (e) {
     console.warn('[gv-om] init skipped', e.message);
   }
-  try {
-    const { startPlatformMaintenanceSchedulers } = require('./lib/platform-maintenance-scheduler');
-    startPlatformMaintenanceSchedulers();
-  } catch (e) {
-    console.warn('[platform] maintenance schedulers failed to start', e.message);
-  }
-  try {
-    const { startPlatformHealthSweepScheduler } = require('./lib/platform-health-sweep');
-    startPlatformHealthSweepScheduler();
-  } catch (e) {
-    console.warn('[platform] health sweep scheduler failed to start', e.message);
-  }
-  try {
-    const { startQaScheduler } = require('./lib/qa/qa-runner');
-    startQaScheduler();
-  } catch (e) {
-    console.warn('[qa] scheduler failed to start', e.message);
-  }
-  try {
-    const { startProductIntelScheduler } = require('./lib/product-intel/product-intel-scheduler');
-    startProductIntelScheduler();
-  } catch (e) {
-    console.warn('[product-intel] scheduler failed to start', e.message);
-  }
-  try {
-    require('./lib/guardian/runtime-watchdog').startRuntimeWatchdog();
-  } catch (e) {
-    console.warn('[guardian] runtime watchdog failed to start', e.message);
+  if (!pipelineGuards.scheduledJobsEnabled()) {
+    console.log('[platform] maintenance/QA/product-intel/watchdog skipped — X_SCHEDULED_JOBS_ENABLED is not true');
+  } else {
+    try {
+      const { startPlatformMaintenanceSchedulers } = require('./lib/platform-maintenance-scheduler');
+      startPlatformMaintenanceSchedulers();
+    } catch (e) {
+      console.warn('[platform] maintenance schedulers failed to start', e.message);
+    }
+    try {
+      const { startPlatformHealthSweepScheduler } = require('./lib/platform-health-sweep');
+      startPlatformHealthSweepScheduler();
+    } catch (e) {
+      console.warn('[platform] health sweep scheduler failed to start', e.message);
+    }
+    try {
+      const { startQaScheduler } = require('./lib/qa/qa-runner');
+      startQaScheduler();
+    } catch (e) {
+      console.warn('[qa] scheduler failed to start', e.message);
+    }
+    try {
+      const { startProductIntelScheduler } = require('./lib/product-intel/product-intel-scheduler');
+      startProductIntelScheduler();
+    } catch (e) {
+      console.warn('[product-intel] scheduler failed to start', e.message);
+    }
+    try {
+      require('./lib/guardian/runtime-watchdog').startRuntimeWatchdog();
+    } catch (e) {
+      console.warn('[guardian] runtime watchdog failed to start', e.message);
+    }
   }
 } // startPostBootRecruitingAndSchedulers
 

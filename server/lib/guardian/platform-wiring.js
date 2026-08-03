@@ -24,10 +24,27 @@ function resolveRequire(relFromServer) {
 function listDirCaseMap(dir, acc = {}) {
   if (!fs.existsSync(dir)) return acc;
   for (const name of fs.readdirSync(dir)) {
+    // Never walk dependency/package trees — that blocked Render /health (>5s).
+    if (
+      name === 'node_modules' ||
+      name === '.git' ||
+      name === 'coverage' ||
+      name === 'dist' ||
+      name === '.next' ||
+      name === 'tmp'
+    ) {
+      continue;
+    }
     const full = path.join(dir, name);
+    let st;
+    try {
+      st = fs.statSync(full);
+    } catch {
+      continue;
+    }
     const rel = normalizeRel(path.relative(SERVER_ROOT, full));
     acc[rel.toLowerCase()] = rel;
-    if (fs.statSync(full).isDirectory()) listDirCaseMap(full, acc);
+    if (st.isDirectory()) listDirCaseMap(full, acc);
   }
   return acc;
 }
@@ -107,7 +124,8 @@ function verifyRouteWiring() {
     let mod;
     try {
       const reqPath = path.join(SERVER_ROOT, route.file);
-      delete require.cache[require.resolve(reqPath)];
+      // Do not bust require.cache during boot — reloading every route file
+      // blocks the event loop and contributes to Render /health timeouts.
       mod = require(reqPath);
     } catch (err) {
       errors.push(`[${route.id}] require(${route.file}) failed: ${err.message}`);
