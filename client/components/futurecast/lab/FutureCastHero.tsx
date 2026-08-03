@@ -13,7 +13,7 @@ import { UfProbabilityBarHero } from './primitives';
 import {
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
-  LAB_HERO_ELITE_FIT_MIN,
+  isLabHeroEliteFit,
   movementDeltasAreBelievable,
   pickLabHeroLead,
   ufPctFromFc,
@@ -110,9 +110,7 @@ export function FutureCastHero({
               >
                 <span className="fc-lab-hero__lead-name">{lead.name}</span>
                 <span className="fc-lab-hero__lead-meta">
-                  {(lead.fitScore ?? 0) >= LAB_HERO_ELITE_FIT_MIN
-                    ? 'Elite scheme fit'
-                    : lead.position}
+                  {isLabHeroEliteFit(lead) ? 'Elite scheme fit' : lead.position}
                   {' · '}
                   {ufPctFromFc(lead.ufProbability)}% Florida
                 </span>

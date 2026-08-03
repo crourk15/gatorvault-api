@@ -140,25 +140,41 @@ export const LAB_HERO_ELITE_UF_FLOOR = 25;
 /** Elite-fit lead must stay within this many points of the Hottest #1 UF%. */
 export const LAB_HERO_ELITE_UF_BAND = 15;
 
+/** True when fit is elite AND Florida odds clear the hero floor (not 8% RPM leftovers). */
+export function isLabHeroEliteFit(target: FcLabTarget | null | undefined): boolean {
+  if (!target) return false;
+  return (
+    (target.fitScore ?? 0) >= LAB_HERO_ELITE_FIT_MIN &&
+    ufPctFromFc(target.ufProbability) >= LAB_HERO_ELITE_UF_FLOOR
+  );
+}
+
 /**
- * Lab hero lead: Hottest #1 by default. Prefer an elite-scheme-fit target only
- * when that kid also has real Florida odds (not single-digit RPM leftovers).
+ * Lab hero lead: Hottest #1 when they have real Florida odds.
+ * If #1 is single-digit RPM, prefer the first top-10 kid who clears the UF floor
+ * so we never market "Elite scheme fit · 8% Florida". Elite-fit can still steal
+ * only among kids already at/above that floor.
  */
 export function pickLabHeroLead(top10: FcLabTarget[]): FcLabTarget | null {
   if (!top10.length) return null;
   const topByPriority = top10[0];
-  const elite = [...top10]
+  const realUfPool = top10.filter(
+    (p) => ufPctFromFc(p.ufProbability) >= LAB_HERO_ELITE_UF_FLOOR
+  );
+  const base =
+    ufPctFromFc(topByPriority.ufProbability) >= LAB_HERO_ELITE_UF_FLOOR || !realUfPool.length
+      ? topByPriority
+      : realUfPool[0];
+  const elite = [...(realUfPool.length ? realUfPool : top10)]
     .filter((p) => (p.fitScore ?? 0) >= LAB_HERO_ELITE_FIT_MIN)
-    .filter((p) => ufPctFromFc(p.ufProbability) >= LAB_HERO_ELITE_UF_FLOOR)
     .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0))[0];
   if (
     elite &&
-    ufPctFromFc(elite.ufProbability) >=
-      ufPctFromFc(topByPriority.ufProbability) - LAB_HERO_ELITE_UF_BAND
+    ufPctFromFc(elite.ufProbability) >= ufPctFromFc(base.ufProbability) - LAB_HERO_ELITE_UF_BAND
   ) {
     return elite;
   }
-  return topByPriority;
+  return base;
 }
 
 /** UF probability in the contested battle band (34–66%). */
