@@ -41,7 +41,32 @@ async function loadPlaywright() {
   }
 }
 
+async function activateRecruitingYear(page, year) {
+  const y = String(year);
+  const tab = page.locator(`.rh-hero-year-tab:text-is("${y}")`).first();
+  if (!(await tab.count())) return false;
+  const selected = await tab.getAttribute('aria-selected').catch(() => null);
+  if (selected === 'true') return true;
+  await tab.click({ timeout: 10_000 }).catch(() => {});
+  await page.waitForTimeout(800);
+  if (Number(year) >= 2028) {
+    await page
+      .waitForFunction(
+        () => {
+          const mode = document.querySelector('[data-testid="rh-hub-shell-mode"]');
+          return mode?.getAttribute('data-shell') === 'open';
+        },
+        { timeout: 15_000 },
+      )
+      .catch(() => {});
+  }
+  return true;
+}
+
 async function assertSection(page, spec) {
+  if (spec.activateYear) {
+    await activateRecruitingYear(page, spec.activateYear);
+  }
   const loc = page.locator(spec.sel);
   const matchCount = await loc.count();
   if (!matchCount) {

@@ -25,6 +25,7 @@ const MENU_ROUTES = [
   { id: 'membership', path: '/vault/membership/', label: 'Membership' },
   { id: 'alerts', path: '/vault/alerts/', label: 'My Alerts' },
   { id: 'tickets', path: '/vault/tickets/', label: 'Schedule (tickets alias)', fallback: '/vault/schedule/' },
+  { id: 'team-staff', path: '/vault/team/staff/', label: 'Team staff room' },
 ];
 
 /** Text that must never persist after settle on any page. */
@@ -56,13 +57,15 @@ const ROUTE_CHECKS = {
     minBodyText: 500,
     sections: [
       { sel: '[data-hydrate="hero"], .gv-rh-elite-hero, [data-testid="rh-elite-hero"]', label: 'Recruiting hero', minText: 20 },
-      { sel: '[data-testid="rh-class-cards"]', label: 'Class cards', minText: 40 },
+      // Mid-page class cards retired — hero year tabs own class switching.
+      { sel: '.rh-hero-year-tabs, [data-hero-field="year-tabs"]', label: 'Class cards', minText: 10 },
       { sel: '[data-testid^="rh-elite-commit-board"]', label: 'Commit class', minText: 40 },
       { sel: '[data-testid="rh-signing-day-tracker"], [data-testid^="rh-elite-commit-board"]', label: 'NSD / commits', minText: 20 },
-      { sel: '[data-testid="rh-elite-movement-feed"]', label: 'Movement feed', minText: 25, noSkeleton: true },
-      { sel: '[data-testid="rh-elite-battle-board"]', label: 'Battle board', minText: 20, noSkeleton: true },
+      // Open-cycle war-room stack only mounts on 2028+ shell mode.
+      { sel: '[data-testid="rh-elite-movement-feed"]', label: 'Movement feed', minText: 25, noSkeleton: true, activateYear: 2028 },
+      { sel: '[data-testid="rh-elite-battle-board"]', label: 'Battle board', minText: 20, noSkeleton: true, activateYear: 2028 },
       { sel: '[data-testid="rh-elite-footprint"]', label: 'Footprint map', minText: 20, noSkeleton: true },
-      { sel: '[data-testid="rh-elite-position-snapshot"]', label: 'Position snapshot', minText: 20, noSkeleton: true },
+      { sel: '[data-testid="rh-elite-position-snapshot"]', label: 'Position snapshot', minText: 20, noSkeleton: true, activateYear: 2028 },
     ],
     testMenu: true,
   },
@@ -74,10 +77,17 @@ const ROUTE_CHECKS = {
       { sel: '[data-testid="team-mobile-header"], [data-testid="team-premium-hero"]', label: 'Team header', minText: 20 },
       { sel: '[data-section="roster"]', label: 'Roster section', minText: 40 },
       { sel: '[data-section="depth-chart"]', label: 'Depth chart', minText: 20 },
-      { sel: '[data-section="coaching-staff"]', label: 'Coaching staff', minText: 20 },
-      { sel: '[data-section="recruiting-pipeline"]', label: 'Recruiting pipeline', minText: 15 },
+      // Staff + pipeline rooms moved off the hub (destination cards / Recruiting footprint).
+      { sel: '.team-dest-grid, .team-dest-card', label: 'Team destinations', minText: 20 },
     ],
     testMenu: true,
+  },
+  'team-staff': {
+    root: '[data-testid="vault-team-staff"]',
+    minBodyText: 200,
+    sections: [
+      { sel: '[data-section="coaching-staff"], [data-testid="vault-team-staff"]', label: 'Coaching staff', minText: 20 },
+    ],
   },
   live: {
     root: '[data-testid="vault-live-feed"]:not(.gv-vault-ssr-marker), [data-testid="gnl-live-feed-module"], [data-testid="gnl-page-hero"]',

@@ -89,6 +89,29 @@ async function settlePage(page, ms = SETTLE_MS) {
   await page.waitForTimeout(1500);
 }
 
+async function activateRecruitingYear(page, year) {
+  const y = String(year);
+  const tab = page.locator(`.rh-hero-year-tab:text-is("${y}")`).first();
+  if (!(await tab.count())) return false;
+  const selected = await tab.getAttribute('aria-selected').catch(() => null);
+  if (selected === 'true') return true;
+  await tab.click({ timeout: 10_000 }).catch(() => {});
+  await page.waitForTimeout(800);
+  // Confirm shell flipped to open-cycle mode when requesting 2028+.
+  if (Number(year) >= 2028) {
+    await page
+      .waitForFunction(
+        () => {
+          const mode = document.querySelector('[data-testid="rh-hub-shell-mode"]');
+          return mode?.getAttribute('data-shell') === 'open';
+        },
+        { timeout: 15_000 },
+      )
+      .catch(() => {});
+  }
+  return true;
+}
+
 async function evaluateSection(page, check, opts = {}) {
   const deadline = Date.now() + (check.waitForbiddenMs || SETTLE_MS);
   if (check.path && !opts.skipGoto) {
@@ -98,7 +121,15 @@ async function evaluateSection(page, check, opts = {}) {
     await page.waitForTimeout(400);
   }
 
+  if (check.activateYear) {
+    await settlePage(page, Math.min(8000, deadline - Date.now()));
+    await activateRecruitingYear(page, check.activateYear);
+  }
+
   while (Date.now() < deadline) {
+    if (check.activateYear) {
+      await activateRecruitingYear(page, check.activateYear);
+    }
     await settlePage(page, Math.min(5000, deadline - Date.now()));
 
     const loc = page.locator(check.selector);
