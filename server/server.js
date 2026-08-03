@@ -1258,23 +1258,9 @@ function startLiveDashboardScheduler() {
   // Full live-refresh OOMs this plan; light beat pull is enough for GNL.
   const hasBearer = !!(process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN);
   if (!pipelineGuards.guardScheduledJobStart('live-dashboard')) {
-    if (hasBearer && !_gvLiveSchedulerStarted) {
-      _gvLiveSchedulerStarted = true;
-      setTimeout(() => {
-        if (pipelineGuards.shouldSkipHeavyJob('live-dashboard')) return;
-        const opsMonitor = require('./lib/ops-monitor');
-        const { refreshBeatStream } = require('./lib/live-beat');
-        opsMonitor
-          .wrapJob('beat-refresh', 'cron:live-refresh', () => refreshBeatStream())
-          .then((result) => {
-            const n = Array.isArray(result?.posts) ? result.posts.length : 0;
-            if (result?.error) console.warn('[live-dashboard] boot beat:', result.error);
-            else console.log('[live-dashboard] boot beat refreshed', n, 'posts');
-          })
-          .catch((err) => console.warn('[live-dashboard] boot beat', err.message));
-      }, bootDelay);
-      console.log('Live dashboard: one-shot boot beat refresh (scheduled jobs off)');
-    }
+    // Do not one-shot refreshBeatStream when schedulers are off — X timeline pulls
+    // can block the event loop past Render's 5s /health timeout.
+    console.log('Live dashboard: boot beat refresh skipped (scheduled jobs off)');
     return;
   }
 
@@ -1881,7 +1867,11 @@ function startPostBootRecruitingAndSchedulers() {
     console.warn('Live dashboard scheduler failed to start', e.message);
   }
   try {
-    startOnboardingScheduler({ loadUsers, saveUsers, deliverEmail, pushEmailLog });
+    if (!pipelineGuards.scheduledJobsEnabled()) {
+      console.log('[onboarding] scheduler skipped — X_SCHEDULED_JOBS_ENABLED is not true');
+    } else {
+      startOnboardingScheduler({ loadUsers, saveUsers, deliverEmail, pushEmailLog });
+    }
   } catch (e) {
     console.warn('Onboarding scheduler init skipped', e.message);
   }
@@ -2053,34 +2043,38 @@ function startPostBootRecruitingAndSchedulers() {
   } catch (e) {
     console.warn('[gv-om] init skipped', e.message);
   }
-  try {
-    const { startPlatformMaintenanceSchedulers } = require('./lib/platform-maintenance-scheduler');
-    startPlatformMaintenanceSchedulers();
-  } catch (e) {
-    console.warn('[platform] maintenance schedulers failed to start', e.message);
-  }
-  try {
-    const { startPlatformHealthSweepScheduler } = require('./lib/platform-health-sweep');
-    startPlatformHealthSweepScheduler();
-  } catch (e) {
-    console.warn('[platform] health sweep scheduler failed to start', e.message);
-  }
-  try {
-    const { startQaScheduler } = require('./lib/qa/qa-runner');
-    startQaScheduler();
-  } catch (e) {
-    console.warn('[qa] scheduler failed to start', e.message);
-  }
-  try {
-    const { startProductIntelScheduler } = require('./lib/product-intel/product-intel-scheduler');
-    startProductIntelScheduler();
-  } catch (e) {
-    console.warn('[product-intel] scheduler failed to start', e.message);
-  }
-  try {
-    require('./lib/guardian/runtime-watchdog').startRuntimeWatchdog();
-  } catch (e) {
-    console.warn('[guardian] runtime watchdog failed to start', e.message);
+  if (!pipelineGuards.scheduledJobsEnabled()) {
+    console.log('[platform] maintenance/QA/product-intel/watchdog skipped — X_SCHEDULED_JOBS_ENABLED is not true');
+  } else {
+    try {
+      const { startPlatformMaintenanceSchedulers } = require('./lib/platform-maintenance-scheduler');
+      startPlatformMaintenanceSchedulers();
+    } catch (e) {
+      console.warn('[platform] maintenance schedulers failed to start', e.message);
+    }
+    try {
+      const { startPlatformHealthSweepScheduler } = require('./lib/platform-health-sweep');
+      startPlatformHealthSweepScheduler();
+    } catch (e) {
+      console.warn('[platform] health sweep scheduler failed to start', e.message);
+    }
+    try {
+      const { startQaScheduler } = require('./lib/qa/qa-runner');
+      startQaScheduler();
+    } catch (e) {
+      console.warn('[qa] scheduler failed to start', e.message);
+    }
+    try {
+      const { startProductIntelScheduler } = require('./lib/product-intel/product-intel-scheduler');
+      startProductIntelScheduler();
+    } catch (e) {
+      console.warn('[product-intel] scheduler failed to start', e.message);
+    }
+    try {
+      require('./lib/guardian/runtime-watchdog').startRuntimeWatchdog();
+    } catch (e) {
+      console.warn('[guardian] runtime watchdog failed to start', e.message);
+    }
   }
 } // startPostBootRecruitingAndSchedulers
 
