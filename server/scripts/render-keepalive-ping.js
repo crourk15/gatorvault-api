@@ -145,14 +145,18 @@ async function mapPool(items, concurrency, worker) {
 async function main() {
   const ping = await wakeUntilReady(PING_URL, 'api/ping');
   let touches = [];
-  if (process.env.KEEPALIVE_HUB_TOUCH !== 'false') {
+  // Opt-in only. Default OFF — concurrent hub/FutureCast warms were blocking the
+  // Render event loop past the 5s /health timeout and crash-looping gatorvault-api.
+  // Set KEEPALIVE_HUB_TOUCH=true (and keep concurrency low) when the API is stable.
+  if (process.env.KEEPALIVE_HUB_TOUCH === 'true') {
+    const concurrency = Math.min(2, TOUCH_CONCURRENCY);
     // Priority first (hubs/roster/live/staff) so cold opens hit warm caches.
     const priority = await mapPool(
       PRIORITY_TOUCH_PATHS,
-      Math.min(TOUCH_CONCURRENCY, Math.max(2, PRIORITY_TOUCH_PATHS.length)),
+      Math.min(concurrency, Math.max(1, PRIORITY_TOUCH_PATHS.length)),
       (path) => softTouch(path)
     );
-    const secondary = await mapPool(TOUCH_PATHS, TOUCH_CONCURRENCY, (path) => softTouch(path));
+    const secondary = await mapPool(TOUCH_PATHS, concurrency, (path) => softTouch(path));
     touches = [...priority, ...secondary];
   }
   const okCount = touches.filter((t) => t && t.ok).length;

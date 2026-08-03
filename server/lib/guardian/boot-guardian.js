@@ -101,6 +101,12 @@ function verifyBoot({ alert = false } = {}) {
  * can still be served while boot verification runs on Starter.
  */
 async function verifyBootAsync({ alert = false } = {}) {
+  // Yield BEFORE the sync wiring scan so an in-flight /health can finish.
+  await yieldEventLoop();
+  if (process.env.GUARDIAN_BOOT_SKIP === 'true') {
+    console.warn('[guardian] GUARDIAN_BOOT_SKIP=true — skipping boot verification');
+    return { skipped: true, wiring: { ok: true, errors: [] }, health: null, blueprints: null };
+  }
   const wiring = verifyPlatformWiring({ simulate: true });
   if (!wiring.ok) {
     const message = wiring.errors.join('; ');
