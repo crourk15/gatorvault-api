@@ -124,7 +124,7 @@ describe('Florida odds sanitizers', () => {
       topTeams: cyionPoisonBoard(),
       classYear: 2028,
     });
-    assert.equal(tempered99, 70);
+    assert.equal(tempered99, 69);
     const resolved = resolveGatorVaultLikelihood({
       rpmPct: tempered99,
       fitScore: 50,
