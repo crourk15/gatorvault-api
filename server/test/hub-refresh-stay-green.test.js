@@ -30,13 +30,13 @@ describe('hub refresh stay-green', () => {
     assert.match(src, /yieldEventLoop/);
   });
 
-  it('recruiting-light cron uses priority-only warm (no geoBackfill stampede)', () => {
+  it('recruiting-light cron refreshes dataset without warm (no geoBackfill stampede)', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', 'scripts/render-recruiting-light-cron.js'),
       'utf8'
     );
     assert.doesNotMatch(src, /hub\/refresh\?geoBackfill=true/);
-    assert.match(src, /\/api\/recruiting\/hub\/refresh\?warmAfter=priority/);
+    assert.match(src, /\/api\/recruiting\/hub\/refresh\?warmAfter=false/);
   });
 
   it('keepalive ignores legacy KEEPALIVE_HUB_TOUCH (ping-only unless FULL_TOUCH)', () => {
@@ -53,5 +53,27 @@ describe('hub refresh stay-green', () => {
     const src = fs.readFileSync(path.join(__dirname, '..', 'lib/recruiting-hub-routes.js'), 'utf8');
     assert.match(src, /warmAfterRaw/);
     assert.match(src, /priorityOnly: true/);
+  });
+
+  it('On3 after-ingest hub refresh is gated under stay-green', () => {
+    const src = fs.readFileSync(path.join(__dirname, '..', 'lib/on3-ingest.js'), 'utf8');
+    assert.match(src, /stay_green/);
+    assert.match(src, /HUB_REFRESH_AFTER_INGEST_FORCE/);
+  });
+
+  it('commitment hub refresh does not hard-wipe unless HUB_REFRESH_CLEAR_CACHES', () => {
+    const src = fs.readFileSync(path.join(__dirname, '..', 'lib/allowlist-target-sync.js'), 'utf8');
+    assert.match(src, /HUB_REFRESH_CLEAR_CACHES === 'true'/);
+    assert.match(src, /priorityOnly: true/);
+  });
+
+  it('beat refresh uses async dashboard warm only', () => {
+    const src = fs.readFileSync(path.join(__dirname, '..', 'lib/live-routes.js'), 'utf8');
+    const beatIdx = src.indexOf("app.post('/api/live/beat/refresh'");
+    assert.ok(beatIdx > 0, 'expected beat refresh route');
+    const beatBlock = src.slice(beatIdx, beatIdx + 1200);
+    assert.match(beatBlock, /scheduleAsyncWarm/);
+    assert.doesNotMatch(beatBlock, /clearDashboardCache\(\)/);
+    assert.doesNotMatch(beatBlock, /warmDashboardCache\(\)/);
   });
 });

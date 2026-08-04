@@ -34,7 +34,7 @@ function mountLiveRoutes(app) {
         void refreshPodcasts()
           .then(() => {
             try {
-              require('./live-dashboard-cache').warmDashboardCache();
+              require('./live-dashboard-cache').scheduleAsyncWarm();
             } catch {
               /* optional */
             }
@@ -171,9 +171,10 @@ function mountLiveRoutes(app) {
       }
       try {
         const dashCache = require('./live-dashboard-cache');
-        dashCache.clearDashboardCache();
-        dashCache.warmDashboardCache();
+        // Async only — sync clear+warm on the cron path blocked /health (~5s)
+        // and crash-looped Render during App Review (HTML 502 on every route).
         dashCache.bumpMobileRefreshSignal();
+        dashCache.scheduleAsyncWarm();
       } catch (cacheErr) {
         console.warn('[live/beat/refresh] dashboard cache warm:', cacheErr.message);
       }

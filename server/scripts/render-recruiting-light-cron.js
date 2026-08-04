@@ -38,10 +38,10 @@ const STEPS = [
     }),
   },
   {
-    // Soft refresh (no geoBackfill) + priority-only warm — full secondary warm
-    // overlapping light ingest was starving Render /ready during App Review.
+    // Dataset soft refresh only — no warm. Hourly hub-refresh cron owns warm.
+    // Light On3 + warm was stacking with after-ingest refresh and 502-looping Render.
     name: 'hub-refresh',
-    path: '/api/recruiting/hub/refresh?warmAfter=priority',
+    path: '/api/recruiting/hub/refresh?warmAfter=false',
     summarize: (r) => ({ enrichedPlayerCount: r?.enrichedPlayerCount ?? null }),
   },
 ];
