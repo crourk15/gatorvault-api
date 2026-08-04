@@ -31,7 +31,13 @@ const { filterBlockedRecruits, isBlockedRecruit } = require('../../lib/recruitin
 const { loadTargetBoardBySlug } = require('../../lib/target-board-path');
 const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere } = require('../../lib/recruiting-target-filters');
 const { resolveCommitmentOverride } = require('../../lib/commitment-prediction-override');
-const { resolveUfProbability, resolveGatorVaultLikelihood, pickRivalsPmScore, loadUfPctPredictorsBySlug } = require('../../lib/uf-probability-utils');
+const {
+  resolveUfProbability,
+  resolveGatorVaultLikelihood,
+  resolveUncommittedMarketRpm,
+  pickRivalsPmScore,
+  loadUfPctPredictorsBySlug,
+} = require('../../lib/uf-probability-utils');
 
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 const EARLY_WATCHLIST_PATH = path.join(__dirname, '../../data/futurecast/early-watchlist.json');
@@ -593,16 +599,23 @@ export async function loadBoardPlayersForSlugs(
         /* optional */
       }
     }
-    // Persisted residual poison (0.99→99/100) still lives on some Render store rows
-    // (Trace Hawkins / Cyion Smith). Uncommitted kids cannot sit at 95%+ UF RPM.
-    if (rpmPct != null && rpmPct >= 95 && !ufCommitted) {
-      rpmPct = null;
-    }
+    // Extreme uncommitted RPM: involve corroborated On3 boards (tempered into GV),
+    // still drop uncorroborated 95%+ leftovers (0.99→99 poison). Raw On3 Market
+    // display keeps the unsanitized market % via ufRpmPct below.
+    const rawMarketRpm = rpmPct;
+    rpmPct = resolveUncommittedMarketRpm({
+      rpmPct,
+      committed: ufCommitted,
+      topTeams: recruiting?.on3TopTeams || recruiting?.topTeams || null,
+      classYear: resolvedClassYear,
+    });
     let storePct =
-      sanitizeStoreOddsPct(seed.ufProbability, { rpmPct }) ??
-      sanitizeStoreOddsPct(recruiting?.ufProbability, { rpmPct }) ??
-      sanitizeStoreOddsPct(recruiting?.futurecastProbability, { rpmPct }) ??
+      sanitizeStoreOddsPct(seed.ufProbability, { rpmPct: rawMarketRpm }) ??
+      sanitizeStoreOddsPct(recruiting?.ufProbability, { rpmPct: rawMarketRpm }) ??
+      sanitizeStoreOddsPct(recruiting?.futurecastProbability, { rpmPct: rawMarketRpm }) ??
       undefined;
+    // Store odds at 95%+ for uncommitted kids are still treated as residual poison
+    // unless they merely echo a corroborated tempered market prior.
     if (storePct != null && storePct >= 95 && !ufCommitted) {
       storePct = undefined;
     }
@@ -720,7 +733,8 @@ export async function loadBoardPlayersForSlugs(
       ufProbabilitySource: resolvedUf?.source,
       ufProbabilityLabel: resolvedUf?.label ?? null,
       ufProbabilityLowConfidence: Boolean(resolvedUf?.lowConfidence),
-      ufRpmPct: rpmPct ?? null,
+      // Fan-facing On3 Market keeps the raw market %, not the tempered GV prior.
+      ufRpmPct: rawMarketRpm ?? null,
       fitScore,
       trendDelta7d: trendDelta7dResolved,
       volatility7d: volatility7dResolved,

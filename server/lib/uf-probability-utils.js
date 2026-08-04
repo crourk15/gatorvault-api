@@ -144,6 +144,63 @@ function resolveUfProbability({
 }
 
 /**
+ * True when On3 topTeams corroborate a dominant Florida RPM (percent-scale board).
+ * Residual poison boards (Florida 0.99 while another school leads) return null from hydrate.
+ */
+function corroborateOn3UfRpm(rpmPct, topTeams, classYear = 2028) {
+  const rpm = sanitizeRpmPct(rpmPct);
+  if (rpm == null || rpm < 95) return false;
+  const teams = Array.isArray(topTeams) ? topTeams : [];
+  if (!teams.length) return false;
+  try {
+    const hydrate = require('./on3-board-hydrate');
+    const fromBoard = sanitizeRpmPct(hydrate.ufRpmFromTopTeams(teams, classYear));
+    // Legitimate dominant-Florida boards land near the stored RPM (Cyion ~97).
+    return fromBoard != null && fromBoard >= 80 && Math.abs(fromBoard - rpm) <= 20;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Uncommitted 95%+ On3 is real sometimes (Cyion) and poison other times (0.99→99).
+ * Never copy 97 into GV odds — compress into a "strong market favorite" band so our
+ * model still owns Florida Odds while the market signal is not thrown away.
+ *
+ * Maps 95→58 … 100→72. Below 95 unchanged. Committed keeps full RPM.
+ */
+function temperExtremeUncommittedRpm(rpmPct, { committed = false } = {}) {
+  const rpm = sanitizeRpmPct(rpmPct);
+  if (rpm == null) return null;
+  if (committed) return rpm;
+  if (rpm < 95) return rpm;
+  const t = Math.min(1, Math.max(0, (rpm - 95) / 5));
+  return Math.round(58 + t * 14);
+}
+
+/**
+ * Resolve the RPM value fed into GV likelihood for underclassmen boards.
+ * - Raw On3 Market display should still use the unsanitized market % separately.
+ * - Corroborated ≥95 uncommitted → tempered prior (involved, not adopted).
+ * - Uncorroborated ≥95 uncommitted → null (legacy residual poison).
+ */
+function resolveUncommittedMarketRpm({
+  rpmPct = null,
+  committed = false,
+  topTeams = null,
+  classYear = 2028,
+} = {}) {
+  const rpm = sanitizeRpmPct(rpmPct);
+  if (rpm == null) return null;
+  if (committed) return rpm;
+  if (rpm < 95) return rpm;
+  if (corroborateOn3UfRpm(rpm, topTeams, classYear)) {
+    return temperExtremeUncommittedRpm(rpm, { committed: false });
+  }
+  return null;
+}
+
+/**
  * GatorVault likelihood — multi-signal blend, market-anchored when On3 RPM exists.
  *
  * Fit stays in the model (scheme still matters) but cannot dominate commit odds:
@@ -339,6 +396,9 @@ module.exports = {
   pickOn3RpmScore,
   pickExternalPmScore,
   resolveUfProbability,
+  corroborateOn3UfRpm,
+  temperExtremeUncommittedRpm,
+  resolveUncommittedMarketRpm,
   resolveGatorVaultLikelihood,
   formatUfProbabilityDisplay,
   isFloridaSchool,

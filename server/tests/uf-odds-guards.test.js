@@ -12,6 +12,8 @@ const {
   toPercent,
   canExposeWeekDelta,
   resolveGatorVaultLikelihood,
+  temperExtremeUncommittedRpm,
+  resolveUncommittedMarketRpm,
   MAX_WEEK_DELTA_HARD,
 } = require('../lib/uf-probability-utils');
 const {
@@ -77,6 +79,54 @@ describe('Florida odds sanitizers', () => {
     });
     assert.ok(resolved.value < 40, `got ${resolved.value}`);
     assert.notEqual(resolved.value, 99);
+  });
+
+  it('tempers corroborated 95%+ On3 into GV strong-favorite band (not 97, not discard)', () => {
+    assert.equal(temperExtremeUncommittedRpm(97), 64);
+    assert.equal(temperExtremeUncommittedRpm(95), 58);
+    assert.equal(temperExtremeUncommittedRpm(75), 75);
+
+    const cyionTeams = [
+      { team: { name: 'Florida' }, status: 'Offered', prediction: 96.98, year: 2028 },
+      { team: { name: 'USF' }, status: 'Offered', prediction: 1.35, year: 2028 },
+      { team: { name: 'Auburn' }, status: 'Offered', prediction: 0.66, year: 2028 },
+    ];
+    const tempered = resolveUncommittedMarketRpm({
+      rpmPct: 97,
+      committed: false,
+      topTeams: cyionTeams,
+      classYear: 2028,
+    });
+    assert.equal(tempered, 64);
+
+    const resolved = resolveGatorVaultLikelihood({
+      rpmPct: tempered,
+      fitScore: 76,
+    });
+    assert.ok(resolved.value >= 55 && resolved.value <= 80, `got ${resolved.value}`);
+    assert.notEqual(resolved.value, 97);
+    assert.ok(resolved.value > 40, 'must not collapse to Fit-only thin ~27');
+  });
+
+  it('uncorroborated 99% uncommitted RPM still drops (poison path)', () => {
+    assert.equal(
+      resolveUncommittedMarketRpm({
+        rpmPct: 99,
+        committed: false,
+        topTeams: [],
+        classYear: 2028,
+      }),
+      null
+    );
+    assert.equal(
+      resolveUncommittedMarketRpm({
+        rpmPct: 99,
+        committed: false,
+        topTeams: cyionPoisonBoard(),
+        classYear: 2028,
+      }),
+      null
+    );
   });
 
   it('suppresses +72 thin fireworks', () => {
