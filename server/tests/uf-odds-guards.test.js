@@ -108,25 +108,29 @@ describe('Florida odds sanitizers', () => {
     assert.ok(resolved.value > 40, 'must not collapse to Fit-only thin ~27');
   });
 
-  it('uncorroborated 99% uncommitted RPM still drops (poison path)', () => {
+  it('missing topTeams still tempers 95%+ (prod Cyion rows) — never copies 99', () => {
     assert.equal(
       resolveUncommittedMarketRpm({
-        rpmPct: 99,
+        rpmPct: 97,
         committed: false,
         topTeams: [],
         classYear: 2028,
       }),
-      null
+      64
     );
-    assert.equal(
-      resolveUncommittedMarketRpm({
-        rpmPct: 99,
-        committed: false,
-        topTeams: cyionPoisonBoard(),
-        classYear: 2028,
-      }),
-      null
-    );
+    const tempered99 = resolveUncommittedMarketRpm({
+      rpmPct: 99,
+      committed: false,
+      topTeams: cyionPoisonBoard(),
+      classYear: 2028,
+    });
+    assert.equal(tempered99, 69);
+    const resolved = resolveGatorVaultLikelihood({
+      rpmPct: tempered99,
+      fitScore: 50,
+    });
+    assert.ok(resolved.value < 85, `must not copy 99 into GV, got ${resolved.value}`);
+    assert.notEqual(resolved.value, 99);
   });
 
   it('suppresses +72 thin fireworks', () => {

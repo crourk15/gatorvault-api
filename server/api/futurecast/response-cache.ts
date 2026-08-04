@@ -13,7 +13,7 @@ const CACHE_TTL_MS = parseInt(process.env.FUTURECAST_CACHE_TTL_MS || String(5 * 
 const cache = createMemoryCache(CACHE_TTL_MS);
 
 /** Bump when high-priority or master-board payload shape changes. */
-export const FUTURECAST_API_CACHE_VERSION = 20;
+export const FUTURECAST_API_CACHE_VERSION = 21;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
