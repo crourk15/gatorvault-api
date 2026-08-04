@@ -475,13 +475,23 @@ async function buildSeedBoardPlayerFromRecruiting(
 
   const recruitingRecord = recruiting as Record<string, unknown> | null | undefined;
   const competingSchools = competingSchoolsFromRecruitingRecord(recruitingRecord);
-  const rpmPct = parseRecruitingUfPct(recruiting?.ufRpmPct);
-  const storePct = parseRecruitingUfPct(recruiting?.ufProbability);
+  const rawRpmPct = parseRecruitingUfPct(recruiting?.ufRpmPct);
+  let storePct = parseRecruitingUfPct(recruiting?.ufProbability);
+  if (storePct != null && storePct >= 95) storePct = null;
   const fitScore =
     recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
       ? Number(recruiting.fitScore)
       : null;
-  const { resolveGatorVaultLikelihood } = require('./uf-probability-utils');
+  const {
+    resolveGatorVaultLikelihood,
+    resolveUncommittedMarketRpm,
+  } = require('./uf-probability-utils');
+  const rpmPct = resolveUncommittedMarketRpm({
+    rpmPct: rawRpmPct,
+    committed: false,
+    topTeams: recruitingRecord?.on3TopTeams || recruitingRecord?.topTeams || null,
+    classYear,
+  });
   const resolved = resolveGatorVaultLikelihood({
     modelPct: 0,
     rpmPct: rpmPct ?? 0,
@@ -513,7 +523,7 @@ async function buildSeedBoardPlayerFromRecruiting(
     ufProbabilitySource: resolved.source,
     ufProbabilityLabel: resolved.label ?? null,
     ufProbabilityLowConfidence: Boolean(resolved.lowConfidence),
-    ufRpmPct: rpmPct,
+    ufRpmPct: rawRpmPct,
     fitScore,
     trendDelta7d: null,
     volatility7d: 0,

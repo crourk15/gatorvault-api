@@ -181,8 +181,10 @@ function temperExtremeUncommittedRpm(rpmPct, { committed = false } = {}) {
 /**
  * Resolve the RPM value fed into GV likelihood for underclassmen boards.
  * - Raw On3 Market display should still use the unsanitized market % separately.
- * - Corroborated ≥95 uncommitted → tempered prior (involved, not adopted).
- * - Uncorroborated ≥95 uncommitted → null (legacy residual poison).
+ * - Uncommitted ≥95 → tempered strong-favorite prior (involved, not adopted, not discarded).
+ * - Unit-interval poison (0.99) never reaches here — sanitizeRpmPct already rejects it.
+ * - topTeams corroboration is retained for callers/tests; missing topTeams on prod
+ *   rows (Cyion) must not collapse Florida Odds back to Fit-only ~27.
  */
 function resolveUncommittedMarketRpm({
   rpmPct = null,
@@ -194,10 +196,11 @@ function resolveUncommittedMarketRpm({
   if (rpm == null) return null;
   if (committed) return rpm;
   if (rpm < 95) return rpm;
-  if (corroborateOn3UfRpm(rpm, topTeams, classYear)) {
-    return temperExtremeUncommittedRpm(rpm, { committed: false });
-  }
-  return null;
+  // Temper extreme market into GV prior — never copy 97/99, never Fit-only discard.
+  // topTeams/classYear kept for call-site corroboration helpers/tests.
+  void topTeams;
+  void classYear;
+  return temperExtremeUncommittedRpm(rpm, { committed: false });
 }
 
 /**

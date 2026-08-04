@@ -51,12 +51,20 @@ function resolveTargetUfPct(target, recruiting, predictorsBySlug) {
   const rivalsPct = pickRivalsPmScore(predictors);
 
   if (year >= 2028) {
+    const { resolveUncommittedMarketRpm } = require('./uf-probability-utils');
+    const temperedRpm = resolveUncommittedMarketRpm({
+      rpmPct,
+      committed: false,
+      topTeams: recruiting?.on3TopTeams || recruiting?.topTeams || null,
+      classYear: year,
+    });
+    const storeForGv = storePct >= 95 ? 0 : storePct;
     const resolved = resolveGatorVaultLikelihood({
       modelPct: 0,
-      rpmPct,
+      rpmPct: temperedRpm ?? 0,
       rivalsPct,
       fitScore,
-      storePct,
+      storePct: storeForGv,
       delta7d: 0,
       stars: target.stars ?? recruiting?.stars ?? null,
       headliner: Boolean(target.headliner),
