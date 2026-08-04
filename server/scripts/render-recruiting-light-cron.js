@@ -38,8 +38,10 @@ const STEPS = [
     }),
   },
   {
+    // Soft refresh (no geoBackfill) — geo normalize is expensive and was overlapping
+    // the dedicated hub-refresh cron, contributing to Render /ready starvation.
     name: 'hub-refresh',
-    path: '/api/recruiting/hub/refresh?geoBackfill=true',
+    path: '/api/recruiting/hub/refresh',
     summarize: (r) => ({ enrichedPlayerCount: r?.enrichedPlayerCount ?? null }),
   },
 ];

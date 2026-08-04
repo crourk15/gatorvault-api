@@ -61,7 +61,7 @@ const RECOVERY_JOBS = [
 const DASHBOARD_STEPS = [
   { name: 'product-intel-recompute', path: '/api/product-intel/recompute', body: { force: true, weekly: false } },
   { name: 'live-hub-cache', path: '/api/live/refresh' },
-  { name: 'recruiting-hub-refresh', path: '/api/recruiting/hub/refresh?geoBackfill=true' },
+  { name: 'recruiting-hub-refresh', path: '/api/recruiting/hub/refresh' },
   { name: 'nil-refresh', jobId: 'nil-refresh' },
   { name: 'beat-writer-ingest', jobId: 'beat-writer-ingest' },
   { name: 'x-autoposter-run', jobId: 'x-autoposter-run' }
@@ -73,7 +73,7 @@ const INGEST_STEPS = [
   { name: 'beat-writer', path: '/api/recruiting/beat-writer/ingest' },
   { name: 'beat-visit', path: '/api/recruiting/beat-visit/ingest' },
   { name: 'live-refresh', path: '/api/live/refresh' },
-  { name: 'hub-refresh', path: '/api/recruiting/hub/refresh?geoBackfill=true' }
+  { name: 'hub-refresh', path: '/api/recruiting/hub/refresh' }
 ];
 
 function authHeaders() {

@@ -46,9 +46,17 @@ async function refreshRecruitingHubCaches(options = {}) {
     }
   }
 
-  clearHubCache();
-  const { clearFuturecastCacheSafe } = require('./recruiting-intel-cache');
-  clearFuturecastCacheSafe();
+  // Soft refresh by default — wiping hub + FutureCast caches before rebuild
+  // creates a cold window that stamps cold Lab/hub rebuilds and can starve
+  // Render /ready (~5s) into restart loops (HTML 502 on every route).
+  // Opt into hard clear with options.clearCaches or HUB_REFRESH_CLEAR_CACHES=true.
+  const clearCaches =
+    options.clearCaches === true || process.env.HUB_REFRESH_CLEAR_CACHES === 'true';
+  if (clearCaches) {
+    clearHubCache();
+    const { clearFuturecastCacheSafe } = require('./recruiting-intel-cache');
+    clearFuturecastCacheSafe();
+  }
 
   const dataset = await loadHubDataset();
   const players = [...dataset.players.values()];
