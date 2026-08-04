@@ -155,15 +155,19 @@ function removeHubCacheKeys(keys) {
 function priorityWarmJobs(elite, years) {
   const jobs = [
     [eliteClassOverviewAllCacheKey(), () => elite.buildHubClassOverviewAll()],
-    // FutureCast Lab critical path — keep master-board / trending hot at boot.
-    [
+  ];
+  // FutureCast Lab warm is heavy (master-board + high-priority + underclassmen).
+  // Keep it OFF the boot/priority path unless explicitly enabled — concurrent Lab
+  // rebuilds were starving Render /ready and causing full-route HTML 502 waves.
+  if (process.env.HUB_BOOT_WARM_FUTURECAST === 'true') {
+    jobs.push([
       'futurecast:lab:elite-warm',
       async () => {
         const { warmFuturecastLabCaches } = require('../api/futurecast/response-cache.ts');
         return warmFuturecastLabCaches([2027, 2028]);
       },
-    ],
-  ];
+    ]);
+  }
   for (const year of years) {
     jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year)]);
     jobs.push([classSnapshotCacheKey(year), () => elite.buildHubClassOverview(year)]);

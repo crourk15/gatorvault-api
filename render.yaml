@@ -288,22 +288,30 @@ services:
         sync: false
       - key: RENDER_DEPLOY_HOOK_URL
         sync: false
+      # Stay-green: never immediate-warm on boot — setImmediate Lab/hub warm was
+      # starving /ready (>5s) → Render restart loops → HTML 502 on every route.
       - key: HUB_BOOT_IMMEDIATE_WARM
-        value: "true"
+        value: "false"
       - key: HUB_BOOT_SKIP_WARM
         value: "false"
       - key: HUB_BOOT_WARM_DELAY_MS
-        value: "15000"
+        value: "120000"
+      # Keep FutureCast Lab off the priority warm path (opt-in only).
+      - key: HUB_BOOT_WARM_FUTURECAST
+        value: "false"
+      # Soft hub refresh — do not wipe caches before rebuild (avoids cold stampede).
+      - key: HUB_REFRESH_CLEAR_CACHES
+        value: "false"
       - key: HUB_PRIORITY_WARM_RSS_MB
-        value: "1400"
-      # Standard plan: shorten heavy-warm defer so live dashboard / hub caches
-      # prime sooner after listen (still after /ready is accepting traffic).
+        value: "900"
+      # Standard plan: keep heavy warm well after listen so /ready stays cheap.
       - key: API_BOOT_DEFER_HEAVY_MS
-        value: "45000"
+        value: "90000"
       - key: PLAYER_INTEL_REFRESH_ON_BOOT
         value: "false"
+      # Background hub re-warm every 10m (was 4m — too aggressive with crons).
       - key: HUB_CACHE_REFRESH_MS
-        value: "240000"
+        value: "600000"
       - key: HUB_REFRESH_INTERVAL_MS
         value: "21600000"
       - key: DATABASE_URL
@@ -392,9 +400,11 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
+  # Hourly soft hub rebuild (no geoBackfill) — light cron already refreshes */20.
+  # Overlapping */30 geoBackfill + */20 geoBackfill was double-stamping the API.
   - type: cron
     name: gatorvault-api-hub-refresh
-    schedule: "*/30 * * * *"
+    schedule: "10 * * * *"
     runtime: node
     region: oregon
     rootDir: server
@@ -402,7 +412,7 @@ services:
     startCommand: node scripts/render-hub-refresh-cron.js
     envVars:
       - key: HUB_REFRESH_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?geoBackfill=true
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh
       - key: MONITORING_CRON_SECRET
         sync: false
 
