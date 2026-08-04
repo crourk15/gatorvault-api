@@ -325,8 +325,10 @@ services:
         sync: false
       - key: ALLOWLIST_TARGET_SYNC
         value: "true"
+      # Off during stay-green — On3 + light cron were double/triple hub-refreshing
+      # and crash-looping /ready. Hourly hub-refresh cron owns warm.
       - key: RECRUITING_HUB_REFRESH_AFTER_INGEST
-        value: "true"
+        value: "false"
       - key: NIL_REFRESH_ENABLED
         value: "true"
       - key: NIL_REFRESH_INTERVAL_MS

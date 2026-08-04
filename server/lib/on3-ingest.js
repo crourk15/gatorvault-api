@@ -1007,9 +1007,24 @@ async function runOn3IngestInner(options = {}) {
   }
 
   try {
-    if (process.env.RECRUITING_HUB_REFRESH_AFTER_INGEST === 'true' && !result.commitmentSync?.hubRefresh) {
+    // Stay-green: nested hub refresh after On3 stacks with recruiting-light's
+    // hub-refresh step and crash-loops Render /ready (HTML 502). Hourly
+    // hub-refresh cron owns warm; opt back in with HUB_REFRESH_AFTER_INGEST_FORCE=true.
+    const stayGreen =
+      process.env.API_STAY_GREEN === 'true' || process.env.NODE_ENV === 'production';
+    const forceAfterIngest = process.env.HUB_REFRESH_AFTER_INGEST_FORCE === 'true';
+    const afterIngestOn =
+      process.env.RECRUITING_HUB_REFRESH_AFTER_INGEST === 'true' &&
+      (!stayGreen || forceAfterIngest);
+    if (afterIngestOn && !result.commitmentSync?.hubRefresh) {
       const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
-      result.hubRefresh = await refreshRecruitingHubCaches({ geoBackfill: false });
+      result.hubRefresh = await refreshRecruitingHubCaches({
+        geoBackfill: false,
+        warmAfter: true,
+        warmOptions: { priorityOnly: true },
+      });
+    } else if (process.env.RECRUITING_HUB_REFRESH_AFTER_INGEST === 'true' && stayGreen && !forceAfterIngest) {
+      result.hubRefresh = { skipped: true, reason: 'stay_green' };
     }
   } catch (e) {
     result.errors.push({ type: 'hub_refresh_after_ingest', error: e.message });

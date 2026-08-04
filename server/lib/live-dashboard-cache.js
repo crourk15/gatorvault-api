@@ -178,6 +178,7 @@ module.exports = {
   isReady,
   getCacheMeta,
   scheduleBackgroundRefresh,
+  scheduleAsyncWarm,
   minimalFallback,
   bumpMobileRefreshSignal,
   getMobileRefreshSignal,

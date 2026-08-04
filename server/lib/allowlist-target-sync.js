@@ -800,8 +800,19 @@ async function refreshHubAfterCommitmentChanges(changedCount) {
   try {
     const { clearHubCache } = require('./recruiting-hub-cache');
     const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
-    clearHubCache();
-    return await refreshRecruitingHubCaches({ geoBackfill: false, warmAfter: true });
+    // Stay-green: never hard-wipe hub caches mid-ingest — that forced cold Lab/hub
+    // rebuilds and starved Render /ready into HTML 502 restart loops.
+    // Opt into hard clear only with HUB_REFRESH_CLEAR_CACHES=true.
+    const hardClear = process.env.HUB_REFRESH_CLEAR_CACHES === 'true';
+    if (hardClear) {
+      clearHubCache();
+    }
+    return await refreshRecruitingHubCaches({
+      geoBackfill: false,
+      warmAfter: true,
+      warmOptions: { priorityOnly: true },
+      clearCaches: hardClear,
+    });
   } catch (e) {
     return { error: e.message };
   }
