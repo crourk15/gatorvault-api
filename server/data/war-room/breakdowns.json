@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-04T01:26:56.158Z",
+  "updatedAt": "2026-08-04T12:26:57.840Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -15488,27 +15488,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19091315/692dcda3ca1cd327c34db216",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Edwards hits the designed hole on one cut — no dance — and is already into the second level.",
+        "Edwards finds cutback daylight when the interior clogs and finishes with a clear second gear on the edge.",
+        "Edwards keeps his feet through arm tackles and shows natural hands on swing routes out of the backfield."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Edwards still has room to add SEC contact strength at 6-1 / 205 before he can lean on every early-down snap."
+      ],
+      "comparison": "Edwards comps to Tony Pollard — 6-0 / 210 mold; one-cut vision, cutback feel, and enough juice to finish outside.",
+      "schemeFit": "Edwards fits a zone/gap RB room that wants vision, one-cut decisiveness, and edge finish.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from Hudl embeds. Comp size-matched within ~1–2\" — not a Florida-alum default. Beat Desk session.",
+      "projection": "Edwards projects as early package/special-teams contributor, then Year-2 rotation with every-down starter upside as a feature back.",
+      "insiderNotes": "Vault film desk on Xander Edwards via On3→Hudl (mid-season + sophomore): 6-1 / 205 RB out of The Bolles School (Jacksonville, FL). Florida 2028 target — nonstop staff contact and return trips to Gainesville. Tape traits below drive Fit evidence.",
+      "recruitingStory": "Xander Edwards is a 4-star RB · listed 6-1 / 205 · The Bolles School (Jacksonville, FL) · Natl #108 · Pos #6 · State #15 — open-board Florida target with UF offer and multiple unofficials.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:06.636Z"
+      "updatedAt": "2026-08-04T12:26:43.327Z"
     },
     "jaylen-francis": {
       "playerSlug": "jaylen-francis",
@@ -16040,32 +16043,35 @@
     },
     "tyree-mannings-jr": {
       "playerSlug": "tyree-mannings-jr",
-      "playerName": "Tyree Mannings Jr.",
+      "playerName": "Tyree Mannings",
       "playerType": "target",
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/5233129/6967dff7143fb0e0b21ae498",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Mannings creates clear cushion on vertical go routes — defenders cannot stay stride-for-stride.",
+        "Mannings tracks the ball through traffic and wins contested catches with strong hands at the catch point.",
+        "Mannings turns short completions into yards after contact with quick feet and lateral agility."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Mannings is still filling out the 6-0 / 170 frame — added mass will help him finish through SEC press."
+      ],
+      "comparison": "Mannings comps to Chris Olave — 6-0 / 187 mold; sudden vertical separation and clean tracking at the catch point.",
+      "schemeFit": "Mannings fits Marcus Davis / Trent McKnight rooms that want sudden separators who win downfield and after the catch.",
+      "staffNotes": "Mannings — Vault film desk verified 2026-08-04 from Hudl embed via On3. Comp size-matched within ~1–2\" — not a Florida-alum default. Beat Desk + Alderman prediction session.",
+      "projection": "Mannings projects as early WR-room contributor who rotates Year 1–2, then starter upside as a vertical separator with YAC.",
+      "insiderNotes": "Vault film desk on Tyree Mannings Jr. via On3→Hudl sophomore reel: 6-0 / 170 WR out of Venice (FL). Florida 2028 priority — Davis first contact June 15, summer UOV, return planned for FAU opener. Tape traits below drive Fit evidence.",
+      "recruitingStory": "Tyree Mannings Jr. is a 4-star WR · listed 6-0 / 170 · Venice (FL) · ~Natl #88 · Pos #13 — open-board Florida priority with summer visit and daily staff contact.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:14:43.484Z"
+      "updatedAt": "2026-08-04T12:26:57.832Z"
     },
     "antonio-thomas-jr": {
       "playerSlug": "antonio-thomas-jr",
@@ -17968,6 +17974,38 @@
       "nflProjection": null,
       "featured": false,
       "updatedAt": "2026-07-11T05:15:57.498Z"
+    },
+    "dion-edwards": {
+      "playerSlug": "dion-edwards",
+      "playerName": "Dion Edwards",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/23549814/695eb69e9138370fc227c13e",
+          "publishedAt": "2026-08-04"
+        }
+      ],
+      "strengths": [
+        "Edwards closes from the deep half with real range — pursuit shows up 15+ yards downfield.",
+        "Edwards breaks down in space and wraps without lunging on open-field tackles.",
+        "Edwards locates the ball in the air while tracking the receiver — eyes stay in the coverage phase."
+      ],
+      "weaknesses": [
+        "Edwards needs to add strength on the 6-1 / 160 frame before he can thump every SEC box run."
+      ],
+      "comparison": "Edwards comps to Jessie Bates — 6-1 center-field safety mold; range from the deep half and clean wraps in space.",
+      "schemeFit": "Edwards fits Chris Collins’ safety room that wants range, space tackling, and coverage eyes from the deep half.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from Hudl embed via On3. Comp size-matched within ~1–2\" — not a Florida-alum default. Beat Desk session. Confirm with Charles before treating as live FutureCast card copy.",
+      "projection": "Edwards projects as develop into the Florida safety room, earn nickel/special-teams snaps early, then compete for a starting safety role — starter upside with range.",
+      "insiderNotes": "Vault film desk on Dion Edwards via On3→Hudl sophomore reel: 6-1 / 160 S out of Tyner Academy (Chattanooga, TN). Florida 2028 target — Collins relationship building into a Swamp visit. Tape traits below drive Fit evidence.",
+      "recruitingStory": "Dion Edwards is a 4-star safety · listed 6-1 / 160 · Tyner Academy (Chattanooga, TN) · Top-100 DB — open-board Florida target with Collins process and upcoming Gainesville visit.",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-08-04T12:26:43.409Z"
     }
   }
 }

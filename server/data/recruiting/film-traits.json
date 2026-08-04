@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-04T01:26:56.167Z",
+  "updatedAt": "2026-08-04T12:26:57.853Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -979,6 +979,104 @@
       "on3RecruitSlug": "brysen-wright-242341",
       "on3ProfileUrl": "https://www.on3.com/rivals/brysen-wright-242341/",
       "lastIngestAt": "2026-08-04T01:23:16.665Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "xander-edwards": {
+      "playerName": "Xander Edwards",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/19091315/692dcda3ca1cd327c34db216"
+        }
+      ],
+      "traits": [
+        "vision",
+        "one-cut",
+        "cutback",
+        "burst",
+        "contact balance",
+        "hands"
+      ],
+      "vaultFilmAngle": "Lead with one-cut / cutback tape and Florida process (nonstop contact, visit stack). Pollard mold for size/traits.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "tyree-mannings-jr": {
+      "playerName": "Tyree Mannings",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/5233129/6967dff7143fb0e0b21ae498"
+        }
+      ],
+      "traits": [
+        "vertical",
+        "separation",
+        "ball tracking",
+        "contested catch",
+        "YAC",
+        "suddenness"
+      ],
+      "vaultFilmAngle": "Mannings — Lead with vertical separation + contested-catch tape and Florida process (Davis contact, visit stack, FAU return).",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "dion-edwards": {
+      "playerName": "Dion Edwards",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/23549814/695eb69e9138370fc227c13e"
+        }
+      ],
+      "traits": [
+        "range",
+        "deep half",
+        "space tackle",
+        "ball awareness",
+        "closing speed"
+      ],
+      "vaultFilmAngle": "Lead with deep-half range + wrap tackle tape and Florida process (Collins, Swamp visit). Bates mold for size/traits.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
       "evaluatedBy": null,
       "evalMode": null,
       "evaluatedAt": null
