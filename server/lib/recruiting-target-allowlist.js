@@ -87,6 +87,9 @@ const ALLOWLIST_2028 = [
   'ridge-janes',
   'zaiden-jernigan',
   'nate-dollard',
+  // Beat Desk / Alderman board — in-state WR priority + Collins DB push
+  'tyree-mannings-jr',
+  'dion-edwards',
 ];
 
 /** Charles' display names — used for On3/Rivals/247 identity lookup (never synthetic cards). */
@@ -146,6 +149,8 @@ const CANONICAL_TARGET_NAMES = {
   'ridge-janes': 'Ridge Janes',
   'zaiden-jernigan': 'Zaiden Jernigan',
   'nate-dollard': 'Nate Dollard',
+  'tyree-mannings-jr': 'Tyree Mannings Jr.',
+  'dion-edwards': 'Dion Edwards',
 };
 
 /** Display name → canonical slug (handles typos / aliases) */
@@ -190,8 +195,16 @@ function getAllowlistSet(classYear) {
   const extra = admin.slugs2028 || [];
   // 2028 still merges Lab promotions for elite offer/visit discovery.
   const promoted = loadLabPromotionSlugs(2028);
+  // Formula auto-include: Florida lead ≥70% + Top-100 (or 4★ while rank lags).
+  // Prevents Mannings-style misses when RPM/PM says Florida is crushing the board.
+  let formula = [];
+  try {
+    formula = require('./allowlist-true-target-2028').listFormulaTrueTargetSlugs2028();
+  } catch {
+    formula = [];
+  }
   return new Set(
-    [...ALLOWLIST_2028, ...extra, ...promoted]
+    [...ALLOWLIST_2028, ...extra, ...promoted, ...formula]
       .map((s) => canonicalTargetSlug(s))
       .filter((s) => s && !BLOCKED_SOFT_2028.has(s))
   );
