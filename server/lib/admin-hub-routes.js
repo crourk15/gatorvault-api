@@ -677,6 +677,28 @@ function mountAdminHubRoutes(app) {
   app.get('/api/admin/hub/overview', async (req, res) => {
     if (!requireAdmin(req, res)) return;
     try {
+      try {
+        const { isStayGreen } = require('./api-stay-green');
+        if (isStayGreen()) {
+          return res.status(200).json({
+            ok: true,
+            stayGreen: true,
+            environment: detectEnvironment(),
+            topIssues: [],
+            recommendedActions: [
+              {
+                id: 'stay-green',
+                title: 'API stay-green lockdown active',
+                detail: 'Heavy cron/hub work is soft-skipped so App Store login stays up. Lift with API_STAY_GREEN_ALLOW_HEAVY=true after review.',
+                severity: 'info',
+              },
+            ],
+            updatedAt: new Date().toISOString(),
+          });
+        }
+      } catch {
+        /* optional */
+      }
       const payload = await buildOverviewPayload();
       return res.status(200).json(payload);
     } catch (err) {
@@ -687,6 +709,28 @@ function mountAdminHubRoutes(app) {
   app.get('/api/admin/hub/module-health', async (req, res) => {
     if (!requireAdmin(req, res)) return;
     try {
+      try {
+        const { isStayGreen } = require('./api-stay-green');
+        if (isStayGreen()) {
+          const light = {
+            api: { status: 'ok', detail: 'stay-green lockdown — login path prioritized' },
+            auth: { status: 'ok' },
+            recruiting: { status: 'paused', detail: 'heavy refresh soft-skipped' },
+            live: { status: 'paused', detail: 'beat pull soft-skipped' },
+          };
+          return res.status(200).json({
+            ok: true,
+            stayGreen: true,
+            moduleHealth: light,
+            modules: light,
+            environment: detectEnvironment(),
+            alertCount: 0,
+            updatedAt: new Date().toISOString(),
+          });
+        }
+      } catch {
+        /* optional */
+      }
       const ops = await buildOpsStatusReport({ evaluateAlerts: false });
       const qa = summarizeQa();
       const productIntel = summarizeProductIntel();

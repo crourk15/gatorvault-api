@@ -179,6 +179,12 @@ function mountPlatformRoutes(app) {
       if (!cronOk && !verifyAdminPin(pin)) {
         return res.status(401).json({ ok: false, error: 'Invalid admin PIN or cron secret' });
       }
+      const { stayGreenSkipPayload } = require('./api-stay-green');
+      const skipped = stayGreenSkipPayload('film-room-youtube-sync');
+      if (skipped) {
+        console.log('[film-room] stay-green skip youtube sync');
+        return res.json(skipped);
+      }
       const { syncFilmRoomYouTube } = require('./film-room-youtube-ingest');
       const sync = await syncFilmRoomYouTube();
       const catalog = filmRoom.rebuildFilmRoomCatalog();

@@ -420,9 +420,10 @@
               applyModuleHealth(merged);
             }
           })
-          .catch(function (err) {
-            // Ping ok but hub route failing — still surface.
-            escalateApiDown(err);
+          .catch(function () {
+            // Ping already proved the API process is up (App Store login path).
+            // Do NOT flash API DOWN for a slow/heavy module-health tile — that false
+            // red + 15s poll storm was stacking load and crash-looping Render.
           });
         // Keep the sticky ops strip fresh even when Command Center is not open.
         var overviewP = apiGet('/api/admin/hub/overview', { skipWake: true, retries: 1 })
