@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-03T03:01:48.667Z",
+  "updatedAt": "2026-08-04T01:26:56.167Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -89,29 +89,28 @@
       "sources": [
         {
           "type": "hudl",
-          "label": "Merrick Ham - Marietta - 2025 Sophomore Season Highlights",
+          "label": "Vault film desk highlight",
           "url": "https://www.hudl.com/embed/video/3/22616802/68d476200f5aa350d2c69b13"
-        },
-        {
-          "type": "hudl",
-          "label": "Merrick Ham - Marietta - 2024 Freshman Season Highlights",
-          "url": "https://www.hudl.com/embed/video/3/22616802/67605ec1f20bc0734c2b3385"
         }
       ],
       "traits": [
-        "Longarm into swim finishes as strip sack (sophomore reel caption + play).",
-        "Rangs out as a stand-up / wide-9 EDGE — keeps tackles off his chest with length."
+        "length",
+        "hand counters",
+        "strip ability",
+        "wide-9",
+        "edge burst",
+        "reach"
       ],
-      "vaultFilmAngle": "Length-first EDGE who already converts hand counters into strip pressure; Florida tracking with Hardmon offer. Comp band: Yetur Gross-Matos.",
+      "vaultFilmAngle": "On3/Hudl tape for Merrick Ham.",
       "doNotClaim": [
-        "Do not claim Florida commit — board is Offered / tracking / ~2% RPM.",
-        "Do not invent tackle totals, sack counts, or grades."
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
       ],
-      "clipNotes": "Vault-reviewed sophomore Hudl reel 2026-07-30.",
-      "ingestStatus": null,
-      "on3RecruitSlug": null,
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "traits_ready",
+      "on3RecruitSlug": "merrick-ham-281179",
       "on3ProfileUrl": "https://www.on3.com/rivals/merrick-ham-281179/",
-      "lastIngestAt": null,
+      "lastIngestAt": "2026-08-04T01:23:12.657Z",
       "evaluatedBy": "vault-film-desk",
       "evalMode": "manual_frame_review",
       "evaluatedAt": "2026-07-30T14:01:52.252Z"
@@ -428,8 +427,8 @@
     },
     "cyion-smith": {
       "playerName": "Cyion Smith",
-      "position": null,
-      "classYear": null,
+      "position": "S",
+      "classYear": 2028,
       "sources": [
         {
           "type": "hudl",
@@ -450,10 +449,536 @@
         "Do not overclaim NFL projection from camp/highlight reps alone"
       ],
       "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
-      "ingestStatus": null,
-      "on3RecruitSlug": null,
-      "on3ProfileUrl": null,
-      "lastIngestAt": null,
+      "ingestStatus": "traits_ready",
+      "on3RecruitSlug": "cyion-smith-242617",
+      "on3ProfileUrl": "https://www.on3.com/rivals/cyion-smith-242617/",
+      "lastIngestAt": "2026-08-04T01:23:05.257Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "asher-ghioto": {
+      "playerName": "Asher Ghioto",
+      "position": "EDGE",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22338333/68dda8786f1a10f6341a1cf7"
+        }
+      ],
+      "traits": [
+        "length",
+        "bend",
+        "burst",
+        "pass rush",
+        "run fit",
+        "JACK"
+      ],
+      "vaultFilmAngle": "Lead with 6-5 / 240 Bolles EDGE length + mass on the soph Hudl, then Florida chase heat.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "asher-ghioto-242955",
+      "on3ProfileUrl": "https://www.on3.com/rivals/asher-ghioto-242955/",
+      "lastIngestAt": "2026-08-04T01:23:05.372Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "tristian-henderson": {
+      "playerName": "Tristian Henderson",
+      "position": "EDGE",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/26880837/691b8cd89828924d7f7a623f"
+        }
+      ],
+      "traits": [
+        "burst",
+        "bend",
+        "arc",
+        "pass rush",
+        "run fit"
+      ],
+      "vaultFilmAngle": "Lead with Pensacola soph Hudl burst/bend, then mass-add note as the only brake.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "tristian-henderson-261828",
+      "on3ProfileUrl": "https://www.on3.com/rivals/tristian-henderson-261828/",
+      "lastIngestAt": "2026-08-04T01:23:06.568Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "izayah-vickers": {
+      "playerName": "Izayah Vickers",
+      "position": "CB",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/17793814/69165c81b81c8d758803c2f6"
+        }
+      ],
+      "traits": [
+        "press",
+        "man",
+        "twitch",
+        "ball skills",
+        "recovery",
+        "physical"
+      ],
+      "vaultFilmAngle": "Lead with FSU School CB press/man on the soph Hudl end-of-season reel; Florida climbing after visits.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "no_video",
+      "on3RecruitSlug": "izayah-vickers-180246",
+      "on3ProfileUrl": "https://www.on3.com/rivals/izayah-vickers-180246/",
+      "lastIngestAt": "2026-08-04T01:24:14.391Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "joey-fleming": {
+      "playerName": "Joey Fleming",
+      "position": "IOL",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/19499673/6966ed3acc281153c14f5bee"
+        }
+      ],
+      "traits": [
+        "anchor",
+        "pull",
+        "length",
+        "functional strength",
+        "leverage",
+        "toughness"
+      ],
+      "vaultFilmAngle": "Lead with Huntsville 6-5 IOL length + finish on soph Hudl; Alabama-to-Florida chase piece.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "joey-fleming-259645",
+      "on3ProfileUrl": "https://www.on3.com/rivals/joey-fleming-259645/",
+      "lastIngestAt": "2026-08-04T01:25:47.020Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "cassell-cruickshank": {
+      "playerName": "Cassell Cruickshank",
+      "position": "EDGE",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/23180517/68d0c63d8a61b935346bd0d1"
+        }
+      ],
+      "traits": [
+        "burst",
+        "length",
+        "pass rush",
+        "hands",
+        "leverage",
+        "JACK"
+      ],
+      "vaultFilmAngle": "Lead with E.E. Smith soph Hudl burst/hands; Bellaire-scout traits already match Vault EDGE mold.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "cassell-cruickshank-282316",
+      "on3ProfileUrl": "https://www.on3.com/rivals/cassell-cruickshank-282316/",
+      "lastIngestAt": "2026-08-04T01:23:08.447Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "jermaine-cobbins": {
+      "playerName": "Jermaine Cobbins",
+      "position": "CB",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22804491/68bce3ca9d3831611657518d"
+        }
+      ],
+      "traits": [
+        "press",
+        "man",
+        "length",
+        "ball skills",
+        "mirror",
+        "physical"
+      ],
+      "vaultFilmAngle": "Lead with Springfield TN soph Hudl length/press; Tennessee-to-Florida CB chase.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "jermaine-cobbins-251062",
+      "on3ProfileUrl": "https://www.on3.com/rivals/jermaine-cobbins-251062/",
+      "lastIngestAt": "2026-08-04T01:25:46.959Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "gabriel-player": {
+      "playerName": "Gabriel Player",
+      "position": "LB",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22702365/68dd4f84c72735906301536b"
+        }
+      ],
+      "traits": [
+        "range",
+        "diagnostics",
+        "tackle",
+        "coverage",
+        "instincts",
+        "physical"
+      ],
+      "vaultFilmAngle": "Lead with Eau Gallie soph Hudl range/trigger; Florida LB need piece.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "gabriel-player-284474",
+      "on3ProfileUrl": "https://www.on3.com/rivals/gabriel-player-284474/",
+      "lastIngestAt": "2026-08-04T01:23:09.557Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "tyzon-swann": {
+      "playerName": "Tyzon Swann",
+      "position": "DL",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/23796788/69362d995079fbd819531a10"
+        }
+      ],
+      "traits": [
+        "first step",
+        "penetrate",
+        "anchor",
+        "length",
+        "run fit",
+        "functional strength"
+      ],
+      "vaultFilmAngle": "Lead with Lackey MD soph Hudl first-step; 5-star DL priority.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "tyzon-swann-249251",
+      "on3ProfileUrl": "https://www.on3.com/rivals/tyzon-swann-249251/",
+      "lastIngestAt": "2026-08-04T01:25:47.698Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "man-robinson": {
+      "playerName": "Man Robinson",
+      "position": "CB",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/11330856/68e59688cf76f6fc1b231319"
+        }
+      ],
+      "traits": [
+        "press",
+        "man",
+        "twitch",
+        "ball skills",
+        "physical",
+        "high motor"
+      ],
+      "vaultFilmAngle": "Lead with IMG soph Hudl twitch/man; Miami heat is real — Florida must keep pace.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "man-robinson-260972",
+      "on3ProfileUrl": "https://www.on3.com/rivals/man-robinson-260972/",
+      "lastIngestAt": "2026-08-04T01:23:10.706Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "dominick-harris-payne": {
+      "playerName": "Dominick Harris-Payne",
+      "position": "CB",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/23265346/69724c627942eab403f92ead"
+        }
+      ],
+      "traits": [
+        "length",
+        "press",
+        "recovery",
+        "man",
+        "ball skills",
+        "mirror"
+      ],
+      "vaultFilmAngle": "Lead with Lakeland 6-3 length on soph Hudl; fill-out is the only brake.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "dominick-harris-payne-249196",
+      "on3ProfileUrl": "https://www.on3.com/rivals/dominick-harris-payne-249196/",
+      "lastIngestAt": "2026-08-04T01:23:11.227Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "andre-alexander": {
+      "playerName": "Andre Alexander",
+      "position": "LB",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/21668249/6917680eee0b19f59aacea73"
+        }
+      ],
+      "traits": [
+        "physical",
+        "tackle",
+        "blitz",
+        "range",
+        "instincts",
+        "diagnostics"
+      ],
+      "vaultFilmAngle": "Lead with IMG soph Hudl downhill strike; avoid Florida-alum default comps — Ernest Jones mold.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "andre-alexander-240834",
+      "on3ProfileUrl": "https://www.on3.com/rivals/andre-alexander-240834/",
+      "lastIngestAt": "2026-08-04T01:23:12.591Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "braxton-rein": {
+      "playerName": "Braxton Rein",
+      "position": "TE",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/16189035/68aa8f035d4c00cfd27bfab0"
+        }
+      ],
+      "traits": [
+        "length",
+        "seam",
+        "YAC",
+        "mismatch",
+        "hand",
+        "versatile"
+      ],
+      "vaultFilmAngle": "Lead with Baylor School 6-6 mismatch on soph Hudl; TE need piece.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "braxton-rein-261614",
+      "on3ProfileUrl": "https://www.on3.com/rivals/braxton-rein-261614/",
+      "lastIngestAt": "2026-08-04T01:23:13.700Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "prince-che": {
+      "playerName": "Prince Che",
+      "position": "DL",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/20093994/68b85efbfa0d6cbe8bd2b8f3"
+        }
+      ],
+      "traits": [
+        "anchor",
+        "mass",
+        "two-gap",
+        "functional strength",
+        "penetrate"
+      ],
+      "vaultFilmAngle": "Lead with Thomas County Central mass/occupy on soph Hudl; Florida priority interior.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "prince-che-280932",
+      "on3ProfileUrl": "https://www.on3.com/rivals/prince-che-280932/",
+      "lastIngestAt": "2026-08-04T01:23:13.719Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "bubba-brown": {
+      "playerName": "Bubba Brown",
+      "position": "WR",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/23242189/68a22ae9d13923fc6e63e700"
+        }
+      ],
+      "traits": [
+        "separation",
+        "routes",
+        "YAC",
+        "speed",
+        "release",
+        "contested"
+      ],
+      "vaultFilmAngle": "Lead with Lowndes (Artavian) Hudl separation/YAC; Georgia WR with Florida ties.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "bubba-brown-250868",
+      "on3ProfileUrl": "https://www.on3.com/rivals/bubba-brown-250868/",
+      "lastIngestAt": "2026-08-04T01:23:15.471Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "ryan-drakeford": {
+      "playerName": "Ryan Drakeford",
+      "position": "S",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22828339/68d754d51a73c855827bbcbe"
+        }
+      ],
+      "traits": [
+        "range",
+        "alley",
+        "STAR",
+        "length",
+        "instincts",
+        "tackle"
+      ],
+      "vaultFilmAngle": "Lead with Quince Orchard soph Hudl range; Maryland safety chase.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "ryan-drakeford-242808",
+      "on3ProfileUrl": "https://www.on3.com/rivals/ryan-drakeford-242808/",
+      "lastIngestAt": "2026-08-04T01:23:15.586Z",
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "brysen-wright": {
+      "playerName": "Brysen Wright",
+      "position": "WR",
+      "classYear": 2028,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/23029332/694c3c9fd44564ced131a589"
+        }
+      ],
+      "traits": [
+        "contested",
+        "length",
+        "YAC",
+        "boundary",
+        "hand",
+        "release"
+      ],
+      "vaultFilmAngle": "Lead with Mandarin 5-star boundary mismatch on soph Hudl; Jacksonville priority WR.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": "sources_ready",
+      "on3RecruitSlug": "brysen-wright-242341",
+      "on3ProfileUrl": "https://www.on3.com/rivals/brysen-wright-242341/",
+      "lastIngestAt": "2026-08-04T01:23:16.665Z",
       "evaluatedBy": null,
       "evalMode": null,
       "evaluatedAt": null
