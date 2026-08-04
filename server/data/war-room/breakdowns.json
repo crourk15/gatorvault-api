@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-03T03:01:48.655Z",
+  "updatedAt": "2026-08-04T01:26:56.158Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -13001,26 +13001,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/player/braxton-rein-46152758/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/16189035/68aa8f035d4c00cfd27bfab0",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "s Braxton Rein High School Starrs Mill (HS) Baylor School (HS) Pos TE Height 6-6 Weight 230"
+        "Rein creates mismatches with 6-6 length on seams and boundary fades.",
+        "Rein shows enough athleticism to threaten after the catch in space.",
+        "Rein has the frame to grow into a functional in-line blocker without losing the mismatch role."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "s Braxton Rein High School Starrs Mill (HS) Baylor School (HS) Pos TE Height 6-6 Weight 230",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Rein still needs consistency as an in-line run blocker versus SEC edge/OLB length."
+      ],
+      "comparison": "Rein comps to Kyle Pitts — 6-6 mismatch TE with length and seam speed who grows into a complete in-line / move hybrid.",
+      "schemeFit": "Rein fits Faulkner 12/11 personnel as a mismatch TE who can align inline or flexed for RPO/conflict concepts.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Rein projects as develop into the TE room, earn early package/mismatch snaps, then compete for starting TE — starter upside as a 6-6 seam threat who can grow into an in-line blocker.",
+      "insiderNotes": "Vault film desk on Braxton Rein via On3→Hudl (Braxton Rein - The Baylor School - 2025 Sophomore Season): 6-6 / 235 TE out of Baylor School (Chattanooga, TN). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Braxton Rein is a 4-star TE · listed 6-6 / 235 · Baylor School (Chattanooga, TN) (TN) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:08.656Z"
+      "updatedAt": "2026-08-04T01:25:47.800Z"
     },
     "andre-alexander": {
       "playerSlug": "andre-alexander",
@@ -13029,27 +13033,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/21668249/6917680eee0b19f59aacea73",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Alexander triggers downhill with real strike and finishes tackles in the box.",
+        "Alexander shows play speed to chase perimeter run and screen game.",
+        "Alexander has enough mass (215) already to take on OL climb without vanishing."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Alexander still needs cleaner coverage discipline versus play-action and option looks."
+      ],
+      "comparison": "Alexander comps to Ernest Jones — compact 6-0 MIKE/WILL with downhill strike, play speed, and enough mass to take on climb blocks.",
+      "schemeFit": "Alexander fits White second-level LB who can chase and hit, with MIKE/WILL flexibility as diagnostics sharpen.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Alexander projects as develop into the LB room, earn special-teams early, then compete for WILL/MIKE — starter upside as a physical second-level runner from the IMG pipeline.",
+      "insiderNotes": "Vault film desk on Andre Alexander via On3→Hudl (Andre Alexander - IMG Academy - 2025 Sophomore Season Highlights): 6-0.5 / 215 LB out of IMG Academy (Chesapeake, VA). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Andre Alexander is a 4-star LB · listed 6-0.5 / 215 · IMG Academy (Chesapeake, VA) (VA) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:04.077Z"
+      "updatedAt": "2026-08-04T01:25:47.721Z"
     },
     "izayah-vickers": {
       "playerSlug": "izayah-vickers",
@@ -13058,27 +13065,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/17793814/69165c81b81c8d758803c2f6",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Vickers mirrors receivers in press with sticky feet and does not panic when stems get sticky.",
+        "Vickers closes throwing windows quickly — track background shows in how he recovers when beaten a step.",
+        "Vickers is willing to be physical at the catch point and does not play soft off the line."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Vickers can get grabby late in routes when he loses leverage — technique polish is the next step versus SEC length."
+      ],
+      "comparison": "Vickers comps to Trent McDuffie — compact 5-11 press/man corner with twitch, physicality, and recovery speed in phase.",
+      "schemeFit": "Vickers fits White’s press/man + pattern-match CB who wins with twitch and physicality on the perimeter.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Vickers projects as develop into the Florida CB room, earn nickel/special-teams snaps early, then compete for outside CB — starter upside as a press-man piece with track juice.",
+      "insiderNotes": "Vault film desk on Izayah Vickers via On3→Hudl (On3/Hudl sophomore highlights): 5-11 / 180 CB out of Florida State Univ. School (Tallahassee, FL). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Izayah Vickers is a 4-star CB · listed 5-11 / 180 · Florida State Univ. School (Tallahassee, FL) (FL) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:07.481Z"
+      "updatedAt": "2026-08-04T01:26:17.178Z"
     },
     "tristian-henderson": {
       "playerSlug": "tristian-henderson",
@@ -13087,26 +13097,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/tristian-henderson-261828/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/26880837/691b8cd89828924d7f7a623f",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Sometimes younger brothers have to wait their turn in recruiting, but that hasn't been the case for Pensacola (Fla.) Pine Forest 4-star EDGE Tristian"
+        "Henderson explodes off the ball with real first-step burst to threaten the tackle’s outside shoulder.",
+        "Henderson shows bend to flatten the arc and chase the QB when the pocket collapses.",
+        "Henderson stays disciplined in run fit and does not abandon the edge when flow comes his way."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Sometimes younger brothers have to wait their turn in recruiting, but that hasn't been the case for Pensacola (Fla.) Pine Forest 4-star EDGE Tristian",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Henderson (6-4 / 217) still needs mass to hold up as an every-down SEC edge versus power tackles."
+      ],
+      "comparison": "Henderson comps to Nik Bonitto — lean 6-4 EDGE who wins with first-step burst and bend before the frame fills into every-down mass.",
+      "schemeFit": "Henderson fits a bend-and-burst EDGE/JACK in White’s 3-3-5 who can rush standing up and still set the edge as he fills out.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Henderson projects as develop in the EDGE room, rush in packages early, then compete for a starting JACK/EDGE role — starter upside as he adds 15–20 pounds without losing bend.",
+      "insiderNotes": "Vault film desk on Tristian Henderson via On3→Hudl (Tristian Henderson - Pensacola - 2025 Sophomore Season Highlights): 6-4 / 217 EDGE out of Pine Forest (Pensacola, FL). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Tristian Henderson is a 4-star EDGE · listed 6-4 / 217 · Pine Forest (Pensacola, FL) (FL) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:11.070Z"
+      "updatedAt": "2026-08-04T01:25:48.339Z"
     },
     "john-matthews": {
       "playerSlug": "john-matthews",
@@ -13173,26 +13187,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Cody Bellaire",
-          "writerId": "bellaire",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/bubba-brown-250868/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/23242189/68a22ae9d13923fc6e63e700",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "– Thursday morning, 120 of the best prospects in the country arrived at Nike Headquarters, ready to go head-to-head with each other"
+        "Brown creates separation with sudden releases and sharp breaks.",
+        "Brown is sudden after the catch and turns short throws into chunk plays.",
+        "Brown contests catches and finishes through contact for a 190-pound frame."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "BEAVERTON, Ore. – Thursday morning, 120 of the best prospects in the country arrived at Nike Headquarters, ready to go head-to-head with each other",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Brown still needs consistency as a vertical separator versus length corners who can match his stride."
+      ],
+      "comparison": "Brown comps to Chris Olave — 6-1 polished perimeter WR with suddenness after the catch and reliable separation habits.",
+      "schemeFit": "Brown fits Faulkner RPO / rhythm offense as a perimeter WR who separates and creates after the catch.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Brown projects as develop into the WR room, earn early package snaps, then compete for a starting perimeter role — starter upside as a polished X/Z who wins with routes and YAC.",
+      "insiderNotes": "Vault film desk on Bubba Brown via On3→Hudl (Artavian Brown Reg Season/Playoffs): 6-1 / 190 WR out of Lowndes (Valdosta, GA). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Bubba Brown is a 4-star WR · listed 6-1 / 190 · Lowndes (Valdosta, GA) (FL) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:03.653Z"
+      "updatedAt": "2026-08-04T01:25:47.876Z"
     },
     "kahmaree-crumity": {
       "playerSlug": "kahmaree-crumity",
@@ -13259,26 +13277,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/prince-che-280932/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/20093994/68b85efbfa0d6cbe8bd2b8f3",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Florida has made 2028 Thomasville (Ga.) Thomas County Central 4-star defensive lineman Prince Che one of its top priorities in the 2028 class."
+        "Che brings true 305-pound mass to occupy double teams and free linebackers.",
+        "Che can still push the pocket when he wins early with hands.",
+        "Che holds the point versus the run and does not get washed easily."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Florida has made 2028 Thomasville (Ga.) Thomas County Central 4-star defensive lineman Prince Che one of its top priorities in the 2028 class.  The",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Che still needs more consistent first-step suddenness to become a weekly interior pass-rush threat."
+      ],
+      "comparison": "Che comps to Vita Vea — thick 6-3 / 305 interior who occupies doubles, pushes the pocket, and holds the point with mass.",
+      "schemeFit": "Che fits White’s odd front as a nose/3T who two-gaps, occupies, and creates second-level clean-up.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Che projects as develop into the DL room, earn early rotation snaps as a nose/3T, then compete for a starting interior role — starter upside as a space-eating disruptor Florida has prioritized.",
+      "insiderNotes": "Vault film desk on Prince Che via On3→Hudl (Prince Che - Thomas County Central - 2025 Sophomore Season Highlights): 6-3 / 305 DL out of Thomas County Central (Thomasville, GA). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Prince Che is a 4-star DL · listed 6-3 / 305 · Thomas County Central (Thomasville, GA) (GA) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:00.386Z"
+      "updatedAt": "2026-08-04T01:25:48.270Z"
     },
     "armani-strong": {
       "playerSlug": "armani-strong",
@@ -13311,32 +13333,35 @@
     },
     "dominick-harris-payne": {
       "playerSlug": "dominick-harris-payne",
-      "playerName": "Dominick Harris Payne",
+      "playerName": "Dominick Harris-Payne",
       "playerType": "target",
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/23265346/69724c627942eab403f92ead",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Harris-Payne uses 6-3 length to disrupt releases and stay in phase down the sideline.",
+        "Harris-Payne recovers when beaten a step — long strides erase space quickly.",
+        "Harris-Payne stays calm in his pedal and does not panic-open versus vertical stems."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Harris-Payne (6-3 / 165) is still rail-thin — strength at the catch point is the clear next step."
+      ],
+      "comparison": "Harris-Payne comps to Sauce Gardner — 6-3 length corner who wins with arm bar, recovery, and calm feet before the frame fills.",
+      "schemeFit": "Harris-Payne fits a length-first press CB who can play boundary and recover with stride length in White’s man/pattern-match system.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Harris-Payne projects as develop into the CB room, earn early package/special-teams work, then compete for outside CB — starter upside as a length press corner once he adds 20+ pounds.",
+      "insiderNotes": "Vault film desk on Dominick Harris-Payne via On3→Hudl (Dominick Harris-Payne - Lakeland - 2025 Sophomore Season Highlights): 6-3 / 165 CB out of Lakeland (Lakeland, FL). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Dominick Harris-Payne is a 4-star CB · listed 6-3 / 165 · Lakeland (Lakeland, FL) (FL) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:15.230Z"
+      "updatedAt": "2026-08-04T01:25:47.987Z"
     },
     "gabriel-player": {
       "playerSlug": "gabriel-player",
@@ -13345,27 +13370,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22702365/68dd4f84c72735906301536b",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Player covers ground with 6-3 length and range when flow stretches the field.",
+        "Player shows instincts to trigger downhill without false-stepping every snap.",
+        "Player has the frame and athleticism to match tight ends/slot in space as he fills out."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Player (6-3 / 190) still needs mass to take on SEC OL climb blocks in the box."
+      ],
+      "comparison": "Player comps to Devin Lloyd — 6-3 rangy linebacker with length to chase, cover, and fill before he packs on MIKE mass.",
+      "schemeFit": "Player fits White 3-3-5 second-level LB who chases with range and can cover in space while adding mass.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Player projects as develop into the LB room, earn special-teams/package snaps early, then compete for WILL/MIKE — starter upside as a rangy second-level piece who can run and hit.",
+      "insiderNotes": "Vault film desk on Gabriel Player via On3→Hudl (Gabriel Player - Eau Gallie - 2025 Sophomore Season Highlights): 6-3 / 190 LB out of Eau Gallie (Melbourne, FL). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Gabriel Player is a 4-star LB · listed 6-3 / 190 · Eau Gallie (Melbourne, FL) (FL) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:03.177Z"
+      "updatedAt": "2026-08-04T01:25:48.022Z"
     },
     "brady-quinn": {
       "playerSlug": "brady-quinn",
@@ -13431,26 +13459,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/Player/brysen-wright-46151659/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/23029332/694c3c9fd44564ced131a589",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "s Brysen Wright Pos WR Height 6-3.5 Weight 215 Timeline Prospect Info High School Mandarin City Jacksonville, FL Class 2028 Play Watch Highlights Player Rating i 247Sports 95 Natl. 4 WR 1 FL 3 247Sports Composite&reg; 0.9994 Natl. 1 WR 1 FL 1 Your Prediction Manage Predictions Make a Prediction Crystal Ball&reg; Predictions No Crystal Ball predictions at this time. College List Offer Interest Recruited By Roster Outlook Visit 32 Offers 0 Visits 0 Coach Visits Florida (Edit) Warm - 13 WR, 3 Commits - Miami (Edit) Warm - 10 WR, 2 Commits - Ohio State (Edit) Warm P Cortez Hankton 12 WR, 2 Commits - Alabama (Edit) Cool - 10 WR, 1 Commits - Auburn (Edit) Cool - 14 WR, 3 Commits - View complete team list Add Interests Manage Interests 32 Offers 0 Visits 0 Coach Visits Add Video Scouting Report Evaluated 06/27/2025 Andrew Ivins Director of Scouting -Physically advanced pass catcher that doesn’t look his age. -Dominates in 50-50 situations with his hands and balance. -More of a build-speed athlete, but can find a top gear. -Sinks hips at top of routes to create separation while working sideline. -Powerful enough to break a tackle or two in traffic. -Projects as a potential high-volume target on Saturdays. Athletic Background Multi-sport athlete that also plays basketball. –––– FOOTBALL 2025: As a sophomore, caught 46 passes for 983 yards and 10 TD. 2024: Named MVP of the annual FBU Freshman All-American Bowl in December after catching 3 passes for 66 yards and a TD. Leading receiver as a freshman for Jacksonville Mandarin, hauling in 31 passes for 646 yards and 8 TD in 11 games. -Andrew Ivins Add Timeline Events Timeline Add Stats Stats Year 2025 2024 TOTAL Rec RecYds RecTD 46 983 10 31 646 8 77 1629 18 Add Photos View all articles CBS Sports Digital YouTube Facebook X Instagram TikTok CBS Sports Betting Podcast Newsletter Text Alert About Contact Us Advertisers Help Center Careers Privacy Policy Minors&apos; Privacy Policy California Notice Terms of Use Subscription Terms cbsoptanon.ot.showPreferenceCenter()}>Your Privacy Choices &copy; 2005-2026 CBS INTERACTIVE ALL RIGHTS RESERVED. CBS Sports is a registered trademark of CBS Broadcasting Inc. 247Sports is a registered service mark of CBT Sports, LLC. Scout is a registered service mark of CBS 247 Inc. Fans Only is a registered service mark of CSTV Online, Inc. The content on this site is for entertainment purposes only and 247Sports makes no representation or warranty as to the accuracy of the information given or the outcome of any game or event. There is no gambling offered on this site. This site contains commercial content and 247Sports may be compensated for the links provided on this site."
+        "Wright wins contested catches with 6-3+ length and strong hands at the catch point.",
+        "Wright has the frame (210) to play through press and still release cleanly.",
+        "Wright creates mismatches on the boundary and in the red zone versus smaller corners."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": "-Projects as a potential high-volume target on Saturdays.",
-      "insiderNotes": "s Brysen Wright Pos WR Height 6-3.5 Weight 215 Timeline Prospect Info High School Mandarin City Jacksonville, FL Class 2028 Play Watch Highlights Player Rating i 247Sports 95 Natl. 4 WR 1 FL 3 247Sports Composite&reg; 0.9994 Natl. 1 WR 1 FL 1 Your Prediction Manage Predictions Make a Prediction Crystal Ball&reg; Predictions No Crystal Ball predictions at this time. College List Offer Interest Recruited By Roster Outlook Visit 32 Offers 0 Visits 0 Coach Visits Florida (Edit) Warm - 13 WR, 3 Commits - Miami (Edit) Warm - 10 WR, 2 Commits - Ohio State (Edit) Warm P Cortez Hankton 12 WR, 2 Commits - Alabama (Edit) Cool - 10 WR, 1 Commits - Auburn (Edit) Cool - 14 WR, 3 Commits - View complete team list Add Interests Manage Interests 32 Offers 0 Visits 0 Coach Visits Add Video Scouting Report Evaluated 06/27/2025 Andrew Ivins Director of Scouting -Physically advanced pass catcher that doesn’t look his age. -Dominates in 50-50 situations with his hands and balance. -More of a build-speed athlete, but can find a top gear. -Sinks hips at top of routes to create separation while working sideline. -Powerful enough to break a tackle or two in traffic. -Projects as a potential high-volume target on Saturdays. H.S. Athletic Background Multi-sport athlete that also plays basketball. –––– FOOTBALL 2025: As a sophomore, caught 46 passes for 983 yards and 10 TD. 2024: Named MVP of the annual FBU Freshman All-American Bowl in December after catching 3 passes for 66 yards and a TD. Leading receiver as a freshman for Jacksonville Mandarin, hauling in 31 passes for 646 yards and 8 TD in 11 games. -Andrew Ivins Add Timeline Events Timeline Add Stats Stats Year 2025 2024 TOTAL Rec RecYds RecTD 46 983 10 31 646 8 77 1629 18 Add Photos View all articles CBS Sports Digital YouTube Facebook X Instagram TikTok CBS Sports Betting Podcast Newsletter Text Alert About Contact Us Advertisers Help Center Careers Privacy Policy Minors&apos; Privacy Policy California Notice Terms of Use Subscription Terms cbsoptanon.ot.showPreferenceCenter()}>Your Privacy Choices &copy; 2005-2026 CBS INTERACTIVE ALL RIGHTS RESERVED. CBS Sports is a registered trademark of CBS Broadcasting Inc. 247Sports is a registered service mark of CBT Sports, LLC. Scout is a registered service mark of CBS 247 Inc. Fans Only is a registered service mark of CSTV Online, Inc. The content on this site is for entertainment purposes only and 247Sports makes no representation or warranty as to the accuracy of the information given or the outcome of any game or event. There is no gambling offered on this site. This site contains commercial content and 247Sports may be compensated for the links provided on this site. Timer List",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Wright still needs sharper short/intermediate route polish to become a full-route-tree separator every down."
+      ],
+      "comparison": "Wright comps to Drake London — 6-3+ contested-catch WR with frame to win outside and grow into a true X.",
+      "schemeFit": "Wright fits Faulkner as a boundary X who wins contested and verticals while the route tree expands.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Wright projects as develop into the WR room, earn early red-zone/package snaps, then compete for starting X — starter upside as a 5-star boundary mismatch who wins above the rim.",
+      "insiderNotes": "Vault film desk on Brysen Wright via On3→Hudl (Brysen Wright - Mandarin - 2025 Sophomore Season Highlights): 6-3.5 / 210 WR out of Mandarin (Jacksonville, FL). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Brysen Wright is a 5-star WR · listed 6-3.5 / 210 · Mandarin (Jacksonville, FL) (FL) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:55.951Z"
+      "updatedAt": "2026-08-04T01:25:47.839Z"
     },
     "asher-ghioto": {
       "playerSlug": "asher-ghioto",
@@ -13459,27 +13491,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/asher-ghioto-242955/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22338333/68dda8786f1a10f6341a1cf7",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Asher Ghioto is one of the most sought-after prospects in the 2028 class.",
-        "The Jacksonville (Fla.) Bolles standout checks every box colleges covet."
+        "Ghioto plays with true 6-5 length off the edge and keeps tackles from latching his chest on the arc.",
+        "Ghioto has early mass (listed 240) to set the edge versus the run while still flashing pass-rush burst.",
+        "Ghioto finishes pursuit with violence and does not quit on second effort once the QB scrambles."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Asher Ghioto is one of the most sought-after prospects in the 2028 class. The Jacksonville (Fla.) Bolles standout checks every box colleges covet. At",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Ghioto still needs a deeper pass-rush counter package beyond length and power once tackles sit on his first move."
+      ],
+      "comparison": "Ghioto comps to Brian Burns — 6-5 EDGE mold with length to win the arc and enough early mass to set the edge while the rush plan grows.",
+      "schemeFit": "Ghioto fits Brad White 3-3-5 JACK / wide-9 EDGE who attacks the arc with bend and burst while holding the edge in run support.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Ghioto projects as develop into the Florida EDGE room, earn early package rushes, then compete for every-down EDGE snaps — starter upside as a wide-9 / JACK piece who can win with length and power.",
+      "insiderNotes": "Vault film desk on Asher Ghioto via On3→Hudl (Asher Ghioto - The Bolles School - 2025 Sophomore Season): 6-5 / 240 EDGE out of The Bolles School (Jacksonville, FL). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Asher Ghioto is a 5-star EDGE · listed 6-5 / 240 · The Bolles School (Jacksonville, FL) (FL) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:58.290Z"
+      "updatedAt": "2026-08-04T01:25:47.762Z"
     },
     "cassell-cruickshank": {
       "playerSlug": "cassell-cruickshank",
@@ -13488,28 +13523,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Cody Bellaire",
-          "writerId": "bellaire",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/cassell-cruickshank-282316/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/23180517/68d0c63d8a61b935346bd0d1",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Approved · Mar 23, 2026 Cassell Cruickshank Scouted by Cody Bellaire EDGE 2028 · Football Long edge defender with prototypical physical and athletic traits to rush the passer and play at the point of attack. Has the frame to add substantial mass and get stronger. Attacks tackles with impressive burst off the line of scrimmage combined with violent hands. Great understanding of leverage and pad level given his size. Will need to continue developing pass rush arsenal but has every physical and athletic gift for a coach to mold and develop."
+        "Cruickshank attacks tackles with impressive burst off the line for a 6-5 frame.",
+        "Cruickshank uses violent hands and understands leverage/pad level given his size.",
+        "Cruickshank has the frame to add substantial mass without losing the first step."
       ],
       "weaknesses": [
-        "Will need to continue developing pass rush arsenal but has every physical and athletic gift for a coach to mold and develop."
+        "Cruickshank still needs to expand the pass-rush counter package beyond athletic gifts."
       ],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Approved · Mar 23, 2026 Cassell Cruickshank Scouted by Cody Bellaire EDGE 2028 · Football Long edge defender with prototypical physical and athletic traits to rush the passer and play at the point of attack. Has the frame to add substantial mass and get stronger. Attacks tackles with impressive burst off the line of scrimmage combined with violent hands. Great understanding of leverage and pad level given his size. Will need to continue developing pass rush arsenal but has every physical and athletic gift for a coach to mold and develop. Full report →",
-      "recruitingStory": null,
+      "comparison": "Cruickshank comps to Boye Mafe — long 6-5 EDGE with first-step burst and violent hands who fills into a productive every-down rusher.",
+      "schemeFit": "Cruickshank fits White wide-9 / JACK EDGE who wins with burst and hand violence while the frame fills.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Cruickshank projects as develop into the EDGE room, rush in packages early, then compete for a starting edge role — starter upside with All-SEC ceiling if the pass-rush arsenal catches the physical traits.",
+      "insiderNotes": "Vault film desk on Cassell Cruickshank via On3→Hudl (Cassell Cruickshank - E.E. Smith - 2025 Sophomore Season Highlights): 6-5 / 217 EDGE out of E E Smith (Fayetteville, NC). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Cassell Cruickshank is a 4-star EDGE · listed 6-5 / 217 · E E Smith (Fayetteville, NC) (NC) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:59.212Z"
+      "updatedAt": "2026-08-04T01:25:47.915Z"
     },
     "malakhi-dudley": {
       "playerSlug": "malakhi-dudley",
@@ -14000,26 +14037,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/man-robinson-260972/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/11330856/68e59688cf76f6fc1b231319",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Miami continues to make a strong push for four-star cornerback Man Robinson, and after another trip to Coral Gables, the Hurricanes have positioned"
+        "Robinson mirrors in man with twitchy feet and stays attached through stems.",
+        "Robinson competes at the catch point despite lacking ideal length.",
+        "Robinson plays with urgency — high motor in pursuit and support."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Miami continues to make a strong push for four-star cornerback Man Robinson, and after another trip to Coral Gables, the Hurricanes have positioned",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Robinson (5-10) can get stressed by taller contested-catch receivers — technique and leverage must stay perfect."
+      ],
+      "comparison": "Robinson comps to Asante Samuel Jr. — compact 5-10 man corner who wins with twitch, competitiveness, and sticky mirror ability.",
+      "schemeFit": "Robinson fits press/man and nickel pattern-match roles that reward twitch and competitiveness over pure length.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Robinson projects as develop into the CB/nickel room, earn early special-teams and nickel snaps, then compete for a starting CB role — starter upside as a feisty press/man piece from the IMG circuit.",
+      "insiderNotes": "Vault film desk on Man Robinson via On3→Hudl (Man Robinson - IMG Academy - 2025 Sophomore Season Highlights): 5-10 / 180 CB out of IMG Academy (Louisville, KY). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Man Robinson is a 3-star CB · listed 5-10 / 180 · IMG Academy (Louisville, KY) (KY) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:27.456Z"
+      "updatedAt": "2026-08-04T01:25:48.199Z"
     },
     "jerome-larue": {
       "playerSlug": "jerome-larue",
@@ -14057,26 +14098,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/jermaine-cobbins-251062/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22804491/68bce3ca9d3831611657518d",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "For one of the nation's top defensive backs in the 2028 class, the Florida Gators made the most of their opportunity this spring."
+        "Cobbins uses 6-0 length to stay stacked on the perimeter and disrupt releases at the line.",
+        "Cobbins shows patience in man coverage — does not bite early on stems.",
+        "Cobbins closes to the football and contests catches without panicking."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "For one of the nation's top defensive backs in the 2028 class, the Florida Gators made the most of their opportunity this spring.  On April 3,",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Cobbins (6-0 / 175) still needs functional strength to finish vs physical SEC receivers at the catch point."
+      ],
+      "comparison": "Cobbins comps to Patrick Surtain II — 6-0 long-armed press corner who stacks receivers and stays patient in phase.",
+      "schemeFit": "Cobbins fits press/man + pattern-match CB who wins with length and patience on the boundary.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Cobbins projects as develop in the CB room, earn early special-teams/nickel work, then compete for outside CB — starter upside as a length press corner once strength catches the frame.",
+      "insiderNotes": "Vault film desk on Jermaine Cobbins via On3→Hudl (Jermaine Cobbins - Springfield - 2025 Sophomore Season Highlights): 6-0 / 175 CB out of Springfield (Springfield, TN). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Jermaine Cobbins is a 4-star CB · listed 6-0 / 175 · Springfield (Springfield, TN) (TN) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:25.137Z"
+      "updatedAt": "2026-08-04T01:25:48.130Z"
     },
     "jay-schell": {
       "playerSlug": "jay-schell",
@@ -14422,7 +14467,7 @@
       "recruitingStory": "Hudson West is a 2028 Sarasota QB and Florida target with a UF offer and multiple unofficial visits.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-08-02T02:51:05.149Z"
+      "updatedAt": "2026-08-04T01:25:48.059Z"
     },
     "jackson-stecher": {
       "playerSlug": "jackson-stecher",
@@ -15669,7 +15714,7 @@
       "recruitingStory": "Cyion Smith is a 2028 Blountstown (FL) safety and Florida target with a UF offer, Chris Collins as primary, and two unofficial visits.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-08-03T03:01:48.646Z"
+      "updatedAt": "2026-08-04T01:25:47.950Z"
     },
     "josiah-taylor": {
       "playerSlug": "josiah-taylor",
@@ -15852,27 +15897,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/23796788/69362d995079fbd819531a10",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Swann gets off the ball with real first-step quickness for a 265-pound frame.",
+        "Swann shows functional strength to hold the point and still penetrate when he wins early.",
+        "Swann pursues down the line and does not quit when the play stretches."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Swann still needs consistency winning with hands/counters when OL sit on his first move."
+      ],
+      "comparison": "Swann comps to Christian Wilkins — 6-3 disruptive DL with first-step quickness and functional strength to occupy gaps and push the pocket.",
+      "schemeFit": "Swann fits White’s odd front as a disruptive interior who can two-gap or penetrate depending on call.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Swann projects as develop into the DL room, earn early rotation snaps, then compete for a starting interior/edge-hybrid role — starter upside as a three-technique style disruptor with 5-star traits.",
+      "insiderNotes": "Vault film desk on Tyzon Swann via On3→Hudl (Tyzon Swann - Lackey - 2025 Sophomore Season Highlights): 6-3.5 / 265 DL out of Henry E. Lackey (Head, MD). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Tyzon Swann is a 5-star DL · listed 6-3.5 / 265 · Henry E. Lackey (Head, MD) (MD) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:25.760Z"
+      "updatedAt": "2026-08-04T01:25:48.374Z"
     },
     "andrew-whittemore": {
       "playerSlug": "andrew-whittemore",
@@ -16141,27 +16189,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/joey-fleming-259645/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19499673/6966ed3acc281153c14f5bee",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Joey Fleming has stayed busy.",
-        "After touring some of the nation's top programs during the spring, the 2028 four-star offensive lineman from"
+        "Fleming has natural 6-5 length to climb and latch linebackers on the second level.",
+        "Fleming plays with a mean streak in the run game and finishes blocks through the whistle.",
+        "Fleming shows enough athleticism to pull/space in gap-zone mixes without looking stiff."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Joey Fleming has stayed busy.  After touring some of the nation's top programs during the spring, the 2028 four-star offensive lineman from",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Fleming still needs tighter hand placement and lower pad level versus elite interior quickness."
+      ],
+      "comparison": "Fleming comps to Jonah Jackson — 6-5 interior with length to climb second level and enough frame to grow into an SEC anchor.",
+      "schemeFit": "Fleming fits Faulkner interior OL asked to anchor for RPO/gap-zone and climb to the second level with length.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Fleming projects as develop along the interior, earn practice/scout snaps early, then compete for OG/C — starter upside as a mauling IOL once he packs on SEC mass and refines hand placement.",
+      "insiderNotes": "Vault film desk on Joey Fleming via On3→Hudl (Joey Fleming - Huntsville - 2025 Sophomore Season Highlights): 6-5 / 275 IOL out of Huntsville (Huntsville, AL). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Joey Fleming is a 4-star IOL · listed 6-5 / 275 · Huntsville (Huntsville, AL) (AL) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:22.414Z"
+      "updatedAt": "2026-08-04T01:25:48.164Z"
     },
     "giovanni-tuggle": {
       "playerSlug": "giovanni-tuggle",
@@ -17603,9 +17654,9 @@
         {
           "writer": "Charles Power",
           "writerId": "power",
-          "outlet": "GatorVault film desk (Hudl / On3)",
-          "url": "https://www.on3.com/rivals/merrick-ham-281179/",
-          "publishedAt": "2026-07-30"
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22616802/68d476200f5aa350d2c69b13",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
@@ -17618,13 +17669,13 @@
       ],
       "comparison": "Ham comps to Yetur Gross-Matos — long, rangy EDGE with length and hand counters who fills into a productive every-down rusher.",
       "schemeFit": "Ham fits a wide-9 / stand-up EDGE or 3-4 OLB who attacks the arc with length while the frame fills out.",
-      "staffNotes": "Florida offered Ham; Bam Hardmon is the listed UF staffer. Board read is tracking — open chase, not a commit.",
+      "staffNotes": "Vault film desk re-verified 2026-08-04 from On3→Hudl hydrate (Merrick Ham - Marietta - 2025 Sophomore Season Highlights).",
       "projection": "Ham projects as a Year 2–3 EDGE/OLB regular contributor who can rush in packages early, then grow into an every-down piece with All-SEC upside once he adds mass — wins the corner with length and hand counters.",
       "insiderNotes": "Merrick Ham is a 4-star EDGE · 6-6 / 230 · Marietta, GA · Natl #107 · Pos #14 · State #12 (GA). Florida Offered. Open board target.",
-      "recruitingStory": null,
-      "nflProjection": "Ham’s length-and-hands package points to a productive EDGE who can keep climbing as the mass arrives.",
+      "recruitingStory": "Merrick Ham is a 4-star EDGE · 6-6 / 230 · Marietta (Marietta, GA), GA · Florida target.",
+      "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-30T14:15:05.254Z"
+      "updatedAt": "2026-08-04T01:26:56.149Z"
     },
     "ryan-drakeford": {
       "playerSlug": "ryan-drakeford",
@@ -17633,27 +17684,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22828339/68d754d51a73c855827bbcbe",
+          "publishedAt": "2026-08-04"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Drakeford ranges over the top and covers ground when the ball leaves the hash.",
+        "Drakeford shows willingness to fill the alley and support the run.",
+        "Drakeford has enough twitch to match in space as a nickel/STAR type as he fills out."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Drakeford (6-1 / 175) still needs mass before he can win with physicality versus SEC TEs in the box."
+      ],
+      "comparison": "Drakeford comps to Jalen Thompson — 6-1 rangy safety with range to play deep and enough twitch to fill the alley.",
+      "schemeFit": "Drakeford fits a range safety / STAR alley-filler in White’s 3-3-5 who can play deep and still support.",
+      "staffNotes": "Vault film desk verified 2026-08-04 from On3 profile Hudl embed. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Drakeford projects as develop into the safety room, earn special-teams early, then compete for FS/nickel — starter upside as a rangy backend piece who can grow into STAR packages.",
+      "insiderNotes": "Vault film desk on Ryan Drakeford via On3→Hudl (Ryan Drakeford - Quince Orchard - 2025 Sophomore Season): 6-1 / 175 S out of Quince Orchard (Gaithersburg, MD). Florida 2028 target — tape traits below drive Fit evidence.",
+      "recruitingStory": "Ryan Drakeford is a 3-star S · listed 6-1 / 175 · Quince Orchard (Gaithersburg, MD) (MD) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:30:33.658Z"
+      "updatedAt": "2026-08-04T01:25:48.304Z"
     },
     "jalanie-george": {
       "playerSlug": "jalanie-george",
