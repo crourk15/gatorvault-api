@@ -707,6 +707,12 @@ function mountRecruitingHubRoutes(app) {
       if (!isCron && process.env.NODE_ENV === 'production') {
         return res.status(403).json({ ok: false, error: 'Forbidden' });
       }
+      const { stayGreenSkipPayload } = require('./api-stay-green');
+      const skipped = stayGreenSkipPayload('hub-refresh');
+      if (skipped) {
+        console.log('[recruiting-hub] stay-green skip hub/refresh');
+        return res.json({ ...skipped, meta: hubMeta() });
+      }
       const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
       const geoBackfill =
         req.query.geoBackfill === 'true' || req.query.geoBackfill === '1';

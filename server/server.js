@@ -1815,27 +1815,38 @@ function startPostBootRecruitingAndSchedulers() {
         } catch (e) {
           console.warn('[startup] intel reconcile skipped:', e.message);
         }
-        if (process.env.COMMIT_TARGET_RECONCILE_BOOT !== 'false') {
-          const bootDelay = parseInt(process.env.COMMIT_TARGET_RECONCILE_BOOT_DELAY_MS || '180000', 10);
-          setTimeout(async () => {
-            try {
-              const store = require('./lib/recruiting-store');
-              const { reconcileCommittedTargetsFromStore } = require('./lib/commit-target-cleanup');
-              const out = await reconcileCommittedTargetsFromStore(store, {
-                source: 'boot_reconcile',
-                quiet: true,
-              });
-              if (out.removedBoardEntries > 0) {
-                console.log(
-                  '[commit-target-cleanup] boot reconcile removed',
-                  out.removedBoardEntries,
-                  'stale board row(s)'
-                );
+        {
+          let stayGreenBoot = false;
+          try {
+            stayGreenBoot = require('./lib/api-stay-green').isStayGreen();
+          } catch {
+            stayGreenBoot = process.env.NODE_ENV === 'production';
+          }
+          // Stay-green / App Review: skip boot commitment reconcile (heavy store walk).
+          if (process.env.COMMIT_TARGET_RECONCILE_BOOT !== 'false' && !stayGreenBoot) {
+            const bootDelay = parseInt(process.env.COMMIT_TARGET_RECONCILE_BOOT_DELAY_MS || '180000', 10);
+            setTimeout(async () => {
+              try {
+                const store = require('./lib/recruiting-store');
+                const { reconcileCommittedTargetsFromStore } = require('./lib/commit-target-cleanup');
+                const out = await reconcileCommittedTargetsFromStore(store, {
+                  source: 'boot_reconcile',
+                  quiet: true,
+                });
+                if (out.removedBoardEntries > 0) {
+                  console.log(
+                    '[commit-target-cleanup] boot reconcile removed',
+                    out.removedBoardEntries,
+                    'stale board row(s)'
+                  );
+                }
+              } catch (e) {
+                console.warn('[commit-target-cleanup] boot reconcile skipped:', e.message);
               }
-            } catch (e) {
-              console.warn('[commit-target-cleanup] boot reconcile skipped:', e.message);
-            }
-          }, bootDelay);
+            }, bootDelay);
+          } else if (stayGreenBoot) {
+            console.log('[commit-target-cleanup] boot reconcile skipped (api stay-green)');
+          }
         }
       });
   } catch (e) {

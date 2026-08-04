@@ -293,6 +293,12 @@ services:
       # a full Lab/hub warm stampede (Render ~5s /ready → restart → HTML 502).
       - key: API_STAY_GREEN
         value: "true"
+      # Soft-skip heavy cron routes inside the web process (App Review lockdown).
+      # Set API_STAY_GREEN_ALLOW_HEAVY=true only when login is proven stable.
+      - key: API_STAY_GREEN_ALLOW_HEAVY
+        value: "false"
+      - key: COMMIT_TARGET_RECONCILE_BOOT
+        value: "false"
       - key: HUB_BOOT_IMMEDIATE_WARM
         value: "false"
       - key: HUB_BOOT_SKIP_WARM
@@ -395,10 +401,10 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
-  # Light On3 + hub rebuild every 20m so new board names land without waiting on the 2h heavy cron.
+  # Light On3 path — API stay-green soft-skips heavy steps so this cron cannot 502-loop login.
   - type: cron
     name: gatorvault-api-recruiting-light
-    schedule: "*/20 * * * *"
+    schedule: "0 * * * *"
     runtime: node
     region: oregon
     rootDir: server
@@ -410,11 +416,10 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
-  # Hourly soft hub rebuild (no geoBackfill) — light cron already refreshes */20.
-  # Priority-only warm keeps /ready responsive for App Review login.
+  # Hub rebuild — stay-green soft-skips on the API; keep cron for when lockdown lifts.
   - type: cron
     name: gatorvault-api-hub-refresh
-    schedule: "10 * * * *"
+    schedule: "10 */2 * * *"
     runtime: node
     region: oregon
     rootDir: server
@@ -422,7 +427,7 @@ services:
     startCommand: node scripts/render-hub-refresh-cron.js
     envVars:
       - key: HUB_REFRESH_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?warmAfter=priority
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?warmAfter=false
       - key: MONITORING_CRON_SECRET
         sync: false
 

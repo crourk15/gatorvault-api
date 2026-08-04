@@ -518,6 +518,12 @@ function mountRecruitingRoutes(app) {
   app.post('/api/recruiting/ingest', async (req, res) => {
     try {
       if (!requireIngestCronAuth(req, res)) return;
+      const { stayGreenSkipPayload } = require('./api-stay-green');
+      const skipped = stayGreenSkipPayload('recruiting-ingest');
+      if (skipped) {
+        console.log('[recruiting] stay-green skip on3 ingest');
+        return res.json(skipped);
+      }
       const classYears = req.body.classYears
         ? String(req.body.classYears).split(',').map((y) => parseInt(y.trim(), 10)).filter(Boolean)
         : undefined;
@@ -543,6 +549,12 @@ function mountRecruitingRoutes(app) {
   app.post('/api/recruiting/rivals-pm/ingest', async (req, res) => {
     try {
       if (!requireIngestCronAuth(req, res)) return;
+      const { stayGreenSkipPayload } = require('./api-stay-green');
+      const skipped = stayGreenSkipPayload('rivals-pm-ingest');
+      if (skipped) {
+        console.log('[recruiting] stay-green skip rivals-pm ingest');
+        return res.json(skipped);
+      }
       const force = req.body.force === true || req.query.force === 'true';
       const backfill =
         req.body.backfill === true ||
@@ -579,6 +591,12 @@ function mountRecruitingRoutes(app) {
   app.post('/api/recruiting/beat-writer/ingest', async (req, res) => {
     try {
       if (!requireIngestCronAuth(req, res)) return;
+      const { stayGreenSkipPayload } = require('./api-stay-green');
+      const skipped = stayGreenSkipPayload('beat-writer-ingest');
+      if (skipped) {
+        console.log('[recruiting] stay-green skip beat-writer ingest');
+        return res.json(skipped);
+      }
       if (req.body.row && req.body.row.playerName) {
         const result = await ingestManualBeatVisitIntel(req.body.row);
         return res.json({ ok: true, ...result });
@@ -610,6 +628,16 @@ function mountRecruitingRoutes(app) {
       const classYear = parseInt(req.body.classYear || req.query.classYear || '2028', 10);
       if (forceCoverageOnly) {
         return res.json({ ok: true, coverage: measureAllowlistIntelCoverage(classYear, { days: 30 }) });
+      }
+      // Stay-green: skip create sweep (coverage-only still allowed above).
+      const { stayGreenSkipPayload } = require('./api-stay-green');
+      const skipped = stayGreenSkipPayload('allowlist-intel-sweep');
+      if (skipped) {
+        console.log('[recruiting] stay-green skip allowlist-intel sweep');
+        return res.json({
+          ...skipped,
+          coverage: measureAllowlistIntelCoverage(classYear, { days: 30 }),
+        });
       }
       const dryRun = req.body.dryRun === true || req.query.dryRun === 'true';
       const result = await runAllowlistIntelSweep({ classYear, dryRun });

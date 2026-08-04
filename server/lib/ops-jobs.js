@@ -719,6 +719,17 @@ async function runJob(jobId, opts = {}) {
     details: { jobId, resolvedId: resolvedId !== jobId ? resolvedId : undefined }
   });
 
+  try {
+    const { shouldBlockOpsJob, stayGreenSkipPayload } = require('./api-stay-green');
+    if (shouldBlockOpsJob(resolvedId) || shouldBlockOpsJob(jobId)) {
+      const skipped = stayGreenSkipPayload(`ops:${resolvedId || jobId}`);
+      console.log('[ops-jobs] stay-green skip', resolvedId || jobId);
+      return { jobId: resolvedId || jobId, requestedId: jobId, result: skipped };
+    }
+  } catch {
+    /* optional */
+  }
+
   const job = JOBS[resolvedId];
   if (!job) {
     opsMonitor.logEvent({
