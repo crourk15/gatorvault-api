@@ -55,7 +55,7 @@ describe('live-dashboard-cache request path', () => {
 
   it('server defers heavy boot warm to >=60s by default', () => {
     const src = require('fs').readFileSync(path.join(__dirname, '..', 'server.js'), 'utf8');
-    assert.match(src, /API_BOOT_DEFER_HEAVY_MS \|\| '120000'/);
+    assert.match(src, /API_BOOT_DEFER_HEAVY_MS \|\| '180000'/);
     assert.match(src, /startPostBootHeavyServices/);
     assert.match(src, /PLAYER_INTEL_REFRESH_ON_BOOT === 'true'/);
     assert.match(src, /GUARDIAN_BOOT_DELAY_MS \|\| '20000'/);

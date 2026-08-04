@@ -85,7 +85,17 @@ async function refreshRecruitingHubCaches(options = {}) {
 
   let warmMeta = null;
   if (options.warmAfter !== false) {
-    warmMeta = await warmEliteHubCaches(options.warmOptions);
+    // Stay-green: production + API_STAY_GREEN default to priority-only warm so
+    // secondary Lab keys do not starve /ready during App Review.
+    // Opt into full warm with HUB_REFRESH_FULL_WARM=true or explicit warmOptions.
+    const preferPriority =
+      process.env.HUB_REFRESH_FULL_WARM !== 'true' &&
+      (process.env.API_STAY_GREEN === 'true' || process.env.NODE_ENV === 'production');
+    const warmOptions = {
+      ...(preferPriority && !options.warmOptions ? { priorityOnly: true } : null),
+      ...(options.warmOptions || {}),
+    };
+    warmMeta = await warmEliteHubCaches(warmOptions);
   }
 
   return {

@@ -145,10 +145,12 @@ async function mapPool(items, concurrency, worker) {
 async function main() {
   const ping = await wakeUntilReady(PING_URL, 'api/ping');
   let touches = [];
-  // Opt-in only. Default OFF — concurrent hub/FutureCast warms were blocking the
-  // Render event loop past the 5s /health timeout and crash-looping gatorvault-api.
-  // Set KEEPALIVE_HUB_TOUCH=true (and keep concurrency low) when the API is stable.
-  if (process.env.KEEPALIVE_HUB_TOUCH === 'true') {
+  // Ping-only by default. Legacy KEEPALIVE_HUB_TOUCH is IGNORED — Render Dashboard
+  // leftovers kept re-enabling the hub/FutureCast stampede and crash-looping /ready.
+  // Opt back in only with KEEPALIVE_FULL_TOUCH=true AND API_STAY_GREEN≠true.
+  const stayGreen = process.env.API_STAY_GREEN !== 'false';
+  const hubTouchAllowed = !stayGreen && process.env.KEEPALIVE_FULL_TOUCH === 'true';
+  if (hubTouchAllowed) {
     const concurrency = Math.min(2, TOUCH_CONCURRENCY);
     // Priority first (hubs/roster/live/staff) so cold opens hit warm caches.
     const priority = await mapPool(
@@ -158,6 +160,10 @@ async function main() {
     );
     const secondary = await mapPool(TOUCH_PATHS, concurrency, (path) => softTouch(path));
     touches = [...priority, ...secondary];
+  } else if (process.env.KEEPALIVE_HUB_TOUCH === 'true' || process.env.KEEPALIVE_FULL_TOUCH === 'true') {
+    console.log(
+      '[keepalive] hub touch suppressed (stay-green / missing KEEPALIVE_FULL_TOUCH) — ping only'
+    );
   }
   const okCount = touches.filter((t) => t && t.ok).length;
   console.log(

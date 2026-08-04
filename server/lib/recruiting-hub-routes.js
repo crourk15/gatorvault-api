@@ -710,7 +710,15 @@ function mountRecruitingHubRoutes(app) {
       const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
       const geoBackfill =
         req.query.geoBackfill === 'true' || req.query.geoBackfill === '1';
-      const result = await refreshRecruitingHubCaches({ geoBackfill });
+      const warmAfterRaw = String(req.query.warmAfter || '').trim().toLowerCase();
+      let warmAfter = true;
+      let warmOptions;
+      if (warmAfterRaw === 'false' || warmAfterRaw === '0' || warmAfterRaw === 'off') {
+        warmAfter = false;
+      } else if (warmAfterRaw === 'priority' || warmAfterRaw === 'priorityonly') {
+        warmOptions = { priorityOnly: true };
+      }
+      const result = await refreshRecruitingHubCaches({ geoBackfill, warmAfter, warmOptions });
       return res.json({ ok: true, meta: hubMeta(), ...result });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

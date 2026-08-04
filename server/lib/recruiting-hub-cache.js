@@ -230,6 +230,10 @@ function secondaryWarmJobs(elite, years) {
   return jobs;
 }
 
+function yieldEventLoop() {
+  return new Promise((resolve) => setImmediate(resolve));
+}
+
 async function runWarmJobBatch(jobs, timeoutMs, label) {
   let warmed = 0;
   for (const [key, fn] of jobs) {
@@ -242,6 +246,8 @@ async function runWarmJobBatch(jobs, timeoutMs, label) {
     } catch (err) {
       console.warn(`[recruiting-hub-cache] ${label} skip`, key, err.message);
     }
+    // Let Render /health + /ready + /api/login run between heavy builds.
+    await yieldEventLoop();
   }
   return warmed;
 }
@@ -449,8 +455,20 @@ function scheduleBackgroundRefresh() {
 
 function scheduleHubBootPipeline() {
   const pipelineGuards = require('./pipeline-guards');
-  if (process.env.HUB_BOOT_SKIP_WARM === 'true') {
-    console.log('[recruiting-hub] boot pipeline skipped (HUB_BOOT_SKIP_WARM=true) — rely on hub-refresh cron');
+  // Production defaults to skip — Dashboard leftovers with HUB_BOOT_SKIP_WARM=false
+  // were still running deferred full warms and crash-looping Render /ready.
+  // Opt back in only with HUB_BOOT_FORCE_WARM=true (and stay-green off).
+  const forceBootWarm =
+    process.env.HUB_BOOT_FORCE_WARM === 'true' && process.env.API_STAY_GREEN !== 'true';
+  const skipBootWarm =
+    !forceBootWarm &&
+    (process.env.HUB_BOOT_SKIP_WARM === 'true' ||
+      process.env.API_STAY_GREEN === 'true' ||
+      process.env.NODE_ENV === 'production');
+  if (skipBootWarm) {
+    console.log(
+      '[recruiting-hub] boot pipeline skipped (stay-green / production default) — rely on hub-refresh cron'
+    );
     return;
   }
 
