@@ -42,7 +42,8 @@ describe('hub refresh stay-green', () => {
   it('exposes api-stay-green helper for cron lockdown', () => {
     const src = fs.readFileSync(path.join(__dirname, '..', 'lib/api-stay-green.js'), 'utf8');
     assert.match(src, /api_stay_green/);
-    assert.match(src, /STAY_GREEN_BLOCKED_JOBS/);
+    assert.match(src, /STAY_GREEN_ALLOWED_JOBS/);
+    assert.match(src, /shouldBlockOpsJob/);
   });
 
   it('keepalive ignores legacy KEEPALIVE_HUB_TOUCH (ping-only unless FULL_TOUCH)', () => {

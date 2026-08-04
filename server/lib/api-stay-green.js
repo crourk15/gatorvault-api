@@ -27,31 +27,30 @@ function stayGreenSkipPayload(label) {
   };
 }
 
-/** Ops job ids that must not run under stay-green (crash /ready). */
-const STAY_GREEN_BLOCKED_JOBS = new Set([
-  'gators-score-alerts',
-  'recruiting-ingest',
-  'hub-refresh',
-  'recruiting-hub-refresh',
-  'beat-late-ingest',
-  'live-refresh',
-  'platform-health-sweep',
-  'nil-refresh',
-  'depth-chart-refresh',
-  'game-zone-refresh',
-]);
+/**
+ * Under stay-green, block essentially all ops cron jobs.
+ * Tiny allowlist only for jobs that must stay live for Apple/login itself (none today).
+ */
+const STAY_GREEN_ALLOWED_JOBS = new Set(
+  String(process.env.API_STAY_GREEN_ALLOWED_JOBS || '')
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean)
+);
 
 function shouldBlockOpsJob(jobId) {
   if (!isStayGreen()) return false;
   const id = String(jobId || '')
     .trim()
     .toLowerCase();
-  return STAY_GREEN_BLOCKED_JOBS.has(id);
+  if (!id) return true;
+  if (STAY_GREEN_ALLOWED_JOBS.has(id)) return false;
+  return true;
 }
 
 module.exports = {
   isStayGreen,
   stayGreenSkipPayload,
   shouldBlockOpsJob,
-  STAY_GREEN_BLOCKED_JOBS,
+  STAY_GREEN_ALLOWED_JOBS,
 };

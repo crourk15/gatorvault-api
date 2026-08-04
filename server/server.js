@@ -925,6 +925,12 @@ app.post('/api/onboarding/process', async (req, res) => {
     if (!cronSecret || header !== cronSecret) {
       return res.status(401).json({ ok: false, error: 'Unauthorized' });
     }
+    const { stayGreenSkipPayload } = require('./lib/api-stay-green');
+    const skipped = stayGreenSkipPayload('onboarding-process');
+    if (skipped) {
+      console.log('[onboarding] stay-green skip process queue');
+      return res.json(skipped);
+    }
     const { processOnboardingQueue } = require('./lib/onboarding-scheduler');
     const { hasPaidAccess } = require('./lib/subscription-service');
     const result = await processOnboardingQueue({

@@ -354,6 +354,12 @@ function startInflightBuild(cacheKey, builderFn, timeoutMs) {
 
 async function serveCached(cacheKey, builderFn, options = {}) {
   const timeoutMs = options.timeoutMs ?? BUILD_TIMEOUT_MS;
+  let stayGreen = false;
+  try {
+    stayGreen = require('./api-stay-green').isStayGreen();
+  } catch {
+    stayGreen = false;
+  }
   if (options.force) {
     hubCache.remove(cacheKey);
   }
@@ -364,7 +370,8 @@ async function serveCached(cacheKey, builderFn, options = {}) {
 
   const stale = hubCache.getStale(cacheKey);
   if (stale != null) {
-    refreshCacheKey(cacheKey, builderFn, timeoutMs);
+    // Stay-green: serve stale, do not kick background rebuilds that starve /ready.
+    if (!stayGreen) refreshCacheKey(cacheKey, builderFn, timeoutMs);
     return { status: 'ready', value: stale, hit: true, stale: true };
   }
 
@@ -372,9 +379,14 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   if (diskFallback?.endpoint) {
     const diskValue = readHubDiskSnapshot(diskFallback.endpoint, diskFallback.year);
     if (diskValue != null) {
-      refreshCacheKey(cacheKey, builderFn, timeoutMs);
+      if (!stayGreen) refreshCacheKey(cacheKey, builderFn, timeoutMs);
       return { status: 'ready', value: diskValue, hit: true, stale: true, diskSnapshot: true };
     }
+  }
+
+  // Stay-green / App Review: never start a sync hub build on the request path.
+  if (stayGreen) {
+    return { status: 'building', hit: false, reason: 'api_stay_green' };
   }
 
   const inflight = inflightBuilds.get(cacheKey);

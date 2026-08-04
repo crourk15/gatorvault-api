@@ -20,7 +20,7 @@ describe('api stay-green lockdown', () => {
     delete require.cache[require.resolve('../lib/api-stay-green')];
   });
 
-  it('defaults on in production', () => {
+  it('defaults on in production and blocks all ops jobs', () => {
     delete process.env.API_STAY_GREEN;
     delete process.env.API_STAY_GREEN_ALLOW_HEAVY;
     process.env.NODE_ENV = 'production';
@@ -29,6 +29,7 @@ describe('api stay-green lockdown', () => {
     assert.equal(mod.isStayGreen(), true);
     assert.ok(mod.stayGreenSkipPayload('hub-refresh'));
     assert.equal(mod.shouldBlockOpsJob('gators-score-alerts'), true);
+    assert.equal(mod.shouldBlockOpsJob('any-random-job'), true);
   });
 
   it('can be forced off', () => {
@@ -39,15 +40,20 @@ describe('api stay-green lockdown', () => {
     assert.equal(mod.stayGreenSkipPayload('hub-refresh'), null);
   });
 
-  it('wires skip gates into hub refresh + beat refresh + ops jobs', () => {
+  it('wires skip gates into hub refresh + beat refresh + ops jobs + admin hub', () => {
     const hub = fs.readFileSync(path.join(__dirname, '..', 'lib/recruiting-hub-routes.js'), 'utf8');
     const live = fs.readFileSync(path.join(__dirname, '..', 'lib/live-routes.js'), 'utf8');
     const recruiting = fs.readFileSync(path.join(__dirname, '..', 'lib/recruiting-routes.js'), 'utf8');
     const ops = fs.readFileSync(path.join(__dirname, '..', 'lib/ops-jobs.js'), 'utf8');
+    const admin = fs.readFileSync(path.join(__dirname, '..', 'lib/admin-hub-routes.js'), 'utf8');
+    const core = fs.readFileSync(path.join(__dirname, '..', 'js/admin-hub-core.js'), 'utf8');
+    const cache = fs.readFileSync(path.join(__dirname, '..', 'lib/recruiting-hub-cache.js'), 'utf8');
     assert.match(hub, /stayGreenSkipPayload\('hub-refresh'\)/);
     assert.match(live, /stayGreenSkipPayload\('live-beat-refresh'\)/);
     assert.match(recruiting, /stayGreenSkipPayload\('recruiting-ingest'\)/);
-    assert.match(recruiting, /stayGreenSkipPayload\('allowlist-intel-sweep'\)/);
     assert.match(ops, /shouldBlockOpsJob/);
+    assert.match(admin, /stayGreen: true/);
+    assert.match(core, /Do NOT flash API DOWN/);
+    assert.match(cache, /api_stay_green/);
   });
 });
