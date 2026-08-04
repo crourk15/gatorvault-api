@@ -23,12 +23,35 @@ describe('hub refresh stay-green', () => {
     assert.match(src, /warmFuturecastLabCaches/);
   });
 
-  it('recruiting-light cron does not geoBackfill on every hub refresh', () => {
+  it('skips boot hub warm in production unless HUB_BOOT_FORCE_WARM', () => {
+    const src = fs.readFileSync(path.join(__dirname, '..', 'lib/recruiting-hub-cache.js'), 'utf8');
+    assert.match(src, /HUB_BOOT_FORCE_WARM === 'true'/);
+    assert.match(src, /NODE_ENV === 'production'/);
+    assert.match(src, /yieldEventLoop/);
+  });
+
+  it('recruiting-light cron uses priority-only warm (no geoBackfill stampede)', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', 'scripts/render-recruiting-light-cron.js'),
       'utf8'
     );
     assert.doesNotMatch(src, /hub\/refresh\?geoBackfill=true/);
-    assert.match(src, /\/api\/recruiting\/hub\/refresh/);
+    assert.match(src, /\/api\/recruiting\/hub\/refresh\?warmAfter=priority/);
+  });
+
+  it('keepalive ignores legacy KEEPALIVE_HUB_TOUCH (ping-only unless FULL_TOUCH)', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', 'scripts/render-keepalive-ping.js'),
+      'utf8'
+    );
+    assert.match(src, /KEEPALIVE_FULL_TOUCH === 'true'/);
+    assert.match(src, /KEEPALIVE_HUB_TOUCH is IGNORED/);
+    assert.match(src, /hub touch suppressed/);
+  });
+
+  it('hub refresh route honors warmAfter=priority|false', () => {
+    const src = fs.readFileSync(path.join(__dirname, '..', 'lib/recruiting-hub-routes.js'), 'utf8');
+    assert.match(src, /warmAfterRaw/);
+    assert.match(src, /priorityOnly: true/);
   });
 });

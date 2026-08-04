@@ -38,10 +38,10 @@ const STEPS = [
     }),
   },
   {
-    // Soft refresh (no geoBackfill) — geo normalize is expensive and was overlapping
-    // the dedicated hub-refresh cron, contributing to Render /ready starvation.
+    // Soft refresh (no geoBackfill) + priority-only warm — full secondary warm
+    // overlapping light ingest was starving Render /ready during App Review.
     name: 'hub-refresh',
-    path: '/api/recruiting/hub/refresh',
+    path: '/api/recruiting/hub/refresh?warmAfter=priority',
     summarize: (r) => ({ enrichedPlayerCount: r?.enrichedPlayerCount ?? null }),
   },
 ];

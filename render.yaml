@@ -288,12 +288,15 @@ services:
         sync: false
       - key: RENDER_DEPLOY_HOOK_URL
         sync: false
-      # Stay-green: never immediate-warm on boot — setImmediate Lab/hub warm was
-      # starving /ready (>5s) → Render restart loops → HTML 502 on every route.
+      # Stay-green HARD (App Review): skip in-process boot hub warm entirely.
+      # Crons soft-refresh caches; login/auth must never share the event loop with
+      # a full Lab/hub warm stampede (Render ~5s /ready → restart → HTML 502).
+      - key: API_STAY_GREEN
+        value: "true"
       - key: HUB_BOOT_IMMEDIATE_WARM
         value: "false"
       - key: HUB_BOOT_SKIP_WARM
-        value: "false"
+        value: "true"
       - key: HUB_BOOT_WARM_DELAY_MS
         value: "120000"
       # Keep FutureCast Lab off the priority warm path (opt-in only).
@@ -350,8 +353,13 @@ services:
         value: https://gatorvault-api.onrender.com/health
       - key: KEEPALIVE_PING_URL
         value: https://gatorvault-api.onrender.com/api/ping
+      # Ping-only while stay-green — concurrent hub/FutureCast touches crash-looped Render.
+      - key: API_STAY_GREEN
+        value: "true"
+      - key: KEEPALIVE_HUB_TOUCH
+        value: "false"
       - key: KEEPALIVE_TOUCH_CONCURRENCY
-        value: "5"
+        value: "1"
 
   # Beat ingest cron — hardened with API warm check, retries, soft failures (always exit 0).
   # Optional future: move to a dedicated worker service to isolate from API deploys.
@@ -401,7 +409,7 @@ services:
         sync: false
 
   # Hourly soft hub rebuild (no geoBackfill) — light cron already refreshes */20.
-  # Overlapping */30 geoBackfill + */20 geoBackfill was double-stamping the API.
+  # Priority-only warm keeps /ready responsive for App Review login.
   - type: cron
     name: gatorvault-api-hub-refresh
     schedule: "10 * * * *"
@@ -412,7 +420,7 @@ services:
     startCommand: node scripts/render-hub-refresh-cron.js
     envVars:
       - key: HUB_REFRESH_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?warmAfter=priority
       - key: MONITORING_CRON_SECRET
         sync: false
 
