@@ -160,6 +160,14 @@ function mountLiveRoutes(app) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN or cron secret' });
     }
     try {
+      const { stayGreenSkipPayload } = require('./api-stay-green');
+      const skipped = stayGreenSkipPayload('live-beat-refresh');
+      if (skipped) {
+        console.log('[live/beat/refresh] stay-green skip X pull');
+        const liveBeat = require('./live-beat');
+        const beat = liveBeat.getBeatPosts(parseInt(req.query.limit || '40', 10));
+        return res.json({ ...skipped, refreshed: { skipped: true }, beat });
+      }
       const liveBeat = require('./live-beat');
       const refreshed = await liveBeat.refreshBeatStream();
       const beat = liveBeat.getBeatPosts(parseInt(req.query.limit || '40', 10));

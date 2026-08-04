@@ -39,6 +39,12 @@ describe('hub refresh stay-green', () => {
     assert.match(src, /\/api\/recruiting\/hub\/refresh\?warmAfter=false/);
   });
 
+  it('exposes api-stay-green helper for cron lockdown', () => {
+    const src = fs.readFileSync(path.join(__dirname, '..', 'lib/api-stay-green.js'), 'utf8');
+    assert.match(src, /api_stay_green/);
+    assert.match(src, /STAY_GREEN_BLOCKED_JOBS/);
+  });
+
   it('keepalive ignores legacy KEEPALIVE_HUB_TOUCH (ping-only unless FULL_TOUCH)', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', 'scripts/render-keepalive-ping.js'),
@@ -71,7 +77,7 @@ describe('hub refresh stay-green', () => {
     const src = fs.readFileSync(path.join(__dirname, '..', 'lib/live-routes.js'), 'utf8');
     const beatIdx = src.indexOf("app.post('/api/live/beat/refresh'");
     assert.ok(beatIdx > 0, 'expected beat refresh route');
-    const beatBlock = src.slice(beatIdx, beatIdx + 1200);
+    const beatBlock = src.slice(beatIdx, beatIdx + 2200);
     assert.match(beatBlock, /scheduleAsyncWarm/);
     assert.doesNotMatch(beatBlock, /clearDashboardCache\(\)/);
     assert.doesNotMatch(beatBlock, /warmDashboardCache\(\)/);
