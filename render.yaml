@@ -488,9 +488,10 @@ services:
         sync: false
 
   # Film Room YouTube auto-ingest — Florida Gators football pressers + GNFP reviews.
+  # Hourly during camp so Sumrall / coordinator pressers land without a 3h lag.
   - type: cron
     name: gatorvault-api-film-room-youtube-sync
-    schedule: "35 */3 * * *"
+    schedule: "20 * * * *"
     runtime: node
     region: oregon
     rootDir: server

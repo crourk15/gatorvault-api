@@ -50,9 +50,8 @@ export function warmVaultApi(): void {
   // Ping first so Render wakes before the heavier hub bundle.
   void ping('/api/ping').then(() => {
     void ping(`/api/recruiting/hub/bundle?year=${hubYear}`);
-    if (path.startsWith('/vault/film-room') || path.startsWith('/vault/film')) {
-      void ping('/api/film-room/catalog');
-    }
+    // Always wake Film Room catalog — pressers paint from seed until this is warm.
+    void ping('/api/film-room/catalog');
     if (path.startsWith('/vault/nil')) void ping('/api/nil/dashboard');
     if (path.startsWith('/vault/alerts')) void ping('/api/futurecast/alerts?limit=20');
     if (path.startsWith('/vault/articles')) void ping('/api/articles/published?limit=12');

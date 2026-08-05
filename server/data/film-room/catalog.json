@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "updatedAt": "2026-08-05T21:03:13.402Z",
+  "rebuiltAt": "2026-08-05T21:03:13.402Z",
+  "counts": {
+    "total": 33,
+    "knowledgeLessons": 4,
+    "legacyVideos": 29,
+    "validated": 4,
+    "skipped": 6
+  },
+  "mode": "merged",
+  "source": "film-room-rebuild",
+  "path": "/workspace/server/data/film-room/catalog.json"
+}
