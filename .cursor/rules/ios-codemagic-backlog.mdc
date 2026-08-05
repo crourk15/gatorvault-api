@@ -1,0 +1,12 @@
+---
+description: Track iOS UI changes for batched Codemagic builds
+alwaysApply: true
+---
+
+# iOS Codemagic backlog
+
+When a change is **bundled client UI/JS** that the App Store binary will not pick up from Netlify/API alone, append a row to `docs/IOS_CODEMAGIC_BACKLOG.md` under **Waiting for next Codemagic build**.
+
+Do **not** start Codemagic unless Charles explicitly asks. Prefer live API/data paths. Batch UI and build later.
+
+API/data-only changes go under **Already live on iOS** (or need no entry).
