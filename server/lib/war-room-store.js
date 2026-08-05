@@ -28,15 +28,57 @@ function writeJson(filePath, data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
+/** In-process cache — breakdowns.json is ~1.4MB; avoid re-reading on every slug lookup. */
+let cachedBreakdownsDoc = null;
+let cachedBreakdownsMtimeMs = -1;
+let cachedSeedDoc = null;
+let cachedSeedMtimeMs = -1;
+
 function loadDoc() {
-  const doc = readJson(BREAKDOWNS_PATH, { version: 1, updatedAt: null, breakdowns: {} });
-  doc.breakdowns = doc.breakdowns || {};
-  return doc;
+  try {
+    const st = fs.statSync(BREAKDOWNS_PATH);
+    if (cachedBreakdownsDoc && st.mtimeMs === cachedBreakdownsMtimeMs) {
+      return cachedBreakdownsDoc;
+    }
+    const doc = readJson(BREAKDOWNS_PATH, { version: 1, updatedAt: null, breakdowns: {} });
+    doc.breakdowns = doc.breakdowns || {};
+    cachedBreakdownsDoc = doc;
+    cachedBreakdownsMtimeMs = st.mtimeMs;
+    return doc;
+  } catch {
+    const doc = readJson(BREAKDOWNS_PATH, { version: 1, updatedAt: null, breakdowns: {} });
+    doc.breakdowns = doc.breakdowns || {};
+    return doc;
+  }
+}
+
+function loadSeedDoc() {
+  try {
+    const st = fs.statSync(HUB_SEED_PATH);
+    if (cachedSeedDoc && st.mtimeMs === cachedSeedMtimeMs) {
+      return cachedSeedDoc;
+    }
+    const doc = readJson(HUB_SEED_PATH, { version: 1, updatedAt: null, breakdowns: {} });
+    doc.breakdowns = doc.breakdowns || {};
+    cachedSeedDoc = doc;
+    cachedSeedMtimeMs = st.mtimeMs;
+    return doc;
+  } catch {
+    const doc = readJson(HUB_SEED_PATH, { version: 1, updatedAt: null, breakdowns: {} });
+    doc.breakdowns = doc.breakdowns || {};
+    return doc;
+  }
 }
 
 function saveDoc(doc) {
   doc.updatedAt = new Date().toISOString();
   writeJson(BREAKDOWNS_PATH, doc);
+  cachedBreakdownsDoc = doc;
+  try {
+    cachedBreakdownsMtimeMs = fs.statSync(BREAKDOWNS_PATH).mtimeMs;
+  } catch {
+    cachedBreakdownsMtimeMs = Date.now();
+  }
 }
 
 function normalizeWriterName(name) {
@@ -156,7 +198,7 @@ function getBreakdownBySlug(slug) {
     return runtime;
   }
 
-  const seedDoc = readJson(HUB_SEED_PATH, { breakdowns: {} });
+  const seedDoc = loadSeedDoc();
   const seed = seedDoc.breakdowns?.[key] || null;
   if (seed && !breakdownIsCorrupt(seed, seed.playerName || playerName)) {
     return seed;
@@ -181,25 +223,46 @@ function getBreakdownBySlug(slug) {
 function upsertHubSeedBreakdown(slug, raw) {
   const entry = typeof raw === 'object' && raw ? raw : null;
   if (!entry) return null;
-  const doc = readJson(HUB_SEED_PATH, { version: 1, updatedAt: null, breakdowns: {} });
+  const doc = loadSeedDoc();
   doc.breakdowns = doc.breakdowns || {};
   doc.breakdowns[String(slug || entry.playerSlug || '').trim()] = entry;
   doc.updatedAt = new Date().toISOString();
   writeJson(HUB_SEED_PATH, doc);
+  cachedSeedDoc = doc;
+  try {
+    cachedSeedMtimeMs = fs.statSync(HUB_SEED_PATH).mtimeMs;
+  } catch {
+    cachedSeedMtimeMs = Date.now();
+  }
   return entry;
 }
 
 function getAllBreakdowns() {
   const doc = loadDoc();
-  const seedDoc = readJson(HUB_SEED_PATH, { breakdowns: {} });
+  const seedDoc = loadSeedDoc();
+  const {
+    breakdownIsCorrupt,
+  } = require('./recruiting-intel-quality');
   const slugSet = new Set([
     ...Object.keys(doc.breakdowns || {}),
     ...Object.keys(seedDoc.breakdowns || {}),
   ]);
   const resolved = [];
+  // Resolve from the already-loaded docs — do NOT call getBreakdownBySlug per slug
+  // (that used to re-read + re-parse breakdowns.json hundreds of times).
   for (const slug of slugSet) {
-    const entry = getBreakdownBySlug(slug);
-    if (entry) resolved.push(entry);
+    const runtime = doc.breakdowns?.[slug] || null;
+    const playerName = runtime?.playerName || slug;
+    if (runtime && !breakdownIsCorrupt(runtime, playerName)) {
+      resolved.push(runtime);
+      continue;
+    }
+    const seed = seedDoc.breakdowns?.[slug] || null;
+    if (seed && !breakdownIsCorrupt(seed, seed.playerName || playerName)) {
+      resolved.push(seed);
+      continue;
+    }
+    if (runtime || seed) resolved.push(runtime || seed);
   }
   return resolved;
 }

@@ -657,14 +657,25 @@ export async function buildUnderclassmenIntelForSlug(
   if (!classYear) return null;
 
   const { ALLOWLIST_2028 } = require('./recruiting-target-allowlist');
+  // Related cards only need a handful of peers — do NOT rebuild the entire
+  // allowlist board (~39 players) on every profile open.
+  const RELATED_PEER_LOAD_CAP = Math.max(
+    6,
+    parseInt(process.env.UNDERCLASSMEN_RELATED_PEER_CAP || '12', 10) || 12
+  );
   let peerSlugs: string[] = [];
 
   if (classYear === 2028) {
-    peerSlugs = (ALLOWLIST_2028 as string[]).map((s) => String(s).toLowerCase());
+    peerSlugs = (ALLOWLIST_2028 as string[])
+      .map((s) => String(s).toLowerCase())
+      .filter((s) => s && s !== normalized)
+      .slice(0, RELATED_PEER_LOAD_CAP);
   } else {
     peerSlugs = loadEarlyWatchEntries()
       .filter((e) => Number(e.classYear) === classYear && e.slug)
-      .map((e) => String(e.slug).toLowerCase());
+      .map((e) => String(e.slug).toLowerCase())
+      .filter((s) => s && s !== normalized)
+      .slice(0, RELATED_PEER_LOAD_CAP);
   }
 
   const slugSet = new Set([normalized, ...peerSlugs]);
