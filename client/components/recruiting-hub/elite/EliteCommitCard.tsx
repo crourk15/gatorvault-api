@@ -17,13 +17,14 @@ function stripVaultLabel(text: string | null | undefined, label: string): string
 }
 
 /**
- * Fan-first commit card — Vault Eval / Vault Comp / Vault Projection.
- * Strengths omitted (duplicates Vault Eval). Meta line carries ranks under the name.
- * API text carries Vault labels for the iOS binary; web uses CSS labels + stripped body.
+ * Fan-first commit card — untitled brief + Vault Comp / Vault Projection.
+ * Deep eval lives on the player profile (Vault Scouting). Meta line carries ranks under the name.
+ * Comp/Projection API text may carry Vault labels for older iOS; web strips + uses CSS labels.
  */
 export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
   const meta = commit.metaLine || commit.rankNote;
   const skinnyRaw = commit.skinny?.trim() || null;
+  // Brief stays untitled — strip any legacy "Vault Eval —" prefix from API/iOS payloads.
   const skinny = stripVaultLabel(skinnyRaw, 'Eval');
   const showJersey = year <= 2026 && commit.jerseyNumber != null && String(commit.jerseyNumber).trim() !== '';
   const comp = stripVaultLabel(commit.playerComp, 'Comp');
@@ -45,12 +46,7 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
         </div>
       </div>
 
-      {skinny ? (
-        <p className="rh-commit-strengths rh-commit-skinny">
-          <span className="rh-commit-strengths__label">Vault Eval</span>
-          {skinny}
-        </p>
-      ) : null}
+      {skinny ? <p className="rh-commit-strengths rh-commit-skinny">{skinny}</p> : null}
 
       {showComp ? (
         <p className="rh-commit-strengths">
