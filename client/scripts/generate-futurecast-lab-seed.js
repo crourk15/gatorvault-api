@@ -83,11 +83,19 @@ function slimPlayer(p) {
     natlRank: p.natlRank ?? null,
     posRank: p.posRank ?? null,
     stateRank: p.stateRank ?? null,
+    // Lab meter + HP cards read ufProbability; keep ufConfidence as a legacy alias.
     ufConfidence: p.ufConfidence ?? p.ufProbability ?? null,
+    ufProbability: p.ufProbability ?? p.ufConfidence ?? null,
     ufProbabilitySource: p.ufProbabilitySource,
+    ufProbabilityLabel: p.ufProbabilityLabel ?? null,
+    ufProbabilityLowConfidence: p.ufProbabilityLowConfidence ?? false,
     ufRpmPct: p.ufRpmPct ?? null,
     fitScore: p.fitScore ?? null,
-    trendDelta7d: p.trendDelta7d ?? null,
+    staffConfidence: p.staffConfidence ?? 0,
+    priorityScore: p.priorityScore ?? p.hotScore ?? null,
+    trendDelta7d: p.trendDelta7d ?? p.delta7d ?? p.movementDelta ?? null,
+    delta7d: p.delta7d ?? p.trendDelta7d ?? p.movementDelta ?? 0,
+    movementDelta: p.movementDelta ?? p.delta7d ?? p.trendDelta7d ?? 0,
     volatility7d: Number(p.volatility7d || 0),
     priority: p.priority || 'medium',
     committedTo: p.committedTo ?? null,
@@ -271,7 +279,14 @@ function writePayload(pack) {
       nationalRank: null,
     },
     metrics: {
-      avgUFProbability: Math.round(masterBoard.ufConfidenceAverage || 0),
+      // Discovery meter should seed from 2028 HP GV odds, not Closing Class master avg.
+      avgUFProbability: (() => {
+        const odds = highPriority
+          .map((p) => Number(p.ufProbability ?? p.ufConfidence))
+          .filter((n) => Number.isFinite(n) && n > 0);
+        if (odds.length) return Math.round(odds.reduce((a, b) => a + b, 0) / odds.length);
+        return Math.round(masterBoard.ufConfidenceAverage || 0);
+      })(),
       highPriorityCount: highPriority.length || masterBoard.highPriority.players.length,
       activePredictions: masterBoard.players.length,
     },

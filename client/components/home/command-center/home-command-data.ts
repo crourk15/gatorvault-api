@@ -117,11 +117,19 @@ export function buildHomeMetricCards(input: {
 
 export function computeFcPulseMetrics(fcBundle: FutureCastWidgetBundle | null, movement: StaffDashboardResponse | null) {
   const classScore = fcBundle?.classData?.classImpactScore ?? fcBundle?.classData?.rankings?.classScore;
-  const commitLikelihood = computeMomentumPct(
-    movement?.heatmap ?? fcBundle?.home?.heatmap ?? null,
-    classScore
-  );
   const players = fcBundle?.home?.topTargets ?? [];
+  // Prefer real Florida odds from top targets over heatmap "momentum" placeholders.
+  const oddsPool = players
+    .map((p) => {
+      const uf = p.ufProbability;
+      if (uf == null || !Number.isFinite(Number(uf))) return null;
+      const n = Number(uf);
+      return n > 0 && n <= 1 ? Math.round(n * 100) : n > 0 ? Math.round(n) : null;
+    })
+    .filter((n): n is number => n != null && n > 0);
+  const commitLikelihood = oddsPool.length
+    ? Math.round(oddsPool.reduce((a, b) => a + b, 0) / oddsPool.length)
+    : computeMomentumPct(movement?.heatmap ?? fcBundle?.home?.heatmap ?? null, classScore);
   const activeBattles = players.filter((p) => {
     const uf = p.ufProbability ?? 0;
     const pct = uf <= 1 ? uf * 100 : uf;

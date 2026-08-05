@@ -21,10 +21,16 @@ import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 const LAB_POLL_MS = 90_000;
 const SEED_LAB_DATA = buildSeedFutureCastLabData();
 
+function hpUfPct(p: HighPriorityPlayer | (HighPriorityPlayer & { ufConfidence?: number | null })): number | null {
+  const raw =
+    (p as { ufProbability?: number | null }).ufProbability ??
+    (p as { ufConfidence?: number | null }).ufConfidence;
+  if (raw == null || !Number.isFinite(Number(raw)) || Number(raw) <= 0) return null;
+  return Number(raw);
+}
+
 function hasUsableUfProbability(players: HighPriorityPlayer[] | undefined): boolean {
-  return (players ?? []).some(
-    (p) => p?.ufProbability != null && Number.isFinite(Number(p.ufProbability))
-  );
+  return (players ?? []).some((p) => hpUfPct(p) != null);
 }
 
 /** Prefer stale localStorage HP (real UF%) over seed rows that often ship with null odds. */

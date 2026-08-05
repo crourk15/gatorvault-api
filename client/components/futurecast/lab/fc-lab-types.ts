@@ -95,8 +95,15 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
         : null;
   // Primary Lab number = GatorVault likelihood. Fall back to On3 RPM only when GV is missing
   // so names like Hudson West (RPM 62%) still land on Battles. Treat stored 0 as missing.
-  const gv =
-    p.ufProbability != null && Number(p.ufProbability) > 0 ? Number(p.ufProbability) : null;
+  // Seed / allowlist-board rows may ship ufConfidence instead of ufProbability.
+  const gvRaw =
+    p.ufProbability != null && Number(p.ufProbability) > 0
+      ? Number(p.ufProbability)
+      : (p as { ufConfidence?: number | null }).ufConfidence != null &&
+          Number((p as { ufConfidence?: number | null }).ufConfidence) > 0
+        ? Number((p as { ufConfidence?: number | null }).ufConfidence)
+        : null;
+  const gv = gvRaw;
   const uf = isFloridaCommit(committed) ? 100 : gv ?? rpm;
   return {
     id: p.id,

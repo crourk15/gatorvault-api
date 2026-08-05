@@ -50,7 +50,12 @@ export function FutureCastHero({
       return [...highPriority]
         .filter((p) => isActiveUfTarget(p))
         .filter((p) => Number(p.classYear) === focusYear)
-        .filter((p) => p.ufProbability != null && Number.isFinite(Number(p.ufProbability)))
+        .filter((p) => {
+          const uf =
+            p.ufProbability ??
+            (p as { ufConfidence?: number | null }).ufConfidence;
+          return uf != null && Number.isFinite(Number(uf)) && Number(uf) > 0;
+        })
         .sort((a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0))
         .slice(0, 10)
         .map(highPriorityToLabTarget);

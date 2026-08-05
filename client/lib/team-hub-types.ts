@@ -45,6 +45,8 @@ export type TeamPlayer = {
   state?: string;
   tags?: string[];
   slug?: string;
+  /** Official jersey number (0 is valid). */
+  jersey?: number | null;
 };
 
 export type DepthChartStatus = 'Locked' | 'Battle' | 'Watch';

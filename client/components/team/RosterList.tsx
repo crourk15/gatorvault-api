@@ -62,10 +62,23 @@ function PlayerCard({ player }: { player: TeamPlayer }): React.ReactElement {
   const starter = isStarter(player);
   const place = hometownLine(player);
 
+  const jerseyLabel =
+    player.jersey != null && Number.isFinite(Number(player.jersey))
+      ? `#${Number(player.jersey)}`
+      : null;
+
   const body = (
     <>
       <div className="gv-team-roster-card__top">
-        <span className="gv-team-roster-card__pos">{player.position || '—'}</span>
+        <span className="gv-team-roster-card__pos">
+          {jerseyLabel ? (
+            <>
+              <span className="gv-team-roster-card__jersey">{jerseyLabel}</span>
+              <span aria-hidden="true"> · </span>
+            </>
+          ) : null}
+          {player.position || '—'}
+        </span>
         {starter ? <span className="gv-team-roster-card__starter">Starter</span> : null}
       </div>
       <p className="gv-team-roster-card__name">{player.name}</p>
