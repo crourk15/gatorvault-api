@@ -108,6 +108,13 @@ function mountPlatformRoutes(app) {
       const items = (catalog.items || []).map((item) => {
         return { ...item, minPaymentTier: 'film', locked: !unlocked };
       });
+      // Serve immediately; if YouTube presser cache is stale, refresh in background.
+      try {
+        const { maybeSoftSyncFilmRoomYouTube } = require('./film-room-soft-sync');
+        maybeSoftSyncFilmRoomYouTube();
+      } catch (softErr) {
+        console.warn('[film-room] soft sync skipped:', softErr.message);
+      }
       return res.json({ ...catalog, items });
     } catch (err) {
       console.error('[film-room] catalog error:', err.message);

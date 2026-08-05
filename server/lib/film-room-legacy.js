@@ -16,8 +16,8 @@ const LEGACY_CATEGORIES = {
   BREAKDOWN: 'Film Breakdown'
 };
 
-/** Keep SEC Media Days set + recent spring pressers visible. */
-const PRESS_CONFERENCE_LIMIT = 8;
+/** Keep HC + coordinator pressers visible alongside Media Days / camp clips. */
+const PRESS_CONFERENCE_LIMIT = 12;
 
 function readJson(filePath, fallback) {
   try {
