@@ -8,7 +8,7 @@ type Props = {
   year: number;
 };
 
-/** Strip API "Vault X —" prefix when the card already has a CSS label. */
+/** Strip API "Vault X —" prefix when present on legacy payloads. */
 function stripVaultLabel(text: string | null | undefined, label: string): string | null {
   const raw = String(text || '').trim();
   if (!raw) return null;
@@ -17,9 +17,8 @@ function stripVaultLabel(text: string | null | undefined, label: string): string
 }
 
 /**
- * Fan-first commit card — untitled brief + Vault Comp / Vault Projection.
- * Deep eval lives on the player profile (Vault Scouting). Meta line carries ranks under the name.
- * Comp/Projection API text may carry Vault labels for older iOS; web strips + uses CSS labels.
+ * Fan-first commit card — untitled brief only (same shape as 2028).
+ * Vault Comp / Vault Projection / traits live on the player profile (Vault Scouting).
  */
 export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
   const meta = commit.metaLine || commit.rankNote;
@@ -27,9 +26,6 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
   // Brief stays untitled — strip any legacy "Vault Eval —" prefix from API/iOS payloads.
   const skinny = stripVaultLabel(skinnyRaw, 'Eval');
   const showJersey = year <= 2026 && commit.jerseyNumber != null && String(commit.jerseyNumber).trim() !== '';
-  const comp = stripVaultLabel(commit.playerComp, 'Comp');
-  const showComp = Boolean(comp && !/^tbd$/i.test(comp) && !(skinny && skinny.includes(comp)));
-  const projection = stripVaultLabel(commit.projection, 'Projection');
 
   return (
     <article className="rh-commit-card rh-elite-commit-card" data-testid="rh-elite-commit-card">
@@ -47,20 +43,6 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
       </div>
 
       {skinny ? <p className="rh-commit-strengths rh-commit-skinny">{skinny}</p> : null}
-
-      {showComp ? (
-        <p className="rh-commit-strengths">
-          <span className="rh-commit-strengths__label">Vault Comp</span>
-          {comp}
-        </p>
-      ) : null}
-
-      {projection ? (
-        <p className="rh-commit-strengths rh-commit-projection">
-          <span className="rh-commit-strengths__label">Vault Projection</span>
-          {projection}
-        </p>
-      ) : null}
 
       <div className="rh-commit-footer">
         <span>Committed {commit.commitDate}</span>
