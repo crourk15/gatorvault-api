@@ -543,11 +543,11 @@ function mapHubCommit(player, classYear) {
   const slug = player.slug || player.name;
   const metaLine = buildCommitMetaLine(player);
   const skinny = buildCommitFanSkinny(player);
-  const projection = formatVaultProjection(verifiedProjection(player), player.name);
-  // Strengths dropped from commit cards — deep traits live on profile Vault Scouting.
+  // Card surface = untitled brief only (same as 2028). Vault Comp / Projection /
+  // strengths live on the player profile Vault Scouting section.
   const strengths = null;
-  const rawComp = String(player.playerComp ?? player.comp ?? player.comparison ?? '').trim();
-  const playerComp = formatVaultComp(rawComp, player.name);
+  const playerComp = null;
+  const projection = null;
   const isFutureCommit = classYear >= 2027;
   const stars = effectiveStars(player) || 0;
   const badge = isFutureCommit
@@ -574,9 +574,9 @@ function mapHubCommit(player, classYear) {
     enrolled: classYear <= 2026,
     jerseyNumber: player.jerseyNumber ?? player.jersey ?? null,
     positionRoomFit: null,
-    earlyImpactProjection: projection,
+    earlyImpactProjection: null,
     strengths,
-    weaknesses: formatWeaknesses(player),
+    weaknesses: null,
     playerComp,
     gvGrade: null,
     nilEstimate: formatNilEstimate(player),
