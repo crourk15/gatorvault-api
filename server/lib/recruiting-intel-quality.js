@@ -184,11 +184,26 @@ function isChaseProcessIntel(text) {
   return false;
 }
 
+/**
+ * Film-desk provenance / upsert meta — not fan-facing commit-card brief copy.
+ * Belongs in staff notes, not the untitled skinny on EliteCommitCard.
+ */
+function isFilmDeskMeta(text) {
+  const s = String(text || '').trim();
+  if (!s) return true;
+  if (/^vault film desk\b/i.test(s)) return true;
+  if (/\bvia on3\s*(->|->|—|-)?\s*hudl\b/i.test(s)) return true;
+  if (/\bfilm desk verified\b/i.test(s)) return true;
+  if (/\btape traits below drive fit evidence\b/i.test(s)) return true;
+  return false;
+}
+
 /** Beat-article snippet or mis-attributed On3 scrape — not player-specific scouting intel. */
 function isGenericBeatArticle(text, playerName) {
   const s = String(text || '').trim();
   if (!s || s.length < 10) return true;
   if (isChaseProcessIntel(s)) return true;
+  if (isFilmDeskMeta(s)) return true;
   if (JUNK_INTEL_PATTERNS.some((re) => re.test(s))) return true;
   if (/^The Florida Gators\b/i.test(s)) return true;
   if (/^Miami is still working\b/i.test(s)) return true;
@@ -373,6 +388,7 @@ module.exports = {
   assessOn3Intel,
   isGenericBeatArticle,
   isChaseProcessIntel,
+  isFilmDeskMeta,
   isCompositeBio,
   isLowQualityIntelText,
   isVerifiedScoutingTrait,

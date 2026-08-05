@@ -91,6 +91,7 @@ const {
   isGenericBeatArticle,
   isCompositeBio,
   isChaseProcessIntel,
+  isFilmDeskMeta,
   firstVerifiedIntel,
   verifiedStrengthsList,
   isVerifiedScoutingTrait,
@@ -186,6 +187,32 @@ function withVaultLabel(label, body) {
 }
 
 /**
+ * Untitled brief from War Room tape traits — matches 2028 commit-card voice
+ * (film summary first; Vault Comp / Vault Projection sit in labeled slots below).
+ */
+function briefFromWarRoomStrengths(player) {
+  const list = Array.isArray(player.strengths)
+    ? player.strengths.map((s) => String(s || '').trim()).filter(Boolean)
+    : [];
+  if (list.length < 2) return null;
+  const cleaned = list
+    .filter(
+      (s) =>
+        !isFilmDeskMeta(s) &&
+        !isCompositeBio(s) &&
+        !isChaseProcessIntel(s) &&
+        isVerifiedScoutingTrait(s, player.name)
+    )
+    .map((s) => polishScoutingSentence(s, player.name) || s)
+    .filter(Boolean)
+    .slice(0, 3);
+  if (cleaned.length < 2) return null;
+  let body = cleaned.join(' ');
+  if (body.length > 340) body = `${body.slice(0, 337).trim()}…`;
+  return body;
+}
+
+/**
  * Fan-facing commit skinny — untitled brief for the card body.
  * No "Vault Eval" title (deep eval lives on profile Vault Scouting).
  * Strips any legacy Eval prefix so older cached rows stay clean.
@@ -214,11 +241,16 @@ function buildCommitFanSkinny(player) {
     verified.length >= 40 &&
     !isCompositeBio(verified) &&
     !isChaseProcessIntel(verified) &&
+    !isFilmDeskMeta(verified) &&
     !isMetaDumpAsSkinny(verified)
   ) {
     const body = verified.length > 340 ? `${verified.slice(0, 337).trim()}…` : verified;
     return stripEvalPrefix(body) || null;
   }
+
+  // Prefer tape traits as the untitled brief (2028-style card) when War Room strengths exist.
+  const traitBrief = briefFromWarRoomStrengths(player);
+  if (traitBrief) return stripEvalPrefix(traitBrief);
 
   const sentences = [];
   let open = `${name} committed to Florida`;

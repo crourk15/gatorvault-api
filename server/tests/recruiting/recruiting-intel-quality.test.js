@@ -4,7 +4,23 @@ const {
   isPlaceholderSkinny,
   hasMeaningfulOn3Fields,
   assessOn3Intel,
+  isFilmDeskMeta,
 } = require('../../lib/recruiting-intel-quality');
+
+test('isFilmDeskMeta rejects upsert provenance (not fan brief)', () => {
+  assert.equal(
+    isFilmDeskMeta(
+      'Vault film desk on Amare Nugent via On3->Hudl (American Heritage Broward 2025 junior): 5-11 / 180 CB.'
+    ),
+    true
+  );
+  assert.equal(
+    isFilmDeskMeta(
+      'Nugent plays with active eyes in zone and breaks on the ball with timing.'
+    ),
+    false
+  );
+});
 
 test('isPlaceholderSkinny rejects generated offer copy and empty text', () => {
   assert.equal(isPlaceholderSkinny(''), true);
