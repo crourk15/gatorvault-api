@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-05T16:36:01.497Z",
+  "updatedAt": "2026-08-05T17:16:11.728Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -166,27 +166,31 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/aaron-mcwilliams-280848/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/20816319/69307323cd06d6b43c36ee23",
+          "publishedAt": "2026-08-05"
         }
       ],
       "strengths": [
-        "Florida came out of official visit season with a clearer picture of where it stands in some key recruitments.",
-        "In some of those battles, the Gators"
+        "McWilliams shows clean specialist operation on junior tape with consistent plant-and-strike timing.",
+        "McWilliams profiles with dual K/P versatility that adds roster flexibility on special teams.",
+        "McWilliams' camp pedigree (Kohl's high ranking) aligns with reliable mid-range accuracy traits on film.",
+        "McWilliams has adequate 5-11 / 185 size with room to add power for longer attempts."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Florida came out of official visit season with a clearer picture of where it stands in some key recruitments. In some of those battles, the Gators",
-      "recruitingStory": null,
+      "weaknesses": [
+        "McWilliams still must prove live SEC-environment consistency beyond camp and high-school ops."
+      ],
+      "comparison": "McWilliams comps to Jake Moody -- similarly sized accuracy-first placekicker with strong camp-to-college translation traits (size-matched to McWilliams' 5-11 / 185 mold).",
+      "schemeFit": "McWilliams fits as the primary placekicker with emergency/depth punting value.",
+      "staffNotes": "Vault film desk verified 2026-08-05 from On3 Hudl. Comp size-matched -- not a Florida-alum default.",
+      "projection": "McWilliams projects as compete for the placekicking job early, earn the role with consistency, then hold starter upside as the every-week FG/PAT specialist -- with punting depth as a bonus.",
+      "insiderNotes": "Vault film desk on Aaron McWilliams via On3->Hudl (East Coweta junior season): 5-11 / 185 K out of Sharpsburg, GA. Florida 2027 commit. Specialist eval weighted to ops/mechanics + board pedigree.",
+      "recruitingStory": "Aaron McWilliams is a 3-star K | listed 5-11 / 185 | East Coweta (Sharpsburg, GA) | Florida 2027 commit.",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-07-11T11:29:08.052Z"
+      "featured": false,
+      "updatedAt": "2026-08-05T16:59:22.509Z"
     },
     "javier-jones": {
       "playerSlug": "javier-jones",
@@ -1679,26 +1683,31 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/tre-geathers-249231/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/20124502/692336126700aae655b8c9fc",
+          "publishedAt": "2026-08-05"
         }
       ],
       "strengths": [
-        "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on"
+        "Geathers drops with discipline in zone and can mirror backs/TEs in man from space-LB looks.",
+        "Geathers triggers downhill on run reads and uses active hands to get off perimeter blocks.",
+        "Geathers finishes open-field tackles with sound fundamentals sideline-to-sideline.",
+        "Geathers diagnoses quickly pre-snap and plays with contact courage for a 6-1.5 / 195 frame."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Geathers still needs mass to take on SEC guards consistently as more than a sub-package LB."
+      ],
+      "comparison": "Geathers comps to Roquan Smith -- lean, space-capable off-ball LB who wins with trigger speed, coverage, and tackling (size-matched toward Geathers' 6-1.5 / 195 mold with fill-out room).",
+      "schemeFit": "Geathers fits White as a WILL/Star hybrid who covers and fits the run in space.",
+      "staffNotes": "Vault film desk verified 2026-08-05 from On3 Hudl. Comp size-matched within ~1-2\" -- not a Florida-alum default.",
+      "projection": "Geathers projects as develop into the LB room, earn early special-teams and nickel-LB snaps, then compete for a starting WILL/space role -- starter upside as a coverage-capable modern linebacker.",
+      "insiderNotes": "Vault film desk on Tre Geathers via On3->Hudl (Providence Day 2025 junior): 6-1.5 / 195 LB out of Charlotte, NC. Florida 2027 commit.",
+      "recruitingStory": "Tre Geathers is a 3-star LB | listed 6-1.5 / 195 | Providence Day (Charlotte, NC) | Florida 2027 commit.",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-07-11T11:29:09.161Z"
+      "featured": false,
+      "updatedAt": "2026-08-05T16:59:22.437Z"
     },
     "jc-anderson": {
       "playerSlug": "jc-anderson",
@@ -1996,30 +2005,35 @@
     "cain-van-norden": {
       "playerSlug": "cain-van-norden",
       "playerName": "Cain Van Norden",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/cain-van-norden-251040/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/24157897/6910a9b074301bea69fab4d0",
+          "publishedAt": "2026-08-05"
         }
       ],
       "strengths": [
-        "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity."
+        "Van Norden's 6-7 length creates natural disruption -- extends, keeps blockers off his frame, and collapses pockets.",
+        "Van Norden shows surprising first-step quickness for nearly 300 pounds off the snap.",
+        "Van Norden's primary power is a heavy bull rush that walks tackles into the backfield.",
+        "Van Norden redirects with basketball footwork and can threaten multiple gaps along the front."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Van Norden is still raw technically -- limited counters beyond the bull rush and inconsistent leverage/hand placement."
+      ],
+      "comparison": "Van Norden comps to Arik Armstead -- long 6-7 class defensive lineman with power and developmental pass-rush upside (size-matched to Van Norden's 6-7 / 299 mold).",
+      "schemeFit": "Van Norden fits White as a long 5-tech/edge who can also reduce inside in odd fronts.",
+      "staffNotes": "Vault film desk verified 2026-08-05 from On3 Hudl. Comp size-matched within ~1-2\" -- not a Florida-alum default. Band-appropriate (not generational overclaim).",
+      "projection": "Van Norden projects as develop into the DL room with technique focus, earn early pass-rush package snaps, then compete for a starting edge/5-tech role -- starter upside as a length-and-power disruptor if hands catch up to traits.",
+      "insiderNotes": "Vault film desk on Cain Van Norden via On3->Hudl (St. Frances Academy junior clips): 6-7 / 299 DL out of District Heights, MD. Florida 2027 commit. Basketball convert with high ceiling.",
+      "recruitingStory": "Cain Van Norden is a 3-star DL | listed 6-7 / 299 | St. Frances Academy (MD) | Florida 2027 commit.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:15.622Z"
+      "updatedAt": "2026-08-05T16:59:22.474Z"
     },
     "aiking-hall": {
       "playerSlug": "aiking-hall",
@@ -2228,30 +2242,35 @@
     "devoun-kendrick": {
       "playerSlug": "devoun-kendrick",
       "playerName": "De'Voun Kendrick",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/devoun-kendrick-283921/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19903994/694227a1a9640db9072a4f5c",
+          "publishedAt": "2026-08-05"
         }
       ],
       "strengths": [
-        "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity."
+        "Kendrick shows natural power at the point of attack and uses quick hands to shed after first contact.",
+        "Kendrick gets off the ball with sudden first-step quickness for a 6-4 / 300 frame.",
+        "Kendrick plays with a hot motor and pursues down the line after the initial rush stalls.",
+        "Kendrick redirects laterally without losing balance, flashing multi-tech interior flexibility."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Kendrick plays too upright at times, letting blockers into his chest and stalling his momentum."
+      ],
+      "comparison": "Kendrick comps to Javon Kinlaw -- long, powerful interior DL with first-step juice who still needs hand/technique polish (size-matched to Kendrick's 6-4 / 300 mold).",
+      "schemeFit": "Kendrick fits White's interior as a penetrating 3-tech who can also occupy early downs.",
+      "staffNotes": "Vault film desk verified 2026-08-05 from On3 Hudl embed. Comp size-matched within ~1-2\" -- not a Florida-alum default.",
+      "projection": "Kendrick projects as develop into the DL room, earn early rotational 3-tech snaps, then compete for a starting interior role -- starter upside as a power-and-quickness disruptor.",
+      "insiderNotes": "Vault film desk on De'Voun Kendrick via On3->Hudl (Carrollwood Day 2025 junior): 6-4 / 300 DL out of Tampa, FL. Florida 2027 commit.",
+      "recruitingStory": "De'Voun Kendrick is a 3-star DL | listed 6-4 / 300 | Carrollwood Day (Tampa, FL) | Florida 2027 commit.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:17.055Z"
+      "updatedAt": "2026-08-05T16:59:22.279Z"
     },
     "jameer-cantrell": {
       "playerSlug": "jameer-cantrell",
@@ -3020,30 +3039,35 @@
     "kailib-dillard": {
       "playerSlug": "kailib-dillard",
       "playerName": "Kailib Dillard",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/kailib-dillard-243497/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22462822/66d50733f013d3e49d13e56b",
+          "publishedAt": "2026-08-05"
         }
       ],
       "strengths": [
-        "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity."
+        "Dillard reads route combinations early and breaks on the ball with centerfield timing.",
+        "Dillard shows scheme flexibility -- single-high range and the hips to match from nickel looks.",
+        "Dillard's receiving background shows up in coverage mirror and recovery speed on verticals.",
+        "Dillard takes sound run-support angles and wraps in space despite a lean 6-2 / 170 frame."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Dillard needs functional mass to hold up vs SEC tight ends and downhill run fits in the box."
+      ],
+      "comparison": "Dillard comps to Justin Simmons -- rangy 6-2 free safety with ball skills, range, and coverage IQ (size-matched to Dillard's 6-2 / 170 mold with room to fill).",
+      "schemeFit": "Dillard fits White as a single-high/split-safety who can also match in sub packages.",
+      "staffNotes": "Vault film desk verified 2026-08-05 from On3 Hudl. Comp size-matched within ~1-2\" -- not a Florida-alum default.",
+      "projection": "Dillard projects as develop into the safety room, earn early special-teams and dime snaps, then compete for a starting free safety role -- starter upside as a rangy ball hawk.",
+      "insiderNotes": "Vault film desk on Kailib Dillard via On3->Hudl (Jenks highlights): 6-2 / 170 S out of Tulsa, OK. Florida 2027 commit.",
+      "recruitingStory": "Kailib Dillard is a 3-star S | listed 6-2 / 170 | Jenks (Tulsa, OK) | Florida 2027 commit.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:17.769Z"
+      "updatedAt": "2026-08-05T16:59:22.398Z"
     },
     "stafford-willis": {
       "playerSlug": "stafford-willis",
@@ -3476,30 +3500,35 @@
     "stive-bentley-keumajou": {
       "playerSlug": "stive-bentley-keumajou",
       "playerName": "Stive-Bentley Keumajou",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/stive-bentley-keumajou-284617/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/video/3/20329076/68f06373f318f494cb1b7ce4",
+          "publishedAt": "2026-08-05"
         }
       ],
       "strengths": [
-        "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity."
+        "Keumajou shows strong initial quickness off the snap and bursts into gaps before blockers set.",
+        "Keumajou plays with good leverage and pad level for nearly 300 pounds, driving blockers on contact.",
+        "Keumajou pursues laterally with surprising agility for a 295-pound interior and finishes in space.",
+        "Keumajou works through double teams with a hot motor and play recognition beyond a one-year football background."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Keumajou still needs a fuller pass-rush plan -- too often power-only without refined hand counters."
+      ],
+      "comparison": "Keumajou comps to Teair Tart -- compact ~6-2 / 300 interior DL who wins with leverage, power, and gap integrity (size-matched to Keumajou's 6-2.5 / 295 mold).",
+      "schemeFit": "Keumajou fits White as a nose/1-tech who can also shade 3-tech in even fronts.",
+      "staffNotes": "Vault film desk verified 2026-08-05 from Hudl mid-szn tape. Comp size-matched within ~1-2\" -- not a Florida-alum default.",
+      "projection": "Keumajou projects as develop into the DL room, earn early rotational nose/1-tech snaps as a run stuffer, then compete for a starting interior role -- starter upside as a high-floor gap eater if hands catch up.",
+      "insiderNotes": "Vault film desk on Stive-Bentley Keumajou via Hudl mid-season tape (Coral Gables Senior): 6-2.5 / 295 DL. Florida 2027 commit (still on hub). Multi-sport convert with natural power.",
+      "recruitingStory": "Stive-Bentley Keumajou is a 3-star DL | listed 6-2.5 / 295 | Coral Gables Senior (FL) | Florida 2027 commit.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:18.025Z"
+      "updatedAt": "2026-08-05T17:16:11.718Z"
     },
     "xavier-griffin": {
       "playerSlug": "xavier-griffin",
@@ -5225,30 +5254,35 @@
     "jackson-ballinger": {
       "playerSlug": "jackson-ballinger",
       "playerName": "Jackson Ballinger",
-      "playerType": "target",
+      "playerType": "commit",
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/jackson-ballinger-244244/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/15957248/690408098b3e5d221471dccc",
+          "publishedAt": "2026-08-05"
         }
       ],
       "strengths": [
-        "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on"
+        "Ballinger is a physical inline blocker who drives defenders and finishes with intent at the point of attack.",
+        "Ballinger shows modern TE versatility -- attached, flexed, and motion lead-block looks.",
+        "Ballinger hunts second-level blocks and plays through the whistle with a hot motor.",
+        "Ballinger moves well enough for 6-5 / 230 to release into intermediate routes and create after the catch."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Ballinger's route stems still round at times -- needs sharper sink/breaks vs Power 4 linebackers."
+      ],
+      "comparison": "Ballinger comps to Dawson Knox -- 6-5 class TE who wins first as a physical blocker with developmental receiving upside (size-matched to Ballinger's 6-5 / 230 mold).",
+      "schemeFit": "Ballinger fits Faulkner as an inline/move TE who can lead-block and threaten intermediate windows.",
+      "staffNotes": "Vault film desk verified 2026-08-05 from On3 Hudl / published junior film notes. Comp size-matched within ~1-2\" -- not a Florida-alum default.",
+      "projection": "Ballinger projects as develop into the TE room, earn early inline/blocking package snaps, then compete for a starting Y role -- starter upside as a complete blocker-first tight end with growing receive traits.",
+      "insiderNotes": "Vault film desk on Jackson Ballinger via On3->Hudl (Centerburg 2025 junior): 6-5 / 230 TE out of Centerburg, OH. Florida 2027 commit.",
+      "recruitingStory": "Jackson Ballinger is a 3-star TE | listed 6-5 / 230 | Centerburg (OH) | Florida 2027 commit.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:18.779Z"
+      "updatedAt": "2026-08-05T16:59:22.358Z"
     },
     "kyson-mallard": {
       "playerSlug": "kyson-mallard",
@@ -5402,26 +5436,31 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/kamauri-whitfield-243836/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19449538/68cc50fb093196d58dfba044",
+          "publishedAt": "2026-08-05"
         }
       ],
       "strengths": [
-        "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity."
+        "Whitfield tracks the ball naturally and creates takeaways with timing at the catch point.",
+        "Whitfield is physical for 5-10 / 185, triggering downhill in run support and finishing in space.",
+        "Whitfield's press footwork maintains leverage while mirroring through breaks.",
+        "Whitfield competes through contested catches and does not play soft off the line."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "While it’s still only July for the 2027 recruiting cycle, the Florida Gators have already constructed a class with a clear identity.  And there is",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Whitfield's height will be tested vs longer outside receivers -- recovery when beaten still needs polish."
+      ],
+      "comparison": "Whitfield comps to Taron Johnson -- compact, physical nickel/boundary corner who plays bigger than the listing with ball production (size-matched to Whitfield's 5-10 / 185 mold).",
+      "schemeFit": "Whitfield fits White's nickel/press CB who can also contribute on the perimeter.",
+      "staffNotes": "Vault film desk verified 2026-08-05 from On3 Hudl embed. Comp size-matched within ~1-2\" -- not a Florida-alum default.",
+      "projection": "Whitfield projects as develop into the CB room, earn early special-teams and nickel snaps, then compete for a starting slot/dime role -- starter upside as a physical ball-hawk nickel.",
+      "insiderNotes": "Vault film desk on Kamauri Whitfield via On3->Hudl (The First Academy 2025 junior): 5-10 / 185 CB out of Orlando, FL. Florida 2027 commit.",
+      "recruitingStory": "Kamauri Whitfield is a 3-star CB | listed 5-10 / 185 | The First Academy (Orlando, FL) | Florida 2027 commit.",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-07-11T11:29:50.557Z"
+      "featured": false,
+      "updatedAt": "2026-08-05T16:59:22.321Z"
     },
     "frederick-ards-iii": {
       "playerSlug": "frederick-ards-iii",
@@ -8270,27 +8309,31 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/23422040/692d2a66266f7c1db182664f",
+          "publishedAt": "2026-08-05"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Lane shows specialist snap consistency and velocity expected from a top national long-snapper profile.",
+        "Lane has prototypical 6-1 / 220 size for the LS spot with room to add coverage strength.",
+        "Lane's multi-sport athleticism supports coverage ability beyond the snap on film/highlight packages.",
+        "Lane competes with a specialist mentality and clean operation under highlight pacing."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Lane must prove SEC-speed blocking/coverage assignments after Mississippi private-school competition."
+      ],
+      "comparison": "Lane comps to Joe Cardona -- prototypical ~6-1 / 220 long snapper who wins with snap velocity, consistency, and coverage athleticism (size-matched to Lane's 6-1 / 220 mold).",
+      "schemeFit": "Lane fits as the primary long snapper with special-teams coverage contribution.",
+      "staffNotes": "Vault film desk verified 2026-08-05 from On3 Hudl. Avoid Florida-alum default comps.",
+      "projection": "Lane projects as develop behind the incumbent if needed, then compete for the starting long-snapper job -- starter upside as a multi-year LS with coverage value.",
+      "insiderNotes": "Vault film desk on Jaydee Lane via On3->Hudl (Simpson County Academy 2025 highlights): 6-1 / 220 LS out of Mendenhall, MS. Florida 2027 commit. Specialist eval.",
+      "recruitingStory": "Jaydee Lane is a 3-star LS | listed 6-1 / 220 | Simpson County Academy (MS) | Florida 2027 commit.",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-07-11T11:29:46.128Z"
+      "featured": false,
+      "updatedAt": "2026-08-05T16:59:22.544Z"
     },
     "reis-russell": {
       "playerSlug": "reis-russell",
