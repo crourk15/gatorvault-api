@@ -26,3 +26,4 @@ Do **not** set `CAPACITOR_SERVER_URL` / `server.url` for App Store builds. Codem
 ## Status
 
 - GitHub secret `CODEMAGIC_API_TOKEN` configured for auto TestFlight on `main`.
+- **Batched UI waiting for next Codemagic:** see `docs/IOS_CODEMAGIC_BACKLOG.md` (do not build per change).
