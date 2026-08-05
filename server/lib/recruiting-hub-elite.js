@@ -186,8 +186,9 @@ function withVaultLabel(label, body) {
 }
 
 /**
- * Fan-facing commit skinny — Vault Eval prose for the existing card body slot.
- * Prefixed for iOS (no CSS label on skinny). Web may strip the prefix and use its own label.
+ * Fan-facing commit skinny — untitled brief for the card body.
+ * No "Vault Eval" title (deep eval lives on profile Vault Scouting).
+ * Strips any legacy Eval prefix so older cached rows stay clean.
  */
 function buildCommitFanSkinny(player) {
   const name = String(player.name || 'This commit').trim();
@@ -197,6 +198,11 @@ function buildCommitFanSkinny(player) {
   const htWt = String(player.htWt || '').trim();
   const natl = player.natlRank ?? player.natl;
   const posRank = player.posRank;
+
+  const stripEvalPrefix = (text) =>
+    String(text || '')
+      .replace(/^vault\s+eval(?:uation)?\s*[—\-:]\s*/i, '')
+      .trim();
 
   const verified = firstVerifiedIntel(
     player,
@@ -211,7 +217,7 @@ function buildCommitFanSkinny(player) {
     !isMetaDumpAsSkinny(verified)
   ) {
     const body = verified.length > 340 ? `${verified.slice(0, 337).trim()}…` : verified;
-    return withVaultLabel('Eval', body);
+    return stripEvalPrefix(body) || null;
   }
 
   const sentences = [];
@@ -251,7 +257,7 @@ function buildCommitFanSkinny(player) {
     sentences.push(`${bits.join(' ')}.`);
   }
 
-  return withVaultLabel('Eval', sentences.join(' '));
+  return stripEvalPrefix(sentences.join(' ')) || null;
 }
 
 /** Clean Vault Comp line — drop "Name comps to" so the name reads first. */
@@ -506,7 +512,7 @@ function mapHubCommit(player, classYear) {
   const metaLine = buildCommitMetaLine(player);
   const skinny = buildCommitFanSkinny(player);
   const projection = formatVaultProjection(verifiedProjection(player), player.name);
-  // Strengths dropped from commit cards — Vault Eval already covers the traits.
+  // Strengths dropped from commit cards — deep traits live on profile Vault Scouting.
   const strengths = null;
   const rawComp = String(player.playerComp ?? player.comp ?? player.comparison ?? '').trim();
   const playerComp = formatVaultComp(rawComp, player.name);

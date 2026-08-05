@@ -13,12 +13,14 @@ describe('full-profile vaultScouting', () => {
     assert.match(String(scouting.projection || ''), /SEC starter|All-American|All-SEC/i);
   });
 
-  it('commit board: Vault Eval/Comp/Projection, no Strengths, full rank meta', async () => {
+  it('commit board: untitled brief + Vault Comp/Projection, no Strengths, full rank meta', async () => {
     const { buildHubCommits } = require('../../lib/recruiting-hub-elite');
     const rows = await buildHubCommits(2027);
     const hiller = rows.find((r) => r.id === 'maxwell-hiller' || /Hiller/i.test(r.name));
     assert.ok(hiller, 'hiller on 2027 board');
-    assert.match(String(hiller.skinny || ''), /^Vault Eval —/i);
+    const skinny = String(hiller.skinny || '');
+    assert.ok(skinny.length >= 40, 'brief present');
+    assert.doesNotMatch(skinny, /^Vault Eval\b/i);
     assert.match(String(hiller.playerComp || ''), /^Vault Comp —/i);
     assert.match(String(hiller.projection || ''), /^Vault Projection —/i);
     assert.equal(hiller.strengths, null);
