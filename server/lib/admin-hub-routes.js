@@ -689,7 +689,7 @@ function mountAdminHubRoutes(app) {
               {
                 id: 'stay-green',
                 title: 'API stay-green lockdown active',
-                detail: 'Heavy cron/hub work is soft-skipped so App Store login stays up. Lift with API_STAY_GREEN_ALLOW_HEAVY=true after review.',
+                detail: 'Heavy cron/hub work is soft-skipped (API_STAY_GREEN). Set API_STAY_GREEN=false or API_STAY_GREEN_ALLOW_HEAVY=true to resume.',
                 severity: 'info',
               },
             ],

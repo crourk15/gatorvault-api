@@ -20,15 +20,24 @@ describe('api stay-green lockdown', () => {
     delete require.cache[require.resolve('../lib/api-stay-green')];
   });
 
-  it('defaults on in production and blocks all ops jobs', () => {
+  it('defaults off after App Review; opt-in blocks ops jobs', () => {
     delete process.env.API_STAY_GREEN;
     delete process.env.API_STAY_GREEN_ALLOW_HEAVY;
     process.env.NODE_ENV = 'production';
     delete require.cache[require.resolve('../lib/api-stay-green')];
     const mod = require('../lib/api-stay-green');
+    assert.equal(mod.isStayGreen(), false);
+    assert.equal(mod.stayGreenSkipPayload('hub-refresh'), null);
+    assert.equal(mod.shouldBlockOpsJob('gators-score-alerts'), false);
+  });
+
+  it('can be forced on for lockdown', () => {
+    process.env.API_STAY_GREEN = 'true';
+    delete process.env.API_STAY_GREEN_ALLOW_HEAVY;
+    delete require.cache[require.resolve('../lib/api-stay-green')];
+    const mod = require('../lib/api-stay-green');
     assert.equal(mod.isStayGreen(), true);
     assert.ok(mod.stayGreenSkipPayload('hub-refresh'));
-    assert.equal(mod.shouldBlockOpsJob('gators-score-alerts'), true);
     assert.equal(mod.shouldBlockOpsJob('any-random-job'), true);
   });
 

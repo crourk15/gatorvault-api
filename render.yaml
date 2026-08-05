@@ -288,15 +288,12 @@ services:
         sync: false
       - key: RENDER_DEPLOY_HOOK_URL
         sync: false
-      # Stay-green HARD (App Review): skip in-process boot hub warm entirely.
-      # Crons soft-refresh caches; login/auth must never share the event loop with
-      # a full Lab/hub warm stampede (Render ~5s /ready → restart → HTML 502).
+      # Stay-green LIFTED (App Store approved Aug 2026). Crons + Film Room sync run again.
+      # Keep boot warm deferrals below so /ready stays cheap on Starter.
       - key: API_STAY_GREEN
-        value: "true"
-      # Soft-skip heavy cron routes inside the web process (App Review lockdown).
-      # Set API_STAY_GREEN_ALLOW_HEAVY=true only when login is proven stable.
-      - key: API_STAY_GREEN_ALLOW_HEAVY
         value: "false"
+      - key: API_STAY_GREEN_ALLOW_HEAVY
+        value: "true"
       - key: COMMIT_TARGET_RECONCILE_BOOT
         value: "false"
       - key: HUB_BOOT_IMMEDIATE_WARM
@@ -361,9 +358,9 @@ services:
         value: https://gatorvault-api.onrender.com/health
       - key: KEEPALIVE_PING_URL
         value: https://gatorvault-api.onrender.com/api/ping
-      # Ping-only while stay-green — concurrent hub/FutureCast touches crash-looped Render.
+      # Stay-green lifted — ping-only keepalive still (hub touch needs KEEPALIVE_FULL_TOUCH).
       - key: API_STAY_GREEN
-        value: "true"
+        value: "false"
       - key: KEEPALIVE_HUB_TOUCH
         value: "false"
       - key: KEEPALIVE_TOUCH_CONCURRENCY

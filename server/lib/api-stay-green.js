@@ -1,19 +1,18 @@
 /**
- * App Review / Render stay-green lock.
+ * Optional Render stay-green lock (App Review era).
  *
  * When active, heavy cron work soft-skips so /health + /api/login stay up.
- * Admin Hub red alerts remain sensitive — this stops the restarts, not the light.
  *
- * Default ON in production. Opt out with API_STAY_GREEN=false.
- * Force heavy work through with API_STAY_GREEN_ALLOW_HEAVY=true.
+ * Default OFF after App Store approval (Aug 2026). Opt in with API_STAY_GREEN=true.
+ * Force heavy work through even when on with API_STAY_GREEN_ALLOW_HEAVY=true.
  */
 'use strict';
 
 function isStayGreen() {
-  if (process.env.API_STAY_GREEN === 'false') return false;
   if (process.env.API_STAY_GREEN_ALLOW_HEAVY === 'true') return false;
-  if (process.env.API_STAY_GREEN === 'true') return true;
-  return process.env.NODE_ENV === 'production';
+  if (process.env.API_STAY_GREEN === 'false') return false;
+  // Explicit opt-in only — production no longer defaults to lockdown.
+  return process.env.API_STAY_GREEN === 'true';
 }
 
 function stayGreenSkipPayload(label) {

@@ -12,6 +12,13 @@ const DEFAULT_SOURCES = [
     label: 'Florida Gators YouTube',
     kind: 'florida_official',
   },
+  // Football program channel — fall camp / Sumrall pressers land here, not athletics.
+  {
+    channelId: 'UCGy38_kQ5tV_e87Uhs3VCRQ',
+    bucket: 'pressers',
+    label: 'Florida Gators Football',
+    kind: 'gators_football',
+  },
   {
     channelId: 'UC4uzOAHPLPqEnNpNmDUP1VA',
     bucket: 'gnfp',
@@ -113,13 +120,17 @@ function shouldKeepEntry(entry, source) {
 
 function toCacheRow(entry, source) {
   const id = `yt_${entry.youtubeId}`;
+  const publishedAt = entry.publishedAt || null;
+  const year = publishedAt
+    ? new Date(publishedAt).getUTCFullYear()
+    : new Date().getUTCFullYear();
   return {
     id,
     slug: slugify(entry.title),
     title: entry.title,
     dek: '',
     gameLine: source.bucket === 'gnfp' ? 'GNFP Film Review' : 'Florida Gators Football',
-    season: String(new Date(entry.publishedAt).getUTCFullYear() || new Date().getUTCFullYear()),
+    season: String(Number.isFinite(year) ? year : new Date().getUTCFullYear()),
     category: source.bucket === 'gnfp' ? 'Film Breakdown' : 'Press Conferences',
     duration: 'YouTube',
     thumbUrl: entry.thumbUrl || `https://i.ytimg.com/vi/${entry.youtubeId}/hqdefault.jpg`,
@@ -130,7 +141,7 @@ function toCacheRow(entry, source) {
     autoUpdate: true,
     mediaReady: true,
     featured: false,
-    publishedAt: entry.publishedAt,
+    publishedAt,
     ingestedAt: new Date().toISOString(),
   };
 }
@@ -163,9 +174,11 @@ function mergeBucket(existing, incoming) {
     });
     updated += 1;
   }
-  const merged = Array.from(byId.values()).sort(
-    (a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0)
-  );
+  const merged = Array.from(byId.values()).sort((a, b) => {
+    const ta = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+    const tb = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+    return tb - ta;
+  });
   return { rows: merged, added, updated };
 }
 
@@ -221,9 +234,18 @@ function shouldKeepSearchHit(entry) {
   const title = entry.title || '';
   if (!title) return false;
   if (NON_FOOTBALL.test(title) && !/football/i.test(title)) return false;
+  // Drop reaction shorts / meme clips that only mention a presser.
+  if (/[😂📱]|phone went off|message after a reporter|tight ship and he/i.test(title)) return false;
   if (!PRESSER_TITLE.test(title) && !/\bsec media days\b/i.test(title)) return false;
   // Must look like Florida football context
   if (!/\bflorida\b|\bgators\b|\bsumrall\b/i.test(title)) return false;
+  // Prefer real event titles (Coach/HC/Florida … Press Conference), not loose mentions.
+  if (
+    !/\b(press conference|media availability|media days?)\b/i.test(title) ||
+    !/^(florida|coach|hc|sec)\b/i.test(title.trim())
+  ) {
+    return false;
+  }
   return true;
 }
 
@@ -244,10 +266,11 @@ async function syncYouTubeSearchPressers() {
     try {
       const meta = await fetchOEmbed(id);
       if (!meta || !shouldKeepSearchHit(meta)) continue;
+      // oEmbed has no publish date — leave null so channel RSS dates win in merge/sort.
       kept.push(toCacheRow({
         youtubeId: meta.youtubeId,
         title: meta.title,
-        publishedAt: meta.publishedAt,
+        publishedAt: null,
         thumbUrl: meta.thumbUrl,
       }, {
         bucket: 'pressers',
