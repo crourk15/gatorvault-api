@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import type { RosterPlayer } from '@/lib/roster-api';
 import { fetchRosterPlayerBySlug } from '@/lib/roster-api';
 import {
+  prefetchFullProfile,
   resolvePlayerSlug,
   type ProfileRouteContext,
   type ResolvePlayerKind,
@@ -56,6 +57,12 @@ export function usePlayerProfileRoute(
     let cancelled = false;
     setState({ phase: 'loading' });
     const normalized = slug.trim().toLowerCase();
+
+    // Overlap full-profile with resolve so Vault Scouting isn't blocked on a serial RTT
+    // (roster context may redirect — prefetch is cheap/cacheable either way).
+    if (context !== 'roster') {
+      prefetchFullProfile(normalized);
+    }
 
     void (async () => {
       try {

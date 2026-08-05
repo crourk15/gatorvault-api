@@ -358,9 +358,11 @@ services:
         value: https://gatorvault-api.onrender.com/health
       - key: KEEPALIVE_PING_URL
         value: https://gatorvault-api.onrender.com/api/ping
-      # Stay-green lifted — ping-only keepalive still (hub touch needs KEEPALIVE_FULL_TOUCH).
+      # Soft Lab/hub warm — concurrency 1 avoids /ready stampede; keeps FutureCast + profiles hot.
       - key: API_STAY_GREEN
         value: "false"
+      - key: KEEPALIVE_FULL_TOUCH
+        value: "true"
       - key: KEEPALIVE_HUB_TOUCH
         value: "false"
       - key: KEEPALIVE_TOUCH_CONCURRENCY
