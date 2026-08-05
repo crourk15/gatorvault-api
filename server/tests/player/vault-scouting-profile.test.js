@@ -13,15 +13,16 @@ describe('full-profile vaultScouting', () => {
     assert.match(String(scouting.projection || ''), /SEC starter|All-American|All-SEC/i);
   });
 
-  it('commit board: untitled brief only — Vault Comp/Projection on profile, not card', async () => {
+  it('commit board: short commit line like 2026 — Vault Scouting on profile only', async () => {
     const { buildHubCommits, getVaultScoutingForSlug } = require('../../lib/recruiting-hub-elite');
     const rows = await buildHubCommits(2027);
     const hiller = rows.find((r) => r.id === 'maxwell-hiller' || /Hiller/i.test(r.name));
     assert.ok(hiller, 'hiller on 2027 board');
     const skinny = String(hiller.skinny || '');
-    assert.ok(skinny.length >= 40, 'brief present');
+    assert.match(skinny, /committed to Florida/i);
     assert.doesNotMatch(skinny, /^Vault Eval\b/i);
-    // Card surface matches 2028: no Vault Comp / Projection slots.
+    // No mini-eval on the card surface.
+    assert.doesNotMatch(skinny, /college-ready interior|true 300-pound mass/i);
     assert.equal(hiller.playerComp, null);
     assert.equal(hiller.projection, null);
     assert.equal(hiller.strengths, null);
@@ -34,5 +35,21 @@ describe('full-profile vaultScouting', () => {
     const scouting = getVaultScoutingForSlug('maxwell-hiller');
     assert.match(String(scouting?.comparison || ''), /DeCastro/);
     assert.match(String(scouting?.projection || ''), /SEC starter|All-American|All-SEC/i);
+    assert.match(String(scouting?.evaluation || ''), /Hiller|interior|mass/i);
+  });
+
+  it('2026 and 2027 commit cards share the same surface shape', async () => {
+    const { buildHubCommits } = require('../../lib/recruiting-hub-elite');
+    const y26 = await buildHubCommits(2026);
+    const y27 = await buildHubCommits(2027);
+    const groce = y26.find((r) => /Groce/i.test(r.name));
+    const pearl = y27.find((r) => /Pearl/i.test(r.name));
+    assert.ok(groce && pearl);
+    assert.match(String(groce.skinny || ''), /committed to Florida/i);
+    assert.match(String(pearl.skinny || ''), /committed to Florida/i);
+    assert.equal(groce.playerComp, null);
+    assert.equal(pearl.playerComp, null);
+    assert.equal(groce.projection, null);
+    assert.equal(pearl.projection, null);
   });
 });

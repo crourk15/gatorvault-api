@@ -90,8 +90,6 @@ function commitStatusBadge(player) {
 const {
   isGenericBeatArticle,
   isCompositeBio,
-  isChaseProcessIntel,
-  isFilmDeskMeta,
   firstVerifiedIntel,
   verifiedStrengthsList,
   isVerifiedScoutingTrait,
@@ -187,35 +185,9 @@ function withVaultLabel(label, body) {
 }
 
 /**
- * Untitled brief from War Room tape traits — matches 2028 commit-card voice
- * (film summary first; Vault Comp / Vault Projection sit in labeled slots below).
- */
-function briefFromWarRoomStrengths(player) {
-  const list = Array.isArray(player.strengths)
-    ? player.strengths.map((s) => String(s || '').trim()).filter(Boolean)
-    : [];
-  if (list.length < 2) return null;
-  const cleaned = list
-    .filter(
-      (s) =>
-        !isFilmDeskMeta(s) &&
-        !isCompositeBio(s) &&
-        !isChaseProcessIntel(s) &&
-        isVerifiedScoutingTrait(s, player.name)
-    )
-    .map((s) => polishScoutingSentence(s, player.name) || s)
-    .filter(Boolean)
-    .slice(0, 3);
-  if (cleaned.length < 2) return null;
-  let body = cleaned.join(' ');
-  if (body.length > 340) body = `${body.slice(0, 337).trim()}…`;
-  return body;
-}
-
-/**
- * Fan-facing commit skinny — untitled brief for the card body.
- * No "Vault Eval" title (deep eval lives on profile Vault Scouting).
- * Strips any legacy Eval prefix so older cached rows stay clean.
+ * Fan-facing commit skinny — same surface for every class year (2026/2027/2028).
+ * Short commit announcement only. Film eval / Vault Comp / Projection live on
+ * the player profile Vault Scouting section — never as a mini-eval on the card.
  */
 function buildCommitFanSkinny(player) {
   const name = String(player.name || 'This commit').trim();
@@ -225,32 +197,6 @@ function buildCommitFanSkinny(player) {
   const htWt = String(player.htWt || '').trim();
   const natl = player.natlRank ?? player.natl;
   const posRank = player.posRank;
-
-  const stripEvalPrefix = (text) =>
-    String(text || '')
-      .replace(/^vault\s+eval(?:uation)?\s*[—\-:]\s*/i, '')
-      .trim();
-
-  const verified = firstVerifiedIntel(
-    player,
-    ['evaluatorNotes', 'evaluationSummary', 'insiderNotes', 'skinny', 'profileNote', 'notes'],
-    player.name
-  );
-  if (
-    verified &&
-    verified.length >= 40 &&
-    !isCompositeBio(verified) &&
-    !isChaseProcessIntel(verified) &&
-    !isFilmDeskMeta(verified) &&
-    !isMetaDumpAsSkinny(verified)
-  ) {
-    const body = verified.length > 340 ? `${verified.slice(0, 337).trim()}…` : verified;
-    return stripEvalPrefix(body) || null;
-  }
-
-  // Prefer tape traits as the untitled brief (2028-style card) when War Room strengths exist.
-  const traitBrief = briefFromWarRoomStrengths(player);
-  if (traitBrief) return stripEvalPrefix(traitBrief);
 
   const sentences = [];
   let open = `${name} committed to Florida`;
@@ -268,17 +214,6 @@ function buildCommitFanSkinny(player) {
   if (player.headliner) facts.push('Class headliner');
   if (facts.length) sentences.push(`${facts.join(' · ')}.`);
 
-  const scheme = String(player.schemeFit || '').trim();
-  if (
-    scheme &&
-    scheme.length >= 20 &&
-    isVerifiedScoutingTrait(scheme, player.name) &&
-    !isCompositeBio(scheme)
-  ) {
-    sentences.push(scheme.endsWith('.') ? scheme : `${scheme}.`);
-  }
-
-  // Comp has its own card slot — do not dump "Fan comp:" into the skinny body.
   if (sentences.length < 2) {
     const bits = [];
     if (stars >= 4) bits.push('A blue-chip addition');
@@ -289,7 +224,7 @@ function buildCommitFanSkinny(player) {
     sentences.push(`${bits.join(' ')}.`);
   }
 
-  return stripEvalPrefix(sentences.join(' ')) || null;
+  return sentences.join(' ') || null;
 }
 
 /** Clean Vault Comp line — drop "Name comps to" so the name reads first. */
@@ -350,15 +285,6 @@ function isRankLineBlurb(text, playerName) {
   const s = String(text || '').trim();
   if (!s || s.length > 140) return false;
   return !isGenericBeatArticle(s, playerName);
-}
-
-/** Meta-line dumps (pos · stars · hometown · #natl) are not fan skinny. */
-function isMetaDumpAsSkinny(text) {
-  const s = String(text || '').trim();
-  if (!s || s.length > 110) return false;
-  if (/\bcommitted\b/i.test(s)) return false;
-  const dots = (s.match(/·/g) || []).length;
-  return dots >= 2 && /(#\d+\s*natl|\d★)/i.test(s);
 }
 
 function rankNote(player) {

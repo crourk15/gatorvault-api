@@ -17,8 +17,8 @@ function stripVaultLabel(text: string | null | undefined, label: string): string
 }
 
 /**
- * Fan-first commit card — untitled brief only (same shape as 2028).
- * Vault Comp / Vault Projection / traits live on the player profile (Vault Scouting).
+ * Fan-first commit card — same surface for every class year.
+ * Short commit line under the name; Vault Scouting lives on the player profile.
  */
 export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
   const meta = commit.metaLine || commit.rankNote;
