@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-04T12:26:57.853Z",
+  "updatedAt": "2026-08-05T16:36:01.508Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -1068,6 +1068,237 @@
         "closing speed"
       ],
       "vaultFilmAngle": "Lead with deep-half range + wrap tackle tape and Florida process (Collins, Swamp visit). Bates mold for size/traits.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "zahmar-tookes": {
+      "playerName": "Zahmar Tookes",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/20633040/693879a392752ff4074cb80e"
+        }
+      ],
+      "traits": [
+        "first-step",
+        "hands",
+        "motor",
+        "pursuit",
+        "penetration",
+        "versatility"
+      ],
+      "vaultFilmAngle": "Lead with junior Brighton Hudl first-step and shed ability on the interior.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "tommy-douglas": {
+      "playerName": "Tommy Douglas",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22739730/68bc3d12f25b1f72d5fd935a"
+        }
+      ],
+      "traits": [
+        "ball-skills",
+        "catch-radius",
+        "routes",
+        "YAC",
+        "inline-will",
+        "seams"
+      ],
+      "vaultFilmAngle": "Lead with Hun School junior ball skills and seam acceleration.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "kamarion-johnson": {
+      "playerName": "Kamarion Johnson",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/19489912/68cc83e7093196d58dfbac6e"
+        }
+      ],
+      "traits": [
+        "instincts",
+        "hips",
+        "ball-skills",
+        "physical",
+        "versatility",
+        "nickel"
+      ],
+      "vaultFilmAngle": "Lead with Clinch County junior instincts and man-mirror from Star looks.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "ellis-mcgaskin": {
+      "playerName": "Ellis McGaskin",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/17801956/68bde3b8c9147a26be20303e"
+        }
+      ],
+      "traits": [
+        "instincts",
+        "tackling",
+        "run-fit",
+        "blitz",
+        "range",
+        "physical"
+      ],
+      "vaultFilmAngle": "Lead with Williamson junior run fits and blitz timing.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "amare-nugent": {
+      "playerName": "Amare Nugent",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/18720223/68c04b4a961afc0dd6f1b598"
+        }
+      ],
+      "traits": [
+        "zone",
+        "press",
+        "run-support",
+        "ball-skills",
+        "physical",
+        "recovery"
+      ],
+      "vaultFilmAngle": "Lead with American Heritage junior zone instincts and physical run support.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "andrew-beard": {
+      "playerName": "Andrew Beard",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22450636/692b2dc584423567d990cf00"
+        }
+      ],
+      "traits": [
+        "vision",
+        "balance",
+        "cutback",
+        "receiving",
+        "contact",
+        "three-down"
+      ],
+      "vaultFilmAngle": "Lead with Prince Avenue junior vision, balance, and receiving upside.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "anthony-jennings": {
+      "playerName": "Anthony Jennings",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/18231676/691b630f2f0461ff7a407a8a"
+        }
+      ],
+      "traits": [
+        "speed",
+        "release",
+        "YAC",
+        "vertical",
+        "twitch",
+        "separation"
+      ],
+      "vaultFilmAngle": "Lead with Dillard junior release burst and YAC explosives.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"
