@@ -105,6 +105,10 @@ describe('FutureCast elite Lab load path', () => {
       'utf8'
     );
     assert.match(src, /if \(discoveryFocus\)/);
-    assert.match(src, /ufProbability != null/);
+    // Discovery branch must stay on highPriority — never Closing Class masterBoard.
+    assert.match(src, /return \[\.\.\.highPriority\]/);
+    // Accept ufProbability and legacy ufConfidence alias from seed/allowlist rows.
+    assert.match(src, /ufProbability/);
+    assert.match(src, /ufConfidence/);
   });
 });

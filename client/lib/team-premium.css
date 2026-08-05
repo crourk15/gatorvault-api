@@ -2419,6 +2419,11 @@
   color: var(--team-uf-blue);
 }
 
+.team-premium-page .gv-team-roster-card__jersey {
+  font-variant-numeric: tabular-nums;
+  color: var(--team-gator-orange, #fa4616);
+}
+
 .team-premium-page .gv-team-roster-card__starter {
   padding: 3px 7px;
   border-radius: 4px;

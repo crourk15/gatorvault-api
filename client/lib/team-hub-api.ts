@@ -112,6 +112,7 @@ function mapRosterPlayer(p: RosterPlayer): TeamPlayer {
     state: stateMatch?.[1],
     tags,
     slug: p.slug,
+    jersey: p.jersey != null && Number.isFinite(Number(p.jersey)) ? Number(p.jersey) : null,
   };
 }
 
