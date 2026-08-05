@@ -24,3 +24,11 @@ Caption suggestion
   Open the Vault.
   Everything Florida Gators football — FutureCast, Recruiting, Team, Live, Game Week — in one place.
   Download Gator Vault Insider on the App Store.
+  https://apps.apple.com/app/id6783848215
+
+REEL (9:16)
+  OPEN-THE-VAULT-elite-reel.mp4
+    1080×1920 · 12s cinematic zoom on elite-vault-story.png
+    On-screen: Open the Vault → features → App Store URL
+  REEL-CAPTION.txt
+    Ready-to-post caption + App Store link
