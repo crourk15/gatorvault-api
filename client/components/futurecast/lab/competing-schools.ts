@@ -152,3 +152,32 @@ export function closingClassUrgencyScore(player: FcLabTarget): number {
   const battleBonus = uf >= 34 && uf < 67 ? 8 : 0;
   return uf * 1.2 + battleBonus - rivalGap * 0.15;
 }
+
+/** True when Florida's share is strictly ahead of the top confirmed rival. */
+export function isFloridaLeadingOnBoard(player: FcLabTarget): boolean {
+  if (player.committedTo && isFlorida(player.committedTo)) return false;
+  if (player.ufProbability == null) return false;
+  const uf = ufPctFromFc(player.ufProbability);
+  if (!(uf > 0)) return false;
+  const threat = topThreatVsFlorida(player);
+  if (!threat) {
+    // Sole / thin board — require a real share so soft unknowns don't flood Leading.
+    return uf >= 25;
+  }
+  return uf > threat.pct;
+}
+
+/** High-confidence closers: leading the field with a strong Florida share. */
+export function isLikelyNextCommit(player: FcLabTarget, minUfPct = 60): boolean {
+  if (!isFloridaLeadingOnBoard(player)) return false;
+  return ufPctFromFc(player.ufProbability) >= minUfPct;
+}
+
+/** Margin over the top rival (0 when no rival / sole board). */
+export function floridaLeadMargin(player: FcLabTarget): number {
+  const uf = ufPctFromFc(player.ufProbability);
+  const threat = topThreatVsFlorida(player);
+  if (!threat) return uf;
+  return uf - threat.pct;
+}
+

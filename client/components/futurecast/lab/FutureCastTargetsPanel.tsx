@@ -15,6 +15,7 @@ import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
 import { closingClassUrgencyScore, isClosingClassInPlayTarget } from './competing-schools';
 import { FutureCastBattlesPanel } from './FutureCastBattlesPanel';
+import { FutureCastLeadingPanel } from './FutureCastLeadingPanel';
 
 type Props = {
   masterBoard: MasterBoardResponse;
@@ -57,41 +58,49 @@ export function FutureCastTargetsPanel({
 
   const showMovement = useMemo(() => movementDeltasAreBelievable(rows), [rows]);
 
-  const title = discoveryFocus ? `${focusYear} UF Targets` : 'Top UF Targets';
+  const title = discoveryFocus ? `${focusYear} Priority chase` : 'Top UF Targets';
   const sub = discoveryFocus
-    ? "Florida's priority board — odds, fit, and who's still in play."
+    ? "Who Florida should be fighting for — priority and heat, not the current lead board."
     : 'In-play closing fights — Florida odds, rival threats, and movement.';
 
   return (
-    <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-targets">
-      {rows.length === 0 ? (
-        <p className="rh-cc-empty">
-          {discoveryFocus ? `No ${focusYear} UF targets loaded.` : 'No master board targets loaded.'}
-        </p>
-      ) : (
-        <div className="fc-lab-target-cards">
-          {rows.map((p) => (
-            <FutureCastTargetCard
-              key={p.slug}
-              player={p}
-              profileHref={playerProfileRoute(p.slug, 'futurecast')}
-              showMovement={showMovement}
-            />
-          ))}
-        </div>
-      )}
+    <>
+      <FutureCastLeadingPanel
+        bare={bare}
+        masterBoard={masterBoard}
+        trendingBoard={trendingBoard}
+        highPriority={highPriority}
+      />
+      <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-targets">
+        {rows.length === 0 ? (
+          <p className="rh-cc-empty">
+            {discoveryFocus ? `No ${focusYear} UF targets loaded.` : 'No master board targets loaded.'}
+          </p>
+        ) : (
+          <div className="fc-lab-target-cards">
+            {rows.map((p) => (
+              <FutureCastTargetCard
+                key={p.slug}
+                player={p}
+                profileHref={playerProfileRoute(p.slug, 'futurecast')}
+                showMovement={showMovement}
+              />
+            ))}
+          </div>
+        )}
 
-      {includeBattles && trendingBoard ? (
-        <div className="fc-lab-targets-battles">
-          <FutureCastBattlesPanel
-            bare
-            compact={battlesCompact}
-            masterBoard={masterBoard}
-            trendingBoard={trendingBoard}
-            highPriority={highPriority}
-          />
-        </div>
-      ) : null}
-    </FutureCastPanelShell>
+        {includeBattles && trendingBoard ? (
+          <div className="fc-lab-targets-battles">
+            <FutureCastBattlesPanel
+              bare
+              compact={battlesCompact}
+              masterBoard={masterBoard}
+              trendingBoard={trendingBoard}
+              highPriority={highPriority}
+            />
+          </div>
+        ) : null}
+      </FutureCastPanelShell>
+    </>
   );
 }

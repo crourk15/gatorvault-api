@@ -343,6 +343,156 @@
   filter: drop-shadow(0 0 24px rgba(250, 70, 22, 0.5));
 }
 
+/* ── Leading now / Likely next (fan scoreboard) ── */
+.fc-lab-lead-block {
+  margin-bottom: var(--gv-space-5, 20px);
+}
+.fc-lab-lead-block:last-child {
+  margin-bottom: 0;
+}
+.fc-lab-lead-block__head {
+  margin-bottom: var(--gv-space-3, 12px);
+}
+.fc-lab-lead-block__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--accent-blue, #0021a5);
+}
+.fc-lab-lead-block__sub {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted, #5b6b7c);
+}
+.fc-lab-lead-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fc-lab-lead-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) auto minmax(72px, 0.7fr) auto;
+  align-items: center;
+  gap: 10px 12px;
+  padding: 12px 14px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  border-left: 3px solid #0021a5;
+  background: linear-gradient(105deg, rgba(0, 33, 165, 0.04), rgba(255, 255, 255, 0.9) 42%);
+  border-radius: 10px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.fc-lab-lead-row--next {
+  border-left-color: #fa4616;
+  background: linear-gradient(105deg, rgba(250, 70, 22, 0.08), rgba(255, 255, 255, 0.94) 46%);
+}
+.fc-lab-lead-row:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 33, 165, 0.28);
+}
+.fc-lab-lead-row__identity {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fc-lab-lead-row__name {
+  font-weight: 800;
+  font-size: 0.98rem;
+  color: #001a33;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fc-lab-lead-row__meta {
+  font-size: 0.75rem;
+  color: #5b6b7c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fc-lab-lead-stamp {
+  justify-self: start;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.fc-lab-lead-stamp--next {
+  background: #fa4616;
+  color: #fff;
+}
+.fc-lab-lead-stamp--lead {
+  background: rgba(0, 33, 165, 0.12);
+  color: #0021a5;
+}
+.fc-lab-lead-row__rival {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.fc-lab-lead-row__rival-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  border-radius: 4px;
+  background: #fff;
+}
+.fc-lab-lead-row__rival-fallback {
+  width: 22px;
+  height: 22px;
+  display: inline-grid;
+  place-items: center;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #0021a5;
+  background: rgba(0, 33, 165, 0.08);
+  border-radius: 4px;
+}
+.fc-lab-lead-row__margin {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #0021a5;
+}
+.fc-lab-lead-row__margin--solo {
+  color: #5b6b7c;
+}
+.fc-lab-lead-row__right {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: end;
+}
+.fc-lab-lead-row__pct {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #0021a5;
+}
+.fc-lab-panel-shell + .fc-lab-panel-shell,
+.fc-lab-panel-shell + .rh-cc-module,
+[data-testid="fc-lab-leading"] + [data-testid="fc-lab-targets"],
+[data-testid="fc-lab-leading"] + .fc-lab-panel-shell {
+  margin-top: var(--gv-space-5, 20px);
+}
+@media (max-width: 720px) {
+  .fc-lab-lead-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "id stamp"
+      "rival pct";
+  }
+  .fc-lab-lead-row__identity { grid-area: id; }
+  .fc-lab-lead-stamp { grid-area: stamp; justify-self: end; }
+  .fc-lab-lead-row__rival { grid-area: rival; }
+  .fc-lab-lead-row__right { grid-area: pct; }
+}
+
 /* ── Premium target cards ── */
 .fc-lab-target-cards {
   display: flex;
