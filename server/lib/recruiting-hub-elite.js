@@ -342,7 +342,20 @@ function getVaultScoutingForSlug(slug) {
     const bd = warRoom.getBreakdownBySlug(key);
     if (!bd || quality.breakdownIsCorrupt?.(bd, bd.playerName || key)) return null;
 
-    const evaluation = String(bd.insiderNotes || bd.staffNotes || bd.recruitingStory || '').trim() || null;
+    // Lead paragraph = real film take only. Never staffNotes / film-desk meta /
+    // On3 bio dumps (those poisoned Asher-style cards with verification copy).
+    const evaluation = (() => {
+      const candidates = [bd.insiderNotes, bd.recruitingStory]
+        .map((s) => String(s || '').trim())
+        .filter(Boolean);
+      for (const text of candidates) {
+        if (quality.isFilmDeskMeta?.(text)) continue;
+        if (quality.isCompositeBio?.(text)) continue;
+        if (quality.isGenericBeatArticle?.(text, bd.playerName || key)) continue;
+        return text;
+      }
+      return null;
+    })();
     const comparison = String(bd.comparison || '').trim() || null;
     const projection = String(bd.projection || '').trim() || null;
     const strengths = Array.isArray(bd.strengths)

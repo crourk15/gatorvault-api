@@ -13,6 +13,18 @@ describe('full-profile vaultScouting', () => {
     assert.match(String(scouting.projection || ''), /SEC starter|All-American|All-SEC/i);
   });
 
+  it('2028 targets match Pearl card shape (lead + On tape + Comp + Year/Ceiling projection)', () => {
+    const { getVaultScoutingForSlug } = require('../../lib/recruiting-hub-elite');
+    const scouting = getVaultScoutingForSlug('asher-ghioto');
+    assert.ok(scouting, 'asher vaultScouting present');
+    assert.match(String(scouting.evaluation || ''), /Ghioto is a long/i);
+    assert.doesNotMatch(String(scouting.evaluation || ''), /Vault film desk/i);
+    assert.ok((scouting.strengths || []).length >= 3);
+    assert.match(String(scouting.comparison || ''), /Burns/i);
+    assert.match(String(scouting.projection || ''), /Year 2 SEC starter/i);
+    assert.match(String(scouting.projection || ''), /Ceiling:/i);
+  });
+
   it('commit board: short commit line like 2026 — Vault Scouting on profile only', async () => {
     const { buildHubCommits, getVaultScoutingForSlug } = require('../../lib/recruiting-hub-elite');
     const rows = await buildHubCommits(2027);
