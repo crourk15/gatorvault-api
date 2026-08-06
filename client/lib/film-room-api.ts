@@ -76,3 +76,17 @@ export const FILM_HUB_ORDER = [
   'UF Press Conferences',
   'Highlights',
 ];
+
+/** Map legacy / ingest hub labels onto the four Film Room rails. */
+export function normalizeFilmHub(hub?: string | null): string {
+  const raw = String(hub || '').trim();
+  if (!raw) return 'Film Breakdown';
+  if (raw === 'GNFP Film Review' || raw === 'Game Week' || /film\s*breakdown|film\s*review/i.test(raw)) {
+    return 'Film Breakdown';
+  }
+  if (/scheme\s*school/i.test(raw)) return 'Scheme School';
+  if (/press/i.test(raw)) return 'UF Press Conferences';
+  if (/highlight/i.test(raw)) return 'Highlights';
+  if (FILM_HUB_ORDER.includes(raw)) return raw;
+  return 'Film Breakdown';
+}
