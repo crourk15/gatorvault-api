@@ -30,8 +30,20 @@ function fetchJson(url, timeoutMs = 35000) {
   });
 }
 
+/** Coach sit-downs / podcast eps — not tape. Keep "| The Gator Nation Football Podcast" film reviews. */
+function isFilmBreakdownEligibleTitle(title) {
+  const t = String(title || '');
+  if (!t) return true;
+  const filmSignal =
+    /\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i.test(t);
+  const podcastConvo = /\b(podcast\s*episode|talking\s*ball|sit[\s-]?down|q\s*&\s*a)\b/i.test(t);
+  if (podcastConvo && !filmSignal) return false;
+  return true;
+}
+
 function slimItem(item) {
   if (!item || !(item.id || item.title)) return null;
+  if (!isFilmBreakdownEligibleTitle(item.title)) return null;
   return {
     id: item.id || item.slug || item.youtubeId,
     slug: item.slug,

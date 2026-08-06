@@ -59,7 +59,8 @@ export async function fetchFilmRoomCatalog(): Promise<FilmRoomCatalog> {
   const data = await fetchWithWarmPoll(() =>
     snapshotLiveFetch<FilmRoomCatalog>('/api/film-room/catalog', filmFetchInit())
   );
-  return { categories: data.categories, items: data.items ?? [] };
+  const items = (data.items ?? []).filter((item) => isFilmBreakdownEligibleTitle(item.title));
+  return { categories: data.categories, items };
 }
 
 export async function fetchFilmRoomLesson(id: string): Promise<FilmRoomLessonDetail> {
@@ -76,6 +77,17 @@ export const FILM_HUB_ORDER = [
   'UF Press Conferences',
   'Highlights',
 ];
+
+/** Coach sit-downs / podcast eps — not tape. Keep "| The Gator Nation Football Podcast" film reviews. */
+export function isFilmBreakdownEligibleTitle(title?: string | null): boolean {
+  const t = String(title || '');
+  if (!t) return true;
+  const filmSignal =
+    /\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i.test(t);
+  const podcastConvo = /\b(podcast\s*episode|talking\s*ball|sit[\s-]?down|q\s*&\s*a)\b/i.test(t);
+  if (podcastConvo && !filmSignal) return false;
+  return true;
+}
 
 /** Map legacy / ingest hub labels onto the four Film Room rails. */
 export function normalizeFilmHub(hub?: string | null): string {

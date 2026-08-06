@@ -36,7 +36,20 @@ const PRESSER_TITLE =
 const FOOTBALL_HINT =
   /\b(football|gators football|spring (?:practice|game)|sumrall|faulkner|napier|sec media|offense|defense|coordinator|head coach|rb\b|wr\b|qb\b|lb\b)\b/i;
 
-const GNFP_TITLE = /\b(film review|gnfp|florida gators)\b/i;
+/** Real film study — not coach sit-downs / podcast episodes. */
+const GNFP_FILM_SIGNAL =
+  /\b((?:quick\s+)?film\s+review|film\s+breakdown|film\s+study|film\s+analysis)\b/i;
+
+/** Coach conversations / podcast eps that match "GNFP" but are not tape breakdown. */
+const GNFP_PODCAST_CONVO =
+  /\b(podcast\s*episode|talking\s*ball|sit[\s-]?down|q\s*&\s*a)\b/i;
+
+function isGnfpFilmBreakdownTitle(title) {
+  const t = String(title || '');
+  if (!t) return false;
+  if (GNFP_PODCAST_CONVO.test(t) && !GNFP_FILM_SIGNAL.test(t)) return false;
+  return GNFP_FILM_SIGNAL.test(t);
+}
 
 function slugify(title) {
   return String(title || 'video')
@@ -106,7 +119,7 @@ async function fetchChannelFeed(channelId) {
 function shouldKeepEntry(entry, source) {
   const title = entry.title || '';
   if (source.kind === 'gnfp' || source.bucket === 'gnfp') {
-    return GNFP_TITLE.test(title) || /film/i.test(title);
+    return isGnfpFilmBreakdownTitle(title);
   }
   // Florida official + custom presser sources
   if (NON_FOOTBALL.test(title) && !/football/i.test(title)) return false;
@@ -146,7 +159,7 @@ function toCacheRow(entry, source) {
   };
 }
 
-function mergeBucket(existing, incoming) {
+function mergeBucket(existing, incoming, { pruneGnfpNonFilm } = {}) {
   const byId = new Map();
   for (const row of existing || []) {
     if (row?.id) byId.set(row.id, row);
@@ -174,7 +187,11 @@ function mergeBucket(existing, incoming) {
     });
     updated += 1;
   }
-  const merged = Array.from(byId.values()).sort((a, b) => {
+  let merged = Array.from(byId.values());
+  if (pruneGnfpNonFilm) {
+    merged = merged.filter((row) => isGnfpFilmBreakdownTitle(row?.title));
+  }
+  merged.sort((a, b) => {
     const ta = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
     const tb = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
     return tb - ta;
@@ -296,7 +313,9 @@ async function syncFilmRoomYouTube({ sources } = {}) {
       const entries = await fetchChannelFeed(source.channelId);
       const kept = entries.filter((e) => shouldKeepEntry(e, source)).map((e) => toCacheRow(e, source));
       const bucket = source.bucket === 'gnfp' ? 'gnfp' : 'pressers';
-      const { rows, added, updated } = mergeBucket(cache.auto[bucket] || [], kept);
+      const { rows, added, updated } = mergeBucket(cache.auto[bucket] || [], kept, {
+        pruneGnfpNonFilm: bucket === 'gnfp',
+      });
       cache.auto[bucket] = rows;
       totalAdded += added;
       details.push({
@@ -357,6 +376,7 @@ module.exports = {
   DEFAULT_SOURCES,
   parseSourcesFromEnv,
   parseRssEntries,
+  isGnfpFilmBreakdownTitle,
   shouldKeepEntry,
   shouldKeepSearchHit,
   toCacheRow,
