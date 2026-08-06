@@ -167,17 +167,39 @@ export function isFloridaLeadingOnBoard(player: FcLabTarget): boolean {
   return uf > threat.pct;
 }
 
-/** High-confidence closers: leading the field with a strong Florida share. */
-export function isLikelyNextCommit(player: FcLabTarget, minUfPct = 60): boolean {
-  if (!isFloridaLeadingOnBoard(player)) return false;
-  return ufPctFromFc(player.ufProbability) >= minUfPct;
-}
-
-/** Margin over the top rival (0 when no rival / sole board). */
+/** Margin over the top rival (UF alone = full share). */
 export function floridaLeadMargin(player: FcLabTarget): number {
   const uf = ufPctFromFc(player.ufProbability);
   const threat = topThreatVsFlorida(player);
   if (!threat) return uf;
   return uf - threat.pct;
+}
+
+/**
+ * Closer score — who looks nearest to a Florida commit.
+ * Lead + share strength + momentum + cushion over the top rival.
+ */
+export function nextCommitScore(player: FcLabTarget): number {
+  if (!isFloridaLeadingOnBoard(player)) return -1;
+  const uf = ufPctFromFc(player.ufProbability);
+  const margin = floridaLeadMargin(player);
+  const delta = Number(player.delta7d);
+  const momentum = Number.isFinite(delta) ? Math.max(-8, Math.min(18, delta * 1.35)) : 0;
+  const shareBoost = uf >= 70 ? 16 : uf >= 60 ? 10 : uf >= 50 ? 4 : 0;
+  const cushionBoost = margin >= 20 ? 10 : margin >= 12 ? 6 : margin >= 6 ? 3 : 0;
+  return uf * 1.15 + margin * 0.55 + momentum + shareBoost + cushionBoost;
+}
+
+/** Top-tier closer cut for the Next Commit stamp. */
+export function isNextCommitPick(player: FcLabTarget, minScore = 78): boolean {
+  return nextCommitScore(player) >= minScore;
+}
+
+/** @deprecated use isNextCommitPick */
+export function isLikelyNextCommit(player: FcLabTarget, minUfPct = 60): boolean {
+  if (!isFloridaLeadingOnBoard(player)) return false;
+  const uf = ufPctFromFc(player.ufProbability);
+  if (uf < minUfPct) return false;
+  return isNextCommitPick(player, 70);
 }
 

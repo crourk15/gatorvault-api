@@ -3,11 +3,14 @@ import test from 'node:test';
 import {
   floridaLeadMargin,
   isFloridaLeadingOnBoard,
-  isLikelyNextCommit,
+  isNextCommitPick,
+  nextCommitScore,
 } from './competing-schools';
 import type { FcLabTarget } from './fc-lab-types';
 
-function target( partial: Partial<FcLabTarget> & Pick<FcLabTarget, 'slug' | 'name' | 'ufProbability'>): FcLabTarget {
+function target(
+  partial: Partial<FcLabTarget> & Pick<FcLabTarget, 'slug' | 'name' | 'ufProbability'>
+): FcLabTarget {
   return {
     id: partial.slug,
     position: 'QB',
@@ -34,7 +37,7 @@ test('leading when UF is strictly ahead of top rival even under 34%', () => {
     ],
   });
   assert.equal(isFloridaLeadingOnBoard(p), true);
-  assert.equal(isLikelyNextCommit(p), false);
+  assert.equal(isNextCommitPick(p), false);
   assert.equal(floridaLeadMargin(p), 4);
 });
 
@@ -48,15 +51,25 @@ test('not leading on a tie with top rival', () => {
   assert.equal(isFloridaLeadingOnBoard(p), false);
 });
 
-test('likely next requires lead + 60%+ share', () => {
-  const p = target({
+test('next commit pick scores strong lead + momentum higher than soft lead', () => {
+  const closer = target({
     slug: 'closer',
     name: 'Closer',
-    ufProbability: 72,
+    ufProbability: 74,
+    delta7d: 6,
     competingSchools: [{ name: 'Tennessee', pct: 18 }],
   });
-  assert.equal(isFloridaLeadingOnBoard(p), true);
-  assert.equal(isLikelyNextCommit(p), true);
+  const soft = target({
+    slug: 'soft',
+    name: 'Soft Lead',
+    ufProbability: 36,
+    delta7d: -2,
+    competingSchools: [{ name: 'Georgia', pct: 30 }],
+  });
+  assert.equal(isFloridaLeadingOnBoard(closer), true);
+  assert.equal(isNextCommitPick(closer), true);
+  assert.ok(nextCommitScore(closer) > nextCommitScore(soft));
+  assert.equal(isNextCommitPick(soft), false);
 });
 
 test('trailing share is not leading', () => {
@@ -67,4 +80,5 @@ test('trailing share is not leading', () => {
     competingSchools: [{ name: 'Georgia', pct: 55 }],
   });
   assert.equal(isFloridaLeadingOnBoard(p), false);
+  assert.equal(nextCommitScore(p), -1);
 });

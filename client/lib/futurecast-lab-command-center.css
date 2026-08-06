@@ -343,27 +343,25 @@
   filter: drop-shadow(0 0 24px rgba(250, 70, 22, 0.5));
 }
 
-/* ── Leading now / Likely next (fan scoreboard) ── */
-.fc-lab-lead-block {
-  margin-bottom: var(--gv-space-5, 20px);
+/* ── Next commits / Florida lead board ── */
+.fc-lab-lead-board {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.fc-lab-lead-block:last-child {
-  margin-bottom: 0;
-}
-.fc-lab-lead-block__head {
-  margin-bottom: var(--gv-space-3, 12px);
-}
-.fc-lab-lead-block__title {
-  margin: 0;
-  font-size: 0.95rem;
+.fc-lab-lead-list__cols {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1.6fr) 110px 96px 72px;
+  gap: 10px 12px;
+  padding: 0 14px;
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.02em;
-  color: var(--accent-blue, #0021a5);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #5b6b7c;
 }
-.fc-lab-lead-block__sub {
-  margin: 4px 0 0;
-  font-size: 0.8rem;
-  color: var(--text-muted, #5b6b7c);
+.fc-lab-lead-list__cols span:last-child {
+  text-align: right;
 }
 .fc-lab-lead-list {
   display: flex;
@@ -372,7 +370,7 @@
 }
 .fc-lab-lead-row {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) auto minmax(72px, 0.7fr) auto;
+  grid-template-columns: 28px minmax(0, 1.6fr) 110px 96px 72px;
   align-items: center;
   gap: 10px 12px;
   padding: 12px 14px;
@@ -380,17 +378,27 @@
   color: inherit;
   border: 1px solid rgba(0, 33, 165, 0.12);
   border-left: 3px solid #0021a5;
-  background: linear-gradient(105deg, rgba(0, 33, 165, 0.04), rgba(255, 255, 255, 0.9) 42%);
-  border-radius: 10px;
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  background: linear-gradient(105deg, rgba(0, 33, 165, 0.035), rgba(255, 255, 255, 0.96) 48%);
+  border-radius: 12px;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 .fc-lab-lead-row--next {
   border-left-color: #fa4616;
-  background: linear-gradient(105deg, rgba(250, 70, 22, 0.08), rgba(255, 255, 255, 0.94) 46%);
+  background: linear-gradient(105deg, rgba(250, 70, 22, 0.1), rgba(255, 255, 255, 0.97) 50%);
+  box-shadow: 0 6px 18px rgba(250, 70, 22, 0.08);
 }
 .fc-lab-lead-row:hover {
   transform: translateY(-1px);
   border-color: rgba(0, 33, 165, 0.28);
+}
+.fc-lab-lead-row__rank {
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #94a3b8;
+  text-align: center;
+}
+.fc-lab-lead-row--next .fc-lab-lead-row__rank {
+  color: #fa4616;
 }
 .fc-lab-lead-row__identity {
   min-width: 0;
@@ -413,11 +421,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.fc-lab-lead-row__badge-slot {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+}
 .fc-lab-lead-stamp {
-  justify-self: start;
+  display: inline-flex;
+  align-items: center;
   padding: 4px 8px;
   border-radius: 999px;
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -427,9 +441,8 @@
   background: #fa4616;
   color: #fff;
 }
-.fc-lab-lead-stamp--lead {
-  background: rgba(0, 33, 165, 0.12);
-  color: #0021a5;
+.fc-lab-lead-row__rival-slot {
+  min-width: 0;
 }
 .fc-lab-lead-row__rival {
   display: inline-flex;
@@ -460,19 +473,24 @@
   font-weight: 800;
   color: #0021a5;
 }
-.fc-lab-lead-row__margin--solo {
+.fc-lab-lead-row__rival-empty {
+  font-size: 0.75rem;
+  font-weight: 700;
   color: #5b6b7c;
 }
 .fc-lab-lead-row__right {
   display: inline-flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 6px;
-  justify-self: end;
 }
 .fc-lab-lead-row__pct {
   font-size: 1.05rem;
   font-weight: 900;
   color: #0021a5;
+  font-variant-numeric: tabular-nums;
+  min-width: 3.2ch;
+  text-align: right;
 }
 .fc-lab-panel-shell + .fc-lab-panel-shell,
 .fc-lab-panel-shell + .rh-cc-module,
@@ -481,15 +499,19 @@
   margin-top: var(--gv-space-5, 20px);
 }
 @media (max-width: 720px) {
-  .fc-lab-lead-row {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "id stamp"
-      "rival pct";
+  .fc-lab-lead-list__cols {
+    display: none;
   }
+  .fc-lab-lead-row {
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "rank id badge"
+      "rank rival pct";
+  }
+  .fc-lab-lead-row__rank { grid-area: rank; align-self: start; padding-top: 2px; }
   .fc-lab-lead-row__identity { grid-area: id; }
-  .fc-lab-lead-stamp { grid-area: stamp; justify-self: end; }
-  .fc-lab-lead-row__rival { grid-area: rival; }
+  .fc-lab-lead-row__badge-slot { grid-area: badge; justify-content: flex-end; }
+  .fc-lab-lead-row__rival-slot { grid-area: rival; }
   .fc-lab-lead-row__right { grid-area: pct; }
 }
 

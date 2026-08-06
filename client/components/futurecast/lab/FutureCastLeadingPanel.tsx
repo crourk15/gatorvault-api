@@ -16,7 +16,8 @@ import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import {
   floridaLeadMargin,
   isFloridaLeadingOnBoard,
-  isLikelyNextCommit,
+  isNextCommitPick,
+  nextCommitScore,
   topThreatVsFlorida,
 } from './competing-schools';
 import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
@@ -29,27 +30,53 @@ type Props = {
   bare?: boolean;
 };
 
+function RivalCell({ player }: { player: FcLabTarget }): React.ReactElement {
+  const threat = topThreatVsFlorida(player);
+  const margin = Math.round(floridaLeadMargin(player));
+  if (!threat) {
+    return <span className="fc-lab-lead-row__rival-empty">Board lead</span>;
+  }
+  const logo = schoolLogoUrl(threat.name);
+  const initials = schoolLogoInitials(threat.name) || threat.label;
+  return (
+    <span className="fc-lab-lead-row__rival" aria-label={`Leads ${threat.label} by ${Math.max(margin, 1)}`}>
+      {logo ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className="fc-lab-lead-row__rival-logo" src={logo} alt="" width={22} height={22} loading="lazy" decoding="async" />
+      ) : (
+        <span className="fc-lab-lead-row__rival-fallback" aria-hidden>
+          {initials}
+        </span>
+      )}
+      <span className="fc-lab-lead-row__margin">+{Math.max(margin, 1)}</span>
+    </span>
+  );
+}
+
 function LeadRow({
   player,
   showMovement,
-  stamp,
+  nextPick,
+  rank,
 }: {
   player: FcLabTarget;
   showMovement: boolean;
-  stamp: 'next' | 'lead';
+  nextPick: boolean;
+  rank: number;
 }): React.ReactElement {
   const pct = ufPctFromFc(player.ufProbability);
   const delta = showMovement ? Math.round(player.delta7d ?? 0) : 0;
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
-  const threat = topThreatVsFlorida(player);
-  const margin = Math.round(floridaLeadMargin(player));
 
   return (
     <a
       href={playerProfileRoute(player.slug, 'futurecast')}
-      className={`fc-lab-lead-row fc-lab-lead-row--${stamp}`}
-      data-testid={`fc-lab-lead-row-${stamp}`}
+      className={`fc-lab-lead-row${nextPick ? ' fc-lab-lead-row--next' : ''}`}
+      data-testid={nextPick ? 'fc-lab-lead-row-next' : 'fc-lab-lead-row-lead'}
     >
+      <span className="fc-lab-lead-row__rank" aria-hidden>
+        {rank}
+      </span>
       <div className="fc-lab-lead-row__identity">
         <span className="fc-lab-lead-row__name">{player.name}</span>
         <span className="fc-lab-lead-row__meta">
@@ -58,38 +85,12 @@ function LeadRow({
           {player.stars != null ? ` · ${player.stars}★` : ''}
         </span>
       </div>
-      <span className={`fc-lab-lead-stamp fc-lab-lead-stamp--${stamp}`}>
-        {stamp === 'next' ? 'Likely next' : 'Leading'}
-      </span>
-      <span className="fc-lab-lead-row__rival" aria-label={threat ? `Leads ${threat.label}` : 'Board lead'}>
-        {threat ? (
-          <>
-            {(() => {
-              const logo = schoolLogoUrl(threat.name);
-              const initials = schoolLogoInitials(threat.name) || threat.label;
-              return logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  className="fc-lab-lead-row__rival-logo"
-                  src={logo}
-                  alt=""
-                  width={22}
-                  height={22}
-                  loading="lazy"
-                  decoding="async"
-                />
-              ) : (
-                <span className="fc-lab-lead-row__rival-fallback" aria-hidden>
-                  {initials}
-                </span>
-              );
-            })()}
-            <span className="fc-lab-lead-row__margin">+{Math.max(margin, 1)}</span>
-          </>
-        ) : (
-          <span className="fc-lab-lead-row__margin fc-lab-lead-row__margin--solo">Lead</span>
-        )}
-      </span>
+      <div className="fc-lab-lead-row__badge-slot">
+        {nextPick ? <span className="fc-lab-lead-stamp fc-lab-lead-stamp--next">Next commit</span> : null}
+      </div>
+      <div className="fc-lab-lead-row__rival-slot">
+        <RivalCell player={player} />
+      </div>
       <div className="fc-lab-lead-row__right">
         <strong className="fc-lab-lead-row__pct">{pct}%</strong>
         {showMovement && delta !== 0 ? <MovementBadge delta={delta} tone={tone} /> : null}
@@ -98,17 +99,17 @@ function LeadRow({
   );
 }
 
-function sortLeaders(a: FcLabTarget, b: FcLabTarget): number {
+function sortByNextCommit(a: FcLabTarget, b: FcLabTarget): number {
+  const score = nextCommitScore(b) - nextCommitScore(a);
+  if (score !== 0) return score;
   const uf = ufPctFromFc(b.ufProbability) - ufPctFromFc(a.ufProbability);
   if (uf !== 0) return uf;
-  const margin = floridaLeadMargin(b) - floridaLeadMargin(a);
-  if (margin !== 0) return margin;
-  return (b.delta7d ?? 0) - (a.delta7d ?? 0);
+  return floridaLeadMargin(b) - floridaLeadMargin(a);
 }
 
 /**
- * Fan-facing scoreboard: who Florida is ahead on / who looks next to commit.
- * Separate from chase priority (Targets) and share-climate tabs (Battles).
+ * Fan scoreboard: Florida lead board with GV Next Commit picks called out.
+ * Separate from Priority chase and Share climate.
  */
 export function FutureCastLeadingPanel({
   masterBoard,
@@ -143,57 +144,44 @@ export function FutureCastLeadingPanel({
       .map(futureCastPlayerToLabTarget);
   }, [discoveryView, focusYear, highPriority, masterBoard.players, trendingBoard]);
 
-  const { likelyNext, leadingRest } = useMemo(() => {
-    const leaders = pool.filter(isFloridaLeadingOnBoard).sort(sortLeaders);
-    const next = leaders.filter((p) => isLikelyNextCommit(p)).slice(0, 6);
-    const nextSlugs = new Set(next.map((p) => p.slug));
-    const rest = leaders.filter((p) => !nextSlugs.has(p.slug)).slice(0, 8);
-    return { likelyNext: next, leadingRest: rest };
-  }, [pool]);
-
-  const showMovement = useMemo(
-    () => movementDeltasAreBelievable([...likelyNext, ...leadingRest]),
-    [likelyNext, leadingRest]
+  const leaders = useMemo(
+    () => pool.filter(isFloridaLeadingOnBoard).sort(sortByNextCommit).slice(0, 10),
+    [pool]
   );
 
-  if (!likelyNext.length && !leadingRest.length) return null;
+  const showMovement = useMemo(() => movementDeltasAreBelievable(leaders), [leaders]);
 
-  const title = discoveryView ? `${focusYear} Leading now` : 'Leading now';
-  const sub = discoveryView
-    ? 'Who Florida is ahead on — separate from the priority chase below.'
-    : 'Who Florida is ahead on right now — closers first, then the rest of the lead board.';
+  if (!leaders.length) return null;
+
+  const nextCount = leaders.filter((p) => isNextCommitPick(p)).length;
+  const title = discoveryView ? `${focusYear} Next commits` : 'Next commits';
+  const sub =
+    nextCount > 0
+      ? 'GatorVault read on who Florida is ahead on — Next commit marks the closest flips.'
+      : 'GatorVault read on who Florida is ahead on right now.';
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-leading">
-      {likelyNext.length ? (
-        <div className="fc-lab-lead-block" data-testid="fc-lab-likely-next">
-          <div className="fc-lab-lead-block__head">
-            <h3 className="fc-lab-lead-block__title">Likely next</h3>
-            <p className="fc-lab-lead-block__sub">Leading the field at 60%+ Florida share</p>
-          </div>
-          <div className="fc-lab-lead-list">
-            {likelyNext.map((p) => (
-              <LeadRow key={p.slug} player={p} showMovement={showMovement} stamp="next" />
-            ))}
-          </div>
+      <div className="fc-lab-lead-board" data-testid="fc-lab-next-commits">
+        <div className="fc-lab-lead-list__cols" aria-hidden="true">
+          <span>#</span>
+          <span>Name</span>
+          <span>GV call</span>
+          <span>Lead vs</span>
+          <span>UF %</span>
         </div>
-      ) : null}
-
-      {leadingRest.length ? (
-        <div className="fc-lab-lead-block" data-testid="fc-lab-leading-rest">
-          <div className="fc-lab-lead-block__head">
-            <h3 className="fc-lab-lead-block__title">Also leading</h3>
-            <p className="fc-lab-lead-block__sub">
-              Ahead of the field even when the share is still splitting
-            </p>
-          </div>
-          <div className="fc-lab-lead-list">
-            {leadingRest.map((p) => (
-              <LeadRow key={p.slug} player={p} showMovement={showMovement} stamp="lead" />
-            ))}
-          </div>
+        <div className="fc-lab-lead-list">
+          {leaders.map((p, i) => (
+            <LeadRow
+              key={p.slug}
+              player={p}
+              showMovement={showMovement}
+              nextPick={isNextCommitPick(p)}
+              rank={i + 1}
+            />
+          ))}
         </div>
-      ) : null}
+      </div>
     </FutureCastPanelShell>
   );
 }
