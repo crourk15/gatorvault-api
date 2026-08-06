@@ -115,22 +115,28 @@ export function PlayerHeader({
       </div>
 
       <div className="fc-profile-header__scores">
-        <div className={`fc-score-card fc-score-card--${metrics.ufFitTier}`}>
-          <span className="fc-score-card__label">UF Fit Score™</span>
+        <div className={`fc-score-card fc-score-card--elite-panel fc-score-card--${metrics.ufFitTier}`}>
+          <span className="fc-score-card__label">UF Fit</span>
           <span className="fc-score-card__value">{metrics.ufFitScore}</span>
           <span className="fc-score-card__tier">
             {metrics.ufFitLabel ?? fitTierLabel(metrics.ufFitTier)}
           </span>
         </div>
         {!metrics.portalHidden ? (
-          <div className={`fc-score-card fc-score-card--portal fc-score-card--portal-${metrics.portalColor}`}>
-            <span className="fc-score-card__label">Portal Likelihood</span>
+          <div
+            className={`fc-score-card fc-score-card--elite-panel fc-score-card--portal fc-score-card--portal-${metrics.portalColor}`}
+          >
+            <span className="fc-score-card__label">Portal odds</span>
             <span className="fc-score-card__value">{metrics.portalLikelihoodPct ?? 0}%</span>
+            <span className="fc-score-card__tier">Likelihood</span>
           </div>
         ) : null}
-        <div className="fc-score-card fc-score-card--signals">
-          <span className="fc-score-card__label">Signals</span>
+        <div className="fc-score-card fc-score-card--elite-panel fc-score-card--signals">
+          <span className="fc-score-card__label">Intel</span>
           <span className="fc-score-card__value">{metrics.signalCount}</span>
+          <span className="fc-score-card__tier">
+            {metrics.signalCount === 1 ? 'Recent hit' : 'Recent hits'}
+          </span>
         </div>
       </div>
     </header>

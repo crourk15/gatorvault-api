@@ -8,7 +8,7 @@ type Props = {
   year: number;
 };
 
-type MetaChip = { kind: 'stars' | 'pos' | 'home' | 'rank'; text: string };
+type RankCell = { rank: string; label: string };
 
 /** Strip API "Vault X —" prefix when present on legacy payloads. */
 function stripVaultLabel(text: string | null | undefined, label: string): string | null {
@@ -34,55 +34,46 @@ function commitStamp(commit: RhHubCommit): { label: string; tone: 'enrolled' | '
   if (/sign|loi|inked/i.test(raw)) return { label: 'Committed', tone: 'committed' };
   if (/^headliner$/i.test(raw)) return { label: 'Headliner', tone: 'accent' };
   if (/^enrolled$/i.test(raw)) return { label: 'Enrolled', tone: 'enrolled' };
-  // Stars belong in the mark / meta chips — stamp stays commitment language.
   return { label: 'Committed', tone: 'committed' };
 }
 
-/** Break the flat meta string into readable chips. */
-function buildMetaChips(commit: RhHubCommit): MetaChip[] {
-  const chips: MetaChip[] = [];
-  const seen = new Set<string>();
-  const push = (chip: MetaChip) => {
-    const key = chip.text.toLowerCase();
-    if (!chip.text || seen.has(key)) return;
-    seen.add(key);
-    chips.push(chip);
-  };
-
-  if (commit.stars != null && commit.stars > 0) {
-    push({ kind: 'stars', text: `${commit.stars}★` });
-  }
-  if (commit.position) push({ kind: 'pos', text: commit.position });
-
+function parseMeta(commit: RhHubCommit): { hometown: string | null; ranks: RankCell[] } {
   const meta = String(commit.metaLine || commit.rankNote || '').trim();
-  if (!meta) return chips;
+  let hometown: string | null = null;
+  const ranks: RankCell[] = [];
+  if (!meta) return { hometown, ranks };
 
   for (const seg of meta.split('·').map((s) => s.trim()).filter(Boolean)) {
-    // Skip "5★ IOL" style first segment — already covered by stars + pos chips.
     if (/^\d\s*★/.test(seg)) continue;
     if (commit.position && seg.toUpperCase() === commit.position.toUpperCase()) continue;
-    if (/^#\d/.test(seg)) {
-      push({ kind: 'rank', text: seg.replace(/\bnationally\b/i, 'natl').replace(/\bnatl\.?/i, 'NATL') });
+
+    const rankMatch = seg.match(/^#(\d+)\s*(.+)$/i);
+    if (rankMatch) {
+      let label = rankMatch[2]
+        .replace(/\bnationally\b/i, 'NATL')
+        .replace(/\bnatl\.?/i, 'NATL')
+        .trim()
+        .toUpperCase();
+      ranks.push({ rank: `#${rankMatch[1]}`, label });
       continue;
     }
-    push({ kind: 'home', text: seg });
+    if (!hometown) hometown = seg;
   }
 
-  return chips;
+  return { hometown, ranks };
 }
 
 /**
  * Fan-first commit card — same surface for every class year.
- * Identity + meta chips + composite score; Vault Scouting on the profile.
+ * Editorial meta strip + composite score; Vault Scouting on the profile.
  */
 export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
   const skinnyRaw = commit.skinny?.trim() || null;
   const skinny = stripVaultLabel(skinnyRaw, 'Eval');
   const showJersey = year <= 2026 && commit.jerseyNumber != null && String(commit.jerseyNumber).trim() !== '';
   const stamp = commitStamp(commit);
-  const metaChips = buildMetaChips(commit);
-  const rating =
-    commit.rating && commit.rating !== '—' ? commit.rating : null;
+  const { hometown, ranks } = parseMeta(commit);
+  const rating = commit.rating && commit.rating !== '—' ? commit.rating : null;
 
   return (
     <article
@@ -105,18 +96,15 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
           <a href={commit.profileUrl} className="rh-commit-name">
             {commit.name}
           </a>
-          {metaChips.length ? (
-            <ul className="rh-elite-commit-card__meta-chips" aria-label="Player meta">
-              {metaChips.map((chip) => (
-                <li
-                  key={`${chip.kind}-${chip.text}`}
-                  className={`rh-elite-commit-card__chip rh-elite-commit-card__chip--${chip.kind}`}
-                >
-                  {chip.text}
-                </li>
-              ))}
-            </ul>
-          ) : null}
+          <p className="rh-elite-commit-card__identity-line">
+            {commit.stars != null && commit.stars > 0 ? (
+              <span className="rh-elite-commit-card__id-stars">{commit.stars}★</span>
+            ) : null}
+            {commit.position ? (
+              <span className="rh-elite-commit-card__id-pos">{commit.position}</span>
+            ) : null}
+            {hometown ? <span className="rh-elite-commit-card__id-home">{hometown}</span> : null}
+          </p>
         </div>
 
         <span
@@ -126,6 +114,17 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
           {stamp.label}
         </span>
       </div>
+
+      {ranks.length ? (
+        <ul className="rh-elite-commit-card__rank-strip" aria-label="Rankings">
+          {ranks.map((cell) => (
+            <li key={`${cell.rank}-${cell.label}`} className="rh-elite-commit-card__rank-cell">
+              <span className="rh-elite-commit-card__rank-num">{cell.rank}</span>
+              <span className="rh-elite-commit-card__rank-label">{cell.label}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
 
       {commit.inState ? (
         <div className="rh-commit-badges rh-elite-commit-card__badges">

@@ -382,6 +382,41 @@
   text-align: center;
 }
 
+.fc-score-card--elite-panel {
+  position: relative;
+  overflow: hidden;
+  padding: 0.95rem 0.85rem 0.85rem;
+  border-radius: 14px;
+  background:
+    linear-gradient(160deg, rgba(15, 35, 70, 0.95) 0%, rgba(7, 16, 34, 0.98) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  text-align: left;
+}
+
+.fc-score-card--elite-panel::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #fa4616, #0021a5);
+}
+
+.fc-score-card--elite-panel.fc-score-card--elite::before,
+.fc-score-card--elite-panel.fc-score-card--elite {
+  border-color: rgba(250, 70, 22, 0.45);
+}
+
+.fc-score-card--elite-panel.fc-score-card--elite::before {
+  background: linear-gradient(180deg, #fa4616, #fb923c);
+}
+
+.fc-score-card--elite-panel.fc-score-card--signals::before {
+  background: linear-gradient(180deg, #38bdf8, #0021a5);
+}
+
 .fc-score-card__label {
   display: block;
   font-size: 0.625rem;
@@ -389,6 +424,14 @@
   letter-spacing: 0.06em;
   color: #64748b;
   margin-bottom: 0.25rem;
+}
+
+.fc-score-card--elite-panel .fc-score-card__label {
+  margin: 0 0 0.35rem 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(226, 232, 240, 0.72);
 }
 
 .fc-score-card__value {
@@ -399,7 +442,34 @@
   color: #fff;
 }
 
+.fc-score-card--elite-panel .fc-score-card__value {
+  margin-left: 0.35rem;
+  font-size: clamp(1.85rem, 5vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
 .fc-score-card__tier { font-size: 0.75rem; color: #fb923c; }
+
+.fc-score-card--elite-panel .fc-score-card__tier {
+  display: inline-block;
+  margin: 0.45rem 0 0 0.35rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(250, 70, 22, 0.35);
+  background: rgba(250, 70, 22, 0.1);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fdba74;
+}
+
+.fc-score-card--elite-panel.fc-score-card--signals .fc-score-card__tier {
+  border-color: rgba(56, 189, 248, 0.3);
+  background: rgba(56, 189, 248, 0.08);
+  color: #7dd3fc;
+}
 
 .fc-score-card--elite { border-color: rgba(250, 70, 22, 0.5); }
 .fc-score-card--strong { border-color: rgba(59, 130, 246, 0.45); }
@@ -658,6 +728,49 @@
   margin: 0.25rem 0;
   font-size: 0.9375rem;
   color: var(--gv-navy, #001a33);
+}
+
+/* Elite recent-activity cards — clean staff notes, no promo spam layout. */
+.fc-signal-feed--elite {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.fc-signal-feed--elite .fc-signal-feed__item,
+.fc-signal-feed--elite.fc-signal-feed--compact li {
+  padding: 0.85rem 0.9rem;
+  border: 1px solid rgba(0, 33, 165, 0.1);
+  border-radius: 12px;
+  background: linear-gradient(165deg, rgba(0, 33, 165, 0.04), #ffffff 55%);
+  border-bottom: 1px solid rgba(0, 33, 165, 0.1);
+}
+
+.fc-signal-feed--elite .fc-signal-feed__head {
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.fc-signal-feed--elite .fc-signal-feed__type {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #c2410c;
+}
+
+.fc-signal-feed--elite .fc-signal-feed__meta {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.fc-signal-feed--elite .fc-signal-feed__value {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #0f172a;
+  letter-spacing: -0.01em;
 }
 
 .fc-offer-list { margin: 0; padding-left: 1.25rem; }

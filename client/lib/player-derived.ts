@@ -257,6 +257,59 @@ export function signalSummaryText(signals: DiscoverySignal[]): string {
   return `${signals.length} signal${signals.length === 1 ? '' : 's'} · ${types.slice(0, 3).join(', ')}${types.length > 3 ? '…' : ''}`;
 }
 
+/** Fan-facing signal type labels — no raw EVALUATION_NOTE style bands. */
+export function fanSignalTypeLabel(signalType: string | null | undefined): string {
+  const type = String(signalType || '').toUpperCase().replace(/\s+/g, '_');
+  const map: Record<string, string> = {
+    EVALUATION_NOTE: 'Staff note',
+    EVAL_NOTE: 'Staff note',
+    OFFER: 'Offer',
+    VISIT: 'Visit',
+    OFFICIAL_VISIT: 'Official visit',
+    UNOFFICIAL_VISIT: 'Unofficial visit',
+    COMMIT: 'Commit',
+    DECOMMIT: 'Decommit',
+    COMPETING_INTEREST: 'Board move',
+    SOCIAL_MOMENTUM: 'Momentum',
+    STAFF_FLAG: 'Staff flag',
+    PORTAL_ACTIVITY: 'Portal',
+    INTEL: 'Intel',
+  };
+  if (map[type]) return map[type];
+  return type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) || 'Update';
+}
+
+/**
+ * Strip emoji / promo spam / cross-player bleed from discovery note text.
+ * Keeps the first clean sentence about the current player.
+ */
+export function sanitizeFanSignalText(text: string | null | undefined): string {
+  let raw = String(text || '').trim();
+  if (!raw) return '';
+
+  // Drop emoji / siren promo wrappers.
+  raw = raw
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  // Cut promo / other-player bleed: "… Izayah Vickers — Florida Recruiting Intel …"
+  raw = raw.replace(
+    /\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3}\s*[—\-–]\s*.*(?:Recruiting Intel|behind the scenes).*$/i,
+    ''
+  );
+  raw = raw.replace(/\s*(?:🚨\s*)?Florida Recruiting Intel.*$/i, '');
+  raw = raw.replace(/\s*A lot is happening behind the scenes.*$/i, '');
+
+  // Prefer the first 1–2 clean sentences.
+  const sentences = raw.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [raw];
+  const kept = sentences
+    .map((s) => s.trim())
+    .filter((s) => s.length > 12 && !/recruiting intel/i.test(s))
+    .slice(0, 2);
+  return (kept.join(' ') || raw).replace(/\s+/g, ' ').trim();
+}
+
 export function formatSignalValue(signal: DiscoverySignal | { signalType?: string; signalValue?: Record<string, unknown>; value?: Record<string, unknown> }): string {
   const raw = signal as {
     signalType?: string;
@@ -276,23 +329,25 @@ export function formatSignalValue(signal: DiscoverySignal | { signalType?: strin
     }
     return school;
   }
-  if (v.note) return String(v.note);
-  if (v.message) return String(v.message);
+  if (v.note) return sanitizeFanSignalText(String(v.note)) || '—';
+  if (v.message) return sanitizeFanSignalText(String(v.message)) || '—';
   if (v.delta) return `+${v.delta}`;
   const entries = Object.entries(v).filter(([, val]) => val != null && val !== '');
   if (!entries.length) return '—';
-  return entries
-    .map(([k, val]) => {
-      const text =
-        val == null || val === ''
-          ? ''
-          : typeof val === 'object'
-            ? JSON.stringify(val)
-            : String(val);
-      return text ? `${k.replace(/_/g, ' ')}: ${text}` : '';
-    })
-    .filter(Boolean)
-    .join(' · ');
+  return sanitizeFanSignalText(
+    entries
+      .map(([k, val]) => {
+        const text =
+          val == null || val === ''
+            ? ''
+            : typeof val === 'object'
+              ? JSON.stringify(val)
+              : String(val);
+        return text ? `${k.replace(/_/g, ' ')}: ${text}` : '';
+      })
+      .filter(Boolean)
+      .join(' · ')
+  ) || '—';
 }
 
 export function formatDate(iso: unknown): string {

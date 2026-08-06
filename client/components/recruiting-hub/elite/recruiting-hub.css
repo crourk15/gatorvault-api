@@ -1224,49 +1224,94 @@
   color: #64748b;
 }
 
-.rh-elite-chrome .rh-elite-commit-card__meta-chips {
+/* Editorial identity line — not pill spam. */
+.rh-elite-chrome .rh-elite-commit-card__identity-line {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin: 7px 0 0;
+  align-items: baseline;
+  gap: 0.35rem 0.55rem;
+  margin: 5px 0 0;
+  font-size: 12px;
+  line-height: 1.3;
+  color: #64748b;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__id-stars {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #c2410c;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__id-pos {
+  font-weight: 800;
+  color: #0021a5;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__id-home {
+  color: #64748b;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__id-home::before {
+  content: '·';
+  margin-right: 0.55rem;
+  color: #cbd5e1;
+}
+
+/* Rank strip — score cells, not basic pills. */
+.rh-elite-chrome .rh-elite-commit-card__rank-strip {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 12px 0 0;
   padding: 0;
   list-style: none;
 }
 
-.rh-elite-chrome .rh-elite-commit-card__chip {
-  margin: 0;
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
+.rh-elite-chrome .rh-elite-commit-card__rank-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 7px 8px 6px;
+  border-radius: 8px;
+  background: linear-gradient(165deg, rgba(0, 33, 165, 0.07), rgba(0, 33, 165, 0.02));
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  min-width: 0;
 }
 
-.rh-elite-chrome .rh-elite-commit-card__chip--stars {
-  color: #9a3412;
-  background: rgba(250, 70, 22, 0.12);
-  border: 1px solid rgba(250, 70, 22, 0.28);
-}
-
-.rh-elite-chrome .rh-elite-commit-card__chip--pos {
-  color: #001a55;
-  background: rgba(0, 33, 165, 0.08);
-  border: 1px solid rgba(0, 33, 165, 0.18);
-}
-
-.rh-elite-chrome .rh-elite-commit-card__chip--home {
-  color: #334155;
-  background: #f1f5f9;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-}
-
-.rh-elite-chrome .rh-elite-commit-card__chip--rank {
-  color: #0021a5;
-  background: #ffffff;
-  border: 1px solid rgba(0, 33, 165, 0.22);
+.rh-elite-chrome .rh-elite-commit-card__rank-num {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #001a33;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__rank-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+@media (max-width: 380px) {
+  .rh-elite-chrome .rh-elite-commit-card__rank-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .rh-elite-chrome .rh-elite-commit-card__stamp {

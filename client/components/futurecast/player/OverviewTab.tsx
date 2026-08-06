@@ -4,7 +4,12 @@
 import React from 'react';
 import type { PlayerProfileBundle } from '../../../lib/player-api';
 import type { PlayerMetrics } from '../../../lib/player-derived';
-import { signalSummaryText, formatSignalValue, formatDate } from '../../../lib/player-derived';
+import {
+  signalSummaryText,
+  formatSignalValue,
+  formatDate,
+  fanSignalTypeLabel,
+} from '../../../lib/player-derived';
 import { dedupeDiscoverySignals, isFeedSignal, signalTimestamp } from '../../../lib/player-profile-normalize';
 import { coerceDisplayText } from '../../../lib/coerce-text';
 import { RelatedPlayers } from './RelatedPlayers';
@@ -119,16 +124,21 @@ export function OverviewTab({
 
   const pulse =
     recentSignals.length > 0 ? (
-      <ul className="fc-signal-feed fc-signal-feed--compact">
-        {recentSignals.map((s) => (
-          <li key={s.id}>
-            <span className="fc-signal-feed__type">{s.signalType.replace(/_/g, ' ')}</span>
-            <span className="fc-signal-feed__value">{formatSignalValue(s)}</span>
-            {signalMeta(s) ? (
-              <span className="fc-signal-feed__meta">{signalMeta(s)}</span>
-            ) : null}
-          </li>
-        ))}
+      <ul className="fc-signal-feed fc-signal-feed--compact fc-signal-feed--elite">
+        {recentSignals.map((s) => {
+          const value = formatSignalValue(s);
+          if (!value || value === '—') return null;
+          const when = signalMeta(s);
+          return (
+            <li key={s.id} className="fc-signal-feed__item">
+              <div className="fc-signal-feed__head">
+                <span className="fc-signal-feed__type">{fanSignalTypeLabel(s.signalType)}</span>
+                {when ? <span className="fc-signal-feed__meta">{when}</span> : null}
+              </div>
+              <p className="fc-signal-feed__value">{value}</p>
+            </li>
+          );
+        })}
       </ul>
     ) : offerCount > 0 ? (
       <p className="fc-profile-muted">
