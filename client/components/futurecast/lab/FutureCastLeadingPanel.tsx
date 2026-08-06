@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import type { MasterBoardResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
-import { FutureCastPanelShell, MovementBadge } from './primitives';
+import { FutureCastPanelShell } from './primitives';
 import {
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
@@ -30,29 +30,6 @@ type Props = {
   bare?: boolean;
 };
 
-function RivalCell({ player }: { player: FcLabTarget }): React.ReactElement {
-  const threat = topThreatVsFlorida(player);
-  const margin = Math.round(floridaLeadMargin(player));
-  if (!threat) {
-    return <span className="fc-lab-lead-row__rival-empty">Board lead</span>;
-  }
-  const logo = schoolLogoUrl(threat.name);
-  const initials = schoolLogoInitials(threat.name) || threat.label;
-  return (
-    <span className="fc-lab-lead-row__rival" aria-label={`Leads ${threat.label} by ${Math.max(margin, 1)}`}>
-      {logo ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img className="fc-lab-lead-row__rival-logo" src={logo} alt="" width={22} height={22} loading="lazy" decoding="async" />
-      ) : (
-        <span className="fc-lab-lead-row__rival-fallback" aria-hidden>
-          {initials}
-        </span>
-      )}
-      <span className="fc-lab-lead-row__margin">+{Math.max(margin, 1)}</span>
-    </span>
-  );
-}
-
 function LeadRow({
   player,
   showMovement,
@@ -66,35 +43,91 @@ function LeadRow({
 }): React.ReactElement {
   const pct = ufPctFromFc(player.ufProbability);
   const delta = showMovement ? Math.round(player.delta7d ?? 0) : 0;
-  const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
+  const threat = topThreatVsFlorida(player);
+  const margin = Math.max(1, Math.round(floridaLeadMargin(player)));
+  const rivalLabel = threat?.label || threat?.name || null;
+  const logo = threat ? schoolLogoUrl(threat.name) : null;
+  const initials = threat ? schoolLogoInitials(threat.name) || threat.label : '';
+
+  const leadLine = rivalLabel
+    ? `Leads ${rivalLabel} by ${margin}`
+    : 'Florida leads this board';
+  const oddsLine =
+    delta !== 0
+      ? `Florida odds ${pct}% · ${delta > 0 ? 'up' : 'down'} ${Math.abs(delta)} this week`
+      : `Florida odds ${pct}%`;
 
   return (
     <a
       href={playerProfileRoute(player.slug, 'futurecast')}
-      className={`fc-lab-lead-row${nextPick ? ' fc-lab-lead-row--next' : ''}`}
+      className={`fc-lab-lead-card${nextPick ? ' fc-lab-lead-card--next' : ''}`}
       data-testid={nextPick ? 'fc-lab-lead-row-next' : 'fc-lab-lead-row-lead'}
     >
-      <span className="fc-lab-lead-row__rank" aria-hidden>
-        {rank}
-      </span>
-      <div className="fc-lab-lead-row__identity">
-        <span className="fc-lab-lead-row__name">{player.name}</span>
-        <span className="fc-lab-lead-row__meta">
-          {player.position}
-          {player.school ? ` · ${player.school}` : ''}
-          {player.stars != null ? ` · ${player.stars}★` : ''}
+      <div className="fc-lab-lead-card__top">
+        <span className="fc-lab-lead-card__rank" aria-hidden>
+          #{rank}
         </span>
+        <div className="fc-lab-lead-card__identity">
+          <span className="fc-lab-lead-card__name">{player.name}</span>
+          <span className="fc-lab-lead-card__meta">
+            {player.position}
+            {player.school ? ` · ${player.school}` : ''}
+            {player.stars != null ? ` · ${player.stars}★` : ''}
+          </span>
+        </div>
+        {nextPick ? (
+          <span className="fc-lab-lead-stamp fc-lab-lead-stamp--next">Closest to commit</span>
+        ) : (
+          <span className="fc-lab-lead-stamp fc-lab-lead-stamp--lead">Florida ahead</span>
+        )}
       </div>
-      <div className="fc-lab-lead-row__badge-slot">
-        {nextPick ? <span className="fc-lab-lead-stamp fc-lab-lead-stamp--next">Next commit</span> : null}
+
+      <div className="fc-lab-lead-card__facts">
+        <div className="fc-lab-lead-fact">
+          <span className="fc-lab-lead-fact__label">Board lead</span>
+          <span className="fc-lab-lead-fact__value">
+            {threat ? (
+              <>
+                {logo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    className="fc-lab-lead-row__rival-logo"
+                    src={logo}
+                    alt=""
+                    width={20}
+                    height={20}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <span className="fc-lab-lead-row__rival-fallback" aria-hidden>
+                    {initials}
+                  </span>
+                )}
+                <span>{leadLine}</span>
+              </>
+            ) : (
+              <span>{leadLine}</span>
+            )}
+          </span>
+        </div>
+        <div className="fc-lab-lead-fact">
+          <span className="fc-lab-lead-fact__label">Florida chance</span>
+          <span className="fc-lab-lead-fact__value fc-lab-lead-fact__value--strong">{pct}%</span>
+        </div>
+        <div className="fc-lab-lead-fact">
+          <span className="fc-lab-lead-fact__label">7-day move</span>
+          <span
+            className={`fc-lab-lead-fact__value${
+              delta > 0 ? ' is-up' : delta < 0 ? ' is-down' : ''
+            }`}
+          >
+            {delta === 0 ? 'Flat this week' : `${delta > 0 ? 'Up' : 'Down'} ${Math.abs(delta)} pts`}
+          </span>
+        </div>
       </div>
-      <div className="fc-lab-lead-row__rival-slot">
-        <RivalCell player={player} />
-      </div>
-      <div className="fc-lab-lead-row__right">
-        <strong className="fc-lab-lead-row__pct">{pct}%</strong>
-        {showMovement && delta !== 0 ? <MovementBadge delta={delta} tone={tone} /> : null}
-      </div>
+
+      <p className="fc-lab-lead-card__summary">{oddsLine}</p>
     </a>
   );
 }
@@ -108,8 +141,7 @@ function sortByNextCommit(a: FcLabTarget, b: FcLabTarget): number {
 }
 
 /**
- * Fan scoreboard: Florida lead board with GV Next Commit picks called out.
- * Separate from Priority chase and Share climate.
+ * Fan scoreboard: who Florida is ahead on, with closest commit picks called out.
  */
 export function FutureCastLeadingPanel({
   masterBoard,
@@ -153,23 +185,13 @@ export function FutureCastLeadingPanel({
 
   if (!leaders.length) return null;
 
-  const nextCount = leaders.filter((p) => isNextCommitPick(p)).length;
-  const title = discoveryView ? `${focusYear} Next commits` : 'Next commits';
+  const title = discoveryView ? `${focusYear} Who commits next?` : 'Who commits next?';
   const sub =
-    nextCount > 0
-      ? 'GatorVault read on who Florida is ahead on — Next commit marks the closest flips.'
-      : 'GatorVault read on who Florida is ahead on right now.';
+    'Plain-English GatorVault read: who Florida is beating on the board, and who looks closest to flipping.';
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-leading">
       <div className="fc-lab-lead-board" data-testid="fc-lab-next-commits">
-        <div className="fc-lab-lead-list__cols" aria-hidden="true">
-          <span>#</span>
-          <span>Name</span>
-          <span>GV call</span>
-          <span>Lead vs</span>
-          <span>UF %</span>
-        </div>
         <div className="fc-lab-lead-list">
           {leaders.map((p, i) => (
             <LeadRow

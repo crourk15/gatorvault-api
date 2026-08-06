@@ -343,97 +343,78 @@
   filter: drop-shadow(0 0 24px rgba(250, 70, 22, 0.5));
 }
 
-/* ── Next commits / Florida lead board ── */
+/* ── Who commits next? (fan-readable lead cards) ── */
 .fc-lab-lead-board {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-.fc-lab-lead-list__cols {
-  display: grid;
-  grid-template-columns: 28px minmax(0, 1.6fr) 110px 96px 72px;
-  gap: 10px 12px;
-  padding: 0 14px;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #5b6b7c;
-}
-.fc-lab-lead-list__cols span:last-child {
-  text-align: right;
+  gap: 10px;
 }
 .fc-lab-lead-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
-.fc-lab-lead-row {
-  display: grid;
-  grid-template-columns: 28px minmax(0, 1.6fr) 110px 96px 72px;
-  align-items: center;
-  gap: 10px 12px;
-  padding: 12px 14px;
+.fc-lab-lead-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
   text-decoration: none;
   color: inherit;
   border: 1px solid rgba(0, 33, 165, 0.12);
-  border-left: 3px solid #0021a5;
-  background: linear-gradient(105deg, rgba(0, 33, 165, 0.035), rgba(255, 255, 255, 0.96) 48%);
-  border-radius: 12px;
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  border-left: 4px solid #0021a5;
+  border-radius: 14px;
+  background: linear-gradient(120deg, rgba(0, 33, 165, 0.04), #fff 42%);
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.fc-lab-lead-row--next {
+.fc-lab-lead-card--next {
   border-left-color: #fa4616;
-  background: linear-gradient(105deg, rgba(250, 70, 22, 0.1), rgba(255, 255, 255, 0.97) 50%);
-  box-shadow: 0 6px 18px rgba(250, 70, 22, 0.08);
+  background: linear-gradient(120deg, rgba(250, 70, 22, 0.1), #fff 46%);
+  box-shadow: 0 8px 22px rgba(250, 70, 22, 0.08);
 }
-.fc-lab-lead-row:hover {
+.fc-lab-lead-card:hover {
   transform: translateY(-1px);
   border-color: rgba(0, 33, 165, 0.28);
 }
-.fc-lab-lead-row__rank {
-  font-size: 0.85rem;
+.fc-lab-lead-card__top {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  align-items: start;
+}
+.fc-lab-lead-card__rank {
+  font-size: 0.9rem;
   font-weight: 900;
   color: #94a3b8;
-  text-align: center;
+  padding-top: 2px;
 }
-.fc-lab-lead-row--next .fc-lab-lead-row__rank {
+.fc-lab-lead-card--next .fc-lab-lead-card__rank {
   color: #fa4616;
 }
-.fc-lab-lead-row__identity {
+.fc-lab-lead-card__identity {
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-.fc-lab-lead-row__name {
-  font-weight: 800;
-  font-size: 0.98rem;
+.fc-lab-lead-card__name {
+  font-size: 1.05rem;
+  font-weight: 900;
   color: #001a33;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.2;
 }
-.fc-lab-lead-row__meta {
-  font-size: 0.75rem;
+.fc-lab-lead-card__meta {
+  font-size: 0.78rem;
   color: #5b6b7c;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.fc-lab-lead-row__badge-slot {
-  display: flex;
-  align-items: center;
-  min-height: 24px;
 }
 .fc-lab-lead-stamp {
   display: inline-flex;
   align-items: center;
-  padding: 4px 8px;
+  padding: 5px 10px;
   border-radius: 999px;
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -441,56 +422,78 @@
   background: #fa4616;
   color: #fff;
 }
-.fc-lab-lead-row__rival-slot {
-  min-width: 0;
+.fc-lab-lead-stamp--lead {
+  background: rgba(0, 33, 165, 0.1);
+  color: #0021a5;
 }
-.fc-lab-lead-row__rival {
+.fc-lab-lead-card__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 12px;
+}
+.fc-lab-lead-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(0, 26, 51, 0.03);
+}
+.fc-lab-lead-fact__label {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+.fc-lab-lead-fact__value {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   min-width: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #001a33;
+  line-height: 1.25;
+}
+.fc-lab-lead-fact__value--strong {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #0021a5;
+  font-variant-numeric: tabular-nums;
+}
+.fc-lab-lead-fact__value.is-up {
+  color: #0f766e;
+}
+.fc-lab-lead-fact__value.is-down {
+  color: #b45309;
 }
 .fc-lab-lead-row__rival-logo {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
   border-radius: 4px;
   background: #fff;
+  flex: 0 0 auto;
 }
 .fc-lab-lead-row__rival-fallback {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   display: inline-grid;
   place-items: center;
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 800;
   color: #0021a5;
   background: rgba(0, 33, 165, 0.08);
   border-radius: 4px;
+  flex: 0 0 auto;
 }
-.fc-lab-lead-row__margin {
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: #0021a5;
-}
-.fc-lab-lead-row__rival-empty {
-  font-size: 0.75rem;
+.fc-lab-lead-card__summary {
+  margin: 0;
+  font-size: 0.82rem;
   font-weight: 700;
-  color: #5b6b7c;
-}
-.fc-lab-lead-row__right {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-}
-.fc-lab-lead-row__pct {
-  font-size: 1.05rem;
-  font-weight: 900;
-  color: #0021a5;
-  font-variant-numeric: tabular-nums;
-  min-width: 3.2ch;
-  text-align: right;
+  color: #334155;
 }
 .fc-lab-panel-shell + .fc-lab-panel-shell,
 .fc-lab-panel-shell + .rh-cc-module,
@@ -499,20 +502,16 @@
   margin-top: var(--gv-space-5, 20px);
 }
 @media (max-width: 720px) {
-  .fc-lab-lead-list__cols {
-    display: none;
+  .fc-lab-lead-card__top {
+    grid-template-columns: 32px minmax(0, 1fr);
   }
-  .fc-lab-lead-row {
-    grid-template-columns: 24px minmax(0, 1fr) auto;
-    grid-template-areas:
-      "rank id badge"
-      "rank rival pct";
+  .fc-lab-lead-stamp {
+    grid-column: 2;
+    justify-self: start;
   }
-  .fc-lab-lead-row__rank { grid-area: rank; align-self: start; padding-top: 2px; }
-  .fc-lab-lead-row__identity { grid-area: id; }
-  .fc-lab-lead-row__badge-slot { grid-area: badge; justify-content: flex-end; }
-  .fc-lab-lead-row__rival-slot { grid-area: rival; }
-  .fc-lab-lead-row__right { grid-area: pct; }
+  .fc-lab-lead-card__facts {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Premium target cards ── */
