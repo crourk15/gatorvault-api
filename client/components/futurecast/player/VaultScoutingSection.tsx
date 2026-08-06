@@ -2,7 +2,7 @@
 
 /**
  * Full Vault scouting block for player profiles.
- * Evaluation · Vault Player Comp · Vault Projection — room to breathe off the front card.
+ * Organized reading order: Evaluation → Traits → Comp / Projection pair.
  */
 import React from 'react';
 import { coerceDisplayText } from '../../../lib/coerce-text';
@@ -24,23 +24,25 @@ export function VaultScoutingSection({ scouting }: Props): React.ReactElement | 
 
   if (!evaluation && !comparison && !projection && !strengths.length) return null;
 
+  const hasPair = Boolean(comparison || projection);
+
   return (
     <section className="fc-profile-section fc-vault-scouting" data-testid="vault-scouting-section">
-      <h2>Vault Scouting</h2>
-      <p className="fc-profile-muted fc-profile-section__lede">
-        Film-desk evaluation, player comp, and projection — how Florida sees this get.
-      </p>
+      <header className="fc-vault-scouting__head">
+        <h2>Vault Scouting</h2>
+        <p className="fc-vault-scouting__lede">Film desk · how Florida sees this get</p>
+      </header>
 
       {evaluation ? (
-        <div className="fc-vault-scouting__block">
-          <h3>Evaluation</h3>
-          <p>{evaluation}</p>
+        <div className="fc-vault-scouting__lead">
+          <p className="fc-vault-scouting__kicker">Evaluation</p>
+          <p className="fc-vault-scouting__body">{evaluation}</p>
         </div>
       ) : null}
 
       {strengths.length ? (
-        <div className="fc-vault-scouting__block">
-          <h3>Traits</h3>
+        <div className="fc-vault-scouting__traits-wrap">
+          <p className="fc-vault-scouting__kicker">Traits</p>
           <ul className="fc-vault-scouting__traits">
             {strengths.map((trait) => (
               <li key={trait}>{trait}</li>
@@ -49,17 +51,20 @@ export function VaultScoutingSection({ scouting }: Props): React.ReactElement | 
         </div>
       ) : null}
 
-      {comparison ? (
-        <div className="fc-vault-scouting__block">
-          <h3>Vault Player Comp</h3>
-          <p>{comparison}</p>
-        </div>
-      ) : null}
-
-      {projection ? (
-        <div className="fc-vault-scouting__block fc-vault-scouting__block--projection">
-          <h3>Vault Projection</h3>
-          <p>{projection}</p>
+      {hasPair ? (
+        <div className="fc-vault-scouting__pair">
+          {comparison ? (
+            <div className="fc-vault-scouting__card">
+              <p className="fc-vault-scouting__kicker">Vault Player Comp</p>
+              <p className="fc-vault-scouting__body">{comparison}</p>
+            </div>
+          ) : null}
+          {projection ? (
+            <div className="fc-vault-scouting__card fc-vault-scouting__card--projection">
+              <p className="fc-vault-scouting__kicker">Vault Projection</p>
+              <p className="fc-vault-scouting__body">{projection}</p>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </section>

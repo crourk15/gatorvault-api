@@ -30,16 +30,6 @@ export interface PlayerHeaderProps {
   movementWindow?: FullProfileMovementWindow | null;
 }
 
-function playerInitials(fullName: string, position: string | null | undefined): string {
-  const parts = String(fullName || '')
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2);
-  const initials = parts.map((part) => part[0]?.toUpperCase() || '').join('');
-  if (initials) return initials;
-  return String(position || 'GV').slice(0, 2).toUpperCase();
-}
-
 export function PlayerHeader({
   player,
   metrics,
@@ -53,7 +43,6 @@ export function PlayerHeader({
   const lifecycle = player.status;
   const location = formatPlayerLocation(player.hometown, player.state);
   const stars = validStars(player.stars);
-  const initials = playerInitials(player.fullName, player.position);
   const ufPct =
     futurecastSummary?.gvProbability ??
     futurecastSummary?.ufProbability ??
@@ -77,25 +66,20 @@ export function PlayerHeader({
   }, [player.fullName, player.slug, player.status, inVault]);
 
   return (
-    <header className="fc-profile-header fc-profile-header--elite" data-testid="player-header">
+    <header className="fc-profile-header" data-testid="player-header">
       <div className="fc-profile-header__top">
-        <div className="fc-profile-header__identity">
-          <div className="fc-profile-header__mark" aria-hidden>
-            {initials}
-          </div>
-          <div>
-            <p className="fc-profile-header__position">
-              <PositionIcon position={player.position} size="sm" variant="on-blue" showLabel={false} className="fc-profile-header__pos-icon" />
-              {player.position} · Class of {player.classYear}
+        <div>
+          <p className="fc-profile-header__position">
+            <PositionIcon position={player.position} size="sm" variant="on-blue" showLabel={false} className="fc-profile-header__pos-icon" />
+            {player.position} · Class of {player.classYear}
+          </p>
+          <h1 className="fc-profile-header__name gv-h1">{player.fullName}</h1>
+          {location && <p className="fc-profile-header__location">{location}</p>}
+          {(player.height || player.weight) && (
+            <p className="fc-profile-header__measurables">
+              {formatHeight(player.height)} · {formatWeight(player.weight)}
             </p>
-            <h1 className="fc-profile-header__name gv-h1">{player.fullName}</h1>
-            {location && <p className="fc-profile-header__location">{location}</p>}
-            {(player.height || player.weight) && (
-              <p className="fc-profile-header__measurables">
-                {formatHeight(player.height)} · {formatWeight(player.weight)}
-              </p>
-            )}
-          </div>
+          )}
         </div>
         <button type="button" className="fc-profile-share" onClick={onShare}>
           {copied ? 'Link copied!' : 'Share'}

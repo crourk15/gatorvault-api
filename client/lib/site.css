@@ -2273,35 +2273,20 @@ body.gv-nav-menu-open {
   color: #94a3b8;
 }
 
-.gv-hp-card__identity {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.65rem;
-}
-
-.gv-hp-card__avatar {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 3.25rem;
-  height: 3.25rem;
-  border-radius: 0.9rem;
-  border: 1px solid rgba(250, 70, 22, 0.45);
-  background: linear-gradient(145deg, #fa4616, #7c2d12 60%, #1e293b);
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-}
-
 .gv-hp-card__ratings {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.35rem 0.65rem;
-  margin-bottom: 0;
-  min-width: 0;
+  margin-bottom: 0.55rem;
+}
+
+.gv-hp-card__narrative,
+.gv-hp-card__signals .rh-analyst-signals__text {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #e2e8f0;
 }
 
 .gv-hp-card__composite {

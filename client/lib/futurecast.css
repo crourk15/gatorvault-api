@@ -264,30 +264,6 @@
   border-bottom: none;
 }
 
-.fc-profile-header--elite {
-  background:
-    radial-gradient(700px 220px at 0% 0%, rgba(250, 70, 22, 0.28), transparent 55%),
-    linear-gradient(105deg, #0b1b33 0%, #0021a5 55%, #07111f 100%);
-  border-radius: 0 0 18px 18px;
-}
-
-.fc-profile-header__mark {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 4.5rem;
-  height: 4.5rem;
-  border-radius: 1.1rem;
-  border: 1px solid rgba(250, 70, 22, 0.55);
-  background:
-    linear-gradient(160deg, rgba(250, 70, 22, 0.45), transparent 52%),
-    radial-gradient(circle at 40% 30%, #475569, #0f172a 72%);
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-}
-
 .fc-profile-move {
   border-radius: 9999px;
   padding: 0.2rem 0.65rem;
@@ -493,38 +469,48 @@
   letter-spacing: 0.04em;
 }
 
-/* Vault film-desk scouting on player profiles (full room — not front cards). */
-.fc-vault-scouting__block {
-  margin: 0 0 1.1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(0, 33, 165, 0.12);
+/* Vault film-desk scouting — writing-first layout on profiles. */
+.fc-vault-scouting__head {
+  margin: 0 0 1rem;
 }
 
-.fc-vault-scouting__block:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: 0;
+.fc-vault-scouting__head h2 {
+  margin: 0;
 }
 
-.fc-vault-scouting__block h3 {
-  margin: 0 0 0.45rem;
-  font-family: Source Sans 3, sans-serif;
-  font-size: 0.78rem;
+.fc-vault-scouting__lede {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--gv-muted, #64748b);
+}
+
+.fc-vault-scouting__kicker {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--gv-orange, #fa4616);
 }
 
-.fc-vault-scouting__block p {
-  margin: 0;
-  font-size: 0.98rem;
-  line-height: 1.55;
-  color: var(--gv-navy, #001a33);
+.fc-vault-scouting__lead {
+  margin: 0 0 1.15rem;
+  padding: 0 0 1.1rem;
+  border-bottom: 1px solid rgba(0, 33, 165, 0.12);
 }
 
-.fc-vault-scouting__block--projection p {
+.fc-vault-scouting__body {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.62;
   font-weight: 600;
+  color: var(--gv-navy, #001a33);
+  letter-spacing: -0.01em;
+}
+
+.fc-vault-scouting__traits-wrap {
+  margin: 0 0 1.15rem;
 }
 
 .fc-vault-scouting__traits {
@@ -538,13 +524,42 @@
 
 .fc-vault-scouting__traits li {
   margin: 0;
-  padding: 0.35rem 0.6rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(0, 33, 165, 0.16);
-  background: rgba(0, 33, 165, 0.05);
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(250, 70, 22, 0.22);
+  background: rgba(250, 70, 22, 0.06);
   color: var(--gv-navy, #001a33);
   font-size: 0.78rem;
   font-weight: 700;
+}
+
+.fc-vault-scouting__pair {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 720px) {
+  .fc-vault-scouting__pair {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.fc-vault-scouting__card {
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  background: rgba(0, 33, 165, 0.03);
+}
+
+.fc-vault-scouting__card--projection {
+  border-color: rgba(250, 70, 22, 0.2);
+  background: rgba(250, 70, 22, 0.04);
+}
+
+.fc-vault-scouting__card .fc-vault-scouting__body {
+  font-size: 0.95rem;
+  line-height: 1.55;
 }
 
 .fc-profile-dl {
