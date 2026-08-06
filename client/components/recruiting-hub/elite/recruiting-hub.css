@@ -1110,27 +1110,55 @@
   border-top: 4px solid var(--gator-orange);
 }
 
-/* Compact heat: identity mark + signed stamp — not a dark media band. */
+/* Compact heat: identity mark + commit stamp — not a dark media band. */
 .rh-elite-chrome .rh-elite-commit-card--heat {
   position: relative;
   overflow: hidden;
-  padding: 14px 16px 14px;
+  padding: 15px 16px 14px 18px;
   background:
-    linear-gradient(135deg, rgba(0, 33, 165, 0.06) 0%, rgba(255, 255, 255, 0.96) 42%, #ffffff 100%);
-  border-top: 3px solid var(--gator-orange);
-  box-shadow: 0 6px 18px rgba(0, 33, 165, 0.12);
+    linear-gradient(120deg, rgba(0, 33, 165, 0.09) 0%, rgba(255, 255, 255, 0.97) 38%, #ffffff 100%);
+  border: 1px solid rgba(0, 33, 165, 0.1);
+  border-top: none;
+  border-left: 4px solid var(--gator-orange);
+  border-radius: 12px;
+  box-shadow: 0 8px 22px rgba(0, 33, 165, 0.11);
+}
+
+.rh-elite-chrome .rh-elite-commit-card--heat::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gator-orange) 0%, #0021a5 72%, transparent 100%);
+  pointer-events: none;
 }
 
 .rh-elite-chrome .rh-elite-commit-card--heat::after {
   content: '';
   position: absolute;
-  right: -18px;
-  bottom: -22px;
-  width: 88px;
-  height: 88px;
+  right: -20px;
+  bottom: -26px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(250, 70, 22, 0.12), transparent 68%);
+  background: radial-gradient(circle, rgba(250, 70, 22, 0.14), transparent 70%);
   pointer-events: none;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__watermark {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-52%);
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 4.2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(0, 33, 165, 0.05);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
 }
 
 .rh-elite-chrome .rh-elite-commit-card__top {
@@ -1143,21 +1171,35 @@
 
 .rh-elite-chrome .rh-elite-commit-card__mark {
   flex: 0 0 auto;
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: linear-gradient(160deg, #0021a5 0%, #001a6b 100%);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  min-width: 48px;
+  height: 48px;
+  padding: 0 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 11px;
+  background: linear-gradient(165deg, #0021a5 0%, #00144f 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 4px 10px rgba(0, 33, 165, 0.28);
 }
 
 .rh-elite-chrome .rh-elite-commit-card__pos {
   font-family: var(--gv-font-display, 'Oswald', sans-serif);
   font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   color: #ffffff;
+  line-height: 1;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__stars {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fdba74;
   line-height: 1;
 }
 
@@ -1168,34 +1210,50 @@
 
 .rh-elite-chrome .rh-elite-commit-card--heat .rh-commit-name {
   font-family: var(--gv-font-display, 'Oswald', sans-serif);
-  font-size: 1.2rem;
+  font-size: 1.28rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1.15;
+  letter-spacing: 0.015em;
+  line-height: 1.12;
   color: #001a33;
 }
 
 .rh-elite-chrome .rh-elite-commit-card--heat .rh-commit-meta {
-  margin-top: 3px;
+  margin-top: 4px;
   font-size: 12px;
+  line-height: 1.35;
   color: #64748b;
 }
 
 .rh-elite-chrome .rh-elite-commit-card__stamp {
   flex: 0 0 auto;
   margin-top: 2px;
-  padding: 4px 8px;
-  border: 1.5px solid var(--gator-orange);
+  padding: 5px 9px;
   border-radius: 4px;
   font-family: var(--gv-font-display, 'Oswald', sans-serif);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--gator-orange);
-  background: rgba(250, 70, 22, 0.06);
-  transform: rotate(-3deg);
   line-height: 1;
+  transform: rotate(-2.5deg);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__stamp--committed {
+  border: 1.5px solid #0021a5;
+  color: #0021a5;
+  background: rgba(0, 33, 165, 0.06);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__stamp--enrolled {
+  border: 1.5px solid #15803d;
+  color: #15803d;
+  background: rgba(22, 163, 74, 0.08);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__stamp--accent {
+  border: 1.5px solid var(--gator-orange);
+  color: var(--gator-orange);
+  background: rgba(250, 70, 22, 0.07);
 }
 
 .rh-elite-chrome .rh-elite-commit-card__badges {
@@ -1213,15 +1271,18 @@
   margin-top: 12px;
   padding-top: 10px;
   border-top: 1px solid rgba(0, 33, 165, 0.1);
+  font-weight: 600;
+  color: #64748b;
 }
 
-/* Elite brief — sharper take under identity. */
+/* Elite brief — take line with orange rail. */
 .rh-elite-chrome .rh-commit-skinny--elite {
   position: relative;
   z-index: 1;
   margin: 12px 0 0;
-  padding: 0;
+  padding: 0 0 0 11px;
   border-top: none;
+  border-left: 3px solid rgba(250, 70, 22, 0.85);
   font-size: 13.5px;
   line-height: 1.55;
   font-weight: 600;
