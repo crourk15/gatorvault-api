@@ -400,8 +400,15 @@
 .fc-lab-lead-card__name {
   font-size: 1.05rem;
   font-weight: 900;
-  color: #001a33;
+  color: var(--fc-ink, #001a33);
   line-height: 1.2;
+}
+
+/* Shared Lab ink — same writing color as Who commits next / recruiting cards */
+.fc-lab-cc-page {
+  --fc-ink: #001a33;
+  --fc-ink-muted: #5b6b7c;
+  --fc-ink-body: #334155;
 }
 .fc-lab-lead-card__meta {
   font-size: 0.78rem;
@@ -549,12 +556,183 @@
 .fc-lab-target-card__name {
   font-size: 1rem;
   font-weight: 800;
-  color: var(--accent-blue, #0021a5);
+  color: var(--fc-ink, #001a33);
   text-decoration: none;
 }
 
 .fc-lab-target-card__name:hover {
   color: var(--accent-orange, #fa4616);
+}
+
+/* ── Priority chase cards (rank + why) ── */
+.fc-lab-chase-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 780px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.fc-lab-chase-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  border-left: 4px solid #0021a5;
+  border-radius: 14px;
+  background: linear-gradient(120deg, rgba(0, 33, 165, 0.04), #fff 42%);
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.fc-lab-chase-card--top {
+  border-left-color: #fa4616;
+  background: linear-gradient(120deg, rgba(250, 70, 22, 0.1), #fff 46%);
+  box-shadow: 0 8px 22px rgba(250, 70, 22, 0.08);
+}
+.fc-lab-chase-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 33, 165, 0.28);
+}
+.fc-lab-chase-card__top {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  align-items: start;
+}
+.fc-lab-chase-card__rank {
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: #94a3b8;
+  padding-top: 2px;
+}
+.fc-lab-chase-card--top .fc-lab-chase-card__rank {
+  color: #fa4616;
+}
+.fc-lab-chase-card__identity {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fc-lab-chase-card__name {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--fc-ink, #001a33);
+  line-height: 1.2;
+}
+.fc-lab-chase-card__meta {
+  font-size: 0.78rem;
+  color: var(--fc-ink-muted, #5b6b7c);
+}
+.fc-lab-chase-stamp {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.fc-lab-chase-stamp--top {
+  background: #fa4616;
+  color: #fff;
+}
+.fc-lab-chase-stamp--prio {
+  background: rgba(0, 33, 165, 0.1);
+  color: #0021a5;
+}
+.fc-lab-chase-card__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 12px;
+}
+.fc-lab-chase-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(0, 26, 51, 0.03);
+}
+.fc-lab-chase-fact__label {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+.fc-lab-chase-fact__value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--fc-ink, #001a33);
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+.fc-lab-chase-fact__value--strong {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #0021a5;
+}
+.fc-lab-chase-fact__value .is-up {
+  font-size: 0.75rem;
+  color: #0f766e;
+}
+.fc-lab-chase-fact__value .is-down {
+  font-size: 0.75rem;
+  color: #b45309;
+}
+.fc-lab-chase-card__why {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--fc-ink-body, #334155);
+  line-height: 1.4;
+}
+.fc-lab-chase-card__why-label {
+  display: inline-block;
+  margin-right: 0.45rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+.fc-lab-chase-card__fight {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--fc-ink-muted, #5b6b7c);
+}
+.fc-lab-panel-board-link {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: #fa4616;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.fc-lab-panel-board-link:hover {
+  color: #0021a5;
+}
+@media (max-width: 720px) {
+  .fc-lab-chase-card__top {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+  .fc-lab-chase-stamp {
+    grid-column: 2;
+    justify-self: start;
+  }
+  .fc-lab-chase-card__facts {
+    grid-template-columns: 1fr;
+  }
 }
 
 .fc-lab-target-card__meta {
@@ -2124,6 +2302,19 @@
   min-width: 0;
 }
 
+/* Keep dual-column panel titles level (Who commits next ↔ Needs help) */
+.fc-lab-desktop-board > .fc-lab-desktop-board__lead > div > .fc-lab-panel-shell:first-child .rh-cc-module__head,
+.fc-lab-desktop-board > .fc-lab-desktop-board__fit > .fc-lab-panel-shell:first-child .rh-cc-module__head,
+.fc-lab-desktop-board > .fc-lab-desktop-board__lead > div > [data-testid="fc-lab-leading"] .rh-cc-module__head,
+.fc-lab-desktop-board > .fc-lab-desktop-board__fit > [data-testid="fc-lab-position-breakdown"] .rh-cc-module__head {
+  min-height: 4.5rem;
+  align-items: flex-start;
+}
+.fc-lab-desktop-board .rh-cc-module__title,
+.fc-lab-desktop-board .fc-lab-mobile-section__title {
+  line-height: 1.2;
+}
+
 .fc-lab-battle-list--compact {
   display: flex;
   flex-direction: column;
@@ -2459,7 +2650,7 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 .fc-lab-scheme-match__name {
   font-size: 0.9375rem;
   font-weight: 800;
-  color: var(--gator-blue, #0021a5);
+  color: var(--fc-ink, #001a33);
 }
 
 .fc-lab-scheme-match__band {
@@ -2678,7 +2869,7 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 .fc-lab-need-elite__pos {
   font-size: 1.15rem;
   font-weight: 800;
-  color: #0021a5;
+  color: var(--fc-ink, #001a33);
   letter-spacing: -0.01em;
 }
 
@@ -2758,7 +2949,7 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 .fc-lab-need-elite__lead a,
 .fc-lab-need-elite__lead strong {
   font-weight: 800;
-  color: #0021a5;
+  color: var(--fc-ink, #001a33);
   text-decoration: none;
 }
 
@@ -2809,7 +3000,7 @@ a.fc-lab-battle-row--compact:hover .fc-lab-battle-row__name {
 .fc-lab-need-row__pos {
   font-size: 1.125rem;
   font-weight: 800;
-  color: #0021a5;
+  color: var(--fc-ink, #001a33);
 }
 
 .fc-lab-need-tier {

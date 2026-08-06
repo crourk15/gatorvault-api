@@ -32,6 +32,23 @@ export type FcLabTarget = {
   committedTo?: string | null;
   predictors: Array<{ name: string; score: number }>;
   competingSchools?: Array<{ name: string; pct: number }>;
+  /** Hot / chase importance (not commit %). */
+  priorityScore?: number | null;
+  notePreview?: string | null;
+  visitLabels?: string[];
+  hotLanes?: {
+    staffHeat?: number;
+    mustGetFit?: number;
+    positionalNeed?: number;
+    geoPipeline?: number;
+    marketPressure?: number;
+  } | null;
+  hotBadges?: {
+    quietChase?: boolean;
+    inState?: boolean;
+    homeVisit?: boolean;
+    staffAssigned?: boolean;
+  } | null;
 };
 
 function isFloridaCommit(value: string | null | undefined): boolean {
@@ -128,6 +145,17 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
     competingSchools: (p.competingSchools ?? [])
       .filter((x) => x?.name && Number(x.pct) > 0)
       .map((x) => ({ name: x.name, pct: Number(x.pct) })),
+    priorityScore:
+      p.priorityScore != null && Number.isFinite(Number(p.priorityScore))
+        ? Number(p.priorityScore)
+        : null,
+    notePreview: p.notePreview ?? p.skinny ?? null,
+    visitLabels: (p.visitHistory ?? [])
+      .map((v) => String(v?.label || v?.type || '').trim())
+      .filter(Boolean)
+      .slice(0, 3),
+    hotLanes: (p as { hotLanes?: FcLabTarget['hotLanes'] }).hotLanes ?? null,
+    hotBadges: (p as { hotBadges?: FcLabTarget['hotBadges'] }).hotBadges ?? null,
   };
 }
 
