@@ -2,7 +2,7 @@
  * Shared Who / Stand / Context / Pulse overview shell.
  *
  * default     — Who → Stand → Context → Pulse (roster + legacy)
- * stand-hero  — Stand leads; Who / Context / Pulse demoted under afterStand
+ * stand-hero  — Hero take leads; Who / Context / Activity demoted (no jargon bands)
  */
 import React from 'react';
 
@@ -40,11 +40,11 @@ export interface OverviewFourSlotProps {
   /** Prefix for section heading ids (default: overview). */
   idPrefix?: string;
   /**
-   * stand-hero: Florida stand is the hero editorial moment; supporting slots
-   * sit below `afterStand` (e.g. Vault Scouting).
+   * stand-hero: hero take leads; supporting slots sit below `afterStand`
+   * (e.g. Vault Scouting). Fan labels only — no Dossier / Pulse jargon.
    */
   variant?: 'default' | 'stand-hero';
-  /** Injected between Stand and demoted Who/Context/Pulse when variant=stand-hero. */
+  /** Injected between Stand and demoted Who/Context/Activity when variant=stand-hero. */
   afterStand?: React.ReactNode;
 }
 
@@ -52,14 +52,18 @@ function WhoSlot({
   who,
   whoRows,
   whoId,
+  title,
 }: {
   who?: React.ReactNode;
   whoRows?: OverviewWhoRow[];
   whoId: string;
+  title: string;
 }): React.ReactElement {
   return (
     <section className="fc-overview-slot fc-profile-section" aria-labelledby={whoId}>
-      <h2 id={whoId} className="fc-overview-title">Who</h2>
+      <h2 id={whoId} className="fc-overview-title">
+        {title}
+      </h2>
       {who != null ? (
         who
       ) : (
@@ -94,7 +98,7 @@ function StandSlot({
       <p className="fc-overview-eyebrow">{stand.eyebrow}</p>
       {/* Hero: eyebrow + Oswald take lead; keep h2 for a11y without a second visible label. */}
       <h2 id={standId} className={hero ? 'fc-overview-title fc-overview-title--sr' : 'fc-overview-title'}>
-        Stand
+        {stand.eyebrow || 'Stand'}
       </h2>
       <p className="fc-overview-headline">{stand.headline}</p>
       {stand.metrics.length > 0 ? (
@@ -163,17 +167,21 @@ export function OverviewFourSlot({
   const contextId = `${idPrefix}-context`;
   const pulseId = `${idPrefix}-pulse`;
   const hero = variant === 'stand-hero';
+  const whoTitle = hero ? 'At a glance' : 'Who';
+  const activityTitle = hero ? 'Recent activity' : 'Pulse';
 
   const support = (
     <>
-      <WhoSlot who={who} whoRows={whoRows} whoId={whoId} />
+      <WhoSlot who={who} whoRows={whoRows} whoId={whoId} title={whoTitle} />
       {context ? <ContextSlot context={context} contextId={contextId} /> : null}
       <section
         className="fc-overview-slot fc-profile-section"
         aria-labelledby={pulseId}
         data-testid="overview-pulse"
       >
-        <h2 id={pulseId} className="fc-overview-title">Pulse</h2>
+        <h2 id={pulseId} className="fc-overview-title">
+          {activityTitle}
+        </h2>
         {pulse}
       </section>
     </>
@@ -185,7 +193,6 @@ export function OverviewFourSlot({
         <StandSlot stand={stand} standId={standId} hero />
         {afterStand}
         <div className="fc-overview-secondary" data-testid="overview-secondary">
-          <p className="fc-overview-secondary__label">Dossier</p>
           {support}
         </div>
       </div>
@@ -194,7 +201,7 @@ export function OverviewFourSlot({
 
   return (
     <div className="fc-overview" data-overview-mode={mode}>
-      <WhoSlot who={who} whoRows={whoRows} whoId={whoId} />
+      <WhoSlot who={who} whoRows={whoRows} whoId={whoId} title="Who" />
       <StandSlot stand={stand} standId={standId} hero={false} />
       {context ? <ContextSlot context={context} contextId={contextId} /> : null}
       <section
@@ -202,7 +209,9 @@ export function OverviewFourSlot({
         aria-labelledby={pulseId}
         data-testid="overview-pulse"
       >
-        <h2 id={pulseId} className="fc-overview-title">Pulse</h2>
+        <h2 id={pulseId} className="fc-overview-title">
+          Pulse
+        </h2>
         {pulse}
       </section>
     </div>

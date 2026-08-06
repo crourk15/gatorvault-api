@@ -476,13 +476,13 @@ function mapHubCommit(player, classYear) {
   const projection = null;
   const isFutureCommit = classYear >= 2027;
   const stars = effectiveStars(player) || 0;
-  const badge = isFutureCommit
-    ? player.headliner
+  // Pre-NSD: verbal commits are Committed — never Signed / LOI.
+  // Headliner stays as an accent badge; stars live on the card mark/meta chips.
+  const badge = !isFutureCommit
+    ? 'Enrolled'
+    : player.headliner
       ? 'Headliner'
-      : stars >= 5
-        ? '5★'
-        : null
-    : 'Enrolled';
+      : 'Committed';
   return {
     id: slug,
     name: player.name,

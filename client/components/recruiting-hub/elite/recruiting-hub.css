@@ -1224,6 +1224,51 @@
   color: #64748b;
 }
 
+.rh-elite-chrome .rh-elite-commit-card__meta-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 7px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__chip {
+  margin: 0;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__chip--stars {
+  color: #9a3412;
+  background: rgba(250, 70, 22, 0.12);
+  border: 1px solid rgba(250, 70, 22, 0.28);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__chip--pos {
+  color: #001a55;
+  background: rgba(0, 33, 165, 0.08);
+  border: 1px solid rgba(0, 33, 165, 0.18);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__chip--home {
+  color: #334155;
+  background: #f1f5f9;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__chip--rank {
+  color: #0021a5;
+  background: #ffffff;
+  border: 1px solid rgba(0, 33, 165, 0.22);
+  font-variant-numeric: tabular-nums;
+}
+
 .rh-elite-chrome .rh-elite-commit-card__stamp {
   flex: 0 0 auto;
   margin-top: 2px;
@@ -1268,11 +1313,54 @@
 .rh-elite-chrome .rh-elite-commit-card__footer-row {
   position: relative;
   z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
   margin-top: 12px;
   padding-top: 10px;
   border-top: 1px solid rgba(0, 33, 165, 0.1);
   font-weight: 600;
   color: #64748b;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__footer-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  font-size: 11px;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__rating {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  min-width: 3.5rem;
+  padding: 4px 8px 3px;
+  border-radius: 8px;
+  background: linear-gradient(160deg, rgba(250, 70, 22, 0.12), rgba(250, 70, 22, 0.04));
+  border: 1px solid rgba(250, 70, 22, 0.22);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__rating-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c2410c;
+  line-height: 1;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__rating-value {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #001a33;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Elite brief — take line with orange rail. */

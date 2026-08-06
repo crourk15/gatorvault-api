@@ -2584,15 +2584,6 @@
   gap: 0.75rem;
 }
 
-.fc-overview-secondary__label {
-  margin: 0;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #94a3b8;
-}
-
 .fc-overview-secondary .fc-overview-slot.fc-profile-section {
   padding: 0.7rem 0.8rem;
   border-radius: 10px;
@@ -2653,16 +2644,36 @@
 }
 
 .fc-overview--stand-hero .fc-vault-scouting__lead {
-  margin: 1.05rem 0 0;
-  padding-bottom: 1rem;
+  margin: 0;
+  padding: 1.25rem 1.15rem 1.15rem;
+  border-bottom: 1px solid rgba(0, 33, 165, 0.1);
+  background: linear-gradient(180deg, rgba(0, 33, 165, 0.03), transparent 85%);
+}
+
+.fc-overview--stand-hero .fc-vault-scouting__body--lead {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.15rem, 2.8vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  color: var(--gv-navy, #001a33);
 }
 
 .fc-overview--stand-hero .fc-vault-scouting__traits-wrap {
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 }
 
 .fc-overview--stand-hero .fc-vault-scouting__pair {
   margin: 0 0 1.15rem;
+}
+
+/* Also style lead body when Vault Scouting is not nested under stand-hero. */
+.fc-vault-scouting__body--lead {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.55;
+  font-weight: 600;
+  color: var(--gv-navy, #001a33);
 }
 
 .fc-overview-metrics {

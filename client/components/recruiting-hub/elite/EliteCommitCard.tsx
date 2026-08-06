@@ -8,6 +8,8 @@ type Props = {
   year: number;
 };
 
+type MetaChip = { kind: 'stars' | 'pos' | 'home' | 'rank'; text: string };
+
 /** Strip API "Vault X —" prefix when present on legacy payloads. */
 function stripVaultLabel(text: string | null | undefined, label: string): string | null {
   const raw = String(text || '').trim();
@@ -24,33 +26,63 @@ function positionMark(position: string | null | undefined): string {
 }
 
 /**
- * Status on the card before NSD: verbally committed (not signed).
- * Never show "Signed" until National Signing Day / real LOI.
+ * Pre-NSD language only. Never "Signed" for verbal commits.
  */
 function commitStamp(commit: RhHubCommit): { label: string; tone: 'enrolled' | 'committed' | 'accent' } {
   if (commit.enrolled) return { label: 'Enrolled', tone: 'enrolled' };
   const raw = String(commit.statusBadge || '').trim();
-  if (!raw) return { label: 'Committed', tone: 'committed' };
-  // Badges that are still accurate pre-NSD (headliner / star callouts).
-  if (/^(headliner|5★|5\*|enrolled)$/i.test(raw)) {
-    return { label: raw === '5*' ? '5★' : raw, tone: /enrolled/i.test(raw) ? 'enrolled' : 'accent' };
-  }
-  // Anything that implies paperwork (Signed / LOI) → verbal commit language.
   if (/sign|loi|inked/i.test(raw)) return { label: 'Committed', tone: 'committed' };
-  return { label: raw, tone: 'accent' };
+  if (/^headliner$/i.test(raw)) return { label: 'Headliner', tone: 'accent' };
+  if (/^enrolled$/i.test(raw)) return { label: 'Enrolled', tone: 'enrolled' };
+  // Stars belong in the mark / meta chips — stamp stays commitment language.
+  return { label: 'Committed', tone: 'committed' };
+}
+
+/** Break the flat meta string into readable chips. */
+function buildMetaChips(commit: RhHubCommit): MetaChip[] {
+  const chips: MetaChip[] = [];
+  const seen = new Set<string>();
+  const push = (chip: MetaChip) => {
+    const key = chip.text.toLowerCase();
+    if (!chip.text || seen.has(key)) return;
+    seen.add(key);
+    chips.push(chip);
+  };
+
+  if (commit.stars != null && commit.stars > 0) {
+    push({ kind: 'stars', text: `${commit.stars}★` });
+  }
+  if (commit.position) push({ kind: 'pos', text: commit.position });
+
+  const meta = String(commit.metaLine || commit.rankNote || '').trim();
+  if (!meta) return chips;
+
+  for (const seg of meta.split('·').map((s) => s.trim()).filter(Boolean)) {
+    // Skip "5★ IOL" style first segment — already covered by stars + pos chips.
+    if (/^\d\s*★/.test(seg)) continue;
+    if (commit.position && seg.toUpperCase() === commit.position.toUpperCase()) continue;
+    if (/^#\d/.test(seg)) {
+      push({ kind: 'rank', text: seg.replace(/\bnationally\b/i, 'natl').replace(/\bnatl\.?/i, 'NATL') });
+      continue;
+    }
+    push({ kind: 'home', text: seg });
+  }
+
+  return chips;
 }
 
 /**
  * Fan-first commit card — same surface for every class year.
- * Compact identity mark + commit stamp; Vault Scouting lives on the player profile.
+ * Identity + meta chips + composite score; Vault Scouting on the profile.
  */
 export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
-  const meta = commit.metaLine || commit.rankNote;
   const skinnyRaw = commit.skinny?.trim() || null;
-  // Brief stays untitled — strip any legacy "Vault Eval —" prefix from API/iOS payloads.
   const skinny = stripVaultLabel(skinnyRaw, 'Eval');
   const showJersey = year <= 2026 && commit.jerseyNumber != null && String(commit.jerseyNumber).trim() !== '';
   const stamp = commitStamp(commit);
+  const metaChips = buildMetaChips(commit);
+  const rating =
+    commit.rating && commit.rating !== '—' ? commit.rating : null;
 
   return (
     <article
@@ -73,11 +105,23 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
           <a href={commit.profileUrl} className="rh-commit-name">
             {commit.name}
           </a>
-          {meta ? <p className="rh-commit-meta">{meta}</p> : null}
+          {metaChips.length ? (
+            <ul className="rh-elite-commit-card__meta-chips" aria-label="Player meta">
+              {metaChips.map((chip) => (
+                <li
+                  key={`${chip.kind}-${chip.text}`}
+                  className={`rh-elite-commit-card__chip rh-elite-commit-card__chip--${chip.kind}`}
+                >
+                  {chip.text}
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
 
         <span
           className={`rh-elite-commit-card__stamp rh-elite-commit-card__stamp--${stamp.tone}`}
+          data-testid="rh-elite-commit-stamp"
         >
           {stamp.label}
         </span>
@@ -94,10 +138,17 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
       ) : null}
 
       <div className="rh-commit-footer rh-elite-commit-card__footer-row">
-        <span>Committed {commit.commitDate}</span>
-        {commit.rating && commit.rating !== '—' ? <span>{commit.rating}</span> : null}
-        {showJersey ? <span>#{commit.jerseyNumber}</span> : null}
-        {commit.nilEstimate ? <span>NIL {commit.nilEstimate}</span> : null}
+        <div className="rh-elite-commit-card__footer-main">
+          <span>Committed {commit.commitDate}</span>
+          {showJersey ? <span>#{commit.jerseyNumber}</span> : null}
+          {commit.nilEstimate ? <span>NIL {commit.nilEstimate}</span> : null}
+        </div>
+        {rating ? (
+          <div className="rh-elite-commit-card__rating" aria-label={`Composite ${rating}`}>
+            <span className="rh-elite-commit-card__rating-label">Composite</span>
+            <span className="rh-elite-commit-card__rating-value">{rating}</span>
+          </div>
+        ) : null}
       </div>
     </article>
   );
