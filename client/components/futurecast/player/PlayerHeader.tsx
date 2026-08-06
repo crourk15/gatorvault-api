@@ -92,14 +92,16 @@ export function PlayerHeader({
     const statusBit = player.committedTo
       ? `Committed to ${player.committedTo}`
       : `Class of ${player.classYear}`;
+    // Keep subject human-readable. Put the link in the body text — Gmail/Mail
+    // often uses a bare `url` field as the subject and leaves the body empty.
     const title = `${player.fullName} · ${starBit} | GatorVault`;
-    const text = `${player.fullName} — ${statusBit}. Open the Vault profile:`;
+    const text = `${player.fullName} — ${statusBit}.\n\nOpen the Vault profile:\n${url}`;
     try {
       if (navigator.share) {
-        await navigator.share({ title, text, url });
+        await navigator.share({ title, text });
         return;
       }
-      await navigator.clipboard.writeText(`${title}\n${text}\n${url}`);
+      await navigator.clipboard.writeText(`${title}\n\n${text}`);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
