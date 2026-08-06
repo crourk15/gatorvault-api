@@ -26,6 +26,18 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  external_node_modules = ["sharp"]
+
+[functions."share-player"]
+  included_files = ["server/data/recruiting/players.json"]
+
+[[edge_functions]]
+  function = "player-share-bots"
+  path = "/vault/futurecast/player/*"
+
+[[edge_functions]]
+  function = "player-share-bots"
+  path = "/vault/recruiting/player/*"
 
 # Disable Netlify post-processing — optimization layer rewrites HTML/RSC with stale chunk hashes.
 [build.processing]

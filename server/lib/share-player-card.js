@@ -1,8 +1,15 @@
 /**
- * Player share cards — Open Graph HTML + 1200×630 JPEG for rich link previews.
+ * Player share cards — Open Graph HTML + 1200x630 JPEG for rich link previews.
+ * Works offline from recruiting players.json when the live API is down.
  */
+const fs = require('fs');
+const path = require('path');
+
 const SITE_FALLBACK = 'https://gatorvaultinsider.com';
 const API_FALLBACK = 'https://gatorvault-api.onrender.com';
+
+const CRAWLER_UA_RE =
+  /Twitterbot|facebookexternalhit|Facebot|LinkedInBot|Slackbot|Discordbot|WhatsApp|TelegramBot|Applebot|Googlebot|bingbot|SkypeUriPreview|Slack-ImgProxy|Embedly|Quora Link Preview|redditbot|Showyoubot|Outbrain|Pinterest|W3C_Validator|Baiduspider|DuckDuckBot/i;
 
 function esc(value) {
   return String(value ?? '')
@@ -33,6 +40,10 @@ function siteBase(hostHeader) {
   return SITE_FALLBACK;
 }
 
+function isShareCrawler(userAgent) {
+  return CRAWLER_UA_RE.test(String(userAgent || ''));
+}
+
 function formatComposite(raw) {
   if (raw == null || !Number.isFinite(Number(raw))) return null;
   const n = Number(raw);
@@ -42,19 +53,26 @@ function formatComposite(raw) {
 function buildShareModel(payload) {
   const player = payload?.player || {};
   const name = String(player.fullName || player.name || 'Florida recruit').trim();
-  const pos = String(player.position || 'ATH').trim();
+  const pos = String(player.position || player.pos || 'ATH').trim();
   const classYear = player.classYear ? String(player.classYear) : '';
   const stars = player.stars != null && Number(player.stars) > 0 ? Number(player.stars) : null;
-  const hometown = [player.hometown, player.state].filter(Boolean).join(', ');
+  const hometown =
+    [player.hometown, player.state].filter(Boolean).join(', ') ||
+    [player.hometownCity, player.hometownState].filter(Boolean).join(', ');
   const committed = String(player.committedTo || '').trim();
-  const composite = formatComposite(player.compositeRating);
-  const natl = player.rankingNational != null ? `#${player.rankingNational} NATL` : null;
+  const composite = formatComposite(
+    player.compositeRating != null ? player.compositeRating : player.rating
+  );
+  const natlRank = player.rankingNational != null ? player.rankingNational : player.natlRank;
+  const natl = natlRank != null ? `#${natlRank} NATL` : null;
   const fit =
     payload?.futurecastSummary?.fitScore != null
       ? Math.round(Number(payload.futurecastSummary.fitScore))
       : player.ufFitScore != null
         ? Math.round(Number(player.ufFitScore))
-        : null;
+        : player.fitScore != null
+          ? Math.round(Number(player.fitScore))
+          : null;
 
   const statusLine = committed
     ? `Committed to ${committed}`
@@ -63,17 +81,17 @@ function buildShareModel(payload) {
       : 'Florida recruiting';
 
   const metaBits = [
-    stars != null ? `${stars}★ ${pos}` : pos,
+    stars != null ? `${stars}\u2605 ${pos}` : pos,
     hometown || null,
     natl,
     composite ? `Composite ${composite}` : null,
   ].filter(Boolean);
 
   const title = committed
-    ? `${name} · ${stars != null ? `${stars}★ ` : ''}${pos} · Florida Commit | GatorVault`
-    : `${name} · ${stars != null ? `${stars}★ ` : ''}${pos} | GatorVault`;
+    ? `${name} \u00b7 ${stars != null ? `${stars}\u2605 ` : ''}${pos} \u00b7 Florida Commit | GatorVault`
+    : `${name} \u00b7 ${stars != null ? `${stars}\u2605 ` : ''}${pos} | GatorVault`;
 
-  const description = `${statusLine}. ${metaBits.join(' · ')}. Open the full Vault profile for film, board picture, and intel.`;
+  const description = `${statusLine}. ${metaBits.join(' \u00b7 ')}. Open the full Vault profile for film, board picture, and intel.`;
 
   return {
     name,
@@ -94,7 +112,7 @@ function buildShareModel(payload) {
 }
 
 function buildShareSvg(model) {
-  const starLine = model.stars != null ? `${model.stars}★ ${model.pos}` : model.pos;
+  const starLine = model.stars != null ? `${model.stars}\u2605 ${model.pos}` : model.pos;
   const rankLine = [model.natl, model.composite ? `COMP ${model.composite}` : null, model.fit != null ? `FIT ${model.fit}` : null]
     .filter(Boolean)
     .join('   ');
@@ -118,33 +136,36 @@ function buildShareSvg(model) {
   <circle cx="160" cy="80" r="140" fill="#ffffff" fill-opacity="0.05"/>
   <rect x="0" y="0" width="1200" height="10" fill="url(#accent)"/>
   <text x="72" y="92" fill="#fdba74" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="4">GATORVAULT</text>
-  <text x="72" y="150" fill="#93c5fd" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" letter-spacing="3">${esc(starLine.toUpperCase())}${model.classYear ? ` · CLASS OF ${esc(model.classYear)}` : ''}</text>
+  <text x="72" y="150" fill="#93c5fd" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" letter-spacing="3">${esc(starLine.toUpperCase())}${model.classYear ? ` \u00b7 CLASS OF ${esc(model.classYear)}` : ''}</text>
   <text x="72" y="260" fill="#ffffff" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="72" font-weight="900">${esc(model.name)}</text>
   <text x="72" y="320" fill="#dbeafe" font-family="Arial, Helvetica, sans-serif" font-size="30">${esc(home)}</text>
   <rect x="72" y="360" width="${Math.min(520, 40 + model.statusLine.length * 14)}" height="54" rx="10" fill="#fa4616"/>
   <text x="92" y="396" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">${esc(model.statusLine.toUpperCase())}</text>
   <text x="72" y="490" fill="#e2e8f0" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">${esc(rankLine)}</text>
-  <text x="72" y="570" fill="#94a3b8" font-family="Arial, Helvetica, sans-serif" font-size="22">Florida recruiting · board · film · intel</text>
+  <text x="72" y="570" fill="#94a3b8" font-family="Arial, Helvetica, sans-serif" font-size="22">Florida recruiting \u00b7 board \u00b7 film \u00b7 intel</text>
 </svg>`;
 }
 
-async function renderShareJpeg(model) {
-  const path = require('path');
-  let sharp = null;
+function resolveSharp() {
   const candidates = [
     'sharp',
     path.join(__dirname, '..', 'node_modules', 'sharp'),
     path.join(__dirname, '..', '..', 'node_modules', 'sharp'),
+    path.join(process.cwd(), 'node_modules', 'sharp'),
   ];
   for (const id of candidates) {
     try {
       // eslint-disable-next-line import/no-dynamic-require, global-require
-      sharp = require(id);
-      break;
+      return require(id);
     } catch {
       /* try next */
     }
   }
+  return null;
+}
+
+async function renderShareJpeg(model) {
+  const sharp = resolveSharp();
   if (!sharp) return null;
   const svg = Buffer.from(buildShareSvg(model));
   return sharp(svg, { density: 144 })
@@ -153,9 +174,14 @@ async function renderShareJpeg(model) {
     .toBuffer();
 }
 
-function buildShareHtml({ model, shareUrl, profileUrl, imageUrl }) {
+function buildShareHtml({ model, shareUrl, profileUrl, imageUrl, crawler }) {
   const title = esc(model.title);
   const description = esc(model.description);
+  const refresh = crawler
+    ? ''
+    : `
+  <meta http-equiv="refresh" content="0;url=${esc(profileUrl)}" />
+  <script>location.replace(${JSON.stringify(profileUrl)});</script>`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -174,35 +200,120 @@ function buildShareHtml({ model, shareUrl, profileUrl, imageUrl }) {
   <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="${esc(model.name)} — GatorVault" />
+  <meta property="og:image:alt" content="${esc(model.name)} - GatorVault" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${title}" />
   <meta name="twitter:description" content="${description}" />
-  <meta name="twitter:image" content="${esc(imageUrl)}" />
-  <meta http-equiv="refresh" content="0;url=${esc(profileUrl)}" />
+  <meta name="twitter:image" content="${esc(imageUrl)}" />${refresh}
   <style>
     body{margin:0;font-family:Arial,sans-serif;background:#00144f;color:#fff;display:grid;place-items:center;min-height:100vh}
     a{color:#fdba74}
   </style>
 </head>
 <body>
-  <p>Opening <a href="${esc(profileUrl)}">${esc(model.name)}</a> on GatorVault…</p>
-  <script>location.replace(${JSON.stringify(profileUrl)});</script>
+  <p>Opening <a href="${esc(profileUrl)}">${esc(model.name)}</a> on GatorVault...</p>
 </body>
 </html>`;
 }
 
+function playerJsonCandidates() {
+  return [
+    path.join(__dirname, '../data/recruiting/players.json'),
+    path.join(__dirname, '../../server/data/recruiting/players.json'),
+    path.join(__dirname, '../../data/recruiting/players.json'),
+    path.join(process.cwd(), 'server/data/recruiting/players.json'),
+    path.join(process.cwd(), 'data/recruiting/players.json'),
+  ];
+}
+
+let cachedPlayers = null;
+let cachedPlayersPath = null;
+
+function loadRecruitingPlayers() {
+  if (cachedPlayers) return cachedPlayers;
+  for (const filePath of playerJsonCandidates()) {
+    try {
+      if (!fs.existsSync(filePath)) continue;
+      const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      const rows = Array.isArray(raw) ? raw : raw.players || raw.items || [];
+      if (!rows.length) continue;
+      cachedPlayers = rows;
+      cachedPlayersPath = filePath;
+      return cachedPlayers;
+    } catch {
+      /* try next */
+    }
+  }
+  return null;
+}
+
+function loadLocalSharePayload(slug) {
+  const key = String(slug || '')
+    .trim()
+    .toLowerCase();
+  if (!key) return null;
+  const rows = loadRecruitingPlayers();
+  if (!rows) return null;
+  const row = rows.find((p) => String(p.slug || p.id || '').toLowerCase() === key);
+  if (!row) return null;
+  return {
+    player: {
+      slug: row.slug || key,
+      name: row.name,
+      fullName: row.name,
+      position: row.pos || row.position || 'ATH',
+      pos: row.pos || row.position || 'ATH',
+      classYear: row.classYear,
+      stars: row.stars,
+      hometown: row.hometown || row.hometownCity || null,
+      state: row.state || row.hometownState || null,
+      hometownCity: row.hometownCity,
+      hometownState: row.hometownState,
+      committedTo: row.committedTo,
+      status: row.status,
+      compositeRating: row.compositeRating != null ? row.compositeRating : row.rating,
+      rating: row.rating,
+      rankingNational: row.rankingNational != null ? row.rankingNational : row.natlRank,
+      natlRank: row.natlRank,
+      ufFitScore: row.ufFitScore != null ? row.ufFitScore : row.fitScore,
+      fitScore: row.fitScore,
+    },
+    futurecastSummary: row.fitScore != null ? { fitScore: row.fitScore } : null,
+    source: 'local-players-json',
+    sourcePath: cachedPlayersPath,
+  };
+}
+
 async function fetchSharePayload(slug) {
   const url = `${apiBase()}/api/player/full-profile/${encodeURIComponent(slug)}`;
-  const res = await fetch(url, {
-    headers: { Accept: 'application/json', 'User-Agent': 'GatorVaultShareCard/1.0' },
-  });
-  if (!res.ok) {
-    const err = new Error(`Profile fetch failed (${res.status})`);
-    err.statusCode = res.status;
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timer = controller ? setTimeout(() => controller.abort(), 2500) : null;
+  try {
+    const res = await fetch(url, {
+      headers: { Accept: 'application/json', 'User-Agent': 'GatorVaultShareCard/1.0' },
+      signal: controller ? controller.signal : undefined,
+    });
+    if (!res.ok) {
+      const err = new Error(`Profile fetch failed (${res.status})`);
+      err.statusCode = res.status;
+      throw err;
+    }
+    return res.json();
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+async function resolveSharePayload(slug) {
+  try {
+    return await fetchSharePayload(slug);
+  } catch {
+    const local = loadLocalSharePayload(slug);
+    if (local) return local;
+    const err = new Error('Player share card unavailable');
+    err.statusCode = 502;
     throw err;
   }
-  return res.json();
 }
 
 function parseSharePath(pathname) {
@@ -215,7 +326,7 @@ function parseSharePath(pathname) {
   };
 }
 
-async function handleSharePlayerRequest({ pathname, host, protocol }) {
+async function handleSharePlayerRequest({ pathname, host, protocol, userAgent }) {
   const parsed = parseSharePath(pathname);
   if (!parsed?.slug) {
     return { statusCode: 404, headers: { 'Content-Type': 'text/plain' }, body: 'Not found' };
@@ -223,12 +334,13 @@ async function handleSharePlayerRequest({ pathname, host, protocol }) {
 
   const site = siteBase(host);
   const shareUrl = `${site}/share/player/${encodeURIComponent(parsed.slug)}`;
-  const profileUrl = `${site}/vault/recruiting/player/${encodeURIComponent(parsed.slug)}`;
+  const profileUrl = `${site}/vault/futurecast/player/${encodeURIComponent(parsed.slug)}`;
   const imageUrl = `${shareUrl}/og.jpg`;
+  const crawler = isShareCrawler(userAgent);
 
   let payload;
   try {
-    payload = await fetchSharePayload(parsed.slug);
+    payload = await resolveSharePayload(parsed.slug);
   } catch (err) {
     const statusCode = err.statusCode || 502;
     return {
@@ -244,7 +356,6 @@ async function handleSharePlayerRequest({ pathname, host, protocol }) {
   if (parsed.wantImage) {
     const jpeg = await renderShareJpeg(model);
     if (!jpeg) {
-      // Fallback: redirect crawlers to brand OG asset.
       return {
         statusCode: 302,
         headers: { Location: `${site}/og-image.jpg` },
@@ -263,12 +374,14 @@ async function handleSharePlayerRequest({ pathname, host, protocol }) {
     };
   }
 
-  const html = buildShareHtml({ model, shareUrl, profileUrl, imageUrl });
+  const html = buildShareHtml({ model, shareUrl, profileUrl, imageUrl, crawler });
   return {
     statusCode: 200,
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
-      'Cache-Control': 'public, max-age=120, s-maxage=300',
+      'Cache-Control': crawler
+        ? 'public, max-age=300, s-maxage=600'
+        : 'public, max-age=120, s-maxage=300',
     },
     body: html,
   };
@@ -280,6 +393,7 @@ function mountSharePlayerRoutes(app) {
     const result = await handleSharePlayerRequest({
       pathname: req.path,
       host,
+      userAgent: req.get('user-agent'),
     });
     if (result.headers) {
       for (const [k, v] of Object.entries(result.headers)) res.setHeader(k, v);
@@ -304,4 +418,7 @@ module.exports = {
   handleSharePlayerRequest,
   mountSharePlayerRoutes,
   parseSharePath,
+  loadLocalSharePayload,
+  isShareCrawler,
+  resolveSharePayload,
 };

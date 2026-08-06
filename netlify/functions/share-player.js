@@ -6,11 +6,37 @@
  */
 const { handleSharePlayerRequest } = require('../../server/lib/share-player-card');
 
+function resolvePathname(event) {
+  const candidates = [
+    event.path,
+    event.rawUrl,
+    event.headers && (event.headers['x-forwarded-url'] || event.headers['x-original-url']),
+    event.headers && event.headers.referer,
+  ];
+  for (const raw of candidates) {
+    if (!raw) continue;
+    try {
+      if (String(raw).includes('://')) {
+        const u = new URL(String(raw));
+        if (/share\/player\//i.test(u.pathname)) return u.pathname;
+      } else if (/share\/player\//i.test(String(raw))) {
+        return String(raw).split('?')[0];
+      }
+    } catch {
+      /* try next */
+    }
+  }
+  return event.path || '';
+}
+
 exports.handler = async (event) => {
-  const host = event.headers['x-forwarded-host'] || event.headers.host || '';
+  const host =
+    (event.headers && (event.headers['x-forwarded-host'] || event.headers.host)) || '';
+  const userAgent = (event.headers && event.headers['user-agent']) || '';
   const result = await handleSharePlayerRequest({
-    pathname: event.path || '',
+    pathname: resolvePathname(event),
     host,
+    userAgent,
   });
 
   const response = {
