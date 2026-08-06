@@ -25,6 +25,7 @@ const fs = require('fs');
 const path = require('path');
 const warRoom = require('../lib/war-room-store');
 const filmTraits = require('../lib/film-traits-store');
+const { isFilmDeskMeta } = require('../lib/recruiting-intel-quality');
 
 function argValue(flag) {
   const hit = process.argv.find((a) => a.startsWith(`${flag}=`));
@@ -96,7 +97,15 @@ function buildPayload(raw) {
     comparison: ensureIdentityInText(raw.comparison, raw.name || raw.playerName || slug),
     projection: ensureIdentityInText(raw.projection, raw.name || raw.playerName || slug),
     schemeFit: String(raw.schemeFit || '').trim() || null,
-    insiderNotes: ensureIdentityInText(raw.insiderNotes || raw.eval, raw.name || raw.playerName || slug),
+    // Film-desk provenance belongs in staffNotes — never insiderNotes (corrupt-gate).
+    insiderNotes: (() => {
+      const note = ensureIdentityInText(
+        raw.insiderNotes || raw.eval,
+        raw.name || raw.playerName || slug
+      );
+      if (!note || isFilmDeskMeta(note)) return null;
+      return note;
+    })(),
     staffNotes:
       String(raw.staffNotes || '').trim() ||
       `Vault film desk verified ${publishedAt}.`,
