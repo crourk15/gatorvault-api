@@ -1,6 +1,7 @@
 /**
  * Player share cards — Open Graph HTML + 1200x630 JPEG for rich link previews.
  * Works offline from recruiting players.json when the live API is down.
+ * JPEG text is drawn as SVG paths (opentype) so Netlify needs no system fonts.
  */
 const fs = require('fs');
 const path = require('path');
@@ -111,38 +112,145 @@ function buildShareModel(payload) {
   };
 }
 
+function asciiShareText(value) {
+  return String(value ?? '')
+    .replace(/\u2605/g, '*')
+    .replace(/★/g, '*')
+    .replace(/·/g, '|')
+    .replace(/—/g, '-')
+    .replace(/[^\x20-\x7E]/g, '');
+}
+
+let cachedFont = null;
+function loadShareFont() {
+  if (cachedFont) return cachedFont;
+  let opentype = null;
+  try {
+    // eslint-disable-next-line import/no-dynamic-require, global-require
+    opentype = require('opentype.js');
+  } catch (err) {
+    console.warn('[share-card] opentype.js unavailable', err && err.message);
+    return null;
+  }
+  const candidates = [
+    path.join(__dirname, '../assets/fonts/Arimo-Bold.ttf'),
+    path.join(__dirname, '../../server/assets/fonts/Arimo-Bold.ttf'),
+    path.join(__dirname, 'share-fonts/Arimo-Bold.ttf'),
+    path.join(__dirname, '../share-fonts/Arimo-Bold.ttf'),
+    path.join(process.cwd(), 'server/assets/fonts/Arimo-Bold.ttf'),
+    path.join(process.cwd(), 'assets/fonts/Arimo-Bold.ttf'),
+    path.join(process.cwd(), 'share-fonts/Arimo-Bold.ttf'),
+    path.join(process.cwd(), 'netlify/functions/share-fonts/Arimo-Bold.ttf'),
+  ];
+  for (const filePath of candidates) {
+    try {
+      if (!fs.existsSync(filePath)) continue;
+      const buf = fs.readFileSync(filePath);
+      cachedFont = opentype.parse(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
+      return cachedFont;
+    } catch (err) {
+      console.warn('[share-card] font parse failed', filePath, err && err.message);
+    }
+  }
+  console.warn('[share-card] no share font found', candidates);
+  return null;
+}
+
+function textPath(font, text, x, y, size) {
+  if (!font) return '';
+  const p = font.getPath(String(text || ''), x, y, size);
+  return p.toPathData(1);
+}
+
+function pathEl(d, fill, opacity) {
+  if (!d) return '';
+  const op = opacity == null ? '' : ` fill-opacity="${opacity}"`;
+  return `<path fill="${fill}"${op} d="${d}"/>`;
+}
+
 function buildShareSvg(model) {
-  const starLine = model.stars != null ? `${model.stars}\u2605 ${model.pos}` : model.pos;
-  const rankLine = [model.natl, model.composite ? `COMP ${model.composite}` : null, model.fit != null ? `FIT ${model.fit}` : null]
-    .filter(Boolean)
-    .join('   ');
-  const home = model.hometown || (model.classYear ? `Class of ${model.classYear}` : 'Florida Gators');
+  const font = loadShareFont();
+  const starBit =
+    model.stars != null
+      ? asciiShareText(`${model.stars}* ${model.pos}`)
+      : asciiShareText(model.pos);
+  const metaLine = asciiShareText(
+    [starBit, model.classYear ? `CLASS OF ${model.classYear}` : null].filter(Boolean).join('  |  ')
+  );
+  const rankLine = asciiShareText(
+    [
+      model.natl,
+      model.composite ? `COMP ${model.composite}` : null,
+      model.fit != null ? `FIT ${model.fit}` : null,
+    ]
+      .filter(Boolean)
+      .join('    ')
+  );
+  const home = asciiShareText(
+    model.hometown || (model.classYear ? `Class of ${model.classYear}` : 'Florida Gators')
+  );
+  const status = asciiShareText(model.statusLine).toUpperCase();
+  const name = asciiShareText(model.name);
+  const statusAdvance =
+    font && typeof font.getAdvanceWidth === 'function'
+      ? font.getAdvanceWidth(status, 28)
+      : status.length * 17;
+  const stampWidth = Math.min(640, Math.max(300, Math.ceil(statusAdvance + 56)));
+
+  // Prefer path text (Netlify-safe). Fall back to <text> only if font missing locally.
+  const usePaths = Boolean(font);
+  const brand = usePaths
+    ? pathEl(textPath(font, 'GATORVAULT', 72, 88, 30), '#fdba74')
+    : `<text x="72" y="88" fill="#fdba74" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700">GATORVAULT</text>`;
+  const meta = usePaths
+    ? pathEl(textPath(font, metaLine, 72, 150, 28), '#93c5fd')
+    : `<text x="72" y="150" fill="#93c5fd" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">${esc(metaLine)}</text>`;
+  const nameEl = usePaths
+    ? pathEl(textPath(font, name, 72, 270, 76), '#ffffff')
+    : `<text x="72" y="270" fill="#ffffff" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="76" font-weight="700">${esc(name)}</text>`;
+  const homeEl = usePaths
+    ? pathEl(textPath(font, home, 72, 330, 32), '#dbeafe')
+    : `<text x="72" y="330" fill="#dbeafe" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700">${esc(home)}</text>`;
+  const statusEl = usePaths
+    ? pathEl(textPath(font, status, 96, 410, 28), '#ffffff')
+    : `<text x="96" y="410" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">${esc(status)}</text>`;
+  const rankEl = usePaths
+    ? pathEl(textPath(font, rankLine, 72, 500, 30), '#e2e8f0')
+    : `<text x="72" y="490" fill="#e2e8f0" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700">${esc(rankLine)}</text>`;
+  const footEl = usePaths
+    ? pathEl(textPath(font, 'Florida recruiting  |  board  |  film  |  intel', 72, 575, 22), '#94a3b8')
+    : `<text x="72" y="570" fill="#94a3b8" font-family="Arial, Helvetica, sans-serif" font-size="22">Florida recruiting | board | film | intel</text>`;
+  const ufMark = usePaths
+    ? pathEl(textPath(font, 'UF', 980, 560, 140), '#ffffff', 0.06)
+    : `<text x="1180" y="560" text-anchor="end" fill="#ffffff" fill-opacity="0.06" font-size="140" font-weight="700">UF</text>`;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#00144f"/>
-      <stop offset="55%" stop-color="#0021a5"/>
-      <stop offset="100%" stop-color="#0a2a8c"/>
+      <stop offset="50%" stop-color="#0021a5"/>
+      <stop offset="100%" stop-color="#0a1f6e"/>
     </linearGradient>
     <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%" stop-color="#fa4616"/>
-      <stop offset="100%" stop-color="#0021a5"/>
+      <stop offset="100%" stop-color="#ff7a45"/>
     </linearGradient>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle cx="1080" cy="520" r="180" fill="#fa4616" fill-opacity="0.16"/>
-  <circle cx="160" cy="80" r="140" fill="#ffffff" fill-opacity="0.05"/>
-  <rect x="0" y="0" width="1200" height="10" fill="url(#accent)"/>
-  <text x="72" y="92" fill="#fdba74" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="4">GATORVAULT</text>
-  <text x="72" y="150" fill="#93c5fd" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" letter-spacing="3">${esc(starLine.toUpperCase())}${model.classYear ? ` \u00b7 CLASS OF ${esc(model.classYear)}` : ''}</text>
-  <text x="72" y="260" fill="#ffffff" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="72" font-weight="900">${esc(model.name)}</text>
-  <text x="72" y="320" fill="#dbeafe" font-family="Arial, Helvetica, sans-serif" font-size="30">${esc(home)}</text>
-  <rect x="72" y="360" width="${Math.min(520, 40 + model.statusLine.length * 14)}" height="54" rx="10" fill="#fa4616"/>
-  <text x="92" y="396" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">${esc(model.statusLine.toUpperCase())}</text>
-  <text x="72" y="490" fill="#e2e8f0" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">${esc(rankLine)}</text>
-  <text x="72" y="570" fill="#94a3b8" font-family="Arial, Helvetica, sans-serif" font-size="22">Florida recruiting \u00b7 board \u00b7 film \u00b7 intel</text>
+  <circle cx="1080" cy="520" r="210" fill="#fa4616" fill-opacity="0.14"/>
+  <circle cx="140" cy="70" r="160" fill="#ffffff" fill-opacity="0.05"/>
+  ${ufMark}
+  <rect x="0" y="0" width="1200" height="12" fill="url(#accent)"/>
+  <rect x="0" y="0" width="14" height="630" fill="#fa4616"/>
+  ${brand}
+  ${meta}
+  ${nameEl}
+  ${homeEl}
+  <rect x="72" y="370" width="${stampWidth}" height="58" rx="12" fill="#fa4616"/>
+  ${statusEl}
+  ${rankEl}
+  ${footEl}
 </svg>`;
 }
 
@@ -249,7 +357,6 @@ function loadRecruitingPlayers() {
 
 function loadBundledOgPlayers() {
   try {
-    // Bundled into the Netlify function by esbuild — no filesystem dependency.
     // eslint-disable-next-line import/no-dynamic-require, global-require
     return require('../data/share/og-players.json');
   } catch {
@@ -290,7 +397,7 @@ function loadLocalSharePayload(slug) {
       fitScore: row.fitScore,
     },
     futurecastSummary: row.fitScore != null ? { fitScore: row.fitScore } : null,
-    source: 'local-players-json',
+    source: bundled ? 'bundled-og-players' : 'local-players-json',
     sourcePath: cachedPlayersPath,
   };
 }

@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
   buildShareModel,
+  buildShareSvg,
   handleSharePlayerRequest,
   loadLocalSharePayload,
   isShareCrawler,
@@ -64,4 +65,12 @@ test('handleSharePlayerRequest humans get vault redirect', async () => {
   assert.equal(result.statusCode, 200);
   assert.match(result.body, /http-equiv="refresh"/i);
   assert.match(result.body, /\/vault\/futurecast\/player\/maxwell-hiller/);
+});
+
+test('buildShareSvg draws path text (Netlify-safe, no system fonts)', () => {
+  const model = buildShareModel(loadLocalSharePayload('davin-davidson'));
+  const svg = buildShareSvg(model);
+  assert.match(svg, /<path fill="#ffffff"/);
+  assert.doesNotMatch(svg, /<text /);
+  assert.match(svg, /Davin|M\d/); // path data present
 });

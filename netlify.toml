@@ -29,7 +29,7 @@
   external_node_modules = ["sharp"]
 
 [functions."share-player"]
-  included_files = ["server/data/share/og-players.json", "server/data/recruiting/players.json"]
+  included_files = ["server/data/share/og-players.json", "server/data/recruiting/players.json", "server/assets/fonts/Arimo-Bold.ttf", "netlify/functions/share-fonts/Arimo-Bold.ttf"]
 
 [[edge_functions]]
   function = "player-share-bots"
