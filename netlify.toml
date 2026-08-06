@@ -29,7 +29,7 @@
   external_node_modules = ["sharp"]
 
 [functions."share-player"]
-  included_files = ["server/data/recruiting/players.json"]
+  included_files = ["server/data/share/og-players.json", "server/data/recruiting/players.json"]
 
 [[edge_functions]]
   function = "player-share-bots"

@@ -247,14 +247,25 @@ function loadRecruitingPlayers() {
   return null;
 }
 
+function loadBundledOgPlayers() {
+  try {
+    // Bundled into the Netlify function by esbuild — no filesystem dependency.
+    // eslint-disable-next-line import/no-dynamic-require, global-require
+    return require('../data/share/og-players.json');
+  } catch {
+    return null;
+  }
+}
+
 function loadLocalSharePayload(slug) {
   const key = String(slug || '')
     .trim()
     .toLowerCase();
   if (!key) return null;
-  const rows = loadRecruitingPlayers();
-  if (!rows) return null;
-  const row = rows.find((p) => String(p.slug || p.id || '').toLowerCase() === key);
+  const bundled = loadBundledOgPlayers();
+  const row = bundled
+    ? bundled[key]
+    : (loadRecruitingPlayers() || []).find((p) => String(p.slug || p.id || '').toLowerCase() === key);
   if (!row) return null;
   return {
     player: {
