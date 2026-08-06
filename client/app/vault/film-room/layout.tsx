@@ -12,7 +12,7 @@ export default function VaultFilmRoomLayout({
         testId="vault-film-room"
         className="gv-film-room"
         label="Film Breakdown Scheme School UF Press Conferences Highlights"
-        extraClasses="gv-film-hub-grid gv-film-hub-card gv-film-lessons"
+        extraClasses="gv-fr-hero gv-fr-rail gv-fr-grid gv-fr-card"
       />
       {children}
     </>
