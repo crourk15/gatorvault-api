@@ -1,28 +1,8 @@
 {
-  "generatedAt": "2026-08-05T11:07:00.213Z",
+  "generatedAt": "2026-08-06T21:10:49.111Z",
   "source": "local-cache",
   "categories": [],
   "items": [
-    {
-      "id": "yt_S_tCZjoet48",
-      "slug": "gnfp-podcast-episode-2026-talking-ball-with-coach-jon-sumrall",
-      "title": "GNFP Podcast Episode- 2026 Talking Ball with Coach Jon Sumrall",
-      "category": "Film Breakdown",
-      "filmHub": "GNFP Film Review",
-      "source": "GNFP",
-      "sourceUrl": "https://www.youtube.com/watch?v=S_tCZjoet48",
-      "locked": false,
-      "season": "2026",
-      "duration": "YouTube",
-      "youtubeId": "S_tCZjoet48",
-      "embedUrl": "https://www.youtube.com/embed/S_tCZjoet48",
-      "videoUrl": "https://www.youtube.com/watch?v=S_tCZjoet48",
-      "knowledgeEngine": false,
-      "gameLine": "GNFP Film Review",
-      "publishedAt": "2026-05-20T20:01:09.000Z",
-      "lastVerified": null,
-      "noVideo": false
-    },
     {
       "id": "yt_ACmyasv28qs",
       "slug": "gnfp-film-review-2026-aaron-philo-analysis-part-2-florida-gators-offense",

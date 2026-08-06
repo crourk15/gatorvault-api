@@ -5,6 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const { loadFilmRoomCache, resolveCachePath } = require('./film-room-cache-store');
+const { isGnfpFilmBreakdownTitle } = require('./film-room-youtube-ingest');
 
 const MANUAL_PATH = path.join(__dirname, '..', 'data', 'film-room', 'manual.json');
 
@@ -67,6 +68,8 @@ function loadLegacyVideoCatalog() {
   const items = [];
 
   (cache.auto?.gnfp || []).forEach((row) => {
+    // Drop coach podcast / Talking Ball sit-downs — Film Breakdown is tape only.
+    if (!isGnfpFilmBreakdownTitle(row?.title)) return;
     items.push(legacyItemToCatalog(row, LEGACY_CATEGORIES.GNFP));
   });
 
