@@ -4,7 +4,6 @@
  */
 import { getApiBase, type BigBoardPlayer } from './big-board-api';
 import { coerceDisplayText } from './coerce-text';
-import { playerProfilePath } from './player-routes';
 
 export type PlayerLifecycle = 'HS' | 'COLLEGE' | 'PORTAL';
 
@@ -220,19 +219,21 @@ export async function fetchPlayerProfile(slug: string): Promise<PlayerProfileBun
   });
 }
 
+/**
+ * Share URL for rich link previews (Open Graph card), not the bare SPA shell.
+ * Humans hitting /share/player/:slug are redirected into the vault profile.
+ */
 export function buildPlayerShareUrl(
   slug: string,
-  lifecycle?: string | null,
-  inVault = false,
-  tab?: string
+  _lifecycle?: string | null,
+  _inVault = false,
+  _tab?: string
 ): string {
-  const path = playerProfilePath(slug, lifecycle, inVault);
-  if (typeof window === 'undefined') {
-    return `${path}${tab ? `?tab=${tab}` : ''}`;
-  }
+  const path = `/share/player/${encodeURIComponent(slug)}`;
+  if (typeof window === 'undefined') return path;
   const url = new URL(window.location.href);
   url.pathname = path;
   url.search = '';
-  if (tab) url.searchParams.set('tab', tab);
+  url.hash = '';
   return url.toString();
 }

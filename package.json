@@ -2,7 +2,7 @@
   "name": "gatorvault-api",
   "version": "1.0.0",
   "private": true,
-  "description": "GatorVault Insider \u2014 API, static site, On3 ingest, X AutoPoster",
+  "description": "GatorVault Insider — API, static site, On3 ingest, X AutoPoster",
   "scripts": {
     "postinstall": "npm install --prefix server",
     "build:futurecast": "npm run build:render --prefix client",
@@ -71,6 +71,9 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "playwright": "^1.61.0"

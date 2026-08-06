@@ -23,6 +23,10 @@
   # Apple Team ID (same as Xcode DEVELOPMENT_TEAM) — fills AASA appIDs for universal links.
   APPLE_TEAM_ID = "45C4DZJ4UJ"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # Disable Netlify post-processing — optimization layer rewrites HTML/RSC with stale chunk hashes.
 [build.processing]
   skip_processing = true

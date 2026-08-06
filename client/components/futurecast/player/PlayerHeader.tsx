@@ -88,18 +88,33 @@ export function PlayerHeader({
 
   const onShare = useCallback(async () => {
     const url = buildPlayerShareUrl(player.slug, player.status, inVault);
+    const starBit = stars != null ? `${stars}★ ${player.position}` : player.position;
+    const statusBit = player.committedTo
+      ? `Committed to ${player.committedTo}`
+      : `Class of ${player.classYear}`;
+    const title = `${player.fullName} · ${starBit} | GatorVault`;
+    const text = `${player.fullName} — ${statusBit}. Open the Vault profile:`;
     try {
       if (navigator.share) {
-        await navigator.share({ title: player.fullName, url });
+        await navigator.share({ title, text, url });
         return;
       }
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(`${title}\n${text}\n${url}`);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       /* user cancelled share */
     }
-  }, [player.fullName, player.slug, player.status, inVault]);
+  }, [
+    player.fullName,
+    player.slug,
+    player.status,
+    player.position,
+    player.classYear,
+    player.committedTo,
+    stars,
+    inVault,
+  ]);
 
   return (
     <header className="fc-profile-header fc-profile-header--hero" data-testid="player-header">
