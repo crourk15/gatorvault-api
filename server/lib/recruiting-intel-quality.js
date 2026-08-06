@@ -135,7 +135,9 @@ function playerLastName(name) {
   const parts = String(name || '')
     .trim()
     .split(/\s+/)
-    .filter(Boolean);
+    .filter(Boolean)
+    // Strip generational suffixes so "Anthony Howard Jr." → Howard (not Jr.).
+    .filter((p) => !/^(jr\.?|sr\.?|ii|iii|iv|v)$/i.test(p));
   return parts.length ? parts[parts.length - 1] : '';
 }
 
