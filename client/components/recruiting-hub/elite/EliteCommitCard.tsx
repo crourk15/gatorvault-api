@@ -16,10 +16,16 @@ function stripVaultLabel(text: string | null | undefined, label: string): string
   return raw.replace(re, '').trim() || raw;
 }
 
+function positionMark(position: string | null | undefined): string {
+  const raw = String(position || '').trim().toUpperCase();
+  if (!raw) return '—';
+  if (raw.length <= 4) return raw;
+  return raw.slice(0, 3);
+}
+
 /**
  * Fan-first commit card — same surface for every class year.
- * Short commit line under the name; Vault Scouting lives on the player profile.
- * Keep the prior compact card shape — elite is in the writing, not a bigger chrome block.
+ * Compact identity mark + signed stamp; Vault Scouting lives on the player profile.
  */
 export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
   const meta = commit.metaLine || commit.rankNote;
@@ -27,29 +33,44 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
   // Brief stays untitled — strip any legacy "Vault Eval —" prefix from API/iOS payloads.
   const skinny = stripVaultLabel(skinnyRaw, 'Eval');
   const showJersey = year <= 2026 && commit.jerseyNumber != null && String(commit.jerseyNumber).trim() !== '';
+  const stamp = commit.statusBadge || (commit.enrolled ? 'Enrolled' : 'Signed');
 
   return (
-    <article className="rh-commit-card rh-elite-commit-card" data-testid="rh-elite-commit-card">
-      <div className="rh-commit-header">
-        <div>
+    <article
+      className="rh-commit-card rh-elite-commit-card rh-elite-commit-card--heat"
+      data-testid="rh-elite-commit-card"
+    >
+      <div className="rh-elite-commit-card__top">
+        <div className="rh-elite-commit-card__mark" aria-hidden>
+          <span className="rh-elite-commit-card__pos">{positionMark(commit.position)}</span>
+        </div>
+
+        <div className="rh-elite-commit-card__identity">
           <a href={commit.profileUrl} className="rh-commit-name">
             {commit.name}
           </a>
           {meta ? <p className="rh-commit-meta">{meta}</p> : null}
         </div>
-        <div className="rh-commit-badges">
-          {commit.inState ? <span className="rh-badge rh-badge--instate">In-state</span> : null}
-          {commit.statusBadge ? <span className="rh-badge">{commit.statusBadge}</span> : null}
-        </div>
+
+        <span className="rh-elite-commit-card__stamp">{stamp}</span>
       </div>
+
+      {commit.inState || (commit.stars != null && commit.stars > 0) ? (
+        <div className="rh-commit-badges rh-elite-commit-card__badges">
+          {commit.inState ? <span className="rh-badge rh-badge--instate">In-state</span> : null}
+          {commit.stars != null && commit.stars > 0 ? (
+            <span className="rh-badge">{commit.stars}★</span>
+          ) : null}
+        </div>
+      ) : null}
 
       {skinny ? (
         <p className="rh-commit-strengths rh-commit-skinny rh-commit-skinny--elite">{skinny}</p>
       ) : null}
 
-      <div className="rh-commit-footer">
+      <div className="rh-commit-footer rh-elite-commit-card__footer-row">
         <span>Committed {commit.commitDate}</span>
-        {commit.rating && commit.rating !== '—' ? <span>Rating {commit.rating}</span> : null}
+        {commit.rating && commit.rating !== '—' ? <span>{commit.rating}</span> : null}
         {showJersey ? <span>#{commit.jerseyNumber}</span> : null}
         {commit.nilEstimate ? <span>NIL {commit.nilEstimate}</span> : null}
       </div>

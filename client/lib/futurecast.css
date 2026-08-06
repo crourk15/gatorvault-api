@@ -2468,6 +2468,18 @@
   margin-top: 0;
 }
 
+.fc-overview-title--sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .fc-overview-eyebrow {
   margin: 0 0 0.35rem;
   font-size: 0.6875rem;
@@ -2484,6 +2496,112 @@
   font-weight: 600;
   line-height: 1.35;
   color: var(--gv-navy, #001a33);
+}
+
+/* Recruiting profile: Stand leads, Vault Scouting follows, dossier demoted. */
+.fc-overview--stand-hero {
+  gap: 1.25rem;
+}
+
+.fc-overview-stand--hero {
+  position: relative;
+  padding: 1.15rem 1.1rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  background:
+    linear-gradient(145deg, rgba(0, 33, 165, 0.07) 0%, rgba(255, 255, 255, 0.97) 48%, #ffffff 100%);
+  overflow: hidden;
+}
+
+.fc-overview-stand--hero::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #fa4616 0%, #0021a5 100%);
+}
+
+.fc-overview-stand--hero .fc-overview-eyebrow {
+  margin: 0 0 0.55rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+}
+
+.fc-overview-stand--hero .fc-overview-headline {
+  margin: 0 0 1rem;
+  font-size: clamp(1.35rem, 3.6vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: 0.01em;
+}
+
+.fc-overview-stand--hero .fc-overview-metrics {
+  margin-bottom: 0.35rem;
+}
+
+.fc-overview-stand--hero .fc-overview-metric {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.fc-overview-secondary {
+  margin-top: 0.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 33, 165, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  opacity: 0.96;
+}
+
+.fc-overview-secondary__label {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.fc-overview-secondary .fc-overview-slot.fc-profile-section {
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: #f8fafc;
+}
+
+.fc-overview-secondary .fc-overview-title {
+  font-size: 0.78rem;
+  margin-bottom: 0.55rem;
+  color: #64748b;
+}
+
+.fc-overview--stand-hero + .fc-profile-section--picks,
+.fc-overview--stand-hero ~ .fc-profile-section {
+  margin-top: 0.25rem;
+}
+
+.fc-overview--stand-hero .fc-vault-scouting {
+  margin-top: 0.15rem;
+  padding: 1.15rem 1.1rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 33, 165, 0.06);
+}
+
+.fc-overview--stand-hero .fc-vault-scouting__head h2 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--gv-navy, #001a33);
+}
+
+.fc-overview--stand-hero .fc-vault-scouting__lede {
+  color: #64748b;
 }
 
 .fc-overview-metrics {

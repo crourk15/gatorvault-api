@@ -143,9 +143,15 @@ export function OverviewTab({
 
   return (
     <div className="fc-profile-panel" data-testid="tab-overview">
-      <OverviewFourSlot mode={mode} who={who} stand={stand} context={context} pulse={pulse} />
-
-      <VaultScoutingSection scouting={vaultScouting} />
+      <OverviewFourSlot
+        mode={mode}
+        variant="stand-hero"
+        who={who}
+        stand={stand}
+        context={context}
+        pulse={pulse}
+        afterStand={<VaultScoutingSection scouting={vaultScouting} />}
+      />
 
       {showPicks ? (
         <section className="fc-profile-section fc-profile-section--picks">
