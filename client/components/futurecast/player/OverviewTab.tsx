@@ -9,6 +9,8 @@ import {
   formatSignalValue,
   formatDate,
   fanSignalTypeLabel,
+  formatRelativeSignalDate,
+  isStaleCommitBioSignal,
 } from '../../../lib/player-derived';
 import { dedupeDiscoverySignals, isFeedSignal, signalTimestamp } from '../../../lib/player-profile-normalize';
 import { coerceDisplayText } from '../../../lib/coerce-text';
@@ -44,12 +46,11 @@ function profileNotesDeduped(
 
 function signalMeta(signal: { signalType: string; createdAt?: string | null }): string {
   const type = String(signal.signalType || '').toUpperCase();
-  const date = formatDate(signal.createdAt);
+  const relative = formatRelativeSignalDate(signal.createdAt);
   if (type === 'OFFER') {
-    return date !== '—' ? date : 'Offer';
+    return relative || 'Offer';
   }
-  if (date !== '—') return date;
-  return '';
+  return relative;
 }
 
 export interface OverviewTabProps {
@@ -73,7 +74,10 @@ export function OverviewTab({
     data;
   const offerCount = highSchoolProfile?.offers?.length ?? 0;
   const eventSignals = dedupeDiscoverySignals(signals).filter(isFeedSignal);
-  const recentSignals = [...eventSignals]
+  // Prefer live intel over synthetic recruiting-store commit bios.
+  const liveSignals = eventSignals.filter((s) => !isStaleCommitBioSignal(s));
+  const feedPool = liveSignals.length ? liveSignals : eventSignals;
+  const recentSignals = [...feedPool]
     .sort((a, b) => signalTimestamp(b.createdAt) - signalTimestamp(a.createdAt))
     .slice(0, 5);
   const notes = profileNotesDeduped(

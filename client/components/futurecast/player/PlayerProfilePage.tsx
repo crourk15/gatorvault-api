@@ -13,7 +13,18 @@ import {
 import type { PortalIntelPayload, TransferPrediction } from '@/lib/portal-api';
 import type { UfFitIntelResponse } from '@/lib/uf-fit-api';
 import type { PlayerPrediction } from '@/lib/predictions-api';
-import { resolveProfileMetrics } from '@/lib/player-profile-normalize';
+import {
+  dedupeDiscoverySignals,
+  isFeedSignal,
+  signalTimestamp,
+  resolveProfileMetrics,
+} from '@/lib/player-profile-normalize';
+import {
+  fanSignalTypeLabel,
+  formatRelativeSignalDate,
+  formatSignalValue,
+  isStaleCommitBioSignal,
+} from '@/lib/player-derived';
 import '@/lib/futurecast.css';
 import { PlayerHeader } from './PlayerHeader';
 import { PlayerTabs, parseProfileTab, type ProfileTabId } from './PlayerTabs';
@@ -197,6 +208,26 @@ export function PlayerProfilePage({
     [data, profile?.fitIntel]
   );
 
+  const latestIntel = useMemo(() => {
+    if (!data?.signals?.length) return null;
+    const pool = dedupeDiscoverySignals(data.signals).filter(isFeedSignal);
+    const live = pool.filter((s) => !isStaleCommitBioSignal(s));
+    const ordered = [...(live.length ? live : pool)].sort(
+      (a, b) => signalTimestamp(b.createdAt) - signalTimestamp(a.createdAt)
+    );
+    const top = ordered[0];
+    if (!top) return null;
+    const text = formatSignalValue(top);
+    if (!text || text === '—') return null;
+    // Keep hero intel snappy — one sentence max.
+    const short = text.split(/(?<=[.!?])\s+/)[0] || text;
+    return {
+      label: fanSignalTypeLabel(top.signalType),
+      text: short.length > 140 ? `${short.slice(0, 137)}…` : short,
+      when: formatRelativeSignalDate(top.createdAt) || null,
+    };
+  }, [data?.signals]);
+
   if (loading && !profile) {
     return (
       <div className="fc-profile-page fc-profile-page--feed mobile-app" data-testid="player-profile-page">
@@ -233,6 +264,7 @@ export function PlayerProfilePage({
         portalProfile={data.portalProfile}
         futurecastSummary={profile?.futurecastSummary ?? null}
         movementWindow={profile?.movementWindow ?? null}
+        latestIntel={latestIntel}
       />
       <PlayerTabs activeTab={activeTab} onTabChange={onTabChange} availableTabs={availableTabs} />
       <div className="fc-profile-tab-panel" role="tabpanel">

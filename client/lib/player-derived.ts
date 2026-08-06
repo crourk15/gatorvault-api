@@ -350,6 +350,44 @@ export function formatSignalValue(signal: DiscoverySignal | { signalType?: strin
   ) || '—';
 }
 
+/** True when an EVALUATION_NOTE is just a static commit bio, not live intel. */
+export function isStaleCommitBioSignal(
+  signal: DiscoverySignal | { signalType?: string; signalValue?: Record<string, unknown>; value?: Record<string, unknown> }
+): boolean {
+  const raw = signal as {
+    signalType?: string;
+    signalValue?: Record<string, unknown>;
+    value?: Record<string, unknown>;
+  };
+  const type = String(raw.signalType || '').toUpperCase();
+  if (type !== 'EVALUATION_NOTE' && type !== 'EVAL_NOTE') return false;
+  const v = raw.signalValue ?? raw.value ?? {};
+  const source = String(v.source || '').toLowerCase();
+  const note = String(v.note || v.message || '').toLowerCase();
+  if (source === 'recruiting-store') {
+    if (/committed to florida as a/.test(note)) return true;
+    if (/listed at/.test(note) && /nationally/.test(note)) return true;
+  }
+  return false;
+}
+
+/** Relative freshness for fan-facing activity rows. */
+export function formatRelativeSignalDate(iso: unknown): string {
+  const absolute = formatDate(iso);
+  if (absolute === '—') return '';
+  const t = new Date(String(iso || '')).getTime();
+  if (!Number.isFinite(t)) return absolute;
+  const diffMs = Date.now() - t;
+  if (diffMs < 0) return absolute;
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 60) return mins <= 1 ? 'Just now' : `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 36) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 14) return `${days}d ago`;
+  return absolute;
+}
+
 export function formatDate(iso: unknown): string {
   if (iso == null || iso === '') return '—';
   if (typeof iso === 'object') {
