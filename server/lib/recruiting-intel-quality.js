@@ -236,6 +236,11 @@ function isCompositeBio(text) {
   // On3 rank dump: "Name is a 4-star WR · listed at 6-0 / 185 · from …"
   if (/\bis a \d+-star\b/i.test(s) && /\blisted at\b/i.test(s)) return true;
   if (/\bis a \d+-star\b/i.test(s) && /\bfrom\b/i.test(s) && /#\d+\s+nationally/i.test(s)) return true;
+  // Broken synthetic: "Name is a listed at 6-3 / 235 · from …"
+  if (/\bis a listed at\b/i.test(s)) return true;
+  if (/Still an open board target — not a Florida commit/i.test(s) && /\blisted at\b/i.test(s)) {
+    return true;
+  }
   return false;
 }
 
