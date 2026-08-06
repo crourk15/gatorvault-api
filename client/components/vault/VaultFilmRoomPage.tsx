@@ -50,7 +50,7 @@ const HUB_COPY: Record<string, { desc: string; kicker: string }> = {
   },
   'Scheme School': {
     kicker: 'Staff school',
-    desc: 'Fan-friendly lessons from Florida's real coaching staff — no clinic jargon.',
+    desc: "Fan-friendly lessons from Florida's real coaching staff — no clinic jargon.",
   },
   'UF Press Conferences': {
     kicker: 'On the record',
