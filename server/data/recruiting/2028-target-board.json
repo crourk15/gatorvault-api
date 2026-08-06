@@ -48,6 +48,21 @@
       "ufProbability": 0.30000000000000004
     },
     {
+      "slug": "antonio-thomas-jr",
+      "name": "Antonio Thomas Jr.",
+      "pos": "EDGE",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "state": "FL",
+      "stars": 4,
+      "rating": null,
+      "natlRank": 17,
+      "posRank": 4,
+      "stateRank": 5,
+      "inState": true,
+      "committedTo": null,
+      "notes": "Locked allowlist — closest-to-commit / Florida EDGE priority (Carrollwood). Live UF% from predictions/RPM."
+    },
+    {
       "slug": "malakhi-dudley",
       "name": "Malakhi Dudley",
       "pos": "OT",
@@ -620,5 +635,5 @@
       "ufProbability": null
     }
   ],
-  "updatedAt": "2026-07-24T15:40:00.000Z"
+  "updatedAt": "2026-08-06T22:04:49.524Z"
 }

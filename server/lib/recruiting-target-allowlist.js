@@ -50,6 +50,8 @@ const ALLOWLIST_2028 = [
   'kaleb-ballard',
   'brysen-wright',
   'asher-ghioto',
+  // Closest-to-commit / Who commits next — Carrollwood EDGE priority (must stay locked)
+  'antonio-thomas-jr',
   'cassell-cruickshank',
   'prince-che',
   'gabriel-player',
@@ -114,6 +116,7 @@ const CANONICAL_TARGET_NAMES = {
   'kaleb-ballard': 'Kaleb Ballard',
   'brysen-wright': 'Brysen Wright',
   'asher-ghioto': 'Asher Ghioto',
+  'antonio-thomas-jr': 'Antonio Thomas Jr.',
   'cassell-cruickshank': 'Cassell Cruickshank',
   'prince-che': 'Prince Che',
   'gabriel-player': 'Gabriel Player',
