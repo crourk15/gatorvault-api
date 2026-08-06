@@ -227,7 +227,13 @@ export function PlayerProfilePage({
       <nav className="fc-profile-back">
         <a href={backHref}>{backLabel}</a>
       </nav>
-      <PlayerHeader player={data.player} metrics={metrics} portalProfile={data.portalProfile} />
+      <PlayerHeader
+        player={data.player}
+        metrics={metrics}
+        portalProfile={data.portalProfile}
+        futurecastSummary={profile?.futurecastSummary ?? null}
+        movementWindow={profile?.movementWindow ?? null}
+      />
       <PlayerTabs activeTab={activeTab} onTabChange={onTabChange} availableTabs={availableTabs} />
       <div className="fc-profile-tab-panel" role="tabpanel">
         {activeTab === 'overview' && (

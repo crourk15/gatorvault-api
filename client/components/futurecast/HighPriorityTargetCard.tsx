@@ -47,6 +47,12 @@ export function HighPriorityTargetCard({
         : '—';
   const fitTone = fitMeterTone(player.fitScore);
   const note = player.notePreview ?? player.skinny;
+  const initials = player.name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() || '')
+    .join('');
   const trendValues = useMemo(
     () => (player.trendHistory ?? []).map((point) => point.confidence),
     [player.trendHistory]
@@ -60,7 +66,7 @@ export function HighPriorityTargetCard({
       <VaultNavLink href={href} className="gv-hp-card__link">
         <header className="gv-hp-card__head">
           <div>
-            {rank != null && <span className="gv-hp-card__rank">#{rank}</span>}
+            {rank != null && <span className="gv-hp-card__rank">#{rank} chase</span>}
             <h3 className="gv-hp-card__name">{player.name}</h3>
             <p className="gv-hp-card__meta">
               {player.position}
@@ -73,14 +79,19 @@ export function HighPriorityTargetCard({
           ) : null}
         </header>
 
-        <div className="gv-hp-card__ratings">
-          <span className="gv-hp-card__composite">{composite}</span>
-          <span className="gv-hp-card__composite-label">Composite</span>
-          <span className="gv-hp-card__ranks">
-            NATL {formatRank(player.nationalRank ?? player.natlRank)} · POS{' '}
-            {formatRank(player.positionRank ?? player.posRank)} · ST{' '}
-            {formatRank(player.stateRank)}
+        <div className="gv-hp-card__identity">
+          <span className="gv-hp-card__avatar" aria-hidden>
+            {initials || (player.position || '?').slice(0, 2)}
           </span>
+          <div className="gv-hp-card__ratings">
+            <span className="gv-hp-card__composite">{composite}</span>
+            <span className="gv-hp-card__composite-label">Composite</span>
+            <span className="gv-hp-card__ranks">
+              NATL {formatRank(player.nationalRank ?? player.natlRank)} · POS{' '}
+              {formatRank(player.positionRank ?? player.posRank)} · ST{' '}
+              {formatRank(player.stateRank)}
+            </span>
+          </div>
         </div>
 
         {player.visitHistory.length > 0 && (

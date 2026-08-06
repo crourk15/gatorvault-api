@@ -264,6 +264,50 @@
   border-bottom: none;
 }
 
+.fc-profile-header--elite {
+  background:
+    radial-gradient(700px 220px at 0% 0%, rgba(250, 70, 22, 0.28), transparent 55%),
+    linear-gradient(105deg, #0b1b33 0%, #0021a5 55%, #07111f 100%);
+  border-radius: 0 0 18px 18px;
+}
+
+.fc-profile-header__mark {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 1.1rem;
+  border: 1px solid rgba(250, 70, 22, 0.55);
+  background:
+    linear-gradient(160deg, rgba(250, 70, 22, 0.45), transparent 52%),
+    radial-gradient(circle at 40% 30%, #475569, #0f172a 72%);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.fc-profile-move {
+  border-radius: 9999px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.fc-profile-move.is-up {
+  background: rgba(74, 222, 128, 0.14);
+  color: #86efac;
+  border: 1px solid rgba(74, 222, 128, 0.35);
+}
+
+.fc-profile-move.is-down {
+  background: rgba(248, 113, 113, 0.14);
+  color: #fca5a5;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
 .fc-profile-header__top {
   display: flex;
   justify-content: space-between;
@@ -484,15 +528,23 @@
 }
 
 .fc-vault-scouting__traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
   margin: 0;
-  padding-left: 1.15rem;
-  color: var(--gv-navy, #001a33);
-  font-size: 0.95rem;
-  line-height: 1.5;
+  padding: 0;
+  list-style: none;
 }
 
 .fc-vault-scouting__traits li {
-  margin: 0 0 0.35rem;
+  margin: 0;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 33, 165, 0.16);
+  background: rgba(0, 33, 165, 0.05);
+  color: var(--gv-navy, #001a33);
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .fc-profile-dl {
