@@ -152,3 +152,54 @@ export function closingClassUrgencyScore(player: FcLabTarget): number {
   const battleBonus = uf >= 34 && uf < 67 ? 8 : 0;
   return uf * 1.2 + battleBonus - rivalGap * 0.15;
 }
+
+/** True when Florida's share is strictly ahead of the top confirmed rival. */
+export function isFloridaLeadingOnBoard(player: FcLabTarget): boolean {
+  if (player.committedTo && isFlorida(player.committedTo)) return false;
+  if (player.ufProbability == null) return false;
+  const uf = ufPctFromFc(player.ufProbability);
+  if (!(uf > 0)) return false;
+  const threat = topThreatVsFlorida(player);
+  if (!threat) {
+    // Sole / thin board — require a real share so soft unknowns don't flood Leading.
+    return uf >= 25;
+  }
+  return uf > threat.pct;
+}
+
+/** Margin over the top rival (UF alone = full share). */
+export function floridaLeadMargin(player: FcLabTarget): number {
+  const uf = ufPctFromFc(player.ufProbability);
+  const threat = topThreatVsFlorida(player);
+  if (!threat) return uf;
+  return uf - threat.pct;
+}
+
+/**
+ * Closer score — who looks nearest to a Florida commit.
+ * Lead + share strength + momentum + cushion over the top rival.
+ */
+export function nextCommitScore(player: FcLabTarget): number {
+  if (!isFloridaLeadingOnBoard(player)) return -1;
+  const uf = ufPctFromFc(player.ufProbability);
+  const margin = floridaLeadMargin(player);
+  const delta = Number(player.delta7d);
+  const momentum = Number.isFinite(delta) ? Math.max(-8, Math.min(18, delta * 1.35)) : 0;
+  const shareBoost = uf >= 70 ? 16 : uf >= 60 ? 10 : uf >= 50 ? 4 : 0;
+  const cushionBoost = margin >= 20 ? 10 : margin >= 12 ? 6 : margin >= 6 ? 3 : 0;
+  return uf * 1.15 + margin * 0.55 + momentum + shareBoost + cushionBoost;
+}
+
+/** Top-tier closer cut for the Next Commit stamp. */
+export function isNextCommitPick(player: FcLabTarget, minScore = 78): boolean {
+  return nextCommitScore(player) >= minScore;
+}
+
+/** @deprecated use isNextCommitPick */
+export function isLikelyNextCommit(player: FcLabTarget, minUfPct = 60): boolean {
+  if (!isFloridaLeadingOnBoard(player)) return false;
+  const uf = ufPctFromFc(player.ufProbability);
+  if (uf < minUfPct) return false;
+  return isNextCommitPick(player, 70);
+}
+

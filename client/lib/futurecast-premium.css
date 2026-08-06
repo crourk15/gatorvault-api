@@ -124,13 +124,23 @@
   transform: translateY(-1px);
 }
 
-.gv-fc-page .fc-lab-target-card__name {
-  color: var(--fc-uf-blue) !important;
+.gv-fc-page .fc-lab-target-card__name,
+.gv-fc-page .fc-lab-chase-card__name,
+.gv-fc-page .fc-lab-lead-card__name,
+.gv-fc-page .fc-lab-need-elite__pos,
+.gv-fc-page .fc-lab-need-elite__lead a,
+.gv-fc-page .fc-lab-need-elite__lead strong {
+  color: var(--fc-swamp-navy, #001a33) !important;
   font-weight: 800;
+}
+
+.gv-fc-page .fc-lab-target-card__name {
   font-size: 0.9375rem;
 }
 
-.gv-fc-page .fc-lab-target-card__name:hover {
+.gv-fc-page .fc-lab-target-card__name:hover,
+.gv-fc-page .fc-lab-need-elite__lead a:hover,
+.gv-fc-page .fc-lab-chase-card:hover .fc-lab-chase-card__name {
   color: var(--fc-gator-orange) !important;
 }
 

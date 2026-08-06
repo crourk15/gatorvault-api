@@ -13,6 +13,7 @@ const { mountFutureCastAlertsRoutes } = require('../api/alerts/mount.ts');
 const { mountRecruitsRoutes } = require('../api/recruits/mount.ts');
 const { mountStaffRoutes } = require('../api/staff/mount.ts');
 const { mountPlayerProfileRoutes } = require('../api/player/mount.ts');
+const { mountSharePlayerRoutes } = require('./share-player-card');
 
 function mountFutureCastApiRoutes(app) {
   mountFutureCastPlayersRoutes(app);
@@ -25,7 +26,8 @@ function mountFutureCastApiRoutes(app) {
   mountRecruitsRoutes(app);
   mountStaffRoutes(app);
   mountPlayerProfileRoutes(app);
-  console.log('[futurecast] API mounted: /api/players, /api/player/full-profile, /api/player/resolve, /api/big-board, /api/portal, /api/uf-fit, /api/predictions, /api/predictors, /api/futurecast/*, /api/recruits, /api/alerts, /api/staff/dashboard');
+  mountSharePlayerRoutes(app);
+  console.log('[futurecast] API mounted: /api/players, /api/player/full-profile, /api/player/resolve, /api/share/player, /api/big-board, /api/portal, /api/uf-fit, /api/predictions, /api/predictors, /api/futurecast/*, /api/recruits, /api/alerts, /api/staff/dashboard');
 }
 
 module.exports = {

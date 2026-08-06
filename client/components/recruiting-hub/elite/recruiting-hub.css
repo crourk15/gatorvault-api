@@ -1106,8 +1106,321 @@
   color: var(--card-text);
   border-radius: 10px;
   box-shadow: var(--card-shadow);
-  padding: 18px 20px;
+  padding: 16px 18px;
   border-top: 4px solid var(--gator-orange);
+}
+
+/* Compact heat: identity mark + commit stamp — not a dark media band. */
+.rh-elite-chrome .rh-elite-commit-card--heat {
+  position: relative;
+  overflow: hidden;
+  padding: 15px 16px 14px 18px;
+  background:
+    linear-gradient(120deg, rgba(0, 33, 165, 0.09) 0%, rgba(255, 255, 255, 0.97) 38%, #ffffff 100%);
+  border: 1px solid rgba(0, 33, 165, 0.1);
+  border-top: none;
+  border-left: 4px solid var(--gator-orange);
+  border-radius: 12px;
+  box-shadow: 0 8px 22px rgba(0, 33, 165, 0.11);
+}
+
+.rh-elite-chrome .rh-elite-commit-card--heat::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gator-orange) 0%, #0021a5 72%, transparent 100%);
+  pointer-events: none;
+}
+
+.rh-elite-chrome .rh-elite-commit-card--heat::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  bottom: -26px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(250, 70, 22, 0.14), transparent 70%);
+  pointer-events: none;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__watermark {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-52%);
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 4.2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(0, 33, 165, 0.05);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__mark {
+  flex: 0 0 auto;
+  min-width: 48px;
+  height: 48px;
+  padding: 0 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 11px;
+  background: linear-gradient(165deg, #0021a5 0%, #00144f 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 4px 10px rgba(0, 33, 165, 0.28);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__pos {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__stars {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fdba74;
+  line-height: 1;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__identity {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.rh-elite-chrome .rh-elite-commit-card--heat .rh-commit-name {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.28rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  line-height: 1.12;
+  color: #001a33;
+}
+
+.rh-elite-chrome .rh-elite-commit-card--heat .rh-commit-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #64748b;
+}
+
+/* Editorial identity line — not pill spam. */
+.rh-elite-chrome .rh-elite-commit-card__identity-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.55rem;
+  margin: 5px 0 0;
+  font-size: 12px;
+  line-height: 1.3;
+  color: #64748b;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__id-stars {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #c2410c;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__id-pos {
+  font-weight: 800;
+  color: #0021a5;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__id-home {
+  color: #64748b;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__id-home::before {
+  content: '·';
+  margin-right: 0.55rem;
+  color: #cbd5e1;
+}
+
+/* Rank strip — score cells, not basic pills. */
+.rh-elite-chrome .rh-elite-commit-card__rank-strip {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__rank-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 7px 8px 6px;
+  border-radius: 8px;
+  background: linear-gradient(165deg, rgba(0, 33, 165, 0.07), rgba(0, 33, 165, 0.02));
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  min-width: 0;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__rank-num {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #001a33;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__rank-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+@media (max-width: 380px) {
+  .rh-elite-chrome .rh-elite-commit-card__rank-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.rh-elite-chrome .rh-elite-commit-card__stamp {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  padding: 5px 9px;
+  border-radius: 4px;
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  line-height: 1;
+  transform: rotate(-2.5deg);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__stamp--committed {
+  border: 1.5px solid #0021a5;
+  color: #0021a5;
+  background: rgba(0, 33, 165, 0.06);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__stamp--enrolled {
+  border: 1.5px solid #15803d;
+  color: #15803d;
+  background: rgba(22, 163, 74, 0.08);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__stamp--accent {
+  border: 1.5px solid var(--gator-orange);
+  color: var(--gator-orange);
+  background: rgba(250, 70, 22, 0.07);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__badges {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__footer-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 33, 165, 0.1);
+  font-weight: 600;
+  color: #64748b;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__footer-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  font-size: 11px;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__rating {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  min-width: 3.5rem;
+  padding: 4px 8px 3px;
+  border-radius: 8px;
+  background: linear-gradient(160deg, rgba(250, 70, 22, 0.12), rgba(250, 70, 22, 0.04));
+  border: 1px solid rgba(250, 70, 22, 0.22);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__rating-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c2410c;
+  line-height: 1;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__rating-value {
+  font-family: var(--gv-font-display, 'Oswald', sans-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #001a33;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Elite brief — take line with orange rail. */
+.rh-elite-chrome .rh-commit-skinny--elite {
+  position: relative;
+  z-index: 1;
+  margin: 12px 0 0;
+  padding: 0 0 0 11px;
+  border-top: none;
+  border-left: 3px solid rgba(250, 70, 22, 0.85);
+  font-size: 13.5px;
+  line-height: 1.55;
+  font-weight: 600;
+  color: #1e293b;
+  letter-spacing: -0.01em;
 }
 
 .rh-elite-chrome .rh-elite-commit-card__head {

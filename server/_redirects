@@ -4,6 +4,9 @@
 # API proxy
 /api/*  https://gatorvault-api.onrender.com/api/:splat  200
 
+# Player share cards (Open Graph HTML + JPEG) — Netlify function, not vault SPA
+/share/player/*  /.netlify/functions/share-player  200
+
 # Webpack publicPath /_next/ + absolute /js/vault-chunks refs → canonical flat chunks
 /_next/js/vault-chunks/*  /js/vault-chunks/:splat  200!
 /_next//js/vault-chunks/*  /js/vault-chunks/:splat  200!
@@ -220,6 +223,15 @@
 /vault/recruiting  /vault/recruiting/index.html  200
 /vault/recruiting/  /vault/recruiting/index.html  200
 /vault/recruiting/*  /vault/recruiting/index.html  200
+/vault/team/staff  /vault/team/staff/index.html  200
+/vault/team/staff/  /vault/team/staff/index.html  200
+/vault/team/staff/*  /vault/team/staff/index.html  200
+/vault/team/identity  /vault/team/identity/index.html  200
+/vault/team/identity/  /vault/team/identity/index.html  200
+/vault/team/identity/*  /vault/team/identity/index.html  200
+/vault/team/history  /vault/team/history/index.html  200
+/vault/team/history/  /vault/team/history/index.html  200
+/vault/team/history/*  /vault/team/history/index.html  200
 /vault/team  /vault/team/index.html  200
 /vault/team/  /vault/team/index.html  200
 /vault/team/*  /vault/team/index.html  200

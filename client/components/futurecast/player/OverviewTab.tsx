@@ -4,7 +4,14 @@
 import React from 'react';
 import type { PlayerProfileBundle } from '../../../lib/player-api';
 import type { PlayerMetrics } from '../../../lib/player-derived';
-import { signalSummaryText, formatSignalValue, formatDate } from '../../../lib/player-derived';
+import {
+  signalSummaryText,
+  formatSignalValue,
+  formatDate,
+  fanSignalTypeLabel,
+  formatRelativeSignalDate,
+  isStaleCommitBioSignal,
+} from '../../../lib/player-derived';
 import { dedupeDiscoverySignals, isFeedSignal, signalTimestamp } from '../../../lib/player-profile-normalize';
 import { coerceDisplayText } from '../../../lib/coerce-text';
 import { RelatedPlayers } from './RelatedPlayers';
@@ -39,12 +46,11 @@ function profileNotesDeduped(
 
 function signalMeta(signal: { signalType: string; createdAt?: string | null }): string {
   const type = String(signal.signalType || '').toUpperCase();
-  const date = formatDate(signal.createdAt);
+  const relative = formatRelativeSignalDate(signal.createdAt);
   if (type === 'OFFER') {
-    return date !== '—' ? date : 'Offer';
+    return relative || 'Offer';
   }
-  if (date !== '—') return date;
-  return '';
+  return relative;
 }
 
 export interface OverviewTabProps {
@@ -68,7 +74,10 @@ export function OverviewTab({
     data;
   const offerCount = highSchoolProfile?.offers?.length ?? 0;
   const eventSignals = dedupeDiscoverySignals(signals).filter(isFeedSignal);
-  const recentSignals = [...eventSignals]
+  // Prefer live intel over synthetic recruiting-store commit bios.
+  const liveSignals = eventSignals.filter((s) => !isStaleCommitBioSignal(s));
+  const feedPool = liveSignals.length ? liveSignals : eventSignals;
+  const recentSignals = [...feedPool]
     .sort((a, b) => signalTimestamp(b.createdAt) - signalTimestamp(a.createdAt))
     .slice(0, 5);
   const notes = profileNotesDeduped(
@@ -119,16 +128,21 @@ export function OverviewTab({
 
   const pulse =
     recentSignals.length > 0 ? (
-      <ul className="fc-signal-feed fc-signal-feed--compact">
-        {recentSignals.map((s) => (
-          <li key={s.id}>
-            <span className="fc-signal-feed__type">{s.signalType.replace(/_/g, ' ')}</span>
-            <span className="fc-signal-feed__value">{formatSignalValue(s)}</span>
-            {signalMeta(s) ? (
-              <span className="fc-signal-feed__meta">{signalMeta(s)}</span>
-            ) : null}
-          </li>
-        ))}
+      <ul className="fc-signal-feed fc-signal-feed--compact fc-signal-feed--elite">
+        {recentSignals.map((s) => {
+          const value = formatSignalValue(s);
+          if (!value || value === '—') return null;
+          const when = signalMeta(s);
+          return (
+            <li key={s.id} className="fc-signal-feed__item">
+              <div className="fc-signal-feed__head">
+                <span className="fc-signal-feed__type">{fanSignalTypeLabel(s.signalType)}</span>
+                {when ? <span className="fc-signal-feed__meta">{when}</span> : null}
+              </div>
+              <p className="fc-signal-feed__value">{value}</p>
+            </li>
+          );
+        })}
       </ul>
     ) : offerCount > 0 ? (
       <p className="fc-profile-muted">
@@ -139,11 +153,19 @@ export function OverviewTab({
       <p className="fc-profile-muted">{signalSummaryText(eventSignals)}</p>
     );
 
+  const moveDelta = futurecastSummary?.movementDelta;
+
   return (
     <div className="fc-profile-panel" data-testid="tab-overview">
-      <OverviewFourSlot mode={mode} who={who} stand={stand} context={context} pulse={pulse} />
-
-      <VaultScoutingSection scouting={vaultScouting} />
+      <OverviewFourSlot
+        mode={mode}
+        variant="stand-hero"
+        who={who}
+        stand={stand}
+        context={context}
+        pulse={pulse}
+        afterStand={<VaultScoutingSection scouting={vaultScouting} />}
+      />
 
       {showPicks ? (
         <section className="fc-profile-section fc-profile-section--picks">
@@ -152,6 +174,9 @@ export function OverviewTab({
             {on3Uf != null && gvUf != null
               ? `On3 market has Florida at ${on3Uf}% · GatorVault model at ${gvUf}%`
               : 'GatorVault model for Florida · On3 RPM for competitor schools'}
+            {moveDelta != null && Number(moveDelta) !== 0
+              ? ` · GV movement ${Number(moveDelta) > 0 ? '+' : ''}${Math.round(Number(moveDelta))} over 7 days`
+              : ''}
           </p>
           <PredictionsPanel
             playerId={player.id}

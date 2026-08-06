@@ -32,19 +32,19 @@ const TAB_META: Record<Tab, { label: string; battleClass: string; battleLabel: s
     label: 'Battles',
     battleClass: 'fc-lab-battle-label--battle',
     battleLabel: 'Battle',
-    empty: 'No open battles on the board yet. Check Lean UF or Lean Elsewhere.',
+    empty: 'No open battles on the board yet. Check Lean UF or Soft share.',
   },
   'lean-uf': {
     label: 'Lean UF',
     battleClass: 'fc-lab-battle-label--uf',
     battleLabel: 'Lean UF',
-    empty: 'No Florida leans at 67%+ right now — open Battles for the live fights.',
+    empty: 'No 67%+ Florida shares right now — open Battles for the live fights.',
   },
   'lean-elsewhere': {
-    label: 'Lean Elsewhere',
+    label: 'Soft share',
     battleClass: 'fc-lab-battle-label--other',
-    battleLabel: 'Lean Other',
-    empty: 'No lean-elsewhere targets on the board yet.',
+    battleLabel: 'Soft share',
+    empty: 'No soft-share targets on the board yet.',
   },
 };
 
@@ -201,10 +201,10 @@ export function FutureCastBattlesPanel({
   const totalRows =
     buckets.battles.length + buckets['lean-uf'].length + buckets['lean-elsewhere'].length;
 
-  const title = discoveryFocus ? `${focusYear} Battles` : 'Battles';
+  const title = discoveryFocus ? `${focusYear} Share climate` : 'Share climate';
   const sub = compact
-    ? 'Name · lean · top rival · Florida %'
-    : 'Battle · leaning Florida · leaning elsewhere';
+    ? 'How locked Florida\'s % is — not the same as who\'s ahead above.'
+    : 'Share temperature: strong Florida lean · contested · soft Florida share';
 
   // Never vanish — fans need the Battles slot even when RPM/board odds are thin.
   if (totalRows === 0) {

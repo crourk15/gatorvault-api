@@ -23,6 +23,22 @@
   # Apple Team ID (same as Xcode DEVELOPMENT_TEAM) — fills AASA appIDs for universal links.
   APPLE_TEAM_ID = "45C4DZJ4UJ"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  external_node_modules = ["sharp"]
+
+[functions."share-player"]
+  included_files = ["server/data/share/og-players.json", "server/data/recruiting/players.json", "server/assets/fonts/Arimo-Bold.ttf", "netlify/functions/share-fonts/Arimo-Bold.ttf"]
+
+[[edge_functions]]
+  function = "player-share-bots"
+  path = "/vault/futurecast/player/*"
+
+[[edge_functions]]
+  function = "player-share-bots"
+  path = "/vault/recruiting/player/*"
+
 # Disable Netlify post-processing — optimization layer rewrites HTML/RSC with stale chunk hashes.
 [build.processing]
   skip_processing = true

@@ -106,8 +106,8 @@ export function buildRecruitingStand(input: {
   if (mode === 'commit') {
     if (gvUf != null) metrics.push({ label: 'GV model', value: pctLabel(gvUf) || '—' });
     return {
-      eyebrow: 'Florida stand',
-      headline: staffTake || `Locked in with Florida · Class of ${input.player.classYear}`,
+      eyebrow: 'Locked in',
+      headline: staffTake || `Committed to Florida · Class of ${input.player.classYear}`,
       metrics,
       note: staffTake ? evalTake : null,
     };
@@ -116,7 +116,7 @@ export function buildRecruitingStand(input: {
   if (mode === 'committed_elsewhere') {
     const school = resolveCommittedTo(input.player) || 'another program';
     return {
-      eyebrow: 'Current stand',
+      eyebrow: 'Committed elsewhere',
       headline: staffTake || `Committed to ${school}`,
       metrics,
       note: null,
@@ -132,7 +132,7 @@ export function buildRecruitingStand(input: {
     }
     const status = String(input.player.status || 'PORTAL');
     return {
-      eyebrow: 'Florida stand',
+      eyebrow: 'Portal watch',
       headline: staffTake || `Portal watch · ${status.replace(/_/g, ' ')}`,
       metrics,
       note: null,
@@ -147,7 +147,7 @@ export function buildRecruitingStand(input: {
       });
     }
     return {
-      eyebrow: 'Florida stand',
+      eyebrow: 'On campus',
       headline: staffTake || 'College roster — Florida interest tracked when signals land',
       metrics,
       note: null,
@@ -181,7 +181,7 @@ export function buildRecruitingStand(input: {
   }
 
   return {
-    eyebrow: 'Florida stand',
+    eyebrow: 'Board picture',
     headline,
     metrics,
     note: staffTake ? evalTake : null,
@@ -227,9 +227,9 @@ export function buildRecruitingContext(input: {
 
   if (mode === 'commit') {
     return {
-      title: 'Context',
+      title: 'Commit details',
       rows: [
-        { label: 'Commitment', value: 'Florida', emphasize: true },
+        { label: 'School', value: 'Florida', emphasize: true },
         { label: 'Class', value: String(player.classYear), emphasize: false },
         ...(player.highSchool
           ? [{ label: 'High school', value: player.highSchool, emphasize: false }]
@@ -319,7 +319,7 @@ export function buildRosterStand(player: RosterPlayer): OverviewStand {
 
   if (take) {
     return {
-      eyebrow: 'Florida stand',
+      eyebrow: 'On the roster',
       headline: take,
       metrics: metrics.slice(0, 2),
       note: tier ? `${tier} on the Florida depth chart` : null,
@@ -327,7 +327,7 @@ export function buildRosterStand(player: RosterPlayer): OverviewStand {
   }
 
   return {
-    eyebrow: 'Florida stand',
+    eyebrow: 'On the roster',
     headline: tier
       ? `${tier} ${pos} on the Florida depth chart`
       : `Florida roster · ${pos}`,

@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import type { DiscoverySignal } from '../../../lib/player-api';
-import { formatDate, formatSignalValue } from '../../../lib/player-derived';
+import { formatDate, formatSignalValue, fanSignalTypeLabel } from '../../../lib/player-derived';
 import { dedupeDiscoverySignals, isFeedSignal, signalTimestamp } from '../../../lib/player-profile-normalize';
 
 export interface SignalsTabProps {
@@ -40,7 +40,7 @@ export function SignalsTab({ signals, offerCount = 0 }: SignalsTabProps): React.
         {sorted.map((s) => (
           <li key={s.id} className="fc-signal-feed__item">
             <div className="fc-signal-feed__head">
-              <span className="fc-signal-feed__type">{s.signalType.replace(/_/g, ' ')}</span>
+              <span className="fc-signal-feed__type">{fanSignalTypeLabel(s.signalType)}</span>
               {formatDate(s.createdAt) !== '—' ? (
                 <span className="fc-signal-feed__weight">{formatDate(s.createdAt)}</span>
               ) : null}

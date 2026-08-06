@@ -27,6 +27,16 @@ function visitBadgeClass(type: string): string {
   return 'gv-hp-card__visit--other';
 }
 
+function initialsFromName(name: string): string {
+  const parts = String(name || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (!parts.length) return '—';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0] || ''}${parts[parts.length - 1][0] || ''}`.toUpperCase();
+}
+
 export function HighPriorityTargetCard({
   player,
   rank,
@@ -47,6 +57,7 @@ export function HighPriorityTargetCard({
         : '—';
   const fitTone = fitMeterTone(player.fitScore);
   const note = player.notePreview ?? player.skinny;
+  const initials = initialsFromName(player.name);
   const trendValues = useMemo(
     () => (player.trendHistory ?? []).map((point) => point.confidence),
     [player.trendHistory]
@@ -54,19 +65,24 @@ export function HighPriorityTargetCard({
 
   return (
     <article
-      className={`gv-hp-card${compact ? ' gv-hp-card--compact' : ''}${player.headliner ? ' gv-hp-card--headliner' : ''}`}
+      className={`gv-hp-card gv-hp-card--elite${compact ? ' gv-hp-card--compact' : ''}${player.headliner ? ' gv-hp-card--headliner' : ''}`}
       data-testid="high-priority-card"
     >
       <VaultNavLink href={href} className="gv-hp-card__link">
         <header className="gv-hp-card__head">
-          <div>
-            {rank != null && <span className="gv-hp-card__rank">#{rank}</span>}
-            <h3 className="gv-hp-card__name">{player.name}</h3>
-            <p className="gv-hp-card__meta">
-              {player.position}
-              {player.school ? ` · ${player.school}` : ''}
-              {player.htWt ? ` · ${player.htWt}` : ''}
-            </p>
+          <div className="gv-hp-card__identity">
+            <span className="gv-hp-card__mark" aria-hidden>
+              {initials}
+            </span>
+            <div>
+              {rank != null && <span className="gv-hp-card__rank">#{rank} chase</span>}
+              <h3 className="gv-hp-card__name">{player.name}</h3>
+              <p className="gv-hp-card__meta">
+                {player.position}
+                {player.school ? ` · ${player.school}` : ''}
+                {player.htWt ? ` · ${player.htWt}` : ''}
+              </p>
+            </div>
           </div>
           {player.movementDelta !== 0 ? (
             <TrendingIndicator delta={player.movementDelta} />

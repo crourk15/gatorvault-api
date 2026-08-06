@@ -45,9 +45,18 @@ const EMPTY_HIGH_PRIORITY: HighPriorityResponse = {
   flipWatch: [],
   movementNarratives: [],
 };
-const LAB_FETCH_OPTS = DEFAULT_SNAPSHOT_FETCH_OPTS;
-/** Cap Lab wake retries — unbounded warm-poll turned Discovery cold misses into 3+ minute hangs. */
-const LAB_WARM_POLL = { maxAttempts: 3, delayMs: 1_500 } as const;
+/**
+ * Lab must fail fast when Render is hard-down (paid/routing 502), otherwise seed paint
+ * sits behind stacked apiFetch retries × warm-poll and feels like a multi-minute hang.
+ * Cold-start wake still gets one short retry; hard outages fall back to seed/stale.
+ */
+const LAB_FETCH_OPTS = {
+  ...DEFAULT_SNAPSHOT_FETCH_OPTS,
+  retries: 0,
+  timeoutMs: 8_000,
+  retryDelayMs: 400,
+} as const;
+const LAB_WARM_POLL = { maxAttempts: 2, delayMs: 600 } as const;
 
 function warmFetch<T>(path: string): Promise<T> {
   return fetchWithWarmPoll(() => snapshotLiveFetch<T>(path, LAB_FETCH_OPTS), LAB_WARM_POLL);

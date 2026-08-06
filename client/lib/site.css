@@ -2253,18 +2253,60 @@ body.gv-nav-menu-open {
   margin-bottom: 0.65rem;
 }
 
+.gv-hp-card__identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.gv-hp-card__mark {
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.55rem;
+  background: linear-gradient(160deg, #fa4616 0%, #b45309 100%);
+  color: #fff;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
 .gv-hp-card__rank {
   display: inline-block;
   font-size: 0.6875rem;
   font-weight: 700;
   color: #fa4616;
   margin-bottom: 0.15rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .gv-hp-card__name {
   margin: 0;
   font-size: 1rem;
   color: #fff;
+}
+
+.gv-hp-card--elite .gv-hp-card__name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.12rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.gv-hp-card--elite .gv-hp-card__narrative {
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #f1f5f9;
 }
 
 .gv-hp-card__meta {
@@ -2279,6 +2321,14 @@ body.gv-nav-menu-open {
   align-items: baseline;
   gap: 0.35rem 0.65rem;
   margin-bottom: 0.55rem;
+}
+
+.gv-hp-card__narrative,
+.gv-hp-card__signals .rh-analyst-signals__text {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #e2e8f0;
 }
 
 .gv-hp-card__composite {

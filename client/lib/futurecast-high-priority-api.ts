@@ -98,6 +98,22 @@ export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
   ufProbabilitySource?: string;
   ufProbabilityLabel?: string | null;
   ufProbabilityLowConfidence?: boolean;
+  /** Hot-target lane breakdown when API returns chase scoring. */
+  hotLanes?: {
+    staffHeat?: number;
+    mustGetFit?: number;
+    positionalNeed?: number;
+    geoPipeline?: number;
+    marketPressure?: number;
+  } | null;
+  hotBadges?: {
+    quietChase?: boolean;
+    inState?: boolean;
+    homeVisit?: boolean;
+    staffAssigned?: boolean;
+  } | null;
+  hotScore?: number | null;
+  chaseScore?: number | null;
 }
 
 export interface VisitRecapRow {
