@@ -363,7 +363,8 @@ function getVaultScoutingForSlug(slug) {
       : [];
     const schemeFit = String(bd.schemeFit || '').trim() || null;
 
-    if (!evaluation && !comparison && !projection && !strengths.length) return null;
+    // Pearl card only — never show a half-empty / On3-bio stub as Vault Scouting.
+    if (!evaluation || !comparison || !projection || strengths.length < 3) return null;
     return { evaluation, comparison, projection, strengths, schemeFit };
   } catch {
     return null;

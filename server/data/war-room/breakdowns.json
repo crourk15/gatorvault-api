@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-06T21:29:58.273Z",
+  "updatedAt": "2026-08-06T21:58:07.696Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -16206,31 +16206,34 @@
     "antonio-thomas-jr": {
       "playerSlug": "antonio-thomas-jr",
       "playerName": "Antonio Thomas Jr.",
-      "playerType": "commit",
+      "playerType": "target",
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22925020/68d82b01a02fc28d2aa9df5e",
+          "publishedAt": "2026-08-06"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Thomas plays with a 6-3 / 235 EDGE frame and keeps tackles from latching his chest on the arc.",
+        "Thomas finishes rushes with violence and does not quit when the QB scrambles off the edge.",
+        "Thomas sets a firm edge versus the run and still flashes enough burst to threaten as a pass rusher."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Thomas still needs a deeper pass-rush counter package once tackles sit on his first move."
+      ],
+      "comparison": "Thomas comps to Micah Parsons — 6-3 / ~235 hybrid EDGE mold with length, mass, and enough athleticism to rush and set the edge.",
+      "schemeFit": "Thomas fits Brad White 3-3-5 JACK / wide-9 EDGE who can rush with mass and still set the edge in run support.",
+      "staffNotes": "Vault film desk drafted 2026-08-06 from On3/Hudl. Comp size-matched within ~1–2\" — not a Florida-alum default.",
+      "projection": "Thomas projects as a Year 2 SEC starter at EDGE (package rushes Year 1). Ceiling: All-SEC edge rusher — the Carrollwood hybrid who can win the arc and hold the edge every down.",
+      "insiderNotes": "Thomas is a 6-3 / 235 Carrollwood Day EDGE with the mass and length to win on the arc and still set the edge versus the run. Finishes with violence and second effort. Florida has made him a priority early — a Tampa hybrid EDGE mold who can grow into every-down snaps.",
+      "recruitingStory": "Antonio Thomas Jr. is a 2028 EDGE · listed 6-3 / 235 · Carrollwood Day (Tampa, FL) · open-board Florida priority target.",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-07-11T05:15:07.714Z"
+      "featured": false,
+      "updatedAt": "2026-08-06T21:58:07.689Z"
     },
     "cale-britt": {
       "playerSlug": "cale-britt",

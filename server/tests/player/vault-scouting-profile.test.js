@@ -25,6 +25,23 @@ describe('full-profile vaultScouting', () => {
     assert.match(String(scouting.projection || ''), /Ceiling:/i);
   });
 
+  it('Antonio Thomas Jr. has a complete Pearl Vault Scouting card', () => {
+    const { getVaultScoutingForSlug } = require('../../lib/recruiting-hub-elite');
+    const scouting = getVaultScoutingForSlug('antonio-thomas-jr');
+    assert.ok(scouting, 'thomas vaultScouting present');
+    assert.match(String(scouting.evaluation || ''), /Thomas is a 6-3/i);
+    assert.match(String(scouting.comparison || ''), /Parsons/i);
+    assert.match(String(scouting.projection || ''), /Year 2 SEC starter/i);
+    assert.match(String(scouting.projection || ''), /Ceiling:/i);
+    assert.ok((scouting.strengths || []).length >= 3);
+  });
+
+  it('does not surface On3 bio stubs as Vault Scouting', () => {
+    const { getVaultScoutingForSlug } = require('../../lib/recruiting-hub-elite');
+    // Synthetic-only breakdowns must not render a half-empty Vault Scouting block.
+    assert.equal(getVaultScoutingForSlug('ryan-peterson'), null);
+  });
+
   it('commit board: short commit line like 2026 — Vault Scouting on profile only', async () => {
     const { buildHubCommits, getVaultScoutingForSlug } = require('../../lib/recruiting-hub-elite');
     const rows = await buildHubCommits(2027);
