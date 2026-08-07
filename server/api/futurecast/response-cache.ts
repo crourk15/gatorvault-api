@@ -88,8 +88,11 @@ export async function warmFuturecastHighPriorityCaches(
   for (const year of years) {
     const key = highPriorityCacheKey(year);
     try {
-      await cache.wrap(key, () => buildHighPriorityPayload(year), CACHE_TTL_MS);
-      warmed += 1;
+      const { value } = await cache.wrap(key, () => buildHighPriorityPayload(year), CACHE_TTL_MS);
+      if (value != null) {
+        writeHighPriorityRuntime(year, value);
+        warmed += 1;
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       console.warn(`[futurecast-cache] warm ${year} failed:`, message);
@@ -203,6 +206,55 @@ export async function warmFuturecastLabCaches(
 /** Prime one Lab cache key (used by spaced elite warm). */
 export function primeFuturecastCache(cacheKey: string, value: unknown): void {
   cache.set(cacheKey, value, CACHE_TTL_MS);
+}
+
+function highPriorityRuntimePath(year: number | string): string {
+  const { resolveRecruitingDataDir } = require('../../lib/recruiting-data-dir');
+  return require('node:path').join(
+    resolveRecruitingDataDir(),
+    'futurecast-runtime',
+    `high-priority-${year}.json`
+  );
+}
+
+/** Durable HP snapshot — survives process restart (same idea as hub-runtime). */
+export function readHighPriorityRuntime(year: number | string): unknown | null {
+  try {
+    const filePath = highPriorityRuntimePath(year);
+    if (!require('node:fs').existsSync(filePath)) return null;
+    return JSON.parse(require('node:fs').readFileSync(filePath, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+export function writeHighPriorityRuntime(year: number | string, value: unknown): boolean {
+  try {
+    const fs = require('node:fs');
+    const filePath = highPriorityRuntimePath(year);
+    fs.mkdirSync(require('node:path').dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, JSON.stringify(value), 'utf8');
+    return true;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn('[futurecast-cache] write HP runtime failed:', message);
+    return false;
+  }
+}
+
+/** Memory first, then durable disk — keeps Lab elite after worker warm / restart. */
+export function loadHighPriorityCached(year: number | string): unknown | null {
+  const key = highPriorityCacheKey(year);
+  const fresh = cache.get(key);
+  if (fresh != null) return fresh;
+  const stale = typeof cache.getStale === 'function' ? cache.getStale(key) : null;
+  if (stale != null) return stale;
+  const disk = readHighPriorityRuntime(year);
+  if (disk != null) {
+    cache.set(key, disk, CACHE_TTL_MS);
+    return disk;
+  }
+  return null;
 }
 
 /** Warm master-board alone — safer than full lab warm on Starter. */

@@ -746,9 +746,10 @@ function runSpacedEliteWorker({ job, year }) {
     parseInt(process.env.HUB_SPACED_WORKER_TIMEOUT_MS || '360000', 10) || 360000
   );
   return new Promise((resolve, reject) => {
+    // --import tsx so HP worker can require .ts modules (bundle is plain JS).
     const child = spawn(
       process.execPath,
-      [script, `--job=${job}`, `--year=${year}`],
+      ['--import', 'tsx', script, `--job=${job}`, `--year=${year}`],
       {
         env: {
           ...process.env,

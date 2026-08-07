@@ -13,6 +13,7 @@ describe('Spaced elite warm (bundle + Lab)', () => {
     assert.match(src, /--job=/);
     assert.match(src, /buildHubBundle/);
     assert.match(src, /buildHighPriorityPayload/);
+    assert.match(src, /tsx\/cjs/);
   });
 
   it('buildHubBundle defaults to sequential parts with event-loop yields', () => {
@@ -55,6 +56,7 @@ describe('Spaced elite warm (bundle + Lab)', () => {
     assert.match(src, /runSpacedEliteWorker/);
     assert.match(src, /warmBundleViaWorker/);
     assert.match(src, /HUB_SPACED_WARM_FORK/);
+    assert.match(src, /--import', 'tsx'/);
     // Boot lite then spaced — not immediate HP(bootYears).
     assert.match(src, /boot priority-lite warm complete/);
     assert.match(src, /scheduleSpacedEliteFill\(\{/);

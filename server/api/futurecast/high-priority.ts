@@ -28,7 +28,12 @@ import {
   filterModelPredictionsOnly,
   FUTURECAST_CLASS_YEAR,
 } from './feed-filters';
-import { sendCachedJson, highPriorityCacheKey } from './response-cache';
+import {
+  sendCachedJson,
+  highPriorityCacheKey,
+  loadHighPriorityCached,
+  primeFuturecastCache,
+} from './response-cache';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -922,6 +927,14 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
     }
 
     const cacheKey = highPriorityCacheKey(classYear);
+    // Elite: serve worker/disk snapshot before returning status:building.
+    const primed = loadHighPriorityCached(classYear);
+    if (primed != null) {
+      primeFuturecastCache(cacheKey, primed);
+      res.setHeader('X-GatorVault-Cache', 'DISK');
+      res.json(primed);
+      return;
+    }
     await sendCachedJson(res, cacheKey, () => buildHighPriorityPayload(classYear));
   } catch (err) {
     handlePredictionsApiError(res, err);
