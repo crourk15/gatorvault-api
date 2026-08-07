@@ -150,9 +150,11 @@ describe('Tier B hub GET no-sync + durable snapshots', () => {
       'utf8'
     );
     assert.match(cron, /warm-memory/);
-    assert.match(cron, /lab-warm/);
+    assert.match(cron, /LAB_WARM_URL/);
+    assert.match(cron, /lab-warm skipped/);
     const yaml = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'render.yaml'), 'utf8');
     assert.match(yaml, /gatorvault-api-hub-warm/);
+    assert.match(yaml, /warm-memory\?mode=spaced/);
     assert.match(yaml, /warmAfter=priority/);
   });
 });

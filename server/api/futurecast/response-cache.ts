@@ -200,6 +200,19 @@ export async function warmFuturecastLabCaches(
   return { warmed, failed };
 }
 
+/** Prime one Lab cache key (used by spaced elite warm). */
+export function primeFuturecastCache(cacheKey: string, value: unknown): void {
+  cache.set(cacheKey, value, CACHE_TTL_MS);
+}
+
+/** Warm master-board alone — safer than full lab warm on Starter. */
+export async function warmFuturecastMasterBoard(): Promise<{ ok: true; key: string }> {
+  const { buildMasterBoardPayload } = require('./allowlist-board');
+  const key = masterBoardCacheKey();
+  await cache.wrap(key, () => buildMasterBoardPayload(), CACHE_TTL_MS);
+  return { ok: true, key };
+}
+
 export function clearFuturecastCache(): void {
   cache.clear();
 }

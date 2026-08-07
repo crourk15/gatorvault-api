@@ -757,6 +757,33 @@ function mountRecruitingHubRoutes(app) {
       }
       const { warmEliteHubCaches } = require('./recruiting-hub-cache');
       const mode = String(req.query.mode || '').trim().toLowerCase();
+      const years = String(req.query.years || '2027,2028')
+        .split(',')
+        .map((y) => parseInt(y.trim(), 10))
+        .filter((y) => Number.isFinite(y));
+      const yearList = years.length ? years : [2027, 2028];
+
+      // Spaced elite: lite now, then HP/bundle/master with gaps (full elite without OOM).
+      if (mode === 'spaced' || mode === 'elite') {
+        const { scheduleSpacedEliteFill } = require('./recruiting-hub-cache');
+        void warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: yearList })
+          .then((meta) => {
+            console.log('[recruiting-hub] spaced lite complete', meta?.warmKeyCount);
+            scheduleSpacedEliteFill({ years: yearList, force: true });
+          })
+          .catch((err) => {
+            console.warn('[recruiting-hub] spaced lite failed:', err.message);
+            scheduleSpacedEliteFill({ years: yearList, force: true });
+          });
+        return res.json({
+          ok: true,
+          accepted: true,
+          mode: 'spaced',
+          years: yearList,
+          meta: hubMeta(),
+        });
+      }
+
       const priorityLite =
         mode === 'lite' ||
         mode === 'priority' ||
@@ -771,17 +798,13 @@ function mountRecruitingHubRoutes(app) {
         req.query.secondaryOnly === '1' ||
         req.query.secondaryOnly === 'true';
       const bundleOnly = mode === 'bundle' || req.query.bundleOnly === '1' || req.query.bundleOnly === 'true';
-      const years = String(req.query.years || '2027,2028')
-        .split(',')
-        .map((y) => parseInt(y.trim(), 10))
-        .filter((y) => Number.isFinite(y));
       // Respond immediately — warm continues under heavy-job-gate.
       void warmEliteHubCaches({
         priorityLite,
         priorityOnly,
         secondaryOnly,
         bundleOnly,
-        years: years.length ? years : [2027, 2028],
+        years: yearList,
       })
         .then((meta) => {
           console.log('[recruiting-hub] warm-memory complete', meta?.status || 'ok');
@@ -796,7 +819,7 @@ function mountRecruitingHubRoutes(app) {
         priorityOnly,
         secondaryOnly,
         bundleOnly,
-        years: years.length ? years : [2027, 2028],
+        years: yearList,
         meta: hubMeta(),
       });
     } catch (err) {

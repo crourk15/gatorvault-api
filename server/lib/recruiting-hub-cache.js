@@ -689,6 +689,176 @@ function parseWarmYears(raw, fallback) {
   return years.length ? years : fallback;
 }
 
+let spacedEliteUnlockTimer = null;
+let spacedEliteQueued = false;
+let spacedEliteGeneration = 0;
+/** @type {ReturnType<typeof setTimeout>[]} */
+let spacedEliteStepTimers = [];
+
+function softGc() {
+  try {
+    if (typeof global.gc === 'function') global.gc();
+  } catch {
+    /* optional */
+  }
+}
+
+function clearSpacedEliteTimers() {
+  for (const timer of spacedEliteStepTimers) {
+    clearTimeout(timer);
+  }
+  spacedEliteStepTimers = [];
+  if (spacedEliteUnlockTimer) {
+    clearTimeout(spacedEliteUnlockTimer);
+    spacedEliteUnlockTimer = null;
+  }
+}
+
+/**
+ * After lite is hot: warm HP then bundle one year at a time with large gaps.
+ * Avoids the Promise.all / dual-year stampede that OOM'd Starter.
+ */
+function scheduleSpacedEliteFill(options = {}) {
+  // Default: never stack chains (cron/boot overlap). force=true cancels pending steps only.
+  if (spacedEliteQueued && options.force !== true) {
+    return { ok: true, queued: true, already: true };
+  }
+
+  clearSpacedEliteTimers();
+  spacedEliteQueued = true;
+  const generation = ++spacedEliteGeneration;
+
+  const years = (options.years || [2028, 2027])
+    .slice()
+    .filter((y) => Number.isFinite(y))
+    .sort((a, b) => b - a); // 2028 first
+  const includeLab = options.includeLab !== false;
+  const includeBundle = options.includeBundle !== false;
+  const startDelay = Math.max(
+    30000,
+    parseInt(process.env.HUB_SPACED_WARM_START_MS || '60000', 10) || 60000
+  );
+  const gapMs = Math.max(
+    60000,
+    parseInt(process.env.HUB_SPACED_WARM_GAP_MS || '180000', 10) || 180000
+  );
+  const rssLimit = parseInt(process.env.HUB_PRIORITY_WARM_RSS_MB || '520', 10) || 520;
+
+  /** @type {Array<{ at: number, label: string, run: () => Promise<unknown> }>} */
+  const steps = [];
+  let at = Date.now() + startDelay;
+
+  if (includeLab) {
+    for (const year of years) {
+      const y = year;
+      steps.push({
+        at,
+        label: `futurecast-hp:${y}`,
+        run: async () => {
+          const pipelineGuards = require('./pipeline-guards');
+          if (pipelineGuards.shouldSkipHeavyJob(`spaced-hp-${y}`, rssLimit)) {
+            throw new Error(`RSS guard skipped spaced-hp-${y}`);
+          }
+          const { runHeavyJob } = require('./heavy-job-gate');
+          const { warmFuturecastHighPriorityCaches } = require('../api/futurecast/response-cache.ts');
+          softGc();
+          return runHeavyJob(`futurecast-hp-${y}`, () => warmFuturecastHighPriorityCaches([y]));
+        },
+      });
+      at += gapMs;
+    }
+  }
+
+  if (includeBundle) {
+    for (const year of years) {
+      const y = year;
+      steps.push({
+        at,
+        label: `hub-bundle:${y}`,
+        run: async () => {
+          const pipelineGuards = require('./pipeline-guards');
+          if (pipelineGuards.shouldSkipHeavyJob(`spaced-bundle-${y}`, rssLimit)) {
+            throw new Error(`RSS guard skipped spaced-bundle-${y}`);
+          }
+          softGc();
+          return warmEliteHubCaches({ bundleOnly: true, years: [y] });
+        },
+      });
+      at += gapMs;
+    }
+  }
+
+  // Master board last — one shot, after HP + bundles.
+  if (includeLab && process.env.HUB_SPACED_WARM_MASTER !== 'false') {
+    steps.push({
+      at,
+      label: 'futurecast-master-board',
+      run: async () => {
+        const pipelineGuards = require('./pipeline-guards');
+        if (pipelineGuards.shouldSkipHeavyJob('spaced-master-board', rssLimit)) {
+          throw new Error('RSS guard skipped spaced-master-board');
+        }
+        const { runHeavyJob } = require('./heavy-job-gate');
+        softGc();
+        return runHeavyJob('futurecast-master-board', async () => {
+          const { warmFuturecastMasterBoard } = require('../api/futurecast/response-cache.ts');
+          return warmFuturecastMasterBoard();
+        });
+      },
+    });
+  }
+
+  bootWarmDecision = {
+    ...(bootWarmDecision || {}),
+    spacedElite: true,
+    spacedSteps: steps.map((s) => ({ label: s.label, at: new Date(s.at).toISOString() })),
+  };
+  getMeta();
+
+  console.log(
+    '[recruiting-hub] spaced elite fill queued',
+    steps.map((s) => s.label).join(' → '),
+    'gapMs',
+    gapMs
+  );
+
+  for (const step of steps) {
+    const wait = Math.max(0, step.at - Date.now());
+    const timer = setTimeout(() => {
+      if (generation !== spacedEliteGeneration) return;
+      console.log('[recruiting-hub] spaced step start', step.label);
+      Promise.resolve()
+        .then(() => step.run())
+        .then((result) => {
+          if (generation !== spacedEliteGeneration) return;
+          console.log(
+            '[recruiting-hub] spaced step done',
+            step.label,
+            result && result.warmed != null ? result : ''
+          );
+          getMeta();
+          softGc();
+        })
+        .catch((err) => {
+          console.warn('[recruiting-hub] spaced step failed', step.label, err.message);
+        });
+    }, wait);
+    if (typeof timer.unref === 'function') timer.unref();
+    spacedEliteStepTimers.push(timer);
+  }
+
+  // Allow a later re-queue after the chain would have finished.
+  const unlockIn = startDelay + Math.max(1, steps.length) * gapMs + 60000;
+  spacedEliteUnlockTimer = setTimeout(() => {
+    if (generation === spacedEliteGeneration) {
+      spacedEliteQueued = false;
+    }
+  }, unlockIn);
+  if (typeof spacedEliteUnlockTimer.unref === 'function') spacedEliteUnlockTimer.unref();
+
+  return { ok: true, queued: true, steps: steps.length, gapMs, years, generation };
+}
+
 function scheduleHubBootPipeline() {
   if (bootPipelineScheduled) {
     return getMeta();
@@ -766,16 +936,26 @@ function scheduleHubBootPipeline() {
   };
   getMeta();
 
+  const spacedElite =
+    process.env.HUB_SPACED_ELITE_WARM !== 'false' || bootBundle || bootLab;
+
   const runPriorityWarm = () => {
     if (pipelineGuards.shouldSkipHeavyJob('hub-boot-priority-warm', priorityRssLimit)) {
       console.warn('[recruiting-hub] boot priority warm skipped — RSS guard');
       return;
     }
     console.log('[recruiting-hub] boot priority-lite warm start', { years: bootYears });
-    // Lite ONLY on boot (hero/class). HP + bundle crash-looped Starter after keys hit ~7.
+    // Lite first (hero/class). Spaced HP + sequential bundle follow to finish elite.
     warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: bootYears })
       .then((meta) => {
         console.log('[recruiting-hub] boot priority-lite warm complete', meta?.warmKeyCount);
+        if (spacedElite) {
+          scheduleSpacedEliteFill({
+            years: bootYears,
+            includeLab: process.env.HUB_SPACED_WARM_LAB !== 'false',
+            includeBundle: process.env.HUB_SPACED_WARM_BUNDLE !== 'false',
+          });
+        }
       })
       .catch((err) => {
         console.warn('[recruiting-hub-cache] boot warm failed:', err.message);
@@ -788,22 +968,11 @@ function scheduleHubBootPipeline() {
     setTimeout(runPriorityWarm, bootDelay);
   }
 
-  if (bootBundle) {
-    const bundleDelayFromBoot =
-      (immediateWarm ? 0 : bootDelay) +
-      Math.max(180000, parseInt(process.env.HUB_BOOT_BUNDLE_DELAY_MS || '300000', 10) || 300000);
-    setTimeout(() => {
-      if (pipelineGuards.shouldSkipHeavyJob('hub-boot-bundle-warm', priorityRssLimit)) {
-        console.warn('[recruiting-hub] boot bundle warm skipped — RSS guard');
-        return;
-      }
-      console.log('[recruiting-hub] boot bundle warm start', [2028]);
-      warmEliteHubCaches({ bundleOnly: true, years: [2028] })
-        .then((meta) => console.log('[recruiting-hub] boot bundle warm complete', meta?.warmKeyCount))
-        .catch((err) => console.warn('[recruiting-hub] boot bundle warm failed:', err.message));
-    }, bundleDelayFromBoot);
-    bootWarmDecision = { ...bootWarmDecision, bundleDelayMs: bundleDelayFromBoot };
-  }
+  bootWarmDecision = {
+    ...bootWarmDecision,
+    spacedElite,
+    spacedGapMs: parseInt(process.env.HUB_SPACED_WARM_GAP_MS || '180000', 10) || 180000,
+  };
 
   // Heavy geo refresh stays optional / scheduled-jobs gated (not required for first paint).
   const refreshDelay = Math.max(
@@ -861,6 +1030,7 @@ module.exports = {
   getMeta,
   scheduleBackgroundRefresh,
   scheduleHubBootPipeline,
+  scheduleSpacedEliteFill,
   readHubDiskSnapshot,
   writeHubDiskSnapshot,
   persistDurableCacheValue,
