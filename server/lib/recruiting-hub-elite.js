@@ -659,45 +659,42 @@ async function buildHubHero(year = 2027) {
   };
 }
 
+function yieldEventLoop() {
+  return new Promise((resolve) => setImmediate(resolve));
+}
+
 /** Single payload for Recruiting Hub elite landing — one cache key, one client fetch. */
 async function buildHubBundle(year = 2027) {
-  const [
-    ticker,
-    classOverview,
-    classOverviewAll,
-    commits,
-    battles,
-    positions,
-    heatIndex,
-    movementFeed,
-    battleBoard,
-    footprint,
-  ] = await Promise.all([
-    buildHubTicker(year),
-    buildHubClassOverview(year),
-    buildHubClassOverviewAll(),
-    buildHubCommits(year),
-    buildHubBattles(year),
-    buildHubPositions(year),
-    buildHubHeatIndex(year),
-    buildHubMovementFeed(year),
-    buildHubBattleBoard(year),
-    buildHubFootprint(year),
-  ]);
+  // Default sequential: Promise.all peaked RSS and OOM'd Render Starter during warm.
+  const sequential = process.env.HUB_BUNDLE_SEQUENTIAL !== 'false';
+  const parts = [
+    ['ticker', () => buildHubTicker(year)],
+    ['classOverview', () => buildHubClassOverview(year)],
+    ['classOverviewAll', () => buildHubClassOverviewAll()],
+    ['commits', () => buildHubCommits(year)],
+    ['battles', () => buildHubBattles(year)],
+    ['positions', () => buildHubPositions(year)],
+    ['heatIndex', () => buildHubHeatIndex(year)],
+    ['movementFeed', () => buildHubMovementFeed(year)],
+    ['battleBoard', () => buildHubBattleBoard(year)],
+    ['footprint', () => buildHubFootprint(year)],
+  ];
 
-  return {
-    year,
-    ticker,
-    classOverview,
-    classOverviewAll,
-    commits,
-    battles,
-    positions,
-    heatIndex,
-    movementFeed,
-    battleBoard,
-    footprint,
-  };
+  if (!sequential) {
+    const values = await Promise.all(parts.map(([, fn]) => fn()));
+    const out = { year };
+    parts.forEach(([name], i) => {
+      out[name] = values[i];
+    });
+    return out;
+  }
+
+  const out = { year };
+  for (const [name, fn] of parts) {
+    out[name] = await fn();
+    await yieldEventLoop();
+  }
+  return out;
 }
 
 module.exports = {

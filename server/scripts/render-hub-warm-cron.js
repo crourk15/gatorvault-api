@@ -1,18 +1,17 @@
 #!/usr/bin/env node
 /**
- * Render cron — refill hub + FutureCast Lab in-process memory (Tier B).
+ * Render cron: refill hub + FutureCast Lab in-process memory (Tier B).
  * Member GETs serve disk/SWR only; this cron owns the rebuild.
+ * Prefer mode=spaced (lite + gapped HP/bundle/master). Skip empty LAB_WARM_URL.
  */
 require('./render-cron-env');
 
 const API_ORIGIN = process.env.HUB_WARM_API_ORIGIN || 'https://gatorvault-api.onrender.com';
 const CRON_SECRET = process.env.MONITORING_CRON_SECRET || process.env.CRON_SECRET || '';
-
 const HUB_WARM_URL =
   process.env.HUB_WARM_URL ||
-  `${API_ORIGIN}/api/recruiting/hub/warm-memory?mode=priority`;
-const LAB_WARM_URL =
-  process.env.LAB_WARM_URL || `${API_ORIGIN}/api/futurecast/lab-warm?years=2027,2028`;
+  `${API_ORIGIN}/api/recruiting/hub/warm-memory?mode=spaced&years=2028,2027`;
+const LAB_WARM_URL = String(process.env.LAB_WARM_URL || '').trim();
 
 const RETRY_STATUSES = new Set([502, 503, 504, 429]);
 const MAX_ATTEMPTS = 3;
@@ -29,7 +28,7 @@ async function postWarm(url, label) {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       'x-monitoring-cron': CRON_SECRET,
-      'User-Agent': 'gatorvault-hub-warm-cron/1.0',
+      'User-Agent': 'gatorvault-hub-warm-cron/1.1',
     },
     body: '{}',
     signal: AbortSignal.timeout(60000),
@@ -61,7 +60,7 @@ async function postWithRetry(url, label) {
       const retryable =
         attempt < MAX_ATTEMPTS - 1 &&
         (RETRY_STATUSES.has(status) ||
-          /timeout|ECONNRESET|ECONNREFUSED|fetch failed|network/i.test(String(err.message || '')));
+          /timeout|ECONNRESET|ENOTFOUND|fetch failed|network/i.test(String(err.message || '')));
       if (!retryable) break;
       await new Promise((resolve) => setTimeout(resolve, RETRY_MS * (attempt + 1)));
     }
@@ -76,10 +75,15 @@ async function postWithRetry(url, label) {
   } catch (err) {
     console.error('[hub-warm-cron] hub-warm failed:', err.message);
   }
-  try {
-    results.push(await postWithRetry(LAB_WARM_URL, 'lab-warm'));
-  } catch (err) {
-    console.error('[hub-warm-cron] lab-warm failed:', err.message);
+  // Spaced mode owns HP/master — only hit lab-warm when explicitly configured.
+  if (LAB_WARM_URL) {
+    try {
+      results.push(await postWithRetry(LAB_WARM_URL, 'lab-warm'));
+    } catch (err) {
+      console.error('[hub-warm-cron] lab-warm failed:', err.message);
+    }
+  } else {
+    console.log('[hub-warm-cron] lab-warm skipped (LAB_WARM_URL empty; spaced hub-warm owns Lab)');
   }
   console.log(
     '[hub-warm-cron] done',
