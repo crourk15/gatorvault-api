@@ -313,6 +313,11 @@ services:
         value: "true"
       - key: HUB_BOOT_WARM_DELAY_MS
         value: "120000"
+      # Tier B: member GETs never sync-rebuild hub/Lab (cron warm owns refill).
+      - key: HUB_GET_NO_SYNC_BUILD
+        value: "true"
+      - key: FC_GET_NO_SYNC_BUILD
+        value: "true"
       # Keep FutureCast Lab off the priority warm path (opt-in only).
       - key: HUB_BOOT_WARM_FUTURECAST
         value: "false"
@@ -426,7 +431,7 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
-  # Hub rebuild — stay-green soft-skips on the API; keep cron for when lockdown lifts.
+  # Hub rebuild — Tier B warms priority memory after refresh (GETs never sync-rebuild).
   - type: cron
     name: gatorvault-api-hub-refresh
     schedule: "25 */2 * * *"
@@ -437,7 +442,24 @@ services:
     startCommand: node scripts/render-hub-refresh-cron.js
     envVars:
       - key: HUB_REFRESH_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?warmAfter=false
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?warmAfter=priority
+      - key: MONITORING_CRON_SECRET
+        sync: false
+
+  # Tier B: keep hub bundle/hero + FutureCast Lab memory hot between member traffic.
+  - type: cron
+    name: gatorvault-api-hub-warm
+    schedule: "*/12 * * * *"
+    runtime: node
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-hub-warm-cron.js
+    envVars:
+      - key: HUB_WARM_URL
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=priority
+      - key: LAB_WARM_URL
+        value: https://gatorvault-api.onrender.com/api/futurecast/lab-warm?years=2027,2028
       - key: MONITORING_CRON_SECRET
         sync: false
 

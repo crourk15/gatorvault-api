@@ -730,6 +730,52 @@ function mountRecruitingHubRoutes(app) {
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
+
+  /**
+   * Tier B: refill in-process hub memory (+ durable hub-runtime snapshots).
+   * Cron-only in production — member GETs no longer sync-rebuild.
+   */
+  app.post('/api/recruiting/hub/warm-memory', async (req, res) => {
+    try {
+      const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.CRON_SECRET || '';
+      const isCron = cronSecret && req.headers['x-monitoring-cron'] === cronSecret;
+      if (!isCron && process.env.NODE_ENV === 'production') {
+        return res.status(403).json({ ok: false, error: 'Forbidden' });
+      }
+      const { stayGreenSkipPayload } = require('./api-stay-green');
+      const skipped = stayGreenSkipPayload('hub-warm-memory');
+      if (skipped) {
+        console.log('[recruiting-hub] stay-green skip hub/warm-memory');
+        return res.json({ ...skipped, meta: hubMeta() });
+      }
+      const { warmEliteHubCaches } = require('./recruiting-hub-cache');
+      const priorityOnly =
+        req.query.priorityOnly === '1' ||
+        req.query.priorityOnly === 'true' ||
+        req.query.mode === 'priority';
+      const secondaryOnly =
+        req.query.secondaryOnly === '1' ||
+        req.query.secondaryOnly === 'true' ||
+        req.query.mode === 'secondary';
+      // Respond immediately — warm continues under heavy-job-gate.
+      void warmEliteHubCaches({ priorityOnly, secondaryOnly })
+        .then((meta) => {
+          console.log('[recruiting-hub] warm-memory complete', meta?.status || 'ok');
+        })
+        .catch((err) => {
+          console.warn('[recruiting-hub] warm-memory failed:', err.message);
+        });
+      return res.json({
+        ok: true,
+        accepted: true,
+        priorityOnly,
+        secondaryOnly,
+        meta: hubMeta(),
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 }
 
 module.exports = { mountRecruitingHubRoutes, buildClassPayload, mapPlayerToHub, clearHubCache: clearHubCacheExport, buildHighPriorityIntel };

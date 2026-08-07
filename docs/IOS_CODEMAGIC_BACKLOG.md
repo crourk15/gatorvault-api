@@ -12,6 +12,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.12) picks 
 
 - [x] FutureCast commit likelihood (live HP / GV odds)
 - [x] Official 2026 roster jersey numbers + newcomers (API)
+- [x] Elite API Tier B — hub/Lab GET no-sync rebuild + warm-memory cron (API)
 - [x] Recruiting card brief without `Vault Eval —` API prefix
 - [x] Film Room / Sumrall Aug 4 pressers (after stay-green lift + sync)
 - [x] Stay-green lifted — beat / Film Room / recruiting crons running again
