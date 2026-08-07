@@ -6,6 +6,15 @@ const fs = require('node:fs');
 const path = require('path');
 
 describe('Spaced elite warm (bundle + Lab)', () => {
+  it('ships spaced-elite-warm-worker child script', () => {
+    const worker = path.join(__dirname, '..', '..', 'scripts', 'spaced-elite-warm-worker.js');
+    assert.equal(fs.existsSync(worker), true);
+    const src = fs.readFileSync(worker, 'utf8');
+    assert.match(src, /--job=/);
+    assert.match(src, /buildHubBundle/);
+    assert.match(src, /buildHighPriorityPayload/);
+  });
+
   it('buildHubBundle defaults to sequential parts with event-loop yields', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', '..', 'lib', 'recruiting-hub-elite.js'),
@@ -43,6 +52,9 @@ describe('Spaced elite warm (bundle + Lab)', () => {
     assert.match(src, /clearSpacedEliteTimers/);
     assert.match(src, /releaseHubMemoryForHeavyStep/);
     assert.match(src, /restoreLiteAfterHeavy/);
+    assert.match(src, /runSpacedEliteWorker/);
+    assert.match(src, /warmBundleViaWorker/);
+    assert.match(src, /HUB_SPACED_WARM_FORK/);
     // Boot lite then spaced — not immediate HP(bootYears).
     assert.match(src, /boot priority-lite warm complete/);
     assert.match(src, /scheduleSpacedEliteFill\(\{/);
