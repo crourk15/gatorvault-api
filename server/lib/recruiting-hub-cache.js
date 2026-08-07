@@ -45,6 +45,8 @@ let lastWarmAt = null;
 let lastWarmError = null;
 let warmKeyCount = 0;
 let refreshTimer = null;
+/** @type {null | Record<string, unknown>} */
+let bootWarmDecision = null;
 const inflightBuilds = new Map();
 
 function classSnapshotCacheKey(year) {
@@ -217,6 +219,7 @@ function getMeta() {
     cacheSize: warmKeyCount,
     cacheTtlMs: HUB_CACHE_MS,
     buildTimeoutMs: BUILD_TIMEOUT_MS,
+    bootWarm: bootWarmDecision,
   };
   // Cheap snapshot for /ready probe — avoids require()+I/O on the health path.
   try {
@@ -624,19 +627,21 @@ function parseWarmYears(raw, fallback) {
 
 function scheduleHubBootPipeline() {
   const pipelineGuards = require('./pipeline-guards');
-  const stayGreen = process.env.API_STAY_GREEN === 'true';
-
-  // Elite: always keep the background re-warm timer (unless stay-green).
-  // Previous production skip returned early and never scheduled refresh → permanent building.
-  if (!stayGreen) {
-    scheduleBackgroundRefresh();
+  // Respect ALLOW_HEAVY — raw API_STAY_GREEN=true was blocking elite boot warm forever.
+  let stayGreen = false;
+  try {
+    stayGreen = require('./api-stay-green').isStayGreen();
+  } catch {
+    stayGreen = process.env.API_STAY_GREEN === 'true';
   }
 
+  // Elite: always keep the background re-warm timer. Hub GET no-sync cannot self-heal.
+  scheduleBackgroundRefresh();
+
   // When GETs cannot rebuild (Tier B default), boot MUST warm or hub stays building forever.
-  // HUB_BOOT_FORCE_WARM=false opts out; otherwise force warm whenever GET no-sync is on.
+  // Opt out only with HUB_BOOT_FORCE_WARM=false.
   const getNoSync = hubGetNoSyncBuild();
   const forceBootWarm =
-    !stayGreen &&
     process.env.HUB_BOOT_FORCE_WARM !== 'false' &&
     (process.env.HUB_BOOT_FORCE_WARM === 'true' || getNoSync);
   const skipBootWarm =
@@ -645,26 +650,50 @@ function scheduleHubBootPipeline() {
       stayGreen ||
       process.env.NODE_ENV === 'production');
 
+  bootWarmDecision = {
+    at: new Date().toISOString(),
+    stayGreen,
+    apiStayGreenEnv: process.env.API_STAY_GREEN || null,
+    allowHeavy: process.env.API_STAY_GREEN_ALLOW_HEAVY === 'true',
+    getNoSync,
+    forceBootWarm,
+    skipBootWarm,
+    skipWarmEnv: process.env.HUB_BOOT_SKIP_WARM || null,
+  };
+
   if (skipBootWarm) {
     console.log(
-      '[recruiting-hub] boot warm skipped — rely on hub-warm / hub-refresh cron; background refresh',
-      stayGreen ? 'off (stay-green)' : `every ${REFRESH_MS}ms`
+      '[recruiting-hub] boot warm skipped — rely on hub-warm / hub-refresh cron; background refresh every',
+      REFRESH_MS,
+      'ms',
+      bootWarmDecision
     );
     return;
   }
 
   // Deferred after listen so /ready stays cheap while priority caches refill.
   const bootDelay = Math.max(
-    60000,
-    parseInt(process.env.HUB_BOOT_WARM_DELAY_MS || '90000', 10) || 90000
+    45000,
+    parseInt(process.env.HUB_BOOT_WARM_DELAY_MS || '75000', 10) || 75000
   );
   const immediateWarm = process.env.HUB_BOOT_IMMEDIATE_WARM === 'true';
   const priorityRssLimit = parseInt(process.env.HUB_PRIORITY_WARM_RSS_MB || '520', 10) || 520;
   const bootYears = parseWarmYears(process.env.HUB_BOOT_WARM_YEARS, [2027, 2028]);
   const bootSecondary = process.env.HUB_BOOT_SECONDARY_WARM === 'true';
+  // Lab warm defaults ON with force boot (elite Lab first paint).
   const bootLab =
+    process.env.HUB_BOOT_WARM_LAB === 'true' ||
     process.env.HUB_BOOT_WARM_FUTURECAST === 'true' ||
-    process.env.HUB_BOOT_WARM_LAB === 'true';
+    (forceBootWarm && process.env.HUB_BOOT_WARM_LAB !== 'false');
+
+  bootWarmDecision = {
+    ...bootWarmDecision,
+    bootDelayMs: immediateWarm ? 0 : bootDelay,
+    bootYears,
+    bootLab,
+    bootSecondary,
+    scheduled: true,
+  };
 
   const runPriorityWarm = () => {
     if (pipelineGuards.shouldSkipHeavyJob('hub-boot-priority-warm', priorityRssLimit)) {

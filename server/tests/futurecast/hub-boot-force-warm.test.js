@@ -20,6 +20,8 @@ describe('Elite boot force warm', () => {
     assert.match(src, /HUB_BOOT_SECONDARY_WARM/);
     // GET no-sync implies boot force-warm unless explicitly false.
     assert.match(src, /getNoSync/);
+    assert.match(src, /isStayGreen/);
+    assert.match(src, /bootWarm/);
     // Must schedule background refresh before the skip return.
     const refreshIdx = src.indexOf('scheduleBackgroundRefresh();');
     const skipLogIdx = src.indexOf('boot warm skipped');
