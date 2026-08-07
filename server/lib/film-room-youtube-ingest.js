@@ -302,7 +302,12 @@ async function syncYouTubeSearchPressers() {
 }
 
 
-async function syncFilmRoomYouTube({ sources } = {}) {
+async function syncFilmRoomYouTube(opts = {}) {
+  const { runHeavyJob } = require('./heavy-job-gate');
+  return runHeavyJob('film-room-youtube-sync', () => syncFilmRoomYouTubeInner(opts));
+}
+
+async function syncFilmRoomYouTubeInner({ sources } = {}) {
   const list = Array.isArray(sources) && sources.length ? sources : parseSourcesFromEnv();
   const cache = loadFilmRoomCache();
   const details = [];

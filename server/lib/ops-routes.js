@@ -73,7 +73,13 @@ function mountOpsRoutes(app) {
     try {
       const evaluateAlerts = req.query.evaluateAlerts === '1';
       const report = await buildOpsStatusReport({ evaluateAlerts });
-      return res.status(200).json({ ok: true, authenticated: true, ...report });
+      const { getHeavyJobGateStatus } = require('./heavy-job-gate');
+      return res.status(200).json({
+        ok: true,
+        authenticated: true,
+        heavyJobGate: getHeavyJobGateStatus(),
+        ...report,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

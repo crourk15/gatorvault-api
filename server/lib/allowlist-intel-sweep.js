@@ -174,7 +174,12 @@ function measureAllowlistIntelCoverage(classYear = 2028, { days = 30 } = {}) {
 /**
  * Materialize visit/offer process signals into intel for every allowlist target.
  */
-async function runAllowlistIntelSweep({
+async function runAllowlistIntelSweep(opts = {}) {
+  const { runHeavyJob } = require('./heavy-job-gate');
+  return runHeavyJob('allowlist-intel-sweep', () => runAllowlistIntelSweepInner(opts));
+}
+
+async function runAllowlistIntelSweepInner({
   classYear = 2028,
   days = 180,
   dryRun = false,

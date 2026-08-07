@@ -116,16 +116,27 @@ export async function listMovementHistoryByPlayerIds(
   if (!playerIds.length) return new Map();
 
   const days = Math.max(1, Math.floor(windowDays));
-  const { rows } = await db.query<{ player_id: string; date: string; confidence: number }>(
-    `
-    SELECT player_id, date::text AS date, confidence
-    FROM futurecast.prediction_history
-    WHERE player_id = ANY($1::uuid[])
-      AND date >= CURRENT_DATE - $2::int
-    ORDER BY player_id, date ASC
-    `,
-    [playerIds, days]
-  );
+  let rows: Array<{ player_id: string; date: string; confidence: number }> = [];
+  try {
+    const result = await db.query<{ player_id: string; date: string; confidence: number }>(
+      `
+      SELECT player_id, date::text AS date, confidence
+      FROM futurecast.prediction_history
+      WHERE player_id = ANY($1::uuid[])
+        AND date >= CURRENT_DATE - $2::int
+      ORDER BY player_id, date ASC
+      `,
+      [playerIds, days]
+    );
+    rows = result.rows;
+  } catch (err) {
+    // Soft-empty on Supabase auth/connect blips — boards stay up without volatility history.
+    console.warn(
+      '[predictions] movement history unavailable:',
+      err instanceof Error ? err.message : err
+    );
+    return new Map();
+  }
 
   const grouped = new Map<string, MovementHistoryRow[]>();
   for (const row of rows) {

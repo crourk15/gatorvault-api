@@ -7,6 +7,11 @@ const REFRESH_INTERVAL_MS = parseInt(
 );
 
 async function refreshRecruitingHubCaches(options = {}) {
+  const { runHeavyJob } = require('./heavy-job-gate');
+  return runHeavyJob('hub-refresh', () => refreshRecruitingHubCachesInner(options));
+}
+
+async function refreshRecruitingHubCachesInner(options = {}) {
   const { clearHubCache, warmEliteHubCaches } = require('./recruiting-hub-cache');
   const { syncStaffAssignments } = require('./recruiting-staff-assignments');
   const { reconcileVisitIntelInStore } = require('./expire-stale-visit-intel');

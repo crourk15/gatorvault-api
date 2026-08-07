@@ -169,9 +169,22 @@ export function serializeSignal(row: Record<string, unknown>) {
 
 export function handleApiError(res: Response, err: unknown): void {
   const message = err instanceof Error ? err.message : String(err);
+  const code = err && typeof err === 'object' ? String((err as { code?: string }).code || '') : '';
   if (message === 'Invalid URL' || /invalid database_url/i.test(message)) {
     console.error('[futurecast-players-api] database config:', err);
     sendError(res, 503, 'Database connection misconfigured — check DATABASE_URL');
+    return;
+  }
+  if (
+    code === 'EAUTHTIMEOUT' ||
+    code === 'ETIMEDOUT' ||
+    code === 'ECONNRESET' ||
+    code === 'ECONNREFUSED' ||
+    code === '08006' ||
+    /EAUTHTIMEOUT|timeout while waiting for message|circuit open|Connection terminated/i.test(message)
+  ) {
+    console.warn('[futurecast-players-api] database unavailable:', code || message);
+    sendError(res, 503, 'Database temporarily unavailable');
     return;
   }
   if (/must be|required|invalid/i.test(message)) {

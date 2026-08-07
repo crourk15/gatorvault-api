@@ -21,6 +21,7 @@ const DEFAULT_YEARS = String(process.env.HUB_WARM_YEARS || '2026,2027,2028,2029'
 const hubCache = createMemoryCache(HUB_CACHE_MS);
 
 let warming = false;
+let warmInflight = null;
 let ready = false;
 let lastWarmAt = null;
 let lastWarmError = null;
@@ -253,7 +254,13 @@ async function runWarmJobBatch(jobs, timeoutMs, label) {
 }
 
 async function warmEliteHubCaches(options = {}) {
-  if (warming) return getMeta();
+  const { runHeavyJob } = require('./heavy-job-gate');
+  return runHeavyJob('hub-warm', () => warmEliteHubCachesInner(options));
+}
+
+async function warmEliteHubCachesInner(options = {}) {
+  if (warmInflight) return warmInflight;
+
   warming = true;
   lastWarmError = null;
   const years = options.years || DEFAULT_YEARS;
@@ -262,6 +269,7 @@ async function warmEliteHubCaches(options = {}) {
   const start = Date.now();
   let warmed = 0;
 
+  warmInflight = (async () => {
   try {
     const elite = require('./recruiting-hub-elite');
     const priorityTimeout = Math.max(BUILD_TIMEOUT_MS * 3, 60_000);
@@ -315,9 +323,13 @@ async function warmEliteHubCaches(options = {}) {
     console.warn('[recruiting-hub-cache] warm failed:', err.message);
   } finally {
     warming = false;
+    warmInflight = null;
   }
 
   return getMeta();
+  })();
+
+  return warmInflight;
 }
 
 function scheduleAsyncWarm() {
