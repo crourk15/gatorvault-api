@@ -11,6 +11,8 @@ import {
 } from '@/lib/player-full-profile-api';
 import { navigateVaultHref } from '@/lib/navigate-vault-href';
 import { playerProfileRoute } from '@/lib/vault-route-map';
+import { ApiFetchError } from '@/lib/api-fetch';
+import { isWarmRetryError } from '@/lib/api-warm-poll';
 
 export type PlayerProfileRouteState =
   | { phase: 'loading' }
@@ -22,7 +24,14 @@ export type PlayerProfileRouteState =
       canonicalSlug: string;
       kind: ResolvePlayerKind;
     }
-  | { phase: 'error'; message: string };
+  | { phase: 'error'; message: string; unavailable?: boolean };
+
+function isUnavailableResolveError(err: unknown): boolean {
+  if (err instanceof ApiFetchError) {
+    return Boolean(err.unavailable || err.timedOut || err.status === 502 || err.status === 503 || err.status === 504);
+  }
+  return isWarmRetryError(err);
+}
 
 function mapRoster(raw: Record<string, unknown>): RosterPlayer {
   return raw as unknown as RosterPlayer;
@@ -44,7 +53,8 @@ function canonicalProfileHref(
 
 export function usePlayerProfileRoute(
   slug: string | null,
-  context: ProfileRouteContext = 'auto'
+  context: ProfileRouteContext = 'auto',
+  retryToken = 0
 ): PlayerProfileRouteState {
   const [state, setState] = useState<PlayerProfileRouteState>({ phase: 'loading' });
 
@@ -143,9 +153,15 @@ export function usePlayerProfileRoute(
             /* fall through */
           }
         }
+        const unavailable = isUnavailableResolveError(err);
         setState({
           phase: 'error',
-          message: err instanceof Error ? err.message : 'Player not found',
+          unavailable,
+          message: unavailable
+            ? 'Live player data is down right now. Profiles need the API — try again in a moment.'
+            : err instanceof Error
+              ? err.message
+              : 'Player not found',
         });
       }
     })();
@@ -153,7 +169,7 @@ export function usePlayerProfileRoute(
     return () => {
       cancelled = true;
     };
-  }, [slug, context]);
+  }, [slug, context, retryToken]);
 
   return state;
 }
