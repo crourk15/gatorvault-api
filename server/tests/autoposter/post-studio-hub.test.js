@@ -34,16 +34,22 @@ test('autoposter scheduler off by default in hub mode', () => {
   assert.equal(guards.autoposterComposeEnabled(), true);
 });
 
-test('withIngestLock skips overlapping runs', async () => {
+test('withIngestLock queues overlapping runs (never skips)', async () => {
   const { withIngestLock, isIngestRunning } = require('../../lib/ingest-run-guard');
-  const slow = withIngestLock('test-lock', async () => {
-    await new Promise((r) => setTimeout(r, 50));
-    return { ok: true };
+  const order = [];
+  const first = withIngestLock('test-lock', async () => {
+    order.push('a1');
+    await new Promise((r) => setTimeout(r, 40));
+    order.push('a2');
+    return { ok: true, id: 'a' };
   });
-  const skip = withIngestLock('test-lock', async () => ({ ok: true }));
-  const out = await Promise.all([slow, skip]);
-  assert.equal(out[1].skipped, true);
-  assert.equal(out[1].reason, 'already_running');
+  const second = withIngestLock('test-lock', async () => {
+    order.push('b1');
+    return { ok: true, id: 'b' };
+  });
+  const out = await Promise.all([first, second]);
+  assert.deepEqual(out.map((r) => r.id), ['a', 'b']);
+  assert.deepEqual(order, ['a1', 'a2', 'b1']);
   assert.equal(isIngestRunning('test-lock'), false);
 });
 

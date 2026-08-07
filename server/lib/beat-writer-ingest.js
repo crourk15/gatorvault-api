@@ -2018,7 +2018,12 @@ async function runBeatLateIngestSweep() {
   };
 }
 
-async function runBeatWriterIngest({ force = false, manualRows = [], posts = null, logSkips = false } = {}) {
+async function runBeatWriterIngest(opts = {}) {
+  const { runHeavyJob } = require('./heavy-job-gate');
+  return runHeavyJob('beat-writer-ingest', () => runBeatWriterIngestInner(opts));
+}
+
+async function runBeatWriterIngestInner({ force = false, manualRows = [], posts = null, logSkips = false } = {}) {
   const snapshot = loadSnapshot();
   const results = { processed: [], skipped: [], errors: [] };
 

@@ -1,23 +1,18 @@
-﻿/** Prevent overlapping ingest runs (On3 fetch aborts with TypeError: terminated). */
-const locks = new Map();
+/**
+ * Prevent overlapping ingest runs from stomping each other.
+ * Overlap now QUEUES via heavy-job-gate (never skips product work).
+ */
+const { runHeavyJob, isHeavyJobActive } = require('./heavy-job-gate');
 
 function isIngestRunning(name) {
-  return !!locks.get(name);
+  return isHeavyJobActive(name);
 }
 
 async function withIngestLock(name, fn) {
-  if (locks.get(name)) {
-    return { ok: true, skipped: true, reason: 'already_running', lock: name };
-  }
-  locks.set(name, true);
-  try {
-    return await fn();
-  } finally {
-    locks.set(name, false);
-  }
+  return runHeavyJob(name || 'ingest', fn);
 }
 
 module.exports = {
   isIngestRunning,
-  withIngestLock
+  withIngestLock,
 };

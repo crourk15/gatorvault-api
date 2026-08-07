@@ -27,6 +27,10 @@ Plain-English playbook cards on **Beat Desk** and **Command Center**:
 - **Go post** — default when nothing actionable is red; wake-lag / latency-only API is yellow (ignore) so Charles isn’t blocked from Beat Desk
 - **Wake lock** — while the server is waking, Deploy recovery stays disabled (spamming it makes fail noise)
 - **API status light** — top-right pill is always visible: **green API OK** / yellow API waking / **flashing red API DOWN**. Click to recheck. Soft orange banner = kitchen waking (503). **Flashing red banner + ops strip + `[API DOWN]` tab title** = Render 502/504 — App Store / War Room login will fail until `gatorvault-api` is restarted/redeployed. Do not treat red as “just waking.”
+
+### Elite API stability (keep every product job)
+
+Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTube) is **queued**, not disabled. Overlap waits its turn so members still get every feature while `/ready` stays green. Look for `[heavy-job-gate] start|done` in Render logs. Do **not** re-enable stay-green / strip crons to “stabilize.”
 - **App Store gate** — internal 7-day stability checklist (QA + Product Health ≥ 90). Codes like `product_intel_below_90` mean the vault scorecard is under 90 — **not** a message from Apple / App Store Connect
 - **What the buttons mean** — Open / Copy Brief / Refresh / etc.
 - **Don’t touch** — Legacy consoles + calm guidance for “kitchen waking”

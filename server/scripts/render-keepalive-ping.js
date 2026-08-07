@@ -151,13 +151,14 @@ async function main() {
   const stayGreen = process.env.API_STAY_GREEN !== 'false';
   const hubTouchAllowed = !stayGreen && process.env.KEEPALIVE_FULL_TOUCH === 'true';
   if (hubTouchAllowed) {
-    const concurrency = Math.min(2, TOUCH_CONCURRENCY);
-    // Priority first (hubs/roster/live/staff) so cold opens hit warm caches.
+    // Still touch every path — just one at a time so member traffic stays smooth.
+    const concurrency = 1;
     const priority = await mapPool(
       PRIORITY_TOUCH_PATHS,
-      Math.min(concurrency, Math.max(1, PRIORITY_TOUCH_PATHS.length)),
+      concurrency,
       (path) => softTouch(path)
     );
+    await sleep(250);
     const secondary = await mapPool(TOUCH_PATHS, concurrency, (path) => softTouch(path));
     touches = [...priority, ...secondary];
   } else if (process.env.KEEPALIVE_HUB_TOUCH === 'true' || process.env.KEEPALIVE_FULL_TOUCH === 'true') {
