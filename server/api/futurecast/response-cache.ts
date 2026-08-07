@@ -13,7 +13,8 @@ const CACHE_TTL_MS = parseInt(process.env.FUTURECAST_CACHE_TTL_MS || String(5 * 
 const cache = createMemoryCache(CACHE_TTL_MS);
 
 /** Bump when high-priority or master-board payload shape changes. */
-export const FUTURECAST_API_CACHE_VERSION = 23;
+/** Bumped when stars nullability / ED soft-deferred shape changes. */
+export const FUTURECAST_API_CACHE_VERSION = 24;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
@@ -51,10 +52,21 @@ export function movementIntelCacheKey(classYear: number | string): string {
   return `futurecast:movement-intel:v${FUTURECAST_API_CACHE_VERSION}:${classYear}`;
 }
 
+export type SendCachedJsonOptions = {
+  /**
+   * When Tier B deferMiss would return status:building, serve this sync payload instead.
+   * Must be a fan-ready body (no status:building) so iOS apiFetch does not throw.
+   */
+  softOnDeferred?: () => unknown;
+  /** After soft deferred response, rebuild into memory in the background (default true). */
+  backgroundBuildOnSoft?: boolean;
+};
+
 export async function sendCachedJson(
   res: Response,
   cacheKey: string,
-  buildPayload: () => Promise<unknown>
+  buildPayload: () => Promise<unknown>,
+  options: SendCachedJsonOptions = {}
 ): Promise<void> {
   // Default ON in production: never block Lab GETs on cold master-board rebuilds.
   const deferMiss = process.env.FC_GET_NO_SYNC_BUILD !== 'false';
@@ -62,6 +74,32 @@ export async function sendCachedJson(
     deferMiss,
   });
   if (deferred) {
+    if (typeof options.softOnDeferred === 'function') {
+      try {
+        const soft = options.softOnDeferred();
+        if (soft != null) {
+          res.setHeader('X-GatorVault-Cache', 'SOFT');
+          res.status(200).json(soft);
+          if (options.backgroundBuildOnSoft !== false) {
+            void cache
+              .wrap(cacheKey, buildPayload, CACHE_TTL_MS)
+              .then((result: { value?: unknown }) => {
+                if (result?.value != null) {
+                  console.log('[futurecast-cache] background warm after soft', cacheKey);
+                }
+              })
+              .catch((err: unknown) => {
+                const message = err instanceof Error ? err.message : String(err);
+                console.warn('[futurecast-cache] background warm failed', cacheKey, message);
+              });
+          }
+          return;
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.warn('[futurecast-cache] softOnDeferred failed', cacheKey, message);
+      }
+    }
     res.setHeader('X-GatorVault-Cache', 'DEFERRED');
     res.status(200).json({
       ok: true,
@@ -218,13 +256,35 @@ function highPriorityRuntimeCandidates(year: number | string): string[] {
   ];
 }
 
+/** Fan Lab cards treat 0 as a real rating — coerce unknown/placeholder stars to null. */
+export function normalizeFanStars(raw: unknown): number | null {
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 1) return null;
+  return Math.round(n);
+}
+
+/** Sanitize HP (and similar) payloads so seed/disk leftovers never emit 0★. */
+export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
+  if (!value || typeof value !== 'object') return value;
+  const doc = value as Record<string, unknown>;
+  if (!Array.isArray(doc.players)) return value;
+  return {
+    ...doc,
+    players: doc.players.map((row) => {
+      if (!row || typeof row !== 'object') return row;
+      const p = row as Record<string, unknown>;
+      return { ...p, stars: normalizeFanStars(p.stars) };
+    }),
+  };
+}
+
 /** Durable/bundled HP snapshot — survives restart (hub-runtime pattern). */
 export function readHighPriorityRuntime(year: number | string): unknown | null {
   const fs = require('node:fs');
   for (const filePath of highPriorityRuntimeCandidates(year)) {
     try {
       if (!fs.existsSync(filePath)) continue;
-      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      return sanitizeHighPriorityStarsPayload(JSON.parse(fs.readFileSync(filePath, 'utf8')));
     } catch {
       /* try next */
     }
@@ -243,7 +303,7 @@ export function writeHighPriorityRuntime(year: number | string, value: unknown):
       `high-priority-${year}.json`
     );
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    fs.writeFileSync(filePath, JSON.stringify(value), 'utf8');
+    fs.writeFileSync(filePath, JSON.stringify(sanitizeHighPriorityStarsPayload(value)), 'utf8');
     return true;
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -256,9 +316,9 @@ export function writeHighPriorityRuntime(year: number | string, value: unknown):
 export function loadHighPriorityCached(year: number | string): unknown | null {
   const key = highPriorityCacheKey(year);
   const fresh = cache.get(key);
-  if (fresh != null) return fresh;
+  if (fresh != null) return sanitizeHighPriorityStarsPayload(fresh);
   const stale = typeof cache.getStale === 'function' ? cache.getStale(key) : null;
-  if (stale != null) return stale;
+  if (stale != null) return sanitizeHighPriorityStarsPayload(stale);
   const disk = readHighPriorityRuntime(year);
   if (disk != null) {
     cache.set(key, disk, CACHE_TTL_MS);

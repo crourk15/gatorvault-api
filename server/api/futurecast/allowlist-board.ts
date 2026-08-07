@@ -104,7 +104,7 @@ export interface FutureCastBoardPlayer {
   hometown?: string | null;
   state?: string | null;
   composite: number;
-  stars: number;
+  stars: number | null;
   natlRank?: number | null;
   posRank?: number | null;
   stateRank?: number | null;
@@ -737,7 +737,11 @@ export async function loadBoardPlayersForSlugs(
       hometown: (recruiting?.hometown as string) ?? (seed.hometown as string) ?? null,
       state: (recruiting?.state as string) ?? (seed.state as string) ?? rank?.state ?? null,
       composite: Math.round((rank?.compositeScore ?? Number(recruiting?.rating ?? seed.rating ?? 0)) * 100) / 100,
-      stars: Number(rank?.stars ?? recruiting?.stars ?? seed.stars ?? 0) || 0,
+      // Unknown stars must be null — Lab cards render `0★` when given 0.
+      stars: (() => {
+        const n = Number(rank?.stars ?? recruiting?.stars ?? seed.stars ?? 0);
+        return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
+      })(),
       natlRank: rank?.nationalRank ?? (recruiting?.natlRank as number) ?? (seed.natlRank as number) ?? null,
       posRank: rank?.positionRank ?? (recruiting?.posRank as number) ?? (seed.posRank as number) ?? null,
       stateRank: rank?.stateRank ?? (recruiting?.stateRank as number) ?? (seed.stateRank as number) ?? null,

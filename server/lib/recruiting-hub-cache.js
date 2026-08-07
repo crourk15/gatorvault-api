@@ -746,10 +746,22 @@ function runSpacedEliteWorker({ job, year }) {
     parseInt(process.env.HUB_SPACED_WORKER_TIMEOUT_MS || '360000', 10) || 360000
   );
   return new Promise((resolve, reject) => {
+    // Cap child heap so OOM kills the worker, not gatorvault-api (Pro 4GB shared cgroup).
+    const childHeapMb = Math.max(
+      512,
+      parseInt(process.env.HUB_SPACED_WORKER_MAX_OLD_SPACE_MB || '1536', 10) || 1536
+    );
     // --import tsx so HP worker can require .ts modules (bundle is plain JS).
     const child = spawn(
       process.execPath,
-      ['--import', 'tsx', script, `--job=${job}`, `--year=${year}`],
+      [
+        `--max-old-space-size=${childHeapMb}`,
+        '--import',
+        'tsx',
+        script,
+        `--job=${job}`,
+        `--year=${year}`,
+      ],
       {
         env: {
           ...process.env,

@@ -33,6 +33,7 @@ import {
   highPriorityCacheKey,
   loadHighPriorityCached,
   primeFuturecastCache,
+  sanitizeHighPriorityStarsPayload,
 } from './response-cache';
 
 const require = createRequire(import.meta.url);
@@ -468,7 +469,10 @@ function boardPlayerToHighPriority(
     position: p.position,
     school: p.school ?? null,
     htWt: null,
-    stars: p.stars ?? null,
+    stars: (() => {
+      const n = Number(p.stars);
+      return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
+    })(),
     headliner: false,
     committedTo: p.committedTo ?? null,
     compositeScore: p.composite ?? 0,
@@ -664,7 +668,10 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
           position: target.pos ?? recruiting?.pos ?? '—',
           school: target.school ?? recruiting?.school ?? null,
           htWt: target.htWt ?? null,
-          stars: target.stars ?? rank?.stars ?? null,
+          stars: (() => {
+            const n = Number(target.stars ?? rank?.stars ?? 0);
+            return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
+          })(),
           headliner: Boolean(target.headliner),
           committedTo: resolveCommittedTo(target, recruiting, seed),
           compositeScore: compositeScore ?? 0,
@@ -910,10 +917,10 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
 
 /** Shared by HTTP handler + boot/keepalive warm so Lab cache is primed before fans hit. */
 export async function buildHighPriorityPayload(classYear: number) {
-  if (isUnderclassmenHighPriorityYear(classYear)) {
-    return buildUnderclassmenHighPriorityPayload(classYear);
-  }
-  return buildClosingClassHighPriorityPayload(classYear);
+  const payload = isUnderclassmenHighPriorityYear(classYear)
+    ? await buildUnderclassmenHighPriorityPayload(classYear)
+    : await buildClosingClassHighPriorityPayload(classYear);
+  return sanitizeHighPriorityStarsPayload(payload);
 }
 
 export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request, res: Response) => {

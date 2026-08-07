@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Lab polish API — null stars, Early Discovery soft cold-miss, capped warm workers (API)
 
 These ship via Render / Netlify API — current App Store binary (1.0.12) picks them up:
 
