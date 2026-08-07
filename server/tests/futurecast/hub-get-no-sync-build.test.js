@@ -52,35 +52,37 @@ describe('Tier B hub GET no-sync + durable snapshots', () => {
     );
     assert.equal(result.deferred, true);
     assert.equal(built, false);
-    await new Promise((r) => setTimeout(r, 120));
-    assert.equal(built, true);
-    assert.deepEqual(cache.get('k1'), { ok: 1 });
+    await new Promise((r) => setTimeout(r, 80));
+    assert.equal(built, false);
+    assert.equal(cache.get('k1'), null);
   });
 
-  it('serveCached never awaits a hanging builder on cold miss', async () => {
-    const { serveCached, clearHubCache, hubCache } = require('../../lib/recruiting-hub-cache');
+  it('serveCached never awaits or starts per-key builder on cold miss', async () => {
+    process.env.HUB_GET_NO_SYNC_BUILD = 'true';
+    process.env.HUB_ASYNC_WARM_DEBOUNCE_MS = '600000';
+    delete require.cache[require.resolve('../../lib/recruiting-hub-cache')];
+    const {
+      serveCached,
+      clearHubCache,
+      hubCache,
+      hubGetNoSyncBuild,
+    } = require('../../lib/recruiting-hub-cache');
+    assert.equal(hubGetNoSyncBuild(), true);
     clearHubCache();
     hubCache.remove('tier-b-hang');
     let started = false;
-    let resolveBuild;
-    const gate = new Promise((r) => {
-      resolveBuild = r;
-    });
     const result = await serveCached(
       'tier-b-hang',
       async () => {
         started = true;
-        await gate;
         return { ok: true };
       },
       { timeoutMs: 30_000 }
     );
     assert.equal(result.status, 'building');
     assert.equal(result.reason, 'deferred_rebuild');
-    await new Promise((r) => setImmediate(r));
-    assert.equal(started, true);
-    resolveBuild();
-    await new Promise((r) => setTimeout(r, 20));
+    await new Promise((r) => setTimeout(r, 30));
+    assert.equal(started, false);
   });
 
   it('serveCached returns durable disk snapshot without rebuild', async () => {

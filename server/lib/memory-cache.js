@@ -54,9 +54,9 @@ function createMemoryCache(defaultTtlMs = 60_000) {
       return { value: stale, hit: true, stale: true };
     }
 
-    // Elite Tier B: member GET never awaits a cold rebuild — warm in background.
+    // Elite Tier B+: member GET never starts a cold rebuild either — cron warm owns refill.
+    // (Background revalidate on cold miss was still OOMing Render under keepalive stampede.)
     if (options && options.deferMiss) {
-      void revalidate(key, fn, ttlMs).catch(() => {});
       return { value: null, hit: false, stale: false, deferred: true };
     }
 

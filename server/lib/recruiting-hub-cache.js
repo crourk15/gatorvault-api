@@ -453,10 +453,21 @@ async function warmEliteHubCachesInner(options = {}) {
   return warmInflight;
 }
 
-function scheduleAsyncWarm() {
-  if (warming) return;
+let asyncWarmQueued = false;
+let lastAsyncWarmAt = 0;
+const ASYNC_WARM_DEBOUNCE_MS = parseInt(process.env.HUB_ASYNC_WARM_DEBOUNCE_MS || '120000', 10) || 120000;
+
+/** Debounced priority-only warm — never stampede full rebuilds from member GETs. */
+function scheduleAsyncWarm(options = {}) {
+  if (warming || asyncWarmQueued) return;
+  const now = Date.now();
+  if (now - lastAsyncWarmAt < ASYNC_WARM_DEBOUNCE_MS) return;
+  asyncWarmQueued = true;
   setImmediate(() => {
-    warmEliteHubCaches().catch((err) => {
+    lastAsyncWarmAt = Date.now();
+    asyncWarmQueued = false;
+    const warmOpts = options.priorityOnly === false ? options : { priorityOnly: true, ...options };
+    warmEliteHubCaches(warmOpts).catch((err) => {
       console.warn('[recruiting-hub-cache] async warm failed:', err.message);
     });
   });
@@ -514,8 +525,8 @@ async function serveCached(cacheKey, builderFn, options = {}) {
 
   const stale = hubCache.getStale(cacheKey);
   if (stale != null) {
-    // Stay-green: serve stale, do not kick background rebuilds that starve /ready.
-    if (!stayGreen) refreshCacheKey(cacheKey, builderFn, timeoutMs);
+    // Stay-green / no-sync: serve stale only. Do not rebuild from GET — cron owns refill.
+    if (!stayGreen && !noSync) refreshCacheKey(cacheKey, builderFn, timeoutMs);
     return { status: 'ready', value: stale, hit: true, stale: true };
   }
 
@@ -523,9 +534,9 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   if (diskFallback?.endpoint) {
     const diskValue = readHubDiskSnapshot(diskFallback.endpoint, diskFallback.year);
     if (diskValue != null) {
-      // Seed memory so the next request is a hot hit; refresh in background.
+      // Seed memory so the next request is a hot hit. Cron warm-memory refreshes later.
       hubCache.set(cacheKey, diskValue);
-      if (!stayGreen) refreshCacheKey(cacheKey, builderFn, timeoutMs);
+      if (!stayGreen && !noSync) refreshCacheKey(cacheKey, builderFn, timeoutMs);
       return { status: 'ready', value: diskValue, hit: true, stale: true, diskSnapshot: true };
     }
   }
@@ -535,12 +546,9 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     return { status: 'building', hit: false, reason: 'api_stay_green' };
   }
 
-  // Tier B: kick single-flight rebuild but never await on member GET.
-  const inflight = inflightBuilds.get(cacheKey);
-  if (!inflight) {
-    startInflightBuild(cacheKey, builderFn, timeoutMs);
-  }
-
+  // Tier B+: GETs never start hub rebuilds (sync or background). Keepalive + fans were
+  // stampeding buildHubBundle after every restart and crash-looping Render → 502.
+  // Only cron warm-memory / hub-refresh / explicit warmEliteHubCaches refill memory.
   if (noSync) {
     return { status: 'building', hit: false, reason: 'deferred_rebuild' };
   }
@@ -552,7 +560,7 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     return { status: 'ready', value, hit: false, stale: false, buildMs };
   } catch (err) {
     console.warn('[recruiting-hub-cache] build timeout/miss', cacheKey, err.message);
-    scheduleAsyncWarm();
+    scheduleAsyncWarm({ priorityOnly: true });
     return { status: 'building', hit: false, reason: err.message };
   }
 }
