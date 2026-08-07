@@ -728,19 +728,23 @@ function scheduleSpacedEliteFill(options = {}) {
   spacedEliteQueued = true;
   const generation = ++spacedEliteGeneration;
 
-  const years = (options.years || [2028, 2027])
+  // Starter: default 2028-only. Dual-year HP+bundle after lite still OOM'd (~7 keys → restart).
+  const years = (
+    options.years ||
+    parseWarmYears(process.env.HUB_SPACED_WARM_YEARS, [2028])
+  )
     .slice()
     .filter((y) => Number.isFinite(y))
-    .sort((a, b) => b - a); // 2028 first
+    .sort((a, b) => b - a); // newest first
   const includeLab = options.includeLab !== false;
   const includeBundle = options.includeBundle !== false;
   const startDelay = Math.max(
-    30000,
-    parseInt(process.env.HUB_SPACED_WARM_START_MS || '60000', 10) || 60000
+    60000,
+    parseInt(process.env.HUB_SPACED_WARM_START_MS || '180000', 10) || 180000
   );
   const gapMs = Math.max(
-    60000,
-    parseInt(process.env.HUB_SPACED_WARM_GAP_MS || '180000', 10) || 180000
+    120000,
+    parseInt(process.env.HUB_SPACED_WARM_GAP_MS || '240000', 10) || 240000
   );
   const rssLimit = parseInt(process.env.HUB_PRIORITY_WARM_RSS_MB || '520', 10) || 520;
 
@@ -950,8 +954,9 @@ function scheduleHubBootPipeline() {
       .then((meta) => {
         console.log('[recruiting-hub] boot priority-lite warm complete', meta?.warmKeyCount);
         if (spacedElite) {
+          const spacedYears = parseWarmYears(process.env.HUB_SPACED_WARM_YEARS, [2028]);
           scheduleSpacedEliteFill({
-            years: bootYears,
+            years: spacedYears,
             includeLab: process.env.HUB_SPACED_WARM_LAB !== 'false',
             includeBundle: process.env.HUB_SPACED_WARM_BUNDLE !== 'false',
           });
@@ -971,7 +976,9 @@ function scheduleHubBootPipeline() {
   bootWarmDecision = {
     ...bootWarmDecision,
     spacedElite,
-    spacedGapMs: parseInt(process.env.HUB_SPACED_WARM_GAP_MS || '180000', 10) || 180000,
+    spacedYears: parseWarmYears(process.env.HUB_SPACED_WARM_YEARS, [2028]),
+    spacedGapMs: parseInt(process.env.HUB_SPACED_WARM_GAP_MS || '240000', 10) || 240000,
+    spacedStartMs: parseInt(process.env.HUB_SPACED_WARM_START_MS || '180000', 10) || 180000,
   };
 
   // Heavy geo refresh stays optional / scheduled-jobs gated (not required for first paint).
