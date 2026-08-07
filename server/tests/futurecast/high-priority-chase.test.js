@@ -40,4 +40,29 @@ describe('Lab High Priority uses staff-chase ranking', () => {
       'staff-side chase must outrank high-fit / low-pursuit peer'
     );
   });
+
+  it('2028 high-priority payload keeps full allowlist so Closest to commit is system-driven', async () => {
+    const {
+      buildHighPriorityPayload,
+      HIGH_PRIORITY_UNDERCLASSMEN_CHASE_LIMIT,
+    } = require('../../api/futurecast/high-priority.ts');
+    const payload = await buildHighPriorityPayload(2028);
+    assert.ok(Array.isArray(payload.players));
+    assert.ok(
+      payload.players.length > HIGH_PRIORITY_UNDERCLASSMEN_CHASE_LIMIT,
+      `expected full allowlist board, got ${payload.players.length}`
+    );
+    assert.ok(
+      payload.players.some((p) => p.slug === 'hudson-west'),
+      'Hudson West must stay in HP so Closest to commit updates from API without a client cut'
+    );
+    const byChase = [...payload.players].sort(
+      (a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0)
+    );
+    const hudsonChaseRank = byChase.findIndex((p) => p.slug === 'hudson-west') + 1;
+    assert.ok(
+      hudsonChaseRank === 0 || hudsonChaseRank > HIGH_PRIORITY_UNDERCLASSMEN_CHASE_LIMIT,
+      'Hudson is outside chase-hot top-N — proving the old slice would have dropped him'
+    );
+  });
 });

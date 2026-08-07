@@ -19,6 +19,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.12) picks 
 - [x] Commit hub cards: API no longer sends Vault Comp / Vault Projection (brief only — matches 2028; iOS hides empty slots)
 - [x] FutureCast / profile speed: War Room cache, full-profile SWR cache, slim related peers, keepalive Lab warm (API)
 - [x] Commit card surface unison: short “committed to Florida” line for all class years (API)
+- [x] FutureCast Closest to commit: 2028 high-priority API returns full allowlist (not chase-hot top-18 cut) so board leaders like Hudson West update live on iOS
 
 ---
 
@@ -40,7 +41,6 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-06 | FutureCast Lab: ink-color unison (Who commits / Needs help) + Priority chase rank/why cards + Open board link | Lab panels + CSS in binary | #337 |
 | 2026-08-06 | Film Room shell refresh: owned hero, hub rail counts, featured + thumbnail grid, hub label normalize | `VaultFilmRoomPage` + CSS in binary | #337 |
 | 2026-08-06 | Film Breakdown: drop GNFP Podcast / Talking Ball coach sit-downs from seed + client catalog filter | `film-room-hub-seed` + `film-room-api` in binary (API prune also live) | pending |
-| 2026-08-07 | FutureCast Lab: Who commits next / Closest to commit uses full 2028 allowlist board (not chase-hot HP top-18) | `FutureCastLeadingPanel` + `fc-lab-types` in binary | pending |
 
 ---
 
