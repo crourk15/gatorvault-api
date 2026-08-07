@@ -32,13 +32,14 @@ Plain-English playbook cards on **Beat Desk** and **Command Center**:
 
 Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTube) is **queued**, not disabled. Overlap waits its turn so members still get every feature while `/ready` stays green. Look for `[heavy-job-gate] start|done` in Render logs. Do **not** re-enable stay-green / strip crons to “stabilize.”
 
-**Tier B (request path):** Hub + FutureCast Lab **GETs never sync-rebuild**. They serve memory → stale → durable `hub-runtime` / deploy snapshot, and return `status: building` only on a true cold miss while a background job fills memory. Refill is owned by:
+**Tier B (request path):** Hub + FutureCast Lab **GETs never sync-rebuild**. They serve memory → stale → durable `hub-runtime` / deploy snapshot, and return `status: building` only on a true cold miss. Refill is owned by:
 
-- `POST /api/recruiting/hub/warm-memory` (cron `gatorvault-api-hub-warm`, every ~12m)
-- `POST /api/futurecast/lab-warm` (same cron)
+- **Boot:** `HUB_BOOT_FORCE_WARM=true` — deferred priority hub warm (2027/2028) then Lab warm (~90s after listen)
+- `POST /api/recruiting/hub/warm-memory` (cron `gatorvault-api-hub-warm`, every ~12m; Admin PIN also works)
+- `POST /api/futurecast/lab-warm` (same cron / Admin PIN)
 - `POST /api/recruiting/hub/refresh?warmAfter=priority` (cron `gatorvault-api-hub-refresh`)
 
-Look for `[recruiting-hub] warm-memory` / `[futurecast] lab-warm` in Render logs. Env knobs: `HUB_GET_NO_SYNC_BUILD` (default on), `FC_GET_NO_SYNC_BUILD` (default on).
+Look for `[recruiting-hub] boot priority warm` / `warm-memory` / `[futurecast] lab-warm` in Render logs. Env knobs: `HUB_GET_NO_SYNC_BUILD`, `FC_GET_NO_SYNC_BUILD`, `HUB_BOOT_FORCE_WARM`, `HUB_BOOT_WARM_LAB`.
 - **App Store gate** — internal 7-day stability checklist (QA + Product Health ≥ 90). Codes like `product_intel_below_90` mean the vault scorecard is under 90 — **not** a message from Apple / App Store Connect
 - **What the buttons mean** — Open / Copy Brief / Refresh / etc.
 - **Don’t touch** — Legacy consoles + calm guidance for “kitchen waking”

@@ -309,18 +309,27 @@ services:
         value: "false"
       - key: HUB_BOOT_IMMEDIATE_WARM
         value: "false"
-      - key: HUB_BOOT_SKIP_WARM
+      # Elite: deferred priority warm after listen (GET path never rebuilds).
+      - key: HUB_BOOT_FORCE_WARM
         value: "true"
+      - key: HUB_BOOT_SKIP_WARM
+        value: "false"
       - key: HUB_BOOT_WARM_DELAY_MS
-        value: "120000"
-      # Tier B: member GETs never sync-rebuild hub/Lab (cron warm owns refill).
+        value: "90000"
+      - key: HUB_BOOT_WARM_YEARS
+        value: "2027,2028"
+      - key: HUB_BOOT_SECONDARY_WARM
+        value: "false"
+      # Tier B: member GETs never sync-rebuild hub/Lab (boot/cron warm owns refill).
       - key: HUB_GET_NO_SYNC_BUILD
         value: "true"
       - key: FC_GET_NO_SYNC_BUILD
         value: "true"
-      # Keep FutureCast Lab off the priority warm path (opt-in only).
+      # Lab warm runs AFTER hub priority (sequential), not inside priority job list.
       - key: HUB_BOOT_WARM_FUTURECAST
         value: "false"
+      - key: HUB_BOOT_WARM_LAB
+        value: "true"
       # Soft hub refresh — do not wipe caches before rebuild (avoids cold stampede).
       - key: HUB_REFRESH_CLEAR_CACHES
         value: "false"
