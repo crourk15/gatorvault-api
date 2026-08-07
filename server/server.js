@@ -1633,6 +1633,21 @@ function startPostBootServices() {
     'ms'
   );
   setTimeout(startPostBootLightServices, deferLightMs);
+  // Hub boot warm must not wait on recruiting-store / identity-patterns init.
+  // Those paths can stall and left hub permanently building after Tier B GET no-sync.
+  const deferHubWarmMs = Math.max(
+    20000,
+    parseInt(process.env.API_BOOT_DEFER_HUB_WARM_MS || String(deferLightMs), 10) || deferLightMs
+  );
+  setTimeout(() => {
+    try {
+      const { scheduleHubBootPipeline } = require('./lib/recruiting-hub-cache');
+      scheduleHubBootPipeline();
+      console.log('[recruiting-hub] early boot warm pipeline scheduled');
+    } catch (e) {
+      console.warn('[recruiting-hub] early boot warm schedule failed:', e.message);
+    }
+  }, deferHubWarmMs);
   setTimeout(startPostBootRecruitingAndSchedulers, deferSchedMs);
   setTimeout(startPostBootHeavyServices, deferHeavyMs);
 }
@@ -1802,12 +1817,7 @@ function startPostBootRecruitingAndSchedulers() {
         console.warn('[player-intelligence] refresh scheduler skipped:', e.message);
       }
     }
-    try {
-      const { scheduleHubBootPipeline } = require('./lib/recruiting-hub-cache');
-      scheduleHubBootPipeline();
-    } catch (e) {
-      console.warn('[recruiting-hub] boot warm skipped:', e.message);
-    }
+    // Hub boot warm is scheduled early in scheduleDeferredBootWork (idempotent).
   } catch (e) {
     console.warn('Recruiting API: failed to init', e.message);
   }
