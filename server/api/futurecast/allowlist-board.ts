@@ -487,7 +487,13 @@ export async function loadBoardPlayersForSlugs(
   const modelRows = dedupeFeedRows(filterModelPredictionsOnly(predictionRows)).filter((row) =>
     Boolean(resolveCanonical(String(row.slug || row.playerSlug || '').toLowerCase()))
   );
-  const serialized = await serializeFeedRowsWithVolatility(modelRows);
+  const serialized = await serializeFeedRowsWithVolatility(modelRows).catch((err) => {
+    console.warn(
+      '[allowlist-board] prediction serialize unavailable:',
+      err instanceof Error ? err.message : err
+    );
+    return [] as Awaited<ReturnType<typeof serializeFeedRowsWithVolatility>>;
+  });
   const predictionBySlug = new Map<string, (typeof serialized)[0]>();
   for (const row of serialized) {
     const canonical = resolveCanonical(String(row.playerSlug || '').toLowerCase());
@@ -498,7 +504,13 @@ export async function loadBoardPlayersForSlugs(
 
   const playerIds = serialized.map((p) => p.playerId).filter(Boolean);
   const [historyMap, recruitingBySlug] = await Promise.all([
-    listMovementHistoryByPlayerIds(playerIds, movementWindowDays),
+    listMovementHistoryByPlayerIds(playerIds, movementWindowDays).catch((err) => {
+      console.warn(
+        '[allowlist-board] movement history unavailable:',
+        err instanceof Error ? err.message : err
+      );
+      return new Map() as Awaited<ReturnType<typeof listMovementHistoryByPlayerIds>>;
+    }),
     loadRecruitingPlayersBySlug(allowedSlugs),
   ]);
 

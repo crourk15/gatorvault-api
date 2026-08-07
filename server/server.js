@@ -1,6 +1,34 @@
 require('dotenv').config();
 const { applyToProcessEnv } = require('./lib/autoposter/uf-premium-mode');
 applyToProcessEnv();
+
+// Keep Render alive through Supabase idle-client / auth blips. Without these,
+// unhandled pg pool errors restart the dyno (`==> Running 'node server.js'` loop)
+// and profile routes 502 behind `x-render-routing: dynamic-paid-error`.
+process.on('unhandledRejection', (reason) => {
+  const msg = reason instanceof Error ? reason.message : String(reason ?? '');
+  const code = reason && typeof reason === 'object' ? String(reason.code || '') : '';
+  console.error('[process] unhandledRejection (kept alive):', code, msg);
+});
+process.on('uncaughtException', (err) => {
+  const msg = err instanceof Error ? err.message : String(err ?? '');
+  const code = err && typeof err === 'object' ? String(err.code || '') : '';
+  // Fatal programmer errors should still exit; connection/auth noise must not.
+  if (
+    code === 'EAUTHTIMEOUT' ||
+    code === 'ETIMEDOUT' ||
+    code === 'ECONNRESET' ||
+    code === 'ECONNREFUSED' ||
+    code === '08006' ||
+    /EAUTHTIMEOUT|timeout while waiting for message|Connection terminated|ECONNRESET/i.test(msg)
+  ) {
+    console.error('[process] uncaughtException DB/network (kept alive):', code, msg);
+    return;
+  }
+  console.error('[process] uncaughtException:', code, msg);
+  if (err && err.stack) console.error(err.stack);
+});
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const { mountRecruitingRoutes } = require('./lib/recruiting-routes');
