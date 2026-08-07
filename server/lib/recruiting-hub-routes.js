@@ -780,11 +780,19 @@ function mountRecruitingHubRoutes(app) {
         void warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: liteYears })
           .then((meta) => {
             console.log('[recruiting-hub] spaced lite complete', meta?.warmKeyCount);
-            scheduleSpacedEliteFill({ years: yearList, force: true });
+            scheduleSpacedEliteFill({
+              years: yearList,
+              force: true,
+              includeLab: process.env.HUB_SPACED_WARM_LAB === 'true',
+            });
           })
           .catch((err) => {
             console.warn('[recruiting-hub] spaced lite failed:', err.message);
-            scheduleSpacedEliteFill({ years: yearList, force: true });
+            scheduleSpacedEliteFill({
+              years: yearList,
+              force: true,
+              includeLab: process.env.HUB_SPACED_WARM_LAB === 'true',
+            });
           });
         return res.json({
           ok: true,

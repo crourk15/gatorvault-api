@@ -21,6 +21,13 @@ function resolveRecruitingDataDir() {
  * Copy missing JSON artifacts from bundled recruiting data into durable dir.
  * Never overwrites non-empty durable files.
  */
+function copyJsonIfMissing(src, dest) {
+  if (!fs.existsSync(src) || fs.existsSync(dest)) return false;
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  fs.copyFileSync(src, dest);
+  return true;
+}
+
 function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
   if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
     return { migrated: false, reason: 'same_path' };
@@ -43,9 +50,18 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
           continue;
         }
       }
-      if (!fs.existsSync(dest)) {
-        fs.copyFileSync(src, dest);
-        copied += 1;
+      if (copyJsonIfMissing(src, dest)) copied += 1;
+    }
+    // Seed Lab HP snapshots into durable disk (Starter cannot rebuild these in-process).
+    const seedRuntime = path.join(BUNDLE_DIR, 'futurecast-runtime');
+    const destRuntime = path.join(dataDir, 'futurecast-runtime');
+    if (fs.existsSync(seedRuntime)) {
+      fs.mkdirSync(destRuntime, { recursive: true });
+      for (const name of fs.readdirSync(seedRuntime)) {
+        if (!name.endsWith('.json')) continue;
+        if (copyJsonIfMissing(path.join(seedRuntime, name), path.join(destRuntime, name))) {
+          copied += 1;
+        }
       }
     }
     return { migrated: copied > 0, copied, to: dataDir };

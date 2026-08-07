@@ -813,14 +813,13 @@ function primeHubBundleFromDisk(year) {
 }
 
 function primeHpFromDisk(year) {
-  const filePath = path.join(
-    resolveRecruitingDataDir(),
-    'futurecast-runtime',
-    `high-priority-${year}.json`
-  );
-  if (!fs.existsSync(filePath)) return false;
-  const value = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  const { primeFuturecastCache, highPriorityCacheKey } = require('../api/futurecast/response-cache.ts');
+  const {
+    readHighPriorityRuntime,
+    primeFuturecastCache,
+    highPriorityCacheKey,
+  } = require('../api/futurecast/response-cache.ts');
+  const value = readHighPriorityRuntime(year);
+  if (!value) return false;
   primeFuturecastCache(highPriorityCacheKey(year), value);
   return true;
 }
@@ -878,7 +877,11 @@ function scheduleSpacedEliteFill(options = {}) {
     .slice()
     .filter((y) => Number.isFinite(y))
     .sort((a, b) => b - a); // newest first
-  const includeLab = options.includeLab !== false;
+  // Lab HP rebuild is opt-in — bundled seed keeps Lab elite without OOM risk.
+  const includeLab =
+    options.includeLab != null
+      ? options.includeLab !== false
+      : process.env.HUB_SPACED_WARM_LAB === 'true';
   const includeBundle = options.includeBundle !== false;
   // Floors beat stale Render dashboard env from older blueprint sync (60s/180s OOM'd).
   const startDelay = Math.max(
@@ -1118,11 +1121,23 @@ function scheduleHubBootPipeline() {
     warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: bootYears })
       .then((meta) => {
         console.log('[recruiting-hub] boot priority-lite warm complete', meta?.warmKeyCount);
+        // Cheap Lab elite: prime HP from bundled/durable seed (no heavy rebuild).
+        try {
+          const yearsToPrime = parseWarmYears(process.env.HUB_SPACED_WARM_YEARS, [2028]);
+          for (const y of yearsToPrime) {
+            if (primeHpFromDisk(y)) {
+              console.log('[recruiting-hub] primed Lab HP from seed', y);
+            }
+          }
+        } catch (err) {
+          console.warn('[recruiting-hub] HP seed prime failed:', err.message);
+        }
         if (spacedElite) {
           const spacedYears = parseWarmYears(process.env.HUB_SPACED_WARM_YEARS, [2028]);
           scheduleSpacedEliteFill({
             years: spacedYears,
-            includeLab: process.env.HUB_SPACED_WARM_LAB !== 'false',
+            // Default OFF: HP worker still OOM'd the dyno; seed + GET disk keep Lab elite.
+            includeLab: process.env.HUB_SPACED_WARM_LAB === 'true',
             includeBundle: process.env.HUB_SPACED_WARM_BUNDLE !== 'false',
           });
         }

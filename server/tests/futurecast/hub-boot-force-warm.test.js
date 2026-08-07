@@ -38,6 +38,7 @@ describe('Elite boot force warm', () => {
     assert.match(yaml, /HUB_SPACED_WARM_YEARS[\s\S]*value: "2028"/);
     assert.match(yaml, /HUB_BUNDLE_SEQUENTIAL[\s\S]*value: "true"/);
     assert.match(yaml, /HUB_SPACED_WARM_FORK[\s\S]*value: "true"/);
+    assert.match(yaml, /HUB_SPACED_WARM_LAB[\s\S]*value: "false"/);
     assert.match(yaml, /warm-memory\?mode=spaced&years=2028/);
   });
 

@@ -342,8 +342,9 @@ services:
         value: "300000"
       - key: HUB_SPACED_WARM_GAP_MS
         value: "300000"
+      # OFF: HP child warm still OOM'd Starter. Bundled seed + GET disk = Lab elite.
       - key: HUB_SPACED_WARM_LAB
-        value: "true"
+        value: "false"
       - key: HUB_SPACED_WARM_BUNDLE
         value: "true"
       # Opt-in — master-board warm OOMs Starter after lite; enable when upgraded.

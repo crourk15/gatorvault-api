@@ -208,31 +208,41 @@ export function primeFuturecastCache(cacheKey: string, value: unknown): void {
   cache.set(cacheKey, value, CACHE_TTL_MS);
 }
 
-function highPriorityRuntimePath(year: number | string): string {
-  const { resolveRecruitingDataDir } = require('../../lib/recruiting-data-dir');
-  return require('node:path').join(
-    resolveRecruitingDataDir(),
-    'futurecast-runtime',
-    `high-priority-${year}.json`
-  );
+function highPriorityRuntimeCandidates(year: number | string): string[] {
+  const path = require('node:path');
+  const { resolveRecruitingDataDir, BUNDLE_DIR } = require('../../lib/recruiting-data-dir');
+  const name = `high-priority-${year}.json`;
+  return [
+    path.join(resolveRecruitingDataDir(), 'futurecast-runtime', name),
+    path.join(BUNDLE_DIR, 'futurecast-runtime', name),
+  ];
 }
 
-/** Durable HP snapshot — survives process restart (same idea as hub-runtime). */
+/** Durable/bundled HP snapshot — survives restart (hub-runtime pattern). */
 export function readHighPriorityRuntime(year: number | string): unknown | null {
-  try {
-    const filePath = highPriorityRuntimePath(year);
-    if (!require('node:fs').existsSync(filePath)) return null;
-    return JSON.parse(require('node:fs').readFileSync(filePath, 'utf8'));
-  } catch {
-    return null;
+  const fs = require('node:fs');
+  for (const filePath of highPriorityRuntimeCandidates(year)) {
+    try {
+      if (!fs.existsSync(filePath)) continue;
+      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    } catch {
+      /* try next */
+    }
   }
+  return null;
 }
 
 export function writeHighPriorityRuntime(year: number | string, value: unknown): boolean {
   try {
     const fs = require('node:fs');
-    const filePath = highPriorityRuntimePath(year);
-    fs.mkdirSync(require('node:path').dirname(filePath), { recursive: true });
+    const path = require('node:path');
+    const { resolveRecruitingDataDir } = require('../../lib/recruiting-data-dir');
+    const filePath = path.join(
+      resolveRecruitingDataDir(),
+      'futurecast-runtime',
+      `high-priority-${year}.json`
+    );
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
     fs.writeFileSync(filePath, JSON.stringify(value), 'utf8');
     return true;
   } catch (err) {
