@@ -35,6 +35,17 @@ describe('Elite boot force warm', () => {
     assert.match(yaml, /HUB_BOOT_WARM_YEARS[\s\S]*2027,2028/);
   });
 
+  it('server schedules hub boot warm early and idempotently', () => {
+    const serverSrc = fs.readFileSync(path.join(__dirname, '..', '..', 'server.js'), 'utf8');
+    assert.match(serverSrc, /early boot warm pipeline scheduled/);
+    assert.match(serverSrc, /API_BOOT_DEFER_HUB_WARM_MS/);
+    const cacheSrc = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'lib', 'recruiting-hub-cache.js'),
+      'utf8'
+    );
+    assert.match(cacheSrc, /bootPipelineScheduled/);
+  });
+
   it('warm-memory accepts admin pin', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', '..', 'lib', 'recruiting-hub-routes.js'),

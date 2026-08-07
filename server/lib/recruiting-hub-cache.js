@@ -47,6 +47,7 @@ let warmKeyCount = 0;
 let refreshTimer = null;
 /** @type {null | Record<string, unknown>} */
 let bootWarmDecision = null;
+let bootPipelineScheduled = false;
 const inflightBuilds = new Map();
 
 function classSnapshotCacheKey(year) {
@@ -687,6 +688,11 @@ function parseWarmYears(raw, fallback) {
 }
 
 function scheduleHubBootPipeline() {
+  if (bootPipelineScheduled) {
+    return getMeta();
+  }
+  bootPipelineScheduled = true;
+
   const pipelineGuards = require('./pipeline-guards');
   // Respect ALLOW_HEAVY — raw API_STAY_GREEN=true was blocking elite boot warm forever.
   let stayGreen = false;
