@@ -275,14 +275,34 @@ function removeHubCacheKeys(keys) {
   return removed;
 }
 
-/** Fan-facing first paint — warm these before the rest of the elite map. */
-function priorityWarmJobs(elite, years) {
+/**
+ * Lite first-paint warm — class overview + hero only.
+ * Full hub bundle is separate: buildHubBundle Promise.all was OOMing Render on boot.
+ */
+function priorityLiteWarmJobs(elite, years) {
   const jobs = [
     [eliteClassOverviewAllCacheKey(), () => elite.buildHubClassOverviewAll()],
   ];
-  // FutureCast Lab warm is heavy (master-board + high-priority + underclassmen).
-  // Keep it OFF the boot/priority path unless explicitly enabled — concurrent Lab
-  // rebuilds were starving Render /ready and causing full-route HTML 502 waves.
+  for (const year of years) {
+    jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year)]);
+    jobs.push([classSnapshotCacheKey(year), () => elite.buildHubClassOverview(year)]);
+    jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year)]);
+  }
+  return jobs;
+}
+
+function bundleWarmJobs(elite, years) {
+  const jobs = [];
+  for (const year of years) {
+    jobs.push([eliteBundleCacheKey(year), () => elite.buildHubBundle(year)]);
+  }
+  return jobs;
+}
+
+/** Fan-facing first paint — lite keys, then optional FutureCast marker job. */
+function priorityWarmJobs(elite, years, { includeBundle = true } = {}) {
+  const jobs = priorityLiteWarmJobs(elite, years);
+  // FutureCast Lab warm is heavy — keep OFF priority unless explicitly enabled.
   if (process.env.HUB_BOOT_WARM_FUTURECAST === 'true') {
     jobs.push([
       'futurecast:lab:elite-warm',
@@ -292,11 +312,8 @@ function priorityWarmJobs(elite, years) {
       },
     ]);
   }
-  for (const year of years) {
-    jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year)]);
-    jobs.push([classSnapshotCacheKey(year), () => elite.buildHubClassOverview(year)]);
-    jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year)]);
-    jobs.push([eliteBundleCacheKey(year), () => elite.buildHubBundle(year)]);
+  if (includeBundle) {
+    jobs.push(...bundleWarmJobs(elite, years));
   }
   return jobs;
 }
@@ -390,6 +407,8 @@ async function warmEliteHubCachesInner(options = {}) {
   const years = options.years || DEFAULT_YEARS;
   const priorityOnly = options.priorityOnly === true;
   const secondaryOnly = options.secondaryOnly === true;
+  const priorityLite = options.priorityLite === true;
+  const bundleOnly = options.bundleOnly === true;
   const start = Date.now();
   let warmed = 0;
 
@@ -397,31 +416,55 @@ async function warmEliteHubCachesInner(options = {}) {
   try {
     const elite = require('./recruiting-hub-elite');
     const priorityTimeout = Math.max(BUILD_TIMEOUT_MS * 3, 60_000);
+    const bundleTimeout = Math.max(
+      BUILD_TIMEOUT_MS * 4,
+      parseInt(process.env.HUB_BUNDLE_BUILD_TIMEOUT_MS || '45000', 10) || 45000
+    );
 
-    if (!secondaryOnly) {
-      const priorityWarmed = await runWarmJobBatch(
-        priorityWarmJobs(elite, years),
-        priorityTimeout,
-        'priority'
+    if (bundleOnly) {
+      const bundleWarmed = await runWarmJobBatch(
+        bundleWarmJobs(elite, years),
+        bundleTimeout,
+        'bundle'
       );
-      warmed += priorityWarmed;
+      warmed += bundleWarmed;
+      warming = false;
+    } else if (!secondaryOnly) {
+      // Lite first (hero/class) — never OOM the box before /ready can answer.
+      const liteWarmed = await runWarmJobBatch(
+        priorityLiteWarmJobs(elite, years),
+        priorityTimeout,
+        'priority-lite'
+      );
+      warmed += liteWarmed;
       warmKeyCount = Math.max(warmKeyCount, warmed);
       ready = warmKeyCount > 0;
-      if (priorityWarmed > 0) {
+      if (liteWarmed > 0) {
         lastWarmAt = new Date().toISOString();
         console.log(
-          '[recruiting-hub-cache] priority warm ready:',
-          priorityWarmed,
+          '[recruiting-hub-cache] priority-lite warm ready:',
+          liteWarmed,
           'keys in',
           Date.now() - start,
           'ms'
         );
       }
+
+      // Full priority / cron also warms bundles one year at a time after lite.
+      if (!priorityLite) {
+        const bundleWarmed = await runWarmJobBatch(
+          bundleWarmJobs(elite, years),
+          bundleTimeout,
+          'bundle'
+        );
+        warmed += bundleWarmed;
+      }
+
       // Unblock fan-facing "warming" status before slower secondary jobs finish.
       warming = false;
     }
 
-    if (!priorityOnly) {
+    if (!priorityOnly && !priorityLite && !bundleOnly) {
       const secondaryWarmed = await runWarmJobBatch(
         secondaryWarmJobs(elite, years),
         BUILD_TIMEOUT_MS * 2,
@@ -700,24 +743,24 @@ function scheduleHubBootPipeline() {
       console.warn('[recruiting-hub] boot priority warm skipped — RSS guard');
       return;
     }
-    console.log('[recruiting-hub] boot priority warm start', { years: bootYears, lab: bootLab });
-    warmEliteHubCaches({ priorityOnly: true, years: bootYears })
+    console.log('[recruiting-hub] boot priority-lite warm start', { years: bootYears, lab: bootLab });
+    // Lite only on boot — full bundle OOMed Render (502 loop). Bundle follows delayed.
+    warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: bootYears })
       .then(async () => {
         if (bootLab) {
           try {
             const { runHeavyJob } = require('./heavy-job-gate');
-            const { warmFuturecastLabCaches } = require('../api/futurecast/response-cache.ts');
-            const lab = await runHeavyJob('futurecast-lab-warm', () =>
-              warmFuturecastLabCaches(bootYears)
+            // High-priority only on boot — full Lab warm is cron-owned.
+            const { warmFuturecastHighPriorityCaches } = require('../api/futurecast/response-cache.ts');
+            const hp = await runHeavyJob('futurecast-hp-warm', () =>
+              warmFuturecastHighPriorityCaches(bootYears)
             );
-            console.log('[recruiting-hub] boot lab warm complete', lab);
+            console.log('[recruiting-hub] boot high-priority warm complete', hp);
           } catch (err) {
-            console.warn('[recruiting-hub] boot lab warm failed:', err.message);
+            console.warn('[recruiting-hub] boot high-priority warm failed:', err.message);
           }
         }
-        if (!bootSecondary) return null;
-        if (pipelineGuards.shouldSkipHeavyJob('hub-boot-warm', priorityRssLimit)) return null;
-        return warmEliteHubCaches({ secondaryOnly: true, years: bootYears });
+        return null;
       })
       .catch((err) => {
         console.warn('[recruiting-hub-cache] boot warm failed:', err.message);
@@ -729,6 +772,23 @@ function scheduleHubBootPipeline() {
   } else {
     setTimeout(runPriorityWarm, bootDelay);
   }
+
+  // Bundle after lite has had time to finish — never on the same tick as lite start.
+  const bundleDelayFromBoot =
+    (immediateWarm ? 0 : bootDelay) +
+    Math.max(90000, parseInt(process.env.HUB_BOOT_BUNDLE_DELAY_MS || '120000', 10) || 120000);
+  setTimeout(() => {
+    if (pipelineGuards.shouldSkipHeavyJob('hub-boot-bundle-warm', priorityRssLimit)) {
+      console.warn('[recruiting-hub] boot bundle warm skipped — RSS guard');
+      return;
+    }
+    const bundleYears = bootYears.slice().sort((a, b) => b - a); // 2028 first
+    console.log('[recruiting-hub] boot bundle warm start', bundleYears);
+    warmEliteHubCaches({ bundleOnly: true, years: bundleYears })
+      .then((meta) => console.log('[recruiting-hub] boot bundle warm complete', meta?.warmKeyCount))
+      .catch((err) => console.warn('[recruiting-hub] boot bundle warm failed:', err.message));
+  }, bundleDelayFromBoot);
+  bootWarmDecision = { ...bootWarmDecision, bundleDelayMs: bundleDelayFromBoot, priorityLite: true };
 
   // Heavy geo refresh stays optional / scheduled-jobs gated (not required for first paint).
   const refreshDelay = Math.max(
