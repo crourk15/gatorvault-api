@@ -176,8 +176,35 @@ export function floridaLeadMargin(player: FcLabTarget): number {
 }
 
 /**
+ * Structured UF process on file — offer / visits / pursuit intel.
+ * Closest to commit must not stamp from On3 % alone.
+ */
+export function hasClosestCommitProcessEvidence(player: FcLabTarget): boolean {
+  if (player.closestCommitEligible === true) return true;
+  const ev = player.processEvidence;
+  if (!ev) return false;
+  if (ev.closestEligible === true) return true;
+  // Warm allowlist process: offer/visits/intel and still engaged.
+  if (ev.allowlisted === false) return false;
+  return Boolean(ev.hasProcess && ev.stillWarm);
+}
+
+/** Board lead with a real market read — not a thin sole-board soft %. */
+export function hasCredibleBoardLead(player: FcLabTarget): boolean {
+  if (!isFloridaLeadingOnBoard(player)) return false;
+  const uf = ufPctFromFc(player.ufProbability);
+  const rpm =
+    player.ufRpmPct != null && Number(player.ufRpmPct) > 0 ? ufPctFromFc(player.ufRpmPct) : 0;
+  const threat = topThreatVsFlorida(player);
+  if (threat) return uf > threat.pct;
+  // No rival board — need a real market share, not Est. noise.
+  return rpm >= 40 || uf >= 50;
+}
+
+/**
  * Closer score — who looks nearest to a Florida commit.
  * Lead + share strength + momentum + cushion over the top rival.
+ * Process evidence is gated separately in isNextCommitPick.
  */
 export function nextCommitScore(player: FcLabTarget): number {
   if (!isFloridaLeadingOnBoard(player)) return -1;
@@ -190,8 +217,10 @@ export function nextCommitScore(player: FcLabTarget): number {
   return uf * 1.15 + margin * 0.55 + momentum + shareBoost + cushionBoost;
 }
 
-/** Top-tier closer cut for the Next Commit stamp. */
+/** Top-tier closer cut — board lead + process evidence (offer/visits/intel). */
 export function isNextCommitPick(player: FcLabTarget, minScore = 78): boolean {
+  if (!hasClosestCommitProcessEvidence(player)) return false;
+  if (!hasCredibleBoardLead(player)) return false;
   return nextCommitScore(player) >= minScore;
 }
 

@@ -2,11 +2,35 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   floridaLeadMargin,
+  hasClosestCommitProcessEvidence,
   isFloridaLeadingOnBoard,
   isNextCommitPick,
   nextCommitScore,
 } from './competing-schools';
 import { buildDiscoveryLeadingPool, type FcLabTarget } from './fc-lab-types';
+
+function warmProcess(
+  partial: Partial<NonNullable<FcLabTarget['processEvidence']>> = {}
+): NonNullable<FcLabTarget['processEvidence']> {
+  return {
+    allowlisted: true,
+    hasUFOffer: true,
+    flOfferCount: 1,
+    floridaVisits: 2,
+    ov: 0,
+    uv: 2,
+    home: 0,
+    intel90: 2,
+    pursuitHits: 0,
+    scheduledOv: false,
+    recentVisit: true,
+    hasProcess: true,
+    stillWarm: true,
+    closestEligible: true,
+    reasons: ['uf_offer', 'florida_visit', 'recent_visit'],
+    ...partial,
+  };
+}
 
 function target(
   partial: Partial<FcLabTarget> & Pick<FcLabTarget, 'slug' | 'name' | 'ufProbability'>
@@ -56,8 +80,11 @@ test('next commit pick scores strong lead + momentum higher than soft lead', () 
     slug: 'closer',
     name: 'Closer',
     ufProbability: 74,
+    ufRpmPct: 74,
     delta7d: 6,
     competingSchools: [{ name: 'Tennessee', pct: 18 }],
+    closestCommitEligible: true,
+    processEvidence: warmProcess(),
   });
   const soft = target({
     slug: 'soft',
@@ -65,11 +92,25 @@ test('next commit pick scores strong lead + momentum higher than soft lead', () 
     ufProbability: 36,
     delta7d: -2,
     competingSchools: [{ name: 'Georgia', pct: 30 }],
+    processEvidence: warmProcess({ closestEligible: true }),
   });
   assert.equal(isFloridaLeadingOnBoard(closer), true);
   assert.equal(isNextCommitPick(closer), true);
   assert.ok(nextCommitScore(closer) > nextCommitScore(soft));
   assert.equal(isNextCommitPick(soft), false);
+});
+
+test('odds-only board lead without process evidence is not Closest to commit', () => {
+  const oddsOnly = target({
+    slug: 'hamilton-leserra',
+    name: 'Hamilton LeSerra',
+    ufProbability: 72,
+    ufRpmPct: null,
+    competingSchools: [],
+    stars: 0,
+  });
+  assert.equal(hasClosestCommitProcessEvidence(oddsOnly), false);
+  assert.equal(isNextCommitPick(oddsOnly), false);
 });
 
 test('trailing share is not leading', () => {
@@ -114,6 +155,22 @@ test('discovery leading pool includes Florida board leaders outside chase-hot HP
     visitHistory: [],
   };
 
+  const hudsonHp = {
+    ...hotOnly,
+    id: 'hudson-west',
+    slug: 'hudson-west',
+    name: 'Hudson West',
+    position: 'QB',
+    school: 'Carrollwood Day',
+    ufProbability: 62,
+    ufRpmPct: 62,
+    priorityScore: 40,
+    competingSchools: [{ name: 'SMU', pct: 20 }],
+    closestCommitEligible: true,
+    hasUFOffer: true,
+    processEvidence: warmProcess(),
+  };
+
   const hudson = {
     id: 'hudson-west',
     slug: 'hudson-west',
@@ -135,10 +192,11 @@ test('discovery leading pool includes Florida board leaders outside chase-hot HP
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const pool = buildDiscoveryLeadingPool([hotOnly as any], [hudson as any], 2028);
+  const pool = buildDiscoveryLeadingPool([hotOnly as any, hudsonHp as any], [hudson as any], 2028);
   const west = pool.find((p) => p.slug === 'hudson-west');
   assert.ok(west, 'Hudson West must enter Who commits next from underclassmen board');
   assert.equal(isFloridaLeadingOnBoard(west!), true);
+  assert.equal(hasClosestCommitProcessEvidence(west!), true);
   assert.equal(isNextCommitPick(west!), true);
   assert.equal(pool.some((p) => p.slug === 'hot-chase'), true);
 });

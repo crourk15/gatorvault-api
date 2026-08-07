@@ -49,6 +49,26 @@ export type FcLabTarget = {
     homeVisit?: boolean;
     staffAssigned?: boolean;
   } | null;
+  /** API process evidence — offer / visits / intel (not On3 % alone). */
+  hasUFOffer?: boolean;
+  closestCommitEligible?: boolean;
+  processEvidence?: {
+    allowlisted?: boolean;
+    hasUFOffer?: boolean;
+    flOfferCount?: number;
+    floridaVisits?: number;
+    ov?: number;
+    uv?: number;
+    home?: number;
+    intel90?: number;
+    pursuitHits?: number;
+    scheduledOv?: boolean;
+    recentVisit?: boolean;
+    hasProcess?: boolean;
+    stillWarm?: boolean;
+    closestEligible?: boolean;
+    reasons?: string[];
+  } | null;
 };
 
 function isFloridaCommit(value: string | null | undefined): boolean {
@@ -156,6 +176,10 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
       .slice(0, 3),
     hotLanes: (p as { hotLanes?: FcLabTarget['hotLanes'] }).hotLanes ?? null,
     hotBadges: (p as { hotBadges?: FcLabTarget['hotBadges'] }).hotBadges ?? null,
+    hasUFOffer: p.hasUFOffer === true || p.processEvidence?.hasUFOffer === true,
+    closestCommitEligible:
+      p.closestCommitEligible === true || p.processEvidence?.closestEligible === true,
+    processEvidence: p.processEvidence ?? null,
   };
 }
 
