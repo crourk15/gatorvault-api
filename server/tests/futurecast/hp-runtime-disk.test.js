@@ -14,7 +14,22 @@ describe('FutureCast HP durable runtime', () => {
     assert.match(src, /readHighPriorityRuntime/);
     assert.match(src, /writeHighPriorityRuntime/);
     assert.match(src, /loadHighPriorityCached/);
+    it('ships bundled high-priority seed for 2028', () => {
+    const seed = path.join(
+      __dirname,
+      '..',
+      '..',
+      'data',
+      'recruiting',
+      'futurecast-runtime',
+      'high-priority-2028.json'
+    );
+    assert.equal(fs.existsSync(seed), true);
+    const doc = JSON.parse(fs.readFileSync(seed, 'utf8'));
+    assert.equal(doc.classYear, 2028);
+    assert.ok(Array.isArray(doc.players) && doc.players.length > 0);
   });
+});
 
   it('high-priority GET primes from disk before building', () => {
     const src = fs.readFileSync(
