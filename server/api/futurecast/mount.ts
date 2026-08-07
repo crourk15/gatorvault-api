@@ -34,11 +34,13 @@ import {
   handleGetLabIntelPromoteStatus,
   handlePostLabIntelPromote,
 } from './lab-intel-promote';
+import { handlePostFutureCastLabWarm } from './lab-warm';
 
 export function mountFutureCastFeatureRoutes(app: Express): void {
   app.get('/api/futurecast/health', handleGetFutureCastHealth);
   app.get('/api/futurecast/lab-promote/status', handleGetLabIntelPromoteStatus);
   app.post('/api/futurecast/lab-promote', handlePostLabIntelPromote);
+  app.post('/api/futurecast/lab-warm', handlePostFutureCastLabWarm);
   app.post('/api/futurecast/visit-intel/reconcile', handlePostVisitIntelReconcile);
   app.post('/api/futurecast/visit-intel/recap', handlePostVisitIntelRecap);
   app.post('/api/futurecast/visit-intel/daily-digest', handlePostVisitIntelDailyDigest);

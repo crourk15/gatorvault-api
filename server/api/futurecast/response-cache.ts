@@ -56,7 +56,24 @@ export async function sendCachedJson(
   cacheKey: string,
   buildPayload: () => Promise<unknown>
 ): Promise<void> {
-  const { value, hit, stale } = await cache.wrap(cacheKey, buildPayload, CACHE_TTL_MS);
+  // Default ON in production: never block Lab GETs on cold master-board rebuilds.
+  const deferMiss = process.env.FC_GET_NO_SYNC_BUILD !== 'false';
+  const { value, hit, stale, deferred } = await cache.wrap(cacheKey, buildPayload, CACHE_TTL_MS, {
+    deferMiss,
+  });
+  if (deferred) {
+    res.setHeader('X-GatorVault-Cache', 'DEFERRED');
+    res.status(200).json({
+      ok: true,
+      status: 'building',
+      unavailable: true,
+      players: [],
+      items: [],
+      targets: [],
+      meta: { cacheKey, cacheReason: 'deferred_rebuild' },
+    });
+    return;
+  }
   const header = !hit ? 'MISS' : stale ? 'STALE' : 'HIT';
   res.setHeader('X-GatorVault-Cache', header);
   res.json(value);

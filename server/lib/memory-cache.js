@@ -44,7 +44,7 @@ function createMemoryCache(defaultTtlMs = 60_000) {
    * Expired but present → return stale and rebuild in background.
    * Missing → single-flight rebuild (concurrent callers share one build).
    */
-  async function wrap(key, fn, ttlMs = defaultTtlMs) {
+  async function wrap(key, fn, ttlMs = defaultTtlMs, options = {}) {
     const hit = get(key);
     if (hit != null) return { value: hit, hit: true, stale: false };
 
@@ -52,6 +52,12 @@ function createMemoryCache(defaultTtlMs = 60_000) {
     if (stale != null) {
       void revalidate(key, fn, ttlMs).catch(() => {});
       return { value: stale, hit: true, stale: true };
+    }
+
+    // Elite Tier B: member GET never awaits a cold rebuild — warm in background.
+    if (options && options.deferMiss) {
+      void revalidate(key, fn, ttlMs).catch(() => {});
+      return { value: null, hit: false, stale: false, deferred: true };
     }
 
     try {

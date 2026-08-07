@@ -1,9 +1,11 @@
 /**
  * Recruiting Hub elite cache — prebuild on deploy, building fallback on cold miss.
+ * Tier B: member GETs never sync-rebuild (disk + SWR + background warm only).
  */
 const fs = require('fs');
 const path = require('path');
 const { createMemoryCache } = require('./memory-cache');
+const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
 
 const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 
@@ -18,7 +20,23 @@ const DEFAULT_YEARS = String(process.env.HUB_WARM_YEARS || '2026,2027,2028,2029'
   .map((y) => parseInt(y.trim(), 10))
   .filter((y) => Number.isFinite(y));
 
+/** Default ON: never await a cold hub rebuild on the request path. */
+function hubGetNoSyncBuild() {
+  return process.env.HUB_GET_NO_SYNC_BUILD !== 'false';
+}
+
 const hubCache = createMemoryCache(HUB_CACHE_MS);
+
+/** Endpoints persisted under durable hub-runtime (survives process restart). */
+const DURABLE_SPREAD_ENDPOINTS = new Set([
+  'bundle',
+  'hero',
+  'class-overview',
+  'class-overview-all',
+  'footprint',
+  'class-metrics',
+]);
+const DURABLE_ITEMS_ENDPOINTS = new Set(['commits', 'ticker']);
 
 let warming = false;
 let warmInflight = null;
@@ -46,35 +64,137 @@ function eliteBundleCacheKey(year) {
 }
 
 function withTimeout(promise, ms, label) {
-  return Promise.race([
-    Promise.resolve(promise),
-    new Promise((_, reject) => {
-      setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
-    }),
-  ]);
+  let timer = null;
+  return new Promise((resolve, reject) => {
+    timer = setTimeout(() => {
+      reject(new Error(`${label} timed out after ${ms}ms`));
+    }, ms);
+    if (typeof timer.unref === 'function') timer.unref();
+    Promise.resolve(promise).then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      (err) => {
+        clearTimeout(timer);
+        reject(err);
+      }
+    );
+  });
 }
 
-/** Static hub-snapshot JSON from deploy build — instant response on cold cache miss. */
+function runtimeSnapshotRoot() {
+  return path.join(resolveRecruitingDataDir(), 'hub-runtime');
+}
+
+function snapshotFileCandidates(endpoint, year) {
+  const diskName =
+    endpoint === 'class-metrics' ? 'class-overview' : endpoint;
+  const roots = [runtimeSnapshotRoot(), HUB_SNAPSHOT_DIR];
+  const paths = [];
+  for (const root of roots) {
+    if (diskName === 'class-overview-all') {
+      paths.push(path.join(root, 'class-overview-all.json'));
+    } else if (year != null) {
+      paths.push(path.join(root, String(year), `${diskName}.json`));
+    }
+  }
+  return paths;
+}
+
+function parseHubSnapshotDoc(endpoint, doc) {
+  if (!doc || doc.ok === false) return null;
+  const { ok, status, meta, items, ...spreadRest } = doc;
+  if (
+    endpoint === 'class-overview' ||
+    endpoint === 'class-overview-all' ||
+    endpoint === 'class-metrics' ||
+    endpoint === 'footprint' ||
+    endpoint === 'bundle' ||
+    endpoint === 'hero'
+  ) {
+    return Object.keys(spreadRest).length ? spreadRest : null;
+  }
+  return items ?? (Object.keys(spreadRest).length ? spreadRest : null);
+}
+
+/** Runtime hub-runtime first, then static deploy hub-snapshot — cold miss without rebuild. */
 function readHubDiskSnapshot(endpoint, year) {
   if (!endpoint) return null;
-  try {
-    const filePath =
-      endpoint === 'class-overview-all'
-        ? path.join(HUB_SNAPSHOT_DIR, 'class-overview-all.json')
-        : year != null
-          ? path.join(HUB_SNAPSHOT_DIR, String(year), `${endpoint}.json`)
-          : null;
-    if (!filePath || !fs.existsSync(filePath)) return null;
-    const doc = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    if (!doc || doc.ok === false) return null;
-    const { ok, status, meta, items, ...spreadRest } = doc;
-    if (endpoint === 'class-overview' || endpoint === 'class-overview-all' || endpoint === 'footprint') {
-      return Object.keys(spreadRest).length ? spreadRest : null;
+  for (const filePath of snapshotFileCandidates(endpoint, year)) {
+    try {
+      if (!fs.existsSync(filePath)) continue;
+      const doc = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      const value = parseHubSnapshotDoc(endpoint, doc);
+      if (value != null) return value;
+    } catch {
+      /* try next */
     }
-    return items ?? spreadRest ?? null;
-  } catch {
-    return null;
   }
+  return null;
+}
+
+function writeHubDiskSnapshot(endpoint, year, value) {
+  if (!endpoint || value == null) return false;
+  const diskName =
+    endpoint === 'class-metrics' ? 'class-overview' : endpoint;
+  const isSpread =
+    DURABLE_SPREAD_ENDPOINTS.has(endpoint) || DURABLE_SPREAD_ENDPOINTS.has(diskName);
+  const isItems = DURABLE_ITEMS_ENDPOINTS.has(endpoint) || DURABLE_ITEMS_ENDPOINTS.has(diskName);
+  if (!isSpread && !isItems) return false;
+  try {
+    const root = runtimeSnapshotRoot();
+    const filePath =
+      diskName === 'class-overview-all'
+        ? path.join(root, 'class-overview-all.json')
+        : year != null
+          ? path.join(root, String(year), `${diskName}.json`)
+          : null;
+    if (!filePath) return false;
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    const meta = {
+      generatedAt: new Date().toISOString(),
+      snapshot: true,
+      endpoint: diskName,
+      year: year ?? null,
+      source: 'hub-runtime',
+    };
+    const doc = isSpread
+      ? { ok: true, status: 'ready', meta, ...value }
+      : { ok: true, status: 'ready', meta, items: value };
+    fs.writeFileSync(filePath, JSON.stringify(doc), 'utf8');
+    return true;
+  } catch (err) {
+    console.warn('[recruiting-hub-cache] disk snapshot write failed', endpoint, err.message);
+    return false;
+  }
+}
+
+/** Map warm/serve cache keys → durable disk endpoint (+ year). */
+function durableMetaForCacheKey(cacheKey) {
+  if (!cacheKey || typeof cacheKey !== 'string') return null;
+  let m = cacheKey.match(/^hub:elite:bundle:[^:]+:(\d+)$/);
+  if (m) return { endpoint: 'bundle', year: Number(m[1]), spread: true };
+  m = cacheKey.match(/^hub:elite:hero:(\d+)$/);
+  if (m) return { endpoint: 'hero', year: Number(m[1]), spread: true };
+  m = cacheKey.match(/^hub:elite:class-overview:[^:]+:(\d+)$/);
+  if (m) return { endpoint: 'class-overview', year: Number(m[1]), spread: true };
+  if (cacheKey === eliteClassOverviewAllCacheKey()) {
+    return { endpoint: 'class-overview-all', year: null, spread: true };
+  }
+  m = cacheKey.match(/^hub:class:snapshot:[^:]+:(\d+)$/);
+  if (m) return { endpoint: 'class-metrics', year: Number(m[1]), spread: true };
+  m = cacheKey.match(/^hub:elite:commits:v3:(\d+)$/);
+  if (m) return { endpoint: 'commits', year: Number(m[1]), spread: false };
+  m = cacheKey.match(/^hub:elite:ticker:(\d+)$/);
+  if (m) return { endpoint: 'ticker', year: Number(m[1]), spread: false };
+  return null;
+}
+
+function persistDurableCacheValue(cacheKey, value) {
+  const meta = durableMetaForCacheKey(cacheKey);
+  if (!meta) return false;
+  return writeHubDiskSnapshot(meta.endpoint, meta.year, value);
 }
 
 function getHubStatus() {
@@ -220,7 +340,7 @@ function secondaryWarmJobs(elite, years) {
     jobs.push([`recruiting:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
     jobs.push([`recruiting:footprint:${year}`, () => elite.buildHubFootprint(year)]);
     jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year)]);
-    jobs.push([`hub:elite:commits:${year}`, () => elite.buildHubCommits(year)]);
+    jobs.push([`hub:elite:commits:v3:${year}`, () => elite.buildHubCommits(year)]);
     jobs.push([`hub:elite:battles:${year}`, () => elite.buildHubBattles(year)]);
     jobs.push([`hub:elite:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
     jobs.push([`hub:elite:heat-index:${year}`, () => elite.buildHubHeatIndex(year)]);
@@ -241,6 +361,7 @@ async function runWarmJobBatch(jobs, timeoutMs, label) {
     try {
       const value = await withTimeout(fn(), timeoutMs, key);
       hubCache.set(key, value);
+      persistDurableCacheValue(key, value);
       warmed += 1;
       ready = true;
       warmKeyCount = Math.max(warmKeyCount, warmed);
@@ -351,6 +472,7 @@ function startInflightBuild(cacheKey, builderFn, timeoutMs) {
       const value = await withTimeout(builderFn(), timeoutMs, cacheKey);
       const buildMs = Date.now() - buildStart;
       hubCache.set(cacheKey, value);
+      persistDurableCacheValue(cacheKey, value);
       ready = true;
       warmKeyCount += 1;
       console.log(`[recruiting-hub-cache] build ${cacheKey} ${buildMs}ms hit=false`);
@@ -361,11 +483,21 @@ function startInflightBuild(cacheKey, builderFn, timeoutMs) {
   })();
 
   inflightBuilds.set(cacheKey, buildPromise);
+  // Tier B GETs fire-and-forget this promise — attach a handler so timeouts
+  // do not become unhandledRejection while cron/warm still await the same flight.
+  buildPromise.catch((err) => {
+    console.warn(
+      '[recruiting-hub-cache] inflight build failed',
+      cacheKey,
+      err && err.message ? err.message : err
+    );
+  });
   return buildPromise;
 }
 
 async function serveCached(cacheKey, builderFn, options = {}) {
   const timeoutMs = options.timeoutMs ?? BUILD_TIMEOUT_MS;
+  const noSync = hubGetNoSyncBuild();
   let stayGreen = false;
   try {
     stayGreen = require('./api-stay-green').isStayGreen();
@@ -391,6 +523,8 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   if (diskFallback?.endpoint) {
     const diskValue = readHubDiskSnapshot(diskFallback.endpoint, diskFallback.year);
     if (diskValue != null) {
+      // Seed memory so the next request is a hot hit; refresh in background.
+      hubCache.set(cacheKey, diskValue);
       if (!stayGreen) refreshCacheKey(cacheKey, builderFn, timeoutMs);
       return { status: 'ready', value: diskValue, hit: true, stale: true, diskSnapshot: true };
     }
@@ -401,20 +535,20 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     return { status: 'building', hit: false, reason: 'api_stay_green' };
   }
 
+  // Tier B: kick single-flight rebuild but never await on member GET.
   const inflight = inflightBuilds.get(cacheKey);
-  if (inflight) {
-    try {
-      const { value, buildMs } = await withTimeout(inflight, timeoutMs, cacheKey);
-      return { status: 'ready', value, hit: false, stale: false, buildMs };
-    } catch (err) {
-      console.warn('[recruiting-hub-cache] build timeout/miss', cacheKey, err.message);
-      scheduleAsyncWarm();
-      return { status: 'building', hit: false, reason: err.message };
-    }
+  if (!inflight) {
+    startInflightBuild(cacheKey, builderFn, timeoutMs);
   }
 
+  if (noSync) {
+    return { status: 'building', hit: false, reason: 'deferred_rebuild' };
+  }
+
+  // Legacy sync path (HUB_GET_NO_SYNC_BUILD=false only).
   try {
-    const { value, buildMs } = await startInflightBuild(cacheKey, builderFn, timeoutMs);
+    const build = inflightBuilds.get(cacheKey) || startInflightBuild(cacheKey, builderFn, timeoutMs);
+    const { value, buildMs } = await withTimeout(build, timeoutMs, cacheKey);
     return { status: 'ready', value, hit: false, stale: false, buildMs };
   } catch (err) {
     console.warn('[recruiting-hub-cache] build timeout/miss', cacheKey, err.message);
@@ -426,14 +560,9 @@ async function serveCached(cacheKey, builderFn, options = {}) {
 function refreshCacheKey(cacheKey, builderFn, timeoutMs = BUILD_TIMEOUT_MS) {
   if (warming) return;
   setImmediate(() => {
-    withTimeout(builderFn(), timeoutMs, cacheKey)
-      .then((value) => {
-        hubCache.set(cacheKey, value);
-        ready = true;
-      })
-      .catch((err) => {
-        console.warn('[recruiting-hub-cache] background refresh failed', cacheKey, err.message);
-      });
+    startInflightBuild(cacheKey, builderFn, timeoutMs).catch((err) => {
+      console.warn('[recruiting-hub-cache] background refresh failed', cacheKey, err.message);
+    });
   });
 }
 
@@ -579,4 +708,7 @@ module.exports = {
   scheduleBackgroundRefresh,
   scheduleHubBootPipeline,
   readHubDiskSnapshot,
+  writeHubDiskSnapshot,
+  persistDurableCacheValue,
+  hubGetNoSyncBuild,
 };
