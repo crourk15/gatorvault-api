@@ -114,6 +114,26 @@ export interface HighPriorityPlayer {
   competingSchools?: Array<{ name: string; pct: number }>;
   /** Confirmed On3 UF RPM % when available (preferred over model for battle RPM bar). */
   ufRpmPct?: number | null;
+  /** Structured UF process — Closest to commit must not be On3 % alone. */
+  hasUFOffer?: boolean;
+  closestCommitEligible?: boolean;
+  processEvidence?: {
+    allowlisted?: boolean;
+    hasUFOffer?: boolean;
+    flOfferCount?: number;
+    floridaVisits?: number;
+    ov?: number;
+    uv?: number;
+    home?: number;
+    intel90?: number;
+    pursuitHits?: number;
+    scheduledOv?: boolean;
+    recentVisit?: boolean;
+    hasProcess?: boolean;
+    stillWarm?: boolean;
+    closestEligible?: boolean;
+    reasons?: string[];
+  } | null;
 }
 
 interface TargetBoardEntry {
@@ -489,10 +509,13 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   // Record today's GV likelihood, then attach real 7d snapshot deltas (not seed +4).
   const withMovement = ufTrendSnapshot.applySnapshotMovement(mapped, { minAbs: 1 });
   const withChase = applyChasePriorityScores(withMovement, classYear);
+  // Attach offer/visit/intel evidence so Closest to commit is process-backed, not On3 % alone.
+  const { attachClosestCommitEvidence } = require('../../lib/closest-commit-evidence');
+  const withEvidence = attachClosestCommitEvidence(withChase, { classYear, days: 180 });
   // Full locked board, chase-scored. Do not slice to chase top-N — Who commits next /
   // Closest to commit is a system board-lead read over every allowlist target.
   // Priority chase surfaces still re-sort by priorityScore and take top 10 client-side.
-  const players = [...withChase].sort(compareUnderclassmenHighPriority);
+  const players = [...withEvidence].sort(compareUnderclassmenHighPriority);
   const lastUpdated = new Date().toISOString();
   const visitBoardSnapshot = getVisitIntelBoardSnapshot([]);
 

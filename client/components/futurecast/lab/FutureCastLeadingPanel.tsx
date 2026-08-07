@@ -17,6 +17,8 @@ import {
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import {
   floridaLeadMargin,
+  hasClosestCommitProcessEvidence,
+  hasCredibleBoardLead,
   isFloridaLeadingOnBoard,
   isNextCommitPick,
   nextCommitScore,
@@ -200,18 +202,27 @@ export function FutureCastLeadingPanel({
     trendingBoard,
   ]);
 
-  const leaders = useMemo(
-    () => pool.filter(isFloridaLeadingOnBoard).sort(sortByNextCommit).slice(0, 10),
-    [pool]
-  );
+  const leaders = useMemo(() => {
+    // Discovery: only process-backed Florida leads (offer/visits/intel) — not On3 % alone.
+    const eligible = discoveryView
+      ? pool.filter(
+          (p) =>
+            isFloridaLeadingOnBoard(p) &&
+            hasCredibleBoardLead(p) &&
+            hasClosestCommitProcessEvidence(p)
+        )
+      : pool.filter(isFloridaLeadingOnBoard);
+    return eligible.sort(sortByNextCommit).slice(0, 10);
+  }, [discoveryView, pool]);
 
   const showMovement = useMemo(() => movementDeltasAreBelievable(leaders), [leaders]);
 
   if (!leaders.length) return null;
 
   const title = discoveryView ? `${focusYear} Who commits next?` : 'Who commits next?';
-  const sub =
-    'Plain-English GatorVault read: who Florida is beating on the board, and who looks closest to flipping.';
+  const sub = discoveryView
+    ? 'Process-backed only — UF offer, visits, and intel, not On3 percentage alone. Closest stamp means Florida is still in it.'
+    : 'Plain-English GatorVault read: who Florida is beating on the board, and who looks closest to flipping.';
 
   return (
     <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-leading">

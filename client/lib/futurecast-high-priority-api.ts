@@ -114,6 +114,26 @@ export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
   } | null;
   hotScore?: number | null;
   chaseScore?: number | null;
+  /** Structured UF process — Closest to commit must not be On3 % alone. */
+  hasUFOffer?: boolean;
+  closestCommitEligible?: boolean;
+  processEvidence?: {
+    allowlisted?: boolean;
+    hasUFOffer?: boolean;
+    flOfferCount?: number;
+    floridaVisits?: number;
+    ov?: number;
+    uv?: number;
+    home?: number;
+    intel90?: number;
+    pursuitHits?: number;
+    scheduledOv?: boolean;
+    recentVisit?: boolean;
+    hasProcess?: boolean;
+    stillWarm?: boolean;
+    closestEligible?: boolean;
+    reasons?: string[];
+  } | null;
 }
 
 export interface VisitRecapRow {
