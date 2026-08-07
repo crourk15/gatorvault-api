@@ -614,42 +614,81 @@ function scheduleBackgroundRefresh() {
   if (typeof refreshTimer.unref === 'function') refreshTimer.unref();
 }
 
+function parseWarmYears(raw, fallback) {
+  const years = String(raw || '')
+    .split(',')
+    .map((y) => parseInt(y.trim(), 10))
+    .filter((y) => Number.isFinite(y));
+  return years.length ? years : fallback;
+}
+
 function scheduleHubBootPipeline() {
   const pipelineGuards = require('./pipeline-guards');
-  // Production defaults to skip — Dashboard leftovers with HUB_BOOT_SKIP_WARM=false
-  // were still running deferred full warms and crash-looping Render /ready.
-  // Opt back in only with HUB_BOOT_FORCE_WARM=true (and stay-green off).
+  const stayGreen = process.env.API_STAY_GREEN === 'true';
+
+  // Elite: always keep the background re-warm timer (unless stay-green).
+  // Previous production skip returned early and never scheduled refresh → permanent building.
+  if (!stayGreen) {
+    scheduleBackgroundRefresh();
+  }
+
+  // When GETs cannot rebuild (Tier B default), boot MUST warm or hub stays building forever.
+  // HUB_BOOT_FORCE_WARM=false opts out; otherwise force warm whenever GET no-sync is on.
+  const getNoSync = hubGetNoSyncBuild();
   const forceBootWarm =
-    process.env.HUB_BOOT_FORCE_WARM === 'true' && process.env.API_STAY_GREEN !== 'true';
+    !stayGreen &&
+    process.env.HUB_BOOT_FORCE_WARM !== 'false' &&
+    (process.env.HUB_BOOT_FORCE_WARM === 'true' || getNoSync);
   const skipBootWarm =
     !forceBootWarm &&
     (process.env.HUB_BOOT_SKIP_WARM === 'true' ||
-      process.env.API_STAY_GREEN === 'true' ||
+      stayGreen ||
       process.env.NODE_ENV === 'production');
+
   if (skipBootWarm) {
     console.log(
-      '[recruiting-hub] boot pipeline skipped (stay-green / production default) — rely on hub-refresh cron'
+      '[recruiting-hub] boot warm skipped — rely on hub-warm / hub-refresh cron; background refresh',
+      stayGreen ? 'off (stay-green)' : `every ${REFRESH_MS}ms`
     );
     return;
   }
 
-  // Hub warm is fan-facing infrastructure — do NOT gate on X_SCHEDULED_JOBS_ENABLED.
-  // Default DEFERRED: immediate warm + sync dashboard traffic was blocking /health >5s
-  // and triggering Render restart loops (exit 143) during App Review.
+  // Deferred after listen so /ready stays cheap while priority caches refill.
   const bootDelay = Math.max(
     60000,
     parseInt(process.env.HUB_BOOT_WARM_DELAY_MS || '90000', 10) || 90000
   );
   const immediateWarm = process.env.HUB_BOOT_IMMEDIATE_WARM === 'true';
-  // Starter can OOM on full warm; priority hero/bundle/class keys first (higher RSS ceiling).
   const priorityRssLimit = parseInt(process.env.HUB_PRIORITY_WARM_RSS_MB || '520', 10) || 520;
+  const bootYears = parseWarmYears(process.env.HUB_BOOT_WARM_YEARS, [2027, 2028]);
+  const bootSecondary = process.env.HUB_BOOT_SECONDARY_WARM === 'true';
+  const bootLab =
+    process.env.HUB_BOOT_WARM_FUTURECAST === 'true' ||
+    process.env.HUB_BOOT_WARM_LAB === 'true';
 
   const runPriorityWarm = () => {
-    if (pipelineGuards.shouldSkipHeavyJob('hub-boot-priority-warm', priorityRssLimit)) return;
-    warmEliteHubCaches({ priorityOnly: true })
-      .then(() => {
-        if (pipelineGuards.shouldSkipHeavyJob('hub-boot-warm', priorityRssLimit)) return;
-        return warmEliteHubCaches({ secondaryOnly: true });
+    if (pipelineGuards.shouldSkipHeavyJob('hub-boot-priority-warm', priorityRssLimit)) {
+      console.warn('[recruiting-hub] boot priority warm skipped — RSS guard');
+      return;
+    }
+    console.log('[recruiting-hub] boot priority warm start', { years: bootYears, lab: bootLab });
+    warmEliteHubCaches({ priorityOnly: true, years: bootYears })
+      .then(async () => {
+        if (bootLab) {
+          try {
+            const { runHeavyJob } = require('./heavy-job-gate');
+            const { warmFuturecastLabCaches } = require('../api/futurecast/response-cache.ts');
+            const lab = await runHeavyJob('futurecast-lab-warm', () =>
+              warmFuturecastLabCaches(bootYears)
+            );
+            console.log('[recruiting-hub] boot lab warm complete', lab);
+          } catch (err) {
+            console.warn('[recruiting-hub] boot lab warm failed:', err.message);
+          }
+        }
+        if (!bootSecondary) return null;
+        if (pipelineGuards.shouldSkipHeavyJob('hub-boot-warm', priorityRssLimit)) return null;
+        return warmEliteHubCaches({ secondaryOnly: true, years: bootYears });
       })
       .catch((err) => {
         console.warn('[recruiting-hub-cache] boot warm failed:', err.message);
@@ -684,13 +723,16 @@ function scheduleHubBootPipeline() {
     console.log('[recruiting-hub] boot geo refresh skipped — X_SCHEDULED_JOBS_ENABLED is not true');
   }
 
-  scheduleBackgroundRefresh();
   console.log(
     '[recruiting-hub] boot warm',
-    immediateWarm ? 'immediate-priority' : 'deferred-priority',
-    '; refresh pipeline in',
-    pipelineGuards.scheduledJobsEnabled() ? refreshDelay : 'skipped',
-    'ms; background every',
+    immediateWarm ? 'immediate-priority' : `deferred-priority ${bootDelay}ms`,
+    'years',
+    bootYears.join(','),
+    'lab',
+    bootLab,
+    'secondary',
+    bootSecondary,
+    '; background every',
     REFRESH_MS,
     'ms'
   );

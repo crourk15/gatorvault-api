@@ -12,8 +12,17 @@ function isCronAuthorized(req: Request): boolean {
   return Boolean(cronSecret && req.headers['x-monitoring-cron'] === cronSecret);
 }
 
+function isAdminAuthorized(req: Request): boolean {
+  try {
+    const { verifyAdminPin, pinFromReq } = require('../../lib/admin-pin');
+    return Boolean(verifyAdminPin(pinFromReq(req)));
+  } catch {
+    return false;
+  }
+}
+
 export async function handlePostFutureCastLabWarm(req: Request, res: Response): Promise<void> {
-  if (!isCronAuthorized(req) && process.env.NODE_ENV === 'production') {
+  if (!isCronAuthorized(req) && !isAdminAuthorized(req) && process.env.NODE_ENV === 'production') {
     res.status(403).json({ ok: false, error: 'Forbidden' });
     return;
   }

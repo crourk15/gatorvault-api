@@ -733,13 +733,20 @@ function mountRecruitingHubRoutes(app) {
 
   /**
    * Tier B: refill in-process hub memory (+ durable hub-runtime snapshots).
-   * Cron-only in production — member GETs no longer sync-rebuild.
+   * Cron or Admin PIN in production — member GETs no longer sync-rebuild.
    */
   app.post('/api/recruiting/hub/warm-memory', async (req, res) => {
     try {
       const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.CRON_SECRET || '';
       const isCron = cronSecret && req.headers['x-monitoring-cron'] === cronSecret;
-      if (!isCron && process.env.NODE_ENV === 'production') {
+      let isAdmin = false;
+      try {
+        const { verifyAdminPin, pinFromReq } = require('./admin-pin');
+        isAdmin = verifyAdminPin(pinFromReq(req));
+      } catch {
+        isAdmin = false;
+      }
+      if (!isCron && !isAdmin && process.env.NODE_ENV === 'production') {
         return res.status(403).json({ ok: false, error: 'Forbidden' });
       }
       const { stayGreenSkipPayload } = require('./api-stay-green');
