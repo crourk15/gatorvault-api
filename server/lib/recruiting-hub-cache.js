@@ -703,6 +703,33 @@ function softGc() {
   }
 }
 
+/** Drop in-memory hub keys so HP/bundle can allocate; GETs fall back to hub-runtime disk. */
+function releaseHubMemoryForHeavyStep(label) {
+  try {
+    const before = typeof hubCache.size === 'number' ? hubCache.size : warmKeyCount;
+    clearHubCache();
+    getMeta();
+    console.log('[recruiting-hub] released hub memory before', label, 'was', before);
+  } catch (err) {
+    console.warn('[recruiting-hub] release hub memory failed', err.message);
+  }
+  softGc();
+}
+
+function restoreLiteAfterHeavy(years) {
+  const liteYears = (years && years.length ? years : [2027, 2028]).filter((y) =>
+    Number.isFinite(y)
+  );
+  return warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: liteYears })
+    .then((meta) => {
+      console.log('[recruiting-hub] lite restored after spaced heavy', meta?.warmKeyCount);
+      return meta;
+    })
+    .catch((err) => {
+      console.warn('[recruiting-hub] lite restore after spaced failed:', err.message);
+    });
+}
+
 function clearSpacedEliteTimers() {
   for (const timer of spacedEliteStepTimers) {
     clearTimeout(timer);
@@ -753,6 +780,26 @@ function scheduleSpacedEliteFill(options = {}) {
   const steps = [];
   let at = Date.now() + startDelay;
 
+  // Bundle before HP: recruiting hub elite first; Lab HP is the heavier RSS spike.
+  if (includeBundle) {
+    for (const year of years) {
+      const y = year;
+      steps.push({
+        at,
+        label: `hub-bundle:${y}`,
+        run: async () => {
+          const pipelineGuards = require('./pipeline-guards');
+          if (pipelineGuards.shouldSkipHeavyJob(`spaced-bundle-${y}`, rssLimit)) {
+            throw new Error(`RSS guard skipped spaced-bundle-${y}`);
+          }
+          releaseHubMemoryForHeavyStep(`spaced-bundle-${y}`);
+          return warmEliteHubCaches({ bundleOnly: true, years: [y] });
+        },
+      });
+      at += gapMs;
+    }
+  }
+
   if (includeLab) {
     for (const year of years) {
       const y = year;
@@ -766,27 +813,8 @@ function scheduleSpacedEliteFill(options = {}) {
           }
           const { runHeavyJob } = require('./heavy-job-gate');
           const { warmFuturecastHighPriorityCaches } = require('../api/futurecast/response-cache.ts');
-          softGc();
+          releaseHubMemoryForHeavyStep(`spaced-hp-${y}`);
           return runHeavyJob(`futurecast-hp-${y}`, () => warmFuturecastHighPriorityCaches([y]));
-        },
-      });
-      at += gapMs;
-    }
-  }
-
-  if (includeBundle) {
-    for (const year of years) {
-      const y = year;
-      steps.push({
-        at,
-        label: `hub-bundle:${y}`,
-        run: async () => {
-          const pipelineGuards = require('./pipeline-guards');
-          if (pipelineGuards.shouldSkipHeavyJob(`spaced-bundle-${y}`, rssLimit)) {
-            throw new Error(`RSS guard skipped spaced-bundle-${y}`);
-          }
-          softGc();
-          return warmEliteHubCaches({ bundleOnly: true, years: [y] });
         },
       });
       at += gapMs;
@@ -804,7 +832,7 @@ function scheduleSpacedEliteFill(options = {}) {
           throw new Error('RSS guard skipped spaced-master-board');
         }
         const { runHeavyJob } = require('./heavy-job-gate');
-        softGc();
+        releaseHubMemoryForHeavyStep('spaced-master-board');
         return runHeavyJob('futurecast-master-board', async () => {
           const { warmFuturecastMasterBoard } = require('../api/futurecast/response-cache.ts');
           return warmFuturecastMasterBoard();
@@ -812,6 +840,8 @@ function scheduleSpacedEliteFill(options = {}) {
       },
     });
   }
+
+  const liteRestoreYears = parseWarmYears(process.env.HUB_BOOT_WARM_YEARS, [2027, 2028]);
 
   bootWarmDecision = {
     ...(bootWarmDecision || {}),
@@ -827,6 +857,7 @@ function scheduleSpacedEliteFill(options = {}) {
     gapMs
   );
 
+  const lastLabel = steps.length ? steps[steps.length - 1].label : null;
   for (const step of steps) {
     const wait = Math.max(0, step.at - Date.now());
     const timer = setTimeout(() => {
@@ -843,9 +874,17 @@ function scheduleSpacedEliteFill(options = {}) {
           );
           getMeta();
           softGc();
+          if (step.label === lastLabel) {
+            return restoreLiteAfterHeavy(liteRestoreYears);
+          }
+          return null;
         })
         .catch((err) => {
           console.warn('[recruiting-hub] spaced step failed', step.label, err.message);
+          if (step.label === lastLabel) {
+            return restoreLiteAfterHeavy(liteRestoreYears);
+          }
+          return null;
         });
     }, wait);
     if (typeof timer.unref === 'function') timer.unref();
