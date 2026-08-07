@@ -730,6 +730,120 @@ function restoreLiteAfterHeavy(years) {
     });
 }
 
+function spacedWarmForkEnabled() {
+  return process.env.HUB_SPACED_WARM_FORK !== 'false';
+}
+
+/**
+ * Run heavy warm in a child process so OOM kills the worker, not the API.
+ * Worker writes disk; parent primes memory from disk.
+ */
+function runSpacedEliteWorker({ job, year }) {
+  const { spawn } = require('child_process');
+  const script = path.join(__dirname, '..', 'scripts', 'spaced-elite-warm-worker.js');
+  const timeoutMs = Math.max(
+    120000,
+    parseInt(process.env.HUB_SPACED_WORKER_TIMEOUT_MS || '360000', 10) || 360000
+  );
+  return new Promise((resolve, reject) => {
+    const child = spawn(
+      process.execPath,
+      [script, `--job=${job}`, `--year=${year}`],
+      {
+        env: {
+          ...process.env,
+          HUB_BUNDLE_SEQUENTIAL: 'true',
+        },
+        stdio: ['ignore', 'pipe', 'pipe'],
+      }
+    );
+    let stdout = '';
+    let stderr = '';
+    const timer = setTimeout(() => {
+      try {
+        child.kill('SIGKILL');
+      } catch {
+        /* ignore */
+      }
+      reject(new Error(`spaced worker ${job}:${year} timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+    if (typeof timer.unref === 'function') timer.unref();
+    child.stdout.on('data', (chunk) => {
+      stdout += String(chunk);
+    });
+    child.stderr.on('data', (chunk) => {
+      stderr += String(chunk);
+    });
+    child.on('error', (err) => {
+      clearTimeout(timer);
+      reject(err);
+    });
+    child.on('close', (code, signal) => {
+      clearTimeout(timer);
+      if (code === 0) {
+        let parsed = null;
+        try {
+          const line = stdout.trim().split('\n').filter(Boolean).pop();
+          parsed = line ? JSON.parse(line) : null;
+        } catch {
+          parsed = null;
+        }
+        resolve({ ok: true, job, year, code, parsed, stderr: stderr.slice(-500) });
+        return;
+      }
+      reject(
+        new Error(
+          `spaced worker ${job}:${year} exit ${code}${signal ? `/${signal}` : ''}: ${stderr.slice(-400) || stdout.slice(-200)}`
+        )
+      );
+    });
+  });
+}
+
+function primeHubBundleFromDisk(year) {
+  const value = readHubDiskSnapshot('bundle', year);
+  if (!value) return false;
+  const key = eliteBundleCacheKey(year);
+  hubCache.set(key, value);
+  ready = true;
+  warmKeyCount = Math.max(warmKeyCount, 1);
+  getMeta();
+  return true;
+}
+
+function primeHpFromDisk(year) {
+  const filePath = path.join(
+    resolveRecruitingDataDir(),
+    'futurecast-runtime',
+    `high-priority-${year}.json`
+  );
+  if (!fs.existsSync(filePath)) return false;
+  const value = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const { primeFuturecastCache, highPriorityCacheKey } = require('../api/futurecast/response-cache.ts');
+  primeFuturecastCache(highPriorityCacheKey(year), value);
+  return true;
+}
+
+async function warmBundleViaWorker(year) {
+  releaseHubMemoryForHeavyStep(`worker-bundle-${year}`);
+  await runSpacedEliteWorker({ job: 'bundle', year });
+  if (!primeHubBundleFromDisk(year)) {
+    throw new Error(`bundle worker finished but disk snapshot missing for ${year}`);
+  }
+  softGc();
+  return { ok: true, year, via: 'worker', job: 'bundle' };
+}
+
+async function warmHpViaWorker(year) {
+  releaseHubMemoryForHeavyStep(`worker-hp-${year}`);
+  await runSpacedEliteWorker({ job: 'hp', year });
+  if (!primeHpFromDisk(year)) {
+    throw new Error(`hp worker finished but disk snapshot missing for ${year}`);
+  }
+  softGc();
+  return { ok: true, year, via: 'worker', job: 'hp' };
+}
+
 function clearSpacedEliteTimers() {
   for (const timer of spacedEliteStepTimers) {
     clearTimeout(timer);
@@ -780,6 +894,8 @@ function scheduleSpacedEliteFill(options = {}) {
   const steps = [];
   let at = Date.now() + startDelay;
 
+  const useFork = spacedWarmForkEnabled();
+
   // Bundle before HP: recruiting hub elite first; Lab HP is the heavier RSS spike.
   if (includeBundle) {
     for (const year of years) {
@@ -791,6 +907,10 @@ function scheduleSpacedEliteFill(options = {}) {
           const pipelineGuards = require('./pipeline-guards');
           if (pipelineGuards.shouldSkipHeavyJob(`spaced-bundle-${y}`, rssLimit)) {
             throw new Error(`RSS guard skipped spaced-bundle-${y}`);
+          }
+          if (useFork) {
+            const { runHeavyJob } = require('./heavy-job-gate');
+            return runHeavyJob(`hub-bundle-worker-${y}`, () => warmBundleViaWorker(y));
           }
           releaseHubMemoryForHeavyStep(`spaced-bundle-${y}`);
           return warmEliteHubCaches({ bundleOnly: true, years: [y] });
@@ -810,6 +930,10 @@ function scheduleSpacedEliteFill(options = {}) {
           const pipelineGuards = require('./pipeline-guards');
           if (pipelineGuards.shouldSkipHeavyJob(`spaced-hp-${y}`, rssLimit)) {
             throw new Error(`RSS guard skipped spaced-hp-${y}`);
+          }
+          if (useFork) {
+            const { runHeavyJob } = require('./heavy-job-gate');
+            return runHeavyJob(`futurecast-hp-worker-${y}`, () => warmHpViaWorker(y));
           }
           const { runHeavyJob } = require('./heavy-job-gate');
           const { warmFuturecastHighPriorityCaches } = require('../api/futurecast/response-cache.ts');

@@ -351,6 +351,11 @@ services:
         value: "false"
       - key: HUB_BUNDLE_SEQUENTIAL
         value: "true"
+      # Child-process warm so OOM kills worker, not gatorvault-api.
+      - key: HUB_SPACED_WARM_FORK
+        value: "true"
+      - key: HUB_SPACED_WORKER_TIMEOUT_MS
+        value: "360000"
       # Soft hub refresh — do not wipe caches before rebuild (avoids cold stampede).
       - key: HUB_REFRESH_CLEAR_CACHES
         value: "false"
