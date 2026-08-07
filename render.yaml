@@ -339,15 +339,16 @@ services:
       - key: HUB_SPACED_WARM_YEARS
         value: "2028"
       - key: HUB_SPACED_WARM_START_MS
-        value: "180000"
+        value: "300000"
       - key: HUB_SPACED_WARM_GAP_MS
-        value: "240000"
+        value: "300000"
       - key: HUB_SPACED_WARM_LAB
         value: "true"
       - key: HUB_SPACED_WARM_BUNDLE
         value: "true"
+      # Opt-in — master-board warm OOMs Starter after lite; enable when upgraded.
       - key: HUB_SPACED_WARM_MASTER
-        value: "true"
+        value: "false"
       - key: HUB_BUNDLE_SEQUENTIAL
         value: "true"
       # Soft hub refresh — do not wipe caches before rebuild (avoids cold stampede).
