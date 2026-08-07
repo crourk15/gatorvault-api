@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import type { MasterBoardResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import { playerProfileRoute, RECRUITING_TAB_PATHS } from '@/lib/vault-route-map';
 import { FutureCastTargetCard } from '@/components/futurecast/FutureCastTargetCard';
 import { FutureCastChaseCard } from './FutureCastChaseCard';
@@ -23,6 +24,7 @@ type Props = {
   masterBoard: MasterBoardResponse;
   trendingBoard?: TrendingBoardResponse;
   highPriority?: HighPriorityPlayer[];
+  underclassmen?: UnderclassmenPlayer[];
   bare?: boolean;
   /** When true, nest battles tabs under the target cards (default). */
   includeBattles?: boolean;
@@ -34,6 +36,7 @@ export function FutureCastTargetsPanel({
   masterBoard,
   trendingBoard,
   highPriority = [],
+  underclassmen = [],
   bare,
   includeBattles = true,
   battlesCompact = true,
@@ -81,6 +84,7 @@ export function FutureCastTargetsPanel({
         masterBoard={masterBoard}
         trendingBoard={trendingBoard}
         highPriority={highPriority}
+        underclassmen={underclassmen}
       />
       <FutureCastPanelShell
         bare={bare}

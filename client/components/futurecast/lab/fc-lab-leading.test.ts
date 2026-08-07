@@ -6,7 +6,7 @@ import {
   isNextCommitPick,
   nextCommitScore,
 } from './competing-schools';
-import type { FcLabTarget } from './fc-lab-types';
+import { buildDiscoveryLeadingPool, type FcLabTarget } from './fc-lab-types';
 
 function target(
   partial: Partial<FcLabTarget> & Pick<FcLabTarget, 'slug' | 'name' | 'ufProbability'>
@@ -81,4 +81,64 @@ test('trailing share is not leading', () => {
   });
   assert.equal(isFloridaLeadingOnBoard(p), false);
   assert.equal(nextCommitScore(p), -1);
+});
+
+test('discovery leading pool includes Florida board leaders outside chase-hot HP top-N', () => {
+  const hotOnly = {
+    id: 'hot-1',
+    slug: 'hot-chase',
+    name: 'Hot Chase',
+    classYear: 2028,
+    position: 'WR',
+    school: 'HS',
+    htWt: null,
+    stars: 4,
+    headliner: false,
+    committedTo: null,
+    compositeScore: 0.95,
+    nationalRank: 10,
+    positionRank: 1,
+    stateRank: 1,
+    rating: 0.95,
+    natlRank: 10,
+    posRank: 1,
+    movementDelta: 2,
+    delta7d: 2,
+    fitScore: 70,
+    staffConfidence: 70,
+    priorityScore: 90,
+    ufProbability: 38,
+    ufRpmPct: 38,
+    predictors: [],
+    competingSchools: [{ name: 'Georgia', pct: 30 }],
+    visitHistory: [],
+  };
+
+  const hudson = {
+    id: 'hudson-west',
+    slug: 'hudson-west',
+    name: 'Hudson West',
+    classYear: 2028,
+    position: 'QB',
+    school: 'Carrollwood Day',
+    composite: 0.9,
+    stars: 4,
+    ufConfidence: 62,
+    ufRpmPct: 62,
+    trendDelta7d: 0,
+    volatility7d: 0,
+    priority: 'high',
+    committedTo: null,
+    predictors: [],
+    competingSchools: [{ name: 'SMU', pct: 20 }],
+    tier: 'target' as const,
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pool = buildDiscoveryLeadingPool([hotOnly as any], [hudson as any], 2028);
+  const west = pool.find((p) => p.slug === 'hudson-west');
+  assert.ok(west, 'Hudson West must enter Who commits next from underclassmen board');
+  assert.equal(isFloridaLeadingOnBoard(west!), true);
+  assert.equal(isNextCommitPick(west!), true);
+  assert.equal(pool.some((p) => p.slug === 'hot-chase'), true);
 });

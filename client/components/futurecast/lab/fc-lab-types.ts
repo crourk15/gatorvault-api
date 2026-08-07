@@ -286,6 +286,31 @@ export function discoveryNeedBoardPlayers(
   return [...bySlug.values()];
 }
 
+/**
+ * Discovery "Who commits next?" / Closest to commit must score Florida board
+ * leaders from the full allowlist year, not only chase-hot top-18 HP.
+ * Example: Hudson West (UF RPM ~62%) can lead SMU and still miss HP heat cut.
+ * Prefer High Priority rows when the same slug appears in both.
+ */
+export function buildDiscoveryLeadingPool(
+  highPriority: HighPriorityPlayer[],
+  underclassmen: UnderclassmenPlayer[],
+  classYear: number,
+  isActiveTarget: (p: { committedTo?: string | null }) => boolean = () => true
+): FcLabTarget[] {
+  const bySlug = new Map<string, FcLabTarget>();
+  for (const p of underclassmenTargetsForYear(underclassmen, classYear)) {
+    if (!p?.slug || !isActiveTarget(p)) continue;
+    bySlug.set(p.slug, futureCastPlayerToLabTarget(p));
+  }
+  for (const p of highPriority) {
+    if (!p?.slug || !isActiveTarget(p)) continue;
+    if (Number(p.classYear) !== classYear) continue;
+    bySlug.set(p.slug, highPriorityToLabTarget(p));
+  }
+  return [...bySlug.values()];
+}
+
 /** Map underclassmen board row → high-priority shape for lab fit/SCI panels. */
 export function underclassmenToFitLeader(p: UnderclassmenPlayer): HighPriorityPlayer {
   const uf = ufPctFromFc(p.ufConfidence);

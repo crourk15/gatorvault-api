@@ -56,6 +56,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
                   masterBoard={data.masterBoard}
                   trendingBoard={data.trendingBoard}
                   highPriority={highPriority}
+                  underclassmen={data.underclassmen}
                   battlesCompact
                 />
               )}
