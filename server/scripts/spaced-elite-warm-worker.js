@@ -9,6 +9,14 @@
  */
 'use strict';
 
+// HP payload is TypeScript — fresh worker must load tsx (main API already does).
+try {
+  require('tsx/cjs');
+} catch (err) {
+  console.error(JSON.stringify({ ok: false, error: 'tsx unavailable: ' + (err.message || err) }));
+  process.exit(2);
+}
+
 const fs = require('fs');
 const path = require('path');
 
