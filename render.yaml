@@ -328,8 +328,11 @@ services:
       # Lab warm runs AFTER hub priority (sequential), not inside priority job list.
       - key: HUB_BOOT_WARM_FUTURECAST
         value: "false"
+      # Off on boot — HP/bundle after lite was OOMing Starter. Cron owns Lab/bundle.
       - key: HUB_BOOT_WARM_LAB
-        value: "true"
+        value: "false"
+      - key: HUB_BOOT_BUNDLE_WARM
+        value: "false"
       # Soft hub refresh — do not wipe caches before rebuild (avoids cold stampede).
       - key: HUB_REFRESH_CLEAR_CACHES
         value: "false"
@@ -466,9 +469,9 @@ services:
     startCommand: node scripts/render-hub-warm-cron.js
     envVars:
       - key: HUB_WARM_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=priority
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=lite&years=2027,2028
       - key: LAB_WARM_URL
-        value: https://gatorvault-api.onrender.com/api/futurecast/lab-warm?years=2027,2028
+        value: https://gatorvault-api.onrender.com/api/futurecast/lab-warm?years=2028
       - key: MONITORING_CRON_SECRET
         sync: false
 

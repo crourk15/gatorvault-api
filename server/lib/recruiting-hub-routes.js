@@ -756,16 +756,33 @@ function mountRecruitingHubRoutes(app) {
         return res.json({ ...skipped, meta: hubMeta() });
       }
       const { warmEliteHubCaches } = require('./recruiting-hub-cache');
+      const mode = String(req.query.mode || '').trim().toLowerCase();
+      const priorityLite =
+        mode === 'lite' ||
+        mode === 'priority' ||
+        req.query.priorityLite === '1' ||
+        req.query.priorityLite === 'true';
       const priorityOnly =
+        priorityLite ||
         req.query.priorityOnly === '1' ||
-        req.query.priorityOnly === 'true' ||
-        req.query.mode === 'priority';
+        req.query.priorityOnly === 'true';
       const secondaryOnly =
+        mode === 'secondary' ||
         req.query.secondaryOnly === '1' ||
-        req.query.secondaryOnly === 'true' ||
-        req.query.mode === 'secondary';
+        req.query.secondaryOnly === 'true';
+      const bundleOnly = mode === 'bundle' || req.query.bundleOnly === '1' || req.query.bundleOnly === 'true';
+      const years = String(req.query.years || '2027,2028')
+        .split(',')
+        .map((y) => parseInt(y.trim(), 10))
+        .filter((y) => Number.isFinite(y));
       // Respond immediately — warm continues under heavy-job-gate.
-      void warmEliteHubCaches({ priorityOnly, secondaryOnly })
+      void warmEliteHubCaches({
+        priorityLite,
+        priorityOnly,
+        secondaryOnly,
+        bundleOnly,
+        years: years.length ? years : [2027, 2028],
+      })
         .then((meta) => {
           console.log('[recruiting-hub] warm-memory complete', meta?.status || 'ok');
         })
@@ -775,8 +792,11 @@ function mountRecruitingHubRoutes(app) {
       return res.json({
         ok: true,
         accepted: true,
+        priorityLite,
         priorityOnly,
         secondaryOnly,
+        bundleOnly,
+        years: years.length ? years : [2027, 2028],
         meta: hubMeta(),
       });
     } catch (err) {

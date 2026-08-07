@@ -672,7 +672,9 @@ function scheduleBackgroundRefresh() {
     } catch {
       /* optional */
     }
-    warmEliteHubCaches().catch((err) => {
+    // Lite only — full warm/bundle was crash-looping Starter during background refresh.
+    const years = parseWarmYears(process.env.HUB_BOOT_WARM_YEARS, [2027, 2028]);
+    warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years }).catch((err) => {
       console.warn('[recruiting-hub-cache] background refresh failed:', err.message);
     });
   }, REFRESH_MS);
@@ -748,19 +750,19 @@ function scheduleHubBootPipeline() {
   const priorityRssLimit = parseInt(process.env.HUB_PRIORITY_WARM_RSS_MB || '520', 10) || 520;
   const bootYears = parseWarmYears(process.env.HUB_BOOT_WARM_YEARS, [2027, 2028]);
   const bootSecondary = process.env.HUB_BOOT_SECONDARY_WARM === 'true';
-  // Lab warm defaults ON with force boot (elite Lab first paint).
-  const bootLab =
-    process.env.HUB_BOOT_WARM_LAB === 'true' ||
-    process.env.HUB_BOOT_WARM_FUTURECAST === 'true' ||
-    (forceBootWarm && process.env.HUB_BOOT_WARM_LAB !== 'false');
+  // Lab/bundle on boot OOMed Render after lite succeeded — cron owns those.
+  const bootLab = process.env.HUB_BOOT_WARM_LAB === 'true';
+  const bootBundle = process.env.HUB_BOOT_BUNDLE_WARM === 'true';
 
   bootWarmDecision = {
     ...bootWarmDecision,
     bootDelayMs: immediateWarm ? 0 : bootDelay,
     bootYears,
     bootLab,
+    bootBundle,
     bootSecondary,
     scheduled: true,
+    priorityLite: true,
   };
   getMeta();
 
@@ -769,24 +771,11 @@ function scheduleHubBootPipeline() {
       console.warn('[recruiting-hub] boot priority warm skipped — RSS guard');
       return;
     }
-    console.log('[recruiting-hub] boot priority-lite warm start', { years: bootYears, lab: bootLab });
-    // Lite only on boot — full bundle OOMed Render (502 loop). Bundle follows delayed.
+    console.log('[recruiting-hub] boot priority-lite warm start', { years: bootYears });
+    // Lite ONLY on boot (hero/class). HP + bundle crash-looped Starter after keys hit ~7.
     warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: bootYears })
-      .then(async () => {
-        if (bootLab) {
-          try {
-            const { runHeavyJob } = require('./heavy-job-gate');
-            // High-priority only on boot — full Lab warm is cron-owned.
-            const { warmFuturecastHighPriorityCaches } = require('../api/futurecast/response-cache.ts');
-            const hp = await runHeavyJob('futurecast-hp-warm', () =>
-              warmFuturecastHighPriorityCaches(bootYears)
-            );
-            console.log('[recruiting-hub] boot high-priority warm complete', hp);
-          } catch (err) {
-            console.warn('[recruiting-hub] boot high-priority warm failed:', err.message);
-          }
-        }
-        return null;
+      .then((meta) => {
+        console.log('[recruiting-hub] boot priority-lite warm complete', meta?.warmKeyCount);
       })
       .catch((err) => {
         console.warn('[recruiting-hub-cache] boot warm failed:', err.message);
@@ -799,22 +788,22 @@ function scheduleHubBootPipeline() {
     setTimeout(runPriorityWarm, bootDelay);
   }
 
-  // Bundle after lite has had time to finish — never on the same tick as lite start.
-  const bundleDelayFromBoot =
-    (immediateWarm ? 0 : bootDelay) +
-    Math.max(90000, parseInt(process.env.HUB_BOOT_BUNDLE_DELAY_MS || '120000', 10) || 120000);
-  setTimeout(() => {
-    if (pipelineGuards.shouldSkipHeavyJob('hub-boot-bundle-warm', priorityRssLimit)) {
-      console.warn('[recruiting-hub] boot bundle warm skipped — RSS guard');
-      return;
-    }
-    const bundleYears = bootYears.slice().sort((a, b) => b - a); // 2028 first
-    console.log('[recruiting-hub] boot bundle warm start', bundleYears);
-    warmEliteHubCaches({ bundleOnly: true, years: bundleYears })
-      .then((meta) => console.log('[recruiting-hub] boot bundle warm complete', meta?.warmKeyCount))
-      .catch((err) => console.warn('[recruiting-hub] boot bundle warm failed:', err.message));
-  }, bundleDelayFromBoot);
-  bootWarmDecision = { ...bootWarmDecision, bundleDelayMs: bundleDelayFromBoot, priorityLite: true };
+  if (bootBundle) {
+    const bundleDelayFromBoot =
+      (immediateWarm ? 0 : bootDelay) +
+      Math.max(180000, parseInt(process.env.HUB_BOOT_BUNDLE_DELAY_MS || '300000', 10) || 300000);
+    setTimeout(() => {
+      if (pipelineGuards.shouldSkipHeavyJob('hub-boot-bundle-warm', priorityRssLimit)) {
+        console.warn('[recruiting-hub] boot bundle warm skipped — RSS guard');
+        return;
+      }
+      console.log('[recruiting-hub] boot bundle warm start', [2028]);
+      warmEliteHubCaches({ bundleOnly: true, years: [2028] })
+        .then((meta) => console.log('[recruiting-hub] boot bundle warm complete', meta?.warmKeyCount))
+        .catch((err) => console.warn('[recruiting-hub] boot bundle warm failed:', err.message));
+    }, bundleDelayFromBoot);
+    bootWarmDecision = { ...bootWarmDecision, bundleDelayMs: bundleDelayFromBoot };
+  }
 
   // Heavy geo refresh stays optional / scheduled-jobs gated (not required for first paint).
   const refreshDelay = Math.max(
