@@ -2,11 +2,15 @@
  * Postgres connection pool for FutureCast models.
  * @see server/migrations/README.md
  *
- * Requires DATABASE_URL or SUPABASE_DATABASE_URL (direct Postgres connection string).
+ * Prefer Supabase shared session pooler URI (port 6543) on Render.
+ * Requires DATABASE_URL or SUPABASE_DATABASE_URL.
  */
 import { Pool, type PoolConfig, type QueryResult, type QueryResultRow } from 'pg';
 
 let pool: Pool | null = null;
+/** Fail fast for a short window after auth/connect failures (keeps Render alive). */
+let circuitOpenUntil = 0;
+const CIRCUIT_OPEN_MS = 15_000;
 
 function getConnectionString(): string {
   const url = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
@@ -41,6 +45,28 @@ export function normalizePostgresUrl(raw: string): string {
   return `${prefix}${user}:${encoded}@${hostpart}`;
 }
 
+function envInt(name: string, fallback: number): number {
+  const raw = Number(process.env[name]);
+  return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : fallback;
+}
+
+function isConnectFailure(err: unknown): boolean {
+  const anyErr = err as { code?: string; message?: string } | null;
+  const code = String(anyErr?.code || '');
+  const msg = String(anyErr?.message || err || '');
+  return (
+    code === 'EAUTHTIMEOUT' ||
+    code === 'ETIMEDOUT' ||
+    code === 'ECONNRESET' ||
+    code === 'ECONNREFUSED' ||
+    code === '08006' ||
+    code === '57P01' ||
+    /EAUTHTIMEOUT|timeout while waiting for message|Connection terminated|connect ETIMEDOUT|circuit open/i.test(
+      msg
+    )
+  );
+}
+
 /** Parse postgres URI without Node URL (avoids "Invalid URL" on special chars in password). */
 export function parsePostgresConfig(raw: string): PoolConfig {
   const normalized = normalizePostgresUrl(raw);
@@ -72,6 +98,12 @@ export function parsePostgresConfig(raw: string): PoolConfig {
     /supabase\.(co|com)|pooler\.supabase\.com|:6543/i.test(normalized) ||
     process.env.NODE_ENV === 'production';
 
+  // Bound hangs so Supabase auth blips cannot pin the event loop / crash Render.
+  const connectionTimeoutMillis = envInt('PG_CONNECTION_TIMEOUT_MS', 5_000);
+  const idleTimeoutMillis = envInt('PG_IDLE_TIMEOUT_MS', 20_000);
+  const max = envInt('PG_POOL_MAX', 4);
+  const statementTimeoutMs = envInt('PG_STATEMENT_TIMEOUT_MS', 8_000);
+
   return {
     user,
     password,
@@ -79,6 +111,11 @@ export function parsePostgresConfig(raw: string): PoolConfig {
     port,
     database: database || 'postgres',
     ssl: useSsl ? { rejectUnauthorized: false } : undefined,
+    connectionTimeoutMillis,
+    idleTimeoutMillis,
+    max,
+    allowExitOnIdle: true,
+    options: `-c statement_timeout=${statementTimeoutMs}`,
   };
 }
 
@@ -86,6 +123,16 @@ function getPool(): Pool {
   if (!pool) {
     const connectionString = getConnectionString();
     pool = new Pool(parsePostgresConfig(connectionString));
+    // Idle clients emit here on auth/network death. Without a listener, node-pg can
+    // crash the process — which is the Render `==> Running 'node server.js'` loop.
+    pool.on('error', (err) => {
+      circuitOpenUntil = Date.now() + CIRCUIT_OPEN_MS;
+      console.error(
+        '[pg-pool] idle client error (kept process alive):',
+        (err as { code?: string })?.code || '',
+        err instanceof Error ? err.message : err
+      );
+    });
   }
   return pool;
 }
@@ -95,7 +142,19 @@ export const db = {
     text: string,
     params?: unknown[]
   ): Promise<QueryResult<T>> {
-    return getPool().query<T>(text, params);
+    if (Date.now() < circuitOpenUntil) {
+      const err = new Error('DATABASE_URL circuit open — recent connection failures');
+      (err as { code?: string }).code = 'ECONNREFUSED';
+      throw err;
+    }
+    try {
+      return await getPool().query<T>(text, params);
+    } catch (err) {
+      if (isConnectFailure(err)) {
+        circuitOpenUntil = Date.now() + CIRCUIT_OPEN_MS;
+      }
+      throw err;
+    }
   },
 };
 
@@ -105,4 +164,5 @@ export async function closeDb(): Promise<void> {
     await pool.end();
     pool = null;
   }
+  circuitOpenUntil = 0;
 }

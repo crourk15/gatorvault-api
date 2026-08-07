@@ -4,9 +4,22 @@
 import type { Response } from 'express';
 
 export function isDatabaseUnavailableError(err: unknown): boolean {
+  const anyErr = err as { code?: string; message?: string } | null;
+  const code = String(anyErr?.code || '');
   const msg = err instanceof Error ? err.message : String(err ?? '');
+  if (
+    code === 'EAUTHTIMEOUT' ||
+    code === 'ETIMEDOUT' ||
+    code === 'ECONNRESET' ||
+    code === 'ECONNREFUSED' ||
+    code === 'ENOTFOUND' ||
+    code === '08006' ||
+    code === '57P01'
+  ) {
+    return true;
+  }
   return (
-    /DATABASE_URL|SUPABASE_DATABASE_URL|connection|ECONNREFUSED|ENOTFOUND|password authentication/i.test(
+    /DATABASE_URL|SUPABASE_DATABASE_URL|connection|ECONNREFUSED|ENOTFOUND|EAUTHTIMEOUT|ETIMEDOUT|ECONNRESET|08006|password authentication|timeout while waiting for message|circuit open|Connection terminated/i.test(
       msg
     )
   );
