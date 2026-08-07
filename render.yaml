@@ -10,7 +10,7 @@ services:
   - type: web
     name: gatorvault-api
     runtime: node
-    plan: standard
+    plan: pro
     region: oregon
     rootDir: server
     buildCommand: npm install && node scripts/platform-guardian-predeploy.js
@@ -342,9 +342,10 @@ services:
         value: "300000"
       - key: HUB_SPACED_WARM_GAP_MS
         value: "300000"
-      # OFF: HP child warm still OOM'd Starter. Bundled seed + GET disk = Lab elite.
+      # ON with Pro 4GB: child worker refreshes Lab HP leftovers automatically.
+      # Bundled seed stays as emergency backup if a warm fails.
       - key: HUB_SPACED_WARM_LAB
-        value: "false"
+        value: "true"
       - key: HUB_SPACED_WARM_BUNDLE
         value: "true"
       # Opt-in — master-board warm OOMs Starter after lite; enable when upgraded.
@@ -362,7 +363,7 @@ services:
         value: "false"
       - key: HUB_PRIORITY_WARM_RSS_MB
         value: "900"
-      # Standard plan: keep heavy warm well after listen so /ready stays cheap.
+      # Pro 4GB: keep heavy warm well after listen so /ready stays cheap.
       - key: API_BOOT_DEFER_HEAVY_MS
         value: "90000"
       - key: PLAYER_INTEL_REFRESH_ON_BOOT
