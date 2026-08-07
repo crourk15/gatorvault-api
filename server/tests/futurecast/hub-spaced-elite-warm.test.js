@@ -35,6 +35,7 @@ describe('Spaced elite warm (bundle + Lab)', () => {
     );
     assert.match(src, /function scheduleSpacedEliteFill/);
     assert.match(src, /HUB_SPACED_WARM_GAP_MS/);
+    assert.match(src, /HUB_SPACED_WARM_YEARS/);
     assert.match(src, /futurecast-hp:/);
     assert.match(src, /hub-bundle:/);
     assert.match(src, /futurecast-master-board/);
@@ -48,8 +49,8 @@ describe('Spaced elite warm (bundle + Lab)', () => {
     const prevGap = process.env.HUB_SPACED_WARM_GAP_MS;
     const prevStart = process.env.HUB_SPACED_WARM_START_MS;
     const prevMaster = process.env.HUB_SPACED_WARM_MASTER;
-    process.env.HUB_SPACED_WARM_GAP_MS = '60000';
-    process.env.HUB_SPACED_WARM_START_MS = '30000';
+    process.env.HUB_SPACED_WARM_GAP_MS = '120000';
+    process.env.HUB_SPACED_WARM_START_MS = '60000';
     process.env.HUB_SPACED_WARM_MASTER = 'false';
 
     delete require.cache[require.resolve('../../lib/recruiting-hub-cache')];

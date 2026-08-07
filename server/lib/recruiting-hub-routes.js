@@ -757,16 +757,27 @@ function mountRecruitingHubRoutes(app) {
       }
       const { warmEliteHubCaches } = require('./recruiting-hub-cache');
       const mode = String(req.query.mode || '').trim().toLowerCase();
-      const years = String(req.query.years || '2027,2028')
-        .split(',')
-        .map((y) => parseInt(y.trim(), 10))
-        .filter((y) => Number.isFinite(y));
-      const yearList = years.length ? years : [2027, 2028];
+      const yearsRaw = String(req.query.years || '').trim();
+      const years = yearsRaw
+        ? yearsRaw
+            .split(',')
+            .map((y) => parseInt(y.trim(), 10))
+            .filter((y) => Number.isFinite(y))
+        : [];
+      // Spaced defaults to 2028-only (Starter). Lite/other modes keep 2027+2028.
+      const yearList =
+        years.length > 0
+          ? years
+          : mode === 'spaced' || mode === 'elite'
+            ? [2028]
+            : [2027, 2028];
 
       // Spaced elite: lite now, then HP/bundle/master with gaps (full elite without OOM).
       if (mode === 'spaced' || mode === 'elite') {
         const { scheduleSpacedEliteFill } = require('./recruiting-hub-cache');
-        void warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: yearList })
+        // Lite can still heat both classes; spaced fill stays on yearList (usually 2028).
+        const liteYears = years.length > 0 ? yearList : [2027, 2028];
+        void warmEliteHubCaches({ priorityLite: true, priorityOnly: true, years: liteYears })
           .then((meta) => {
             console.log('[recruiting-hub] spaced lite complete', meta?.warmKeyCount);
             scheduleSpacedEliteFill({ years: yearList, force: true });
@@ -780,6 +791,7 @@ function mountRecruitingHubRoutes(app) {
           accepted: true,
           mode: 'spaced',
           years: yearList,
+          liteYears,
           meta: hubMeta(),
         });
       }
