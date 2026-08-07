@@ -60,7 +60,11 @@ export function enrichWithRankings<T extends Record<string, unknown>>(
     rating: r?.compositeScore ?? (player.rating as number | null | undefined) ?? null,
     natlRank: r?.nationalRank ?? (player.natlRank as number | null | undefined) ?? null,
     posRank: r?.positionRank ?? (player.posRank as number | null | undefined) ?? null,
-    stars: r?.stars ?? (player.stars as number | null | undefined) ?? null,
+    // Unknown/placeholder 0 must be null — Lab cards render literal `0★` for 0.
+    stars: (() => {
+      const n = Number(r?.stars ?? player.stars ?? 0);
+      return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
+    })(),
     position:
       r?.position ??
       (player.position as string | null | undefined) ??

@@ -70,7 +70,11 @@ function buildAllowlistDiscoveryRow(boardRow, classYear) {
       recruiting: merged,
     }) || merged.pos || merged.position || boardRow.pos || null,
     state: merged.state || boardRow.state || null,
-    stars: merged.stars ?? boardRow.stars ?? null,
+    // Unknown/placeholder 0 must be null — Lab/ED cards render literal `0★` for 0.
+    stars: (() => {
+      const n = Number(merged.stars ?? boardRow.stars);
+      return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
+    })(),
     discoveryScore,
     ufFitScore: merged.fitScore ?? null,
     ufProbability: merged.ufProbability ?? null,

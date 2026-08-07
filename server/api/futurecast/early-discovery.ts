@@ -6,7 +6,7 @@ import { createRequire } from 'node:module';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
 import { enrichWithRankings } from './ranking-enrichment';
 import { expandPositionFilter, parsePositionFilter } from './position-filter';
-import { earlyDiscoveryCacheKey, sendCachedJson } from './response-cache';
+import { earlyDiscoveryCacheKey, primeFuturecastCache, sendCachedJson } from './response-cache';
 import { isFutureCastDataError } from './db-fallback';
 
 const require = createRequire(import.meta.url);
@@ -240,14 +240,42 @@ export const handleGetEarlyDiscovery = asyncHandler(async (req: Request, res: Re
       limit,
     });
 
-    await sendCachedJson(res, cacheKey, () =>
-      buildEarlyDiscoveryPayload({
-        classYearGte,
-        minDiscoveryScore,
-        minUfFitScore,
-        position,
-        limit,
-      })
+    await sendCachedJson(
+      res,
+      cacheKey,
+      () =>
+        buildEarlyDiscoveryPayload({
+          classYearGte,
+          minDiscoveryScore,
+          minUfFitScore,
+          position,
+          limit,
+        }),
+      {
+        // Never leave Lab on "Loading Early Discovery…" — cheap allowlist body for iOS.
+        // No in-process background full SQL rebuild here (OOM risk); spaced/cron can refill later.
+        softOnDeferred: () => {
+          const players = allowlistOnlyPlayers({
+            classYearGte,
+            minDiscoveryScore,
+            minUfFitScore,
+            position,
+            limit,
+          });
+          const payload = {
+            ok: true,
+            classYearGte,
+            position: position ?? null,
+            count: players.length,
+            players,
+            degraded: 'allowlist_only',
+            updatedAt: new Date().toISOString(),
+          };
+          primeFuturecastCache(cacheKey, payload);
+          return payload;
+        },
+        backgroundBuildOnSoft: false,
+      }
     );
   } catch (err) {
     // Last-resort 200 so TestFlight never sticks on bare "Load failed" HTML 502s.

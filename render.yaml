@@ -358,6 +358,8 @@ services:
         value: "true"
       - key: HUB_SPACED_WORKER_TIMEOUT_MS
         value: "360000"
+      - key: HUB_SPACED_WORKER_MAX_OLD_SPACE_MB
+        value: "1536"
       # Soft hub refresh — do not wipe caches before rebuild (avoids cold stampede).
       - key: HUB_REFRESH_CLEAR_CACHES
         value: "false"

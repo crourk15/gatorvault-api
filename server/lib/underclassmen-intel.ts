@@ -113,6 +113,13 @@ function namespaceBytes(uuid: string): Buffer {
   return Buffer.from(uuid.replace(/-/g, ''), 'hex');
 }
 
+/** Fan UI treats 0 as a real star count — emit null when unknown. */
+function normalizeStars(raw: unknown): number | null {
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 1) return null;
+  return Math.round(n);
+}
+
 /** Deterministic UUID v5 from player slug — stable intel id for underclassmen profiles. */
 export function intelUuidForSlug(slug: string): string {
   const normalized = String(slug || '').trim().toLowerCase();
@@ -437,7 +444,7 @@ function buildMinimalBoardPlayer(
     state: (board?.state as string) ?? entry?.state ?? null,
     composite: Math.round(Number(board?.rating ?? 0) * 100) / 100,
     // Never trust seed-file stars — only target-board / recruiting ratings.
-    stars: Number(board?.stars ?? 0) || 0,
+    stars: normalizeStars(board?.stars),
     natlRank: (board?.natlRank as number) ?? null,
     posRank: (board?.posRank as number) ?? null,
     stateRank: (board?.stateRank as number) ?? null,
@@ -515,7 +522,7 @@ async function buildSeedBoardPlayerFromRecruiting(
     hometown: recruiting?.hometown ?? null,
     state: recruiting?.state ?? (board?.state as string) ?? entry?.state ?? null,
     composite: Math.round(Number(recruiting?.rating ?? board?.rating ?? 0) * 100) / 100,
-    stars: Number(recruiting?.stars ?? board?.stars ?? 0) || 0,
+    stars: normalizeStars(recruiting?.stars ?? board?.stars),
     natlRank: recruiting?.natlRank ?? (board?.natlRank as number) ?? null,
     posRank: recruiting?.posRank ?? (board?.posRank as number) ?? null,
     stateRank: recruiting?.stateRank ?? (board?.stateRank as number) ?? null,
