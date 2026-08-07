@@ -385,6 +385,8 @@ async function runWarmJobBatch(jobs, timeoutMs, label) {
       warmed += 1;
       ready = true;
       warmKeyCount = Math.max(warmKeyCount, warmed);
+      // Publish for /ready cheap probe (global.__GV_HUB_META__).
+      getMeta();
     } catch (err) {
       console.warn(`[recruiting-hub-cache] ${label} skip`, key, err.message);
     }
@@ -566,6 +568,11 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   }
   const hit = options.force ? null : hubCache.get(cacheKey);
   if (hit != null) {
+    if (!ready) {
+      ready = true;
+      warmKeyCount = Math.max(warmKeyCount, 1);
+      getMeta();
+    }
     return { status: 'ready', value: hit, hit: true, stale: false };
   }
 
@@ -573,6 +580,11 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   if (stale != null) {
     // Stay-green / no-sync: serve stale only. Do not rebuild from GET — cron owns refill.
     if (!stayGreen && !noSync) refreshCacheKey(cacheKey, builderFn, timeoutMs);
+    if (!ready) {
+      ready = true;
+      warmKeyCount = Math.max(warmKeyCount, 1);
+      getMeta();
+    }
     return { status: 'ready', value: stale, hit: true, stale: true };
   }
 
@@ -582,6 +594,9 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     if (diskValue != null) {
       // Seed memory so the next request is a hot hit. Cron warm-memory refreshes later.
       hubCache.set(cacheKey, diskValue);
+      ready = true;
+      warmKeyCount = Math.max(warmKeyCount, 1);
+      getMeta();
       if (!stayGreen && !noSync) refreshCacheKey(cacheKey, builderFn, timeoutMs);
       return { status: 'ready', value: diskValue, hit: true, stale: true, diskSnapshot: true };
     }
@@ -626,6 +641,8 @@ async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = fa
     force,
     diskFallback: endpoint ? { endpoint, year } : null,
   });
+  // Keep /ready hubMeta in sync whenever hub routes answer.
+  const hubSnap = getMeta();
   if (result.status === 'building') {
     return res.status(200).json(buildingResponse({ endpoint, year, cacheKey }));
   }
@@ -635,6 +652,7 @@ async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = fa
     hubReady: isReady(),
     cacheHit: result.hit,
     cacheStale: result.stale ?? false,
+    warmKeyCount: hubSnap.warmKeyCount,
     ...(result.diskSnapshot ? { diskSnapshot: true } : {}),
     ...(result.buildMs != null ? { buildMs: result.buildMs } : {}),
   });
@@ -711,6 +729,7 @@ function scheduleHubBootPipeline() {
       'ms',
       bootWarmDecision
     );
+    getMeta();
     return;
   }
 
@@ -737,6 +756,7 @@ function scheduleHubBootPipeline() {
     bootSecondary,
     scheduled: true,
   };
+  getMeta();
 
   const runPriorityWarm = () => {
     if (pipelineGuards.shouldSkipHeavyJob('hub-boot-priority-warm', priorityRssLimit)) {
