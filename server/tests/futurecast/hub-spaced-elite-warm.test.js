@@ -28,7 +28,7 @@ describe('Spaced elite warm (bundle + Lab)', () => {
     assert.match(src, /primeFuturecastCache/);
   });
 
-  it('scheduleSpacedEliteFill queues HP then bundle then master with gaps', () => {
+  it('scheduleSpacedEliteFill queues bundle then HP with gaps (memory release)', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', '..', 'lib', 'recruiting-hub-cache.js'),
       'utf8'
@@ -38,8 +38,11 @@ describe('Spaced elite warm (bundle + Lab)', () => {
     assert.match(src, /HUB_SPACED_WARM_YEARS/);
     assert.match(src, /futurecast-hp:/);
     assert.match(src, /hub-bundle:/);
+    assert.ok(src.indexOf('label: `hub-bundle:') < src.indexOf('label: `futurecast-hp:'));
     assert.match(src, /futurecast-master-board/);
     assert.match(src, /clearSpacedEliteTimers/);
+    assert.match(src, /releaseHubMemoryForHeavyStep/);
+    assert.match(src, /restoreLiteAfterHeavy/);
     // Boot lite then spaced — not immediate HP(bootYears).
     assert.match(src, /boot priority-lite warm complete/);
     assert.match(src, /scheduleSpacedEliteFill\(\{/);
