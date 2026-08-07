@@ -19,6 +19,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.12) picks 
 - [x] Commit hub cards: API no longer sends Vault Comp / Vault Projection (brief only — matches 2028; iOS hides empty slots)
 - [x] FutureCast / profile speed: War Room cache, full-profile SWR cache, slim related peers, keepalive Lab warm (API)
 - [x] Commit card surface unison: short “committed to Florida” line for all class years (API)
+- [x] FutureCast Closest to commit: 2028 high-priority API returns full allowlist (not chase-hot top-18 cut) so board leaders like Hudson West update live on iOS
 
 ---
 

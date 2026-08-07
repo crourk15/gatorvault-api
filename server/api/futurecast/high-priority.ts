@@ -50,8 +50,14 @@ const TARGET_BOARD_SEED_PATH = path.join(__dirname, '../../data/recruiting/2027-
 
 /** Underclassmen years served by the high-priority endpoint (2027 uses legacy board pipeline). */
 export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;
-/** Top N allowlist targets surfaced for 2028+ high-priority board. */
-export const HIGH_PRIORITY_UNDERCLASSMEN_LIMIT = 18;
+/**
+ * Chase UI hint (Priority chase / hero still sort by priorityScore and slice client-side).
+ * Discovery 2028 HP payload returns the full allowlist — Closest to commit must not be
+ * gated by a chase-hot cut (e.g. Hudson West leading SMU but outside top-18 heat).
+ */
+export const HIGH_PRIORITY_UNDERCLASSMEN_CHASE_LIMIT = 18;
+/** @deprecated Use HIGH_PRIORITY_UNDERCLASSMEN_CHASE_LIMIT — kept for older imports/tests. */
+export const HIGH_PRIORITY_UNDERCLASSMEN_LIMIT = HIGH_PRIORITY_UNDERCLASSMEN_CHASE_LIMIT;
 
 export type VisitBadgeType = 'OV' | 'UV' | 'Game Day' | 'Junior Day' | 'Spring Visit';
 
@@ -483,21 +489,23 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   // Record today's GV likelihood, then attach real 7d snapshot deltas (not seed +4).
   const withMovement = ufTrendSnapshot.applySnapshotMovement(mapped, { minAbs: 1 });
   const withChase = applyChasePriorityScores(withMovement, classYear);
-  const sorted = [...withChase].sort(compareUnderclassmenHighPriority);
-  const top10 = sorted.slice(0, HIGH_PRIORITY_UNDERCLASSMEN_LIMIT);
+  // Full locked board, chase-scored. Do not slice to chase top-N — Who commits next /
+  // Closest to commit is a system board-lead read over every allowlist target.
+  // Priority chase surfaces still re-sort by priorityScore and take top 10 client-side.
+  const players = [...withChase].sort(compareUnderclassmenHighPriority);
   const lastUpdated = new Date().toISOString();
   const visitBoardSnapshot = getVisitIntelBoardSnapshot([]);
 
   return {
     classYear,
-    count: top10.length,
+    count: players.length,
     visitIntelCount: 0,
     visitRecapCount: 0,
     flipWatchCount: 0,
     visitBoardSnapshot,
     updatedAt: lastUpdated,
     lastUpdated,
-    players: top10,
+    players,
     visitIntel: [],
     visitRecap: [],
     flipWatch: [],

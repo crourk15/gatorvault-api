@@ -3,9 +3,11 @@
 import React, { useMemo } from 'react';
 import type { MasterBoardResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 import { FutureCastPanelShell } from './primitives';
 import {
+  buildDiscoveryLeadingPool,
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
   movementDeltasAreBelievable,
@@ -27,6 +29,8 @@ type Props = {
   masterBoard: MasterBoardResponse;
   trendingBoard?: TrendingBoardResponse;
   highPriority?: HighPriorityPlayer[];
+  /** Full 2028 allowlist board — Closest to commit must not be chase-hot top-18 only. */
+  underclassmen?: UnderclassmenPlayer[];
   bare?: boolean;
 };
 
@@ -147,12 +151,25 @@ export function FutureCastLeadingPanel({
   masterBoard,
   trendingBoard,
   highPriority = [],
+  underclassmen = [],
   bare,
 }: Props): React.ReactElement | null {
   const { discoveryView } = useFutureCastLabCycle();
   const focusYear = discoveryView ? 2028 : 2027;
 
   const pool = useMemo(() => {
+    // Discovery: full allowlist year (underclassmen + HP overlay). Chase-hot HP
+    // top-18 alone drops board leaders like Hudson West from Closest to commit.
+    if (discoveryView) {
+      const discoveryPool = buildDiscoveryLeadingPool(
+        highPriority,
+        underclassmen,
+        focusYear,
+        isActiveUfTarget
+      );
+      if (discoveryPool.length) return discoveryPool;
+    }
+
     const fromHp = highPriority
       .filter((p) => isActiveUfTarget(p))
       .filter((p) => Number(p.classYear) === focusYear)
@@ -174,7 +191,14 @@ export function FutureCastLeadingPanel({
         return Number(p.classYear) === focusYear || !discoveryView;
       })
       .map(futureCastPlayerToLabTarget);
-  }, [discoveryView, focusYear, highPriority, masterBoard.players, trendingBoard]);
+  }, [
+    discoveryView,
+    focusYear,
+    highPriority,
+    underclassmen,
+    masterBoard.players,
+    trendingBoard,
+  ]);
 
   const leaders = useMemo(
     () => pool.filter(isFloridaLeadingOnBoard).sort(sortByNextCommit).slice(0, 10),
