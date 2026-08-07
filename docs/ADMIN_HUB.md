@@ -39,7 +39,7 @@ Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTu
 - `POST /api/futurecast/lab-warm` (Admin PIN / optional; spaced warm owns HP + master on cron)
 - `POST /api/recruiting/hub/refresh?warmAfter=priority` (cron `gatorvault-api-hub-refresh`)
 
-Look for `[recruiting-hub] boot priority-lite warm` / `spaced elite fill queued` / `spaced step` / `warm-memory` in Render logs. Env knobs: `HUB_GET_NO_SYNC_BUILD`, `FC_GET_NO_SYNC_BUILD`, `HUB_BOOT_FORCE_WARM`, `HUB_SPACED_ELITE_WARM`, `HUB_SPACED_WARM_YEARS` (default `2028`), `HUB_SPACED_WARM_GAP_MS`, `HUB_BUNDLE_SEQUENTIAL`.
+Look for `[recruiting-hub] boot priority-lite warm` / `spaced elite fill queued` / `spaced step` / `warm-memory` in Render logs. Env knobs: `HUB_GET_NO_SYNC_BUILD`, `FC_GET_NO_SYNC_BUILD`, `HUB_BOOT_FORCE_WARM`, `HUB_SPACED_ELITE_WARM`, `HUB_SPACED_WARM_YEARS` (default `2028`), `HUB_SPACED_WARM_GAP_MS` (code floor ≥240s), `HUB_SPACED_WARM_START_MS` (code floor ≥180s), `HUB_SPACED_WARM_MASTER` (opt-in), `HUB_BUNDLE_SEQUENTIAL`. Stale Render dashboard values below the floors are ignored.
 - **App Store gate** — internal 7-day stability checklist (QA + Product Health ≥ 90). Codes like `product_intel_below_90` mean the vault scorecard is under 90 — **not** a message from Apple / App Store Connect
 - **What the buttons mean** — Open / Copy Brief / Refresh / etc.
 - **Don’t touch** — Legacy consoles + calm guidance for “kitchen waking”

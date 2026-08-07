@@ -738,13 +738,14 @@ function scheduleSpacedEliteFill(options = {}) {
     .sort((a, b) => b - a); // newest first
   const includeLab = options.includeLab !== false;
   const includeBundle = options.includeBundle !== false;
+  // Floors beat stale Render dashboard env from older blueprint sync (60s/180s OOM'd).
   const startDelay = Math.max(
-    60000,
-    parseInt(process.env.HUB_SPACED_WARM_START_MS || '180000', 10) || 180000
+    180000,
+    parseInt(process.env.HUB_SPACED_WARM_START_MS || '300000', 10) || 300000
   );
   const gapMs = Math.max(
-    120000,
-    parseInt(process.env.HUB_SPACED_WARM_GAP_MS || '240000', 10) || 240000
+    240000,
+    parseInt(process.env.HUB_SPACED_WARM_GAP_MS || '300000', 10) || 300000
   );
   const rssLimit = parseInt(process.env.HUB_PRIORITY_WARM_RSS_MB || '520', 10) || 520;
 
@@ -792,8 +793,8 @@ function scheduleSpacedEliteFill(options = {}) {
     }
   }
 
-  // Master board last — one shot, after HP + bundles.
-  if (includeLab && process.env.HUB_SPACED_WARM_MASTER !== 'false') {
+  // Master board last — opt-in (full board rebuild is the heaviest Lab job).
+  if (includeLab && process.env.HUB_SPACED_WARM_MASTER === 'true') {
     steps.push({
       at,
       label: 'futurecast-master-board',
@@ -977,8 +978,14 @@ function scheduleHubBootPipeline() {
     ...bootWarmDecision,
     spacedElite,
     spacedYears: parseWarmYears(process.env.HUB_SPACED_WARM_YEARS, [2028]),
-    spacedGapMs: parseInt(process.env.HUB_SPACED_WARM_GAP_MS || '240000', 10) || 240000,
-    spacedStartMs: parseInt(process.env.HUB_SPACED_WARM_START_MS || '180000', 10) || 180000,
+    spacedGapMs: Math.max(
+      240000,
+      parseInt(process.env.HUB_SPACED_WARM_GAP_MS || '300000', 10) || 300000
+    ),
+    spacedStartMs: Math.max(
+      180000,
+      parseInt(process.env.HUB_SPACED_WARM_START_MS || '300000', 10) || 300000
+    ),
   };
 
   // Heavy geo refresh stays optional / scheduled-jobs gated (not required for first paint).
