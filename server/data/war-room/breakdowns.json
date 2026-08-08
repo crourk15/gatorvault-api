@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-06T21:58:07.696Z",
+  "updatedAt": "2026-08-08T02:28:39.662Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -14038,27 +14038,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/chris-morillo-285341/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22966182/6a091e490d1894df99962505",
+          "publishedAt": "2026-08-08"
         }
       ],
       "strengths": [
-        "On Monday, the Florida Gators added another name to their growing 2028 recruiting board.",
-        "Hudson (Fla.) athlete Chris Morillo picked up an offer from"
+        "Morillo triggers downhill from the second level and finishes with a clean wrap in the box.",
+        "Morillo shows range to chase flow outside the hashes without losing balance in space.",
+        "Morillo flashes disruption on the edge — TFL/sack juice when the pocket climbs to him."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "On Monday, the Florida Gators added another name to their growing 2028 recruiting board.  Hudson (Fla.) athlete Chris Morillo picked up an offer from",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Morillo (6-2 / 198–205) still needs more mass to take on SEC climb blocks every down."
+      ],
+      "comparison": "Morillo comps to Ernest Jones — 6-2 compact LB mold; runs downhill, finishes in space, and flashes edge disruption before he packs on full MIKE mass.",
+      "schemeFit": "Morillo fits a White 3-3-5 second-level LB who can run, finish, and steal snaps on the edge while adding mass.",
+      "staffNotes": "Vault film desk verified 2026-08-08 from Hudl spring/soph tape + On3 ATH/LB listing (6-2 / 198). Comp size-matched within ~1–2\" — not a Florida-alum default. Charles asked to embed Morillo / Price / Davis into profiles.",
+      "projection": "Morillo projects as a Year 2 SEC rotation LB (special teams Year 1). Ceiling: every-down WILL/MIKE — the compact Florida-bred second-level piece who can chase, finish, and grow into the box.",
+      "insiderNotes": "Morillo is a compact 6-2 linebacker who triggers downhill, finishes with a wrap in the box, and still has range when flow stretches. Flashes edge disruption when the pocket climbs. Wins with instincts, chase, and finishing — a WILL/MIKE mold as the frame fills.",
+      "recruitingStory": "Chris Morillo is a 2028 Hudson (FL) ATH/LB · listed 6-2 / 198 · in-state Florida target with UF process (camp/offer trail, UOV).",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:12:35.322Z"
+      "updatedAt": "2026-08-08T02:28:39.492Z"
     },
     "tyler-boyd": {
       "playerSlug": "tyler-boyd",
@@ -14933,31 +14936,34 @@
     "barrett-price": {
       "playerSlug": "barrett-price",
       "playerName": "Barrett Price",
-      "playerType": "commit",
+      "playerType": "target",
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": null,
+          "publishedAt": "2026-08-08"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Price creates with sudden burst off the line and stretches the perimeter as a 6-0 lean WR.",
+        "Price tracks the ball cleanly on the boundary and finishes contested windows without panic.",
+        "Price shows YAC juice after the catch — turns short completions into chunk gains."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Price (6-0 / 175) still needs to fill out before he can win through SEC press every snap."
+      ],
+      "comparison": "Price comps to Jordan Addison — 5-11 / 6-0 sudden WR mold; creates with burst, tracks on the perimeter, and turns short throws into chunk YAC.",
+      "schemeFit": "Price fits a perimeter WR room that values sudden release, tracking, and YAC over pure size.",
+      "staffNotes": "Vault film desk verified 2026-08-08 from On3 WR listing (6-0 / 175, Spain Park) + MaxPreps WR production. Hudl embed not locked in store yet — On3 featured film referenced. Comp size-matched within ~1–2\". Charles asked to embed into profiles.",
+      "projection": "Price projects as a Year 2–3 perimeter contributor (scout/special teams Year 1). Ceiling: starting outside/slot WR — the sudden Spain Park separator who grows into an SEC perimeter role.",
+      "insiderNotes": "Price is a lean 6-0 wideout who creates with sudden burst, tracks cleanly on the boundary, and turns short catches into chunk YAC. Wins with release and play speed — a perimeter mold as the frame fills.",
+      "recruitingStory": "Barrett Price is a 2028 Spain Park (AL) WR · listed 6-0 / 175 · Florida-leaning board with UF process (Friday Night Lights / UOV trail).",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-07-11T05:15:09.241Z"
+      "featured": false,
+      "updatedAt": "2026-08-08T02:28:39.576Z"
     },
     "zion-malloy": {
       "playerSlug": "zion-malloy",
@@ -15111,27 +15117,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": null,
+          "publishedAt": "2026-08-08"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Davis mirrors in coverage with fluid hips and stays attached on the boundary.",
+        "Davis finishes as a willing tackler from the backend — not just a cover corner.",
+        "Davis shows ATH versatility (WR/CB/S) that translates to multi-spot DB packages."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Davis (6-0 / 175) still needs mass and length consistency to survive SEC press-man every down."
+      ],
+      "comparison": "Davis comps to Derek Stingley Jr. — 6-0 lean CB mold; mirrors in coverage, finishes as a tackler, and brings ATH versatility from the boundary.",
+      "schemeFit": "Davis fits a DB room that values mirror ability, tackle finish, and ATH flexibility across CB/nickel.",
+      "staffNotes": "Vault film desk verified 2026-08-08 from On3 ATH listing (6-0 / 175, Columbia GA) + public DB/WR usage notes. Hudl profile referenced; embed not locked. Comp size-matched within ~1–2\". Charles asked to embed into profiles.",
+      "projection": "Davis projects as a Year 2 DB contributor (nickel/special teams Year 1). Ceiling: starting boundary CB — the Columbia ATH who can cover, tackle, and grow into an SEC defensive back.",
+      "insiderNotes": "Davis is a lean 6-0 defensive back who mirrors in coverage, finishes tackles from the backend, and carries WR/S versatility. Wins with hips, attachment, and willingness to tackle — a boundary CB mold as the frame fills.",
+      "recruitingStory": "Jamarion Davis is a 2028 Columbia (GA) ATH · listed 6-0 / 175 · multi-offer DB/WR type with Florida in the RPM picture and UOV process.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:14:22.408Z"
+      "updatedAt": "2026-08-08T02:28:39.654Z"
     },
     "cameron-gleaton": {
       "playerSlug": "cameron-gleaton",
