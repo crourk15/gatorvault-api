@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-08T02:35:46.589Z",
+  "updatedAt": "2026-08-08T12:12:03.761Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -13462,7 +13462,9 @@
       "recruitingStory": "Dominick Harris-Payne is a 4-star CB · listed 6-3 / 165 · Lakeland (Lakeland, FL) (FL) · open-board Florida target.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-08-06T21:24:31.342Z"
+      "updatedAt": "2026-08-08T12:12:03.710Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "gabriel-player": {
       "playerSlug": "gabriel-player",
@@ -14592,7 +14594,9 @@
       "recruitingStory": "Hudson West is a 2028 Sarasota QB and Florida target with a UF offer and multiple unofficial visits.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-08-06T21:24:31.417Z"
+      "updatedAt": "2026-08-08T12:12:03.754Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "jackson-stecher": {
       "playerSlug": "jackson-stecher",

@@ -212,6 +212,41 @@ async function loadLiveRecruiting(slug) {
 }
 
 /** Serve stamped dossier + live RPM. Returns null when no stamp. */
+
+function isPearlVaultScouting(vault) {
+  if (!vault || typeof vault !== 'object') return false;
+  const evaluation = String(vault.evaluation || '').trim();
+  const comparison = String(vault.comparison || '').trim();
+  const projection = String(vault.projection || '').trim();
+  const strengths = Array.isArray(vault.strengths)
+    ? vault.strengths.map((s) => String(s || '').trim()).filter(Boolean)
+    : [];
+  return Boolean(evaluation && comparison && projection && strengths.length >= 3);
+}
+
+function resolveVaultScoutingForStamp(slug, stampVault) {
+  try {
+    const warRoom = require('./war-room-store');
+    const { getVaultScoutingForSlug } = require('./recruiting-hub-elite');
+    const key = String(slug || '').trim().toLowerCase();
+    const bd = warRoom.getBreakdownBySlug(key);
+    const provisional =
+      !!bd &&
+      (bd.filmWatched === false ||
+        bd.provisional === true ||
+        /\bPROVISIONAL\b/i.test(String(bd.staffNotes || '')));
+    const live = getVaultScoutingForSlug(key);
+    if (live) return live;
+    // Hide provisional drafts even if an older stamp still has a pearl-shaped card.
+    if (provisional) return null;
+    // Film-desk clobber recovery: keep stamped Pearl when War Room was wiped.
+    if (isPearlVaultScouting(stampVault)) return stampVault;
+    return null;
+  } catch {
+    return isPearlVaultScouting(stampVault) ? stampVault : null;
+  }
+}
+
 async function getStampedFullProfile(slug) {
   const key = String(slug || '')
     .trim()
@@ -220,7 +255,9 @@ async function getStampedFullProfile(slug) {
   const stamp = readStamp(key);
   if (!stamp) return null;
   const recruiting = await loadLiveRecruiting(key);
-  return overlayLiveRpm(stamp, recruiting);
+  const out = overlayLiveRpm(stamp, recruiting);
+  out.vaultScouting = resolveVaultScoutingForStamp(key, stamp.vaultScouting);
+  return out;
 }
 
 function listAllowlistStampSlugs() {
