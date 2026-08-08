@@ -58,8 +58,10 @@ function saveFilmRoomCache(cache) {
   const target = resolveCachePath();
   const dir = path.dirname(target);
   fs.mkdirSync(dir, { recursive: true });
+  const updatedAt = new Date().toISOString();
   const payload = {
     ...cache,
+    updatedAt,
     auto: {
       gnfp: Array.isArray(cache?.auto?.gnfp) ? cache.auto.gnfp : [],
       pressers: Array.isArray(cache?.auto?.pressers) ? cache.auto.pressers : [],
@@ -67,7 +69,7 @@ function saveFilmRoomCache(cache) {
     meta: {
       ...(cache.meta || {}),
       version: 1,
-      updatedAt: new Date().toISOString(),
+      updatedAt,
       path: target,
     },
   };

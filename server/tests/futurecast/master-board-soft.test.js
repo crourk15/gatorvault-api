@@ -44,4 +44,33 @@ describe('master-board soft serve for iOS Lab', () => {
     const cached = loadMasterBoardCached();
     assert.ok(cached?.players?.length > 0);
   });
+
+  it('softTrendingBoardFromMaster always returns iterable trending arrays', () => {
+    const { softTrendingBoardFromMaster } = require('../../api/futurecast/response-cache.ts');
+    const soft = softTrendingBoardFromMaster();
+    assert.ok(Array.isArray(soft.trendingUp));
+    assert.ok(Array.isArray(soft.trendingDown));
+    assert.notEqual(soft.status, 'building');
+  });
+
+  it('deferred building stub includes trendingUp/trendingDown arrays', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'api', 'futurecast', 'response-cache.ts'),
+      'utf8'
+    );
+    assert.match(src, /softTrendingBoardFromMaster/);
+    assert.match(src, /trendingUp: \[\]/);
+    assert.match(src, /trendingDown: \[\]/);
+  });
+
+
+  it('softMovementIntelFromMaster always returns iterable movement arrays', () => {
+    const { softMovementIntelFromMaster } = require('../../api/futurecast/response-cache.ts');
+    const soft = softMovementIntelFromMaster(2028);
+    assert.ok(Array.isArray(soft.risers));
+    assert.ok(Array.isArray(soft.fallers));
+    assert.ok(Array.isArray(soft.highVolatility));
+    assert.notEqual(soft.status, 'building');
+  });
+
 });

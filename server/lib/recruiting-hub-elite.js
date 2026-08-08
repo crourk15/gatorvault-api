@@ -343,8 +343,8 @@ function getVaultScoutingForSlug(slug) {
     if (!bd || quality.breakdownIsCorrupt?.(bd, bd.playerName || key)) return null;
 
     // Never serve board/bio placeholders as Harris-Payne-level Vault Scouting.
-    const staffNotes = String(bd.staffNotes || '');
-    if (/\bPROVISIONAL\b/i.test(staffNotes) || bd.filmWatched === false) return null;
+    // "Not provisional" in staffNotes must not hide a watched Pearl card.
+    if (quality.isProvisionalVaultCard?.(bd)) return null;
 
     // Lead paragraph = real film take only. Never staffNotes / film-desk meta /
     // On3 bio dumps (those poisoned Asher-style cards with verification copy).

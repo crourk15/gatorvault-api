@@ -230,11 +230,8 @@ function resolveVaultScoutingForStamp(slug, stampVault) {
     const { getVaultScoutingForSlug } = require('./recruiting-hub-elite');
     const key = String(slug || '').trim().toLowerCase();
     const bd = warRoom.getBreakdownBySlug(key);
-    const provisional =
-      !!bd &&
-      (bd.filmWatched === false ||
-        bd.provisional === true ||
-        /\bPROVISIONAL\b/i.test(String(bd.staffNotes || '')));
+    const quality = require('./recruiting-intel-quality');
+    const provisional = !!bd && quality.isProvisionalVaultCard?.(bd);
     const live = getVaultScoutingForSlug(key);
     if (live) return live;
     // Hide provisional drafts even if an older stamp still has a pearl-shaped card.

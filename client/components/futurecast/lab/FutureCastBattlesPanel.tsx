@@ -138,8 +138,8 @@ export function FutureCastBattlesPanel({
   const pool = useMemo(() => {
     const merged = [
       ...masterBoard.players,
-      ...trendingBoard.trendingUp,
-      ...trendingBoard.trendingDown,
+      ...(trendingBoard?.trendingUp ?? []),
+      ...(trendingBoard?.trendingDown ?? []),
       ...masterBoard.movementSummary.volatilePlayers,
     ];
     const seen = new Set<string>();

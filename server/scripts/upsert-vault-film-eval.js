@@ -29,7 +29,7 @@ const fs = require('fs');
 const path = require('path');
 const warRoom = require('../lib/war-room-store');
 const filmTraits = require('../lib/film-traits-store');
-const { isFilmDeskMeta } = require('../lib/recruiting-intel-quality');
+const { isFilmDeskMeta, staffNotesMarkProvisional } = require('../lib/recruiting-intel-quality');
 
 function argValue(flag) {
   const hit = process.argv.find((a) => a.startsWith(`${flag}=`));
@@ -120,13 +120,13 @@ function buildPayload(raw) {
     filmWatched:
       typeof raw.filmWatched === 'boolean'
         ? raw.filmWatched
-        : /\bPROVISIONAL\b/i.test(String(raw.staffNotes || ''))
+        : staffNotesMarkProvisional(raw.staffNotes)
           ? false
           : undefined,
     provisional:
       typeof raw.provisional === 'boolean'
         ? raw.provisional
-        : /\bPROVISIONAL\b/i.test(String(raw.staffNotes || ''))
+        : staffNotesMarkProvisional(raw.staffNotes)
           ? true
           : undefined,
   };

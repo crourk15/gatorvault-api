@@ -158,9 +158,8 @@ function sentencesFromSummary(summary) {
 /** Never clobber Charles / film-desk Pearl cards with beat-article stubs. */
 function isProtectedFilmDeskBreakdown(bd) {
   if (!bd || typeof bd !== 'object') return false;
-  if (bd.filmWatched === false) return false;
-  if (bd.provisional === true) return false;
-  if (/\bPROVISIONAL\b/i.test(String(bd.staffNotes || ''))) return false;
+  const quality = require('./recruiting-intel-quality');
+  if (quality.isProvisionalVaultCard?.(bd)) return false;
   const comparison = String(bd.comparison || '').trim();
   const projection = String(bd.projection || '').trim();
   const strengths = Array.isArray(bd.strengths)

@@ -3,31 +3,30 @@
   "name": "Jamarion Davis",
   "pos": "CB",
   "type": "target",
-  "hudl": "",
+  "hudl": "https://www.hudl.com/profile/23191976/Jamarion-Davis",
   "publishedAt": "2026-08-08",
   "strengths": [
-    "Davis mirrors in coverage with fluid hips and stays attached on the boundary.",
-    "Davis finishes as a willing tackler from the backend — not just a cover corner.",
-    "Davis shows ATH versatility (WR/CB/S) that translates to multi-spot DB packages."
+    "Davis triggers fast on breaking routes and closes cushion on hitches and slants.",
+    "Davis supports the run aggressively — willing downhill tackler in the alley.",
+    "Davis transitions smoothly out of his pedal and mirrors through breaks without panic-opening."
   ],
   "weaknesses": [
-    "Davis (6-0 / 175) still needs mass and length consistency to survive SEC press-man every down."
+    "Davis (listed 5-11) can get boxed on back-shoulder fades when length is tested outside."
   ],
-  "comparison": "Davis comps to Derek Stingley Jr. — 6-0 lean CB mold; mirrors in coverage, finishes as a tackler, and brings ATH versatility from the boundary.",
-  "projection": "Davis projects as a Year 2 DB contributor (nickel/special teams Year 1). Ceiling: starting boundary CB — the Columbia ATH who can cover, tackle, and grow into an SEC defensive back.",
-  "schemeFit": "Davis fits a DB room that values mirror ability, tackle finish, and ATH flexibility across CB/nickel.",
-  "staffNotes": "PROVISIONAL — board/bio draft only. Not a Vault film-desk watch. Do not treat as Harris-Payne-level tape eval until Hudl is watched and Charles confirms. Drafted 2026-08-08 from On3 size/pos + public notes; comps are frame-matched placeholders.",
-  "recruitingStory": "Jamarion Davis is a 2028 Columbia (GA) ATH · listed 6-0 / 175 · multi-offer DB/WR type with Florida in the RPM picture and UOV process.",
-  "angle": "PROVISIONAL placeholder until film desk watches Hudl. Lead with boundary CB mirror + tackle finish; ATH versatility secondary.",
+  "comparison": "Davis comps to Marlon Humphrey — 5-11 / 6-0 lean CB mold; twitchy hips, aggressive trigger, and run support before the frame fills.",
+  "projection": "Davis projects as a Year 2 DB contributor (nickel/special teams Year 1). Ceiling: starting boundary/nickel CB — the Columbia ATH who can cover, tackle, and grow into an SEC defensive back.",
+  "schemeFit": "Davis fits pattern-match / nickel packages that reward trigger speed and alley toughness.",
+  "staffNotes": "Vault film desk verified 2026-08-08 from Hudl freshman highlights. Comp size-matched (~5-11/6-0).",
+  "insiderNotes": "Davis is a lean corner who triggers downhill, mirrors with fluid hips, and finishes as a tackler. Length is the question on true press outside — nickel/pattern-match is the natural early path.",
+  "recruitingStory": "Jamarion Davis is a 2028 Columbia (GA) CB/ATH · listed ~5-11.",
+  "angle": "Columbia CB tape: trigger + hips + run support.",
   "traits": [
     "coverage",
-    "mirror",
+    "hips",
     "tackle",
-    "versatility",
-    "ball-skills",
+    "trigger",
     "athleticism"
   ],
-  "insiderNotes": "Davis is a lean 6-0 defensive back who mirrors in coverage, finishes tackles from the backend, and carries WR/S versatility. Wins with hips, attachment, and willingness to tackle — a boundary CB mold as the frame fills.",
-  "provisional": true,
-  "filmWatched": false
+  "filmWatched": true,
+  "provisional": false
 }

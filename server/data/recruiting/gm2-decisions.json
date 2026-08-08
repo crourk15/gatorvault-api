@@ -2,6 +2,105 @@
   "version": 1,
   "events": [
     {
+      "id": "gm2_1786197034995_kt0i2",
+      "at": "2026-08-08T13:50:34.995Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "dion-edwards",
+      "fingerprint": "allowlist_sweep_board_pulse_dion-edwards_2026-08-08",
+      "source": "auto:allowlist-intel-sweep",
+      "eventType": "target_update"
+    },
+    {
+      "id": "gm2_1786196034352_2ldr1",
+      "at": "2026-08-08T13:33:54.352Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "cyion-smith",
+      "fingerprint": "allowlist_sweep_offer_cyion-smith_2026-08-03",
+      "source": "auto:allowlist-intel-sweep",
+      "eventType": "offer"
+    },
+    {
+      "id": "gm2_1786196034335_02pld",
+      "at": "2026-08-08T13:33:54.335Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "ridge-janes",
+      "fingerprint": "allowlist_sweep_offer_ridge-janes_2026-08-03",
+      "source": "auto:allowlist-intel-sweep",
+      "eventType": "offer"
+    },
+    {
+      "id": "gm2_1786196034320_pknnz",
+      "at": "2026-08-08T13:33:54.320Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "zaiden-jernigan",
+      "fingerprint": "allowlist_sweep_offer_zaiden-jernigan_2026-08-03",
+      "source": "auto:allowlist-intel-sweep",
+      "eventType": "offer"
+    },
+    {
+      "id": "gm2_1786196034303_l0ljj",
+      "at": "2026-08-08T13:33:54.303Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "nate-dollard",
+      "fingerprint": "allowlist_sweep_offer_nate-dollard_2026-08-03",
+      "source": "auto:allowlist-intel-sweep",
+      "eventType": "offer"
+    },
+    {
+      "id": "gm2_1786196034225_1wx3w",
+      "at": "2026-08-08T13:33:54.225Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "antonio-thomas-jr",
+      "fingerprint": "allowlist_sweep_visit_antonio-thomas-jr_2026-06-19_unofficial_visit",
+      "source": "auto:allowlist-intel-sweep",
+      "eventType": "target_update"
+    },
+    {
+      "id": "gm2_1786196034184_f2eo6",
+      "at": "2026-08-08T13:33:54.184Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "tyree-mannings-jr",
+      "fingerprint": "allowlist_sweep_visit_tyree-mannings-jr_2026-06-19_unofficial_visit",
+      "source": "auto:allowlist-intel-sweep",
+      "eventType": "target_update"
+    },
+    {
+      "id": "gm2_1786196033847_nj7ic",
+      "at": "2026-08-08T13:33:53.847Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "antonio-thomas-jr",
+      "fingerprint": "allowlist_sweep_visit_antonio-thomas-jr_2026-03-13_unofficial_visit",
+      "source": "auto:allowlist-intel-sweep",
+      "eventType": "target_update"
+    },
+    {
+      "id": "gm2_1786196033689_bkrz3",
+      "at": "2026-08-08T13:33:53.689Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "intel-store",
+      "playerSlug": "cyion-smith",
+      "fingerprint": "allowlist_sweep_visit_cyion-smith_2026-06-03_unofficial_visit",
+      "source": "auto:allowlist-intel-sweep",
+      "eventType": "target_update"
+    },
+    {
       "id": "gm2_1783769442453_q94q4",
       "at": "2026-07-11T11:30:42.453Z",
       "layer": "re",
@@ -5165,100 +5264,7 @@
       "errors": [
         "invalid_school"
       ]
-    },
-    {
-      "id": "gm2_1783769292277_0tb8n",
-      "at": "2026-07-11T11:28:12.277Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "tyler-alexander",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1783769292248_z2wmp",
-      "at": "2026-07-11T11:28:12.248Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "george-lamons",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1783769292246_w5q1n",
-      "at": "2026-07-11T11:28:12.246Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "george-lamons",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1783769292219_eo9ng",
-      "at": "2026-07-11T11:28:12.219Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "junior-tuupo",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1783769292217_elsdp",
-      "at": "2026-07-11T11:28:12.217Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "junior-tuupo",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1783769292192_ccbo3",
-      "at": "2026-07-11T11:28:12.192Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "desmond-malpress",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1783769292190_z71xf",
-      "at": "2026-07-11T11:28:12.190Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "desmond-malpress",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1783769292163_jwqd9",
-      "at": "2026-07-11T11:28:12.163Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "joakim-gouda",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1783769292161_rddv3",
-      "at": "2026-07-11T11:28:12.161Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "joakim-gouda",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
     }
   ],
-  "updatedAt": "2026-07-11T11:30:42.453Z"
+  "updatedAt": "2026-08-08T13:50:34.995Z"
 }

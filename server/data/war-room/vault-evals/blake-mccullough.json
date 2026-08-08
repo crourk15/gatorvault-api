@@ -3,31 +3,30 @@
   "name": "Blake McCullough",
   "pos": "QB",
   "type": "target",
-  "hudl": "",
+  "hudl": "https://www.hudl.com/profile/22407137/Blake-McCullough",
   "publishedAt": "2026-08-08",
   "strengths": [
-    "McCullough throws with juice from a 6-1 platform and can drive the intermediate window.",
-    "McCullough creates when the pocket breaks — keeps his eyes up and extends plays.",
-    "McCullough shows Central Florida camp/7v7 juice and competitive toughness as Bishop Moore's starter."
+    "McCullough gets the ball out fast on RPOs and screens — compact release, no hitch.",
+    "McCullough identifies pre-snap advantages and attacks numbers vs light boxes.",
+    "McCullough stands in and delivers knowing contact is coming — competitive toughness from the shotgun."
   ],
   "weaknesses": [
-    "McCullough (6-1 / 190) still needs to fill out and prove every-down processing versus SEC speed."
+    "McCullough still needs cleaner intermediate ball placement — too many catch-radius throws into windows."
   ],
   "comparison": "McCullough comps to Baker Mayfield — 6-1 competitive QB mold; throws with juice, creates when the pocket breaks, and plays with edge from the shotgun.",
   "projection": "McCullough projects as a develop-then-compete QB (scout Year 1, compete for the job Year 2–3). Ceiling: campus starter upside — never a rotational QB path; the Bishop Moore passer who can grow into a QB-room contender.",
-  "schemeFit": "McCullough fits a QB room that values creation, intermediate juice, and competitive toughness while the frame fills.",
-  "staffNotes": "PROVISIONAL — board/bio draft only. Not a Vault film-desk watch. Do not treat as Harris-Payne-level tape eval until Hudl is watched and Charles confirms. Drafted 2026-08-08 from On3 size/pos + public notes; comps are frame-matched placeholders.",
-  "recruitingStory": "Blake McCullough is a 2028 Bishop Moore Catholic (Orlando, FL) QB · listed 6-1 / 190 · in-state Florida target with early offers and rising Central Florida buzz.",
-  "angle": "PROVISIONAL placeholder until film desk watches Hudl. Lead with 6-1 Orlando QB creation + juice; develop/compete path, never rotational-QB language.",
+  "schemeFit": "McCullough fits Faulkner shotgun / RPO spacing that rewards quick decisions and toughness in the pocket.",
+  "staffNotes": "Vault film desk verified 2026-08-08 from Hudl highlight reel. Comp size-matched to Baker Mayfield (6-1). QB path: develop → compete → starter upside.",
+  "insiderNotes": "McCullough is a 6-1 competitive quarterback who gets the ball out on time, attacks pre-snap advantages, and does not flinch in the pocket. Intermediate placement and off-script creation are the next steps — the path is develop, then compete for the job, with starter upside.",
+  "recruitingStory": "Blake McCullough is a 2028 Bishop Moore (FL) QB · listed 6-1 / 190 · in-state Florida target.",
+  "angle": "Bishop Moore QB tape: quick release + pre-snap + toughness. Develop → compete → starter upside.",
   "traits": [
-    "arm",
-    "creation",
-    "pocket",
-    "competitiveness",
-    "QB",
-    "athleticism"
+    "release",
+    "toughness",
+    "pre-snap",
+    "RPO",
+    "pocket"
   ],
-  "insiderNotes": "McCullough is a 6-1 Bishop Moore quarterback who throws with juice, keeps his eyes up when the pocket breaks, and plays with competitive toughness. Wins with creation and arm strength — a develop-then-compete QB mold as the frame fills, with starter upside rather than a rotational label.",
-  "provisional": true,
-  "filmWatched": false
+  "filmWatched": true,
+  "provisional": false
 }
