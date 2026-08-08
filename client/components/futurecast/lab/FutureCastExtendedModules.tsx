@@ -302,8 +302,11 @@ export function FutureCastExtendedModules({
 
   const smartAlerts = useMemo(() => {
     const raw: IntelFeedItem[] = [];
+    const risers = movementIntel?.risers ?? [];
+    const volatile = movementIntel?.highVolatility ?? [];
+    const alerts = movementIntel?.alerts ?? [];
     // Closing-class priority: movement + flip first; OV recap already has its own panel.
-    for (const p of movementIntel.risers.slice(0, 4)) {
+    for (const p of risers.slice(0, 4)) {
       raw.push(
         buildIntelFeedItem({
           id: `rise-${p.slug}`,
@@ -314,7 +317,7 @@ export function FutureCastExtendedModules({
         })
       );
     }
-    for (const row of movementNarratives.slice(0, 4)) {
+    for (const row of (movementNarratives ?? []).slice(0, 4)) {
       raw.push(
         buildIntelFeedItem({
           id: `move-${row.slug}`,
@@ -325,7 +328,7 @@ export function FutureCastExtendedModules({
         })
       );
     }
-    for (const p of movementIntel.highVolatility.slice(0, 3)) {
+    for (const p of volatile.slice(0, 3)) {
       raw.push(
         buildIntelFeedItem({
           id: `vol-${p.slug}`,
@@ -337,7 +340,7 @@ export function FutureCastExtendedModules({
         })
       );
     }
-    for (const alert of movementIntel.alerts.slice(0, 4)) {
+    for (const alert of alerts.slice(0, 4)) {
       raw.push(
         buildIntelFeedItem({
           id: alert.id,

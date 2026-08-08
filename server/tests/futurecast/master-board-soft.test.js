@@ -63,4 +63,14 @@ describe('master-board soft serve for iOS Lab', () => {
     assert.match(src, /trendingDown: \[\]/);
   });
 
+
+  it('softMovementIntelFromMaster always returns iterable movement arrays', () => {
+    const { softMovementIntelFromMaster } = require('../../api/futurecast/response-cache.ts');
+    const soft = softMovementIntelFromMaster(2028);
+    assert.ok(Array.isArray(soft.risers));
+    assert.ok(Array.isArray(soft.fallers));
+    assert.ok(Array.isArray(soft.highVolatility));
+    assert.notEqual(soft.status, 'building');
+  });
+
 });

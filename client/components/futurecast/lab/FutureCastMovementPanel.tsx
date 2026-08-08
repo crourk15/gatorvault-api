@@ -73,12 +73,10 @@ export function FutureCastMovementPanel({
     discoveryFocus && Number(movementIntel.classYear) === focusYear;
 
   const scopedHasMovers = useMemo(() => {
-    return (
-      movementIntel.risers.length +
-        movementIntel.fallers.length +
-        movementIntel.highVolatility.length >
-      0
-    );
+    const risers = movementIntel?.risers ?? [];
+    const fallers = movementIntel?.fallers ?? [];
+    const volatile = movementIntel?.highVolatility ?? [];
+    return risers.length + fallers.length + volatile.length > 0;
   }, [movementIntel]);
 
   const discoveryHasMovers = useMemo(() => {
@@ -92,23 +90,27 @@ export function FutureCastMovementPanel({
     );
   }, [useScopedMovementIntel, scopedHasMovers, discoveryBuckets]);
 
+  const scopedRisers = movementIntel?.risers ?? [];
+  const scopedFallers = movementIntel?.fallers ?? [];
+  const scopedVolatile = movementIntel?.highVolatility ?? [];
+
   const rows = discoveryFocus
     ? useScopedMovementIntel
       ? tab === 'risers'
-        ? movementIntel.risers
+        ? scopedRisers
         : tab === 'fallers'
-          ? movementIntel.fallers
-          : movementIntel.highVolatility
+          ? scopedFallers
+          : scopedVolatile
       : tab === 'risers'
         ? discoveryBuckets.risers
         : tab === 'fallers'
           ? discoveryBuckets.fallers
           : discoveryBuckets.highVolatility
     : tab === 'risers'
-      ? movementIntel.risers
+      ? scopedRisers
       : tab === 'fallers'
-        ? movementIntel.fallers
-        : movementIntel.highVolatility;
+        ? scopedFallers
+        : scopedVolatile;
 
   if (discoveryFocus ? !discoveryHasMovers : !scopedHasMovers) return null;
 

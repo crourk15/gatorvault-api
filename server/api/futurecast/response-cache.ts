@@ -489,6 +489,58 @@ export function loadMasterBoardCached(): unknown | null {
   return null;
 }
 
+/** Soft movement-intel plate from master-board — never missing riser/faller arrays. */
+export function softMovementIntelFromMaster(classYear = 2028): {
+  classYear: number;
+  updatedAt: string;
+  movementHeatmap: { upCount: number; downCount: number; flatCount: number };
+  heatmap: { buckets: { label: string; count: number }[]; windowDays: number };
+  risers: unknown[];
+  fallers: unknown[];
+  highVolatility: unknown[];
+  stable: unknown[];
+  fitScoreLeaders: unknown[];
+  fitScoreRisks: unknown[];
+  alerts: unknown[];
+  degraded: string;
+} {
+  const softTrend = softTrendingBoardFromMaster();
+  const master = loadMasterBoardCached() as
+    | {
+        updatedAt?: string;
+        movementHeatmap?: { upCount: number; downCount: number; flatCount: number };
+        heatmap?: { buckets: { label: string; count: number }[]; windowDays: number };
+        players?: unknown[];
+      }
+    | null;
+  const players = Array.isArray(master?.players) ? master!.players! : [];
+  return {
+    classYear: Number(classYear) || softTrend.classYear,
+    updatedAt: String(master?.updatedAt || softTrend.updatedAt),
+    movementHeatmap: master?.movementHeatmap || {
+      upCount: softTrend.trendingUp.length,
+      downCount: softTrend.trendingDown.length,
+      flatCount: Math.max(0, players.length - softTrend.trendingUp.length - softTrend.trendingDown.length),
+    },
+    heatmap: master?.heatmap || {
+      buckets: [
+        { label: 'Up', count: softTrend.trendingUp.length },
+        { label: 'Down', count: softTrend.trendingDown.length },
+        { label: 'Flat', count: Math.max(0, players.length - softTrend.trendingUp.length - softTrend.trendingDown.length) },
+      ],
+      windowDays: 7,
+    },
+    risers: softTrend.trendingUp,
+    fallers: softTrend.trendingDown,
+    highVolatility: [],
+    stable: [],
+    fitScoreLeaders: [],
+    fitScoreRisks: [],
+    alerts: [],
+    degraded: 'master_soft_movement',
+  };
+}
+
 /** Soft trending plate from master-board / empty arrays — never status:building for Lab. */
 export function softTrendingBoardFromMaster(): {
   classYear: number;

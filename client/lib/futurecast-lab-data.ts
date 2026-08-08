@@ -94,6 +94,35 @@ function normalizeTrendingBoard(raw: TrendingBoardResponse | null | undefined): 
   };
 }
 
+function normalizeMovementIntel(raw: MovementIntelResponse | null | undefined): MovementIntelResponse {
+  return {
+    classYear: Number(raw?.classYear) || 2028,
+    updatedAt: String(raw?.updatedAt || ''),
+    movementHeatmap: raw?.movementHeatmap || { upCount: 0, downCount: 0, flatCount: 0 },
+    heatmap: raw?.heatmap || { buckets: [], windowDays: 7 },
+    risers: Array.isArray(raw?.risers) ? raw!.risers : [],
+    fallers: Array.isArray(raw?.fallers) ? raw!.fallers : [],
+    highVolatility: Array.isArray(raw?.highVolatility) ? raw!.highVolatility : [],
+    stable: Array.isArray(raw?.stable) ? raw!.stable : [],
+    fitScoreLeaders: Array.isArray(raw?.fitScoreLeaders) ? raw!.fitScoreLeaders : [],
+    fitScoreRisks: Array.isArray(raw?.fitScoreRisks) ? raw!.fitScoreRisks : [],
+    alerts: Array.isArray(raw?.alerts) ? raw!.alerts : [],
+  };
+}
+
+function normalizeHome(raw: FutureCastHomeResponse | null | undefined): FutureCastHomeResponse {
+  return {
+    classYear: Number(raw?.classYear) || 2027,
+    commitSort: raw?.commitSort || 'fit',
+    heatmap: raw?.heatmap || { buckets: [], windowDays: 7 },
+    commits: Array.isArray(raw?.commits) ? raw!.commits : [],
+    topTargets: Array.isArray(raw?.topTargets) ? raw!.topTargets : [],
+    trendingUp: Array.isArray(raw?.trendingUp) ? raw!.trendingUp : [],
+    trendingDown: Array.isArray(raw?.trendingDown) ? raw!.trendingDown : [],
+    portalWatchlist: Array.isArray(raw?.portalWatchlist) ? raw!.portalWatchlist : [],
+  };
+}
+
 export type FutureCastLabDataMap = {
   masterBoard: MasterBoardResponse;
   trendingBoard: TrendingBoardResponse;
@@ -224,19 +253,21 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
   const trending = normalizeTrendingBoard(
     settled(trendingR, { classYear: 2027, updatedAt: '', trendingUp: [], trendingDown: [] })
   );
-  const movement = settled(movementR, {
-    classYear: discoveryYear,
-    updatedAt: '',
-    movementHeatmap: { upCount: 0, downCount: 0, flatCount: 0 },
-    heatmap: { buckets: [], windowDays: 7 },
-    risers: [],
-    fallers: [],
-    highVolatility: [],
-    stable: [],
-    fitScoreLeaders: [],
-    fitScoreRisks: [],
-    alerts: [],
-  });
+  const movement = normalizeMovementIntel(
+    settled(movementR, {
+      classYear: discoveryYear,
+      updatedAt: '',
+      movementHeatmap: { upCount: 0, downCount: 0, flatCount: 0 },
+      heatmap: { buckets: [], windowDays: 7 },
+      risers: [],
+      fallers: [],
+      highVolatility: [],
+      stable: [],
+      fitScoreLeaders: [],
+      fitScoreRisks: [],
+      alerts: [],
+    })
+  );
   const staffNotes = settled(staffR, {
     classYear: ACTIVE_RECRUITING_CLASS_YEAR,
     updatedAt: '',
@@ -244,16 +275,18 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     count: 0,
     notes: [],
   });
-  const home = settled(homeR, {
-    classYear: 2027,
-    commitSort: 'fit',
-    heatmap: { buckets: [], windowDays: 7 },
-    commits: [],
-    topTargets: [],
-    trendingUp: [],
-    trendingDown: [],
-    portalWatchlist: [],
-  });
+  const home = normalizeHome(
+    settled(homeR, {
+      classYear: 2027,
+      commitSort: 'fit',
+      heatmap: { buckets: [], windowDays: 7 },
+      commits: [],
+      topTargets: [],
+      trendingUp: [],
+      trendingDown: [],
+      portalWatchlist: [],
+    })
+  );
   const stock = settled(stockR, EMPTY_STOCK);
   const discoveryHighPriority: HighPriorityResponse = settled(discoveryHpR, {
     ...EMPTY_HIGH_PRIORITY,
