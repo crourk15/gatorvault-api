@@ -528,6 +528,8 @@ function toSafeMemberRow(user) {
   const paid = hasPaidAccess(user);
   const accessActive = paid || !trial.expired;
   const sub = user?.subscription || null;
+  const { sanitizeFirstTouch, outletLabel } = require('./member-attribution');
+  const firstTouch = sanitizeFirstTouch(user?.firstTouch || null);
   return {
     email: user.email || null,
     name: user.name || null,
@@ -544,7 +546,11 @@ function toSafeMemberRow(user) {
     subscriptionTier: sub?.tier || null,
     hasStripe: Boolean(user?.stripeCustomerId || sub?.stripeCustomerId),
     hasBeehiiv: Boolean(user?.beehiivSubscriptionId),
-    onboardingSent: Boolean(user?.onboardingSent)
+    onboardingSent: Boolean(user?.onboardingSent),
+    firstTouch,
+    source: outletLabel(firstTouch),
+    campaign: firstTouch?.campaign || null,
+    medium: firstTouch?.medium || null,
   };
 }
 
@@ -588,11 +594,15 @@ function listRecentMembers(opts = {}) {
     if (counts[row.access] != null) counts[row.access] += 1;
   }
 
+  const { countBySource } = require('./member-attribution');
+  const bySource = countBySource(filtered);
+
   return {
     members: filtered.slice(0, limit),
     total: filtered.length,
     returned: Math.min(filtered.length, limit),
     counts,
+    bySource,
     since: opts.since == null ? '30d' : String(opts.since),
     access: accessFilter || 'all',
     limit

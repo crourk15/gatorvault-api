@@ -27,6 +27,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.12) picks 
 - [x] FutureCast Closest to commit: 2028 high-priority API returns full allowlist (not chase-hot top-18 cut) so board leaders like Hudson West update live on iOS
 - [x] Vault Scouting: provisional / `filmWatched:false` evals hidden from fan profiles (Harris-Payne film-watch standard) — API gate
 - [x] FutureCast Closest processEvidence on HP API (offer/visits/intel flags) — live on iOS for payload; stamp gate needs client bake below
+- [x] Member first-touch attribution persist on `POST /api/register` + Admin Members Source/bySource (API) — live once any client sends `firstTouch`
 
 ---
 
@@ -49,6 +50,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-06 | Film Room shell refresh: owned hero, hub rail counts, featured + thumbnail grid, hub label normalize | `VaultFilmRoomPage` + CSS in binary | #337 |
 | 2026-08-06 | Film Breakdown: drop GNFP Podcast / Talking Ball coach sit-downs from seed + client catalog filter | `film-room-hub-seed` + `film-room-api` in binary (API prune also live) | pending |
 | 2026-08-08 | FutureCast Lab: harden trendingUp/Down nulls for SSG/deferred API stubs | `futurecast-lab-data` + Lab panels in binary (API soft plate also live) | #367 |
+| 2026-08-08 | Silent first-touch UTM capture on landing → send with Join register | `first-touch-attribution.ts` + `FirstTouchCapture` + JoinPage in binary | pending |
 | 2026-08-07 | FutureCast Lab: Closest to commit requires process evidence (offer/visits/intel), not On3 % alone | Leading panel + `competing-schools` gate in binary (API `processEvidence` also live) | pending |
 
 ---

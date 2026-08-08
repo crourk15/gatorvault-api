@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { GlobalErrorBoundary } from '@/components/GlobalErrorBoundary';
 import { RouteErrorRecovery } from '@/components/RouteErrorRecovery';
+import { FirstTouchCapture } from '@/components/FirstTouchCapture';
 
 const NativeShellInit = dynamic(
   () => import('@/components/native/NativeShellInit').then((m) => m.NativeShellInit),
@@ -15,6 +16,7 @@ export function AppProviders({ children }: { children: React.ReactNode }): React
   return (
     <GlobalErrorBoundary>
       <ThemeProvider>
+        <FirstTouchCapture />
         <NativeShellInit />
         <RouteErrorRecovery />
         {children}
