@@ -241,6 +241,18 @@ export async function registerAccount(opts: {
   password: string;
   name: string;
   tier: PaymentTierId;
+  firstTouch?: {
+    source?: string | null;
+    medium?: string | null;
+    campaign?: string | null;
+    content?: string | null;
+    term?: string | null;
+    gclid?: string | null;
+    fbclid?: string | null;
+    referrer?: string | null;
+    landingPath?: string | null;
+    capturedAt?: string;
+  } | null;
 }): Promise<{
   session: AuthSession;
   emailSent?: boolean;

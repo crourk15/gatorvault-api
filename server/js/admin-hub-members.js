@@ -49,6 +49,27 @@
     return '—';
   }
 
+  function sourceLabel(row) {
+    var src = String(row.source || '').trim().toLowerCase();
+    if (!src || src === 'direct') return 'direct';
+    return src;
+  }
+
+  function sourceDetail(row) {
+    var parts = [];
+    if (row.medium) parts.push(String(row.medium));
+    if (row.campaign) parts.push(String(row.campaign));
+    return parts.length ? parts.join(' · ') : '';
+  }
+
+  function renderBySource(bySource) {
+    var rows = Array.isArray(bySource) ? bySource : [];
+    if (!rows.length) return 'Outlets: no attributed signups in this window (direct/unknown until tracked links are used)';
+    return 'Outlets: ' + rows.slice(0, 8).map(function (r) {
+      return String(r.source || 'direct') + ' ' + String(r.count || 0);
+    }).join(' · ');
+  }
+
   function copyText(text) {
     if (!text) return Promise.reject(new Error('Nothing to copy'));
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -81,7 +102,7 @@
       '<div class="hub-sum hub-members">'
       + '<div class="hub-dash-head">'
       + '<div><h2 class="hub-dash-title">Recent Members</h2>'
-      + '<p class="hub-dash-sub">Newest signups from the durable account store — trial, paid, and expired</p></div>'
+      + '<p class="hub-dash-sub">Newest signups from the durable account store — trial, paid, expired, and first-touch outlet</p></div>'
       + '<div class="hub-btn-row">'
       + '<button type="button" class="hub-btn secondary" id="hub-mem-refresh">Refresh</button>'
       + '<button type="button" class="hub-btn secondary" id="hub-mem-points">Member Points</button>'
@@ -151,11 +172,12 @@
       var members = payload.members || [];
       var counts = payload.counts || {};
       if (countsEl) {
-        countsEl.textContent =
-          'Showing ' + (payload.returned || members.length) + ' of ' + (payload.total || 0)
-          + ' · Trial ' + (counts.trial || 0)
-          + ' · Paid ' + (counts.paid || 0)
-          + ' · Expired ' + (counts.expired || 0);
+        countsEl.innerHTML =
+          '<div>Showing ' + esc(payload.returned || members.length) + ' of ' + esc(payload.total || 0)
+          + ' · Trial ' + esc(counts.trial || 0)
+          + ' · Paid ' + esc(counts.paid || 0)
+          + ' · Expired ' + esc(counts.expired || 0) + '</div>'
+          + '<div style="margin-top:6px">' + esc(renderBySource(payload.bySource)) + '</div>';
       }
 
       if (!members.length) {
@@ -165,12 +187,16 @@
 
       var rows = members.map(function (m) {
         var email = m.email || '';
+        var detail = sourceDetail(m);
         return '<tr>'
           + '<td><div class="hub-mem-name">' + esc(m.name || '—') + '</div>'
           + '<div class="hub-mem-email">' + esc(email || '—') + '</div></td>'
           + '<td>' + esc(fmtWhen(m.createdAt)) + '</td>'
           + '<td><span class="' + accessClass(m.access) + '">' + esc(accessLabel(m.access)) + '</span></td>'
           + '<td>' + esc(m.tier || '—') + '</td>'
+          + '<td><div>' + esc(sourceLabel(m)) + '</div>'
+          + (detail ? '<div class="hub-mem-email">' + esc(detail) + '</div>' : '')
+          + '</td>'
           + '<td>' + esc(billingLabel(m)) + '</td>'
           + '<td>' + esc(m.trialEnd ? fmtWhen(m.trialEnd) : '—') + '</td>'
           + '<td><button type="button" class="hub-btn secondary hub-mem-copy" data-email="' + esc(email) + '"'
@@ -182,7 +208,7 @@
         '<div class="hub-table-wrap">'
         + '<table class="hub-table" aria-label="Recent members">'
         + '<thead><tr>'
-        + '<th>Member</th><th>Joined</th><th>Access</th><th>Tier</th><th>Billing</th><th>Trial end</th><th></th>'
+        + '<th>Member</th><th>Joined</th><th>Access</th><th>Tier</th><th>Source</th><th>Billing</th><th>Trial end</th><th></th>'
         + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
 
       body.querySelectorAll('.hub-mem-copy').forEach(function (btn) {

@@ -17,6 +17,7 @@ import {
 import { findPricingTier, publicPricingTiers, PRICING_TIERS } from '@/lib/pricing-tiers';
 import { LegalSiteLinks } from '@/components/site/LegalSiteLinks';
 import { isNativeApp, nativeNavigationUrl } from '@/lib/api-base';
+import { firstTouchForRegister } from '@/lib/first-touch-attribution';
 
 type Mode = 'signin' | 'signup' | 'forgot' | 'reset';
 
@@ -95,6 +96,8 @@ export function JoinPage(): React.ReactElement {
   const native = isNativeApp();
 
   useEffect(() => {
+    // Silent first-touch — no extra signup step for the member.
+    firstTouchForRegister();
     setTier(tierFromQuery());
     const params = new URLSearchParams(window.location.search);
     if (params.get('mode') === 'signin') setMode('signin');
@@ -219,6 +222,7 @@ export function JoinPage(): React.ReactElement {
         password,
         name: name.trim(),
         tier,
+        firstTouch: firstTouchForRegister(),
       });
       rememberLastEmail(session.email);
       saveSession(session);

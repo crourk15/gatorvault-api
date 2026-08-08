@@ -652,9 +652,11 @@ app.post('/api/register', async (req, res) => {
     }
 
     const { resolveRegistrationTrial, rememberTrial } = require('./lib/trial-ledger');
+    const { sanitizeFirstTouch } = require('./lib/member-attribution');
     const trialPlan = resolveRegistrationTrial(email, { trialDays: 30 });
     const trialEnd = trialPlan.trialEnd;
     const createdAt = new Date().toISOString();
+    const firstTouch = sanitizeFirstTouch(req.body?.firstTouch || req.body?.attribution || null);
 
     const user = {
       email,
@@ -663,6 +665,7 @@ app.post('/api/register', async (req, res) => {
       passwordHash: hashPassword(password),
       createdAt: trialPlan.trialStart || createdAt,
       trialEnd: trialEnd.toISOString(),
+      ...(firstTouch ? { firstTouch } : {}),
     };
     users.push(user);
     saveUsers(users);

@@ -221,7 +221,15 @@ test('listRecentMembers returns newest first without passwordHash', () => {
       passwordHash: 'SECRET_NEW',
       createdAt: new Date(now - 1 * 60 * 60 * 1000).toISOString(),
       trialEnd: new Date(now + 6 * 24 * 60 * 60 * 1000).toISOString(),
-      tier: 'trial'
+      tier: 'trial',
+      firstTouch: {
+        source: 'x',
+        medium: 'social',
+        campaign: 'fall_camp',
+        referrer: 't.co',
+        landingPath: '/join/?utm_source=x',
+        capturedAt: new Date(now - 2 * 60 * 60 * 1000).toISOString()
+      }
     },
     {
       email: 'paid@example.com',
@@ -245,7 +253,12 @@ test('listRecentMembers returns newest first without passwordHash', () => {
     assert.equal(all.total, 3);
     assert.equal(all.members[0].email, 'newest@example.com');
     assert.equal(all.members[0].access, 'trial');
+    assert.equal(all.members[0].source, 'x');
+    assert.equal(all.members[0].campaign, 'fall_camp');
+    assert.ok(Array.isArray(all.bySource));
+    assert.ok(all.bySource.some((r) => r.source === 'x' && r.count >= 1));
     assert.equal(all.members.find((m) => m.email === 'paid@example.com')?.access, 'paid');
+    assert.equal(all.members.find((m) => m.email === 'paid@example.com')?.source, 'direct');
     for (const row of all.members) {
       assert.equal(Object.prototype.hasOwnProperty.call(row, 'passwordHash'), false);
       assert.ok(!JSON.stringify(row).includes('SECRET'));
