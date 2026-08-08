@@ -16,9 +16,9 @@
   "comparison": "Davis comps to Derek Stingley Jr. — 6-0 lean CB mold; mirrors in coverage, finishes as a tackler, and brings ATH versatility from the boundary.",
   "projection": "Davis projects as a Year 2 DB contributor (nickel/special teams Year 1). Ceiling: starting boundary CB — the Columbia ATH who can cover, tackle, and grow into an SEC defensive back.",
   "schemeFit": "Davis fits a DB room that values mirror ability, tackle finish, and ATH flexibility across CB/nickel.",
-  "staffNotes": "Vault film desk verified 2026-08-08 from On3 ATH listing (6-0 / 175, Columbia GA) + public DB/WR usage notes. Hudl profile referenced; embed not locked. Comp size-matched within ~1–2\". Charles asked to embed into profiles.",
+  "staffNotes": "PROVISIONAL — board/bio draft only. Not a Vault film-desk watch. Do not treat as Harris-Payne-level tape eval until Hudl is watched and Charles confirms. Drafted 2026-08-08 from On3 size/pos + public notes; comps are frame-matched placeholders.",
   "recruitingStory": "Jamarion Davis is a 2028 Columbia (GA) ATH · listed 6-0 / 175 · multi-offer DB/WR type with Florida in the RPM picture and UOV process.",
-  "angle": "Lead with boundary CB mirror + tackle finish; ATH versatility secondary.",
+  "angle": "PROVISIONAL placeholder until film desk watches Hudl. Lead with boundary CB mirror + tackle finish; ATH versatility secondary.",
   "traits": [
     "coverage",
     "mirror",
@@ -27,5 +27,7 @@
     "ball-skills",
     "athleticism"
   ],
-  "insiderNotes": "Davis is a lean 6-0 defensive back who mirrors in coverage, finishes tackles from the backend, and carries WR/S versatility. Wins with hips, attachment, and willingness to tackle — a boundary CB mold as the frame fills."
+  "insiderNotes": "Davis is a lean 6-0 defensive back who mirrors in coverage, finishes tackles from the backend, and carries WR/S versatility. Wins with hips, attachment, and willingness to tackle — a boundary CB mold as the frame fills.",
+  "provisional": true,
+  "filmWatched": false
 }

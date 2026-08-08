@@ -174,6 +174,10 @@ function normalizeBreakdown(raw, slug) {
     updatedAt: raw.updatedAt || new Date().toISOString()
   };
 
+  // Film-desk provenance — fan Vault Scouting hides when filmWatched === false.
+  if (typeof raw.filmWatched === 'boolean') entry.filmWatched = raw.filmWatched;
+  if (typeof raw.provisional === 'boolean') entry.provisional = raw.provisional;
+
   if (!hasScoutingContent(entry)) {
     throw new Error('Breakdown must include at least one scouting field');
   }

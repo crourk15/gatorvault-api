@@ -342,6 +342,10 @@ function getVaultScoutingForSlug(slug) {
     const bd = warRoom.getBreakdownBySlug(key);
     if (!bd || quality.breakdownIsCorrupt?.(bd, bd.playerName || key)) return null;
 
+    // Never serve board/bio placeholders as Harris-Payne-level Vault Scouting.
+    const staffNotes = String(bd.staffNotes || '');
+    if (/\bPROVISIONAL\b/i.test(staffNotes) || bd.filmWatched === false) return null;
+
     // Lead paragraph = real film take only. Never staffNotes / film-desk meta /
     // On3 bio dumps (those poisoned Asher-style cards with verification copy).
     const evaluation = (() => {

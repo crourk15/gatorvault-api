@@ -16,9 +16,9 @@
   "comparison": "Price comps to Jordan Addison — 5-11 / 6-0 sudden WR mold; creates with burst, tracks on the perimeter, and turns short throws into chunk YAC.",
   "projection": "Price projects as a Year 2–3 perimeter contributor (scout/special teams Year 1). Ceiling: starting outside/slot WR — the sudden Spain Park separator who grows into an SEC perimeter role.",
   "schemeFit": "Price fits a perimeter WR room that values sudden release, tracking, and YAC over pure size.",
-  "staffNotes": "Vault film desk verified 2026-08-08 from On3 WR listing (6-0 / 175, Spain Park) + MaxPreps WR production. Hudl embed not locked in store yet — On3 featured film referenced. Comp size-matched within ~1–2\". Charles asked to embed into profiles.",
+  "staffNotes": "PROVISIONAL — board/bio draft only. Not a Vault film-desk watch. Do not treat as Harris-Payne-level tape eval until Hudl is watched and Charles confirms. Drafted 2026-08-08 from On3 size/pos + public notes; comps are frame-matched placeholders.",
   "recruitingStory": "Barrett Price is a 2028 Spain Park (AL) WR · listed 6-0 / 175 · Florida-leaning board with UF process (Friday Night Lights / UOV trail).",
-  "angle": "Lead with sudden 6-0 WR separator traits and Florida process out of Alabama.",
+  "angle": "PROVISIONAL placeholder until film desk watches Hudl. Lead with sudden 6-0 WR separator traits and Florida process out of Alabama.",
   "traits": [
     "separation",
     "tracking",
@@ -27,5 +27,7 @@
     "hands",
     "perimeter"
   ],
-  "insiderNotes": "Price is a lean 6-0 wideout who creates with sudden burst, tracks cleanly on the boundary, and turns short catches into chunk YAC. Wins with release and play speed — a perimeter mold as the frame fills."
+  "insiderNotes": "Price is a lean 6-0 wideout who creates with sudden burst, tracks cleanly on the boundary, and turns short catches into chunk YAC. Wins with release and play speed — a perimeter mold as the frame fills.",
+  "provisional": true,
+  "filmWatched": false
 }
