@@ -295,8 +295,8 @@ export function FutureCastExtendedModules({
   }, [movementNarratives, visitRecap, flipWatch]);
 
   const trend30 = useMemo(() => {
-    const up = trendingBoard.trendingUp.slice(0, 5);
-    const down = trendingBoard.trendingDown.slice(0, 5);
+    const up = (trendingBoard?.trendingUp ?? []).slice(0, 5);
+    const down = (trendingBoard?.trendingDown ?? []).slice(0, 5);
     return { up, down };
   }, [trendingBoard]);
 

@@ -101,6 +101,7 @@ export async function sendCachedJson(
       }
     }
     res.setHeader('X-GatorVault-Cache', 'DEFERRED');
+    // Always include array fields FutureCast Lab spreads/slices during SSG/iOS paint.
     res.status(200).json({
       ok: true,
       status: 'building',
@@ -108,6 +109,16 @@ export async function sendCachedJson(
       players: [],
       items: [],
       targets: [],
+      trendingUp: [],
+      trendingDown: [],
+      risers: [],
+      fallers: [],
+      highVolatility: [],
+      stable: [],
+      fitScoreLeaders: [],
+      fitScoreRisks: [],
+      alerts: [],
+      notes: [],
       meta: { cacheKey, cacheReason: 'deferred_rebuild' },
     });
     return;
@@ -476,6 +487,52 @@ export function loadMasterBoardCached(): unknown | null {
     return soft;
   }
   return null;
+}
+
+/** Soft trending plate from master-board / empty arrays — never status:building for Lab. */
+export function softTrendingBoardFromMaster(): {
+  classYear: number;
+  updatedAt: string;
+  trendingUp: unknown[];
+  trendingDown: unknown[];
+  degraded: string;
+} {
+  const master = loadMasterBoardCached() as
+    | {
+        classYear?: number;
+        updatedAt?: string;
+        movementSummary?: {
+          riserPlayers?: unknown[];
+          fallerPlayers?: unknown[];
+        };
+        players?: Array<Record<string, unknown>>;
+      }
+    | null;
+  const updatedAt = String(master?.updatedAt || new Date().toISOString());
+  const classYear = Number(master?.classYear) || 2028;
+  let trendingUp = Array.isArray(master?.movementSummary?.riserPlayers)
+    ? master!.movementSummary!.riserPlayers!
+    : [];
+  let trendingDown = Array.isArray(master?.movementSummary?.fallerPlayers)
+    ? master!.movementSummary!.fallerPlayers!
+    : [];
+  if (!trendingUp.length && !trendingDown.length && Array.isArray(master?.players)) {
+    const ranked = [...master!.players!].sort(
+      (a, b) => Number(b.trendDelta7d ?? 0) - Number(a.trendDelta7d ?? 0)
+    );
+    trendingUp = ranked.filter((p) => Number(p.trendDelta7d ?? 0) > 0).slice(0, 8);
+    trendingDown = ranked
+      .filter((p) => Number(p.trendDelta7d ?? 0) < 0)
+      .sort((a, b) => Number(a.trendDelta7d ?? 0) - Number(b.trendDelta7d ?? 0))
+      .slice(0, 8);
+  }
+  return {
+    classYear,
+    updatedAt,
+    trendingUp,
+    trendingDown,
+    degraded: 'master_soft_trending',
+  };
 }
 
 /** Warm master-board alone — safer than full lab warm on Starter. */

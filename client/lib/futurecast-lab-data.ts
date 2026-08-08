@@ -84,6 +84,16 @@ function settled<T>(result: PromiseSettledResult<T>, fallback: T): T {
   return result.status === 'fulfilled' ? result.value : fallback;
 }
 
+/** Guard Lab paint/SSG when Tier B returns building stubs missing array fields. */
+function normalizeTrendingBoard(raw: TrendingBoardResponse | null | undefined): TrendingBoardResponse {
+  return {
+    classYear: Number(raw?.classYear) || 2027,
+    updatedAt: String(raw?.updatedAt || ''),
+    trendingUp: Array.isArray(raw?.trendingUp) ? raw!.trendingUp : [],
+    trendingDown: Array.isArray(raw?.trendingDown) ? raw!.trendingDown : [],
+  };
+}
+
 export type FutureCastLabDataMap = {
   masterBoard: MasterBoardResponse;
   trendingBoard: TrendingBoardResponse;
@@ -211,7 +221,9 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
       })),
     ]);
 
-  const trending = settled(trendingR, { classYear: 2027, updatedAt: '', trendingUp: [], trendingDown: [] });
+  const trending = normalizeTrendingBoard(
+    settled(trendingR, { classYear: 2027, updatedAt: '', trendingUp: [], trendingDown: [] })
+  );
   const movement = settled(movementR, {
     classYear: discoveryYear,
     updatedAt: '',

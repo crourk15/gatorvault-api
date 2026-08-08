@@ -31,18 +31,21 @@ export function TrendingBoardLayout({ trendingUp, trendingDown, updatedAt }: Pro
   const insider = isFutureCastInsider();
   const freeLimit = 3;
 
+  const upRows = trendingUp ?? [];
+  const downRows = trendingDown ?? [];
+
   const positions = useMemo(
-    () => [...new Set([...trendingUp, ...trendingDown].map((p) => p.position))].sort(),
-    [trendingUp, trendingDown]
+    () => [...new Set([...upRows, ...downRows].map((p) => p.position))].sort(),
+    [upRows, downRows]
   );
   const states = useMemo(
     () =>
-      [...new Set([...trendingUp, ...trendingDown].map((p) => p.state).filter(Boolean) as string[])].sort(),
-    [trendingUp, trendingDown]
+      [...new Set([...upRows, ...downRows].map((p) => p.state).filter(Boolean) as string[])].sort(),
+    [upRows, downRows]
   );
 
-  const up = applyTrendingFilters(trendingUp, filters);
-  const down = applyTrendingFilters(trendingDown, filters);
+  const up = applyTrendingFilters(upRows, filters);
+  const down = applyTrendingFilters(downRows, filters);
   const upVisible = insider ? up : up.slice(0, freeLimit);
   const downVisible = insider ? down : down.slice(0, freeLimit);
 
