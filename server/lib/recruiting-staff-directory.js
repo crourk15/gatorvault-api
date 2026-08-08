@@ -108,6 +108,7 @@ function isStaffPlayerSlug(slug) {
 
 module.exports = {
   STAFF_DIRECTORY,
+  STAFF_ID_ALIASES,
   normalizeStaffId,
   resolveStaffById,
   listStaff,

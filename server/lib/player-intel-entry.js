@@ -399,7 +399,19 @@ async function previewPlayerIntel(input) {
 }
 
 async function enterPlayerIntel(input) {
+  try {
+    const staff = require('./recruiting-staff-directory');
+    const probeSlug = String(input.slug || '').toLowerCase();
+    if (staff.isStaffOrCoachName(input.name) || (probeSlug && staff.isStaffPlayerSlug(probeSlug))) {
+      throw new Error('staff_not_recruit: UF coaching staff cannot be entered as recruits');
+    }
+  } catch (err) {
+    if (String(err.message || '').startsWith('staff_not_recruit')) throw err;
+  }
   const resolved = await resolveRecruitIdentity(input.name, input.classYear);
+  if (require('./recruiting-blocked-players').isBlockedRecruit(resolved)) {
+    throw new Error('staff_not_recruit: UF coaching staff cannot be entered as recruits');
+  }
   const intelQuality = assessOn3Intel(resolved);
   if (!intelQuality.ok) {
     throw new Error(intelQuality.message);

@@ -80,6 +80,14 @@ function addToAdminAllowlist({ slug, name, classYear }) {
   const year = parseInt(classYear, 10);
   const s = normalizeSlug(slug || slugify(name));
   if (!s || !name) throw new Error('slug and name required');
+  try {
+    const staff = require('./recruiting-staff-directory');
+    if (staff.isStaffPlayerSlug(s) || staff.isStaffOrCoachName(name)) {
+      return { added: false, reason: 'staff_not_recruit', slug: s, classYear: year };
+    }
+  } catch {
+    /* optional */
+  }
   if (year === 2027) {
     return {
       added: false,

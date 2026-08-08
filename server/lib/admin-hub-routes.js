@@ -870,6 +870,18 @@ function mountAdminHubRoutes(app) {
     }
   });
 
+  /** Purge UF staff coach phantoms soft-created as FutureCast/HS recruits. */
+  app.post('/api/admin/hub/purge-staff-phantoms', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const { purgeStaffPhantomRecruits } = require('./purge-staff-phantom-recruits');
+      const report = await purgeStaffPhantomRecruits({ clearHubCache: true });
+      return res.status(200).json({ ok: true, ...report });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   /** Curated Hudl/On3 film traits for Beat Desk Copy Brief. */
   app.get('/api/admin/hub/film-traits', (req, res) => {
     if (!requireAdmin(req, res)) return;

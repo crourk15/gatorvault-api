@@ -206,6 +206,18 @@ function mountRecruitingHubRoutes(app) {
     try {
       const id = String(req.params.id || '').trim();
       if (!id) return res.status(400).json({ ok: false, error: 'Missing player id' });
+      try {
+        const { isBlockedRecruit } = require('./recruiting-blocked-players');
+        const staff = require('./recruiting-staff-directory');
+        if (
+          isBlockedRecruit({ slug: id, name: id.replace(/-/g, ' ') }) ||
+          staff.isStaffPlayerSlug(id)
+        ) {
+          return res.status(404).json({ ok: false, error: 'Player not found', reason: 'staff_not_recruit' });
+        }
+      } catch {
+        /* optional */
+      }
       const cacheKey = `hub:player:${id}`;
 
       const { value: player } = await hubCache.wrap(cacheKey, async () => {
@@ -219,6 +231,14 @@ function mountRecruitingHubRoutes(app) {
       });
 
       if (!player) return res.status(404).json({ ok: false, error: 'Player not found' });
+      try {
+        const { isBlockedRecruit } = require('./recruiting-blocked-players');
+        if (isBlockedRecruit(player)) {
+          return res.status(404).json({ ok: false, error: 'Player not found', reason: 'staff_not_recruit' });
+        }
+      } catch {
+        /* optional */
+      }
       return res.json({ ok: true, meta: hubMeta({ cacheKey }), player: mapPlayerToHub(player) });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

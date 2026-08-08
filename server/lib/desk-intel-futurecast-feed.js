@@ -317,6 +317,26 @@ async function feedDeskIntelToFutureCast({
   const key = canonicalTargetSlug(slug || player?.slug || '');
   if (!key) return { ok: false, error: 'missing_slug', steps };
 
+  // Never soft-create HS/FC targets from UF coaching staff (brandon-harris =
+  // CB coach, not a 2028 Bolles S). Desk topic filters alone are not enough.
+  try {
+    const staff = require('./recruiting-staff-directory');
+    const probeName = player?.name || research?.playerName || key.replace(/-/g, ' ');
+    if (staff.isStaffPlayerSlug(key) || staff.isStaffOrCoachName(probeName)) {
+      steps.push({ step: 'staff_collision_block', ok: true, blocked: true });
+      return {
+        ok: false,
+        error: 'staff_not_recruit',
+        slug: key,
+        name: probeName,
+        steps,
+        allowlisted: false
+      };
+    }
+  } catch {
+    /* optional */
+  }
+
   // Never soft-create HS/FC targets from current UF roster names (weight-room /
   // depth-chart chatter). Bryce Lovett = R-Jr OL, not a 2028 ATH commit.
   const rosterHit = currentRosterCollision(key);

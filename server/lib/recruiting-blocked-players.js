@@ -1,5 +1,7 @@
 /**
  * Admin-purged recruiting identities — must never appear in UI or ingest.
+ * Also hard-blocks UF coaching staff so Desk never soft-creates coach phantoms
+ * (e.g. brandon-harris = CB coach, not a 2028 Bolles S).
  */
 const { slugify } = require('./slug');
 
@@ -17,6 +19,10 @@ const BLOCKED_PLAYER_SLUGS = new Set([
   'trey-morrison',
   'malik-clark',
   'michael-johnson-jr',
+  // UF staff coach-name collisions (Desk / On3 coach rows mistaken for recruits).
+  'brandon-harris',
+  'phil-trautwein',
+  'chris-foster',
 ]);
 
 const BLOCKED_PLAYER_NAMES = new Set([
@@ -28,6 +34,9 @@ const BLOCKED_PLAYER_NAMES = new Set([
   'michael johnson jr.',
   'michael johnson jr',
   'bryce lovett',
+  'brandon harris',
+  'phil trautwein',
+  'chris foster',
 ]);
 
 function isBlockedRecruit(player) {
@@ -35,7 +44,15 @@ function isBlockedRecruit(player) {
   const slug = String(player.slug || player.id || slugify(player.name) || '').toLowerCase();
   if (BLOCKED_PLAYER_SLUGS.has(slug)) return true;
   const name = String(player.name || player.playerName || '').trim().toLowerCase();
-  return BLOCKED_PLAYER_NAMES.has(name);
+  if (BLOCKED_PLAYER_NAMES.has(name)) return true;
+  try {
+    const staff = require('./recruiting-staff-directory');
+    if (slug && staff.isStaffPlayerSlug(slug)) return true;
+    if (name && staff.isStaffOrCoachName(name)) return true;
+  } catch {
+    /* optional */
+  }
+  return false;
 }
 
 function filterBlockedRecruits(list) {
