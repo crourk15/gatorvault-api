@@ -112,6 +112,38 @@ function updateUser(email, patch) {
   return users[idx];
 }
 
+/**
+ * Rename a member login email (typo fixes). Preserves password/trial/subscription.
+ * @returns {{ ok: true, from: string, to: string, user: object } | { ok: false, error: string }}
+ */
+function changeUserEmail(fromEmail, toEmail) {
+  const from = String(fromEmail || '').trim().toLowerCase();
+  const to = String(toEmail || '').trim().toLowerCase();
+  if (!from || !to) return { ok: false, error: 'from and to emails are required' };
+  if (from === to) return { ok: false, error: 'from and to are the same' };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
+    return { ok: false, error: 'to email looks invalid' };
+  }
+  const users = loadUsers();
+  const idx = users.findIndex((u) => u.email === from);
+  if (idx < 0) return { ok: false, error: 'account_not_found' };
+  if (users.some((u, i) => i !== idx && u.email === to)) {
+    return { ok: false, error: 'target_email_in_use' };
+  }
+  const previousEmails = Array.isArray(users[idx].previousEmails)
+    ? users[idx].previousEmails.slice()
+    : [];
+  if (!previousEmails.includes(from)) previousEmails.push(from);
+  users[idx] = {
+    ...users[idx],
+    email: to,
+    previousEmails,
+    emailCorrectedAt: new Date().toISOString(),
+  };
+  saveUsers(users);
+  return { ok: true, from, to, user: users[idx] };
+}
+
 function deleteUser(email) {
   const normalized = String(email || '').trim().toLowerCase();
   if (!normalized) return false;
@@ -143,6 +175,7 @@ module.exports = {
   findUserByOriginalTransactionId,
   findUserByAppAccountToken,
   updateUser,
+  changeUserEmail,
   deleteUser,
   migrateUsersFromLegacyIfNeeded,
   getUsersStoreInfo,

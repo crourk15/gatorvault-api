@@ -8,7 +8,7 @@ const productStore = require('./product-intel/product-intel-store');
 const selfRunnerEngine = require('./self-runner/self-runner-engine');
 const recruitingStore = require('./recruiting-store');
 const { loadPublishedArticles } = require('./content-store');
-const { loadUsers } = require('./user-store');
+const { loadUsers, changeUserEmail, findUserByEmail } = require('./user-store');
 const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 const { hasPaidAccess, trialState, isSubscriptionActive } = require('./subscription-service');
 const { effectiveTier } = require('./session-auth');
@@ -785,6 +785,35 @@ function mountAdminHubRoutes(app) {
         ok: true,
         updatedAt: new Date().toISOString(),
         ...payload
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /**
+   * Fix a member typo email (e.g. outlook.coom → outlook.com).
+   * Body: { from, to }
+   * Caller can POST /api/welcome afterward to redeliver.
+   */
+  app.post('/api/admin/members/change-email', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const from = String(req.body?.from || req.body?.fromEmail || '').trim().toLowerCase();
+      const to = String(req.body?.to || req.body?.toEmail || '').trim().toLowerCase();
+      const result = changeUserEmail(from, to);
+      if (!result.ok) {
+        const status = result.error === 'account_not_found' ? 404 : 400;
+        return res.status(status).json({ ok: false, error: result.error });
+      }
+      const safeUser = findUserByEmail(to);
+      return res.status(200).json({
+        ok: true,
+        from: result.from,
+        to: result.to,
+        email: safeUser?.email || to,
+        name: safeUser?.name || result.user?.name || null,
+        previousEmails: Array.isArray(safeUser?.previousEmails) ? safeUser.previousEmails : [],
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
