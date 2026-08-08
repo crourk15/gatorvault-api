@@ -144,6 +144,16 @@ function extractClassYears(text) {
   return years;
 }
 
+function isStaffName(name) {
+  try {
+    const staff = require('./recruiting-staff-directory');
+    return staff.isStaffOrCoachName?.(name) === true;
+  } catch {
+    return false;
+  }
+}
+
+/** Prefer allowlisted / cue-adjacent recruits; never return UF coaches as Beat Desk topics. */
 function resolvePlayerFromTextSync(text) {
   const raw = String(text || '').trim();
   if (!raw) return null;
@@ -163,30 +173,77 @@ function resolvePlayerFromTextSync(text) {
     s = s.replace(/['’]s$/i, '').trim();
     return s || null;
   };
-  let name = cleanName(extractPlayerFromText(t));
-  if (name && !relationalOk(name)) name = null;
-  if (!name) {
-    const candidates = extractAllPlayerNameCandidates(t) || [];
-    name = cleanName(candidates.find((n) => relationalOk(cleanName(n) || n)) || null);
-  }
-  if (!name) {
-    try {
-      const allowlist = require('./recruiting-target-allowlist');
-      const names = Object.values(allowlist.getMergedCanonicalNames?.() || allowlist.CANONICAL_TARGET_NAMES || {});
-      for (const n of names) {
-        const re = new RegExp(`\\b${String(n).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-        if (re.test(t) && relationalOk(n)) {
-          name = n;
-          break;
-        }
+
+  const ordered = [];
+  const seen = new Set();
+  const pushName = (n) => {
+    const name = cleanName(n);
+    if (!name || !relationalOk(name) || isStaffName(name) || !isValidPlayerName(name)) return;
+    const key = name.toLowerCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    ordered.push(name);
+  };
+
+  // Structured extract first (year/POS/target patterns), then all Title-Case candidates.
+  pushName(extractPlayerFromText(t));
+  for (const n of extractAllPlayerNameCandidates(t) || []) pushName(n);
+
+  // Allowlist scan — prefer locked 2027/2028 board names present in text.
+  const allowlistHits = [];
+  try {
+    const allowlist = require('./recruiting-target-allowlist');
+    const names = Object.values(
+      allowlist.getMergedCanonicalNames?.() || allowlist.CANONICAL_TARGET_NAMES || {}
+    );
+    for (const n of names) {
+      const re = new RegExp(`\\b${String(n).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+      if (re.test(t) && relationalOk(n) && !isStaffName(n)) {
+        allowlistHits.push(n);
+        pushName(n);
       }
-    } catch {
-      /* optional */
     }
+  } catch {
+    /* optional */
   }
-  if (!name) return null;
+
+  if (!ordered.length) return null;
+
+  const cueScore = (name) => {
+    const esc = String(name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    let score = 0;
+    if (allowlistHits.some((n) => String(n).toLowerCase() === name.toLowerCase())) score += 50;
+    if (
+      new RegExp(
+        `\\b(?:20(?:2[7-9]|30)\\s+)?(?:\\d+-star\\s+)?(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH)\\s+${esc}\\b`,
+        'i'
+      ).test(t)
+    ) {
+      score += 40;
+    }
+    if (
+      new RegExp(
+        `\\b(?:target|prospect|recruit|commit|visitor)\\s+${esc}\\b`,
+        'i'
+      ).test(t)
+    ) {
+      score += 35;
+    }
+    if (new RegExp(`\\b${esc}\\b`, 'i').test(t) && /\b(20(?:2[7-9]|30)|class of)\b/i.test(t)) {
+      score += 10;
+    }
+    // Prefer later (recruit) names over lead coach names when scores tie.
+    const idx = t.toLowerCase().indexOf(name.toLowerCase());
+    if (idx >= 0) score += Math.min(8, Math.floor(idx / 40));
+    return score;
+  };
+
+  ordered.sort((a, b) => cueScore(b) - cueScore(a));
+  const name = ordered[0];
+  if (!name || isStaffName(name)) return null;
+
   const roster = matchRosterByName(name);
-  if (roster?.name) {
+  if (roster?.name && !isStaffName(roster.name)) {
     return {
       playerName: roster.name,
       playerSlug: roster.slug || slugify(roster.name),

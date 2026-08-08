@@ -34,6 +34,12 @@ const STAFF_ID_ALIASES = {
   hughes: 'drew-hughes',
   'drew hughes': 'drew-hughes',
   'brandon harris': 'harris',
+  'brandon-harris': 'harris',
+  'phil trautwein': 'trautwein',
+  'phil-trautwein': 'trautwein',
+  foster: 'foster',
+  'chris foster': 'foster',
+  'chris-foster': 'foster',
 };
 
 function normalizeStaffId(id) {
@@ -78,10 +84,33 @@ function isStaffOrCoachName(name) {
   return false;
 }
 
+/** True when a Beat Desk / intel slug is a UF staff id (brandon-harris, phil-trautwein, …). */
+function isStaffPlayerSlug(slug) {
+  const key = String(slug || '')
+    .trim()
+    .toLowerCase()
+    .replace(/^@/, '');
+  if (!key) return false;
+  if (resolveStaffById(key)) return true;
+  const spaced = key.replace(/-/g, ' ');
+  if (isStaffOrCoachName(spaced)) return true;
+  if (STAFF_ID_ALIASES[spaced] || STAFF_ID_ALIASES[key]) return true;
+  for (const entry of listStaff()) {
+    const nameSlug = String(entry.name || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+    if (nameSlug && nameSlug === key) return true;
+    if (entry.staffId === key) return true;
+  }
+  return false;
+}
+
 module.exports = {
   STAFF_DIRECTORY,
   normalizeStaffId,
   resolveStaffById,
   listStaff,
   isStaffOrCoachName,
+  isStaffPlayerSlug,
 };

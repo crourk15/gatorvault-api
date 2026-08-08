@@ -56,6 +56,8 @@ const INVALID_NAME_PHRASES = [
   /^message\s+board$/i,
   /^preseason\s+coverage$/i,
   /^recruiting\s+intel$/i,
+  /^best\s+deal\s+we['’]?ve$/i,
+  /^best\s+deal$/i,
 ];
 
 function isValidPlayerName(name) {
