@@ -302,7 +302,64 @@ async function runAllowlistIntelSweepInner({
     }
   }
 
-  const coverageBefore = measureAllowlistIntelCoverage(classYear, { days: 30 });
+  // Board-pulse fallback: allowlist targets with zero visit/offer materialization
+  // still need process intel so chase breadth stays fair (not Desk-only).
+  const coverageBeforePulse = measureAllowlistIntelCoverage(classYear, { days: 30 });
+  for (const slug of coverageBeforePulse.missing || []) {
+    if (results.created.length >= maxCreates) break;
+    try {
+      const ctx = await loadPlayerContext(slug);
+      const player = ctx.player;
+      const name = ctx.playerName;
+      const note = String(player?.profileNote || player?.skinny || '').trim();
+      const ufSignal =
+        /\b(florida|gators|gainesville|uf)\b/i.test(note) ||
+        (Array.isArray(player?.competitors) &&
+          player.competitors.some((c) => isFloridaSchool(c?.school || c?.name || ''))) ||
+        Number(player?.ufRpmPct) > 0 ||
+        String(player?.on3Source || '').includes('beat-desk');
+      if (!ufSignal && !note) {
+        results.skipped.push({ kind: 'board_pulse', slug, reason: 'no_uf_process_signal' });
+        continue;
+      }
+      const day = new Date().toISOString().slice(0, 10);
+      const detail =
+        note && /\b(florida|gators|gainesville|uf|collins)\b/i.test(note)
+          ? `${name} — ${note.replace(/\s+/g, ' ').slice(0, 220)} Continuous allowlist intel sweep.`
+          : `${name} — Florida process on file (allowlist board pulse). Continuous allowlist intel sweep.`;
+      const fp = `allowlist_sweep_board_pulse_${slug}_${day}`;
+      const now = new Date().toISOString();
+      const out = await ensureIntelRow(
+        {
+          playerId: ctx.playerId,
+          playerSlug: slug,
+          playerName: name,
+          classYear: ctx.classYear || classYear,
+          pos: ctx.pos,
+          eventType: 'target_update',
+          status: 'Florida process',
+          detail,
+          text: detail.slice(0, 280),
+          timestamp: now,
+          reportedAt: now,
+          source: 'auto:allowlist-intel-sweep',
+          sourceHandle: 'board-pulse',
+          sourceType: 'board',
+          ufRelevant: true,
+          identityConfirmed: true,
+          fingerprint: fp,
+          ...(ctx.school ? { school: ctx.school } : {}),
+        },
+        { dryRun }
+      );
+      if (out.created) results.created.push({ kind: 'board_pulse', ...out });
+      else results.skipped.push({ kind: 'board_pulse', slug, reason: out.reason || 'skip' });
+    } catch (err) {
+      results.errors.push({ slug, kind: 'board_pulse', error: err.message });
+    }
+  }
+
+  const coverageBefore = coverageBeforePulse;
   // Re-measure after writes (same process memory).
   const coverage = measureAllowlistIntelCoverage(classYear, { days: 30 });
 

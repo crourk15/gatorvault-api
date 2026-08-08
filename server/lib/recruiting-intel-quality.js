@@ -200,6 +200,27 @@ function isFilmDeskMeta(text) {
   return false;
 }
 
+/**
+ * True when staffNotes mark a card as a provisional draft.
+ * Negations like "Not provisional" must not hide a watched Pearl card.
+ */
+function staffNotesMarkProvisional(staffNotes) {
+  const scrubbed = String(staffNotes || '').replace(/\bnot\s+provisional\b/gi, ' ');
+  return /\bPROVISIONAL\b/i.test(scrubbed);
+}
+
+/**
+ * Fan Vault Scouting / film-desk protect gate for incomplete film cards.
+ * Explicit filmWatched / provisional booleans win over leftover staffNotes wording.
+ */
+function isProvisionalVaultCard(bd) {
+  if (!bd || typeof bd !== 'object') return true;
+  if (bd.filmWatched === false) return true;
+  if (bd.provisional === true) return true;
+  if (bd.filmWatched === true && bd.provisional === false) return false;
+  return staffNotesMarkProvisional(bd.staffNotes);
+}
+
 /** Beat-article snippet or mis-attributed On3 scrape — not player-specific scouting intel. */
 function isGenericBeatArticle(text, playerName) {
   const s = String(text || '').trim();
@@ -396,6 +417,8 @@ module.exports = {
   isGenericBeatArticle,
   isChaseProcessIntel,
   isFilmDeskMeta,
+  staffNotesMarkProvisional,
+  isProvisionalVaultCard,
   isCompositeBio,
   isLowQualityIntelText,
   isVerifiedScoutingTrait,

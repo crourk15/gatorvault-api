@@ -3,31 +3,30 @@
   "name": "Barrett Price",
   "pos": "WR",
   "type": "target",
-  "hudl": "",
+  "hudl": "https://www.hudl.com/embed/video/3/23501653/6922228f35a35ca25fdf48c",
   "publishedAt": "2026-08-08",
   "strengths": [
-    "Price creates with sudden burst off the line and stretches the perimeter as a 6-0 lean WR.",
-    "Price tracks the ball cleanly on the boundary and finishes contested windows without panic.",
-    "Price shows YAC juice after the catch — turns short completions into chunk gains."
+    "Price runs sharp outs and comebacks — sells stems and separates with route detail.",
+    "Price tracks the deep ball smoothly and catches away from his frame.",
+    "Price wins contested 50-50s by boxing out and fighting for position in the red zone."
   ],
   "weaknesses": [
-    "Price (6-0 / 175) still needs to fill out before he can win through SEC press every snap."
+    "Price creates limited yards after contact once secured — more technician than space breaker."
   ],
-  "comparison": "Price comps to Jordan Addison — 5-11 / 6-0 sudden WR mold; creates with burst, tracks on the perimeter, and turns short throws into chunk YAC.",
-  "projection": "Price projects as a Year 2–3 perimeter contributor (scout/special teams Year 1). Ceiling: starting outside/slot WR — the sudden Spain Park separator who grows into an SEC perimeter role.",
-  "schemeFit": "Price fits a perimeter WR room that values sudden release, tracking, and YAC over pure size.",
-  "staffNotes": "PROVISIONAL — board/bio draft only. Not a Vault film-desk watch. Do not treat as Harris-Payne-level tape eval until Hudl is watched and Charles confirms. Drafted 2026-08-08 from On3 size/pos + public notes; comps are frame-matched placeholders.",
-  "recruitingStory": "Barrett Price is a 2028 Spain Park (AL) WR · listed 6-0 / 175 · Florida-leaning board with UF process (Friday Night Lights / UOV trail).",
-  "angle": "PROVISIONAL placeholder until film desk watches Hudl. Lead with sudden 6-0 WR separator traits and Florida process out of Alabama.",
+  "comparison": "Price comps to Jordan Addison — 5-11 / 6-0 sudden WR mold; creates with route sharpness, tracks on the perimeter, and turns timing throws into chunk gains.",
+  "projection": "Price projects as a Year 2–3 perimeter contributor (scout/special teams Year 1). Ceiling: starting outside/slot WR — the Spain Park separator who grows into an SEC perimeter role.",
+  "schemeFit": "Price fits Faulkner perimeter concepts that reward stem discipline and contested catch toughness.",
+  "staffNotes": "Vault film desk verified 2026-08-08 from Hudl sophomore season. Comp size-matched to Jordan Addison band.",
+  "insiderNotes": "Price is a sudden perimeter receiver who wins with route detail, tracking, and contested catch toughness. Not a pure burner — separates with technique and fights through contact at the catch point.",
+  "recruitingStory": "Barrett Price is a 2028 Spain Park (AL) WR · Alabama prospect with Florida interest.",
+  "angle": "Spain Park WR tape: route sharpness + tracking + contested catch.",
   "traits": [
-    "separation",
-    "tracking",
-    "yac",
-    "burst",
+    "routes",
     "hands",
-    "perimeter"
+    "tracking",
+    "contested",
+    "separation"
   ],
-  "insiderNotes": "Price is a lean 6-0 wideout who creates with sudden burst, tracks cleanly on the boundary, and turns short catches into chunk YAC. Wins with release and play speed — a perimeter mold as the frame fills.",
-  "provisional": true,
-  "filmWatched": false
+  "filmWatched": true,
+  "provisional": false
 }
