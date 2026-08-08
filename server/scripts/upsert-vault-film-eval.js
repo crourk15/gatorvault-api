@@ -4,6 +4,10 @@
  * into War Room breakdowns + optional film-traits so FutureCast / player
  * profiles pick them up live.
  *
+ * Gold standard = Harris-Payne: real Hudl watch → On Tape / Comp / Projection.
+ * Set filmWatched:false + staffNotes containing PROVISIONAL to keep drafts
+ * out of fan Vault Scouting until Charles confirms a real film eval.
+ *
  * Usage:
  *   node server/scripts/upsert-vault-film-eval.js \
  *     --slug=hudson-west \
@@ -113,6 +117,18 @@ function buildPayload(raw) {
     recruitingStory: String(raw.recruitingStory || '').trim() || null,
     vaultFilmAngle: String(raw.angle || raw.vaultFilmAngle || '').trim() || null,
     traits: Array.isArray(raw.traits) ? raw.traits : strengths,
+    filmWatched:
+      typeof raw.filmWatched === 'boolean'
+        ? raw.filmWatched
+        : /\bPROVISIONAL\b/i.test(String(raw.staffNotes || ''))
+          ? false
+          : undefined,
+    provisional:
+      typeof raw.provisional === 'boolean'
+        ? raw.provisional
+        : /\bPROVISIONAL\b/i.test(String(raw.staffNotes || ''))
+          ? true
+          : undefined,
   };
 }
 
@@ -136,6 +152,13 @@ function main() {
         recruitingStory: argValue('--recruitingStory'),
         angle: argValue('--angle'),
         publishedAt: argValue('--publishedAt'),
+        filmWatched:
+          hasFlag('--film-watched')
+            ? true
+            : hasFlag('--no-film-watched')
+              ? false
+              : undefined,
+        provisional: hasFlag('--provisional') ? true : undefined,
       };
 
   const payload = buildPayload(raw);
@@ -169,6 +192,8 @@ function main() {
     staffNotes: payload.staffNotes,
     recruitingStory: payload.recruitingStory,
     featured: false,
+    ...(typeof payload.filmWatched === 'boolean' ? { filmWatched: payload.filmWatched } : {}),
+    ...(typeof payload.provisional === 'boolean' ? { provisional: payload.provisional } : {}),
   });
 
   let film = null;

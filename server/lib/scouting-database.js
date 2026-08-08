@@ -155,9 +155,40 @@ function sentencesFromSummary(summary) {
     .filter((s) => s.length > 20);
 }
 
+/** Never clobber Charles / film-desk Pearl cards with beat-article stubs. */
+function isProtectedFilmDeskBreakdown(bd) {
+  if (!bd || typeof bd !== 'object') return false;
+  if (bd.filmWatched === false) return false;
+  if (bd.provisional === true) return false;
+  if (/\bPROVISIONAL\b/i.test(String(bd.staffNotes || ''))) return false;
+  const comparison = String(bd.comparison || '').trim();
+  const projection = String(bd.projection || '').trim();
+  const strengths = Array.isArray(bd.strengths)
+    ? bd.strengths.map((s) => String(s || '').trim()).filter(Boolean)
+    : [];
+  if (!comparison || !projection || strengths.length < 3) return false;
+  if (bd.filmWatched === true) return true;
+  const staff = String(bd.staffNotes || '');
+  if (/\bVault film desk verified\b/i.test(staff) || /\bfilm desk\b/i.test(staff)) return true;
+  const sources = Array.isArray(bd.sources) ? bd.sources : [];
+  return sources.some((s) => {
+    const outlet = String(s?.outlet || '');
+    const writer = String(s?.writer || '');
+    return /film desk|hudl/i.test(outlet) || /Charles Power/i.test(writer);
+  });
+}
+
 function syncEntryToBreakdown(entry) {
   if (!entry) return null;
   const warRoom = require('./war-room-store');
+  const existing = warRoom.getBreakdownBySlug(entry.playerSlug);
+  if (isProtectedFilmDeskBreakdown(existing)) {
+    console.log(
+      '[scouting-database] skip sync — protect film-desk pearl',
+      entry.playerSlug
+    );
+    return existing;
+  }
   const typedUpdates = Array.isArray(entry.updates) ? entry.updates : [];
   const sents = sentencesFromSummary(entry.scoutingSummary);
   const fromUpdates = {

@@ -16,9 +16,9 @@
   "comparison": "Morillo comps to Ernest Jones — 6-2 compact LB mold; runs downhill, finishes in space, and flashes edge disruption before he packs on full MIKE mass.",
   "projection": "Morillo projects as a Year 2 SEC rotation LB (special teams Year 1). Ceiling: every-down WILL/MIKE — the compact Florida-bred second-level piece who can chase, finish, and grow into the box.",
   "schemeFit": "Morillo fits a White 3-3-5 second-level LB who can run, finish, and steal snaps on the edge while adding mass.",
-  "staffNotes": "Vault film desk verified 2026-08-08 from Hudl spring/soph tape + On3 ATH/LB listing (6-2 / 198). Comp size-matched within ~1–2\" — not a Florida-alum default. Charles asked to embed Morillo / Price / Davis into profiles.",
+  "staffNotes": "PROVISIONAL — board/bio draft only. Not a Vault film-desk watch. Do not treat as Harris-Payne-level tape eval until Hudl is watched and Charles confirms. Drafted 2026-08-08 from On3 size/pos + public notes; comps are frame-matched placeholders.",
   "recruitingStory": "Chris Morillo is a 2028 Hudson (FL) ATH/LB · listed 6-2 / 198 · in-state Florida target with UF process (camp/offer trail, UOV).",
-  "angle": "Lead with Hudson LB tape (trigger + finish + edge juice) and in-state Florida process.",
+  "angle": "PROVISIONAL placeholder until film desk watches Hudl. Lead with Hudson LB tape (trigger + finish + edge juice) and in-state Florida process.",
   "traits": [
     "diagnostics",
     "tackle",
@@ -27,5 +27,7 @@
     "edge",
     "instincts"
   ],
-  "insiderNotes": "Morillo is a compact 6-2 linebacker who triggers downhill, finishes with a wrap in the box, and still has range when flow stretches. Flashes edge disruption when the pocket climbs. Wins with instincts, chase, and finishing — a WILL/MIKE mold as the frame fills."
+  "insiderNotes": "Morillo is a compact 6-2 linebacker who triggers downhill, finishes with a wrap in the box, and still has range when flow stretches. Flashes edge disruption when the pocket climbs. Wins with instincts, chase, and finishing — a WILL/MIKE mold as the frame fills.",
+  "provisional": true,
+  "filmWatched": false
 }

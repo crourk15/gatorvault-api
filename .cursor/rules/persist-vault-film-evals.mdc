@@ -22,13 +22,21 @@ node server/scripts/upsert-vault-film-eval.js --file=server/data/war-room/vault-
 
 Required fields: `slug`, `name`, `comparison`, `projection`, `strengths` (tape traits), and usually `hudl`.
 
+**Film-watch rule (Harris-Payne standard):** only set `filmWatched: true` after Hudl is actually watched. Board/bio drafts must use `filmWatched: false` and `staffNotes` containing `PROVISIONAL` — fan Vault Scouting hides those via `getVaultScoutingForSlug`.
+
 3. Confirm War Room is live:
 
 ```bash
 node -e "const wr=require('./server/lib/war-room-store'); console.log(wr.getBreakdownBySlug('<slug>').comparison, wr.getBreakdownBySlug('<slug>').projection)"
 ```
 
-4. Commit `breakdowns.json`, `film-traits.json`, the vault-eval JSON, and any brief/docs updates together.
+4. Confirm fan card:
+
+```bash
+node -e "const e=require('./server/lib/recruiting-hub-elite'); console.log(e.getVaultScoutingForSlug('<slug>') ? 'SHOW' : 'HIDDEN')"
+```
+
+5. Commit `breakdowns.json`, `film-traits.json`, the vault-eval JSON, and any brief/docs updates together.
 
 ## Content rules (reminders)
 
@@ -36,6 +44,7 @@ node -e "const wr=require('./server/lib/war-room-store'); console.log(wr.getBrea
 - **QB projection:** develop → compete for the job → starter upside — never “rotational QB”.
 - Narrative fields should include the player’s **last name** (War Room corrupt-gate).
 - Confirm with Charles before treating a brand-new eval as live FutureCast card copy (asking to embed = confirmation).
+- Do **not** ship fake On Tape / Comp / Projection as live Vault Scouting without a real film watch.
 
 ## System notes already wired
 

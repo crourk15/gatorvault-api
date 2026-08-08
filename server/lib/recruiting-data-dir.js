@@ -64,6 +64,18 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
         }
       }
     }
+    // Prepared-meal profile dossiers (RPM overlaid live on GET).
+    const seedStamps = path.join(__dirname, '..', 'data', 'player-profiles', 'stamps');
+    const destStamps = path.join(path.dirname(dataDir), 'player-profiles', 'stamps');
+    if (fs.existsSync(seedStamps) && path.resolve(destStamps) !== path.resolve(seedStamps)) {
+      fs.mkdirSync(destStamps, { recursive: true });
+      for (const name of fs.readdirSync(seedStamps)) {
+        if (!name.endsWith('.json')) continue;
+        if (copyJsonIfMissing(path.join(seedStamps, name), path.join(destStamps, name))) {
+          copied += 1;
+        }
+      }
+    }
     return { migrated: copied > 0, copied, to: dataDir };
   } catch (err) {
     console.warn('[recruiting-data-dir] migrate skipped:', err.message);

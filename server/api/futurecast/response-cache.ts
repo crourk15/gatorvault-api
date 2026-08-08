@@ -327,11 +327,163 @@ export function loadHighPriorityCached(year: number | string): unknown | null {
   return null;
 }
 
+function masterBoardRuntimeCandidates(): string[] {
+  const path = require('node:path');
+  const { resolveRecruitingDataDir, BUNDLE_DIR } = require('../../lib/recruiting-data-dir');
+  const name = 'master-board.json';
+  return [
+    path.join(resolveRecruitingDataDir(), 'futurecast-runtime', name),
+    path.join(BUNDLE_DIR, 'futurecast-runtime', name),
+  ];
+}
+
+function isUsableMasterBoard(value: unknown): boolean {
+  if (!value || typeof value !== 'object') return false;
+  const doc = value as Record<string, unknown>;
+  if (doc.status === 'building' || doc.unavailable === true) return false;
+  return Array.isArray(doc.players) && doc.players.length > 0;
+}
+
+/** Durable/bundled master-board snapshot — keeps iOS Lab primary off status:building. */
+export function readMasterBoardRuntime(): unknown | null {
+  const fs = require('node:fs');
+  for (const filePath of masterBoardRuntimeCandidates()) {
+    try {
+      if (!fs.existsSync(filePath)) continue;
+      const doc = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      if (isUsableMasterBoard(doc)) return doc;
+    } catch {
+      /* try next */
+    }
+  }
+  return null;
+}
+
+export function writeMasterBoardRuntime(value: unknown): boolean {
+  if (!isUsableMasterBoard(value)) return false;
+  try {
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const { resolveRecruitingDataDir } = require('../../lib/recruiting-data-dir');
+    const filePath = path.join(resolveRecruitingDataDir(), 'futurecast-runtime', 'master-board.json');
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, JSON.stringify(value), 'utf8');
+    // Also refresh bundled seed so deploys keep a fan-ready fallback.
+    try {
+      const { BUNDLE_DIR } = require('../../lib/recruiting-data-dir');
+      const bundlePath = path.join(BUNDLE_DIR, 'futurecast-runtime', 'master-board.json');
+      fs.mkdirSync(path.dirname(bundlePath), { recursive: true });
+      fs.writeFileSync(bundlePath, JSON.stringify(value), 'utf8');
+    } catch {
+      /* optional */
+    }
+    return true;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn('[futurecast-cache] write master-board runtime failed:', message);
+    return false;
+  }
+}
+
+/** Soft board from HP seed when master disk is cold — never return empty building to iOS. */
+export function softMasterBoardFromHighPriority(): unknown | null {
+  const hp = loadHighPriorityCached(2028) as
+    | {
+        players?: Array<Record<string, unknown>>;
+        updatedAt?: string;
+        lastUpdated?: string;
+      }
+    | null;
+  const rows = Array.isArray(hp?.players) ? hp.players : [];
+  if (!rows.length) return null;
+
+  const players = rows.map((p, idx) => {
+    const uf =
+      Number(p.ufProbability ?? p.ufConfidence ?? p.ufRpmPct ?? p.ufPct ?? 0) || 0;
+    return {
+      id: String(p.id || p.slug || `soft-${idx}`),
+      slug: String(p.slug || ''),
+      name: String(p.name || p.fullName || p.slug || 'Player'),
+      position: p.position ?? null,
+      school: p.school ?? p.highSchool ?? null,
+      classYear: Number(p.classYear) || 2028,
+      ufConfidence: uf,
+      ufProbability: uf,
+      ufRpmPct: p.ufRpmPct ?? null,
+      trendDelta7d: Number(p.delta7d ?? p.trendDelta7d ?? 0) || 0,
+      fitScore: Number(p.fitScore ?? p.ufFitScore ?? 0) || 0,
+      stars: normalizeFanStars(p.stars),
+      committedTo: p.committedTo ?? null,
+      priority: 'high',
+      volatility7d: Number(p.volatilityScore ?? p.volatility7d ?? 0) || 0,
+      predictors: Array.isArray(p.predictors) ? p.predictors : [],
+      competingSchools: Array.isArray(p.competingSchools) ? p.competingSchools : [],
+    };
+  });
+
+  const avg =
+    players.reduce((sum, p) => sum + (Number(p.ufConfidence) || 0), 0) / players.length;
+  const updatedAt = String(hp?.updatedAt || hp?.lastUpdated || new Date().toISOString());
+  const highPriority = players.slice(0, 18);
+
+  return {
+    classYear: 2028,
+    updatedAt,
+    movementHeatmap: { upCount: 0, downCount: 0, flatCount: players.length },
+    heatmap: {
+      buckets: [
+        { label: 'Up', count: 0 },
+        { label: 'Down', count: 0 },
+        { label: 'Flat', count: players.length },
+      ],
+      windowDays: 7,
+    },
+    ufConfidenceAverage: avg,
+    confidenceSparkline: [],
+    commitWatch: [],
+    highPriority: {
+      playerIds: highPriority.map((p) => p.id),
+      players: highPriority,
+    },
+    movementSummary: {
+      risers: [],
+      fallers: [],
+      highVolatility: [],
+      riserPlayers: [],
+      fallerPlayers: [],
+      volatilePlayers: [],
+    },
+    players,
+    degraded: 'hp_soft_seed',
+  };
+}
+
+/** Memory → disk → HP soft seed. */
+export function loadMasterBoardCached(): unknown | null {
+  const key = masterBoardCacheKey();
+  const fresh = cache.get(key);
+  if (isUsableMasterBoard(fresh)) return fresh;
+  const stale = typeof cache.getStale === 'function' ? cache.getStale(key) : null;
+  if (isUsableMasterBoard(stale)) return stale;
+  const disk = readMasterBoardRuntime();
+  if (disk != null) {
+    cache.set(key, disk, CACHE_TTL_MS);
+    return disk;
+  }
+  const soft = softMasterBoardFromHighPriority();
+  if (soft != null) {
+    cache.set(key, soft, CACHE_TTL_MS);
+    return soft;
+  }
+  return null;
+}
+
 /** Warm master-board alone — safer than full lab warm on Starter. */
 export async function warmFuturecastMasterBoard(): Promise<{ ok: true; key: string }> {
   const { buildMasterBoardPayload } = require('./allowlist-board');
   const key = masterBoardCacheKey();
-  await cache.wrap(key, () => buildMasterBoardPayload(), CACHE_TTL_MS);
+  const { value } = await cache.wrap(key, () => buildMasterBoardPayload(), CACHE_TTL_MS);
+  if (value != null) writeMasterBoardRuntime(value);
   return { ok: true, key };
 }
 
