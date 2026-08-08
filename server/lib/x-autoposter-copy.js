@@ -130,6 +130,12 @@ function sanitizeExtractedPlayerName(name, fullText = '') {
   } catch {
     /* optional */
   }
+  try {
+    const { isStaffOrCoachName } = require('./recruiting-staff-directory');
+    if (isStaffOrCoachName(n)) return null;
+  } catch {
+    /* optional */
+  }
   return isValidPlayerName(n) ? n : null;
 }
 
@@ -196,7 +202,10 @@ function extractPlayerFromText(text) {
     new RegExp(`\\b(${NAME_CHUNK})\\s+(?:will|to)\\s+(?:now\\s+)?(?:visit|take|officially)\\b`),
     new RegExp(`["'](${NAME_CHUNK})["']`),
     new RegExp(`\\b(${NAME_CHUNK})\\s*,\\s*(?:a|the)?\\s*(?:20\\d{2}|${POS_TOKEN})\\b`),
-    new RegExp(`\\b(?:target|prospect|recruit|commit|flip|visit(?:er)?)\\s+(${NAME_CHUNK})(?=\\s+(?:can't|cannot|can\\s+not|won't|will|is|has|was|ignor|who|that|and)\\b|\\s*[.,!?]|\\s*$)`, 'i')
+    new RegExp(
+      `\\b(?:target|prospect|recruit|commit|flip|visit(?:er)?)\\s+(${NAME_CHUNK})(?=\\s+(?:can't|cannot|can\\s+not|won't|will|is|has|was|ignor|who|that|and|from|of|out|in|to|for)\\b|\\s*[.,!?]|\\s*$)`,
+      'i'
+    )
   ];
   for (const t of variants) {
     for (const re of patterns) {
@@ -205,6 +214,7 @@ function extractPlayerFromText(text) {
       if (name) return name;
     }
     const candidates = extractAllPlayerNameCandidates(t);
+    // Staff names are already stripped in sanitizeExtractedPlayerName.
     if (candidates.length) return candidates[0];
   }
   return null;

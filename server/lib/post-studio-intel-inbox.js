@@ -215,6 +215,20 @@ async function liveBeatInboxRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS, limit = 80 }
         hit = null;
       }
     }
+    // Never let UF coaches become fake recruit topics (Harris / Trautwein / etc.).
+    if (hit?.playerName || hit?.playerSlug) {
+      try {
+        const staff = require('./recruiting-staff-directory');
+        if (
+          staff.isStaffOrCoachName?.(hit.playerName) ||
+          staff.isStaffPlayerSlug?.(hit.playerSlug)
+        ) {
+          hit = null;
+        }
+      } catch {
+        /* optional */
+      }
+    }
     if (hit?.playerSlug) {
       const playerSlug = normalizeSlug(hit.playerSlug);
       // Current UF roster names are Florida football coverage — not HS recruiting.
@@ -295,6 +309,25 @@ function recentBeatIntelRows({ maxAgeMs = DEFAULT_INBOX_AGE_MS } = {}) {
   }
   return recent
     .filter((row) => isBeatIntel(row) || row.ufRelevant === true)
+    .filter((row) => {
+      // Drop stored coach-as-recruit mistakes (e.g. phil-trautwein / brandon-harris).
+      try {
+        const staff = require('./recruiting-staff-directory');
+        if (staff.isStaffOrCoachName?.(row.playerName)) return false;
+        if (staff.isStaffPlayerSlug?.(row.playerSlug)) return false;
+      } catch {
+        /* keep */
+      }
+      try {
+        const prefilter = require('./beat-intel-prefilter');
+        if (prefilter.isSubscribePromoIntel?.(row.detail || row.skinny || row.text || '')) {
+          return false;
+        }
+      } catch {
+        /* keep */
+      }
+      return true;
+    })
     .map((row) => {
       if (row.playerSlug) return row;
       if (!hubTopics) return row;

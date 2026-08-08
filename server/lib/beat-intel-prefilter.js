@@ -52,6 +52,14 @@ function isSubscribePromoIntel(text) {
   }
   // Checklist soft-sell: checkmarks + join CTA, no real player intel.
   if (/✅/.test(t) && /\b(join\s+today|subscribe|gators?\s+online)\b/i.test(t)) return true;
+  // Affiliate / betting / blanket "best deal" CTA rows — never Beat Desk topics.
+  if (/\bbest\s+deal\s+we['’]?ve\b/i.test(t)) return true;
+  if (/\b(fanduel|draftkings|betmgm|caesars)\b/i.test(t) && /\b(bet|odds|promo|bonus|claim)\b/i.test(t)) {
+    return true;
+  }
+  if (/\b\d{1,2}%\s+off\b/i.test(t) && /\b(join|subscribe|membership|gators?\s+online)\b/i.test(t)) {
+    return true;
+  }
   return false;
 }
 
