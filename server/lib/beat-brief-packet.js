@@ -1244,6 +1244,21 @@ async function buildBeatBrief(slug, opts = {}) {
     /* fall through to recruit brief */
   }
 
+  // UF coaching staff must never open as a recruit brief / On3 hydrate.
+  try {
+    const staff = require('./recruiting-staff-directory');
+    if (staff.isStaffPlayerSlug(normalized)) {
+      return {
+        ok: false,
+        error: 'staff_not_recruit',
+        slug: normalized,
+        name: staff.resolveStaffById(normalized)?.name || normalized.replace(/-/g, ' ')
+      };
+    }
+  } catch {
+    /* fall through */
+  }
+
   // Current UF roster identity → Florida football / team packet (not recruiting).
   const rosterHit = currentRosterCollision(normalized);
   if (rosterHit) {

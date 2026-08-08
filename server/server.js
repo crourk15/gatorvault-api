@@ -1779,6 +1779,29 @@ function startPostBootRecruitingAndSchedulers() {
           })
           .catch((err) => console.warn('[headlines] purge skipped:', err.message));
       }, purgeDelay);
+
+  // Scrub UF staff coach phantoms (brandon-harris etc.) from durable recruiting/FC.
+  setTimeout(() => {
+    try {
+      if (pipelineGuards.shouldSkipHeavyJob('staff-phantom-purge-boot')) return;
+      const { purgeStaffPhantomRecruits } = require('./lib/purge-staff-phantom-recruits');
+      purgeStaffPhantomRecruits({ clearHubCache: true })
+        .then((r) => {
+          const n = r?.files?.recruitingPlayers?.removed || 0;
+          if (n || r?.allowlist?.removed) {
+            console.log('[staff-phantoms] boot purge:', JSON.stringify({
+              players: n,
+              allowlist: r?.allowlist?.removed || 0,
+              db: r?.futurecastDb,
+            }));
+          }
+        })
+        .catch((err) => console.warn('[staff-phantoms] boot purge skipped:', err.message));
+    } catch (err) {
+      console.warn('[staff-phantoms] boot purge unavailable:', err.message);
+    }
+  }, Math.max(15000, Number(process.env.STAFF_PHANTOM_PURGE_BOOT_DELAY_MS || 20000)));
+
     }
     if (!pipelineGuards.scheduledJobsEnabled()) {
       console.log('[recruiting-hub] in-process refresh skipped — X_SCHEDULED_JOBS_ENABLED is not true');

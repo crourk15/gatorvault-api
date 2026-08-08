@@ -660,8 +660,10 @@ async function loadPlayersLocal() {
 /** Sync lookup for autoposter identity-matcher (local JSON fallback). */
 function findBySlug(slug) {
   if (!slug) return null;
+  if (isBlockedPlayer({ slug })) return null;
   const players = readJson(PLAYERS_PATH, []).map(normalizePlayer);
-  return players.find((p) => p.slug === slug) || null;
+  const p = players.find((row) => row.slug === slug) || null;
+  return p && !isBlockedPlayer(p) ? p : null;
 }
 
 function findByNameAndClass(name, classYear) {
@@ -720,6 +722,8 @@ async function getAllPlayers() {
 }
 
 async function getPlayerBySlug(slug) {
+  const key = String(slug || '').toLowerCase().trim();
+  if (key && isBlockedPlayer({ slug: key })) return null;
   const { applyEditorialPositionToPlayer } = require('./recruiting-editorial-positions');
   const sb = initSupabase();
   if (sb) {
@@ -731,12 +735,15 @@ async function getPlayerBySlug(slug) {
         throw error;
       }
     } else if (data) {
-      return enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(rowToPlayer(data)), slug);
+      const row = enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(rowToPlayer(data)), slug);
+      return isBlockedPlayer(row) ? null : row;
     }
   }
   const players = await loadPlayersLocal();
   const p = players.find((x) => x.slug === slug);
-  return p ? enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(normalizePlayer(p)), slug) : null;
+  if (!p) return null;
+  const row = enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(normalizePlayer(p)), slug);
+  return isBlockedPlayer(row) ? null : row;
 }
 
 /**
@@ -749,7 +756,7 @@ async function getPlayersBySlugs(slugs) {
     ...new Set(
       (Array.isArray(slugs) ? slugs : [])
         .map((s) => String(s || '').trim().toLowerCase())
-        .filter(Boolean)
+        .filter((s) => s && !isBlockedPlayer({ slug: s }))
     ),
   ];
   /** @type {Map<string, object>} */
@@ -772,7 +779,7 @@ async function getPlayersBySlugs(slugs) {
       for (const row of data || []) {
         const player = rowToPlayer(row);
         const key = String(player.slug || row.slug || '').toLowerCase();
-        if (!key) continue;
+        if (!key || isBlockedPlayer(player) || isBlockedPlayer({ slug: key })) continue;
         out.set(key, enrichPlayerFromLocalJson(applyEditorialPositionToPlayer(player), key));
       }
     }
