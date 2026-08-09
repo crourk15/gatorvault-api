@@ -1020,23 +1020,37 @@ async function loadDiscoveryMovementPlayers(classYear: number): Promise<FutureCa
     const { getLiveBoardTargets } = require('../../lib/live-board-targets') as {
       getLiveBoardTargets: (year: number) => Promise<Array<{ slug?: string }>>;
     };
-    const { ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist') as {
+    const { getAllowlistSet, ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist') as {
+      getAllowlistSet: (year: number) => Set<string>;
       ALLOWLIST_2028: string[];
     };
+    const { isBlockedRecruit } = require('../../lib/recruiting-blocked-players') as {
+      isBlockedRecruit: (p: { slug?: string }) => boolean;
+    };
 
-    const live = await getLiveBoardTargets(classYear);
-    const liveSlugs = live
-      .map((t) => String(t.slug || '').toLowerCase())
-      .filter(Boolean);
-    const liveSet = new Set(liveSlugs);
-    const allowlistFirst =
-      classYear === 2028
-        ? (ALLOWLIST_2028 as string[])
-            .map((s) => String(s).toLowerCase())
-            .filter((slug) => liveSet.has(slug))
-        : [];
-    const extras = liveSlugs.filter((slug) => !allowlistFirst.includes(slug));
-    const slugs = [...allowlistFirst, ...extras];
+    // 2028 discovery/chase boards stay on the locked hunt list — never dump the
+    // full live board (that path rehydrated alumni/roster ATH phantoms).
+    let slugs: string[] = [];
+    if (classYear === 2028) {
+      const allow = [...getAllowlistSet(2028)]
+        .map((s) => String(s).toLowerCase())
+        .filter((slug) => slug && !isBlockedRecruit({ slug }));
+      const live = await getLiveBoardTargets(classYear);
+      const liveSet = new Set(live.map((t) => String(t.slug || '').toLowerCase()).filter(Boolean));
+      const onLive = allow.filter((slug) => liveSet.has(slug));
+      const offline = allow.filter((slug) => !liveSet.has(slug));
+      slugs = onLive.length || offline.length ? [...onLive, ...offline] : allow;
+      if (!slugs.length) {
+        slugs = (ALLOWLIST_2028 as string[])
+          .map((s) => String(s).toLowerCase())
+          .filter((slug) => slug && !isBlockedRecruit({ slug }));
+      }
+    } else {
+      const live = await getLiveBoardTargets(classYear);
+      slugs = live
+        .map((t) => String(t.slug || '').toLowerCase())
+        .filter((slug) => slug && !isBlockedRecruit({ slug }));
+    }
     const players = slugs.length ? await loadBoardPlayersForSlugs(classYear, slugs) : [];
     discoveryBoardCache.set(classYear, {
       expires: Date.now() + BOARD_PLAYERS_TTL_MS,

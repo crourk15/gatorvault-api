@@ -36,6 +36,13 @@ function staffPhantomSlugs() {
   out.add('brandon-harris');
   out.add('phil-trautwein');
   out.add('chris-foster');
+  // Also scrub alumni/roster bleed that soft-created onto 2028 chase.
+  try {
+    const { BLOCKED_PLAYER_SLUGS } = require('./recruiting-blocked-players');
+    for (const slug of BLOCKED_PLAYER_SLUGS) out.add(slug);
+  } catch {
+    /* optional */
+  }
   return [...out];
 }
 
@@ -58,6 +65,12 @@ function isPhantomPlayer(row) {
   const name = String(row.name || row.playerName || '').trim();
   if (slug && isStaffPlayerSlug(slug)) return true;
   if (name && isStaffOrCoachName(name)) return true;
+  try {
+    const { isBlockedRecruit } = require('./recruiting-blocked-players');
+    if (isBlockedRecruit(row)) return true;
+  } catch {
+    /* optional */
+  }
   return false;
 }
 
@@ -235,6 +248,15 @@ async function purgeStaffPhantomRecruits({ clearHubCache = true } = {}) {
     report.snapshotsRebuilt = true;
   } catch (err) {
     report.snapshotsError = err.message || String(err);
+  }
+
+  // Chain alumni/roster phantom scrub (Kyle Trask, Caden Jones, …) so the
+  // already-deployed purge-staff-phantoms admin route clears chase bleed too.
+  try {
+    const { purgeAlumniPhantomRecruits } = require('./purge-alumni-phantom-recruits');
+    report.alumni = await purgeAlumniPhantomRecruits({ clearHubCache: clearHubCache });
+  } catch (err) {
+    report.alumniError = err.message || String(err);
   }
 
   return report;
