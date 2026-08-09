@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-09T19:24:48.715Z",
+  "updatedAt": "2026-08-09T21:23:25.897Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -15885,27 +15885,32 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://access.qwikcut.com/highlights/6830bf044c8950b6ac722f91",
+          "publishedAt": "2026-08-09"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Taylor already carries a true heavy-interior frame at 6-4 / 313 — length and mass to occupy doubles as a young DL.",
+        "Taylor shows active hands when engaging blockers in line work, using the frame to create early contact instead of catching.",
+        "Taylor plays with a steady motor through the whistle on interior reps — effort matches the size on early snaps."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Taylor still needs lower pad level and cleaner footwork so taller mass does not get stood up into blockers.",
+        "Taylor’s counter package vs double teams is raw — must add violence and reset moves before every-down SEC claims stick."
+      ],
+      "comparison": "Taylor comps to Kenny Clark — listed 6-4 / 313 vs Clark’s ~6-3 / 314 interior mold (height within ~1\", same heavy DT frame); then matching occupy-and-disrupt tools from early tape (size-matched; not a Florida-alum default).",
+      "schemeFit": "Taylor fits an even front that wants a heavy shade / 3-tech who can eat doubles, two-gap early downs, and still push the pocket as the hands catch up.",
+      "staffNotes": "FILM VERIFIED 2026-08-09 from Vero Beach QwikCut package (Josiah Taylor #75, ~1:54 line/scrimmage work). Watched — frame, hands, motor; pad level + counters next. Prefer more full-game cutups as they post.",
+      "projection": "Taylor projects to develop into Florida’s DL room with Year-1 practice / early-down depth snaps, Year-2 compete for a rotational 3-tech / nose role, and Year-3+ starter upside as a two-gap interior if pad level and hand counters catch the mass.",
+      "insiderNotes": "Watched Vero Beach QwikCut tape (#75). Taylor’s win right now is the frame + effort; polish pad level and double-team counters.",
+      "recruitingStory": "Josiah Taylor is an in-state DL listed 6-4 / 313 from Vero Beach (FL) — Florida-offer heavy interior with live UF chase heat after FNL.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:14:17.556Z"
+      "updatedAt": "2026-08-09T21:23:25.889Z",
+      "filmWatched": true
     },
     "carter-barrett": {
       "playerSlug": "carter-barrett",
@@ -18083,27 +18088,32 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22594520/68d160e68a79b1d9e1cd7e85",
+          "publishedAt": "2026-08-09"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Peterson chases with a high LB motor — works downhill, then still finishes pursuit to the perimeter on bounce runs.",
+        "Peterson fills assigned gaps with leverage and physicality, especially effective in short-yardage / early-down run fits.",
+        "Peterson wraps and finishes tackles instead of arm-grabbing — shows competitive contact through the ball carrier."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Peterson still needs cleaner hand counters when OL latch on reach/zone — can get washed before he sheds.",
+        "Peterson’s zone-drop footwork and depth timing need polish so windows underneath close faster in coverage."
+      ],
+      "comparison": "Peterson comps to Ernest Jones — listed 6-0 / 220 vs Jones’ ~6-2 / 230 LB mold (height within ~2\", same compact MIKE frame); then matching downhill fill, wrap tackle, and gap-sound traits (size-matched; not a Florida-alum default).",
+      "schemeFit": "Peterson fits an attacking 4-3 / nickel that wants a gap-sound MIKE who can fill downhill, wrap up, and still chase when the ball bounces.",
+      "staffNotes": "FILM VERIFIED 2026-08-09 from William A. Hough sophomore highlights (Ryan Peterson #5, Sophomore Full SZN). Watched gameplay — downhill fill, pursuit, wrap; shed + coverage polish.",
+      "projection": "Peterson projects to develop into Florida’s LB room with Year-1 special-teams / early-down run snaps, Year-2 compete for a rotational every-down MIKE/WILL role, and Year-3+ starter upside if the shed hands and coverage drops catch the motor.",
+      "insiderNotes": "Watched Hough sophomore tape. Peterson wins with fill and finish; next step is shedding and coverage depth.",
+      "recruitingStory": "Ryan Peterson is a 4-star LB listed 6-0 / 220 from William Amos Hough (Cornelius, NC) — national LB with Florida in the live chase mix.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:14:36.695Z"
+      "updatedAt": "2026-08-09T21:23:25.838Z",
+      "filmWatched": true
     },
     "jackson-jenkins": {
       "playerSlug": "jackson-jenkins",
