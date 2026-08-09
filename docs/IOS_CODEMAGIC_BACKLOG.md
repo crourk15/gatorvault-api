@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Early Discovery cards: durable rankings + live UF RPM overlay (fills composite/UF bars for allowlist shells) — API
 - [x] Jamarcus Johnson 2028 DL Vault Scouting (Dexter Lawrence comp + projection) — War Room film desk upsert (API)
 - [x] Prepared-meal player profiles — dossier stamps + live RPM overlay (API)
 - [x] iOS member path: protect film-desk Pearl cards from beat sync clobber; restore Harris-Payne / West Vault Scouting; hide provisional drafts (API)

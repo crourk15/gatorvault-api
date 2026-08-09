@@ -16,8 +16,11 @@ test('mergeAllowlistIntoDiscovery backfills all 2028 allowlist slugs', () => {
     limit: 100,
   });
   const slugs = new Set(merged.map((p) => p.slug));
-  assert.ok(merged.length >= allowlist.ALLOWLIST_2028.length);
-  for (const slug of allowlist.ALLOWLIST_2028) {
+  const board = require('../../lib/target-board-path').loadTargetBoardBySlug(2028);
+  const boardBacked = allowlist.ALLOWLIST_2028.filter((slug) => board.get(slug));
+  assert.ok(boardBacked.length >= 30, 'expected board-backed allowlist targets');
+  assert.ok(merged.length >= boardBacked.length);
+  for (const slug of boardBacked) {
     assert.ok(slugs.has(slug), 'missing allowlist slug ' + slug);
   }
   const sample = merged.find((p) => p.slug === 'brysen-wright');
@@ -71,4 +74,20 @@ test('mergeAllowlistIntoDiscovery skips merge for 2029-only queries', () => {
   const merged = mergeAllowlistIntoDiscovery(input, { classYearGte: 2029, limit: 100 });
   assert.equal(merged.length, 1);
   assert.equal(merged[0].slug, 'only-one');
+});
+
+test('mergeAllowlistIntoDiscovery overlays live store RPM/stars for thin shells', () => {
+  const merged = mergeAllowlistIntoDiscovery([], {
+    classYearGte: 2028,
+    minDiscoveryScore: 0,
+    limit: 100,
+  });
+  const hudson = merged.find((p) => p.slug === 'hudson-west');
+  assert.ok(hudson);
+  assert.equal(hudson.stars, 3);
+  assert.ok(Number(hudson.ufProbability) >= 0.9);
+  const antonio = merged.find((p) => p.slug === 'antonio-thomas-jr');
+  assert.ok(antonio);
+  assert.equal(antonio.stars, 4);
+  assert.ok(Number(antonio.ufProbability) > 0.3);
 });

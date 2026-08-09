@@ -68,7 +68,9 @@ function mergeBoardSeed(player, boardRow, classYear) {
   const ufFraction =
     toUfFraction(merged.ufProbability) ??
     toUfFraction(merged.futurecastProbability) ??
-    toUfFraction(boardRow.ufProbability);
+    toUfFraction(merged.ufRpmPct) ??
+    toUfFraction(boardRow.ufProbability) ??
+    toUfFraction(boardRow.ufRpmPct);
   if (ufFraction != null) merged.ufProbability = ufFraction;
 
   let fitScore = firstPositive(merged.fitScore, merged.ufFitScore, boardRow.fitScore, boardRow.ufFitScore);

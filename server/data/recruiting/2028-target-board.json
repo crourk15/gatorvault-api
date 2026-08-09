@@ -54,13 +54,15 @@
       "school": "Carrollwood Day (Tampa, FL)",
       "state": "FL",
       "stars": 4,
-      "rating": null,
+      "rating": 94.95618279569892,
       "natlRank": 17,
       "posRank": 4,
       "stateRank": 5,
       "inState": true,
       "committedTo": null,
-      "notes": "Locked allowlist — closest-to-commit / Florida EDGE priority (Carrollwood). Live UF% from predictions/RPM."
+      "notes": "Locked allowlist — closest-to-commit / Florida EDGE priority (Carrollwood). Live UF% from predictions/RPM.",
+      "ufProbability": 0.41,
+      "ufRpmPct": 41
     },
     {
       "slug": "malakhi-dudley",
@@ -135,7 +137,8 @@
       "stateRank": 21,
       "inState": false,
       "committedTo": null,
-      "ufProbability": 0.47000000000000003
+      "ufProbability": 0.19,
+      "ufRpmPct": 19
     },
     {
       "slug": "quinton-rolle-jr",
@@ -165,7 +168,8 @@
       "stateRank": 58,
       "inState": false,
       "committedTo": null,
-      "ufProbability": 0.29000000000000004
+      "ufProbability": 0.21,
+      "ufRpmPct": 21
     },
     {
       "slug": "kahmaree-crumity",
@@ -195,7 +199,8 @@
       "stateRank": 7,
       "inState": false,
       "committedTo": null,
-      "ufProbability": 0.31000000000000005
+      "ufProbability": 0.34,
+      "ufRpmPct": 34
     },
     {
       "slug": "zyon-robinson",
@@ -505,7 +510,9 @@
       "stateRank": 1,
       "htWt": null,
       "skinny": "4★ WR · #11 Rivals · Princeton (OH) · major UF push",
-      "ufProbability": null
+      "ufProbability": 0.06,
+      "rating": 93.82081580177653,
+      "ufRpmPct": 6
     },
     {
       "slug": "jordyn-murray",
@@ -531,13 +538,15 @@
       "school": "Sarasota (Sarasota, FL)",
       "state": "FL",
       "inState": true,
-      "stars": null,
-      "natlRank": null,
-      "posRank": null,
-      "stateRank": null,
+      "stars": 3,
+      "natlRank": 525,
+      "posRank": 43,
+      "stateRank": 67,
       "htWt": "6-5 / 190",
       "skinny": "QB · 6-5 / 190 · Sarasota · UF offer · feels like top target",
-      "ufProbability": null
+      "ufProbability": 0.99,
+      "rating": 84.66666666666667,
+      "ufRpmPct": 99
     },
     {
       "slug": "nikolay-petrushev",
@@ -553,7 +562,8 @@
       "stateRank": null,
       "htWt": "6-6 / 285",
       "skinny": "OT · 6-6 / 285 · East Lake · UF offer June 2026",
-      "ufProbability": null
+      "ufProbability": 0.7,
+      "ufRpmPct": 70
     },
     {
       "slug": "kaydan-whiteside",
@@ -627,12 +637,14 @@
       "state": "FL",
       "inState": false,
       "stars": 4,
-      "natlRank": null,
-      "posRank": null,
-      "stateRank": null,
+      "natlRank": 169,
+      "posRank": 16,
+      "stateRank": 20,
       "htWt": "5-9.5 / 165",
       "skinny": "4★ CB · IMG Academy · UF among top options · loves coaches",
-      "ufProbability": null
+      "ufProbability": 0.03,
+      "rating": 90.84601449275364,
+      "ufRpmPct": 3
     }
   ],
   "updatedAt": "2026-08-06T22:04:49.524Z"
