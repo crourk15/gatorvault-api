@@ -154,7 +154,7 @@ function removeAdminAllowlistAlumni() {
   }
 }
 
-async function purgeAlumniPhantomRecruits({ clearHubCache = true } = {}) {
+async function purgeAlumniPhantomRecruits({ clearHubCache = true, rebuildSnapshots = false } = {}) {
   const recruitingDir = resolveRecruitingDataDir();
   const serverData = path.join(__dirname, '..', 'data');
   const slugs = alumniPhantomSlugs();
@@ -228,12 +228,19 @@ async function purgeAlumniPhantomRecruits({ clearHubCache = true } = {}) {
     }
   }
 
-  try {
-    const { rebuildRecruitingSnapshots } = require('./recruiting-snapshot-rebuild');
-    await rebuildRecruitingSnapshots();
-    report.snapshotRebuilt = true;
-  } catch (err) {
-    report.snapshotError = err.message || String(err);
+  // Never run full page/hub snapshot rebuild during boot/admin purge on Starter —
+  // that rebuild blocks the event loop long enough for Render to 502.
+  if (rebuildSnapshots) {
+    try {
+      const { rebuildRecruitingSnapshots } = require('./recruiting-snapshot-rebuild');
+      await rebuildRecruitingSnapshots();
+      report.snapshotRebuilt = true;
+    } catch (err) {
+      report.snapshotError = err.message || String(err);
+    }
+  } else {
+    report.snapshotRebuilt = false;
+    report.snapshotSkipped = 'boot_safe_default';
   }
 
   return report;

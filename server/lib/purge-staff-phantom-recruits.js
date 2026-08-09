@@ -190,7 +190,7 @@ function removeAdminAllowlistStaff() {
 /**
  * Full purge across durable recruiting paths + FutureCast DB.
  */
-async function purgeStaffPhantomRecruits({ clearHubCache = true } = {}) {
+async function purgeStaffPhantomRecruits({ clearHubCache = true, rebuildSnapshots = false } = {}) {
   const recruitingDir = resolveRecruitingDataDir();
   const serverData = path.join(__dirname, '..', 'data');
   const slugs = staffPhantomSlugs();
@@ -242,19 +242,26 @@ async function purgeStaffPhantomRecruits({ clearHubCache = true } = {}) {
     }
   }
 
-  try {
-    const { rebuildRecruitingSnapshots } = require('./recruiting-snapshot-rebuild');
-    await rebuildRecruitingSnapshots();
-    report.snapshotsRebuilt = true;
-  } catch (err) {
-    report.snapshotsError = err.message || String(err);
+  if (rebuildSnapshots) {
+    try {
+      const { rebuildRecruitingSnapshots } = require('./recruiting-snapshot-rebuild');
+      await rebuildRecruitingSnapshots();
+      report.snapshotsRebuilt = true;
+    } catch (err) {
+      report.snapshotsError = err.message || String(err);
+    }
+  } else {
+    report.snapshotsRebuilt = false;
+    report.snapshotSkipped = 'boot_safe_default';
   }
 
-  // Chain alumni/roster phantom scrub (Kyle Trask, Caden Jones, …) so the
-  // already-deployed purge-staff-phantoms admin route clears chase bleed too.
+  // Chain alumni/roster phantom scrub without nested snapshot rebuilds.
   try {
     const { purgeAlumniPhantomRecruits } = require('./purge-alumni-phantom-recruits');
-    report.alumni = await purgeAlumniPhantomRecruits({ clearHubCache: clearHubCache });
+    report.alumni = await purgeAlumniPhantomRecruits({
+      clearHubCache: clearHubCache,
+      rebuildSnapshots: false,
+    });
   } catch (err) {
     report.alumniError = err.message || String(err);
   }
