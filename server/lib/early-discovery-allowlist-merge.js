@@ -19,6 +19,70 @@ const POSITION_ALIASES = {
   S: ['S', 'SAF', 'DB'],
 };
 
+
+function isUsableLivePlayer(hit) {
+  if (!hit || typeof hit !== 'object') return false;
+  return Boolean(
+    hit.name ||
+      hit.rating ||
+      hit.ufRpmPct != null ||
+      hit.ufProbability != null ||
+      hit.natlRank != null ||
+      hit.nationalRank != null ||
+      (Number(hit.stars) >= 1)
+  );
+}
+
+function loadLiveRecruitingPlayer(slug) {
+  const key = String(slug || '').toLowerCase();
+  if (!key) return null;
+  try {
+    const store = require('./recruiting-store');
+    if (typeof store.getPlayerBySlug === 'function') {
+      const hit = store.getPlayerBySlug(key);
+      if (isUsableLivePlayer(hit)) return hit;
+    }
+    if (typeof store.findBySlug === 'function') {
+      const hit = store.findBySlug(key);
+      if (isUsableLivePlayer(hit)) return hit;
+    }
+  } catch {
+    /* optional */
+  }
+  // Durable/bundle players.json fallback (store getter can return empty shells).
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
+    const file = path.join(resolveRecruitingDataDir(), 'players.json');
+    const rows = JSON.parse(fs.readFileSync(file, 'utf8'));
+    if (!Array.isArray(rows)) return null;
+    const hit = rows.find((p) => String(p?.slug || '').toLowerCase() === key);
+    return isUsableLivePlayer(hit) ? hit : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Overlay durable recruiting-store ranks/RPM onto Early Discovery allowlist rows. */
+function overlayLiveStoreFields(row, live) {
+  if (!row || !live) return row;
+  const { toUfFraction } = require('./target-board-enrich');
+  const next = { ...row };
+  const stars = Number(live.stars);
+  if ((!next.stars || Number(next.stars) < 1) && Number.isFinite(stars) && stars >= 1) {
+    next.stars = Math.round(stars);
+  }
+  const uf =
+    toUfFraction(next.ufProbability) ??
+    toUfFraction(live.ufProbability) ??
+    toUfFraction(live.ufRpmPct);
+  if (uf != null) next.ufProbability = uf;
+  if (next.ufFitScore == null && live.fitScore != null) next.ufFitScore = live.fitScore;
+  if (!next.state && live.state) next.state = live.state;
+  return next;
+}
+
 function expandPosition(position) {
   const key = String(position || '').toUpperCase();
   return POSITION_ALIASES[key] ? [...POSITION_ALIASES[key]] : [key];
@@ -58,30 +122,73 @@ function buildAllowlistDiscoveryRow(boardRow, classYear) {
     { slug, name: merged.name || boardRow.name },
     { canonicalNames: getMergedCanonicalNames() }
   );
-  return {
-    id: slug,
-    slug,
-    fullName,
-    classYear,
-    position: resolveFutureCastPosition({
+  const live = loadLiveRecruitingPlayer(slug);
+  // Prefer live store rating/ranks into the board merge path (durable On3 hydrate).
+  const liveMerged = live
+    ? {
+        ...merged,
+        stars: merged.stars ?? live.stars,
+        rating: merged.rating ?? live.rating,
+        natlRank: merged.natlRank ?? live.natlRank ?? live.nationalRank,
+        posRank: merged.posRank ?? live.posRank ?? live.positionRank,
+        stateRank: merged.stateRank ?? live.stateRank,
+        ufRpmPct: live.ufRpmPct ?? live.ufProbability ?? merged.ufRpmPct,
+        state: merged.state || live.state,
+        school: merged.school || live.school,
+      }
+    : merged;
+  // Recompute UF fraction with live RPM when board seed was empty.
+  try {
+    const { toUfFraction } = require('./target-board-enrich');
+    const uf =
+      toUfFraction(liveMerged.ufProbability) ??
+      toUfFraction(liveMerged.ufRpmPct);
+    if (uf != null) liveMerged.ufProbability = uf;
+  } catch {
+    /* optional */
+  }
+  // Recompute discovery floor inputs when live stars/rating landed.
+  if (live) {
+    const inFloridaLive =
+      String(liveMerged.state || boardRow.state || '').toUpperCase() === 'FL' || Boolean(boardRow.inState);
+    discoveryScore = Math.max(
+      computeDiscoveryScore({
+        signalTypes: ['STAFF_FLAG'],
+        stars: liveMerged.stars ?? boardRow.stars,
+        rating: liveMerged.rating ?? boardRow.rating,
+        inFlorida: inFloridaLive,
+      }),
+      ALLOWLIST_DISCOVERY_FLOOR
+    );
+  }
+
+  return overlayLiveStoreFields(
+    {
+      id: slug,
       slug,
+      fullName,
       classYear,
-      seed: boardRow,
-      recruiting: merged,
-    }) || merged.pos || merged.position || boardRow.pos || null,
-    state: merged.state || boardRow.state || null,
-    // Unknown/placeholder 0 must be null — Lab/ED cards render literal `0★` for 0.
-    stars: (() => {
-      const n = Number(merged.stars ?? boardRow.stars);
-      return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
-    })(),
-    discoveryScore,
-    ufFitScore: merged.fitScore ?? null,
-    ufProbability: merged.ufProbability ?? null,
-    ufStatus: 'TARGET',
-    signalCount: 0,
-    allowlistTarget: true,
-  };
+      position: resolveFutureCastPosition({
+        slug,
+        classYear,
+        seed: boardRow,
+        recruiting: liveMerged,
+      }) || liveMerged.pos || liveMerged.position || boardRow.pos || null,
+      state: liveMerged.state || boardRow.state || null,
+      // Unknown/placeholder 0 must be null — Lab/ED cards render literal `0★` for 0.
+      stars: (() => {
+        const n = Number(liveMerged.stars ?? boardRow.stars);
+        return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
+      })(),
+      discoveryScore,
+      ufFitScore: liveMerged.fitScore ?? null,
+      ufProbability: liveMerged.ufProbability ?? null,
+      ufStatus: 'TARGET',
+      signalCount: 0,
+      allowlistTarget: true,
+    },
+    live
+  );
 }
 
 /** Early Discovery board fields for a locked 2028 allowlist slug. */
@@ -120,15 +227,23 @@ function enrichAllowlistRow(row, boardRow) {
     { slug: row.slug, name: merged?.name, fullName: row.fullName },
     { canonicalNames: getMergedCanonicalNames() }
   );
-  return {
-    ...row,
-    fullName,
-    allowlistTarget: true,
-    discoveryScore: Math.max(Number(row.discoveryScore) || 0, ALLOWLIST_DISCOVERY_FLOOR),
-    ufStatus: row.ufStatus || 'TARGET',
-    ufFitScore: row.ufFitScore ?? merged?.fitScore ?? null,
-    ufProbability: row.ufProbability ?? merged?.ufProbability ?? null,
-  };
+  const live = loadLiveRecruitingPlayer(row.slug);
+  return overlayLiveStoreFields(
+    {
+      ...row,
+      fullName,
+      allowlistTarget: true,
+      discoveryScore: Math.max(Number(row.discoveryScore) || 0, ALLOWLIST_DISCOVERY_FLOOR),
+      ufStatus: row.ufStatus || 'TARGET',
+      ufFitScore: row.ufFitScore ?? merged?.fitScore ?? null,
+      ufProbability: row.ufProbability ?? merged?.ufProbability ?? null,
+      stars: (() => {
+        const n = Number(row.stars ?? merged?.stars ?? live?.stars);
+        return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
+      })(),
+    },
+    live
+  );
 }
 
 function mergeAllowlistIntoDiscovery(players, opts = {}) {

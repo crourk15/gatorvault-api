@@ -3393,7 +3393,7 @@
   {
     "id": "jordon-gorham",
     "slug": "jordon-gorham",
-    "name": "Jordon Gorham",
+    "name": "Jordan Gorham",
     "pos": "WR",
     "classYear": 2028,
     "school": "IMG Academy (Saint Stephen, SC)",
@@ -3417,7 +3417,7 @@
     "on3Id": "259816",
     "on3Slug": "jordan-gorham-259816",
     "on3ProfileUrl": "https://www.on3.com/rivals/jordan-gorham-259816/",
-    "on3Source": "on3-board-sync",
+    "on3Source": "on3_profile_last_good",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -3429,7 +3429,7 @@
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": true,
-    "ufProbability": null,
+    "ufProbability": 21,
     "fitScore": 97,
     "staff_lead_id": "cody-collins",
     "secondary_recruiter_id": null,
@@ -3491,7 +3491,10 @@
         "date": "2026-07-11",
         "source": "on3"
       }
-    ]
+    ],
+    "nationalRank": 368,
+    "positionRank": 58,
+    "position": "WR"
   },
   {
     "id": "derrick-hooker",
@@ -5000,7 +5003,7 @@
     "on3Id": "261593",
     "on3Slug": "bryce-willingham-261593",
     "on3ProfileUrl": "https://www.on3.com/rivals/bryce-willingham-261593/",
-    "on3Source": "on3-allowlist-sync",
+    "on3Source": "on3_profile_last_good",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -5012,7 +5015,7 @@
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 19,
     "fitScore": 95,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -5075,7 +5078,10 @@
         "date": "2026-07-11",
         "source": "on3"
       }
-    ]
+    ],
+    "nationalRank": 352,
+    "positionRank": 20,
+    "position": "CB"
   },
   {
     "id": "ryan-drakeford",
@@ -6419,7 +6425,7 @@
   {
     "id": "pj-evans",
     "slug": "pj-evans",
-    "name": "PJ Evans",
+    "name": "Pj Evans",
     "pos": "IOL",
     "classYear": 2028,
     "school": "Jackson Academy (Jackson, MS)",
@@ -6443,7 +6449,7 @@
     "on3Id": "248892",
     "on3Slug": "pj-evans-248892",
     "on3ProfileUrl": "https://www.on3.com/rivals/pj-evans-248892/",
-    "on3Source": "on3-board-sync",
+    "on3Source": "on3_profile_last_good",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -6455,7 +6461,7 @@
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 34,
     "fitScore": 99,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -6517,7 +6523,10 @@
         "date": "2026-07-11",
         "source": "on3"
       }
-    ]
+    ],
+    "nationalRank": 384,
+    "positionRank": 23,
+    "position": "IOL"
   },
   {
     "id": "will-griffin",
@@ -35527,13 +35536,13 @@
   {
     "id": "antonio-thomas-jr",
     "slug": "antonio-thomas-jr",
-    "name": "Antonio Thomas Jr.",
+    "name": "Antonio Thomas Jr",
     "pos": "EDGE",
     "classYear": 2028,
     "school": "Carrollwood Day (Tampa, FL)",
     "htWt": "6-3 / 235",
     "stars": 4,
-    "rating": null,
+    "rating": 94.95618279569892,
     "ratingOverride": null,
     "vaultGrade": null,
     "vaultGradeUpdatedAt": null,
@@ -35551,7 +35560,7 @@
     "on3Id": 251059,
     "on3Slug": "antonio-thomas-jr-251059",
     "on3ProfileUrl": "https://www.on3.com/rivals/antonio-thomas-jr-251059/",
-    "on3Source": null,
+    "on3Source": "on3_profile_last_good",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -35563,7 +35572,7 @@
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 41,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -35601,18 +35610,20 @@
     "state": "FL",
     "position": "EDGE",
     "hasUFOffer": true,
-    "ufOffer": true
+    "ufOffer": true,
+    "nationalRank": 17,
+    "positionRank": 4
   },
   {
     "id": "lorenzo-mcmullen-jr",
     "slug": "lorenzo-mcmullen-jr",
-    "name": "Lorenzo McMullen Jr.",
+    "name": "Lorenzo Mcmullen Jr",
     "pos": "WR",
     "classYear": 2028,
     "school": "Princeton (Cincinnati, OH)",
     "htWt": "6-2 / 170",
     "stars": 4,
-    "rating": null,
+    "rating": 93.82081580177653,
     "ratingOverride": null,
     "vaultGrade": null,
     "vaultGradeUpdatedAt": null,
@@ -35630,7 +35641,7 @@
     "on3Id": "261606",
     "on3Slug": "lorenzo-mcmullen-jr-261606",
     "on3ProfileUrl": "https://www.on3.com/rivals/lorenzo-mcmullen-jr-261606/",
-    "on3Source": "on3-rpm-manual-seed",
+    "on3Source": "on3_profile_last_good",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -35642,7 +35653,7 @@
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 6,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -35696,7 +35707,7 @@
         "trend": "flat"
       }
     ],
-    "ufRpmPct": 7,
+    "ufRpmPct": 6,
     "updatedAt": "2026-08-03T02:27:45.768Z",
     "displayRating": null,
     "ratingIsOverride": false,
@@ -35714,7 +35725,9 @@
         "date": "2026-06-19",
         "source": "beat:corey-bender"
       }
-    ]
+    ],
+    "nationalRank": 11,
+    "positionRank": 4
   },
   {
     "id": "jaelyn-easterling-flores",
@@ -36266,13 +36279,13 @@
     "school": "IMG Academy (Bradenton, FL)",
     "htWt": "5-9.5 / 165",
     "stars": 4,
-    "rating": null,
+    "rating": 90.84601449275364,
     "ratingOverride": null,
     "vaultGrade": null,
     "vaultGradeUpdatedAt": null,
-    "natlRank": null,
-    "posRank": null,
-    "stateRank": null,
+    "natlRank": 169,
+    "posRank": 16,
+    "stateRank": 20,
     "inState": false,
     "category": "target",
     "status": "uncommitted",
@@ -36284,7 +36297,7 @@
     "on3Id": "243873",
     "on3Slug": "phoenix-evans-243873",
     "on3ProfileUrl": "https://www.on3.com/rivals/phoenix-evans-243873/",
-    "on3Source": "on3-rpm-manual-seed",
+    "on3Source": "on3_profile_last_good",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -36296,7 +36309,7 @@
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 3,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -36388,7 +36401,7 @@
     "ratingIsOverride": false,
     "height": "5-9.5",
     "weight": 165,
-    "state": "NJ",
+    "state": "FL",
     "position": "CB",
     "hasUFOffer": true,
     "ufOffer": true,
@@ -36400,7 +36413,9 @@
         "date": "2026-06-19",
         "source": "beat:corey-bender"
       }
-    ]
+    ],
+    "nationalRank": 169,
+    "positionRank": 16
   },
   {
     "id": "braxton-rein",
@@ -36736,14 +36751,14 @@
     "classYear": 2028,
     "school": "Sarasota (Sarasota, FL)",
     "htWt": "6-5 / 190",
-    "stars": 0,
-    "rating": null,
+    "stars": 3,
+    "rating": 84.66666666666667,
     "ratingOverride": null,
     "vaultGrade": null,
     "vaultGradeUpdatedAt": null,
-    "natlRank": null,
-    "posRank": null,
-    "stateRank": null,
+    "natlRank": 525,
+    "posRank": 43,
+    "stateRank": 67,
     "inState": true,
     "category": "target",
     "status": "uncommitted",
@@ -36755,7 +36770,7 @@
     "on3Id": "284243",
     "on3Slug": "hudson-west-284243",
     "on3ProfileUrl": "https://www.on3.com/rivals/hudson-west-284243/",
-    "on3Source": "on3-rpm-manual-seed",
+    "on3Source": "on3_profile_last_good",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -36767,7 +36782,7 @@
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 99,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -36789,7 +36804,7 @@
         "trend": "flat"
       }
     ],
-    "ufRpmPct": 62,
+    "ufRpmPct": 99,
     "updatedAt": "2026-08-03T02:27:45.768Z",
     "displayRating": null,
     "ratingIsOverride": false,
@@ -36807,7 +36822,9 @@
         "date": "2026-06-20",
         "source": "beat:blake-alderman"
       }
-    ]
+    ],
+    "nationalRank": 525,
+    "positionRank": 43
   },
   {
     "id": "turner-wilkie",
@@ -37136,7 +37153,7 @@
     "on3Id": "290300",
     "on3Slug": "nikolay-petrushev-290300",
     "on3ProfileUrl": "https://www.on3.com/rivals/nikolay-petrushev-290300/",
-    "on3Source": null,
+    "on3Source": "on3_profile_last_good",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -37148,7 +37165,7 @@
     "visitEnd": null,
     "starsDisplay": null,
     "headliner": false,
-    "ufProbability": null,
+    "ufProbability": 70,
     "fitScore": null,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
@@ -37161,7 +37178,7 @@
     "nilEstimate": null,
     "nilSource": null,
     "competitors": [],
-    "ufRpmPct": null,
+    "ufRpmPct": 70,
     "updatedAt": "2026-08-03T02:27:45.768Z",
     "displayRating": null,
     "ratingIsOverride": false,
@@ -46467,7 +46484,8 @@
         "source": "beat:corey-bender"
       }
     ],
-    "updatedAt": "2026-08-03T02:27:45.768Z"
+    "updatedAt": "2026-08-03T02:27:45.768Z",
+    "on3Source": "on3_profile_last_good"
   },
   {
     "id": "kaydan-whiteside",
@@ -46492,7 +46510,8 @@
         "source": "beat:tyler-harden"
       }
     ],
-    "updatedAt": "2026-08-03T02:27:45.768Z"
+    "updatedAt": "2026-08-03T02:27:45.768Z",
+    "on3Source": "on3_profile_last_good"
   },
   {
     "id": "zaiden-jernigan",

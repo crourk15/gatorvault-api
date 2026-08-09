@@ -35,7 +35,10 @@ export interface PlayerRankingEntry {
 
 export function resolveRatingSource(on3Source: unknown): RecruitingRatingSource {
   const s = String(on3Source ?? '').trim().toLowerCase();
-  if (s === 'on3-board-sync' || s.startsWith('http')) return 'on3';
+  if (!s) return 'seed';
+  if (s.startsWith('http')) return 'on3';
+  // Any On3-derived store stamp counts as industry composite (not Vault est.).
+  if (s.includes('on3')) return 'on3';
   return 'seed';
 }
 
@@ -54,8 +57,34 @@ function editorialPosition(slug: string | undefined, fallback: string | null): s
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PLAYERS_PATH = path.join(__dirname, '../data/recruiting/players.json');
-const BOARD_PATH = path.join(__dirname, '../data/recruiting/2028-target-board.json');
+const BUNDLE_PLAYERS_PATH = path.join(__dirname, '../data/recruiting/players.json');
+const BUNDLE_BOARD_PATH = path.join(__dirname, '../data/recruiting/2028-target-board.json');
+
+function resolvePlayersPath(): string {
+  try {
+    const { resolveRecruitingDataDir } = require('./recruiting-data-dir') as {
+      resolveRecruitingDataDir: () => string;
+    };
+    const durable = path.join(resolveRecruitingDataDir(), 'players.json');
+    if (fs.existsSync(durable)) return durable;
+  } catch {
+    /* optional */
+  }
+  return BUNDLE_PLAYERS_PATH;
+}
+
+function resolveBoardPath(): string {
+  try {
+    const { resolveRecruitingDataDir } = require('./recruiting-data-dir') as {
+      resolveRecruitingDataDir: () => string;
+    };
+    const durable = path.join(resolveRecruitingDataDir(), '2028-target-board.json');
+    if (fs.existsSync(durable)) return durable;
+  } catch {
+    /* optional */
+  }
+  return BUNDLE_BOARD_PATH;
+}
 
 interface BoardRow {
   slug?: string;
@@ -72,7 +101,7 @@ interface BoardRow {
 function loadEditorialBoardIndex(): Map<string, BoardRow> {
   const index = new Map<string, BoardRow>();
   try {
-    const board = JSON.parse(fs.readFileSync(BOARD_PATH, 'utf8')) as { targets?: BoardRow[] };
+    const board = JSON.parse(fs.readFileSync(resolveBoardPath(), 'utf8')) as { targets?: BoardRow[] };
     for (const row of board.targets || []) {
       const slug = indexKey(row.slug);
       if (slug) index.set(slug, row);
@@ -107,7 +136,7 @@ export function loadRecruitingRankings(): Map<string, PlayerRankingEntry> {
   const editorial = loadEditorialBoardIndex();
 
   try {
-    const players = JSON.parse(fs.readFileSync(PLAYERS_PATH, 'utf8')) as Array<{
+    const players = JSON.parse(fs.readFileSync(resolvePlayersPath(), 'utf8')) as Array<{
       id?: string;
       slug?: string;
       on3Id?: string;
