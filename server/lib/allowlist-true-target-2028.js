@@ -2,13 +2,13 @@
  * Formula-based 2028 true-target auto-include for FutureCast / Desk.
  *
  * Manual ALLOWLIST_2028 remains as a seed/override union. This module adds
- * prospects who clear locked thresholds so high-lead Top-100 chases (e.g.
- * Mannings @ ~92% Florida lead) cannot be invisible due to a missing slug.
+ * prospects who clear locked thresholds so high-lead / elite chases cannot be
+ * invisible due to a missing slug.
  *
- * Locked thresholds (Charles + Vault, 2026-08-04):
- * - Florida lead >= 70% (On3 UF RPM, Rivals PM confidence, or Florida #1 competitor %)
- * - Board quality: national rank <= 100, OR 4-star when national rank is still null (rank lag)
- * - Must remain an active open UF target
+ * Paths (Charles + Vault):
+ * A) Florida lead >= 70% + Top-100 (or 4★ when national rank lags) — Mannings-style
+ * B) Top-50 nationally + Florida leading the board — Jamarcus-style (~49% lead / #50)
+ *    Never miss a Top-50 where UF is #1 just because lead is under 70%.
  */
 'use strict';
 
@@ -17,10 +17,17 @@ const path = require('path');
 const { isActiveUfTarget, isFloridaSchool } = require('./recruiting-target-filters');
 
 const CLASS_YEAR = 2028;
-/** Minimum Florida lead % to auto-include. */
+/** Path A: minimum Florida lead % to auto-include with Top-100 quality. */
 const LEAD_PCT_MIN = 70;
-/** National rank ceiling for auto-include when ranks are present. */
+/** Path A: national rank ceiling when ranks are present. */
 const NATL_RANK_MAX = 100;
+/** Path B: elite national rank ceiling (Top-50). */
+const ELITE_NATL_RANK_MAX = 50;
+/**
+ * Path B soft floor when we only have UF RPM (no full competitor ladder).
+ * Prevents tiny leftover UF % from auto-including every Top-50.
+ */
+const ELITE_LEAD_SOFT_FLOOR = 25;
 
 function slugKey(value) {
   return String(value || '')
@@ -134,6 +141,42 @@ function passesBoardQuality(player) {
   return resolveStars(player) >= 4;
 }
 
+function isEliteTop50(player) {
+  const natl = resolveNatlRank(player);
+  return natl != null && natl > 0 && natl <= ELITE_NATL_RANK_MAX;
+}
+
+/**
+ * Florida is leading the chase (Path B).
+ * Prefer competitor ladder (#1). Else accept UF RPM / Rivals PM with a soft floor.
+ */
+function floridaIsLeading(player, rpmBySlug = null) {
+  const ladder = floridaCompetitorLeadPct(player);
+  if (ladder != null) {
+    return { ok: true, pct: ladder, source: 'competitor_ladder' };
+  }
+
+  const comps = Array.isArray(player?.competitors) ? player.competitors : [];
+  if (comps.length) {
+    // Ladder present but Florida not #1.
+    return { ok: false, pct: null, source: 'competitor_ladder' };
+  }
+
+  const lead = resolveFloridaLead(player, rpmBySlug);
+  if (lead.pct == null) return { ok: false, pct: null, source: null };
+
+  if (lead.source === 'rivals_pm') {
+    return { ok: true, pct: lead.pct, source: lead.source };
+  }
+  if (lead.source === 'uf_rpm' || lead.source === 'on3_rpm_allowlist') {
+    if (lead.pct >= ELITE_LEAD_SOFT_FLOOR) {
+      return { ok: true, pct: lead.pct, source: lead.source };
+    }
+    return { ok: false, pct: lead.pct, source: lead.source };
+  }
+  return { ok: false, pct: lead.pct, source: lead.source };
+}
+
 function passesLead(player, rpmBySlug = null) {
   const { pct, source } = resolveFloridaLead(player, rpmBySlug);
   if (pct == null || pct < LEAD_PCT_MIN) return { ok: false, pct, source };
@@ -146,6 +189,26 @@ function evaluateTrueTarget2028(player, opts = {}) {
   if (year !== CLASS_YEAR) return { ok: false, reason: 'wrong_class' };
   if (!isActiveUfTarget(player)) return { ok: false, reason: 'not_active_uf_target' };
 
+  const natlRank = resolveNatlRank(player);
+  const stars = resolveStars(player);
+
+  // Path B — Top-50 + Florida leading (Jamarcus Johnson class).
+  if (isEliteTop50(player)) {
+    const leading = floridaIsLeading(player, opts.rpmBySlug);
+    if (leading.ok) {
+      return {
+        ok: true,
+        reason: 'formula_true_target_top50_uf_lead',
+        path: 'top50_uf_lead',
+        leadPct: leading.pct,
+        leadSource: leading.source,
+        natlRank,
+        stars,
+      };
+    }
+  }
+
+  // Path A — Florida lead ≥70% + Top-100 / 4★ rank-lag (Mannings class).
   const lead = passesLead(player, opts.rpmBySlug);
   if (!lead.ok) {
     return {
@@ -153,8 +216,8 @@ function evaluateTrueTarget2028(player, opts = {}) {
       reason: 'florida_lead_below_threshold',
       leadPct: lead.pct,
       leadSource: lead.source,
-      natlRank: resolveNatlRank(player),
-      stars: resolveStars(player),
+      natlRank,
+      stars,
     };
   }
   if (!passesBoardQuality(player)) {
@@ -163,17 +226,18 @@ function evaluateTrueTarget2028(player, opts = {}) {
       reason: 'board_quality_below_threshold',
       leadPct: lead.pct,
       leadSource: lead.source,
-      natlRank: resolveNatlRank(player),
-      stars: resolveStars(player),
+      natlRank,
+      stars,
     };
   }
   return {
     ok: true,
     reason: 'formula_true_target',
+    path: 'lead70_top100',
     leadPct: lead.pct,
     leadSource: lead.source,
-    natlRank: resolveNatlRank(player),
-    stars: resolveStars(player),
+    natlRank,
+    stars,
   };
 }
 
@@ -194,8 +258,11 @@ module.exports = {
   CLASS_YEAR,
   LEAD_PCT_MIN,
   NATL_RANK_MAX,
+  ELITE_NATL_RANK_MAX,
+  ELITE_LEAD_SOFT_FLOOR,
   evaluateTrueTarget2028,
   listFormulaTrueTargetSlugs2028,
   resolveFloridaLead,
+  floridaIsLeading,
   passesBoardQuality,
 };
