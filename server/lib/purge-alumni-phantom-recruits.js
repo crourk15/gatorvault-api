@@ -187,18 +187,6 @@ async function purgeAlumniPhantomRecruits({ clearHubCache = true, rebuildSnapsho
   );
   report.files.stampsRepo = purgeStampFiles(path.join(serverData, 'player-profiles', 'stamps'));
 
-  // Also delete by slug from durable recruiting store when available.
-  try {
-    const store = require('./recruiting-store');
-    const deleted = [];
-    for (const slug of slugs) {
-      const r = await store.deletePlayerBySlug(slug);
-      if (r?.removed) deleted.push(slug);
-    }
-    report.files.storeDeletes = { removed: deleted.length, slugs: deleted };
-  } catch (err) {
-    report.files.storeDeletes = { error: err.message || String(err) };
-  }
 
   report.allowlist = removeAdminAllowlistAlumni();
   report.futurecastDb = await purgeFuturecastDb(slugs);

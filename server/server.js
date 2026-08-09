@@ -1780,9 +1780,11 @@ function startPostBootRecruitingAndSchedulers() {
           .catch((err) => console.warn('[headlines] purge skipped:', err.message));
       }, purgeDelay);
 
-  // Scrub UF staff coach phantoms (brandon-harris etc.) from durable recruiting/FC.
+  // Staff phantom boot purge gated — expanded alumni slug scrub made boot IO
+  // heavy enough to 502 Render Starter after #379. Enable with STAFF_PHANTOM_PURGE_BOOT=1.
   setTimeout(() => {
     try {
+      if (String(process.env.STAFF_PHANTOM_PURGE_BOOT || '').trim() !== '1') return;
       if (pipelineGuards.shouldSkipHeavyJob('staff-phantom-purge-boot')) return;
       const { purgeStaffPhantomRecruits } = require('./lib/purge-staff-phantom-recruits');
       purgeStaffPhantomRecruits({ clearHubCache: true, rebuildSnapshots: false })
@@ -1802,27 +1804,11 @@ function startPostBootRecruitingAndSchedulers() {
     }
   }, Math.max(15000, Number(process.env.STAFF_PHANTOM_PURGE_BOOT_DELAY_MS || 20000)));
 
-  // Scrub UF alumni / roster / empty-ATH phantoms off 2028 Priority Chase.
-  setTimeout(() => {
-    try {
-      if (pipelineGuards.shouldSkipHeavyJob('alumni-phantom-purge-boot')) return;
-      const { purgeAlumniPhantomRecruits } = require('./lib/purge-alumni-phantom-recruits');
-      purgeAlumniPhantomRecruits({ clearHubCache: true, rebuildSnapshots: false })
-        .then((r) => {
-          const n = r?.files?.recruitingPlayers?.removed || r?.files?.storeDeletes?.removed || 0;
-          if (n || r?.allowlist?.removed) {
-            console.log('[alumni-phantoms] boot purge:', JSON.stringify({
-              players: n,
-              allowlist: r?.allowlist?.removed || 0,
-              db: r?.futurecastDb,
-            }));
-          }
-        })
-        .catch((err) => console.warn('[alumni-phantoms] boot purge skipped:', err.message));
-    } catch (err) {
-      console.warn('[alumni-phantoms] boot purge unavailable:', err.message);
-    }
-  }, Math.max(18000, Number(process.env.ALUMNI_PHANTOM_PURGE_BOOT_DELAY_MS || 25000)));
+
+  // Alumni/roster phantom scrub is admin-only (not boot). Boot purge wedged
+  // Render Starter into 502s via heavy file IO after #379/#380.
+  // Ops: POST /api/admin/hub/purge-alumni-phantoms after deploy.
+
 
   // Repair jamarcus-johnson → Kamarion collision; seed real 2028 DL.
   setTimeout(() => {

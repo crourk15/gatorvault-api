@@ -36,13 +36,6 @@ function staffPhantomSlugs() {
   out.add('brandon-harris');
   out.add('phil-trautwein');
   out.add('chris-foster');
-  // Also scrub alumni/roster bleed that soft-created onto 2028 chase.
-  try {
-    const { BLOCKED_PLAYER_SLUGS } = require('./recruiting-blocked-players');
-    for (const slug of BLOCKED_PLAYER_SLUGS) out.add(slug);
-  } catch {
-    /* optional */
-  }
   return [...out];
 }
 
@@ -255,17 +248,8 @@ async function purgeStaffPhantomRecruits({ clearHubCache = true, rebuildSnapshot
     report.snapshotSkipped = 'boot_safe_default';
   }
 
-  // Chain alumni/roster phantom scrub without nested snapshot rebuilds.
-  try {
-    const { purgeAlumniPhantomRecruits } = require('./purge-alumni-phantom-recruits');
-    report.alumni = await purgeAlumniPhantomRecruits({
-      clearHubCache: clearHubCache,
-      rebuildSnapshots: false,
-    });
-  } catch (err) {
-    report.alumniError = err.message || String(err);
-  }
-
+  // Do not chain alumni purge here — boot + admin staff purge must stay cheap
+  // on Render Starter. Use POST /api/admin/hub/purge-alumni-phantoms separately.
   return report;
 }
 
