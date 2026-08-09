@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T01:33:10.086Z",
+  "updatedAt": "2026-08-09T01:51:57.307Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -2532,13 +2532,13 @@
         }
       ],
       "traits": [
-        "contested-catch",
         "yac",
-        "vertical",
+        "contact-balance",
         "suddenness",
-        "physical"
+        "physical",
+        "versatile-alignment"
       ],
-      "vaultFilmAngle": "Flip chase: Texas commit with return Florida trip heat — ownership language forbidden.",
+      "vaultFilmAngle": "Flip chase: Texas commit with return Florida trip — tape sell is YAC + contact balance, not fake ownership.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"
