@@ -882,6 +882,18 @@ function mountAdminHubRoutes(app) {
     }
   });
 
+  /** Purge UF alumni / roster / empty-ATH phantoms off 2028 Priority Chase. */
+  app.post('/api/admin/hub/purge-alumni-phantoms', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const { purgeAlumniPhantomRecruits } = require('./purge-alumni-phantom-recruits');
+      const report = await purgeAlumniPhantomRecruits({ clearHubCache: true });
+      return res.status(200).json({ ok: true, ...report });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   /** Repair jamarcus-johnson / Kamarion collision; seed real 2028 DL Jamarcus. */
   app.post('/api/admin/hub/repair-jamarcus-kamarion', async (req, res) => {
     if (!requireAdmin(req, res)) return;

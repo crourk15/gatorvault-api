@@ -424,18 +424,29 @@ function buildDisplayPredictors(
 
 async function loadUnderclassmenHighPrioritySlugs(classYear: number): Promise<string[]> {
   const { getLiveBoardTargets } = require('../../lib/live-board-targets');
+  const { getAllowlistSet } = require('../../lib/recruiting-target-allowlist');
+  const { isBlockedRecruit } = require('../../lib/recruiting-blocked-players');
   if (classYear === 2028) {
+    // Priority Chase = locked hunt list (static + admin + formula), NOT the full
+    // live-board census. Dumping live extras reintroduced roster/alumni ATH shells
+    // (Kyle Trask, Caden Jones, Tramell Jones) after allowlist removes.
+    const allow = [...getAllowlistSet(2028)]
+      .map((s: string) => String(s).toLowerCase())
+      .filter((slug: string) => slug && !isBlockedRecruit({ slug }));
+    if (!allow.length) {
+      return (ALLOWLIST_2028 as string[])
+        .map((s) => String(s).toLowerCase())
+        .filter((slug) => slug && !isBlockedRecruit({ slug }));
+    }
     const live = await getLiveBoardTargets(2028);
-    const liveSlugs = live
-      .map((t: { slug?: string }) => String(t.slug || '').toLowerCase())
-      .filter(Boolean);
-    const liveSet = new Set(liveSlugs);
-    const allowlistFirst = (ALLOWLIST_2028 as string[])
-      .map((s) => String(s).toLowerCase())
-      .filter((slug) => liveSet.has(slug));
-    const extras = liveSlugs.filter((slug) => !allowlistFirst.includes(slug));
-    if (allowlistFirst.length || extras.length) return [...allowlistFirst, ...extras];
-    return (ALLOWLIST_2028 as string[]).map((s) => String(s).toLowerCase());
+    const liveSet = new Set(
+      live
+        .map((t: { slug?: string }) => String(t.slug || '').toLowerCase())
+        .filter(Boolean)
+    );
+    const onLive = allow.filter((slug: string) => liveSet.has(slug));
+    const offline = allow.filter((slug: string) => !liveSet.has(slug));
+    return onLive.length || offline.length ? [...onLive, ...offline] : allow;
   }
   return [];
 }
@@ -510,10 +521,12 @@ function boardPlayerToHighPriority(
 async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   const slugs = await loadUnderclassmenHighPrioritySlugs(classYear);
   const board = slugs.length ? await loadUnderclassmenBoardPlayers(classYear, slugs) : [];
-  const mapped = board
-    .map(boardPlayerToHighPriority)
-    .filter((p) => isActiveUfTarget(p))
-    .filter((p) => Number(p.classYear) === Number(classYear));
+  const mapped = filterBlockedRecruits(
+    board
+      .map(boardPlayerToHighPriority)
+      .filter((p) => isActiveUfTarget(p))
+      .filter((p) => Number(p.classYear) === Number(classYear))
+  );
   const ufTrendSnapshot = require('../../lib/uf-trend-snapshot');
   // Record today's GV likelihood, then attach real 7d snapshot deltas (not seed +4).
   const withMovement = ufTrendSnapshot.applySnapshotMovement(mapped, { minAbs: 1 });

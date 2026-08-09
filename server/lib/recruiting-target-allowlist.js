@@ -207,10 +207,16 @@ function getAllowlistSet(classYear) {
   } catch {
     formula = [];
   }
+  let isBlocked = () => false;
+  try {
+    isBlocked = require('./recruiting-blocked-players').isBlockedRecruit;
+  } catch {
+    /* optional */
+  }
   return new Set(
     [...ALLOWLIST_2028, ...extra, ...promoted, ...formula]
       .map((s) => canonicalTargetSlug(s))
-      .filter((s) => s && !BLOCKED_SOFT_2028.has(s))
+      .filter((s) => s && !BLOCKED_SOFT_2028.has(s) && !isBlocked({ slug: s }))
   );
 }
 

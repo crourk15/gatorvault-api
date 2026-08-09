@@ -88,6 +88,14 @@ function addToAdminAllowlist({ slug, name, classYear }) {
   } catch {
     /* optional */
   }
+  try {
+    const { isBlockedRecruit } = require('./recruiting-blocked-players');
+    if (isBlockedRecruit({ slug: s, name })) {
+      return { added: false, reason: 'blocked_not_recruit', slug: s, classYear: year };
+    }
+  } catch {
+    /* optional */
+  }
   if (year === 2027) {
     return {
       added: false,

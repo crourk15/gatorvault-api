@@ -366,7 +366,19 @@ async function feedDeskIntelToFutureCast({
 
   // Never soft-create HS/FC targets from current UF roster names (weight-room /
   // depth-chart chatter). Bryce Lovett = R-Jr OL, not a 2028 ATH commit.
-  const rosterHit = currentRosterCollision(key);
+  // Also cover Jr/II/III slug drift (tramell-jones vs tramell-jones-jr).
+  let rosterHit = currentRosterCollision(key);
+  if (!rosterHit) {
+    try {
+      const { currentRosterRecruitCollision } = require('./recruiting-blocked-players');
+      rosterHit = currentRosterRecruitCollision({
+        slug: key,
+        name: player?.name || research?.playerName || null
+      });
+    } catch {
+      /* optional */
+    }
+  }
   if (rosterHit) {
     steps.push({
       step: 'roster_collision_block',
@@ -383,6 +395,31 @@ async function feedDeskIntelToFutureCast({
       steps,
       allowlisted: false
     };
+  }
+
+  // Alumni / legend / empty-ATH phantoms (Urban Meyer, Kyle Trask, …).
+  try {
+    const { isBlockedRecruit } = require('./recruiting-blocked-players');
+    const probe = {
+      slug: key,
+      name: player?.name || research?.playerName || profile?.name || key.replace(/-/g, ' '),
+      pos: player?.pos || player?.position || profile?.pos || 'ATH',
+      school: player?.school || profile?.school || '',
+      classYear: player?.classYear || 2028
+    };
+    if (isBlockedRecruit(probe)) {
+      steps.push({ step: 'blocked_recruit', ok: true, blocked: true });
+      return {
+        ok: false,
+        error: 'blocked_not_recruit',
+        slug: key,
+        name: probe.name,
+        steps,
+        allowlisted: false
+      };
+    }
+  } catch {
+    /* optional */
   }
 
   let board = player;

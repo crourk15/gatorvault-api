@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T03:37:51.888Z",
+  "updatedAt": "2026-08-09T21:23:25.910Z",
   "notes": "Curated Hudl / On3 highlight traits for Beat Desk Copy Brief. Paste → brief includes film so posts can use the tape as fact. Do not tell the audience you're different — just be. Upsert via Admin Hub API or edit this file.",
   "bySlug": {
     "cj-craig-james": {
@@ -2572,6 +2572,177 @@
         "motor"
       ],
       "vaultFilmAngle": "Top-50 mass interior with Florida stake — Chatman/offer, 2 UOV, tape sell is occupy + push.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "jalanie-george": {
+      "playerName": "Jalanie George",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22503401/68d7e04323107843e9c5b6ff"
+        }
+      ],
+      "traits": [
+        "length",
+        "motor",
+        "bend",
+        "violent-hands",
+        "pursuit",
+        "gap-discipline",
+        "needs-counters",
+        "add-mass"
+      ],
+      "vaultFilmAngle": "Top-tier EDGE length with chase traits Florida can develop into a starter-upside rusher.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "zylen-little": {
+      "playerName": "Zylen Little",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22832811/68ab0388681298adcbfd1f5e"
+        }
+      ],
+      "traits": [
+        "motor",
+        "first-step",
+        "penetrator",
+        "run-stuff",
+        "leverage",
+        "active-hands",
+        "needs-counters"
+      ],
+      "vaultFilmAngle": "Compact in-state DT with penetration and production — Florida needs this body type in the room.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "keoni-snipes": {
+      "playerName": "Keoni Snipes",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/24594170/6f4f8dc4d8f54fb05ac521b6"
+        }
+      ],
+      "traits": [
+        "length",
+        "motor",
+        "versatility",
+        "pursuit",
+        "athleticism",
+        "needs-counters",
+        "add-mass"
+      ],
+      "vaultFilmAngle": "Long Alabama EDGE with chase traits — Florida can develop the counters into starter upside.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "ryan-peterson": {
+      "playerName": "Ryan Peterson",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://www.hudl.com/embed/video/3/22594520/68d160e68a79b1d9e1cd7e85"
+        }
+      ],
+      "traits": [
+        "motor",
+        "downhill",
+        "gap-sound",
+        "wrap-tackle",
+        "pursuit",
+        "needs-shed",
+        "coverage-polish"
+      ],
+      "vaultFilmAngle": "Compact MIKE with fill + finish traits Florida can develop into starter-upside linebacker play.",
+      "doNotClaim": [
+        "Do not invent tackle totals or grades from highlight reps alone",
+        "Do not overclaim NFL projection from camp/highlight reps alone"
+      ],
+      "clipNotes": "Vault film desk — persisted with War Room eval/comp/projection.",
+      "ingestStatus": null,
+      "on3RecruitSlug": null,
+      "on3ProfileUrl": null,
+      "lastIngestAt": null,
+      "evaluatedBy": null,
+      "evalMode": null,
+      "evaluatedAt": null
+    },
+    "josiah-taylor": {
+      "playerName": "Josiah Taylor",
+      "position": null,
+      "classYear": null,
+      "sources": [
+        {
+          "type": "hudl",
+          "label": "Vault film desk highlight",
+          "url": "https://access.qwikcut.com/highlights/6830bf044c8950b6ac722f91"
+        }
+      ],
+      "traits": [
+        "mass",
+        "length",
+        "active-hands",
+        "motor",
+        "heavy-interior",
+        "pad-level",
+        "needs-counters"
+      ],
+      "vaultFilmAngle": "True 300+ in-state interior body — Florida can develop the hands into a starter-upside DT.",
       "doNotClaim": [
         "Do not invent tackle totals or grades from highlight reps alone",
         "Do not overclaim NFL projection from camp/highlight reps alone"

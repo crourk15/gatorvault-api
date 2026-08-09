@@ -1,49 +1,21 @@
 /**
- * Purge UF coaching-staff identities that were soft-created as HS/FutureCast
- * "recruits" (e.g. brandon-harris = CB coach hydrated with Asher Ghioto data).
+ * Purge UF alumni / current-roster / empty-ATH phantoms that were soft-created
+ * onto the 2028 Priority Chase board (Urban Meyer, Kyle Trask, Dallas Wilson, …).
  */
 'use strict';
 
 const fs = require('fs');
 const path = require('path');
 const {
-  listStaff,
-  isStaffPlayerSlug,
-  isStaffOrCoachName,
-  STAFF_ID_ALIASES,
-} = require('./recruiting-staff-directory');
+  BLOCKED_PLAYER_SLUGS,
+  isBlockedRecruit,
+  isEmptyAthPhantomShell,
+  currentRosterRecruitCollision,
+} = require('./recruiting-blocked-players');
 const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
 
-function staffPhantomSlugs() {
-  const out = new Set();
-  for (const entry of listStaff()) {
-    const id = String(entry.staffId || '').toLowerCase();
-    if (id) out.add(id);
-    const nameSlug = String(entry.name || '')
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
-    if (nameSlug) out.add(nameSlug);
-  }
-  for (const [alias, target] of Object.entries(STAFF_ID_ALIASES)) {
-    const a = String(alias || '')
-      .toLowerCase()
-      .replace(/\s+/g, '-');
-    if (a) out.add(a);
-    if (target) out.add(String(target).toLowerCase());
-  }
-  // Explicit coach phantoms seen in the wild.
-  out.add('brandon-harris');
-  out.add('phil-trautwein');
-  out.add('chris-foster');
-  // Also scrub alumni/roster bleed that soft-created onto 2028 chase.
-  try {
-    const { BLOCKED_PLAYER_SLUGS } = require('./recruiting-blocked-players');
-    for (const slug of BLOCKED_PLAYER_SLUGS) out.add(slug);
-  } catch {
-    /* optional */
-  }
-  return [...out];
+function alumniPhantomSlugs() {
+  return [...BLOCKED_PLAYER_SLUGS];
 }
 
 function readJson(filePath, fallback) {
@@ -61,16 +33,9 @@ function writeJson(filePath, data) {
 
 function isPhantomPlayer(row) {
   if (!row) return false;
-  const slug = String(row.slug || row.id || '').toLowerCase();
-  const name = String(row.name || row.playerName || '').trim();
-  if (slug && isStaffPlayerSlug(slug)) return true;
-  if (name && isStaffOrCoachName(name)) return true;
-  try {
-    const { isBlockedRecruit } = require('./recruiting-blocked-players');
-    if (isBlockedRecruit(row)) return true;
-  } catch {
-    /* optional */
-  }
+  if (isBlockedRecruit(row)) return true;
+  if (isEmptyAthPhantomShell(row)) return true;
+  if (currentRosterRecruitCollision(row)) return true;
   return false;
 }
 
@@ -96,15 +61,17 @@ function purgeSlugKeyedObject(filePath, keys = ['slug']) {
   const strip = (obj) => {
     if (!obj || typeof obj !== 'object') return;
     for (const k of Object.keys(obj)) {
-      if (isStaffPlayerSlug(k) || isStaffOrCoachName(k.replace(/-/g, ' '))) {
+      if (isBlockedRecruit({ slug: k }) || isBlockedRecruit({ name: k.replace(/-/g, ' ') })) {
         delete obj[k];
-        removed++;
+        removed += 1;
       }
     }
   };
   if (Array.isArray(doc)) {
     const before = doc.length;
-    const next = doc.filter((row) => !isPhantomPlayer(row) && !keys.some((k) => isStaffPlayerSlug(row?.[k])));
+    const next = doc.filter(
+      (row) => !isPhantomPlayer(row) && !keys.some((k) => isBlockedRecruit({ slug: row?.[k] }))
+    );
     if (next.length !== before) {
       writeJson(filePath, next);
       return before - next.length;
@@ -124,7 +91,7 @@ function purgeSlugKeyedObject(filePath, keys = ['slug']) {
   if (doc.names && typeof doc.names === 'object') strip(doc.names);
   if (Array.isArray(doc.slugs2028)) {
     const before = doc.slugs2028.length;
-    doc.slugs2028 = doc.slugs2028.filter((s) => !isStaffPlayerSlug(s));
+    doc.slugs2028 = doc.slugs2028.filter((s) => !isBlockedRecruit({ slug: s }));
     removed += before - doc.slugs2028.length;
   }
   strip(doc);
@@ -135,11 +102,11 @@ function purgeSlugKeyedObject(filePath, keys = ['slug']) {
 function purgeStampFiles(stampsDir) {
   if (!fs.existsSync(stampsDir)) return 0;
   let removed = 0;
-  for (const slug of staffPhantomSlugs()) {
+  for (const slug of alumniPhantomSlugs()) {
     const p = path.join(stampsDir, `${slug}.json`);
     if (fs.existsSync(p)) {
       fs.unlinkSync(p);
-      removed++;
+      removed += 1;
     }
   }
   return removed;
@@ -172,11 +139,11 @@ async function purgeFuturecastDb(slugs) {
   }
 }
 
-function removeAdminAllowlistStaff() {
+function removeAdminAllowlistAlumni() {
   try {
     const { removeFromAdminAllowlist, loadAdminAllowlist } = require('./admin-allowlist-store');
     const before = loadAdminAllowlist();
-    const hits = (before.slugs2028 || []).filter((s) => isStaffPlayerSlug(s));
+    const hits = (before.slugs2028 || []).filter((s) => isBlockedRecruit({ slug: s }));
     const results = [];
     for (const slug of hits) {
       results.push(removeFromAdminAllowlist({ slug, classYear: 2028 }));
@@ -187,13 +154,10 @@ function removeAdminAllowlistStaff() {
   }
 }
 
-/**
- * Full purge across durable recruiting paths + FutureCast DB.
- */
-async function purgeStaffPhantomRecruits({ clearHubCache = true } = {}) {
+async function purgeAlumniPhantomRecruits({ clearHubCache = true } = {}) {
   const recruitingDir = resolveRecruitingDataDir();
   const serverData = path.join(__dirname, '..', 'data');
-  const slugs = staffPhantomSlugs();
+  const slugs = alumniPhantomSlugs();
   const report = {
     ok: true,
     slugs,
@@ -221,10 +185,22 @@ async function purgeStaffPhantomRecruits({ clearHubCache = true } = {}) {
   report.files.stamps = purgeStampFiles(
     path.join(path.dirname(recruitingDir), 'player-profiles', 'stamps')
   );
-  // Repo-local stamps fallback
   report.files.stampsRepo = purgeStampFiles(path.join(serverData, 'player-profiles', 'stamps'));
 
-  report.allowlist = removeAdminAllowlistStaff();
+  // Also delete by slug from durable recruiting store when available.
+  try {
+    const store = require('./recruiting-store');
+    const deleted = [];
+    for (const slug of slugs) {
+      const r = await store.deletePlayerBySlug(slug);
+      if (r?.removed) deleted.push(slug);
+    }
+    report.files.storeDeletes = { removed: deleted.length, slugs: deleted };
+  } catch (err) {
+    report.files.storeDeletes = { error: err.message || String(err) };
+  }
+
+  report.allowlist = removeAdminAllowlistAlumni();
   report.futurecastDb = await purgeFuturecastDb(slugs);
 
   if (clearHubCache) {
@@ -236,6 +212,16 @@ async function purgeStaffPhantomRecruits({ clearHubCache = true } = {}) {
       } else if (typeof hubCache.clearHubCache === 'function') {
         hubCache.clearHubCache();
       }
+      // Drop FutureCast HP disk snapshots so alumni cards cannot resurrect.
+      try {
+        const diskDir = path.join(serverData, 'futurecast-cache');
+        for (const year of [2028, 2027]) {
+          const hp = path.join(diskDir, `high-priority-${year}.json`);
+          if (fs.existsSync(hp)) fs.unlinkSync(hp);
+        }
+      } catch {
+        /* optional */
+      }
       report.hubCacheCleared = true;
     } catch (err) {
       report.hubCacheError = err.message || String(err);
@@ -245,25 +231,16 @@ async function purgeStaffPhantomRecruits({ clearHubCache = true } = {}) {
   try {
     const { rebuildRecruitingSnapshots } = require('./recruiting-snapshot-rebuild');
     await rebuildRecruitingSnapshots();
-    report.snapshotsRebuilt = true;
+    report.snapshotRebuilt = true;
   } catch (err) {
-    report.snapshotsError = err.message || String(err);
-  }
-
-  // Chain alumni/roster phantom scrub (Kyle Trask, Caden Jones, …) so the
-  // already-deployed purge-staff-phantoms admin route clears chase bleed too.
-  try {
-    const { purgeAlumniPhantomRecruits } = require('./purge-alumni-phantom-recruits');
-    report.alumni = await purgeAlumniPhantomRecruits({ clearHubCache: clearHubCache });
-  } catch (err) {
-    report.alumniError = err.message || String(err);
+    report.snapshotError = err.message || String(err);
   }
 
   return report;
 }
 
 module.exports = {
-  staffPhantomSlugs,
+  alumniPhantomSlugs,
   isPhantomPlayer,
-  purgeStaffPhantomRecruits,
+  purgeAlumniPhantomRecruits,
 };
