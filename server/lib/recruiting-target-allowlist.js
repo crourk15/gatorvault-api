@@ -198,8 +198,9 @@ function getAllowlistSet(classYear) {
   const extra = admin.slugs2028 || [];
   // 2028 still merges Lab promotions for elite offer/visit discovery.
   const promoted = loadLabPromotionSlugs(2028);
-  // Formula auto-include: Florida lead ≥70% + Top-100 (or 4★ while rank lags).
-  // Prevents Mannings-style misses when RPM/PM says Florida is crushing the board.
+  // Formula auto-include:
+  //   A) Florida lead ≥70% + Top-100 (or 4★ while rank lags) — Mannings-style
+  //   B) Top-50 + Florida leading — Jamarcus-style (never miss elite UF #1 chases under 70%)
   let formula = [];
   try {
     formula = require('./allowlist-true-target-2028').listFormulaTrueTargetSlugs2028();
