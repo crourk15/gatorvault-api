@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-08T13:49:33.387Z",
+  "updatedAt": "2026-08-09T01:51:57.296Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -137,27 +137,30 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Sam Spiegelman",
-          "writerId": "spiegelman",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/easton-royal-243862/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/18475096/691553674f38d669b7dd6c85",
+          "publishedAt": "2026-08-09"
         }
       ],
       "strengths": [
-        "Lane Kiffin is closing in on a top-10 recruiting class in his first season as LSU's head coach.",
-        "The Tigers have been red-hot this summer, bolstering"
+        "Royal's best tape trait is YAC — once he clears the first tackle angle he has a second gear that pulls away from pursuit.",
+        "Royal's listed 5-11 / 200 looks real on film: thick lower half, stays on his feet through arm tackles, and finishes runs with contact balance.",
+        "Royal is used as a true weapon — split wide, slot, and in the screen/jet-touch game — not a one-alignment perimeter guy."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Lane Kiffin is closing in on a top-10 recruiting class in his first season as LSU's head coach.  The Tigers have been red-hot this summer, bolstering",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Highlight cuts emphasize space YAC more than full stems vs press; route polish and contested high-point sample need more all-22 before locking those claims."
+      ],
+      "comparison": "Royal comps to Deebo Samuel — 5-11 / 6-0 thick WR mold; sudden after the catch, contact balance, and enough mass to punish tackle angles (size-matched; not a Florida-alum default).",
+      "schemeFit": "Royal fits Faulkner as a boundary/slot hybrid built for manufactured touches and YAC after the catch.",
+      "staffNotes": "FILM VERIFIED 2026-08-09 from Brother Martin junior + soph Hudl highlight reels (watched). Verified: open-field speed, contact balance, thick frame, multi-alignment/screen usage. NOT enough clean sample on contested high-points or full press-release tree in highlight cuts — do not oversell those. Flip-watch Texas commit. Comp size-matched Deebo; skipped On3 Percy Harvin Florida-alum default.",
+      "projection": "Royal projects as a Year 1 package/special-teams WR (screens, manufactured touches), Year 2 rotation slot/flex, with Year 3 every-down starter ceiling as a physical YAC weapon — not a pure length X.",
+      "insiderNotes": "Watched junior/soph Hudl. Royal wins with thick-frame YAC and contact balance; highlight package is space-heavy so contested-catch/route-tree claims stay conservative until more tape.",
+      "recruitingStory": "Easton Royal is a 5-star WR · listed 5-11 / 200 · Brother Martin (New Orleans, LA) · Texas commit — Closing Class Flip Watch.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:11.579Z"
+      "updatedAt": "2026-08-09T01:51:57.288Z"
     },
     "aaron-mcwilliams": {
       "playerSlug": "aaron-mcwilliams",
