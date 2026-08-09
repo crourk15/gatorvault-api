@@ -300,6 +300,26 @@
     .hub-nc-alert-body{color:#cbd5e1;font-size:13px;line-height:1.45}
     .hub-bd-legend{color:#94a3b8;font-size:12px;line-height:1.55}
     .hub-bd-legend .hub-env-badge{margin-right:2px}
+    .hub-bd-topic{min-width:168px;max-width:260px;vertical-align:middle}
+    .hub-bd-topic__main{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+    .hub-bd-topic__name{color:#fff;font-weight:700;font-size:13px;line-height:1.3;letter-spacing:0}
+    .hub-bd-topic__slug{
+      margin-top:5px;font-size:11px;color:#64748b;line-height:1.3;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      word-break:break-word;
+    }
+    .hub-bd-topic__kind{
+      flex:0 0 auto;font-size:10px;font-weight:800;letter-spacing:.05em;
+      padding:2px 7px;border-radius:4px;text-transform:uppercase;line-height:1.2;
+    }
+    .hub-bd-topic__kind--team{background:rgba(29,78,216,.32);color:#93c5fd;border:1px solid rgba(59,130,246,.4)}
+    .hub-bd-topic__kind--program{background:rgba(67,56,202,.32);color:#c4b5fd;border:1px solid rgba(129,140,248,.4)}
+    .hub-bd-topic__kind--roster{background:rgba(15,118,110,.32);color:#5eead4;border:1px solid rgba(45,212,191,.4)}
+    .hub-bd-beat{color:#cbd5e1;max-width:340px;line-height:1.4}
+    .hub-bd-actions{white-space:nowrap}
+    .hub-bd-actions .hub-btn{min-height:36px;padding:8px 10px;margin:0 6px 0 0}
+    .hub-bd-actions .hub-btn:last-child{margin-right:0}
+    .hub-ps-row td{vertical-align:middle}
     .hub-nc-card--ignore h4{color:#fca5a5}
     .hub-nc-card p{margin:0;color:#e2e8f0;font-size:13px;line-height:1.5}
     .hub-nc-steps{margin:0;padding:0;list-style:none;display:grid;gap:8px}
@@ -435,7 +455,7 @@
   <script src="/js/admin-hub-runbooks.js?v=hub-runbooks-v4"></script>
   <script src="/js/admin-hub-ops.js?v=hub-ops-v2"></script>
   <script src="/js/admin-hub-job-queue.js?v=hub-jobs-v1"></script>
-  <script src="/js/admin-hub-beat-desk.js?v=hub-bd-v16"></script>
+  <script src="/js/admin-hub-beat-desk.js?v=hub-bd-v17"></script>
   <script src="/js/admin-hub-futurecast.js?v=hub-fc-v1"></script>
   <script src="/js/admin-hub-post-studio.js?v=hub-ps-v1"></script>
   <script src="/js/admin-hub-qa-summary.js?v=hub-qa-sum-v1"></script>

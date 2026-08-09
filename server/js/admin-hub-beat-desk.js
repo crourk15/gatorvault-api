@@ -9,9 +9,84 @@
   var MAX_AUTO_RETRIES = 4;
 
   function esc(s) {
-    var d = document.createElement('div');
-    d.textContent = s == null ? '' : String(s);
-    return d.innerHTML;
+    var raw = s == null ? '' : String(s);
+    if (typeof document !== 'undefined' && document.createElement) {
+      var d = document.createElement('div');
+      d.textContent = raw;
+      return d.innerHTML;
+    }
+    return raw
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  /** Clean TOPIC / PLAYER label — no shouty ALL CAPS, no raw-slug titles. */
+  function formatTopicLabel(name, slug, kind) {
+    var raw = String(name || '').trim();
+    var s = String(slug || '').trim().toLowerCase();
+    var k = String(kind || 'recruit').toLowerCase();
+    if (k === 'team' || k === 'program' || k === 'roster') {
+      return raw || prettySlug(s) || '—';
+    }
+    if (raw && raw.length > 2 && raw === raw.toUpperCase() && /[A-Z]/.test(raw)) {
+      raw = titleCaseWords(raw.toLowerCase());
+    }
+    if (!raw || raw === s || looksLikeSlug(raw)) {
+      raw = prettySlug(s);
+    }
+    return raw || s || '—';
+  }
+
+  function looksLikeSlug(value) {
+    return /^[a-z0-9]+(?:-[a-z0-9]+)+$/.test(String(value || '').trim());
+  }
+
+  function titleCaseWords(value) {
+    return String(value || '')
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(function (w) {
+        if (/^(wr|qb|rb|te|ol|dl|lb|cb|ath|ot|edge|iol|s|de|dt|og|c)$/i.test(w)) {
+          return w.toUpperCase();
+        }
+        if (/^(jr|sr|ii|iii|iv)$/i.test(w)) {
+          return w.toUpperCase().replace('JR', 'Jr').replace('SR', 'Sr');
+        }
+        return w.charAt(0).toUpperCase() + w.slice(1);
+      })
+      .join(' ');
+  }
+
+  function prettySlug(slug) {
+    if (!slug) return '';
+    return titleCaseWords(String(slug).replace(/-/g, ' '));
+  }
+
+  function topicKindMeta(kind) {
+    var k = String(kind || 'recruit').toLowerCase();
+    if (k === 'program') return { key: 'program', label: 'PROGRAM' };
+    if (k === 'roster') return { key: 'roster', label: 'ROSTER' };
+    if (k === 'team') return { key: 'team', label: 'TEAM' };
+    return null;
+  }
+
+  function topicCellHtml(name, slug, kind) {
+    var meta = topicKindMeta(kind);
+    var label = formatTopicLabel(name, slug, kind);
+    var kindHtml = meta
+      ? '<span class="hub-bd-topic__kind hub-bd-topic__kind--' + esc(meta.key) + '">' + esc(meta.label) + '</span>'
+      : '';
+    return '<td class="hub-bd-topic">'
+      + '<div class="hub-bd-topic__main">'
+      + '<span class="hub-bd-topic__name">' + esc(label) + '</span>'
+      + kindHtml
+      + '</div>'
+      + (slug
+        ? '<div class="hub-bd-topic__slug" title="' + esc(slug) + '">' + esc(slug) + '</div>'
+        : '')
+      + '</td>';
   }
 
   function fmtTime(iso) {
@@ -444,26 +519,19 @@
         var st = (it.status && it.status.label) || (it.status && it.status.status) || '—';
         var slug = it.slug || '';
         var stale = it.ageMs != null && it.ageMs > FRESH_MS;
-        var name = it.playerName || slug || '—';
         var kind = it.deskKind || (String(slug).indexOf('uf-team-') === 0 || String(slug).indexOf('uf-program-') === 0
           ? (String(slug).indexOf('uf-program-') === 0 ? 'program' : 'team')
           : 'recruit');
-        var kindBadge = kind === 'recruit'
-          ? ''
-          : '<span class="hub-env-badge" style="margin-left:6px;background:'
-            + (kind === 'roster' ? '#0f766e' : '#1d4ed8') + '">'
-            + esc(kind === 'program' ? 'PROGRAM' : (kind === 'roster' ? 'ROSTER' : 'TEAM'))
-            + '</span>';
+        var name = formatTopicLabel(it.playerName || slug || '—', slug, kind);
         return '<tr data-bd-slug="' + esc(slug) + '" class="hub-ps-row' + (slug === selectedSlug ? ' hub-ps-row--active' : '') + '">'
-          + '<td><strong style="color:#fff">' + esc(name) + '</strong>' + kindBadge
-          + '<div class="hub-meta" style="margin:2px 0 0">' + esc(slug) + '</div></td>'
+          + topicCellHtml(it.playerName || slug || '—', slug, kind)
           + '<td><span class="hub-env-badge ' + statusClass(stale ? 'stale' : (it.liveBeat ? 'ok' : ((it.status && it.status.status) || st))) + '">'
           + esc(stale ? 'STALE' : (it.liveBeat ? 'LIVE' : (typeof st === 'string' ? st : '—'))) + '</span></td>'
           + '<td>' + esc(it.ageLabel || fmtTime(it.reportedAt)) + '</td>'
-          + '<td>' + esc((it.beatText || '').slice(0, 90)) + '</td>'
-          + '<td style="white-space:nowrap">'
-          + '<button type="button" class="hub-btn sm" data-bd-open="' + esc(slug) + '" data-bd-name="' + esc(name) + '" style="min-height:36px;padding:8px 10px;margin-right:6px">Open</button>'
-          + '<button type="button" class="hub-btn secondary sm" data-bd-copy="' + esc(slug) + '" data-bd-name="' + esc(name) + '" style="min-height:36px;padding:8px 10px">Copy Brief</button>'
+          + '<td class="hub-bd-beat">' + esc((it.beatText || '').slice(0, 90)) + (String(it.beatText || '').length > 90 ? '…' : '') + '</td>'
+          + '<td class="hub-bd-actions">'
+          + '<button type="button" class="hub-btn sm" data-bd-open="' + esc(slug) + '" data-bd-name="' + esc(name) + '">Open</button>'
+          + '<button type="button" class="hub-btn secondary sm" data-bd-copy="' + esc(slug) + '" data-bd-name="' + esc(name) + '">Copy Brief</button>'
           + '</td>'
           + '</tr>';
       }).join('') || '<tr><td colspan="5">No beat intel in this view.</td></tr>';
@@ -558,8 +626,10 @@
         // Re-use paintInbox into a temp body swap: simplest — call paintInbox which overwrites body.
         // Instead keep wake card + append a compact list below.
         var rows = cachedItems.slice(0, 8).map(function (it) {
+          var kind = it.deskKind || 'recruit';
+          var label = formatTopicLabel(it.playerName || it.slug, it.slug, kind);
           return '<div class="hub-meta" style="padding:8px 0;border-top:1px solid #1e293b">'
-            + '<strong style="color:#fff">' + esc(it.playerName || it.slug) + '</strong>'
+            + '<strong style="color:#fff">' + esc(label) + '</strong>'
             + ' · ' + esc(it.ageLabel || '—')
             + '<div style="color:#94a3b8">' + esc((it.beatText || '').slice(0, 120)) + '</div></div>';
         }).join('');
@@ -663,5 +733,9 @@
     pulseTimer = setInterval(function () { updatePulse({ skipEnsure: true }); }, 90000);
   }
 
-  global.GVAdminBeatDesk = { render: render };
+  global.GVAdminBeatDesk = {
+    render: render,
+    formatTopicLabel: formatTopicLabel,
+    topicCellHtml: topicCellHtml,
+  };
 })(typeof window !== 'undefined' ? window : global);
