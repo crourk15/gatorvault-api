@@ -153,14 +153,33 @@ async function seedJamarcusJohnson() {
   };
 }
 
+async function purgePoisonedJamarcusStamp() {
+  try {
+    const stampStore = require('./player-profile-stamp');
+    return stampStore.deleteStamp('jamarcus-johnson');
+  } catch (err) {
+    return { deleted: 0, paths: [], error: err.message };
+  }
+}
+
 async function repairJamarcusKamarionCollision() {
   const purged = await purgeMismatchedPlayers();
+  const stampPurge = await purgePoisonedJamarcusStamp();
   const seeded = await seedJamarcusJohnson();
-  return { ok: true, purged, seeded };
+  // Drop poisoned prepared-meal again after seed so next full-profile rebuilds Jamarcus.
+  const stampPurgeAfter = await purgePoisonedJamarcusStamp();
+  return {
+    ok: true,
+    purged,
+    stampPurge,
+    stampPurgeAfter,
+    seeded,
+  };
 }
 
 module.exports = {
   purgeMismatchedPlayers,
+  purgePoisonedJamarcusStamp,
   seedJamarcusJohnson,
   repairJamarcusKamarionCollision,
 };

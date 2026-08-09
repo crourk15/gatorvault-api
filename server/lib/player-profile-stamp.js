@@ -244,6 +244,85 @@ function resolveVaultScoutingForStamp(slug, stampVault) {
   }
 }
 
+function stampPlayerPayload(stamp) {
+  return stamp?.player && typeof stamp.player === 'object' ? stamp.player : null;
+}
+
+/** True when a prepared-meal stamp no longer matches the live/slug identity. */
+function isPoisonedStamp(slug, stamp, recruiting = null) {
+  const key = String(slug || '')
+    .trim()
+    .toLowerCase();
+  if (!key || !stamp || typeof stamp !== 'object') return false;
+  try {
+    const { hasSlugNameFirstMismatch } = require('./recruit-identity-collision');
+    const stamped = stampPlayerPayload(stamp) || {};
+    const stampedName =
+      stamped.fullName || stamped.name || stamped.playerName || '';
+    if (
+      hasSlugNameFirstMismatch({
+        slug: key,
+        name: stampedName,
+        fullName: stampedName,
+      })
+    ) {
+      return true;
+    }
+    if (recruiting && typeof recruiting === 'object') {
+      const liveName = recruiting.name || recruiting.fullName || recruiting.playerName || '';
+      const liveYear = Number(recruiting.classYear || recruiting.year || 0);
+      const stampYear = Number(stamped.classYear || stamped.year || 0);
+      if (
+        liveName &&
+        hasSlugNameFirstMismatch({
+          slug: key,
+          name: liveName,
+          fullName: liveName,
+        }) === false &&
+        hasSlugNameFirstMismatch({
+          slug: key,
+          name: stampedName,
+          fullName: stampedName,
+        })
+      ) {
+        return true;
+      }
+      // Live recruit first-name disagrees with stamped first-name (Jamarcus vs Kamarion).
+      if (liveName && stampedName) {
+        const liveFirst = String(liveName).trim().split(/\s+/)[0].toLowerCase();
+        const stampFirst = String(stampedName).trim().split(/\s+/)[0].toLowerCase();
+        if (liveFirst && stampFirst && liveFirst !== stampFirst) return true;
+      }
+      if (liveYear > 0 && stampYear > 0 && liveYear !== stampYear) return true;
+    }
+  } catch {
+    /* ignore */
+  }
+  return false;
+}
+
+function deleteStamp(slug) {
+  const key = String(slug || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, '-');
+  if (!key) return { deleted: 0, paths: [] };
+  const paths = [];
+  let deleted = 0;
+  for (const filePath of stampCandidates(key)) {
+    try {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        deleted += 1;
+        paths.push(filePath);
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+  return { deleted, paths };
+}
+
 async function getStampedFullProfile(slug) {
   const key = String(slug || '')
     .trim()
@@ -252,6 +331,18 @@ async function getStampedFullProfile(slug) {
   const stamp = readStamp(key);
   if (!stamp) return null;
   const recruiting = await loadLiveRecruiting(key);
+  if (isPoisonedStamp(key, stamp, recruiting)) {
+    try {
+      deleteStamp(key);
+      console.warn('[profile-stamp] purged poisoned stamp', key, {
+        stampedName: stamp?.player?.fullName || stamp?.player?.name || null,
+        liveName: recruiting?.name || recruiting?.fullName || null,
+      });
+    } catch {
+      /* ignore */
+    }
+    return null;
+  }
   const out = overlayLiveRpm(stamp, recruiting);
   out.vaultScouting = resolveVaultScoutingForStamp(key, stamp.vaultScouting);
   return out;
@@ -317,6 +408,8 @@ module.exports = {
   stripLiveRpmFields,
   readStamp,
   writeStamp,
+  deleteStamp,
+  isPoisonedStamp,
   overlayLiveRpm,
   getStampedFullProfile,
   listAllowlistStampSlugs,

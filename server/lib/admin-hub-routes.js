@@ -894,6 +894,28 @@ function mountAdminHubRoutes(app) {
     }
   });
 
+  /** Delete prepared-meal stamp(s) so next full-profile rebuilds from live store. */
+  app.post('/api/admin/hub/purge-profile-stamps', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const stampStore = require('./player-profile-stamp');
+      const body = req.body && typeof req.body === 'object' ? req.body : {};
+      const slugs = Array.isArray(body.slugs)
+        ? body.slugs
+        : String(body.slug || req.query.slug || '')
+            .split(',')
+            .map((s) => String(s || '').trim().toLowerCase())
+            .filter(Boolean);
+      if (!slugs.length) {
+        return res.status(400).json({ ok: false, error: 'slug_or_slugs_required' });
+      }
+      const results = slugs.map((slug) => ({ slug, ...stampStore.deleteStamp(slug) }));
+      return res.status(200).json({ ok: true, results });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   /** Curated Hudl/On3 film traits for Beat Desk Copy Brief. */
   app.get('/api/admin/hub/film-traits', (req, res) => {
     if (!requireAdmin(req, res)) return;

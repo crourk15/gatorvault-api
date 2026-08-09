@@ -119,4 +119,34 @@ describe('player profile prepared-meal stamps', () => {
     assert.match(src, /X-Profile-Cache', 'STAMP'/);
     assert.match(src, /writeStamp/);
   });
+
+  it('rejects poisoned identity stamps (Jamarcus slug holding Kamarion)', async () => {
+    const slug = 'jamarcus-johnson';
+    assert.equal(
+      stamp.writeStamp(slug, {
+        source: 'test',
+        player: {
+          slug,
+          fullName: 'Kamarion Johnson',
+          classYear: 2027,
+          position: 'ATH',
+          highSchool: 'Clinch County',
+        },
+        futurecastSummary: {},
+        vaultScouting: null,
+      }),
+      true
+    );
+    assert.equal(
+      stamp.isPoisonedStamp(
+        slug,
+        stamp.readStamp(slug),
+        { name: 'Jamarcus Johnson', classYear: 2028, pos: 'DL' }
+      ),
+      true
+    );
+    const del = stamp.deleteStamp(slug);
+    assert.ok(del.deleted >= 1);
+    assert.equal(stamp.readStamp(slug), null);
+  });
 });
