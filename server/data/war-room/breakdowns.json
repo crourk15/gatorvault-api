@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-09T01:51:57.296Z",
+  "updatedAt": "2026-08-09T03:37:51.873Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -18305,6 +18305,39 @@
       "nflProjection": null,
       "featured": false,
       "updatedAt": "2026-08-06T21:29:58.224Z"
+    },
+    "jamarcus-johnson": {
+      "playerSlug": "jamarcus-johnson",
+      "playerName": "Jamarcus Johnson",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/22484944/69a609c3741fa267c9d0c44f",
+          "publishedAt": "2026-08-09"
+        }
+      ],
+      "strengths": [
+        "Johnson's listed 6-5 / 330 looks real on sophomore Hudl — thick through the trunk, length to stack, and enough mass to force double teams at the point.",
+        "Johnson occupies doubles and clogs the A/B gap instead of getting washed — early tape shows he can keep linebackers clean when he wins with hands and leverage.",
+        "Johnson generates pocket push when he strikes first — drives the interior OL into the backfield and still shows enough lateral chase for a 330-pound frame."
+      ],
+      "weaknesses": [
+        "Johnson still plays high on some snaps and needs cleaner, more violent hand placement — pad level and strike timing are the next polish items versus SEC interior OL."
+      ],
+      "comparison": "Johnson comps to Dexter Lawrence — 6-4 / 6-5 massive interior mold; occupies doubles, pushes the pocket with mass, and still moves enough laterally to chase (size-matched; not a Florida-alum default).",
+      "schemeFit": "Johnson fits White's odd front as a nose/1-tech/3T who two-gaps, occupies doubles, and creates second-level clean-up with pocket push on early wins.",
+      "staffNotes": "FILM VERIFIED 2026-08-09 from Toombs County 2025 sophomore Hudl (Jamarcus Johnson Soph.year #98, ~2:20). Watched: occupy doubles, interior pocket push, lateral chase for size. Highlight package — limited negative reps / pass-rush sample. Comp size-matched Dexter Lawrence (6-4/342 family) for 6-5/330; skipped Florida-alum default.",
+      "projection": "Johnson projects as develop into the Florida DL room with Year 1 rotation/nose-3T snaps, Year 2 compete for a starting interior role, with every-down starter upside as a space-eating, double-team magnet if pad level and hands catch the mass.",
+      "insiderNotes": "Watched sophomore Hudl. Johnson wins with rare early mass at 6-5 / 330 — occupies doubles, pushes the pocket when he strikes, and still chases laterally. Pad level and hand violence need polish before every-down SEC claims lock.",
+      "recruitingStory": "Jamarcus Johnson is a 4-star DL · listed 6-5 / 330 · Toombs County (Lyons, GA) · Natl #50 · Florida On3 RPM lead ~49% · staff priority (Gerald Chatman).",
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-08-09T03:37:51.866Z",
+      "filmWatched": true
     }
   }
 }
