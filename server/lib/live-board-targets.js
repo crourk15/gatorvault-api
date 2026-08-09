@@ -3,6 +3,7 @@
  */
 const store = require('./recruiting-store');
 const { isActiveUfTarget, isFloridaSchool } = require('./recruiting-target-filters');
+const { filterBlockedRecruits } = require('./recruiting-blocked-players');
 
 function isFloridaCommit(player) {
   const to = String(player?.committedTo || player?.committed_to || '').toLowerCase();
@@ -34,7 +35,7 @@ async function getLiveBoard(classYear = 2027) {
  */
 async function getLiveBoardTargets(classYear = 2027) {
   const board = await getLiveBoard(classYear);
-  return (board.targets || []).filter(isActiveUfTarget);
+  return filterBlockedRecruits((board.targets || []).filter(isActiveUfTarget));
 }
 
 /**

@@ -1802,6 +1802,28 @@ function startPostBootRecruitingAndSchedulers() {
     }
   }, Math.max(15000, Number(process.env.STAFF_PHANTOM_PURGE_BOOT_DELAY_MS || 20000)));
 
+  // Scrub UF alumni / roster / empty-ATH phantoms off 2028 Priority Chase.
+  setTimeout(() => {
+    try {
+      if (pipelineGuards.shouldSkipHeavyJob('alumni-phantom-purge-boot')) return;
+      const { purgeAlumniPhantomRecruits } = require('./lib/purge-alumni-phantom-recruits');
+      purgeAlumniPhantomRecruits({ clearHubCache: true })
+        .then((r) => {
+          const n = r?.files?.recruitingPlayers?.removed || r?.files?.storeDeletes?.removed || 0;
+          if (n || r?.allowlist?.removed) {
+            console.log('[alumni-phantoms] boot purge:', JSON.stringify({
+              players: n,
+              allowlist: r?.allowlist?.removed || 0,
+              db: r?.futurecastDb,
+            }));
+          }
+        })
+        .catch((err) => console.warn('[alumni-phantoms] boot purge skipped:', err.message));
+    } catch (err) {
+      console.warn('[alumni-phantoms] boot purge unavailable:', err.message);
+    }
+  }, Math.max(18000, Number(process.env.ALUMNI_PHANTOM_PURGE_BOOT_DELAY_MS || 25000)));
+
   // Repair jamarcus-johnson → Kamarion collision; seed real 2028 DL.
   setTimeout(() => {
     try {

@@ -14,7 +14,7 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 
 /** Bump when high-priority or master-board payload shape changes. */
 /** Bumped when stars nullability / ED soft-deferred shape changes. */
-export const FUTURECAST_API_CACHE_VERSION = 25;
+export const FUTURECAST_API_CACHE_VERSION = 26;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;

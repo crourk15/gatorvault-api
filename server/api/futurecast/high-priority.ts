@@ -510,10 +510,12 @@ function boardPlayerToHighPriority(
 async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   const slugs = await loadUnderclassmenHighPrioritySlugs(classYear);
   const board = slugs.length ? await loadUnderclassmenBoardPlayers(classYear, slugs) : [];
-  const mapped = board
-    .map(boardPlayerToHighPriority)
-    .filter((p) => isActiveUfTarget(p))
-    .filter((p) => Number(p.classYear) === Number(classYear));
+  const mapped = filterBlockedRecruits(
+    board
+      .map(boardPlayerToHighPriority)
+      .filter((p) => isActiveUfTarget(p))
+      .filter((p) => Number(p.classYear) === Number(classYear))
+  );
   const ufTrendSnapshot = require('../../lib/uf-trend-snapshot');
   // Record today's GV likelihood, then attach real 7d snapshot deltas (not seed +4).
   const withMovement = ufTrendSnapshot.applySnapshotMovement(mapped, { minAbs: 1 });
