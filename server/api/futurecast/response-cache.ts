@@ -14,7 +14,7 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 
 /** Bump when high-priority or master-board payload shape changes. */
 /** Bumped when stars nullability / ED soft-deferred shape changes. */
-export const FUTURECAST_API_CACHE_VERSION = 27;
+export const FUTURECAST_API_CACHE_VERSION = 28;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
@@ -274,18 +274,30 @@ export function normalizeFanStars(raw: unknown): number | null {
   return Math.round(n);
 }
 
-/** Sanitize HP (and similar) payloads so seed/disk leftovers never emit 0★. */
+/** Sanitize HP (and similar) payloads so seed/disk leftovers never emit 0★
+ *  and never resurrect alumni/roster ATH phantoms from durable runtime cache.
+ */
 export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
   if (!value || typeof value !== 'object') return value;
   const doc = value as Record<string, unknown>;
   if (!Array.isArray(doc.players)) return value;
+  let players = doc.players.map((row) => {
+    if (!row || typeof row !== 'object') return row;
+    const p = row as Record<string, unknown>;
+    return { ...p, stars: normalizeFanStars(p.stars) };
+  });
+  try {
+    const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players') as {
+      filterBlockedRecruits: (list: unknown[]) => unknown[];
+    };
+    players = filterBlockedRecruits(players);
+  } catch {
+    /* optional */
+  }
   return {
     ...doc,
-    players: doc.players.map((row) => {
-      if (!row || typeof row !== 'object') return row;
-      const p = row as Record<string, unknown>;
-      return { ...p, stars: normalizeFanStars(p.stars) };
-    }),
+    count: Array.isArray(players) ? players.length : doc.count,
+    players,
   };
 }
 

@@ -154,7 +154,7 @@ function removeAdminAllowlistAlumni() {
   }
 }
 
-async function purgeAlumniPhantomRecruits({ clearHubCache = true, rebuildSnapshots = false } = {}) {
+async function purgeAlumniPhantomRecruits({ clearHubCache = true, rebuildSnapshots = false, purgeDb = false } = {}) {
   const recruitingDir = resolveRecruitingDataDir();
   const serverData = path.join(__dirname, '..', 'data');
   const slugs = alumniPhantomSlugs();
@@ -189,7 +189,11 @@ async function purgeAlumniPhantomRecruits({ clearHubCache = true, rebuildSnapsho
 
 
   report.allowlist = removeAdminAllowlistAlumni();
-  report.futurecastDb = await purgeFuturecastDb(slugs);
+  if (purgeDb) {
+    report.futurecastDb = await purgeFuturecastDb(slugs);
+  } else {
+    report.futurecastDb = { skipped: true, reason: 'purgeDb_default_false' };
+  }
 
   if (clearHubCache) {
     try {
@@ -202,9 +206,10 @@ async function purgeAlumniPhantomRecruits({ clearHubCache = true, rebuildSnapsho
       }
       // Drop FutureCast HP disk snapshots so alumni cards cannot resurrect.
       try {
-        const diskDir = path.join(serverData, 'futurecast-cache');
+        const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
+        const runtimeDir = path.join(resolveRecruitingDataDir(), 'futurecast-runtime');
         for (const year of [2028, 2027]) {
-          const hp = path.join(diskDir, `high-priority-${year}.json`);
+          const hp = path.join(runtimeDir, `high-priority-${year}.json`);
           if (fs.existsSync(hp)) fs.unlinkSync(hp);
         }
       } catch {
