@@ -882,6 +882,18 @@ function mountAdminHubRoutes(app) {
     }
   });
 
+  /** Repair jamarcus-johnson / Kamarion collision; seed real 2028 DL Jamarcus. */
+  app.post('/api/admin/hub/repair-jamarcus-kamarion', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const { repairJamarcusKamarionCollision } = require('./fix-jamarcus-kamarion-collision');
+      const report = await repairJamarcusKamarionCollision();
+      return res.status(200).json(report);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   /** Curated Hudl/On3 film traits for Beat Desk Copy Brief. */
   app.get('/api/admin/hub/film-traits', (req, res) => {
     if (!requireAdmin(req, res)) return;

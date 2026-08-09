@@ -337,6 +337,33 @@ async function feedDeskIntelToFutureCast({
     /* optional */
   }
 
+  // Never soft-create under the wrong first-name slug (jamarcus-johnson ≠ Kamarion).
+  try {
+    const { hasSlugNameFirstMismatch, explainSlugNameMismatch } = require('./recruit-identity-collision');
+    const probe = {
+      slug: key,
+      name: player?.name || research?.playerName || profile?.name || null
+    };
+    if (probe.name && hasSlugNameFirstMismatch(probe)) {
+      steps.push({
+        step: 'identity_collision_block',
+        ok: true,
+        blocked: true,
+        ...explainSlugNameMismatch(probe)
+      });
+      return {
+        ok: false,
+        error: 'slug_name_identity_mismatch',
+        slug: key,
+        name: probe.name,
+        steps,
+        allowlisted: false
+      };
+    }
+  } catch {
+    /* optional */
+  }
+
   // Never soft-create HS/FC targets from current UF roster names (weight-room /
   // depth-chart chatter). Bryce Lovett = R-Jr OL, not a 2028 ATH commit.
   const rosterHit = currentRosterCollision(key);
