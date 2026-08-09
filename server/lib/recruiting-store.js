@@ -684,6 +684,17 @@ async function savePlayersLocal(players) {
   writeJson(PLAYERS_PATH, players);
 }
 
+async function deletePlayerBySlug(slug) {
+  const key = String(slug || '').toLowerCase().trim();
+  if (!key) return { removed: false };
+  const players = await loadPlayersLocal();
+  const next = players.filter((p) => String(p.slug || '').toLowerCase() !== key);
+  const removed = next.length !== players.length;
+  if (removed) await savePlayersLocal(next);
+  return { removed, slug: key };
+}
+
+
 async function loadEventsLocal() {
   return readJson(EVENTS_PATH, []);
 }
@@ -943,6 +954,18 @@ function preservePlayerFields(existing, incoming) {
 async function upsertPlayer(player, options = {}) {
   if (isBlockedPlayer(player)) {
     return null;
+  }
+  try {
+    const { hasSlugNameFirstMismatch, explainSlugNameMismatch } = require('./recruit-identity-collision');
+    if (hasSlugNameFirstMismatch(player) && !options.allowIdentityMismatch) {
+      console.warn(
+        '[recruiting-store] blocked slug/name identity collision',
+        explainSlugNameMismatch(player)
+      );
+      return null;
+    }
+  } catch {
+    /* optional */
   }
   const existing = player?.slug ? await getPlayerBySlug(player.slug) : null;
   const merged = existing ? preservePlayerFields(existing, player) : player;
@@ -1559,6 +1582,7 @@ module.exports = {
   getStoreInfo,
   getAllPlayers,
   getPlayerBySlug,
+  deletePlayerBySlug,
   getPlayersBySlugs,
   resolvePlayerKey,
   findBySlug,

@@ -1802,6 +1802,26 @@ function startPostBootRecruitingAndSchedulers() {
     }
   }, Math.max(15000, Number(process.env.STAFF_PHANTOM_PURGE_BOOT_DELAY_MS || 20000)));
 
+  // Repair jamarcus-johnson → Kamarion collision; seed real 2028 DL.
+  setTimeout(() => {
+    try {
+      if (pipelineGuards.shouldSkipHeavyJob('identity-collision-repair-boot')) return;
+      const { repairJamarcusKamarionCollision } = require('./lib/fix-jamarcus-kamarion-collision');
+      repairJamarcusKamarionCollision()
+        .then((r) => {
+          console.log('[identity-collision] boot repair:', JSON.stringify({
+            purged: r?.purged?.removed?.length || 0,
+            seeded: r?.seeded?.saved?.slug || null,
+            name: r?.seeded?.saved?.name || null,
+          }));
+        })
+        .catch((err) => console.warn('[identity-collision] boot repair skipped:', err.message));
+    } catch (err) {
+      console.warn('[identity-collision] boot repair unavailable:', err.message);
+    }
+  }, Math.max(22000, Number(process.env.IDENTITY_COLLISION_REPAIR_BOOT_DELAY_MS || 25000)));
+
+
     }
     if (!pipelineGuards.scheduledJobsEnabled()) {
       console.log('[recruiting-hub] in-process refresh skipped — X_SCHEDULED_JOBS_ENABLED is not true');
