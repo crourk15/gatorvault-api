@@ -882,6 +882,34 @@ function mountAdminHubRoutes(app) {
     }
   });
 
+  /** Drop durable FutureCast HP runtime snapshots (cheap; forces rebuild). */
+  app.post('/api/admin/hub/clear-hp-runtime', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
+      const dir = path.join(resolveRecruitingDataDir(), 'futurecast-runtime');
+      const removed = [];
+      for (const year of [2027, 2028]) {
+        const file = path.join(dir, `high-priority-${year}.json`);
+        if (fs.existsSync(file)) {
+          fs.unlinkSync(file);
+          removed.push(file);
+        }
+      }
+      try {
+        const hubCache = require('./recruiting-hub-cache');
+        if (typeof hubCache.clearHubCache === 'function') hubCache.clearHubCache();
+      } catch {
+        /* optional */
+      }
+      return res.status(200).json({ ok: true, removed });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   /** Purge UF alumni / roster / empty-ATH phantoms off 2028 Priority Chase. */
   app.post('/api/admin/hub/purge-alumni-phantoms', async (req, res) => {
     if (!requireAdmin(req, res)) return;
