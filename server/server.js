@@ -1785,7 +1785,7 @@ function startPostBootRecruitingAndSchedulers() {
     try {
       if (pipelineGuards.shouldSkipHeavyJob('staff-phantom-purge-boot')) return;
       const { purgeStaffPhantomRecruits } = require('./lib/purge-staff-phantom-recruits');
-      purgeStaffPhantomRecruits({ clearHubCache: true })
+      purgeStaffPhantomRecruits({ clearHubCache: true, rebuildSnapshots: false })
         .then((r) => {
           const n = r?.files?.recruitingPlayers?.removed || 0;
           if (n || r?.allowlist?.removed) {
@@ -1807,7 +1807,7 @@ function startPostBootRecruitingAndSchedulers() {
     try {
       if (pipelineGuards.shouldSkipHeavyJob('alumni-phantom-purge-boot')) return;
       const { purgeAlumniPhantomRecruits } = require('./lib/purge-alumni-phantom-recruits');
-      purgeAlumniPhantomRecruits({ clearHubCache: true })
+      purgeAlumniPhantomRecruits({ clearHubCache: true, rebuildSnapshots: false })
         .then((r) => {
           const n = r?.files?.recruitingPlayers?.removed || r?.files?.storeDeletes?.removed || 0;
           if (n || r?.allowlist?.removed) {
