@@ -39922,7 +39922,7 @@
     "posRank": 8,
     "stateRank": 3,
     "inState": false,
-    "category": "recruit",
+    "category": "target",
     "status": "uncommitted",
     "committedTo": null,
     "fromSchool": null,
@@ -39932,7 +39932,7 @@
     "on3Id": "283076",
     "on3Slug": "samuel-bailey-283076",
     "on3ProfileUrl": "https://www.on3.com/rivals/samuel-bailey-283076/",
-    "on3Source": "on3-board-sync",
+    "on3Source": "on3",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -39991,7 +39991,7 @@
       }
     ],
     "ufRpmPct": 20,
-    "updatedAt": "2026-08-02T13:37:20.390Z",
+    "updatedAt": "2026-08-10T17:20:45.970Z",
     "displayRating": 92.8086956521739,
     "ratingIsOverride": false,
     "height": "6-5.5",
@@ -40017,7 +40017,7 @@
         "school": "Florida",
         "offerType": "Offered",
         "date": null,
-        "source": "on3"
+        "source": "beat:alderman"
       },
       {
         "school": "Auburn Tigers",
@@ -40084,9 +40084,34 @@
         "offerType": "Offered",
         "date": null,
         "source": "on3"
+      },
+      {
+        "school": "Auburn",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Oklahoma",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
       }
     ],
-    "visits": [],
+    "visits": [
+      {
+        "school": "Florida Gators",
+        "visitType": "unofficial_visit",
+        "date": "2026-06-01",
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Florida Gators",
+        "visitType": "unofficial_visit",
+        "date": "2026-04-15",
+        "source": "beat:alderman"
+      }
+    ],
     "on3TopTeams": [
       {
         "team": {
@@ -41911,7 +41936,27 @@
         "positionKey": 5
       }
     ],
-    "evaluationSummary": "4★ OT · #49 natl · Jemison, AL"
+    "evaluationSummary": "4★ OT · #49 natl · Jemison, AL",
+    "offerList": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Auburn",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Oklahoma",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      }
+    ]
   },
   {
     "id": "tristin-gaines",
@@ -43315,12 +43360,12 @@
     "id": "nehemiah-mccary",
     "slug": "nehemiah-mccary",
     "name": "Nehemiah McCary",
-    "pos": "ATH",
+    "pos": "LB",
     "classYear": 2028,
     "school": "Maplesville (Maplesville, AL)",
     "htWt": "6-3 / 220",
-    "stars": 0,
-    "rating": null,
+    "stars": 4,
+    "rating": 92,
     "ratingOverride": null,
     "vaultGrade": null,
     "vaultGradeUpdatedAt": null,
@@ -43328,7 +43373,7 @@
     "posRank": null,
     "stateRank": null,
     "inState": false,
-    "category": "recruit",
+    "category": "target",
     "status": "uncommitted",
     "committedTo": null,
     "fromSchool": null,
@@ -43336,14 +43381,14 @@
     "skinny": "",
     "profileNote": "",
     "on3Id": 261609,
-    "on3Slug": "nehemiah-mccary-261609",
+    "on3Slug": "nehemiah-mccary",
     "on3ProfileUrl": "https://www.on3.com/rivals/nehemiah-mccary-261609/",
-    "on3Source": null,
+    "on3Source": "on3",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
     "rivalsArticleUrl": null,
-    "ufOvStatus": null,
+    "ufOvStatus": "visit",
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
@@ -43356,20 +43401,77 @@
     "secondary_recruiter_id": null,
     "hometownCity": "Maplesville",
     "hometownState": "AL",
-    "stateFips": null,
-    "pinLat": null,
-    "pinLng": null,
+    "stateFips": "01",
+    "pinLat": 32.806671,
+    "pinLng": -86.79113,
     "nilValue": null,
     "nilEstimate": null,
     "nilSource": null,
     "competitors": [],
     "ufRpmPct": null,
-    "updatedAt": "2026-07-12T19:10:52.980Z",
-    "displayRating": null,
+    "updatedAt": "2026-08-10T17:20:45.931Z",
+    "displayRating": 92,
     "ratingIsOverride": false,
     "height": "6-3",
     "weight": 220,
-    "state": "AL"
+    "state": "AL",
+    "boardSource": null,
+    "protected": false,
+    "verifiedCommit": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Alabama",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Auburn",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      }
+    ],
+    "offerList": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Alabama",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Auburn",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      }
+    ],
+    "visits": [
+      {
+        "school": "Florida Gators",
+        "visitType": "unofficial_visit",
+        "date": "2026-06-15",
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Florida Gators",
+        "visitType": "unofficial_visit",
+        "date": "2026-03-01",
+        "source": "beat:alderman"
+      }
+    ]
   },
   {
     "id": "jc-wessel",
@@ -53672,5 +53774,264 @@
     ],
     "offers": [],
     "updatedAt": "2026-08-04T12:26:35.115Z"
+  },
+  {
+    "id": "antijuan-wilkes-jr",
+    "slug": "antijuan-wilkes-jr",
+    "name": "Antijuan Wilkes Jr.",
+    "pos": "OT",
+    "classYear": 2028,
+    "school": "Cass Technical (Detroit, MI)",
+    "htWt": "6-5 / 265",
+    "stars": 4,
+    "rating": 95.05,
+    "ratingOverride": null,
+    "vaultGrade": null,
+    "vaultGradeUpdatedAt": null,
+    "natlRank": 16,
+    "posRank": 2,
+    "stateRank": 1,
+    "inState": false,
+    "category": "target",
+    "status": "uncommitted",
+    "committedTo": null,
+    "fromSchool": null,
+    "commitDate": null,
+    "skinny": "",
+    "profileNote": "",
+    "on3Id": 261623,
+    "on3Slug": "antijuan-wilkes-jr",
+    "on3ProfileUrl": "https://www.on3.com/rivals/antijuan-wilkes-jr-261623/",
+    "on3Source": "on3",
+    "boardSource": null,
+    "protected": false,
+    "verifiedCommit": false,
+    "rivalsLastPrediction": null,
+    "rivalsAnalyst": null,
+    "rivalsConfidence": null,
+    "rivalsArticleUrl": null,
+    "ufOvStatus": null,
+    "ufOvCancelledAt": null,
+    "nextVisitSchool": "Florida",
+    "visitStart": null,
+    "visitEnd": null,
+    "starsDisplay": null,
+    "headliner": false,
+    "ufProbability": null,
+    "fitScore": null,
+    "staff_lead_id": null,
+    "secondary_recruiter_id": null,
+    "hometownCity": "Detroit",
+    "hometownState": "MI",
+    "stateFips": "26",
+    "pinLat": 43.326618,
+    "pinLng": -84.536095,
+    "nilValue": null,
+    "nilEstimate": null,
+    "nilSource": null,
+    "competitors": [],
+    "ufRpmPct": null,
+    "updatedAt": "2026-08-10T17:20:45.872Z",
+    "state": "MI",
+    "displayRating": 95.05,
+    "ratingIsOverride": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-04-01",
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Miami",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Ohio State",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Alabama",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Missouri",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Georgia",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      }
+    ],
+    "offerList": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": "2026-04-01",
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Miami",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Ohio State",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Alabama",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Missouri",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Georgia",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      }
+    ],
+    "visits": []
+  },
+  {
+    "id": "derrell-hines-jr",
+    "slug": "derrell-hines-jr",
+    "name": "Derrell Hines Jr.",
+    "pos": "WR",
+    "classYear": 2028,
+    "school": "Carrollwood Day (Tampa, FL)",
+    "htWt": "6-1 / 170",
+    "stars": 4,
+    "rating": 90,
+    "ratingOverride": null,
+    "vaultGrade": null,
+    "vaultGradeUpdatedAt": null,
+    "natlRank": null,
+    "posRank": null,
+    "stateRank": null,
+    "inState": false,
+    "category": "target",
+    "status": "uncommitted",
+    "committedTo": null,
+    "fromSchool": null,
+    "commitDate": null,
+    "skinny": "",
+    "profileNote": "",
+    "on3Id": 261612,
+    "on3Slug": "derrell-hines-jr",
+    "on3ProfileUrl": "https://www.on3.com/rivals/derrell-hines-jr-261612/",
+    "on3Source": "on3",
+    "boardSource": null,
+    "protected": false,
+    "verifiedCommit": false,
+    "rivalsLastPrediction": null,
+    "rivalsAnalyst": null,
+    "rivalsConfidence": null,
+    "rivalsArticleUrl": null,
+    "ufOvStatus": null,
+    "ufOvCancelledAt": null,
+    "nextVisitSchool": null,
+    "visitStart": null,
+    "visitEnd": null,
+    "starsDisplay": null,
+    "headliner": false,
+    "ufProbability": 18,
+    "fitScore": null,
+    "staff_lead_id": null,
+    "secondary_recruiter_id": null,
+    "hometownCity": "Tampa",
+    "hometownState": "FL",
+    "stateFips": "12",
+    "pinLat": 27.766279,
+    "pinLng": -81.686783,
+    "nilValue": null,
+    "nilEstimate": null,
+    "nilSource": null,
+    "competitors": [],
+    "ufRpmPct": 18,
+    "updatedAt": "2026-08-10T17:20:46.007Z",
+    "state": "FL",
+    "displayRating": 90,
+    "ratingIsOverride": false,
+    "offers": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Auburn",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Nebraska",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "USC",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      }
+    ],
+    "offerList": [
+      {
+        "school": "Florida",
+        "offerType": "Offered",
+        "date": null,
+        "source": "on3"
+      },
+      {
+        "school": "Auburn",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "Nebraska",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      },
+      {
+        "school": "USC",
+        "offerType": "Offered",
+        "date": null,
+        "source": "beat:alderman"
+      }
+    ],
+    "visits": [
+      {
+        "school": "Florida Gators",
+        "visitType": "unofficial_visit",
+        "date": "2026-06-20",
+        "source": "beat:alderman"
+      }
+    ]
   }
 ]

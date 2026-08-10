@@ -1,7 +1,79 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-03T02:34:06.430Z",
+  "updatedAt": "2026-08-10T17:21:51.731Z",
   "items": [
+    {
+      "id": "olog_nehemiah-mccary_2026-05-15_florida",
+      "playerSlug": "nehemiah-mccary",
+      "playerId": null,
+      "school": "Florida",
+      "offerType": "Offered",
+      "date": "2026-05-15",
+      "source": "on3",
+      "fingerprint": "offer|nehemiah-mccary|florida|offered|2026-05-15",
+      "reportedAt": "2026-08-10T17:21:51.722Z",
+      "detail": null
+    },
+    {
+      "id": "olog_nehemiah-mccary_2026-02-01_florida-gators",
+      "playerSlug": "nehemiah-mccary",
+      "playerId": null,
+      "school": "Florida Gators",
+      "offerType": "Offered",
+      "date": "2026-02-01",
+      "source": "on3",
+      "fingerprint": "offer|nehemiah-mccary|florida gators|offered|2026-02-01",
+      "reportedAt": "2026-08-10T17:21:42.408Z",
+      "detail": null
+    },
+    {
+      "id": "olog_derrell-hines-jr_2026-05-01_florida",
+      "playerSlug": "derrell-hines-jr",
+      "playerId": null,
+      "school": "Florida",
+      "offerType": "Offered",
+      "date": "2026-05-01",
+      "source": "beat:alderman",
+      "fingerprint": "offer|derrell-hines-jr|florida|offered|2026-05-01",
+      "reportedAt": "2026-08-10T17:21:26.646Z",
+      "detail": null
+    },
+    {
+      "id": "olog_samuel-bailey_2026-03-01_florida",
+      "playerSlug": "samuel-bailey",
+      "playerId": null,
+      "school": "Florida",
+      "offerType": "Offered",
+      "date": "2026-03-01",
+      "source": "beat:alderman",
+      "fingerprint": "offer|samuel-bailey|florida|offered|2026-03-01",
+      "reportedAt": "2026-08-10T17:21:26.627Z",
+      "detail": null
+    },
+    {
+      "id": "olog_nehemiah-mccary_2026-02-01_florida",
+      "playerSlug": "nehemiah-mccary",
+      "playerId": null,
+      "school": "Florida",
+      "offerType": "Offered",
+      "date": "2026-02-01",
+      "source": "beat:alderman",
+      "fingerprint": "offer|nehemiah-mccary|florida|offered|2026-02-01",
+      "reportedAt": "2026-08-10T17:21:26.607Z",
+      "detail": null
+    },
+    {
+      "id": "olog_antijuan-wilkes-jr_2026-04-15_florida",
+      "playerSlug": "antijuan-wilkes-jr",
+      "playerId": null,
+      "school": "Florida",
+      "offerType": "Offered",
+      "date": "2026-04-15",
+      "source": "beat:alderman",
+      "fingerprint": "offer|antijuan-wilkes-jr|florida|offered|2026-04-15",
+      "reportedAt": "2026-08-10T17:21:26.585Z",
+      "detail": null
+    },
     {
       "id": "olog_nate-dollard_undated_texas-a&m-aggies",
       "playerSlug": "nate-dollard",

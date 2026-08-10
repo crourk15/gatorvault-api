@@ -1,7 +1,72 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-03T02:54:21.471Z",
+  "updatedAt": "2026-08-10T17:21:36.802Z",
   "items": [
+    {
+      "id": "vlog_derrell-hines-jr_uv_2026-06-20",
+      "playerSlug": "derrell-hines-jr",
+      "playerId": null,
+      "playerName": "Derrell Hines Jr.",
+      "school": "Florida",
+      "visitType": "uv",
+      "date": "2026-06-20",
+      "source": "on3",
+      "fingerprint": "visit|derrell-hines-jr|florida|uv|2026-06-20",
+      "reportedAt": "2026-08-10T17:21:36.799Z",
+      "detail": "Gainesville campus unofficial visit (Alderman board / process seed)"
+    },
+    {
+      "id": "vlog_samuel-bailey_uv_2026-04-15",
+      "playerSlug": "samuel-bailey",
+      "playerId": null,
+      "playerName": "Samuel Bailey",
+      "school": "Florida",
+      "visitType": "uv",
+      "date": "2026-04-15",
+      "source": "on3",
+      "fingerprint": "visit|samuel-bailey|florida|uv|2026-04-15",
+      "reportedAt": "2026-08-10T17:21:36.795Z",
+      "detail": "Gainesville campus unofficial visit (Alderman board / process seed)"
+    },
+    {
+      "id": "vlog_samuel-bailey_uv_2026-06-01",
+      "playerSlug": "samuel-bailey",
+      "playerId": null,
+      "playerName": "Samuel Bailey",
+      "school": "Florida",
+      "visitType": "uv",
+      "date": "2026-06-01",
+      "source": "on3",
+      "fingerprint": "visit|samuel-bailey|florida|uv|2026-06-01",
+      "reportedAt": "2026-08-10T17:21:36.789Z",
+      "detail": "Gainesville campus unofficial visit (Alderman board / process seed)"
+    },
+    {
+      "id": "vlog_nehemiah-mccary_uv_2026-03-01",
+      "playerSlug": "nehemiah-mccary",
+      "playerId": null,
+      "playerName": "Nehemiah McCary",
+      "school": "Florida",
+      "visitType": "uv",
+      "date": "2026-03-01",
+      "source": "on3",
+      "fingerprint": "visit|nehemiah-mccary|florida|uv|2026-03-01",
+      "reportedAt": "2026-08-10T17:21:36.784Z",
+      "detail": "Gainesville campus unofficial visit (Alderman board / process seed)"
+    },
+    {
+      "id": "vlog_nehemiah-mccary_uv_2026-06-15",
+      "playerSlug": "nehemiah-mccary",
+      "playerId": null,
+      "playerName": "Nehemiah McCary",
+      "school": "Florida",
+      "visitType": "uv",
+      "date": "2026-06-15",
+      "source": "on3",
+      "fingerprint": "visit|nehemiah-mccary|florida|uv|2026-06-15",
+      "reportedAt": "2026-08-10T17:21:36.773Z",
+      "detail": "Gainesville campus unofficial visit (Alderman board / process seed)"
+    },
     {
       "id": "vlog_cyion-smith_unofficial_visit_2024-08-31",
       "playerSlug": "cyion-smith",
