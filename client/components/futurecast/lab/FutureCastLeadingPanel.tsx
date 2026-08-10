@@ -16,13 +16,13 @@ import {
 } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import {
+  credibleThreatVsFlorida,
   floridaLeadMargin,
   hasClosestCommitProcessEvidence,
   hasCredibleBoardLead,
   isFloridaLeadingOnBoard,
   isNextCommitPick,
   nextCommitScore,
-  topThreatVsFlorida,
 } from './competing-schools';
 import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
 import { schoolLogoInitials, schoolLogoUrl } from '@/lib/school-logos';
@@ -49,8 +49,9 @@ function LeadRow({
 }): React.ReactElement {
   const pct = ufPctFromFc(player.ufProbability);
   const delta = showMovement ? Math.round(player.delta7d ?? 0) : 0;
-  const threat = topThreatVsFlorida(player);
-  const margin = Math.max(1, Math.round(floridaLeadMargin(player)));
+  // Thin legacy crumbs (e.g. GT 4.8%) must not read as "Leads GT by 61".
+  const threat = credibleThreatVsFlorida(player);
+  const margin = threat ? Math.max(1, Math.round(floridaLeadMargin(player))) : 0;
   const rivalLabel = threat?.label || threat?.name || null;
   const logo = threat ? schoolLogoUrl(threat.name) : null;
   const initials = threat ? schoolLogoInitials(threat.name) || threat.label : '';

@@ -153,6 +153,18 @@ export function closingClassUrgencyScore(player: FcLabTarget): number {
   return uf * 1.2 + battleBonus - rivalGap * 0.15;
 }
 
+/** Rival crumbs below this do not count as a contested board (no "Leads GT by 61"). */
+export const MIN_CREDIBLE_RIVAL_PCT = 12;
+
+/** Top rival only when the market share is real enough to score against. */
+export function credibleThreatVsFlorida(
+  player: FcLabTarget
+): { name: string; label: string; pct: number } | null {
+  const threat = topThreatVsFlorida(player);
+  if (!threat || threat.pct < MIN_CREDIBLE_RIVAL_PCT) return null;
+  return threat;
+}
+
 /** True when Florida's share is strictly ahead of the top confirmed rival. */
 export function isFloridaLeadingOnBoard(player: FcLabTarget): boolean {
   if (player.committedTo && isFlorida(player.committedTo)) return false;
@@ -167,12 +179,15 @@ export function isFloridaLeadingOnBoard(player: FcLabTarget): boolean {
   return uf > threat.pct;
 }
 
-/** Margin over the top rival (UF alone = full share). */
+/**
+ * Margin over a credible rival only.
+ * Empty/thin rival boards return 0 so sole-board UF% cannot invent a giant lead.
+ */
 export function floridaLeadMargin(player: FcLabTarget): number {
   const uf = ufPctFromFc(player.ufProbability);
-  const threat = topThreatVsFlorida(player);
-  if (!threat) return uf;
-  return uf - threat.pct;
+  const threat = credibleThreatVsFlorida(player);
+  if (!threat) return 0;
+  return Math.max(0, uf - threat.pct);
 }
 
 /**
@@ -195,26 +210,39 @@ export function hasCredibleBoardLead(player: FcLabTarget): boolean {
   const uf = ufPctFromFc(player.ufProbability);
   const rpm =
     player.ufRpmPct != null && Number(player.ufRpmPct) > 0 ? ufPctFromFc(player.ufRpmPct) : 0;
-  const threat = topThreatVsFlorida(player);
+  const threat = credibleThreatVsFlorida(player);
   if (threat) return uf > threat.pct;
-  // No rival board — need a real market share, not Est. noise.
+  // No credible rival board — need a real market share, not Est. noise.
   return rpm >= 40 || uf >= 50;
 }
 
 /**
  * Closer score — who looks nearest to a Florida commit.
- * Lead + share strength + momentum + cushion over the top rival.
+ * Contested boards (credible rival) outrank empty/thin sole-board leads.
  * Process evidence is gated separately in isNextCommitPick.
  */
 export function nextCommitScore(player: FcLabTarget): number {
   if (!isFloridaLeadingOnBoard(player)) return -1;
   const uf = ufPctFromFc(player.ufProbability);
+  const threat = credibleThreatVsFlorida(player);
   const margin = floridaLeadMargin(player);
   const delta = Number(player.delta7d);
   const momentum = Number.isFinite(delta) ? Math.max(-8, Math.min(18, delta * 1.35)) : 0;
   const shareBoost = uf >= 70 ? 16 : uf >= 60 ? 10 : uf >= 50 ? 4 : 0;
-  const cushionBoost = margin >= 20 ? 10 : margin >= 12 ? 6 : margin >= 6 ? 3 : 0;
-  return uf * 1.15 + margin * 0.55 + momentum + shareBoost + cushionBoost;
+  const cushionBoost = threat
+    ? margin >= 20
+      ? 10
+      : margin >= 12
+        ? 6
+        : margin >= 6
+          ? 3
+          : 0
+    : 0;
+  const contestedBoost = threat ? 14 : 0;
+  const soleBoardPenalty = threat ? 0 : 18;
+  return (
+    uf * 1.15 + margin * 0.55 + momentum + shareBoost + cushionBoost + contestedBoost - soleBoardPenalty
+  );
 }
 
 /** Top-tier closer cut — board lead + process evidence (offer/visits/intel). */

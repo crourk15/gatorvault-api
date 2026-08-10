@@ -36,7 +36,8 @@ export function EarlyDiscoveryPreview({
     let cancelled = false;
 
     async function load() {
-      setLoading(true);
+      // Keep prior cards painted while refreshing — never stick on infinite Loading.
+      if (!players.length) setLoading(true);
       setError(null);
       try {
         const data = await fetchWithWarmPoll(
@@ -47,17 +48,28 @@ export function EarlyDiscoveryPreview({
               position,
               limit,
             }),
-          // Lab panel is fan-facing — keep polling through short Render/Netlify wake gaps.
-          { maxAttempts: 6, delayMs: 1_500 }
+          // Soft/stale allowlist bodies usually land quickly; don't sit in warm-poll forever.
+          { maxAttempts: 3, delayMs: 800 }
         );
         if (cancelled) return;
-        setCount(data.count ?? data.players?.length ?? 0);
-        setPlayers((data.players ?? []).slice(0, limit).map(fromEarlyDiscovery));
+        const next = (data.players ?? []).slice(0, limit).map(fromEarlyDiscovery);
+        setCount(data.count ?? next.length);
+        if (next.length) {
+          setPlayers(next);
+          setError(null);
+        } else if (!players.length) {
+          setPlayers([]);
+        }
       } catch (err) {
         if (cancelled) return;
-        setError(userFacingLoadError(err, 'Early Discovery is warming up — try again in a moment.'));
-        setPlayers([]);
-        setCount(0);
+        // Preserve last good paint when a wake/timeout blip hits.
+        if (!players.length) {
+          setError(
+            userFacingLoadError(err, 'Early Discovery is warming up — try again in a moment.')
+          );
+          setPlayers([]);
+          setCount(0);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -67,9 +79,11 @@ export function EarlyDiscoveryPreview({
     return () => {
       cancelled = true;
     };
+    // intentionally omit `players` — refresh on query/retry only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classYearGte, limit, minDiscoveryScore, position, retryTick]);
 
-  if (loading) {
+  if (loading && !players.length) {
     return <p className="fc-home-section__empty">Loading Early Discovery…</p>;
   }
   if (error && !players.length) {

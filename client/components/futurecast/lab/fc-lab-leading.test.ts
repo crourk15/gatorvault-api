@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  credibleThreatVsFlorida,
   floridaLeadMargin,
   hasClosestCommitProcessEvidence,
   isFloridaLeadingOnBoard,
@@ -63,6 +64,43 @@ test('leading when UF is strictly ahead of top rival even under 34%', () => {
   assert.equal(isFloridaLeadingOnBoard(p), true);
   assert.equal(isNextCommitPick(p), false);
   assert.equal(floridaLeadMargin(p), 4);
+});
+
+test('empty/thin rival boards do not outrank contested board leads', () => {
+  const petrushev = target({
+    slug: 'nikolay-petrushev',
+    name: 'Nikolay Petrushev',
+    ufProbability: 73,
+    ufRpmPct: 70,
+    competingSchools: [],
+    closestCommitEligible: true,
+    processEvidence: warmProcess(),
+  });
+  const west = target({
+    slug: 'hudson-west',
+    name: 'Hudson West',
+    ufProbability: 73,
+    ufRpmPct: 99,
+    competingSchools: [{ name: 'SMU', pct: 20.4 }],
+    closestCommitEligible: true,
+    processEvidence: warmProcess(),
+  });
+  const matthewsThin = target({
+    slug: 'john-matthews',
+    name: 'John Matthews',
+    ufProbability: 66,
+    ufRpmPct: 60,
+    competingSchools: [{ name: 'Georgia Tech', pct: 4.8 }],
+    closestCommitEligible: true,
+    processEvidence: warmProcess(),
+  });
+
+  assert.equal(floridaLeadMargin(petrushev), 0);
+  assert.equal(credibleThreatVsFlorida(matthewsThin), null);
+  assert.equal(floridaLeadMargin(matthewsThin), 0);
+  assert.ok(nextCommitScore(west) > nextCommitScore(petrushev));
+  assert.ok(nextCommitScore(west) > nextCommitScore(matthewsThin));
+  assert.equal(isNextCommitPick(west), true);
 });
 
 test('not leading on a tie with top rival', () => {
