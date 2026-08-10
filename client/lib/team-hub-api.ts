@@ -14,6 +14,7 @@ import type { Coach, DepthChart, Era, Achievement, IdentityBlock, TeamPlayer, Te
 import { computeTeamCommandStats } from '@/components/team/team-command-stats';
 import { TEAM_HUB_SEED } from '@/lib/team-hub-seed';
 import { cacheFirstFetch, readSwrCache } from './stale-while-revalidate';
+import { fallbackDepthChartBoard, fetchDepthChartBoard, type DepthChartBoard } from './depth-chart-api';
 
 export type TeamHubBundle = {
   eras: Era[];
@@ -22,6 +23,8 @@ export type TeamHubBundle = {
   coaches: Coach[];
   roster: TeamPlayer[];
   depthChart: DepthChart;
+  depthLabel: string;
+  depthSubtitle: string;
   commandStats: TeamCommandStats;
   updatedAt: string | null;
 };
@@ -36,7 +39,8 @@ function teamBundleUsable(data: unknown): boolean {
 
 /** Static first-paint seed — real roster/staff/depth without waiting on API. */
 export function buildSeedTeamHubBundle(): TeamHubBundle {
-  const depthChart = TEAM_DEPTH_CHART;
+  const depthBoard = fallbackDepthChartBoard();
+  const depthChart = depthBoard.depthChart;
   const roster = TEAM_HUB_SEED.roster ?? [];
   const coaches =
     TEAM_HUB_SEED.coaches?.length > 0
@@ -55,16 +59,26 @@ export function buildSeedTeamHubBundle(): TeamHubBundle {
     coaches,
     roster,
     depthChart,
+    depthLabel: depthBoard.label,
+    depthSubtitle: depthBoard.subtitle,
     commandStats,
-    updatedAt: meta?.updatedAt ?? TEAM_HUB_SEED.generatedAt ?? null,
+    updatedAt: depthBoard.updatedAt ?? meta?.updatedAt ?? TEAM_HUB_SEED.generatedAt ?? null,
   };
 }
 
 /** Sync read for React initial state — instant Team paint on revisit. */
 export function readCachedTeamHubBundle(): TeamHubBundle | null {
-  return readSwrCache<TeamHubBundle>(TEAM_HUB_BUNDLE_CACHE_KEY, {
+  const cached = readSwrCache<TeamHubBundle>(TEAM_HUB_BUNDLE_CACHE_KEY, {
     isUsable: teamBundleUsable,
   });
+  if (!cached) return null;
+  const fallback = fallbackDepthChartBoard();
+  return {
+    ...cached,
+    depthChart: cached.depthChart?.offense?.length ? cached.depthChart : fallback.depthChart,
+    depthLabel: cached.depthLabel || fallback.label,
+    depthSubtitle: cached.depthSubtitle || fallback.subtitle,
+  };
 }
 
 type StaffApiCoach = {
@@ -183,7 +197,7 @@ function countRosterUnits(roster: TeamPlayer[]): { offense: number; defense: num
 }
 
 async function fetchTeamHubBundleLive(): Promise<TeamHubBundle> {
-  const [rosterResult, coaches, meta] = await Promise.allSettled([
+  const [rosterResult, coaches, meta, depthResult] = await Promise.allSettled([
     fetchWithWarmPoll(
       () =>
         snapshotLiveFetch<{ players?: RosterPlayer[] }>('/api/roster/players', DEFAULT_SNAPSHOT_FETCH_OPTS).then(
@@ -193,14 +207,17 @@ async function fetchTeamHubBundleLive(): Promise<TeamHubBundle> {
     ).catch(() => [] as TeamPlayer[]),
     fetchCoachingStaff(),
     fetchDepthChartMeta(),
+    fetchDepthChartBoard(),
   ]);
 
   const roster = rosterResult.status === 'fulfilled' ? rosterResult.value : [];
-
-  const depthChart = TEAM_DEPTH_CHART;
+  const depthBoard: DepthChartBoard =
+    depthResult.status === 'fulfilled' ? depthResult.value : fallbackDepthChartBoard();
+  const liveDepth =
+    depthBoard.depthChart.offense.length > 0 ? depthBoard.depthChart : TEAM_DEPTH_CHART;
   const metaData = meta.status === 'fulfilled' ? meta.value : null;
   const unitCounts = countRosterUnits(roster);
-  const commandStats = computeTeamCommandStats(roster, depthChart, metaData);
+  const commandStats = computeTeamCommandStats(roster, liveDepth, metaData);
   commandStats.offenseCount = metaData?.units?.offense ?? unitCounts.offense;
   commandStats.defenseCount = metaData?.units?.defense ?? unitCounts.defense;
 
@@ -210,9 +227,11 @@ async function fetchTeamHubBundleLive(): Promise<TeamHubBundle> {
     identity: TEAM_IDENTITY,
     coaches: coaches.status === 'fulfilled' ? coaches.value : FALLBACK_COACHES.map((c) => ({ ...c })),
     roster,
-    depthChart,
+    depthChart: liveDepth,
+    depthLabel: depthBoard.label,
+    depthSubtitle: depthBoard.subtitle,
     commandStats,
-    updatedAt: metaData?.updatedAt ?? new Date().toISOString(),
+    updatedAt: depthBoard.updatedAt ?? metaData?.updatedAt ?? new Date().toISOString(),
   };
 }
 
