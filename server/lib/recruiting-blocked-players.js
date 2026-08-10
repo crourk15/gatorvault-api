@@ -114,13 +114,45 @@ function rosterSlugCandidates(slug) {
   return [...out];
 }
 
+/** Cached roster identity index — never re-read players.json per HP card. */
+let _rosterIndex = null;
+let _rosterIndexAt = 0;
+const ROSTER_INDEX_TTL_MS = 5 * 60_000;
+
+function getRosterIdentityIndex() {
+  const now = Date.now();
+  if (_rosterIndex && now - _rosterIndexAt < ROSTER_INDEX_TTL_MS) return _rosterIndex;
+  try {
+    const rosterStore = require('./roster-store');
+    const all = rosterStore.getAllRosterPlayers() || [];
+    const bySlug = new Map();
+    const byName = new Map();
+    for (const row of all) {
+      const slug = normalizeSlug(row?.slug);
+      if (slug) bySlug.set(slug, row);
+      const name = String(row?.name || '')
+        .trim()
+        .toLowerCase()
+        .replace(/\./g, '');
+      if (name) byName.set(name, row);
+    }
+    _rosterIndex = { bySlug, byName };
+    _rosterIndexAt = now;
+    return _rosterIndex;
+  } catch {
+    _rosterIndex = { bySlug: new Map(), byName: new Map() };
+    _rosterIndexAt = now;
+    return _rosterIndex;
+  }
+}
+
 /** Current UF roster hit (exact slug or Jr/II/III variant). */
 function currentRosterRecruitCollision(player) {
   try {
-    const rosterStore = require('./roster-store');
+    const index = getRosterIdentityIndex();
     const slug = normalizeSlug(player?.slug || player?.id || slugify(player?.name));
     for (const cand of rosterSlugCandidates(slug)) {
-      const hit = rosterStore.getRosterPlayerBySlug(cand);
+      const hit = index.bySlug.get(cand);
       if (hit) return hit;
     }
     const name = String(player?.name || player?.playerName || '')
@@ -128,16 +160,7 @@ function currentRosterRecruitCollision(player) {
       .toLowerCase()
       .replace(/\./g, '');
     if (!name) return null;
-    const all = rosterStore.getAllRosterPlayers() || [];
-    return (
-      all.find((r) => {
-        const rn = String(r.name || '')
-          .trim()
-          .toLowerCase()
-          .replace(/\./g, '');
-        return rn && rn === name;
-      }) || null
-    );
+    return index.byName.get(name) || null;
   } catch {
     return null;
   }
@@ -200,6 +223,11 @@ function filterBlockedRecruits(list) {
   return (list || []).filter((p) => !isBlockedRecruit(p));
 }
 
+function clearRosterIdentityIndex() {
+  _rosterIndex = null;
+  _rosterIndexAt = 0;
+}
+
 module.exports = {
   BLOCKED_PLAYER_SLUGS,
   BLOCKED_PLAYER_NAMES,
@@ -208,4 +236,5 @@ module.exports = {
   isEmptyAthPhantomShell,
   currentRosterRecruitCollision,
   rosterSlugCandidates,
+  clearRosterIdentityIndex,
 };
