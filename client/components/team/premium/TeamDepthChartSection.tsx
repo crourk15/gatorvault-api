@@ -13,6 +13,7 @@ type Props = {
   onTabChange: (tab: DepthChartTab) => void;
   positions: DepthChartPosition[];
   loading?: boolean;
+  subtitle?: string;
 };
 
 export function TeamDepthChartSection({
@@ -20,12 +21,13 @@ export function TeamDepthChartSection({
   onTabChange,
   positions,
   loading = false,
+  subtitle,
 }: Props): React.ReactElement {
   return (
     <div className="team-premium-section" id="depth-chart" data-section="depth-chart">
       <TeamPremiumModule
         title={TEAM_COPY.depthChart.title}
-        subtitle={TEAM_COPY.depthChart.subtitle}
+        subtitle={subtitle || TEAM_COPY.depthChart.subtitle}
         className="team-dc-module"
       >
         {loading ? (

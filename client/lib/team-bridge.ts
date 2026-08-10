@@ -6,6 +6,7 @@ import {
   type DepthChartRow,
   type DepthPhase,
 } from '@/lib/depth-chart-data';
+import { fetchDepthChartBoard } from '@/lib/depth-chart-api';
 import { navigateVaultHref } from '@/lib/navigate-vault-href';
 import { playerProfilePath } from '@/lib/player-routes';
 import { saveVaultPageState, type VaultPageState } from '@/lib/vault-navigation';
@@ -98,12 +99,24 @@ function renderDCCards(data: DepthChartRow[], containerId: string): void {
   });
 }
 
+let liveByPhase: Record<DepthPhase, DepthChartRow[]> = DEPTH_BY_PHASE;
+
 function installRenderDC(): void {
   window.renderDC = () => {
     (['off', 'def', 'st'] as DepthPhase[]).forEach((ph) => {
-      renderDCCards(DEPTH_BY_PHASE[ph], `gv-team-dc-${ph}`);
+      renderDCCards(liveByPhase[ph] || DEPTH_BY_PHASE[ph], `gv-team-dc-${ph}`);
     });
   };
+}
+
+async function refreshLiveDepthChart(): Promise<void> {
+  try {
+    const board = await fetchDepthChartBoard();
+    liveByPhase = board.byPhase;
+    if (typeof window.renderDC === 'function') window.renderDC();
+  } catch {
+    /* keep static fallback */
+  }
 }
 
 function wireDepthPhaseTabs(): void {
@@ -136,6 +149,7 @@ export async function initTeamModule(): Promise<void> {
   installRenderDC();
   await loadTeamScript();
   if (typeof window.renderDC === 'function') window.renderDC();
+  void refreshLiveDepthChart();
   if (typeof window.gvRenderTeam === 'function') window.gvRenderTeam();
   wireDepthPhaseTabs();
   if (typeof window.gvApplyTeamDeepLink === 'function') window.gvApplyTeamDeepLink();

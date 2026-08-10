@@ -7,7 +7,7 @@ import {
   readCachedTeamHubBundle,
   type TeamHubBundle,
 } from '@/lib/team-hub-api';
-import type { DepthChartTab } from '@/lib/team-hub-types';
+import { TEAM_COPY, type DepthChartTab } from '@/lib/team-hub-types';
 import type { RosterFilter } from '@/lib/team-hub-data';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 import { TeamElitePageShell } from '@/components/team/premium/TeamElitePageShell';
@@ -222,6 +222,7 @@ export function TeamHubPage(): React.ReactElement {
           onTabChange={setDcTab}
           positions={dcPositions}
           loading={depthLoading}
+          subtitle={bundle.depthSubtitle || bundle.depthLabel || TEAM_COPY.depthChart.subtitle}
         />
         <TeamRosterSection
           roster={bundle.roster}

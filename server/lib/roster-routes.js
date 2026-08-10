@@ -1,10 +1,33 @@
 const fs = require('fs');
 const path = require('path');
 const rosterStore = require('./roster-store');
+const depthChartBoard = require('./depth-chart-board');
 
 const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 
 function mountRosterRoutes(app) {
+  /** Live depth chart — camp updates via JSON/admin PUT, no Codemagic for content. */
+  app.get('/api/roster/depth-chart', (_req, res) => {
+    try {
+      return res.json(depthChartBoard.toApiPayload());
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.put('/api/roster/depth-chart', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req)) && !verifyAdminPin(req.body?.pin)) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const body = req.body && typeof req.body === 'object' ? req.body : {};
+      const saved = depthChartBoard.saveDepthChartBoard(body);
+      return res.json({ ok: true, ...depthChartBoard.toApiPayload(saved), path: saved.path });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/roster/headshots', (req, res) => {
     try {
       return res.json({ ok: true, headshots: rosterStore.getHeadshotMap() });

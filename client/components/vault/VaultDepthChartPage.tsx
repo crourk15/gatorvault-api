@@ -7,6 +7,7 @@ import {
   type DepthChartRow,
   type DepthPhase,
 } from '@/lib/depth-chart-data';
+import { fetchDepthChartBoard } from '@/lib/depth-chart-api';
 import { fetchRosterPlayers, type RosterPlayer } from '@/lib/roster-api';
 import { TEAM_HUB_SEED } from '@/lib/team-hub-seed';
 import { TEAM_ERAS } from '@/lib/team-history-data';
@@ -60,6 +61,10 @@ function DepthCard({ row }: { row: DepthChartRow }): React.ReactElement {
 export function VaultDepthChartPage(): React.ReactElement {
   const [phase, setPhase] = useState<DepthPhase>('off');
   const [roster, setRoster] = useState<RosterPlayer[]>(HAS_SEED ? SEED_ROSTER : []);
+  const [byPhase, setByPhase] = useState(DEPTH_BY_PHASE);
+  const [depthSubtitle, setDepthSubtitle] = useState(
+    'Fall camp projection · battles open'
+  );
   const [loading, setLoading] = useState(!HAS_SEED);
   const [error, setError] = useState<string | null>(null);
   const [expandedEra, setExpandedEra] = useState<string | null>(null);
@@ -70,13 +75,18 @@ export function VaultDepthChartPage(): React.ReactElement {
       setError(null);
     }
     try {
-      const players = await fetchRosterPlayers();
+      const [players, depthBoard] = await Promise.all([
+        fetchRosterPlayers().catch(() => [] as RosterPlayer[]),
+        fetchDepthChartBoard(),
+      ]);
       if (players.length) {
         setRoster(players);
         setError(null);
       } else if (!HAS_SEED) {
         setRoster([]);
       }
+      setByPhase(depthBoard.byPhase);
+      setDepthSubtitle(depthBoard.subtitle || depthBoard.label);
     } catch (err) {
       if (!HAS_SEED) {
         setError(err instanceof Error ? err.message : 'Could not load roster.');
@@ -92,13 +102,13 @@ export function VaultDepthChartPage(): React.ReactElement {
     void load();
   }, [load]);
 
-  const rows = DEPTH_BY_PHASE[phase];
+  const rows = byPhase[phase] || DEPTH_BY_PHASE[phase];
 
   return (
     <div className="gv-depth-chart" data-testid="vault-depth-chart">
       <div className="gv-page-hero">
         <h1 className="gv-page-title">2026 Depth Chart & Team Hub</h1>
-        <p className="gv-page-subtitle">Spring projections · Program history, roster, and depth chart.</p>
+        <p className="gv-page-subtitle">{depthSubtitle}</p>
       </div>
 
       <section className="gv-depth-chart__eras">

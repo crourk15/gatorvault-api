@@ -924,26 +924,24 @@ function formatBriefText({
 
 function depthChartHintForRosterPlayer(roster) {
   try {
-    const fs = require('fs');
-    const path = require('path');
-    const depthPath = path.join(__dirname, '..', '..', 'client', 'lib', 'depth-chart-data.ts');
-    const text = fs.readFileSync(depthPath, 'utf8');
-    const name = String(roster?.name || '').trim();
+    const { getDepthChartBoard } = require('./depth-chart-board');
+    const doc = getDepthChartBoard();
+    const name = String(roster?.name || '').trim().toLowerCase();
     if (!name) return null;
     const last = name.split(/\s+/).filter(Boolean).pop();
     if (!last || last.length < 3) return null;
-    const re = new RegExp(
-      `\\{[^{}]*${last.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[^{}]*\\}`,
-      'i'
-    );
-    const m = text.match(re);
-    if (!m) return null;
-    const row = m[0];
-    const pos = (row.match(/\bpos:\s*'([^']+)'/) || [])[1] || null;
-    const status = (row.match(/\bstatus:\s*'([^']+)'/) || [])[1] || null;
-    const analysis = (row.match(/\banalysis:\s*'([^']+)'/) || [])[1] || null;
-    const starters = (row.match(/\bs:\s*'([^']+)'/) || [])[1] || null;
-    return { pos, status, analysis, starters };
+    const rows = [...(doc.offense || []), ...(doc.defense || []), ...(doc.specialTeams || [])];
+    const hit = rows.find((row) => {
+      const blob = `${row.s || ''} ${row.b || ''} ${row.third || ''}`.toLowerCase();
+      return blob.includes(name) || blob.includes(last);
+    });
+    if (!hit) return null;
+    return {
+      pos: hit.pos || null,
+      status: hit.status || null,
+      analysis: hit.analysis || null,
+      starters: hit.s || null,
+    };
   } catch {
     return null;
   }

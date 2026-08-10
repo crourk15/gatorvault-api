@@ -106,7 +106,7 @@ export const TEAM_COPY = {
   },
   depthChart: {
     title: '2026 Depth Chart',
-    subtitle: 'Fall camp board · Locked · Battle · Watch',
+    subtitle: 'Fall camp projection · battles open',
     tabs: { offense: 'Offense', defense: 'Defense (3‑3‑5)', specialTeams: 'Special Teams' },
   },
   footer: {
