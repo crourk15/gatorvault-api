@@ -193,7 +193,7 @@ function parseRecruitingUfPct(raw: unknown): number | null {
 }
 
 /** Min peer % when falling back to legacy competitors (UF + 1–2 rivals). */
-const LEGACY_PEER_MIN_PCT = 4;
+const LEGACY_PEER_MIN_PCT = 12;
 /** When Florida RPM is this high, skip stale legacy peer crumbs (UF-only OK). */
 const UF_LOCKED_SKIP_LEGACY_PCT = 90;
 const LEGACY_PEER_MAX = 2;

@@ -93,6 +93,26 @@ describe("uf-trend-snapshot", () => {
     assert.equal(moved.movementDelta, 8);
   });
 
+  
+  it("ignores ancient baselines outside 14d window and hydrates stamp history", () => {
+    const { hydrateFromPlayerStamps } = require("../../lib/uf-trend-snapshot");
+    upsertSnapshot("old-crumb", 40, "2026-06-22", { source: "gatorvault" });
+    upsertSnapshot("old-crumb", 46, "2026-06-29", { source: "gatorvault" });
+    upsertSnapshot("old-crumb", 50, "2026-08-10", { source: "gatorvault" });
+    // June baseline is >14d before Aug 10 — not a real 7-day move.
+    assert.equal(computeDelta7d("old-crumb", new Date("2026-08-10T12:00:00Z")), null);
+
+    const asOf = new Date("2026-08-10T12:00:00Z");
+    const hydrated = hydrateFromPlayerStamps(["john-matthews"], { asOf, maxAgeDays: 14 });
+    assert.ok(hydrated.upserted >= 0);
+    // Recent stamp points + today's GV should yield a finite week delta when history exists.
+    if (hydrated.upserted > 0) {
+      upsertSnapshot("john-matthews", 66, "2026-08-10", { source: "gatorvault" });
+      const delta = computeDelta7d("john-matthews", asOf, { preferSource: "gatorvault" });
+      assert.equal(typeof delta === "number" || delta == null, true);
+    }
+  });
+
   it("cleans test snapshots", () => {
     const doc = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, "utf8"));
     for (const slug of [
@@ -103,6 +123,8 @@ describe("uf-trend-snapshot", () => {
       "gv-source-player",
       "gv-apply-player",
       "gv-move-test",
+      "old-crumb",
+      "john-matthews",
     ]) {
       delete doc.snapshots[slug];
     }

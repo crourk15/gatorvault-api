@@ -127,9 +127,20 @@ function resolveLatestUfPct(slug, asOf = new Date(), options = {}) {
 
 function resolveUfPct7dAgo(slug, asOf = new Date(), options = {}) {
   const cutoff = daysAgoYmd(DELTA_WINDOW_DAYS, asOf);
-  const rows = filterSnapshotRows(slug, cutoff, options);
-  if (rows.length) return rows[rows.length - 1].ufPct;
-  // No point on/before cutoff — don't invent from newer rows.
+  // Only accept baselines inside a true week-ish window (not June crumbs in August).
+  const floor = daysAgoYmd(Number(options.maxAgeDays) || 14, asOf);
+  const pick = (opts) => {
+    const rows = filterSnapshotRows(slug, cutoff, opts).filter((row) => String(row.date) >= floor);
+    if (!rows.length) return null;
+    return rows[rows.length - 1].ufPct;
+  };
+  const preferred = pick(options);
+  if (preferred != null) return preferred;
+  // Today's gatorvault point can hide older unsourced history when preferSource is set —
+  // fall back so a real 7–14d baseline still produces movement.
+  if (options.preferSource) {
+    return pick({ ...options, preferSource: null, requireSource: false });
+  }
   return null;
 }
 
@@ -253,11 +264,46 @@ function getUfTrendStoreInfo() {
 }
 
 /**
+ * Seed recent UF% history from prepared-meal stamps when snapshot disk is thin.
+ * Uses stamp movementHistory dates inside the last ~14 days only.
+ */
+function hydrateFromPlayerStamps(slugs = [], { asOf = new Date(), maxAgeDays = 14 } = {}) {
+  const fsPath = path.join(__dirname, '..', 'data', 'player-profiles', 'stamps');
+  const floor = daysAgoYmd(maxAgeDays, asOf);
+  let upserted = 0;
+  for (const slug of slugs || []) {
+    const key = slugKey(slug);
+    if (!key) continue;
+    const file = path.join(fsPath, `${key}.json`);
+    if (!fs.existsSync(file)) continue;
+    let hist = [];
+    try {
+      const doc = JSON.parse(fs.readFileSync(file, 'utf8'));
+      hist = Array.isArray(doc?.player?.movementHistory) ? doc.player.movementHistory : [];
+    } catch {
+      continue;
+    }
+    for (const row of hist) {
+      const date = String(row?.date || '').slice(0, 10);
+      const pct = clampPct(row?.confidence ?? row?.ufPct ?? row?.ufProbability);
+      if (!date || date < floor || pct == null) continue;
+      if (upsertSnapshot(key, pct, date, { source: 'gatorvault' })) upserted += 1;
+    }
+  }
+  return { upserted, floor };
+}
+
+/**
  * Apply real snapshot deltas onto player rows. Ignores seed/legacy history.
  * Badge only when |Δ| >= minAbs (default 1).
  */
 function applySnapshotMovement(players = [], { asOf = new Date(), minAbs = 1 } = {}) {
   const slugs = players.map((p) => p.slug).filter(Boolean);
+  try {
+    hydrateFromPlayerStamps(slugs, { asOf });
+  } catch (err) {
+    console.warn('[uf-trend-snapshot] stamp hydrate failed:', err.message);
+  }
   recordGvSnapshots(players, asOf);
   // Prefer gatorvault points; allow legacy unsourced rows so redeployed history still moves.
   const deltaMap = buildDelta7dBySlug(slugs, asOf, {
@@ -512,6 +558,7 @@ module.exports = {
   recordGvSnapshots,
   getUfTrendStoreInfo,
   applySnapshotMovement,
+  hydrateFromPlayerStamps,
   runDailyUfTrendSnapshot,
   backfillUfTrendSnapshots,
 };
