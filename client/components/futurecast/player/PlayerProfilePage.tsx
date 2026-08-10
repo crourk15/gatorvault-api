@@ -10,6 +10,8 @@ import {
   mapFullProfileToBundle,
   type FullProfilePayload,
 } from '@/lib/player-full-profile-api';
+import { ApiFetchError } from '@/lib/api-fetch';
+import { isWarmRetryError } from '@/lib/api-warm-poll';
 import type { PortalIntelPayload, TransferPrediction } from '@/lib/portal-api';
 import type { UfFitIntelResponse } from '@/lib/uf-fit-api';
 import type { PlayerPrediction } from '@/lib/predictions-api';
@@ -79,8 +81,10 @@ export function PlayerProfilePage({
 
   const [profile, setProfile] = useState<FullProfilePayload | null>(cached);
   const [error, setError] = useState<string | null>(null);
+  const [errorUnavailable, setErrorUnavailable] = useState(false);
   const [loading, setLoading] = useState(!cached);
   const [activeTab, setActiveTab] = useState<ProfileTabId>('overview');
+  const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     setActiveTab(parseProfileTab(new URLSearchParams(window.location.search).get('tab')));
@@ -93,23 +97,43 @@ export function PlayerProfilePage({
       setProfile(instant);
       setLoading(false);
       setError(null);
+      setErrorUnavailable(false);
     } else {
       // Drop prior slug's profile so we never flash another player's HS/location.
       setProfile(null);
       setLoading(true);
       setError(null);
+      setErrorUnavailable(false);
     }
 
-    void fetchFullProfile(slug, { playerId: playerIdProp })
+    void fetchFullProfile(slug, { playerId: playerIdProp, force: reloadToken > 0 })
       .then((payload) => {
         if (cancelled) return;
         setProfile(payload);
         setError(null);
+        setErrorUnavailable(false);
       })
       .catch((err) => {
         if (cancelled) return;
         if (!instant) {
-          setError(err instanceof Error ? err.message : 'Failed to load player');
+          const unavailable =
+            err instanceof ApiFetchError
+              ? Boolean(
+                  err.unavailable ||
+                    err.timedOut ||
+                    err.status === 502 ||
+                    err.status === 503 ||
+                    err.status === 504
+                )
+              : isWarmRetryError(err);
+          setErrorUnavailable(unavailable);
+          setError(
+            unavailable
+              ? 'Live player data is down right now. Profiles need the API — try again in a moment.'
+              : err instanceof Error
+                ? err.message
+                : 'Failed to load player'
+          );
         }
       })
       .finally(() => {
@@ -119,7 +143,7 @@ export function PlayerProfilePage({
     return () => {
       cancelled = true;
     };
-  }, [slug, playerIdProp, cacheKey]);
+  }, [slug, playerIdProp, cacheKey, reloadToken]);
 
   const onTabChange = useCallback((tab: ProfileTabId) => {
     setActiveTab(tab);
@@ -242,11 +266,12 @@ export function PlayerProfilePage({
   if (error || !data || !metrics) {
     return (
       <UiError
-        title="Player not found"
+        title={errorUnavailable ? 'API unavailable' : 'Player not found'}
         message={
           error ||
           'This profile is not available in FutureCast. Portal and college players are listed in the Player Directory.'
         }
+        retry={errorUnavailable ? () => setReloadToken((n) => n + 1) : undefined}
         backHref={backHref}
         backLabel={backLabel}
       />

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { PlayerProfilePage } from '@/components/futurecast/player/PlayerProfilePage';
 import { RosterProfilePage } from '@/components/vault/RosterProfilePage';
 import { UiError } from '@/components/site/UiMessage';
@@ -31,7 +31,9 @@ export function VaultPlayerProfileRoute({
   rosterBackHref,
   rosterBackLabel,
 }: Props): React.ReactElement {
-  const route: PlayerProfileRouteState = usePlayerProfileRoute(slug, context);
+  const [retryToken, setRetryToken] = useState(0);
+  const route: PlayerProfileRouteState = usePlayerProfileRoute(slug, context, retryToken);
+  const retry = useCallback(() => setRetryToken((n) => n + 1), []);
 
   if (route.phase === 'loading' || route.phase === 'redirect') {
     return <ProfileRouteSkeleton />;
@@ -40,8 +42,9 @@ export function VaultPlayerProfileRoute({
   if (route.phase === 'error') {
     return (
       <UiError
-        title="Player not found"
+        title={route.unavailable ? 'API unavailable' : 'Player not found'}
         message={route.message}
+        retry={route.unavailable ? retry : undefined}
         backHref={backHref}
         backLabel={backLabel}
       />

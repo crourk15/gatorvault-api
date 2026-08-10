@@ -55,6 +55,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-08 | FutureCast Lab: harden trendingUp/Down nulls for SSG/deferred API stubs | `futurecast-lab-data` + Lab panels in binary (API soft plate also live) | #367 |
 | 2026-08-08 | Silent first-touch UTM capture on landing → send with Join register | `first-touch-attribution.ts` + `FirstTouchCapture` + JoinPage in binary | pending |
 | 2026-08-07 | FutureCast Lab: Closest to commit requires process evidence (offer/visits/intel), not On3 % alone | Leading panel + `competing-schools` gate in binary (API `processEvidence` also live) | pending |
+| 2026-08-07 | Player profiles: show **API unavailable** + retry when resolve/full-profile 502 (not false “Player not found”) | `VaultPlayerProfileRoute` + `usePlayerProfileRoute` + `PlayerProfilePage` in binary | pending |
 
 ---
 
