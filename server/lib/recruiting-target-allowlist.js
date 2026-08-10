@@ -92,6 +92,11 @@ const ALLOWLIST_2028 = [
   // Beat Desk / Alderman board — in-state WR priority + Collins DB push
   'tyree-mannings-jr',
   'dion-edwards',
+  // Blake Alderman “12 UF likes standing” — lock missing board names
+  'antijuan-wilkes-jr',
+  'nehemiah-mccary',
+  'samuel-bailey',
+  'derrell-hines-jr',
 ];
 
 /** Charles' display names — used for On3/Rivals/247 identity lookup (never synthetic cards). */
@@ -154,6 +159,10 @@ const CANONICAL_TARGET_NAMES = {
   'nate-dollard': 'Nate Dollard',
   'tyree-mannings-jr': 'Tyree Mannings Jr.',
   'dion-edwards': 'Dion Edwards',
+  'antijuan-wilkes-jr': 'Antijuan Wilkes Jr.',
+  'nehemiah-mccary': 'Nehemiah McCary',
+  'samuel-bailey': 'Samuel Bailey',
+  'derrell-hines-jr': 'Derrell Hines Jr.',
 };
 
 /** Display name → canonical slug (handles typos / aliases) */

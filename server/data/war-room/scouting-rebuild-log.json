@@ -1,12 +1,17 @@
 {
   "ok": true,
   "reason": "recruiting_player_update",
-  "startedAt": "2026-07-11T11:30:35.230Z",
-  "finishedAt": "2026-07-11T11:30:35.713Z",
+  "startedAt": "2026-08-10T17:20:53.959Z",
+  "finishedAt": "2026-08-10T17:20:58.160Z",
   "total": 1,
-  "updated": 1,
+  "updated": 0,
   "unchanged": 0,
-  "blank": 0,
-  "errors": [],
+  "blank": 1,
+  "errors": [
+    {
+      "slug": "nehemiah-mccary",
+      "error": "scoutingDb.importLegacyBreakdown is not a function"
+    }
+  ],
   "updatesAdded": 0
 }
