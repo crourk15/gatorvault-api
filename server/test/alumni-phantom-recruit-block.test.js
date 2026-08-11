@@ -63,4 +63,28 @@ describe('alumni / roster phantom recruit hard-block', () => {
     assert.equal(kept.length, 1);
     assert.equal(kept[0].slug, 'asher-ghioto');
   });
+
+  it('does not wipe On3 board signees who enrolled onto the roster', () => {
+    const {
+      isBlockedRecruit,
+      currentRosterRecruitCollision,
+      clearRosterIdentityIndex,
+    } = require('../lib/recruiting-blocked-players');
+    const { getSnapshotHubCommits } = require('../lib/on3-snapshot-commits');
+    clearRosterIdentityIndex();
+    const enrolled = getSnapshotHubCommits(2026).find((p) => p.slug === 'davian-groce');
+    assert.ok(enrolled, 'expected Davian Groce in 2026 On3 snapshot');
+    assert.ok(
+      currentRosterRecruitCollision(enrolled),
+      'Groce should collide with current roster (enrolled)'
+    );
+    assert.equal(
+      isBlockedRecruit(enrolled),
+      false,
+      'authoritative On3 signees must remain on recruiting class boards'
+    );
+    const early = getSnapshotHubCommits(2027).find((p) => p.slug === 'stive-bentley-keumajou');
+    assert.ok(early, 'expected Keumajou in 2027 On3 snapshot');
+    assert.equal(isBlockedRecruit(early), false);
+  });
 });

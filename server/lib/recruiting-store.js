@@ -150,9 +150,11 @@ function sortHubCommits(players) {
 }
 
 function isOfficialRecruitingCommit(p, classYear) {
-  if (p.on3Source === 'on3-board-sync') return true;
+  if (p.on3Source === 'on3-board-sync' || p.on3Source === 'on3-portal-sync') return true;
   if (p.protected === true) return true;
-  const { isVerifiedUfCommitSlug } = require('./recruiting-verified-commits');
+  const { isVerifiedUfCommitSlug, isOn3SnapshotUfCommit } = require('./recruiting-verified-commits');
+  // On3 snapshot board rows are authoritative — never demote past/current-year signees.
+  if (isOn3SnapshotUfCommit(p)) return true;
   const slug = String(p.slug || '').toLowerCase();
   if (isVerifiedUfCommitSlug(slug, classYear)) return true;
   const src = String(p.on3Source || p.on3_source || '');

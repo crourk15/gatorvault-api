@@ -167,6 +167,29 @@ function currentRosterRecruitCollision(player) {
 }
 
 /**
+ * Authoritative UF board commits (On3 snapshot / board sync / verified).
+ * These often appear on the current roster after enrollment — that collision
+ * must not wipe them from recruiting class lists (2026 signees, early 2027s).
+ */
+function isAuthoritativeUfBoardCommit(player) {
+  if (!player || typeof player !== 'object') return false;
+  if (player.protected === true) return true;
+  const src = String(player.on3Source || player.on3_source || '');
+  if (src === 'on3-board-sync' || src === 'on3-portal-sync') return true;
+  if (/on3\.com.*\/commits\//i.test(src)) return true;
+  try {
+    const { isOn3SnapshotUfCommit, isVerifiedUfCommitSlug } = require('./recruiting-verified-commits');
+    if (isOn3SnapshotUfCommit(player)) return true;
+    const slug = normalizeSlug(player.slug || player.id || slugify(player.name));
+    const year = Number(player.classYear ?? player.class_year);
+    if (slug && Number.isFinite(year) && isVerifiedUfCommitSlug(slug, year)) return true;
+  } catch {
+    /* optional at boot */
+  }
+  return false;
+}
+
+/**
  * Empty ATH shells with zero industry signal — alumni/legend bleed pattern
  * seen on Priority Chase (Urban Meyer, Kyle Trask, etc.).
  * Requires a display name so slug-only allowlist probes are not false-positives.
@@ -214,7 +237,11 @@ function isBlockedRecruit(player) {
   } catch {
     /* optional */
   }
-  if (currentRosterRecruitCollision(player)) return true;
+  // Roster collision is for chase phantoms (Dallas Wilson on Priority Chase),
+  // not for real signees who enrolled onto the roster.
+  if (!isAuthoritativeUfBoardCommit(player) && currentRosterRecruitCollision(player)) {
+    return true;
+  }
   if (isEmptyAthPhantomShell(player)) return true;
   return false;
 }
@@ -234,6 +261,7 @@ module.exports = {
   isBlockedRecruit,
   filterBlockedRecruits,
   isEmptyAthPhantomShell,
+  isAuthoritativeUfBoardCommit,
   currentRosterRecruitCollision,
   rosterSlugCandidates,
   clearRosterIdentityIndex,
