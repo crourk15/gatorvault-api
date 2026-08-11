@@ -191,6 +191,8 @@ function durableMetaForCacheKey(cacheKey) {
   if (m) return { endpoint: 'commits', year: Number(m[1]), spread: false };
   m = cacheKey.match(/^hub:elite:ticker:(\d+)$/);
   if (m) return { endpoint: 'ticker', year: Number(m[1]), spread: false };
+  m = cacheKey.match(/^hub:elite:footprint:(\d+)$/);
+  if (m) return { endpoint: 'footprint', year: Number(m[1]), spread: true };
   return null;
 }
 
@@ -198,6 +200,21 @@ function persistDurableCacheValue(cacheKey, value) {
   const meta = durableMetaForCacheKey(cacheKey);
   if (!meta) return false;
   return writeHubDiskSnapshot(meta.endpoint, meta.year, value);
+}
+
+/** Bundle warm must also fill dedicated footprint GETs (map Class 2027/2028 tabs). */
+function cacheHubValue(cacheKey, value) {
+  if (!cacheKey || value == null) return;
+  hubCache.set(cacheKey, value);
+  persistDurableCacheValue(cacheKey, value);
+  const m = String(cacheKey).match(/^hub:elite:bundle:[^:]+:(\d+)$/);
+  if (!m || !value || typeof value !== 'object') return;
+  const footprint = value.footprint;
+  if (!footprint || typeof footprint !== 'object') return;
+  const year = Number(m[1]);
+  const fpKey = `hub:elite:footprint:${year}`;
+  hubCache.set(fpKey, footprint);
+  persistDurableCacheValue(fpKey, footprint);
 }
 
 function getHubStatus() {
@@ -381,8 +398,7 @@ async function runWarmJobBatch(jobs, timeoutMs, label) {
   for (const [key, fn] of jobs) {
     try {
       const value = await withTimeout(fn(), timeoutMs, key);
-      hubCache.set(key, value);
-      persistDurableCacheValue(key, value);
+      cacheHubValue(key, value);
       warmed += 1;
       ready = true;
       warmKeyCount = Math.max(warmKeyCount, warmed);
@@ -531,8 +547,7 @@ function startInflightBuild(cacheKey, builderFn, timeoutMs) {
     try {
       const value = await withTimeout(builderFn(), timeoutMs, cacheKey);
       const buildMs = Date.now() - buildStart;
-      hubCache.set(cacheKey, value);
-      persistDurableCacheValue(cacheKey, value);
+      cacheHubValue(cacheKey, value);
       ready = true;
       warmKeyCount += 1;
       console.log(`[recruiting-hub-cache] build ${cacheKey} ${buildMs}ms hit=false`);
@@ -594,7 +609,8 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     const diskValue = readHubDiskSnapshot(diskFallback.endpoint, diskFallback.year);
     if (diskValue != null) {
       // Seed memory so the next request is a hot hit. Cron warm-memory refreshes later.
-      hubCache.set(cacheKey, diskValue);
+      // Bundle disk hits also seed dedicated footprint keys for Class year tabs.
+      cacheHubValue(cacheKey, diskValue);
       ready = true;
       warmKeyCount = Math.max(warmKeyCount, 1);
       getMeta();

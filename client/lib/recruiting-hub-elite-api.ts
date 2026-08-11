@@ -289,8 +289,41 @@ export async function fetchRecruitingHubBattleBoard(year = HUB_YEAR): Promise<Rh
   return data.items ?? [];
 }
 
+function normalizeFootprintPayload(
+  raw: Partial<RhHubFootprintResponse> | null | undefined,
+  year: number
+): RhHubFootprintResponse | null {
+  const states = Array.isArray(raw?.states) ? raw.states : [];
+  if (!states.length) return null;
+  return {
+    year: raw?.year ?? year,
+    states,
+    pins: Array.isArray(raw?.pins) ? raw.pins : [],
+  };
+}
+
+/**
+ * Footprint Class tabs often request a year that differs from the hub shell year.
+ * Dedicated `/hub/footprint` can soft-miss (`status: building`) while that year's
+ * hub bundle is already warm — fall back so 2027 ↔ 2028 tabs keep working.
+ */
 export async function fetchRecruitingHubFootprint(year = HUB_YEAR): Promise<RhHubFootprintResponse> {
-  return fetchHub<RhHubFootprintResponse>(`/api/recruiting/hub/footprint?year=${year}`);
+  type RawFootprint = RhHubFootprintResponse & { ok?: boolean; status?: string };
+  try {
+    const raw = await fetchHub<RawFootprint>(`/api/recruiting/hub/footprint?year=${year}`);
+    const direct = normalizeFootprintPayload(raw, year);
+    if (direct) return direct;
+  } catch {
+    /* bundle fallback below */
+  }
+  try {
+    const bundle = await fetchRecruitingHubBundle(year);
+    const fromBundle = normalizeFootprintPayload(bundle?.footprint, year);
+    if (fromBundle) return fromBundle;
+  } catch {
+    /* empty plate */
+  }
+  return { year, states: [], pins: [] };
 }
 
 /** Lightweight hero payload — one round trip before bundle. */

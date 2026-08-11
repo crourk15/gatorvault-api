@@ -267,9 +267,9 @@ export function RecruitingFootprintMap(): React.ReactElement {
         </div>
       </div>
 
-      {loading ? (
+      {loading && !states.length ? (
         <div className="rh-skeleton rh-footprint-skeleton" data-testid="rh-elite-footprint" aria-hidden="true" />
-      ) : !footprint || error ? (
+      ) : error && !states.length ? (
         <section className="rh-card rh-footprint-map" data-testid="rh-elite-footprint">
           <p className="rh-empty">Could not load recruiting footprint map.</p>
         </section>
