@@ -51,7 +51,8 @@ function snapshotEntryToPlayer(entry, classYear) {
     slug,
     name: entry.name,
     pos: entry.pos,
-    classYear: Number(entry.classYear) || classYear,
+    // Hub board year wins — portal rows often carry the player's original HS class.
+    classYear: Number(classYear) || Number(entry.classYear) || null,
     school: entry.school || '',
     htWt: entry.htWt || '',
     stars: entry.stars || 0,
@@ -90,6 +91,40 @@ function preferCommitCategory(a, b) {
   return cats.includes('portal') ? 'portal' : cats.find(Boolean) || 'recruit';
 }
 
+function isFloridaCommitRow(p) {
+  if (!p) return false;
+  const status = String(p.status || '').toLowerCase();
+  const committedTo = String(p.committedTo || p.committed_to || '').trim();
+  return (
+    ['committed', 'commit', 'signed', 'enrolled'].includes(status) && /^florida$/i.test(committedTo)
+  );
+}
+
+/** Prefer an authoritative UF commit row over a demoted store shell. */
+function preferCommitIdentity(existing, player) {
+  const existingFla = isFloridaCommitRow(existing);
+  const playerFla = isFloridaCommitRow(player);
+  if (existingFla && !playerFla) {
+    return {
+      status: existing.status,
+      committedTo: existing.committedTo || existing.committed_to || 'Florida',
+      commitDate: existing.commitDate || player.commitDate || null,
+    };
+  }
+  if (playerFla) {
+    return {
+      status: player.status,
+      committedTo: player.committedTo || player.committed_to || 'Florida',
+      commitDate: player.commitDate || existing.commitDate || null,
+    };
+  }
+  return {
+    status: player.status ?? existing.status,
+    committedTo: player.committedTo ?? player.committed_to ?? existing.committedTo ?? null,
+    commitDate: player.commitDate ?? existing.commitDate ?? null,
+  };
+}
+
 function mergeCommitPlayerLists(...lists) {
   const map = new Map();
   for (const list of lists) {
@@ -99,12 +134,28 @@ function mergeCommitPlayerLists(...lists) {
       const on3Key = player.on3Id ? `on3:${player.on3Id}` : null;
       const existing = map.get(key) || (on3Key ? map.get(on3Key) : null);
       const merged = existing
-        ? {
-            ...existing,
-            ...player,
-            // Never let a store 'recruit' tag clobber a snapshot portal identity.
-            category: preferCommitCategory(existing, player),
-          }
+        ? (() => {
+            const sources = [existing.on3Source, player.on3Source];
+            const on3Source = sources.includes('on3-board-sync')
+              ? 'on3-board-sync'
+              : sources.includes('on3-portal-sync')
+                ? 'on3-portal-sync'
+                : player.on3Source || existing.on3Source;
+            const identity = preferCommitIdentity(existing, player);
+            return {
+              ...existing,
+              ...player,
+              // Never let a store 'recruit' tag clobber a snapshot portal identity.
+              category: preferCommitCategory(existing, player),
+              // Keep authoritative On3 board provenance when store rows strip it.
+              on3Source,
+              protected: existing.protected === true || player.protected === true,
+              on3Id: player.on3Id || existing.on3Id || null,
+              status: identity.status,
+              committedTo: identity.committedTo,
+              commitDate: identity.commitDate,
+            };
+          })()
         : player;
       map.set(key, merged);
       if (on3Key) map.set(on3Key, merged);
