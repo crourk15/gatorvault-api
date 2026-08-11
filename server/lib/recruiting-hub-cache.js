@@ -202,19 +202,25 @@ function persistDurableCacheValue(cacheKey, value) {
   return writeHubDiskSnapshot(meta.endpoint, meta.year, value);
 }
 
+/** When a hub bundle is in hand, keep dedicated footprint GETs warm for Class tabs. */
+function seedFootprintFromBundle(cacheKey, value) {
+  const m = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
+  if (!m || !value || typeof value !== 'object') return;
+  const footprint = value.footprint;
+  if (!footprint || typeof footprint !== 'object') return;
+  if (!Array.isArray(footprint.states) || !footprint.states.length) return;
+  const year = Number(m[1]);
+  const fpKey = `hub:elite:footprint:${year}`;
+  hubCache.set(fpKey, footprint);
+  persistDurableCacheValue(fpKey, footprint);
+}
+
 /** Bundle warm must also fill dedicated footprint GETs (map Class 2027/2028 tabs). */
 function cacheHubValue(cacheKey, value) {
   if (!cacheKey || value == null) return;
   hubCache.set(cacheKey, value);
   persistDurableCacheValue(cacheKey, value);
-  const m = String(cacheKey).match(/^hub:elite:bundle:[^:]+:(\d+)$/);
-  if (!m || !value || typeof value !== 'object') return;
-  const footprint = value.footprint;
-  if (!footprint || typeof footprint !== 'object') return;
-  const year = Number(m[1]);
-  const fpKey = `hub:elite:footprint:${year}`;
-  hubCache.set(fpKey, footprint);
-  persistDurableCacheValue(fpKey, footprint);
+  seedFootprintFromBundle(cacheKey, value);
 }
 
 function getHubStatus() {
@@ -584,6 +590,8 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   }
   const hit = options.force ? null : hubCache.get(cacheKey);
   if (hit != null) {
+    // Older in-memory bundles predate footprint seeding — backfill on hit.
+    seedFootprintFromBundle(cacheKey, hit);
     if (!ready) {
       ready = true;
       warmKeyCount = Math.max(warmKeyCount, 1);
@@ -594,6 +602,7 @@ async function serveCached(cacheKey, builderFn, options = {}) {
 
   const stale = hubCache.getStale(cacheKey);
   if (stale != null) {
+    seedFootprintFromBundle(cacheKey, stale);
     // Stay-green / no-sync: serve stale only. Do not rebuild from GET — cron owns refill.
     if (!stayGreen && !noSync) refreshCacheKey(cacheKey, builderFn, timeoutMs);
     if (!ready) {

@@ -235,7 +235,8 @@ export function RecruitingFootprintMap(): React.ReactElement {
               role="tab"
               aria-selected={footprintYear === year}
               className={`rh-footprint-year-tab${footprintYear === year ? ' is-active' : ''}`}
-              onMouseDown={(e) => e.preventDefault()}
+              // Do not preventDefault on pointer/mouse down — iOS WKWebView drops the
+              // following click, so Class 2027/2028 tabs look dead in the App Store binary.
               onClick={() => selectFootprintYear(year as RecruitingClassYear)}
             >
               Class {year}
