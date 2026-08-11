@@ -354,137 +354,202 @@
       margin-top: 2px;
     }
 
-    /* —— Chase cards (elite: #1 navy feature, rest white cards) —— */
+    /* —— Chase cards: fight energy —— */
     .chase-feature {
       display: block;
       text-decoration: none;
       color: #fff;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      border-top: 4px solid var(--gator-orange);
+      border-radius: 14px;
+      box-shadow: 0 14px 32px rgba(0, 20, 51, 0.28);
       overflow: hidden;
       margin-bottom: 12px;
+      position: relative;
       background:
-        radial-gradient(120% 90% at 100% 0%, rgba(250, 70, 22, 0.28), transparent 55%),
-        linear-gradient(165deg, #0021a5 0%, #001433 70%);
-      padding: 16px;
+        radial-gradient(90% 80% at 100% 0%, rgba(250, 70, 22, 0.55), transparent 50%),
+        radial-gradient(70% 60% at 0% 100%, rgba(0, 33, 165, 0.9), transparent 55%),
+        linear-gradient(155deg, #1a0a08 0%, #001433 42%, #0021a5 100%);
+      padding: 0;
     }
-    .chase-feature__top {
+    .chase-feature::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -28deg,
+        transparent,
+        transparent 14px,
+        rgba(255,255,255,0.02) 14px,
+        rgba(255,255,255,0.02) 15px
+      );
+      pointer-events: none;
+    }
+    .chase-feature__heat {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 8px;
+      padding: 10px 14px;
+      background: rgba(250, 70, 22, 0.95);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
-    .chase-feature__mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+    .chase-feature__heat b {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+    }
+    .chase-feature__body {
+      position: relative;
+      padding: 16px 14px 14px;
+    }
+    .chase-feature__rankline {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-family: "Barlow Condensed", sans-serif;
-      font-size: 20px;
-      font-weight: 900;
-      color: #ffd7c4;
+      gap: 10px;
+      margin-bottom: 10px;
     }
-    .chase-feature__stamp {
-      font-size: 11px;
+    .chase-feature__rank {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 0.85;
+      color: #ffb089;
+    }
+    .chase-feature__rank span {
+      display: block;
+      font-family: "Source Sans 3", sans-serif;
+      font-size: 10px;
       font-weight: 800;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.65);
+      margin-top: 4px;
+    }
+    .chase-feature__pos {
+      margin-left: auto;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: rgba(250, 70, 22, 0.22);
-      border: 1px solid rgba(250, 70, 22, 0.75);
-      color: #ffd7c4;
+      color: rgba(255,255,255,0.8);
+    }
+    .chase-feature__pos em {
+      display: block;
+      margin-top: 2px;
+      font-style: normal;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: none;
+      color: rgba(255,255,255,0.6);
     }
     .chase-feature__name {
       margin: 0;
       font-family: "Barlow Condensed", sans-serif;
-      font-size: 34px;
+      font-size: 40px;
       font-weight: 900;
       text-transform: uppercase;
-      line-height: 0.95;
+      line-height: 0.9;
       letter-spacing: 0.01em;
+      text-shadow: 0 2px 18px rgba(0,0,0,0.35);
     }
-    .chase-feature__meta {
-      margin: 6px 0 0;
+    .chase-feature__school {
+      margin: 8px 0 0;
       font-size: 13px;
-      font-weight: 600;
-      color: rgba(247, 244, 239, 0.75);
+      font-weight: 700;
+      color: rgba(255,255,255,0.78);
     }
-    .chase-feature__why {
+    .chase-feature__fight {
       margin: 14px 0 0;
       padding: 12px;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.22);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.14);
     }
-    .chase-feature__why span {
-      display: block;
+    .chase-feature__fight-label {
+      margin: 0 0 8px;
       font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.12em;
+      font-weight: 900;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: #ffb089;
-      margin-bottom: 4px;
     }
-    .chase-feature__why p {
+    .chase-feature__schools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .chase-feature__school-pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+    }
+    .chase-feature__school-pill.is-lead {
+      background: var(--gator-orange);
+      border-color: transparent;
+    }
+    .chase-feature__school-pill.is-us {
+      background: rgba(0, 33, 165, 0.85);
+      border-color: rgba(255,255,255,0.25);
+    }
+    .chase-feature__copy {
       margin: 0;
       font-size: 14px;
       line-height: 1.4;
       font-weight: 600;
-      color: #fff;
+      color: rgba(255,255,255,0.92);
     }
-    .chase-feature__bar {
+    .chase-feature__meter {
       margin-top: 14px;
+    }
+    .chase-feature__meter-top {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 10px;
-    }
-    .chase-feature__odds {
-      display: inline-flex;
       align-items: baseline;
-      gap: 6px;
-      padding: 8px 12px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.75);
     }
-    .chase-feature__odds strong {
+    .chase-feature__meter-top strong {
       font-family: "Barlow Condensed", sans-serif;
       font-size: 28px;
+      color: #fff;
       font-weight: 900;
-      line-height: 1;
     }
-    .chase-feature__odds em {
-      font-style: normal;
-      font-size: 11px;
-      font-weight: 700;
-      color: rgba(247, 244, 239, 0.7);
+    .chase-feature__track {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      overflow: hidden;
     }
-    .chase-feature__note {
-      font-size: 12px;
-      font-weight: 700;
-      color: #ffb089;
-      text-align: right;
-      line-height: 1.3;
+    .chase-feature__fill {
+      height: 100%;
+      width: 28%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #fa4616, #ff8a4c);
     }
     .chase-feature__cta {
       display: flex;
       align-items: center;
       justify-content: center;
       margin-top: 14px;
-      min-height: 42px;
+      min-height: 44px;
       border-radius: 10px;
-      background: var(--gator-orange);
-      color: #fff;
+      background: #fff;
+      color: var(--navy);
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 900;
+      letter-spacing: 0.02em;
     }
 
     .chase-card {
@@ -494,42 +559,29 @@
       background: var(--card);
       border-radius: 12px;
       box-shadow: var(--shadow);
-      border-top: 4px solid var(--gator-blue);
-      padding: 14px;
+      overflow: hidden;
       margin-bottom: 10px;
+      border-top: 4px solid var(--gator-orange);
     }
-    .chase-card__row {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
-    .chase-card__mark {
-      flex-shrink: 0;
-      width: 44px;
-      height: 44px;
-      border-radius: 11px;
-      background: #eef2ff;
-      color: var(--gator-blue);
+    .chase-card__band {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-family: "Barlow Condensed", sans-serif;
-      font-size: 18px;
-      font-weight: 900;
-    }
-    .chase-card__body { min-width: 0; flex: 1; }
-    .chase-card__rank {
-      margin: 0;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #001433;
+      color: #fff;
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--gator-orange);
     }
+    .chase-card__band span { color: #ffb089; }
+    .chase-card__inner { padding: 12px 14px 14px; }
     .chase-card__name {
-      margin: 2px 0 0;
+      margin: 0;
       font-family: "Barlow Condensed", sans-serif;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 900;
       text-transform: uppercase;
       line-height: 0.95;
@@ -539,7 +591,7 @@
       margin: 4px 0 0;
       font-size: 12px;
       color: var(--muted);
-      font-weight: 600;
+      font-weight: 700;
     }
     .chase-card__story {
       margin: 10px 0 0;
@@ -548,6 +600,31 @@
       font-weight: 600;
       color: var(--text);
     }
+    .chase-card__rivals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .chase-card__pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f4f6fb;
+      color: var(--navy);
+      border: 1px solid #e5e7eb;
+    }
+    .chase-card__pill.is-us {
+      background: #eef2ff;
+      color: var(--gator-blue);
+      border-color: #c7d2fe;
+    }
+    .chase-card__pill.is-lead {
+      background: #fff4ed;
+      color: var(--gator-orange);
+      border-color: #ffd0bf;
+    }
     .chase-card__bottom {
       margin-top: 12px;
       display: flex;
@@ -555,18 +632,27 @@
       justify-content: space-between;
       gap: 8px;
     }
-    .chase-card__chip {
-      font-size: 12px;
-      font-weight: 800;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #eef2ff;
+    .chase-card__odds {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 26px;
+      font-weight: 900;
       color: var(--gator-blue);
+      line-height: 1;
+    }
+    .chase-card__odds small {
+      display: block;
+      margin-top: 2px;
+      font-family: "Source Sans 3", sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
     .chase-card__cta {
       font-size: 13px;
-      font-weight: 800;
-      color: var(--gator-blue);
+      font-weight: 900;
+      color: var(--gator-orange);
     }
 
     @media (max-width: 420px) {
@@ -671,61 +757,82 @@
 
         <section id="panel-chase" class="block hidden">
           <h2 class="section-title">2028 priority chase</h2>
-          <p class="section-sub">The names Florida has to win — story first.</p>
+          <p class="section-sub">Live board fights Florida has to win.</p>
 
           <a class="chase-feature" href="#">
-            <div class="chase-feature__top">
-              <div class="chase-feature__mark" aria-hidden="true">TH</div>
-              <span class="chase-feature__stamp">#1 chase</span>
+            <div class="chase-feature__heat">
+              <span>Live fight</span>
+              <b>Hot chase</b>
             </div>
-            <h3 class="chase-feature__name">Tristian Henderson</h3>
-            <p class="chase-feature__meta">EDGE · Pine Forest · Pensacola · 4★</p>
-            <div class="chase-feature__why">
-              <span>Why he’s #1</span>
-              <p>Florida’s top EDGE fight. Georgia Tech is leading the public board — this one is still live.</p>
-            </div>
-            <div class="chase-feature__bar">
-              <div class="chase-feature__odds">
-                <strong>28%</strong>
-                <em>Florida chance</em>
+            <div class="chase-feature__body">
+              <div class="chase-feature__rankline">
+                <div class="chase-feature__rank">#1<span>on the board</span></div>
+                <div class="chase-feature__pos">EDGE<em>4★ · Pensacola</em></div>
               </div>
-              <div class="chase-feature__note">Slipped this month<br />still the top fight</div>
-            </div>
-            <div class="chase-feature__cta">Open full breakdown</div>
-          </a>
-
-          <a class="chase-card" href="#">
-            <div class="chase-card__row">
-              <div class="chase-card__mark" aria-hidden="true">IV</div>
-              <div class="chase-card__body">
-                <p class="chase-card__rank">#3 on the board</p>
-                <h3 class="chase-card__name">Izayah Vickers</h3>
-                <p class="chase-card__meta">CB · Florida State University School · 4★</p>
-                <p class="chase-card__story">Highest Florida chance on the chase — in-state corner Florida can still win.</p>
-                <div class="chase-card__bottom">
-                  <span class="chase-card__chip">42% Florida chance</span>
-                  <span class="chase-card__cta">Breakdown →</span>
+              <h3 class="chase-feature__name">Tristian<br />Henderson</h3>
+              <p class="chase-feature__school">Pine Forest High School</p>
+              <div class="chase-feature__fight">
+                <p class="chase-feature__fight-label">Who’s winning him right now</p>
+                <div class="chase-feature__schools">
+                  <span class="chase-feature__school-pill is-lead">Georgia Tech leads</span>
+                  <span class="chase-feature__school-pill is-us">Florida 28%</span>
+                  <span class="chase-feature__school-pill">Georgia</span>
                 </div>
+                <p class="chase-feature__copy">Top EDGE fight on the board. Public lead is Tech — Florida still very much in it.</p>
               </div>
+              <div class="chase-feature__meter">
+                <div class="chase-feature__meter-top">
+                  <span>Florida chance</span>
+                  <strong>28%</strong>
+                </div>
+                <div class="chase-feature__track"><div class="chase-feature__fill"></div></div>
+              </div>
+              <div class="chase-feature__cta">Enter the fight →</div>
             </div>
           </a>
 
           <a class="chase-card" href="#">
-            <div class="chase-card__row">
-              <div class="chase-card__mark" aria-hidden="true">AG</div>
-              <div class="chase-card__body">
-                <p class="chase-card__rank">#2 on the board</p>
-                <h3 class="chase-card__name">Asher Ghioto</h3>
-                <p class="chase-card__meta">EDGE · The Bolles School · Jacksonville · 4★</p>
-                <p class="chase-card__story">Elite EDGE talent — Miami owns the public board, Florida stays in the fight on fit.</p>
-                <div class="chase-card__bottom">
-                  <span class="chase-card__chip">16% Florida chance</span>
-                  <span class="chase-card__cta">Breakdown →</span>
-                </div>
+            <div class="chase-card__band">
+              <span>#3 chase</span>
+              <span>Heating up</span>
+            </div>
+            <div class="chase-card__inner">
+              <h3 class="chase-card__name">Izayah Vickers</h3>
+              <p class="chase-card__meta">CB · Florida State University School · 4★</p>
+              <p class="chase-card__story">Best Florida chance on the board — in-state corner still there to win.</p>
+              <div class="chase-card__rivals">
+                <span class="chase-card__pill is-us">Florida leads</span>
+                <span class="chase-card__pill">Clemson</span>
+                <span class="chase-card__pill">Notre Dame</span>
+              </div>
+              <div class="chase-card__bottom">
+                <div class="chase-card__odds">42%<small>Florida chance</small></div>
+                <span class="chase-card__cta">Open fight →</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="chase-card" href="#">
+            <div class="chase-card__band">
+              <span>#2 chase</span>
+              <span>Hard battle</span>
+            </div>
+            <div class="chase-card__inner">
+              <h3 class="chase-card__name">Asher Ghioto</h3>
+              <p class="chase-card__meta">EDGE · The Bolles School · Jacksonville · 4★</p>
+              <p class="chase-card__story">Elite EDGE talent. Miami owns the public board — Florida stays alive on fit.</p>
+              <div class="chase-card__rivals">
+                <span class="chase-card__pill is-lead">Miami leads</span>
+                <span class="chase-card__pill is-us">Florida</span>
+              </div>
+              <div class="chase-card__bottom">
+                <div class="chase-card__odds">16%<small>Florida chance</small></div>
+                <span class="chase-card__cta">Open fight →</span>
               </div>
             </div>
           </a>
         </section>
+
       </main>
     </div>
   </div>
