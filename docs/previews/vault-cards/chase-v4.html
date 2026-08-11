@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>GatorVault — Card preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Source+Sans+3:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gator-blue: #0021a5;
+      --gator-orange: #fa4616;
+      --navy: #001433;
+      --page: #eef1f6;
+      --card: #ffffff;
+      --text: #101828;
+      --muted: #667085;
+      --shadow: 0 8px 24px rgba(16, 24, 40, 0.1);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Source Sans 3", system-ui, sans-serif;
+      background: #0b1220;
+      color: var(--text);
+    }
+
+    /* Desktop: show phone sitting on desk */
+    .stage {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 12px 40px;
+      background:
+        radial-gradient(80% 50% at 50% 0%, rgba(0, 33, 165, 0.35), transparent 60%),
+        #0b1220;
+    }
+    .stage__note {
+      max-width: 390px;
+      width: 100%;
+      margin: 0 0 14px;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      line-height: 1.4;
+      text-align: center;
+    }
+    .stage__note strong { color: #fff; }
+    .phone {
+      width: min(390px, 100%);
+      background: var(--page);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+      border: 8px solid #1a2233;
+    }
+    .phone__status {
+      height: 28px;
+      background: var(--navy);
+    }
+    .app-header {
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 16px 14px;
+    }
+    .app-header__brand {
+      margin: 0;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .app-header__brand span { color: var(--gator-orange); }
+    .app-header__sub {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      font-weight: 600;
+    }
+    .tabs {
+      display: flex;
+      gap: 0;
+      background: #001a40;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .tabs a {
+      flex: 1;
+      text-align: center;
+      padding: 10px 6px;
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .tabs a.is-active {
+      color: #fff;
+      box-shadow: inset 0 -3px 0 var(--gator-orange);
+    }
+    .feed {
+      padding: 16px 14px 28px;
+      background: var(--page);
+    }
+    .section-title {
+      margin: 0 0 4px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .section-sub {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .block { margin-bottom: 22px; }
+    .block.hidden { display: none; }
+
+    /* Shared card shell — must read as a CARD */
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--gator-orange);
+      overflow: hidden;
+    }
+
+    /* —— Game Week card —— */
+    .gw-card { padding: 16px; }
+    .gw-card__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .gw-card__kicker {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gator-blue);
+    }
+    .gw-card__pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #fff4ed;
+      color: var(--gator-orange);
+      border: 1px solid rgba(250, 70, 22, 0.35);
+    }
+    .gw-card__match {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .gw-card__team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+    .gw-card__logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      background: #f8fafc;
+      border-radius: 50%;
+      padding: 5px;
+      border: 1px solid #e5e7eb;
+    }
+    .gw-card__team-name {
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .gw-card__vs {
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+    .gw-card__when {
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .gw-card__clock {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .gw-card__unit {
+      background: #f4f6fb;
+      border-radius: 10px;
+      padding: 10px 4px;
+      text-align: center;
+    }
+    .gw-card__unit--accent { background: #fff4ed; }
+    .gw-card__num {
+      display: block;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--navy);
+    }
+    .gw-card__unit--accent .gw-card__num { color: var(--gator-orange); }
+    .gw-card__unit-label {
+      display: block;
+      margin-top: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .gw-card__cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border-radius: 10px;
+      background: var(--gator-orange);
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      text-decoration: none;
+    }
+
+    /* —— Signing tracker card —— */
+    .sign-card { padding: 14px; }
+    .sign-esp {
+      background: linear-gradient(160deg, #0021a5 0%, #001433 100%);
+      color: #fff;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 10px;
+    }
+    .sign-esp__role {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffb089;
+    }
+    .sign-esp__title {
+      margin: 0;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 0.95;
+    }
+    .sign-esp__dates {
+      margin: 6px 0 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      font-weight: 600;
+    }
+    .sign-esp__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .sign-esp__days {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 40px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .sign-esp__days small {
+      display: block;
+      font-family: "Source Sans 3", sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-top: 2px;
+    }
+    .sign-esp__link {
+      color: #ffd7c4;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      border-bottom: 2px solid rgba(250,70,22,0.9);
+      padding-bottom: 1px;
+    }
+    .sign-nsd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .sign-nsd__role {
+      margin: 0;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .sign-nsd__title {
+      margin: 2px 0 0;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .sign-nsd__dates {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .sign-nsd__days {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--gator-blue);
+      line-height: 1;
+      text-align: right;
+    }
+    .sign-nsd__days small {
+      display: block;
+      font-family: "Source Sans 3", sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* —— Chase cards: fight energy —— */
+    .chase-feature {
+      display: block;
+      text-decoration: none;
+      color: #fff;
+      border-radius: 14px;
+      box-shadow: 0 14px 32px rgba(0, 20, 51, 0.28);
+      overflow: hidden;
+      margin-bottom: 12px;
+      position: relative;
+      background:
+        radial-gradient(90% 80% at 100% 0%, rgba(250, 70, 22, 0.55), transparent 50%),
+        radial-gradient(70% 60% at 0% 100%, rgba(0, 33, 165, 0.9), transparent 55%),
+        linear-gradient(155deg, #1a0a08 0%, #001433 42%, #0021a5 100%);
+      padding: 0;
+    }
+    .chase-feature::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -28deg,
+        transparent,
+        transparent 14px,
+        rgba(255,255,255,0.02) 14px,
+        rgba(255,255,255,0.02) 15px
+      );
+      pointer-events: none;
+    }
+    .chase-feature__heat {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 14px;
+      background: rgba(250, 70, 22, 0.95);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .chase-feature__heat b {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+    }
+    .chase-feature__body {
+      position: relative;
+      padding: 16px 14px 14px;
+    }
+    .chase-feature__rankline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .chase-feature__rank {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 0.85;
+      color: #ffb089;
+    }
+    .chase-feature__rank span {
+      display: block;
+      font-family: "Source Sans 3", sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.65);
+      margin-top: 4px;
+    }
+    .chase-feature__pos {
+      margin-left: auto;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+    }
+    .chase-feature__pos em {
+      display: block;
+      margin-top: 2px;
+      font-style: normal;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: none;
+      color: rgba(255,255,255,0.6);
+    }
+    .chase-feature__name {
+      margin: 0;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 40px;
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 0.9;
+      letter-spacing: 0.01em;
+      text-shadow: 0 2px 18px rgba(0,0,0,0.35);
+    }
+    .chase-feature__school {
+      margin: 8px 0 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.78);
+    }
+    .chase-feature__fight {
+      margin: 14px 0 0;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+    .chase-feature__fight-label {
+      margin: 0 0 8px;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #ffb089;
+    }
+    .chase-feature__schools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .chase-feature__school-pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+    }
+    .chase-feature__school-pill.is-lead {
+      background: var(--gator-orange);
+      border-color: transparent;
+    }
+    .chase-feature__school-pill.is-us {
+      background: rgba(0, 33, 165, 0.85);
+      border-color: rgba(255,255,255,0.25);
+    }
+    .chase-feature__copy {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.4;
+      font-weight: 600;
+      color: rgba(255,255,255,0.92);
+    }
+    .chase-feature__whyfan {
+      margin-top: 12px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+    .chase-feature__whyfan span {
+      display: block;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffb089;
+      margin-bottom: 4px;
+    }
+    .chase-feature__whyfan p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 600;
+      color: rgba(255,255,255,0.92);
+    }
+    .chase-feature__meter {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .chase-feature__meter-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .chase-feature__meter-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+    }
+    .chase-feature__meter-label b {
+      display: block;
+      margin-top: 4px;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 32px;
+      letter-spacing: 0;
+      text-transform: none;
+      color: #fff;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .chase-feature__meter-plain {
+      margin: 0;
+      max-width: 16ch;
+      text-align: right;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #ffd7c4;
+    }
+    .chase-feature__track {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      overflow: hidden;
+    }
+    .chase-feature__fill {
+      height: 100%;
+      width: 28%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #fa4616, #ff8a4c);
+    }
+    .chase-feature__fill.is-42 { width: 42%; }
+    .chase-feature__fill.is-16 { width: 16%; }
+    .chase-card__plain {
+      margin: 8px 0 0;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .chase-card__why {
+      margin: 10px 0 0;
+      padding: 10px 11px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .chase-card__why span {
+      display: block;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gator-orange);
+      margin-bottom: 3px;
+    }
+    .chase-feature__cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 14px;
+      min-height: 44px;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    .chase-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 10px;
+      border-top: 4px solid var(--gator-orange);
+    }
+    .chase-card__band {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #001433;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .chase-card__band span { color: #ffb089; }
+    .chase-card__inner { padding: 12px 14px 14px; }
+    .chase-card__name {
+      margin: 0;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 0.95;
+      color: var(--navy);
+    }
+    .chase-card__meta {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .chase-card__story {
+      margin: 10px 0 0;
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .chase-card__rivals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .chase-card__pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f4f6fb;
+      color: var(--navy);
+      border: 1px solid #e5e7eb;
+    }
+    .chase-card__pill.is-us {
+      background: #eef2ff;
+      color: var(--gator-blue);
+      border-color: #c7d2fe;
+    }
+    .chase-card__pill.is-lead {
+      background: #fff4ed;
+      color: var(--gator-orange);
+      border-color: #ffd0bf;
+    }
+    .chase-card__bottom {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .chase-card__odds {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--gator-blue);
+      line-height: 1;
+    }
+    .chase-card__odds small {
+      display: block;
+      margin-top: 2px;
+      font-family: "Source Sans 3", sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .chase-card__cta {
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--gator-orange);
+    }
+
+    @media (max-width: 420px) {
+      .stage { padding: 0; background: var(--page); }
+      .stage__note { display: none; }
+      .phone {
+        width: 100%;
+        min-height: 100vh;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <p class="stage__note">
+      <strong>Chase v4</strong> — why he’s here + plain-English odds. Tap tabs to compare.
+      Not live on gatorvault.com.
+    </p>
+    <div class="phone">
+      <div class="phone__status" aria-hidden="true"></div>
+      <header class="app-header">
+        <p class="app-header__brand">Gator<span>Vault</span></p>
+        <p class="app-header__sub">Chase v4 · fan-friendly</p>
+      </header>
+      <nav class="tabs" aria-label="Preview sections">
+        <a href="#home" data-tab="home">Home</a>
+        <a href="#recruiting" data-tab="recruiting">Recruiting</a>
+        <a href="#chase" class="is-active" data-tab="chase">Chase</a>
+      </nav>
+
+      <main class="feed">
+        <section id="panel-home" class="block hidden">
+          <h2 class="section-title">Game Week</h2>
+          <p class="section-sub">Matchup prep, kickoff intel, and Gators Live.</p>
+          <article class="card gw-card">
+            <div class="gw-card__top">
+              <p class="gw-card__kicker">Next kickoff</p>
+              <span class="gw-card__pill">Home opener</span>
+            </div>
+            <div class="gw-card__match">
+              <div class="gw-card__team">
+                <img class="gw-card__logo" alt="Florida" width="52" height="52"
+                  src="https://a.espncdn.com/i/teamlogos/ncaa/500/57.png" />
+                <span class="gw-card__team-name">Florida</span>
+              </div>
+              <span class="gw-card__vs">VS</span>
+              <div class="gw-card__team">
+                <img class="gw-card__logo" alt="FAU" width="52" height="52"
+                  src="https://a.espncdn.com/i/teamlogos/ncaa/500/2226.png" />
+                <span class="gw-card__team-name">FAU Owls</span>
+              </div>
+            </div>
+            <p class="gw-card__when">Sat, Sep 5 · 7:45 PM ET · Ben Hill Griffin Stadium</p>
+            <div class="gw-card__clock" aria-label="25 days to kickoff">
+              <div class="gw-card__unit gw-card__unit--accent">
+                <span class="gw-card__num">25</span>
+                <span class="gw-card__unit-label">Days</span>
+              </div>
+              <div class="gw-card__unit">
+                <span class="gw-card__num">06</span>
+                <span class="gw-card__unit-label">Hrs</span>
+              </div>
+              <div class="gw-card__unit">
+                <span class="gw-card__num">11</span>
+                <span class="gw-card__unit-label">Min</span>
+              </div>
+              <div class="gw-card__unit">
+                <span class="gw-card__num">04</span>
+                <span class="gw-card__unit-label">Sec</span>
+              </div>
+            </div>
+            <a class="gw-card__cta" href="#">Open Game Week</a>
+          </article>
+        </section>
+
+        <section id="panel-recruiting" class="block hidden">
+          <h2 class="section-title">Signing Day</h2>
+          <p class="section-sub">Class of 2027 · ESP leads, NSD closes.</p>
+          <article class="card sign-card">
+            <div class="sign-esp">
+              <p class="sign-esp__role">Primary window</p>
+              <h3 class="sign-esp__title">Early Signing Period</h3>
+              <p class="sign-esp__dates">December 15–17, 2026</p>
+              <div class="sign-esp__row">
+                <div class="sign-esp__days">125<small>days out</small></div>
+                <a class="sign-esp__link" href="#">Expected signees →</a>
+              </div>
+            </div>
+            <div class="sign-nsd">
+              <div>
+                <p class="sign-nsd__role">Then the closer</p>
+                <p class="sign-nsd__title">National Signing Day</p>
+                <p class="sign-nsd__dates">February 3, 2027</p>
+              </div>
+              <div class="sign-nsd__days">175<small>days</small></div>
+            </div>
+          </article>
+        </section>
+
+        <section id="panel-chase" class="block">
+          <h2 class="section-title">2028 priority chase</h2>
+          <p class="section-sub">Who Florida needs most — and why the odds look like that.</p>
+
+          <a class="chase-feature" href="#">
+            <div class="chase-feature__heat">
+              <span>Biggest board fight</span>
+              <b>Hot chase</b>
+            </div>
+            <div class="chase-feature__body">
+              <div class="chase-feature__rankline">
+                <div class="chase-feature__rank">#1<span>priority</span></div>
+                <div class="chase-feature__pos">EDGE<em>4★ · Pensacola</em></div>
+              </div>
+              <h3 class="chase-feature__name">Tristian<br />Henderson</h3>
+              <p class="chase-feature__school">Pine Forest High School</p>
+
+              <div class="chase-feature__whyfan">
+                <span>Why he’s up here</span>
+                <p>Florida needs EDGE help in this class. Henderson is the top in-state pass rusher still on the board — so he sits #1.</p>
+              </div>
+
+              <div class="chase-feature__fight">
+                <p class="chase-feature__fight-label">The race right now</p>
+                <div class="chase-feature__schools">
+                  <span class="chase-feature__school-pill is-lead">Georgia Tech ahead</span>
+                  <span class="chase-feature__school-pill is-us">Florida in it</span>
+                  <span class="chase-feature__school-pill">Georgia too</span>
+                </div>
+                <p class="chase-feature__copy">Recruiting sites have Tech in front. Florida hasn’t lost this one — it’s still a real fight.</p>
+              </div>
+
+              <div class="chase-feature__meter">
+                <div class="chase-feature__meter-top">
+                  <div class="chase-feature__meter-label">
+                    Florida’s shot
+                    <b>28%</b>
+                  </div>
+                  <p class="chase-feature__meter-plain">About 1 in 4 chance Florida lands him right now.</p>
+                </div>
+                <div class="chase-feature__track"><div class="chase-feature__fill"></div></div>
+              </div>
+              <div class="chase-feature__cta">See full breakdown →</div>
+            </div>
+          </a>
+
+          <a class="chase-card" href="#">
+            <div class="chase-card__band">
+              <span>#3 priority</span>
+              <span>Heating up</span>
+            </div>
+            <div class="chase-card__inner">
+              <h3 class="chase-card__name">Izayah Vickers</h3>
+              <p class="chase-card__meta">CB · Florida State University School · 4★</p>
+              <div class="chase-card__why">
+                <span>Why he’s here</span>
+                Best Florida chance on this board — in-state corner the staff can still win.
+              </div>
+              <div class="chase-card__rivals">
+                <span class="chase-card__pill is-us">Florida ahead</span>
+                <span class="chase-card__pill">Clemson</span>
+                <span class="chase-card__pill">Notre Dame</span>
+              </div>
+              <div class="chase-card__bottom">
+                <div class="chase-card__odds">42%<small>Florida’s shot</small></div>
+                <span class="chase-card__cta">Breakdown →</span>
+              </div>
+              <p class="chase-card__plain">Plain English: Florida is the favorite here — better than a coin flip.</p>
+            </div>
+          </a>
+
+          <a class="chase-card" href="#">
+            <div class="chase-card__band">
+              <span>#2 priority</span>
+              <span>Hard battle</span>
+            </div>
+            <div class="chase-card__inner">
+              <h3 class="chase-card__name">Asher Ghioto</h3>
+              <p class="chase-card__meta">EDGE · The Bolles School · Jacksonville · 4★</p>
+              <div class="chase-card__why">
+                <span>Why he’s here</span>
+                Elite EDGE talent Florida wants — even if Miami is ahead on the public board.
+              </div>
+              <div class="chase-card__rivals">
+                <span class="chase-card__pill is-lead">Miami ahead</span>
+                <span class="chase-card__pill is-us">Florida still in</span>
+              </div>
+              <div class="chase-card__bottom">
+                <div class="chase-card__odds">16%<small>Florida’s shot</small></div>
+                <span class="chase-card__cta">Breakdown →</span>
+              </div>
+              <p class="chase-card__plain">Plain English: long shot today — still worth watching because the talent is rare.</p>
+            </div>
+          </a>
+        </section>
+
+      </main>
+    </div>
+  </div>
+  <script>
+    const tabs = document.querySelectorAll('[data-tab]');
+    const panels = {
+      home: document.getElementById('panel-home'),
+      recruiting: document.getElementById('panel-recruiting'),
+      chase: document.getElementById('panel-chase'),
+    };
+    function show(name) {
+      Object.entries(panels).forEach(([key, el]) => {
+        el.classList.toggle('hidden', key !== name);
+      });
+      tabs.forEach((t) => t.classList.toggle('is-active', t.dataset.tab === name));
+    }
+    tabs.forEach((t) => t.addEventListener('click', (e) => {
+      e.preventDefault();
+      show(t.dataset.tab);
+    }));
+    const hash = (location.hash || '#chase').replace('#', '');
+    if (panels[hash]) show(hash);
+  </script>
+</body>
+</html>

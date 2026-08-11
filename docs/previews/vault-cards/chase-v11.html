@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>GatorVault - Chase v11 (recruit card unison)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gator-blue: #0021a5;
+      --gator-orange: #fa4616;
+      --navy: #001433;
+      --page: #eef1f6;
+      --card: #ffffff;
+      --text: #101828;
+      --muted: #667085;
+      --shadow: 0 8px 22px rgba(0, 33, 165, 0.11);
+      --font-display: "Oswald", sans-serif;
+      --font-body: "Source Sans 3", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      background: #0b1220;
+      color: var(--text);
+    }
+    .stage {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 12px 40px;
+      background:
+        radial-gradient(80% 50% at 50% 0%, rgba(0, 33, 165, 0.35), transparent 60%),
+        #0b1220;
+    }
+    .stage__note {
+      max-width: 390px;
+      width: 100%;
+      margin: 0 0 14px;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      line-height: 1.4;
+      text-align: center;
+    }
+    .stage__note strong { color: #fff; }
+    .phone {
+      width: min(390px, 100%);
+      background: var(--page);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+      border: 8px solid #1a2233;
+    }
+    .phone__status { height: 28px; background: var(--navy); }
+    .app-header {
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 16px 14px;
+    }
+    .app-header__brand {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .app-header__brand span { color: var(--gator-orange); }
+    .app-header__sub {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      font-weight: 600;
+    }
+    .tabs {
+      display: flex;
+      background: #001a40;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .tabs a {
+      flex: 1;
+      text-align: center;
+      padding: 10px 6px;
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .tabs a.is-active {
+      color: #fff;
+      box-shadow: inset 0 -3px 0 var(--gator-orange);
+    }
+    .feed {
+      padding: 16px 14px 28px;
+      background: var(--page);
+    }
+    .section-title {
+      margin: 0 0 4px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .section-sub {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .block { margin-bottom: 22px; }
+    .block.hidden { display: none; }
+
+    /* Shared card shell - Game Week / Signing keep prior look */
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--gator-orange);
+      overflow: hidden;
+    }
+    .gw-card { padding: 16px; }
+    .gw-card__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .gw-card__kicker {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gator-blue);
+    }
+    .gw-card__pill {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #fff4ed;
+      color: var(--gator-orange);
+      border: 1px solid rgba(250, 70, 22, 0.35);
+    }
+    .gw-card__match {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .gw-card__team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+    .gw-card__logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      background: #f8fafc;
+      border-radius: 50%;
+      padding: 5px;
+      border: 1px solid #e5e7eb;
+    }
+    .gw-card__team-name {
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .gw-card__vs {
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+    .gw-card__when {
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .gw-card__clock {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .gw-card__unit {
+      background: #f4f6fb;
+      border-radius: 10px;
+      padding: 10px 4px;
+      text-align: center;
+    }
+    .gw-card__unit--accent { background: #fff4ed; }
+    .gw-card__num {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--navy);
+    }
+    .gw-card__unit--accent .gw-card__num { color: var(--gator-orange); }
+    .gw-card__unit-label {
+      display: block;
+      margin-top: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .gw-card__cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border-radius: 10px;
+      background: var(--gator-orange);
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      text-decoration: none;
+    }
+
+    .sign-card { padding: 14px; }
+    .sign-esp {
+      background: linear-gradient(160deg, #0021a5 0%, #001433 100%);
+      color: #fff;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 10px;
+    }
+    .sign-esp__role {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffb089;
+    }
+    .sign-esp__title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      text-transform: uppercase;
+      line-height: 0.95;
+    }
+    .sign-esp__dates {
+      margin: 6px 0 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      font-weight: 600;
+    }
+    .sign-esp__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .sign-esp__days {
+      font-family: var(--font-display);
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .sign-esp__days small {
+      display: block;
+      margin-top: 2px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+    }
+    .sign-esp__link {
+      color: #ffd0bf;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .sign-nsd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #f4f6fb;
+      border: 1px solid #e5e7eb;
+    }
+    .sign-nsd__role {
+      margin: 0 0 2px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .sign-nsd__title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+    .sign-nsd__dates {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .sign-nsd__days {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gator-blue);
+      line-height: 1;
+      text-align: right;
+    }
+    .sign-nsd__days small {
+      display: block;
+      margin-top: 2px;
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* -- Chase targets = Current Class commit card language -- */
+    .chase-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    a.chase-target {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+      padding: 15px 16px 14px 18px;
+      background:
+        linear-gradient(120deg, rgba(0, 33, 165, 0.09) 0%, rgba(255, 255, 255, 0.97) 38%, #ffffff 100%);
+      border: 1px solid rgba(0, 33, 165, 0.1);
+      border-left: 4px solid var(--gator-orange);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    a.chase-target::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gator-orange) 0%, #0021a5 72%, transparent 100%);
+      pointer-events: none;
+    }
+    a.chase-target::after {
+      content: '';
+      position: absolute;
+      right: -20px;
+      bottom: -26px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(250, 70, 22, 0.14), transparent 70%);
+      pointer-events: none;
+    }
+    a.chase-target--lead {
+      box-shadow: 0 10px 28px rgba(0, 33, 165, 0.16);
+    }
+    .chase-target__watermark {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-52%);
+      font-family: var(--font-display);
+      font-size: 4.2rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: rgba(0, 33, 165, 0.05);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+    .chase-target__top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .chase-target__mark {
+      flex: 0 0 auto;
+      min-width: 48px;
+      height: 48px;
+      padding: 0 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      border-radius: 11px;
+      background: linear-gradient(165deg, #0021a5 0%, #00144f 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+        0 4px 10px rgba(0, 33, 165, 0.28);
+    }
+    .chase-target__pos {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #fff;
+      line-height: 1;
+    }
+    .chase-target__stars {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      color: #fdba74;
+      line-height: 1;
+    }
+    .chase-target__identity {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .chase-target__name {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.28rem;
+      font-weight: 600;
+      letter-spacing: 0.015em;
+      line-height: 1.12;
+      color: #001a33;
+    }
+    .chase-target__id-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.35rem 0.55rem;
+      margin: 5px 0 0;
+      font-size: 12px;
+      line-height: 1.3;
+      color: #64748b;
+    }
+    .chase-target__id-stars {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #c2410c;
+    }
+    .chase-target__id-pos {
+      font-weight: 800;
+      color: #0021a5;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .chase-target__id-home::before {
+      content: '·';
+      margin-right: 0.55rem;
+      color: #cbd5e1;
+    }
+    .chase-target__stamp {
+      flex: 0 0 auto;
+      margin-top: 2px;
+      padding: 5px 9px;
+      border-radius: 4px;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      line-height: 1;
+      transform: rotate(-2.5deg);
+    }
+    .chase-target__stamp--hot {
+      border: 1.5px solid var(--gator-orange);
+      color: var(--gator-orange);
+      background: rgba(250, 70, 22, 0.07);
+    }
+    .chase-target__stamp--chase {
+      border: 1.5px solid #0021a5;
+      color: #0021a5;
+      background: rgba(0, 33, 165, 0.06);
+    }
+    .chase-target__stamp--rise {
+      border: 1.5px solid #15803d;
+      color: #15803d;
+      background: rgba(22, 163, 74, 0.08);
+    }
+
+    .chase-target__rank-strip {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .chase-target__rank-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      padding: 7px 8px 6px;
+      border-radius: 8px;
+      background: linear-gradient(165deg, rgba(0, 33, 165, 0.07), rgba(0, 33, 165, 0.02));
+      border: 1px solid rgba(0, 33, 165, 0.12);
+      min-width: 0;
+    }
+    .chase-target__rank-num {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #001a33;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .chase-target__rank-label {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #64748b;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .chase-target__badges {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .chase-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .chase-badge--instate {
+      background: rgba(0, 33, 165, 0.08);
+      color: #0021a5;
+      border: 1px solid rgba(0, 33, 165, 0.18);
+    }
+    .chase-badge--lead {
+      background: rgba(250, 70, 22, 0.1);
+      color: #c2410c;
+      border: 1px solid rgba(250, 70, 22, 0.22);
+    }
+
+    .chase-target__skinny {
+      position: relative;
+      z-index: 1;
+      margin: 12px 0 0;
+      padding: 0 0 0 11px;
+      border-left: 3px solid rgba(250, 70, 22, 0.85);
+      font-size: 13.5px;
+      line-height: 1.55;
+      font-weight: 600;
+      color: #1e293b;
+      letter-spacing: -0.01em;
+    }
+
+    /* Compact board race - #1 only, under skinny, not a second hero */
+    .chase-target__race {
+      position: relative;
+      z-index: 1;
+      margin-top: 12px;
+      padding: 10px 10px 8px;
+      border-radius: 10px;
+      background: rgba(0, 33, 165, 0.04);
+      border: 1px solid rgba(0, 33, 165, 0.1);
+    }
+    .chase-target__race-title {
+      margin: 0 0 8px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+    .chase-target__race-row {
+      display: grid;
+      grid-template-columns: 42px 1fr 34px;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+    }
+    .chase-target__race-row:last-child { margin-bottom: 0; }
+    .chase-target__race-bar {
+      height: 7px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+    .chase-target__race-bar > i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: #94a3b8;
+    }
+    .chase-target__race-bar > i.us {
+      background: linear-gradient(90deg, #0021a5, #3b5bdb);
+    }
+    .chase-target__race-bar > i.lead {
+      background: linear-gradient(90deg, #fa4616, #fb923c);
+    }
+
+    .chase-target__footer {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0, 33, 165, 0.1);
+    }
+    .chase-target__footer-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+    }
+    .chase-target__cta {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0021a5;
+    }
+    .chase-target__rating {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1px;
+      min-width: 3.5rem;
+      padding: 4px 8px 3px;
+      border-radius: 8px;
+      background: linear-gradient(160deg, rgba(250, 70, 22, 0.12), rgba(250, 70, 22, 0.04));
+      border: 1px solid rgba(250, 70, 22, 0.22);
+    }
+    .chase-target__rating-label {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #c2410c;
+      line-height: 1;
+    }
+    .chase-target__rating-value {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #001a33;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 420px) {
+      .stage { padding: 0; background: var(--page); }
+      .stage__note { display: none; }
+      .phone {
+        width: 100%;
+        min-height: 100vh;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <p class="stage__note">
+      <strong>Chase v11</strong> - target cards use the same Current Class commit-card language.
+      Not live on gatorvault.com.
+    </p>
+    <div class="phone">
+      <div class="phone__status" aria-hidden="true"></div>
+      <header class="app-header">
+        <p class="app-header__brand">Gator<span>Vault</span></p>
+        <p class="app-header__sub">Chase v11 · recruit-card unison</p>
+      </header>
+      <nav class="tabs" aria-label="Preview sections">
+        <a href="#home" data-tab="home">Home</a>
+        <a href="#recruiting" data-tab="recruiting">Recruiting</a>
+        <a href="#chase" class="is-active" data-tab="chase">Chase</a>
+      </nav>
+
+      <main class="feed">
+        <section id="panel-home" class="block hidden">
+          <h2 class="section-title">Game Week</h2>
+          <p class="section-sub">Matchup prep, kickoff intel, and Gators Live.</p>
+          <article class="card gw-card">
+            <div class="gw-card__top">
+              <p class="gw-card__kicker">Next kickoff</p>
+              <span class="gw-card__pill">Home opener</span>
+            </div>
+            <div class="gw-card__match">
+              <div class="gw-card__team">
+                <img class="gw-card__logo" alt="Florida" width="52" height="52"
+                  src="https://a.espncdn.com/i/teamlogos/ncaa/500/57.png" />
+                <span class="gw-card__team-name">Florida</span>
+              </div>
+              <span class="gw-card__vs">VS</span>
+              <div class="gw-card__team">
+                <img class="gw-card__logo" alt="FAU" width="52" height="52"
+                  src="https://a.espncdn.com/i/teamlogos/ncaa/500/2226.png" />
+                <span class="gw-card__team-name">FAU Owls</span>
+              </div>
+            </div>
+            <p class="gw-card__when">Sat, Sep 5 · 7:45 PM ET · Ben Hill Griffin Stadium</p>
+            <div class="gw-card__clock" aria-label="25 days to kickoff">
+              <div class="gw-card__unit gw-card__unit--accent">
+                <span class="gw-card__num">25</span>
+                <span class="gw-card__unit-label">Days</span>
+              </div>
+              <div class="gw-card__unit">
+                <span class="gw-card__num">06</span>
+                <span class="gw-card__unit-label">Hrs</span>
+              </div>
+              <div class="gw-card__unit">
+                <span class="gw-card__num">11</span>
+                <span class="gw-card__unit-label">Min</span>
+              </div>
+              <div class="gw-card__unit">
+                <span class="gw-card__num">04</span>
+                <span class="gw-card__unit-label">Sec</span>
+              </div>
+            </div>
+            <a class="gw-card__cta" href="#">Open Game Week</a>
+          </article>
+        </section>
+
+        <section id="panel-recruiting" class="block hidden">
+          <h2 class="section-title">Signing Day</h2>
+          <p class="section-sub">Class of 2027 · ESP leads, NSD closes.</p>
+          <article class="card sign-card">
+            <div class="sign-esp">
+              <p class="sign-esp__role">Primary window</p>
+              <h3 class="sign-esp__title">Early Signing Period</h3>
+              <p class="sign-esp__dates">December 15-17, 2026</p>
+              <div class="sign-esp__row">
+                <div class="sign-esp__days">125<small>days out</small></div>
+                <a class="sign-esp__link" href="#">Expected signees →</a>
+              </div>
+            </div>
+            <div class="sign-nsd">
+              <div>
+                <p class="sign-nsd__role">Then the closer</p>
+                <p class="sign-nsd__title">National Signing Day</p>
+                <p class="sign-nsd__dates">February 3, 2027</p>
+              </div>
+              <div class="sign-nsd__days">175<small>days</small></div>
+            </div>
+          </article>
+        </section>
+
+        <section id="panel-chase" class="block">
+          <h2 class="section-title">2028 priority chase</h2>
+          <p class="section-sub">Same card language as Current Class - chase scores in the rank strip.</p>
+
+          <div class="chase-stack">
+            <a class="chase-target chase-target--lead" href="#">
+              <span class="chase-target__watermark" aria-hidden="true">UF</span>
+              <div class="chase-target__top">
+                <div class="chase-target__mark" aria-hidden="true">
+                  <span class="chase-target__pos">EDGE</span>
+                  <span class="chase-target__stars">4★</span>
+                </div>
+                <div class="chase-target__identity">
+                  <h3 class="chase-target__name">Tristian Henderson</h3>
+                  <p class="chase-target__id-line">
+                    <span class="chase-target__id-stars">4★</span>
+                    <span class="chase-target__id-pos">EDGE</span>
+                    <span class="chase-target__id-home">Pensacola, FL</span>
+                  </p>
+                </div>
+                <span class="chase-target__stamp chase-target__stamp--hot">#1 Chase</span>
+              </div>
+
+              <ul class="chase-target__rank-strip" aria-label="Chase scores">
+                <li class="chase-target__rank-cell">
+                  <span class="chase-target__rank-num">28%</span>
+                  <span class="chase-target__rank-label">UF Shot</span>
+                </li>
+                <li class="chase-target__rank-cell">
+                  <span class="chase-target__rank-num">76</span>
+                  <span class="chase-target__rank-label">Fit</span>
+                </li>
+                <li class="chase-target__rank-cell">
+                  <span class="chase-target__rank-num">62</span>
+                  <span class="chase-target__rank-label">Priority</span>
+                </li>
+              </ul>
+
+              <div class="chase-target__badges">
+                <span class="chase-badge chase-badge--instate">In-state</span>
+                <span class="chase-badge chase-badge--lead">Hot chase</span>
+              </div>
+
+              <p class="chase-target__skinny">
+                Bend-rush EDGE / JACK in White's front - first step + edge set. Top EDGE need keeps Priority #1 even at 28% UF shot.
+              </p>
+
+              <div class="chase-target__race">
+                <p class="chase-target__race-title">Who's ahead · On3</p>
+                <div class="chase-target__race-row">
+                  <span>GT</span>
+                  <div class="chase-target__race-bar"><i class="lead" style="width:90%"></i></div>
+                  <span>27%</span>
+                </div>
+                <div class="chase-target__race-row">
+                  <span>Florida</span>
+                  <div class="chase-target__race-bar"><i class="us" style="width:80%"></i></div>
+                  <span>24%</span>
+                </div>
+                <div class="chase-target__race-row">
+                  <span>UGA</span>
+                  <div class="chase-target__race-bar"><i style="width:67%"></i></div>
+                  <span>20%</span>
+                </div>
+              </div>
+
+              <div class="chase-target__footer">
+                <div class="chase-target__footer-main">
+                  <span>Pine Forest High School</span>
+                  <span class="chase-target__cta">Open breakdown →</span>
+                </div>
+                <div class="chase-target__rating" aria-label="On3 lead Georgia Tech">
+                  <span class="chase-target__rating-label">On3 lead</span>
+                  <span class="chase-target__rating-value">GT</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="chase-target" href="#">
+              <span class="chase-target__watermark" aria-hidden="true">UF</span>
+              <div class="chase-target__top">
+                <div class="chase-target__mark" aria-hidden="true">
+                  <span class="chase-target__pos">CB</span>
+                  <span class="chase-target__stars">4★</span>
+                </div>
+                <div class="chase-target__identity">
+                  <h3 class="chase-target__name">Izayah Vickers</h3>
+                  <p class="chase-target__id-line">
+                    <span class="chase-target__id-stars">4★</span>
+                    <span class="chase-target__id-pos">CB</span>
+                    <span class="chase-target__id-home">Tallahassee, FL</span>
+                  </p>
+                </div>
+                <span class="chase-target__stamp chase-target__stamp--rise">Rising</span>
+              </div>
+
+              <ul class="chase-target__rank-strip" aria-label="Chase scores">
+                <li class="chase-target__rank-cell">
+                  <span class="chase-target__rank-num">42%</span>
+                  <span class="chase-target__rank-label">UF Shot</span>
+                </li>
+                <li class="chase-target__rank-cell">
+                  <span class="chase-target__rank-num">87</span>
+                  <span class="chase-target__rank-label">Fit</span>
+                </li>
+                <li class="chase-target__rank-cell">
+                  <span class="chase-target__rank-num">61</span>
+                  <span class="chase-target__rank-label">Priority</span>
+                </li>
+              </ul>
+
+              <div class="chase-target__badges">
+                <span class="chase-badge chase-badge--instate">In-state</span>
+              </div>
+
+              <p class="chase-target__skinny">
+                Press/man CB - twitch + physicality. Best UF shot on the chase; trails #1 because EDGE need is hotter right now.
+              </p>
+
+              <div class="chase-target__footer">
+                <div class="chase-target__footer-main">
+                  <span>Florida State University School</span>
+                  <span class="chase-target__cta">Open breakdown →</span>
+                </div>
+                <div class="chase-target__rating" aria-label="On3 Florida lead">
+                  <span class="chase-target__rating-label">On3 lead</span>
+                  <span class="chase-target__rating-value">UF</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="chase-target" href="#">
+              <span class="chase-target__watermark" aria-hidden="true">UF</span>
+              <div class="chase-target__top">
+                <div class="chase-target__mark" aria-hidden="true">
+                  <span class="chase-target__pos">EDGE</span>
+                  <span class="chase-target__stars">4★</span>
+                </div>
+                <div class="chase-target__identity">
+                  <h3 class="chase-target__name">Asher Ghioto</h3>
+                  <p class="chase-target__id-line">
+                    <span class="chase-target__id-stars">4★</span>
+                    <span class="chase-target__id-pos">EDGE</span>
+                    <span class="chase-target__id-home">Jacksonville, FL</span>
+                  </p>
+                </div>
+                <span class="chase-target__stamp chase-target__stamp--chase">#2 Chase</span>
+              </div>
+
+              <ul class="chase-target__rank-strip" aria-label="Chase scores">
+                <li class="chase-target__rank-cell">
+                  <span class="chase-target__rank-num">16%</span>
+                  <span class="chase-target__rank-label">UF Shot</span>
+                </li>
+                <li class="chase-target__rank-cell">
+                  <span class="chase-target__rank-num">89</span>
+                  <span class="chase-target__rank-label">Fit</span>
+                </li>
+                <li class="chase-target__rank-cell">
+                  <span class="chase-target__rank-num">61</span>
+                  <span class="chase-target__rank-label">Priority</span>
+                </li>
+              </ul>
+
+              <div class="chase-target__badges">
+                <span class="chase-badge chase-badge--instate">In-state</span>
+              </div>
+
+              <p class="chase-target__skinny">
+                Length JACK / wide-9 EDGE - arc + edge set. Talent + Fit keep him high; Miami lead is the drag.
+              </p>
+
+              <div class="chase-target__footer">
+                <div class="chase-target__footer-main">
+                  <span>The Bolles School</span>
+                  <span class="chase-target__cta">Open breakdown →</span>
+                </div>
+                <div class="chase-target__rating" aria-label="On3 lead Miami">
+                  <span class="chase-target__rating-label">On3 lead</span>
+                  <span class="chase-target__rating-value">MIA</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script>
+    const tabs = document.querySelectorAll('[data-tab]');
+    const panels = {
+      home: document.getElementById('panel-home'),
+      recruiting: document.getElementById('panel-recruiting'),
+      chase: document.getElementById('panel-chase'),
+    };
+    function show(name) {
+      Object.entries(panels).forEach(([key, el]) => {
+        el.classList.toggle('hidden', key !== name);
+      });
+      tabs.forEach((t) => t.classList.toggle('is-active', t.dataset.tab === name));
+    }
+    tabs.forEach((t) => t.addEventListener('click', (e) => {
+      e.preventDefault();
+      show(t.dataset.tab);
+    }));
+    const hash = (location.hash || '#chase').replace('#', '');
+    if (panels[hash]) show(hash);
+  </script>
+</body>
+</html>
