@@ -2240,7 +2240,9 @@
   font-weight: 800;
   letter-spacing: 0.02em;
   cursor: pointer;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .rh-elite-chrome .rh-footprint-year-tab:not(.is-active) {
