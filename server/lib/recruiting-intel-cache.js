@@ -21,6 +21,7 @@ function invalidateUiCacheKeys() {
       eliteClassOverviewCacheKey,
       eliteClassOverviewAllCacheKey,
       eliteBundleCacheKey,
+      recruitingFootprintCacheKey,
     } = require('./recruiting-hub-cache');
     const years = String(process.env.HUB_WARM_YEARS || '2026,2027,2028,2029')
       .split(',')
@@ -36,7 +37,7 @@ function invalidateUiCacheKeys() {
         `recruiting:battles-and-movement:${year}`,
         `recruiting:heat-index:${year}`,
         `recruiting:positions:${year}`,
-        `recruiting:footprint:${year}`
+        recruitingFootprintCacheKey(year)
       );
     }
     const removed = removeHubCacheKeys(keys);

@@ -62,6 +62,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-10 | Team depth chart reads live `/api/roster/depth-chart` (camp updates without rebuild after this bake) | `team-hub-api`, `depth-chart-api`, Vault/Team depth pages in binary — **content** stays API/data after ship | pending |
 | 2026-08-10 | FutureCast Lab accuracy: credible-rival Who commits next scoring + Early Discovery load hardening | `competing-schools.ts`, `FutureCastLeadingPanel`, `EarlyDiscoveryPreview` in binary (HP movement/API also live) | pending |
 | 2026-08-11 | Recruiting Footprint Class 2027/2028 tabs: fall back to year bundle when `/hub/footprint` soft-misses | `recruiting-hub-elite-api.ts` + `RecruitingFootprintMap` in binary (API footprint seed from bundle also live) | pending |
+| 2026-08-11 | Recruiting Footprint year tabs: remove `onMouseDown preventDefault` that drops iOS WKWebView clicks | `RecruitingFootprintMap.tsx` + tab `touch-action` CSS in binary | pending |
 | 2026-08-12 | 2028 chase cards v12: Current Class chrome + Why we chase (home Targets, Lab Priority chase, HP board) | `VaultChaseCard`, `TargetBoardPreview`, `HighPriorityTargetCard`, `FutureCastChaseCard` + CSS in binary | pending |
 | 2026-08-12 | FutureCast Big Board: rename Top Targets tab → **Best Fits** (scheme fit board, not Priority Chase) | `FutureCastBigBoardPage` + big-board routes in binary | pending |
 | 2026-08-12 | My Alerts: Board Intel seed refresh + default method Both/Instant so Save registers email | `alerts-hub-seed`, `VaultAlertsPage`, `alert-prefs` in binary (API visit fanout/soft path also live) | pending |
@@ -74,6 +75,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-12 | FutureCast Big Board: Vault cards for Intelligence Rank / Best Fits / Early Discovery (retire ClassicRecruitCard) | `VaultBigBoardCard` + grids in binary | pending |
 | 2026-08-12 | Big Board vault cards: keep 3-up metric strip on 375px + Portal/Predictions/Related on VaultBigBoardCard | `vault-chase-card.css`, Portal/Prediction/RelatedPlayers in binary | pending |
 | 2026-08-12 | Vault card chrome: match FC chase/BB cards to recruiting commit heat (opaque blue wash + orange rail) | `vault-chase-card.css` + elite commit heat CSS in binary | pending |
+| 2026-08-12 | Chase scroll/FAB leakage: document scroll for Lab + recruiting targets board; kill module overflow:visible; hide FAB on priority | `LivePulseFab`, `gv-ui-cleanup`, `mobile-native-framework`, `vault-shell` in binary | pending |
 
 ---
 

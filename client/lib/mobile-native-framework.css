@@ -110,15 +110,21 @@
     overflow-x: hidden;
   }
 
-  /* Home + Film Room + Live: do not create a nested Y scroller (overflow-x:hidden → overflow-y:auto). */
+  /* Home + Film + Live + Lab + Priority Chase: no nested Y scroller. */
   .gv-vault-shell__main:has(.home-wow-page),
   .gv-vault-shell__main:has(.gv-film-room-page),
   .gv-vault-shell__main:has(.uf-premium-gnl),
   .gv-vault-shell__main:has(.gv-live-feed),
+  .gv-vault-shell__main:has(.fc-lab-cc-page),
+  .gv-vault-shell__main:has(.fc-futurecast-page--elite),
+  .gv-vault-shell__main:has([data-testid$='-targets-board']),
   .gv-app-shell__main:has(.home-wow-page),
   .gv-app-shell__main:has(.gv-film-room-page),
   .gv-app-shell__main:has(.uf-premium-gnl),
   .gv-app-shell__main:has(.gv-live-feed),
+  .gv-app-shell__main:has(.fc-lab-cc-page),
+  .gv-app-shell__main:has(.fc-futurecast-page--elite),
+  .gv-app-shell__main:has([data-testid$='-targets-board']),
   .gv-vault-shell--home,
   .gv-vault-shell--home .gv-vault-shell__main,
   .gv-vault-shell--home .gv-app-shell__main,
@@ -229,7 +235,7 @@
     max-width: 100% !important;
     min-width: 0 !important;
     margin-inline: 0;
-    overflow: visible !important;
+    /* Keep overflow:hidden (RH default) — visible !important fights iOS document scroll. */
   }
 
   /* Tap targets */

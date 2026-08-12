@@ -1448,7 +1448,8 @@ body {
   /* Lab + chase boards — same FAB hide (overlaps full VaultChaseCard / bottom nav). */
   body:has(.fc-lab-cc-page) .gv-live-pulse-fab,
   body:has(.fc-futurecast-page--elite) .gv-live-pulse-fab,
-  body:has([data-testid$='-targets-board']) .gv-live-pulse-fab {
+  body:has([data-testid$='-targets-board']) .gv-live-pulse-fab,
+  body:has(.gv-hp-board-grid) .gv-live-pulse-fab {
     display: none !important;
   }
 
@@ -1459,18 +1460,21 @@ body {
   }
 
   /*
-   * FutureCast Lab — document-only scroll (Film Room / Home parity).
+   * FutureCast Lab + recruiting Priority Chase boards —
+   * document-only scroll (Film Room / Home parity).
    * Do NOT leave overflow:visible on nested modules fighting the WebView scroller.
    */
   html:has(.fc-lab-cc-page),
-  html:has(.fc-futurecast-page--elite) {
+  html:has(.fc-futurecast-page--elite),
+  html:has([data-testid$='-targets-board']) {
     overflow-x: clip !important;
     overflow-y: auto !important;
     height: auto !important;
   }
 
   body:has(.fc-lab-cc-page):not(.gv-scroll-locked),
-  body:has(.fc-futurecast-page--elite):not(.gv-scroll-locked) {
+  body:has(.fc-futurecast-page--elite):not(.gv-scroll-locked),
+  body:has([data-testid$='-targets-board']):not(.gv-scroll-locked) {
     overflow: visible !important;
     height: auto !important;
     overscroll-behavior-y: auto;
@@ -1483,7 +1487,10 @@ body {
   body:has(.fc-lab-cc-page) .gv-vault-shell__main,
   body:has(.fc-futurecast-page--elite) .gv-vault-shell,
   body:has(.fc-futurecast-page--elite) .gv-vault-shell__body,
-  body:has(.fc-futurecast-page--elite) .gv-vault-shell__main {
+  body:has(.fc-futurecast-page--elite) .gv-vault-shell__main,
+  body:has([data-testid$='-targets-board']) .gv-vault-shell,
+  body:has([data-testid$='-targets-board']) .gv-vault-shell__body,
+  body:has([data-testid$='-targets-board']) .gv-vault-shell__main {
     overflow: visible !important;
     max-height: none !important;
     min-height: auto !important;
@@ -1499,6 +1506,14 @@ body {
     max-height: none !important;
     overflow: visible !important;
     -webkit-overflow-scrolling: auto;
+  }
+
+  /* Share-climate tabs under Lab chase — wrap instead of nested X scroller. */
+  body:has(.fc-lab-cc-page) .fc-lab-targets-battles .rh-cc-tabs,
+  body:has(.fc-lab-cc-page) .fc-lab-battle-tabs {
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
   }
 }
 
