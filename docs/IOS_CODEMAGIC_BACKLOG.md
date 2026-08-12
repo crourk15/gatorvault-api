@@ -76,6 +76,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-12 | Big Board vault cards: keep 3-up metric strip on 375px + Portal/Predictions/Related on VaultBigBoardCard | `vault-chase-card.css`, Portal/Prediction/RelatedPlayers in binary | pending |
 | 2026-08-12 | Vault card chrome: match FC chase/BB cards to recruiting commit heat (opaque blue wash + orange rail) | `vault-chase-card.css` + elite commit heat CSS in binary | pending |
 | 2026-08-12 | Chase scroll/FAB leakage: document scroll for Lab + recruiting targets board; kill module overflow:visible; hide FAB on priority | `LivePulseFab`, `gv-ui-cleanup`, `mobile-native-framework`, `vault-shell` in binary | pending |
+| 2026-08-12 | Kill sticky Lab/RH module heads + platform vault document scroll (Who commits next stuck) | `mobile-native-framework`, `gv-ui-cleanup`, `vault-shell`, Leading bare on 2028 | pending |
 
 ---
 

@@ -95,7 +95,8 @@ export function FutureCastTargetsPanel({
   return (
     <>
       <FutureCastLeadingPanel
-        bare={bare}
+        /* Flat title on 2028 discovery — no ModuleShell sticky head over the board. */
+        bare={discoveryFocus ? true : bare}
         masterBoard={masterBoard}
         trendingBoard={trendingBoard}
         highPriority={highPriority}
