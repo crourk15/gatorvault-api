@@ -1117,13 +1117,13 @@
   border-top: 4px solid var(--gator-orange);
 }
 
-/* Compact heat: identity mark + commit stamp — not a dark media band. */
+/* Compact heat: identity mark + commit stamp — not a dark media band.
+   Keep in lockstep with .gv-chase-card (vault-chase-card.css). */
 .rh-elite-chrome .rh-elite-commit-card--heat {
   position: relative;
   overflow: hidden;
   padding: 15px 16px 14px 18px;
-  background:
-    linear-gradient(120deg, rgba(0, 33, 165, 0.09) 0%, rgba(255, 255, 255, 0.97) 38%, #ffffff 100%);
+  background: linear-gradient(120deg, #e8ecf8 0%, #ffffff 38%, #ffffff 100%);
   border: 1px solid rgba(0, 33, 165, 0.1);
   border-top: none;
   border-left: 4px solid var(--gator-orange);
