@@ -1681,6 +1681,25 @@ function startPostBootLightServices() {
   } catch (e) {
     console.warn('[deploy-cache] invalidate skipped:', e.message);
   }
+  // One-shot pending visit alerts (e.g. Brysen Wright OV) — after push store hydrates.
+  const pendingDelay = Math.max(
+    8000,
+    parseInt(process.env.PENDING_VISIT_ALERTS_BOOT_DELAY_MS || '20000', 10) || 20000
+  );
+  setTimeout(() => {
+    try {
+      const { processPendingVisitAlerts } = require('./lib/pending-visit-alerts');
+      processPendingVisitAlerts()
+        .then((out) => {
+          console.log('[pending-visit-alerts] boot', JSON.stringify(out));
+        })
+        .catch((err) => {
+          console.warn('[pending-visit-alerts] boot failed:', err.message || err);
+        });
+    } catch (e) {
+      console.warn('[pending-visit-alerts] boot skipped:', e.message);
+    }
+  }, pendingDelay);
 }
 
 /**

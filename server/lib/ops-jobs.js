@@ -451,6 +451,19 @@ const JOBS = {
       });
     }
   },
+  'pending-visit-alerts': {
+    label: 'Process pending visit alert queue (push + email)',
+    subsystem: 'ops:pending-visit-alerts',
+    schedule: 'Boot + manual',
+    async run(opts = {}) {
+      const { processPendingVisitAlerts } = require('./pending-visit-alerts');
+      return processPendingVisitAlerts({
+        dryRun: opts.dryRun === true,
+        operatorEmails: opts.operatorEmails,
+        asOf: opts.asOf,
+      });
+    }
+  },
   'uf-trend-snapshot': {
     label: 'FutureCast daily UF % trend snapshots',
     subsystem: 'cron:uf-trend-snapshot',

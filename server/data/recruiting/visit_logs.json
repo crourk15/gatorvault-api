@@ -1,7 +1,20 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-10T17:21:36.802Z",
+  "updatedAt": "2026-08-12T01:57:49.992Z",
   "items": [
+    {
+      "id": "vlog_brysen-wright_official_visit_2026-08-22",
+      "playerSlug": "brysen-wright",
+      "playerId": "242341",
+      "playerName": "Brysen Wright",
+      "school": "Florida",
+      "visitType": "official_visit",
+      "date": "2026-08-22",
+      "source": "manual",
+      "fingerprint": "visit|brysen-wright|florida|official_visit|2026-08-22",
+      "reportedAt": "2026-08-12T01:57:49.992Z",
+      "detail": "Brysen Wright has a verified UF official visit scheduled (Aug 22-24)."
+    },
     {
       "id": "vlog_derrell-hines-jr_uv_2026-06-20",
       "playerSlug": "derrell-hines-jr",
