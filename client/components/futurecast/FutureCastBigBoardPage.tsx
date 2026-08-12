@@ -11,7 +11,7 @@ type BigBoardTabId = 'top-targets' | 'early-discovery' | 'portal-watchlist' | 'r
 
 const ALL_TABS: { id: BigBoardTabId; label: string }[] = [
   { id: 'rank', label: 'Intelligence Rank' },
-  { id: 'top-targets', label: 'Top Targets' },
+  { id: 'top-targets', label: 'Best Fits' },
   { id: 'early-discovery', label: 'Early Discovery' },
   { id: 'portal-watchlist', label: 'Portal Watchlist' },
 ];
@@ -159,15 +159,20 @@ export function FutureCastBigBoardPage(): React.ReactElement {
       </div>
 
       {activeTab === 'top-targets' ? (
-        <UfFitWatchlistGrid
-          query={{
-            class_year: classYear,
-            position: position || undefined,
-            // Hottest Targets composite (staff × fit × need × geo) — not UV stacks / RPM.
-            sort: 'chase',
-            limit: 100,
-          }}
-        />
+        <>
+          <p className="rh-elite-section__sub" style={{ margin: '0 0 0.75rem' }}>
+            Best Fits ranks scheme match for Florida (Hot · Fit · Need) — not the Priority Chase board.
+          </p>
+          <UfFitWatchlistGrid
+            query={{
+              class_year: classYear,
+              position: position || undefined,
+              // Hottest Targets composite (staff × fit × need × geo) — not UV stacks / RPM.
+              sort: 'chase',
+              limit: 100,
+            }}
+          />
+        </>
       ) : activeTab === 'early-discovery' ? (
         <EarlyDiscoveryGrid query={earlyDiscoveryQuery} />
       ) : activeTab === 'portal-watchlist' ? (

@@ -26,7 +26,7 @@ export type BigBoardTabId =
 
 const TABS: { id: BigBoardTabId | 'rank'; label: string; sort: BigBoardSort; lifecycle?: BigBoardLifecycle }[] = [
   { id: 'rank', label: 'Rankings', sort: 'rank' },
-  { id: 'top-targets', label: 'Top Targets', sort: 'ufFit' },
+  { id: 'top-targets', label: 'Best Fits', sort: 'ufFit' },
   { id: 'early-discovery', label: 'Early Discovery', sort: 'signals', lifecycle: 'HS' },
   { id: 'portal-watchlist', label: 'Portal Watchlist', sort: 'portalLikelihood', lifecycle: 'PORTAL' },
   { id: 'predictions', label: 'Predictions', sort: 'ufFit' },
