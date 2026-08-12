@@ -2,8 +2,7 @@
 
 .gv-chase-card {
   position: relative;
-  /* visible — never clip Why we chase / rank strip when a parent flex-shrinks */
-  overflow: visible;
+  overflow: hidden;
   height: auto;
   max-height: none;
   flex: 0 0 auto;

@@ -1445,11 +1445,60 @@ body {
     display: none !important;
   }
 
-  /* Chase board / Lab: restore bottom clearance after shell zeros rh-page padding.
-     Keeps full VaultChaseCard above nav + Live Pulse FAB (no card/FAB collision). */
+  /* Lab + chase boards — same FAB hide (overlaps full VaultChaseCard / bottom nav). */
+  body:has(.fc-lab-cc-page) .gv-live-pulse-fab,
+  body:has(.fc-futurecast-page--elite) .gv-live-pulse-fab,
+  body:has([data-testid$='-targets-board']) .gv-live-pulse-fab {
+    display: none !important;
+  }
+
+  /* Bottom nav clearance only (no FAB band) — shell zeros rh-page padding. */
   .gv-vault-shell__main .rh-page.rh-page--elite,
   .gv-vault-shell__main .fc-futurecast-page.fc-futurecast-page--elite {
-    padding-bottom: calc(3.25rem + var(--gv-mobile-nav-height, 4.5rem) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(var(--gv-mobile-nav-height, 4.5rem) + env(safe-area-inset-bottom, 0px));
+  }
+
+  /*
+   * FutureCast Lab — document-only scroll (Film Room / Home parity).
+   * Do NOT leave overflow:visible on nested modules fighting the WebView scroller.
+   */
+  html:has(.fc-lab-cc-page),
+  html:has(.fc-futurecast-page--elite) {
+    overflow-x: clip !important;
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
+  body:has(.fc-lab-cc-page):not(.gv-scroll-locked),
+  body:has(.fc-futurecast-page--elite):not(.gv-scroll-locked) {
+    overflow: visible !important;
+    height: auto !important;
+    overscroll-behavior-y: auto;
+    overscroll-behavior-x: none;
+    touch-action: manipulation;
+  }
+
+  body:has(.fc-lab-cc-page) .gv-vault-shell,
+  body:has(.fc-lab-cc-page) .gv-vault-shell__body,
+  body:has(.fc-lab-cc-page) .gv-vault-shell__main,
+  body:has(.fc-futurecast-page--elite) .gv-vault-shell,
+  body:has(.fc-futurecast-page--elite) .gv-vault-shell__body,
+  body:has(.fc-futurecast-page--elite) .gv-vault-shell__main {
+    overflow: visible !important;
+    max-height: none !important;
+    min-height: auto !important;
+    height: auto !important;
+    touch-action: manipulation;
+  }
+
+  /* Kill nested list scrollports on Lab chase / RH elite. */
+  body:has(.fc-lab-cc-page) .fc-lab-chase-board,
+  body:has(.fc-lab-cc-page) .fc-lab-chase-list,
+  body:has(.fc-lab-cc-page) .fc-lab-target-cards,
+  body:has([data-testid$='-targets-board']) .gv-hp-board-grid {
+    max-height: none !important;
+    overflow: visible !important;
+    -webkit-overflow-scrolling: auto;
   }
 }
 

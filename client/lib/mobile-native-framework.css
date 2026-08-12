@@ -595,27 +595,13 @@
   .fc-lab-chase-list,
   .fc-lab-chase-board {
     max-height: none !important;
-    height: auto !important;
     overflow: visible !important;
     width: 100% !important;
   }
 
   .fc-lab-chase-list > .gv-chase-card,
   .fc-lab-chase-board .gv-chase-card {
-    flex: 0 0 auto !important;
     flex-shrink: 0 !important;
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  /* Battle tabs + chase list — prevent parent module clip */
-  .rh-cc-module:has(.fc-lab-chase-list),
-  .rh-cc-module:has(.fc-lab-chase-board),
-  .fc-lab-panel-shell:has(.fc-lab-chase-list),
-  .fc-lab-panel-shell:has(.fc-lab-chase-board) {
-    overflow: visible !important;
-    max-height: none !important;
   }
 
   .fc-lab-signal-grid {
