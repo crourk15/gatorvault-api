@@ -442,7 +442,9 @@
   gap: 12px;
 }
 
-@media (max-width: 380px) {
+/* Keep the approved 3-up metric strip on phone widths (375+).
+   Only collapse when the card is truly narrower than three cells. */
+@media (max-width: 300px) {
   .gv-chase-card__rank-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

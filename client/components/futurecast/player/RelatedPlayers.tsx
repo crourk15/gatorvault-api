@@ -1,12 +1,11 @@
 /**
- * Related players grid — ClassicRecruitCard only.
+ * Related players grid — VaultBigBoardCard (Intelligence Rank chrome).
  */
 'use client';
 
 import React from 'react';
 import type { BigBoardPlayer } from '../../../lib/big-board-api';
-import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
-import { fromBigBoard } from '@/lib/recruiting-card-adapters';
+import { VaultBigBoardCard, modelFromIntel } from '@/components/futurecast/VaultBigBoardCard';
 
 export interface RelatedPlayersProps {
   players: BigBoardPlayer[];
@@ -20,14 +19,10 @@ export function RelatedPlayers({ players, currentSlug }: RelatedPlayersProps): R
   }
 
   return (
-    <div className="gv-rb-grid" data-testid="related-players">
-      {list.map((p) => {
-        const card = fromBigBoard(p);
-        const variant = card.isCommittedToUF ? 'commit' : 'target';
-        return (
-          <ClassicRecruitCard key={p.id} player={card} variant={variant} rank={p.rank} />
-        );
-      })}
+    <div className="gv-rb-grid gv-chase-card-grid" data-testid="related-players">
+      {list.map((p) => (
+        <VaultBigBoardCard key={p.id} model={modelFromIntel(p)} profileContext="futurecast" />
+      ))}
     </div>
   );
 }

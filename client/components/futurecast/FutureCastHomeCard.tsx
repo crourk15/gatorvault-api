@@ -1,12 +1,11 @@
 /**
- * FutureCast homepage player card — ClassicRecruitCard only.
+ * FutureCast homepage player card — VaultBigBoardCard chrome.
  */
 'use client';
 
 import React from 'react';
 import type { FeedPrediction } from '@/lib/predictions-api';
-import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
-import { fromFeedPrediction } from '@/lib/recruiting-card-adapters';
+import { VaultBigBoardCard, modelFromPrediction } from '@/components/futurecast/VaultBigBoardCard';
 
 export type FutureCastHomeCardVariant =
   | 'commit'
@@ -23,10 +22,9 @@ export function FutureCastHomeCard({
   prediction,
   variant,
 }: FutureCastHomeCardProps): React.ReactElement {
-  const cardVariant = variant === 'commit' ? 'commit' : 'target';
   return (
     <div data-testid={`home-card-${variant}`}>
-      <ClassicRecruitCard player={fromFeedPrediction(prediction, cardVariant)} variant={cardVariant} />
+      <VaultBigBoardCard model={modelFromPrediction(prediction)} profileContext="futurecast" />
     </div>
   );
 }
