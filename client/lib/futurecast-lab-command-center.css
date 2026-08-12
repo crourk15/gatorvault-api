@@ -575,6 +575,22 @@
   padding-right: 0;
 }
 
+/* Opaque ModuleShell around chase — never clip full VaultChaseCards (iOS). */
+.rh-cc-module:has(.fc-lab-chase-board),
+.fc-lab-panel-shell:has(.fc-lab-chase-board),
+.rh-cc-module:has(.fc-lab-chase-list),
+.fc-lab-panel-shell:has(.fc-lab-chase-list) {
+  overflow: visible;
+}
+
+.rh-cc-module:has(.fc-lab-chase-board) .rh-cc-module__body,
+.fc-lab-panel-shell:has(.fc-lab-chase-board) .rh-cc-module__body,
+.rh-cc-module:has(.fc-lab-chase-list) .rh-cc-module__body,
+.fc-lab-panel-shell:has(.fc-lab-chase-list) .rh-cc-module__body {
+  overflow: visible;
+  max-height: none;
+}
+
 .fc-lab-chase-board .gv-chase-card,
 .fc-lab-chase-list > .gv-chase-card {
   flex-shrink: 0;
