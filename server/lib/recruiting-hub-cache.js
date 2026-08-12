@@ -13,7 +13,7 @@ const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 const HUB_METRICS_CACHE_REV = 'hs6';
 
 /** Bump when footprint commit/target tallies logic changes. */
-const FOOTPRINT_CACHE_REV = 'fp2';
+const FOOTPRINT_CACHE_REV = 'fp3';
 
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
@@ -21,6 +21,27 @@ function hubFootprintCacheKey(year) {
 
 function recruitingFootprintCacheKey(year) {
   return `recruiting:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
+}
+
+function footprintStateCommitCount(footprint) {
+  if (!footprint || !Array.isArray(footprint.states)) return 0;
+  return footprint.states.reduce((n, s) => n + (Number(s?.commits) || 0), 0);
+}
+
+/** Reject poisoned pre-fp3 runtime plates that zeroed HS signees (e.g. Armani Strong). */
+function isUsableFootprintSnapshot(value, year) {
+  if (!value || typeof value !== 'object') return false;
+  if (!Array.isArray(value.states) || !value.states.length) return false;
+  if (footprintStateCommitCount(value) > 0) return true;
+  if (year == null || !Number.isFinite(Number(year))) return true;
+  try {
+    const commitsValue = readHubDiskSnapshot('commits', Number(year));
+    const items = Array.isArray(commitsValue) ? commitsValue : null;
+    if (items && items.length > 0) return false;
+  } catch {
+    /* optional heal */
+  }
+  return true;
 }
 
 const HUB_CACHE_MS = parseInt(process.env.HUB_CACHE_MS || String(5 * 60 * 1000), 10);
@@ -101,12 +122,21 @@ function runtimeSnapshotRoot() {
   return path.join(resolveRecruitingDataDir(), 'hub-runtime');
 }
 
+function bundledHubRuntimeRoot() {
+  return path.join(__dirname, '..', 'data', 'recruiting', 'hub-runtime');
+}
+
 function snapshotFileCandidates(endpoint, year) {
   const diskName =
     endpoint === 'class-metrics' ? 'class-overview' : endpoint;
-  const roots = [runtimeSnapshotRoot(), HUB_SNAPSHOT_DIR];
+  // Durable runtime first, then gitignored hub-snapshot, then bundled seed
+  // (tracked under server/data/recruiting/hub-runtime — HP soft-plate pattern).
+  const roots = [runtimeSnapshotRoot(), HUB_SNAPSHOT_DIR, bundledHubRuntimeRoot()];
+  const seen = new Set();
   const paths = [];
   for (const root of roots) {
+    if (!root || seen.has(root)) continue;
+    seen.add(root);
     if (diskName === 'class-overview-all') {
       paths.push(path.join(root, 'class-overview-all.json'));
     } else if (year != null) {
@@ -119,11 +149,18 @@ function snapshotFileCandidates(endpoint, year) {
 function parseHubSnapshotDoc(endpoint, doc) {
   if (!doc || doc.ok === false) return null;
   const { ok, status, meta, items, ...spreadRest } = doc;
+  if (endpoint === 'footprint') {
+    const rev = meta?.cacheRev || doc.cacheRev || null;
+    // Disk paths are not keyed by rev — reject pre-fp3 / mismatched plates so
+    // poisoned runtime (0 commits) cannot keep winning over deploy hub-snapshot.
+    if (rev !== FOOTPRINT_CACHE_REV) return null;
+    if (!Object.keys(spreadRest).length) return null;
+    return spreadRest;
+  }
   if (
     endpoint === 'class-overview' ||
     endpoint === 'class-overview-all' ||
     endpoint === 'class-metrics' ||
-    endpoint === 'footprint' ||
     endpoint === 'bundle' ||
     endpoint === 'hero'
   ) {
@@ -172,6 +209,10 @@ function writeHubDiskSnapshot(endpoint, year, value) {
       endpoint: diskName,
       year: year ?? null,
       source: 'hub-runtime',
+      ...(diskName === 'footprint' ? { cacheRev: FOOTPRINT_CACHE_REV } : {}),
+      ...(diskName === 'class-overview' || diskName === 'class-overview-all' || diskName === 'class-metrics'
+        ? { cacheRev: HUB_METRICS_CACHE_REV }
+        : {}),
     };
     const doc = isSpread
       ? { ok: true, status: 'ready', meta, ...value }
@@ -223,6 +264,7 @@ function seedFootprintFromBundle(cacheKey, value) {
   if (!footprint || typeof footprint !== 'object') return;
   if (!Array.isArray(footprint.states) || !footprint.states.length) return;
   const year = Number(m[1]);
+  if (!isUsableFootprintSnapshot(footprint, year)) return;
   const fpKey = hubFootprintCacheKey(year);
   hubCache.set(fpKey, footprint);
   persistDurableCacheValue(fpKey, footprint);
@@ -313,7 +355,9 @@ function removeHubCacheKeys(keys) {
 }
 
 /**
- * Lite first-paint warm — class overview + hero only.
+ * Lite first-paint warm — class overview + hero + Class footprint/commits.
+ * Footprint/commits must refresh on the ~25m warm-memory cron (no Codemagic) so
+ * poisoned runtime plates cannot stick at 0 commits after a logic fix.
  * Full hub bundle is separate: buildHubBundle Promise.all was OOMing Render on boot.
  */
 function priorityLiteWarmJobs(elite, years) {
@@ -324,6 +368,9 @@ function priorityLiteWarmJobs(elite, years) {
     jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year)]);
     jobs.push([classSnapshotCacheKey(year), () => elite.buildHubClassOverview(year)]);
     jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year)]);
+    // Periodic Class tabs — API/data live on iOS without a Codemagic rebuild.
+    jobs.push([`hub:elite:commits:v3:${year}`, () => elite.buildHubCommits(year)]);
+    jobs.push([hubFootprintCacheKey(year), () => elite.buildHubFootprint(year)]);
   }
   return jobs;
 }
@@ -629,7 +676,11 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   const diskFallback = options.diskFallback;
   if (diskFallback?.endpoint) {
     const diskValue = readHubDiskSnapshot(diskFallback.endpoint, diskFallback.year);
-    if (diskValue != null) {
+    const diskOk =
+      diskValue != null &&
+      (diskFallback.endpoint !== 'footprint' ||
+        isUsableFootprintSnapshot(diskValue, diskFallback.year));
+    if (diskOk) {
       // Seed memory so the next request is a hot hit. Cron warm-memory refreshes later.
       // Bundle disk hits also seed dedicated footprint keys for Class year tabs.
       cacheHubValue(cacheKey, diskValue);
@@ -1269,6 +1320,8 @@ module.exports = {
   eliteBundleCacheKey,
   hubFootprintCacheKey,
   recruitingFootprintCacheKey,
+  footprintStateCommitCount,
+  isUsableFootprintSnapshot,
   clearHubCache,
   removeHubCacheKeys,
   warmEliteHubCaches,

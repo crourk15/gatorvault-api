@@ -34,10 +34,12 @@ Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTu
 
 **Tier B (request path):** Hub + FutureCast Lab **GETs never sync-rebuild**. They serve memory → stale → durable `hub-runtime` / deploy snapshot, and return `status: building` only on a true cold miss. Refill is owned by:
 
-- **Boot:** `HUB_BOOT_FORCE_WARM=true` — priority-**lite** (hero/class) first, then **spaced elite fill** (HP → sequential bundle → master-board) with large gaps so Starter does not OOM
-- `POST /api/recruiting/hub/warm-memory?mode=spaced` (cron `gatorvault-api-hub-warm`, every ~25m; Admin PIN also works). Modes: `lite` | `spaced`/`elite` | `bundle`
+- **Boot:** `HUB_BOOT_FORCE_WARM=true` — priority-**lite** (hero/class/**footprint+commits**) first, then **spaced elite fill** (HP → sequential bundle → master-board) with large gaps so Starter does not OOM
+- `POST /api/recruiting/hub/warm-memory?mode=spaced` (cron `gatorvault-api-hub-warm`, every ~25m; Admin PIN also works). Modes: `lite` | `spaced`/`elite` | `bundle` — **lite includes Class footprint + commits** so map tallies refresh without Codemagic
 - `POST /api/futurecast/lab-warm` (Admin PIN / optional; spaced warm owns HP + master on cron)
 - `POST /api/recruiting/hub/refresh?warmAfter=priority` (cron `gatorvault-api-hub-refresh`)
+
+**Periodic / no-Codemagic surfaces:** Footprint Class tabs, hub commits, class overview, FutureCast HP / Closing Top UF Targets, allowlist intel, War Room vault evals. Prefer API/data + durable `/var/data/.../hub-runtime` with bundled seed fallback under `server/data/recruiting/hub-runtime/` (and `futurecast-runtime` for Lab HP). Bump `FOOTPRINT_CACHE_REV` when tally logic changes so poisoned runtime disks cannot stick; lite warm rewrites footprint/commits on the ~25m cron.
 
 **Prepared-meal profiles:** `GET /api/player/full-profile/:slug` serves durable dossier stamps first (`X-Profile-Cache: STAMP`) — identity, War Room vault scouting, tape, ranks — and overlays **live On3/RPM + live Vault Scouting**. Roster meals stay on `roster/players.json` via resolve (stats land there later). Re-stamp allowlist: `node --import tsx server/scripts/stamp-player-profiles.js --write-bundle`. Env: `PROFILE_STAMP_FIRST` (default on).
 
