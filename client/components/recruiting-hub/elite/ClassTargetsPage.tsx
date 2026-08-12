@@ -69,13 +69,8 @@ export function ClassTargetsPage({ year }: Props): React.ReactElement {
           <section>
             <h2 className="rh-panel-title">{year} priority chase board</h2>
             <p className="rh-muted">
-              Top ranked targets by GatorVault priority (likelihood + fit) — not the full class
-              census. On3 RPM is market context. Corner movement uses real 7-day GatorVault snapshot
-              deltas only.
+              Who Florida is chasing hardest — ranked by GatorVault priority.
             </p>
-            {data?.updatedAt ? (
-              <p className="rh-muted">Updated {new Date(data.updatedAt).toLocaleString()}</p>
-            ) : null}
           </section>
 
           {loading && <p className="gv-page-status">Loading targets…</p>}
