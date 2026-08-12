@@ -409,6 +409,81 @@ async function dispatchVisitScheduledPush(log, options = {}) {
   });
 }
 
+/**
+ * Send a real scheduled-OV push to one email's registered devices (owner QA).
+ * Unlike broadcast fanout, this does not require global eligibleRecipients.
+ */
+async function dispatchVisitPushToEmail(email, log, options = {}) {
+  if (!pushEnabled()) return { ok: false, skipped: true, reason: 'push_disabled' };
+  const normalized = String(email || '').trim().toLowerCase();
+  if (!normalized || !log?.playerSlug) {
+    return { ok: false, error: 'invalid_email_or_log' };
+  }
+
+  const payload = buildScheduledPayload(log);
+  const store = readStore();
+  const web = (store.subscriptions || []).filter(
+    (s) => String(s.email || '').toLowerCase() === normalized
+  );
+  const devices = (store.deviceTokens || []).filter(
+    (d) => String(d.email || '').toLowerCase() === normalized
+  );
+
+  if (!web.length && !devices.length) {
+    return {
+      ok: false,
+      error: 'no_devices',
+      reason: 'no_devices',
+      hint: 'Save Preferences on My Alerts first.',
+      sent: 0,
+    };
+  }
+
+  if (options.dryRun) {
+    return { ok: true, dryRun: true, wouldSend: web.length + devices.length, sent: 0 };
+  }
+
+  const fingerprint =
+    options.fingerprint ||
+    `visit_push_email|${normalized}|${log.fingerprint || payload.tag}`;
+  if (!options.force && alreadyDispatched(fingerprint)) {
+    return { ok: true, skipped: true, reason: 'already_dispatched', fingerprint, sent: 0 };
+  }
+
+  let sent = 0;
+  let failed = 0;
+  if (ensureWebPush()) {
+    for (const sub of web) {
+      try {
+        await webpush.sendNotification(
+          { endpoint: sub.endpoint, keys: sub.keys },
+          JSON.stringify({
+            title: payload.title,
+            body: payload.body,
+            url: payload.url,
+            tag: payload.tag,
+            type: payload.type,
+            playerSlug: payload.playerSlug,
+          })
+        );
+        sent += 1;
+      } catch {
+        failed += 1;
+      }
+    }
+  }
+  if (apnsConfigured()) {
+    for (const device of devices) {
+      const out = await sendApnsNotification(device.token, payload);
+      if (out.ok) sent += 1;
+      else failed += 1;
+    }
+  }
+
+  if (sent > 0) markDispatched(fingerprint);
+  return { ok: sent > 0, sent, failed, fingerprint, recipients: web.length + devices.length };
+}
+
 async function dispatchVisitCancelledPush(row, options = {}) {
   if (!row?.playerSlug) return { ok: false, skipped: true, reason: 'invalid_row' };
   if (row.identityConfirmed === false) return { ok: false, skipped: true, reason: 'unverified' };
@@ -674,6 +749,7 @@ module.exports = {
   removeSubscriptionsForEmail,
   updateSubscriptionPrefs,
   dispatchVisitScheduledPush,
+  dispatchVisitPushToEmail,
   dispatchVisitCancelledPush,
   dispatchCommitPush,
   dispatchScorePush,

@@ -1,6 +1,6 @@
 /**
  * One-shot pending visit alerts — committed under data/ops, processed after API boot.
- * Dedupes via push dispatch fingerprints (Postgres) so redeploys do not re-spam.
+ * Force-delivers to OPERATOR_ALERT_EMAILS so owner QA is not blocked by empty prefs/devices.
  */
 const fs = require("fs");
 const path = require("path");
@@ -29,13 +29,22 @@ function visitFingerprint(item) {
   return `visit|${slug}|florida|${type}|${date}`;
 }
 
+function operatorEmailsFrom(options = {}) {
+  return String(
+    options.operatorEmails ||
+      process.env.OPERATOR_ALERT_EMAILS ||
+      "crourk15@gmail.com"
+  )
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+}
+
 async function ensureOperatorEmailPrefs(emails = []) {
   const { upsertEmailAlertPrefs } = require("./alert-email-prefs-service");
   const out = [];
   for (const email of emails) {
-    const normalized = String(email || "")
-      .trim()
-      .toLowerCase();
+    const normalized = String(email || "").trim().toLowerCase();
     if (!normalized) continue;
     try {
       const saved = await upsertEmailAlertPrefs(normalized, {
@@ -54,6 +63,55 @@ async function ensureOperatorEmailPrefs(emails = []) {
     }
   }
   return out;
+}
+
+/** Bypass subscriber lists — always try owner inboxes/devices. */
+async function forceDeliverToOperators(log, emails = []) {
+  const {
+    sendSubscriberDigestEmail,
+    buildVisitScheduledEmailHtml,
+  } = require("./visit-intel-email-digest");
+  const { dispatchVisitPushToEmail } = require("./push-alert-service");
+  const name = log.playerName || log.playerSlug;
+  const subject = `Verified UF OV scheduled — ${name}`;
+  const html = buildVisitScheduledEmailHtml(log);
+  const results = [];
+
+  for (const email of emails) {
+    let emailOut = { sent: false, reason: "skipped" };
+    try {
+      emailOut = await sendSubscriberDigestEmail(email, subject, html);
+    } catch (err) {
+      emailOut = {
+        sent: false,
+        reason: err instanceof Error ? err.message : String(err),
+      };
+    }
+
+    let pushOut = { ok: false, reason: "skipped" };
+    try {
+      pushOut = await dispatchVisitPushToEmail(email, log, {
+        fingerprint: `force|${log.fingerprint || visitFingerprint(log)}|${email}`,
+        force: true,
+      });
+    } catch (err) {
+      pushOut = {
+        ok: false,
+        reason: err instanceof Error ? err.message : String(err),
+      };
+    }
+
+    results.push({
+      email,
+      emailSent: Boolean(emailOut.sent),
+      emailReason: emailOut.reason || null,
+      pushSent: Number(pushOut.sent || 0),
+      pushOk: Boolean(pushOut.ok),
+      pushReason: pushOut.reason || pushOut.error || null,
+    });
+  }
+
+  return results;
 }
 
 async function processPendingVisitAlerts(options = {}) {
@@ -76,15 +134,7 @@ async function processPendingVisitAlerts(options = {}) {
   const { handleNewVerifiedVisitLogs } = require("./visit-intel-ingest-hooks");
   const { isOfficialVisitType } = require("./visit-intel-utils");
 
-  const operatorEmails = String(
-    options.operatorEmails ||
-      process.env.OPERATOR_ALERT_EMAILS ||
-      "crourk15@gmail.com"
-  )
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-
+  const operatorEmails = operatorEmailsFrom(options);
   const emailPrefs = dryRun ? [] : await ensureOperatorEmailPrefs(operatorEmails);
 
   const results = [];
@@ -109,6 +159,7 @@ async function processPendingVisitAlerts(options = {}) {
         slug,
         expired: Boolean(expiresAt && now > expiresAt),
         alreadyDispatched: alreadyDispatched(fingerprint),
+        operatorEmails,
       });
       continue;
     }
@@ -126,15 +177,6 @@ async function processPendingVisitAlerts(options = {}) {
       item.skipReason = "invalid";
       changed = true;
       results.push({ id: item.id, skipped: true, reason: "invalid" });
-      continue;
-    }
-
-    if (alreadyDispatched(fingerprint)) {
-      item.status = "done";
-      item.doneAt = now.toISOString();
-      item.doneReason = "already_dispatched";
-      changed = true;
-      results.push({ id: item.id, skipped: true, reason: "already_dispatched", fingerprint });
       continue;
     }
 
@@ -187,12 +229,20 @@ async function processPendingVisitAlerts(options = {}) {
       identityConfirmed: true,
     };
 
-    const fanout = await handleNewVerifiedVisitLogs([log], { queueX: item.queueX === true });
+    // Broadcast to all eligible members (may be zero).
+    const fanout = await handleNewVerifiedVisitLogs([log], {
+      queueX: item.queueX === true,
+    });
     const row = fanout?.results?.[0] || {};
-    const sent =
-      Number(row.pushSent || 0) > 0 || Number(row.emailSent || 0) > 0 || row.queued === true;
 
-    item.status = sent || logResult?.created || logResult?.duplicate ? "done" : "failed";
+    // Always force-deliver to operator inboxes/devices (owner QA).
+    const operatorDelivery = await forceDeliverToOperators(log, operatorEmails);
+    const operatorEmailSent = operatorDelivery.some((r) => r.emailSent);
+    const operatorPushSent = operatorDelivery.some((r) => r.pushSent > 0);
+    const broadcastSent =
+      Number(row.pushSent || 0) > 0 || Number(row.emailSent || 0) > 0;
+
+    item.status = operatorEmailSent || operatorPushSent || broadcastSent ? "done" : "failed";
     item.doneAt = now.toISOString();
     item.fanout = {
       pushSent: row.pushSent || 0,
@@ -200,6 +250,7 @@ async function processPendingVisitAlerts(options = {}) {
       emailSent: row.emailSent || 0,
       emailReason: row.emailReason || null,
       queued: Boolean(row.queued),
+      operatorDelivery,
     };
     changed = true;
     results.push({
@@ -209,10 +260,20 @@ async function processPendingVisitAlerts(options = {}) {
       created: Boolean(logResult?.created),
       duplicate: Boolean(logResult?.duplicate),
       ...item.fanout,
+      delivered: item.status === "done",
     });
+
+    console.log(
+      "[pending-visit-alerts] item",
+      item.id,
+      "status",
+      item.status,
+      "operator",
+      JSON.stringify(operatorDelivery)
+    );
   }
 
-  if (changed && !dryRun) {
+  if (changed) {
     try {
       writePending(doc);
     } catch (err) {
@@ -235,5 +296,7 @@ module.exports = {
   PENDING_PATH,
   processPendingVisitAlerts,
   ensureOperatorEmailPrefs,
+  forceDeliverToOperators,
   visitFingerprint,
+  operatorEmailsFrom,
 };
