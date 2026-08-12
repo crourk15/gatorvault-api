@@ -400,11 +400,15 @@ async function buildHubTicker(year = 2027) {
 
   const { buildHubMovementFeed } = require('./recruiting-hub-data');
   const feed = await buildHubMovementFeed(year);
-  for (const row of feed.slice(0, 4 - items.length)) {
-    if (row.summary) items.push(row.summary);
+  for (const row of feed.slice(0, 6)) {
+    if (!row?.summary) continue;
+    // Keep the player name — bare "unofficial visit · Florida" reads as dead filler.
+    const line = row.name ? `${row.name} — ${row.summary}` : String(row.summary);
+    if (!items.includes(line)) items.push(line);
+    if (items.length >= 6) break;
   }
 
-  return items.slice(0, 4);
+  return items.slice(0, 6);
 }
 
 async function buildHubClassOverview(year = 2027) {

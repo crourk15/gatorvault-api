@@ -4,7 +4,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import '@/lib/home-wow.css';
 import { HOME_REFRESH } from '@/lib/vault-home-api';
 import { fetchRecruitingBoard, type RecruitingBoardResponse } from '@/lib/recruiting-board-api';
-import { fetchRecruitingHubBundle } from '@/lib/recruiting-hub-elite-api';
+import {
+  fetchRecruitingHubBundle,
+  fetchRecruitingHubTicker,
+} from '@/lib/recruiting-hub-elite-api';
+import { RECRUITING_HUB_BUNDLE_SEED } from '@/lib/recruiting-hub-bundle-seed';
 import { useVaultDataReload } from '@/lib/vault-navigation';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
@@ -34,7 +38,13 @@ import {
   buildFutureCastTargetsFromHome,
   buildGameDayView,
   buildHomePulseHeadline,
+  buildHomePulseStories,
 } from '@/components/home/premium/command/home-command-utils';
+
+function seedHomeTicker(year: number): string[] {
+  const fromSeed = RECRUITING_HUB_BUNDLE_SEED?.byYear?.[String(year)]?.ticker;
+  return Array.isArray(fromSeed) ? fromSeed.filter((t) => String(t || '').trim()) : [];
+}
 
 function buildSeedBeatIntel(): BeatIntelItem[] {
   return (GNL_HUB_SEED.panels?.beatWriterHighlights ?? [])
@@ -90,7 +100,9 @@ function readBootBeat(): BeatIntelItem[] {
 
 /** Vault home — brand hero → gameday → strip → FutureCast → beat. */
 export function HomePremiumPage(): React.ReactElement {
-  const [hubTicker, setHubTicker] = useState<string[]>([]);
+  const [hubTicker, setHubTicker] = useState<string[]>(() =>
+    seedHomeTicker(ACTIVE_RECRUITING_CLASS_YEAR)
+  );
   const [hpIntel, setHpIntel] = useState<HighPriorityIntelItem[]>([]);
   const [movementIntel, setMovementIntel] = useState<MovementIntelResponse | null>(null);
   // Seeded beat + metrics so first paint never waits on cold intel APIs.
@@ -142,8 +154,10 @@ export function HomePremiumPage(): React.ReactElement {
     try {
       const year = ACTIVE_RECRUITING_CLASS_YEAR;
       // APIs that already warm-poll internally — do not nest another warm layer.
-      const [hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets] =
+      const [hubTickerLive, hubBundle, intel, movement, beat, recruitingBoard, fcHome, hpTargets] =
         await Promise.all([
+          // Dedicated ticker — lighter than full bundle; keeps NOW live without Codemagic.
+          fetchWithWarmPoll(() => fetchRecruitingHubTicker(year), poll).catch(() => []),
           fetchWithWarmPoll(() => fetchRecruitingHubBundle(year), poll).catch(() => null),
           fetchHighPriorityIntel().catch(() => null),
           fetchMovementIntel().catch(() => null),
@@ -154,7 +168,10 @@ export function HomePremiumPage(): React.ReactElement {
         ]);
       // Cold API miss must NOT wipe build-time seeds — first-open chill was clearing
       // metrics/beat to null/[] and looking broken until a later warm revisit.
-      if (hubBundle?.ticker?.length) setHubTicker(hubBundle.ticker);
+      const nextTicker =
+        (Array.isArray(hubTickerLive) && hubTickerLive.length && hubTickerLive) ||
+        (hubBundle?.ticker?.length ? hubBundle.ticker : null);
+      if (nextTicker?.length) setHubTicker(nextTicker);
       if (Array.isArray(intel) && intel.length) setHpIntel(intel);
       if (movement) setMovementIntel(movement);
       // Keep seeded real writers if live beat is empty or brand-only (@gatorvault).
@@ -221,18 +238,19 @@ export function HomePremiumPage(): React.ReactElement {
     [highPriority]
   );
 
-  const pulseHeadline = useMemo(
-    () =>
-      buildHomePulseHeadline({
-        hubTicker,
-        hpIntel,
-        movement: movementIntel,
-        flipWatch,
-        visitRecap,
-        movementNarratives,
-      }),
+  const pulseInput = useMemo(
+    () => ({
+      hubTicker,
+      hpIntel,
+      movement: movementIntel,
+      flipWatch,
+      visitRecap,
+      movementNarratives,
+    }),
     [hubTicker, hpIntel, movementIntel, flipWatch, visitRecap, movementNarratives]
   );
+  const pulseStories = useMemo(() => buildHomePulseStories(pulseInput, 6), [pulseInput]);
+  const pulseHeadline = useMemo(() => buildHomePulseHeadline(pulseInput), [pulseInput]);
   const gameDay = useMemo(() => buildGameDayView(), []);
 
   const futureCastTargets = useMemo(
@@ -246,6 +264,7 @@ export function HomePremiumPage(): React.ReactElement {
     <div className="home-wow-page" data-testid="vault-home-premium">
       <HomeCommandCenter
         pulseHeadline={pulseHeadline}
+        pulseStories={pulseStories}
         gameDay={gameDay}
         futureCastTargets={futureCastTargets}
         beatPosts={beatPosts}
