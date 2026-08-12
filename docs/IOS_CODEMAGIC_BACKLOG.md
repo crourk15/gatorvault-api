@@ -46,7 +46,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-08-12 | Priority chase board: kill On3 RPM / snapshot-delta / Updated jargon under title | `ClassTargetsPage.tsx` in binary | pending |
+| 2026-08-12 | Priority chase board: kill On3 RPM / snapshot-delta / Updated jargon under title | `ClassTargetsPage.tsx` in binary | #419 + bake |
 | 2026-08-05 | Recruiting commit cards: remove orange **Vault Eval** CSS label (untitled brief) | `EliteCommitCard.tsx` + CSS in binary | #326 |
 | 2026-08-05 | Recruiting commit cards: remove Vault Comp / Vault Projection slots from card JSX (profile-only) | `EliteCommitCard.tsx` in binary (API already nulls fields) | pending |
 | 2026-08-05 | Profile route: prefetch full-profile in parallel with resolve | `usePlayerProfileRoute.ts` in binary | pending |

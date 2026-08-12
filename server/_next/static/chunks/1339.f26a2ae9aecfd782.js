@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[1339],{81339:function(e,n,t){t.d(n,{fetchNilEliteBundle:function(){return u}});var i=t(16765);async function u(){return(0,i.snapshotLiveFetch)("/api/nil/elite")}}}]);
