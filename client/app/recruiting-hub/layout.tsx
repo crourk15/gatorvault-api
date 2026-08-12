@@ -2,6 +2,7 @@ import React from 'react';
 import { VaultShell } from '@/components/vault/VaultShell';
 import { VaultErrorBoundary } from '@/components/vault/VaultErrorBoundary';
 import '@/lib/vault-shell.css';
+import '@/lib/vault-chase-card.css';
 import '@/lib/vault-home.css';
 import '@/lib/vault-recruiting-hub.css';
 import '@/styles/recruiting-hub-globals.css';

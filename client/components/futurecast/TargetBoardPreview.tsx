@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
-import { fromHighPriorityTarget, resolveCardVariant } from '@/lib/recruiting-card-adapters';
-import { fetchHighPriorityTargets } from '@/lib/futurecast-high-priority-api';
+import { VaultChaseCard } from '@/components/futurecast/VaultChaseCard';
+import { highPriorityToLabTarget } from '@/components/futurecast/lab/fc-lab-types';
+import {
+  fetchHighPriorityTargets,
+  type HighPriorityPlayer,
+} from '@/lib/futurecast-high-priority-api';
 import { RECRUITING_TAB_PATHS } from '@/lib/vault-route-map';
-import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 
 export interface TargetBoardPreviewProps {
   classYear?: number;
@@ -15,9 +17,8 @@ export interface TargetBoardPreviewProps {
 }
 
 /**
- * Home "2028 UF Targets to watch" — top of the chase board (high-priority),
- * not the full underclassmen census sorted by raw UF% (that surface leaked
- * soft-promoted / residual-poison rows like Trace Hawkins @ 99%).
+ * Home "2028 UF Targets to watch" - chase-card v12 surface
+ * (Current Class chrome + Why we chase), top of the priority board.
  */
 export function TargetBoardPreview({
   classYear = 2028,
@@ -28,7 +29,7 @@ export function TargetBoardPreview({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [boardCount, setBoardCount] = useState(0);
-  const [players, setPlayers] = useState<RecruitingBoardPlayer[]>([]);
+  const [players, setPlayers] = useState<HighPriorityPlayer[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -40,7 +41,7 @@ export function TargetBoardPreview({
         const priority = await fetchHighPriorityTargets(classYear);
         if (cancelled) return;
         const ranked = priority.players ?? [];
-        setPlayers(ranked.slice(0, limit).map(fromHighPriorityTarget));
+        setPlayers(ranked.slice(0, limit));
         setBoardCount(priority.count ?? ranked.length);
       } catch (err) {
         if (cancelled) return;
@@ -70,12 +71,14 @@ export function TargetBoardPreview({
 
   return (
     <>
-      <div className="fc-home-card-grid gv-rb-grid" data-testid="target-board-preview">
-        {players.map((player) => (
-          <ClassicRecruitCard
+      <div className="gv-chase-card-grid" data-testid="target-board-preview">
+        {players.map((player, idx) => (
+          <VaultChaseCard
             key={player.slug}
-            player={player}
-            variant={resolveCardVariant(player)}
+            player={highPriorityToLabTarget(player)}
+            rank={idx + 1}
+            showRace={idx === 0}
+            profileContext="recruiting"
           />
         ))}
       </div>
@@ -89,8 +92,8 @@ export function TargetBoardPreview({
           <span className="home-targets-board-cta__title">{footerLabel}</span>
           <span className="home-targets-board-cta__meta">
             {boardCount > 0
-              ? `${boardCount} ranked targets · likelihood + fit`
-              : 'Ranked by likelihood + fit'}
+              ? `${boardCount} ranked targets · why we chase`
+              : 'Ranked by chase heat + fit'}
           </span>
         </span>
         <span className="home-targets-board-cta__chevron" aria-hidden="true">

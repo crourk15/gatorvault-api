@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { buildChaseWhy, chaseFightLine, chaseHeatLabel } from './chase-priority';
+import {
+  buildChaseWhy,
+  buildChaseWhyBrief,
+  chaseFightLine,
+  chaseHeatLabel,
+} from './chase-priority';
 import type { FcLabTarget } from './fc-lab-types';
 
 function target(
@@ -25,7 +30,7 @@ function target(
 
 test('chase heat formats priority score', () => {
   assert.equal(chaseHeatLabel(72.4), '72');
-  assert.equal(chaseHeatLabel(null), '—');
+  assert.equal(chaseHeatLabel(null), '-');
 });
 
 test('buildChaseWhy prefers staff heat + thin room over odds alone', () => {
@@ -70,4 +75,29 @@ test('chaseFightLine includes top rival', () => {
     competingSchools: [{ name: 'Georgia', pct: 40 }],
   });
   assert.match(chaseFightLine(p), /Georgia|UGA/i);
+});
+
+test('buildChaseWhyBrief is a chase reason, not a trait blurb', () => {
+  const p = target({
+    slug: 'tristian-henderson',
+    name: 'Tristian Henderson',
+    position: 'EDGE',
+    school: 'Pine Forest (Pensacola, FL)',
+    ufProbability: 28,
+    fitScore: 76,
+    priorityScore: 62,
+    hotLanes: {
+      positionalNeed: 88,
+      mustGetFit: 70,
+      staffHeat: 40,
+      geoPipeline: 90,
+      marketPressure: 50,
+    },
+    hotBadges: { inState: true },
+    competingSchools: [{ name: 'Georgia Tech', pct: 27 }],
+    notePreview: 'Henderson fits a bend-and-burst EDGE with first-step burst.',
+  });
+  const brief = buildChaseWhyBrief(p);
+  assert.match(brief, /need|fit|fight|pipeline|chase/i);
+  assert.doesNotMatch(brief, /first-step|bend-and-burst/i);
 });

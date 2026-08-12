@@ -62,6 +62,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-10 | Team depth chart reads live `/api/roster/depth-chart` (camp updates without rebuild after this bake) | `team-hub-api`, `depth-chart-api`, Vault/Team depth pages in binary — **content** stays API/data after ship | pending |
 | 2026-08-10 | FutureCast Lab accuracy: credible-rival Who commits next scoring + Early Discovery load hardening | `competing-schools.ts`, `FutureCastLeadingPanel`, `EarlyDiscoveryPreview` in binary (HP movement/API also live) | pending |
 | 2026-08-11 | Recruiting Footprint Class 2027/2028 tabs: fall back to year bundle when `/hub/footprint` soft-misses | `recruiting-hub-elite-api.ts` + `RecruitingFootprintMap` in binary (API footprint seed from bundle also live) | pending |
+| 2026-08-12 | 2028 chase cards v12: Current Class chrome + Why we chase (home Targets, Lab Priority chase, HP board) | `VaultChaseCard`, `TargetBoardPreview`, `HighPriorityTargetCard`, `FutureCastChaseCard` + CSS in binary | pending |
 
 ---
 
