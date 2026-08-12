@@ -1173,7 +1173,11 @@ function scheduleHubBootPipeline() {
         console.log('[recruiting-hub] boot priority-lite warm complete', meta?.warmKeyCount);
         // Cheap Lab elite: prime HP from bundled/durable seed (no heavy rebuild).
         try {
-          const yearsToPrime = parseWarmYears(process.env.HUB_SPACED_WARM_YEARS, [2028]);
+          // Always include Closing Class 2027 — Top UF Targets / Flip Watch must
+          // paint from durable seed even when spaced warm is Discovery-only.
+          const yearsToPrime = [
+            ...new Set([2027, ...parseWarmYears(process.env.HUB_SPACED_WARM_YEARS, [2028])]),
+          ];
           for (const y of yearsToPrime) {
             if (primeHpFromDisk(y)) {
               console.log('[recruiting-hub] primed Lab HP from seed', y);

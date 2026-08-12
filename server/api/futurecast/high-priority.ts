@@ -34,6 +34,7 @@ import {
   loadHighPriorityCached,
   primeFuturecastCache,
   sanitizeHighPriorityStarsPayload,
+  writeHighPriorityRuntime,
 } from './response-cache';
 
 const require = createRequire(import.meta.url);
@@ -45,6 +46,7 @@ const { resolveUfProbability, loadUfPctPredictorsBySlug } = require('../../lib/u
 const { buildFlipWatchRows } = require('../../lib/flip-watch-utils');
 const intelStore = require('../../lib/recruiting-intel-store');
 const {
+  ALLOWLIST_2027,
   ALLOWLIST_2028,
   FLIP_WATCH_2027,
   FLIP_WATCH_COMMITS_2027,
@@ -53,6 +55,163 @@ const {
 const { loadUnderclassmenBoardPlayers } = require('../../lib/underclassmen-intel');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 const TARGET_BOARD_SEED_PATH = path.join(__dirname, '../../data/recruiting/2027-target-board.json');
+
+/**
+ * Sync Closing Class HP soft plate — Tier B GET must never return empty deferred_rebuild
+ * for 2027. Lab Top UF Targets / Flip Watch stay API-live (no Codemagic) from allowlist +
+ * 2027-target-board.json; full odds/visits refill via warm/cron.
+ */
+export function softClosingClassHighPriorityFromSeed(classYear = FUTURECAST_CLASS_YEAR) {
+  const year = Number(classYear) || FUTURECAST_CLASS_YEAR;
+  const recruitingBySlug = loadRecruitingBySlug();
+  const targetSeedBySlug = loadTargetSeedBySlug();
+  const allowSlugs = (ALLOWLIST_2027 as string[]).map((s) => String(s).toLowerCase());
+
+  const seedRows: TargetBoardEntry[] = [];
+  for (const slug of allowSlugs) {
+    const seed = targetSeedBySlug.get(slug);
+    const recruiting = recruitingBySlug.get(slug);
+    const name =
+      seed?.name ||
+      recruiting?.name ||
+      (CANONICAL_TARGET_NAMES as Record<string, string>)[slug] ||
+      slug;
+    seedRows.push({
+      slug,
+      name,
+      pos: seed?.pos || recruiting?.pos || undefined,
+      school: seed?.school || recruiting?.school || undefined,
+      htWt: seed?.htWt || recruiting?.htWt || undefined,
+      stars: seed?.stars ?? recruiting?.stars ?? undefined,
+      rating: seed?.rating ?? recruiting?.rating ?? undefined,
+      natlRank: seed?.natlRank ?? recruiting?.natlRank ?? undefined,
+      posRank: seed?.posRank ?? recruiting?.posRank ?? undefined,
+      stateRank: seed?.stateRank ?? recruiting?.stateRank ?? undefined,
+      headliner: Boolean(seed?.headliner || recruiting?.headliner),
+      committedTo: resolveCommittedTo(
+        { slug, name, committedTo: seed?.committedTo ?? null },
+        recruiting,
+        seed
+      ),
+      skinny: seed?.skinny || recruiting?.skinny || undefined,
+      ufProbability: recruiting?.ufProbability ?? seed?.ufProbability,
+      classYear: year,
+    });
+  }
+
+  const openHunts = filterBlockedRecruits(seedRows).filter((t: TargetBoardEntry) =>
+    isActiveUfTarget(t)
+  );
+
+  const players: HighPriorityPlayer[] = openHunts.map((target) => {
+    const recruiting = recruitingBySlug.get(target.slug);
+    const storeRpm = firstPositivePct(recruiting?.ufRpmPct, loadAllowlistRpmPct(target.slug));
+    const resolvedUf = resolveUfProbability({
+      modelPct: null,
+      storePct: firstPositivePct(target.ufProbability, storeRpm, recruiting?.ufProbability),
+      predictors: [],
+      stars: target.stars ?? null,
+      headliner: Boolean(target.headliner),
+    });
+    let competingSchools: Array<{ name: string; pct: number }> = [];
+    try {
+      const { competingSchoolsFromRecruitingRecord } = require('../../lib/underclassmen-intel');
+      competingSchools = competingSchoolsFromRecruitingRecord(
+        recruiting as Record<string, unknown> | null | undefined
+      );
+    } catch {
+      competingSchools = [];
+    }
+    const fitScore =
+      recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
+        ? Math.round(Number(recruiting.fitScore))
+        : 0;
+    return {
+      id: target.slug,
+      slug: target.slug,
+      name: target.name,
+      classYear: year,
+      position: target.pos ?? recruiting?.pos ?? '—',
+      school: target.school ?? recruiting?.school ?? null,
+      htWt: target.htWt ?? null,
+      stars: (() => {
+        const n = Number(target.stars ?? 0);
+        return Number.isFinite(n) && n >= 1 ? Math.round(n) : null;
+      })(),
+      headliner: Boolean(target.headliner),
+      committedTo: target.committedTo ?? null,
+      compositeScore: Number(target.rating ?? recruiting?.rating ?? 0) || 0,
+      nationalRank: target.natlRank ?? recruiting?.natlRank ?? null,
+      positionRank: target.posRank ?? recruiting?.posRank ?? null,
+      stateRank: target.stateRank ?? recruiting?.stateRank ?? null,
+      rating: Number(target.rating ?? recruiting?.rating ?? 0) || 0,
+      natlRank: target.natlRank ?? recruiting?.natlRank ?? null,
+      posRank: target.posRank ?? recruiting?.posRank ?? null,
+      ufProbability: resolvedUf.value,
+      ufProbabilitySource: resolvedUf.source,
+      ufProbabilityLabel: resolvedUf.label,
+      ufProbabilityLowConfidence: resolvedUf.lowConfidence,
+      movementDelta: 0,
+      delta7d: 0,
+      fitScore,
+      staffConfidence: 0,
+      priorityScore: Math.max(40, fitScore || 50),
+      insiderNotes: null,
+      notePreview: null,
+      skinny: target.skinny ?? null,
+      visitHistory: [],
+      ufOvStatus: null,
+      visitStart: null,
+      visitEnd: null,
+      trendHistory: [],
+      predictors: storeRpm != null ? [{ name: 'On3 RPM', score: storeRpm }] : [],
+      competingSchools,
+      ufRpmPct: storeRpm,
+    } as HighPriorityPlayer;
+  });
+
+  const flipPool = seedRows.map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    pos: p.pos,
+    position: p.pos,
+    stars: p.stars,
+    committedTo: p.committedTo,
+  }));
+  const commitBySlug = new Map<string, string>();
+  for (const [slug, school] of Object.entries(FLIP_WATCH_COMMITS_2027 || {})) {
+    if (school) commitBySlug.set(String(slug).toLowerCase(), String(school));
+  }
+  for (const row of seedRows) {
+    if (row.committedTo) commitBySlug.set(row.slug.toLowerCase(), row.committedTo);
+  }
+  const flipWatch = buildFlipWatchRows(flipPool, [], {
+    curatedSlugs: FLIP_WATCH_2027,
+    commitDefaults: FLIP_WATCH_COMMITS_2027,
+    displayNames: CANONICAL_TARGET_NAMES,
+    commitBySlug,
+    limit: FLIP_WATCH_2027.length,
+  });
+
+  const lastUpdated = new Date().toISOString();
+  return sanitizeHighPriorityStarsPayload({
+    ok: true,
+    classYear: year,
+    count: players.length,
+    visitIntelCount: 0,
+    visitRecapCount: 0,
+    flipWatchCount: flipWatch.length,
+    visitBoardSnapshot: { upcomingCount: 0, recapCount: 0 },
+    updatedAt: lastUpdated,
+    lastUpdated,
+    players,
+    visitIntel: [],
+    visitRecap: [],
+    flipWatch,
+    movementNarratives: [],
+    degraded: 'closing_seed',
+  });
+}
 
 /** Underclassmen years served by the high-priority endpoint (2027 uses legacy board pipeline). */
 export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;
@@ -955,7 +1114,20 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       res.json(primed);
       return;
     }
-    await sendCachedJson(res, cacheKey, () => buildHighPriorityPayload(classYear));
+    await sendCachedJson(res, cacheKey, () => buildHighPriorityPayload(classYear), {
+      // Closing Class: never leave Top UF Targets / Flip Watch empty on Tier B cold miss.
+      // Soft plate is allowlist + 2027-target-board (API/data — no Codemagic).
+      softOnDeferred: () => {
+        if (classYear === FUTURECAST_CLASS_YEAR) {
+          const soft = softClosingClassHighPriorityFromSeed(classYear);
+          primeFuturecastCache(cacheKey, soft);
+          writeHighPriorityRuntime(classYear, soft);
+          return soft;
+        }
+        return loadHighPriorityCached(classYear);
+      },
+      backgroundBuildOnSoft: false,
+    });
   } catch (err) {
     handlePredictionsApiError(res, err);
   }

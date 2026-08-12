@@ -410,15 +410,21 @@ export function writeMasterBoardRuntime(value: unknown): boolean {
 
 /** Soft board from HP seed when master disk is cold — never return empty building to iOS. */
 export function softMasterBoardFromHighPriority(): unknown | null {
-  const hp = loadHighPriorityCached(2028) as
-    | {
-        players?: Array<Record<string, unknown>>;
-        updatedAt?: string;
-        lastUpdated?: string;
-      }
-    | null;
-  const rows = Array.isArray(hp?.players) ? hp.players : [];
+  // Merge Closing (2027) + Discovery (2028) so Lab year-scoped panels never miss
+  // open hunts like Tranard when master-board is cold.
+  type HpSoft = {
+    players?: Array<Record<string, unknown>>;
+    updatedAt?: string;
+    lastUpdated?: string;
+  } | null;
+  const hp27 = loadHighPriorityCached(2027) as HpSoft;
+  const hp28 = loadHighPriorityCached(2028) as HpSoft;
+  const rows = [
+    ...(Array.isArray(hp27?.players) ? hp27!.players! : []),
+    ...(Array.isArray(hp28?.players) ? hp28!.players! : []),
+  ];
   if (!rows.length) return null;
+  const hp = hp28?.players?.length ? hp28 : hp27;
 
   const players = rows.map((p, idx) => {
     const uf =
@@ -429,7 +435,7 @@ export function softMasterBoardFromHighPriority(): unknown | null {
       name: String(p.name || p.fullName || p.slug || 'Player'),
       position: p.position ?? null,
       school: p.school ?? p.highSchool ?? null,
-      classYear: Number(p.classYear) || 2028,
+      classYear: Number(p.classYear) || Number(p.class) || 2028,
       ufConfidence: uf,
       ufProbability: uf,
       ufRpmPct: p.ufRpmPct ?? null,
