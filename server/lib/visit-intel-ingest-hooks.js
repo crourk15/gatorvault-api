@@ -27,12 +27,18 @@ function writeState(state) {
   fs.writeFileSync(STATE_PATH, JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2));
 }
 
+function isOfficialVisitType(visitType) {
+  const t = String(visitType || "").toLowerCase();
+  // "unofficial_visit".includes("official") is true — must exclude UV / uv.
+  if (!t || t === "uv" || t.includes("unofficial")) return false;
+  return t.includes("official");
+}
+
 function isFloridaOfficialVisit(log) {
   if (!log?.playerSlug) return false;
   const school = String(log.school || "Florida").toLowerCase();
   if (!/florida|gators|\buf\b/.test(school)) return false;
-  const visitType = String(log.visitType || "").toLowerCase();
-  if (!visitType.includes("official")) return false;
+  if (!isOfficialVisitType(log.visitType)) return false;
   return isVerifiedVisitLogSource(log.source, log);
 }
 

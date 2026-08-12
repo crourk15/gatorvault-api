@@ -53,6 +53,29 @@ describe('visit-intel-ingest-hooks', () => {
     );
   });
 
+  it('isFloridaOfficialVisit rejects unofficial / uv (includes("official") trap)', () => {
+    assert.equal(
+      isFloridaOfficialVisit({
+        playerSlug: 'test-player',
+        school: 'Florida',
+        visitType: 'unofficial_visit',
+        source: 'on3',
+        date: '2099-07-01',
+      }),
+      false
+    );
+    assert.equal(
+      isFloridaOfficialVisit({
+        playerSlug: 'test-player',
+        school: 'Florida',
+        visitType: 'uv',
+        source: 'manual',
+        date: '2099-07-01',
+      }),
+      false
+    );
+  });
+
   it('handleNewVerifiedVisitLogs dryRun skips queue', async () => {
     const result = await handleNewVerifiedVisitLogs(
       [
