@@ -142,7 +142,7 @@ export function VaultAlertsPage(): React.ReactElement {
     if (wantsEmail && prefs.types.visit) {
       void syncEmailAlertPrefs({
         method: prefs.method,
-        freq: prefs.freq,
+        freq: prefs.freq || 'instant',
         visit: true,
         followPlayers: prefs.followPlayers,
       }).then((out) => {

@@ -27,12 +27,7 @@ function writeState(state) {
   fs.writeFileSync(STATE_PATH, JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2));
 }
 
-function isOfficialVisitType(visitType) {
-  const t = String(visitType || "").toLowerCase();
-  // "unofficial_visit".includes("official") is true — must exclude UV / uv.
-  if (!t || t === "uv" || t.includes("unofficial")) return false;
-  return t.includes("official");
-}
+const { isOfficialVisitType } = require("./visit-intel-utils");
 
 function isFloridaOfficialVisit(log) {
   if (!log?.playerSlug) return false;

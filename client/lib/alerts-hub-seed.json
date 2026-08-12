@@ -1,84 +1,7 @@
 {
-  "generatedAt": "2026-08-12T01:33:16.440Z",
+  "generatedAt": "2026-08-12T01:42:29.747Z",
   "source": "local-board-intel-sync",
   "alerts": [
-    {
-      "id": "recap-cyion-smith-2026-06-20",
-      "playerId": "cyion-smith",
-      "playerSlug": "cyion-smith",
-      "playerName": "Cyion Smith",
-      "type": "visit_recap",
-      "message": "Cyion Smith — verified UF OV completed (2026-06-20–2026-06-22)",
-      "createdAt": "2026-06-22",
-      "seen": false,
-      "category": "Visit"
-    },
-    {
-      "id": "recap-man-robinson-2026-06-20",
-      "playerId": "man-robinson",
-      "playerSlug": "man-robinson",
-      "playerName": "Man Robinson",
-      "type": "visit_recap",
-      "message": "Man Robinson — verified UF OV completed (2026-06-20–2026-06-22)",
-      "createdAt": "2026-06-22",
-      "seen": false,
-      "category": "Visit"
-    },
-    {
-      "id": "recap-dominick-harris-payne-2026-06-20",
-      "playerId": "dominick-harris-payne",
-      "playerSlug": "dominick-harris-payne",
-      "playerName": "Dominick Harris-Payne",
-      "type": "visit_recap",
-      "message": "Dominick Harris-Payne — verified UF OV completed (2026-06-20–2026-06-22)",
-      "createdAt": "2026-06-22",
-      "seen": false,
-      "category": "Visit"
-    },
-    {
-      "id": "recap-asher-ghioto-2026-06-20",
-      "playerId": "asher-ghioto",
-      "playerSlug": "asher-ghioto",
-      "playerName": "Asher Ghioto",
-      "type": "visit_recap",
-      "message": "Asher Ghioto — verified UF OV completed (2026-06-20–2026-06-22)",
-      "createdAt": "2026-06-22",
-      "seen": false,
-      "category": "Visit"
-    },
-    {
-      "id": "recap-ryan-drakeford-2026-06-19",
-      "playerId": "ryan-drakeford",
-      "playerSlug": "ryan-drakeford",
-      "playerName": "Ryan Drakeford",
-      "type": "visit_recap",
-      "message": "Ryan Drakeford — verified UF OV completed (2026-06-19–2026-06-21)",
-      "createdAt": "2026-06-21",
-      "seen": false,
-      "category": "Visit"
-    },
-    {
-      "id": "recap-nikolay-petrushev-2026-06-19",
-      "playerId": "nikolay-petrushev",
-      "playerSlug": "nikolay-petrushev",
-      "playerName": "Nikolay Petrushev",
-      "type": "visit_recap",
-      "message": "Nikolay Petrushev — verified UF OV completed (2026-06-19–2026-06-21)",
-      "createdAt": "2026-06-21",
-      "seen": false,
-      "category": "Visit"
-    },
-    {
-      "id": "flip-keldrid-ben",
-      "playerId": "keldrid-ben",
-      "playerSlug": "keldrid-ben",
-      "playerName": "Keldrid Ben",
-      "type": "flip_watch",
-      "message": "Keldrid Ben (Oklahoma) — Flip score — · UF TBD",
-      "createdAt": "2026-04-06",
-      "seen": false,
-      "category": "Flip Watch"
-    },
     {
       "id": "flip-ace-alston",
       "playerId": "ace-alston",
@@ -86,29 +9,7 @@
       "playerName": "Ace Alston",
       "type": "flip_watch",
       "message": "Ace Alston (Notre) — Flip score — · UF TBD",
-      "createdAt": "2026-03-29",
-      "seen": false,
-      "category": "Flip Watch"
-    },
-    {
-      "id": "flip-andre-hyppolite",
-      "playerId": "andre-hyppolite",
-      "playerSlug": "andre-hyppolite",
-      "playerName": "Andre Hyppolite",
-      "type": "flip_watch",
-      "message": "Andre Hyppolite (Miami) — Flip score — · UF TBD",
-      "createdAt": "2026-03-28",
-      "seen": false,
-      "category": "Flip Watch"
-    },
-    {
-      "id": "flip-easton-royal",
-      "playerId": "easton-royal",
-      "playerSlug": "easton-royal",
-      "playerName": "Easton Royal",
-      "type": "flip_watch",
-      "message": "Easton Royal (Texas) — Flip score — · UF TBD",
-      "createdAt": "2026-03-14",
+      "createdAt": "2026-08-12T01:42:29.734Z",
       "seen": false,
       "category": "Flip Watch"
     },
@@ -119,9 +20,86 @@
       "playerName": "Jalen Brewster",
       "type": "flip_watch",
       "message": "Jalen Brewster (Texas) — Flip score — · UF TBD",
-      "createdAt": "2026-03-08",
+      "createdAt": "2026-06-13",
       "seen": false,
       "category": "Flip Watch"
+    },
+    {
+      "id": "flip-easton-royal",
+      "playerId": "easton-royal",
+      "playerSlug": "easton-royal",
+      "playerName": "Easton Royal",
+      "type": "flip_watch",
+      "message": "Easton Royal (Texas) — Flip score — · UF TBD",
+      "createdAt": "2026-06-13",
+      "seen": false,
+      "category": "Flip Watch"
+    },
+    {
+      "id": "recap-easton-royal-2026-06-11",
+      "playerId": "easton-royal",
+      "playerSlug": "easton-royal",
+      "playerName": "Easton Royal",
+      "type": "visit_recap",
+      "message": "Easton Royal — verified UF OV completed (2026-06-11–2026-06-13)",
+      "createdAt": "2026-06-13",
+      "seen": false,
+      "category": "Visit"
+    },
+    {
+      "id": "recap-jalen-brewster-2026-06-11",
+      "playerId": "jalen-brewster",
+      "playerSlug": "jalen-brewster",
+      "playerName": "Jalen Brewster",
+      "type": "visit_recap",
+      "message": "Jalen Brewster — verified UF OV completed (2026-06-11–2026-06-13)",
+      "createdAt": "2026-06-13",
+      "seen": false,
+      "category": "Visit"
+    },
+    {
+      "id": "flip-andre-hyppolite",
+      "playerId": "andre-hyppolite",
+      "playerSlug": "andre-hyppolite",
+      "playerName": "Andre Hyppolite",
+      "type": "flip_watch",
+      "message": "Andre Hyppolite (Miami) — Flip score — · UF TBD",
+      "createdAt": "2026-06-06",
+      "seen": false,
+      "category": "Flip Watch"
+    },
+    {
+      "id": "recap-andre-hyppolite-2026-06-04",
+      "playerId": "andre-hyppolite",
+      "playerSlug": "andre-hyppolite",
+      "playerName": "Andre Hyppolite",
+      "type": "visit_recap",
+      "message": "Andre Hyppolite — verified UF OV completed (2026-06-04–2026-06-06)",
+      "createdAt": "2026-06-06",
+      "seen": false,
+      "category": "Visit"
+    },
+    {
+      "id": "flip-keldrid-ben",
+      "playerId": "keldrid-ben",
+      "playerSlug": "keldrid-ben",
+      "playerName": "Keldrid Ben",
+      "type": "flip_watch",
+      "message": "Keldrid Ben (Oklahoma) — Flip score — · UF TBD",
+      "createdAt": "2026-05-30",
+      "seen": false,
+      "category": "Flip Watch"
+    },
+    {
+      "id": "recap-keldrid-ben-2026-05-28",
+      "playerId": "keldrid-ben",
+      "playerSlug": "keldrid-ben",
+      "playerName": "Keldrid Ben",
+      "type": "visit_recap",
+      "message": "Keldrid Ben — verified UF OV completed (2026-05-28–2026-05-30)",
+      "createdAt": "2026-05-30",
+      "seen": false,
+      "category": "Visit"
     }
   ]
 }

@@ -16,6 +16,13 @@ function isVerifiedVisitLogSource(source, entry = null) {
   return false;
 }
 
+/** True official OV only — "unofficial_visit".includes("official") must not win. */
+function isOfficialVisitType(visitType) {
+  const t = String(visitType || '').toLowerCase();
+  if (!t || t === 'uv' || t.includes('unofficial')) return false;
+  return t.includes('official') || t === 'ov_change' || t === 'ov';
+}
+
 function parseVisitLogDateYmd(entry) {
   if (!entry) return null;
   const raw = entry.date || entry.reportedAt || entry.timestamp;
@@ -38,7 +45,7 @@ function getVerifiedFloridaVisitWindow(entry) {
   if (!entry || !isVerifiedVisitLogSource(entry.source, entry)) return null;
   if (!isFloridaVisitLog(entry)) return null;
   const visitType = String(entry.visitType || entry.eventType || '').toLowerCase();
-  if (!visitType.includes('official')) return null;
+  if (!isOfficialVisitType(visitType)) return null;
 
   const visitStart = parseVisitLogDateYmd(entry);
   if (!visitStart) return null;
@@ -248,6 +255,7 @@ module.exports = {
   todayYmd,
   isVerifiedVisitLogSource,
   parseVisitLogDateYmd,
+  isOfficialVisitType,
   getVerifiedFloridaVisitWindow,
   effectiveVisitEnd,
   isPastVisitWindow,

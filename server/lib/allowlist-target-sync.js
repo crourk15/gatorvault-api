@@ -254,9 +254,10 @@ function profilePatchFromOn3(profile, classYear) {
 
 /** Write offer/visit logs so Player Intelligence gaps clear on Detectives refresh. */
 async function persistOn3OfferVisitLogs(slug, playerName, profilePatch, profile) {
-  if (!slug || !profilePatch) return { offers: 0, visits: 0 };
+  if (!slug || !profilePatch) return { offers: 0, visits: 0, createdVisitLogs: [] };
   let offers = 0;
   let visits = 0;
+  const createdVisitLogs = [];
   try {
     const offerLogStore = require('./recruiting-offer-log-store');
     for (const offer of profilePatch.offers || []) {
@@ -277,6 +278,7 @@ async function persistOn3OfferVisitLogs(slug, playerName, profilePatch, profile)
   }
   try {
     const visitLogStore = require('./recruiting-visit-log-store');
+    const { isOfficialVisitType } = require('./visit-intel-utils');
     for (const visit of profilePatch.visits || []) {
       const logResult = await visitLogStore.appendVisitLog({
         playerSlug: slug,
@@ -288,12 +290,33 @@ async function persistOn3OfferVisitLogs(slug, playerName, profilePatch, profile)
         source: 'on3',
         reportedAt: profile?.fetchedAt || new Date().toISOString(),
       });
-      if (logResult?.created) visits += 1;
+      if (logResult?.created) {
+        visits += 1;
+        if (logResult.item && isOfficialVisitType(logResult.item.visitType)) {
+          createdVisitLogs.push(logResult.item);
+        }
+      }
     }
   } catch {
     /* optional */
   }
-  return { offers, visits };
+
+  let visitAlerts = null;
+  if (createdVisitLogs.length) {
+    try {
+      const { handleNewVerifiedVisitLogs } = require('./visit-intel-ingest-hooks');
+      visitAlerts = await handleNewVerifiedVisitLogs(createdVisitLogs);
+    } catch (err) {
+      visitAlerts = {
+        processed: 0,
+        queued: 0,
+        error: err instanceof Error ? err.message : String(err),
+      };
+      console.warn('[allowlist-target-sync] visit alert fanout failed:', visitAlerts.error);
+    }
+  }
+
+  return { offers, visits, createdVisitLogs, visitAlerts };
 }
 
 function localJsonPlayer(slug) {
