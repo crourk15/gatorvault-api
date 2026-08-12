@@ -19,7 +19,7 @@ import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
 import { buildSeedAlerts } from '@/lib/alerts-hub-seed';
 import { buildFanAlertCards, formatAlertTime } from '@/lib/alert-fan-copy';
 import { sendTestPushAlert, syncAlertPushPrefs, unsubscribeVisitPush } from '@/lib/push-alerts-api';
-import { syncEmailAlertPrefs } from '@/lib/alert-email-api';
+import { sendVisitAlertToMe, syncEmailAlertPrefs } from '@/lib/alert-email-api';
 import { isNativeApp } from '@/lib/api-base';
 import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
@@ -369,26 +369,41 @@ export function VaultAlertsPage(): React.ReactElement {
               disabled={testingPush}
               onClick={() => {
                 setTestingPush(true);
-                void sendTestPushAlert('confirm', { force: true }).then((out) => {
+                void (async () => {
+                  // Register email prefs + fire Brysen Wright OV to this account, then confirm push.
+                  await syncEmailAlertPrefs({
+                    method: prefs.method === 'push' ? 'both' : prefs.method,
+                    freq: prefs.freq || 'instant',
+                    visit: true,
+                    followPlayers: prefs.followPlayers,
+                  });
+                  const visitOut = await sendVisitAlertToMe('brysen-wright');
+                  const pushOut = await sendTestPushAlert('visit', { force: true });
                   setTestingPush(false);
-                  if (out.ok) {
+                  if (visitOut.emailSent || (visitOut.pushSent || 0) > 0 || pushOut.ok) {
+                    const bits: string[] = [];
+                    if (visitOut.emailSent) bits.push('email');
+                    if ((visitOut.pushSent || 0) > 0 || pushOut.ok) bits.push('lock screen');
                     setPushStatus(
-                      nativeShell
-                        ? 'Test alert sent — check your lock screen.'
-                        : 'Test alert sent — check browser notifications.'
+                      `Brysen Wright OV alert sent (${bits.join(' + ') || 'queued'}). Check phone + inbox.`
                     );
-                  } else if (out.reason === 'no_devices') {
-                    setPushStatus('Save Preferences first so this device can register for push.');
-                  } else if (out.reason === 'sign_in') {
+                  } else if (visitOut.reason === 'no_devices' || pushOut.reason === 'no_devices') {
+                    setPushStatus(
+                      visitOut.emailSent
+                        ? 'Email sent. For lock screen: Save Preferences, allow notifications, then retry.'
+                        : 'Save Preferences first so this device can register for push.'
+                    );
+                  } else if (visitOut.reason === 'sign_in' || pushOut.reason === 'sign_in') {
                     setPushStatus('Sign in to send a test alert.');
-                  } else if (out.reason === 'membership') {
-                    setPushStatus('Active membership required for push alerts.');
-                  } else if (out.reason === 'rate_limited') {
-                    setPushStatus('Test alert already sent — wait a minute and try again.');
+                  } else if (visitOut.reason === 'membership' || pushOut.reason === 'membership') {
+                    setPushStatus('Active membership required for alerts.');
                   } else {
-                    setPushStatus('Could not send test alert. Try Save Preferences, then retry.');
+                    setPushStatus(
+                      visitOut.hint ||
+                        'Could not send. Save Preferences (Both + Instant), then tap Send test alert again.'
+                    );
                   }
-                });
+                })();
               }}
             >
               {testingPush ? 'Sending test…' : 'Send test alert'}
