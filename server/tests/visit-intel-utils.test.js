@@ -27,6 +27,23 @@ describe("visit-intel-utils", () => {
     assert.equal(snap.recapCount, 0);
   });
 
+  it("does not treat unofficial_visit as a verified OV window", () => {
+    const { getVerifiedFloridaVisitWindow, isOfficialVisitType } = require("../lib/visit-intel-utils");
+    assert.equal(isOfficialVisitType("unofficial_visit"), false);
+    assert.equal(isOfficialVisitType("uv"), false);
+    assert.equal(isOfficialVisitType("official_visit"), true);
+    assert.equal(
+      getVerifiedFloridaVisitWindow({
+        playerSlug: "uv-player",
+        source: "on3",
+        visitType: "unofficial_visit",
+        school: "Florida",
+        date: "2026-07-10",
+      }),
+      null
+    );
+  });
+
   it("builds recap rows for completed verified OVs only", () => {
     const logs = [
       { playerSlug: "done-player", playerName: "Done Player", source: "on3", visitType: "official_visit", school: "Florida", date: "2026-06-11" },

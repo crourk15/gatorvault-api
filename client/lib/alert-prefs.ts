@@ -118,7 +118,8 @@ export const ALERT_CATEGORY_META: Record<
 export const PRIMARY_ALERT_CATEGORIES: DeliverableAlertCategory[] = ['visit', 'commit', 'score'];
 
 export const DEFAULT_ALERT_PREFS: AlertPrefs = {
-  method: 'push',
+  // Both = lock-screen push + email when Visits is on (Save Preferences registers email).
+  method: 'both',
   freq: 'instant',
   types: {
     commit: true,

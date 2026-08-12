@@ -10,7 +10,14 @@ import { sendCachedJson } from './response-cache';
 import { FUTURECAST_CLASS_YEAR } from './feed-filters';
 
 const require = createRequire(import.meta.url);
-const { buildFutureCastIntelAlerts } = require('../../lib/futurecast-intel-alerts');
+const {
+  buildFutureCastIntelAlerts,
+  buildFutureCastIntelAlertsSync,
+} = require('../../lib/futurecast-intel-alerts');
+const {
+  getAllowlistSet,
+  canonicalTargetSlug,
+} = require('../../lib/recruiting-target-allowlist');
 
 type AlertRow = {
   id: string;
@@ -23,6 +30,26 @@ type AlertRow = {
   seen: boolean;
   category?: string;
 };
+
+function isGatorVaultBoardSlug(slug: string | null | undefined): boolean {
+  const key = canonicalTargetSlug(slug);
+  if (!key) return false;
+  return getAllowlistSet(2027).has(key) || getAllowlistSet(2028).has(key);
+}
+
+/** Drop off-board phantoms (e.g. Ryan Peterson) from fan Board Intel. */
+function keepBoardIntelAlert(row: AlertRow): boolean {
+  const slug = canonicalTargetSlug(row.playerSlug || row.playerId);
+  if (!slug) return true; // generic movement banners
+  if (/ryan-peterson|jalanie-george|keoni-snipes|zylen-little|josiah-taylor/i.test(slug)) {
+    return false;
+  }
+  // Named player alerts must be on the GatorVault 2027/2028 board.
+  if (row.playerName || row.playerSlug) {
+    return isGatorVaultBoardSlug(slug);
+  }
+  return true;
+}
 
 function dedupeAlerts(rows: AlertRow[]): AlertRow[] {
   const seen = new Set<string>();
@@ -91,6 +118,7 @@ async function buildFutureCastAlertsPayload() {
   }
 
   const alerts = dedupeAlerts(merged)
+    .filter(keepBoardIntelAlert)
     .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
     .slice(0, 50);
 
@@ -100,9 +128,23 @@ async function buildFutureCastAlertsPayload() {
   };
 }
 
+function softAlertsFromIntel(): { alerts: AlertRow[]; updatedAt: string; ok: true } {
+  // Sync soft path: visit/flip intel only (no movement DB). Keeps Alerts feed live
+  // while the full payload warms in the background.
+  const intel = buildFutureCastIntelAlertsSync() as AlertRow[];
+  const alerts = dedupeAlerts(intel)
+    .filter(keepBoardIntelAlert)
+    .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
+    .slice(0, 50);
+  return { ok: true, alerts, updatedAt: new Date().toISOString() };
+}
+
 export const handleGetFutureCastAlerts = asyncHandler(async (_req: Request, res: Response) => {
   try {
-    await sendCachedJson(res, 'futurecast:alerts:v1', buildFutureCastAlertsPayload);
+    await sendCachedJson(res, 'futurecast:alerts:v2-board', buildFutureCastAlertsPayload, {
+      softOnDeferred: softAlertsFromIntel,
+      backgroundBuildOnSoft: true,
+    });
   } catch (err) {
     handlePredictionsApiError(res, err);
   }

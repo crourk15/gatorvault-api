@@ -4,6 +4,7 @@
 const visitLogStore = require('./recruiting-visit-log-store');
 const offerLogStore = require('./recruiting-offer-log-store');
 const { mergeCompetitorsOnPlayer } = require('./recruiting-competitor-merge');
+const { isOfficialVisitType } = require('./visit-intel-utils');
 
 const VISIT_EVENT_TYPES = new Set([
   'home_visit',
@@ -28,24 +29,33 @@ function competitorEntriesFromIntel(enrichedIntel, source, updatedAt) {
   return entries;
 }
 
+function visitTypeForBeatEvent(eventType) {
+  const et = String(eventType || '').toLowerCase();
+  if (et === 'ov_change' || et === 'ov') return 'official_visit';
+  if (et === 'visit') return 'unofficial_visit';
+  return et;
+}
+
 async function recordBeatVisitLog(row, player, source = 'auto:beat-writer') {
   const eventType = String(row.eventType || '').toLowerCase();
   if (!VISIT_EVENT_TYPES.has(eventType)) return null;
+  if (eventType === 'visit_cancelled') return null; // cancel alerts use beat-visit-intel path
   const reportedAt = row.timestamp || row.reportedAt || new Date().toISOString();
   const school =
-    eventType === 'visit_cancelled' || eventType === 'ov_change'
-      ? row.cancelledSchool || 'Florida'
-      : 'Florida';
+    eventType === 'ov_change' ? row.cancelledSchool || 'Florida' : 'Florida';
+  const visitType = visitTypeForBeatEvent(eventType);
   return visitLogStore.appendVisitLog({
     playerSlug: player.slug,
     playerId: player.on3Id || row.on3Id,
     playerName: player.name,
     school,
-    visitType: eventType,
-    date: row.visitStart || reportedAt,
+    visitType,
+    date: row.visitStart || row.visitDates || reportedAt,
     source,
     reportedAt,
     detail: row.detail,
+    // Beat writer only reaches here after identity confirmation.
+    identityConfirmed: row.identityConfirmed !== false,
   });
 }
 
@@ -77,10 +87,30 @@ async function recordBeatCompetitorMerge(enrichedIntel, player, source = 'auto:b
   return mergeCompetitorsOnPlayer(player.slug, entries);
 }
 
+/**
+ * Write dig-deeper logs and fan out push/email for newly created verified Florida OVs.
+ */
 async function recordBeatDigDeeper(row, player, enrichedIntel, source = 'auto:beat-writer') {
-  await recordBeatVisitLog(row, player, source);
+  const visitLog = await recordBeatVisitLog(row, player, source);
   await recordBeatOfferLog(row, player, source);
   await recordBeatCompetitorMerge(enrichedIntel, player, source);
+
+  let visitAlerts = null;
+  if (visitLog?.created && visitLog.item && isOfficialVisitType(visitLog.item.visitType)) {
+    try {
+      const { handleNewVerifiedVisitLogs } = require('./visit-intel-ingest-hooks');
+      visitAlerts = await handleNewVerifiedVisitLogs([visitLog.item]);
+    } catch (err) {
+      visitAlerts = {
+        processed: 0,
+        queued: 0,
+        error: err instanceof Error ? err.message : String(err),
+      };
+      console.warn('[dig-deeper] visit alert fanout failed:', visitAlerts.error);
+    }
+  }
+
+  return { visitLog, visitAlerts };
 }
 
 module.exports = {
@@ -90,4 +120,5 @@ module.exports = {
   recordBeatOfferLog,
   recordBeatCompetitorMerge,
   recordBeatDigDeeper,
+  visitTypeForBeatEvent,
 };

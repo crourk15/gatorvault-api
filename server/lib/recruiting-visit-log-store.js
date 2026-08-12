@@ -73,9 +73,8 @@ function appendVisitLog(entry) {
     return { item: null, created: false, duplicate: false, reason: 'invalid' };
   }
 
-  const { isVerifiedVisitLogSource } = require('./visit-intel-utils');
-  const isOfficial = String(row.visitType || '').includes('official');
-  if (isOfficial && !isVerifiedVisitLogSource(row.source, entry)) {
+  const { isVerifiedVisitLogSource, isOfficialVisitType } = require('./visit-intel-utils');
+  if (isOfficialVisitType(row.visitType) && !isVerifiedVisitLogSource(row.source, entry)) {
     return { item: null, created: false, duplicate: false, reason: 'unverified_source' };
   }
 

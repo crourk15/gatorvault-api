@@ -550,7 +550,10 @@ async function syncOn3VisitOfferIntel(classYears, options = {}) {
         const player = v.player || {};
         const slug = resolvePlayerSlugFromOn3(player, byOn3Id);
         if (!slug) continue;
-        const official = v.official === true || /official/i.test(String(v.visitStatus || ''));
+        const statusRaw = String(v.visitStatus || '');
+        const official =
+          v.official === true ||
+          (/official/i.test(statusRaw) && !/unofficial/i.test(statusRaw));
         const visitType = official ? 'official_visit' : 'unofficial_visit';
         const reportedAt = new Date().toISOString();
         const logResult = await visitLogStore.appendVisitLog({

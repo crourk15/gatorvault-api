@@ -13,8 +13,10 @@ function normalizeFollowPlayers(list) {
 }
 
 function normalizePrefs(prefs = {}) {
+  // Default instant — fans expect a ping when a verified UF OV is scheduled.
+  // Weekly/daily remain available when explicitly chosen.
   const method = ["push", "email", "both"].includes(prefs.method) ? prefs.method : "email";
-  const freq = ["instant", "daily", "weekly"].includes(prefs.freq) ? prefs.freq : "weekly";
+  const freq = ["instant", "daily", "weekly"].includes(prefs.freq) ? prefs.freq : "instant";
   return {
     method,
     freq,

@@ -17,16 +17,39 @@ const intelStore = require("./recruiting-intel-store");
 
 const PREDICTOR_NAMES = { system: "FutureCast Model" };
 const FUTURECAST_CLASS_YEAR = 2027;
+const {
+  getAllowlistSet,
+  canonicalTargetSlug,
+} = require("./recruiting-target-allowlist");
 
-const TARGET_BOARD_PATH = path.join(__dirname, "../data/recruiting/2027-target-board.json");
+const TARGET_BOARD_PATHS = [
+  path.join(__dirname, "../data/recruiting/2027-target-board.json"),
+  path.join(__dirname, "../data/recruiting/2028-target-board.json"),
+];
+
+function isGatorVaultBoardSlug(slug) {
+  const key = canonicalTargetSlug(slug);
+  if (!key) return false;
+  return getAllowlistSet(2027).has(key) || getAllowlistSet(2028).has(key);
+}
 
 function loadTargetBoardEntries() {
-  try {
-    const doc = JSON.parse(fs.readFileSync(TARGET_BOARD_PATH, "utf8"));
-    return Array.isArray(doc.targets) ? doc.targets : [];
-  } catch {
-    return [];
+  const out = [];
+  const seen = new Set();
+  for (const boardPath of TARGET_BOARD_PATHS) {
+    try {
+      const doc = JSON.parse(fs.readFileSync(boardPath, "utf8"));
+      for (const target of Array.isArray(doc.targets) ? doc.targets : []) {
+        const slug = canonicalTargetSlug(target?.slug);
+        if (!slug || seen.has(slug) || !isGatorVaultBoardSlug(slug)) continue;
+        seen.add(slug);
+        out.push(target);
+      }
+    } catch {
+      /* optional board file */
+    }
   }
+  return out;
 }
 
 function loadRecruitingBySlug() {
@@ -82,21 +105,17 @@ function formatFlipWatchUf(row) {
   });
 }
 
-async function buildFutureCastIntelAlerts(options = {}) {
-  const asOf = options.asOf ? new Date(options.asOf) : new Date();
-  const visitLogs = visitLogStore.loadDoc().items || [];
-  const seedEntries = loadTargetBoardEntries();
-  const recruitingBySlug = loadRecruitingBySlug();
+function assembleIntelAlerts({
+  asOf,
+  seedEntries,
+  recruitingBySlug,
+  storeBySlug,
+  predictionBySlug,
+}) {
   const targetSeedBySlug = loadTargetSeedBySlug(seedEntries);
   const prioritySlugs = seedEntries.map((t) => t.slug).filter(Boolean);
-
-  const storePlayers = await store.getAllPlayers();
-  const storeBySlug = new Map(
-    storePlayers.filter((p) => p.slug).map((p) => [String(p.slug).toLowerCase(), p])
-  );
-
+  const visitLogs = visitLogStore.loadDoc().items || [];
   const { buildResolveSlugUfMeta, loadUfPctPredictorsBySlug } = require("./visit-intel-flip-context");
-  const predictionBySlug = await loadFuturecastPredictionBySlug(FUTURECAST_CLASS_YEAR);
   const resolveSlugUfMeta = buildResolveSlugUfMeta({
     recruitingBySlug,
     targetSeedBySlug,
@@ -201,4 +220,53 @@ async function buildFutureCastIntelAlerts(options = {}) {
   return alerts;
 }
 
-module.exports = { buildFutureCastIntelAlerts };
+/** Sync Board Intel for soft deferred GET (no DB / store wake). */
+function buildFutureCastIntelAlertsSync(options = {}) {
+  const asOf = options.asOf ? new Date(options.asOf) : new Date();
+  return assembleIntelAlerts({
+    asOf,
+    seedEntries: loadTargetBoardEntries(),
+    recruitingBySlug: loadRecruitingBySlug(),
+    storeBySlug: new Map(),
+    predictionBySlug: new Map(),
+  });
+}
+
+async function buildFutureCastIntelAlerts(options = {}) {
+  const asOf = options.asOf ? new Date(options.asOf) : new Date();
+  const seedEntries = loadTargetBoardEntries();
+  const recruitingBySlug = loadRecruitingBySlug();
+
+  let storeBySlug = new Map();
+  try {
+    const storePlayers = await store.getAllPlayers();
+    storeBySlug = new Map(
+      storePlayers.filter((p) => p.slug).map((p) => [String(p.slug).toLowerCase(), p])
+    );
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn("[futurecast-intel-alerts] store load skipped:", message);
+  }
+
+  // Predictions are enrichment only — never block Board Intel on DB wake/failure.
+  let predictionBySlug = new Map();
+  try {
+    predictionBySlug = await loadFuturecastPredictionBySlug(FUTURECAST_CLASS_YEAR);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn("[futurecast-intel-alerts] prediction load skipped:", message);
+  }
+
+  return assembleIntelAlerts({
+    asOf,
+    seedEntries,
+    recruitingBySlug,
+    storeBySlug,
+    predictionBySlug,
+  });
+}
+
+module.exports = {
+  buildFutureCastIntelAlerts,
+  buildFutureCastIntelAlertsSync,
+};
