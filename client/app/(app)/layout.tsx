@@ -12,6 +12,7 @@ import '@/lib/vault-team-hub.css';
 import '@/lib/futurecast-elite.css';
 import '@/lib/gv-page-layout.css';
 import '@/lib/vault-shell.css';
+import '@/lib/vault-chase-card.css';
 import '@/lib/gv-ui-cleanup.css';
 import '@/styles/hub-unified-theme.css';
 import '@/lib/recruiting-hub-elite.css';

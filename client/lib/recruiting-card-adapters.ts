@@ -76,7 +76,11 @@ export function fromHighPriorityTarget(p: HighPriorityPlayer): RecruitingBoardPl
             ? 'down'
             : 'flat'
         : undefined,
-    skinny: isUfCommit ? 'Committed to Florida' : p.skinny || 'Priority UF target',
+    skinny: isUfCommit
+      ? 'Committed to Florida'
+      : p.skinny && !/^priority uf target$/i.test(String(p.skinny).trim())
+        ? p.skinny
+        : 'Why we chase — open the board for Priority, Fit, and the fight.',
   };
 }
 

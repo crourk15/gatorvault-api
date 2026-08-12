@@ -58,7 +58,7 @@ function laneLabel(key: keyof ChaseLaneScores): string {
 }
 
 /**
- * Plain-English reasons this name sits at this chase rank — not Florida odds alone.
+ * Plain-English reasons this name sits at this chase rank - not Florida odds alone.
  */
 export function buildChaseWhy(
   player: FcLabTarget & ChaseTargetExtras
@@ -76,7 +76,7 @@ export function buildChaseWhy(
     bullets.push('Staff already assigned');
   }
   if (badges?.homeVisit) bullets.push('Home visit logged');
-  if (badges?.quietChase) bullets.push('Quiet chase — process over noise');
+  if (badges?.quietChase) bullets.push('Quiet chase - process over noise');
   if (badges?.inState && !bullets.some((b) => /in-state/i.test(b))) {
     bullets.push('Florida pipeline');
   }
@@ -85,7 +85,7 @@ export function buildChaseWhy(
   if (visits.length) bullets.push(visits.join(' · '));
 
   const note = String(player.notePreview || '').trim();
-  if (note && bullets.length < 3) {
+  if (note && !looksLikeTraitNote(note) && bullets.length < 3) {
     const short = note.length > 72 ? `${note.slice(0, 69).trim()}…` : note;
     bullets.push(short);
   }
@@ -104,14 +104,79 @@ export function buildChaseWhy(
   const summary =
     unique.length > 0
       ? unique.join(' · ')
-      : 'Ranked on GatorVault chase heat — priority for the class, not current lead.';
+      : 'Ranked on GatorVault chase heat - priority for the class, not current lead.';
 
   return { bullets: unique, summary };
 }
 
+/** Trait / scheme blurbs belong on the profile - not the chase card. */
+function looksLikeTraitNote(note: string): boolean {
+  return /\b(fits|comps? to|first-step|press\/man|bend|burst|arc|length|twitch|physicality|scheme)\b/i.test(
+    note
+  );
+}
+
+/**
+ * Fan-facing chase brief for card skinny - why Florida is chasing him,
+ * not how he plays. Traits stay on the profile.
+ */
+export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): string {
+  const pct = ufPctFromFc(player.ufProbability);
+  const fit = player.fitScore != null ? Math.round(Number(player.fitScore)) : 0;
+  const lanes = laneRank(player.hotLanes);
+  const threat = topThreatVsFlorida(player);
+  const inState =
+    Boolean(player.hotBadges?.inState) ||
+    /\bFL\b|\(FL\)|Florida/i.test(String(player.school || ''));
+  const pos = String(player.position || 'prospect').toUpperCase();
+  const last = String(player.name || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(-1)[0] || 'He';
+
+  const headLane = lanes[0]?.key;
+  let lead = '';
+  if (headLane === 'positionalNeed') {
+    lead = `Top ${pos} need for the class`;
+  } else if (headLane === 'mustGetFit' || fit >= 80) {
+    lead = `Must-get scheme fit (${fit || '-'})`;
+  } else if (headLane === 'staffHeat' || player.hotBadges?.staffAssigned) {
+    lead = 'Staff heat is already on him';
+  } else if (pct >= 35) {
+    lead = `Best Florida shot on this board (${pct}%)`;
+  } else if (inState) {
+    lead = 'In-state pipeline Florida has to keep warm';
+  } else {
+    lead = "Ranked on chase heat — priority for the class, not today's lead";
+  }
+
+  const tails: string[] = [];
+  if (inState && !/in-state/i.test(lead)) tails.push('in-state');
+  if (threat?.name) {
+    tails.push(
+      pct > 0 && pct < 40
+        ? `live fight with ${threat.label || threat.name} while Florida still sits at ${pct}%`
+        : `board fight with ${threat.label || threat.name}`
+    );
+  } else if (pct > 0 && pct < 35 && !/Florida shot/i.test(lead)) {
+    tails.push(`still a live chase at ${pct}% UF`);
+  }
+  if (fit >= 75 && fit < 80 && !/fit/i.test(lead)) {
+    tails.push(`Fit ${fit} keeps ${last} high`);
+  }
+
+  if (!tails.length) {
+    const fallback = buildChaseWhy(player).summary;
+    return fallback.endsWith('.') ? fallback : `${fallback}.`;
+  }
+
+  return `${lead} - ${tails.join('; ')}.`;
+}
+
 export function chaseHeatLabel(score: number | null | undefined): string {
   const n = Number(score);
-  if (!Number.isFinite(n) || n <= 0) return '—';
+  if (!Number.isFinite(n) || n <= 0) return '-';
   return String(Math.round(n));
 }
 

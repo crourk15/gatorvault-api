@@ -12,6 +12,7 @@ import {
 import { VAULT_MENU_BOOT_SCRIPT } from '@/lib/vault-menu-boot.js';
 import '@/lib/gv-page-layout.css';
 import '@/lib/vault-shell.css';
+import '@/lib/vault-chase-card.css';
 import '@/lib/vault-admin.css';
 import '@/lib/vault-home.css';
 import '@/lib/home-premium.css';
