@@ -261,6 +261,12 @@
   border: 1px solid rgba(250, 70, 22, 0.22);
 }
 
+.gv-chase-badge--rising {
+  background: rgba(22, 163, 74, 0.1);
+  color: #15803d;
+  border: 1px solid rgba(22, 163, 74, 0.22);
+}
+
 .gv-chase-card__why-label {
   position: relative;
   z-index: 1;

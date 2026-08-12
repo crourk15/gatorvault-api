@@ -110,17 +110,24 @@ async function main() {
       writerName: p.writerName || p.handle || p.outlet || 'Beat Writer',
     }));
 
-  // If beat empty, promote a few feed rows into beat-style highlights for first paint depth.
-  if (!beatHighlights.length) {
-    feed.slice(0, 4).forEach((item) => {
-      beatHighlights.push({
-        text: item.title,
-        source: item.source || 'GatorVault',
-        timestamp: item.createdAt,
-        url: item.url,
-        writerName: 'GatorVault Live',
-      });
-    });
+  // Diversify: one highlight per writer (never brand-only "GatorVault Live" filler).
+  if (beatHighlights.length) {
+    const seen = new Set();
+    const diversified = [];
+    for (const row of beatHighlights) {
+      const key = String(row.handle || row.writerName || '')
+        .toLowerCase()
+        .replace(/^@/, '')
+        .replace(/\s+/g, '');
+      if (!key || key.includes('gatorvault') || seen.has(key)) continue;
+      seen.add(key);
+      diversified.push(row);
+      if (diversified.length >= 8) break;
+    }
+    if (diversified.length) {
+      beatHighlights.length = 0;
+      beatHighlights.push(...diversified);
+    }
   }
 
   const payload = {

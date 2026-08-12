@@ -157,7 +157,17 @@ export function HomePremiumPage(): React.ReactElement {
       if (hubBundle?.ticker?.length) setHubTicker(hubBundle.ticker);
       if (Array.isArray(intel) && intel.length) setHpIntel(intel);
       if (movement) setMovementIntel(movement);
-      if (Array.isArray(beat) && beat.length) setBeatIntel(beat);
+      // Keep seeded real writers if live beat is empty or brand-only (@gatorvault).
+      if (Array.isArray(beat) && beat.length) {
+        const realWriters = beat.filter((row) => {
+          const key = String(row.handle || row.writerName || '')
+            .toLowerCase()
+            .replace(/^@/, '')
+            .replace(/\s+/g, '');
+          return key && !key.includes('gatorvault');
+        });
+        if (realWriters.length) setBeatIntel(realWriters);
+      }
       if (recruitingBoard) setBoard(recruitingBoard);
       if (hubBundle?.classOverview) {
         const nextMetrics = { ...hubBundle.classOverview };

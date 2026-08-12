@@ -24,6 +24,48 @@ import { formatLiveSourceLabel } from './live-source-label';
 
 export const LIVE_HUB_REFRESH_MS = 45_000;
 
+/** Brand Live + UF official — fine in the stream, not Beat Writer Highlights. */
+const BEAT_HIGHLIGHT_EXCLUDE_HANDLES = new Set([
+  'gatorvault',
+  'gatorsfb',
+  'floridagators',
+]);
+
+function beatHighlightWriterKey(post: {
+  handle?: string | null;
+  writerName?: string | null;
+  outlet?: string | null;
+}): string {
+  return String(post.handle || post.writerName || post.outlet || '')
+    .toLowerCase()
+    .replace(/^@/, '')
+    .replace(/\s+/g, '')
+    .trim();
+}
+
+/** Prefer diverse real beat writers (one card each) for the highlights panel. */
+export function pickBeatHighlightPosts(posts: BeatPost[], limit = 12): BeatPost[] {
+  const withText = (posts || []).filter((p) => String(p.text || '').trim());
+  const preferred = withText.filter((p) => {
+    const key = beatHighlightWriterKey(p);
+    if (!key) return false;
+    if (BEAT_HIGHLIGHT_EXCLUDE_HANDLES.has(key)) return false;
+    if (key.includes('gatorvault')) return false;
+    return true;
+  });
+  const pool = preferred.length ? preferred : withText;
+  const seen = new Set<string>();
+  const out: BeatPost[] = [];
+  for (const post of pool) {
+    const key = beatHighlightWriterKey(post);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(post);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
 export type { TickerTag };
 
 export type LiveTickerItem = {
@@ -436,21 +478,19 @@ export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePan
     (item) => ({ type: 'PORTAL', source: item.source })
   );
 
+  // Real beat writers only — exclude brand Live + UF official, one card per writer.
   const beatWriterHighlights = filterExcludedPortalClassItems(
-    beat
-      .filter((post) => String(post.text || '').trim())
-      .slice(0, 12)
-      .map((post) => {
-        const writer = post.writerName || post.handle || post.outlet || 'Beat Writer';
-        return {
-          text: String(post.text || '').trim(),
-          source: post.outlet || 'Beat',
-          timestamp: post.publishedAt || undefined,
-          url: post.url,
-          handle: post.handle,
-          writerName: writer,
-        };
-      }),
+    pickBeatHighlightPosts(beat, 12).map((post) => {
+      const writer = post.writerName || post.handle || post.outlet || 'Beat Writer';
+      return {
+        text: String(post.text || '').trim(),
+        source: post.outlet || 'Beat',
+        timestamp: post.publishedAt || undefined,
+        url: post.url,
+        handle: post.handle,
+        writerName: writer,
+      };
+    }),
     (item) => item.text,
     (item) => ({ source: item.source })
   );

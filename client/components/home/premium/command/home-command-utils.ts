@@ -589,7 +589,20 @@ export function buildFutureCastTargetsFromHome(
 }
 
 export function buildBeatPostsFromIntel(items: BeatIntelItem[]): HomeBeatPostView[] {
-  return items.slice(0, 3).map((item) => ({
+  const seen = new Set<string>();
+  const diversified: BeatIntelItem[] = [];
+  for (const item of items || []) {
+    const key = String(item.writerName || item.id || '')
+      .toLowerCase()
+      .replace(/^@/, '')
+      .replace(/\s+/g, '');
+    if (!key || key.includes('gatorvault') || seen.has(key)) continue;
+    seen.add(key);
+    diversified.push(item);
+    if (diversified.length >= 3) break;
+  }
+  const pool = diversified.length ? diversified : (items || []).slice(0, 3);
+  return pool.map((item) => ({
     id: item.id,
     writerName: item.writerName || 'Beat Writer',
     outlet: item.source || 'UF Beat',

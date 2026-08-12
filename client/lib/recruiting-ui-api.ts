@@ -54,6 +54,7 @@ export type BeatIntelItem = {
   id: string;
   text: string;
   writerName: string;
+  handle?: string | null;
   source: string;
   url?: string | null;
   timestamp: string;

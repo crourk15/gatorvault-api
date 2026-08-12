@@ -25,11 +25,14 @@ function beatPostUrl(post) {
 async function buildBeatIntelItems(limit = 5) {
   const liveBeat = require('./live-beat');
   const beatFilters = require('./beat-writer-filters');
-  const { posts: rawPosts = [] } = liveBeat.getBeatPosts(Math.max(limit * 3, 12));
+  const { posts: rawPosts = [] } = liveBeat.getBeatPosts(Math.max(limit * 4, 16));
   const { kept } = beatFilters.filterBeatPosts
     ? beatFilters.filterBeatPosts(rawPosts)
     : { kept: rawPosts };
-  const posts = (kept.length ? kept : rawPosts).slice(0, limit);
+  const pool = kept.length ? kept : rawPosts;
+  const posts = beatFilters.pickBeatHighlightPosts
+    ? beatFilters.pickBeatHighlightPosts(pool, limit)
+    : pool.slice(0, limit);
 
   const items = [];
   for (const post of posts) {
@@ -39,7 +42,8 @@ async function buildBeatIntelItems(limit = 5) {
       id: post.id || post.tweetId || url || `beat_${items.length}`,
       text: post.text || post.fullText || '',
       writerName: post.writerName || post.author || post.handle || 'UF Beat',
-      source: post.source || 'beat',
+      handle: post.handle || null,
+      source: post.outlet || post.source || 'beat',
       url,
       timestamp: post.timestamp || post.createdAt || post.publishedAt || new Date().toISOString(),
       embedHtml,

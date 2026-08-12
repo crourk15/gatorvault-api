@@ -567,6 +567,35 @@ function extractCommitQuote(text = '') {
   return null;
 }
 
+
+/**
+ * Beat Writer Highlights: real reporters first, one card per writer.
+ * Brand Live (@gatorvault) stays in the stream — not this panel.
+ */
+function pickBeatHighlightPosts(posts = [], limit = 6) {
+  const list = Array.isArray(posts) ? posts : [];
+  const withText = list.filter((p) => String(p?.text || p?.fullText || '').trim());
+  const nonBrand = withText.filter((p) => !isBrandLiveFeedAccount(p) && !isUfOfficialAccount(p));
+  const pool = nonBrand.length ? nonBrand : withText.filter((p) => !isBrandLiveFeedAccount(p));
+  const fallback = pool.length ? pool : withText;
+  const seen = new Set();
+  const out = [];
+  for (const post of fallback) {
+    const key = String(post.handle || post.writerId || post.writerName || post.author || '')
+      .toLowerCase()
+      .replace(/^@/, '')
+      .replace(/\s+/g, '')
+      .trim();
+    if (!key) continue;
+    if (key === 'gatorvault' || key === 'gatorvaultlive' || key === 'gatorvaultinsider') continue;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(post);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
 module.exports = {
   FLORIDA_URL_RE,
   MOMENTUM_KEYWORDS,
@@ -578,6 +607,7 @@ module.exports = {
   TRUSTED_HANDLES,
   BEAT_RECRUITING_INGEST_HANDLES,
   isBrandLiveFeedAccount,
+  pickBeatHighlightPosts,
   isNationalUfOnlyReporter,
   isOtherProgramReporter,
   requiresUfContextReporter,
