@@ -9,6 +9,7 @@ export type SigningEventId = 'esp' | 'nsd';
 export type SigningEventConfig = {
   id: SigningEventId;
   label: string;
+  shortLabel: string;
   badge: string;
   liveBadge: string;
   linkLabel: string;
@@ -35,6 +36,7 @@ function buildSigningEventConfig(
     return {
       id,
       label: 'Early Signing Period (ESP)',
+      shortLabel: 'Early Signing Period',
       badge: 'Primary Signing Window',
       liveBadge: 'LIVE SIGNING WINDOW',
       linkLabel: 'Expected signees →',
@@ -49,7 +51,8 @@ function buildSigningEventConfig(
   return {
     id,
     label: 'National Signing Day (NSD)',
-    badge: 'Final Signatures',
+    shortLabel: 'National Signing Day',
+    badge: 'Then the closer',
     liveBadge: 'LIVE SIGNING WINDOW',
     linkLabel: 'Remaining targets →',
     linkHref: '/vault/recruiting/signing/nsd',
