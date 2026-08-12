@@ -58,9 +58,18 @@ function buildVisitDailyEmailHtml(recapRows, dayKey) {
   ].join("");
 }
 
-async function sendSubscriberDigestEmail(to, subject, html) {
+function visitAlertPlayerUrl(slug) {
+  const normalized = String(slug || "").trim().toLowerCase();
+  if (!normalized) return `${SITE_URL}/vault/alerts/`;
+  return `${SITE_URL}/vault/recruiting/player/${encodeURIComponent(normalized)}/`;
+}
+
+async function sendSubscriberDigestEmail(to, subject, html, options = {}) {
   if (!isEmailJsReady()) return { sent: false, reason: "email_not_configured" };
   const { serviceId, templateId, publicKey, privateKey } = getEmailJsConfig();
+  const vaultUrl =
+    options.vaultUrl ||
+    (options.playerSlug ? visitAlertPlayerUrl(options.playerSlug) : `${SITE_URL}/vault/futurecast#visits`);
   await sendEmailViaEmailJS({
     serviceId,
     templateId,
@@ -73,7 +82,7 @@ async function sendSubscriberDigestEmail(to, subject, html) {
       email_subject: subject,
       body_html: html,
       tier_benefits: html,
-      vault_url: `${SITE_URL}/vault/futurecast#visits`,
+      vault_url: vaultUrl,
       support_email: process.env.EMAILJS_REPLY_TO || "gatorvaultinsider@gmail.com",
     },
   });
@@ -87,11 +96,13 @@ function formatVisitWindow(log) {
   return `${window.visitStart}–${window.visitEnd}`;
 }
 
-function buildVisitInstantEmailHtml({ headline, detail }) {
+function buildVisitInstantEmailHtml({ headline, detail, playerSlug, ctaLabel, ctaUrl }) {
+  const href = ctaUrl || (playerSlug ? visitAlertPlayerUrl(playerSlug) : `${SITE_URL}/vault/futurecast#visits`);
+  const label = ctaLabel || (playerSlug ? "Open player profile →" : "Open FutureCast Visit Intel →");
   return [
     `<p>${headline}</p>`,
     detail ? `<p>${detail}</p>` : "",
-    `<p><a href="${SITE_URL}/vault/futurecast#visits">Open FutureCast Visit Intel →</a></p>`,
+    `<p><a href="${href}">${label}</a></p>`,
     `<p style="color:#666;font-size:12px;">GatorVault verified On3 / beat-confirmed visit intel only.</p>`,
   ]
     .filter(Boolean)
@@ -104,6 +115,7 @@ function buildVisitScheduledEmailHtml(log) {
   return buildVisitInstantEmailHtml({
     headline: `<strong>${name}</strong> has a verified UF official visit on the calendar.`,
     detail: when ? `Visit window: ${when}.` : null,
+    playerSlug: log.playerSlug,
   });
 }
 
@@ -112,7 +124,8 @@ function buildVisitCancelledEmailHtml(row) {
   const next = row.nextVisitSchool ? ` · now visiting ${row.nextVisitSchool}` : "";
   return buildVisitInstantEmailHtml({
     headline: `<strong>${name}</strong> cancelled his official visit to Florida${next}.`,
-    detail: "We will update FutureCast as new verified visit intel is confirmed.",
+    detail: "We will update the player profile as new verified visit intel is confirmed.",
+    playerSlug: row.playerSlug,
   });
 }
 
@@ -162,7 +175,10 @@ async function dispatchVisitInstantEmail(payload, options = {}) {
   const errors = [];
   for (const recipient of filtered) {
     try {
-      const out = await sendSubscriberDigestEmail(recipient.email, payload.subject, payload.html);
+      const out = await sendSubscriberDigestEmail(recipient.email, payload.subject, payload.html, {
+        playerSlug: payload.playerSlug,
+        vaultUrl: payload.playerSlug ? visitAlertPlayerUrl(payload.playerSlug) : undefined,
+      });
       if (out.sent) sent += 1;
     } catch (err) {
       errors.push({ email: recipient.email, error: err.message });

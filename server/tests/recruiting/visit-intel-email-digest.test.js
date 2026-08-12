@@ -121,6 +121,8 @@ describe("visit-intel-email-digest", () => {
     });
     assert.match(scheduled, /Easton Royal/);
     assert.match(scheduled, /verified UF official visit/);
+    assert.match(scheduled, /\/vault\/recruiting\/player\/easton-royal\//);
+    assert.match(scheduled, /Open player profile/);
 
     const cancelled = buildVisitCancelledEmailHtml({
       playerSlug: "easton-royal",
@@ -129,6 +131,7 @@ describe("visit-intel-email-digest", () => {
     });
     assert.match(cancelled, /cancelled his official visit to Florida/);
     assert.match(cancelled, /Texas/);
+    assert.match(cancelled, /\/vault\/recruiting\/player\/easton-royal\//);
   });
 
   it("dispatchVisitScheduledEmail dryRun does not throw", async () => {

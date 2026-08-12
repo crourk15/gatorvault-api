@@ -238,6 +238,13 @@ function formatVisitWindow(log) {
   return `${window.visitStart}–${window.visitEnd}`;
 }
 
+/** Single-player visit alerts open the recruit profile (not FutureCast). */
+function visitAlertPlayerUrl(slug) {
+  const normalized = String(slug || '').trim().toLowerCase();
+  if (!normalized) return `${SITE_URL}/vault/alerts/`;
+  return `${SITE_URL}/vault/recruiting/player/${encodeURIComponent(normalized)}/`;
+}
+
 function buildScheduledPayload(log) {
   const name = log.playerName || log.playerSlug;
   const when = formatVisitWindow(log);
@@ -246,7 +253,7 @@ function buildScheduledPayload(log) {
     body: when
       ? `${name} has a verified UF official visit on the calendar (${when}).`
       : `${name} has a verified UF official visit on the calendar.`,
-    url: `${SITE_URL}/vault/futurecast#visits`,
+    url: visitAlertPlayerUrl(log.playerSlug),
     tag: log.fingerprint || `visit_scheduled|${log.playerSlug}|${log.date}`,
     type: 'visit_scheduled',
     playerSlug: log.playerSlug || null,
@@ -260,7 +267,7 @@ function buildCancelledPayload(row) {
   return {
     title: 'Verified UF official visit cancelled',
     body: `${name} cancelled his official visit to Florida${next}.`,
-    url: `${SITE_URL}/vault/futurecast#visits`,
+    url: visitAlertPlayerUrl(row.playerSlug),
     tag: row.fingerprint || `visit_cancelled|${row.playerSlug}`,
     type: 'visit_cancelled',
     playerSlug: row.playerSlug || null,
@@ -756,6 +763,7 @@ module.exports = {
   dispatchTestPushToEmail,
   buildScheduledPayload,
   buildCancelledPayload,
+  visitAlertPlayerUrl,
   buildCommitPayload,
   buildScorePayload,
   buildTestPayload,

@@ -57,6 +57,7 @@ describe("push-alert-service payloads", () => {
     assert.match(payload.body, /Test Player/i);
     assert.match(payload.body, /verified/i);
     assert.equal(payload.type, "visit_scheduled");
+    assert.match(payload.url, /\/vault\/recruiting\/player\/test-player\/$/);
   });
 
   it("builds cancelled payload", () => {
@@ -69,6 +70,7 @@ describe("push-alert-service payloads", () => {
     assert.match(payload.title, /cancelled/i);
     assert.match(payload.body, /South Carolina/);
     assert.equal(payload.type, "visit_cancelled");
+    assert.match(payload.url, /\/vault\/recruiting\/player\/test-player\/$/);
   });
 
   it("pushEnabled is false without VAPID keys", () => {
