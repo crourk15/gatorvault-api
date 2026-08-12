@@ -564,14 +564,36 @@
   color: var(--accent-orange, #fa4616);
 }
 
-/* ── Priority chase cards (rank + why) ── */
+/* ── Priority chase — same board grid as recruiting HP chase board ── */
+.fc-lab-chase-board.gv-hp-board-grid,
 .fc-lab-chase-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 780px;
-  overflow-y: auto;
-  padding-right: 4px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+  padding-right: 0;
+}
+
+.fc-lab-chase-board .gv-chase-card,
+.fc-lab-chase-list > .gv-chase-card {
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  width: 100%;
+  min-width: 0;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Kill ModuleShell overflow:hidden around chase cards (iOS clip). */
+.rh-cc-module:has([data-testid='fc-lab-chase-list']),
+.fc-lab-panel-shell:has([data-testid='fc-lab-chase-list']),
+.fc-lab-mobile-section:has([data-testid='fc-lab-chase-list']) {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
 }
 .fc-lab-chase-card {
   display: flex;

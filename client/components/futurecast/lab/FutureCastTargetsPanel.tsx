@@ -6,11 +6,10 @@ import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import { playerProfileRoute, RECRUITING_TAB_PATHS } from '@/lib/vault-route-map';
 import { FutureCastTargetCard } from '@/components/futurecast/FutureCastTargetCard';
-import { FutureCastChaseCard } from './FutureCastChaseCard';
+import { HighPriorityTargetCard } from '@/components/futurecast/HighPriorityTargetCard';
 import { FutureCastPanelShell } from './primitives';
 import {
   futureCastPlayerToLabTarget,
-  highPriorityToLabTarget,
   movementDeltasAreBelievable,
 } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
@@ -44,28 +43,40 @@ export function FutureCastTargetsPanel({
   const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
   const focusYear = discoveryFocus ? 2028 : 2027;
 
-  const rows = useMemo(() => {
-    if (discoveryFocus && highPriority.length) {
-      return [...highPriority]
-        .filter((p) => isActiveUfTarget(p))
-        .filter((p) => Number(p.classYear) === focusYear)
-        .sort((a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0))
-        .slice(0, 10)
-        .map(highPriorityToLabTarget);
-    }
+  /** Same ranked HP rows the recruiting chase board uses — full VaultChaseCard. */
+  const chasePlayers = useMemo(() => {
+    if (!discoveryFocus || !highPriority.length) return [] as HighPriorityPlayer[];
+    return [...highPriority]
+      .filter((p) => isActiveUfTarget(p))
+      .filter((p) => Number(p.classYear) === focusYear)
+      .sort((a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0))
+      .slice(0, 5);
+  }, [discoveryFocus, highPriority, focusYear]);
+
+  const closingRows = useMemo(() => {
+    if (discoveryFocus) return [];
     return [...masterBoard.players]
       .filter((p) => isActiveUfTarget(p))
       .map(futureCastPlayerToLabTarget)
       .filter(isClosingClassInPlayTarget)
       .sort((a, b) => closingClassUrgencyScore(b) - closingClassUrgencyScore(a))
       .slice(0, 10);
-  }, [discoveryFocus, highPriority, masterBoard.players, focusYear]);
+  }, [discoveryFocus, masterBoard.players]);
 
-  const showMovement = useMemo(() => movementDeltasAreBelievable(rows), [rows]);
+  const showMovement = useMemo(() => {
+    if (discoveryFocus) {
+      return movementDeltasAreBelievable(
+        chasePlayers.map((p) => ({
+          delta7d: p.delta7d ?? p.movementDelta ?? null,
+        }))
+      );
+    }
+    return movementDeltasAreBelievable(closingRows);
+  }, [discoveryFocus, chasePlayers, closingRows]);
 
   const title = discoveryFocus ? `${focusYear} Priority chase` : 'Top UF Targets';
   const sub = discoveryFocus
-    ? 'Ranked by chase heat — why Florida should fight for them, not who leads the board today.'
+    ? 'Same full chase cards as the board — heat, fit, why we chase. Open board for the rest of the class.'
     : 'In-play closing fights — Florida odds, rival threats, and movement.';
 
   const boardHref = discoveryFocus
@@ -77,6 +88,10 @@ export function FutureCastTargetsPanel({
     </VaultNavLink>
   );
 
+  // Chase surface must not sit inside overflow:hidden ModuleShell chrome — that
+  // plus flex max-height was clipping VaultChaseCard to the top row on iOS.
+  const chaseBare = discoveryFocus ? true : bare;
+
   return (
     <>
       <FutureCastLeadingPanel
@@ -87,30 +102,37 @@ export function FutureCastTargetsPanel({
         underclassmen={underclassmen}
       />
       <FutureCastPanelShell
-        bare={bare}
+        bare={chaseBare}
         title={title}
         sub={sub}
         action={boardAction}
         testId="fc-lab-targets"
       >
-        {rows.length === 0 ? (
-          <p className="rh-cc-empty">
-            {discoveryFocus ? `No ${focusYear} UF targets loaded.` : 'No master board targets loaded.'}
-          </p>
-        ) : discoveryFocus ? (
-          <div className="fc-lab-chase-list" data-testid="fc-lab-chase-list">
-            {rows.map((p, i) => (
-              <FutureCastChaseCard
-                key={p.slug}
-                player={p}
-                rank={i + 1}
-                showMovement={showMovement}
-              />
-            ))}
-          </div>
+        {discoveryFocus ? (
+          chasePlayers.length === 0 ? (
+            <p className="rh-cc-empty">No {focusYear} UF targets loaded.</p>
+          ) : (
+            <div
+              className="gv-hp-board-grid fc-lab-chase-board"
+              data-testid="fc-lab-chase-list"
+              data-show-movement={showMovement ? '1' : '0'}
+            >
+              {chasePlayers.map((player, i) => (
+                <HighPriorityTargetCard
+                  key={player.slug}
+                  player={player}
+                  rank={i + 1}
+                  showMovement={showMovement}
+                  profileContext="futurecast"
+                />
+              ))}
+            </div>
+          )
+        ) : closingRows.length === 0 ? (
+          <p className="rh-cc-empty">No master board targets loaded.</p>
         ) : (
           <div className="fc-lab-target-cards">
-            {rows.map((p) => (
+            {closingRows.map((p) => (
               <FutureCastTargetCard
                 key={p.slug}
                 player={p}

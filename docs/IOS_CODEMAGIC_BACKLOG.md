@@ -65,13 +65,11 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-12 | 2028 chase cards v12: Current Class chrome + Why we chase (home Targets, Lab Priority chase, HP board) | `VaultChaseCard`, `TargetBoardPreview`, `HighPriorityTargetCard`, `FutureCastChaseCard` + CSS in binary | pending |
 | 2026-08-12 | FutureCast Big Board: rename Top Targets tab → **Best Fits** (scheme fit board, not Priority Chase) | `FutureCastBigBoardPage` + big-board routes in binary | pending |
 | 2026-08-12 | My Alerts: Board Intel seed refresh + default method Both/Instant so Save registers email | `alerts-hub-seed`, `VaultAlertsPage`, `alert-prefs` in binary (API visit fanout/soft path also live) | pending |
-<<<<<<< HEAD
 | 2026-08-12 | Film-tier shells: Game Week depth blur, Vault Scouting blur, 2029–30 early board; trial unlocks Film | `VaultGameWeekPage`, `GameWeekCommandCenter`, `VaultScoutingSection`, `FutureCastExtendedModules`, `futurecast-insider` in binary (API trial=Film also live) | pending |
 | 2026-08-12 | Priority Chase stamps: always `#N Chase` + Rising badge (not Rising replacing rank) | `VaultChaseCard` + CSS in binary | pending |
 | 2026-08-12 | Beat Writer Highlights: diversify writers / exclude brand Live filler on home + GNL | `gatornation-live-api`, `home-command-utils`, `HomePremiumPage` in binary (API `pickBeatHighlightPosts` also live) | pending |
-=======
 | 2026-08-12 | My Alerts: **Send test alert** fires Brysen OV email + push to signed-in account | `VaultAlertsPage`, `alert-email-api` in binary (`POST /api/alerts/send-visit-alert` also live) | pending |
->>>>>>> b7e3dde3 (docs(ios): backlog Send test alert client path)
+| 2026-08-12 | Lab Priority chase: full VaultChaseCard on surface (same HP board cards; kill ModuleShell/flex clip) + FAB/safe-area | `FutureCastTargetsPanel`, `HighPriorityTargetCard`, `vault-chase-card.css`, Lab/RH CSS in binary | pending |
 
 ---
 

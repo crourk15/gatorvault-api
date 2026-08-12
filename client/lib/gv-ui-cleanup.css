@@ -1444,6 +1444,13 @@ body {
   body:has(.gv-film-room-page) .gv-live-pulse-fab {
     display: none !important;
   }
+
+  /* Chase board / Lab: restore bottom clearance after shell zeros rh-page padding.
+     Keeps full VaultChaseCard above nav + Live Pulse FAB (no card/FAB collision). */
+  .gv-vault-shell__main .rh-page.rh-page--elite,
+  .gv-vault-shell__main .fc-futurecast-page.fc-futurecast-page--elite {
+    padding-bottom: calc(3.25rem + var(--gv-mobile-nav-height, 4.5rem) + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /*

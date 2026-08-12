@@ -17,6 +17,13 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
+@media (max-width: 767px) {
+  .rh-elite-chrome .rh-hero-strip {
+    /* Class targets / year pages: keep year pills under the iOS status bar. */
+    padding-top: calc(28px + env(safe-area-inset-top, 0px));
+  }
+}
+
 .rh-elite-chrome > * + * {
   margin-top: 0;
 }
