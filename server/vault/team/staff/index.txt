@@ -1,0 +1,311 @@
+2:I[19107,[],"ClientPageRoot"]
+3:I[4248,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","6765","/js/vault-chunks/6765-96733157ff23ae9b.js","1072","/js/vault-chunks/1072-d7b365a283e83038.js","9490","/js/vault-chunks/9490-1fa1826ff623e1de.js","3767","/js/vault-chunks/app/vault/team/staff/page-3b1ffe42d8ba3221.js"],"default",1]
+4:I[4707,[],""]
+5:I[36423,[],""]
+7:I[22617,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","3567","/js/vault-chunks/3567-4fbdc5e283001b80.js","5629","/js/vault-chunks/app/vault/layout-104138727c301cae.js"],"VaultHydrationGuard"]
+8:I[21500,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","3567","/js/vault-chunks/3567-4fbdc5e283001b80.js","5629","/js/vault-chunks/app/vault/layout-104138727c301cae.js"],"VaultErrorBoundary"]
+9:I[35389,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","3567","/js/vault-chunks/3567-4fbdc5e283001b80.js","5629","/js/vault-chunks/app/vault/layout-104138727c301cae.js"],"VaultRouteGate"]
+a:I[17817,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","3567","/js/vault-chunks/3567-4fbdc5e283001b80.js","5629","/js/vault-chunks/app/vault/layout-104138727c301cae.js"],"VaultNavigationProvider"]
+b:I[6041,["7648","/js/vault-chunks/7648-5ff2aa13baed0083.js","3567","/js/vault-chunks/3567-4fbdc5e283001b80.js","5629","/js/vault-chunks/app/vault/layout-104138727c301cae.js"],"VaultShell"]
+f:I[61338,["3185","/js/vault-chunks/app/layout-b5f47bfd664718d6.js"],"AppProviders"]
+6:{"display":"none","minHeight":0,"height":0,"margin":0,"padding":0,"overflow":"hidden"}
+c:T833,(function(){var open=false;function els(){return{btn:document.querySelector("[data-vault-menu-toggle]")||document.querySelector('button[aria-controls="gv-app-menu-drawer"]'),drawer:document.getElementById("gv-app-menu-drawer"),backdrop:document.querySelector(".gv-app-menu__backdrop")};}function clearBodyLock(){try{document.body.style.overflow="";document.body.classList.remove("gv-scroll-locked");}catch(_){}}function applyBodyLock(){try{document.body.style.overflow="hidden";document.body.classList.add("gv-scroll-locked");}catch(_){}}function sync(){var e=els();if(!open)clearBodyLock();if(!e.btn||!e.drawer)return;if(!e.btn.hasAttribute("data-vault-menu-toggle"))e.btn.setAttribute("data-vault-menu-toggle","");e.drawer.classList.toggle("is-open",open);e.drawer.setAttribute("aria-hidden",open?"false":"true");if(e.backdrop){e.backdrop.classList.toggle("is-open",open);e.backdrop.setAttribute("aria-hidden",open?"false":"true");}e.btn.classList.toggle("is-menu-open",open);e.btn.setAttribute("aria-expanded",open?"true":"false");if(open){applyBodyLock();}else{clearBodyLock();}}function setOpen(next){open=!!next;sync();if(window.__GV_MENU_BOOT__&&window.__GV_MENU_BOOT__.onChange){window.__GV_MENU_BOOT__.onChange(open);}}function bind(){sync();}window.__GV_MENU_BOOT__={isOpen:function(){return open;},setOpen:setOpen,onChange:null};window.__GV_MENU_BIND__=bind;if(!window.__gvMenuClickBound){window.__gvMenuClickBound=true;document.addEventListener("click",function(ev){var close=ev.target.closest("[data-vault-menu-close]");if(close){ev.preventDefault();setOpen(false);return;}var backdrop=ev.target.closest(".gv-app-menu__backdrop");if(backdrop){setOpen(false);return;}var toggle=ev.target.closest("[data-vault-menu-toggle],button[aria-controls=\"gv-app-menu-drawer\"]");if(toggle){ev.preventDefault();setOpen(!open);}},true);document.addEventListener("keydown",function(ev){if(ev.key==="Escape"&&open)setOpen(false);});window.addEventListener("gv-vault-restored",bind);}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",bind,{once:true});}else{bind();}})();d:T7cd,(function(){if(window.__gvHydrationBoot)return;window.__gvHydrationBoot=true;function mainEl(){var r=document.getElementById("gv-vault-root");return r?r.querySelector(".gv-vault-shell__main"):null}function rootBlank(){var r=document.getElementById("gv-vault-root");if(!r)return true;if(r.getAttribute("data-gv-hydrated")==="true")return false;var m=mainEl();if(!m)return true;if(m.querySelector("[data-home-boot-painted],[data-hydrate=hero]:not(.hero-skeleton)"))return false;return m.childElementCount===0}function softRecover(){try{if(sessionStorage.getItem("gv_vault_hydration_reload")==="1")return false;sessionStorage.setItem("gv_vault_hydration_reload","1");}catch(e){}console.warn("[VaultHydrationGuard] blank main — soft reload");location.reload();return true}function clearReloadGuard(){try{sessionStorage.removeItem("gv_vault_hydration_reload")}catch(e){}}function guard(){var r=document.getElementById("gv-vault-root");if(r&&r.getAttribute("data-gv-hydrated")==="true"){clearReloadGuard();return}if(rootBlank()){softRecover();return}if(r&&!r.hasAttribute("data-gv-hydrated")){r.removeAttribute("data-hydrating")}}function arm(){if(window.__gvHydrationTimeout){clearTimeout(window.__gvHydrationTimeout)}var ms=window.matchMedia&&window.matchMedia("(max-width:767px)").matches?4500:3000;window.__gvHydrationTimeout=window.setTimeout(guard,ms)}function boot(){arm()}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",boot,{once:true})}else{boot()}window.addEventListener("error",function(ev){var msg=String(ev.message||"");var file=String(ev.filename||"");if(/hydration|Hydration|did not match|Minified React error #(418|423|425|422)/i.test(msg)||/vault-chunks|_next\/static\/chunks/i.test(file)){setTimeout(guard,0)}});window.addEventListener("pageshow",function(ev){if(ev.persisted){arm()}})window.addEventListener("load",function(){var r=document.getElementById("gv-vault-root");if(r&&r.getAttribute("data-gv-hydrated")==="true")clearReloadGuard()})})();e:T29f2,(function(){
+  try {
+    var cap = window.Capacitor;
+    var proto = location.protocol || '';
+    var host = location.hostname || '';
+    var port = location.port || '';
+    var bundledNative = proto.indexOf('capacitor') === 0 ||
+      ((host === 'localhost' || host === '127.0.0.1') && port !== '3000');
+    var native = (cap && cap.isNativePlatform && cap.isNativePlatform()) || bundledNative;
+    if (!native) return;
+
+    var SITE = (host === 'gatorvaultinsider.com' || host === 'www.gatorvaultinsider.com')
+      ? location.origin
+      : bundledNative
+        ? location.origin
+        : 'https://gatorvaultinsider.com';
+    var COLD_KEY = 'gv_native_cold_done';
+    var SPA_KEY = 'gv_native_spa_path';
+
+    function routePath(path) {
+      var p = (path || '/').replace(/\/$/, '') || '/';
+      if (p.slice(-11) === '/index.html') p = p.slice(0, -11) || '/';
+      return p || '/';
+    }
+
+    function staticFilePath(pathname) {
+      var p = pathname || '/';
+      if (p.charAt(0) !== '/') p = '/' + p;
+      var parts = p.split('/').filter(Boolean);
+      var last = parts[parts.length - 1] || '';
+      if (last && /\.[a-z0-9]+$/i.test(last)) {
+        return p.charAt(p.length - 1) === '/' ? p.replace(/\/+$/, '') : p;
+      }
+      if (p === '/') return '/index.html';
+      return (p.charAt(p.length - 1) === '/' ? p : p + '/') + 'index.html';
+    }
+
+    function abs(path) {
+      if (!path) return SITE + (bundledNative ? '/index.html' : '/');
+      if (path.indexOf('http') === 0) return path;
+      try {
+        var u = new URL(path, SITE);
+        var filePath = bundledNative ? staticFilePath(u.pathname) : u.pathname;
+        return SITE + filePath + u.search + u.hash;
+      } catch (e) {
+        return SITE + (path.charAt(0) === '/' ? path : '/' + path);
+      }
+    }
+
+    function norm(href) {
+      if (!href || href.charAt(0) === '#' || href.indexOf('http') === 0) return href;
+      try {
+        var u = new URL(href, SITE);
+        var p = u.pathname || '/';
+        var last = p.split('/').filter(Boolean).pop() || '';
+        if (last.indexOf('.') === -1 && p.charAt(p.length - 1) !== '/') p += '/';
+        return p + u.search + u.hash;
+      } catch (e) { return href; }
+    }
+
+    function sessionOk() {
+      try {
+        var raw = localStorage.getItem('gv_session');
+        if (!raw) return false;
+        var s = JSON.parse(raw);
+        return !!(s && s.email && s.token);
+      } catch (e) { return false; }
+    }
+
+    /** Fresh process: always Sign in when logged out (App Review + returning members). Create account stays one tap away. */
+    function vaultDest() {
+      if (sessionOk()) return abs('/vault/');
+      return abs('/join/?mode=signin&next=/vault/');
+    }
+
+    /** iOS may wipe localStorage; Preferences (UserDefaults) survives — restore before join bounce. */
+    function restoreSessionFromPreferences(done) {
+      try {
+        var plugins = cap && cap.Plugins;
+        var Prefs = plugins && plugins.Preferences;
+        if (!Prefs || typeof Prefs.get !== 'function') {
+          done();
+          return;
+        }
+        var settled = false;
+        var finish = function() {
+          if (settled) return;
+          settled = true;
+          done();
+        };
+        // First install has nothing in Preferences — don't burn ~1.2s on an empty wait.
+        var prefsBudget = sessionOk() ? 1200 : 350;
+        setTimeout(finish, prefsBudget);
+        Prefs.get({ key: 'gv_session' }).then(function(res) {
+          try {
+            if (res && res.value) {
+              var s = JSON.parse(res.value);
+              if (s && s.email && s.token) {
+                localStorage.setItem('gv_session', res.value);
+              }
+            }
+          } catch (e1) {}
+          finish();
+        }).catch(function() { finish(); });
+      } catch (e2) {
+        done();
+      }
+    }
+
+    function isMarketingPath(path) {
+      var p = routePath(path);
+      return p === '/' || p === '/welcome' || p === '/insider';
+    }
+
+    function isVaultClientNav(href) {
+      try {
+        var p = new URL(href, SITE).pathname.replace(/\/$/, '') || '/';
+        return p === '/vault' || p.indexOf('/vault/') === 0;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    /** Catch-all shells — only one index.html exists; deep slugs must not hard-nav to missing files. */
+    function catchAllShell(pathname) {
+      var p = routePath(pathname);
+      var art = p.match(/^\/articles\/([^/]+)$/);
+      if (art && art[1] && art[1] !== 'detail') return '/vault/articles/';
+      var rules = [
+        [/^\/vault\/recruiting\/player(?:\/[^/]+)?$/, '/vault/recruiting/player/'],
+        [/^\/vault\/futurecast\/player(?:\/[^/]+)?$/, '/vault/futurecast/player/'],
+        [/^\/vault\/portal\/player(?:\/[^/]+)?$/, '/vault/portal/player/'],
+        [/^\/vault\/players(?:\/[^/]+)?$/, '/vault/players/'],
+        [/^\/vault\/articles(?:\/[^/]+)?$/, '/vault/articles/'],
+        [/^\/vault\/community\/thread(?:\/[^/]+)?$/, '/vault/community/thread/'],
+        [/^\/community\/thread(?:\/[^/]+)?$/, '/community/thread/'],
+        [/^\/player(?:\/[^/]+)?$/, '/player/'],
+        [/^\/recruiting\/player(?:\/[^/]+)?$/, '/recruiting/player/'],
+        [/^\/futurecast\/player(?:\/[^/]+)?$/, '/futurecast/player/'],
+        [/^\/team\/player(?:\/[^/]+)?$/, '/team/player/']
+      ];
+      for (var i = 0; i < rules.length; i++) {
+        if (rules[i][0].test(p)) return rules[i][1];
+      }
+      return null;
+    }
+
+    function resolveSpaHref(href) {
+      try {
+        var u = new URL(href, SITE);
+        var p = routePath(u.pathname);
+        var art = p.match(/^\/articles\/([^/]+)$/);
+        if (art && art[1] && art[1] !== 'detail') {
+          return '/vault/articles/' + encodeURIComponent(art[1]) + '/' + u.search + u.hash;
+        }
+        return norm(href);
+      } catch (e) {
+        return href;
+      }
+    }
+
+    function isCatchAllDynamic(pathname) {
+      var shell = catchAllShell(pathname);
+      if (!shell) return false;
+      return routePath(pathname) !== routePath(shell);
+    }
+
+    function navigateCatchAll(href) {
+      var target = resolveSpaHref(href);
+      var shell = catchAllShell(target);
+      if (!shell) {
+        location.href = abs(target);
+        return;
+      }
+      var curShell = catchAllShell(location.pathname);
+      if (curShell && routePath(curShell) === routePath(shell)) {
+        history.pushState(null, '', target);
+        try { window.dispatchEvent(new Event('vault:navigation')); } catch (e1) {}
+        return;
+      }
+      try { sessionStorage.setItem(SPA_KEY, target); } catch (e2) {}
+      location.href = abs(shell);
+    }
+
+    function takeColdStart() {
+      try {
+        if (sessionStorage.getItem(COLD_KEY)) return false;
+        sessionStorage.setItem(COLD_KEY, '1');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function consumeSpaPending() {
+      try {
+        var pending = sessionStorage.getItem(SPA_KEY);
+        if (!pending) return;
+        sessionStorage.removeItem(SPA_KEY);
+        var pendingShell = catchAllShell(pending);
+        var curShell = catchAllShell(location.pathname);
+        if (pendingShell && curShell && routePath(pendingShell) === routePath(curShell)) {
+          history.replaceState(null, '', pending);
+        } else if (pendingShell) {
+          sessionStorage.setItem(SPA_KEY, pending);
+          location.replace(abs(pendingShell));
+        }
+      } catch (e) {}
+    }
+
+    function toAppRelative(href) {
+      if (!href || href.charAt(0) === '#' || href.indexOf('mailto:') === 0 || href.indexOf('tel:') === 0) return href;
+      if (href.indexOf('http') !== 0) return href;
+      try {
+        var au = new URL(href);
+        var siteHost = '';
+        try { siteHost = new URL(SITE).hostname; } catch (eh) {}
+        if (au.hostname === 'gatorvaultinsider.com' || au.hostname === 'www.gatorvaultinsider.com' ||
+            au.hostname === 'localhost' || au.hostname === '127.0.0.1' ||
+            (siteHost && au.hostname === siteHost)) {
+          return (au.pathname || '/') + au.search + au.hash;
+        }
+      } catch (eRel) {}
+      return href;
+    }
+
+    document.addEventListener('click', function(e) {
+      var a = e.target && e.target.closest && e.target.closest('a[href]');
+      if (!a) return;
+      var attr = a.getAttribute('href');
+      if (!attr || attr.charAt(0) === '#' ||
+          attr.indexOf('mailto:') === 0 || attr.indexOf('tel:') === 0) return;
+      var raw = toAppRelative(attr);
+      if (raw.indexOf('http') === 0) return;
+
+      if (bundledNative) {
+        try {
+          var u = new URL(raw, SITE);
+          if (isMarketingPath(u.pathname)) {
+            e.preventDefault();
+            e.stopPropagation();
+            location.href = vaultDest();
+            return;
+          }
+          // Deep catch-all routes have no per-slug index.html — every player slug.
+          if (isCatchAllDynamic(u.pathname) || isCatchAllDynamic(resolveSpaHref(raw))) {
+            e.preventDefault();
+            e.stopPropagation();
+            navigateCatchAll(raw);
+            return;
+          }
+          // Other vault boards: leave client router alone after hydration.
+          if (isVaultClientNav(raw)) return;
+        } catch (err) {}
+        e.preventDefault();
+        e.stopPropagation();
+        location.href = abs(norm(raw));
+        return;
+      }
+
+      var fixed = norm(raw);
+      if (fixed !== raw || attr !== raw) {
+        e.preventDefault();
+        location.href = abs(fixed);
+        return;
+      }
+      try {
+        var u2 = new URL(raw, SITE);
+        if (isMarketingPath(u2.pathname)) {
+          e.preventDefault();
+          location.href = vaultDest();
+        }
+      } catch (err2) {}
+    }, true);
+
+    // Safe-area / tap polish before React mounts.
+    try { document.documentElement.classList.add('gv-native-app'); } catch (eCls) {}
+
+    // Restore stashed catch-all deep links BEFORE cold-start routing.
+    // Otherwise Team → /vault/players/:slug loads the shell, then cold-start
+    // replaces to /vault/ and drops the player (or falls through to marketing).
+    consumeSpaPending();
+    var path = routePath(location.pathname || '/');
+    var cold = takeColdStart();
+    if (isMarketingPath(path) || (cold && isMarketingPath(path))) {
+      // Skip Preferences round-trip when localStorage already has a session.
+      if (sessionOk()) {
+        var destFast = vaultDest();
+        if (location.href !== destFast) location.replace(destFast);
+      } else {
+        restoreSessionFromPreferences(function() {
+          var dest = vaultDest();
+          if (location.href !== dest) location.replace(dest);
+        });
+      }
+    }
+  } catch (e) {}
+})();0:["UQxfwkyX74S9nThMrQWRf",[[["",{"children":["vault",{"children":["team",{"children":["staff",{"children":["__PAGE__",{}]}]}]}]},"$undefined","$undefined",true],["",{"children":["vault",{"children":["team",{"children":["staff",{"children":["__PAGE__",{},[["$L1",["$","$L2",null,{"props":{"params":{},"searchParams":{}},"Component":"$3"}],null],null],null]},[null,["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children","vault","children","team","children","staff","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],null]},[[null,[[["$","span",null,{"hidden":true,"aria-hidden":"true","data-testid":"vault-team","className":"gv-vault-ssr-marker gv-team-page gv-team-roster","style":{"display":"none","minHeight":0,"height":0,"margin":0,"padding":0,"overflow":"hidden"},"children":"Full Roster · Depth Chart · Team"}],["$","span",null,{"hidden":true,"aria-hidden":"true","className":"gv-vault-ssr-marker gv-hub-tabs gv-hub-tabs--scroll gv-hub-tab","style":"$6"}]],["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children","vault","children","team","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/43712cf75700bb37.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/cee87e348723cad5.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/685523d5d6faee53.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/a70cfd483fdd5d96.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","4",{"rel":"stylesheet","href":"/_next/static/css/fca2b81e4f619f62.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","5",{"rel":"stylesheet","href":"/_next/static/css/821e38d30f5655aa.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","6",{"rel":"stylesheet","href":"/_next/static/css/032f77b4860f5cac.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","7",{"rel":"stylesheet","href":"/_next/static/css/eac1a836dee0991d.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","8",{"rel":"stylesheet","href":"/_next/static/css/82b0d598757362d7.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","9",{"rel":"stylesheet","href":"/_next/static/css/3f52c8abae2610fd.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","10",{"rel":"stylesheet","href":"/_next/static/css/a3bd6a5cb521f2b8.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","11",{"rel":"stylesheet","href":"/_next/static/css/3ff5c0cb3c102764.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","12",{"rel":"stylesheet","href":"/_next/static/css/920fed036f4409d2.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","13",{"rel":"stylesheet","href":"/_next/static/css/d758af469e58b3cb.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","14",{"rel":"stylesheet","href":"/_next/static/css/52832c45d8f0bfc1.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","15",{"rel":"stylesheet","href":"/_next/static/css/2f8817660bc03d45.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","16",{"rel":"stylesheet","href":"/_next/static/css/a6905a4117dfd8b1.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","17",{"rel":"stylesheet","href":"/_next/static/css/a59b91f2a3ce4322.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","18",{"rel":"stylesheet","href":"/_next/static/css/fd1ffd61a96471af.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","19",{"rel":"stylesheet","href":"/_next/static/css/33470ad96e36be8b.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","20",{"rel":"stylesheet","href":"/_next/static/css/f5018f6bc28b1e96.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","21",{"rel":"stylesheet","href":"/_next/static/css/1158d82d0c627bac.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","22",{"rel":"stylesheet","href":"/_next/static/css/8171a0432c1173bf.css","precedence":"next","crossOrigin":"$undefined"}]],[["$","style",null,{"dangerouslySetInnerHTML":{"__html":".gv-vault-shell{min-height:100vh;min-height:100dvh;background:#001a33;color:#ffffff;display:flex;flex-direction:column}.gv-vault-shell__main{flex:1;min-height:0;width:100%}.gv-vault-shell--home .gv-vault-shell__main,.gv-vault-shell__main:has(.home-wow-page){flex:1 0 auto;min-height:auto;height:auto;overflow:visible}.gv-vault-shell--home .gv-vault-shell__body,.gv-vault-shell__main:has(.gv-home){margin:0;padding-top:0}.gv-vault-shell--home .gv-vault-shell__main,.gv-vault-shell__main:has(.gv-home){padding:0}.gv-home__frame,.gv-home__frame.gv-home__command{padding-top:24px}[data-hydrating] .gv-vault-shell,[data-hydrating] .gv-vault-shell__main{opacity:1!important;visibility:visible!important}[data-hydrating] .gv-vault-shell.is-navigating .gv-vault-shell__main{opacity:1!important;pointer-events:auto!important}[data-hydrating] .gv-vault-shell__main>*{visibility:visible!important}"}}],["$","div",null,{"id":"gv-vault-root","data-hydrating":"true","children":[["$","$L7",null,{}],["$","$L8",null,{"children":[["$","$L9",null,{}],["$","$La",null,{"children":["$","$Lb",null,{"children":["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children","vault","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]}]}]]}]]}],["$","script",null,{"data-gv-menu-boot":"","dangerouslySetInnerHTML":{"__html":"$c"}}],["$","script",null,{"data-gv-hydration-boot":"","dangerouslySetInnerHTML":{"__html":"$d"}}]]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/8c656d63b1573491.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/18b9a4f413c25020.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/bb434d8c0077aa2a.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/6e8fa6ea7542a4c4.css","precedence":"next","crossOrigin":"$undefined"}]],["$","html",null,{"lang":"en","data-theme":"dark","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();"}}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$e"}}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Oswald:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"className":"fc-body gv-body","children":["$","$Lf",null,{"children":["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":"404"}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]}]]}]],null],null],["$L10",null]]]]
+10:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","1",{"charSet":"utf-8"}]]
+1:null
