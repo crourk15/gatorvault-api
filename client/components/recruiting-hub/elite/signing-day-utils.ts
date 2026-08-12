@@ -46,7 +46,7 @@ function buildSigningEventConfig(
       badge: 'Primary Signing Window',
       liveBadge: 'LIVE SIGNING WINDOW',
       linkLabel: 'Expected signees →',
-      linkHref: '/vault/recruiting/signing/esp',
+      linkHref: `/vault/recruiting/signing/esp?year=${calendar.classYear}`,
       classYear: calendar.classYear,
       start: calendar.esp.start,
       end: calendar.esp.end,
@@ -61,7 +61,7 @@ function buildSigningEventConfig(
     badge: 'Then the closer',
     liveBadge: 'LIVE SIGNING WINDOW',
     linkLabel: 'Remaining targets →',
-    linkHref: '/vault/recruiting/signing/nsd',
+    linkHref: `/vault/recruiting/signing/nsd?year=${calendar.classYear}`,
     classYear: calendar.classYear,
     start: calendar.nsd.start,
     end: calendar.nsd.end,
@@ -121,17 +121,28 @@ function isUfCommit(player: RecruitingBoardPlayer): boolean {
   return isFloridaSchool(resolveCommittedTo(player));
 }
 
+function matchesClassYear(
+  player: RecruitingBoardPlayer,
+  classYear?: number | null
+): boolean {
+  if (classYear == null || !Number.isFinite(Number(classYear))) return true;
+  const y = Number(player.classYear);
+  if (!Number.isFinite(y)) return true; // year-scoped board fetch is authoritative
+  return y === Number(classYear);
+}
+
 /**
- * ESP "Expected signees" = Florida commits for the class.
+ * ESP "Expected signees" = Florida commits for that class year.
  * Never Flip Watch / committed-elsewhere TOP-HIGH targets.
- * NSD "Remaining targets" = open UF hunts only (active targets).
+ * NSD "Remaining targets" = open UF hunts for that class only.
  */
 export function selectSigningBoardPlayers(
   eventId: SigningEventId,
-  board: SigningBoardLists
+  board: SigningBoardLists,
+  classYear?: number | null
 ): RecruitingBoardPlayer[] {
-  const commits = board.commits ?? [];
-  const targets = board.targets ?? [];
+  const commits = (board.commits ?? []).filter((p) => matchesClassYear(p, classYear));
+  const targets = (board.targets ?? []).filter((p) => matchesClassYear(p, classYear));
 
   const pool =
     eventId === 'esp'
