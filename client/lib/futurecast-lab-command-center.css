@@ -564,14 +564,22 @@
   color: var(--accent-orange, #fa4616);
 }
 
-/* ── Priority chase cards (rank + why) ── */
+/* ── Priority chase cards (full VaultChaseCard on Lab surface) ── */
 .fc-lab-chase-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  max-height: 780px;
-  overflow-y: auto;
-  padding-right: 4px;
+  gap: 14px;
+  /* Never max-height + flex-column: WebKit shrinks children to fit, and
+     .gv-chase-card { overflow:hidden } clips them to the top row only. */
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+}
+
+.fc-lab-chase-list > .gv-chase-card {
+  flex-shrink: 0;
+  width: 100%;
+  min-width: 0;
 }
 .fc-lab-chase-card {
   display: flex;

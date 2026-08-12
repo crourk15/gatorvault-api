@@ -591,10 +591,21 @@
     grid-column: 1 / -1;
   }
 
-  .fc-lab-target-cards {
+  .fc-lab-target-cards,
+  .fc-lab-chase-list {
     max-height: none !important;
     overflow: visible !important;
     width: 100% !important;
+  }
+
+  .fc-lab-chase-list > .gv-chase-card {
+    flex-shrink: 0 !important;
+  }
+
+  /* Battle tabs + chase list — prevent parent module clip */
+  .rh-cc-module:has(.fc-lab-chase-list),
+  .fc-lab-panel-shell:has(.fc-lab-chase-list) {
+    overflow: visible !important;
   }
 
   .fc-lab-signal-grid {

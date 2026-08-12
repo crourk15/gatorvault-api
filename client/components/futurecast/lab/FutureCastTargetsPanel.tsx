@@ -50,7 +50,8 @@ export function FutureCastTargetsPanel({
         .filter((p) => isActiveUfTarget(p))
         .filter((p) => Number(p.classYear) === focusYear)
         .sort((a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0))
-        .slice(0, 10)
+        /* Full chase cards on Lab surface — top 5; Open board for the rest. */
+        .slice(0, 5)
         .map(highPriorityToLabTarget);
     }
     return [...masterBoard.players]
@@ -65,7 +66,7 @@ export function FutureCastTargetsPanel({
 
   const title = discoveryFocus ? `${focusYear} Priority chase` : 'Top UF Targets';
   const sub = discoveryFocus
-    ? 'Ranked by chase heat — why Florida should fight for them, not who leads the board today.'
+    ? 'Full chase cards on this surface — heat, fit, and why Florida should fight. Open board for the rest of the class.'
     : 'In-play closing fights — Florida odds, rival threats, and movement.';
 
   const boardHref = discoveryFocus
