@@ -102,28 +102,28 @@ export function fallbackDepthChartBoard(): DepthChartBoard {
 
 function normalizeRows(list: unknown, fallback: DepthChartRow[]): DepthChartRow[] {
   if (!Array.isArray(list) || !list.length) return fallback.map((r) => ({ ...r }));
-  return list
-    .map((row) => {
-      if (!row || typeof row !== 'object') return null;
-      const r = row as Partial<DepthChartRow>;
-      const pos = String(r.pos || '').trim();
-      const s = String(r.s || '').trim();
-      if (!pos || !s) return null;
-      const statusRaw = String(r.status || 'locked').toLowerCase();
-      const status: DepthChartRow['status'] =
-        statusRaw === 'battle' || statusRaw === 'watch' ? statusRaw : 'locked';
-      return {
-        pos,
-        s,
-        si: String(r.si || '').trim(),
-        b: String(r.b || '').trim(),
-        bi: String(r.bi || '').trim(),
-        third: String(r.third || '').trim(),
-        status,
-        analysis: String(r.analysis || '').trim(),
-      } satisfies DepthChartRow;
-    })
-    .filter((r): r is DepthChartRow => r != null);
+  const out: DepthChartRow[] = [];
+  for (const row of list) {
+    if (!row || typeof row !== 'object') continue;
+    const r = row as Partial<DepthChartRow>;
+    const pos = String(r.pos || '').trim();
+    const s = String(r.s || '').trim();
+    if (!pos || !s) continue;
+    const statusRaw = String(r.status || 'locked').toLowerCase();
+    const status: DepthChartRow['status'] =
+      statusRaw === 'battle' || statusRaw === 'watch' ? statusRaw : 'locked';
+    out.push({
+      pos,
+      s,
+      si: String(r.si || '').trim(),
+      b: String(r.b || '').trim(),
+      bi: String(r.bi || '').trim(),
+      third: String(r.third || '').trim(),
+      status,
+      analysis: String(r.analysis || '').trim(),
+    });
+  }
+  return out.length ? out : fallback.map((r) => ({ ...r }));
 }
 
 export function normalizeDepthChartBoard(data: DepthChartBoardResponse | null | undefined): DepthChartBoard {
