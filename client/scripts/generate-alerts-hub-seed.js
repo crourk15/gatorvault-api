@@ -62,9 +62,26 @@ async function main() {
       await new Promise((r) => setTimeout(r, 1500 * (i + 1)));
     }
   }
+  const BLOCKED = new Set([
+    'ryan-peterson',
+    'jalanie-george',
+    'keoni-snipes',
+    'zylen-little',
+    'josiah-taylor',
+  ]);
+  const scrub = (rows) =>
+    (rows || []).filter((a) => {
+      const slug = String(a.playerSlug || a.playerId || '')
+        .toLowerCase()
+        .trim();
+      if (slug && BLOCKED.has(slug)) return false;
+      if (/\bryan\s+peterson\b/i.test(`${a.playerName || ''} ${a.message || ''}`)) return false;
+      return true;
+    });
+  alerts = scrub(alerts);
   const prev = retainPrevious();
   if (!alerts.length && prev?.alerts?.length) {
-    alerts = prev.alerts;
+    alerts = scrub(prev.alerts);
     source = 'retained-previous';
   }
   const seed = { generatedAt: new Date().toISOString(), source, alerts };

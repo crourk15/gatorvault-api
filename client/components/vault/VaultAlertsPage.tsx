@@ -81,7 +81,12 @@ export function VaultAlertsPage(): React.ReactElement {
     }
     try {
       const rows = await fetchAlerts();
-      setApiAlerts(rows);
+      // Never wipe a good first-paint seed with an empty live payload (deferred rebuild).
+      if (Array.isArray(rows) && rows.length > 0) {
+        setApiAlerts(rows);
+      } else if (!HAS_SEED) {
+        setApiAlerts([]);
+      }
       setLocalAlerts(loadLocalRecentAlerts());
       setError(null);
     } catch (err) {

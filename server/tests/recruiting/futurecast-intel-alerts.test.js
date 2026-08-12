@@ -2,10 +2,30 @@ require("dotenv").config({ path: require("path").join(__dirname, "../../.env") }
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 
-describe("futurecast-intel-alerts", () => {
-  const { buildFutureCastIntelAlerts } = require("../../lib/futurecast-intel-alerts");
+const HAS_DB = Boolean(process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL);
 
-  it("includes resolved UF % on flip-watch alert messages", async () => {
+describe("futurecast-intel-alerts", () => {
+  const {
+    buildFutureCastIntelAlerts,
+    buildFutureCastIntelAlertsSync,
+  } = require("../../lib/futurecast-intel-alerts");
+
+  it("sync Board Intel stays on GatorVault board (no DB)", () => {
+    const alerts = buildFutureCastIntelAlertsSync({
+      asOf: new Date("2026-06-22T12:00:00Z"),
+    });
+    assert.ok(alerts.length >= 1, "expected board intel without DB");
+    assert.ok(
+      !alerts.some((a) => /ryan-peterson|Ryan Peterson/i.test(JSON.stringify(a))),
+      "Ryan Peterson must not appear in Board Intel"
+    );
+    assert.ok(
+      alerts.every((a) => a.playerSlug),
+      "intel alerts should be named board targets"
+    );
+  });
+
+  it("includes resolved UF % on flip-watch alert messages", { skip: !HAS_DB }, async () => {
     const alerts = await buildFutureCastIntelAlerts({
       asOf: new Date("2026-06-22T12:00:00Z"),
     });
@@ -22,7 +42,7 @@ describe("futurecast-intel-alerts", () => {
     );
   });
 
-  it("matches high-priority flip-watch UF for shared slugs", async () => {
+  it("matches high-priority flip-watch UF for shared slugs", { skip: !HAS_DB }, async () => {
     const alerts = await buildFutureCastIntelAlerts({
       asOf: new Date("2026-06-22T12:00:00Z"),
     });
