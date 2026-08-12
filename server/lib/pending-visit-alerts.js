@@ -80,7 +80,9 @@ async function forceDeliverToOperators(log, emails = []) {
   for (const email of emails) {
     let emailOut = { sent: false, reason: "skipped" };
     try {
-      emailOut = await sendSubscriberDigestEmail(email, subject, html);
+      emailOut = await sendSubscriberDigestEmail(email, subject, html, {
+        playerSlug: log.playerSlug,
+      });
     } catch (err) {
       emailOut = {
         sent: false,

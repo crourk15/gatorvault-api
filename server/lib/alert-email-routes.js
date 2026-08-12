@@ -64,7 +64,8 @@ function mountAlertEmailRoutes(app) {
       emailOut = await sendSubscriberDigestEmail(
         email,
         subject,
-        buildVisitScheduledEmailHtml(log)
+        buildVisitScheduledEmailHtml(log),
+        { playerSlug: log.playerSlug || slug }
       );
     } catch (err) {
       emailOut = { sent: false, reason: err.message };
