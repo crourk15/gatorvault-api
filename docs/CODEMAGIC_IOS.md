@@ -80,6 +80,7 @@ Required in Codemagic: named cert **`gatorvault_appstore`**, named profile **`ga
 | Publishing failed / Failed to publish App.ipa | Open the **Publishing** step log. Common causes: (1) `CFBundleVersion` duplicate — auto-bump step handles this; (2) **version train closed** / `CFBundleShortVersionString` must be higher than previously approved — bump `MARKETING_VERSION` (e.g. `1.0.8` → `1.0.9`) and create that version in App Store Connect. Also check ASC agreements + API key role (App Manager+) |
 | Bundle ID mismatch | Must be `com.gatorvaultinsider.app` |
 | Build fails on `npm run build` | Check Codemagic build log; fix Next.js errors |
+| `Error installing FBAEMKit` / `curl: (56) Connection died` on FacebookSDK zip | Transient GitHub CDN flake while CocoaPods downloads Meta App Events (`FBSDKCoreKit` → `FBAEMKit`). Workflow defers pods out of `cap sync` and retries via `scripts/codemagic-pod-install.sh` (stronger curl retries). Re-run **iOS Release Build** on `main` if it still fails after several attempts. |
 | Upload OK but no build in Connect | Wait 30 min; check email for Apple processing errors |
 
 ## Version bumps

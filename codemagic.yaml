@@ -50,6 +50,10 @@ workflows:
           unset CAPACITOR_SERVER_URL || true
           cd client
           node scripts/patch-capgo-podspec.js
+          # Defer real `pod install` — Facebook FBAEMKit GitHub zip often dies mid-download
+          # under CocoaPods' default curl --retry 2. Pods run in the next step with retries.
+          export CAPACITOR_COCOAPODS_PATH="$CM_BUILD_DIR/scripts/codemagic-cap-sync-skip-pods.sh"
+          chmod +x "$CAPACITOR_COCOAPODS_PATH"
           npx cap sync ios
           test -d ios/App/App/public
           echo "OK: copied web bundle to ios/App/App/public"
@@ -66,8 +70,9 @@ workflows:
           echo "OK: bundled Capacitor shell (no live WebView URL)"
       - name: Install CocoaPods
         script: |
-          cd client/ios/App
-          pod install
+          set -euo pipefail
+          chmod +x "$CM_BUILD_DIR/scripts/codemagic-pod-install.sh"
+          bash "$CM_BUILD_DIR/scripts/codemagic-pod-install.sh"
       - name: Refresh App Store profile with Push + Associated Domains
         script: |
           set -euo pipefail
