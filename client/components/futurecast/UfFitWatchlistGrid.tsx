@@ -1,9 +1,11 @@
 /**
- * UF Fit Watchlist grid — GET /api/uf-fit/watchlist
+ * UF Fit Watchlist grid — GET /api/uf-fit/watchlist (Best Fits Big Board cards).
  */
 import React, { useCallback, useEffect, useState } from 'react';
-import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
-import { fromUfFitWatchlist } from '@/lib/recruiting-card-adapters';
+import {
+  VaultBigBoardCard,
+  modelFromBestFits,
+} from '@/components/futurecast/VaultBigBoardCard';
 import {
   fetchUfFitWatchlist,
   type UfFitWatchlistPlayer,
@@ -52,14 +54,9 @@ export function UfFitWatchlistGrid({ query }: UfFitWatchlistGridProps): React.Re
   if (!players.length) return <div className="fc-big-board-empty">No players match these filters.</div>;
 
   return (
-    <div className="gv-rb-grid" data-testid="uf-fit-watchlist-grid">
+    <div className="gv-rb-grid gv-chase-card-grid" data-testid="uf-fit-watchlist-grid">
       {players.map((p) => (
-        <ClassicRecruitCard
-          key={p.id}
-          player={fromUfFitWatchlist(p)}
-          variant="target"
-          rank={p.rank}
-        />
+        <VaultBigBoardCard key={p.id} model={modelFromBestFits(p)} profileContext="futurecast" />
       ))}
     </div>
   );

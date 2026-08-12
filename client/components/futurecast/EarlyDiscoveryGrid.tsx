@@ -7,8 +7,10 @@ import {
   type EarlyDiscoveryQuery,
 } from '@/lib/early-discovery-api';
 import { fetchWithWarmPoll, userFacingLoadError } from '@/lib/api-warm-poll';
-import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
-import { fromEarlyDiscovery } from '@/lib/recruiting-card-adapters';
+import {
+  VaultBigBoardCard,
+  modelFromEarlyDiscovery,
+} from '@/components/futurecast/VaultBigBoardCard';
 
 export interface EarlyDiscoveryGridProps {
   query: EarlyDiscoveryQuery;
@@ -90,16 +92,14 @@ export function EarlyDiscoveryGrid({ query }: EarlyDiscoveryGridProps): React.Re
         {position ? ` · ${position}` : ''}
       </p>
       <div
-        className="gv-rb-grid"
+        className="gv-rb-grid gv-chase-card-grid"
         data-testid="early-discovery-grid"
         data-refreshing={isRefreshing ? 'true' : undefined}
       >
         {players.map((player) => (
           <div key={player.id} data-testid="player-card" data-slug={player.slug}>
-            <ClassicRecruitCard
-              player={fromEarlyDiscovery(player)}
-              variant="target"
-              rank={player.rank}
+            <VaultBigBoardCard
+              model={modelFromEarlyDiscovery(player)}
               profileContext="futurecast"
             />
           </div>

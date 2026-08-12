@@ -306,8 +306,8 @@
   border-top: 3px solid var(--gv-orange, #fa4616);
   border-radius: var(--gv-radius-md, 12px);
   box-shadow: var(--gv-shadow-soft, 0 8px 24px rgba(0, 0, 0, 0.18));
-  /* visible — overflow:hidden was clipping full VaultChaseCard bodies on iOS Lab */
-  overflow: visible;
+  /* Keep clipped — overflow:visible here fights iOS document scroll. */
+  overflow: hidden;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 

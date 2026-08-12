@@ -70,6 +70,8 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-12 | Beat Writer Highlights: diversify writers / exclude brand Live filler on home + GNL | `gatornation-live-api`, `home-command-utils`, `HomePremiumPage` in binary (API `pickBeatHighlightPosts` also live) | pending |
 | 2026-08-12 | My Alerts: **Send test alert** fires Brysen OV email + push to signed-in account | `VaultAlertsPage`, `alert-email-api` in binary (`POST /api/alerts/send-visit-alert` also live) | pending |
 | 2026-08-12 | Lab Priority chase: full VaultChaseCard on surface (same HP board cards; kill ModuleShell/flex clip) + FAB/safe-area | `FutureCastTargetsPanel`, `HighPriorityTargetCard`, `vault-chase-card.css`, Lab/RH CSS in binary | pending |
+| 2026-08-12 | Fix Lab/chase scroll fight + UI leakage: restore module overflow, hide Live Pulse FAB on Lab/chase, document scroll | `LivePulseFab`, `gv-ui-cleanup`, `recruiting-hub-command-center.css` in binary | pending |
+| 2026-08-12 | FutureCast Big Board: Vault cards for Intelligence Rank / Best Fits / Early Discovery (retire ClassicRecruitCard) | `VaultBigBoardCard` + grids in binary | pending |
 
 ---
 
