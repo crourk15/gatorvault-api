@@ -103,22 +103,21 @@ export function FutureCastTargetsPanel({
     </VaultNavLink>
   );
 
-  // Chase surface must not sit inside overflow:hidden ModuleShell chrome — that
-  // plus flex max-height was clipping VaultChaseCard to the top row on iOS.
-  const chaseBare = discoveryFocus ? true : bare;
-
+  // Sticky module heads are forced static on mobile (see mobile-native-framework).
+  // Keep ModuleShell here so Priority chase has an opaque plate + dark title —
+  // bare white-on-navy heads + nested Share climate read as UI leakage under the board.
+  // Cards stay unclipped via :has(.fc-lab-chase-board) overflow:visible rules.
   return (
     <>
       <FutureCastLeadingPanel
-        /* Flat title on 2028 discovery — no ModuleShell sticky head over the board. */
-        bare={discoveryFocus ? true : bare}
+        bare={bare}
         masterBoard={masterBoard}
         trendingBoard={trendingBoard}
         highPriority={highPriority}
         underclassmen={underclassmen}
       />
       <FutureCastPanelShell
-        bare={chaseBare}
+        bare={bare}
         title={title}
         sub={sub}
         action={boardAction}
@@ -158,19 +157,17 @@ export function FutureCastTargetsPanel({
             ))}
           </div>
         )}
-
-        {includeBattles && trendingBoard ? (
-          <div className="fc-lab-targets-battles">
-            <FutureCastBattlesPanel
-              bare
-              compact={battlesCompact}
-              masterBoard={masterBoard}
-              trendingBoard={trendingBoard}
-              highPriority={highPriority}
-            />
-          </div>
-        ) : null}
       </FutureCastPanelShell>
+
+      {includeBattles && trendingBoard ? (
+        <FutureCastBattlesPanel
+          bare={bare}
+          compact={battlesCompact}
+          masterBoard={masterBoard}
+          trendingBoard={trendingBoard}
+          highPriority={highPriority}
+        />
+      ) : null}
     </>
   );
 }

@@ -1499,7 +1499,8 @@ body {
     -webkit-overflow-scrolling: auto;
   }
 
-  /* Share-climate tabs under Lab chase — wrap instead of nested X scroller. */
+  /* Share-climate tabs (sibling under Priority chase) — wrap instead of nested X scroller. */
+  body:has(.fc-lab-cc-page) [data-testid='fc-lab-battles'] .rh-cc-tabs,
   body:has(.fc-lab-cc-page) .fc-lab-targets-battles .rh-cc-tabs,
   body:has(.fc-lab-cc-page) .fc-lab-battle-tabs {
     flex-wrap: wrap !important;

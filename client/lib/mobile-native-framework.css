@@ -912,17 +912,26 @@
     padding-inline: 0;
   }
 
-  /* Battle tabs + target cards — prevent parent module clip (RH intel-scroll parity) */
+  /* Battle tabs + target / chase cards — prevent parent module clip (RH intel-scroll parity) */
   .rh-cc-module:has(.fc-lab-battle-tabs),
   .fc-lab-panel-shell:has(.fc-lab-battle-tabs),
   .rh-cc-module:has(.fc-lab-target-cards),
-  .fc-lab-panel-shell:has(.fc-lab-target-cards) {
+  .fc-lab-panel-shell:has(.fc-lab-target-cards),
+  .rh-cc-module:has(.fc-lab-chase-board),
+  .fc-lab-panel-shell:has(.fc-lab-chase-board),
+  .rh-cc-module:has(.fc-lab-chase-list),
+  .fc-lab-panel-shell:has(.fc-lab-chase-list) {
     overflow: visible !important;
   }
 
   .rh-cc-module__body:has(.fc-lab-battle-tabs),
-  .fc-lab-panel-shell .rh-cc-module__body:has(.fc-lab-battle-tabs) {
+  .fc-lab-panel-shell .rh-cc-module__body:has(.fc-lab-battle-tabs),
+  .rh-cc-module__body:has(.fc-lab-chase-board),
+  .rh-cc-module__body:has(.fc-lab-chase-list),
+  .fc-lab-panel-shell .rh-cc-module__body:has(.fc-lab-chase-board),
+  .fc-lab-panel-shell .rh-cc-module__body:has(.fc-lab-chase-list) {
     overflow: visible !important;
+    max-height: none !important;
   }
 
   /* Tab strips inside modules — scroll, not wrap clip */
@@ -1139,13 +1148,13 @@
   }
 
   /* Module titles scroll with the page — sticky heads pin "Who commits next?"
-     over chase cards and read as UI leakage on iOS document scroll. */
+     over chase cards and read as UI leakage on iOS document scroll.
+     Keep ModuleShell (opaque plate + dark title); do not force bare white titles. */
   .rh-cc-module__head,
   .fc-lab-module__head {
     position: static !important;
     top: auto !important;
     z-index: auto;
-    background: transparent;
   }
 
   /* Profile hero subtle entrance */
