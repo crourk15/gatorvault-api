@@ -1,7 +1,18 @@
 {
-  "generatedAt": "2026-08-12T01:42:29.747Z",
+  "generatedAt": "2026-08-12T01:58:11.604Z",
   "source": "local-board-intel-sync",
   "alerts": [
+    {
+      "id": "ov-up-brysen-wright",
+      "playerId": "brysen-wright",
+      "playerSlug": "brysen-wright",
+      "playerName": "Brysen Wright",
+      "type": "visit_upcoming",
+      "message": "Upcoming UF OV: Brysen Wright (2026-08-22–2026-08-24)",
+      "createdAt": "2026-08-22",
+      "seen": false,
+      "category": "Visit"
+    },
     {
       "id": "flip-ace-alston",
       "playerId": "ace-alston",
@@ -9,7 +20,7 @@
       "playerName": "Ace Alston",
       "type": "flip_watch",
       "message": "Ace Alston (Notre) — Flip score — · UF TBD",
-      "createdAt": "2026-08-12T01:42:29.734Z",
+      "createdAt": "2026-08-12T01:58:11.582Z",
       "seen": false,
       "category": "Flip Watch"
     },
