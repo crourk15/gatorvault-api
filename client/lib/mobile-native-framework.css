@@ -105,20 +105,11 @@
     padding-right: var(--mobile-gutter);
   }
 
+  /* Platform: never nest Y inside shell main (overflow-x:hidden → overflow-y:auto). */
+  .gv-vault-shell,
+  .gv-vault-shell__body,
   .gv-vault-shell__main,
-  .gv-app-shell__main {
-    overflow-x: hidden;
-  }
-
-  /* Home + Film Room + Live: do not create a nested Y scroller (overflow-x:hidden → overflow-y:auto). */
-  .gv-vault-shell__main:has(.home-wow-page),
-  .gv-vault-shell__main:has(.gv-film-room-page),
-  .gv-vault-shell__main:has(.uf-premium-gnl),
-  .gv-vault-shell__main:has(.gv-live-feed),
-  .gv-app-shell__main:has(.home-wow-page),
-  .gv-app-shell__main:has(.gv-film-room-page),
-  .gv-app-shell__main:has(.uf-premium-gnl),
-  .gv-app-shell__main:has(.gv-live-feed),
+  .gv-app-shell__main,
   .gv-vault-shell--home,
   .gv-vault-shell--home .gv-vault-shell__main,
   .gv-vault-shell--home .gv-app-shell__main,
@@ -229,7 +220,7 @@
     max-width: 100% !important;
     min-width: 0 !important;
     margin-inline: 0;
-    overflow: visible !important;
+    /* Keep overflow:hidden (RH default) — visible !important fights iOS document scroll. */
   }
 
   /* Tap targets */
@@ -1147,19 +1138,14 @@
     max-width: calc(100% - 2 * var(--mobile-gutter)) !important;
   }
 
-  /* Sticky module headers on long mobile pages */
+  /* Module titles scroll with the page — sticky heads pin "Who commits next?"
+     over chase cards and read as UI leakage on iOS document scroll. */
   .rh-cc-module__head,
   .fc-lab-module__head {
-    position: sticky;
-    top: calc(56px + env(safe-area-inset-top, 0px));
-    z-index: 2;
-    background: inherit;
-    padding-bottom: var(--space-sm);
-  }
-
-  .rh-cc-hero .rh-cc-module__head,
-  .fc-lab-hero .fc-lab-module__head {
-    position: static;
+    position: static !important;
+    top: auto !important;
+    z-index: auto;
+    background: transparent;
   }
 
   /* Profile hero subtle entrance */

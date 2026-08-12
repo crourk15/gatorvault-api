@@ -12,8 +12,9 @@ function hideLivePulseFab(pathname: string): boolean {
   const p = String(pathname || '').replace(/\/+$/, '') || '/';
   if (p === '/vault/futurecast' || p.startsWith('/vault/futurecast/')) return true;
   if (p === '/futurecast' || p.startsWith('/futurecast/')) return true;
-  // Recruiting priority chase boards: /vault/recruiting/2028/targets
-  if (/\/vault\/recruiting\/\d{4}\/targets(?:\/|$)/.test(p)) return true;
+  // Recruiting priority chase boards (vault + hub bases)
+  if (/\/(?:vault\/)?recruiting(?:-hub)?\/\d{4}\/targets(?:\/|$)/.test(p)) return true;
+  if (/\/(?:vault\/)?recruiting(?:-hub)?\/priority(?:\/|$)/.test(p)) return true;
   return false;
 }
 

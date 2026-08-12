@@ -287,12 +287,10 @@ body.gv-scroll-locked .gv-vault-bottom-nav {
   z-index: 1;
 }
 
-/* Home + Live + Film Room — document scroll. overflow-x:hidden on shell/main
-   coerces overflow-y:auto and traps vertical gestures inside the shell. */
-.gv-vault-shell__main:has(.home-wow-page),
-.gv-vault-shell__main:has(.uf-premium-gnl),
-.gv-vault-shell__main:has(.gv-live-feed),
-.gv-vault-shell__main:has(.gv-film-room-page),
+/* Platform vault document scroll — shell must not nest a second Y scroller. */
+.gv-vault-shell,
+.gv-vault-shell__body,
+.gv-vault-shell__main,
 .gv-vault-shell--home,
 .gv-vault-shell--home .gv-vault-shell__body,
 .gv-vault-shell--home .gv-vault-shell__main,

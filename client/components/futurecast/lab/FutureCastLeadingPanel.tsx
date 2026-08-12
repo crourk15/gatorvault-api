@@ -191,7 +191,8 @@ export function FutureCastLeadingPanel({
         if (!isActiveUfTarget(p)) return false;
         if (seen.has(p.slug)) return false;
         seen.add(p.slug);
-        return Number(p.classYear) === focusYear || !discoveryView;
+        // Closing Class must stay on focusYear — never inherit 2028 Discovery rows.
+        return Number(p.classYear) === focusYear;
       })
       .map(futureCastPlayerToLabTarget);
   }, [

@@ -12,6 +12,17 @@ const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 /** Bump when HS-only class commit metrics logic changes. */
 const HUB_METRICS_CACHE_REV = 'hs6';
 
+/** Bump when footprint commit/target tallies logic changes. */
+const FOOTPRINT_CACHE_REV = 'fp2';
+
+function hubFootprintCacheKey(year) {
+  return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
+}
+
+function recruitingFootprintCacheKey(year) {
+  return `recruiting:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
+}
+
 const HUB_CACHE_MS = parseInt(process.env.HUB_CACHE_MS || String(5 * 60 * 1000), 10);
 const BUILD_TIMEOUT_MS = parseInt(process.env.HUB_BUILD_TIMEOUT_MS || '20000', 10);
 const REFRESH_MS = parseInt(process.env.HUB_CACHE_REFRESH_MS || String(Math.max(HUB_CACHE_MS - 60_000, 120_000)), 10);
@@ -191,6 +202,8 @@ function durableMetaForCacheKey(cacheKey) {
   if (m) return { endpoint: 'commits', year: Number(m[1]), spread: false };
   m = cacheKey.match(/^hub:elite:ticker:(\d+)$/);
   if (m) return { endpoint: 'ticker', year: Number(m[1]), spread: false };
+  m = cacheKey.match(/^hub:elite:footprint:[^:]+:(\d+)$/);
+  if (m) return { endpoint: 'footprint', year: Number(m[1]), spread: true };
   m = cacheKey.match(/^hub:elite:footprint:(\d+)$/);
   if (m) return { endpoint: 'footprint', year: Number(m[1]), spread: true };
   return null;
@@ -202,19 +215,25 @@ function persistDurableCacheValue(cacheKey, value) {
   return writeHubDiskSnapshot(meta.endpoint, meta.year, value);
 }
 
+/** When a hub bundle is in hand, keep dedicated footprint GETs warm for Class tabs. */
+function seedFootprintFromBundle(cacheKey, value) {
+  const m = String(cacheKey || '').match(/^hub:elite:bundle:[^:]+:(\d+)$/);
+  if (!m || !value || typeof value !== 'object') return;
+  const footprint = value.footprint;
+  if (!footprint || typeof footprint !== 'object') return;
+  if (!Array.isArray(footprint.states) || !footprint.states.length) return;
+  const year = Number(m[1]);
+  const fpKey = hubFootprintCacheKey(year);
+  hubCache.set(fpKey, footprint);
+  persistDurableCacheValue(fpKey, footprint);
+}
+
 /** Bundle warm must also fill dedicated footprint GETs (map Class 2027/2028 tabs). */
 function cacheHubValue(cacheKey, value) {
   if (!cacheKey || value == null) return;
   hubCache.set(cacheKey, value);
   persistDurableCacheValue(cacheKey, value);
-  const m = String(cacheKey).match(/^hub:elite:bundle:[^:]+:(\d+)$/);
-  if (!m || !value || typeof value !== 'object') return;
-  const footprint = value.footprint;
-  if (!footprint || typeof footprint !== 'object') return;
-  const year = Number(m[1]);
-  const fpKey = `hub:elite:footprint:${year}`;
-  hubCache.set(fpKey, footprint);
-  persistDurableCacheValue(fpKey, footprint);
+  seedFootprintFromBundle(cacheKey, value);
 }
 
 function getHubStatus() {
@@ -376,7 +395,7 @@ function secondaryWarmJobs(elite, years) {
     ]);
     jobs.push([`recruiting:heat-index:${year}`, () => elite.buildHubHeatIndex(year)]);
     jobs.push([`recruiting:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
-    jobs.push([`recruiting:footprint:${year}`, () => elite.buildHubFootprint(year)]);
+    jobs.push([recruitingFootprintCacheKey(year), () => elite.buildHubFootprint(year)]);
     jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year)]);
     jobs.push([`hub:elite:commits:v3:${year}`, () => elite.buildHubCommits(year)]);
     jobs.push([`hub:elite:battles:${year}`, () => elite.buildHubBattles(year)]);
@@ -384,7 +403,7 @@ function secondaryWarmJobs(elite, years) {
     jobs.push([`hub:elite:heat-index:${year}`, () => elite.buildHubHeatIndex(year)]);
     jobs.push([`hub:elite:movement-feed:v3:${year}`, () => elite.buildHubMovementFeed(year)]);
     jobs.push([`hub:elite:battle-board:${year}`, () => elite.buildHubBattleBoard(year)]);
-    jobs.push([`hub:elite:footprint:${year}`, () => elite.buildHubFootprint(year)]);
+    jobs.push([hubFootprintCacheKey(year), () => elite.buildHubFootprint(year)]);
   }
   return jobs;
 }
@@ -584,6 +603,8 @@ async function serveCached(cacheKey, builderFn, options = {}) {
   }
   const hit = options.force ? null : hubCache.get(cacheKey);
   if (hit != null) {
+    // Older in-memory bundles predate footprint seeding — backfill on hit.
+    seedFootprintFromBundle(cacheKey, hit);
     if (!ready) {
       ready = true;
       warmKeyCount = Math.max(warmKeyCount, 1);
@@ -594,6 +615,7 @@ async function serveCached(cacheKey, builderFn, options = {}) {
 
   const stale = hubCache.getStale(cacheKey);
   if (stale != null) {
+    seedFootprintFromBundle(cacheKey, stale);
     // Stay-green / no-sync: serve stale only. Do not rebuild from GET — cron owns refill.
     if (!stayGreen && !noSync) refreshCacheKey(cacheKey, builderFn, timeoutMs);
     if (!ready) {
@@ -1236,10 +1258,13 @@ module.exports = {
   hubCache,
   HUB_CACHE_MS,
   HUB_METRICS_CACHE_REV,
+  FOOTPRINT_CACHE_REV,
   classSnapshotCacheKey,
   eliteClassOverviewCacheKey,
   eliteClassOverviewAllCacheKey,
   eliteBundleCacheKey,
+  hubFootprintCacheKey,
+  recruitingFootprintCacheKey,
   clearHubCache,
   removeHubCacheKeys,
   warmEliteHubCaches,

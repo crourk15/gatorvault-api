@@ -484,7 +484,8 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/footprint', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `recruiting:footprint:${year}`;
+      const { recruitingFootprintCacheKey } = require('./recruiting-hub-cache');
+      const cacheKey = recruitingFootprintCacheKey(year);
       return sendHubJson(res, {
         cacheKey,
         year,
@@ -706,7 +707,8 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/hub/footprint', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `hub:elite:footprint:${year}`;
+      const { hubFootprintCacheKey } = require('./recruiting-hub-cache');
+      const cacheKey = hubFootprintCacheKey(year);
       return sendHubJson(res, {
         cacheKey,
         year,

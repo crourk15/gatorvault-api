@@ -526,8 +526,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-4, 16px);
-  max-height: 720px;
-  overflow-y: auto;
+  max-height: none;
+  overflow: visible;
   padding-right: 4px;
 }
 

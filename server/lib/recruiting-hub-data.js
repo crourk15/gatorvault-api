@@ -1176,10 +1176,13 @@ function buildFootprintPayload(enrichedPlayers, intelRows, logs = {}) {
       (r) => String(r.playerSlug || r.player_slug || '').toLowerCase() === slug
     );
 
+    // Portal = explicit portal identity only. Do NOT treat fromSchool as portal —
+    // HS signees often carry high school in fromSchool (e.g. Armani Strong /
+    // Chaminade-Madonna Prep), which falsely zeroed Footprint Class 2028 commits.
     const isPortal =
       Boolean(player.isPortal) ||
       String(player.category || '').toLowerCase() === 'portal' ||
-      Boolean(player.fromSchool && (player.isCommit || player.isCommittedToUF));
+      /portal/i.test(String(player.on3Source || player.on3_source || ''));
     // Footprint commit pins/tallies match HS signing class — not portal arrivals.
     const isCommit = (player.isCommit || player.isCommittedToUF) && !isPortal;
     const year = Number(player.classYear);

@@ -88,6 +88,47 @@ describe('Closing Class surface gates', () => {
     assert.equal(fl.commits, 1);
   });
 
+  it('footprint still counts HS signees when fromSchool is the high school', () => {
+    const hub = require('../../lib/recruiting-hub-data');
+    const players = [
+      {
+        slug: 'armani-strong',
+        name: 'Armani Strong',
+        classYear: 2028,
+        category: 'recruit',
+        isCommit: true,
+        isCommittedToUF: true,
+        // Prod often stores HS here — must NOT be treated as a portal arrival.
+        fromSchool: 'Chaminade-Madonna Prep',
+        school: 'Chaminade-Madonna Prep',
+        position: 'WR',
+        state: 'FL',
+        geo: { hometownState: 'FL', pinLat: 26.1, pinLng: -80.1 },
+      },
+      {
+        slug: 'evan-pryor',
+        name: 'Evan Pryor',
+        classYear: 2026,
+        category: 'portal',
+        isPortal: true,
+        isCommit: true,
+        isCommittedToUF: true,
+        fromSchool: 'Ohio State',
+        position: 'RB',
+        state: 'OH',
+        geo: { hometownState: 'OH', pinLat: 40.0, pinLng: -83.0 },
+      },
+    ];
+    const fp = hub.buildFootprintPayload(players, [], {});
+    const armani = fp.pins.find((p) => p.id === 'armani-strong');
+    assert.ok(armani, 'HS signee must pin as commit');
+    assert.equal(armani.pinType, 'commit');
+    const fl = fp.states.find((s) => s.state === 'FL');
+    assert.equal(fl.commits, 1, 'HS fromSchool must not zero Footprint commits');
+    const oh = fp.states.find((s) => s.state === 'OH');
+    assert.ok(!oh || oh.commits === 0, 'true portal must not inflate HS footprint commit tallies');
+  });
+
   it('position rooms group OL and keep EDGE separate from DL', async () => {
     const elite = require('../../lib/recruiting-hub-elite');
     const rooms = await elite.buildHubPositions(2027);
