@@ -17,13 +17,6 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-@media (max-width: 767px) {
-  .rh-elite-chrome .rh-hero-strip {
-    /* Class targets / year pages: keep year pills under the iOS status bar. */
-    padding-top: calc(28px + env(safe-area-inset-top, 0px));
-  }
-}
-
 .rh-elite-chrome > * + * {
   margin-top: 0;
 }
@@ -615,112 +608,118 @@
   color: var(--muted-text);
 }
 
-/* Signing Day Tracker */
+/* Signing Day Tracker — stacked ESP primary + NSD closer (vault-cards preview) */
 .rh-elite-chrome .rh-signing-tracker {
   margin-bottom: 24px;
 }
 
-.rh-elite-chrome .rh-signing-tracker__header {
-  margin-bottom: 16px;
+.rh-elite-chrome .rh-signing-tracker--elite {
+  padding: 14px;
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(250, 70, 22, 0.1), transparent 50%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  border: 1px solid rgba(0, 33, 165, 0.12);
 }
 
-.rh-elite-chrome .rh-signing-tracker__title {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--card-text);
-}
-
-.rh-elite-chrome .rh-signing-tracker__sub {
-  margin: 4px 0 0;
-  font-size: 14px;
-  color: var(--muted-text);
-}
-
-.rh-elite-chrome .rh-signing-tracker__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-@media (max-width: 767px) {
-  .rh-elite-chrome .rh-signing-tracker__grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.rh-elite-chrome .rh-signing-event {
-  background: #f8fafc;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+.rh-elite-chrome .rh-sign-esp {
+  background: linear-gradient(160deg, #0021a5 0%, #001433 100%);
+  color: #fff;
+  border-radius: 10px;
   padding: 16px;
-  transition: box-shadow 0.2s ease;
-}
-
-.rh-elite-chrome .rh-signing-event--live {
-  border-color: var(--gator-orange);
-  box-shadow: 0 0 0 2px rgba(250, 70, 22, 0.25), 0 0 18px rgba(250, 70, 22, 0.35);
-}
-
-.rh-elite-chrome .rh-badge--live {
-  background: var(--gator-orange);
-  color: #ffffff;
-  border-color: var(--gator-orange);
-  animation: rh-badge-pulse 3s ease-in-out infinite;
-}
-
-.rh-elite-chrome .rh-signing-event__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
   margin-bottom: 10px;
 }
 
-.rh-elite-chrome .rh-signing-event__title {
+.rh-elite-chrome .rh-sign-esp--live {
+  box-shadow: 0 0 0 2px rgba(250, 70, 22, 0.4), 0 0 18px rgba(250, 70, 22, 0.28);
+}
+
+.rh-elite-chrome .rh-sign-esp__role {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffb089;
+}
+
+.rh-elite-chrome .rh-sign-esp__title {
   margin: 0;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--card-text);
+  font-family: 'Barlow Condensed', 'Oswald', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.95;
+  color: #fff;
 }
 
-.rh-elite-chrome .rh-signing-event__dates {
-  margin: 4px 0 0;
+.rh-elite-chrome .rh-sign-esp__dates {
+  margin: 6px 0 14px;
   font-size: 13px;
-  color: var(--muted-text);
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 600;
 }
 
-.rh-elite-chrome .rh-signing-event__countdown {
+.rh-elite-chrome .rh-sign-esp__row {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin: 8px 0 10px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.rh-elite-chrome .rh-sign-esp__days {
+  font-family: 'Barlow Condensed', 'Oswald', sans-serif;
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.rh-elite-chrome .rh-sign-esp__days small {
+  display: block;
+  font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 2px;
+}
+
+.rh-elite-chrome .rh-sign-esp__closed {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.rh-elite-chrome .rh-sign-esp__link {
+  color: #ffd7c4;
   font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(250, 70, 22, 0.9);
+  padding-bottom: 1px;
 }
 
-.rh-elite-chrome .rh-signing-event__countdown-value strong {
-  font-size: 18px;
-  color: var(--gator-blue);
+.rh-elite-chrome .rh-sign-esp__link:hover {
+  color: #fff;
 }
 
-.rh-elite-chrome .rh-signing-event__countdown--past {
-  color: var(--muted-text);
-}
-
-.rh-elite-chrome .rh-signing-event__live-feed {
+.rh-elite-chrome .rh-sign-esp__live {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 8px 0 10px;
+  margin: 12px 0 0;
   padding: 8px 10px;
-  border-radius: 6px;
-  background: #fff7ed;
+  border-radius: 8px;
+  background: rgba(250, 70, 22, 0.16);
   font-size: 12px;
   font-weight: 600;
-  color: var(--gator-orange);
+  color: #ffd7c4;
 }
 
-.rh-elite-chrome .rh-signing-event__live-pulse {
+.rh-elite-chrome .rh-sign-esp__live-pulse {
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -728,15 +727,78 @@
   animation: rh-badge-pulse 1.5s ease-in-out infinite;
 }
 
-.rh-elite-chrome .rh-signing-event__link {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--gator-blue);
+.rh-elite-chrome .rh-sign-nsd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 14px;
   text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.rh-elite-chrome .rh-signing-event__link:hover {
-  color: var(--gator-orange);
+.rh-elite-chrome .rh-sign-nsd:hover {
+  border-color: rgba(0, 33, 165, 0.28);
+  box-shadow: 0 4px 12px rgba(0, 26, 77, 0.08);
+}
+
+.rh-elite-chrome .rh-sign-nsd--live {
+  box-shadow: 0 0 0 2px rgba(250, 70, 22, 0.35);
+}
+
+.rh-elite-chrome .rh-sign-nsd__role {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-sign-nsd__title {
+  margin: 2px 0 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--card-text);
+}
+
+.rh-elite-chrome .rh-sign-nsd__dates {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted-text);
+  font-weight: 600;
+}
+
+.rh-elite-chrome .rh-sign-nsd__days {
+  font-family: 'Barlow Condensed', 'Oswald', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gator-blue);
+  line-height: 1;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.rh-elite-chrome .rh-sign-nsd__days small {
+  display: block;
+  font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-text);
+  margin-top: 2px;
+}
+
+.rh-elite-chrome .rh-badge--live {
+  background: var(--gator-orange);
+  color: #ffffff;
+  border-color: var(--gator-orange);
+  animation: rh-badge-pulse 3s ease-in-out infinite;
 }
 
 /* Remaining targets — thin closing-class strip (not a FutureCast clone) */
@@ -1117,13 +1179,13 @@
   border-top: 4px solid var(--gator-orange);
 }
 
-/* Compact heat: identity mark + commit stamp — not a dark media band.
-   Keep in lockstep with .gv-chase-card (vault-chase-card.css). */
+/* Compact heat: identity mark + commit stamp — not a dark media band. */
 .rh-elite-chrome .rh-elite-commit-card--heat {
   position: relative;
   overflow: hidden;
   padding: 15px 16px 14px 18px;
-  background: linear-gradient(120deg, #e8ecf8 0%, #ffffff 38%, #ffffff 100%);
+  background:
+    linear-gradient(120deg, rgba(0, 33, 165, 0.09) 0%, rgba(255, 255, 255, 0.97) 38%, #ffffff 100%);
   border: 1px solid rgba(0, 33, 165, 0.1);
   border-top: none;
   border-left: 4px solid var(--gator-orange);
@@ -2247,9 +2309,7 @@
   font-weight: 800;
   letter-spacing: 0.02em;
   cursor: pointer;
-  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  user-select: none;
 }
 
 .rh-elite-chrome .rh-footprint-year-tab:not(.is-active) {

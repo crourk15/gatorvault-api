@@ -419,7 +419,7 @@
   color: var(--home-muted);
 }
 
-/* GameDay */
+/* GameDay — elite matchup card (structure + logos + clock, not a photo plate) */
 .home-wow-gameday-card {
   display: flex;
   align-items: center;
@@ -428,124 +428,200 @@
   position: relative;
 }
 
+.home-wow-gameday-card--elite {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 18px 18px 16px;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(250, 70, 22, 0.18), transparent 55%),
+    linear-gradient(160deg, #001433 0%, #0021a5 58%, #001a4d 100%);
+  color: #f8fafc;
+  border-top: 4px solid var(--home-gator-orange);
+  box-shadow: 0 12px 28px rgba(0, 20, 51, 0.35);
+}
+
 .home-wow-gameday-card--in-season {
   border-color: var(--home-gator-orange);
-  box-shadow: 0 0 0 1px rgba(250, 166, 26, 0.25);
 }
 
-.home-wow-gameday-logo-wrap {
-  position: relative;
-  flex-shrink: 0;
+.home-wow-gameday-elite__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
-.home-wow-gameday-logo-watermark {
-  position: absolute;
-  inset: -8px;
+.home-wow-gameday-elite__kicker {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(248, 250, 252, 0.72);
+}
+
+.home-wow-gameday-elite__badge {
+  padding: 4px 10px;
   border-radius: 999px;
+  border: 1px solid rgba(250, 70, 22, 0.85);
+  background: rgba(250, 70, 22, 0.16);
+  color: #ffd7c4;
   font-size: 0.625rem;
   font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.12;
-  color: var(--home-gator-blue);
-  pointer-events: none;
+  letter-spacing: 0.06em;
 }
 
-.home-wow-gameday-logo {
-  position: relative;
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
-  background: #e5e7eb;
-  display: flex;
+.home-wow-gameday-elite__matchup {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: center;
-  font-size: 0.875rem;
-  font-weight: 800;
-  color: var(--home-gator-blue);
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-.home-wow-gameday-main {
-  flex: 1;
+.home-wow-gameday-elite__team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   min-width: 0;
 }
 
-.home-wow-gameday-opponent {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 700;
+.home-wow-gameday-elite__logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  padding: 5px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
 }
 
-.home-wow-gameday-date {
-  margin: 4px 0 0;
-  font-size: 0.875rem;
-  color: var(--home-muted);
-}
-
-.home-wow-gameday-countdown {
-  margin: 4px 0 0;
-  font-size: 1rem;
+.home-wow-gameday-elite__team-name {
+  font-size: 0.8125rem;
   font-weight: 800;
-  color: var(--home-gator-blue);
+  color: #ffffff;
+  text-align: center;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-wow-gameday-elite__vs {
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.home-wow-gameday-elite__when {
+  margin: 0 0 14px;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: rgba(226, 232, 240, 0.82);
+  line-height: 1.35;
+}
+
+.home-wow-gameday-elite__live {
+  margin: 0 0 14px;
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.home-wow-gameday-elite__clock {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.home-wow-gameday-elite__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  padding: 8px 4px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.home-wow-gameday-elite__unit--days {
+  background: rgba(250, 70, 22, 0.18);
+  border-color: rgba(250, 70, 22, 0.35);
+}
+
+.home-wow-gameday-elite__num {
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #ffffff;
   font-variant-numeric: tabular-nums;
 }
 
-.home-wow-gameday-meta {
-  margin: 4px 0 0;
-  font-size: 0.8125rem;
-  color: var(--home-muted);
+.home-wow-gameday-elite__unit--days .home-wow-gameday-elite__num {
+  font-size: 1.75rem;
+  color: #ffd7c4;
 }
 
-.home-wow-gameday-bar {
-  margin-top: 10px;
-  height: 6px;
+.home-wow-gameday-elite__unit-label {
+  margin-top: 4px;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 240, 0.7);
+}
+
+.home-wow-gameday-elite__bar {
+  height: 4px;
   border-radius: 999px;
-  background: #f3f4f6;
+  background: rgba(255, 255, 255, 0.12);
   overflow: hidden;
+  margin-bottom: 14px;
 }
 
-.home-wow-gameday-bar-fill {
+.home-wow-gameday-elite__bar-fill {
   height: 100%;
   width: 0;
-  background: var(--home-gator-orange);
+  background: linear-gradient(90deg, #fa4616, #ff8a4c);
   transition: width 0.4s ease-out;
 }
 
-.home-wow-gameday-badge {
-  position: absolute;
-  top: 12px;
-  right: 18px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--home-gator-orange);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--home-gator-blue);
-  background: #fff7ed;
-  animation: home-badge-pulse 6s ease-in-out infinite;
-}
-
-.home-wow-gameday-link {
-  margin: 0 0 0 auto;
-  font-size: 0.8125rem;
-  font-weight: 700;
-}
-
-.home-wow-gameday-link a {
-  color: var(--home-gator-blue);
+.home-wow-gameday-elite__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 10px;
+  background: var(--home-gator-orange);
+  color: #ffffff;
+  font-size: 0.9375rem;
+  font-weight: 800;
   text-decoration: none;
+  letter-spacing: 0.02em;
 }
 
-@keyframes home-badge-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    box-shadow: none;
+.home-wow-gameday-elite__cta:hover {
+  filter: brightness(1.05);
+  color: #ffffff;
+}
+
+@media (max-width: 380px) {
+  .home-wow-gameday-elite__num {
+    font-size: 1.25rem;
   }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 6px rgba(250, 70, 22, 0.18);
+
+  .home-wow-gameday-elite__unit--days .home-wow-gameday-elite__num {
+    font-size: 1.4rem;
   }
 }
 

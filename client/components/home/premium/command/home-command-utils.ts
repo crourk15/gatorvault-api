@@ -26,9 +26,11 @@ export type HomeMetricBlock = {
 };
 
 export type HomeGameDayView = {
+  gameId: string;
   opponent: string;
   opponentShort: string;
   dateLabel: string;
+  venue: string;
   kickoffIso: string;
   isRival: boolean;
 };
@@ -138,9 +140,11 @@ export function avatarInitials(name: string): string {
 
 export function buildGameDayView(): HomeGameDayView {
   return {
+    gameId: NEXT_GAME.id,
     opponent: NEXT_GAME.opp,
     opponentShort: opponentInitials(NEXT_GAME.opp),
     dateLabel: NEXT_GAME.date,
+    venue: NEXT_GAME.venue,
     kickoffIso: NEXT_GAME_KICKOFF_ISO,
     isRival: RIVAL_OPPONENT_IDS.has(NEXT_GAME.id),
   };
@@ -589,20 +593,7 @@ export function buildFutureCastTargetsFromHome(
 }
 
 export function buildBeatPostsFromIntel(items: BeatIntelItem[]): HomeBeatPostView[] {
-  const seen = new Set<string>();
-  const diversified: BeatIntelItem[] = [];
-  for (const item of items || []) {
-    const key = String(item.writerName || item.id || '')
-      .toLowerCase()
-      .replace(/^@/, '')
-      .replace(/\s+/g, '');
-    if (!key || key.includes('gatorvault') || seen.has(key)) continue;
-    seen.add(key);
-    diversified.push(item);
-    if (diversified.length >= 3) break;
-  }
-  const pool = diversified.length ? diversified : (items || []).slice(0, 3);
-  return pool.map((item) => ({
+  return items.slice(0, 3).map((item) => ({
     id: item.id,
     writerName: item.writerName || 'Beat Writer',
     outlet: item.source || 'UF Beat',
@@ -629,6 +620,10 @@ export function computeKickoffProgress(kickoffIso: string): {
   countdown: string;
   progressPct: number;
   daysLeft: number;
+  hoursLeft: number;
+  minutesLeft: number;
+  secondsLeft: number;
+  isLive: boolean;
 } {
   const kickoff = new Date(kickoffIso).getTime();
   const now = Date.now();
@@ -637,18 +632,26 @@ export function computeKickoffProgress(kickoffIso: string): {
   const hours = Math.max(0, Math.floor((diff / (1000 * 60 * 60)) % 24));
   const minutes = Math.max(0, Math.floor((diff / (1000 * 60)) % 60));
   const seconds = Math.max(0, Math.floor((diff / 1000) % 60));
+  const isLive = diff <= 0;
 
-  const countdown =
-    diff <= 0
-      ? 'Kickoff — Go Gators!'
-      : `${days} days · ${hours} hours · ${minutes} minutes · ${seconds}s`;
+  const countdown = isLive
+    ? 'Kickoff — Go Gators!'
+    : `${days} days · ${hours} hours · ${minutes} minutes · ${seconds}s`;
 
   const startWindow = kickoff - 1000 * 60 * 60 * 24 * 90;
   const totalSpan = kickoff - startWindow;
   const clamped = Math.min(Math.max(now - startWindow, 0), totalSpan);
   const progressPct = totalSpan > 0 ? (clamped / totalSpan) * 100 : 100;
 
-  return { countdown, progressPct, daysLeft: days };
+  return {
+    countdown,
+    progressPct,
+    daysLeft: days,
+    hoursLeft: hours,
+    minutesLeft: minutes,
+    secondsLeft: seconds,
+    isLive,
+  };
 }
 
 export function gameDayBadge(daysLeft: number, isRival: boolean): string | null {
