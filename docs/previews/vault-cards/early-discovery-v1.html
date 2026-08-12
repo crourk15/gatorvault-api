@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>GatorVault - Early Discovery card preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gator-blue: #0021a5;
+      --gator-orange: #fa4616;
+      --navy: #001433;
+      --page: #eef1f6;
+      --card: #ffffff;
+      --text: #101828;
+      --muted: #667085;
+      --shadow: 0 8px 22px rgba(0, 33, 165, 0.11);
+      --font-display: "Oswald", sans-serif;
+      --font-body: "Source Sans 3", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      background: #0b1220;
+      color: var(--text);
+    }
+    .stage {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 12px 40px;
+      background:
+        radial-gradient(80% 50% at 50% 0%, rgba(0, 33, 165, 0.35), transparent 60%),
+        #0b1220;
+    }
+    .stage__note {
+      max-width: 390px;
+      width: 100%;
+      margin: 0 0 14px;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      line-height: 1.4;
+      text-align: center;
+    }
+    .stage__note strong { color: #fff; }
+    .phone {
+      width: min(390px, 100%);
+      background: var(--page);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+      border: 8px solid #1a2233;
+    }
+    .phone__status { height: 28px; background: var(--navy); }
+    .app-header {
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 16px 14px;
+    }
+    .app-header__brand {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .app-header__brand span { color: var(--gator-orange); }
+    .app-header__sub {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      font-weight: 600;
+    }
+    .tabs {
+      display: flex;
+      background: #001a40;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .tabs span {
+      flex: 1;
+      text-align: center;
+      padding: 10px 4px;
+      font-size: 11px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .tabs span.is-active {
+      color: #fff;
+      box-shadow: inset 0 -3px 0 var(--gator-orange);
+    }
+    .feed { padding: 16px 14px 28px; background: var(--page); }
+    .section-title {
+      margin: 0 0 4px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .section-sub {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .stack { display: flex; flex-direction: column; gap: 12px; }
+
+    a.ed-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+      padding: 15px 16px 14px 18px;
+      background:
+        linear-gradient(120deg, rgba(0, 33, 165, 0.09) 0%, rgba(255, 255, 255, 0.97) 38%, #ffffff 100%);
+      border: 1px solid rgba(0, 33, 165, 0.1);
+      border-left: 4px solid var(--gator-orange);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    a.ed-card::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gator-orange) 0%, #0021a5 72%, transparent 100%);
+      pointer-events: none;
+    }
+    a.ed-card::after {
+      content: '';
+      position: absolute;
+      right: -20px;
+      bottom: -26px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(250, 70, 22, 0.14), transparent 70%);
+      pointer-events: none;
+    }
+    .ed-card__watermark {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-52%);
+      font-family: var(--font-display);
+      font-size: 4.2rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: rgba(0, 33, 165, 0.05);
+      line-height: 1;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ed-card__top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .ed-card__mark {
+      flex: 0 0 auto;
+      min-width: 48px;
+      height: 48px;
+      padding: 0 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      border-radius: 11px;
+      background: linear-gradient(165deg, #0021a5 0%, #00144f 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+        0 4px 10px rgba(0, 33, 165, 0.28);
+    }
+    .ed-card__pos {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #fff;
+      line-height: 1;
+    }
+    .ed-card__stars {
+      font-size: 10px;
+      font-weight: 800;
+      color: #fdba74;
+      line-height: 1;
+    }
+    .ed-card__identity { flex: 1 1 auto; min-width: 0; }
+    .ed-card__name {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.28rem;
+      font-weight: 600;
+      letter-spacing: 0.015em;
+      line-height: 1.12;
+      color: #001a33;
+    }
+    .ed-card__id-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.35rem 0.55rem;
+      margin: 5px 0 0;
+      font-size: 12px;
+      color: #64748b;
+    }
+    .ed-card__id-stars {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      color: #c2410c;
+    }
+    .ed-card__id-pos {
+      font-weight: 800;
+      color: #0021a5;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .ed-card__id-home::before {
+      content: '\00b7';
+      margin-right: 0.55rem;
+      color: #cbd5e1;
+    }
+    .ed-card__stamp {
+      flex: 0 0 auto;
+      margin-top: 2px;
+      padding: 5px 9px;
+      border-radius: 4px;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      line-height: 1;
+      transform: rotate(-2.5deg);
+    }
+    .ed-card__stamp--locked {
+      border: 1.5px solid var(--gator-orange);
+      color: var(--gator-orange);
+      background: rgba(250, 70, 22, 0.07);
+    }
+    .ed-card__stamp--rising {
+      border: 1.5px solid #0021a5;
+      color: #0021a5;
+      background: rgba(0, 33, 165, 0.06);
+    }
+    .ed-card__rank-strip {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .ed-card__rank-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 7px 8px 6px;
+      border-radius: 8px;
+      background: linear-gradient(165deg, rgba(0, 33, 165, 0.07), rgba(0, 33, 165, 0.02));
+      border: 1px solid rgba(0, 33, 165, 0.12);
+      min-width: 0;
+    }
+    .ed-card__rank-num {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #001a33;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .ed-card__rank-label {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #64748b;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ed-card__badges {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .ed-badge {
+      display: inline-flex;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .ed-badge--instate {
+      background: rgba(0, 33, 165, 0.08);
+      color: #0021a5;
+      border: 1px solid rgba(0, 33, 165, 0.18);
+    }
+    .ed-badge--locked {
+      background: rgba(250, 70, 22, 0.1);
+      color: #c2410c;
+      border: 1px solid rgba(250, 70, 22, 0.22);
+    }
+    .ed-card__why-label {
+      position: relative;
+      z-index: 1;
+      margin: 12px 0 0;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #c2410c;
+    }
+    .ed-card__skinny {
+      position: relative;
+      z-index: 1;
+      margin: 6px 0 0;
+      padding: 0 0 0 11px;
+      border-left: 3px solid rgba(250, 70, 22, 0.85);
+      font-size: 13.5px;
+      line-height: 1.55;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    .ed-card__footer {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0, 33, 165, 0.1);
+    }
+    .ed-card__footer-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+    }
+    .ed-card__cta {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0021a5;
+    }
+    .ed-card__rating {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1px;
+      min-width: 3.5rem;
+      padding: 4px 8px 3px;
+      border-radius: 8px;
+      background: linear-gradient(160deg, rgba(250, 70, 22, 0.12), rgba(250, 70, 22, 0.04));
+      border: 1px solid rgba(250, 70, 22, 0.22);
+    }
+    .ed-card__rating-label {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #c2410c;
+      line-height: 1;
+    }
+    .ed-card__rating-value {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #001a33;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    @media (max-width: 420px) {
+      .stage { padding: 0; background: var(--page); }
+      .stage__note { display: none; }
+      .phone {
+        width: 100%;
+        min-height: 100vh;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <p class="stage__note">
+      <strong>Early Discovery v1</strong> - same Current Class / chase chrome.
+      Rank strip: Discovery · UF Shot · Fit. Not live yet.
+    </p>
+    <div class="phone">
+      <div class="phone__status" aria-hidden="true"></div>
+      <header class="app-header">
+        <p class="app-header__brand">Gator<span>Vault</span></p>
+        <p class="app-header__sub">Early Discovery card preview</p>
+      </header>
+      <nav class="tabs" aria-label="Big Board tabs">
+        <span>Intel Rank</span>
+        <span>Top Targets</span>
+        <span class="is-active">Early Disc.</span>
+      </nav>
+      <main class="feed">
+        <h2 class="section-title">Early Discovery · 2028</h2>
+        <p class="section-sub">Who is rising on Florida's radar - Discovery first, not chase heat.</p>
+        <div class="stack">
+
+          <a class="ed-card" href="#">
+            <span class="ed-card__watermark" aria-hidden="true">UF</span>
+            <div class="ed-card__top">
+              <div class="ed-card__mark" aria-hidden="true">
+                <span class="ed-card__pos">WR</span>
+                <span class="ed-card__stars">5★</span>
+              </div>
+              <div class="ed-card__identity">
+                <h3 class="ed-card__name">Brysen Wright</h3>
+                <p class="ed-card__id-line">
+                  <span class="ed-card__id-stars">5★</span>
+                  <span class="ed-card__id-pos">WR</span>
+                  <span class="ed-card__id-home">Jacksonville, FL</span>
+                </p>
+              </div>
+              <span class="ed-card__stamp ed-card__stamp--locked">Locked</span>
+            </div>
+            <ul class="ed-card__rank-strip" aria-label="Discovery scores">
+              <li class="ed-card__rank-cell">
+                <span class="ed-card__rank-num">100</span>
+                <span class="ed-card__rank-label">Discovery</span>
+              </li>
+              <li class="ed-card__rank-cell">
+                <span class="ed-card__rank-num">29%</span>
+                <span class="ed-card__rank-label">UF Shot</span>
+              </li>
+              <li class="ed-card__rank-cell">
+                <span class="ed-card__rank-num">77</span>
+                <span class="ed-card__rank-label">Fit</span>
+              </li>
+            </ul>
+            <div class="ed-card__badges">
+              <span class="ed-badge ed-badge--instate">In-state</span>
+              <span class="ed-badge ed-badge--locked">Locked UF target</span>
+            </div>
+            <p class="ed-card__why-label">Why he's here</p>
+            <p class="ed-card__skinny">
+              Locked UF target - discovery 100 keeps Wright pinned on the 2028 board while On3 rankings catch up.
+            </p>
+            <div class="ed-card__footer">
+              <div class="ed-card__footer-main">
+                <span>Mandarin High School</span>
+                <span class="ed-card__cta">Open profile →</span>
+              </div>
+              <div class="ed-card__rating">
+                <span class="ed-card__rating-label">Vault est.</span>
+                <span class="ed-card__rating-value">97.8</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="ed-card" href="#">
+            <span class="ed-card__watermark" aria-hidden="true">UF</span>
+            <div class="ed-card__top">
+              <div class="ed-card__mark" aria-hidden="true">
+                <span class="ed-card__pos">EDGE</span>
+                <span class="ed-card__stars">5★</span>
+              </div>
+              <div class="ed-card__identity">
+                <h3 class="ed-card__name">Asher Ghioto</h3>
+                <p class="ed-card__id-line">
+                  <span class="ed-card__id-stars">5★</span>
+                  <span class="ed-card__id-pos">EDGE</span>
+                  <span class="ed-card__id-home">Jacksonville, FL</span>
+                </p>
+              </div>
+              <span class="ed-card__stamp ed-card__stamp--locked">Locked</span>
+            </div>
+            <ul class="ed-card__rank-strip" aria-label="Discovery scores">
+              <li class="ed-card__rank-cell">
+                <span class="ed-card__rank-num">100</span>
+                <span class="ed-card__rank-label">Discovery</span>
+              </li>
+              <li class="ed-card__rank-cell">
+                <span class="ed-card__rank-num">30%</span>
+                <span class="ed-card__rank-label">UF Shot</span>
+              </li>
+              <li class="ed-card__rank-cell">
+                <span class="ed-card__rank-num">80</span>
+                <span class="ed-card__rank-label">Fit</span>
+              </li>
+            </ul>
+            <div class="ed-card__badges">
+              <span class="ed-badge ed-badge--instate">In-state</span>
+              <span class="ed-badge ed-badge--locked">Locked UF target</span>
+            </div>
+            <p class="ed-card__why-label">Why he's here</p>
+            <p class="ed-card__skinny">
+              Locked UF target - top EDGE discovery name Florida already has on the board, not a soft prospect.
+            </p>
+            <div class="ed-card__footer">
+              <div class="ed-card__footer-main">
+                <span>The Bolles School</span>
+                <span class="ed-card__cta">Open profile →</span>
+              </div>
+              <div class="ed-card__rating">
+                <span class="ed-card__rating-label">Vault est.</span>
+                <span class="ed-card__rating-value">96.0</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="ed-card" href="#">
+            <span class="ed-card__watermark" aria-hidden="true">UF</span>
+            <div class="ed-card__top">
+              <div class="ed-card__mark" aria-hidden="true">
+                <span class="ed-card__pos">S</span>
+                <span class="ed-card__stars">4★</span>
+              </div>
+              <div class="ed-card__identity">
+                <h3 class="ed-card__name">Cyion Smith</h3>
+                <p class="ed-card__id-line">
+                  <span class="ed-card__id-stars">4★</span>
+                  <span class="ed-card__id-pos">S</span>
+                  <span class="ed-card__id-home">Blountstown, FL</span>
+                </p>
+              </div>
+              <span class="ed-card__stamp ed-card__stamp--rising">Rising</span>
+            </div>
+            <ul class="ed-card__rank-strip" aria-label="Discovery scores">
+              <li class="ed-card__rank-cell">
+                <span class="ed-card__rank-num">92</span>
+                <span class="ed-card__rank-label">Discovery</span>
+              </li>
+              <li class="ed-card__rank-cell">
+                <span class="ed-card__rank-num">71%</span>
+                <span class="ed-card__rank-label">UF Shot</span>
+              </li>
+              <li class="ed-card__rank-cell">
+                <span class="ed-card__rank-num">76</span>
+                <span class="ed-card__rank-label">Fit</span>
+              </li>
+            </ul>
+            <div class="ed-card__badges">
+              <span class="ed-badge ed-badge--instate">In-state</span>
+            </div>
+            <p class="ed-card__why-label">Why he's here</p>
+            <p class="ed-card__skinny">
+              Rising underclassman - strong Florida shot and discovery heat before full On3 rankings land.
+            </p>
+            <div class="ed-card__footer">
+              <div class="ed-card__footer-main">
+                <span>Blountstown High School</span>
+                <span class="ed-card__cta">Open profile →</span>
+              </div>
+              <div class="ed-card__rating">
+                <span class="ed-card__rating-label">Composite</span>
+                <span class="ed-card__rating-value">89.5</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
