@@ -408,19 +408,18 @@ export function FutureCastExtendedModules({
 
   return (
     <>
-      {/* Always mount 2028 Early Discovery — do not hide it behind the 2027 cycle tab. */}
-      <div className="fc-lab-more-boards" data-testid="fc-lab-more-boards">
-        <h2 className="fc-lab-more-boards__title">More boards</h2>
-        <p className="fc-lab-more-boards__sub">
-          {discoveryFocus
-            ? 'Early discovery and younger classes — secondary to the 2028 UF targets above.'
-            : '2028 Early Discovery stays available while you work the 2027 Closing Class.'}
-        </p>
-
-        {earlyDiscoveryPanel}
-
-        {discoveryFocus ? <YoungerProspectsLabBoard columns={youngerProspectColumns} /> : null}
-      </div>
+      {/* Early Discovery is a 2028 board — only under Discovery cycle so Closing Class
+          does not look like the same 2028 list. */}
+      {discoveryFocus ? (
+        <div className="fc-lab-more-boards" data-testid="fc-lab-more-boards">
+          <h2 className="fc-lab-more-boards__title">More boards</h2>
+          <p className="fc-lab-more-boards__sub">
+            Early discovery and younger classes — secondary to the 2028 UF targets above.
+          </p>
+          {earlyDiscoveryPanel}
+          <YoungerProspectsLabBoard columns={youngerProspectColumns} />
+        </div>
+      ) : null}
 
       {!discoveryFocus ? (
         <>

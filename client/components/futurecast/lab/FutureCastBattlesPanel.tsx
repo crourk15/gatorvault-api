@@ -165,16 +165,36 @@ export function FutureCastBattlesPanel({
         result[classifyTab(ufPctFromFc(lab.ufProbability))].push(lab);
       }
     } else {
-      for (const p of pool) {
-        if (!isActiveUfTarget(p)) continue;
-        const lab = futureCastPlayerToLabTarget(p);
-        if (lab.ufProbability == null) continue;
-        // Closing class: only show in-play UF fights in Battles/Lean UF;
-        // lean-elsewhere keeps real longshots that still have known odds.
-        if (!isClosingClassInPlayTarget(lab) && classifyTab(ufPctFromFc(lab.ufProbability)) !== 'lean-elsewhere') {
-          continue;
+      // Closing Class: year-scoped HP first, then master/trending — never mix in 2028.
+      const fromHp = highPriority.filter(
+        (p) => isActiveUfTarget(p) && Number(p.classYear) === focusYear
+      );
+      if (fromHp.length) {
+        for (const p of fromHp) {
+          const lab = highPriorityToLabTarget(p);
+          if (lab.ufProbability == null) continue;
+          if (
+            !isClosingClassInPlayTarget(lab) &&
+            classifyTab(ufPctFromFc(lab.ufProbability)) !== 'lean-elsewhere'
+          ) {
+            continue;
+          }
+          result[classifyTab(ufPctFromFc(lab.ufProbability))].push(lab);
         }
-        result[classifyTab(ufPctFromFc(lab.ufProbability))].push(lab);
+      } else {
+        for (const p of pool) {
+          if (!isActiveUfTarget(p)) continue;
+          if (Number(p.classYear) !== focusYear) continue;
+          const lab = futureCastPlayerToLabTarget(p);
+          if (lab.ufProbability == null) continue;
+          if (
+            !isClosingClassInPlayTarget(lab) &&
+            classifyTab(ufPctFromFc(lab.ufProbability)) !== 'lean-elsewhere'
+          ) {
+            continue;
+          }
+          result[classifyTab(ufPctFromFc(lab.ufProbability))].push(lab);
+        }
       }
     }
     for (const key of Object.keys(result) as Tab[]) {

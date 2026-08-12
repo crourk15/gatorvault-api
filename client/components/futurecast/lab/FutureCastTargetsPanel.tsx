@@ -10,6 +10,7 @@ import { HighPriorityTargetCard } from '@/components/futurecast/HighPriorityTarg
 import { FutureCastPanelShell } from './primitives';
 import {
   futureCastPlayerToLabTarget,
+  highPriorityToLabTarget,
   movementDeltasAreBelievable,
 } from './fc-lab-types';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
@@ -55,13 +56,27 @@ export function FutureCastTargetsPanel({
 
   const closingRows = useMemo(() => {
     if (discoveryFocus) return [];
-    return [...masterBoard.players]
+    // Prefer closing-class HP board (resolved highPriority) — master-board alone
+    // can still carry Discovery-year rows and made 2027 look like 2028.
+    const fromHp = highPriority
       .filter((p) => isActiveUfTarget(p))
-      .map(futureCastPlayerToLabTarget)
+      .filter((p) => Number(p.classYear) === focusYear)
+      .map(highPriorityToLabTarget);
+    const fromMaster = masterBoard.players
+      .filter((p) => isActiveUfTarget(p))
+      .filter((p) => Number(p.classYear) === focusYear)
+      .map(futureCastPlayerToLabTarget);
+    const seen = new Set<string>();
+    const merged = [...fromHp, ...fromMaster].filter((p) => {
+      if (seen.has(p.slug)) return false;
+      seen.add(p.slug);
+      return true;
+    });
+    return merged
       .filter(isClosingClassInPlayTarget)
       .sort((a, b) => closingClassUrgencyScore(b) - closingClassUrgencyScore(a))
       .slice(0, 10);
-  }, [discoveryFocus, masterBoard.players]);
+  }, [discoveryFocus, focusYear, highPriority, masterBoard.players]);
 
   const showMovement = useMemo(() => {
     if (discoveryFocus) {
