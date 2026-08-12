@@ -19,6 +19,7 @@ import { PlayerIntelTimelineStrip } from './PlayerIntelTimelineStrip';
 import { ufPctFromFc } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
+import { InsiderPaywall } from '@/components/futurecast/InsiderPaywall';
 import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import {
   groupYoungerProspectsByYear,
@@ -130,6 +131,12 @@ function ModuleList({
   );
 }
 
+const FILM_EARLY_CLASS_PAYWALL = {
+  message:
+    'Film Room unlocks Class of 2029 & 2030 early targets — names, profiles, and film as we build them.',
+  ctaLabel: 'Unlock Film Room',
+} as const;
+
 function YoungerProspectsLabBoard({
   columns,
 }: {
@@ -140,40 +147,42 @@ function YoungerProspectsLabBoard({
   return (
     <FutureCastPanelShell
       title="Names to know — 2029 & 2030"
-      sub="Early names by class — before the board gets real."
+      sub="Early names by class — Film Room targets before the board gets real."
       testId="fc-lab-underclassmen"
     >
-      <div className="fc-lab-younger-cols">
-        {columns.map((group) => (
-          <div key={group.year} className="fc-lab-younger-group" data-year={group.year}>
-            <div className="fc-lab-younger-group__head">
-              <strong className="fc-lab-younger-group__title">{group.label}</strong>
-              <span className="fc-lab-younger-group__badge">{group.badge}</span>
-              {group.players.length > 0 ? (
-                <span className="fc-lab-younger-group__count">
-                  {group.total > group.players.length
-                    ? `${group.players.length} of ${group.total}`
-                    : `${group.total} tracked`}
-                </span>
+      <InsiderPaywall variant="overlay" {...FILM_EARLY_CLASS_PAYWALL}>
+        <div className="fc-lab-younger-cols">
+          {columns.map((group) => (
+            <div key={group.year} className="fc-lab-younger-group" data-year={group.year}>
+              <div className="fc-lab-younger-group__head">
+                <strong className="fc-lab-younger-group__title">{group.label}</strong>
+                <span className="fc-lab-younger-group__badge">{group.badge}</span>
+                {group.players.length > 0 ? (
+                  <span className="fc-lab-younger-group__count">
+                    {group.total > group.players.length
+                      ? `${group.players.length} of ${group.total}`
+                      : `${group.total} tracked`}
+                  </span>
+                ) : null}
+              </div>
+              {isAthHeavyShownPlayers(group.players) ? (
+                <p className="fc-lab-younger-group__ath-note fc-profile-muted">
+                  Positions still filling in for this class.
+                </p>
               ) : null}
+              <ModuleList
+                empty={`No Class of ${group.year} names loaded yet.`}
+                items={group.players.map((p) => ({
+                  key: p.slug,
+                  primary: `${p.name} · ${p.position && p.position !== 'TBD' ? p.position : 'ATH'}`,
+                  meta: formatYoungerLabMeta(p) || 'Early watch',
+                  href: playerProfileRoute(p.slug, 'futurecast'),
+                }))}
+              />
             </div>
-            {isAthHeavyShownPlayers(group.players) ? (
-              <p className="fc-lab-younger-group__ath-note fc-profile-muted">
-                Positions still filling in for this class.
-              </p>
-            ) : null}
-            <ModuleList
-              empty={`No Class of ${group.year} names loaded yet.`}
-              items={group.players.map((p) => ({
-                key: p.slug,
-                primary: `${p.name} · ${p.position && p.position !== 'TBD' ? p.position : 'ATH'}`,
-                meta: formatYoungerLabMeta(p) || 'Early watch',
-                href: playerProfileRoute(p.slug, 'futurecast'),
-              }))}
-            />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </InsiderPaywall>
     </FutureCastPanelShell>
   );
 }

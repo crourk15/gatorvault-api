@@ -3,18 +3,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { PageLayout } from '@/components/brand';
 import { GameWeekCommandCenter } from '@/components/vault/game-week/GameWeekCommandCenter';
-import { InsiderPaywall } from '@/components/futurecast/InsiderPaywall';
 import { DYNAMIC_PATH_PATTERNS, segmentFromPath } from '@/lib/dynamic-path-parser';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
 import { useUser } from '@/hooks/useUser';
 import { useInsiderUnlock } from '@/lib/useUser';
 import { usePathname } from '@/lib/use-pathname';
-
-const GAME_WEEK_PAYWALL = {
-  message:
-    'Game Week unlocks matchup intel, opponent film prep, swing-player notes, and GatorVault predictions.',
-  ctaLabel: 'Unlock Game Week + Film Room',
-} as const;
 
 export function VaultGameWeekPage(): React.ReactElement {
   const pathname = usePathname();
@@ -35,9 +28,8 @@ export function VaultGameWeekPage(): React.ReactElement {
   return (
     <div className="rh-page rh-page--elite gv-gw-wow-page fc-lab-cc-page" data-testid="vault-game-week-elite">
       <PageLayout theme="navy" testId="vault-game-week" className="gv-gw-wow-page-layout">
-        <InsiderPaywall variant="overlay" {...GAME_WEEK_PAYWALL}>
-          <GameWeekCommandCenter initialGameId={gameId} onGameChange={setGameId} />
-        </InsiderPaywall>
+        {/* Shell open for Locker; Film depth (intel + scouting) blurred inside Command Center. Trial unlocks. */}
+        <GameWeekCommandCenter initialGameId={gameId} onGameChange={setGameId} />
 
         {!insider ? (
           <a
@@ -48,7 +40,7 @@ export function VaultGameWeekPage(): React.ReactElement {
               goToUnlock();
             }}
           >
-            Unlock Game Week + Film Room · from $9.99/mo
+            Unlock Film intel · Game Week depth + Scouting Report · from $9.99/mo
           </a>
         ) : null}
       </PageLayout>

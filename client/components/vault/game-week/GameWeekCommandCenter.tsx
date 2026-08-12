@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { getGameWeekBundle } from '@/lib/game-week-data';
+import { InsiderPaywall } from '@/components/futurecast/InsiderPaywall';
 import { MatchupHeroWidget } from './MatchupHeroWidget';
 import { SeasonTimeline } from './SeasonTimeline';
 import { WinProbabilityGaugeWidget } from './WinProbabilityGaugeWidget';
@@ -19,6 +20,18 @@ const TABS = [
   { id: 'scouting', label: 'Scouting Report' },
   { id: 'prediction', label: 'Prediction Panel' },
 ];
+
+const FILM_INTEL_PAYWALL = {
+  message:
+    'Film Room unlocks full Game Week Intel — 3 Keys, swing players, and film notes from the matchup tape.',
+  ctaLabel: 'Unlock Film Room',
+} as const;
+
+const FILM_SCOUTING_PAYWALL = {
+  message:
+    'Film Room unlocks the full Scouting Report — offense, defense, and how Florida wins this week.',
+  ctaLabel: 'Unlock Film Room',
+} as const;
 
 type Props = {
   initialGameId?: string;
@@ -75,28 +88,30 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
           </div>
 
           {tab === 'intel' ? (
-            <div className="gv-gw-wow-tab gv-gw-wow-tab--intel">
-              <div className="gv-gw-wow-row gv-gw-wow-row--2">
+            <InsiderPaywall variant="overlay" {...FILM_INTEL_PAYWALL}>
+              <div className="gv-gw-wow-tab gv-gw-wow-tab--intel">
+                <div className="gv-gw-wow-row gv-gw-wow-row--2">
+                  <section className="gv-gw-wow-panel fc-lab-panel-shell">
+                    <h3 className="gv-gw-wow-panel__title">3 Keys to the Game</h3>
+                    <div className="gv-gw-wow-panel__body">
+                      <KeysToGameCards keys={bundle.keys} />
+                    </div>
+                  </section>
+                  <section className="gv-gw-wow-panel fc-lab-panel-shell">
+                    <h3 className="gv-gw-wow-panel__title">Swing Players</h3>
+                    <div className="gv-gw-wow-panel__body">
+                      <SwingPlayersCards players={bundle.swingPlayers} />
+                    </div>
+                  </section>
+                </div>
                 <section className="gv-gw-wow-panel fc-lab-panel-shell">
-                  <h3 className="gv-gw-wow-panel__title">3 Keys to the Game</h3>
+                  <h3 className="gv-gw-wow-panel__title">Film Notes</h3>
                   <div className="gv-gw-wow-panel__body">
-                    <KeysToGameCards keys={bundle.keys} />
-                  </div>
-                </section>
-                <section className="gv-gw-wow-panel fc-lab-panel-shell">
-                  <h3 className="gv-gw-wow-panel__title">Swing Players</h3>
-                  <div className="gv-gw-wow-panel__body">
-                    <SwingPlayersCards players={bundle.swingPlayers} />
+                    <FilmNotesPanel notes={bundle.filmNotes} />
                   </div>
                 </section>
               </div>
-              <section className="gv-gw-wow-panel fc-lab-panel-shell">
-                <h3 className="gv-gw-wow-panel__title">Film Notes</h3>
-                <div className="gv-gw-wow-panel__body">
-                  <FilmNotesPanel notes={bundle.filmNotes} />
-                </div>
-              </section>
-            </div>
+            </InsiderPaywall>
           ) : null}
 
           {tab === 'depth' ? (
@@ -109,12 +124,14 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
           ) : null}
 
           {tab === 'scouting' ? (
-            <section className="gv-gw-wow-panel fc-lab-panel-shell">
-              <h3 className="gv-gw-wow-panel__title">Scouting report</h3>
-              <div className="gv-gw-wow-panel__body">
-                <ScoutingReportPanel scouting={bundle.scouting} />
-              </div>
-            </section>
+            <InsiderPaywall variant="overlay" {...FILM_SCOUTING_PAYWALL}>
+              <section className="gv-gw-wow-panel fc-lab-panel-shell">
+                <h3 className="gv-gw-wow-panel__title">Scouting report</h3>
+                <div className="gv-gw-wow-panel__body">
+                  <ScoutingReportPanel scouting={bundle.scouting} />
+                </div>
+              </section>
+            </InsiderPaywall>
           ) : null}
 
           {tab === 'prediction' ? (

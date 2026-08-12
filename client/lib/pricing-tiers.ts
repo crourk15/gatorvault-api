@@ -51,10 +51,11 @@ export const PRICING_TIERS: PricingTier[] = [
     monthly: 4.99,
     annual: 3.99,
     features: [
-      'Recruiting board + 2027 targets',
+      'Recruiting board + 2027/2028 targets',
       'Portal tracker + visit intel',
       'NIL snapshot + live feed',
       'Depth chart + team hub',
+      'Game Week matchup shell',
     ],
   },
   {
@@ -67,8 +68,10 @@ export const PRICING_TIERS: PricingTier[] = [
     features: [
       'Everything in Locker Room',
       'FutureCast — UF probabilities & movement',
-      'Fit scores, staff notes & signal intel',
-      'Film Room breakdowns + Game Week',
+      'Vault Scouting on player profiles',
+      'Game Week Intel + Scouting Report',
+      'Class of 2029 & 2030 early targets',
+      'Film Room breakdowns',
     ],
   },
   {
@@ -141,7 +144,31 @@ export const PUBLIC_FEATURE_COMPARISON_ROWS: PublicFeatureComparisonRow[] = [
     film: 'Full',
   },
   {
-    feature: 'Film Room + Game Week',
+    feature: 'Game Week shell',
+    free: '—',
+    locker: 'Full',
+    film: 'Full',
+  },
+  {
+    feature: 'Game Week Intel + Scouting Report',
+    free: '—',
+    locker: 'Teaser',
+    film: 'Full',
+  },
+  {
+    feature: 'Vault Scouting (player profiles)',
+    free: '—',
+    locker: 'Teaser',
+    film: 'Full',
+  },
+  {
+    feature: 'Class of 2029 & 2030',
+    free: '—',
+    locker: 'Teaser',
+    film: 'Full',
+  },
+  {
+    feature: 'Film Room breakdowns',
     free: '—',
     locker: '—',
     film: 'Full',
