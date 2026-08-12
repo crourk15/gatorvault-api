@@ -9,6 +9,7 @@ import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecr
 import {
   getSigningEvents,
   getSigningCountdown,
+  selectSigningBoardPlayers,
   type SigningEventId,
 } from '@/components/recruiting-hub/elite/signing-day-utils';
 import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
@@ -21,21 +22,8 @@ type SigningPayload = {
 
 async function loadSigningPlayers(eventId: SigningEventId): Promise<SigningPayload> {
   const board = await fetchRecruitingBoard(ACTIVE_RECRUITING_CLASS_YEAR);
-  const commits = new Set((board.commits ?? []).map((p) => p.slug));
-  const targets = (board.targets ?? []) as EnrichedCommitPlayer[];
-
-  const pool =
-    eventId === 'esp'
-      ? targets.filter((p) => p.tier === 'TOP' || p.tier === 'HIGH')
-      : targets.filter((p) => !commits.has(p.slug));
-
-  const sorted = [...pool].sort((a, b) => {
-    const ra = a.natlRank ?? a.natl ?? 9999;
-    const rb = b.natlRank ?? b.natl ?? 9999;
-    return ra - rb;
-  });
-
-  return { players: sorted };
+  const players = selectSigningBoardPlayers(eventId, board) as EnrichedCommitPlayer[];
+  return { players };
 }
 
 type Props = {
@@ -97,7 +85,11 @@ export function SigningDayPage({ eventId }: Props): React.ReactElement {
                     </p>
                   </div>
                   <div className="rh-signing-page__aside">
-                    {uf != null ? <span className="rh-signing-page__uf">{uf}% UF</span> : null}
+                    {eventId === 'esp' ? (
+                      <span className="rh-signing-page__uf">UF commit</span>
+                    ) : uf != null ? (
+                      <span className="rh-signing-page__uf">{uf}% UF</span>
+                    ) : null}
                     <Link href={href} className="rh-signing-page__link">
                       Profile →
                     </Link>

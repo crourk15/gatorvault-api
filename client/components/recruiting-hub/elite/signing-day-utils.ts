@@ -3,6 +3,12 @@ import {
   getSigningCalendar,
   type SigningCalendar,
 } from '@/lib/recruiting-cycle';
+import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
+import {
+  isActiveUfTarget,
+  isFloridaSchool,
+  resolveCommittedTo,
+} from '@/lib/recruiting-target-filters';
 
 export type SigningEventId = 'esp' | 'nsd';
 
@@ -64,7 +70,9 @@ function buildSigningEventConfig(
 }
 
 /** Signing windows for the active recruiting cycle (defaults to class of 2027). */
-export function getSigningEvents(classYear = ACTIVE_RECRUITING_CLASS_YEAR): Record<SigningEventId, SigningEventConfig> {
+export function getSigningEvents(
+  classYear = ACTIVE_RECRUITING_CLASS_YEAR
+): Record<SigningEventId, SigningEventConfig> {
   const calendar = getSigningCalendar(classYear);
   return {
     esp: buildSigningEventConfig(calendar, 'esp'),
@@ -101,4 +109,38 @@ export function getSigningCountdown(event: SigningEventConfig, now = new Date())
   const hours = totalHours % 24;
 
   return { isLive, isPast, days, hours, targetLabel };
+}
+
+export type SigningBoardLists = {
+  commits?: RecruitingBoardPlayer[] | null;
+  targets?: RecruitingBoardPlayer[] | null;
+};
+
+function isUfCommit(player: RecruitingBoardPlayer): boolean {
+  if (player.isCommittedToUF) return true;
+  return isFloridaSchool(resolveCommittedTo(player));
+}
+
+/**
+ * ESP "Expected signees" = Florida commits for the class.
+ * Never Flip Watch / committed-elsewhere TOP-HIGH targets.
+ * NSD "Remaining targets" = open UF hunts only (active targets).
+ */
+export function selectSigningBoardPlayers(
+  eventId: SigningEventId,
+  board: SigningBoardLists
+): RecruitingBoardPlayer[] {
+  const commits = board.commits ?? [];
+  const targets = board.targets ?? [];
+
+  const pool =
+    eventId === 'esp'
+      ? commits.filter(isUfCommit)
+      : targets.filter((p) => isActiveUfTarget(p));
+
+  return [...pool].sort((a, b) => {
+    const ra = a.natlRank ?? a.natl ?? 9999;
+    const rb = b.natlRank ?? b.natl ?? 9999;
+    return Number(ra) - Number(rb);
+  });
 }
