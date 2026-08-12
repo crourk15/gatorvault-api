@@ -19,7 +19,7 @@ export interface UfFitWatchlistPlayer {
   fitVolatility: number;
   /** Staff-heat lane (process) — component of Hottest Targets. */
   chaseScore?: number;
-  /** Hottest Targets composite — Top Targets sort key. */
+  /** Hottest Targets composite — Best Fits (Big Board) sort key. */
   hotScore?: number;
   priorityScore?: number;
   hotLanes?: {

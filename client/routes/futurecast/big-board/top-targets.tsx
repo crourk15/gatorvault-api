@@ -1,4 +1,4 @@
-/** Top Targets tab — links to UF Fit Watchlist API-backed page */
+/** Best Fits tab (id: top-targets) — UF Fit Watchlist API-backed page */
 import React from 'react';
 import { UfFitWatchlistGrid } from '../../../components/futurecast/UfFitWatchlistGrid';
 

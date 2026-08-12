@@ -25,7 +25,7 @@ export function UfFitWatchlistGrid({ query }: UfFitWatchlistGridProps): React.Re
     setError(null);
     try {
       const data = await fetchUfFitWatchlist(query);
-      // Belt-and-suspenders: Top Targets must never render UF commits as open targets.
+      // Belt-and-suspenders: Best Fits must never render UF commits as open targets.
       setPlayers(
         (data.players || []).filter((p) =>
           isActiveUfTarget({
