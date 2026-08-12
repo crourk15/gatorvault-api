@@ -11,10 +11,11 @@ const PAYMENT_TIERS = {
     icon: '🏟️',
     level: 0,
     features: [
-      'Recruiting board + 2027 targets',
+      'Recruiting board + 2027/2028 targets',
       'Portal tracker + visit intel',
       'NIL snapshot + live feed',
-      'Depth chart + team hub'
+      'Depth chart + team hub',
+      'Game Week matchup shell'
     ]
   },
   film: {
@@ -25,8 +26,10 @@ const PAYMENT_TIERS = {
     features: [
       'Everything in Locker Room',
       'FutureCast — UF probabilities & movement',
-      'Fit scores, staff notes & signal intel',
-      'Film Room breakdowns + Game Week'
+      'Vault Scouting on player profiles',
+      'Game Week Intel + Scouting Report',
+      'Class of 2029 & 2030 early targets',
+      'Film Room breakdowns'
     ]
   },
   war: {

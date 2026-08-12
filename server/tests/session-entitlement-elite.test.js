@@ -38,7 +38,7 @@ describe('session entitlement elite gates', () => {
     assert.equal(sessionHasTier({ email: 'ghost@example.com', tier: 'war' }, 'film'), false);
   });
 
-  it('sessionHasTier allows active trial user at stored tier', () => {
+  it('sessionHasTier unlocks Film (not War) during active unpaid trial', () => {
     const { saveUsers, loadUsers } = require('../lib/user-store');
     const { sessionHasTier } = require('../lib/session-auth');
     const trialEnd = new Date(Date.now() + 7 * 86400000).toISOString();
@@ -52,8 +52,26 @@ describe('session entitlement elite gates', () => {
     ]);
     assert.equal(loadUsers().length, 1);
     assert.equal(sessionHasTier({ email: 'trial@example.com', tier: 'war' }, 'locker'), true);
-    // Live tier is locker — JWT war must not unlock film/war APIs.
-    assert.equal(sessionHasTier({ email: 'trial@example.com', tier: 'war' }, 'film'), false);
+    // Trial opens Film soft gates even when stored tier is locker.
+    assert.equal(sessionHasTier({ email: 'trial@example.com', tier: 'war' }, 'film'), true);
+    // War stays paid-only — JWT war must not unlock War during locker trial.
+    assert.equal(sessionHasTier({ email: 'trial@example.com', tier: 'war' }, 'war'), false);
+  });
+
+  it('sessionHasTier keeps paid locker below Film after trial ends', () => {
+    const { saveUsers } = require('../lib/user-store');
+    const { sessionHasTier } = require('../lib/session-auth');
+    saveUsers([
+      {
+        email: 'locker@example.com',
+        tier: 'locker',
+        paid: true,
+        trialEnd: new Date(Date.now() - 86400000).toISOString(),
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+    assert.equal(sessionHasTier({ email: 'locker@example.com', tier: 'locker' }, 'locker'), true);
+    assert.equal(sessionHasTier({ email: 'locker@example.com', tier: 'locker' }, 'film'), false);
   });
 
   it('production rejects legacy default admin PIN unless explicitly allowed', () => {

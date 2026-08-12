@@ -83,8 +83,18 @@ function tierLevel(tier) {
 }
 
 /**
+ * Active unpaid trial unlocks Film (not War) so trial members see Film soft gates.
+ */
+function trialFilmTierBoost(user, trial, paid) {
+  if (paid) return null;
+  if (!user?.trialEnd || trial?.expired) return null;
+  return 'film';
+}
+
+/**
  * Gate paid APIs on live user entitlement — not stale JWT tier.
  * Deleted users and expired trials fail closed.
+ * Active trial ⇒ Film access (War still requires paid War).
  */
 function sessionHasTier(session, minTier) {
   if (!session?.email) return false;
@@ -97,9 +107,15 @@ function sessionHasTier(session, minTier) {
       return tierLevel('war') >= tierLevel(minTier);
     }
     const trial = trialState(user);
-    const accessActive = hasPaidAccess(user) || !trial.expired;
+    const paid = hasPaidAccess(user);
+    const accessActive = paid || !trial.expired;
     if (!accessActive) return false;
-    return tierLevel(effectiveTier(user)) >= tierLevel(minTier);
+    let tier = effectiveTier(user);
+    const boost = trialFilmTierBoost(user, trial, paid);
+    if (boost && tierLevel(boost) > tierLevel(tier)) {
+      tier = boost;
+    }
+    return tierLevel(tier) >= tierLevel(minTier);
   } catch {
     // Fail closed if stores unavailable.
     return false;
@@ -111,6 +127,7 @@ module.exports = {
   getSessionFromReq,
   tierLevel,
   sessionHasTier,
+  trialFilmTierBoost,
   isAdminAccount,
   isReservedOperatorEmail,
   effectiveTier,
