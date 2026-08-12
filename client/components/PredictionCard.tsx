@@ -1,12 +1,11 @@
 /**
- * FutureCast prediction card — ClassicRecruitCard only.
+ * FutureCast prediction card — VaultBigBoardCard chrome.
  */
 'use client';
 
 import React from 'react';
 import { type FeedPrediction } from '../lib/predictions-api';
-import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
-import { fromFeedPrediction } from '@/lib/recruiting-card-adapters';
+import { VaultBigBoardCard, modelFromPrediction } from '@/components/futurecast/VaultBigBoardCard';
 
 export interface PredictionCardData {
   playerId: string;
@@ -26,6 +25,9 @@ export interface PredictionCardData {
   nationalRank?: number | null;
   positionRank?: number | null;
   stateRank?: number | null;
+  stars?: number | null;
+  rating?: number | null;
+  natlRank?: number | null;
 }
 
 export interface PredictionCardProps {
@@ -51,6 +53,9 @@ export function feedPredictionToCard(p: FeedPrediction): PredictionCardData {
     nationalRank: p.nationalRank,
     positionRank: p.positionRank,
     stateRank: p.stateRank,
+    stars: p.stars,
+    rating: p.rating,
+    natlRank: p.natlRank,
   };
 }
 
@@ -79,16 +84,16 @@ function cardDataToFeed(data: PredictionCardData): FeedPrediction {
     nationalRank: data.nationalRank ?? null,
     positionRank: data.positionRank ?? null,
     stateRank: data.stateRank ?? null,
+    stars: data.stars ?? undefined,
+    rating: data.rating ?? undefined,
+    natlRank: data.natlRank ?? undefined,
   };
 }
 
 export function PredictionCard({ prediction }: PredictionCardProps): React.ReactElement {
   return (
     <div data-testid="prediction-card">
-      <ClassicRecruitCard
-        player={fromFeedPrediction(cardDataToFeed(prediction), 'target')}
-        variant="target"
-      />
+      <VaultBigBoardCard model={modelFromPrediction(cardDataToFeed(prediction))} profileContext="futurecast" />
     </div>
   );
 }

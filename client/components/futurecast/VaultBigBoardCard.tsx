@@ -3,13 +3,21 @@
 import React from 'react';
 import type { BigBoardPlayer } from '@/lib/big-board-api';
 import type { EarlyDiscoveryPlayer } from '@/lib/early-discovery-api';
+import type { FeedPrediction } from '@/lib/predictions-api';
+import type { PortalWatchlistPlayer } from '@/lib/portal-api';
+import type { PortalWatchlistHomePlayer } from '@/lib/futurecast-home-api';
 import type { UfFitWatchlistPlayer } from '@/lib/uf-fit-api';
 import { formatRecruitSchoolLabel } from '@/lib/recruiting-display-utils';
 import { playerProfilePath } from '@/lib/player-routes';
 import type { PlayerProfileContext } from '@/lib/vault-route-map';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 
-export type VaultBigBoardMode = 'intel' | 'best-fits' | 'early-discovery';
+export type VaultBigBoardMode =
+  | 'intel'
+  | 'best-fits'
+  | 'early-discovery'
+  | 'portal'
+  | 'prediction';
 
 type StampTone = 'hot' | 'fit' | 'intel' | 'signal' | 'board' | 'chase';
 
@@ -189,6 +197,79 @@ export function modelFromEarlyDiscovery(player: EarlyDiscoveryPlayer): VaultBigB
   };
 }
 
+
+/** Portal Watchlist — Portal / Depth / Vol */
+export function modelFromPortal(
+  player: PortalWatchlistPlayer | PortalWatchlistHomePlayer
+): VaultBigBoardCardModel {
+  const name = player.fullName;
+  const portal = Math.round(Number(player.portalLikelihood) || 0);
+  const depth = Math.round(Number(player.depthChartRisk) || 0);
+  const vol = Math.round(Number(player.volatility) || 0);
+  const stampTone: StampTone = portal >= 70 ? 'hot' : portal >= 40 ? 'chase' : 'intel';
+  return {
+    slug: player.slug,
+    name,
+    position: player.position || null,
+    stars: null,
+    school: 'Portal watchlist',
+    classYear: player.classYear ?? null,
+    inState: false,
+    onBoard: false,
+    ratingLabel: 'Portal',
+    ratingValue: portal > 0 ? `${portal}%` : '-',
+    skinny:
+      portal >= 70
+        ? `High portal likelihood — ${lastName(name)} sits near the top of the watchlist on exit risk + depth chart pressure.`
+        : `Portal radar keeps ${lastName(name)} on the board — likelihood, depth-chart risk, and volatility only (not chase Priority).`,
+    stamp: { label: `Portal #${player.rank}`, tone: stampTone },
+    metrics: [
+      { label: 'Portal', value: portal > 0 ? `${portal}%` : '-' },
+      { label: 'Depth', value: depth > 0 ? `${depth}%` : '-' },
+      { label: 'Vol', value: vol > 0 ? String(vol) : '-' },
+    ],
+  };
+}
+
+/** Predictions feed — UF Shot / Fit / Conf */
+export function modelFromPrediction(player: FeedPrediction): VaultBigBoardCardModel {
+  const name = player.fullName;
+  const school =
+    formatRecruitSchoolLabel(player.school ?? undefined) || String(player.school || 'High school TBD');
+  const composite = player.compositeScore ?? player.rating ?? null;
+  const isLiveOn3 = (player.nationalRank ?? player.natlRank ?? 0) > 0 && Number(composite) > 0;
+  const inState = schoolLooksInState(school);
+  const conf = Math.round(Number(player.confidence) || 0);
+  const delta = player.delta != null ? Number(player.delta) : 0;
+  let stamp: VaultBigBoardCardModel['stamp'];
+  if (delta > 0) stamp = { label: 'Rising', tone: 'signal' };
+  else if (delta < 0) stamp = { label: 'Cooling', tone: 'chase' };
+  else stamp = { label: conf >= 60 ? 'Lean UF' : 'Watch', tone: 'intel' };
+
+  return {
+    slug: player.playerSlug || player.playerId,
+    name,
+    position: player.position || null,
+    stars: player.stars ?? null,
+    school,
+    classYear: typeof player.classYear === 'number' ? player.classYear : null,
+    inState,
+    onBoard: false,
+    ratingLabel: isLiveOn3 ? 'Composite' : 'Vault est.',
+    ratingValue: fmtRating(composite),
+    skinny:
+      delta > 0
+        ? `Prediction heat rising for ${lastName(name)} — UF Shot / Fit / Conf from the FutureCast feed, not Priority Chase order.`
+        : `FutureCast prediction stack for ${lastName(name)} — confidence + Fit, not Big Board Intelligence Rank.`,
+    stamp,
+    metrics: [
+      { label: 'UF Shot', value: fmtPct(player.ufProbability ?? conf) },
+      { label: 'Fit', value: fmtScore(player.ufFitScore) },
+      { label: 'Conf', value: conf > 0 ? `${conf}%` : '-' },
+    ],
+  };
+}
+
 export function VaultBigBoardCard({
   model,
   profileContext = 'futurecast',
@@ -246,7 +327,9 @@ export function VaultBigBoardCard({
         {(model.inState || model.onBoard) && (
           <div className="gv-chase-card__badges">
             {model.inState ? <span className="gv-chase-badge gv-chase-badge--instate">In-state</span> : null}
-            {model.onBoard ? <span className="gv-chase-badge gv-chase-badge--board">UF Board</span> : null}
+            {model.onBoard ? (
+              <span className="gv-chase-badge gv-chase-badge--board">On the board</span>
+            ) : null}
           </div>
         )}
 

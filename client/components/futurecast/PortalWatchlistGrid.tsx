@@ -2,8 +2,10 @@
  * Portal Watchlist grid — GET /api/portal/watchlist
  */
 import React, { useCallback, useEffect, useState } from 'react';
-import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
-import { fromPortalWatchlist } from '@/lib/recruiting-card-adapters';
+import {
+  VaultBigBoardCard,
+  modelFromPortal,
+} from '@/components/futurecast/VaultBigBoardCard';
 import {
   fetchPortalWatchlist,
   type PortalWatchlistPlayer,
@@ -42,14 +44,9 @@ export function PortalWatchlistGrid({ query }: PortalWatchlistGridProps): React.
   if (!players.length) return <div className="fc-big-board-empty">No portal candidates match these filters.</div>;
 
   return (
-    <div className="gv-rb-grid" data-testid="portal-watchlist-grid">
+    <div className="gv-rb-grid gv-chase-card-grid" data-testid="portal-watchlist-grid">
       {players.map((p) => (
-        <ClassicRecruitCard
-          key={p.id}
-          player={fromPortalWatchlist(p)}
-          variant="target"
-          rank={p.rank}
-        />
+        <VaultBigBoardCard key={p.id} model={modelFromPortal(p)} profileContext="futurecast" />
       ))}
     </div>
   );

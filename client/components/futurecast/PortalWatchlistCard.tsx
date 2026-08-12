@@ -1,23 +1,16 @@
 /**
- * Portal Watchlist card — ClassicRecruitCard only.
+ * Portal Watchlist card — VaultBigBoardCard chrome.
  */
 'use client';
 
 import React from 'react';
 import type { PortalWatchlistHomePlayer } from '@/lib/futurecast-home-api';
-import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
-import { fromPortalWatchlist } from '@/lib/recruiting-card-adapters';
+import { VaultBigBoardCard, modelFromPortal } from '@/components/futurecast/VaultBigBoardCard';
 
 export function PortalWatchlistCard({
   player,
 }: {
   player: PortalWatchlistHomePlayer;
 }): React.ReactElement {
-  return (
-    <ClassicRecruitCard
-      player={fromPortalWatchlist(player)}
-      variant="target"
-      rank={player.rank}
-    />
-  );
+  return <VaultBigBoardCard model={modelFromPortal(player)} profileContext="futurecast" />;
 }
