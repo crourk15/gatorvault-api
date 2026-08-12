@@ -160,132 +160,103 @@ export type HomeTrustTickerInput = {
 };
 
 const HOME_TICKER_FALLBACKS = [
-  '2027 class trending nationally — UF in the mix',
+  'Live recruiting pulse warming — check back in a moment',
   'FutureCast leans UF for multiple blue-chip targets',
   'Staff locked in for summer evals and camps',
   'GatorNation Live — real-time pulse from the Swamp',
 ] as const;
 
-/** Prefer one concrete story for the hero — not a marquee of the whole board. */
-export function buildHomePulseHeadline(input: HomeTrustTickerInput): string {
-  const candidates: string[] = [];
+function isGenericClassPulse(text: string): boolean {
+  return /class trending nationally/i.test(text) || /^Blue chip % at\b/i.test(text);
+}
 
-  const push = (value?: string | null) => {
+function isWeakAnonPulse(text: string): boolean {
+  // Movement rows without a player name — not worth a NOW slot alone.
+  return /^(uv|unofficial visit|official visit|offer)\b/i.test(text);
+}
+
+/** Ranked NOW stories from live hub/intel — rotates on the home strip. */
+export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): string[] {
+  const named: string[] = [];
+  const commits: string[] = [];
+  const board: string[] = [];
+  const generic: string[] = [];
+
+  const pushBucket = (bucket: string[], value?: string | null) => {
     const text = String(value || '').trim();
-    if (text) candidates.push(text);
+    if (!text) return;
+    bucket.push(text);
   };
 
-  // Commits / hub headlines first when available.
-  for (const item of input.hubTicker) {
-    const text = item.trim();
-    if (/commit/i.test(text)) push(text);
-  }
-  for (const item of input.hpIntel) {
-    const text = item.text?.trim();
-    if (text && /commit/i.test(text)) push(text);
-  }
-
-  for (const row of input.flipWatch ?? []) {
-    if (row.movementNarrative) push(`${row.name} — ${row.movementNarrative}`);
-    else if (row.flipScore != null) {
-      push(`Flip Watch: ${row.name} (${row.committedShort}) · Flip ${row.flipScore}`);
-    }
-  }
   for (const row of input.visitRecap ?? []) {
     if (row.movementNarrative) {
-      push(`${row.name} — ${row.movementNarrative}`);
+      pushBucket(named, `${row.name} — ${row.movementNarrative}`);
       continue;
     }
     const range =
       row.visitEnd && row.visitEnd !== row.visitStart
         ? `${row.visitStart}–${row.visitEnd}`
         : row.visitStart;
-    if (range) push(`Verified OV: ${row.name} (${range})`);
+    if (range) pushBucket(named, `Verified OV: ${row.name} (${range})`);
+  }
+  for (const row of input.flipWatch ?? []) {
+    if (row.movementNarrative) pushBucket(named, `${row.name} — ${row.movementNarrative}`);
+    else if (row.flipScore != null) {
+      pushBucket(
+        named,
+        `Flip Watch: ${row.name} (${row.committedShort || 'elsewhere'}) · Flip ${row.flipScore}`
+      );
+    }
   }
   for (const row of input.movementNarratives ?? []) {
-    if (row.movementNarrative) push(`${row.name} — ${row.movementNarrative}`);
+    if (row.movementNarrative) pushBucket(named, `${row.name} — ${row.movementNarrative}`);
   }
-  for (const item of input.hpIntel) push(item.text);
   for (const alert of input.movement?.alerts ?? []) {
     const detail = alert.detail?.trim();
     if (!detail) continue;
-    push(alert.player ? `${alert.player}: ${detail}` : detail);
+    pushBucket(named, alert.player ? `${alert.player}: ${detail}` : detail);
   }
   for (const player of input.movement?.risers ?? []) {
     const ufPct = Math.round(player.ufProb <= 1 ? player.ufProb * 100 : player.ufProb);
-    push(`${player.name} rising — UF at ${ufPct}%`);
+    pushBucket(named, `${player.name} rising — UF at ${ufPct}%`);
   }
-  for (const item of input.hubTicker) push(item);
 
-  const unique = [...new Set(candidates)];
-  if (unique.length > 0) return unique[0];
-  return HOME_TICKER_FALLBACKS[0];
+  for (const item of input.hubTicker) {
+    const text = item.trim();
+    if (!text) continue;
+    if (/commit/i.test(text)) pushBucket(commits, text);
+    else if (isGenericClassPulse(text) || isWeakAnonPulse(text)) pushBucket(generic, text);
+    else pushBucket(board, text);
+  }
+  for (const item of input.hpIntel) {
+    const text = item.text?.trim();
+    if (!text) continue;
+    if (/commit/i.test(text)) pushBucket(commits, text);
+    else pushBucket(board, text);
+  }
+
+  const ordered = [...named, ...commits, ...board, ...generic];
+  const unique = [...new Set(ordered)].filter(Boolean);
+  if (unique.length > 0) return unique.slice(0, limit);
+  return [...HOME_TICKER_FALLBACKS].slice(0, limit);
 }
 
-/** @deprecated Prefer buildHomePulseHeadline — kept for any leftover callers. */
+/** Prefer one concrete story for the hero — not a marquee of the whole board. */
+export function buildHomePulseHeadline(input: HomeTrustTickerInput): string {
+  return buildHomePulseStories(input, 1)[0] || HOME_TICKER_FALLBACKS[0];
+}
+
+/** @deprecated Prefer buildHomePulseStories — kept for any leftover callers. */
 export function buildHeroTickerFromTrust(input: HomeTrustTickerInput): string[] {
-  const pulse = buildHomePulseHeadline(input);
-  if (pulse === HOME_TICKER_FALLBACKS[0] && !(input.hubTicker?.length || input.hpIntel?.length)) {
+  const stories = buildHomePulseStories(input, 6);
+  if (
+    stories.length === 1 &&
+    stories[0] === HOME_TICKER_FALLBACKS[0] &&
+    !(input.hubTicker?.length || input.hpIntel?.length)
+  ) {
     return [...HOME_TICKER_FALLBACKS];
   }
-  const rest = buildHeroTickerFromTrustLegacy(input).filter((item) => item !== pulse);
-  return [pulse, ...rest].slice(0, 6);
-}
-
-function buildHeroTickerFromTrustLegacy(input: HomeTrustTickerInput): string[] {
-  const fromHub = input.hubTicker.map((item) => item.trim()).filter(Boolean).slice(0, 4);
-  const fromHp = input.hpIntel
-    .map((item) => item.text?.trim())
-    .filter(Boolean)
-    .slice(0, 2);
-  const fromAlerts = (input.movement?.alerts ?? [])
-    .map((alert) => {
-      const detail = alert.detail?.trim();
-      if (!detail) return '';
-      return alert.player ? `${alert.player}: ${detail}` : detail;
-    })
-    .filter(Boolean)
-    .slice(0, 2);
-  const fromRisers = (input.movement?.risers ?? [])
-    .slice(0, 2)
-    .map((player) => {
-      const ufPct = Math.round(player.ufProb <= 1 ? player.ufProb * 100 : player.ufProb);
-      return `${player.name} rising — UF at ${ufPct}%`;
-    });
-  const fromNarratives = (input.movementNarratives ?? [])
-    .slice(0, 3)
-    .map((row) => (row.movementNarrative ? `${row.name} — ${row.movementNarrative}` : ''))
-    .filter(Boolean);
-  const fromFlipWatch = (input.flipWatch ?? [])
-    .slice(0, 2)
-    .map((row) => {
-      if (row.movementNarrative) return `${row.name} — ${row.movementNarrative}`;
-      const score = row.flipScore != null ? ` · Flip ${row.flipScore}` : '';
-      return `Flip Watch: ${row.name} (${row.committedShort})${score}`;
-    });
-  const fromVisitRecap = (input.visitRecap ?? [])
-    .slice(0, 2)
-    .map((row) => {
-      if (row.movementNarrative) return `${row.name} — ${row.movementNarrative}`;
-      const range =
-        row.visitEnd && row.visitEnd !== row.visitStart
-          ? `${row.visitStart}–${row.visitEnd}`
-          : row.visitStart;
-      return `Verified OV: ${row.name} (${range})`;
-    });
-
-  const combined = [
-    ...fromHub,
-    ...fromNarratives,
-    ...fromFlipWatch,
-    ...fromVisitRecap,
-    ...fromHp,
-    ...fromAlerts,
-    ...fromRisers,
-  ];
-  const unique = [...new Set(combined)].slice(0, 6);
-  if (unique.length > 0) return unique;
-  return [...HOME_TICKER_FALLBACKS];
+  return stories;
 }
 
 export function mapClassMetricsToHomeView(

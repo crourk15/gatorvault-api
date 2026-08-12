@@ -368,9 +368,10 @@ function priorityLiteWarmJobs(elite, years) {
     jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year)]);
     jobs.push([classSnapshotCacheKey(year), () => elite.buildHubClassOverview(year)]);
     jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year)]);
-    // Periodic Class tabs — API/data live on iOS without a Codemagic rebuild.
+    // Periodic Class tabs + home NOW ticker — API/data live without Codemagic.
     jobs.push([`hub:elite:commits:v3:${year}`, () => elite.buildHubCommits(year)]);
     jobs.push([hubFootprintCacheKey(year), () => elite.buildHubFootprint(year)]);
+    jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year)]);
   }
   return jobs;
 }

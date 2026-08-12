@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Home NOW ticker lines: named movement + lite-warm `/hub/ticker` refresh (API — no Codemagic)
 - [x] Footprint Class 2028 commits: rev-gate + heal poisoned 0-commit runtime plates; lite warm refreshes footprint/commits on cron (API — no Codemagic)
 - [x] 2027 Closing Class Top UF Targets soft plate (Tranard Roberts) — API
 - [x] 2028 Priority Chase: purge UF alumni/roster/empty-ATH phantoms (Urban Meyer, Kyle Trask, Dallas Wilson, …) + hard-block — API
@@ -46,6 +47,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-12 | Home NOW pulse: rotate live ticker/intel stories (not frozen class-trending line) | `HomeCommandCenter`, `HomePremiumPage`, pulse utils in binary (API ticker also live) | pending |
 | 2026-08-12 | ESP Expected signees: UF commits only (kick Flip Watch off the list) | `SigningDayPage` + `signing-day-utils` in binary | pending |
 | 2026-08-12 | Home Game Week elite card (ESPN logos + Days/Hrs/Min/Sec) + Signing Day stacked ESP/NSD tracker | `HomeCommandGameDay`, `SigningDayTracker`, home-wow + recruiting-hub CSS in binary | pending |
 | 2026-08-12 | Priority chase board: kill On3 RPM / snapshot-delta / Updated jargon under title | `ClassTargetsPage.tsx` in binary | #419 + bake |
