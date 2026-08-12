@@ -1,15 +1,17 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
-import { fromEarlyDiscovery } from '@/lib/recruiting-card-adapters';
+import {
+  VaultBigBoardCard,
+  modelFromEarlyDiscovery,
+} from '@/components/futurecast/VaultBigBoardCard';
 import {
   fetchEarlyDiscovery,
+  type EarlyDiscoveryPlayer,
   type EarlyDiscoveryQuery,
 } from '@/lib/early-discovery-api';
 import { fetchWithWarmPoll, userFacingLoadError } from '@/lib/api-warm-poll';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
-import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 
 export interface EarlyDiscoveryPreviewProps {
   query?: EarlyDiscoveryQuery;
@@ -29,7 +31,7 @@ export function EarlyDiscoveryPreview({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [count, setCount] = useState(0);
-  const [players, setPlayers] = useState<RecruitingBoardPlayer[]>([]);
+  const [players, setPlayers] = useState<EarlyDiscoveryPlayer[]>([]);
   const [retryTick, setRetryTick] = useState(0);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export function EarlyDiscoveryPreview({
           { maxAttempts: 3, delayMs: 800 }
         );
         if (cancelled) return;
-        const next = (data.players ?? []).slice(0, limit).map(fromEarlyDiscovery);
+        const next = (data.players ?? []).slice(0, limit);
         setCount(data.count ?? next.length);
         if (next.length) {
           setPlayers(next);
@@ -108,9 +110,13 @@ export function EarlyDiscoveryPreview({
 
   return (
     <>
-      <div className="fc-home-card-grid gv-rb-grid" data-testid="early-discovery-preview">
+      <div className="fc-home-card-grid gv-rb-grid gv-chase-card-grid" data-testid="early-discovery-preview">
         {players.map((player) => (
-          <ClassicRecruitCard key={player.slug} player={player} variant="target" />
+          <VaultBigBoardCard
+            key={player.slug}
+            model={modelFromEarlyDiscovery(player)}
+            profileContext="futurecast"
+          />
         ))}
       </div>
       <p className="fc-home-section__footer-link">

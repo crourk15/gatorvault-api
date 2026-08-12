@@ -48,7 +48,7 @@ export function BigBoardGrid({ query, onPlayerClick }: BigBoardGridProps): React
   }
 
   return (
-    <div className="gv-rb-grid" data-testid="big-board-grid">
+    <div className="gv-rb-grid gv-chase-card-grid" data-testid="big-board-grid">
       {players.map((player) => (
         <PlayerCard key={player.id} player={player} onClick={onPlayerClick} />
       ))}

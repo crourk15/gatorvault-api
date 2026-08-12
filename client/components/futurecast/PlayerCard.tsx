@@ -1,14 +1,11 @@
 /**
- * Big Board player card — ClassicRecruitCard only.
- * Elite four-metric cards use TrendingPlayerCard, HighPriorityTargetCard, etc.
- * Metric definitions: client/lib/futurecast-elite-metrics.ts
+ * Big Board player card — VaultBigBoardCard (Intelligence Rank chrome).
  */
 'use client';
 
 import React from 'react';
 import type { BigBoardPlayer } from '../../lib/big-board-api';
-import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
-import { fromBigBoard } from '@/lib/recruiting-card-adapters';
+import { VaultBigBoardCard, modelFromIntel } from '@/components/futurecast/VaultBigBoardCard';
 
 export interface PlayerCardProps {
   player: BigBoardPlayer;
@@ -19,12 +16,7 @@ export interface PlayerCardProps {
 export function PlayerCard({ player }: PlayerCardProps): React.ReactElement {
   return (
     <div data-testid="player-card" data-slug={player.slug}>
-      <ClassicRecruitCard
-        player={fromBigBoard(player)}
-        variant="target"
-        rank={player.rank}
-        profileContext="futurecast"
-      />
+      <VaultBigBoardCard model={modelFromIntel(player)} profileContext="futurecast" />
     </div>
   );
 }

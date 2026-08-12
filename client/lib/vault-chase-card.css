@@ -187,6 +187,32 @@
   background: rgba(22, 163, 74, 0.08);
 }
 
+/* Big Board modes (Intelligence Rank / Best Fits / Early Discovery) */
+.gv-chase-card__stamp--intel,
+.gv-chase-card__stamp--fit {
+  border: 1.5px solid #0021a5;
+  color: #0021a5;
+  background: rgba(0, 33, 165, 0.06);
+}
+
+.gv-chase-card__stamp--board {
+  border: 1.5px solid #fa4616;
+  color: #fa4616;
+  background: rgba(250, 70, 22, 0.07);
+}
+
+.gv-chase-card__stamp--signal {
+  border: 1.5px solid #15803d;
+  color: #15803d;
+  background: rgba(22, 163, 74, 0.08);
+}
+
+.gv-chase-badge--board {
+  background: rgba(250, 70, 22, 0.1);
+  color: #c2410c;
+  border: 1px solid rgba(250, 70, 22, 0.22);
+}
+
 .gv-chase-card__rank-strip {
   position: relative;
   z-index: 1;
