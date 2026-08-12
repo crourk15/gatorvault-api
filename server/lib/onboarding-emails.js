@@ -6,7 +6,7 @@ const ALERTS_URL =
 const MEMBERSHIP_URL = process.env.GV_MEMBERSHIP_URL || `${SITE_URL}/vault/membership/`;
 const VAULT_LINK_LABEL = 'Open your vault';
 const MEMBERSHIP_LINK_LABEL = 'Choose your membership';
-const ALERTS_LINK_LABEL = 'Turn on visit alerts';
+const ALERTS_LINK_LABEL = 'Set up My Alerts';
 const VAULT_URL_DISPLAY = `${SITE_URL.replace(/^https?:\/\//, '')}/join`;
 const SUPPORT_EMAIL = process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com';
 
