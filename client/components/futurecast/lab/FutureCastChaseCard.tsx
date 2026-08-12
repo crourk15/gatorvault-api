@@ -17,12 +17,14 @@ type Props = {
 export function FutureCastChaseCard({
   player,
   rank,
+  showMovement = true,
 }: Props): React.ReactElement {
   return (
     <VaultChaseCard
       player={player}
       rank={rank}
       showRace={rank === 1}
+      showMovement={showMovement}
       profileContext="futurecast"
       href={playerProfileRoute(player.slug, 'futurecast')}
     />

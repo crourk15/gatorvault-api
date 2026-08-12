@@ -93,14 +93,16 @@ function on3LeadLabel(player: VaultChaseCardPlayer): string {
   return '-';
 }
 
+/** Always keep #N visible — Rising is a separate badge, not a stamp replacement. */
 function stampFor(
   rank: number,
-  delta7d: number | null | undefined
-): { label: string; tone: 'hot' | 'chase' | 'rise' } {
-  if (rank === 1) return { label: '#1 Chase', tone: 'hot' };
+  delta7d: number | null | undefined,
+  showMovement = true
+): { label: string; tone: 'hot' | 'chase'; rising: boolean } {
   const d = Number(delta7d);
-  if (Number.isFinite(d) && d > 0) return { label: 'Rising', tone: 'rise' };
-  return { label: `#${rank} Chase`, tone: 'chase' };
+  const rising = Boolean(showMovement && Number.isFinite(d) && d > 0 && rank !== 1);
+  if (rank === 1) return { label: '#1 Chase', tone: 'hot', rising: false };
+  return { label: `#${rank} Chase`, tone: 'chase', rising };
 }
 
 /**
@@ -111,12 +113,15 @@ export function VaultChaseCard({
   player,
   rank,
   showRace = rank === 1,
+  showMovement = true,
   profileContext = 'futurecast',
   href: hrefOverride,
 }: {
   player: VaultChaseCardPlayer;
   rank: number;
   showRace?: boolean;
+  /** When false, hide Rising badge (Lab movement gate). */
+  showMovement?: boolean;
   profileContext?: PlayerProfileContext;
   href?: string;
 }): React.ReactElement {
@@ -131,7 +136,7 @@ export function VaultChaseCard({
       : null;
   const priority = chaseHeatLabel(player.priorityScore);
   const why = buildChaseWhyBrief(player);
-  const stamp = stampFor(rank, player.delta7d);
+  const stamp = stampFor(rank, player.delta7d, showMovement);
   const inState = Boolean(player.hotBadges?.inState) || schoolLooksInState(player.school);
   const race = showRace ? raceRows(player) : [];
   const raceMax = Math.max(...race.map((r) => r.pct), 1);
@@ -190,10 +195,11 @@ export function VaultChaseCard({
           </li>
         </ul>
 
-        {(inState || rank === 1) && (
+        {(inState || rank === 1 || stamp.rising) && (
           <div className="gv-chase-card__badges">
             {inState ? <span className="gv-chase-badge gv-chase-badge--instate">In-state</span> : null}
             {rank === 1 ? <span className="gv-chase-badge gv-chase-badge--lead">Hot chase</span> : null}
+            {stamp.rising ? <span className="gv-chase-badge gv-chase-badge--rising">Rising</span> : null}
           </div>
         )}
 
