@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-12T02:18:00.000Z",
+  "updatedAt": "2026-08-12T14:10:00.000Z",
   "items": [
     {
       "id": "brysen-wright-ov-2026-08-22-v2",
-      "status": "pending",
+      "status": "done",
       "playerSlug": "brysen-wright",
       "playerName": "Brysen Wright",
       "playerId": "242341",
@@ -16,7 +16,9 @@
       "detail": "Brysen Wright has a verified UF official visit scheduled (Aug 22-24).",
       "fingerprint": "visit|brysen-wright|florida|official_visit|2026-08-22|v2",
       "queueX": false,
-      "expiresAt": "2026-08-15T23:59:00.000Z"
+      "expiresAt": "2026-08-15T23:59:00.000Z",
+      "doneAt": "2026-08-12T14:10:00.000Z",
+      "skipReason": "qa_complete_stop_redeploy_spam"
     }
   ]
 }

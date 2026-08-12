@@ -92,9 +92,9 @@ async function forceDeliverToOperators(log, emails = []) {
 
     let pushOut = { ok: false, reason: "skipped" };
     try {
+      // Stable fingerprint + no force — redeploys must not re-spam after first send.
       pushOut = await dispatchVisitPushToEmail(email, log, {
         fingerprint: `force|${log.fingerprint || visitFingerprint(log)}|${email}`,
-        force: true,
       });
     } catch (err) {
       pushOut = {
@@ -146,6 +146,17 @@ async function processPendingVisitAlerts(options = {}) {
     if (!item || item.status === "done" || item.status === "skipped") {
       results.push({ id: item?.id, skipped: true, reason: item?.status || "empty" });
       continue;
+    }
+    // Do not re-run QA items that already delivered once (ephemeral disk / redeploy).
+    if (item.fanout && (item.fanout.operatorDelivery || item.fanout.pushSent || item.fanout.emailSent)) {
+      const delivered = Array.isArray(item.fanout.operatorDelivery)
+        ? item.fanout.operatorDelivery.some((r) => r.emailSent || (r.pushSent || 0) > 0)
+        : Number(item.fanout.pushSent || 0) > 0 || Number(item.fanout.emailSent || 0) > 0;
+      if (delivered) {
+        item.status = "done";
+        results.push({ id: item.id, skipped: true, reason: "already_delivered" });
+        continue;
+      }
     }
 
     const slug = String(item.playerSlug || "").toLowerCase();
