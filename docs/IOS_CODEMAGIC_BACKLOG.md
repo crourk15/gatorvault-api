@@ -69,7 +69,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-12 | Priority Chase stamps: always `#N Chase` + Rising badge (not Rising replacing rank) | `VaultChaseCard` + CSS in binary | pending |
 | 2026-08-12 | Beat Writer Highlights: diversify writers / exclude brand Live filler on home + GNL | `gatornation-live-api`, `home-command-utils`, `HomePremiumPage` in binary (API `pickBeatHighlightPosts` also live) | pending |
 | 2026-08-12 | My Alerts: **Send test alert** fires Brysen OV email + push to signed-in account | `VaultAlertsPage`, `alert-email-api` in binary (`POST /api/alerts/send-visit-alert` also live) | pending |
-| 2026-08-12 | Lab Priority chase: full VaultChaseCard on surface (fix flex max-height clip) + chase-board FAB/safe-area clearance | `futurecast-lab-command-center.css`, `mobile-native-framework.css`, `recruiting-hub.css`, `gv-ui-cleanup.css` in binary | pending |
+| 2026-08-12 | Lab Priority chase: full VaultChaseCard on surface (same HP board cards; kill ModuleShell/flex clip) + FAB/safe-area | `FutureCastTargetsPanel`, `HighPriorityTargetCard`, `vault-chase-card.css`, Lab/RH CSS in binary | pending |
 
 ---
 
