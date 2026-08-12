@@ -32,8 +32,9 @@ function runVerifyVisitIntelApi() {
   if (
     !check('policy gate', () => {
       const policy = require('../lib/x-autoposter-policy');
+      // Empty body must always fail — do not couple this smoke to live OV board counts.
       const result = policy.validatePostContent({
-        text: 'Fresh 2027 visit intel updated on FutureCast board',
+        text: '',
         category: 'engagement',
         action: 'reply',
         inReplyToStatusId: '123',
