@@ -23,6 +23,25 @@ const KNOWN_COLLISION_FIXES = [
     },
     kamarionSlug: 'kamarion-johnson',
   },
+  {
+    // Wrong: Beat Desk Open attached Tramond Collins (On3 258942 / Cottondale WR)
+    // under DeNairo Girton Jr. (Great Mills MD S / On3 283189).
+    badSlug: 'denairo-girton-jr',
+    wrongNameRe: /^tramond\b/i,
+    wrongOn3Ids: ['258942'],
+    correct: {
+      slug: 'denairo-girton-jr',
+      name: 'DeNairo Girton Jr.',
+      classYear: 2028,
+      pos: 'S',
+      on3Id: '283189',
+      on3Slug: 'denairo-girton-jr-283189',
+      school: 'Great Mills (Lexington Park, MD)',
+      htWt: '6-1 / 180',
+      state: 'MD',
+    },
+    collinsSlug: 'tramond-collins',
+  },
 ];
 
 function normalizeNameTokens(slugOrName) {

@@ -53,3 +53,19 @@ describe('recruit identity collision guard', () => {
     assert.equal(r.error, 'slug_name_identity_mismatch');
   });
 });
+
+describe('Girton / Collins On3 collision', () => {
+  it('flags denairo-girton-jr + Tramond Collins', () => {
+    assert.equal(
+      hasSlugNameFirstMismatch({ slug: 'denairo-girton-jr', name: 'Tramond Collins' }),
+      true
+    );
+  });
+
+  it('allows denairo-girton-jr + DeNairo Girton Jr.', () => {
+    assert.equal(
+      hasSlugNameFirstMismatch({ slug: 'denairo-girton-jr', name: 'DeNairo Girton Jr.' }),
+      false
+    );
+  });
+});
