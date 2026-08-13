@@ -51,6 +51,8 @@ const {
   FLIP_WATCH_2027,
   FLIP_WATCH_COMMITS_2027,
   CANONICAL_TARGET_NAMES,
+  getElsewhereLaneSlugs,
+  getElsewhereCommitDefaults,
 } = require('../../lib/recruiting-target-allowlist');
 const { loadUnderclassmenBoardPlayers } = require('../../lib/underclassmen-intel');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
@@ -697,6 +699,19 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   // Closest to commit is a system board-lead read over every allowlist target.
   // Priority chase surfaces still re-sort by priorityScore and take top 10 client-side.
   const players = [...withEvidence].sort(compareUnderclassmenHighPriority);
+
+  // 2028+ "Committed elsewhere" lane — same HP room as open Priority Chase (flipWatch payload).
+  const elsewhereSlugs = getElsewhereLaneSlugs(classYear);
+  const elsewhereBoard = elsewhereSlugs.length
+    ? await loadUnderclassmenBoardPlayers(classYear, elsewhereSlugs)
+    : [];
+  const elsewherePlayers = elsewhereBoard.map(boardPlayerToHighPriority);
+  const flipWatch = buildFlipWatchRows(elsewherePlayers, [], {
+    curatedSlugs: elsewhereSlugs,
+    commitDefaults: getElsewhereCommitDefaults(classYear),
+    limit: Math.max(8, elsewhereSlugs.length || 0),
+  });
+
   const lastUpdated = new Date().toISOString();
   const visitBoardSnapshot = getVisitIntelBoardSnapshot([]);
 
@@ -705,14 +720,14 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
     count: players.length,
     visitIntelCount: 0,
     visitRecapCount: 0,
-    flipWatchCount: 0,
+    flipWatchCount: flipWatch.length,
     visitBoardSnapshot,
     updatedAt: lastUpdated,
     lastUpdated,
     players,
     visitIntel: [],
     visitRecap: [],
-    flipWatch: [],
+    flipWatch,
     movementNarratives: [],
   };
 }

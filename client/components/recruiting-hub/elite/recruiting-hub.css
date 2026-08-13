@@ -2686,3 +2686,92 @@
 .rh-elite-chrome .rh-footprint-map .rh-empty {
   color: rgba(0, 26, 51, 0.72);
 }
+
+/* 2028+ Committed elsewhere lane — same room as Priority Chase */
+.rh-elsewhere-lane {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(0, 33, 71, 0.12);
+}
+
+.rh-elsewhere-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+@media (min-width: 720px) {
+  .rh-elsewhere-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.rh-elsewhere-card {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.85rem 1rem;
+  text-decoration: none;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(0, 33, 71, 0.1);
+}
+
+.rh-elsewhere-card:hover {
+  border-color: rgba(0, 33, 71, 0.28);
+}
+
+.rh-elsewhere-card__rank {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: rgba(0, 33, 71, 0.55);
+  min-width: 1.75rem;
+}
+
+.rh-elsewhere-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.rh-elsewhere-card__name {
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.rh-elsewhere-card__meta {
+  font-size: 0.78rem;
+  color: rgba(0, 33, 71, 0.65);
+}
+
+.rh-elsewhere-card__commit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.25rem;
+  font-size: 0.82rem;
+  color: rgba(0, 33, 71, 0.8);
+}
+
+.rh-elsewhere-card__commit em {
+  font-style: normal;
+  font-weight: 700;
+}
+
+.rh-elsewhere-card__commit img,
+.rh-elsewhere-card__logo-fallback {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.rh-elsewhere-card__logo-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: rgba(0, 33, 71, 0.08);
+}

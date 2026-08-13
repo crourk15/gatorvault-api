@@ -45,6 +45,33 @@ const FLIP_WATCH_COMMITS_2027 = {
   'ace-alston': 'Notre Dame',
 };
 
+/**
+ * 2028+ open-cycle lane: vault players committed elsewhere (same room as Priority Chase).
+ * Not the 2027 Closing Class Flip Watch — fan label is "Committed elsewhere".
+ * Order = display rank; UF-touch names first.
+ */
+const ELSEWHERE_LANE_2028 = [
+  'cale-britt', // Wisconsin — UF offered / pursued
+  'kingston-preyear', // Alabama — chose Tide over Florida
+  'kweli-fielder', // Miami
+  'knox-annis', // Miami
+  'trace-hawkins', // Clemson
+  'neimann-lawrence', // Texas
+  'jerome-larue', // Maryland
+  'jackson-stecher', // Buffalo
+];
+
+const ELSEWHERE_COMMITS_2028 = {
+  'cale-britt': 'Wisconsin',
+  'kingston-preyear': 'Alabama',
+  'kweli-fielder': 'Miami',
+  'knox-annis': 'Miami',
+  'trace-hawkins': 'Clemson',
+  'neimann-lawrence': 'Texas',
+  'jerome-larue': 'Maryland',
+  'jackson-stecher': 'Buffalo',
+};
+
 /** Locked 2028 target slugs */
 const ALLOWLIST_2028 = [
   'kaleb-ballard',
@@ -234,7 +261,49 @@ function isFlipWatchAllowlisted(slug, classYear) {
   const key = canonicalTargetSlug(slug);
   if (!key) return false;
   if (year === 2027) return FLIP_WATCH_2027.includes(key);
+  // 2028+ reuses flipWatch payload shape for the "Committed elsewhere" lane.
+  if (year >= 2028) return ELSEWHERE_LANE_2028.includes(key);
   return false;
+}
+
+function getElsewhereLaneSlugs(classYear) {
+  const year = parseInt(classYear, 10);
+  if (year === 2027) return [...FLIP_WATCH_2027];
+  if (!(year >= 2028)) return [];
+  const { isFloridaSchool, resolveCommittedTo } = require('./recruiting-target-filters');
+  const curated =
+    year === 2028
+      ? ELSEWHERE_LANE_2028.map((s) => canonicalTargetSlug(s)).filter(Boolean)
+      : [];
+  const seen = new Set(curated);
+  // Auto-append any other vault elsewhere-commits for this class year.
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const playersPath = path.join(__dirname, '../data/recruiting/players.json');
+    const doc = JSON.parse(fs.readFileSync(playersPath, 'utf8'));
+    const players = Array.isArray(doc) ? doc : doc.players || [];
+    for (const p of players || []) {
+      const y = parseInt(p.classYear || p.class_year, 10);
+      if (y !== year) continue;
+      const slug = canonicalTargetSlug(p.slug || slugify(p.name));
+      if (!slug || seen.has(slug)) continue;
+      const committedTo = resolveCommittedTo(p);
+      if (!committedTo || isFloridaSchool(committedTo)) continue;
+      seen.add(slug);
+      curated.push(slug);
+    }
+  } catch {
+    /* players.json optional in some test sandboxes */
+  }
+  return curated;
+}
+
+function getElsewhereCommitDefaults(classYear) {
+  const year = parseInt(classYear, 10);
+  if (year === 2027) return { ...FLIP_WATCH_COMMITS_2027 };
+  if (year >= 2028) return { ...ELSEWHERE_COMMITS_2028 };
+  return {};
 }
 
 function getMergedCanonicalNames() {
@@ -264,11 +333,13 @@ function filterAllowlistedTargets(targets, classYear) {
   const { isFloridaSchool, resolveCommittedTo } = require('./recruiting-target-filters');
   return (targets || []).filter((p) => {
     const slug = canonicalTargetSlug(p.slug || slugify(p.name));
-    const flipWatch = set.has(slug) && isFlipWatchAllowlisted(slug, year);
-    if (flipWatch) {
-      // Flip radar: keep intentional elsewhere-commits, never UF commits.
+    // 2027 Flip Watch (must also be on allowlist) OR 2028+ elsewhere lane.
+    const elsewhereLane =
+      isFlipWatchAllowlisted(slug, year) && (year >= 2028 || set.has(slug));
+    if (elsewhereLane) {
+      // Elsewhere lane: keep intentional elsewhere-commits, never UF commits.
       if (isFloridaSchool(resolveCommittedTo(p))) return false;
-      return true;
+      return Boolean(resolveCommittedTo(p));
     }
     if (!isActiveUfTarget(p)) return false;
     // Hunt list only — no 247 offer-list expansion for Closing Class.
@@ -319,6 +390,8 @@ module.exports = {
   BLOCKED_SOFT_2028,
   FLIP_WATCH_2027,
   FLIP_WATCH_COMMITS_2027,
+  ELSEWHERE_LANE_2028,
+  ELSEWHERE_COMMITS_2028,
   CANONICAL_TARGET_NAMES,
   ALL_ALLOWED,
   canonicalTargetSlug,
@@ -327,6 +400,8 @@ module.exports = {
   getMergedCanonicalNames,
   isAllowlistedTarget,
   isFlipWatchAllowlisted,
+  getElsewhereLaneSlugs,
+  getElsewhereCommitDefaults,
   filterAllowlistedTargets,
   validateStoreTargets,
   demoteNonAllowlistedTargets,
