@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-10T17:20:19.990Z",
+  "updatedAt": "2026-08-13T01:24:21.748Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -4230,27 +4230,33 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/tranard-roberts-239139/",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/19093378/6793d53fe65f3e0facd7d014",
+          "publishedAt": "2026-08-13"
         }
       ],
       "strengths": [
-        "The running back position is one of the more unsettled areas on the Florida Gators' recruiting board right now.",
-        "While some top targets across the"
+        "Roberts presses the hole, plants on one cut, and is already vertical into the second level without dancing.",
+        "Roberts finishes runs with real contact balance at 5-11.5 / 195 — stiff-arms, churns through arm tackles, and falls forward.",
+        "Roberts shows mature vision: he presses the line to freeze linebackers, then hits the designed seam or the cutback.",
+        "Roberts has a clear second gear once he clears the second level and can finish outside when the edge is there."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "The running back position is one of the more unsettled areas on the Florida Gators' recruiting board right now.  While some top targets across the",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Roberts wins more north-south than with phone-booth wiggle — pass-game / every-down protection proof still needs to stack on junior tape."
+      ],
+      "comparison": "Roberts comps to Quinshon Judkins — 5-11 / ~210 mold; patient one-cut vision, contact balance, and downhill finish (size-matched to Roberts' 5-11.5 / 195 frame before fill-out).",
+      "schemeFit": "Roberts fits a zone/gap RB room that wants one-cut decisiveness, between-tackle finish, and enough juice to stress the edge.",
+      "staffNotes": "Vault film desk verified 2026-08-13 from IMG sophomore Hudl embed (Sophomore Szn). Comp size-matched within ~1–2\" — not a Florida-alum default. Not provisional.",
+      "projection": "Roberts projects as develop into the Florida RB room, earn early package and special-teams snaps, then compete for a feature/RB1 role — starter upside as a vision-first one-cut back.",
+      "insiderNotes": "Roberts is a sturdy 5-11.5 / 195 Villages Charter back who presses the hole on one cut, finishes through contact, and shows a clear second gear outside. Wins with vision and contact balance — a Judkins-mold feature back Florida is still chasing in the Closing Class.",
+      "recruitingStory": "Tranard Roberts is a 3-star RB · listed 5-11.5 / 195 · The Villages Charter (The Villages, FL) · #500 natl / #34 RB / #53 FL — Closing Class open hunt with Florida leading the On3 board.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T11:29:39.195Z"
+      "updatedAt": "2026-08-13T01:24:21.739Z",
+      "filmWatched": true,
+      "provisional": false
     },
     "emanuel-ruffin": {
       "playerSlug": "emanuel-ruffin",

@@ -70,12 +70,13 @@ export async function augmentPlayerFromRecruiting(
   if (!recruiting) return player;
 
   const parsed = parseHtWt(recruiting.htWt);
+  // Prefer combined htWt (On3 board source of truth) over stale height/weight columns.
   const height =
-    player.height ??
-    parseHeightInches(recruiting.height || null) ??
     parsed.height ??
+    parseHeightInches(recruiting.height || null) ??
+    (typeof player.height === 'number' ? player.height : parseHeightInches(String(player.height || ''))) ??
     null;
-  const weight = player.weight ?? recruiting.weight ?? parsed.weight ?? null;
+  const weight = parsed.weight ?? recruiting.weight ?? player.weight ?? null;
   const ufCommit = isFloridaSchool(recruiting.committedTo);
   const storePct = parseUfPct(recruiting.ufProbability ?? recruiting.ufRpmPct);
 
@@ -339,9 +340,19 @@ export function futurecastSummaryForRecruiting(
     };
   }
   if (pct > 0 || hasBoard) {
+    const peerPct = topPeer ? Number(topPeer.score) || 0 : 0;
+    // Board leader must respect live UF RPM — never crown an 8% rival over 74% Florida.
+    const predictedSchool =
+      pct > 0 && pct >= peerPct
+        ? 'Florida'
+        : topPeer?.school
+          ? String(topPeer.school)
+          : pct > 0
+            ? 'Florida'
+            : null;
     return {
       ufProbability: pct > 0 ? pct : null,
-      predictedSchool: topPeer?.school ? String(topPeer.school) : null,
+      predictedSchool,
       movementDelta: null,
       fitScore: player.ufFitScore ?? recruiting.fitScore ?? null,
       volatilityScore: 0,
