@@ -67,8 +67,10 @@ function normalizeGame(row) {
         }))
         .filter((s) => s.name)
     : [];
+  const kind = String(row.kind || 'game').trim().toLowerCase() === 'bye' ? 'bye' : 'game';
   return {
     id,
+    kind,
     label: String(row.label || '').trim() || id,
     opp,
     date,

@@ -1,14 +1,14 @@
 {
   "season": 2026,
-  "updatedAt": "2026-08-13T21:25:00.000Z",
+  "updatedAt": "2026-08-13T21:35:00.000Z",
   "label": "2026 Florida football schedule",
   "games": [
     {
       "id": "fau",
       "label": "Sep 5 vs FAU",
       "opp": "FAU Owls",
-      "date": "September 5, 2026 \u00b7 7:45 PM ET",
-      "venue": "Ben Hill Griffin Stadium",
+      "date": "September 5, 2026 · 7:45 PM ET",
+      "venue": "Ben Hill Griffin Stadium, Gainesville FL",
       "ufPct": 94,
       "tv": "SEC Network",
       "keys": [
@@ -19,7 +19,7 @@
       "swing": [
         {
           "name": "Philo / Jones Jr.",
-          "role": "QB1 into camp \u2014 efficiency matters in debut"
+          "role": "QB1 into camp — efficiency matters in debut"
         },
         {
           "name": "Jayden Woods",
@@ -27,21 +27,21 @@
         }
       ],
       "film": "FAU runs spread RPO. The 3-3-5 is built to neutralize this.",
-      "pred": "UF 38 \u00b7 FAU 10",
+      "pred": "UF 38 · FAU 10",
       "predUF": 38,
       "predOpp": 10,
       "filmLessonId": "frl00004-0000-4000-8000-000000000004",
       "opponentTendencies": [
         "Spread-RPO quick game at tempo",
         "Tests STAR communication and edge setting",
-        "Limited vertical threat \u2014 win early downs"
+        "Limited vertical threat — win early downs"
       ],
       "howUFWins": [
         "Faulkner establishes rhythm RPO without negative plays",
         "White front sets edge vs conflict reads",
         "Win field position and avoid special teams mistakes"
       ],
-      "scoutingReport": "FAU spreads the field and operates quickly. UF's odd front and STAR fit are built for this opener \u2014 control explosives and force long drives.",
+      "scoutingReport": "FAU spreads the field and operates quickly. UF's odd front and STAR fit are built for this opener — control explosives and force long drives.",
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27903",
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-florida-atlantic-owls-tickets-ben-hill-griffin-stadium-9-5-26-7pm/7622666/",
@@ -54,10 +54,10 @@
       "id": "campbell",
       "label": "Sep 12 vs Campbell",
       "opp": "Campbell Camels",
-      "date": "September 12, 2026 \u00b7 5:30 PM ET",
-      "venue": "Ben Hill Griffin Stadium",
+      "date": "September 12, 2026 · 5:30 PM ET",
+      "venue": "Ben Hill Griffin Stadium, Gainesville FL",
       "ufPct": 96,
-      "tv": "SEC Network",
+      "tv": "SECN+",
       "keys": [
         "Control tempo and field position",
         "Evaluate depth in second half",
@@ -74,7 +74,7 @@
         }
       ],
       "film": "Campbell runs spread concepts. UF should win line of scrimmage.",
-      "pred": "UF 42 \u00b7 Campbell 7",
+      "pred": "UF 42 · Campbell 7",
       "predUF": 42,
       "predOpp": 7,
       "tickets": {
@@ -89,8 +89,8 @@
       "id": "auburn",
       "label": "Sep 19 @ Auburn",
       "opp": "Auburn Tigers",
-      "date": "September 19, 2026 \u00b7 7:00 PM ET",
-      "venue": "Jordan-Hare Stadium",
+      "date": "September 19, 2026 · 7:00 PM ET",
+      "venue": "Jordan-Hare Stadium, Auburn AL",
       "ufPct": 51,
       "tv": "ESPN",
       "keys": [
@@ -109,7 +109,7 @@
         }
       ],
       "film": "Auburn runs physical downhill ball. Jordan-Hare in September is tough.",
-      "pred": "UF 24 \u00b7 Auburn 21",
+      "pred": "UF 24 · Auburn 21",
       "predUF": 24,
       "predOpp": 21,
       "filmLessonId": "frl00005-0000-4000-8000-000000000005",
@@ -134,8 +134,8 @@
       "id": "olemiss",
       "label": "Sep 26 vs Ole Miss",
       "opp": "Ole Miss Rebels",
-      "date": "September 26, 2026 \u00b7 TBA",
-      "venue": "Ben Hill Griffin Stadium",
+      "date": "September 26, 2026 · 3:30–8:00 PM ET",
+      "venue": "Ben Hill Griffin Stadium, Gainesville FL",
       "ufPct": 50,
       "keys": [
         "Match their tempo without mistakes",
@@ -153,7 +153,7 @@
         }
       ],
       "film": "Ole Miss tempo offense stresses communication.",
-      "pred": "UF 27 \u00b7 Ole Miss 28",
+      "pred": "UF 27 · Ole Miss 28",
       "predUF": 27,
       "predOpp": 28,
       "tickets": {
@@ -161,14 +161,15 @@
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-mississippi-rebels-tickets-ben-hill-griffin-stadium-9-26-26-3am/7620866/",
         "ticketmaster": "https://www.ticketmaster.com/florida-gators-football-vs-ole-miss-gainesville-florida-09-26-2026/event/2200645C218D0934",
         "official": "https://www.ticketmaster.com/florida-gators-football-vs-ole-miss-gainesville-florida-09-26-2026/event/2200645C218D0934"
-      }
+      },
+      "tv": "TBD"
     },
     {
       "id": "missouri",
       "label": "Oct 3 @ Missouri",
       "opp": "Missouri Tigers",
-      "date": "October 3, 2026 \u00b7 TBA",
-      "venue": "Memorial Stadium, Columbia MO",
+      "date": "October 3, 2026 · 3:30–8:00 PM ET",
+      "venue": "Faurot Field, Columbia MO",
       "ufPct": 47,
       "keys": [
         "Establish run on road",
@@ -186,7 +187,7 @@
         }
       ],
       "film": "Missouri uses RPO and play-action.",
-      "pred": "UF 23 \u00b7 Missouri 27",
+      "pred": "UF 23 · Missouri 27",
       "predUF": 23,
       "predOpp": 27,
       "tickets": {
@@ -194,14 +195,15 @@
         "tickpick": "https://www.tickpick.com/buy-missouri-tigers-vs-florida-gators-tickets-faurot-field-at-memorial-stadium-10-3-26-3am/7620964/",
         "ticketmaster": "https://www.ticketmaster.com/2026-mizzou-football-v-florida-columbia-missouri-10-03-2026/event/060064A9DD1A37BC",
         "official": "https://www.ticketmaster.com/2026-mizzou-football-v-florida-columbia-missouri-10-03-2026/event/060064A9DD1A37BC"
-      }
+      },
+      "tv": "TBD"
     },
     {
       "id": "scar",
-      "label": "Oct 10 vs South Carolina",
+      "label": "Oct 10 vs South Carolina (HC)",
       "opp": "South Carolina Gamecocks",
-      "date": "October 10, 2026 \u00b7 TBA",
-      "venue": "Ben Hill Griffin Stadium",
+      "date": "October 10, 2026 · 12:00–1:00 PM ET",
+      "venue": "Ben Hill Griffin Stadium, Gainesville FL",
       "ufPct": 64,
       "keys": [
         "Win rivalry week",
@@ -218,8 +220,8 @@
           "role": "Win one-on-ones"
         }
       ],
-      "film": "South Carolina RPO-heavy.",
-      "pred": "UF 27 \u00b7 South Carolina 20",
+      "film": "Homecoming vs South Carolina. RPO-heavy.",
+      "pred": "UF 27 · South Carolina 20",
       "predUF": 27,
       "predOpp": 20,
       "tickets": {
@@ -227,14 +229,15 @@
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-south-carolina-gamecocks-tickets-ben-hill-griffin-stadium-10-10-26-3am/7620865/",
         "ticketmaster": "https://www.ticketmaster.com/florida-gators-football-vs-univ-of-gainesville-florida-10-10-2026/event/2200645C21920948",
         "official": "https://www.ticketmaster.com/florida-gators-football-vs-univ-of-gainesville-florida-10-10-2026/event/2200645C21920948"
-      }
+      },
+      "tv": "TBD"
     },
     {
       "id": "texas",
       "label": "Oct 17 @ Texas",
       "opp": "Texas Longhorns",
-      "date": "October 17, 2026 \u00b7 TBA",
-      "venue": "DKR-Texas Memorial Stadium",
+      "date": "October 17, 2026 · 12:00–1:00 PM ET",
+      "venue": "DKR-Texas Memorial Stadium, Austin TX",
       "ufPct": 37,
       "keys": [
         "Protect the football",
@@ -252,19 +255,37 @@
         }
       ],
       "film": "Texas balanced attack with elite skill.",
-      "pred": "UF 20 \u00b7 Texas 31",
+      "pred": "UF 20 · Texas 31",
       "predUF": 20,
       "predOpp": 31,
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27909",
         "tickpick": "https://www.tickpick.com/buy-texas-longhorns-vs-florida-gators-tickets-darrell-k-royal-texas-memorial-stadium-10-17-26-3am/7620985/"
-      }
+      },
+      "tv": "TBD"
+    },
+    {
+      "id": "bye-oct24",
+      "kind": "bye",
+      "label": "Oct 24 BYE",
+      "opp": "Bye week",
+      "date": "October 24, 2026 · OFF",
+      "venue": "Invesco QQQ Atlanta Gridiron Classic week",
+      "ufPct": 0,
+      "tv": "—",
+      "keys": [],
+      "swing": [],
+      "film": "Open date — Invesco QQQ Atlanta Gridiron Classic week on the SEC calendar.",
+      "pred": "",
+      "predUF": 0,
+      "predOpp": 0,
+      "scoutingReport": "Florida is off Oct 24. SEC open date aligns with the Atlanta Gridiron Classic week."
     },
     {
       "id": "uga",
       "label": "Oct 31 vs Georgia",
       "opp": "Georgia Bulldogs",
-      "date": "October 31, 2026 \u00b7 3:30 PM ET",
+      "date": "October 31, 2026 · 3:30 PM ET",
       "venue": "Mercedes-Benz Stadium, Atlanta GA",
       "ufPct": 40,
       "tv": "ABC",
@@ -284,7 +305,7 @@
         }
       ],
       "film": "Neutral-site Cocktail Party at Mercedes-Benz Stadium in Atlanta for 2026.",
-      "pred": "UF 20 \u00b7 Georgia 27",
+      "pred": "UF 20 · Georgia 27",
       "predUF": 20,
       "predOpp": 27,
       "scoutingReport": "Georgia series moves to Atlanta in 2026 (Mercedes-Benz). UF path is controlling the ball and limiting explosives in a neutral-site environment.",
@@ -299,8 +320,8 @@
       "id": "oklahoma",
       "label": "Nov 7 vs Oklahoma",
       "opp": "Oklahoma Sooners",
-      "date": "November 7, 2026 \u00b7 TBA",
-      "venue": "Ben Hill Griffin Stadium",
+      "date": "November 7, 2026 · 3:30–8:00 PM ET",
+      "venue": "Ben Hill Griffin Stadium, Gainesville FL",
       "ufPct": 48,
       "keys": [
         "Win early downs",
@@ -318,7 +339,7 @@
         }
       ],
       "film": "Oklahoma brings tempo and skill. Swamp night energy matters.",
-      "pred": "UF 24 \u00b7 Oklahoma 27",
+      "pred": "UF 24 · Oklahoma 27",
       "predUF": 24,
       "predOpp": 27,
       "tickets": {
@@ -326,13 +347,14 @@
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-oklahoma-sooners-tickets-ben-hill-griffin-stadium-11-7-26-3am/7620868/",
         "ticketmaster": "https://www.ticketmaster.com/florida-gators-football-vs-oklahoma-sooners-gainesville-florida-11-07-2026/event/2200645C2197098A",
         "official": "https://www.ticketmaster.com/florida-gators-football-vs-oklahoma-sooners-gainesville-florida-11-07-2026/event/2200645C2197098A"
-      }
+      },
+      "tv": "TBD"
     },
     {
       "id": "kentucky",
       "label": "Nov 14 @ Kentucky",
       "opp": "Kentucky Wildcats",
-      "date": "November 14, 2026 \u00b7 TBA",
+      "date": "November 14, 2026 · 6:00–8:00 PM ET",
       "venue": "Kroger Field, Lexington KY",
       "ufPct": 55,
       "keys": [
@@ -351,7 +373,7 @@
         }
       ],
       "film": "Kentucky power run and play-action on the road.",
-      "pred": "UF 24 \u00b7 Kentucky 21",
+      "pred": "UF 24 · Kentucky 21",
       "predUF": 24,
       "predOpp": 21,
       "tickets": {
@@ -359,14 +381,15 @@
         "tickpick": "https://www.tickpick.com/buy-kentucky-wildcats-vs-florida-gators-tickets-kroger-field-11-14-26-3am/7620880/",
         "ticketmaster": "https://www.ticketmaster.com/kentucky-wildcats-football-vs-florida-gators-lexington-kentucky-11-14-2026/event/160064ACA20A7989",
         "official": "https://www.ticketmaster.com/kentucky-wildcats-football-vs-florida-gators-lexington-kentucky-11-14-2026/event/160064ACA20A7989"
-      }
+      },
+      "tv": "TBD"
     },
     {
       "id": "vandy",
       "label": "Nov 21 vs Vanderbilt",
       "opp": "Vanderbilt Commodores",
-      "date": "November 21, 2026 \u00b7 TBA",
-      "venue": "Ben Hill Griffin Stadium",
+      "date": "November 21, 2026 · 12:00–1:00 PM ET",
+      "venue": "Ben Hill Griffin Stadium, Gainesville FL",
       "ufPct": 72,
       "keys": [
         "Execute early",
@@ -383,8 +406,8 @@
           "role": "Efficient scoring drives"
         }
       ],
-      "film": "Vanderbilt improving \u2014 treat as SEC test.",
-      "pred": "UF 31 \u00b7 Vanderbilt 17",
+      "film": "Vanderbilt improving — treat as SEC test.",
+      "pred": "UF 31 · Vanderbilt 17",
       "predUF": 31,
       "predOpp": 17,
       "tickets": {
@@ -392,14 +415,15 @@
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-vanderbilt-commodores-tickets-ben-hill-griffin-stadium-11-21-26-3am/7620867/",
         "ticketmaster": "https://www.ticketmaster.com/florida-gators-football-vs-vanderbilt-commodores-gainesville-florida-11-21-2026/event/2200645C219C0A2B",
         "official": "https://www.ticketmaster.com/florida-gators-football-vs-vanderbilt-commodores-gainesville-florida-11-21-2026/event/2200645C219C0A2B"
-      }
+      },
+      "tv": "TBD"
     },
     {
       "id": "fsu",
       "label": "Nov 27 @ FSU",
       "opp": "Florida State Seminoles",
-      "date": "November 27, 2026 \u00b7 3:30 PM ET",
-      "venue": "Doak Campbell Stadium",
+      "date": "November 27, 2026 · 3:30 PM ET",
+      "venue": "Doak Campbell Stadium, Tallahassee FL",
       "ufPct": 49,
       "tv": "ABC",
       "keys": [
@@ -418,7 +442,7 @@
         }
       ],
       "film": "Everything on the line. Preparation wins this game.",
-      "pred": "UF 24 \u00b7 FSU 27",
+      "pred": "UF 24 · FSU 27",
       "predUF": 24,
       "predOpp": 27,
       "filmLessonId": "frl00010-0000-4000-8000-00000000000a",
@@ -432,7 +456,7 @@
         "White coverage matches sim pressure looks",
         "Special teams and field position decide it"
       ],
-      "scoutingReport": "Rivalry game at Doak \u2014 field position and turnover margin decide it. UF's 3-3-5 is built to handle spread RPO; offense must finish drives.",
+      "scoutingReport": "Rivalry game at Doak — field position and turnover margin decide it. UF's 3-3-5 is built to handle spread RPO; offense must finish drives.",
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27914",
         "tickpick": "https://www.tickpick.com/buy-florida-state-seminoles-vs-florida-gators-tickets-doak-campbell-stadium-11-27-26-3pm/7528939/"

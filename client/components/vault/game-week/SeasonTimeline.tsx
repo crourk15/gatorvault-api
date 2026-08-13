@@ -41,7 +41,7 @@ export function SeasonTimeline({ activeGameId, onSelect }: Props): React.ReactEl
     <div className="gv-gw-wow-section">
       <h3 className="gv-gw-wow-section__title">Season timeline</h3>
       <div className="gv-gw-timeline" data-testid="gw-season-timeline">
-        {games.map((g) => {
+        {games.filter((g) => g.kind !== 'bye' && !String(g.id || '').startsWith('bye')).map((g) => {
           const bundle = getGameWeekBundle(g.id);
           const home = isHomeGame(g);
           return (
