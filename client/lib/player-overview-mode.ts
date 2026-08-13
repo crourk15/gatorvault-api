@@ -85,11 +85,13 @@ export function buildRecruitingStand(input: {
   evaluationNote: string | null;
 }): OverviewStand {
   const mode = resolveProfileOverviewMode(input.player);
-  const on3Uf =
-    input.futurecastSummary?.on3UfProbability ?? input.futurecastSummary?.ufProbability ?? null;
+  // On3 Florida = live RPM only. Never treat unlabeled ufProbability / GV as market %.
+  const on3Uf = input.futurecastSummary?.on3UfProbability ?? null;
   const gvUf = input.futurecastSummary?.gvProbability ?? null;
-  const delta = input.futurecastSummary?.movementDelta ?? null;
-  const board = buildBoardLeaderLine(on3Uf, input.competingSchools);
+  const marketSchools = input.competingSchools.filter(
+    (c) => String((c as { source?: string }).source || '').toLowerCase() !== 'legacy'
+  );
+  const board = buildBoardLeaderLine(on3Uf, marketSchools);
   const staffTake = firstSentence(input.staffNote);
   const evalTake = firstSentence(input.evaluationNote);
   const metrics: OverviewMetric[] = [];
@@ -169,11 +171,6 @@ export function buildRecruitingStand(input: {
     } else {
       headline = `${board.leader} leads at ${Math.round(board.leaderPct)}%`;
     }
-  } else if (delta != null && Math.abs(delta) >= 1) {
-    headline =
-      delta > 0
-        ? `Florida momentum up ${Math.round(delta)} pts recently`
-        : `Florida momentum down ${Math.abs(Math.round(delta))} pts recently`;
   } else if (input.metrics.ufFitScore > 0) {
     headline = `Florida fit rates ${fitTierLabel(input.metrics.ufFitTier).toLowerCase()} on this board`;
   } else {
@@ -199,14 +196,14 @@ export function buildRecruitingContext(input: {
   const { mode, player, collegeProfile, portalProfile, competingSchools, futurecastSummary } = input;
 
   if (mode === 'target' || mode === 'unknown') {
-    const ufPct =
-      futurecastSummary?.on3UfProbability ?? futurecastSummary?.ufProbability ?? null;
+    const ufPct = futurecastSummary?.on3UfProbability ?? null;
     const rows: OverviewContextRow[] = [];
     if (ufPct != null && ufPct > 0) {
       rows.push({ label: 'Florida', value: `${Math.round(ufPct)}%`, emphasize: true });
     }
     for (const c of competingSchools) {
       if (c.pct == null || c.pct <= 0) continue;
+      if (String((c as { source?: string }).source || '').toLowerCase() === 'legacy') continue;
       rows.push({
         label: c.school,
         value: `${Math.round(c.pct)}%`,

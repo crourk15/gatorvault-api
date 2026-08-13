@@ -65,7 +65,7 @@ describe('competingSchoolsFromRecruitingRecord', () => {
     );
   });
 
-  it('falls back to top legacy peers when market peers are empty', () => {
+  it('never fabricates a board from legacy peers when market peers are empty', () => {
     const rows = competingSchoolsFromRecruitingRecord({
       ufRpmPct: 60,
       competitors: [
@@ -74,15 +74,12 @@ describe('competingSchoolsFromRecruitingRecord', () => {
         { school: 'SMU', pct: 3.4, source: 'legacy' },
       ],
     });
-    assert.deepEqual(
-      rows.map((r) => r.name),
-      ['Georgia Tech', 'Auburn']
-    );
+    assert.deepEqual(rows, []);
   });
 
-  it('skips legacy crumbs when Florida is already locked on RPM', () => {
+  it('skips legacy crumbs even when Florida RPM is moderate', () => {
     const rows = competingSchoolsFromRecruitingRecord({
-      ufRpmPct: 94,
+      ufRpmPct: 40,
       competitors: [
         { school: 'Georgia Tech', pct: 4.8, source: 'legacy' },
         { school: 'Auburn', pct: 4.1, source: 'legacy' },

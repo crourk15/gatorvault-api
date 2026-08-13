@@ -10,6 +10,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Home NOW ticker lines: named movement + lite-warm `/hub/ticker` refresh (API — no Codemagic)
 - [x] Footprint Class 2028 commits: rev-gate + heal poisoned 0-commit runtime plates; lite warm refreshes footprint/commits on cron (API — no Codemagic)
 - [x] Profile stamp overlay: FutureCast Picks Florida score follows live On3 RPM (not stale GV) — API
+- [x] Profile market hygiene: strip synthetic GV Δ / unlabeled uf%=GV / legacy peer boards from stamps + overlay — API
 - [x] DeNairo Girton Jr. 2028 S Vault Scouting (Jessie Bates III comp) — correct Great Mills MD identity (Beat Desk had Tramond Collins On3 collision) — API
 - [x] Tranard Roberts profile: Vault Scouting (Judkins comp) + heal predictedSchool / htWt / Georgia phantom rival — API + prepared-meal stamp
 - [x] 2027 Closing Class Top UF Targets soft plate (Tranard Roberts) — API
@@ -50,7 +51,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-08-13 | Profile hero UF%: prefer live On3 RPM over GV model (Vickers 94% not 42%) | `PlayerHeader.tsx` + picks mapping in binary (API also overlays Picks Florida score) | pending |
+| 2026-08-13 | Profile hero UF%: On3 RPM only — no GV fallback, no synthetic ▲/▼ 7d delta (Vickers 94% not 42%+5) | `PlayerHeader.tsx`, overview mode, OverviewTab in binary (API stamp overlay also strips fakes) | pending |
 | 2026-08-12 | Signing Day ESP/NSD: scope lists to active class year (?year=2028) | `SigningDayPage` + signing-day-utils links in binary | pending |
 | 2026-08-12 | Home NOW pulse: rotate live ticker/intel stories (not frozen class-trending line) | `HomeCommandCenter`, `HomePremiumPage`, pulse utils in binary (API ticker also live) | pending |
 | 2026-08-12 | ESP Expected signees: UF commits only (kick Flip Watch off the list) | `SigningDayPage` + `signing-day-utils` in binary | pending |
