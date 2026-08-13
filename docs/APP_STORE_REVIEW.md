@@ -1,5 +1,7 @@
 # App Store Review Notes (GatorVault Insider)
 
+> **IN REVIEW (Aug 13, 2026):** Keep production API up. Do **not** delete/stop crons, services, or the demo account. Do **not** turn on `API_STAY_GREEN` lockdown. Prefer no API restarts while Apple is testing unless Charles asks. Agent standing order: `.cursor/rules/apple-review-freeze.mdc`.
+
 **Full Connect copy (description, keywords, screenshots):** `docs/APP_STORE_CONNECT.md`  
 **Metadata checklist:** `docs/APP_STORE_METADATA.md`
 
