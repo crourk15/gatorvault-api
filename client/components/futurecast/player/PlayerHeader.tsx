@@ -71,11 +71,27 @@ export function PlayerHeader({
   const [copied, setCopied] = useState(false);
   const location = formatPlayerLocation(player.hometown, player.state);
   const stars = validStars(player.stars);
+  // Hero UF% = live On3 market when present. GV model stays on Overview (Board picture).
+  const on3Uf =
+    futurecastSummary?.on3UfProbability != null &&
+    Number.isFinite(Number(futurecastSummary.on3UfProbability))
+      ? Number(futurecastSummary.on3UfProbability)
+      : null;
   const ufPct =
-    futurecastSummary?.gvProbability ??
-    futurecastSummary?.ufProbability ??
-    null;
-  const moveDelta = movementWindow?.delta7d ?? futurecastSummary?.movementDelta ?? null;
+    on3Uf ??
+    (futurecastSummary?.ufProbability != null &&
+    Number.isFinite(Number(futurecastSummary.ufProbability))
+      ? Number(futurecastSummary.ufProbability)
+      : null) ??
+    (futurecastSummary?.gvProbability != null &&
+    Number.isFinite(Number(futurecastSummary.gvProbability))
+      ? Number(futurecastSummary.gvProbability)
+      : null);
+  // Don't park GV 7d delta next to an On3 market % (Vickers: 94% On3 ≠ +5 GV).
+  const moveDelta =
+    on3Uf != null
+      ? null
+      : movementWindow?.delta7d ?? futurecastSummary?.movementDelta ?? null;
   const ranks = rankCells(player);
   const composite =
     player.compositeRating != null && Number.isFinite(player.compositeRating)

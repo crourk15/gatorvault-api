@@ -192,10 +192,34 @@ function overlayLiveRpm(profile, recruiting) {
     };
   }
 
+  // Keep FutureCast Picks Florida row on the live On3 market % (not stale GV stamp score).
+  let portalPredictions = profile.portalPredictions;
+  const floridaPct = ufCommit ? 100 : rpm;
+  if (
+    floridaPct != null &&
+    portalPredictions &&
+    typeof portalPredictions === 'object' &&
+    Array.isArray(portalPredictions.predictions)
+  ) {
+    const predictions = portalPredictions.predictions.map((row) => {
+      if (!row || typeof row !== 'object') return row;
+      const school = String(row.school || '');
+      if (!/\bflorida\b|\bgators\b|\buf\b/i.test(school)) return row;
+      return {
+        ...row,
+        score: floridaPct,
+        sourceType: row.sourceType || 'BLENDED',
+        predictorId: ufCommit ? row.predictorId || 'gatorvault' : 'on3-rpm',
+      };
+    });
+    portalPredictions = { ...portalPredictions, predictions };
+  }
+
   return {
     ...profile,
     player,
     futurecastSummary,
+    portalPredictions,
     lastUpdated: new Date().toISOString(),
     servedFrom: 'stamp',
     rpmLive: true,

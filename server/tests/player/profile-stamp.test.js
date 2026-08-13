@@ -122,6 +122,31 @@ describe('player profile prepared-meal stamps', () => {
     assert.equal(live.futurecastSummary.predictedSchool, 'Florida');
   });
 
+  it('overlays FutureCast Picks Florida score to live On3 RPM (not stale GV)', () => {
+    const live = stamp.overlayLiveRpm(
+      {
+        player: { slug: 'izayah-vickers', committedTo: null, classYear: 2028 },
+        competingSchools: [{ school: 'Clemson', pct: 29 }],
+        futurecastSummary: { gvProbability: 42, ufProbability: 42 },
+        portalPredictions: {
+          predictions: [
+            { school: 'Florida', score: 42, sourceType: 'MODEL', predictorId: 'gatorvault' },
+            { school: 'Clemson', score: 29, sourceType: 'BLENDED', predictorId: 'on3-rpm' },
+          ],
+        },
+        vaultScouting: null,
+      },
+      { ufRpmPct: 94, committedTo: null }
+    );
+    assert.equal(live.futurecastSummary.on3UfProbability, 94);
+    assert.equal(live.futurecastSummary.gvProbability, 42);
+    const florida = live.portalPredictions.predictions.find((p) => /florida/i.test(p.school));
+    assert.equal(florida.score, 94);
+    assert.equal(florida.predictorId, 'on3-rpm');
+    const clemson = live.portalPredictions.predictions.find((p) => /clemson/i.test(p.school));
+    assert.equal(clemson.score, 29);
+  });
+
   it('lists 2027 + 2028 allowlist prepared-meal targets', () => {
     const slugs = stamp.listAllowlistStampSlugs();
     assert.ok(slugs.length >= 40);
