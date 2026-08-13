@@ -33,6 +33,8 @@ export type PremiumScheduleGame = {
   intelUrl: string;
   ticketVendors: TicketVendor[];
   section: ScheduleSectionId;
+  /** Open date — no tickets / win model. */
+  isBye?: boolean;
   /** One-line game-week teaser — never the full scout dump. */
   keyTeaser?: string;
 };
@@ -68,6 +70,8 @@ const SECTION_BY_ID: Record<string, ScheduleSectionId> = {
   olemiss: 'sec',
   missouri: 'sec',
   texas: 'sec',
+  'bye-oct24': 'sec',
+  oklahoma: 'sec',
   kentucky: 'sec',
   vandy: 'sec',
   scar: 'sec',
@@ -83,18 +87,33 @@ const OPPONENT_META: Record<string, { short: string; logo: string }> = {
   missouri: { short: 'MIZ', logo: 'MU' },
   texas: { short: 'TEX', logo: 'UT' },
   uga: { short: 'UGA', logo: 'UGA' },
+  oklahoma: { short: 'OU', logo: 'OU' },
   kentucky: { short: 'UK', logo: 'UK' },
   vandy: { short: 'VAN', logo: 'VU' },
   scar: { short: 'SC', logo: 'SC' },
   fsu: { short: 'FSU', logo: 'FSU' },
 };
 
-const TV_PLACEHOLDERS = new Set(['FLEX', 'EARLY', 'NIGHT', 'TBD']);
+const TV_PLACEHOLDERS = new Set(['FLEX', 'EARLY', 'NIGHT', 'TBD', '—', '-']);
 const POSTGAME_MS = 5 * 3600_000;
+
+export function isByeGame(game: Pick<ScheduleGame, 'kind' | 'id' | 'opp'>): boolean {
+  if (game.kind === 'bye') return true;
+  if (String(game.id || '').startsWith('bye')) return true;
+  return /bye\s*week/i.test(String(game.opp || ''));
+}
 
 function homeOrAwayFromLabel(label: string, venue: string): HomeOrAway {
   if (label.includes('@')) return '@';
-  if (venue.toLowerCase().includes('jacksonville')) return 'neutral';
+  const v = venue.toLowerCase();
+  // Cocktail Party + other true neutrals (2026 UGA is Atlanta / Mercedes-Benz).
+  if (
+    v.includes('jacksonville') ||
+    v.includes('mercedes') ||
+    v.includes('atlanta')
+  ) {
+    return 'neutral';
+  }
   return 'vs';
 }
 
@@ -116,9 +135,32 @@ function normalizeTv(tv?: string): string {
   return tv;
 }
 
-function ticketVendorsForGame(opponent: string): TicketVendor[] {
-  // Matchup search links only — never invent "$42+" floors. Prices appear only with a live feed.
-  const q = encodeURIComponent(`Florida Gators ${opponent}`);
+function isTicketEventUrl(url: string): boolean {
+  // Real event / buy pages — not floridagators.com game-center or marketplace search.
+  return /ticketmaster\.com|tickpick\.com|stubhub\.com\/.+\/event\/|seatgeek\.com\/.+/i.test(url);
+}
+
+function ticketVendorsForGame(game: ScheduleGame): TicketVendor[] {
+  // Prefer per-game event deep links from the schedule board — not marketplace search pages.
+  const t = game.tickets;
+  const vendors: TicketVendor[] = [];
+  const official = (t?.official || t?.ticketmaster || '').trim();
+  if (official && isTicketEventUrl(official)) {
+    vendors.push({ id: 'official', name: 'Official', logo: 'OF', url: official });
+  }
+  if (t?.tickpick && isTicketEventUrl(t.tickpick)) {
+    vendors.push({ id: 'tickpick', name: 'TickPick', logo: 'TP', url: t.tickpick });
+  }
+  if (t?.stubhub && isTicketEventUrl(t.stubhub)) {
+    vendors.push({ id: 'stubhub', name: 'StubHub', logo: 'SH', url: t.stubhub });
+  }
+  if (t?.seatgeek && isTicketEventUrl(t.seatgeek)) {
+    vendors.push({ id: 'seatgeek', name: 'SeatGeek', logo: 'SG', url: t.seatgeek });
+  }
+  if (vendors.length) return vendors.slice(0, 3);
+
+  // Last resort only when a game has no event URLs yet.
+  const q = encodeURIComponent(`Florida Gators ${game.opp}`);
   return [
     {
       id: 'stubhub',
@@ -132,40 +174,38 @@ function ticketVendorsForGame(opponent: string): TicketVendor[] {
       logo: 'SG',
       url: `https://seatgeek.com/search?q=${q}`,
     },
-    {
-      id: 'vivid',
-      name: 'Vivid Seats',
-      logo: 'VS',
-      url: `https://www.vividseats.com/search?q=${q}`,
-    },
   ];
 }
 
 export function toPremiumScheduleGame(game: ScheduleGame): PremiumScheduleGame {
+  const bye = isByeGame(game);
   const parsed = parsePrediction(game.pred);
   const uf = Number.isFinite(game.predUF) ? game.predUF : parsed.uf;
   const opp = Number.isFinite(game.predOpp) ? game.predOpp : parsed.opp;
   const { date, time } = splitDateTime(game.date);
-  const meta = OPPONENT_META[game.id] ?? { short: game.opp.slice(0, 3).toUpperCase(), logo: '🏈' };
+  const meta = bye
+    ? { short: 'BYE', logo: '—' }
+    : OPPONENT_META[game.id] ?? { short: game.opp.slice(0, 3).toUpperCase(), logo: '🏈' };
 
   return {
     id: game.id,
-    opponentName: game.opp,
+    opponentName: bye ? 'Bye week' : game.opp,
     opponentShort: meta.short,
     opponentLogo: meta.logo,
-    homeOrAway: homeOrAwayFromLabel(game.label, game.venue),
+    homeOrAway: bye ? 'neutral' : homeOrAwayFromLabel(game.label, game.venue),
     date,
-    time,
+    time: bye ? 'OFF' : time,
     kickoffRaw: game.date,
     stadium: game.venue,
-    tvNetwork: normalizeTv(game.tv),
-    winProbability: game.ufPct,
-    predictedScoreUF: uf,
-    predictedScoreOpp: opp,
-    intelUrl: gameWeekRoute(game.id),
-    ticketVendors: ticketVendorsForGame(game.opp),
+    tvNetwork: bye ? '—' : normalizeTv(game.tv),
+    winProbability: bye ? 0 : game.ufPct,
+    predictedScoreUF: bye ? 0 : uf,
+    predictedScoreOpp: bye ? 0 : opp,
+    intelUrl: bye ? '/vault/schedule/' : gameWeekRoute(game.id),
+    ticketVendors: bye ? [] : ticketVendorsForGame(game),
     section: SECTION_BY_ID[game.id] ?? 'sec',
-    keyTeaser: game.keys[0],
+    isBye: bye || undefined,
+    keyTeaser: bye ? game.film || 'Open date' : game.keys[0],
   };
 }
 
@@ -204,6 +244,7 @@ export function getNextScheduleGame(
   const t = now.getTime();
 
   for (const game of games) {
+    if (game.isBye) continue;
     const kick = parseScheduleKickoff(game.kickoffRaw);
     if (!kick) continue;
     const end = kick.getTime() + POSTGAME_MS;
@@ -250,15 +291,16 @@ export type SeasonModelSummary = {
 };
 
 export function getSeasonModelSummary(games: PremiumScheduleGame[]): SeasonModelSummary {
-  const expectedWins = games.reduce((sum, g) => sum + g.winProbability / 100, 0);
-  const modeWins = games.filter((g) => g.predictedScoreUF > g.predictedScoreOpp).length;
-  const modeLosses = Math.max(0, games.length - modeWins);
+  const counted = games.filter((g) => !g.isBye);
+  const expectedWins = counted.reduce((sum, g) => sum + g.winProbability / 100, 0);
+  const modeWins = counted.filter((g) => g.predictedScoreUF > g.predictedScoreOpp).length;
+  const modeLosses = Math.max(0, counted.length - modeWins);
   return {
     expectedWins: Math.round(expectedWins * 10) / 10,
     modeWins,
     modeLosses,
     modeRecord: `${modeWins}-${modeLosses}`,
-    gameCount: games.length,
+    gameCount: counted.length,
     articleHref: '/vault/articles/art-win-model/',
   };
 }

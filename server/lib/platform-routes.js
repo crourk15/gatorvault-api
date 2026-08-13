@@ -134,6 +134,32 @@ function mountPlatformRoutes(app) {
     }
   });
 
+  /** Live schedule slate — edit server/data/schedule/<year>-season.json (or /var/data) without Codemagic. */
+  app.get('/api/schedule', (req, res) => {
+    try {
+      const scheduleBoard = require('./schedule-board');
+      const season = Number(req.query.year || req.query.season || 2026) || 2026;
+      return res.json(scheduleBoard.toApiPayload(scheduleBoard.getScheduleBoard(season)));
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.put('/api/schedule', (req, res) => {
+    const pin = String(req.body?.pin || req.get('X-Recruiting-Pin') || req.query.pin || '');
+    if (!verifyAdminPin(pin)) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const scheduleBoard = require('./schedule-board');
+      const season = Number(req.body?.season || req.query.year || 2026) || 2026;
+      const saved = scheduleBoard.saveScheduleBoard(req.body || {}, season);
+      return res.json({ ok: true, ...scheduleBoard.toApiPayload(saved), path: saved.path });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/film-room/lesson/:id', (req, res) => {
     try {
       const session = getSessionFromReq(req);

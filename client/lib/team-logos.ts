@@ -10,6 +10,7 @@ export const OPPONENT_ESPN_IDS: Record<string, number> = {
   missouri: 142,
   texas: 251,
   uga: 61,
+  oklahoma: 201,
   kentucky: 96,
   vandy: 238,
   scar: 2579,

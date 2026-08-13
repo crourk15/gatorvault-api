@@ -17,12 +17,25 @@ function readJson(filePath, fallback) {
 
 function buildGameWeekPayload() {
   const meta = readJson(META_PATH, { season: 2026, currentGameId: 'fau' });
+  let games = [];
+  let scheduleUpdatedAt = null;
+  try {
+    const scheduleBoard = require('./schedule-board');
+    const board = scheduleBoard.getScheduleBoard(meta.season || 2026);
+    games = board.games || [];
+    scheduleUpdatedAt = board.updatedAt || null;
+  } catch {
+    /* schedule board optional for meta pointer */
+  }
   return {
     ok: true,
     season: meta.season || 2026,
     currentGameId: meta.currentGameId || 'fau',
     updatedAt: meta.updatedAt || new Date().toISOString(),
-    note: 'Full matchup sections render client-side from schedule-data; API provides current week pointer.',
+    scheduleUpdatedAt,
+    games,
+    count: games.length,
+    note: 'Schedule games are live from /api/schedule — edit server/data/schedule without Codemagic after client bake.',
   };
 }
 

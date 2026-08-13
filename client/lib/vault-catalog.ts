@@ -4,7 +4,7 @@ export type TicketGame = {
   game: string;
   date: string;
   venue: string;
-  type: 'HOME' | 'AWAY' | 'NEUTRAL';
+  type: 'HOME' | 'AWAY' | 'NEUTRAL' | 'BYE';
   note?: string;
 };
 
@@ -16,6 +16,7 @@ export type ApparelShop = {
   url: string;
 };
 
+/** Official 2026 Florida football slate (aligned to floridagators.com / SEC windows). */
 export const TICKET_GAMES: TicketGame[] = [
   {
     game: '🐊 UF vs FAU',
@@ -25,88 +26,88 @@ export const TICKET_GAMES: TicketGame[] = [
     note: 'SEC Network',
   },
   {
-    game: '🐊 UF vs Charlotte',
+    game: '🐊 UF vs Campbell',
     date: 'September 12, 2026 · 5:30 PM ET',
     venue: 'Ben Hill Griffin Stadium, Gainesville FL',
     type: 'HOME',
-    note: 'SEC Network',
+    note: 'SECN+',
   },
   {
     game: '🐊 UF @ Auburn',
     date: 'September 19, 2026 · 7:00 PM ET',
     venue: 'Jordan-Hare Stadium, Auburn AL',
     type: 'AWAY',
-    note: 'ESPN · Away game — limited Gator ticket allotment',
+    note: 'ESPN',
   },
   {
     game: '🐊 UF vs Ole Miss',
-    date: 'October 3, 2026 · FLEX',
+    date: 'September 26, 2026 · 3:30–8:00 PM ET',
     venue: 'Ben Hill Griffin Stadium, Gainesville FL',
     type: 'HOME',
-    note: 'Kickoff window TBD',
+    note: 'TV TBD · window 3:30–8:00 PM ET',
   },
   {
     game: '🐊 UF @ Missouri',
-    date: 'October 10, 2026 · FLEX',
-    venue: 'Memorial Stadium, Columbia MO',
+    date: 'October 3, 2026 · 3:30–8:00 PM ET',
+    venue: 'Faurot Field, Columbia MO',
     type: 'AWAY',
-    note: 'Kickoff window TBD',
+    note: 'TV TBD · window 3:30–8:00 PM ET',
   },
   {
-    game: '🐊 UF vs LSU',
-    date: 'October 17, 2026 · EARLY',
+    game: '🐊 UF vs South Carolina (HC)',
+    date: 'October 10, 2026 · 12:00–1:00 PM ET',
     venue: 'Ben Hill Griffin Stadium, Gainesville FL',
     type: 'HOME',
-    note: 'Early kickoff window',
+    note: 'Homecoming · TV TBD · early window',
   },
   {
     game: '🐊 UF @ Texas',
-    date: 'October 24, 2026 · EARLY',
+    date: 'October 17, 2026 · 12:00–1:00 PM ET',
     venue: 'DKR-Texas Memorial Stadium, Austin TX',
     type: 'AWAY',
-    note: 'Early kickoff window',
+    note: 'TV TBD · early window',
+  },
+  {
+    game: '🐊 OFF — Bye week',
+    date: 'October 24, 2026 · OFF',
+    venue: 'Invesco QQQ Atlanta Gridiron Classic week',
+    type: 'BYE',
+    note: 'Open date on the SEC calendar',
   },
   {
     game: '🐊 UF vs Georgia',
     date: 'October 31, 2026 · 3:30 PM ET',
-    venue: 'EverBank Stadium, Jacksonville FL',
+    venue: 'Mercedes-Benz Stadium, Atlanta GA',
     type: 'NEUTRAL',
-    note: "ABC · World's Largest Outdoor Cocktail Party",
+    note: "World's Largest Outdoor Cocktail Party (Atlanta 2026) · ABC",
   },
   {
-    game: '🐊 UF @ Oklahoma',
-    date: 'November 7, 2026 · FLEX',
-    venue: 'Gaylord Family Oklahoma Memorial Stadium, Norman OK',
-    type: 'AWAY',
-    note: 'Kickoff window TBD',
-  },
-  {
-    game: '🐊 UF vs Kentucky',
-    date: 'November 14, 2026 · NIGHT',
+    game: '🐊 UF vs Oklahoma',
+    date: 'November 7, 2026 · 3:30–8:00 PM ET',
     venue: 'Ben Hill Griffin Stadium, Gainesville FL',
     type: 'HOME',
-    note: 'Night game window',
+    note: 'TV TBD · window 3:30–8:00 PM ET',
   },
   {
-    game: '🐊 UF @ Vanderbilt',
-    date: 'November 21, 2026 · EARLY',
-    venue: 'FirstBank Stadium, Nashville TN',
+    game: '🐊 UF @ Kentucky',
+    date: 'November 14, 2026 · 6:00–8:00 PM ET',
+    venue: 'Kroger Field, Lexington KY',
     type: 'AWAY',
-    note: 'Early kickoff window',
+    note: 'TV TBD · night window',
   },
   {
-    game: '🐊 UF vs South Carolina',
-    date: 'November 28, 2026 · 3:30 PM ET',
+    game: '🐊 UF vs Vanderbilt',
+    date: 'November 21, 2026 · 12:00–1:00 PM ET',
     venue: 'Ben Hill Griffin Stadium, Gainesville FL',
     type: 'HOME',
-    note: 'ABC',
+    note: 'TV TBD · early window',
   },
   {
     game: '🐊 UF @ FSU',
-    date: 'December 5, 2026 · TBD',
+    date: 'November 27, 2026 · 3:30 PM ET',
     venue: 'Doak Campbell Stadium, Tallahassee FL',
     type: 'AWAY',
-    note: 'Rivalry finale',
+    note: 'Friday · ABC · Rivalry finale',
   },
 ];
 
