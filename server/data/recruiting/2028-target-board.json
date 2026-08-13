@@ -645,7 +645,66 @@
       "ufProbability": 0.03,
       "rating": 90.84601449275364,
       "ufRpmPct": 3
+    },
+    {
+      "slug": "jamarcus-johnson",
+      "name": "Jamarcus Johnson",
+      "pos": "DL",
+      "school": "Toombs County (Lyons, GA)",
+      "state": "GA",
+      "stars": 4,
+      "natlRank": 50,
+      "inState": false,
+      "committedTo": null,
+      "ufProbability": 0.49,
+      "ufRpmPct": 49,
+      "notes": "Locked allowlist — Chatman DL / film desk."
+    },
+    {
+      "slug": "antijuan-wilkes-jr",
+      "name": "Antijuan Wilkes Jr.",
+      "pos": "OT",
+      "school": "Cass Technical (Detroit, MI)",
+      "state": "MI",
+      "stars": 4,
+      "natlRank": 16,
+      "inState": false,
+      "committedTo": null,
+      "notes": "Alderman board lock."
+    },
+    {
+      "slug": "nehemiah-mccary",
+      "name": "Nehemiah McCary",
+      "pos": "DL",
+      "school": null,
+      "state": null,
+      "stars": null,
+      "committedTo": null,
+      "notes": "Alderman board lock."
+    },
+    {
+      "slug": "samuel-bailey",
+      "name": "Samuel Bailey",
+      "pos": "OT",
+      "school": "Jemison (AL)",
+      "state": "AL",
+      "stars": 4,
+      "natlRank": 49,
+      "committedTo": null,
+      "ufProbability": 0.2,
+      "ufRpmPct": 20,
+      "notes": "Alderman board lock."
+    },
+    {
+      "slug": "derrell-hines-jr",
+      "name": "Derrell Hines Jr.",
+      "pos": null,
+      "school": null,
+      "committedTo": null,
+      "ufProbability": 0.18,
+      "ufRpmPct": 18,
+      "notes": "Alderman board lock."
     }
   ],
-  "updatedAt": "2026-08-06T22:04:49.524Z"
+  "updatedAt": "2026-08-13T13:42:57.341Z"
 }

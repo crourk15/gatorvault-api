@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] 2028 allowlist intel continuous coverage (Wilkes/McCary/Bailey/Hines/Jamarcus) + chase process logs — API / recruiting-light sweep
 - [x] Home NOW ticker lines: named movement + lite-warm `/hub/ticker` refresh (API — no Codemagic)
 - [x] Footprint Class 2028 commits: rev-gate + heal poisoned 0-commit runtime plates; lite warm refreshes footprint/commits on cron (API — no Codemagic)
 - [x] DeNairo Girton Jr. 2028 S Vault Scouting (Jessie Bates III comp) — correct Great Mills MD identity (Beat Desk had Tramond Collins On3 collision) — API

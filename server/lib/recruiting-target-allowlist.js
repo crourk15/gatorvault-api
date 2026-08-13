@@ -97,6 +97,8 @@ const ALLOWLIST_2028 = [
   'nehemiah-mccary',
   'samuel-bailey',
   'derrell-hines-jr',
+  // Film-desk / Chatman DL — keep on locked chase (was admin-only; player shell can drop)
+  'jamarcus-johnson',
 ];
 
 /** Charles' display names — used for On3/Rivals/247 identity lookup (never synthetic cards). */
@@ -163,6 +165,7 @@ const CANONICAL_TARGET_NAMES = {
   'nehemiah-mccary': 'Nehemiah McCary',
   'samuel-bailey': 'Samuel Bailey',
   'derrell-hines-jr': 'Derrell Hines Jr.',
+  'jamarcus-johnson': 'Jamarcus Johnson',
 };
 
 /** Display name → canonical slug (handles typos / aliases) */

@@ -200,6 +200,81 @@ async function runAllowlistIntelSweepInner({
     errors: [],
   };
 
+  // Materialize FL offers/visits from player cards into logs when Desk/Alderman
+  // stamped the card but offer_logs/visit_logs never got a row (chase + intel gap).
+  // Must run before visit/offer intel loops so same sweep picks them up.
+  let playerRows = [];
+  try {
+    playerRows = await store.getAllPlayers();
+  } catch {
+    try {
+      const raw = JSON.parse(
+        require('fs').readFileSync(require('path').join(__dirname, '../data/recruiting/players.json'), 'utf8')
+      );
+      playerRows = Array.isArray(raw) ? raw : [];
+    } catch {
+      playerRows = [];
+    }
+  }
+  const playerBySlug = new Map(
+    (Array.isArray(playerRows) ? playerRows : []).map((p) => [slugKey(p.slug || p.id), p])
+  );
+  for (const slug of slugs) {
+    const player = playerBySlug.get(slug);
+    if (!player) continue;
+    const cardOffers = [...(player.offers || []), ...(player.offerList || [])];
+    for (const o of cardOffers) {
+      if (!isFloridaSchool(o?.school || o?.name || '')) continue;
+      if (dryRun) {
+        results.created.push({ kind: 'offer_log_sync', slug, dryRun: true });
+        continue;
+      }
+      try {
+        const out = offerLogStore.appendOfferLog({
+          playerSlug: slug,
+          playerId: player.on3Id || player.id || null,
+          school: 'Florida',
+          offerType: o.offerType || 'Offered',
+          date: o.date || null,
+          source: o.source || 'player-card',
+          detail: `${playerDisplayName(slug, player.name)} — Florida offer from player card.`,
+        });
+        if (out.created) {
+          results.created.push({ kind: 'offer_log_sync', slug, fingerprint: out.item?.fingerprint });
+        }
+      } catch (err) {
+        results.errors.push({ slug, kind: 'offer_log_sync', error: err.message });
+      }
+    }
+    const cardVisits = [...(player.visited || []), ...(player.visits || [])];
+    for (const v of cardVisits) {
+      if (!isFloridaVisit(v)) continue;
+      const day = isoDay(v.date || v.visitDate);
+      if (!day) continue; // never invent undated campus trips
+      if (dryRun) {
+        results.created.push({ kind: 'visit_log_sync', slug, dryRun: true, day });
+        continue;
+      }
+      try {
+        const out = visitLogStore.appendVisitLog({
+          playerSlug: slug,
+          playerId: player.on3Id || player.id || null,
+          playerName: playerDisplayName(slug, player.name),
+          school: 'Florida',
+          visitType: v.visitType || v.type || 'unofficial_visit',
+          date: day,
+          source: v.source || 'player-card',
+          detail: `${playerDisplayName(slug, player.name)} — Florida visit from player card (${day}).`,
+        });
+        if (out.created) {
+          results.created.push({ kind: 'visit_log_sync', slug, fingerprint: out.item?.fingerprint });
+        }
+      } catch (err) {
+        results.errors.push({ slug, kind: 'visit_log_sync', error: err.message });
+      }
+    }
+  }
+
   const visits = visitLogStore.listVisitLogs({ limit: 8000 });
   for (const row of visits) {
     const slug = slugKey(row.playerSlug);
@@ -304,6 +379,8 @@ async function runAllowlistIntelSweepInner({
 
   // Board-pulse fallback: allowlist targets with zero visit/offer materialization
   // still need process intel so chase breadth stays fair (not Desk-only).
+  // Locked allowlist membership itself is the UF process signal — do not skip
+  // Wilkes/McCary/Jamarcus-style locks for empty note/RPM fields.
   const coverageBeforePulse = measureAllowlistIntelCoverage(classYear, { days: 30 });
   for (const slug of coverageBeforePulse.missing || []) {
     if (results.created.length >= maxCreates) break;
@@ -311,20 +388,10 @@ async function runAllowlistIntelSweepInner({
       const ctx = await loadPlayerContext(slug);
       const player = ctx.player;
       const name = ctx.playerName;
-      const note = String(player?.profileNote || player?.skinny || '').trim();
-      const ufSignal =
-        /\b(florida|gators|gainesville|uf)\b/i.test(note) ||
-        (Array.isArray(player?.competitors) &&
-          player.competitors.some((c) => isFloridaSchool(c?.school || c?.name || ''))) ||
-        Number(player?.ufRpmPct) > 0 ||
-        String(player?.on3Source || '').includes('beat-desk');
-      if (!ufSignal && !note) {
-        results.skipped.push({ kind: 'board_pulse', slug, reason: 'no_uf_process_signal' });
-        continue;
-      }
+      const note = String(player?.profileNote || player?.skinny || player?.recruitingStory || '').trim();
       const day = new Date().toISOString().slice(0, 10);
       const detail =
-        note && /\b(florida|gators|gainesville|uf|collins)\b/i.test(note)
+        note && /\b(florida|gators|gainesville|uf|collins|chatman)\b/i.test(note)
           ? `${name} — ${note.replace(/\s+/g, ' ').slice(0, 220)} Continuous allowlist intel sweep.`
           : `${name} — Florida process on file (allowlist board pulse). Continuous allowlist intel sweep.`;
       const fp = `allowlist_sweep_board_pulse_${slug}_${day}`;
