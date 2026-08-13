@@ -1,5 +1,7 @@
 # App Store Review Notes (GatorVault Insider)
 
+> **APPROVED (Aug 13, 2026):** App Store **1.0.14** accepted (submission `a28c0e4a-a137-4e51-936b-62bb68e154eb`). Review freeze lifted. Live: https://apps.apple.com/app/gatorvault-insider/id6783848215
+
 **Full Connect copy (description, keywords, screenshots):** `docs/APP_STORE_CONNECT.md`  
 **Metadata checklist:** `docs/APP_STORE_METADATA.md`
 
