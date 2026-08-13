@@ -96,7 +96,15 @@ const POSTGAME_MS = 5 * 3600_000;
 
 function homeOrAwayFromLabel(label: string, venue: string): HomeOrAway {
   if (label.includes('@')) return '@';
-  if (venue.toLowerCase().includes('jacksonville')) return 'neutral';
+  const v = venue.toLowerCase();
+  // Cocktail Party + other true neutrals (2026 UGA is Atlanta / Mercedes-Benz).
+  if (
+    v.includes('jacksonville') ||
+    v.includes('mercedes') ||
+    v.includes('atlanta')
+  ) {
+    return 'neutral';
+  }
   return 'vs';
 }
 
@@ -118,9 +126,32 @@ function normalizeTv(tv?: string): string {
   return tv;
 }
 
-function ticketVendorsForGame(opponent: string): TicketVendor[] {
-  // Matchup search links only — never invent "$42+" floors. Prices appear only with a live feed.
-  const q = encodeURIComponent(`Florida Gators ${opponent}`);
+function isTicketEventUrl(url: string): boolean {
+  // Real event / buy pages — not floridagators.com game-center or marketplace search.
+  return /ticketmaster\.com|tickpick\.com|stubhub\.com\/.+\/event\/|seatgeek\.com\/.+/i.test(url);
+}
+
+function ticketVendorsForGame(game: ScheduleGame): TicketVendor[] {
+  // Prefer per-game event deep links from the schedule board — not marketplace search pages.
+  const t = game.tickets;
+  const vendors: TicketVendor[] = [];
+  const official = (t?.official || t?.ticketmaster || '').trim();
+  if (official && isTicketEventUrl(official)) {
+    vendors.push({ id: 'official', name: 'Official', logo: 'OF', url: official });
+  }
+  if (t?.tickpick && isTicketEventUrl(t.tickpick)) {
+    vendors.push({ id: 'tickpick', name: 'TickPick', logo: 'TP', url: t.tickpick });
+  }
+  if (t?.stubhub && isTicketEventUrl(t.stubhub)) {
+    vendors.push({ id: 'stubhub', name: 'StubHub', logo: 'SH', url: t.stubhub });
+  }
+  if (t?.seatgeek && isTicketEventUrl(t.seatgeek)) {
+    vendors.push({ id: 'seatgeek', name: 'SeatGeek', logo: 'SG', url: t.seatgeek });
+  }
+  if (vendors.length) return vendors.slice(0, 3);
+
+  // Last resort only when a game has no event URLs yet.
+  const q = encodeURIComponent(`Florida Gators ${game.opp}`);
   return [
     {
       id: 'stubhub',
@@ -133,12 +164,6 @@ function ticketVendorsForGame(opponent: string): TicketVendor[] {
       name: 'SeatGeek',
       logo: 'SG',
       url: `https://seatgeek.com/search?q=${q}`,
-    },
-    {
-      id: 'vivid',
-      name: 'Vivid Seats',
-      logo: 'VS',
-      url: `https://www.vividseats.com/search?q=${q}`,
     },
   ];
 }
@@ -165,7 +190,7 @@ export function toPremiumScheduleGame(game: ScheduleGame): PremiumScheduleGame {
     predictedScoreUF: uf,
     predictedScoreOpp: opp,
     intelUrl: gameWeekRoute(game.id),
-    ticketVendors: ticketVendorsForGame(game.opp),
+    ticketVendors: ticketVendorsForGame(game),
     section: SECTION_BY_ID[game.id] ?? 'sec',
     keyTeaser: game.keys[0],
   };

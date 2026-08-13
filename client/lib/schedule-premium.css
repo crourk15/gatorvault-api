@@ -1018,6 +1018,14 @@
   background: var(--th-blue, #0021a5);
 }
 
+.gv-sched-tickets__vendor--official .gv-sched-tickets__mark {
+  background: #0021a5;
+}
+
+.gv-sched-tickets__vendor--tickpick .gv-sched-tickets__mark {
+  background: #0b6e4f;
+}
+
 .gv-sched-tickets__vendor--stubhub .gv-sched-tickets__mark {
   background: #3b1c7d;
 }

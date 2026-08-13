@@ -89,7 +89,18 @@ function normalizeGame(row) {
       ? row.howUFWins.map((x) => String(x || '').trim()).filter(Boolean)
       : undefined,
     scoutingReport: row.scoutingReport != null ? String(row.scoutingReport).trim() : undefined,
+    tickets: normalizeTickets(row.tickets),
   };
+}
+
+function normalizeTickets(raw) {
+  if (!raw || typeof raw !== 'object') return undefined;
+  const out = {};
+  for (const key of ['gameCenter', 'official', 'tickpick', 'stubhub', 'seatgeek', 'ticketmaster']) {
+    const v = String(raw[key] || '').trim();
+    if (v) out[key] = v;
+  }
+  return Object.keys(out).length ? out : undefined;
 }
 
 function normalizeDoc(raw, season) {

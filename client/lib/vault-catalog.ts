@@ -69,9 +69,9 @@ export const TICKET_GAMES: TicketGame[] = [
   {
     game: '🐊 UF vs Georgia',
     date: 'October 31, 2026 · 3:30 PM ET',
-    venue: 'EverBank Stadium, Jacksonville FL',
+    venue: 'Mercedes-Benz Stadium, Atlanta GA',
     type: 'NEUTRAL',
-    note: "World's Largest Outdoor Cocktail Party",
+    note: "World's Largest Outdoor Cocktail Party (Atlanta 2026)",
   },
   {
     game: '🐊 UF vs Oklahoma',

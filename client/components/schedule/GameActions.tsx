@@ -9,6 +9,8 @@ type Props = {
 };
 
 const VENDOR_MARK: Record<string, string> = {
+  official: 'OF',
+  tickpick: 'TP',
   stubhub: 'SH',
   seatgeek: 'SG',
   vivid: 'VS',
@@ -30,7 +32,7 @@ export function GameActions({ ticketVendors, opponentName }: Props): React.React
             from <strong>${lowest}+</strong>
           </p>
         ) : (
-          <p className="gv-sched-tickets__from">Compare markets</p>
+          <p className="gv-sched-tickets__from">This game</p>
         )}
       </div>
       <div className="gv-sched-tickets__grid" role="list" aria-label={`Ticket options for ${opponentName}`}>
@@ -42,7 +44,7 @@ export function GameActions({ ticketVendors, opponentName }: Props): React.React
             rel="noopener noreferrer"
             className={`gv-sched-tickets__vendor gv-sched-tickets__vendor--${vendor.id}`}
             role="listitem"
-            title={`Find ${opponentName} tickets on ${vendor.name}`}
+            title={`${opponentName} tickets — ${vendor.name}`}
           >
             <span className="gv-sched-tickets__mark" aria-hidden="true">
               {VENDOR_MARK[vendor.id] ?? vendor.logo}
