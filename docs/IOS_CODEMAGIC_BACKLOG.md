@@ -89,7 +89,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 | 2026-08-12 | Chase scroll/FAB leakage: document scroll for Lab + recruiting targets board; kill module overflow:visible; hide FAB on priority | `LivePulseFab`, `gv-ui-cleanup`, `mobile-native-framework`, `vault-shell` in binary | pending |
 | 2026-08-12 | Kill sticky Lab/RH module heads + platform vault document scroll (Who commits next stuck) | `mobile-native-framework`, `gv-ui-cleanup`, `vault-shell`, Leading bare on 2028 | pending |
 | 2026-08-12 | Priority chase UI leakage: restore ModuleShell plate + dark title; un-nest Share climate; chase overflow:visible | `FutureCastTargetsPanel`, lab/mobile CSS in binary | pending |
-| 2026-08-13 | 2026 schedule: add Nov 7 vs Oklahoma; fix Kentucky to @ UK; align tickets catalog | `schedule-data`, `schedule-premium`, `vault-catalog`, `team-logos` in binary | pending |
+| 2026-08-13 | 2026 schedule live API: Oklahoma + @ Kentucky + `/api/schedule` fetch (after this bake, slate edits are JSON/API-only — no Codemagic) | `schedule-api`, SchedulePageShell, SeasonTimeline, `schedule-board` seed in binary | pending |
 
 ---
 

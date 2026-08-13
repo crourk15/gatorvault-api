@@ -1,4 +1,9 @@
-/** 2026 Florida schedule — official week order (SEC + non-conference). */
+/**
+ * 2026 Florida schedule — bundled seed / offline fallback.
+ * Live source of truth: `GET /api/schedule` → server/data/schedule/2026-season.json
+ * (durable override `/var/data/schedule/2026-season.json`). Edit the JSON for slate
+ * fixes without Codemagic after the live-fetch client bake ships.
+ */
 
 export type ScheduleGame = {
   id: string;

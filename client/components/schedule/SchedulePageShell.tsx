@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Container, Tabs } from '@/components/ui';
+import { fetchScheduleGames } from '@/lib/schedule-api';
 import {
   SCHEDULE_SECTION_META,
   SCHEDULE_SEASONS,
@@ -10,6 +11,8 @@ import {
   getScheduleGameStatus,
   getSeasonModelSummary,
   groupGamesBySection,
+  toPremiumScheduleGame,
+  type PremiumScheduleGame,
   type ScheduleGameStatus,
   type ScheduleSeason,
 } from '@/lib/schedule-premium';
@@ -26,7 +29,35 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
   const [season, setSeason] = useState<ScheduleSeason>(
     SCHEDULE_SEASONS.includes(defaultSeason) ? defaultSeason : '2026',
   );
-  const games = useMemo(() => gamesForSeason(season), [season]);
+  const [liveGames, setLiveGames] = useState<PremiumScheduleGame[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (season !== '2026') {
+      setLiveGames([]);
+      return () => {
+        cancelled = true;
+      };
+    }
+    setLiveGames(null);
+    fetchScheduleGames(2026)
+      .then((raw) => {
+        if (cancelled) return;
+        setLiveGames(raw.map(toPremiumScheduleGame));
+      })
+      .catch(() => {
+        if (!cancelled) setLiveGames(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [season]);
+
+  const games = useMemo(() => {
+    if (season === '2026' && liveGames && liveGames.length) return liveGames;
+    return gamesForSeason(season);
+  }, [season, liveGames]);
+
   const grouped = useMemo(() => groupGamesBySection(games), [games]);
   const nextGame = useMemo(() => getNextScheduleGame(games), [games]);
   const nextId = nextGame?.id ?? null;
