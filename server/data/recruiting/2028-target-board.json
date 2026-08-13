@@ -704,7 +704,17 @@
       "ufProbability": 0.18,
       "ufRpmPct": 18,
       "notes": "Alderman board lock."
+    },
+    {
+      "slug": "denairo-girton-jr",
+      "name": "DeNairo Girton Jr.",
+      "pos": "S",
+      "school": "Great Mills (Lexington Park, MD)",
+      "state": "MD",
+      "stars": null,
+      "committedTo": null,
+      "notes": "Locked allowlist — Beat Desk / film desk (identity hardened)."
     }
   ],
-  "updatedAt": "2026-08-13T13:42:57.341Z"
+  "updatedAt": "2026-08-13T13:46:15.473Z"
 }
