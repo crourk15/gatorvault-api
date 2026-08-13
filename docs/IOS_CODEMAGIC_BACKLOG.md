@@ -40,8 +40,6 @@ These ship via Render / Netlify API — current App Store binary (1.0.12) picks 
 - [x] Live depth chart API — `GET/PUT /api/roster/depth-chart` fall-camp board (web + post-Codemagic iOS content path)
 - [x] FutureCast HP movement: hydrate 7d deltas from stamp history + ignore ancient baselines (API seed refresh)
 - [x] Recruiting class counts: enrolled On3 signees no longer wiped by roster-collision block (2026 HS ~21, 2027 ~26) — API
-- [x] 2028+ HP `flipWatch` = Committed elsewhere lane (Cale Britt / Preyear / …) — API; open chase still `isActiveUfTarget` only
-
 ---
 
 ## Waiting for next Codemagic build
@@ -50,7 +48,6 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-08-13 | 2028+ Priority Chase room: **Committed elsewhere** lane (Cale Britt → Wisconsin, etc.) | `ClassTargetsPage`, Lab FlipWatch panel copy, hub CSS in binary (HP API also emits flipWatch) | pending |
 | 2026-08-12 | Signing Day ESP/NSD: scope lists to active class year (?year=2028) | `SigningDayPage` + signing-day-utils links in binary | pending |
 | 2026-08-12 | Home NOW pulse: rotate live ticker/intel stories (not frozen class-trending line) | `HomeCommandCenter`, `HomePremiumPage`, pulse utils in binary (API ticker also live) | pending |
 | 2026-08-12 | ESP Expected signees: UF commits only (kick Flip Watch off the list) | `SigningDayPage` + `signing-day-utils` in binary | pending |

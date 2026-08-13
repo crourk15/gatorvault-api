@@ -62,33 +62,23 @@ function FlipCard({ row, rank }: { row: FlipWatchRow; rank: number }): React.Rea
 }
 
 /**
- * 2027 Closing Class Flip Watch + 2028+ Committed elsewhere lane (same HP flipWatch payload).
+ * Closing Class Flip Watch — standalone section with a loud section title.
  */
 export function FutureCastFlipWatchPanel({ flipWatch = [], bare }: Props): React.ReactElement | null {
   const { discoveryView } = useFutureCastLabCycle();
-  const rows = useMemo(() => {
-    if (discoveryView) {
-      // Open-cycle: use live API only — never fall back to 2027 Closing Class seed.
-      if (!Array.isArray(flipWatch) || flipWatch.length === 0) return [];
-      return flipWatch.map((row, i) => ({
-        ...row,
-        flipRank: row.flipRank ?? i + 1,
-        committedShort: row.committedShort || row.committedTo?.split(/\s+/)[0] || 'Other',
-      }));
-    }
-    return resolveClosingClassFlipWatch(flipWatch);
-  }, [discoveryView, flipWatch]);
+  const rows = useMemo(() => resolveClosingClassFlipWatch(flipWatch), [flipWatch]);
 
+  if (discoveryView) return null;
   if (!rows.length) return null;
-
-  const title = discoveryView ? 'Committed elsewhere' : 'Top 5 Flip Candidates';
-  const sub = discoveryView
-    ? 'Vault prospects already committed — kept beside Priority Chase, never as open targets.'
-    : "Committed elsewhere — Florida's best remaining flip shots before signing day.";
 
   return (
     <div className="fc-lab-flip-watch-section" data-testid="fc-lab-flip-watch-section">
-      <FutureCastPanelShell bare={bare} title={title} sub={sub} testId="fc-lab-flip-watch-panel">
+      <FutureCastPanelShell
+        bare={bare}
+        title="Top 5 Flip Candidates"
+        sub="Committed elsewhere — Florida's best remaining flip shots before signing day."
+        testId="fc-lab-flip-watch-panel"
+      >
         <div className="fc-lab-flip-grid">
           {rows.map((row, i) => (
             <FlipCard key={row.slug} row={row} rank={row.flipRank ?? i + 1} />
