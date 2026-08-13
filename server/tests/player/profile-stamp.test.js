@@ -104,6 +104,24 @@ describe('player profile prepared-meal stamps', () => {
     assert.equal(live.futurecastSummary.predictedSchool, 'Florida');
   });
 
+  it('heals stale predictedSchool when live UF RPM leads the rival board', () => {
+    const live = stamp.overlayLiveRpm(
+      {
+        player: { slug: 'tranard-roberts', committedTo: null, classYear: 2027 },
+        competingSchools: [{ school: 'Auburn', pct: 8.4 }],
+        futurecastSummary: {
+          gvProbability: 74,
+          ufProbability: 74,
+          predictedSchool: 'Auburn',
+        },
+        vaultScouting: null,
+      },
+      { ufRpmPct: 74, committedTo: null }
+    );
+    assert.equal(live.futurecastSummary.on3UfProbability, 74);
+    assert.equal(live.futurecastSummary.predictedSchool, 'Florida');
+  });
+
   it('lists 2027 + 2028 allowlist prepared-meal targets', () => {
     const slugs = stamp.listAllowlistStampSlugs();
     assert.ok(slugs.length >= 40);

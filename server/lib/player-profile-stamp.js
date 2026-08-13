@@ -170,6 +170,12 @@ function overlayLiveRpm(profile, recruiting) {
       volatilityScore: futurecastSummary?.volatilityScore ?? 0,
     };
   } else if (rpm != null) {
+    const rivalMax = Math.max(
+      0,
+      ...(Array.isArray(profile.competingSchools)
+        ? profile.competingSchools.map((s) => Number(s?.pct) || 0)
+        : [])
+    );
     futurecastSummary = {
       ...(futurecastSummary || {
         predictedSchool: null,
@@ -181,6 +187,8 @@ function overlayLiveRpm(profile, recruiting) {
       // On3 panel prefers RPM; keep GV from stamp when present.
       ufProbability: rpm,
       gvProbability: futurecastSummary?.gvProbability ?? null,
+      // Heal stale stamps that crowned a legacy rival over live UF RPM.
+      ...(rpm >= rivalMax ? { predictedSchool: 'Florida' } : {}),
     };
   }
 
