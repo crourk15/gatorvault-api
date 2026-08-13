@@ -20,6 +20,8 @@ export type FullProfileMovementWindow = {
   delta7d: number;
   volatilityScore: number;
   windowDays: number;
+  /** Set when delta is live On3/RPM history (never synthetic GV). */
+  source?: 'on3-rpm' | string | null;
 };
 
 export type FullProfileCompetingSchool = {

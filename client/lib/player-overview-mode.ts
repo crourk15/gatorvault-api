@@ -88,6 +88,8 @@ export function buildRecruitingStand(input: {
   // On3 Florida = live RPM only. Never treat unlabeled ufProbability / GV as market %.
   const on3Uf = input.futurecastSummary?.on3UfProbability ?? null;
   const gvUf = input.futurecastSummary?.gvProbability ?? null;
+  // movementDelta is only attached for real On3/RPM history by the profile overlay.
+  const delta = on3Uf != null ? input.futurecastSummary?.movementDelta ?? null : null;
   const marketSchools = input.competingSchools.filter(
     (c) => String((c as { source?: string }).source || '').toLowerCase() !== 'legacy'
   );
@@ -171,6 +173,11 @@ export function buildRecruitingStand(input: {
     } else {
       headline = `${board.leader} leads at ${Math.round(board.leaderPct)}%`;
     }
+  } else if (delta != null && Math.abs(delta) >= 1) {
+    headline =
+      delta > 0
+        ? `Florida momentum up ${Math.round(delta)} pts recently`
+        : `Florida momentum down ${Math.abs(Math.round(delta))} pts recently`;
   } else if (input.metrics.ufFitScore > 0) {
     headline = `Florida fit rates ${fitTierLabel(input.metrics.ufFitTier).toLowerCase()} on this board`;
   } else {

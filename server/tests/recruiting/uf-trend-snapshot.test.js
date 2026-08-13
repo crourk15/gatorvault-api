@@ -5,6 +5,7 @@ const path = require("path");
 const {
   upsertSnapshot,
   computeDelta7d,
+  computeRpmDelta7d,
   buildDelta7dBySlug,
   buildTrendHistoryForSlug,
   mergeTrendHistories,
@@ -21,6 +22,21 @@ describe("uf-trend-snapshot", () => {
     upsertSnapshot("test-player", 40, "2026-06-15");
     upsertSnapshot("test-player", 46, "2026-06-22");
     assert.equal(computeDelta7d("test-player", new Date("2026-06-22T12:00:00Z")), 6);
+  });
+
+  it("computes On3/RPM 7d delta from rpmPct history (ignores GV ufPct)", () => {
+    const asOf = new Date("2026-07-12T12:00:00Z");
+    upsertSnapshot("rpm-delta-player", 40, "2026-07-05", {
+      source: "gatorvault",
+      rpmPct: 80,
+    });
+    upsertSnapshot("rpm-delta-player", 42, "2026-07-12", {
+      source: "gatorvault",
+      rpmPct: 94,
+    });
+    // GV ufPct only moved +2; market RPM moved +14.
+    assert.equal(computeDelta7d("rpm-delta-player", asOf, { preferSource: "gatorvault" }), 2);
+    assert.equal(computeRpmDelta7d("rpm-delta-player", asOf), 14);
   });
 
   it("merges snapshot deltas when postgres map is empty", () => {

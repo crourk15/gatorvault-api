@@ -162,6 +162,21 @@ function overlayLiveRpm(profile, recruiting) {
       ? { ...profile.futurecastSummary }
       : null;
 
+  // Real On3/RPM week delta from recorded rpmPct history (not synthetic GV curves).
+  let rpmDelta = null;
+  let rpmHistory = [];
+  const slugKey = String(player.slug || profile.stampMeta?.slug || '').trim().toLowerCase();
+  if (slugKey && (ufCommit || rpm != null)) {
+    try {
+      const trend = require('./uf-trend-snapshot');
+      rpmDelta = trend.computeRpmDelta7d(slugKey);
+      rpmHistory = trend.buildRpmTrendHistoryForSlug(slugKey) || [];
+    } catch {
+      rpmDelta = null;
+      rpmHistory = [];
+    }
+  }
+
   if (ufCommit) {
     futurecastSummary = {
       ...(futurecastSummary || {}),
@@ -169,8 +184,7 @@ function overlayLiveRpm(profile, recruiting) {
       on3UfProbability: 100,
       gvProbability: futurecastSummary?.gvProbability ?? 100,
       predictedSchool: 'Florida',
-      // Never expose synthetic GV week-delta as market movement.
-      movementDelta: null,
+      movementDelta: rpmDelta,
       fitScore: futurecastSummary?.fitScore ?? player.ufFitScore ?? 100,
       volatilityScore: futurecastSummary?.volatilityScore ?? 0,
     };
@@ -189,12 +203,12 @@ function overlayLiveRpm(profile, recruiting) {
       // Unlabeled ufProbability = live On3 only (never GV model score).
       ufProbability: rpm,
       gvProbability: futurecastSummary?.gvProbability ?? null,
-      movementDelta: null,
+      movementDelta: rpmDelta,
       // Heal stale stamps that crowned a legacy rival over live UF RPM.
       ...(rpm >= rivalMax ? { predictedSchool: 'Florida' } : {}),
     };
   } else if (futurecastSummary) {
-    // No live On3 — do not leave GV copied into unlabeled ufProbability.
+    // No live On3 — do not leave GV copied into unlabeled ufProbability / market Δ.
     delete futurecastSummary.ufProbability;
     delete futurecastSummary.on3UfProbability;
     futurecastSummary.movementDelta = null;
@@ -228,14 +242,26 @@ function overlayLiveRpm(profile, recruiting) {
     portalPredictions = { ...portalPredictions, predictions };
   }
 
+  const movementWindow =
+    rpm != null && rpmDelta != null
+      ? {
+          ufProbNow: rpm,
+          ufProb7dAgo: Math.max(0, Math.min(100, rpm - rpmDelta)),
+          delta7d: rpmDelta,
+          volatilityScore: futurecastSummary?.volatilityScore ?? null,
+          windowDays: 7,
+          source: 'on3-rpm',
+        }
+      : null;
+
   return {
     ...profile,
     player,
     futurecastSummary,
     competingSchools,
     portalPredictions,
-    movementWindow: null,
-    movementHistory: [],
+    movementWindow,
+    movementHistory: rpmHistory,
     lastUpdated: new Date().toISOString(),
     servedFrom: 'stamp',
     rpmLive: true,

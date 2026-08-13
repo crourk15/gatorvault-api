@@ -63,23 +63,24 @@ export function PlayerHeader({
   metrics,
   portalProfile,
   futurecastSummary = null,
-  movementWindow: _movementWindow = null,
+  movementWindow = null,
   latestIntel = null,
 }: PlayerHeaderProps): React.ReactElement {
-  void _movementWindow;
   const pathname = usePathname();
   const inVault = isVaultPath(pathname);
   const [copied, setCopied] = useState(false);
   const location = formatPlayerLocation(player.hometown, player.state);
   const stars = validStars(player.stars);
-  // Hero UF% = live On3 market only (or commit 100 via overlay). Never GV / synthetic Δ.
-  const ufPct =
+  // Hero UF% = live On3 market only (or commit 100 via overlay). Never GV as unlabeled UF%.
+  const on3Uf =
     futurecastSummary?.on3UfProbability != null &&
     Number.isFinite(Number(futurecastSummary.on3UfProbability))
       ? Number(futurecastSummary.on3UfProbability)
       : null;
-  // Synthetic GV movementHistory deltas must never appear as market ▲/▼ on the hero.
-  const moveDelta = null;
+  const ufPct = on3Uf;
+  // ▲/▼ only beside On3 % — overlay attaches real On3/RPM week deltas, never synthetic GV.
+  const moveDelta =
+    on3Uf != null ? movementWindow?.delta7d ?? futurecastSummary?.movementDelta ?? null : null;
   const ranks = rankCells(player);
   const composite =
     player.compositeRating != null && Number.isFinite(player.compositeRating)

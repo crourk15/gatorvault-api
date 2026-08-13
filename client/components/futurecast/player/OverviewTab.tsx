@@ -176,6 +176,11 @@ export function OverviewTab({
                 : gvUf != null
                   ? `GatorVault model has Florida at ${gvUf}% · competitor schools use On3 when available`
                   : 'On3 RPM for the market · GatorVault model when labeled'}
+            {on3Uf != null &&
+            futurecastSummary?.movementDelta != null &&
+            Number(futurecastSummary.movementDelta) !== 0
+              ? ` · On3 movement ${Number(futurecastSummary.movementDelta) > 0 ? '+' : ''}${Math.round(Number(futurecastSummary.movementDelta))} over 7 days`
+              : ''}
           </p>
           <PredictionsPanel
             playerId={player.id}

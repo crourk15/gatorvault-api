@@ -165,6 +165,36 @@ function computeDelta7d(slug, asOf = new Date(), options = {}) {
 
 const TREND_HISTORY_DAYS = 30;
 
+/**
+ * 7d delta from recorded On3/RPM points (rpmPct), not GV model ufPct.
+ * Returns null unless we have a real week-ish RPM baseline + current.
+ */
+function computeRpmDelta7d(slug, asOf = new Date(), { maxAgeDays = 14, minAbs = 1 } = {}) {
+  const today = ymd(asOf);
+  const cutoff = daysAgoYmd(DELTA_WINDOW_DAYS, asOf);
+  const floor = daysAgoYmd(maxAgeDays, asOf);
+  const rows = listSnapshots(slug)
+    .filter((row) => row.date <= today && clampPct(row?.rpmPct) != null)
+    .map((row) => ({ date: String(row.date).slice(0, 10), rpmPct: clampPct(row.rpmPct) }));
+  if (rows.length < 2) return null;
+  const now = rows[rows.length - 1];
+  const baseline = [...rows]
+    .filter((row) => row.date <= cutoff && row.date >= floor)
+    .pop();
+  if (!baseline || baseline.date === now.date) return null;
+  const delta = Math.round((now.rpmPct - baseline.rpmPct) * 10) / 10;
+  if (!Number.isFinite(delta) || Math.abs(delta) < minAbs) return null;
+  return delta;
+}
+
+function buildRpmTrendHistoryForSlug(slug, { days = TREND_HISTORY_DAYS, asOf = new Date() } = {}) {
+  const cutoff = daysAgoYmd(days, asOf);
+  const today = ymd(asOf);
+  return listSnapshots(slug)
+    .filter((row) => row.date <= today && row.date >= cutoff && clampPct(row?.rpmPct) != null)
+    .map((row) => ({ date: String(row.date).slice(0, 10), confidence: clampPct(row.rpmPct) }));
+}
+
 function buildTrendHistoryForSlug(slug, { days = TREND_HISTORY_DAYS, asOf = new Date(), preferSource = null } = {}) {
   const cutoff = daysAgoYmd(days, asOf);
   const today = ymd(asOf);
@@ -550,8 +580,10 @@ module.exports = {
   upsertSnapshot,
   listSnapshots,
   computeDelta7d,
+  computeRpmDelta7d,
   buildDelta7dBySlug,
   buildTrendHistoryForSlug,
+  buildRpmTrendHistoryForSlug,
   mergeTrendHistories,
   mergeDelta7dMaps,
   backfillBaseline,
