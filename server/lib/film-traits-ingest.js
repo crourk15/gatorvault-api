@@ -45,6 +45,14 @@ async function resolveOn3RecruitSlug({ slug, playerName, player, classYear } = {
     player?.on3Slug,
     player?.on3RecruitSlug,
     player?.recruitSlug,
+    // Prefer id-suffixed On3 slug when store has a numeric on3Id (avoids bare-name collisions).
+    player?.on3Id && /^\d+$/.test(String(player.on3Id))
+      ? `${String(slug || '')
+          .trim()
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '')}-${player.on3Id}`
+      : null,
   ]
     .map((s) => String(s || '').trim())
     .filter(Boolean);
@@ -142,6 +150,41 @@ async function hydrateFilmTraitsFromOn3({
       slug: key,
       recruitSlug: resolved.recruitSlug,
     };
+  }
+
+  // Reject On3 identity collisions (e.g. denairo-girton-jr hydrated as Tramond Collins / 258942).
+  try {
+    const {
+      hasSlugNameFirstMismatch,
+      explainSlugNameMismatch,
+      firstNameToken,
+    } = require('./recruit-identity-collision');
+    const profileName = String(profile.name || profile.fullName || '').trim();
+    const expectedName = String(playerName || player?.name || player?.fullName || '').trim();
+    const slugMismatch =
+      profileName && hasSlugNameFirstMismatch({ slug: key, name: profileName });
+    const expectedFirst = firstNameToken(expectedName);
+    const profileFirst = firstNameToken(profileName);
+    const nameSwap =
+      expectedFirst &&
+      profileFirst &&
+      expectedFirst !== profileFirst &&
+      !expectedFirst.startsWith(profileFirst) &&
+      !profileFirst.startsWith(expectedFirst);
+    if (slugMismatch || nameSwap) {
+      return {
+        ok: false,
+        error: 'on3_identity_collision',
+        slug: key,
+        recruitSlug: resolved.recruitSlug,
+        detail: explainSlugNameMismatch({ slug: key, name: profileName }) || {
+          expectedName,
+          profileName,
+        },
+      };
+    }
+  } catch {
+    /* ignore guard load failures — continue hydrate */
   }
 
   // Prefer videos already mapped on profile; else extract from raw pageProps if present
