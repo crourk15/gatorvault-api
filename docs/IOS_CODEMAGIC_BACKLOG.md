@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Full-profile stamps overlay live On3 Industry ranks (Wright #1 not baked #208) — API
 - [x] 2028 allowlist intel continuous coverage (Wilkes/McCary/Bailey/Hines/Jamarcus) + chase process logs — API / recruiting-light sweep
 - [x] Home NOW ticker lines: named movement + lite-warm `/hub/ticker` refresh (API — no Codemagic)
 - [x] Footprint Class 2028 commits: rev-gate + heal poisoned 0-commit runtime plates; lite warm refreshes footprint/commits on cron (API — no Codemagic)
