@@ -140,7 +140,8 @@ function inferProfileKind(profile) {
 }
 
 /**
- * Cheap live garnish — On3/RPM (+ locked commits). Dossier body stays stamped.
+ * Cheap live garnish — On3 Industry ranks + RPM (+ locked commits).
+ * Dossier narrative body stays stamped; rank/rating/odds refresh every GET.
  */
 function overlayLiveRpm(profile, recruiting) {
   if (!profile || typeof profile !== 'object') return profile;
@@ -152,6 +153,36 @@ function overlayLiveRpm(profile, recruiting) {
   const player = { ...(profile.player || {}) };
   if (rpm != null) player.ufRpmPct = rpm;
   if (committedTo) player.committedTo = committedTo;
+
+  // Live On3 Industry Consensus — stamps bake ranks and go stale (Wright #208 vs #1).
+  const natl = pickRankNumber(recruiting?.natlRank ?? recruiting?.nationalRank);
+  const posRank = pickRankNumber(recruiting?.posRank ?? recruiting?.positionRank);
+  const stateRank = pickRankNumber(recruiting?.stateRank);
+  const rating = pickRankNumber(recruiting?.rating ?? recruiting?.displayRating ?? recruiting?.compositeRating);
+  const stars = pickRankNumber(recruiting?.stars ?? recruiting?.consensusStars);
+  if (natl != null) player.rankingNational = natl;
+  if (posRank != null) player.rankingPosition = posRank;
+  if (stateRank != null) player.rankingState = stateRank;
+  if (rating != null) player.compositeRating = rating;
+  if (stars != null && stars > 0) player.stars = stars;
+
+  let highSchoolProfile =
+    profile.highSchoolProfile && typeof profile.highSchoolProfile === 'object'
+      ? { ...profile.highSchoolProfile }
+      : null;
+  if (highSchoolProfile) {
+    const stats = {
+      ...(highSchoolProfile.stats && typeof highSchoolProfile.stats === 'object'
+        ? highSchoolProfile.stats
+        : {}),
+    };
+    if (natl != null) stats.natlRank = natl;
+    if (posRank != null) stats.posRank = posRank;
+    if (stateRank != null) stats.stateRank = stateRank;
+    if (rating != null) stats.rating = rating;
+    if (stars != null && stars > 0) stats.stars = stars;
+    highSchoolProfile = { ...highSchoolProfile, stats };
+  }
 
   let futurecastSummary =
     profile.futurecastSummary && typeof profile.futurecastSummary === 'object'
@@ -195,11 +226,19 @@ function overlayLiveRpm(profile, recruiting) {
   return {
     ...profile,
     player,
+    ...(highSchoolProfile ? { highSchoolProfile } : {}),
     futurecastSummary,
     lastUpdated: new Date().toISOString(),
     servedFrom: 'stamp',
     rpmLive: true,
+    ranksLive: natl != null || posRank != null || stateRank != null || rating != null,
   };
+}
+
+function pickRankNumber(value) {
+  if (value == null || value === '') return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
 }
 
 async function loadLiveRecruiting(slug) {
