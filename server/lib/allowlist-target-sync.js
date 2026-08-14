@@ -209,7 +209,7 @@ function profilePatchFromOn3(profile, classYear) {
     classYear: profile.classYear || classYear,
     committedTo: ufCommitted ? 'Florida' : committedTo,
     status: committedTo ? 'committed' : 'uncommitted',
-    category: committedTo ? 'recruit' : 'target',
+    // category decided in mergeAllowlistPlayerPatch (allowlist gate)
     commitDate: commit?.committedDate || null,
     on3Source: 'on3-allowlist-sync',
     stars,
@@ -357,6 +357,19 @@ function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, cl
       ? '247-uf-board-sync'
       : existing?.boardSource || localPlayer?.boardSource || null;
 
+  const allowlisted = isAllowlistedTarget({
+    slug,
+    classYear: resolvedYear,
+    category: 'target',
+  });
+  const nextCategory = committedTo
+    ? 'recruit'
+    : allowlisted
+      ? 'target'
+      : existing?.category === 'target'
+        ? 'recruit'
+        : existing?.category || 'recruit';
+
   let merged = applyEditorialPositionToPlayer({
     ...localPlayer,
     ...existing,
@@ -367,7 +380,7 @@ function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, cl
     pos: profilePatch.pos || existing?.pos || localPlayer?.pos,
     committedTo: ufCommitted ? 'Florida' : committedTo,
     status: committedTo ? 'committed' : 'uncommitted',
-    category: committedTo ? 'recruit' : 'target',
+    category: nextCategory,
     commitDate: profilePatch.commitDate ?? existing?.commitDate ?? localPlayer?.commitDate ?? null,
     commitmentSyncAt: new Date().toISOString(),
     commitmentSource: profilePatch.committedTo ? 'on3-allowlist-sync' : existing?.commitmentSource || null,
@@ -612,12 +625,13 @@ async function syncSlugFromOn3(slug, classYear) {
       mergeAllowlistPlayerPatch(existing, localJsonPlayer(slug), profilePatch, slug, classYear, playerName)
     );
     // Preserve identity rebuild fields that patch may not carry
+    const allowlisted = isAllowlistedTarget({ slug, classYear, category: 'target' });
     merged = {
       ...p,
       ...merged,
       committedTo: ufCommitted ? 'Florida' : committedTo,
       status: committedTo ? 'committed' : 'uncommitted',
-      category: committedTo ? 'recruit' : 'target',
+      category: committedTo ? 'recruit' : allowlisted ? 'target' : 'recruit',
     };
 
     if (
