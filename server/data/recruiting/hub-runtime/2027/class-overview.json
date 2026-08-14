@@ -1,0 +1,17 @@
+{
+  "classRank": "#8",
+  "blueChip": "68%",
+  "commits": "25",
+  "commitLabel": "Commits",
+  "avgRating": "89.9",
+  "trendRank": "Stable",
+  "trendBlueChip": "Rising",
+  "trendCommits": "Rising",
+  "trendRating": "Rising",
+  "sparklines": {
+    "classRank": null,
+    "blueChip": null,
+    "commits": null,
+    "avgRating": null
+  }
+}

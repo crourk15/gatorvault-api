@@ -1,0 +1,88 @@
+{
+  "year": 2028,
+  "title": "Florida Recruiting",
+  "subtitle": "Who Florida is chasing — movement, board, and beat intel.",
+  "classYears": [
+    2026,
+    2027,
+    2028
+  ],
+  "ticker": [
+    "Blue chip % at 100%",
+    "1 commits locked for 2028",
+    "Quinton Rolle Jr — Offer from Liberty Flames",
+    "Malakhi Dudley — Offer from Nebraska Cornhuskers",
+    "Anthony Howard Jr — unofficial visit · Florida State Seminoles",
+    "Pj Evans — unofficial visit · Ole Miss Rebels"
+  ],
+  "classOverview": {
+    "classRank": "—",
+    "blueChip": "100%",
+    "commits": "1",
+    "commitLabel": "Commits",
+    "avgRating": "90.2",
+    "trendRank": "Stable",
+    "trendBlueChip": "Rising",
+    "trendCommits": "Rising",
+    "trendRating": "Rising",
+    "sparklines": {
+      "classRank": null,
+      "blueChip": null,
+      "commits": null,
+      "avgRating": null
+    }
+  },
+  "classOverviewAll": {
+    "2026": {
+      "classRank": "#15",
+      "blueChip": "59%",
+      "commits": "22",
+      "commitLabel": "Signees",
+      "avgRating": "89.7",
+      "trendRank": "Stable",
+      "trendBlueChip": "Rising",
+      "trendCommits": "Rising",
+      "trendRating": "Rising",
+      "sparklines": {
+        "classRank": null,
+        "blueChip": null,
+        "commits": null,
+        "avgRating": null
+      }
+    },
+    "2027": {
+      "classRank": "#8",
+      "blueChip": "68%",
+      "commits": "25",
+      "commitLabel": "Commits",
+      "avgRating": "89.9",
+      "trendRank": "Stable",
+      "trendBlueChip": "Rising",
+      "trendCommits": "Rising",
+      "trendRating": "Rising",
+      "sparklines": {
+        "classRank": null,
+        "blueChip": null,
+        "commits": null,
+        "avgRating": null
+      }
+    },
+    "2028": {
+      "classRank": "—",
+      "blueChip": "100%",
+      "commits": "1",
+      "commitLabel": "Commits",
+      "avgRating": "90.2",
+      "trendRank": "Stable",
+      "trendBlueChip": "Rising",
+      "trendCommits": "Rising",
+      "trendRating": "Rising",
+      "sparklines": {
+        "classRank": null,
+        "blueChip": null,
+        "commits": null,
+        "avgRating": null
+      }
+    }
+  }
+}

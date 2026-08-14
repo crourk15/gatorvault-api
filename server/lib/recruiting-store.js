@@ -396,7 +396,12 @@ function normalizePlayer(raw) {
     classYear: normalizeClassYear(raw),
     school: raw.school || '',
     htWt: raw.htWt || raw.ht_wt || '',
-    stars: raw.stars || 0,
+    stars:
+      raw.stars != null && raw.stars !== ''
+        ? Number(raw.stars)
+        : raw.consensusStars != null && raw.consensusStars !== ''
+          ? Number(raw.consensusStars)
+          : null,
     rating: raw.rating != null ? Number(raw.rating) : null,
     ratingOverride: raw.ratingOverride != null ? Number(raw.ratingOverride) : null,
     vaultGrade: raw.vaultGrade != null ? Number(raw.vaultGrade) : raw.ratingOverride != null ? Number(raw.ratingOverride) : null,
@@ -878,6 +883,21 @@ function preservePlayerFields(existing, incoming) {
   ['natlRank', 'posRank', 'stateRank', 'rating', 'ratingOverride', 'vaultGrade', 'vaultGradeUpdatedAt', 'stars', 'htWt', 'school', 'on3Id', 'commitDate', 'classYear', 'staff_lead_id', 'secondary_recruiter_id', 'hometownCity', 'hometownState', 'stateFips', 'pinLat', 'pinLng'].forEach((field) => {
     if (merged[field] == null && existing[field] != null) merged[field] = existing[field];
   });
+  // Never let a partial upsert (visits/offers/etc.) wipe a real star count with 0.
+  {
+    const incomingStars = Number(incoming?.stars);
+    const existingStars = Number(existing?.stars);
+    if (
+      Number.isFinite(existingStars) &&
+      existingStars > 0 &&
+      (!Number.isFinite(incomingStars) || incomingStars <= 0)
+    ) {
+      merged.stars = existingStars;
+      if (existing.starsDisplay && !incoming?.starsDisplay) {
+        merged.starsDisplay = existing.starsDisplay;
+      }
+    }
+  }
   if (merged.school && !identityValidator.isValidSchoolField(merged.school)) {
     merged.school = identityValidator.sanitizeSchoolField(existing?.school) || null;
   }
