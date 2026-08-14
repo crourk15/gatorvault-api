@@ -320,8 +320,25 @@ function overlayJsonIntelFields(players) {
       patch.stars = localStars;
       if (src.consensusStars != null) patch.consensusStars = src.consensusStars;
     }
-    if (src.natlRank != null && (p.natlRank == null || Number(src.natlRank) < Number(p.natlRank))) {
+    // players.json is the On3 sync source of truth for hub class cards. Supabase
+    // rows often lag and were winning pos/state/rating (e.g. Pearl #19/#11 vs #17/#12).
+    // Always prefer JSON ranks/rating when present — not "better" numeric rank
+    // (state/pos can move worse and still be the live Industry Consensus).
+    if (src.natlRank != null && src.natlRank !== '') {
       patch.natlRank = src.natlRank;
+      patch.natl = src.natlRank;
+    }
+    if (src.posRank != null && src.posRank !== '') {
+      patch.posRank = src.posRank;
+    }
+    if (src.stateRank != null && src.stateRank !== '') {
+      patch.stateRank = src.stateRank;
+    }
+    if (src.rating != null && Number.isFinite(Number(src.rating))) {
+      patch.rating = Number(src.rating);
+    }
+    if (src.displayRating != null && Number.isFinite(Number(src.displayRating))) {
+      patch.displayRating = Number(src.displayRating);
     }
     if (src.skinny && String(src.skinny).trim()) patch.skinny = src.skinny;
     const localNote = String(src.profileNote || '').trim();
@@ -1626,5 +1643,6 @@ module.exports = {
   upsertTargetFromVisitIntel,
   storageMode,
   DATA_DIR,
-  PLAYERS_PATH
+  PLAYERS_PATH,
+  overlayJsonIntelFields
 };

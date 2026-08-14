@@ -19,7 +19,7 @@ const FOOTPRINT_CACHE_REV = 'fp3';
  * Bump when commit card meta (On3 ranks / rating plate) must invalidate durable
  * /var/data hub-runtime + deploy hub-snapshot that outlive players.json syncs.
  */
-const COMMITS_CACHE_REV = 'c4';
+const COMMITS_CACHE_REV = 'c5';
 
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
@@ -169,7 +169,7 @@ function parseHubSnapshotDoc(endpoint, doc) {
   }
   if (endpoint === 'commits') {
     const rev = meta?.cacheRev || doc.cacheRev || null;
-    // Reject pre-c4 durable/hub-snapshot plates so On3 rank syncs on players.json
+    // Reject pre-c5 durable/hub-snapshot plates so On3 rank syncs on players.json
     // are not masked by stale commit-card metaLines until the next warm cron.
     if (rev !== COMMITS_CACHE_REV) return null;
     return Array.isArray(items) ? items : null;

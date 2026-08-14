@@ -70,10 +70,10 @@ describe('commits cache rev', () => {
     assert.equal(raw.meta.cacheRev, cache.COMMITS_CACHE_REV);
   });
 
-  it('hub-snapshot 2027 commits are c4 with Pearl #17/#12', () => {
-    const snap = path.join(__dirname, '../../hub-snapshot/2027/commits.json');
+  it('hub-runtime 2027 commits are c5 with Pearl #17/#12', () => {
+    const snap = path.join(__dirname, '../../data/recruiting/hub-runtime/2027/commits.json');
     const doc = JSON.parse(fs.readFileSync(snap, 'utf8'));
-    assert.equal(doc.meta.cacheRev, 'c4');
+    assert.equal(doc.meta.cacheRev, 'c5');
     const pearl = (doc.items || []).find((p) => /pearl/i.test(p.name || ''));
     assert.ok(pearl, 'Elias Pearl must be in 2027 commits snapshot');
     assert.match(String(pearl.metaLine || ''), /#17 WR/);

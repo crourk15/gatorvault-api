@@ -121,7 +121,7 @@ describe('Tier B hub GET no-sync + durable snapshots', () => {
       'utf8'
     );
     assert.match(src, /hub:elite:commits:\$\{COMMITS_CACHE_REV\}:\$\{year\}/);
-    assert.match(src, /COMMITS_CACHE_REV = 'c4'/);
+    assert.match(src, /COMMITS_CACHE_REV = 'c5'/);
     assert.doesNotMatch(src, /hub:elite:commits:v3:\$\{year\}/);
     assert.doesNotMatch(src, /hub:elite:commits:\$\{year\}/);
   });
