@@ -1,7 +1,7 @@
 {
   "version": 1,
   "description": "Verified On3 recruit slugs for locked 2028 UF allowlist targets",
-  "updatedAt": "2026-08-04T12:20:00.000Z",
+  "updatedAt": "2026-08-14T12:53:28.670Z",
   "slugs": {
     "hudson-west": "hudson-west-284243",
     "phoenix-evans": "phoenix-evans-243873",
@@ -44,7 +44,8 @@
     "jermaine-cobbins": "jermaine-cobbins-251062",
     "tyzon-swann": "tyzon-swann-249251",
     "tyree-mannings-jr": "tyree-mannings-jr-244931",
-    "dion-edwards": "dion-edwards-271327"
+    "dion-edwards": "dion-edwards-271327",
+    "jaxen-cepeda": "jaxen-cepeda-287390"
   },
-  "count": 42
+  "count": 43
 }
