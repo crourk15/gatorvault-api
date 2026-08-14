@@ -221,7 +221,7 @@
       "slug": "jermaine-cobbins",
       "name": "Jermaine Cobbins",
       "pos": "ATH",
-      "school": "Springfield, TN",
+      "school": "Springfield (Springfield, TN)",
       "state": "TN",
       "stars": 4,
       "rating": 93.56227208976156,
@@ -236,14 +236,14 @@
       "slug": "man-robinson",
       "name": "Man Robinson",
       "pos": "ATH",
-      "school": "IMG Academy, FL",
-      "state": "FL",
+      "school": "IMG Academy, KY",
+      "state": "KY",
       "stars": 3,
       "rating": 85.66666666666667,
-      "natlRank": 364,
+      "natlRank": 391,
       "posRank": 40,
-      "stateRank": 51,
-      "inState": true,
+      "stateRank": 49,
+      "inState": false,
       "committedTo": null,
       "ufProbability": 0.2
     },
@@ -251,7 +251,7 @@
       "slug": "ryan-drakeford",
       "name": "Ryan Drakeford",
       "pos": "S",
-      "school": "Quince Orchard, MD",
+      "school": "Quince Orchard (Gaithersburg, MD)",
       "state": "MD",
       "stars": 3,
       "rating": 86.04528985507247,
@@ -522,7 +522,7 @@
       "school": "Tampa Bay Tech (Tampa, FL)",
       "state": "FL",
       "inState": true,
-      "stars": null,
+      "stars": 0,
       "natlRank": null,
       "posRank": null,
       "stateRank": null,
@@ -556,7 +556,7 @@
       "school": "East Lake (Tarpon Springs, FL)",
       "state": "FL",
       "inState": true,
-      "stars": null,
+      "stars": 0,
       "natlRank": null,
       "posRank": null,
       "stateRank": null,
@@ -573,7 +573,7 @@
       "school": "Asheville (Asheville, NC)",
       "state": "NC",
       "inState": false,
-      "stars": null,
+      "stars": 0,
       "htWt": null,
       "skinny": "ATH · Asheville, NC · recent UF offer · Gators trending up"
     },
@@ -658,7 +658,10 @@
       "committedTo": null,
       "ufProbability": 0.49,
       "ufRpmPct": 49,
-      "notes": "Locked allowlist — Chatman DL / film desk."
+      "notes": "Locked allowlist — Chatman DL / film desk.",
+      "rating": 92.79963768115941,
+      "posRank": 6,
+      "stateRank": 8
     },
     {
       "slug": "antijuan-wilkes-jr",
@@ -670,17 +673,22 @@
       "natlRank": 16,
       "inState": false,
       "committedTo": null,
-      "notes": "Alderman board lock."
+      "notes": "Alderman board lock.",
+      "rating": 95.05,
+      "posRank": 2,
+      "stateRank": 1
     },
     {
       "slug": "nehemiah-mccary",
       "name": "Nehemiah McCary",
       "pos": "DL",
-      "school": null,
-      "state": null,
-      "stars": null,
+      "school": "Maplesville (Maplesville, AL)",
+      "state": "AL",
+      "stars": 4,
       "committedTo": null,
-      "notes": "Alderman board lock."
+      "notes": "Alderman board lock.",
+      "inState": false,
+      "rating": 92
     },
     {
       "slug": "samuel-bailey",
@@ -693,17 +701,25 @@
       "committedTo": null,
       "ufProbability": 0.2,
       "ufRpmPct": 20,
-      "notes": "Alderman board lock."
+      "notes": "Alderman board lock.",
+      "inState": false,
+      "rating": 92.8086956521739,
+      "posRank": 8,
+      "stateRank": 3
     },
     {
       "slug": "derrell-hines-jr",
       "name": "Derrell Hines Jr.",
       "pos": null,
-      "school": null,
+      "school": "Carrollwood Day (Tampa, FL)",
       "committedTo": null,
       "ufProbability": 0.18,
       "ufRpmPct": 18,
-      "notes": "Alderman board lock."
+      "notes": "Alderman board lock.",
+      "state": "FL",
+      "inState": false,
+      "rating": 90,
+      "stars": 4
     },
     {
       "slug": "denairo-girton-jr",
@@ -711,9 +727,14 @@
       "pos": "S",
       "school": "Great Mills (Lexington Park, MD)",
       "state": "MD",
-      "stars": null,
+      "stars": 4,
       "committedTo": null,
-      "notes": "Locked allowlist — Beat Desk / film desk (identity hardened)."
+      "notes": "Locked allowlist — Beat Desk / film desk (identity hardened).",
+      "inState": false,
+      "rating": 91.23188405797102,
+      "natlRank": 142,
+      "posRank": 14,
+      "stateRank": 6
     }
   ],
   "updatedAt": "2026-08-13T13:46:15.473Z"

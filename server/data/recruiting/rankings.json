@@ -1,26 +1,26 @@
 [
   {
     "classYear": 2026,
-    "nationalRank": 16,
+    "nationalRank": 15,
     "secRank": 8,
-    "classScore": 89.75,
+    "classScore": 89.670307917889,
     "source": "on3",
-    "updatedAt": "2026-06-05T20:46:11.026Z"
+    "updatedAt": "2026-08-14T00:01:06.226Z"
   },
   {
     "classYear": 2027,
     "nationalRank": 8,
     "secRank": 3,
-    "classScore": 91.588948931606,
+    "classScore": 91.716417099799,
     "source": "on3",
-    "updatedAt": "2026-07-11T05:06:12.861Z"
+    "updatedAt": "2026-08-14T00:01:07.617Z"
   },
   {
     "classYear": 2028,
     "nationalRank": null,
     "secRank": null,
-    "classScore": 88.911036314815,
+    "classScore": 88.889297184381,
     "source": "on3",
-    "updatedAt": "2026-07-04T13:56:49.127Z"
+    "updatedAt": "2026-08-14T00:01:07.671Z"
   }
 ]
