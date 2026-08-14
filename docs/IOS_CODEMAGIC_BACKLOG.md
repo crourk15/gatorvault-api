@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] App Store **1.0.15** accepted / eligible for distribution (Aug 14, 2026) — member announce email path live via Admin Hub
 - [x] Jaxen Cepeda 2028 OT Vault Scouting (Dalton Risner comp) + allowlist seed after Florida offer/game-day visit — API
 - [x] Full-profile stamps overlay live On3 Industry ranks (Wright #1 not baked #208) — API
 - [x] 2028 allowlist intel continuous coverage (Wilkes/McCary/Bailey/Hines/Jamarcus) + chase process logs — API / recruiting-light sweep
