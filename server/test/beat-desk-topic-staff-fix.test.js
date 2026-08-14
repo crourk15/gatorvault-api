@@ -48,6 +48,16 @@ describe('Beat Desk topic staff/promo fix', () => {
     assert.equal(resolvePlayerFromTextSync(promo), null);
   });
 
+  it('blocks GatorsFB birthday tributes from becoming recruit topics', () => {
+    const { isPersonalTributeIntel } = require('../lib/beat-intel-prefilter');
+    const text = 'Happy Birthday 1️⃣5️⃣ @TimTebow | #GoGators https://t.co/R1ffTF8iij';
+    assert.equal(isPersonalTributeIntel(text), true);
+    assert.equal(isSubscribePromoIntel(text), true);
+    assert.equal(isValidPlayerName('Happy Birthday'), false);
+    assert.equal(extractPlayerFromText(text), null);
+    assert.equal(resolvePlayerFromTextSync(text), null);
+  });
+
   it('still resolves real named recruits', () => {
     const text = 'Florida RBs coach Chris Foster has made a great impression on 2028 RB Jacez Walton early.';
     const hit = resolvePlayerFromTextSync(text);

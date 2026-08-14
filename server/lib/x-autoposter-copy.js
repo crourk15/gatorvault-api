@@ -189,6 +189,12 @@ function extractAllPlayerNameCandidates(text) {
 }
 
 function extractPlayerFromText(text) {
+  try {
+    const { isPersonalTributeIntel } = require('./beat-intel-prefilter');
+    if (isPersonalTributeIntel?.(text)) return null;
+  } catch {
+    /* optional */
+  }
   const variants = [String(text || ''), normalizeTextForNameExtract(text)].filter(Boolean);
   const patterns = [
     new RegExp(`\\b(?:Class of )?(20\\d{2})\\s+(?:\\d+-Star\\s+)?(?:${POS_TOKEN}\\s+)(${NAME_CHUNK})\\b`),

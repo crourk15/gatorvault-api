@@ -58,6 +58,13 @@ const INVALID_NAME_PHRASES = [
   /^recruiting\s+intel$/i,
   /^best\s+deal\s+we['’]?ve$/i,
   /^best\s+deal$/i,
+  // Program tribute / greeting phrases that NAME_CHUNK otherwise treats as people.
+  /^happy\s+birthday$/i,
+  /^birthday\s+wishes$/i,
+  /^happy\s+anniversary$/i,
+  /^fathers?\s+day$/i,
+  /^mothers?\s+day$/i,
+  /^go\s+gators$/i,
 ];
 
 function isValidPlayerName(name) {
