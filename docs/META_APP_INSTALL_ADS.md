@@ -26,3 +26,11 @@ iOS 14+ App Install campaigns need the Facebook SDK reporting conversion data. U
 ## Organic posts (no spend)
 
 Page/group image posts with App Store URL only -- separate from paid App Install campaigns.
+
+## New ad paste pack (creatives + copy)
+
+Ready-to-upload Meta sizes + Ads Manager copy:
+
+→ [`docs/promo/open-the-vault/META-APP-INSTALL-AD.md`](./promo/open-the-vault/META-APP-INSTALL-AD.md)
+
+Exports folder: `docs/promo/open-the-vault/meta-exports/` (1080 feed, 9:16 story, reel).
