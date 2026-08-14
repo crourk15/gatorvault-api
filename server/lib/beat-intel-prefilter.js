@@ -40,9 +40,34 @@ const GENERIC_INTEL_RES = [
 /**
  * Soft-sell / subscribe promos (Athletic, Gators Online $1, etc.) — never Beat Desk packets.
  */
+/**
+ * Program birthday / tribute / merch greetings — not recruiting board topics.
+ * (GatorsFB "Happy Birthday @TimTebow" was falsely Opened as player "happy-birthday".)
+ */
+function isPersonalTributeIntel(text) {
+  const t = String(text || '');
+  if (!t.trim()) return false;
+  if (
+    /\b(happy\s+birthday|birthday\s+wishes|happy\s+anniversary|father'?s\s+day|mother'?s\s+day)\b/i.test(
+      t
+    )
+  ) {
+    return true;
+  }
+  if (/\b(wedding|anniversary|merch\s+drop|giveaway|vacation\s+photos?|personal\s+note)\b/i.test(t)) {
+    // Keep real recruit beats that mention "anniversary" of a commit/offer.
+    if (/\b(commit|commitment|offer|offered|visit|ov|recruit|target|prospect)\b/i.test(t)) {
+      return false;
+    }
+    return true;
+  }
+  return false;
+}
+
 function isSubscribePromoIntel(text) {
   const t = String(text || '');
   if (!t.trim()) return false;
+  if (isPersonalTributeIntel(t)) return true;
   if (/\bgators?\s+online\b/i.test(t) && /(\$\s*1|subscribe|join|membership)/i.test(t)) return true;
   if (/\bthe\s*athletic\b|theathletic\.com/i.test(t) && /(\$\s*1|subscribe|join\s+today|full\s+year|membership)/i.test(t)) {
     return true;
@@ -166,6 +191,7 @@ function isCorruptedOrHeadlinePhrase(text) {
 function isGenericNonPlayerIntel(text) {
   const t = normalizePhrase(text);
   if (!t) return true;
+  if (isPersonalTributeIntel(text)) return true;
   if (isSubscribePromoIntel(text)) return true;
   if (isCorruptedOrHeadlinePhrase(t)) return true;
   if (PREVIEW_HEADER_RES.some((re) => re.test(t))) return true;
@@ -978,6 +1004,7 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
 module.exports = {
   normalizePhrase,
   isCorruptedOrHeadlinePhrase,
+  isPersonalTributeIntel,
   isSubscribePromoIntel,
   isGenericNonPlayerIntel,
   hasStrongRecruitingSignals,

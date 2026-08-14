@@ -105,7 +105,7 @@ function classifyHubDeskBeat(text, post = null) {
   const prefilter = require('./beat-intel-prefilter');
   const t = String(text || '').trim();
   if (!t) return null;
-  if (prefilter.isSubscribePromoIntel?.(t)) return null;
+  if (prefilter.isPersonalTributeIntel?.(t) || prefilter.isSubscribePromoIntel?.(t)) return null;
 
   if (looksLikeNamelessRecruitTeaser(t, post)) {
     return null;

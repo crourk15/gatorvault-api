@@ -158,6 +158,13 @@ function resolvePlayerFromTextSync(text) {
   const raw = String(text || '').trim();
   if (!raw) return null;
 
+  try {
+    const { isPersonalTributeIntel } = require('./beat-intel-prefilter');
+    if (isPersonalTributeIntel?.(raw)) return null;
+  } catch {
+    /* optional */
+  }
+
   let teaser = null;
   try {
     teaser = require('./beat-teaser-resolve');
