@@ -1,1 +1,300 @@
-{"lastUpdated":"2026-08-13T01:56:11.298Z","source":"recruiting-store","player":{"id":"cacc4744-17e6-585d-8f64-0378883b7c77","fullName":"DeNairo Girton Jr.","slug":"denairo-girton-jr","classYear":2028,"position":"S","status":"HS","height":73,"weight":180,"hometown":"Lexington Park","state":"MD","highSchool":"Great Mills (Lexington Park, MD)","stars":4,"compositeRating":91.25,"rankingNational":138,"rankingPosition":15,"rankingState":5,"committedTo":null,"ufFitScore":73,"fitScoreBreakdown":null,"movementHistory":[],"volatilityScore":0},"highSchoolProfile":{"id":"denairo-girton-jr","playerId":"cacc4744-17e6-585d-8f64-0378883b7c77","offers":[],"stats":{"stars":4,"natlRank":138,"posRank":15,"stateRank":5,"rating":91.25,"on3Id":"283189"},"recruitingNotes":"Florida tracking — first Gainesville visit late June; connected with Chris Collins. On3 RPM led by Penn State.","discoveryScore":null,"visitHistory":[],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":null,"movementHistory":[],"signals":[{"id":"cacc4744-17e6-585d-8f64-0378883b7c77-staff-note","playerId":"cacc4744-17e6-585d-8f64-0378883b7c77","signalType":"EVALUATION_NOTE","signalValue":{"note":"Florida tracking — first Gainesville visit late June; connected with Chris Collins. On3 RPM led by Penn State.","source":"recruiting-store"},"createdAt":"2026-08-13T01:42:43.836Z"},{"id":"cacc4744-17e6-585d-8f64-0378883b7c77-staff-flag","playerId":"cacc4744-17e6-585d-8f64-0378883b7c77","signalType":"STAFF_FLAG","signalValue":{"note":"Listed on FutureCast early target board","classYear":2028},"createdAt":"2026-08-13T01:42:43.836Z"}],"related":[{"id":"94e6a1ee-8b3b-5234-8285-3eaab592fcb8","slug":"antonio-thomas-jr","fullName":"Antonio Thomas Jr","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":41,"ufConfidence":49,"rank":1,"stars":4,"rating":94.95618279569892,"compositeScore":94.95618279569892,"nationalRank":17,"natlRank":17,"posRank":4,"stateRank":5,"state":"FL","school":"Carrollwood Day (Tampa, FL)","committedTo":null,"isCommittedToUF":false},{"id":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe","slug":"izayah-vickers","fullName":"Izayah Vickers","classYear":2028,"position":"CB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":33,"ufConfidence":42,"rank":2,"stars":4,"rating":91.54710144927536,"compositeScore":91.54710144927536,"nationalRank":117,"natlRank":117,"posRank":12,"stateRank":18,"state":"FL","school":"Florida State Univ. School (Tallahassee, FL)","committedTo":null,"isCommittedToUF":false},{"id":"0f878544-f0c1-5ee4-8195-cf4f1b739736","slug":"andre-alexander","fullName":"Andre Alexander","classYear":2028,"position":"LB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":23,"ufConfidence":28,"rank":3,"stars":4,"rating":92.24057971014493,"compositeScore":92.24057971014493,"nationalRank":72,"natlRank":72,"posRank":4,"stateRank":9,"state":"VA","school":"IMG Academy (Chesapeake, VA)","committedTo":null,"isCommittedToUF":false},{"id":"5e60722f-9da8-5e10-8766-711fbba9c76e","slug":"cassell-cruickshank","fullName":"Cassell Cruickshank","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":21,"ufConfidence":24,"rank":4,"stars":4,"rating":95.22258064516129,"compositeScore":95.22258064516129,"nationalRank":14,"natlRank":14,"posRank":3,"stateRank":2,"state":"NC","school":"E E Smith (Fayetteville, NC)","committedTo":null,"isCommittedToUF":false},{"id":"9382b81b-159d-554e-83b6-02a4d4cdcf53","slug":"bubba-brown","fullName":"Bubba Brown","classYear":2028,"position":"WR","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":19,"ufConfidence":23,"rank":5,"stars":4,"rating":91.91340579710146,"compositeScore":91.91340579710146,"nationalRank":95,"natlRank":95,"posRank":15,"stateRank":12,"state":"FL","school":"Lowndes (Valdosta, GA)","committedTo":null,"isCommittedToUF":false},{"id":"0c2e2ddb-6d7b-5689-88c9-8733394b57a0","slug":"kaleb-ballard","fullName":"Kaleb Ballard","classYear":2028,"position":"TE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":10,"ufConfidence":17,"rank":6,"stars":4,"rating":92.63260869565217,"compositeScore":92.63260869565217,"nationalRank":200,"natlRank":200,"posRank":1,"stateRank":2,"state":"AL","school":"Wetumpka (Wetumpka, AL)","committedTo":null,"isCommittedToUF":false}],"portalPredictions":{"predictions":[{"school":"Penn State","score":38,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"},{"school":"Florida","score":26,"sourceType":"MODEL","predictorId":"gatorvault","status":"ACTIVE"},{"school":"Maryland","score":23,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"}],"intel":{"portalLikelihood":0,"depthChartRisk":0,"snapShareScore":0,"volatility":0}},"fitIntel":null,"competingSchools":[{"school":"Penn State","rankNow":1,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":38},{"school":"Maryland","rankNow":2,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":23}],"futurecastSummary":{"ufProbability":26,"gvProbability":26,"predictedSchool":"Penn State","movementDelta":null,"fitScore":73,"volatilityScore":0},"vaultScouting":{"evaluation":"Girton is a rangy 6-1 / 180 Great Mills free-safety mold with center-field range and natural ball skills. Reads the quarterback, covers ground in long strides, and click-and-closes on intermediate stems. Wins with eyes and range before the frame fills — Bates mold, not a box thumper.","comparison":"Girton comps to Jessie Bates III — 6-1 / ~190 lean free-safety mold; center-field range, QB eyes, and ball skills over box thump (size-matched to Girton’s 6-1 / 180 frame).","projection":"Girton projects as special teams / package snaps Year 1, then compete for every-down free safety — starter upside as a rangy center-fielder who can grow into STAR looks as he adds mass.","strengths":["Girton reads the quarterback from deep and drives the sideline throw for clean interceptions — true center-field anticipation.","Girton covers hash-to-boundary with long strides and tracks the deep ball over the shoulder without panic.","Girton click-and-closes from off coverage — breaks on intermediate stems and arrives on time at the catch point.","Girton triggers downhill from a deep shell and is willing to finish in the alley when he diagnoses run."],"schemeFit":"Girton fits a length-first safety room that wants a deep-third / alley defender with range and ball production."},"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-13T01:56:11.411Z","slug":"denairo-girton-jr","profileKind":"prospect-2028"}}
+{
+  "lastUpdated": "2026-08-13T01:56:11.298Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "cacc4744-17e6-585d-8f64-0378883b7c77",
+    "fullName": "DeNairo Girton Jr.",
+    "slug": "denairo-girton-jr",
+    "classYear": 2028,
+    "position": "S",
+    "status": "HS",
+    "height": 73,
+    "weight": 180,
+    "hometown": "Lexington Park",
+    "state": "MD",
+    "highSchool": "Great Mills (Lexington Park, MD)",
+    "stars": 4,
+    "compositeRating": 91.23188405797102,
+    "rankingNational": 142,
+    "rankingPosition": 14,
+    "rankingState": 6,
+    "committedTo": null,
+    "ufFitScore": 73,
+    "fitScoreBreakdown": null,
+    "movementHistory": [],
+    "volatilityScore": 0
+  },
+  "highSchoolProfile": {
+    "id": "denairo-girton-jr",
+    "playerId": "cacc4744-17e6-585d-8f64-0378883b7c77",
+    "offers": [],
+    "stats": {
+      "stars": 4,
+      "natlRank": 142,
+      "posRank": 14,
+      "stateRank": 6,
+      "rating": 91.23188405797102,
+      "on3Id": "283189"
+    },
+    "recruitingNotes": "Florida tracking — first Gainesville visit late June; connected with Chris Collins. On3 RPM led by Penn State.",
+    "discoveryScore": null,
+    "visitHistory": [],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": null,
+  "movementHistory": [],
+  "signals": [
+    {
+      "id": "cacc4744-17e6-585d-8f64-0378883b7c77-staff-note",
+      "playerId": "cacc4744-17e6-585d-8f64-0378883b7c77",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "Florida tracking — first Gainesville visit late June; connected with Chris Collins. On3 RPM led by Penn State.",
+        "source": "recruiting-store"
+      },
+      "createdAt": "2026-08-13T01:42:43.836Z"
+    },
+    {
+      "id": "cacc4744-17e6-585d-8f64-0378883b7c77-staff-flag",
+      "playerId": "cacc4744-17e6-585d-8f64-0378883b7c77",
+      "signalType": "STAFF_FLAG",
+      "signalValue": {
+        "note": "Listed on FutureCast early target board",
+        "classYear": 2028
+      },
+      "createdAt": "2026-08-13T01:42:43.836Z"
+    }
+  ],
+  "related": [
+    {
+      "id": "94e6a1ee-8b3b-5234-8285-3eaab592fcb8",
+      "slug": "antonio-thomas-jr",
+      "fullName": "Antonio Thomas Jr",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 41,
+      "ufConfidence": 49,
+      "rank": 1,
+      "stars": 4,
+      "rating": 94.95618279569892,
+      "compositeScore": 94.95618279569892,
+      "nationalRank": 17,
+      "natlRank": 17,
+      "posRank": 4,
+      "stateRank": 5,
+      "state": "FL",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe",
+      "slug": "izayah-vickers",
+      "fullName": "Izayah Vickers",
+      "classYear": 2028,
+      "position": "CB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 33,
+      "ufConfidence": 42,
+      "rank": 2,
+      "stars": 4,
+      "rating": 91.54710144927536,
+      "compositeScore": 91.54710144927536,
+      "nationalRank": 117,
+      "natlRank": 117,
+      "posRank": 12,
+      "stateRank": 18,
+      "state": "FL",
+      "school": "Florida State Univ. School (Tallahassee, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0f878544-f0c1-5ee4-8195-cf4f1b739736",
+      "slug": "andre-alexander",
+      "fullName": "Andre Alexander",
+      "classYear": 2028,
+      "position": "LB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 23,
+      "ufConfidence": 28,
+      "rank": 3,
+      "stars": 4,
+      "rating": 92.24057971014493,
+      "compositeScore": 92.24057971014493,
+      "nationalRank": 72,
+      "natlRank": 72,
+      "posRank": 4,
+      "stateRank": 9,
+      "state": "VA",
+      "school": "IMG Academy (Chesapeake, VA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "5e60722f-9da8-5e10-8766-711fbba9c76e",
+      "slug": "cassell-cruickshank",
+      "fullName": "Cassell Cruickshank",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 21,
+      "ufConfidence": 24,
+      "rank": 4,
+      "stars": 4,
+      "rating": 95.22258064516129,
+      "compositeScore": 95.22258064516129,
+      "nationalRank": 14,
+      "natlRank": 14,
+      "posRank": 3,
+      "stateRank": 2,
+      "state": "NC",
+      "school": "E E Smith (Fayetteville, NC)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "9382b81b-159d-554e-83b6-02a4d4cdcf53",
+      "slug": "bubba-brown",
+      "fullName": "Bubba Brown",
+      "classYear": 2028,
+      "position": "WR",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 19,
+      "ufConfidence": 23,
+      "rank": 5,
+      "stars": 4,
+      "rating": 91.91340579710146,
+      "compositeScore": 91.91340579710146,
+      "nationalRank": 95,
+      "natlRank": 95,
+      "posRank": 15,
+      "stateRank": 12,
+      "state": "FL",
+      "school": "Lowndes (Valdosta, GA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0c2e2ddb-6d7b-5689-88c9-8733394b57a0",
+      "slug": "kaleb-ballard",
+      "fullName": "Kaleb Ballard",
+      "classYear": 2028,
+      "position": "TE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 10,
+      "ufConfidence": 17,
+      "rank": 6,
+      "stars": 4,
+      "rating": 92.63260869565217,
+      "compositeScore": 92.63260869565217,
+      "nationalRank": 200,
+      "natlRank": 200,
+      "posRank": 1,
+      "stateRank": 2,
+      "state": "AL",
+      "school": "Wetumpka (Wetumpka, AL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    }
+  ],
+  "portalPredictions": {
+    "predictions": [
+      {
+        "school": "Penn State",
+        "score": 38,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Florida",
+        "score": 26,
+        "sourceType": "MODEL",
+        "predictorId": "gatorvault",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Maryland",
+        "score": 23,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      }
+    ],
+    "intel": {
+      "portalLikelihood": 0,
+      "depthChartRisk": 0,
+      "snapShareScore": 0,
+      "volatility": 0
+    }
+  },
+  "fitIntel": null,
+  "competingSchools": [
+    {
+      "school": "Penn State",
+      "rankNow": 1,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 38
+    },
+    {
+      "school": "Maryland",
+      "rankNow": 2,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 23
+    }
+  ],
+  "futurecastSummary": {
+    "ufProbability": 26,
+    "gvProbability": 26,
+    "predictedSchool": "Penn State",
+    "movementDelta": null,
+    "fitScore": 73,
+    "volatilityScore": 0
+  },
+  "vaultScouting": {
+    "evaluation": "Girton is a rangy 6-1 / 180 Great Mills free-safety mold with center-field range and natural ball skills. Reads the quarterback, covers ground in long strides, and click-and-closes on intermediate stems. Wins with eyes and range before the frame fills — Bates mold, not a box thumper.",
+    "comparison": "Girton comps to Jessie Bates III — 6-1 / ~190 lean free-safety mold; center-field range, QB eyes, and ball skills over box thump (size-matched to Girton’s 6-1 / 180 frame).",
+    "projection": "Girton projects as special teams / package snaps Year 1, then compete for every-down free safety — starter upside as a rangy center-fielder who can grow into STAR looks as he adds mass.",
+    "strengths": [
+      "Girton reads the quarterback from deep and drives the sideline throw for clean interceptions — true center-field anticipation.",
+      "Girton covers hash-to-boundary with long strides and tracks the deep ball over the shoulder without panic.",
+      "Girton click-and-closes from off coverage — breaks on intermediate stems and arrives on time at the catch point.",
+      "Girton triggers downhill from a deep shell and is willing to finish in the alley when he diagnoses run."
+    ],
+    "schemeFit": "Girton fits a length-first safety room that wants a deep-third / alley defender with range and ball production."
+  },
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.209Z",
+    "slug": "denairo-girton-jr",
+    "profileKind": "prospect-2028",
+    "ranksSyncedAt": "2026-08-14T02:43:42.209Z"
+  }
+}

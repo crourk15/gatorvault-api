@@ -1,0 +1,421 @@
+{
+  "generatedAt": "2026-08-14T02:44:07.389Z",
+  "count": 69,
+  "note": "On3 Industry consensusOverallRank is null — not a GatorVault mapping miss",
+  "players": [
+    {
+      "slug": "bryson-hughley",
+      "name": "Bryson Hughley",
+      "year": 2026,
+      "on3Slug": "bryson-hughley-241290"
+    },
+    {
+      "slug": "cam-vaughn",
+      "name": "Cam Vaughn",
+      "year": 2026,
+      "on3Slug": "cam-vaughn-177233"
+    },
+    {
+      "slug": "corbett-yarbrough",
+      "name": "Corbett Yarbrough",
+      "year": 2026,
+      "on3Slug": "corbett-yarbrough-242037"
+    },
+    {
+      "slug": "derrick-mcbride-ii",
+      "name": "Derrick McBride II",
+      "year": 2026,
+      "on3Slug": "derrick-mcbride-ii-243364"
+    },
+    {
+      "slug": "jake-namnun",
+      "name": "Jake Namnun",
+      "year": 2026,
+      "on3Slug": "jake-namnun-174764"
+    },
+    {
+      "slug": "javion-romer",
+      "name": "Javion Romer",
+      "year": 2026,
+      "on3Slug": "javion-romer-236059"
+    },
+    {
+      "slug": "keil-mcgriffy",
+      "name": "Keil McGriffy",
+      "year": 2026,
+      "on3Slug": "keil-mcgriffy-161862"
+    },
+    {
+      "slug": "kharon-craig",
+      "name": "Kharon Craig",
+      "year": 2026,
+      "on3Slug": "kharon-craig-155665"
+    },
+    {
+      "slug": "ladarius-simmons",
+      "name": "La'Darius Simmons",
+      "year": 2026,
+      "on3Slug": "ladarius-simmons-175462"
+    },
+    {
+      "slug": "logan-rogers",
+      "name": "Logan Rogers",
+      "year": 2026,
+      "on3Slug": "logan-rogers-153698"
+    },
+    {
+      "slug": "randy-shavers-jr",
+      "name": "Randy Shavers Jr.",
+      "year": 2026,
+      "on3Slug": "randy-shavers-jr-284896"
+    },
+    {
+      "slug": "rj-wortman",
+      "name": "RJ Wortman",
+      "year": 2026,
+      "on3Slug": "rj-wortman-261542"
+    },
+    {
+      "slug": "andre-wise-jr",
+      "name": "Andre Wise Jr",
+      "year": 2027,
+      "on3Slug": "andre-wise-jr-282329"
+    },
+    {
+      "slug": "camden-morton",
+      "name": "Camden Morton",
+      "year": 2027,
+      "on3Slug": "camden-morton-242372"
+    },
+    {
+      "slug": "charles-jacobs",
+      "name": "Charles Jacobs",
+      "year": 2027,
+      "on3Slug": "charles-jacobs-289880"
+    },
+    {
+      "slug": "christian-bond",
+      "name": "Christian Bond",
+      "year": 2027,
+      "on3Slug": "christian-bond-284491"
+    },
+    {
+      "slug": "jack-evitts",
+      "name": "Jack Evitts",
+      "year": 2027,
+      "on3Slug": "jack-evitts-253673"
+    },
+    {
+      "slug": "jackson-smith",
+      "name": "Jackson Smith",
+      "year": 2027,
+      "on3Slug": "jackson-smith-174328"
+    },
+    {
+      "slug": "jaelyn-powell",
+      "name": "Jaelyn Powell",
+      "year": 2027,
+      "on3Slug": "jaelyn-powell-238589"
+    },
+    {
+      "slug": "jayden-haynes",
+      "name": "Jayden Haynes",
+      "year": 2027,
+      "on3Slug": "jayden-haynes-280989"
+    },
+    {
+      "slug": "joshua-jones",
+      "name": "Joshua Jones",
+      "year": 2027,
+      "on3Slug": "joshua-jones-178484"
+    },
+    {
+      "slug": "maddox-mcginnis",
+      "name": "Maddox McGinnis",
+      "year": 2027,
+      "on3Slug": "maddox-mcginnis-240374"
+    },
+    {
+      "slug": "prentice-mackyeon-jr",
+      "name": "Prentice Mackyeon Jr",
+      "year": 2027,
+      "on3Slug": "prentice-mackyeon-jr-260311"
+    },
+    {
+      "slug": "xay-mincey",
+      "name": "Xay Mincey",
+      "year": 2027,
+      "on3Slug": "xay-mincey-287627"
+    },
+    {
+      "slug": "barrett-price",
+      "name": "Barrett Price",
+      "year": 2028,
+      "on3Slug": "barrett-price-284012"
+    },
+    {
+      "slug": "blake-mccullough",
+      "name": "Blake Mccullough",
+      "year": 2028,
+      "on3Slug": "blake-mccullough-280842"
+    },
+    {
+      "slug": "brayden-doss",
+      "name": "Brayden Doss",
+      "year": 2028,
+      "on3Slug": "brayden-doss-260530"
+    },
+    {
+      "slug": "cameron-gleaton",
+      "name": "Cameron Gleaton",
+      "year": 2028,
+      "on3Slug": "cameron-gleaton-283565"
+    },
+    {
+      "slug": "cooper-martenson",
+      "name": "Cooper Martenson",
+      "year": 2028,
+      "on3Slug": "cooper-martenson-288764"
+    },
+    {
+      "slug": "dracen-martin",
+      "name": "Dracen Martin",
+      "year": 2028,
+      "on3Slug": "dracen-martin-250109"
+    },
+    {
+      "slug": "evan-larrick",
+      "name": "Evan Larrick",
+      "year": 2028,
+      "on3Slug": "evan-larrick-289124"
+    },
+    {
+      "slug": "gino-wang",
+      "name": "Gino Wang",
+      "year": 2028,
+      "on3Slug": "gino-wang-283449"
+    },
+    {
+      "slug": "gionni-lewis",
+      "name": "Gionni Lewis",
+      "year": 2028,
+      "on3Slug": "gionni-lewis-259579"
+    },
+    {
+      "slug": "hamilton-leserra",
+      "name": "Hamilton LeSerra",
+      "year": 2028,
+      "on3Slug": "hamilton-leserra-261674"
+    },
+    {
+      "slug": "jamarion-davis",
+      "name": "Jamarion Davis",
+      "year": 2028,
+      "on3Slug": "jamarion-davis-288736"
+    },
+    {
+      "slug": "jamarion-hillsman",
+      "name": "Jamarion Hillsman",
+      "year": 2028,
+      "on3Slug": "jamarion-hillsman-288175"
+    },
+    {
+      "slug": "jaylen-francis",
+      "name": "Jaylen Francis",
+      "year": 2028,
+      "on3Slug": "jaylen-francis-288751"
+    },
+    {
+      "slug": "john-odwyer",
+      "name": "John Odwyer",
+      "year": 2028,
+      "on3Slug": "john-odwyer-284631"
+    },
+    {
+      "slug": "jonah-bedford",
+      "name": "Jonah Bedford",
+      "year": 2028,
+      "on3Slug": "jonah-bedford-282763"
+    },
+    {
+      "slug": "kadyn-simon",
+      "name": "Kadyn Simon",
+      "year": 2028,
+      "on3Slug": "kadyn-simon-261191"
+    },
+    {
+      "slug": "kameron-hollins",
+      "name": "Kameron Hollins",
+      "year": 2028,
+      "on3Slug": "kameron-hollins-284881"
+    },
+    {
+      "slug": "luke-toland",
+      "name": "Luke Toland",
+      "year": 2028,
+      "on3Slug": "luke-toland-281827"
+    },
+    {
+      "slug": "maddon-martin",
+      "name": "Maddon Martin",
+      "year": 2028,
+      "on3Slug": "maddon-martin-250333"
+    },
+    {
+      "slug": "marcus-stracke",
+      "name": "Marcus Stracke",
+      "year": 2028,
+      "on3Slug": "marcus-stracke-285005"
+    },
+    {
+      "slug": "nikolay-petrushev",
+      "name": "Nikolay Petrushev",
+      "year": 2028,
+      "on3Slug": "nikolay-petrushev-290300"
+    },
+    {
+      "slug": "richard-roundtree-jr",
+      "name": "Richard Roundtree Jr.",
+      "year": 2028,
+      "on3Slug": "richard-roundtree-jr-284134"
+    },
+    {
+      "slug": "tj-bailey-jr",
+      "name": "Tj Bailey Jr",
+      "year": 2028,
+      "on3Slug": "tj-bailey-jr-261483"
+    },
+    {
+      "slug": "treiy-crenshaw",
+      "name": "Treiy Crenshaw",
+      "year": 2028,
+      "on3Slug": "treiy-crenshaw-285806"
+    },
+    {
+      "slug": "tucker-willis",
+      "name": "Tucker Willis",
+      "year": 2028,
+      "on3Slug": "tucker-willis-281995"
+    },
+    {
+      "slug": "turner-wilkie",
+      "name": "Turner Wilkie",
+      "year": 2028,
+      "on3Slug": "turner-wilkie-282685"
+    },
+    {
+      "slug": "adrian-reynolds",
+      "name": "Adrian Reynolds",
+      "year": 2029,
+      "on3Slug": "adrian-reynolds-284645"
+    },
+    {
+      "slug": "amarian-mcrae",
+      "name": "Amarian McRae",
+      "year": 2029,
+      "on3Slug": "amarian-mcrae-288616"
+    },
+    {
+      "slug": "brayden-boults",
+      "name": "Brayden Boults",
+      "year": 2029,
+      "on3Slug": "brayden-boults-260603"
+    },
+    {
+      "slug": "captain-rolle",
+      "name": "Captain Rolle",
+      "year": 2029,
+      "on3Slug": "captain-rolle-281222"
+    },
+    {
+      "slug": "derrick-hooker",
+      "name": "Derrick Hooker",
+      "year": 2029,
+      "on3Slug": "derrick-hooker-283699"
+    },
+    {
+      "slug": "eddison-king",
+      "name": "Eddison King",
+      "year": 2029,
+      "on3Slug": "eddison-king-260004"
+    },
+    {
+      "slug": "fredner-frederic-jr",
+      "name": "Fredner Frederic Jr",
+      "year": 2029,
+      "on3Slug": "fredner-frederic-jr-282697"
+    },
+    {
+      "slug": "jackson-jenkins",
+      "name": "Jackson Jenkins",
+      "year": 2029,
+      "on3Slug": "jackson-jenkins-285908"
+    },
+    {
+      "slug": "jacorey-shockley",
+      "name": "Jacorey Shockley",
+      "year": 2029,
+      "on3Slug": "jacorey-shockley-251094"
+    },
+    {
+      "slug": "james-allen",
+      "name": "James Allen",
+      "year": 2029,
+      "on3Slug": "james-allen-249476"
+    },
+    {
+      "slug": "jase-gibson",
+      "name": "Jase ‪Gibson ‬",
+      "year": 2029,
+      "on3Slug": "jase-gibson-283672"
+    },
+    {
+      "slug": "jd-jackson",
+      "name": "JD Jackson",
+      "year": 2029,
+      "on3Slug": "jd-jackson-286459"
+    },
+    {
+      "slug": "khayel-sam-fong-talia",
+      "name": "Khayel Sam Fong-Talia",
+      "year": 2029,
+      "on3Slug": "khayel-sam-fong-talia-281138"
+    },
+    {
+      "slug": "lord-malik-heru",
+      "name": "Lord Malik Heru",
+      "year": 2029,
+      "on3Slug": "lord-malik-heru-280714"
+    },
+    {
+      "slug": "matthew-pangaro",
+      "name": "Matthew Pangaro",
+      "year": 2029,
+      "on3Slug": "matthew-pangaro-284989"
+    },
+    {
+      "slug": "nolan-downes",
+      "name": "Nolan Downes",
+      "year": 2029,
+      "on3Slug": "nolan-downes-259465"
+    },
+    {
+      "slug": "timothy-cole",
+      "name": "Timothy Cole",
+      "year": 2029,
+      "on3Slug": "timothy-cole-288360"
+    },
+    {
+      "slug": "trey-wells",
+      "name": "Trey Wells",
+      "year": 2029,
+      "on3Slug": "trey-wells-284437"
+    },
+    {
+      "slug": "xzavier-corbin",
+      "name": "X'Zavier Corbin",
+      "year": 2029,
+      "on3Slug": "xzavier-corbin-269947"
+    }
+  ]
+}

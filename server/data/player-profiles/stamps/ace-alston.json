@@ -1,1 +1,74 @@
-{"lastUpdated":"2026-08-08T00:12:23.505Z","source":"recruiting-store","player":{"id":"238848","fullName":"Ace Alston","slug":"ace-alston","classYear":2027,"position":"CB","status":"HS","height":71,"weight":175,"hometown":"Cincinnati","state":"OH","highSchool":"Anderson (Cincinnati, OH)","stars":4,"compositeRating":93,"rankingNational":99,"rankingPosition":null,"rankingState":null,"committedTo":"Notre Dame","ufFitScore":null,"fitScoreBreakdown":null,"movementHistory":[],"volatilityScore":0},"highSchoolProfile":{"id":"ace-alston","playerId":"238848","offers":[],"stats":{"stars":4,"natlRank":99,"posRank":null,"stateRank":null,"rating":93,"on3Id":238848},"recruitingNotes":"4★ CB committed to Notre Dame — Closing Class Flip Watch #5.","discoveryScore":null,"visitHistory":[],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":null,"movementHistory":[],"signals":[{"id":"238848-staff-note","playerId":"238848","signalType":"EVALUATION_NOTE","signalValue":{"note":"4★ CB committed to Notre Dame — Closing Class Flip Watch #5.","source":"recruiting-store"},"createdAt":"2026-07-15T01:33:42.035Z"}],"related":[],"portalPredictions":null,"fitIntel":null,"competingSchools":[],"futurecastSummary":null,"vaultScouting":null,"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-08T00:12:23.559Z","slug":"ace-alston","profileKind":"commit-2027"}}
+{
+  "lastUpdated": "2026-08-08T00:12:23.505Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "238848",
+    "fullName": "Ace Alston",
+    "slug": "ace-alston",
+    "classYear": 2027,
+    "position": "CB",
+    "status": "HS",
+    "height": 71,
+    "weight": 175,
+    "hometown": "Cincinnati",
+    "state": "OH",
+    "highSchool": "Anderson (Cincinnati, OH)",
+    "stars": 4,
+    "compositeRating": 92.95036231884059,
+    "rankingNational": 100,
+    "rankingPosition": 14,
+    "rankingState": 4,
+    "committedTo": "Notre Dame",
+    "ufFitScore": null,
+    "fitScoreBreakdown": null,
+    "movementHistory": [],
+    "volatilityScore": 0
+  },
+  "highSchoolProfile": {
+    "id": "ace-alston",
+    "playerId": "238848",
+    "offers": [],
+    "stats": {
+      "stars": 4,
+      "natlRank": 100,
+      "posRank": 14,
+      "stateRank": 4,
+      "rating": 92.95036231884059,
+      "on3Id": 238848
+    },
+    "recruitingNotes": "4★ CB committed to Notre Dame — Closing Class Flip Watch #5.",
+    "discoveryScore": null,
+    "visitHistory": [],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": null,
+  "movementHistory": [],
+  "signals": [
+    {
+      "id": "238848-staff-note",
+      "playerId": "238848",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "4★ CB committed to Notre Dame — Closing Class Flip Watch #5.",
+        "source": "recruiting-store"
+      },
+      "createdAt": "2026-07-15T01:33:42.035Z"
+    }
+  ],
+  "related": [],
+  "portalPredictions": null,
+  "fitIntel": null,
+  "competingSchools": [],
+  "futurecastSummary": null,
+  "vaultScouting": null,
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.202Z",
+    "slug": "ace-alston",
+    "profileKind": "commit-2027",
+    "ranksSyncedAt": "2026-08-14T02:43:42.202Z"
+  }
+}

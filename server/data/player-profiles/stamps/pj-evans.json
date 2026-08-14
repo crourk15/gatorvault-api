@@ -1,1 +1,416 @@
-{"lastUpdated":"2026-08-08T00:12:42.610Z","source":"recruiting-store","player":{"id":"ff0dea9c-95bf-582e-9bd0-ad8d47250b40","fullName":"PJ Evans","slug":"pj-evans","classYear":2028,"position":"IOL","status":"HS","height":74,"weight":335,"hometown":"Jackson","state":"MS","highSchool":"Jackson Academy (Jackson, MS)","stars":3,"compositeRating":85.7731884057971,"rankingNational":384,"rankingPosition":23,"rankingState":7,"committedTo":null,"ufFitScore":83,"fitScoreBreakdown":null,"movementHistory":[{"date":"2026-08-02","confidence":31},{"date":"2026-08-03","confidence":32.7},{"date":"2026-08-04","confidence":34.3},{"date":"2026-08-05","confidence":36},{"date":"2026-08-06","confidence":37.7},{"date":"2026-08-07","confidence":39.3},{"date":"2026-08-08","confidence":41}],"volatilityScore":10},"highSchoolProfile":{"id":"pj-evans","playerId":"ff0dea9c-95bf-582e-9bd0-ad8d47250b40","offers":[{"school":"Tulane Green Wave","date":null},{"school":"Oregon State Beavers","date":null},{"school":"Akron Zips","date":null},{"school":"Georgia Tech Yellow Jackets","date":null},{"school":"Missouri Tigers","date":null},{"school":"Georgia Bulldogs","date":null},{"school":"Texas A&M Aggies","date":null},{"school":"Auburn Tigers","date":null},{"school":"Florida","date":null},{"school":"Ole Miss Rebels","date":null}],"stats":{"stars":3,"natlRank":384,"posRank":23,"stateRank":7,"rating":85.7731884057971,"on3Id":"248892"},"recruitingNotes":"","discoveryScore":83,"visitHistory":[],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":{"ufProbNow":41,"ufProb7dAgo":31,"delta7d":10,"volatilityScore":10,"windowDays":30},"movementHistory":[{"date":"2026-08-02","confidence":31},{"date":"2026-08-03","confidence":32.7},{"date":"2026-08-04","confidence":34.3},{"date":"2026-08-05","confidence":36},{"date":"2026-08-06","confidence":37.7},{"date":"2026-08-07","confidence":39.3},{"date":"2026-08-08","confidence":41}],"signals":[{"id":"ff0dea9c-95bf-582e-9bd0-ad8d47250b40-discovery","playerId":"ff0dea9c-95bf-582e-9bd0-ad8d47250b40","signalType":"EVALUATION_NOTE","signalValue":{"note":"Early discovery score on FutureCast underclassmen watchlist","discoveryScore":83,"tier":"high"},"createdAt":"2026-08-03T02:27:45.768Z"},{"id":"ff0dea9c-95bf-582e-9bd0-ad8d47250b40-staff-flag","playerId":"ff0dea9c-95bf-582e-9bd0-ad8d47250b40","signalType":"STAFF_FLAG","signalValue":{"note":"Listed on FutureCast early target board","classYear":2028},"createdAt":"2026-08-03T02:27:45.768Z"},{"id":"ff0dea9c-95bf-582e-9bd0-ad8d47250b40-momentum","playerId":"ff0dea9c-95bf-582e-9bd0-ad8d47250b40","signalType":"SOCIAL_MOMENTUM","signalValue":{"direction":"up","delta7d":10,"ufConfidence":41},"createdAt":"2026-08-03T02:27:45.768Z"}],"related":[{"id":"94e6a1ee-8b3b-5234-8285-3eaab592fcb8","slug":"antonio-thomas-jr","fullName":"Antonio Thomas Jr.","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":41,"ufConfidence":49,"rank":1,"stars":4,"rating":null,"compositeScore":null,"nationalRank":17,"natlRank":17,"posRank":4,"stateRank":5,"state":"FL","school":"Carrollwood Day (Tampa, FL)","committedTo":null,"isCommittedToUF":false},{"id":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe","slug":"izayah-vickers","fullName":"Izayah Vickers","classYear":2028,"position":"CB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":33,"ufConfidence":42,"rank":2,"stars":4,"rating":91.54710144927536,"compositeScore":91.54710144927536,"nationalRank":117,"natlRank":117,"posRank":12,"stateRank":18,"state":"FL","school":"Florida State Univ. School (Tallahassee, FL)","committedTo":null,"isCommittedToUF":false},{"id":"0f878544-f0c1-5ee4-8195-cf4f1b739736","slug":"andre-alexander","fullName":"Andre Alexander","classYear":2028,"position":"LB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":23,"ufConfidence":28,"rank":3,"stars":4,"rating":92.24057971014493,"compositeScore":92.24057971014493,"nationalRank":72,"natlRank":72,"posRank":4,"stateRank":9,"state":"VA","school":"IMG Academy (Chesapeake, VA)","committedTo":null,"isCommittedToUF":false},{"id":"5e60722f-9da8-5e10-8766-711fbba9c76e","slug":"cassell-cruickshank","fullName":"Cassell Cruickshank","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":21,"ufConfidence":24,"rank":4,"stars":4,"rating":95.22258064516129,"compositeScore":95.22258064516129,"nationalRank":14,"natlRank":14,"posRank":3,"stateRank":2,"state":"NC","school":"E E Smith (Fayetteville, NC)","committedTo":null,"isCommittedToUF":false},{"id":"9382b81b-159d-554e-83b6-02a4d4cdcf53","slug":"bubba-brown","fullName":"Bubba Brown","classYear":2028,"position":"WR","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":19,"ufConfidence":23,"rank":5,"stars":4,"rating":91.91340579710146,"compositeScore":91.91340579710146,"nationalRank":95,"natlRank":95,"posRank":15,"stateRank":12,"state":"FL","school":"Lowndes (Valdosta, GA)","committedTo":null,"isCommittedToUF":false},{"id":"0c2e2ddb-6d7b-5689-88c9-8733394b57a0","slug":"kaleb-ballard","fullName":"Kaleb Ballard","classYear":2028,"position":"TE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":10,"ufConfidence":17,"rank":6,"stars":4,"rating":92.63260869565217,"compositeScore":92.63260869565217,"nationalRank":200,"natlRank":200,"posRank":1,"stateRank":2,"state":"AL","school":"Wetumpka (Wetumpka, AL)","committedTo":null,"isCommittedToUF":false}],"portalPredictions":{"predictions":[{"school":"Florida","score":41,"sourceType":"MODEL","predictorId":"gatorvault","status":"ACTIVE"},{"school":"Ole Miss","score":39,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"},{"school":"Auburn","score":5,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"}],"intel":{"portalLikelihood":0,"depthChartRisk":0,"snapShareScore":0,"volatility":10}},"fitIntel":null,"competingSchools":[{"school":"Ole Miss","rankNow":1,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":38.9},{"school":"Auburn","rankNow":2,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":4.9}],"futurecastSummary":{"ufProbability":41,"gvProbability":41,"predictedSchool":"Ole Miss","movementDelta":10,"fitScore":83,"volatilityScore":10},"vaultScouting":{"evaluation":"Evans is a 6-2 / 335 Jackson Academy interior with true mass, finishing mentality, and a compact base to anchor. Wins with power — a space-moving IOL mold Florida can develop into every-down OG/C.","comparison":"Evans comps to Shaq Mason — compact, powerful interior with mass to move people and enough base to anchor in pass protection.","projection":"Evans projects as a Year 2 SEC starter at OG/C (scout / rotation Year 1). Ceiling: multi-year SEC interior starter — the mass-first mauler who can lock down a gap.","strengths":["Evans brings true 335-pound mass to occupy the interior and move people in the run game.","Evans finishes blocks through the whistle and does not look soft once he latches.","Evans has a compact 6-2 base that can anchor versus interior bull rush when pad level stays right."],"schemeFit":"Evans fits an interior OG/C room that values mass, finish, and gap integrity over long athletic pulls."},"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-08T00:12:42.737Z","slug":"pj-evans","profileKind":"prospect-2028"}}
+{
+  "lastUpdated": "2026-08-08T00:12:42.610Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "ff0dea9c-95bf-582e-9bd0-ad8d47250b40",
+    "fullName": "PJ Evans",
+    "slug": "pj-evans",
+    "classYear": 2028,
+    "position": "IOL",
+    "status": "HS",
+    "height": 74,
+    "weight": 335,
+    "hometown": "Jackson",
+    "state": "MS",
+    "highSchool": "Jackson Academy (Jackson, MS)",
+    "stars": 3,
+    "compositeRating": 85.75144927536232,
+    "rankingNational": 380,
+    "rankingPosition": 22,
+    "rankingState": 11,
+    "committedTo": null,
+    "ufFitScore": 83,
+    "fitScoreBreakdown": null,
+    "movementHistory": [
+      {
+        "date": "2026-08-02",
+        "confidence": 31
+      },
+      {
+        "date": "2026-08-03",
+        "confidence": 32.7
+      },
+      {
+        "date": "2026-08-04",
+        "confidence": 34.3
+      },
+      {
+        "date": "2026-08-05",
+        "confidence": 36
+      },
+      {
+        "date": "2026-08-06",
+        "confidence": 37.7
+      },
+      {
+        "date": "2026-08-07",
+        "confidence": 39.3
+      },
+      {
+        "date": "2026-08-08",
+        "confidence": 41
+      }
+    ],
+    "volatilityScore": 10
+  },
+  "highSchoolProfile": {
+    "id": "pj-evans",
+    "playerId": "ff0dea9c-95bf-582e-9bd0-ad8d47250b40",
+    "offers": [
+      {
+        "school": "Tulane Green Wave",
+        "date": null
+      },
+      {
+        "school": "Oregon State Beavers",
+        "date": null
+      },
+      {
+        "school": "Akron Zips",
+        "date": null
+      },
+      {
+        "school": "Georgia Tech Yellow Jackets",
+        "date": null
+      },
+      {
+        "school": "Missouri Tigers",
+        "date": null
+      },
+      {
+        "school": "Georgia Bulldogs",
+        "date": null
+      },
+      {
+        "school": "Texas A&M Aggies",
+        "date": null
+      },
+      {
+        "school": "Auburn Tigers",
+        "date": null
+      },
+      {
+        "school": "Florida",
+        "date": null
+      },
+      {
+        "school": "Ole Miss Rebels",
+        "date": null
+      }
+    ],
+    "stats": {
+      "stars": 3,
+      "natlRank": 380,
+      "posRank": 22,
+      "stateRank": 11,
+      "rating": 85.75144927536232,
+      "on3Id": "248892"
+    },
+    "recruitingNotes": "",
+    "discoveryScore": 83,
+    "visitHistory": [],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": {
+    "ufProbNow": 41,
+    "ufProb7dAgo": 31,
+    "delta7d": 10,
+    "volatilityScore": 10,
+    "windowDays": 30
+  },
+  "movementHistory": [
+    {
+      "date": "2026-08-02",
+      "confidence": 31
+    },
+    {
+      "date": "2026-08-03",
+      "confidence": 32.7
+    },
+    {
+      "date": "2026-08-04",
+      "confidence": 34.3
+    },
+    {
+      "date": "2026-08-05",
+      "confidence": 36
+    },
+    {
+      "date": "2026-08-06",
+      "confidence": 37.7
+    },
+    {
+      "date": "2026-08-07",
+      "confidence": 39.3
+    },
+    {
+      "date": "2026-08-08",
+      "confidence": 41
+    }
+  ],
+  "signals": [
+    {
+      "id": "ff0dea9c-95bf-582e-9bd0-ad8d47250b40-discovery",
+      "playerId": "ff0dea9c-95bf-582e-9bd0-ad8d47250b40",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "Early discovery score on FutureCast underclassmen watchlist",
+        "discoveryScore": 83,
+        "tier": "high"
+      },
+      "createdAt": "2026-08-03T02:27:45.768Z"
+    },
+    {
+      "id": "ff0dea9c-95bf-582e-9bd0-ad8d47250b40-staff-flag",
+      "playerId": "ff0dea9c-95bf-582e-9bd0-ad8d47250b40",
+      "signalType": "STAFF_FLAG",
+      "signalValue": {
+        "note": "Listed on FutureCast early target board",
+        "classYear": 2028
+      },
+      "createdAt": "2026-08-03T02:27:45.768Z"
+    },
+    {
+      "id": "ff0dea9c-95bf-582e-9bd0-ad8d47250b40-momentum",
+      "playerId": "ff0dea9c-95bf-582e-9bd0-ad8d47250b40",
+      "signalType": "SOCIAL_MOMENTUM",
+      "signalValue": {
+        "direction": "up",
+        "delta7d": 10,
+        "ufConfidence": 41
+      },
+      "createdAt": "2026-08-03T02:27:45.768Z"
+    }
+  ],
+  "related": [
+    {
+      "id": "94e6a1ee-8b3b-5234-8285-3eaab592fcb8",
+      "slug": "antonio-thomas-jr",
+      "fullName": "Antonio Thomas Jr.",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 41,
+      "ufConfidence": 49,
+      "rank": 1,
+      "stars": 4,
+      "rating": null,
+      "compositeScore": null,
+      "nationalRank": 17,
+      "natlRank": 17,
+      "posRank": 4,
+      "stateRank": 5,
+      "state": "FL",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe",
+      "slug": "izayah-vickers",
+      "fullName": "Izayah Vickers",
+      "classYear": 2028,
+      "position": "CB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 33,
+      "ufConfidence": 42,
+      "rank": 2,
+      "stars": 4,
+      "rating": 91.54710144927536,
+      "compositeScore": 91.54710144927536,
+      "nationalRank": 117,
+      "natlRank": 117,
+      "posRank": 12,
+      "stateRank": 18,
+      "state": "FL",
+      "school": "Florida State Univ. School (Tallahassee, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0f878544-f0c1-5ee4-8195-cf4f1b739736",
+      "slug": "andre-alexander",
+      "fullName": "Andre Alexander",
+      "classYear": 2028,
+      "position": "LB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 23,
+      "ufConfidence": 28,
+      "rank": 3,
+      "stars": 4,
+      "rating": 92.24057971014493,
+      "compositeScore": 92.24057971014493,
+      "nationalRank": 72,
+      "natlRank": 72,
+      "posRank": 4,
+      "stateRank": 9,
+      "state": "VA",
+      "school": "IMG Academy (Chesapeake, VA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "5e60722f-9da8-5e10-8766-711fbba9c76e",
+      "slug": "cassell-cruickshank",
+      "fullName": "Cassell Cruickshank",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 21,
+      "ufConfidence": 24,
+      "rank": 4,
+      "stars": 4,
+      "rating": 95.22258064516129,
+      "compositeScore": 95.22258064516129,
+      "nationalRank": 14,
+      "natlRank": 14,
+      "posRank": 3,
+      "stateRank": 2,
+      "state": "NC",
+      "school": "E E Smith (Fayetteville, NC)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "9382b81b-159d-554e-83b6-02a4d4cdcf53",
+      "slug": "bubba-brown",
+      "fullName": "Bubba Brown",
+      "classYear": 2028,
+      "position": "WR",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 19,
+      "ufConfidence": 23,
+      "rank": 5,
+      "stars": 4,
+      "rating": 91.91340579710146,
+      "compositeScore": 91.91340579710146,
+      "nationalRank": 95,
+      "natlRank": 95,
+      "posRank": 15,
+      "stateRank": 12,
+      "state": "FL",
+      "school": "Lowndes (Valdosta, GA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0c2e2ddb-6d7b-5689-88c9-8733394b57a0",
+      "slug": "kaleb-ballard",
+      "fullName": "Kaleb Ballard",
+      "classYear": 2028,
+      "position": "TE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 10,
+      "ufConfidence": 17,
+      "rank": 6,
+      "stars": 4,
+      "rating": 92.63260869565217,
+      "compositeScore": 92.63260869565217,
+      "nationalRank": 200,
+      "natlRank": 200,
+      "posRank": 1,
+      "stateRank": 2,
+      "state": "AL",
+      "school": "Wetumpka (Wetumpka, AL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    }
+  ],
+  "portalPredictions": {
+    "predictions": [
+      {
+        "school": "Florida",
+        "score": 41,
+        "sourceType": "MODEL",
+        "predictorId": "gatorvault",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Ole Miss",
+        "score": 39,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Auburn",
+        "score": 5,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      }
+    ],
+    "intel": {
+      "portalLikelihood": 0,
+      "depthChartRisk": 0,
+      "snapShareScore": 0,
+      "volatility": 10
+    }
+  },
+  "fitIntel": null,
+  "competingSchools": [
+    {
+      "school": "Ole Miss",
+      "rankNow": 1,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 38.9
+    },
+    {
+      "school": "Auburn",
+      "rankNow": 2,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 4.9
+    }
+  ],
+  "futurecastSummary": {
+    "ufProbability": 41,
+    "gvProbability": 41,
+    "predictedSchool": "Ole Miss",
+    "movementDelta": 10,
+    "fitScore": 83,
+    "volatilityScore": 10
+  },
+  "vaultScouting": {
+    "evaluation": "Evans is a 6-2 / 335 Jackson Academy interior with true mass, finishing mentality, and a compact base to anchor. Wins with power — a space-moving IOL mold Florida can develop into every-down OG/C.",
+    "comparison": "Evans comps to Shaq Mason — compact, powerful interior with mass to move people and enough base to anchor in pass protection.",
+    "projection": "Evans projects as a Year 2 SEC starter at OG/C (scout / rotation Year 1). Ceiling: multi-year SEC interior starter — the mass-first mauler who can lock down a gap.",
+    "strengths": [
+      "Evans brings true 335-pound mass to occupy the interior and move people in the run game.",
+      "Evans finishes blocks through the whistle and does not look soft once he latches.",
+      "Evans has a compact 6-2 base that can anchor versus interior bull rush when pad level stays right."
+    ],
+    "schemeFit": "Evans fits an interior OG/C room that values mass, finish, and gap integrity over long athletic pulls."
+  },
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.212Z",
+    "slug": "pj-evans",
+    "profileKind": "prospect-2028",
+    "ranksSyncedAt": "2026-08-14T02:43:42.212Z"
+  }
+}

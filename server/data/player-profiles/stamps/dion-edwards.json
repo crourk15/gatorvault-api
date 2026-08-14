@@ -1,1 +1,299 @@
-{"lastUpdated":"2026-08-08T00:12:51.979Z","source":"recruiting-store","player":{"id":"8461c69b-e0e2-5f8b-b3a3-8231432fc1d2","fullName":"Dion Edwards","slug":"dion-edwards","classYear":2028,"position":"S","status":"HS","height":73,"weight":160,"hometown":"Chattanooga","state":"TN","highSchool":"Tyner Academy (Chattanooga, TN)","stars":4,"compositeRating":91.89,"rankingNational":97,"rankingPosition":11,"rankingState":3,"committedTo":null,"ufFitScore":75,"fitScoreBreakdown":null,"movementHistory":[],"volatilityScore":0},"highSchoolProfile":{"id":"dion-edwards","playerId":"8461c69b-e0e2-5f8b-b3a3-8231432fc1d2","offers":[],"stats":{"stars":4,"natlRank":97,"posRank":11,"stateRank":3,"rating":91.89,"on3Id":"271327"},"recruitingNotes":"Chattanooga safety — Chris Collins relationship building into Gainesville visit (Beat Desk / On3). Locked to 2028 allowlist.","discoveryScore":null,"visitHistory":[],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":null,"movementHistory":[],"signals":[{"id":"8461c69b-e0e2-5f8b-b3a3-8231432fc1d2-staff-note","playerId":"8461c69b-e0e2-5f8b-b3a3-8231432fc1d2","signalType":"EVALUATION_NOTE","signalValue":{"note":"Chattanooga safety — Chris Collins relationship building into Gainesville visit (Beat Desk / On3). Locked to 2028 allowlist.","source":"recruiting-store"},"createdAt":"2026-08-04T12:26:35.115Z"},{"id":"8461c69b-e0e2-5f8b-b3a3-8231432fc1d2-staff-flag","playerId":"8461c69b-e0e2-5f8b-b3a3-8231432fc1d2","signalType":"STAFF_FLAG","signalValue":{"note":"Listed on FutureCast early target board","classYear":2028},"createdAt":"2026-08-04T12:26:35.115Z"}],"related":[{"id":"94e6a1ee-8b3b-5234-8285-3eaab592fcb8","slug":"antonio-thomas-jr","fullName":"Antonio Thomas Jr.","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":41,"ufConfidence":49,"rank":1,"stars":4,"rating":null,"compositeScore":null,"nationalRank":17,"natlRank":17,"posRank":4,"stateRank":5,"state":"FL","school":"Carrollwood Day (Tampa, FL)","committedTo":null,"isCommittedToUF":false},{"id":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe","slug":"izayah-vickers","fullName":"Izayah Vickers","classYear":2028,"position":"CB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":33,"ufConfidence":42,"rank":2,"stars":4,"rating":91.54710144927536,"compositeScore":91.54710144927536,"nationalRank":117,"natlRank":117,"posRank":12,"stateRank":18,"state":"FL","school":"Florida State Univ. School (Tallahassee, FL)","committedTo":null,"isCommittedToUF":false},{"id":"0f878544-f0c1-5ee4-8195-cf4f1b739736","slug":"andre-alexander","fullName":"Andre Alexander","classYear":2028,"position":"LB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":23,"ufConfidence":28,"rank":3,"stars":4,"rating":92.24057971014493,"compositeScore":92.24057971014493,"nationalRank":72,"natlRank":72,"posRank":4,"stateRank":9,"state":"VA","school":"IMG Academy (Chesapeake, VA)","committedTo":null,"isCommittedToUF":false},{"id":"5e60722f-9da8-5e10-8766-711fbba9c76e","slug":"cassell-cruickshank","fullName":"Cassell Cruickshank","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":21,"ufConfidence":24,"rank":4,"stars":4,"rating":95.22258064516129,"compositeScore":95.22258064516129,"nationalRank":14,"natlRank":14,"posRank":3,"stateRank":2,"state":"NC","school":"E E Smith (Fayetteville, NC)","committedTo":null,"isCommittedToUF":false},{"id":"9382b81b-159d-554e-83b6-02a4d4cdcf53","slug":"bubba-brown","fullName":"Bubba Brown","classYear":2028,"position":"WR","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":19,"ufConfidence":23,"rank":5,"stars":4,"rating":91.91340579710146,"compositeScore":91.91340579710146,"nationalRank":95,"natlRank":95,"posRank":15,"stateRank":12,"state":"FL","school":"Lowndes (Valdosta, GA)","committedTo":null,"isCommittedToUF":false},{"id":"0c2e2ddb-6d7b-5689-88c9-8733394b57a0","slug":"kaleb-ballard","fullName":"Kaleb Ballard","classYear":2028,"position":"TE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":10,"ufConfidence":17,"rank":6,"stars":4,"rating":92.63260869565217,"compositeScore":92.63260869565217,"nationalRank":200,"natlRank":200,"posRank":1,"stateRank":2,"state":"AL","school":"Wetumpka (Wetumpka, AL)","committedTo":null,"isCommittedToUF":false}],"portalPredictions":{"predictions":[{"school":"Tennessee","score":33,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"},{"school":"Florida","score":26,"sourceType":"MODEL","predictorId":"gatorvault","status":"ACTIVE"},{"school":"Vanderbilt","score":12,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"}],"intel":{"portalLikelihood":0,"depthChartRisk":0,"snapShareScore":0,"volatility":0}},"fitIntel":null,"competingSchools":[{"school":"Tennessee","rankNow":1,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":33},{"school":"Vanderbilt","rankNow":2,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":12}],"futurecastSummary":{"ufProbability":26,"gvProbability":26,"predictedSchool":"Tennessee","movementDelta":null,"fitScore":75,"volatilityScore":0},"vaultScouting":{"evaluation":"Edwards is a center-field safety with real range from the deep half and clean wraps in space. Closes pursuit 15+ yards downfield and locates the ball while tracking receivers. Wins with range, tackling, and backend instincts — a FS mold who can grow into every-down snaps.","comparison":"Edwards comps to Jessie Bates — 6-1 center-field safety mold; range from the deep half and clean wraps in space.","projection":"Edwards projects as a Year 2 SEC starter at safety (nickel / special teams Year 1). Ceiling: every-down SEC safety — the rangy deep-half piece who closes and finishes tackles in space.","strengths":["Edwards closes from the deep half with real range — pursuit shows up 15+ yards downfield.","Edwards breaks down in space and wraps without lunging on open-field tackles.","Edwards locates the ball in the air while tracking the receiver — eyes stay in the coverage phase."],"schemeFit":"Edwards fits Chris Collins’ safety room that wants range, space tackling, and coverage eyes from the deep half."},"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-08T00:12:52.110Z","slug":"dion-edwards","profileKind":"prospect-2028"}}
+{
+  "lastUpdated": "2026-08-08T00:12:51.979Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "8461c69b-e0e2-5f8b-b3a3-8231432fc1d2",
+    "fullName": "Dion Edwards",
+    "slug": "dion-edwards",
+    "classYear": 2028,
+    "position": "S",
+    "status": "HS",
+    "height": 73,
+    "weight": 160,
+    "hometown": "Chattanooga",
+    "state": "TN",
+    "highSchool": "Tyner Academy (Chattanooga, TN)",
+    "stars": 4,
+    "compositeRating": 91.89166666666667,
+    "rankingNational": 98,
+    "rankingPosition": 10,
+    "rankingState": 3,
+    "committedTo": null,
+    "ufFitScore": 75,
+    "fitScoreBreakdown": null,
+    "movementHistory": [],
+    "volatilityScore": 0
+  },
+  "highSchoolProfile": {
+    "id": "dion-edwards",
+    "playerId": "8461c69b-e0e2-5f8b-b3a3-8231432fc1d2",
+    "offers": [],
+    "stats": {
+      "stars": 4,
+      "natlRank": 98,
+      "posRank": 10,
+      "stateRank": 3,
+      "rating": 91.89166666666667,
+      "on3Id": "271327"
+    },
+    "recruitingNotes": "Chattanooga safety — Chris Collins relationship building into Gainesville visit (Beat Desk / On3). Locked to 2028 allowlist.",
+    "discoveryScore": null,
+    "visitHistory": [],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": null,
+  "movementHistory": [],
+  "signals": [
+    {
+      "id": "8461c69b-e0e2-5f8b-b3a3-8231432fc1d2-staff-note",
+      "playerId": "8461c69b-e0e2-5f8b-b3a3-8231432fc1d2",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "Chattanooga safety — Chris Collins relationship building into Gainesville visit (Beat Desk / On3). Locked to 2028 allowlist.",
+        "source": "recruiting-store"
+      },
+      "createdAt": "2026-08-04T12:26:35.115Z"
+    },
+    {
+      "id": "8461c69b-e0e2-5f8b-b3a3-8231432fc1d2-staff-flag",
+      "playerId": "8461c69b-e0e2-5f8b-b3a3-8231432fc1d2",
+      "signalType": "STAFF_FLAG",
+      "signalValue": {
+        "note": "Listed on FutureCast early target board",
+        "classYear": 2028
+      },
+      "createdAt": "2026-08-04T12:26:35.115Z"
+    }
+  ],
+  "related": [
+    {
+      "id": "94e6a1ee-8b3b-5234-8285-3eaab592fcb8",
+      "slug": "antonio-thomas-jr",
+      "fullName": "Antonio Thomas Jr.",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 41,
+      "ufConfidence": 49,
+      "rank": 1,
+      "stars": 4,
+      "rating": null,
+      "compositeScore": null,
+      "nationalRank": 17,
+      "natlRank": 17,
+      "posRank": 4,
+      "stateRank": 5,
+      "state": "FL",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe",
+      "slug": "izayah-vickers",
+      "fullName": "Izayah Vickers",
+      "classYear": 2028,
+      "position": "CB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 33,
+      "ufConfidence": 42,
+      "rank": 2,
+      "stars": 4,
+      "rating": 91.54710144927536,
+      "compositeScore": 91.54710144927536,
+      "nationalRank": 117,
+      "natlRank": 117,
+      "posRank": 12,
+      "stateRank": 18,
+      "state": "FL",
+      "school": "Florida State Univ. School (Tallahassee, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0f878544-f0c1-5ee4-8195-cf4f1b739736",
+      "slug": "andre-alexander",
+      "fullName": "Andre Alexander",
+      "classYear": 2028,
+      "position": "LB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 23,
+      "ufConfidence": 28,
+      "rank": 3,
+      "stars": 4,
+      "rating": 92.24057971014493,
+      "compositeScore": 92.24057971014493,
+      "nationalRank": 72,
+      "natlRank": 72,
+      "posRank": 4,
+      "stateRank": 9,
+      "state": "VA",
+      "school": "IMG Academy (Chesapeake, VA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "5e60722f-9da8-5e10-8766-711fbba9c76e",
+      "slug": "cassell-cruickshank",
+      "fullName": "Cassell Cruickshank",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 21,
+      "ufConfidence": 24,
+      "rank": 4,
+      "stars": 4,
+      "rating": 95.22258064516129,
+      "compositeScore": 95.22258064516129,
+      "nationalRank": 14,
+      "natlRank": 14,
+      "posRank": 3,
+      "stateRank": 2,
+      "state": "NC",
+      "school": "E E Smith (Fayetteville, NC)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "9382b81b-159d-554e-83b6-02a4d4cdcf53",
+      "slug": "bubba-brown",
+      "fullName": "Bubba Brown",
+      "classYear": 2028,
+      "position": "WR",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 19,
+      "ufConfidence": 23,
+      "rank": 5,
+      "stars": 4,
+      "rating": 91.91340579710146,
+      "compositeScore": 91.91340579710146,
+      "nationalRank": 95,
+      "natlRank": 95,
+      "posRank": 15,
+      "stateRank": 12,
+      "state": "FL",
+      "school": "Lowndes (Valdosta, GA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0c2e2ddb-6d7b-5689-88c9-8733394b57a0",
+      "slug": "kaleb-ballard",
+      "fullName": "Kaleb Ballard",
+      "classYear": 2028,
+      "position": "TE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 10,
+      "ufConfidence": 17,
+      "rank": 6,
+      "stars": 4,
+      "rating": 92.63260869565217,
+      "compositeScore": 92.63260869565217,
+      "nationalRank": 200,
+      "natlRank": 200,
+      "posRank": 1,
+      "stateRank": 2,
+      "state": "AL",
+      "school": "Wetumpka (Wetumpka, AL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    }
+  ],
+  "portalPredictions": {
+    "predictions": [
+      {
+        "school": "Tennessee",
+        "score": 33,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Florida",
+        "score": 26,
+        "sourceType": "MODEL",
+        "predictorId": "gatorvault",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Vanderbilt",
+        "score": 12,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      }
+    ],
+    "intel": {
+      "portalLikelihood": 0,
+      "depthChartRisk": 0,
+      "snapShareScore": 0,
+      "volatility": 0
+    }
+  },
+  "fitIntel": null,
+  "competingSchools": [
+    {
+      "school": "Tennessee",
+      "rankNow": 1,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 33
+    },
+    {
+      "school": "Vanderbilt",
+      "rankNow": 2,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 12
+    }
+  ],
+  "futurecastSummary": {
+    "ufProbability": 26,
+    "gvProbability": 26,
+    "predictedSchool": "Tennessee",
+    "movementDelta": null,
+    "fitScore": 75,
+    "volatilityScore": 0
+  },
+  "vaultScouting": {
+    "evaluation": "Edwards is a center-field safety with real range from the deep half and clean wraps in space. Closes pursuit 15+ yards downfield and locates the ball while tracking receivers. Wins with range, tackling, and backend instincts — a FS mold who can grow into every-down snaps.",
+    "comparison": "Edwards comps to Jessie Bates — 6-1 center-field safety mold; range from the deep half and clean wraps in space.",
+    "projection": "Edwards projects as a Year 2 SEC starter at safety (nickel / special teams Year 1). Ceiling: every-down SEC safety — the rangy deep-half piece who closes and finishes tackles in space.",
+    "strengths": [
+      "Edwards closes from the deep half with real range — pursuit shows up 15+ yards downfield.",
+      "Edwards breaks down in space and wraps without lunging on open-field tackles.",
+      "Edwards locates the ball in the air while tracking the receiver — eyes stay in the coverage phase."
+    ],
+    "schemeFit": "Edwards fits Chris Collins’ safety room that wants range, space tackling, and coverage eyes from the deep half."
+  },
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.209Z",
+    "slug": "dion-edwards",
+    "profileKind": "prospect-2028",
+    "ranksSyncedAt": "2026-08-14T02:43:42.209Z"
+  }
+}

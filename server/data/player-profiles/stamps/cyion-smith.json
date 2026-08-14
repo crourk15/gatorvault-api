@@ -1,1 +1,428 @@
-{"lastUpdated":"2026-08-08T00:12:37.599Z","source":"recruiting-store","player":{"id":"1918a72a-df14-5ad0-a4cc-0ca5873e604a","fullName":"Cyion Smith","slug":"cyion-smith","classYear":2028,"position":"S","status":"HS","height":74,"weight":175,"hometown":"Blountstown","state":"FL","highSchool":"Blountstown (Blountstown, FL)","stars":4,"compositeRating":89.51231884057971,"rankingNational":175,"rankingPosition":14,"rankingState":29,"committedTo":null,"ufFitScore":74,"fitScoreBreakdown":null,"movementHistory":[],"volatilityScore":0},"highSchoolProfile":{"id":"cyion-smith","playerId":"1918a72a-df14-5ad0-a4cc-0ca5873e604a","offers":[{"school":"Michigan Wolverines","date":null},{"school":"Boston College Eagles","date":null},{"school":"Louisville Cardinals","date":null},{"school":"Wake Forest Demon Deacons","date":null},{"school":"Virginia Tech Hokies","date":null},{"school":"Wisconsin Badgers","date":null},{"school":"North Carolina Tar Heels","date":null},{"school":"Oregon Ducks","date":null},{"school":"Mississippi State Bulldogs","date":null},{"school":"South Carolina Gamecocks","date":null},{"school":"Miami Hurricanes","date":null},{"school":"Auburn Tigers","date":null},{"school":"USF Bulls","date":null},{"school":"Florida","date":null}],"stats":{"stars":4,"natlRank":175,"posRank":14,"stateRank":29,"rating":89.51231884057971,"on3Id":"242617"},"recruitingNotes":"Promoted to 2028 allowlist after Blake Alderman UF RPM teaser (2026-07-18).","discoveryScore":100,"visitHistory":[{"school":"Florida Gators","visitType":"unofficial_visit","date":"2026-06-20","source":"on3"},{"school":"Florida Gators","visitType":"unofficial_visit","date":"2026-06-03","source":"on3"},{"school":"USF Bulls","visitType":"unofficial_visit","date":"2026-04-16","source":"on3"},{"school":"Auburn Tigers","visitType":"unofficial_visit","date":"2026-03-24","source":"on3"},{"school":"USF Bulls","visitType":"unofficial_visit","date":"2024-08-31","source":"on3"}],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":null,"movementHistory":[],"signals":[{"id":"1918a72a-df14-5ad0-a4cc-0ca5873e604a-staff-note","playerId":"1918a72a-df14-5ad0-a4cc-0ca5873e604a","signalType":"EVALUATION_NOTE","signalValue":{"note":"Promoted to 2028 allowlist after Blake Alderman UF RPM teaser (2026-07-18).","source":"recruiting-store"},"createdAt":"2026-08-03T02:53:53.759Z"},{"id":"1918a72a-df14-5ad0-a4cc-0ca5873e604a-discovery","playerId":"1918a72a-df14-5ad0-a4cc-0ca5873e604a","signalType":"EVALUATION_NOTE","signalValue":{"note":"Early discovery score on FutureCast underclassmen watchlist","discoveryScore":100,"tier":"high"},"createdAt":"2026-08-03T02:53:53.759Z"},{"id":"1918a72a-df14-5ad0-a4cc-0ca5873e604a-staff-flag","playerId":"1918a72a-df14-5ad0-a4cc-0ca5873e604a","signalType":"STAFF_FLAG","signalValue":{"note":"Listed on FutureCast early target board","classYear":2028},"createdAt":"2026-08-03T02:53:53.759Z"}],"related":[{"id":"94e6a1ee-8b3b-5234-8285-3eaab592fcb8","slug":"antonio-thomas-jr","fullName":"Antonio Thomas Jr.","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":41,"ufConfidence":49,"rank":1,"stars":4,"rating":null,"compositeScore":null,"nationalRank":17,"natlRank":17,"posRank":4,"stateRank":5,"state":"FL","school":"Carrollwood Day (Tampa, FL)","committedTo":null,"isCommittedToUF":false},{"id":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe","slug":"izayah-vickers","fullName":"Izayah Vickers","classYear":2028,"position":"CB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":33,"ufConfidence":42,"rank":2,"stars":4,"rating":91.54710144927536,"compositeScore":91.54710144927536,"nationalRank":117,"natlRank":117,"posRank":12,"stateRank":18,"state":"FL","school":"Florida State Univ. School (Tallahassee, FL)","committedTo":null,"isCommittedToUF":false},{"id":"0f878544-f0c1-5ee4-8195-cf4f1b739736","slug":"andre-alexander","fullName":"Andre Alexander","classYear":2028,"position":"LB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":23,"ufConfidence":28,"rank":3,"stars":4,"rating":92.24057971014493,"compositeScore":92.24057971014493,"nationalRank":72,"natlRank":72,"posRank":4,"stateRank":9,"state":"VA","school":"IMG Academy (Chesapeake, VA)","committedTo":null,"isCommittedToUF":false},{"id":"5e60722f-9da8-5e10-8766-711fbba9c76e","slug":"cassell-cruickshank","fullName":"Cassell Cruickshank","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":21,"ufConfidence":24,"rank":4,"stars":4,"rating":95.22258064516129,"compositeScore":95.22258064516129,"nationalRank":14,"natlRank":14,"posRank":3,"stateRank":2,"state":"NC","school":"E E Smith (Fayetteville, NC)","committedTo":null,"isCommittedToUF":false},{"id":"9382b81b-159d-554e-83b6-02a4d4cdcf53","slug":"bubba-brown","fullName":"Bubba Brown","classYear":2028,"position":"WR","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":19,"ufConfidence":23,"rank":5,"stars":4,"rating":91.91340579710146,"compositeScore":91.91340579710146,"nationalRank":95,"natlRank":95,"posRank":15,"stateRank":12,"state":"FL","school":"Lowndes (Valdosta, GA)","committedTo":null,"isCommittedToUF":false},{"id":"0c2e2ddb-6d7b-5689-88c9-8733394b57a0","slug":"kaleb-ballard","fullName":"Kaleb Ballard","classYear":2028,"position":"TE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":10,"ufConfidence":17,"rank":6,"stars":4,"rating":92.63260869565217,"compositeScore":92.63260869565217,"nationalRank":200,"natlRank":200,"posRank":1,"stateRank":2,"state":"AL","school":"Wetumpka (Wetumpka, AL)","committedTo":null,"isCommittedToUF":false}],"portalPredictions":{"predictions":[{"school":"Florida","score":71,"sourceType":"MODEL","predictorId":"gatorvault","status":"ACTIVE"},{"school":"Auburn","score":66,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"},{"school":"Miami","score":9,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"},{"school":"South Carolina","score":9,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"},{"school":"USF Bulls","score":1,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"}],"intel":{"portalLikelihood":0,"depthChartRisk":0,"snapShareScore":0,"volatility":0}},"fitIntel":null,"competingSchools":[{"school":"Auburn","rankNow":1,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":66},{"school":"Miami","rankNow":2,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":9.2},{"school":"South Carolina","rankNow":3,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":9.2},{"school":"USF Bulls","rankNow":4,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":1.3}],"futurecastSummary":{"ufProbability":71,"gvProbability":71,"predictedSchool":"Florida","movementDelta":null,"fitScore":74,"volatilityScore":0},"vaultScouting":{"evaluation":"Smith is a rangy 6-2 free-safety mold with length and center-field range — covers ground in a few strides when the ball leaves the hash. Stays stacked on deep thirds and does not panic when receivers stem. Wins with eyes over the top and range before the frame fills.","comparison":"Smith comps to Justin Simmons — 6-2 rangy free-safety mold; length, center-field range, and eyes over the top before the frame fills.","projection":"Smith projects as a Year 2 SEC starter at safety (special teams / package snaps Year 1). Ceiling: every-down SEC free safety — the rangy center-fielder who can grow into STAR packages as he adds mass.","strengths":["Smith plays with real length at 6-2 — covers ground in a few strides when the ball leaves the hash.","Smith stays stacked on the perimeter as a deep-third / alley safety and does not panic when receivers stem at him.","Smith finishes pursuit angles downhill and is willing to stick his face in the run after the catch."],"schemeFit":"Smith fits a length-first safety room that asks the deep defender to range over the top and fill the alley without guessing."},"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-08T00:12:37.725Z","slug":"cyion-smith","profileKind":"prospect-2028"}}
+{
+  "lastUpdated": "2026-08-08T00:12:37.599Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "1918a72a-df14-5ad0-a4cc-0ca5873e604a",
+    "fullName": "Cyion Smith",
+    "slug": "cyion-smith",
+    "classYear": 2028,
+    "position": "S",
+    "status": "HS",
+    "height": 74,
+    "weight": 175,
+    "hometown": "Blountstown",
+    "state": "FL",
+    "highSchool": "Blountstown (Blountstown, FL)",
+    "stars": 4,
+    "compositeRating": 89.51231884057971,
+    "rankingNational": 250,
+    "rankingPosition": 25,
+    "rankingState": 29,
+    "committedTo": null,
+    "ufFitScore": 74,
+    "fitScoreBreakdown": null,
+    "movementHistory": [],
+    "volatilityScore": 0
+  },
+  "highSchoolProfile": {
+    "id": "cyion-smith",
+    "playerId": "1918a72a-df14-5ad0-a4cc-0ca5873e604a",
+    "offers": [
+      {
+        "school": "Michigan Wolverines",
+        "date": null
+      },
+      {
+        "school": "Boston College Eagles",
+        "date": null
+      },
+      {
+        "school": "Louisville Cardinals",
+        "date": null
+      },
+      {
+        "school": "Wake Forest Demon Deacons",
+        "date": null
+      },
+      {
+        "school": "Virginia Tech Hokies",
+        "date": null
+      },
+      {
+        "school": "Wisconsin Badgers",
+        "date": null
+      },
+      {
+        "school": "North Carolina Tar Heels",
+        "date": null
+      },
+      {
+        "school": "Oregon Ducks",
+        "date": null
+      },
+      {
+        "school": "Mississippi State Bulldogs",
+        "date": null
+      },
+      {
+        "school": "South Carolina Gamecocks",
+        "date": null
+      },
+      {
+        "school": "Miami Hurricanes",
+        "date": null
+      },
+      {
+        "school": "Auburn Tigers",
+        "date": null
+      },
+      {
+        "school": "USF Bulls",
+        "date": null
+      },
+      {
+        "school": "Florida",
+        "date": null
+      }
+    ],
+    "stats": {
+      "stars": 4,
+      "natlRank": 250,
+      "posRank": 25,
+      "stateRank": 29,
+      "rating": 89.51231884057971,
+      "on3Id": "242617"
+    },
+    "recruitingNotes": "Promoted to 2028 allowlist after Blake Alderman UF RPM teaser (2026-07-18).",
+    "discoveryScore": 100,
+    "visitHistory": [
+      {
+        "school": "Florida Gators",
+        "visitType": "unofficial_visit",
+        "date": "2026-06-20",
+        "source": "on3"
+      },
+      {
+        "school": "Florida Gators",
+        "visitType": "unofficial_visit",
+        "date": "2026-06-03",
+        "source": "on3"
+      },
+      {
+        "school": "USF Bulls",
+        "visitType": "unofficial_visit",
+        "date": "2026-04-16",
+        "source": "on3"
+      },
+      {
+        "school": "Auburn Tigers",
+        "visitType": "unofficial_visit",
+        "date": "2026-03-24",
+        "source": "on3"
+      },
+      {
+        "school": "USF Bulls",
+        "visitType": "unofficial_visit",
+        "date": "2024-08-31",
+        "source": "on3"
+      }
+    ],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": null,
+  "movementHistory": [],
+  "signals": [
+    {
+      "id": "1918a72a-df14-5ad0-a4cc-0ca5873e604a-staff-note",
+      "playerId": "1918a72a-df14-5ad0-a4cc-0ca5873e604a",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "Promoted to 2028 allowlist after Blake Alderman UF RPM teaser (2026-07-18).",
+        "source": "recruiting-store"
+      },
+      "createdAt": "2026-08-03T02:53:53.759Z"
+    },
+    {
+      "id": "1918a72a-df14-5ad0-a4cc-0ca5873e604a-discovery",
+      "playerId": "1918a72a-df14-5ad0-a4cc-0ca5873e604a",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "Early discovery score on FutureCast underclassmen watchlist",
+        "discoveryScore": 100,
+        "tier": "high"
+      },
+      "createdAt": "2026-08-03T02:53:53.759Z"
+    },
+    {
+      "id": "1918a72a-df14-5ad0-a4cc-0ca5873e604a-staff-flag",
+      "playerId": "1918a72a-df14-5ad0-a4cc-0ca5873e604a",
+      "signalType": "STAFF_FLAG",
+      "signalValue": {
+        "note": "Listed on FutureCast early target board",
+        "classYear": 2028
+      },
+      "createdAt": "2026-08-03T02:53:53.759Z"
+    }
+  ],
+  "related": [
+    {
+      "id": "94e6a1ee-8b3b-5234-8285-3eaab592fcb8",
+      "slug": "antonio-thomas-jr",
+      "fullName": "Antonio Thomas Jr.",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 41,
+      "ufConfidence": 49,
+      "rank": 1,
+      "stars": 4,
+      "rating": null,
+      "compositeScore": null,
+      "nationalRank": 17,
+      "natlRank": 17,
+      "posRank": 4,
+      "stateRank": 5,
+      "state": "FL",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe",
+      "slug": "izayah-vickers",
+      "fullName": "Izayah Vickers",
+      "classYear": 2028,
+      "position": "CB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 33,
+      "ufConfidence": 42,
+      "rank": 2,
+      "stars": 4,
+      "rating": 91.54710144927536,
+      "compositeScore": 91.54710144927536,
+      "nationalRank": 117,
+      "natlRank": 117,
+      "posRank": 12,
+      "stateRank": 18,
+      "state": "FL",
+      "school": "Florida State Univ. School (Tallahassee, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0f878544-f0c1-5ee4-8195-cf4f1b739736",
+      "slug": "andre-alexander",
+      "fullName": "Andre Alexander",
+      "classYear": 2028,
+      "position": "LB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 23,
+      "ufConfidence": 28,
+      "rank": 3,
+      "stars": 4,
+      "rating": 92.24057971014493,
+      "compositeScore": 92.24057971014493,
+      "nationalRank": 72,
+      "natlRank": 72,
+      "posRank": 4,
+      "stateRank": 9,
+      "state": "VA",
+      "school": "IMG Academy (Chesapeake, VA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "5e60722f-9da8-5e10-8766-711fbba9c76e",
+      "slug": "cassell-cruickshank",
+      "fullName": "Cassell Cruickshank",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 21,
+      "ufConfidence": 24,
+      "rank": 4,
+      "stars": 4,
+      "rating": 95.22258064516129,
+      "compositeScore": 95.22258064516129,
+      "nationalRank": 14,
+      "natlRank": 14,
+      "posRank": 3,
+      "stateRank": 2,
+      "state": "NC",
+      "school": "E E Smith (Fayetteville, NC)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "9382b81b-159d-554e-83b6-02a4d4cdcf53",
+      "slug": "bubba-brown",
+      "fullName": "Bubba Brown",
+      "classYear": 2028,
+      "position": "WR",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 19,
+      "ufConfidence": 23,
+      "rank": 5,
+      "stars": 4,
+      "rating": 91.91340579710146,
+      "compositeScore": 91.91340579710146,
+      "nationalRank": 95,
+      "natlRank": 95,
+      "posRank": 15,
+      "stateRank": 12,
+      "state": "FL",
+      "school": "Lowndes (Valdosta, GA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0c2e2ddb-6d7b-5689-88c9-8733394b57a0",
+      "slug": "kaleb-ballard",
+      "fullName": "Kaleb Ballard",
+      "classYear": 2028,
+      "position": "TE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 10,
+      "ufConfidence": 17,
+      "rank": 6,
+      "stars": 4,
+      "rating": 92.63260869565217,
+      "compositeScore": 92.63260869565217,
+      "nationalRank": 200,
+      "natlRank": 200,
+      "posRank": 1,
+      "stateRank": 2,
+      "state": "AL",
+      "school": "Wetumpka (Wetumpka, AL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    }
+  ],
+  "portalPredictions": {
+    "predictions": [
+      {
+        "school": "Florida",
+        "score": 71,
+        "sourceType": "MODEL",
+        "predictorId": "gatorvault",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Auburn",
+        "score": 66,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Miami",
+        "score": 9,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "South Carolina",
+        "score": 9,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "USF Bulls",
+        "score": 1,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      }
+    ],
+    "intel": {
+      "portalLikelihood": 0,
+      "depthChartRisk": 0,
+      "snapShareScore": 0,
+      "volatility": 0
+    }
+  },
+  "fitIntel": null,
+  "competingSchools": [
+    {
+      "school": "Auburn",
+      "rankNow": 1,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 66
+    },
+    {
+      "school": "Miami",
+      "rankNow": 2,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 9.2
+    },
+    {
+      "school": "South Carolina",
+      "rankNow": 3,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 9.2
+    },
+    {
+      "school": "USF Bulls",
+      "rankNow": 4,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 1.3
+    }
+  ],
+  "futurecastSummary": {
+    "ufProbability": 71,
+    "gvProbability": 71,
+    "predictedSchool": "Florida",
+    "movementDelta": null,
+    "fitScore": 74,
+    "volatilityScore": 0
+  },
+  "vaultScouting": {
+    "evaluation": "Smith is a rangy 6-2 free-safety mold with length and center-field range — covers ground in a few strides when the ball leaves the hash. Stays stacked on deep thirds and does not panic when receivers stem. Wins with eyes over the top and range before the frame fills.",
+    "comparison": "Smith comps to Justin Simmons — 6-2 rangy free-safety mold; length, center-field range, and eyes over the top before the frame fills.",
+    "projection": "Smith projects as a Year 2 SEC starter at safety (special teams / package snaps Year 1). Ceiling: every-down SEC free safety — the rangy center-fielder who can grow into STAR packages as he adds mass.",
+    "strengths": [
+      "Smith plays with real length at 6-2 — covers ground in a few strides when the ball leaves the hash.",
+      "Smith stays stacked on the perimeter as a deep-third / alley safety and does not panic when receivers stem at him.",
+      "Smith finishes pursuit angles downhill and is willing to stick his face in the run after the catch."
+    ],
+    "schemeFit": "Smith fits a length-first safety room that asks the deep defender to range over the top and fill the alley without guessing."
+  },
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.209Z",
+    "slug": "cyion-smith",
+    "profileKind": "prospect-2028",
+    "ranksSyncedAt": "2026-08-14T02:43:42.209Z"
+  }
+}

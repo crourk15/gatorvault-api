@@ -1,1 +1,452 @@
-{"lastUpdated":"2026-08-08T00:12:31.290Z","source":"recruiting-store","player":{"id":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe","fullName":"Izayah Vickers","slug":"izayah-vickers","classYear":2028,"position":"CB","status":"HS","height":71,"weight":180,"hometown":"Quincy","state":"FL","highSchool":"Florida State Univ. School (Tallahassee, FL)","stars":4,"compositeRating":91.54710144927536,"rankingNational":117,"rankingPosition":12,"rankingState":18,"committedTo":null,"ufFitScore":87,"fitScoreBreakdown":null,"movementHistory":[{"date":"2026-08-02","confidence":37},{"date":"2026-08-03","confidence":37.8},{"date":"2026-08-04","confidence":38.7},{"date":"2026-08-05","confidence":39.5},{"date":"2026-08-06","confidence":40.3},{"date":"2026-08-07","confidence":41.2},{"date":"2026-08-08","confidence":42}],"volatilityScore":5},"highSchoolProfile":{"id":"izayah-vickers","playerId":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe","offers":[{"school":"Southern Miss Golden Eagles","date":null},{"school":"Troy Trojans","date":null},{"school":"East Carolina Pirates","date":null},{"school":"FIU Golden Panthers","date":null},{"school":"Jacksonville State Gamecocks","date":null},{"school":"Coastal Carolina Chanticleers","date":null},{"school":"Massachusetts Minutemen","date":null},{"school":"Georgia Tech Yellow Jackets","date":null},{"school":"Louisville Cardinals","date":null},{"school":"Ole Miss Rebels","date":null},{"school":"Miami Hurricanes","date":null},{"school":"Texas A&M Aggies","date":null},{"school":"South Carolina Gamecocks","date":null},{"school":"West Virginia Mountaineers","date":null},{"school":"Mississippi State Bulldogs","date":null},{"school":"Arkansas Razorbacks","date":null},{"school":"Notre Dame Fighting Irish","date":null},{"school":"Clemson Tigers","date":null},{"school":"Florida","date":null}],"stats":{"stars":4,"natlRank":117,"posRank":12,"stateRank":18,"rating":91.54710144927536,"on3Id":"180246"},"recruitingNotes":"","discoveryScore":100,"visitHistory":[],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":{"ufProbNow":42,"ufProb7dAgo":37,"delta7d":5,"volatilityScore":5,"windowDays":30},"movementHistory":[{"date":"2026-08-02","confidence":37},{"date":"2026-08-03","confidence":37.8},{"date":"2026-08-04","confidence":38.7},{"date":"2026-08-05","confidence":39.5},{"date":"2026-08-06","confidence":40.3},{"date":"2026-08-07","confidence":41.2},{"date":"2026-08-08","confidence":42}],"signals":[{"id":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe-discovery","playerId":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe","signalType":"EVALUATION_NOTE","signalValue":{"note":"Early discovery score on FutureCast underclassmen watchlist","discoveryScore":100,"tier":"high"},"createdAt":"2026-08-03T02:27:45.767Z"},{"id":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe-staff-flag","playerId":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe","signalType":"STAFF_FLAG","signalValue":{"note":"Listed on FutureCast early target board","classYear":2028},"createdAt":"2026-08-03T02:27:45.767Z"},{"id":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe-momentum","playerId":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe","signalType":"SOCIAL_MOMENTUM","signalValue":{"direction":"up","delta7d":5,"ufConfidence":42},"createdAt":"2026-08-03T02:27:45.767Z"}],"related":[{"id":"94e6a1ee-8b3b-5234-8285-3eaab592fcb8","slug":"antonio-thomas-jr","fullName":"Antonio Thomas Jr.","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":41,"ufConfidence":49,"rank":1,"stars":4,"rating":null,"compositeScore":null,"nationalRank":17,"natlRank":17,"posRank":4,"stateRank":5,"state":"FL","school":"Carrollwood Day (Tampa, FL)","committedTo":null,"isCommittedToUF":false},{"id":"0f878544-f0c1-5ee4-8195-cf4f1b739736","slug":"andre-alexander","fullName":"Andre Alexander","classYear":2028,"position":"LB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":23,"ufConfidence":28,"rank":2,"stars":4,"rating":92.24057971014493,"compositeScore":92.24057971014493,"nationalRank":72,"natlRank":72,"posRank":4,"stateRank":9,"state":"VA","school":"IMG Academy (Chesapeake, VA)","committedTo":null,"isCommittedToUF":false},{"id":"5e60722f-9da8-5e10-8766-711fbba9c76e","slug":"cassell-cruickshank","fullName":"Cassell Cruickshank","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":21,"ufConfidence":24,"rank":3,"stars":4,"rating":95.22258064516129,"compositeScore":95.22258064516129,"nationalRank":14,"natlRank":14,"posRank":3,"stateRank":2,"state":"NC","school":"E E Smith (Fayetteville, NC)","committedTo":null,"isCommittedToUF":false},{"id":"9382b81b-159d-554e-83b6-02a4d4cdcf53","slug":"bubba-brown","fullName":"Bubba Brown","classYear":2028,"position":"WR","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":19,"ufConfidence":23,"rank":4,"stars":4,"rating":91.91340579710146,"compositeScore":91.91340579710146,"nationalRank":95,"natlRank":95,"posRank":15,"stateRank":12,"state":"FL","school":"Lowndes (Valdosta, GA)","committedTo":null,"isCommittedToUF":false},{"id":"0c2e2ddb-6d7b-5689-88c9-8733394b57a0","slug":"kaleb-ballard","fullName":"Kaleb Ballard","classYear":2028,"position":"TE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":10,"ufConfidence":17,"rank":5,"stars":4,"rating":92.63260869565217,"compositeScore":92.63260869565217,"nationalRank":200,"natlRank":200,"posRank":1,"stateRank":2,"state":"AL","school":"Wetumpka (Wetumpka, AL)","committedTo":null,"isCommittedToUF":false},{"id":"e8029f9c-ccc2-5362-8eb8-776ed93aa239","slug":"brysen-wright","fullName":"Brysen Wright","classYear":2028,"position":"WR","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":10,"ufConfidence":17,"rank":6,"stars":5,"rating":97.7731182795699,"compositeScore":97.7731182795699,"nationalRank":208,"natlRank":208,"posRank":2,"stateRank":1,"state":"FL","school":"Mandarin (Jacksonville, FL)","committedTo":null,"isCommittedToUF":false}],"portalPredictions":{"predictions":[{"school":"Florida","score":42,"sourceType":"MODEL","predictorId":"gatorvault","status":"ACTIVE"},{"school":"Clemson","score":29,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"},{"school":"Notre Dame","score":13,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"}],"intel":{"portalLikelihood":0,"depthChartRisk":0,"snapShareScore":0,"volatility":5}},"fitIntel":null,"competingSchools":[{"school":"Clemson","rankNow":1,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":28.7},{"school":"Notre Dame","rankNow":2,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":13.4}],"futurecastSummary":{"ufProbability":42,"gvProbability":42,"predictedSchool":"Florida","movementDelta":5,"fitScore":87,"volatilityScore":5},"vaultScouting":{"evaluation":"Vickers is a compact, twitchy press/man corner with sticky feet and track recovery speed. Closes throwing windows quickly and is physical at the catch point. Wins with mirror ability, recovery, and competitiveness — a press-man CB who does not play soft off the line.","comparison":"Vickers comps to Trent McDuffie — compact 5-11 press/man corner with twitch, physicality, and recovery speed in phase.","projection":"Vickers projects as a Year 2 SEC starter at CB (nickel / special teams Year 1). Ceiling: every-down SEC press corner — the twitchy man cover piece with track juice who can lock the perimeter.","strengths":["Vickers mirrors receivers in press with sticky feet and does not panic when stems get sticky.","Vickers closes throwing windows quickly — track background shows in how he recovers when beaten a step.","Vickers is willing to be physical at the catch point and does not play soft off the line."],"schemeFit":"Vickers fits White’s press/man + pattern-match CB who wins with twitch and physicality on the perimeter."},"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-08T00:12:31.418Z","slug":"izayah-vickers","profileKind":"prospect-2028"}}
+{
+  "lastUpdated": "2026-08-08T00:12:31.290Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe",
+    "fullName": "Izayah Vickers",
+    "slug": "izayah-vickers",
+    "classYear": 2028,
+    "position": "CB",
+    "status": "HS",
+    "height": 71,
+    "weight": 180,
+    "hometown": "Quincy",
+    "state": "FL",
+    "highSchool": "Florida State Univ. School (Tallahassee, FL)",
+    "stars": 4,
+    "compositeRating": 91.5072463768116,
+    "rankingNational": 120,
+    "rankingPosition": 12,
+    "rankingState": 16,
+    "committedTo": null,
+    "ufFitScore": 87,
+    "fitScoreBreakdown": null,
+    "movementHistory": [
+      {
+        "date": "2026-08-02",
+        "confidence": 37
+      },
+      {
+        "date": "2026-08-03",
+        "confidence": 37.8
+      },
+      {
+        "date": "2026-08-04",
+        "confidence": 38.7
+      },
+      {
+        "date": "2026-08-05",
+        "confidence": 39.5
+      },
+      {
+        "date": "2026-08-06",
+        "confidence": 40.3
+      },
+      {
+        "date": "2026-08-07",
+        "confidence": 41.2
+      },
+      {
+        "date": "2026-08-08",
+        "confidence": 42
+      }
+    ],
+    "volatilityScore": 5
+  },
+  "highSchoolProfile": {
+    "id": "izayah-vickers",
+    "playerId": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe",
+    "offers": [
+      {
+        "school": "Southern Miss Golden Eagles",
+        "date": null
+      },
+      {
+        "school": "Troy Trojans",
+        "date": null
+      },
+      {
+        "school": "East Carolina Pirates",
+        "date": null
+      },
+      {
+        "school": "FIU Golden Panthers",
+        "date": null
+      },
+      {
+        "school": "Jacksonville State Gamecocks",
+        "date": null
+      },
+      {
+        "school": "Coastal Carolina Chanticleers",
+        "date": null
+      },
+      {
+        "school": "Massachusetts Minutemen",
+        "date": null
+      },
+      {
+        "school": "Georgia Tech Yellow Jackets",
+        "date": null
+      },
+      {
+        "school": "Louisville Cardinals",
+        "date": null
+      },
+      {
+        "school": "Ole Miss Rebels",
+        "date": null
+      },
+      {
+        "school": "Miami Hurricanes",
+        "date": null
+      },
+      {
+        "school": "Texas A&M Aggies",
+        "date": null
+      },
+      {
+        "school": "South Carolina Gamecocks",
+        "date": null
+      },
+      {
+        "school": "West Virginia Mountaineers",
+        "date": null
+      },
+      {
+        "school": "Mississippi State Bulldogs",
+        "date": null
+      },
+      {
+        "school": "Arkansas Razorbacks",
+        "date": null
+      },
+      {
+        "school": "Notre Dame Fighting Irish",
+        "date": null
+      },
+      {
+        "school": "Clemson Tigers",
+        "date": null
+      },
+      {
+        "school": "Florida",
+        "date": null
+      }
+    ],
+    "stats": {
+      "stars": 4,
+      "natlRank": 120,
+      "posRank": 12,
+      "stateRank": 16,
+      "rating": 91.5072463768116,
+      "on3Id": "180246"
+    },
+    "recruitingNotes": "",
+    "discoveryScore": 100,
+    "visitHistory": [],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": {
+    "ufProbNow": 42,
+    "ufProb7dAgo": 37,
+    "delta7d": 5,
+    "volatilityScore": 5,
+    "windowDays": 30
+  },
+  "movementHistory": [
+    {
+      "date": "2026-08-02",
+      "confidence": 37
+    },
+    {
+      "date": "2026-08-03",
+      "confidence": 37.8
+    },
+    {
+      "date": "2026-08-04",
+      "confidence": 38.7
+    },
+    {
+      "date": "2026-08-05",
+      "confidence": 39.5
+    },
+    {
+      "date": "2026-08-06",
+      "confidence": 40.3
+    },
+    {
+      "date": "2026-08-07",
+      "confidence": 41.2
+    },
+    {
+      "date": "2026-08-08",
+      "confidence": 42
+    }
+  ],
+  "signals": [
+    {
+      "id": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe-discovery",
+      "playerId": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "Early discovery score on FutureCast underclassmen watchlist",
+        "discoveryScore": 100,
+        "tier": "high"
+      },
+      "createdAt": "2026-08-03T02:27:45.767Z"
+    },
+    {
+      "id": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe-staff-flag",
+      "playerId": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe",
+      "signalType": "STAFF_FLAG",
+      "signalValue": {
+        "note": "Listed on FutureCast early target board",
+        "classYear": 2028
+      },
+      "createdAt": "2026-08-03T02:27:45.767Z"
+    },
+    {
+      "id": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe-momentum",
+      "playerId": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe",
+      "signalType": "SOCIAL_MOMENTUM",
+      "signalValue": {
+        "direction": "up",
+        "delta7d": 5,
+        "ufConfidence": 42
+      },
+      "createdAt": "2026-08-03T02:27:45.767Z"
+    }
+  ],
+  "related": [
+    {
+      "id": "94e6a1ee-8b3b-5234-8285-3eaab592fcb8",
+      "slug": "antonio-thomas-jr",
+      "fullName": "Antonio Thomas Jr.",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 41,
+      "ufConfidence": 49,
+      "rank": 1,
+      "stars": 4,
+      "rating": null,
+      "compositeScore": null,
+      "nationalRank": 17,
+      "natlRank": 17,
+      "posRank": 4,
+      "stateRank": 5,
+      "state": "FL",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0f878544-f0c1-5ee4-8195-cf4f1b739736",
+      "slug": "andre-alexander",
+      "fullName": "Andre Alexander",
+      "classYear": 2028,
+      "position": "LB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 23,
+      "ufConfidence": 28,
+      "rank": 2,
+      "stars": 4,
+      "rating": 92.24057971014493,
+      "compositeScore": 92.24057971014493,
+      "nationalRank": 72,
+      "natlRank": 72,
+      "posRank": 4,
+      "stateRank": 9,
+      "state": "VA",
+      "school": "IMG Academy (Chesapeake, VA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "5e60722f-9da8-5e10-8766-711fbba9c76e",
+      "slug": "cassell-cruickshank",
+      "fullName": "Cassell Cruickshank",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 21,
+      "ufConfidence": 24,
+      "rank": 3,
+      "stars": 4,
+      "rating": 95.22258064516129,
+      "compositeScore": 95.22258064516129,
+      "nationalRank": 14,
+      "natlRank": 14,
+      "posRank": 3,
+      "stateRank": 2,
+      "state": "NC",
+      "school": "E E Smith (Fayetteville, NC)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "9382b81b-159d-554e-83b6-02a4d4cdcf53",
+      "slug": "bubba-brown",
+      "fullName": "Bubba Brown",
+      "classYear": 2028,
+      "position": "WR",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 19,
+      "ufConfidence": 23,
+      "rank": 4,
+      "stars": 4,
+      "rating": 91.91340579710146,
+      "compositeScore": 91.91340579710146,
+      "nationalRank": 95,
+      "natlRank": 95,
+      "posRank": 15,
+      "stateRank": 12,
+      "state": "FL",
+      "school": "Lowndes (Valdosta, GA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0c2e2ddb-6d7b-5689-88c9-8733394b57a0",
+      "slug": "kaleb-ballard",
+      "fullName": "Kaleb Ballard",
+      "classYear": 2028,
+      "position": "TE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 10,
+      "ufConfidence": 17,
+      "rank": 5,
+      "stars": 4,
+      "rating": 92.63260869565217,
+      "compositeScore": 92.63260869565217,
+      "nationalRank": 200,
+      "natlRank": 200,
+      "posRank": 1,
+      "stateRank": 2,
+      "state": "AL",
+      "school": "Wetumpka (Wetumpka, AL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "e8029f9c-ccc2-5362-8eb8-776ed93aa239",
+      "slug": "brysen-wright",
+      "fullName": "Brysen Wright",
+      "classYear": 2028,
+      "position": "WR",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 10,
+      "ufConfidence": 17,
+      "rank": 6,
+      "stars": 5,
+      "rating": 97.7731182795699,
+      "compositeScore": 97.7731182795699,
+      "nationalRank": 208,
+      "natlRank": 208,
+      "posRank": 2,
+      "stateRank": 1,
+      "state": "FL",
+      "school": "Mandarin (Jacksonville, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    }
+  ],
+  "portalPredictions": {
+    "predictions": [
+      {
+        "school": "Florida",
+        "score": 42,
+        "sourceType": "MODEL",
+        "predictorId": "gatorvault",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Clemson",
+        "score": 29,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Notre Dame",
+        "score": 13,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      }
+    ],
+    "intel": {
+      "portalLikelihood": 0,
+      "depthChartRisk": 0,
+      "snapShareScore": 0,
+      "volatility": 5
+    }
+  },
+  "fitIntel": null,
+  "competingSchools": [
+    {
+      "school": "Clemson",
+      "rankNow": 1,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 28.7
+    },
+    {
+      "school": "Notre Dame",
+      "rankNow": 2,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 13.4
+    }
+  ],
+  "futurecastSummary": {
+    "ufProbability": 42,
+    "gvProbability": 42,
+    "predictedSchool": "Florida",
+    "movementDelta": 5,
+    "fitScore": 87,
+    "volatilityScore": 5
+  },
+  "vaultScouting": {
+    "evaluation": "Vickers is a compact, twitchy press/man corner with sticky feet and track recovery speed. Closes throwing windows quickly and is physical at the catch point. Wins with mirror ability, recovery, and competitiveness — a press-man CB who does not play soft off the line.",
+    "comparison": "Vickers comps to Trent McDuffie — compact 5-11 press/man corner with twitch, physicality, and recovery speed in phase.",
+    "projection": "Vickers projects as a Year 2 SEC starter at CB (nickel / special teams Year 1). Ceiling: every-down SEC press corner — the twitchy man cover piece with track juice who can lock the perimeter.",
+    "strengths": [
+      "Vickers mirrors receivers in press with sticky feet and does not panic when stems get sticky.",
+      "Vickers closes throwing windows quickly — track background shows in how he recovers when beaten a step.",
+      "Vickers is willing to be physical at the catch point and does not play soft off the line."
+    ],
+    "schemeFit": "Vickers fits White’s press/man + pattern-match CB who wins with twitch and physicality on the perimeter."
+  },
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.210Z",
+    "slug": "izayah-vickers",
+    "profileKind": "prospect-2028",
+    "ranksSyncedAt": "2026-08-14T02:43:42.210Z"
+  }
+}

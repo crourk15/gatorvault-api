@@ -1,1 +1,74 @@
-{"lastUpdated":"2026-08-08T00:12:23.387Z","source":"recruiting-store","player":{"id":"282768","fullName":"Keldrid Ben","slug":"keldrid-ben","classYear":2027,"position":"RB","status":"HS","height":70,"weight":210,"hometown":"Montgomery","state":"TX","highSchool":"Montgomery (Montgomery, TX)","stars":4,"compositeRating":90,"rankingNational":225,"rankingPosition":null,"rankingState":null,"committedTo":"Oklahoma","ufFitScore":null,"fitScoreBreakdown":null,"movementHistory":[],"volatilityScore":0},"highSchoolProfile":{"id":"keldrid-ben","playerId":"282768","offers":[],"stats":{"stars":4,"natlRank":225,"posRank":null,"stateRank":null,"rating":90,"on3Id":282768},"recruitingNotes":"4★ RB committed to Oklahoma — Closing Class Flip Watch #3.","discoveryScore":null,"visitHistory":[],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":null,"movementHistory":[],"signals":[{"id":"282768-staff-note","playerId":"282768","signalType":"EVALUATION_NOTE","signalValue":{"note":"4★ RB committed to Oklahoma — Closing Class Flip Watch #3.","source":"recruiting-store"},"createdAt":"2026-07-15T01:33:42.070Z"}],"related":[],"portalPredictions":null,"fitIntel":null,"competingSchools":[],"futurecastSummary":null,"vaultScouting":null,"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-08T00:12:23.436Z","slug":"keldrid-ben","profileKind":"commit-2027"}}
+{
+  "lastUpdated": "2026-08-08T00:12:23.387Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "282768",
+    "fullName": "Keldrid Ben",
+    "slug": "keldrid-ben",
+    "classYear": 2027,
+    "position": "RB",
+    "status": "HS",
+    "height": 70,
+    "weight": 210,
+    "hometown": "Montgomery",
+    "state": "TX",
+    "highSchool": "Montgomery (Montgomery, TX)",
+    "stars": 4,
+    "compositeRating": 92.50760869565218,
+    "rankingNational": 115,
+    "rankingPosition": 6,
+    "rankingState": 14,
+    "committedTo": "Oklahoma",
+    "ufFitScore": null,
+    "fitScoreBreakdown": null,
+    "movementHistory": [],
+    "volatilityScore": 0
+  },
+  "highSchoolProfile": {
+    "id": "keldrid-ben",
+    "playerId": "282768",
+    "offers": [],
+    "stats": {
+      "stars": 4,
+      "natlRank": 115,
+      "posRank": 6,
+      "stateRank": 14,
+      "rating": 92.50760869565218,
+      "on3Id": 282768
+    },
+    "recruitingNotes": "4★ RB committed to Oklahoma — Closing Class Flip Watch #3.",
+    "discoveryScore": null,
+    "visitHistory": [],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": null,
+  "movementHistory": [],
+  "signals": [
+    {
+      "id": "282768-staff-note",
+      "playerId": "282768",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "4★ RB committed to Oklahoma — Closing Class Flip Watch #3.",
+        "source": "recruiting-store"
+      },
+      "createdAt": "2026-07-15T01:33:42.070Z"
+    }
+  ],
+  "related": [],
+  "portalPredictions": null,
+  "fitIntel": null,
+  "competingSchools": [],
+  "futurecastSummary": null,
+  "vaultScouting": null,
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.211Z",
+    "slug": "keldrid-ben",
+    "profileKind": "commit-2027",
+    "ranksSyncedAt": "2026-08-14T02:43:42.211Z"
+  }
+}

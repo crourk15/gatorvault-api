@@ -220,10 +220,11 @@ async function finalizeProfileResponse(
       stats: {
         ...stats,
         stars: coalesceStars(recruiting.stars, stats.stars),
-        natlRank: stats.natlRank ?? recruiting.natlRank ?? null,
-        posRank: stats.posRank ?? recruiting.posRank ?? null,
-        stateRank: stats.stateRank ?? recruiting.stateRank ?? null,
-        rating: stats.rating ?? recruiting.rating ?? null,
+        // Live store Industry ranks win over stale Postgres hs stats.
+        natlRank: recruiting.natlRank ?? stats.natlRank ?? null,
+        posRank: recruiting.posRank ?? stats.posRank ?? null,
+        stateRank: recruiting.stateRank ?? stats.stateRank ?? null,
+        rating: recruiting.rating ?? stats.rating ?? null,
         on3Id: stats.on3Id ?? recruiting.on3Id ?? null,
       },
     };
