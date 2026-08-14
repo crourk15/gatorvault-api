@@ -153,8 +153,6 @@ export function OverviewTab({
       <p className="fc-profile-muted">{signalSummaryText(eventSignals)}</p>
     );
 
-  const moveDelta = futurecastSummary?.movementDelta;
-
   return (
     <div className="fc-profile-panel" data-testid="tab-overview">
       <OverviewFourSlot
@@ -173,9 +171,15 @@ export function OverviewTab({
           <p className="fc-profile-muted fc-profile-section__lede">
             {on3Uf != null && gvUf != null
               ? `On3 market has Florida at ${on3Uf}% · GatorVault model at ${gvUf}%`
-              : 'GatorVault model for Florida · On3 RPM for competitor schools'}
-            {moveDelta != null && Number(moveDelta) !== 0
-              ? ` · GV movement ${Number(moveDelta) > 0 ? '+' : ''}${Math.round(Number(moveDelta))} over 7 days`
+              : on3Uf != null
+                ? `On3 market has Florida at ${on3Uf}%`
+                : gvUf != null
+                  ? `GatorVault model has Florida at ${gvUf}% · competitor schools use On3 when available`
+                  : 'On3 RPM for the market · GatorVault model when labeled'}
+            {on3Uf != null &&
+            futurecastSummary?.movementDelta != null &&
+            Number(futurecastSummary.movementDelta) !== 0
+              ? ` · On3 movement ${Number(futurecastSummary.movementDelta) > 0 ? '+' : ''}${Math.round(Number(futurecastSummary.movementDelta))} over 7 days`
               : ''}
           </p>
           <PredictionsPanel

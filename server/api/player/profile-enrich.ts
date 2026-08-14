@@ -176,6 +176,7 @@ export function competingSchoolsFromRecruiting(
 
   return competitors
     .filter((c) => c?.school && !isFloridaSchool(c.school))
+    .filter((c) => String((c as { source?: string })?.source || '').toLowerCase() !== 'legacy')
     .sort((a, b) => Number(b.score ?? 0) - Number(a.score ?? 0))
     .slice(0, 8)
     .map((c, i) => ({

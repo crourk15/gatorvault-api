@@ -34,6 +34,45 @@ describe('player-overview-mode', () => {
     assert.ok(ctx.rows.some((r) => r.label === 'Georgia'));
   });
 
+  it('Board picture uses On3 only and skips legacy peers / GV momentum theater', () => {
+    const player = { status: 'HS', committedTo: null, classYear: 2028, highSchool: 'Test HS' };
+    const stand = mod.buildRecruitingStand({
+      player,
+      metrics: { ufFitScore: 0, ufFitTier: 'watch', ufFitLabel: null },
+      competingSchools: [
+        { school: 'Georgia', pct: 55, source: 'legacy' },
+        { school: 'Clemson', pct: 29 },
+      ],
+      futurecastSummary: {
+        on3UfProbability: 94,
+        ufProbability: 42,
+        gvProbability: 42,
+        movementDelta: 5,
+      },
+      staffNote: null,
+      evaluationNote: null,
+    });
+    assert.ok(stand.metrics.some((m) => m.label === 'On3 Florida' && m.value === '94%'));
+    assert.ok(stand.metrics.some((m) => m.label === 'GV model' && m.value === '42%'));
+    assert.match(stand.headline, /Florida leads the board at 94%/i);
+    assert.doesNotMatch(stand.headline, /momentum/i);
+
+    const ctx = mod.buildRecruitingContext({
+      mode: 'target',
+      player,
+      collegeProfile: null,
+      portalProfile: null,
+      competingSchools: [
+        { school: 'Georgia', pct: 55, source: 'legacy' },
+        { school: 'Clemson', pct: 29 },
+      ],
+      futurecastSummary: { on3UfProbability: 94, ufProbability: 42 },
+    });
+    assert.ok(ctx.rows.some((r) => r.label === 'Florida' && r.value === '94%'));
+    assert.ok(ctx.rows.some((r) => r.label === 'Clemson'));
+    assert.ok(!ctx.rows.some((r) => r.label === 'Georgia'));
+  });
+
   it('committed to Florida uses commit mode without The field', () => {
     const player = { status: 'HS', committedTo: 'Florida', classYear: 2027 };
     const mode = mod.resolveProfileOverviewMode(player);
@@ -48,7 +87,7 @@ describe('player-overview-mode', () => {
     });
     assert.ok(ctx);
     assert.notEqual(ctx.title, 'The field');
-    assert.ok(ctx.rows.some((r) => r.label === 'Commitment' && r.value === 'Florida'));
+    assert.ok(ctx.rows.some((r) => r.label === 'School' && r.value === 'Florida'));
   });
 
   it('PORTAL status resolves to portal mode', () => {

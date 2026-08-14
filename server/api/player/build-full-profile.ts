@@ -304,7 +304,6 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
         pct: s.pct,
       }));
 
-      const mw = intel.earlyMovement.movementWindow;
       const on3Uf =
         intel.ufRpmPct != null && Number(intel.ufRpmPct) > 0
           ? Math.round(Number(intel.ufRpmPct))
@@ -322,8 +321,9 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
         collegeProfile: profiles.collegeProfile,
         portalProfile: profiles.portalProfile as Record<string, unknown> | null,
         ufSpecificProfile: profiles.ufSpecificProfile,
-        movementWindow: mw,
-        movementHistory: intel.earlyMovement.movementHistory,
+        // Do not ship synthetic GV movement curves as market history.
+        movementWindow: null,
+        movementHistory: [],
         signals: intel.earlySignals as unknown as Record<string, unknown>[],
         related,
         portalPredictions: {
@@ -345,12 +345,12 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
         fitIntel: null,
         competingSchools,
         futurecastSummary: {
-          // On3 panel: prefer RPM. GV blend stays on FutureCast Picks (Florida row).
-          ufProbability: on3Uf ?? intel.earlyIntel.ufProbability,
+          // Unlabeled uf% = On3 only. GV model stays in gvProbability (Overview labels it).
+          ufProbability: on3Uf,
           on3UfProbability: on3Uf,
           gvProbability: intel.earlyIntel.ufProbability,
           predictedSchool: boardLeader?.school ?? null,
-          movementDelta: mw?.delta7d ?? null,
+          movementDelta: null,
           fitScore: intel.earlyIntel.fitScore,
           volatilityScore: intel.earlyIntel.volatilityScore,
         },

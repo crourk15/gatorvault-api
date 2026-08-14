@@ -140,6 +140,9 @@ export function PlayerProfilePage({
     const raw = profile?.portalPredictions?.predictions;
     if (!raw?.length) return undefined;
     const now = profile?.lastUpdated ?? new Date().toISOString();
+    const on3Uf = profile?.futurecastSummary?.on3UfProbability;
+    const on3Pct =
+      on3Uf != null && Number.isFinite(Number(on3Uf)) ? Math.round(Number(on3Uf)) : null;
     return raw.map((p, i) => {
       const row = p as {
         school: string;
@@ -148,12 +151,17 @@ export function PlayerProfilePage({
         predictorId?: string;
         status?: PlayerPrediction['status'];
       };
+      const isFlorida = /\bflorida\b|\bgators\b|\buf\b/i.test(String(row.school || ''));
+      const confidence =
+        isFlorida && on3Pct != null ? on3Pct : Math.round(Number(row.score));
       return {
         id: `${profile?.player?.id ?? 'pick'}-${i}`,
         school: row.school,
-        confidence: Math.round(Number(row.score)),
-        sourceType: row.sourceType ?? 'MODEL',
-        predictorId: row.predictorId ?? 'gatorvault',
+        confidence,
+        sourceType:
+          isFlorida && on3Pct != null ? 'BLENDED' : row.sourceType ?? 'MODEL',
+        predictorId:
+          isFlorida && on3Pct != null ? 'on3-rpm' : row.predictorId ?? 'gatorvault',
         status: row.status ?? 'ACTIVE',
         createdAt: now,
         updatedAt: now,

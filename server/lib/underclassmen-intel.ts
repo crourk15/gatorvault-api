@@ -192,12 +192,6 @@ function parseRecruitingUfPct(raw: unknown): number | null {
   return sanitizeRpmPct(raw);
 }
 
-/** Min peer % when falling back to legacy competitors (UF + 1–2 rivals). */
-const LEGACY_PEER_MIN_PCT = 12;
-/** When Florida RPM is this high, skip stale legacy peer crumbs (UF-only OK). */
-const UF_LOCKED_SKIP_LEGACY_PCT = 90;
-const LEGACY_PEER_MAX = 2;
-
 function competitorPct(raw: unknown): number | null {
   if (raw == null || !Number.isFinite(Number(raw))) return null;
   const num = Number(raw);
@@ -228,26 +222,10 @@ function competingSchoolsFromRecruitingRecord(
     pct?: number;
     source?: string;
   }>;
-  // Prefer confirmed On3 / live competitors. If none, allow top 1–2 meaningful legacy peers
-  // (not when UF is already ~locked — that reads as a fake battle).
-  const nonLegacy = competitors.filter(
+  // Market peers only — never invent a board from legacy seed crumbs.
+  const competitorPool = competitors.filter(
     (c) => String(c?.source || '').toLowerCase() !== 'legacy'
   );
-  let competitorPool = nonLegacy;
-  if (!competitorPool.length) {
-    const ufRpm = competitorPct(recruiting?.ufRpmPct) ?? 0;
-    if (ufRpm < UF_LOCKED_SKIP_LEGACY_PCT) {
-      competitorPool = [...competitors]
-        .map((c) => ({
-          c,
-          pct: competitorPct(c?.score ?? c?.pct) ?? 0,
-        }))
-        .filter((row) => row.pct >= LEGACY_PEER_MIN_PCT)
-        .sort((a, b) => b.pct - a.pct)
-        .slice(0, LEGACY_PEER_MAX)
-        .map((row) => row.c);
-    }
-  }
   for (const c of competitorPool) {
     add(c?.school || c?.name, c?.score ?? c?.pct);
   }
@@ -269,7 +247,7 @@ function competingSchoolsFromRecruitingRecord(
   return [...bySchool.values()].sort((a, b) => b.pct - a.pct);
 }
 
-/** Export for high-priority / battles — On3 first, then smart legacy peer fallback. */
+/** Export for high-priority / battles — live/On3 peers only (no legacy fabrications). */
 export { competingSchoolsFromRecruitingRecord };
 
 function buildEarlySignals(
@@ -350,21 +328,31 @@ function buildFutureCastPicks(
   const now = new Date().toISOString();
   const picks: UnderclassmenFutureCastPick[] = [];
 
-  const floridaPct =
-    player.ufConfidence != null && player.ufConfidence > 0
-      ? player.ufConfidence
-      : player.ufRpmPct != null && player.ufRpmPct > 0
-        ? player.ufRpmPct
-        : null;
-  if (floridaPct != null && floridaPct > 0) {
-    const fromRpm = !(player.ufConfidence != null && player.ufConfidence > 0);
+  // Florida market row = live On3 RPM when present. GV model is Overview-labeled, not a fake RPM.
+  const on3Pct =
+    player.ufRpmPct != null && Number(player.ufRpmPct) > 0 ? Number(player.ufRpmPct) : null;
+  const gvPct =
+    player.ufConfidence != null && Number(player.ufConfidence) > 0
+      ? Number(player.ufConfidence)
+      : null;
+  if (on3Pct != null) {
     picks.push({
       id: `${intelUuid}-pick-florida`,
       school: 'Florida',
-      confidence: Math.round(floridaPct),
-      delta: player.trendDelta7d != null ? Math.round(player.trendDelta7d) : undefined,
-      sourceType: fromRpm ? 'BLENDED' : 'MODEL',
-      predictorId: fromRpm ? 'on3-rpm' : 'gatorvault',
+      confidence: Math.round(on3Pct),
+      sourceType: 'BLENDED',
+      predictorId: 'on3-rpm',
+      status: 'ACTIVE',
+      createdAt: now,
+      updatedAt: now,
+    });
+  } else if (gvPct != null) {
+    picks.push({
+      id: `${intelUuid}-pick-florida`,
+      school: 'Florida',
+      confidence: Math.round(gvPct),
+      sourceType: 'MODEL',
+      predictorId: 'gatorvault',
       status: 'ACTIVE',
       createdAt: now,
       updatedAt: now,

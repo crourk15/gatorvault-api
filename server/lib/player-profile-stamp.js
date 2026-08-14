@@ -53,7 +53,7 @@ function stampCandidates(slug) {
   return [path.join(durableStampDir(), name), path.join(BUNDLE_STAMP_DIR, name)];
 }
 
-/** Strip live odds before writing so stamps never bake stale RPM. */
+/** Strip live odds before writing so stamps never bake stale RPM / fake market Δ. */
 function stripLiveRpmFields(profile) {
   if (!profile || typeof profile !== 'object') return profile;
   const doc = { ...profile };
@@ -65,20 +65,24 @@ function stripLiveRpmFields(profile) {
   }
   if (doc.futurecastSummary && typeof doc.futurecastSummary === 'object') {
     const summary = { ...doc.futurecastSummary };
-    // Preserve gvProbability / fit / movement from dossier; clear On3 RPM slots.
+    // Keep labeled gvProbability / fit. Never bake On3 or unlabeled uf% / synthetic Δ.
     delete summary.on3UfProbability;
-    // ufProbability on underclassmen is often the RPM display field — clear for live overlay.
-    // Keep gvProbability when present.
-    if (summary.gvProbability != null) {
-      summary.ufProbability = summary.gvProbability;
-    } else if (!isFloridaSchool(doc.player?.committedTo)) {
-      delete summary.ufProbability;
-    }
+    delete summary.ufProbability;
+    delete summary.movementDelta;
     doc.futurecastSummary = summary;
+  }
+  // Synthetic 7d curves must not ship as market movement on prepared-meal stamps.
+  doc.movementWindow = null;
+  doc.movementHistory = [];
+  if (Array.isArray(doc.competingSchools)) {
+    doc.competingSchools = doc.competingSchools.filter(
+      (c) => String(c?.source || '').toLowerCase() !== 'legacy'
+    );
   }
   doc.stampMeta = {
     ...(doc.stampMeta && typeof doc.stampMeta === 'object' ? doc.stampMeta : {}),
     rpmStripped: true,
+    marketFakesStripped: true,
     stampedAt: new Date().toISOString(),
   };
   return doc;
@@ -158,6 +162,21 @@ function overlayLiveRpm(profile, recruiting) {
       ? { ...profile.futurecastSummary }
       : null;
 
+  // Real On3/RPM week delta from recorded rpmPct history (not synthetic GV curves).
+  let rpmDelta = null;
+  let rpmHistory = [];
+  const slugKey = String(player.slug || profile.stampMeta?.slug || '').trim().toLowerCase();
+  if (slugKey && (ufCommit || rpm != null)) {
+    try {
+      const trend = require('./uf-trend-snapshot');
+      rpmDelta = trend.computeRpmDelta7d(slugKey);
+      rpmHistory = trend.buildRpmTrendHistoryForSlug(slugKey) || [];
+    } catch {
+      rpmDelta = null;
+      rpmHistory = [];
+    }
+  }
+
   if (ufCommit) {
     futurecastSummary = {
       ...(futurecastSummary || {}),
@@ -165,37 +184,84 @@ function overlayLiveRpm(profile, recruiting) {
       on3UfProbability: 100,
       gvProbability: futurecastSummary?.gvProbability ?? 100,
       predictedSchool: 'Florida',
-      movementDelta: futurecastSummary?.movementDelta ?? null,
+      movementDelta: rpmDelta,
       fitScore: futurecastSummary?.fitScore ?? player.ufFitScore ?? 100,
       volatilityScore: futurecastSummary?.volatilityScore ?? 0,
     };
   } else if (rpm != null) {
-    const rivalMax = Math.max(
-      0,
-      ...(Array.isArray(profile.competingSchools)
-        ? profile.competingSchools.map((s) => Number(s?.pct) || 0)
-        : [])
-    );
+    const marketRivals = Array.isArray(profile.competingSchools)
+      ? profile.competingSchools.filter((s) => String(s?.source || '').toLowerCase() !== 'legacy')
+      : [];
+    const rivalMax = Math.max(0, ...marketRivals.map((s) => Number(s?.pct) || 0));
     futurecastSummary = {
       ...(futurecastSummary || {
         predictedSchool: null,
-        movementDelta: null,
         fitScore: player.ufFitScore ?? null,
         volatilityScore: null,
       }),
       on3UfProbability: rpm,
-      // On3 panel prefers RPM; keep GV from stamp when present.
+      // Unlabeled ufProbability = live On3 only (never GV model score).
       ufProbability: rpm,
       gvProbability: futurecastSummary?.gvProbability ?? null,
+      movementDelta: rpmDelta,
       // Heal stale stamps that crowned a legacy rival over live UF RPM.
       ...(rpm >= rivalMax ? { predictedSchool: 'Florida' } : {}),
     };
+  } else if (futurecastSummary) {
+    // No live On3 — do not leave GV copied into unlabeled ufProbability / market Δ.
+    delete futurecastSummary.ufProbability;
+    delete futurecastSummary.on3UfProbability;
+    futurecastSummary.movementDelta = null;
   }
+
+  // Drop legacy phantom peers from the board field fans see.
+  let competingSchools = Array.isArray(profile.competingSchools)
+    ? profile.competingSchools.filter((s) => String(s?.source || '').toLowerCase() !== 'legacy')
+    : profile.competingSchools;
+
+  // Keep FutureCast Picks Florida row on the live On3 market % (not stale GV stamp score).
+  let portalPredictions = profile.portalPredictions;
+  const floridaPct = ufCommit ? 100 : rpm;
+  if (
+    floridaPct != null &&
+    portalPredictions &&
+    typeof portalPredictions === 'object' &&
+    Array.isArray(portalPredictions.predictions)
+  ) {
+    const predictions = portalPredictions.predictions.map((row) => {
+      if (!row || typeof row !== 'object') return row;
+      const school = String(row.school || '');
+      if (!/\bflorida\b|\bgators\b|\buf\b/i.test(school)) return row;
+      return {
+        ...row,
+        score: floridaPct,
+        sourceType: row.sourceType || 'BLENDED',
+        predictorId: ufCommit ? row.predictorId || 'gatorvault' : 'on3-rpm',
+      };
+    });
+    portalPredictions = { ...portalPredictions, predictions };
+  }
+
+  const movementWindow =
+    rpm != null && rpmDelta != null
+      ? {
+          ufProbNow: rpm,
+          ufProb7dAgo: Math.max(0, Math.min(100, rpm - rpmDelta)),
+          delta7d: rpmDelta,
+          volatilityScore: futurecastSummary?.volatilityScore ?? null,
+          windowDays: 7,
+          source: 'on3-rpm',
+        }
+      : null;
 
   return {
     ...profile,
     player,
     futurecastSummary,
+    competingSchools,
+    portalPredictions,
+    movementWindow,
+    movementHistory: rpmHistory,
     lastUpdated: new Date().toISOString(),
     servedFrom: 'stamp',
     rpmLive: true,

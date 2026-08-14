@@ -75,9 +75,12 @@ describe('player profile prepared-meal stamps', () => {
     assert.ok(raw);
     assert.equal(raw.player.ufRpmPct, undefined);
     assert.equal(raw.futurecastSummary.on3UfProbability, undefined);
-    // GV kept; display ufProbability falls back to GV until live overlay.
+    // GV kept labeled; unlabeled ufProbability / synthetic Δ stripped until live On3 overlay.
     assert.equal(raw.futurecastSummary.gvProbability, 31);
-    assert.equal(raw.futurecastSummary.ufProbability, 31);
+    assert.equal(raw.futurecastSummary.ufProbability, undefined);
+    assert.equal(raw.futurecastSummary.movementDelta, undefined);
+    assert.equal(raw.movementWindow, null);
+    assert.deepEqual(raw.movementHistory, []);
     assert.equal(raw.vaultScouting.comparison, 'Comp');
 
     const live = stamp.overlayLiveRpm(raw, { ufRpmPct: 58, committedTo: null });
@@ -87,6 +90,11 @@ describe('player profile prepared-meal stamps', () => {
     assert.equal(live.futurecastSummary.on3UfProbability, 58);
     assert.equal(live.futurecastSummary.ufProbability, 58);
     assert.equal(live.futurecastSummary.gvProbability, 31);
+    // movementDelta only when real On3/RPM history exists for the slug (often null in unit tests).
+    assert.ok(
+      live.futurecastSummary.movementDelta == null ||
+        Number.isFinite(Number(live.futurecastSummary.movementDelta))
+    );
     assert.equal(live.vaultScouting.comparison, 'Comp');
   });
 
@@ -120,6 +128,50 @@ describe('player profile prepared-meal stamps', () => {
     );
     assert.equal(live.futurecastSummary.on3UfProbability, 74);
     assert.equal(live.futurecastSummary.predictedSchool, 'Florida');
+  });
+
+  it('overlays FutureCast Picks Florida score to live On3 RPM (not stale GV)', () => {
+    const live = stamp.overlayLiveRpm(
+      {
+        player: { slug: 'izayah-vickers', committedTo: null, classYear: 2028 },
+        competingSchools: [{ school: 'Clemson', pct: 29 }],
+        futurecastSummary: { gvProbability: 42, ufProbability: 42, movementDelta: 5 },
+        portalPredictions: {
+          predictions: [
+            { school: 'Florida', score: 42, sourceType: 'MODEL', predictorId: 'gatorvault' },
+            { school: 'Clemson', score: 29, sourceType: 'BLENDED', predictorId: 'on3-rpm' },
+          ],
+        },
+        vaultScouting: null,
+      },
+      { ufRpmPct: 94, committedTo: null }
+    );
+    assert.equal(live.futurecastSummary.on3UfProbability, 94);
+    assert.equal(live.futurecastSummary.gvProbability, 42);
+    // Stamped synthetic +5 must not survive; only real RPM history may populate Δ.
+    assert.notEqual(live.futurecastSummary.movementDelta, 5);
+    const florida = live.portalPredictions.predictions.find((p) => /florida/i.test(p.school));
+    assert.equal(florida.score, 94);
+    assert.equal(florida.predictorId, 'on3-rpm');
+    const clemson = live.portalPredictions.predictions.find((p) => /clemson/i.test(p.school));
+    assert.equal(clemson.score, 29);
+  });
+
+  it('does not leave GV as unlabeled ufProbability when On3 RPM is missing', () => {
+    const live = stamp.overlayLiveRpm(
+      {
+        player: { slug: 'no-rpm-yet', committedTo: null, classYear: 2028 },
+        competingSchools: [{ school: 'Miami', pct: 31, source: 'legacy' }],
+        futurecastSummary: { gvProbability: 26, ufProbability: 26, movementDelta: -4 },
+        vaultScouting: null,
+      },
+      { ufRpmPct: null, committedTo: null }
+    );
+    assert.equal(live.futurecastSummary.gvProbability, 26);
+    assert.equal(live.futurecastSummary.ufProbability, undefined);
+    assert.equal(live.futurecastSummary.on3UfProbability, undefined);
+    assert.equal(live.futurecastSummary.movementDelta, null);
+    assert.deepEqual(live.competingSchools, []);
   });
 
   it('lists 2027 + 2028 allowlist prepared-meal targets', () => {
