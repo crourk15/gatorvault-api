@@ -46,3 +46,8 @@ No Codemagic — store + hub-runtime + seed.
 ## Known non-blockers
 - `zyon-robinson`, `tyree-mannings-jr`: identity gate blocked write (pre-existing)
 - Some early 2028 names have On3 profiles but **no Industry ranking yet** — cards correctly omit #NATL until On3 publishes consensus
+
+## Elite full-roster follow-up (same day)
+- **594** On3-linked · **525** with Industry natl · **69** confirmed On3 Industry-null (see `on3-industry-unranked.json`)
+- Full-profile enrich + hs stats prefer live store over Postgres
+- Stamp write-through: `refresh-stamp-ranks-from-store.js` (39 stamps updated)

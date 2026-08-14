@@ -1,1 +1,457 @@
-{"lastUpdated":"2026-08-08T00:12:27.082Z","source":"recruiting-store","player":{"id":"5e60722f-9da8-5e10-8766-711fbba9c76e","fullName":"Cassell Cruickshank","slug":"cassell-cruickshank","classYear":2028,"position":"EDGE","status":"HS","height":77,"weight":217,"hometown":"Fayetteville","state":"NC","highSchool":"E E Smith (Fayetteville, NC)","stars":4,"compositeRating":95.22258064516129,"rankingNational":14,"rankingPosition":3,"rankingState":2,"committedTo":null,"ufFitScore":71,"fitScoreBreakdown":null,"movementHistory":[{"date":"2026-08-02","confidence":31},{"date":"2026-08-03","confidence":29.8},{"date":"2026-08-04","confidence":28.7},{"date":"2026-08-05","confidence":27.5},{"date":"2026-08-06","confidence":26.3},{"date":"2026-08-07","confidence":25.2},{"date":"2026-08-08","confidence":24}],"volatilityScore":7},"highSchoolProfile":{"id":"cassell-cruickshank","playerId":"5e60722f-9da8-5e10-8766-711fbba9c76e","offers":[{"school":"Duke Blue Devils","date":null},{"school":"Texas Longhorns","date":null},{"school":"Georgia Tech Yellow Jackets","date":null},{"school":"Notre Dame Fighting Irish","date":null},{"school":"Oregon Ducks","date":null},{"school":"Oklahoma Sooners","date":null},{"school":"Ole Miss Rebels","date":null},{"school":"Missouri Tigers","date":null},{"school":"Virginia Tech Hokies","date":null},{"school":"Miami Hurricanes","date":null},{"school":"LSU Tigers","date":null},{"school":"Kentucky Wildcats","date":null},{"school":"Auburn Tigers","date":null},{"school":"Tennessee Volunteers","date":null},{"school":"Mississippi State Bulldogs","date":null},{"school":"SMU Mustangs","date":null},{"school":"Wake Forest Demon Deacons","date":null},{"school":"South Carolina Gamecocks","date":null},{"school":"Nebraska Cornhuskers","date":null},{"school":"North Carolina Tar Heels","date":null},{"school":"Ohio State Buckeyes","date":null},{"school":"NC State Wolfpack","date":null},{"school":"Alabama Crimson Tide","date":null},{"school":"Florida","date":null}],"stats":{"stars":4,"natlRank":14,"posRank":3,"stateRank":2,"rating":95.22258064516129,"on3Id":"282316"},"recruitingNotes":"","discoveryScore":100,"visitHistory":[],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":{"ufProbNow":24,"ufProb7dAgo":31,"delta7d":-7,"volatilityScore":7,"windowDays":30},"movementHistory":[{"date":"2026-08-02","confidence":31},{"date":"2026-08-03","confidence":29.8},{"date":"2026-08-04","confidence":28.7},{"date":"2026-08-05","confidence":27.5},{"date":"2026-08-06","confidence":26.3},{"date":"2026-08-07","confidence":25.2},{"date":"2026-08-08","confidence":24}],"signals":[{"id":"5e60722f-9da8-5e10-8766-711fbba9c76e-discovery","playerId":"5e60722f-9da8-5e10-8766-711fbba9c76e","signalType":"EVALUATION_NOTE","signalValue":{"note":"Early discovery score on FutureCast underclassmen watchlist","discoveryScore":100,"tier":"medium"},"createdAt":"2026-08-03T02:27:45.767Z"},{"id":"5e60722f-9da8-5e10-8766-711fbba9c76e-staff-flag","playerId":"5e60722f-9da8-5e10-8766-711fbba9c76e","signalType":"STAFF_FLAG","signalValue":{"note":"Listed on FutureCast early target board","classYear":2028},"createdAt":"2026-08-03T02:27:45.767Z"},{"id":"5e60722f-9da8-5e10-8766-711fbba9c76e-momentum","playerId":"5e60722f-9da8-5e10-8766-711fbba9c76e","signalType":"SOCIAL_MOMENTUM","signalValue":{"direction":"down","delta7d":-7,"ufConfidence":24},"createdAt":"2026-08-03T02:27:45.767Z"}],"related":[{"id":"94e6a1ee-8b3b-5234-8285-3eaab592fcb8","slug":"antonio-thomas-jr","fullName":"Antonio Thomas Jr.","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":41,"ufConfidence":49,"rank":1,"stars":4,"rating":null,"compositeScore":null,"nationalRank":17,"natlRank":17,"posRank":4,"stateRank":5,"state":"FL","school":"Carrollwood Day (Tampa, FL)","committedTo":null,"isCommittedToUF":false},{"id":"4b9dca2e-7cfa-5245-aa96-f1ad8aa0c722","slug":"asher-ghioto","fullName":"Asher Ghioto","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":8,"ufConfidence":16,"rank":2,"stars":5,"rating":96.03709677419356,"compositeScore":96.03709677419356,"nationalRank":216,"natlRank":216,"posRank":2,"stateRank":3,"state":"FL","school":"The Bolles School (Jacksonville, FL)","committedTo":null,"isCommittedToUF":false},{"id":"9a39a8c5-5936-5d30-9691-da30c90a8a45","slug":"merrick-ham","fullName":"Merrick Ham","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":2,"ufConfidence":3,"rank":3,"stars":4,"rating":91.77934782608696,"compositeScore":91.77934782608696,"nationalRank":102,"natlRank":102,"posRank":13,"stateRank":14,"state":"GA","school":"Marietta (Marietta, GA)","committedTo":null,"isCommittedToUF":false},{"id":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe","slug":"izayah-vickers","fullName":"Izayah Vickers","classYear":2028,"position":"CB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":33,"ufConfidence":42,"rank":4,"stars":4,"rating":91.54710144927536,"compositeScore":91.54710144927536,"nationalRank":117,"natlRank":117,"posRank":12,"stateRank":18,"state":"FL","school":"Florida State Univ. School (Tallahassee, FL)","committedTo":null,"isCommittedToUF":false},{"id":"0f878544-f0c1-5ee4-8195-cf4f1b739736","slug":"andre-alexander","fullName":"Andre Alexander","classYear":2028,"position":"LB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":23,"ufConfidence":28,"rank":5,"stars":4,"rating":92.24057971014493,"compositeScore":92.24057971014493,"nationalRank":72,"natlRank":72,"posRank":4,"stateRank":9,"state":"VA","school":"IMG Academy (Chesapeake, VA)","committedTo":null,"isCommittedToUF":false},{"id":"9382b81b-159d-554e-83b6-02a4d4cdcf53","slug":"bubba-brown","fullName":"Bubba Brown","classYear":2028,"position":"WR","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":19,"ufConfidence":23,"rank":6,"stars":4,"rating":91.91340579710146,"compositeScore":91.91340579710146,"nationalRank":95,"natlRank":95,"posRank":15,"stateRank":12,"state":"FL","school":"Lowndes (Valdosta, GA)","committedTo":null,"isCommittedToUF":false}],"portalPredictions":{"predictions":[{"school":"Florida","score":24,"sourceType":"MODEL","predictorId":"gatorvault","status":"ACTIVE"},{"school":"Alabama","score":19,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"}],"intel":{"portalLikelihood":0,"depthChartRisk":0,"snapShareScore":0,"volatility":7}},"fitIntel":null,"competingSchools":[{"school":"Alabama","rankNow":1,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":18.6}],"futurecastSummary":{"ufProbability":24,"gvProbability":24,"predictedSchool":"Florida","movementDelta":-7,"fitScore":71,"volatilityScore":7},"vaultScouting":{"evaluation":"Cruickshank is a long 6-5 EDGE who attacks tackles with first-step burst and violent hands, already understanding leverage and pad level for his size. Frame is built to add mass without losing the rush plan. Wins with burst, hands, and length — a growing every-down edge rusher.","comparison":"Cruickshank comps to Boye Mafe — long 6-5 EDGE with first-step burst and violent hands who fills into a productive every-down rusher.","projection":"Cruickshank projects as a Year 2 SEC starter at EDGE (package rushes Year 1). Ceiling: All-SEC edge rusher — the long, explosive EDGE whose pass-rush arsenal catches up to the physical traits.","strengths":["Cruickshank attacks tackles with impressive burst off the line for a 6-5 frame.","Cruickshank uses violent hands and understands leverage/pad level given his size.","Cruickshank has the frame to add substantial mass without losing the first step."],"schemeFit":"Cruickshank fits White wide-9 / JACK EDGE who wins with burst and hand violence while the frame fills."},"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-08T00:12:27.204Z","slug":"cassell-cruickshank","profileKind":"prospect-2028"}}
+{
+  "lastUpdated": "2026-08-08T00:12:27.082Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "5e60722f-9da8-5e10-8766-711fbba9c76e",
+    "fullName": "Cassell Cruickshank",
+    "slug": "cassell-cruickshank",
+    "classYear": 2028,
+    "position": "EDGE",
+    "status": "HS",
+    "height": 77,
+    "weight": 217,
+    "hometown": "Fayetteville",
+    "state": "NC",
+    "highSchool": "E E Smith (Fayetteville, NC)",
+    "stars": 4,
+    "compositeRating": 95.22795698924732,
+    "rankingNational": 13,
+    "rankingPosition": 3,
+    "rankingState": 2,
+    "committedTo": null,
+    "ufFitScore": 71,
+    "fitScoreBreakdown": null,
+    "movementHistory": [
+      {
+        "date": "2026-08-02",
+        "confidence": 31
+      },
+      {
+        "date": "2026-08-03",
+        "confidence": 29.8
+      },
+      {
+        "date": "2026-08-04",
+        "confidence": 28.7
+      },
+      {
+        "date": "2026-08-05",
+        "confidence": 27.5
+      },
+      {
+        "date": "2026-08-06",
+        "confidence": 26.3
+      },
+      {
+        "date": "2026-08-07",
+        "confidence": 25.2
+      },
+      {
+        "date": "2026-08-08",
+        "confidence": 24
+      }
+    ],
+    "volatilityScore": 7
+  },
+  "highSchoolProfile": {
+    "id": "cassell-cruickshank",
+    "playerId": "5e60722f-9da8-5e10-8766-711fbba9c76e",
+    "offers": [
+      {
+        "school": "Duke Blue Devils",
+        "date": null
+      },
+      {
+        "school": "Texas Longhorns",
+        "date": null
+      },
+      {
+        "school": "Georgia Tech Yellow Jackets",
+        "date": null
+      },
+      {
+        "school": "Notre Dame Fighting Irish",
+        "date": null
+      },
+      {
+        "school": "Oregon Ducks",
+        "date": null
+      },
+      {
+        "school": "Oklahoma Sooners",
+        "date": null
+      },
+      {
+        "school": "Ole Miss Rebels",
+        "date": null
+      },
+      {
+        "school": "Missouri Tigers",
+        "date": null
+      },
+      {
+        "school": "Virginia Tech Hokies",
+        "date": null
+      },
+      {
+        "school": "Miami Hurricanes",
+        "date": null
+      },
+      {
+        "school": "LSU Tigers",
+        "date": null
+      },
+      {
+        "school": "Kentucky Wildcats",
+        "date": null
+      },
+      {
+        "school": "Auburn Tigers",
+        "date": null
+      },
+      {
+        "school": "Tennessee Volunteers",
+        "date": null
+      },
+      {
+        "school": "Mississippi State Bulldogs",
+        "date": null
+      },
+      {
+        "school": "SMU Mustangs",
+        "date": null
+      },
+      {
+        "school": "Wake Forest Demon Deacons",
+        "date": null
+      },
+      {
+        "school": "South Carolina Gamecocks",
+        "date": null
+      },
+      {
+        "school": "Nebraska Cornhuskers",
+        "date": null
+      },
+      {
+        "school": "North Carolina Tar Heels",
+        "date": null
+      },
+      {
+        "school": "Ohio State Buckeyes",
+        "date": null
+      },
+      {
+        "school": "NC State Wolfpack",
+        "date": null
+      },
+      {
+        "school": "Alabama Crimson Tide",
+        "date": null
+      },
+      {
+        "school": "Florida",
+        "date": null
+      }
+    ],
+    "stats": {
+      "stars": 4,
+      "natlRank": 13,
+      "posRank": 3,
+      "stateRank": 2,
+      "rating": 95.22795698924732,
+      "on3Id": "282316"
+    },
+    "recruitingNotes": "",
+    "discoveryScore": 100,
+    "visitHistory": [],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": {
+    "ufProbNow": 24,
+    "ufProb7dAgo": 31,
+    "delta7d": -7,
+    "volatilityScore": 7,
+    "windowDays": 30
+  },
+  "movementHistory": [
+    {
+      "date": "2026-08-02",
+      "confidence": 31
+    },
+    {
+      "date": "2026-08-03",
+      "confidence": 29.8
+    },
+    {
+      "date": "2026-08-04",
+      "confidence": 28.7
+    },
+    {
+      "date": "2026-08-05",
+      "confidence": 27.5
+    },
+    {
+      "date": "2026-08-06",
+      "confidence": 26.3
+    },
+    {
+      "date": "2026-08-07",
+      "confidence": 25.2
+    },
+    {
+      "date": "2026-08-08",
+      "confidence": 24
+    }
+  ],
+  "signals": [
+    {
+      "id": "5e60722f-9da8-5e10-8766-711fbba9c76e-discovery",
+      "playerId": "5e60722f-9da8-5e10-8766-711fbba9c76e",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "Early discovery score on FutureCast underclassmen watchlist",
+        "discoveryScore": 100,
+        "tier": "medium"
+      },
+      "createdAt": "2026-08-03T02:27:45.767Z"
+    },
+    {
+      "id": "5e60722f-9da8-5e10-8766-711fbba9c76e-staff-flag",
+      "playerId": "5e60722f-9da8-5e10-8766-711fbba9c76e",
+      "signalType": "STAFF_FLAG",
+      "signalValue": {
+        "note": "Listed on FutureCast early target board",
+        "classYear": 2028
+      },
+      "createdAt": "2026-08-03T02:27:45.767Z"
+    },
+    {
+      "id": "5e60722f-9da8-5e10-8766-711fbba9c76e-momentum",
+      "playerId": "5e60722f-9da8-5e10-8766-711fbba9c76e",
+      "signalType": "SOCIAL_MOMENTUM",
+      "signalValue": {
+        "direction": "down",
+        "delta7d": -7,
+        "ufConfidence": 24
+      },
+      "createdAt": "2026-08-03T02:27:45.767Z"
+    }
+  ],
+  "related": [
+    {
+      "id": "94e6a1ee-8b3b-5234-8285-3eaab592fcb8",
+      "slug": "antonio-thomas-jr",
+      "fullName": "Antonio Thomas Jr.",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 41,
+      "ufConfidence": 49,
+      "rank": 1,
+      "stars": 4,
+      "rating": null,
+      "compositeScore": null,
+      "nationalRank": 17,
+      "natlRank": 17,
+      "posRank": 4,
+      "stateRank": 5,
+      "state": "FL",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "4b9dca2e-7cfa-5245-aa96-f1ad8aa0c722",
+      "slug": "asher-ghioto",
+      "fullName": "Asher Ghioto",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 8,
+      "ufConfidence": 16,
+      "rank": 2,
+      "stars": 5,
+      "rating": 96.03709677419356,
+      "compositeScore": 96.03709677419356,
+      "nationalRank": 216,
+      "natlRank": 216,
+      "posRank": 2,
+      "stateRank": 3,
+      "state": "FL",
+      "school": "The Bolles School (Jacksonville, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "9a39a8c5-5936-5d30-9691-da30c90a8a45",
+      "slug": "merrick-ham",
+      "fullName": "Merrick Ham",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 2,
+      "ufConfidence": 3,
+      "rank": 3,
+      "stars": 4,
+      "rating": 91.77934782608696,
+      "compositeScore": 91.77934782608696,
+      "nationalRank": 102,
+      "natlRank": 102,
+      "posRank": 13,
+      "stateRank": 14,
+      "state": "GA",
+      "school": "Marietta (Marietta, GA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe",
+      "slug": "izayah-vickers",
+      "fullName": "Izayah Vickers",
+      "classYear": 2028,
+      "position": "CB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 33,
+      "ufConfidence": 42,
+      "rank": 4,
+      "stars": 4,
+      "rating": 91.54710144927536,
+      "compositeScore": 91.54710144927536,
+      "nationalRank": 117,
+      "natlRank": 117,
+      "posRank": 12,
+      "stateRank": 18,
+      "state": "FL",
+      "school": "Florida State Univ. School (Tallahassee, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0f878544-f0c1-5ee4-8195-cf4f1b739736",
+      "slug": "andre-alexander",
+      "fullName": "Andre Alexander",
+      "classYear": 2028,
+      "position": "LB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 23,
+      "ufConfidence": 28,
+      "rank": 5,
+      "stars": 4,
+      "rating": 92.24057971014493,
+      "compositeScore": 92.24057971014493,
+      "nationalRank": 72,
+      "natlRank": 72,
+      "posRank": 4,
+      "stateRank": 9,
+      "state": "VA",
+      "school": "IMG Academy (Chesapeake, VA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "9382b81b-159d-554e-83b6-02a4d4cdcf53",
+      "slug": "bubba-brown",
+      "fullName": "Bubba Brown",
+      "classYear": 2028,
+      "position": "WR",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 19,
+      "ufConfidence": 23,
+      "rank": 6,
+      "stars": 4,
+      "rating": 91.91340579710146,
+      "compositeScore": 91.91340579710146,
+      "nationalRank": 95,
+      "natlRank": 95,
+      "posRank": 15,
+      "stateRank": 12,
+      "state": "FL",
+      "school": "Lowndes (Valdosta, GA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    }
+  ],
+  "portalPredictions": {
+    "predictions": [
+      {
+        "school": "Florida",
+        "score": 24,
+        "sourceType": "MODEL",
+        "predictorId": "gatorvault",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Alabama",
+        "score": 19,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      }
+    ],
+    "intel": {
+      "portalLikelihood": 0,
+      "depthChartRisk": 0,
+      "snapShareScore": 0,
+      "volatility": 7
+    }
+  },
+  "fitIntel": null,
+  "competingSchools": [
+    {
+      "school": "Alabama",
+      "rankNow": 1,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 18.6
+    }
+  ],
+  "futurecastSummary": {
+    "ufProbability": 24,
+    "gvProbability": 24,
+    "predictedSchool": "Florida",
+    "movementDelta": -7,
+    "fitScore": 71,
+    "volatilityScore": 7
+  },
+  "vaultScouting": {
+    "evaluation": "Cruickshank is a long 6-5 EDGE who attacks tackles with first-step burst and violent hands, already understanding leverage and pad level for his size. Frame is built to add mass without losing the rush plan. Wins with burst, hands, and length — a growing every-down edge rusher.",
+    "comparison": "Cruickshank comps to Boye Mafe — long 6-5 EDGE with first-step burst and violent hands who fills into a productive every-down rusher.",
+    "projection": "Cruickshank projects as a Year 2 SEC starter at EDGE (package rushes Year 1). Ceiling: All-SEC edge rusher — the long, explosive EDGE whose pass-rush arsenal catches up to the physical traits.",
+    "strengths": [
+      "Cruickshank attacks tackles with impressive burst off the line for a 6-5 frame.",
+      "Cruickshank uses violent hands and understands leverage/pad level given his size.",
+      "Cruickshank has the frame to add substantial mass without losing the first step."
+    ],
+    "schemeFit": "Cruickshank fits White wide-9 / JACK EDGE who wins with burst and hand violence while the frame fills."
+  },
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.208Z",
+    "slug": "cassell-cruickshank",
+    "profileKind": "prospect-2028",
+    "ranksSyncedAt": "2026-08-14T02:43:42.208Z"
+  }
+}

@@ -1,1 +1,214 @@
-{"lastUpdated":"2026-08-09T02:25:56.562Z","source":"recruiting-store","player":{"id":"243862","fullName":"Easton Royal","slug":"easton-royal","classYear":2027,"position":"WR","status":"HS","height":71,"weight":200,"hometown":"New Orleans","state":"LA","highSchool":"Brother Martin (Orleans, LA)","stars":5,"compositeRating":98,"rankingNational":15,"rankingPosition":null,"rankingState":null,"committedTo":"Texas","ufFitScore":null,"fitScoreBreakdown":null,"movementHistory":[],"volatilityScore":0},"highSchoolProfile":{"id":"easton-royal","playerId":"243862","offers":[{"school":"Baylor Bears","date":null},{"school":"Houston Cougars","date":null},{"school":"Boston College Eagles","date":null},{"school":"Mississippi State Bulldogs","date":null},{"school":"Maryland Terrapins","date":null},{"school":"Arkansas Razorbacks","date":null},{"school":"Colorado Buffaloes","date":null},{"school":"North Carolina Tar Heels","date":null},{"school":"Vanderbilt Commodores","date":null},{"school":"Wisconsin Badgers","date":null},{"school":"Washington Huskies","date":null},{"school":"Virginia Tech Hokies","date":null},{"school":"Nebraska Cornhuskers","date":null},{"school":"Georgia Bulldogs","date":null},{"school":"Auburn Tigers","date":null},{"school":"Michigan Wolverines","date":null},{"school":"LSU Tigers","date":null},{"school":"Texas Tech Red Raiders","date":null},{"school":"Oregon Ducks","date":null},{"school":"Texas A&M Aggies","date":null},{"school":"Miami Hurricanes","date":null},{"school":"Ole Miss Rebels","date":null}],"stats":{"stars":5,"natlRank":15,"posRank":null,"stateRank":null,"rating":98,"on3Id":243862},"recruitingNotes":"5★ WR committed to Texas — Closing Class Flip Watch #2.","discoveryScore":null,"visitHistory":[],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":null,"movementHistory":[],"signals":[{"id":"243862-staff-note","playerId":"243862","signalType":"EVALUATION_NOTE","signalValue":{"note":"5★ WR committed to Texas — Closing Class Flip Watch #2.","source":"recruiting-store"},"createdAt":"2026-07-15T01:33:42.001Z"}],"related":[],"portalPredictions":null,"fitIntel":null,"competingSchools":[{"school":"Texas Longhorns","rankNow":1,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0},{"school":"Ole Miss Rebels","rankNow":2,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0},{"school":"Miami Hurricanes","rankNow":3,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0},{"school":"Texas A&M Aggies","rankNow":4,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0},{"school":"Oregon Ducks","rankNow":5,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0}],"futurecastSummary":null,"vaultScouting":{"evaluation":"Watched junior/soph Hudl. Royal wins with thick-frame YAC and contact balance; highlight package is space-heavy so contested-catch/route-tree claims stay conservative until more tape.","comparison":"Royal comps to Deebo Samuel — 5-11 / 6-0 thick WR mold; sudden after the catch, contact balance, and enough mass to punish tackle angles (size-matched; not a Florida-alum default).","projection":"Royal projects as a Year 1 package/special-teams WR (screens, manufactured touches), Year 2 rotation slot/flex, with Year 3 every-down starter ceiling as a physical YAC weapon — not a pure length X.","strengths":["Royal's best tape trait is YAC — once he clears the first tackle angle he has a second gear that pulls away from pursuit.","Royal's listed 5-11 / 200 looks real on film: thick lower half, stays on his feet through arm tackles, and finishes runs with contact balance.","Royal is used as a true weapon — split wide, slot, and in the screen/jet-touch game — not a one-alignment perimeter guy."],"schemeFit":"Royal fits Faulkner as a boundary/slot hybrid built for manufactured touches and YAC after the catch."},"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-09T02:25:56.623Z","slug":"easton-royal","profileKind":"commit-2027"}}
+{
+  "lastUpdated": "2026-08-09T02:25:56.562Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "243862",
+    "fullName": "Easton Royal",
+    "slug": "easton-royal",
+    "classYear": 2027,
+    "position": "WR",
+    "status": "HS",
+    "height": 71,
+    "weight": 200,
+    "hometown": "New Orleans",
+    "state": "LA",
+    "highSchool": "Brother Martin (Orleans, LA)",
+    "stars": 5,
+    "compositeRating": 98.42634408602152,
+    "rankingNational": 5,
+    "rankingPosition": 1,
+    "rankingState": 1,
+    "committedTo": "Texas",
+    "ufFitScore": null,
+    "fitScoreBreakdown": null,
+    "movementHistory": [],
+    "volatilityScore": 0
+  },
+  "highSchoolProfile": {
+    "id": "easton-royal",
+    "playerId": "243862",
+    "offers": [
+      {
+        "school": "Baylor Bears",
+        "date": null
+      },
+      {
+        "school": "Houston Cougars",
+        "date": null
+      },
+      {
+        "school": "Boston College Eagles",
+        "date": null
+      },
+      {
+        "school": "Mississippi State Bulldogs",
+        "date": null
+      },
+      {
+        "school": "Maryland Terrapins",
+        "date": null
+      },
+      {
+        "school": "Arkansas Razorbacks",
+        "date": null
+      },
+      {
+        "school": "Colorado Buffaloes",
+        "date": null
+      },
+      {
+        "school": "North Carolina Tar Heels",
+        "date": null
+      },
+      {
+        "school": "Vanderbilt Commodores",
+        "date": null
+      },
+      {
+        "school": "Wisconsin Badgers",
+        "date": null
+      },
+      {
+        "school": "Washington Huskies",
+        "date": null
+      },
+      {
+        "school": "Virginia Tech Hokies",
+        "date": null
+      },
+      {
+        "school": "Nebraska Cornhuskers",
+        "date": null
+      },
+      {
+        "school": "Georgia Bulldogs",
+        "date": null
+      },
+      {
+        "school": "Auburn Tigers",
+        "date": null
+      },
+      {
+        "school": "Michigan Wolverines",
+        "date": null
+      },
+      {
+        "school": "LSU Tigers",
+        "date": null
+      },
+      {
+        "school": "Texas Tech Red Raiders",
+        "date": null
+      },
+      {
+        "school": "Oregon Ducks",
+        "date": null
+      },
+      {
+        "school": "Texas A&M Aggies",
+        "date": null
+      },
+      {
+        "school": "Miami Hurricanes",
+        "date": null
+      },
+      {
+        "school": "Ole Miss Rebels",
+        "date": null
+      }
+    ],
+    "stats": {
+      "stars": 5,
+      "natlRank": 5,
+      "posRank": 1,
+      "stateRank": 1,
+      "rating": 98.42634408602152,
+      "on3Id": 243862
+    },
+    "recruitingNotes": "5★ WR committed to Texas — Closing Class Flip Watch #2.",
+    "discoveryScore": null,
+    "visitHistory": [],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": null,
+  "movementHistory": [],
+  "signals": [
+    {
+      "id": "243862-staff-note",
+      "playerId": "243862",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "5★ WR committed to Texas — Closing Class Flip Watch #2.",
+        "source": "recruiting-store"
+      },
+      "createdAt": "2026-07-15T01:33:42.001Z"
+    }
+  ],
+  "related": [],
+  "portalPredictions": null,
+  "fitIntel": null,
+  "competingSchools": [
+    {
+      "school": "Texas Longhorns",
+      "rankNow": 1,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0
+    },
+    {
+      "school": "Ole Miss Rebels",
+      "rankNow": 2,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0
+    },
+    {
+      "school": "Miami Hurricanes",
+      "rankNow": 3,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0
+    },
+    {
+      "school": "Texas A&M Aggies",
+      "rankNow": 4,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0
+    },
+    {
+      "school": "Oregon Ducks",
+      "rankNow": 5,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0
+    }
+  ],
+  "futurecastSummary": null,
+  "vaultScouting": {
+    "evaluation": "Watched junior/soph Hudl. Royal wins with thick-frame YAC and contact balance; highlight package is space-heavy so contested-catch/route-tree claims stay conservative until more tape.",
+    "comparison": "Royal comps to Deebo Samuel — 5-11 / 6-0 thick WR mold; sudden after the catch, contact balance, and enough mass to punish tackle angles (size-matched; not a Florida-alum default).",
+    "projection": "Royal projects as a Year 1 package/special-teams WR (screens, manufactured touches), Year 2 rotation slot/flex, with Year 3 every-down starter ceiling as a physical YAC weapon — not a pure length X.",
+    "strengths": [
+      "Royal's best tape trait is YAC — once he clears the first tackle angle he has a second gear that pulls away from pursuit.",
+      "Royal's listed 5-11 / 200 looks real on film: thick lower half, stays on his feet through arm tackles, and finishes runs with contact balance.",
+      "Royal is used as a true weapon — split wide, slot, and in the screen/jet-touch game — not a one-alignment perimeter guy."
+    ],
+    "schemeFit": "Royal fits Faulkner as a boundary/slot hybrid built for manufactured touches and YAC after the catch."
+  },
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.209Z",
+    "slug": "easton-royal",
+    "profileKind": "commit-2027",
+    "ranksSyncedAt": "2026-08-14T02:43:42.209Z"
+  }
+}

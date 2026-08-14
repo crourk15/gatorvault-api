@@ -1,1 +1,152 @@
-{"lastUpdated":"2026-08-08T00:12:23.448Z","source":"recruiting-store","player":{"id":"285163","fullName":"Andre Hyppolite","slug":"andre-hyppolite","classYear":2027,"position":"S","status":"HS","height":72,"weight":180,"hometown":"Miami","state":"FL","highSchool":"North Miami Beach (Miami, FL)","stars":3,"compositeRating":null,"rankingNational":null,"rankingPosition":null,"rankingState":null,"committedTo":"Miami","ufFitScore":null,"fitScoreBreakdown":null,"movementHistory":[],"volatilityScore":0},"highSchoolProfile":{"id":"andre-hyppolite","playerId":"285163","offers":[{"school":"Massachusetts Minutemen","date":null},{"school":"FIU Golden Panthers","date":null},{"school":"USF Bulls","date":null},{"school":"West Virginia Mountaineers","date":null},{"school":"Indiana Hoosiers","date":null},{"school":"Georgia Bulldogs","date":null},{"school":"Auburn Tigers","date":null},{"school":"Minnesota Golden Gophers","date":null},{"school":"Notre Dame Fighting Irish","date":null}],"stats":{"stars":3,"natlRank":null,"posRank":null,"stateRank":null,"rating":null,"on3Id":285163},"recruitingNotes":"S committed to Miami — Closing Class Flip Watch #4.","discoveryScore":null,"visitHistory":[],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":null,"movementHistory":[],"signals":[{"id":"285163-staff-note","playerId":"285163","signalType":"EVALUATION_NOTE","signalValue":{"note":"S committed to Miami — Closing Class Flip Watch #4.","source":"recruiting-store"},"createdAt":"2026-07-12T19:10:52.980Z"}],"related":[],"portalPredictions":null,"fitIntel":null,"competingSchools":[{"school":"Miami Hurricanes","rankNow":1,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0},{"school":"Notre Dame Fighting Irish","rankNow":2,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0},{"school":"Minnesota Golden Gophers","rankNow":3,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0},{"school":"Auburn Tigers","rankNow":4,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0},{"school":"Georgia Bulldogs","rankNow":5,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0}],"futurecastSummary":null,"vaultScouting":null,"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-08T00:12:23.492Z","slug":"andre-hyppolite","profileKind":"commit-2027"}}
+{
+  "lastUpdated": "2026-08-08T00:12:23.448Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "285163",
+    "fullName": "Andre Hyppolite",
+    "slug": "andre-hyppolite",
+    "classYear": 2027,
+    "position": "S",
+    "status": "HS",
+    "height": 72,
+    "weight": 180,
+    "hometown": "Miami",
+    "state": "FL",
+    "highSchool": "North Miami Beach (Miami, FL)",
+    "stars": 4,
+    "compositeRating": 91.3677536231884,
+    "rankingNational": 181,
+    "rankingPosition": 14,
+    "rankingState": 21,
+    "committedTo": "Miami",
+    "ufFitScore": null,
+    "fitScoreBreakdown": null,
+    "movementHistory": [],
+    "volatilityScore": 0
+  },
+  "highSchoolProfile": {
+    "id": "andre-hyppolite",
+    "playerId": "285163",
+    "offers": [
+      {
+        "school": "Massachusetts Minutemen",
+        "date": null
+      },
+      {
+        "school": "FIU Golden Panthers",
+        "date": null
+      },
+      {
+        "school": "USF Bulls",
+        "date": null
+      },
+      {
+        "school": "West Virginia Mountaineers",
+        "date": null
+      },
+      {
+        "school": "Indiana Hoosiers",
+        "date": null
+      },
+      {
+        "school": "Georgia Bulldogs",
+        "date": null
+      },
+      {
+        "school": "Auburn Tigers",
+        "date": null
+      },
+      {
+        "school": "Minnesota Golden Gophers",
+        "date": null
+      },
+      {
+        "school": "Notre Dame Fighting Irish",
+        "date": null
+      }
+    ],
+    "stats": {
+      "stars": 4,
+      "natlRank": 181,
+      "posRank": 14,
+      "stateRank": 21,
+      "rating": 91.3677536231884,
+      "on3Id": 285163
+    },
+    "recruitingNotes": "S committed to Miami — Closing Class Flip Watch #4.",
+    "discoveryScore": null,
+    "visitHistory": [],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": null,
+  "movementHistory": [],
+  "signals": [
+    {
+      "id": "285163-staff-note",
+      "playerId": "285163",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "S committed to Miami — Closing Class Flip Watch #4.",
+        "source": "recruiting-store"
+      },
+      "createdAt": "2026-07-12T19:10:52.980Z"
+    }
+  ],
+  "related": [],
+  "portalPredictions": null,
+  "fitIntel": null,
+  "competingSchools": [
+    {
+      "school": "Miami Hurricanes",
+      "rankNow": 1,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0
+    },
+    {
+      "school": "Notre Dame Fighting Irish",
+      "rankNow": 2,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0
+    },
+    {
+      "school": "Minnesota Golden Gophers",
+      "rankNow": 3,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0
+    },
+    {
+      "school": "Auburn Tigers",
+      "rankNow": 4,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0
+    },
+    {
+      "school": "Georgia Bulldogs",
+      "rankNow": 5,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0
+    }
+  ],
+  "futurecastSummary": null,
+  "vaultScouting": null,
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.206Z",
+    "slug": "andre-hyppolite",
+    "profileKind": "commit-2027",
+    "ranksSyncedAt": "2026-08-14T02:43:42.206Z"
+  }
+}

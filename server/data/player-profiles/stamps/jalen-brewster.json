@@ -1,1 +1,234 @@
-{"lastUpdated":"2026-08-08T00:12:23.280Z","source":"recruiting-store","player":{"id":"242708","fullName":"Jalen Brewster","slug":"jalen-brewster","classYear":2027,"position":"DL","status":"HS","height":77,"weight":280,"hometown":"Lake Dallas HS","state":"TX","highSchool":"Lake Dallas HS, TX","stars":5,"compositeRating":98,"rankingNational":5,"rankingPosition":1,"rankingState":1,"committedTo":"Texas Tech","ufFitScore":98,"fitScoreBreakdown":null,"movementHistory":[],"volatilityScore":0},"highSchoolProfile":{"id":"jalen-brewster","playerId":"242708","offers":[{"school":"Maryland Terrapins","date":null},{"school":"Arkansas Razorbacks","date":null},{"school":"Alabama Crimson Tide","date":null},{"school":"Kansas State Wildcats","date":null},{"school":"Indiana Hoosiers","date":null},{"school":"Missouri Tigers","date":null},{"school":"Wisconsin Badgers","date":null},{"school":"Nebraska Cornhuskers","date":null},{"school":"Georgia Bulldogs","date":null},{"school":"Ole Miss Rebels","date":null},{"school":"Auburn Tigers","date":null},{"school":"USC Trojans","date":null},{"school":"Michigan Wolverines","date":null},{"school":"LSU Tigers","date":null},{"school":"Florida","date":null},{"school":"Miami Hurricanes","date":null},{"school":"Notre Dame Fighting Irish","date":null},{"school":"Texas A&M Aggies","date":null},{"school":"Ohio State Buckeyes","date":null},{"school":"Oregon Ducks","date":null},{"school":"Texas Longhorns","date":null},{"school":"SMU Mustangs","date":null},{"school":"Oklahoma Sooners","date":null},{"school":"Syracuse Orange","date":null}],"stats":{"stars":5,"natlRank":5,"posRank":1,"stateRank":1,"rating":98,"on3Id":"242708"},"recruitingNotes":"5★ DT committed to Texas Tech — Closing Class Flip Watch #1.","discoveryScore":null,"visitHistory":[],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":null,"movementHistory":[],"signals":[{"id":"242708-staff-note","playerId":"242708","signalType":"EVALUATION_NOTE","signalValue":{"note":"5★ DT committed to Texas Tech — Closing Class Flip Watch #1.","source":"recruiting-store"},"createdAt":"2026-07-15T01:33:41.969Z"}],"related":[],"portalPredictions":{"predictions":[{"school":"Texas Tech Red Raiders","score":96.3},{"school":"Oklahoma","score":1.5},{"school":"SMU Mustangs","score":0.5},{"school":"Texas","score":0.5}],"intel":{"portalLikelihood":0,"depthChartRisk":0,"snapShareScore":0,"volatility":0}},"fitIntel":null,"competingSchools":[{"school":"Texas Tech Red Raiders","rankNow":1,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":96.3},{"school":"Oklahoma","rankNow":2,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":1.5},{"school":"SMU Mustangs","rankNow":3,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0.5},{"school":"Texas","rankNow":4,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":0.5}],"futurecastSummary":{"predictedSchool":"Texas Tech Red Raiders","movementDelta":null,"fitScore":98,"volatilityScore":0},"vaultScouting":null,"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-08T00:12:23.318Z","slug":"jalen-brewster","profileKind":"commit-2027"}}
+{
+  "lastUpdated": "2026-08-08T00:12:23.280Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "242708",
+    "fullName": "Jalen Brewster",
+    "slug": "jalen-brewster",
+    "classYear": 2027,
+    "position": "DL",
+    "status": "HS",
+    "height": 77,
+    "weight": 280,
+    "hometown": "Lake Dallas HS",
+    "state": "TX",
+    "highSchool": "Lake Dallas HS, TX",
+    "stars": 5,
+    "compositeRating": 98.62849462365591,
+    "rankingNational": 1,
+    "rankingPosition": 1,
+    "rankingState": 1,
+    "committedTo": "Texas Tech",
+    "ufFitScore": 98,
+    "fitScoreBreakdown": null,
+    "movementHistory": [],
+    "volatilityScore": 0
+  },
+  "highSchoolProfile": {
+    "id": "jalen-brewster",
+    "playerId": "242708",
+    "offers": [
+      {
+        "school": "Maryland Terrapins",
+        "date": null
+      },
+      {
+        "school": "Arkansas Razorbacks",
+        "date": null
+      },
+      {
+        "school": "Alabama Crimson Tide",
+        "date": null
+      },
+      {
+        "school": "Kansas State Wildcats",
+        "date": null
+      },
+      {
+        "school": "Indiana Hoosiers",
+        "date": null
+      },
+      {
+        "school": "Missouri Tigers",
+        "date": null
+      },
+      {
+        "school": "Wisconsin Badgers",
+        "date": null
+      },
+      {
+        "school": "Nebraska Cornhuskers",
+        "date": null
+      },
+      {
+        "school": "Georgia Bulldogs",
+        "date": null
+      },
+      {
+        "school": "Ole Miss Rebels",
+        "date": null
+      },
+      {
+        "school": "Auburn Tigers",
+        "date": null
+      },
+      {
+        "school": "USC Trojans",
+        "date": null
+      },
+      {
+        "school": "Michigan Wolverines",
+        "date": null
+      },
+      {
+        "school": "LSU Tigers",
+        "date": null
+      },
+      {
+        "school": "Florida",
+        "date": null
+      },
+      {
+        "school": "Miami Hurricanes",
+        "date": null
+      },
+      {
+        "school": "Notre Dame Fighting Irish",
+        "date": null
+      },
+      {
+        "school": "Texas A&M Aggies",
+        "date": null
+      },
+      {
+        "school": "Ohio State Buckeyes",
+        "date": null
+      },
+      {
+        "school": "Oregon Ducks",
+        "date": null
+      },
+      {
+        "school": "Texas Longhorns",
+        "date": null
+      },
+      {
+        "school": "SMU Mustangs",
+        "date": null
+      },
+      {
+        "school": "Oklahoma Sooners",
+        "date": null
+      },
+      {
+        "school": "Syracuse Orange",
+        "date": null
+      }
+    ],
+    "stats": {
+      "stars": 5,
+      "natlRank": 1,
+      "posRank": 1,
+      "stateRank": 1,
+      "rating": 98.62849462365591,
+      "on3Id": "242708"
+    },
+    "recruitingNotes": "5★ DT committed to Texas Tech — Closing Class Flip Watch #1.",
+    "discoveryScore": null,
+    "visitHistory": [],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": null,
+  "movementHistory": [],
+  "signals": [
+    {
+      "id": "242708-staff-note",
+      "playerId": "242708",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "5★ DT committed to Texas Tech — Closing Class Flip Watch #1.",
+        "source": "recruiting-store"
+      },
+      "createdAt": "2026-07-15T01:33:41.969Z"
+    }
+  ],
+  "related": [],
+  "portalPredictions": {
+    "predictions": [
+      {
+        "school": "Texas Tech Red Raiders",
+        "score": 96.3
+      },
+      {
+        "school": "Oklahoma",
+        "score": 1.5
+      },
+      {
+        "school": "SMU Mustangs",
+        "score": 0.5
+      },
+      {
+        "school": "Texas",
+        "score": 0.5
+      }
+    ],
+    "intel": {
+      "portalLikelihood": 0,
+      "depthChartRisk": 0,
+      "snapShareScore": 0,
+      "volatility": 0
+    }
+  },
+  "fitIntel": null,
+  "competingSchools": [
+    {
+      "school": "Texas Tech Red Raiders",
+      "rankNow": 1,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 96.3
+    },
+    {
+      "school": "Oklahoma",
+      "rankNow": 2,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 1.5
+    },
+    {
+      "school": "SMU Mustangs",
+      "rankNow": 3,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0.5
+    },
+    {
+      "school": "Texas",
+      "rankNow": 4,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 0.5
+    }
+  ],
+  "futurecastSummary": {
+    "predictedSchool": "Texas Tech Red Raiders",
+    "movementDelta": null,
+    "fitScore": 98,
+    "volatilityScore": 0
+  },
+  "vaultScouting": null,
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.210Z",
+    "slug": "jalen-brewster",
+    "profileKind": "commit-2027",
+    "ranksSyncedAt": "2026-08-14T02:43:42.210Z"
+  }
+}

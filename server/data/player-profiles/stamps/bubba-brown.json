@@ -1,1 +1,440 @@
-{"lastUpdated":"2026-08-08T00:12:29.872Z","source":"recruiting-store","player":{"id":"9382b81b-159d-554e-83b6-02a4d4cdcf53","fullName":"Bubba Brown","slug":"bubba-brown","classYear":2028,"position":"WR","status":"HS","height":73,"weight":190,"hometown":"Tallahassee","state":"FL","highSchool":"Lowndes (Valdosta, GA)","stars":4,"compositeRating":91.91340579710146,"rankingNational":95,"rankingPosition":15,"rankingState":12,"committedTo":null,"ufFitScore":79,"fitScoreBreakdown":null,"movementHistory":[{"date":"2026-08-02","confidence":35},{"date":"2026-08-03","confidence":33},{"date":"2026-08-04","confidence":31},{"date":"2026-08-05","confidence":29},{"date":"2026-08-06","confidence":27},{"date":"2026-08-07","confidence":25},{"date":"2026-08-08","confidence":23}],"volatilityScore":12},"highSchoolProfile":{"id":"bubba-brown","playerId":"9382b81b-159d-554e-83b6-02a4d4cdcf53","offers":[{"school":"USF Bulls","date":null},{"school":"Troy Trojans","date":null},{"school":"Connecticut Huskies","date":null},{"school":"Georgia Southern Eagles","date":null},{"school":"East Carolina Pirates","date":null},{"school":"West Virginia Mountaineers","date":null},{"school":"NC State Wolfpack","date":null},{"school":"Kentucky Wildcats","date":null},{"school":"Arkansas Razorbacks","date":null},{"school":"Tennessee Volunteers","date":null},{"school":"Georgia Tech Yellow Jackets","date":null},{"school":"Pittsburgh Panthers","date":null},{"school":"Alabama Crimson Tide","date":null},{"school":"Auburn Tigers","date":null},{"school":"Florida","date":null},{"school":"Georgia Bulldogs","date":null}],"stats":{"stars":4,"natlRank":95,"posRank":15,"stateRank":12,"rating":91.91340579710146,"on3Id":"250868"},"recruitingNotes":"","discoveryScore":100,"visitHistory":[],"interestMeter":null},"collegeProfile":null,"portalProfile":null,"ufSpecificProfile":null,"movementWindow":{"ufProbNow":23,"ufProb7dAgo":35,"delta7d":-12,"volatilityScore":12,"windowDays":30},"movementHistory":[{"date":"2026-08-02","confidence":35},{"date":"2026-08-03","confidence":33},{"date":"2026-08-04","confidence":31},{"date":"2026-08-05","confidence":29},{"date":"2026-08-06","confidence":27},{"date":"2026-08-07","confidence":25},{"date":"2026-08-08","confidence":23}],"signals":[{"id":"9382b81b-159d-554e-83b6-02a4d4cdcf53-discovery","playerId":"9382b81b-159d-554e-83b6-02a4d4cdcf53","signalType":"EVALUATION_NOTE","signalValue":{"note":"Early discovery score on FutureCast underclassmen watchlist","discoveryScore":100,"tier":"medium"},"createdAt":"2026-08-03T02:27:45.767Z"},{"id":"9382b81b-159d-554e-83b6-02a4d4cdcf53-staff-flag","playerId":"9382b81b-159d-554e-83b6-02a4d4cdcf53","signalType":"STAFF_FLAG","signalValue":{"note":"Listed on FutureCast early target board","classYear":2028},"createdAt":"2026-08-03T02:27:45.767Z"},{"id":"9382b81b-159d-554e-83b6-02a4d4cdcf53-momentum","playerId":"9382b81b-159d-554e-83b6-02a4d4cdcf53","signalType":"SOCIAL_MOMENTUM","signalValue":{"direction":"down","delta7d":-12,"ufConfidence":23},"createdAt":"2026-08-03T02:27:45.767Z"}],"related":[{"id":"e8029f9c-ccc2-5362-8eb8-776ed93aa239","slug":"brysen-wright","fullName":"Brysen Wright","classYear":2028,"position":"WR","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":10,"ufConfidence":17,"rank":1,"stars":5,"rating":97.7731182795699,"compositeScore":97.7731182795699,"nationalRank":208,"natlRank":208,"posRank":2,"stateRank":1,"state":"FL","school":"Mandarin (Jacksonville, FL)","committedTo":null,"isCommittedToUF":false},{"id":"94e6a1ee-8b3b-5234-8285-3eaab592fcb8","slug":"antonio-thomas-jr","fullName":"Antonio Thomas Jr.","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":41,"ufConfidence":49,"rank":2,"stars":4,"rating":null,"compositeScore":null,"nationalRank":17,"natlRank":17,"posRank":4,"stateRank":5,"state":"FL","school":"Carrollwood Day (Tampa, FL)","committedTo":null,"isCommittedToUF":false},{"id":"da69ba08-b232-5dd8-81c6-69a9ff2fb5fe","slug":"izayah-vickers","fullName":"Izayah Vickers","classYear":2028,"position":"CB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":33,"ufConfidence":42,"rank":3,"stars":4,"rating":91.54710144927536,"compositeScore":91.54710144927536,"nationalRank":117,"natlRank":117,"posRank":12,"stateRank":18,"state":"FL","school":"Florida State Univ. School (Tallahassee, FL)","committedTo":null,"isCommittedToUF":false},{"id":"0f878544-f0c1-5ee4-8195-cf4f1b739736","slug":"andre-alexander","fullName":"Andre Alexander","classYear":2028,"position":"LB","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":23,"ufConfidence":28,"rank":4,"stars":4,"rating":92.24057971014493,"compositeScore":92.24057971014493,"nationalRank":72,"natlRank":72,"posRank":4,"stateRank":9,"state":"VA","school":"IMG Academy (Chesapeake, VA)","committedTo":null,"isCommittedToUF":false},{"id":"5e60722f-9da8-5e10-8766-711fbba9c76e","slug":"cassell-cruickshank","fullName":"Cassell Cruickshank","classYear":2028,"position":"EDGE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":21,"ufConfidence":24,"rank":5,"stars":4,"rating":95.22258064516129,"compositeScore":95.22258064516129,"nationalRank":14,"natlRank":14,"posRank":3,"stateRank":2,"state":"NC","school":"E E Smith (Fayetteville, NC)","committedTo":null,"isCommittedToUF":false},{"id":"0c2e2ddb-6d7b-5689-88c9-8733394b57a0","slug":"kaleb-ballard","fullName":"Kaleb Ballard","classYear":2028,"position":"TE","lifecycle":"HS","portalStatus":null,"signalCount":0,"portalLikelihood":0,"ufFitScore":10,"ufConfidence":17,"rank":6,"stars":4,"rating":92.63260869565217,"compositeScore":92.63260869565217,"nationalRank":200,"natlRank":200,"posRank":1,"stateRank":2,"state":"AL","school":"Wetumpka (Wetumpka, AL)","committedTo":null,"isCommittedToUF":false}],"portalPredictions":{"predictions":[{"school":"Georgia","score":40,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"},{"school":"Florida","score":23,"sourceType":"MODEL","predictorId":"gatorvault","status":"ACTIVE"},{"school":"Auburn","score":17,"sourceType":"BLENDED","predictorId":"on3-rpm","status":"ACTIVE"}],"intel":{"portalLikelihood":0,"depthChartRisk":0,"snapShareScore":0,"volatility":12}},"fitIntel":null,"competingSchools":[{"school":"Georgia","rankNow":1,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":40.3},{"school":"Auburn","rankNow":2,"rankPrior":null,"delta":0,"volatilityBoost":0,"pct":16.5}],"futurecastSummary":{"ufProbability":23,"gvProbability":23,"predictedSchool":"Georgia","movementDelta":-12,"fitScore":79,"volatilityScore":12},"vaultScouting":{"evaluation":"Brown is a polished perimeter WR who creates separation with sudden releases and sharp breaks, then turns short throws into chunk plays. Contests catches and finishes through contact. Wins with routes, suddenness, and YAC — a reliable X/Z who stresses coverage all over the formation.","comparison":"Brown comps to Chris Olave — 6-1 polished perimeter WR with suddenness after the catch and reliable separation habits.","projection":"Brown projects as a Year 2 SEC starter on the perimeter (package snaps Year 1). Ceiling: every-down SEC WR — the polished separator who wins with routes and YAC violence after the catch.","strengths":["Brown creates separation with sudden releases and sharp breaks.","Brown is sudden after the catch and turns short throws into chunk plays.","Brown contests catches and finishes through contact for a 190-pound frame."],"schemeFit":"Brown fits Faulkner RPO / rhythm offense as a perimeter WR who separates and creates after the catch."},"stampMeta":{"rpmStripped":true,"stampedAt":"2026-08-08T00:12:29.994Z","slug":"bubba-brown","profileKind":"prospect-2028"}}
+{
+  "lastUpdated": "2026-08-08T00:12:29.872Z",
+  "source": "recruiting-store",
+  "player": {
+    "id": "9382b81b-159d-554e-83b6-02a4d4cdcf53",
+    "fullName": "Bubba Brown",
+    "slug": "bubba-brown",
+    "classYear": 2028,
+    "position": "WR",
+    "status": "HS",
+    "height": 73,
+    "weight": 190,
+    "hometown": "Tallahassee",
+    "state": "FL",
+    "highSchool": "Lowndes (Valdosta, GA)",
+    "stars": 4,
+    "compositeRating": 91.39891304347826,
+    "rankingNational": 126,
+    "rankingPosition": 19,
+    "rankingState": 15,
+    "committedTo": null,
+    "ufFitScore": 79,
+    "fitScoreBreakdown": null,
+    "movementHistory": [
+      {
+        "date": "2026-08-02",
+        "confidence": 35
+      },
+      {
+        "date": "2026-08-03",
+        "confidence": 33
+      },
+      {
+        "date": "2026-08-04",
+        "confidence": 31
+      },
+      {
+        "date": "2026-08-05",
+        "confidence": 29
+      },
+      {
+        "date": "2026-08-06",
+        "confidence": 27
+      },
+      {
+        "date": "2026-08-07",
+        "confidence": 25
+      },
+      {
+        "date": "2026-08-08",
+        "confidence": 23
+      }
+    ],
+    "volatilityScore": 12
+  },
+  "highSchoolProfile": {
+    "id": "bubba-brown",
+    "playerId": "9382b81b-159d-554e-83b6-02a4d4cdcf53",
+    "offers": [
+      {
+        "school": "USF Bulls",
+        "date": null
+      },
+      {
+        "school": "Troy Trojans",
+        "date": null
+      },
+      {
+        "school": "Connecticut Huskies",
+        "date": null
+      },
+      {
+        "school": "Georgia Southern Eagles",
+        "date": null
+      },
+      {
+        "school": "East Carolina Pirates",
+        "date": null
+      },
+      {
+        "school": "West Virginia Mountaineers",
+        "date": null
+      },
+      {
+        "school": "NC State Wolfpack",
+        "date": null
+      },
+      {
+        "school": "Kentucky Wildcats",
+        "date": null
+      },
+      {
+        "school": "Arkansas Razorbacks",
+        "date": null
+      },
+      {
+        "school": "Tennessee Volunteers",
+        "date": null
+      },
+      {
+        "school": "Georgia Tech Yellow Jackets",
+        "date": null
+      },
+      {
+        "school": "Pittsburgh Panthers",
+        "date": null
+      },
+      {
+        "school": "Alabama Crimson Tide",
+        "date": null
+      },
+      {
+        "school": "Auburn Tigers",
+        "date": null
+      },
+      {
+        "school": "Florida",
+        "date": null
+      },
+      {
+        "school": "Georgia Bulldogs",
+        "date": null
+      }
+    ],
+    "stats": {
+      "stars": 4,
+      "natlRank": 126,
+      "posRank": 19,
+      "stateRank": 15,
+      "rating": 91.39891304347826,
+      "on3Id": "250868"
+    },
+    "recruitingNotes": "",
+    "discoveryScore": 100,
+    "visitHistory": [],
+    "interestMeter": null
+  },
+  "collegeProfile": null,
+  "portalProfile": null,
+  "ufSpecificProfile": null,
+  "movementWindow": {
+    "ufProbNow": 23,
+    "ufProb7dAgo": 35,
+    "delta7d": -12,
+    "volatilityScore": 12,
+    "windowDays": 30
+  },
+  "movementHistory": [
+    {
+      "date": "2026-08-02",
+      "confidence": 35
+    },
+    {
+      "date": "2026-08-03",
+      "confidence": 33
+    },
+    {
+      "date": "2026-08-04",
+      "confidence": 31
+    },
+    {
+      "date": "2026-08-05",
+      "confidence": 29
+    },
+    {
+      "date": "2026-08-06",
+      "confidence": 27
+    },
+    {
+      "date": "2026-08-07",
+      "confidence": 25
+    },
+    {
+      "date": "2026-08-08",
+      "confidence": 23
+    }
+  ],
+  "signals": [
+    {
+      "id": "9382b81b-159d-554e-83b6-02a4d4cdcf53-discovery",
+      "playerId": "9382b81b-159d-554e-83b6-02a4d4cdcf53",
+      "signalType": "EVALUATION_NOTE",
+      "signalValue": {
+        "note": "Early discovery score on FutureCast underclassmen watchlist",
+        "discoveryScore": 100,
+        "tier": "medium"
+      },
+      "createdAt": "2026-08-03T02:27:45.767Z"
+    },
+    {
+      "id": "9382b81b-159d-554e-83b6-02a4d4cdcf53-staff-flag",
+      "playerId": "9382b81b-159d-554e-83b6-02a4d4cdcf53",
+      "signalType": "STAFF_FLAG",
+      "signalValue": {
+        "note": "Listed on FutureCast early target board",
+        "classYear": 2028
+      },
+      "createdAt": "2026-08-03T02:27:45.767Z"
+    },
+    {
+      "id": "9382b81b-159d-554e-83b6-02a4d4cdcf53-momentum",
+      "playerId": "9382b81b-159d-554e-83b6-02a4d4cdcf53",
+      "signalType": "SOCIAL_MOMENTUM",
+      "signalValue": {
+        "direction": "down",
+        "delta7d": -12,
+        "ufConfidence": 23
+      },
+      "createdAt": "2026-08-03T02:27:45.767Z"
+    }
+  ],
+  "related": [
+    {
+      "id": "e8029f9c-ccc2-5362-8eb8-776ed93aa239",
+      "slug": "brysen-wright",
+      "fullName": "Brysen Wright",
+      "classYear": 2028,
+      "position": "WR",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 10,
+      "ufConfidence": 17,
+      "rank": 1,
+      "stars": 5,
+      "rating": 97.7731182795699,
+      "compositeScore": 97.7731182795699,
+      "nationalRank": 208,
+      "natlRank": 208,
+      "posRank": 2,
+      "stateRank": 1,
+      "state": "FL",
+      "school": "Mandarin (Jacksonville, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "94e6a1ee-8b3b-5234-8285-3eaab592fcb8",
+      "slug": "antonio-thomas-jr",
+      "fullName": "Antonio Thomas Jr.",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 41,
+      "ufConfidence": 49,
+      "rank": 2,
+      "stars": 4,
+      "rating": null,
+      "compositeScore": null,
+      "nationalRank": 17,
+      "natlRank": 17,
+      "posRank": 4,
+      "stateRank": 5,
+      "state": "FL",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "da69ba08-b232-5dd8-81c6-69a9ff2fb5fe",
+      "slug": "izayah-vickers",
+      "fullName": "Izayah Vickers",
+      "classYear": 2028,
+      "position": "CB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 33,
+      "ufConfidence": 42,
+      "rank": 3,
+      "stars": 4,
+      "rating": 91.54710144927536,
+      "compositeScore": 91.54710144927536,
+      "nationalRank": 117,
+      "natlRank": 117,
+      "posRank": 12,
+      "stateRank": 18,
+      "state": "FL",
+      "school": "Florida State Univ. School (Tallahassee, FL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0f878544-f0c1-5ee4-8195-cf4f1b739736",
+      "slug": "andre-alexander",
+      "fullName": "Andre Alexander",
+      "classYear": 2028,
+      "position": "LB",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 23,
+      "ufConfidence": 28,
+      "rank": 4,
+      "stars": 4,
+      "rating": 92.24057971014493,
+      "compositeScore": 92.24057971014493,
+      "nationalRank": 72,
+      "natlRank": 72,
+      "posRank": 4,
+      "stateRank": 9,
+      "state": "VA",
+      "school": "IMG Academy (Chesapeake, VA)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "5e60722f-9da8-5e10-8766-711fbba9c76e",
+      "slug": "cassell-cruickshank",
+      "fullName": "Cassell Cruickshank",
+      "classYear": 2028,
+      "position": "EDGE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 21,
+      "ufConfidence": 24,
+      "rank": 5,
+      "stars": 4,
+      "rating": 95.22258064516129,
+      "compositeScore": 95.22258064516129,
+      "nationalRank": 14,
+      "natlRank": 14,
+      "posRank": 3,
+      "stateRank": 2,
+      "state": "NC",
+      "school": "E E Smith (Fayetteville, NC)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    },
+    {
+      "id": "0c2e2ddb-6d7b-5689-88c9-8733394b57a0",
+      "slug": "kaleb-ballard",
+      "fullName": "Kaleb Ballard",
+      "classYear": 2028,
+      "position": "TE",
+      "lifecycle": "HS",
+      "portalStatus": null,
+      "signalCount": 0,
+      "portalLikelihood": 0,
+      "ufFitScore": 10,
+      "ufConfidence": 17,
+      "rank": 6,
+      "stars": 4,
+      "rating": 92.63260869565217,
+      "compositeScore": 92.63260869565217,
+      "nationalRank": 200,
+      "natlRank": 200,
+      "posRank": 1,
+      "stateRank": 2,
+      "state": "AL",
+      "school": "Wetumpka (Wetumpka, AL)",
+      "committedTo": null,
+      "isCommittedToUF": false
+    }
+  ],
+  "portalPredictions": {
+    "predictions": [
+      {
+        "school": "Georgia",
+        "score": 40,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Florida",
+        "score": 23,
+        "sourceType": "MODEL",
+        "predictorId": "gatorvault",
+        "status": "ACTIVE"
+      },
+      {
+        "school": "Auburn",
+        "score": 17,
+        "sourceType": "BLENDED",
+        "predictorId": "on3-rpm",
+        "status": "ACTIVE"
+      }
+    ],
+    "intel": {
+      "portalLikelihood": 0,
+      "depthChartRisk": 0,
+      "snapShareScore": 0,
+      "volatility": 12
+    }
+  },
+  "fitIntel": null,
+  "competingSchools": [
+    {
+      "school": "Georgia",
+      "rankNow": 1,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 40.3
+    },
+    {
+      "school": "Auburn",
+      "rankNow": 2,
+      "rankPrior": null,
+      "delta": 0,
+      "volatilityBoost": 0,
+      "pct": 16.5
+    }
+  ],
+  "futurecastSummary": {
+    "ufProbability": 23,
+    "gvProbability": 23,
+    "predictedSchool": "Georgia",
+    "movementDelta": -12,
+    "fitScore": 79,
+    "volatilityScore": 12
+  },
+  "vaultScouting": {
+    "evaluation": "Brown is a polished perimeter WR who creates separation with sudden releases and sharp breaks, then turns short throws into chunk plays. Contests catches and finishes through contact. Wins with routes, suddenness, and YAC — a reliable X/Z who stresses coverage all over the formation.",
+    "comparison": "Brown comps to Chris Olave — 6-1 polished perimeter WR with suddenness after the catch and reliable separation habits.",
+    "projection": "Brown projects as a Year 2 SEC starter on the perimeter (package snaps Year 1). Ceiling: every-down SEC WR — the polished separator who wins with routes and YAC violence after the catch.",
+    "strengths": [
+      "Brown creates separation with sudden releases and sharp breaks.",
+      "Brown is sudden after the catch and turns short throws into chunk plays.",
+      "Brown contests catches and finishes through contact for a 190-pound frame."
+    ],
+    "schemeFit": "Brown fits Faulkner RPO / rhythm offense as a perimeter WR who separates and creates after the catch."
+  },
+  "stampMeta": {
+    "rpmStripped": true,
+    "stampedAt": "2026-08-14T02:43:42.208Z",
+    "slug": "bubba-brown",
+    "profileKind": "prospect-2028",
+    "ranksSyncedAt": "2026-08-14T02:43:42.208Z"
+  }
+}
