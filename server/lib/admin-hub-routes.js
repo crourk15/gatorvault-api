@@ -8,10 +8,11 @@ const productStore = require('./product-intel/product-intel-store');
 const selfRunnerEngine = require('./self-runner/self-runner-engine');
 const recruitingStore = require('./recruiting-store');
 const { loadPublishedArticles } = require('./content-store');
-const { loadUsers, changeUserEmail, findUserByEmail } = require('./user-store');
+const { loadUsers, changeUserEmail, findUserByEmail, saveUsers } = require('./user-store');
 const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 const { hasPaidAccess, trialState, isSubscriptionActive } = require('./subscription-service');
 const { effectiveTier } = require('./session-auth');
+const memberAnnounce = require('./member-announce-email');
 
 const MODULE_IDS = [
   'beat-desk',
@@ -824,6 +825,57 @@ function mountAdminHubRoutes(app) {
         email: safeUser?.email || to,
         name: safeUser?.name || result.user?.name || null,
         previousEmails: Array.isArray(safeUser?.previousEmails) ? safeUser.previousEmails : [],
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /**
+   * Email members about an App Store update (default 1.0.15).
+   * Body: { version?, dryRun?, force?, limit?, requireActiveAccess? }
+   * Skips App Review / test / Charles-Rourk / operator accounts.
+   */
+  app.post('/api/admin/members/announce-ios', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const body = req.body || {};
+      const version = String(body.version || memberAnnounce.DEFAULT_VERSION).trim() || '1.0.15';
+      const dryRun = body.dryRun === true || body.dryRun === 'true' || body.dry_run === true;
+      const force = body.force === true || body.force === 'true';
+      const requireActiveAccess = body.requireActiveAccess !== false && body.requireActiveAccess !== 'false';
+      const limit = body.limit != null ? Number(body.limit) : null;
+
+      const mail =
+        (global.__GV_SUBSCRIPTION_MAIL__ && global.__GV_SUBSCRIPTION_MAIL__.deliverEmail) ||
+        null;
+      if (!mail && !dryRun) {
+        return res.status(503).json({ ok: false, error: 'Email deliverer not ready' });
+      }
+
+      const users = loadUsers();
+      const result = await memberAnnounce.sendIosUpdateAnnounce({
+        loadUsers: () => users,
+        deliverEmail: mail || (async () => ({ sent: false, provider: 'dry' })),
+        version,
+        dryRun,
+        force,
+        requireActiveAccess,
+        limit,
+      });
+
+      if (!dryRun && result.sent > 0) {
+        try {
+          saveUsers(users);
+        } catch (err) {
+          console.warn('[announce-ios] saveUsers failed:', err.message || err);
+        }
+      }
+
+      return res.status(200).json({
+        ok: true,
+        ...result,
+        appStoreUrl: memberAnnounce.APP_STORE_URL,
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
