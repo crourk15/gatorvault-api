@@ -124,6 +124,37 @@ function extractHtWtFromOn3Player(player, recruitment = null) {
   };
 }
 
+function pickNumber(...vals) {
+  for (const v of vals) {
+    if (v == null || v === '') continue;
+    const n = Number(v);
+    if (Number.isFinite(n)) return n;
+  }
+  return null;
+}
+
+/**
+ * On3 Industry Consensus ranks (same aggregate as the On3 player card).
+ * Prefer consensus* only — never single-service overallRank/positionRank/stateRank.
+ * Industry national is exposed as consensusOverallRank (and sometimes consensusNationalRank).
+ */
+function pickOn3IndustryRanks(rankingsPlayer = {}, recruitmentRating = {}) {
+  const rp = rankingsPlayer && typeof rankingsPlayer === 'object' ? rankingsPlayer : {};
+  const rr = recruitmentRating && typeof recruitmentRating === 'object' ? recruitmentRating : {};
+  return {
+    natlRank: pickNumber(
+      rp.consensusOverallRank,
+      rp.consensusNationalRank,
+      rr.consensusOverallRank,
+      rr.consensusNationalRank
+    ),
+    posRank: pickNumber(rp.consensusPositionRank, rr.consensusPositionRank),
+    stateRank: pickNumber(rp.consensusStateRank, rr.consensusStateRank),
+    rating: pickNumber(rp.consensusRating, rr.consensusRating),
+    stars: pickNumber(rp.consensusStars, rr.consensusStars),
+  };
+}
+
 async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
   if (!recruitSlug) return null;
   const year = parseInt(classYear, 10) || 2027;
@@ -171,36 +202,25 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
     null;
   const { height, weight, htWt } = extractHtWtFromOn3Player(pp.player, recruitment);
 
+  /**
+   * On3 Industry Consensus only (same stack as the On3 player card).
+   * Never fall back to single-service overallRank / positionRank / stateRank —
+   * those are Rivals/247/ESPN rows and caused profile NATL mismatches
+   * (e.g. Wright Industry #1 vs Rivals #3 / stale #208).
+   * Note: On3 names Industry national as consensusOverallRank.
+   */
+  const industry = pickOn3IndustryRanks(rp, recruitmentRating);
   const stars =
-    rp.consensusStars ??
+    industry.stars ??
     rp.stars ??
     recruitmentRating.stars ??
-    recruitmentRating.consensusStars ??
     null;
-  const natlRank =
-    rp.consensusOverallRank ??
-    rp.overallRank ??
-    rp.consensusNationalRank ??
-    rp.nationalRank ??
-    recruitmentRating.consensusOverallRank ??
-    recruitmentRating.nationalRank ??
-    null;
-  const posRank =
-    rp.consensusPositionRank ??
-    rp.positionRank ??
-    recruitmentRating.consensusPositionRank ??
-    recruitmentRating.positionRank ??
-    null;
-  const stateRank =
-    rp.consensusStateRank ??
-    rp.stateRank ??
-    recruitmentRating.consensusStateRank ??
-    recruitmentRating.stateRank ??
-    null;
+  const natlRank = industry.natlRank;
+  const posRank = industry.posRank;
+  const stateRank = industry.stateRank;
   const rating =
-    rp.consensusRating ??
+    industry.rating ??
     rp.rating ??
-    recruitmentRating.consensusRating ??
     recruitmentRating.rating ??
     null;
 
@@ -321,6 +341,7 @@ module.exports = {
   parseOn3NilValue,
   formatHtWt,
   extractHtWtFromOn3Player,
+  pickOn3IndustryRanks,
   resolveRecruitSlug,
   slugify,
   stateFromHighSchoolSlug,

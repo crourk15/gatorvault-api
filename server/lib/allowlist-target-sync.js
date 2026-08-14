@@ -203,6 +203,7 @@ function profilePatchFromOn3(profile, classYear) {
   const visitRecords = extractVisitsFromOn3Profile(profile);
   const competitors = competitorsFromOn3TopTeams(profile.topTeams, classYear);
 
+  const industry = on3Recruit.pickOn3IndustryRanks(rp, {});
   const patch = {
     name: profile.name,
     pos: profile.pos || null,
@@ -212,11 +213,11 @@ function profilePatchFromOn3(profile, classYear) {
     // category decided in mergeAllowlistPlayerPatch (allowlist gate)
     commitDate: commit?.committedDate || null,
     on3Source: 'on3-allowlist-sync',
-    stars,
+    stars: industry.stars ?? stars,
     consensusStars: rp.consensusStars ?? null,
-    natlRank: rp.consensusOverallRank ?? rp.consensusNationalRank ?? profile.natlRank ?? null,
-    posRank: rp.consensusPositionRank ?? rp.positionRank ?? profile.posRank ?? null,
-    stateRank: rp.consensusStateRank ?? rp.stateRank ?? profile.stateRank ?? null,
+    natlRank: industry.natlRank ?? profile.natlRank ?? null,
+    posRank: industry.posRank ?? profile.posRank ?? null,
+    stateRank: industry.stateRank ?? profile.stateRank ?? null,
     on3TopTeams: profile.topTeams || [],
     topTeams: profile.topTeams || [],
   };
@@ -243,7 +244,7 @@ function profilePatchFromOn3(profile, classYear) {
   } else if (patch.on3Slug) {
     patch.on3ProfileUrl = `https://www.on3.com/rivals/${patch.on3Slug}/`;
   }
-  const rating = profile.rating ?? rp.consensusRating ?? rp.rating ?? null;
+  const rating = industry.rating ?? profile.rating ?? rp.consensusRating ?? rp.rating ?? null;
   if (rating != null && Number.isFinite(Number(rating))) {
     patch.rating = Number(rating);
     patch.on3Source = 'on3-board-sync';

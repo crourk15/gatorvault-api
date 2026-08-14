@@ -115,16 +115,18 @@ function applyEditorialPositionToPlayer(player) {
     out.state = editorial.state;
     out.hometownState = editorial.state;
   }
-  if (editorial.natlRank != null && Number.isFinite(editorial.natlRank)) {
+  // Board seed fills rank/rating gaps only. Live On3 Industry Consensus on the
+  // player record must win (stale board rows were pinning Wright at #208).
+  if ((out.natlRank == null || out.natlRank === '') && editorial.natlRank != null && Number.isFinite(editorial.natlRank)) {
     out.natlRank = editorial.natlRank;
   }
-  if (editorial.posRank != null && Number.isFinite(editorial.posRank)) {
+  if ((out.posRank == null || out.posRank === '') && editorial.posRank != null && Number.isFinite(editorial.posRank)) {
     out.posRank = editorial.posRank;
   }
-  if (editorial.stateRank != null && Number.isFinite(editorial.stateRank)) {
+  if ((out.stateRank == null || out.stateRank === '') && editorial.stateRank != null && Number.isFinite(editorial.stateRank)) {
     out.stateRank = editorial.stateRank;
   }
-  if (editorial.rating != null && Number.isFinite(editorial.rating)) {
+  if ((out.rating == null || out.rating === '') && editorial.rating != null && Number.isFinite(editorial.rating)) {
     out.rating = editorial.rating;
     out.displayRating = editorial.rating;
   }

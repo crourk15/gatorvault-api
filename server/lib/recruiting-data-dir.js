@@ -28,6 +28,78 @@ function copyJsonIfMissing(src, dest) {
   return true;
 }
 
+
+/**
+ * Durable /var/data players.json is never overwritten on deploy. Copy fresher
+ * On3 Industry Consensus ranks from the git bundle into durable rows so profile
+ * cards pick up rank syncs without waiting for a live On3 crawl.
+ */
+function mergeBundledIndustryRanksIfFresher(dataDir = resolveRecruitingDataDir()) {
+  if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
+    return { merged: false, reason: 'same_path' };
+  }
+  const durablePath = path.join(dataDir, 'players.json');
+  const bundlePath = path.join(BUNDLE_DIR, 'players.json');
+  if (!fs.existsSync(durablePath) || !fs.existsSync(bundlePath)) {
+    return { merged: false, reason: 'missing_file' };
+  }
+  try {
+    const durable = JSON.parse(fs.readFileSync(durablePath, 'utf8'));
+    const bundled = JSON.parse(fs.readFileSync(bundlePath, 'utf8'));
+    if (!Array.isArray(durable) || !Array.isArray(bundled)) {
+      return { merged: false, reason: 'not_array' };
+    }
+    const bySlug = new Map(
+      bundled
+        .filter((p) => p && p.slug)
+        .map((p) => [String(p.slug).toLowerCase(), p])
+    );
+    const RANK_KEYS = ['natlRank', 'posRank', 'stateRank', 'rating', 'stars', 'displayRating'];
+    let updated = 0;
+    for (let i = 0; i < durable.length; i += 1) {
+      const row = durable[i];
+      if (!row?.slug) continue;
+      const src = bySlug.get(String(row.slug).toLowerCase());
+      if (!src) continue;
+      const srcAt = Date.parse(String(src.rankSyncedAt || src.updatedAt || '')) || 0;
+      const dstAt = Date.parse(String(row.rankSyncedAt || row.updatedAt || '')) || 0;
+      const srcHasRank = src.natlRank != null && src.natlRank !== '';
+      if (!srcHasRank) continue;
+      const shouldCopy =
+        srcAt > dstAt ||
+        (row.natlRank == null || row.natlRank === '') ||
+        (Number(src.natlRank) !== Number(row.natlRank) && srcAt >= dstAt && src.on3Source === 'on3-board-sync');
+      if (!shouldCopy && Number(src.natlRank) === Number(row.natlRank)) continue;
+      if (!shouldCopy) continue;
+      let changed = false;
+      for (const key of RANK_KEYS) {
+        if (src[key] == null || src[key] === '') continue;
+        if (row[key] !== src[key]) {
+          row[key] = src[key];
+          changed = true;
+        }
+      }
+      if (src.rankSyncedAt && row.rankSyncedAt !== src.rankSyncedAt) {
+        row.rankSyncedAt = src.rankSyncedAt;
+        changed = true;
+      }
+      if (src.on3Source && !row.on3Source) row.on3Source = src.on3Source;
+      if (changed) {
+        durable[i] = row;
+        updated += 1;
+      }
+    }
+    if (updated > 0) {
+      fs.writeFileSync(durablePath, JSON.stringify(durable, null, 2));
+    }
+    return { merged: updated > 0, updated };
+  } catch (err) {
+    console.warn('[recruiting-data-dir] industry rank merge skipped:', err.message);
+    return { merged: false, error: err.message };
+  }
+}
+
+
 function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
   if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
     return { migrated: false, reason: 'same_path' };
@@ -76,7 +148,11 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
         }
       }
     }
-    return { migrated: copied > 0, copied, to: dataDir };
+    const rankMerge = mergeBundledIndustryRanksIfFresher(dataDir);
+    if (rankMerge.updated) {
+      console.log('[recruiting-data-dir] merged Industry ranks from bundle', rankMerge.updated);
+    }
+    return { migrated: copied > 0 || !!rankMerge.updated, copied, rankMerge, to: dataDir };
   } catch (err) {
     console.warn('[recruiting-data-dir] migrate skipped:', err.message);
     return { migrated: false, error: err.message };
@@ -88,4 +164,5 @@ module.exports = {
   RENDER_DIR,
   resolveRecruitingDataDir,
   migrateRecruitingBundleIfNeeded,
+  mergeBundledIndustryRanksIfFresher,
 };
