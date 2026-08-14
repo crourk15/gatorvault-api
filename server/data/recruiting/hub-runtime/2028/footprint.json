@@ -2,12 +2,12 @@
   "states": [
     {
       "state": "FL",
-      "targets": 21,
+      "targets": 22,
       "commits": 1,
-      "offers": 103,
-      "visits": 132,
-      "ufScore": 35,
-      "competitorPressure": 28,
+      "offers": 119,
+      "visits": 157,
+      "ufScore": 47,
+      "competitorPressure": 36,
       "pipelineScore": 100,
       "momentum": "up",
       "topPlayers": [
@@ -45,24 +45,24 @@
           "pinLng": -81.686783
         },
         {
-          "id": "nikolay-petrushev",
-          "name": "Nikolay Petrushev",
-          "position": "OT",
+          "id": "tyree-mannings-jr",
+          "name": "Tyree Mannings Jr",
+          "position": "WR",
           "class": 2028,
           "status": "target",
-          "ufScore": 70,
-          "competitorScore": null,
+          "ufScore": 96,
+          "competitorScore": 83,
           "pinLat": 27.766279,
           "pinLng": -81.686783
         },
         {
-          "id": "anthony-howard-jr",
-          "name": "Anthony Howard Jr.",
-          "position": "RB",
+          "id": "izayah-vickers",
+          "name": "Izayah Vickers",
+          "position": "CB",
           "class": 2028,
           "status": "target",
-          "ufScore": 63,
-          "competitorScore": 20,
+          "ufScore": 94,
+          "competitorScore": 17,
           "pinLat": 27.766279,
           "pinLng": -81.686783
         }
@@ -90,13 +90,24 @@
       "state": "AL",
       "targets": 4,
       "commits": 0,
-      "offers": 26,
-      "visits": 35,
-      "ufScore": 26,
-      "competitorPressure": 46,
+      "offers": 25,
+      "visits": 36,
+      "ufScore": 44,
+      "competitorPressure": 57,
       "pipelineScore": 100,
       "momentum": "up",
       "topPlayers": [
+        {
+          "id": "nehemiah-mccary",
+          "name": "Nehemiah Mccary",
+          "position": "LB",
+          "class": 2028,
+          "status": "target",
+          "ufScore": 100,
+          "competitorScore": 91,
+          "pinLat": 32.806671,
+          "pinLng": -86.79113
+        },
         {
           "id": "joey-fleming",
           "name": "Joey Fleming",
@@ -129,17 +140,6 @@
           "competitorScore": 16,
           "pinLat": 27.766279,
           "pinLng": -81.686783
-        },
-        {
-          "id": "nehemiah-mccary",
-          "name": "Nehemiah McCary",
-          "position": "LB",
-          "class": 2028,
-          "status": "target",
-          "ufScore": null,
-          "competitorScore": null,
-          "pinLat": 32.806671,
-          "pinLng": -86.79113
         }
       ],
       "staffActivity": []
@@ -148,10 +148,10 @@
       "state": "GA",
       "targets": 7,
       "commits": 0,
-      "offers": 34,
-      "visits": 16,
+      "offers": 35,
+      "visits": 21,
       "ufScore": 22,
-      "competitorPressure": 27,
+      "competitorPressure": 26,
       "pipelineScore": 100,
       "momentum": "up",
       "topPlayers": [
@@ -214,70 +214,14 @@
       "staffActivity": []
     },
     {
-      "state": "TN",
-      "targets": 3,
-      "commits": 0,
-      "offers": 14,
-      "visits": 11,
-      "ufScore": 14,
-      "competitorPressure": 25,
-      "pipelineScore": 85,
-      "momentum": "up",
-      "topPlayers": [
-        {
-          "id": "braxton-rein",
-          "name": "Braxton Rein",
-          "position": "TE",
-          "class": 2028,
-          "status": "target",
-          "ufScore": 29,
-          "competitorScore": 14,
-          "pinLat": 35.747845,
-          "pinLng": -86.692345
-        },
-        {
-          "id": "jermaine-cobbins",
-          "name": "Jermaine Cobbins",
-          "position": "CB",
-          "class": 2028,
-          "status": "target",
-          "ufScore": 7,
-          "competitorScore": 27,
-          "pinLat": 35.747845,
-          "pinLng": -86.692345
-        },
-        {
-          "id": "dion-edwards",
-          "name": "Dion Edwards",
-          "position": "S",
-          "class": 2028,
-          "status": "target",
-          "ufScore": 5,
-          "competitorScore": 33,
-          "pinLat": 35.747845,
-          "pinLng": -86.692345
-        }
-      ],
-      "staffActivity": [
-        {
-          "staffId": "drew-hughes",
-          "name": "Drew Hughes",
-          "role": "Director of High School Personnel",
-          "assignedPlayers": 1,
-          "wins": 0,
-          "losses": 0
-        }
-      ]
-    },
-    {
       "state": "MD",
       "targets": 3,
       "commits": 0,
-      "offers": 11,
-      "visits": 11,
+      "offers": 13,
+      "visits": 14,
       "ufScore": 8,
       "competitorPressure": 27,
-      "pipelineScore": 78,
+      "pipelineScore": 93,
       "momentum": "up",
       "topPlayers": [
         {
@@ -326,14 +270,70 @@
       ]
     },
     {
+      "state": "TN",
+      "targets": 3,
+      "commits": 0,
+      "offers": 13,
+      "visits": 11,
+      "ufScore": 13,
+      "competitorPressure": 25,
+      "pipelineScore": 83,
+      "momentum": "up",
+      "topPlayers": [
+        {
+          "id": "braxton-rein",
+          "name": "Braxton Rein",
+          "position": "TE",
+          "class": 2028,
+          "status": "target",
+          "ufScore": 29,
+          "competitorScore": 14,
+          "pinLat": 35.747845,
+          "pinLng": -86.692345
+        },
+        {
+          "id": "jermaine-cobbins",
+          "name": "Jermaine Cobbins",
+          "position": "CB",
+          "class": 2028,
+          "status": "target",
+          "ufScore": 6,
+          "competitorScore": 27,
+          "pinLat": 35.747845,
+          "pinLng": -86.692345
+        },
+        {
+          "id": "dion-edwards",
+          "name": "Dion Edwards",
+          "position": "S",
+          "class": 2028,
+          "status": "target",
+          "ufScore": 5,
+          "competitorScore": 33,
+          "pinLat": 35.747845,
+          "pinLng": -86.692345
+        }
+      ],
+      "staffActivity": [
+        {
+          "staffId": "drew-hughes",
+          "name": "Drew Hughes",
+          "role": "Director of High School Personnel",
+          "assignedPlayers": 1,
+          "wins": 0,
+          "losses": 0
+        }
+      ]
+    },
+    {
       "state": "NC",
       "targets": 3,
       "commits": 0,
-      "offers": 15,
+      "offers": 14,
       "visits": 5,
       "ufScore": 13,
       "competitorPressure": 19,
-      "pipelineScore": 72,
+      "pipelineScore": 69,
       "momentum": "up",
       "topPlayers": [
         {
@@ -382,6 +382,42 @@
       ]
     },
     {
+      "state": "OH",
+      "targets": 2,
+      "commits": 0,
+      "offers": 13,
+      "visits": 6,
+      "ufScore": 7,
+      "competitorPressure": 32,
+      "pipelineScore": 64,
+      "momentum": "up",
+      "topPlayers": [
+        {
+          "id": "landon-dawson",
+          "name": "Landon Dawson",
+          "position": "TE",
+          "class": 2028,
+          "status": "target",
+          "ufScore": 7,
+          "competitorScore": 28,
+          "pinLat": 40.388783,
+          "pinLng": -82.764915
+        },
+        {
+          "id": "lorenzo-mcmullen-jr",
+          "name": "Lorenzo Mcmullen Jr",
+          "position": "WR",
+          "class": 2028,
+          "status": "target",
+          "ufScore": 6,
+          "competitorScore": 35,
+          "pinLat": 40.388783,
+          "pinLng": -82.764915
+        }
+      ],
+      "staffActivity": []
+    },
+    {
       "state": "MO",
       "targets": 1,
       "commits": 0,
@@ -407,49 +443,13 @@
       "staffActivity": []
     },
     {
-      "state": "OH",
-      "targets": 2,
-      "commits": 0,
-      "offers": 9,
-      "visits": 4,
-      "ufScore": 5,
-      "competitorPressure": 43,
-      "pipelineScore": 48,
-      "momentum": "up",
-      "topPlayers": [
-        {
-          "id": "lorenzo-mcmullen-jr",
-          "name": "Lorenzo McMullen Jr.",
-          "position": "WR",
-          "class": 2028,
-          "status": "target",
-          "ufScore": 6,
-          "competitorScore": 37,
-          "pinLat": 40.388783,
-          "pinLng": -82.764915
-        },
-        {
-          "id": "landon-dawson",
-          "name": "Landon Dawson",
-          "position": "TE",
-          "class": 2028,
-          "status": "target",
-          "ufScore": 3,
-          "competitorScore": 49,
-          "pinLat": 40.388783,
-          "pinLng": -82.764915
-        }
-      ],
-      "staffActivity": []
-    },
-    {
       "state": "MS",
       "targets": 2,
       "commits": 0,
       "offers": 10,
       "visits": 3,
       "ufScore": 67,
-      "competitorPressure": 33,
+      "competitorPressure": 30,
       "pipelineScore": 47,
       "momentum": "up",
       "topPlayers": [
@@ -460,7 +460,7 @@
           "class": 2028,
           "status": "target",
           "ufScore": 100,
-          "competitorScore": 26,
+          "competitorScore": 20,
           "pinLat": 32.741646,
           "pinLng": -89.678696
         },
@@ -547,14 +547,64 @@
       ]
     },
     {
-      "state": "VA",
+      "state": "TX",
       "targets": 1,
       "commits": 0,
       "offers": 6,
       "visits": 3,
+      "ufScore": 25,
+      "competitorPressure": 28,
+      "pipelineScore": 31,
+      "momentum": "up",
+      "topPlayers": [
+        {
+          "id": "tristin-gaines",
+          "name": "Tristin Gaines",
+          "position": "QB",
+          "class": 2028,
+          "status": "target",
+          "ufScore": 25,
+          "competitorScore": 28,
+          "pinLat": 31.054487,
+          "pinLng": -97.563461
+        }
+      ],
+      "staffActivity": []
+    },
+    {
+      "state": "MI",
+      "targets": 1,
+      "commits": 0,
+      "offers": 8,
+      "visits": 0,
+      "ufScore": 84,
+      "competitorPressure": 28,
+      "pipelineScore": 30,
+      "momentum": "up",
+      "topPlayers": [
+        {
+          "id": "antijuan-wilkes-jr",
+          "name": "Antijuan Wilkes Jr",
+          "position": "OT",
+          "class": 2028,
+          "status": "target",
+          "ufScore": 84,
+          "competitorScore": 28,
+          "pinLat": 43.326618,
+          "pinLng": -84.536095
+        }
+      ],
+      "staffActivity": []
+    },
+    {
+      "state": "VA",
+      "targets": 1,
+      "commits": 0,
+      "offers": 5,
+      "visits": 3,
       "ufScore": 23,
       "competitorPressure": 20,
-      "pipelineScore": 31,
+      "pipelineScore": 28,
       "momentum": "up",
       "topPlayers": [
         {
@@ -581,31 +631,6 @@
       ]
     },
     {
-      "state": "MI",
-      "targets": 1,
-      "commits": 0,
-      "offers": 6,
-      "visits": 0,
-      "ufScore": null,
-      "competitorPressure": null,
-      "pipelineScore": 25,
-      "momentum": "up",
-      "topPlayers": [
-        {
-          "id": "antijuan-wilkes-jr",
-          "name": "Antijuan Wilkes Jr.",
-          "position": "OT",
-          "class": 2028,
-          "status": "target",
-          "ufScore": null,
-          "competitorScore": null,
-          "pinLat": 43.326618,
-          "pinLng": -84.536095
-        }
-      ],
-      "staffActivity": []
-    },
-    {
       "state": "HI",
       "targets": 1,
       "commits": 0,
@@ -626,31 +651,6 @@
           "competitorScore": 17,
           "pinLat": 21.094318,
           "pinLng": -157.498337
-        }
-      ],
-      "staffActivity": []
-    },
-    {
-      "state": "TX",
-      "targets": 1,
-      "commits": 0,
-      "offers": 4,
-      "visits": 2,
-      "ufScore": 25,
-      "competitorPressure": 29,
-      "pipelineScore": 23,
-      "momentum": "up",
-      "topPlayers": [
-        {
-          "id": "tristin-gaines",
-          "name": "Tristin Gaines",
-          "position": "QB",
-          "class": 2028,
-          "status": "target",
-          "ufScore": 25,
-          "competitorScore": 29,
-          "pinLat": 31.054487,
-          "pinLng": -97.563461
         }
       ],
       "staffActivity": []
@@ -684,7 +684,7 @@
       "lat": 27.766279,
       "lng": -81.686783,
       "status": "target",
-      "ufScore": 18,
+      "ufScore": 16,
       "pinType": "battle"
     },
     {
@@ -709,7 +709,7 @@
     },
     {
       "id": "quinton-rolle-jr",
-      "name": "Quinton Rolle Jr.",
+      "name": "Quinton Rolle Jr",
       "state": "FL",
       "lat": 27.766279,
       "lng": -81.686783,
@@ -739,7 +739,7 @@
     },
     {
       "id": "antonio-thomas-jr",
-      "name": "Antonio Thomas Jr.",
+      "name": "Antonio Thomas Jr",
       "state": "FL",
       "lat": 27.766279,
       "lng": -81.686783,
@@ -748,14 +748,24 @@
       "pinType": "battle"
     },
     {
-      "id": "tyree-mannings-jr",
-      "name": "Tyree Mannings Jr.",
+      "id": "tromon-isaac",
+      "name": "Tromon Isaac",
       "state": "FL",
       "lat": 27.766279,
       "lng": -81.686783,
       "status": "target",
-      "ufScore": 18,
+      "ufScore": 80,
       "pinType": "battle"
+    },
+    {
+      "id": "tyree-mannings-jr",
+      "name": "Tyree Mannings Jr",
+      "state": "FL",
+      "lat": 27.766279,
+      "lng": -81.686783,
+      "status": "target",
+      "ufScore": 96,
+      "pinType": "target"
     },
     {
       "id": "izayah-vickers",
@@ -764,8 +774,8 @@
       "lat": 27.766279,
       "lng": -81.686783,
       "status": "target",
-      "ufScore": 33,
-      "pinType": "battle"
+      "ufScore": 94,
+      "pinType": "target"
     },
     {
       "id": "phoenix-evans",
@@ -809,7 +819,7 @@
     },
     {
       "id": "anthony-howard-jr",
-      "name": "Anthony Howard Jr.",
+      "name": "Anthony Howard Jr",
       "state": "FL",
       "lat": 27.766279,
       "lng": -81.686783,
@@ -844,7 +854,7 @@
       "lat": 27.766279,
       "lng": -81.686783,
       "status": "target",
-      "ufScore": 9,
+      "ufScore": 80,
       "pinType": "battle"
     },
     {
@@ -869,13 +879,13 @@
     },
     {
       "id": "derrell-hines-jr",
-      "name": "Derrell Hines Jr.",
+      "name": "Derrell Hines Jr",
       "state": "FL",
       "lat": 27.766279,
       "lng": -81.686783,
       "status": "target",
       "ufScore": 18,
-      "pinType": "target"
+      "pinType": "battle"
     },
     {
       "id": "kaleb-ballard",
@@ -909,13 +919,13 @@
     },
     {
       "id": "nehemiah-mccary",
-      "name": "Nehemiah McCary",
+      "name": "Nehemiah Mccary",
       "state": "AL",
       "lat": 32.806671,
       "lng": -86.79113,
       "status": "target",
-      "ufScore": null,
-      "pinType": "target"
+      "ufScore": 100,
+      "pinType": "battle"
     },
     {
       "id": "jermaine-cobbins",
@@ -924,7 +934,7 @@
       "lat": 35.747845,
       "lng": -86.692345,
       "status": "target",
-      "ufScore": 7,
+      "ufScore": 6,
       "pinType": "battle"
     },
     {
@@ -984,7 +994,7 @@
       "lat": 33.040619,
       "lng": -83.643074,
       "status": "target",
-      "ufScore": 2,
+      "ufScore": 5,
       "pinType": "battle"
     },
     {
@@ -1089,7 +1099,7 @@
     },
     {
       "id": "lorenzo-mcmullen-jr",
-      "name": "Lorenzo McMullen Jr.",
+      "name": "Lorenzo Mcmullen Jr",
       "state": "OH",
       "lat": 40.388783,
       "lng": -82.764915,
@@ -1104,7 +1114,7 @@
       "lat": 40.388783,
       "lng": -82.764915,
       "status": "target",
-      "ufScore": 3,
+      "ufScore": 7,
       "pinType": "battle"
     },
     {
@@ -1179,19 +1189,19 @@
     },
     {
       "id": "antijuan-wilkes-jr",
-      "name": "Antijuan Wilkes Jr.",
+      "name": "Antijuan Wilkes Jr",
       "state": "MI",
       "lat": 43.326618,
       "lng": -84.536095,
       "status": "target",
-      "ufScore": null,
+      "ufScore": 84,
       "pinType": "target"
     }
   ],
   "meta": {
-    "playerCount": 53,
+    "playerCount": 54,
     "stateCount": 15,
-    "pinCount": 53
+    "pinCount": 54
   },
   "year": 2028
 }

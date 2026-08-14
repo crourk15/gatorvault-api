@@ -3,10 +3,10 @@
   "ticker": [
     "Blue chip % at 100%",
     "1 commits locked for 2028",
+    "Quinton Rolle Jr — Offer from Liberty Flames",
     "Malakhi Dudley — Offer from Nebraska Cornhuskers",
-    "Pj Evans — unofficial visit · Ole Miss Rebels",
-    "Bryce Willingham — unofficial visit · Georgia Bulldogs",
-    "Antijuan Wilkes Jr. — Offer from Florida"
+    "Anthony Howard Jr — unofficial visit · Florida State Seminoles",
+    "Pj Evans — unofficial visit · Ole Miss Rebels"
   ],
   "classOverview": {
     "classRank": "—",
@@ -110,6 +110,15 @@
   ],
   "battles": [
     {
+      "id": "nehemiah-mccary",
+      "name": "Nehemiah Mccary",
+      "position": "LB",
+      "ufPercent": "100%",
+      "tag": "Lean UF",
+      "note": "4★ LB · 92.0 composite · Maplesville (Maplesville, AL)",
+      "movement": "Stable"
+    },
+    {
       "id": "zaiden-jernigan",
       "name": "Zaiden Jernigan",
       "position": "RB",
@@ -146,21 +155,12 @@
       "movement": "Stable"
     },
     {
-      "id": "nikolay-petrushev",
-      "name": "Nikolay Petrushev",
-      "position": "OT",
-      "ufPercent": "70%",
+      "id": "tyree-mannings-jr",
+      "name": "Tyree Mannings Jr",
+      "position": "WR",
+      "ufPercent": "96%",
       "tag": "Lean UF",
-      "note": "OT · 6-6 / 285 · East Lake · UF offer June 2026",
-      "movement": "Stable"
-    },
-    {
-      "id": "anthony-howard-jr",
-      "name": "Anthony Howard Jr.",
-      "position": "RB",
-      "ufPercent": "63%",
-      "tag": "Battle",
-      "note": "3★ RB · #349 natl · IMG Academy, FL",
+      "note": "4★ WR · #88 natl · Venice, FL — Florida leads (~92% PM)",
       "movement": "Stable"
     }
   ],
@@ -183,7 +183,7 @@
       "id": "WR",
       "label": "WR",
       "commits": 1,
-      "targets": 9,
+      "targets": 10,
       "note": null
     },
     {
@@ -245,6 +245,24 @@
   ],
   "heatIndex": [
     {
+      "id": "nehemiah-mccary",
+      "name": "Nehemiah Mccary",
+      "position": "LB",
+      "heat": 100,
+      "movement": "flat",
+      "ufPercent": 100,
+      "battle": {
+        "uf": 100,
+        "competitor": 91,
+        "competitorName": "Alabama"
+      },
+      "committedTo": null,
+      "flipWatch": false,
+      "nextVisit": null,
+      "insiderNote": "4★ LB · 92.0 composite · Maplesville (Maplesville, AL)",
+      "profileUrl": "/vault/recruiting/player/nehemiah-mccary"
+    },
+    {
       "id": "zaiden-jernigan",
       "name": "Zaiden Jernigan",
       "position": "RB",
@@ -253,8 +271,8 @@
       "ufPercent": 100,
       "battle": {
         "uf": 100,
-        "competitor": 26,
-        "competitorName": "Auburn"
+        "competitor": 20,
+        "competitorName": "Mississippi State"
       },
       "committedTo": null,
       "flipWatch": false,
@@ -317,6 +335,96 @@
       "profileUrl": "/vault/recruiting/player/cyion-smith"
     },
     {
+      "id": "tyree-mannings-jr",
+      "name": "Tyree Mannings Jr",
+      "position": "WR",
+      "heat": 96,
+      "movement": "flat",
+      "ufPercent": 96,
+      "battle": {
+        "uf": 96,
+        "competitor": 83,
+        "competitorName": "Miami"
+      },
+      "committedTo": null,
+      "flipWatch": false,
+      "nextVisit": null,
+      "insiderNote": "4★ WR · #88 natl · Venice, FL — Florida leads (~92% PM)",
+      "profileUrl": "/vault/recruiting/player/tyree-mannings-jr"
+    },
+    {
+      "id": "izayah-vickers",
+      "name": "Izayah Vickers",
+      "position": "CB",
+      "heat": 94,
+      "movement": "flat",
+      "ufPercent": 94,
+      "battle": {
+        "uf": 94,
+        "competitor": 17,
+        "competitorName": "Arkansas"
+      },
+      "committedTo": null,
+      "flipWatch": false,
+      "nextVisit": null,
+      "insiderNote": "4★ CB · #117 natl · Florida State Univ. School, FL",
+      "profileUrl": "/vault/recruiting/player/izayah-vickers"
+    },
+    {
+      "id": "antijuan-wilkes-jr",
+      "name": "Antijuan Wilkes Jr",
+      "position": "OT",
+      "heat": 84,
+      "movement": "flat",
+      "ufPercent": 84,
+      "battle": {
+        "uf": 84,
+        "competitor": 28,
+        "competitorName": "Michigan"
+      },
+      "committedTo": null,
+      "flipWatch": false,
+      "nextVisit": null,
+      "insiderNote": "4★ OT · #16 natl · Cass Technical (Detroit, MI)",
+      "profileUrl": "/vault/recruiting/player/antijuan-wilkes-jr"
+    },
+    {
+      "id": "tromon-isaac",
+      "name": "Tromon Isaac",
+      "position": "WR",
+      "heat": 80,
+      "movement": "flat",
+      "ufPercent": 80,
+      "battle": {
+        "uf": 80,
+        "competitor": 97,
+        "competitorName": "Miami"
+      },
+      "committedTo": null,
+      "flipWatch": false,
+      "nextVisit": null,
+      "insiderNote": "4★ WR · #92 natl · Chaminade-Madonna Prep, FL",
+      "profileUrl": "/vault/recruiting/player/tromon-isaac"
+    },
+    {
+      "id": "gabriel-player",
+      "name": "Gabriel Player",
+      "position": "LB",
+      "heat": 80,
+      "movement": "flat",
+      "ufPercent": 80,
+      "battle": {
+        "uf": 80,
+        "competitor": 94,
+        "competitorName": "Miami"
+      },
+      "committedTo": null,
+      "flipWatch": false,
+      "nextVisit": null,
+      "insiderNote": "4★ LB · #40 natl · Eau Gallie, FL",
+      "profileUrl": "/vault/recruiting/player/gabriel-player"
+    },
+    {
       "id": "nikolay-petrushev",
       "name": "Nikolay Petrushev",
       "position": "OT",
@@ -325,8 +433,8 @@
       "ufPercent": 70,
       "battle": {
         "uf": 70,
-        "competitor": null,
-        "competitorName": null
+        "competitor": 10,
+        "competitorName": "UCF"
       },
       "committedTo": null,
       "flipWatch": false,
@@ -336,7 +444,7 @@
     },
     {
       "id": "anthony-howard-jr",
-      "name": "Anthony Howard Jr.",
+      "name": "Anthony Howard Jr",
       "position": "RB",
       "heat": 63,
       "movement": "flat",
@@ -351,120 +459,23 @@
       "nextVisit": null,
       "insiderNote": "3★ RB · #349 natl · IMG Academy, FL",
       "profileUrl": "/vault/recruiting/player/anthony-howard-jr"
-    },
-    {
-      "id": "john-matthews",
-      "name": "John Matthews",
-      "position": "WR",
-      "heat": 60,
-      "movement": "flat",
-      "ufPercent": 60,
-      "battle": {
-        "uf": 60,
-        "competitor": 5,
-        "competitorName": "Georgia Tech"
-      },
-      "committedTo": null,
-      "flipWatch": false,
-      "nextVisit": null,
-      "insiderNote": "4★ WR · #279 natl · Newnan, GA",
-      "profileUrl": "/vault/recruiting/player/john-matthews"
-    },
-    {
-      "id": "jamarcus-johnson",
-      "name": "Jamarcus Johnson",
-      "position": "DL",
-      "heat": 49,
-      "movement": "flat",
-      "ufPercent": 49,
-      "battle": {
-        "uf": 49,
-        "competitor": 23,
-        "competitorName": "Georgia"
-      },
-      "committedTo": null,
-      "flipWatch": false,
-      "nextVisit": null,
-      "insiderNote": "4★ DL · #50 natl · Toombs County (Lyons, GA)",
-      "profileUrl": "/vault/recruiting/player/jamarcus-johnson"
-    },
-    {
-      "id": "joey-fleming",
-      "name": "Joey Fleming",
-      "position": "IOL",
-      "heat": 47,
-      "movement": "flat",
-      "ufPercent": 47,
-      "battle": {
-        "uf": 47,
-        "competitor": 95,
-        "competitorName": "Alabama"
-      },
-      "committedTo": null,
-      "flipWatch": false,
-      "nextVisit": null,
-      "insiderNote": "4★ IOL · #22 natl · Huntsville, AL",
-      "profileUrl": "/vault/recruiting/player/joey-fleming"
-    },
-    {
-      "id": "antonio-thomas-jr",
-      "name": "Antonio Thomas Jr.",
-      "position": "EDGE",
-      "heat": 41,
-      "movement": "flat",
-      "ufPercent": 41,
-      "battle": {
-        "uf": 41,
-        "competitor": 13,
-        "competitorName": "Miami"
-      },
-      "committedTo": null,
-      "flipWatch": false,
-      "nextVisit": null,
-      "insiderNote": "4★ EDGE · Carrollwood Day (Tampa, FL) · On3 ~No. 17 natl · Florida priority",
-      "profileUrl": "/vault/recruiting/player/antonio-thomas-jr"
-    },
-    {
-      "id": "pj-evans",
-      "name": "Pj Evans",
-      "position": "IOL",
-      "heat": 34,
-      "movement": "flat",
-      "ufPercent": 34,
-      "battle": {
-        "uf": 34,
-        "competitor": 39,
-        "competitorName": "Ole Miss"
-      },
-      "committedTo": null,
-      "flipWatch": false,
-      "nextVisit": null,
-      "insiderNote": "3★ IOL · #384 natl · Jackson Academy, MS",
-      "profileUrl": "/vault/recruiting/player/pj-evans"
-    },
-    {
-      "id": "izayah-vickers",
-      "name": "Izayah Vickers",
-      "position": "CB",
-      "heat": 33,
-      "movement": "flat",
-      "ufPercent": 33,
-      "battle": {
-        "uf": 33,
-        "competitor": 29,
-        "competitorName": "Clemson"
-      },
-      "committedTo": null,
-      "flipWatch": false,
-      "nextVisit": null,
-      "insiderNote": "4★ CB · #117 natl · Florida State Univ. School, FL",
-      "profileUrl": "/vault/recruiting/player/izayah-vickers"
     }
   ],
   "movementFeed": [
     {
+      "id": "offer-log-olog_quinton-rolle-jr_undated_liberty-flames",
+      "timestamp": "2026-08-14T00:11:49.629Z",
+      "name": "Quinton Rolle Jr",
+      "position": "CB",
+      "class": 2028,
+      "event": "offer",
+      "summary": "Offer from Liberty Flames",
+      "profileUrl": "/vault/recruiting/player/quinton-rolle-jr",
+      "movementNarrative": "UF -1% (7d)"
+    },
+    {
       "id": "offer-log-olog_malakhi-dudley_undated_nebraska-cornhuskers",
-      "timestamp": "2026-08-14T00:04:01.281Z",
+      "timestamp": "2026-08-14T00:11:30.915Z",
       "name": "Malakhi Dudley",
       "position": "OT",
       "class": 2028,
@@ -474,8 +485,19 @@
       "movementNarrative": "UF -4% (7d)"
     },
     {
+      "id": "visit-log-vlog_anthony-howard-jr_unofficial_visit_2024-06-16",
+      "timestamp": "2026-08-14T00:11:55.838Z",
+      "name": "Anthony Howard Jr",
+      "position": "RB",
+      "class": 2028,
+      "event": "visit",
+      "summary": "unofficial visit · Florida State Seminoles",
+      "profileUrl": "/vault/recruiting/player/anthony-howard-jr",
+      "movementNarrative": "UF +6% (7d)"
+    },
+    {
       "id": "visit-log-vlog_pj-evans_unofficial_visit_2025-11-15",
-      "timestamp": "2026-08-14T00:04:25.046Z",
+      "timestamp": "2026-08-14T00:11:54.125Z",
       "name": "Pj Evans",
       "position": "IOL",
       "class": 2028,
@@ -483,27 +505,6 @@
       "summary": "unofficial visit · Ole Miss Rebels",
       "profileUrl": "/vault/recruiting/player/pj-evans",
       "movementNarrative": "UF +3% (7d)"
-    },
-    {
-      "id": "visit-log-vlog_bryce-willingham_unofficial_visit_2025-08-30",
-      "timestamp": "2026-08-14T00:04:19.394Z",
-      "name": "Bryce Willingham",
-      "position": "CB",
-      "class": 2028,
-      "event": "visit",
-      "summary": "unofficial visit · Georgia Bulldogs",
-      "profileUrl": "/vault/recruiting/player/bryce-willingham",
-      "movementNarrative": "UF -11% (7d)"
-    },
-    {
-      "id": "offer-log-olog_antijuan-wilkes-jr_2026-04-01_florida",
-      "timestamp": "2026-08-13T13:42:15.909Z",
-      "name": "Antijuan Wilkes Jr.",
-      "position": "OT",
-      "class": 2028,
-      "event": "offer",
-      "summary": "Offer from Florida",
-      "profileUrl": "/vault/recruiting/player/antijuan-wilkes-jr"
     },
     {
       "id": "offer-log-olog_kaydan-whiteside_2026-07-01_florida",
@@ -526,28 +527,55 @@
       "profileUrl": "/vault/recruiting/player/jordyn-murray"
     },
     {
-      "id": "offer-log-olog_zaiden-jernigan_undated_southern-miss-golden-eagles",
-      "timestamp": "2026-08-03T02:32:48.949Z",
-      "name": "Zaiden Jernigan",
-      "position": "RB",
+      "id": "offer-log-olog_zyon-robinson_2026-07-11",
+      "timestamp": "2026-07-11T05:15:53.422Z",
+      "name": "Zyon Robinson",
+      "position": "WR",
       "class": 2028,
       "event": "offer",
-      "summary": "Offer from Southern Miss Golden Eagles",
-      "profileUrl": "/vault/recruiting/player/zaiden-jernigan"
-    },
-    {
-      "id": "offer-log-olog_quinton-rolle-jr_2026-07-11",
-      "timestamp": "2026-07-11T05:15:38.811Z",
-      "name": "Quinton Rolle Jr.",
-      "position": "CB",
-      "class": 2028,
-      "event": "offer",
-      "summary": "Offer from Liberty Flames",
-      "profileUrl": "/vault/recruiting/player/quinton-rolle-jr",
-      "movementNarrative": "UF -1% (7d)"
+      "summary": "Offer from Western Kentucky Hilltoppers",
+      "profileUrl": "/vault/recruiting/player/zyon-robinson"
     }
   ],
   "battleBoard": [
+    {
+      "id": "nehemiah-mccary",
+      "name": "Nehemiah Mccary",
+      "position": "LB",
+      "class": 2028,
+      "battleDifficulty": "hard",
+      "battleColor": "blue",
+      "trend": "flat",
+      "competitors": [
+        {
+          "school": "Alabama",
+          "logo": "ALA",
+          "score": 91,
+          "trend": "flat"
+        },
+        {
+          "school": "Ohio State",
+          "logo": "OS",
+          "score": 18,
+          "trend": "flat"
+        },
+        {
+          "school": "Georgia",
+          "logo": "GEO",
+          "score": 18,
+          "trend": "flat"
+        },
+        {
+          "school": "Auburn",
+          "logo": "AUB",
+          "score": 7,
+          "trend": "flat"
+        }
+      ],
+      "ufScore": 100,
+      "nextVisit": null,
+      "intel": "4★ LB · 92.0 composite · Maplesville (Maplesville, AL)"
+    },
     {
       "id": "zaiden-jernigan",
       "name": "Zaiden Jernigan",
@@ -558,27 +586,27 @@
       "trend": "flat",
       "competitors": [
         {
-          "school": "Auburn",
-          "logo": "AUB",
-          "score": 26,
-          "trend": "flat"
-        },
-        {
           "school": "Mississippi State",
           "logo": "MS",
-          "score": 16,
+          "score": 20,
           "trend": "flat"
         },
         {
           "school": "Ole Miss",
           "logo": "OM",
-          "score": 14,
+          "score": 17,
+          "trend": "flat"
+        },
+        {
+          "school": "Auburn",
+          "logo": "AUB",
+          "score": 15,
           "trend": "flat"
         },
         {
           "school": "Notre Dame",
           "logo": "ND",
-          "score": 11,
+          "score": 12,
           "trend": "flat"
         }
       ],
@@ -701,21 +729,236 @@
       "intel": "2028 4-star S — Blountstown. UF daily contact + early On3 RPM momentum (Alderman)."
     },
     {
+      "id": "tyree-mannings-jr",
+      "name": "Tyree Mannings Jr",
+      "position": "WR",
+      "class": 2028,
+      "battleDifficulty": "moderate",
+      "battleColor": "blue",
+      "trend": "flat",
+      "competitors": [
+        {
+          "school": "Miami",
+          "logo": "MIA",
+          "score": 83,
+          "trend": "flat"
+        },
+        {
+          "school": "Auburn",
+          "logo": "AUB",
+          "score": 71,
+          "trend": "flat"
+        },
+        {
+          "school": "Nebraska",
+          "logo": "NEB",
+          "score": 59,
+          "trend": "flat"
+        },
+        {
+          "school": "USC",
+          "logo": "USC",
+          "score": 59,
+          "trend": "flat"
+        }
+      ],
+      "ufScore": 96,
+      "nextVisit": null,
+      "intel": "4★ WR · #88 natl · Venice, FL — Florida leads (~92% PM)"
+    },
+    {
+      "id": "izayah-vickers",
+      "name": "Izayah Vickers",
+      "position": "CB",
+      "class": 2028,
+      "battleDifficulty": "easy",
+      "battleColor": "blue",
+      "trend": "flat",
+      "competitors": [
+        {
+          "school": "Arkansas",
+          "logo": "ARK",
+          "score": 17,
+          "trend": "flat"
+        },
+        {
+          "school": "Mississippi State",
+          "logo": "MS",
+          "score": 17,
+          "trend": "flat"
+        },
+        {
+          "school": "Clemson",
+          "logo": "CLE",
+          "score": 3,
+          "trend": "flat"
+        },
+        {
+          "school": "Notre Dame",
+          "logo": "ND",
+          "score": 1,
+          "trend": "flat"
+        }
+      ],
+      "ufScore": 94,
+      "nextVisit": null,
+      "intel": "4★ CB · #117 natl · Florida State Univ. School, FL"
+    },
+    {
+      "id": "antijuan-wilkes-jr",
+      "name": "Antijuan Wilkes Jr",
+      "position": "OT",
+      "class": 2028,
+      "battleDifficulty": "easy",
+      "battleColor": "blue",
+      "trend": "flat",
+      "competitors": [
+        {
+          "school": "Michigan",
+          "logo": "MIC",
+          "score": 28,
+          "trend": "flat"
+        },
+        {
+          "school": "Michigan State",
+          "logo": "MS",
+          "score": 25,
+          "trend": "flat"
+        },
+        {
+          "school": "Ohio State",
+          "logo": "OS",
+          "score": 11,
+          "trend": "flat"
+        },
+        {
+          "school": "Missouri",
+          "logo": "MIS",
+          "score": 5,
+          "trend": "flat"
+        }
+      ],
+      "ufScore": 84,
+      "nextVisit": null,
+      "intel": "4★ OT · #16 natl · Cass Technical (Detroit, MI)"
+    },
+    {
+      "id": "tromon-isaac",
+      "name": "Tromon Isaac",
+      "position": "WR",
+      "class": 2028,
+      "battleDifficulty": "hard",
+      "battleColor": "blue",
+      "trend": "flat",
+      "competitors": [
+        {
+          "school": "Miami",
+          "logo": "MIA",
+          "score": 97,
+          "trend": "flat"
+        },
+        {
+          "school": "Nebraska",
+          "logo": "NEB",
+          "score": 69,
+          "trend": "flat"
+        },
+        {
+          "school": "Notre Dame",
+          "logo": "ND",
+          "score": 10,
+          "trend": "flat"
+        },
+        {
+          "school": "Georgia",
+          "logo": "GEO",
+          "score": 10,
+          "trend": "flat"
+        }
+      ],
+      "ufScore": 80,
+      "nextVisit": null,
+      "intel": "4★ WR · #92 natl · Chaminade-Madonna Prep, FL"
+    },
+    {
+      "id": "gabriel-player",
+      "name": "Gabriel Player",
+      "position": "LB",
+      "class": 2028,
+      "battleDifficulty": "hard",
+      "battleColor": "blue",
+      "trend": "flat",
+      "competitors": [
+        {
+          "school": "Miami",
+          "logo": "MIA",
+          "score": 94,
+          "trend": "flat"
+        },
+        {
+          "school": "Ohio State",
+          "logo": "OS",
+          "score": 69,
+          "trend": "flat"
+        },
+        {
+          "school": "Texas",
+          "logo": "TEX",
+          "score": 57,
+          "trend": "flat"
+        },
+        {
+          "school": "Texas A&M",
+          "logo": "TA",
+          "score": 57,
+          "trend": "flat"
+        }
+      ],
+      "ufScore": 80,
+      "nextVisit": null,
+      "intel": "4★ LB · #40 natl · Eau Gallie, FL"
+    },
+    {
       "id": "nikolay-petrushev",
       "name": "Nikolay Petrushev",
       "position": "OT",
       "class": 2028,
-      "battleDifficulty": "unknown",
+      "battleDifficulty": "moderate",
       "battleColor": "blue",
       "trend": "flat",
-      "competitors": [],
+      "competitors": [
+        {
+          "school": "UCF",
+          "logo": "UCF",
+          "score": 10,
+          "trend": "flat"
+        },
+        {
+          "school": "Georgia Tech",
+          "logo": "GT",
+          "score": 9,
+          "trend": "flat"
+        },
+        {
+          "school": "Coastal Carolina Chanticleer",
+          "logo": "CCC",
+          "score": 4,
+          "trend": "flat"
+        },
+        {
+          "school": "USF",
+          "logo": "USF",
+          "score": 4,
+          "trend": "flat"
+        }
+      ],
       "ufScore": 70,
       "nextVisit": null,
       "intel": "OT · 6-6 / 285 · East Lake · UF offer June 2026"
     },
     {
       "id": "anthony-howard-jr",
-      "name": "Anthony Howard Jr.",
+      "name": "Anthony Howard Jr",
       "position": "RB",
       "class": 2028,
       "battleDifficulty": "hard",
@@ -735,14 +978,14 @@
           "trend": "flat"
         },
         {
-          "school": "UCF",
-          "logo": "UCF",
+          "school": "Notre Dame",
+          "logo": "ND",
           "score": 1,
           "trend": "flat"
         },
         {
-          "school": "Tennessee",
-          "logo": "TEN",
+          "school": "UCF",
+          "logo": "UCF",
           "score": 1,
           "trend": "flat"
         }
@@ -750,234 +993,18 @@
       "ufScore": 63,
       "nextVisit": null,
       "intel": "3★ RB · #349 natl · IMG Academy, FL"
-    },
-    {
-      "id": "john-matthews",
-      "name": "John Matthews",
-      "position": "WR",
-      "class": 2028,
-      "battleDifficulty": "hard",
-      "battleColor": "orange",
-      "trend": "flat",
-      "competitors": [
-        {
-          "school": "Georgia Tech",
-          "logo": "GT",
-          "score": 5,
-          "trend": "flat"
-        },
-        {
-          "school": "Auburn",
-          "logo": "AUB",
-          "score": 4,
-          "trend": "flat"
-        },
-        {
-          "school": "SMU",
-          "logo": "SMU",
-          "score": 3,
-          "trend": "flat"
-        },
-        {
-          "school": "Georgia",
-          "logo": "GEO",
-          "score": 3,
-          "trend": "flat"
-        }
-      ],
-      "ufScore": 60,
-      "nextVisit": null,
-      "intel": "4★ WR · #279 natl · Newnan, GA"
-    },
-    {
-      "id": "jamarcus-johnson",
-      "name": "Jamarcus Johnson",
-      "position": "DL",
-      "class": 2028,
-      "battleDifficulty": "hard",
-      "battleColor": "orange",
-      "trend": "flat",
-      "competitors": [
-        {
-          "school": "Georgia",
-          "logo": "GEO",
-          "score": 23,
-          "trend": "flat"
-        },
-        {
-          "school": "Georgia Tech",
-          "logo": "GT",
-          "score": 3,
-          "trend": "flat"
-        },
-        {
-          "school": "Tennessee",
-          "logo": "TEN",
-          "score": 3,
-          "trend": "flat"
-        },
-        {
-          "school": "Auburn",
-          "logo": "AUB",
-          "score": 3,
-          "trend": "flat"
-        }
-      ],
-      "ufScore": 49,
-      "nextVisit": null,
-      "intel": "4★ DL · #50 natl · Toombs County (Lyons, GA)"
-    },
-    {
-      "id": "joey-fleming",
-      "name": "Joey Fleming",
-      "position": "IOL",
-      "class": 2028,
-      "battleDifficulty": "hard",
-      "battleColor": "orange",
-      "trend": "flat",
-      "competitors": [
-        {
-          "school": "Alabama",
-          "logo": "ALA",
-          "score": 95,
-          "trend": "flat"
-        },
-        {
-          "school": "Ohio State",
-          "logo": "OS",
-          "score": 47,
-          "trend": "flat"
-        },
-        {
-          "school": "Auburn",
-          "logo": "AUB",
-          "score": 1,
-          "trend": "flat"
-        },
-        {
-          "school": "Oklahoma",
-          "logo": "OKL",
-          "score": 1,
-          "trend": "flat"
-        }
-      ],
-      "ufScore": 47,
-      "nextVisit": null,
-      "intel": "4★ IOL · #22 natl · Huntsville, AL"
-    },
-    {
-      "id": "antonio-thomas-jr",
-      "name": "Antonio Thomas Jr.",
-      "position": "EDGE",
-      "class": 2028,
-      "battleDifficulty": "hard",
-      "battleColor": "orange",
-      "trend": "flat",
-      "competitors": [
-        {
-          "school": "Miami",
-          "logo": "MIA",
-          "score": 13,
-          "trend": "flat"
-        },
-        {
-          "school": "Auburn",
-          "logo": "AUB",
-          "score": 11,
-          "trend": "flat"
-        }
-      ],
-      "ufScore": 41,
-      "nextVisit": null,
-      "intel": "4★ EDGE · Carrollwood Day (Tampa, FL) · On3 ~No. 17 natl · Florida priority"
-    },
-    {
-      "id": "pj-evans",
-      "name": "Pj Evans",
-      "position": "IOL",
-      "class": 2028,
-      "battleDifficulty": "hard",
-      "battleColor": "red",
-      "trend": "flat",
-      "competitors": [
-        {
-          "school": "Ole Miss",
-          "logo": "OM",
-          "score": 39,
-          "trend": "flat"
-        },
-        {
-          "school": "Auburn",
-          "logo": "AUB",
-          "score": 5,
-          "trend": "flat"
-        },
-        {
-          "school": "Texas A&M",
-          "logo": "TA",
-          "score": 4,
-          "trend": "flat"
-        },
-        {
-          "school": "Georgia",
-          "logo": "GEO",
-          "score": 4,
-          "trend": "flat"
-        }
-      ],
-      "ufScore": 34,
-      "nextVisit": null,
-      "intel": "3★ IOL · #384 natl · Jackson Academy, MS"
-    },
-    {
-      "id": "izayah-vickers",
-      "name": "Izayah Vickers",
-      "position": "CB",
-      "class": 2028,
-      "battleDifficulty": "hard",
-      "battleColor": "red",
-      "trend": "flat",
-      "competitors": [
-        {
-          "school": "Clemson",
-          "logo": "CLE",
-          "score": 29,
-          "trend": "flat"
-        },
-        {
-          "school": "Notre Dame",
-          "logo": "ND",
-          "score": 13,
-          "trend": "flat"
-        },
-        {
-          "school": "Arkansas",
-          "logo": "ARK",
-          "score": 2,
-          "trend": "flat"
-        },
-        {
-          "school": "Mississippi State",
-          "logo": "MS",
-          "score": 2,
-          "trend": "flat"
-        }
-      ],
-      "ufScore": 33,
-      "nextVisit": null,
-      "intel": "4★ CB · #117 natl · Florida State Univ. School, FL"
     }
   ],
   "footprint": {
     "states": [
       {
         "state": "FL",
-        "targets": 21,
+        "targets": 22,
         "commits": 1,
-        "offers": 103,
-        "visits": 132,
-        "ufScore": 35,
-        "competitorPressure": 28,
+        "offers": 119,
+        "visits": 157,
+        "ufScore": 47,
+        "competitorPressure": 36,
         "pipelineScore": 100,
         "momentum": "up",
         "topPlayers": [
@@ -1015,24 +1042,24 @@
             "pinLng": -81.686783
           },
           {
-            "id": "nikolay-petrushev",
-            "name": "Nikolay Petrushev",
-            "position": "OT",
+            "id": "tyree-mannings-jr",
+            "name": "Tyree Mannings Jr",
+            "position": "WR",
             "class": 2028,
             "status": "target",
-            "ufScore": 70,
-            "competitorScore": null,
+            "ufScore": 96,
+            "competitorScore": 83,
             "pinLat": 27.766279,
             "pinLng": -81.686783
           },
           {
-            "id": "anthony-howard-jr",
-            "name": "Anthony Howard Jr.",
-            "position": "RB",
+            "id": "izayah-vickers",
+            "name": "Izayah Vickers",
+            "position": "CB",
             "class": 2028,
             "status": "target",
-            "ufScore": 63,
-            "competitorScore": 20,
+            "ufScore": 94,
+            "competitorScore": 17,
             "pinLat": 27.766279,
             "pinLng": -81.686783
           }
@@ -1060,13 +1087,24 @@
         "state": "AL",
         "targets": 4,
         "commits": 0,
-        "offers": 26,
-        "visits": 35,
-        "ufScore": 26,
-        "competitorPressure": 46,
+        "offers": 25,
+        "visits": 36,
+        "ufScore": 44,
+        "competitorPressure": 57,
         "pipelineScore": 100,
         "momentum": "up",
         "topPlayers": [
+          {
+            "id": "nehemiah-mccary",
+            "name": "Nehemiah Mccary",
+            "position": "LB",
+            "class": 2028,
+            "status": "target",
+            "ufScore": 100,
+            "competitorScore": 91,
+            "pinLat": 32.806671,
+            "pinLng": -86.79113
+          },
           {
             "id": "joey-fleming",
             "name": "Joey Fleming",
@@ -1099,17 +1137,6 @@
             "competitorScore": 16,
             "pinLat": 27.766279,
             "pinLng": -81.686783
-          },
-          {
-            "id": "nehemiah-mccary",
-            "name": "Nehemiah McCary",
-            "position": "LB",
-            "class": 2028,
-            "status": "target",
-            "ufScore": null,
-            "competitorScore": null,
-            "pinLat": 32.806671,
-            "pinLng": -86.79113
           }
         ],
         "staffActivity": []
@@ -1118,10 +1145,10 @@
         "state": "GA",
         "targets": 7,
         "commits": 0,
-        "offers": 34,
-        "visits": 16,
+        "offers": 35,
+        "visits": 21,
         "ufScore": 22,
-        "competitorPressure": 27,
+        "competitorPressure": 26,
         "pipelineScore": 100,
         "momentum": "up",
         "topPlayers": [
@@ -1184,70 +1211,14 @@
         "staffActivity": []
       },
       {
-        "state": "TN",
-        "targets": 3,
-        "commits": 0,
-        "offers": 14,
-        "visits": 11,
-        "ufScore": 14,
-        "competitorPressure": 25,
-        "pipelineScore": 85,
-        "momentum": "up",
-        "topPlayers": [
-          {
-            "id": "braxton-rein",
-            "name": "Braxton Rein",
-            "position": "TE",
-            "class": 2028,
-            "status": "target",
-            "ufScore": 29,
-            "competitorScore": 14,
-            "pinLat": 35.747845,
-            "pinLng": -86.692345
-          },
-          {
-            "id": "jermaine-cobbins",
-            "name": "Jermaine Cobbins",
-            "position": "CB",
-            "class": 2028,
-            "status": "target",
-            "ufScore": 7,
-            "competitorScore": 27,
-            "pinLat": 35.747845,
-            "pinLng": -86.692345
-          },
-          {
-            "id": "dion-edwards",
-            "name": "Dion Edwards",
-            "position": "S",
-            "class": 2028,
-            "status": "target",
-            "ufScore": 5,
-            "competitorScore": 33,
-            "pinLat": 35.747845,
-            "pinLng": -86.692345
-          }
-        ],
-        "staffActivity": [
-          {
-            "staffId": "drew-hughes",
-            "name": "Drew Hughes",
-            "role": "Director of High School Personnel",
-            "assignedPlayers": 1,
-            "wins": 0,
-            "losses": 0
-          }
-        ]
-      },
-      {
         "state": "MD",
         "targets": 3,
         "commits": 0,
-        "offers": 11,
-        "visits": 11,
+        "offers": 13,
+        "visits": 14,
         "ufScore": 8,
         "competitorPressure": 27,
-        "pipelineScore": 78,
+        "pipelineScore": 93,
         "momentum": "up",
         "topPlayers": [
           {
@@ -1296,14 +1267,70 @@
         ]
       },
       {
+        "state": "TN",
+        "targets": 3,
+        "commits": 0,
+        "offers": 13,
+        "visits": 11,
+        "ufScore": 13,
+        "competitorPressure": 25,
+        "pipelineScore": 83,
+        "momentum": "up",
+        "topPlayers": [
+          {
+            "id": "braxton-rein",
+            "name": "Braxton Rein",
+            "position": "TE",
+            "class": 2028,
+            "status": "target",
+            "ufScore": 29,
+            "competitorScore": 14,
+            "pinLat": 35.747845,
+            "pinLng": -86.692345
+          },
+          {
+            "id": "jermaine-cobbins",
+            "name": "Jermaine Cobbins",
+            "position": "CB",
+            "class": 2028,
+            "status": "target",
+            "ufScore": 6,
+            "competitorScore": 27,
+            "pinLat": 35.747845,
+            "pinLng": -86.692345
+          },
+          {
+            "id": "dion-edwards",
+            "name": "Dion Edwards",
+            "position": "S",
+            "class": 2028,
+            "status": "target",
+            "ufScore": 5,
+            "competitorScore": 33,
+            "pinLat": 35.747845,
+            "pinLng": -86.692345
+          }
+        ],
+        "staffActivity": [
+          {
+            "staffId": "drew-hughes",
+            "name": "Drew Hughes",
+            "role": "Director of High School Personnel",
+            "assignedPlayers": 1,
+            "wins": 0,
+            "losses": 0
+          }
+        ]
+      },
+      {
         "state": "NC",
         "targets": 3,
         "commits": 0,
-        "offers": 15,
+        "offers": 14,
         "visits": 5,
         "ufScore": 13,
         "competitorPressure": 19,
-        "pipelineScore": 72,
+        "pipelineScore": 69,
         "momentum": "up",
         "topPlayers": [
           {
@@ -1352,6 +1379,42 @@
         ]
       },
       {
+        "state": "OH",
+        "targets": 2,
+        "commits": 0,
+        "offers": 13,
+        "visits": 6,
+        "ufScore": 7,
+        "competitorPressure": 32,
+        "pipelineScore": 64,
+        "momentum": "up",
+        "topPlayers": [
+          {
+            "id": "landon-dawson",
+            "name": "Landon Dawson",
+            "position": "TE",
+            "class": 2028,
+            "status": "target",
+            "ufScore": 7,
+            "competitorScore": 28,
+            "pinLat": 40.388783,
+            "pinLng": -82.764915
+          },
+          {
+            "id": "lorenzo-mcmullen-jr",
+            "name": "Lorenzo Mcmullen Jr",
+            "position": "WR",
+            "class": 2028,
+            "status": "target",
+            "ufScore": 6,
+            "competitorScore": 35,
+            "pinLat": 40.388783,
+            "pinLng": -82.764915
+          }
+        ],
+        "staffActivity": []
+      },
+      {
         "state": "MO",
         "targets": 1,
         "commits": 0,
@@ -1377,49 +1440,13 @@
         "staffActivity": []
       },
       {
-        "state": "OH",
-        "targets": 2,
-        "commits": 0,
-        "offers": 9,
-        "visits": 4,
-        "ufScore": 5,
-        "competitorPressure": 43,
-        "pipelineScore": 48,
-        "momentum": "up",
-        "topPlayers": [
-          {
-            "id": "lorenzo-mcmullen-jr",
-            "name": "Lorenzo McMullen Jr.",
-            "position": "WR",
-            "class": 2028,
-            "status": "target",
-            "ufScore": 6,
-            "competitorScore": 37,
-            "pinLat": 40.388783,
-            "pinLng": -82.764915
-          },
-          {
-            "id": "landon-dawson",
-            "name": "Landon Dawson",
-            "position": "TE",
-            "class": 2028,
-            "status": "target",
-            "ufScore": 3,
-            "competitorScore": 49,
-            "pinLat": 40.388783,
-            "pinLng": -82.764915
-          }
-        ],
-        "staffActivity": []
-      },
-      {
         "state": "MS",
         "targets": 2,
         "commits": 0,
         "offers": 10,
         "visits": 3,
         "ufScore": 67,
-        "competitorPressure": 33,
+        "competitorPressure": 30,
         "pipelineScore": 47,
         "momentum": "up",
         "topPlayers": [
@@ -1430,7 +1457,7 @@
             "class": 2028,
             "status": "target",
             "ufScore": 100,
-            "competitorScore": 26,
+            "competitorScore": 20,
             "pinLat": 32.741646,
             "pinLng": -89.678696
           },
@@ -1517,14 +1544,64 @@
         ]
       },
       {
-        "state": "VA",
+        "state": "TX",
         "targets": 1,
         "commits": 0,
         "offers": 6,
         "visits": 3,
+        "ufScore": 25,
+        "competitorPressure": 28,
+        "pipelineScore": 31,
+        "momentum": "up",
+        "topPlayers": [
+          {
+            "id": "tristin-gaines",
+            "name": "Tristin Gaines",
+            "position": "QB",
+            "class": 2028,
+            "status": "target",
+            "ufScore": 25,
+            "competitorScore": 28,
+            "pinLat": 31.054487,
+            "pinLng": -97.563461
+          }
+        ],
+        "staffActivity": []
+      },
+      {
+        "state": "MI",
+        "targets": 1,
+        "commits": 0,
+        "offers": 8,
+        "visits": 0,
+        "ufScore": 84,
+        "competitorPressure": 28,
+        "pipelineScore": 30,
+        "momentum": "up",
+        "topPlayers": [
+          {
+            "id": "antijuan-wilkes-jr",
+            "name": "Antijuan Wilkes Jr",
+            "position": "OT",
+            "class": 2028,
+            "status": "target",
+            "ufScore": 84,
+            "competitorScore": 28,
+            "pinLat": 43.326618,
+            "pinLng": -84.536095
+          }
+        ],
+        "staffActivity": []
+      },
+      {
+        "state": "VA",
+        "targets": 1,
+        "commits": 0,
+        "offers": 5,
+        "visits": 3,
         "ufScore": 23,
         "competitorPressure": 20,
-        "pipelineScore": 31,
+        "pipelineScore": 28,
         "momentum": "up",
         "topPlayers": [
           {
@@ -1551,31 +1628,6 @@
         ]
       },
       {
-        "state": "MI",
-        "targets": 1,
-        "commits": 0,
-        "offers": 6,
-        "visits": 0,
-        "ufScore": null,
-        "competitorPressure": null,
-        "pipelineScore": 25,
-        "momentum": "up",
-        "topPlayers": [
-          {
-            "id": "antijuan-wilkes-jr",
-            "name": "Antijuan Wilkes Jr.",
-            "position": "OT",
-            "class": 2028,
-            "status": "target",
-            "ufScore": null,
-            "competitorScore": null,
-            "pinLat": 43.326618,
-            "pinLng": -84.536095
-          }
-        ],
-        "staffActivity": []
-      },
-      {
         "state": "HI",
         "targets": 1,
         "commits": 0,
@@ -1596,31 +1648,6 @@
             "competitorScore": 17,
             "pinLat": 21.094318,
             "pinLng": -157.498337
-          }
-        ],
-        "staffActivity": []
-      },
-      {
-        "state": "TX",
-        "targets": 1,
-        "commits": 0,
-        "offers": 4,
-        "visits": 2,
-        "ufScore": 25,
-        "competitorPressure": 29,
-        "pipelineScore": 23,
-        "momentum": "up",
-        "topPlayers": [
-          {
-            "id": "tristin-gaines",
-            "name": "Tristin Gaines",
-            "position": "QB",
-            "class": 2028,
-            "status": "target",
-            "ufScore": 25,
-            "competitorScore": 29,
-            "pinLat": 31.054487,
-            "pinLng": -97.563461
           }
         ],
         "staffActivity": []
@@ -1654,7 +1681,7 @@
         "lat": 27.766279,
         "lng": -81.686783,
         "status": "target",
-        "ufScore": 18,
+        "ufScore": 16,
         "pinType": "battle"
       },
       {
@@ -1679,7 +1706,7 @@
       },
       {
         "id": "quinton-rolle-jr",
-        "name": "Quinton Rolle Jr.",
+        "name": "Quinton Rolle Jr",
         "state": "FL",
         "lat": 27.766279,
         "lng": -81.686783,
@@ -1709,7 +1736,7 @@
       },
       {
         "id": "antonio-thomas-jr",
-        "name": "Antonio Thomas Jr.",
+        "name": "Antonio Thomas Jr",
         "state": "FL",
         "lat": 27.766279,
         "lng": -81.686783,
@@ -1718,14 +1745,24 @@
         "pinType": "battle"
       },
       {
-        "id": "tyree-mannings-jr",
-        "name": "Tyree Mannings Jr.",
+        "id": "tromon-isaac",
+        "name": "Tromon Isaac",
         "state": "FL",
         "lat": 27.766279,
         "lng": -81.686783,
         "status": "target",
-        "ufScore": 18,
+        "ufScore": 80,
         "pinType": "battle"
+      },
+      {
+        "id": "tyree-mannings-jr",
+        "name": "Tyree Mannings Jr",
+        "state": "FL",
+        "lat": 27.766279,
+        "lng": -81.686783,
+        "status": "target",
+        "ufScore": 96,
+        "pinType": "target"
       },
       {
         "id": "izayah-vickers",
@@ -1734,8 +1771,8 @@
         "lat": 27.766279,
         "lng": -81.686783,
         "status": "target",
-        "ufScore": 33,
-        "pinType": "battle"
+        "ufScore": 94,
+        "pinType": "target"
       },
       {
         "id": "phoenix-evans",
@@ -1779,7 +1816,7 @@
       },
       {
         "id": "anthony-howard-jr",
-        "name": "Anthony Howard Jr.",
+        "name": "Anthony Howard Jr",
         "state": "FL",
         "lat": 27.766279,
         "lng": -81.686783,
@@ -1814,7 +1851,7 @@
         "lat": 27.766279,
         "lng": -81.686783,
         "status": "target",
-        "ufScore": 9,
+        "ufScore": 80,
         "pinType": "battle"
       },
       {
@@ -1839,13 +1876,13 @@
       },
       {
         "id": "derrell-hines-jr",
-        "name": "Derrell Hines Jr.",
+        "name": "Derrell Hines Jr",
         "state": "FL",
         "lat": 27.766279,
         "lng": -81.686783,
         "status": "target",
         "ufScore": 18,
-        "pinType": "target"
+        "pinType": "battle"
       },
       {
         "id": "kaleb-ballard",
@@ -1879,13 +1916,13 @@
       },
       {
         "id": "nehemiah-mccary",
-        "name": "Nehemiah McCary",
+        "name": "Nehemiah Mccary",
         "state": "AL",
         "lat": 32.806671,
         "lng": -86.79113,
         "status": "target",
-        "ufScore": null,
-        "pinType": "target"
+        "ufScore": 100,
+        "pinType": "battle"
       },
       {
         "id": "jermaine-cobbins",
@@ -1894,7 +1931,7 @@
         "lat": 35.747845,
         "lng": -86.692345,
         "status": "target",
-        "ufScore": 7,
+        "ufScore": 6,
         "pinType": "battle"
       },
       {
@@ -1954,7 +1991,7 @@
         "lat": 33.040619,
         "lng": -83.643074,
         "status": "target",
-        "ufScore": 2,
+        "ufScore": 5,
         "pinType": "battle"
       },
       {
@@ -2059,7 +2096,7 @@
       },
       {
         "id": "lorenzo-mcmullen-jr",
-        "name": "Lorenzo McMullen Jr.",
+        "name": "Lorenzo Mcmullen Jr",
         "state": "OH",
         "lat": 40.388783,
         "lng": -82.764915,
@@ -2074,7 +2111,7 @@
         "lat": 40.388783,
         "lng": -82.764915,
         "status": "target",
-        "ufScore": 3,
+        "ufScore": 7,
         "pinType": "battle"
       },
       {
@@ -2149,19 +2186,19 @@
       },
       {
         "id": "antijuan-wilkes-jr",
-        "name": "Antijuan Wilkes Jr.",
+        "name": "Antijuan Wilkes Jr",
         "state": "MI",
         "lat": 43.326618,
         "lng": -84.536095,
         "status": "target",
-        "ufScore": null,
+        "ufScore": 84,
         "pinType": "target"
       }
     ],
     "meta": {
-      "playerCount": 53,
+      "playerCount": 54,
       "stateCount": 15,
-      "pinCount": 53
+      "pinCount": 54
     },
     "year": 2028
   }

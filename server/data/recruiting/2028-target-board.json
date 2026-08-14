@@ -221,12 +221,12 @@
       "slug": "jermaine-cobbins",
       "name": "Jermaine Cobbins",
       "pos": "ATH",
-      "school": "Springfield (Springfield, TN)",
+      "school": "Springfield, TN",
       "state": "TN",
       "stars": 4,
-      "rating": 93.56227208976156,
-      "natlRank": 28,
-      "posRank": 4,
+      "rating": 93.86989247311828,
+      "natlRank": 23,
+      "posRank": 3,
       "stateRank": 1,
       "inState": false,
       "committedTo": null,
@@ -251,12 +251,12 @@
       "slug": "ryan-drakeford",
       "name": "Ryan Drakeford",
       "pos": "S",
-      "school": "Quince Orchard (Gaithersburg, MD)",
+      "school": "Quince Orchard, MD",
       "state": "MD",
       "stars": 3,
-      "rating": 86.04528985507247,
-      "natlRank": 335,
-      "posRank": 34,
+      "rating": 86.04710144927536,
+      "natlRank": 353,
+      "posRank": 32,
       "stateRank": 11,
       "inState": false,
       "committedTo": null,
@@ -688,7 +688,10 @@
       "committedTo": null,
       "notes": "Alderman board lock.",
       "inState": false,
-      "rating": 92
+      "rating": 92,
+      "natlRank": 34,
+      "posRank": 2,
+      "stateRank": 2
     },
     {
       "slug": "samuel-bailey",
@@ -719,7 +722,10 @@
       "state": "FL",
       "inState": false,
       "rating": 90,
-      "stars": 4
+      "stars": 4,
+      "natlRank": 97,
+      "posRank": 16,
+      "stateRank": 12
     },
     {
       "slug": "denairo-girton-jr",
@@ -737,5 +743,5 @@
       "stateRank": 6
     }
   ],
-  "updatedAt": "2026-08-13T13:46:15.473Z"
+  "updatedAt": "2026-08-14T00:21:32.154Z"
 }
