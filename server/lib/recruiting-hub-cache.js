@@ -15,8 +15,18 @@ const HUB_METRICS_CACHE_REV = 'hs6';
 /** Bump when footprint commit/target tallies logic changes. */
 const FOOTPRINT_CACHE_REV = 'fp3';
 
+/**
+ * Bump when commit card meta (On3 ranks / rating plate) must invalidate durable
+ * /var/data hub-runtime + deploy hub-snapshot that outlive players.json syncs.
+ */
+const COMMITS_CACHE_REV = 'c4';
+
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
+}
+
+function hubCommitsCacheKey(year) {
+  return `hub:elite:commits:${COMMITS_CACHE_REV}:${year}`;
 }
 
 function recruitingFootprintCacheKey(year) {
@@ -157,6 +167,13 @@ function parseHubSnapshotDoc(endpoint, doc) {
     if (!Object.keys(spreadRest).length) return null;
     return spreadRest;
   }
+  if (endpoint === 'commits') {
+    const rev = meta?.cacheRev || doc.cacheRev || null;
+    // Reject pre-c4 durable/hub-snapshot plates so On3 rank syncs on players.json
+    // are not masked by stale commit-card metaLines until the next warm cron.
+    if (rev !== COMMITS_CACHE_REV) return null;
+    return Array.isArray(items) ? items : null;
+  }
   if (
     endpoint === 'class-overview' ||
     endpoint === 'class-overview-all' ||
@@ -210,6 +227,7 @@ function writeHubDiskSnapshot(endpoint, year, value) {
       year: year ?? null,
       source: 'hub-runtime',
       ...(diskName === 'footprint' ? { cacheRev: FOOTPRINT_CACHE_REV } : {}),
+      ...(diskName === 'commits' ? { cacheRev: COMMITS_CACHE_REV } : {}),
       ...(diskName === 'class-overview' || diskName === 'class-overview-all' || diskName === 'class-metrics'
         ? { cacheRev: HUB_METRICS_CACHE_REV }
         : {}),
@@ -239,7 +257,9 @@ function durableMetaForCacheKey(cacheKey) {
   }
   m = cacheKey.match(/^hub:class:snapshot:[^:]+:(\d+)$/);
   if (m) return { endpoint: 'class-metrics', year: Number(m[1]), spread: true };
-  m = cacheKey.match(/^hub:elite:commits:v3:(\d+)$/);
+  m = cacheKey.match(/^hub:elite:commits:[^:]+:(\d+)$/);
+  if (m) return { endpoint: 'commits', year: Number(m[1]), spread: false };
+  m = cacheKey.match(/^hub:elite:commits:(\d+)$/);
   if (m) return { endpoint: 'commits', year: Number(m[1]), spread: false };
   m = cacheKey.match(/^hub:elite:ticker:(\d+)$/);
   if (m) return { endpoint: 'ticker', year: Number(m[1]), spread: false };
@@ -369,7 +389,7 @@ function priorityLiteWarmJobs(elite, years) {
     jobs.push([classSnapshotCacheKey(year), () => elite.buildHubClassOverview(year)]);
     jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year)]);
     // Periodic Class tabs + home NOW ticker — API/data live without Codemagic.
-    jobs.push([`hub:elite:commits:v3:${year}`, () => elite.buildHubCommits(year)]);
+    jobs.push([hubCommitsCacheKey(year), () => elite.buildHubCommits(year)]);
     jobs.push([hubFootprintCacheKey(year), () => elite.buildHubFootprint(year)]);
     jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year)]);
   }
@@ -445,7 +465,7 @@ function secondaryWarmJobs(elite, years) {
     jobs.push([`recruiting:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
     jobs.push([recruitingFootprintCacheKey(year), () => elite.buildHubFootprint(year)]);
     jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year)]);
-    jobs.push([`hub:elite:commits:v3:${year}`, () => elite.buildHubCommits(year)]);
+    jobs.push([hubCommitsCacheKey(year), () => elite.buildHubCommits(year)]);
     jobs.push([`hub:elite:battles:${year}`, () => elite.buildHubBattles(year)]);
     jobs.push([`hub:elite:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
     jobs.push([`hub:elite:heat-index:${year}`, () => elite.buildHubHeatIndex(year)]);
@@ -1315,11 +1335,13 @@ module.exports = {
   HUB_CACHE_MS,
   HUB_METRICS_CACHE_REV,
   FOOTPRINT_CACHE_REV,
+  COMMITS_CACHE_REV,
   classSnapshotCacheKey,
   eliteClassOverviewCacheKey,
   eliteClassOverviewAllCacheKey,
   eliteBundleCacheKey,
   hubFootprintCacheKey,
+  hubCommitsCacheKey,
   recruitingFootprintCacheKey,
   footprintStateCommitCount,
   isUsableFootprintSnapshot,

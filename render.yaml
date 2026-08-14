@@ -496,7 +496,7 @@ services:
     startCommand: node scripts/render-hub-warm-cron.js
     envVars:
       - key: HUB_WARM_URL
-        value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=spaced&years=2028
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/warm-memory?mode=spaced&years=2027,2028
       - key: LAB_WARM_URL
         value: ""
       - key: MONITORING_CRON_SECRET

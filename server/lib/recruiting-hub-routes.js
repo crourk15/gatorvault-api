@@ -14,6 +14,7 @@ const {
   eliteClassOverviewCacheKey,
   eliteClassOverviewAllCacheKey,
   eliteBundleCacheKey,
+  hubCommitsCacheKey,
 } = require('./recruiting-hub-cache');
 
 function avgStars(players) {
@@ -611,7 +612,7 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/hub/commits', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `hub:elite:commits:v3:${year}`;
+      const cacheKey = hubCommitsCacheKey(year);
       return sendHubJson(res, {
         cacheKey,
         year,

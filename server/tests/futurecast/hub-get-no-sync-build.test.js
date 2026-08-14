@@ -115,12 +115,14 @@ describe('Tier B hub GET no-sync + durable snapshots', () => {
     assert.equal(built, false);
   });
 
-  it('secondary warm jobs use commits:v3 cache key', () => {
+  it('secondary warm jobs use commits cacheRev key', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', '..', 'lib', 'recruiting-hub-cache.js'),
       'utf8'
     );
-    assert.match(src, /hub:elite:commits:v3:\$\{year\}/);
+    assert.match(src, /hub:elite:commits:\$\{COMMITS_CACHE_REV\}:\$\{year\}/);
+    assert.match(src, /COMMITS_CACHE_REV = 'c4'/);
+    assert.doesNotMatch(src, /hub:elite:commits:v3:\$\{year\}/);
     assert.doesNotMatch(src, /hub:elite:commits:\$\{year\}/);
   });
 

@@ -56,7 +56,11 @@ describe('footprint cache rev and heal', () => {
       JSON.stringify({
         ok: true,
         status: 'ready',
-        meta: { endpoint: 'commits', year: 2028 },
+        meta: {
+          endpoint: 'commits',
+          year: 2028,
+          cacheRev: cache.COMMITS_CACHE_REV,
+        },
         items: [{ id: 'armani-strong', name: 'Armani Strong' }],
       })
     );

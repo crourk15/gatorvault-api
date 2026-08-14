@@ -23,18 +23,41 @@ const ENDPOINTS = [
 ];
 
 function meta(endpoint, year) {
-  return {
+  const base = {
     generatedAt: new Date().toISOString(),
     snapshot: true,
     endpoint,
     year: year ?? null,
     source: 'build-hub-snapshot',
   };
+  if (endpoint === 'commits') {
+    try {
+      const { COMMITS_CACHE_REV } = require('../lib/recruiting-hub-cache');
+      base.cacheRev = COMMITS_CACHE_REV;
+    } catch {
+      base.cacheRev = 'c4';
+    }
+  }
+  if (endpoint === 'footprint') {
+    try {
+      const { FOOTPRINT_CACHE_REV } = require('../lib/recruiting-hub-cache');
+      base.cacheRev = FOOTPRINT_CACHE_REV;
+    } catch {
+      base.cacheRev = 'fp3';
+    }
+  }
+  return base;
 }
 
 function wrapPayload({ spread, items, value, endpoint, year }) {
   const base = { ok: true, status: 'ready', meta: meta(endpoint, year) };
-  if (spread) return { ...base, ...value };
+  if (spread) {
+    const rest = value && typeof value === 'object' ? { ...value } : {};
+    const valueMeta = rest.meta && typeof rest.meta === 'object' ? rest.meta : {};
+    delete rest.meta;
+    // Keep builder meta fields but never let them drop cacheRev / snapshot bookkeeping.
+    return { ...base, ...rest, meta: { ...valueMeta, ...base.meta } };
+  }
   if (items) return { ...base, items: value };
   return { ...base, ...value };
 }
