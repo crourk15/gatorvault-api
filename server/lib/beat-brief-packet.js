@@ -1115,7 +1115,8 @@ async function buildRosterDeskBrief(slug, roster, opts = {}) {
 
 /**
  * Full brief packet for Beat Desk UI + copy/paste.
- * Research always runs. Heavy inspect/compose only when opts.full === true.
+ * Hub topics still avoid FutureCast thin_board, but RESEARCH runs when beat
+ * rows carry visit/recruit cues (resolve names + nameless star/pos → Vault).
  */
 async function buildHubDeskBrief(slug, opts = {}) {
   const { parseHubDeskSlug, hubDeskLabel } = require('./hub-desk-topics');
@@ -1137,16 +1138,33 @@ async function buildHubDeskBrief(slug, opts = {}) {
       return String(type).replace(/-/g, '_') === hub.type || hub.type === 'general';
     })
     .slice(0, 12);
-  const beatRows = mergeBeatRows(stored, liveRows);
+  const beatRows = Array.isArray(opts.beatRows) && opts.beatRows.length
+    ? opts.beatRows
+    : mergeBeatRows(stored, liveRows);
   const primary = beatRows[0] || null;
   const seed = primary
     ? String(primary.detail || primary.skinny || primary.text || '').replace(/\s+/g, ' ').trim()
     : '';
 
+  let research = null;
+  try {
+    const hubResearch = require('./hub-brief-research');
+    research = await hubResearch.researchHubBeatRows(beatRows, {
+      skipNetwork: opts.skipNetwork === true,
+      expandTeasers: opts.expandTeasers !== false,
+      fetchImpl: opts.fetchImpl || null,
+      players: opts.players || null
+    });
+  } catch {
+    research = { ok: false, ran: false, pasteBlock: null };
+  }
+
   const whyFlorida = [
     `UF hub topic: ${topicName} (${hub.kind}/${hub.type}).`,
     seed ? `Latest beat seed: ${seed.slice(0, 280)}` : 'No live beat text on file — write from known UF program context only.',
-    'This is team/program coverage — not a recruit board packet.'
+    research?.ran
+      ? 'Hub research ran — use RESEARCH names below (still program framing, not a FutureCast board packet).'
+      : 'This is team/program coverage — not a recruit board packet.'
   ].join(' ');
 
   const vaultAngle = [
@@ -1189,6 +1207,11 @@ async function buildHubDeskBrief(slug, opts = {}) {
       lines.push('');
     });
   }
+
+  if (research?.pasteBlock) {
+    lines.push('', research.pasteBlock);
+  }
+
   lines.push(
     '',
     'INSTRUCTIONS FOR AI',
@@ -1196,13 +1219,30 @@ async function buildHubDeskBrief(slug, opts = {}) {
     'Write one GatorVault Insider X post about this UF team/program topic (long-form OK). Target 600–900 characters (hard cap 1000).',
     'VOICE RULE (hard): GatorVault original take. FORBIDDEN: naming beat writers, "according to", "reports say", "per On3/247".',
     'Structure: (1) Florida stake opener, (2) what is happening for the program, (3) why fans should care now, (4) sharp closer.',
-    'Stay factual to the beat seed above — no invented hires, firings, injuries, depth chart moves, or quotes.',
-    'This is NOT a recruiting board post — skip RPM / offer ladder / OV checklist unless the seed explicitly has them.',
+    'Stay factual to the beat seed + RESEARCH block above — no invented hires, firings, injuries, depth chart moves, or quotes.',
+    research?.ran
+      ? 'RESEARCH RULE (hard): If RESEARCH resolves a nameless cue to a Vault name, use that name. Never leave "5-star edge" / "No. 1 WR" anonymous when a match is listed.'
+      : 'This is NOT a recruiting board post — skip RPM / offer ladder / OV checklist unless the seed explicitly has them.',
     '',
     'FUTURECAST FEED',
     '---------------',
     '(n/a — hub team/program topic, not a recruit target board write)'
   );
+
+  const boardFacts = research?.ran
+    ? [
+        research.named?.length
+          ? `Named: ${research.named.map((n) => n.playerName).filter(Boolean).join(', ')}`
+          : null,
+        research.cueResolves?.length
+          ? `Cue resolves: ${research.cueResolves
+              .map((c) => `"${c.cue}"→${c.playerName}`)
+              .join('; ')}`
+          : null
+      ]
+        .filter(Boolean)
+        .join(' · ') || 'Hub research ran (see paste RESEARCH block)'
+    : '— (team/program hub brief)';
 
   const pasteText = lines.join('\n');
   return {
@@ -1216,7 +1256,8 @@ async function buildHubDeskBrief(slug, opts = {}) {
     player: null,
     whyFlorida,
     vaultAngle,
-    boardFacts: '— (team/program hub brief)',
+    boardFacts,
+    research,
     futurecastFeed: { ok: true, skipped: true, reason: 'hub_topic' },
     pasteText,
     beat: primary
