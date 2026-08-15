@@ -1,4 +1,6 @@
 /** Ref-counted body scroll lock for modals, drawers, and overlays. */
+import { readVaultMenuBootOpen } from './vault-menu-sync';
+
 let lockCount = 0;
 
 const BODY_CLASS = 'gv-scroll-locked';
@@ -26,7 +28,7 @@ export function lockBodyScroll(): () => void {
 export function ensureDocumentScrollUnlocked(): void {
   if (typeof document === 'undefined') return;
   try {
-    if (window.__GV_MENU_BOOT__?.isOpen?.() === true) return;
+    if (readVaultMenuBootOpen()) return;
   } catch {
     /* ignore */
   }
