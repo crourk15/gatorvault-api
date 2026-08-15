@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { buildHomePulseStories } from './home-command-utils';
+import { applyLiveCommitCountToTicker, buildHomePulseStories } from './home-command-utils';
 
 describe('buildHomePulseStories', () => {
   it('prefers named visits/flips over generic class trending', () => {
@@ -46,5 +46,26 @@ describe('buildHomePulseStories', () => {
     });
     assert.equal(stories[0], '26 commits locked for 2027');
     assert.ok(!stories.some((s) => /UF in the mix/i.test(s)));
+  });
+
+  it('rewrites commit-count lines from live metrics and strips seed stone counts', () => {
+    assert.deepEqual(
+      applyLiveCommitCountToTicker(
+        ['2027 class trending nationally — UF at #8', '25 commits locked for 2027', 'Blue chip % at 65%'],
+        { year: 2027, commits: null }
+      ),
+      ['2027 class trending nationally — UF at #8', 'Blue chip % at 65%']
+    );
+    assert.deepEqual(
+      applyLiveCommitCountToTicker(
+        ['2027 class trending nationally — UF at #8', '25 commits locked for 2027', 'Blue chip % at 65%'],
+        { year: 2027, commits: '26', commitLabel: 'Commits' }
+      ),
+      [
+        '2027 class trending nationally — UF at #8',
+        'Blue chip % at 65%',
+        '26 commits locked for 2027',
+      ]
+    );
   });
 });

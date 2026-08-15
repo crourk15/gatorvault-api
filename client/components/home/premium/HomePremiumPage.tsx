@@ -39,11 +39,14 @@ import {
   buildGameDayView,
   buildHomePulseHeadline,
   buildHomePulseStories,
+  applyLiveCommitCountToTicker,
 } from '@/components/home/premium/command/home-command-utils';
 
 function seedHomeTicker(year: number): string[] {
   const fromSeed = RECRUITING_HUB_BUNDLE_SEED?.byYear?.[String(year)]?.ticker;
-  return Array.isArray(fromSeed) ? fromSeed.filter((t) => String(t || '').trim()) : [];
+  const raw = Array.isArray(fromSeed) ? fromSeed.filter((t) => String(t || '').trim()) : [];
+  // Never paint a stone commit/signee count from the Capacitor seed.
+  return applyLiveCommitCountToTicker(raw, { year, commits: null });
 }
 
 function buildSeedBeatIntel(): BeatIntelItem[] {
@@ -171,7 +174,32 @@ export function HomePremiumPage(): React.ReactElement {
       const nextTicker =
         (Array.isArray(hubTickerLive) && hubTickerLive.length && hubTickerLive) ||
         (hubBundle?.ticker?.length ? hubBundle.ticker : null);
-      if (nextTicker?.length) setHubTicker(nextTicker);
+      const liveMetrics = hubBundle?.classOverview
+        ? ({ ...hubBundle.classOverview } as ClassMetricsResponse)
+        : null;
+      if (liveMetrics) {
+        setClassMetrics(liveMetrics);
+        try {
+          const payload = JSON.stringify({ at: Date.now(), data: liveMetrics });
+          const key = `gv_class_metrics_v1:${year}`;
+          sessionStorage.setItem(key, payload);
+          localStorage.setItem(key, payload);
+        } catch {
+          /* ignore quota */
+        }
+      }
+      const metricsForCount = liveMetrics;
+      if (nextTicker?.length || metricsForCount?.commits) {
+        setHubTicker(
+          applyLiveCommitCountToTicker(nextTicker ?? [], {
+            year,
+            commits: metricsForCount?.commits ?? null,
+            commitLabel: metricsForCount?.commitLabel ?? null,
+            // Live ticker already carries the count when overview is still warming.
+            allowExistingCount: Boolean(nextTicker?.length),
+          })
+        );
+      }
       if (Array.isArray(intel) && intel.length) setHpIntel(intel);
       if (movement) setMovementIntel(movement);
       // Keep seeded real writers if live beat is empty or brand-only (@gatorvault).
@@ -186,18 +214,6 @@ export function HomePremiumPage(): React.ReactElement {
         if (realWriters.length) setBeatIntel(realWriters);
       }
       if (recruitingBoard) setBoard(recruitingBoard);
-      if (hubBundle?.classOverview) {
-        const nextMetrics = { ...hubBundle.classOverview };
-        setClassMetrics(nextMetrics);
-        try {
-          const payload = JSON.stringify({ at: Date.now(), data: nextMetrics });
-          const key = `gv_class_metrics_v1:${year}`;
-          sessionStorage.setItem(key, payload);
-          localStorage.setItem(key, payload);
-        } catch {
-          /* ignore quota */
-        }
-      }
       if (fcHome) setFutureCastHome(fcHome);
       if (hpTargets) setHighPriority(hpTargets);
     } finally {

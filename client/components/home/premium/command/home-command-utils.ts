@@ -175,6 +175,60 @@ function isWeakAnonPulse(text: string): boolean {
   return /^(uv|unofficial visit|official visit|offer)\b/i.test(text);
 }
 
+/** Hardcoded "N commits locked for YEAR" — never leave these baked in the binary. */
+const COMMIT_COUNT_LINE_RE = /^\d+\s+(commits|signees)\s+locked\s+for\s+(\d{4})\b/i;
+
+export function isCommitCountPulseLine(text: string): boolean {
+  return COMMIT_COUNT_LINE_RE.test(String(text || '').trim());
+}
+
+/**
+ * Commit / decommit counts must track live hub metrics — not Capacitor seed stone.
+ * - With a live count: rewrite / insert the locked-for line.
+ * - Without + allowExistingCount: keep live ticker counts (API already correct).
+ * - Without + seed path: strip baked count lines so NOW never flashes a stale number.
+ */
+export function applyLiveCommitCountToTicker(
+  ticker: string[] | null | undefined,
+  opts: {
+    year: number;
+    commits?: string | number | null;
+    commitLabel?: string | null;
+    /** Keep existing "N commits locked" lines when no live metrics yet (live ticker). */
+    allowExistingCount?: boolean;
+  }
+): string[] {
+  const year = Number(opts.year);
+  const incoming = (Array.isArray(ticker) ? ticker : [])
+    .map((t) => String(t || '').trim())
+    .filter(Boolean);
+
+  const raw = opts.commits;
+  const n =
+    raw == null || raw === '' || raw === '—'
+      ? NaN
+      : Number(String(raw).replace(/[^\d.]/g, ''));
+
+  if (Number.isFinite(n) && n > 0 && Number.isFinite(year) && year >= 2000) {
+    const base = incoming.filter((t) => !isCommitCountPulseLine(t));
+    const labelRaw = String(
+      opts.commitLabel || (year <= new Date().getFullYear() ? 'Signees' : 'Commits')
+    );
+    const label = labelRaw.toLowerCase();
+    const line = `${Math.round(n)} ${label} locked for ${year}`;
+    let insertAt = 0;
+    for (let i = 0; i < base.length; i += 1) {
+      if (isGenericClassPulse(base[i])) insertAt = i + 1;
+    }
+    const out = base.slice();
+    out.splice(insertAt, 0, line);
+    return out;
+  }
+
+  if (opts.allowExistingCount) return incoming;
+  return incoming.filter((t) => !isCommitCountPulseLine(t));
+}
+
 /** Ranked NOW stories from live hub/intel — rotates on the home strip. */
 export function buildHomePulseStories(input: HomeTrustTickerInput, limit = 6): string[] {
   const named: string[] = [];
