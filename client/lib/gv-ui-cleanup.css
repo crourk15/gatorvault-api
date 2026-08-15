@@ -1507,6 +1507,28 @@ body {
     overflow-x: visible !important;
     overflow-y: visible !important;
   }
+
+  /*
+   * Player profile — document scroll only.
+   * Sticky + overflow-x:auto tabs nested a Y scrollport; wrapped mobile tabs
+   * must not stick (tall sticky band freezes WKWebView gestures).
+   */
+  body:has(.fc-profile-page) .fc-profile-page,
+  body:has(.fc-profile-page) .fc-profile-page--feed,
+  body:has(.fc-profile-page) .fc-profile-tab-panel,
+  body:has(.fc-profile-page) .fc-profile-panel {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+  }
+
+  body:has(.fc-profile-page--feed) .fc-profile-tabs {
+    position: static !important;
+    top: auto !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: auto;
+  }
 }
 
 /*

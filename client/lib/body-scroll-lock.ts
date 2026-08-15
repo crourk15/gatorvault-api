@@ -18,3 +18,23 @@ export function lockBodyScroll(): () => void {
     }
   };
 }
+
+/**
+ * Drop orphaned menu/modal locks so document scroll works again.
+ * No-op while the vault menu boot reports open (real lock still needed).
+ */
+export function ensureDocumentScrollUnlocked(): void {
+  if (typeof document === 'undefined') return;
+  try {
+    if (window.__GV_MENU_BOOT__?.isOpen?.() === true) return;
+  } catch {
+    /* ignore */
+  }
+  lockCount = 0;
+  document.body.classList.remove(BODY_CLASS);
+  try {
+    document.body.style.overflow = '';
+  } catch {
+    /* ignore */
+  }
+}

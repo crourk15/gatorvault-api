@@ -649,17 +649,22 @@
 .fc-score-card--portal-medium { border-color: rgba(168, 85, 247, 0.35); }
 
 .fc-profile-tabs {
+  /* Sit under sticky vault header — top:0 covers the shell chrome. */
   position: sticky;
-  top: 0;
-  z-index: 40;
+  top: calc(var(--gv-shell-header-height, 64px) + env(safe-area-inset-top, 0px));
+  z-index: 30;
   display: flex;
   gap: 0.35rem;
+  /* overflow-x alone coerces overflow-y → auto (nested Y scrollport on iOS). */
   overflow-x: auto;
+  overflow-y: hidden;
   padding: 0.75rem 0;
   margin-bottom: 0.5rem;
   background: var(--gv-white, #ffffff);
   border-bottom: 1px solid rgba(0, 33, 165, 0.18);
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
 }
 
 .fc-profile-tab {

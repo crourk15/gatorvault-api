@@ -448,9 +448,14 @@
   }
 
   .fc-profile-page--feed .fc-profile-tabs {
+    /* Wrapped tab stacks are tall — sticky traps document scroll on iOS. */
+    position: static !important;
+    top: auto !important;
     overflow-x: visible !important;
+    overflow-y: visible !important;
     flex-wrap: wrap !important;
     gap: 8px !important;
+    -webkit-overflow-scrolling: auto;
   }
 
   .fc-profile-page--feed .fc-profile-tab {

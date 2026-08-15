@@ -20,7 +20,11 @@ function mustInclude(fileRel, needles) {
   }
 }
 
-mustInclude('lib/body-scroll-lock.ts', ['export function lockBodyScroll', 'gv-scroll-locked']);
+mustInclude('lib/body-scroll-lock.ts', [
+  'export function lockBodyScroll',
+  'export function ensureDocumentScrollUnlocked',
+  'gv-scroll-locked',
+]);
 mustInclude('components/community/CommunityReportModal.tsx', ['lockBodyScroll']);
 mustInclude('components/community/CommunityConfirmModal.tsx', ['lockBodyScroll']);
 mustInclude('components/shell/AppMenuDrawer.tsx', ['lockBodyScroll']);
@@ -30,6 +34,9 @@ mustInclude('lib/vault-shell.css', [
   'body.gv-scroll-locked',
   'min-height: 44px',
   '.gv-community__action-btn',
+]);
+mustInclude('lib/home-wow.css', [
+  'overflow: visible',
   '.gv-vault-shell__main:has(.home-wow-page)',
 ]);
 mustInclude('lib/gv-ui-cleanup.css', [
@@ -38,8 +45,31 @@ mustInclude('lib/gv-ui-cleanup.css', [
   '.gv-vault-shell--home.is-navigating .gv-vault-shell__main',
   'overscroll-behavior-x: none',
   'min-height: auto !important',
+  'body:has(.fc-profile-page--feed) .fc-profile-tabs',
+  'position: static !important',
 ]);
-mustInclude('lib/home-wow.css', ['overflow: visible']);
+mustInclude('lib/futurecast.css', [
+  'overflow-y: hidden',
+  '--gv-shell-header-height',
+]);
+mustInclude('hooks/usePlayerProfileRoute.ts', [
+  'optimisticProfileState',
+  'prefetchFullProfile',
+]);
+mustInclude('components/vault/VaultPlayerProfileRoute.tsx', [
+  'ProfileSkeleton',
+  'ensureDocumentScrollUnlocked',
+]);
+{
+  const rel = 'components/vault/VaultPlayerProfileRoute.tsx';
+  const abs = path.join(ROOT, rel);
+  if (fs.existsSync(abs)) {
+    const text = fs.readFileSync(abs, 'utf8');
+    if (text.includes('Loading player profile')) {
+      failures.push(`${rel}: must not show plain "Loading player profile…" status text`);
+    }
+  }
+}
 mustInclude('lib/vault-menu-boot.js', [
   'clearBodyLock',
   'applyBodyLock',
