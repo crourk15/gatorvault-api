@@ -1522,11 +1522,14 @@ body {
     height: auto !important;
   }
 
-  body:has(.fc-profile-page--feed) .fc-profile-tabs {
+  body:has(.fc-profile-page--feed) .fc-profile-tabs,
+  body:has(.fc-profile-page) .fc-profile-tabs {
     position: static !important;
     top: auto !important;
-    overflow-x: visible !important;
-    overflow-y: visible !important;
+    z-index: auto !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    overflow: visible !important;
     -webkit-overflow-scrolling: auto;
   }
 }

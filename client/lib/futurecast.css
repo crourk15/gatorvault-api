@@ -667,6 +667,19 @@
   touch-action: pan-x pan-y;
 }
 
+/* Mobile: never sticky — a stuck tab band hides Vault Scouting mid-scroll. */
+@media (max-width: 1023px) {
+  .fc-profile-tabs,
+  .fc-profile-page--feed .fc-profile-tabs {
+    position: static;
+    top: auto;
+    z-index: auto;
+    overflow: visible;
+    flex-wrap: wrap;
+    -webkit-overflow-scrolling: auto;
+  }
+}
+
 .fc-profile-tab {
   flex-shrink: 0;
   background: transparent;

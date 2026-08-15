@@ -51,6 +51,11 @@ mustInclude('lib/gv-ui-cleanup.css', [
 mustInclude('lib/futurecast.css', [
   'overflow-y: hidden',
   '--gv-shell-header-height',
+  'Mobile: never sticky',
+]);
+mustInclude('lib/vault-mobile-vertical.css', [
+  'flex-direction: row !important',
+  '.fc-profile-page--feed .fc-profile-tabs',
 ]);
 mustInclude('hooks/usePlayerProfileRoute.ts', [
   'optimisticProfileState',
@@ -82,6 +87,8 @@ mustInclude('lib/mobile-native-framework.css', [
   'inset-inline-end:',
   'z-index: 60',
   'touch-action: manipulation',
+  'Never column-stack + sticky',
+  'flex-direction: row !important',
 ]);
 mustInclude('components/vault/MobileBackToTop.tsx', [
   'scrollingElement',
