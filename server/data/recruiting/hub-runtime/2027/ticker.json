@@ -1,6 +1,17 @@
-[
-  "2027 class trending nationally — UF at #8",
-  "Blue chip % at 68%",
-  "25 commits locked for 2027",
-  "Tranard Roberts — unofficial visit · Auburn Tigers"
-]
+{
+  "ok": true,
+  "status": "ready",
+  "meta": {
+    "generatedAt": "2026-08-15T11:17:26.749Z",
+    "snapshot": true,
+    "endpoint": "ticker",
+    "year": 2027,
+    "source": "hub-runtime"
+  },
+  "items": [
+    "2027 class trending nationally — UF at #8",
+    "Blue chip % at 65%",
+    "26 commits locked for 2027",
+    "Tranard Roberts — unofficial visit · Florida"
+  ]
+}

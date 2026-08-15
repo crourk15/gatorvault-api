@@ -386,10 +386,15 @@ function classCommitMetricLabel(year) {
 }
 
 async function buildHubTicker(year = 2027) {
-  const enriched = await loadEnrichedBoard(year);
-  const commits = enriched.commits || [];
-  const targets = enriched.targets || [];
-  const rank = enriched.rankings?.nationalRank;
+  const { filterBlockedRecruits } = require('./recruiting-blocked-players');
+  // Same commit universe as class-overview / commits cards — avoid 25/26/27 drift.
+  const commits = filterBlockedRecruits(await store.getHubHsCommits(year));
+  const board = await store.getBoard(year);
+  const targets = board?.targets || [];
+  const rankingsList = await store.getRankings();
+  const rankings =
+    (rankingsList || []).find((r) => Number(r.classYear) === Number(year)) || null;
+  const rank = rankings?.nationalRank;
   const chip = blueChipPct(commits);
   const items = [];
   const countLabel = classCommitMetricLabel(year).toLowerCase();
@@ -413,10 +418,13 @@ async function buildHubTicker(year = 2027) {
 
 async function buildHubClassOverview(year = 2027) {
   // Lightweight path: targeted commit + rankings queries only (avoid getAllPlayers + movement DB).
-  const [commits, rankingsList] = await Promise.all([
+  const { filterBlockedRecruits } = require('./recruiting-blocked-players');
+  const [rawCommits, rankingsList] = await Promise.all([
     store.getHubHsCommits(year),
     store.getRankings(),
   ]);
+  // Match commits cards + Home NOW ticker (blocked phantoms never count).
+  const commits = filterBlockedRecruits(rawCommits);
   const rankings =
     (rankingsList || []).find((r) => Number(r.classYear) === Number(year)) || null;
   const chip = blueChipPct(commits);
@@ -537,7 +545,8 @@ function mapHubCommit(player, classYear) {
 
 async function buildHubCommits(year = 2027) {
   // Match class-card counts (HS signing class only — portal has its own board).
-  const commits = await store.getHubHsCommits(year);
+  const { filterBlockedRecruits } = require('./recruiting-blocked-players');
+  const commits = filterBlockedRecruits(await store.getHubHsCommits(year));
   const { enrichBoard } = require('./recruiting-board-enrich');
   const enriched = enrichBoard({ classYear: year, commits, targets: [], rankings: null }, false);
   const rows = enriched.commits || commits;

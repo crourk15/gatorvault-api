@@ -10,7 +10,7 @@ const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
 const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 
 /** Bump when HS-only class commit metrics logic changes. */
-const HUB_METRICS_CACHE_REV = 'hs6';
+const HUB_METRICS_CACHE_REV = 'hs7';
 
 /** Bump when footprint commit/target tallies logic changes. */
 const FOOTPRINT_CACHE_REV = 'fp3';
