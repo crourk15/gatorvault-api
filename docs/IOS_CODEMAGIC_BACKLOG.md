@@ -15,6 +15,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] Footprint Class 2028 commits: rev-gate + heal poisoned 0-commit runtime plates; lite warm refreshes footprint/commits on cron (API — no Codemagic)
 - [x] DeNairo Girton Jr. 2028 S Vault Scouting (Jessie Bates III comp) — correct Great Mills MD identity (Beat Desk had Tramond Collins On3 collision) — API
 - [x] Tranard Roberts profile: Vault Scouting (Judkins comp) + heal predictedSchool / htWt / Georgia phantom rival — API + prepared-meal stamp
+- [x] Josiah Taylor: UF Fit 99 was On3 UF% poisoned into `ufFitScore` — heal stamp overlay to recruiting Fit (~55); RPM stays on odds — API
 - [x] 2027 Closing Class Top UF Targets soft plate (Tranard Roberts) — API
 - [x] 2028 Priority Chase: purge UF alumni/roster/empty-ATH phantoms (Urban Meyer, Kyle Trask, Dallas Wilson, …) + hard-block — API
 - [x] Early Discovery cards: durable rankings + live UF RPM overlay (fills composite/UF bars for allowlist shells) — API

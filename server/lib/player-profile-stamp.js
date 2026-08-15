@@ -60,6 +60,19 @@ function stripLiveRpmFields(profile) {
   if (doc.player && typeof doc.player === 'object') {
     const player = { ...doc.player };
     delete player.ufRpmPct;
+    // Fit is scheme match — never bake On3 UF% into ufFitScore.
+    // If stamped Fit equals a probability-shaped field, drop it for live rebuild.
+    const fit = Number(player.ufFitScore);
+    const gf = Number(doc.futurecastSummary?.gvProbability);
+    const uf = Number(doc.futurecastSummary?.ufProbability);
+    if (
+      Number.isFinite(fit) &&
+      fit > 0 &&
+      ((Number.isFinite(uf) && fit === Math.round(uf)) ||
+        (Number.isFinite(gf) && fit === Math.round(gf)))
+    ) {
+      delete player.ufFitScore;
+    }
     // Keep committed 100s in stamp for Florida commits; live overlay re-asserts.
     doc.player = player;
   }
@@ -139,6 +152,52 @@ function inferProfileKind(profile) {
   return 'prospect';
 }
 
+function pickRankNumber(value) {
+  if (value == null || value === '') return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
+/**
+ * Heal ufFitScore so On3 UF% / RPM never displays as Scheme Fit.
+ * Prefers recruiting.fitScore, then evidence-backed Fit, else keeps stamp Fit
+ * only when it is not identical to live RPM.
+ */
+function resolveLiveUfFitScore(player, recruiting, rpm) {
+  const storeFitRaw = Number(recruiting?.fitScore);
+  const storeFit =
+    Number.isFinite(storeFitRaw) && storeFitRaw > 0 && storeFitRaw <= 100
+      ? Math.round(storeFitRaw)
+      : null;
+  // Never treat store Fit as valid when it is clearly the RPM number.
+  const storeFitOk = storeFit != null && (rpm == null || storeFit !== rpm) ? storeFit : null;
+
+  const stampedRaw = Number(player?.ufFitScore);
+  const stamped =
+    Number.isFinite(stampedRaw) && stampedRaw > 0 && stampedRaw <= 100
+      ? Math.round(stampedRaw)
+      : null;
+  const stampedPoisoned = stamped != null && rpm != null && stamped === rpm;
+
+  if (storeFitOk != null) return storeFitOk;
+
+  if (!stampedPoisoned && stamped != null) return stamped;
+
+  try {
+    const { resolveEvidenceBackedFitScore } = require('./scheme-fit-evidence');
+    const resolved = resolveEvidenceBackedFitScore({
+      slug: player?.slug,
+      pos: player?.position || player?.pos || recruiting?.pos || recruiting?.position,
+      fitScore: storeFitOk,
+      ufFitScore: storeFitOk,
+    });
+    if (resolved?.fitScore != null) return resolved.fitScore;
+  } catch {
+    /* optional */
+  }
+  return null;
+}
+
 /**
  * Cheap live garnish — On3 Industry ranks + RPM (+ locked commits).
  * Dossier narrative body stays stamped; rank/rating/odds refresh every GET.
@@ -165,6 +224,13 @@ function overlayLiveRpm(profile, recruiting) {
   if (stateRank != null) player.rankingState = stateRank;
   if (rating != null) player.compositeRating = rating;
   if (stars != null && stars > 0) player.stars = stars;
+
+  // Scheme Fit ≠ On3 UF%. Heal stamps that baked RPM into ufFitScore (e.g. Josiah Taylor 99).
+  if (!ufCommit) {
+    player.ufFitScore = resolveLiveUfFitScore(player, recruiting, rpm);
+  } else if (player.ufFitScore == null || !(Number(player.ufFitScore) > 0)) {
+    player.ufFitScore = 100;
+  }
 
   let highSchoolProfile =
     profile.highSchoolProfile && typeof profile.highSchoolProfile === 'object'
@@ -207,17 +273,21 @@ function overlayLiveRpm(profile, recruiting) {
         ? profile.competingSchools.map((s) => Number(s?.pct) || 0)
         : [])
     );
+    const summaryFitRaw = Number(futurecastSummary?.fitScore);
+    const summaryFitPoisoned =
+      Number.isFinite(summaryFitRaw) && Math.round(summaryFitRaw) === rpm;
     futurecastSummary = {
       ...(futurecastSummary || {
         predictedSchool: null,
         movementDelta: null,
-        fitScore: player.ufFitScore ?? null,
         volatilityScore: null,
       }),
       on3UfProbability: rpm,
       // On3 panel prefers RPM; keep GV from stamp when present.
       ufProbability: rpm,
       gvProbability: futurecastSummary?.gvProbability ?? null,
+      // Scheme Fit from healed player — never mirror RPM.
+      fitScore: summaryFitPoisoned ? player.ufFitScore : futurecastSummary?.fitScore ?? player.ufFitScore,
       // Heal stale stamps that crowned a legacy rival over live UF RPM.
       ...(rpm >= rivalMax ? { predictedSchool: 'Florida' } : {}),
     };
@@ -233,12 +303,6 @@ function overlayLiveRpm(profile, recruiting) {
     rpmLive: true,
     ranksLive: natl != null || posRank != null || stateRank != null || rating != null,
   };
-}
-
-function pickRankNumber(value) {
-  if (value == null || value === '') return null;
-  const n = Number(value);
-  return Number.isFinite(n) ? n : null;
 }
 
 async function loadLiveRecruiting(slug) {
