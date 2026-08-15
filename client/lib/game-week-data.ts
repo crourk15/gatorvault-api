@@ -255,11 +255,12 @@ function defaultDepthChart(): DepthChartGroup[] {
 
 function buildScouting(game: ScheduleGame): ScoutingReportIntel {
   return {
-    offense: game.howUFWins?.length
-      ? game.howUFWins
-      : ['Establish run game early', 'Protect the football', 'Win early downs'],
-    defense: game.opponentTendencies?.length
+    // UI: "Opponent offense" / "Opponent defense" — map tendencies, not howUFWins.
+    offense: game.opponentTendencies?.length
       ? game.opponentTendencies
+      : ['Establish run game early', 'Protect the football', 'Win early downs'],
+    defense: game.defenseTendencies?.length
+      ? game.defenseTendencies
       : ['Set the edge vs run', 'Communicate in tempo', 'Limit explosives'],
     specialTeams: ['Win field position', 'Clean punt coverage', 'No missed kicks'],
     matchupSummary: game.scoutingReport ?? game.film,
@@ -290,7 +291,11 @@ function generateBundle(game: ScheduleGame): GameWeekBundle {
     weather: isHomeGame(game) ? '84°F · Clear · Light wind' : '78°F · Humid · SE 8 mph',
     keys: buildKeys(game),
     swingPlayers: buildSwing(game),
-    filmNotes: [game.film, ...(game.opponentTendencies ?? [])].filter(Boolean),
+    filmNotes: [
+      game.film,
+      ...(game.opponentTendencies ?? []),
+      ...(game.defenseTendencies ?? []),
+    ].filter(Boolean),
     radar: defaultRadar(game.ufPct),
     depthChart: defaultDepthChart(),
     scouting: buildScouting(game),
