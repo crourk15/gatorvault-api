@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-08-15T03:30:00.000Z",
+  "updatedAt": "2026-08-15T03:20:00.000Z",
   "label": "2026 Florida football schedule",
   "games": [
     {
@@ -65,7 +65,7 @@
         "gameCenter": "https://floridagators.com/game-center/27903",
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-florida-atlantic-owls-tickets-ben-hill-griffin-stadium-9-5-26-7pm/7622666/",
         "ticketmaster": "https://www.ticketmaster.com/florida-gators-football-vs-florida-atlantic-gainesville-florida-09-05-2026/event/2200645C21820922",
-        "stubhub": "https://www.stubhub.com/florida-gators-football-gainesville-tickets-9-5-2026/event/107083553/",
+        "stubhub": "https://www.stubhub.com/florida-gators-football-gainesville-tickets-9-5-2026/event/160067981/",
         "official": "https://www.ticketmaster.com/florida-gators-football-vs-florida-atlantic-gainesville-florida-09-05-2026/event/2200645C21820922"
       }
     },
@@ -100,7 +100,7 @@
         "gameCenter": "https://floridagators.com/game-center/27904",
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-campbell-fighting-camels-tickets-ben-hill-griffin-stadium-9-12-26-5pm/7622668/",
         "ticketmaster": "https://www.ticketmaster.com/florida-gators-football-vs-campbell-university-gainesville-florida-09-12-2026/event/2200645C21870928",
-        "stubhub": "https://www.stubhub.com/florida-gators-football-gainesville-tickets-9-12-2026/event/107082476/",
+        "stubhub": "https://www.stubhub.com/florida-gators-football-gainesville-tickets-9-12-2026/event/160067983/",
         "official": "https://www.ticketmaster.com/florida-gators-football-vs-campbell-university-gainesville-florida-09-12-2026/event/2200645C21870928"
       }
     },
@@ -146,7 +146,7 @@
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27905",
         "tickpick": "https://www.tickpick.com/buy-auburn-tigers-vs-florida-gators-tickets-jordan-hare-stadium-9-19-26-6pm/7620863/",
-        "stubhub": "https://www.stubhub.com/auburn-tigers-football-auburn-tickets-9-19-2026/event/107144117/"
+        "stubhub": "https://www.stubhub.com/auburn-tigers-football-auburn-tickets-9-19-2026/event/159474210/"
       }
     },
     {
@@ -478,7 +478,8 @@
       "scoutingReport": "Rivalry game at Doak — field position and turnover margin decide it. UF's 3-3-5 is built to handle spread RPO; offense must finish drives.",
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27914",
-        "tickpick": "https://www.tickpick.com/buy-florida-state-seminoles-vs-florida-gators-tickets-doak-campbell-stadium-11-27-26-3pm/7528939/"
+        "tickpick": "https://www.tickpick.com/buy-florida-state-seminoles-vs-florida-gators-tickets-doak-campbell-stadium-11-27-26-3pm/7528939/",
+        "stubhub": "https://www.stubhub.com/florida-state-seminoles-football-tallahassee-tickets-11-27-2026/event/159766146/"
       }
     }
   ]

@@ -97,7 +97,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       gameCenter: "https://floridagators.com/game-center/27903",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-florida-atlantic-gainesville-florida-09-05-2026/event/2200645C21820922",
       tickpick: "https://www.tickpick.com/buy-florida-gators-vs-florida-atlantic-owls-tickets-ben-hill-griffin-stadium-9-5-26-7pm/7622666/",
-      stubhub: "https://www.stubhub.com/florida-gators-football-gainesville-tickets-9-5-2026/event/107083553/",
+      stubhub: "https://www.stubhub.com/florida-gators-football-gainesville-tickets-9-5-2026/event/160067981/",
       ticketmaster: "https://www.ticketmaster.com/florida-gators-football-vs-florida-atlantic-gainesville-florida-09-05-2026/event/2200645C21820922",
     },
   },
@@ -122,7 +122,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       gameCenter: "https://floridagators.com/game-center/27904",
       official: "https://www.ticketmaster.com/florida-gators-football-vs-campbell-university-gainesville-florida-09-12-2026/event/2200645C21870928",
       tickpick: "https://www.tickpick.com/buy-florida-gators-vs-campbell-fighting-camels-tickets-ben-hill-griffin-stadium-9-12-26-5pm/7622668/",
-      stubhub: "https://www.stubhub.com/florida-gators-football-gainesville-tickets-9-12-2026/event/107082476/",
+      stubhub: "https://www.stubhub.com/florida-gators-football-gainesville-tickets-9-12-2026/event/160067983/",
       ticketmaster: "https://www.ticketmaster.com/florida-gators-football-vs-campbell-university-gainesville-florida-09-12-2026/event/2200645C21870928",
     },
   },
@@ -151,7 +151,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27905",
       tickpick: "https://www.tickpick.com/buy-auburn-tigers-vs-florida-gators-tickets-jordan-hare-stadium-9-19-26-6pm/7620863/",
-      stubhub: "https://www.stubhub.com/auburn-tigers-football-auburn-tickets-9-19-2026/event/107144117/",
+      stubhub: "https://www.stubhub.com/auburn-tigers-football-auburn-tickets-9-19-2026/event/159474210/",
     },
   },
   {
