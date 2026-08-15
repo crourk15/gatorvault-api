@@ -441,21 +441,35 @@
 
   .fc-profile-page--feed .fc-profile-header,
   .fc-profile-page--feed .fc-profile-scores,
-  .fc-profile-page--feed .fc-profile-tabs,
   .fc-profile-page--feed .fc-profile-actions {
     flex-direction: column !important;
     align-items: stretch !important;
   }
 
+  /*
+   * Profile tabs: compact wrap row that scrolls away with the document.
+   * Never column-stack + sticky — that covers Vault Scouting while content
+   * scrolls underneath (mid-line text clip under Signals).
+   */
   .fc-profile-page--feed .fc-profile-tabs {
-    overflow-x: visible !important;
+    position: static !important;
+    top: auto !important;
+    z-index: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
     flex-wrap: wrap !important;
+    align-items: stretch !important;
+    overflow: visible !important;
     gap: 8px !important;
+    -webkit-overflow-scrolling: auto;
+    background: var(--gv-white, #ffffff);
   }
 
   .fc-profile-page--feed .fc-profile-tab {
     min-height: var(--mobile-tap);
     flex: 1 1 calc(50% - 4px);
+    max-width: calc(50% - 4px);
+    box-sizing: border-box;
   }
 
   /* FutureCast stacked page tables → hide horizontal scroll areas */

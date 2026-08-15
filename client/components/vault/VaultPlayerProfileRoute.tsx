@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PlayerProfilePage } from '@/components/futurecast/player/PlayerProfilePage';
+import { ProfileSkeleton } from '@/components/futurecast/player/ProfileSkeleton';
 import { RosterProfilePage } from '@/components/vault/RosterProfilePage';
 import { UiError } from '@/components/site/UiMessage';
 import {
@@ -9,6 +10,8 @@ import {
   type PlayerProfileRouteState,
 } from '@/hooks/usePlayerProfileRoute';
 import type { ProfileRouteContext } from '@/lib/player-full-profile-api';
+import { ensureDocumentScrollUnlocked } from '@/lib/body-scroll-lock';
+import '@/lib/futurecast.css';
 
 type Props = {
   slug: string;
@@ -19,8 +22,21 @@ type Props = {
   rosterBackLabel?: string;
 };
 
-function ProfileRouteSkeleton(): React.ReactElement {
-  return <p className="rh-page__status rh-container">Loading player profile…</p>;
+function ProfileRouteSkeleton({
+  backHref,
+  backLabel,
+}: {
+  backHref: string;
+  backLabel: string;
+}): React.ReactElement {
+  return (
+    <div className="fc-profile-page fc-profile-page--feed mobile-app" data-testid="player-profile-page">
+      <nav className="fc-profile-back">
+        <a href={backHref}>{backLabel}</a>
+      </nav>
+      <ProfileSkeleton />
+    </div>
+  );
 }
 
 export function VaultPlayerProfileRoute({
@@ -33,8 +49,12 @@ export function VaultPlayerProfileRoute({
 }: Props): React.ReactElement {
   const route: PlayerProfileRouteState = usePlayerProfileRoute(slug, context);
 
+  useEffect(() => {
+    ensureDocumentScrollUnlocked();
+  }, [slug]);
+
   if (route.phase === 'loading' || route.phase === 'redirect') {
-    return <ProfileRouteSkeleton />;
+    return <ProfileRouteSkeleton backHref={backHref} backLabel={backLabel} />;
   }
 
   if (route.phase === 'error') {
@@ -61,7 +81,7 @@ export function VaultPlayerProfileRoute({
   return (
     <PlayerProfilePage
       slug={route.canonicalSlug}
-      playerId={route.playerId}
+      playerId={route.playerId || undefined}
       backHref={backHref}
       backLabel={backLabel}
       recruitingContext={context === 'recruiting'}

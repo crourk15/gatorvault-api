@@ -183,17 +183,30 @@
     width: 100% !important;
   }
 
+  /*
+   * Profile tabs must stay a compact wrap row (not a full-height column).
+   * Column + sticky covered overview content as it scrolled underneath.
+   */
   .fc-profile-page--feed .fc-profile-tabs {
-    flex-direction: column !important;
+    position: static !important;
+    top: auto !important;
+    z-index: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
     align-items: stretch !important;
-    overflow-x: visible !important;
+    overflow: visible !important;
     gap: 8px !important;
+    -webkit-overflow-scrolling: auto;
   }
 
   .fc-profile-page--feed .fc-profile-tab {
-    width: 100%;
+    width: auto;
+    max-width: calc(50% - 4px);
+    flex: 1 1 calc(50% - 4px);
     min-height: 44px;
-    justify-content: flex-start;
+    justify-content: center;
+    box-sizing: border-box;
   }
 
   .fc-profile-page--feed .fc-profile-section,

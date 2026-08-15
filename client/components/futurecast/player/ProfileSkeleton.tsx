@@ -1,0 +1,14 @@
+import React from 'react';
+
+/** Shared profile loading chrome — route gate + in-page fetch. */
+export function ProfileSkeleton(): React.ReactElement {
+  return (
+    <div className="fc-profile-skeleton" data-testid="player-profile-loading">
+      <div className="fc-skeleton fc-skeleton--title" />
+      <div className="fc-skeleton fc-skeleton--line" />
+      <div className="fc-skeleton fc-skeleton--scores" />
+      <div className="fc-skeleton fc-skeleton--tabs" />
+      <div className="fc-skeleton fc-skeleton--panel" />
+    </div>
+  );
+}

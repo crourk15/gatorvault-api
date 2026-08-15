@@ -1,4 +1,6 @@
 /** Ref-counted body scroll lock for modals, drawers, and overlays. */
+import { readVaultMenuBootOpen } from './vault-menu-sync';
+
 let lockCount = 0;
 
 const BODY_CLASS = 'gv-scroll-locked';
@@ -17,4 +19,24 @@ export function lockBodyScroll(): () => void {
       document.body.classList.remove(BODY_CLASS);
     }
   };
+}
+
+/**
+ * Drop orphaned menu/modal locks so document scroll works again.
+ * No-op while the vault menu boot reports open (real lock still needed).
+ */
+export function ensureDocumentScrollUnlocked(): void {
+  if (typeof document === 'undefined') return;
+  try {
+    if (readVaultMenuBootOpen()) return;
+  } catch {
+    /* ignore */
+  }
+  lockCount = 0;
+  document.body.classList.remove(BODY_CLASS);
+  try {
+    document.body.style.overflow = '';
+  } catch {
+    /* ignore */
+  }
 }

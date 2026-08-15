@@ -34,22 +34,12 @@ import { CollegeTab } from './CollegeTab';
 import { PortalTab } from './PortalTab';
 import { UFFitTab } from './UFFitTab';
 import { SignalsTab } from './SignalsTab';
+import { ProfileSkeleton } from './ProfileSkeleton';
 import { UiError } from '@/components/site/UiMessage';
 import { usePathname } from '@/lib/use-pathname';
 import { futureCastBase, isVaultPath } from '@/lib/vault-routes';
 import { readProfileCache, profileCacheKey } from '@/lib/profile-cache';
-
-function ProfileSkeleton(): React.ReactElement {
-  return (
-    <div className="fc-profile-skeleton" data-testid="player-profile-loading">
-      <div className="fc-skeleton fc-skeleton--title" />
-      <div className="fc-skeleton fc-skeleton--line" />
-      <div className="fc-skeleton fc-skeleton--scores" />
-      <div className="fc-skeleton fc-skeleton--tabs" />
-      <div className="fc-skeleton fc-skeleton--panel" />
-    </div>
-  );
-}
+import { ensureDocumentScrollUnlocked } from '@/lib/body-scroll-lock';
 
 export interface PlayerProfilePageProps {
   slug: string;
@@ -86,9 +76,17 @@ export function PlayerProfilePage({
     setActiveTab(parseProfileTab(new URLSearchParams(window.location.search).get('tab')));
   }, [slug]);
 
+  // Orphaned menu locks (or boot/hydrate races) freeze document scroll on profiles.
+  useEffect(() => {
+    ensureDocumentScrollUnlocked();
+  }, [slug]);
+
   useEffect(() => {
     let cancelled = false;
-    const instant = readProfileCache(cacheKey);
+    const instant =
+      readProfileCache(cacheKey) ||
+      readProfileCache(profileCacheKey(slug)) ||
+      (playerIdProp ? readProfileCache(profileCacheKey(slug, playerIdProp)) : null);
     if (instant) {
       setProfile(instant);
       setLoading(false);

@@ -42,11 +42,30 @@ function canonicalProfileHref(
   return playerProfileRoute(canonicalSlug, 'futurecast');
 }
 
+function optimisticProfileState(
+  slug: string,
+  context: ProfileRouteContext
+): Extract<PlayerProfileRouteState, { phase: 'profile' }> {
+  const canonicalSlug = slug.trim().toLowerCase();
+  return {
+    phase: 'profile',
+    playerId: '',
+    canonicalSlug,
+    kind: context === 'recruiting' ? 'recruiting-fallback' : 'futurecast',
+  };
+}
+
 export function usePlayerProfileRoute(
   slug: string | null,
   context: ProfileRouteContext = 'auto'
 ): PlayerProfileRouteState {
-  const [state, setState] = useState<PlayerProfileRouteState>({ phase: 'loading' });
+  const [state, setState] = useState<PlayerProfileRouteState>(() => {
+    if (!slug) return { phase: 'error', message: 'No player slug in URL.' };
+    // Roster must resolve before picking RosterProfilePage vs FutureCast shell.
+    if (context === 'roster') return { phase: 'loading' };
+    // Skip the resolve gate — mount profile immediately (skeleton/cache inside).
+    return optimisticProfileState(slug, context);
+  });
 
   useEffect(() => {
     if (!slug) {
@@ -55,12 +74,16 @@ export function usePlayerProfileRoute(
     }
 
     let cancelled = false;
-    setState({ phase: 'loading' });
     const normalized = slug.trim().toLowerCase();
 
-    // Overlap full-profile with resolve so Vault Scouting isn't blocked on a serial RTT
-    // (roster context may redirect — prefetch is cheap/cacheable either way).
-    if (context !== 'roster') {
+    if (context === 'roster') {
+      setState({ phase: 'loading' });
+    } else {
+      setState((prev) =>
+        prev.phase === 'profile' && prev.canonicalSlug === normalized
+          ? prev
+          : optimisticProfileState(normalized, context)
+      );
       prefetchFullProfile(normalized);
     }
 
@@ -118,11 +141,18 @@ export function usePlayerProfileRoute(
           });
           return;
         }
-        setState({
-          phase: 'profile',
-          playerId: resolved.playerId,
-          canonicalSlug: resolved.canonicalSlug,
-          kind: resolved.kind,
+        setState((prev) => {
+          const canonical = (resolved.canonicalSlug || normalized).toLowerCase();
+          // Stay on optimistic mount — bumping playerId remounts the fetch and flashes skeleton.
+          if (prev.phase === 'profile' && prev.canonicalSlug === canonical) {
+            return prev;
+          }
+          return {
+            phase: 'profile',
+            playerId: resolved.playerId,
+            canonicalSlug: canonical,
+            kind: resolved.kind,
+          };
         });
       } catch (err) {
         if (cancelled) return;
@@ -142,11 +172,13 @@ export function usePlayerProfileRoute(
           } catch {
             /* fall through */
           }
+          setState({
+            phase: 'error',
+            message: err instanceof Error ? err.message : 'Player not found',
+          });
+          return;
         }
-        setState({
-          phase: 'error',
-          message: err instanceof Error ? err.message : 'Player not found',
-        });
+        // Non-roster: keep optimistic profile mounted — full-profile fetch owns the error UI.
       }
     })();
 
