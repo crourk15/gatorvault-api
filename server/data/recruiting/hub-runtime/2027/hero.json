@@ -1,22 +1,22 @@
 {
   "year": 2027,
   "title": "Florida Recruiting",
-  "subtitle": "Who Florida is chasing — movement, board, and beat intel.",
+  "subtitle": "Who Florida is chasing \u2014 movement, board, and beat intel.",
   "classYears": [
     2026,
     2027,
     2028
   ],
   "ticker": [
-    "2027 class trending nationally — UF at #8",
-    "Blue chip % at 68%",
-    "25 commits locked for 2027",
-    "Tranard Roberts — unofficial visit · Auburn Tigers"
+    "2027 class trending nationally \u2014 UF at #8",
+    "Blue chip % at 65%",
+    "26 commits locked for 2027",
+    "Tranard Roberts \u2014 unofficial visit \u00b7 Florida"
   ],
   "classOverview": {
     "classRank": "#8",
     "blueChip": "68%",
-    "commits": "25",
+    "commits": "26",
     "commitLabel": "Commits",
     "avgRating": "89.9",
     "trendRank": "Stable",
@@ -51,7 +51,7 @@
     "2027": {
       "classRank": "#8",
       "blueChip": "68%",
-      "commits": "25",
+      "commits": "26",
       "commitLabel": "Commits",
       "avgRating": "89.9",
       "trendRank": "Stable",
@@ -66,7 +66,7 @@
       }
     },
     "2028": {
-      "classRank": "—",
+      "classRank": "\u2014",
       "blueChip": "100%",
       "commits": "1",
       "commitLabel": "Commits",
@@ -82,5 +82,18 @@
         "avgRating": null
       }
     }
-  }
+  },
+  "ok": true,
+  "status": "ready",
+  "meta": {
+    "generatedAt": "2026-08-15T11:17:26.749Z",
+    "year": 2027,
+    "source": "hub-runtime"
+  },
+  "items": [
+    "2027 class trending nationally \u2014 UF at #8",
+    "Blue chip % at 65%",
+    "26 commits locked for 2027",
+    "Tranard Roberts \u2014 unofficial visit \u00b7 Florida"
+  ]
 }
