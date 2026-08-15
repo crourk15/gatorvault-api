@@ -122,6 +122,31 @@ describe('player profile prepared-meal stamps', () => {
     assert.equal(live.futurecastSummary.predictedSchool, 'Florida');
   });
 
+  it('does not treat On3 UF% / RPM as Scheme Fit (Josiah Taylor poison)', () => {
+    const live = stamp.overlayLiveRpm(
+      {
+        player: {
+          slug: 'josiah-taylor',
+          fullName: 'Josiah Taylor',
+          classYear: 2028,
+          position: 'ATH',
+          ufFitScore: 99, // poisoned stamp: RPM baked into Fit
+        },
+        futurecastSummary: {
+          fitScore: 99,
+          ufProbability: 99,
+          predictedSchool: 'Florida',
+        },
+        vaultScouting: null,
+      },
+      { ufRpmPct: 99, ufProbability: 99, fitScore: 55, pos: 'DL', committedTo: null }
+    );
+    assert.equal(live.player.ufRpmPct, 99);
+    assert.equal(live.futurecastSummary.ufProbability, 99);
+    assert.equal(live.player.ufFitScore, 55);
+    assert.equal(live.futurecastSummary.fitScore, 55);
+  });
+
   it('lists 2027 + 2028 allowlist prepared-meal targets', () => {
     const slugs = stamp.listAllowlistStampSlugs();
     assert.ok(slugs.length >= 40);
