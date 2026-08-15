@@ -52,7 +52,7 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
     tv: "SEC Network",
     keys: [
       "Disrupt Veltkamp's rhythm",
-      "Gas FAU's run defense",
+      "Attack FAU's run defense",
       "Chunk shots vs a takeaway-light secondary",
     ],
     swing: [
