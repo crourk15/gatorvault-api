@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-08-13T21:35:00.000Z",
+  "updatedAt": "2026-08-15T03:30:00.000Z",
   "label": "2026 Florida football schedule",
   "games": [
     {
@@ -12,36 +12,55 @@
       "ufPct": 94,
       "tv": "SEC Network",
       "keys": [
-        "Establish run with Baugh early",
-        "QB1: no turnovers in debut",
-        "Defense sets physical tone"
+        "Disrupt Veltkamp's rhythm",
+        "Gas FAU's run defense",
+        "Chunk shots vs a takeaway-light secondary"
       ],
       "swing": [
         {
-          "name": "Philo / Jones Jr.",
-          "role": "QB1 into camp — efficiency matters in debut"
+          "name": "Aaron Philo",
+          "role": "QB1 — attack a secondary that forced only 3 INTs in 2025"
+        },
+        {
+          "name": "Jaden Baugh",
+          "role": "RB — FAU allowed 200 rush YPG; Navy hit them for 397"
         },
         {
           "name": "Jayden Woods",
-          "role": "JACK sets the edge"
+          "role": "JACK — set the edge and rush Veltkamp off rhythm"
         }
       ],
-      "film": "FAU runs spread RPO. The 3-3-5 is built to neutralize this.",
+      "film": "Offense (ESPN highlights): FAU W at Rice 27-21 (401762477) + W vs Tulsa 40-21 (401762505) — shotgun spread, pass-heavy, vertical + explosive run confirmed; tempo/RPO not confirmed. Defense (ESPN highlights + full 2025 drive/box dig): 4-down front + nickel/dime looks confirmed on Maryland/Memphis scoring clips; coverage shells not confirmed. Season: 36.3 PPG / 435.5 YPG allowed; only 3 INTs.",
       "pred": "UF 38 · FAU 10",
       "predUF": 38,
       "predOpp": 10,
       "filmLessonId": "frl00004-0000-4000-8000-000000000004",
       "opponentTendencies": [
-        "Spread-RPO quick game at tempo",
-        "Tests STAR communication and edge setting",
-        "Limited vertical threat — win early downs"
+        "Shotgun spread on every snap reviewed — no under-center observed",
+        "Pass-heavy even in wins (Veltkamp 24/33, 290 vs Rice; 22/29, 272 vs Tulsa)",
+        "Vertical shot confirmed: deep TD pass vs Rice (~46-yard clip)",
+        "Quick red-zone throw confirmed: short TD pass vs Rice",
+        "Explosive run confirmed: long TD rush vs Rice (~68-yard clip)",
+        "Tempo / no-huddle between snaps: not confirmed on highlight packages",
+        "RPO mesh: not confirmed on these highlight packages"
+      ],
+      "defenseTendencies": [
+        "Film-confirmed (ESPN Maryland + Memphis highlight clips): 4-down front on multiple snaps; nickel/dime DB looks in obvious pass situations",
+        "Coverage shells (Cover 2/3/man) + specific pressure packages: NOT confirmed on available highlight angles",
+        "Box-confirmed 2025: 36.3 PPG allowed (436 pts / 12) and 435.5 YPG (200 rush / 235 pass)",
+        "Explosive-run problem (play results): Memphis 90-yd TD run; Rice 68-yd TD run; Navy 397 rush yards; FIU 224 rush yards",
+        "Explosive-pass problem (play results): UConn 446 pass yards; USF 60-yd TD; Memphis 73-yd TD; even in Rice win — 46-yd TD pass allowed",
+        "Takeaway-light: only 3 INTs all season (Tied-130th); 8 total takeaways vs 29 giveaways on offense",
+        "Pressure volume modest: 23 sacks (Tied-76th) — leaders Batiste 4, Doggette 3.5, Denaud 3, Roberts 3",
+        "Tackle volume: Hart 93, Stolsky 86, Williams 62 — they chase plays; explosives still land",
+        "Staff/public (not film fronts): DC Brett Dewhurst sells aggressive/havoc, multiple fronts, DB-heavy packages — do not treat as confirmed coverage calls"
       ],
       "howUFWins": [
-        "Faulkner establishes rhythm RPO without negative plays",
-        "White front sets edge vs conflict reads",
-        "Win field position and avoid special teams mistakes"
+        "Veltkamp was efficient in rhythm when protected (24/33 for 290 vs Rice; 22/29 for 272 vs Tulsa) — pressure before the first read; help over the top on the confirmed vertical shot.",
+        "FAU's 2025 defense allowed 200 rush YPG and got gashed for chunk runs (Memphis 90, Rice 68, Navy 397) — establish Baugh early and force them to load the box.",
+        "Secondary forced only 3 INTs all year and surrendered chunk shots even in wins — take calculated verticals once the run is honest; do not fear the takeaway."
       ],
-      "scoutingReport": "FAU spreads the field and operates quickly. UF's odd front and STAR fit are built for this opener — control explosives and force long drives.",
+      "scoutingReport": "FAU OFFENSE (ESPN Rice/Tulsa highlight packages): shotgun spread under Zach Kittley; Veltkamp efficient when protected; confirmed deep TD (~46) and long TD run (~68) vs Rice. Tempo/RPO not confirmed on those cuts. FAU DEFENSE (ESPN Maryland/Memphis highlight clips + full 2025 ESPN drive/box dig across 12 games): 4-down front and nickel/dime looks film-confirmed; coverage shells not confirmed. Unit allowed 36.3 PPG / 435.5 YPG with a clear explosive-run problem and only 3 INTs. Staff-public Dewhurst identity (aggressive, multiple fronts, DB-heavy) is labeled separately — not treated as film-confirmed coverage. UF wins by pressuring Veltkamp, running at a soft front, and taking chunk shots vs a takeaway-light secondary.",
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27903",
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-florida-atlantic-owls-tickets-ben-hill-griffin-stadium-9-5-26-7pm/7622666/",

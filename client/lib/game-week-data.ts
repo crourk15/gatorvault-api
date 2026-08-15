@@ -255,11 +255,12 @@ function defaultDepthChart(): DepthChartGroup[] {
 
 function buildScouting(game: ScheduleGame): ScoutingReportIntel {
   return {
-    offense: game.howUFWins?.length
-      ? game.howUFWins
-      : ['Establish run game early', 'Protect the football', 'Win early downs'],
-    defense: game.opponentTendencies?.length
+    // UI: "Opponent offense" / "Opponent defense" — map tendencies, not howUFWins.
+    offense: game.opponentTendencies?.length
       ? game.opponentTendencies
+      : ['Establish run game early', 'Protect the football', 'Win early downs'],
+    defense: game.defenseTendencies?.length
+      ? game.defenseTendencies
       : ['Set the edge vs run', 'Communicate in tempo', 'Limit explosives'],
     specialTeams: ['Win field position', 'Clean punt coverage', 'No missed kicks'],
     matchupSummary: game.scoutingReport ?? game.film,
@@ -283,112 +284,18 @@ function buildPrediction(game: ScheduleGame): PredictionIntel {
   };
 }
 
-const FAU_BUNDLE: GameWeekBundle = {
-  game: SCHEDULE_GAMES[0],
-  difficulty: 'easy',
-  weather: '82°F · Partly cloudy · SW 6 mph',
-  keys: [
-    {
-      id: 'fau-k1',
-      side: 'front',
-      title: 'Establish run with Baugh early',
-      body: 'FAU loads the box on early downs — Baugh sets physical tone and opens RPO windows for Philo.',
-    },
-    {
-      id: 'fau-k2',
-      side: 'back',
-      title: 'QB1: no turnovers in debut',
-      body: 'Philo’s job to lose into camp. Owls will test STAR communication with tempo RPO — protect the football and take what the defense gives.',
-    },
-    {
-      id: 'fau-k3',
-      side: 'front',
-      title: 'Defense sets physical tone',
-      body: 'White front must set the edge vs conflict reads. Win early downs and force long drives.',
-    },
-  ],
-  swingPlayers: [
-    {
-      name: 'Aaron Philo',
-      position: 'QB',
-      role: 'QB1 into camp — job his to lose',
-      impact: 88,
-      trend: 'up',
-      slug: 'aaron-philo',
-    },
-    {
-      name: 'Jayden Woods',
-      position: 'JACK',
-      role: 'JACK sets the edge',
-      impact: 91,
-      trend: 'up',
-      slug: 'jayden-woods',
-    },
-    {
-      name: 'Eric Singleton Jr.',
-      position: 'WR',
-      role: 'Vertical stress vs soft coverage',
-      impact: 84,
-      trend: 'flat',
-      slug: 'eric-singleton-jr',
-    },
-  ],
-  filmNotes: [
-    'FAU runs spread RPO at tempo — tests STAR communication.',
-    'The 3-3-5 is built to neutralize this attack.',
-    'Limited vertical threat — win early downs and field position.',
-    'Owls will probe conflict reads on the edge; Woods must set the tone.',
-  ],
-  radar: [
-    { label: 'Run Game', uf: 82, opp: 58 },
-    { label: 'Pass Efficiency', uf: 78, opp: 62 },
-    { label: 'Front 7', uf: 85, opp: 55 },
-    { label: 'Secondary', uf: 80, opp: 60 },
-    { label: 'Special Teams', uf: 74, opp: 68 },
-    { label: 'Coaching Edge', uf: 79, opp: 65 },
-  ],
-  depthChart: defaultDepthChart(),
-  scouting: {
-    offense: [
-      'Faulkner establishes rhythm RPO without negative plays',
-      'Baugh sets physical tone on early downs',
-      'Singleton Jr. wins one-on-ones when FAU loads the box',
-    ],
-    defense: [
-      'White front sets edge vs conflict reads',
-      'STAR communication vs tempo RPO',
-      'Control explosives and force long drives',
-    ],
-    specialTeams: ['Win field position battle', 'Clean punt coverage', 'No missed kicks in debut'],
-    matchupSummary:
-      "FAU spreads the field and operates quickly. UF's odd front and STAR fit are built for this opener — control explosives and force long drives.",
-  },
-  prediction: {
-    scoreLine: 'UF 38 · FAU 10',
-    spread: 'UF -28.5',
-    total: 'O/U 48.5',
-    expertPicks: [
-      { source: 'FutureCast', pick: 'UF 38 · FAU 10' },
-      { source: 'Vegas consensus', pick: 'UF -27.5' },
-      { source: 'ESPN FPI', pick: 'UF 94%' },
-    ],
-    fanUfPct: 94,
-    confidence: 88,
-    movement: 'up',
-    modelPick: 'UF 38',
-  },
-};
-
-function generateBundle(gameId: string): GameWeekBundle {
-  if (gameId === 'fau') return FAU_BUNDLE;
-  const game = SCHEDULE_GAMES.find((g) => g.id === gameId) ?? SCHEDULE_GAMES[0];
+function generateBundle(game: ScheduleGame): GameWeekBundle {
   return {
     game,
     difficulty: difficultyFromPct(game.ufPct, game.id),
     weather: isHomeGame(game) ? '84°F · Clear · Light wind' : '78°F · Humid · SE 8 mph',
     keys: buildKeys(game),
     swingPlayers: buildSwing(game),
-    filmNotes: [game.film, ...(game.opponentTendencies ?? [])],
+    filmNotes: [
+      game.film,
+      ...(game.opponentTendencies ?? []),
+      ...(game.defenseTendencies ?? []),
+    ].filter(Boolean),
     radar: defaultRadar(game.ufPct),
     depthChart: defaultDepthChart(),
     scouting: buildScouting(game),
@@ -396,7 +303,16 @@ function generateBundle(gameId: string): GameWeekBundle {
   };
 }
 
-export function getGameWeekBundle(gameId: string): GameWeekBundle {
-  return generateBundle(gameId);
+/**
+ * Build Game Week intel from a schedule row (live API or seed).
+ * Prefer `games` from `fetchScheduleGames` so weekly film updates need no Codemagic.
+ */
+export function getGameWeekBundle(
+  gameId: string,
+  games: ScheduleGame[] = SCHEDULE_GAMES
+): GameWeekBundle {
+  const pool = games.length ? games : SCHEDULE_GAMES;
+  const game = pool.find((g) => g.id === gameId) ?? SCHEDULE_GAMES.find((g) => g.id === gameId) ?? SCHEDULE_GAMES[0];
+  return generateBundle(game);
 }
 

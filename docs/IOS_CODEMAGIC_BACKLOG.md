@@ -53,6 +53,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-15 | Game Week Command Center reads live `/api/schedule` for Intel/Film Notes/Scouting (drop FAU_BUNDLE); `defenseTendencies` + correct offense/defense scouting map; weekly film updates are JSON/API-only after this bake | `GameWeekCommandCenter`, `SeasonTimeline`, `game-week-data`, schedule JSON in binary — **content** stays API/data after ship | pending |
 | 2026-08-15 | Player profile: faster load + tabs no longer cover Vault Scouting on scroll (compact wrap row, not sticky column) | `usePlayerProfileRoute`, `VaultPlayerProfileRoute`, profile/mobile CSS in binary — **1.0.16 / build 81** | #444 + version bump |
 | 2026-08-12 | Signing Day ESP/NSD: scope lists to active class year (?year=2028) | `SigningDayPage` + signing-day-utils links in binary | pending |
 | 2026-08-12 | Home NOW pulse: rotate live ticker/intel stories (not frozen class-trending line) | `HomeCommandCenter`, `HomePremiumPage`, pulse utils in binary (API ticker also live) | pending |

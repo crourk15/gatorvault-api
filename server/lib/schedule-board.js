@@ -87,6 +87,9 @@ function normalizeGame(row) {
     opponentTendencies: Array.isArray(row.opponentTendencies)
       ? row.opponentTendencies.map((x) => String(x || '').trim()).filter(Boolean)
       : undefined,
+    defenseTendencies: Array.isArray(row.defenseTendencies)
+      ? row.defenseTendencies.map((x) => String(x || '').trim()).filter(Boolean)
+      : undefined,
     howUFWins: Array.isArray(row.howUFWins)
       ? row.howUFWins.map((x) => String(x || '').trim()).filter(Boolean)
       : undefined,
