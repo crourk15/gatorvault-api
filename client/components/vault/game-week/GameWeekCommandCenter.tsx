@@ -2,6 +2,8 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { getGameWeekBundle } from '@/lib/game-week-data';
+import { fetchScheduleGames } from '@/lib/schedule-api';
+import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 import { InsiderPaywall } from '@/components/futurecast/InsiderPaywall';
 import { MatchupHeroWidget } from './MatchupHeroWidget';
 import { SeasonTimeline } from './SeasonTimeline';
@@ -41,12 +43,28 @@ type Props = {
 export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: Props): React.ReactElement {
   const [gameId, setGameId] = useState(initialGameId);
   const [tab, setTab] = useState('intel');
+  const [games, setGames] = useState<ScheduleGame[]>(SCHEDULE_GAMES);
 
   useEffect(() => {
     if (initialGameId) setGameId(initialGameId);
   }, [initialGameId]);
 
-  const bundle = useMemo(() => getGameWeekBundle(gameId), [gameId]);
+  // Live schedule board — weekly film/keys/scout edits publish without Codemagic.
+  useEffect(() => {
+    let cancelled = false;
+    fetchScheduleGames(2026)
+      .then((live) => {
+        if (!cancelled && live.length) setGames(live);
+      })
+      .catch(() => {
+        /* keep seed */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const bundle = useMemo(() => getGameWeekBundle(gameId, games), [gameId, games]);
 
   const handleGameSelect = useCallback(
     (id: string) => {
@@ -62,7 +80,7 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
         <div className="gv-gw-wow-hero__bg" aria-hidden />
         <div className="gv-gw-wow-hero__inner rh-frame">
           <MatchupHeroWidget bundle={bundle} />
-          <SeasonTimeline activeGameId={gameId} onSelect={handleGameSelect} />
+          <SeasonTimeline activeGameId={gameId} onSelect={handleGameSelect} games={games} />
           <div className="gv-gw-wow-hero__metrics">
             <WinProbabilityGaugeWidget ufPct={bundle.game.ufPct} prediction={bundle.prediction} />
             <ScoutingRadarChart axes={bundle.radar} opponentName={bundle.game.opp} />

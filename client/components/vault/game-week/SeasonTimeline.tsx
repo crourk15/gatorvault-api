@@ -1,48 +1,28 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import {
-  SCHEDULE_GAMES,
-  getGameWeekBundle,
-  isHomeGame,
-  type GameWeekBundle,
-} from '@/lib/game-week-data';
-import { fetchScheduleGames } from '@/lib/schedule-api';
+import React from 'react';
+import { getGameWeekBundle, isHomeGame, type GameWeekBundle } from '@/lib/game-week-data';
 import type { ScheduleGame } from '@/lib/schedule-data';
 import { opponentLogoUrl } from '@/lib/team-logos';
 
 type Props = {
   activeGameId: string;
   onSelect: (gameId: string) => void;
+  /** Live schedule rows from `/api/schedule` (fallback seed OK). */
+  games: ScheduleGame[];
 };
 
 function diffClass(difficulty: GameWeekBundle['difficulty']): string {
   return `gv-gw-timeline__diff--${difficulty}`;
 }
 
-export function SeasonTimeline({ activeGameId, onSelect }: Props): React.ReactElement {
-  const [games, setGames] = useState<ScheduleGame[]>(SCHEDULE_GAMES);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchScheduleGames(2026)
-      .then((live) => {
-        if (!cancelled && live.length) setGames(live);
-      })
-      .catch(() => {
-        /* keep seed */
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
+export function SeasonTimeline({ activeGameId, onSelect, games }: Props): React.ReactElement {
   return (
     <div className="gv-gw-wow-section">
       <h3 className="gv-gw-wow-section__title">Season timeline</h3>
       <div className="gv-gw-timeline" data-testid="gw-season-timeline">
         {games.filter((g) => g.kind !== 'bye' && !String(g.id || '').startsWith('bye')).map((g) => {
-          const bundle = getGameWeekBundle(g.id);
+          const bundle = getGameWeekBundle(g.id, games);
           const home = isHomeGame(g);
           return (
             <button

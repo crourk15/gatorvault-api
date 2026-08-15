@@ -1,6 +1,6 @@
 {
   "season": 2026,
-  "updatedAt": "2026-08-13T21:35:00.000Z",
+  "updatedAt": "2026-08-15T02:15:00.000Z",
   "label": "2026 Florida football schedule",
   "games": [
     {
@@ -12,36 +12,44 @@
       "ufPct": 94,
       "tv": "SEC Network",
       "keys": [
-        "Establish run with Baugh early",
-        "QB1: no turnovers in debut",
-        "Defense sets physical tone"
+        "Disrupt Veltkamp's rhythm",
+        "Take away the deep shot",
+        "Gap integrity vs explosive runs"
       ],
       "swing": [
         {
-          "name": "Philo / Jones Jr.",
-          "role": "QB1 into camp — efficiency matters in debut"
+          "name": "Aaron Philo",
+          "role": "QB1 — protect the ball vs FAU pressure looks"
         },
         {
           "name": "Jayden Woods",
-          "role": "JACK sets the edge"
+          "role": "JACK — set the edge and rush the passer"
+        },
+        {
+          "name": "Eric Singleton Jr.",
+          "role": "WR — stress soft coverage when FAU loads the box"
         }
       ],
-      "film": "FAU runs spread RPO. The 3-3-5 is built to neutralize this.",
+      "film": "Sources: ESPN highlight packages — FAU W at Rice 27-21 (Oct 4, 2025) and W vs Tulsa 40-21 (Nov 8, 2025). Shotgun Air Raid, pass-heavy, vertical shots + explosive runs confirmed. Tempo/RPO not confirmed on these cuts.",
       "pred": "UF 38 · FAU 10",
       "predUF": 38,
       "predOpp": 10,
       "filmLessonId": "frl00004-0000-4000-8000-000000000004",
       "opponentTendencies": [
-        "Spread-RPO quick game at tempo",
-        "Tests STAR communication and edge setting",
-        "Limited vertical threat — win early downs"
+        "Shotgun spread on every snap reviewed — no under-center observed",
+        "Pass-heavy even in wins (Veltkamp 24/33, 290 vs Rice; 22/29, 272 vs Tulsa)",
+        "Vertical shot confirmed: deep TD pass vs Rice (~46-yard clip)",
+        "Quick red-zone throw confirmed: short TD pass vs Rice",
+        "Explosive run confirmed: long TD rush vs Rice (~68-yard clip)",
+        "Tempo / no-huddle between snaps: not confirmed on highlight packages",
+        "RPO mesh: not confirmed on these highlight packages"
       ],
       "howUFWins": [
-        "Faulkner establishes rhythm RPO without negative plays",
-        "White front sets edge vs conflict reads",
-        "Win field position and avoid special teams mistakes"
+        "Veltkamp was efficient in rhythm when protected (24/33 for 290 vs Rice; 22/29 for 272 vs Tulsa on ESPN highlights) — pressure before the first read.",
+        "Confirmed vertical score vs Rice (~46-yard TD clip) — safety help over the top; do not play soft boundaries.",
+        "Confirmed long TD run vs Rice (~68 yards) — maintain gap fits; do not free-hit."
       ],
-      "scoutingReport": "FAU spreads the field and operates quickly. UF's odd front and STAR fit are built for this opener — control explosives and force long drives.",
+      "scoutingReport": "From 2025 ESPN highlight packages of FAU's wins at Rice (27-21) and vs Tulsa (40-21): FAU lives in shotgun spread under Zach Kittley. QB Caden Veltkamp is efficient when protected and will take vertical shots (confirmed deep TD vs Rice). They can also hit explosive runs when blocking holds (confirmed long TD run vs Rice). Highlight cuts do not show between-snap tempo or clear RPO — those are not claimed here. UF keys from this tape: pressure to break rhythm, help over the top on verticals, gap integrity vs the run.",
       "tickets": {
         "gameCenter": "https://floridagators.com/game-center/27903",
         "tickpick": "https://www.tickpick.com/buy-florida-gators-vs-florida-atlantic-owls-tickets-ben-hill-griffin-stadium-9-5-26-7pm/7622666/",
