@@ -398,14 +398,28 @@ async function feedDeskIntelToFutureCast({
   }
 
   // Alumni / legend / empty-ATH phantoms (Urban Meyer, Kyle Trask, …).
+  // Do NOT default pos to ATH — that false-positives real allowlist targets when
+  // vault-feed calls feed with slug-only (empty school + invented ATH).
   try {
     const { isBlockedRecruit } = require('./recruiting-blocked-players');
+    if (!player) {
+      try {
+        const store = require('./recruiting-store');
+        player = (await store.getPlayerBySlug(key)) || null;
+      } catch {
+        /* optional */
+      }
+    }
     const probe = {
       slug: key,
       name: player?.name || research?.playerName || profile?.name || key.replace(/-/g, ' '),
-      pos: player?.pos || player?.position || profile?.pos || 'ATH',
+      pos: player?.pos || player?.position || profile?.pos || null,
       school: player?.school || profile?.school || '',
-      classYear: player?.classYear || 2028
+      classYear: player?.classYear || 2028,
+      stars: player?.stars ?? null,
+      natlRank: player?.natlRank ?? player?.nationalRank ?? null,
+      ufProbability: player?.ufProbability ?? player?.ufRpmPct ?? null,
+      rating: player?.rating ?? null,
     };
     if (isBlockedRecruit(probe)) {
       steps.push({ step: 'blocked_recruit', ok: true, blocked: true });

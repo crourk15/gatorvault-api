@@ -136,8 +136,17 @@
           + (vfUpdated.length
             ? '<div class="hub-table-wrap"><table class="hub-table"><thead><tr><th>Player</th><th>What changed</th><th>Beat / source</th></tr></thead><tbody>'
               + vfUpdated.slice(0, 20).map(function (r) {
+                var errMap = {
+                  blocked_not_recruit: 'Blocked as phantom (usually false ATH default — should be fixed)',
+                  staff_not_recruit: 'Staff/coach collision',
+                  thin_board: 'Thin board — need On3 hydrate',
+                  store_upsert_failed: 'Store upsert failed',
+                  current_roster_player: 'Current roster collision'
+                };
                 var what = r.whatChanged
-                  || (r.feedOk === false ? ('Feed failed' + (r.feedError ? ': ' + r.feedError : '')) : null)
+                  || (r.feedOk === false
+                    ? ('Feed failed: ' + (errMap[r.feedError] || r.feedError || 'unknown'))
+                    : null)
                   || (r.action === 'fed_futurecast' ? 'FutureCast intel re-applied from beat' : null)
                   || (r.action === 'would_update' ? 'dry-run would update' : null)
                   || r.action
@@ -160,13 +169,14 @@
                   weak_identity: 'Weak identity — need clearer On3/name match',
                   missing_on3: 'Missing On3 profile / ID',
                   on3_id_missing: 'Missing On3 ID',
+                  no_on3_id: 'Missing On3 ID',
                   provision_failed: 'Provision failed',
                   untrusted_writer: 'Writer not on trusted beat list',
                   class_year_out_of_scope: 'Class year out of 2028+ scope',
                   blocked_staff: 'Staff/coach name blocked',
                   staff_not_recruit: 'Staff/coach — not a recruit',
                   current_roster_player: 'Matches current UF roster player',
-                  blocked_not_recruit: 'Blocked alumni/legend phantom',
+                  blocked_not_recruit: 'Blocked as phantom/alumni (or false ATH shell)',
                   slug_name_identity_mismatch: 'Slug/name identity mismatch',
                   vault_feed_weak_identity: 'Weak identity — queued for review',
                   max_creates_reached: 'Hit create cap this run'

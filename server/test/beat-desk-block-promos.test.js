@@ -29,6 +29,19 @@ const REAL_CAMP = 'Fall camp is almost here for the Gators. First practice sets 
 const REAL_STAFF = 'Florida has hired a new defensive coordinator and the staff room is reshaping fast.';
 
 describe('Beat Desk promo vs hub topics', () => {
+  it('rejects subscribe CTA headers as player names', () => {
+    assert.equal(isValidPlayerName('FINAL DAYS'), false);
+    assert.equal(isValidPlayerName('DEAL ENDS SOON'), false);
+    assert.equal(isValidPlayerName('JOIN GO'), false);
+    assert.equal(isValidPlayerName('App Store'), false);
+    assert.equal(isValidPlayerName('INSIDER NOTES'), false);
+    assert.equal(isValidPlayerName('LIVE CHAT'), false);
+    assert.equal(isValidPlayerName('SIGN UP'), false);
+    assert.equal(isValidPlayerName('Prince Avenue Christian'), false);
+    assert.equal(isValidPlayerName('Tyree Mannings Jr'), true);
+    assert.equal(extractPlayerFromText('FINAL DAYS to join Gators Online for $1'), null);
+  });
+
   it('rejects FALL CAMP / Transfer Portal as player names', () => {
     assert.equal(isValidPlayerName('FALL CAMP'), false);
     assert.equal(isValidPlayerName('Transfer Portal'), false);

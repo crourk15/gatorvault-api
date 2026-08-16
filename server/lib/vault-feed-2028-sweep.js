@@ -167,6 +167,13 @@ function collectBeatCandidates(posts = [], { lookbackHours = 36 } = {}) {
       gate.isUfOfficialAccount?.(post) === true;
     if (!trusted) continue;
 
+    try {
+      const pre = require('./beat-intel-prefilter');
+      if (pre.isSubscribePromoIntel?.(text)) continue;
+    } catch {
+      /* optional */
+    }
+
     const years = extractClassYears(text);
     if (years.length && years.every((y) => y === 2027)) {
       out.push({
@@ -196,6 +203,12 @@ function collectBeatCandidates(posts = [], { lookbackHours = 36 } = {}) {
     if (!hit?.playerName) continue;
 
     const name = String(hit.playerName).trim();
+    try {
+      const { isValidPlayerName } = require('./x-autoposter-player-context');
+      if (!isValidPlayerName(name)) continue;
+    } catch {
+      /* optional */
+    }
     const slug = String(hit.playerSlug || '').toLowerCase() || null;
     const key = `${slug || name.toLowerCase()}|${text.slice(0, 40)}`;
     if (seen.has(key)) continue;
