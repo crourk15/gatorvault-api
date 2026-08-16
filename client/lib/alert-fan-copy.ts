@@ -30,6 +30,10 @@ function relativeTime(iso: string): string {
   const t = new Date(iso).getTime();
   if (!Number.isFinite(t)) return '';
   const mins = Math.round((Date.now() - t) / 60000);
+  // Future timestamps (e.g. upcoming visit start) must not read as "Just now".
+  if (mins < -60) {
+    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
   if (mins < 1) return 'Just now';
   if (mins < 60) return `${mins}m ago`;
   const hours = Math.round(mins / 60);
@@ -69,6 +73,21 @@ export function toFanAlertCard(alert: FutureCastAlert): FanAlertCard | null {
       chip: 'Visit',
       tone: 'visit',
       headline: `${name} has a Florida visit coming up`,
+      detail: cleanVisitDetail(message, name),
+      createdAt: alert.createdAt,
+      rank: 1,
+    };
+  }
+
+  if (type === 'visit_uv' || type.includes('visit_uv') || /unofficial visit/i.test(message)) {
+    return {
+      id: alert.id,
+      playerName: name,
+      playerSlug: alert.playerSlug,
+      lifecycle: alert.lifecycle,
+      chip: 'UV',
+      tone: 'visit',
+      headline: `${name} took an unofficial Florida visit`,
       detail: cleanVisitDetail(message, name),
       createdAt: alert.createdAt,
       rank: 1,

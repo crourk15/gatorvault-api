@@ -8,6 +8,7 @@ const visitLogStore = require("./recruiting-visit-log-store");
 const {
   buildVerifiedVisitRecapRows,
   buildVerifiedVisitIntelRows,
+  buildVerifiedVisitActivityRows,
   applyVerifiedVisitFields,
 } = require("./visit-intel-utils");
 const { formatUfProbabilityDisplay } = require("./uf-probability-utils");
@@ -150,6 +151,13 @@ function assembleIntelAlerts({
     prioritySlugs,
   });
 
+  // Verified unofficial visits for board targets — without these Board Intel looks frozen all summer.
+  const visitUv = buildVerifiedVisitActivityRows(players, visitLogs, asOf, {
+    limit: 12,
+    prioritySlugs,
+    kinds: ["unofficial"],
+  });
+
   const { flipWatch } = buildFlipWatchWithUfContext({
     players,
     visitRecap,
@@ -175,6 +183,16 @@ function assembleIntelAlerts({
 
   const alerts = [];
 
+  function alertTime(preferred, fallback) {
+    const raw = preferred || fallback || asOf.toISOString();
+    const t = Date.parse(raw);
+    // Never use a future visit-start as "createdAt" — that prints "Just now" forever.
+    if (Number.isFinite(t) && t > asOf.getTime() + 60_000) {
+      return asOf.toISOString();
+    }
+    return typeof raw === "string" ? raw : asOf.toISOString();
+  }
+
   for (const row of flipWatch) {
     alerts.push(
       alertRow({
@@ -183,8 +201,32 @@ function assembleIntelAlerts({
         name: row.name,
         type: "flip_watch",
         message: `${row.name} (${row.committedShort}) — Flip score ${row.flipScore ?? "—"} · UF ${formatFlipWatchUf(row)}`,
-        createdAt: row.visitEnd || row.visitStart,
+        createdAt: alertTime(row.reportedAt, row.visitEnd || row.visitStart),
         category: "Flip Watch",
+      })
+    );
+  }
+
+  // One UV card per player (newest reported) — avoid beat+On3 duplicate noise.
+  const uvSeen = new Set();
+  const uvDeduped = [];
+  for (const row of visitUv) {
+    const key = String(row.slug || "").toLowerCase();
+    if (!key || uvSeen.has(key)) continue;
+    uvSeen.add(key);
+    uvDeduped.push(row);
+    if (uvDeduped.length >= 8) break;
+  }
+  for (const row of uvDeduped) {
+    alerts.push(
+      alertRow({
+        id: `uv-${row.slug}-${row.visitStart}`,
+        slug: row.slug,
+        name: row.name,
+        type: "visit_uv",
+        message: `${row.name} — UF unofficial visit (${row.visitStart})`,
+        createdAt: alertTime(row.reportedAt, row.visitStart),
+        category: "Visit",
       })
     );
   }
@@ -197,7 +239,7 @@ function assembleIntelAlerts({
         name: row.name,
         type: "visit_recap",
         message: `${row.name} — verified UF OV completed (${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ""})`,
-        createdAt: row.visitEnd || row.visitStart,
+        createdAt: alertTime(row.reportedAt, row.visitEnd || row.visitStart),
         category: "Visit",
       })
     );
@@ -211,7 +253,7 @@ function assembleIntelAlerts({
         name: p.name,
         type: "visit_upcoming",
         message: `Upcoming UF OV: ${p.name} (${p.visitStart || "TBD"}${p.visitEnd ? `–${p.visitEnd}` : ""})`,
-        createdAt: p.visitStart || asOf.toISOString(),
+        createdAt: alertTime(p.visitReportedAt || p.reportedAt, asOf.toISOString()),
         category: "Visit",
       })
     );
