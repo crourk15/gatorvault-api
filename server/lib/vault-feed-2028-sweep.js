@@ -78,6 +78,7 @@ function isBlockedStaff(name, slug) {
 function emptyReport(opts = {}) {
   return {
     ok: true,
+    status: 'running',
     job: 'vault-feed-2028-sweep',
     startedAt: new Date().toISOString(),
     finishedAt: null,
@@ -100,6 +101,7 @@ function emptyReport(opts = {}) {
 
 function finalizeSummary(report) {
   report.finishedAt = new Date().toISOString();
+  report.status = report.errors?.length ? 'warning' : 'success';
   report.summary = {
     createdCount: report.created.length,
     updatedCount: report.updated.length,
@@ -113,6 +115,7 @@ function finalizeSummary(report) {
       ? report.allowlistIntel.coverage.missing.length
       : null,
   };
+    report.message = `created ${report.summary.createdCount}, updated ${report.summary.updatedCount}, unresolved ${report.summary.unresolvedCount}`;
   return report;
 }
 
