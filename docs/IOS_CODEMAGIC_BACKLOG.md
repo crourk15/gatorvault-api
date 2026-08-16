@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] Twice-daily 2028+ vault feed (7am/7pm ET) — trusted beats update existing + monitor-provision new 2028/2029/2030+ into Vault/Lab; never auto-add 2027; staff blocked; Hub proof report — API
 - [x] App Store **1.0.15** accepted / eligible for distribution (Aug 14, 2026) — member announce email path live via Admin Hub
 - [x] Jaxen Cepeda 2028 OT Vault Scouting (Dalton Risner comp) + allowlist seed after Florida offer/game-day visit — API
 - [x] Full-profile stamps overlay live On3 Industry ranks (Wright #1 not baked #208) — API

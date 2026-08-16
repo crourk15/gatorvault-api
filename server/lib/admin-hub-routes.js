@@ -893,6 +893,33 @@ function mountAdminHubRoutes(app) {
     }
   });
 
+  /** Last 7am/7pm vault-feed proof report (created/updated/skipped/staff-blocked). */
+  app.get('/api/admin/hub/vault-feed-2028', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const { readLastReport } = require('./vault-feed-2028-sweep');
+      return res.status(200).json({ ok: true, report: readLastReport() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message, report: null });
+    }
+  });
+
+  app.post('/api/admin/hub/vault-feed-2028/run', async (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const dryRun = req.body?.dryRun === true;
+      const { runVaultFeed2028Sweep } = require('./vault-feed-2028-sweep');
+      const report = await runVaultFeed2028Sweep({
+        dryRun,
+        force: true,
+        maxCreates: req.body?.maxCreates != null ? Number(req.body.maxCreates) : 40,
+      });
+      return res.status(200).json({ ok: true, report });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/admin/hub/allowlist/add', (req, res) => {
     if (!requireAdmin(req, res)) return;
     try {

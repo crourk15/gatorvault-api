@@ -9,7 +9,9 @@
     { id: 'qa-crawler', label: 'QA crawler' },
     { id: 'film-room-weekly', label: 'Film Room rebuild' },
     { id: 'product-intel-recompute', label: 'Product Intel recompute' },
-    { id: 'ops-healthcheck', label: 'Ops healthcheck' }
+    { id: 'ops-healthcheck', label: 'Ops healthcheck' },
+    { id: 'vault-feed-2028-sweep', label: 'Vault feed 2028+ (7am/7pm)' },
+    { id: 'allowlist-intel-sweep', label: 'Allowlist intel sweep' }
   ];
 
   function esc(s) {

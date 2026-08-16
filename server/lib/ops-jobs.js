@@ -100,6 +100,20 @@ const JOBS = {
       });
     }
   },
+  'vault-feed-2028-sweep': {
+    label: '2028+ vault feed (7am/7pm ET) — beat → Vault/Lab, no 2027 auto-add',
+    subsystem: 'cron:vault-feed-2028-sweep',
+    schedule: 'Twice daily Render cron (7am + 7pm ET)',
+    async run(opts = {}) {
+      const { runVaultFeed2028Sweep } = require('./vault-feed-2028-sweep');
+      return runVaultFeed2028Sweep({
+        dryRun: opts.dryRun === true,
+        force: opts.force === true,
+        maxCreates: opts.maxCreates != null ? Number(opts.maxCreates) : 40,
+        lookbackHours: opts.lookbackHours != null ? Number(opts.lookbackHours) : 36,
+      });
+    }
+  },
   'uf-on3-news-discovery': {
     label: 'UF On3 team news discovery',
     subsystem: 'cron:uf-on3-news-discovery',

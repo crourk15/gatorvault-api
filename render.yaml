@@ -470,6 +470,24 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
+  # 2028+ vault feed — 7am/7pm ET (hourly tick; script no-ops outside America/New_York 7/19).
+  # Provisions monitor-only 2028/2029/2030+ from trusted beats; never auto-adds 2027; staff blocked.
+  - type: cron
+    name: gatorvault-api-vault-feed-2028
+    schedule: "5 * * * *"
+    runtime: node
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-vault-feed-2028-cron.js
+    envVars:
+      - key: NEXT_PUBLIC_API_BASE
+        value: https://gatorvault-api.onrender.com
+      - key: BEAT_INGEST_ALLOW_CLASS_2029
+        value: "true"
+      - key: MONITORING_CRON_SECRET
+        sync: false
+
   # Hub rebuild — Tier B warms priority memory after refresh (GETs never sync-rebuild).
   - type: cron
     name: gatorvault-api-hub-refresh

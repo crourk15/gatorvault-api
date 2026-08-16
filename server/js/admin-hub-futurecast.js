@@ -95,6 +95,30 @@
         }).join('')
         : '<tr><td colspan="3" class="hub-meta">No early-watch entries.</td></tr>';
 
+      var vf = data.vaultFeed2028LastReport || null;
+      var vfs = (vf && vf.summary) || {};
+      var vfCreated = (vf && vf.created) || [];
+      var vfUpdated = (vf && vf.updated) || [];
+      var vfStaff = (vf && vf.blockedStaff) || [];
+      var vf2027 = (vf && vf.skipped2027) || [];
+      var vfHtml = !vf
+        ? '<p class="hub-meta">No vault-feed run yet — waits for 7am / 7pm ET cron (or Run now).</p>'
+        : '<p class="hub-meta">Last run: <strong style="color:#fff">' + esc(vf.finishedAt || vf.startedAt || '—') + '</strong>'
+          + (vf.dryRun ? ' · dry-run' : '')
+          + '</p>'
+          + '<div class="hub-dash-grid" style="margin:8px 0">'
+          + '<section class="hub-card"><h3>Created</h3><p class="hub-kpi">' + esc(vfs.createdCount || 0) + '</p></section>'
+          + '<section class="hub-card"><h3>Updated</h3><p class="hub-kpi">' + esc(vfs.updatedCount || 0) + '</p></section>'
+          + '<section class="hub-card"><h3>Unresolved</h3><p class="hub-kpi">' + esc(vfs.unresolvedCount || 0) + '</p></section>'
+          + '<section class="hub-card"><h3>Staff blocked</h3><p class="hub-kpi">' + esc(vfs.blockedStaffCount || 0) + '</p></section>'
+          + '<section class="hub-card"><h3>2027 skipped</h3><p class="hub-kpi">' + esc(vfs.skipped2027Count || 0) + '</p></section>'
+          + '<section class="hub-card"><h3>Allowlist cov</h3><p class="hub-kpi">' + esc(vfs.allowlistCoveragePct != null ? vfs.allowlistCoveragePct + '%' : '—') + '</p></section>'
+          + '</div>'
+          + '<p class="hub-meta">Created (proof): ' + esc(vfCreated.slice(0, 8).map(function (r) { return r.playerName || r.playerSlug; }).join(', ') || 'none') + '</p>'
+          + '<p class="hub-meta">Updated (proof): ' + esc(vfUpdated.slice(0, 8).map(function (r) { return r.playerName || r.playerSlug; }).join(', ') || 'none') + '</p>'
+          + (vfStaff.length ? '<p class="hub-meta">Staff blocked: ' + esc(vfStaff.slice(0, 5).map(function (r) { return r.playerName; }).join(', ')) + '</p>' : '')
+          + (vf2027.length ? '<p class="hub-meta">2027 handpick-only skips: ' + esc(String(vf2027.length)) + '</p>' : '');
+
       body.innerHTML =
         '<div class="hub-dash-grid">'
         + '<section class="hub-card hub-st-green"><h3>Locked 2027</h3><p class="hub-kpi">' + esc(c.locked2027 || 0) + '</p><p class="hub-meta">Closing Class — not expandable</p></section>'
@@ -103,6 +127,14 @@
         + '<section class="hub-card"><h3>Board 2028</h3><p class="hub-kpi">' + esc(c.board2028 || 0) + '</p><p class="hub-meta">Target board rows · watch ' + esc(c.earlyWatch || 0) + '</p></section>'
         + '</div>'
         + '<p class="hub-meta" style="margin:12px 0">' + esc((data.notes && data.notes.deskFeed) || '') + '</p>'
+        + '<p class="hub-meta" style="margin:0 0 12px">' + esc((data.notes && data.notes.vaultFeed2028) || '') + '</p>'
+        + '<div class="hub-card" style="margin-bottom:12px">'
+        + '<div class="hub-btn-row" style="justify-content:space-between;align-items:center;margin-bottom:8px">'
+        + '<h3 style="margin:0">Vault feed 2028+ (7am / 7pm ET proof)</h3>'
+        + '<button type="button" class="hub-btn secondary" id="hub-fc-vault-feed-run">Run now</button>'
+        + '</div>'
+        + vfHtml
+        + '</div>'
         + '<div class="hub-card" style="margin-bottom:12px">'
         + '<h3>Add 2028 allowlist target</h3>'
         + '<div class="hub-btn-row" style="flex-wrap:wrap;gap:8px;align-items:flex-end">'
@@ -152,6 +184,23 @@
             })
             .catch(function (e) { setMsg(e.message || 'Add failed', true); })
             .finally(function () { addBtn.disabled = false; });
+        });
+      }
+
+      var vfRun = document.getElementById('hub-fc-vault-feed-run');
+      if (vfRun) {
+        vfRun.addEventListener('click', function () {
+          vfRun.disabled = true;
+          setMsg('Running vault feed…');
+          apiPost('/api/admin/hub/vault-feed-2028/run', { dryRun: false })
+            .then(function (j) {
+              var s = (j.report && j.report.summary) || {};
+              setMsg('Vault feed done — created ' + (s.createdCount || 0) + ', updated ' + (s.updatedCount || 0) + ', unresolved ' + (s.unresolvedCount || 0));
+              pushAct({ status: 'success', message: 'Vault feed 2028 run', subsystem: 'futurecast' });
+              return load();
+            })
+            .catch(function (e) { setMsg(e.message || 'Vault feed failed', true); })
+            .finally(function () { vfRun.disabled = false; });
         });
       }
 
