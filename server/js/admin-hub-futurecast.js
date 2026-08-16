@@ -133,6 +133,7 @@
         + '<h3 style="margin:0">Vault feed 2028+ (7am / 7pm ET proof)</h3>'
         + '<button type="button" class="hub-btn secondary" id="hub-fc-vault-feed-run">Run now</button>'
         + '</div>'
+        + '<p id="hub-fc-vault-feed-status" class="hub-meta" style="margin:0 0 8px;color:#fbbf24"></p>'
         + vfHtml
         + '</div>'
         + '<div class="hub-card" style="margin-bottom:12px">'
@@ -188,19 +189,65 @@
       }
 
       var vfRun = document.getElementById('hub-fc-vault-feed-run');
+      var vfStatus = document.getElementById('hub-fc-vault-feed-status');
+      function setVfStatus(text, isErr) {
+        if (!vfStatus) return;
+        vfStatus.textContent = text || '';
+        vfStatus.style.color = isErr ? '#fca5a5' : '#fbbf24';
+      }
+      if (vf && vf.status === 'running') {
+        setVfStatus('Vault feed is running… proof will fill when finished. Auto-refreshing.');
+        if (vfRun) vfRun.disabled = true;
+        setTimeout(function () { load(); }, 4000);
+      }
       if (vfRun) {
         vfRun.addEventListener('click', function () {
           vfRun.disabled = true;
-          setMsg('Running vault feed…');
+          setVfStatus('Starting vault feed…');
+          setMsg('Starting vault feed…');
           apiPost('/api/admin/hub/vault-feed-2028/run', { dryRun: false })
             .then(function (j) {
-              var s = (j.report && j.report.summary) || {};
-              setMsg('Vault feed done — created ' + (s.createdCount || 0) + ', updated ' + (s.updatedCount || 0) + ', unresolved ' + (s.unresolvedCount || 0));
-              pushAct({ status: 'success', message: 'Vault feed 2028 run', subsystem: 'futurecast' });
-              return load();
+              if (!j || j.ok === false) throw new Error((j && j.error) || 'Vault feed failed to start');
+              if (j.alreadyRunning) {
+                setVfStatus('Already running — waiting for proof…');
+                setMsg('Vault feed already running.');
+              } else {
+                setVfStatus('Running in background… this can take 1–2 minutes. Watching for proof.');
+                setMsg('Vault feed started — do not close this tab; proof updates when done.');
+              }
+              pushAct({ status: 'success', message: 'Vault feed 2028 started', subsystem: 'futurecast' });
+              var tries = 0;
+              function poll() {
+                tries += 1;
+                return apiGet('/api/admin/hub/vault-feed-2028')
+                  .then(function (r) {
+                    var rep = r && r.report;
+                    if (rep && rep.status === 'running') {
+                      setVfStatus('Still running… (' + tries + ')');
+                      if (tries < 45) return setTimeout(poll, 4000);
+                      setVfStatus('Still running — tap Refresh on this page in a minute.', true);
+                      vfRun.disabled = false;
+                      return null;
+                    }
+                    var s = (rep && rep.summary) || {};
+                    setVfStatus('Done — created ' + (s.createdCount || 0) + ', updated ' + (s.updatedCount || 0) + ', unresolved ' + (s.unresolvedCount || 0), false);
+                    setMsg('Vault feed done — created ' + (s.createdCount || 0) + ', updated ' + (s.updatedCount || 0));
+                    vfRun.disabled = false;
+                    return load();
+                  })
+                  .catch(function (e) {
+                    if (tries < 45) return setTimeout(poll, 4000);
+                    setVfStatus(e.message || 'Poll failed', true);
+                    vfRun.disabled = false;
+                  });
+              }
+              setTimeout(poll, 3000);
             })
-            .catch(function (e) { setMsg(e.message || 'Vault feed failed', true); })
-            .finally(function () { vfRun.disabled = false; });
+            .catch(function (e) {
+              setVfStatus(e.message || 'Vault feed failed', true);
+              setMsg(e.message || 'Vault feed failed', true);
+              vfRun.disabled = false;
+            });
         });
       }
 

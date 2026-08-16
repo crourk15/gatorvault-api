@@ -908,13 +908,62 @@ function mountAdminHubRoutes(app) {
     if (!requireAdmin(req, res)) return;
     try {
       const dryRun = req.body?.dryRun === true;
-      const { runVaultFeed2028Sweep } = require('./vault-feed-2028-sweep');
-      const report = await runVaultFeed2028Sweep({
-        dryRun,
-        force: true,
-        maxCreates: req.body?.maxCreates != null ? Number(req.body.maxCreates) : 40,
+      const {
+        runVaultFeed2028Sweep,
+        readLastReport,
+        writeReport,
+      } = require('./vault-feed-2028-sweep');
+      const prev = readLastReport();
+      if (prev && prev.status === 'running') {
+        return res.status(200).json({
+          ok: true,
+          started: false,
+          alreadyRunning: true,
+          report: prev,
+        });
+      }
+      const startedAt = new Date().toISOString();
+      const running = {
+        ok: true,
+        status: 'running',
+        job: 'vault-feed-2028-sweep',
+        startedAt,
+        finishedAt: null,
+        dryRun: !!dryRun,
+        summary: {
+          createdCount: 0,
+          updatedCount: 0,
+          unresolvedCount: 0,
+          blockedStaffCount: 0,
+          skipped2027Count: 0,
+        },
+        created: [],
+        updated: [],
+        message: 'Vault feed running — refresh or wait; proof fills when finished.',
+      };
+      writeReport(running);
+      // Do not await — full beat+allowlist pass can exceed Hub/proxy timeouts.
+      setImmediate(() => {
+        runVaultFeed2028Sweep({
+          dryRun,
+          force: true,
+          maxCreates: req.body?.maxCreates != null ? Number(req.body.maxCreates) : 40,
+        }).catch((err) => {
+          try {
+            writeReport({
+              ...running,
+              ok: false,
+              status: 'error',
+              finishedAt: new Date().toISOString(),
+              errors: [{ step: 'hub_run', error: err.message || String(err) }],
+              message: err.message || 'Vault feed failed',
+            });
+          } catch {
+            /* ignore */
+          }
+        });
       });
-      return res.status(200).json({ ok: true, report });
+      return res.status(200).json({ ok: true, started: true, report: running });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
