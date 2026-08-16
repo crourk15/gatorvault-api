@@ -124,6 +124,36 @@ function rpmTopFromOn3TopTeams(topTeams = [], classYear = 2028) {
     rows = topTeams || [];
   }
 
+  // Scale-aware % — never pass raw 0.36 residuals through parseUfPct→36%.
+  try {
+    const {
+      detectTopTeamsPctScale,
+      residualPredictionKeys,
+      rawTeamPrediction,
+      teamPct,
+    } = require('../../on3-board-hydrate');
+    const on3Recruit = require('../../on3-recruit-client');
+    const collegeRows = (rows || []).filter((t) => !on3Recruit.isHighSchoolOrg?.(t));
+    const scale = detectTopTeamsPctScale(collegeRows);
+    const residual = residualPredictionKeys(collegeRows, scale);
+    return collegeRows
+      .map((row) => {
+        const team = row?.team || row;
+        const name = normalizeSchoolName(team?.fullName || team?.name || row?.school) || null;
+        if (!name || /^florida|gators|uf$/i.test(String(name))) return null;
+        const raw = rawTeamPrediction(row);
+        if (raw != null && residual.has(String(raw))) return { school: name, pct: null };
+        const pct = teamPct(row, scale);
+        const rounded = pct != null && pct >= 1 ? Math.round(pct) : null;
+        return { school: name, pct: rounded };
+      })
+      .filter(Boolean)
+      .sort((a, b) => (Number(b.pct) || 0) - (Number(a.pct) || 0))
+      .slice(0, 4);
+  } catch {
+    /* fall through */
+  }
+
   return rows
     .map((row) => {
       const team = row?.team || row;

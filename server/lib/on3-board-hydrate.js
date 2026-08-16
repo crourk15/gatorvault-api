@@ -158,7 +158,8 @@ function interestedSchoolsFromTopTeams(topTeams, classYear, limit = 8) {
     .slice(0, limit);
 }
 
-function ufRpmFromTopTeams(topTeams, classYear) {
+function ufRpmFromTopTeams(topTeams, classYear, opts = {}) {
+  const minPct = opts.minPct != null && Number.isFinite(Number(opts.minPct)) ? Number(opts.minPct) : 2.5;
   const year = Number(classYear) || 2028;
   const yearRows = on3Recruit.getYearTopTeams(topTeams || [], year);
   const rows = yearRows.length ? yearRows : topTeams || [];
@@ -172,8 +173,8 @@ function ufRpmFromTopTeams(topTeams, classYear) {
   if (raw != null && residual.has(String(raw))) return null;
   const pct = teamPct(uf, scale);
   if (pct == null || !Number.isFinite(pct) || pct <= 0) return null;
-  // Sub-2.5% on a percent-scale Industry Consensus board is residual/micro, not a market call.
-  if (scale === 'percent' && pct < 2.5) return null;
+  // Sub-floor on a percent-scale Industry Consensus board is residual/micro, not a market call.
+  if (scale === 'percent' && pct < minPct) return null;
   // Keep one decimal so 15.4% Industry Consensus does not collapse to 15.
   return Math.round(pct * 10) / 10;
 }

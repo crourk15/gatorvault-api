@@ -2,7 +2,7 @@
  * Real competitor extraction — no default schools or synthetic scores.
  * College RPM schools only — never high-school names / offer-list noise.
  */
-const { parseUfPct, isFloridaSchool: isFloridaSchoolScoring } = require('./recruiting-hub-scoring');
+const { parseUfPct, parseMarketRpmPct, isFloridaSchool: isFloridaSchoolScoring } = require('./recruiting-hub-scoring');
 const { resolveCommitmentOverride } = require('./commitment-prediction-override');
 
 const MASCOT_SUFFIX =
@@ -50,7 +50,7 @@ function addCompetitor(map, name, score, trend = 'flat') {
   if (!normalized || isFloridaSchool(normalized)) return;
   const key = normalized.toLowerCase();
   const existing = map.get(key);
-  const parsedScore = score != null ? parseUfPct(score) : null;
+  const parsedScore = score != null ? parseMarketRpmPct(score) : null;
   if (!existing) {
     map.set(key, {
       school: normalized,
@@ -174,18 +174,31 @@ function extractRealCompetitors(player, intelRows = []) {
 function resolveStrictUfScore(player, intelRows = []) {
   if (resolveCommitmentOverride(player)) return null;
 
-  // Confirmed On3 UF RPM first when present.
-  const rpm = parseUfPct(player.ufRpmPct);
+  const classYear = Number(player.classYear) || 2028;
+  const topTeams = player.on3TopTeams || player.topTeams || [];
+
+  // Confirmed On3 Industry Consensus board first (scale-aware — never 1%→100%).
+  try {
+    const { ufRpmFromTopTeams } = require('./on3-board-hydrate');
+    if (Array.isArray(topTeams) && topTeams.length) {
+      // Battle board needs honest micro RPM (e.g. McCary ~1%) when not residual noise.
+      const board = ufRpmFromTopTeams(topTeams, classYear, { minPct: 0.5 });
+      if (board != null && board > 0) return Math.round(board);
+    }
+  } catch {
+    /* optional */
+  }
+
+  // Store RPM as percentage points only — parseUfPct(1)→100 was poisoning Biggest Battles.
+  const rpm = parseMarketRpmPct(player.ufRpmPct);
   if (rpm != null && rpm > 0) return rpm;
 
-  const pct = parseUfPct(player.ufProbability);
+  const pct = parseMarketRpmPct(player.ufProbability);
   if (pct != null && pct > 0) return pct;
 
-  // Florida row on On3 topTeams board.
+  // Florida row on On3 topTeams board (fallback if hydrate failed).
   try {
     const on3Recruit = require('./on3-recruit-client');
-    const classYear = Number(player.classYear) || 2028;
-    const topTeams = player.on3TopTeams || player.topTeams || [];
     if (Array.isArray(topTeams) && topTeams.length) {
       const yearTeams = on3Recruit.getYearTopTeams
         ? on3Recruit.getYearTopTeams(topTeams, classYear)
@@ -194,7 +207,7 @@ function resolveStrictUfScore(player, intelRows = []) {
         (t) => on3Recruit.isFloridaTeam?.(t) || isFloridaSchool(t?.team?.name || t?.team?.fullName)
       );
       if (ufTeam) {
-        const ufPct = parseUfPct(
+        const ufPct = parseMarketRpmPct(
           ufTeam.percent ?? ufTeam.percentage ?? ufTeam.prediction ?? ufTeam.pct
         );
         if (ufPct != null && ufPct > 0) return ufPct;
@@ -208,7 +221,7 @@ function resolveStrictUfScore(player, intelRows = []) {
   if (rivals && typeof rivals === 'object') {
     const school = rivals.school || rivals.schoolName || rivals.name;
     if (isFloridaSchool(school)) {
-      const conf = parseUfPct(rivals.pct ?? rivals.confidence ?? player.rivalsConfidence);
+      const conf = parseMarketRpmPct(rivals.pct ?? rivals.confidence ?? player.rivalsConfidence);
       if (conf != null && conf > 0) return conf;
     }
   }
@@ -218,7 +231,7 @@ function resolveStrictUfScore(player, intelRows = []) {
     const rowSlug = String(row.playerSlug || row.player_slug || '').toLowerCase();
     if (rowSlug !== slug) continue;
     if (row.predictionSchool && isFloridaSchool(row.predictionSchool) && row.confidencePct != null) {
-      const conf = parseUfPct(row.confidencePct);
+      const conf = parseMarketRpmPct(row.confidencePct);
       if (conf != null && conf > 0) return conf;
     }
   }

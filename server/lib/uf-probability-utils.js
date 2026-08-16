@@ -26,11 +26,18 @@ function normalizeOddsPct(value, { allowUnitInterval = false } = {}) {
 }
 
 /**
- * On3 / market RPM must be percentage points.
+ * On3 / market RPM must be percentage points (1–100).
  * Rejects residual unit-interval leftovers (0.99, 0.6887) that used to become 99%/69%.
+ * Accepts 1 as one percent (Industry Consensus micro) — never ×100 into 100%.
  */
 function sanitizeRpmPct(value) {
-  return normalizeOddsPct(value, { allowUnitInterval: false });
+  if (value == null || !Number.isFinite(Number(value))) return null;
+  const n = Number(value);
+  if (n <= 0) return null;
+  if (n > 100) return 100;
+  // (0, 1): residual fraction on percent-scale boards — not 36%/99%.
+  if (n < 1) return null;
+  return Math.round(n);
 }
 
 /**
