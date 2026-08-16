@@ -2,7 +2,7 @@
  * Live schedule fetch — API is source of truth after client bake.
  * Seed fallback: SCHEDULE_GAMES (bundled) so cold/offline still renders.
  */
-import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
+import { snapshotLiveFetch } from './snapshot-fetch';
 import { SCHEDULE_GAMES, type ScheduleGame } from './schedule-data';
 
 export type ScheduleBoardResponse = {
@@ -49,8 +49,11 @@ export function fallbackScheduleGames(): ScheduleGame[] {
 
 export async function fetchScheduleGames(season = 2026): Promise<ScheduleGame[]> {
   try {
-    const data = await snapshotFirstFetch(`/api/schedule?year=${season}`, () =>
-      snapshotLiveFetch<ScheduleBoardResponse>(`/api/schedule?year=${season}`)
+    // Always await live schedule — do not return a stale SWR cache hit. Game Week
+    // keys (Expected visitors, film notes) update via API without Codemagic; a
+    // cache-first paint left the UI on yesterday's slate until hard refresh.
+    const data = await snapshotLiveFetch<ScheduleBoardResponse>(
+      `/api/schedule?year=${season}`
     );
     const live = normalizeGames(data?.games);
     if (live.length) return live;
