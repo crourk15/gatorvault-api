@@ -63,8 +63,8 @@ function ReadyCard({ game }: { game: ScheduleGame }): React.ReactElement {
       <p className="gv-gators-live__ready-eyebrow">Season ready</p>
       <h2 className="gv-gators-live__ready-title">Gators Live activates on game day</h2>
       <p className="gv-gators-live__ready-dek">
-        Florida football only — score, status, and clock when the Gators are playing. No national
-        board noise. We don&apos;t ping live APIs until kickoff window.
+        Florida football only — score, status, and clock when the Gators are on the field. No
+        national board noise.
       </p>
       <div className="gv-gators-live__next">
         <Chip variant="orange">Next up</Chip>
@@ -76,7 +76,7 @@ function ReadyCard({ game }: { game: ScheduleGame }): React.ReactElement {
         </p>
         {kick ? (
           <p className="gv-gators-live__next-hint">
-            Live polling opens ~3 hours before kickoff and runs through the final.
+            Scoreboard goes live about 3 hours before kickoff and stays up through the final.
           </p>
         ) : null}
       </div>
