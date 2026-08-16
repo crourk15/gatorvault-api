@@ -135,7 +135,11 @@ export function VaultChaseCard({
       ? Math.round(Number(player.fitScore))
       : null;
   const priority = chaseHeatLabel(player.priorityScore);
-  const why = buildChaseWhyBrief(player);
+  const visitLine = (player.visitLabels ?? []).filter(Boolean)[0] || null;
+  // Dedicated visit plate on the card — keep Why we chase free of the same line.
+  const why = buildChaseWhyBrief(
+    visitLine ? { ...player, visitLabels: [] } : player
+  );
   const stamp = stampFor(rank, player.delta7d, showMovement);
   const inState = Boolean(player.hotBadges?.inState) || schoolLooksInState(player.school);
   const race = showRace ? raceRows(player) : [];
@@ -202,6 +206,12 @@ export function VaultChaseCard({
             {stamp.rising ? <span className="gv-chase-badge gv-chase-badge--rising">Rising</span> : null}
           </div>
         )}
+
+        {visitLine ? (
+          <p className="gv-chase-card__visit" data-testid="chase-expected-visit">
+            {visitLine}
+          </p>
+        ) : null}
 
         <p className="gv-chase-card__why-label">Why we chase</p>
         <p className="gv-chase-card__skinny">{why}</p>
