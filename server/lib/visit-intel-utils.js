@@ -5,8 +5,30 @@ const { normalizeIntelTimestamp } = require('./commit-fingerprint');
 
 const VERIFIED_VISIT_SOURCES = new Set(['on3', 'manual', 'rivals_pm']);
 
+/** Completed UV/OV cards older than this drop off Board Intel (upcoming stays). */
+const BOARD_INTEL_VISIT_MAX_AGE_DAYS = 21;
+
 function todayYmd(asOf = new Date()) {
   return asOf.toISOString().slice(0, 10);
+}
+
+function ymdDaysAgo(asOf = new Date(), days = BOARD_INTEL_VISIT_MAX_AGE_DAYS) {
+  const d = new Date(asOf.getTime());
+  d.setUTCDate(d.getUTCDate() - Math.max(0, Number(days) || 0));
+  return d.toISOString().slice(0, 10);
+}
+
+/** True when visit end (or start) is still within the Board Intel freshness window. */
+function isBoardIntelVisitFresh(visitStart, visitEnd, asOf = new Date(), maxAgeDays = BOARD_INTEL_VISIT_MAX_AGE_DAYS) {
+  const today = todayYmd(asOf);
+  const end = String(visitEnd || visitStart || '').slice(0, 10);
+  const start = String(visitStart || visitEnd || '').slice(0, 10);
+  if (!end && !start) return false;
+  // Upcoming / in-progress: always fresh.
+  if ((start && start >= today) || (end && end >= today)) return true;
+  const cutoff = ymdDaysAgo(asOf, maxAgeDays);
+  const anchor = end || start;
+  return anchor >= cutoff;
 }
 
 function isVerifiedVisitLogSource(source, entry = null) {
@@ -101,7 +123,7 @@ function getVerifiedFloridaVisitActivity(entry) {
 
 function listRecentVerifiedFloridaVisitActivity(
   visitLogs,
-  { limit = 24, asOf = new Date(), kinds = null } = {}
+  { limit = 24, asOf = new Date(), kinds = null, maxAgeDays = BOARD_INTEL_VISIT_MAX_AGE_DAYS } = {}
 ) {
   const today = todayYmd(asOf);
   const allowKinds = kinds ? new Set(kinds) : null;
@@ -111,6 +133,7 @@ function listRecentVerifiedFloridaVisitActivity(
     const activity = getVerifiedFloridaVisitActivity(entry);
     if (!activity) continue;
     if (allowKinds && !allowKinds.has(activity.kind)) continue;
+    if (!isBoardIntelVisitFresh(activity.visitStart, activity.visitEnd, asOf, maxAgeDays)) continue;
     const key = `${String(activity.playerSlug || '').toLowerCase()}|${activity.kind}|${activity.visitStart}`;
     if (seen.has(key)) continue;
     seen.add(key);
@@ -128,10 +151,13 @@ function listRecentVerifiedFloridaVisitActivity(
     });
   }
   rows.sort((a, b) => {
-    const ar = String(a.reportedAt || a.visitStart || '');
-    const br = String(b.reportedAt || b.visitStart || '');
-    if (ar !== br) return br.localeCompare(ar);
-    return String(b.visitStart || '').localeCompare(String(a.visitStart || ''));
+    // Prefer visit date so late ingest doesn't float old summer UVs to the top.
+    const aVisit = String(a.visitEnd || a.visitStart || '');
+    const bVisit = String(b.visitEnd || b.visitStart || '');
+    if (aVisit !== bVisit) return bVisit.localeCompare(aVisit);
+    const ar = String(a.reportedAt || '');
+    const br = String(b.reportedAt || '');
+    return br.localeCompare(ar);
   });
   return rows.slice(0, Math.max(1, limit));
 }
@@ -141,10 +167,13 @@ function buildVerifiedVisitActivityRows(players, visitLogs, asOf = new Date(), o
   const prioritySlugs = (opts.prioritySlugs || []).map((s) => String(s || '').toLowerCase());
   const prioritySet = new Set(prioritySlugs);
   const kinds = opts.kinds || ['unofficial'];
+  const maxAgeDays =
+    opts.maxAgeDays != null ? Number(opts.maxAgeDays) : BOARD_INTEL_VISIT_MAX_AGE_DAYS;
   const pool = listRecentVerifiedFloridaVisitActivity(visitLogs, {
     limit: Math.max(limit * 4, 48),
     asOf,
     kinds,
+    maxAgeDays,
   });
   const playerBySlug = new Map((players || []).map((pl) => [String(pl.slug || '').toLowerCase(), pl]));
   let rows = pool
@@ -262,12 +291,25 @@ function countUpcomingVisitIntel(players, asOf = new Date()) {
   return (players || []).filter((p) => p.visitVerified && isUpcomingVisitIntel(p, asOf)).length;
 }
 
-function listRecentVerifiedFloridaOfficialVisits(visitLogs, { classYear = 2027, limit = 8, asOf = new Date() } = {}) {
+function listRecentVerifiedFloridaOfficialVisits(
+  visitLogs,
+  {
+    classYear = 2027,
+    limit = 8,
+    asOf = new Date(),
+    maxAgeDays = BOARD_INTEL_VISIT_MAX_AGE_DAYS,
+  } = {}
+) {
   const today = todayYmd(asOf);
   return (visitLogs || [])
     .map((entry) => {
       const window = getVerifiedFloridaVisitWindow(entry);
       if (!window) return null;
+      const completed = window.visitEnd < today;
+      // Upcoming OVs always; completed only if within freshness window.
+      if (completed && !isBoardIntelVisitFresh(window.visitStart, window.visitEnd, asOf, maxAgeDays)) {
+        return null;
+      }
       return {
         slug: entry.playerSlug,
         name: entry.playerName,
@@ -275,7 +317,7 @@ function listRecentVerifiedFloridaOfficialVisits(visitLogs, { classYear = 2027, 
         visitEnd: window.visitEnd,
         source: window.source,
         reportedAt: window.reportedAt || entry.reportedAt || null,
-        completed: window.visitEnd < today,
+        completed,
       };
     })
     .filter(Boolean)
@@ -330,10 +372,13 @@ function buildVerifiedVisitRecapRows(players, visitLogs, asOf = new Date(), opts
   const prioritySlugs = opts.prioritySlugs || [];
   const poolLimit = prioritySlugs.length ? Math.max(limit * 4, 48) : Math.max(limit * 2, 16);
   const classYear = opts.classYear || 2027;
+  const maxAgeDays =
+    opts.maxAgeDays != null ? Number(opts.maxAgeDays) : BOARD_INTEL_VISIT_MAX_AGE_DAYS;
   const recap = listRecentVerifiedFloridaOfficialVisits(visitLogs, {
     classYear,
     limit: poolLimit,
     asOf,
+    maxAgeDays,
   }).filter((row) => row.completed);
   const playerBySlug = new Map((players || []).map((pl) => [String(pl.slug || '').toLowerCase(), pl]));
   let rows = recap.map((row) => {
@@ -366,7 +411,10 @@ function getVisitIntelBoardSnapshot(visitLogs, asOf = new Date()) {
 }
 module.exports = {
   VERIFIED_VISIT_SOURCES,
+  BOARD_INTEL_VISIT_MAX_AGE_DAYS,
   todayYmd,
+  ymdDaysAgo,
+  isBoardIntelVisitFresh,
   isVerifiedVisitLogSource,
   parseVisitLogDateYmd,
   isOfficialVisitType,

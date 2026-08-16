@@ -218,6 +218,8 @@ function assembleIntelAlerts({
     if (uvDeduped.length >= 8) break;
   }
   for (const row of uvDeduped) {
+    // Stamp = when the visit happened, not when we late-logged it (avoids "3d ago" for June UVs).
+    const visitStamp = row.visitEnd || row.visitStart || null;
     alerts.push(
       alertRow({
         id: `uv-${row.slug}-${row.visitStart}`,
@@ -225,13 +227,14 @@ function assembleIntelAlerts({
         name: row.name,
         type: "visit_uv",
         message: `${row.name} — UF unofficial visit (${row.visitStart})`,
-        createdAt: alertTime(row.reportedAt, row.visitStart),
+        createdAt: alertTime(visitStamp, row.reportedAt),
         category: "Visit",
       })
     );
   }
 
   for (const row of visitRecap.slice(0, 6)) {
+    const visitStamp = row.visitEnd || row.visitStart || null;
     alerts.push(
       alertRow({
         id: `recap-${row.slug}-${row.visitStart}`,
@@ -239,7 +242,7 @@ function assembleIntelAlerts({
         name: row.name,
         type: "visit_recap",
         message: `${row.name} — verified UF OV completed (${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ""})`,
-        createdAt: alertTime(row.reportedAt, row.visitEnd || row.visitStart),
+        createdAt: alertTime(visitStamp, row.reportedAt),
         category: "Visit",
       })
     );

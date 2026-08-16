@@ -55,6 +55,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-16 | My Alerts Board Intel copy: “recent (~3 weeks)” visits — older UVs/OVs drop via API already | `VaultAlertsPage` hint in binary | pending |
 | 2026-08-16 | My Alerts Board Intel: show verified UV visits + fix upcoming “Just now” timestamp | `VaultAlertsPage`, `alert-fan-copy` in binary (API row types live without bake) | pending |
 | 2026-08-16 | Gators Live ready copy: drop member-facing “don’t ping live APIs” jargon; scoreboard-window wording only | `VaultLiveScoresPage` in binary | pending |
 | 2026-08-15 | Home NOW: never bake commit/signee counts in Capacitor seed — strip stone lines; rewrite from live class-overview on load (commit/decommit = API only after this bake) | `HomePremiumPage`, `home-command-utils`, `recruiting-hub-bundle-seed` in binary | pending |
