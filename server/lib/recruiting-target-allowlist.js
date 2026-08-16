@@ -198,7 +198,7 @@ function loadLabPromotionSlugs(classYear) {
  * Soft-promote mistakes that must never reappear on the 2028 board / Home teaser.
  * (Visit-only national prospects, etc.)
  */
-const BLOCKED_SOFT_2028 = new Set(['trace-hawkins']);
+const BLOCKED_SOFT_2028 = new Set(['trace-hawkins', 'uf-three']);
 
 function getAllowlistSet(classYear) {
   const year = parseInt(classYear, 10);

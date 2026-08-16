@@ -50,6 +50,8 @@ const BLOCKED_PLAYER_SLUGS = new Set([
   'cole-best',
   'jayden-wade',
   'andrew-whittemore',
+  // Beat/On3 parse junk — "UF. Three" phantom DL (stole Zylen-like ranks).
+  'uf-three',
 ]);
 
 const BLOCKED_PLAYER_NAMES = new Set([
@@ -91,6 +93,8 @@ const BLOCKED_PLAYER_NAMES = new Set([
   'cole best',
   'jayden wade',
   'andrew whittemore',
+  'uf three',
+  'uf. three',
 ]);
 
 function normalizeSlug(raw) {
@@ -218,10 +222,21 @@ function isEmptyAthPhantomShell(player) {
   return true;
 }
 
+function isGarbageChaseName(name) {
+  const n = String(name || '').trim();
+  if (!n) return false;
+  // "UF. Three", "Florida. My", program fragments mistaken for recruits
+  if (/^UF\.?\s+/i.test(n)) return true;
+  if (/^Florida\.?\s+(My|The|Gators?)/i.test(n)) return true;
+  if (/^(The\s+)?Gators?\s+(Online|Football)/i.test(n)) return true;
+  return false;
+}
+
 function isBlockedRecruit(player) {
   if (!player) return false;
   const slug = normalizeSlug(player.slug || player.id || slugify(player.name));
   if (slug && BLOCKED_PLAYER_SLUGS.has(slug)) return true;
+  if (isGarbageChaseName(player.name || player.playerName)) return true;
   for (const cand of rosterSlugCandidates(slug)) {
     if (BLOCKED_PLAYER_SLUGS.has(cand)) return true;
   }
@@ -259,6 +274,7 @@ module.exports = {
   BLOCKED_PLAYER_SLUGS,
   BLOCKED_PLAYER_NAMES,
   isBlockedRecruit,
+  isGarbageChaseName,
   filterBlockedRecruits,
   isEmptyAthPhantomShell,
   isAuthoritativeUfBoardCommit,
