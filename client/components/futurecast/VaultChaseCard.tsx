@@ -214,7 +214,7 @@ export function VaultChaseCard({
         ) : null}
 
         <p className="gv-chase-card__why-label">Why we chase</p>
-        <p className="gv-chase-card__skinny">{whySansVisit}</p>
+        <p className="gv-chase-card__skinny">{why}</p>
 
         {race.length > 0 ? (
           <div className="gv-chase-card__race">
