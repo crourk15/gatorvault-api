@@ -55,6 +55,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-16 | Gators Live ready copy: drop member-facing “don’t ping live APIs” jargon; scoreboard-window wording only | `VaultLiveScoresPage` in binary | pending |
 | 2026-08-15 | Home NOW: never bake commit/signee counts in Capacitor seed — strip stone lines; rewrite from live class-overview on load (commit/decommit = API only after this bake) | `HomePremiumPage`, `home-command-utils`, `recruiting-hub-bundle-seed` in binary | pending |
 | 2026-08-15 | Home NOW 2027 commit count: seed/hub-runtime said 25; live is 26 (Keumajou class-year fix + ticker/class-overview use same filtered count) | hub-runtime 2027 + players.json — **API live**; seed stone fixed by row above | pending |
 | 2026-08-15 | Game Week Command Center reads live `/api/schedule` for Intel/Film Notes/Scouting (drop FAU_BUNDLE); `defenseTendencies` + correct offense/defense scouting map; weekly film updates are JSON/API-only after this bake | `GameWeekCommandCenter`, `SeasonTimeline`, `game-week-data`, schedule JSON in binary — **content** stays API/data after ship | pending |
