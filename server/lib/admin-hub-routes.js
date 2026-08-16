@@ -967,6 +967,9 @@ function mountAdminHubRoutes(app) {
           force: true,
           // Hub Run now: refresh beat cache first + wider lookback so empty cache isn't a silent zero.
           skipBeatRefresh: req.body?.skipBeatRefresh === true,
+          // Default skip allowlist on Hub Run now — that sweep alone can exceed Starter memory/time.
+          // Cron keeps full allowlist; pass skipAllowlistIntel:false to force both.
+          skipAllowlistIntel: req.body?.skipAllowlistIntel !== false,
           lookbackHours: req.body?.lookbackHours != null ? Number(req.body.lookbackHours) : 72,
           maxCreates: req.body?.maxCreates != null ? Number(req.body.maxCreates) : 40,
         }).catch((err) => {
