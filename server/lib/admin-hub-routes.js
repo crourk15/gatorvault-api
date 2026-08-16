@@ -915,12 +915,30 @@ function mountAdminHubRoutes(app) {
       } = require('./vault-feed-2028-sweep');
       const prev = readLastReport();
       if (prev && prev.status === 'running') {
-        return res.status(200).json({
-          ok: true,
-          started: false,
-          alreadyRunning: true,
-          report: prev,
-        });
+        const startedMs = Date.parse(prev.startedAt || '') || 0;
+        const staleMs = 8 * 60 * 1000;
+        const stale = !startedMs || Date.now() - startedMs > staleMs;
+        if (!stale) {
+          return res.status(200).json({
+            ok: true,
+            started: false,
+            alreadyRunning: true,
+            report: prev,
+          });
+        }
+        // Prior hub run likely OOM'd / never finalized — unlock so Run now can retry.
+        try {
+          writeReport({
+            ...prev,
+            ok: false,
+            status: 'error',
+            finishedAt: new Date().toISOString(),
+            errors: [...(prev.errors || []), { step: 'hub_run', error: 'stale_running_unlocked' }],
+            message: 'Previous vault feed marked stale (no finish within 8m) — starting a new run.',
+          });
+        } catch {
+          /* continue */
+        }
       }
       const startedAt = new Date().toISOString();
       const running = {

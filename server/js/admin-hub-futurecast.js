@@ -104,8 +104,13 @@
       var vfEmpty = (vf && (vf.emptyReason || (vfs && vfs.emptyReason))) || '';
       var vfBeats = vf ? (vfs.beatsFetched != null ? vfs.beatsFetched : vf.beatsFetched) : null;
       var vfCands = vf ? (vfs.candidatesNamed != null ? vfs.candidatesNamed : vf.candidatesNamed) : null;
+      var vfRunning = !!(vf && vf.status === 'running');
       var vfHtml = !vf
         ? '<p class="hub-meta">No vault-feed run yet — waits for 7am / 7pm ET cron (or Run now).</p>'
+        : vfRunning
+        ? '<p class="hub-meta" style="color:#fbbf24"><strong>RUNNING</strong> since ' + esc(vf.startedAt || '—')
+          + ' — beat refresh + allowlist can take 1–3 minutes. Zeros below are a placeholder, not finished proof.</p>'
+          + '<p class="hub-meta">' + esc(vf.message || 'Proof fills when finished.') + '</p>'
         : '<p class="hub-meta">Last run: <strong style="color:#fff">' + esc(vf.finishedAt || vf.startedAt || '—') + '</strong>'
           + (vf.status ? ' · ' + esc(vf.status) : '')
           + (vf.dryRun ? ' · dry-run' : '')
