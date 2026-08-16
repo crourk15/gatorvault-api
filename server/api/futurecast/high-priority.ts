@@ -686,9 +686,16 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
       .filter((p) => isActiveUfTarget(p))
       .filter((p) => Number(p.classYear) === Number(classYear))
   );
+  let eliteMapped = mapped;
+  try {
+    const { filterEliteChaseProfiles } = require('../../lib/elite-chase-profile-bar');
+    eliteMapped = filterEliteChaseProfiles(mapped);
+  } catch {
+    eliteMapped = mapped;
+  }
   const ufTrendSnapshot = require('../../lib/uf-trend-snapshot');
   // Record today's GV likelihood, then attach real 7d snapshot deltas (not seed +4).
-  const withMovement = ufTrendSnapshot.applySnapshotMovement(mapped, { minAbs: 1 });
+  const withMovement = ufTrendSnapshot.applySnapshotMovement(eliteMapped, { minAbs: 1 });
   const withChase = applyChasePriorityScores(withMovement, classYear);
   // Attach offer/visit/intel evidence so Closest to commit is process-backed, not On3 % alone.
   const { attachClosestCommitEvidence } = require('../../lib/closest-commit-evidence');
