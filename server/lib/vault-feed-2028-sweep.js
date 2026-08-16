@@ -276,6 +276,97 @@ async function collectOn3ArticlePosts({ lookbackHours = 72, maxArticles = 40 } =
   };
 }
 
+function summarizeFeedResult(fed) {
+  if (!fed || typeof fed !== 'object') {
+    return { whatChanged: 'no feed result', ufPct: null, promoted: false };
+  }
+  if (fed.ok === false) {
+    return {
+      whatChanged: 'Feed failed: ' + (fed.error || fed.reason || 'unknown'),
+      ufPct: fed.player?.ufProbability ?? fed.decision?.pct ?? null,
+      promoted: false,
+    };
+  }
+  if (fed.dryRun) {
+    return { whatChanged: 'dry-run would update', ufPct: null, promoted: false };
+  }
+
+  const decision = fed.decision || {};
+  const pct = Number.isFinite(Number(decision.pct)) ? Number(decision.pct) : null;
+  const delta = Number.isFinite(Number(decision.delta)) ? Number(decision.delta) : null;
+  const prior =
+    Number.isFinite(Number(decision.prior))
+      ? Number(decision.prior)
+      : pct != null && delta != null
+        ? Math.round(pct - delta)
+        : null;
+
+  const sourceLabel = {
+    on3_rpm_seed: 'On3 RPM seed',
+    on3_rpm_blend: 'On3 RPM blend',
+    offer_seed: 'offer seed',
+    signal_nudge: 'signal nudge',
+    unchanged: 'unchanged',
+    no_seed: 'no seed',
+    rivals_pm_locked: 'Rivals locked',
+  };
+
+  const parts = [];
+  if (fed.isNew) parts.push('new Vault shell');
+  if (fed.promoted) parts.push('promoted onto chase board');
+  if (fed.allowlisted) parts.push('allowlisted');
+
+  if (decision.nudged && pct != null) {
+    const via = decision.source ? ` (${sourceLabel[decision.source] || decision.source})` : '';
+    parts.push(
+      prior != null && prior !== pct ? `UF% ${prior}→${pct}${via}` : `UF% → ${pct}${via}`
+    );
+  } else if (pct != null) {
+    parts.push(`UF% held at ${pct}`);
+  }
+
+  if (fed.player?.natlRank != null) parts.push(`natl #${fed.player.natlRank}`);
+  if (fed.player?.posRank != null) parts.push(`pos #${fed.player.posRank}`);
+
+  const stepLabel = {
+    hydrate: 'On3 hydrate',
+    recruiting_store_upsert: 'store refresh',
+    on3_rpm_file: 'On3 RPM file',
+    offer_visit_logs: 'offer/visit logs',
+    futurecast_prediction_refresh: 'FC prediction refresh',
+    futurecast_prediction_seed: 'FC prediction seed',
+    '2028_target_board_seed': '2028 board seed',
+    admin_allowlist: 'allowlist',
+    early_watchlist: 'early watch',
+    on3_slug_map: 'On3 slug map',
+  };
+  if (Array.isArray(fed.steps) && fed.steps.length) {
+    const interesting = fed.steps
+      .map((s) => {
+        const key = s?.step || s?.action || s?.name || null;
+        if (!key) return null;
+        if (s?.ok === false) return (stepLabel[key] || key) + ' failed';
+        if (s?.blocked) return (stepLabel[key] || key) + ' blocked';
+        if (key === 'hydrate' || key === 'recruiting_store_upsert' || key === 'futurecast_prediction_refresh'
+          || key === 'futurecast_prediction_seed' || key === '2028_target_board_seed'
+          || key === 'admin_allowlist' || key === 'early_watchlist') {
+          return stepLabel[key] || key;
+        }
+        return null;
+      })
+      .filter(Boolean)
+      .slice(0, 4);
+    if (interesting.length) parts.push(interesting.join(', '));
+  }
+
+  if (!parts.length) parts.push('FutureCast intel re-applied from beat');
+  return {
+    whatChanged: parts.join(' · '),
+    ufPct: fed.player?.ufProbability ?? pct,
+    promoted: !!fed.promoted,
+  };
+}
+
 async function feedExistingSlug(slug, { signalType = null, dryRun = false } = {}) {
   const key = String(slug || '').toLowerCase();
   if (!key) return { ok: false, reason: 'missing_slug' };
@@ -548,14 +639,20 @@ async function runVaultFeed2028SweepInner(opts = {}) {
           signalType: 'vault_feed_2028_existing',
           dryRun,
         });
+        const feedSummary = summarizeFeedResult(fed);
         report.updated.push({
           playerName: existing.name || name,
           playerSlug: existing.slug,
           classYear: existing.classYear || candidate.classYear,
           action: dryRun ? 'would_update' : 'fed_futurecast',
           feedOk: fed?.ok !== false,
+          feedError: fed?.error || fed?.reason || null,
+          whatChanged: feedSummary.whatChanged,
+          ufPct: feedSummary.ufPct,
+          promoted: feedSummary.promoted,
           handle: candidate.handle || null,
-          sourcePreview: String(candidate.text || '').slice(0, 100),
+          sourceUrl: candidate.url || null,
+          sourcePreview: String(candidate.text || '').slice(0, 160),
         });
         continue;
       }
@@ -585,9 +682,13 @@ async function runVaultFeed2028SweepInner(opts = {}) {
         );
         report.unresolved.push({
           playerName: name,
+          playerSlug: candidate.playerSlug || null,
+          classYear: candidate.classYear || null,
           reason: provisioned.reason || 'provision_failed',
           queued,
           handle: candidate.handle || null,
+          sourceUrl: candidate.url || null,
+          sourcePreview: String(candidate.text || '').slice(0, 160),
         });
         continue;
       }
@@ -717,6 +818,7 @@ module.exports = {
   pickClassYear,
   extractClassYears,
   isBlockedStaff,
+  summarizeFeedResult,
   readLastReport,
   writeReport,
   reportPath,
