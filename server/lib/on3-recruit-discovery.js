@@ -210,6 +210,44 @@ function parseOn3NewsArticleSlug(pathSlug) {
     };
   }
 
+  // Narrative mid-slug: …-offers-james-allen-has-deep-florida-gators-ties
+  {
+    const verb =
+      'is|are|has|have|was|were|plans?|planning|talks?|commits?|committed|visits?|visited|offers?|offered|named|joins?|signs?|signed|enrolls?|shows?|hopped|returns?|reacts?|says?|said';
+    const mid = slug.match(
+      new RegExp(`(?:^|-)([a-z]{2,}(?:-[a-z]{2,}){1,2})-(?:${verb})-(?:deep|all|still|now|back|into|for|to|on|with|the|a|an)\b`)
+    );
+    if (mid) {
+      const playerSlug = mid[1].replace(/-\d+$/, '');
+      if (isLikelyPersonSlug(playerSlug)) {
+        return {
+          playerSlug,
+          playerName: slugToPlayerName(playerSlug),
+          stars: null,
+          pos: null,
+          classYear: null,
+        };
+      }
+    }
+  }
+
+  // …for-2029-rb-james-allen / …2028-cb-tyree-mannings-jr
+  m = slug.match(
+    /\b(?:for-)?(202[7-9]|203[0-2])-(wr|qb|rb|te|ol|ot|og|c|dl|dt|de|edge|lb|cb|s|ath|k|p)-([a-z]{2,}(?:-[a-z0-9]{2,}){1,3})(?:-|$)/i
+  );
+  if (m) {
+    const playerSlug = m[3].replace(/-\d+$/, '');
+    if (isLikelyPersonSlug(playerSlug)) {
+      return {
+        playerSlug,
+        playerName: slugToPlayerName(playerSlug),
+        stars: null,
+        pos: m[2].toUpperCase(),
+        classYear: parseInt(m[1], 10),
+      };
+    }
+  }
+
   // …contender-for-merrick-ham-ahead-of-fall-visit / …on-joe-craddock-this-weekend
   m = slug.match(
     /\b(?:for|on|with)-([a-z]{2,}(?:-[a-z]{2,}){1,2})-(?:ahead|before|after|this|next|on|to|with|as|in|for)\b/i

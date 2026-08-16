@@ -74,13 +74,49 @@ function parseArticleIdentity(article) {
     };
   }
 
+  // Long narrative GO headlines often bury the name mid-slug — resolve from title/excerpt.
+  try {
+    const gate = require('./beat-recruiting-ingest-gate');
+    const hit = gate.resolvePlayerFromTextSync(textBlob);
+    if (hit?.playerName) {
+      return {
+        playerSlug: hit.playerSlug || null,
+        playerName: hit.playerName,
+        stars: hit.stars || null,
+        pos: hit.pos || null,
+        classYear: classYear || hit.classYear || null,
+        on3ArticleUrl: url,
+        articleKey: article?.key || slugPath,
+        source: 'on3_team_news_title',
+      };
+    }
+  } catch {
+    /* optional */
+  }
+
+  const looseName = parseNameFromArticleBody(article);
+  if (looseName) {
+    return {
+      playerSlug: null,
+      playerName: looseName,
+      stars: null,
+      pos: null,
+      classYear,
+      on3ArticleUrl: url,
+      articleKey: article?.key || slugPath,
+      source: 'on3_team_news_loose_name',
+    };
+  }
+
   return null;
 }
 
 function isRecruitingArticle(article, identity) {
-  if (identity?.playerSlug) return true;
+  if (identity?.playerSlug || identity?.playerName) return true;
   const cat = article?.primaryCategory?.slug || article?.primaryCategory?.name || '';
   if (RECRUITING_CATEGORY_RE.test(cat)) return Boolean(identity);
+  const blob = `${article?.title || ''} ${article?.excerpt || ''}`;
+  if (/recruit|offer|commit|visit|class of 202[7-9]|2030/i.test(blob) && identity) return true;
   return false;
 }
 
@@ -108,11 +144,16 @@ function buildSyntheticBeatPostFromOn3Article(article, identity) {
     : /alderman/i.test(author)
       ? 'blake_alderman'
       : 'gatorsonline';
-  const excerpt = String(article?.excerpt || article?.title || '')
-    .replace(/\s+/g, ' ')
-    .trim();
+  // Prefer title — excerpts often omit the prospect name that vault-feed resolve needs.
+  const title = String(article?.title || '').replace(/\s+/g, ' ').trim();
+  const excerpt = String(article?.excerpt || '').replace(/\s+/g, ' ').trim();
+  const blob = [title, excerpt].filter(Boolean).join(' — ').trim() || title || excerpt;
   const url = identity?.on3ArticleUrl || articleFullUrl(article);
-  const text = excerpt.includes('INTEL:') ? excerpt : `${excerpt} INTEL: ${url}`;
+  const named =
+    identity?.playerName && !new RegExp(identity.playerName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(blob)
+      ? `${identity.playerName}: ${blob}`
+      : blob;
+  const text = named.includes('INTEL:') ? named : `${named} INTEL: ${url}`;
   return {
     handle,
     writerName: author,

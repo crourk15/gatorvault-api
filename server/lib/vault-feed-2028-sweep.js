@@ -92,6 +92,7 @@ function emptyReport(opts = {}) {
     candidatesNamed: 0,
     emptyReason: null,
     beatIngest: null,
+    on3Articles: null,
     allowlistIntel: null,
     created: [],
     updated: [],
@@ -213,6 +214,66 @@ function collectBeatCandidates(posts = [], { lookbackHours = 36 } = {}) {
     });
   }
   return out;
+}
+
+/**
+ * Pull UF On3 / Gators Online team-news articles into the same candidate pool as tweets.
+ * Articles are first-class intel — writers often publish GO pieces without a named X teaser
+ * still sitting in the 80-post beat cache.
+ */
+async function collectOn3ArticlePosts({ lookbackHours = 72, maxArticles = 40 } = {}) {
+  const cutoff = Date.now() - Math.max(1, lookbackHours) * 60 * 60 * 1000;
+  const {
+    fetchFloridaTeamNewsArticles,
+    parseArticleIdentity,
+    buildSyntheticBeatPostFromOn3Article,
+  } = require('./uf-on3-news-discovery');
+
+  let articles = [];
+  try {
+    articles = await fetchFloridaTeamNewsArticles();
+  } catch (err) {
+    return { posts: [], error: err.message, scanned: 0 };
+  }
+
+  const sorted = [...(articles || [])]
+    .sort((a, b) => new Date(b.postDateGMT || b.postDate || 0) - new Date(a.postDateGMT || a.postDate || 0))
+    .slice(0, Math.max(1, maxArticles));
+
+  const posts = [];
+  let skippedNoId = 0;
+  let skippedOld = 0;
+  for (const article of sorted) {
+    const when = Date.parse(article?.postDateGMT || article?.postDate || '') || 0;
+    if (when && when < cutoff) {
+      skippedOld += 1;
+      continue;
+    }
+    const identity = parseArticleIdentity(article);
+    if (!identity?.playerName && !identity?.playerSlug) {
+      skippedNoId += 1;
+      continue;
+    }
+    const synthetic = buildSyntheticBeatPostFromOn3Article(article, identity);
+    posts.push({
+      ...synthetic,
+      createdAt: synthetic.publishedAt,
+      publishedAt: synthetic.publishedAt,
+      detail: synthetic.text,
+      source: 'on3_team_news',
+      playerNameHint: identity.playerName || null,
+      playerSlugHint: identity.playerSlug || null,
+      classYearHint: identity.classYear || null,
+    });
+  }
+
+  return {
+    posts,
+    scanned: sorted.length,
+    skippedNoId,
+    skippedOld,
+    error: null,
+  };
 }
 
 async function feedExistingSlug(slug, { signalType = null, dryRun = false } = {}) {
@@ -383,11 +444,38 @@ async function runVaultFeed2028SweepInner(opts = {}) {
       }
     }
 
-    // 3) Candidate pass — update existing / provision new 2028+ / block phantoms
+    // 3) Merge On3 / Gators Online team-news articles into the beat candidate pool
+    if (!opts.candidates && opts.skipOn3Articles !== true) {
+      try {
+        const on3 = await collectOn3ArticlePosts({
+          lookbackHours: Math.max(lookbackHours, 96),
+          maxArticles: opts.on3MaxArticles != null ? Number(opts.on3MaxArticles) : 40,
+        });
+        report.on3Articles = {
+          scanned: on3.scanned,
+          posts: on3.posts.length,
+          skippedNoId: on3.skippedNoId,
+          skippedOld: on3.skippedOld,
+          error: on3.error,
+        };
+        if (on3.error) {
+          report.errors.push({ step: 'on3Articles', error: on3.error });
+        }
+        if (on3.posts.length) {
+          posts = posts.concat(on3.posts);
+          report.beatsFetched = posts.length;
+        }
+      } catch (err) {
+        report.on3Articles = { ok: false, error: err.message };
+        report.errors.push({ step: 'on3Articles', error: err.message });
+      }
+    }
+
+    // 4) Candidate pass — update existing / provision new 2028+ / block phantoms
     const store = require('./recruiting-store');
     const candidates = Array.isArray(opts.candidates)
       ? opts.candidates
-      : collectBeatCandidates(posts, { lookbackHours });
+      : collectBeatCandidates(posts, { lookbackHours: Math.max(lookbackHours, 96) });
     report.candidatesNamed = candidates.filter((c) => c && c.kind === 'named').length;
 
     let creates = 0;
@@ -517,7 +605,7 @@ async function runVaultFeed2028SweepInner(opts = {}) {
       });
     }
 
-    // 4) Continuous allowlist intel for 2028 (existing chase targets)
+    // 5) Continuous allowlist intel for 2028 (existing chase targets)
     if (!skipAllowlistIntel) {
       try {
         const { runAllowlistIntelSweep, measureAllowlistIntelCoverage } = require('./allowlist-intel-sweep');
@@ -549,7 +637,7 @@ async function runVaultFeed2028SweepInner(opts = {}) {
       }
     }
 
-    // 5) Seed/refresh FC predictions for newly created 2028 slugs (movement deltas)
+    // 6) Seed/refresh FC predictions for newly created 2028 slugs (movement deltas)
     if (!dryRun && report.created.length) {
       try {
         const { provisionAllowlistPredictionForSlug } = require('./allowlist-futurecast-provision');
@@ -625,6 +713,7 @@ module.exports = {
   runVaultFeed2028Sweep,
   runVaultFeed2028SweepInner,
   collectBeatCandidates,
+  collectOn3ArticlePosts,
   pickClassYear,
   extractClassYears,
   isBlockedStaff,

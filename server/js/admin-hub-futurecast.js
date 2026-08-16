@@ -126,6 +126,7 @@
           + '</div>'
           + '<p class="hub-meta">Beats fetched: <strong style="color:#fff">' + esc(vfBeats != null ? vfBeats : '—') + '</strong>'
           + ' · Named 2028+ candidates: <strong style="color:#fff">' + esc(vfCands != null ? vfCands : '—') + '</strong></p>'
+          + ((vf.on3Articles) ? '<p class="hub-meta">On3 articles: scanned ' + esc(vf.on3Articles.scanned != null ? vf.on3Articles.scanned : '—') + ' · as posts ' + esc(vf.on3Articles.posts != null ? vf.on3Articles.posts : '—') + (vf.on3Articles.skippedNoId ? ' · no-id ' + esc(vf.on3Articles.skippedNoId) : '') + '</p>' : '')
           + (vfEmpty ? '<p class="hub-meta" style="color:#fbbf24">Empty reason: ' + esc(vfEmpty) + '</p>' : '')
           + ((vf.beatRefresh && vf.beatRefresh.error) ? '<p class="hub-meta" style="color:#fca5a5">Beat refresh: ' + esc(vf.beatRefresh.error) + '</p>' : '')
           + ((vf.allowlistIntel && vf.allowlistIntel.error) ? '<p class="hub-meta" style="color:#fca5a5">Allowlist: ' + esc(vf.allowlistIntel.error) + '</p>' : '')
