@@ -141,7 +141,7 @@ function softAlertsFromIntel(): { alerts: AlertRow[]; updatedAt: string; ok: tru
 
 export const handleGetFutureCastAlerts = asyncHandler(async (_req: Request, res: Response) => {
   try {
-    await sendCachedJson(res, 'futurecast:alerts:v2-board', buildFutureCastAlertsPayload, {
+    await sendCachedJson(res, 'futurecast:alerts:v3-board', buildFutureCastAlertsPayload, {
       softOnDeferred: softAlertsFromIntel,
       backgroundBuildOnSoft: true,
     });

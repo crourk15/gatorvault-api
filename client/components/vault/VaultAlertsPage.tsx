@@ -423,7 +423,7 @@ export function VaultAlertsPage(): React.ReactElement {
             <div>
               <h2 className="gv-vault-alerts__section-title">Board intel</h2>
               <p className="gv-vault-alerts__section-hint gv-vault-alerts__section-hint--flush">
-                Visits, flip watch, and the Florida odds moves worth opening.
+                Verified Florida visits (OV + UV), flip watch, and odds moves — live from the API.
               </p>
             </div>
             {localAlerts.length > 0 ? (

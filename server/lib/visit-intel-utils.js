@@ -12,7 +12,8 @@ function todayYmd(asOf = new Date()) {
 function isVerifiedVisitLogSource(source, entry = null) {
   const src = String(source || '').toLowerCase();
   if (VERIFIED_VISIT_SOURCES.has(src)) return true;
-  if (/beat/.test(src) && entry?.identityConfirmed) return true;
+  // Beat desk / writer ingest already resolved a playerSlug — treat as verified visit intel.
+  if (/beat/.test(src) && (entry?.identityConfirmed || entry?.playerSlug)) return true;
   return false;
 }
 
@@ -41,6 +42,15 @@ function defaultVisitEndYmd(startYmd) {
   return d.toISOString().slice(0, 10);
 }
 
+function isUnofficialVisitType(visitType) {
+  const t = String(visitType || '').toLowerCase();
+  if (!t) return false;
+  return t === 'uv' || t.includes('unofficial');
+}
+
+/**
+ * Official OV window only (3-day default). Used by OV recap / upcoming OV paths.
+ */
 function getVerifiedFloridaVisitWindow(entry) {
   if (!entry || !isVerifiedVisitLogSource(entry.source, entry)) return null;
   if (!isFloridaVisitLog(entry)) return null;
@@ -56,7 +66,103 @@ function getVerifiedFloridaVisitWindow(entry) {
     source: entry.source,
     visitType,
     fingerprint: entry.fingerprint || null,
+    kind: 'official',
+    reportedAt: entry.reportedAt || entry.timestamp || null,
   };
+}
+
+/**
+ * Board Intel activity: verified Florida OV + UV (UV = same-day window).
+ * Keeps OV-only helpers intact for autoposter / OV-specific gates.
+ */
+function getVerifiedFloridaVisitActivity(entry) {
+  if (!entry || !isVerifiedVisitLogSource(entry.source, entry)) return null;
+  if (!isFloridaVisitLog(entry)) return null;
+  const visitType = String(entry.visitType || entry.eventType || '').toLowerCase();
+  const official = isOfficialVisitType(visitType);
+  const unofficial = isUnofficialVisitType(visitType);
+  if (!official && !unofficial) return null;
+
+  const visitStart = parseVisitLogDateYmd(entry);
+  if (!visitStart) return null;
+
+  return {
+    visitStart,
+    visitEnd: official ? defaultVisitEndYmd(visitStart) : visitStart,
+    source: entry.source,
+    visitType,
+    fingerprint: entry.fingerprint || null,
+    kind: official ? 'official' : 'unofficial',
+    reportedAt: entry.reportedAt || entry.timestamp || null,
+    playerSlug: entry.playerSlug || null,
+    playerName: entry.playerName || null,
+  };
+}
+
+function listRecentVerifiedFloridaVisitActivity(
+  visitLogs,
+  { limit = 24, asOf = new Date(), kinds = null } = {}
+) {
+  const today = todayYmd(asOf);
+  const allowKinds = kinds ? new Set(kinds) : null;
+  const seen = new Set();
+  const rows = [];
+  for (const entry of visitLogs || []) {
+    const activity = getVerifiedFloridaVisitActivity(entry);
+    if (!activity) continue;
+    if (allowKinds && !allowKinds.has(activity.kind)) continue;
+    const key = `${String(activity.playerSlug || '').toLowerCase()}|${activity.kind}|${activity.visitStart}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    rows.push({
+      slug: activity.playerSlug,
+      name: activity.playerName,
+      visitStart: activity.visitStart,
+      visitEnd: activity.visitEnd,
+      source: activity.source,
+      kind: activity.kind,
+      visitType: activity.visitType,
+      reportedAt: activity.reportedAt,
+      completed: activity.visitEnd < today,
+      upcoming: activity.visitStart >= today || activity.visitEnd >= today,
+    });
+  }
+  rows.sort((a, b) => {
+    const ar = String(a.reportedAt || a.visitStart || '');
+    const br = String(b.reportedAt || b.visitStart || '');
+    if (ar !== br) return br.localeCompare(ar);
+    return String(b.visitStart || '').localeCompare(String(a.visitStart || ''));
+  });
+  return rows.slice(0, Math.max(1, limit));
+}
+
+function buildVerifiedVisitActivityRows(players, visitLogs, asOf = new Date(), opts = {}) {
+  const limit = opts.limit || 12;
+  const prioritySlugs = (opts.prioritySlugs || []).map((s) => String(s || '').toLowerCase());
+  const prioritySet = new Set(prioritySlugs);
+  const kinds = opts.kinds || ['unofficial'];
+  const pool = listRecentVerifiedFloridaVisitActivity(visitLogs, {
+    limit: Math.max(limit * 4, 48),
+    asOf,
+    kinds,
+  });
+  const playerBySlug = new Map((players || []).map((pl) => [String(pl.slug || '').toLowerCase(), pl]));
+  let rows = pool
+    .filter((row) => row.slug)
+    .map((row) => {
+      const player = playerBySlug.get(String(row.slug || '').toLowerCase());
+      return {
+        ...row,
+        name: row.name || player?.name || row.slug,
+        visitSource: row.source,
+        visitSourceLabel: formatVisitSourceLabel(row.source),
+        ufProbability: player?.ufProbability ?? null,
+      };
+    });
+  if (prioritySet.size) {
+    rows = rows.filter((r) => prioritySet.has(String(r.slug || '').toLowerCase()));
+  }
+  return rows.slice(0, limit);
 }
 
 function effectiveVisitEnd(player) {
@@ -83,7 +189,11 @@ function pickLatestVerifiedUpcomingFloridaVisit(slug, visitLogs, asOf = new Date
     const window = getVerifiedFloridaVisitWindow(entry);
     if (!window) continue;
     if (window.visitEnd >= today || window.visitStart >= today) {
-      return { ...window, entry };
+      return {
+        ...window,
+        entry,
+        reportedAt: window.reportedAt || entry.reportedAt || entry.timestamp || null,
+      };
     }
   }
   return null;
@@ -135,6 +245,8 @@ function applyVerifiedVisitFields(player, visitLogs, asOf = new Date()) {
     visitVerified: true,
     visitSource: verified.source,
     visitSourceLabel: formatVisitSourceLabel(verified.source),
+    reportedAt: verified.reportedAt || verified.entry?.reportedAt || null,
+    visitReportedAt: verified.reportedAt || verified.entry?.reportedAt || null,
   };
 }
 
@@ -162,6 +274,7 @@ function listRecentVerifiedFloridaOfficialVisits(visitLogs, { classYear = 2027, 
         visitStart: window.visitStart,
         visitEnd: window.visitEnd,
         source: window.source,
+        reportedAt: window.reportedAt || entry.reportedAt || null,
         completed: window.visitEnd < today,
       };
     })
@@ -232,6 +345,7 @@ function buildVerifiedVisitRecapRows(players, visitLogs, asOf = new Date(), opts
       visitEnd: row.visitEnd,
       visitSource: row.source,
       visitSourceLabel: formatVisitSourceLabel(row.source),
+      reportedAt: row.reportedAt || null,
       ufProbability: player?.ufProbability ?? null,
     };
   });
@@ -256,7 +370,11 @@ module.exports = {
   isVerifiedVisitLogSource,
   parseVisitLogDateYmd,
   isOfficialVisitType,
+  isUnofficialVisitType,
   getVerifiedFloridaVisitWindow,
+  getVerifiedFloridaVisitActivity,
+  listRecentVerifiedFloridaVisitActivity,
+  buildVerifiedVisitActivityRows,
   effectiveVisitEnd,
   isPastVisitWindow,
   pickLatestVerifiedUpcomingFloridaVisit,
