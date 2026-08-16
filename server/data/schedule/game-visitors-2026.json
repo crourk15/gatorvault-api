@@ -1,0 +1,48 @@
+{
+  "updatedAt": "2026-08-16T21:30:00.000Z",
+  "source": "Gators Online / Blake Alderman early visitor look — plans can change",
+  "games": [
+    {
+      "gameId": "fau",
+      "opponent": "FAU",
+      "dateLabel": "Sep 5",
+      "chaseLabel": "Expected FAU visit · Sep 5",
+      "slugs": [
+        "asher-ghioto",
+        "zaiden-jernigan",
+        "zylen-little",
+        "kameron-battle",
+        "chayse-brown",
+        "josiah-taylor"
+      ]
+    },
+    {
+      "gameId": "olemiss",
+      "opponent": "Ole Miss",
+      "dateLabel": "Sep 26",
+      "chaseLabel": "Expected Ole Miss visit · Sep 26",
+      "slugs": [
+        "easton-royal",
+        "brysen-wright",
+        "antonio-thomas-jr",
+        "tyzon-swann",
+        "madoxx-davis",
+        "jayden-bell",
+        "giovanni-tuggle",
+        "cj-craig-james",
+        "dion-edwards",
+        "merrick-ham",
+        "xander-edwards",
+        "omari-lawson",
+        "jc-wessel",
+        "j-c-wessel",
+        "shamar-evans",
+        "ty-winn",
+        "jaxon-flowers",
+        "anthony-howard-jr",
+        "hudson-west",
+        "cooper-martenson"
+      ]
+    }
+  ]
+}
