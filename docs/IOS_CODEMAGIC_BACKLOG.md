@@ -55,6 +55,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-16 | Game Week schedule: always await live `/api/schedule` (skip SWR cache-first) so Expected visitors / keys update without hard refresh | `schedule-api`, `stale-while-revalidate` in binary — **Netlify picks up web; iOS needs bake** | pending |
 | 2026-08-16 | My Alerts Board Intel copy: “recent (~3 weeks)” visits — older UVs/OVs drop via API already | `VaultAlertsPage` hint in binary | pending |
 | 2026-08-16 | My Alerts Board Intel: show verified UV visits + fix upcoming “Just now” timestamp | `VaultAlertsPage`, `alert-fan-copy` in binary (API row types live without bake) | pending |
 | 2026-08-16 | Gators Live ready copy: drop member-facing “don’t ping live APIs” jargon; scoreboard-window wording only | `VaultLiveScoresPage` in binary | pending |

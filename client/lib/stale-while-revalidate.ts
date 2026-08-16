@@ -31,6 +31,9 @@ const NO_CACHE_PREFIXES = [
   '/api/ops',
   '/api/user',
   '/api/me',
+  // Game Week / schedule intel must not stick on a stale SWR paint — live keys
+  // (e.g. Expected visitors) never reached the UI when onFresh was unused.
+  '/api/schedule',
 ];
 
 type CacheEnvelope<T> = { at: number; data: T };
