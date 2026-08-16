@@ -32,3 +32,12 @@ node -e "console.log(require('./server/lib/allowlist-intel-sweep').measureAllowl
 - Rely only on whoever Cursor/Beat Desk opened recently
 - Leave top targets (e.g. Vickers) at 0 intel rows while desk-hot names accumulate auto rows
 - Disable allowlist-intel from recruiting-light without a replacement gatherer
+
+## Twice-daily vault feed (2028+)
+
+Complement (not replace) this sweep with `vault-feed-2028-sweep` at **7am / 7pm ET**:
+- Updates existing 2028+ players from trusted beats so FutureCast Lab can move
+- Monitor-provisions *new* 2028/2029/2030+ names into Vault (API only)
+- **Never** auto-adds 2027 (handpick / flip chart)
+- Blocks staff/coach phantoms; weak identity → unresolved queue
+- Proof: Admin Hub FutureCast → Vault feed card / `vault-feed-2028-last-report.json`

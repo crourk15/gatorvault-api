@@ -78,6 +78,14 @@ function buildFutureCastHubSummary() {
     source: t.source || 'target_board',
   }));
 
+  let vaultFeed = null;
+  try {
+    const { readLastReport } = require('./vault-feed-2028-sweep');
+    vaultFeed = readLastReport();
+  } catch {
+    vaultFeed = null;
+  }
+
   return {
     ok: true,
     updatedAt: new Date().toISOString(),
@@ -91,13 +99,16 @@ function buildFutureCastHubSummary() {
       on3RpmTracked: rpm.length,
     },
     notes: {
-      closingClass2027: 'Hard-locked — admin allowlist cannot expand 2027.',
+      closingClass2027: 'Hard-locked — admin allowlist cannot expand 2027. Vault feed never auto-adds 2027.',
       deskFeed:
         'Beat Desk Open feeds FutureCast (board fields + UF% nudge / seed) when Florida involvement is real.',
+      vaultFeed2028:
+        '7am/7pm ET vault feed: trusted beats → update existing 2028+ + monitor-provision new 2028/2029/2030+. Staff blocked. Proof = last report below.',
     },
     adminAllowlist2028: adminRows,
     board2028Sample: boardSample,
     earlyWatch: watch.slice(0, 40),
+    vaultFeed2028LastReport: vaultFeed,
   };
 }
 

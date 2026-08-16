@@ -648,6 +648,45 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  /** Twice-daily 2028+ vault feed — beat → Vault/Lab (no 2027 auto-add; staff blocked). */
+  app.post('/api/recruiting/vault-feed-2028/sweep', async (req, res) => {
+    try {
+      if (!requireIngestCronAuth(req, res)) return;
+      const { stayGreenSkipPayload } = require('./api-stay-green');
+      const skipped = stayGreenSkipPayload('vault-feed-2028-sweep');
+      if (skipped) {
+        console.log('[recruiting] stay-green skip vault-feed-2028 sweep');
+        const { readLastReport } = require('./vault-feed-2028-sweep');
+        return res.json({ ...skipped, lastReport: readLastReport() });
+      }
+      const dryRun = req.body.dryRun === true || req.query.dryRun === 'true';
+      const force = req.body.force === true || req.query.force === 'true';
+      const maxCreates = parseInt(req.body.maxCreates || req.query.maxCreates || '40', 10);
+      const lookbackHours = parseInt(req.body.lookbackHours || req.query.lookbackHours || '36', 10);
+      const { runVaultFeed2028Sweep } = require('./vault-feed-2028-sweep');
+      const result = await runVaultFeed2028Sweep({
+        dryRun,
+        force,
+        maxCreates: Number.isFinite(maxCreates) ? maxCreates : 40,
+        lookbackHours: Number.isFinite(lookbackHours) ? lookbackHours : 36,
+      });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      console.error('vault-feed-2028 sweep error', err);
+      return res.status(200).json({ ok: false, softFailure: true, error: err.message, cached: true });
+    }
+  });
+
+  app.get('/api/recruiting/vault-feed-2028/last-report', (req, res) => {
+    try {
+      const { readLastReport } = require('./vault-feed-2028-sweep');
+      const report = readLastReport();
+      return res.json({ ok: true, report });
+    } catch (err) {
+      return res.status(200).json({ ok: false, error: err.message, report: null });
+    }
+  });
+
   app.post('/api/recruiting/uf-on3-news/discover', async (req, res) => {
     try {
       if (!requireIngestCronAuth(req, res)) return;

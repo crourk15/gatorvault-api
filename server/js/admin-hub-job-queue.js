@@ -15,7 +15,9 @@
     'ops-healthcheck',
     'api-keepalive',
     'platform-health-sweep',
-    'feed-repair'
+    'feed-repair',
+    'vault-feed-2028-sweep',
+    'allowlist-intel-sweep'
   ];
 
   function esc(s) {
