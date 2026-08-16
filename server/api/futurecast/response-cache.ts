@@ -294,6 +294,19 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
   } catch {
     /* optional */
   }
+  // Charles elite profile bar — Priority Chase is not a dumping ground for thin soft shells.
+  try {
+    const { filterEliteChaseProfiles } = require('../../lib/elite-chase-profile-bar') as {
+      filterEliteChaseProfiles: (list: unknown[]) => unknown[];
+    };
+    const before = players.length;
+    players = filterEliteChaseProfiles(players);
+    if (players.length !== before) {
+      /* count updated below */
+    }
+  } catch {
+    /* optional */
+  }
   return {
     ...doc,
     count: Array.isArray(players) ? players.length : doc.count,
