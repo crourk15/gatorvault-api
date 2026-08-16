@@ -23,6 +23,7 @@ describe('vault-feed-2028-sweep gates', () => {
 
   it('blocks known staff/coach names', () => {
     assert.equal(isBlockedStaff('Jon Sumrall', null), true);
+    assert.equal(isBlockedStaff("Jon Sumrall's", null), true);
     assert.equal(isBlockedStaff('Asher Ghioto', 'asher-ghioto'), false);
   });
 

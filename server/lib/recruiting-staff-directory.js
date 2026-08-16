@@ -67,16 +67,27 @@ function listStaff() {
   return Object.values(STAFF_DIRECTORY);
 }
 
+function normalizePersonNameKey(name) {
+  return String(name || '')
+    .trim()
+    .toLowerCase()
+    // Beat headlines: "Jon Sumrall's visit weekend" → still staff
+    .replace(/['\u2019]s\b/g, '')
+    .replace(/[^a-z0-9\s-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function isStaffOrCoachName(name) {
-  const lower = String(name || '').trim().toLowerCase();
+  const lower = normalizePersonNameKey(name);
   if (!lower) return false;
   for (const entry of listStaff()) {
-    if (entry.name.toLowerCase() === lower) return true;
+    if (normalizePersonNameKey(entry.name) === lower) return true;
   }
   try {
     const { getCanonicalCoachNames } = require('./official-coach-identity');
     for (const coach of getCanonicalCoachNames()) {
-      if (String(coach).toLowerCase() === lower) return true;
+      if (normalizePersonNameKey(coach) === lower) return true;
     }
   } catch {
     /* optional */
@@ -113,5 +124,6 @@ module.exports = {
   resolveStaffById,
   listStaff,
   isStaffOrCoachName,
+  normalizePersonNameKey,
   isStaffPlayerSlug,
 };
