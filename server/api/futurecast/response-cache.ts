@@ -13,8 +13,8 @@ const CACHE_TTL_MS = parseInt(process.env.FUTURECAST_CACHE_TTL_MS || String(5 * 
 const cache = createMemoryCache(CACHE_TTL_MS);
 
 /** Bump when high-priority or master-board payload shape changes. */
-/** Bumped when stars nullability / ED soft-deferred shape changes. */
-export const FUTURECAST_API_CACHE_VERSION = 28;
+/** Bumped for Expected visit labels merged onto soft/disk HP serve. */
+export const FUTURECAST_API_CACHE_VERSION = 29;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
@@ -291,6 +291,27 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
       filterBlockedRecruits: (list: unknown[]) => unknown[];
     };
     players = filterBlockedRecruits(players);
+  } catch {
+    /* optional */
+  }
+  // Soft/disk HP can predate a full rebuild — stamp Expected visit labels on every serve.
+  try {
+    const { mergeExpectedVisitHistory } = require('../../lib/game-week-visitors') as {
+      mergeExpectedVisitHistory: (
+        slug: string,
+        visitHistory: unknown
+      ) => Array<{ type: string; label: string }>;
+    };
+    players = players.map((row) => {
+      if (!row || typeof row !== 'object') return row;
+      const p = row as Record<string, unknown>;
+      const slug = String(p.slug || '');
+      if (!slug) return row;
+      return {
+        ...p,
+        visitHistory: mergeExpectedVisitHistory(slug, p.visitHistory),
+      };
+    });
   } catch {
     /* optional */
   }

@@ -152,6 +152,8 @@ export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): str
   }
 
   const tails: string[] = [];
+  const visitBits = (player.visitLabels ?? []).filter(Boolean).slice(0, 2);
+  if (visitBits.length) tails.push(visitBits.join(' · '));
   if (inState && !/in-state/i.test(lead)) tails.push('in-state');
   if (threat?.name) {
     tails.push(
@@ -171,7 +173,7 @@ export function buildChaseWhyBrief(player: FcLabTarget & ChaseTargetExtras): str
     return fallback.endsWith('.') ? fallback : `${fallback}.`;
   }
 
-  return `${lead} - ${tails.join('; ')}.`;
+  return `${lead} - ${tails.slice(0, 3).join('; ')}.`;
 }
 
 export function chaseHeatLabel(score: number | null | undefined): string {

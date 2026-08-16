@@ -101,3 +101,18 @@ test('buildChaseWhyBrief is a chase reason, not a trait blurb', () => {
   assert.match(brief, /need|fit|fight|pipeline|chase/i);
   assert.doesNotMatch(brief, /first-step|bend-and-burst/i);
 });
+
+test('buildChaseWhyBrief includes Expected visit labels on the skinny', () => {
+  const p = target({
+    slug: 'brysen-wright',
+    name: 'Brysen Wright',
+    position: 'WR',
+    school: 'Mandarin (Jacksonville, FL)',
+    ufProbability: 22,
+    fitScore: 84,
+    visitLabels: ['Expected Ole Miss visit · Sep 26'],
+    competingSchools: [{ name: 'Miami', pct: 38 }],
+  });
+  const brief = buildChaseWhyBrief(p);
+  assert.match(brief, /Expected Ole Miss visit · Sep 26/);
+});
