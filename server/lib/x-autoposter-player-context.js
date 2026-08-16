@@ -58,6 +58,17 @@ const INVALID_NAME_PHRASES = [
   /^recruiting\s+intel$/i,
   /^best\s+deal\s+we['’]?ve$/i,
   /^best\s+deal$/i,
+  // Subscribe / soft CTA headers that NAME_CHUNK otherwise treats as people.
+  /^final\s+days$/i,
+  /^deal\s+ends\s+soon$/i,
+  /^last\s+chance$/i,
+  /^join\s+go$/i,
+  /^join\s+today$/i,
+  /^sign\s+up$/i,
+  /^live\s+chat$/i,
+  /^app\s+store$/i,
+  /^insider\s+notes$/i,
+  /^prince\s+avenue\s+christian$/i,
   // Program tribute / greeting phrases that NAME_CHUNK otherwise treats as people.
   /^happy\s+birthday$/i,
   /^birthday\s+wishes$/i,
@@ -72,6 +83,9 @@ function isValidPlayerName(name) {
   const trimmed = name.trim();
   if (trimmed.length < 4 || trimmed.length > 56) return false;
   if (INVALID_NAME_PHRASES.some((re) => re.test(trimmed))) return false;
+  // ALL-CAPS headers (FINAL DAYS, JOIN GO) are promo noise — real names are Title Case.
+  const letters = trimmed.replace(/[^A-Za-z]/g, '');
+  if (letters.length >= 4 && !/[a-z]/.test(letters)) return false;
   const parts = trimmed.split(/\s+/).filter(Boolean);
   const core = coreNameParts(trimmed);
   if (core.length < 2) return false;
