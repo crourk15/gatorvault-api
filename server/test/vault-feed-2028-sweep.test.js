@@ -23,6 +23,7 @@ describe('vault-feed-2028-sweep gates', () => {
 
   it('blocks known staff/coach names', () => {
     assert.equal(isBlockedStaff('Jon Sumrall', null), true);
+    assert.equal(isBlockedStaff("Jon Sumrall's", null), true);
     assert.equal(isBlockedStaff('Asher Ghioto', 'asher-ghioto'), false);
   });
 
@@ -46,6 +47,7 @@ describe('vault-feed-2028-sweep gates', () => {
       dryRun: true,
       skipBeatIngest: true,
       skipAllowlistIntel: true,
+      skipBeatRefresh: true,
       skipPersist: true,
       candidates: [
         {
@@ -71,6 +73,22 @@ describe('vault-feed-2028-sweep gates', () => {
     assert.ok(report.skipped2027.length >= 1);
     assert.ok(report.blockedStaff.some((r) => /sumrall/i.test(r.playerName)));
     assert.equal(report.created.length, 0);
+  });
+
+
+  it('reports emptyReason when no candidates and no beat refresh', async () => {
+    const report = await runVaultFeed2028Sweep({
+      dryRun: true,
+      skipBeatIngest: true,
+      skipAllowlistIntel: true,
+      skipBeatRefresh: true,
+      skipPersist: true,
+      candidates: [],
+    });
+    assert.equal(report.ok, true);
+    assert.equal(report.summary.createdCount, 0);
+    assert.equal(report.summary.updatedCount, 0);
+    assert.ok(report.emptyReason === 'no_beat_posts_in_cache' || report.emptyReason === 'beats_present_but_no_named_2028_plus_in_lookback' || report.emptyReason === 'no_creates_or_updates');
   });
 
   it('ET window helper returns boolean', () => {

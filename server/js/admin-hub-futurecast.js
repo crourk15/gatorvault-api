@@ -101,10 +101,20 @@
       var vfUpdated = (vf && vf.updated) || [];
       var vfStaff = (vf && vf.blockedStaff) || [];
       var vf2027 = (vf && vf.skipped2027) || [];
+      var vfEmpty = (vf && (vf.emptyReason || (vfs && vfs.emptyReason))) || '';
+      var vfBeats = vf ? (vfs.beatsFetched != null ? vfs.beatsFetched : vf.beatsFetched) : null;
+      var vfCands = vf ? (vfs.candidatesNamed != null ? vfs.candidatesNamed : vf.candidatesNamed) : null;
+      var vfRunning = !!(vf && vf.status === 'running');
       var vfHtml = !vf
         ? '<p class="hub-meta">No vault-feed run yet — waits for 7am / 7pm ET cron (or Run now).</p>'
+        : vfRunning
+        ? '<p class="hub-meta" style="color:#fbbf24"><strong>RUNNING</strong> since ' + esc(vf.startedAt || '—')
+          + ' — beat refresh + allowlist can take 1–3 minutes. Zeros below are a placeholder, not finished proof.</p>'
+          + '<p class="hub-meta">' + esc(vf.message || 'Proof fills when finished.') + '</p>'
         : '<p class="hub-meta">Last run: <strong style="color:#fff">' + esc(vf.finishedAt || vf.startedAt || '—') + '</strong>'
+          + (vf.status ? ' · ' + esc(vf.status) : '')
           + (vf.dryRun ? ' · dry-run' : '')
+          + (vf.beatSource ? ' · beats:' + esc(vf.beatSource) : '')
           + '</p>'
           + '<div class="hub-dash-grid" style="margin:8px 0">'
           + '<section class="hub-card"><h3>Created</h3><p class="hub-kpi">' + esc(vfs.createdCount || 0) + '</p></section>'
@@ -114,6 +124,11 @@
           + '<section class="hub-card"><h3>2027 skipped</h3><p class="hub-kpi">' + esc(vfs.skipped2027Count || 0) + '</p></section>'
           + '<section class="hub-card"><h3>Allowlist cov</h3><p class="hub-kpi">' + esc(vfs.allowlistCoveragePct != null ? vfs.allowlistCoveragePct + '%' : '—') + '</p></section>'
           + '</div>'
+          + '<p class="hub-meta">Beats fetched: <strong style="color:#fff">' + esc(vfBeats != null ? vfBeats : '—') + '</strong>'
+          + ' · Named 2028+ candidates: <strong style="color:#fff">' + esc(vfCands != null ? vfCands : '—') + '</strong></p>'
+          + (vfEmpty ? '<p class="hub-meta" style="color:#fbbf24">Empty reason: ' + esc(vfEmpty) + '</p>' : '')
+          + ((vf.beatRefresh && vf.beatRefresh.error) ? '<p class="hub-meta" style="color:#fca5a5">Beat refresh: ' + esc(vf.beatRefresh.error) + '</p>' : '')
+          + ((vf.allowlistIntel && vf.allowlistIntel.error) ? '<p class="hub-meta" style="color:#fca5a5">Allowlist: ' + esc(vf.allowlistIntel.error) + '</p>' : '')
           + '<p class="hub-meta">Created (proof): ' + esc(vfCreated.slice(0, 8).map(function (r) { return r.playerName || r.playerSlug; }).join(', ') || 'none') + '</p>'
           + '<p class="hub-meta">Updated (proof): ' + esc(vfUpdated.slice(0, 8).map(function (r) { return r.playerName || r.playerSlug; }).join(', ') || 'none') + '</p>'
           + (vfStaff.length ? '<p class="hub-meta">Staff blocked: ' + esc(vfStaff.slice(0, 5).map(function (r) { return r.playerName; }).join(', ')) + '</p>' : '')
@@ -230,8 +245,9 @@
                       return null;
                     }
                     var s = (rep && rep.summary) || {};
-                    setVfStatus('Done — created ' + (s.createdCount || 0) + ', updated ' + (s.updatedCount || 0) + ', unresolved ' + (s.unresolvedCount || 0), false);
-                    setMsg('Vault feed done — created ' + (s.createdCount || 0) + ', updated ' + (s.updatedCount || 0));
+                    var emptyBit = s.emptyReason ? ' · ' + s.emptyReason : '';
+                    setVfStatus('Done — created ' + (s.createdCount || 0) + ', updated ' + (s.updatedCount || 0) + ', unresolved ' + (s.unresolvedCount || 0) + ', beats ' + (s.beatsFetched != null ? s.beatsFetched : '—') + emptyBit, !!s.emptyReason && !(s.createdCount || s.updatedCount));
+                    setMsg('Vault feed done — created ' + (s.createdCount || 0) + ', updated ' + (s.updatedCount || 0) + emptyBit);
                     vfRun.disabled = false;
                     return load();
                   })
