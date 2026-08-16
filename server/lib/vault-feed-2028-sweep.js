@@ -380,17 +380,33 @@ function summarizeFeedResult(fed) {
   };
 }
 
-async function feedExistingSlug(slug, { signalType = null, dryRun = false } = {}) {
+async function feedExistingSlug(
+  slug,
+  { signalType = null, dryRun = false, forceHydrate = false, timeoutMs = 25000 } = {}
+) {
   const key = String(slug || '').toLowerCase();
   if (!key) return { ok: false, reason: 'missing_slug' };
   if (dryRun) return { ok: true, dryRun: true, slug: key, action: 'would_feed' };
   try {
     const { feedDeskIntelToFutureCast } = require('./desk-intel-futurecast-feed');
-    return await feedDeskIntelToFutureCast({
+    // Existing board rows already have On3/store data — force hydrate storms Render
+    // (direct On3 403 → jina fallback × every candidate) and leaves Hub "running" forever.
+    const feedPromise = feedDeskIntelToFutureCast({
       slug: key,
-      forceHydrate: true,
+      forceHydrate: forceHydrate === true,
       signalType: signalType || 'vault_feed_2028',
     });
+    const ms = Math.max(5000, Number(timeoutMs) || 25000);
+    const fed = await Promise.race([
+      feedPromise,
+      new Promise((resolve) =>
+        setTimeout(
+          () => resolve({ ok: false, error: 'feed_timeout', slug: key, timeoutMs: ms }),
+          ms
+        )
+      ),
+    ]);
+    return fed;
   } catch (err) {
     return { ok: false, error: err.message, slug: key };
   }
@@ -444,7 +460,11 @@ async function provisionNewProspect(candidate, { dryRun = false } = {}) {
   // Soft-feed FC path for 2028+ monitor entries (hydrate if board thin).
   let feed = null;
   try {
-    feed = await feedExistingSlug(provision.slug, { signalType: 'vault_feed_provision' });
+    feed = await feedExistingSlug(provision.slug, {
+      signalType: 'vault_feed_provision',
+      forceHydrate: true,
+      timeoutMs: 45000,
+    });
   } catch (err) {
     feed = { ok: false, error: err.message };
   }

@@ -439,7 +439,15 @@ async function feedDeskIntelToFutureCast({
   let board = player;
   let usedProfile = profile;
 
-  if (forceHydrate || !board || !(board.on3TopTeams || board.topTeams)?.length || board.natlRank == null) {
+  const boardNeedsHydrate =
+    !board ||
+    !board.name ||
+    (!(board.on3TopTeams || board.topTeams)?.length &&
+      board.natlRank == null &&
+      !board.on3Slug &&
+      !board.on3Id);
+
+  if (forceHydrate || boardNeedsHydrate) {
     try {
       const hydrate = require('./on3-board-hydrate');
       const hydrated = await hydrate.hydrateRecruitBoard({
