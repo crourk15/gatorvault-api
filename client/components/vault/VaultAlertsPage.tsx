@@ -423,7 +423,8 @@ export function VaultAlertsPage(): React.ReactElement {
             <div>
               <h2 className="gv-vault-alerts__section-title">Board intel</h2>
               <p className="gv-vault-alerts__section-hint gv-vault-alerts__section-hint--flush">
-                Verified Florida visits (OV + UV), flip watch, and odds moves — live from the API.
+                Recent verified Florida visits (last ~3 weeks), flip watch, and odds moves — live from
+                the API. Older summer visits stay on the player profile, not this feed.
               </p>
             </div>
             {localAlerts.length > 0 ? (
