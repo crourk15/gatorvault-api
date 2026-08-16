@@ -86,6 +86,11 @@ function emptyReport(opts = {}) {
     classYearMin: CLASS_YEAR_MIN,
     classYearMax: CLASS_YEAR_MAX,
     beatsFetched: 0,
+    beatRefresh: null,
+    beatSource: null,
+    beatFetchedAt: null,
+    candidatesNamed: 0,
+    emptyReason: null,
     beatIngest: null,
     allowlistIntel: null,
     created: [],
@@ -99,8 +104,23 @@ function emptyReport(opts = {}) {
   };
 }
 
+function explainEmpty(report) {
+  if (report.created.length || report.updated.length) return null;
+  if (report.errors?.some((e) => e.step === 'getBeatPosts' || e.step === 'refreshBeatStream')) {
+    return 'beat_fetch_failed';
+  }
+  if (!report.beatsFetched) return 'no_beat_posts_in_cache';
+  if (!report.candidatesNamed) {
+    return 'beats_present_but_no_named_2028_plus_in_lookback';
+  }
+  if (report.unresolved.length) return 'candidates_unresolved_only';
+  if (report.skipped2027.length && !report.created.length) return 'only_2027_or_skipped';
+  return 'no_creates_or_updates';
+}
+
 function finalizeSummary(report) {
   report.finishedAt = new Date().toISOString();
+  report.emptyReason = explainEmpty(report);
   report.status = report.errors?.length ? 'warning' : 'success';
   report.summary = {
     createdCount: report.created.length,
@@ -110,12 +130,17 @@ function finalizeSummary(report) {
     unresolvedCount: report.unresolved.length,
     skippedCount: report.skipped.length,
     errorCount: report.errors.length,
+    beatsFetched: report.beatsFetched || 0,
+    candidatesNamed: report.candidatesNamed || 0,
+    emptyReason: report.emptyReason,
+    beatSource: report.beatSource || null,
     allowlistCoveragePct: report.allowlistIntel?.coverage?.coveragePct ?? null,
     allowlistMissing: Array.isArray(report.allowlistIntel?.coverage?.missing)
       ? report.allowlistIntel.coverage.missing.length
       : null,
   };
-    report.message = `created ${report.summary.createdCount}, updated ${report.summary.updatedCount}, unresolved ${report.summary.unresolvedCount}`;
+  report.message = `created ${report.summary.createdCount}, updated ${report.summary.updatedCount}, unresolved ${report.summary.unresolvedCount}`
+    + (report.emptyReason ? ` · ${report.emptyReason}` : '');
   return report;
 }
 
@@ -305,13 +330,37 @@ async function runVaultFeed2028SweepInner(opts = {}) {
   process.env.BEAT_INGEST_ALLOW_CLASS_2029 = 'true';
 
   try {
-    // 1) Load live beat pool
+    // 1) Refresh + load live beat pool (stale/empty cache → zero creates looks like "nothing happened")
     let posts = [];
+    const skipBeatRefresh = opts.skipBeatRefresh === true;
     try {
       const liveBeat = require('./live-beat');
+      if (!skipBeatRefresh && !opts.posts && !opts.candidates) {
+        try {
+          const refreshed = await liveBeat.refreshBeatStream();
+          report.beatRefresh = {
+            ok: !refreshed?.error || !!refreshed?.postCount || !!refreshed?.posts?.length,
+            postCount: refreshed?.postCount ?? refreshed?.posts?.length ?? null,
+            source: refreshed?.source || null,
+            error: refreshed?.error || null,
+            softFailure: !!refreshed?.softFailure,
+            cached: !!refreshed?.cached,
+          };
+        } catch (err) {
+          report.beatRefresh = { ok: false, error: err.message };
+          report.errors.push({ step: 'refreshBeatStream', error: err.message });
+        }
+      } else {
+        report.beatRefresh = { ok: true, skipped: true };
+      }
       const pack = liveBeat.getBeatPosts?.(120) || {};
       posts = Array.isArray(pack) ? pack : pack.posts || [];
       report.beatsFetched = posts.length;
+      report.beatSource = (!Array.isArray(pack) && pack.source) || report.beatRefresh?.source || null;
+      report.beatFetchedAt = (!Array.isArray(pack) && pack.fetchedAt) || null;
+      if (pack && !Array.isArray(pack) && pack.error) {
+        report.errors.push({ step: 'beatCache', error: String(pack.error).slice(0, 240) });
+      }
     } catch (err) {
       report.errors.push({ step: 'getBeatPosts', error: err.message });
     }
@@ -339,6 +388,7 @@ async function runVaultFeed2028SweepInner(opts = {}) {
     const candidates = Array.isArray(opts.candidates)
       ? opts.candidates
       : collectBeatCandidates(posts, { lookbackHours });
+    report.candidatesNamed = candidates.filter((c) => c && c.kind === 'named').length;
 
     let creates = 0;
     for (const candidate of candidates) {
@@ -470,15 +520,32 @@ async function runVaultFeed2028SweepInner(opts = {}) {
     // 4) Continuous allowlist intel for 2028 (existing chase targets)
     if (!skipAllowlistIntel) {
       try {
-        const { runAllowlistIntelSweep } = require('./allowlist-intel-sweep');
+        const { runAllowlistIntelSweep, measureAllowlistIntelCoverage } = require('./allowlist-intel-sweep');
         report.allowlistIntel = await runAllowlistIntelSweep({
           classYear: 2028,
           dryRun,
           maxCreates: opts.allowlistMaxCreates != null ? Number(opts.allowlistMaxCreates) : 200,
         });
+        // Always stamp coverage for Hub proof even if sweep returned partial/odd shape.
+        if (!report.allowlistIntel?.coverage) {
+          try {
+            report.allowlistIntel = {
+              ...(report.allowlistIntel || {}),
+              coverage: measureAllowlistIntelCoverage(2028, { days: 30 }),
+            };
+          } catch {
+            /* optional */
+          }
+        }
       } catch (err) {
         report.errors.push({ step: 'allowlistIntel', error: err.message });
-        report.allowlistIntel = { ok: false, error: err.message };
+        let coverage = null;
+        try {
+          coverage = require('./allowlist-intel-sweep').measureAllowlistIntelCoverage(2028, { days: 30 });
+        } catch {
+          coverage = null;
+        }
+        report.allowlistIntel = { ok: false, error: err.message, coverage };
       }
     }
 
