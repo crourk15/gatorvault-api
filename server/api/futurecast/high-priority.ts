@@ -42,6 +42,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
 const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
 const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields, buildVerifiedVisitRecapRows, getVisitIntelBoardSnapshot } = require('../../lib/visit-intel-utils');
+const { mergeExpectedVisitHistory } = require('../../lib/game-week-visitors');
 const { resolveUfProbability, loadUfPctPredictorsBySlug } = require('../../lib/uf-probability-utils');
 const { buildFlipWatchRows } = require('../../lib/flip-watch-utils');
 const intelStore = require('../../lib/recruiting-intel-store');
@@ -872,7 +873,13 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
           insiderNotes,
           notePreview: notePreview(insiderNotes ?? target.skinny),
           skinny: target.skinny ?? null,
-          visitHistory: buildVisitHistory(target, recruiting),
+          visitHistory: (() => {
+            const { mergeExpectedVisitHistory } = require('../../lib/game-week-visitors');
+            return mergeExpectedVisitHistory(
+              String(target.slug || ''),
+              buildVisitHistory(target, recruiting)
+            );
+          })(),
           ufOvStatus: target.ufOvStatus ?? recruiting?.ufOvStatus ?? null,
           visitStart: target.visitStart ?? recruiting?.visitStart ?? null,
           visitEnd: target.visitEnd ?? recruiting?.visitEnd ?? null,
