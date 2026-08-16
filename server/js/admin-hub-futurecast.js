@@ -99,6 +99,7 @@
       var vfs = (vf && vf.summary) || {};
       var vfCreated = (vf && vf.created) || [];
       var vfUpdated = (vf && vf.updated) || [];
+      var vfUnresolved = (vf && vf.unresolved) || [];
       var vfStaff = (vf && vf.blockedStaff) || [];
       var vf2027 = (vf && vf.skipped2027) || [];
       var vfEmpty = (vf && (vf.emptyReason || (vfs && vfs.emptyReason))) || '';
@@ -131,7 +132,56 @@
           + ((vf.beatRefresh && vf.beatRefresh.error) ? '<p class="hub-meta" style="color:#fca5a5">Beat refresh: ' + esc(vf.beatRefresh.error) + '</p>' : '')
           + ((vf.allowlistIntel && vf.allowlistIntel.error) ? '<p class="hub-meta" style="color:#fca5a5">Allowlist: ' + esc(vf.allowlistIntel.error) + '</p>' : '')
           + '<p class="hub-meta">Created (proof): ' + esc(vfCreated.slice(0, 8).map(function (r) { return r.playerName || r.playerSlug; }).join(', ') || 'none') + '</p>'
-          + '<p class="hub-meta">Updated (proof): ' + esc(vfUpdated.slice(0, 8).map(function (r) { return r.playerName || r.playerSlug; }).join(', ') || 'none') + '</p>'
+          + '<div style="margin:10px 0 6px"><p class="hub-meta" style="margin:0 0 4px;color:#fff"><strong>Updated detail</strong> — what FutureCast/store changed</p>'
+          + (vfUpdated.length
+            ? '<div class="hub-table-wrap"><table class="hub-table"><thead><tr><th>Player</th><th>What changed</th><th>Beat / source</th></tr></thead><tbody>'
+              + vfUpdated.slice(0, 20).map(function (r) {
+                var what = r.whatChanged
+                  || (r.feedOk === false ? ('Feed failed' + (r.feedError ? ': ' + r.feedError : '')) : null)
+                  || (r.action === 'fed_futurecast' ? 'FutureCast intel re-applied from beat' : null)
+                  || (r.action === 'would_update' ? 'dry-run would update' : null)
+                  || r.action
+                  || 'updated';
+                var src = (r.handle ? '@' + r.handle + ' — ' : '') + (r.sourcePreview || '');
+                var ufBit = (r.ufPct != null && String(what).indexOf('UF%') < 0) ? (' · UF ' + r.ufPct + '%') : '';
+                return '<tr><td><strong style="color:#fff">' + esc(r.playerName || r.playerSlug || '—') + '</strong>'
+                  + '<div class="hub-meta">' + esc(r.playerSlug || '') + (r.classYear ? ' · ' + esc(r.classYear) : '') + '</div></td>'
+                  + '<td class="hub-meta">' + esc(what) + esc(ufBit) + '</td>'
+                  + '<td class="hub-meta">' + esc(src.slice(0, 160) || '—') + '</td></tr>';
+              }).join('')
+              + '</tbody></table></div>'
+            : '<p class="hub-meta">none</p>')
+          + '</div>'
+          + '<div style="margin:10px 0 6px"><p class="hub-meta" style="margin:0 0 4px;color:#fff"><strong>Unresolved detail</strong> — why auto-vault refused (open these in Beat Desk)</p>'
+          + (vfUnresolved.length
+            ? '<div class="hub-table-wrap"><table class="hub-table"><thead><tr><th>Name / cue</th><th>Reason</th><th>Beat / source</th></tr></thead><tbody>'
+              + vfUnresolved.slice(0, 24).map(function (r) {
+                var reasonMap = {
+                  weak_identity: 'Weak identity — need clearer On3/name match',
+                  missing_on3: 'Missing On3 profile / ID',
+                  on3_id_missing: 'Missing On3 ID',
+                  provision_failed: 'Provision failed',
+                  untrusted_writer: 'Writer not on trusted beat list',
+                  class_year_out_of_scope: 'Class year out of 2028+ scope',
+                  blocked_staff: 'Staff/coach name blocked',
+                  staff_not_recruit: 'Staff/coach — not a recruit',
+                  current_roster_player: 'Matches current UF roster player',
+                  blocked_not_recruit: 'Blocked alumni/legend phantom',
+                  slug_name_identity_mismatch: 'Slug/name identity mismatch',
+                  vault_feed_weak_identity: 'Weak identity — queued for review',
+                  max_creates_reached: 'Hit create cap this run'
+                };
+                var reason = reasonMap[r.reason] || r.reason || 'unresolved';
+                var src = (r.handle ? '@' + r.handle + ' — ' : '') + (r.sourcePreview || '');
+                return '<tr><td><strong style="color:#fff">' + esc(r.playerName || r.playerSlug || '—') + '</strong>'
+                  + '<div class="hub-meta">' + esc(r.playerSlug || '') + (r.classYear ? ' · ' + esc(r.classYear) : '')
+                  + (r.queued ? ' · queued for review' : '') + '</div></td>'
+                  + '<td class="hub-meta" style="color:#fbbf24">' + esc(reason) + '</td>'
+                  + '<td class="hub-meta">' + esc(src.slice(0, 160) || '—') + '</td></tr>';
+              }).join('')
+              + '</tbody></table></div>'
+            : '<p class="hub-meta">none</p>')
+          + '</div>'
           + (vfStaff.length ? '<p class="hub-meta">Staff blocked: ' + esc(vfStaff.slice(0, 5).map(function (r) { return r.playerName; }).join(', ')) + '</p>' : '')
           + (vf2027.length ? '<p class="hub-meta">2027 handpick-only skips: ' + esc(String(vf2027.length)) + '</p>' : '');
 

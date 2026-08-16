@@ -8,6 +8,7 @@ const {
   collectBeatCandidates,
   pickClassYear,
   isBlockedStaff,
+  summarizeFeedResult,
   runVaultFeed2028Sweep,
   isVaultFeedEtWindow,
   CLASS_YEAR_MIN,
@@ -93,5 +94,33 @@ describe('vault-feed-2028-sweep gates', () => {
 
   it('ET window helper returns boolean', () => {
     assert.equal(typeof isVaultFeedEtWindow(new Date()), 'boolean');
+  });
+});
+
+
+describe('summarizeFeedResult proof detail', () => {
+  it('explains UF% move from decision delta (no prior field)', () => {
+    const s = summarizeFeedResult({
+      ok: true,
+      promoted: true,
+      allowlisted: true,
+      decision: { pct: 42, delta: 6, source: 'signal_nudge', nudged: true },
+      player: { ufProbability: 42, natlRank: 88 },
+      steps: [
+        { step: 'hydrate', ok: true },
+        { step: 'recruiting_store_upsert', ok: true },
+        { step: 'futurecast_prediction_refresh', ok: true },
+      ],
+    });
+    assert.match(s.whatChanged, /UF% 36→42/);
+    assert.match(s.whatChanged, /promoted onto chase board/);
+    assert.match(s.whatChanged, /On3 hydrate/);
+    assert.equal(s.ufPct, 42);
+    assert.equal(s.promoted, true);
+  });
+
+  it('surfaces feed failures clearly', () => {
+    const s = summarizeFeedResult({ ok: false, error: 'staff_not_recruit' });
+    assert.match(s.whatChanged, /Feed failed: staff_not_recruit/);
   });
 });
