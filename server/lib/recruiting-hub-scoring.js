@@ -22,6 +22,19 @@ function parseUfPct(raw) {
   return Math.min(100, Math.max(0, Math.round(num <= 1 ? num * 100 : num)));
 }
 
+/**
+ * Confirmed On3 / battle-board RPM — percentage points only.
+ * Never treat 1% as fraction→100%, or residual 0.36 as 36%.
+ */
+function parseMarketRpmPct(raw) {
+  if (raw == null || !Number.isFinite(Number(raw))) return null;
+  const num = Number(raw);
+  if (num <= 0) return null;
+  if (num > 100) return 100;
+  if (num < 1) return null;
+  return Math.round(num);
+}
+
 function isFloridaSchool(value) {
   return /florida|gators|\buf\b/i.test(String(value || ''));
 }
@@ -256,5 +269,6 @@ module.exports = {
   calcStaffImpact,
   normalizePipelineScore,
   parseUfPct,
+  parseMarketRpmPct,
   isFloridaSchool,
 };
