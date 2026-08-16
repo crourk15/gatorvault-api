@@ -55,6 +55,8 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-16 | Game Week 3 Keys: always show key body (Expected visitors names) — no hover-flip | `KeysToGameCards` + `game-week-wow.css` in binary | pending |
+| 2026-08-16 | Chase card: dedicated Expected visit line above Why we chase + skip HP SWR | `VaultChaseCard` / SWR in binary | pending |
 | 2026-08-16 | Chase card Why we chase: show Expected FAU/Ole Miss visit labels from HP visitHistory | `chase-priority` `buildChaseWhyBrief` in binary (API visitHistory live without bake) | pending |
 | 2026-08-16 | Game Week schedule: always await live `/api/schedule` (skip SWR cache-first) so Expected visitors / keys update without hard refresh | `schedule-api`, `stale-while-revalidate` in binary — **Netlify picks up web; iOS needs bake** | pending |
 | 2026-08-16 | My Alerts Board Intel copy: “recent (~3 weeks)” visits — older UVs/OVs drop via API already | `VaultAlertsPage` hint in binary | pending |

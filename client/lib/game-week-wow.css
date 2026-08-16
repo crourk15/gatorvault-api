@@ -571,27 +571,11 @@
   gap: 0.75rem;
 }
 
-.gv-gw-flip-card {
-  perspective: 800px;
-  height: 140px;
-}
-
-.gv-gw-flip-card__inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 200ms ease;
-  transform-style: preserve-3d;
-}
-
-.gv-gw-flip-card:hover .gv-gw-flip-card__inner {
-  transform: rotateY(180deg);
-}
-
-.gv-gw-flip-card__face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
+/* Key cards — always show title + body (no hover-flip; mobile never saw visitors). */
+.gv-gw-flip-card,
+.gv-gw-key-card {
+  min-height: 140px;
+  height: auto;
   border-radius: 12px;
   padding: 1rem;
   background: #fff;
@@ -599,14 +583,13 @@
   border-top: 3px solid var(--gv-gw-orange);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 0.45rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.gv-gw-flip-card__face--back {
-  transform: rotateY(180deg);
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
+.gv-gw-key-card--visitors {
+  border-top-color: #0021a5;
 }
 
 .gv-gw-flip-card__title {
@@ -614,6 +597,13 @@
   font-size: 0.9rem;
   margin: 0;
   color: var(--color-text-dark);
+}
+
+.gv-gw-key-card__body {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
 }
 
 /* Swing players — light feed rows */
@@ -985,6 +975,8 @@
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-wow-panel__body,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-swing-card,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-flip-card,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-key-card,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-flip-card__face,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-flip-card__title,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-swing-card__name,
@@ -1004,6 +996,7 @@
 
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-swing-card__role,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-flip-card__face--back,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-key-card__body,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-film-panel__list li,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-scout-card ul,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-scout-summary,
