@@ -4,12 +4,12 @@
 const contentStore = require('./content-store');
 const { getRelatedArticles } = require('./insider-articles-related');
 const {
-  insiderAuthors,
   insiderHeatIndex,
   insiderStorylinesFallback,
-  insiderTags,
   categoryFromBadge,
   parseStorylineTitle,
+  deriveAuthorsFromArticles,
+  deriveTagsFromArticles,
 } = require('./insider-hub-data');
 
 function articleMeta(a) {
@@ -89,7 +89,7 @@ function mountInsiderHubRoutes(app) {
 
   app.get('/api/insider/authors', (req, res) => {
     try {
-      return res.json(insiderAuthors);
+      return res.json(deriveAuthorsFromArticles(loadArticles()));
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -121,7 +121,7 @@ function mountInsiderHubRoutes(app) {
 
   app.get('/api/insider/tags', (req, res) => {
     try {
-      return res.json(insiderTags);
+      return res.json(deriveTagsFromArticles(loadArticles()));
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

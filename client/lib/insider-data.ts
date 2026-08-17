@@ -1,5 +1,6 @@
 /**
  * Insider Articles hub — static enrichments (categories, heat, tags, authors).
+ * Author/tag chips are curated; live counts come from published articles.
  */
 
 export type InsiderCategory = { id: string; name: string; icon: string };
@@ -13,13 +14,19 @@ export type InsiderAuthor = {
 
 export type InsiderHeatRow = { id: string; label: string; value: number };
 
-export type InsiderTag = { id: string; label: string; hot: boolean };
+export type InsiderTag = { id: string; label: string; hot: boolean; match?: RegExp };
 
 export type InsiderStoryline = {
   id: string;
   icon: string;
   title: string;
   body: string;
+};
+
+export const AUTHOR_ROLE_BY_NAME: Record<string, string> = {
+  'gatorvault staff': 'Editorial',
+  'gatorvault film desk': 'Film Analysis',
+  'gatorvault analytics': 'Data & Trends',
 };
 
 export const insiderCategories: InsiderCategory[] = [
@@ -32,10 +39,11 @@ export const insiderCategories: InsiderCategory[] = [
   { id: 'community', name: 'Community', icon: '💬' },
 ];
 
+/** Curated desk roster — roles only; never use fake article counts. */
 export const insiderAuthors: InsiderAuthor[] = [
-  { id: 'staff', name: 'GatorVault Staff', role: 'Editorial', articleCount: 48 },
-  { id: 'film-desk', name: 'GatorVault Film Desk', role: 'Film Analysis', articleCount: 32 },
-  { id: 'analytics', name: 'GatorVault Analytics', role: 'Data & Trends', articleCount: 21 },
+  { id: 'staff', name: 'GatorVault Staff', role: 'Editorial', articleCount: 0 },
+  { id: 'film-desk', name: 'GatorVault Film Desk', role: 'Film Analysis', articleCount: 0 },
+  { id: 'analytics', name: 'GatorVault Analytics', role: 'Data & Trends', articleCount: 0 },
 ];
 
 export const insiderHeatIndex: InsiderHeatRow[] = [
@@ -46,13 +54,15 @@ export const insiderHeatIndex: InsiderHeatRow[] = [
   { id: 'nil', label: 'NIL & locker room dynamics', value: 70 },
 ];
 
+/** Curated topic chips — only shown when deriveTagsFromArticles finds matches. */
 export const insiderTags: InsiderTag[] = [
-  { id: 'tag-335', label: '3-3-5', hot: true },
-  { id: 'tag-portal', label: 'Portal', hot: true },
-  { id: 'tag-qb', label: 'QB battle', hot: true },
-  { id: 'tag-ol', label: 'OL cohesion', hot: false },
-  { id: 'tag-recruiting', label: 'Recruiting', hot: false },
-  { id: 'tag-analytics', label: 'Analytics', hot: false },
+  { id: 'tag-335', label: '3-3-5', hot: true, match: /3[\s-]?3[\s-]?5|scheme install/i },
+  { id: 'tag-portal', label: 'Portal', hot: true, match: /\bportal\b/i },
+  { id: 'tag-qb', label: 'QB battle', hot: true, match: /\bqb\b|quarterback|philo|jones\s*jr/i },
+  { id: 'tag-ol', label: 'OL cohesion', hot: false, match: /\bol\b|offensive line|o-line|oline/i },
+  { id: 'tag-film', label: 'Film Room', hot: false, match: /\bfilm\b/i },
+  { id: 'tag-recruiting', label: 'Recruiting', hot: false, match: /\brecruit|war room|class health/i },
+  { id: 'tag-analytics', label: 'Analytics', hot: false, match: /\banalytics|probability|win model|\bwar\b/i },
 ];
 
 export const insiderStorylinesFallback: InsiderStoryline[] = [

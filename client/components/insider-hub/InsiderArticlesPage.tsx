@@ -3,6 +3,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import '@/lib/insider-hub.css';
 import {
+  deriveAuthorsFromArticles,
+  deriveTagsFromArticles,
   fetchInsiderHubBundle,
   type InsiderArticle,
 } from '@/lib/insider-api';
@@ -204,7 +206,8 @@ function InsiderAuthors({
   activeAuthor: string | null;
   onAuthorClick: (name: string) => void;
   onViewAll: () => void;
-}): React.ReactElement {
+}): React.ReactElement | null {
+  if (!authors.length) return null;
   return (
     <div className="insider-card" data-testid="insider-authors">
       <h2 className="insider-section-title">Authors</h2>
@@ -225,7 +228,9 @@ function InsiderAuthors({
               <div>
                 <div className="insider-author-name">{author.name}</div>
                 <div className="insider-author-role">{author.role}</div>
-                <div className="insider-author-count">{author.articleCount} articles</div>
+                <div className="insider-author-count">
+                  {author.articleCount} {author.articleCount === 1 ? 'article' : 'articles'}
+                </div>
               </div>
             </button>
           );
@@ -307,7 +312,8 @@ function InsiderTagCloud({
   tags: InsiderTag[];
   activeTag: string | null;
   onTagClick: (label: string) => void;
-}): React.ReactElement {
+}): React.ReactElement | null {
+  if (!tags.length) return null;
   return (
     <div className="insider-card" data-testid="insider-tags">
       <h2 className="insider-section-title">Insider Tags</h2>
@@ -361,12 +367,14 @@ export function InsiderArticlesPage({
     HAS_ARTICLES_SEED ? SEED_ARTICLES.storylines : []
   );
   const [authors, setAuthors] = useState<InsiderAuthor[]>(
-    HAS_ARTICLES_SEED ? SEED_ARTICLES.authors : []
+    HAS_ARTICLES_SEED ? deriveAuthorsFromArticles(SEED_ARTICLES.articles) : []
   );
   const [heatIndex, setHeatIndex] = useState<InsiderHeatRow[]>(
     HAS_ARTICLES_SEED ? SEED_ARTICLES.heatIndex : []
   );
-  const [tags, setTags] = useState<InsiderTag[]>(HAS_ARTICLES_SEED ? SEED_ARTICLES.tags : []);
+  const [tags, setTags] = useState<InsiderTag[]>(
+    HAS_ARTICLES_SEED ? deriveTagsFromArticles(SEED_ARTICLES.articles) : []
+  );
 
   const load = useCallback(async () => {
     if (!HAS_ARTICLES_SEED) {
@@ -553,17 +561,21 @@ export function InsiderArticlesPage({
             <section className="insider-section">
               <InsiderSpotlightCarousel articles={articles} inVault={inVault} />
             </section>
-            <section className="insider-section">
-              <InsiderAuthors
-                authors={authors}
-                activeAuthor={authorFilter}
-                onAuthorClick={handleAuthorClick}
-                onViewAll={handleViewAll}
-              />
-            </section>
-            <section className="insider-section">
-              <InsiderTagCloud tags={tags} activeTag={activeTag} onTagClick={handleTagClick} />
-            </section>
+            {authors.length > 0 ? (
+              <section className="insider-section">
+                <InsiderAuthors
+                  authors={authors}
+                  activeAuthor={authorFilter}
+                  onAuthorClick={handleAuthorClick}
+                  onViewAll={handleViewAll}
+                />
+              </section>
+            ) : null}
+            {tags.length > 0 ? (
+              <section className="insider-section">
+                <InsiderTagCloud tags={tags} activeTag={activeTag} onTagClick={handleTagClick} />
+              </section>
+            ) : null}
           </aside>
         </div>
       </div>
