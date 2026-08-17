@@ -198,11 +198,21 @@ const LEGACY_PEER_MIN_PCT = 12;
 const UF_LOCKED_SKIP_LEGACY_PCT = 90;
 const LEGACY_PEER_MAX = 2;
 
+/**
+ * Peer market share in percentage points.
+ * Strict `< 1` for unit-interval fractions — `1` is a real 1% residual crumb
+ * (Asher OSU ~1.2 rounded → 1; `<= 1` used to explode that to 100% On3 lead).
+ */
 function competitorPct(raw: unknown): number | null {
   if (raw == null || !Number.isFinite(Number(raw))) return null;
   const num = Number(raw);
-  return Math.min(100, Math.max(0, Math.round((num <= 1 ? num * 100 : num) * 10) / 10));
+  if (num <= 0) return null;
+  const pct = num < 1 ? num * 100 : num;
+  return Math.min(100, Math.max(0, Math.round(pct * 10) / 10));
 }
+
+/** Meaningful peer floor — residual On3 crumbs must not invent an On3 lead. */
+const MIN_PEER_BOARD_PCT = 5;
 
 function competingSchoolsFromRecruitingRecord(
   recruiting: Record<string, unknown> | null | undefined
@@ -213,7 +223,7 @@ function competingSchoolsFromRecruitingRecord(
     const school = String(nameRaw || '').trim();
     if (!school || /\bflorida\b|\bgators\b|\buf\b/i.test(school)) return;
     const pct = competitorPct(pctRaw);
-    if (pct == null || pct <= 0) return;
+    if (pct == null || pct < MIN_PEER_BOARD_PCT) return;
     const key = school.toLowerCase();
     const existing = bySchool.get(key);
     if (!existing || pct > existing.pct) {

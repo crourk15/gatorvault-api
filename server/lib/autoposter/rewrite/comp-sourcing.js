@@ -144,7 +144,8 @@ function rpmTopFromOn3TopTeams(topTeams = [], classYear = 2028) {
         const raw = rawTeamPrediction(row);
         if (raw != null && residual.has(String(raw))) return { school: name, pct: null };
         const pct = teamPct(row, scale);
-        const rounded = pct != null && pct >= 1 ? Math.round(pct) : null;
+        // Keep residual crumbs out — rounded 1% used to become On3 lead 100 via competitorPct.
+        const rounded = pct != null && pct >= 5 ? Math.round(pct) : null;
         return { school: name, pct: rounded };
       })
       .filter(Boolean)
