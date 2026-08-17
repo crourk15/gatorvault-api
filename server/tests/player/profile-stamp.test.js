@@ -104,6 +104,41 @@ describe('player profile prepared-meal stamps', () => {
     assert.equal(live.futurecastSummary.predictedSchool, 'Florida');
   });
 
+  it('keeps residual ufRpmPct 1 as 1% — never ×100 Field poison (Gabriel)', () => {
+    const live = stamp.overlayLiveRpm(
+      {
+        player: { slug: 'gabriel-player', committedTo: null, classYear: 2028 },
+        competingSchools: [
+          { school: 'Miami', pct: 28.9 },
+          { school: 'Ohio State', pct: 8.1 },
+        ],
+        futurecastSummary: { gvProbability: 11, ufProbability: 11, predictedSchool: 'Miami' },
+        vaultScouting: null,
+      },
+      {
+        ufRpmPct: 1,
+        topTeams: [
+          { team: { name: 'Miami' }, prediction: 93.98 },
+          { team: { name: 'Florida' }, prediction: 0.80 },
+          { team: { name: 'Ohio State' }, prediction: 0.68 },
+        ],
+      }
+    );
+    assert.ok(Number(live.player.ufRpmPct) <= 5, `rpm=${live.player.ufRpmPct}`);
+    assert.ok(Number(live.futurecastSummary.on3UfProbability) <= 5, `on3=${live.futurecastSummary.on3UfProbability}`);
+    assert.ok(
+      (live.competingSchools || []).some((c) => /miami/i.test(c.school) && Number(c.pct) >= 50),
+      `comps=${JSON.stringify(live.competingSchools)}`
+    );
+    assert.notEqual(live.futurecastSummary.predictedSchool, 'Florida');
+  });
+
+  it('parseRpmPct never maps 1 → 100', () => {
+    assert.equal(stamp.parseRpmPct(1), 1);
+    assert.equal(stamp.parseUfPct(1), 1);
+    assert.equal(stamp.parseRpmPct(0.8), 1);
+  });
+
   it('heals stale predictedSchool when live UF RPM leads the rival board', () => {
     const live = stamp.overlayLiveRpm(
       {
