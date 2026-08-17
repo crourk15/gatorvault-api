@@ -16,6 +16,7 @@ const store = require('./recruiting-store');
 const {
   toPercent,
   sanitizeRpmPct,
+  sanitizeStoreOddsPct,
   loadRivalsOnlyUfPctBySlug,
 } = require('./uf-probability-utils');
 const { isAllowlistedTarget, canonicalTargetSlug } = require('./recruiting-target-allowlist');
@@ -96,7 +97,7 @@ function decideTargetingPct({
   rivalsLocked = false
 } = {}) {
   if (rivalsLocked) {
-    const prior = toPercent(priorPct);
+    const prior = sanitizeStoreOddsPct(priorPct) || 0;
     return {
       pct: prior || null,
       delta: 0,
@@ -105,8 +106,9 @@ function decideTargetingPct({
     };
   }
 
-  const on3 = toPercent(on3RpmPct);
-  const prior = toPercent(priorPct);
+  // On3 RPM is percentage points only — never toPercent(1)→100 poison.
+  const on3 = sanitizeRpmPct(on3RpmPct) || 0;
+  const prior = sanitizeStoreOddsPct(priorPct, { rpmPct: on3 }) || 0;
   const signal = String(signalType || '').toLowerCase().replace(/\s+/g, '_');
 
   if (isNew || prior <= 0) {
@@ -169,8 +171,11 @@ function sanitizeHighSchoolLabel(school) {
 
 function buildStorePatchFromHydrated(player, slug, targetingPct) {
   const key = String(slug || player?.slug || '').toLowerCase();
-  const rpm = toPercent(player?.ufRpmPct ?? player?.ufProbability);
-  const pct = targetingPct != null ? targetingPct : rpm || null;
+  // RPM must stay percentage points. toPercent(1) used to write Florida at 100%.
+  const rpm = sanitizeRpmPct(player?.ufRpmPct);
+  const targeting = sanitizeStoreOddsPct(targetingPct, { rpmPct: rpm });
+  const storeOdds = sanitizeStoreOddsPct(player?.ufProbability, { rpmPct: rpm });
+  const pct = targeting != null ? targeting : storeOdds != null ? storeOdds : rpm || null;
   const rivals = Array.isArray(player?.rivals)
     ? player.rivals
     : Array.isArray(player?.competingSchools)
@@ -205,7 +210,7 @@ function buildStorePatchFromHydrated(player, slug, targetingPct) {
     schoolLadder: player.schoolLadder || null,
     ufStaff: player.ufStaff || null,
     ufStatus: player.ufStatus || null,
-    ufRpmPct: rpm || player.ufRpmPct || null,
+    ufRpmPct: rpm,
     // Store as 0–100 for board/FutureCast consumers; readers use toPercent either way.
     ufProbability: pct,
     futurecastProbability: pct,

@@ -10,6 +10,7 @@ const {
   resolveRecruitingDataDir,
   migrateRecruitingBundleIfNeeded,
 } = require('./recruiting-data-dir');
+const { sanitizeRpmPct } = require('./uf-probability-utils');
 
 const DATA_DIR = resolveRecruitingDataDir();
 migrateRecruitingBundleIfNeeded(DATA_DIR);
