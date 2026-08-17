@@ -1,10 +1,10 @@
 {
   "version": 1,
   "mode": "fall-camp",
-  "label": "Fall camp projection · battles open",
-  "subtitle": "Camp board from Sumrall / beat leans — not an official locked depth chart.",
-  "updatedAt": "2026-08-10T20:40:00.000Z",
-  "source": "vault-camp-board",
+  "label": "Mid-camp projection \u00b7 Aug 17",
+  "subtitle": "Aligned to Gators Online mid-camp board (Abolverdi) \u2014 not an official locked depth chart. Plans still change.",
+  "updatedAt": "2026-08-17T02:52:00.000Z",
+  "source": "gators-online-abolverdi-midcamp",
   "offense": [
     {
       "pos": "QB",
@@ -14,17 +14,17 @@
       "bi": "R-Fr.",
       "third": "Aidan Warner (R-Jr.)",
       "status": "battle",
-      "analysis": "Open QB competition into fall camp. Philo is the early lean; Jones Jr. is the primary challenger. Sumrall has not named a starter."
+      "analysis": "Philo remains the mid-camp lean; Jones Jr. is still the primary challenger. No starter named."
     },
     {
       "pos": "RB",
       "s": "Jadan Baugh",
       "si": "Jr.",
-      "b": "Duke Clark",
-      "bi": "R-Fr.",
-      "third": "Evan Pryor (R-Sr.) / Byron Louis (R-Fr.)",
+      "b": "Evan Pryor / Duke Clark",
+      "bi": "R-Sr. / R-Fr.",
+      "third": "London Montgomery (R-Jr.) / Byron Louis (R-Fr.)",
       "status": "locked",
-      "analysis": "Baugh is the clear starter and workhorse."
+      "analysis": "Baugh is the clear RB1. Pryor and Clark share the next tier."
     },
     {
       "pos": "WR (X)",
@@ -32,9 +32,9 @@
       "si": "R-Fr.",
       "b": "Micah Mays Jr.",
       "bi": "R-Jr.",
-      "third": "Kahleil Jackson (R-Sr.)",
+      "third": "Davian Groce (Fr.)",
       "status": "battle",
-      "analysis": "Wilson is winning grass in camp and leads the X lean; Mays Jr. is still pushing."
+      "analysis": "Wilson leads the X lean; Mays Jr. is still pushing."
     },
     {
       "pos": "WR (Z)",
@@ -44,7 +44,7 @@
       "bi": "R-So.",
       "third": "Jaylen Lloyd (R-Jr.)",
       "status": "locked",
-      "analysis": "Singleton Jr. is the clear #1 option."
+      "analysis": "Singleton Jr. is the clear Z option."
     },
     {
       "pos": "WR (F)",
@@ -54,7 +54,7 @@
       "bi": "R-Jr.",
       "third": "Justin Williams (Fr.)",
       "status": "locked",
-      "analysis": "VB3 at the F receiver position."
+      "analysis": "VB3 holds the F spot."
     },
     {
       "pos": "TE (Y)",
@@ -64,37 +64,37 @@
       "bi": "R-Jr.",
       "third": "Heze Kent (Fr.)",
       "status": "locked",
-      "analysis": "Dippre is the top TE."
+      "analysis": "Dippre is the top Y tight end."
     },
     {
       "pos": "TE (H)",
-      "s": "Amir Jackson",
+      "s": "Luke Harpring",
       "si": "R-So.",
-      "b": "Luke Harpring",
+      "b": "Amir Jackson",
       "bi": "R-So.",
       "third": "Micah Jones (R-Fr.)",
-      "status": "locked",
-      "analysis": "Jackson leads at the H-back TE spot."
+      "status": "battle",
+      "analysis": "Mid-camp lean flips to Harpring at H; Jackson remains close."
     },
     {
       "pos": "LT",
-      "s": "Emeka Ugorji",
-      "si": "So.",
+      "s": "Eagan Boyer",
+      "si": "R-So.",
       "b": "Tavaris Dice",
       "bi": "R-Fr.",
-      "third": "Tyler Chukuyem (Fr.)",
-      "status": "locked",
-      "analysis": "Ugorji is the current LT lean into camp."
+      "third": "Fletcher Westphal (R-So.)",
+      "status": "battle",
+      "analysis": "Biggest mid-camp move: Boyer projected at LT (was an OR with Ugorji)."
     },
     {
       "pos": "LG",
       "s": "Knijeah Harris",
       "si": "Sr.",
-      "b": "G'Nivre Carr",
-      "bi": "Fr.",
-      "third": "Corey Brown (Fr.)",
+      "b": "Roderick Kearney",
+      "bi": "R-Jr.",
+      "third": "Desmond Green (Fr.)",
       "status": "locked",
-      "analysis": "Harris anchors the interior."
+      "analysis": "Harris anchors left guard; Kearney is the primary backup."
     },
     {
       "pos": "C",
@@ -108,35 +108,35 @@
     },
     {
       "pos": "RG",
-      "s": "Bryce Lovett / TJ Shanahan",
-      "si": "R-Jr. / R-Jr.",
-      "b": "Roderick Kearney",
+      "s": "T.J. Shanahan Jr.",
+      "si": "R-Jr.",
+      "b": "Bryce Lovett",
       "bi": "R-Jr.",
-      "third": "Desmond Green (Fr.)",
+      "third": "Daniel Pierre Louis (R-Fr.)",
       "status": "battle",
-      "analysis": "Open RG battle between Lovett and Shanahan."
+      "analysis": "Shanahan gets the mid-camp RG lean over Lovett."
     },
     {
       "pos": "RT",
-      "s": "Caden Jones",
-      "si": "R-So.",
-      "b": "Eagan Boyer",
+      "s": "Emeka Ugorji",
+      "si": "So.",
+      "b": "Caden Jones",
       "bi": "R-So.",
-      "third": "Javarii Luckas (Fr.)",
+      "third": "Tyler Chukuyem (Fr.)",
       "status": "battle",
-      "analysis": "Jones holds the early RT lean; Boyer is still in the fight."
+      "analysis": "Ugorji slides to RT in the mid-camp projection; Jones is next up."
     }
   ],
   "defense": [
     {
       "pos": "DT",
-      "s": "Jeremiah McCloud",
+      "s": "Jeramiah McCloud",
       "si": "So.",
       "b": "Jamari Lyons / Joseph Mbatchou",
       "bi": "R-Sr. / So.",
       "third": "Mason Clinton (R-Jr.)",
       "status": "locked",
-      "analysis": "McCloud is the current starting DT lean."
+      "analysis": "McCloud is the starting DT lean."
     },
     {
       "pos": "NOSE",
@@ -154,9 +154,9 @@
       "si": "R-So.",
       "b": "Kamran James / Emmanuel Oyebadejo",
       "bi": "Sr. / R-Sr.",
-      "third": "JaReylan McCoy (Fr.)",
+      "third": "Jalen Wiggins (R-Fr.)",
       "status": "locked",
-      "analysis": "McCray leads the END spot."
+      "analysis": "McCray leads END; James and Oyebadejo share the next tier."
     },
     {
       "pos": "JACK",
@@ -166,7 +166,7 @@
       "bi": "Fr.",
       "third": "Kofi Asare (R-Sr.)",
       "status": "locked",
-      "analysis": "Jayden Woods is the best player on this defense."
+      "analysis": "Woods remains the JACK centerpiece."
     },
     {
       "pos": "MIKE",
@@ -174,9 +174,9 @@
       "si": "Sr.",
       "b": "Myles Johnson",
       "bi": "So.",
-      "third": "Evan Jackson (R-So.)",
+      "third": "Matthew Kade (R-So.)",
       "status": "locked",
-      "analysis": "Robinson is the field general."
+      "analysis": "Robinson is the MIKE field general."
     },
     {
       "pos": "WILL",
@@ -186,7 +186,7 @@
       "bi": "So.",
       "third": "TJ Bullard (R-Sr.)",
       "status": "locked",
-      "analysis": "Graham is a speed/instincts linebacker."
+      "analysis": "Graham holds WILL."
     },
     {
       "pos": "SAM",
@@ -194,39 +194,39 @@
       "si": "Jr.",
       "b": "Malik Morris",
       "bi": "Fr.",
-      "third": "Matthew Kade (R-So.)",
+      "third": "Dylan Leighton (R-Fr.)",
       "status": "locked",
-      "analysis": "Chiles leads the SAM spot."
+      "analysis": "Chiles leads SAM."
     },
     {
       "pos": "CB",
-      "s": "Dijon Johnson",
-      "si": "R-Jr.",
+      "s": "Ben Hanks III",
+      "si": "So.",
       "b": "J'Vari Flowers",
       "bi": "So.",
       "third": "Jordy Lowery (R-Sr.)",
-      "status": "locked",
-      "analysis": "Johnson is a physical press-man corner — Sumrall already elevated his camp profile."
+      "status": "battle",
+      "analysis": "Mid-camp lean puts Hanks on the field with Flowers next."
     },
     {
       "pos": "CB",
       "s": "Cormani McClain",
       "si": "R-So.",
-      "b": "Ben Hanks III",
-      "bi": "So.",
-      "third": "Onis Konanbanny (R-Fr.)",
+      "b": "Dijon Johnson",
+      "bi": "R-Jr.",
+      "third": "CJ Bronaugh (Fr.)",
       "status": "locked",
-      "analysis": "McClain locks down his side of the field."
+      "analysis": "McClain locks one side; Dijon is the primary challenge."
     },
     {
       "pos": "STAR",
       "s": "Kanye Clark",
       "si": "R-So.",
-      "b": "DJ Coleman",
+      "b": "Alfonso Allen Jr.",
       "bi": "Sr.",
-      "third": "Elijah Owens (So.)",
+      "third": "Dylan Purter (Fr.)",
       "status": "battle",
-      "analysis": "Open STAR/nickel battle — Clark holds the early lean over Coleman."
+      "analysis": "Clark holds the STAR lean; Allen Jr. is next."
     },
     {
       "pos": "SS",
@@ -236,17 +236,17 @@
       "bi": "So.",
       "third": "Drake Stubbs (So.)",
       "status": "locked",
-      "analysis": "Thornton is the physical enforcer at strong safety."
+      "analysis": "Thornton is the strong safety."
     },
     {
       "pos": "FS",
-      "s": "Cam Dooley",
-      "si": "Jr.",
-      "b": "DJ Coleman",
-      "bi": "Sr.",
-      "third": "Alfonzo Allen Jr. (Sr.)",
+      "s": "DJ Coleman",
+      "si": "Sr.",
+      "b": "Cam Dooley",
+      "bi": "Jr.",
+      "third": "Brayden Slade (R-Jr.)",
       "status": "battle",
-      "analysis": "Dooley is the FS lean; Coleman can slide here depending on STAR."
+      "analysis": "Mid-camp lean flips Coleman ahead of Dooley at free safety."
     }
   ],
   "specialTeams": [
@@ -254,31 +254,31 @@
       "pos": "PR",
       "s": "Vernell Brown III",
       "si": "So.",
-      "b": "Bailey Stockton",
-      "bi": "R-Jr.",
+      "b": "Justin Williams",
+      "bi": "Fr.",
       "third": "Jaylen Lloyd (R-Jr.)",
       "status": "locked",
-      "analysis": "Brown III is the top punt return option."
+      "analysis": "VB3 is the top punt-return option."
     },
     {
       "pos": "KR",
-      "s": "Vernell Brown III",
-      "si": "So.",
-      "b": "London Montgomery",
-      "bi": "R-Jr.",
-      "third": "Evan Pryor (R-Sr.)",
+      "s": "London Montgomery",
+      "si": "R-Jr.",
+      "b": "J'Vari Flowers",
+      "bi": "So.",
+      "third": "CJ Hester (Fr.)",
       "status": "locked",
-      "analysis": "Brown III doubles as kick returner."
+      "analysis": "Montgomery leads kick return in the mid-camp look."
     },
     {
       "pos": "K",
       "s": "Patrick Durkin",
       "si": "R-So.",
-      "b": "Brandon Rabasco",
+      "b": "Liam Padron",
       "bi": "R-So.",
-      "third": "Liam Padron (R-So.)",
+      "third": "Brandon Rabasco (R-So.)",
       "status": "locked",
-      "analysis": "Durkin won the job in spring and remains the lean."
+      "analysis": "Durkin remains the placekicker lean."
     },
     {
       "pos": "P",
@@ -288,7 +288,7 @@
       "bi": "So.",
       "third": "Nicholas Inglis (R-So.)",
       "status": "locked",
-      "analysis": "Clark is a proven punter."
+      "analysis": "Clark is the punter."
     },
     {
       "pos": "LS",
