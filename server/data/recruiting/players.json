@@ -9337,11 +9337,13 @@
     ],
     "height": "6-1",
     "weight": 175,
-    "ufRpmPct": 87,
+    "ufRpmPct": null,
     "updatedAt": "2026-08-14T01:49:44.221Z",
     "state": "FL",
     "displayRating": 87.76666666666667,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "rpmHealAt": "2026-08-17T16:28:44.052Z",
+    "rpmHealReason": "field_mismatch"
   },
   {
     "id": "maxwell-hiller",

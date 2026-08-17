@@ -43,7 +43,7 @@ const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players'
 const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
 const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields, buildVerifiedVisitRecapRows, getVisitIntelBoardSnapshot } = require('../../lib/visit-intel-utils');
 const { mergeExpectedVisitHistory } = require('../../lib/game-week-visitors');
-const { resolveUfProbability, loadUfPctPredictorsBySlug, sanitizeRpmPct, sanitizeStoreOddsPct } = require('../../lib/uf-probability-utils');
+const { resolveUfProbability, resolveGatorVaultLikelihood, resolveUncommittedMarketRpm, loadUfPctPredictorsBySlug, sanitizeRpmPct, sanitizeStoreOddsPct, pickRivalsPmScore } = require('../../lib/uf-probability-utils');
 const { buildFlipWatchRows } = require('../../lib/flip-watch-utils');
 const intelStore = require('../../lib/recruiting-intel-store');
 const {
@@ -116,17 +116,33 @@ export function softClosingClassHighPriorityFromSeed(classYear = FUTURECAST_CLAS
         return [] as Array<{ name: string; pct: number }>;
       }
     })();
-    const storeRpm = rpmConsistentWithField(
-      firstPositiveRpmPct(recruiting?.ufRpmPct, loadAllowlistRpmPct(target.slug)),
+    const storeRpm = resolveUfRpmPctForRecruiting(
+      recruiting as Record<string, unknown> | null | undefined,
+      target.slug,
       competingSchools
     );
-    const resolvedUf = resolveUfProbability({
-      modelPct: null,
-      storePct: firstPositiveStorePct(target.ufProbability, storeRpm, recruiting?.ufProbability),
-      predictors: [],
-      stars: target.stars ?? null,
-      headliner: Boolean(target.headliner),
-    });
+    const resolvedUf =
+      year >= 2028
+        ? resolveGatorVaultLikelihood({
+            modelPct: 0,
+            rpmPct: storeRpm ?? 0,
+            rivalsPct: 0,
+            fitScore:
+              recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
+                ? Number(recruiting.fitScore)
+                : 0,
+            storePct: firstPositiveStorePct(target.ufProbability, recruiting?.ufProbability) ?? 0,
+            delta7d: 0,
+            stars: target.stars ?? null,
+            headliner: Boolean(target.headliner),
+          })
+        : resolveUfProbability({
+            modelPct: null,
+            storePct: firstPositiveStorePct(target.ufProbability, storeRpm, recruiting?.ufProbability),
+            predictors: [],
+            stars: target.stars ?? null,
+            headliner: Boolean(target.headliner),
+          });
     const fitScore =
       recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
         ? Math.round(Number(recruiting.fitScore))
@@ -508,6 +524,76 @@ function rpmConsistentWithField(
   return rpm;
 }
 
+/**
+ * Prefer live On3 topTeams Florida share over poisoned store ufRpmPct.
+ * Keeps residual shares (Jernigan ~1%) so Closest cannot invent a Florida lead.
+ */
+function resolveUfRpmPctForRecruiting(
+  recruiting: Record<string, unknown> | null | undefined,
+  slug: string,
+  competingSchools: Array<{ name: string; pct: number }> | null | undefined
+): number | null {
+  let fromTeams: number | null = null;
+  let residualFromTeams: number | null = null;
+  try {
+    const { ufRpmFromTopTeams } = require('../../lib/on3-board-hydrate') as {
+      ufRpmFromTopTeams: (
+        topTeams: unknown,
+        classYear: number,
+        opts?: { minPct?: number }
+      ) => number | null;
+    };
+    const teams = (recruiting?.topTeams || recruiting?.on3TopTeams) as unknown;
+    const classYear = Number(recruiting?.classYear) || 2028;
+    fromTeams = firstPositiveRpmPct(ufRpmFromTopTeams(teams, classYear, { minPct: 0.5 }));
+    // Residual crumb boards (shared ~1% across many schools) return null from hydrate.
+    // Still read raw Florida prediction so rival-led boards cannot keep a poisoned 100.
+    if (fromTeams == null && Array.isArray(teams)) {
+      const fl = (teams as Array<Record<string, unknown>>).find((row) => {
+        const team = (row?.team || row) as Record<string, unknown> | undefined;
+        const name = String(team?.name || team?.fullName || row?.name || '');
+        return /\bflorida\b|\bgators\b/i.test(name) && !/florida state|south florida/i.test(name);
+      });
+      const raw = Number(
+        (fl as { prediction?: number } | undefined)?.prediction ??
+          (fl as { pct?: number } | undefined)?.pct
+      );
+      if (Number.isFinite(raw) && raw > 0) {
+        residualFromTeams = firstPositiveRpmPct(raw <= 1.5 ? raw * 100 : raw);
+      }
+    }
+  } catch {
+    fromTeams = null;
+  }
+  const store = firstPositiveRpmPct(
+    recruiting?.ufRpmPct as number | null | undefined,
+    loadAllowlistRpmPct(slug)
+  );
+  // topTeams wins when present — store 100 vs Miss State board is poison.
+  let candidate = fromTeams != null ? fromTeams : store;
+  if (fromTeams != null && store != null && store >= 85 && fromTeams + 40 < store) {
+    candidate = fromTeams;
+  }
+  if (
+    residualFromTeams != null &&
+    (candidate == null || (candidate >= 85 && residualFromTeams + 40 < candidate))
+  ) {
+    candidate = residualFromTeams;
+  }
+  // Rival-led industry board: never keep a locked Florida RPM.
+  const topRival = [...(competingSchools || [])].sort((a, b) => Number(b.pct) - Number(a.pct))[0];
+  if (
+    candidate != null &&
+    candidate >= 70 &&
+    topRival &&
+    Number(topRival.pct) >= 12 &&
+    Number(topRival.pct) > candidate
+  ) {
+    candidate = fromTeams != null ? fromTeams : residualFromTeams;
+  }
+  return rpmConsistentWithField(candidate, competingSchools);
+}
+
 /** Store/model UF odds — may still be 0–1 fractions. */
 function firstPositiveStorePct(...vals: Array<number | null | undefined>): number | null {
   for (const v of vals) {
@@ -838,33 +924,70 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
         const competingSchools = competingSchoolsFromRecruitingRecord(
           recruiting as Record<string, unknown> | null | undefined
         );
-        const storeRpm = rpmConsistentWithField(
-          firstPositiveRpmPct(recruiting?.ufRpmPct, loadAllowlistRpmPct(slug)),
+        const storeRpm = resolveUfRpmPctForRecruiting(
+          recruiting as Record<string, unknown> | null | undefined,
+          slug,
           competingSchools
         );
-        const resolvedUf = resolveUfProbability({
-          modelPct: model?.confidence ?? model?.ufProbability,
-          // Never let an explicit 0 block On3 RPM (Hudson West / peers).
-          storePct: firstPositiveStorePct(
-            target.ufProbability,
-            storeRpm,
-            recruiting?.ufProbability,
-            recruiting?.futurecastProbability
-          ),
-          predictors,
-          stars: target.stars ?? rank?.stars ?? null,
-          headliner: Boolean(target.headliner),
-        });
-        const ufProbability = resolvedUf.value;
-        const ufRpmPct = storeRpm;
-        const delta7d = mergedDelta7dBySlug.get(slug) ?? model?.delta ?? 0;
-        const movementDelta = delta7d;
-        // Scheme fit only — never fall back to On3 rating/composite (that forged
-        // "Elite scheme fit · 8% Florida" hero copy from a 90+ rating).
+        const rpmForGv =
+          resolveUncommittedMarketRpm({
+            rpmPct: storeRpm,
+            committed: Boolean(resolveCommittedTo(target, recruiting, seed)),
+            topTeams:
+              (recruiting as { topTeams?: unknown; on3TopTeams?: unknown } | null | undefined)
+                ?.topTeams ||
+              (recruiting as { on3TopTeams?: unknown } | null | undefined)?.on3TopTeams ||
+              null,
+            classYear,
+          }) ?? storeRpm;
+        const rivalsPct = pickRivalsPmScore(predictors);
+        // Never let allowlist/predictor On3 RPM disagree with field-healed market RPM.
+        if (storeRpm != null) {
+          const on3Idx = predictors.findIndex((p) => /on3/i.test(String(p.name || '')));
+          if (on3Idx >= 0) predictors[on3Idx] = { name: 'On3 RPM', score: storeRpm };
+          else predictors.push({ name: 'On3 RPM', score: storeRpm });
+        }
         const storeFit =
           recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
             ? Number(recruiting.fitScore)
             : 0;
+        const seedModel = String(model?.predictorId || '').toLowerCase() === 'allowlist_seed';
+        const delta7d = mergedDelta7dBySlug.get(slug) ?? model?.delta ?? 0;
+        const movementDelta = delta7d;
+        const resolvedUf =
+          classYear >= 2028
+            ? resolveGatorVaultLikelihood({
+                modelPct: seedModel ? 0 : model?.confidence ?? model?.ufProbability ?? 0,
+                rpmPct: rpmForGv ?? 0,
+                rivalsPct,
+                fitScore: Math.round(model?.ufFitScore ?? storeFit ?? 0),
+                storePct:
+                  firstPositiveStorePct(
+                    target.ufProbability,
+                    recruiting?.ufProbability,
+                    recruiting?.futurecastProbability
+                  ) ?? 0,
+                delta7d: Number(delta7d) / 100,
+                stars: target.stars ?? rank?.stars ?? null,
+                headliner: Boolean(target.headliner),
+              })
+            : resolveUfProbability({
+                modelPct: model?.confidence ?? model?.ufProbability,
+                // Never let an explicit 0 block On3 RPM (Hudson West / peers).
+                storePct: firstPositiveStorePct(
+                  target.ufProbability,
+                  storeRpm,
+                  recruiting?.ufProbability,
+                  recruiting?.futurecastProbability
+                ),
+                predictors,
+                stars: target.stars ?? rank?.stars ?? null,
+                headliner: Boolean(target.headliner),
+              });
+        const ufProbability = resolvedUf.value;
+        const ufRpmPct = storeRpm;
+        // Scheme fit only — never fall back to On3 rating/composite (that forged
+        // "Elite scheme fit · 8% Florida" hero copy from a 90+ rating).
         const fitScore = Math.round(model?.ufFitScore ?? storeFit ?? 0);
         const staffConfidence = Math.round(
           model?.fitScoreBreakdown?.staff ??
@@ -983,7 +1106,20 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
           modelPct: model?.confidence ?? model?.ufProbability,
           storePct: firstPositiveStorePct(
             seed?.ufProbability,
-            firstPositiveRpmPct(recruiting?.ufRpmPct, loadAllowlistRpmPct(slug)),
+            resolveUfRpmPctForRecruiting(
+              recruiting as Record<string, unknown> | null | undefined,
+              slug,
+              (() => {
+                try {
+                  const { competingSchoolsFromRecruitingRecord } = require('../../lib/underclassmen-intel');
+                  return competingSchoolsFromRecruitingRecord(
+                    recruiting as Record<string, unknown> | null | undefined
+                  );
+                } catch {
+                  return [] as Array<{ name: string; pct: number }>;
+                }
+              })()
+            ),
             recruiting?.ufProbability,
             recruiting?.futurecastProbability
           ),

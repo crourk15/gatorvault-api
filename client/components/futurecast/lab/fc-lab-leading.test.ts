@@ -66,6 +66,42 @@ test('leading when UF is strictly ahead of top rival even under 34%', () => {
   assert.equal(floridaLeadMargin(p), 4);
 });
 
+test('industry-trailing residual RPM is not Florida leading / Closest', () => {
+  const jernigan = target({
+    slug: 'zaiden-jernigan',
+    name: 'Zaiden Jernigan',
+    ufProbability: 77,
+    ufRpmPct: 1,
+    competingSchools: [
+      { name: 'Mississippi State', pct: 20 },
+      { name: 'Ole Miss', pct: 17 },
+    ],
+    closestCommitEligible: true,
+    processEvidence: warmProcess({ floridaVisits: 0, recentVisit: false, reasons: ['uf_offer', 'intel'] }),
+  });
+  assert.equal(isFloridaLeadingOnBoard(jernigan), false);
+  assert.equal(hasClosestCommitProcessEvidence(jernigan), true);
+  assert.equal(isNextCommitPick(jernigan), false);
+  assert.equal(nextCommitScore(jernigan), -1);
+});
+
+test('rival-led board with poisoned high GV is not Closest', () => {
+  const girton = target({
+    slug: 'denairo-girton-jr',
+    name: 'DeNairo Girton Jr',
+    ufProbability: 71,
+    ufRpmPct: 9,
+    competingSchools: [
+      { name: 'Penn State', pct: 38 },
+      { name: 'Maryland', pct: 23 },
+    ],
+    closestCommitEligible: true,
+    processEvidence: warmProcess({ hasUFOffer: false, flOfferCount: 0 }),
+  });
+  assert.equal(isFloridaLeadingOnBoard(girton), false);
+  assert.equal(isNextCommitPick(girton), false);
+});
+
 test('empty/thin rival boards do not outrank contested board leads', () => {
   const petrushev = target({
     slug: 'nikolay-petrushev',
