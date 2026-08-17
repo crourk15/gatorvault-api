@@ -17,7 +17,8 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** v30: heal poisoned Florida RPM on disk serve + background rebuild after DISK hit. */
 /** v31: rehydrate missing peer boards from store (Girton) + single-flight HP rebuild. */
 /** v32: durable /var/data board-truth merge + bundle fallback so sole-board lies cannot stick. */
-export const FUTURECAST_API_CACHE_VERSION = 32;
+/** v33: peer 1→100 crumb poison (Asher OSU On3 lead) stripped on heal + competitorPct. */
+export const FUTURECAST_API_CACHE_VERSION = 33;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
@@ -461,6 +462,38 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
   // Prefer live store peer board when disk dropped rivals (Girton sole-board lie).
   if (storeComps.length && (!comps.length || comps.every((c) => Number(c.pct) < 5))) {
     comps = storeComps;
+  }
+  // Asher / Vickers / Gabriel: residual crumb rounded to 1 → competitorPct → 100 On3 lead
+  // while Miami (or another real peer) actually owns the board.
+  const hpTopPeer = [...comps]
+    .filter((c) => {
+      const n = String(c?.name || '');
+      return n && !(/\bflorida\b|\bgators\b/i.test(n) && !/florida state|south florida/i.test(n));
+    })
+    .sort((a, b) => Number(b.pct) - Number(a.pct))[0];
+  const storeTopPeer = storeComps[0];
+  if (
+    storeComps.length &&
+    hpTopPeer &&
+    Number(hpTopPeer.pct) >= 95 &&
+    storeTopPeer &&
+    (String(storeTopPeer.name).toLowerCase() !== String(hpTopPeer.name || '').toLowerCase() ||
+      Number(storeTopPeer.pct) + 40 < Number(hpTopPeer.pct))
+  ) {
+    comps = storeComps;
+  } else if (hpTopPeer && Number(hpTopPeer.pct) >= 95) {
+    // Serve-path: drop fake 100% peers when a mid-board rival already exists.
+    const midBoard = comps.some((c) => {
+      const n = String(c?.name || '');
+      if (!n || (/\bflorida\b|\bgators\b/i.test(n) && !/florida state|south florida/i.test(n))) {
+        return false;
+      }
+      const pct = Number(c.pct);
+      return pct >= 15 && pct <= 90;
+    });
+    if (midBoard) {
+      comps = comps.filter((c) => Number(c.pct) < 95);
+    }
   }
 
   const rpm = sanitizeRpmPct(row.ufRpmPct);
