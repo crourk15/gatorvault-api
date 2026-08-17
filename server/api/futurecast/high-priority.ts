@@ -35,6 +35,7 @@ import {
   primeFuturecastCache,
   sanitizeHighPriorityStarsPayload,
   writeHighPriorityRuntime,
+  scheduleHighPriorityDiskRebuild,
 } from './response-cache';
 
 const require = createRequire(import.meta.url);
@@ -1304,16 +1305,8 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       primeFuturecastCache(cacheKey, healed);
       res.setHeader('X-GatorVault-Cache', 'DISK');
       res.json(healed);
-      void buildHighPriorityPayload(classYear)
-        .then((fresh) => {
-          if (fresh == null) return;
-          primeFuturecastCache(cacheKey, fresh);
-          writeHighPriorityRuntime(classYear, fresh);
-        })
-        .catch((err) => {
-          const message = err instanceof Error ? err.message : String(err);
-          console.warn('[futurecast-hp] background rebuild after DISK serve failed:', message);
-        });
+      // Single-flight + cooldown — never stampede Starter with parallel HP rebuilds.
+      scheduleHighPriorityDiskRebuild(classYear, () => buildHighPriorityPayload(classYear));
       return;
     }
     await sendCachedJson(res, cacheKey, () => buildHighPriorityPayload(classYear), {
