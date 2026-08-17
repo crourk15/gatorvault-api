@@ -459,7 +459,7 @@ function boardTruthFromPlayer(
         if (pct <= 0) continue;
         if (
           /\bflorida\b|\bgators\b/i.test(rowTeam.name) &&
-          !/florida state|south florida/i.test(rowTeam.name)
+          !/florida state|south florida|florida atlantic|florida a\s*&\s*m/i.test(rowTeam.name)
         ) {
           // Percent-board crumbs (Gabriel Florida 0.80) are ~1%, not null/80.
           if (boardRpm == null) {
@@ -468,7 +468,6 @@ function boardTruthFromPlayer(
           }
           continue;
         }
-        if (/\bflorida\b|\bgators\b/i.test(rowTeam.name)) continue;
         if (pct < 5) continue;
         const key = rowTeam.name.toLowerCase();
         const existing = peerMap.get(key);
@@ -507,9 +506,11 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
     })
     .sort((a, b) => Number(b.pct) - Number(a.pct))[0];
   const rowHasClearRival = rowTopPeer && Number(rowTopPeer.pct) >= 55;
+  const rowUfMissing = row.ufRpmPct == null || !(Number(row.ufRpmPct) > 0);
   const rowNeedsStore =
     !rowCompsPreview.length ||
     rowCompsPreview.every((c) => Number(c.pct) < 5) ||
+    rowUfMissing ||
     (Number(row.ufRpmPct) >= 70 && !rowHasClearRival);
 
   if (slug && rowNeedsStore) {
@@ -533,6 +534,11 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
     comps = storeComps;
     compsMutated = true;
   }
+  // Missing ufRpm — restore store On3 peers so chrome does not crown a residual rival.
+  if (rowUfMissing && storeComps.length) {
+    comps = storeComps;
+    compsMutated = true;
+  }
   // Asher / Vickers / Gabriel: residual crumb rounded to 1 → competitorPct → 100 On3 lead
   // while Miami (or another real peer) actually owns the board.
   const hpTopPeer = [...comps]
@@ -551,6 +557,25 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
       Number(storeTopPeer.pct) + 40 < Number(hpTopPeer.pct))
   ) {
     comps = storeComps;
+    compsMutated = true;
+  } else if (
+    storeComps.length &&
+    hpTopPeer &&
+    storeTopPeer &&
+    Number(hpTopPeer.pct) >= Number(storeTopPeer.pct) + 40
+  ) {
+    // Tyree / Fleming: HP peer board inflated residuals (Miami 83 / OSU 47) vs store On3.
+    comps = storeComps;
+    compsMutated = true;
+  } else if (
+    !storeComps.length &&
+    boardRpm != null &&
+    boardRpm >= 50 &&
+    hpTopPeer &&
+    Number(hpTopPeer.pct) >= 40
+  ) {
+    // UF-led On3 board with only residual crumbs — clear fake mid/high peers.
+    comps = [];
     compsMutated = true;
   } else if (hpTopPeer && Number(hpTopPeer.pct) >= 99) {
     // Serve-path: drop fake ~100% peers when a mid-board rival already exists.
@@ -580,6 +605,12 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
 
   let nextRpm = rpm;
   let poisoned = false;
+
+  // Restore missing Florida RPM from On3 board (Vickers / Antonio / Mannings live miss).
+  if (rpm == null && boardRpm != null && boardRpm > 0) {
+    nextRpm = boardRpm;
+    poisoned = true;
+  }
 
   // Trust On3 topTeams / store when disk Florida lock disagrees with the industry board.
   // Prefer boardRpm even when store ufRpmPct is the same poison (Gabriel 0.80→80).

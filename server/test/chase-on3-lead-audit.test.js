@@ -166,4 +166,33 @@ describe('HP chase On3 lead chrome vs store on3TopTeams', () => {
     assert.match(String(threat.name), /alabama/i);
     assert.equal(chromeLead(player), 'ALA');
   });
+
+  it('Tyree Mannings residual Miami 0.83% does not become 83% peer board', () => {
+    const list = loadPlayers();
+    const store = list.find((p) => p.slug === 'tyree-mannings-jr');
+    assert.ok(store?.on3TopTeams?.length);
+    const comps = competingSchoolsFromRecruitingRecord(store);
+    const miami = comps.find((c) => /miami/i.test(c.name));
+    assert.ok(!miami || Number(miami.pct) < 5, JSON.stringify(comps));
+  });
+
+  it('serve heal restores UF lead when live HP drops ufRpm (Mannings / Antonio)', async () => {
+    const {
+      healHighPriorityRpmPoisonRow,
+      ensureHealPlayersWarm,
+    } = require('../api/futurecast/response-cache.ts');
+    await ensureHealPlayersWarm();
+    const healed = healHighPriorityRpmPoisonRow({
+      slug: 'tyree-mannings-jr',
+      name: 'Tyree Mannings Jr',
+      ufRpmPct: null,
+      competingSchools: [
+        { name: 'Miami', pct: 82.9 },
+        { name: 'Auburn', pct: 71 },
+      ],
+    });
+    assert.ok(Number(healed.ufRpmPct) >= 80, healed.ufRpmPct);
+    const miami = (healed.competingSchools || []).find((c) => /miami/i.test(String(c.name)));
+    assert.ok(!miami || Number(miami.pct) < 40, JSON.stringify(healed.competingSchools));
+  });
 });
