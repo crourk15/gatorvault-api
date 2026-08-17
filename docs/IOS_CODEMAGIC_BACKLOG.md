@@ -51,6 +51,8 @@ These ship via Render / Netlify API — current App Store binary (1.0.12) picks 
 
 ## Waiting for next Codemagic build
 
+**Next bake target: App Store `1.0.17` / build `82+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_17_BUILD82.md`.
+
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
