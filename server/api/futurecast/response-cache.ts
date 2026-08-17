@@ -275,6 +275,10 @@ export function scheduleHighPriorityDiskRebuild(
   if (hpDiskRebuildInFlight.has(classYear)) return;
   if (now - last < HP_DISK_REBUILD_COOLDOWN_MS) return;
 
+  // Stamp cooldown immediately — a failed/OOM-adjacent rebuild must not
+  // re-arm on every no-store HP GET (TestFlight stampede → exit 143 loop).
+  hpDiskRebuildAt.set(classYear, now);
+
   const run = Promise.resolve()
     .then(() => build())
     .then((fresh) => {
