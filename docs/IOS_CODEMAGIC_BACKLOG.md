@@ -7,6 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
+- [x] App Store **1.0.17** accepted / eligible for distribution (Aug 17, 2026) — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`
 - [x] Gabriel profile Field/On3 Florida 100: stamp overlay treated residual ufRpmPct 1 as fraction×100 — parseRpmPct + live topTeams peers (API)
 - [x] Gabriel Player Field/GV poison: On3 Florida crumb 0.80% was ×100 → Field 80 / GV ~85 while Miami owns ~94% — board-aware scale + HP heal + store ufRpmPct=1 (API)
 - [x] HP heal no longer sync-parses players.json on request path (was starving Render /ready past 5s under HP no-store load) — API
@@ -29,7 +30,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 - [x] FutureCast master-board soft/disk seed — Lab primary never empty `status:building` on iOS (API)
 - [x] Lab polish API — null stars, Early Discovery soft cold-miss, capped warm workers (API)
 
-These ship via Render / Netlify API — current App Store binary (1.0.12) picks them up:
+These ship via Render / Netlify API — current App Store binary (1.0.17) picks them up:
 
 - [x] FutureCast commit likelihood (live HP / GV odds)
 - [x] Official 2026 roster jersey numbers + newcomers (API)
@@ -54,7 +55,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.12) picks 
 
 ## Waiting for next Codemagic build
 
-**Next bake target: App Store `1.0.17` / build `82+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_17_BUILD82.md`.
+**Next bake target: App Store `1.0.18` / build `83+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_18_BUILD83.md`.
 
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 

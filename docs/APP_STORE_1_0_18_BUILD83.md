@@ -1,0 +1,33 @@
+# Submit 1.0.18 (Build 83+) — new train after 1.0.17 approved
+
+**Why:** App Store accepted **1.0.17** (Aug 17, 2026 — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`). Pre-release train is closed; today's client/UI backlog needs a new marketing version.
+
+## iOS
+
+- `MARKETING_VERSION = 1.0.18`
+- `CURRENT_PROJECT_VERSION = 83` (Codemagic may auto-bump above ASC latest)
+
+## App Store Connect (you)
+
+1. **Apps → GatorVault → + Version → 1.0.18** (if ASC does not auto-create it)
+2. Merge this version bump to `main`
+3. Run Codemagic **iOS Release Build** on `main`
+4. Attach the processed build to **1.0.18** / TestFlight
+
+## Ships in this bake
+
+Client/UI backlog waiting since the 1.0.17 cut (see `docs/IOS_CODEMAGIC_BACKLOG.md`), including:
+
+- FutureCast Closest/Chase board-truth client gates (Girton sole-board, Asher OSU crumb, Jernigan residual RPM, Gabriel HP cache bust v18/v19)
+- Articles hub Authors/Tags + no duplicate Related rail
+- Game Week / Chase Expected visit plates (if not already in the 1.0.17 binary)
+- Alerts Board Intel UV + recent-window copy; Gators Live ready copy
+- Home NOW live commit counts (no Capacitor stone seed)
+
+API/data fixes from Aug 17 (Gabriel Field poison, HP heal `/ready` starve, board-truth merge) are **already live** on the current binary via Render — this bake is for bundled client JS only.
+
+## Whats New (paste)
+
+```
+More accurate FutureCast chase boards — rival-led recruiting races no longer show fake Florida locks. Articles Authors and Tags filters, clearer Game Week / visit intel, and Home NOW commit counts that stay live.
+```

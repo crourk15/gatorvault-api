@@ -2,14 +2,13 @@
 description: Apple App Store review freeze — LIFTED
 alwaysApply: true
 ---
-
 # Apple App Store review freeze — LIFTED
 
-**Status: LIFTED** (Charles cleared Aug 13, 2026 — App Store **1.0.14** accepted; submission `a28c0e4a-a137-4e51-936b-62bb68e154eb`).
+**Status: LIFTED** (user cleared Jul 11, 2026; App Store **1.0.17** accepted Aug 17, 2026 — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`). Next client bake train: **1.0.18** / build 83+ (`docs/APP_STORE_1_0_18_BUILD83.md`).
 
 Normal push / Render auto-deploy / production API deploys are allowed again.
 
-**Do not** re-enable `API_STAY_GREEN` lockdown unless Charles asks. Keep Film Room YouTube sync, Live beat, allowlist-intel, and recruiting-light crons running. Keep cheap `/ready` + deferred boot warm on Starter.
+**Do not** re-enable `API_STAY_GREEN` lockdown unless Charles asks. Keep Film Room/YouTube sync, Live beat, allowlist-intel, and recruiting-light crons running. Keep cheap `/ready` + deferred boot warm on Starter.
 
 Still prefer:
 - Confirm before destructive prod auth/IAP/demo-account changes
