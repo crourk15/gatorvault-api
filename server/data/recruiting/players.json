@@ -270117,11 +270117,12 @@
     ],
     "height": "6-5",
     "weight": 275,
-    "ufRpmPct": 47,
+    "ufRpmPct": null,
     "updatedAt": "2026-08-14T01:57:33.128Z",
     "state": "AL",
     "displayRating": 93.98622019635343,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "predictedSchool": "Alabama"
   },
   {
     "id": "nehemiah-mccary",

@@ -121,6 +121,23 @@ test('fake 100% peer crumb does not beat mid-board On3 lead (Asher OSU)', () => 
   assert.ok(threat.pct < 90);
 });
 
+test('real ~95% On3 favorite stays lead over residual mid crumb (Joey Fleming)', () => {
+  const fleming = target({
+    slug: 'joey-fleming',
+    name: 'Joey Fleming',
+    ufProbability: 8,
+    ufRpmPct: 7,
+    competingSchools: [
+      { name: 'Alabama', pct: 95 },
+      { name: 'Ohio State', pct: 47 },
+    ],
+  });
+  const threat = topThreatVsFlorida(fleming);
+  assert.ok(threat);
+  assert.match(threat.name, /alabama/i);
+  assert.ok(threat.pct >= 90);
+});
+
 test('sole-board fake lock without UF offer is not Closest (Girton disk poison)', () => {
   const girtonPoison = target({
     slug: 'denairo-girton-jr',
