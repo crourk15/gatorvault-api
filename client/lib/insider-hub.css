@@ -502,9 +502,17 @@
   background-color: var(--color-bg-card);
   color: var(--color-text-muted);
   cursor: pointer;
+  font-family: inherit;
 }
 
 .insider-tag--hot { border-color: var(--color-accent-orange); color: var(--color-accent-orange); }
+
+.insider-tag.is-active {
+  background: rgba(0, 33, 165, 0.1);
+  border-color: var(--color-accent-blue);
+  color: var(--color-accent-blue);
+  font-weight: 700;
+}
 
 .insider-status { text-align: center; padding: 24px; color: rgba(255, 255, 255, 0.72); }
 
