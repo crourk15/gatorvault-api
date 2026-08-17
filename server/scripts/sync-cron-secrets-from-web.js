@@ -1,0 +1,139 @@
+#!/usr/bin/env node
+/**
+ * Copy MONITORING_CRON_SECRET / INGEST_CRON_SECRET / NEXT_PUBLIC_API_BASE
+ * from the live gatorvault-api web service onto every gatorvault-api-* cron.
+ *
+ * Fixes the Aug 2026 miss where Render cron jobs had sync:false secrets unset
+ * and vault-feed / recruiting-light exited with missing_cron_secret while
+ * Render still marked the run "successful".
+ *
+ * Requires RENDER_API_KEY.
+ *
+ *   node server/scripts/sync-cron-secrets-from-web.js
+ */
+'use strict';
+
+require('./render-cron-env');
+
+const API = 'https://api.render.com/v1';
+const WEB_NAME = 'gatorvault-api';
+const KEYS = ['MONITORING_CRON_SECRET', 'INGEST_CRON_SECRET', 'NEXT_PUBLIC_API_BASE'];
+
+const CRON_SERVICES = [
+  'gatorvault-api-vault-feed-2028',
+  'gatorvault-api-recruiting-light',
+  'gatorvault-api-recruiting-ingest',
+  'gatorvault-api-beat-ingest',
+  'gatorvault-api-hub-refresh',
+  'gatorvault-api-hub-warm',
+  'gatorvault-api-keepalive',
+  'gatorvault-api-platform-ops',
+  'gatorvault-api-visit-intel-reconcile',
+  'gatorvault-api-visit-intel-recap',
+  'gatorvault-api-visit-intel-daily-digest',
+  'gatorvault-api-allowlist-on3-rankings',
+  'gatorvault-api-on3-rpm-allowlist-sync',
+  'gatorvault-api-early-discovery',
+  'gatorvault-api-portal-intelligence',
+  'gatorvault-api-uf-fit-seed',
+  'gatorvault-api-uf-trend-snapshot',
+  'gatorvault-api-film-room-youtube-sync',
+  'gatorvault-api-community-daily-open',
+  'gatorvault-api-gators-score-alerts',
+  'gatorvault-api-onboarding-drip',
+  'gatorvault-api-fan-digest-weekly',
+];
+
+const key = process.env.RENDER_API_KEY;
+if (!key) {
+  console.error('Missing RENDER_API_KEY');
+  process.exit(1);
+}
+
+const headers = {
+  Authorization: `Bearer ${key}`,
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+};
+
+async function api(path, opts = {}) {
+  const res = await fetch(`${API}${path}`, { ...opts, headers: { ...headers, ...opts.headers } });
+  const text = await res.text();
+  let body;
+  try {
+    body = text ? JSON.parse(text) : null;
+  } catch {
+    body = text;
+  }
+  if (!res.ok) {
+    throw new Error(`${opts.method || 'GET'} ${path} �! ${res.status}: ${typeof body === 'string' ? body : JSON.stringify(body)}`);
+  }
+  return body;
+}
+
+async function findService(name) {
+  const rows = await api(`/services?name=${encodeURIComponent(name)}&limit=20`);
+  const found = (rows || []).find((row) => (row.service || row).name === name);
+  return found ? found.service || found : null;
+}
+
+async function listEnv(serviceId) {
+  const out = {};
+  let cursor = null;
+  for (let i = 0; i < 20; i += 1) {
+    const q = cursor ? `&cursor=${encodeURIComponent(cursor)}` : '';
+    const batch = await api(`/services/${serviceId}/env-vars?limit=100${q}`);
+    if (!batch?.length) break;
+    for (const row of batch) {
+      const ev = row.envVar || row;
+      if (ev.key) out[ev.key] = ev.value;
+    }
+    cursor = batch[batch.length - 1]?.cursor;
+    if (!cursor || batch.length < 100) break;
+  }
+  return out;
+}
+
+function mask(val) {
+  if (!val) return '(empty)';
+  if (val.length <= 8) return '****';
+  return `${val.slice(0, 4)}& ${val.slice(-4)} (${val.length} chars)`;
+}
+
+async function main() {
+  const web = await findService(WEB_NAME);
+  if (!web) throw new Error(`Service ${WEB_NAME} not found`);
+  const webEnv = await listEnv(web.id);
+  const updates = KEYS.map((k) => ({ key: k, value: webEnv[k] })).filter((u) => u.value);
+  if (!updates.find((u) => u.key === 'MONITORING_CRON_SECRET' || u.key === 'INGEST_CRON_SECRET')) {
+    throw new Error('Web service is missing MONITORING_CRON_SECRET / INGEST_CRON_SECRET');
+  }
+  console.log(`Source ${WEB_NAME} (${web.id}):`);
+  for (const u of updates) console.log(`  ${u.key}: ${mask(u.value)}`);
+
+  let ok = 0;
+  let miss = 0;
+  for (const name of CRON_SERVICES) {
+    const cron = await findService(name);
+    if (!cron) {
+      console.warn(`skip missing cron: ${name}`);
+      miss += 1;
+      continue;
+    }
+    for (const u of updates) {
+      await api(`/services/${cron.id}/env-vars/${encodeURIComponent(u.key)}`, {
+        method: 'PUT',
+        body: JSON.stringify({ value: u.value }),
+      });
+    }
+    ok += 1;
+    console.log(`synced ${name}`);
+  }
+  console.log(`\nDone. synced=${ok} missing=${miss}`);
+  console.log('Cron jobs pick up env on next run. Web secret changes still need a web deploy.');
+}
+
+main().catch((err) => {
+  console.error(err.message);
+  process.exit(1);
+});

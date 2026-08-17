@@ -48,8 +48,9 @@ const STEPS = [
 
 async function runIngest() {
   if (!CRON_SECRET) {
-    console.error('[recruiting-light-cron] MONITORING_CRON_SECRET or INGEST_CRON_SECRET is not set');
-    return { ok: false, error: 'missing_cron_secret' };
+    const err = new Error('MONITORING_CRON_SECRET or INGEST_CRON_SECRET is not set');
+    console.error('[recruiting-light-cron]', err.message);
+    throw err;
   }
 
   return runIngestSteps({
@@ -65,9 +66,10 @@ async function runIngest() {
   try {
     const summary = await runIngest();
     console.log('[recruiting-light-cron] complete', JSON.stringify(summary, null, 0));
+    process.exit(summary && summary.ok === false ? 1 : 0);
   } catch (err) {
     console.error('[recruiting-light-cron] unhandled error:', err.message);
     if (err.stack) console.error(err.stack);
+    process.exit(1);
   }
-  process.exit(0);
 })();
