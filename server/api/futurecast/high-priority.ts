@@ -513,20 +513,25 @@ function rpmConsistentWithField(
   rpm: number | null,
   competingSchools: Array<{ name: string; pct: number }> | null | undefined
 ): number | null {
-  if (rpm == null || rpm < 85) return rpm;
+  if (rpm == null) return rpm;
   const real = (competingSchools || []).filter((c) => Number(c?.pct) >= 5);
   if (!real.length) return rpm;
   const top = [...real].sort((a, b) => Number(b.pct) - Number(a.pct))[0];
   const florida = real.find((c) => /florida/i.test(String(c.name || '')));
   const topIsFlorida = top && /florida/i.test(String(top.name || ''));
   const floridaPct = florida ? Number(florida.pct) : 0;
-  if (!topIsFlorida && floridaPct + 40 < rpm) return null;
+  // Gabriel: Miami 94 vs poisoned Field 80 — rival owns the board.
+  if (!topIsFlorida && Number(top.pct) >= 12 && Number(top.pct) > rpm && rpm >= 40) {
+    return floridaPct > 0 ? Math.max(1, Math.round(floridaPct)) : null;
+  }
+  if (rpm >= 85 && !topIsFlorida && floridaPct + 40 < rpm) return null;
   return rpm;
 }
 
 /**
  * Prefer live On3 topTeams Florida share over poisoned store ufRpmPct.
- * Keeps residual shares (Jernigan ~1%) so Closest cannot invent a Florida lead.
+ * Keeps residual shares (Jernigan ~1%, Gabriel ~0.8%) so Field/Closest
+ * cannot invent an 80% Florida lock from a percent-board crumb.
  */
 function resolveUfRpmPctForRecruiting(
   recruiting: Record<string, unknown> | null | undefined,
@@ -536,30 +541,43 @@ function resolveUfRpmPctForRecruiting(
   let fromTeams: number | null = null;
   let residualFromTeams: number | null = null;
   try {
-    const { ufRpmFromTopTeams } = require('../../lib/on3-board-hydrate') as {
+    const {
+      ufRpmFromTopTeams,
+      detectTopTeamsPctScale,
+      teamPct,
+    } = require('../../lib/on3-board-hydrate') as {
       ufRpmFromTopTeams: (
         topTeams: unknown,
         classYear: number,
         opts?: { minPct?: number }
       ) => number | null;
+      detectTopTeamsPctScale: (rows: unknown) => 'percent' | 'fraction' | 'unknown';
+      teamPct: (row: unknown, scale: string) => number | null;
     };
     const teams = (recruiting?.topTeams || recruiting?.on3TopTeams) as unknown;
     const classYear = Number(recruiting?.classYear) || 2028;
-    fromTeams = firstPositiveRpmPct(ufRpmFromTopTeams(teams, classYear, { minPct: 0.5 }));
-    // Residual crumb boards (shared ~1% across many schools) return null from hydrate.
-    // Still read raw Florida prediction so rival-led boards cannot keep a poisoned 100.
+    const rawFromTeams = ufRpmFromTopTeams(teams, classYear, { minPct: 0.5 });
+    // 0.8% on a percent board is real residual — sanitizeRpmPct would null it.
+    if (rawFromTeams != null && Number.isFinite(rawFromTeams) && rawFromTeams > 0) {
+      fromTeams =
+        rawFromTeams < 1 ? Math.max(1, Math.round(rawFromTeams)) : firstPositiveRpmPct(rawFromTeams);
+    }
+    // Residual crumb boards return null from hydrate (below minPct). Still read
+    // Florida with board-aware scale — never blind raw≤1.5 → ×100 (Gabriel 0.80→80).
     if (fromTeams == null && Array.isArray(teams)) {
-      const fl = (teams as Array<Record<string, unknown>>).find((row) => {
-        const team = (row?.team || row) as Record<string, unknown> | undefined;
-        const name = String(team?.name || team?.fullName || row?.name || '');
+      const collegeRows = teams as unknown[];
+      const scale = detectTopTeamsPctScale(collegeRows);
+      const fl = collegeRows.find((row) => {
+        const rec = row as Record<string, unknown>;
+        const team = (rec?.team || rec) as Record<string, unknown> | undefined;
+        const name = String(team?.name || team?.fullName || rec?.name || '');
         return /\bflorida\b|\bgators\b/i.test(name) && !/florida state|south florida/i.test(name);
       });
-      const raw = Number(
-        (fl as { prediction?: number } | undefined)?.prediction ??
-          (fl as { pct?: number } | undefined)?.pct
-      );
-      if (Number.isFinite(raw) && raw > 0) {
-        residualFromTeams = firstPositiveRpmPct(raw <= 1.5 ? raw * 100 : raw);
+      if (fl) {
+        const pct = teamPct(fl, scale);
+        if (pct != null && Number.isFinite(pct) && pct > 0) {
+          residualFromTeams = pct < 1 ? Math.max(1, Math.round(pct)) : firstPositiveRpmPct(pct);
+        }
       }
     }
   } catch {
@@ -569,14 +587,14 @@ function resolveUfRpmPctForRecruiting(
     recruiting?.ufRpmPct as number | null | undefined,
     loadAllowlistRpmPct(slug)
   );
-  // topTeams wins when present — store 100 vs Miss State board is poison.
+  // topTeams wins when present — store 80/100 vs Miami board is poison.
   let candidate = fromTeams != null ? fromTeams : store;
-  if (fromTeams != null && store != null && store >= 85 && fromTeams + 40 < store) {
+  if (fromTeams != null && store != null && store >= 70 && fromTeams + 40 < store) {
     candidate = fromTeams;
   }
   if (
     residualFromTeams != null &&
-    (candidate == null || (candidate >= 85 && residualFromTeams + 40 < candidate))
+    (candidate == null || (candidate >= 70 && residualFromTeams + 40 < candidate))
   ) {
     candidate = residualFromTeams;
   }
@@ -584,7 +602,7 @@ function resolveUfRpmPctForRecruiting(
   const topRival = [...(competingSchools || [])].sort((a, b) => Number(b.pct) - Number(a.pct))[0];
   if (
     candidate != null &&
-    candidate >= 70 &&
+    candidate >= 40 &&
     topRival &&
     Number(topRival.pct) >= 12 &&
     Number(topRival.pct) > candidate
