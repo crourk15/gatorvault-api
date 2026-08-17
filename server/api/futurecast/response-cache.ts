@@ -15,7 +15,8 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** Bump when high-priority or master-board payload shape changes. */
 /** Bumped for Expected visit labels merged onto soft/disk HP serve. */
 /** v30: heal poisoned Florida RPM on disk serve + background rebuild after DISK hit. */
-export const FUTURECAST_API_CACHE_VERSION = 30;
+/** v31: rehydrate missing peer boards from store (Girton) + single-flight HP rebuild. */
+export const FUTURECAST_API_CACHE_VERSION = 31;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
@@ -258,6 +259,38 @@ export function primeFuturecastCache(cacheKey: string, value: unknown): void {
   cache.set(cacheKey, value, CACHE_TTL_MS);
 }
 
+/** One in-flight + cooldown so DISK hits do not OOM Starter with parallel HP rebuilds. */
+const hpDiskRebuildInFlight = new Map<number, Promise<void>>();
+const hpDiskRebuildAt = new Map<number, number>();
+const HP_DISK_REBUILD_COOLDOWN_MS = 10 * 60_000;
+
+export function scheduleHighPriorityDiskRebuild(
+  classYear: number,
+  build: () => Promise<unknown>
+): void {
+  const now = Date.now();
+  const last = hpDiskRebuildAt.get(classYear) || 0;
+  if (hpDiskRebuildInFlight.has(classYear)) return;
+  if (now - last < HP_DISK_REBUILD_COOLDOWN_MS) return;
+
+  const run = Promise.resolve()
+    .then(() => build())
+    .then((fresh) => {
+      if (fresh == null) return;
+      primeFuturecastCache(highPriorityCacheKey(classYear), fresh);
+      writeHighPriorityRuntime(classYear, fresh);
+      hpDiskRebuildAt.set(classYear, Date.now());
+    })
+    .catch((err) => {
+      const message = err instanceof Error ? err.message : String(err);
+      console.warn('[futurecast-hp] background rebuild after DISK serve failed:', message);
+    })
+    .finally(() => {
+      hpDiskRebuildInFlight.delete(classYear);
+    });
+  hpDiskRebuildInFlight.set(classYear, run.then(() => undefined));
+}
+
 function highPriorityRuntimeCandidates(year: number | string): string[] {
   const path = require('node:path');
   const { resolveRecruitingDataDir, BUNDLE_DIR } = require('../../lib/recruiting-data-dir');
@@ -277,17 +310,109 @@ export function normalizeFanStars(raw: unknown): number | null {
 
 /**
  * Disk/runtime HP can keep Florida ufRpmPct=100 after a 1% On3 residual poison
- * while competingSchools still show Miss State/etc leading. Heal on every serve
- * so Closest does not wait for a full rebuild cron.
+ * while competingSchools still show Miss State/etc leading — or drop the peer
+ * board entirely (Girton: Penn State leads, disk had empty comps + Florida 96).
+ * Rehydrate peers + heal RPM on every serve so Closest does not invent leads.
  */
+const healPlayersCache = new Map<string, unknown>();
+const healPlayersCacheAt = new Map<string, number>();
+
 export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Record<string, unknown> {
   const { sanitizeRpmPct } = require('../../lib/uf-probability-utils') as {
     sanitizeRpmPct: (v: unknown) => number | null;
   };
-  const rpm = sanitizeRpmPct(row.ufRpmPct);
-  const comps = Array.isArray(row.competingSchools)
+
+  const slug = String(row.slug || '').toLowerCase();
+  let storeRpm: number | null = null;
+  let storeComps: Array<{ name: string; pct: number }> = [];
+  let boardRpm: number | null = null;
+
+  if (slug) {
+    try {
+      const fs = require('node:fs');
+      const path = require('node:path');
+      const { resolveRecruitingDataDir } = require('../../lib/recruiting-data-dir');
+      // Sync local JSON only — request-path heal cannot await Supabase.
+      const file = path.join(resolveRecruitingDataDir(), 'players.json');
+      const cacheKey = `hp-heal-players:${file}`;
+      let rows: Array<Record<string, unknown>> | null =
+        (healPlayersCache.get(cacheKey) as Array<Record<string, unknown>> | undefined) || null;
+      const cachedAt = Number(healPlayersCacheAt.get(cacheKey) || 0);
+      if (!rows || Date.now() - cachedAt > 5 * 60_000) {
+        const raw = JSON.parse(fs.readFileSync(file, 'utf8'));
+        rows = (Array.isArray(raw) ? raw : raw.players || []) as Array<Record<string, unknown>>;
+        healPlayersCache.set(cacheKey, rows);
+        healPlayersCacheAt.set(cacheKey, Date.now());
+      }
+      const player = rows.find((p) => String(p?.slug || '').toLowerCase() === slug) || null;
+      if (player) {
+        storeRpm = sanitizeRpmPct(player.ufRpmPct);
+        try {
+          const { competingSchoolsFromRecruitingRecord } = require('../../lib/underclassmen-intel') as {
+            competingSchoolsFromRecruitingRecord: (
+              r: Record<string, unknown>
+            ) => Array<{ name: string; pct: number }>;
+          };
+          storeComps = competingSchoolsFromRecruitingRecord(player) || [];
+        } catch {
+          storeComps = [];
+        }
+        try {
+          const teams = (player.topTeams || player.on3TopTeams || []) as unknown[];
+          if (Array.isArray(teams) && teams.length) {
+            const scored: Array<{ name: string; raw: number }> = [];
+            for (const t of teams) {
+              const rec = t as Record<string, unknown>;
+              const team = (rec.team || rec) as Record<string, unknown>;
+              const name = String(team?.name || team?.fullName || rec?.name || '').trim();
+              if (!name) continue;
+              const rawPred = Number(rec.prediction ?? rec.pct ?? rec.score);
+              if (!Number.isFinite(rawPred) || rawPred <= 0) continue;
+              scored.push({ name, raw: rawPred });
+            }
+            const maxRaw = scored.reduce((m, r) => Math.max(m, r.raw), 0);
+            // Percent boards top out ~20–99; true 0–1 fraction boards top out ≤1.5.
+            const scale = maxRaw <= 1.5 ? 100 : 1;
+            const peerMap = new Map<string, { name: string; pct: number }>();
+            for (const rowTeam of scored) {
+              const pct = Math.round(rowTeam.raw * scale * 10) / 10;
+              if (pct <= 0) continue;
+              if (
+                /\bflorida\b|\bgators\b/i.test(rowTeam.name) &&
+                !/florida state|south florida/i.test(rowTeam.name)
+              ) {
+                if (boardRpm == null) boardRpm = sanitizeRpmPct(pct);
+                continue;
+              }
+              if (/\bflorida\b|\bgators\b/i.test(rowTeam.name)) continue;
+              if (pct < 5) continue;
+              const key = rowTeam.name.toLowerCase();
+              const existing = peerMap.get(key);
+              if (!existing || pct > existing.pct) peerMap.set(key, { name: rowTeam.name, pct });
+            }
+            const fromTeams = [...peerMap.values()].sort((a, b) => b.pct - a.pct);
+            if (fromTeams.length && fromTeams.length >= storeComps.length) {
+              storeComps = fromTeams;
+            }
+          }
+        } catch {
+          /* optional */
+        }
+      }
+    } catch {
+      /* optional — disk heal must never throw */
+    }
+  }
+
+  let comps = Array.isArray(row.competingSchools)
     ? (row.competingSchools as Array<{ name?: string; pct?: number }>)
     : [];
+  // Prefer live store peer board when disk dropped rivals (Girton sole-board lie).
+  if (storeComps.length && (!comps.length || comps.every((c) => Number(c.pct) < 5))) {
+    comps = storeComps;
+  }
+
+  const rpm = sanitizeRpmPct(row.ufRpmPct);
   const real = comps
     .filter((c) => c?.name && Number(c.pct) >= 5)
     .sort((a, b) => Number(b.pct) - Number(a.pct));
@@ -298,11 +423,23 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
 
   let nextRpm = rpm;
   let poisoned = false;
-  if (rpm != null && rpm >= 85 && top && !topIsFlorida && floridaPct + 40 < rpm) {
-    nextRpm = floridaPct > 0 ? Math.round(floridaPct) : null;
+
+  // Trust On3 topTeams / store when disk Florida lock disagrees with the industry board.
+  const truthRpm =
+    boardRpm != null ? boardRpm : storeRpm != null && storeRpm < 85 ? storeRpm : null;
+  if (
+    truthRpm != null &&
+    rpm != null &&
+    rpm >= 70 &&
+    truthRpm + 40 < rpm
+  ) {
+    nextRpm = truthRpm;
     poisoned = true;
   }
-  // Rival-led board with absurd Florida lock and no Florida crumb on the peer list.
+  if (rpm != null && rpm >= 85 && top && !topIsFlorida && floridaPct + 40 < rpm) {
+    nextRpm = floridaPct > 0 ? Math.round(floridaPct) : truthRpm;
+    poisoned = true;
+  }
   if (
     !poisoned &&
     rpm != null &&
@@ -312,26 +449,52 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
     Number(top.pct) >= 12 &&
     Number(top.pct) + 40 < rpm
   ) {
-    nextRpm = null;
+    nextRpm = truthRpm;
     poisoned = true;
   }
-  if (!poisoned) return row;
+  // Rival-led industry board (Penn State 38 > Florida 9) even when disk RPM looked "fine".
+  if (
+    top &&
+    !topIsFlorida &&
+    Number(top.pct) >= 12 &&
+    truthRpm != null &&
+    Number(top.pct) > truthRpm &&
+    (rpm == null || rpm > truthRpm + 15 || rpm >= 70)
+  ) {
+    nextRpm = truthRpm;
+    poisoned = true;
+  }
+
+  const compsChanged =
+    storeComps.length > 0 &&
+    JSON.stringify(comps) !== JSON.stringify(row.competingSchools || []);
+
+  if (!poisoned && !compsChanged) return row;
 
   const anchor = nextRpm != null && nextRpm > 0 ? nextRpm : 1;
   const uf = Number(row.ufProbability);
   let nextUf = uf;
-  if (Number.isFinite(uf) && uf > anchor + 15) {
-    // Market-anchored GV band — never leave Closest on a fake 77% over Miss State.
+  if (poisoned && Number.isFinite(uf) && uf > anchor + 15) {
     nextUf = Math.min(99, Math.max(1, anchor + 10));
+  }
+  // Rival clearly ahead of true UF market — Closest cannot keep a fake Florida share.
+  if (
+    top &&
+    !topIsFlorida &&
+    Number(top.pct) >= 12 &&
+    nextRpm != null &&
+    Number(top.pct) > nextRpm &&
+    Number.isFinite(uf) &&
+    uf > Number(top.pct)
+  ) {
+    nextUf = Math.min(uf, Math.max(1, Math.round(nextRpm + 8)));
+    poisoned = true;
   }
 
   const predictors = Array.isArray(row.predictors)
     ? (row.predictors as Array<{ name?: string; score?: number }>).map((p) => {
-        if (p && /on3/i.test(String(p.name || '')) && nextRpm != null) {
-          return { ...p, score: nextRpm };
-        }
-        if (p && /on3/i.test(String(p.name || '')) && nextRpm == null) {
-          return { ...p, score: anchor };
+        if (p && /on3/i.test(String(p.name || ''))) {
+          return { ...p, score: nextRpm != null ? nextRpm : anchor };
         }
         return p;
       })
@@ -339,9 +502,10 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
 
   return {
     ...row,
-    ufRpmPct: nextRpm,
-    ufProbability: Number.isFinite(nextUf) ? nextUf : row.ufProbability,
-    predictors,
+    ufRpmPct: poisoned ? nextRpm : row.ufRpmPct,
+    ufProbability: poisoned && Number.isFinite(nextUf) ? nextUf : row.ufProbability,
+    competingSchools: compsChanged || poisoned ? comps : row.competingSchools,
+    predictors: poisoned ? predictors : row.predictors,
   };
 }
 

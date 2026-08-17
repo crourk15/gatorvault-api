@@ -47,3 +47,21 @@ describe('HP disk RPM poison heal', () => {
     }
   });
 });
+
+describe('HP disk board rehydrate', () => {
+  it('heals Girton-style empty comps + locked Florida RPM from store topTeams', () => {
+    const healed = healHighPriorityRpmPoisonRow({
+      slug: 'denairo-girton-jr',
+      name: 'DeNairo Girton Jr',
+      ufRpmPct: 96,
+      ufProbability: 71,
+      competingSchools: [],
+      predictors: [{ name: 'On3 RPM', score: 96 }],
+    });
+    const comps = healed.competingSchools || [];
+    assert.ok(comps.length >= 1, 'should rehydrate peer board');
+    assert.ok(comps.some((c) => /penn state/i.test(c.name)), `comps=${JSON.stringify(comps)}`);
+    assert.ok(Number(healed.ufRpmPct) < 20, `rpm=${healed.ufRpmPct}`);
+    assert.ok(Number(healed.ufProbability) < 35, `uf=${healed.ufProbability}`);
+  });
+});
