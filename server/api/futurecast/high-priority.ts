@@ -35,7 +35,6 @@ import {
   primeFuturecastCache,
   sanitizeHighPriorityStarsPayload,
   writeHighPriorityRuntime,
-  scheduleHighPriorityDiskRebuild,
 } from './response-cache';
 
 const require = createRequire(import.meta.url);
@@ -1297,8 +1296,9 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
 
     const cacheKey = highPriorityCacheKey(classYear);
     // Elite: serve worker/disk snapshot before returning status:building —
-    // but never leave a poisoned disk plate stuck across deploys. Heal on serve
-    // (sanitizeHighPriorityStarsPayload) and always refresh in the background.
+    // Heal on serve so poisoned odds/boards never ship. Do NOT background
+    // buildHighPriorityPayload on every DISK hit — that OOM'd Pro and caused
+    // exit-143 / 502 loops once HP was no-store (TestFlight hammer).
     const primed = loadHighPriorityCached(classYear);
     if (primed != null) {
       const healed = sanitizeHighPriorityStarsPayload(primed);
@@ -1308,8 +1308,25 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       res.setHeader('Cache-Control', 'no-store, must-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.json(healed);
-      // Single-flight + cooldown — never stampede Starter with parallel HP rebuilds.
-      scheduleHighPriorityDiskRebuild(classYear, () => buildHighPriorityPayload(classYear));
+      // Persist healed plate cheaply (no full rebuild). Full refresh stays on
+      // hub-warm / boot spaced Lab warm. Throttle writes so no-store traffic
+      // does not stringify the plate on every phone refresh.
+      const writeKey = `hp-healed-write:${classYear}`;
+      const lastWrite = Number((global as any).__GV_HP_HEALED_WRITE_AT__?.[writeKey] || 0);
+      if (Date.now() - lastWrite > 60_000) {
+        (global as any).__GV_HP_HEALED_WRITE_AT__ = {
+          ...((global as any).__GV_HP_HEALED_WRITE_AT__ || {}),
+          [writeKey]: Date.now(),
+        };
+        setImmediate(() => {
+          try {
+            writeHighPriorityRuntime(classYear, healed);
+          } catch (err) {
+            const message = err instanceof Error ? err.message : String(err);
+            console.warn('[futurecast-hp] healed disk write failed:', message);
+          }
+        });
+      }
       return;
     }
     await sendCachedJson(res, cacheKey, () => buildHighPriorityPayload(classYear), {
