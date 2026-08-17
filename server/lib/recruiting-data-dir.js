@@ -109,6 +109,13 @@ function mergeBundledIndustryRanksIfFresher(dataDir = resolveRecruitingDataDir()
  */
 function floridaShareFromTopTeams(teams) {
   if (!Array.isArray(teams) || !teams.length) return null;
+  let scale = 'unknown';
+  try {
+    const { detectTopTeamsPctScale } = require('./on3-board-hydrate');
+    scale = detectTopTeamsPctScale(teams);
+  } catch {
+    scale = teams.some((t) => Number(t?.prediction ?? t?.pct ?? 0) > 1.5) ? 'percent' : 'unknown';
+  }
   let best = null;
   for (const t of teams) {
     const name = String(t?.team?.name || t?.team?.fullName || t?.name || '').trim();
@@ -118,7 +125,10 @@ function floridaShareFromTopTeams(teams) {
     }
     const raw = Number(t?.prediction ?? t?.pct ?? t?.score);
     if (!Number.isFinite(raw) || raw <= 0) continue;
-    const pct = raw <= 1.5 ? raw * 100 : raw;
+    // Percent boards: 0.80 means 0.80%, never ×100 → 80 (Gabriel poison).
+    const pct = scale === 'fraction' || (scale === 'unknown' && raw <= 1 && !teams.some((x) => Number(x?.prediction ?? x?.pct ?? 0) > 1.5))
+      ? raw * 100
+      : raw;
     if (best == null || pct > best) best = pct;
   }
   return best;
@@ -126,6 +136,13 @@ function floridaShareFromTopTeams(teams) {
 
 function peerCountFromTopTeams(teams) {
   if (!Array.isArray(teams) || !teams.length) return 0;
+  let scale = 'unknown';
+  try {
+    const { detectTopTeamsPctScale } = require('./on3-board-hydrate');
+    scale = detectTopTeamsPctScale(teams);
+  } catch {
+    scale = teams.some((t) => Number(t?.prediction ?? t?.pct ?? 0) > 1.5) ? 'percent' : 'unknown';
+  }
   let n = 0;
   for (const t of teams) {
     const name = String(t?.team?.name || t?.team?.fullName || t?.name || '').trim();
@@ -135,7 +152,10 @@ function peerCountFromTopTeams(teams) {
     }
     const pct = Number(t?.prediction ?? t?.pct ?? t?.score);
     if (!Number.isFinite(pct) || pct <= 0) continue;
-    const scaled = pct <= 1.5 ? pct * 100 : pct;
+    const scaled =
+      scale === 'fraction' || (scale === 'unknown' && pct <= 1 && !teams.some((x) => Number(x?.prediction ?? x?.pct ?? 0) > 1.5))
+        ? pct * 100
+        : pct;
     if (scaled >= 5) n += 1;
   }
   return n;
@@ -204,6 +224,20 @@ function mergeBundledOn3BoardTruthIfFresher(dataDir = resolveRecruitingDataDir()
         if (Array.isArray(val) && val.length === 0) continue;
         if (JSON.stringify(row[key]) !== JSON.stringify(val)) {
           row[key] = val;
+          changed = true;
+        }
+      }
+      // Bundle ufRpmPct can itself be the Gabriel poison (0.80% → stored 80).
+      // Always write board Florida share when the durable lock disagrees.
+      if (
+        (poisonedLock || rivalLedBundle) &&
+        truthRpm != null &&
+        Number.isFinite(truthRpm) &&
+        truthRpm + 40 < (Number.isFinite(Number(row.ufRpmPct)) ? Number(row.ufRpmPct) : dstRpm)
+      ) {
+        const fixedRpm = truthRpm < 1 ? Math.max(1, Math.round(truthRpm)) : Math.round(truthRpm);
+        if (Number(row.ufRpmPct) !== fixedRpm) {
+          row.ufRpmPct = fixedRpm;
           changed = true;
         }
       }

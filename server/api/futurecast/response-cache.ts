@@ -18,7 +18,7 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** v31: rehydrate missing peer boards from store (Girton) + single-flight HP rebuild. */
 /** v32: durable /var/data board-truth merge + bundle fallback so sole-board lies cannot stick. */
 /** v33: peer 1→100 crumb poison (Asher OSU On3 lead) stripped on heal + competitorPct. */
-export const FUTURECAST_API_CACHE_VERSION = 33;
+export const FUTURECAST_API_CACHE_VERSION = 34;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
@@ -383,7 +383,11 @@ function boardTruthFromPlayer(
           /\bflorida\b|\bgators\b/i.test(rowTeam.name) &&
           !/florida state|south florida/i.test(rowTeam.name)
         ) {
-          if (boardRpm == null) boardRpm = sanitizeRpmPct(pct);
+          // Percent-board crumbs (Gabriel Florida 0.80) are ~1%, not null/80.
+          if (boardRpm == null) {
+            if (pct < 1 && scale === 1) boardRpm = Math.max(1, Math.round(pct));
+            else boardRpm = sanitizeRpmPct(pct);
+          }
           continue;
         }
         if (/\bflorida\b|\bgators\b/i.test(rowTeam.name)) continue;
@@ -513,43 +517,65 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
   let poisoned = false;
 
   // Trust On3 topTeams / store when disk Florida lock disagrees with the industry board.
+  // Prefer boardRpm even when store ufRpmPct is the same poison (Gabriel 0.80→80).
   const truthRpm =
-    boardRpm != null ? boardRpm : storeRpm != null && storeRpm < 85 ? storeRpm : null;
+    boardRpm != null
+      ? boardRpm
+      : storeRpm != null && storeRpm < 40
+        ? storeRpm
+        : null;
   if (
     truthRpm != null &&
     rpm != null &&
-    rpm >= 70 &&
-    truthRpm + 40 < rpm
+    rpm >= 40 &&
+    truthRpm + 25 < rpm
   ) {
     nextRpm = truthRpm;
     poisoned = true;
   }
-  if (rpm != null && rpm >= 85 && top && !topIsFlorida && floridaPct + 40 < rpm) {
-    nextRpm = floridaPct > 0 ? Math.round(floridaPct) : truthRpm;
+  if (rpm != null && rpm >= 40 && top && !topIsFlorida && floridaPct + 40 < rpm) {
+    nextRpm = floridaPct > 0 ? Math.max(1, Math.round(floridaPct)) : truthRpm;
     poisoned = true;
   }
   if (
     !poisoned &&
     rpm != null &&
-    rpm >= 85 &&
+    rpm >= 40 &&
     top &&
     !topIsFlorida &&
     Number(top.pct) >= 12 &&
     Number(top.pct) + 40 < rpm
   ) {
-    nextRpm = truthRpm;
+    nextRpm = truthRpm != null ? truthRpm : Math.max(1, Math.round(100 - Number(top.pct)));
     poisoned = true;
   }
-  // Rival-led industry board (Penn State 38 > Florida 9) even when disk RPM looked "fine".
+  // Rival-led industry board (Penn State 38 > Florida 9) when store truth exists.
   if (
     top &&
     !topIsFlorida &&
     Number(top.pct) >= 12 &&
     truthRpm != null &&
     Number(top.pct) > truthRpm &&
-    (rpm == null || rpm > truthRpm + 15 || rpm >= 70)
+    (rpm == null || rpm > truthRpm + 15 || rpm >= 40)
   ) {
     nextRpm = truthRpm;
+    poisoned = true;
+  }
+  // Serve-path only: clear rival majority vs inflated Field (Gabriel Miami 94 vs Field 80)
+  // when players.json boardRpm was unavailable.
+  if (
+    !poisoned &&
+    top &&
+    !topIsFlorida &&
+    Number(top.pct) >= 55 &&
+    rpm != null &&
+    rpm >= 40 &&
+    Number(top.pct) > rpm
+  ) {
+    nextRpm =
+      floridaPct > 0
+        ? Math.max(1, Math.round(floridaPct))
+        : Math.max(1, Math.round(100 - Number(top.pct)));
     poisoned = true;
   }
 

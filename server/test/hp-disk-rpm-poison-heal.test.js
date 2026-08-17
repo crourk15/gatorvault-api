@@ -64,4 +64,23 @@ describe('HP disk board rehydrate', () => {
     assert.ok(Number(healed.ufRpmPct) < 20, `rpm=${healed.ufRpmPct}`);
     assert.ok(Number(healed.ufProbability) < 35, `uf=${healed.ufProbability}`);
   });
+
+  it('heals Gabriel Field 80 / GV 85 when Miami owns ~94% (0.80 crumb poison)', () => {
+    const healed = healHighPriorityRpmPoisonRow({
+      slug: 'gabriel-player',
+      name: 'Gabriel Player',
+      ufRpmPct: 80,
+      ufProbability: 85,
+      competingSchools: [
+        { name: 'Miami', pct: 94 },
+        { name: 'Ohio State', pct: 1 },
+      ],
+      predictors: [{ name: 'On3 RPM', score: 80 }],
+    });
+    assert.ok(Number(healed.ufRpmPct) <= 5, `Field rpm=${healed.ufRpmPct}`);
+    assert.ok(Number(healed.ufProbability) < 30, `GV=${healed.ufProbability}`);
+    const on3 = (healed.predictors || []).find((p) => /on3/i.test(p.name));
+    assert.ok(on3);
+    assert.ok(Number(on3.score) <= 5, `On3 predictor=${on3.score}`);
+  });
 });
