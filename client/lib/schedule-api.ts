@@ -38,6 +38,12 @@ function normalizeGames(raw: ScheduleGame[] | undefined | null): ScheduleGame[] 
         pred: String(g.pred || ''),
         predUF: Number.isFinite(Number(g.predUF)) ? Number(g.predUF) : 0,
         predOpp: Number.isFinite(Number(g.predOpp)) ? Number(g.predOpp) : 0,
+        expectedVisitors:
+          g.expectedVisitors &&
+          typeof g.expectedVisitors === 'object' &&
+          Array.isArray((g.expectedVisitors as { visitors?: unknown }).visitors)
+            ? (g.expectedVisitors as ScheduleGame['expectedVisitors'])
+            : undefined,
       } as ScheduleGame;
     })
     .filter(Boolean) as ScheduleGame[];

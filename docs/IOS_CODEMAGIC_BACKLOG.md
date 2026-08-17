@@ -51,11 +51,13 @@ These ship via Render / Netlify API — current App Store binary (1.0.12) picks 
 
 ## Waiting for next Codemagic build
 
+**Next bake target: App Store `1.0.17` / build `82+`** (`MARKETING_VERSION` in `project.pbxproj`). See `docs/APP_STORE_1_0_17_BUILD82.md`.
+
 Add a row when a change is **bundled client UI/JS** that iOS will not see until `ios-release` rebakes `client/out`.
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
-| 2026-08-16 | Game Week 3 Keys: always show key body (Expected visitors names) — no hover-flip | `KeysToGameCards` + `game-week-wow.css` in binary | pending |
+| 2026-08-17 | Game Week: dedicated **Expected visitors** panel (name/pos/school → profile); visitors removed from 3 Keys | `ExpectedVisitorsPanel` + Command Center in binary; list data stays API (`game-visitors-2026.json`) | pending |
 | 2026-08-16 | Chase card: dedicated Expected visit line above Why we chase + skip HP SWR | `VaultChaseCard` / SWR in binary | pending |
 | 2026-08-16 | Chase card Why we chase: show Expected FAU/Ole Miss visit labels from HP visitHistory | `chase-priority` `buildChaseWhyBrief` in binary (API visitHistory live without bake) | pending |
 | 2026-08-16 | Game Week schedule: always await live `/api/schedule` (skip SWR cache-first) so Expected visitors / keys update without hard refresh | `schedule-api`, `stale-while-revalidate` in binary — **Netlify picks up web; iOS needs bake** | pending |

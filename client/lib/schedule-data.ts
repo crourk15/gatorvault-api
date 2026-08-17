@@ -30,6 +30,22 @@ export type ScheduleGame = {
   defenseTendencies?: string[];
   howUFWins?: string[];
   scoutingReport?: string;
+  /** Expected home visitors for this game week (from game-visitors JSON via API). */
+  expectedVisitors?: {
+    gameId: string;
+    opponent?: string | null;
+    dateLabel?: string | null;
+    chaseLabel?: string | null;
+    source?: string | null;
+    visitors: Array<{
+      slug: string;
+      name: string;
+      position?: string | null;
+      school?: string | null;
+      stars?: number | null;
+      classYear?: number | null;
+    }>;
+  };
   /** Per-game event deep links (not marketplace search pages). */
   tickets?: {
     gameCenter?: string;
@@ -54,7 +70,6 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Disrupt Veltkamp's rhythm",
       "Attack FAU's run defense",
       "Chunk shots vs a takeaway-light secondary",
-      "Expected visitors",
     ],
     swing: [
       { name: "Aaron Philo", role: "QB1 — attack a secondary that forced only 3 INTs in 2025" },
@@ -91,7 +106,6 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Veltkamp was efficient in rhythm when protected (24/33 for 290 vs Rice; 22/29 for 272 vs Tulsa) — pressure before the first read; help over the top on the confirmed vertical shot.",
       "FAU's 2025 defense allowed 200 rush YPG and got gashed for chunk runs (Memphis 90, Rice 68, Navy 397) — establish Baugh early and force them to load the box.",
       "Secondary forced only 3 INTs all year and surrendered chunk shots even in wins — take calculated verticals once the run is honest; do not fear the takeaway.",
-      "Early Gators Online look for the FAU opener (plans can change): Asher Ghioto, Zaiden Jernigan, Zylen Little, Kameron Battle, Chayse Brown, Josiah Taylor.",
     ],
     scoutingReport:
       "FAU OFFENSE (ESPN Rice/Tulsa highlight packages): shotgun spread under Zach Kittley; Veltkamp efficient when protected; confirmed deep TD (~46) and long TD run (~68) vs Rice. Tempo/RPO not confirmed on those cuts. FAU DEFENSE (ESPN Maryland/Memphis highlight clips + full 2025 ESPN drive/box dig across 12 games): 4-down front and nickel/dime looks film-confirmed; coverage shells not confirmed. Unit allowed 36.3 PPG / 435.5 YPG with a clear explosive-run problem and only 3 INTs. Staff-public Dewhurst identity (aggressive, multiple fronts, DB-heavy) is labeled separately — not treated as film-confirmed coverage. UF wins by pressuring Veltkamp, running at a soft front, and taking chunk shots vs a takeaway-light secondary.",
@@ -168,7 +182,6 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Match their tempo without mistakes",
       "Pressure their QB",
       "Win early downs",
-      "Expected visitors",
     ],
     swing: [
       { name: "Jayden Woods", role: "Edge pressure" },
@@ -182,7 +195,6 @@ export const SCHEDULE_GAMES: ScheduleGame[] = [
       "Ole Miss tempo stresses communication — match pace without negative plays or coverage busts.",
       "Get edge pressure and force them off schedule before the first read.",
       "Win early downs so the Rebels cannot live in obvious passing situations.",
-      "Early Gators Online look for Ole Miss week (plans can change): Easton Royal, Brysen Wright, Antonio Thomas, Tyzon Swann, Madoxx Davis, Jayden Bell, Giovanni Tuggle, CJ Craig-James, Dion Edwards, Merrick Ham, Xander Edwards, Omari Lawson, J.C. Wessel, Shamar Evans, Ty Winn, Jaxon Flowers, Anthony Howard Jr., Hudson West, Cooper Martenson.",
     ],
     tickets: {
       gameCenter: "https://floridagators.com/game-center/27906",

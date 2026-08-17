@@ -642,6 +642,104 @@
   font-weight: 700;
 }
 
+/* Expected visitors — dedicated recruiting panel (not a 3 Keys card) */
+.gv-gw-wow-panel--visitors {
+  border-top: 3px solid #0021a5;
+}
+
+.gv-gw-visitors__dek {
+  margin: 0 0 0.85rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+.gv-gw-visitors__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.55rem;
+}
+
+.gv-gw-visitors__item {
+  margin: 0;
+}
+
+.gv-gw-visitors__link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-panel-border);
+  background: #fff;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.gv-gw-visitors__link:hover,
+.gv-gw-visitors__link:focus-visible {
+  border-color: rgba(0, 33, 165, 0.35);
+  box-shadow: 0 2px 10px rgba(0, 33, 165, 0.08);
+  outline: none;
+}
+
+.gv-gw-visitors__mark {
+  flex: 0 0 auto;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #0021a5;
+  background: rgba(0, 33, 165, 0.08);
+}
+
+.gv-gw-visitors__copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.gv-gw-visitors__name {
+  font-size: 0.95rem;
+  font-weight: 750;
+  color: var(--color-text-dark);
+  letter-spacing: -0.01em;
+}
+
+.gv-gw-visitors__meta {
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gv-gw-visitors__chevron {
+  flex: 0 0 auto;
+  color: #0021a5;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+.gv-gw-visitors__source {
+  margin: 0.85rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
 .gv-gw-swing-card__pos {
   font-size: 0.625rem;
   font-weight: 800;
@@ -979,6 +1077,7 @@
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-key-card,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-flip-card__face,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-flip-card__title,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-visitors__name,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-swing-card__name,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-depth-player__name,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-scout-card,
@@ -996,6 +1095,9 @@
 
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-swing-card__role,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-flip-card__face--back,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-visitors__dek,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-visitors__meta,
+.gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-visitors__source,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-key-card__body,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-film-panel__list li,
 .gv-gw-wow-page .gv-gw-wow-feed .fc-lab-panel-shell .gv-gw-scout-card ul,

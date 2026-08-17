@@ -7,6 +7,8 @@ const {
   expectedVisitLabelForSlug,
   mergeExpectedVisitHistory,
   buildSlugLabelMap,
+  visitorsPanelForGameId,
+  attachExpectedVisitorsToGames,
 } = require('../lib/game-week-visitors');
 
 describe('game-week-visitors', () => {
@@ -28,5 +30,23 @@ describe('game-week-visitors', () => {
     const map = buildSlugLabelMap();
     assert.ok(map.size >= 20);
     assert.equal(map.get('asher-ghioto'), 'Expected FAU visit · Sep 5');
+  });
+
+  it('builds Game Week panel rows for FAU', () => {
+    const panel = visitorsPanelForGameId('fau');
+    assert.ok(panel);
+    assert.equal(panel.gameId, 'fau');
+    assert.ok(panel.visitors.length >= 5);
+    assert.ok(panel.visitors.every((v) => v.slug && v.name));
+    assert.match(String(panel.source || ''), /plans can change/i);
+  });
+
+  it('attaches expectedVisitors onto schedule games', () => {
+    const games = attachExpectedVisitorsToGames([
+      { id: 'fau', opp: 'FAU Owls', date: 'September 5, 2026' },
+      { id: 'campbell', opp: 'Campbell', date: 'September 12, 2026' },
+    ]);
+    assert.ok(games[0].expectedVisitors?.visitors?.length);
+    assert.equal(games[1].expectedVisitors, undefined);
   });
 });
