@@ -256,6 +256,83 @@ function mergeBundledOn3BoardTruthIfFresher(dataDir = resolveRecruitingDataDir()
   }
 }
 
+/**
+ * Durable skinny/profileNote can pick up game-week templates
+ * ("Antonio Thomas Jr — 🐊 Florida vs."). Replace from the git bundle when
+ * durable copy is corrupt and the bundle still has a real recruit brief.
+ */
+function mergeBundledEditorialCopyIfCorrupt(dataDir = resolveRecruitingDataDir()) {
+  if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
+    return { merged: false, reason: 'same_path' };
+  }
+  const durablePath = path.join(dataDir, 'players.json');
+  const bundlePath = path.join(BUNDLE_DIR, 'players.json');
+  if (!fs.existsSync(durablePath) || !fs.existsSync(bundlePath)) {
+    return { merged: false, reason: 'missing_file' };
+  }
+  let isCorruptRecruitSkinny;
+  let isChaseProcessIntel;
+  try {
+    ({ isCorruptRecruitSkinny } = require('./recruiting-placeholder-school'));
+    ({ isChaseProcessIntel } = require('./recruiting-intel-quality'));
+  } catch (err) {
+    return { merged: false, error: err.message };
+  }
+  try {
+    const durable = JSON.parse(fs.readFileSync(durablePath, 'utf8'));
+    const bundled = JSON.parse(fs.readFileSync(bundlePath, 'utf8'));
+    if (!Array.isArray(durable) || !Array.isArray(bundled)) {
+      return { merged: false, reason: 'not_array' };
+    }
+    const bySlug = new Map(
+      bundled.filter((p) => p && p.slug).map((p) => [String(p.slug).toLowerCase(), p])
+    );
+    let updated = 0;
+    for (let i = 0; i < durable.length; i += 1) {
+      const row = durable[i];
+      if (!row?.slug) continue;
+      const src = bySlug.get(String(row.slug).toLowerCase());
+      if (!src) continue;
+      let changed = false;
+      const dstSkinny = String(row.skinny || '').trim();
+      const srcSkinny = String(src.skinny || '').trim();
+      if (
+        srcSkinny &&
+        (isCorruptRecruitSkinny(dstSkinny) || !dstSkinny) &&
+        !isCorruptRecruitSkinny(srcSkinny)
+      ) {
+        row.skinny = srcSkinny;
+        changed = true;
+      }
+      const dstNote = String(row.profileNote || '').trim();
+      const srcNote = String(src.profileNote || '').trim();
+      if (
+        srcNote &&
+        (isCorruptRecruitSkinny(dstNote) ||
+          isChaseProcessIntel(dstNote) ||
+          /🐊\s*Florida\s+vs/i.test(dstNote) ||
+          !dstNote) &&
+        !isCorruptRecruitSkinny(srcNote) &&
+        !isChaseProcessIntel(srcNote)
+      ) {
+        row.profileNote = srcNote;
+        changed = true;
+      }
+      if (changed) {
+        durable[i] = row;
+        updated += 1;
+      }
+    }
+    if (updated > 0) {
+      fs.writeFileSync(durablePath, JSON.stringify(durable, null, 2));
+    }
+    return { merged: updated > 0, updated };
+  } catch (err) {
+    console.warn('[recruiting-data-dir] editorial copy merge skipped:', err.message);
+    return { merged: false, error: err.message };
+  }
+}
+
 function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
   if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
     return { migrated: false, reason: 'same_path' };
@@ -308,6 +385,13 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
     if (rankMerge.updated) {
       console.log('[recruiting-data-dir] merged Industry ranks from bundle', rankMerge.updated);
     }
+    const editorialMerge = mergeBundledEditorialCopyIfCorrupt(dataDir);
+    if (editorialMerge.updated) {
+      console.log(
+        '[recruiting-data-dir] healed corrupt recruit skinnies from bundle',
+        editorialMerge.updated
+      );
+    }
     // Defer board-truth merge — sync parse/stringify of players.json (~9MB) during
     // recruiting-store require can spike memory right as Render health-checks /ready
     // and contribute to exit-143 restart loops after deploy.
@@ -325,9 +409,10 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
       }
     }, 45_000);
     return {
-      migrated: copied > 0 || !!rankMerge.updated,
+      migrated: copied > 0 || !!rankMerge.updated || !!editorialMerge.updated,
       copied,
       rankMerge,
+      editorialMerge,
       boardMerge: { merged: false, deferred: true },
       to: dataDir,
     };
@@ -344,4 +429,5 @@ module.exports = {
   migrateRecruitingBundleIfNeeded,
   mergeBundledIndustryRanksIfFresher,
   mergeBundledOn3BoardTruthIfFresher,
+  mergeBundledEditorialCopyIfCorrupt,
 };

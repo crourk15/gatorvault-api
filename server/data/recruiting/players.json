@@ -120183,7 +120183,8 @@
     "updatedAt": "2026-08-14T01:39:10.401Z",
     "state": "FL",
     "displayRating": 94.95618279569892,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "predictedSchool": "Florida"
   },
   {
     "id": "lorenzo-mcmullen-jr",
