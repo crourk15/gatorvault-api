@@ -19,9 +19,15 @@ export function normalizeOddsPct(
   return Math.round(n * 100);
 }
 
-/** On3 RPM — percentage points only. */
+/** On3 RPM — percentage points only. Accepts 1 as one percent (never ×100). */
 export function sanitizeRpmPct(value: unknown): number | null {
-  return normalizeOddsPct(value, { allowUnitInterval: false });
+  if (value == null || !Number.isFinite(Number(value))) return null;
+  const n = Number(value);
+  if (n <= 0) return null;
+  if (n > 100) return 100;
+  // (0, 1): residual fraction on percent-scale boards — not 36%/99%.
+  if (n < 1) return null;
+  return Math.round(n);
 }
 
 export function sanitizeStoreOddsPct(
@@ -43,6 +49,8 @@ export function ufPctFromRaw(raw: number | null | undefined): number {
   // Prefer percentage points. Reject residual unit-interval leftovers.
   if (raw > 1) return Math.min(100, Math.round(raw));
   if (raw <= 0) return 0;
+  // Exact 1 is one percent (Industry Consensus micro) — never discard or ×100.
+  if (raw === 1) return 1;
   // Unit interval only when it looks like a real store fraction (< 0.85).
   if (raw < 0.85) return Math.round(raw * 100);
   return 0;

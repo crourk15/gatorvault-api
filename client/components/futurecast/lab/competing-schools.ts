@@ -1,5 +1,6 @@
 import type { FcLabTarget } from './fc-lab-types';
 import { ufPctFromFc } from './fc-lab-types';
+import { sanitizeRpmPct } from '../../../lib/uf-odds-scale';
 
 export type CompetingSchoolSegment = {
   key: string;
@@ -172,11 +173,25 @@ export function isFloridaLeadingOnBoard(player: FcLabTarget): boolean {
   const uf = ufPctFromFc(player.ufProbability);
   if (!(uf > 0)) return false;
   const threat = topThreatVsFlorida(player);
-  if (!threat) {
-    // Sole / thin board — require a real share so soft unknowns don't flood Leading.
-    return uf >= 25;
+  const rpm = sanitizeRpmPct(player.ufRpmPct);
+
+  if (threat) {
+    // Industry trailing / residual UF market cannot be overridden by inflated GV odds.
+    if (rpm != null && rpm > 0 && rpm <= threat.pct) return false;
+    if (
+      rpm != null &&
+      rpm > 0 &&
+      rpm < MIN_CREDIBLE_RIVAL_PCT &&
+      threat.pct >= MIN_CREDIBLE_RIVAL_PCT
+    ) {
+      return false;
+    }
+    return uf > threat.pct;
   }
-  return uf > threat.pct;
+
+  // Sole / thin board — require a real share so soft unknowns don't flood Leading.
+  if (rpm != null && rpm > 0 && rpm < 25 && uf >= 50) return false;
+  return uf >= 25;
 }
 
 /**
@@ -208,10 +223,14 @@ export function hasClosestCommitProcessEvidence(player: FcLabTarget): boolean {
 export function hasCredibleBoardLead(player: FcLabTarget): boolean {
   if (!isFloridaLeadingOnBoard(player)) return false;
   const uf = ufPctFromFc(player.ufProbability);
-  const rpm =
-    player.ufRpmPct != null && Number(player.ufRpmPct) > 0 ? ufPctFromFc(player.ufRpmPct) : 0;
+  const rpm = sanitizeRpmPct(player.ufRpmPct) || 0;
   const threat = credibleThreatVsFlorida(player);
-  if (threat) return uf > threat.pct;
+  if (threat) {
+    // Contested industry board: UF market RPM must actually lead the rival.
+    // GV alone over a rival-led / residual board is not Closest-eligible.
+    if (!(rpm > 0) || rpm <= threat.pct || rpm < MIN_CREDIBLE_RIVAL_PCT) return false;
+    return uf > threat.pct;
+  }
   // No credible rival board — need a real market share, not Est. noise.
   return rpm >= 40 || uf >= 50;
 }

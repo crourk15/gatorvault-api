@@ -57,6 +57,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-17 | Closest / Who commits next: industry-trailing residual RPM (Jernigan) cannot invent Florida lead; client `sanitizeRpmPct` accepts 1% | `competing-schools`, `uf-odds-scale` in binary; HP odds heal is API | pending |
 | 2026-08-17 | Articles hub: Authors + Tags filter Latest + live counts/tags from published articles (no fake 48/32/21) | `InsiderArticlesPage` + insider-api/data + insider-hub CSS in binary; API authors/tags also live | pending |
 | 2026-08-17 | Articles hub: remove duplicate Related rail (Related stays on article reader only); Latest list labeled | `InsiderArticlesPage` in binary | pending |
 | 2026-08-17 | Game Week: dedicated **Expected visitors** panel (name/pos/school → profile); visitors removed from 3 Keys | `ExpectedVisitorsPanel` + Command Center in binary; list data stays API (`game-visitors-2026.json`) | pending |
