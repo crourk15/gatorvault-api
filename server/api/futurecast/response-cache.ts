@@ -14,7 +14,8 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 
 /** Bump when high-priority or master-board payload shape changes. */
 /** Bumped for Expected visit labels merged onto soft/disk HP serve. */
-export const FUTURECAST_API_CACHE_VERSION = 29;
+/** v30: heal poisoned Florida RPM on disk serve + background rebuild after DISK hit. */
+export const FUTURECAST_API_CACHE_VERSION = 30;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
@@ -274,6 +275,76 @@ export function normalizeFanStars(raw: unknown): number | null {
   return Math.round(n);
 }
 
+/**
+ * Disk/runtime HP can keep Florida ufRpmPct=100 after a 1% On3 residual poison
+ * while competingSchools still show Miss State/etc leading. Heal on every serve
+ * so Closest does not wait for a full rebuild cron.
+ */
+export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Record<string, unknown> {
+  const { sanitizeRpmPct } = require('../../lib/uf-probability-utils') as {
+    sanitizeRpmPct: (v: unknown) => number | null;
+  };
+  const rpm = sanitizeRpmPct(row.ufRpmPct);
+  const comps = Array.isArray(row.competingSchools)
+    ? (row.competingSchools as Array<{ name?: string; pct?: number }>)
+    : [];
+  const real = comps
+    .filter((c) => c?.name && Number(c.pct) >= 5)
+    .sort((a, b) => Number(b.pct) - Number(a.pct));
+  const top = real[0];
+  const topIsFlorida = top && /\bflorida\b|\bgators\b/i.test(String(top.name || ''));
+  const florida = real.find((c) => /\bflorida\b|\bgators\b/i.test(String(c.name || '')));
+  const floridaPct = florida ? Number(florida.pct) : 0;
+
+  let nextRpm = rpm;
+  let poisoned = false;
+  if (rpm != null && rpm >= 85 && top && !topIsFlorida && floridaPct + 40 < rpm) {
+    nextRpm = floridaPct > 0 ? Math.round(floridaPct) : null;
+    poisoned = true;
+  }
+  // Rival-led board with absurd Florida lock and no Florida crumb on the peer list.
+  if (
+    !poisoned &&
+    rpm != null &&
+    rpm >= 85 &&
+    top &&
+    !topIsFlorida &&
+    Number(top.pct) >= 12 &&
+    Number(top.pct) + 40 < rpm
+  ) {
+    nextRpm = null;
+    poisoned = true;
+  }
+  if (!poisoned) return row;
+
+  const anchor = nextRpm != null && nextRpm > 0 ? nextRpm : 1;
+  const uf = Number(row.ufProbability);
+  let nextUf = uf;
+  if (Number.isFinite(uf) && uf > anchor + 15) {
+    // Market-anchored GV band — never leave Closest on a fake 77% over Miss State.
+    nextUf = Math.min(99, Math.max(1, anchor + 10));
+  }
+
+  const predictors = Array.isArray(row.predictors)
+    ? (row.predictors as Array<{ name?: string; score?: number }>).map((p) => {
+        if (p && /on3/i.test(String(p.name || '')) && nextRpm != null) {
+          return { ...p, score: nextRpm };
+        }
+        if (p && /on3/i.test(String(p.name || '')) && nextRpm == null) {
+          return { ...p, score: anchor };
+        }
+        return p;
+      })
+    : row.predictors;
+
+  return {
+    ...row,
+    ufRpmPct: nextRpm,
+    ufProbability: Number.isFinite(nextUf) ? nextUf : row.ufProbability,
+    predictors,
+  };
+}
+
 /** Sanitize HP (and similar) payloads so seed/disk leftovers never emit 0★
  *  and never resurrect alumni/roster ATH phantoms from durable runtime cache.
  */
@@ -284,7 +355,7 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
   let players = doc.players.map((row) => {
     if (!row || typeof row !== 'object') return row;
     const p = row as Record<string, unknown>;
-    return { ...p, stars: normalizeFanStars(p.stars) };
+    return healHighPriorityRpmPoisonRow({ ...p, stars: normalizeFanStars(p.stars) });
   });
   try {
     const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players') as {
@@ -378,8 +449,9 @@ export function loadHighPriorityCached(year: number | string): unknown | null {
   if (stale != null) return sanitizeHighPriorityStarsPayload(stale);
   const disk = readHighPriorityRuntime(year);
   if (disk != null) {
-    cache.set(key, disk, CACHE_TTL_MS);
-    return disk;
+    const healed = sanitizeHighPriorityStarsPayload(disk);
+    cache.set(key, healed, CACHE_TTL_MS);
+    return healed;
   }
   return null;
 }
