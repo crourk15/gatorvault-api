@@ -1295,12 +1295,25 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
     }
 
     const cacheKey = highPriorityCacheKey(classYear);
-    // Elite: serve worker/disk snapshot before returning status:building.
+    // Elite: serve worker/disk snapshot before returning status:building —
+    // but never leave a poisoned disk plate stuck across deploys. Heal on serve
+    // (sanitizeHighPriorityStarsPayload) and always refresh in the background.
     const primed = loadHighPriorityCached(classYear);
     if (primed != null) {
-      primeFuturecastCache(cacheKey, primed);
+      const healed = sanitizeHighPriorityStarsPayload(primed);
+      primeFuturecastCache(cacheKey, healed);
       res.setHeader('X-GatorVault-Cache', 'DISK');
-      res.json(primed);
+      res.json(healed);
+      void buildHighPriorityPayload(classYear)
+        .then((fresh) => {
+          if (fresh == null) return;
+          primeFuturecastCache(cacheKey, fresh);
+          writeHighPriorityRuntime(classYear, fresh);
+        })
+        .catch((err) => {
+          const message = err instanceof Error ? err.message : String(err);
+          console.warn('[futurecast-hp] background rebuild after DISK serve failed:', message);
+        });
       return;
     }
     await sendCachedJson(res, cacheKey, () => buildHighPriorityPayload(classYear), {
