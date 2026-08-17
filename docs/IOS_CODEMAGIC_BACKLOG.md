@@ -57,6 +57,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-17 | Articles hub: Authors + Tags filter Latest (View all was a dead same-page link) | `InsiderArticlesPage` + insider-hub CSS in binary | pending |
 | 2026-08-17 | Articles hub: remove duplicate Related rail (Related stays on article reader only); Latest list labeled | `InsiderArticlesPage` in binary | pending |
 | 2026-08-17 | Game Week: dedicated **Expected visitors** panel (name/pos/school → profile); visitors removed from 3 Keys | `ExpectedVisitorsPanel` + Command Center in binary; list data stays API (`game-visitors-2026.json`) | pending |
 | 2026-08-16 | Chase card: dedicated Expected visit line above Why we chase + skip HP SWR | `VaultChaseCard` / SWR in binary | pending |

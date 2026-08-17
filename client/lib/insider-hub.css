@@ -344,6 +344,15 @@
   align-items: center;
   gap: 10px;
   color: var(--color-text-body);
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.insider-author-card.is-active {
+  border-color: var(--color-accent-blue);
+  box-shadow: 0 0 0 1px rgba(0, 33, 165, 0.2);
 }
 
 .insider-author-avatar {
@@ -368,10 +377,41 @@
 .insider-view-all {
   display: inline-block;
   margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
   font-size: 13px;
   color: var(--color-accent-orange);
   text-decoration: none;
   font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.insider-filter-chip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(0, 33, 165, 0.06);
+  border: 1px solid rgba(0, 33, 165, 0.14);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.insider-filter-chip__clear {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: var(--color-accent-orange);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
 }
 
 .insider-heat-index {
