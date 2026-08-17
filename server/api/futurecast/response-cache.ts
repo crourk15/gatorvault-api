@@ -459,7 +459,7 @@ function boardTruthFromPlayer(
         if (pct <= 0) continue;
         if (
           /\bflorida\b|\bgators\b/i.test(rowTeam.name) &&
-          !/florida state|south florida|florida atlantic|florida a\s*&\s*m/i.test(rowTeam.name)
+          !/florida state|south florida|florida atlantic|florida a\s*&?\s*m|\bfamu\b/i.test(rowTeam.name)
         ) {
           // Percent-board crumbs (Gabriel Florida 0.80) are ~1%, not null/80.
           if (boardRpm == null) {
@@ -494,8 +494,8 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
   let storeComps: Array<{ name: string; pct: number }> = [];
   let boardRpm: number | null = null;
 
-  // Fast path: in-row peer board already shows a clear rival — heal without store I/O.
-  // Cold players.json parse on every HP row was starving Render /ready (~4.5s under load).
+  // Prefer warm store truth for every slug — Map lookup is cheap. Only skip I/O when
+  // the heal index is cold AND the row already looks complete (avoid /ready stalls).
   const rowCompsPreview = Array.isArray(row.competingSchools)
     ? (row.competingSchools as Array<{ name?: string; pct?: number }>)
     : [];
@@ -507,7 +507,10 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
     .sort((a, b) => Number(b.pct) - Number(a.pct))[0];
   const rowHasClearRival = rowTopPeer && Number(rowTopPeer.pct) >= 55;
   const rowUfMissing = row.ufRpmPct == null || !(Number(row.ufRpmPct) > 0);
+  const healWarm =
+    healTruthBySlug.size > 0 && Date.now() - healTruthWarmAt <= HEAL_TRUTH_TTL_MS;
   const rowNeedsStore =
+    healWarm ||
     !rowCompsPreview.length ||
     rowCompsPreview.every((c) => Number(c.pct) < 5) ||
     rowUfMissing ||
@@ -522,8 +525,7 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
     } else {
       scheduleHealPlayersWarm();
     }
-  } else if (slug && (!healTruthBySlug.size || Date.now() - healTruthWarmAt > HEAL_TRUTH_TTL_MS)) {
-    // Keep index warm for Girton-style empty-comps rows without blocking this request.
+  } else if (slug && !healWarm) {
     scheduleHealPlayersWarm();
   }
 
@@ -536,6 +538,13 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
   }
   // Missing ufRpm — restore store On3 peers so chrome does not crown a residual rival.
   if (rowUfMissing && storeComps.length) {
+    comps = storeComps;
+    compsMutated = true;
+  }
+  // Store On3 top rival differs (Tristian: FSU stripped as Florida; Anthony stale peers).
+  const storeTopName = storeComps[0] ? String(storeComps[0].name).toLowerCase() : '';
+  const rowTopName = rowTopPeer ? String(rowTopPeer.name || '').toLowerCase() : '';
+  if (storeComps.length && storeTopName && storeTopName !== rowTopName) {
     comps = storeComps;
     compsMutated = true;
   }
@@ -608,6 +617,16 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
 
   // Restore missing Florida RPM from On3 board (Vickers / Antonio / Mannings live miss).
   if (rpm == null && boardRpm != null && boardRpm > 0) {
+    nextRpm = boardRpm;
+    poisoned = true;
+  }
+  // Drift vs On3 Florida row (Anthony 9 vs 63; Tristian FSU% stored as ufRpm 22 vs UF ~8).
+  if (
+    boardRpm != null &&
+    boardRpm > 0 &&
+    rpm != null &&
+    Math.abs(boardRpm - rpm) >= 10
+  ) {
     nextRpm = boardRpm;
     poisoned = true;
   }
