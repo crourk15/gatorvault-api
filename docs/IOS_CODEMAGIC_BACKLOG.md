@@ -61,6 +61,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-17 | Chase On3 lead stamp from API (`on3Lead`) — prefer server field so stamp bugs/prediction swings are Render-only after this bake | `VaultChaseCard` + HP cache v20 in binary; API stamps `on3Lead` on every HP serve | pending |
 | 2026-08-17 | Chase On3 lead labels: ND / Miss St / SC / TTU / NC State (no more "Notre"/"South"/"Texas" for Tech) | `competing-schools` + `VaultChaseCard` in binary | pending |
 | 2026-08-17 | Chase On3 lead: treat FSU/USF/FAU as rivals (not UF); keep real ~95% favorites in chrome | `competing-schools` in binary; API peer extract + HP disk heal also live | pending |
 | 2026-08-17 | HP localStorage cache v19 (Gabriel Field 0.80→80 / GV 85 bust) | `futurecast-high-priority-api` in binary; API heal + store ufRpm=1 already live | pending |

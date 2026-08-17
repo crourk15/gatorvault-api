@@ -6,8 +6,8 @@ import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 /** Bump when high-priority payload shape changes (align with server FUTURECAST_API_CACHE_VERSION). */
-/** v19: bust localStorage after Gabriel Field 0.80→80 / GV 85 poison heal. */
-export const FUTURECAST_CLIENT_CACHE_VERSION = 19;
+/** v20: bust localStorage so chase cards pick up API `on3Lead` stamp field. */
+export const FUTURECAST_CLIENT_CACHE_VERSION = 20;
 export const HIGH_PRIORITY_CACHE_KEY = `gv:futurecast:high-priority:v${FUTURECAST_CLIENT_CACHE_VERSION}`;
 export const HIGH_PRIORITY_YEAR = 2027;
 export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;
@@ -94,6 +94,11 @@ export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
   predictors: HighPriorityPredictor[];
   /** Confirmed On3 / store RPM competitors only — never filler. */
   competingSchools?: Array<{ name: string; pct: number }>;
+  /**
+   * Server-resolved chase-card "On3 lead" stamp (e.g. UF, ND, Miami).
+   * Prefer this over client-side derivation so stamp bugs ship via API.
+   */
+  on3Lead?: string | null;
   /** Confirmed On3 UF RPM % when available. */
   ufRpmPct?: number | null;
   ufProbabilitySource?: string;

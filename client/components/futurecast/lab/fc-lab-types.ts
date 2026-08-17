@@ -25,6 +25,12 @@ export type FcLabTarget = {
   ufProbabilityLabel?: string | null;
   /** Confirmed On3 UF RPM — market layer for competitor board. */
   ufRpmPct?: number | null;
+  /**
+   * API-resolved On3 lead stamp for chase cards. When present, VaultChaseCard
+   * displays this directly (no client recompute) so Miami→UF swings and stamp
+   * bugfixes ship via Render without Codemagic.
+   */
+  on3Lead?: string | null;
   delta7d: number | null;
   fitScore: number | null;
   modelPct: number | null;
@@ -108,6 +114,11 @@ export function futureCastPlayerToLabTarget(p: FutureCastPlayer): FcLabTarget {
     ufProbability: ufConfidence,
     ufProbabilityLabel: p.ufProbabilityLabel ?? (gv != null ? 'GV' : rpm != null ? 'On3 RPM' : null),
     ufRpmPct: rpm,
+    on3Lead:
+      typeof (p as { on3Lead?: string | null }).on3Lead === 'string' &&
+      String((p as { on3Lead?: string | null }).on3Lead).trim()
+        ? String((p as { on3Lead?: string | null }).on3Lead).trim()
+        : null,
     delta7d: p.trendDelta7d,
     fitScore: p.fitScore,
     // Board rows have no separate staff meter — don't duplicate Florida odds as "Model".
@@ -152,6 +163,11 @@ export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
     ufProbability: uf,
     ufProbabilityLabel: p.ufProbabilityLabel ?? (gv != null ? 'GV' : rpm != null ? 'On3 RPM' : 'GV'),
     ufRpmPct: rpm,
+    on3Lead:
+      typeof (p as { on3Lead?: string | null }).on3Lead === 'string' &&
+      String((p as { on3Lead?: string | null }).on3Lead).trim()
+        ? String((p as { on3Lead?: string | null }).on3Lead).trim()
+        : null,
     delta7d: p.delta7d ?? p.movementDelta ?? null,
     fitScore: p.fitScore ?? null,
     // Staff/model meter only when we have a real reading — never surface stored 0 as a score.
