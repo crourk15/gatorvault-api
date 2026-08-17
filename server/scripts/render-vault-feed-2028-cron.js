@@ -17,8 +17,10 @@ const CRON_SECRET = process.env.MONITORING_CRON_SECRET || process.env.INGEST_CRO
 
 async function runIngest() {
   if (!CRON_SECRET) {
-    console.error('[vault-feed-2028-cron] MONITORING_CRON_SECRET or INGEST_CRON_SECRET is not set');
-    return { ok: false, error: 'missing_cron_secret' };
+    const err = new Error('MONITORING_CRON_SECRET or INGEST_CRON_SECRET is not set');
+    console.error('[vault-feed-2028-cron]', err.message);
+    // Non-zero exit so Render does not mark a silent miss as "successful".
+    throw err;
   }
 
   const force = process.env.VAULT_FEED_FORCE === 'true';
@@ -54,9 +56,10 @@ async function runIngest() {
   try {
     const summary = await runIngest();
     console.log('[vault-feed-2028-cron] complete', JSON.stringify(summary));
+    process.exit(summary && summary.ok === false ? 1 : 0);
   } catch (err) {
     console.error('[vault-feed-2028-cron] unhandled error:', err.message);
     if (err.stack) console.error(err.stack);
+    process.exit(1);
   }
-  process.exit(0);
 })();

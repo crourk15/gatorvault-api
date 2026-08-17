@@ -11,7 +11,31 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 
 const API = 'https://api.render.com/v1';
 const SERVICE_NAME = 'gatorvault-api';
-const CRON_SERVICES = ['gatorvault-api-recruiting-ingest', 'gatorvault-api-hub-refresh'];
+/** All Render cron jobs that POST to the API with MONITORING/INGEST cron auth. */
+const CRON_SERVICES = [
+  'gatorvault-api-vault-feed-2028',
+  'gatorvault-api-recruiting-light',
+  'gatorvault-api-recruiting-ingest',
+  'gatorvault-api-beat-ingest',
+  'gatorvault-api-hub-refresh',
+  'gatorvault-api-hub-warm',
+  'gatorvault-api-keepalive',
+  'gatorvault-api-platform-ops',
+  'gatorvault-api-visit-intel-reconcile',
+  'gatorvault-api-visit-intel-recap',
+  'gatorvault-api-visit-intel-daily-digest',
+  'gatorvault-api-allowlist-on3-rankings',
+  'gatorvault-api-on3-rpm-allowlist-sync',
+  'gatorvault-api-early-discovery',
+  'gatorvault-api-portal-intelligence',
+  'gatorvault-api-uf-fit-seed',
+  'gatorvault-api-uf-trend-snapshot',
+  'gatorvault-api-film-room-youtube-sync',
+  'gatorvault-api-community-daily-open',
+  'gatorvault-api-gators-score-alerts',
+  'gatorvault-api-onboarding-drip',
+  'gatorvault-api-fan-digest-weekly',
+];
 
 const CRON_SYNC_KEYS = ['MONITORING_CRON_SECRET', 'INGEST_CRON_SECRET', 'NEXT_PUBLIC_API_BASE'];
 
