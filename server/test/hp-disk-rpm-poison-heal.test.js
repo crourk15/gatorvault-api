@@ -49,7 +49,9 @@ describe('HP disk RPM poison heal', () => {
 });
 
 describe('HP disk board rehydrate', () => {
-  it('heals Girton-style empty comps + locked Florida RPM from store topTeams', () => {
+  it('heals Girton-style empty comps + locked Florida RPM from store topTeams', async () => {
+    const { ensureHealPlayersWarm } = require('../api/futurecast/response-cache.ts');
+    await ensureHealPlayersWarm();
     const healed = healHighPriorityRpmPoisonRow({
       slug: 'denairo-girton-jr',
       name: 'DeNairo Girton Jr',
@@ -82,5 +84,19 @@ describe('HP disk board rehydrate', () => {
     const on3 = (healed.predictors || []).find((p) => /on3/i.test(p.name));
     assert.ok(on3);
     assert.ok(Number(on3.score) <= 5, `On3 predictor=${on3.score}`);
+  });
+
+  it('does not sync-parse players.json on clear-rival request path', () => {
+    // Gabriel-shaped row must heal from in-row Miami 94 without needing store warm.
+    const healed = healHighPriorityRpmPoisonRow({
+      slug: 'synthetic-rival-lock',
+      name: 'Synthetic Rival',
+      ufRpmPct: 80,
+      ufProbability: 85,
+      competingSchools: [{ name: 'Miami', pct: 94 }],
+      predictors: [{ name: 'On3 RPM', score: 80 }],
+    });
+    assert.ok(Number(healed.ufRpmPct) <= 10, `rpm=${healed.ufRpmPct}`);
+    assert.ok(Number(healed.ufProbability) < 30, `uf=${healed.ufProbability}`);
   });
 });

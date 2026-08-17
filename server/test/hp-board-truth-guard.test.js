@@ -76,7 +76,8 @@ describe('mergeBundledOn3BoardTruthIfFresher', () => {
 
 describe('heal uses bundle when durable peers empty', () => {
   it('rehydrates Girton from git bundle even if durable looks empty', async () => {
-    const { healHighPriorityRpmPoisonRow } = require('../api/futurecast/response-cache.ts');
+    const { healHighPriorityRpmPoisonRow, ensureHealPlayersWarm } = require('../api/futurecast/response-cache.ts');
+    await ensureHealPlayersWarm();
     const healed = healHighPriorityRpmPoisonRow({
       slug: 'denairo-girton-jr',
       name: 'DeNairo Girton Jr',

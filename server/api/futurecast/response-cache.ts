@@ -18,7 +18,7 @@ const cache = createMemoryCache(CACHE_TTL_MS);
 /** v31: rehydrate missing peer boards from store (Girton) + single-flight HP rebuild. */
 /** v32: durable /var/data board-truth merge + bundle fallback so sole-board lies cannot stick. */
 /** v33: peer 1→100 crumb poison (Asher OSU On3 lead) stripped on heal + competitorPct. */
-export const FUTURECAST_API_CACHE_VERSION = 34;
+export const FUTURECAST_API_CACHE_VERSION = 35;
 
 export function underclassmenCacheKey(years: Array<number | string>): string {
   return `futurecast:underclassmen:v${FUTURECAST_API_CACHE_VERSION}:${years.join(',')}`;
@@ -319,33 +319,111 @@ export function normalizeFanStars(raw: unknown): number | null {
  * while competingSchools still show Miss State/etc leading — or drop the peer
  * board entirely (Girton: Penn State leads, disk had empty comps + Florida 96).
  * Rehydrate peers + heal RPM on every serve so Closest does not invent leads.
+ *
+ * CRITICAL: never sync-parse ~9MB players.json on the request path. Concurrent
+ * HP no-store + cold heal stalled /ready past Render's 5s health timeout (rm5xt).
+ * Warm a slim slug index in the background; request heal uses in-row comps first.
  */
-const healPlayersCache = new Map<string, unknown>();
-const healPlayersCacheAt = new Map<string, number>();
+type HealBoardTruth = {
+  storeRpm: number | null;
+  storeComps: Array<{ name: string; pct: number }>;
+  boardRpm: number | null;
+};
 
-function loadHealPlayersRows(file: string): Array<Record<string, unknown>> {
-  const fs = require('node:fs');
-  const cacheKey = `hp-heal-players:${file}`;
-  let rows: Array<Record<string, unknown>> | null =
-    (healPlayersCache.get(cacheKey) as Array<Record<string, unknown>> | undefined) || null;
-  const cachedAt = Number(healPlayersCacheAt.get(cacheKey) || 0);
-  if (!rows || Date.now() - cachedAt > 5 * 60_000) {
-    const raw = JSON.parse(fs.readFileSync(file, 'utf8'));
-    rows = (Array.isArray(raw) ? raw : raw.players || []) as Array<Record<string, unknown>>;
-    healPlayersCache.set(cacheKey, rows);
-    healPlayersCacheAt.set(cacheKey, Date.now());
+const healTruthBySlug = new Map<string, HealBoardTruth>();
+let healTruthWarmAt = 0;
+let healTruthWarmInFlight: Promise<void> | null = null;
+const HEAL_TRUTH_TTL_MS = 5 * 60_000;
+
+export function ensureHealPlayersWarm(): Promise<void> {
+  scheduleHealPlayersWarm();
+  return healTruthWarmInFlight || Promise.resolve();
+}
+
+function scheduleHealPlayersWarm(): void {
+  if (healTruthWarmInFlight) return;
+  if (healTruthBySlug.size && Date.now() - healTruthWarmAt < HEAL_TRUTH_TTL_MS) return;
+  healTruthWarmInFlight = Promise.resolve()
+    .then(() => {
+      const fs = require('node:fs') as typeof import('node:fs');
+      const path = require('node:path') as typeof import('node:path');
+      const { resolveRecruitingDataDir, BUNDLE_DIR } = require('../../lib/recruiting-data-dir') as {
+        resolveRecruitingDataDir: () => string;
+        BUNDLE_DIR: string;
+      };
+      const { sanitizeRpmPct } = require('../../lib/uf-probability-utils') as {
+        sanitizeRpmPct: (v: unknown) => number | null;
+      };
+      const files = [
+        path.join(resolveRecruitingDataDir(), 'players.json'),
+        path.join(BUNDLE_DIR, 'players.json'),
+      ];
+      const seen = new Set<string>();
+      const next = new Map<string, HealBoardTruth>();
+      for (const file of files) {
+        const key = path.resolve(file);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        try {
+          if (!fs.existsSync(file)) continue;
+          const raw = JSON.parse(fs.readFileSync(file, 'utf8'));
+          const rows = (Array.isArray(raw) ? raw : raw.players || []) as Array<
+            Record<string, unknown>
+          >;
+          for (const player of rows) {
+            const slug = String(player?.slug || '').toLowerCase();
+            if (!slug) continue;
+            const truth = boardTruthFromPlayer(player, sanitizeRpmPct);
+            const prev = next.get(slug);
+            if (!prev) {
+              next.set(slug, truth);
+              continue;
+            }
+            // Prefer richer peer boards / lower Florida share when merging durable+bundle.
+            if (truth.storeComps.length > prev.storeComps.length) prev.storeComps = truth.storeComps;
+            if (
+              truth.boardRpm != null &&
+              (prev.boardRpm == null || (prev.boardRpm >= 70 && truth.boardRpm + 40 < prev.boardRpm))
+            ) {
+              prev.boardRpm = truth.boardRpm;
+            }
+            if (
+              truth.storeRpm != null &&
+              (prev.storeRpm == null || (prev.storeRpm >= 70 && truth.storeRpm + 40 < prev.storeRpm))
+            ) {
+              prev.storeRpm = truth.storeRpm;
+            }
+          }
+        } catch {
+          /* try next file */
+        }
+      }
+      healTruthBySlug.clear();
+      for (const [slug, truth] of next) healTruthBySlug.set(slug, truth);
+      healTruthWarmAt = Date.now();
+    })
+    .catch((err) => {
+      const message = err instanceof Error ? err.message : String(err);
+      console.warn('[futurecast-hp] heal players warm failed:', message);
+    })
+    .finally(() => {
+      healTruthWarmInFlight = null;
+    });
+}
+
+function lookupHealBoardTruth(slug: string): HealBoardTruth | null {
+  if (!slug) return null;
+  if (!healTruthBySlug.size || Date.now() - healTruthWarmAt > HEAL_TRUTH_TTL_MS) {
+    scheduleHealPlayersWarm();
+    return healTruthBySlug.get(slug) || null;
   }
-  return rows || [];
+  return healTruthBySlug.get(slug) || null;
 }
 
 function boardTruthFromPlayer(
   player: Record<string, unknown>,
   sanitizeRpmPct: (v: unknown) => number | null
-): {
-  storeRpm: number | null;
-  storeComps: Array<{ name: string; pct: number }>;
-  boardRpm: number | null;
-} {
+): HealBoardTruth {
   let storeRpm = sanitizeRpmPct(player.ufRpmPct);
   let storeComps: Array<{ name: string; pct: number }> = [];
   let boardRpm: number | null = null;
@@ -417,59 +495,43 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
   let storeComps: Array<{ name: string; pct: number }> = [];
   let boardRpm: number | null = null;
 
-  if (slug) {
-    try {
-      const path = require('node:path');
-      const { resolveRecruitingDataDir, BUNDLE_DIR } = require('../../lib/recruiting-data-dir');
-      // Prefer durable store, then git bundle — /var/data can lag board truth across deploys.
-      const files = [
-        path.join(resolveRecruitingDataDir(), 'players.json'),
-        path.join(BUNDLE_DIR, 'players.json'),
-      ];
-      const seen = new Set<string>();
-      for (const file of files) {
-        const key = path.resolve(file);
-        if (seen.has(key)) continue;
-        seen.add(key);
-        try {
-          const rows = loadHealPlayersRows(file);
-          const player = rows.find((p) => String(p?.slug || '').toLowerCase() === slug) || null;
-          if (!player) continue;
-          const truth = boardTruthFromPlayer(player, sanitizeRpmPct);
-          if (!storeComps.length && truth.storeComps.length) storeComps = truth.storeComps;
-          if (boardRpm == null && truth.boardRpm != null) boardRpm = truth.boardRpm;
-          if (storeRpm == null && truth.storeRpm != null) storeRpm = truth.storeRpm;
-          // Prefer lower Florida share when durable still carries a poisoned lock.
-          if (
-            truth.storeRpm != null &&
-            (storeRpm == null || (storeRpm >= 70 && truth.storeRpm + 40 < storeRpm))
-          ) {
-            storeRpm = truth.storeRpm;
-          }
-          if (
-            truth.boardRpm != null &&
-            (boardRpm == null || (boardRpm >= 70 && truth.boardRpm + 40 < boardRpm))
-          ) {
-            boardRpm = truth.boardRpm;
-          }
-          if (truth.storeComps.length > storeComps.length) storeComps = truth.storeComps;
-          // Enough truth to heal — stop once peers + Florida share are known.
-          if (storeComps.length && (boardRpm != null || storeRpm != null)) break;
-        } catch {
-          /* try next file */
-        }
-      }
-    } catch {
-      /* optional — disk heal must never throw */
-    }
-  }
-
-  let comps = Array.isArray(row.competingSchools)
+  // Fast path: in-row peer board already shows a clear rival — heal without store I/O.
+  // Cold players.json parse on every HP row was starving Render /ready (~4.5s under load).
+  const rowCompsPreview = Array.isArray(row.competingSchools)
     ? (row.competingSchools as Array<{ name?: string; pct?: number }>)
     : [];
+  const rowTopPeer = [...rowCompsPreview]
+    .filter((c) => {
+      const n = String(c?.name || '');
+      return n && !(/\bflorida\b|\bgators\b/i.test(n) && !/florida state|south florida/i.test(n));
+    })
+    .sort((a, b) => Number(b.pct) - Number(a.pct))[0];
+  const rowHasClearRival = rowTopPeer && Number(rowTopPeer.pct) >= 55;
+  const rowNeedsStore =
+    !rowCompsPreview.length ||
+    rowCompsPreview.every((c) => Number(c.pct) < 5) ||
+    (Number(row.ufRpmPct) >= 70 && !rowHasClearRival);
+
+  if (slug && rowNeedsStore) {
+    const truth = lookupHealBoardTruth(slug);
+    if (truth) {
+      storeComps = truth.storeComps || [];
+      boardRpm = truth.boardRpm;
+      storeRpm = truth.storeRpm;
+    } else {
+      scheduleHealPlayersWarm();
+    }
+  } else if (slug && (!healTruthBySlug.size || Date.now() - healTruthWarmAt > HEAL_TRUTH_TTL_MS)) {
+    // Keep index warm for Girton-style empty-comps rows without blocking this request.
+    scheduleHealPlayersWarm();
+  }
+
+  let comps = rowCompsPreview;
+  let compsMutated = false;
   // Prefer live store peer board when disk dropped rivals (Girton sole-board lie).
   if (storeComps.length && (!comps.length || comps.every((c) => Number(c.pct) < 5))) {
     comps = storeComps;
+    compsMutated = true;
   }
   // Asher / Vickers / Gabriel: residual crumb rounded to 1 → competitorPct → 100 On3 lead
   // while Miami (or another real peer) actually owns the board.
@@ -489,6 +551,7 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
       Number(storeTopPeer.pct) + 40 < Number(hpTopPeer.pct))
   ) {
     comps = storeComps;
+    compsMutated = true;
   } else if (hpTopPeer && Number(hpTopPeer.pct) >= 95) {
     // Serve-path: drop fake 100% peers when a mid-board rival already exists.
     const midBoard = comps.some((c) => {
@@ -501,6 +564,7 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
     });
     if (midBoard) {
       comps = comps.filter((c) => Number(c.pct) < 95);
+      compsMutated = true;
     }
   }
 
@@ -580,8 +644,9 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
   }
 
   const compsChanged =
-    storeComps.length > 0 &&
-    JSON.stringify(comps) !== JSON.stringify(row.competingSchools || []);
+    compsMutated ||
+    (storeComps.length > 0 &&
+      JSON.stringify(comps) !== JSON.stringify(row.competingSchools || []));
 
   if (!poisoned && !compsChanged) return row;
 
@@ -630,6 +695,8 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
   if (!value || typeof value !== 'object') return value;
   const doc = value as Record<string, unknown>;
   if (!Array.isArray(doc.players)) return value;
+  // Background-only — never block this sanitize on ~9MB players.json.
+  scheduleHealPlayersWarm();
   let players = doc.players.map((row) => {
     if (!row || typeof row !== 'object') return row;
     const p = row as Record<string, unknown>;
