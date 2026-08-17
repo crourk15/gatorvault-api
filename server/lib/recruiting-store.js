@@ -302,20 +302,37 @@ function overlayJsonIntelFields(players) {
   } catch {
     return players;
   }
-  const { isGenericBeatArticle } = require('./recruiting-intel-quality');
+  const { isGenericBeatArticle, isChaseProcessIntel } = require('./recruiting-intel-quality');
+  const { isCorruptRecruitSkinny } = require('./recruiting-placeholder-school');
+  // Prefer git-bundle editorial when durable /var/data skinny is game-week poison.
+  let bundleBySlug = null;
+  try {
+    const { BUNDLE_DIR } = require('./recruiting-data-dir');
+    if (path.resolve(BUNDLE_DIR) !== path.resolve(path.dirname(PLAYERS_PATH))) {
+      const bundled = readJson(path.join(BUNDLE_DIR, 'players.json'), []);
+      if (Array.isArray(bundled) && bundled.length) {
+        bundleBySlug = new Map(
+          bundled.filter((p) => p && p.slug).map((p) => [String(p.slug).toLowerCase(), p])
+        );
+      }
+    }
+  } catch {
+    bundleBySlug = null;
+  }
   const bySlug = new Map(local.map((p) => [p.slug, p]));
   return (players || []).map((p) => {
     const src = bySlug.get(p.slug);
-    if (!src) return p;
+    const bundle = bundleBySlug?.get(String(p.slug || '').toLowerCase()) || null;
+    if (!src && !bundle) return p;
     const patch = {};
-    const playerName = p.name || src.name || p.slug;
-    if (src.nilValue != null && p.nilValue == null) {
+    const playerName = p.name || src?.name || bundle?.name || p.slug;
+    if (src?.nilValue != null && p.nilValue == null) {
       patch.nilValue = Number(src.nilValue);
       patch.nilEstimate = Number(src.nilEstimate ?? src.nilValue);
       patch.nilSource = src.nilSource || 'on3-profile';
     }
-    if (src.headliner === true && !p.headliner) patch.headliner = true;
-    const localStars = Number(src.stars) || Number(src.consensusStars) || 0;
+    if (src?.headliner === true && !p.headliner) patch.headliner = true;
+    const localStars = Number(src?.stars) || Number(src?.consensusStars) || 0;
     const rowStars = Number(p.stars) || Number(p.consensusStars) || 0;
     if (localStars > rowStars) {
       patch.stars = localStars;
@@ -325,50 +342,75 @@ function overlayJsonIntelFields(players) {
     // rows often lag and were winning pos/state/rating (e.g. Pearl #19/#11 vs #17/#12).
     // Always prefer JSON ranks/rating when present — not "better" numeric rank
     // (state/pos can move worse and still be the live Industry Consensus).
-    if (src.natlRank != null && src.natlRank !== '') {
+    if (src?.natlRank != null && src.natlRank !== '') {
       patch.natlRank = src.natlRank;
       patch.natl = src.natlRank;
     }
-    if (src.posRank != null && src.posRank !== '') {
+    if (src?.posRank != null && src.posRank !== '') {
       patch.posRank = src.posRank;
     }
-    if (src.stateRank != null && src.stateRank !== '') {
+    if (src?.stateRank != null && src.stateRank !== '') {
       patch.stateRank = src.stateRank;
     }
-    if (src.rating != null && Number.isFinite(Number(src.rating))) {
+    if (src?.rating != null && Number.isFinite(Number(src.rating))) {
       patch.rating = Number(src.rating);
     }
-    if (src.displayRating != null && Number.isFinite(Number(src.displayRating))) {
+    if (src?.displayRating != null && Number.isFinite(Number(src.displayRating))) {
       patch.displayRating = Number(src.displayRating);
     }
-    if (src.skinny && String(src.skinny).trim()) patch.skinny = src.skinny;
-    const localNote = String(src.profileNote || '').trim();
+    const rowSkinny = String(p.skinny || '').trim();
+    const srcSkinny = String(src?.skinny || '').trim();
+    const bundleSkinny = String(bundle?.skinny || '').trim();
+    if (isCorruptRecruitSkinny(rowSkinny) || !rowSkinny) {
+      if (bundleSkinny && !isCorruptRecruitSkinny(bundleSkinny)) patch.skinny = bundleSkinny;
+      else if (srcSkinny && !isCorruptRecruitSkinny(srcSkinny)) patch.skinny = srcSkinny;
+    } else if (srcSkinny && !isCorruptRecruitSkinny(srcSkinny)) {
+      patch.skinny = srcSkinny;
+    }
+    const localNote = String(src?.profileNote || '').trim();
+    const bundleNote = String(bundle?.profileNote || '').trim();
     const remoteNote = String(p.profileNote || '').trim();
-    if (localNote) {
-      const localOk = !isGenericBeatArticle(localNote, playerName);
-      const remoteOk = remoteNote && !isGenericBeatArticle(remoteNote, playerName);
+    const preferBundleNote =
+      bundleNote &&
+      !isCorruptRecruitSkinny(bundleNote) &&
+      !isChaseProcessIntel(bundleNote) &&
+      (isCorruptRecruitSkinny(remoteNote) ||
+        isChaseProcessIntel(remoteNote) ||
+        /🐊\s*Florida\s+vs/i.test(remoteNote) ||
+        !remoteNote);
+    if (preferBundleNote) {
+      patch.profileNote = bundleNote;
+    } else if (localNote) {
+      const localOk =
+        !isGenericBeatArticle(localNote, playerName) &&
+        !isCorruptRecruitSkinny(localNote) &&
+        !isChaseProcessIntel(localNote);
+      const remoteOk =
+        remoteNote &&
+        !isGenericBeatArticle(remoteNote, playerName) &&
+        !isCorruptRecruitSkinny(remoteNote);
       if (!remoteNote || (localOk && !remoteOk) || (localOk && localNote.length > remoteNote.length)) {
         patch.profileNote = localNote;
       }
     }
-    if (src.evaluationSummary && String(src.evaluationSummary).trim()) {
+    if (src?.evaluationSummary && String(src.evaluationSummary).trim()) {
       patch.evaluationSummary = src.evaluationSummary;
     }
-    if (src.htWt && String(src.htWt).trim() && !String(p.htWt || '').trim()) {
+    if (src?.htWt && String(src.htWt).trim() && !String(p.htWt || '').trim()) {
       patch.htWt = src.htWt;
     }
-    if (src.height && !p.height) patch.height = src.height;
-    if (src.weight != null && p.weight == null) patch.weight = src.weight;
-    const localPos = String(src.pos || src.position || '')
+    if (src?.height && !p.height) patch.height = src.height;
+    if (src?.weight != null && p.weight == null) patch.weight = src.weight;
+    const localPos = String(src?.pos || src?.position || '')
       .trim()
       .toUpperCase();
     if (localPos && !isWeakStorePos(localPos) && isWeakStorePos(p.pos || p.position)) {
       patch.pos = localPos;
       patch.position = localPos;
     }
-    if (src.on3ProfileUrl && !p.on3ProfileUrl) patch.on3ProfileUrl = src.on3ProfileUrl;
-    if (src.on3Slug && !p.on3Slug) patch.on3Slug = src.on3Slug;
-    if (src.commitDate && !p.commitDate) patch.commitDate = src.commitDate;
+    if (src?.on3ProfileUrl && !p.on3ProfileUrl) patch.on3ProfileUrl = src.on3ProfileUrl;
+    if (src?.on3Slug && !p.on3Slug) patch.on3Slug = src.on3Slug;
+    if (src?.commitDate && !p.commitDate) patch.commitDate = src.commitDate;
     return Object.keys(patch).length ? { ...p, ...patch } : p;
   });
 }

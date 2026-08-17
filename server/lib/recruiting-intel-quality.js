@@ -149,6 +149,8 @@ const CHASE_PROCESS_PATTERNS = [
   /evaluate (him|her|them) as a (priority|secondary)\b/i,
   /remains on Florida['']s (priority|secondary)\b/i,
   /Florida['']s (priority|secondary) .{0,12} board/i,
+  /🐊\s*Florida\s+vs\.?/i,
+  /\bFlorida\s+vs\.?\s*$/i,
   /GV Scout Update/i,
   /Getting to Know:/i,
   /COMMIT YouTube/i,

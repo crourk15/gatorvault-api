@@ -32,7 +32,11 @@ const TRUNCATED_TEXT_RES = [
   /\bfor No\.\s*$/i,
   /\bpush for No\.\s*$/i,
   /\bSERIOUS push for No\./i,
-  /\bmake a SERIOUS push for No\./i
+  /\bmake a SERIOUS push for No\./i,
+  // Game-week template leaked into recruit skinny (Antonio Thomas Jr — 🐊 Florida vs.)
+  /🐊\s*Florida\s+vs\.?\s*$/i,
+  /\bFlorida\s+vs\.?\s*$/i,
+  /^[^—–-]+[—–-]\s*🐊/i,
 ];
 
 const COLLEGE_ONLY_RES =
