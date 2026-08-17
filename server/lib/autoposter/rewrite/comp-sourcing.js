@@ -38,6 +38,15 @@ function stripOn3Mascot(name) {
     .trim();
 }
 
+/** True UF / Gators only — never FSU, USF, FAU, FAMU. */
+function isUfGatorsSchool(name) {
+  const t = String(name || '');
+  if (/florida state|\bfsu\b|south florida|\busf\b|florida atlantic|\bfau\b|florida a\s*&\s*m|\bfamu\b/i.test(t)) {
+    return false;
+  }
+  return /\bflorida\b|\bgators\b|\buf\b/i.test(t) || /^uf$/i.test(t.trim());
+}
+
 function normalizeSchoolName(raw) {
   const key = String(raw || '')
     .trim()
@@ -99,7 +108,7 @@ function schoolsFromVisits(visits = []) {
   const out = [];
   for (const v of visits) {
     const school = v.school || v.visitSchool || v.host;
-    if (school && !/^florida|gators|uf$/i.test(String(school))) {
+    if (school && !isUfGatorsSchool(String(school))) {
       out.push(normalizeSchoolName(school) || school);
     }
   }
@@ -140,7 +149,7 @@ function rpmTopFromOn3TopTeams(topTeams = [], classYear = 2028) {
       .map((row) => {
         const team = row?.team || row;
         const name = normalizeSchoolName(team?.fullName || team?.name || row?.school) || null;
-        if (!name || /^florida|gators|uf$/i.test(String(name))) return null;
+        if (!name || isUfGatorsSchool(String(name))) return null;
         const raw = rawTeamPrediction(row);
         if (raw != null && residual.has(String(raw))) return { school: name, pct: null };
         const pct = teamPct(row, scale);
@@ -163,7 +172,7 @@ function rpmTopFromOn3TopTeams(topTeams = [], classYear = 2028) {
       return name ? { school: name, pct: pct != null ? Number(pct) : null } : null;
     })
     .filter(Boolean)
-    .filter((row) => !/^florida|gators|uf$/i.test(String(row.school)))
+    .filter((row) => !isUfGatorsSchool(String(row.school)))
     .slice(0, 4);
 }
 
@@ -231,6 +240,7 @@ function compLabel(compSchools = []) {
 
 module.exports = {
   normalizeSchoolName,
+  isUfGatorsSchool,
   isValidCollege,
   isBlockedSchool,
   resolveValidCompSchools,

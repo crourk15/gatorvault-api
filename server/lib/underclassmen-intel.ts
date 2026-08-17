@@ -219,9 +219,16 @@ function competingSchoolsFromRecruitingRecord(
 ): Array<{ name: string; pct: number }> {
   const bySchool = new Map<string, { name: string; pct: number }>();
 
+  const isUfGatorsSchool = (school: string) => {
+    if (/florida state|\bfsu\b|south florida|\busf\b|florida atlantic|\bfau\b|florida a\s*&\s*m|\bfamu\b/i.test(school)) {
+      return false;
+    }
+    return /\bflorida\b|\bgators\b|\buf\b/i.test(school);
+  };
+
   const add = (nameRaw: unknown, pctRaw: unknown) => {
     const school = String(nameRaw || '').trim();
-    if (!school || /\bflorida\b|\bgators\b|\buf\b/i.test(school)) return;
+    if (!school || isUfGatorsSchool(school)) return;
     const pct = competitorPct(pctRaw);
     if (pct == null || pct < MIN_PEER_BOARD_PCT) return;
     const key = school.toLowerCase();
@@ -382,7 +389,14 @@ function buildFutureCastPicks(
   }
 
   for (const school of player.competingSchools ?? []) {
-    if (!school?.name || /florida|gators/i.test(school.name)) continue;
+    if (!school?.name) continue;
+    const pickName = String(school.name);
+    if (
+      /\bflorida\b|\bgators\b/i.test(pickName) &&
+      !/florida state|south florida|florida atlantic|florida a\s*&\s*m/i.test(pickName)
+    ) {
+      continue;
+    }
     const pct = Number(school.pct);
     if (!Number.isFinite(pct) || pct <= 0) continue;
     picks.push({

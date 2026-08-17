@@ -11,8 +11,13 @@ export type CompetingSchoolSegment = {
   tone: 'uf' | 'peer' | 'other';
 };
 
+/** True UF / Gators only — never FSU, USF, FAU, FAMU. */
 function isFlorida(name: string): boolean {
-  return /\bflorida\b|\bgators\b|\buf\b/i.test(name);
+  const t = String(name || '');
+  if (/florida state|\bfsu\b|south florida|\busf\b|florida atlantic|\bfau\b|florida a\s*&\s*m|\bfamu\b/i.test(t)) {
+    return false;
+  }
+  return /\bflorida\b|\bgators\b|\buf\b/i.test(t);
 }
 
 function normalizeSchool(name: string): string {
@@ -24,6 +29,10 @@ function normalizeSchool(name: string): string {
 
 function shortSchoolLabel(name: string): string {
   const n = normalizeSchool(name);
+  // FSU / USF / FAU before UF — never label Seminoles as Florida.
+  if (/florida state|\bfsu\b/i.test(n)) return 'FSU';
+  if (/south florida|\busf\b/i.test(n)) return 'USF';
+  if (/florida atlantic|\bfau\b/i.test(n)) return 'FAU';
   if (isFlorida(n)) return 'UF';
   // Georgia Tech before Georgia — otherwise "Georgia Tech" becomes UGA.
   if (/georgia tech|yellow jackets/i.test(n)) return 'GT';
@@ -36,7 +45,6 @@ function shortSchoolLabel(name: string): string {
   if (/clemson/i.test(n)) return 'Clemson';
   if (/tennessee/i.test(n)) return 'Tenn';
   if (/lsu/i.test(n)) return 'LSU';
-  if (/florida state|fsu/i.test(n)) return 'FSU';
   if (/penn state/i.test(n)) return 'PSU';
   if (/kentucky/i.test(n)) return 'UK';
   if (/ole miss|mississippi(?!\s*state)/i.test(n)) return 'Ole Miss';
@@ -122,13 +130,14 @@ export function topThreatVsFlorida(
     .filter((s) => s?.name && Number(s.pct) > 0 && !isFlorida(s.name))
     .sort((a, b) => Number(b.pct) - Number(a.pct));
 
-  // Drop fake 100% peer locks when a real mid-board rival exists (1→100 crumb poison).
+  // Drop fake ~100% peer locks when a real mid-board rival exists (1→100 crumb poison).
+  // Keep real ~95% favorites (e.g. Fleming / Alabama) — only strip Asher-style 99–100 locks.
   const mid = peers.find((s) => {
     const pct = Number(s.pct);
     return pct >= 15 && pct <= 90;
   });
-  if (mid && Number(peers[0]?.pct) >= 95) {
-    peers = peers.filter((s) => Number(s.pct) < 95);
+  if (mid && Number(peers[0]?.pct) >= 99) {
+    peers = peers.filter((s) => Number(s.pct) < 99);
   }
 
   const top = peers[0];

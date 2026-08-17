@@ -545,15 +545,16 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
   if (
     storeComps.length &&
     hpTopPeer &&
-    Number(hpTopPeer.pct) >= 95 &&
+    Number(hpTopPeer.pct) >= 99 &&
     storeTopPeer &&
     (String(storeTopPeer.name).toLowerCase() !== String(hpTopPeer.name || '').toLowerCase() ||
       Number(storeTopPeer.pct) + 40 < Number(hpTopPeer.pct))
   ) {
     comps = storeComps;
     compsMutated = true;
-  } else if (hpTopPeer && Number(hpTopPeer.pct) >= 95) {
-    // Serve-path: drop fake 100% peers when a mid-board rival already exists.
+  } else if (hpTopPeer && Number(hpTopPeer.pct) >= 99) {
+    // Serve-path: drop fake ~100% peers when a mid-board rival already exists.
+    // Keep real ~95% favorites (Fleming / Alabama) — only strip Asher-style 99–100 locks.
     const midBoard = comps.some((c) => {
       const n = String(c?.name || '');
       if (!n || (/\bflorida\b|\bgators\b/i.test(n) && !/florida state|south florida/i.test(n))) {
@@ -563,7 +564,7 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
       return pct >= 15 && pct <= 90;
     });
     if (midBoard) {
-      comps = comps.filter((c) => Number(c.pct) < 95);
+      comps = comps.filter((c) => Number(c.pct) < 99);
       compsMutated = true;
     }
   }
