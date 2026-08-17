@@ -100,6 +100,128 @@ function mergeBundledIndustryRanksIfFresher(dataDir = resolveRecruitingDataDir()
 }
 
 
+/**
+ * Durable /var/data players.json keeps stale On3 boards across deploys
+ * (copyJsonIfMissing never overwrites). That stranded Girton as empty
+ * topTeams + fake Florida 96 on the HP plate while the git bundle had
+ * Penn State 38 / Florida 9. Merge board-truth fields when the bundle
+ * disagrees with a sole-board Florida lock or fills missing peers.
+ */
+function floridaShareFromTopTeams(teams) {
+  if (!Array.isArray(teams) || !teams.length) return null;
+  let best = null;
+  for (const t of teams) {
+    const name = String(t?.team?.name || t?.team?.fullName || t?.name || '').trim();
+    if (!name) continue;
+    if (!/\bflorida\b|\bgators\b/i.test(name) || /florida state|south florida/i.test(name)) {
+      continue;
+    }
+    const raw = Number(t?.prediction ?? t?.pct ?? t?.score);
+    if (!Number.isFinite(raw) || raw <= 0) continue;
+    const pct = raw <= 1.5 ? raw * 100 : raw;
+    if (best == null || pct > best) best = pct;
+  }
+  return best;
+}
+
+function peerCountFromTopTeams(teams) {
+  if (!Array.isArray(teams) || !teams.length) return 0;
+  let n = 0;
+  for (const t of teams) {
+    const name = String(t?.team?.name || t?.team?.fullName || t?.name || '').trim();
+    if (!name) continue;
+    if (/\bflorida\b|\bgators\b/i.test(name) && !/florida state|south florida/i.test(name)) {
+      continue;
+    }
+    const pct = Number(t?.prediction ?? t?.pct ?? t?.score);
+    if (!Number.isFinite(pct) || pct <= 0) continue;
+    const scaled = pct <= 1.5 ? pct * 100 : pct;
+    if (scaled >= 5) n += 1;
+  }
+  return n;
+}
+
+function mergeBundledOn3BoardTruthIfFresher(dataDir = resolveRecruitingDataDir()) {
+  if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
+    return { merged: false, reason: 'same_path' };
+  }
+  const durablePath = path.join(dataDir, 'players.json');
+  const bundlePath = path.join(BUNDLE_DIR, 'players.json');
+  if (!fs.existsSync(durablePath) || !fs.existsSync(bundlePath)) {
+    return { merged: false, reason: 'missing_file' };
+  }
+  try {
+    const durable = JSON.parse(fs.readFileSync(durablePath, 'utf8'));
+    const bundled = JSON.parse(fs.readFileSync(bundlePath, 'utf8'));
+    if (!Array.isArray(durable) || !Array.isArray(bundled)) {
+      return { merged: false, reason: 'not_array' };
+    }
+    const bySlug = new Map(
+      bundled.filter((p) => p && p.slug).map((p) => [String(p.slug).toLowerCase(), p])
+    );
+    const BOARD_KEYS = ['ufRpmPct', 'topTeams', 'on3TopTeams', 'competitors'];
+    let updated = 0;
+    for (let i = 0; i < durable.length; i += 1) {
+      const row = durable[i];
+      if (!row?.slug) continue;
+      const src = bySlug.get(String(row.slug).toLowerCase());
+      if (!src) continue;
+
+      const dstTeams = row.topTeams || row.on3TopTeams || [];
+      const srcTeams = src.topTeams || src.on3TopTeams || [];
+      const dstPeers = peerCountFromTopTeams(dstTeams);
+      const srcPeers = peerCountFromTopTeams(srcTeams);
+      const dstRpm = Number(row.ufRpmPct);
+      const srcRpm = Number(src.ufRpmPct);
+      const srcFl = floridaShareFromTopTeams(srcTeams);
+      const dstFl = floridaShareFromTopTeams(dstTeams);
+      const truthRpm =
+        srcFl != null && Number.isFinite(srcFl)
+          ? srcFl
+          : Number.isFinite(srcRpm)
+            ? srcRpm
+            : null;
+
+      const missingPeers = srcPeers > 0 && dstPeers === 0;
+      const poisonedLock =
+        Number.isFinite(dstRpm) &&
+        dstRpm >= 70 &&
+        truthRpm != null &&
+        truthRpm + 40 < dstRpm;
+      const rivalLedBundle =
+        srcPeers > 0 &&
+        truthRpm != null &&
+        Number.isFinite(dstRpm) &&
+        dstRpm >= 70 &&
+        (srcFl == null || srcFl + 15 < dstRpm);
+
+      if (!missingPeers && !poisonedLock && !rivalLedBundle) continue;
+
+      let changed = false;
+      for (const key of BOARD_KEYS) {
+        const val = src[key];
+        if (val == null) continue;
+        if (Array.isArray(val) && val.length === 0) continue;
+        if (JSON.stringify(row[key]) !== JSON.stringify(val)) {
+          row[key] = val;
+          changed = true;
+        }
+      }
+      if (changed) {
+        durable[i] = row;
+        updated += 1;
+      }
+    }
+    if (updated > 0) {
+      fs.writeFileSync(durablePath, JSON.stringify(durable, null, 2));
+    }
+    return { merged: updated > 0, updated };
+  } catch (err) {
+    console.warn('[recruiting-data-dir] On3 board-truth merge skipped:', err.message);
+    return { merged: false, error: err.message };
+  }
+}
+
 function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
   if (path.resolve(dataDir) === path.resolve(BUNDLE_DIR)) {
     return { migrated: false, reason: 'same_path' };
@@ -152,7 +274,17 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
     if (rankMerge.updated) {
       console.log('[recruiting-data-dir] merged Industry ranks from bundle', rankMerge.updated);
     }
-    return { migrated: copied > 0 || !!rankMerge.updated, copied, rankMerge, to: dataDir };
+    const boardMerge = mergeBundledOn3BoardTruthIfFresher(dataDir);
+    if (boardMerge.updated) {
+      console.log('[recruiting-data-dir] merged On3 board truth from bundle', boardMerge.updated);
+    }
+    return {
+      migrated: copied > 0 || !!rankMerge.updated || !!boardMerge.updated,
+      copied,
+      rankMerge,
+      boardMerge,
+      to: dataDir,
+    };
   } catch (err) {
     console.warn('[recruiting-data-dir] migrate skipped:', err.message);
     return { migrated: false, error: err.message };
@@ -165,4 +297,5 @@ module.exports = {
   resolveRecruitingDataDir,
   migrateRecruitingBundleIfNeeded,
   mergeBundledIndustryRanksIfFresher,
+  mergeBundledOn3BoardTruthIfFresher,
 };
