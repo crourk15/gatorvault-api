@@ -484,12 +484,27 @@ function normalizePlayer(raw) {
     topTeams: Array.isArray(raw.topTeams) ? raw.topTeams : Array.isArray(raw.on3TopTeams) ? raw.on3TopTeams : undefined,
     height: raw.height || null,
     weight: raw.weight != null ? Number(raw.weight) : null,
-    ufRpmPct:
-      raw.ufRpmPct != null
-        ? Number(raw.ufRpmPct)
-        : raw.uf_rpm_pct != null
-          ? Number(raw.uf_rpm_pct)
-          : null,
+    ufRpmPct: (() => {
+      const rpm = sanitizeRpmPct(raw.ufRpmPct ?? raw.uf_rpm_pct);
+      if (rpm == null || rpm < 85) return rpm;
+      const comps = Array.isArray(raw.competitors)
+        ? raw.competitors
+        : Array.isArray(raw.competingSchools)
+          ? raw.competingSchools
+          : [];
+      const real = comps.filter((c) => Number(c?.pct || c?.score || 0) >= 5);
+      if (!real.length) return rpm;
+      const top = [...real].sort(
+        (a, b) => Number(b.pct || b.score || 0) - Number(a.pct || a.score || 0)
+      )[0];
+      const topName = String(top?.school || top?.name || '');
+      if (/florida/i.test(topName)) return rpm;
+      const florida = real.find((c) => /florida/i.test(String(c.school || c.name || '')));
+      const floridaPct = Number(florida?.pct || florida?.score || 0);
+      // Zaiden Jernigan class: Miss State ~20% field vs Florida RPM 100 poison.
+      if (floridaPct + 40 < rpm) return null;
+      return rpm;
+    })(),
     updatedAt: raw.updatedAt || raw.updated_at || nowIso()
   };
   if (!player.offers) delete player.offers;
