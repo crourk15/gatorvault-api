@@ -202,6 +202,10 @@ const LEGACY_PEER_MAX = 2;
  * Peer market share in percentage points.
  * Strict `< 1` for unit-interval fractions — `1` is a real 1% residual crumb
  * (Asher OSU ~1.2 rounded → 1; `<= 1` used to explode that to 100% On3 lead).
+ *
+ * Prefer {@link peerPctWithScale} when the surrounding board may already be
+ * percent-points with fractional residuals (Joey Fleming OSU 0.47% ≠ 47%;
+ * Tyree Mannings Miami 0.83% ≠ 83%).
  */
 function competitorPct(raw: unknown): number | null {
   if (raw == null || !Number.isFinite(Number(raw))) return null;
@@ -211,18 +215,51 @@ function competitorPct(raw: unknown): number | null {
   return Math.min(100, Math.max(0, Math.round(pct * 10) / 10));
 }
 
+/** Same rule as on3-board-hydrate: any value > 1 ⇒ whole board is %-points. */
+function detectCompetitorPctScale(rawValues: unknown[]): 'percent' | 'fraction' {
+  const vals = rawValues
+    .map((v) => Number(v))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  if (!vals.length) return 'percent';
+  if (vals.some((v) => v > 1)) return 'percent';
+  return 'fraction';
+}
+
+function peerPctWithScale(raw: unknown, scale: 'percent' | 'fraction'): number | null {
+  if (raw == null || !Number.isFinite(Number(raw))) return null;
+  const num = Number(raw);
+  if (num <= 0) return null;
+  const pct = scale === 'fraction' && num < 1 ? num * 100 : num;
+  return Math.min(100, Math.max(0, Math.round(pct * 10) / 10));
+}
+
 /** Meaningful peer floor — residual On3 crumbs must not invent an On3 lead. */
 const MIN_PEER_BOARD_PCT = 5;
+
+function isUfGatorsSchoolName(school: string): boolean {
+  if (
+    /florida state|\bfsu\b|south florida|\busf\b|florida atlantic|\bfau\b|florida a\s*&\s*m|\bfamu\b/i.test(
+      school
+    )
+  ) {
+    return false;
+  }
+  return /\bflorida\b|\bgators\b|\buf\b/i.test(school);
+}
 
 function competingSchoolsFromRecruitingRecord(
   recruiting: Record<string, unknown> | null | undefined
 ): Array<{ name: string; pct: number }> {
   const bySchool = new Map<string, { name: string; pct: number }>();
 
-  const add = (nameRaw: unknown, pctRaw: unknown) => {
+  const add = (
+    nameRaw: unknown,
+    pctRaw: unknown,
+    scale: 'percent' | 'fraction' = 'percent'
+  ) => {
     const school = String(nameRaw || '').trim();
-    if (!school || /\bflorida\b|\bgators\b|\buf\b/i.test(school)) return;
-    const pct = competitorPct(pctRaw);
+    if (!school || isUfGatorsSchoolName(school)) return;
+    const pct = peerPctWithScale(pctRaw, scale);
     if (pct == null || pct < MIN_PEER_BOARD_PCT) return;
     const key = school.toLowerCase();
     const existing = bySchool.get(key);
@@ -231,6 +268,25 @@ function competingSchoolsFromRecruitingRecord(
     }
   };
 
+  // Confirmed On3 RPM board wins when present — never merge residual competitor
+  // crumbs that explode 0.83 → 83 and flip On3 lead chrome (Tyree / Fleming).
+  try {
+    const { rpmTopFromOn3TopTeams } = require('./autoposter/rewrite/comp-sourcing');
+    const classYear = Number(recruiting?.classYear) || 2028;
+    const topTeams = (recruiting?.on3TopTeams || recruiting?.topTeams || []) as unknown[];
+    if (Array.isArray(topTeams) && topTeams.length) {
+      for (const row of rpmTopFromOn3TopTeams(topTeams, classYear)) {
+        // rpmTop already returns %-points (or null for residuals).
+        if (row?.school && row.pct != null) add(row.school, row.pct, 'percent');
+      }
+      // Even when every peer is a residual crumb, trust the empty On3 peer board
+      // over legacy competitors (Tyree Miami 0.83% must not become 83%).
+      return [...bySchool.values()].sort((a, b) => b.pct - a.pct);
+    }
+  } catch {
+    /* optional — fall through to competitors */
+  }
+
   const competitors = (recruiting?.competitors ?? []) as Array<{
     school?: string;
     name?: string;
@@ -238,6 +294,10 @@ function competingSchoolsFromRecruitingRecord(
     pct?: number;
     source?: string;
   }>;
+  const competitorScale = detectCompetitorPctScale(
+    competitors.map((c) => c?.score ?? c?.pct)
+  );
+
   // Prefer confirmed On3 / live competitors. If none, allow top 1–2 meaningful legacy peers
   // (not when UF is already ~locked — that reads as a fake battle).
   const nonLegacy = competitors.filter(
@@ -245,12 +305,12 @@ function competingSchoolsFromRecruitingRecord(
   );
   let competitorPool = nonLegacy;
   if (!competitorPool.length) {
-    const ufRpm = competitorPct(recruiting?.ufRpmPct) ?? 0;
+    const ufRpm = peerPctWithScale(recruiting?.ufRpmPct, competitorScale) ?? 0;
     if (ufRpm < UF_LOCKED_SKIP_LEGACY_PCT) {
       competitorPool = [...competitors]
         .map((c) => ({
           c,
-          pct: competitorPct(c?.score ?? c?.pct) ?? 0,
+          pct: peerPctWithScale(c?.score ?? c?.pct, competitorScale) ?? 0,
         }))
         .filter((row) => row.pct >= LEGACY_PEER_MIN_PCT)
         .sort((a, b) => b.pct - a.pct)
@@ -259,21 +319,7 @@ function competingSchoolsFromRecruitingRecord(
     }
   }
   for (const c of competitorPool) {
-    add(c?.school || c?.name, c?.score ?? c?.pct);
-  }
-
-  // Confirmed On3 RPM board when present on the player row.
-  try {
-    const { rpmTopFromOn3TopTeams } = require('./autoposter/rewrite/comp-sourcing');
-    const classYear = Number(recruiting?.classYear) || 2028;
-    const topTeams = (recruiting?.on3TopTeams || recruiting?.topTeams || []) as unknown[];
-    if (Array.isArray(topTeams) && topTeams.length) {
-      for (const row of rpmTopFromOn3TopTeams(topTeams, classYear)) {
-        add(row.school, row.pct);
-      }
-    }
-  } catch {
-    /* optional */
+    add(c?.school || c?.name, c?.score ?? c?.pct, competitorScale);
   }
 
   return [...bySchool.values()].sort((a, b) => b.pct - a.pct);
@@ -382,7 +428,14 @@ function buildFutureCastPicks(
   }
 
   for (const school of player.competingSchools ?? []) {
-    if (!school?.name || /florida|gators/i.test(school.name)) continue;
+    if (!school?.name) continue;
+    const pickName = String(school.name);
+    if (
+      /\bflorida\b|\bgators\b/i.test(pickName) &&
+      !/florida state|south florida|florida atlantic|florida a\s*&\s*m/i.test(pickName)
+    ) {
+      continue;
+    }
     const pct = Number(school.pct);
     if (!Number.isFinite(pct) || pct <= 0) continue;
     picks.push({

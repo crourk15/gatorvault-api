@@ -8,7 +8,7 @@ import {
   chaseHeatLabel,
   type ChaseTargetExtras,
 } from '@/components/futurecast/lab/chase-priority';
-import { topThreatVsFlorida } from '@/components/futurecast/lab/competing-schools';
+import { isFlorida, shortSchoolLabel, topThreatVsFlorida } from '@/components/futurecast/lab/competing-schools';
 import { playerProfilePath } from '@/lib/player-routes';
 import type { PlayerProfileContext } from '@/lib/vault-route-map';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
@@ -23,33 +23,13 @@ function positionMark(position: string | null | undefined): string {
   return raw.length <= 4 ? raw : raw.slice(0, 3);
 }
 
-function isFloridaName(name: string): boolean {
-  return /\bflorida\b|\bgators\b|\buf\b/i.test(name);
-}
-
-function shortLead(name: string): string {
-  const n = String(name || '').trim();
-  if (isFloridaName(n)) return 'UF';
-  if (/georgia tech|yellow jackets/i.test(n)) return 'GT';
-  if (/georgia/i.test(n)) return 'UGA';
-  if (/miami/i.test(n)) return 'MIA';
-  if (/alabama/i.test(n)) return 'Bama';
-  if (/clemson/i.test(n)) return 'CU';
-  if (/florida state|fsu/i.test(n)) return 'FSU';
-  if (/ohio state/i.test(n)) return 'OSU';
-  if (/texas a&m|tamu/i.test(n)) return 'TAMU';
-  if (/texas/i.test(n)) return 'TEX';
-  const word = n.split(/\s+/).filter(Boolean)[0] || n;
-  return word.slice(0, 4).toUpperCase();
-}
-
 function schoolLooksInState(school: string | null | undefined): boolean {
   return /\bFL\b|\(FL\)|,\s*FL\b|Florida/i.test(String(school || ''));
 }
 
 function raceRows(player: VaultChaseCardPlayer): RaceRow[] {
   const peers = (player.competingSchools ?? [])
-    .filter((s) => s?.name && Number(s.pct) > 0 && !isFloridaName(s.name))
+    .filter((s) => s?.name && Number(s.pct) > 0 && !isFlorida(s.name))
     .sort((a, b) => Number(b.pct) - Number(a.pct))
     .slice(0, 2);
 
@@ -61,7 +41,7 @@ function raceRows(player: VaultChaseCardPlayer): RaceRow[] {
   const rows: RaceRow[] = [];
   if (peers[0]) {
     rows.push({
-      label: shortLead(peers[0].name),
+      label: shortSchoolLabel(peers[0].name),
       pct: Math.round(Number(peers[0].pct)),
       tone: 'lead',
     });
@@ -71,7 +51,7 @@ function raceRows(player: VaultChaseCardPlayer): RaceRow[] {
   }
   if (peers[1]) {
     rows.push({
-      label: shortLead(peers[1].name),
+      label: shortSchoolLabel(peers[1].name),
       pct: Math.round(Number(peers[1].pct)),
       tone: 'other',
     });
@@ -86,10 +66,10 @@ function on3LeadLabel(player: VaultChaseCardPlayer): string {
       ? Math.round(Number(player.ufRpmPct))
       : null;
   if (threat && (ufRpm == null || threat.pct >= ufRpm)) {
-    return threat.label || shortLead(threat.name);
+    return threat.label || shortSchoolLabel(threat.name);
   }
   if (ufRpm != null && ufRpm > 0) return 'UF';
-  if (threat) return threat.label || shortLead(threat.name);
+  if (threat) return threat.label || shortSchoolLabel(threat.name);
   return '-';
 }
 
