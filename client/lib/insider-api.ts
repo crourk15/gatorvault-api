@@ -4,8 +4,8 @@
 import { apiFetch } from './api-fetch';
 import { fetchPublishedFeed, type PublishedArticle, type PublishedStoryline } from './content-api';
 import {
+  AUTHOR_ROLE_BY_NAME,
   categoryFromBadge,
-  insiderAuthors,
   insiderHeatIndex,
   insiderStorylinesFallback,
   insiderTags,
@@ -51,38 +51,74 @@ function mapStoryline(s: PublishedStoryline): InsiderStoryline {
 }
 
 
-function deriveAuthorsFromArticles(articles: InsiderArticle[]): InsiderAuthor[] {
-  const counts = new Map<string, number>();
-  for (const a of articles) {
-    const name = (a.author || "GatorVault Staff").trim();
-    counts.set(name, (counts.get(name) || 0) + 1);
-  }
-  return [...counts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 8)
-    .map(([name, articleCount], i) => ({
-      id: `author-${i}-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
-      name,
-      role: "GatorVault Insider",
-      articleCount,
-    }));
+function slugPart(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
-function deriveTagsFromArticles(articles: InsiderArticle[]): InsiderTag[] {
-  const counts = new Map<string, number>();
+export function deriveAuthorsFromArticles(articles: InsiderArticle[]): InsiderAuthor[] {
+  const counts = new Map<string, InsiderAuthor>();
   for (const a of articles) {
-    const label = (a.category || "").trim();
-    if (!label || label === "All") continue;
-    counts.set(label, (counts.get(label) || 0) + 1);
+    const name = (a.author || 'GatorVault Staff').trim() || 'GatorVault Staff';
+    const key = name.toLowerCase();
+    const prev = counts.get(key);
+    if (prev) prev.articleCount += 1;
+    else {
+      counts.set(key, {
+        id: `author-${slugPart(name)}`,
+        name,
+        role: AUTHOR_ROLE_BY_NAME[key] || 'GatorVault Insider',
+        articleCount: 1,
+      });
+    }
   }
-  return [...counts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 12)
-    .map(([label, n], i) => ({
-      id: `tag-${i}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+  return [...counts.values()].sort(
+    (a, b) => b.articleCount - a.articleCount || a.name.localeCompare(b.name)
+  );
+}
+
+function articleTagHaystack(a: InsiderArticle): string {
+  return [a.title, a.preview, a.category, a.author].filter(Boolean).join(' ');
+}
+
+export function deriveTagsFromArticles(articles: InsiderArticle[]): InsiderTag[] {
+  const out: InsiderTag[] = [];
+  for (const tag of insiderTags) {
+    const re = tag.match;
+    if (!re) continue;
+    let n = 0;
+    for (const a of articles) {
+      if (re.test(articleTagHaystack(a))) n += 1;
+    }
+    if (n < 1) continue;
+    out.push({ id: tag.id, label: tag.label, hot: Boolean(tag.hot) || n >= 2 });
+  }
+  const knownCats = new Set([
+    'recruiting',
+    'film room',
+    'game week',
+    'roster',
+    'nil',
+    'community',
+  ]);
+  const covered = new Set(out.map((t) => t.label.toLowerCase()));
+  const catCounts = new Map<string, number>();
+  for (const a of articles) {
+    const label = (a.category || '').trim();
+    if (!label || !knownCats.has(label.toLowerCase())) continue;
+    if (covered.has(label.toLowerCase())) continue;
+    catCounts.set(label, (catCounts.get(label) || 0) + 1);
+  }
+  for (const [label, n] of [...catCounts.entries()].sort((a, b) => b[1] - a[1])) {
+    out.push({
+      id: `tag-cat-${slugPart(label)}`,
       label,
-      hot: n >= 2 || i < 3,
-    }));
+      hot: n >= 2,
+    });
+  }
+  return out.slice(0, 12);
 }
 
 async function tryInsiderFetch<T>(path: string): Promise<T | null> {
@@ -117,7 +153,9 @@ export async function fetchInsiderStorylines(): Promise<InsiderStoryline[]> {
 
 export async function fetchInsiderAuthors(): Promise<InsiderAuthor[]> {
   const remote = await tryInsiderFetch<InsiderAuthor[]>('/api/insider/authors');
-  return remote?.length ? remote : insiderAuthors;
+  if (remote?.length) return remote;
+  const articles = await fetchInsiderArticles();
+  return deriveAuthorsFromArticles(articles);
 }
 
 export async function fetchInsiderHeatIndex(): Promise<InsiderHeatRow[]> {
@@ -127,7 +165,9 @@ export async function fetchInsiderHeatIndex(): Promise<InsiderHeatRow[]> {
 
 export async function fetchInsiderTags(): Promise<InsiderTag[]> {
   const remote = await tryInsiderFetch<InsiderTag[]>('/api/insider/tags');
-  return remote?.length ? remote : insiderTags;
+  if (remote?.length) return remote;
+  const articles = await fetchInsiderArticles();
+  return deriveTagsFromArticles(articles);
 }
 
 export async function fetchInsiderRelated(articleId: string): Promise<InsiderArticle[]> {
@@ -147,19 +187,19 @@ export async function fetchInsiderHubBundle(): Promise<{
   heatIndex: InsiderHeatRow[];
   tags: InsiderTag[];
 }> {
-  const [articles, storylines, authors, heatIndex, tags] = await Promise.all([
+  const [articles, storylines, heatIndex] = await Promise.all([
     fetchInsiderArticles(),
     fetchInsiderStorylines(),
-    fetchInsiderAuthors(),
     fetchInsiderHeatIndex(),
-    fetchInsiderTags(),
   ]);
+  // Always derive from the article list so counts/chips stay honest even if
+  // a stale API still returns seed author/tag catalogs.
   return {
     articles,
     featured: articles[0] ?? null,
     storylines,
-    authors,
+    authors: deriveAuthorsFromArticles(articles),
     heatIndex,
-    tags,
+    tags: deriveTagsFromArticles(articles),
   };
 }

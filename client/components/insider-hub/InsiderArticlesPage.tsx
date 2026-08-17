@@ -3,6 +3,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import '@/lib/insider-hub.css';
 import {
+  deriveAuthorsFromArticles,
+  deriveTagsFromArticles,
   fetchInsiderHubBundle,
   type InsiderArticle,
 } from '@/lib/insider-api';
@@ -196,31 +198,47 @@ function InsiderArticleGrid({
 
 function InsiderAuthors({
   authors,
-  inVault,
+  activeAuthor,
+  onAuthorClick,
+  onViewAll,
 }: {
   authors: InsiderAuthor[];
-  inVault: boolean;
-}): React.ReactElement {
+  activeAuthor: string | null;
+  onAuthorClick: (name: string) => void;
+  onViewAll: () => void;
+}): React.ReactElement | null {
+  if (!authors.length) return null;
   return (
     <div className="insider-card" data-testid="insider-authors">
       <h2 className="insider-section-title">Authors</h2>
       <div className="insider-authors-grid">
-        {authors.map((author) => (
-          <div key={author.id} className="insider-author-card">
-            <div className="insider-author-avatar" aria-hidden>
-              {author.name.charAt(0)}
-            </div>
-            <div>
-              <div className="insider-author-name">{author.name}</div>
-              <div className="insider-author-role">{author.role}</div>
-              <div className="insider-author-count">{author.articleCount} articles</div>
-            </div>
-          </div>
-        ))}
+        {authors.map((author) => {
+          const active = activeAuthor === author.name;
+          return (
+            <button
+              key={author.id}
+              type="button"
+              className={`insider-author-card${active ? ' is-active' : ''}`}
+              onClick={() => onAuthorClick(author.name)}
+              aria-pressed={active}
+            >
+              <div className="insider-author-avatar" aria-hidden>
+                {author.name.charAt(0)}
+              </div>
+              <div>
+                <div className="insider-author-name">{author.name}</div>
+                <div className="insider-author-role">{author.role}</div>
+                <div className="insider-author-count">
+                  {author.articleCount} {author.articleCount === 1 ? 'article' : 'articles'}
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
-      <a className="insider-view-all" href={inVault ? '/vault/articles/' : '/articles'}>
+      <button type="button" className="insider-view-all" onClick={onViewAll}>
         View all articles →
-      </a>
+      </button>
     </div>
   );
 }
@@ -288,25 +306,32 @@ function InsiderSpotlightCarousel({
 
 function InsiderTagCloud({
   tags,
+  activeTag,
   onTagClick,
 }: {
   tags: InsiderTag[];
+  activeTag: string | null;
   onTagClick: (label: string) => void;
-}): React.ReactElement {
+}): React.ReactElement | null {
+  if (!tags.length) return null;
   return (
     <div className="insider-card" data-testid="insider-tags">
       <h2 className="insider-section-title">Insider Tags</h2>
       <div className="insider-tag-cloud">
-        {tags.map((tag) => (
-          <button
-            key={tag.id}
-            type="button"
-            className={`insider-tag${tag.hot ? ' insider-tag--hot' : ''}`}
-            onClick={() => onTagClick(tag.label)}
-          >
-            {tag.label}
-          </button>
-        ))}
+        {tags.map((tag) => {
+          const active = activeTag === tag.label;
+          return (
+            <button
+              key={tag.id}
+              type="button"
+              className={`insider-tag${tag.hot ? ' insider-tag--hot' : ''}${active ? ' is-active' : ''}`}
+              onClick={() => onTagClick(tag.label)}
+              aria-pressed={active}
+            >
+              {tag.label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -324,6 +349,8 @@ export function InsiderArticlesPage({
 }: InsiderArticlesPageProps = {}): React.ReactElement {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [authorFilter, setAuthorFilter] = useState<string | null>(null);
+  const [activeTag, setActiveTag] = useState<string | null>(null);
   const [loading, setLoading] = useState(!HAS_ARTICLES_SEED);
   const [error, setError] = useState<string | null>(null);
   const [articles, setArticles] = useState<InsiderArticle[]>(
@@ -340,12 +367,14 @@ export function InsiderArticlesPage({
     HAS_ARTICLES_SEED ? SEED_ARTICLES.storylines : []
   );
   const [authors, setAuthors] = useState<InsiderAuthor[]>(
-    HAS_ARTICLES_SEED ? SEED_ARTICLES.authors : []
+    HAS_ARTICLES_SEED ? deriveAuthorsFromArticles(SEED_ARTICLES.articles) : []
   );
   const [heatIndex, setHeatIndex] = useState<InsiderHeatRow[]>(
     HAS_ARTICLES_SEED ? SEED_ARTICLES.heatIndex : []
   );
-  const [tags, setTags] = useState<InsiderTag[]>(HAS_ARTICLES_SEED ? SEED_ARTICLES.tags : []);
+  const [tags, setTags] = useState<InsiderTag[]>(
+    HAS_ARTICLES_SEED ? deriveTagsFromArticles(SEED_ARTICLES.articles) : []
+  );
 
   const load = useCallback(async () => {
     if (!HAS_ARTICLES_SEED) {
@@ -385,23 +414,83 @@ export function InsiderArticlesPage({
     const q = searchQuery.trim().toLowerCase();
     return articles.filter((article) => {
       const matchesCategory =
-        activeCategory === 'All' || article.category === activeCategory;
-      const matchesSearch =
-        !q ||
-        article.title.toLowerCase().includes(q) ||
-        article.preview.toLowerCase().includes(q);
-      return matchesCategory && matchesSearch;
+        activeCategory === 'All' ||
+        article.category === activeCategory ||
+        article.category.toLowerCase() === activeCategory.toLowerCase();
+      const matchesAuthor =
+        !authorFilter ||
+        article.author.toLowerCase() === authorFilter.toLowerCase();
+      const haystack = `${article.title} ${article.preview} ${article.category} ${article.author}`.toLowerCase();
+      const matchesSearch = !q || haystack.includes(q);
+      return matchesCategory && matchesAuthor && matchesSearch;
     });
-  }, [articles, activeCategory, searchQuery]);
+  }, [articles, activeCategory, searchQuery, authorFilter]);
 
   const listArticles = useMemo(() => {
     if (!featured) return filteredArticles;
     return filteredArticles.filter((a) => a.id !== featured.id);
   }, [filteredArticles, featured]);
 
-  const handleTagClick = useCallback((label: string) => {
-    setSearchQuery(label);
+  const scrollToLatest = useCallback(() => {
+    if (typeof document === 'undefined') return;
+    document.getElementById('insider-latest')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }, []);
+
+  const clearListFilters = useCallback(() => {
     setActiveCategory('All');
+    setSearchQuery('');
+    setAuthorFilter(null);
+    setActiveTag(null);
+  }, []);
+
+  const handleViewAll = useCallback(() => {
+    clearListFilters();
+    scrollToLatest();
+  }, [clearListFilters, scrollToLatest]);
+
+  const handleAuthorClick = useCallback(
+    (name: string) => {
+      setAuthorFilter((prev) => (prev === name ? null : name));
+      setActiveTag(null);
+      setSearchQuery('');
+      setActiveCategory('All');
+      scrollToLatest();
+    },
+    [scrollToLatest]
+  );
+
+  const handleTagClick = useCallback(
+    (label: string) => {
+      const next = activeTag === label ? null : label;
+      setActiveTag(next);
+      setAuthorFilter(null);
+      if (!next) {
+        setSearchQuery('');
+        setActiveCategory('All');
+        scrollToLatest();
+        return;
+      }
+      const categoryHit = insiderCategories.find(
+        (c) => c.name.toLowerCase() === label.toLowerCase()
+      );
+      if (categoryHit && categoryHit.name !== 'All') {
+        setActiveCategory(categoryHit.name);
+        setSearchQuery('');
+      } else {
+        setActiveCategory('All');
+        setSearchQuery(label);
+      }
+      scrollToLatest();
+    },
+    [activeTag, scrollToLatest]
+  );
+
+  const handleCategoryChange = useCallback((name: string) => {
+    setActiveCategory(name);
+    setActiveTag(null);
   }, []);
 
   if (loading && !HAS_ARTICLES_SEED) {
@@ -430,7 +519,7 @@ export function InsiderArticlesPage({
     <div className="insider-page rh-page rh-page--elite mobile-app gv-page" data-testid="insider-articles-page">
       <InsiderHero />
       <div className="insider-page__frame">
-        <div className="insider-grid" id="insider-latest">
+        <div className="insider-grid">
           <div>
             {featured ? (
               <section className="insider-section">
@@ -444,9 +533,19 @@ export function InsiderArticlesPage({
               </section>
             ) : null}
 
-            <section className="insider-section">
+            <section className="insider-section" id="insider-latest">
               <h2 className="insider-section-title">Latest</h2>
-              <InsiderCategories active={activeCategory} onChange={setActiveCategory} />
+              {(authorFilter || activeTag) && (
+                <p className="insider-filter-chip" data-testid="insider-active-filter">
+                  {authorFilter ? `Author: ${authorFilter}` : null}
+                  {authorFilter && activeTag ? ' · ' : null}
+                  {activeTag ? `Tag: ${activeTag}` : null}
+                  <button type="button" className="insider-filter-chip__clear" onClick={handleViewAll}>
+                    Clear
+                  </button>
+                </p>
+              )}
+              <InsiderCategories active={activeCategory} onChange={handleCategoryChange} />
               <InsiderSearch value={searchQuery} onChange={setSearchQuery} />
               <InsiderArticleGrid articles={listArticles} inVault={inVault} />
             </section>
@@ -462,12 +561,21 @@ export function InsiderArticlesPage({
             <section className="insider-section">
               <InsiderSpotlightCarousel articles={articles} inVault={inVault} />
             </section>
-            <section className="insider-section">
-              <InsiderAuthors authors={authors} inVault={inVault} />
-            </section>
-            <section className="insider-section">
-              <InsiderTagCloud tags={tags} onTagClick={handleTagClick} />
-            </section>
+            {authors.length > 0 ? (
+              <section className="insider-section">
+                <InsiderAuthors
+                  authors={authors}
+                  activeAuthor={authorFilter}
+                  onAuthorClick={handleAuthorClick}
+                  onViewAll={handleViewAll}
+                />
+              </section>
+            ) : null}
+            {tags.length > 0 ? (
+              <section className="insider-section">
+                <InsiderTagCloud tags={tags} activeTag={activeTag} onTagClick={handleTagClick} />
+              </section>
+            ) : null}
           </aside>
         </div>
       </div>
