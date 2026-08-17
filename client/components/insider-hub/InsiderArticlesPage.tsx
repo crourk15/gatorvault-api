@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import '@/lib/insider-hub.css';
 import {
   fetchInsiderHubBundle,
-  fetchInsiderRelated,
   type InsiderArticle,
 } from '@/lib/insider-api';
 import { buildSeedArticlesHub } from '@/lib/articles-hub-seed';
@@ -43,30 +42,6 @@ function InsiderHero(): React.ReactElement {
         </div>
       </div>
     </header>
-  );
-}
-
-function RelatedArticlesSection({
-  articles,
-  inVault,
-}: {
-  articles: InsiderArticle[];
-  inVault: boolean;
-}): React.ReactElement | null {
-  if (!articles.length) return null;
-  return (
-    <section className="insider-section" data-testid="insider-related">
-      <h2 className="insider-section-title">Related Articles</h2>
-      <div className="insider-article-grid">
-        {articles.map((article) => (
-          <a key={article.id} href={articleHref(article.id, inVault)} className="insider-article-card">
-            <span className="insider-article-category">{article.category}</span>
-            <h3 className="insider-article-title">{article.title}</h3>
-            <p className="insider-article-preview">{article.preview}</p>
-          </a>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -371,7 +346,6 @@ export function InsiderArticlesPage({
     HAS_ARTICLES_SEED ? SEED_ARTICLES.heatIndex : []
   );
   const [tags, setTags] = useState<InsiderTag[]>(HAS_ARTICLES_SEED ? SEED_ARTICLES.tags : []);
-  const [related, setRelated] = useState<InsiderArticle[]>([]);
 
   const load = useCallback(async () => {
     if (!HAS_ARTICLES_SEED) {
@@ -406,14 +380,6 @@ export function InsiderArticlesPage({
   useEffect(() => {
     void load();
   }, [load]);
-
-  useEffect(() => {
-    if (!featured?.id) {
-      setRelated([]);
-      return;
-    }
-    fetchInsiderRelated(featured.id).then(setRelated).catch(() => setRelated([]));
-  }, [featured?.id]);
 
   const filteredArticles = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -472,8 +438,6 @@ export function InsiderArticlesPage({
               </section>
             ) : null}
 
-            <RelatedArticlesSection articles={related} inVault={inVault} />
-
             {storylines.length > 0 ? (
               <section className="insider-section">
                 <StorylineWidget storylines={storylines} />
@@ -481,6 +445,7 @@ export function InsiderArticlesPage({
             ) : null}
 
             <section className="insider-section">
+              <h2 className="insider-section-title">Latest</h2>
               <InsiderCategories active={activeCategory} onChange={setActiveCategory} />
               <InsiderSearch value={searchQuery} onChange={setSearchQuery} />
               <InsiderArticleGrid articles={listArticles} inVault={inVault} />
