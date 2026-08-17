@@ -8,6 +8,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 
 ## Already live on iOS (no build needed)
 - [x] App Store **1.0.17** accepted / eligible for distribution (Aug 17, 2026) — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`
+- [x] Film Room Press Conferences: same-day speaker re-uploads / search mirrors collapsed (Sumrall Aug 4 + Media Days) — API + cache dedupe on sync/serve
 - [x] Gabriel profile Field/On3 Florida 100: stamp overlay treated residual ufRpmPct 1 as fraction×100 — parseRpmPct + live topTeams peers (API)
 - [x] Gabriel Player Field/GV poison: On3 Florida crumb 0.80% was ×100 → Field 80 / GV ~85 while Miami owns ~94% — board-aware scale + HP heal + store ufRpmPct=1 (API)
 - [x] HP heal no longer sync-parses players.json on request path (was starving Render /ready past 5s under HP no-store load) — API

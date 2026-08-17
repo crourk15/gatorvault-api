@@ -199,6 +199,156 @@ function mergeBucket(existing, incoming, { pruneGnfpNonFilm } = {}) {
   return { rows: merged, added, updated };
 }
 
+/**
+ * Collapse same-day / same-speaker pressers that landed as different YouTube IDs
+ * (official re-upload + search mirrors). Keep distinct speakers on the same day
+ * (SEC Media Days Baugh vs Graham vs Brown).
+ *
+ * Speaker keys use last name when the title has a person ("Jon Sumrall" / "Coach Sumrall"
+ * → sumrall) so official + mirror titles do not double the hub rail.
+ */
+function speakerKeyFromCleanedName(cleaned) {
+  const parts = String(cleaned || '')
+    .toLowerCase()
+    .replace(/[^a-z\s'-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  while (parts.length && (parts[0] === 'florida' || parts[0] === 'gators')) parts.shift();
+  if (!parts.length) return '';
+  // Event / session labels — keep joined (Spring Game, Spring Practice No …).
+  if (/^(spring|media|practice|press|pre|post|game|availability|opening|closing)$/.test(parts[0])) {
+    return parts.join(' ').slice(0, 40);
+  }
+  // Team dump titles with no person — keep joined so they do not collide with people.
+  if (parts.every((p) => /^(florida|gators|football|team|athletics)$/.test(p))) {
+    return parts.join(' ').slice(0, 40);
+  }
+  const suffixes = new Set(['jr', 'sr', 'ii', 'iii', 'iv', 'v']);
+  if (parts.length >= 2 && suffixes.has(parts[parts.length - 1])) {
+    return parts[parts.length - 2];
+  }
+  if (parts.length >= 2) return parts[parts.length - 1];
+  return parts[0];
+}
+
+function normalizePresserSpeaker(title) {
+  const t = String(title || '');
+  if (!t) return '';
+  const nameStop = /^(press|media|availability|sec|conference|days?|at|the|and)$/i;
+  // Prefer explicit Coach / HC / Head Coach name anywhere in the title.
+  // Capture stops at non-letter boundaries so "Coach Sumrall Press…" / "HC Jon Sumrall - SEC…" work.
+  const coach = t.match(
+    /\b(?:coach|hc|head coach)\s+((?:[A-Za-z][A-Za-z.']+)(?:\s+[A-Za-z][A-Za-z.']+){0,2})/i
+  );
+  if (coach) {
+    const tokens = coach[1].split(/\s+/).filter((w) => !nameStop.test(w));
+    const key = speakerKeyFromCleanedName(tokens.join(' '));
+    if (key && key.length >= 2) return key;
+  }
+  const afterSep = t.split(/\s*[|—–]\s*/).pop() || '';
+  const cleaned = afterSep
+    .replace(/\bSEC Media Days?\b/gi, ' ')
+    .replace(/\b\d{1,2}[-/]\d{1,2}(?:[-/]\d{2,4})?\b/g, ' ')
+    .replace(/\b(press conference|media availability|media days?|availability)\b/gi, ' ')
+    .replace(/\b(coach|hc|head coach)\b/gi, ' ')
+    .replace(/[^a-zA-Z\s']/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+  const fromSep = speakerKeyFromCleanedName(cleaned);
+  if (fromSep && fromSep.length >= 3 && fromSep.length <= 40) return fromSep;
+  // Full-title fallback (search mirrors without a clean pipe segment).
+  const full = t
+    .replace(/\bSEC Media Days?\b/gi, ' ')
+    .replace(/\b\d{1,2}[-/]\d{1,2}(?:[-/]\d{2,4})?\b/g, ' ')
+    .replace(/\b(press conference|media availability|media days?|availability)\b/gi, ' ')
+    .replace(/\b(coach|hc|head coach)\b/gi, ' ')
+    .replace(/[^a-zA-Z\s']/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+  return speakerKeyFromCleanedName(full);
+}
+
+function presserEventKey(row) {
+  const day = String(row?.publishedAt || '').slice(0, 10) || 'nodate';
+  const speaker = normalizePresserSpeaker(row?.title);
+  if (speaker) return `${day}|${speaker}`;
+  // No speaker — only collapse exact title matches on the same day.
+  const titleKey = String(row?.title || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .slice(0, 60);
+  return titleKey ? `${day}|title:${titleKey}` : null;
+}
+
+function presserPreferenceScore(row) {
+  let score = 0;
+  const src = String(row?.source || '');
+  const title = String(row?.title || '');
+  if (/florida gators football/i.test(src)) score += 100;
+  else if (/florida gators youtube/i.test(src)) score += 90;
+  else if (/florida gators/i.test(src)) score += 70;
+  if (row?.publishedAt) score += 25;
+  if (/^florida football (press conference|media availability)/i.test(title)) score += 35;
+  if (/\b(film guy|insider|fox\s?\d+|reaction|interview)\b/i.test(`${src} ${title}`)) score -= 60;
+  if (/youtube-search|kind.:.search/i.test(src) || (!row?.publishedAt && /youtube/i.test(src))) {
+    score -= 20;
+  }
+  const t = row?.publishedAt ? new Date(row.publishedAt).getTime() : 0;
+  if (Number.isFinite(t) && t > 0) score += Math.min(5, t / 1e13);
+  return score;
+}
+
+function dedupePressersByEvent(rows = []) {
+  const list = Array.isArray(rows) ? rows.filter(Boolean) : [];
+  if (list.length < 2) return list.slice();
+  const bestByKey = new Map();
+  const passthrough = [];
+  for (const row of list) {
+    const key = presserEventKey(row);
+    if (!key || key.startsWith('nodate|')) {
+      // Search hits without dates: still collapse by speaker alone when possible.
+      const speaker = normalizePresserSpeaker(row?.title);
+      if (speaker) {
+        const softKey = `soft|${speaker}`;
+        const prevSoft = bestByKey.get(softKey);
+        if (!prevSoft || presserPreferenceScore(row) > presserPreferenceScore(prevSoft)) {
+          bestByKey.set(softKey, row);
+        }
+        continue;
+      }
+      passthrough.push(row);
+      continue;
+    }
+    const prev = bestByKey.get(key);
+    if (!prev || presserPreferenceScore(row) > presserPreferenceScore(prev)) {
+      bestByKey.set(key, row);
+    }
+  }
+  // Soft keys must not drop a dated official when both exist.
+  const datedSpeakers = new Set(
+    [...bestByKey.keys()]
+      .filter((k) => /^\d{4}-\d{2}-\d{2}\|/.test(k))
+      .map((k) => k.split('|').slice(1).join('|'))
+  );
+  for (const key of [...bestByKey.keys()]) {
+    if (!key.startsWith('soft|')) continue;
+    const speaker = key.slice(5);
+    if (datedSpeakers.has(speaker)) bestByKey.delete(key);
+  }
+  const deduped = [...bestByKey.values(), ...passthrough];
+  deduped.sort((a, b) => {
+    const ta = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+    const tb = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+    return tb - ta;
+  });
+  return deduped;
+}
+
 
 const DEFAULT_SEARCH_QUERIES = [
   'Florida Football Press Conference',
@@ -364,6 +514,18 @@ async function syncFilmRoomYouTubeInner({ sources } = {}) {
     details.push({ channelId: 'youtube-search', label: 'YouTube search', error: err.message });
   }
 
+  // Same-day Sumrall / coach re-uploads + search mirrors must not double the hub rail.
+  const beforeDedupe = (cache.auto.pressers || []).length;
+  cache.auto.pressers = dedupePressersByEvent(cache.auto.pressers || []);
+  const removedDupes = Math.max(0, beforeDedupe - cache.auto.pressers.length);
+  if (removedDupes > 0) {
+    details.push({
+      channelId: 'presser-dedupe',
+      label: 'Same-day speaker dedupe',
+      removed: removedDupes,
+    });
+  }
+
   const saved = saveFilmRoomCache(cache);
   return {
     ok: true,
@@ -386,6 +548,9 @@ module.exports = {
   shouldKeepSearchHit,
   toCacheRow,
   mergeBucket,
+  normalizePresserSpeaker,
+  presserEventKey,
+  dedupePressersByEvent,
   fetchChannelFeed,
   syncYouTubeSearchPressers,
   syncFilmRoomYouTube,

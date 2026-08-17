@@ -5,7 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const { loadFilmRoomCache, resolveCachePath } = require('./film-room-cache-store');
-const { isGnfpFilmBreakdownTitle } = require('./film-room-youtube-ingest');
+const { isGnfpFilmBreakdownTitle, dedupePressersByEvent } = require('./film-room-youtube-ingest');
 
 const MANUAL_PATH = path.join(__dirname, '..', 'data', 'film-room', 'manual.json');
 
@@ -85,7 +85,7 @@ function loadLegacyVideoCatalog() {
     }
   });
 
-  const pressers = (cache.auto?.pressers || [])
+  const pressers = dedupePressersByEvent(cache.auto?.pressers || [])
     .slice()
     .sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0))
     .slice(0, PRESS_CONFERENCE_LIMIT);
