@@ -8,6 +8,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 
 ## Already live on iOS (no build needed)
 - [x] App Store **1.0.17** accepted / eligible for distribution (Aug 17, 2026) — submission `702dcbe4-cab3-4b26-a8ff-5a329d3a6d27`
+- [x] Joey Fleming chase On3 lead OSU while Bama owns ~95%: residual 0.47% ×100→47 mid-board + fake-lock filter stripped Alabama — scale-aware peer % + store ufRpm heal (API)
 - [x] Gabriel profile Field/On3 Florida 100: stamp overlay treated residual ufRpmPct 1 as fraction×100 — parseRpmPct + live topTeams peers (API)
 - [x] Gabriel Player Field/GV poison: On3 Florida crumb 0.80% was ×100 → Field 80 / GV ~85 while Miami owns ~94% — board-aware scale + HP heal + store ufRpmPct=1 (API)
 - [x] HP heal no longer sync-parses players.json on request path (was starving Render /ready past 5s under HP no-store load) — API
@@ -61,6 +62,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-17 | Chase On3 lead chrome: keep real ~95% favorites (Fleming Bama); only drop ~100 fake locks (Asher) | `competing-schools` `topThreatVsFlorida` in binary; API peer-scale heal also live | pending |
 | 2026-08-17 | HP localStorage cache v19 (Gabriel Field 0.80→80 / GV 85 bust) | `futurecast-high-priority-api` in binary; API heal + store ufRpm=1 already live | pending |
 | 2026-08-17 | Closest/Chase: drop fake 100% peer On3 leads when a mid-board rival exists (Asher OSU crumb); HP localStorage cache v18 | `competing-schools` + `futurecast-high-priority-api` in binary; API no-store + heal already live | pending |
 | 2026-08-17 | Closest: sole-board fake Florida lock without UF offer cannot rank (Girton disk poison); real sole locks with offers still eligible | `competing-schools` in binary; API board-truth merge/heal also live | pending |

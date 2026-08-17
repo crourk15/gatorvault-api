@@ -40,4 +40,33 @@ describe('Asher-style peer 1→100 On3-lead poison', () => {
       JSON.stringify(comps)
     );
   });
+
+  it('Joey Fleming residual 0.47% stays crumb — Alabama keeps On3 board', () => {
+    const { competingSchoolsFromRecruitingRecord } = require('../lib/underclassmen-intel.ts');
+    const comps = competingSchoolsFromRecruitingRecord({
+      slug: 'joey-fleming',
+      classYear: 2028,
+      ufRpmPct: 0.4677633117642472,
+      competitors: [
+        { school: 'Alabama', score: 94.92476806735792, pct: 94.92476806735792, source: 'legacy' },
+        { school: 'Auburn', score: 1.200592500194901, pct: 1.200592500194901, source: 'legacy' },
+        { school: 'Ohio State', score: 0.4677633117642472, pct: 0.4677633117642472, source: 'legacy' },
+      ],
+      on3TopTeams: [
+        { team: { name: 'Alabama' }, prediction: 94.92476806735792, year: 2028 },
+        { team: { name: 'Ohio State' }, prediction: 0.4677633117642472, year: 2028, classRank: 1 },
+        { team: { name: 'Florida' }, prediction: 0.4677633117642472, year: 2028 },
+        { team: { name: 'Notre Dame' }, prediction: 0.4677633117642472, year: 2028 },
+        { team: { name: 'Clemson' }, prediction: 0.4677633117642472, year: 2028 },
+      ],
+    });
+    assert.ok(comps.length >= 1, JSON.stringify(comps));
+    assert.equal(comps[0].name, 'Alabama', JSON.stringify(comps[0]));
+    assert.ok(Number(comps[0].pct) >= 90);
+    assert.ok(
+      !comps.some((c) => /ohio state/i.test(c.name) && Number(c.pct) >= 12),
+      `OSU must not be mid-board: ${JSON.stringify(comps)}`
+    );
+  });
+
 });

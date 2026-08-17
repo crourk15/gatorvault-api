@@ -202,12 +202,33 @@ const LEGACY_PEER_MAX = 2;
  * Peer market share in percentage points.
  * Strict `< 1` for unit-interval fractions — `1` is a real 1% residual crumb
  * (Asher OSU ~1.2 rounded → 1; `<= 1` used to explode that to 100% On3 lead).
+ *
+ * Prefer {@link peerPctWithScale} when the surrounding board may already be
+ * percent-points with fractional residuals (Joey Fleming OSU 0.47% ≠ 47%).
  */
 function competitorPct(raw: unknown): number | null {
   if (raw == null || !Number.isFinite(Number(raw))) return null;
   const num = Number(raw);
   if (num <= 0) return null;
   const pct = num < 1 ? num * 100 : num;
+  return Math.min(100, Math.max(0, Math.round(pct * 10) / 10));
+}
+
+/** Same rule as on3-board-hydrate: any value > 1 ⇒ whole board is %-points. */
+function detectCompetitorPctScale(rawValues: unknown[]): 'percent' | 'fraction' {
+  const vals = rawValues
+    .map((v) => Number(v))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  if (!vals.length) return 'percent';
+  if (vals.some((v) => v > 1)) return 'percent';
+  return 'fraction';
+}
+
+function peerPctWithScale(raw: unknown, scale: 'percent' | 'fraction'): number | null {
+  if (raw == null || !Number.isFinite(Number(raw))) return null;
+  const num = Number(raw);
+  if (num <= 0) return null;
+  const pct = scale === 'fraction' && num < 1 ? num * 100 : num;
   return Math.min(100, Math.max(0, Math.round(pct * 10) / 10));
 }
 
@@ -219,10 +240,23 @@ function competingSchoolsFromRecruitingRecord(
 ): Array<{ name: string; pct: number }> {
   const bySchool = new Map<string, { name: string; pct: number }>();
 
-  const add = (nameRaw: unknown, pctRaw: unknown) => {
+  const competitors = (recruiting?.competitors ?? []) as Array<{
+    school?: string;
+    name?: string;
+    score?: number;
+    pct?: number;
+    source?: string;
+  }>;
+  // Joey Fleming: Alabama 94.9 + OSU residual 0.47 (already %-points). Treating 0.47 as a
+  // unit fraction → 47% invented a mid-board rival and stole the On3 lead chrome from Bama.
+  const competitorScale = detectCompetitorPctScale(
+    competitors.map((c) => c?.score ?? c?.pct)
+  );
+
+  const add = (nameRaw: unknown, pctRaw: unknown, scale: 'percent' | 'fraction' = competitorScale) => {
     const school = String(nameRaw || '').trim();
     if (!school || /\bflorida\b|\bgators\b|\buf\b/i.test(school)) return;
-    const pct = competitorPct(pctRaw);
+    const pct = peerPctWithScale(pctRaw, scale);
     if (pct == null || pct < MIN_PEER_BOARD_PCT) return;
     const key = school.toLowerCase();
     const existing = bySchool.get(key);
@@ -231,13 +265,6 @@ function competingSchoolsFromRecruitingRecord(
     }
   };
 
-  const competitors = (recruiting?.competitors ?? []) as Array<{
-    school?: string;
-    name?: string;
-    score?: number;
-    pct?: number;
-    source?: string;
-  }>;
   // Prefer confirmed On3 / live competitors. If none, allow top 1–2 meaningful legacy peers
   // (not when UF is already ~locked — that reads as a fake battle).
   const nonLegacy = competitors.filter(
@@ -245,12 +272,12 @@ function competingSchoolsFromRecruitingRecord(
   );
   let competitorPool = nonLegacy;
   if (!competitorPool.length) {
-    const ufRpm = competitorPct(recruiting?.ufRpmPct) ?? 0;
+    const ufRpm = peerPctWithScale(recruiting?.ufRpmPct, competitorScale) ?? 0;
     if (ufRpm < UF_LOCKED_SKIP_LEGACY_PCT) {
       competitorPool = [...competitors]
         .map((c) => ({
           c,
-          pct: competitorPct(c?.score ?? c?.pct) ?? 0,
+          pct: peerPctWithScale(c?.score ?? c?.pct, competitorScale) ?? 0,
         }))
         .filter((row) => row.pct >= LEGACY_PEER_MIN_PCT)
         .sort((a, b) => b.pct - a.pct)
@@ -259,7 +286,7 @@ function competingSchoolsFromRecruitingRecord(
     }
   }
   for (const c of competitorPool) {
-    add(c?.school || c?.name, c?.score ?? c?.pct);
+    add(c?.school || c?.name, c?.score ?? c?.pct, competitorScale);
   }
 
   // Confirmed On3 RPM board when present on the player row.

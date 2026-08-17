@@ -122,13 +122,15 @@ export function topThreatVsFlorida(
     .filter((s) => s?.name && Number(s.pct) > 0 && !isFlorida(s.name))
     .sort((a, b) => Number(b.pct) - Number(a.pct));
 
-  // Drop fake 100% peer locks when a real mid-board rival exists (1→100 crumb poison).
+  // Drop fake ~100% peer locks when a real mid-board rival exists (1→100 crumb poison).
+  // Do NOT strip real On3 favorites near 95% (Joey Fleming Alabama ~95 + residual OSU crumb
+  // wrongly scaled to ~47 used to crown OSU on the chase "On3 lead" chrome).
   const mid = peers.find((s) => {
     const pct = Number(s.pct);
     return pct >= 15 && pct <= 90;
   });
-  if (mid && Number(peers[0]?.pct) >= 95) {
-    peers = peers.filter((s) => Number(s.pct) < 95);
+  if (mid && Number(peers[0]?.pct) >= 99) {
+    peers = peers.filter((s) => Number(s.pct) < 99);
   }
 
   const top = peers[0];
