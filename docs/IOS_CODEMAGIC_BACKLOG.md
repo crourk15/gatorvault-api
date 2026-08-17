@@ -8,6 +8,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 
 ## Already live on iOS (no build needed)
 - [x] Gabriel Player Field/GV poison: On3 Florida crumb 0.80% was ×100 → Field 80 / GV ~85 while Miami owns ~94% — board-aware scale + HP heal + store ufRpmPct=1 (API)
+- [x] HP heal no longer sync-parses players.json on request path (was starving Render /ready past 5s under HP no-store load) — API
 - [x] HP board-truth guard: durable `/var/data` merges fresher On3 topTeams/ufRpm from git bundle; heal falls back to bundle; audit script `audit-hp-board-truth.js` — API (Closest client offer gate needs Codemagic)
 - [x] App Store **1.0.15** accepted / eligible for distribution (Aug 14, 2026) — member announce email path live via Admin Hub
 - [x] Jaxen Cepeda 2028 OT Vault Scouting (Dalton Risner comp) + allowlist seed after Florida offer/game-day visit — API
