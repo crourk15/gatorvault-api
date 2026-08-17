@@ -732,7 +732,15 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
   let players = doc.players.map((row) => {
     if (!row || typeof row !== 'object') return row;
     const p = row as Record<string, unknown>;
-    return healHighPriorityRpmPoisonRow({ ...p, stars: normalizeFanStars(p.stars) });
+    const healed = healHighPriorityRpmPoisonRow({ ...p, stars: normalizeFanStars(p.stars) });
+    try {
+      const { withOn3LeadStamp } = require('../../lib/on3-lead-stamp') as {
+        withOn3LeadStamp: (r: Record<string, unknown>) => Record<string, unknown>;
+      };
+      return withOn3LeadStamp(healed as Record<string, unknown>);
+    } catch {
+      return healed;
+    }
   });
   try {
     const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players') as {

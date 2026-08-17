@@ -60,6 +60,10 @@ function raceRows(player: VaultChaseCardPlayer): RaceRow[] {
 }
 
 function on3LeadLabel(player: VaultChaseCardPlayer): string {
+  // Prefer API stamp — prediction swings and stamp bugfixes ship via Render.
+  const apiLead = String(player.on3Lead || '').trim();
+  if (apiLead && apiLead !== '-' && apiLead !== '—') return apiLead;
+
   const threat = topThreatVsFlorida(player);
   const ufRpm =
     player.ufRpmPct != null && Number(player.ufRpmPct) > 0
