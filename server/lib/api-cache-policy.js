@@ -16,6 +16,7 @@ const NO_STORE_PREFIXES = [
   '/api/futurecast/commits',
   '/api/futurecast/targets',
   '/api/futurecast/big-board',
+  '/api/futurecast/high-priority',
   '/api/portal/',
   '/api/players/',
   '/api/recruiting/',
@@ -43,7 +44,8 @@ const SHORT_TTL_ROUTES = [
   { prefix: '/api/futurecast/class', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/futurecast/predictions', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/futurecast/staff-notes', maxAge: 300, sMaxAge: 600 },
-  { prefix: '/api/futurecast/high-priority', maxAge: 300, sMaxAge: 600 },
+  // high-priority intentionally omitted — board/odds heal must not stick in iOS URLCache
+  // (Asher OSU 1→100 poison stayed on TestFlight behind max-age=300).
   { prefix: '/api/recruits', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/film-room/catalog', maxAge: 60 },
   { prefix: '/api/recruiting/board', maxAge: 45 },

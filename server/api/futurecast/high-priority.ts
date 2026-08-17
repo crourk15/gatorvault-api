@@ -1304,6 +1304,9 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const healed = sanitizeHighPriorityStarsPayload(primed);
       primeFuturecastCache(cacheKey, healed);
       res.setHeader('X-GatorVault-Cache', 'DISK');
+      // Odds/board heals must reach iOS — never let URLCache keep a poisoned plate.
+      res.setHeader('Cache-Control', 'no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
       res.json(healed);
       // Single-flight + cooldown — never stampede Starter with parallel HP rebuilds.
       scheduleHighPriorityDiskRebuild(classYear, () => buildHighPriorityPayload(classYear));

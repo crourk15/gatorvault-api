@@ -57,6 +57,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-17 | Closest/Chase: drop fake 100% peer On3 leads when a mid-board rival exists (Asher OSU crumb); HP localStorage cache v18 | `competing-schools` + `futurecast-high-priority-api` in binary; API no-store + heal already live | pending |
 | 2026-08-17 | Closest: sole-board fake Florida lock without UF offer cannot rank (Girton disk poison); real sole locks with offers still eligible | `competing-schools` in binary; API board-truth merge/heal also live | pending |
 | 2026-08-17 | Closest / Who commits next: industry-trailing residual RPM (Jernigan) cannot invent Florida lead; client `sanitizeRpmPct` accepts 1% | `competing-schools`, `uf-odds-scale` in binary; HP odds heal is API | pending |
 | 2026-08-17 | Articles hub: Authors + Tags filter Latest + live counts/tags from published articles (no fake 48/32/21) | `InsiderArticlesPage` + insider-api/data + insider-hub CSS in binary; API authors/tags also live | pending |

@@ -3,6 +3,7 @@ import test from 'node:test';
 import {
   credibleThreatVsFlorida,
   floridaLeadMargin,
+  topThreatVsFlorida,
   hasClosestCommitProcessEvidence,
   hasCredibleBoardLead,
   isFloridaLeadingOnBoard,
@@ -101,6 +102,23 @@ test('rival-led board with poisoned high GV is not Closest', () => {
   });
   assert.equal(isFloridaLeadingOnBoard(girton), false);
   assert.equal(isNextCommitPick(girton), false);
+});
+
+test('fake 100% peer crumb does not beat mid-board On3 lead (Asher OSU)', () => {
+  const asher = target({
+    slug: 'asher-ghioto',
+    name: 'Asher Ghioto',
+    ufProbability: 15,
+    ufRpmPct: 8,
+    competingSchools: [
+      { name: 'Ohio State', pct: 100 },
+      { name: 'Miami', pct: 67 },
+    ],
+  });
+  const threat = topThreatVsFlorida(asher);
+  assert.ok(threat);
+  assert.match(threat.name, /miami/i);
+  assert.ok(threat.pct < 90);
 });
 
 test('sole-board fake lock without UF offer is not Closest (Girton disk poison)', () => {
