@@ -43,7 +43,7 @@ const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players'
 const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
 const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields, buildVerifiedVisitRecapRows, getVisitIntelBoardSnapshot } = require('../../lib/visit-intel-utils');
 const { mergeExpectedVisitHistory } = require('../../lib/game-week-visitors');
-const { resolveUfProbability, loadUfPctPredictorsBySlug } = require('../../lib/uf-probability-utils');
+const { resolveUfProbability, loadUfPctPredictorsBySlug, sanitizeRpmPct, sanitizeStoreOddsPct } = require('../../lib/uf-probability-utils');
 const { buildFlipWatchRows } = require('../../lib/flip-watch-utils');
 const intelStore = require('../../lib/recruiting-intel-store');
 const {
@@ -106,23 +106,27 @@ export function softClosingClassHighPriorityFromSeed(classYear = FUTURECAST_CLAS
 
   const players: HighPriorityPlayer[] = openHunts.map((target) => {
     const recruiting = recruitingBySlug.get(target.slug);
-    const storeRpm = firstPositivePct(recruiting?.ufRpmPct, loadAllowlistRpmPct(target.slug));
+    const competingSchools = (() => {
+      try {
+        const { competingSchoolsFromRecruitingRecord } = require('../../lib/underclassmen-intel');
+        return competingSchoolsFromRecruitingRecord(
+          recruiting as Record<string, unknown> | null | undefined
+        );
+      } catch {
+        return [] as Array<{ name: string; pct: number }>;
+      }
+    })();
+    const storeRpm = rpmConsistentWithField(
+      firstPositiveRpmPct(recruiting?.ufRpmPct, loadAllowlistRpmPct(target.slug)),
+      competingSchools
+    );
     const resolvedUf = resolveUfProbability({
       modelPct: null,
-      storePct: firstPositivePct(target.ufProbability, storeRpm, recruiting?.ufProbability),
+      storePct: firstPositiveStorePct(target.ufProbability, storeRpm, recruiting?.ufProbability),
       predictors: [],
       stars: target.stars ?? null,
       headliner: Boolean(target.headliner),
     });
-    let competingSchools: Array<{ name: string; pct: number }> = [];
-    try {
-      const { competingSchoolsFromRecruitingRecord } = require('../../lib/underclassmen-intel');
-      competingSchools = competingSchoolsFromRecruitingRecord(
-        recruiting as Record<string, unknown> | null | undefined
-      );
-    } catch {
-      competingSchools = [];
-    }
     const fitScore =
       recruiting?.fitScore != null && Number(recruiting.fitScore) > 0
         ? Math.round(Number(recruiting.fitScore))
@@ -472,17 +476,50 @@ function loadInsiderNotesBySlug(): Map<string, string> {
 function ufPctFromBoard(value: number | null | undefined): number {
   if (value == null || !Number.isFinite(value)) return 0;
   const n = Number(value);
+  // Model/store fractions (0–1) expand; already-percent values stay.
   return n <= 1 ? Math.round(n * 100) : Math.round(n);
 }
 
-/** First positive UF % — treats 0 as missing so RPM can fill Hudson West-style gaps. */
-function firstPositivePct(...vals: Array<number | null | undefined>): number | null {
+/** On3 / market RPM — percentage points only. Never expand 1 → 100. */
+function firstPositiveRpmPct(...vals: Array<number | null | undefined>): number | null {
   for (const v of vals) {
-    if (v != null && Number.isFinite(Number(v)) && Number(v) > 0) {
-      return ufPctFromBoard(Number(v));
-    }
+    const n = sanitizeRpmPct(v);
+    if (n != null && n > 0) return n;
   }
   return null;
+}
+
+/**
+ * Drop impossible "Florida RPM 95–100" when the On3-style field clearly belongs
+ * to another school (Zaiden Jernigan: Miss State ~20% lead vs Florida 100% poison).
+ */
+function rpmConsistentWithField(
+  rpm: number | null,
+  competingSchools: Array<{ name: string; pct: number }> | null | undefined
+): number | null {
+  if (rpm == null || rpm < 85) return rpm;
+  const real = (competingSchools || []).filter((c) => Number(c?.pct) >= 5);
+  if (!real.length) return rpm;
+  const top = [...real].sort((a, b) => Number(b.pct) - Number(a.pct))[0];
+  const florida = real.find((c) => /florida/i.test(String(c.name || '')));
+  const topIsFlorida = top && /florida/i.test(String(top.name || ''));
+  const floridaPct = florida ? Number(florida.pct) : 0;
+  if (!topIsFlorida && floridaPct + 40 < rpm) return null;
+  return rpm;
+}
+
+/** Store/model UF odds — may still be 0–1 fractions. */
+function firstPositiveStorePct(...vals: Array<number | null | undefined>): number | null {
+  for (const v of vals) {
+    const n = sanitizeStoreOddsPct(v);
+    if (n != null && n > 0) return n;
+  }
+  return null;
+}
+
+/** @deprecated — ambiguous; prefer firstPositiveRpmPct / firstPositiveStorePct */
+function firstPositivePct(...vals: Array<number | null | undefined>): number | null {
+  return firstPositiveStorePct(...vals);
 }
 
 function loadAllowlistRpmPct(slug: string): number | null {
@@ -797,11 +834,18 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
           predictors.push(ext);
         }
 
-        const storeRpm = firstPositivePct(recruiting?.ufRpmPct, loadAllowlistRpmPct(slug));
+        const { competingSchoolsFromRecruitingRecord } = require('../../lib/underclassmen-intel');
+        const competingSchools = competingSchoolsFromRecruitingRecord(
+          recruiting as Record<string, unknown> | null | undefined
+        );
+        const storeRpm = rpmConsistentWithField(
+          firstPositiveRpmPct(recruiting?.ufRpmPct, loadAllowlistRpmPct(slug)),
+          competingSchools
+        );
         const resolvedUf = resolveUfProbability({
           modelPct: model?.confidence ?? model?.ufProbability,
           // Never let an explicit 0 block On3 RPM (Hudson West / peers).
-          storePct: firstPositivePct(
+          storePct: firstPositiveStorePct(
             target.ufProbability,
             storeRpm,
             recruiting?.ufProbability,
@@ -812,10 +856,6 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
           headliner: Boolean(target.headliner),
         });
         const ufProbability = resolvedUf.value;
-        const { competingSchoolsFromRecruitingRecord } = require('../../lib/underclassmen-intel');
-        const competingSchools = competingSchoolsFromRecruitingRecord(
-          recruiting as Record<string, unknown> | null | undefined
-        );
         const ufRpmPct = storeRpm;
         const delta7d = mergedDelta7dBySlug.get(slug) ?? model?.delta ?? 0;
         const movementDelta = delta7d;
@@ -941,10 +981,9 @@ async function buildClosingClassHighPriorityPayload(classYear: number) {
         }
         return resolveUfProbability({
           modelPct: model?.confidence ?? model?.ufProbability,
-          storePct: firstPositivePct(
+          storePct: firstPositiveStorePct(
             seed?.ufProbability,
-            recruiting?.ufRpmPct,
-            loadAllowlistRpmPct(slug),
+            firstPositiveRpmPct(recruiting?.ufRpmPct, loadAllowlistRpmPct(slug)),
             recruiting?.ufProbability,
             recruiting?.futurecastProbability
           ),
