@@ -23,7 +23,103 @@ function parseUfPct(raw) {
   if (raw == null || !Number.isFinite(Number(raw))) return null;
   const num = Number(raw);
   if (!(num > 0)) return null;
-  return Math.min(100, Math.max(0, Math.round(num <= 1 ? num * 100 : num)));
+  // Legacy unit-interval odds (0.58 → 58). Integer 1 is 1% RPM, never ×100 → 100
+  // (Gabriel Field poison after residual hydrate wrote ufRpmPct: 1).
+  if (num < 1) return Math.min(100, Math.max(1, Math.round(num * 100)));
+  return Math.min(100, Math.round(num));
+}
+
+/**
+ * On3 / Field RPM — percentage points only.
+ * Never treat residual 1% as fraction→100% (profile Field / On3 Florida poison).
+ */
+function parseRpmPct(raw) {
+  if (raw == null || !Number.isFinite(Number(raw))) return null;
+  const num = Number(raw);
+  if (num <= 0) return null;
+  if (num > 100) return 100;
+  if (num < 1) return Math.max(1, Math.round(num));
+  return Math.round(num);
+}
+
+function floridaShareFromTopTeams(teams) {
+  if (!Array.isArray(teams) || !teams.length) return null;
+  try {
+    const { ufRpmFromTopTeams, detectTopTeamsPctScale, teamPct } = require('./on3-board-hydrate');
+    const soft = ufRpmFromTopTeams(teams, 2028, { minPct: 0.5 });
+    if (soft != null && Number.isFinite(soft) && soft > 0) {
+      return soft < 1 ? Math.max(1, Math.round(soft)) : Math.round(soft);
+    }
+    const scale = detectTopTeamsPctScale(teams);
+    const fl = teams.find((row) => {
+      const name = String(row?.team?.name || row?.team?.fullName || row?.name || '');
+      return /\bflorida\b|\bgators\b/i.test(name) && !/florida state|south florida/i.test(name);
+    });
+    if (!fl) return null;
+    const pct = teamPct(fl, scale);
+    if (pct == null || !Number.isFinite(pct) || pct <= 0) return null;
+    return pct < 1 ? Math.max(1, Math.round(pct)) : Math.round(pct);
+  } catch {
+    return null;
+  }
+}
+
+function peersFromTopTeams(teams) {
+  if (!Array.isArray(teams) || !teams.length) return [];
+  try {
+    const { detectTopTeamsPctScale, teamPct } = require('./on3-board-hydrate');
+    const scale = detectTopTeamsPctScale(teams);
+    const out = [];
+    for (const row of teams) {
+      const name = String(row?.team?.name || row?.team?.fullName || row?.name || '').trim();
+      if (!name) continue;
+      if (/\bflorida\b|\bgators\b/i.test(name) && !/florida state|south florida/i.test(name)) {
+        continue;
+      }
+      const pct = teamPct(row, scale);
+      if (pct == null || !Number.isFinite(pct) || pct < 5) continue;
+      out.push({ school: name, pct: Math.round(pct * 10) / 10 });
+    }
+    return out.sort((a, b) => b.pct - a.pct).slice(0, 8);
+  } catch {
+    return [];
+  }
+}
+
+function resolveLiveRpmPct(recruiting, competingSchools) {
+  const storeRpm = parseRpmPct(recruiting?.ufRpmPct);
+  const boardRpm = floridaShareFromTopTeams(recruiting?.topTeams || recruiting?.on3TopTeams);
+  const peers = Array.isArray(competingSchools) ? competingSchools : [];
+  const topRival = [...peers]
+    .filter((c) => {
+      const n = String(c?.school || c?.name || '');
+      return n && !(/\bflorida\b|\bgators\b/i.test(n) && !/florida state|south florida/i.test(n));
+    })
+    .sort((a, b) => Number(b.pct) - Number(a.pct))[0];
+  const topRivalPct = topRival ? Number(topRival.pct) : 0;
+
+  let rpm = boardRpm != null ? boardRpm : storeRpm;
+  if (boardRpm != null && storeRpm != null && storeRpm >= 40 && boardRpm + 25 < storeRpm) {
+    rpm = boardRpm;
+  }
+  // Rival owns the board — never keep a locked Florida Field/On3 % (Gabriel Miami ~94).
+  if (
+    rpm != null &&
+    rpm >= 40 &&
+    topRivalPct >= 12 &&
+    topRivalPct > rpm
+  ) {
+    rpm = boardRpm != null ? boardRpm : Math.max(1, Math.round(100 - topRivalPct));
+  }
+  if (
+    rpm != null &&
+    rpm >= 40 &&
+    topRivalPct >= 55 &&
+    topRivalPct > rpm
+  ) {
+    rpm = boardRpm != null ? boardRpm : Math.max(1, Math.round(100 - topRivalPct));
+  }
+  return rpm;
 }
 
 function isFloridaSchool(value) {
@@ -207,7 +303,26 @@ function overlayLiveRpm(profile, recruiting) {
   const committedTo =
     recruiting?.committedTo ?? profile.player?.committedTo ?? profile.player?.committed_to ?? null;
   const ufCommit = isFloridaSchool(committedTo);
-  const rpm = parseUfPct(recruiting?.ufRpmPct ?? recruiting?.ufProbability);
+
+  // Prefer live On3 topTeams peers over stale stamp comps (Gabriel Miami 28.9 → 94).
+  const livePeers = peersFromTopTeams(recruiting?.topTeams || recruiting?.on3TopTeams);
+  let competingSchools = Array.isArray(profile.competingSchools) ? [...profile.competingSchools] : [];
+  if (livePeers.length) {
+    const stampTop = Math.max(0, ...competingSchools.map((s) => Number(s?.pct) || 0));
+    const liveTop = Number(livePeers[0]?.pct) || 0;
+    if (!competingSchools.length || liveTop + 15 >= stampTop) {
+      competingSchools = livePeers.map((s, i) => ({
+        school: s.school,
+        rankNow: i + 1,
+        rankPrior: null,
+        delta: 0,
+        volatilityBoost: 0,
+        pct: s.pct,
+      }));
+    }
+  }
+
+  const rpm = ufCommit ? 100 : resolveLiveRpmPct(recruiting, competingSchools);
 
   const player = { ...(profile.player || {}) };
   if (rpm != null) player.ufRpmPct = rpm;
@@ -267,15 +382,11 @@ function overlayLiveRpm(profile, recruiting) {
       volatilityScore: futurecastSummary?.volatilityScore ?? 0,
     };
   } else if (rpm != null) {
-    const rivalMax = Math.max(
-      0,
-      ...(Array.isArray(profile.competingSchools)
-        ? profile.competingSchools.map((s) => Number(s?.pct) || 0)
-        : [])
-    );
+    const rivalMax = Math.max(0, ...competingSchools.map((s) => Number(s?.pct) || 0));
     const summaryFitRaw = Number(futurecastSummary?.fitScore);
     const summaryFitPoisoned =
       Number.isFinite(summaryFitRaw) && Math.round(summaryFitRaw) === rpm;
+    const topSchool = [...competingSchools].sort((a, b) => Number(b.pct) - Number(a.pct))[0];
     futurecastSummary = {
       ...(futurecastSummary || {
         predictedSchool: null,
@@ -288,14 +399,20 @@ function overlayLiveRpm(profile, recruiting) {
       gvProbability: futurecastSummary?.gvProbability ?? null,
       // Scheme Fit from healed player — never mirror RPM.
       fitScore: summaryFitPoisoned ? player.ufFitScore : futurecastSummary?.fitScore ?? player.ufFitScore,
-      // Heal stale stamps that crowned a legacy rival over live UF RPM.
-      ...(rpm >= rivalMax ? { predictedSchool: 'Florida' } : {}),
+      // Heal stale stamps that crowned a legacy rival over live UF RPM —
+      // or crowned Florida when a rival clearly owns the industry board.
+      ...(rpm >= rivalMax && rivalMax < 55
+        ? { predictedSchool: 'Florida' }
+        : rivalMax >= 55 && rpm + 15 < rivalMax
+          ? { predictedSchool: topSchool?.school || futurecastSummary?.predictedSchool || null }
+          : {}),
     };
   }
 
   return {
     ...profile,
     player,
+    competingSchools,
     ...(highSchoolProfile ? { highSchoolProfile } : {}),
     futurecastSummary,
     lastUpdated: new Date().toISOString(),
@@ -516,6 +633,7 @@ module.exports = {
   BUNDLE_STAMP_DIR,
   durableStampDir,
   parseUfPct,
+  parseRpmPct,
   stripLiveRpmFields,
   readStamp,
   writeStamp,
