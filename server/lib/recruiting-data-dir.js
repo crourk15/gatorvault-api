@@ -274,15 +274,27 @@ function migrateRecruitingBundleIfNeeded(dataDir = resolveRecruitingDataDir()) {
     if (rankMerge.updated) {
       console.log('[recruiting-data-dir] merged Industry ranks from bundle', rankMerge.updated);
     }
-    const boardMerge = mergeBundledOn3BoardTruthIfFresher(dataDir);
-    if (boardMerge.updated) {
-      console.log('[recruiting-data-dir] merged On3 board truth from bundle', boardMerge.updated);
-    }
+    // Defer board-truth merge — sync parse/stringify of players.json (~9MB) during
+    // recruiting-store require can spike memory right as Render health-checks /ready
+    // and contribute to exit-143 restart loops after deploy.
+    setTimeout(() => {
+      try {
+        const boardMerge = mergeBundledOn3BoardTruthIfFresher(dataDir);
+        if (boardMerge.updated) {
+          console.log('[recruiting-data-dir] merged On3 board truth from bundle', boardMerge.updated);
+        }
+      } catch (err) {
+        console.warn(
+          '[recruiting-data-dir] deferred On3 board-truth merge failed:',
+          err && err.message ? err.message : err
+        );
+      }
+    }, 45_000);
     return {
-      migrated: copied > 0 || !!rankMerge.updated || !!boardMerge.updated,
+      migrated: copied > 0 || !!rankMerge.updated,
       copied,
       rankMerge,
-      boardMerge,
+      boardMerge: { merged: false, deferred: true },
       to: dataDir,
     };
   } catch (err) {
