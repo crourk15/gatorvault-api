@@ -1,7 +1,7 @@
 /**
- * Expected home-game visitors -> Chase card "Why we chase" visit labels.
- * Data: server/data/schedule/game-visitors-2026.json (same Alderman early look as Game Week keys).
- * API-only -- no Codemagic. Clear the slug from the JSON to remove from cards.
+ * Expected home-game visitors — Chase labels + Game Week panel.
+ * Data: server/data/schedule/game-visitors-2026.json
+ * API-only list edits — no Codemagic after the panel UI is baked.
  */
 'use strict';
 
@@ -26,7 +26,7 @@ function loadDoc() {
   }
 }
 
-/** @returns {Map<string, string>} slug -> chase label (first upcoming game wins) */
+/** @returns {Map<string, string>} slug → chase label (first upcoming game wins) */
 function buildSlugLabelMap(doc = loadDoc()) {
   const map = new Map();
   const games = Array.isArray(doc?.games) ? doc.games : [];
@@ -63,7 +63,96 @@ function mergeExpectedVisitHistory(slug, visitHistory) {
   const existing = Array.isArray(visitHistory) ? visitHistory.slice() : [];
   const already = existing.some((v) => String(v?.label || '').trim() === label);
   if (already) return existing;
-  return [{ type: 'Game Day', label }, ...existing].slice(0, 4);
+  return [{ type: 'Game Day', label }, ...existing].slice(0, 8);
+}
+
+function titleCaseSlug(slug) {
+  return String(slug || '')
+    .split('-')
+    .filter(Boolean)
+    .map((w) => (w.length <= 2 ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1)))
+    .join(' ');
+}
+
+function resolveVisitorRow(slug) {
+  const key = String(slug || '')
+    .trim()
+    .toLowerCase();
+  if (!key) return null;
+  let name = titleCaseSlug(key);
+  let position = null;
+  let school = null;
+  let stars = null;
+  let classYear = null;
+  try {
+    const store = require('./recruiting-store');
+    const p = typeof store.findBySlug === 'function' ? store.findBySlug(key) : null;
+    if (p) {
+      name = String(p.name || p.fullName || name).trim() || name;
+      position = p.pos || p.position || null;
+      school = p.school || p.highSchool || null;
+      stars = p.stars != null && Number(p.stars) > 0 ? Number(p.stars) : null;
+      classYear = p.classYear != null ? Number(p.classYear) : null;
+    }
+  } catch {
+    /* optional */
+  }
+  return {
+    slug: key,
+    name,
+    position: position ? String(position) : null,
+    school: school ? String(school) : null,
+    stars,
+    classYear,
+  };
+}
+
+/**
+ * Fan-facing Game Week panel payload for one schedule game id (e.g. fau).
+ */
+function visitorsPanelForGameId(gameId) {
+  const id = String(gameId || '')
+    .trim()
+    .toLowerCase();
+  if (!id) return null;
+  const doc = loadDoc();
+  const games = Array.isArray(doc?.games) ? doc.games : [];
+  const game = games.find((g) => String(g?.gameId || '').trim().toLowerCase() === id);
+  if (!game) return null;
+  const seen = new Set();
+  const visitors = [];
+  for (const raw of Array.isArray(game.slugs) ? game.slugs : []) {
+    const row = resolveVisitorRow(raw);
+    if (!row || seen.has(row.slug)) continue;
+    const aliasKey = row.slug.replace(/-/g, '');
+    if ([...seen].some((s) => s.replace(/-/g, '') === aliasKey)) continue;
+    seen.add(row.slug);
+    visitors.push(row);
+  }
+  if (!visitors.length) return null;
+  return {
+    gameId: String(game.gameId),
+    opponent: String(game.opponent || '').trim() || null,
+    dateLabel: String(game.dateLabel || '').trim() || null,
+    chaseLabel: String(game.chaseLabel || '').trim() || null,
+    source: String(doc.source || '').trim() || null,
+    visitors,
+  };
+}
+
+/** Attach expectedVisitors onto each schedule game that has a list. */
+function attachExpectedVisitorsToGames(games) {
+  if (!Array.isArray(games)) return games;
+  return games.map((g) => {
+    if (!g || typeof g !== 'object') return g;
+    const panel = visitorsPanelForGameId(g.id);
+    if (!panel) {
+      const next = { ...g };
+      delete next.expectedVisitors;
+      return next;
+    }
+    return { ...g, expectedVisitors: panel };
+  });
 }
 
 module.exports = {
@@ -72,4 +161,7 @@ module.exports = {
   buildSlugLabelMap,
   expectedVisitLabelForSlug,
   mergeExpectedVisitHistory,
+  visitorsPanelForGameId,
+  attachExpectedVisitorsToGames,
+  resolveVisitorRow,
 };

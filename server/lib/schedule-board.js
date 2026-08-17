@@ -125,15 +125,27 @@ function normalizeDoc(raw, season) {
 function getScheduleBoard(season = 2026) {
   const year = String(season || 2026);
   const filePath = resolveReadPath(year);
+  let doc;
   try {
-    return normalizeDoc(readJson(filePath), year);
+    doc = normalizeDoc(readJson(filePath), year);
   } catch (err) {
     const fallback = bundlePath(year);
     if (filePath !== fallback && fs.existsSync(fallback)) {
-      return normalizeDoc(readJson(fallback), year);
+      doc = normalizeDoc(readJson(fallback), year);
+    } else {
+      throw err;
     }
-    throw err;
   }
+  try {
+    const { attachExpectedVisitorsToGames } = require('./game-week-visitors');
+    doc = {
+      ...doc,
+      games: attachExpectedVisitorsToGames(doc.games),
+    };
+  } catch {
+    /* optional */
+  }
+  return doc;
 }
 
 function saveScheduleBoard(raw, season = 2026) {

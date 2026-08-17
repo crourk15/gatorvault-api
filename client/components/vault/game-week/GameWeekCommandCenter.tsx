@@ -11,6 +11,7 @@ import { WinProbabilityGaugeWidget } from './WinProbabilityGaugeWidget';
 import { ScoutingRadarChart } from './ScoutingRadarChart';
 import { KeysToGameCards } from './KeysToGameCards';
 import { SwingPlayersCards } from './SwingPlayersCards';
+import { ExpectedVisitorsPanel } from './ExpectedVisitorsPanel';
 import { FilmNotesPanel } from './FilmNotesPanel';
 import { DepthChartGrid } from './DepthChartGrid';
 import { ScoutingReportPanel } from './ScoutingReportPanel';
@@ -25,7 +26,7 @@ const TABS = [
 
 const FILM_INTEL_PAYWALL = {
   message:
-    'Film Room unlocks full Game Week Intel — 3 Keys, swing players, and film notes from the matchup tape.',
+    'Film Room unlocks full Game Week Intel — 3 Keys, expected visitors, swing players, and film notes from the matchup tape.',
   ctaLabel: 'Unlock Film Room',
 } as const;
 
@@ -122,6 +123,17 @@ export function GameWeekCommandCenter({ initialGameId = 'fau', onGameChange }: P
                     </div>
                   </section>
                 </div>
+                {bundle.game.expectedVisitors?.visitors?.length ? (
+                  <section
+                    className="gv-gw-wow-panel fc-lab-panel-shell gv-gw-wow-panel--visitors"
+                    data-testid="gw-expected-visitors-panel"
+                  >
+                    <h3 className="gv-gw-wow-panel__title">Expected visitors</h3>
+                    <div className="gv-gw-wow-panel__body">
+                      <ExpectedVisitorsPanel panel={bundle.game.expectedVisitors} />
+                    </div>
+                  </section>
+                ) : null}
                 <section className="gv-gw-wow-panel fc-lab-panel-shell">
                   <h3 className="gv-gw-wow-panel__title">Film Notes</h3>
                   <div className="gv-gw-wow-panel__body">
