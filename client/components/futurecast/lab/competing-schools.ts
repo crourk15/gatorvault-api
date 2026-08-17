@@ -118,10 +118,20 @@ export function topThreatVsFlorida(
 ): { name: string; label: string; pct: number } | null {
   if (player.committedTo && isFlorida(player.committedTo)) return null;
 
-  const top = (player.competingSchools ?? [])
+  let peers = (player.competingSchools ?? [])
     .filter((s) => s?.name && Number(s.pct) > 0 && !isFlorida(s.name))
-    .sort((a, b) => Number(b.pct) - Number(a.pct))[0];
+    .sort((a, b) => Number(b.pct) - Number(a.pct));
 
+  // Drop fake 100% peer locks when a real mid-board rival exists (1→100 crumb poison).
+  const mid = peers.find((s) => {
+    const pct = Number(s.pct);
+    return pct >= 15 && pct <= 90;
+  });
+  if (mid && Number(peers[0]?.pct) >= 95) {
+    peers = peers.filter((s) => Number(s.pct) < 95);
+  }
+
+  const top = peers[0];
   if (!top) return null;
   const pct = Math.round(Number(top.pct));
   if (!Number.isFinite(pct) || pct <= 0) return null;

@@ -6,7 +6,8 @@ import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 /** Bump when high-priority payload shape changes (align with server FUTURECAST_API_CACHE_VERSION). */
-export const FUTURECAST_CLIENT_CACHE_VERSION = 17;
+/** v18: bust localStorage after Asher OSU 1→100 peer poison (and similar HP board heals). */
+export const FUTURECAST_CLIENT_CACHE_VERSION = 18;
 export const HIGH_PRIORITY_CACHE_KEY = `gv:futurecast:high-priority:v${FUTURECAST_CLIENT_CACHE_VERSION}`;
 export const HIGH_PRIORITY_YEAR = 2027;
 export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;

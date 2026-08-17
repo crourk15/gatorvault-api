@@ -5,17 +5,22 @@ const { cacheControlForPath } = require('../../lib/api-cache-policy');
 
 test('hub bundle gets CDN-friendly cache headers', () => {
   const cc = cacheControlForPath('/api/recruiting/hub/bundle');
-  assert.match(cc, /s-maxage=90/);
-  assert.match(cc, /stale-while-revalidate=120/);
+  assert.match(cc, /s-maxage=45/);
+  assert.match(cc, /stale-while-revalidate=60/);
 });
 
 test('hub ticker and class-overview get short CDN TTL', () => {
-  assert.match(cacheControlForPath('/api/recruiting/hub/ticker'), /s-maxage=90/);
-  assert.match(cacheControlForPath('/api/recruiting/hub/class-overview'), /s-maxage=90/);
+  assert.match(cacheControlForPath('/api/recruiting/hub/ticker'), /s-maxage=45/);
+  assert.match(cacheControlForPath('/api/recruiting/hub/class-overview'), /s-maxage=45/);
 });
 
 test('generic recruiting paths stay no-store', () => {
   const cc = cacheControlForPath('/api/recruiting/intel/beat');
+  assert.match(cc, /no-store/);
+});
+
+test('high-priority board stays no-store (odds heal must reach TestFlight)', () => {
+  const cc = cacheControlForPath('/api/futurecast/high-priority');
   assert.match(cc, /no-store/);
 });
 
