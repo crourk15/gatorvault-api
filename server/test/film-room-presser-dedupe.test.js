@@ -104,6 +104,40 @@ describe('Film Room presser same-event dedupe', () => {
     assert.equal(out.some((r) => r.id === 'mirror'), false);
   });
 
+  it('collapses live Aug 10 + Aug 17 Sumrall formal/short pairs', () => {
+    const out = dedupePressersByEvent([
+      {
+        id: 'f17',
+        title: 'Florida Football Press Conference | Coach Sumrall',
+        source: 'Florida Gators Football',
+        publishedAt: '2026-08-17T20:00:00.000Z',
+      },
+      {
+        id: 's17',
+        title: 'Coach Sumrall Press Conference 8-17-26',
+        source: 'Florida Gators Football',
+        publishedAt: '2026-08-17T18:00:00.000Z',
+      },
+      {
+        id: 'f10',
+        title: 'Florida Football Press Conference | Coach Sumrall',
+        source: 'Florida Gators Football',
+        publishedAt: '2026-08-10T20:00:00.000Z',
+      },
+      {
+        id: 's10',
+        title: 'Coach Sumrall Press Conference 8-10-26',
+        source: 'Florida Gators Football',
+        publishedAt: '2026-08-10T18:00:00.000Z',
+      },
+    ]);
+    assert.equal(out.length, 2);
+    assert.deepEqual(
+      out.map((r) => r.id).sort(),
+      ['f10', 'f17']
+    );
+  });
+
   it('prefers official channel over search mirror', () => {
     const out = dedupePressersByEvent([
       {
