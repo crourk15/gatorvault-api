@@ -191,6 +191,11 @@ export function isFloridaLeadingOnBoard(player: FcLabTarget): boolean {
 
   // Sole / thin board — require a real share so soft unknowns don't flood Leading.
   if (rpm != null && rpm > 0 && rpm < 25 && uf >= 50) return false;
+  // Empty peer board without a UF offer is how Girton-style disk poison ranked Closest
+  // (fake ~96% lock, peers dropped). Real sole locks (West/Dominick) carry offers.
+  const hasOffer =
+    player.hasUFOffer === true || player.processEvidence?.hasUFOffer === true;
+  if (!hasOffer) return false;
   return uf >= 25;
 }
 
@@ -231,7 +236,10 @@ export function hasCredibleBoardLead(player: FcLabTarget): boolean {
     if (!(rpm > 0) || rpm <= threat.pct || rpm < MIN_CREDIBLE_RIVAL_PCT) return false;
     return uf > threat.pct;
   }
-  // No credible rival board — need a real market share, not Est. noise.
+  // No credible rival board — need a real market share + UF offer (not Est. noise / disk lie).
+  const hasOffer =
+    player.hasUFOffer === true || player.processEvidence?.hasUFOffer === true;
+  if (!hasOffer) return false;
   return rpm >= 40 || uf >= 50;
 }
 

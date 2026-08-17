@@ -7,7 +7,7 @@ See also: `docs/APP_WEB_DRIFT.md`
 ---
 
 ## Already live on iOS (no build needed)
-- [x] Twice-daily 2028+ vault feed (7am/7pm ET) — trusted beats update existing + monitor-provision new 2028/2029/2030+ into Vault/Lab; never auto-add 2027; staff blocked; Hub proof report — API
+- [x] HP board-truth guard: durable `/var/data` merges fresher On3 topTeams/ufRpm from git bundle; heal falls back to bundle; audit script `audit-hp-board-truth.js` — API (Closest client offer gate needs Codemagic)
 - [x] App Store **1.0.15** accepted / eligible for distribution (Aug 14, 2026) — member announce email path live via Admin Hub
 - [x] Jaxen Cepeda 2028 OT Vault Scouting (Dalton Risner comp) + allowlist seed after Florida offer/game-day visit — API
 - [x] Full-profile stamps overlay live On3 Industry ranks (Wright #1 not baked #208) — API
@@ -57,6 +57,7 @@ Add a row when a change is **bundled client UI/JS** that iOS will not see until 
 
 | Added | Item | Why Codemagic | PR / commit |
 |---|---|---|---|
+| 2026-08-17 | Closest: sole-board fake Florida lock without UF offer cannot rank (Girton disk poison); real sole locks with offers still eligible | `competing-schools` in binary; API board-truth merge/heal also live | pending |
 | 2026-08-17 | Closest / Who commits next: industry-trailing residual RPM (Jernigan) cannot invent Florida lead; client `sanitizeRpmPct` accepts 1% | `competing-schools`, `uf-odds-scale` in binary; HP odds heal is API | pending |
 | 2026-08-17 | Articles hub: Authors + Tags filter Latest + live counts/tags from published articles (no fake 48/32/21) | `InsiderArticlesPage` + insider-api/data + insider-hub CSS in binary; API authors/tags also live | pending |
 | 2026-08-17 | Articles hub: remove duplicate Related rail (Related stays on article reader only); Latest list labeled | `InsiderArticlesPage` in binary | pending |

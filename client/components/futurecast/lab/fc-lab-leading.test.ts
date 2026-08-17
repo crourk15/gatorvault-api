@@ -4,6 +4,7 @@ import {
   credibleThreatVsFlorida,
   floridaLeadMargin,
   hasClosestCommitProcessEvidence,
+  hasCredibleBoardLead,
   isFloridaLeadingOnBoard,
   isNextCommitPick,
   nextCommitScore,
@@ -100,6 +101,42 @@ test('rival-led board with poisoned high GV is not Closest', () => {
   });
   assert.equal(isFloridaLeadingOnBoard(girton), false);
   assert.equal(isNextCommitPick(girton), false);
+});
+
+test('sole-board fake lock without UF offer is not Closest (Girton disk poison)', () => {
+  const girtonPoison = target({
+    slug: 'denairo-girton-jr',
+    name: 'DeNairo Girton Jr',
+    ufProbability: 71,
+    ufRpmPct: 96,
+    competingSchools: [],
+    hasUFOffer: false,
+    closestCommitEligible: true,
+    processEvidence: warmProcess({
+      hasUFOffer: false,
+      flOfferCount: 0,
+      reasons: ['florida_visit', 'pursuit_intel', 'intel', 'recent_visit'],
+    }),
+  });
+  assert.equal(isFloridaLeadingOnBoard(girtonPoison), false);
+  assert.equal(hasCredibleBoardLead(girtonPoison), false);
+  assert.equal(isNextCommitPick(girtonPoison), false);
+});
+
+test('real sole-board Florida lock with offer stays Closest-eligible', () => {
+  const west = target({
+    slug: 'hudson-west',
+    name: 'Hudson West',
+    ufProbability: 75,
+    ufRpmPct: 99,
+    competingSchools: [],
+    hasUFOffer: true,
+    closestCommitEligible: true,
+    processEvidence: warmProcess(),
+  });
+  assert.equal(isFloridaLeadingOnBoard(west), true);
+  assert.equal(hasCredibleBoardLead(west), true);
+  assert.equal(isNextCommitPick(west), true);
 });
 
 test('empty/thin rival boards do not outrank contested board leads', () => {
