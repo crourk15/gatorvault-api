@@ -65,4 +65,27 @@ describe('Lab High Priority uses staff-chase ranking', () => {
       'Hudson is outside chase-hot top-N — proving the old slice would have dropped him'
     );
   });
+
+  it('2028 HP cards surface visit lines + chase notes from intel (API-only)', async () => {
+    const { buildHighPriorityPayload } = require('../../api/futurecast/high-priority.ts');
+    const payload = await buildHighPriorityPayload(2028);
+    const hudson = payload.players.find((p) => p.slug === 'hudson-west');
+    assert.ok(hudson, 'Hudson West on board');
+    assert.ok(
+      Array.isArray(hudson.visitHistory) && hudson.visitHistory.length > 0,
+      'Hudson must have visitHistory from FL UV logs / Expected merge'
+    );
+    assert.match(
+      String(hudson.visitHistory.map((v) => v.label).join(' | ')),
+      /UV|OV|Home visit|Expected/i
+    );
+    // Rising stays snapshot-driven — enrich must not invent movement.
+    assert.ok(hudson.delta7d == null || Number.isFinite(Number(hudson.delta7d)));
+
+    const withNotes = payload.players.filter((p) => String(p.notePreview || '').trim());
+    assert.ok(
+      withNotes.length >= 1,
+      'at least one chase notePreview from profile/intel process language'
+    );
+  });
 });
