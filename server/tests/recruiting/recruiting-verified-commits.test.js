@@ -252,6 +252,17 @@ test('getHubCommits ignores stale store rows when On3 snapshot defines the class
         on3Id: String(900000 + i),
         stars: 3,
       });
+      // Bare protected shells used to bypass the snapshot gate and inflate home counts.
+      bloated.push({
+        slug: `protected-fake-commit-${i}`,
+        name: `Protected Fake ${i}`,
+        classYear: 2027,
+        status: 'committed',
+        committedTo: 'Florida',
+        category: 'recruit',
+        protected: true,
+        stars: 4,
+      });
     }
     return base.concat(bloated);
   };
@@ -260,7 +271,7 @@ test('getHubCommits ignores stale store rows when On3 snapshot defines the class
   assert.equal(
     commits.length,
     expected,
-    `bloated store must not inflate 2027 commits (${commits.length} vs ${expected})`
+    `bloated/protected store must not inflate 2027 commits (${commits.length} vs ${expected})`
   );
 
   jsonStore.getAllPlayers = originalGetAll;

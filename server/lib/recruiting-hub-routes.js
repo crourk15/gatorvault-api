@@ -564,7 +564,8 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/hub/ticker', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `hub:elite:ticker:${year}`;
+      const { hubTickerCacheKey } = require('./recruiting-hub-cache');
+      const cacheKey = hubTickerCacheKey(year);
       return sendHubJson(res, {
         cacheKey,
         year,

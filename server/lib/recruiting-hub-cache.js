@@ -10,7 +10,7 @@ const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
 const HUB_SNAPSHOT_DIR = path.join(__dirname, '..', 'hub-snapshot');
 
 /** Bump when HS-only class commit metrics logic changes. */
-const HUB_METRICS_CACHE_REV = 'hs7';
+const HUB_METRICS_CACHE_REV = 'hs8';
 
 /** Bump when footprint commit/target tallies logic changes. */
 const FOOTPRINT_CACHE_REV = 'fp3';
@@ -21,12 +21,19 @@ const FOOTPRINT_CACHE_REV = 'fp3';
  */
 const COMMITS_CACHE_REV = 'c5';
 
+/** Bump when Home NOW locked-commit ticker line must invalidate. */
+const TICKER_CACHE_REV = 't2';
+
 function hubFootprintCacheKey(year) {
   return `hub:elite:footprint:${FOOTPRINT_CACHE_REV}:${year}`;
 }
 
 function hubCommitsCacheKey(year) {
   return `hub:elite:commits:${COMMITS_CACHE_REV}:${year}`;
+}
+
+function hubTickerCacheKey(year) {
+  return `hub:elite:ticker:${TICKER_CACHE_REV}:${year}`;
 }
 
 function recruitingFootprintCacheKey(year) {
@@ -261,6 +268,8 @@ function durableMetaForCacheKey(cacheKey) {
   if (m) return { endpoint: 'commits', year: Number(m[1]), spread: false };
   m = cacheKey.match(/^hub:elite:commits:(\d+)$/);
   if (m) return { endpoint: 'commits', year: Number(m[1]), spread: false };
+  m = cacheKey.match(/^hub:elite:ticker:[^:]+:(\d+)$/);
+  if (m) return { endpoint: 'ticker', year: Number(m[1]), spread: false };
   m = cacheKey.match(/^hub:elite:ticker:(\d+)$/);
   if (m) return { endpoint: 'ticker', year: Number(m[1]), spread: false };
   m = cacheKey.match(/^hub:elite:footprint:[^:]+:(\d+)$/);
@@ -391,7 +400,7 @@ function priorityLiteWarmJobs(elite, years) {
     // Periodic Class tabs + home NOW ticker — API/data live without Codemagic.
     jobs.push([hubCommitsCacheKey(year), () => elite.buildHubCommits(year)]);
     jobs.push([hubFootprintCacheKey(year), () => elite.buildHubFootprint(year)]);
-    jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year)]);
+    jobs.push([hubTickerCacheKey(year), () => elite.buildHubTicker(year)]);
   }
   return jobs;
 }
@@ -464,7 +473,7 @@ function secondaryWarmJobs(elite, years) {
     jobs.push([`recruiting:heat-index:${year}`, () => elite.buildHubHeatIndex(year)]);
     jobs.push([`recruiting:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
     jobs.push([recruitingFootprintCacheKey(year), () => elite.buildHubFootprint(year)]);
-    jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year)]);
+    jobs.push([hubTickerCacheKey(year), () => elite.buildHubTicker(year)]);
     jobs.push([hubCommitsCacheKey(year), () => elite.buildHubCommits(year)]);
     jobs.push([`hub:elite:battles:${year}`, () => elite.buildHubBattles(year)]);
     jobs.push([`hub:elite:positions:v2:${year}`, () => elite.buildHubPositions(year)]);
@@ -1353,8 +1362,10 @@ module.exports = {
   HUB_METRICS_CACHE_REV,
   FOOTPRINT_CACHE_REV,
   COMMITS_CACHE_REV,
+  TICKER_CACHE_REV,
   classSnapshotCacheKey,
   eliteClassOverviewCacheKey,
+  hubTickerCacheKey,
   eliteClassOverviewAllCacheKey,
   eliteBundleCacheKey,
   hubFootprintCacheKey,

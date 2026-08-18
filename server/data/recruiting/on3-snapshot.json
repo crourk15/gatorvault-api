@@ -1738,6 +1738,29 @@
           "category": "recruit",
           "skinny": "",
           "sourceStatus": "Committed"
+        },
+        "on3:284617": {
+          "on3Id": "284617",
+          "name": "Stive-Bentley Keumajou",
+          "pos": "DL",
+          "classYear": 2027,
+          "school": "Coral Gables Senior",
+          "hometownCity": "Coral Gables",
+          "hometownState": "FL",
+          "state": "FL",
+          "htWt": "6-2.5 / 295",
+          "stars": 3,
+          "rating": 88.03333333333333,
+          "natlRank": 640,
+          "posRank": null,
+          "stateRank": null,
+          "inState": true,
+          "status": "committed",
+          "commitDate": "2026-05-06",
+          "committedTo": "Florida",
+          "category": "recruit",
+          "skinny": "DL · 3★ · Coral Gables Senior · #640 natl",
+          "sourceStatus": "Committed"
         }
       },
       "rankings": {

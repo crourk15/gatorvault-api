@@ -212,7 +212,9 @@ function filterSnapshotAuthoritativeCommits(players, snapshotCommits, classYear)
     const slug = String(p.slug || '').toLowerCase();
     if (snapshotSlugs.has(slug)) return true;
     if (p.on3Id && snapshotOn3Ids.has(String(p.on3Id))) return true;
-    if (p.on3Source === 'on3-board-sync' || p.protected === true) return true;
+    // Live On3 board sync may add a signee before the bundled snapshot refreshes.
+    // Do NOT allow bare protected:true — that re-inflated home "N commits" past the card list.
+    if (p.on3Source === 'on3-board-sync' || p.on3Source === 'on3-portal-sync') return true;
     if (isVerifiedUfCommitSlug(slug, year)) return true;
     return false;
   });
