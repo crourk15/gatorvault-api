@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-18T01:05:39.000Z",
+  "description": "Slim sync soft plate for Lab Names to know \u2014 never parse full players.json on /ready path.",
+  "entries": [
+    {
+      "slug": "derrick-hooker",
+      "name": "Derrick Hooker",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "University Lab (Rouge, LA)",
+      "state": "MS",
+      "stars": null
+    },
+    {
+      "slug": "jd-jackson",
+      "name": "JD Jackson",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "The First Academy (Orlando, FL)",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "eddison-king",
+      "name": "Eddison King",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "La Vega (Waco, TX)",
+      "state": "TX",
+      "stars": null
+    },
+    {
+      "slug": "jackson-jenkins",
+      "name": "Jackson Jenkins",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "Northern Nash (Mount, NC)",
+      "state": "NC",
+      "stars": null
+    },
+    {
+      "slug": "timothy-cole",
+      "name": "Timothy Cole",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "Gainesville (Gainesville, GA)",
+      "state": "GA",
+      "stars": null
+    },
+    {
+      "slug": "brayden-boults",
+      "name": "Brayden Boults",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "Crestwood (Sumter, SC)",
+      "state": "SC",
+      "stars": null
+    },
+    {
+      "slug": "amarian-mcrae",
+      "name": "Amarian McRae",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "Cardinal Mooney (Sarasota, FL)",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "lord-malik-heru",
+      "name": "Lord Malik Heru",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "Indian River (Chesapeake, VA)",
+      "state": "VA",
+      "stars": null
+    },
+    {
+      "slug": "trey-wells",
+      "name": "Trey Wells",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "St. Frances Academy (Baltimore, MD)",
+      "state": "MD",
+      "stars": null
+    },
+    {
+      "slug": "matthew-pangaro",
+      "name": "Matthew Pangaro",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "The Taft School (Watertown, CT)",
+      "state": "CT",
+      "stars": null
+    },
+    {
+      "slug": "jacorey-shockley",
+      "name": "Jacorey Shockley",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "McEachern (Springs, GA)",
+      "state": "GA",
+      "stars": null
+    },
+    {
+      "slug": "adrian-reynolds",
+      "name": "Adrian Reynolds",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "Fort Lauderdale (Lauderdale, FL)",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "xzavier-corbin",
+      "name": "X'Zavier Corbin",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "Eau Gallie (Melbourne, FL)",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "captain-rolle",
+      "name": "Captain Rolle",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "Eau Gallie (Melbourne, FL)",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "nolan-downes",
+      "name": "Nolan Downes",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "Manatee (Bradenton, FL)",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "khayel-sam-fong-talia",
+      "name": "Khayel Sam Fong-Talia",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "South Forsyth (Cumming, GA)",
+      "state": "SC",
+      "stars": null
+    },
+    {
+      "slug": "jase-gibson",
+      "name": "Jase \u202aGibson \u202c",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "West Orange (Garden, FL)",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "james-allen",
+      "name": "James Allen",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "Carrollwood Day (Tampa, FL)",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "fredner-frederic-jr",
+      "name": "Fredner Frederic Jr",
+      "classYear": 2029,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "Booker T. Washington (Miami, FL)",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "young-fl-qb-2030",
+      "name": "Jaylen Brooks",
+      "classYear": 2030,
+      "tier": "watchlist",
+      "pos": "QB",
+      "school": "Lake Wales HS, FL",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "young-fl-wr-2030",
+      "name": "Marcus Cole",
+      "classYear": 2030,
+      "tier": "watchlist",
+      "pos": "WR",
+      "school": "St. Thomas Aquinas, FL",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "young-fl-ath-2030",
+      "name": "DeShawn Rivers",
+      "classYear": 2030,
+      "tier": "watchlist",
+      "pos": "ATH",
+      "school": "Edgewater HS, Orlando FL",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "young-fl-dl-2030",
+      "name": "Terrence Wade",
+      "classYear": 2030,
+      "tier": "watchlist",
+      "pos": "DL",
+      "school": "Carol City HS, FL",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "young-fl-lb-2030",
+      "name": "Isaiah Grant",
+      "classYear": 2030,
+      "tier": "watchlist",
+      "pos": "LB",
+      "school": "Chaminade-Madonna, FL",
+      "state": "FL",
+      "stars": null
+    },
+    {
+      "slug": "young-fl-rb-2030",
+      "name": "Cam Johnson",
+      "classYear": 2030,
+      "tier": "watchlist",
+      "pos": "RB",
+      "school": "Apopka HS, FL",
+      "state": "FL",
+      "stars": null
+    }
+  ]
+}
