@@ -52,6 +52,7 @@ These ship via Render / Netlify API — current App Store binary (1.0.17) picks 
 - [x] Live depth chart API — `GET/PUT /api/roster/depth-chart` fall-camp board (web + post-Codemagic iOS content path)
 - [x] FutureCast HP movement: hydrate 7d deltas from stamp history + ignore ancient baselines (API seed refresh)
 - [x] Recruiting class counts: enrolled On3 signees no longer wiped by roster-collision block (2026 HS ~21, 2027 ~26) — API
+- [x] 2026 Game Week uniform schedule (helmet/jersey/pants per game from `@GatorsFB` lineup) — API `/api/schedule` (matchup hero strip needs Codemagic)
 
 ---
 
