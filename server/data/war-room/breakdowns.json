@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-14T12:53:51.359Z",
+  "updatedAt": "2026-08-18T21:30:02.702Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -16466,27 +16466,31 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-07-11"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "GatorVault film desk (Hudl)",
+          "url": "https://www.hudl.com/embed/video/3/23378604/6841ab6937166c0c8f04bad5",
+          "publishedAt": "2026-08-18"
         }
       ],
       "strengths": [
-        "Seth Williams thought he would already have his recruitment behind him.",
-        "Instead, the four-star safety from Atlanta Lakeside continues to weigh two"
+        "Steele flexes wide as a big-slot / mismatch TE — not glued to the tackle — and creates vertical seams with 6-6 length.",
+        "Steele stacks the second level on seams and clears light coverage with stride length before the mass arrives.",
+        "Steele finishes in space after the catch — ball security through contact while still accelerating past smaller defenders."
       ],
-      "weaknesses": [],
-      "comparison": null,
-      "schemeFit": null,
-      "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Seth Williams thought he would already have his recruitment behind him.  Instead, the four-star safety from Atlanta Lakeside continues to weigh two",
-      "recruitingStory": null,
+      "weaknesses": [
+        "Steele still needs functional mass at 6-6 / 210 before he can sustain every-down in-line work versus SEC edge setters."
+      ],
+      "comparison": "Steele comps to Mike Gesicki — 6-6 athletic TE mold; same height family, flex alignments, and mismatch length who grows into a complete hybrid (size-matched; not a Florida-alum default).",
+      "schemeFit": "Steele fits a 12/11 TE room that values flexed mismatch snaps and growing in-line will as the frame fills.",
+      "staffNotes": "FILM VERIFIED 2026-08-18 from Orange Beach FR 2024 Hudl (Lee Steele FR 2024 Clips, ~76s). Watched: flexed wide / big-slot alignments, seam stacks with length over the second level, finish in space after the catch. Cleared poisoned Seth Williams / Atlanta Lakeside safety notes from prior War Room row. Comp size-matched Mike Gesicki (6-6) for 6-6 / 210; skipped Florida-alum default.",
+      "projection": "Steele projects as add mass Year 1–2, earn package / mismatch snaps, then compete for a hybrid TE role — starter upside as a move/Y who wins with length before the complete in-line base arrives.",
+      "insiderNotes": "Steele is a 6-6 / 210 Orange Beach tight end who wins early with flex alignments and seam length over defensive backs. Freshman tape shows him stacked as a big-slot mismatch who finishes in space after the catch. Mass is the growth item — the length and mismatch traits are already Florida-relevant.",
+      "recruitingStory": "Lee Steele is a 3-star TE · listed 6-6 / 210 · Orange Beach (AL) · Natl #388 · Pos #20 · State #13 — Florida tracking with McKissack offer; fall game-day visit locked; UF RPM ~11%.",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-07-11T05:15:59.581Z"
+      "updatedAt": "2026-08-18T21:30:02.692Z",
+      "filmWatched": true
     },
     "samuel-bailey": {
       "playerSlug": "samuel-bailey",
