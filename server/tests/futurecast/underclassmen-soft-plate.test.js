@@ -32,6 +32,18 @@ describe('underclassmen soft plate (2029-30 Names to know)', () => {
     assert.ok(withSchool.length >= 1, 'younger soft rows need school for Lab gate');
   });
 
+
+  it('soft plate never sync-parses full players.json', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'lib', 'underclassmen-soft-plate.js'),
+      'utf8'
+    );
+    assert.doesNotMatch(src, /loadRecruitingPlayersJsonSync/);
+    assert.doesNotMatch(src, /resolveRecruitingDataDir/);
+    assert.doesNotMatch(src, /['"]players\.json['"]/);
+    assert.match(src, /younger-prospects-soft\.json/);
+  });
+
   it('underclassmen GET wires softOnDeferred like Early Discovery', () => {
     const src = fs.readFileSync(
       path.join(__dirname, '..', '..', 'api', 'futurecast', 'underclassmen.ts'),

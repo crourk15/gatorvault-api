@@ -2,6 +2,9 @@
  * Sync soft plate for GET /api/futurecast/underclassmen when Tier B would
  * otherwise return empty status:building / deferred_rebuild.
  * Powers Lab "Names to know — 2029 & 2030" without awaiting Postgres.
+ *
+ * CRITICAL: never sync-parse full players.json here — that starved Render /ready
+ * past 5s and crash-looped the API after #496. Use slim younger-prospects-soft.json.
  */
 'use strict';
 
@@ -9,53 +12,35 @@ const fs = require('fs');
 const path = require('path');
 const { getAllowlistSet } = require('./recruiting-target-allowlist');
 const { isActiveUfTarget } = require('./recruiting-target-filters');
-const {
-  isHubCommittedStatus,
-  isHubFloridaCommitStatus,
-} = require('./recruiting-store');
 const { sortUnderclassmenForWatchboard } = require('./underclassmen-discovery-enrich');
 
 const EARLY_WATCHLIST_PATH = path.join(__dirname, '../data/futurecast/early-watchlist.json');
+const YOUNGER_SOFT_PATH = path.join(__dirname, '../data/futurecast/younger-prospects-soft.json');
 const DEFAULT_YEARS = [2028, 2029, 2030];
 
-function loadEarlyWatchEntries() {
+function readJsonSafe(filePath) {
   try {
-    const doc = JSON.parse(fs.readFileSync(EARLY_WATCHLIST_PATH, 'utf8'));
-    return Array.isArray(doc.entries) ? doc.entries : [];
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
   } catch {
-    return [];
+    return null;
   }
 }
 
-function loadRecruitingPlayersJsonSync() {
-  const candidates = [];
-  try {
-    const { resolveRecruitingDataDir } = require('./recruiting-data-dir');
-    candidates.push(path.join(resolveRecruitingDataDir(), 'players.json'));
-  } catch {
-    /* fall through */
-  }
-  candidates.push(path.join(__dirname, '../data/recruiting/players.json'));
-  for (const filePath of candidates) {
-    try {
-      const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-      const list = Array.isArray(raw) ? raw : raw.players || [];
-      if (list.length) return list;
-    } catch {
-      /* try next */
-    }
-  }
-  return [];
+function loadEarlyWatchEntries() {
+  const doc = readJsonSafe(EARLY_WATCHLIST_PATH);
+  return Array.isArray(doc && doc.entries) ? doc.entries : [];
+}
+
+/** Slim 2029/2030 identity rows — never full players.json. */
+function loadYoungerSoftEntries() {
+  const doc = readJsonSafe(YOUNGER_SOFT_PATH);
+  return Array.isArray(doc && doc.entries) ? doc.entries : [];
 }
 
 function loadTargetBoardTargetsSync(classYear) {
-  try {
-    const boardPath = path.join(__dirname, `../data/recruiting/${classYear}-target-board.json`);
-    const doc = JSON.parse(fs.readFileSync(boardPath, 'utf8'));
-    return Array.isArray(doc.targets) ? doc.targets : [];
-  } catch {
-    return [];
-  }
+  const boardPath = path.join(__dirname, `../data/recruiting/${classYear}-target-board.json`);
+  const doc = readJsonSafe(boardPath);
+  return Array.isArray(doc && doc.targets) ? doc.targets : [];
 }
 
 function softRowId(slug) {
@@ -114,7 +99,7 @@ function bucketForYear(classYear, targets, watchlist) {
 
 function buildUnderclassmenSoftPlate(years = DEFAULT_YEARS) {
   const earlyEntries = loadEarlyWatchEntries();
-  const storePlayers = loadRecruitingPlayersJsonSync();
+  const youngerSoft = loadYoungerSoftEntries();
   const classes = {};
   const flat = [];
 
@@ -129,29 +114,17 @@ function buildUnderclassmenSoftPlate(years = DEFAULT_YEARS) {
       for (const raw of allow) {
         const slug = String(raw || '').toLowerCase();
         if (!slug) continue;
-        const board = boardBySlug.get(slug);
-        const store = storePlayers.find(
-          (p) => String(p.slug || '').toLowerCase() === slug && Number(p.classYear) === 2028
-        );
+        const board = boardBySlug.get(slug) || {};
         bySlug.set(
           slug,
           softUnderclassmenRow({
             slug,
-            name: String((store && store.name) || (board && board.name) || slug),
+            name: String(board.name || slug),
             classYear: 2028,
-            position: String(
-              (store && (store.pos || store.position)) ||
-                (board && (board.pos || board.position)) ||
-                ''
-            ),
-            school: (store && store.school) || (board && board.school) || null,
-            state: (store && store.state) || (board && board.state) || null,
-            stars:
-              store && store.stars != null
-                ? Number(store.stars)
-                : board && board.stars != null
-                  ? Number(board.stars)
-                  : null,
+            position: String(board.pos || board.position || ''),
+            school: board.school || null,
+            state: board.state || null,
+            stars: board.stars != null ? Number(board.stars) : null,
             tier: 'target',
             allowlistTarget: true,
           })
@@ -160,24 +133,24 @@ function buildUnderclassmenSoftPlate(years = DEFAULT_YEARS) {
     }
 
     if (year === 2029 || year === 2030) {
-      for (const p of storePlayers) {
-        if (Number(p.classYear) !== year) continue;
-        if (isHubCommittedStatus(p) || isHubFloridaCommitStatus(p)) continue;
-        const cat = String(p.category || '').toLowerCase();
-        if (!(cat === 'target' || cat === 'recruit' || cat === '')) continue;
-        const slug = String(p.slug || '').toLowerCase();
-        if (!slug || !isActiveUfTarget(p)) continue;
+      for (const entry of youngerSoft) {
+        if (Number(entry.classYear) !== year) continue;
+        const slug = String(entry.slug || '').toLowerCase();
+        if (!slug || !isActiveUfTarget(entry)) continue;
+        const tier =
+          year === 2030 || entry.tier === 'watchlist' ? 'watchlist' : 'target';
         bySlug.set(
           slug,
           softUnderclassmenRow({
             slug,
-            name: String(p.name || slug),
+            name: String(entry.name || slug),
             classYear: year,
-            position: String(p.pos || p.position || ''),
-            school: p.school || p.highSchool || null,
-            state: p.state || null,
-            stars: p.stars != null ? Number(p.stars) : null,
-            tier: year === 2030 ? 'watchlist' : 'target',
+            position: String(entry.pos || entry.position || ''),
+            school: entry.school || null,
+            state: entry.state || null,
+            stars: entry.stars != null ? Number(entry.stars) : null,
+            tier,
+            discoveryScore: entry.discoveryScore,
           })
         );
       }
@@ -229,6 +202,6 @@ function buildUnderclassmenSoftPlate(years = DEFAULT_YEARS) {
 
 module.exports = {
   buildUnderclassmenSoftPlate,
-  loadRecruitingPlayersJsonSync,
+  loadYoungerSoftEntries,
   DEFAULT_YEARS,
 };
