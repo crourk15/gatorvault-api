@@ -179,7 +179,6 @@ function YoungerProspectsLabBoard({
                     <VaultBigBoardCard
                       key={p.slug}
                       model={modelFromYoungerProspect(p)}
-                      mode="early-discovery"
                       profileContext="futurecast"
                     />
                   ))}
