@@ -147,7 +147,9 @@ async function main() {
   let touches = [];
   // Ping-only by default. Legacy KEEPALIVE_HUB_TOUCH is IGNORED — Render Dashboard
   // leftovers kept re-enabling the hub/FutureCast stampede and crash-looping /ready.
-  // Opt back in only with KEEPALIVE_FULL_TOUCH=true AND API_STAY_GREEN≠true.
+  // FULL_TOUCH is emergency-only: each HP touch schedules a sync ~9MB players.json
+  // heal warm on the web dyno and has crash-looped Render /ready (Aug 2026).
+  // Prefer boot spaced elite + hub-warm / hub-refresh crons for Lab heat.
   const stayGreen = process.env.API_STAY_GREEN !== 'false';
   const hubTouchAllowed = !stayGreen && process.env.KEEPALIVE_FULL_TOUCH === 'true';
   if (hubTouchAllowed) {
