@@ -206,6 +206,37 @@ function processFreshnessNudge(player, { visitHistory = [], intelRows = [], nowM
   return Math.round(Math.min(4.5, nudge) * 10) / 10;
 }
 
+
+/**
+ * Load recruiting players.json once into a slug map (normalize lightly).
+ * Avoids N× findBySlug sync parses that starve Render /ready on HP rebuild.
+ */
+function loadRecruitingBySlugMap() {
+  const map = new Map();
+  try {
+    const store = require('./recruiting-store');
+    const fs = require('fs');
+    const file = store.PLAYERS_PATH;
+    if (!file || !fs.existsSync(file)) return map;
+    const rows = JSON.parse(fs.readFileSync(file, 'utf8'));
+    if (!Array.isArray(rows)) return map;
+    for (const row of rows) {
+      const slug = slugKey(row?.slug || row?.id);
+      if (!slug || map.has(slug)) continue;
+      map.set(slug, {
+        slug,
+        skinny: row.skinny || null,
+        profileNote: row.profileNote || row.profile_note || null,
+        ufStatus: row.uf_status || row.ufStatus || null,
+        ufOvStatus: row.ufOvStatus || row.uf_ov_status || null,
+      });
+    }
+  } catch {
+    /* optional */
+  }
+  return map;
+}
+
 /**
  * Enrich HP players in place-friendly map: visitHistory, notePreview, skinny, priority nudge.
  */
@@ -224,18 +255,8 @@ function enrichHighPriorityChaseCards(players, opts = {}) {
 
   let recruitingBySlug = opts.recruitingBySlug || null;
   if (!recruitingBySlug) {
-    recruitingBySlug = new Map();
-    try {
-      const store = require('./recruiting-store');
-      for (const p of players || []) {
-        const slug = slugKey(p?.slug);
-        if (!slug || recruitingBySlug.has(slug)) continue;
-        const local = typeof store.findBySlug === 'function' ? store.findBySlug(slug) : null;
-        if (local) recruitingBySlug.set(slug, local);
-      }
-    } catch {
-      /* optional */
-    }
+    // ONE players.json parse — never N× findBySlug (each re-reads ~9MB and starved /ready).
+    recruitingBySlug = loadRecruitingBySlugMap();
   }
 
   let intelBySlug = opts.intelBySlug || null;
@@ -298,6 +319,7 @@ module.exports = {
   pickChaseNotePreview,
   processFreshnessNudge,
   enrichHighPriorityChaseCards,
+  loadRecruitingBySlugMap,
   looksLikeTraitOrRankPlate,
   shortVisitDate,
   parseVisitTs,

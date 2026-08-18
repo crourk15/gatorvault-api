@@ -24,6 +24,16 @@ describe('Lab High Priority uses staff-chase ranking', () => {
     );
   });
 
+
+  it('hot-target board scores with one players.json parse (no N× findBySlug)', () => {
+    const src = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'lib', 'hot-florida-targets.js'),
+      'utf8'
+    );
+    assert.match(src, /loadHotScoreRecruitingBySlug/);
+    assert.match(src, /ONE players\.json parse/);
+  });
+
   it('2028 discovery board ranks staff-side chase over bare high UF fit', async () => {
     const { buildChaseFeatureIndex, computeChaseScore } = require('../../lib/uf-chase-score');
     const index = buildChaseFeatureIndex({ classYear: 2028 });

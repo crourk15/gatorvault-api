@@ -87,6 +87,20 @@ describe('hp-chase-card-enrich', () => {
     assert.ok(nudge <= 4.5);
   });
 
+
+  it('loads recruiting map once — never N× findBySlug on enrich', () => {
+    const src = require('fs').readFileSync(
+      require('path').join(__dirname, '..', 'lib', 'hp-chase-card-enrich.js'),
+      'utf8'
+    );
+    assert.match(src, /loadRecruitingBySlugMap/);
+    assert.match(src, /ONE players\.json parse/);
+    assert.doesNotMatch(
+      src,
+      /for \(const p of players[\s\S]*findBySlug/
+    );
+  });
+
   it('enrichHighPriorityChaseCards fills visitHistory + notePreview and keeps delta7d', () => {
     const players = enrichHighPriorityChaseCards(
       [
