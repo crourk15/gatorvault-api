@@ -337,72 +337,119 @@ let healTruthWarmAt = 0;
 let healTruthWarmInFlight: Promise<void> | null = null;
 const HEAL_TRUTH_TTL_MS = 5 * 60_000;
 
+function yieldHealEventLoop(): Promise<void> {
+  return new Promise((resolve) => setImmediate(resolve));
+}
+
 export function ensureHealPlayersWarm(): Promise<void> {
   scheduleHealPlayersWarm();
   return healTruthWarmInFlight || Promise.resolve();
 }
 
+/**
+ * Build slim slug→board-truth index from players.json.
+ * CRITICAL: never start from the HP GET/sanitize path — sync JSON.parse of ~9MB
+ * blocked Render /ready past 5s under keepalive FULL_TOUCH (Aug 2026 crash loop).
+ * Boot/cron call ensureHealPlayersWarm(); request heal only reads the Map.
+ */
 function scheduleHealPlayersWarm(): void {
   if (healTruthWarmInFlight) return;
   if (healTruthBySlug.size && Date.now() - healTruthWarmAt < HEAL_TRUTH_TTL_MS) return;
-  healTruthWarmInFlight = Promise.resolve()
-    .then(() => {
-      const fs = require('node:fs') as typeof import('node:fs');
-      const path = require('node:path') as typeof import('node:path');
-      const { resolveRecruitingDataDir, BUNDLE_DIR } = require('../../lib/recruiting-data-dir') as {
-        resolveRecruitingDataDir: () => string;
-        BUNDLE_DIR: string;
-      };
-      const { sanitizeRpmPct } = require('../../lib/uf-probability-utils') as {
-        sanitizeRpmPct: (v: unknown) => number | null;
-      };
-      const files = [
-        path.join(resolveRecruitingDataDir(), 'players.json'),
-        path.join(BUNDLE_DIR, 'players.json'),
-      ];
-      const seen = new Set<string>();
-      const next = new Map<string, HealBoardTruth>();
-      for (const file of files) {
-        const key = path.resolve(file);
-        if (seen.has(key)) continue;
-        seen.add(key);
-        try {
-          if (!fs.existsSync(file)) continue;
-          const raw = JSON.parse(fs.readFileSync(file, 'utf8'));
-          const rows = (Array.isArray(raw) ? raw : raw.players || []) as Array<
-            Record<string, unknown>
-          >;
-          for (const player of rows) {
-            const slug = String(player?.slug || '').toLowerCase();
-            if (!slug) continue;
-            const truth = boardTruthFromPlayer(player, sanitizeRpmPct);
-            const prev = next.get(slug);
-            if (!prev) {
-              next.set(slug, truth);
-              continue;
-            }
-            // Prefer richer peer boards / lower Florida share when merging durable+bundle.
-            if (truth.storeComps.length > prev.storeComps.length) prev.storeComps = truth.storeComps;
-            if (
-              truth.boardRpm != null &&
-              (prev.boardRpm == null || (prev.boardRpm >= 70 && truth.boardRpm + 40 < prev.boardRpm))
-            ) {
-              prev.boardRpm = truth.boardRpm;
-            }
-            if (
-              truth.storeRpm != null &&
-              (prev.storeRpm == null || (prev.storeRpm >= 70 && truth.storeRpm + 40 < prev.storeRpm))
-            ) {
-              prev.storeRpm = truth.storeRpm;
-            }
-          }
-        } catch {
-          /* try next file */
-        }
+
+  const deferMs = Math.max(
+    250,
+    parseInt(process.env.HP_HEAL_WARM_DEFER_MS || '1500', 10) || 1500
+  );
+  const rssLimit = parseInt(process.env.HP_HEAL_WARM_RSS_MB || '750', 10) || 750;
+  const chunkSize = Math.max(
+    50,
+    parseInt(process.env.HP_HEAL_WARM_CHUNK || '200', 10) || 200
+  );
+
+  healTruthWarmInFlight = new Promise<void>((resolve) => {
+    setTimeout(() => resolve(), deferMs);
+  })
+    .then(async () => {
+      const rssMb = Math.round(process.memoryUsage().rss / 1024 / 1024);
+      if (rssMb >= rssLimit) {
+        console.warn('[futurecast-hp] heal players warm skipped — RSS', rssMb, '>=', rssLimit);
+        return;
       }
-      healTruthBySlug.clear();
-      for (const [slug, truth] of next) healTruthBySlug.set(slug, truth);
-      healTruthWarmAt = Date.now();
+      const { runHeavyJob } = require('../../lib/heavy-job-gate') as {
+        runHeavyJob: (name: string, fn: () => Promise<unknown>) => Promise<unknown>;
+      };
+      await runHeavyJob('hp-heal-players-warm', async () => {
+        const fs = require('node:fs') as typeof import('node:fs');
+        const fsp = fs.promises;
+        const path = require('node:path') as typeof import('node:path');
+        const { resolveRecruitingDataDir, BUNDLE_DIR } = require('../../lib/recruiting-data-dir') as {
+          resolveRecruitingDataDir: () => string;
+          BUNDLE_DIR: string;
+        };
+        const { sanitizeRpmPct } = require('../../lib/uf-probability-utils') as {
+          sanitizeRpmPct: (v: unknown) => number | null;
+        };
+        const files = [
+          path.join(resolveRecruitingDataDir(), 'players.json'),
+          path.join(BUNDLE_DIR, 'players.json'),
+        ];
+        const seen = new Set<string>();
+        const next = new Map<string, HealBoardTruth>();
+        for (const file of files) {
+          const key = path.resolve(file);
+          if (seen.has(key)) continue;
+          seen.add(key);
+          try {
+            if (!fs.existsSync(file)) continue;
+            await yieldHealEventLoop();
+            const text = await fsp.readFile(file, 'utf8');
+            await yieldHealEventLoop();
+            // JSON.parse is still sync — gate + defer + yields around it keep /ready
+            // answering between files and row chunks (never from member GET).
+            const raw = JSON.parse(text);
+            await yieldHealEventLoop();
+            const rows = (Array.isArray(raw) ? raw : raw.players || []) as Array<
+              Record<string, unknown>
+            >;
+            for (let i = 0; i < rows.length; i += 1) {
+              if (i > 0 && i % chunkSize === 0) await yieldHealEventLoop();
+              const player = rows[i];
+              const slug = String(player?.slug || '').toLowerCase();
+              if (!slug) continue;
+              const truth = boardTruthFromPlayer(player, sanitizeRpmPct);
+              const prev = next.get(slug);
+              if (!prev) {
+                next.set(slug, truth);
+                continue;
+              }
+              // Prefer richer peer boards / lower Florida share when merging durable+bundle.
+              if (truth.storeComps.length > prev.storeComps.length) {
+                prev.storeComps = truth.storeComps;
+              }
+              if (
+                truth.boardRpm != null &&
+                (prev.boardRpm == null ||
+                  (prev.boardRpm >= 70 && truth.boardRpm + 40 < prev.boardRpm))
+              ) {
+                prev.boardRpm = truth.boardRpm;
+              }
+              if (
+                truth.storeRpm != null &&
+                (prev.storeRpm == null ||
+                  (prev.storeRpm >= 70 && truth.storeRpm + 40 < prev.storeRpm))
+              ) {
+                prev.storeRpm = truth.storeRpm;
+              }
+            }
+          } catch {
+            /* try next file */
+          }
+        }
+        healTruthBySlug.clear();
+        for (const [slug, truth] of next) healTruthBySlug.set(slug, truth);
+        healTruthWarmAt = Date.now();
+        console.log('[futurecast-hp] heal players warm ok', next.size, 'slugs');
+      });
     })
     .catch((err) => {
       const message = err instanceof Error ? err.message : String(err);
@@ -415,10 +462,7 @@ function scheduleHealPlayersWarm(): void {
 
 function lookupHealBoardTruth(slug: string): HealBoardTruth | null {
   if (!slug) return null;
-  if (!healTruthBySlug.size || Date.now() - healTruthWarmAt > HEAL_TRUTH_TTL_MS) {
-    scheduleHealPlayersWarm();
-    return healTruthBySlug.get(slug) || null;
-  }
+  // Map only — never schedule ~9MB players.json warm from the request path.
   return healTruthBySlug.get(slug) || null;
 }
 
@@ -524,11 +568,7 @@ export function healHighPriorityRpmPoisonRow(row: Record<string, unknown>): Reco
       storeComps = truth.storeComps || [];
       boardRpm = truth.boardRpm;
       storeRpm = truth.storeRpm;
-    } else {
-      scheduleHealPlayersWarm();
     }
-  } else if (slug && !healWarm) {
-    scheduleHealPlayersWarm();
   }
 
   let comps = rowCompsPreview;
@@ -748,8 +788,7 @@ export function sanitizeHighPriorityStarsPayload(value: unknown): unknown {
   if (!value || typeof value !== 'object') return value;
   const doc = value as Record<string, unknown>;
   if (!Array.isArray(doc.players)) return value;
-  // Background-only — never block this sanitize on ~9MB players.json.
-  scheduleHealPlayersWarm();
+  // Use warm Map when boot/cron filled it — never schedule players.json parse here.
   let players = doc.players.map((row) => {
     if (!row || typeof row !== 'object') return row;
     const p = row as Record<string, unknown>;

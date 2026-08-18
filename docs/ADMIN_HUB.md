@@ -36,7 +36,8 @@ Heavy work (On3, beat ingest, allowlist-intel, hub refresh/warm, Film Room YouTu
 
 **Tier B (request path):** Hub + FutureCast Lab **GETs never sync-rebuild**. They serve memory → stale → durable `hub-runtime` / deploy snapshot, and return `status: building` only on a true cold miss. Refill is owned by:
 
-- **Boot:** `HUB_BOOT_FORCE_WARM=true` — priority-**lite** (hero/class/**footprint+commits**) first, then **spaced elite fill** (HP → sequential bundle → master-board) with large gaps so Starter does not OOM
+- **Keepalive:** ping-only (`KEEPALIVE_FULL_TOUCH=false`). Do **not** re-enable full touch — it stampeded HP/bundle and sync-parsed `players.json` on the web dyno, starving Render `/ready` into 502 restart loops.
+- **Boot:** `HUB_BOOT_FORCE_WARM=true` — priority-**lite** (hero/class/**footprint+commits**) first, then **spaced elite fill** (HP → sequential bundle → master-board) with large gaps so Starter does not OOM. HP board-truth heal index warms deferred after lite (never on GET).
 - `POST /api/recruiting/hub/warm-memory?mode=spaced` (cron `gatorvault-api-hub-warm`, every ~25m; Admin PIN also works). Modes: `lite` | `spaced`/`elite` | `bundle` — **lite includes Class footprint + commits** so map tallies refresh without Codemagic
 - `POST /api/futurecast/lab-warm` (Admin PIN / optional; spaced warm owns HP + master on cron)
 - `POST /api/recruiting/hub/refresh?warmAfter=priority` (cron `gatorvault-api-hub-refresh`)

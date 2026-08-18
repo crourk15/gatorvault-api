@@ -413,11 +413,13 @@ services:
         value: https://gatorvault-api.onrender.com/health
       - key: KEEPALIVE_PING_URL
         value: https://gatorvault-api.onrender.com/api/ping
-      # Soft Lab/hub warm — concurrency 1 avoids /ready stampede; keeps FutureCast + profiles hot.
+      # Ping-only. FULL_TOUCH stampeded HP/bundle/master every 2m → sync 9MB
+      # players.json heal warm blocked /ready past 5s → HTML 502 restart loop.
+      # Hub/Lab warm is owned by boot spaced elite + hub-warm / hub-refresh crons.
       - key: API_STAY_GREEN
         value: "false"
       - key: KEEPALIVE_FULL_TOUCH
-        value: "true"
+        value: "false"
       - key: KEEPALIVE_HUB_TOUCH
         value: "false"
       - key: KEEPALIVE_TOUCH_CONCURRENCY

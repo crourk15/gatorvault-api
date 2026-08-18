@@ -1258,6 +1258,23 @@ function scheduleHubBootPipeline() {
         } catch (err) {
           console.warn('[recruiting-hub] HP seed prime failed:', err.message);
         }
+        // Deferred HP board-truth index (slim Map from players.json) — never from GET.
+        const healDelay = Math.max(
+          120000,
+          parseInt(process.env.HP_HEAL_WARM_BOOT_DELAY_MS || '180000', 10) || 180000
+        );
+        setTimeout(() => {
+          try {
+            const { ensureHealPlayersWarm } = require('../api/futurecast/response-cache.ts');
+            ensureHealPlayersWarm()
+              .then(() => console.log('[recruiting-hub] HP heal players warm scheduled/done'))
+              .catch((err) =>
+                console.warn('[recruiting-hub] HP heal players warm failed:', err.message)
+              );
+          } catch (err) {
+            console.warn('[recruiting-hub] HP heal players warm skipped:', err.message);
+          }
+        }, healDelay);
         if (spacedElite) {
           const spacedYears = parseWarmYears(process.env.HUB_SPACED_WARM_YEARS, [2028]);
           scheduleSpacedEliteFill({
