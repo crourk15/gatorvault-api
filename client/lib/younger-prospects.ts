@@ -9,13 +9,13 @@ export const YOUNGER_PROSPECT_YEARS = [2029, 2030] as const;
 
 /** Hub mini grids — keep each class short. */
 export const YOUNGER_PROSPECT_HUB_CAPS: Record<number, number> = {
-  2029: 8,
+  2029: 10,
   2030: 6,
 };
 
-/** Lab denser lists — short stacks so neither year dominates. */
+/** Lab denser lists — Power Top 100 FL + tracked early targets. */
 export const YOUNGER_PROSPECT_LAB_CAPS: Record<number, number> = {
-  2029: 6,
+  2029: 12,
   2030: 6,
 };
 
@@ -138,12 +138,16 @@ export function formatYoungerLabMeta(p: {
   school?: string | null;
   state?: string | null;
   stars?: number | null;
+  natlRank?: number | null;
+  rivalsNatlRank?: number | null;
 }): string {
   const parts: string[] = [];
   const school = formatRecruitSchoolLabel(p.school, p.state);
   if (school && school !== 'School pending') parts.push(school);
   const stars = youngerProspectStars(p.stars);
   if (stars != null) parts.push(`${stars}★`);
+  const natl = Number(p.natlRank ?? p.rivalsNatlRank);
+  if (Number.isFinite(natl) && natl > 0) parts.push(`#${Math.round(natl)}`);
   return parts.join(' · ');
 }
 

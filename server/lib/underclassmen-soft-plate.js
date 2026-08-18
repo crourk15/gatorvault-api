@@ -54,6 +54,22 @@ function softUnderclassmenRow(input) {
   const position = String(input.position || '')
     .trim()
     .toUpperCase();
+  const ratingN = Number(input.rating);
+  const rating = Number.isFinite(ratingN) && ratingN > 0 ? ratingN : null;
+  const natl =
+    input.natlRank != null && Number.isFinite(Number(input.natlRank))
+      ? Number(input.natlRank)
+      : input.rivalsNatlRank != null && Number.isFinite(Number(input.rivalsNatlRank))
+        ? Number(input.rivalsNatlRank)
+        : null;
+  const posRank =
+    input.posRank != null && Number.isFinite(Number(input.posRank))
+      ? Number(input.posRank)
+      : null;
+  const stateRank =
+    input.stateRank != null && Number.isFinite(Number(input.stateRank))
+      ? Number(input.stateRank)
+      : null;
   return {
     id: softRowId(slug),
     slug,
@@ -63,11 +79,11 @@ function softUnderclassmenRow(input) {
     school: input.school ? String(input.school) : null,
     hometown: null,
     state: input.state ? String(input.state) : null,
-    composite: 0,
+    composite: rating ?? 0,
     stars,
-    natlRank: null,
-    posRank: null,
-    stateRank: null,
+    natlRank: natl,
+    posRank,
+    stateRank,
     ufConfidence: null,
     fitScore: null,
     trendDelta7d: null,
@@ -80,6 +96,11 @@ function softUnderclassmenRow(input) {
     discoveryScore: input.discoveryScore != null ? Number(input.discoveryScore) : null,
     earlyMovement: null,
     allowlistTarget: Boolean(input.allowlistTarget),
+    rivalsNatlRank:
+      input.rivalsNatlRank != null && Number.isFinite(Number(input.rivalsNatlRank))
+        ? Number(input.rivalsNatlRank)
+        : null,
+    photoUrl: input.photoUrl || null,
   };
 }
 
@@ -149,6 +170,12 @@ function buildUnderclassmenSoftPlate(years = DEFAULT_YEARS) {
             school: entry.school || null,
             state: entry.state || null,
             stars: entry.stars != null ? Number(entry.stars) : null,
+            natlRank: entry.natlRank,
+            posRank: entry.posRank,
+            stateRank: entry.stateRank,
+            rating: entry.rating,
+            rivalsNatlRank: entry.rivalsNatlRank,
+            photoUrl: entry.photoUrl,
             tier,
             discoveryScore: entry.discoveryScore,
           })
@@ -170,6 +197,12 @@ function buildUnderclassmenSoftPlate(years = DEFAULT_YEARS) {
             school: entry.school || null,
             state: entry.state || null,
             stars: entry.stars != null ? Number(entry.stars) : null,
+            natlRank: entry.natlRank,
+            posRank: entry.posRank,
+            stateRank: entry.stateRank,
+            rating: entry.rating,
+            rivalsNatlRank: entry.rivalsNatlRank,
+            photoUrl: entry.photoUrl,
             tier,
             discoveryScore: entry.discoveryScore,
           })

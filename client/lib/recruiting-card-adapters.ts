@@ -133,7 +133,7 @@ export function fromUnderclassmenTarget(p: UnderclassmenPlayer): RecruitingBoard
 /** 2029–2030 watchboard cards — name/pos/school first; hide filler UF/fit/stars. */
 export function fromYoungerProspect(p: UnderclassmenPlayer): RecruitingBoardPlayer {
   const composite = p.composite > 0 ? p.composite : undefined;
-  const isLiveOn3 = (p.natlRank ?? 0) > 0 && (p.composite ?? 0) > 0;
+  const isLiveOn3 = (p.natlRank ?? 0) > 0 && ((p.composite ?? 0) > 0 || Number((p as { rating?: number }).rating ?? 0) > 0);
   const ufPct = youngerProspectUfPct(p);
   const fitPct = youngerProspectFitPct(p);
   const stars = youngerProspectStars(p.stars);
