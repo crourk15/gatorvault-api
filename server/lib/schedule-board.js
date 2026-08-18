@@ -52,6 +52,26 @@ function readJson(filePath) {
   return JSON.parse(text);
 }
 
+function normalizeUniform(raw) {
+  if (!raw || typeof raw !== 'object') return undefined;
+  const helmet = String(raw.helmet || '').trim();
+  const jersey = String(raw.jersey || '').trim();
+  const pants = String(raw.pants || '').trim();
+  if (!helmet && !jersey && !pants) return undefined;
+  const label =
+    String(raw.label || '').trim() ||
+    [helmet, jersey, pants].filter(Boolean).join(' / ');
+  const out = {
+    helmet: helmet || undefined,
+    jersey: jersey || undefined,
+    pants: pants || undefined,
+    label,
+  };
+  if (raw.note != null && String(raw.note).trim()) out.note = String(raw.note).trim();
+  if (raw.source != null && String(raw.source).trim()) out.source = String(raw.source).trim();
+  return out;
+}
+
 function normalizeGame(row) {
   if (!row || typeof row !== 'object') return null;
   const id = String(row.id || '').trim();
@@ -68,6 +88,7 @@ function normalizeGame(row) {
         .filter((s) => s.name)
     : [];
   const kind = String(row.kind || 'game').trim().toLowerCase() === 'bye' ? 'bye' : 'game';
+  const uniform = normalizeUniform(row.uniform);
   return {
     id,
     kind,
@@ -95,6 +116,7 @@ function normalizeGame(row) {
       : undefined,
     scoutingReport: row.scoutingReport != null ? String(row.scoutingReport).trim() : undefined,
     tickets: normalizeTickets(row.tickets),
+    ...(uniform ? { uniform } : {}),
   };
 }
 

@@ -55,6 +55,15 @@ export type ScheduleGame = {
     seatgeek?: string;
     ticketmaster?: string;
   };
+  /** Official UF uniform combo for this game (helmet / jersey / pants). */
+  uniform?: {
+    helmet?: string;
+    jersey?: string;
+    pants?: string;
+    label: string;
+    note?: string;
+    source?: string;
+  };
 };
 
 export const SCHEDULE_GAMES: ScheduleGame[] = [

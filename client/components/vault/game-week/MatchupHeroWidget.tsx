@@ -41,6 +41,15 @@ export function MatchupHeroWidget({ bundle }: Props): React.ReactElement {
           {game.venue}
           {game.tv ? ` · ${game.tv}` : ''}
         </p>
+        {game.uniform?.label ? (
+          <p className="gv-gw-matchup-hero__uniform" data-testid="gw-uniform">
+            <span className="gv-gw-matchup-hero__uniform-label">Uniform</span>
+            <span className="gv-gw-matchup-hero__uniform-combo">{game.uniform.label}</span>
+            {game.uniform.note ? (
+              <span className="gv-gw-matchup-hero__uniform-note">{game.uniform.note}</span>
+            ) : null}
+          </p>
+        ) : null}
         {weather ? (
           <div className="gv-gw-matchup-hero__weather">
             {weatherParts.map((part) => (
